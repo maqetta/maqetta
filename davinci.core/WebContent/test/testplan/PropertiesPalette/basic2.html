@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Properties palette basic tests (part 2)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Properties palette basic tests (part 2)</h1>
+
+	<h2 class="test_section">Layout properties</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Drag a Button, TextBox and Calendar onto the canvas.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Select the TextBox. Go to Properties palette and set Value to "abc".</li>
+		<li>Select the Button. There should be no resize handles.</li>
+		<li>Select the TextBox. There should be only horizontal resize handles. 
+				Change the Width property on the Properties palette.
+				You will get a prompt asking ok to change global CSS rule. Answer yes.</li>
+		<li>Select the Calendar. There should be resize handles for both Width and Height and
+				the Width and Height properties should be enabled on the Properties palette. 
+				Change both the width and the height on the Properties palette.
+				You will get a prompt asking ok to change global CSS rule. Answer yes.</li>
+		<li>Select the Calendar. The Position property should say either "relative" or "static". 
+				Try to move the widget on the canvas. It should snap back to its original position.</li>
+		<li>Select the Calendar. Change the Position property to "absolute". 
+				Try to move the widget on the canvas. It should now move.
+				Change the left and top properties on the Properties palette.</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As you change the properties, the canvas should update so that the widgets reflect the styling changes you made.</li>
+		<li>After save and reopen, the saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+	</ol>
+
+	<h2 class="test_section">Absolute vs relative positioning</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>On editor toolbar, click on the flow/absolute layout icon, and turn Flow Layout to true.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Drag two ContentPane's onto canvas.</li>
+		<li>Drag a Button into first ContentPane and a TextBox into second ContentPane.</li>
+		<li>Select each of the ContentPanes, set position to "absolute" in Properties palette, and drag each ContentPane to a new absolute location.</li>
+		<li>Select the Button and set position to "absolute" and drag around to a different absolute location.</li>
+		<li>Restore all elements to relative positioning.</li>
+		<li>Save, reopen.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to change the 'position' property on various types of widgets.</li>
+	</ol>
+
+	<h2 class="test_section">display, opacity, float, clear, overflow</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Drag a Button, LABEL and DIV onto canvas.</li>
+		<li>Select LABEL.</li>
+		<li>Set display to block. The LABEL should now be a block-level element and shift down to the row under the Button.</li>
+		<li>Select Button.</li>
+		<li>Set opacity to 0.5. The button should now be semi-transparent.</li>
+		<li>Set float to right. The button should shift to the right, and LABEL should move to top/left.</li>
+		<li>Select LABEL.</li>
+		<li>Set clear to both. The LABEL should shift down to the row under the Button.</li>
+		<li>Select DIV.</li>
+		<li>Set DIV's text content (under widget-specific) to "abc def ghi abc def ghi abc def ghi".</li>
+		<li>Set width to 100px, set white-space to 'nowrap', and set overflow to hidden.
+			The text should be clipped at the edge of the DIV.</li>
+		<li>Save, close, reopen.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Upon reopening, the display, opacity, float, clear and overflow properties should still be in effect.</li>
+	</ol>
+
+
+	<h2 class="test_section">box-shadow</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li><span style="color:red; font-style:italic">Note: box-shadow might not be working yet in 0.6.</span></li>
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Drag a DIV onto canvas. Under widget-specific, set text to "abc". Set width to "3em".</li>
+		<li>Set box-shadow to "10px 10px 5px #888". A drop shadow should appear under the DIV.</li>
+		<li>Save, close, reopen.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Upon reopening, the box-shadow property should still be in effect.</li>
+	</ol>
+
+	<h2 class="test_section">z-index</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Click on the flow layout icon on the editor toolbar and switch to absolute layout.</li>
+		<li>Drag a Button and TextBox onto canvas such that they overlap.</li>
+		<li>Select Button. Set z-index to 1. The Button should now be above the TextBox.</li>
+		<li>Select TextBox. Set z-index to 2. The TextBox should now be above the Button.</li>
+		<li>Select Button. Click on + icon twice for z-index to change the z-index to 3. The Button should now be above the TextBox.</li>
+		<li>Save, close, reopen.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Upon reopening, the z-index properties should still be in effect.</li>
+	</ol>
+
+</body>
+</html>

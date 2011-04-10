@@ -1,0 +1,11 @@
+@CHARSET "ISO-8859-1";
+/* --- floated columns --- */
+div.sidebar {
+	border-right:none;
+	border-left:1px solid #ebebeb;
+	float:right;
+}
+div.content {
+	float:right;
+}
+/* ---- end floated columns --- */

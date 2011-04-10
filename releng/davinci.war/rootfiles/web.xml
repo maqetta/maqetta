@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!-- maqetta WAR-->
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+
+	 <display-name>maqetta</display-name>
+
+<!--  where to put maqetta user files -->
+        <env-entry>
+                <env-entry-name>maqetta.baseDirectory</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+               
+        </env-entry> 
+
+<!--  maximum number of maqetta users allowed -->
+        <env-entry>
+                <env-entry-name>maqetta.maxUsers</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+        </env-entry> 
+
+<!--  send debug info to console-->
+        <env-entry>
+                <env-entry-name>maqetta.serverDebug</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+        </env-entry> 
+
+
+	<servlet id="bridge">
+		<description>Equinox Bridge Servlet</description>
+		<display-name>Equinox Bridge Servlet</display-name>
+		
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		
+		
+		<servlet-class>org.eclipse.equinox.servletbridge.BridgeServlet</servlet-class>
+		<init-param>
+			<param-name>commandline</param-name>
+			<param-value>-console</param-value>			
+		</init-param>		
+		<init-param>
+			<param-name>enableFrameworkControls</param-name>
+			<param-value>true</param-value>			
+		</init-param>
+		<!--
+		  org.eclipse.equinox.servletbridge and the Servlet API are exported automatically to the underlying OSGi framework.
+		  The extendedFrameworkExports parameter allows the specification of additional java package exports.
+		  The format is a comma separated list of exports as specified by the "Export-Package" bundle manifest header.
+		  For example: com.mycompany.exports; version=1.0.0, com.mycompany.otherexports; version=1.0.0
+		  -->
+		<init-param>
+			<param-name>extendedFrameworkExports</param-name>
+			<param-value>org.apache.naming.java</param-value>			
+		</init-param>
+
+		<!-- 
+		  You can specify your own framework launcher here.
+		  The default is: org.eclipse.equinox.servletbridge.FrameworkLauncher
+		<init-param>
+			<param-name>frameworkLauncherClass</param-name>
+			<param-value>org.eclipse.equinox.servletbridge.FrameworkLauncher</param-value>
+		</init-param>	
+		-->		
+		<!-- 
+		  When the framework is deployed, an extension bundle must be present to allow the Servlet API to 
+		  be exported by the container.  Typically, this extension bundle is created at deploy time by the
+		  FrameworkLauncher.  If, however, an extension bundle (with id 'org.eclipse.equinox.servletbridge.extensionbundle') is
+		  already present in the 'plugins' area, then preference is given to the existing bundle.
+		  If this param is set to 'true', then the existing extension bundle with be *overridden* and
+		  the one created by the FrameworkLauncher will replace any existing one.  The default is 'false' 
+		  (giving preference to the existing extension bundle if present).
+		  
+		  default: false
+		 -->
+		<init-param>
+			<param-name>overrideAndReplaceExtensionBundle</param-name>
+			<param-value>true</param-value>
+		</init-param>	
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<!--
+	  This is required if your application bundles expose JSPs. 
+	-->	
+	<servlet-mapping>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+	</servlet-mapping>	
+</web-app>

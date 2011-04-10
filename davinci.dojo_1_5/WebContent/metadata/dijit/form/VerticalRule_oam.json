@@ -1,0 +1,45 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/VerticalRule",
+    "name": "dijit.form.VerticalRule",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.form.Slider');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "count": {
+            "datatype": "number",
+            "defaultValue": 3,
+            "title": "Count"
+        },
+        "ruleStyle": {
+            "datatype": "string",
+            "title": "Rule Style"
+        },
+        "container": {
+            "datatype": "string",
+            "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa.",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>"
+}

@@ -1,0 +1,104 @@
+@import url("EnhancedGrid.css");
+@import url("../../resources/claroGrid.css");
+
+/* overwrite claroGrid.css */
+.claro .dojoxGridRowbarInner {
+	width:20px;
+}
+/* end overwrite */
+
+/* header cell root container */
+.claro .dojoxGridSortHover {
+	border-color:#a5beda; 
+	border-bottom-color:#5c7590; 
+	color:#243C5F;
+	cursor:pointer;
+	background-color:#abd5fd;
+}
+.claro .dojoxGridSortRoot {
+	background:url("../../resources/images/header_shadow.png") repeat-x bottom;
+	color:#000;
+	text-decoration:none;
+	border:1px solid #e0eefb;
+	height:100%;
+	display:block;
+	margin-left:-1px;
+}
+.dj_ie .claro .dojoxGridSortRoot {
+	border-right:1px solid #bcbcbc;
+}
+
+/* header cell sorting wrapper & selection region (for selecting column) */
+.claro .dojoxGridHeaderCellSelectRegion {
+	padding:4px 0px 5px 6px;
+}
+.claro .dojoxGridSelectRegionHover {
+	cursor:pointer;
+	color:#243C5F;
+	text-decoration:none;
+}
+.claro .dojoxGridSelectRegionHover,
+.claro .dojoxGridCellOver .dojoxGridSortWrapper,
+.claro .dojoxGridHeaderSelected .dojoxGridHeaderCellSelectRegion {
+	background:url("../../resources/images/header.png") #abd5fd repeat-x bottom;
+}
+.claro .dojoxGridCellOver .dojoxGridSortWrapper {
+	background-color:transparent;
+}
+.claro .dojoxGridHeaderSelected .dojoxGridHeaderActive {
+	background-color:#91c9fe;
+}
+
+/* column selection */
+.claro td.dojoxGridRowSelected {
+	border-collapse:separate;
+	border:1px solid #BFD6EB;
+	border-bottom:1px solid transparent;
+	background:url("../../resources/images/row_back.png") #e3f2ff repeat-x;
+	/*border:solid 1px #A0BFDD;*/
+}
+.dj_ie6 .claro td.dojoxGridRowSelected,
+.dj_ie6 .claro .dojoxGridRowOdd td.dojoxGridRowSelected {
+	border-color:#BFD6EB;
+}
+.claro .dojoxGridRowOver td.dojoxGridRowSelected {
+	border-top:1px solid #769DC0;
+	border-bottom:1px solid #769DC0;
+}
+.claro .dojoxGridRowActive td.dojoxGridRowSelected {
+	background-image:url("../../resources/images/td_button_down.png");
+}
+
+/* focus border */
+.claro .dojoxGridFocusBorder {
+	border-top: 1px dashed darkblue;
+	border-left: 1px dashed darkblue;
+}
+
+/** dnd **/
+.claro .dojoxGridSelectedDIV {
+	background-color: #3366CC;
+}
+.dj_ie .claro .dojoxGridSelectedDIV {
+	filter: alpha(opacity = 30);
+}
+.claro .dojoxGridBorderDIV {
+	background-color:#769DC0;
+}
+
+.dj_ie6 .claro .dojoxGridSortRoot,
+.dj_ie6 .claro .dojoxGridSelectRegionHover,
+.dj_ie6 .claro .dojoxGridCellOver .dojoxGridSortWrapper,
+.dj_ie6 .claro .dojoxGridHeaderSelected .dojoxGridHeaderCellSelectRegion {
+	background-image:none;
+}
+
+/* Don't need any explicit outlines */
+.claro .dojoxGridCell,
+.claro .dojoxGridCellFocus,
+.claro .dojoxGridHeaderCellSelectRegion,
+.claro .dojoxGridUnarySortWrapper,
+.claro .dojoxGridNestedSortWrapper,
+.claro .dojoxGridSortRoot {
+	outline: none;
+}

@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Chart: Map&Legend</title>
+		<style type="text/css">
+			@import "../../../../dojo/resources/dojo.css";
+			@import "../../../../dijit/tests/css/dijitTests.css";
+			@import "../../../../dijit/themes/tundra/tundra.css";
+			@import "../resources/Map.css";
+		</style>
+		<script type="text/javascript" djConfig="parseOnLoad:true,gfxRenderer:'svg,vml,silverlight'" src="../../../../dojo/dojo.js"></script>
+		<script type="text/javascript">
+			dojo.require("dojox.geo.charting.Map");
+			dojo.require("dojox.geo.charting.widget.Legend");
+			dojo.require("dojo.data.ItemFileReadStore");
+			dojo.addOnLoad(function(){
+				//create new map
+				var map = new dojox.geo.charting.Map("USStates", "../resources/data/USStates.json");
+				//add outside map marker file
+				map.setMarkerData("../resources/markers/USStates.json");
+				//set data store to map
+				var dataStore = new dojo.data.ItemFileReadStore({
+					url: "datastore/dataStore.json"
+				});
+				map.setDataStore(dataStore, {
+					product: "A"
+				});
+				//add series to map 
+				map.addSeries([{
+					name: "Low sales state(0~$3.0M)",
+					min: "0.0",
+					max: "3.0",
+					color: "#FFCE52"
+				}, {
+					name: "Normal sales state($3.0M~$6.0M)",
+					min: "3.0",
+					max: "6.0",
+					color: "#63A584"
+				}, {
+					name: "High sales state($6.0M~$10.0M)",
+					min: "6.0",
+					max: "9.0",
+					color: "#CE6342"
+				}]);
+				//declare associated legend
+				var legend = new dojox.geo.charting.widget.Legend({
+					map: map
+				});
+				//map marker customization
+				map.onFeatureOver = function(feature){
+					if(!feature.markerText){
+						feature.markerText = map.mapObj.marker.markerData[feature.id] + ": $" + feature.value.toFixed(3) + "M";
+					}
+				};
+			});
+		</script>
+	</head>
+	<body class="tundra">
+		<h1>Map with series, data, legend</h1>
+		<div id="USStates" style="width:900px;height:500px;border:1px solid;">
+		</div>
+	</body>
+</html>

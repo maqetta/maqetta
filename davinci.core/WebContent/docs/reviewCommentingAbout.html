@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>About the Claro Theme Editor</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a> &gt;
+		<a href="reviewCommenting.html">Review and Commenting</a>
+    </td>
+    <td class="prevnext">
+    <a href="reviewCommenting.html">Previous</a> / <a href="reviewCommenting.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>About Review and Commenting</h1>
+
+<p>Maqetta includes a web-based review and commenting features that allows
+authors to share their HTML pages with their team members and receive feedback comments.
+</p>
+
+<h2>Initiating a review session</h2>
+
+<p>To initiate a team review, select the "New Review" command found on the "New" menu at the top of the product:</p>
+<p><img src="img/review_new_review_command.png"></img></p>
+
+<p>This will bring up the New Review wizard, which has 3 sections. 
+The first section is for general information about this review session, such
+as title and description. You can also define an end date for the review
+and customize the window size that will be used when the HTML pages are presented to the user.</p>
+<p><img src="img/review_new_wizard_1.png"></img></p>
+
+<p>The second section of the wizard is where you choose which files from your workspace
+should be included in the review. You can either select a file and click the right-arrow icon
+or double-click on files to move them into the right section, which shows the files you have selected.</p>
+<p><img src="img/review_new_wizard_2.png"></img></p>
+
+<p>The third section of the wizard is where you choose the list of reviewers. 
+You can enter email addresses manually. (Note: If your particular installation of
+Maqetta is integrated with a user database (e.g., LDAP), then you might be able
+to start typing partial names or email addresses, with auto-complete to show you
+users that match what you have typed so far.)</p>
+<p><img src="img/review_new_wizard_3.png"></img></p>
+
+<p>Once you have selected files and reviewers, click on the <strong>Publish</strong> button to initiate
+the review session.</p>
+
+<p>The Publish button will cause an email invitation to be sent to each reviewer:</p>
+<div class="note" style="width:100%;">
+<table border="1">
+<tr><td>Subject:</td><td>You have been invited to review published file(s)</td></tr>
+<tr><td>To:</td><td>&lt;your name and email&gt;</td></tr>
+<tr><td>From:</td><td>(no reply)</td></tr>
+</table>
+<div>
+<br/>
+sue@example.com has invited you to review this page.<br/>
+sue@example.com's message: Proposed admin panel for the new data manager application.<br/>
+<br/>
+You can review the page by clicking this link: http://&lt;hostname&gt;/maqetta/review/sue@example.com
+<br/>
+</div>
+</div>
+
+<p>The email contains the URL which will launch Maqetta in review mode. Upon clicking on this
+link, reviewers should see Maqetta's review mode launch in a new browser window:</p>
+
+<p><img src="img/review_board_1.png" style="width:100%;"></img></p>
+
+<p>The Reviews palette shows the list of review sessions that this user has been invited.
+The picture above shows one review session, "Admin panel". To see the files that are included
+in the Admin panel review session, open up "Admin panel" to see its child contents
+(in this case, Sample1.html.rev and Sample2.html.rev):</p>
+
+<p><img src="img/review_board_2.png"></img></p>
+
+<p>The reviewer can now double-click on one of the files (e.g., Sample1.html) to view
+the page and comment on it:</p>
+<p><img src="img/review_board_3.png" style="width:100%;"></img></p>
+
+<p>The reviewer can add a plain-text comment in the Comments palette by clicking on the "Add Comment" icon:</p>
+<p><img src="img/review_board_add_comment_icon.png"></img></p>
+
+<p>which will cause a comment entry form to appear at the top of the Comments palette into which
+the reviewer can provide plain text feedback:</p>
+<p><img src="img/review_board_comments_1.png"></img></p>
+
+<p>While creating a new comment or editing an existing comment (i.e., while the comment entry form is open for editing),
+the reviewer can also use the annotation icons to draw rectangles, ovals, arrows and plain text on top of the HTML page he is viewing:</p>
+<p><img src="img/review_board_annotation_icons.png"></img></p>
+
+<p>For example, the reviewer might put an oval around the tabs in the tab palette:</p>
+<p><img src="img/review_board_annotation_1.png" style="width:100%;"></img></p>
+
+<p>Upon hitting Submit in the Comments palette for the new comment he has created, 
+his comment (and associated annotations) will be added to the review and the add comment form will close:</p>
+<p><img src="img/review_board_comments_2.png"></img></p>
+
+<p>Other reviewers can click on "Reply" to add a sub-comment to existing comments or click on the "Add Comment"
+icon to add new comments.</p>
+
+<p>Many UI mockups will consist of multiple application states, where
+different parts of the application are visible in one state and other parts of the
+application are visible in a different state. A review can switch between
+states and add comments about that particular state by alternately clicking
+through the states listed in the States palette.</p>
+<p><img src="img/review_board_states_palette_1.png"></img></p>
+<p>For example, in the picture below,
+the review has turned on the "Add Task" state, causing the "Add Task" dialog to appear on the main canvas:</p>
+<p><img src="img/review_board_states_palette_2.png" style="width:100%;"></img></p>
+
+<br />
+
+<p class="prevnext"><a href="reviewCommenting.html">Previous</a> / <a href="reviewCommenting.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

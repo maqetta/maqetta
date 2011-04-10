@@ -1,0 +1,52 @@
+{
+    "name": "jquery-ui",
+    "longName": "jQuery UI",
+    "version": "1.8.11",
+    "categories": {
+        "jquery-ui": {
+            "name": "jQuery UI",
+            "description": "jQuery UI",
+            "widgetClass": "OpenAjax"
+        }
+    },
+    "widgets": [
+        {
+            "name": "Button",
+            "type": "jquery.ui.button",
+            "category": "jquery-ui",
+            "icon": "resources/images/jquery-button.gif"
+        },
+/* XXX not working for some reason
+        {
+            "name": "ButtonSet",
+            "type": "jquery.ui.buttonset",
+            "category": "jquery-ui",
+            "icon": "resources/images/dx-mbl--tab-container.gif"
+        },
+*/
+        {
+            "name": "Accordion",
+            "type": "jquery.ui.accordion",
+            "category": "jquery-ui",
+            "icon": "resources/images/accordion.png"
+        },
+        {
+            "name": "Datepicker",
+            "type": "jquery.ui.datepicker",
+            "category": "jquery-ui",
+            "icon": "resources/images/calendar.png"
+        },
+        {
+            "name": "Slider",
+            "type": "jquery.ui.slider",
+            "category": "jquery-ui",
+            "icon": "resources/images/horizontalslider.gif"
+        },
+        {
+            "name": "Tabs",
+            "type": "jquery.ui.tabs",
+            "category": "jquery-ui",
+            "icon": "resources/images/tab-container.png"
+        }
+    ]
+}

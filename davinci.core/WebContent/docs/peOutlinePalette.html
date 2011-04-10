@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Using the Outline Palette</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+    </td>
+    <td class="prevnext">
+    <a href="pePropertiesPalette.html">Previous</a> / <a href="peStatesPalette.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Using the Outline Palette</h1>
+
+<div style="clear:both;">
+
+<div class="image" style="float:right; padding:0 20px 10px;" >
+   <img alt="image" style="margin:0;" src="img/Maqetta_UI_Outline_Palette.png" />
+   <div>The Outline palette</div>
+</div>
+
+<p>The Outline palette shows the object/widget hierarchy for the current page. 
+You can select a widget or subwidget from the Outline palette and the corresponding widget will become selected on the <a href="wsPageEditorCanvas.html">page editor canvas.</a></p>
+
+<p>The Outline palette also provides a way to show/hide widgets in various <a href="peStatesPalette.html">states</a> (e.g. show a dialog box when a button is clicked). You click on the <b>eye icon</b> (shown in the left column in the Outline palette) to toggle the visibility of the widget on the <a href="wsPageEditorCanvas.html">page editor canvas</a>. See the tutorial <a href="tutorials/tutorial3.html">Task Manager (Application States)</a> for an example.</p>
+
+</div>
+
+<h3>Outline Palette Toolbar</h3>
+
+<p>The Outline palette toolbar contains three icons for displaying the Outline palette in <b>Widgets</b> mode, <b>Source</b> mode or <b>Page DOM</b> mode.</p>
+<ul>
+<li><b>Widgets</b> mode (default) - displays the widgets contained on the page in a tree hierarchy.</li>
+<li><b>Source</b> mode - displays the HTML source tags containted on the page in a tree hierarchy. This mode is useful when viewing the <a href="wsPageEditorCanvas.html">page editor canvas</a> in Source mode.</li>
+<li><b>Page DOM</b> mode - currently this mode is identical to the Source mode. In a future release this option will show the runtime DOM nodes and allow selection of those nodes to provide more complete ability to style widgets in the page editor.</li>
+</ul>
+
+<h3>Outline Palette Widget Hierarchy</h3>
+
+<p>The widgets in the Outline palette are displayed in a tree hierarchy, where each node in the tree can be collapsed or expanded.</p>
+<ul>
+<li>At the top of the tree is the filename.</li>
+<li>The next level in the tree is all the top-level widgets on the page.</li>
+<li>If a widget contains sub-widgets, the widget is displayed as a parent node with expand/collapse controls.</li>
+<li>Sub-widgets or nested widgets are indented under their parent.</li>
+</ul>
+
+<h3>Widget Identifiers</h3>
+<p>For each widget entry, after the <b>widget type</b> the following property values are displayed to help identify the widget:</p>
+<ul>
+<li><b>label</b> - the label is displayed in quotes (e.g. Button text or &lt;label&gt; text)</li>
+<li><b>title</b> - the title is displayed in quotes (e.g. for each ContentPane in a TabContainer, this is the Tab title)</li>
+<li><b>id</b> - the value of the id property (starts with "#")</li>
+<li><b>class</b> - the value of the class property (starts with ".")</li>
+</ul>
+
+<h3>Widget Selection</h3>
+<p>You can select a widget by clicking on its entry in the Outline palette. The corresponding widget in the <a href="wsPageEditorCanvas.html">page editor canvas</a> then becomes selected.  This is handy for selecting widgets that are difficult to select from the <a href="wsPageEditorCanvas.html">page editor canvas</a>, such as sub-widgets, very small widgets or hidden widgets.</p>
+
+<h3>Moving Widgets</h3>
+<p>You can move widgets around on the canvas from within the Outline palette. First select the widget, then drag it to the desired location. This is handy for moving widgets to someplace that might be hidden on the canvas (for example moving a widget from Tab 1 to Tab 2 in a TabContainer).</p>
+
+<h3>Widget Context Menu</h3>
+<p>Each widget has a context menu with the following commands: 
+<ul>
+<li><b>cut</b> - delete the currently selected widget and copy it to your clipboard.</li>
+<li><b>copy</b> - copy the currently selected widget to your clipboard.</li>
+<li><b>paste</b> - paste the widget from your clipboard (click paste, then click your cursor where you want to make the paste).</li>
+<li><b>delete</b> - delete the currently selected widget.</li>
+<li><b>surround with &lt;A&gt;</b> - select 1 or more widgets and enclose in a &lt;a&gt;.</li>
+<li><b>surround with &lt;DIV&gt;</b> - select 1 or more widgets and enclose in a &lt;div&gt;.</li>
+<li><b>surround with &lt;SPAN&gt;</b> - select 1 or more widgets and enclose in a &lt;span&gt;.</li>
+</ul>
+</p>
+<p>To use the widget's context menu, first select the widget, then right-click (ctrl-click on Mac) on the widget.</p>
+
+
+<h3>Toggling Widget Visibility with the Eye Icon</h3>
+<p>Every widget has an <b>eye icon</b> next to it in the Outline palette (in the left-most column). When you click on the eye icon it toggles the visibility of the widget. An open eye indicates visibility, and a closed eye indicates invisibility.  When you make a parent widget invisible, all of its children also become invisible. Invisible widgets are hidden on the <a href="wsPageEditorCanvas.html">page editor canvas</a> and in <a href="peToolbar.html">Preview in browser</a> view. Widget visibility can be toggled for different <a href="applicationStatesAbout.html">application states</a>, thus providing an interactive experience to the user. When using this feature, you need to pay particular attention to the selected state in the <a href="peStatesPalette.html">States palette</a>.</p>
+
+<p class="prevnext"><a href="pePropertiesPalette.html">Previous</a> / <a href="peStatesPalette.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

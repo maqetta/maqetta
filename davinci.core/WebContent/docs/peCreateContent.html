@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Creating Content</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+	</td>
+    <td class="prevnext">
+	<a href="peManageFiles.html">Previous</a> / <a href="peInlineEditing.html">Next</a>
+    </td></tr>
+</table>
+
+<a name="overview"><h1>Creating Content</h1></a>
+
+<p><i>In this documentation, the term <em>widget</em> refers to both widgets and HTML tags.</i></p>
+
+<p>You create content in Maqetta using the <b>Maqetta Page Editor</b>, comprised of the <a href="wsPageEditorCanvas.html">page editor canvas</a> and its associated <a href="wsPalettes.html">palettes</a>. To create content, you must first have a file opened in the <a href="wsPageEditorCanvas.html">page editor canvas</a>. You can either create a new HTML file or open an existing file (see the <a href="wsMenubar.html">Maqetta Menu Bar</a> for details).</p>
+
+<p>Once you have an opened file you can create content by dragging widgets from the <a href="wsPalettes.html">Widgets palette</a> and dropping them onto the canvas. When a widget is first dropped onto the canvas it is automatically set to <b>selected</b>, indicated by a thick gray border, so you can immediately work with it (e.g. move it, resize it, or <a href="pePropertiesPalette.html">set its properties</a>).
+
+<p>Some widgets provide a <a href="peInlineEditing.html">data entry popup</a> where a text window pops up for you to enter the widget's text. You can enter some text or just accept the default. Simply click off the text window to close it. You can later re-open it by double-clicking on the widget.  See <a href="peInlineEditing.html">Widget Data Entry Popup</a> for details.</p>
+
+<p>You can use <b>app.css</b> to <a href="peAppCss.html">create custom style rules</a> for your application. You can also edit the default <b>Claro</b> theme to <a href="themeEditorAbout.html">make system-wide style changes</a> for your organization. Or you can use one of the other <a href="peSwitchThemes.html">themes</a> available in Maqetta.</p>
+
+<p>Here are some tips for working with widgets:</p>
+<ul>
+<li>Drag widgets from the Widgets palette onto the canvas.</li>
+<li>You can drop widgets inside of container widgets, but not inside of control widgets.</li>
+<li>To work with a widget you must first select it by clicking on it (or by selecting it in the Outline palette).</li>
+<li>Once a widget is selected you can move it, resize it, or <a href="pePropertiesPalette.html">set its properties</a>.</li>
+<li>Use <a href="peAppCss.html">app.css</a> to create your own style rules.</li>
+<li>Many widgets contain sub-widgets, which can be selected and have their own set of properties.</li>
+<li>Many widgets contain a <a href="peInlineEditing.html">data entry popup</a> that allows you to easily set the widget's text.</li>
+<li>The <a href="peOutlinePalette.html">Outline palette</a> shows the widget hierarchy and is handy for selecting sub-widgets or nested widgets.</li>
+</ul>
+
+<h3>Widget Context Menu</h3>
+<p>Each widget has a context menu with the following commands: 
+<ul>
+<li><b>cut</b> - delete the currently selected widget and copy it to your clipboard.</li>
+<li><b>copy</b> - copy the currently selected widget to your clipboard.</li>
+<li><b>paste</b> - paste the widget from your clipboard (click paste, then click your cursor where you want to make the paste).</li>
+<li><b>delete</b> - delete the currently selected widget.</li>
+<li><b>surround with &lt;A&gt;</b> - select 1 or more widgets and enclose in a &lt;a&gt;.</li>
+<li><b>surround with &lt;DIV&gt;</b> - select 1 or more widgets and enclose in a &lt;div&gt;.</li>
+<li><b>surround with &lt;SPAN&gt;</b> - select 1 or more widgets and enclose in a &lt;span&gt;.</li>
+</ul>
+</p>
+
+<p>To use the widget's context menu, first select the widget, then right-click (ctrl-click on Mac) on the widget.</p>
+
+<h3>The Widgets Palette</h3>
+
+<p>The widgets are grouped into the following sections:</p>
+<ul>
+<li><b>Filter...</b> - allows you to search for widgets using a keyword.</li>
+<li><b>Dojo Containers</b> - <a href="http://www.dojotoolkit.org/reference-guide/dijit/index.html" rel="external">Dojo widgets</a> that can contain other widgets, typically used for page layout; creating sections, windows or portals; or to delineate an aggregate or grouping of widgets.</li>
+<li><b>Dojo Controls</b> - <a href="http://www.dojotoolkit.org/reference-guide/dijit/form.html#dijit-form" rel="external">Dojo form widgets</a> such as TextBox, ComboBox, CheckBox, RadioButton and Button.</li>
+<li><b>DojoX Mobile</b> - An initial set of mobile widgets from the dojox.mobile project.</li>
+<li><b>HTML</b> - HTML tags and an HTML Rich Text editor.</li>
+<li><b>Untested Dojo&amp;HTML</b> - <a href="http://www.dojotoolkit.org/reference-guide/dijit/index.html" rel="external">Dojo widgets</a> and HTML tags that are currently un-tested but are in plan to be fully supported in future releases of Maqetta.</li>
+<li><b>jQuery</b> and <b>YUI</b> - widgets from the <a href="http://jqueryui.com/">jQuery UI</a> and <a href="http://developer.yahoo.com/yui/" rel="external">YUI</a> widget libraries.</li>
+</ul>  
+ 
+
+<h3>Widget Libraries</h3>
+<p>Maqetta uses widgets from the following open source widget libraries:
+<ul>
+<li><a href="http://www.dojotoolkit.org/" rel="external">Dojo Toolkit</a> - an open source Javascript toolkit (or library) managed by the 
+<a href="http://en.wikipedia.org/wiki/Dojo_Toolkit#Dojo_Foundation_and_sponsorship" rel="external">Dojo Foundation</a>.</li>
+
+<li><a href="http://jqueryui.com/" rel="external">jQuery UI</a> - an open source Javascript library based on the <a href="http://jquery.com/" rel="external">jQuery</a> library and managed by the <a href="http://jquery.org/" rel="external">jQuery Project</a>.</li>
+
+<li><a href="http://developer.yahoo.com/yui/" rel="external">YUI Library</a> - an open source Javascript library managed by 
+<a href="http://developer.yahoo.com/yui/community/index.html" rel="external">Yahoo!</a>
+and freely available under Yahoo!'s <a href="http://developer.yahoo.com/yui/license.html" rel="external">BSD license</a>.</li>
+
+</ul>
+<!--
+<p>The widgets under <a href="#dojocontrols">Dojo Controls</a> and <a href="#dojocontainers">Dojo Containers</a> 
+are from the <a href="http://www.dojotoolkit.org/" rel="external">Dojo Toolkit</a> (or more specifically, from Dojo's UI Library <a href="http://www.dojotoolkit.org/reference-guide/dijit/index.html#dijit-index" rel="external">Dijit</a>).<br />
+The widgets under <a href="#other">Other</a> are from the <a href="http://jqueryui.com/">jQuery UI</a> and  
+<a href="http://developer.yahoo.com/yui/" rel="external">YUI</a> libraries.</p>
+-->
+  
+<p class="prevnext"><a href="peManageFiles.html">Previous</a> / <a href="peInlineEditing.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

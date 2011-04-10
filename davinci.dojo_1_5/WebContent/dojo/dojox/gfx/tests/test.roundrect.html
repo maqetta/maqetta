@@ -1,0 +1,34 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
+<head>
+<title>Testing rounded rectangle</title>
+<style type="text/css">
+	@import "../../../dojo/resources/dojo.css";
+	@import "../../../dijit/tests/css/dijitTests.css";
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
+<!--<script type="text/javascript" src="../vml.js"></script>-->
+<!--<script type="text/javascript" src="../svg.js"></script>-->
+<!--<script type="text/javascript" src="../silverlight.js"></script>-->
+<script type="text/javascript">
+dojo.require("dojox.gfx");
+dojo.require("dojox.gfx.move");
+dojo.require("dojo.colors");
+
+makeShapes = function(){
+    var g = dojox.gfx;
+	var surface = g.createSurface("test", 800, 600)
+    var rect1 = surface.createRect({x: 100, y: 100, width: 300, height: 200, r: 50}).setFill("red").setStroke("black");
+	new g.Moveable(rect1);
+};
+
+dojo.addOnLoad(makeShapes);
+
+</script>
+</head>
+<body>
+<h1>dojox.gfx Rounded rectangle</h1>
+<div id="test"></div>
+<p>That's all Folks!</p>
+</body>
+</html>

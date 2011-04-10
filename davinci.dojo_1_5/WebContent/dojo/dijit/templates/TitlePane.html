@@ -1,0 +1,17 @@
+<div>
+	<div dojoAttachEvent="onclick:_onTitleClick, onkeypress:_onTitleKey"
+			class="dijitTitlePaneTitle" dojoAttachPoint="titleBarNode">
+		<div class="dijitTitlePaneTitleFocus" dojoAttachPoint="focusNode">
+			<img src="${_blankGif}" alt="" dojoAttachPoint="arrowNode" class="dijitArrowNode" waiRole="presentation"
+			/><span dojoAttachPoint="arrowNodeInner" class="dijitArrowNodeInner"></span
+			><span dojoAttachPoint="titleNode" class="dijitTitlePaneTextNode"></span>
+		</div>
+	</div>
+	<div class="dijitTitlePaneContentOuter" dojoAttachPoint="hideNode" waiRole="presentation">
+		<div class="dijitReset" dojoAttachPoint="wipeNode" waiRole="presentation">
+			<div class="dijitTitlePaneContentInner" dojoAttachPoint="containerNode" waiRole="region" tabindex="-1" id="${id}_pane">
+				<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->
+			</div>
+		</div>
+	</div>
+</div>

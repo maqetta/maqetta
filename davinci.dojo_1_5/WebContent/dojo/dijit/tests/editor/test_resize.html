@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Editor in a BorderContainer</title>
+
+	<link rel="stylesheet" href="../../themes/tundra/tundra.css">
+
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="parseOnLoad: true, isDebug: true"></script>
+
+	<script type="text/javascript">
+		dojo.require("dijit.layout.BorderContainer");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dijit.Editor");
+		dojo.require("dijit._editor.plugins.AlwaysShowToolbar");
+		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+	</script>
+</head>
+<body class="claro">
+	<h1>Editor in a BorderContainer</h1>
+	<p>Tests that a BorderContainer can correctly size the Editor (by calling Editor.resize()).</p>
+	<div dojoType="dijit.layout.BorderContainer" style="height: 400px;border:1px solid black;">
+		<div dojoType="dijit.layout.ContentPane" region="top" splitter="true" style="height: 100px">
+			Top pane
+		</div>
+		<div dojoType="dijit.Editor" id="editor1" region="center" height="100%">
+			Editor (center pane)
+		</div>
+	</div>
+</body>
+</html>

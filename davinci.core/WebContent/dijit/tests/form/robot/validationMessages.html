@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Validation Message Test</title>
+
+		<style>
+			@import "../../../../dojo/resources/dojo.css";
+			@import "../../css/dijitTests.css";
+			@import "../../../../util/doh/robot/robot.css";
+		</style>
+		<link id="themeStyles" rel="stylesheet" href="../../../themes/tundra/tundra.css">
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../../dojo/dojo.js"
+			djConfig="isDebug: true, parseOnLoad: true"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.form.NumberTextBox");
+			dojo.require("dijit.robot");
+
+			dojo.addOnLoad(function(){
+
+			dojo.forEach([false, true], function(rangeBound){
+				dojo.forEach([false, true], function(required){
+					dojo.forEach(["", "p"], function(promptMessage){
+						dojo.forEach(["", "i"], function(invalidMessage){
+							dojo.forEach(["", "m"], function(missingMessage){
+								var name = "t" + (rangeBound?1:0) + (required?1:0) + (promptMessage?1:0) + (invalidMessage?1:0) + (missingMessage?1:0);
+								var textbox = dijit.byId(name);
+								doh.register(name, [
+								{
+									name: name + " first focus, empty value",
+									timeout: 5000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.mouseMoveAt(textbox.focusNode, 0, 1000);
+										doh.robot.mouseClick({left: true}, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 1000);
+
+										return d;
+									}
+								},
+								{
+									name: name + " first valid character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.typeKeys("1", 200, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!rangeBound, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " second valid character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.typeKeys("2", 200, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(true, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " first invalid character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.typeKeys("a", 200, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(false, textbox.isValid(false), "isValid");
+											doh.is("Error", textbox.state, "state");
+											doh.is(invalidMessage||promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " delete invalid character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.BACKSPACE, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(true, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " delete last valid character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.BACKSPACE, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!rangeBound, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " delete first valid character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.BACKSPACE, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " tab from empty",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.TAB, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is(!required, !textbox.state, "state");
+											doh.is("", textbox._message, "tooltip");
+										}), 500);
+
+										return d;
+									}
+								},
+								{
+									name: name + " tab back to empty",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.TAB, 200, { shift:true });
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is(!required, !textbox.state, "state");
+											doh.is(required? (missingMessage||invalidMessage||promptMessage) : promptMessage, textbox._message, "tooltip");
+										}), 500);
+
+										return d;
+									}
+								},
+								{
+									name: name + " first valid character after refocus",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.typeKeys("1", 200, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!rangeBound, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " out of range after refocus",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.typeKeys("2", 200, 200);
+										doh.robot.typeKeys("3", 200, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!rangeBound, textbox.isValid(false), "isValid");
+											doh.is(!rangeBound, !textbox.state, "state");
+											doh.is(rangeBound? textbox.rangeMessage : promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " tab from out of range",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.TAB, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!rangeBound, textbox.isValid(false), "isValid");
+											doh.is(!rangeBound, !textbox.state, "state");
+											doh.is("", textbox._message, "tooltip");
+										}), 500);
+
+										return d;
+									}
+								},
+								{
+									name: name + " tab back to out of range",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.TAB, 200, { shift:true });
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!rangeBound, textbox.isValid(false), "isValid");
+											doh.is(!rangeBound, !textbox.state, "state");
+											doh.is(rangeBound? textbox.rangeMessage : promptMessage, textbox._message, "tooltip");
+										}), 500);
+
+										return d;
+									}
+								},
+								{
+									name: name + " delete out of range character",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										if(dojo.isMac){
+											doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 200, {meta:true});
+										}else{
+											doh.robot.keyPress(dojo.keys.END, 200);
+										}
+										doh.robot.keyPress(dojo.keys.BACKSPACE, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(true, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " delete remaining characters",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.BACKSPACE, 200);
+										doh.robot.keyPress(dojo.keys.BACKSPACE, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is("", textbox.state, "state");
+											doh.is(promptMessage, textbox._message, "tooltip");
+										}), 200);
+
+										return d;
+									}
+								},
+								{
+									name: name + " tab from empty 2",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.TAB, 200);
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is(!required, !textbox.state, "state");
+											doh.is("", textbox._message, "tooltip");
+										}), 500);
+
+										return d;
+									}
+								},
+								{
+									name: name + " tab back to empty 2",
+									timeout: 2000,
+									runTest: function(){
+										var d = new doh.Deferred();
+
+										doh.robot.keyPress(dojo.keys.TAB, 200, { shift:true });
+
+										doh.robot.sequence(d.getTestCallback(function(){
+											doh.is(!required, textbox.isValid(false), "isValid");
+											doh.is(!required, !textbox.state, "state");
+											doh.is(required? (missingMessage||invalidMessage||promptMessage) : promptMessage, textbox._message, "tooltip");
+										}), 500, 1000);
+
+										return d;
+									}
+								}]);
+							});
+						});
+					});
+				});
+			});
+
+			doh.run();
+			});
+		</script>
+	</head>
+	<body class="claro">
+		<label for="t00000">not required, no min/max, no prompt message, no invalid message, no missing message</label><br>
+		<input  id="t00000" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00000"><br>
+
+		<label for="t00001">not required, no min/max, no prompt message, no invalid message, missing message</label><br>
+		<input  id="t00001" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00001"><br>
+
+		<label for="t00010">not required, no min/max, no prompt message, invalid message, no missing message</label><br>
+		<input  id="t00010" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00010"><br>
+
+		<label for="t00011">not required, no min/max, no prompt message, invalid message, missing message</label><br>
+		<input  id="t00011" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00011"><br>
+
+		<label for="t00100">not required, no min/max, prompt message, no invalid message, no missing message</label><br>
+		<input  id="t00100" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="p" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00100"><br>
+
+		<label for="t00101">not required, no min/max, prompt message, no invalid message, missing message</label><br>
+		<input  id="t00101" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="p" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00101"><br>
+
+		<label for="t00110">not required, no min/max, prompt message, invalid message, no missing message</label><br>
+		<input  id="t00110" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="p" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00110"><br>
+
+		<label for="t00111">not required, no min/max, prompt message, invalid message, missing message</label><br>
+		<input  id="t00111" dojoType="dijit.form.NumberTextBox" required="false" promptMessage="p" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t00111"><br>
+
+		<label for="t01000">required, no min/max, no prompt message, no invalid message, no missing message</label><br>
+		<input  id="t01000" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01000"><br>
+
+		<label for="t01001">required, no min/max, no prompt message, no invalid message, missing message</label><br>
+		<input  id="t01001" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01001"><br>
+
+		<label for="t01010">required, no min/max, no prompt message, invalid message, no missing message</label><br>
+		<input  id="t01010" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01010"><br>
+
+		<label for="t01011">required, no min/max, no prompt message, invalid message, missing message</label><br>
+		<input  id="t01011" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01011"><br>
+
+		<label for="t01100">required, no min/max, prompt message, no invalid message, no missing message</label><br>
+		<input  id="t01100" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="p" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01100"><br>
+
+		<label for="t01101">required, no min/max, prompt message, no invalid message, missing message</label><br>
+		<input  id="t01101" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="p" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01101"><br>
+
+		<label for="t01110">required, no min/max, prompt message, invalid message, no missing message</label><br>
+		<input  id="t01110" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="p" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01110"><br>
+
+		<label for="t01111">required, no min/max, prompt message, invalid message, missing message</label><br>
+		<input  id="t01111" dojoType="dijit.form.NumberTextBox" required="true" promptMessage="p" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t01111"><br>
+
+		<label for="t10000">not required, min=10, max=100, no prompt message, no invalid message, no missing message</label><br>
+		<input  id="t10000" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10000"><br>
+
+		<label for="t10001">not required, min=10, max=100, no prompt message, no invalid message, missing message</label><br>
+		<input  id="t10001" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10001"><br>
+
+		<label for="t10010">not required, min=10, max=100, no prompt message, invalid message, no missing message</label><br>
+		<input  id="t10010" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10010"><br>
+
+		<label for="t10011">not required, min=10, max=100, no prompt message, invalid message, missing message</label><br>
+		<input  id="t10011" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10011"><br>
+
+		<label for="t10100">not required, min=10, max=100, prompt message, no invalid message, no missing message</label><br>
+		<input  id="t10100" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="p" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10100"><br>
+
+		<label for="t10101">not required, min=10, max=100, prompt message, no invalid message, missing message</label><br>
+		<input  id="t10101" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="p" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10101"><br>
+
+		<label for="t10110">not required, min=10, max=100, prompt message, invalid message, no missing message</label><br>
+		<input  id="t10110" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="p" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10110"><br>
+
+		<label for="t10111">not required, min=10, max=100, prompt message, invalid message, missing message</label><br>
+		<input  id="t10111" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="false" promptMessage="p" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t10111"><br>
+
+		<label for="t11000">required, min=10, max=100, no prompt message, no invalid message, no missing message</label><br>
+		<input  id="t11000" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11000"><br>
+
+		<label for="t11001">required, min=10, max=100, no prompt message, no invalid message, missing message</label><br>
+		<input  id="t11001" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11001"><br>
+
+		<label for="t11010">required, min=10, max=100, no prompt message, invalid message, no missing message</label><br>
+		<input  id="t11010" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11010"><br>
+
+		<label for="t11011">required, min=10, max=100, no prompt message, invalid message, missing message</label><br>
+		<input  id="t11011" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11011"><br>
+
+		<label for="t11100">required, min=10, max=100, prompt message, no invalid message, no missing message</label><br>
+		<input  id="t11100" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="p" invalidMessage="" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11100"><br>
+
+		<label for="t11101">required, min=10, max=100, prompt message, no invalid message, missing message</label><br>
+		<input  id="t11101" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="p" invalidMessage="" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11101"><br>
+
+		<label for="t11110">required, min=10, max=100, prompt message, invalid message, no missing message</label><br>
+		<input  id="t11110" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="p" invalidMessage="i" missingMessage="" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11110"><br>
+
+		<label for="t11111">required, min=10, max=100, prompt message, invalid message, missing message</label><br>
+		<input  id="t11111" dojoType="dijit.form.NumberTextBox" constraints="{min:10, max:100}" required="true" promptMessage="p" invalidMessage="i" missingMessage="m" rangeMessage="r" value="">
+		<input style="border:0px;" size="6" value="t11111"><br>
+
+	</body>
+</html>

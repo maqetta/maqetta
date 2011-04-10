@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>Dijit focus manager DOH Robot test</title>
+
+		<style>
+			@import "../../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../../dojo/dojo.js"
+			djConfig="isDebug: true, parseOnLoad: true"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.robotx");
+
+			dojo.addOnLoad(function(){
+				doh.robot.initRobot('../test_focusWidget.html?animate=false');
+
+				// These are objects used to track calls to _onFocus and _onBlur in various widgets
+				function resetEvents(){
+					focusEvents = {};
+					blurEvents = {};
+				}
+				resetEvents();
+
+				doh.register("Dijit focus manager tests", [
+
+					function setUp(){
+						dojo.forEach(["form", "fieldset1", "fieldset2", "select", "editor"], function(id){
+							dojo.connect(dijit.byId(id), "_onFocus", function(){
+								focusEvents[id] = true;
+							});
+							dojo.connect(dijit.byId(id), "_onBlur", function(){
+								blurEvents[id] = true;
+							});
+						});
+					},
+
+					{
+						name: "focus simple input",
+						timeout: 4000,
+						setUp: function(){
+							resetEvents();
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Focus the simple input
+							//dojo.byId("first").focus();
+							doh.robot.mouseMoveAt("first");
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Make sure that focus manager caught the focus event
+								doh.is(dojo.byId("first"), dojo.global.dijit._curFocus);
+
+								// And that the dijit.form.Form widget is marked as
+								// being "in focus"
+								doh.t(focusEvents["form"], "form focused");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "focus combobox",
+						timeout: 4000,
+						setUp: function(){
+							resetEvents();
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							dijit.byId("select").focus();
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Focus goes to an <input> node deep inside of select.domNode,
+								// but that <input> node has the id of the widget
+								doh.is(dojo.byId("select"), dojo.global.dijit._curFocus);
+
+								// The focus stack should show the ComboBox plus all parent widgets
+								var stack = dojo.global.dijit._activeStack;
+								doh.is(3, stack.length, "3 active widgets in stack");
+								doh.is("form", stack[0], "grandparent of combobox");
+								doh.is("fieldset1", stack[1], "parent of combobox");
+								doh.is("select", stack[2], "combobox itself (last in stack)");
+
+								// _onFocus()/_onBlur was called appropriately
+								doh.f(focusEvents["form"], "form was already focused, no duplicate event");
+								doh.f(blurEvents["form"], "form wasn't blurred");
+								doh.t(focusEvents["fieldset1"], "fieldset1 focused");
+								doh.t(focusEvents["select"], "select focused");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "focus editor",
+						timeout: 4000,
+						setUp: function(){
+							resetEvents();
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							dijit.byId("editor").focus();
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// The focus stack should show the Editor plus all parent widgets
+								var stack = dojo.global.dijit._activeStack;
+								doh.is(2, stack.length, "2 active widgets in stack");
+								doh.is("form", stack[0], "parent of editor");
+								doh.is("editor", stack[1], "editor itself (last in stack)");
+
+								// _onFocus()/_onBlur was called appropriately
+								doh.f(focusEvents["form"], "form was already focused, no duplicate event");
+								doh.f(blurEvents["form"], "form wasn't blurred");
+								doh.t(blurEvents["fieldset1"], "fieldset no longer focused");
+								doh.t(focusEvents["editor"], "editor focused");
+							}), 500);
+
+							return d;
+						}
+					},
+
+					// clicking spinner buttons should activate the spinner, even
+					// though there's no actual DOM focus event
+					{
+						name: "spinner",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var upArrow = dojo.query(".dijitSpinner .dijitUpArrowButton")[0];
+							doh.t(upArrow, "found the up arrow");
+
+							doh.robot.mouseMoveAt(upArrow);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// The focus stack should show the Spinner plus all parent widgets
+								var stack = dojo.global.dijit._activeStack;
+								doh.is(3, stack.length, "3 active widgets in stack");
+								doh.is("form", stack[0], "grandparent of spinner");
+								doh.is("fieldset2", stack[1], "parent of spinner");
+								doh.is("spinner", stack[2], "spinner itself (last in stack)");
+							}), 500);
+
+							return d;
+						}
+					},
+
+					{
+						name: "combo button menu",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var button = dojo.query("#button .dijitDownArrowButton")[0];
+							doh.t(button, "found drop down button");
+
+							doh.robot.mouseMoveAt(button);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Focus goes to an first item in the drop down menu
+								doh.is(dojo.byId("mi1"), dojo.global.dijit._curFocus);
+
+								// The focus stack should show the ComboBox plus all parent widgets
+								var stack = dojo.global.dijit._activeStack;
+								console.log("menu stack is ", stack);
+								doh.is(5, stack.length, "5 active widgets in stack");
+								doh.is("form", stack[0], "grandparent of combobutton");
+								doh.is("fieldset2", stack[1], "parent of combobutton");
+								doh.is("button", stack[2], "combobutton");
+								doh.is("menu", stack[3], "menu");
+								doh.is("mi1", stack[4], "menuitem");
+							}), 1000);
+
+							return d;
+						}
+					}
+
+/*
+					// Commented out because
+					// in order to allow dijit.popup's getTopPopup() to work,a sub menu's popupParent
+					// points to the parent Menu, bypassing the parent MenuItem... thus the
+					// MenuItem is not in the chain of active widgets
+					{
+						name: "nested menu",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.mouseMoveAt("popupMenuItem");
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Focus goes to an first item in the sub menu
+								doh.is(dojo.byId("smi1"), dojo.global.dijit._curFocus);
+
+								// The focus stack should show the two submenus and then upwards
+								// to the ComboButton, and the rest
+								var stack = dojo.global.dijit._activeStack;
+								console.log("menu stack is ", stack);
+								doh.is(7, stack.length, "7 active widgets in stack");
+								doh.is("form", stack[0], "grandparent of combobutton");
+								doh.is("fieldset2", stack[1], "parent of combobutton");
+								doh.is("button", stack[2], "combobutton");
+								doh.is("menu", stack[3], "menu");
+								doh.is("mi1", stack[4], "menuitem");
+								doh.is("submenu", stack[5], "menu");
+								doh.is("smi1", stack[6], "menuitem");
+							}), 1000);
+
+							return d;
+						}
+					}
+*/
+				]);
+
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

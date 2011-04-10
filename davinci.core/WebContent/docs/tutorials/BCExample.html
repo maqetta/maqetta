@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>BorderContainer Tutorials</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/BCBasics.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Widget Gallery Example</h1>
+
+<p>This tutorial will create the following mockup.</p>
+
+<div class="image">
+<a href="img/RIA_Widget_Gallery.png" target="_blank"><img alt="image" src="img/RIA_Widget_Gallery.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+
+<h2>Outer BorderContainer:</h2>
+
+  <ol>
+  <li>Drag a BorderContainer onto a blank canvas.</li>
+  <li>In the BorderContainer Dialog select: Headline, Top, Bottom, Center.</li>
+  <li>Top pane:
+      <ul>
+      <li>Height: 27px</li>
+      <li>Overflow: hidden</li>
+      <li>background-image url: img/masthead_blue_gradient2.png</li>
+      <li>repeat: repeat-x</li>
+      <li>font-family: Arial</li>
+      <li>color: #ffffff;</li>
+      <li>Splitter: off</li>
+      </ul></li>
+  <li>Bottom pane:
+      <ul>
+      <li>Height: 30px</li>
+      <li>Overflow: hidden</li>
+      <li>border-top: 1px solid gray</li>
+      <li>Splitter: off</li>
+      </ul></li>
+  <li>BorderContainer:
+     <ul>
+     <li>Gutters: off</li>
+     </ul></li>
+  </ol>
+
+<h3>Top Pane Content:</h3>
+   <ol>
+   <li>Drag an image file for the logo onto the pane.
+      <ul>
+      <li>float: right</li>
+      <li>margin: 3px</li>
+      </ul></li>
+   <li>Add label: "Welcome Joe Smioth"
+      <ul>
+      <li>float: right</li>
+      <li>font-size: 12px</li>
+      <li>margin-right: 8em</li>
+      <li>margin-top: 3px</li>
+      </ul></li>
+   <li>Add another image file
+      <ul>
+      <li>margin-top: -7px</li>
+      <li>margin-right: 30px</li>
+      </ul></li>
+   <li>Add anchor tag: "UXD"
+      <ul>
+      <li>url: http://example.com</li>
+      <li>color: #ffffff</li>
+      <li>position: relative</li>
+      <li>top: -7px</li>
+      </ul></li>
+   <li>Add label: " »&nbsp;Widget Gallery "  (Text mode)
+      <ul>
+      <li>position: relative</li>
+      <li>top: -7px</li>
+      <li>display: inline-block</li>
+      <li>margin-left: 0.5em</li>
+      </ul></li>
+    </ol>
+
+<h3>Bottom Pane Content:</h3>
+   <ol>
+   <li>Drag image file: "img/powered_by_dojo.png" onto the pane.
+      <ul>
+      <li>margin-top: 8px</li>
+      <li>margin-left: 5px</li>
+      </ul></li>
+   </ol>
+   
+
+
+
+<h2>Nested BorderContainer</h2>
+  <ol>
+  <li>Drag a BorderContainer onto the <b>center pane</b> of Outer BorderContainer</li>
+  <li>In the BorderContainer Dialog select: Headline, Top, Left, Center.</li>
+  <li>Top pane:
+      <ul>
+      <li>Splitter: off</li>
+      <li>Height: 55px</li>
+      <li>Overflow: hidden</li>
+      <li>border-bottom: 1px solid gray</li>
+      <li>background-image url: img/wg_swoosh.jpg</li>
+      <li>repeat: no-repeat</li>
+      <li>background-position: right top</li>
+      </ul></li>
+  <li>Left pane:
+      <ul>
+      <li>Width: 322px</li>
+      <li>border-right: 1px solid gray</li>
+      <li>font-family: Arial</li>
+      </ul></li>
+  <li>Center pane:
+      <ul>
+      <li>font-family: Arial</li>
+      </ul></li>
+  <li>BorderContainer:
+      <ul>
+      <li>Gutters: off</li>
+      </ul></li>
+  </ol>
+
+   
+<h3>Top Pane Content:</h3>
+   <ol>
+   <li>Drag image file: "img/wg_hero_dojo.gif" onto the pane.</li>
+   </ol>
+   
+
+<h3>Left Pane Content:</h3>
+<div style="clear:both;">
+    <img style="float:right; padding-right:20px;" src="img/RIA_tree.png" />
+    <p>Create the left pane as shown to the right:</p>
+    <ol>
+        <li>Create the Search div:
+            <ol>
+                <li>Drag a div onto the pane.</li>
+                <li>Set the following properties on the div:
+                    <ul>
+                        <li>height: 50px</li>
+                        <li>width: 261px</li>
+                        <li>padding-bottom: 1em</li>
+                        <li>padding-left: 1em</li>
+                    </ul>
+                </li>
+                <li>Add the following content to the div:
+                    <ol>
+                        <li>Add a TextBox.</li>
+                        <li>Add a Button with the text "Search".</li>
+                        <li>Set the following property on the Button:
+                            <ul>
+                                <li>margin-left: 2px</li>
+                            </ul>
+                        </li>
+                        <li>Drag a nested div inside the outer div</li>
+                        <li>Double-click on the div to bring up the data entry popup.</li>
+                        <li>Enter "Enter a one-word search term".</li>
+                        <li>Set the following properties on the div:
+                            <ul>
+                                <li>height: 13px</li>
+                                <li>width: 164px</li>
+                                <li>font: Arial</li>
+                                <li>font-size: 0.8em</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </li>
+        <li>Create the Tree widget:
+            <ol>
+                <li>Drag a Tree onto the left pane.</li>
+                <li>Enter the data as shown to the right.</li>
+                <li>Set the following properties on the Tree:
+                    <ul>
+                        <li>height: 369px</li>
+                        <li>width: 262px</li>
+                        <li>padding-top: 2em</li>
+                        <li>padding-left: 1em</li>
+                    </ul>
+                </li>
+            </ol>
+        </li>
+    </ol>
+</div>
+
+     
+<h3>Center Pane Content:</h3>
+    <ol>
+        <li>Drag a div onto the center pane.</li>
+        <li>Set the following property on the div:
+            <ul>
+                <li>margin-bottom: 1em</li>
+            </ul>
+        </li>
+        <li>Add the following content to the div:
+            <ol>
+                <li>Add a Button with the label "Thumbnails".</li>
+                <li>Set the following properties on the Button:
+                    <ul>
+                        <li>float: right</li>
+                        <li>margin-right: 5px</li>
+                        <li>margin-left: 5px</li>
+                    </ul>
+                </li>
+                <li>Add a Button with the label "List".</li>
+                <li>Set the following properties on the Button:
+                    <ul>
+                        <li>float: right</li>
+                    </ul>
+                </li>
+                <li>Add a Button with the label "Add a widget..."</li>
+            </ol>
+        </li>
+        <li>Drag a TabContainer onto the center pane.</li>
+        <li>Set the Tab Titles to: "Charts, Guages, Grids"</li>
+        <li>Set the following properties on the TabContainer:
+            <ul>
+                <li>width: 90%</li>
+                <li>height: 90%</li>
+            </ul>
+        </li>
+        <li>Create the "Charts" tab Content:
+            <ol>
+                <li>Drag an HTML table onto the Charts tab.</li>
+                <li>Drag the bottom right corner of the table to make it larger.</li>
+                <li>Click on one of the table cells to select it.</li>
+                <li>Right-click or Cmd-click on the table cell to bring up the Context menu.</li>
+                <li>Select "Insert row after" to create a new row.</li>
+                <li>Create two more rows so there are 5 rows in all.</li>
+                <li>Select "Insert column after" to create a new column.</li>
+                <li>Use the Outline palette to select the &lt;table&gt; widget.</li>
+                <li>Set the width and height on the table:
+                    <ul>
+                        <li>width: 505px</li>
+                        <li>height: 243px</li>
+                    </ul>
+                </li>
+                <li>Set the properties on the top row as follows:
+                    <ul>
+                        <li>Click on row 1, column 1</li>
+                            <ul>
+                                <li>background-color: #cde7f7</li>
+                                <li>text-align: center</li>
+                                <li>Add an HTML Label with the text "Thumbnail"</li>
+                            </ul>
+                        </li>
+                        <li>Click on row 1, column 2</li>
+                            <ul>
+                                <li>background-color: #cde7f7</li>
+                                <li>text-align: center</li>
+                                <li>Add an HTML Label with the text "Guages".</li>
+                            </ul>
+                        </li>
+                        <li>Click on row 1, column 3</li>
+                            <ul>
+                                <li>background-color: #cde7f7</li>
+                                <li>text-align: center</li>
+                                <li>Add an HTML Label with the text "Grids".</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+        </li>
+    </ol>
+
+
+<p class="prevnext"><a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/BCBasics.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

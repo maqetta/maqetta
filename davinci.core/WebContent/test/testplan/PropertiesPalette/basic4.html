@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Properties palette basic tests (part 4)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Properties palette basic tests (part 4)</h1>
+
+	<h2 class="test_section">CSS cascade features</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Create a virgin user environment navigating away from daVinci, clearing browser cache,
+			killing the server, removing users/ folder, restarting the server, and navigating browser
+			back to daVinci. (For server-hosted, create a new user)</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li><span style="color:red"><b><i>NOTE: For much of this test,
+			you will get prompts warning you that you
+			might be changing a global CSS style sheet. Say OK to these warnings,
+			but note that this will changes your theme CSS files. After running this
+			test, you'll want to make sure you recreate your user so that the
+			theme CSS files are restored to their original state.</i></b></span></li>		
+		<li>Drag a Button onto canvas.</li>
+		<li>Go to Properties palette and go to 'width' property.
+			Click on the right-pointing icon at the right side of the 'width'
+			property to show the CSS cascade.
+			<blockquote>You should see two entries, element.style and an entry that lists
+			various CSS selectors that includes within it ".claro .dijitButton .dijitButtonNode".
+			</blockquote>
+			Up above in the type-in area of the 'width' property, type "200px".
+			Click OK for the CSS global warning. (And similarly for other warnings you
+			see later.)
+			<blockquote>button width should change to 200px.
+			</blockquote></li>
+		<li>Click on the show all rules checkbox.
+			<blockquote>You should see additional entries in the CSS cascade list,
+			including one whose selector is ".dijitButton".
+			</blockquote>
+			Click on the red "x" by the ".claro .dijitButton .dijitButtonNode" to remove
+			the 'width' property declaration from that style rule.
+			<blockquote>The button's width should no longer be 200px.
+			</blockquote>
+			Click on the radio button by the ".dijitButton" rule. 
+			Up above in the type-in area of the 'width' property, type "300px".
+			<blockquote>The button's width should now be 300px, although
+			this doesn't affect the actual button content, only the space it takes
+			up in browser layout.
+			</blockquote>
+			Click on the radio button by the ".claro .dijitButton .dijitButtonNode" rule. 
+			Up above in the type-in area of the 'width' property, type "200px".
+			<blockquote>The overall button width should still be 300px, but the
+			button content area should now be 200px.
+			</blockquote>
+		</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See text above for expected results.</li>
+	</ol>
+
+	<h2 class="test_section">app.css files</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Create a virgin user environment navigating away from daVinci, clearing browser cache,
+			killing the server, removing users/ folder, restarting the server, and navigating browser
+			back to daVinci. (For server-hosted, create a new user)</li>
+		<li>Double-click on the app.css file in the Files palette.</li>
+		<li>Add the following lines to the bottom of the file:
+			<pre>
+.myapp.claro .class1.dijitButton .dijitButtonNode {
+	width:200px;
+}
+#label1 {
+	font-size:30px;
+}
+			</pre>
+		</li>
+		<li>Save and close the file.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Drag two Buttons and two LABELs onto canvas.</li>
+		<li>Select the second Button, go to Properties palette and set class to 'class1'.</li>
+		<li>Select the second LABEL, go to Properties palette and set id to 'label1'.</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Second button should have width of 200px and second LABEL should have font size of 30px.</li>
+	</ol>
+
+</body>
+</html>

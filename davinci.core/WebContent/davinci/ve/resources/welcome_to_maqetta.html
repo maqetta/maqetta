@@ -1,0 +1,144 @@
+<div id="welcome_page_content">
+	<div class="welcome_above_content"></div>
+	<div class="welcome_content_container">
+		<div class="welcome_header">Welcome to Maqetta</div>
+		<div class="welcome_under_header"></div>
+		<div class="welcome_content">
+			<table>
+				<colgroup>
+					<col style="width:50%;"/>
+					<col style="width:50%;"/>
+				</colgroup>
+				<tr>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="window.open('app/docs/index.html#tutorials/tutorials')">
+							<div class="welcome_section_header">
+								Tutorials
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_tutorials"></span>
+								<span class="welcome_section_content">
+									Learn the basics about Maqetta by
+									running the hands-on tutorials.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+					<td class="welcome_section_cell" rowspan="2">
+						<div class="welcome_section">
+							<div class="welcome_section_header">
+								Recent files
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_section_content">
+									(This feature will be available soon.)
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="davinci.model.Resource.fileDialog('newhtml')">
+							<div class="welcome_section_header">
+								New HTML Page
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_newhtml"></span>
+								<span class="welcome_section_content">
+									Author a new HTML page using the visual page editor.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="davinci.Workbench.showModal(davinci.ui.NewThemeDialog(), 'New Theme', 'height:135px;width: 300px')">
+							<div class="welcome_section_header">
+								New CSS Theme
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_newtheme"></span>
+								<span class="welcome_section_content">
+									Create a new CSS theme out of an existing theme.
+									You can then customize the new theme
+									with the theme editor.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+					<td class="welcome_section_cell">
+						<div class="welcome_section">
+							<div class="welcome_section_header">
+								Common Actions and Tasks
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_section_content">
+									<table>
+										<tr>
+											<td class="welcome_action_cell" onclick="davinci.model.Resource.addFiles()">
+												<span class="welcome_action_icon welcome_upload_icon"></span>
+												<span class="welcome_action">Upload a file</span>
+											</td>
+											<td class="welcome_action_cell" onclick="davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:100px;width: 200px')">
+												<span class="welcome_action_icon welcome_themeeditor_icon"></span>
+												<span class="welcome_action">Open theme editor</span>
+											</td>
+										</tr>
+										<tr>
+											<td class="welcome_action_cell" onclick="alert('This feature is scheduled to be available soon.')">
+												<span class="welcome_action_icon welcome_importwidget_icon"></span>
+												<span class="welcome_action">Import a widget</span>
+											</td>
+											<td class="welcome_action_cell">
+											</td>
+										</tr>
+									</table>
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="davinci.review.Runtime.publish()">
+							<div class="welcome_section_header">
+								New Review
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_newreview"></span>
+								<span class="welcome_section_content">
+									Create a new online team review session.
+									Choose files to review and then invite
+									reviewers via email.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+					<td class="welcome_section_cell">
+						<div class="welcome_section">
+							<div class="welcome_section_header">
+								About Maqetta
+							</div>
+							<div class="welcome_section_container">
+								<div class="welcome_section_content">
+									Maqetta is an open source initiative that provides visual drag&amp;drop 
+									creation of HTML5 user interfaces (desktop and mobile). 
+								</div>
+								<div class="welcome_learn_more" onclick="window.open('app/docs/index.html#overview')">Learn more...</div>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+				</tr>	
+			</table>
+		</div>
+	</div>
+</div>

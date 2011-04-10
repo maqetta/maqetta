@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Local install basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Local install basic tests</h1>
+
+	<h2 class="test_section">Pull down the most recent daVinci build</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Open a browser window and go to the following Web page:
+		</li>
+		<li>Find the relevant ZIP file for the current version (e.g., daVinci_04.zip)</li>
+		<li>Download the ZIP file from the browser by using the 
+				Save Link As... (or similar) command on the context menu 
+				(right mouse button on Windows), 
+				placing the ZIP file somewhere on your local disk.</li>
+		<li>After downloading, unzip the contents into a directory somewhere on your system.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The directory should contain the following files:
+			<ul>
+				<li>configuration/</li>
+				<li>.eclipseproduct/</li>
+				<li>davinci.local.mac.command</li>
+				<li>davinci.local.win.bat</li>
+				<li>davinci.server.mac.command</li>
+				<li>davinci.server.win.bat</li>
+				<li>eclipse.exe</li>
+				<li>plugins/</li>
+			</ul>
+		</li>
+	</ol>
+
+	<h2 class="test_section">Launch the daVinci server (need to run tests on both Windows and Mac)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>With the Explorer (Windows) or Finder (Mac), navigate to the directory into which you unzip-d the daVinci files</li>
+		<li>Launch the daVinci server process:
+			<ul>
+				<li>On Windows, double-click on the file davinci.local.win.bat (Depending on your settings, the Windows explorer might not show the ".bat" extension)</li>
+				<li>On Mac, double-click on the file davinci.local.mac.command (Depending on your settings, the Mac finder might not show the ".command" extension)</li>
+			</ul>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You can tell that the server has launched if you see the following message in the shell window:
+<pre>
+!!!!!!!!!!!!!!
+NOTE: CLOSING THIS WINDOW WILL 
+      STOP THE DAVINCI SERVER PROCESS
+!!!!!!!!!!!!!
+
+Using directory: .....
+
+osgi>
+</pre>
+		</li>
+		<li>The daVinci server will continue to run until you close the shell window that comes up after you double-click on the server launch file. 
+				Therefore, if you close the shell window, the daVinci server process will stop running, 
+				at which point you can't run http://localhost:8080/davinci anymore.</li>
+	</ol>
+
+</body>
+</html>

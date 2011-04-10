@@ -1,0 +1,713 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta User Guide: Dijit Widgets</title>
+</head>
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">User Guide</a> &gt; <a href="widgetref/widgetRef.html">Widget Reference</a>    
+	</td>
+    <td class="prevnext">
+	<a href="widgetref/ma_dojowidgets.html">Previous</a> / <a href="widgetref/ma_dojox.html">Next</a>
+    </td></tr>
+</table>
+
+
+<a name="overview"><h1>Dijit Widgets</h1></a>
+
+<h2>Dijit / Layout </h2>
+
+<a name="accordiancontainer"><h3>AccordianContainer</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.layout.AccordianContainer</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Duration</td><td></td><td>Yes</td></tr>
+<tr><td>Persist</td><td></td><td>No</td></tr>
+</table>
+<br />
+
+<a name="bordercontainer"><h3>BorderContainer</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.layout.BorderContainer</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Design</td><td>Headline or Sidebar</td><td>Yes</td></tr>
+<tr><td>Live Splitters</td><td></td><td>Yes</td></tr>
+<tr><td>Persist</td><td>Save splitter positions in a cookie</td><td>Yes</td></tr>
+<tr><td>Gutters</td><td></td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="cp"><h3>ContentPane</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.layout.BorderContainer</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Title</td><td></td><td>No</td></tr>
+<tr><td>content</td><td>The innerHTML of the ContentPane</td><td>Yes</td></tr>
+<tr><td>URL</td><td>href</td><td>Yes</td></tr>
+<tr><td>Extract Content</td><td>Extract content from inside &lt;body&gt; tag</td><td>Yes</td></tr>
+<tr><td>Parse On Load</td><td>default to Yes</td><td>No</td></tr>
+<tr><td>Prevent Cache</td><td>default to No</td><td>No</td></tr>
+<tr><td>Preload</td><td>default to Yes</td><td>No</td></tr>
+<tr><td>Refresh On Show</td><td>default to No</td><td>No</td></tr>
+<tr><td>Loading Message</td><td>Message to show while loading content</td><td>Yes</td></tr>
+<tr><td>Error Message</td><td>Message to show if an error occurs</td><td>Yes</td></tr>
+<tr><td>ioArgs</td><td></td><td>No</td></tr>
+</table>
+<br />
+
+<a name="stackcontainer"><h3>StackContainer</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.layout.StackContainer</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Persist</td><td>Remembers the selected child across sessions</td><td>Yes</td></tr>
+</table>
+<p>Notes: This container is good for wizards, slide shows, and long lists or text blocks. Default is 2 pages - how do you add more pages?
+StackContainer uses ContentPane for each page. Works in tandem with StackController (the contorl buttons).</p>
+
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.layout.StackController</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Container ID</td><td></td><td>No</td></tr>
+<tr><td>buttonWidget</td><td>Name of the button widget to create to correspond to each page</td><td>Yes</td></tr>
+</table>
+<p>Notes: StackController has more properties that are not in Maqetta: containerId, pane2button, pane2handles - not sure what these are but might want to include them. The dojo example shows multiple buttons (forward/back + page buttons) - how do you configure this?</p>
+
+
+<a name="tabcontainer"><h3>TabContainer</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.layout.StackContainer</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Tab Position</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Nested</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>tabStrip</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>persist</td><td>Inherited. Remembers the selected child across sessions</td><td>Yes</td></tr>
+<tr><td>controllerWidget</td><td></td><td>Yes</td></tr>
+</table>
+<p>Notes: TabContainer has more properties that are not in Maqetta: useMenu and useSlider. I think these should be added.</p>
+
+
+<h2>Dijit / Form Handling</h2>
+
+<a name="button"><h3>Button</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.Button</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label</td><td></td><td>Yes</td></tr>
+<tr><td>Show Label</td><td></td><td>Yes</td></tr>
+<tr><td>Icon Class</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="combobutton"><h3>ComboButton</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.ComboButton</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show Label</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Icon Class</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>baseClass</td><td>Root CSS class of the widget</td><td>Yes</td></tr>
+<tr><td>optionsTitle</td><td>Text that describes the options menu (accessability)</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="dropdownbutton"><h3>DropDownButton</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.DropDownButton</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>Inherited</td><td>see inherited properties</td><td>Yes</td></tr>
+<tr><td>baseClass</td><td></td><td>Yes</td></tr>
+<tr><td>dropDown</td><td></td><td>Yes</td></tr>
+<tr><td>dropDownContainer</td><td></td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="togglebutton"><h3>ToggleButton</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.ToggleButton</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>Inherited</td><td>see inherited properties</td><td>Yes</td></tr>
+<tr><td>baseClass</td><td></td><td>Yes</td></tr>
+<tr><td>checked</td><td></td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="currencytextbox"><h3>CurrencyTextBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.CurrencyTextBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Currency</td><td></td><td>Yes</td></tr>
+<tr><td>regExp</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Notes: Missing property: constraints - specifies both contstraints on the input (including minimum/maximum allowed values) as well
+as formatting options. See dijit.form.CurrencyTextBox._Contraints for details.</p>
+
+
+<a name="datetextbox"><h3>DateTextBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.DateTextBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>datePackage</td><td>Defaults to Gregorian calendar routines at dojo.date.</td><td>No</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="numbertextbox"><h3>NumberTextBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.NumberTextBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>state</td><td></td><td>No</td></tr>
+</table>
+<br />
+
+<a name="simpletextarea"><h3>SimpleTextarea</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.SimpleTextarea</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Text</td><td>(value)</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Rows</td><td></td><td>Yes</td></tr>
+<tr><td>Columns</td><td></td><td>Yes</td></tr>
+<tr><td>trim</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>uppercase</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>lowercase</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>propercase</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>maxLength</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="textarea"><h3>TextArea</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.TextArea</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>maxLength</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Text</td><td>(value)</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>cols</td><td></td><td>Yes</td></tr>
+<tr><td>rows</td><td></td><td>Yes</td></tr>
+<tr><td>trim</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>uppercase</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>lowercase</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>propercase</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="textbox"><h3>TextBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.TextBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Trim</td><td></td><td>Yes</td></tr>
+<tr><td>Upper Case</td><td></td><td>Yes</td></tr>
+<tr><td>Lower Case</td><td></td><td>Yes</td></tr>
+<tr><td>Proper Case</td><td></td><td>Yes</td></tr>
+<tr><td>Max Length</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Note: Consider adding "selectOnClick".</p>
+
+<a name="timetextbox"><h3>TimeTextBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.TimeTextBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>popupClass</td><td></td><td>Yes</td></tr>
+<tr><td>datePackage</td><td>Defaults to Gregorian calendar routines at dojo.date.</td><td>No</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="validationtextbox"><h3>ValidationTextBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.ValidationTextBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Trim</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Upper Case</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Lower Case</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Proper Case</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Consider adding: "invalidMessage", "promptMessage", "required", "state", "tooltipPosition". Not sure about "messages" - no documentation on it.</p>
+
+<a name="combobox"><h3>ComboBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.ComboBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Auto Complete</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Search Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Search Attribute</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Query Expression</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Ignore Case</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show Down Arrow</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>highlightMatch</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>labelAttr</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label Type</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="filteringselect"><h3>FilteringSelect</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.FilteringSelect</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Page Size</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Auto Complete</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Search Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Search Attribute</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Query Expression</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Ignore Case</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show Down Arrow</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label Attribute</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label Type</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>fetchProperties</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>highlightMatch</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Consider adding "required".</p>
+
+<a name="multiselect"><h3>MultiSelect</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.MultiSelect</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Size</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="select"><h3>Select</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.Select</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Type</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Height</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Auto Width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Force Width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>ToolTip Position</td><td></td><td>Yes</td></tr>
+<tr><td>Required</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Note: This widget is not in Maqetta so this is best guess on which properties to display.</p>
+
+<a name="checkbox"><h3>CheckBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.CheckBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td></td><td>Yes</td></tr>
+<tr><td>Checked</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="horizontalslider"><h3>HorizontalSlider</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.HorizontalSlider</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>?</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Show Buttons</td><td></td><td>Yes</td></tr>
+<tr><td>Minimum Value</td><td></td><td>Yes</td></tr>
+<tr><td>Maximum Value</td><td></td><td>Yes</td></tr>
+<tr><td>Discreet Values</td><td></td><td>Yes</td></tr>
+<tr><td>Page Increment</td><td></td><td>Yes</td></tr>
+<tr><td>Click Select</td><td></td><td>Yes</td></tr>
+<tr><td>Slide Diration</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="numberspinner"><h3>NumberSpinner</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.NumberSpinner</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Default Timeout</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Timeout Change Rate</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Small Delta</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Lare Delta</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>state</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="radiobutton"><h3>RadioButton</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.RadioButton</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Checked</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="verticalslider"><h3>VerticalSlider</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.form.VerticalSlider</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>?</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Show Buttons</td><td></td><td>Yes</td></tr>
+<tr><td>Minimum Value</td><td></td><td>Yes</td></tr>
+<tr><td>Maximum Value</td><td></td><td>Yes</td></tr>
+<tr><td>Discreet Values</td><td></td><td>Yes</td></tr>
+<tr><td>Page Increment</td><td></td><td>Yes</td></tr>
+<tr><td>Click Select</td><td></td><td>Yes</td></tr>
+<tr><td>Slide Diration</td><td></td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>widgetsInTemplate</td><td>Inherited</td><td>No</td></tr>
+<tr><td>isContainer</td><td>Inherited</td><td>No</td></tr>
+</table>
+<br />
+
+<h2>Dijit / Widget </h2>
+
+<a name="calendar"><h3>Calendar</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Calendar</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Day Width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>datePackage</td><td>Use dojo.date default?  Inherited</td><td>No</td></tr>
+</table>
+<br />
+
+<a name="colorpalette"><h3>ColorPalette</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.ColorPalette</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Default Timeout</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Timeout Change Rate</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Palette Size</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<!--------------------------------------------------------->
+
+<a name="dialog"><h3>Dialog</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Dialog</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Title</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>URL</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Extract Content</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Parse On Load</td><td>default to Yes</td><td>No</td></tr>
+<tr><td>Prevent Cache</td><td>default to No</td><td>No</td></tr>
+<tr><td>Preload</td><td>default to Yes</td><td>No</td></tr>
+<tr><td>Refresh On Show</td><td>default to No</td><td>No</td></tr>
+<tr><td>Loading Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Error Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Duration</td><td>not a valid property</td><td>No</td></tr>
+<tr><td>Refocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>open</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>autofocus</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>draggable</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>content</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="editor"><h3>Editor</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Editor</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Inherit Width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Focus On Load</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Style Sheets</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Height</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Minimum Height</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Plug-ins</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Extra Plug-ins</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>customUndo</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>IsTabIndent</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>disableSpellCheck</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>updateInterval</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="inlineeditbox"><h3>InlineEditBox</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.InlineEditBox</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Auto Save</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Save Button Label</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Cancel Button Label</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Render As HTML</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Editor Class</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Editor Parameters</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Editor Width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td>Same as Text? Inherited</td><td>Yes</td></tr>
+<tr><td>Text</td><td>(title? - no Text property) Inherited</td><td>Yes</td></tr>
+<tr><td>Yes Value Indicator</td><td>Should this be No Value indicator? (property=noValueIndicator) Inherited</td><td>Yes</td></tr>
+<tr><td>editing</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="menu"><h3>Menu</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Menu</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Target Node IDs</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Context Menu For Window</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Left Click To Open</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Popup Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="menubar"><h3>MenuBar</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.MenuBar</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Popup Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="progressbar"><h3>ProgressBar</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.ProgressBar</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Progress Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Maximum Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Places</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Indeterminate</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="titlepane"><h3>TitlePane</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.TitlePane</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Title</td><td></td><td>Yes</td></tr>
+<tr><td>URL</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Extract Content</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Parse On Load</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Prevent Cache</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Preload</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Refresh on Show</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Loading Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Error Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Duration</td><td>Not a valid property</td><td>Yes</td></tr>
+<tr><td>open</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>content</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>ioArgs</td><td>Inherited</td><td>No</td></tr>
+</table>
+<br />
+
+<a name="toolbar"><h3>Toolbar</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Toolbar</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>isContainer</td><td>Not a valid property?</td><td>No</td></tr>
+</table>
+<p>Consider "layoutAlign"</p>
+<br />
+
+<a name="tooltip"><h3>Tooltip</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Tooltip</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Label</td><td></td><td>Yes</td></tr>
+<tr><td>Text</td><td>Not a valid property. There's "title" but it's interchangeable with "label"</td><td>?</td></tr>
+<tr><td>Connect IDs</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Positions</td><td>(plural?) Inherited</td><td>Yes</td></tr>
+<tr><td>defaultPosition</td><td>Not a valid property</td><td>No</td></tr>
+</table>
+<br />
+
+<a name="tree"><h3>Tree</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dijit.Tree</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Show Root</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Open On Click</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>openOnDblClick</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>persist</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>dndController</td><td>Inherited</td><td>No</td></tr>
+<tr><td>dndParams</td><td>Inherited</td><td>No</td></tr>
+</table>
+<p>Consider: "persist", "selected", "selectedItem"</p>
+<br />
+
+
+
+
+<p class="prevnext"><a href="widgetref/ma_dojowidgets.html">Previous</a> / <a href="widgetref/ma_dojox.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

@@ -1,0 +1,204 @@
+<html>
+<head>
+<title>Theme editor basic tests</title>
+<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+<link href="../../css/testplan.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="scayt-enabled">
+<div class="navbar"><a href="./" title="show directory contents"><code>./</code>
+(show contents of this directory)</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="../"
+	title="show directory contents"><code>../</code> (show contents of
+parent directory)</a></div>
+<hr />
+<h1 class="test_title">Theme editor basic tests</h1>
+<h2 class="test_section">Primitive widget theming</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>You'll want to setup a virgin user environment by creating a whole new user
+	login or resetting the existing user login (e.g., delete users/ folder, restart server).
+	Clear the browser cache. Launch the daVinci server. Login if
+	necessary.</li>
+	<li>Open the Dojo/Claro theme editor from the daVinci menu bar using "Open > Open Claro Theme Editor".</li>
+	<li>From the states tab select the Normal state. <span
+		style="color: #006400;">All widgets should be enabled</span></li>
+	<li>Click to select the TextBox widget. In the Styling palette,
+	change some properties to restyle TextBox widgets. For example, change
+	some combination of font-family, font-size, font-color, boldness,
+	padding, border color/thickness and backgrounds. You should see the
+	effect on the canvas as you change properties.</li>
+	<li>Click to select the Button widget. In the Styling palette,
+	change some properties to restyle button widgets. For example, change
+	some combination of font-family, font-size, font-color, boldness,
+	padding, border color/thickness and backgrounds. You should see the
+	effect on the canvas as you change properties.</li>
+	<li>Change the state of the widget, for example from the
+	States tab select the Hover state. If a state
+	is selected that is not supported by the widget the widget will be
+	disabled, visually grayed out.</li>
+	<li>Repeat steps 4 and 5 for every state that that the widget
+	supports (is not disabled).</li>
+	<li>Click on the Save icon on the main toolbar to save
+	the new file. <span style="color: red">The asterisks that
+	indicates that the file is dirty should go away.</span></li>
+	<li>Click on the X close button for the editor tab for
+	this file</li>
+	<li>Re-open the theme editor.</li>
+	<li>Press the Add file icon on the main toolbar to
+	create a new HTML file.</li>
+	<li>Add a Button and TextBox widget to the canvas.</li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>As you change states widgets should be disabled that do not
+	support that state.</li>
+	<li>As you change properties in the theme editor, the canvas
+	should update so that the widgets reflect the styling changes you made.</li>
+	<li>After save and reopen, the saved theme should open and its
+	contents should be the same as how it was when you clicked on the Save
+	button.</li>
+	<li>After you have created your new HTML file with the widgets,
+	you should see that the widgets have the styling changes you made in
+	the theme editor.</li>
+</ol>
+<h2 class="test_section">Global theming</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>You'll want to setup a virgin user environment by creating a whole new user
+	login or resetting the existing user login (e.g., delete users/ folder, restart server).
+	Clear the browser cache. Launch the daVinci server. Login if
+	necessary.</li>
+	<li>Open the Dojo/Claro theme editor from the Open menu.</li>
+	<li>From the states tab select the Normal state. <span
+		style="color: #006400;">All widgets should be enabled</span></li>
+	<li>Click to select the generic text widget. In the
+	Styling palette, change some properties. For example, change some
+	combination of font-family, font-size, font-color, boldness, padding,
+	border color/thickness and backgrounds. <blockquote>You should see the effect on
+	the canvas as you change properties. Some of the property changes such
+	as font-family and font-size should affect multiple widgets.</blockquote></li>
+	<li>Select the Global Backgrounds and Borders. widget. This is the tab container in the
+	global styling area. The Normal state must be selected. 
+	Change background-color to light green.
+	<blockquote>You should see
+	the effect on multiple widgets.</blockquote></li>
+	<li>Over time, we will be adding other widgets to the Global
+	styling area. Click to select some of these other global widgets.In the
+	Styling palette, change some properties. You should see the effect on
+	the canvas as you change properties. Some of the property changes
+	should affect multiple widgets.</li>
+	<li>Click on the Save icon on the main toolbar to save
+	the new file. <span style="color: red">The asterisks that
+	indicates that the file is dirty should go away.</span></li>
+	<li>Click on the X close button for the editor tab for
+	this file</li>
+	<li>Re-open the theme editor.</li>
+	<li>Issue a Create HTML File command.</li>
+	<li>Add some HTML widgets to the canvas along with TextBox to the
+	canvas.</li>
+	<li><span style="color: red;">Note that in 0.6, there is a browser caching problem.
+	Theme editor changes might not be visible on the page editor or preview-in-browser
+	because the browser might be using an earlier cached version of some of the CSS files.
+	Refreshing the browser usually causes the latest theme CSS files to be used.</span></li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>As you change properties in the theme editor, the canvas
+	should update so that the widgets reflect the styling changes you made.</li>
+	<li>After save and reopen, the saved theme should open and its
+	contents should be the same as how it was when you clicked on the Save
+	button.</li>
+	<li>After you have created your new HTML file with the widgets,
+	you should see that the widgets have the styling changes you made in
+	the theme editor.</li>
+</ol>
+<h2 class="test_section">Subwidget theming</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>You'll want to setup a virgin user environment by creating a whole new user
+	login or resetting the existing user login (e.g., delete users/ folder, restart server).
+	Clear the browser cache. Launch the daVinci server. Login if
+	necessary.</li>
+	<li>Open the Dojo/Claro theme editor from the Open menu.</li>
+	<li>Click to select the Calendar widget.</li>
+	<li>In the Outline palette, select one of the subwidget children
+	of Calendar, such as SelectedDate. Change Styling properties such as
+	font size and font color. Only the styling of the selected date in the
+	Calendar widget should show the styling changes.</li>
+	<li>Repeat the process for one or more other subwidgets of
+	Calendar.</li>
+	<li>Repeat the process for one or more other subwidgets of other
+	container widgets (e.g., TabContainer or TitlePane).</li>
+	<li>Click on the Save icon on the main toolbar to save
+	the new file. <span style="color: red">The asterisks that
+	indicates that the file is dirty should go away.</span></li>
+	<li>Click on the X close button for the editor tab for
+	this file</li>
+	<li>Re-open the theme editor.</li>
+	<li>Press the Add file icon on the main toolbar to
+	create a new HTML file.</li>
+	<li>Add a Calendar and other widgets you modified in the theme
+	editor to the canvas.</li>
+	<li><span style="color: red;">Note that in 0.6, there is a browser caching problem.
+	Theme editor changes might not be visible on the page editor or preview-in-browser
+	because the browser might be using an earlier cached version of some of the CSS files.
+	Refreshing the browser usually causes the latest theme CSS files to be used.</span></li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>As you change properties in the theme editor, the canvas
+	should update so that the widgets reflect the styling changes you made.</li>
+	<li>After save and reopen, the saved theme should open and its
+	contents should be the same as how it was when you clicked on the Save
+	button.</li>
+	<li>After you have created your new HTML file with the widgets,
+	you should see that the widgets have the styling changes you made in
+	the theme editor.</li>
+</ol>
+<h2 class="test_section">States theming</h2>
+<h3 class="steps_subsection">Steps</h3>
+<ol class="steps">
+	<li>You'll want to setup a virgin user environment by creating a whole new user
+	login or resetting the existing user login (e.g., delete users/ folder, restart server).
+	Clear the browser cache. Launch the daVinci server. Login if
+	necessary.</li>
+	<li>Open the Dojo/Claro theme editor from the Open menu.</li>
+	<li>Click to select the TextBox widget.</li>
+	<li>Change to the Hover state. (Right now, this is done in the
+	Outline palette.)</li>
+	<li>In the Styling palette, change some properties to restyle the
+	hover state of the widget. For example, change some combination of
+	font-size, font-color, and background color. You should see the effect
+	on the canvas as you change properties.</li>
+	<li>Click to select the Button widget.</li>
+	<li>Change to the Hover state. (Right now, this is done in the
+	Outline palette.)</li>
+	<li>In the Styling palette, change some properties to restyle the
+	hover state of the widget. For example, change some combination of
+	font-size, font-color, and background color. You should see the effect
+	on the canvas as you change properties.</li>
+	<li>Click on the Save icon on the main toolbar to save
+	the new file. <span style="color: red">The asterisks that
+	indicates that the file is dirty should go away.</span></li>
+	<li>Click on the X close button for the editor tab for
+	this file</li>
+	<li>In Explorer window, re-open the theme editor.</li>
+	<li>Press the Add file icon on the main toolbar to
+	create a new HTML file.</li>
+	<li>Add a Button and TextBox widget to the canvas.</li>
+	<li>Click on the Preview in Browser button on the main toolbar.
+	Move the mouse to hover over the Button and then hover over the
+	TextBox.</li>
+</ol>
+<h3 class="expectedResults_subsection">Expected results</h3>
+<ol class="expectedResults">
+	<li>As you change properties in the theme editor, the canvas
+	should update so that the widgets reflect the styling changes you made.</li>
+	<li>After save and reopen, the saved theme should open and its
+	contents should be the same as how it was when you clicked on the Save
+	button.</li>
+	<li>After you have created your new HTML file with the widgets,
+	and then launched the Preview in Browser, you should see that the
+	widgets have the styling changes you made in the theme editor.</li>
+</ol>
+</body>
+</html>

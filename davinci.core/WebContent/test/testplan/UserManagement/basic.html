@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>User management basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">User management basic tests</h1>
+
+	<h2 class="test_section">Login page</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Clear your browser cache.</li>
+		<li>Launch the daVinci server such that the server requires a user login (i.e., do not run server with localInstall=true option).</li>
+		<li>Browse to the daVinci root URL <em>without the user name</em> 
+				(e.g., <a href="http://localhost:8080/davinci">http://localhost:8080/davinci</a>, not http://localhost:8080/davinci/JohnSmith).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should see the login page, with two parts:
+			<ul>
+				<li>"Please sign in", followed by Login and Password entry boxes</li>
+				<li>New users - please sign up</li>
+			</ul>
+		</li>
+	</ol>
+
+	<h2 class="test_section">New user sign up</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Clear your browser cache.</li>
+		<li>With the login page showing (see previous section), click on the please sign up hyperlink</li>
+		<li>You should now see four fields for new user signup: Login name, email, password and confirm password. Enter valid values for these fields and click the button to create a new user.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The daVinci application should appear with its various palettes at left, right and bottom and a toolbar across the top.</li>
+		<li>The right side of the toolbar should have your login name followed by a logout hyperlink.</li>
+	</ol>
+
+	<h2 class="test_section">Log out (continuation of previous testing steps)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Click the logout link</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The login screen should reappear.</li>
+	</ol>
+
+	<h2 class="test_section">Existing user sign in</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Clear your browser cache.</li>
+		<li>If you are current logged into the daVinci server as a user, click the logout hyperlink at the top right of the toolbar. 
+				Else, launch the daVinci server with user management activated (i.e., do not run server with localInstall=true option)
+				and browse to the daVinci root URL <em>without the user name</em> 
+				(e.g., <a href="http://localhost:8080/davinci">http://localhost:8080/davinci</a>, not http://localhost:8080/davinci/JohnSmith).</li>
+		<li>Type in the user name and password for a user account that created previously and click on the Login button.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The daVinci application should appear with its various palettes at left, right and bottom and a toolbar across the top.</li>
+		<li>The right side of the toolbar should have your login name and, further to the right, by a logout hyperlink.</li>
+	</ol>
+
+	<h2 class="test_section">Local install, single-version of daVinci (localInstall=true)</h2>
+	<p>This section verifies that there are no user login if the server is running on localhost with the "-Ddavinci.localInstall=true" option.
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Clear your browser cache.</li>
+		<li>Launch the daVinci server on localhost with option "-Ddavinci.localInstall=true".</li>
+		<li>Browse to the daVinci root URL <em>without the user name</em> 
+				(e.g., <a href="http://localhost:8080/davinci">http://localhost:8080/davinci</a>, not http://localhost:8080/davinci/JohnSmith).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>No login screen. Instead, you should immediately jump to to daVinci application,
+				 with its various palettes at left, right and bottom and a toolbar across the top.</li>
+		<li>The right side of the toolbar should say "localhost user".</li>
+	</ol>
+
+</body>
+</html>

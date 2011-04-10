@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Other Palettes</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="workspace.html">The Maqetta Workspace</a>
+    </td>
+    <td class="prevnext">
+    <a href="wsPageEditorCanvas.html">Previous</a> / <a href="workspace.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>The Palettes</h1>
+
+
+<h3>Widgets Palette</h3>
+
+<div style="clear:both;">
+<img style="float:left; margin:0 20px 5px 0;" alt="image" src="img/Maqetta_UI_Widget_Palette.png" />
+
+<p>The Widgets palette shows the set of widgets that can be dragged and dropped onto the page canvas. 
+The widgets are grouped into the following categories: <b>Dojo Containers</b>, <b>Dojo Controls</b>, <b>HTML</b>, <b>Untested Dojo&amp;HTML</b> and <b>Other Toolkits</b></p>
+
+<p>The <b>OpenAjax</b> group of widgets are under <b>Other Toolkits</b>. 
+OpenAjax widget support is partially implemented at this point and will be more fully implemented in future releases. 
+The OpenAjax Widget format provides a declarative markup mechanism for wrapping widgets from
+other toolkits (i.e., other than Dojo) and will be the means by which Maqetta
+supports widgets from jQuery, YUI and other toolkits.</p>
+</div>
+<div style="clear:both; padding:1em;"></div>
+
+
+<h3>Files Palette</h3>
+
+<div style="clear:both;">
+<img style="float:left; margin:0 20px 5px 0;" alt="image" src="img/Maqetta_UI_Files.png" />
+
+<p>The Files palette displays the files in your <a href="install.html">user workspace folder</a>, where all of your Maqetta files are stored. 
+If you are accessing Maqetta from the server then this is a folder associated with your username on the Maqetta server.
+If you are running Maqetta locally then this is the local Maqetta workspace folder specified in the Maqetta startup file.
+See <a href="install.html">Accessing / Installing Maqetta</a> for more information.</p>
+<p>The Files palette has toolbar with three icons:</p>
+
+<div style="margin-left:200px;">
+<ul>
+ <li><b>Download workspace</b> - Download the entire workspace into a ZIP. A dialog appears with download options.</li>
+ <li><b>Download selected files</b> - Download only selected files.</li>
+ <li><b>Manage libraries</b> - Manage the JavaScript libraries that are available to your workspace.</li>
+ </ul></div>
+ 
+<p>The Files palette has a context menu with 6 commands:</p>
+
+<div style="margin-left:200px;">
+<ul>
+ <li><b>New file...</b> - creates a new file for editing</li>
+ <li><b>New folder...</b> - creates a new folder in your Maqetta workspace</li>
+ <li><b>Upload file</b> - uploads files from your local file system to your Maqetta workspace</li>
+ <li><b>Delete resource</b> -  deletes the currently selected file from your Maqetta workspace</li>
+ <li><b>Download</b> - zips and downloads the currently selected file(s) to your local system.</li>
+</ul></div>
+<p>You can also access your Maqetta files from the <a href="wsMenubar.html">Maqetta Menu Bar</a>.
+<br />See <a href="peManageFiles.html">Managing your files</a> for more information about using the Files palette.</p>
+
+</div>
+<div style="clear:both; padding:1em;"></div>
+
+<h3>Properties Palette</h3>
+
+<div style="clear:both;">
+<img style="float:left; margin:0 20px 5px 0;" alt="image" src="img/prop_palette_root.png" />
+
+<p>The Properties palette is grouped into the following sections:</p>
+
+<div style="margin-left:251px;">
+<ul> 
+<li><b>Widget label</b> - displays the currently selected widget's type (e.g. Button) and label (e.g. "Login")</li>
+<li><b>Class attribute</b> - The 'class' attribute is always visible at the top of the palette.</li>
+<li><b>Common</b> - contains core HTML attributes that are common to all widgets and HTML elements.</li>
+<li><b>Widget Specific</b> - contains properties that are specific to the type of widget that is selected.</li>
+<li><b>Events</b> - contains properties that control user events.</li>
+<li><b>Layout</b> - contains CSS properties that control the <a href="http://www.w3schools.com/CSS/css_dimension.asp" rel="external">dimension</a> 
+and <a href="http://www.w3schools.com/css/css_positioning.asp" rel="external">positioning</a> of widgets and HTML elements.</li>
+<li><b>Padding/Margins</b> - contains CSS properties for setting the widget's the padding and margins.</li>
+<li><b>Background</b> - contains CSS properties for setting the widget's background color and background image.</li>
+<li><b>Border</b> - contains CSS properties for setting the widget's border styles.</li>
+<li><b>Fonts and Text</b> - contains CSS properties for styling and aligning the widget's text.</li>
+</ul></div>
+
+<p>See <a href="pePropertiesPalette.html">Properties Palette</a> for more information.</p>
+</div>
+<div style="clear:both; padding:1em;"></div>
+
+<h3>Outline Palette</h3>
+
+<div style="clear:both;">
+<img style="float:left; margin:0 20px 5px 0;" alt="image" src="img/Maqetta_UI_Outline_Palette.png" width="220" />
+
+<p>The Outline palette shows the object/widget hierarchy for the current page. 
+You can select a widget or subwidget from the Outline palette and the corresponding widget will become selected on the <a href="wsPageEditorCanvas.html">page editor canvas.</a></p>
+
+<p>The Outline palette also provides a way to show/hide widgets in various states (e.g. show a dialog box when a button is clicked). Click on the <b>eye icon</b> to toggle the visibility of the widget on the <a href="wsPageEditorCanvas.html">page editor canvas</a>. See the tutorial <a href="tutorials/tutorial3.html">Task Manager (Application States)</a> for an example.</p>
+
+<p>See the <a href="peStatesPalette.html">States Palette</a> for more information on widget states.</p>
+</div>
+<div style="clear:both; padding:1em;"></div>
+
+
+<h3>States Palette</h3>
+
+<div style="clear:both;">
+<img style="float:left; margin:0 20px 5px 0;" alt="image" src="img/StatesPalette.png" width="220" />
+
+<p>The States palette is for creating interactive states for your page. 
+Every page has an initial state, which is represented in the States palette by the entry called <b>Normal</b> state.
+You can add additional states that define what the page should look like after a given user action.
+For example, if a dialog box should appear when a user clicks on a button, a new state can be created that displays the dialog box.</p>
+
+<p>To learn more about how to create an interactive page using Maqetta, go through the tutorials <a href="tutorials/tutorial2.html">Build a Task Manager (Scene Graph)</a>
+and <a href="tutorials/tutorial3.html">Build a Task Manager (Application States)</a>.</p>
+</div>
+<div style="clear:both; padding:1em;"></div>
+
+<br />
+
+<p class="prevnext"><a href="wsPageEditorCanvas.html">Previous</a> / <a href="workspace.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

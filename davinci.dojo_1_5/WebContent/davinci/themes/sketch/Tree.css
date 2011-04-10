@@ -1,0 +1,99 @@
+/* Tree */
+
+.sketch .dijitTreeNode {
+    zoom: 1;	/* force layout on IE (TODO: may not be needed anymore) */
+}
+.sketch .dijitTreeIsRoot {
+    background-image: none;
+}
+.sketch .dijitTreeRow {
+	/* so insert line shows up on IE when dropping after a target element */
+	padding: 4px 1px 2px 0px;
+	margin-left: 1px;
+	background-image: url("images/commonHighlight.png");
+	background-position:0px 0px;
+	background-repeat:repeat-x;
+	border-color: rgba(118,157,192,0);
+	background-color: rgba(171,214,255,0);
+	-webkit-transition-property:background-color, border-color;
+	-webkit-transition-duration:.25s ;
+	-webkit-transition-timing-function: ease-out;
+}
+.dj_ie6 .sketch .dijitTreeRow {
+	background-image: none;
+}
+
+.sketch .dijitTreeRowSelected {
+	background-repeat:repeat-x;
+	background-color:#d8edff;
+	padding: 3px 0px 1px;
+	margin-left: 0px;
+	border:solid 1px #c3e2fd;
+	color:#000;
+}
+.sketch .dijitTreeRowHover {
+	background-color:#abd6ff;
+	padding: 3px 0px 1px;
+	margin-left: 0px;
+	border:solid 1px #769dc0;
+	color:#000;
+	-webkit-transition-duration:.25s ; 
+}
+.sketch .dijitTreeRowActive {
+	background-color:#7dbefa;
+	background-position:0px -177px;
+	padding: 3px 0px 1px;
+	margin-left: 0px;
+	border:solid 1px #769dc0;
+	color:#000;
+}
+.dj_ie6 .sketch .dijitTreeRowActive {
+	background-image: none;
+}
+.sketch .dijitTreeRowFocused {
+	background-repeat: repeat;
+}
+
+/* expando (open/closed) icon */
+
+.sketch .dijitTreeExpando {
+	background-image: url('images/treeExpandImages.png');
+    width: 16px;
+    height: 16px;
+	background-position: -35px 0px		/* for dijitTreeExpandoOpened */
+}
+.dj_ie6 .sketch .dijitTreeExpando {
+	background-image: url('images/treeExpandImages8bit.png');
+}
+.sketch .dijitTreeRowHover .dijitTreeExpandoOpened {
+	background-position: -53px 0px;
+}
+.sketch .dijitTreeExpandoClosed {
+	background-position: 1px 0px;
+}
+.sketch .dijitTreeRowHover .dijitTreeExpandoClosed {
+	background-position: -17px 0px;
+}
+.sketch .dijitTreeExpandoLeaf{
+	background-image:none;
+}
+.sketch .dijitTreeExpandoLoading {
+	background-image: url('images/loadingAnimation.gif');
+}
+
+/* Drag and Drop on TreeNodes
+ * Put insert line on dijitTreeContent node so it's aligned w/
+ * (ie, indented equally with) target element, even
+ * though dijitTreeRowNode is the actual "drag object"
+ */
+.sketch .dijitTreeNode .dojoDndItemBefore,
+.sketch .dijitTreeNode .dojoDndItemAfter {
+	border-bottom: none;
+	border-top: none;
+}
+.sketch .dijitTreeNode .dojoDndItemBefore .dijitTreeContent {
+	border-top: 2px solid #369;
+}
+.sketch .dijitTreeNode .dojoDndItemAfter .dijitTreeContent {
+	border-bottom: 2px solid #369;
+}

@@ -1,0 +1,45 @@
+{
+    "id": "http://developer.yahoo.com/yui/colorpicker",
+    "name": "ColorPicker",
+    "spec": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "utilities/utilities.js",
+            "$library": "yui"
+        },
+        {
+            "type": "javascript",
+            "src": "slider/slider-min.js",
+            "$library": "yui"
+        },
+        {
+            "type": "javascript",
+            "src": "colorpicker/colorpicker-min.js",
+            "$library": "yui"
+        },
+        {
+            "type": "css",
+            "src": "colorpicker/assets/skins/sam/colorpicker.css",
+            "$library": "yui"
+        },
+        {
+            "type": "image",
+            "src": "colorpicker/assets/picker_thumb.png",
+            "$library": "yui"
+        },
+        {
+            "type": "image",
+            "src": "colorpicker/assets/hue_thumb.png",
+            "$library": "yui"
+        }
+    ],
+    "library": {
+        "yui": {
+            "version": "2.8.2r1",
+            "src": "../../../yui/"
+        }
+    },
+    "content": "<div class='yui-skin-sam' id='__WID__container'></div>",
+    "javascript": "new YAHOO.widget.ColorPicker('__WID__container', { showhsvcontrols: true, showhexcontrols: true, images: { PICKER_THUMB: 'colorpicker/assets/picker_thumb.png', HUE_THUMB: 'colorpicker/assets/hue_thumb.png' }});"
+}

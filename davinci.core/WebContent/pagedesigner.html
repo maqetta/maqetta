@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html manifest="app/davinci/davinci.manifest">
+  <head>
+    <title>Maqetta Designer</title>
+	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
+	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
+	<meta http-equiv="Pragma" CONTENT="no-cache">
+     <style type="text/css">
+		@import url("app/davinci/workbench.css");
+		html, body {
+			width: 100%;
+			height: 100%;
+		}
+    </style>
+    <!-- propvieweffects.css needs to be separate and not built -->
+    <!-- FIXME: This LINK element should be added by the properties palette plugin -->
+    <link href="app/davinci/propvieweffects.css" rel="stylesheet" type="text/css"></link> 
+    <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script type="text/javascript" src="app/dijit/dijit.js"></script>
+    <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
+    <script type="text/javascript" src="app/davinci/davinci.js"></script>
+    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
+
+    <script type="text/javascript">
+//		davinci.Runtime.addPlugin( "app/davinci/ui" );	
+//	 	davinci.Runtime.addPlugin( "app/davinci/js/js" );	
+//	//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );	
+//	 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
+//		davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
+//		davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
+		
+		davinci.Runtime.loadPlugins();
+	
+ 		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
+		function run()
+		{
+	
+		 var userInfo;	
+		 var result=davinci.Runtime.serverJSONRequest({
+				   url:"./cmd/getUserInfo",sync:true});
+	
+			if (result && result.userName)
+			{
+		 	   dojo.byId('davinci_user').innerHTML=result.userName;
+		 	   davinci.Runtime.userName=result.userName;
+			}
+			else
+			{
+				//FIXME: temporary fix for running via file: URLs
+		 	   dojo.byId('davinci_user').innerHTML="Maqetta User";
+		 	}
+		 	if (result && result.isLocalInstall)
+		 	{
+			 	dojo.byId('davinci_user').innerHTML="localhost user";
+		 		dojo.byId('davinci_logoff').href="";
+		 		davinci.Runtime.isLocalInstall=true;
+		 	}
+		  davinci.Runtime.run(userInfo);
+		}
+		
+		dojo.addOnLoad(run );
+		dojo.addOnUnload(davinci.Runtime.unload );
+    </script>
+
+
+  </head>
+
+	<body class="claro">
+		<div class="loading"></div>
+		<div id="davinci_app">
+			<div id="davinci_top_bar">
+					<div id="davinci_user_container">
+						<span id="davinci_user_welcome">Welcome</span>
+						<span id="davinci_user"></span>
+						<span id="davinci_main_menu"> </span>
+						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'>  Log Out</a>
+					</div>
+					<span class="maq_banner_name_box">
+						<span class="maq_banner_name">Maqetta</span>
+						<span class="maq_banner_component">Designer,</span>
+						<span class="maq_banner_version">Preview 1</span>
+					</span>
+<!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions					
+					<div id="toolbar_container">
+						<span id="davinci_toolbar_main"></span>
+					</div>
+-->					
+			</div>
+			<div id="mainBody"></div>	
+		</div>
+	</body>
+</html>

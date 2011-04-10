@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Tutorials" link_to="toc.xml">
+    <topic label="Tutorials" href="tutorials\tutorialsHome.html">
+    	<topic label="Page Editor Exercise A - Feature Overview" href="tutorials\tutorial4.html"></topic>
+    	<topic label="Page Editor Exercise B - Mocking Up a Task Manager" href="tutorials\tutorial5.html"></topic>
+    	<topic label="Page Editor Exercise C - Adding Interactivity via Application States" href="tutorials\tutorial6.html"></topic>
+    	<topic label="Theme Editor" href="tutorials\tutorial7.html"></topic>
+    </topic>
+</toc>

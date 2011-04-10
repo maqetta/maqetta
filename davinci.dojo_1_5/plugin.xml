@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <extension point="davinci.core.ajaxLibrary">
+         <ajaxLibrary name="dojo" id="dojo" version="1.5">
+            <libraryPath location="WebContent/dojo" name="/lib/dojo"></libraryPath>
+            <metadata location="app/metadata/dojo/1.5" />
+   	
+         </ajaxLibrary>
+        
+        
+        
+      </extension>
+      <extension id="dojo.metadata" point="org.eclipse.equinox.http.registry.resources">
+      	<resource alias="/app/metadata/dojo/1.5" base-name="/WebContent/metadata"/>
+      </extension>
+      <extension
+            point="davinci.core.initialUserFiles">
+            <initalUserFile
+                  path="WebContent/davinci"/>
+      </extension>
+</plugin>

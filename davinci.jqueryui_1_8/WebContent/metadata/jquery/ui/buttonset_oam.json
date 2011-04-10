@@ -1,0 +1,30 @@
+{
+    "id": "http://jqueryui.com/buttonset",
+    "name": "jquery.ui.buttonset",
+    "spec": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "jquery-1.4.4.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "javascript",
+            "src": "jquery-ui-1.8.11.custom.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "css",
+            "src": "css/smoothness/jquery-ui-1.8.11.custom.css",
+            "$library": "jquery-ui"
+        }
+    ],
+    "library": {
+        "jquery-ui": {
+            "version": "1.8.11",
+            "src": "../../../jquery-ui-1"
+        }
+    },
+    "content": "<div id='__WID___radio'> <input type='radio' id='__WID___radio1' name='radio' /><label for='radio1'>Choice 1</label> <input type='radio' id='__WID___radio2' name='radio' checked='checked' /><label for='radio2'>Choice 2</label> <input type='radio' id='__WID___radio3' name='radio' /><label for='radio3'>Choice 3</label> </div>",
+    "javascript": "$('#__WID___radio').buttonset();"
+}

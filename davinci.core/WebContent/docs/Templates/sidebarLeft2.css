@@ -1,0 +1,28 @@
+.bl-body {
+	margin:0;
+	padding:0;
+	font:Verdana, Geneva, sans-serif;	
+}
+h1, h2, p {
+	margin-top:0; 
+	padding:3px 5px; 
+}
+.label {
+	padding:3px 5px;
+}
+
+div.container {
+}
+div.footer {
+}
+/* All rules below go into template file */
+
+.bl-body {background:#333; color:gray;}
+.bl-container {width: 100%; min-width:550px; overflow:hidden; background:#fff;}
+.bl-header {height:70px; color: #fff; background-color: #47b;}
+.bl-toolbar {border-bottom:1px solid #ebebeb; height:30px;}
+.bl-sidebar {border-right:1px solid #ebebeb; float:left; width:19%;}
+.bl-content {float:left; width:80%;}
+.bl-padding {padding:10px 20px;}
+.bl-footer {border-top:1px solid #ebebeb; clear:both; height:35px;}
+

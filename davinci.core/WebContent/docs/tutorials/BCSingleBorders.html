@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>BorderContainer Tutorials</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/BCtutorials.html">Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/BCNestedBC.html">Previous</a> / <a href="tutorials/BCtutorials.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>How To Set Single Borders on BorderContainer</h1>
+
+<h3>Create a BorderContainer with no gutters</h3>
+<ol>
+<li>Drag a BorderContainer onto a blank canvas.</li>
+<li>In the Border Container Dialog, select Headline, Top, Left, Center.</li>
+<li>Set a light background color on top and left panes (so you can see them after turning off gutters).</li>
+<li>Turn the splitter off on top and left panes (Splitter is in the Widget Specific section).</li>
+<li>On the BorderContainer, turn gutters off (gutters is in the Widget Specific section).</li>
+<li><i>Note: all borders will now be gone on BorderContainer.</i></li>
+</ol>
+
+<h3>Setting the outer border</h3>
+<ol>
+<li>Go to Outline palette and select BorderContainer</li>
+<li>In Properties palette go to Border section and select <b>show: props</b></li>
+<li>Click the "&gt;" icon to the far right of <b>border-width:</b></li>
+<li>Set Apply to: element.style</li>
+<li>Set width to 1px. </li>
+<li>Close Apply-to window.</li>
+<li>Click the "&gt;" icon to the far right of <b>border-style:</b></li>
+<li>Set Apply to: element.style</li>
+<li>Set style to "solid". </li>
+<li>Close Apply-to window.</li>
+<li>Click the "&gt;" icon to the far right of <b>border-color:</b></li>
+<li>Set Apply-to: element.style.</li>
+<li>Click on border-color to open ColorPicker. The color will default to #b5bcc7. </li>
+<li>Click off the Color Picker to set the color and close it.</li>
+</ol>
+
+<h3>Setting the inner borders</h3>
+<ol>
+<li>Set the bottom border on the header pane:</li>
+<li>Select the top content pane</li>
+<li>Under Borders select show: side</li>
+<li>Verify Apply-to: element.style</li>
+<li>Set border-bottom: 1px solid #b5bcc7</li>
+</ol>
+
+<h3>Set the right-side border on the left pane</h3>
+<ol>
+<li>Select the side content pane</li>
+<li>Under Borders select show: side</li>
+<li>Verify Apply-to: element.style</li>
+<li>Set border-right: 1px solid #b5bcc7</li>
+<li>Remove the background color from the top and side panes.</li>
+<li>Preview in browser.</li>
+</ol>
+
+
+<p class="prevnext"><a href="tutorials/BCNestedBC.html">Previous</a> / <a href="tutorials/BCtutorials.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

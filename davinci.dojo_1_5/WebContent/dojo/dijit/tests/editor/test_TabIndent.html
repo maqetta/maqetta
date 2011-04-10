@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Editor TabIndent Plugin Test</title>
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="parseOnLoad: true, isDebug: true"></script>
+
+	<!-- required: a default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+
+	<script type="text/javascript" src="../_testCommon.js"></script>
+	<script type="text/javascript">
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.Editor");
+		dojo.require("dijit._editor.plugins.TabIndent");
+		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+	</script>
+</head>
+<body class="claro">
+	<p>Paragraph with focusable <span tabindex="0" style="color:blue">item </span>before editor. </p>
+	<label for="tiTest">Test TabIndent Plugin</label>
+	<div style="border: 1px dotted black;">
+	
+		<div id="tiTest" dojoType="dijit.Editor"
+			extraPlugins="['tabIndent','|','dijit._editor.plugins.TabIndent','|',{name:'dijit._editor.plugins.TabIndent'}]">
+			<p>
+				<ol>
+				<li>the tabIndent plugin allows the use of the tab and shift-tab keys to
+indent list items.</li>
+				<li>another list element</li>
+				<li>and another</li>
+				<li>still one more</li>
+				</ol>
+			</p>
+			<p>
+				Ctrl-M also turns tab indent on/off.
+				(The buttons should change checked status when the user types
+				Ctrl-M, to indicate whether tab and shift-tab is enabled.)
+			</p>
+		</div>
+	</div>
+	<p>Paragraph with focusable <span tabindex="0" style="color:blue">item </span>after editor. </p>
+</body>
+</html>

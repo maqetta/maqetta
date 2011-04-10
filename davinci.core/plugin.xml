@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="command" name="Davinci Command" schema="schema/command.exsd"/>
+   <extension-point id="jsPlugin" name="Javascript Plugins" schema="schema/jsPlugin.exsd"/>
+   <extension-point id="webContent" name="Served Web content" schema="schema/webContent.exsd"/>
+   <extension-point id="initialUserFiles" name="Initial user files" schema="schema/initialUserFiles.exsd"/>
+   <extension-point id="ajaxLibrary" name="AJAX Library" schema="schema/ajaxLibrary.exsd"/>
+   <extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
+   <extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
+   <extension-point id="jsPlugin" name="JavaScript plugins" schema="schema/jsPlugin.exsd"/>
+     <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
+  
+   <extension
+        point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext id="davincicontext">
+ 		  <resource-mapping path="/" />
+	      <mime-mapping extension="manifest" mime-type="text/cache-manifest" />
+      </httpcontext>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/"
+            class="org.davinci.server.DavinciPageServlet"
+            load-on-startup="true">
+      </servlet>
+      <servlet
+            alias="/cmd"
+            class="org.davinci.server.DavinciCommandServlet"
+            load-on-startup="true">
+      </servlet>
+   </extension>
+   
+      <extension
+           id="testResource"
+           point="org.eclipse.equinox.http.registry.resources">
+        <resource
+              alias="/app/davinci"
+              base-name="/WebContent/davinci"
+              httpcontextId="davincicontext"
+              />
+        <resource
+              alias="/app/docs"
+              base-name="/WebContent/docs"
+              />
+        <resource
+              alias="/app/dojo"
+              base-name="/WebContent/dojo"
+              />
+        <resource
+              alias="/app/dojox"
+              base-name="/WebContent/dojox"
+              />
+        <resource
+              alias="/app/dijit"
+              base-name="/WebContent/dijit"
+              />
+        <resource
+              alias="/app/eclipse"
+              base-name="/WebContent/eclipse"
+              />
+        <resource
+              alias="/app/OpenAjax"
+              base-name="/WebContent/OpenAjax"
+              />
+        <resource
+              alias="/app/workspace"
+              base-name="/WebContent/workspace"
+              />
+
+      </extension>
+      <extension
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="davinci.product"
+            description="Davinci Server"
+            name="Davinci Server">
+      </product>
+   </extension>
+      <extension
+            point="davinci.core.command">
+         <command path="login" noLogin="true" 
+               class="org.davinci.server.internal.command.Login" />
+         <command path="getLoggingInUser" noLogin="true" 
+               class="org.davinci.server.internal.command.GetLoggingInUser" />
+         <command path="getUserInfo"  
+               class="org.davinci.server.internal.command.GetUserInfo" />
+         <command path="register" noLogin="true" 
+               class="org.davinci.server.internal.command.Register" />
+         <command path="listFiles" 
+               class="org.davinci.server.internal.command.ListFiles" />
+         <command path="loadFile" 
+               class="org.davinci.server.internal.command.LoadFile" />
+         <command path="saveFile"  isPut="true"
+               class="org.davinci.server.internal.command.SaveFile" />
+         <command path="addFiles" 
+               class="org.davinci.server.internal.command.AddFiles" />
+         <command path="deleteResource" 
+               class="org.davinci.server.internal.command.DeleteResource" />
+         <command path="createResource" 
+               class="org.davinci.server.internal.command.CreateResource" />
+         <command path="getPreferences" 
+               class="org.davinci.server.internal.command.GetPreferences" />
+         <command path="setPreferences"  isPut="true"
+               class="org.davinci.server.internal.command.SetPreferences" />
+         <command path="getWorkbenchState" 
+               class="org.davinci.server.internal.command.GetWorkbenchState" />
+         <command path="setWorkbenchState"  isPut="true"
+               class="org.davinci.server.internal.command.SetWorkbenchState" />
+         <command path="removeWorkingCopy" 
+               class="org.davinci.server.internal.command.RemoveWorkingCopy" />
+         <command path="getFileInfo" 
+               class="org.davinci.server.internal.command.GetFileInfo" />
+         <command path="logoff" 
+               class="org.davinci.server.internal.command.LogOff" />
+         <command path="systemFileList" 
+               class="org.davinci.server.internal.command.SystemFileList" />
+         <command path="getWidgetProviders" 
+               class="org.davinci.server.internal.command.GetWidgetProviders" />
+         <command path="createLink" 
+               class="org.davinci.server.internal.command.CreateLink" />
+         <command path="download" 
+               class="org.davinci.server.internal.command.Download" />
+         <command path="findResource" 
+               class="org.davinci.server.internal.command.FindResource" />
+         <command path="getPlugins" 
+               class="org.davinci.server.internal.command.GetPlugins" />
+          <command path="getLibRoots" 
+               class="org.davinci.server.internal.command.GetLibRoots" /> 
+          <command path="listLibs" 
+               class="org.davinci.server.internal.command.ListLibs" />   
+          <command path="getUserLibs" 
+               class="org.davinci.server.internal.command.GetUserLibs" />   
+          <command path="getLibMetadata" 
+               class="org.davinci.server.internal.command.GetLibMetadata" />  
+          <command path="modifyLib" 
+               class="org.davinci.server.internal.command.ModifyLib" /> 
+          <command path="getMetaRoot" 
+               class="org.davinci.server.internal.command.GetMetaRoot" />   
+            <command path="copy" 
+               class="org.davinci.server.internal.command.Copy" />       
+           <command path="rename" 
+               class="org.davinci.server.internal.command.Rename" />         
+           <command path="tryIt" noLogin="true"
+               class="org.davinci.server.internal.command.TryIt" />         
+               
+      </extension>
+      <extension
+            point="davinci.core.initialUserFiles">
+             <initalUserFile
+                  path="WebContent/workspace/"/>
+             <initalUserFile
+                  path="WebContent/samples/"/>
+      </extension>
+      <extension
+            point="davinci.core.jsPlugin">
+         <jsPlugin
+               path="app/davinci/ui"
+               resourcePath="WebContent/davinci/ui"/>
+         <jsPlugin
+               path="app/js/js"
+               resourcePath="WebContent/davinci/js/js"/>
+         <jsPlugin
+               path="app/html/html"
+               resourcePath="WebContent/davinci/html/html"/>
+         <jsPlugin
+               path="app/ve/ve"
+               resourcePath="WebContent/davinci/ve/ve"/>
+         <jsPlugin
+               path="app/davinci/ve/themeEditor/themeEditor"
+               resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
+      </extension>
+      
+</plugin>

@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Dijit UI Tester</title>
+
+	<!-- required: a default theme -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+
+		html, body {
+			height: 100%;
+			width: 100%;
+			padding: 0px;
+			margin: 0px;
+			border: 0;
+			background: #fff;
+		}
+		#main {
+			font-size: 0.9em;
+			height: 100%;
+			width: 100%;
+			padding: 5px;
+			margin: 0px;
+		}
+
+		/* initial sizing */
+		#leftAccordion {
+			width: 25%;
+		}
+		#bottomTabs {
+			height: 40%;
+		}
+	</style>
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="parseOnLoad: true, isDebug: false"></script>
+
+	<!-- do not use: only for debugging / testing themes -->
+	<script type="text/javascript" src="../../tests/_testCommon.js"></script>
+
+	<script type="text/javascript">
+		// dojo.requires()
+		dojo.require("dijit.dijit");
+		dojo.require("dijit.dijit-all");
+
+		// layouts used in page
+		dojo.require("dijit.layout.AccordionContainer");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dijit.layout.TabContainer");
+		dojo.require("dijit.layout.BorderContainer");
+		dojo.require("dijit.TitlePane");
+
+	</script>
+</head>
+<body class="claro">
+
+	<!-- "main" BorderContainer just contains page title and another BorderContainer -->
+	<div id="main" dojoType="dijit.layout.BorderContainer" gutters=true>
+		<div dojoType="dijit.layout.ContentPane" region="top" splitter="false">This test is to make sure nested layout elements work fine in regards to double borders etc. You need a screen with a very high resolution to not get cramped tabs and other weird visual effects </div>
+
+		<!-- "mainSplit" BorderContainer has all the real content -->
+		<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar"
+			region="center" id="mainSplit">
+
+			<div dojoType="dijit.layout.AccordionContainer"
+				minSize="20" style="width: 300px;" id="leftAccordion" region="leading" splitter="true">
+
+				<div dojoType="dijit.layout.ContentPane" title="Popups and Alerts">
+				</div>
+
+				<div dojoType="dijit.layout.ContentPane" title="Dojo Tree from Store">
+				</div>
+
+				<div dojoType="dijit.layout.ContentPane" title="Calendar" selected="true">
+				</div>
+
+				<div dojoType="dijit.layout.ContentPane" title="Color Picker">
+				</div>
+
+			</div><!-- end AccordionContainer -->
+
+			<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center">
+				<!-- top tabs (marked as "center" to take up the main part of the BorderContainer) -->
+				<div dojoType="dijit.layout.TabContainer" region="top" id="topTabs1" tabStrip="true" splitter="true" style="height:200px;">
+
+					<div dojoType="dijit.layout.ContentPane"
+						id="basdicFormTab"
+						title="Basic Form Widgets"
+						layoutType="fit"
+						style="padding:10px;display:none;">
+						Hi friends of dijit
+					</div> <!-- end of basic form widgets -->
+					<div dojoType="dijit.layout.AccordionContainer"
+						id="tabAccordion"
+						title="Accordion in Tab"
+						layoutType="tab"
+						minSize="20"
+						style="width: 100%;">
+
+						<div dojoType="dijit.layout.ContentPane" title="Popups and Alerts">
+						</div>
+
+						<div dojoType="dijit.layout.ContentPane" title="Dojo Tree from Store">
+						</div>
+
+						<div dojoType="dijit.layout.ContentPane" title="Calendar" selected="true">
+						</div>
+
+						<div dojoType="dijit.layout.ContentPane" title="Color Picker">
+						</div>
+
+					</div><!-- end AccordionContainer -->
+
+					<div dojoType="dijit.layout.ContentPane"
+						id="textareaTab"
+						layoutType="tab"
+						title="Accordion in Content Tab">
+
+						<div dojoType="dijit.layout.AccordionContainer"
+							minSize="20" layoutType="default" style="width: 100%;" id="tabAccordionContainer">
+
+							<div dojoType="dijit.layout.ContentPane" title="Popups and Alerts">
+							</div>
+
+							<div dojoType="dijit.layout.ContentPane" title="Tabs in Accordion">
+								<!-- bottom right tabs -->
+								<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar"
+									id="mainSplit1" style="padding: 0px;width: 300px; height: 100px">
+
+									<div dojoType="dijit.layout.TabContainer" id="accTabs"
+										tabPosition="top" region="center" selectedChild="bbtab1">
+
+										<!-- btab 1 -->
+										<div dojoType="dijit.layout.ContentPane" id="bbtab1"
+											layoutType="tab" title="Info" style=" padding:10px;">
+										</div><!-- end:info btab1 -->
+
+										<div dojoType="dijit.layout.ContentPane" id="bbtab2"
+											layoutType="tab" title="Alternate Themes" style="padding:20px;">
+										</div><!-- btab2 -->
+
+										<div dojoType="dijit.layout.ContentPane" id="bbtab3"
+											layoutType="tab" title="Bottom 3" closable="true">
+										</div><!-- btab3 -->
+
+									</div><!-- end Bottom TabContainer -->
+								</div>
+							</div>
+
+							<div dojoType="dijit.layout.ContentPane" title="Calendar" selected="true">
+							</div>
+
+							<div dojoType="dijit.layout.ContentPane" title="Color Picker">
+							</div>
+
+						</div><!-- end AccordionContainer -->
+
+					</div><!-- end of Textarea/Editor tab -->
+
+
+					<div dojoType="dijit.layout.ContentPane"
+						title="Title Pane in Content Pane"
+						layoutType="tab"
+						doLayout="false"
+						style="display:none;">
+
+						Here's some text, then a TitlePane:
+						<div dojoType="dijit.TitlePane" title="Color Picker">
+							Hi friends of dijit
+						</div>
+						... and some more text.
+					</div>
+
+					<div dojoType="dijit.layout.TabContainer" title="TabContainer in Tab" nested="true" closable="true">
+						<div id="basicFormTab1" dojoType="dijit.layout.ContentPane"
+							layoutType="fit" title="Basic Form Widgets 1"
+							style="padding:10px; display:none;">
+						    Hi friends of dijit
+						</div>
+						<div id="basicFormTab2" dojoType="dijit.layout.ContentPane"
+							layoutType="fit" title="Basic Form Widgets 2"
+							style="padding:10px; display:none;">
+						    Hi friends of dijit
+						</div>
+					</div>
+
+					<div id="closableTab" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Closable ContentPane w/TabContainer"
+						style="display:none; padding:0px;" closable="true">
+
+						<div dojoType="dijit.layout.TabContainer" title="Tab in Tab" nested="true">
+
+							<div id="basicFormTab3" dojoType="dijit.layout.ContentPane" layoutType="fit" title="Basic Form Widgets 3" style="padding:10px;display:none;">
+							    Hi friends of dijit
+							</div>
+							<div id="basicFormTab4" dojoType="dijit.layout.ContentPane" layoutType="fit" title="Basic Form Widgets 4" style="padding:10px;display:none;">
+							    Hi friends of dijit
+							</div>
+						</div>
+					</div>
+				</div><!-- end of region="center" TabContainer -->
+				<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" region="center">
+					<div dojoType="dijit.layout.TabContainer" id="bottomTabs1" tabStrip="true"
+						tabPosition="left-h" selectedChild="btabA" region="top" style="height: 50%;" splitter="true">
+
+						<!-- btab 1 -->
+						<div id="btabA" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Info" style="padding:10px;">
+
+						</div><!-- end:info btabA -->
+
+						<div id="btabB" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Alternate Themes" style="padding:20px;">
+
+						</div><!-- btabB -->
+
+						<div id="btabC" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Bottom 3" closable="true">
+
+						</div><!-- btabC -->
+
+					</div><!-- end Bottom TabContainer -->
+					<div dojoType="dijit.layout.TabContainer" id="bottomTabs2" tabStrip="true"
+						tabPosition="right-h" selectedChild="btabD" region="center">
+
+						<!-- btab 1 -->
+						<div id="btabD" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Info" style="padding:10px;">
+
+						</div><!-- end:info btabD -->
+
+						<div id="btabE" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Alternate Themes" style="padding:20px;">
+
+						</div><!-- btabE -->
+
+						<div id="btabF" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Bottom 3" closable="true">
+
+						</div><!-- btabF -->
+
+					</div><!-- end Bottom TabContainer -->
+				</div>
+				<!-- bottom right tabs -->
+				<div dojoType="dijit.layout.TabContainer" id="bottomTabs" tabStrip="true"
+					tabPosition="bottom" selectedChild="btab1" region="bottom" splitter="true">
+
+					<!-- btab 1 -->
+					<div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar"
+						region="center" id="bottomSplit" title="BorderContainer in Tabs" style="padding: 5px; width: 100%">
+						<div dojoType="dijit.layout.ContentPane" region="top" splitter="true" liveSplitters="false">This test is to make sure nested layout elements work fine in regards to double borders etc. You need a screen with a very high resolution to not get cramped tabs and other weird visual effects </div>
+						<div dojoType="dijit.layout.TabContainer" id="bottomTabs22"
+							tabPosition="top" selectedChild="btabAA" region="center" splitter="true">
+
+							<!-- btab 1 -->
+							<div id="btabAA" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Info" style="padding:10px;">Hi</div>
+						</div>
+
+						<div dojoType="dijit.layout.ContentPane" region="bottom" splitter="true" liveSplitters="false">This test is to make sure nested layout elements work fine in regards to double borders etc. You need a screen with a very high resolution to not get cramped tabs and other weird visual effects </div>
+
+					</div>
+
+					<div id="btab2" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Alternate Themes" style="padding:20px;">
+
+					</div><!-- btab2 -->
+
+					<div id="btab3" dojoType="dijit.layout.ContentPane" layoutType="tab" title="Bottom 3" closable="true">
+
+					</div><!-- btab3 -->
+
+				</div><!-- end Bottom TabContainer -->
+			</div>
+		</div> <!-- end of "mainSplit" BorderContainer -->
+		<div dojoType="dijit.layout.ContentPane" region="trailing" splitter="true" style="width: 10%;" liveSplitters="false">Hi </div>
+
+	</div><!-- end of "main" BorderContainer -->
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr">
+    
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js"
+        djConfig="parseOnLoad: true">
+        </script>
+        <script type="text/javascript">
+            dojo.require("dijit.layout.ContentPane");
+            dojo.require("dijit.layout.BorderContainer");
+            dojo.require("dojo.data.ItemFileReadStore");
+            dojo.require("dijit.Tree");
+			
+			dojo.addOnLoad(function(){
+				dojo.style(dojo.byId("content"), "display", "block");
+				dijit.byId("borderContainerTwo").layout();
+			});
+        </script>
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dijit/themes/claro/claro.css"
+        />
+        <style type="text/css">
+            html, body { width: 100%; height: 100%; margin: 0; overflow:hidden; }
+            #borderContainerTwo { width: 100%; height: 100%; }
+			#print_content { display:none; }
+			
+			@media print {
+				#borderContainerTwo {display:none;}
+				#print_content   {display:block;}
+			}
+        </style>
+    </head>
+    
+    <body class=" claro ">
+        <div dojoType="dijit.layout.BorderContainer" gutters="false" id="borderContainerTwo">
+            <div dojoType="dijit.layout.ContentPane" region="top" splitter="false" style="height:38px; padding:0; overflow:hidden;" id="titlepane">
+            	<!-- Title Pane -->
+                <iframe src="header.html" style="border-width:0; width:100%; overflow:hidden;"></iframe>
+            </div>
+            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar" region="center" id="mainSplit">
+                <div dojoType="dijit.layout.ContentPane"  region="leading" splitter="true" style="width:250px;padding:0">
+                    <!-- Left Navigation Pane -->
+                    <div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore" url="maqettadocs.json">
+			        </div>
+			        <div dojoType="dijit.tree.ForestStoreModel" jsId="continentModel" store="continentStore" rootId="continentRoot" rootLabel="Maqetta Documentation"
+			        childrenAttrs="children">
+			        </div>
+			        <div dojoType="dijit.Tree" id="mytree" model="continentModel" showRoot="false">
+			            <script type="dojo/method" event="onClick" args="item">
+							if (item.url) {
+								var content = dojo.byId("content");
+								dojo.attr(content, "src", item.url);
+								var print_content = dojo.byId("print_content");
+								dojo.attr(print_content, "src", item.url);
+							}
+			            </script>
+			        </div>
+                </div>
+                <div dojoType="dijit.layout.ContentPane" region="center" jsid="content" style="padding:0; overflow:hidden;">
+                    <iframe id="content" src="home.html" style="border-width:0;width:100%;height:100%;display:none;"></iframe>
+                </div>
+            </div>
+        </div>
+                <div dojoType="dijit.layout.ContentPane" jsid="print_content" style="padding:0; overflow:hidden;">
+                    <iframe id="print_content" src="home.html" style="border-width:0; width:100%; height:100%;"></iframe>
+                </div>
+    </body>
+
+</html>

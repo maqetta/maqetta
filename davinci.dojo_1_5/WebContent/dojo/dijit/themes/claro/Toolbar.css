@@ -1,0 +1,170 @@
+/* Toolbar 
+ * 
+ * Styling Toolbar means styling the toolbar container and the widget inside toolbar  (dijitToolbar)
+ * 
+ * 1. toolbar (default styling): 
+ * 		.dijitToolbar - styles for outer container
+ *
+ * 2. widget inside toolbar
+ * 		.dijitToolbar .dijitButtonNode   - Button widget
+ * 					  .dijitComboButton  - ComboButton widget
+ * 					  .dijitDropDownButton  - DropDownButton widget
+ * 					  .dijitToggleButton  - ToggleButton widget
+ * 		
+ * 3. hovered widget inside toolbar (ie, mouse hover on the widget inside)
+ * 			.dijitToolbar .dijitButtonNodeHover  - styles for hovered Button widget
+ * 
+ * 4. actived widget inside toolbar (ie, mouse down on the widget inside)
+ * 			.dijitToolbar .dijitButtonNodeActive  - mouse down on Button widget
+ */
+
+.claro .dijitToolbar {
+	border-bottom: 1px solid #b5bcc7;
+	background-color: #f1f1f1;
+	background-image: url("images/commonHighlight.png");
+	background-position:0px 0px;
+	background-repeat:repeat-x;
+	padding: 2px 0px 2px 4px;
+	zoom: 1;
+}
+
+.claro .dijitToolbar label {
+	padding: 0px 3px 0 6px;
+}
+
+/** override claro/form/Button.css **/
+.claro .dijitToolbar .dijitButtonNode {
+	border:none;
+	padding: 2px;
+	background-image: url("images/commonHighlight.png");
+	background-position:0 -30px;
+	background-repeat:repeat-x;
+	background-color:rgba(171,214,255,0);
+	border-radius: 2px;	
+	-moz-border-radius: 2px;	
+	-webkit-border-radius: 2px;	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	-webkit-transition-property:background-color;
+	-webkit-transition-duration:.3s, .35s;
+}
+.claro .dijitToolbar .dijitComboButton .dijitButtonNode{
+	padding: 3px 2px 3px 2px;	/* make the ComboButton in toolbar more stable when mouse hovering */
+}
+.dj_ie .claro .dijitToolbar .dijitButtonNode {
+	background-color: transparent;   /* for IE, which doesn't understand rgba(...) */
+}
+.dj_ie6 .claro .dijitToolbar .dijitButtonNode {
+	background: none;	/* because background-color: transparent above doesn't work */
+}
+
+.claro .dijitToolbar .dijitComboBox .dijitButtonNode {
+	padding: 0px;
+}
+
+.claro .dijitToolbar .dijitComboButton {
+	padding: 1px;
+}
+/* hover status */
+.claro .dijitToolbar .dijitButtonHover .dijitButtonNode,
+.claro .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode,
+.claro .dijitToolbar .dijitToggleButtonHover .dijitButtonNode {
+	background-position:0 0;
+	border:solid 1px #769dc0;
+	background-color: #abd6ff;
+	padding: 1px;
+}
+.claro .dijitToolbar .dijitComboButtonHover {
+	background-color: #abd6ff;
+	border: solid 1px #769dc0;
+	padding: 0px;
+}
+.claro .dijitToolbar .dijitComboButtonHover .dijitButtonNode,
+.claro .dijitToolbar .dijitComboButtonHover .dijitDownArrowButton {
+	background-position:0 0;
+	padding: 2px;
+}
+.claro .dijitToolbar .dijitComboButtonHover .dijitDownArrowButton {
+	background-color: #7dd6fa;
+}
+/* actve status */
+.claro .dijitToolbar .dijitButtonActive .dijitButtonNode,
+.claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode,
+.claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
+	border:solid 1px #769dc0;
+	background-color:#7dbefa;
+	background-position:0px -177px;
+	padding: 1px;
+}
+.claro .dijitToolbar .dijitComboButtonActive {
+	-webkit-transition-duration:.2s;
+	border: solid 1px #769dc0;
+	padding: 0px;
+}
+.claro .dijitToolbar .dijitComboButtonActive .dijitButtonNode {
+	background-color: #7dbefa;
+	background-position:0px -177px;
+	padding: 2px;
+}
+.claro .dijitToolbar .dijitComboButton .dijitDownArrowButtonActive {
+	background-color: #7dbefa;
+}
+/* toggle button checked status */
+.claro .dijitToolbar .dijitToggleButtonChecked .dijitButtonNode {
+	border-color: #769dc0;
+	background-color:#fff;
+	padding: 1px;
+}
+
+
+/** hacks for browsers **/
+.dj_ie6 .claro .dijitToolbar .dijitButtonContents, 
+.dj_ie7 .claro .dijitToolbar .dijitButtonContents {
+	margin: -2px 0;
+	padding: 0;
+}
+
+.dj_ie6 .claro .dijitToolbar {
+	background-image: none;
+}
+
+.dj_ie6 .claro .dijitToolbar .dijitButtonNode {
+	margin: 1px; /* as transparent the border */
+	border: none;
+}
+
+.dj_ie6 .claro .dijitToolbar .dijitButtonHover .dijitButtonNode,
+.dj_ie6 .claro .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitButtonNodeHover,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitDownArrowButtonHover,
+.dj_ie6 .claro .dijitToolbar .dijitToggleButtonHover .dijitButtonNode,
+.dj_ie6 .claro .dijitToolbar .dijitButtonActive .dijitButtonNode,
+.dj_ie6 .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitButtonNodeActive,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitDownArrowButtonActive,
+.dj_ie6 .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode,
+.claro .dijitToolbar .dijitToggleButtonChecked .dijitButtonNode {
+	margin: 0;	/* remove margin and add a border */
+	border-width: 1px;
+	border-style: solid;
+	background-image: none;
+}
+
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitButtonNodeHover,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitDownArrowButtonHover,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitButtonNodeActive,
+.dj_ie6 .claro .dijitToolbar .dijitComboButton .dijitDownArrowButtonActive {
+	padding: 1px;	/* ComboButton use table td has no margin, so we minus padding 2px -> 1px for the 1px border. ie6... */
+}
+
+.claro .dijitToolbarSeparator {
+	/* separator icon in the editor sprite */
+	background: url('../../icons/images/editorIconsEnabled.png');
+}
+
+/* Toolbar inside of disabled Editor */
+.claro .dijitDisabled .dijitToolbar {
+	background:none;
+	background-color:#f5f5f5;
+	border-bottom: 1px solid #d3d3d3;
+}

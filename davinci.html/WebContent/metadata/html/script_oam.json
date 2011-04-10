@@ -1,0 +1,18 @@
+{
+    "id": "http://www.w3.org/html/script",
+    "name": "html.script",
+    "spec": "1.0",
+    "version": "1.0",
+    "property": {
+        "type": {
+            "datatype": "string",
+            "title": "Type"
+        },
+        "src": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        }
+    },
+    "content": "<script></script>"
+}

@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>doh.robot popup/BackgroundIFrame Test</title>
+
+		<style>
+			@import "../../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../../dojo/dojo.js"
+			djConfig="isDebug: true"></script>
+
+		<!-- functions to help test -->
+		<script type="text/javascript" src="../../helpers.js"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.robotx");
+
+			dojo.addOnLoad(function(){
+				doh.robot.initRobot('../test_popup.html');
+
+			doh.register("simple open and close",
+				[
+					function initialConditions(t){
+						// If the popup code has cached any iframes, make sure they are hidden
+						dojo.query("iframe").forEach(function(node){
+							console.log("found iframe", node);
+							doh.is("none", node.style.display, "background iframe is hidden");
+						});
+					},
+
+					// Create popup on the edge of another widget
+					function openAround(){
+						var d = new doh.Deferred();
+
+						var around = dojo.global.choiceDropDownButton,
+							popup = dojo.global.choiceDropDown;
+
+						around.openPopup();
+
+						doh.robot.sequence(d.getTestCallback(function(){
+							doh.t(isVisible(popup.domNode), "popup is visible");
+
+							if(dojo.isIE <= 6){
+								// Test the BackgroundIFrame
+								var iframes = dojo.query("iframe");
+								doh.is(1, iframes.length, "one background iframe on IE6");
+
+								var popupCoords = dojo.position(popup.domNode),
+									iframeCoords = dojo.position(iframes[0]);
+								doh.is(popupCoords.x, iframeCoords.x, "x is same: " + popupCoords.x);
+								doh.is(popupCoords.y, iframeCoords.y, "y is same: " + popupCoords.y);
+								doh.is(popupCoords.w, iframeCoords.w, "w is same: " + popupCoords.w);
+								doh.is(popupCoords.h, iframeCoords.h, "h is same: " + popupCoords.h);
+								doh.is("", iframes[0].style.display, "not display:none");
+							}
+							// TODO: test stack
+						}), 500);
+
+						return d;
+					},
+
+					function closeAround(){
+						// Close the popup
+						var around = dojo.global.choiceDropDownButton,
+							popup = dojo.global.choiceDropDown;
+
+						around.closePopup();
+
+						// Make sure the popup is hidden
+						// (in a future release this might change to display:none etc but currently it's visibility:hidden)
+						doh.is("hidden", popup.domNode.style.visibility, "popup is hidden");
+
+						// If the popup code has cached the iframe for later use, make sure it's hidden
+						dojo.query("iframe").forEach(function(node){
+							doh.is("none", node.style.display, "background iframe is hidden");
+						});
+					}
+				]);
+
+			doh.register("nested open and close",
+				[
+					function initialConditions(t){
+						// If the popup code has cached any iframes, make sure they are hidden
+						dojo.query("iframe").forEach(function(node){
+							console.log("found iframe", node);
+							doh.is("none", node.style.display, "background iframe is hidden");
+						});
+					},
+
+					// Open first level
+					function openAround(){
+						var d = new doh.Deferred();
+
+						var around = dojo.global.nestedDropDownButton,
+							popup = dojo.global.nestedOpener,
+							nestedPopup = dojo.global.nestedChoice1;
+
+						around.openPopup();
+
+						doh.robot.sequence(d.getTestCallback(function(){
+							doh.t(isVisible(popup.domNode), "popup is visible");
+
+							if(dojo.isIE <= 6){
+								// Test the BackgroundIFrame
+								var iframes = dojo.query("iframe");
+								doh.is(1, iframes.length, "one background iframe on IE6");
+
+								var popupCoords = dojo.position(popup.domNode),
+									iframeCoords = dojo.position(iframes[0]);
+								doh.is(popupCoords.x, iframeCoords.x, "x is same: " + popupCoords.x);
+								doh.is(popupCoords.y, iframeCoords.y, "y is same: " + popupCoords.y);
+								doh.is(popupCoords.w, iframeCoords.w, "w is same: " + popupCoords.w);
+								doh.is(popupCoords.h, iframeCoords.h, "h is same: " + popupCoords.h);
+								doh.is("", iframes[0].style.display, "not display:none");
+							}
+							// TODO: test stack
+						}), 500);
+
+						return d;
+					},
+
+					function openNested(){
+						var d = new doh.Deferred();
+
+						var around = dojo.global.nestedDropDownButton,
+							popup = dojo.global.nestedOpener,
+							nestedPopup = dojo.global.nestedChoice1;
+
+						popup.openPopup(nestedPopup);
+
+						doh.robot.sequence(d.getTestCallback(function(){
+							doh.t(isVisible(nestedPopup.domNode), "nested popup is visible");
+
+							if(dojo.isIE <= 6){
+								// Test the BackgroundIFrame
+								var iframes = dojo.query("iframe");
+								doh.is(2, iframes.length, "two background iframe on IE6");
+
+								var popupCoords = dojo.position(nestedPopup.domNode),
+									iframeCoords = dojo.position(iframes[1]);
+								doh.is(popupCoords.x, iframeCoords.x, "x is same: " + popupCoords.x);
+								doh.is(popupCoords.y, iframeCoords.y, "y is same: " + popupCoords.y);
+								doh.is(popupCoords.w, iframeCoords.w, "w is same: " + popupCoords.w);
+								doh.is(popupCoords.h, iframeCoords.h, "h is same: " + popupCoords.h);
+								doh.is("", iframes[0].style.display, "not display:none");
+							}
+							// TODO: test stack
+						}), 500);
+
+						return d;
+					},
+
+					function closeAround(){
+						// Close the layer of popups
+						var around = dojo.global.choiceDropDownButton,
+							popup = dojo.global.choiceDropDown;
+
+						var around = dojo.global.nestedDropDownButton,
+							popup = dojo.global.nestedOpener,
+							nestedPopup = dojo.global.nestedChoice1;
+
+						around.closePopup();
+
+						// Make sure the popups are both hidden
+						// (in a future release this might change to display:none etc but currently it's visibility:hidden)
+						doh.is("hidden", popup.domNode.style.visibility, "popup is hidden");
+						doh.is("hidden", nestedPopup.domNode.style.visibility, "nested popup is hidden");
+
+						// If the popup code has cached the iframes for later use, make sure they are hidden
+						dojo.query("iframe").forEach(function(node){
+							doh.is("none", node.style.display, "background iframe is hidden");
+						});
+					}
+				]);
+
+				// TODO: test x/y placement
+
+				// Test that onCancel goes back one level.
+				// Call nestedChoice2.onCancel() and that should trigger nestedChoice2 to close
+				// but nestedOpener stays open.
+				// (TODO)
+
+				// Test that onChange/onExecute goes back to top of popup chain.
+				// Call dialogNestedChoice2.onChange() and that should trigger dialogNestedChoice2
+				// and dialogNestedPopupOpener to close, but not dialogWithNestedPopup.
+				// (TODO)
+
+				// ---------------------
+				// a11y tests
+
+				// Test that ESC key closes one level of a popup chain.
+				// Focus nestedChoice2 and type ESC, and that should trigger nestedChoice2 to close
+				// but nestedOpener stays open.
+				// (TODO)
+
+				// Test that TAB key cancels back to top of popup chain.
+				// Focus nestedChoice2 and type TAB, and that should trigger dialogNestedChoice2
+				// and dialogNestedPopupOpener to close, but not dialogWithNestedPopup.
+				// (TODO)
+
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

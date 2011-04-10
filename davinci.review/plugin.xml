@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+       <servlet
+            alias="/review"
+            class="org.davinci.server.review.DavinciReviewServlet"
+            load-on-startup="true">
+      </servlet>
+   </extension>
+         <extension
+           id="testResource"
+           point="org.eclipse.equinox.http.registry.resources">
+        <resource
+              alias="/app/davinci/review"
+              base-name="/WebContent/davinci/review"
+              />
+      </extension>
+   
+      <extension
+            point="davinci.core.command">
+         <command path="listVersions"
+               class="org.davinci.server.review.command.ListVersions" />
+         <command path="addComment"
+               class="org.davinci.server.review.command.AddComment" />
+         <command path="updateComment"
+               class="org.davinci.server.review.command.UpdateComment" />
+         <command path="getComments"
+               class="org.davinci.server.review.command.GetComments" />
+         <command path="publish"
+         	   class="org.davinci.server.review.command.Publish" />
+	     <command path="getBluePageInfo"
+         	   class="org.davinci.server.review.command.GetBluePageInfo" />         	   
+         <command path="listReviewFiles"
+         	   class="org.davinci.server.review.command.ListReviewFiles" />
+         <command path="getLatestVersionId"
+         	   class="org.davinci.server.review.command.GetLatestVersionId" />
+         <command path="managerVersion"
+         	   class="org.davinci.server.review.command.ManagerVersion" />
+         <command path="getReviewUserInfo"
+         	   class="org.davinci.server.review.command.GetReviewUserInfo" />   
+      </extension>
+            <extension
+            point="davinci.core.jsPlugin">
+         <jsPlugin
+               path="app/davinci/review/review"
+               resourcePath="WebContent/davinci/review/review" />
+      </extension>
+</plugin>

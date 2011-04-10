@@ -1,0 +1,31 @@
+{
+    "name": "yui",
+    "longName": "YUI Library",
+    "version": "2.8.2r1",
+    "categories": {
+        "yui": {
+            "name": "YUI",
+            "description": "YUI",
+            "widgetClass": "OpenAjax"
+        }
+    },
+    "widgets": [
+/* Bug 7660 - disable ColorPicker, since we don't have a good solution for required images
+        {
+            "name": "ColorPicker",
+            "description": "ColorPicker",
+            "type": "YAHOO.widget.ColorPicker",
+            "category": "yui",
+            "icon": "resources/images/yui-color-picker.gif",
+            "resizable": "none"
+        },
+*/
+        {
+            "name": "Calendar",
+            "description": "Calendar",
+            "type": "YAHOO.widget.Calendar",
+            "category": "yui",
+            "icon": "resources/images/yui-calendar.gif"
+        }
+    ]
+}

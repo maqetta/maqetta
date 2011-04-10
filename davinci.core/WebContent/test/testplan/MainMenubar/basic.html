@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Main menubar basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Main menubar basic tests</h1>
+
+	<h2 class="test_section">New menu: New HTML File - default filename, no save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>Click OK to accept the default file name (file1.html)</li>
+		<li>Drag/drop any widget onto canvas</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>After clicking OK on file dialog, editor window appears with a blank canvas, and...</li>
+		<li>Files palette should show the file name for this file, and...</li>
+		<li>Widget palette is populated with many widgets organized into categories (e.g., Form, Layout, etc), and...</li>
+		<li>Outline palette contains a single entry (e.g., ./file1.html), and...</li>
+		<li>Property palette appear but entries are disabled until a widget is selected, and...</li>
+		<li>After closing, the file name should be removed from the Files palette.</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New HTML File - default filename, with save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>Click OK to accept the default file name (file1.html)</li>
+		<li>Drag/drop any widget onto canvas</li>
+		<li>Click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>After clicking OK on file dialog, ...(same as above)...</li>
+		<li>After clicking save, dirty indicator (*) should disappear from editor's tab.</li>
+		<li>(With 0.6, there is a known bug with dirty logic where you are prompted "are you sure" even though no changes since last save)</li>
+		<li>After closing, the file name should continue to be visible in Files palette.</li>
+		<li>After reopening, the visual page editor should show the widget you added to the page.</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New HTML File - different filename in root directory, with save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
+		<li>Drag/drop any widget onto canvas</li>
+		<li>Click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Same as above, except with a different filename.</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New HTML File - nested directory, with save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the New menu on the banner, choose New Folder...</li>
+		<li>Type a name for the new folder or accept the default name. Keep the current parent folder as ".".</li>
+		<li>Highlight the new folder name in the Files palette.</li>
+		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>You should see your folder name listed as "parent folder". Enter a filename and click OK.</li>
+		<li>Drag a button widget onto the canvas.</li>
+		<li>Click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>A new editor window should appear (as with previous test sections).</li>
+		<li>In the Files palette, the new file should appear as a nested file within the folder you just created..</li>
+		<li>The button should be properly styled using the default theme (which in most cases is Claro, which results in bluish styling)</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New CSS File - different filename in root directory, with save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the New menu on the banner, choose New CSS File...</li>
+		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
+		<li>Add some text to the file, such as ".foo { color:red; }"</li>
+		<li>Click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The new CSS file should be visible in the Files palette and upon reopening show the content you entered.</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New JavaScript File - different filename in root directory, with save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the New menu on the banner, choose New JavaScript File...</li>
+		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
+		<li>Add some text to the file, such as "// a comment"</li>
+		<li>Click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The new JavaScript file should be visible in the Files palette and upon reopening show the content you entered.</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New File - in root directory, with save</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the New menu on the banner, choose New File...</li>
+		<li>Type a new file name, such as "a.txt", within the default directory.</li>
+		<li>Add some text to the file, such as "some text"</li>
+		<li>Click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The new file should be visible in the Files palette and upon reopening show the content you entered.</li>
+	</ol>
+
+	<h2 class="test_section">Open menu: Open File</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the Open menu on the banner, choose Open File...</li>
+		<li>From the file dialog that appears, select the "Sample1.html" file in the root folder and click "OK".</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>After clicking OK in the Open File dialog, Sample1.html should have appear in the visual editor.</li>
+	</ol>
+
+	<h2 class="test_section">Open menu: Open Claro Theme Editor</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the Open menu on the banner, choose Open Claro Theme Editor</li>
+		<li>Close the theme editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>After issuing the Open Claro Theme Editor command, the theme editor should have appeared,
+			showing a collection of Dojo widgets, and...</li>
+		<li>Properties palette should have content, and...</li>
+		<li>States palette should show a list of widget states, such as Normal, Selected, and Hover, and...</li>
+		<li>Widgets and Outline palettes should be empty</li>
+	</ol>
+
+	<h2 class="test_section">Settings Menu: Edit Preferences</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the Settings menu on the banner, choose Edit Preferences...</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As of now, there should be only one menu item on the Settings menu, Edit Preferences....</li>
+		<li>Preferences dialog should appear. There should be a tree widget on the left with
+			two major sections, JavaScript and HTML. Inside of the HTML, there should be a
+			single entry, Visual Editor. The Visual Editor section should show various options,
+			including Flow Layout, Snap to Grid, Show Grid and Warn on CSS Override.</li>
+	</ol>
+
+	<h2 class="test_section">Help Menu: daVinci Help and daVinci Community</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the Help menu on the banner, choose daVinci Help</li>
+		<li>From the Help menu on the banner, choose daVinci Community</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As of now, there should be two one menu items on the Help menu, daVinci Help and daVinci Community.</li>
+		<li>daVinci Help should cause a new browser tab to open showing the daVinci docs main page.</li>
+		<li>daVinci Community should cause a new browser tab to open showing the daVinci connections community.</li>
+	</ol>
+
+</body>
+</html>

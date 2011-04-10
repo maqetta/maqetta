@@ -1,0 +1,31 @@
+.sketch .dijitSliderRtl .dijitSliderProgressBarH,
+.sketch .dijitSliderRtl .dijitSliderRemainingBarH,
+.sketch .dijitSliderRtl .dijitSliderLeftBumper,
+.sketch .dijitSliderRtl .dijitSliderRightBumper,
+.sketch .dijitSliderRtl .dijitSliderTopBumper {
+	background-position: top right;
+}
+
+.sketch .dijitSliderRtl .dijitSliderProgressBarV,
+.sketch .dijitSliderRtl .dijitSliderRemainingBarV,
+.sketch .dijitSliderRtl .dijitSliderBottomBumper {
+	background-position: bottom right;
+}
+
+.sketch .dijitSliderRtl .dijitSliderLeftBumper {
+	border-left-width: 0px;
+	border-right-width: 1px;
+}
+
+.sketch .dijitSliderRtl .dijitSliderRightBumper {
+	border-left-width: 1px;
+	border-right-width: 0px;
+}
+
+.sketch .dijitSliderRtl .dijitSliderIncrementIconH {
+	background-position:-357px 50%;
+}
+
+.sketch .dijitSliderRtl .dijitSliderDecrementIconH {
+	background-position:-251px 50%;
+}

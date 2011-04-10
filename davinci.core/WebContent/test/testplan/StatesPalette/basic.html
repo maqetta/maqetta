@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>States palette basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">States palette basic tests</h1>
+
+	<h2 class="test_section">Creating states, making widgets invisible within a state</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Drag an HTML label, Calendar, TextBox, a DIV, and three buttons inside of DIV onto the canvas.</li>
+		<li>In the States palette, click on the + icon to define two states "aaa" and "bbb"</li>
+		<li>In the States palette, select the "bbb" state and click on the - icon to delete that state</li>
+		<li>In the States palette, use the dropdown menu (top right) to define two states "ccc" and "ddd"</li>
+		<li>In the States palette, select the "ccc" state and use the dropdown menu (top right) to remove that state.
+			<span style="color:red; font-style:italic;">Note: Dropdown isn't there for 0.6. Use "-" icon instead.</span></li>
+		<li>In the States palette, select the "aaa" state. Go to Outline palette and 
+				click on the eyeball icon for the Label to make it invisible for the "aaa" state.
+				(The Label should become invisible on the canvas).</li>
+		<li>In the States palette, select the "ddd" state. Go to Outline palette and 
+				click on the eyeball icon for the Calendar to make it invisible for the "ddd" state.
+				(The Calendar should become invisible on the canvas).</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+		<li>In the States palette, alternatively click on "Normal", "aaa" and "ddd".</li> </li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The TextBox and buttons should be
+				visible in all 3 states. The Label should disappear in the "aaa" state.
+				The Calendar should disappear in the "ddd" state.</li>
+	</ol>
+
+	<h2 class="test_section">(continuation of previous) Adding interactivity</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Select the first button widget. On the Object palette, go to the onclick property
+				and use the dropdown menu to choose the option to switch to the "Normal" state</li>
+		<li>Select the second button widget. On the Object palette, go to the onclick property
+				and use the dropdown menu to choose the option to switch to the "aaa" state</li>
+		<li>Select the first button widget. On the Object palette, go to the onclick property
+				and use the dropdown menu to choose the option to switch to the "ddd" state</li>
+		<li>Save and close the file.</li>
+		<li>In the Files palette, double-click on the file you just closed to re-open the file.</li>
+		<li>Click on the Preview in Browser button on the main toolbar. A new browser tab or window should appear
+				with your new file showing within the frame.</li>
+		<li>Alternatively click on the 3 buttons.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The TextBox and buttons should be
+				visible when the page launches and after clicking the first button. 
+				The Label should disappear when you click on the second button.
+				The Calendar should disappear when you click on the third button.</li>
+	</ol>
+
+	<h2 class="test_section">Changing properties in different states</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>In the States palette, select the "ddd" state. Go to Outline palette and 
+				click on the closed eyeball icon for the Calendar to make it visible
+				(the eyeball should open and the Calendar should become visible on the canvas),
+				then click on the open eyeball icon for the TextBox to make it invisible
+				(the eyeball should close and the TextBox should become invisible on the canvas).</li>
+		<li>(Note: For some of these cases below, the Properties palette will
+			default to targeting the CSS style rule within a CSS style sheet.
+			Instead, bring up CSS cascade and set the target to element.style.
+			This might be something we fix in the future.
+			We should know that you can set fonts on the root node for button
+			and can set width on the root for calendar.)</li>
+		<li>On the States palette, go into the Normal state. 
+				Select the first button widget. On the Styling palette, set font color to a reddish color and font size to 20.
+				Select the calendar widget. On the Object palette, set the width to 200px.</li>
+		<li>On the States palette, go into the "aaa" state. 
+				Select the second button widget. On the Styling palette, set font color to a greenish color and font size to 30.
+				Select the calendar widget. On the Object palette, set the width to 300px.</li>
+		<li>On the States palette, go into the "ddd" state. 
+				Select the third button widget. On the Styling palette, set font color to a bluish color and font size to 40.
+				Select the calendar widget. On the Object palette, set the width to 400px.</li>
+		<li>Save and close the file.</li>
+		<li>In the Files palette, double-click on the file you just closed to re-open the file.</li>
+		<li>Click on the Preview in Browser button on the main toolbar. A new browser tab or window should appear
+				with your new file showing within the frame.</li>
+		<li>Alternatively click on the 3 buttons.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should see slightly different results than in the previous section. 
+				The Label should disappear when you click on the second button and 
+				the TextBox should disappear when you click on the third button.</li>
+		<li>In all 3 states, the first button should have a reddish color and a font size of 20</li>
+		<li>In the normal state, the Calendar whould be 200px wide.</li>
+		<li>In the "aaa" state, the second button should have a greenish color and a font size of 30 and the Calendar whould be 300px wide.</li>
+		<li>In the "ddd" state, the third button should have a bluish color and a font size of 40 and the Calendar whould be 400px wide.</li>
+	</ol>
+
+</body>
+</html>

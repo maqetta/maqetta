@@ -1,0 +1,1227 @@
+@import url("../dojo/resources/dojo.css");
+@import url("../dijit/themes/claro/claro.css");
+@import url("../dojox/widget/Toaster/Toaster.css");
+@import url("../dojox/layout/resources/ResizeHandle.css");
+@import url("../dojox/html/resources/ellipsis.css");
+
+@import url("syntaxColors.css");
+@import url("propview.css");
+
+.downloadSelectedHeader{
+	font-weight: bold;
+}
+
+.downloadSelectedList{
+	overflow: auto;
+	height: 50px;
+	margin-left:10px;
+}
+
+.dwnloadLibTable .columnc{
+	text-align: center;
+}
+
+#davinci_app .dijitTabContainer, #davinci_app .dijitSplitter {
+	background-color: #cedfe9;
+}
+.claro #davinci_app .davinciPaletteContainer .dijitTab.dijitTabChecked .dijitTabInnerDiv {
+	background-color:#B2D4F3;
+}
+.claro #davinci_app .davinciPaletteContainer .dijitTab .dijitTabInnerDiv {
+	background-color:#d0d0d0;
+}
+.claro #davinci_app .davinciPaletteContainer .davinciBottomPalette .dijitTabContainerTop-tabs .dijitTab {
+	padding-top:0px;
+}
+
+/**** RESTORE THIS LOGIC LATER WHEN WE ALLOW USERS TO ADD/REMOVE PALETTES ****/
+.claro #davinci_app .davinciPaletteContainer .dijitTabCloseIcon {
+	/*opacity:0;*/ /* visibility:hidden doesn't seem to work with :hover */
+}
+.claro #davinci_app .davinciPaletteContainer .dijitTabCloseIcon:hover {
+	/*opacity:1;*/
+}
+
+/**** TEMPORARILY, DONT SHOW CLOSE BUTTON ****/
+.claro #davinci_app .davinciPaletteContainer .dijitTabCloseIcon {
+	display:none;
+}
+
+#davinci_app .dijitSplitterH {
+	height:4px;
+}
+#davinci_app .dijitSplitterV {
+	width:4px;
+}
+.claro #editors_tabcontainer .dijitBorderContainer {
+	background-color:#888;
+}
+.claro #editors_tabcontainer .dijitBorderContainer-dijitContentPane {
+	border:1px #444 solid;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	padding:0;
+}
+
+.heading {
+	font-weight: bold;
+	padding-bottom: 0.25em;
+}
+
+.viewActionIcon {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat;   
+}
+.editActionIcon {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat; 
+}
+
+.StyleNormalViewButton {
+	width:17px;
+}
+.StyleNormalViewButton .dijitButtonNode {	
+	width:16px !important;
+	padding:0 !important;
+}
+
+.styleImagePreviewDiv{
+	width:16px;
+	height:16px;
+	border: 1px solid #B3B3B3;
+	background-repeat: no-repeat
+}
+.styleAlphaNameColumn,
+.styleCategoryNameColumn{
+	font-family: Verdana, sans-serif, Arial;
+	font-weight: bold;
+	font-size: 10px;
+	text-align: left;
+	float: left;
+	width: 13em !important;
+	
+}
+.computedCssValue {
+	background-color : #ffe8e8 !important;
+	border-color:#411 !important;
+	
+	
+}
+.styleAlphaValueColumn,
+.styleCategoryValueColumn{
+	
+	font-family: Verdana, sans-serif, Arial;
+	font-weight: normal;
+	font-size: 10px;
+	width: 13em !important;
+	float:right;
+	display:inline;
+	
+}
+
+.styleCategoryTable,
+.styleAlphaTable {
+	font-family: Verdana;
+	font-weight: normal;
+	font-size: 10px;
+	
+	width: 250px;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	margin-top: 0px;
+} 
+.StyleNormalViewButton .dijitButtonContents {
+	margin-left:-3px !important;
+}
+
+.StyleNormalViewSpacerFontButtonGroups {
+	display:inline-block;
+	width:3px;
+}
+.StyleNormalViewSpacerBGBorder {
+	display:inline-block;
+	width:4px;
+}
+.StyleNormalViewSpacerBorderColorWidth {
+	display:inline-block;
+	width:4px;
+}
+
+.stylePaneNormalViewTable{
+	table-layout: fixed;
+	border-spacing:0;
+	margin:0;
+	padding:0;
+}
+
+/* WE AREN'T SHOWING ICONS IN PROPS PALETTE NOW. MIGHT RESTORE THEM LATER
+.styleBoldButton {
+	background-image: url('img/styletoolbar/bold.gif') !important;
+	width:16px;
+	height:16px;
+}
+
+.styleItalicsButton {
+	background-image: url('img/styletoolbar/italic.gif') !important; 
+	width:16px;
+	height:16px;
+}
+
+.styleUnderlineButton {
+	background-image: url('img/styletoolbar/underline.gif') !important; 
+	width:16px;
+	height:16px;
+}
+
+.styleLeftJustifyButton {
+	background-image: url('img/styletoolbar/align_left.gif');
+	width:16px;
+	height:16px;
+}
+
+.styleRightJustifyButton {
+	background-image: url('img/styletoolbar/align_right.gif');
+	width:16px;
+	height:16px;
+}
+
+.styleCenterButton {
+	background-image: url('img/styletoolbar/align_center.gif');
+	width:16px;
+	height:16px;
+}
+*/
+
+#davinci_ve_widgets_ColorPicker_1 input, #dijit_form_TextBox_0, #dijit_form_TextBox_5 {
+	color: transparent;
+}
+
+#davinci_ve_widgets_MultiTypeDropDown_0 {
+	padding: 2px;	
+}
+
+#davinci_ve_widgets_Background_0 {
+	margin-bottom: -3px;	
+}
+
+#davinci_ve_widgets_ColorPicker_0 div, #davinci_ve_widgets_ColorPicker_1 div, #davinci_ve_widgets_ColorPicker_2 div{
+	background-image: none;	
+}
+
+#styleFillColorIcon {
+	margin-bottom: -5px;
+}
+
+#styleBackgroundImageIcon {
+	margin-bottom: -4px;	
+}
+
+.propertiesPaneTable {
+	margin: 4px;
+	table-layout:fixed;
+	width:13em;
+}
+
+.objectPaneTable {
+	margin: 4px;
+	table-layout:fixed;
+	border-collapse:collapse;
+	font-size:9pt;
+}
+
+.objectPaneTable th,
+.objectPaneTable td {
+	padding:1px 0 0 0;
+} 
+
+.propertiesSelectionName,
+.objectSelectionName{
+	background-image:none !important;
+	background-color:#EAEAEA !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+}
+.objectSelectionName{
+	height:2em;
+}
+
+.styleViewCol3{
+	background-image:none !important;
+	background-color:#EAEAEA !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+	
+}
+
+.styleViewCol2{
+	background-image:none !important;
+	background-color:#EAEAEA !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+	
+}
+.styleViewCol1{
+	
+	
+}
+.styleViewCol4{
+	background-image:none !important;
+	background-color:#EAEAEA !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+}
+.propertiesAppliesToToolBar{
+	background-image:none !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+    width:74px !important;
+    background-color:#EAEAEA !important;
+	
+}
+
+.propertiesViewToolBar{
+    background-image:none !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+    width:74px !important;
+}
+.propertiesNameColumn,
+.objectNameColumn{
+    width:7em;
+}
+.propertiesValueColumn,
+.objectValueColumn{
+}	
+.styleHeader {
+    background-color:#4477BB !important;
+    background-image:none !important;
+    font: normal 900 8pt bold Verdana,sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #464646;
+}
+
+#editors_tabcontainer > .dijitTabPaneWrapper {
+	background-color:white;
+}
+
+.themeEditor {
+		background-color: white !important;	
+}
+
+/* Tweaks to Claro for editor toolbar */
+.claro .dijitToolbar.davinciToolbar {
+	padding:2px 4px 4px; 
+	line-height:18px;
+	font-size:10px;
+	background-color:transparent;
+	background-image:none;
+	border-bottom:none;
+}
+.claro .dijitToolbar.davinciToolbar .dijitButtonContents {
+	padding:0 2px;
+	line-height:16px;
+}
+
+#davinci_app {
+	height: 100%;
+}
+
+#davinci_top_bar {
+	padding:0 8px 0 22px; /* override dijitContentPane */
+	background: #2c2c2c url('img/banner-tile.png') repeat-x;
+	color: #cccccc;
+    font: normal bold 12px Arial, sans-serif;
+    text-shadow:none;
+    border-top: rgb(45,46,46) 1px;
+	border-bottom: rgb(45,46,46) 1px;
+	overflow: hidden;
+	line-height:38px;
+}
+.maq_banner_name_box {
+	display: inline-block;
+	padding-top: 1px;
+}
+.dj_gecko .maq_banner_name_box {
+	padding-top: 2px;	// Different rounding rules between WebKit and Gecko
+}
+.maq_banner_name {
+    font: normal normal 10pt Arial, sans-serif;
+	color:white;
+	text-shadow: #000000 1px 1px 1px;
+}
+.maq_banner_component {
+    font: normal normal 10pt Arial, sans-serif;
+    color:#949494;
+}
+.maq_banner_version {
+    font: italic normal 10pt Arial, sans-serif;
+    color:#949494;
+}
+
+#davinci_top_bar .dijitToolbar,
+davinci_top_bar .dijitButtonNode {
+	border: 0 !important;
+}
+
+#davinci_user_container {
+	display: inline-block;
+	float: right;
+	padding-right: .5em;
+}
+
+#davinci_user {
+	font: normal bold 12px Arial, sans-serif;
+	color: #CCC;
+	text-shadow: black 1px 1px 1px;
+}
+
+#davinci_user a {
+	color:#EAEAEA;
+}
+
+
+#davinci_logoff {
+	font: normal normal 9pt Arial, sans-serif;
+	color: #CCC;
+	text-shadow: black 1px 1px 1px;
+	text-decoration:none;
+}
+#davinci_logoff:hover {
+	text-decoration:underline;
+}
+#toolbar_container {
+	display: table;
+	margin: 0 auto;
+	padding: 0;
+	height: 32px
+}
+.toolbaredContainer_toolbarDiv {
+	/* no override rules at this time */
+}
+
+#davinci_toolbar_main {
+	display:inline;
+	background: none;
+	border: none;
+	padding-top:15px !important;
+    font: normal normal bold 8pt sans-serif;
+}
+
+/* FIXME: Probably don't need to define rules for both DropDown and Combo.
+	We will probably use one or the other */
+.claro #davinci_app #davinci_user_container .dijitDropDownButton .dijitButtonNode,
+.claro #davinci_app #davinci_user_container .dijitComboButton,
+.claro #davinci_app #davinci_user_container .dijitComboButton .dijitButtonNode
+{
+	border:none;
+	background-color:transparent;
+	background-image:none;
+	padding-left:0px;
+	padding-right:0px;
+	padding-bottom:6px; /* For win/chrome - see subsequent rule for other browsers */
+}
+/* Deal with 1-pixel layout difference for win/chrome, which gets padding-bottom:6px
+	this rule makes it so mac/chrome and all versions of FF get padding-bottom:4px; */
+.isMac .claro #davinci_app #davinci_user_container .dijitDropDownButton .dijitButtonNode,
+.dj_gecko .claro #davinci_app #davinci_user_container .dijitDropDownButton .dijitButtonNode {
+	padding-bottom:4px;
+}
+.claro #davinci_app #davinci_user_container .dijitDropDownButton,
+.claro #davinci_app #davinci_user_container .dijitComboButton
+{
+	margin:.2em .45em;	/* Add extra lr padding over what Claro provides */
+}
+.claro #davinci_app #davinci_user_container .dijitDropDownButton .dijitButtonText,
+.claro #davinci_app #davinci_user_container .dijitComboButton .dijitButtonText
+{
+	padding:0px .2em;	/* Squeeze padding a bit over what Claro provides */
+	margin-top: -2px;	/* To make baselines align with text on either side of buttons */
+}
+
+.claro #davinci_app #davinci_user_container .dijitArrowButtonInner {
+	/* background-image:url("img/buttonArrows.png");*/	/* Derived from Claro, but no bluish tint  FIXME: why?  resolve with other claro buttonArrows reference in .paletteDropdown */
+	/* Following 2 lines squeeze the arrow closer to text */
+	/* background-position:-53px 53%; */
+	background-image:url("img/banner_droparrow.png");
+	background-position: 5px 6px;
+	width: 20px;
+}
+#davinci_top_bar .dijitButtonText {
+	font:normal bold 9pt Arial, sans-serif;
+	color:#cccccc;
+	text-shadow: #000000 1px 1px 1px;
+}
+
+.claro #davinci_app #davinci_user_container .dijitDropDownButtonHover .dijitButtonNode,
+.claro #davinci_app #davinci_user_container .dijitComboButton .dijitButtonNodeHover,
+.claro #davinci_app #davinci_user_container .dijitComboButton .dijitDownArrowButtonHover, 
+.claro #davinci_app #davinci_user_container .dijitDropDownButtonHover .dijitButtonNode
+{
+	color: white; /* Override Claro, which uses black */
+}
+#davinci_user_welcome {
+	font:normal normal 8.75pt Arial, sans-serif;
+	color:#cccccc;
+	text-shadow: #000000 1px 1px 1px;
+}
+#davinci_user, #davinci_logoff {
+	padding:0 0 2px;	/* Claro puts 2px extra padding-bottom on DropDownMenus */
+}
+#davinci_user, #davinci_logoff {
+	margin-left: 3px;
+	margin-right: 15px;
+}
+#loginpane {
+	margin-top: 2em;
+	margin-left: 5em;
+}
+
+.dvOutlineVisibility {
+	position:relative;
+	width:16px;
+	height:13px;
+	margin-left:2px;
+	margin-top:-2px;
+	margin-right:-18px;
+	background-position:-2px -4px;
+}
+
+.dvOutlineVisibilityOn {
+	background-image:url('img/visible.gif');
+}
+
+.dvOutlineVisibilityOff {
+	background-image:url('img/not_visible.gif');
+}
+
+.dvStateNode .dvOutlineVisibilityOn {
+	background-image:url('img/checkmarkNoBorder.png');
+	background-position:-2px -4px;
+}
+
+.dvStateNode .dvOutlineVisibilityOff {
+	background-image:url('img/checkmarkNoBorder.png');
+	background-position:-34px -4px;
+}
+
+/*FIXME: These two style rules aren't hooked up yet to theme editor
+	Visual Outline palette, so hasn't been tested yet. */
+.dvSubwidgetNode .dvOutlineVisibilityOn {
+	background-image:url('img/checkmarkNoBorder.png');
+	background-position:-98px -4px;
+}
+
+.dvSubwidgetNode .dvOutlineVisibilityOff {
+	background-image:url('img/checkmarkNoBorder.png');
+	background-position:-114px -4px;
+}
+
+.dvBox {
+	display: inline-block;
+	height: 13px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+	vertical-align: middle;
+}
+
+#dvStatesDataGrid .dojoxGridHeader {
+   display: none;
+}
+
+#dvStatesViewToolbar {
+	border-bottom:1px solid #aaa;
+	background:#eee;
+	margin:0;
+	padding:3px;
+	font-family:helvetica,arial,sans-serif;
+	font-size:85%;
+}
+
+#dvStatesViewActions {
+	text-align:right;
+}
+
+#dvStatesViewCurrentWidgetID {
+	xdisplay:inline-block;
+	xfloat:left;
+}
+
+#dvStatesViewTransition {
+	display:inline-block;
+	float:left;
+	margin-top: 4px;
+}
+
+#widget_dvStatesViewTransitionBox {
+	width:40px;
+	margin-top: -2px;
+	margin-left: 3px;
+	margin-bottom: 2px;
+}
+
+#dvStatesViewToolbarFooter {
+	clear: both;
+}
+
+#dvStatesViewDataGridContainer {
+	height: 80%;
+	xbackground: blue;
+}
+#dvOutlineSubcontainer {
+	overflow: auto;
+	/* overflow: hidden; /* hide scrollbars on outline */
+	white-space: nowrap;
+	height: 100%;
+}
+.dvStateBox {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-width: 1px;
+	border-style: solid;
+	vertical-align: middle;
+}
+
+.dvHTMLVisualEditorSourcePane {
+	padding: 0 !important;
+	overflow: hidden;
+}
+
+.bbtView {
+}
+
+/* Palette */
+.dojoyPalette {
+    background-color: white !important;
+    height: 100%;
+    overflow-x: hidden;
+}
+.dojoyPaletteCommon a {
+	text-decoration: none;
+    color: black;
+    white-space: nowrap;
+    display: block;
+}
+.dojoyPaletteCommon img {
+	vertical-align: top;
+    padding-right: 4px;
+}
+.dojoyPaletteCommon {
+	white-space: nowrap;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #D1D1D1 #989898 #989898 white;
+    font-family: tahoma, helvetica, arial, sans-serif;
+/*    font-size: 9pt;*/
+    cursor: pointer;
+    padding: 1px;
+}
+.dojoyPaletteHeader {
+}
+.dojoyPaletteItem {
+    background-color: white;
+    margin: 0 1px 1px 0;
+    border-color: white;
+}
+.dojoyPaletteItemFlat {
+	border-color: white;
+	background-color: white;
+	margin: 0 1px 1px 0;
+}
+.dojoyPaletteItemRaised {
+	border-color: white #ACA899 #ACA899 white;
+	background-color: #F0F4FC;
+	margin: 0 1px 1px 0;
+}
+.dojoyPaletteItemSunken {
+	border-color: #ACA899 white white #ACA899;
+	background-color: #D9E9F9;
+	margin: 1px 0 0 1px;
+}
+.dojoyPaletteFolder {
+    border-color: #D1D1D1 #989898 #989898 white;
+}
+.claro .dojoyPaletteFolderLow {
+/*    background-image: url(images/palette-folder-bg.gif); */
+	 background: #EAEAEA url(../dijit/themes/claro/images/titlebar.png) repeat-x scroll left top;
+}
+.claro .dojoyPaletteFolderHi {
+/*    background-image: url(images/palette-folder-bg-hi.gif); */
+	    background: #EAEAEA url(../dijit/themes/claro/images/titlebar.png) repeat-x scroll left top;
+}
+.dojoyPaletteSearch {
+/*	font-size: 12px;*/
+    background-repeat: no-repeat;
+    padding-left: 1px;
+}
+/* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
+	look like a button. Really need to do a UI makeover for Add Files dialog. */
+#btn0.browse {
+	width:8em; text-align:center; padding:3px; border:1px #555 solid; border-radius:10px; -moz-border-radius:10px;
+}
+#btn0.browse:hover {
+	background-color:#aaa;
+}
+
+.editCutIcon {
+	background-image: url(img/cut.gif);
+}
+.editCopyIcon {
+	background-image: url(img/copy.gif);
+}
+.editPasteIcon {
+	background-image: url(img/paste.gif);
+}
+.editDeleteIcon {
+	background-image: url(img/delete.gif);
+}
+
+.addStateIcon {
+	background-image: url("img/plusButton.gif");
+}
+.removeStateIcon {
+	background-image: url("img/minusButton.gif");
+}
+
+.designModeIcon {
+	background-image: url(img/mode_design.gif);
+}
+
+.sourceModeIcon {
+	background-image: url(img/mode_source.gif);
+}
+
+.splitVerticalIcon {
+	background-image: url(img/mode_split.gif);
+}
+
+.splitHorizontalIcon {
+	background-image: url(img/mode_split_h.gif);
+}
+/* FIXME: I'm hardcoding the dropdown arrow icon from Claro.
+	Instead, we should just use a Dijit DropDownArrow control
+	and then inherit the styling "for free" but current code
+	for dropdown menus uses dijit.Menubar as top-level widget
+	because that's what Phil recommended. */
+.paletteDropdown {
+	display:inline-block;
+	float:right;
+	border:none;
+	background-image:url("../dijit/themes/claro/form/images/buttonArrows.png");
+	background-position:-51px 53%;
+	background-repeat:no-repeat;
+	height:15px;
+	margin:3px 5px 0;
+	width:15px;
+}
+.EditorContainer .paletteDropdown {
+	margin:5px 5px 0;
+}
+.paletteDropdown .dijitMenuBar, .paletteDropdown .dijitMenuBar .dijitMenuItem {
+	background:none;
+}
+/* Override claro theme, which puts a solid border around menus FIXME: still needed? */
+.paletteDropdown .dijitMenu, .paletteDropdown .dijitMenuBar {
+	border:none;
+}
+
+#welcome_page_content {
+	margin:-2px 0;
+	border:1px solid #b5bcc7;	
+	border-bottom:none;
+	height:100%;		
+}
+#welcome_page_new_open_container, #editors_tabcontainer_new_open_container {
+	display:inline-block;
+	white-space:no-wrap;
+	float:right;
+	margin:2px 2px 0 2px;
+}
+.claro #davinci_app .dijitComboButton .dijitButtonNode {
+	/* background-image:none; */
+	background-color:#FFF;
+	background-image:url("img/header_shadow.png");
+	background-position:center bottom;
+	
+}
+.claro #davinci_app .newOpenComboButton .dijitArrowButtonInner,
+.claro #davinci_app .newOpenComboButton .dijitArrowButtonInner {
+	margin-top:5px;	/* Drop downarrow down to align with text better */
+}
+.claro .dijitComboButton .dijitButtonNode {
+	padding:0px 4px 2px;
+}
+.editor_top_new_button {
+	background-image:url("img/add.gif");
+	width:16px;
+	height:16px;
+}
+.editor_top_open_button {
+	background-image:url("img/open.gif");
+	background-position:0px -3px;
+	width:16px;
+	height:16px;
+}
+
+.claro .loading{
+	background-color: #eee;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 110;
+	display: block;
+	opacity: 0.5;
+	background-image: url('../dojox/image/resources/images/loading.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.inlineEdit{
+	position: absolute;
+	/*width: 750px;*/
+	/*height: 380px;*/
+	z-index: 110;
+	display: none;
+}
+
+.inlineEditConnectorBelow{
+ 	background-image: url("../dijit/themes/claro/images/tooltip.png");
+    background-position: -31px 0;
+    background-repeat: no-repeat;
+    border: 0 none;
+    height: 14px;
+    left: 35px;
+    top: 19px;
+    width: 16px;
+    z-index: 112;
+    position: absolute;
+}
+
+.inlineEditDisabled{
+	opacity: .5;
+}
+
+
+.inlineEditHelp{
+	background-image: url('img/linkto_help.gif');
+	height: 16px; 
+	width: 16px;
+	display:inline-block;
+	margin-top: 5px;
+	    
+}
+
+.inlineEditHelpSelected{
+	background-image: url('img/linkto_help_selected.gif');
+	height: 16px; 
+	width: 16px;
+	display:inline-block;
+	margin-top: 5px;
+}
+
+.inlineEditHelpOk .dijitButtonNode, .inlineEditHelpCancel .dijitButtonNode{
+	width:40px;
+	/*padding: 0 .7em; 
+	display: inline-block;*/
+}
+
+/*.inlineEditHelpOkCancel {
+	text-decoration: underline;
+}*/
+
+.davinciIleb {
+	width: 200px; 
+	/*border-width:3px; */
+	/*border-width:1px;*/
+	border-width:0px 0px 1px 0px;
+	border-style:solid;
+	border-color: #769DC0;
+	/*-moz-border-radius: 4px 4px 0px 0px;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);*/
+}
+
+.iedResizeDiv {
+	position: relative; 
+	width: 200px; 
+	/*height:19px; not needed for textarea*/ 
+}
+
+.smartInputTextBox {
+	overflow: auto;
+	padding: 1px;
+	margin-left: -1px;
+	outline:none;
+}
+
+.smartInputTextArea {
+	/*border-style: solid;*/
+    /*border-width: 3px 3px 0;*/
+    border-width: 0px;
+    overflow: auto;
+    resize:none;
+    outline:none;
+}
+
+.smartInputSim {
+	/*height:10px;*/
+	height:18px; 
+	/*border-color: #B5BCC7;*/ 
+	border-color: #769DC0;
+	border-style: solid; 
+	/*border-width: 0px 3px 3px 3px;  */
+	border-width: 0px 0px 1px 0px;  
+	background-color: #F7FCFF;
+	margin: -1px;
+}
+
+.smartInputDiv {
+	display: block; 
+	width:100%;
+}
+
+.smartInputRadioDiv{
+	/*border: 3px solid #86a9c6; */
+	/*border: 1px solid #769DC0;; 
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);*/
+	background-color: #f7fdff; 
+	font-size: 90%; 
+	/*padding-top: 3px; */
+	padding-top: 2px; 
+	padding-left: .6em; 
+	padding-right: 1px;
+	width: 195px; 
+	/*height:60px; */
+	/*border-top-style: none;
+	-moz-border-radius: 0px 0px 4px 4px;*/
+}
+
+.smartInputRadioDiv table {
+	width: 100%;
+}
+
+.smartInputTd1 {
+	 width: 16px;
+}
+
+.smartInputTd2 {
+	width: 200px;
+	white-space: nowrap;
+}
+
+.smartInputRadioTextDiv  {
+	width: 100px;
+}
+
+/*
+.smartInputHelpDiv {
+	padding-right: .7em; 
+	line-height: 1.5em; 
+	padding-left: .5em; 
+	padding-bottom: 3px; 
+	padding-top: 3px;
+}
+*/
+
+.smartInputSpacerSpan {
+	float: right; 
+	display: inline-block;
+	 line-height: 2em;
+}
+
+.smartInputHelpTextDiv {
+	border-top: 1px solid #86a9c6; 
+	padding-top: .4em; 
+	margin-top: .25em; 
+}
+
+.EditorContainer {
+	z-index: -4;
+}
+
+.EditorContainer .dijitBorderContainer {
+	z-index: -3;
+}
+
+.EditorContainer IFRAME {
+		 border: 0;
+		 width: 100%;
+		 height: 100%;
+}
+
+.EditorContainer .ipad IFRAME {
+		 height: 549px;
+		 width: 412px;
+		 margin-top: 152px;
+		 margin-left: 182px;
+		 -webkit-animation: turn 1s;
+ 		 -webkit-animation-timing-function: cubic-bezier(0,1,0,1);
+}
+
+.EditorContainer .iphone IFRAME {
+		 height: 208px;
+		 width: 139px;
+		 margin-top: 300px;
+		 margin-left: 293px;
+		 -webkit-animation: turn 1s;
+ 		 -webkit-animation-timing-function: cubic-bezier(0,1,0,1);
+}
+
+.EditorContainer .android_480x800 IFRAME {
+		 height: 231px;
+		 width: 139px;
+		 margin-top: 250px;
+		 margin-left: 181px;
+		 -webkit-animation: turn 1s;
+ 		 -webkit-animation-timing-function: cubic-bezier(0,1,0,1);
+}
+
+.EditorContainer .blackberry IFRAME {
+		 height: 193px;
+		 width: 144px;
+		 margin-top: 247px;
+		 margin-left: 247px;
+		 -webkit-animation: turn 1s;
+ 		 -webkit-animation-timing-function: cubic-bezier(0,1,0,1);
+}
+
+@-webkit-keyframes turn{
+		0%{opacity: 0;}
+		100%{opacity: 1;}
+}
+
+.EditorContainer .landscape IFRAME {
+		 -webkit-animation: turn 1s;
+ 		 -webkit-animation-timing-function: cubic-bezier(0,1,0,1);
+}
+
+.EditorContainer .ipad.landscape IFRAME {
+		 width: 549px;
+		 height: 412px;
+		 margin-left: 133px;
+		 margin-top: 186px;
+}
+
+.EditorContainer .iphone.landscape IFRAME {
+		 width: 208px;
+		 height: 139px;
+		 margin-left: 320px;
+		 margin-top: 297px;
+}
+
+.EditorContainer .android_480x800.landscape IFRAME {
+		 width: 231px;
+		 height: 139px;
+		 margin-left: 268px;
+		 margin-top: 224px;
+}
+
+.EditorContainer .blackberry.landscape IFRAME {
+		 width: 193px;
+		 height: 144px;
+		 margin-left: 352px;
+		 margin-top: 248px;
+}
+
+.EditorContainer .landscape .device {
+		 -moz-transform: rotate(90deg);
+		 -webkit-transform: rotate(90deg);
+		 -o-transform: rotate(90deg);
+		 transform: rotate(90deg);
+}
+
+.ipad #device-ipad {
+	width: 825px;
+	height: 842px;
+	display: inline;
+	-webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+   	transition: all 1s ease-in-out;
+}
+
+.iphone #device-iphone {
+	width: 824px;
+	height: 830px;
+	display: inline;
+	-webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+   	transition: all 1s ease-in-out;
+}
+
+.android_480x800 #device-android_480x800 {
+	width: 706px;
+	height: 792px;
+	display: inline;
+	-webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+   	transition: all 1s ease-in-out;
+}
+
+.blackberry #device-blackberry {
+	 height: 792px;
+	 width: 791px;
+	display: inline;
+	-webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+   	transition: all 1s ease-in-out;
+}
+
+.device {
+	display: none;
+	position:absolute;
+	z-index: -1;
+}
+
+.claro #editorsWelcomePage.dijitContentPane {
+	padding:0;
+}
+.welcome_above_content {
+	height:32px;
+	background:#cedfe9;
+	margin:-1px;
+}
+.welcome_content {
+}
+.welcome_header {
+	height:34px;
+	line-height:34px;
+	background:#ededed;
+	text-align:center;
+	font: bold 1.364em/34px Verdana, sans-serif;
+	border-top:1px solid #b5bcc7;
+	border-bottom:1px solid #b5bcc7;
+}
+.welcome_under_header {
+	height:22px;
+	background:#f9f9f9;
+	border-bottom:1px solid #e1e4e9;
+}
+.welcome_section {
+	margin:10px 0 22px;
+}
+.welcome_section_active:hover {
+	color:blue;
+	cursor:pointer;
+}
+.welcome_section .welcome_section_footer {
+	clear:both;
+}
+.welcome_section_header {
+	font: 1.364em/34px Verdana, sans-serif;
+	margin-bottom:10px;
+}
+.welcome_section_container {
+	padding-top:4px;
+	padding-left:1px;
+}
+.welcome_icon {
+	float:left;
+	display:inline-block;
+	width:58px;
+	height:60px;
+	background-image:url(ve/resources/images/welcome_icons.png);
+	margin-right:12px;
+	margin-top:-4px;
+}
+.welcome_section_content {
+	font-family: Verdana, sans-serif;
+}
+.welcome_icon_tutorials {
+	background-position: -331px -5px;
+}
+.welcome_section_active:hover .welcome_icon_tutorials {
+	background-position: -331px -72px;
+}
+.welcome_section_active:active .welcome_icon_tutorials {
+	background-position: -331px -139px;
+}
+.welcome_icon_newhtml {
+	background-position: -6px -5px;
+}
+.welcome_section_active:hover .welcome_icon_newhtml {
+	background-position: -6px -72px;
+}
+.welcome_section_active:active .welcome_icon_newhtml {
+	background-position: -6px -139px;
+}
+.welcome_icon_newtheme {
+	background-position: -266px -5px;
+}
+.welcome_section_active:hover .welcome_icon_newtheme {
+	background-position: -266px -72px;
+}
+.welcome_section_active:active .welcome_icon_newtheme {
+	background-position: -266px -139px;
+}
+.welcome_icon_newreview {
+	background-position: -201px -5px;
+}
+.welcome_section:hover .welcome_icon_newreview {
+	background-position: -201px -72px;
+}
+.welcome_section_active:active .welcome_icon_newreview {
+	background-position: -201px -139px;
+}
+.welcome_content table {
+	width:100%;
+	border-collapse:collapse; /* cellspacing equiv */
+}
+.welcome_content td.welcome_section_cell {
+	padding:0 10px 0 20px; /* cellpadding equiv */
+	vertical-align:top;
+}
+.welcome_content td.welcome_action_cell {
+	vertical-align:middle;
+	line-height:25px;
+}
+.welcome_action_cell:hover {
+	color:blue;
+	cursor:pointer;
+}
+.welcome_action_icon {
+	width:16px;
+	height:16px;
+	display:inline-block;
+	margin-right:4px;
+	vertical-align:middle;
+}
+.welcome_content .welcome_action {
+	vertical-align:0px;
+}
+.welcome_upload_icon {
+	background-image:url(ve/resources/images/upload_file.gif);
+}
+.welcome_themeeditor_icon {
+	background-image:url(ve/resources/images/open_theme_edit.gif);
+}
+.welcome_importwidget_icon {
+	background-image:url(ve/resources/images/import_widget.gif);
+}
+.welcome_learn_more {
+	margin-top:1em;
+}
+.welcome_learn_more:hover {
+	color:blue;
+	cursor:pointer;
+}
+
+
+
+

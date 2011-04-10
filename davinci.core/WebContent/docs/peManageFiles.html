@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Managing Your Files</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+    </td>
+    <td class="prevnext">
+    <a href="peToolbar.html">Previous</a> / <a href="peCreateContent.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Managing Your Files</h1>
+
+<div style="clear:both;">
+
+<div class="image" style="float:right; padding:0 20px 10px;" >
+   <img alt="image" style="margin:0;" src="img/Maqetta_UI_Files.png" />
+   <div>The Files palette</div>
+</div>
+
+<p>Files that you create in Maqetta are saved in your <a href="install.html">user workspace folder</a>. (If you are accessing Maqetta from the server then this is a folder associated with your username on the Maqetta server.
+If you are running Maqetta locally then this is the local Maqetta workspace folder specified in the Maqetta startup file.
+See <a href="install.html">Accessing / Installing Maqetta</a> for details.)</p>
+<p>Files in the <a href="install.html">user workspace folder</a> are displayed in the <b>Files palette</b>.
+
+<h3>Files Palette Toolbar</h3>
+
+<p>The Files palette toolbar contains three icons:</p>
+<ul>
+<li><b>Download entire workspace</b> - Creates a ZIP file containing all files in your workspace. A dialog appears that 
+allows you to decide whether to include JavaScript libraries (e.g., Dojo) within the ZIP in order to make
+a fully self-sufficient runnable workspace image, but note that the ZIP may be quite large due to the size of the libraries.
+The dialog also allows adjusting the location of the JavaScript libraries in case you are targeting unpacking
+the ZIP into a developer tool which assumes JavaScript libraries are at a different location (absolute or relative URL).</li>
+<li><b>Download selected files</b> - Similar to the above command, except only files that are selected will be downloaded.
+You have the same choices about whether to include JavaScript files and whether to relocate the libraries.</li>
+<li><b>Manage libraries</b> - This brings up a dialog that allows you to manage the JavaScript libraries
+that are used in your workspace, including whether to embed the libraries into your workspace or reference them
+from an external URL (e.g., the Google Ajax CDN at <a href="http://code.google.com/apis/libraries/">http://code.google.com/apis/libraries/</a>).</li>
+</ul>
+
+<h3>Files Palette Context Menu</h3>
+
+<p>The <b>Files palette</b> has a <b>context menu</b> with 5 commands:</p>
+
+<ul>
+ <li><b>New file...</b> - creates a new file for editing</li>
+ <li><b>New folder...</b> - creates a new folder in your Maqetta workspace</li>
+ <li><b>Upload file</b> - uploads files from your local file system to your Maqetta workspace</li>
+ <li><b>Delete resource</b> -  deletes the currently selected file from your Maqetta workspace</li>
+  <li><b>Download</b> - zips and downloads the currently selected file(s) to your local system.</li>
+</ul>
+<p>You can also access your Maqetta files from the <a href="wsMenubar.html">Maqetta Menu Bar</a>.</p>
+
+</div>
+
+
+<h3>Create New Files and New Folders</h3>
+<p>New files and new folders can be created from either the <a href="wsMenubar.html">Maqetta Menu Bar</a> or the Files palette's context menu. Files can be saved into the user workspace root folder (indicated by a ".") or into a sub-folder (you create sub-folders using the <b>New folder...</b> command). See the <b>New</b> section under the <a href="wsMenubar.html">Maqetta Menu Bar</a> for details.</p>
+<p>Note: You should not put your files in the Maqetta <b>themes</b> folder since this contains CSS files maintained by Maqetta.</p>
+
+<h3>Upload Files</h3>
+<p>You can also import files from your local file system into Maqetta using the <b>Upload file</b> option from the Files palette context menu. Upload will <b>copy</b> the file to the user workspace, into the folder specified under <b>Parent Folder:</b> in the dialog window. (To specify a sub-folder, first select the sub-folder in the Files palette, then bring up the context menu.) Once uploaded, the files will be displayed in the Files palette.</p>
+
+<h3>Open Existing Files</h3>
+<p>To open an existing file, either select <b>Open > Open File...</b> from the <a href="wsMenubar.html">Maqetta Menu Bar</a>, or double-click on the file in the <a href="wsPalettes.html">Files palette</a>. HTML files and image files are opened in the page editor canvas in <b>Design view</b>.  CSS and JavaScript files are opened in <b>Source view</b>.</p>
+
+<h3>Delete Files</h3>
+<p>To delete a file, first select it in the <a href="wsPalettes.html">Files palette</a>, then open the Files palette context menu and select <b>Delete resource</b>. Select OK at the "Are you sure" prompt to delete the file.</p>
+
+<h3>Download</h3>
+<p>You can export files from your Maqetta user workspace to your local file system using the <b>Download</b> option from the Files palette context menu. This will create a zip file containing the selected files.</p>
+
+<p class="prevnext"><a href="peToolbar.html">Previous</a> / <a href="peCreateContent.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

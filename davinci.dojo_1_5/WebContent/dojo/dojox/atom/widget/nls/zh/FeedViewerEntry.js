@@ -1,0 +1,3 @@
+({
+	deleteButton: "[删除]"
+})

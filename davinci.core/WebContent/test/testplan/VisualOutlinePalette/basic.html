@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Outline palette basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Outline palette basic tests</h1>
+
+	<h2 class="test_section">Widget hierarchy</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Select "Create New HTML File" from New menu. A folder titled showing the file name should appear in the Outline palette.</li>
+		<li>Drag a Button and a TextBox onto the canvas.  A Button entry and a TextBox entry should appear in the Outline palette.</li>
+		<li>Drag a ContentPane onto the canvas. A ContentPane entry should appear in the Outline palette.</li>
+		<li>Drag a Button into the ContentPane. A tree control (with a +/- square) should appear next to the ContentPane entry in the Outline palette.</li>
+		<li>Click on the + square next to the ContentPane to expand it. A child Button entry should be displayed.</li>
+		<li>Click on the - square next to the ContentPane to collapse it.</li>
+		<li>On the canvas, drag a DIV into the ContentPane. A &lt;div&gt; entry should appear in the Outline palette as a child of the ContentPane.</li>
+		<li>On the canvas, drag a Label and a ComboBox into the DIV. A + square should appear next to the &lt;div&gt; entry in the Outline palette.</li>
+		<li>On the Outline palette, expand the &lt;div&gt; entry. A &lt;label&gt; and a ComboBox entry should appear as children of the &lt;div&gt;.</li>
+		<li>On the canvas, drag a TabContainer onto an empty space on the canvas. A TabContainer should appear in the Outline palette under the root "Application" folder.</li>
+		<li>On the Outline palette, expand the TabContainer. It should contain two ContentPanes, one for each tab in the TabContainer.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>When no files are open, the Outline palette is empty.</li>
+		<li>When you open a new file, the Outline palette displays a folder titled "Application".</li>
+		<li>When you drag a widget (or an HTML element) onto the canvas, an entry is added to the Outline palette,
+		    consisting of an eyeball icon, a widget icon, and the widget name (e.g. "Button").</li>
+		<li>Widgets are displayed in a tree-like hierarchy on the Outline palette.
+			<ul>
+			<li>Widgets that are dropped directly onto the canvas are displayed in the Outline palette under the root "Application" folder.</li>
+			<li>Widgets that are dropped into container widgets are displayed in the Outline palette under their parent container's folder.</li>
+			</ul></li> 
+		<li>The widget icon for all container widgets is a folder.
+			<ul>
+			<li>If the container contains other widgets, a tree control (+/- square) is displayed to the left of the folder.</li> 
+		    <li>If the container is empty, the tree control is not displayed.</li>
+		    <li>When you click on the + square, the folder expands to show the contents of the folder.</li>
+		    <li>When you click on the - square, the folder collapses.</li>
+		    </ul></li>
+	</ol>
+
+	<h2 class="test_section">Selecting widgets from the Outline palette</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Click on any widget entry in the Outline palette to select it, and verify that the corresponding widget is also selected on the canvas.</li>
+		<li>In the Outline palette, expand the TabContainer and click on each child ContentPane of the TabContainer. Note how this selects each tab in the TabContainer on the canvas.</li>
+		<li>In the Outline palette, expand the TabContainer and select the second ContentPane.</li> 
+		<li>On the canvas, drag a Calendar widget onto the TabContainer. Verify that the Calendar goes onto Tab 2.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>When you select a widget entry in the Outline palette, the corresponding widget or subwidget is also selected on the canvas.</li>
+		<li>When you select a widget or subwidget on the canvas, the corresponding widget entry in the Outline palette is also selected.</li>
+	</ol>
+
+	<h2 class="test_section">Setting widget visibility</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>In the Outline palette, click on the eyeball icon next to the TabContainer. The eyeball should close and the TabContainer should become invisible on the canvas.</li>
+		<li>In the Outline palette, click on the eyeball icon next to the TextBox. The eyeball should close and the TextBox should become invisible on the canvas.</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file.</li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+		<li>In the Outline palette, the eyeball icons for the TextBox and the TabContainer should still be closed, and their widgets should still be invisible on the canvas.</li>
+		<li>In the Outline palette, click on the closed eyeball icon next to the TabContainer. The eyeball should open and the TabContainer should become visible on the canvas.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Every entry in the Outline palette should have an eyeball icon in the left-most column (except the root "Application folder").</li>
+		<li>All widgets are initially displayed with their eyeball icon open.</li>
+		<li>The eyeball icon can be toggled open or closed by clicking on the icon.
+			<ul>
+			<li>When you click on the open eyeball, the eyeball will close and the corresponding widget on the canvas will become invisible.</li>
+			<li>When you click on the closed eyeball, the eyeball will open and the corresponding widget on the canvas will become visible.</li>
+			</ul></li>
+		<li>When a container widget's eyeball icon is toggled, the container and all of it's children will become invisible or visible on the canvas.
+			<br />(Note - the children eyeball icons do not close unless you specifically click on a child widget's eyeball icon.)</li>
+		<li>Eyeball icons retain their state.
+			<ul>
+			<li>When you click off of a widget entry, the eyeball eyecon should retain its state.</li>
+			<li>When you close the file and re-open it, the eyeball should retain its saved state.</li>
+			</ul></li>
+		<li>See the StatesPalette test plan for testing widget visibility for different states.</li> 
+	</ol>
+
+	<h2 class="test_section">Widget rearrangement</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Try to rearrange the widgets by dragging and dropping rows in the Outline palette.
+			Try to reorder widgets with the same parent and try to move a widget to a different parent.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able rearrange widgets arbitrarily in the Outline palette.</li> 
+		<li><span style="color:red;font-weight:bold;font-style:italic;">
+			(In 0.6, you can't drag/drop arbitrarily. We are lacking protection against
+			doing invalid reparenting. For example, TabContainer can only have
+			layout containers such as ContentPane as children, but
+			the Outline palette allows rearrangement such that a
+			Button or SPAN can be a direct child of TabContainer.
+			This will be addressed in a future release.</span></li> 
+	</ol>
+
+</body>
+</html>

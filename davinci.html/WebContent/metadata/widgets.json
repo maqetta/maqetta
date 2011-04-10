@@ -1,0 +1,401 @@
+{
+    "name": "html",
+    "longName": "HTML Elements",
+    "version": "1.0",
+    "categories": {
+        "html": {
+            "name": "HTML",
+            "widgetClass": "html"
+        },
+        "untested": {
+            "name": "Untested Dojo & HTML",
+            "widgetClass": "html"
+        },
+        "html-generic": {
+            "name": "HTML",
+            "widgetClass": "generic"
+        },
+        "untested-generic": {
+            "name": "Untested Dojo & HTML",
+            "widgetClass": "generic"
+        }
+    },
+    "widgets": [
+        {
+            "name": "<div>",
+            "description": "HTML block container",
+            "type": "html.div",
+            "category": "html",
+            "icon": "resources/images/html-div.png",
+            "isContainer": true,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "<span>",
+            "description": "HTML inline container",
+            "type": "html.span",
+            "category": "html",
+            "icon": "resources/images/html-span.png",
+            "resizable": "none",
+            "isContainer": true,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "<table>",
+            "description": "Table",
+            "type": "html.table",
+            "category": "html",
+            "icon": "resources/images/html-table.png",
+            "children": [
+                {
+                    "type": "html.tbody",
+                    "children": [
+                        {
+                            "type": "html.tr",
+                            "children": [
+                                {
+                                    "type": "html.td"
+                                },
+                                {
+                                    "type": "html.td"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "html.tr",
+                            "children": [
+                                {
+                                    "type": "html.td"
+                                },
+                                {
+                                    "type": "html.td"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "isContainer": true
+        },
+        {
+            "name": "<tbody>",
+            "description": "Table Body",
+            "type": "html.tbody",
+            "category": "html",
+            "icon": "resources/images/html-table.png",
+            "hidden": true,
+            "children": [
+                {
+                    "type": "html.tr",
+                    "children": [
+                        {
+                            "type": "html.td"
+                        },
+                        {
+                            "type": "html.td"
+                        }
+                    ]
+                },
+                {
+                    "type": "html.tr",
+                    "children": [
+                        {
+                            "type": "html.td"
+                        },
+                        {
+                            "type": "html.td"
+                        }
+                    ]
+                }
+            ],
+            "resizable": "none",
+            "isContainer": true
+        },
+        {
+            "name": "<tr>",
+            "description": "Table Row",
+            "type": "html.tr",
+            "category": "html",
+            "icon": "resources/images/html-table.png",
+            "hidden": true,
+            "children": [
+                {
+                    "type": "html.td"
+                },
+                {
+                    "type": "html.td"
+                }
+            ],
+            "resizable": "none",
+            "isContainer": true
+        },
+        {
+            "name": "<td>",
+            "description": "Table Data",
+            "type": "html.td",
+            "category": "html",
+            "icon": "resources/images/html-table.png",
+            "hidden": true,
+            "isContainer": true,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "<tfoot>",
+            "description": "Table Footer",
+            "type": "html.tfoot",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "isContainer": true
+        },
+        {
+            "name": "<th>",
+            "description": "Table Header Cell",
+            "type": "html.th",
+            "category": "html",
+            "hidden": true,
+            "isContainer": true
+        },
+        {
+            "name": "<thead>",
+            "description": "Table Header",
+            "type": "html.thead",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "isContainer": true
+        },
+        {
+            "name": "<a>",
+            "description": "Hyperlink container",
+            "type": "html.a",
+            "category": "html",
+            "icon": "resources/images/html-a.png",
+            "properties": {
+                "href": ""
+            },
+            "children": "Link",
+            "resizable": "none",
+            "isControl": true,
+            "isContainer": true,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "<label>",
+            "description": "<label>",
+            "type": "html.label",
+            "category": "html",
+            "icon": "resources/images/html-label.png",
+            "children": "Label",
+            "resizable": "none",
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "<h1>",
+            "description": "level 1 header",
+            "type": "html.h1",
+            "category": "html",
+            "icon": "resources/images/html-h1.png",
+            "children": "Header",
+            "resizable": "none",
+            "isContainer": false,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "<h2>",
+            "description": "level 2 header",
+            "type": "html.h2",
+            "category": "html",
+            "icon": "resources/images/html-h2.png",
+            "children": "Header",
+            "resizable": "none",
+            "isContainer": false,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "<h3>",
+            "description": "level 3 header",
+            "type": "html.h3",
+            "category": "html",
+            "icon": "resources/images/html-h3.png",
+            "children": "Header",
+            "resizable": "none",
+            "isContainer": false,
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "iframe",
+            "description": "IFrame",
+            "type": "html.iframe",
+            "category": "html",
+            "icon": "resources/images/html-iframe.png",
+            "properties": {
+                "src": "",
+                "style": "width: 300px; height: 300px;"
+            },
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.HtmlSrcAttributeInput"
+        },
+        {
+            "name": "img",
+            "description": "Image",
+            "type": "html.img",
+            "category": "html",
+            "icon": "resources/images/html-image.png",
+            "properties": {
+                "src": ""
+            },
+            "inlineEdit": "davinci.ve.input.HtmlSrcAttributeInput"
+        },
+        {
+            "name": "<br>",
+            "description": "Line Break",
+            "type": "html.br",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none"
+        },
+        {
+            "name": "<code>",
+            "description": "Code Fragment",
+            "type": "html.code",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none"
+        },
+        {
+            "name": "<dd>",
+            "description": "Definition Description",
+            "type": "html.dd",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none"
+        },
+        {
+            "name": "<dt>",
+            "description": "Definition Term",
+            "type": "html.dt",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none"
+        },
+        {
+            "name": "<li>",
+            "description": "List Item",
+            "type": "html.li",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "<ol>",
+            "description": "Ordered List",
+            "type": "html.ol",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "isContainer": true
+        },
+        {
+            "name": "<p>",
+            "description": "Paragraph",
+            "type": "html.p",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "isContainer": true,
+            "inlineEdit": {
+                "property": "richText",
+                "displayOnCreate": true
+            }
+        },
+        {
+            "name": "<script>",
+            "description": "Embedded Script",
+            "type": "html.script",
+            "category": "html",
+            "hidden": true,
+            "invisible": true
+        },
+        {
+            "name": "<ul>",
+            "description": "Unordered List",
+            "type": "html.ul",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "isContainer": true
+        },
+        {
+            "name": "hr",
+            "description": "Horizonal Rule",
+            "type": "html.hr",
+            "category": "untested",
+            "icon": "resources/images/horizontalrule.gif"
+        },
+        {
+            "name": "HTML Rich Text",
+            "description": "HTML Rich Text",
+            "type": "html.richtext",
+            "category": "html-generic",
+            "icon": "resources/images/rich-text-widget.png",
+            "children": "Enter Text",
+            "resizable": "none",
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.RichTextInput"
+        },
+        {
+            "name": "HTML Sticky Note",
+            "description": "HTML Sticky Note",
+            "type": "html.stickynote",
+            "category": "untested-generic",
+            "icon": "resources/images/HTML-sticky-note.gif",
+            "properties": {
+                "style": "position:absolute; height:100px; width:100px; background-color:#F9FFC2; border-color:black; border-width:2px; border-style:solid; z-index:25; -webkit-border-radius: 5px 5px 0 0; -moz-border-radius: 5px 5px 0 0; border-radius: 5px 5px 0 0;"
+            },
+            "children": "<i>Enter Note</i>",
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.RichTextInput"
+        },
+        {
+            "name": "<option>",
+            "description": "<option>",
+            "type": "html.option",
+            "category": "untested-generic",
+            "icon": "resources/images/element.gif",
+            "properties": {
+                "value": "Option X"
+            },
+            "children": "Option X",
+            "resizable": "none"
+        }
+    ]
+}

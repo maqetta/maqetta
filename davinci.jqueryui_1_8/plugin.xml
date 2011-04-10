@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <extension point="davinci.core.ajaxLibrary" >
+          <ajaxLibrary name="jquery-ui" id="jquery-ui" version="1.8.11">
+            <libraryPath
+                location="WebContent/jquery-ui-1"
+                name="/lib/jquery-ui">
+            </libraryPath>
+            <metadata location="app/metadata/jquery-ui/1.8.11" />
+          </ajaxLibrary>
+      </extension>
+      <extension id="jquery.metadata" point="org.eclipse.equinox.http.registry.resources">
+      	<resource alias="/app/metadata/jquery-ui/1.8.11" base-name="/WebContent/metadata"/>
+      </extension>
+</plugin>

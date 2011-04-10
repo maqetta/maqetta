@@ -1,0 +1,412 @@
+
+.propRootDetailsContainer {
+	width:100%;
+	border-spacing:0px; 
+	border-collapse: collapse;
+}
+
+.propRootDetailsContainer td {
+	padding:0;
+}
+
+.propPaletteRoot, .propPaletteDetails {
+	vertical-align:top; 
+	width:100%;
+}
+
+.propPaletteDetailsRoot .propRowHidden {
+	display:none;
+}
+
+.claro .propertiesSection .propSectionButton.dijitTitlePane .dijitArrowNode {
+	display:inline-block;
+	float:right;
+	background:none;
+	text-align:center;
+	height:12px;
+	margin:-1px 3px 0px;
+	width:8px;
+}
+.dijitTitlePane.cssBreadcrumbContainer .dijitTitlePaneTitle {
+	cursor:auto;	// Override pointer cursor that is default for claro
+}
+.breadcrumbText {
+	display:inline-block;
+	margin-bottom:5px;
+}
+.breadcrumbTextBackLink {
+	text-decoration:underline;
+	color:darkblue;
+}
+.breadcrumbTextBackLink:hover {
+	cursor:pointer;
+}
+.breadcrumbDescend {
+	display:inline-block;
+	background-image:none;
+	text-align:center;
+	background-position:-7px 53%;
+	background-repeat:no-repeat;
+	height:12px;
+	margin:0 8px 5px;
+	width:8px;
+}
+.breadcrumbTextCurrent {
+	font-weight:bold;
+	text-decoration:none;
+}
+.propSectionButtonStartGroup {
+	margin-top:2px;
+}
+.propDetailsOpaque {
+	opacity:1;
+}
+.propDetailsTransparent {
+	opacity:0;
+}
+.propRowFadeIn {
+	-webkit-transition: all .6s ease;
+	-moz-transition: all .6s ease;
+	opacity:1;
+}
+.propRowFadeOut {
+	-webkit-transition: all .6s ease;
+	-moz-transition: all .6s ease;
+	opacity:0;
+}
+.propRowOpaque {
+	opacity:1;
+}
+.propRowTransparent {
+	opacity:0;
+}
+.propRowHidden {
+	display:none;
+}
+
+.cascadeRowFadeIn {
+	-webkit-transition: all .6s ease;
+	-moz-transition: all .6s ease;
+	opacity:1;
+}
+.cascadeRowTransparent {
+	opacity:0;
+}
+.cascadeRowHidden {
+	display:none;
+}
+
+.rulePreview pre{
+	font-size : 85%;
+	padding: 0.2em 1em;
+	border: 1px solid #CCCCCC;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	
+}
+
+
+
+
+.propertiesSection .dijitTitlePaneTextNode{
+	
+    font: 8pt Verdana;
+    letter-spacing: -0.02em;
+    
+}
+
+.propCreateNewRule{
+	font: 8pt Verdana;
+    letter-spacing: -0.02em;
+/*    text-decoration:underline; */
+	padding-top:5px;
+    padding-left:35px;
+    padding-bottom:5px;
+
+}
+
+.davinci_ve_ThemeEditor .propertiesTitleClassName,
+.davinci_ve_ThemeEditor .propertiesTitleWidgetText{
+		display: none;
+}
+
+.davinci_ve_ThemeEditor .showCss.propertyButton{
+	
+	display:none;	
+	
+}
+
+.davinci_ve_ThemeEditor .cssCascadeSection{
+	display:none;	
+}
+
+.cascadeTitle{
+   background-color:#aaaadd;
+  	width:90%;
+	position:absolute;
+}
+.propertiesSection .propInputWithIncrDecrButtons {
+	margin-right:38px;
+	padding:1.5px 0;
+}
+
+
+.propertiesSectionHidden {
+	display:none;
+}
+.propDetailsShowing .propertyExtra {
+	display:none;
+}
+.cascadeRowHidden{
+	display:none;
+	
+}
+.propertiesSection .propertyButton {
+	width:16px;
+	height:16px;
+	border:1px solid #B5BCC7;	/* Same border color as Claro ComboBox */
+	margin-top:2px; /* Magically makes buttons line up vertically */
+}
+.propertiesSection .propertyButton.incrementButton {
+	background: url('./img/increment.png') no-repeat -1px -1px;
+}
+.propertiesSection .propertyButton.decrementButton {
+	background: url('./img/decrement.png') no-repeat -1px -1px;
+	margin-left:-1px;	/* So that border coincides with increment button border */
+}
+.propertiesSection .propertyButton.showCss{
+	background:none;
+	border:none;
+	margin-top:-4px;
+}
+.dj_webkit .propertiesSection .propertyButton.showCss{
+	margin-top:-4px; /* Webkit layout is 2px different than Mozilla */
+}
+.propertiesSection .propertyButton.showCss.showCssVisible{
+	background: url('./img/show_details_open.png') no-repeat -1px -1px;		
+}
+button.showCss::-moz-focus-inner { 
+	/* Hide the funky dotted outline that Moz adds to button after clicking on it.
+		Maybe it would be better to move the focus to a different element? */
+	border: 0;	
+}
+
+.ruleValue{
+	
+	font-weight:bold;
+	
+}
+.claro .propertiesSection .dijitTitlePaneTitle {
+	margin-bottom: 0px;
+	padding-bottom: 2px;
+	padding-top: 1px;
+	padding-left:4px;
+}
+.claro .dijitTitlePaneTitleFocus {
+	padding-bottom:0;
+}
+.claro .propertiesSection .dijitTitlePaneTitleHover {
+	/*background-color:#ABD6FF;*/
+	background-color:#c0d0f0;
+}
+.propertiesTitleBar {
+	 background:#fefefe; 
+	 text-align:left;
+	 white-space: nowrap;
+	 padding-left:0.5em;
+	 padding-top:2px;
+
+}
+.claro propertiesSection .dijitTitlePaneTitle {
+	background-color:#F3F3F3;
+	height:3.8em;	/* FIXME: code uses absolute layout. Shouldn't */
+}
+
+.propertiesWidgetDescription {
+	line-height:1.8em;
+	font-size: 10px;
+}
+.propertiesWidgetDescriptionFor {
+	font-style:italic;
+}
+.propClassInputRow {
+	font-size:10px;
+}
+
+.cascadeTable {
+	width:100%;
+	background-color: #e0e0e0;
+	border-bottom:2px solid black;
+	padding-top:5px;
+}
+.cascadeSpacer{
+	
+	width:3px;	
+}
+.cascadeButton{
+	
+	
+	text-align:right;
+	vertical-align:top;
+	width:10px;
+}
+.cascadRemove{
+	
+	text-align:left;
+	vertical-align:top;
+	width:14px;
+	height:14px;
+		
+}
+.hiddenCascadeNode .cascadRemove{
+	/* hide the remove button for nodes with no value */
+	
+	display:none;	
+	
+}
+
+.elementStyleNode .cascadRemove{
+	/* hide the remove button for nodes with no value */
+	
+	display:none;	
+	
+}
+
+.shorthandOverrideCascadeNode .cascadRemove{
+	
+	display:none;
+	
+}
+
+.cascadeAll .hiddenCascadeNode{
+	
+
+	
+	
+}
+
+.applyToLabelCell{
+	vertical-align:middle;
+	padding:0 0 0 .5em;
+}
+.showAllRulesCell{
+	margin:0;
+	text-align:center;
+}
+.showAllRulesLabel{
+	margin:0 0 0 .3em;
+}
+.showCascade {
+	padding:0.3em 0 0.8em 1em;
+	font-size: 80%;
+}
+.showAllValues .hiddenCascadeNode{
+	
+	display:none;	
+}
+.cascadeCloseButtonDiv{
+	background-image: none;
+	margin:0 .5em; 
+	float: right;
+	border: 1px solid gray;
+	font-size: 8px; 
+}
+.cascadeRemoveButton{
+
+   width:14px;
+   height:14px;
+  background-repeat: no-repeat;
+   border-style:none;
+  background-image:url('./img/remove.gif');
+  background-color: transparent;
+}
+
+.propClassInputCell{
+	padding-left:3px;
+	padding-bottom:5px;
+}
+.propApplyToLabelCell{
+	padding-left:3px;
+	padding-bottom:1px;
+}
+.propWhichStateCell{
+	padding-top:3px;
+	padding-left:1px;
+}
+
+.propScrollableArea{
+	
+	overflow-y:auto;
+	overflow-x:hidden;
+	position:absolute;
+	width:100%;
+	top:0;
+	bottom:0;
+	margin-top:3.8em; 	/* FIXME: code uses absolute layout. Shouldn't */
+	
+}
+.property_table_stretchable{
+	border-spacing:0 1px;
+/*
+	font:6pt Verdana; 
+	color:#383838; 
+	background:#ddd;
+	
+*/	
+}
+.claro .propertiesSection .dijitTitlePaneContentInner {
+	padding:2px;
+}
+.cssOverRidden .cascadText, .cssShorthandOverRidden .cascadText{
+
+	text-decoration: line-through !important;	
+	
+}
+.propertyExtra > div {
+	text-align:right;
+}
+
+.property_table_stretchable tr {
+	margin-top:3px;
+	margin-bottom:10px;
+}
+.propertyInputField,.propertyDisplayName{
+		font-size:10px; 
+} 
+.property_table_stretchable .propertyDisplayName{
+	width:60px;
+	text-align:right;
+	white-space:nowrap;
+	
+}
+.claro .property_table_stretchable .dijitComboBox .dijitInputField,
+.claro .property_table_stretchable input,
+.claro .property_table_stretchable select,
+.claro input.propClassInput {
+	font-size:10px;
+}
+.propertiesTitleWidgetName, 
+.propertiesTitleClassName, 
+.propertiesTitleWidgetText{
+    letter-spacing: -0.01em !important;
+}
+
+.propertiesTitleWidgetName{
+}
+.propertiesTitleClassName{
+	font-style:italic;
+}
+
+.propertiesTitleWidgetText:before,.propertiesTitleWidgetText:after{
+	content:'"';
+	/*font-weight:bold;*/
+}
+.propertiesTitleBar p {
+	
+	 font-family:Verdana; 
+	 font-size:1em;
+	 margin: auto;
+}
+.propertiesSection .show_all_rules_cell {
+	text-align:center;
+	background-color:#E6E6E7;
+}

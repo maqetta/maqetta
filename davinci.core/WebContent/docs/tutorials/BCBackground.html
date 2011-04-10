@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>BorderContainer Tutorial</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/BCtutorials.html">BorderContainer Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/BCPanes.html">Previous</a> / <a href="tutorials/BCNestedBC.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>BorderContainer Background Color or Image</h1>
+
+<h3>About working with widget CSS styles</h3>
+
+<p>When setting CSS styles on a specific widget, you want to be avoid changing the theme styles that may be applied to this widget type.
+For example, in the exercise below we are setting the background color on a BorderContainer widget. 
+But the default background color for all BorderContainers is set to white (#fff) in the theme CSS files.
+Therefore it's necessary to tell Maqetta we want to override the theme setting for this widget only, and not for all instances of BorderContainer.
+We do that by using the "<b>Apply to</b>" drop down, which is described below.</p>
+
+<h3>Create a BorderContainer widget</h3>
+<ol>
+<li>Create a BorderContainer widget as described in <a href="tutorials/BCBasics.html">BorderContainer Basics</a>.</li>
+</ol>
+
+
+<h3 style="margin-top:1.5em;">How to set the background color</h3>
+<ol>
+<li>Select the top pane of the BorderContainer.</li>
+<li>Open the <b>Background</b> section on the Properties palette.</li>
+<li>Click on the <img title=">" class="inline" src="img/css-cascade-control.png" /> control next to <b>color</b> to open the "<b>Apply to</b>" drop-down, as shown below:</li>
+<p><img src="img/apply_to.png"  /></p>
+<li>Select the radio button for <b>element.style</b>.</li>
+<li>Click on the color text box to bring up the Color Picker.</li>
+<li>Select a color, then click off the Color Picker to close it and set the color.</li>
+</ol>
+<p><i>Note: Selecting element.style sets the background-color in the widget's style attribute in the HTML file. 
+See below for instructions on how to set the background-color using a CSS style rule in <a href="peAppCss.html">app.css</a>.</i></p>
+
+<h3>How to remove the background color</h3>
+<ol>
+<li>Select the pane.</li>
+<li>Click on the <img title=">" class="inline" src="img/css-cascade-control.png" /> control next to <b>color</b> to open the "<b>Apply to</b>" drop-down.</li>
+<li>Click on the red <span style="color:red;font-weight:bold; font-size:1.3em;">X</span> next to element.style. This will remove the color.</li>
+<li>Close the "Apply to" drop-down by clicking on the <img title="Close" class="inline" src="img/css-cascade-control2.png" /> control next to <b>color</b>.</li>
+</ol>
+
+<h3>How to set the background color using a CSS style rule in app.css</h3>
+
+<p>Setting a CSS style using element.style sets the background-color in the widget's style attribute in the HTML file. 
+While this is fine for making quick mockups, for developer-ready code it is preferable to use a CSS style rule in <a href="peAppCss.html">app.css</a>, as described below.</p>
+
+<ol>
+<li>If you followed the instructions above to set the background-color using element.style, 
+    then first remove this setting by following the instructions above to remove the background color.</li>
+<li>Select the top pane of the BorderContainer.</li>
+<li>Open the <b>Background</b> section on the Properties palette.</li>
+<li>Click on the <img title=">" class="inline" src="img/css-cascade-control.png" /> control next to <b>color</b> to open the "<b>Apply to</b>" drop-down.</li>
+<li>Click on the <span style="color:blue; text-decoration:underline;">Add style rule...</span> link.</li>
+<li>In the <b>Add style rule</b> dialog, enter a class name for your new style (for example, "myBCColor").</li>
+<li>Click Ok.</li>
+<li>A new style rule will be created in app.css, and the style rule will appear in the "Apply to" drop-down with the radio button automatically selected:</li>
+<p><img src="img/apply_to2.png"  /></p>
+<li>Now set the background color:
+    <ol>
+    <li>Click on the color text box to bring up the Color Picker.</li>
+	<li>Select a color, then click off the Color Picker to close it and set the color.</li>
+    </ol></li>
+<li>Close the "Apply to" drop-down by clicking on the <img title="Close" class="inline" src="img/css-cascade-control2.png" /> control next to <b>color</b>.</li>
+</ol>
+
+  
+<h3>How to set a background image</h3>
+<ol>
+<li>Click on the top pane to select it.</li>
+<li>In the <b>Background</b> section, click on <b>background-image url</b>.</li>
+<li>Select SampleBanner.jpg and click Ok. The image should now appear in the top panel.</li>
+<li>The default repeat setting is repeat. Experiment with each repeat option to see the affect.</li>
+<li>The default background-position is "0px".  Experiment with different background positions, combined with repeat options, to see the effect.</li>
+<li>If you have an image file available, <a href="wsPalettes.html">upload</a> it into the Maqetta Files palette (using the Files palette context menu), then set it as the background image in one of the BorderContainer panes.</li>
+</ol>
+
+<h3>How to remove the background image</h3>
+<ol>
+<li>Select the pane.</li>
+<li>Click on the <img title=">" class="inline" src="img/css-cascade-control.png" /> control next to <b>background-image url</b> to open the "<b>Apply to</b>" drop-down.</li>
+<li>Click on the red <span style="color:red;font-weight:bold; font-size:1.3em;">X</span> next to element.style. This will remove the url.</li>
+<li>Close the "Apply to" drop-down by clicking on the <img title="Close" class="inline" src="img/css-cascade-control2.png" /> control next to <b>background-image url</b>.</li>
+</ol>
+
+
+<p class="prevnext"><a href="tutorials/BCPanes.html">Previous</a> / <a href="tutorials/BCNestedBC.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

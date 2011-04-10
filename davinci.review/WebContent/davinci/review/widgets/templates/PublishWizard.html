@@ -1,0 +1,74 @@
+<div style="width:600px;height:310px">
+		<div style="height:25px">
+			<div dojoAttachPoint="navPage1" dojoAttachEvent="onclick:select" style="display:inline;" class="crumbs done current sep">1. General Information</div>
+			<div dojoAttachPoint="navPage2" dojoAttachEvent="onclick:select" style="display:inline;" class="crumbs todo sep">2. Select Review Files</div>
+			<div dojoAttachPoint="navPage3" dojoAttachEvent="onclick:select" style="display:inline;" class="crumbs todo ">3. Add Reviewers</div>
+		</div>
+		<div dojoAttachPoint="reviewerStackContainer" style="height:235px;width:600px;">
+		</div>
+		<table cellspacing="10" dojoAttachPoint="page1Node">
+			<tr>
+				<td><label for="versionTitle">Title:</label></td>
+				<td><input dojoAttachPoint="versionTitle"></input></td>
+				<td><input dojoAttachPoint="receiveEmail"></input><label style="position:relative;left:4px;top:3px;" for="receiveEmail">Notify me when a comment is added</label></td>
+			</tr>
+			<tr>
+				<td valign="top"><label for="descriptions">Description:</label></td>
+				<td colspan="2"><input dojoAttachPoint="descriptions"></input></td>
+			</tr>
+			<tr>
+				<td><label>Window Size:</label></td>
+				<td colspan="2"><input dojoAttachPoint="desireWidth"></input><label>*</label><input dojoAttachPoint="desireHeight"/></td>
+			</tr>
+			<tr>
+				<td><label for="dueDate">Due Date:</label></td>
+				<td><input dojoAttachPoint="dueDate" /></td>
+				<td class="review-tips"><label>Leave it blank to close the review manually</label></td>
+			</tr>
+		</table>
+		
+		<table cellspacing="10" dojoAttachPoint="page2Node">
+			<tr>
+				<td>Available files:</td>
+				<td></td>
+				<td>Selected files:</td>
+			</tr>
+			<tr>
+				<td>
+					<div dojoAttachPoint="sourceTreeCP" style="width:245px;height:170px;border:1px solid #DBDBDB">
+						
+					</div>
+				</td>
+				<td>
+					<a href="javascript:void(0);" dojoAttachEvent="onclick:addSelectFiles"><img src="app/davinci/review/resources/img/forward_nav.gif"/></a>
+				</td>
+				<td>
+					<div dojoAttachPoint="targetTreeCP" style="width:245px;height:170px;border:1px solid #DBDBDB">
+					
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table cellspacing="10" dojoAttachPoint="page3Node">
+			<tr valign="top">
+				<td align="left" rowspan=2><div style="height:30px">Reviewers:</div></td>
+				<td colspan=2><div dojoAttachPoint="userGrid" style="width:480px;height:160px"></div></td>
+			</tr>
+			<tr>
+				<td style="width:220px">
+					<div dojoAttachPoint="addReviewerCombox"></div>
+				</td>
+				<td align="left"><button dojoAttachPoint="addReviewerButton"></button></td>
+			</tr>
+		</table>
+		
+		<div style="margin:10px 0 0 0">
+		<div dojoAttachPoint="reviewMsg" class="reviewMsg"></div>
+		<a style="float:right;margin:7px 0px 0 5px; text-decoration:none;" href="javascript:void(0);" dojoAttachEvent="onclick:onClose">Cancel</a>
+		<button style="float:right;" dojoAttachPoint="invite">Publish</button>
+		<button style="float:right;" dojoAttachPoint="next">Next &gt</button>
+		<button style="float:right;" dojoAttachPoint="prev">&lt Back</button>
+		<button style="float:right;" dojoAttachPoint="saveDt">Save as draft</button>
+		</div>
+</div>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>doh.robot Editor NewPage Plugin Test</title>
+
+		<style>
+			@import "../../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../../dojo/dojo.js"
+			djConfig="isDebug: true, parseOnLoad: true"></script>
+
+		<!-- functions to help test -->
+		<script type="text/javascript" src="../../helpers.js"></script>
+
+		<script type="text/javascript">
+			dojo.require("dojo.window");
+			dojo.require("dijit.robotx");
+
+			dojo.addOnLoad(function(){
+				doh.robot.initRobot('../test_NewPage.html');
+
+				var editor0;
+				var npPlugin;
+				var value;
+
+				doh.register("NewPage_tests", [
+					{
+						name: "Mouse: Click new page clears editor",
+						timeout: 20000,
+						setUp: function(){
+							editor0 = dijit.byId("editor0");
+							var edPlugins = editor0._plugins, i;
+							for(i = 0; i < edPlugins.length; i++){
+								var p = edPlugins[i];
+								if(p.declaredClass === "dijit._editor.plugins.NewPage"){
+									npPlugin = p;
+									break;
+								}
+							}
+							value = editor0.get("value");
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							try{
+								//Focus on the editor window
+								dojo.window.scrollIntoView(editor0.domNode);
+								editor0.focus();
+
+								//Find the fullscreen plugin, we'll need it.
+								doh.assertTrue(npPlugin != null);
+								var value = editor0.get("value");
+								doh.robot.mouseMoveAt(npPlugin.button.domNode, 500);
+								doh.robot.mouseClick({left:true}, 500);
+
+								doh.robot.sequence(d.getTestCallback(function(){
+									//Now check the state!
+									var newVal = editor0.get("value");
+									doh.assertTrue(newVal !== value, "Verify the contents have changed.");
+									newVal = dojo.trim(newVal);
+									newVal = newVal.replace("/>", ">");
+									newVal = newVal.replace(" >", ">");
+									newVal = newVal.toLowerCase();
+									doh.assertEqual("<br>", newVal, "Validate the contents are a single br");
+								}), 1000);
+							}catch(e){
+								d.errback(e);
+							}
+							return d;
+						},
+						tearDown: function(){
+							if(editor0){editor0.set("value", value);}
+						}
+					},
+					{
+						name: "Mouse: Click new page sets editor with default content.",
+						timeout: 20000,
+						setUp: function(){
+							editor0 = dijit.byId("editor1");
+							var edPlugins = editor0._plugins, i;
+							for(i = 0; i < edPlugins.length; i++){
+								var p = edPlugins[i];
+								if(p.declaredClass === "dijit._editor.plugins.NewPage"){
+									npPlugin = p;
+									break;
+								}
+							}
+							value = editor0.get("value");
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							try{
+								//Focus on the editor window
+								dojo.window.scrollIntoView(editor0.domNode);
+								editor0.focus();
+
+								//Find the fullscreen plugin, we'll need it.
+								doh.assertTrue(npPlugin != null);
+								var value = editor0.get("value");
+								doh.robot.mouseMoveAt(npPlugin.button.domNode, 500);
+								doh.robot.mouseClick({left:true}, 500);
+
+								doh.robot.sequence(d.getTestCallback(function(){
+									//Now check the state!
+									var newVal = editor0.get("value");
+									doh.assertTrue(newVal !== value, "Verify the contents have changed.");
+									newVal = dojo.trim(newVal);
+									doh.assertEqual("<p>This page intentionally left blank</p>", newVal, "Validate the contents are the defined default content");
+								}), 1000);
+							}catch(e){
+								d.errback(e);
+							}
+							return d;
+						},
+						tearDown: function(){
+							if(editor0){editor0.set("value", value);}
+						}
+					}
+				]);
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

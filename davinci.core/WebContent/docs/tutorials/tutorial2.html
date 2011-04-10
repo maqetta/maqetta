@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial: Mocking Up a Task Manager</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/tutorial1.html">Previous</a> / <a href="tutorials/tutorial3.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Build a Task Manager (Scene Graph)</h1>
+
+<p class="comment">In this exercise we will create a mock-up of a Task Manager, with three "states" as shown below:</p>
+<p><img src="img/browser1.png" height="220px"/><img src="img/browser2.png" height="220px" /><img src="img/browser3.png" height="220px" /></p>
+
+<p class="comment">A completed version of the Task Manager mock-up is provided in Sample1.html, located in the <b>Files</b> palette. Preview the mock-up as follows:</p>
+
+<ol>
+<li>Open Sample1.html from the <b>Files</b> palette.</li>
+<li>In the page editor toolbar, click the <b>Preview in Browser</b> <img class="inline" src="img/preview-browser.gif" /> icon. This will launch a new browser window that contains the HTML page you just created.</li>
+<li>Click on the <img class="inline" src="img/new_button.jpg" height="18px" /> button. The Add Task dialog should appear.</li>
+<li>Click on the <img class="inline" src="img/add_button.jpg" height="21px" /> button. The task list should appear.</li>
+<li>Close the preview window to return to the Maqetta page editor.</li>
+<li>Close Sample1.html</li>
+</ol>
+<p></p>
+
+<p class="comment">In this exercise we will mock up the content for each of the three "states" on the Task Manager.
+In the next exercise we will add interactivity by defining the states, and then wiring the states to onclick events.</p>
+
+<h3>Create a Tab Container</h3>
+
+<ol>
+<li>Click <b>New > New HTML File...</b> on the Maqetta menubar to create a new file.</li>
+<li>In the <b>Widgets</b> palette, open <b>Dojo Containers</b> and drag a <b>Tab Container</b> onto the canvas.</li>
+<li>The Tab Container's data entry popup will pop up with the default tab titles "Tab 1, Tab 2".</li>
+<div class="image">
+<a href="img/TabContainer1.png" target="_blank"><img alt="image" src="img/TabContainer1.png" style="margin: 1em 1em 0pt 0pt;" height="200px" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+
+<li>Change the text in the data entry popup to:
+
+<div class="image">
+<a href="img/TabContainer1a.png" target="_blank"><img alt="image" src="img/TabContainer1a.png" style="margin: 1em 1em 0pt 0pt;" height="115px" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+
+then click on the OK button, hit <b>Enter</b> or click outside the edit box to close the popup.<br /><br /></li>
+
+<li>In the <b>Properties</b> palette, open the <b>Layout</b> section by clicking on the Layout button. 
+	(If you have previously opened a section of the <b>Properties</b> palette,
+	you will need to click on the "All" breadcrumb link at the top of the <b>Properties</b> palette
+	to return to the initial view, and then you can click on the "Layout button.)
+    <ul>
+	<li>Set <b>width: 300px</b></li>
+	<li>Set <b>height: 250px</b></li>
+    </ul><br /></li>
+
+<li>You should now see a Tab Container with three tabs:</li>
+
+<div class="image">
+<a href="img/TabContainer2.png" target="_blank"><img alt="image" src="img/TabContainer2.png" style="margin: 1em 1em 0pt 0pt;" height="200px" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon on the page editor toolbar to save your changes.</li>
+</ol>
+
+<h3>Create the New and Delete buttons</h3>
+<ol>
+<li>In the Widgets palette, close <b>Dojo Containers</b> and open <b>HTML</b>.</li>
+<li>Drag a <b>&lt;div&gt;</b> from the Widgets palette onto the Tab Container.</li>
+<li>Close the <b>HTML</b> section and open <b>Dojo Controls</b>.</li>
+<li>Drag a <b>Button</b> from the Widgets palette onto the &lt;div&gt; you just created.</li>
+<li>Enter "<b>New</b>" in the data entry popup.</li>
+<br /><img src="img/button1.png" /></li>
+
+<li>Drag another <b>Button</b> from the Widget palette into the &lt;div&gt;, next to the <b>New</b> button.</li> 
+<li>Enter "<b>Del</b>" in the data entry popup.</li>
+
+<li>Click on the white space to the side of the 2 Buttons. This will select the <b>&lt;div&gt;</b> that contains the Buttons.
+<br /><img src="img/buttons2.png" /></li>
+<li>In the <b>Properties</b> palette, click on the <b>Fonts and Text</b> button to open the <b>Fonts and Text</b> section.
+	(If you have previously opened a section of the <b>Properties</b> palette,
+	you will need to click on the "All" breadcrumb link at the top of the <b>Properties</b> palette
+	to return to the initial view, and then you can click on the "Fonts and Text" button.)
+</li>
+<li>Set <b>text-align: right</b>. This will shift the Buttons to the right side of the &lt;div&gt;.
+<div class="image">
+<a href="img/right-justify.png" target="_blank"><img alt="image" src="img/right-justify.png" style="margin: 1em 1em 0pt 0pt;" width="175px" /></a>	
+<img src="img/buttons3.png" style="padding-left:15px;" />
+<div>Click on the image to enlarge it.</div>
+</div><br />
+</li>
+
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon to save your changes.</li>
+</ol>
+
+<h3>Create the Sort-by row</h3>
+<ol>
+<li>Drag another <b>&lt;div&gt;</b> onto the Tab Container and drop it into the area below the buttons.</li>
+<li>With the <b>&lt;div&gt;</b> still selected:
+	<ol>
+	<li>In the <b>Properties</b> palette, click on the <b>Padding/Margins</b> button to open the <b>Padding/Margins</b> section.
+	(If you have previously opened a section of the <b>Properties</b> palette,
+	you will need to click on the "All" breadcrumb link at the top of the <b>Properties</b> palette
+	to return to the initial view, and then you can click on the "Padding/Margins" button.)
+	In the <b>Padding/Margins</b> section, click on the "show t/r/b/l:" check box under <b>(padding)</b>.</li>
+	<li>Set the padding to <b>padding-top: 10px</b> and <b>padding-bottom: 10px</b>. (<i>Hit <b>Enter</b> or click outside of each input field to apply the changes.</i>)
+	<div class="image">
+	<a href="img/padding.png" target="_blank"><img alt="image" src="img/padding.png" style="margin: 1em 1em 0pt 0pt;" width="175px" /></a>
+	<div>Click on the image to enlarge it.</div>
+	</div><br />
+	</ol>
+</li>
+<li>Drag a <strong>&lt;label&gt;</strong> onto the &lt;div&gt; you just created.</li>
+<li>Enter "<b>Sort-by:</b>" in the data entry popup.</li>
+<li>Drag a <strong>Combo Box</strong> (in <b>Dojo Controls</b>) onto the &lt;div&gt;, to the right of <b>Sort-by:</b></li>
+<li>In the data entry popup, enter values below (hit <b>Enter</b> to create a new line):
+
+<div class="image">
+<a href="img/combobox.png" target="_blank"><img alt="image" src="img/combobox.png" style="margin: 1em 1em 0pt 0pt;" width="175px" /></a>	
+<div>Click on the image to enlarge it.</div>
+</div><br />
+      
+then click on the OK button or click outside the edit box to close the popup.<br />
+<i>Note: The "<b>+</b>" indicates the default selection.</i><br /><br /></li>
+
+<li>With the <b>Combo Box</b> still selected:
+	<ol>
+	<li>Place your mouse over the <b>resize knob</b> on the right side of the Comb Box and drag the knob to the left, making the ComboBox smaller.</li>
+    <li>Open the <b>Padding/Margins</b> section in the Properties palette.
+	<li>Click on the "show t/r/b/l:" check box under <b>(margin)</b>.</li>
+    <li>Set the margin to <b>margin-left: 5px</b>.</li>
+	</ol>
+</li>
+<p><img src="img/sort-by.png"/></p>
+</ol>
+
+<h3>Create the Task List</h3>
+<ol>
+<li>Drag a <b>Multi Select</b> onto the Tab Container and drop it in the empty space below the last &lt;div&gt;.
+<br /><img src="img/multiselect.png"/></li>
+<li>In the widget's data entry popup, change the values to:
+
+<p><img src="img/multiselect2.png"/></p><br />
+
+then click on the OK button or click outside the edit box to close the popup.<br />
+<i>Note: After you close the data entry popup, you can re-open it by double-clicking on the widget.</i><br /><br /></li>
+
+<li>Click on the <strong>Save</strong> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+<li>Click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.gif" /> (in the toolbar) to see your how your page looks so far. This will launch a new browser window that contains the HTML page you just created. Your Tab Container widget should look like this:
+<p><img src="img/TabContainerPreview.png"/></p></li>
+<li>Close the preview window to return to Maqetta.</li>
+</ol>
+
+<h3>Create the New Task dialog's frame</h3>
+<ol>
+<li>Drag a <b>Content Pane</b> (in <b>Dojo Containers</b>) onto the canvas below the Tab Container.</li>
+<li><i><b>Keep the Content Pane selected for the remainder of this section.</b></i></li>
+<li>Open the <b>Border</b> section in the Properties palette:
+      <div style="margin-bottom: 15px">
+          <div class="left-side">
+			  <ol>
+   			  <li>Set <b>show: props</b></li>
+        	  <li>Set <b>border-width: 1px</b></li>
+              <li>Set <b>border-style: solid</b></li>
+              <li>Set <b>border-color: blue</b></li>
+              </ol>
+          </div>
+          <div class="image">
+              <img alt="image" src="img/borders.png" height="150px" style="padding-left:10px;" />
+          </div>
+      </div>
+</li>
+
+ <li>On the canvas, resize the Content Pane to roughly 350px wide by 75px tall (<i>using the bottom-right-corner resize knob</i>).</li>
+<li><i>Note how the width and height values change in the Layout section after you resize.</i>
+<p><img src="img/layout.png"  height="120px"/></p>
+</li>
+</ol>
+
+<h3>Add content to the Add Task dialog</h3>
+<ol>
+<li>Drag a <b>&lt;div&gt;</b> into the ContentPane you just created.</li>
+<li>Double-click on the div to bring up the data entry popup.</li>
+<li>In the data entry popup enter "<b>Add new task</b>".</li>
+
+<li>Open the <b>Fonts and Text</b> section in the Properties palette:
+      <div style="margin-bottom: 15px">
+          <div class="left-side">
+			  <ol>
+				<li>Set <b>font-weight: bold</b>.</li>
+				<li>Set <b>text-align: center</b>.</li>
+              </ol>
+          </div>
+          <div class="image">
+<a href="img/right-justify.png" target="_blank"><img alt="image" src="img/dialog-font.png" style="margin: 1em 1em 0pt 15px;" height="200px" /></a>	
+          </div>
+      </div>
+</li>
+
+<li>Open the <b>Padding/Margins</b> section in the Properties palette:
+      <div style="margin-bottom: 15px">
+          <div class="left-side">
+			  <ol>
+				<li>Click the "show t/r/b/l:" check box under <b>(padding)</b>.</li>
+				<li>Set <b>padding-top: 6px</b>.</li>
+				<li>Set <b>padding-bottom: 6px</b>.
+              </ol>
+          </div>
+          <div class="image">
+<a href="img/right-justify.png" target="_blank"><img alt="image" src="img/padding2.png" style="margin: 1em 1em 0pt 15px;" height="175px" /></a>	
+          </div>
+      </div>
+</li>
+
+<li>Drag another <b>&lt;div&gt;</b> onto the Content Pane, below the first &lt;div&gt;.</li>
+<li>With the new &lt;div&gt; still selected:<ol>
+	<li>Drag a <b>&lt;label&gt;</b> onto the selected &lt;div&gt;.</li>
+	<li>In the data entry popup enter "<b>Task name:</b>".</li>
+	<li>Drag a <b>TextBox</b> onto the &lt;div&gt;, to the right of "Task name:".</li>
+	<li>Drag a <b>Button</b> the onto the &lt;div&gt;, to the right of the TextBox.</li>
+	<li>In the data entry popup enter "<b>Add</b>".</li>
+</ol></li>
+<li>Click on the <strong>Save</strong> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+
+<li>Select the Content Pane either by clicking on its border or clicking on white space within the Content Pane that has no widgets covering that area.</li>
+<li>Open the <b>Layout</b> section of the Properties palette and set <b>position: absolute</b>.</li>
+<li>Drag the Content Pane over the Tab Container, placing the top of the ContentPane just below the <b>New</b> button:
+      <div style="margin-bottom: 15px">
+          <div>
+			  <ol>
+   			  <li>Place the mouse on the top border of the Content Pane, between the resize knobs.</li>
+              <li>Drag the Content Pane up using the mouse.</li>
+              </ol>
+          </div>
+      </div><br />
+</li>
+
+<li>Open the <b>Background</b> section in the Properties palette</li>
+<li>Set the <b>color</b> to white (#ffffff):
+      <div style="margin-bottom: 15px">
+          <div class="left-side" style="max-width:25em;">
+			  <ol>
+   			  <li>Click on <b>color</b> to open the Color Picker.</li>
+              <li>Click on the color box to bring out the Saturation Selector (small square on the color box).</li>
+              <li>Drag the Saturation Selector to the upper-left corner until the hex value is #ffffff (white).</li>
+              <li>Click off the Color Picker to close it.</li>
+              </ol>
+          </div>
+          <div class="image">
+			<p><a href="img/add-new-task.png" target="_blank"><img alt="image" src="img/add-new-task.png" style="margin: 1em 1em 0pt 0pt;" height="160px" /></a></p>
+          </div>
+      </div><br />
+</li>
+
+<li>Click on the <strong>Save</strong> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+</ol>
+
+<p class="prevnext"><a href="tutorials/tutorial1.html">Previous</a> / <a href="tutorials/tutorial3.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

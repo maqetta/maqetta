@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>TabContainer Test</title>
+
+	<style>
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+	</style>
+
+	<!-- required: the default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../helpers.js"></script>
+
+	<!-- only needed for alternate theme testing: do NOT use in your code! -->
+	<script type="text/javascript" src="../_testCommon.js"></script>
+
+
+	<script type="text/javascript">
+		dojo.require('doh.runner');
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.layout.TabContainer");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+
+		// create a do nothing, only for test widget
+		dojo.addOnLoad(function(){
+
+			doh.register("creationAndDestruction", [
+
+				// Test that destroyRecursive removes all supporting widgets, including the list-of-tabs menu
+				// and the close menu
+				{
+					name: 'destroyRecursive',
+					runTest: function(t){
+						var num = dijit.registry.length;
+	
+						var tc = new dijit.layout.TabContainer({ id:"creationAndDestruction", useMenu:true }).placeAt(dojo.body());
+						tc.addChild(new dijit.layout.ContentPane({title: "test pane 1", closable: true}));
+						tc.addChild(new dijit.layout.ContentPane({title: "test pane 2"}));
+						tc.startup();
+	
+						tc.destroyRecursive();
+	
+						t.assertEqual(dijit.registry.length, num);
+					}
+				},
+	
+				// Tests that creating a TabContainer creates the list-of-tabs Menu.
+				// (Note though that TabContainer doesn't need to create that Menu until the user presses the show-menu Button)
+				{
+					name: 'createWithMenu',
+					runTest: function(t){
+						var numMenus = dijit.registry.byClass("dijit.Menu").length;
+						var tc = new dijit.layout.TabContainer({ id:"createWithMenu", useMenu:true }).placeAt(dojo.body());
+						
+						var numCreatedMenus = dijit.registry.byClass("dijit.Menu").length;
+						t.assertEqual(numMenus + 1, numCreatedMenus);
+	
+						tc.destroyRecursive();
+					}
+				},
+	
+				// Tests that creating a TabContainer with useMenu=false doesn't create a list-of-tabs Menu.
+				{
+					name: 'createWithoutMenu',
+					runTest: function(t){
+						var numMenus = dijit.registry.byClass("dijit.Menu").length;
+						var tc = new dijit.layout.TabContainer({ id:"createWithoutMenu", useMenu:false }).placeAt(dojo.body());
+						
+						var numCreatedMenus = dijit.registry.byClass("dijit.Menu").length;
+						t.assertEqual(numMenus, numCreatedMenus);
+	
+						tc.destroyRecursive();
+					}
+				},
+				
+				// Check that tab labels for initial tabs are created
+				{
+					name: 'checkTabLabels',
+					runTest: function(t){
+						var tabLabels = dojo.query("#tc1 .tabLabel");
+						t.assertEqual(4, tabLabels.length);
+					}
+				}
+			]);
+			
+			doh.register("addingTabs", [
+
+				// Test that adding a pane creates new tab button and new menu item
+				{
+					name: 'add new tab',
+					runTest: function(t){
+						var tc = dijit.byId("tc1");
+						var cp1 = new dijit.layout.ContentPane({
+								id: "newTab1",
+						         title: "newTab1",
+						         content: "newTab1 content"
+						    });
+						tc.addChild(cp1);
+						
+						var tabLabels = dijit.byId("tc1").getChildren();
+						var menuLabels = dijit.byId("tc1_tablist_menu").getChildren();
+						
+						t.assertEqual(5, tabLabels.length, "there are 5 tabs");
+						t.assertEqual(5, menuLabels.length, "there are 5 menu items");
+					}
+				},
+				
+				// Test that scroll buttons show up when tab buttons overflow
+				{
+					name: 'addTabsOverflowMenu',
+					runTest: function(t){
+						var tc = dijit.byId("tc1");
+						
+						var cp2 = new dijit.layout.ContentPane({
+						         id: "newTab2",
+						         title: "newTab2",
+						         content: "newTab2 content"
+							});
+						tc.addChild(cp2);
+						
+						var left = dojo.byId("tc1_tablist_leftBtn");
+						var right = dojo.byId("tc1_tablist_rightBtn");						
+						var menu = dojo.byId("tc1_tablist_menuBtn");
+
+						t.assertTrue(left, "verify left scroll button exists");
+						t.assertTrue(right, "verify right scroll button exists");
+						t.assertTrue(menu, "verify dropdown menu button exists");
+							
+						t.assertTrue(isVisible(left), "left scroll is displayed");
+						t.assertTrue(isVisible(right), "right scroll is displayed");
+						t.assertTrue(isVisible(menu), "menu is displayed");	
+					}
+				}
+			]);
+
+			doh.register("selectingTabs", [
+
+				// Check that tab button is scrolled into view when tab is selected
+				{
+					name: 'isVisible',
+					timeout: 10000,
+					runTest: function(t){
+						var d = new doh.Deferred();
+						
+						var tc = dijit.byId("tc1");
+						var cp = dijit.byId("newTab1");
+
+						tc.selectChild(cp);
+						
+						setTimeout(d.getTestCallback(function(){
+								var cpLeft = dojo.byId("tc1_tablist_leftBtn");
+								var left = dojo.position(cpLeft).x + dojo.position(cpLeft).w;
+
+								var cpRight = dojo.byId("tc1_tablist_rightBtn");
+								var right = dojo.position(cpRight).x;
+
+								var tab = dijit.byId("tc1_tablist_newTab1");
+								var tabLeft = dojo.position(tab.domNode).x;
+								var tabRight = dojo.position(tab.domNode).x + dojo.position(tab.domNode).w;
+								
+								var isTabVisible = ((tabLeft > left) && (tabRight < right));
+								doh.t(isTabVisible, "verify chosen tab is in viewable area");
+						}), 1000);
+						
+						return d;
+					}
+				}
+			]);
+
+			doh.register("icons", [
+				{
+					name: "initialIcon",
+					runTest: function(t){
+						var cp =  dijit.byId("cp4");
+						var menuTitle = dijit.byId("cp7_stcMi").label;
+						
+						t.assertEqual('plusIcon', cp.controlButton.iconClass, "an icon image is displayed");
+						t.assertEqual('plus', menuTitle, "the menu's text label is 'plus'");
+					}
+				},
+				{
+					name: "changeIcon",
+					runTest: function(t){
+						var cp =  dijit.byId("cp4");
+						cp.set("iconClass", "noteIcon"); 
+						cp.set("title", "note");
+						
+						var menuTitle = dijit.byId("cp7_stcMi").label;
+						
+						t.assertEqual('noteIcon', cp.controlButton.iconClass, "new icon is displayed in tab");
+						t.assertEqual('plus', menuTitle, "the menu's text label has changed");
+					}
+				},
+				{
+					name: "noTitle",
+					runTest: function(t){
+						var cp =  dijit.byId("cp7");
+						t.assertFalse(cp.controlButton.showLabel, "an icon exists, but there is no text label");
+					}
+				}
+			]);
+
+			doh.register("changeTabName", [
+				{
+					name: 'changeName',
+					runTest: function(t){
+						var cp = dijit.byId('cpTitle');
+						cp.set('title', 'newTitle');
+						
+						var title = dojo.query("#tc1_tablist_cpTitle span.tabLabel")[0];
+						var menuTitle = dijit.byId("cpTitle_stcMi").label;
+						
+						t.assertEqual('newTitle', innerText(title), "the tab's text label has changed");
+						t.assertEqual('newTitle', menuTitle, "the menu's text label has changed");
+					}
+				}
+			]);
+
+			doh.register("deletingTabs", [
+
+				// Check that deleting a pane removes the tab button, menu item, etc.
+				{
+					name: 'deleteTab',
+					runTest: function(t){
+						var tc1 = dijit.byId("tc1");
+						var cp = dijit.byId("cpTitle");
+						
+						tc1.removeChild(cp);
+						
+						var childPanes = tc1.getChildren();
+						var menuLabels = dijit.byId("tc1_tablist_menu").getChildren();
+						
+						t.assertEqual(5, childPanes.length, "verify there are now only 4 tabs instead of 5");
+						t.assertEqual(5,  menuLabels.length, "verify there are now only 4 menu items instead of 5");
+						t.assertTrue(cp.domNode, "verify that the deleted tab's content pane still exists on the page");
+
+						var label = dojo.byId("#tc1_tablist_cpTitle");
+						t.assertFalse(label, "verify that deleted tab's label does not exist");
+					}
+				},
+				
+				// Check that scroll buttons disappear when no longer needed
+				{
+					name: 'removedOverflowMenu',
+					runTest: function(t){
+						var tc = dijit.byId("tc3");
+						
+						var cp = dijit.byId('cp10');
+						tc.removeChild(cp);	
+						cp = dijit.byId('cp9');
+						tc.removeChild(cp);
+						cp = dijit.byId('cp8');
+						tc.removeChild(cp);
+						cp = dijit.byId('cp7');
+						tc.removeChild(cp);			
+						
+						var left = dijit.byId("tc3_tablist_leftBtn").domNode;
+						var right = dijit.byId("tc3_tablist_rightBtn").domNode;
+						var menu = dijit.byId("tc3_tablist_menuBtn").domNode;
+						
+						t.assertTrue(isHidden(left), "left scroll is hidden");
+						t.assertTrue(isHidden(right), "right scroll is hidden");
+						t.assertTrue(isHidden(menu), "menu is hidden");
+					}
+				}
+			]);
+
+			doh.register("closableTabs", [
+				{
+					name: "closeTab",
+					runTest: function(t){
+						var cp = dijit.byId("cp6");
+						var cp2 = dijit.byId("cp5");
+						
+						t.assertTrue(cp.controlButton.closeButton, "close button is displayed");
+						t.assertFalse(cp2.controlButton.closeButton, "close button is displayed");
+					}
+				}
+			]);		
+
+			doh.register("layoutTests", [
+				{
+					name: "topLeftRightBottom",
+					runTest: function(t){
+						var tc = dijit.byId("tc1");
+
+						// TODO: should test actual positions of tabs vs. content, not just settings
+						t.assertEqual('top', tc.tabPosition, "tabs are on the top of the container");
+						
+						tc.set("tabPosition", "left");						
+						t.assertEqual('left', tc.tabPosition, "tabs are on the left of the container");
+						
+						tc.set("tabPosition", "right");						
+						t.assertEqual('right', tc.tabPosition, "tabs are on the right of the container");
+						
+						tc.set("tabPosition", "bottom");						
+						t.assertEqual('bottom', tc.tabPosition, "tabs are on the bottom of the container");
+					}
+				},
+				{
+					name: "nested",
+					runTest: function(t){
+						var tc = dijit.byId("tcNested");
+
+						// TODO: check that nested CSS class applied in the right place
+						t.assertFalse(tc.nested, "parent TabContainer is not nested");
+						
+						var children = tc.getChildren();
+						t.assertEqual(2, children.length, "parent TabContainer has multiple children");
+						
+						t.assertTrue(children[1].nested, "second child of parent TabContainer has nested tabs");
+					}
+				},
+				{
+					name: "doLayoutFalse",
+					runTest: function(t){
+						var tc = dijit.byId("tcDoLayout");
+						var cps = tc.getChildren();
+
+						// TODO: should check that height of TabContainer itself changes when different
+						// tabs are selected
+						tc.selectChild(cps[1]);
+						var height1 = cps[0]._contentBox.h;
+						var height2 = cps[1]._contentBox.h;
+						
+						t.assertTrue(height1 < height2, "height changes with the content length");
+					}
+				},
+				{
+					name: "doLayoutTrue",
+					runTest: function(t){
+						var tc = dijit.byId("tc3");
+						var cps = tc.getChildren();
+						
+						// TODO: should check that height of TabContainer itself stays constant when different
+						// tabs are selected
+						tc.selectChild(cps[1]);
+						var height1 = cps[0]._contentBox.h;
+						var height2 = cps[1]._contentBox.h;
+						
+						t.assertTrue(height1 === height2, "height does not change with the content length");
+					}
+				}
+				
+			]);
+			doh.register("destroy widget", [
+				// TODO: looks like this can be moved up to be part of top group, creationAndDestruction?
+				{
+					name: 'destroyRecursive',
+					runTest: function(t){
+						var tcAmount = dijit.registry.byClass("dijit.layout.TabContainer").length - 1;
+
+						var tc = dijit.byId("tc1");
+						tc.destroyRecursive();
+						
+						var tc1 = dojo.query("#tc1");
+						var tcNewAmount = dijit.registry.byClass("dijit.layout.TabContainer").length;
+
+						t.assertEqual(0, tc1.length, "the html for the TabContainer is removed from the page");
+						t.assertEqual(tcAmount, tcNewAmount, "the amount of TabContainers on the page");
+					}
+				}
+			]);
+			doh.run();
+
+		});
+	</script>
+
+</head>
+<body class="claro">
+
+	<h1 class="testTitle">Dijit layout.TabContainer tests</h1>
+	
+	<div dojoType="dijit.layout.TabContainer" style="width: 300px; height: 100px;" id="tc1">
+	  <div dojoType="dijit.layout.ContentPane" title="tab1" id="cpTitle" selected="true">
+	    Lorem ipsum and all around...
+	  </div>
+	  <div dojoType="dijit.layout.ContentPane" title="tab2">
+	    Lorem ipsum and all around - second...
+	  </div>
+	  <div dojoType="dijit.layout.ContentPane" id="t3" title="tab3" closable="true">
+	    Lorem ipsum and all around - last...
+	  </div>
+		 <div dojoType="dijit.layout.ContentPane" title="tab4" closable="true">
+		    Lorem ipsum and all around - last...
+		  </div>
+	</div>
+	
+	<div dojoType="dijit.layout.TabContainer" style="width: 300px; height: 100px;" id="tc2">
+	  <div dojoType="dijit.layout.ContentPane" id="cp1" title="tab1" selected="true">
+	    Lorem ipsum and all around...
+	  </div>
+	  <div dojoType="dijit.layout.ContentPane" id="cp2" title="tab2">
+	    Lorem ipsum and all around - second...
+	  </div>
+	  <div dojoType="dijit.layout.ContentPane" id="cp3" title="tab3" closable="true">
+	    Lorem ipsum and all around - last...
+	  </div>
+	</div>
+	
+	<div dojoType="dijit.layout.TabContainer" style="width: 300px; height: 100px;" id="tc3">
+	  	<div dojoType="dijit.layout.ContentPane" id="cp4" title="tab1" selected="true" iconClass="plusIcon">
+	    	Lorem ipsum and all around...
+	  	</div>
+	  	<div dojoType="dijit.layout.ContentPane" id="cp5" title="tab2">
+	    	 Lorem ipsum and all around - last...
+	            <br />
+	            <br />
+	            <br />
+	            Hmmm even more expanding tabs......
+	  	</div>
+	  	<div dojoType="dijit.layout.ContentPane" id="cp6" title="tab3" closable="true">
+	    	Lorem ipsum and all around - last...
+	  	</div>
+		<div dojoType="dijit.layout.ContentPane" id="cp7" title="plus" closable="true" iconClass="plusIcon" showTitle="false">
+	    	Lorem ipsum and all around - last...
+	  	</div>
+		<div dojoType="dijit.layout.ContentPane" id="cp8" title="tab4" closable="true">
+	    	Lorem ipsum and all around - last...
+	  	</div>
+		<div dojoType="dijit.layout.ContentPane" id="cp9" title="tab5" closable="true">
+	    	Lorem ipsum and all around - last...
+	  	</div>
+		<div dojoType="dijit.layout.ContentPane" id="cp10" title="tab6" closable="true">
+	    	Lorem ipsum and all around - last...
+	  	</div>
+	</div>
+	
+	<div dojoType="dijit.layout.TabContainer" style="width: 400px; height: 100px;" id="tcNested">
+	    <div dojoType="dijit.layout.TabContainer" title="Tab 1" nested="true">
+	        <div dojoType="dijit.layout.ContentPane" title="My first inner tab" selected="true">
+	            Lorem ipsum and all around...
+	        </div>
+	        <div dojoType="dijit.layout.ContentPane" title="My second inner tab">
+	            Lorem ipsum and all around - second...
+	        </div>
+	        <div dojoType="dijit.layout.ContentPane" title="My last inner tab">
+	            Lorem ipsum and all around - last...
+	        </div>
+	    </div>
+	    <div dojoType="dijit.layout.TabContainer" title="Tab 2" nested="true">
+	        <div dojoType="dijit.layout.ContentPane" title="My first inner tab" selected="true">
+	            Lorem ipsum and all around...
+	        </div>
+	        <div dojoType="dijit.layout.ContentPane" title="My second inner tab">
+	            Lorem ipsum and all around - second...
+	        </div>
+	        <div dojoType="dijit.layout.ContentPane" title="My last inner tab">
+	            Lorem ipsum and all around - last...
+	        </div>
+	    </div>
+	</div>
+	
+	<div dojoType="dijit.layout.TabContainer" id="tcDoLayout" style="width: 100%;" doLayout="false">
+	        <div dojoType="dijit.layout.ContentPane" title="My first tab" selected="true">
+	            Lorem ipsum and all around...
+	        </div>
+	        <div dojoType="dijit.layout.ContentPane" title="My second tab" closable="true">
+	            Lorem ipsum and all around - second...
+	            <br />
+	            Hmmm expanding tabs......
+	        </div>
+	        <div dojoType="dijit.layout.ContentPane" title="My last tab">
+	            Lorem ipsum and all around - last...
+	            <br />
+	            <br />
+	            <br />
+	            Hmmm even more expanding tabs......
+	        </div>
+	    </div>
+	</body>
+</html>

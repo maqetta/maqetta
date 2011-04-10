@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>doh.robot Textarea Test</title>
+
+		<style>
+			@import "../../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../../dojo/dojo.js"
+			djConfig="isDebug: true, parseOnLoad: true"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.robotx");
+
+			dojo.addOnLoad(function(){
+				doh.robot.initRobot('../test_Textarea.html');
+
+				doh.register("height tests", [
+					{
+						name: "initial height",
+						runTest: function(){
+							doh.t(dojo.marginBox("largeTextArea").h > dojo.marginBox("blank").h);
+						}
+					},
+					{
+						name: "expansion/contraction by newline",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							
+							var height1 = dojo.marginBox("blank").h;
+
+							dijit.byId("blank").focus();
+
+							// Test expand on newline
+							doh.robot.typeKeys('Row of text.', 500, 500);
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							doh.robot.sequence(d.getTestErrback(function(){
+								var height2 = dojo.marginBox("blank").h;
+								doh.t(height2 > height1, "height went from " + height1 + " to " + height2);
+							}), 500);
+
+							// Test shrink on delete of newline
+							doh.robot.keyPress(dojo.keys.DELETE, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								var height2 = dojo.marginBox("blank").h;
+								doh.t(height2 > height1, "height went from " + height1 + " to " + height2);
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "expansion/contraction by word wrap",
+						timeout: 30000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var height1 = dojo.marginBox("blank").h,
+								height2,
+								height3;
+
+							dijit.byId("blank").focus();
+
+
+							// Test expand by wordwrap
+							var text = 'The quick brown fox jumped over the lazy dog.';
+							for(var i=0; i<5; i++){
+								doh.robot.typeKeys(text, 500, 500);
+							}
+							doh.robot.sequence(d.getTestErrback(function(){
+								height2 = dojo.marginBox("blank").h;
+								doh.t(height2 > height1, "height went from " + height1 + " to " + height2);
+								console.log("height went from " + height1 + " to " + height2);
+							}), 7000);
+
+							// Test shrink on delete (backspace) of text.   delete seems to delete the next character
+							// rather than the previous character, hence the LEFT_ARROW.
+							for(var i=0; i<text.length*5; i++){
+								doh.robot.keyPress(dojo.keys.LEFT_ARROW, 30, {});
+								doh.robot.keyPress(dojo.keys.DELETE, 30, {});
+							}
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								height3 = dojo.marginBox("blank").h;
+								doh.t(height3 < height2, "height went from " + height2 + " to " + height3);
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "expansion/contraction by cut/paste",
+						timeout: 30000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var modifier = dojo.isMac ? {meta: true} : {ctrl: true};
+
+							var height1 = dojo.marginBox("blank").h,
+								height2,
+								height3;
+
+							dijit.byId("blank").focus();
+
+							// Cut text, height should decrease
+							doh.robot.keyPress("a", 500, modifier);
+							doh.robot.keyPress("x", 500, modifier);
+							doh.robot.sequence(d.getTestErrback(function(){
+								height2 = dojo.marginBox("blank").h;
+								doh.t(height2 < height1, "height went from " + height1 + " to " + height2);
+								console.log("height went from " + height1 + " to " + height2);
+							}), 500);
+
+							// Paste text, height should increase
+							doh.robot.keyPress("v", 500, modifier);
+							doh.robot.keyPress("v", 500, modifier);
+							doh.robot.sequence(d.getTestCallback(function(){
+								height3 = dojo.marginBox("blank").h;
+								doh.t(height3 > height2, "height went from " + height2 + " to " + height3);
+							}), 500);
+
+							return d;
+						}
+					}
+
+				]);
+
+				doh.register("miscellaneous", [
+					{
+						name: "maxLength",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							
+							var ta = dijit.byId("simple");
+							
+							ta.focus();
+
+							// Limit is 50, and there's text there already, so not all of
+							// these characters will fit; some should be rejected.
+							doh.robot.typeKeys('0123456789', 500, 500);	
+							doh.robot.sequence(d.getTestErrback(function(){
+								var value = ta.get("value");
+								doh.is(50, value.length, "should have stopped at 50, value is " + value);
+							}), 500);
+
+							// Erase a character
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.DELETE, 500, {});
+							doh.robot.sequence(d.getTestErrback(function(){
+								value = ta.get("value");
+								doh.is(49, value.length, "erased a char, value is " + value);
+							}), 500);
+
+							// And try to type a new character, there should be room now,
+							// but just for one character
+							doh.robot.typeKeys('AB', 500, 500);	
+							doh.robot.sequence(d.getTestCallback(function(){
+								value = ta.get("value");
+								doh.is(50, value.length, "tried to type 2 chars but only 1 should fit, value is " + value);
+							}), 500);
+
+							return d;
+						}
+					}
+
+				]);
+
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

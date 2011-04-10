@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>BorderContainer Tutorial</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/BCtutorials.html">BorderContainer Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/BCBackground.html">Previous</a> / <a href="tutorials/BCSingleBorders.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Nested BorderContainers</h1>
+
+<p>This is just one example of nested BorderContainers. Many other options are possible.</p>
+
+<h3 style="margin-top:1em;">Create the outer BorderContainer:</h3>
+<ol><li>Drag a <b>BorderContainer</b> onto the canvas. The <b>Border Container Dialog</b> will pop up.</li>
+    <li>Select Headline, uncheck the Right pane, and click Ok.</li>
+    <li><a href="tutorials/BCPanes.html">Set the size</a> of each pane as desired.</li>
+    <li><a href="tutorials/BCSplitters.html">Turn off the splitters</a> on the top and bottom panes.</li>
+    <li>(optional) <a href="tutorials/BCBackground.html">Set the background color</a> on the top, left and bottom panes.</li>
+</ol>
+<h3 style="margin-top:1.5em;">Create the inner BorderContainer:</h3>
+<ol><li>Drag a <b>BorderContainer</b> onto the canvas. The <b>Border Container Dialog</b> will pop up.</li>
+    <li>Select Headline, uncheck the Right and Bottom panes, and click Ok.</li>
+	<li>Under <b>Layout</b>, set <b>box-sizing: border-box</b>. (This will remove the vertical scroll bar.)</li>
+	<li>Select the left pane.</li>
+	<li>Under <b>Layout</b>, set <b>width: 50%</b>.</li> 
+	<li><i>Note: If you set the left pane with the splitter it will set the width using a fixed position,
+	whereas specifying 50% in the width property produces a left pane that is always at 50% regardless of the window size.</i></li>
+    <li><a href="tutorials/BCSplitters.html">Turn off the splitters</a> on the top pane.</li>
+</ol>
+<p>Preview in the browser. Resize the left panes by dragging on their borders with your mouse.</p>
+
+<h3>Remove the padding on the center ContentPane</h3>
+<p>Notice that there is a border for the center ContentPane and a border for the nested BorderContainer.
+These instructions will remove the padding on the center ContentPane so the two borders will collapse into one:</p>
+<ol>
+<li>In the Outline palette, select the ContentPane that is the parent of the nested BorderContainer.</li>
+<li>Open the <b>Paddings/Margins</b> section of the Properties palette.</li>
+<li>Notice the 8px padding. This is set by the theme CSS as the default padding for ContentPanes.</li>
+<li>Click on the <img title=">" class="inline" src="img/css-cascade-control.png" /> control to the far right of <b>(padding)</b>.</li>
+<li>Select the radio button for <b>element.style</b>. This says to "apply my change to just this element".</li>
+<li>Set the padding to <b>0px</b>.</li>
+<li>Close Paddings/Margings</li>
+</ol>
+
+<p>Preview in the browser.</p>
+<p>Notice that the collapsed border is slightly thicker (2px).
+This looks pretty good, but if you prefer a 1px border then follow the next steps.</p>
+
+<h3>Remove the border on the nested BorderContainer</h3>
+<ol>
+<li>In the Outline palette, select the nested BorderContainer.</li>
+<li>Open the <b>Border</b> section of the Properties palette.</li>
+<li>Select <b>show: props</b>.</li>
+<li>Notice that the border properties are set to the theme CSS values for BorderContainer borders.</li>
+<li>Click on the <img title=">" class="inline" src="img/css-cascade-control.png" /> control to the far right of <b>border-width</b>.</li>
+<li>Select the radio button for <b>element.style</b>. This says to "apply my change to just this element".</li>
+<li>Set the border-width to <b>0px</b>.</li>
+<li>Close the Border section</li>
+</ol>
+
+<p>Preview in the browser.</p> 
+<p>Notice that there is no longer a thicker (2px) border.
+If you prefer the 2px border, here's how you remove changes applied to element.style:</p>
+
+<h3>How to remove changes applied to element.style</h3>
+<ol>
+<li>Select the widget that has the change (the nested BorderContainer).</li>
+<li>Go to the property that was changed (border-width).</li>
+<li>Select the radio button next to <b>element.style</b> to view the value you wish to remove.</li>
+<li>Click on the red <span style="color:red;font-weight:bold; font-size:1.3em;">X</span> next to <b>element.style</b>.</li>
+<li>Preivew in the browser to see the results.</li>
+</ol>
+
+
+<p class="prevnext"><a href="tutorials/BCBackground.html">Previous</a> / <a href="tutorials/BCSingleBorders.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

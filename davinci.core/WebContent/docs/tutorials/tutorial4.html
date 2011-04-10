@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Theme Editor Tutorial</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/tutorial3.html">Previous</a> / <a href="tutorials/tutorials.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Theme Editor Tutorial</h1>
+
+<p>Read <a href="themeEditorAbout.html">About the Theme Editor</a> to learn about the Dojo Claro theme.</p>
+
+<a name="newtheme"><h2>Cloning the Claro theme</h2></a>
+
+<p>Before launching the theme editor, clone the Claro theme into your own custom theme.
+	Select <b>New &gt; New Theme</b> from the Maqetta menu bar.
+	A dialog will appear. In the first field, choose "claro" as the theme to clone.
+	In the second field, enter "myclaro" as the name for the cloned theme.
+	<em>(Note: theme names must not contain spaces or other special characters.)</em>
+	This will create a new CSS styling theme in your workspace named "myclaro".</p> 
+
+<a name="launching"><h2>Launching the theme editor</h2></a>
+
+<p>To launch the theme editor, select <b>Open &gt; Theme Editor</b> from the Maqetta menu bar.
+	In the dialog that comes up, choose "myclaro" from the menu.</p> 
+	
+<p>Your browser window should look something like this:</p>
+
+<p><a href="img/Maqetta_ThemeEditor.png" target="_blank"><img alt="image" src="img/Maqetta_ThemeEditor.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a></p>
+
+<p>All of the supported widgets are displayed on the theme editor canvas. The widgets are divided into
+three sections: <b>Global Styling</b>, <b>Primitive Widgets</b> and <b>Container Widgets</b>.
+
+<ul>
+<li>Click on any widget to select it.</li>
+<li>When a widget is selected, its properties can be customized in the <b>Properties</b> palette.</li>
+</ul>
+
+<h3>Subwidget Selection Panel</h3>
+
+<p>Some widgets contain subwidgets, which can be customized individually.</p> 
+<p>When you click on a widget that has subwidgets, a panel pops up displaying a list of the subwidgets:<p>
+<ol>
+<li>Click on the <b>Calendar</b> widget to display its subwidget panel.</li>
+<li>Click on each check box and notice how the corresponding subwidget is highlighted in red on the Calendar widget.</li>
+</ol>
+<img src="img/calendar.png" />
+<ul>
+<li>When a subwidget is selected, property changes will be applied to the subwidget.</li>
+<li>When <b>WidgetOuterContainer</b> is selected, property changes will be applied to the main widget.</li>
+</ul>
+<p>To close the subwidget panel, you must select a different widget. (In a future release the panel will close when you click anywhere off the widget.)</p>
+
+
+<h2>Global Styling</h2>
+
+<p>The Global Styling section is for setting styles that apply globally.  There are two types of elements that can be set globally: text and widgets.</p>
+
+<h3>Using the Generic text widget to make global changes</h3>
+
+<p>The <b>Generic text</b> widget is for setting text styles that apply to all widgets that contain text elements.</p>
+<ol>
+<li>Select the <b>Generic text</b> widget (at the top under <b>Global Styling</b>).</li>
+<li>Open the <b>Fonts and Text</b> section of the Properties palette.</li>
+<li>Set the font color to red.</li>
+<li>Notice how the text for all the widgets is now red.</li>
+<li>If you wish to commit this theme change, click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your changes.
+(Note: You can undo after saving within the same editing session.)</li>
+<li class="topgap">Create a new HTML file to see the new font color:
+<ol>
+<li>Select <b>New &gt; HTML file</b> from the Maqetta menu bar to create a new HTML file.</li> 
+<li>Drag a Button onto the canvas.
+<div class="note">
+The button's text should be black. This is each new HTML file starts off using the Claro theme,
+and the default text color with Claro is black.
+</div>
+</li>
+<li>Dag the HTML Rich Text widget onto the canvas and type in some text.</li>
+<li>Click off of the rich text widget to close it.</li>
+<li><i>Note that all of the text is black.</i></li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme.
+	In the menu, choose "myclaro" as the theme to use.</li>
+<li><i>Note that all of the text is now red.</i>
+</li>
+<li>Save and close the HTML file.</li>
+</ol></li>
+</ol>
+
+<h3>Using the Global Background and Border widget to make global changes</h3>
+
+<p>The <b>Global Background and Border</b> widget represents a generic widget and allows you to globally set the background and border for all widgets. These properties are under the <b>Background</b> and <b>Border</b> sections of the Properties palette.</p>
+
+<ol>
+<li>Select the <b>Global Background and Border</b> widget in the theme editor.</li>
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Set the background color to a pale green.</li>
+<li>Notice how the color on the Primitive widgets is now green.</li>
+<li>Click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+<li class="topgap">Create a new HTML file to see the new background color:
+<ol>
+<li>Select <b>New &gt; HTML file</b> from the Maqetta menu bar to create a new HTML file.</li> 
+<li>Drag a Button onto the canvas.</li>
+<li>Drag a Calendar onto the canvas.</li>
+<li><i>Note that both widgets are blue. This is because new HTML files start with the Claro theme.</i></li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme.
+	In the menu, choose "myclaro" as the theme to use.</li>
+<li><i>Note that the two widgets are now green.</i>
+</li>
+<li>Close the HTML file.</li>
+</ol></li>
+</ol>
+
+<p class="note">Note: Changes made with the <b>Global Background and Border</b> widget will override changes previously made to individual widgets. If you want to customize individual widgets for your theme, you should make all global changes first, then make the individual widget changes.</p>
+
+<a name="customizing"><h2>Customizing the look of a particular type of widget</h2></a>
+
+
+<p>To customize the visual styling for a particular type of widget, select the widget on the theme editor canvas and modify the styling properties for that widget using the Properties palette.</p>
+
+<h3>Customizing the button widget</h3>
+<ol>
+<li>Change the button style in the Theme editor:
+<ol>
+<li>Click on the Button widget to select it.</li> 
+<li>In the Properties palette, open the <b>Fonts and Text</b> section.</li>
+<li>Adjust the various text properties (e.g., font family, font size, color).</li> 
+<li>Notice how the changes are applied to the Button widget on the canvas.</li> 
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon on the page editor toolbar to save your theme modifications.</li>
+</ol></li>
+<li class="topgap">Create a new HTML file to use the new button style:
+<ol>
+<li>Select <b>New &gt; HTML file</b> from the Maqetta menu bar to create a new HTML file.</li> 
+<li>Drag two buttons from the Widget palette onto the canvas.</li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme.
+	In the menu, choose "myclaro" as the theme to use.</li>
+<li>Notice how the two buttons reflect the styling settings that you defined in the theme editor.</li> 
+<li>In the page editor toolbar, click the <b>Preview in Browser</b> <img class="inline" src="img/preview-browser.gif" /> icon. This will launch a new browser window that contains the HTML page you just created.</li>
+</ol></li></ol>
+
+<p class="note">Sometimes changes made in the theme editor don't show up in the page editor until you do a browser refresh. 
+Save and close the theme editor before doing a browser refresh, then reopen it if needed.</p>
+
+
+<h3>Changing background colors</h3>
+
+<ol>
+<li>Change <b>Button</b>'s background color:<ol>
+<li>Select the <b>Button</b> widget in the theme editor.</li>
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Click on the <b>color</b> input field to bring up the Color Picker</li>
+<li>Pick a green color.</li>
+<li>Click off the Color Picker to close it.</li>
+<li><i>Note that Button's color is now green.</i></li></ol></li>
+
+<li class="topgap">Change <b>Calendar</b>'s background color:<ol>
+<li>Select the <b>Calendar</b> widget in the theme editor.</li>
+<li><i>A window will pop up containing a list of all the subwidgets for Calendar.</i></li> 
+<li>Check the box next to the <b>CalendarMonthContainer</b> subwidget.</li>
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Click on the <b>color</b> input field to bring up the Color Picker</li>
+<li>Note that the same green color is still selected.</li>
+<li>Click off the Color Picker to accept the same color and close the picker.</li>
+<li><i>Note that the background on Calendar's top row, where the month is displayed, is now green.</i></li></ol></li>
+
+<li class="topgap">Change <b>TitlePane</b>'s background color:<ol>
+<li>Select the <b>TitlePane</b> widget in the theme editor (container widget that has <b>Pane</b> at the top).</li>
+<li><i>A window will pop up containing a list of all the subwidgets for TitlePane.</i></li> 
+<li>Check the box next to the <b>TitlePaneTitle</b> subwidget.</li>
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Click on the <b>color</b> input field to bring up the Color Picker</li>
+<li>Note that the same green color is still selected.</li>
+<li>Click off the Color Picker to accept the same color and close the picker.</li>
+<li><i>Note that the TitlePane's title color is now green.</i></li></ol></li>
+</ol>
+
+<h3>Changing background colors for different states</h3>
+
+<p>When a tab is selected on TabContainer, it puts the tab in the <b>Selected state</b>. Any tab that is not selected is considered to be in the <b>Normal state</b>. This exercise shows how to set tab background color for the Normal state, and then the Selected state.</p>
+<ol>
+<li class="topgap">Change <b>TabContainer</b> for the <b>Normal state</b>:<ol>
+<li>Select <b>TabContainer</b>.</li>
+<li><i>A window will pop up containing a list of all the subwidgets for TabContainer.</i></li> 
+<li>Check the box next to the <b>Tab</b> subwidget.</li>
+<li>Make sure <b>Normal</b> is selected in the <b>States palette</b>.</li> 
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Click on the <b>color</b> input field to bring up the Color Picker</li>
+<li>Pick a green color.</li>
+<li>Click off the Color Picker to close it.</li></ol></li>
+
+<li class="topgap">Change <b>TabContainer</b> for the <b>Selected state</b>:<ol>
+<li>Make sure that TabContainer is still selected and the Tab subwidget box is checked in the popup.</li> 
+<li>Select the <b>Selected</b> state in the <b>States palette</b>.</li> 
+<li>Open the <b>Background</b> section of the Properties palette.</li>
+<li>Click on the <b>color</b> input field to bring up the Color Picker</li>
+<li>Click off the Color Picker to accept the same color and close the picker.</li></ol></li>
+
+<li class="topgap">View <b>TabContainer</b> in various states:<ol>
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon on the theme editor toolbar to save your changes.</li>
+<li>Open a new HTML file (select <b>New &gt; HTML File...</b> from the Maqetta menu bar).</li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme.
+	In the menu, choose "myclaro" as the theme to use.</li>
+<li>Drag a TabContainer onto the canvas (accept the default tab names).</li>
+<li>Click on each tab to view the color differences.</li>
+<li>Click the <b>Preview in Browser</b> <img class="inline" src="img/preview-browser.gif" /> icon in the toolbar. This will launch a new browser window that contains the HTML page you just created.</li>
+<li>Click on each tab to view the color differences.</li>
+<li>Note the difference in color when you hover over each tab. This is controlled by the <b>Hover state</b>. Try changing the tab color for the hover state, then view the results.</li></ol></li>
+</ol>
+
+<div class="note">
+Be sure to return to Normal state in the States palette before continuing with the remainder of the tutorial.
+</div>
+
+
+<a name="inheritance"><h2>Styling inheritance</h2></a>
+
+<p>The styling assigned to certain widgets will have an indirect effect on other widgets.</p>
+
+<p>For example, Accordion, TabContainer and BorderContainer use ContentPanes as wrapper widgets for each of their sub-panes,
+so these widgets will be affected by any changes made to ContentPane.</p>
+
+<h3>Styling inheritance exercises</h3>
+
+<ul>
+<li>Changing ContentPane affects multiple widgets:
+	<ol>
+	<li>Click on the <b>ContentPane</b> widget (the 1<sup>st</sup> widget in the Container widgets section) to select it.</li>
+	<li>In the Properties palette under <b>Fonts and Text</b>, set font color to a dark blue color.</li>
+	<li>Notice that the same font color is used for ContentPane, Accordion, TabContainer and BorderContainer. 
+	This is because Accordion, TabContainer and BorderContainer use ContentPanes as a wrapper widget for each of their sub-panes.
+    (<i>Note that TitlePane's font color does not change, because TitlePane does not use ContentPanes.</i>)</li>
+	<li>Click the <b>Undo</b> <img class="inline" src="img/Maqetta-toolbar-undo.png" /> icon to undo the changes.</li>
+	</ol></li>
+ 
+<li class="topgap">Changing the Global Styling font:
+<!--<p>The <b>Generic text</b> block, under <b>Global Styling</b> at the top of the theme editor, is for making global changes to properties under the <b>Fonts and Text</b> section. 
+This exercise uses the Generic text block to globally change the font on all widgets.</p>-->
+	<ol>
+	<li>Click on the <b>Generic text</b> block under <b>Global Styling</b> at the top of the theme editor.</li>
+	<li>In the Properties palette under <b>Fonts and Text</b> and note that the default <b>font-family</b> is "Verdana,Arial,Helvetica,sans-serif".</li>
+	<li>Set the font-family to <b>Arial Black</b>.</li>
+	<li>Notice that all widget fonts are now set to Arial Black.</li>
+	<li>Now select the <b>Button</b> widget and set the font-family to <b>Courier New</b>.</li>
+	<li>Notice that all buttons are now set to Courier New (<i>including Toolbar which contains Buttons as subwidgets</i>).</li>
+	<li><i>Setting the font on individual widgets will override the global font set on the Generic text block.</i></i>
+	<li>Click the <b>Undo</b> <img class="inline" src="img/Maqetta-toolbar-undo.png" /> icon twice to undo the Button and Generic text changes.</li>
+	</ol></li>
+</ul>
+
+<ul>
+<li>Changing the Global Background and Border widget affects multiple widgets:
+<ol>
+<li>Click on the <b>Global Background and Border</b> widget under <b>Global Styling</b>.</li>
+<li>In the Properties palette under <b>Background</b>, set the color to pale yellow. </li>
+<li>Notice that the background color for many of the Primitive widgets changes to the selected color.</li>
+<li>(Notice that the background color for the container widgets does not change. Use ContentPane to globally change the background for container widgets.)</li>
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon save your theme changes.</li>
+<li>Open <b>Sample1.html</b> and <b>Sample2.html</b>, for each file switch to the "myclaro" theme (using the <img src="img/stylesheet.gif" style="margin:0"></img> toolbar icon), and preview them in the browser 
+(using the <b>Preview in Browser</b> <img class="inline" src="img/preview-browser.gif" /> toolbar icon) to see the affects this change.</li>
+</ol></li>
+
+</ul>
+
+
+<!--
+<p>With subsequent releases of the theme editor, there will be many such cases of &quot;styling inheritance&quot; because Dojo&#39;s widgets tend to use common styling for visual components that are used across different widgets.  Future versions of Maqetta will provide help information via tooltips and context menus that will help designers understand how widgets inherit styling from other widgets. </p>
+-->
+
+<a name="complex"><h2>Complex widgets and subwidgets</h2></a>
+
+<p>Some complex widgets, such as Calendar, allow different styling for different &quot;subwidgets&quot;, which are particular sub-elements to the given widget. For Calendar, you can customize the styling on several things, including the year, the month, the days of the week (Sun to Sat), and the dates (0 to 31).</p>
+
+<h3>Experiment with subwidgets</h3>
+
+<ol>
+<li>Click on the Calendar widget to select it.</li>
+<li>In the subwidget popup, check the box next to <b>CalendarMonthContainer</b>.</li>
+<li>In the Properties palette, change the font color to red.</li>
+<li>Notice how the font color for the month name changes on the Calendar widget.</li>
+<li>In the subwidget popup check the box next to <b>CalendarDayLabel</b> and change the font color.</li>
+<li>Continue to select other subwidgets and change the styling.</li>
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon save your theme changes.</li>
+<li>Create a new HTML file (select <b>New &gt; HTML File...</b> from the Maqetta menu bar).</li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme.
+	In the menu, choose "myclaro" as the theme to use.</li>
+<li>Drag a Calendar widget onto the canvas.</li>
+<li>Notice that the theme changes you made to the Calendar widget are visible in the HTML page editor.</li>
+</ol>
+
+<a name="states"><h2>Widget States</h2></a>
+
+<p>The term <b>widget states</b> refers to the various interactive states that a widget might have. 
+For example, the Dojo Button widget has three widget states: Normal, Hover and Disabled. 
+For each state Dojo displays a different set of CSS properties, such as border color, font color, 
+and background properties, in order to provide visual feedback at runtime.</p>
+
+<h3>Experiment with widget states</h3>
+
+<ol>
+<li>Understanding the States palette:
+<ol>
+<li>Close all files except the Claro theme editor (claro.theme).</li>
+<li>Open the Claro theme editor if it is not already open.</li>
+<li>In the States palette, select the <b>Active</b> state.</li>
+<li>Notice that some widgets are grayed out. This indicates that these widgets do not have an Active state.
+Any widgets that are not grayed out (such as Button) <em>do</em> have an Active state.</li>
+<li>Select the <b>Disabled</b> state in the States palette.</li>
+<li>Notice that Button and Checkbox are light gray, indicating that these widgets are styled as light gray when they are disabled.</li>
+<li>Select the <b>Hover</b> state in the States palette.</li>
+<li>Notice that many of the widgets have a slightly darker blue coloring than they do in the Normal state.  
+This styling is displayed when you hover over the widget with your mouse.</li>
+<li>Select the <b>Selected</b> state in the States palette.</li>
+<li>Notice that the CheckBox widget now displays with a check mark, to show that it displays as checked in the Selected state.
+(At runtime the Checkbox widget toggles between the Selected and Normal states when you click on it.)</li>
+</ol></li>
+<li class="topgap">Change the styling for different states:
+<ol>
+<li>In the States palette, make sure the <b>Normal</b> state is highlighted (it is by default).</li>
+<li>In the Styling palette, change the Button's styling (e.g., font family, font size or font color).
+This will change the styling for the Button's Normal state.</li>
+<li>Notice how the button&#39;s appearance changes on the theme editor canvas updates as you change styling properties.</li>
+<li>Now select <b>Hover</b> in the States palette.</li>
+<li>Notice that the Button's styling now shows the current styling for the Hover state.</li>
+<li>In the Styling palette, change the Button's styling for the Hover state, making it different from the styling you gave it for the Normal state.</li>
+<li>In the States palette, alternately click on the Normal and Hover states and observe the style changes on the Button widget.</li>
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon save your theme changes.</li>
+</ol></li>
+<li class="topgap">Test your theme changes:
+<ol>
+<li>Select <b>New &gt; HTML File...</b> from the Maqetta menu bar open up a new HTML page.</li>
+<li>On the toolbar, click on the "Switch themes" icon: <img src="img/stylesheet.gif" style="margin:0"></img>.
+	This will bring up a dialog that allows you to switch to a different theme.
+	In the menu, choose "myclaro" as the theme to use.</li>
+<li>Drag a Button widget onto the canvas.</li>
+<li>In the page editor toolbar, click the <b>Preview in Browser</b> <img class="inline" src="img/preview-browser.gif" /> icon. This will launch a new browser window that contains the HTML page you just created (which only contains the Button widget).</li>
+<li>The button should reflect the styles you set for the Normal state.</li>
+<li>Hover your mouse over the button to observe the styling for the Hover state.</li>
+</ol></li>
+</ol>
+
+<p class="prevnext"><a href="tutorials/tutorial3.html">Previous</a> / <a href="tutorials/tutorials.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

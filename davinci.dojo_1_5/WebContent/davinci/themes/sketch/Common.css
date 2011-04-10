@@ -1,0 +1,179 @@
+
+  /* ======= Styling for the document itself (overriding dojo.css) ======== */
+ .sketch {
+    font-family:Chalkboard,Casual,"Comic Sans MS",cursive;
+    font-size: .688em;
+    color : #131313;
+    background-color : #fff;
+    background-image : none;
+    font-style : italic;
+}
+
+  /* Headings */
+ h1 {
+    font-size : 1.545em;
+    font-weight : normal;
+    line-height : 1em;
+    margin-top : 1em;
+    margin-bottom : 0.727em;
+}
+ .sketch .dijitDialog h1 {
+    margin-top : 0em;
+}
+ h2 {
+    font-size : 1.364em;
+    line-height : 1.455em;
+    margin-top : 1em;
+    margin-bottom : 0.60em;
+    font-weight : normal;
+}
+ h3, h4, h5, h6 {
+    font-size : 1.091em;
+    font-weight : normal;
+    line-height : 1.5em;
+    margin-top : 1.5em;
+    margin-bottom : 0;
+}
+
+  /* paragraphs, quotes and lists */
+ p {
+    font-size : 1em;
+    line-height : 1.3em;
+}
+ blockquote {
+    font-size : 0.916em;
+    margin-top : 3.272em;
+    margin-bottom : 3.272em;
+    line-height : 1.636em;
+    padding : 1.636em;
+    border-top : 1px solid #ccc;
+    border-bottom : 1px solid #ccc;
+}
+ ol li, ul li {
+    font-size : 1em;
+    line-height : 1.5em;
+    margin : 0;
+}
+
+  /* pre and code */
+ pre, code {
+    font-size : 115%;
+    *font-size : 100%;
+    font-family : inherit;
+    background-color : #efefef;
+    border : 1px solid #ccc;
+}
+ pre {
+    border-width : 1px 0;
+    padding : 1.5em;
+}
+
+  /*
+  Tables
+
+  Note that these table definitions make the assumption that you are using tables
+  to display tabular data, and NOT using tables as layout mechanisms.  If you are
+  using tables for layout, you will probably want to override these rules with
+  more specific ones.
+
+  These definitions make tabular data look presentable, particularly when presented
+  inline with paragraphs.
+*/
+ table {
+    font-size : 100%;
+}
+ table.dojoTabular {
+    border-collapse : collapse;
+    border-spacing : 0;
+    border : 1px solid #ccc;
+    margin : 0 1.5em;
+}
+ .dojoTabular th {
+    text-align : center;
+    font-weight : bold;
+}
+ table.dojoTabular thead, table.dojoTabular tfoot {
+    background-color : #efefef;
+    border : 1px solid #ccc;
+    border-width : 1px 0;
+}
+ table.dojoTabular thead tr th, table.dojoTabular thead tr td, table.dojoTabular tbody tr td, table.dojoTabular tfoot tr td {
+    padding : 0.25em 0.5em;
+}
+
+  /* ========= Styling rules to affect widgets ========= */
+ .sketch .dijitPopup {
+    box-shadow : 0px 1px 5px rgba(0,0,0,0.25);
+    -webkit-box-shadow : 0px 1px 5px rgba(0,0,0,0.25);
+    -moz-box-shadow : 0px 1px 5px rgba(0,0,0,0.25);
+}
+ .sketch .dijitTooltipDialogPopup {
+    
+  /* exception popups: do not use a shadow on these because they aren't rectangular */
+box-shadow : none;
+    -webkit-box-shadow : none;
+    -moz-box-shadow : none;
+}
+
+  /* The highlight is shown in the ComboBox menu. */
+ .sketch .dijitComboBoxHighlightMatch {
+    background-color : #a5beda;
+}
+ .sketch .dijitFocusedLabel {
+    
+  /* for checkboxes or radio buttons, hatch border around the corresponding label, to indicate focus */
+outline : 1px dotted #666666;
+}
+ .sketch .dijitContentPaneLoading {
+    background : url('images/loadingAnimation.gif') no-repeat left center;
+    padding-left : 25px;
+}
+
+  /* .dijitContentPaneError icon renders in a dialog box with the error messsage when  there is an error in a HREF url */
+ .sketch .dijitContentPaneError {
+    background : url('../../icons/images/commonIconsObjActEnabled.png') no-repeat left center;
+    background-position : -496px;
+    padding-left : 25px;
+}
+
+  /* Drag and Drop */
+ .sketch .dojoDndItemBefore, .sketch .dojoDndItemAfter {
+    border-top : 1px solid #769DC0;
+}
+ .sketch .dojoDndItemOver {
+    cursor : pointer;
+}
+ .sketch table.dojoDndAvatar {
+    border : 1px solid #b5bcc7;
+    border-collapse : collapse;
+    background-color : #fff;
+    -webkit-box-shadow : 0px 1px 3px rgba(0, 0, 0, .25);
+}
+ .sketch .dojoDndAvatarHeader td {
+    height : 20px;
+    padding-left : 21px;
+}
+ .sketch .dojoDndMove .dojoDndAvatarHeader, .sketch .dojoDndCopy .dojoDndAvatarHeader {
+    background-image : url(images/dnd.png);
+    background-repeat : no-repeat;
+    background-position : 2px -122px;
+}
+ .sketch .dojoDndAvatarItem td {
+    padding : 5px;
+}
+ .sketch .dojoDndMove .dojoDndAvatarHeader {
+    background-color : #f58383;
+    background-position : 2px -103px;
+}
+ .sketch .dojoDndCopy .dojoDndAvatarHeader {
+    background-color : #f58383;
+    background-position : 2px -68px;
+}
+ .sketch .dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader {
+    background-color : #97e68d;
+    background-position : 2px -33px;
+}
+ .sketch .dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader {
+    background-color : #97e68d;
+    background-position : 2px 2px;
+}

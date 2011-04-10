@@ -1,0 +1,61 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/RadioGroupFace",
+    "name": "dojox.layout.RadioGroupFace",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/layout/resources/RadioGroup.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.layout.RadioGroup');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 750,
+            "title": "Duration"
+        },
+        "hasButtons": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Has Buttons"
+        }
+    },
+    "childProperties": {
+        "selected": {
+            "datatype": "boolean",
+            "title": "Selected"
+        },
+        "closable": {
+            "datatype": "boolean",
+            "title": "Closable"
+        }
+    },
+    "content": "<span></span>"
+}

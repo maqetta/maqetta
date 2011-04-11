@@ -25,3 +25,8 @@ Code: <http://github.com/maqetta/maqetta>
 User Group: <http://groups.google.com/group/maqetta-users>  
 Dev Group: <http://groups.google.com/group/maqetta-devs>  
 IRC: #maqetta on irc.freenode.net
+
+Getting Started
+===============
+
+Follow the instructions at <https://github.com/maqetta/maqetta/wiki/Developer-Setup> to run Maqetta from source.

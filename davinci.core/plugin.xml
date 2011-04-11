@@ -18,6 +18,14 @@
 	      <mime-mapping extension="manifest" mime-type="text/cache-manifest" />
       </httpcontext>
    </extension>
+   <extension point="org.eclipse.equinox.http.registry.filters">
+    <filter
+        alias="/"
+        class="org.mortbay.servlet.GzipFilter"
+        httpcontextId="davincicontext"
+        load-on-startup="true">
+    </filter>
+	</extension>
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet

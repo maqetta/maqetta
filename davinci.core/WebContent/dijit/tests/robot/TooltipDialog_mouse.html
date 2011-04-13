@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>doh.robot TooltipDialog Mouse Test</title>
+
+		<style>
+			@import "../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../dojo/dojo.js"
+			djConfig="isDebug: true"></script>
+
+		<!-- functions to help test -->
+		<script type="text/javascript" src="../helpers.js"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.robotx");
+
+			dojo.addOnLoad(function(){
+				doh.robot.initRobot('../test_TooltipDialog.html');
+
+				doh.register("TooltipDialog", [
+					{
+						name: "Select",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred(),
+								select = dijit.byId("select");
+							
+							// open TooltipDialog
+							doh.robot.mouseMoveAt("tooltipDlgButton", 1000);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should be showing");
+							}), 1000);
+
+							// open Select
+							doh.robot.mouseMoveAt("select", 0);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still be showing");
+								doh.t(isVisible("select_menu"), "Select Menu showing too");
+							}), 1000);
+							
+							// pick second option
+							doh.robot.mouseMoveAt(function(){
+								return dojo.query("tr", dojo.byId("select_menu"))[1];
+							}, 0);
+							doh.robot.mouseClick({left: true}, 1000);
+
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(isHidden("select_menu"), "Select Menu closed");
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still still be showing");
+								doh.is("peppers", select.get("value"), "selected peppers");
+							}), 1000);
+
+							// close TooltipDialog
+							doh.robot.mouseMove(10, 10, 0);
+							doh.robot.mouseClick({left: true}, 1000);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("tooltipDlg"), "Tooltip dialog closed");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "InlineEditBox",
+						timeout: 20000,
+						runTest: function(){
+							var d = new doh.Deferred(),
+								inlineEditBox = dijit.byId("inline");
+							
+							// open TooltipDialog
+							doh.robot.mouseMoveAt("tooltipDlgButton", 500);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should be showing");
+							}), 1000);
+
+							// start editing InlineEditBox
+							doh.robot.mouseMoveAt("inline", 0);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still be showing");
+								doh.t(inlineEditBox.editing, "InlineEditBox in edit mode");
+							}), 1000);
+							
+							// type something
+							doh.robot.typeKeys("changed", 0, 600);
+
+							// close InlineEditBox by clicking on blank area of TooltipDialog
+							doh.robot.mouseMoveAt("tooltipDlg", 0, 500, 10, 20);
+							doh.robot.mouseClick({left: true}, 1000);
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.f(inlineEditBox.editing, "InlineEditBox no longer in edit mode");
+								doh.t(isVisible("tooltipDlg"), "TooltipDialog should still still be showing");
+								doh.is("changed", inlineEditBox.get("value"), "value changed to changed");
+							}), 1000);
+
+							// close TooltipDialog
+							doh.robot.mouseMove(10, 10, 0);
+							doh.robot.mouseClick({left: true}, 1000);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("tooltipDlg"), "Tooltip dialog closed");
+							}), 500);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>dojox.layout.ToggleSplitter Test</title>
+
+	<!-- required: a default theme file -->
+	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/tundra/tundra.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true"></script>
+
+	<!-- do not use! only for testing dynamic themes -->
+	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
+
+	<!-- for debugging: -->
+	<script type="text/javascript" src="../ToggleSplitter.js"></script>
+
+	<script type="text/javascript">
+		dojo.require("dojox.layout.ToggleSplitter");
+		dojo.require("dojo.parser");
+	</script>
+
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../../../dijit/tests/css/dijitTests.css";
+		@import "../resources/ToggleSplitter.css";
+		
+	</style>
+	
+	<script type="text/javascript">
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.layout.BorderContainer");
+		dojo.require("dijit.layout.AccordionContainer");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dojox.layout.ToggleSplitter");
+
+		function watchSplitters(bc) {
+
+			var out = dojo.byId("watchedOutput");
+			var moveConnects = {};
+			dojo.forEach(["top", "left"], function(region) {
+				var spl = bc.getSplitter(region); 
+
+				dojo.connect(spl, "_startDrag", function() {
+
+					dojo.style(spl.child.domNode, "opacity", "0.4");
+					moveConnects[spl.widgetId] = dojo.connect(spl.domNode, "onmousemove", function(evt) {
+
+						out.innerHTML = spl.region + ": " + dojo.toJson({
+							x: !spl.horizontal ? spl.domNode.style[spl.region] : 0,
+							y: spl.horizontal ? spl.domNode.style[spl.region] : 0
+						});
+					})
+					
+				});
+				dojo.connect(spl, "_stopDrag", function(evt) {
+					dojo.style(spl.child.domNode, "opacity", 1);
+					dojo.disconnect(moveConnects[spl.widgetId]); 
+					delete moveConnects[spl.widgetId];
+				});
+				dojo.connect(spl, "onOpen", function() {
+					out.innerHTML = spl.region + ": open";
+				});
+				dojo.connect(spl, "onClose", function() {
+					out.innerHTML = spl.region + ": closed";
+				});
+			})
+		}
+		dojo.addOnLoad(function() {
+			watchSplitters( dijit.byId("watchedBC") );
+		})
+	</script>
+</head>
+<body class="tundra" id="testpage">
+
+	<h2 class="testTitle">dojox.layout.ToggleSplitter tests</h2>
+	<p>Double click the splitters to toggle them open/closed</p>
+
+	<div id="border1" dojoType="dijit.layout.BorderContainer"
+		style="width: 90%; height: 300px; border: 2px solid blue; ">
+		<script type="dojo/method">
+			this._splitterClass="dojox.layout.ToggleSplitter";
+		</script>
+
+		<div dojoType="dijit.layout.ContentPane" region="top" style="background-color: #b39b86; border: 1px black solid; height: 50px;" splitter="true">
+			top bar (resizable)
+		</div>
+		<div dojoType="dijit.layout.AccordionContainer"
+			minSize="20" style="width: 300px;" id="leftAccordion" region="leading" splitter="true">
+
+			<div dojoType="dijit.layout.ContentPane" title="Popups and Alerts">
+			</div>
+
+			<div dojoType="dijit.layout.ContentPane" title="Dojo Tree from Store">
+			</div>
+
+			<div dojoType="dijit.layout.ContentPane" title="Calendar" selected="true">
+			</div>
+
+			<div dojoType="dijit.layout.ContentPane" title="Color Picker">
+			</div>
+
+		</div><!-- end AccordionContainer -->
+		<div dojoType="dijit.layout.ContentPane" region="center" style="background-color: #f5ffbf; padding: 3px;">
+			main panel with <a href="http://www.dojotoolkit.org/">a link</a>.<br />
+			(to check we're copying children around properly).<br />
+		</div>
+		<div dojoType="dijit.layout.ContentPane" region="right" toggleSplitterOpen="false" style="background-color: #acb386; width: 100px;" splitter="true">
+			initialized closed
+		</div>
+		<div dojoType="dijit.layout.ContentPane" region="bottom" style="background-color: #b39b86; height: 50px;" splitter="true">
+			bottom bar (resizable)
+		</div>
+	</div>
+	
+	<br />
+	<p>Watching the splitter events</p>
+	<div dojoType="dijit.layout.BorderContainer" id="watchedBC" persist="false" style="height: 200px; width: 100%">
+		<script type="dojo/method">
+			this._splitterClass="dojox.layout.ToggleSplitter";
+		</script>
+		<div dojoType="dijit.layout.ContentPane" region="top" splitter="true" style="background-color: #ccffcc; height: 50px;">Top:</div>
+		<div dojoType="dijit.layout.ContentPane" region="left" style="background-color: #ccccff; width: 40px" splitter="true"><span>Bottom</span></div>
+		<div dojoType="dijit.layout.ContentPane" region="center" style="background-color: #ffffcc"><span>Center</span></div>
+	</div>
+	
+	<p>Splitter coords output:</p>
+	<div id="watchedOutput" style="border: 1px solid #999">nothing moving</div>
+
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+    "id": "http://www.w3.org/html/option",
+    "name": "html.option",
+    "spec": "1.0",
+    "version": "1.0",
+    "property": {
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        }
+    },
+    "content": "<option></option>"
+}

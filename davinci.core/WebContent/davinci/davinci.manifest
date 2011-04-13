@@ -1,0 +1,58 @@
+CACHE MANIFEST
+../dojo/resources/dojo.css
+../davinci/davinci.css
+../dojo/dojo.js
+../dijit/dijit.js
+../davinci/davinci-common.js
+../davinci/img/banner-tile.png
+# lots more in img... should be tiled
+# nls files should depend on locale
+../davinci/nls/davinci-common_en-us.js
+../davinci/workbench.css
+../davinci/propvieweffects.css
+../davinci/davinci.js
+# should depend on locale
+../davinci/nls/davinci_en-us.js
+../davinci/ui_plugin.js
+../davinci/ui.css
+../davinci/js/js_plugin.js
+../davinci/html/html_plugin.js
+../davinci/ve/ve_plugin.js
+../davinci/ve/template.html
+../davinci/ve/resources/welcome_to_maqetta.html
+../davinci/ve/themeEditor/themeEditor_plugin.js
+../davinci/ve/themeEditor/ThemeEditor.js
+#../davinci/themeEditor/davinci-dojo-theme-editor.html
+# Probably cannot cache user data until login
+#404 /davinci/peller/themes/claro/claro.json
+# should this be dynamic?
+../davinci/ve/prefs/default_style_prefs.js
+#../OpenAjax/hub20/OpenAjaxManagedHub-core.js
+#../OpenAjax/widget/openajax_metadata.js
+../dojo/resources/blank.gif
+../dijit/themes/claro/images/titlebar.png
+
+
+NETWORK:
+../metadata
+../../cmd
+../davinci/repositoryinfoLive.js
+../davinci/img
+#../davinci/ve/libs/builtin
+../davinci/ve/input
+../davinci/ve/resources/images
+../davinci/themes
+../dojo/resources
+../dijit/icons
+../dijit/themes
+../dojox/image/resources/images
+../dojox/layout/resources/icons
+../dojox/widget/ColorPicker/images
+../dojox/widget/Standby/images
+../dojox/grid/resources
+../../user
+# for non-English translations.  Proper solution might be to do substitution on the cached bundle with the appropriate locale
+../davinci/nls
+../dijit/nls
+# need to build davinci.review plugin
+../davinci/review

@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Using the Page Editor</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a> 
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/tutorial2.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Introducing the Page Editor</h1>
+<!--
+<ul>
+<li><a href="#newfile">Creating a new HTML page</a></li>
+<li><a href="#dojo">Add Dojo controls to the page</a></li>
+<li><a href="#button">Button widget and on-screen text editing</a></li>
+<li><a href="#html">Add HTML elements to the page</a></li>
+<li><a href="#image">Add an image to the page</a></li>
+<li><a href="#workwidgets">Working with widgets</a></li>
+<li><a href="#deletewidgets">Deleting widgets</a></li>
+<li><a href="#saveopen">Saving and opening files</a></li>
+</ul>
+-->
+
+<a name="pageeditor"><h2>The Maqetta Page Editor</h2></a>
+
+<p>Upon launching Maqetta for the first time, the screen will look as follows:</p>
+
+<div class="image">
+<a href="img/Maqetta_UI_Initial.png" target="_blank"><img alt="image" src="img/Maqetta_UI_Initial.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+<p>Upon opening a file, the middle area becomes the page editor canvas. The following picture
+shows how the application looks after opening up one of the sample files:</p>
+
+<div class="image">
+<a href="img/Maqetta_UI_Overview.png" target="_blank"><img alt="image" src="img/Maqetta_UI_Overview.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+
+<a name="newfile"><h2>Creating a new HTML page in the page editor</h2></a>
+
+<ol>
+<li>Click <b>New &gt; HTML File...</b> on the Maqetta menubar.</li>
+<li>The <b>Create New HTML File</b> dialog will be displayed with a default filename.</li> 
+<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li>A new blank HTML file is opened in the page editor, with the filename displayed at the top.</li>
+</ol>
+
+<p>Your workspace should now look something like this:</p>
+<div class="image">
+<a href="img/PageEditorNewFile.png" target="_blank"><img alt="image" src="img/PageEditorNewFile.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+<a name="dojo"><h2>Add Dojo controls to the page</h2></a>
+
+<ol>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section to open that section.</li>
+<li>Drag a <b>Text Box</b> widget onto the canvas.</li>
+<li>Drag a <b>Button</b> widget onto the HTML page canvas to add a button to the page. 
+Notice that Maqetta automatically pops up the widget's data entry popup so that you 
+can immediately define the text for the button's label.</li>
+<li>Enter some text (e.g., "Press me") and hit Return. You will see a button with the label you provided.</li>
+<li>Double-click on the Button widget. Notice that Maqetta re-opens the data entry popup.</li>
+<li>Change the text to say "Click-me" and hit Return.</li>
+<li>Drag a <b>Calendar</b> widget onto the canvas.</li>
+<li>The Calendar widget is initially set with today's date.</li>
+<li>To change the Calendar's date, double-click on the Calendar widget and edit the date.</li>
+<li>In the <b>Widgets</b> palette, click on the <b>Dojo Controls</b> section title to close the section.</li>
+</ol>
+<p class="note">Maqetta automatically prompts the user for initial data for a number of widgets, such as Button, Calendar, &lt;label&gt;, &lt;a&gt; and &lt;h1&gt; - &lt;h3&gt;. Later you can double-click on the widget to edit the initial data.</p>
+
+
+<a name="html"><h2>Add HTML elements to the page</h2></a>
+
+<ol>
+<li>In the <b>Widgets</b> palette, click on the <b>HTML</b> section to open that section.</li>
+<li>Drag a <b>&lt;div&gt;</b> widget onto the canvas.</li>
+<li>Drag a <b>&lt;label&gt;</b> widget onto the &lt;div&gt; on the canvas. This will put the &lt;label&gt; inside the &lt;div&gt;.</li>
+<li>Enter some text for the &lt;label&gt; and hit Return.</li>
+<li>Click on the <b>HTML</b> section title to close the section.</li>
+</ol>
+
+<a name="image"><h2>Add an image to the page</h2></a>
+
+<ol>
+<li>The <b>Files</b> palette is in the lower-left section of the Maqetta workspace.</li>
+<li>You can expand the palette by placing the mouse on the upper edge of the blue divider and dragging up with the mouse.</li> 
+<li>From the <b>Files</b> palette, drag and drop the &quot;SampleBanner.jpg&quot; file onto the page canvas.</li>
+</ol>
+<p class="note">To add your own images, right-click (ctrl-click on the Mac) on the <b>Files</b> palette to bring up the context menu, and select <b>Upload File</b>. Uploaded files are displayed in the Files palette where you can drag and drop them onto the canvas.</p>
+
+
+<a name="workwidgets"><h2>Working with widgets</h2></a>
+
+<p>To work with a widget, you must first select it. You can then size it, move it, style it or set its properties.</p>
+
+<h3>Selecting a widget</h3>
+
+<p>You can select a widget in two ways:</p>
+
+<ul>
+ <li>Click on a widget on the page canvas.</li>
+ <li>Click on a widget&#39;s entry in the <b>Outline</b> palette.</li>
+</ul>
+
+<p>A gray border is displayed around a widget to show that it is selected.</p>
+
+<p>You can select multiple widgets by holding down the <b>Ctrl</b> key (Command key on Mac) as you select the widgets.</p>
+
+<h3>Resizing, moving and styling a widget</h3>
+
+<ul>
+<li>To change the size of a widget, select it and pull one of the resize handles (little white boxes along the corners and sides of the selection border).</li>
+</ul> 
+<p class="note">Some widgets such as Button do not have resize handles because their size depends on their interior content.</p>
+
+<ul>
+<li>You can move widgets in two ways:
+<ul>
+<li>On the canvas, select the widget, then place the mouse on the selection border and then drag it to a different location.</li>
+<li>On the <a href="peOutlinePalette.html">Outline palette</a>, drag the widget to a new location within the Outline palette. (The Outline palette allows widgets to be moved into any position in the widget hierarchy.)</li>
+</ul></li>
+</ul>
+
+<h3>Nesting widgets</h3>
+<ul>
+<li>You can nest widgets by dragging and dropping a widget onto another widget (the target must be a container widget).</li>
+<li>Nested widgets can be moved into a different container widget, or outside of any widgets to become a top-level widget on the page.</li>
+</ul>
+
+<h3>Styling widgets</h3>
+<ul>
+<li>To change the look of a widget, click on the widget to select it and then change its values using the <a href="pePropertiesPalette.html">Properties palette</a>.</li>
+</ul>
+
+<a name="deletewidgets"><h2>Deleting widgets</h2></a>
+
+<ol>
+<li>Select one of the widgets in the Page Editor canvas.</li>
+<li>Delete the widget in one of the following ways:
+<ul>
+<li>Click on the <b>delete</b> <img class="inline" src="img/delete_icon.png" /> icon on the page editor toolbar.</li>
+<li>Hit the <b>Delete</b> key on your keyboard (for Windows only - currently not working on the Mac).
+<li>Bring up the widget's context menu (right-click on Windows / ctrl-click on Mac) and choose <b>delete</b>.</li>
+</ul></li>
+</ol>
+
+<ul>
+<li>You can also delete a widget from the Outline palette:
+<ol>
+<li>Select the widget in the Outline palette</li>
+<li>Bring up the widget's context menu (right-click on Windows / ctrl-click on Mac) and choose <b>delete</b>.</li>
+</ol></li>
+</ul>
+
+<a name="saveopen"><h2>Saving and opening files</h2></a>
+
+<p>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon on the page editor toolbar to save the current HTML file.</p>
+
+<h3>Saving with <b>Save as</b></h3>
+<p>Use <b>Save as</b> to save the file under a different file name:</p>
+<ol>
+<li>Click on the <b>Save as</b> <img class="inline" src="img/Maqetta-toolbar-saveas.png" /> icon on the page editor toolbar.</li>
+<li>A dialog window will pop up with the directory list from your <a href="../install.html">user workspace folder</a> (which is also displayed in the <b>Files</b> palette).</li>
+<li><b>File name:</b> - enter a new file name or select an existing file from the list (using an existng filename will overwrite the existing file).</li>
+<li><b>Parent folder:</b> - select any folder from the list (the root <a href="../install.html">user workspace folder</a> is indicated by a "."). 
+<i>Do not use the <b>themes</b> folder since this is reserved for Maqetta theme files.</i></li>
+<li>The file will be saved with the new file name, and will also remain open on the canvas with the new file name.</li>
+</ol>
+<h3>Opening Files</h3>
+<p>There are two ways to open an existing file:</p>
+<ol>
+<li>Find the file in the <b>Files</b> palette and double-click on it.</li>
+<li>Select <b>Open > Open File...</b> from the Maqetta menu bar. A dialog window will pop up allowing you to select the file to open.</li>
+</ol>
+<br />
+<p class="prevnext"><a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/tutorial2.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>States API</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="techdocs/techguide.html">Programming Guide</a>
+    </td>
+    <td class="prevnext">
+    <a href="techdocs/techguide.html">Previous</a> / <a href="techdocs/themeEditor.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>States API</h1>
+
+<div class=WordSection1>
+
+<h2>Overview</h2>
+
+<p>States are provided to simplify and accelerate the creation of dynamic user interfaces
+within your application.</p>
+
+<p>You don’t need to know how to code to use states.  
+Designers can create dynamic UI via options in the design tool:</p>
+
+<ul>
+<li>Simply add a new state for each unique interaction in your user interface.</li>
+<li>For each state added, you can hide irrelevant user interface elements, 
+	show relevant ones, plus move, resize and style anything the user should see.</li>
+<li>You can set up triggers for state changes by setting an event
+	property on any user interface element.  Simply choose the state you want to
+	set the event to trigger via the dropdown menu.</li>
+</ul>
+
+<p>For more advanced scenarios, developers can manipulate states via an API.  
+You can use the States API to:</p>
+
+<ul>
+<li>Listen for state changes in order to trigger complex animations and business logic.</li>
+<li>Trigger state changes via application initiated events.</li>
+</ul>
+
+<h2>API</h2>
+
+<pre>
+/**
+
+ * Sets the current state of the application interface.
+
+ * You can subscribe to changes in state using the following call:
+
+ *   davinci.states.subscribe(&quot;/davinci/states/state/changed&quot;, callback)
+
+ * @return undefined
+
+ */
+
+ davinci.states.setState(stateName);
+
+/**
+
+ * Gets the current state of the application interface.
+
+ * @return string
+
+ */
+davinci.states.getState();
+</pre>
+
+<h2>Examples</h2>
+
+<p>In addition to
+the basic style changes set in the design tool, you may need to add more
+complex animations to your application, execute business logic, or trigger
+states changes via application events.  The following examples demonstrate how to
+accomplish these types of goals.</p>
+
+<h3>Adding Complex Animations</h3>
+
+<p>You can add
+complex animations to your application by listening for the state changed
+event, and executing a callback which triggers the desired animation from your
+favorite toolkit.  The following sample code illustrates how you might use the
+states API to implement your favorite slide effect for a login prompt.</p>
+
+<h4>Sample code</h4>
+
+<pre>
+&lt;script src=”my/favorite/toolkit/effects.js”&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+davinci.states.subscribe(&quot;/davinci/states/state/changed&quot;,function(event){
+
+	var loginPrompt = document.getElementById(&quot;loginPrompt&quot;);
+
+	var state = &quot;Login Prompt&quot;;
+
+	if (event.newState == state) {
+
+		my.favorite.toolkit.effects.slideIn(loginPrompt);
+
+	} else if (event.oldState == state) {
+
+		my.favorite.toolkit.effects.slideOut(loginPrompt);
+
+	}
+
+});
+
+&lt;/script&gt;
+
+</pre>
+
+<h3>Executing Business Logic</h3>
+
+<p>You can execute
+business logic in your application when the user interface changes by listening
+for the state changed event, and executing a callback which triggers the
+desired logic.  The following sample code illustrates how you might use the
+states API to implement a search results interface.</p>
+
+<h4>Sample code</h4>
+
+<pre>
+&lt;script src=”my/business/logic.js”&gt;&lt;/script&gt;
+
+&lt;script src=”my/ui/logic.js”&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+davinci.states.subscribe(&quot;/davinci/states/state/changed&quot;, function(event){
+
+            // If we’ve just changed to the Search Results state, then populate the results div
+
+            if (event.newState == &quot;Search Results&quot;) {
+
+    	        var query = document.getElementById(&quot;searchField&quot;).value;
+
+                var results = my.business.logic.getResults(query);
+
+	            my.ui.logic.populateSearchResultsDivWith(results);
+
+			}
+
+});
+
+&lt;/script&gt;
+
+</pre>
+
+<h3>Triggering State Changes via Application Events</h3>
+
+<p>You can trigger
+state changes via application events by simply calling the setState function
+within your code.  The following sample code illustrates how you might use the
+states API to implement an inactivity based logout warning.</p>
+
+<h4>Sample code</span></h4>
+
+<pre>
+&lt;script src=”my/ui/logic.js”&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+setInterval(function(){
+
+            var state = davinci.states.getState();
+
+
+            // If we’ve already warned the user, then trigger the logout
+
+            if (state == &quot;Inactivity Warning&quot;) {
+
+                        davinci.states.setState(&quot;Logging Out&quot;);
+
+                        my.ui.logic.logout();
+
+
+            // After 15 minutes, warn the user that they’ll soon be logged out
+
+            } else if (my.ui.logic.timeSinceLastActivity() &gt; 15*60*1000 ) {
+
+                        davinci.states.setState(&quot;Inactivity Warning&quot;);
+
+            }
+
+}, 60*1000);
+
+&lt;/script&gt;
+
+</pre>
+
+</div>
+
+<p class="prevnext"><a href="techdocs/techguide.html">Previous</a> / <a href="techdocs/themeEditor.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+
+</html>

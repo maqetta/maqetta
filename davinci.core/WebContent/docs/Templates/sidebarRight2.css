@@ -1,0 +1,12 @@
+@CHARSET "ISO-8859-1";
+/* --- floated columns --- */
+.bl-sidebar {
+	border-right:none;
+	border-left:1px solid #ebebeb;
+	float:right;
+}
+.bl-content {
+	float:right;
+}
+
+/* ---- end floated columns --- */

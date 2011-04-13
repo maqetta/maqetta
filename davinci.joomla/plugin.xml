@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="davinci.core.personManager">
+         <personManager class="davinci.joomla.JoomlaPersonManager"/>
+   </extension>
+   <extension
+         point="davinci.core.welcomePage">
+      <welcomePage
+            path="WebContent/welcome.html">
+      </welcomePage>
+   </extension>
+   <extension
+         point="davinci.core.mailConfig">
+      <mailConfig
+            smtp.mailServer="localhost"
+            smtp.notificationId="noreply@maqetta.org">
+      </mailConfig>
+   </extension>
+   <extension
+           point="davinci.core.jsPlugin">
+       <jsPlugin
+               path="app/joomlaPlugin"
+               resourcePath="WebContent/joomla" />
+   </extension>
+</plugin> 

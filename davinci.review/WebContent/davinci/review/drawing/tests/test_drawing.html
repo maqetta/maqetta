@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Test Drawing</title>
+
+	<style type="text/css">
+		@import "../../../../dojo/resources/dojo.css";
+		@import "../../../../dijit/tests/css/dijitTests.css";
+		@import "../../../../dijit/themes/claro/claro.css";
+	</style>
+	
+	<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true, isDebug: true"></script>
+
+	<!-- only needed for alternate theme testing: -->
+	<script type="text/javascript" src="../../../../dijit/tests/_testCommon.js"></script>
+	
+	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dijit.form.Button");
+		dojo.require("davinci.review.drawing.Surface");
+		dojo.require("davinci.review.drawing.tools.CreateTool");
+		dojo.require("davinci.review.drawing.tools.SelectTool");
+		dojo.require("davinci.review.drawing.tools.ExchangeTool");
+		dojo.require("davinci.review.drawing.tools.HighlightTool");
+		
+		dojo.addOnLoad(function(){
+			surface = new davinci.review.drawing.Surface(dojo.doc.body),
+				createTool = new davinci.review.drawing.tools.CreateTool(surface, ["color"]),
+				selectTool = new davinci.review.drawing.tools.SelectTool(surface, ["color"]),
+				exchangeTool = new davinci.review.drawing.tools.ExchangeTool(surface),
+				highlightTool = new davinci.review.drawing.tools.HighlightTool(surface);
+			
+			surface.color = "purple";
+			
+			dojo.connect(button1, "onClick", function(){
+				surface.activate();
+				createTool.deactivate();
+				createTool.setShape("Arrow", {color: "blue"});
+				createTool.activate();
+				selectTool.deactivate();
+				selectTool.activate();
+			});
+			dojo.connect(button2, "onClick", function(){
+				surface.activate();
+				createTool.deactivate();
+				createTool.setShape("Arrow", {color: "red"});
+				createTool.activate();
+				selectTool.deactivate();
+				selectTool.activate();
+			});
+//			dojo.connect(button3, "onClick", function(){
+//				surface.activate();
+//				surface.filterByAttribute("color", {blue: 1});
+//			});
+//			dojo.connect(button4, "onClick", function(){
+//				surface.activate();
+//				surface.filterByAttribute("color", {red: 1});
+//			});
+//			dojo.connect(button5, "onClick", function(){
+//				surface.activate();
+//				surface.filterByAttribute("color");
+//			});
+			dojo.connect(button6, "onMouseDown", function(){
+				surface.activate();
+				selectTool.removeShape();
+			});
+			dojo.connect(button7, "onClick", function(){
+				surface.destroy();
+			});
+			dojo.connect(button8, "onClick", function(){
+				window.exportedData = exchangeTool.exportShapesByAttribute("color", {red: 1, purple: 1});
+				console.log(window.exportedData);
+			});
+			dojo.connect(button9, "onClick", function(){
+				exchangeTool.importShapes(window.exportedData, true);
+			});
+			dojo.connect(button10, "onClick", function(){
+				surface.activate();
+				createTool.deactivate();
+				createTool.setShape("Rectangle", {color: "purple"});
+				createTool.activate();
+				selectTool.deactivate();
+				selectTool.activate();
+			});
+			dojo.connect(button11, "onClick", function(){
+				surface.activate();
+				createTool.deactivate();
+				createTool.setShape("Ellipse", {color: "purple"});
+				createTool.activate();
+				selectTool.deactivate();
+				selectTool.activate();
+			});
+			dojo.connect(button12, "onClick", function(){
+				surface.deactivate();
+				highlightTool.deactivate();
+				highlightTool.activate();
+			});
+			dojo.connect(button13, "onClick", function(){
+				surface.activate();
+				createTool.deactivate();
+				createTool.setShape("Text", {color: "blue"});
+				createTool.activate();
+				selectTool.deactivate();
+				selectTool.activate();
+			});
+		});
+	</script>
+</head>
+<body class="claro">
+	<h1 class="testTitle">HTML Surface</h1>
+	<button dojoType="dijit.form.Button" jsid="button1">Drawing Blue</button>
+	<button dojoType="dijit.form.Button" jsid="button2">Drawing Red</button>
+	<button dojoType="dijit.form.Button" jsid="button3">Keep Blue</button>
+	<button dojoType="dijit.form.Button" jsid="button4">Keep Red</button>
+	<button dojoType="dijit.form.Button" jsid="button5">Show All</button>
+	<button dojoType="dijit.form.Button" jsid="button6">Remove Shape</button>
+	<button dojoType="dijit.form.Button" jsid="button7">Destroy All</button>
+	<button dojoType="dijit.form.Button" jsid="button8">Export Shapes</button>
+	<button dojoType="dijit.form.Button" jsid="button9">Import Shapes</button>
+	<button dojoType="dijit.form.Button" jsid="button10">Draw Rectangle</button>
+	<button dojoType="dijit.form.Button" jsid="button11">Draw Ellipse</button>
+	<button dojoType="dijit.form.Button" jsid="button12">Enable Highlight Tool</button>
+	<button dojoType="dijit.form.Button" jsid="button13">Add Text</button>
+</body>
+</html>

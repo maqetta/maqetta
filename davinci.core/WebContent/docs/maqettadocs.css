@@ -1,0 +1,230 @@
+@CHARSET "ISO-8859-1";
+
+@media print {
+	.noprint, .prevnext {
+		display:none;
+	}
+	body {
+		font-size:80%;
+	}
+}
+
+body.maqettadocs {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:.68em;	// same as Claro
+}
+
+#content {
+	/* #content is only in screen view. Make it a little bigger */
+	font-size:1.1em;
+}
+
+div#pagebody {padding: 0 1.5em 0 1em;}
+
+table.breadcrumbs {
+	width:100%;
+	margin-top:0;
+	margin-bottom:2em;
+}
+.prevnext {
+	text-align:right;
+	padding-right:1em;
+}
+
+/* #pagebody is needed to override dojo claro styles (see index.html) */
+
+#pagebody h1, #pagebody h2 {border-bottom: 1px solid #dadada;}
+#pagebody h1 {
+	color:#666666;
+	font-family:"Lucida Grande",Verdana,Tahoma,Arial,sans-serif;
+	font-size:1.7em;
+	font-weight:bold;
+	margin-bottom:2em;
+	margin-top:0;
+	padding-bottom:2px;
+}
+#pagebody h2, #pagebody h3 {
+	font-family: Georgia, "Times New Roman", Times, serif; 
+	font-weight: normal;
+	color: #333;
+	margin-top:2em; 
+}
+#pagebody h2 {font-size: 1.5em;}
+#pagebody h3 {
+	font-size: 1.3em;
+	margin-bottom:0;
+}
+#pagebody p, #pagebody dd, #pagebody ul, #pagebody ol {
+	font-size:1em;
+	line-height:1.3em;
+}
+#pagebody dt.text {
+	padding-top: 1em;
+}
+.menu li {
+	list-style-type:none;
+	list-style-type:square;
+	font-size:1em;
+}
+#pagebody ul li {list-style-type:square;}
+#pagebody li ol li {list-style-type:decimal;}
+#pagebody li ol li ul li {list-style-type:square;}
+#pagebody li li {margin-left:-1em;}
+
+li.topgap {padding-top:1.2em;}
+#pagebody strong {font-size:.97em;}
+#pagebody b {font-size:.97em;}
+
+#pagebody code { 
+	font-family: "Courier New", Courier, monospace; 
+	color: #000;
+  	background: #F0F0F0;
+	border:1px dotted #999;
+}
+#pagebody pre {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:1em;
+	line-height: 1.5em;
+	background-color: #E5EECC;
+	/*background-color:#E6F0FA;*/
+	display:block;
+	width:58em;
+	margin:1.3em 0 1.8em -2em;
+	padding: 5px 5px 5px 15px;
+	/*border:1px dotted #999;*/
+	-moz-box-shadow: 10px 10px 5px #888;
+}
+#pagebody a, #pagebody a:link {
+	color:#105cb6;
+	text-decoration:none;
+}
+#pagebody a:hover {
+    color:#05386b;
+	text-decoration:underline;
+}
+#pagebody a.external, #pagebody a.external:link {
+	background:url("img/external.png") no-repeat scroll right center transparent;
+	padding-right:13px;
+}
+#pagebody a.external:hover {
+    color:#05386b;
+	text-decoration:underline;
+}
+#pagebody img {margin:10px 10px 20px 10px;}
+#pagebody img.inline {margin:0px;}
+
+p.comment {
+	padding-left: 1.5em;
+	padding-right: 2em;
+}
+.note {
+	display:block;
+	border:1px dotted #999;
+	background-color: #eee;
+	/*margin:10px 0 15px; */
+	margin:2em 0; 
+	padding:5px 5px 5px 15px;
+	width:45em;
+	line-height:normal;
+	-moz-box-shadow: 10px 10px 5px #888;
+}
+.callout {  
+	display:block;
+	border:1px dotted #999;
+	background-color: #eee;
+	/* margin:3em 0 4em; */
+	margin:2em 0; 
+	padding: 5px 5px 5px 15px;
+	width:45em;
+	font-size:.85em;
+	-moz-box-shadow: 10px 10px 5px #888;
+}
+div.left-side {
+	float:left;	
+	margin-top:20px;
+}
+div.video {margin: 30px 0 0 170px;}
+
+.image div {
+	font-size:90%;
+	font-style:italic;
+}
+
+.important_note {font-style:italic;}
+.important_note em {text-decoration:underline;}
+.TODO {color: red;}
+
+div.left-col {
+	float:left;
+	width:200px;
+	padding-right:40px;
+}
+div.right-col {
+	float:left;
+	width:200px;
+}
+.section {background-color: #FFD74E;}
+.subsection {font-weight:bold;}
+#resource_div {font-size: 110%;}
+#pagebody table.resources {border-collapse:collapse;}
+#pagebody table.resources, #pagebody table.resources th, #pagebody table.resources td {border:1px solid gray;}
+#pagebody table.resources th {
+	background:#ddd;
+	padding:5px 0;
+}
+#pagebody table.resources td {
+	padding:0 15px;
+	vertical-align:top;
+}
+#pagebody table.resources dt {
+	padding-top:1em;
+	padding-bottom:0;
+}
+#pagebody table.resources dl > dt:first-child {
+	padding-top:0;
+}
+#pagebody table.resources dd {
+	padding-left:0;
+	margin-left:0;
+}
+#pagebody table.resources dd ul {
+	margin-top:0.4em;
+	padding-left:2em;
+}
+#pagebody #layout-tools dt {
+	font-weight:bold;
+	font-size:.9em;
+}
+#pagebody table.palette {
+	margin:1em;
+	border-collapse:collapse;
+	max-width:75%;
+}
+#pagebody table.palette th, #pagebody table.palette td { 
+	padding:.4em .5em; 
+	border: 1px #ccc solid; 
+}
+#pagebody table.palette thead {
+	background-color:#eee;
+	color:#000;
+}
+#pagebody table.palette th {text-align:left;}
+#pagebody table.palette thead th {text-align:center;}
+#pagebody table.palette td {vertical-align:top;}
+#pagebody table.palette td.icon, #pagebody table.palette td.icon img {
+	padding:1px;
+	margin:0;
+	text-align:center;
+}
+#pagebody table.toolbar td {vertical-align:middle;}
+#testcolor {
+	color: #AEB8C0;
+}
+
+#pagebody .inline-editor {
+	width:15em;
+	margin:10px;
+	padding:2px;
+	border:3px solid #769DC0;
+	font-family:'Courier New';	
+}

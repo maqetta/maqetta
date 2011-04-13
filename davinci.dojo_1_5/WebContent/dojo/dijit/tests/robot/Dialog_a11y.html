@@ -1,0 +1,501 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>doh.robot Dialog A11Y Test</title>
+
+		<style>
+			@import "../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script type="text/javascript" src="../../../dojo/dojo.js"
+			djConfig="isDebug: true"></script>
+
+		<!-- functions to help test -->
+		<script type="text/javascript" src="../helpers.js"></script>
+
+		<script type="text/javascript">
+			dojo.require("dijit.robotx");
+
+			var dialogIds = [
+				{ dlg: "dialog1", firstFocus: "name" },
+				{ dlg: "tabDialog", firstFocus: "tc_tablist_cp1" },
+				{ dlg: "fifthDlg", firstFocus: "timeref" }, //timeref is in layout/getResponse.php
+				{ dlg: "dialog6", firstFocus: "dialog6", fileInput: "afile" },
+				{ dlg: "cantmove", firstFocus: "cantmove" },
+				{ dlg: "preventer", firstFocus: "preventerOK" }
+			];
+
+			// testing utilities
+			function dialogTests(){
+				var that = {};
+				var xtraPara = null;
+				var firstTabStop = null;
+				var gotFocus = false;
+				var lostFocus = false;
+				var focusConnect = null;
+				var blurConnect = null;
+
+				// Define a known location to place keyboard focus, and put it there.  Allows for a
+				// place for focus to return to when dialog is dismissed.
+				function addTabNavFocus(){
+					removeTabNavFocus();
+					xtraPara = dojo.doc.createElement("p");
+					dojo.attr(xtraPara, 'tabIndex', 0);
+					xtraPara.innerHTML = "Tab-focussable paragraph";
+					xtraPara.id="focusPara";
+					dojo.place(xtraPara, dojo.body(), "first");
+					xtraPara.focus();
+				};
+
+				function removeTabNavFocus(){
+					if(xtraPara && xtraPara.parentNode){
+						xtraPara.parentNode.removeChild(xtraPara);
+					}
+				};
+
+				that.ariaFocusSetup = function(/*dialog's and first focusable ids*/ ids){
+					addTabNavFocus();
+					gotFocus = lostFocus = false;
+					var dlog = dijit.byId(ids.dlg);
+					// need to show dialog in order to find the first tab stop.
+					if( !dojo.isMoz && ids.fileInput){
+						that.firstTabStop = ids.fileInput;
+					}else{
+						that.firstTabStop = ids.firstFocus;
+					}
+				};
+
+				that.ariaFocusTeardown = function(){
+					removeTabNavFocus();
+				};
+
+				that.ariaFocus = function(dlogId){
+					var d = new doh.Deferred();
+					var dlog = dijit.byId(dlogId.dlg);
+					var doShow = function(){
+						dlog.show();
+					};
+					var doHide = function(){
+						dlog.hide();
+					};
+					var doFocusTest = function(){
+						gotFocus = (dojo.global.dijit._curFocus.id == that.firstTabStop);
+					}
+					var doBlurTest = function(){
+						lostFocus = (dojo.global.dijit._curFocus.id != that.firstTabStop);
+					}
+					// <firstTabStop> set in that.ariaFocusSetup(), above.
+					doh.isNot(null, that.firstTabStop,  + "no first-focusable item for dialog: " + dlog.id);
+					doh.robot.sequence(doShow, 200);
+					doh.robot.sequence(doFocusTest, (dlogId.dlg == "fifthDlg" ? 4000 : 1000));  // wait for dialog to display
+					doh.robot.sequence(doHide, 1000);
+					doh.robot.sequence(doBlurTest, 1000);
+					var testShowHide = function(){
+						doh.t(gotFocus, "first focusable didn't get focus on open, for: " + dlog.id);
+						doh.t(lostFocus, "first focusable didn't lose focus on close, for: " + dlog.id);
+					};
+					doh.robot.sequence(d.getTestCallback(testShowHide), 1000);
+					return d;
+				};
+				return that;
+
+			}	// end dialogTests().
+
+			var dialogTest;
+
+			dojo.addOnLoad(function(){
+				doh.robot.initRobot('../test_Dialog.html');
+
+				doh.register("dijit.Dialog keyboard tests (cancel)",[
+					{
+						name: "open dialog",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Click the button.  We do this manually rather than calling Dialog.show()
+							// so we can later test that focus is restored (to the previous position)
+							// when the dialog is closed
+							doh.robot.sequence(function(){
+								dojo.byId("dialog1button").focus();
+							}, 500);
+							doh.robot.keyPress(dojo.keys.SPACE, 1500, {});
+							doh.robot.typeKeys("Bill", 1000, 2000);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible("dialog1"), "dialog 1 has been made visible");
+								doh.is("name", dojo.global.dijit._curFocus.id, "focus is on the first field");
+							}), 1000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "tab to the date field",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.typeKeys("Japan", 500, 2500);
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("date", dojo.global.dijit._curFocus.id, "focus is on the date field");
+							}), 1000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "close date drop down",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("date", dojo.global.dijit._curFocus.id, "focus is still on the date field");
+								doh.t(isVisible("dialog1"), "dialog 1 wasn't closed");
+							}), 1000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "tabbing loops around",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("name", dojo.global.dijit._curFocus.id, "focus looped back to name field");
+							}), 1000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "reverse-tabbing loops around",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("ok", dojo.global.dijit._curFocus.id, "focus looped back to submit button");
+							}), 1000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "close via ESC",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("dialog1"), "dialog 1 was closed");
+								doh.is("dialog1button", dojo.global.dijit._curFocus.id, "focus returned to button");
+							}), 1000);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.register("dijit.Dialog keyboard tests (submit)",[
+					{
+						name: "submit some data",
+						timeout: 15000,
+						setUp: function(){
+							dijit.byId("dialog1").reset();
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Setup handler to catch submitted data
+							var data;
+							dojo.connect(dijit.byId("dialog1"), "execute", function(vals){
+								data = vals;
+							});
+
+							// Open the dialog
+							doh.robot.sequence(function(){
+								dojo.byId("dialog1button").focus();
+							}, 500);
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+
+							// Enter some info
+							doh.robot.typeKeys("Ted", 2000, 1500);
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.typeKeys("America", 500, 3500);
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+
+							// Submit
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("dialog1"), "dialog 1 was closed on submit");
+								doh.t(data, "got submit data");
+								doh.is("Ted", data.name, "Name");
+								doh.is("America", data.loc, "Location");
+							}), 1000);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.register("dijit.Dialog keyboard tests (cancel via Cancel button)",[
+					{
+						name: "close Dialog via Cancel button",
+						timeout: 15000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Test which callbacks are called on cancel
+							var executed = false, canceled = false;
+							dojo.connect(dijit.byId("ABDlg1"), "execute", function(vals){
+								executed = true;
+							});
+							dojo.connect(dijit.byId("ABDlg1"), "onCancel", function(){
+								canceled = true;
+							});
+
+							// Open the dialog
+							doh.robot.sequence(function(){
+								dojo.byId("ABDlg1Btn").focus();
+							}, 500);
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+
+							doh.robot.sequence(d.getTestErrback(function(){
+								doh.t(isVisible("ABDlg1"), "dialog opened");
+							}), 1000);
+
+							// Cancel
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("ABDlg1"), "dialog closed on cancel");
+								doh.t(canceled, "cancel callback was called");
+								doh.f(executed, "execute callback wasn't called");
+							}), 1000);
+
+							return d;
+						}
+					}
+				]);
+
+				var dialogTest = dialogTests();
+
+				// Loop to register tests for each dialog in the <dialogIds> array
+				// TODO:
+				//		The a11yAriaRole, a11yLabel, and a11yAriaExpanded tests probably only need
+				//		to be done for one dialog.
+				// TODO:
+				//		Even the focus tests, the only things we need to test that haven't been tested
+				//		already are:
+				//			1. focus for a dialog with no focusable elements
+				//			2. the file focus thing
+				for(i=0; i<dialogIds.length; i++){
+
+					// aria role and properties (aria-labelledby) tests.
+					doh.register("a11yAriaRole", {
+						name:dialogIds[i].dlg+"_role",
+						dialogId:dialogIds[i].dlg,
+						runTest:function(){
+							var dlog = dijit.byId(this.dialogId);
+							doh.is("dialog", dijit.getWaiRole(dlog.domNode), dlog.id + ": aria role (dialog)");
+						}
+					});
+					doh.register("a11yLabel", {
+						name:dialogIds[i].dlg+"_label",
+						dialogId:dialogIds[i].dlg,
+						runTest:function(){
+							var dlog = dijit.byId(this.dialogId);
+							var label = dijit.getWaiState(dlog.domNode, 'label');
+							if(!label){
+								var labelNodeId = dijit.getWaiState(dlog.domNode, 'labelledby');
+								if(labelNodeId){
+									var labelNode = dojo.byId(labelNodeId);
+								}
+								if(labelNode){
+									label = labelNode.innerHTML;
+								}
+							}
+							var hint = "aria-label or aria-labelledby (" + dlog.id + ")";
+							doh.isNot(null, label, "null " + hint);
+							doh.isNot("", label, "empty " + hint);
+						}
+					});
+
+	/*				// dijit.Dialog does not implment aria-expanded as of this writing -- should it?
+					doh.register("a11yAriaExpanded",{
+						name:dialogIds[i].dlg+"_aria-expanded",
+						dialogId:dialogIds[i].dlg,
+						runTest:function(){
+							var dlog = dijit.byId(this.dialogId);
+							var expanded = dijit.getWaiState(dlog.domNode, 'expanded');
+							if(expanded=="") expanded = "false";
+							doh.is("false", expanded, dlog.id + ": not shown");
+							dlog.show();
+							expanded = dijit.getWaiState(dlog.domNode, 'expanded');
+							dlog.hide();
+							doh.is("true", expanded, dlog.id + ": shown");
+						}
+					});
+	*/
+
+					// First focusable tests
+					doh.register("a11yFirstFocusable",{
+						name:"a11yFirstFocusable_"+dialogIds[i].dlg,
+						dialog:dialogIds[i],
+						timeout:20000,
+						setUp:function(){
+							dialogTest.ariaFocusSetup(this.dialog);
+						},
+						runTest:function(){
+							return dialogTest.ariaFocus(this.dialog);
+						},
+						tearDown:function(){
+							dialogTest.ariaFocusTeardown();
+						}
+					});
+				}	// end for() loop thru dialogIds array.
+
+				doh.register("dijit.Dialog keyboard tests (multiple dialogs)",[
+					{
+						name: "open first dialog",
+						timeout: 10000,
+						setUp: function(){
+							dijit.byId("dialog1").reset();
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Click the button.  We do this manually rather than calling Dialog.show()
+							// so we can later test that focus is restored (to the previous position)
+							// when the dialog is closed
+							doh.robot.sequence(function(){
+								dojo.byId("dialog1button").focus();
+							}, 500);
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							doh.robot.typeKeys("lower", 1000,1000);
+
+							// Move focus to second field
+							doh.robot.keyPress(dojo.keys.TAB, 1000);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible("dialog1"), "dialog 1 is visible");
+
+								var dialog1Z = dojo.style(dijit.byId("dialog1").domNode, "zIndex"),
+									underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
+
+								doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
+									") above underlay (zIndex=" + underlayZ + ")");
+
+								doh.is("loc", dojo.global.dijit._curFocus.id, "focus is on the second field");
+							}), 5000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "open second dialog",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.sequence(function(){
+								dijit.byId("tabDialog").show();
+							}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible("tabDialog"), "tab dialog has been made visible");
+								doh.t(isVisible("dialog1"), "dialog 1 is still visible");
+
+								var tabDialogZ = dojo.style(dijit.byId("tabDialog").domNode, "zIndex"),
+									dialog1Z = dojo.style(dijit.byId("dialog1").domNode, "zIndex"),
+									underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
+
+								doh.t(tabDialogZ > underlayZ, "tabDialog (zIndex=" + tabDialogZ +
+									") above underlay (zIndex=" + underlayZ + ")");
+								doh.t(dialog1Z < underlayZ, "dialog1 (zIndex=" + dialog1Z +
+									") below underlay (zIndex=" + underlayZ + ")");
+							}), 5000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "cancel second dialog",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("tabDialog"), "tab dialog has been hidden");
+								doh.t(isVisible("dialog1"), "dialog 1 is still visible");
+
+								var dialog1Z = dojo.style(dijit.byId("dialog1").domNode, "zIndex"),
+									underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
+
+								doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
+									") above underlay (zIndex=" + underlayZ + ")");
+
+								doh.is("loc", dojo.global.dijit._curFocus.id, "focus is on the second field");
+							}), 5000);
+
+							return d;
+						}
+					},
+
+					{
+						name: "cancel first dialog",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden("dialog1"), "dialog 1 was closed");
+								doh.is("dialog1button", dojo.global.dijit._curFocus.id, "focus returned to button");
+							}), 5000);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

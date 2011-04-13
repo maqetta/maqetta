@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html manifest="app/davinci/davinci.manifest">
+<head>
+    <title>Welcome to Maqetta</title>
+	 <style type="text/css">
+			@import url("app/dojo/resources/dojo.css");
+			@import url("app/davinci/davinci.css");
+	
+			html, body {
+				width: 100%;
+				height: 100%;
+			}
+	
+			#mainBody {
+				/* kludge to avoid scrollbars.  using padding with absolute positioning seems to
+				 * prevent mouse events from reaching the toolbar, for some reason */
+				height: 90%;
+			}
+	
+			#error-holder {
+				color: red;
+			}
+	
+			.sniff {
+				color: red;
+				font-style: bold;
+				font-size: 200%;
+				padding: 2em;
+			}
+	    </style>
+    
+    <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script type="text/javascript" src="app/dijit/dijit.js"></script>
+    <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
+    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
+    <script type="text/javascript" >
+	function login()
+	{
+		var user = dojo.byId('username').value;
+		var password = dojo.byId('password').value;
+		dojo.xhrGet({url:"./cmd/login",sync:true,handleAs:"text",
+			content:{'userName':user, 'password': password}
+		}).then(function(result){
+			if (result=="OK"){
+				var loading = dojo.create("div",null, dojo.body(), "first");
+				dojo.addClass(loading, 'loading');
+		   		showMainPage(".");
+			}else 
+				showMainPage(result);  			  
+	 		return;
+		}, function(error){
+			dojo.attr("error-holder", "innerHTML", "Invalid userid or password");
+		});
+	}
+
+    function registerNewUser()
+    {
+         var user=dojo.byId('name').value;
+         var password=dojo.byId('register_password').value;
+         var email=dojo.byId('email').value;
+		 dojo.xhrGet({url:"./cmd/register",sync:true,handleAs:"text",
+			content:{'userName':user, 'password': password, 'email':email}}).then(function(result){
+            if (result=="OK")
+            {
+               var dialog = dijit.byId('register_form');
+               dialog.destroy();
+               var loading = dojo.create("div",null, dojo.body(), "first");
+			   dojo.addClass(loading, 'loading');
+     		   showMainPage(".");
+     		   return true;         
+            }
+            else
+            {
+               alert(result);
+            }
+          }, function(error){
+  			//TODO: parse result and display more detailed error message?
+  			console.info(error.responseText);
+          	dojo.attr("error-holder", "innerHTML", "Failed to create new user '"+user+"'");
+          });         
+    }
+    
+    function showMainPage(url)
+    {
+       location.href = url;
+    }
+
+	dojo.addOnLoad(function (){
+		if(!(dojo.isFF >= 3.5 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
+			dojo.create("div", {innerHTML: "Firefox 3.5, Chrome 5.0, Safari 5.0 or greater is required", "class": "sniff"}, "loginpane", "first");
+		}
+
+		dojo.xhrGet({url:"./cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){
+          if (result && result.length)
+          {
+     		   dojo.byId('username').value=result;
+     		   return;         
+          }
+		});
+	 
+	});
+    
+    </script>
+   
+</head>
+
+<body class="claro">
+	<div id="davinci_top_bar"></div>
+		<span class="maq_banner_name_box">
+			<span class="maq_banner_name">Maqetta</span>
+			<span class="maq_banner_version">Preview 1</span>
+		</span>
+	</div>
+	<div id="loginpane">
+	  <div id="not_logged_in">
+		  <form onsubmit="login(); return false;">
+				<div id="login-holder">
+					Please sign in:<br/>
+					<label for="username">Username: </label><input id="username" type="text" tabindex="1"> <label id="psw-label" for="password">Password: </label><input id="password" type="password" maxlength="20" tabindex="2">
+					<input type="submit"  value="login" tabindex="3"/>
+				</div>
+				<div id="error-holder"></div>
+		  </form>
+		</div>
+		<div id="mainBody">
+			<br/>New users - please
+			 <a href="javascript:;" onclick="dijit.byId('register_form').show();">sign up</a>.
+		</div>
+	</div>
+
+	<div id="welcome" align="center">
+		<div id="logo"></div>
+	</div>
+
+	<div dojoType="dijit.Dialog" id="register_form" title="Register for Maqetta"
+			execute="registerNewUser();">
+		<table>
+			<tr>
+				<td><label for="name">User Name: </label></td>
+				<td><input dojoType="dijit.form.ValidationTextBox" type="text" name="name" id="name"
+					regexp="^\w{5,21}$" trim="true" required="true" invalidMessage="Must be between 5 and 21 characters, using only letters, numbers or '_'"/></td>
+			</tr>
+			<tr>
+				<td><label for="email">Email: </label></td>
+				<td><input id="email" type="text" name="email"
+					dojoType="dijit.form.ValidationTextBox"
+					regExpGen="dojox.validate.regexp.emailAddress"
+					invalidMessage="Must be a valid email address, such as john@smith.com"
+					trim="true"
+					required="true" />
+			</tr>
+		</table>
+		<br></br>
+		<div dojoType="dojox.form.PasswordValidator" name="password">
+		<table>
+			<tr>
+				<td><label>Password: </label></td><td><input type="password" id="register_password" name="register_password" pwType="new" /><br /></td>
+			</tr><tr>
+				<td><label>Confirm Password: </label></td><td><input type="password" id="register_confirm" name="register_confirm" pwType="verify" /><br></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<button dojoType="dijit.form.Button" type="submit" onclick="return dijit.byId('register_form').isValid()">Register</button></td>
+			</tr>
+		</table>
+		</div>
+	</div>
+</body>
+</html>

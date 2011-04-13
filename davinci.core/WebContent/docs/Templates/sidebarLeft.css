@@ -1,0 +1,78 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	background:#333;
+	color:gray;
+	margin:0;
+	padding:0;
+	font:Verdana, Geneva, sans-serif;	
+}
+h1, h2, p {
+	margin-top:0;
+}
+.label {
+	padding:2px 4px;
+}
+div#container {
+	width: 100%;
+	min-width:550px;
+	background:#fff;
+	margin:0;
+	overflow:hidden;
+}
+div#header {
+	height:70px;
+	color: #FFF;
+	background-color: #47B;
+}
+div#toolbar {
+	border-bottom:1px solid #ebebeb;
+	height:30px;
+	background-color: #fff;
+}
+/* --- floated columns --- */
+div.sidebar {
+	border-right:1px solid #ebebeb;
+	float:left;
+	width:19%;
+	background:#fff;
+}
+div.content {
+	float:left;
+	width:80%;
+	background-color: #fff;
+}
+/* ---- end floated columns --- */
+.padding {
+	padding:10px 20px;
+}
+div#footer {
+	border-top:1px solid #ebebeb;*/
+	background:#fff;
+	clear:both;
+	height:35px;
+}
+
+/* ---- Menu styles --- */
+ul, ol, dl { 
+	padding: 0;
+	margin: 0;
+}
+ul.nav {
+	list-style: none; 
+	margin-bottom: 15px; 
+}
+ul.nav li {
+	display:inline-block;
+}
+ul.nav a, ul.nav a:visited {
+	padding: 5px 20px;
+	text-decoration: none;
+	color: #fff;
+	background-color: #7DB65E;
+	font-size:.8em;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus { 
+	background: #6F7D94;
+	color: #FFF;
+}

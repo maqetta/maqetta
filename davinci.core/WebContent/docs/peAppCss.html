@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Setting Properties</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+    </td>
+    <td class="prevnext">
+    <a href="pePropertiesPalette.html">Previous</a> / <a href="peOutlinePalette.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Creating Style Rules with app.css</h1>
+
+<p>Maqetta provides three levels of granularity for setting CSS styles:</p>
+<ul>
+<li><b>app.css</b> - Each Maqetta user has their own personal CSS file, called <b>app.css</b>. 
+The recommended approach for styling widgets and HTML elements is:
+<ul>
+<li>Assign custom CSS classes to the various widgets and elements on your HTML page</li>
+<li>Create custom style rules using these custom classes in your app.css file</li>
+<li>Use the Detailed CSS panel in Maqetta to place any CSS property changes 
+into the new custom style rules you have created in your app.css file.</li>
+</ul>
+This recommended approach will improve your efficiency and better prepare your UI mockup
+for future hand-off to your development team. The sections below describe how to work with app.css in detail.
+</li>
+<li><b>element.style</b> - In many cases, you can simply attach property changes to the 'style' attribute
+on particular widgets or HTML elements (what is often referred to as <em>element.style</em>.
+This approach is often the fastest way to work, but is not available for certain CSS properties
+on certain widgets due to the way that particular widgets have been architected.</li>
+<li><b>Theme styles</b> - The default theme used by Maqetta is the Dojo Claro theme. 
+The theme can be customized for your organization using the <a href="themeEditorAbout.html">Claro Theme Editor</a>.
+CSS styling changes made in theme editor apply to all HTML pages in your workspace.
+(Note: style rules in app.css andelement.style almost always override the styling rules in your current theme.</li>
+</ul>
+
+<h3>About app.css</h3>
+<p><b>app.css</b> is located in the root directory of your user workspace folder and can be accessed from the Files palette.
+When you create an HTML file using Maqetta, app.css is automatically imported, so all you need to do is add your style rules to app.css.</p>
+
+<p>There are two ways to add a style rule to app.css:</p>
+<ul>
+<li>Use features found in the Detailed CSS pane of the Properties palette to add or modify style rules in app.css.</li>
+<li>Open app.css from the Files palette or the Maqetta Menu bar, and enter the style rule by hand.</li>
+</ul>
+
+
+<h2>Using the Detailed CSS pane on the Properties palette to add/modify style rules in app.css</h2>
+
+<p>We recommend that users take advantage of the Detailed CSS pane in the Properties palette
+when changing CSS property values on widgets or HTML element. These approaches require going up
+a small learning curve, but provide quick benefits by making your UI mockups easier to modify
+and facilitate an efficient hand-off of your UI mockup to the development team. </p>
+
+<p>Here are the steps:</p>
+<ol>
+<li><strong>Select the widget or HTML element you need to customize</strong></li>
+<li>
+<p><strong>Assign one or more custom CSS classes to the currently selected widget or element</strong>.
+The list of custom CSS classes are defined in the 'class' attribute for  the widget or element.
+(The 'class' attribute is a standard attribute in HTML that is available for all elements
+in the HTML language.) As the picture below shows, the 'class' attribute editing box is located
+at the top of the Properties palette. In this example, the 'class' attribute is set to the value
+"login_button", which means one custom class ("login_button") has been assigned to the currently
+selected widget. (If you need multiple classes, use spaces to separate the class names.)</p>
+<p><img src="img/app_css_class_attribute.png"></img></p>
+</li>
+<li>
+<p><strong>Create style rules (or modify rules) for your custom class in your app.css file</strong>.
+The pictures below demonstrate the steps for creating a style rule for class "login_button"
+for the CSS 'width' property. First, you need to click on the appropriate section button
+of the Properties palette. The 'width' property is in the Layout section, so click on the Layout button:
+</p>
+<p><img src="img/app_css_layout_button.png"></img></p>
+<p>This will cause the Layout properties to show. 'width' is the first property in this section.
+Next, click on the right arrow icon (">") found to the right of the 'width' property's input entry control
+to cause the CSS Details view to show for the 'width' property:</p>
+<p><img src="img/app_css_layout_section.png"></img></p>
+<p>This will cause the CSS Details pane to show for the CSS 'width' property:</p>
+<p><img src="img/app_css_width_details.png"></img></p>
+<p>
+This pane shows all existing CSS style rules that are relevant to the 'width' property
+on this type of widget or HTML element, including any existing style rules found in the app.css file
+and any existing style rules in the theme CSS files. The pane also shows "proposed new style rules",
+which are candidate rules that Maqetta can add automatically to app.css. In the picture below,
+the user has clicked on the radio button corresponding to the first style rule listed,
+which is one of the proposed new style rules. That will cause the new property value ("8em")
+to be inserted into a new "class selector" style rule in app.css that applies to all
+Button widgets that have custom class "login_button".</p>
+<p><em>NOTE: The sequence of operations is important. To cause the new property value to go into 
+a particular style rule, you must first click on the radio button for that style rule,
+and subsequently change and commit the value in the text entry field for the current property (in this case, 'width').</em>
+(You can "commit" a property change by either hitting Enter or clicking away from the field.)
+<p>After clicking on the radio button to choose the proposed new style rule, and then
+changing (and committing) the property value to "8em", a new rule will appear in the app.css file as follows:</p>
+<p><img src="img/app_css_new_width_rule.png"></img></p>
+<p>Some key things to note about the above style rule:</p>
+<ul>
+<li>The style rule begins with an ID selector ("#myapp"). 
+Maqetta automatically puts the ID 'myapp' on the BODY element of HTML files.
+This ID selector causes the new style rule to override most style rules found in theme CSS files
+because ID selectors in CSS have higher precedence than style rules that only use class or tag selectors.</li>
+<li>The style rule includes a class selector for the custom class (".login_button" in this case) so that this
+property assignment will only apply to widgets that have this custom class.</li>
+<li>The style rule includes class selectors (".dijitButton" in this case) to qualify this style rules as
+only applying to the current type of widget.</li>
+<li>The style rule includes class selectors (".dijitButtonNode" in this case)
+that targets the correct sub-node to which the 'width' property should apply.</li>
+</ul>
+</li>
+</ol>
+
+<h2>Editing app.css by hand</h2>
+
+<p>The <b>myapp</b> id is automatically added to the body tag of every Maqetta HTML file, for use with app.css style selectors. 
+For the Maqetta default Claro theme, style selectors always being with ".claro". 
+Therefore if you copy a theme selector and change ".claro" to "#myapp.claro" (no spaces), it will take precedence over the theme selector. 
+(You can see the theme selectors for a widget property by opening the CSS Details view in the Properties palette.)</p>
+<p>For example:</p>
+<ol>
+<li>Open the app.css file by double-clicking on it in the Files palette.</li>
+<li>Add the following style rule:
+<pre>
+#myapp.claro .dijitButton .dijitButtonNode {
+	background-color: #3596f1;
+}
+</pre></li>
+<li>Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon to save the file.</li>
+<li>Open a new HTML file.</li>
+<li>Drag two Buttons onto the canvas and note that their color is dark blue.</li>
+<li>Save and close the HTML file.</li>
+<li>In the app.css file, change the background color to something else.</li>
+<li>Save your changes.</li>
+<li>Re-open the HTML file and you should see that the button color has changed.</li>
+</ol>
+
+<p>Also note the comments at the top of app.css</a> to see this example.</p>
+
+<p class="note">With Maqetta Preview 1, you will have to close and reopen your HTML file in order to see the affect of changes to app.css.</p>
+
+<h3>Creating new style selectors</h3>
+
+<p>You can also create your own class and id names in your style rules, and then apply them to widgets by setting the class or id property on the widget (in the <b>Common</b> section of the Properties palette). Follow the tutorial below for an example.
+
+<ol>
+<li>Open app.css and create the following style rules:
+<pre>
+.mycolor {
+    color: #c02c2c;
+}
+.mypadding {
+    padding-top: 20px;
+    padding-left: 50px;
+}
+</pre>
+</li>
+<li>Save and close app.css.</li>
+
+<li>Open a new HTML file.</li>
+<li>Drag a <b>Button</b> onto the canvas.</li>
+<li>Drag a <b>&lt;label&gt;</b> onto the canvas, enter some text in the input box and hit Return.</li>
+<li>With the &lt;label&gt; still selected, enter "<b>mycolor</b>" in the <b>class</b> field
+at the top of the Properties palette, then press <b>Enter</b> or click off the field to apply the change.</li>
+<li>The label text should change to red.</li>
+<li>Drag a <b>&lt;div&gt;</b> onto the canvas.</li>
+<li>Enter "<b>mypadding</b>" in the <b>class</b> field, then press <b>Enter</b> or click off the field to apply the change.</li>
+<li>The <b>&lt;div&gt;</b> on the canvas should expand due to the padding styles applied from the <b>mypadding</b> class.</li>
+<li>Drag a <b>Tab Container</b> on to the &lt;div&gt; and note the effects of the padding on the &lt;div&gt;.</li>
+<li>Click on the white space outside of the Tab Container but inside the &lt;div&gt;, to select the div.</li>
+<li>Note that at the top of the Properties palette it displays "<b>&lt;div&gt; <i>.mypadding</i></b>" to identify the selected widget</li>
+<li>Open the <b>Padding/Margins</b> section in the Properties palette.</li>
+<li>Click the "show/t/r/b/l" check box under <b>(padding)</b>.</li>
+<li>You should see the padding values from the <b>mypadding</b> class in the <b>top</b> and <b>left</b> padding fields.</li>
+<li>Click on the "&gt;" icon to the right of the "<b>top</b>" field to open the <b>CSS Detailed pane</b>.</li>
+<li>Note that the selected style rule is <b>.mypadding</b> from <b>app.css</b>.</li>
+<li>Return to the Padding/Margins section by clicking on the "Padding/Margin" hyperlink in the breadcrumb towards the top of the Properties palette.</li>
+<li>Now open the <b>CSS Details</b> view for the <b>bottom</b> field by clicking on the "&gt;" icon to the right of the "<b>bottom</b>" field .</li>
+<li>Click on the radio button for <b>.mypadding (app.css)</b>.</li>
+<li>In the <b>bottom</b> field enter "<b>10px</b>", then press <b>Enter</b> or click off the field to apply the change.</li>
+<li>Click <b>Save</b> to save the file.</li>
+<li>Click the <b>x</b> on the filename tab to close the file. </li>
+<li>Re-open the same file. You should now see a 10px bottom padding on the &lt;div&gt; containing the Tab Container.</li>
+</ol>
+
+
+<p class="prevnext"><a href="pePropertiesPalette.html">Previous</a> / <a href="peOutlinePalette.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

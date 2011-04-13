@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta User Guide: Dojo Widgets</title>
+</head>
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">User Guide</a> &gt; <a href="widgetref/widgetRef.html">Widget Reference</a>    
+	</td>
+    <td class="prevnext">
+	<a href="widgetref/overview.html">Previous</a> / <a href="widgetref/ma_dijit.html">Next</a>
+    </td></tr>
+</table>
+
+
+<a name="overview"><h1>Dojo Widgets</h1></a>
+
+<div id="resource_div">
+
+<table class="resources">
+<tr id="labels">
+<th>Dojo Widgets</th>
+<th>In Maqetta?</th>
+<th>Comments</th>
+<th>Recommendation</th>
+</tr>
+<tr><td colspan="4" class="section">Dijit / Layout</td></tr>
+<tr><td><a href="widgetref/ma_widgetdetails.html#accordiancontainer">AccordianContainer</a></td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>BorderContainer</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>ContentPane</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>StackContainer</td><td>Yes</td><td>Works (in Maqetta), but some issues</td><td>Yes</td></tr>
+<tr><td>TabContainer</td><td>Yes</td><td></td><td>Yes</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Layout</td></tr>
+<tr><td>FloatingPane</td><td>Yes</td><td>Dojo - Experimental 
+(see <a href="http://docs.dojocampus.org/dojox/layout/FloatingPane#id3" class="external">FloatingPane Usage</a>)</td><td>Future</td></tr>
+<tr><td>RadioGroup</td><td>Yes</td><td>Partially working in Maqetta</td><td>Future</td></tr>
+<tr><td>ScrollPane</td><td>Yes</td><td>Not working in Maqetta</td><td>No</td></tr>
+<tr><td>GridContainer</td><td>Yes</td><td>Not working in Maqetta. Should this be a widget or a Page Editor option?</td><td>Not sure</td></tr>
+
+
+<tr><td colspan="4" class="section">Dijit / Form handling</td></tr>
+
+<tr><td colspan="4" class="subsection">Buttons</td></tr>
+<tr><td>Button</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>ComboButton</td><td>No</td><td>Drop-down menu</td><td>Yes</td></tr>
+<tr><td>DropDownButton</td><td>No</td><td>Drop-down menu or dialog</td><td>Future</td></tr>
+<tr><td>ToggleButton</td><td>No</td><td></td><td>Yes</td></tr>
+
+<tr><td colspan="4" class="subsection">Text boxes</td></tr>
+<tr><td>CurrencyTextBox</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>DateTextBox</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>NumberTextBox</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>SimpleTextarea</td><td>Yes</td><td>Working in Maqetta (displays vertical scroll bar)</td><td>Yes</td></tr>
+<tr><td>Textarea</td><td>Yes</td><td>Not working correctly in Maqetta, text box should expand instead of displaying scrollbar</td><td>Future</td></tr>
+<tr><td>TextBox</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>TimeTextBox</td><td>No</td><td></td><td>Yes</td></tr>
+<tr><td>ValidationTextBox</td><td>Yes</td><td>Requires configuration but no widget-specific properties available in Maqetta</td><td>Yes</td></tr>
+
+<tr><td colspan="4" class="subsection">Select widgets</td></tr>
+<tr><td>ComboBox</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>FilteringSelect</td><td>Yes</td><td>Not sure if filtering works in Maqetta, no way to test</td><td>Yes</td></tr>
+<tr><td>MultiSelect</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>Select</td><td>No</td><td>Use instead of DropDownSelect in Maqetta</td><td>Yes</td></tr>
+
+<tr><td colspan="4" class="subsection">Other controls</td></tr>
+<tr><td>CheckBox</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>Form</td><td>No</td><td>Would be nice to provide some sample forms in Maqetta</td><td>Future</td></tr>
+<tr><td>HorizontalSlider</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>NumberSpinner</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>RadioButton</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>VerticalSlider</td><td>Yes</td><td></td><td>Yes</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Form Handling </td></tr>
+
+<tr><td colspan="4" class="subsection">Buttons</td></tr>
+<tr><td>BusyButton</td><td>No</td><td></td><td>Future</td></tr>
+
+<tr><td colspan="4" class="subsection">Text boxes</td></tr>
+<tr><td>DateTextBox</td><td>No</td><td>No examples</td><td>No</td></tr>
+<tr><td>PasswordValidator</td><td>No</td><td></td><td>No</td></tr>
+
+<tr><td colspan="4" class="subsection">Select widgets</td></tr>
+<tr><td>CheckedMultiSelect</td><td>Yes</td><td>Maqetta's widget uses radio buttons, should be check boxes</td><td>Future</td></tr>
+<tr><td>DropDownSelect</td><td>Yes</td><td>Deprecated in Dojo, has been moved to dijit.form.Select</td><td>No</td></tr>
+<tr><td>DropDownStack</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>MultiComboBox</td><td>No</td><td>No examples in Dojo docs</td><td>No</td></tr>
+
+<tr><td colspan="4" class="subsection">File input controls</td></tr>
+<tr><td>FileInput</td><td>Yes</td><td>Doojo doc recommends using FileUploader instead/td><td>Review</td></tr>
+<tr><td>FileInput Auto</td><td>Yes</td><td></td><td>Review</td></tr>
+<tr><td>FileInput Blind</td><td>Yes</td><td></td><td>Review</td></tr>
+<tr><td>FilePickerTextBox</td><td>No</td><td></td><td>Review</td></tr>
+<tr><td>FileUploader</td><td>No</td><td>For Flash or HTML files, Dojo recommends this widget over FileInput</td><td>Review</td></tr>
+
+<tr><td colspan="4" class="subsection">Other controls</td></tr>
+<tr><td>RadioStack</td><td>No</td><td>No examples in Dojo docs</td><td>No</td></tr>
+<tr><td>RangeSlider</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Rating</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>TimeSpinner</td><td>Yes</td><td></td><td>Yes</td></tr>
+
+
+<tr><td colspan="4" class="section">Dijit / Widget</td></tr>
+<tr><td>Calendar</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>ColorPalette</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>Dialog</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>Editor</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>InlineEditBox</td><td>Yes</td><td>Not working in Maqetta</td><td>Future</td></tr>
+<tr><td>Menu</td><td>Yes</td><td>Called "Context Menu" in Maqetta</td><td>Yes</td></tr>
+<tr><td>MenuBar</td><td>Yes</td><td>Works in Maqetta but can't add new items</td><td>Yes</td></tr>
+<tr><td>ProgressBar</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>TitlePane</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>Toolbar</td><td>Yes</td><td>Works in Maqetta but can't add new buttons</td><td>Yes</td></tr>
+<tr><td>Tooltip</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>TooltipDialog</td><td>Yes</td><td>Not working in Maqetta</td><td>Yes</td></tr>
+<tr><td>Tree</td><td>Yes</td><td>Not working in Maqetta. Would be nice to have a sample Tree widget w/fixed data</td><td>Yes</td></tr>
+<tr><td>TreeStoreModel</td><td>No</td><td>Single root</td><td>Yes</td></tr>
+<tr><td>ForestStoreModel</td><td>No</td><td>Multiple roots</td><td>Future</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Widget</td></tr>
+<tr><td>AnalogGuage</td><td>Yes</td><td>Not working in Maqetta, corrupts the source html</td><td>Future</td></tr>
+<tr><td>AutoRotator</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>BarGuage</td><td>Yes</td><td>Not working in Maqetta, corrupts the source html</td><td>Future</td></tr>
+<tr><td>Calendar</td><td>No</td><td>Offers enhancements to Digit Calendar</td><td>Future</td></tr>
+<tr><td>Color Picker</td><td>Yes</td><td></td><td>Yes</td></tr>
+<tr><td>Dialog</td><td>No</td><td>Offers enhancements to Dijit Dialog</td><td>Future</td></tr>
+<tr><td>FisheyeList</td><td>No</td><td>Provides Mac dock functionality</td><td>Future</td></tr>
+<tr><td>FisheyeLite</td><td>No</td><td>No examples in Dojo</td><td>Not sure</td></tr>
+<tr><td>FilePicker</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Pager</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Portlet</td><td>No</td><td>For RSS Feeds. Configurable TitlePane. Works with GridContainer to allow multiple portlets.</td><td>Yes</td></tr>
+<tr><td>Roller</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Sortlist</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Standby</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Wizard</td><td>No</td><td></td><td>Future</td></tr>
+
+
+<tr><td colspan="4" class="section">Dojox / Grid</td></tr>
+<tr><td>Basic</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>DataGrid</td><td>Yes</td><td>Partially implemented in Maqetta</td><td>Yes</td></tr>
+<tr><td>EnhancedGrid</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Grid</td><td>Yes</td><td>Deprecated, use EnhancedGrid instead</td><td>No</td></tr>
+<tr><td>TreeGrid</td><td>No</td><td></td><td>Future</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Charting</td></tr>
+<tr><td>Chart2D</td><td>No</td>
+<td>Provide sample chart widgets. Available 2D chart types: Animated, Areas, Bars, Grid, Lines, Markers, Pie, Stacked.</td><td>Future</td></tr>
+<tr><td>Chart3D (Bar)</td><td>No</td><td></td><td>Future</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / AV</td></tr>
+<tr><td>Player</td><td>No</td><td>Audio/Video Player. Plays Flash, H264/M4V codec, and MP3.</td><td>Future</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Data</td></tr>
+<tr><td>GoogleFeedStore</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>GoogleSearchStore</td><td>No</td><td></td><td>Future</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Image</td></tr>
+<tr><td>Gallery</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>Lightbox</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>SlideShow</td><td>No</td><td></td><td>Future</td></tr>
+<tr><td>ThumbnailPicker</td><td>No</td><td></td><td>Future</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / FX / Gfx / Gfx3D</td></tr>
+<tr><td>Easing</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>Linear Gradient</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>Cube</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>Rotate</td><td>No</td><td></td><td>No</td></tr>
+
+<tr><td colspan="4" class="section">Dojox / Highlight</td></tr>
+<tr><td>CSS</td><td>No</td><td>For displaying code snippets with color-coding</td><td>No</td></tr>
+<tr><td>HTML</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>JavaScript</td><td>No</td><td></td><td>No</td></tr>
+<tr><td>XML</td><td>No</td><td></td><td>No</td></tr>
+
+</table>
+
+<div>  <!-- resource_div -->
+
+<p class="prevnext"><a href="widgetref/overview.html">Previous</a> / <a href="widgetref/ma_dijit.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+	<title>Form unit test</title>
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+	</style>
+
+	<!-- required: the default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="isDebug: true, parseOnLoad: true"></script>
+
+	<!-- only needed for alternate theme testing: -->
+	<script type="text/javascript" src="../_testCommon.js"></script>
+
+	<script type="text/javascript">
+		dojo.require("doh.runner");
+		dojo.require("dojo.date");
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.form.Form");
+		dojo.require("dijit.layout.LayoutContainer");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dijit.form.ComboBox");
+		dojo.require("dijit.form.CheckBox");
+		dojo.require("dijit.form.DateTextBox");
+		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.MultiSelect");
+		dojo.require("dijit.form.Textarea");
+		dojo.require("dijit.form.SimpleTextarea");
+		dojo.require("dijit.Editor");
+
+		var obj;
+		function getValues(){
+			obj = dijit.byId('myForm').get('value');
+			console.log("Object is: " + dojo.toJson(obj, true));
+		}
+
+		function setValues(){
+			if(!obj){
+		 		obj = {testF: 'testi'};
+			}
+			console.log("Object is: " + dojo.toJson(obj, true));
+			dijit.byId('myForm').set('value', obj);
+		}
+
+		function validate(){
+			console.log(dijit.byId('myForm').validate());
+		}
+
+		function defaultSubmitHandler(values){
+			console.log('actual submitted values: ' + dojo.toJson(values));
+		}
+		submittedValues = defaultSubmitHandler;
+		// make dojo.toJson() print dates correctly (this feels a bit dirty)
+		Date.prototype.json = function(){ return dojo.date.stamp.toISOString(this, {selector: 'date'});};
+
+		var d = dojo.date.stamp.fromISOString;
+
+		// These are the values assigned to the widgets in the page's HTML
+		var original =	{
+							foo: {bar: {baz: {quux: d("2007-12-30")} } },
+							available: {from: d("2005-01-02"), to: d("2006-01-02")},
+							plop: {combo: "one"},
+							cb2: ["2", "3"],
+							r2: "2",
+							ms1: ["VA", "WA"],
+							h1: "hidden",
+							t1: "line 1\nline 2",
+							st1: "simple line 1\nsimple line 2",
+							richtext: "<h1>original</h1><p>This is the default content</p>",
+							filename: "",
+							readOnlyWidget: "Should be returned",
+							duplicate: ["first", "second", "third"]
+						};
+
+		// we change the form to these values
+		var changed =	{
+							foo: {bar: {baz: {quux: d("2005-01-01")} } },
+							available: {from: d("2005-11-02"), to: d("2006-11-02")},
+							plop: {combo: "three"},
+							cb2: ["4"],
+							r2: "1",
+							ms1: ["FL", "CA"],
+							h1: "still hidden",
+							t1: "new line 1\nnew line 2",
+							st1: "new simple line 1\nnew simple line 2",
+							richtext: "<h1>changed</h1><p>This is the changed content set by set('value', ...')</p>",
+							filename: "",
+							readOnlyWidget: "Should be returned",
+							duplicate: ["1", "2", "3"]
+						};
+		var particalchanged = {
+							foo: {bar: {baz: {quux: d("2006-01-01")} } },
+							available: {from: d("2006-11-02"), to: d("2007-11-02")},
+							plop: {combo: "two"},
+							cb2: ["2"]
+		};
+		// we reset the form to these values
+		var reset =	{
+							foo: {bar: {baz: {quux: d("2007-12-30")} } },
+							available: {from: d("2005-01-02"), to: d("2006-01-02")},
+							plop: {combo: "one"},
+							cb2: ["2", "3"],
+							r2: "2",
+							ms1: ["VA", "WA"],
+							h1: "hidden",
+							t1: "line 1\nline 2",
+							st1: "simple line 1\nsimple line 2",
+							richtext: "<h1>changed</h1><p>This is the changed content set by set('value', ...')</p>", // not a form element, so not reset
+							filename: "",
+							readOnlyWidget: "Should be returned",
+							duplicate: ["first", "second", "third"]
+						};
+
+		dojo.addOnLoad(function(){
+
+			// should be able to query for all of the inputs, including hidden ones
+			doh.register("query input by checked state", [
+				{
+					name: "all",
+					runTest: function(){
+						var queried=dojo.query("input[checked]");
+						doh.t(queried.length>0,"dojo.query could not find checked widgets.");
+						doh.is(3,queried.length,"expected: 3 checked widgets, got: "+queried.length);
+						doh.is(dojo.byId('dijit_form_CheckBox_1'),queried[0],"Expected 2nd checkbox.");
+						doh.is(dojo.byId('dijit_form_CheckBox_2'),queried[1],"Expected 3rd checkbox.");
+						doh.is(dojo.byId('dijit_form_RadioButton_1'),queried[2],"Expected 2nd radio button.");
+					}
+				}
+			]);
+
+			doh.register("query input by name",
+				dojo.map(
+					[
+						"foo.bar.baz.quux","available.from","available.to", // DateTextBox
+						"plop.combo", // ComboBox
+						"cb2", // CheckBox
+						"r2", // RadioButton
+						//"ms1", // MultiSelect
+						"h1", // plain hidden input
+						//"t1", "st1", // TextArea
+						//"richtext", // Editor
+						"filename", // TextBox set to file input
+						"disabledWidget" // disabled TextBox
+					],
+					function(name){
+						return {
+							name: name,
+							widgetName: name,
+							runTest: function(){
+								var queried = dojo.query("input[name="+this.widgetName+"]");
+								doh.t(queried.length > 0, "dojo.query could not find form widget: '"+this.widgetName+"'");
+							}
+						};
+					}
+				)
+			);
+
+			var resetready=false;
+			var formWidget = dijit.byId("myForm");
+			var testSubmittedValues = function(deferred, testValues, formValues){
+				deferred.getTestCallback(function(){
+					doh.is(testValues.foo.bar.baz.quux.json(), formValues['foo.bar.baz.quux']);
+					doh.is(testValues.available.from.json(), formValues['available.from']);
+					doh.is(testValues.available.to.json(), formValues['available.to']);
+					doh.is(testValues.plop.combo, formValues['plop.combo']);
+					doh.is(testValues.cb2, formValues.cb2);
+					doh.is(testValues.r2, formValues.r2);
+					doh.is(testValues.ms1, formValues.ms1);
+					doh.is(testValues.h1, formValues.h1);
+					doh.is(testValues.t1, formValues.t1);
+					doh.is(testValues.st1, formValues.st1);
+					doh.is(testValues.filename, formValues.filename || '');
+					doh.is(testValues.readOnlyWidget, formValues.readOnlyWidget);
+				})();
+			};
+			doh.register("dijit.form.Form",
+				[
+					{
+						name: "setUp",
+						timeout: 5000,
+						runTest: function(){
+							var d=new doh.Deferred();
+
+							var defer=function(){
+								if(dijit.byId('t1')._resetValue!==undefined &&
+									!dijit.byId('editor').disabled){
+									doh.t(true);
+									d.callback(true);
+								}else{
+									setTimeout(defer,100);
+								}
+							};
+							setTimeout(defer,1000);
+							return d;
+						}
+					},
+					function getValues(){
+						var values = formWidget.get('value');
+
+						// FF3 sticks in some tabs and newlines that mess up the equality check
+						// Need better way to compare two HTML trees but for now do this.
+						values.richtext = values.richtext.replace(/[\n\t]/, "", "g");
+
+						doh.is( dojo.toJson(original), dojo.toJson(values) );
+					},
+					{
+						name:"testSubmit",
+					        timeout:10000,
+					        runTest:function(){
+							var d=new doh.Deferred();
+							submittedValues = function(values){
+								testSubmittedValues(d, original, values);
+								submittedValues = defaultSubmitHandler;
+							};
+							formWidget.containerNode.submit();
+							return d;
+						}
+					},
+					function setValues(){
+						formWidget.set('value', changed);
+						doh.is( dojo.toJson(changed), dojo.toJson(formWidget.get('value')) );
+
+						formWidget.set('value', particalchanged);
+						doh.is( dojo.toJson(dojo.mixin(changed,particalchanged)), dojo.toJson(formWidget.get('value')) );
+					},
+					function nameAttributeSurvived(){  // ticket:4753
+						var radios = dojo.query("INPUT[type=radio]", "radio-cells").forEach(
+							function(r) {
+								doh.is( r.name, "r2" );
+							});
+					},
+					{
+					        name:"postSubmit",
+					        timeout:10000,
+					        runTest:function(){
+							var d=new doh.Deferred();
+							submittedValues = function(values){
+								testSubmittedValues(d, dojo.mixin(changed,particalchanged), values);
+								submittedValues = defaultSubmitHandler;
+							};
+							formWidget.containerNode.submit();
+							return d;
+						}
+					},
+					function resetTest(){
+						formWidget._onResetReturn = false;
+						formWidget.reset();
+						doh.isNot( dojo.toJson(reset), dojo.toJson(formWidget.get('value')), "reset stopped");
+						formWidget._onResetReturn = true;
+						formWidget.reset();
+						delete formWidget._onResetReturn;
+						doh.is( dojo.toJson(reset), dojo.toJson(formWidget.get('value')), "reset permitted" );
+					},
+					function testValidate(){
+						doh.is(formWidget.validate(), true);
+					},
+					function resetEditor(){ // reset editor so that refresh will pass all tests
+						dijit.byId('editor').set('value', original.richtext);
+						// FF3 sticks in some tabs and newlines that mess up the equality check
+						// Need better way to compare two HTML trees but for now do this.
+						var values = formWidget.get('value');
+						values.richtext = values.richtext.replace(/[\n\t]/, "", "g");
+						doh.is( dojo.toJson(original), dojo.toJson(values) );
+					}
+				]
+			);
+
+			doh.run();
+		});
+
+	</script>
+</head>
+<body class="claro">
+	<h1>Form Widget Unit Test</h1>
+	<p>
+		The form widget takes data in a form and serializes/deserializes it, so
+		it can be submitted as a JSON string of nested objects.
+	</p>
+	<div style="color:red">Currently only widgets are supported, not raw elements.</div>
+	<!--    to test form submission, you'll need to create an action handler similar to
+			http://www.utexas.edu/teamweb/cgi-bin/generic.cgi
+		http://www.tipjar.com/cgi-bin/test -->
+	<form dojoType="dijit.form.Form" id="myForm"
+		encType="multipart/form-data" action="../formAction.html" method="" target="_formSubmitIframe">
+		<script type="dojo/method" event="onReset">
+			return ("_onResetReturn" in this)? this._onResetReturn : confirm('Press OK to reset widget values');
+		</script>
+		<script type="dojo/method" event="onSubmit">
+			console.debug('Attempting to submit form w/values:\n',
+				dojo.toJson(this.get('value'),true)
+			);
+			if(this.validate()){
+				return confirm('Form is valid, press OK to submit');
+			}else{
+				alert('Form contains invalid data.  Please correct first');
+				return false;
+			}
+			return true;
+		</script>
+		<p>Just HTML text</p>
+		<table style="border: 1px solid #9f9f9f;" cellspacing="10">
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Name</th>
+					<th>Form node/widget</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--
+				<tr><td>text</td><td>testF</td><td><input type="text" name="testF" value="bar1" /></td></tr>
+				<tr><td>password</td><td>passwordF</td><td><input type="password" name="passwordF" value="bar4" /></td></tr>
+				<tr><td>hidden</td><td>hiddenF</td><td><input type="hidden" name="hiddenF" value="bar4" /></td></tr>
+				<tr><td>select</td><td>plop.noncombo</td><td>
+				<div class="group">
+					<select name="plop.noncombo">
+					 <option value="1">one</option>
+					 <option value="2">two</option>
+					 <option value="3">three</option>
+					</select>
+				</div>
+
+				</td></tr>
+				-->
+
+				<tr>
+					<td>DateTextBox inside contentpane</td>
+					<td>foo.bar.baz.quux</td>
+					<td>
+						<div dojoType="dijit.layout.ContentPane">
+						<input type="text" name="foo.bar.baz.quux" dojoType="dijit.form.DateTextBox" value="2007-12-30" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Layoutcontainer</td>
+					<td>
+						<div dojoType="dijit.layout.LayoutContainer"></div>
+					</td>
+				</tr>
+				<tr>
+					<td>DateTextBox 1</td>
+					<td>available.from</td>
+					<td>
+						<input type="text" name="available.from" dojoType="dijit.form.DateTextBox" value="2005-01-02" />
+					</td>
+				</tr>
+				<tr>
+					<td>DateTextBox 2</td>
+					<td>available.to</td>
+					<td>
+						<input type="text" name="available.to" dojoType="dijit.form.DateTextBox" value="2006-01-02" />
+					</td>
+				</tr>
+				<tr>
+					<td>ComboBox</td>
+					<td>plop.combo</td>
+					<td>
+						<select name="plop.combo" dojoType="dijit.form.ComboBox">
+							<option value="one">one</option>
+							<option value="two">two</option>
+							<option value="three">three</option>
+						</select>
+					</td>
+				</tr>
+
+				<!--
+				<tr>
+					<td>textarea</td>
+					<td>myTextArea</td>
+					<td>
+						<textarea name="myTextArea">
+							text text text """ \\\/
+						</textarea>
+					</td>
+				</tr>
+				-->
+
+				<!--
+				<tr>
+					<td>CheckBox</td>
+					<td>cb1</td>
+					<td>
+						<input type="checkbox" name="cb1" value="1" /> 1
+						<input type="checkbox" name="cb1" value="2" checked="checked" /> 2
+						<input type="checkbox" name="cb1" value="3" checked="checked" /> 3
+						<input type="checkbox" name="cb1" value="4" /> 4
+					</td>
+				</tr>
+				-->
+
+				<tr>
+					<td>CheckBox widget</td>
+					<td>cb2</td>
+					<td>
+						<input dojoType="dijit.form.CheckBox" type="checkbox" name="cb2" value="1" /> 1
+						<input dojoType="dijit.form.CheckBox" type="checkbox" name="cb2" value="2" checked="checked" /> 2
+						<input dojoType="dijit.form.CheckBox" type="checkbox" name="cb2" value="3" checked="checked" /> 3
+						<input dojoType="dijit.form.CheckBox" type="checkbox" name="cb2" value="4" /> 4
+					</td>
+				</tr>
+
+				<!--
+				<tr>
+					<td>radio</td>
+					<td>r1</td>
+					<td>
+						<input type="radio" name="r1" value="1" /> 1
+						<input type="radio" name="r1" value="2" /> 2
+						<input type="radio" name="r1" value="3" /> 3
+						<input type="radio" name="r1" value="4" /> 4
+					</td>
+				</tr>
+				-->
+
+				<tr>
+				<td>Radio widget</td><td>r2</td>
+				<td id="radio-cells">
+				<input dojoType="dijit.form.RadioButton" type="radio" name="r2" value="1" /> 1
+				<input dojoType="dijit.form.RadioButton" type="radio" name="r2" value="2" checked="checked" /> 2
+				<input dojoType="dijit.form.RadioButton" type="radio" name="r2" value="3"/> 3
+				<input dojoType="dijit.form.RadioButton" type="radio" name="r2" value="4" /> 4
+				<input type="button" onclick="dojo.query('INPUT[type=radio]','radio-cells').forEach(function(n){dijit.getEnclosingWidget(n).set('checked',false);});return true;" value="Unset all radio buttons"/>
+				</td>
+				</tr>
+
+				<tr>
+					<td>Multi-select</td><td>ms1</td>
+					<td>
+						<select id="ms1" multiple="true" name="ms1"
+							dojoType="dijit.form.MultiSelect"
+							style="height:100px; width:175px; border:5px solid #ededed;">
+
+							<option value="TN">Tennessee</option>
+							<option value="VA" selected="true">Virginia</option>
+							<option value="WA" selected="true">Washington</option>
+							<option value="FL">Florida</option>
+							<option value="CA">California</option>
+
+						</select>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Hidden input</td>
+					<td>h1</td>
+					<td>
+						<input id="h1" name="h1" dojoType="dijit.form.TextBox" type="hidden" value="hidden">
+					</td>
+				</tr>
+
+				<tr>
+					<td>Auto-sizing textarea</td>
+					<td>t1</td>
+					<td>
+						<textarea id="t1" name="t1"
+	dojoType="dijit.form.Textarea">line 1
+line 2</textarea>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Fixed size textarea</td>
+					<td>st1</td>
+					<td>
+						<textarea id="st1" name="st1" dojoType="dijit.form.SimpleTextarea" rows=5 cols=50>
+simple line 1
+simple line 2</textarea>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Editor widget</td>
+					<td>richtext</td>
+					<td>
+						<div dojoType="dijit.Editor" id="editor" name="richtext" pluginsConfig="[{items:['bold','italic']}]"><h1>original</h1><p>This is the default content</p></div>
+					</td>
+				</tr>
+
+				<tr>
+					<td>File upload</td>
+					<td>filename</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" name="filename" type="file">
+					</td>
+				</tr>
+				<tr>
+					<td>Disabled Widget</td>
+					<td>disabledWidget</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" name="disabledWidget" disabled="disabled" value="Should not be returned">
+					</td>
+				</tr>
+				<tr>
+					<td>Disabled Required Widget</td>
+					<td>disabledRequiredWidget</td>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" name="disabledRequiredWidget" disabled="disabled" required="true" value="">
+					</td>
+				</tr>
+				<tr>
+					<td>Read-only Widget</td>
+					<td>readOnlyWidget</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" name="readOnlyWidget" readOnly value="Should be returned">
+					</td>
+				</tr>
+				<tr>
+					<td>Duplicate named TextBox 1</td>
+					<td>duplicate</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" name="duplicate" value="first">
+					</td>
+				</tr>
+				<tr>
+					<td>Duplicate named TextBox 2</td>
+					<td>duplicate</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" name="duplicate" value="second">
+					</td>
+				</tr>
+				<tr>
+					<td>Duplicate named TextBox 3</td>
+					<td>duplicate</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" name="duplicate" value="third">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<button dojoType="dijit.form.Button" onClick="getValues();">Get Values from form!</button>
+		<button dojoType="dijit.form.Button" onClick="setValues();">Set Values to form!</button>
+		<button dojoType="dijit.form.Button" onClick="validate();">Validate form!</button>
+		<button dojoType="dijit.form.Button" type="submit" value="Submit">Submit</button>
+		<button dojoType="dijit.form.Button" type="reset">HTML Reset</button>
+		<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('myForm').reset()">reset()</button>
+	</form>
+<button dojoType="dijit.form.Button" type="button"
+onclick="dijit.byId('myForm').submit()">Submit programmatically</button>
+
+<iframe name="_formSubmitIframe" src="about:blank" onload="if(this.values)submittedValues(this.values)" style="display:none;"></iframe>
+</body>
+</html>

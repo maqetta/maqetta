@@ -1,0 +1,18 @@
+<div class="dijit dijitReset dijitInlineTable dijitLeft"
+	id="widget_${id}"
+	dojoAttachPoint="comboNode" waiRole="combobox"
+	><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer'
+		dojoAttachPoint="downArrowNode" waiRole="presentation"
+		dojoAttachEvent="onmousedown:_onArrowMouseDown"
+		><input class="dijitReset dijitInputField dijitArrowButtonInner" value="&#9660; " type="text" tabIndex="-1" readOnly waiRole="presentation"
+			${_buttonInputDisabled}
+	/></div
+	><div class='dijitReset dijitValidationContainer'
+		><input class="dijitReset dijitInputField dijitValidationIcon dijitValidationInner" value="&Chi; " type="text" tabIndex="-1" readOnly waiRole="presentation"
+	/></div
+	><div class="dijitReset dijitInputField dijitInputContainer"
+		><input class='dijitReset dijitInputInner' ${!nameAttrSetting} type="text" autocomplete="off"
+			dojoAttachEvent="onkeypress:_onKeyPress,compositionend"
+			dojoAttachPoint="textbox,focusNode" waiRole="textbox" waiState="haspopup-true,autocomplete-list"
+	/></div
+></div>

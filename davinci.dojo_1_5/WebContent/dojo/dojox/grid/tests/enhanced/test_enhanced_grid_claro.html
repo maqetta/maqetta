@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import "../../../../dojo/resources/dojo.css";
+		@import "../../../../dijit/themes/claro/claro.css";		
+		@import "../../enhanced/resources/claroEnhancedGrid.css";
+		body {
+			font-size: 0.9em;
+			padding: 0.5em;
+		}
+		.title {
+			padding-top: 1em;
+			padding-bottom: 0.5em;
+			font-weight:bold;
+		}
+		
+ 		#grid1,#grid2,#grid3,#grid4{
+			width: 78em;
+			height: 40em;
+		}
+
+	</style>
+	<script type="text/javascript" src="../../../../dojo/dojo.js" 
+		djConfig="isDebug:true, parseOnLoad: true"></script>
+	<script type="text/javascript">
+		dojo.require("dojox.grid.EnhancedGrid");
+		dojo.require("dojox.grid.enhanced.plugins.DnD");
+		dojo.require("dojox.grid.enhanced.plugins.Menu");
+		dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
+		dojo.require("dojox.grid.enhanced.plugins.IndirectSelection");
+		dojo.require("dojox.data.CsvStore");
+		dojo.require("dojo.parser");
+	</script>
+	<script type="text/javascript">
+		var layout = [{
+			defaultCell: { width: 8, editable: false, type: dojox.grid.cells._Widget },
+			rows:
+			[
+				{ field: "Genre", width: '6'},
+				{ field: "Artist", width: '10'},
+				{ field: "Year", width: '6'},
+				{ field: "Album", width: '12'},
+				{ field: "Name", width: '17'},
+				{ field: "Length", width: '6'},
+				{ field: "Track", width: '6'},
+				{ field: "Composer", width: '15'}				
+			]}
+		];
+		var csvStore1 = new dojox.data.CsvStore({id:'csvStore1', url:"support/music-for-demo.part.csv"});
+	</script>
+	<script type="text/javascript" src="support/test_ue.js"></script>
+</head>
+<body class="claro">
+	<div class="title">Simple DataGrid</div>
+	<div id="grid1" dojoType="dojox.grid.EnhancedGrid" query="{ Track: '*' }" rowsPerPage="30"
+		 store="csvStore1" structure="layout" rowSelector="0px">
+	</div>
+
+	<br/>
+	<div class="title">Enhanced Grid</div>
+	<div id="grid3" dojoType="dojox.grid.EnhancedGrid" query="{ Track: '*' }" rowsPerPage="30"
+		plugins='{nestedSorting: true, dnd: true, indirectSelection: {width:"40px"}}'
+		store="csvStore1" structure="layout" rowSelector="20px">
+	</div>	
+</body>
+</html>

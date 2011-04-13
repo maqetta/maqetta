@@ -1,0 +1,30 @@
+{
+    "id": "http://jqueryui.com/tabs",
+    "name": "jquery.ui.tabs",
+    "spec": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "jquery-1.4.4.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "javascript",
+            "src": "jquery-ui-1.8.11.custom.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "css",
+            "src": "css/smoothness/jquery-ui-1.8.11.custom.css",
+            "$library": "jquery-ui"
+        }
+    ],
+    "library": {
+        "jquery-ui": {
+            "version": "1.8.11",
+            "src": "../../../jquery-ui-1"
+        }
+    },
+    "content": "<div id='__WID___tabs'> <ul> <li><a href='#tabs-1'>Tab 1</a></li> <li><a href='#tabs-2'>Tab 2</a></li> <li><a href='#tabs-3'>Tab 3</a></li> </ul> <div id='tabs-1'> <p>Content one.</p> </div> <div id='tabs-2'> <p>Content two.</p> </div> <div id='tabs-3'> <p>Content three.</p> </div></div>",
+    "javascript": "$('#__WID___tabs').tabs();"
+}

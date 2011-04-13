@@ -1,0 +1,4 @@
+({
+	"pageBreak": "Întrerupere pagină"
+})
+

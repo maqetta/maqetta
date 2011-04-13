@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>ContentPane Programmatic Test</title>
+
+	<style>
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+	</style>
+
+	<!-- required: the default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="isDebug: true, parseOnLoad: true"></script>
+
+	<!-- only needed for alternate theme testing: do NOT use in your code! -->
+	<script type="text/javascript" src="../_testCommon.js"></script>
+
+	<script type="text/javascript">
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.ComboBox");
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+
+		var cp;
+
+		dojo.addOnLoad(function(){
+			cp = new dijit.layout.ContentPane({
+				content: "hello world",
+				style: "border: solid black thin;"
+			});
+			dojo.body().appendChild(cp.domNode);
+		});
+	</script>
+
+</head>
+<body class="claro">
+
+	<h1 class="testTitle">Dijit layout.ContentPane programmatic tests</h1>
+
+	<button onclick="cp.set('content', 'good night, sweet prince')">set content</button>
+	<button onclick="cp.set('href', 'doc0.html')">set href</button>
+
+</body>
+</html>

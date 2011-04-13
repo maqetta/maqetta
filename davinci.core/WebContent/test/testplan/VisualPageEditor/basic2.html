@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Visual page editor basic tests (part 2 - visual editing)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Visual page editor basic tests (part 2)</h1>
+
+	<h2 class="test_section">Widgets, images, open/save (relative layout)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Click on the "New file" icon on the main toolbar. Choose any filename.</li>
+		<li>Drag a few primitive widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
+		<li>Drag an image onto the canvas (e.g., SampleBanner.jpg).</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+		<li>The canvas should show the widgets and image(s) that you dragged onto the canvas.</li>
+		<li>The Outline palette should show the widgets and image(s).</li>
+	</ol>
+
+	<h2 class="test_section">HTML and OpenAjax widgets (continuation of previous)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Re-open the file created in the previous steps.</li>
+		<li>Drag a few HTML widgets onto the canvas (e.g., DIV, SPAN, LABEL).</li>
+		<li><span style="color:red; font-style:italic; font-weight:bold;">(OpenAjax widgets aren't working with 0.6, will be restored with 0.7.)</span> 
+			Drag a few OpenAjax widgets onto the canvas (e.g., jQuery Button, YUI Calendar, YUI Color Picker).</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+		<li>The canvas should show the widgets and image(s) that you dragged onto the canvas.</li>
+		<li>The Outline palette should show the widgets and image(s).</li>
+	</ol>
+
+	<h2 class="test_section">Container widgets (continuation of previous)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Re-open the file created in the previous steps.</li>
+		<li>Drag a few container widgets onto the canvas (e.g., ContentPane, Accordion, TabContainer).</li>
+		<li>Drag an HTML DIV widget onto the canvas.</li>
+		<li>Drag a couple of primitive widgets into each container (e.g., Button, TextBox, HTML LABEL, HTML SPAN).</li>
+		<li>Drag a couple of container widgets inside other containers to create nested containers (e.g., Accordion inside of a TabContainer). 
+				Drag primitive widgets into the nested container widget.</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+		<li>The canvas should show the widgets and image(s) that you dragged onto the canvas.</li>
+		<li>The Outline palette should show the widgets and image(s). 
+				Within the Outline palette, the widgets that you dragged into containers should appear as nested children of their container widget.</li>
+	</ol>
+
+	<h2 class="test_section">Selecting, moving, resizing, and deleting widgets</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Re-open the file created in the previous steps.</li>
+		<li>Click to select various widgets.</li>
+		<li>Move selected widgets to different locations. 
+				With relative layout, you should be able to re-order widgets within the flow via drag/drop. 
+				With absolute layout, you should be able to change widget position.</li>
+		<li>Some widgets are resizable and show resize knobs when selected. For example, ContentPane and Calendar. Drag the knobs to resize some widgets.</li>
+		<li>Delete a widget by selecting it and then invoking the "Delete" command from the context menu.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to select, move, resize and delete widgets.</li>
+	</ol>
+
+	<h2 class="test_section">Design/source views (continuation of previous)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Re-open the file created in the previous steps.</li>
+		<li>Click on the Split View icon (top/bottom views).</li>
+		<li>In the source editor, select and delete one of the widgets.</li>
+		<li>In the source editor, select, copy, paste one of the widgets to clone a second version of that widget.</li>
+		<li>Change some textual content (e.g., a button label) and change the width property of a widget.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The visual image of the document should reflect immediate changes with every change 
+			to the source code of the document. Changes should occur with each keystroke.</li>
+	</ol>
+
+	<h2 class="test_section">Absolute layout</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Turn on absolute layout by clicking on the Switch Layout icon.</li>
+		<li>Repeat all of the tests that you ran above in relative layout mode.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Similar results as for relative layout, except (of course) widgets will be positioned at absolute locations instead of showing a flow layout.</li>
+	</ol>
+
+	<h2 class="test_section">Cut/copy/paste/delete from context menu</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Add a Button, an Accordion, ComboBox, Calendar, SPAN, DIV and a few LABEL elements to the page.</li>
+		<li>Verify that the context menu commands cut, copy, paste and delete are working on individually selected widgets.</li>
+		<li>Verify that the context menu commands cut, copy, paste and delete are working with multiple selection.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>(See notes above for expected behavior)</li>
+	</ol>
+
+	<h2 class="test_section">Surround with (&lt;div&gt; and &lt;span&gt;)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Add a Button, an Accordion, ComboBox, Calendar, SPAN, DIV and a few LABEL elements to the page.</li>
+		<li>Individually select a couple of widgets (both Dojo and HTML) and issue a "Surround with &lt;div&gt;" command from the context menu.</li>
+		<li>Individually select a couple of widgets (both Dojo and HTML) and issue a "Surround with &lt;span&gt;" command from the context menu.</li>
+		<li>Multiply select widgets that share the same parent (including both Dojo and HTML) and issue a "Surround with &lt;div&gt;" command from the context menu.</li>
+		<li>Multiply select widgets that share the same parent (including both Dojo and HTML) and issue a "Surround with &lt;span&gt;" command from the context menu.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>In both the Outline palette and in source view, 
+			the selected widgets should have become the children of DIVs or SPANs, as appropriate.</li>
+	</ol>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Widget Data Entry Popup</title>
+</head>
+<body class="maqettadocs">
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+	</td>
+    <td class="prevnext">
+	<a href="peCreateContent.html">Previous</a> / <a href="pePropertiesPalette.html">Next</a>
+    </td></tr>
+</table>
+
+<a name="overview"><h1>Widget Data Entry Popup</h1></a>
+
+<p>The widget data entry popup pops up on a widget to allow you to enter text or data for the widget. 
+The popup pops up automatically when the widget is first created, and can later be activated by double-clicking on the widget.
+See below for details for each widget.</p>
+
+<h3>Container Widgets</h3>
+<table class="palette" style="max-width:90%;">
+<thead>
+<tr><th>Widget</th><th>Popup Function</th><th>Syntax</th><th>Save&nbsp;&amp;&nbsp;Exit</th></tr>
+</thead>
+
+<tr><th>Border Container</th><td>Configures the BorderContainer layout.</td>
+    <td>Use the dialog window controls.</td><td>Click <b>Ok</b></td></tr>
+    
+<tr><th>Tab Container</th><td>Sets the titles for each tab.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each tab title must be comma-separated.</li>
+            <li>The number of titles determines how many tabs are created.</li>
+        </ul></td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>Accordian Container</th><td>Sets the titles for each pane.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each title must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>The number of lines determines how many panes are created.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+    
+<tr><th>Title Pane</th><td>Sets the title for the pane.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>Toolbar</th><td>Sets the Button labels for each button on the toolbar.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each label must be comma-separated.</li>
+            <li>The number of labels determines how many toolbar buttons are created.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+    
+<tr><th>MenuBar</th><td>Sets the menu items.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>Start the line with "<b>&gt;</b>" to indicate a sub-menu item.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+</table>
+
+
+<h3>Control Widgets</h3>
+<table class="palette" style="max-width:90%;">
+<thead>
+<tr><th>Widget</th><th>Popup Function</th><th>Syntax</th><th>Save&nbsp;&amp;&nbsp;Exit</th></tr>
+</thead>
+
+<tr><th>Button</th><td>Sets the button's label.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>Combo Box</th><td>Sets the items in the drop-down list.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>Start the line with "<b>+</b>" to indicate the initial default value.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+
+<tr><th>Filtering Select</th><td>Sets the items in the drop-down list.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>Start the line with "<b>+</b>" to indicate the initial default value.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+
+<tr><th>Multi Select</th><td>Sets the items in the list box.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>Start line(s) with "<b>+</b>" to indicate the initial default value(s).</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+
+<tr><th>Drop Down Select</th><td>Sets the items in the drop-down list.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>Start the line with "<b>+</b>" to indicate the initial default value.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+
+<tr><th>DropDownButton</th><td>Sets the items in the drop-down list.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>The first item in the list will used as the button's text.</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+
+<tr><th>Tree</th><td>Sets the text for each node.</td>
+    <td><ul style="margin-top:1px;margin-bottom:1px;padding-left:15px;">
+    	    <li>Each item must be on a separate line.</li>
+            <li>Pressing <b>Enter</b> adds a new line.</li>
+            <li>Sub-nodes are indicated with a <b>&gt;</b> character at the beginning of the line.</li>
+            <li>A new sub-node level will be generated for each <b>&gt;</b> 
+                (e.g. use <b>&gt;&gt;</b> for two levels deep, <b>&gt;&gt;&gt;</b> for three levels deep, etc.).</li>
+        </ul></td>
+    <td>Click off the widget</td></tr>
+
+<tr><th>Calendar</th><td>Sets the date and time on the Calendar widget.</td>
+    <td>Enter a single line of text using the format shown in the popup.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+
+</table>
+
+
+<h3>HTML Widgets</h3>
+<table class="palette" style="max-width:90%;">
+<thead>
+<tr><th>Widget</th><th>Popup Function</th><th>Syntax</th><th>Save&nbsp;&amp;&nbsp;Exit</th></tr>
+</thead>
+
+<tr><th>&lt;div&gt;</th><td>Sets the text inside a div.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>&lt;span&gt;</th><td>Sets the text inside a span.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>&lt;a&gt;</th><td>Sets the text for the anchor tag.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>&lt;label&gt;</th><td>Sets the text for the label.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>&lt;h1&gt;</th><td>Sets the text for the heading.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>&lt;h2&gt;</th><td>Sets the text for the heading.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>&lt;h3&gt;</th><td>Sets the text for the heading.</td>
+    <td>Enter a single line of text.</td>
+    <td>Press <b>Enter</b> or click off the widget</td></tr>
+    
+<tr><th>HTML Rich Text</th><td>Pops up a rich text editor.</td>
+    <td>Use the rich text editor controls.</td>
+    <td>Click off the widget</td></tr>
+    
+</table>
+
+  
+<p class="prevnext"><a href="peCreateContent.html">Previous</a> / <a href="pePropertiesPalette.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

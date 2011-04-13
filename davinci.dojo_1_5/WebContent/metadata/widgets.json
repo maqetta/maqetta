@@ -1,0 +1,1553 @@
+{
+    "name": "dojo",
+    "longName": "Dojo Toolkit",
+    "version": "1.5",
+    "categories": {
+        "containers": {
+            "name": "Dojo Containers",
+            "description": "Dojo Containers",
+            "widgetClass": "dijit"
+        },
+        "controls": {
+            "name": "Dojo Controls",
+            "description": "Dojo Controls",
+            "widgetClass": "dijit"
+        },
+        "untested": {
+            "name": "Untested Dojo & HTML",
+            "widgetClass": "dijit"
+        },
+        "untested-obj": {
+            "name": "Untested Dojo & HTML",
+            "widgetClass": "object"
+        },
+        "mobile": {
+            "name": "Dojox Mobile",
+            "widgetClass": "dijit"
+        }
+    },
+    "widgets": [
+        {
+            "name": "BorderContainer",
+            "description": "Border Container",
+            "type": "dijit.layout.BorderContainer",
+            "category": "containers",
+            "icon": "resources/images/border-container.png",
+            "properties": {
+                "design": "sidebar",
+                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "top",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "height: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "bottom",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "height: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "leading",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "width: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "trailing",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "width: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "center",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.BorderContainerInput",
+            "helper": "davinci.libraries.dojo.dijit.layout.BorderContainerHelper"
+        },
+        {
+            "name": "TabContainer",
+            "description": "Tab Container",
+            "type": "dijit.layout.TabContainer",
+            "category": "containers",
+            "icon": "resources/images/tab-container.png",
+            "properties": {
+                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;",
+                "controllerWidget": "dijit.layout.TabController"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Tab 1",
+                        "doLayout": false
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Tab 2",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.StackContainerInput"
+        },
+        {
+            "name": "AccordionContainer",
+            "description": "Accordion Container",
+            "type": "dijit.layout.AccordionContainer",
+            "category": "containers",
+            "icon": "resources/images/accordion.png",
+            "properties": {
+                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Pane 1",
+                        "doLayout": false
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Pane 2",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "inlineEdit": "davinci.ve.input.AccordionContainerInput"
+        },
+        {
+            "name": "TitlePane",
+            "description": "Title Pane",
+            "type": "dijit.TitlePane",
+            "category": "containers",
+            "icon": "resources/images/title-pane.png",
+            "properties": {
+                "title": "Pane",
+                "style": "width: 100%; min-width:1em;"
+            },
+            "resizable": "width",
+            "isLayoutContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper",
+            "inlineEdit": {
+                "property": "title",
+                "displayOnCreate": true,
+                "multiLine": false
+            }
+        },
+        {
+            "name": "ContentPane",
+            "description": "Content Pane",
+            "type": "dijit.layout.ContentPane",
+            "category": "containers",
+            "icon": "resources/images/content-pane.png",
+            "properties": {
+                "title": "Pane",
+                "doLayout": false,
+                "style": "width: 250px; height: 250px;"
+            },
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
+        },
+        {
+            "name": "Toolbar",
+            "description": "Toolbar",
+            "type": "dijit.Toolbar",
+            "category": "containers",
+            "icon": "resources/images/toolbar.png",
+            "children": [
+                {
+                    "type": "dijit.form.Button",
+                    "properties": {
+                        "label": "Button 1"
+                    }
+                },
+                {
+                    "type": "dijit.form.Button",
+                    "properties": {
+                        "label": "Button 2"
+                    }
+                },
+                {
+                    "type": "dijit.form.Button",
+                    "properties": {
+                        "label": "Button 3"
+                    }
+                }
+            ],
+            "resizable": "none",
+            "isLayoutContainer": true,
+            "inlineEdit": "davinci.ve.input.ToolbarInput"
+        },
+        {
+            "name": "MenuBar",
+            "description": "Menu Bar",
+            "type": "dijit.MenuBar",
+            "category": "containers",
+            "icon": "resources/images/menu-bar.png",
+            "children": [
+                {
+                    "type": "dijit.PopupMenuBarItem",
+                    "properties": {
+                        "label": "Menu 1"
+                    },
+                    "children": [
+                        {
+                            "type": "dijit.Menu",
+                            "children": [
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 1.1"
+                                    }
+                                },
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 1.2"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "dijit.PopupMenuBarItem",
+                    "properties": {
+                        "label": "Menu 2"
+                    },
+                    "children": [
+                        {
+                            "type": "dijit.Menu",
+                            "children": [
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 2.1"
+                                    }
+                                },
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 2.2"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "resizable": true,
+            "isLayered": true,
+            "helper": "davinci.libraries.dojo.dijit.MenuHelper",
+            "inlineEdit": "davinci.ve.input.MenuBarInput"
+        },
+        {
+            "name": "Button",
+            "description": "Button",
+            "type": "dijit.form.Button",
+            "category": "controls",
+            "icon": "resources/images/button.png",
+            "properties": {
+                "label": "Button"
+            },
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.ButtonHelper",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "multiLine": false,
+                "supportsHTML": true,
+                "helpText": "If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment)."
+            }
+        },
+        {
+            "name": "TextBox",
+            "description": "Text Box",
+            "type": "dijit.form.TextBox",
+            "category": "controls",
+            "icon": "resources/images/text-box.png",
+            "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "ComboBox",
+            "description": "Combo Box",
+            "type": "dijit.form.ComboBox",
+            "category": "controls",
+            "icon": "resources/images/combo-box.png",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1",
+                    "content": "<option></option>"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2",
+                    "content": "<option></option>"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3",
+                    "content": "<option></option>"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "FilteringSelect",
+            "description": "Select (Filtering)",
+            "type": "dijit.form.FilteringSelect",
+            "category": "controls",
+            "icon": "resources/images/filtering-select.png",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "MultiSelect",
+            "description": "Select (Multiple)",
+            "type": "dijit.form.MultiSelect",
+            "category": "controls",
+            "icon": "resources/images/multi-select.png",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.OptionsInput"
+        },
+        {
+            "name": "DropDownSelect",
+            "description": "Select (Drop Down)",
+            "type": "dijit.form.Select",
+            "category": "controls",
+            "icon": "resources/images/dropdown.png",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "none",
+            "isControl": true,
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "DropDownButton",
+            "description": "Drop Down Button",
+            "type": "dijit.form.DropDownButton",
+            "category": "controls",
+            "icon": "resources/images/dropdown-button.png",
+            "properties": {
+                "label": "Drop Down"
+            },
+            "children": [
+                {
+                    "type": "dijit.Menu",
+                    "children": [
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Option 1"
+                            }
+                        },
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Option 2"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "resizable": "none",
+            "isControl": true,
+            "helper": "davinci.libraries.dojo.dijit.form.DropDownButtonHelper",
+            "inlineEdit": "davinci.ve.input.DropDownButtonInput"
+        },
+        {
+            "name": "CheckBox",
+            "description": "Check Box",
+            "type": "dijit.form.CheckBox",
+            "category": "controls",
+            "icon": "resources/images/checkbox.png",
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+        },
+        {
+            "name": "RadioButton",
+            "description": "Radio Button",
+            "type": "dijit.form.RadioButton",
+            "category": "controls",
+            "icon": "resources/images/radio-button.png",
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+        },
+        {
+            "name": "Tree",
+            "description": "Tree",
+            "type": "dijit.Tree",
+            "category": "controls",
+            "icon": "resources/images/tree.png",
+            "data": [
+                {
+                    "type": "dojo.data.ItemFileReadStore",
+                    "properties": {
+                        "data": {
+                            "identifier": "id",
+                            "label": "label",
+                            "items": [
+                                {
+                                    "label": "1",
+                                    "id": "1",
+                                    "children": [
+                                        {
+                                            "label": "1.1",
+                                            "id": "1.1"
+                                        },
+                                        {
+                                            "label": "1.2",
+                                            "id": "1.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "2",
+                                    "id": "2",
+                                    "children": [
+                                        {
+                                            "id": "2.1",
+                                            "label": "2.1"
+                                        },
+                                        {
+                                            "id": "2.2",
+                                            "label": "2.2"
+                                        },
+                                        {
+                                            "id": "2.3",
+                                            "label": "2.3"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "dijit.tree.ForestStoreModel",
+                    "properties": {
+                        "rootLabel": "Root"
+                    }
+                },
+                {
+                    "type": "dijit.Tree",
+                    "properties": {
+                        "style": "width: 250px; height: 250px; overflow:auto;",
+                        "showRoot": false,
+                        "autoExpand": true
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dijit.TreeCreateTool",
+            "inlineEdit": "davinci.ve.input.TreeInput"
+        },
+        {
+            "name": "DataGrid",
+            "description": "DataGrid",
+            "type": "dojox.grid.DataGrid",
+            "category": "controls",
+            "icon": "resources/images/data-grid.png",
+            "data": [
+                {
+                    "type": "dojo.data.ItemFileReadStore",
+                    "properties": {
+                        "data": {
+                            "identifier": "id",
+                            "items": [
+                                {
+                                    "label": "Label 1",
+                                    "id": "1"
+                                },
+                                {
+                                    "label": "Label 2",
+                                    "id": "2"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "dojox.grid.DataGrid",
+                    "properties": {
+                        "structure": [
+                            {
+                                "name": "ID",
+                                "field": "id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "label",
+                                "name": "Label",
+                                "width": "auto"
+                            }
+                        ],
+                        "style": "width: 300px; height: 300px;"
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dojox.grid.DataGridCreateTool",
+            "helper": "davinci.libraries.dojo.dojox.grid.DataGridHelper",
+            "inlineEdit": "davinci.ve.input.DataGridInput"
+        },
+        {
+            "name": "Calendar",
+            "description": "Calendar (Read Only)",
+            "type": "dijit.Calendar",
+            "category": "controls",
+            "icon": "resources/images/calendar.png",
+            "inlineEdit": "davinci.ve.input.CalendarInput"
+        },
+        {
+            "name": "ValidationTextBox",
+            "description": "Validation Text Box",
+            "type": "dijit.form.ValidationTextBox",
+            "category": "untested",
+            "icon": "resources/images/dojo-validtn-text-box.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "NumberTextBox",
+            "description": "Number Text Box",
+            "type": "dijit.form.NumberTextBox",
+            "category": "untested",
+            "icon": "resources/images/nmb-text-box.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "NumberSpinner",
+            "description": "Number Spinner",
+            "type": "dijit.form.NumberSpinner",
+            "category": "untested",
+            "icon": "resources/images/number-spinner.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "DateTextBox",
+            "description": "Date Text Box",
+            "type": "dijit.form.DateTextBox",
+            "category": "untested",
+            "icon": "resources/images/date-text-box.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "TimeTextBox",
+            "description": "Time Text Box",
+            "type": "dijit.form.TimeTextBox",
+            "category": "untested",
+            "icon": "resources/images/time-text-box.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "CurrencyTextBox",
+            "description": "Currency Text Box",
+            "type": "dijit.form.CurrencyTextBox",
+            "category": "untested",
+            "icon": "resources/images/currency-text-box.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "SimpleTextarea",
+            "description": "Text Area (Basic)",
+            "type": "dijit.form.SimpleTextarea",
+            "category": "untested",
+            "icon": "resources/images/simpletextarea.gif",
+            "properties": {
+                "rows": "10",
+                "cols": "10",
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "Textarea",
+            "description": "Text Area (Resizing)",
+            "type": "dijit.form.Textarea",
+            "category": "untested",
+            "icon": "resources/images/textarea.gif",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "HorizontalSlider",
+            "description": "Slider (Horizontal)",
+            "type": "dijit.form.HorizontalSlider",
+            "category": "untested",
+            "icon": "resources/images/horizontalslider.gif",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width"
+        },
+        {
+            "name": "VerticalSlider",
+            "description": "Slider (Vertical)",
+            "type": "dijit.form.VerticalSlider",
+            "category": "untested",
+            "icon": "resources/images/verticalslider.gif",
+            "properties": {
+                "style": "height: 200px;"
+            },
+            "resizable": "height"
+        },
+        {
+            "name": "Dialog",
+            "description": "Dialog",
+            "type": "dijit.Dialog",
+            "category": "untested",
+            "icon": "resources/images/dialog.gif",
+            "properties": {
+                "style": "width: 250px; height: 250px;",
+                "title": "Dialog"
+            },
+            "isContainer": true,
+            "isLayered": true,
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.DialogHelper"
+        },
+        {
+            "name": "ContextMenu",
+            "description": "Context Menu",
+            "type": "dijit.Menu",
+            "category": "untested",
+            "icon": "resources/images/contextmenu.gif",
+            "properties": {
+                "contextMenuForWindow": true,
+                "style": "visibility: hidden;"
+            },
+            "children": [
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 1"
+                    }
+                },
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 2"
+                    }
+                },
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 3"
+                    }
+                }
+            ],
+            "resizable": "none",
+            "isLayered": true,
+            "helper": "davinci.libraries.dojo.dijit.MenuHelper"
+        },
+        {
+            "name": "PopupMenuBarItem",
+            "description": "Popup Menu Bar Item",
+            "type": "dijit.PopupMenuBarItem",
+            "category": "untested",
+            "icon": "resources/images/popupmenubaritem.gif",
+            "properties": {
+                "label": "Menu"
+            },
+            "children": [
+                {
+                    "type": "dijit.Menu",
+                    "children": [
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Menu Item 1"
+                            }
+                        },
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Menu Item 2"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "resizable": "none"
+        },
+        {
+            "name": "MenuItem",
+            "description": "Menu Item",
+            "type": "dijit.MenuItem",
+            "category": "untested",
+            "icon": "resources/images/menuitem.gif",
+            "properties": {
+                "label": "Menu Item"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "CheckedMenuItem",
+            "description": "Checked Menu Item",
+            "type": "dijit.CheckedMenuItem",
+            "category": "untested",
+            "icon": "resources/images/checkedmenuitem.gif",
+            "properties": {
+                "label": "Checked Menu Item"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "MenuSeparator",
+            "description": "Menu Separator",
+            "type": "dijit.MenuSeparator",
+            "category": "untested",
+            "icon": "resources/images/menuseparator.gif",
+            "properties": {
+                "label": "Menu Separator"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "PopupMenuItem",
+            "description": "Popup Menu Item",
+            "type": "dijit.PopupMenuItem",
+            "category": "untested",
+            "icon": "resources/images/popupmenuitem.gif",
+            "properties": {
+                "label": "Popup Menu Item"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "Tooltip",
+            "description": "Tooltip",
+            "type": "dijit.Tooltip",
+            "category": "untested",
+            "icon": "resources/images/tooltip.gif",
+            "children": "Text",
+            "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
+            "resizable": "none",
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
+            "inlineEdit": "davinci.ve.input.RichTextInput"
+        },
+        {
+            "name": "Editor",
+            "description": "Editor",
+            "type": "dijit.Editor",
+            "category": "untested",
+            "icon": "resources/images/rt-editor.gif"
+        },
+        {
+            "name": "InlineEditBox",
+            "description": "Inline Edit Box",
+            "type": "dijit.InlineEditBox",
+            "category": "untested",
+            "icon": "resources/images/inlineeditbox.gif",
+            "children": "Text",
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "ProgressBar",
+            "description": "Progress Bar",
+            "type": "dijit.ProgressBar",
+            "category": "untested",
+            "icon": "resources/images/progressbar.gif",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width"
+        },
+        {
+            "name": "ColorPalette",
+            "description": "Color Palette",
+            "type": "dijit.ColorPalette",
+            "category": "untested",
+            "icon": "resources/images/colorpalette.gif",
+            "resizable": "none"
+        },
+        {
+            "name": "StackContainer",
+            "description": "Stack Container",
+            "type": "dijit.layout.StackContainer",
+            "category": "untested",
+            "icon": "resources/images/stackcontainer.gif",
+            "data": [
+                {
+                    "type": "dijit.layout.StackController"
+                },
+                {
+                    "type": "dijit.layout.StackContainer",
+                    "properties": {
+                        "style": "width: 250px; height: 250px;"
+                    },
+                    "children": [
+                        {
+                            "type": "dijit.layout.ContentPane",
+                            "properties": {
+                                "title": "Page 1",
+                                "doLayout": false
+                            }
+                        },
+                        {
+                            "type": "dijit.layout.ContentPane",
+                            "properties": {
+                                "title": "Page 2",
+                                "doLayout": false
+                            }
+                        }
+                    ]
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dijit.layout.StackContainerCreateTool",
+            "isContainer": true
+        },
+        {
+            "name": "Form",
+            "description": "Form",
+            "type": "dijit.form.Form",
+            "category": "untested",
+            "icon": "resources/images/form.gif",
+            "properties": {
+                "style": "width: 250px; height: 250px;"
+            },
+            "isContainer": true
+        },
+        {
+            "name": "AnalogGauge",
+            "description": "AnalogGauge",
+            "type": "dojox.widget.AnalogGauge",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "properties": {
+                "style": "width: 250px; height: 250px;",
+                "width": 250,
+                "height": 250,
+                "ranges": [
+                    {
+                        "low": 0,
+                        "high": 100,
+                        "color": "black",
+                        "hover": "",
+                        "size": 100
+                    }
+                ],
+                "minorTicks": {
+                    "offset": 70,
+                    "length": 5,
+                    "interval": 5,
+                    "color": "gray"
+                },
+                "majorTicks": {
+                    "offset": 70,
+                    "length": 10,
+                    "interval": 20,
+                    "color": "gray"
+                },
+                "indicators": [
+                    {
+                        "value": 0,
+                        "width": 3,
+                        "length": 100,
+                        "hover": "Value: 0",
+                        "title": "Value",
+                        "color": "red",
+                        "offset": 0,
+                        "front": false,
+                        "label": ""
+                    }
+                ]
+            },
+            "helper": "davinci.libraries.dojo.dojox.widget.AnalogGaugeHelper"
+        },
+        {
+            "name": "BarGauge",
+            "description": "BarGauge",
+            "type": "dojox.widget.BarGauge",
+            "category": "untested",
+            "icon": "resources/images/bargauge.gif",
+            "properties": {
+                "style": "width: 300px; height: 55px;",
+                "width": 300,
+                "height": 55,
+                "dataHeight": 25,
+                "dataWidth": 275,
+                "dataY": 25,
+                "dataX": 10,
+                "ranges": [
+                    {
+                        "low": 5,
+                        "high": 10,
+                        "hover": "5 - 10"
+                    },
+                    {
+                        "low": 10,
+                        "high": 20,
+                        "hover": "10 - 20"
+                    },
+                    {
+                        "low": 20,
+                        "high": 30,
+                        "hover": "20 - 30"
+                    },
+                    {
+                        "low": 30,
+                        "high": 40,
+                        "hover": "30 - 40"
+                    },
+                    {
+                        "low": 40,
+                        "high": 50,
+                        "hover": "40 - 50"
+                    },
+                    {
+                        "low": 50,
+                        "high": 60,
+                        "hover": "50 - 60"
+                    },
+                    {
+                        "low": 60,
+                        "high": 70,
+                        "hover": "60 - 70"
+                    },
+                    {
+                        "low": 70,
+                        "high": 75,
+                        "hover": "70 - 75"
+                    }
+                ],
+                "majorTicks": {
+                    "length": 5,
+                    "width": 1,
+                    "offset": -5,
+                    "interval": 5,
+                    "color": "black"
+                },
+                "indicators": [
+                    {
+                        "value": 17,
+                        "width": 7,
+                        "hover": "Value: 17",
+                        "title": "Value"
+                    }
+                ]
+            },
+            "helper": "davinci.libraries.dojo.dojox.widget.BarGaugeHelper"
+        },
+        {
+            "name": "EnhancedCalendar",
+            "description": "Calendar (Enhanced)",
+            "type": "dojox.widget.Calendar",
+            "category": "untested",
+            "icon": "resources/images/enhancedCalendar.gif"
+        },
+        {
+            "name": "Chart2D",
+            "description": "Chart2D",
+            "type": "dojox.charting.widget.Chart2D",
+            "category": "untested",
+            "icon": "resources/images/chart.gif",
+            "properties": {
+                "style": "width: 300px; height: 300px;"
+            },
+            "children": [
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "axis",
+                        "name": "x"
+                    }
+                },
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "axis",
+                        "name": "y",
+                        "vertical": true,
+                        "includeZero": true
+                    }
+                },
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "plot",
+                        "name": "default",
+                        "type": "Lines"
+                    }
+                },
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "series",
+                        "name": "a",
+                        "data": "1, 0.5, 2, 1.5, 3"
+                    }
+                }
+            ],
+            "helper": "davinci.libraries.dojo.dojox.charting.widget.Chart2DHelper"
+        },
+        {
+            "name": "MultiComboBox",
+            "description": "Combo Box (Multiple)",
+            "type": "dojox.form.MultiComboBox",
+            "category": "untested",
+            "icon": "resources/images/multicombobox.gif",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "1"
+                    },
+                    "children": "Item1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "2"
+                    },
+                    "children": "Item2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "3"
+                    },
+                    "children": "Item3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+        },
+        {
+            "name": "CheckedMultiSelect",
+            "description": "Select (Check Box)",
+            "type": "dojox.form.CheckedMultiSelect",
+            "category": "untested",
+            "icon": "resources/images/checkedmultiSelect.gif",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+        },
+        {
+            "name": "TimeSpinner",
+            "description": "Time Spinner",
+            "type": "dojox.form.TimeSpinner",
+            "category": "untested",
+            "icon": "resources/images/timespinner.gif"
+        },
+        {
+            "name": "FileInput",
+            "description": "File Input",
+            "type": "dojox.form.FileInput",
+            "category": "untested",
+            "icon": "resources/images/fileinput.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "FileInputAuto",
+            "description": "File Input (Auto)",
+            "type": "dojox.form.FileInputAuto",
+            "category": "untested",
+            "icon": "resources/images/fileinputauto.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "FileInputBlind",
+            "description": "File Input (Blind)",
+            "type": "dojox.form.FileInputBlind",
+            "category": "untested",
+            "icon": "resources/images/fileinputblind.gif",
+            "resizable": "width"
+        },
+        {
+            "name": "Rating",
+            "description": "Rating",
+            "type": "dojox.form.Rating",
+            "category": "untested",
+            "icon": "resources/images/rating.gif",
+            "resizable": "none"
+        },
+        {
+            "name": "SortList",
+            "description": "List (Sorted)",
+            "type": "dojox.widget.SortList",
+            "category": "untested",
+            "icon": "resources/images/sortlist.gif",
+            "properties": {
+                "title": "Sorted List",
+                "style": "width: 300px; height: 300px"
+            },
+            "children": [
+                {
+                    "type": "html.li",
+                    "children": "Item1"
+                },
+                {
+                    "type": "html.li",
+                    "children": "Item2"
+                },
+                {
+                    "type": "html.li",
+                    "children": "Item3"
+                }
+            ],
+            "helper": "davinci.libraries.dojo.dojox.widget.SortListHelper"
+        },
+        {
+            "name": "GridContainer",
+            "description": "Grid Container",
+            "type": "dojox.layout.GridContainer",
+            "category": "untested",
+            "icon": "resources/images/gridcontainer.gif",
+            "properties": {
+                "nbZones": "3",
+                "opacity": "0.7",
+                "allowAutoScroll": true,
+                "hasResizableColumns": true,
+                "withHandles": true,
+                "style": "width: 500px; height: 300px;"
+            },
+            "isContainer": true
+        },
+        {
+            "name": "FloatingPane",
+            "description": "Floating Pane",
+            "type": "dojox.layout.FloatingPane",
+            "category": "untested",
+            "icon": "resources/images/floatingpane.gif",
+            "properties": {
+                "title": "Floating Pane",
+                "style": "width: 300px; height: 300px;"
+            },
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
+        },
+        {
+            "name": "ScrollPane",
+            "description": "Scroll Pane",
+            "type": "dojox.layout.ScrollPane",
+            "category": "untested",
+            "icon": "resources/images/scrollpane.gif",
+            "properties": {
+                "style": "width: 300px; height: 300px"
+            },
+            "isContainer": true
+        },
+        {
+            "name": "RadioGroup",
+            "description": "Radio Group",
+            "type": "dojox.layout.RadioGroup",
+            "category": "untested",
+            "icon": "resources/images/radiogroup.gif",
+            "properties": {
+                "style": "float: left; width: 300px; height: 300px"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 1"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ColorPicker",
+            "description": "Color Picker",
+            "type": "dojox.widget.ColorPicker",
+            "category": "untested",
+            "icon": "resources/images/colorpicker.gif",
+            "resizable": "none"
+        },
+        {
+            "name": "ItemFileReadStore",
+            "description": "ItemFileReadStore",
+            "type": "dojo.data.ItemFileReadStore",
+            "category": "untested-obj",
+            "icon": "resources/images/DataPanel.gif",
+            "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
+            "resizable": "none",
+            "invisible": false,
+            "helper": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper",
+            "inlineEdit": "davinci.ve.input.ItemFileReadStoreInput"
+        },
+        {
+            "name": "ItemFileWriteStore",
+            "description": "ItemFileWriteStore",
+            "type": "dojo.data.ItemFileWriteStore",
+            "category": "untested-obj",
+            "icon": "resources/images/DataPanel.gif",
+            "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
+            "resizable": "none",
+            "invisible": false,
+            "inlineEdit": "davinci.ve.input.ItemFileReadStoreInput"
+        },
+        {
+            "name": "ForestStoreModel",
+            "type": "dijit.tree.ForestStoreModel",
+            "category": "untested-obj",
+            "hidden": true,
+            "invisible": true
+        },
+        {
+            "name": "View",
+            "type": "dojox.mobile.View",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-view.gif",
+            "isContainer": true
+        },
+/* Dojo 1.6+ only
+        {
+            "name": "ScrollableView",
+            "type": "dojox.mobile.ScrollableView",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-scrollable-view.gif",
+            "isContainer": true
+        },
+        {
+            "name": "FlippableView",
+            "type": "dojox.mobile.FlippableView",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--flippable-iew.gif",
+            "isContainer": true
+        },
+*/
+        {
+            "name": "Heading",
+            "type": "dojox.mobile.Heading",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-heading.gif",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+/* Dojo 1.6+ only
+        {
+            "name": "ToolbarButton",
+            "type": "dojox.mobile.ToolbarButton",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--toolbar-button.gif"
+        },
+*/
+        {
+            "name": "RoundRect",
+            "type": "dojox.mobile.RoundRect",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrect.gif",
+            "isContainer": true
+        },
+        {
+            "name": "RoundRectCategory",
+            "type": "dojox.mobile.RoundRectCategory",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrectctgy.gif",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "RoundRectList",
+            "type": "dojox.mobile.RoundRectList",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrectlist.gif",
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "EdgeToEdgeCategory",
+            "type": "dojox.mobile.EdgeToEdgeCategory",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-edge-edge-ctg.gif",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "EdgeToEdgeList",
+            "type": "dojox.mobile.EdgeToEdgeList",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-edge-edgellist.gif",
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ListItem",
+            "type": "dojox.mobile.ListItem",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-list-item.gif",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "Switch",
+            "type": "dojox.mobile.Switch",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-switch.gif"
+        },
+        {
+            "name": "IconContainer",
+            "type": "dojox.mobile.IconContainer",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-icon-container.gif",
+            "isContainer": true,
+            "properties": {
+                "defaultIcon": "__MAQ_LIB_BASE_URL__/resources/images/icon-container-fallback.png"
+            },
+            "children": [
+                {
+                    "type": "dojox.mobile.IconItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.IconItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "IconItem",
+            "type": "dojox.mobile.IconItem",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--icon-item.gif"
+        },
+        {
+            "name": "Button",
+            "type": "dojox.mobile.Button",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--button.gif",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "TabContainer",
+            "type": "dojox.mobile.TabContainer",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--tab-container.gif",
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.TabPane",
+                    "properties": {
+                        "label": "Pane 1",
+                        "selected": true
+                    }
+                },
+                {
+                    "type": "dojox.mobile.TabPane",
+                    "properties": {
+                        "label": "Pane 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "TabPane",
+            "type": "dojox.mobile.TabPane",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-tab-pane.gif",
+            "isContainer": true
+        }
+/* Dojo 1.6+ only
+        {
+            "name": "TabBar",
+            "type": "dojox.mobile.TabBar",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--tab-container.gif",
+            "isContainer": true
+        },
+        {
+            "name": "TabBarButton",
+            "type": "dojox.mobile.TabBarButton",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--toolbar-button.gif"
+        }
+*/
+    ]
+}

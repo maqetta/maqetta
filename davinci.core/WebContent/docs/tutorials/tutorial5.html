@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Creating a basic layout</title>
+</head>
+
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a> &gt; 
+		<a href="pageEditor.html">Page Editor</a>
+    </td>
+    <td class="prevnext">
+	<a href="peUserHTML.html">Previous</a> / <a href="pageEditor.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Creating a basic layout</h1>
+
+<p class="TODO">This page is under construction.</p>
+
+
+<p>This tutorial creates a flexible 2-column layout, with a header and footer.  
+<ul>  
+<li>First we'll create four DIVs for the header, sidebar, content pane and footer.</li>
+<li>Then we'll use the Source view to add additional styling that is currently not supported in Design view.</li>
+<li>Finally, we will preview the results in the browser.</li>
+</ul><p>
+
+<h2>Instructions for making a basic layout:</h2>
+
+<ol>
+<li>Open Maqetta and begin with a blank canvas.</li>
+<li>Create a <strong>new file</strong> and name it.</li>
+<li class="topgap">Create the header<ol>
+<li>Drag a <strong>DIV</strong> onto the canvas and set the <strong>height</strong> to about <strong>70px</strong> (drag the bottom border of the div down from it's center handle, or type in the height in the Layout section).</li>
+<li>Set the <strong>id</strong> to <strong>header</strong> and the <strong>Text</strong> to <strong>Header</strong></li>
+<li>Set the <strong>Background color</strong> to <strong>blue</strong>. and the <strong>Text color</strong> to <strong>white</strong></li>
+</ol></li>
+
+<li>Create the sidebar<ol>
+<li>Drag a <strong>DIV</strong> onto the canvas and drag the bottom border about 1/3rd of the way down the canvas window.</li>
+<li>Set the <strong>id</strong> to <strong>sidebar</strong> and the <strong>Text</strong> to <strong>Sidebar</strong></li>
+</ol></li>
+
+<li class="topgap">Create the content pane<ol>
+<li>Drag a <strong>DIV</strong> onto the canvas and drag the bottom border about 3/4ths of the way down the canvas window.</li>
+<li>Set the <strong>id</strong> to <strong>content</strong> and the <strong>Text</strong> to <strong>Content</strong></li>
+<li>Set the <strong>Border</strong> to <strong>1px solid gray</strong>.</li>
+</ol></li>
+
+<li class="topgap">Create the footer<ol>
+<li>Drag a <strong>DIV</strong> onto the canvas and resize the <strong>height</strong> to about <strong>40px</strong></li>
+<li>Set the <strong>id</strong> to <strong>footer</strong> and the <strong>Text</strong> to <strong>Footer</strong></li>
+<li>Set the <strong>Border</strong> to <strong>1px solid gray</strong>.</li>
+<li>Click Save.</li>
+</ol></li>
+
+<li class="topgap">Add additional styling in Source view to create a flexible 2-column layout<ol>
+<li>Go to <strong>Source view</strong></li>
+<li>Near the bottom of the code you should see the four DIVs (the header div is labeled <code>&lt;div id="header"</code>, the sidebar div is labeled <code>&lt;div id="sidebar"</code>, etc.) like this:
+
+<pre>
+&lt;body class=&quot;claro&quot;&gt;
+&lt;div id=&quot;header&quot; style=&quot;width: 955px; height: 70px;&quot;&gt;Header&lt;/div&gt;
+&lt;div id=&quot;sidebar&quot; style=&quot;width: 955px; height: 138px;&quot;&gt;Sidebar&lt;/div&gt;
+&lt;div id=&quot;content&quot; style=&quot;border-color: #a2a2a2; border-width: 1px; border-style: solid; width: 955px; height: 207px;&quot;&gt;Content&lt;/div&gt;
+&lt;div id=&quot;footer&quot; style=&quot;border-color: #a2a2a2; border-width: 1px; border-style: solid;  width: 955px; height: 40px;&quot;&gt;Footer&lt;/div&gt;
+&lt;/body&gt;
+
+</pre></li>
+
+<li>The styling is inside the <code>style</code> attribute. We will be updating some of the style properties.</li> 
+<li>On the <strong>header DIV</strong>, change the width to <code>width: 100%;</code></li>
+<li>On the <strong>sidebar DIV</strong> add <code>float: left;</code> and change the width to <code>width: 19%;</code></li>
+<li>On the <strong>content DIV</strong> add <code>float: left;</code> and change the width to <code>width: 79%;</code>  (leave off 1% to allow for the border)</li>
+<li>On the <strong>content DIV</strong>, change <code>border:</code> to <code>border-left:</code> (so we only have a border on the left side)</li>
+<li>On the <strong>footer DIV</strong>, add <code>clear: both;</code> and change the width to <code>width: 100%;</code></li>
+<li>Here is what the body should now look like:
+
+<pre>
+&lt;body class=&quot;claro&quot;&gt;
+&lt;div id=&quot;header&quot; style=&quot;color: rgb(255, 255, 255); background-color: rgb(50, 63, 199); width: 100%; height: 66px;&quot;&gt;Header&lt;/div&gt;
+&lt;div id=&quot;sidebar&quot; style=&quot;float: left; width: 20%; height: 53px;&quot;&gt;Sidebar&lt;/div&gt;
+&lt;div id=&quot;content&quot; style=&quot;float: left; border-left: 1px solid rgb(187, 188, 189); width: 79%; height: 75px;&quot;&gt;Content&lt;/div&gt;
+&lt;div id=&quot;footer&quot; style=&quot;clear: both; border-top: 1px solid rgb(187, 188, 189); width: 100%; height: 34px;&quot;&gt;Footer&lt;/div&gt;
+&lt;/body&gt;
+</pre></li>
+
+<li>Click Save</li>
+<li>Return to Design view</li>
+<li>Click the <strong>Preview in browser</strong> icon to see your layout. You will notice that the sidebar and content are very short. They will expand in height as you add your content inside these panes.</li>
+<li>You are now ready to add your content by dragging widgets inside of each pane.</li>
+</ol></li>
+
+<h2>Customizing the layout:</h2>
+
+<p>From here, you can customize the layout to fit your needs.  Here are some helpful tips:</p>
+<h4>Moving the sidebar to the right side</h4>
+<p>To put the sidebar on the right side, make these changes:</p>
+<ol>
+<li>Go to <strong>Source view</strong></li>
+<li> on the <strong>sidebar</strong> and <strong>content</strong> DIVs, change <code>float: left;</code> to <code>float: right;</code>.</li>
+<li>On the <strong>content</strong> div, change <code>border-left:</code> to <code>border-right:</code></li>
+</ol>
+<h4>Adding padding inside each pane</h4>
+<p>There are several options for providing padding inside the divs. If you add padding to the layout DIVs themselves, you will have to reduce the width of each DIV because CSS will add the padding to the total width (see ____ ).  A better option is to put another DIV inside each DIV, and add padding to the inner DIV. This will not affect the width of the outer div.  Here's how to set the padding on the sidebar div (you can repeat the same process for each of the other divs):
+<ol>
+<li>Go to Design view</li>
+<li>Select the sidebar pane</li>
+<li>Drag a new DIV inside it</li>
+<li>Set the padding to 10px on all sides.</li>
+<li>Go to Source view</li>
+<li>Find the inner div and set the width to <code>width: 100%;</code></li>
+</ol>
+</p>
+
+<p class="prevnext"><a href="peUserHTML.html">Previous</a> / <a href="pageEditor.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

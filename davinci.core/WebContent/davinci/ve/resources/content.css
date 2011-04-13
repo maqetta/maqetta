@@ -1,0 +1,122 @@
+/* needed for theme editor subwidget menu pop up */
+@import url("Menu.css");
+
+.editFocusFrame {
+	background-image: url('images/slant.gif'); 
+}
+.editFocusNob {
+	background-color: #FFFFFF;
+	border: 1px solid #AAA;
+}
+
+.editFeedback {
+	background-color: #AAA;
+}
+
+.editSubwidgetFocusFrame{
+	outline-style: dotted;
+	outline-color: red;
+	outline-width: 3px;
+	z-index: 100;
+	
+}
+.disableWidgetFocusFrame{
+	z-index: 100;
+	opacity:0.75;
+	background-color: white;
+	
+}
+
+.enableWidgetFocusFrame{
+	z-index: 99;
+
+
+}
+
+.themeSubwidgetMenu{
+	z-index: 115;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	font-style:normal;
+	/*font-size: .688em;*/
+	color:#131313;
+	background-color: #fff;
+	background-image:none;
+}
+
+.editCursor {
+	display: inline-block;
+	border: 1px solid black;
+	height: 1.5em;
+}
+
+.editCursorBlink {
+	visibility: hidden;
+}
+
+.editContextContainer FORM,
+.editContextContainer .dijitContentPane,
+.editContextContainer .dojoxScrollWindow {
+	outline: 1px dotted #AAA;
+}
+.editContextContainer .dijitTabContainer .dijitContentPane {
+	outline: 0px none #FFFFFF;
+}
+
+.editLayoutGrid {
+	background-image: url('images/grid.gif');
+}
+.editLayoutGrid FORM,
+.editLayoutGrid .dijitContentPane,
+.editLayoutGrid .dojoxScrollWindow {
+	background-image: url('images/grid.gif');
+}
+
+
+/* HTML widgets */
+
+DIV.HtmlWidget {
+	min-width:1em;
+	min-height:1em; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
+SPAN.HtmlWidget {
+	min-width:1em; 
+	min-height:1em; 
+	display:inline-block; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
+A.HtmlWidget {
+	min-width:1em; 
+	min-height:1em; 
+	display:inline-block; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
+TABLE.HtmlWidget {
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.4);
+}
+TD.HtmlWidget {
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.4);
+	width: 1em;
+	height: 1em;
+}
+TH.HtmlWidget {
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.4);
+	width: 1em;
+	height: 1em;
+}
+
+
+/* dojox.mobile widgets */
+
+div.mblView {
+    min-width:1em;
+    min-height:1em; 
+    outline: 1px dotted #AAA;
+    outline-color:rgba(128,128,128,0.5);
+}

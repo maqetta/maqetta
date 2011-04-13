@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <extension point="davinci.core.ajaxLibrary"  >
+          <ajaxLibrary name="yui" id="yui" version="2.8.2r1">
+            <libraryPath
+                location="WebContent/yui"
+                name="/lib/yui">
+            </libraryPath>
+             <metadata location="app/metadata/yui/2.8.2r1" />
+          </ajaxLibrary>
+      </extension>
+     <extension id="yui.metadata" point="org.eclipse.equinox.http.registry.resources">
+      <resource alias="/app/metadata/yui/2.8.2r1" base-name="/WebContent/metadata"/>
+     </extension>
+</plugin>

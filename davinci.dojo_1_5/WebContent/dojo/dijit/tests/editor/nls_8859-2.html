@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Editor Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2">
+
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+	</style>
+
+	<!-- required: a default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="parseOnLoad: true, isDebug: true"></script>
+
+	<script type="text/javascript">
+		dojo.require("dijit.dijit");
+		dojo.require("dijit.Editor");
+		dojo.require("dojo.parser");
+	</script>
+</head>
+<body class="claro">
+<form method="post">
+<p>
+Plain text: �󱶳�����ӣ�������
+</p>
+
+<p>
+Same text should show up in the Editor:
+</p>
+<div name="field" id="editor" dojoType="dijit.Editor">
+�󱶳�����ӣ�������
+</div>
+<input type="submit" value="Save" />
+<button type=button onclick="console.log(dijit.byId('editor').attr('value'))">getValue</button>
+<button type=button onclick="dijit.byId('editor').attr('value', '\u65e5\u672c\u8a9e')">set value to &#x65e5;&#x672c;&#x8a9e;</button>
+
+</form>
+</body>
+</html>

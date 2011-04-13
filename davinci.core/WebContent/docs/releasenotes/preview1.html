@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta User Guide: Introduction and Overview</title>
+</head>
+
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="releasenotes/releasenotes.html">Release notes</a>
+    </td>
+    <td class="prevnext">
+    <a href="releasenotes/release07.html">Previous</a> / <a href="releasenotes/releasenotes.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Maqetta Preview 1</h1>
+
+<h2>Goals with the Preview 1 release</h2>
+
+<p>The Preview 1 release includes many features, including 
+	a visual page editor (including simultaneous visual and source editing), 
+	a theme editor and web-based review and commenting.</p>
+<p>The following items list those features in Maqetta Preview 1 
+	that are <em>recent additions</em> to the code base:</p>
+
+<ul style="margin-top: 0pt;" type="disc">
+	<li><strong>Web-based review and commenting</strong>. 
+		Maqetta now includes a "New Review" command on the "New" menu
+		that allows an author to launch a team review of a UI mockup.
+		The New Review command presents a short wizard that allows the author
+		to pick the files that need to be reviewed and pick the list of reviewers
+		(via email addresses). Upon clicking "Publish", the reviewers
+		receive an email invitation that contains a URL. Upon clicking on the
+		URL, the reviewers will be taken to a web page where they can view the mockup
+		and provide feedback using forum-style text comments or on-screen annotations
+		(rectangles, ovals, arrows and text).
+	</li>
+	<li><strong>Initial mobile authoring features</strong>. 
+		There have been recent code additions to allow for authoring mobile user interfaces.
+		The features in the Preview 1 release represent an initial and only partial delivery of mobile authoring features.
+		Lots of enhancements in this area are planned for the future.
+		With the Preview 1 release,
+		users can construct mobile user interfaces within the context of a life-size device silhouette.
+		Silhouettes are available for a handful of devices. 
+		A small collection of dojox.mobile widgets from Dojo 1.5 are available on the widget palette.
+		In a subsequent release, Maqetta will upgrade to Dojo 1.6 and support the rich mobile widget library
+		that is under development at Dojo.
+		</em>
+	</li>
+	<li><strong>Custom themes by cloning one of the existing themes</strong>.
+		With Preview 1, there is a New Theme... command that allows you to clone one of
+		the themes that ships standard with the product, such as "claro" and "sketch".
+		You can then use the theme editor to do style modifications on your newly created theme.
+		The "Open Claro Theme Editor" command has been changed to "Open Theme Editor",
+		and it now prompts you to choose a theme to open in the theme editor. 
+		The "claro" and "sketch" themes are now designed to be read-only themes.
+		<em>These theme management features are recent additions and we recognize
+		that this feature area is not yet complete.</em>
+	</li>
+	<li><strong>Initial support for DataGrid</strong>. 
+		Maqetta Preview 1 includes limited support for the Dojo DataGrid widget.
+		With this release, support is limited to text data entered manually
+		(via multiple lines of comma-separated data for the cells in a particlar row)
+		or linked to a simple JSON file containing simple row/column textual data.
+		<em>Note: Future releases will enhance DataGrid support in major ways.</em>
+	</li>
+	<li><strong>Download/deploy workspace (or selected files) to developer tools</strong>. 
+		With Preview 1, there are two new download icons on the Files palette
+		that allow the author to create a ZIP file out of his entire workspace
+		or from selected files.  One goal with this feature is
+		to enable a smooth workflow between Maqetta in the cloud and 
+		Eclipse-based developer tools. The feature includes options to move
+		the location of JavaScript libraries (e.g., dojo) to alternate locations
+		in case the authors directory structure is different than the development
+		team's directory structure.The feature also allows the author
+		to choose whether or not to include JavaScript libraries in the ZIP.
+		(Including the libraries is needed to create a self-sufficient runnable
+		application image, but if deploying to development tools, the 
+		JavaScript libraries might already be in the developer tool workspace.)
+	</li>
+<!-- 
+	<li><strong>Save as widget, export widget and import widget</strong>.
+		With Preview 1, a user interface defined within a single HTML file
+		can be saved as an OpenAjax Widget (the widget format used by Maqetta)
+		by clicking on the "Save As Widget" icon found on the editor toolbar.
+		The widget can then be exported into a ZIP package to enable sharing
+		with other users, who can import the ZIP package into their
+		Maqetta workspace.
+	</li>
+-->
+	<li><strong>Support for IFRAME and IMG elements</strong>. 
+		Maqetta Preview 1 now includes
+		support for the HTML &lt;iframe&gt; and &lt;img&gt; elements.
+		The &lt;iframe&gt; widget can be used to modularize
+		development of a UI mockup such that sections of the mockup
+		can be stored in external files.</em>
+	</li>
+<!-- 
+	<li><strong>Support for Dialog and Tooltip widgets</strong>.
+		With Preview 1, we made significant progress on supporting "modal overlay widgets" -
+		widgets (such as Dialog, Tooltip, Menu, and TooltipDialog) 
+		that appear as temporary overlays on top of the (more permanent) page content.
+		In the Preview 1 release, we are providing initial support for Dialog and Tooltip.
+		When activating a Dialog for editing, the Dialog becomes a mini page
+		container into which the user can drag/drop widgets that become
+		the content of the Dialog.
+		(In the next release, we will add Menu and TooltipDialog.)
+	</li>
+-->
+	<li><strong>Manage locations of (and relocate) JavaScript libraries</strong>.
+		With Preview 1, there is a new manage libraries icon on the Files palette
+		that allows users to control where JavaScript libraries such as Dojo
+		should be located, either at a particular location within their cloud
+		workspace, or located externally (e.g., on a CDN).
+	</li>
+	<li><strong>UI changes to Properties palette, including easier management of CSS classes</strong>
+		<ul>
+			<li>The Properties palette has been rewritten to use a new slide-in/slide-out
+				approach (with slide-in animations on Chrome, Safari and Firefox4).
+				There are now 3 levels. The top-most (initial) level shows buttons that
+				list the sub-sections (e.g., Common, Events, Layout, etc.).
+				After clicking on a button, the 2nd level sub-section (e.g., Layout properties)
+				slides in. For CSS properties, there is a 3rd level that shows
+				CSS details for a single property (e.g., 'width' or 'height').</li>
+			<li>For easier management of CSS classes (and promoting best practices in using CSS), 
+				various aspects of the Properties palette have changed.
+				Maqetta has moved the 'class'
+				attribute to the top of the Properties palette's where it is always
+				visible (and therefore always editable). Also,
+				the CSS details view shows not only all of the CSS style
+				rules that apply to the given property on the current widget,
+				the CSS detail view also shows "proposed new style rules".
+				By selecting the radio button for one of these "proposed new style rules"
+				and then changing the property value, Maqetta will automatically
+				create a new style rule in the app.css file that contains the new
+				property value.</li>
+			<li><em>The Maqetta team believes they are converging on nice approaches
+				for visual styling of widgets and HTML elements, but we expect some
+				additional minor improvements in the near future.</em></li>
+		</ul>
+	</li>
+	<li><strong>On-screen widget data entry improvements</strong> 
+		With Preview 1, we cleaned up the UI for widget data entry, where for most widgets
+		we use a TooltipDialog widget (a "pointy popup") that is located just under
+		the top-left of the widget. The data entry popup now includes OK and Cancel
+		buttons, thereby allowing a user to cancel changes (which wasn't possible in 0.7).
+		The data entry popup include a "?" icon which brings up some short help text
+		that explains the formatting rules for that particular widget.
+		In 0.7, there was a hard-to-understand "HTML markup or plain text" popup
+		that was incomprehensible to many users. With Preview 1, we hide that choice
+		from users except when it is absolutely necessary, and when it does appear,
+		it is less incomprehensible and has defaults that usually do the right thing.
+	</li>
+	<li><strong>Major performance fixes to source editor</strong>. 
+		Most of these performance issues with the source editor in prior releases have been addressed in Preview 1.
+	</li>
+</ul>
+
+<p> </p>
+
+<p class="prevnext"><a href="releasenotes/release07.html">Previous</a> / <a href="releasenotes/releasenotes.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+
+</body>
+</html>

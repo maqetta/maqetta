@@ -1,0 +1,30 @@
+{
+    "id": "http://jqueryui.com/accordion",
+    "name": "jquery.ui.accordion",
+    "spec": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "jquery-1.4.4.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "javascript",
+            "src": "jquery-ui-1.8.11.custom.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "css",
+            "src": "css/smoothness/jquery-ui-1.8.11.custom.css",
+            "$library": "jquery-ui"
+        }
+    ],
+    "library": {
+        "jquery-ui": {
+            "version": "1.8.11",
+            "src": "../../../jquery-ui-1"
+        }
+    },
+    "content": "<div id='__WID___accordion'><h3><a href='#'>First header</a></h3><div>First content</div><h3><a href='#'>Second header</a></h3><div>Second content</div></div>",
+    "javascript": "$('#__WID___accordion').accordion();"
+}

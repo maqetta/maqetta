@@ -1,0 +1,37 @@
+{
+    "id": "http://developer.yahoo.com/yui/calendar",
+    "name": "Calendar",
+    "spec": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "yahoo-dom-event/yahoo-dom-event.js",
+            "$library": "yui"
+        },
+        {
+            "type": "javascript",
+            "src": "calendar/calendar-min.js",
+            "$library": "yui"
+        },
+        {
+            "type": "css",
+            "src": "calendar/assets/skins/sam/calendar.css",
+            "$library": "yui"
+        }
+    ],
+    "library": {
+        "yui": {
+            "version": "2.8.2r1",
+            "src": "../../../yui/"
+        }
+    },
+    "property": {
+        "date": {
+            "datatype": "Date",
+            "defaultValue": "",
+            "sharedAs": "date"
+        }
+    },
+    "content": "<div class='yui-skin-sam' id='__WID__cal1Container'></div>",
+    "javascript": "(new YAHOO.widget.Calendar('__WID__cal1Container')).render();"
+}

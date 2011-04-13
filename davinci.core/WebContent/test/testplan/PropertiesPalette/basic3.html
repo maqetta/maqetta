@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Properties palette basic tests (part 3)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Properties palette basic tests (part 3)</h1>
+
+	<h2 class="test_section">Backgrounds, borders, margins, padding properties using shortcuts</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Create a virgin user environment navigating away from daVinci, clearing browser cache,
+			killing the server, removing users/ folder, restarting the server, and navigating browser
+			back to daVinci. (For server-hosted, create a new user)</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Drag a ContentPane onto the canvas, and then put a LABEL, TextBox and Button inside the ContentPane.</li>
+		<li>Go to Properties palette and for all widgets,
+				change all of the background properties, the border shortcut property,
+				the border-radius shortcut property,
+				the margin shortcut property and paddding shortcut property to new values,
+				making sure to test each property at least once for at least one widget.
+				<blockquote>Note that you will get a prompt in some cases warning you that you
+				might be changing a global CSS style sheet. Say OK to these warnings,
+				but note that this will changes your theme CSS files. After running this
+				test, you'll want to make sure you recreate your user so that the
+				theme CSS files are restored to their original state.</blockquote>
+				<blockquote>Note that background-color and background-image can collide. An opaque background-image
+				will mask the background color.</blockquote> 
+				<blockquote>The background image dialog shows a gradient option.
+				No need to verify that feature for the basic test plan, especially since
+				most browsers don't support that particular CSS3 feature yet.</blockquote></li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As you change the properties, the canvas should update so that the widgets reflect the styling changes you made.</li>
+		<li>As you change the properties, the Properties palette's text entry and 
+				preview areas should update to reflect the changes you made.</li>
+		<li>After save and reopen, the saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+	</ol>
+
+	<h2 class="test_section">Border, margin, padding detail properties</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Create a virgin user environment navigating away from daVinci, clearing browser cache,
+			killing the server, removing users/ folder, restarting the server, and navigating browser
+			back to daVinci. (For server-hosted, create a new user)</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Drag two DIV elements onto the canvas.</li>
+		<li>Select the second DIV. Under widget-specific properties, set text to "abc".</li>
+		<li>Go to Properties palette and set the border shortcut to "1px solid black", 
+			border-radius shortcut to "4px", 'margin' shortcut to "10px" and 'padding' shortcut to "5px".</li>
+		<li>Under 'border' property on Properties palette, choose the option to
+			show "props". Set border-width to 3px, border=style to dotted, border-color to red.
+				<blockquote>You should see these changes on the design canvas.</blockquote>
+		</li>
+		<li>For each of the above properties, issue "remove value".
+				<blockquote>Border again by 1px solid black on design canvas.</blockquote>
+			Choose the option to show sides. Set left border to "3px dotted green".
+				<blockquote>You should see these changes on the design canvas.</blockquote>
+		</li>
+		<li>Choose the option to show all. Set border-top-width to "7px" and border-right-color to blue.
+				<blockquote>You should see these changes on the design canvas.</blockquote>
+		</li>
+		<li>Under 'border-radius' property on Properties palette, choose the option to
+			show details. Set border-top-right-radius to 20px.
+				<blockquote>You should see these changes on the design canvas.</blockquote>
+		</li>
+		<li>Under margins and padding, turn on "show t/r/b/l". Set margin-left to 20px and padding-top to 10px.
+				<blockquote>You should see these changes on the design canvas.</blockquote>
+		</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As you change the properties, the canvas should update so that the widgets reflect the styling changes you made.</li>
+		<li>As you change the properties, the Properties palette's text entry and 
+				preview areas should update to reflect the changes you made.</li>
+		<li>After save and reopen, the saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+	</ol>
+
+	<h2 class="test_section">Fonts and Text properties</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+
+		<li>Drag a DIV onto the canvas.</li>
+		<li>Drag a Label inside the DIV and enter "Label 1" as the label text.</li>
+		<li>Drag another Label inside the DIV and enter "Label 2" as the label text.</li>
+		<li>Click in the white space inside the DIV (outside of the labels) so the DIV is selected.</li>
+		<li>Go to Properties palette and change various text-related values in the Text twisty: 
+				font-family, font-size, font-color, bold, italic, text-decoration, text-align. 
+				<br />"Label 1" and "Label 2" should inherit the values set on the DIV.
+				<br />The labels should move to left, center and right as you click on the DIV's text-align buttons.</li>
+		<li>Click inside "Label 2" to select it.</li>
+		<li>Go to Properties palette and change <em>some</em> of the text-related values in the Text twisty.
+			Note how the values set on "Label 2" override the inherited values from the DIV.</li>
+
+		<li>Drag a TextBox and a DIV onto the canvas.</li>
+		<li>Select the TextBox. Double-click to bring up text input
+			editing control and set the value to "abc"</li>
+		<li>Select the DIV. In the Properties palette, set 'width' to '200px' and 
+			under widget-specific properties, set the value to "abc def abc def abc def abc def abc def".
+			</li>
+		<li>Go to Properties palette and for both the TextBox and DIV,
+			change various text-related values in the Text twisty.
+			For the DIV, change all of the values, particularly
+			white-space:nowrap and white-space:pre (in both cases,
+			the text should extend past the end of the DIV).
+			For TextBox,
+			you might find that some of the values have no effect (e.g., line-height and text-indent).
+			<blockquote>Click OK when prompt asks OK to change global style sheet.
+			Note that you should recreate a new user after running this test
+			so that in the future you will be using original CSS theme files.</blockquote>
+		</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As you change the properties, the canvas should update so that the widgets reflect the styling changes you made.</li>
+		<li>As you change the properties, the Properties palette's text entry and preview areas should update to reflect the changes you made. 
+				<br />The font-family and font-size areas should show the new values as text. 
+				<br />The 'color' widgets should be solid filled with the chosen text color.
+				<br />The bold, italic, underline and justification icons should be highlighted to match the toggling state for those properties.</li>
+		<li>The text for the labels inside the DIV should show the values you set for the DIV. 
+		    <br />The text for "Label 2" should show a mixture of the inherited DIV values and the values set on the label.
+		    <br />Any values set on the label element should override the values set on the DIV element.</li>
+		<li>As you click the text-align buttons on the DIV, you should see the labels move within the DIV (left-justify, center, right-justify).</li>
+		<li>After save and reopen, the saved file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+	</ol>
+
+</body>
+</html>

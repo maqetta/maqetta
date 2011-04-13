@@ -1,0 +1,292 @@
+<!-- ===================================================================== -->
+<!-- Custom targets called from a project's generated build.xml            -->
+<!-- Set customBuildCallbacks=<path/to/this/file> in your build.properties.-->
+<!-- ===================================================================== -->
+<project name="Build specific targets and properties" default="noDefault">
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Following logic invokes logic equivalent to UNIX command              -->
+	<!--    svn info . > WebContent/davinci/repositoryinfo.js                  -->
+	<!-- This is so that we can show the last svn checkin number in the        -->
+	<!-- "About daVinci" dialog.                                               -->
+	<!-- ===================================================================== -->
+	<property environment="env"/>
+	<property name="manifest.file" value="${target.folder}/WebContent/davinci/davinci.manifest"/>
+	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
+	<property name="rep.info.live.file" value="${target.folder}/WebContent/davinci/repositoryinfoLive.js"/>
+
+	<!-- +++++++++++ Verify that "svn" or "svn.exe" is on the PATH +++++++++++ -->
+	<target name="verify.command.line.svn">
+		<!--
+		<echo message="filepath=${env.PATH}"/>
+		<echo message="filepath=${env.Path}"/>
+		-->
+		<condition property="command.line.svn.ok">
+			<or>
+				<available file="svn" filepath="${env.PATH}"/>
+				<available file="svn" filepath="${env.Path}"/>
+				<available file="svn.exe" filepath="${env.PATH}"/>
+				<available file="svn.exe" filepath="${env.Path}"/>
+			</or>
+		</condition>
+	</target>
+
+	<!-- ++++++++++ Crash and burn if can't find command-line svn ++++++++++++ -->
+	<target name="check.command.line.svn" depends="verify.command.line.svn" unless="command.line.svn.ok">
+		<fail message="ERROR - YOU NEED TO INSTALL AN SVN COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
+	</target>
+
+	<!--    Write "svn info" results to WebContent/davinci/repositoryinfo.js   -->
+	<target name="update.repositoryinfo.js" depends="check.command.line.svn">
+		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.file}"/>
+		<echo message="/* Holds output from 'svn info /path/to/davinci.core' */${line.separator}" file="${rep.info.file}" append="true"/>
+		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
+		<echo message="dojo.provide('davinci.repositoryinfo');${line.separator}" file="${rep.info.file}" append="true"/>
+		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
+
+		<exec executable="svn" output="${rep.info.file}.temp" append="true"  dir ="${basedir}">
+			<arg value="info"/>
+			<arg value="."/>
+		</exec>
+		<replace file="${rep.info.file}.temp" token="${line.separator}" value="|"/>
+		<replaceregexp file="${rep.info.file}.temp" match="^" replace="davinci.repositoryinfo='"/>
+		<replaceregexp file="${rep.info.file}.temp" match="$" replace="';"/>
+		<concat destfile="${rep.info.file}" append="true">
+			<filelist files="${rep.info.file}.temp"/>
+		</concat>
+		<delete file="${rep.info.file}.temp"/>
+	</target>
+
+	<!--    Write "svn info" results to WebContent/davinci/repositoryinfoLive.js   -->
+	<target name="update.repositoryinfoLive.js" depends="check.command.line.svn">
+		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.live.file}"/>
+		<echo message="/* Holds output from 'svn info /path/to/davinci.core' */${line.separator}" file="${rep.info.live.file}" append="true"/>
+		<echo message="${line.separator}" file="${rep.info.live.file}" append="true"/>
+		<echo message="dojo.provide('davinci.repositoryinfoLive');${line.separator}" file="${rep.info.live.file}" append="true"/>
+		<echo message="${line.separator}" file="${rep.info.live.file}" append="true"/>
+
+		<exec executable="svn" output="${rep.info.live.file}.temp" append="true"  dir ="${basedir}">
+			<arg value="info"/>
+			<arg value="."/>
+		</exec>
+		<replace file="${rep.info.live.file}.temp" token="${line.separator}" value="|"/>
+		<replaceregexp file="${rep.info.live.file}.temp" match="^" replace="davinci.repositoryinfoLive='"/>
+		<replaceregexp file="${rep.info.live.file}.temp" match="$" replace="';"/>
+		<concat destfile="${rep.info.live.file}" append="true">
+			<filelist files="${rep.info.live.file}.temp"/>
+		</concat>
+		<delete file="${rep.info.live.file}.temp"/>
+	</target>
+
+	<!--    Write "svn info" results to WebContent/davinci/davinci.manifest   -->
+	<target name="update.manifest" depends="check.command.line.svn">
+		<echo message="# svninfo: " file="${manifest.file}.temp" />
+
+		<exec executable="svn" output="${manifest.file}.temp" append="true"  dir ="${basedir}">
+			<arg value="info"/>
+			<arg value="."/>
+		</exec>
+		<replace file="${manifest.file}.temp" token="${line.separator}" value="|"/>
+		<concat destfile="${manifest.file}" append="true">
+			<filelist files="${manifest.file}.temp"/>
+		</concat>
+		<delete file="${manifest.file}.temp"/>
+	</target>
+
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target build.jars                              -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="pre.build.jars">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target build.jars                               -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="post.build.jars">
+	</target>
+	
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target build.sources                           -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="pre.build.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target build.sources                            -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="post.build.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the compilation target <name>                      -->
+	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
+	<!-- Available parameters :                                                -->
+	<!--   source.foldern : n = 1 ... N, the source folders                    -->
+	<!--   target.folder  : where the results of the compilation go            -->
+	<!--   <name>.classpath : name = name of the compilation target. A         -->
+	<!--                      reference to the classpath structure.            -->
+	<!-- ===================================================================== -->
+	<target name="pre.name">
+	</target>
+
+	<target name="pre.@dot">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do during the compilation target <name>, after the compile   -->
+	<!-- but before jaring.  Substitute "name" with the name of the compilation-->
+	<!-- target, eg @dot                                                       -->
+	<!-- Available parameters :                                                -->
+	<!--   source.foldern : n = 1 ... N, the source folders                    -->
+	<!--   target.folder  : where the results of the compilation go            -->
+	<!--   <name>.classpath : name = name of the compilation target. A         -->
+	<!--                      reference to the classpath structure.            -->
+	<!-- ===================================================================== -->
+	<target name="post.compile.name">
+	</target>
+
+	<target name="post.compile.@dot">
+	</target>
+	
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the compilation target <name>                       -->
+	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
+	<!-- Available parameters :                                                -->
+	<!--   jar.location - the location of the compilation results              -->
+	<!--   <name>.classpath : name = name of the compilation target. A         -->
+	<!--                      reference to the classpath structure.            -->
+	<!-- ===================================================================== -->
+	<target name="post.name">
+	</target>
+
+	<target name="post.@dot">
+	</target>
+	
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target gather.bin.parts                         -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder containing the build results           -->
+	<!--   target.folder - destination folder                                  -->
+	<!-- ===================================================================== -->
+	<target name="pre.gather.bin.parts">
+	</target>
+		
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.bin.parts                         -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder containing the build results           -->
+	<!--   target.folder - destination folder                                  -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.bin.parts">
+
+		<echo message="Inserting svn info"/>
+		<antcall target="update.repositoryinfo.js"/>
+		<antcall target="update.repositoryinfoLive.js"/>
+		<antcall target="update.manifest"/>
+
+		<echo message="Doing dojo build" />
+		<property name="logExtension" value=".log"/>
+		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
+
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
+			<fileset dir="${basedir}">
+				<include name="WebContent/util/"/>
+			</fileset>
+		</copy>
+		<java fork="true" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
+			classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
+			classname="org.mozilla.javascript.tools.shell.Main"
+			description="Run Dojo build script"
+			>
+			<arg value="build.js"/>
+			<arg value="profileFile=${basedir}/davinci.profile.js"/>
+			<arg value="action=release"/>
+			<arg value="cssOptimize=comments.keepLines"/>
+			<arg value="layerOptimize=shrinksafe.keepLines"/>
+		</java>
+		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
+		<copy toFile="${target.folder}/WebContent/release/dojo/workspace/app.css" file="${target.folder}/WebContent/workspace/app.css" overwrite="true" />
+		<delete dir="${target.folder}/WebContent/util"/>
+		<delete dir="${target.folder}/WebContent/dojo"/>
+		<delete dir="${target.folder}/WebContent/dijit"/>
+		<delete dir="${target.folder}/WebContent/dojox"/>
+		<delete dir="${target.folder}/WebContent/davinci"/>
+		<delete dir="${target.folder}/WebContent/eclipse"/>
+		<delete dir="${target.folder}/WebContent/workspace"/>
+		<move todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="move Dojo build">
+			<fileset dir="${target.folder}/WebContent/release/dojo">
+				<include name="davinci/"/>
+				<include name="dojo/"/>
+				<include name="dijit/"/>
+				<include name="dojox/"/>
+				<include name="eclipse/"/>
+				<include name="workspace/"/>
+			</fileset>
+		</move>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target gather.sources                          -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="pre.gather.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.sources                           -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target gather.logs                             -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="pre.gather.logs">        
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.logs                              -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.logs">       
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target clean                                   -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="pre.clean">              
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target clean                                    -->
+	<!-- Available parameters :                                                -->
+	<!--   plugin.destination - final destination of the build                 -->
+	<!--   build.result.folder - results of the compilation                    -->
+	<!--   temp.folder - temporary folder                                      -->
+	<!-- ===================================================================== -->
+	<target name="post.clean">             
+	</target>
+</project>

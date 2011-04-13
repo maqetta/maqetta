@@ -1,0 +1,31 @@
+<!DOCTYPE html><html><head><title>Sample2</title>
+<style type="text/css">
+@import "themes/claro/claro.css";
+@import "lib/dojo/dojo/resources/dojo.css";
+@import "app.css";
+</style>
+<script type="text/javascript" src="lib/dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+<script src="maqetta/States.js"></script>
+<script src="maqetta/maqetta.js"></script>
+<script type="text/javascript">
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.Calendar");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.Button");
+</script>
+</head>
+<body id="myapp" class="claro lotusui" dvStates="{'Home':{'origin':true}}" data-davinci-ws="collapse">
+<img src="./SampleBanner.jpg" style="position: absolute; left: 17px; top: 18px; width: 562px; height: 60px;"></img>
+<div dojoType="dijit.layout.ContentPane" title="Pane" ioArgs="{}" style="position: absolute; left: 22px; top: 91px; width: 287px; height: 157px; display: block;" dojotype="dijit.layout.ContentPane" ioargs="{}" dolayout="false" dvStates="{'Home':{'style':{'display':'none'}}}">  <input dojoType="dijit.form.Button" type="dijit.form.Button" label="Login" style="position: absolute; left: 119px; top: 87px; width: 46px; height: 23px;" dojotype="dijit.form.Button" onclick="davinci.states.setState('Home')"></input>
+  <input dojoType="dijit.form.TextBox" type="dijit.form.TextBox" style="position: absolute; left: 96px; top: 51px; width: 165px; height: 17px;" dojotype="dijit.form.TextBox" ></input>
+  <input dojoType="dijit.form.TextBox" type="dijit.form.TextBox" style="position: absolute; left: 96px; top: 24px; width: 165px; height: 17px;" dojotype="dijit.form.TextBox"></input>
+  <label style="position: absolute; left: 17px; top: 55px; width: 0px; height: 0px; font-family: Verdana, Geneva, sans-serif; font-size: 12px;" >Password:</label>
+  <label style="position: absolute; left: 17px; top: 30px; width: 0px; height: 0px; font-family: Verdana, Geneva, sans-serif; font-size: 12px;" >Login:</label>
+</div>
+<div dojoType="dijit.layout.TabContainer" controllerWidget="dijit.layout.TabController" style="position: absolute; left: 329px; top: 95px; width: 250px; height: 250px;" dojotype="dijit.layout.TabContainer" controllerwidget="dijit.layout.TabController" dvStates="{'Home':{'style':{'position':'absolute','left':'150px','top':'95px','width':'250px','height':'250px'}}}">  <div dojoType="dijit.layout.ContentPane" title="Tab 1" ioArgs="{}" selected="true" style="width: 250px; height: 220px;" dojotype="dijit.layout.ContentPane" ioargs="{}" dolayout="false" >    <input dojoType="dijit.Calendar" value="2010-05-13" datePackage="dojo.date" style="-webkit-user-select: none;" dojotype="dijit.Calendar" datepackage="dojo.date"></input>
+  </div>
+  <div dojoType="dijit.layout.ContentPane" title="Tab 2" ioArgs="{}" dojotype="dijit.layout.ContentPane" ioargs="{}" dolayout="false" ></div>
+</div>
+</body>
+</html>

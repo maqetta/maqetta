@@ -1,0 +1,67 @@
+({
+	identifier: 'id',
+	label: 'name',
+	url: 'url',
+	items: [
+		{ id: '0', name:'Home', url: 'home.html' },
+		{ id: '1', name:'About Maqetta', url: 'overview.html' },
+		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
+			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' }
+		] },
+		{ id: '3', name:'Accessing / Installing Maqetta', url: 'install.html' },
+		{ id: '4', name:'Tutorials', url: 'tutorials/tutorials.html', children:[
+			{ id: '4.1', name:'Introducing the Page Editor', url: 'tutorials/tutorial1.html' }, 
+			{ id: '4.2', name:'Build a Task Manager (Scene Graph)', url: 'tutorials/tutorial2.html' }, 
+			{ id: '4.3', name:'Build a Task Manager (Application States)', url: 'tutorials/tutorial3.html' },
+			{ id: '4.4', name:'Theme Editor Tutorial', url: 'tutorials/tutorial4.html' },
+			{ id: '4.5', name:'BorderContainer Tutorials', url: 'tutorials/BCtutorials.html', children:[
+				{ id: '4.5.1', name:'BorderContainer Example', url: 'tutorials/BCExample.html' },
+				{ id: '4.5.2', name:'BorderContainer Basics', url: 'tutorials/BCBasics.html' },
+				{ id: '4.5.3', name:'About Gutters', url: 'tutorials/BCGutters.html' },
+				{ id: '4.5.4', name:'About Splitters', url: 'tutorials/BCSplitters.html' },
+				{ id: '4.5.5', name:'BorderContainer Panes', url: 'tutorials/BCPanes.html' },
+				{ id: '4.5.6', name:'Background Color or Image', url: 'tutorials/BCBackground.html' },
+				{ id: '4.5.7', name:'Nested BorderContainers', url: 'tutorials/BCNestedBC.html' },
+				{ id: '4.5.8', name:'Single Borders on BorderContainer', url: 'tutorials/BCSingleBorders.html' }
+			] },
+		] },
+	    { id: '5', name:'Using Maqetta', url: 'userguide.html', children:[
+			{ id: '5.1', name:'Maqetta Workspace', url: 'workspace.html', children:[
+				{ id: '5.1.1', name:'Signing in', url: 'wsLogin.html' }, 
+				{ id: '5.1.2', name:'Maqetta Menu Bar', url: 'wsMenubar.html' }, 
+				{ id: '5.1.3', name:'Page Editor Canvas', url: 'wsPageEditorCanvas.html' },
+				{ id: '5.1.4', name:'The Palettes', url: 'wsPalettes.html' }
+			] },
+			{ id: '5.2', name:'Page Editor', url: 'pageEditor.html', children:[
+				{ id: '5.2.1', name:'Page Editor Toolbar', url: 'peToolbar.html' }, 
+				{ id: '5.2.2', name:'Managing Your Files', url: 'peManageFiles.html' }, 
+				{ id: '5.2.3', name:'Creating Content', url: 'peCreateContent.html' }, 
+				{ id: '5.2.4', name:'Widget Data Entry Popup', url: 'peInlineEditing.html' }, 
+				{ id: '5.2.6', name:'Properties Palette', url: 'pePropertiesPalette.html' }, 
+				{ id: '5.2.5', name:'Creating Style Rules with app.css', url: 'peAppCss.html' }, 
+				{ id: '5.2.7', name:'Outline Palette', url: 'peOutlinePalette.html' }, 
+				{ id: '5.2.8', name:'States Palette', url: 'peStatesPalette.html' }, 
+				{ id: '5.2.9', name:'Switching Themes', url: 'peSwitchThemes.html' }, 
+				{ id: '5.2.10', name:'Source Editing', url: 'peSourceEditing.html' },
+				{ id: '5.2.11', name:'About the User HTML File', url: 'peUserHTML.html' },
+				{ id: '5.2.12', name:'Creating a Basic Layout', url: 'tutorials/tutorial5.html' }
+			] },
+			{ id: '5.3', name:'Application States', url: 'applicationStates.html', children:[
+				{ id: '5.3.1', name:'About Application States', url: 'applicationStatesAbout.html' }
+			] },
+			{ id: '5.4', name:'Review and Commenting', url: 'reviewCommenting.html', children:[
+				{ id: '5.4.1', name:'About Review and Commenting', url: 'reviewCommentingAbout.html' }
+			] },
+			{ id: '5.5', name:'Theme Editor', url: 'themeEditor.html', children:[
+				{ id: '5.5.1', name:'About the Claro Theme Editor', url:'themeEditorAbout.html' }
+			] },
+		] },
+		{ id: '6', name:'Learning Resources', url: 'resources.html' },
+			
+	    { id: '7', name:'Programming Maqetta', url: 'techdocs/techguide.html', children:[
+			{ id: '7.1', name:'States API', url: 'techdocs/states.html' },		
+			{ id: '7.2', name:'Theme Editor', url: 'techdocs/themeEditor.html' }	
+		] },
+		
+	]
+})

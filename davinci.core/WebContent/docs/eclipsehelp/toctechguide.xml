@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Programmer Guide" link_to="toc.xml">
+    <topic label="Programmer Guide" href="techdocs\techguide.html">
+	    <topic label="Creating custom themes" href="techdocs\themes.html"></topic>
+    	<topic label="States API" href="techdocs\states.html">
+	    	<topic label="Adding complex animations" href="techdocs\states.html#animation"></topic>
+	    	<topic label="Executing business logic" href="techdocs\states.html#buslogic"></topic>
+	    	<topic label="Triggering state changes via application events" href="techdocs\states.html#events"></topic>
+    	</topic>
+    </topic>
+</toc>

@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Widget palette basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Widget palette basic tests</h1>
+
+	<h2 class="test_section">Overview</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Choose New HTML File from the New menu</li>
+		<li>Once the new file is created, the Widget palette is populated.</li>
+		<li>At the top of the Widget palette is a text input field for searching the widget library.</li>
+		<li>Widgets are organized into the following folders in the Widget palette:
+			<ul>
+			<li>Dojo Containers</li>
+			<li>Dojo Controls</li>
+			<li>HTML</li>
+			<li>Untested Dojo/HTML</li>
+			<li>Other Toolkits</li>
+			<li>Lotus OneUI</li>
+			</ul></li>
+		<li>Click on each widget folder and observe that the folder opens to display a list of widgets.</li>
+		<li>With a widget folder open, observe that each widget is highlighted as you hover over it with the mouse.</li>
+		<li>Select a widget and drag it onto the editor canvas.</li>
+		<li>Click on a widget to select it, and then click on the canvas. <span style="color:red">This should also add the widget to the canvas.</span></li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+		<li>Observe that the Widget palette is now empty.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>When no files are open in the Page editor, the Widget palette is empty.</li>
+		<li>When a file is open in the Page editor, the Widget palette is populated.</li>
+	</ol>
+
+	<h2 class="test_section">Dojo Controls</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag each widget listed in this section onto the canvas.
+			Some of the widgets will allow you to enter data for the widget
+			via a popup text entry control.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to drag each widget from the Widget palette onto the editor canvas.</li>
+		<li>As the widget is being dragged, the mouse pointer turns into a + sign and the widget's name.</li>
+		<li>When the widget is dropped onto the canvas, the widget is displayed on the canvas.</li>
+	</ol>
+
+	<h2 class="test_section">Dojo Containers</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Containers folder in the Widget palette.</li>
+		<li>Drag each widget listed in this section onto the canvas.
+			Some of the widgets will allow you to enter data for the widget
+			via a popup text entry control.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to drag each widget from the Widget palette onto the editor canvas.</li>
+		<li>As the widget is being dragged, the mouse pointer turns into a + sign and the widget's name.</li>
+		<li>When the widget is dropped onto the canvas, the widget is displayed on the canvas.</li>
+	</ol>
+
+	<h2 class="test_section">HTML</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the HTML folder in the Widget palette.</li>
+		<li>Drag each widget listed in this section onto the canvas.
+			Some of the widgets will allow you to enter data for the widget
+			via a popup text entry control.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to drag each widget from the Widget palette onto the editor canvas.</li>
+		<li>As the widget is being dragged, the mouse pointer turns into a + sign and the widget's name.</li>
+		<li>When the widget is dropped onto the canvas, the widget is displayed on the canvas.</li>
+	</ol>
+
+	<h2 class="test_section">Untested Dojo/HTML</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag a sampling of widgets onto the canvas.
+		<br />Note - most of the widgets in the Untested folder are not functional at all or not fully functional.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to drag each widget from the Widget palette onto the editor canvas.</li>
+		<li>As the widget is being dragged, the mouse pointer turns into a + sign and the widget's name.</li>
+		<li>When the widget is dropped onto the canvas, the widget is displayed on the canvas.</li>
+	</ol>
+
+	<h2 class="test_section">Other Toolkits</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li><span style="color:red;font-weight:bold;font-style:italic;">(The widgets in the Other Toolkits area are broken in 0.6 and will be restored for 0.7.)</span></li>
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Other Toolkits folder in the Widget palette.</li>
+		<li>Drag each widget onto the canvas (jQueryUI_Button, YUIColorpicker, YUICalendar).</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to drag each widget from the Widget palette onto the editor canvas.</li>
+		<li>As the widget is being dragged, the mouse pointer turns into a + sign and the widget's name.</li>
+		<li>When the widget is dropped onto the canvas, the widget is displayed on the canvas.</li>
+	</ol>
+
+	<h2 class="test_section">Lotus OneUI</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li><span style="color:red;font-weight:bold;font-style:italic;">(The widgets in the Lotus OneUI area are only partly functional 0.6 and are present for demo purposes.
+			They will have greater level of support for 0.7.)</span></li>
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Other Toolkits folder in the Widget palette.</li>
+		<li>Drag each widget onto the canvas.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should be able to drag each widget from the Widget palette onto the editor canvas.</li>
+		<li>As the widget is being dragged, the mouse pointer turns into a + sign and the widget's name.</li>
+		<li>When the widget is dropped onto the canvas, the widget is displayed on the canvas.</li>
+	</ol>
+
+	<h2 class="test_section">Using the widget filter</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>In the Widget palette, click on the "Filter..." input field.</li>
+		<li>Type in some text to search for a widget (e.g. "button").</li>
+		<li>Select one of the widgets displayed and drag it into the canvas.</li>
+		<li>Clear the input field to display the complete list of widgets.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>When you enter text in the Filter input field, any widgets that contain the text will be displayed. All other widgets will be filtered out.</li>
+	</ol>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Yui_2_6_0
+Bundle-SymbolicName: davinci.yui_2_6_0;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: davinci.yui.Activator
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: org.osgi.framework;version="1.3.0"
+Require-Bundle: org.eclipse.equinox.http.registry;bundle-version="1.0.200"

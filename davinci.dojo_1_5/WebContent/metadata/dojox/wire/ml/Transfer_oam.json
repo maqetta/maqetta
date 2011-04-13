@@ -1,0 +1,47 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/Transfer",
+    "name": "dojox.wire.ml.Transfer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.wire.ml.Transfer');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../../"
+        }
+    },
+    "property": {
+        "trigger": {
+            "datatype": "string",
+            "title": "Trigger"
+        },
+        "triggerEvent": {
+            "datatype": "string",
+            "title": "Event"
+        },
+        "source": {
+            "datatype": "string",
+            "title": "Source"
+        },
+        "target": {
+            "datatype": "string",
+            "title": "Target"
+        }
+    },
+    "content": "<span></span>"
+}

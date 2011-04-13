@@ -1,0 +1,281 @@
+@import url("iphone.css");
+
+.alertDialog {
+	width: 100%;
+	padding-left: 2px;
+	padding-right: 2px;
+	z-index: 1000;
+}
+
+.alertDialogBody {
+	border: 1px solid #ADAAAD;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	background-color: white;
+	margin-left: 2px;
+	margin-right: 4px;
+}
+
+.alertTitle {
+	height: 42px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #889BB3;
+	background: -webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF));
+	border-top: 1px solid #CDD5DF;
+	border-bottom: 1px solid #2D3642;
+	font-family: Helvetica;
+	font-size: 20px;
+	color: white;
+	text-align: center;
+	line-height: 44px;
+	text-shadow: rgba(0,0,0,0.6) 0px -1px 0px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align: center;
+}
+
+.alertText {	
+	text-align: center;
+}
+
+.alertBtns {
+	padding: 5px;
+	text-align: center;
+}
+
+.alertBtns .mblButton {
+	width: 100%;
+	margin-top: 5px;
+}
+
+.alertDialog.out {
+	position: absolute;
+}
+
+.alertDialog.in {
+	position: absolute;
+}
+
+.slidev.out {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: slideOut;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform: translateY(-100%);
+}
+.slidev.in {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: slideIn;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform: translateY(0px);
+}
+.slidev.out.reverse {
+	-webkit-animation-name: slideOutReverse;
+}
+.slidev.in.reverse {
+	-webkit-animation-name: slideInReverse;
+}
+
+.dialogUnderlayWrapper {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 998;
+	background: transparent !important;
+	visibility: visible;
+	height: 100%;
+	width: 100%;
+}
+
+.dialogUnderlay {
+	background-color: #eee;
+	opacity: 0.5;
+	width: 100%;
+	height: 100%;
+}
+
+.list .row {
+	padding: 10px;
+	border-bottom: 1px solid #444;
+	position: relative;
+	background-color: white;
+	z-index: 6; /* Must be greater than the .buttons z-index */
+}
+.list .row.mblListItem {
+	padding: 0px;
+}
+
+.list .row.last {
+	border-bottom: none;
+}
+
+.list .row.hold {
+	background-color: #ddd;
+}
+
+.list .buttons {
+	position: absolute;
+	text-align: center;
+	padding-top: 10px;
+	width: 100%;
+	height: 100%;
+	z-index: 5;
+}
+
+.list .buttons .mblButton {
+}
+
+.list .buttons .deleteBtn {
+	background-color: red;
+	
+}
+.list .buttons .cancelBtn {
+	margin-left: 10px;
+	background-color: blue;
+}
+
+.row.collapsed { 
+	-webkit-animation-name: collapse-vert;
+	-webkit-animation-duration: 0.5s;
+	-webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes collapse-vert {
+	from {
+		height: 100%;
+		padding: 10px;
+	}
+	to {
+		height: 0px;
+		padding: 0px;
+	} 
+}
+
+.listSelector {
+	position: absolute;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border: 1px solid #666;
+	background-color: #ccc;
+	color: #333;
+	z-index: 1000;
+}
+.listSelectorRow {
+	padding: 10px;
+	border-bottom: 1px solid #666;
+	white-space: nowrap;
+}
+.listSelectorRow-selected {
+	background-color: #666;
+	color: #ccc;
+}
+
+.listSelectorRow.last {
+ 	border-bottom: none;
+}
+
+.mblImageView, .mblImageView canvas {
+	width: 100%;
+	height: 100%;
+}
+
+.mblPillar {
+	display: none;
+}
+
+/* Form Input Styles */
+
+input {
+	-webkit-text-size-adjust: 140%;
+}
+ 
+ 
+/* ImageThumbView styles */
+.mblImageThumbView {
+	position: relative;
+}
+
+.mblImageThumbView .mblThumb {
+	width: 93px;
+	min-height: 100px;
+	display: inline-block;
+	padding: 4px 3px 0px 4px;
+	z-index: 2;
+	position: absolute;
+	-webkit-transition-property: -webkit-transform, opacity;
+	-webkit-transition-duration: 0.5s, 0.5s;
+	-webkit-transition-delay: 0, 0;
+}
+
+.mblImageThumbView .mblThumb.hidden {
+	z-index: 1;
+	opacity: 0;
+}
+
+.mblImageThumbView .mblThumbInner {
+	width: 102px;
+	height: 102px;
+	position: relative;
+}
+
+.mblImageThumbView .mblThumbOverlay {
+	width: 102px;
+	height: 102px;
+	background: url(images/thumb-overlay.png) center top no-repeat;
+	position: absolute;
+	z-index: 20;
+	overflow: hidden;
+}
+
+.mblImageThumbView .mblThumb.selected .mblThumbOverlay {
+	background: url(images/thumb-overlay.png) center bottom no-repeat;
+}
+
+
+.mblImageThumbView .mblThumbInner .mblThumbMask {
+  width: 90px;
+  height: 90px;
+  overflow: hidden;
+  padding-left: 6px;
+  padding-top: 5px;
+  z-index: 10;
+  
+}
+
+.mblImageThumbView .mblThumbInner .mblThumbMask img {
+  left: 0px;
+  top: 0px;
+  width: 90px;
+  height: 90px;
+}
+
+.mblImageThumbView .mblThumbInner .mblThumbMask .mblThumbSrc {
+  left: 6px;
+  top: 5px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  position: absolute;
+  -webkit-background-size: 100% 100%;
+  -webkit-border-radius: 5px;
+  width: 90px;
+  height: 90px;
+  z-index: 5;
+}
+
+.mblImageThumbView .mblThumbMask div {
+  left: 0px;
+  top: 0px;
+  width: 90px;
+  height: 90px;
+  background-repeat: no-repeat;
+}
+
+.mblImageThumbView .mblThumb:hover,
+.mblImageThumbView .mblThumb.selected  {
+	-webkit-transform: scale(1.2);
+}
+
+
+

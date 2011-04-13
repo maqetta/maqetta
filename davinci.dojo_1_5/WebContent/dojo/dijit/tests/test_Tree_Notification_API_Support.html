@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Dijit Tree Test</title>
+
+	<style type="text/css">
+		@import "../../dojo/resources/dojo.css";
+		@import "../../dojo/resources/dnd.css";
+		@import "../../dojo/tests/dnd/dndDefault.css";
+		@import "css/dijitTests.css";
+
+		.clear {
+			clear: both;
+		}
+
+		.box {
+			border: #ccc 3px solid;
+			padding: 1em;
+			-moz-border-radius: 8px 8px;
+			radius: 8px;
+		}
+
+		label {
+			display: inline-block;
+			min-width: 8em;
+		}
+	</style>
+
+	<!-- required: a default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../dojo/dojo.js"
+		djConfig="parseOnLoad: true, isDebug: true"></script>
+
+	<!-- not needed, for testing alternate themes -->
+	<script type="text/javascript" src="_testCommon.js"></script>
+
+	<script language="JavaScript" type="text/javascript">
+		dojo.require("dojo.dnd.Source");
+		dojo.require("dojo.data.ItemFileWriteStore");
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.Declaration");
+		dojo.require("dijit.Tree");
+		dojo.require("dijit.tree.TreeStoreModel");
+		dojo.require("dijit.Menu");
+		dojo.require("dijit.form.Button");
+		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+
+		// Hash of id-->item for all the items (including children) in the data store.
+		var allItems = {};
+
+		function deleteItem(){
+			store.deleteItem(selectedItem);
+			store.save();
+
+			resetForms();
+			loadItemsTable();
+		}
+
+		function newItem(){
+			var pInfo = selectedItem ? {parent: selectedItem, attribute:"children"} : null,
+				item = {
+					id: dojo.byId('nId').value,
+					name: dojo.byId("nLabel").value,
+					someProperty: dojo.byId("nSomeProperty").value,
+					children: dojo.query("> *", "nChildren").map( function(child){
+								var id = child.id;
+								return allItems[id];
+							})
+				};
+
+			console.debug("New item: ", item, ", pInfo = ", pInfo);
+
+			store.newItem(item, pInfo);
+			store.save();
+
+			resetForms();
+			loadItemsTable();
+		}
+
+		function resetForms() {
+			selectedItem=null;
+
+			// Update item form
+			dojo.byId("uLabel").value = "";
+			dojo.byId("uSomeProperty").value = "";
+
+			dojo.byId("uChildren").innerHTML = "";
+			uChildrenDragSource.clearItems();
+
+			dojo.byId("uPotentialChildren").innerHTML = "";
+			uPotentialChildrenDragSource.clearItems();
+
+			// New item form
+			dojo.byId("nChildren").innerHTML = "";
+			nChildrenDragSource.clearItems();
+
+			dojo.byId("nPotentialChildren").innerHTML = "";
+			nPotentialChildrenDragSource.clearItems();
+		}
+
+		function updateItem(){
+			if (selectedItem!=null){
+				if (dojo.byId("uLabel").value != store.getValue(selectedItem, "name")){
+					store.setValue(selectedItem, "name", dojo.byId("uLabel").value);
+				}
+
+				if (dojo.byId("uSomeProperty").value != store.getValue(selectedItem, "someProperty")){
+					store.setValue(selectedItem, "someProperty", dojo.byId("uSomeProperty").value);
+				}
+
+				var children = dojo.query("> *", "uChildren").map( function(child){
+					var id = child.id;
+					return allItems[id];
+				});
+				store.setValues(selectedItem, "children", children);
+
+				store.save();
+
+				resetForms();
+				loadItemsTable();
+			}else{
+				console.error("Can't update the tree root");
+			}
+		}
+
+		dojo.addOnLoad(function(){
+			resetForms();
+			loadItemsTable();
+		});
+
+		function loadItemsTable(){
+			// summary: for each item in the datastore generate a row in the table
+			function processItem(item){
+				allItems[store.getIdentity(item)] = item;
+
+				var vals = {
+					itemId: store.getIdentity(item),
+					label: store.getLabel(item),
+					someProperty: store.getValue(item, "someProperty"),
+					children: store.getValues(item, "children")
+				};
+
+				// add this item to children list in "new item" form
+				dojo.byId("nPotentialChildren").innerHTML +=
+					"<div class='dojoDndItem' id='" + vals.itemId + "'>" +
+						vals.label +
+					"</div>";
+				nPotentialChildrenDragSource.setItem(vals.itemId, {
+					data: vals.label,
+					type: ["text"]
+				});
+
+				// update table listing items
+				var row = new ItemRow(vals);
+				dojo.byId("itemsTable").appendChild(row.domNode);
+
+				//dojo.forEach(vals.children, processItem);
+			}
+
+			allItems = {};
+			dijit.registry.byClass("ItemRow").forEach(function(widget){ widget.destroy(); });
+			store.fetch({onItem: processItem});
+		}
+
+		function onSelectItem(item){
+			resetForms();
+			loadItemsTable();
+
+			console.log("Selected item: ", item ? store.getLabel(item) : "none");
+			selectedItem = item;
+
+			if(item){
+				// Display basic attribute values
+				dojo.byId('uLabel').value = item ? store.getLabel(item) : "";
+				dojo.byId('uSomeProperty').value = item ? store.getValue(item,"someProperty") : "";
+
+				// Fill in info about children
+				var children = store.getValues(item, "children");
+				dojo.forEach(children, function(item){
+					var id = store.getIdentity(item),
+						label = store.getLabel(item);
+					dojo.byId("uChildren").innerHTML +=
+						"<div class='dojoDndItem' id='" + id + "'>" +
+							label +
+						"</div>";
+					uChildrenDragSource.setItem(id, {
+						data: label,
+						type: ["text"]
+					});
+				});
+
+				// and the items that could be children but aren't currently
+				// (including items that would cause cycles, because i'm lazy)
+				for(var id in allItems){
+					var child = allItems[id];
+					if(dojo.indexOf(children, child) == -1){
+						var label = store.getLabel(child);
+						dojo.byId("uPotentialChildren").innerHTML +=
+							"<div class='dojoDndItem' id='" + id + "'>" +
+								label +
+							"</div>";
+						uPotentialChildrenDragSource.setItem(id, {
+							data: label,
+							type: ["text"]
+						});
+					}
+				}
+			}
+
+			// New Item section
+			dojo.byId('nParent').value = item ? store.getLabel(item) : "";
+		}
+	</script>
+
+</head>
+<body class="claro">
+
+	<h1 class="testTitle">Dijit Tree Test - dojo.data.Notification API support</h1>
+
+	<div dojoType="dojo.data.ItemFileWriteStore" jsId="store"
+		url="../tests/_data/treeTest.json"></div>
+	<div dojoType="dijit.tree.TreeStoreModel" jsId="model"
+		store="store" query="{id:'root'}"></div>
+	<div dojoType="dijit.Tree" id="myTree" model="model" onClick="onSelectItem"></div>
+
+	<br />
+	<h2>Selected Item:</h2>
+	<div class="box">
+		<label for="uLabel">Name:</label>				<input id="uLabel" width="50" value="Enter Node Label"  autocomplete="off"/><br />
+		<label for="uSomeProperty">Description:</label> <input id="uSomeProperty" width="50" value="Some Test Property"  autocomplete="off"/><br /><br />
+		<div style="float:left; margin-right: 2em;">
+			<label for="uChildren">Children (in order):</label>
+			<div dojoType="dojo.dnd.Source" class="container" id="uChildren" jsId="uChildrenDragSource"></div>
+		</div>
+		<div style="float:left">
+			<label for="uPotentialChildren">Potential Children:</label>
+			<div dojoType="dojo.dnd.Source" class="container" id="uPotentialChildren" jsId="uPotentialChildrenDragSource"></div>
+		</div>
+		<div class="clear">(drag and drop items to adjust list of children, and order of those children)</div>
+	</div>
+	<div dojoType="dijit.form.Button" iconClass="noteIcon" onClick="updateItem();">Update Item</div>
+	<div dojoType="dijit.form.Button" iconClass="noteIcon" onClick="deleteItem();">Delete Item</div>
+
+	<h2>New Item</h2>
+	<p>Enter an Id, Name, and optionally a description to be added as a new item to the store.  Upon successful addition, the tree will recieve notification of this event and respond accordingly.  If you select a node the item will be added to that node, otherwise the item will be added to the tree root. "Id" is the identifer here and as such must be unique for all items in the store.</p>
+	<div class="box">
+		<label for="nId">Id:</label>					<input id="nId" width="50" value="Enter Item Id"  autocomplete="off"/><br />
+		<label for="nLabel">Name:</label>				<input id="nLabel" width="50" value="Enter Item Name"  autocomplete="off"/><br />
+		<label for="nSomeProperty">Description:</label> <input id="nSomeProperty" width="50" value="Enter Some Property Value"  autocomplete="off"/><br /><br />
+		<label for="nParent">Parent:</label>			<input id="nParent" readonly autocomplete="off"/><br /><br />
+		<div style="float:left; margin-right: 2em;">
+			Children (in order):
+			<div dojoType="dojo.dnd.Source" class="container" id="nChildren" jsId="nChildrenDragSource"></div>
+		</div>
+		<div style="float:left">
+			<label for="nPotentialChildren">Potential Children:</label>
+			<div dojoType="dojo.dnd.Source" class="container" id="nPotentialChildren" jsId="nPotentialChildrenDragSource"></div>
+		</div>
+		<div class="clear">(drag and drop items to adjust list of children, and order of those children)</div>
+	</div>
+
+	<div dojoType="dijit.form.Button" iconClass="noteIcon" onClick="newItem();">Add Item to Store</div>
+	<br />
+
+	<h2>Data in flat form</h2>
+	<!--
+		flat view of the items in the data store.
+		TODO: use the table widget from the mail demo, or dojox.Grid
+	-->
+	<div dojoType="dijit.Declaration" widgetClass="ItemRow" defaults="{ item: {}, itemId: 'thud', label: 'foo', someProperty: 'foo', children: {} }">
+		Id: ${itemId}, Label: ${label}
+
+		Children:
+		<span class="dijitInline" dojoAttachPoint="childrenContainerNode"></span>
+
+		<script type='dojo/connect' event='postCreate'>
+			var children =
+				dojo.map(this.children, function(childItem){
+					return "<span class='itemReference'>" + store.getLabel(childItem) + "</span>";
+				});
+			this.childrenContainerNode.innerHTML = children.join(" ");
+		</script>
+	</div>
+	<div id="itemsTable"></div>
+	</body>
+</html>
+
+
+
+

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BasicTabLayout.html</title>
+<style type="text/css">
+@import "themes/claro/claro.css";
+@import "dojo/dojo/resources/dojo.css";
+@import "app.css";
+</style>
+<script type="text/javascript" src="dojo/dojo/dojo.js" djConfig="parseOnLoad:true"></script>
+<script src="davinci/States.js"></script>
+<script src="davinci/davinci.js"></script>
+
+<style type="text/css">
+div.template {padding:20px;}
+div.tips {width:400px;)
+.template p {padding: 0 10px; }
+</style>
+<script type="text/javascript">
+    dojo.require("dojo.parser");
+    dojo.require("workspace.davinci.States");
+    dojo.require("dijit.layout.TabContainer");
+    dojo.require("dijit.layout.ContentPane");
+    dojo.require("dijit.layout.AccordionContainer");
+    dojo.require("dijit.TitlePane");
+</script>
+</head>
+<body class="claro lotusui" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp">
+<div id="container" style="position: static; left: auto; top: auto; width: 100%; overflow: hidden;">
+	<div id="header" style="background-color: rgb(68, 119, 187); width: 100%; height: 53px;">Header</div>
+	<div id="toolbar" style="width: 100%; height: 24px;">Sub Heading</div>
+	<div id="sidebar" class="sidebar" style="float: left; width: 19%; border-right: 1px solid rgb(235, 235, 235);">
+		<div class="template">
+			<p>Sidebar</p>
+			<p>This template can be modified as desired. For example:</p>
+			<ul>
+				<li>To remove this sidebar, go to Source view and delete the div with id=&quot;sidebar&quot;. Be sure to also delete the closing div tag and everything in between the opening and closing div tags.</li>
+				<li>To remove the Sub Header section, go to Source view and remove the div with id=&quot;toolbar&quot;.</li>
+				<li>The Footer can be removed by deleting the div with id=&quot;footer&quot;.</li>
+			</ul>
+			<p></p>
+		</div>
+	</div>
+	<div id="content" class="content" style="float: left; width: 80%;">
+		<div dojoType="dijit.layout.TabContainer"
+			controllerWidget="dijit.layout.TabController"
+			style="margin-bottom: 20px; width: 738px; height: 479px;"
+			dojotype="dijit.layout.TabContainer"
+			controllerwidget="dijit.layout.TabController">
+			<div dojoType="dijit.layout.ContentPane"
+				title="Tab 1"
+				ioArgs="{}"
+				selected="true"
+				style="left: 0px; top: 0px; width: 720px; height: 429px;"
+				dojotype="dijit.layout.ContentPane"
+				ioargs="{}"
+				dolayout="false">
+				<div class="template tips">
+					<span style="margin-top: 10px; font-weight: bold;">Tips and Hints:</span>
+					<p></p>
+					<p>You can replace this Tab Container with any other widget, or you can drop widgets onto any of the tabs in this Container.</p>
+					<p></p>
+					<p>Text Formatting:</p>
+					<p></p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis libero odio, ultricies quis aliquet non, hendrerit eget orci. Etiam sodales, purus et condimentum porttitor, ante risus tempor justo, sagittis suscipit nisl mauris quis mi. Quisque consectetur mauris sit amet augue rhoncus eget laoreet dolor tristique. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque libero eros, ultricies quis tincidunt in, dictum id lectus. Pellentesque varius, erat eget facilisis ultricies, neque diam feugiat mi, nec feugiat nibh arcu sed mauris. Nulla non posuere justo. Suspendisse potenti. Nam ut ipsum velit, eu convallis turpis. Fusce tristique eleifend tellus, sed ornare elit convallis ac. Vivamus volutpat porta ullamcorper. Suspendisse eu nulla id turpis lobortis tincidunt ac ut mi. Aenean laoreet rhoncus orci sed feugiat. Donec eleifend nisl ac magna pellentesque rutrum. Fusce porttitor molestie semper.</p>
+					<p>Morbi placerat ligula eu ante aliquam rhoncus. Phasellus sed nunc sem, ac cursus dolor. Maecenas malesuada diam id elit ultrices malesuada. In hendrerit fermentum blandit. Vestibulum sed mauris libero. Nullam fringilla rhoncus sagittis. Maecenas non tortor id velit consectetur commodo. In pharetra augue sit amet lectus rutrum elementum. Quisque facilisis faucibus mattis. Pellentesque turpis nisi, vestibulum id ultricies gravida, gravida nec enim. Etiam tempor libero nec libero commodo eget egestas augue semper. Aliquam nulla turpis, pulvinar sollicitudin dictum at, vulputate vel nisi. Proin ullamcorper lorem purus, et facilisis nisi. Praesent augue purus, tincidunt vitae ultricies sed, dapibus ac tortor. Sed ipsum enim, elementum non euismod eu, feugiat eget magna. Mauris non odio et sapien varius interdum. Sed et justo ante. Aliquam erat volutpat.</p>
+					<p>Vivamus lorem nisi, vestibulum et dapibus egestas, tempus a orci. Aliquam nibh felis, pretium at eleifend ut, faucibus in diam. Phasellus vel nibh sapien, nec convallis nulla. Mauris ipsum dui, tempus ullamcorper ullamcorper vel, cursus ut elit. Curabitur sit amet lorem eget nulla dictum pretium vel ac felis. Sed fermentum velit interdum magna vehicula et porttitor urna porta. Integer a nunc arcu, sed luctus dui. Suspendisse eu cursus arcu. Pellentesque ac sapien elit. Sed ut lectus magna.</p>
+				</div>
+			</div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Tab 2"
+				ioArgs="{}"
+				style="left: 0px; top: 0px; width: 720px; height: 347px;"
+				dojotype="dijit.layout.ContentPane"
+				ioargs="{}"
+				dolayout="false"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				style="left: 0px; top: 0px; width: 720px; height: 347px;"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				style="left: 0px; top: 0px; width: 720px; height: 347px;"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+			<div dojoType="dijit.layout.ContentPane"
+				title="Pane"
+				doLayout="true"
+				ioArgs="{}"
+				dojotype="dijit.layout.ContentPane"
+				dolayout="true"
+				ioargs="{}"></div>
+		</div>
+	</div>
+	<div id="footer" style="margin-top: 30px; border-top: 1px solid rgb(235, 235, 235); width: 100%; height: 35px; clear: both;">Footer</div>
+</div>
+</body>
+</html>

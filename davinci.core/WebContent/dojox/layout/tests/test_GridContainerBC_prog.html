@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Demo GridContainer</title>
+		<style type="text/css" title="text/css">
+			/* <![CDATA[ */
+				@import "../../../dojo/resources/dojo.css";
+				@import "../../../dijit/themes/soria/soria.css";
+				
+				html,body{
+					overflow:hidden;
+					margin:0; padding:0; 
+					width:100%; height:100%;
+				}
+				.dijitTitlePane .gripNode {
+				 	cursor: move;
+				}
+				
+				.dijitTitlePane .gripNode span {
+				 	cursor: pointer;
+				}
+				.cpane{
+					border:1px solid #666;
+					font:bold 12px Arial;
+					color:#999;
+					background:#FFF;
+					padding:10px;
+					margin:0;
+				}
+				#lGC {  }
+				
+				#GC1{
+					margin:0;
+					padding:5px;
+					overflow-x:hidden;
+					overflow-y:scroll;
+				}
+				#lGC,
+				#GC1 .gridContainerTable {
+					border-collapse:collapse;
+				}
+
+				#lGC,
+				#GC1 .gridContainerZone {
+					border-collapse:collapse;
+					border : 2px solid #ededed
+				}
+			/* ]]> */
+		</style>
+		
+		<link rel="stylesheet" href="../resources/GridContainer.css">
+		<link rel="stylesheet" href="../resources/DndGridContainer.css">
+		<link rel="stylesheet" href="../resources/ExpandoPane.css">
+		
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../GridContainer.js"></script>
+		<script type="text/javascript">
+			dojo.require("dojo.parser");
+			dojo.require("dijit.TitlePane");
+			dojo.require("dijit.ColorPalette");
+			dojo.require("dijit.layout.ContentPane");
+			dojo.require("dojox.layout.GridContainer");
+			dojo.require("dojox.layout.ExpandoPane");
+			dojo.require("dijit.layout.BorderContainer");
+			dojo.require("dijit.layout.AccordionContainer");
+			dojo.require("dijit.form.Button");
+			dojo.require("dijit.Calendar");
+			dojo.require("dojo.fx.easing");
+			var GC1;
+			function setColumns(){
+				GC1 = dijit.byId("GC1");
+				nb = dojo.byId("nbCol").value;
+				if(nb > 0){
+					GC1.setColumns(nb);
+				}
+			}
+			dojo.addOnLoad(init);
+			function init(){
+				bc = new dijit.layout.BorderContainer({liveSplitters:false, style:{height: '100%', width: '100%'}});
+				document.body.appendChild(bc.domNode);
+				ep = new dojox.layout.ExpandoPane({title: 'Left Side', splitter:true, style:{width:'200px'}, region: 'left', easin:dojo.fx.easing.backOut, duration: 600});
+				bc.addChild(ep);
+				gc1 = new dojox.layout.GridContainer({acceptTypes: [dijit.TitlePane, dijit.layout.AccordionContainer, dijit.Calendar], hasResizableColumns:false, opacity:.3, nbZones:1, style:{height: '100%'}, allowAutoScroll:true, withHandles: true});
+				ep.containerNode.appendChild(gc1.domNode);
+				tp1 = new dijit.TitlePane({attachParent:true, title:'Panel 1'});
+				tp1.attr('content', 'lorem ipsum');
+				gc1.addChild(tp1);
+				tp2 = new dijit.TitlePane({title:'Panel 2'});
+				tp2.attr('content', 'lorem ipsum');
+				gc1.addChild(tp2);
+				tp3 = new dijit.TitlePane({title:'Panel 3'});
+				tp3.attr('content', 'lorem ipsum');
+				gc1.addChild(tp3);
+				gc2 = new dojox.layout.GridContainer({region: 'center', nbZones:3, opacity:.42, allowAutoScroll:true,hasResizableColumns:false,withHandles:true,acceptTypes:[dijit.layout.ContentPane, dijit.TitlePane, dijit.ColorPalette, dijit.Calendar, dijit.layout.AccordionPane]});
+				bc.addChild(gc2);
+				cp1 = new dijit.layout.ContentPane({"class":'cpane', label:'Content Pane'});
+				cp1.attr('content', 'ContentPane n*1 !');
+				gc2.addChild(cp1);
+				tp4 = new dijit.TitlePane({title:'Ergo'});
+				tp4.attr('content', 'Non ergo erunt homines deliciis diffluentes audiendi, si quando de amicitia, quam nec usu nec ratione habent cognitam, disputabunt. Nam quis est, pro deorum fidem atque hominum! qui velit, ut neque diligat quemquam nec ipse ab ullo diligatur, circumfluere omnibus copiis atque in omnium rerum abundantia vivere? Haec enim est tyrannorum vita nimirum, in qua nulla fides, nulla caritas, nulla stabilis benevolentiae potest esse fiducia, omnia semper suspecta atque sollicita, nullus locus amicitiae.');
+				gc2.addChild(tp4);
+				cp2 = new dijit.layout.ContentPane({"class":'cpane', label:"Content Pane"});
+				cp2.attr('content', 'Content Pane n*2 !');
+				gc2.addChild(cp2);
+				cp3 = new dijit.layout.ContentPane({title:"Itellectum"});
+				cp3.attr('content', 'Intellectum est enim mihi quidem in multis, et maxime in me ipso, sed paulo ante in omnibus, cum M. Marcellum senatui reique publicae concessisti, commemoratis praesertim offensionibus, te auctoritatem huius ordinis dignitatemque rei publicae tuis vel doloribus vel suspicionibus anteferre. Ille quidem fructum omnis ante actae vitae hodierno die maximum cepit, cum summo consensu senatus, tum iudicio tuo gravissimo et maximo. Ex quo profecto intellegis quanta in dato beneficio sit laus, cum in accepto sit tanta gloria.');
+				gc2.addChild(cp3);
+				cp4 = new dijit.layout.ContentPane({"class":'cpane', label:'Content Pane'});
+				cp4.attr('content', 'Content Pane n*3 !');
+				gc2.addChild(cp4);
+				cp5 = new dijit.layout.ContentPane({"class":'cpane', label:'Content Pane'});
+				cp5.attr('content', 'Content Pane n*4 !');
+				gc2.addChild(cp5);
+				dp = new dijit.Calendar({});
+				gc2.addChild(dp);
+				gc3 = new dojox.layout.GridContainer({region: 'right', nbZones:1, opacity:.3, allowAutoScroll:true,hasResizableColumns:false,withHandles:true,acceptTypes:[dijit.TitlePane], style: {width:'200px'}, splitter:true});
+				bc.addChild(gc3);
+				tp4 = new dijit.TitlePane({attachParent:true, title:'Panel 1'});
+				tp4.attr('content', 'lorem ipsum');
+				gc3.addChild(tp4);
+				tp5 = new dijit.TitlePane({title:'Panel 2'});
+				tp5.attr('content', 'lorem ipsum');
+				gc3.addChild(tp5);
+				tp6 = new dijit.TitlePane({title:'Panel 3'});
+				tp6.attr('content', 'lorem ipsum');
+				gc3.addChild(tp6);
+				gc1.startup();
+				bc.startup();
+			}
+
+		</script>
+
+	</head>
+
+	<body class="soria">
+	</body>
+</html>

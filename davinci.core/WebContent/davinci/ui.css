@@ -1,0 +1,309 @@
+.userLibDialog .columna{
+	
+	text-align:center;
+	margin:4px;
+	padding-left:2px;	
+	padding-right:2px;
+	
+}
+.userLibDialog .columnb{
+	
+	text-align:center;	
+		padding-right:15px;
+		padding-left:15px;
+	
+}
+.userLibDialog .header{
+	font-weight:bold;
+		padding-right:15px;
+		padding-left:15px;
+}
+.userLibDialog .columnc{
+	
+	text-align:center;
+		padding-left:4px;	
+	padding-right:4px;	
+	
+}
+.userLibDialog .columnd{
+	
+	text-align:left;
+		padding-left:4px;	
+	padding-right:4px;	
+	
+}
+.userLibDialog .columnd input{
+	
+	
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+	font-size:11px;
+	
+}
+.downloadDialog {
+	
+	
+	 margin:0;
+	 padding:0;
+	
+}
+.downloadAllIcon {
+	
+	background-image: url(./img/download.gif); /* FIXME: add logic for new_document-disabled.gif? */
+	background-position: center 30%;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	
+}
+.userLibIcon {
+	
+	background-image: url(./img/modify-library.gif); /* FIXME: add logic for new_document-disabled.gif? */
+	background-position: center 30%;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	
+}
+.downloadSomeIcon {
+	
+	background-image: url(./img/download-selected-files.gif); /* FIXME: add logic for new_document-disabled.gif? */
+	background-position: center 30%;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	
+}
+
+.saveIcon {
+	background-image: url(./img/save_edit.gif); /* FIXME: add logic for save_edit-disabled.gif? */
+	background-position: center 40%;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.saveAsIcon {
+	background-image: url(./img/saveas.gif); /* FIXME: add logic for saveas-disabled.gif? */
+	background-position: center 40%;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+/* For when we activate the save-as-widget feature
+.saveAsWidgetIcon {
+	background-image: url(./img/save-as-widget.gif);
+}
+*/
+
+.selectThemeIcon {
+	background-image: url(./img/stylesheet.gif); /* FIXME: add logic for undo-disabled.gif? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+.selectLayoutIcon {
+	background-image: url(./img/flowLayout.gif); /* FIXME: add logic for undo-disabled.gif? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.stickynoteIcon {
+	background-image: url(./img/author-note.gif); /* FIXME: add logic for undo-disabled.gif? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.rotateIcon {
+	background-image: url(./img/rotate.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.deviceIcon {
+	background-image: url(./img/device.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.undoIcon {
+	/* background-image: url(./img/undo.png); FIXME: delete undo.png from SVN */
+	background-image: url(./img/undo.gif); /* FIXME: add logic for undo-disabled.gif? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.redoIcon {
+	/* background-image: url(./img/redo.png); FIXMME: delete redo.png from SVN */
+	background-image: url(./img/redo.gif); /* FIXME: add logic for redo-disabled.gif? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.deleteIcon {
+	/* background-image: url(./img/delete.gif); FIXME: delete delete.gif from SVN */
+	background-image: url(./img/remove.gif); /* FIXME: add logic for remove-disabled.gif? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.printIcon {
+	/*	background-image: url(./img/print.png); FIXME: delete print.png from SVN */
+	background-image: url(./img/print.gif); /* FIXME: Add logic for print-disabled.gif? */
+	background-position: center 40%;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.openBrowserIcon {
+	background-image: url(./img/preview-browser.gif); /* FIXME: Disabled version? */
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+.propertiesDropDownIcon {
+	background-image: url(./img/downarrow.gif);
+	width: 16px;
+	height: 16px;
+	background-color:#EAEAEA;
+}
+.copyIcon {
+	background-image: url(./img/copy.gif);
+		width: 18px;
+	height: 18px;
+}
+.gotolineIcon {
+	background-image: url(./img/forward.gif);
+		width: 18px;
+	height: 18px;
+}
+
+.closeIcon {
+	background-image: url(./img/close.gif);
+		width: 18px;
+	height: 18px;
+}
+.formatIcon {
+	background-image: url(./img/validate.gif);
+		width: 18px;
+	height: 18px;
+}
+.fullScreenIcon {
+	background-image: url(./img/expandAll.jpg);
+		width: 18px;
+	height: 18px;
+}
+.htmlFileIcon {
+	background-image: url(./img/tag-html.gif);
+}
+.themeFileIcon {
+	background-image: url(./img/group_sc_obj.gif);
+}
+.cssFileIcon {
+	background-image: url(./img/stylesheet.gif);
+}
+.jsFileIcon {
+	background-image: url(./img/jcu_obj.gif);
+}
+.imageFileIcon {
+	background-image: url(./img/image.gif);
+}
+
+/*FIXME: The style rules below might conflict with Claro Tree widget styling */
+.fileDialog .fileNameRow {
+	margin:.5em 2em 1.25em;
+	text-align:center;
+}
+.fileDialog .fileNameRow input {
+	 width:12em;
+}
+.fileDialog .parentFolderInputRow {
+	margin-right:2px;
+}
+.fileDialog .parentFolderInputRow .dijitTextBox {
+	width:100%;
+}
+.fileDialog .folderContainer {
+	border:1px solid #888;
+	margin-left:1px;
+	margin-top:1px;
+	padding:1px;
+}
+.fileDialog .fileDialogTreeWidget {
+	height:10em;/*100%*/
+	overflow:auto;
+}
+.fileDialog .dijitTreeRowSelected {
+	background-color: #ddd;
+	width:100%;
+}
+.fileDialog .dijitTreeRowSelected .dijitTreeLabel {
+	background:none;
+	outline:none;
+}
+.fileDialog .buttonRow {
+	text-align:center;
+	margin:1.2em 0 1em 0;
+}
+.tabButtonLoadingIcon {
+	background: url("img/loading_wheel.gif")  no-repeat;
+	width: 14px;
+	height: 14px;
+	margin-left: 5px;
+	margin-right:-3px;
+}
+
+/* generic */
+
+.dvRequired {
+    display: inline;
+    color: red;
+}
+
+.dvDialogOKCancel {
+    float: right;
+    margin-right: 40px;
+}
+
+/* SaveAsWidget dialog */
+
+.dvSaveAsWidgetDialog {
+    width: 410px;
+}
+
+/* SaveAsWidgetForm */
+
+.dvSaveAsWidgetForm h4.dvRequired {
+    margin-left: 120px;
+    font-size: x-small;
+}
+
+.dvSawfLabel {
+    width: 120px;
+    display: block;
+    float: left;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.dvSaveAsWidgetForm .dijitValidationTextBox {
+    width: 200px;
+}
+
+.dvSaveAsWidgetForm .dijitTitlePane {
+    margin-top: 1.5em;
+}
+
+.dvSawfDesc {
+    margin-left: 20px;
+    margin-right: 20px;
+}

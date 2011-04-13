@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BasicLayout.html</title>
+<style type="text/css">
+@import "themes/claro/claro.css";
+@import "dojo/dojo/resources/dojo.css";
+@import "app.css";
+</style>
+<script type="text/javascript" src="dojo/dojo/dojo.js" djConfig="parseOnLoad:true"></script>
+<script src="davinci/States.js"></script>
+<script src="davinci/davinci.js"></script>
+<script type="text/javascript">
+    dojo.require("dojo.parser");
+    dojo.require("workspace.davinci.States");
+</script>
+</head>
+<body class="claro lotusui" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp" style="background:#333; color:gray;">
+<div id="container" style="width: 100%; min-width: 550px; overflow: hidden; background-image: none; background-attachment: scroll; background-color: rgb(255, 255, 255); background-position: 0% 0%;">
+	<div id="header" style="height: 70px; color: rgb(255, 255, 255); background-color: rgb(68, 119, 187);">Header</div>
+	<div id="sidebar" style="border-right: 1px solid rgb(235, 235, 235); float: left; width: 19%;">
+		<div style="padding: 10px 20px;">
+			<h2>Sidebar</h2>
+			<p>Replace with your sidebar.</p>
+			<p>The window will expand to fit the content.</p>
+		</div>
+	</div>
+	<div id="content" style="float: left; width: 80%;">
+		<div style="padding: 10px 20px;">
+			<h2>Content</h2>
+			<p>Replace with your content.</p>
+			<p>The window will expand to fit the content.</p>
+			<p>Preview in browser to see the final results.</p>
+		</div>
+	</div>
+	<div id="footer" style="border-top: 1px solid rgb(235, 235, 235); clear: both; height: 35px;">Footer</div>
+</div>
+</body>
+</html>

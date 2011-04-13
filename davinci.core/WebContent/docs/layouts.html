@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Maqetta User Guide: Getting Started</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="../header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">User Guide</a>
+    </td>
+    <td class="prevnext">
+    <a href="themeEditor.html">Previous</a> / <a href="userguide.html">Next</a>
+    </td></tr>
+</table>
+
+
+<!-- Content -->
+<div class="content">
+
+<h1>Creating a page Layout</h1>
+
+<p class="topnext"><a href="themeEditor.html">Previous</a> / <a href="userguide.html">Next</a></p>
+<!--
+<ul>
+<li><a href="#tools">Layout Tools in Maqetta</a></li>
+<li><a href="#primer">CSS Primer</a></li>
+<li><a href="#box">CSS Box Model Explained</a></li>
+<li><a href="#tools">Layout Tools in Maqetta</a></li>
+<li><a href="#bordercontainer">Using BorderContainer</a></li>
+<li><a href="#fixed">Creating a centered, fixed-width page</a></li>
+<li><a href="template">Using one of the BasicLayouts templates provided in the Maqetta Explorer palette</a></li>
+</ul>
+-->
+<a name="tools"><h2>Layout Tools in Maqetta</h2></a>
+<p>There are several widgets and elements you can use to setup a page layout in the Maqetta canvas:</p>
+<dl id="layout-tools">
+<dt>BorderContainer widget</dt>
+<dd>This widget gives you a page layout with header, footer, 2 sidebars and a content area.  All panes have sliders, allowing you to resize the pane.
+	BorderContainer is made up of 5 ContentPanes inside the BorderContainer.  You can delete any of the inner panes except the center pane.
+	BorderContainer is by far the easiest and quickest way to produce a layout in Maqetta.</dd>
+<dt>ContentPane widget</dt>
+<dd>ContentPane is the simplest container widget and provides you with a rectangular area that can be sized and styled. It's similar to an HTML DIV but is a dojo widget instead of an HTML element, and it comes with a 5px padding built in.</dd>
+<dt>HTML DIVs</dt>
+<dd>DIVs are HTML elements so they do not require any dojo code in the source, DIVs give you the greatest flexibility, but they do require a good knowledge of CSS to use for layouts. DIVs are the most common method used today for creating layouts.</dd>
+<dt>HTML tables</dt>
+<dd>Tables  are HTML elements so they do not require any dojo code in the source. With HTML tables you can create a layout using rows and columns.  The layout structure is created with HTML table row and table column tags. Drawbacks to tables are that they require more HTML markup than DIVs, and do not have the flexibility of DIVs. Tables can only be defined in a row/column, grid-like fashion, whereas DIVs can be positioned in any way that you desire.</dd>
+</dl>
+
+<a name="primer"><h2>CSS Primer</h2></a>
+<p>DIVs and container widgets are all types of boxes, so if you aren't familiar with CSS Box Model styling, take a quick look at the links below. In addition, here are some basic rules:</p>
+<ul>
+<li>Setting a width on a box will cause it to be a fixed width.  Same goes for height.</li>
+<li>Setting the width to 100% will cause the div to expand to the width of its parent container. Same goes for height.</li>
+<li>Having no width on a DIV will cause the div to expand to the width of its parent container.</li>
+<li>Having no height on a DIV gives you a flexible height.  The height will expand to fit it's content. An empty DIV has no height.</li>
+<li>DIVs by default have no height or width, making them flat and horizontally spanned across the width of their container.</li>
+<li>Container widgets are usually created with a starting fixed height and width, but you can adjust the properties and the same rules apply as with DIVs.</li>
+</ul>
+<p class="important_note">Note: The width property does not include padding, borders or margins, so do not not use padding, borders or margins on DIVs set to 100%.</p>
+<p>In the containers below, the left-hand container has no width set on the inner divs,
+and the right-hand container has a 100% width set on the inner divs.
+Note that on the right-hand container, the inner divs are overflowing from the container.<p>
+
+<div id="width100">
+<div id="container1">
+	<p>These DIVs do not have a width property</p>
+	<div class="nostyles">
+		<p>No padding, border or margin</p>
+	</div>
+	<div class="padded">
+		<p>padding=2px"</p>
+	</div>
+	<div class="margins">
+		<p>margin=10px</p>
+	</div>
+	<div class="borders">
+		<p>border=2px</p>
+	</div>
+</div>
+<div id="container2">
+	<p>These DIVs all have a width of 100%</p>
+	<div class="nostyles">
+		<p>No padding, border or margin</p>
+	</div>
+	<div class="padded">
+		<p>padding=2px"</p>
+	</div>
+	<div class="margins">
+		<p>margin=10px</p>
+	</div>
+	<div class="borders">
+		<p>border=2px</p>
+	</div>
+</div>
+</div>
+ 
+
+<a name="box"><h2>CSS Box Model Explained</h2></a>
+<ul>
+<li><a href="http://www.w3schools.com/css/css_boxmodel.asp">w3schools: The CSS Box Model</a></li>
+<li><a href="http://www.w3.org/TR/CSS2/box.html#box-dimensions">w3.org: Box model dimensions</a></li>
+<li><a href="http://ooyes.net/userfiles/media/downloaded/a-closer-look-at-the-blueprint-css-framework-2009062310115521-box-model_gif.gif">Box model diagram</a></li>
+</ul>
+
+<a name="bordercontainer"><h2>Using BorderContainer</h2></a>
+<ol>
+<li>Create a new file</li>
+<li>Drag the BorderContainer widget onto the canvas</li>
+<li>Size the widget by dragging the lower-right corner of the widget.</li>
+<li>Preview in the browser.</li>
+<li>To delete any panes you don't want, click inside the pane and hit Delete, or right-click and select delete.</li>
+<li>Drag widgets, images or HTML elements inside the panes.</li>
+<li>Preview in the browser.</li>
+<li>To center the widget in the browser window, follow the steps below to create a centered, fixed-width page.</li>
+</ol>
+
+<a name="fixed"><h2>Creating a centered, fixed-width page</h2></a>
+<ol>
+<li>Create a new file</li>
+<li>Drag a DIV onto the canvas (this will create a backdrop so you can give it some color).</li>
+<li>Drag the div down to cover the entire canvas.</li>
+<li>Set the background color or background url as desired.</li>
+<li>Set the width to 100%.</li>
+<li>Drag another DIV or container widget onto the canvas (this will be the container for your page).</li>
+<li>Set the width to your desired page width (abut 980px is common).</li>
+<li>Set the background color as desired (something different from the backdrop)</li>
+<li>Set  "margin: auto;" and set the height to 100%.  (Tip: Don't put borders on the top or bottom of this.)</li>
+    <br />On BorderContainer make the height 99% to allow for the borders, or you may want to give it a fixed height.</li>
+<li>Optionally, you can set padding to the backdrop div to give some padding to the top and bottom of the backdrop.</li>
+</ol>
+
+<a name="template"><h2>Using one of the BasicLayouts templates provided in the Maqetta Explorer palette</h2></a>
+<ol>
+<li>Make a copy of the template (right-click on the template name and select copy).</li>
+<li>Open the template copy.</li>
+<li>Modify the layout as desired.</li>
+<li>Add your content to the layout panes (see Adding Content for more information).</li>
+</ol>
+
+<h4>Creating a layout using DIVs</h4>
+<p>Follow the tutorial <a href="tutorials/tutorial5.html">Creating a basic layout</a>.</p>
+
+
+</div>
+
+
+<p class="next"><a href="themeEditor.html">Previous</a> / <a href="userguide.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="../footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

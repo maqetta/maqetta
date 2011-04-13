@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Chart: Map&Chart</title>
+		<style type="text/css">
+			@import "../../../../dojo/resources/dojo.css";
+			@import "../../../../dijit/tests/css/dijitTests.css";
+			@import "../../../../dijit/themes/tundra/tundra.css";
+			@import "../resources/Map.css";
+			.mapContainer {
+				display: none;
+				width: 810px;
+				height: 400px;
+				border: solid 1px;
+			}
+			
+			.mapVerticalContainer {
+				display: none;
+				width: 405px;
+				height: 500px;
+				border: solid 1px;
+			}
+		</style>
+		<script type="text/javascript" djConfig="parseOnLoad:true,gfxRenderer:'svg,vml,silverlight'" src="../../../../dojo/dojo.js"></script>
+		<script type="text/javascript">
+			dojo.require("dojox.geo.charting.Map");
+			dojo.require("dojox.charting.DataChart");
+			dojo.require("dojo.data.ItemFileReadStore");
+			var chartStore = new dojo.data.ItemFileReadStore({
+				url: "datastore/dataStore.json"
+			});
+			var chart;
+			dojo.addOnLoad(function(){
+				chart = new dojox.charting.DataChart("chartDiv", {
+					displayRange: 8,
+					yaxis: {
+						max: 8,
+						min: 1,
+						majorTickStep: 1,
+						labelFunc: "seriesLabels",
+						maxLabelSize: 30
+					},
+					scroll: false
+				});
+				chart.addPlot("default", {
+					type: "Bars",
+					gap: 2,
+					animate: {
+						duration: 1000
+					}
+				});
+				
+				var map = new dojox.geo.charting.Map("map", "../resources/data/USStates.json");
+				map.setMarkerData("../resources/markers/USStates.json");
+				map.onFeatureClick = function(feature){
+					if (!feature._isFocused) {
+						chart.setStore(chartStore, {
+							product: "*"
+						}, feature.id);
+					}
+				};
+			});
+		</script>
+	</head>
+	<body class="tundra">
+		<h1>Map connect with DataChart(Click on map)</h1>
+		<div style="width:610px;height:400px;border:solid 1px;background:#f5f5f5;" id="map">
+		</div>
+		<div id="chartDiv" style="width: 400px; height: 150px;">
+		</div>
+	</body>
+</html>

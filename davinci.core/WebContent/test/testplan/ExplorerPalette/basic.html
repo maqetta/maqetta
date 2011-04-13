@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Files palette basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Files palette basic tests</h1>
+
+	<h2 class="test_section">Initial view, tree controls, context menu, double-click behaviors</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>You'll want to setup a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
+				Clear the browser cache. Launch the daVinci server. Login if necessary. </li>
+		<li>Look at Files palette. You should see an initial set of files. For 0.6, there is Sample1.html, Sample2.html, SampleBanner.jpg, SampleJs.js, app.css and a themes/ folder with dijit.css, dijit_rtl.css and three folders (claro, oneUI, sketch) each with many files inside.</li>
+		<li>Verify the tree control and that you can expand and close folders by clicking on + and - squares.</li>
+		<li>With the mouse inside of the Files palette's main area, click the right mouse button (or Ctrl-click on Mac) to bring up context menu. For 0.6, you should see "New file...", "New folder...", "Upload file", "Delete resource", "Add link" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
+		<li>Try double-clicking on the various file types to make sure that the appropriate editor is launched.
+			<ul>
+				<li>Double-click on Sample1.html. The page editor should show the sample contents, which (with 0.5 completed) should include a states demo where some controls appear and disappear at runtime depending on what the user clicks on at runtime.</li>
+				<li>Double-click on SampleJs.js. The source editor should show the JavaScript source code.</li>
+				<li>Double-click on SampleBanner.jpg. The image should appear in an editor tab.</li>
+				<li>Go into themes/claro. Double-click on a *.css, then on a *.json file. The source editor should show the CSS and JSON source code, respectively.</li>
+				<li>Go into themes/claro. Double-click on claro.theme. This should launch the Dojo/Claro theme editor.</li>
+			</ul>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See description above for expected results.
+		</li>
+	</ol>
+
+	<h2 class="test_section">new files and folders</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>You'll want to set up a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
+				Clear the browser cache. Launch the daVinci server. Login if necessary. </li>
+		<li>With the mouse inside of the Files palette's main area, click on one of the root file (e.g., Sample.html) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New file...". In the dialog(s) that appear, type in an HTML file name (e.g., abc.html), click OK, and the page editor should appear with an empty canvas.</li>
+		<li>With the mouse inside of the Files palette's main area, click on one of the root file (e.g., Sample.html) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New file...". In the dialog(s) that appear, type in a JS file name (e.g., abc.js), click OK, and the source editor should appear with an empty JavaScript file.</li>
+		<li>With the mouse inside of the Files palette's main area, click on one of the root file (e.g., Sample.html) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New folder...". In the dialog(s) that appear, enter a new folder name (e.g., "aaaa") and clock OK. The new folder should show in the Files palette.</li>
+		<li>With the mouse inside of the Files palette's main area, click on one of the your new folder (e.g., aaaa) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New file...". In the dialog(s) that appear, make sure the dialog shows the proper folder name (e.g., aaaa). Type in an HTML file name (e.g., bbbb.html), click OK, and the page editor should appear with an empty canvas, and the Files palette should should bbb.html in folder aaaa.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See description above for expected results.
+		</li>
+	</ol>
+
+	<h2 class="test_section">add files</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>You'll want to set up a virgin user environment by creating a whole new user login or 
+			resetting the existing user login (ask engineers about how to do that).
+			Clear the browser cache. Launch the daVinci server. Login if necessary. </li>
+		<li>With the mouse inside of the Files palette's main area, 
+			click on one of the root file (e.g., Sample.html) and then 
+			click the right mouse button (or Ctrl-click on Mac) to bring up context menu 
+			and choose "add files". In the dialog(s) that appear, choose a file from your 
+			disk and upload to your workspace. The new file should have been added 
+			into the root folder in the Files palette.</li>
+		<li>Create a new folder (see instructions above), perhaps named "ggg". 
+			With the mouse inside of the Files palette's main area, 
+			click on thie folder (e.g., ggg) and then click the right mouse button 
+			(or Ctrl-click on Mac) to bring up context menu and 
+			choose "add files". In the dialog(s) that appear, choose a file from your disk and 
+			upload to your workspace. The new file should have been added into the ggg 
+			folder in the Files palette.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See description above for expected results.</li>
+		<li>(Note that there is a bug in 0.4-0.6 which only allows the Upload dialog to work
+			the first time in each browser session. The first time the dialog appears, you
+			can upload files successfully so long as the dialog does not come down.
+			But once it comes down, it won't work until you refresh daVinci.)</li>
+	</ol>
+
+	<h2 class="test_section">delete files</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>You'll want to set up a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
+				Clear the browser cache. Launch the daVinci server. Login if necessary. </li>
+		<li>Add a new HTML file, such as mmm.html (see above for instructions). Close the page editor tab that appears. Then, in the Files palette, click on mmm.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
+		<li>Create a new folder (see instructions above), perhaps named "nnn". Add a new file (e.g., ooo.html) into that folder (see instructions above). Close the page editor tab that appears.  Then, in the Files palette, click on ooo.html and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the file.</li>
+		<li>Create a new folder (e.g., www) and add a file into that folder (e.g., via New operations - see instructions above for how to do this.) In the Files palette, click on www and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "Delete resource". Click OK on "are you sure" warning dialog. The Files palette should no longer show the folder (or any of the files that were in the folder).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See description above for expected results.</li>
+	</ol>
+
+	<h2 class="test_section">download as ZIP</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Click on one file in Files palette to select it. 
+			Bring up context menu as save ZIP. In dialog, accept default name (download.zip). 
+			A file named download.zip should be in your browser's download area.</li>
+		<li>Click on one file in Files palette to select it, then Ctl-click on two other files to select them, also. 
+			Bring up context menu as save ZIP. In dialog, type in "download2". 
+			A file named download2.zip should be in your browser's download area with the two files inside.</li>
+		<li>Select the ./themes/sketch folder. 
+			Bring up context menu as save ZIP. In dialog, type in "download3". 
+			A file named download3.zip should be in your browser's download area with all of the files from that folder inside.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See description above for expected results.</li>
+	</ol>
+
+	<h2 class="test_section">add link</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+        <li>Warning: Currently if you delete a link using "Delete resource", it will delete the directory from your
+        local file system. Therefore all the tests should only be done using a temporary test directory on your local file system.</li>
+        <li>Create a test directory on your local file system (we'll call it "test").</li>
+        <li>Copy some files into the test directory. (Include HTML, CSS, Javascript or image files.)</li>
+		<li>In daVinci, bring up the Files palette context menu and select "Add link".
+        A dialog titled "Select Directory to link to" will be displayed, with a list of your local file directories.</li>
+        <li>Scroll down and select the "test" directory.</li>
+        <li>In the "Local Name" text box enter "test".</li>
+        <li>Click the "Link" button.</li>
+        <li>Expand the test folder and open some of the files from the folder.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+        <li>When you click the "Link" button you should see a new folder in the Files Palette 
+        (called "test [C:\test] on Windows).</li>
+        <li>Currently daVinci can only open HTML, CSS, Javascript and image files. 
+        Other files types may hang daVinci when you try to open them.
+        Non-daVinci HTML files won't display in design mode, but will show in source mode and you can view them 
+        using Preview in browser. For image files, open a daVinci HTML file then drag the image onto the canvas.</li>
+        <li><i>Currently if you delete the link using "Delete resource", it will delete the directory from your
+        local file system.</i></li>
+        <li>Known bug: After deleting a link, daVinci cannot a new link using the same directory name.</li>
+	</ol>
+
+</body>
+</html>

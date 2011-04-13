@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta User Guide: Getting Started</title>
+</head>
+<body class="maqettadocs">
+<!-- Header -->
+<!-- 
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+ -->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">User Guide</a>
+    </td>
+    <td class="prevnext">
+    <a href="overview.html">Previous</a> / <a href="install.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Getting Started</h1>
+
+<ol>
+<li>Read <a href="overview.html">Introduction and Overview</a>.</li>
+<li>Read <a href="install.html">Accessing/Installing the build</a> to determine how you will run deVinci - either from your local system, or from the Maqetta server. To get up and running quickly, chose running from the server.</li>
+<li>Launch Maqetta from the server, or download and install Maqetta and launch it locally.</li>
+<li>Read <a href="workspace.html">The Maqetta Workspace</a> to learn about the Maqetta user interface.</li>
+<li>Go through the <a href="tutorials/tutorial1.html">Page Editor Overview</a> tutorial to get a quick tour of Maqetta.</li>
+<li>Go through the <a href="tutorials/tutorial2.html">Mocking Up a Task Manager</a> and <a href="tutorials/tutorial3.html">Adding Interactivity</a> tutorials to learn how to mock up an interactive page from start to finish.</li>
+<li>Read <a href="themeEditor.html">The Maqetta Theme Editor</a> to learn about using Maqetta themes.</li>
+<li>Go through the <a href="tutorials/tutorial4.html">Theme Editor Tutorial</a>.</li>
+</ol>
+
+<!--
+
+<a name="defaultlayout"><h2 class="top">Setting the default layout style</h2></a>
+
+<p>With Maqetta you have the option of setting the layout mode to flow layout or absolute layout.</p>
+
+<h3>Flow layout</h3>
+In flow layout mode, widgets and elements dropped onto the canvas will follow the normal flow of an HTML document, which flows top-to bottom for block elements and left-to-right for in-line elements.  Block elements are stacked up underneath one another, and in-line elements are pushed up against each other from left to right. (You could think of this as if the force of gravity is coming from the top left corner of the page.)   CSS style rules are then used to separate and position the elements as desired. This is the default layout mode for Maqetta, since this mirrors the default behavior of HTML documents.</p>
+
+<h3>Absolute layout</h3>
+In absolute layout mode, widgets and elements will "stick" to the canvas wherever you drop them.  In HTML/CSS, this behavior is achieved by setting the element's position to "absolute", and then specifiying the exact position where you want the element to be.  (This is usually done with a CSS style rule, but could also be done by setting the property directly on the HTML element.)</p>
+
+<h3>Using both flow and absolute layout</h3>
+Sometimes when working in flow layout you'll want to use absolute layout for certain widgets.  
+A dialog box is a good example, where you want a pop-up window that floats on top of the rest of the page.  
+You can do this by setting the <strong>position</strong> property to <strong>absolute</strong> on the widget that you want to float.
+
+<p>The rest of the instructions on this page are for working in the default flow layout.</p>
+
+<a name="newfile"><h2>Creating a new HTML page</h2></a>
+
+<ol>
+<li>Click on the <strong>New file</strong> icon on the top toolbar (the leftmost icon) to create a new empty HTML page.</li>
+<li>Enter a filename and click Create</li>
+</ol>
+<p>You will now see the following items in the Maqetta workspace:<ul>
+<li>Above the blank canvas will be a tab with the new filename. This indicates what file is currently open.</li>
+<li>Below the filename tab there will be a Design tab and a Source tab, which allow you to switch from Design view to Source view.</li>
+<li>The new filename will be displayed in the Exploerer tab.</li>
+<li>A list of widget folders will appear in the Widgets palette.</li>
+<li>The Properties palette will be populated.</li>
+</ul>
+
+<a name="addwidgets"><h2>Adding Widgets</h2></a>
+
+<p>The easiest way to get started using Maqetta is to simply drag some widgets onto a blank canvas.
+Here's how:</p>
+<ol>
+<li>In the Widgets palette, click on each category to expand the section and view the widgets.</li>
+<li>Select a widget to add to your canvas.</li>
+<li>Using your mouse, drag the widget from the Widget palette to the canvas.</li>
+<li>When you release the mouse, the widget will appear on the canvas.</li>
+<li>Repeat the process to add additional widgets.</li>
+<li>To delete a widget, select the widget by clicking on it, then press Delete.<br />(Or you can right-click on the widget and select delete
+from the context menu.)</li>
+</ol>
+<a name="sizewidget"><h3>Sizing a widget</h3></a>
+<p>To work with a widget, you must first selected it by clicking on the widget. When a widget is selected you will see a thick gray 
+border around the widget, with small white squares called sizing handles on the corners and sides of the widget.
+Drag the sizing handles to re-size the widget. The corner handles will re-size the entire widget larger or smaller, keeping the height
+and width proportional to the original size.  The side handles will move only the side that you are dragging, making the 
+widget either wider or taller.</p>
+
+<h3>Nesting Container widgets</h3>
+<p>Container widgets can contain other widgets. 
+<ol>
+<li>Add container widget to the canvas.</li>
+<li>Drag another widget on top of the container widget. The second widget will be placed inside the container widget.</li>
+<li>If the second widget is also a container, you can drop another widget inside of it.</li>
+</ol>
+<p>You can nest as many widgets as desired, and you can put multiple widgets inside of container widgets.
+You may need to re-size your container widgets as you are adding content. To do this, first select the container you want to work with
+by clicking on one of its borders, then re-size the container as described above.</p>
+
+<h3>Floating widgets</h3>
+<p>You can also set a widget to "float" on the page, like a pop-up or modal dialog box.  
+Here are the steps (assuming you are starting with an existing page):</p>
+<ol>
+<li>Drag the widget onto the page (e.g. a ContentPane or a Dialog widget)</li>
+<li>Set its position to absolute</li>
+<li>Drag the widget to the desired location (drag any of the borders, but not the sizing handles)</li>
+<li>Size the widget as desired</li>
+<li>Set the background color to white to obscure the underlying page elements.</li>
+<li>Add content to the widget as desired. The content will default to flow layout <em>within</em> the fixed-position container.</li>
+</ol>
+<p>See the tutorial <a href="../tutorials/tutorial2.html">Mocking Up a Task Manager</a> for more detailed instructions.</p>
+
+
+<p>To help you get started, follow this <a href="../tutorials/tutorial1.html">tutorial</a> to learn how to add content to your page.</p>
+
+
+
+<a name="custwidgets"><h2>Customizing widgets</h2></a>
+<a name="outline"><h2>Using the Outline palette</h2></a>
+<a name="states"><h2>Configuring States</h2></a>
+<a name="preview"><h2>Previewing in the browser</h2></a>
+<a name="global"><h2>Setting global styles</h2></a>
+<a name="mousehover"><h2>Setting mouse hover styles</h2></a>
+
+
+<h2>Working with Container Widgets</h2>
+
+<p>Container widgets are widgets that can contain other
+widgets. Dojo&#39;s container widgets include ContentPane, TabContainer, Accordion and TitlePane (under "Dojo Containers"),
+and BorderContainer, Menubar and Toolbar (under "Untested"). 
+</p>
+
+<p>If you want a new widget to be placed inside of
+a particular container widget (i.e., the new widget will become a child of the
+container widget), you drag the widget from the Widget Palette and
+then drop the new widget into the inside of the container widget. Some widgets such as
+TabContainer and Accordion support multiple child panes. To place a new widget
+into a particular child pane, first manipulate the container widget such that
+the target section is open, then drag/drop the new widget into that section. You can see
+if you succeeded in placing the new widget inside of the appropriate container
+widget by looking at the widget hierarchy in the Outline palette or by
+switching to source mode and looking at the HTML source code.</p>
+
+-->
+
+<p class="prevnext"><a href="overview.html">Previous</a> / <a href="install.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!-- 
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+ -->
+</body>
+</html>

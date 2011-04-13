@@ -1,0 +1,3 @@
+({
+	insertEntity: "Insert Symbol"
+})

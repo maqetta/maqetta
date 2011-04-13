@@ -1,0 +1,32 @@
+<div>
+	<table>
+	<tr>
+	<td>Theme to clone:</td><td> <div dojoType="davinci.ui.widgets.ThemeSelection" dojoAttachPoint = '_themeSelection'></div></td><td><div dojoAttachPoint='_error1'></div></td>
+	</tr>
+	<tr><td colspan='3'><hr></hr></td></tr>
+	<!-- 
+	<tr>
+	<td>New Name:</td><td><input style='width:100%' type='select' dojoAttachPoint="_themeName"></input></td><td><div dojoAttachPoint='_error2'></div></td>
+	</tr>
+	<tr>
+	<td>Version:</td><td><input style='width:100%' type='text' dojoAttachPoint="_version"></input></td><td><div dojoAttachPoint='_error3'></div></td>
+	</tr>
+	 -->
+	<tr>
+	<td>New Name:</td><td><input style='width:100%' type='text' dojoAttachPoint="_selector"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+	</tr>
+	</table>
+
+	<table style='width:100%;'> 
+			<tr> 
+			<td width='20px'>&nbsp;</td>
+				<td style='width:auto;'>&nbsp;</td> 
+				<td style='width:1px;'><span dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='OK' disabled /></td> 
+				<td style='width:auto;'>&nbsp;</td> 
+				<td style='width:1px;'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='Cancel'/></td> 
+				<td style='width:auto;'>&nbsp;</td> 
+				<td width='20px'>&nbsp;</td>
+			</tr> 
+		</table> 
+		
+</div>

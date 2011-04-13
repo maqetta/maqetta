@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Visual page editor basic tests (part 1 - editor toolbar)/title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Visual page editor basic tests (part 1 - editor toolbar)</h1>
+
+	<h2 class="test_section">New HTML file, preview, save, reopen, preview, close</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>Click OK to accept the default file name (file1.html)</li>
+		<li>Drag/drop any widget onto canvas</li>
+		<li>Click on the "Preview in browser" icon on editor toolbar 
+			to open another browser tab which shows the current HTML file running directly in browser</li>
+		<li>View the new browser tab, then close it</li>
+		<li>Back in daVinci, click the "Save" button on editor toolbar</li>
+		<li>Close the editor by clicking "x" on editor's tab</li>
+		<li>Double-click on the filename in Files palette to reopen</li>
+		<li>Click on the "Preview in browser" icon on editor toolbar </li>
+		<li>View the new browser tab, then close it</li>
+		<li>Back in daVinci, close the editor by clicking "x" on editor's tab</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>After each Preview in Browser, a new browser tab (or window) should open 
+			and the same thing you see in the drawing canvas within daVinci
+			should appear in the new browser tab.</li>
+	</ol>
+
+	<h2 class="test_section">SaveAs</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag a few widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
+		<li>Click on the "SaveAs" icon on the main toolbar to save the new file. In the dialog that appears, choose a new file name.</li>
+		<li>Click on the "X" close button for the editor tab for the newly renamed file</li>
+		<li>In the Files palette, double-click on the file you just created</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>After completing the SaveAs operation, the old editor  (with the old filename)
+			should be replaced by a new editor (with the new filename).
+			Its contents should be the same as how it was when you clicked on the SaveAs button.</li>
+		<li>Upon reopening, the saved file should open and its contents should be the same 
+			as how it was.</li>
+	</ol>
+
+	<h2 class="test_section">Cut/copy/paste/delete</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag a few widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
+		<li>Select one of the widgets. Click on Cut. Then click on Paste.
+			The cursor should change to a crosshair cursor. Click somewhere on canvas and the
+			widget that was cut from the document should now be pasted back in.</li>
+		<li>Select one of the widgets. Click on Copy. Then click on Paste.
+			The cursor should change to a crosshair cursor. Click somewhere on canvas and the
+			widget that was copied from the document should now be pasted back in.</li>
+		<li>Select one of the widgets. Click on Copy. Select a different widget. Click on Delete. 
+			Then click on Paste.
+			The cursor should change to a crosshair cursor. Click somewhere on canvas and the
+			first widget (the copied widget) should now be pasted back in, not the deleted widget.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The Cut command should have removed the widget, and Paste added it back in.</li>
+		<li>The Copy command should not remove the widget. Paste should add a second copy.</li>
+		<li>The Delete command should have removed the widget, and Paste should not have added it back in.</li>
+	</ol>
+
+	<h2 class="test_section">Undo/Redo</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag a few widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
+		<li>Click Undo until all widgets disappear.</li>
+		<li>Click Redo until all widgets reappear.</li>
+		<li>Select a widget and delete it.</li>
+		<li>Click Undo to restore the widget.</li>
+		<li>Click Redo remove that widget again.</li>
+		<li>Select one of the widgets. Set the 'id' property to something (e.g., "abc")
+			in the Properties palette.</li>
+		<li>Click Undo to remove the property setting.</li>
+		<li>Click Redo to restore the property setting.</li>		
+		<li>Click the Save button, then close the file.</li>		
+		<li>In Files palette, reopen the file. After viewing the file, close the file.</li>		
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Operations should undo/redo correctly.</li>
+		<li>Upon reopening, the file should reflect the state of the document when it was last saved.</li>
+	</ol>
+
+	<h2 class="test_section">Switch themes</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag Toolbar, Calendar, and Button onto canvas.</li>
+		<li>Click on switch themes icon. A dialog should appear. Choose Sketch.
+			The widgets should now be styled with a pseudo-handdrawn style.</li>
+		<li>Click on switch themes icon. A dialog should appear. Choose Lotus OneUI.
+			The widgets should now be styled with a different style (Lotus OneUI-like style).</li>
+		<li>Save the file and close it.</li>
+		<li>Double-click on Sample1.html. It should be styled with claro.</li>
+		<li>Double-click on the file you just saved. It should be styled with "Lotus OneUI".</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>(See instructions above for expected results.)</li>
+	</ol>
+
+	<h2 class="test_section">Switch layout: Flow vs Absolute</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag TextBox, ComboBox, and Button onto canvas.
+			They should be added in "flow" layout (left-to-right, top-to-bottom) because
+			that's the default preference value.</li>
+		<li>Click on switch layout icon. A dialog should appear. Choose Absolute.</li>
+		<li>Drag a Calendar onto canvas, dropping into middle of page.
+			Calendar should be positioned absolutely (i.e., position:absolute).</li>
+		<li>Save the file and close it.</li>
+		<li>Double-click on Sample1.html. Drag/drop a Button into middle of page. 
+			Because Sample1.html was last in Flow Layout, the Button should be
+			inserted into the doc in flow layout mode.</li>
+		<li>Reopen the file you just created.</li>
+		<li>Drag a MultiSelect onto canvas, dropping into middle of page.
+			MultiSelect should be positioned absolutely (i.e., position:absolute).
+			The last choice for layout state should be persisted into file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>(See instructions above for expected results.)</li>
+	</ol>
+
+	<h2 class="test_section">Sticky note</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag TextBox, ComboBox, and Button onto canvas.
+			They should be added in "flow" layout (left-to-right, top-to-bottom) because
+			that's the default preference value.</li>
+		<li>Click on the sticky note icon. After a few seconds, the Dojo rich text editor
+			should appear as a very large overlay on the page canvas.
+			Create some rich text, such as bullets. Then click away from the rich text editor
+			to cause your changes to be added to the document as a yellow sticky note
+			that is absolutely positioned.</li>
+		<li>Save the file, close and reopen.</li>
+		<li>Sticky note should be right where it was before.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>(See instructions above for expected results.)</li>
+	</ol>
+
+	<h2 class="test_section">Page view modes</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file</li>
+		<li>Drag TextBox, ComboBox, and Button onto canvas.</li>
+		<li>Alternatively, click on the four icons.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The HTML editor should switch between design, source, split view (top/bottom) and split view (left/right).</li>
+	</ol>
+
+</body>
+</html>

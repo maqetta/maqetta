@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial: Adding Interactivity via Application States</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/tutorial2.html">Previous</a> / <a href="tutorials/tutorial4.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Build a Task Manager (Application States)</h1>
+
+<p class="comment">In the previous tutorial we created the content for each of the three "states" for our Task Manager.<br />
+In this tutorial we will add interactivity by defining the states, and then wiring the states to onclick events.</p>
+<!--
+<ul>
+<li><a href="#outline">Understanding the Outline palette</a></li>
+<li><a href="#define">Define two new application states: "Add Task" and "Task Added"</a></li>
+<li><a href="#visible">Use the States and Outline palettes to define which elements should be visible</a></li>
+<li><a href="#wire">Wire up onclick event handlers to switch states</a></li>
+<li><a href="#preview">Preview in Browser</a></li>
+<li><a href="#advanced">Advanced functionality</a></li>
+<li><a href="#future">Future directions</a></li>
+</ul>
+-->
+<a name="outline"><h2>Working with the Outline palette</h2></a>
+
+<p>The Outline palette is in the bottom right section of the Maqetta Page Editor.</p>
+<ol>
+<li>Expand the Outline palette by dragging on the upper edge of the palette.</li>
+<li>Collapse the Outline palette entries so you see only the two top-level entries: <b>TabContainer</b> and <b>ContentPane</b>.</li>
+<li>Click on the <b>eye icon</b> to the left of the Content Pane.</li>
+<li><i>Observe that the </i><b>Add new task</b><i> ContentPane disappears from the editing canvas and the eye is now closed.</i></li>
+<div class="image">
+<a href="img/outline1.png" target="_blank"><img alt="image" src="img/outline1.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+
+<li>Click on the <b>plus icon</b> to expand the Tab Container.</li> 
+<li>Collapse the entries so you see just the three Content Pane entries under Tab Container (one for each tab in the TabContainer).</li>
+<div class="image">
+<a href="img/outline2.png" target="_blank"><img alt="image" src="img/outline2.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+	
+<li>Expand the first ContentPane, then click on the first <b>&lt;div&gt;</b> to select it.</li>
+<li><i>Observe how the associated the &lt;div&gt; containing the </i><b>New</b><i> and </i><b>Del</b><i> buttons is selected on the editing canvas.</i></li>
+<div class="image">
+<a href="img/outline4.png" target="_blank"><img alt="image" src="img/outline4.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+
+<li>Click the second <b>&lt;div&gt;</b> in the Outline palette to select it.</li>
+<li><i>Observe how the associated the &lt;div&gt; containing the </i><b>Sort-by:</b><i> label and </i><b>Name</b><i> ComboBox is selected on the editing canvas.</i></li>
+<div class="image">
+<a href="img/outline5.png" target="_blank"><img alt="image" src="img/outline5.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+<li>Collapse the parent TabContainer entry.</li>
+<li>Un-hide the last ContentPane by clicking on the <b>closed eye icon</b>.</li>
+<li>Click on the ContentPane entry in the Outline palette to select that widget.</li>
+<div class="image">
+<a href="img/outline6.png" target="_blank"><img alt="image" src="img/outline6.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+
+</ol>
+
+<a name="define"><h2>Define The Application States</h2></a>
+<ol>
+<li>Click on the <b>States palette</b> tab (next to the Properties palette tab).</li>
+<li>Click on the <b>plus icon</b> to bring up the <b>Create New State</b> dialog.</li>
+<li>Enter "<b>Add Task</b>" and click <b>Create</b>.</li>
+	<div><img src="img/new_state.png" width="230" /></div>
+<li>Click on the <b>plus icon</b> again to bring up the <b>Create New State</b> dialog.</li>
+<li>Enter "<b>Task Added</b>" and click <b>Create</b>.
+	<br /><br />You should now have three states:</li>
+	<div><img src="img/states_palette.png" /></div>
+<li>Click on the <strong>Save</strong> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+</ol>
+
+<a name="visible"><h2>Configure Widget Visibility For Each State</h2></a>
+<h3>Configure the Normal State</h3>
+<ol>
+<li>In the States palette, click on <b>Normal</b> to put your application into the Normal state.</li>
+<li>In the Outline palette, close the <b>eye icon</b> for the ContentPane for the Add Task dialog.</li>
+<li><i>The </i><b>Add new task</b><i> dialog should now be invisible.</i></li>
+<li>In the Outline palette, close the <b>eye icon</b> for the MultiSelect widget.</li>
+<li><i>The MultiSelect widget should now be invisible.</i></li>
+<div class="image">
+<a href="img/normal_state.png" target="_blank"><img alt="image" src="img/normal_state.png" style="margin: 1em 1em 0pt 0pt;" height="350" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</ol>
+
+<h3>Configure the "Add Task" State</h3>
+<ol>
+<li>In the States palette, click on <b>Add Task</b> to put your application into the "Add Task" state.</li>
+<li>In the Outline palette, open the <b>eye icon</b> for the ContentPane for the <b>Add new task</b> dialog.</li>
+<li><i>The </i><b>Add new task</b><i> dialog should now be visible.</i></li>
+<div class="image">
+<a href="img/add_task_state.png" target="_blank"><img alt="image" src="img/add_task_state.png" style="margin: 1em 1em 0pt 0pt;" height="350" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</ol>
+
+<h3>Configure the "Task Added" State</h3>
+<ol>
+<li>In the States palette, click on "Task Added" to put your application into the "Task Added" state.</li>
+<li>In the Outline palette, under the TabContainer close the <b>eye icon</b> for the <b>MultiSelect</b> widget.</li>
+<li><i>The MultiSelect widget should now be visible.</i></li>
+<div class="image">
+<a href="img/task_added_state.png" target="_blank"><img alt="image" src="img/task_added_state.png" style="margin: 1em 1em 0pt 0pt;" height="350" /></a>
+<div>Click on the image to enlarge it.</div>
+</div><br />
+<li>Click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+</ol>
+
+<h3>Test the State Configurations</h3>
+<ol>
+<li>In the States palette, alternatively click on <b>Normal</b>, <b>Add Task</b> and <b>Task Added</b>.
+<li><i>Observe how things appear and disappear as you changes states.</i></li>
+</ol>
+
+<a name="wire"><h2>Wire up onclick event handlers to switch states</h2></a>
+<ol>
+<li>In the States palette, click on <b>Normal</b> to put your application into the Normal state.</li>
+<li>In the TabContainer, click on the <b>New</b> button to select it.
+	<br /><img src="img/new_button_selected.png" height="70px" /></li>
+<li>In the Properties palette, open the <b>Events</b> section.</li>
+<li>In the drop-down for the <b>onclick</b> event select <b>Add Task:State</b>.<br />
+(<i>Note that this is one of the events that we added in the States palette.</i>)
+	<br /><img src="img/onclick.png" height="60px" /></li>
+<li>In the States palette, click on <b>Add Task</b> to put your application into the Add Task state. This will make the "Add Task" dialog visible.</li>
+<li>In the <b>Add New Task</b> ContentPane, click on the <b>Add</b> button to select it.
+	<br /><img src="img/add_button_selected.png" height="65px" /></li>
+<li>In the Properties palette <b>Events</b> section, set <b>onclick</b> to <b>Task Added:State</b>.</li>
+<li>Click on the <strong>Save</strong> icon <img class="inline" src="img/save_icon.png" /> to save your changes.</li>
+</ol>
+
+<a name="preview"><h2>Preview in Browser</h2></a>
+<ol>
+<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/web_browser.gif" />. This will launch a new browser window that contains the HTML page you just created.</li>
+<li>Click on the <img class="inline" src="img/new_button.jpg" height="18px" /> button. The Add Task dialog should appear.</li>
+<li>Enter "<b>Task 1</b>" and click the <img class="inline" src="img/add_button.jpg" height="21px" /> button.</li>
+<li>The Multi Select widget should appear with "<b>Task 1</b>" in the list.
+	<br /><br /><img src="img/browser1.png" height="220px"/><img src="img/browser2.png" height="220px" /><img src="img/browser3.png" height="220px" /></li>
+</ol>
+<p></p>
+<p>This completes the tutorial.</p>
+
+
+<a name="advanced"><h2>Advanced functionality</h2></a>
+
+<h3>Different widget properties for different states</h3>
+
+<p>The exercise above illustrates how to make widgets visible or invisible as the application moves from one state to another. 
+Maqetta also allows widget property values to have different values for different application states. 
+For example, in one state a widget might have a blue background, red text, and a width of 300px, 
+but in another state that same widget might have a green background, yellow text and a width of 200px.</p>
+
+<a name="future"><h2>Future directions</h2></a>
+
+<h3>Save as widget/gadget (and why the default state is named "Normal")</h3>
+
+<p>One of the longer-term goals with Maqetta is that users can create a user interface and then save as a widget 
+or gadget (e.g., Dojo widget, iWidget or OpenSocial Gadget). Because of this future goal, the "application state" feature 
+is designed to allow smooth migration into common widget states (e.g., Normal, Hover, Selected, Disabled). 
+This is the primary reason why the default state in the States palette is named "Normal".</p>
+
+<h3>Simple animated transition effects</h3></a>
+
+<p>In a future release, we plan to implement a "Transition:" field in the States palette, with a default value of "0s". This field will provide a simple ability to add animated transition effects for state changes. For example, if the Transition field is set to 1 second, then when application state changes, widgets that become visible or invisible due to the state change will fade in or fade out over the course of a 1 second period. Similarly, if a widget has different (x,y) locations (assuming absolute positioning) in different states, then the widget would slide across the screen during state changes if the transition time was greater than zero.</p>
+<br /><br />
+
+<p class="prevnext"><a href="tutorials/tutorial2.html">Previous</a> / <a href="tutorials/tutorial4.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

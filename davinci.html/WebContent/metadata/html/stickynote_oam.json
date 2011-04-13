@@ -1,0 +1,7 @@
+{
+    "id": "http://www.ibm.com/davinci/stickynote",
+    "name": "html.stickynote",
+    "spec": "1.0",
+    "version": "1.0",
+    "content": "<div></div>"
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Properties palette basic tests (part 1)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Properties palette basic tests (part 1)</h1>
+
+	<h2 class="test_section">Common properties</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Drag a Button onto the canvas.</li>
+		<li>Under Common properties, type in values for id, class and title.</li>
+		<li>Click on split view icon. Verify that source code shows the values for the above properties.</li>
+		<li>Save, close, reopen.</li>
+		<li>Click on split view icon. Verify that source code shows the values for the above properties.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>In source pane, find the markup for the Button. you should see the values you supplied as the attribute values for 'id', 'class' and 'tabindex'.</li>
+	</ol>
+
+	<h2 class="test_section">Widget-specific</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Drag a Button, a TextBox and an HTML DIV onto the canvas.</li>
+		<li>Select the Button, then the TextBox, then the DIV. The widget-specific property list should change based on the widget.</li>
+		<li>Type in values for the various widget-specific properties.</li>
+		<li>Click on split view icon. Verify that source code shows the values for the above properties.</li>
+		<li>Save, close, reopen.</li>
+		<li>Select the Button, then the TextBox, then the DIV.</li>
+		<li>Click on split view icon. Verify that source code shows the values for the above properties.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As you change widget-specific properties, the new values should be reflected in the visual appearance of the widget on the canvas.</li>
+		<li>Upon re-opening the file, the widget-specific properties that you entered should show in the Properties palette as you select each widget.</li>
+		<li>The widget-specific properties should appear in the HTML markup for each widget.</li>
+	</ol>
+
+	<h2 class="test_section">Events properties</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "New HTML File" command.</li>
+		<li>In Firefox, open Firebug and show the console. In Chrome, open up the JavaScript console.</li>
+		<li>Make the Properties palette visible.</li>
+		<li>Drag two TextBoxes onto the canvas.</li>
+		<li>For one of the TextBox'es, type in "console.log('something or other')" for each of the click, mouse and focus/blur event fields.</li>
+		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
+		<li>Click Preview in Browser on the toolbar.</li>
+		<li>In the browser preview, move the mouse over and out of the TextBox, and change the focus between the TextBoxes. </li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>You should see the console.log() messages you put into the event fields. (Note: for Chrome, you have to make sure that
+			the developer tools window is working against the preview in browser tab instead of daVinci itself.)</li>
+	</ol>
+
+</body>
+</html>

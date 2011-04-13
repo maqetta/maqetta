@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Chart: Map</title>
+		<style type="text/css">
+			@import "../../../../dojo/resources/dojo.css";
+			@import "../../../../dijit/tests/css/dijitTests.css";
+			@import "../../../../dijit/themes/tundra/tundra.css";
+			@import "../resources/Map.css";
+			.mapContainer {
+				display: none;
+				width: 810px;
+				height: 400px;
+				border: solid 1px;
+			}
+			
+			.mapVerticalContainer {
+				display: none;
+				width: 405px;
+				height: 500px;
+				border: solid 1px;
+			}
+		</style>
+		<script type="text/javascript" djConfig="parseOnLoad:true,gfxRenderer:'svg,vml,silverlight'" src="../../../../dojo/dojo.js"></script>
+		<script type="text/javascript">
+			dojo.require("dojox.geo.charting.Map");
+			dojo.addOnLoad(function(){
+				var USStates = new dojox.geo.charting.Map("USStates", "../resources/data/USStates.json");
+				USStates.setMarkerData("../resources/markers/USStates.json");
+			});
+		</script>
+	</head>
+	<body class="tundra">
+		<h1>Simple Maps,support zoom in and zoom out.</h1>
+		<div class="mapContainer" style="display:block;" id="USStates"></div>
+	</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>Button List</title>
+		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
+		<link href="../themes/buttons.css" rel="stylesheet"></link>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+
+		<script language="JavaScript" type="text/javascript">
+			//dojo.require("dojo.parser"); // Use the lightweight parser.
+			dojo.require("dojox.mobile.parser");
+			dojo.require("dojox.mobile");
+			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
+			dojo.addOnLoad(function(){
+				var ul = dojo.byId("list");
+				for(var i = 0, len = ul.childNodes.length; i < len; i++){
+					var li = ul.childNodes[i];
+					if(li.nodeType != 1 || li.tagName != "LI"){ continue; }
+					var w = dijit.byNode(li);
+					dojo.connect(w.btnNode, "onclick", btnClicked);
+				}
+			});
+			function btnClicked(e){
+				var btnDiv = e.currentTarget;
+				if(dojo.hasClass(btnDiv, "mblBluePlusButton")){
+					dojo.removeClass(btnDiv, "mblBluePlusButton");
+					dojo.addClass(btnDiv, "mblRedMinusButton");
+				}else if(dojo.hasClass(btnDiv, "mblRedMinusButton")){
+					dojo.removeClass(btnDiv, "mblRedMinusButton");
+					dojo.addClass(btnDiv, "mblBluePlusButton");
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="mashups" dojoType="dojox.mobile.View" selected="true">
+			<h1 dojoType="dojox.mobile.Heading">Mashups</h1>
+			<ul id="list" dojoType="dojox.mobile.EdgeToEdgeList">
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" btnClass="mblBluePlusButton">
+					XX Widget
+				</li>
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-2.png" btnClass="mblRedMinusButton">
+					YY Widget
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>

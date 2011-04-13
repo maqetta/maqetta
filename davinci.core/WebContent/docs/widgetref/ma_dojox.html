@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta User Guide: Dojox Widgets</title>
+</head>
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">User Guide</a> &gt; <a href="widgetref/widgetRef.html">Widget Reference</a>    
+	</td>
+    <td class="prevnext">
+	<a href="widgetref/ma_dijit.html">Previous</a> / <a href="widgetref/widgetRef.html">Next</a>
+    </td></tr>
+</table>
+
+
+<a name="overview"><h1>Dojox Widgets</h1></a>
+
+<h2>Dojox / Layout </h2>
+
+<a name="floatingpane"><h3>FloatingPane</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.layout.FloatingPane</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Title</td><td></td><td>Yes</td></tr>
+<tr><td>URL</td><td>(href) Inherited - see <a href="#cp">ContentPane</a></td><td>Yes</td></tr>
+<tr><td>Extract Content</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Parse On Load</td><td>Inherited</td><td>No</td></tr>
+<tr><td>Prevent Cache</td><td>Inherited</td><td>No</td></tr>
+<tr><td>Preload</td><td>Inherited</td><td>No</td></tr>
+<tr><td>Refresh On Show</td><td>Inherited</td><td>No</td></tr>
+<tr><td>Loading Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Error Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Closable</td><td></td><td>Yes</td></tr>
+<tr><td>Dockable</td><td></td><td>Yes</td></tr>
+<tr><td>Resizable</td><td></td><td>Yes</td></tr>
+<tr><td>Maximizable</td><td></td><td>Yes</td></tr>
+<tr><td>Resize Axis</td><td></td><td>Yes</td></tr>
+<tr><td>Dock To</td><td></td><td>No</td></tr>
+<tr><td>Duration</td><td>MS for toggling in/out node</td><td>Yes</td></tr>
+<tr><td>contentClass</td><td>Classname on inner node</td><td>Yes</td></tr>
+<tr><td>adjustPaths</td><td>Inherited</td><td>No</td></tr>
+<tr><td>cleanContent</td><td>Inherited</td><td>No</td></tr>
+<tr><td>renderStyles</td><td>Inherited. Trigger/load styles in the content</td><td>Yes</td></tr>
+<tr><td>executeScripts</td><td>Execute (eval) scripts found in the content (security risk?)</td><td>No?</td></tr>
+<tr><td>ioArgs</td><td></td><td>No</td></tr>
+<tr><td>content</td><td>InnerHTML of the ContentPane (inherited from _Widget)</td><td>Yes</td></tr>
+<tr><td>scriptHasHooks</td><td></td><td>No</td></tr>
+</table>
+<br />
+
+<a name="radiogroup"><h3>RadioGroup</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.layout.RadioGroup</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Duration</td><td>For transition animation of Fade and Slide RadioGroups, does not affect anything in default RadioGroup.
+(How does Maqetta user create Fade and Slide?)</td><td>Yes</td></tr>
+<tr><td>Has Buttons</td><td></td><td>Yes</td></tr>
+<tr><td>persist</td><td>Inherited. Remember the selected child across sessions</td><td>Yes</td></tr>
+<tr><td>buttonClass</td><td>Class name of the Button widget to user for hasButtons</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="scrollpane"><h3>ScrollPane</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.layout.ScrollPane</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Orientation</td><td></td><td>Yes</td></tr>
+<tr><td>autoHide</td><td></td><td>Yes</td></tr>
+<tr><td>href</td><td>Inherited - see <a href="#cp">ContentPane</a></td><td>No</td></tr>
+<tr><td>extractContent</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>parseOnLoad</td><td>Inherited</td><td>No</td></tr>
+<tr><td>preventCache</td><td>Inherited</td><td>No</td></tr>
+<tr><td>preload</td><td>Inherited</td><td>No</td></tr>
+<tr><td>refreshOnShow</td><td>Inherited</td><td>No</td></tr>
+<tr><td>loadingMessage</td><td>Inherited</td><td>No</td></tr>
+<tr><td>errorMessage</td><td>Inherited</td><td>No</td></tr>
+<tr><td>doLayout</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="gridcontainer"><h3>GridContainer</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.layout.GridContainer</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Is Auto-Organized</td><td></td><td>Yes</td></tr>
+<tr><td>Is Right Fixed</td><td></td><td>Yes</td></tr>
+<tr><td>Is Left Fixed</td><td></td><td>Yes</td></tr>
+<tr><td>Has Resizable columns</td><td></td><td>Yes</td></tr>
+<tr><td>Number of Drop Zones</td><td></td><td>Yes</td></tr>
+<tr><td>DnD Avatar Opacity</td><td></td><td>Yes</td></tr>
+<tr><td>Minimum Column Width (percent)</td><td></td><td>Yes</td></tr>
+<tr><td>Minimum Child Width</td><td></td><td>Yes</td></tr>
+<tr><td>Mode</td><td></td><td>Yes</td></tr>
+<tr><td>Allow Auto Scroll</td><td></td><td>Yes</td></tr>
+<tr><td>Time to Display Popup (ms)</td><td></td><td>Yes</td></tr>
+<tr><td>Is Offset</td><td></td><td>Yes</td></tr>
+<tr><td>Specific Drag With Handles</td><td></td><td>Yes</td></tr>
+<tr><td>Execute Scripts</td><td>Not a valid property</td><td>No</td></tr>
+<tr><td>Script Has Hooks</td><td>Not a valid Prroperty</td><td>No</td></tr>
+<tr><td>acceptTypes</td><td></td><td>No</td></tr>
+<tr><td>handleClasses</td><td></td><td>No</td></tr>
+</table>
+<br />
+
+<h2>Dojox / Form Handling</h2>
+
+<a name="checkedmultiselect"><h3>CheckedMultiSelect</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.form.CheckedMultiSelect</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Size</td><td>(minSize) Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="fileinput"><h3>FileInput</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.form.FileInput</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td></td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label</td><td></td><td>Yes</td></tr>
+<tr><td>Cancel Text</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Consider adding: "layoutAlign", "minSize".</p>
+
+<a name="fileinputauto"><h3>FileInputAuto</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.form.FileInputAuto</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td></td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label</td><td></td><td>Yes</td></tr>
+<tr><td>Cancel Text</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>URL</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Blur Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Duration</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Upload Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>triggerEvent</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="fileinputblind"><h3>FileInputBlind</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.form.FileInputBlind</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td></td><td>Yes</td></tr>
+<tr><td>Value</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Label</td><td></td><td>Yes</td></tr>
+<tr><td>Cancel Text</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>URL</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Blur Delay</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Duration</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Upload Message</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>triggerEvent</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="rating"><h3>Rating</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.form.Rating</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Number of stars</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="timespinner"><h3>TimeSpinner</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.form.TimeSpinner</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td></td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Tab Index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td></td><td>Yes</td></tr>
+<tr><td>Read Only</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Intermediate Changes</td><td>Inherited</td><td>?</td></tr>
+<tr><td>Max Length</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Small Delta</td><td></td><td>Yes</td></tr>
+<tr><td>Lare Delta</td><td></td><td>Yes</td></tr>
+<tr><td>Timeout Change Rate</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>defaultTimeout</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<p>Also has: "required", "scrollOnFocus"</p>
+
+<!--------------------------------------------------------->
+
+<h2>Dojox / Widget</h2>
+
+<a name="analogguage"><h3>AnalogGuage</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.widget.AnalogGuage</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>startAngle</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>endAngle</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>cx</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>cy</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>radius</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>height</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>image</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>useRangeStyles</td><td>Inherited</td><td>No?</td></tr>
+<tr><td>useTooltip</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>hideValues</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="barguage"><h3>BarGuage</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.widget.BarGuage</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>dataX</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>dataY</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>dataWidth</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>dataHeight</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>height</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>image</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>useRangeStyles</td><td>Inherited</td><td>No?</td></tr>
+<tr><td>useTooltip</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>hideValues</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="colopicker"><h3>ColorPicker</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.widget.ColorPicker</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td>Inherited</td><td>No</td></tr>
+<tr><td>Name</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Value</td><td></td><td>Yes</td></tr>
+<tr><td>Tab index</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Disabled</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show RBG</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show HSV</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Show Hex</td><td>Inherited</td><td>No?</td></tr>
+<tr><td>Web Safe</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Animate Point</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Slide Duration</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>liveUpdate</td><td>Inherited</td><td>No?</td></tr>
+<tr><td>scrollOnFocus</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+<a name="datagrid"><h3>DataGrid</h3></a>
+<table class="resources" border="1" cellpadding="2" style="border-collapse:collapse">
+<tr><td colspan="3" style="background:#FFD74E;font-size:1.5em;padding:5px 10px">dojox.grid.DataGrid</td></tr>
+<tr><th>Maqetta property</th><th>Comments</th><th>Show?</th></tr>
+<tr><td>ID</td><td>Inherited</td><td>No</td></tr>
+<tr><td>Keep Rows</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Rows Per Page</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Auto Width</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Auto Height</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Auto Render</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Row Count</td><td></td><td>Yes</td></tr>
+<tr><td>Elastic View</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>Single Click Edit</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>User Can Reorder Columns</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>queryOptions</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>fetchText</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>sortFields</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>classTag</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>selectionMode</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>rowSelector</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>placeholderLabel</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>selectable</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>loadingMessage</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>errorMessage</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>noDataMessage</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>sortInfo</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>themeable</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>fastScroll</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>delayScroll</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>scrollRedrawThreshold</td><td>Inherited</td><td>Yes</td></tr>
+<tr><td>cellOverClass</td><td>Inherited</td><td>Yes</td></tr>
+</table>
+<br />
+
+
+<p class="prevnext"><a href="widgetref/ma_dijit.html">Previous</a> / <a href="widgetref/widgetRef.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

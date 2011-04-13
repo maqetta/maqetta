@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Setting Properties</title>
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
+		 &gt; <a href="pageEditor.html">Page Editor</a>
+    </td>
+    <td class="prevnext">
+    <a href="peInlineEditing.html">Previous</a> / <a href="peAppCss.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Using the Properties Palette</h1>
+
+<p><i>Note: In this documentation, the term "widget" refers to anything in the Maqetta Widgets palette, including HTML elements.</i></p>
+
+<p>The Properties palette is located on the right side of the Maqetta workspace.  
+When a file is opened in the Page Editor, the Properties palette will display panes that contain fields for setting properties on widgets and HTML elements
+(e.g. styles, events, widget-specific properties and HTML attributes).</p>
+
+<p><em>All changes made in the Properties palette apply only to the currently selected widget, which is displayed at the top of the Properties palette
+and highlighted with a dark border on the Page Editor canvas. Any changes made from the Properties palette will be applied to this widget.</em></p>
+
+<h3>Topmost section: Current Selection and 'class' attribute</h3>
+
+<p>At the top of the Properties palette are two rows:</p>
+<p><img src="img/prop_palette_top_rows.png"></img></p>
+<ul>
+<li>The first row (with the word "<em>for:</em>") shows information about the currently selected widget, including
+the type of widget (e.g., "Button"), in some cases the widget's 
+text content (e.g., a button's label text, such as "Click me"),
+any custom CSS classes defined on the widget's 'class' attribute
+(e.g., ".normal_button"), and (if the widget has an ID) the widget's ID (e.g., "#myid").</li>
+<li>The second row provides a text input area for the widget's 'class' attribute.
+We recommend that, whenever you need to change CSS properties on a widget, 
+you define one or more custom CSS classes and create new style rules in your <strong>app.css file</strong>
+and place any CSS property changes in those new style rules.
+(These techniques are explained in <a href="peAppCss.html">"Creating Style Rules with app.css"</a>.)</li>
+</ul>
+
+<h3>Properties Palette Slide-in Panes</h3>
+
+<p>Underneath the topmost section is the main editing area for the Properties palette.
+This main editing section has 3 levels of slide-in/slide-out panes:</p>
+<ul>
+<li>
+<p><strong>Root level</strong> - The Root level of the Properties palette shows buttons for the various sub-sections
+for different groups of properties. You descend into sub-sections by clicking on one of the buttons:</p>
+<p><img src="img/prop_palette_root.png"></img></p>
+</li>
+<li>
+<p><strong>Property Section panes</strong> - The various sub-section panes in the Properties pane (Common section, Widget-Specific section, etc.)
+show a list of collection of related properties. For example, below is a picture of the Layout section.</p>
+<p><img src="img/prop_palette_layout_section.png"></img></p>
+<p>Notice that after descending into a sub-section, a breadcrumb control appears towards the
+top of the palette which allows you to return to a higher-level pane (e.g., "Root").</p>
+<p>At the right side of each property row is a "&gt;" icon which will allow you to descend into the "Detailed CSS" pane
+corresponding to that particular property:</p>
+</li>
+<li>
+<p><strong>Detailed CSS panes</strong> - Each CSS property has its own Detailed CSS pane
+that shows the list of stye rules that apply to this property on this particular widget. 
+Below is a picture of the Deatiled CSS pane corresponding to the 'width' property:</p>
+<p><img src="img/prop_palette_width_details.png"></img></p>
+<p>For more information on the Detailed CSS panes, see <a href="peAppCss.html">"Creating Style Rules with app.css"</a>.</p>
+</li>
+</ul>
+
+<h3>Controls for Changing Values on Particular Properties</h3>
+
+<dl>
+<dt class="text"><b>Drop-down input field</b></dt>
+<dd>You can either type in a value or select one of the pre-set values in the drop-down list.
+As a guide, Maqetta provides the most commonly used <a href="http://htmlhelp.com/reference/css/units.html" rel="external">CSS units</a> for each property. 
+You can select one of the drop-down values and then modify the value as applicable for your particular widget. <b>auto</b> is also provided for CSS properties for which that keyword is applicable (e.g. <code>width:auto</code> for 
+<a href="http://www.devarticles.com/c/a/Web-Style-Sheets/Using-Auto-Margins-to-Center-DIVs-with-CSS/">centering</a>, or <code>overflow:auto</code> for 
+<a href="http://www.quirksmode.org/css/clearing.html">clearing floats</a>). </dd>
+
+<dt class="text"><b>Plus and Minus Controls</b></dt>
+<dd>The <b>plus</b> and <b>minus</b> controls <img title="+ | -- " class="inline" src="img/plus-minus-control.png" /> are to the right of numeric input fields. When there is a numeric value set in the field, clicking on the <b>plus</b> control will increment the value, and clicking on the <b>minus</b> control will decrement it. This is handy for fine-tuning the values as you view the effect on the selected widget in the page editor.</dd>
+
+<dt class="text"><b>Go To Detailed CSS Control</b></dt>
+<dd>
+The "&gt;" icon to the far right of each property will take you to the Detailed CSS pane
+corresponding to the given property.
+For more information on the Detailed CSS panes, see <a href="peAppCss.html">"Creating Style Rules with app.css"</a>.</dd>
+</dl>
+
+
+<h2>Properties Sections</h3>
+
+<h3>Common Properties</h3>
+
+<p>The <b>Common</b> pane contains core HTML attributes that are common to all widgets and HTML elements.</p>
+
+<table class="palette">
+<thead><tr><th colspan="2">Common</th></tr></thead>
+<tr><th>id</th><td>This is the standard 'id' attribute that is available
+on all elements in HTML.</td></tr>
+<tr><th>title</th><td>Browsers typically display this string as a tooltip when the mouse hovers over the given element.</td></tr>
+</table>
+
+<p>Example showing how <b>id</b> and <b>class</b> are displayed in the <a href="peOutlinePalette.html">Outline palette</a>:</p>
+<ul>
+<li>(case 1) <b>&lt;label&gt;</b> "John": <b>id</b>="fname"</li>
+<li>(case 2) <b>&lt;label&gt;</b> "W.": <b>class</b>="namefields"</li>
+<li>(case 3) <b>&lt;label&gt;</b> "Doe": <b>id</b>="lname", <b>class</b>="namefields"</li>
+</ul>
+
+<p>In the <a href="peOutlinePalette.html">Outline palette</a> you should see:<br />
+<img src="img/OutlinePalette-id-class.png"/></p>
+
+
+<h3>Widget Specific Properties</h3>
+
+<p>The <b>Widget Specific</b> pane contains properties that are specific to the type of widget that is selected.  
+For example, most of the control widgets have a <b>Disabled</b> checkbox because controls can be enabled or disabled.
+Many of the container widgets have <b>URL</b> and <b>Content</b> properties where you can specify the content for the container.  
+Some other examples: <b>Check Box</b> and <b>Radio Button</b> have a <b>Checked</b> property, <b>MultiSelect</b> has a <b>Size</b>
+property, and <b>Calendar</b> has a <b>Day Width</b> property.</p>
+
+
+<h3>Event Properties</h3>
+
+<p>The <b>Events</b> pane contains properties that control user events such as <b>onclick</b>, <b>onmouseover</b> and <b>onfocus</b>.
+In Maqetta you can use events to trigger a new <a href="applicationStates.html">application state</a>, so these properties work in conjunction with the <a href="peStatesPalette.html">States palette</a>.
+You define your states first, using the <a href="peStatesPalette.html">States palette</a>, and then they will show up in the drop-down lists for all the event properties.</p>
+
+<p>For example, say you want to display a tooltip dialog on a Button mouseover event.  
+First configure a <a href="applicationStatesAbout.html">state</a> that displays the tooltip.
+Then, with the Button selected, go to the <b>onmouseover</b> property in the Properties palette and select your tooltip state from the drop-down.  
+See the tutorial <a href="tutorials/tutorial3.html">Build a Task Manager (Application States)</a> for a detailed example showing how to do this.</p>
+
+<table class="palette">
+<thead><tr><th colspan="2">Events</th></tr></thead>
+<tr><th>all events</th><td>Specify the new <a href="applicationStatesAbout.html">state</a> to display when the event occurs. <a href="http://www.w3schools.com/jsref/dom_obj_event.asp" rel="external">More on events...</a>.</td></tr>
+</table>
+
+<a name="layout"><h3>Layout Properties</h3></a>
+
+<p>These are CSS properties that control the <a href="http://www.w3schools.com/CSS/css_dimension.asp" rel="external">dimension</a> 
+and <a href="http://www.w3schools.com/css/css_positioning.asp" rel="external">positioning</a> of widgets and HTML elements. </p>
+
+<p>Notice how changes made in the Properties palette immediately affect the widget on the canvas (after you hit Enter or click off the input field).
+Likewise, changes you make by manipulating the widget on the canvas will immediately update the values in the corresponding fields in the Properties palette.
+For example, when you resize a widget on the canvas, the height and width is updated in the Properties palette.</p>
+
+
+<table class="palette">
+<thead><tr><th colspan="2">Layout</th></tr></thead>
+<tr><th>width</th>
+    <td rowspan="2">
+    	Widget width and height in <a href="http://htmlhelp.com/reference/css/units.html" rel="external">CSS units</a>.
+    </td></tr>
+<tr><th>height</th></tr>
+
+<tr><th><nobr>show min/max</nobr></th><td>Check this box to display the min/max properties. These properties overrule the normal width and height.
+<a href="http://www.quirksmode.org/css/width.html" rel="external">Learn more...</a></td></tr>
+<tr><th>min-width</th><td>Minimum width for this widget. Overrules the normal width.</td></tr>
+<tr><th>max-width</th><td>Maximum width for this widget. Overrules the normal width.</td></tr>
+<tr><th>min-height</th><td>Minimum height for this widget. Overrules the normal height.</td></tr>
+<tr><th>max-hegith</th><td>Maximum height for this widget. Overrules the normal height.</td></tr>
+
+<tr><th>position</th><td>This setting overrides the Maqetta system-wide positioning (see <b>Preferences</b> under the <a href="wsMenubar.html">Maqetta Menu Bar</a>) for this particular widget. Maqetta recommends using the default Maqetta positioning, then use this setting when you need a widget to be set to absolute positioning. (See this <a href="tutorials/tutorial2.html">Maqetta tutorial</a> for an example.) Also, the <b>Switch layout</b> <a href="peToolbar.html">toolbar button</a> provides a convenient way to temporarily switch the layout setting (see the <a href="peToolbar.html">Page Editor Toolbar</a> for details).
+<a href="http://www.w3schools.com/Css/pr_class_position.asp" rel="external">Learn more about the CSS position property...</a> </td></tr>
+<tr><th>left</th><td>When using <b>abslute</b> positioning, this sets the x coordinate of the upper-left corner of the widget, relative to the page.</td></tr>
+<tr><th>top</th><td>When using <b>abslute</b> positioning, this sets the y coordinate of the upper-left corner of the widget, relative to the page.</td></tr>
+<tr><th>display</th><td><a href="http://www.w3schools.com/css/pr_class_display.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>opacity</th><td>Sets the opacity or transparency of the widget. 
+<a href="http://www.w3schools.com/Css/css_image_transparency.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>box-shadow</th><td>(New in CSS3) Creates a shadow effect on block-level elements. The property takes 3 lengths and a color.
+<a href="http://www.css3.info/preview/box-shadow/" rel="external">Learn more...</a></td></tr>
+<tr><th>float</th><td>With float, a widget can be pushed to the left or right, allowing other elements to wrap around it. (Float is ignored with absolute positioning.)
+<a href="http://www.w3schools.com/css/css_float.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>clear</th><td>Use clear to prevent floated elements from floating to the left or right of this widget. 
+<a href="http://www.w3schools.com/css/pr_class_clear.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>overflow</th><td>Specifies what happens if content overflows an element's box. 
+<a href="http://www.w3schools.com/css/pr_pos_overflow.asp rel="external"">Learn more...</a><br />
+Can also be used for <a href="http://www.quirksmode.org/css/clearing.html rel="external"">clearing floats</a>.</td></tr>
+<tr><th>z-index</th><td>Specifies the stack order of an elements, and only applies to positioned elements. 
+<a href="http://www.w3schools.com/css/pr_pos_z-index.asp rel="external"">Learn more...</a></td></tr>
+</table>
+
+
+
+<h3>Padding/Margins</h3>
+
+<p>The padding and margin can be set using either the shorthand <b>(padding)</b> and <b>(margin)</b> properties, which combine all the individual properties, 
+or by using one or more of the individual properties.</p>
+
+<table class="palette">
+<thead><tr><th colspan="2">Paddings/Margins</th></tr></thead>
+<tr><th>(padding)</th><td>Sets the padding on all sides. Can have from one to four values. <a href="http://www.w3schools.com/css/css_padding.asp" rel="external">Learn more...</a></td></tr>
+<tr><th><nobr>show t/r/b/l</nobr></th><td>Check this box to display the padding properties for individual sides.</td></tr>
+<tr><th>top</th><td>sets the top padding</td></tr>
+<tr><th>right</th><td>sets the right padding</td></tr>
+<tr><th>bottom</th><td>sets the bottom padding</td></tr>
+<tr><th>left</th><td>sets the left padding</td></tr>
+<tr><th>(margin)</th><td>Sets the margins on all sides. Can have from one to four values. <a href="http://www.w3schools.com/css/css_margin.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>show t/r/b/l</th><td>Check this box to display the margin properties for individual sides.</td></tr>
+<tr><th>top</th><td>sets the top margin</td></tr>
+<tr><th>right</th><td>sets the right margin</td></tr>
+<tr><th>bottom</th><td>sets the bottom margin</td></tr>
+<tr><th>left</th><td>sets the left margin</td></tr>
+</table>
+
+<h3>Background</h3>
+
+<table class="palette">
+<thead><tr><th colspan="2">Background</th></tr></thead>
+<tr><th>color</th><td>Background color for the widget using the color picker.</td></tr>
+<tr><th>image/gradient</th><td>Options are <b>image</b> or <a href="https://developer.mozilla.org/en/CSS/-moz-linear-gradient" rel="external">gradient</a>.</td></tr>
+<tr><th><nobr>background-image url</nobr></th><td>The url for the background image. 
+<a href="http://www.w3schools.com/css/pr_background-image.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>repeat</th><td>Sets if/how a background-image will be repeated.
+<a href="http://www.w3schools.com/css/pr_background-repeat.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>background-position</th><td>Sets the starting position of a background image.
+<a href="http://www.w3schools.com/css/pr_background-position.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>background-size</th><td>(New in CSS3) Can be used to stretch or shrink the background image.
+<a href="http://www.w3.org/TR/2002/WD-css3-background-20020802/#background-size" rel="external">Learn more...</a></td></tr>
+<tr><th>background-origin</th><td>(New in CSS3) Determines how the background-position is calculated.
+<a href="http://www.css3.info/preview/background-origin-and-background-clip/" rel="external">Learn more...</a></td></tr>
+<tr><th>background-clip</th><td>(New in CSS3) Determines whether the bacgkround extends into the border area or not.
+<a href="http://www.css3.info/preview/background-origin-and-background-clip/" rel="external">Learn more...</a></td></tr>
+</table>
+
+<h3>Border</h3>
+
+<p>The border can be set using either the shorthand <b>(border)</b> property, which combines all the individual border properties, 
+or by using one or more of the individual border properties.</p>
+
+<table class="palette">
+<thead><tr><th colspan="2">Border</th></tr></thead>
+<tr><th>(border)</th><td>Syntax: <b>border-width border-style border-color</b> 
+<a href="http://www.w3schools.com/css/css_border.asp" rel="external">Learn more...</a></td></tr>
+<tr><th>show</th><td>Use this drop-down to select which individual border properties to display.</td></tr>
+<tr><th>border-top</th><td>sets the top border</td></tr>
+<tr><th>border-right</th><td>sets the right border</td></tr>
+<tr><th>border-bottom</th><td>sets the bottom border</td></tr>
+<tr><th>border-left</th><td>sets the left border</td></tr>
+<tr><th>(border-radius)</th><td>(CSS3) Creates rounded corners. The border-*-radius properties can each accept either one or two values, expressed as a length or a percentage.
+<a href="http://www.css3.info/preview/rounded-border/" rel="external">Learn more...</a></td></tr>
+<tr><th>show details</th><td>Check this box to display the border-radius properties for each individual corner.</td></tr>
+<tr><th>border-top-left-radius</th><td>sets the radius for the top-left corner</td></tr>
+<tr><th>border-top-right-radius</th><td>sets the radius for the top-right corner</td></tr>
+<tr><th><nobr>border-bottom-right-radius</nobr></th><td>sets the radius for the bottom-right corner</td></tr>
+<tr><th>border-bottom-left-radius</th><td>sets the radius for the bottom-left corner</td></tr>
+</table>
+
+
+<h3>Fonts and Text</h3>
+
+<table class="palette">
+<thead><tr><th colspan="2">Fonts and Text</th></tr></thead>
+<tr><th>font</th><td>Sets all the font properties in one declaration. <a href="http://www.w3schools.com/css/pr_font_font.asp">Learn more...</a></td></tr>
+<tr><th>font-family</th><td>Sets the font for text. <a href="http://www.w3schools.com/css/pr_font_font-family.asp">Learn more...</a></td></tr>
+<tr><th>size</th><td>Sets the font size for text. <a href="http://www.w3schools.com/css/pr_font_font-size.asp">Learn more...</a></td></tr>
+<tr><th>color</th><td>Sets the text color. <a href="http://www.w3schools.com/css/css_text.asp">Learn more...</a></td></tr>
+<tr><th>font-weight</th><td>Sets the font weight for text. <a href="http://www.w3schools.com/css/pr_font_weight.asp">Learn more...</a></td></tr>
+<tr><th>font-style</th><td>Sets the font style for text. <a href="http://www.w3schools.com/css/pr_font_font-style.asp">Learn more...</a></td></tr>
+<tr><th><nobr>text-decoration</nobr></th><td>Adds decoration to the text. <a href="http://www.w3schools.com/css/pr_text_text-decoration.asp">Learn more...</a></td></tr>
+<tr><th>text-align</th><td>Aligns the text horizontally. <a href="http://www.w3schools.com/css/pr_text_text-align.asp">Learn more...</a></td></tr>
+<tr><th>vertical-align</th><td>Aligns the text verically. <a href="http://www.w3schools.com/css/pr_pos_vertical-align.asp">Learn more...</a></td></tr>
+<tr><th>white-space</th><td>Sets how white space inside an element is handled. <a href="http://www.w3schools.com/css/pr_text_white-space.asp">Learn more...</a></td></tr>
+<tr><th>text-indent</th><td>Indents the first line of text in an element. <a href="http://www.w3schools.com/css/pr_text_text-indent.asp">Learn more...</a></td></tr>
+<tr><th>line-height</th><td>Sets the difference between lines. <a href="http://www.w3schools.com/css/pr_dim_line-height.asp">Learn more...</a></td></tr>
+</table>
+
+
+<p class="prevnext"><a href="peInlineEditing.html">Previous</a> / <a href="peAppCss.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+</body>
+</html>

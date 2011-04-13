@@ -1,0 +1,30 @@
+{
+    "id": "http://jqueryui.com/datepicker",
+    "name": "jquery.ui.datepicker",
+    "spec": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "jquery-1.4.4.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "javascript",
+            "src": "jquery-ui-1.8.11.custom.min.js",
+            "$library": "jquery-ui"
+        },
+        {
+            "type": "css",
+            "src": "css/smoothness/jquery-ui-1.8.11.custom.css",
+            "$library": "jquery-ui"
+        }
+    ],
+    "library": {
+        "jquery-ui": {
+            "version": "1.8.11",
+            "src": "../../../jquery-ui-1"
+        }
+    },
+    "content": "<input type='text' id='__WID___datepicker'>",
+    "javascript": "$('#__WID___datepicker').datepicker();"
+}

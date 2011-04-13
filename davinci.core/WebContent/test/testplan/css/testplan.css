@@ -1,0 +1,46 @@
+body {
+	margin-left:2em;
+	margin-right:2em;
+	background-color:#f8f8f8;
+}
+.navbar {
+	font-size:90%;
+	text-align:center;
+}
+.test_title {
+	color:#003;
+	text-align:center;
+	margin-top:.25em;
+	margin-bottom:-.5em;
+}
+.test_section {
+	color:#003;
+	border-bottom:2px solid #003;
+	margin-top:1em;
+}
+.steps_subsection, .expectedResults_subsection {
+	font-weight:bold;
+	font-size:110%;
+	margin-top:1em;
+	margin-bottom:.5em;
+	padding-top:0;
+	padding-bottom:0;
+}
+.steps_subsection {
+	color:#003;
+}
+.expectedResults_subsection {
+	color:#080;
+}
+.steps, .expectedResults {
+	margin-top:0;
+	margin-bottom:0;
+	padding-top:0;
+	padding-bottom:0;
+}
+pre {
+	background:#eee;
+	border:solid 1px black;
+	margin-left:1em;
+	padding:.75em;
+}

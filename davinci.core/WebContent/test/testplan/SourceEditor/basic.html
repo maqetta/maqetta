@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Source editor basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Source editor basic tests</h1>
+
+	<h2 class="test_section">Verifying the generated source code on a new file</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the daVinci server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Click on the "New file" icon on the toolbar. Choose any filename.</li>
+		<li>Click on the Split View icon (top/bottom) to display the file split view, 
+			which shows the design pane on the top and source pane on the bottom. 
+		The code in the source pane should look something like this:
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Untitled&lt;/title&gt;
+&lt;script type='text/javascript'&gt;
+oam_urls={
+
+}
+&lt;/script&gt;
+&lt;style type="text/css"&gt;
+@import "./themes/claro/claro.css";
+@import "./dojo/resources/dojo.css";
+&lt;/style&gt;
+&lt;script type="text/javascript" src="./dojo/dojo.js"
+	djConfig="parseOnLoad: true"&gt;&lt;/script&gt; 
+&lt;script type="text/javascript"&gt;
+    dojo.require("dojo.parser");
+    dojo.require("workspace.davinci.States");
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body class="claro"&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></li>
+		<li>Verify that you can highlight and copy/paste the source code into some other text editor.
+			<span style="color:red;font-weight:bold;font-style:italic;">Integration with system
+			clipboard not working in 0.6, will be fixed for 0.7.)</span></li>
+		<li>Click on the "Save" icon on the toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Click on the "X" close button for the editor tab for this file</li>
+		<li>In the Files palette, double-click on the file you just created to re-open the file.
+			Go into Split View.</li>
+		<li>In Source pane verify that the source code is the same as it was when you saved and closed the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Design view is displayed by default when a file is opened or created.</li>
+		<li>The saved file should open and the source code should be the same as how it was when you clicked on the Save button.</li>
+	</ol>
+
+	<h2 class="test_section">Adding and deleting primitive widgets</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Drag a Button widget onto the canvas.</li>
+		<li>View the source and verify that new code has been generated inside the body tag that looks something like this:
+<pre>
+&lt;body class="claro"&gt;
+&lt;input dojoType="dijit.form.Button"
+	type="dijit.form.Button"
+	label="Button"&gt;&lt;/input&gt;
+&lt;/body&gt;
+</pre></li>
+	    <li>In Source pane, change the text for the button's label.</li>
+	    <li>In Design pane and verify that the button's label is changed.</li>
+		<li>In Design pane, drag several primitive widgets onto the canvas (e.g. TextBox, ComboBox, Calendar).</li>
+		<li>In Source pane verify that the source code is present for each widget.</li>
+		<li>Delete one of the widgets In Design pane and verify that the source code for the widget has been removed from Source view.</li>
+		<li>Select and delete one of the widgets from Source view and verify that the widget is removed from Design view.</li>
+		<li>In Source pane, select, copy and paste a widget to clone a second version of the widget.</li>
+		<li>Change some textual content (e.g., a button label) and change the width property of a widget.</li>
+		<li>In Design pane and verify that the cloned widget is displayed properly.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As widgets are added, modified or removed In Design pane, the source code is automatically updated Source view.</li>
+		<li>When widgets are added, modified, copied or removed In Source pane, the changes are automatically made In Design pane as well.</li>
+	</ol>
+	
+	<h2 class="test_section">Container widgets</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Drag an HTML DIV onto the canvas.</li>
+		<li>Go to the Properties palette and set the margin-top to "5px".</li>
+		<li>Drag a TextBox and a Button onto the canvas inside the div.</li>
+		<li>In Source pane verify that the TextBox and Button were placed inside the div open and close tags.</li>
+		<li>Verify that the div style attribute has been set with <code>"margin-top: 5px;"</code>.</li>
+		<li>The source code for the div should look something like this:
+<pre>
+&lt;div style="margin-top: 5px;"&gt;
+	&lt;input dojoType="dijit.form.TextBox"
+		type="dijit.form.TextBox"&gt;&lt;/input&gt;
+	&lt;input dojoType="dijit.form.Button"
+		type="dijit.form.Button"
+		label="Button"&gt;&lt;/input&gt;
+&lt;/div&gt;
+</pre></li>
+		<li>In Design pane, select the DIV and delete it.</li>
+		<li>In Source pane verify that the div and all of it's contents have been removed.</li>
+		<li>In Source pane add a div (<code>&lt;div&gt;&lt;/div&gt;</code>) somewhere in the body.</li>
+		<li>In Design pane and verify that a DIV is on the canvas.</li>
+		<li>Select the DIV and drag some widgets inside it.</li>
+		<li>In Source pane verify that the new widgets are inside the div that you just created.</li>
+		<li>Add and delete various container widgets In Design pane and observe the source code after each change.</li>
+		<li>Drop widgets inside the container widgets and verify that the source code for the new widgets is inside the opening and closing tags of the parent container widget.</li>
+		<li>In Source pane, select, cut and paste widgets into and out of container widgets and observe the changes In Design pane.</li>  
+		<li>Save and close the file at various points, then re-open it and verify that the source has not changed.</li>
+		<li>Close the file without saving your changes, then re-open it and verify that the changes did not get saved.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As widgets are added, modified or removed In Design pane, the source code is automatically updated Source view.</li>
+		<li>When widgets are added, modified, copied or removed In Source pane, the changes are automatically made In Design pane as well.</li>
+		<li>When the file is saved, closed and re-opened, the file should open and its contents should be the same as how it was when you clicked on the Save button.</li>
+	</ol>
+
+</body>
+</html>

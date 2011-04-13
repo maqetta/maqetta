@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>dijit.layout.TabContainer Programmatic Test</title>
+
+	<!-- only needed for test files: -->
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+	</style>
+
+	<!-- required: the default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="../../../dojo/dojo.js"
+		djConfig="isDebug: true, parseOnLoad: true"></script>
+
+	<!-- only needed for alternate theme testing: -->
+	<script type="text/javascript" src="../_testCommon.js"></script>
+
+	<script type="text/javascript">
+		dojo.require("dijit.dijit"); // optimize: load dijit layer
+		dojo.require("dijit.layout.TabContainer");
+        dojo.require("dijit.layout.ContentPane");
+
+		var tab = 1;
+
+		var tc, cp;
+		function create(initialTabs){
+			tc = new dijit.layout.TabContainer({style:'height:200px;width:500px;'}, dojo.byId('main'));
+
+			for(var i=0; i<initialTabs; i++){
+				cp = new dijit.layout.ContentPane({title: 'Tab ' + tab});
+				cp.domNode.innerHTML = "Contents of Tab " + tab++;
+				tc.addChild(cp);
+			}
+
+			tc.startup();
+        }
+
+        function addTab(){
+			cp = new dijit.layout.ContentPane({title: 'Tab' + tab});
+			cp.domNode.innerHTML = "Contents of Tab " + tab++;
+			tc.addChild(cp);
+        }
+	</script>
+</head>
+<body class="claro">
+	<h2 class="testTitle">dijit.layout.TabContainer programmatic test</h2>
+	<div id='main'>
+	</div>
+
+	<button onclick="create(0)">create empty tab container</button>
+	<button onclick="create(2)">create tab container w/2 tabs</button>
+
+	<button onclick="tc.selectChild(tc.getChildren()[1]);">select second tab</button>
+	<button onclick="tc.removeChild(tc.getChildren()[1]);">remove second tab</button>
+	<button onclick="addTab();">add tab</button>
+</body>
+</html>

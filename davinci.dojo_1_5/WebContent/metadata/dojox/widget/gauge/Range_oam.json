@@ -1,0 +1,56 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/gauge/Range",
+    "name": "dojox.widget.gauge.Range",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.widget.gauge._Gauge');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../../"
+        }
+    },
+    "property": {
+        "low": {
+            "datatype": "number",
+            "description": "the low value of the range",
+            "hidden": false
+        },
+        "high": {
+            "datatype": "number",
+            "description": "the high value of the range",
+            "hidden": false
+        },
+        "hover": {
+            "datatype": "string",
+            "description": "the text to put in the tooltip for the gauge",
+            "hidden": false
+        },
+        "color": {
+            "datatype": "json",
+            "description": "the color of the range.  This must be an object of one of two forms:\n{'color': 'color-name'}\nOR\n(for a gradient:)\n{'type': 'linear', 'colors': [{offset: 0, color:'#C0C0C0'}, {offset: 1, color: '#E0E0E0'}] }",
+            "hidden": false
+        },
+        "size": {
+            "datatype": "number",
+            "description": "for a circular gauge (such as an AnalogGauge), this dictates the size of the arc",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>"
+}

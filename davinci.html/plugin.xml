@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <extension
+           point="org.eclipse.equinox.http.registry.resources">
+      </extension>
+      <extension id="html.metadata" point="org.eclipse.equinox.http.registry.resources">
+      	<resource alias="/app/metadata/html/0.8" base-name="/WebContent/metadata"/>
+      </extension>
+      <extension
+            point="davinci.core.ajaxLibrary" >
+          <ajaxLibrary name="html" id="html" version="0.8">
+            <libraryPath
+                location="WebContent/html"
+                name="/lib/html">
+            </libraryPath>
+           <metadata location="app/metadata/html/0.8" />
+          </ajaxLibrary>
+      </extension>
+</plugin>

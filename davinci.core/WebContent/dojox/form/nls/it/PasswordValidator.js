@@ -1,0 +1,5 @@
+({
+        nomatchMessage: "Le password non corrispondono.",
+		badPasswordMessage: "Password non valida."
+})
+

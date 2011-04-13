@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr">
+    
+    <head>
+    	<title>Maqetta Documentation</title>
+        <script src="../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+        <script type="text/javascript">
+            dojo.require("dijit.layout.ContentPane");
+            dojo.require("dojox.layout.ContentPane");
+            dojo.require("dijit.layout.BorderContainer");
+            dojo.require("dojo.data.ItemFileReadStore");
+            dojo.require("dijit.Tree");
+
+            // Global variables
+            docs_base_url = null;
+			currently_viewed_page = null;
+			docs_page_array = {};
+            
+			dojo.addOnLoad(function() {
+				// Set global variable docs_base_url
+				// to the base directory for the docset
+console.log("addOnLoad entered");
+                var initial_loc = location.href;
+                var hash_index = initial_loc.indexOf('#');
+console.log("hash_index="+hash_index);
+                var initial_loc_nohash = (hash_index>=0) ? initial_loc.substr(0,hash_index) : initial_loc;
+            	var base_index = initial_loc_nohash.lastIndexOf('/');
+            	// docs_base_url is a global
+            	docs_base_url = initial_loc_nohash.substr(0,base_index);
+            	var initial_goto_page = null;
+            	if(hash_index>=0){
+                	var hash = initial_loc.substr(hash_index+1);
+                	if(hash.length>0){
+                		initial_goto_page = initial_loc.substr(hash_index+1)+".html";
+                	}
+            	}
+console.log("initial_goto_page="+initial_goto_page);
+            	// Go get the JSON structure that is used to populate the Tree widget
+            	var maqettadocs_json_deferred = dojo.xhrGet({
+                    url: "maqettadocs.json",
+                    handleAs: "json",
+                    preventCache: true,
+                    load: function(data) {
+                    	
+                    	var getUrlsRecursive=function(item){
+                    		if(dojo.isString(item.url) && item.url.length>0){
+                    			// docs_page_array is a global variable
+                        		docs_page_array[item.url]=true;
+                    		}
+                    		if(dojo.isArray(item.children)){
+                        		for(var itemchild=0;itemchild<item.children.length;itemchild++){
+                        			getUrlsRecursive(item.children[itemchild]);
+                        		}
+                    		}
+                    	}
+                    	for(var item=0;item<data.items.length; item++){
+                        	getUrlsRecursive(data.items[item]);
+                    	}
+                    },
+                    error: function(error) {
+                        console.log("unable to load maqettadocs.json");
+                    }
+            	});
+            	
+				content.onDownloadEnd = function() {
+					dojo.query('A').forEach(function(link){
+						if (link.getAttribute("href")) {
+					   		if (link.getAttribute("rel") == "external") {
+								link.target = "_blank";
+							} else if (!("target" in link) || link.target != "_blank") {
+								link.onclick = function(e){
+									for (var node = e.target; node; node = node.parentNode) {
+										if ('href' in node) {
+											return goToPage(node.href);
+										}
+									}
+								}; 
+							}
+						}
+					});
+					if(initial_goto_page){
+						// Have to use temporary variable to prevent
+						// infinite loop when loading the first page
+						var goto_page = initial_goto_page;
+						initial_goto_page = null;
+						dojo.when(maqettadocs_json_deferred, function(){
+							goToPage(goto_page);
+						});
+					}
+					if("onhashchange" in window){
+						dojo.connect(window, "onhashchange", function() {
+							var new_url = location.href;
+							var hash_index = new_url.indexOf('#');
+							if(hash_index>=0){
+							   	var hash = new_url.substr(hash_index+1);
+							   	if(hash.length>0){
+								   	if(hash !== currently_viewed_page){
+							   			var goto_page = new_url.substr(hash_index+1)+".html";
+							   			goToPage(goto_page);
+							   		}
+							   	}
+							}
+							
+						});
+					}
+				}
+			});
+			
+            function goToPage(href) {
+                var filename = href;
+                // sometimes this routine is called with a string
+                // and sometimes with an array of strings
+                if(dojo.isArray(filename)){
+                	filename=filename[0];
+                }
+                // sometimes this routine is called with an absolute url
+                // if so, convert to relative url
+                var base_len = docs_base_url.length;
+                if(filename.substr(0,base_len)===docs_base_url){
+                	filename = filename.substr(base_len+1);
+                }
+                var target_anchor = null;
+/* Possible approach for supporting hyperlinks within a page
+	For now, they are disabled.
+                // hyperlinks within a content page include a # in the href
+                var hash_index = filename.indexOf('#');
+                if(hash_index >= 0){
+                    // By convention, hyperlinks within a page must be of form
+                    // <pagenam>@<otherstring>. For example, techdocs/themeEditor@definition
+                    filename = filename.substr(hash_index+1);
+                	var at_index = filename.indexOf('@');
+                 	if(at_index > 0){
+                     	target_anchor = filename;
+                    	filename = filename.substr(0,at_index);
+                	}
+                }
+*/
+               	// make sure there is a .html at the end
+               	if(filename.indexOf('.html')<0){
+                   	filename += ".html";
+               	}
+                // only go to this page if it is in the list of known pages, else things will hang
+                if(docs_page_array[filename]){
+	                var dot_index = filename.lastIndexOf('.');
+	                var filename_no_ext = (dot_index>=0) ? filename.substr(0,dot_index) : filename;
+	                var hash_index = location.href.indexOf('#');
+	                var current_loc_nohash = (hash_index>=0)? location.href.substr(0,hash_index) : location.href;
+	                // currently_viewed_page is a global
+	    			currently_viewed_page = filename_no_ext;
+	            	content.setHref(filename);
+	            	if(!target_anchor){
+		            	target_anchor = filename_no_ext;
+	            	}
+	                location.href = current_loc_nohash + '#' + target_anchor;
+					print_content.setHref(href);
+                }else{
+                    console.log("Bad hyperlink. currently_viewed_page="+currently_viewed_page+", target="+filename);
+                }
+            	return false;
+            }
+
+			/*
+			function PrintContent() {
+				var DocumentContainer = document.getElementById('content');
+				var WindowObject = window.open("", "PrintWindow",
+				"width=750,height=650,top=50,left=50,toolbars=no, menubar=no,scrollbars=yes,status=no,resizable=yes");
+				WindowObject.document.writeln(DocumentContainer.innerHTML);
+				WindowObject.document.close();
+				WindowObject.focus();
+				WindowObject.print();
+				WindowObject.close();
+			}
+			*/
+			
+        </script>
+        <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/claro.css"
+        />
+        <style type="text/css">
+            html, body { width: 100%; height: 100%; margin: 0; overflow:hidden; } 
+            #borderContainerTwo { width: 100%; height: 100%; }
+			#print_content {display:none; }
+			
+			@media print {
+				#borderContainerTwo {display:none;}
+				#print_content   {display:block; overflow:visible; width:auto; height:auto; }
+				html, body { overflow:visible; width:auto; height:auto; }
+			}
+        </style>
+    </head>
+    
+    <body class=" claro ">
+        <div dojoType="dijit.layout.BorderContainer" gutters="false" id="borderContainerTwo">
+            <div dojoType="dojox.layout.ContentPane" region="top" splitter="false" href="header.html" style="height:38px; padding:0px;" id="titlepane" renderStyles="true">
+            	<!-- Title Pane -->
+            </div>
+            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar" region="center" id="mainSplit">
+                <div dojoType="dojox.layout.ContentPane"  region="leading" splitter="true" style="width:250px;padding:0;" renderStyles="true">
+                    <!-- Left Navigation Pane -->
+                    <div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore" url="maqettadocs.json">
+			        </div>
+			        <div dojoType="dijit.tree.ForestStoreModel" jsId="continentModel" store="continentStore" rootId="continentRoot" rootLabel="Maqetta Documentation"
+			        childrenAttrs="children">
+			        </div>
+			        <div dojoType="dijit.Tree" id="mytree" model="continentModel" showRoot="false">
+			            <script type="dojo/method" event="onClick" args="item">
+console.log('item.url='+item.url);
+							if (item.url) {
+goToPage(item.url);
+//								content.setHref(item.url);
+//								print_content.setHref(item.url);
+							}
+			            </script>
+			        </div>
+                </div>
+                <div dojoType="dojox.layout.ContentPane"  region="center" href="home.html" jsid="content" id="content" renderStyles="true">
+                    <!-- The contents of this page are pulled from the page pointed to by href -->
+                </div>
+            </div>
+        </div>
+                <div dojoType="dojox.layout.ContentPane" href="home.html" jsid="print_content" id="print_content" renderStyles="true">
+                    <!-- The contents of this page are pulled from the page pointed to by href -->
+                </div>
+    </body>
+
+</html>

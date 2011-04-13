@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>BorderContainer Basics</title>
+</head>
+<body class="maqettadocs">
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="tutorials/BCtutorials.html">BorderContainer Tutorials</a>
+    </td>
+    <td class="prevnext">
+	<a href="tutorials/BCGutters.html">Previous</a> / <a href="tutorials/BCPanes.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>About BorderContainer Splitters</h1>
+
+<p><b>Splitters</b> allow the user to interactively resize the panes in a BorderContainer.
+They are initially visible as a small thin line inside the gutter.
+When you hover your mouse over a splitter, the splitter color changes to a light blue, 
+indicating that you can now move the border by dragging it with your mouse.</p>
+<img src="img/splitter.png" style="margin-bottom:0;" />
+
+<h3>Splitter behavior in Maqetta</h3>
+<ul>
+<li><b>In the Maqetta Page Editor:</b>
+    <ul>
+    <li>Pane size changes made with the splitters is persistent.</li>
+    <li>Resizing a pane with the splitter will update the pane's width or height.</li>
+    <li>The splitters are only active when the BorderContainer widget is selected.</li>
+    <li>The splitters are not active when one of the panes is selected.</li>
+    </ul></li>
+<li style="margin-top:10px;"><b>In the final page (Preview in Browser):</b>
+    <ul>
+    <li>Pane size changes with the splitters is not persistent.</li>
+    <li>When the page is refreshed the pane sizes will return to their original positions.</li>
+    </ul></li>
+</ul>
+
+<h3>How to turn off the splitters</h3>
+<p>To set a pane to a fixed size with no splitters, you can turn off the splitter as follows:</p>
+<ol>
+<li>Select the pane whose splitter you want to turn off.</li>
+<li>Go to the <b>Widget Specific</b> section of the Properties palette and uncheck <b>Splitters</b>.</li>
+</ol>
+
+
+
+<p class="prevnext"><a href="tutorials/BCGutters.html">Previous</a> / <a href="tutorials/BCPanes.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

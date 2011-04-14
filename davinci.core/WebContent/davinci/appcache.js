@@ -62,13 +62,15 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 		applicationCache.addEventListener("updateready", function(x){
 			applicationCache.swapCache();
 			dojo.publish(topic, [{message:"Application cache update ready", type:"message"}]);
+			alert("An update is now available.  The application will reload.");
+			window.location.reload();
 		}, false);
 
 		var rev = function(str){ var r = (str||"").match(/Revision: (\d+)\|/); return r && r[1]; };
 		if (rev(davinci.repositoryInfoLive) != rev(davinci.repositoryInfo)) {
 			try{
 				applicationCache.update();
-				dojo.publish(topic, [{message:"Update available", type:"warning"}]);
+				dojo.publish(topic, [{message:"Update available.  Loading updates...", type:"warning"}]);
 			} catch(e) {
 				console.error(e);
 			}

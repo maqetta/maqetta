@@ -1222,6 +1222,10 @@ davinci_top_bar .dijitButtonNode {
 	cursor:pointer;
 }
 
+#davinci_warn {
+	width: 400px;
+}
 
-
-
+#davinci_warn .dijitToasterContent {
+	font-size: 200%;
+}

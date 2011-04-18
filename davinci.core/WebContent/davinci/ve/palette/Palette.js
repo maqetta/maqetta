@@ -113,10 +113,10 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	_generateCssRules: function(descriptor) {
 		var sheet = dojo.doc.styleSheets[0]; // This is dangerous...assumes content.css is first position
 		if(!sheet){ return; }
-		
+
 		dojo.forEach(descriptor, function(component){
 			dojo.forEach(component.items, function(item){
-				var iconSrc = this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
+				var iconSrc = item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
 				var selector = "img.davinci_"+item.type.replace(/\./g, "_");
 				var rule = "{background-image: url(" + iconSrc + ")}";
 				if(dojo.isIE){
@@ -163,12 +163,12 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	        if (item.hidden) {
 	            return;
 	        }
-	      
+
 			var opt = {
-				icon: this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-				displayName: 
-					item.$library._maqGetString(item.type) || 
-					item.$library._maqGetString(item.name) || 
+				icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+				displayName:
+					item.$library._maqGetString(item.type) ||
+					item.$library._maqGetString(item.name) ||
 					item.name,
 				description: 
 				    item.$library._maqGetString(item.type+"_description") || 

@@ -472,17 +472,16 @@ dojo.declare("davinci.ve.Context", null, {
 				head += '</style>';
 			}
 			//head += '<style type="text/css">@import "claro.css";</style>';
-			var context = this;
+            head += "</head><body></body></html>";
+
+            var context = this;
 			window["loading" + this._id] = function(){
 				delete window["loading" + this._id];
 				var win = dijit.getDocumentWindow(doc);
+                var body = (context.rootNode = doc.body);
 			//	console.debug("editor's dojo version=" + dojo.version);
 			//	console.debug("content's dojo version=" + win.dojo.version);
 			//	console.debug("content's dojo URL=" + dojoUrl);
-
-				doc.write("</head><body></body></html>");
-				doc.close();
-				var body = (context.rootNode = doc.body);
 
 				body.id = "myapp";
 
@@ -524,7 +523,9 @@ dojo.declare("davinci.ve.Context", null, {
 
 			doc.open();
 			doc.write(head);
-			// intercept BS key - prompt user before navigating backwards
+            doc.close();
+
+            // intercept BS key - prompt user before navigating backwards
 			dojo.connect(doc.documentElement, "onkeypress", function(e){
 				if(e.charOrCode==8){
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = new Date().getTime();

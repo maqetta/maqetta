@@ -458,11 +458,13 @@ dojo.declare("davinci.ve.Context", null, {
 			//   See bug 7585.
 			if (dojoUrl) {
 				var inx=dojoUrl.lastIndexOf('/');
-				head += "<script>djConfig={baseUrl:'"+dojoUrl.substr(0,inx+1)+"'}</script>";
+				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
+				//  depend on dojo any more.  Once issue, though, is that the callback function
+				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
+				//  to remove Dojo dependencies from callback function first.
+				head += "<script>djConfig={addOnLoad:top.loading" + this._id + ", baseUrl:'"+dojoUrl.substr(0,inx+1)+"' }</script>";
 				head += "<script type=\"text/javascript\" src=\"" + dojoUrl + "\"></script>";
 			}
-
-			head += "<script>setTimeout(function(){top.loading" + this._id + "(); }, 0);</script>";   // XXX delete after loading?
 
 			if(source.themeCssfiles){ // css files need to be added to doc before body content
 				head += '<style type="text/css">';
@@ -472,48 +474,54 @@ dojo.declare("davinci.ve.Context", null, {
 				head += '</style>';
 			}
 			//head += '<style type="text/css">@import "claro.css";</style>';
-            head += "</head><body></body></html>";
+            head += "</head><body>";
+            if (dojoUrl) {
+                // Since this document was created from script, DOMContentLoaded and window.onload never fire.
+                // Call dojo._loadInit manually to trigger the Dojo onLoad events.
+                head += "<script>dojo._loadInit();</script>";
+            }
+            head += "</body></html>";
 
             var context = this;
-			window["loading" + this._id] = function(){
+			window["loading" + this._id] = function() {
 				delete window["loading" + this._id];
-				var win = dijit.getDocumentWindow(doc);
-                var body = (context.rootNode = doc.body);
-			//	console.debug("editor's dojo version=" + dojo.version);
-			//	console.debug("content's dojo version=" + win.dojo.version);
-			//	console.debug("content's dojo URL=" + dojoUrl);
-
-				body.id = "myapp";
-
-				// Kludge to enable full-screen layout widgets, like BorderContainer.
-				// What possible side-effects could there be setting 100%x100% on every document?
-				// See note above about margin:0 temporary hack
-				body.style.width = "100%";
-				body.style.height = "100%";
-				body.style.margin = "0";
-
-				body._edit_context = context; // TODO: find a better place to stash the root context
-				context._bootstrapModules.split(",").forEach(function(module){
-																if (module === 'dijit.dijit-all')
-																	win.dojo._postLoad=true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
-																win.dojo["require"](module);
-															}); // to bootstrap references to base dijit methods in container
-				context._frameNode = frame;
-				// see Dojo ticket #5334
-				// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
-				// Also, any array value will be converted to {0: val0, 1: val1, ...}
-				// after swapping back and forth between the design and code views twice. This is not an array!
-				win.dojo.isArray=function(it){
-					return it && Object.prototype.toString.call(it)=="[object Array]";
-				};
-
 				var callbackData = context;
 				try {
+    				var win = dijit.getDocumentWindow(doc);
+                    var body = (context.rootNode = doc.body);
+    				body.id = "myapp";
+
+    				// Kludge to enable full-screen layout widgets, like BorderContainer.
+    				// What possible side-effects could there be setting 100%x100% on every document?
+    				// See note above about margin:0 temporary hack
+    				body.style.width = "100%";
+    				body.style.height = "100%";
+    				body.style.margin = "0";
+
+    				body._edit_context = context; // TODO: find a better place to stash the root context
+    				context._bootstrapModules.split(",").forEach(function(module){
+    																if (module === 'dijit.dijit-all')
+    																	win.dojo._postLoad=true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
+    																win.dojo["require"](module);
+    															}); // to bootstrap references to base dijit methods in container
+    				context._frameNode = frame;
+    				// see Dojo ticket #5334
+    				// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
+    				// Also, any array value will be converted to {0: val0, 1: val1, ...}
+    				// after swapping back and forth between the design and code views twice. This is not an array!
+    				win.dojo.isArray=function(it){
+    					return it && Object.prototype.toString.call(it)=="[object Array]";
+    				};
+
 					context._setSourceData(data);
 				} catch(e) {
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
+                    // XXX setSource() currently called without callback; log error to console
+                    if (!callback) {
+                        console.error(e);
+                    }
 				}
 
 				if(callback){

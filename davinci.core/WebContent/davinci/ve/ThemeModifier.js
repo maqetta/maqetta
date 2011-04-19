@@ -179,7 +179,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			var str = values[a];
 			if (davinci.ve.utils.URLRewrite.containsUrl(str))
 			{
-				var url = url=davinci.ve.utils.URLRewrite.getUrl(str);;
+				var url = davinci.ve.utils.URLRewrite.getUrl(str);;
 				var path=new davinci.model.Path(url);
 				var newUrl=path.relativeTo(basePath, true).toString(); // ignore the filename to get the correct path to the image
 				values[a]="url('"+ newUrl + "')";

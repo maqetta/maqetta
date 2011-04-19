@@ -34,8 +34,8 @@
  		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 		dojo.addOnLoad(function()
 		{
-			if (!(dojo.isFF >= 3.5 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
-				dojo.publish("davinci-warn", [{message:"Firefox 3.5, Chrome 5.0, Safari 5.0 or greater is required.", type:"error"}]);
+			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
+				dojo.publish("davinci-warn", [{message:"Firefox 4, Chrome 5, Safari 5 or greater is required.", type:"error"}]);
 				return;
 			}
 

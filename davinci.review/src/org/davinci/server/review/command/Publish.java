@@ -150,17 +150,17 @@ public class Publish extends Command {
 
 	private void notifyRelatedPersons(String from, String to, String subject,
 			String htmlContent) {
-		SimpleMessage email = new SimpleMessage(from, to, null, null, subject,
-				htmlContent);
+		SimpleMessage email = new SimpleMessage(from, to, null, null, subject, htmlContent);
 		try {
 			if(mailer != null){
 				mailer.sendMessage(email);
 			}else{
+				this.responseString = htmlContent;
 				System.out.println("Mail server is not configured. Mail notificatioin is cancelled.");
 			}
 		} catch (MessagingException e) {
+			this.responseString = htmlContent;
 			e.printStackTrace();
-			this.responseString = "Failed to send mail to users. "+e.getMessage();
 		}
 	}
 
@@ -168,14 +168,13 @@ public class Publish extends Command {
 		StringBuffer buf = new StringBuffer();
 		buf.append(Util.genHtmlHeader());
 		buf.append("<div>" + user.getUserName()
-				+ " has invited you to review this page. </div>");
+				+ " has invited you to review this design.</div>");
 		if (message != null && message.length() > 0) {
 			buf.append("<div>" + user.getUserName() + "'s message: " + message
 					+ "</div>");
 		}
 		buf.append("<br />");
-		buf.append("<div> You can review the page by clicking this link: "
-				+ url + "</div>");
+		buf.append("<div> You can review the page by clicking this link: " + url + "</div>");
 
 		buf.append(Util.genHtmlTail());
 		return buf.toString();

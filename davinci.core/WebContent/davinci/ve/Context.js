@@ -224,7 +224,7 @@ dojo.declare("davinci.ve.Context", null, {
 		return davinci.model.Resource.findResource(this.getDocumentLocation());
 	},
 
-	loadRequires: function(type, updateSrc) {
+	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires) {
 		if (!type) {
 			return false;
 		}
@@ -275,7 +275,7 @@ dojo.declare("davinci.ve.Context", null, {
 		    } else {  // resource with text content
 		        switch (r.type) {
 		            case "javascript":
-		                this.addJavaScript(null, r.$text, updateSrc);
+		                this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires);
 		                break;
 		            default:
                         console.warn("Unhandled metadata resource type '" + r.type +
@@ -679,7 +679,11 @@ dojo.declare("davinci.ve.Context", null, {
 	_processWidgets: function(containerNode, attachWidgets, states) {
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type = n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
-			this.loadRequires(type);
+			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
+			//to always check that scriptAdditions includes the dojo.require() for this widget.
+			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
+			//we had old files that were missing some of their dojo.require() statements.
+			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/);
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
 
@@ -1743,7 +1747,7 @@ dojo.declare("davinci.ve.Context", null, {
     // XXX see addJavaScript() and addHeaderScript()
     _reDojoJS: new RegExp(".*/dojo.js$"),
     
-    addJavaScript: function(url, text, doUpdateModel) {
+    addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires) {
         if (url) {
             var isDojoJS = this._reDojoJS.test(url);
             // XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
@@ -1772,7 +1776,7 @@ dojo.declare("davinci.ve.Context", null, {
             }
         } else if (text) {
             this.getGlobal()['eval'](text);
-            if (doUpdateModel) {
+            if (doUpdateModel || doUpdateModelDojoRequires) {
                 this.addHeaderScriptSrc(text);
             }
         }

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +26,7 @@ import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
-import org.davinci.server.review.Util;
+import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.persistence.CommentDao;
 import org.davinci.server.review.persistence.CommentDaoFactory;
@@ -86,8 +88,8 @@ public class AddComment extends Command {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment);
-			SimpleMessage email = new SimpleMessage(Util.getCommonNotificationId(),
-					designer.getPerson().getEmail(), null, null, Constants.ADD_COMMENT_NOTIFICATION_SUBJECT,
+			SimpleMessage email = new SimpleMessage(Utils.getCommonNotificationId(),
+					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
 //			SmtpPop3Mailer.send(email);
 			try {
@@ -151,68 +153,18 @@ public class AddComment extends Command {
 			pageName = pageName.substring(index + 1);
 		}
 
-		StringBuffer content = new StringBuffer();
-		content.append(Util.genHtmlHeader());
-
-		content.append("<table>");
-		content.append("<caption>" + reviewer.getUserName() + " add comment on your page \""
-				+ pageName + "\"</caption>");
-
-		content.append("<tr>");
-		content.append("<th>Comment owner:</th>");
-		content.append("<td>" + reviewer.getUserName() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment subject:</th>");
-		content.append("<td>" + commentTitle + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment type:</th>");
-		content.append("<td>" + comment.getType() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment severity:</th>");
-		content.append("<td>" + comment.getSeverity() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment status:</th>");
-		content.append("<td>" + comment.getStatus() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment content:</th>");
-		content.append("<td>" + commentContent + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Page name:</th>");
-		content.append("<td>" + pageName + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Page state:</th>");
-		content.append("<td>" + comment.getPageState() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment timestamp:</th> ");
-		content.append("<td>" + comment.getCreated() + "</td>");
-		content.append("</tr>");
-
-		content.append("</table>");
-
-		content.append("<div>");
-		content.append("<p>You are receiving this mail because you are designer of this page.</p>");
-		content.append("<br />");
-		content.append("<p>DO NOT RESPOND TO THE SERVICE MACHINE THAT GENERATED THIS NOTE</p>");
-		content.append("</div>");
-		content.append(Util.genHtmlTail());
-
-		return content.toString();
+		Map<String, String> props = new HashMap<String, String>();
+		props.put("username", reviewer.getUserName());
+		props.put("pagename", pageName);
+		props.put("title", commentTitle);
+		props.put("type", comment.getType());
+		props.put("severity", comment.getSeverity());
+		props.put("status", comment.getStatus());
+		props.put("content", comment.getContent());
+		props.put("pagestate", comment.getPageState());
+		props.put("time", comment.getCreated().toString());
+		
+		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
 	}
 
 	protected Comment extractComment(HttpServletRequest req) {
@@ -264,7 +216,7 @@ public class AddComment extends Command {
 		paramValue = req.getParameter(Comment.STATUS);
 		comment.setStatus(paramValue);
 
-		comment.setCreated(Util.getCurrentDateInGmt0());
+		comment.setCreated(Utils.getCurrentDateInGmt0());
 
 		return comment;
 	}

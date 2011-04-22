@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.Util;
+import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.persistence.Marshaller;
 import org.davinci.server.review.persistence.Unmarshaller;
@@ -51,7 +51,7 @@ public class ReviewCacheManager extends Thread {
 			}
 
 			boolean isFaterClosed = false;
-			if (!Util.isBlank(comment.getReplyTo()) && !"0".equals(comment.getReplyTo())){
+			if (!Utils.isBlank(comment.getReplyTo()) && !"0".equals(comment.getReplyTo())){
 				fatherComment = reviewHash.get(comment.getReplyTo());
 				if(null != fatherComment
 						&& Comment.STATUS_CLOSED.equals(fatherComment.getStatus())){
@@ -93,7 +93,7 @@ public class ReviewCacheManager extends Thread {
 					// If the comment does not belong to the given page, do not add it
 					continue;
 				}
-				result.add((Comment) (Util.deepClone(entry.getValue())));
+				result.add((Comment) (Utils.deepClone(entry.getValue())));
 				// result.add(entry.getValue());
 			}
 		}
@@ -112,7 +112,7 @@ public class ReviewCacheManager extends Thread {
 		// Update the last access time
 		updateLastAccessTime(project);
 
-		return (Comment) (Util.deepClone(reviewHash.get(commentId)));
+		return (Comment) (Utils.deepClone(reviewHash.get(commentId)));
 		// return reviewHash.get(commentId);
 	}
 
@@ -179,7 +179,7 @@ public class ReviewCacheManager extends Thread {
 			project.setCommentsDocument(doc);
 		}
 
-		reviewHash = (Hashtable<String, Comment>) Util.deepClone(reviewHash);
+		reviewHash = (Hashtable<String, Comment>) Utils.deepClone(reviewHash);
 		reviewHash.remove(LAST_ACCESS_TIME);
 		// clearUnconsistentComments(reviewHash);
 		doc.setCommentList(new ArrayList<Comment>(reviewHash.values()));
@@ -283,7 +283,7 @@ public class ReviewCacheManager extends Thread {
 
 			oldOne = entry.getValue();
 			if (!Comment.STATUS_CLOSED.equalsIgnoreCase(oldOne.getStatus())&&parentVersion.equals(oldOne.getPageVersion())) {
-				newOne = (Comment) Util.deepClone(oldOne);
+				newOne = (Comment) Utils.deepClone(oldOne);
 
 				// Re-calculate the comment id
 				s = newOne.getId();

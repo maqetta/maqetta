@@ -7,7 +7,7 @@ import java.util.Vector;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.Util;
+import org.davinci.server.review.Utils;
 import org.davinci.server.review.cache.ReviewCacheManager;
 
 public class XmlCommentDaoImpl implements CommentDao {
@@ -65,7 +65,7 @@ public class XmlCommentDaoImpl implements CommentDao {
 	}
 	
 	private Comment getTopParent(Comment comment){
-		while(!Util.isBlank(comment.getReplyTo())&&!"0".equals(comment.getReplyTo())){
+		while(!Utils.isBlank(comment.getReplyTo())&&!"0".equals(comment.getReplyTo())){
 			comment = ReviewCacheManager.$.getComment(comment.getProject(), comment.getReplyTo());
 		}
 		return comment;

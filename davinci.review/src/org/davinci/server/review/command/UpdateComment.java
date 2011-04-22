@@ -16,7 +16,7 @@ import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
-import org.davinci.server.review.Util;
+import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.persistence.CommentDao;
@@ -90,7 +90,7 @@ public class UpdateComment extends Command {
 		paramValue = req.getParameter(Comment.STATUS);
 		comment.setStatus(paramValue);
 
-		comment.setCreated(Util.getCurrentDateInGmt0());
+		comment.setCreated(Utils.getCurrentDateInGmt0());
 
 		return comment;
 	}

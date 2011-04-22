@@ -5,7 +5,7 @@
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
-     <style type="text/css">
+    <style type="text/css">
 		@import url("app/davinci/workbench.css");
 		html, body {
 			width: 100%;
@@ -32,12 +32,15 @@
 		davinci.Runtime.loadPlugins();
 	
  		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
-		function run()
+		dojo.addOnLoad(function()
 		{
-	
-		 var userInfo;	
-		 var result=davinci.Runtime.serverJSONRequest({
-				   url:"./cmd/getUserInfo",sync:true});
+			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
+				dojo.publish("davinci-warn", [{message:"Firefox 4, Chrome 5, Safari 5 or greater is required.", type:"error"}]);
+				return;
+			}
+
+			var userInfo;	
+			var result=davinci.Runtime.serverJSONRequest({url:"./cmd/getUserInfo",sync:true});
 	
 			if (result && result.userName)
 			{
@@ -55,10 +58,9 @@
 		 		dojo.byId('davinci_logoff').href="";
 		 		davinci.Runtime.isLocalInstall=true;
 		 	}
-		  davinci.Runtime.run(userInfo);
-		}
-		
-		dojo.addOnLoad(run );
+			davinci.Runtime.run(userInfo);
+		});
+
 		dojo.addOnUnload(davinci.Runtime.unload );
     </script>
 

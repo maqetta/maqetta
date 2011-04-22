@@ -5,7 +5,7 @@ CACHE MANIFEST
 ../dijit/dijit.js
 ../davinci/davinci-common.js
 ../davinci/img/banner-tile.png
-# lots more in img... should be tiled
+../davinci/img/sprite.png
 # nls files should depend on locale
 ../davinci/nls/davinci-common_en-us.js
 ../davinci/workbench.css

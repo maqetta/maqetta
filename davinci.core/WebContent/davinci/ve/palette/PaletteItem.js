@@ -28,14 +28,15 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		a.onclick = this.palette.nop; // to avoid firing the onbeforeunload event (dojo.event.connect doesn't work for this purpose)
 		var img = a.firstChild;
 
-		var offsetX = 0;
-		var offsetY = 0;
-		if(this.icon.indexOf(",") != -1){
-			var arr = this.icon.split(",");
-			this.icon = arr[0];
-			offsetX = arr[1] - 0;
-			offsetY = arr[2] - 0;
-		}
+// XXX Sprited images not supported. Use base64 instead.
+//		var offsetX = 0;
+//		var offsetY = 0;
+//		if(this.icon.indexOf(",") != -1){
+//			var arr = this.icon.split(",");
+//			this.icon = arr[0];
+//			offsetX = arr[1] - 0;
+//			offsetY = arr[2] - 0;
+//		}
 
 		img.src = this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));

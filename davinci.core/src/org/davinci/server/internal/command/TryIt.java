@@ -34,8 +34,8 @@ public class TryIt extends Command {
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
 
             // redirect to designer
-            String hostname = req.getServerName();
-            String redirectURL = resp.encodeRedirectURL("http://" + hostname + ":55555/maqetta/");
+            String portSpec = req.getServerPort() == 80 ? "" : ':' + String.valueOf(req.getServerPort());
+            String redirectURL = "http://" + req.getServerName() + portSpec  + "/maqetta/";
             resp.sendRedirect(redirectURL);
             
         } catch (UserException e) {

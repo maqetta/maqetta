@@ -1265,5 +1265,8 @@ davinci_top_bar .dijitButtonNode {
 }
 
 #davinci_warn .dijitToasterContent {
-	font-size: 200%;
+	font-size: 175%;
+}
+#davinci_warn .dijitToasterError .dijitToasterContent {
+	background-color:#11BB17;
 }

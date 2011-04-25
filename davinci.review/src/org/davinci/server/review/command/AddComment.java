@@ -1,17 +1,11 @@
 package org.davinci.server.review.command;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,9 +22,7 @@ import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
-import org.davinci.server.review.persistence.CommentDao;
-import org.davinci.server.review.persistence.CommentDaoFactory;
-import org.davinci.server.review.persistence.CommentDaoFactory.DaoType;
+import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.User;
 import org.davinci.server.user.UserManager;
 
@@ -54,29 +46,24 @@ public class AddComment extends Command {
 
 			comment.setEmail(user.getPerson().getEmail());
 
-			CommentDao commDao = CommentDaoFactory.getInstance(DaoType.XML);
-			if (null != commDao) {
-				DesignerUser du = ReviewManager.getReviewManager()
-						.getDesignerUser(designerName);
-				Version version = du.getVersion(comment.getPageVersion());
+			DesignerUser du = ReviewManager.getReviewManager()
+					.getDesignerUser(designerName);
+			Version version = du.getVersion(comment.getPageVersion());
 
-				if (version != null && version.isClosed())
-					throw new Exception(
-							"The version is closed by others during your editting. Please reload the review data.");
-				List<Comment> commentList = new ArrayList<Comment>(1);
-				commentList.add(comment);
-				commDao.insertComments(commentList);
+			if (version != null && version.isClosed()){
+				throw new Exception("The version is closed by others during your editting. Please reload the review data.");
+			}
+			List<Comment> commentList = new ArrayList<Comment>(1);
+			commentList.add(comment);
+			ReviewCacheManager.$.updateComments(commentList, false);
 
-				if (version != null && version.isReceiveEmail())// Send the notification only the
-																// designer want receive it.
-					notifyRelatedPersons(user, designer, comment);
+			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
+				notifyRelatedPersons(user, designer, comment);
 
-				responseString = "{id:'" + comment.getId() + "',created:"
-						+ comment.getCreated().getTime() /*+ ",order:'" + comment.getOrder()
-						+ "'*/ + ",email:'" + user.getPerson().getEmail() + "',reviewer:'" + user.getUserName()
-						+ "'}";
-			} else
-				throw new RuntimeException("Server error!");
+			responseString = "{id:'" + comment.getId() + "',created:"
+					+ comment.getCreated().getTime() /*+ ",order:'" + comment.getOrder()
+					+ "'*/ + ",email:'" + user.getPerson().getEmail() + "',reviewer:'" + user.getUserName()
+					+ "'}";
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorString = "The review is not added successfully. Reason: " + e.getMessage();
@@ -107,47 +94,44 @@ public class AddComment extends Command {
 		}
 	}
 
-	private static String unescape(String str) {
-		if (str == null)
-			return null;
+//	private static String unescape(String str) {
+//		if (str == null)
+//			return null;
+//
+//		String regEx = "%u([0-9A-F]{4})";
+//		Pattern p = Pattern.compile(regEx);
+//		Matcher m = p.matcher(str);
+//
+//		StringBuffer sb = new StringBuffer();
+//
+//		while (m.find()) {
+//			String group = m.group().substring(2);
+//			m.appendReplacement(sb, String.valueOf((char) (Integer.parseInt(group, 16))));
+//		}
+//
+//		m.appendTail(sb);
+//
+//		return sb.toString();
+//	}
 
-		String regEx = "%u([0-9A-F]{4})";
-		Pattern p = Pattern.compile(regEx);
-		Matcher m = p.matcher(str);
-
-		StringBuffer sb = new StringBuffer();
-
-		while (m.find()) {
-			String group = m.group().substring(2);
-			m.appendReplacement(sb, String.valueOf((char) (Integer.parseInt(group, 16))));
-		}
-
-		m.appendTail(sb);
-
-		return sb.toString();
-	}
-
-	private static String decode(String str) {
-		/*if (str == null) {
-			return null;
-		}
-
-		try {
-			return URLDecoder.decode(unescape(str), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// ignore, never happen.
-			return null;
-		}*/
-		return str;
-	}
+//	private static String decode(String str) {
+//		/*if (str == null) {
+//			return null;
+//		}
+//
+//		try {
+//			return URLDecoder.decode(unescape(str), "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			// ignore, never happen.
+//			return null;
+//		}*/
+//		return str;
+//	}
 
 	private String getHtmlContent(User reviewer, Comment comment) {
-		String commentTitle = null;
-		String commentContent = null;
-		commentTitle = decode(comment.getSubject());
-		commentContent = decode(comment.getContent());
-
-		String pageName = decode(comment.getPageName());
+		String commentTitle = comment.getSubject();;
+		String pageName = comment.getPageName();
+		
 		int index = pageName.lastIndexOf("/");
 		if (index > -1) {
 			pageName = pageName.substring(index + 1);

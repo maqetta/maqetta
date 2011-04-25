@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.mail.MessagingException;
@@ -21,7 +23,7 @@ import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Reviewer;
-import org.davinci.server.review.Util;
+import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.User;
@@ -140,8 +142,8 @@ public class Publish extends Command {
 			if (mail != null && !mail.equals("") && set.add(mail)) {
 				String url = getUrl(user, timeVersion, requestUrl, mail);
 				String htmlContent = getHtmlContent(user, message, url);
-				notifyRelatedPersons(Util.getCommonNotificationId(), mail,
-						Constants.PUBLISH_NOTIFICATION_SUBJECT, htmlContent);
+				notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
+						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT), htmlContent);
 			}
 		}
 		if(this.responseString==null)
@@ -150,35 +152,26 @@ public class Publish extends Command {
 
 	private void notifyRelatedPersons(String from, String to, String subject,
 			String htmlContent) {
-		SimpleMessage email = new SimpleMessage(from, to, null, null, subject,
-				htmlContent);
+		SimpleMessage email = new SimpleMessage(from, to, null, null, subject, htmlContent);
 		try {
 			if(mailer != null){
 				mailer.sendMessage(email);
 			}else{
+				this.responseString = htmlContent;
 				System.out.println("Mail server is not configured. Mail notificatioin is cancelled.");
 			}
 		} catch (MessagingException e) {
+			this.responseString = htmlContent;
 			e.printStackTrace();
-			this.responseString = "Failed to send mail to users. "+e.getMessage();
 		}
 	}
 
 	private String getHtmlContent(User user, String message, String url) {
-		StringBuffer buf = new StringBuffer();
-		buf.append(Util.genHtmlHeader());
-		buf.append("<div>" + user.getUserName()
-				+ " has invited you to review this page. </div>");
-		if (message != null && message.length() > 0) {
-			buf.append("<div>" + user.getUserName() + "'s message: " + message
-					+ "</div>");
-		}
-		buf.append("<br />");
-		buf.append("<div> You can review the page by clicking this link: "
-				+ url + "</div>");
-
-		buf.append(Util.genHtmlTail());
-		return buf.toString();
+		Map<String, String> props = new HashMap<String, String>();
+		props.put("username", user.getUserName());
+		props.put("message", message);
+		props.put("url", url);
+		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 
 	private String getUrl(User user, String version, String requestUrl, String reviewer) {

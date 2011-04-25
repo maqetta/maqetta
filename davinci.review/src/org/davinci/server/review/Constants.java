@@ -1,9 +1,6 @@
 package org.davinci.server.review;
 
-import java.io.File;
-
 import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.ServerManager;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.User;
 
@@ -29,16 +26,12 @@ public class Constants {
 	public static final String EP_ATTR_MAIL_CONFIG_LOGINUSER = "smtp.loginUser";
 	public static final String EP_ATTR_MAIL_CONFIG_PASSWORD = "smtp.password";
 	
-	/**
-	 * notification subject of adding comment.
-	 */
-	public static final String ADD_COMMENT_NOTIFICATION_SUBJECT = "Reviewer has added comment(s) on your page.";
-
-	/**
-	 * notification subject of inviting user to review.
-	 */
-	public static final String PUBLISH_NOTIFICATION_SUBJECT = "You have been invited to review published file(s)";
-
+	public static final String TEMPLATE_PROPERTY_FILE = "review.properties";
+	public static final String TEMPLATE_INVITATION_SUBJECT = "maqetta.review.invitationSubject";
+	public static final String TEMPLATE_INVITATION = "maqetta.review.invitationTemplate";
+	public static final String TEMPLATE_COMMENT_NOTIFICATION_SUBJECT = "maqetta.review.commentNotificationSubject";
+	public static final String TEMPLATE_COMMENT = "maqetta.review.commentTemplate";
+	
 	public static final User LOCAL_INSTALL_USER;
 
 	public static final String LOCAL_INSTALL_USER_NAME = IDavinciServerConstants.LOCAL_INSTALL_USER;

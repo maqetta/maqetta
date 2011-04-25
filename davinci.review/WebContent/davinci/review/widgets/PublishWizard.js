@@ -13,10 +13,13 @@ dojo.require("dijit.form.CheckBox");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojox.data.QueryReadStore");
 dojo.require("dojox.widget.Toaster");
+dojo.require("dojo.string");
+dojo.require("dijit.Dialog");
 
 dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templated],{
 	templateString: dojo.cache("davinci", "review/widgets/templates/PublishWizard.html"),
-
+	warningString: dojo.cache("davinci", "review/widgets/templates/MailFailureDialogContent.html"),
+	
 	postCreate: function(){
 	
 		var sc = this.reviewerStackContainer = new dijit.layout.StackContainer({},this.reviewerStackContainer);
@@ -619,7 +622,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			return item.getPath();
 		});
 		var receiveEmail = this.receiveEmail.get("value")=="on"?"true":"false";
-		
+		var warningString = this.warningString;
 		
 		dojo.xhrPost({url:"./cmd/publish",sync:false,handleAs:"text",
 			content:{
@@ -639,7 +642,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			error: function(response){
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-				davinci.Runtime.handleError("error to publish review session "
+				davinci.Runtime.handleError("Error to publish review session "
 					       + ", response="
 					       + response+", reason="+
 					       msg);
@@ -653,15 +656,27 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             	});
             	hasToaster = true;
         	}
-            if (result=="OK")
-            {
-            	if(!value)
+            if (result=="OK"){
+            	if(!value){
             		dojo.publish("/davinci/review/resourceChanged", [{message:"You have successfully invited the reviewers!", type:"message"},"create"]);
-            	else
+            	}else{
             		dojo.publish("/davinci/review/resourceChanged", [{message:"Saved as draft successfully!", type:"message"},"create"]);
-            }
-            else{
-            	dojo.publish("/davinci/review/resourceChanged", [{message:result, type:"warning"},"create"]);
+            	}
+            }else{
+            	var dialogContent = dojo.string.substitute(warningString, {htmlContent: result});
+            	dojo.publish("/davinci/review/resourceChanged", [{message:"Failed to send out the invitation", type:"warning"},"create"]);
+            	if(!this.invitationDialog){
+            		this.invitationDialog = new dijit.Dialog({
+            			title: "Warning",
+            			content: dialogContent
+            		});
+            		this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function(){
+            			this.hide();
+            		});
+            	}else{
+            		this.invitationDialog.content = dialogContent;
+            	}
+            	this.invitationDialog.show();
             }
 		});
 		this.onClose();

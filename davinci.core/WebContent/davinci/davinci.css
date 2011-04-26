@@ -1270,3 +1270,12 @@ davinci_top_bar .dijitButtonNode {
 #davinci_warn .dijitToasterError .dijitToasterContent {
 	background-color:#11BB17;
 }
+
+#unsupportedBrowserDialog {
+    width: 400px;
+    font-size: 125%;
+}
+
+#unsupportedBrowserDialog .maqButtonArea {
+    text-align: right;
+}

@@ -4,14 +4,10 @@ dojo.require("dojox.widget.Toaster");
 
 if(typeof applicationCache != "undefined" && window.location.search.indexOf("nocache") == -1){
 	dojo.addOnLoad(function(){
-		new dojox.widget.Toaster({
-			id: "davinci_warn",
-			positionDirection: "tr-down",
-			duration: 0,
-			messageTopic: "davinci-warn"
-		});
+        var topic = "davinci-appcache",
+            init = false,
+            ffToaster;
 
-		var topic = "davinci-appcache", init = false;
 		new dojox.widget.Toaster({
 			positionDirection: "br-up",
 			duration: 4000,
@@ -22,7 +18,13 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 			// Firefox has a prompt to allow appcache.  If after some interval, the appcache hasn't loaded, encourage the user to click 'allow'
 			setTimeout(function(){
 				if(!init){
-					dojo.publish("davinci-warn", [{message:"For improved performance, click \"Allow\" above for offline storage.", type:"error"}]);
+			        ffToaster = new dojox.widget.Toaster({
+			            id: "davinci_warn",
+			            positionDirection: "tr-down",
+			            duration: 0
+			        });
+			        ffToaster.setContent("For improved performance, click \"Allow\" above for offline storage.",
+			                "error");
 				}
 			}, 5000)
 		}
@@ -40,6 +42,10 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 		applicationCache.addEventListener("checking", function(x){
 			init = true;
 			dojo.publish(topic, [{message:"Checking for updates to application cache", type:"warning"}]);
+			if (ffToaster) {
+			    ffToaster.hide();
+			    // XXX destroy, to remove from memory?
+			}
 		}, false);
 		
 		applicationCache.addEventListener("downloading", function(x){

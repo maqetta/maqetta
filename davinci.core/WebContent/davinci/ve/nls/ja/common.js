@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- * Licensed Materials - Property of IBM
- * Project  Zero
- *
- * (C) Copyright IBM Corp. 2007,2008  All Rights Reserved.
- *
- * US Government Users Restricted Rights - Use, duplication or disclosure
- * restricted by GSA ADP Schedule Contract with IBM Corp.
- * ============================================================================
- */
 ({
 /* General resources */
 search: "検索",

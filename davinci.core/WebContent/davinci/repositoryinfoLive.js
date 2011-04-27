@@ -3,4 +3,4 @@
 
 dojo.provide('davinci.repositoryinfoLive');
 
-davinci.repositoryinfo='Revision: unknown|';
+davinci.repositoryinfoLive='Revision: unknown|';

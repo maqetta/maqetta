@@ -18,7 +18,7 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 			messageTopic: topic
 		});
 	
-		if(dojo.isFF){
+		if(dojo.isFF && davinci.useAppCache){
 			// Firefox has a prompt to allow appcache.  If after some interval, the appcache hasn't loaded, encourage the user to click 'allow'
 			setTimeout(function(){
 				if(!init){

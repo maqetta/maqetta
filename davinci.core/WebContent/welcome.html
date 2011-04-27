@@ -34,6 +34,8 @@
     <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
     <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
     <script type="text/javascript" >
+	davinci.useAppCache = true; // needed to provide FF "allow" warning
+
 	function login()
 	{
 		var user = dojo.byId('username').value;

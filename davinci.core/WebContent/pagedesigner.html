@@ -36,31 +36,49 @@
  		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 		dojo.addOnLoad(function()
 		{
-			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
-				dojo.publish("davinci-warn", [{message:"Firefox 4, Chrome 5, Safari 5 or greater is required.", type:"error"}]);
-				return;
+		    // Display a warning dialog for unsupported browsers
+			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)) {
+                var unsupportedDialog = new dijit.Dialog({
+                    id: "unsupportedBrowserDialog",
+                    title: "Unsupported Browser",
+                    content: ["<p> Maqetta supports Firefox 4, Chrome and Safari 5.",
+                              "Please upgrade your browser to one of these versions. </p>",
+                              "<p> If you wish to continue with an unsupported browser, click \"Continue.\" </p>",
+                              "<div class='maqButtonArea'>",
+                              "   <button dojoType='dijit.form.Button' type='submit'>",
+                              "      Continue",
+                              "   </button>",
+                              "</div>"
+                             ].join(" "),
+                    execute: function() { run(); }
+                });
+			    unsupportedDialog.show();
+			} else {
+			    run();
 			}
-
-			var userInfo;	
-			var result=davinci.Runtime.serverJSONRequest({url:"./cmd/getUserInfo",sync:true});
+			
+			function run() {
+    			var userInfo;	
+    			var result=davinci.Runtime.serverJSONRequest({url:"./cmd/getUserInfo",sync:true});
 	
-			if (result && result.userName)
-			{
-		 	   dojo.byId('davinci_user').innerHTML=result.userName;
-		 	   davinci.Runtime.userName=result.userName;
+    			if (result && result.userName)
+    			{
+    		 	   dojo.byId('davinci_user').innerHTML=result.userName;
+    		 	   davinci.Runtime.userName=result.userName;
+    			}
+    			else
+    			{
+    				//FIXME: temporary fix for running via file: URLs
+    		 	   dojo.byId('davinci_user').innerHTML="Maqetta User";
+    		 	}
+    		 	if (result && result.isLocalInstall)
+    		 	{
+    			 	dojo.byId('davinci_user').innerHTML="localhost user";
+    		 		dojo.byId('davinci_logoff').href="";
+    		 		davinci.Runtime.isLocalInstall=true;
+    		 	}
+    			davinci.Runtime.run(userInfo);
 			}
-			else
-			{
-				//FIXME: temporary fix for running via file: URLs
-		 	   dojo.byId('davinci_user').innerHTML="Maqetta User";
-		 	}
-		 	if (result && result.isLocalInstall)
-		 	{
-			 	dojo.byId('davinci_user').innerHTML="localhost user";
-		 		dojo.byId('davinci_logoff').href="";
-		 		davinci.Runtime.isLocalInstall=true;
-		 	}
-			davinci.Runtime.run(userInfo);
 		});
 
 		dojo.addOnUnload(davinci.Runtime.unload );

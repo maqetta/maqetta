@@ -5,8 +5,8 @@ dojo.require("dojox.widget.Toaster");
 if(typeof applicationCache != "undefined" && window.location.search.indexOf("nocache") == -1){
 	dojo.addOnLoad(function(){
         var topic = "davinci-appcache",
-            init = false,
-            ffToaster;
+            ffToaster,
+            ffToasterTimer;
 
 		new dojox.widget.Toaster({
 			positionDirection: "br-up",
@@ -16,17 +16,15 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 	
 		if(dojo.isFF && davinci.useAppCache){
 			// Firefox has a prompt to allow appcache.  If after some interval, the appcache hasn't loaded, encourage the user to click 'allow'
-			setTimeout(function(){
-				if(!init){
-			        ffToaster = new dojox.widget.Toaster({
-			            id: "davinci_warn",
-			            positionDirection: "tr-down",
-			            duration: 0
-			        });
-			        ffToaster.setContent("For improved performance, click \"Allow\" above for offline storage.",
-			                "error");
-				}
-			}, 5000)
+			ffToasterTimer = setTimeout(function(){
+		        ffToaster = new dojox.widget.Toaster({
+		            id: "davinci_warn",
+		            positionDirection: "tr-down",
+		            duration: 0
+		        });
+		        ffToaster.setContent("For improved performance, click \"Allow\" above for offline storage.",
+		                "error");
+			}, 5000);
 		}
 
 		applicationCache.addEventListener("cached", function(x){
@@ -40,8 +38,11 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 		}, false);
 		
 		applicationCache.addEventListener("checking", function(x){
-			init = true;
 			dojo.publish(topic, [{message:"Checking for updates to application cache", type:"warning"}]);
+			if (ffToasterTimer) {
+				cancelTimeout(ffToasterTimer);
+				ffToasterTimer = 0;
+			}
 			if (ffToaster) {
 			    ffToaster.hide();
 			    // XXX destroy, to remove from memory?
@@ -73,7 +74,7 @@ if(typeof applicationCache != "undefined" && window.location.search.indexOf("noc
 		}, false);
 
 		var rev = function(str){ var r = (str||"").match(/Revision: (\d+)\|/); return r && r[1]; };
-		if (rev(davinci.repositoryInfoLive) != rev(davinci.repositoryInfo)) {
+		if (rev(davinci.repositoryinfoLive) != rev(davinci.repositoryinfo)) {
 			try{
 				applicationCache.update();
 				dojo.publish(topic, [{message:"Update available.  Loading updates...", type:"warning"}]);

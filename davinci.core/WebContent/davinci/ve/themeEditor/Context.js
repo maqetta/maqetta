@@ -106,8 +106,23 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 //				this.resolveUrl(n);
 			}, this);
 			var dj = this.getDojo();
-			dj["require"]("dojo.parser");
-			dj.parser.parse(containerNode);
+			try {
+				var dj = this.getDojo();
+				dj["require"]("dojo.parser");
+				dj.parser.parse(containerNode);
+			} catch(e){
+				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
+				// the dojo parser will throw an exception trying to compute style on hidden containers
+				// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
+				// then we will reprocess the content when we have focus -- wdr
+				
+				// remove all registered widgets, some may be partly constructed.
+				var localDijit = this.getDijit();
+				localDijit.registry.forEach(function(w){
+	                  w.destroy();             
+				});
+				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
+			}
 		
 		if(active){
 			dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(this.attach, this);

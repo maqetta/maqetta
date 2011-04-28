@@ -469,7 +469,7 @@ dojo.declare("davinci.ve.Context", null, {
 			if(source.themeCssfiles){ // css files need to be added to doc before body content
 				head += '<style type="text/css">';
 				for(var i = 0;i < source.themeCssfiles.length;i++){
-					head += '@import "'+ source.themeCssfiles + '";\n';
+					head += '@import "'+ source.themeCssfiles[i] + '";\n';
 				}
 				head += '</style>';
 			}

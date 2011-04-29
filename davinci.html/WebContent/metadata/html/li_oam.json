@@ -3,5 +3,5 @@
     "name": "html.li",
     "spec": "1.0",
     "version": "1.0",
-    "content": "<dd></dd>"
+    "content": "<li></li>"
 }

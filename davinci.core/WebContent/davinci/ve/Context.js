@@ -469,7 +469,7 @@ dojo.declare("davinci.ve.Context", null, {
 			if(source.themeCssfiles){ // css files need to be added to doc before body content
 				head += '<style type="text/css">';
 				for(var i = 0;i < source.themeCssfiles.length;i++){
-					head += '@import "'+ source.themeCssfiles + '";\n';
+					head += '@import "'+ source.themeCssfiles[i] + '";\n';
 				}
 				head += '</style>';
 			}
@@ -688,13 +688,37 @@ dojo.declare("davinci.ve.Context", null, {
 			this._preserveStates(n, states);
 
 		}, this);
-		var dj = this.getDojo();
-		dj["require"]("dojo.parser");
-		dj.parser.parse(containerNode);
+		try {
+			var dj = this.getDojo();
+			dj["require"]("dojo.parser");
+			dj.parser.parse(containerNode);
+		} catch(e){
+			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
+			// the dojo parser will throw an exception trying to compute style on hidden containers
+			// so to fix this we catch the exception here and add a subscription to be notified when this editor is seleected by the user
+			// then we will reprocess the content when we have focus -- wdr
+			
+			// remove all registered widgets, some may be partly constructed.
+			var localDijit = this.getDijit();
+			localDijit.registry.forEach(function(w){
+                  w.destroy();             
+			});
+			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
+		}
 	
 		this._restoreStates(states);
 		if(attachWidgets){
 			this._attachAll();
+		}
+	},
+	
+	_editorSelectionChange: function(event){
+		// we should only be here do to a dojo.parse exception the first time we tried to process the page
+		// Now the editor tab container should have focus becouse the usre selected it. So the dojo.processing should work this time
+		if (event.editor.fileName === this._editor.fileName){
+			dojo.unsubscribe(this._editorSelectConnection);
+			delete this._editorSelectConnection;
+			this._setSource(this._srcDocument, null, null);
 		}
 	},
 

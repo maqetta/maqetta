@@ -351,6 +351,30 @@
             }
         },
         {
+            "name": "<i>",
+            "description": "Italic text",
+            "type": "html.i",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+               {
+            "name": "<b>",
+            "description": "Bold text",
+            "type": "html.b",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "inlineEdit": {
+                "property": "textContent",
+                "displayOnCreate": true
+            }
+        },
+        {
             "name": "<script>",
             "description": "Embedded Script",
             "type": "html.script",

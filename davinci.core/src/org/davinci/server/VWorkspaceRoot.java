@@ -137,6 +137,11 @@ public class VWorkspaceRoot extends VDirectory {
 		if(!this.isDirectory()) return null;
 		
 		IPath a = new Path(this.file.getAbsolutePath()).append(path);
+		/* security check, dont want to return a resource BELOW the workspace root */
+		IPath workspaceRoot = new Path(this.file.getAbsolutePath());
+		if(a.matchingFirstSegments(workspaceRoot)!= workspaceRoot.segmentCount()) return null;
+		
+		
 		File f1 = new File(a.toOSString());
 		
 		if(!f1.exists()){

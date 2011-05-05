@@ -9,15 +9,7 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 	
 	run: function(selection){
 		if (!this.isEnabled(null)) return;
-		var e = davinci.Workbench.getOpenEditor();
-		
-		var c = e.getContext();
-		var f = c.getPreference("flowLayout");
-		
 		this.showLayouts(); 
-		
-		
-		
 
 	},
 

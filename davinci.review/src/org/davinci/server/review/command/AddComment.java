@@ -1,15 +1,11 @@
 package org.davinci.server.review.command;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
-import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,11 +20,9 @@ import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
-import org.davinci.server.review.Util;
+import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
-import org.davinci.server.review.persistence.CommentDao;
-import org.davinci.server.review.persistence.CommentDaoFactory;
-import org.davinci.server.review.persistence.CommentDaoFactory.DaoType;
+import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.User;
 import org.davinci.server.user.UserManager;
 
@@ -52,29 +46,24 @@ public class AddComment extends Command {
 
 			comment.setEmail(user.getPerson().getEmail());
 
-			CommentDao commDao = CommentDaoFactory.getInstance(DaoType.XML);
-			if (null != commDao) {
-				DesignerUser du = ReviewManager.getReviewManager()
-						.getDesignerUser(designerName);
-				Version version = du.getVersion(comment.getPageVersion());
+			DesignerUser du = ReviewManager.getReviewManager()
+					.getDesignerUser(designerName);
+			Version version = du.getVersion(comment.getPageVersion());
 
-				if (version != null && version.isClosed())
-					throw new Exception(
-							"The version is closed by others during your editting. Please reload the review data.");
-				List<Comment> commentList = new ArrayList<Comment>(1);
-				commentList.add(comment);
-				commDao.insertComments(commentList);
+			if (version != null && version.isClosed()){
+				throw new Exception("The version is closed by others during your editting. Please reload the review data.");
+			}
+			List<Comment> commentList = new ArrayList<Comment>(1);
+			commentList.add(comment);
+			ReviewCacheManager.$.updateComments(commentList, false);
 
-				if (version != null && version.isReceiveEmail())// Send the notification only the
-																// designer want receive it.
-					notifyRelatedPersons(user, designer, comment);
+			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
+				notifyRelatedPersons(user, designer, comment);
 
-				responseString = "{id:'" + comment.getId() + "',created:"
-						+ comment.getCreated().getTime() /*+ ",order:'" + comment.getOrder()
-						+ "'*/ + ",email:'" + user.getPerson().getEmail() + "',reviewer:'" + user.getUserName()
-						+ "'}";
-			} else
-				throw new RuntimeException("Server error!");
+			responseString = "{id:'" + comment.getId() + "',created:"
+					+ comment.getCreated().getTime() /*+ ",order:'" + comment.getOrder()
+					+ "'*/ + ",email:'" + user.getPerson().getEmail() + "',reviewer:'" + user.getUserName()
+					+ "'}";
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorString = "The review is not added successfully. Reason: " + e.getMessage();
@@ -86,8 +75,8 @@ public class AddComment extends Command {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment);
-			SimpleMessage email = new SimpleMessage(Util.getCommonNotificationId(),
-					designer.getPerson().getEmail(), null, null, Constants.ADD_COMMENT_NOTIFICATION_SUBJECT,
+			SimpleMessage email = new SimpleMessage(Utils.getCommonNotificationId(),
+					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
 //			SmtpPop3Mailer.send(email);
 			try {
@@ -105,114 +94,61 @@ public class AddComment extends Command {
 		}
 	}
 
-	private static String unescape(String str) {
-		if (str == null)
-			return null;
+//	private static String unescape(String str) {
+//		if (str == null)
+//			return null;
+//
+//		String regEx = "%u([0-9A-F]{4})";
+//		Pattern p = Pattern.compile(regEx);
+//		Matcher m = p.matcher(str);
+//
+//		StringBuffer sb = new StringBuffer();
+//
+//		while (m.find()) {
+//			String group = m.group().substring(2);
+//			m.appendReplacement(sb, String.valueOf((char) (Integer.parseInt(group, 16))));
+//		}
+//
+//		m.appendTail(sb);
+//
+//		return sb.toString();
+//	}
 
-		String regEx = "%u([0-9A-F]{4})";
-		Pattern p = Pattern.compile(regEx);
-		Matcher m = p.matcher(str);
-
-		StringBuffer sb = new StringBuffer();
-
-		while (m.find()) {
-			String group = m.group().substring(2);
-			m.appendReplacement(sb, String.valueOf((char) (Integer.parseInt(group, 16))));
-		}
-
-		m.appendTail(sb);
-
-		return sb.toString();
-	}
-
-	private static String decode(String str) {
-		/*if (str == null) {
-			return null;
-		}
-
-		try {
-			return URLDecoder.decode(unescape(str), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// ignore, never happen.
-			return null;
-		}*/
-		return str;
-	}
+//	private static String decode(String str) {
+//		/*if (str == null) {
+//			return null;
+//		}
+//
+//		try {
+//			return URLDecoder.decode(unescape(str), "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			// ignore, never happen.
+//			return null;
+//		}*/
+//		return str;
+//	}
 
 	private String getHtmlContent(User reviewer, Comment comment) {
-		String commentTitle = null;
-		String commentContent = null;
-		commentTitle = decode(comment.getSubject());
-		commentContent = decode(comment.getContent());
-
-		String pageName = decode(comment.getPageName());
+		String commentTitle = comment.getSubject();;
+		String pageName = comment.getPageName();
+		
 		int index = pageName.lastIndexOf("/");
 		if (index > -1) {
 			pageName = pageName.substring(index + 1);
 		}
 
-		StringBuffer content = new StringBuffer();
-		content.append(Util.genHtmlHeader());
-
-		content.append("<table>");
-		content.append("<caption>" + reviewer.getUserName() + " add comment on your page \""
-				+ pageName + "\"</caption>");
-
-		content.append("<tr>");
-		content.append("<th>Comment owner:</th>");
-		content.append("<td>" + reviewer.getUserName() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment subject:</th>");
-		content.append("<td>" + commentTitle + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment type:</th>");
-		content.append("<td>" + comment.getType() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment severity:</th>");
-		content.append("<td>" + comment.getSeverity() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment status:</th>");
-		content.append("<td>" + comment.getStatus() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment content:</th>");
-		content.append("<td>" + commentContent + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Page name:</th>");
-		content.append("<td>" + pageName + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Page state:</th>");
-		content.append("<td>" + comment.getPageState() + "</td>");
-		content.append("</tr>");
-
-		content.append("<tr>");
-		content.append("<th>Comment timestamp:</th> ");
-		content.append("<td>" + comment.getCreated() + "</td>");
-		content.append("</tr>");
-
-		content.append("</table>");
-
-		content.append("<div>");
-		content.append("<p>You are receiving this mail because you are designer of this page.</p>");
-		content.append("<br />");
-		content.append("<p>DO NOT RESPOND TO THE SERVICE MACHINE THAT GENERATED THIS NOTE</p>");
-		content.append("</div>");
-		content.append(Util.genHtmlTail());
-
-		return content.toString();
+		Map<String, String> props = new HashMap<String, String>();
+		props.put("username", reviewer.getUserName());
+		props.put("pagename", pageName);
+		props.put("title", commentTitle);
+		props.put("type", comment.getType());
+		props.put("severity", comment.getSeverity());
+		props.put("status", comment.getStatus());
+		props.put("content", comment.getContent());
+		props.put("pagestate", comment.getPageState());
+		props.put("time", comment.getCreated().toString());
+		
+		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
 	}
 
 	protected Comment extractComment(HttpServletRequest req) {
@@ -264,7 +200,7 @@ public class AddComment extends Command {
 		paramValue = req.getParameter(Comment.STATUS);
 		comment.setStatus(paramValue);
 
-		comment.setCreated(Util.getCurrentDateInGmt0());
+		comment.setCreated(Utils.getCurrentDateInGmt0());
 
 		return comment;
 	}

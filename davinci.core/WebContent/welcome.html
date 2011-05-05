@@ -34,6 +34,8 @@
     <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
     <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
     <script type="text/javascript" >
+	davinci.useAppCache = true; // needed to provide FF "allow" warning
+
 	function login()
 	{
 		var user = dojo.byId('username').value;
@@ -86,8 +88,8 @@
     }
 
 	dojo.addOnLoad(function (){
-		if(!(dojo.isFF >= 3.5 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
-			dojo.create("div", {innerHTML: "Firefox 3.5, Chrome 5.0, Safari 5.0 or greater is required", "class": "sniff"}, "loginpane", "first");
+		if(!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
+			dojo.create("div", {innerHTML: "Firefox 4, Chrome 5, Safari 5 or greater is required", "class": "sniff"}, "loginpane", "first");
 		}
 
 		dojo.xhrGet({url:"./cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){

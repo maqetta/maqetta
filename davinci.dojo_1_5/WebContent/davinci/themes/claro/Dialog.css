@@ -78,7 +78,7 @@ background-color : #f2f2f2;
 border : 1px solid #fff;
     border-top : none;
     background-color : #abd6ff;
-    background-image : url("images/titlebar.png");
+    background-image : url("images/titleBar.png");
     background-repeat : repeat-x;
     padding : 5px 7px 4px 7px;
 }

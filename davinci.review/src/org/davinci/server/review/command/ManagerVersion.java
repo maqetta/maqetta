@@ -39,7 +39,7 @@ public class ManagerVersion extends Command {
 			reviewManager.saveVersionFile(du);
 			DavinciProject project = new DavinciProject();
 			project.setOwnerId(du.getName());
-			ReviewCacheManager.$.clearReviewForProject(project);
+			ReviewCacheManager.$.clearReviewByProject(project);
 			// TODO delete the version folder
 		}
 		this.responseString = "OK";

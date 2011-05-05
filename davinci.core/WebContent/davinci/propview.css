@@ -179,10 +179,16 @@
 	margin-top:2px; /* Magically makes buttons line up vertically */
 }
 .propertiesSection .propertyButton.incrementButton {
-	background: url('./img/increment.png') no-repeat -1px -1px;
+	background: url('./img/sprite.png') no-repeat;
+	background-position: -1px -1515px;
+	width: 16px;
+	height: 16px;
 }
 .propertiesSection .propertyButton.decrementButton {
-	background: url('./img/decrement.png') no-repeat -1px -1px;
+	background: url('./img/sprite.png') no-repeat;
+	background-position: -1px -583px;
+	width: 16px;
+	height: 16px;
 	margin-left:-1px;	/* So that border coincides with increment button border */
 }
 .propertiesSection .propertyButton.showCss{
@@ -194,7 +200,10 @@
 	margin-top:-4px; /* Webkit layout is 2px different than Mozilla */
 }
 .propertiesSection .propertyButton.showCss.showCssVisible{
-	background: url('./img/show_details_open.png') no-repeat -1px -1px;		
+	background: url('./img/sprite.png') no-repeat;
+	background-position: -83px -1192px;
+	width: 16px;
+	height: 16px;		
 }
 button.showCss::-moz-focus-inner { 
 	/* Hide the funky dotted outline that Moz adds to button after clicking on it.
@@ -323,12 +332,12 @@ button.showCss::-moz-focus-inner {
 	font-size: 8px; 
 }
 .cascadeRemoveButton{
-
    width:14px;
    height:14px;
   background-repeat: no-repeat;
    border-style:none;
-  background-image:url('./img/remove.gif');
+  background-image:url('./img/sprite.png');
+  background-position: 0 -648px;
   background-color: transparent;
 }
 

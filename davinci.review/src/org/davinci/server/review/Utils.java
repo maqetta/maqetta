@@ -10,13 +10,26 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import org.davinci.server.ServerManager;
 import org.davinci.server.user.User;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-public class Util {
+public class Utils {
+	private static Properties templateProperties;
+	
+	static{
+		templateProperties = new Properties();
+		try{
+			templateProperties.load(new Utils().getClass().getClassLoader().getResourceAsStream(Constants.TEMPLATE_PROPERTY_FILE));
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
 	public static Date getCurrentDateInGmt0() {
 		Date date = new Date();
 		date.setTime(date.getTime() - TimeZone.getDefault().getOffset(date.getTime()));
@@ -38,14 +51,6 @@ public class Util {
 			notificationId = "noreply@website.org";
 		}
 		return notificationId;
-	}
-
-	public static String genHtmlHeader() {
-		return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"><html><head></head><body>";
-	}
-
-	public static String genHtmlTail() {
-		return "</body></html>";
 	}
 
 	/**
@@ -96,5 +101,24 @@ public class Util {
 
 	public static boolean isBlank(String str) {
 		return (str == null || str.length() == 0 || str.trim().length() == 0);
+	}
+	
+	public static Properties getTemplates(){
+		return templateProperties;
+	}
+	
+	private static final String START_FLAG = "${";
+	private static final String END_FLAG = "}";
+
+	public static String substitude(String s, Map<String, String> map) {
+		StringBuilder ret = new StringBuilder(s.length());
+		int pos = 0;
+		for(int start, end; (start = s.indexOf(START_FLAG, pos)) != -1 && (end = s.indexOf(END_FLAG, start)) != -1;){
+			ret.append(s.substring(pos, start)).append(
+					map.get(s.substring(start + START_FLAG.length(), end)));
+			pos = end + END_FLAG.length();
+		}
+		ret.append(s.substring(pos, s.length()));
+		return ret.toString();
 	}
 }

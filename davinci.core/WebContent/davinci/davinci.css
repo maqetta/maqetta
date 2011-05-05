@@ -453,8 +453,8 @@ davinci_top_bar .dijitButtonNode {
 	/* background-image:url("img/buttonArrows.png");*/	/* Derived from Claro, but no bluish tint  FIXME: why?  resolve with other claro buttonArrows reference in .paletteDropdown */
 	/* Following 2 lines squeeze the arrow closer to text */
 	/* background-position:-53px 53%; */
-	background-image:url("img/banner_droparrow.png");
-	background-position: 5px 6px;
+	background-image:url("img/sprite.png");
+	background-position: 5px -126px;
 	width: 20px;
 }
 #davinci_top_bar .dijitButtonText {
@@ -498,11 +498,17 @@ davinci_top_bar .dijitButtonNode {
 }
 
 .dvOutlineVisibilityOn {
-	background-image:url('img/visible.gif');
+	background-image:url('img/sprite.png');
+	background-position: -84px -1523px;
+	width: 16px;
+	height: 16px;
 }
 
 .dvOutlineVisibilityOff {
-	background-image:url('img/not_visible.gif');
+	background-image:url('img/sprite.png');
+	background-position: -84px -266px;
+	width: 16px;
+	height: 16px;
 }
 
 .dvStateNode .dvOutlineVisibilityOn {
@@ -676,39 +682,69 @@ davinci_top_bar .dijitButtonNode {
 }
 
 .editCutIcon {
-	background-image: url(img/cut.gif);
+	background-image: url(img/sprite.png);
+	background-position: 0 -516px;
+	width: 16px;
+	height: 16px;
 }
 .editCopyIcon {
-	background-image: url(img/copy.gif);
+	background-image: url(img/sprite.png);
+	background-position: 0 -450px;
+	width: 16px;
+	height: 16px;
 }
 .editPasteIcon {
-	background-image: url(img/paste.gif);
+	background-image: url(img/sprite.png);
+	background-position: -82px -400px;
+	width: 16px;
+	height: 16px;
 }
 .editDeleteIcon {
-	background-image: url(img/delete.gif);
+	background-image: url(img/sprite.png);
+	background-position: 0 -648px;
+	width: 16px;
+	height: 16px;
 }
 
 .addStateIcon {
-	background-image: url("img/plusButton.gif");
+	background-image: url("img/sprite.png");
+	background-position: -82px -466px;
+	width: 16px;
+	height: 16px;
 }
 .removeStateIcon {
-	background-image: url("img/minusButton.gif");
+	background-image: url("img/sprite.png");
+	background-position: 0 -1778px;
+	width: 16px;
+	height: 16px;
 }
 
 .designModeIcon {
-	background-image: url(img/mode_design.gif);
+	background-image: url(img/sprite.png);
+	background-position: 0 -1842px;
+	width: 16px;
+	height: 16px;
 }
 
 .sourceModeIcon {
-	background-image: url(img/mode_source.gif);
+	background-image: url(img/sprite.png);
+	background-position: 0 -1908px;
+	width: 16px;
+	height: 16px;
 }
 
 .splitVerticalIcon {
-	background-image: url(img/mode_split.gif);
+	background-image: url(img/sprite.png);
+	background-position: -82px 0;
+	width: 16px;
+	height: 16px;
 }
 
 .splitHorizontalIcon {
-	background-image: url(img/mode_split_h.gif);
+	background-image: url(img/sprite.png);
+	background-position: -82px -66px;
+	width: 16px;
+	height: 16px;
 }
 /* FIXME: I'm hardcoding the dropdown arrow icon from Claro.
 	Instead, we should just use a Dijit DropDownArrow control
@@ -764,15 +800,16 @@ davinci_top_bar .dijitButtonNode {
 	padding:0px 4px 2px;
 }
 .editor_top_new_button {
-	background-image:url("img/add.gif");
+	background-image:url("img/sprite.png");
+	background-position: 0 0;
 	width:16px;
 	height:16px;
 }
 .editor_top_open_button {
-	background-image:url("img/open.gif");
-	background-position:0px -3px;
-	width:16px;
-	height:16px;
+	background-image:url("img/sprite.png");
+	background-position: -82px -334px;
+	width: 16px;
+	height: 16px;
 }
 
 .claro .loading{
@@ -817,16 +854,17 @@ davinci_top_bar .dijitButtonNode {
 
 
 .inlineEditHelp{
-	background-image: url('img/linkto_help.gif');
+	background-image: url('img/sprite.png');
+	background-position: 0 -1646px;
 	height: 16px; 
 	width: 16px;
 	display:inline-block;
 	margin-top: 5px;
-	    
 }
 
 .inlineEditHelpSelected{
-	background-image: url('img/linkto_help_selected.gif');
+	background-image: url('img/sprite.png');
+	background-position: 0 -1712px;
 	height: 16px; 
 	width: 16px;
 	display:inline-block;
@@ -1222,6 +1260,22 @@ davinci_top_bar .dijitButtonNode {
 	cursor:pointer;
 }
 
+#davinci_warn {
+	width: 400px;
+}
 
+#davinci_warn .dijitToasterContent {
+	font-size: 175%;
+}
+#davinci_warn .dijitToasterError .dijitToasterContent {
+	background-color:#11BB17;
+}
 
+#unsupportedBrowserDialog {
+    width: 400px;
+    font-size: 125%;
+}
 
+#unsupportedBrowserDialog .maqButtonArea {
+    text-align: right;
+}

@@ -152,7 +152,6 @@ dojo.mixin(davinci.Runtime, {
 		//var retry=true;
 		var formHtml = "<table>" +
 		"<tr><div id='review_login_result'/></tr>"+
-		"<tr><td colspan=\"2\">New users - please <a href='welcome' tabindex='4'>sign up</a></td></tr>"+
         "<tr><td><label for=\"username\">User: </label></td>" +
         "<td><input dojoType=\"dijit.form.TextBox\" type=\"text\" name=\"username\" id='username' tabindex='1'></input></td></tr>" +
         "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password' tabindex='2'></input></td></tr>" +

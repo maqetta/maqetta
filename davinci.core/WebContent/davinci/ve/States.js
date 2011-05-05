@@ -79,17 +79,14 @@ dojo.declare("davinci.ve.States", workspace.maqetta.States, {
 		return context && context.getDocument && context.getDocument();
 	},
 
+	// returns a shallow copy of the children
 	getChildren: function(widget) {
-		var children = [];
 		if (widget && widget.getChildren) {
-			var widgets = widget.getChildren();
-			dojo.forEach(widgets, function(child) {
-				children.push(child);				
-			});
+			return widget.getChildren().slice();
 		}
-		return children;
+		return [];
 	},
-	_updateSrcState : function (widget)
+	_updateSrcState: function (widget)
 	{
 		if (widget._srcElement) {
 			var str=this.serialize(widget);
@@ -117,7 +114,9 @@ dojo.declare("davinci.ve.States", workspace.maqetta.States, {
 		
 			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
-				if (!editor || editor.declaredClass == "davinci.themeEditor.ThemeEditor") return; // ignore updates in theme editor
+				if (!editor || editor.declaredClass == "davinci.themeEditor.ThemeEditor"){ return; } // ignore updates in theme editor
+
+				dojo.publish("/davinci/states/state/changed/start");
 				var children = this.getChildren(e.widget);
 				while (children.length) {
 					var child = children.shift();
@@ -128,6 +127,8 @@ dojo.declare("davinci.ve.States", workspace.maqetta.States, {
 						this._update(child, e.newState, e.oldState);
 					}
 				}
+				dojo.publish("/davinci/states/state/changed/end");
+
 				// Trigger update of the selection box in case the selected widget changed size or moved
 				var context = this.getContext();
 				if (context) {

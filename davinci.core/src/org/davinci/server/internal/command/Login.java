@@ -31,7 +31,6 @@ public class Login extends Command {
 		}
 		else
 		{
-			int status = HttpServletResponse.SC_UNAUTHORIZED;
 			user = ServerManager.getServerManger().getUserManager().getUser(name);
 			if (user == null)
 			{

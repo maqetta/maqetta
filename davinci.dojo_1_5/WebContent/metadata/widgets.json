@@ -1394,7 +1394,8 @@
             "type": "dijit.tree.ForestStoreModel",
             "category": "untested-obj",
             "hidden": true,
-            "invisible": true
+            "invisible": true,
+            "helper": "davinci.libraries.dojo.dijit.tree.ForestStoreModelHelper"
         },
         {
             "name": "View",

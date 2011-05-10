@@ -595,11 +595,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			if(this._inline.style.display != "none" && this._inline.eb){
 				value = this._inline.eb.attr('value');
 				this._value = value;
-				var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-				if (htmlRadio && htmlRadio.checked)
-					this._format = 'html';
-				else
-					this._format = 'text';
+				this._format = this.getFormat();
 				this._inline.style.display = "none";
 				if (this._inline.eb){
 					//this._inline.eb.destroy(); 
@@ -623,7 +619,14 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		}
 	},
 	
-
+	getFormat: function(){
+		var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
+		var format = 'text';
+		if (htmlRadio && htmlRadio.checked)
+			format = 'html';
+		return format;
+	},
+	
 		
 
 		containsHtmlMarkUp: function (str){

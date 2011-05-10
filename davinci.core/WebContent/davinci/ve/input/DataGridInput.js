@@ -16,7 +16,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	delimiter: ", ",
 	
 	multiLine: "true",
-	supportsHTML: "false", // FIXME: we need to support encoding 
+	supportsHTML: "true", 
 	helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
 
 //	helpText:  'If the CSV data format button is selected enter text in the format: first line is column headers separated by commons all following lines are data for those columns.'+
@@ -106,14 +106,14 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		var structure = this._widget.attr("structure");
 		var value ='';
 		for (var x = 0; x < structure.length; x++){
-			var pre = (x > 0) ? ', ' : '';
+			var pre = (x > 0) ? ',' : '';
 			value += pre + structure[x].name;
 		}
 		value += '\n';
 		for (var i = 0; i <  this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
 			var item = this._widget.dijitWidget.store._arrayOfAllItems[i];
 			for (var s = 0; s < structure.length; s++){
-				var pre = (s > 0) ? ', ' : '';
+				var pre = (s > 0) ? ',' : '';
 				value += pre + item[structure[s].field];
 			}
 			value += '\n';
@@ -160,7 +160,8 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	
     	var storeCmd = this.updateStore(structure);
     	structure = this._structure;
-        var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure}, null, context);
+    	var escapeHTML = (this.getFormat() === 'text') ? true : false;
+        var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure, escapeHTMLInData:escapeHTML}, null, context);
         var compoundCommand = new davinci.commands.OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
@@ -197,8 +198,10 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			item.uniqe_id = r; // unique id for items
 			for (var s = 0; s < structure.length; s++){
 				var fieldName = structure[s].field;
-				if (cols[s])
+				if (cols[s]){
 					item[fieldName] = cols[s];
+				}
+				
 			}
 			items.push(item);
 		}
@@ -362,15 +365,17 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         var content = this._getTemplate();
         this._inline.attr("content", content);
        // this._inline.onCancel = dojo.hitch(this, "cancel");
+        this._inline.eb = dijit.byId("davinciIleb");
         this._inline.callBackObj = this;
  
-        this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk"));  
+        this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
+        this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
 		//this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent")); 
 		//this._connection.push(dojo.connect(this._inline.eb, "onClick", this, "updateSimStyle"));
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();
-		this.updateFormats();
+		//this.updateFormats();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
 		//dojo.style(this._inline.domNode, 'backgroundColor', 'red');
 		//this._inline.eb.focus();
@@ -402,28 +407,37 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	this._inline.eb.setValue(/* this._widget.dijitWidget.store.url*/ this._url); 
         	this._data = ' ';
         }
+        this.updateFormats();
+        var html = this._widget.getPropertyValue('escapeHTMLInData');
+        var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
+		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
+        if(html){
+        	htmlRadio.setChecked(false);
+			textRadio.setChecked(true);
+        }else{
+        	htmlRadio.setChecked(true);
+			textRadio.setChecked(false);        	
+        }
 
         this.toggleInputBoxes(null);
         
 	},
 	
-	updateFormats: function(){
-		
-		var disabled = true;
-		
-		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
-		var localDojo = this._widget.getContext().getDojo();
-		var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
-		var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
-		var table = dojo.byId('davinci.ve.input.SmartInput_table');
-		dojo.style(textRadio.domNode, 'display', 'none');
-		dojo.style(htmlRadio.domNode, 'display', 'none');
-		dojo.style(table, 'display', 'none');
-		
-		
+	handleEvent: function(event){
+
+		if (event.keyCode == 13) {
+			var multiLine = this.multiLine;
+			if (!multiLine || multiLine == "false" || this._lastKeyCode == 13){ // back to back CR
+				this.onOk();
+			}
+		} else {
+			this.updateFormats();
+		}
+		this._lastKeyCode = event.keyCode;
+		this.updateSimStyle();
 	},
 	
+
 	
 	_getTemplate: function(){
 		
@@ -453,7 +467,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 							'<tr> '+
 		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" />  </td> '+
 		 					'<td class="smartInputTd2">'+
-		 						'<div id="davinci.ve.input.SmartInput_radio_html_width_div" class="smartInputRadioTextDiv">'+
+		 						'<div id="davinci.ve.input.DataGridInput.urlData_width_div" class="smartInputRadioTextDiv">'+
 		 							'Create data grid from URL data:'+
 		 						'</div>'+
 		     				'</td> '+

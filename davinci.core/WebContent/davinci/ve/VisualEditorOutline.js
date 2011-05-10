@@ -139,6 +139,7 @@ dojo.declare("davinci.ve.OutlineTreeModel",	null, {
 		}));
 		dojo.subscribe("/davinci/states/state/changed/end", dojo.hitch(this, function(e) {
 			delete this._skipRefresh;
+			this.refresh();
 		}));
 },
 	

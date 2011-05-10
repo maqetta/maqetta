@@ -1126,7 +1126,9 @@ if (typeof dojo != "undefined") {
 			}
 				
 			function _getTemporaryId(type){
-				if (!type) return undefined;
+				if (!type) {
+					return undefined;
+				}
 				if (type.domNode) { // widget
 					type = type.declaredClass;
 				} else if (type.nodeType === 1) { // Element
@@ -1138,3 +1140,17 @@ if (typeof dojo != "undefined") {
 		}
 	}
 })();
+
+// Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
+if (!davinci.Workbench && typeof dijit != "undefined"){
+	davinci.states.subscribe("/davinci/states/state/changed", function(args) {
+		var w;
+		if (args.newState && !args.newState.indexOf("_show:")) {
+			w = dijit.byId(args.newState.substring(6));
+			w && w.show();
+		} else if (args.oldState && !args.oldState.indexOf("_show:")) {
+			w = dijit.byId(args.oldState.substring(6));
+			w && w.hide();
+		}
+	});
+}

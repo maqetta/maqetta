@@ -24,18 +24,21 @@ dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 		
 			if (this.currentEditor)
 			{
-				if (this.currentEditor==editor)
+				if (this.currentEditor==editor) {
 					return;
+				}
 	//			this.currentEditor.removeChangeListener(this.modelStore);
 				if (this.outlineTree) {
 					this.removeContent();
-	//				this.outlineTree.destroy();
+					this.outlineTree.destroy();
 				}
 				this.outlineProvider=this.outlineTree=null;
 				this._toolbarID=undefined;
 			}
 			this.currentEditor=editor;
-			if (!editor) return;
+			if (!editor) {
+				return;
+			}
 		
 			if (editor.getOutline) {
 				this.outlineProvider=editor.getOutline();

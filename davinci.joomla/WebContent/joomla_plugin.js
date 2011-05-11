@@ -10,7 +10,7 @@
 		actions: [
 					{
 						id: "davinciCommunity",
-						run: "window.open('http://maqetta.org/index.php?option=com_content&view=article&id=6&Itemid=15')",  
+						run: "window.open('http://maqetta.org/index.php?option=com_content&view=article&id=15')",  
 						label: "Community",
 						menubarPath: "davinci.help/help"	  
 					}					

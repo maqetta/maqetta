@@ -1147,10 +1147,10 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 		var w;
 		if (args.newState && !args.newState.indexOf("_show:")) {
 			w = dijit.byId(args.newState.substring(6));
-			w && w.show();
+			w && w.show && w.show();
 		} else if (args.oldState && !args.oldState.indexOf("_show:")) {
 			w = dijit.byId(args.oldState.substring(6));
-			w && w.hide();
+			w && w.hide && w.hide();
 		}
 	});
 }

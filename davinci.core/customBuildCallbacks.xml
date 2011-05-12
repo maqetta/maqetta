@@ -42,17 +42,37 @@
 		<fail message="ERROR - YOU NEED TO INSTALL AN SVN COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
 	</target>
 
-	<!--    Write "svn info" results to WebContent/davinci/repositoryinfo.js   -->
-	<target name="update.repositoryinfo.js" depends="check.command.line.svn">
+    <!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
+    <target name="verify.command.line.git">
+        <!--
+        <echo message="filepath=${env.PATH}"/>
+        <echo message="filepath=${env.Path}"/>
+        -->
+        <condition property="command.line.git.ok">
+            <or>
+                <available file="git" filepath="${env.PATH}"/>
+                <available file="git" filepath="${env.Path}"/>
+                <available file="git.exe" filepath="${env.PATH}"/>
+                <available file="git.exe" filepath="${env.Path}"/>
+            </or>
+        </condition>
+    </target>
+
+    <!-- ++++++++++ Crash and burn if can't find command-line git ++++++++++++ -->
+    <target name="check.command.line.git" depends="verify.command.line.git" unless="command.line.git.ok">
+        <fail message="ERROR - YOU NEED TO INSTALL A GIT COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
+    </target>
+
+	<!--    Write "git describe" results to WebContent/davinci/repositoryinfo.js   -->
+	<target name="update.repositoryinfo.js" depends="check.command.line.git">
 		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.file}"/>
-		<echo message="/* Holds output from 'svn info /path/to/davinci.core' */${line.separator}" file="${rep.info.file}" append="true"/>
+		<echo message="/* Holds output from 'git describe' */${line.separator}" file="${rep.info.file}" append="true"/>
 		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
 		<echo message="dojo.provide('davinci.repositoryinfo');${line.separator}" file="${rep.info.file}" append="true"/>
 		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
 
-		<exec executable="svn" output="${rep.info.file}.temp" append="true"  dir ="${basedir}">
-			<arg value="info"/>
-			<arg value="."/>
+		<exec executable="git" output="${rep.info.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
 		</exec>
 		<replace file="${rep.info.file}.temp" token="${line.separator}" value="|"/>
 		<replaceregexp file="${rep.info.file}.temp" match="^" replace="davinci.repositoryinfo='"/>
@@ -63,17 +83,16 @@
 		<delete file="${rep.info.file}.temp"/>
 	</target>
 
-	<!--    Write "svn info" results to WebContent/davinci/repositoryinfoLive.js   -->
-	<target name="update.repositoryinfoLive.js" depends="check.command.line.svn">
+	<!--    Write "git describe" results to WebContent/davinci/repositoryinfoLive.js   -->
+	<target name="update.repositoryinfoLive.js" depends="check.command.line.git">
 		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.live.file}"/>
-		<echo message="/* Holds output from 'svn info /path/to/davinci.core' */${line.separator}" file="${rep.info.live.file}" append="true"/>
+		<echo message="/* Holds output from 'git describe */${line.separator}" file="${rep.info.live.file}" append="true"/>
 		<echo message="${line.separator}" file="${rep.info.live.file}" append="true"/>
 		<echo message="dojo.provide('davinci.repositoryinfoLive');${line.separator}" file="${rep.info.live.file}" append="true"/>
 		<echo message="${line.separator}" file="${rep.info.live.file}" append="true"/>
 
-		<exec executable="svn" output="${rep.info.live.file}.temp" append="true"  dir ="${basedir}">
-			<arg value="info"/>
-			<arg value="."/>
+		<exec executable="git" output="${rep.info.live.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
 		</exec>
 		<replace file="${rep.info.live.file}.temp" token="${line.separator}" value="|"/>
 		<replaceregexp file="${rep.info.live.file}.temp" match="^" replace="davinci.repositoryinfoLive='"/>
@@ -84,13 +103,12 @@
 		<delete file="${rep.info.live.file}.temp"/>
 	</target>
 
-	<!--    Write "svn info" results to WebContent/davinci/davinci.manifest   -->
-	<target name="update.manifest" depends="check.command.line.svn">
+	<!--    Write "git describe" results to WebContent/davinci/davinci.manifest   -->
+	<target name="update.manifest" depends="check.command.line.git">
 		<echo message="# svninfo: " file="${manifest.file}.temp" />
 
-		<exec executable="svn" output="${manifest.file}.temp" append="true"  dir ="${basedir}">
-			<arg value="info"/>
-			<arg value="."/>
+		<exec executable="git" output="${manifest.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
 		</exec>
 		<replace file="${manifest.file}.temp" token="${line.separator}" value="|"/>
 		<concat destfile="${manifest.file}" append="true">
@@ -194,7 +212,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 
-		<echo message="Inserting svn info"/>
+		<echo message="Inserting git describe information"/>
 		<antcall target="update.repositoryinfo.js"/>
 		<antcall target="update.repositoryinfoLive.js"/>
 		<antcall target="update.manifest"/>

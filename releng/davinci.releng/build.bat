@@ -48,12 +48,14 @@ rem
 set gitRepository=git@github.com:maqetta/maqetta.git
 
 rem
-rem SVN URL for javax.activation and javax.mail Eclipse projects
+rem Path to javax.activation and javax.mail Eclipse projects directory 
 rem
 rem Note: Users outside of IBM need to create these projects for
-rem       themselves as they are *not* checked-in to GitHub
+rem       themselves as they are *not* checked-in to GitHub for
+rem       licensing reasons. Empty template projects with proper settings
+rem       are checked-in to GitHub in 'davinci.releng\javax_project_templates.zip'.
 rem
-set svnRepository=https://lab5.austin.ibm.com/davinci
+set javaxPath=\path\to\directory\containing\javax\eclipse\projects
 
 rem
 rem Windowing System, Operating System and processor Architecture settings
@@ -69,7 +71,7 @@ rem
 rem Set up for and pull down the latest code from GitHub
 rem
 IF NOT EXIST %buildDirectory%\repository (
-    rem "Making repository directory"
+    rem "Making repository directory..."
     mkdir %buildDirectory%\repository
 )
 
@@ -84,11 +86,24 @@ IF EXIST %buildDirectory%\repository\maqetta\.git (
     rem "Cloning repository. This may take a few moments..."
     cd %buildDirectory%\repository
     git clone %gitRepository%
-    rem "Checking out javax.activation and javax.mail SVN projects..."
-    cd maqetta
-    svn co %svnRepository%\trunk\javax.activation
-    svn co %svnRepository%\trunk\javax.mail
 )
+
+rem
+rem If '.git' directory exists we need to pull
+rem
+if EXIST %javaxPath%\.git (
+    rem "Fetching javax.activation and javax.mail projects..."
+    cd %javaxPath%
+    git pull
+)
+
+rem
+rem "Copying javax.activation and javax.mail projects..."
+rem
+cd %buildDirectory%\repository\maqetta
+xcopy %javaxPath%\javax.activation . /s /e 
+xcopy %javaxPath%\javax.mail . /s /e 
+
 
 rem
 rem Change directory to the build directory.

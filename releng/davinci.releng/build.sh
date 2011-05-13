@@ -9,14 +9,14 @@
 # That is, if eclipse is installed in '/usr/local/eclipse', this property 
 # would be set as 'base="/usr/local"'. No trailing slash.
 #
-export base="/Applications"
+export base="/path/to/eclipse/parent/directory"
 
 #
 # Path to eclipse directory inclusive. The application directory is 
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
-export baseLocation="${base}/eclipse-3.6"
+export baseLocation="${base}/eclipse"
 
 #
 # Version number of the launcher jar file. See ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar. 
@@ -28,7 +28,7 @@ launcherVersion="1.1.1.R36x_v20101122_1400"
 #
 # Directory in which to do the build. No trailing slash.
 #
-export buildDirectory="/Users/wayne/work/build"
+export buildDirectory="/path/to/your/build/directory"
 
 #
 # Directory containing build.xml (this should not have to be changed in most cases).
@@ -49,12 +49,14 @@ export relEngDir="${buildDirectory}/repository/maqetta/releng/davinci.releng"
 export gitRepository="git@github.com:maqetta/maqetta.git"
 
 #
-# SVN URL for javax.activation and javax.mail Eclipse projects
+# Path to javax.activation and javax.mail Eclipse projects directory
 #
 # Note: Users outside of IBM need to create these projects for
-#       themselves as they are *not* checked-in to GitHub
+#       themselves as they are *not* checked-in to GitHub for
+#       licensing reasons. Empty template projects with proper settings
+#       are checked-in to GitHub in 'davinci.releng/javax_project_templates.zip'.
 #
-export svnRepository="https://lab5.austin.ibm.com/davinci"
+export javaxPath="/path/to/directory/containing/javax/eclipse/projects"
 
 #
 # Windowing System, Operating System and processor Architecture settings
@@ -87,11 +89,22 @@ else
     echo "Cloning repository. This may take a few moments..."
     cd ${buildDirectory}/repository
     git clone ${gitRepository}
-    echo "Checking out javax.activation and javax.mail SVN projects..."
-    cd maqetta
-    svn co ${svnRepository}/trunk/javax.activation
-    svn co ${svnRepository}/trunk/javax.mail
 fi
+
+#
+# If '.git' directory exists we need to pull
+#
+if [ -d ${javaxPath}/.git ]
+then
+    echo "Fetching javax.activation and javax.mail projects..."
+    cd ${javaxPath}
+    git pull
+fi
+
+echo "Copying javax.activation and javax.mail projects..."
+cd ${buildDirectory}/repository/maqetta
+cp -R ${javaxPath}/javax.activation .
+cp -R ${javaxPath}/javax.mail .
 
 #
 # Change directory to the build directory.

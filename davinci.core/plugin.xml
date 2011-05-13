@@ -145,6 +145,8 @@
                class="org.davinci.server.internal.command.Rename" />         
            <command path="tryIt" noLogin="true"
                class="org.davinci.server.internal.command.TryIt" />         
+           <command path="removeUser" noLogin="true"
+               class="org.davinci.server.internal.command.RemoveUser" />         
                
       </extension>
       <extension

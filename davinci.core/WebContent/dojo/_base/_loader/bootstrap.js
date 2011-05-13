@@ -454,7 +454,8 @@ dojo.global = {
 		//		complicate tracebacks on some platforms.
 		//	returns:
 		//		The result of the evaluation. Often `undefined`
-		return d.global.eval ? d.global.eval(scriptFragment) : eval(scriptFragment); 	// Object
+		//return d.global.eval ? d.global.eval(scriptFragment) : eval(scriptFragment); 	// Object
+		return eval(scriptFragment);  // FF 4 fix
 	}
 
 	/*=====

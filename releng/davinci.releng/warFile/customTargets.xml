@@ -149,7 +149,7 @@
 <!-- rename resulting zip to 'war'		-->
 <!-- ===================================================================== -->
 		<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveNamePrefix}-${myOS}.${myWS}.${myArch}.zip"/>
-		<property name="warFullPath" value="${buildDirectory}/${buildLabel}/${warFileName}.war"/>
+		<property name="warFullPath" value="${buildDirectory}/${buildLabel}/${warFileName}-${maqBuildTime}.war"/>
 		<move file="${archiveFullPath}" toFile="${warFullPath}" />
 	</target>
 

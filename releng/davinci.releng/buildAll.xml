@@ -2,7 +2,7 @@
     
     <target name="nightly" depends="init">
         <tstamp>
-            <format property="maqBuildTime" timezone="GMT" pattern="yyyyMMddHHmm"/>
+            <format property="maqBuildTime" timezone="GMT-06:00" pattern="yyyyMMddHHmm"/>
         </tstamp>
         
         <!--
@@ -16,8 +16,8 @@
         
         <antcall target="updateZip">
             <param name="addPlugin" value="davinci.joomla"/>
-            <param name="fromZipName" value="${maqettaArchiveName}"/>
-            <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
+            <param name="fromZipName" value="${maqettaArchiveName}-${maqBuildTime}"/>
+            <param name="newZipName" value="joomla-${maqettaArchiveName}-${maqBuildTime}.zip"/>
         </antcall>
         
         <!--
@@ -186,20 +186,20 @@
         <!-- at this point the plugin is in a zip file,  unzip the jar to the desired location -->
         <property name="tmpDir" value="${buildDirectory}/tempJar"/>
         <mkdir dir="${tmpDir}"/>
-        <unzip dest="${tmpDir}" src="${buildDirectory}/${buildLabel}/${pluginName}.feature-TestBuild.zip"/>
+        <unzip dest="${tmpDir}" src="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
         <move toDir="${pluginDestination}">
             <fileset file="${tmpDir}/eclipse/plugins/*.jar">
             </fileset>
         </move>
         <delete dir="${tmpDir}"/>
-        <delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-TestBuild.zip"/>
+        <delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
         <delete dir="${buildDirectory}/features/${pluginName}.feature"/>
         
     </target>
     
     <target name="makeEar">
         <mkdir dir="${assemblyTempDir}"/>
-        <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}"/>
+        <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}-${maqBuildTime}"/>
         <copy todir="${assemblyTempDir}">
             <fileset dir="${warProject}/earRootFiles"/>
         </copy>
@@ -212,7 +212,7 @@
     <!-- create a new zip file from the base zip file with a new plugin added -->
     <target name="updateZip">
         <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
-        <property name="fromZipName" value="${maqettaArchiveName}"/>
+        <property name="fromZipName" value="${maqettaArchiveName}-${maqBuildTime}"/>
         <property name="maqettaZipPath" value="${buildDirectory}/${buildLabel}/${fromZipName}.zip"/>
         <mkdir dir="${tempDir}"/>
         <!-- unzip the base zip file -->
@@ -242,7 +242,7 @@
     <!-- create a new war file from the base war file with a new plugin added -->
     <target name="updateWar">
         <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
-        <property name="maqettaWarPath" value="${buildDirectory}/${buildLabel}/${warFileName}.war"/>
+        <property name="maqettaWarPath" value="${buildDirectory}/${buildLabel}/${warFileName}-${maqBuildTime}.war"/>
         <mkdir dir="${tempDir}"/>
     	
         <!-- unzip the base zip file -->
@@ -283,12 +283,6 @@
         <delete dir="${tempDir}"/>
     </target>
     
-    <target name="tagSVN" depends="init">
-        <exec executable="svn" dir="${buildDirectory}/${pluginDir}" failonerror="true">
-            <arg line="copy ${svnUser} ${svnPassword} ${svnRepository}/ tags/build${maqBuildTime} -m &quot;Tagging the build on ${maqBuildTime}&quot; "/>
-        </exec>
-    </target>
-        
     <target name="clean" depends="init">
         
         <defaultexcludes remove="**/.gitignore"/>

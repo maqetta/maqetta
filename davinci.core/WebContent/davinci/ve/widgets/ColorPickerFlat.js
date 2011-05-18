@@ -65,4 +65,3 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	}
 
 });
-davinci.ve.widgets.ColorPicker.divider = "---";

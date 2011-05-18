@@ -1,0 +1,45 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Toolbar",
+    "name": "dijit.Toolbar",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.Toolbar');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../"
+        }
+    },
+    "property": {
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "focusedChild": {
+            "datatype": "object",
+            "description": "The currently focused child widget, or null if there isn't one",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container"
+        }
+    },
+    "content": "<span></span>"
+}

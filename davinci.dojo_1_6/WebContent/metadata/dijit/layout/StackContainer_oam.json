@@ -1,0 +1,61 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/StackContainer",
+    "name": "dijit.layout.StackContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.layout.StackContainer');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "persist": {
+            "datatype": "boolean",
+            "description": "Remembers the selected child across sessions"
+        },
+        "selectedChildWidget": {
+            "datatype": "object",
+            "description": "References the currently selected child widget, if any",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "childProperties": {
+        "selected": {
+            "datatype": "boolean",
+            "title": "Selected"
+        },
+        "closable": {
+            "datatype": "boolean",
+            "title": "Closable"
+        }
+    },
+    "content": "<span></span>"
+}

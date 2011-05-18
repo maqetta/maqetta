@@ -1,0 +1,54 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/TabPane",
+    "name": "dojox.mobile.TabPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "defaultValue": "TabPane"
+        },
+        "icon": {
+            "datatype": "string"
+        },
+        "iconPos": {
+            "datatype": "string"
+        },
+        "selected": {
+            "datatype": "boolean",
+            "defaultValue": false
+        }
+    },
+    "content": "<div label='TabPane'></div>"
+}

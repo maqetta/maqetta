@@ -1,6 +1,4 @@
-
-  /* TitlePane 
-*/
+/* TitlePane */
 .claro .dijitTitlePaneRtl .dijitClosed .dijitArrowNode {
-    background-position : -7px 0px;
+  background-position: -7px 0;
 }

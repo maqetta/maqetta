@@ -83,15 +83,21 @@ simulates a cloud environment. Detailed installation instructions can be found i
 						In the dialog that follows, make sure "Empty the cache" is checked.
 						You might want to uncheck the other items so that other things are not also cleared.
 						Now, click on the "Clear browsing data" button.</li>
-					<li>Clear appcache (offline storage): Click on "Content settings...." to bring up the Content Settings dialog.
-						With "Cookies" highlighted in left column, click on "Show cookies and other site data".
-						Under "Search", type the name of the server from which you are running Maqetta.
-						If you installed locally, type "localhost". If running off of http://maqetta.org,
-						then type "maqetta". 
-						In tree view, open up the the tree item for the server (i.e., "localhost" or "maqetta.org").
-						If there is an entry labeled "Application Caches", open that tree item. Either
-						select the "Application Caches" tree item or the sub-item that corresponds to the Maqetta server,
-						and click the "Remove" button at the bottom.
+					<li>Clear appcache (offline storage): 
+						<ul>
+							<li>While in the "Under the Hood" tab, click on "Content settings...." to bring up the Content Settings dialog.</li>
+							<li>In the "Cookies" section towards the top, click on the "All Cookies and Site Data..." button to bring up the Cookies and Other Data panel.</li>
+							<li>In the top right search box, type in part of the URL for the web server where you are running Maqetta.
+								For example:
+								<ul>
+									<li>If you run Maqetta at Maqetta.org, then you can start typing "maqetta.org" into the search box
+										and immediately you will see the subset of sites that match the pattern (e.g., maqetta.org).</li>
+									<li>If you run Maqetta at http://dleadt.torolab.ibm.com:9080/maqetta/, then you can start typing the string "dleadt" into the search box.</li>
+									<li>If run run locally on http://localhost, then you can start typing "localhost" into the search box.</li>
+								</ul>
+							<li>When the listing of sites shows the site from which you run Maqetta, click on the row for that site to select that row.</li>
+							<li>Then click on the "x" in the top-right of that row to delete all cookies and offline storage for that site.</li>
+						</ul>
 					</li>
 				</ul>
 			</li>
@@ -144,17 +150,17 @@ Follow these steps to check your Java version:</p>
 	Java 1.5 (or later) onto your machine.
 </li>
 </ol>
+
 <h3>Step 2: Pull down the most recent Maqetta build</h3>
 
-<ol><li> Open a browser window and go to the appropriate Maqetta downloads page. 
+<ol><li> Create a folder on your local system for the Maqetta application (e.g., "maqetta_preview_1")
+</li><li> Open a browser window and go to the appropriate Maqetta downloads page. 
 <strong><em>Note that there are likely to be multiple Maqetta downloads pages.
 For example, your company might provide customized versions of Maqetta that are available
 somewhere on your company's servers.</em></strong>
 If you are looking for a recent Maqetta build that was created from the code in the Maqetta open source project without customizations, go to:
 <a href="http://maqetta.org/downloads" rel="external" title="Maqetta downloads">http://maqetta.org/downloads</a>.
-</li><li> Create a folder on your local system for the Maqetta application (e.g., "maqetta_preview_1")
-</li><li> On the download site, find the appropriate ZIP file (e.g., perhaps <b>maqetta_preview_1.zip</b>)
-</li><li> Download the ZIP from the browser by using the Save Link As... (or similar) command on the context menu (right mouse button on Windows) into the Maqetta application folder you created. 
+</li><li> Using the browser, download the ZIP by using the Save Link As... (or similar) command on the context menu (right mouse button on Windows) into the Maqetta application folder you created. 
 </li><li> After downloading, extract the ZIP file contents:
 <ul>
 <li>On Windows, extract (unzip) into the Maqetta application folder you just created</li>

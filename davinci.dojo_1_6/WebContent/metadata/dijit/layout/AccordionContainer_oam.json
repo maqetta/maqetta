@@ -1,0 +1,67 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/AccordionContainer",
+    "name": "dijit.layout.AccordionContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.layout.AccordionContainer');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 250,
+            "title": "Duration"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "description": "Remembers the selected child across sessions\n\n\nBoolean",
+            "hidden": false
+        },
+        "selectedChildWidget": {
+            "datatype": "object",
+            "description": "References the currently selected child widget, if any",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "childProperties": {
+        "selected": {
+            "datatype": "boolean",
+            "title": "Selected"
+        },
+        "closable": {
+            "datatype": "boolean",
+            "title": "Closable"
+        }
+    },
+    "content": "<span></span>"
+}

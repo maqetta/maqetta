@@ -47,6 +47,7 @@ davinci.library.getMetaData=function(theme){
 	
 }
 
+//FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
 	return (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
 }
@@ -56,9 +57,7 @@ davinci.library.getlibMetaData=function(id, version){
 
 davinci.library.getUserLibs=function(){
 	// not sure if we want to only allow the logged in user to view his/her installed libs, or to include user name in request of targe user.
-	
-	return davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{},sync:true  })[0]['userLibs'];
-	
+	return davinci.library._userLibsCache = davinci.library._userLibsCache || davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{},sync:true  })[0]['userLibs'];
 }
 
 // Cache library roots so we don't make multiple server calls for the same 'id' and 'version'.  But

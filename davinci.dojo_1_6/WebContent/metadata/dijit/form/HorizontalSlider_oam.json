@@ -1,0 +1,119 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/HorizontalSlider",
+    "name": "dijit.form.HorizontalSlider",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.form.Slider');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "version": "1.5",
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "showButtons": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Buttons"
+        },
+        "minimum": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Minimum Value"
+        },
+        "maximum": {
+            "datatype": "number",
+            "defaultValue": 100,
+            "title": "Maximum Value"
+        },
+        "discreteValues": {
+            "datatype": "number",
+            "defaultValue": null,
+            "title": "Discrete Values"
+        },
+        "pageIncrement": {
+            "datatype": "number",
+            "defaultValue": 2,
+            "title": "Page Increment"
+        },
+        "clickSelect": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Click Select"
+        },
+        "slideDuration": {
+            "datatype": "number",
+            "defaultValue": 1000,
+            "title": "Slide Duration",
+            "description": "Slide duration (ms)"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "widgetsInTemplate": {
+            "datatype": "boolean",
+            "hidden": true,
+            "defaultValue": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>"
+}

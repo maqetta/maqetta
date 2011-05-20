@@ -248,7 +248,17 @@ dojo.declare("davinci.ve.Context", null, {
                     // Since the metadata files are 'relocatable', we don't use the metadata's
                     //  value for $library.src.  Instead, we find the base URL for the user's
                     //  currently selected library.
-                    var libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
+                    var libVer;
+                    //libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
+
+                    // If version was not specified on widget's library reference, use default
+                    davinci.library.getUserLibs().some(function(lib){
+                    	if (lib.id=="dojo"){
+                    		libVer = lib.version;
+                    		return true;
+                    	}
+                    	return false;
+                    });
                     var libRoot = davinci.library.getLibRoot(r.$library, libVer);
                     if (!libRoot) {
                         console.warn("No library found for name = '" + r.$library +

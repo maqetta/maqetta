@@ -107,7 +107,7 @@
         <!-- -->
         
         <populateDir project="davinci.core"/>
-        <populateDir project="davinci.dojo_1_5"/>
+        <populateDir project="davinci.dojo_1_6"/>
         <populateDir project="davinci.html"/>
         <populateDir project="davinci.jqueryui_1_8"/>
         <populateDir project="davinci.product" extPath="/releng"/>

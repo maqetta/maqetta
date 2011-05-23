@@ -2,7 +2,7 @@
     
     <target name="nightly" depends="init">
         <tstamp>
-            <format property="maqBuildTime" timezone="GMT-06:00" pattern="yyyyMMddHHmm"/>
+            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyyMMddHHmm"/>
         </tstamp>
         
         <!--
@@ -16,8 +16,8 @@
         
         <antcall target="updateZip">
             <param name="addPlugin" value="davinci.joomla"/>
-            <param name="fromZipName" value="${maqettaArchiveName}-${maqBuildTime}"/>
-            <param name="newZipName" value="joomla-${maqettaArchiveName}-${maqBuildTime}.zip"/>
+            <param name="fromZipName" value="${maqettaArchiveName}"/>
+            <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
         </antcall>
         
         <!--
@@ -199,7 +199,7 @@
     
     <target name="makeEar">
         <mkdir dir="${assemblyTempDir}"/>
-        <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}-${maqBuildTime}"/>
+        <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}"/>
         <copy todir="${assemblyTempDir}">
             <fileset dir="${warProject}/earRootFiles"/>
         </copy>
@@ -212,7 +212,7 @@
     <!-- create a new zip file from the base zip file with a new plugin added -->
     <target name="updateZip">
         <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
-        <property name="fromZipName" value="${maqettaArchiveName}-${maqBuildTime}"/>
+        <property name="fromZipName" value="${maqettaArchiveName}"/>
         <property name="maqettaZipPath" value="${buildDirectory}/${buildLabel}/${fromZipName}.zip"/>
         <mkdir dir="${tempDir}"/>
         <!-- unzip the base zip file -->
@@ -242,7 +242,7 @@
     <!-- create a new war file from the base war file with a new plugin added -->
     <target name="updateWar">
         <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
-        <property name="maqettaWarPath" value="${buildDirectory}/${buildLabel}/${warFileName}-${maqBuildTime}.war"/>
+        <property name="maqettaWarPath" value="${buildDirectory}/${buildLabel}/${warFileName}.war"/>
         <mkdir dir="${tempDir}"/>
     	
         <!-- unzip the base zip file -->

@@ -1,25 +1,19 @@
-dojo.provide("dojox.widget.Standby");
-
-dojo.require("dojo.window");
-dojo.require("dojo.fx");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define("dojox/widget/Standby", ["dojo", "dijit", "dojox", "dojo/window", "dojo/fx", "dijit/_Widget", "dijit/_Templated"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.widget.Standby");
 
 dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 	// summary:
-	//		A widget designed to act as a Standby/Busy/Disable/Blocking widget to indicate a 
+	//		A widget designed to act as a Standby/Busy/Disable/Blocking widget to indicate a
 	//		particular DOM node is processing and cannot be clicked on at this time.
 	//		This widget uses absolute positioning to apply the overlay and image.
-	// 
-	// image:	
-	//		A URL to an image to center within the blocking overlay.  
+	//
+	// image:
+	//		A URL to an image to center within the blocking overlay.
 	//		The default is a basic spinner.
 	//
 	// imageText:
-	//		Text to set on the ALT tag of the image.  
+	//		Text to set on the ALT tag of the image.
 	//		The default is 'Please wait...'
 	//
 	// text:
@@ -31,7 +25,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 	//		Defaults to image.
 	//
 	// color:
-	//		The color to use for the translucent overlay.  
+	//		The color to use for the translucent overlay.
 	//		Text string such as: darkblue, #FE02FD, etc.
 	//
 	// duration:
@@ -41,14 +35,14 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 	// zIndex:
 	//		Control that lets you specify if the zIndex for the overlay
 	//		should be auto-computed based off parent zIndex, or should be set
-	//		to a particular value.  This is useful when you want to overlay 
+	//		to a particular value.  This is useful when you want to overlay
 	//		things in digit.Dialogs, you can specify a base zIndex to append from.
 	//		Default is 'auto'.
 
 	// templateString: [protected] String
 	//		The template string defining out the basics of the widget.  No need for an external
 	//		file.
-	templateString: 
+	templateString:
 		"<div>" +
 			"<div style=\"display: none; opacity: 0; z-index: 9999; " +
 				"position: absolute; cursor:wait;\" dojoAttachPoint=\"_underlayNode\"></div>" +
@@ -60,9 +54,9 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		"</div>",
 
 	// _underlayNode: [private] DOMNode
-	//		The node that is the translucent underlay for the 
+	//		The node that is the translucent underlay for the
 	//		image that blocks access to the target.
-	_underlayNode: null,	
+	_underlayNode: null,
 
 	// _imageNode: [private] DOMNode
 	//		The image node where we attach and define the image to display.
@@ -78,11 +72,11 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	// image: String
 	//		The URL to the image to center in the overlay.
-	image: dojo.moduleUrl("dojox", "widget/Standby/images/loading.gif").toString(), 
+	image: dojo.moduleUrl("dojox", "widget/Standby/images/loading.gif").toString(),
 
 	// imageText: String
 	//		Text for the ALT tag.
-	imageText: "Please Wait...", 
+	imageText: "Please Wait...",
 
 	// text: String
 	//		Text/HTML to display in the center of the overlay
@@ -98,16 +92,16 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	// _displayed: [private] Boolean
 	//		Flag to indicate if the overlay is displayed or not.
-	_displayed: false, 
+	_displayed: false,
 
 	// _resizeCheck: [private] Object
 	//		Handle to interval function that checks the target for changes.
-	_resizeCheck: null, 
+	_resizeCheck: null,
 	
 	// target: DOMNode||DOMID(String)||WidgetID(String)
-	//		The target to overlay when active.  Can be a widget id, a 
+	//		The target to overlay when active.  Can be a widget id, a
 	//		dom id, or a direct node reference.
-	target: "", 
+	target: "",
 
 	// color:	String
 	//		The color to set the overlay.  Should be in #XXXXXX form.
@@ -118,7 +112,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 	//		Integer defining how long the show and hide effects should take.
 	duration: 500,
 
-	// _started: [private] Boolean 
+	// _started: [private] Boolean
 	//		Trap flag to ensure startup only processes once.
 	_started: false,
 
@@ -130,13 +124,13 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 	// zIndex: String
 	//		Control that lets you specify if the zIndex for the overlay
 	//		should be auto-computed based off parent zIndex, or should be set
-	//		to a particular value.  This is useful when you want to overlay 
+	//		to a particular value.  This is useful when you want to overlay
 	//		things in digit.Dialogs, you can specify a base zIndex to append from.
 	zIndex: "auto",
 
 	startup: function(args){
 		// summary:
-		//		Over-ride of the basic widget startup function.  
+		//		Over-ride of the basic widget startup function.
 		//		Configures the target node and sets the image to use.
 		if(!this._started){
 			if(typeof this.target === "string"){
@@ -165,9 +159,9 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 			dojo.style(this._centerNode, "display", "none");
 			this.connect(this._underlayNode, "onclick", "_ignore");
 
-			//Last thing to do is move the widgets parent, if any, to the current document body.  
-			//Avoids having to deal with parent relative/absolute mess.  Otherwise positioning 
-			//tends to go goofy.  
+			//Last thing to do is move the widgets parent, if any, to the current document body.
+			//Avoids having to deal with parent relative/absolute mess.  Otherwise positioning
+			//tends to go goofy.
 			if(this.domNode.parentNode && this.domNode.parentNode != dojo.body()){
 				dojo.body().appendChild(this.domNode);
 			}
@@ -191,6 +185,10 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		// summary:
 		//		Function to display the blocking overlay and busy/status icon or text.
 		if(!this._displayed){
+			if(this._anim){
+				this._anim.stop();
+				delete this._anim;
+			}
 			this._displayed = true;
 			this._size();
 			this._disableOverflow();
@@ -202,6 +200,10 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		// summary:
 		//		Function to hide the blocking overlay and status icon or text.
 		if(this._displayed){
+			if(this._anim){
+				this._anim.stop();
+				delete this._anim;
+			}
 			this._size();
 			this._fadeOut();
 			this._displayed = false;
@@ -231,7 +233,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 	},
 
 	uninitialize: function(){
-		// summary:	
+		// summary:
 		//		Over-ride to hide the widget, which clears intervals, before cleanup.
 		this._displayed = false;
 		if(this._resizeCheck){
@@ -243,6 +245,10 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 			dojo.body().removeChild(this._ieFixNode);
 			delete this._ieFixNode;
 		}
+		if(this._anim){
+			this._anim.stop();
+			delete this._anim;
+		}
 		this.target = null;
 		this._imageNode = null;
 		this._textNode = null;
@@ -252,7 +258,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	_size: function(){
 		// summary:
-		//		Internal function that handles resizing the overlay and 
+		//		Internal function that handles resizing the overlay and
 		//		centering of the image on window resizing.
 		// tags:
 		//		private
@@ -265,7 +271,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 			var target = this.target;
 
 			//Show the image and make sure the zIndex is set high.
-			var curStyle = dojo.style(this._centerNode, "display"); 
+			var curStyle = dojo.style(this._centerNode, "display");
 			dojo.style(this._centerNode, "display", "block");
 			var box = dojo.position(target, true);
 			if(target === dojo.body() || target === dojo.doc){
@@ -278,7 +284,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 			var cntrIndicator = dojo.marginBox(this._centerNode);
 			dojo.style(this._centerNode, "display", curStyle);
 
-			//IE has a horrible zoom bug.  So, we have to try and account for 
+			//IE has a horrible zoom bug.  So, we have to try and account for
 			//it and fix up the scaling.
 			if(this._ieFixNode){
 				_ie7zoom = -this._ieFixNode.offsetTop / 1000;
@@ -328,15 +334,15 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 
 			var pn = target.parentNode;
-			if(pn && pn !== dojo.body() && 
-				target !== dojo.body() && 
+			if(pn && pn !== dojo.body() &&
+				target !== dojo.body() &&
 				target !== dojo.doc){
 				
 				// If the parent is the body tag itself,
-				// we can avoid all this, the body takes 
+				// we can avoid all this, the body takes
 				// care of overflow for me.  Besides, browser
-				// weirdness with height and width on body causes 
-				// problems with this sort of intersect testing 
+				// weirdness with height and width on body causes
+				// problems with this sort of intersect testing
 				// anyway.
 				var obh = box.h;
 				var obw = box.w;
@@ -352,29 +358,29 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 				}
 				
 				//Shift the parent width/height a bit if scollers are present.
-				pnBox.w -= pn.scrollHeight > pn.clientHeight && 
+				pnBox.w -= pn.scrollHeight > pn.clientHeight &&
 					pn.clientHeight > 0 ? scrollers.v: 0;
-				pnBox.h -= pn.scrollWidth > pn.clientWidth && 
+				pnBox.h -= pn.scrollWidth > pn.clientWidth &&
 					pn.clientWidth > 0 ? scrollers.h: 0;
 
-				//RTL requires a bit of massaging in some cases 
+				//RTL requires a bit of massaging in some cases
 				//(and differently depending on browser, ugh!)
 				//WebKit and others still need work.
 				if(dir === "rtl"){
 					if(dojo.isOpera){
-						box.x += pn.scrollHeight > pn.clientHeight && 
+						box.x += pn.scrollHeight > pn.clientHeight &&
 							pn.clientHeight > 0 ? scrollers.v: 0;
-						pnBox.x += pn.scrollHeight > pn.clientHeight && 
+						pnBox.x += pn.scrollHeight > pn.clientHeight &&
 							pn.clientHeight > 0 ? scrollers.v: 0;
 					}else if(dojo.isIE){
-						pnBox.x += pn.scrollHeight > pn.clientHeight && 
+						pnBox.x += pn.scrollHeight > pn.clientHeight &&
 							pn.clientHeight > 0 ? scrollers.v: 0;
 					}else if(dojo.isWebKit){
 						//TODO:  FIX THIS!
 					}
 				}
 
-				//Figure out if we need to adjust the overlay to fit a viewable 
+				//Figure out if we need to adjust the overlay to fit a viewable
 				//area, then resize it, we saved the original height/width above.
 				//This is causing issues on IE.  Argh!
 				if(pnBox.w < box.w){
@@ -398,23 +404,23 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 				var bRight = box.x + obw;
 				var delta;
 				//Adjust the height now
-				if(bBottom > vpTop && 
+				if(bBottom > vpTop &&
 					bTop < vpTop){
 					box.y = pnBox.y;
 					//intersecting top, need to do some shifting.
 					delta = vpTop - bTop;
 					var visHeight = obh - delta;
-					//If the visible height < viewport height, 
+					//If the visible height < viewport height,
 					//We need to shift it.
 					if(visHeight < pnBox.h){
 						box.h = visHeight;
 					}else{
 						//Deal with horizontal scrollbars if necessary.
-						box.h -= 2*(pn.scrollWidth > pn.clientWidth && 
+						box.h -= 2*(pn.scrollWidth > pn.clientWidth &&
 							pn.clientWidth > 0? scrollers.h: 0);
 					}
 				}else if(bTop < vpBottom && bBottom > vpBottom){
-					//Intersecting bottom, just figure out how much 
+					//Intersecting bottom, just figure out how much
 					//overlay to show.
 					box.h = vpBottom - bTop;
 				}else if(bBottom <= vpTop || bTop >= vpBottom){
@@ -428,17 +434,17 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 					//intersecting left, need to do some shifting.
 					delta = vpLeft - bLeft;
 					var visWidth = obw - delta;
-					//If the visible width < viewport width, 
+					//If the visible width < viewport width,
 					//We need to shift it.
 					if(visWidth < pnBox.w){
 						box.w = visWidth;
 					}else{
 						//Deal with horizontal scrollbars if necessary.
-						box.w -= 2*(pn.scrollHeight > pn.clientHeight && 
+						box.w -= 2*(pn.scrollHeight > pn.clientHeight &&
 							pn.clientHeight > 0? scrollers.w:0);
 					}
 				}else if(bLeft < vpRight && bRight > vpRight){
-					//Intersecting right, just figure out how much 
+					//Intersecting right, just figure out how much
 					//overlay to show.
 					box.w = vpRight - bLeft;
 				}else if(bRight <= vpLeft || bLeft >= vpRight){
@@ -457,16 +463,16 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 					left: box.x + "px"
 				});
 
-				var styles = ["borderRadius", "borderTopLeftRadius", 
-					"borderTopRightRadius","borderBottomLeftRadius", 
+				var styles = ["borderRadius", "borderTopLeftRadius",
+					"borderTopRightRadius","borderBottomLeftRadius",
 					"borderBottomRightRadius"];
 				this._cloneStyles(styles);
 				if(!dojo.isIE){
 					//Browser specific styles to try and clone if non-IE.
-					styles = ["MozBorderRadius", "MozBorderRadiusTopleft", 
-						"MozBorderRadiusTopright","MozBorderRadiusBottomleft", 
-						"MozBorderRadiusBottomright","WebkitBorderRadius", 
-						"WebkitBorderTopLeftRadius", "WebkitBorderTopRightRadius", 
+					styles = ["MozBorderRadius", "MozBorderRadiusTopleft",
+						"MozBorderRadiusTopright","MozBorderRadiusBottomleft",
+						"MozBorderRadiusBottomright","WebkitBorderRadius",
+						"WebkitBorderTopLeftRadius", "WebkitBorderTopRightRadius",
 						"WebkitBorderBottomLeftRadius","WebkitBorderBottomRightRadius"
 					];
 					this._cloneStyles(styles, this);
@@ -499,7 +505,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	_cloneStyles: function(list){
 		// summary:
-		//		Internal function to clone a set of styles from the target to 
+		//		Internal function to clone a set of styles from the target to
 		//		the underlay.
 		// list: Array
 		//		An array of style names to clone.
@@ -519,19 +525,20 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		var self = this;
 		var underlayNodeAnim = dojo.animateProperty({
 			duration: self.duration,
-			node: self._underlayNode, 
+			node: self._underlayNode,
 			properties: {opacity: {start: 0, end: 0.75}}
 		});
 		var imageAnim = dojo.animateProperty({
 			duration: self.duration,
-			node: self._centerNode, 
+			node: self._centerNode,
 			properties: {opacity: {start: 0, end: 1}},
 			onEnd: function(){
 				self.onShow();
+				delete self._anim;
 			}
 		});
-		var anim = dojo.fx.combine([underlayNodeAnim,imageAnim]);
-		anim.play();
+		this._anim = dojo.fx.combine([underlayNodeAnim,imageAnim]);
+		this._anim.play();
 	},
 
 	_fadeOut: function(){
@@ -542,7 +549,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		var self = this;
 		var underlayNodeAnim = dojo.animateProperty({
 			duration: self.duration,
-			node: self._underlayNode, 
+			node: self._underlayNode,
 			properties: {opacity: {start: 0.75, end: 0}},
 			onEnd: function(){
 				dojo.style(this.node,{"display":"none", "zIndex": "-1000"});
@@ -550,16 +557,17 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		});
 		var imageAnim = dojo.animateProperty({
 			duration: self.duration,
-			node: self._centerNode, 
+			node: self._centerNode,
 			properties: {opacity: {start: 1, end: 0}},
 			onEnd: function(){
 				dojo.style(this.node,{"display":"none", "zIndex": "-1000"});
 				self.onHide();
 				self._enableOverflow();
+				delete self._anim;
 			}
 		});
-		var anim = dojo.fx.combine([underlayNodeAnim,imageAnim]);
-		anim.play();
+		this._anim = dojo.fx.combine([underlayNodeAnim,imageAnim]);
+		this._anim.play();
 	},
 
 	_ignore: function(event){
@@ -604,8 +612,8 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 		div.appendChild(iDiv);
 		dojo.body().appendChild(div);
 
-		//Figure out content size before and after 
-		//scrollbars are there, then just subtract to 
+		//Figure out content size before and after
+		//scrollbars are there, then just subtract to
 		//get width.
 		var b = dojo.contentBox(div);
 		dojo.style(div, "overflow", "scroll");
@@ -618,7 +626,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	_setTextAttr: function(text){
 		// summary:
-		//		Function to allow widget.attr to set the text displayed in center 
+		//		Function to allow widget.attr to set the text displayed in center
 		//		if using text display.
 		// text: String
 		//		The text to set.
@@ -673,7 +681,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	_disableOverflow: function(){
 		 // summary:
-		 //		Function to disable scrollbars on the body.  Only used if the overlay 
+		 //		Function to disable scrollbars on the body.  Only used if the overlay
 		 //		targets the body or the document.
 		 if(this.target === dojo.body() || this.target === dojo.doc){
 			 // Store the overflow state we have to restore later.
@@ -687,10 +695,10 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 			 }
 			 if(dojo.isIE && !dojo.isQuirks){
 				 // IE will put scrollbars in anyway, html (parent of body)
-				 // also controls them in standards mode, so we have to 
+				 // also controls them in standards mode, so we have to
 				 // remove them, argh.
-				 if(body.parentNode && 
-					body.parentNode.style && 
+				 if(body.parentNode &&
+					body.parentNode.style &&
 					body.parentNode.style.overflow){
 					 this._oldBodyParentOverflow = body.parentNode.style.overflow;
 				 }else{
@@ -708,7 +716,7 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 
 	_enableOverflow: function(){
 		 // summary:
-		 //		Function to restore scrollbars on the body.  Only used if the overlay 
+		 //		Function to restore scrollbars on the body.  Only used if the overlay
 		 //		targets the body or the document.
 		 if(this._overflowDisabled){
 			delete this._overflowDisabled;
@@ -733,4 +741,8 @@ dojo.declare("dojox.widget.Standby",[dijit._Widget, dijit._Templated],{
 			delete this._oldOverflow;
 		}
 	}
-});	
+});
+
+return dojox.widget.Standby;
+
+});

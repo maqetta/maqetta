@@ -19,125 +19,120 @@
  * 5. Disabled state
  * 		.dijitSpinnerDisabled .* - for background color|image
  */
-
 .claro .dijitSpinnerButtonContainer {
-	overflow: hidden;
-	position: relative;
-	width: auto;
-	padding: 0 2px;
+  overflow: hidden;
+  position: relative;
+  width: auto;
+  padding: 0 2px;
 }
 .claro .dijitSpinnerButtonContainer .dijitSpinnerButtonInner {
-	border-width: 1px 0; /* reserve space to match the claro combobox button border with border and not padding to make IE happier */
-	border-style: solid none;
-}
+  border-width: 1px 0;
+  /* reserve space to match the claro combobox button border with border and not padding to make IE happier */
 
+  border-style: solid none;
+}
 /* button */
 .claro .dijitSpinner .dijitArrowButton {
-	width:auto;
-	background-color: #ebeef4;
-	background-image: url("images/formHighlight.png");
-	background-position:0px 0px;
-	background-repeat:repeat-x;
-	overflow: hidden;
+  width: auto;
+  background-color: #efefef;
+  background-image: url("images/formHighlight.png");
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  overflow: hidden;
 }
 .dj_iequirks .claro .dijitSpinner .dijitArrowButton {
-	overflow: visible; /* 0 height w/o this */
-}
+  overflow: visible;
+  /* 0 height w/o this */
 
+}
 .claro .dijitSpinner .dijitSpinnerButtonInner {
-	width: 15px;
+  width: 15px;
 }
 /* up & down button icons */
 .claro .dijitSpinner .dijitArrowButtonInner {
-	border:solid 1px #fff;
-	border-bottom-width: 0; /* 2 top borders = 1 top+bottom border in ComboBox */
-	background-image: url("images/commonFormArrows.png");
-	background-repeat: no-repeat;
-	height: 100%;
-	width:15px;
-	padding-left: 1px;
-	padding-right: 1px;
+  border: solid 1px #ffffff;
+  border-bottom-width: 0;
+  /* 2 top borders = 1 top+bottom border in ComboBox */
 
-	/* for up arrow */
-	background-position:-139px center;
+  background-image: url("images/commonFormArrows.png");
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 15px;
+  padding-left: 1px;
+  padding-right: 1px;
+  /* for up arrow */
 
-	/* override button.css (TODO: move to Common.css since ComboBox needs this too) */
-	display: block;
-	margin: -1px 0px -1px 0px;	/* compensate for inner border */
-	#margin-top: 0; /* since its bottom aligned */
+  background-position: -139px center;
+  /* override button.css (TODO: move to Common.css since ComboBox needs this too) */
+
+  display: block;
+  margin: -1px 0 -1px 0;
+  /* compensate for inner border */
+
+}
+.dj_ie6 .claro .dijitSpinner .dijitArrowButtonInner, .dj_ie7 .claro .dijitSpinner .dijitArrowButtonInner {
+  margin-top: 0;
+  /* since its bottom aligned */
+
 }
 .dj_iequirks .claro .dijitSpinner .dijitArrowButtonInner {
-	width: 19px;
+  width: 19px;
 }
 .claro .dijitSpinner .dijitDownArrowButton .dijitArrowButtonInner {
-	background-position:-34px;
+  background-position: -34px;
 }
 .claro .dijitSpinner .dijitArrowButtonInner .dijitInputField {
-	padding: 0;
+  padding: 0;
 }
-
 /** hover & focused status **/
-
-.claro .dijitUpArrowButtonActive,
-.claro .dijitDownArrowButtonActive {
-	background-color:#abd6ff;
+.claro .dijitUpArrowButtonActive, .claro .dijitDownArrowButtonActive {
+  background-color: #abd6ff;
 }
-
-.claro .dijitSpinner .dijitUpArrowButtonHover,
-.claro .dijitSpinner .dijitDownArrowButtonHover,
-.claro .dijitSpinnerFocused .dijitArrowButton {
-	background-color: #a0d1ff;
+.claro .dijitSpinner .dijitUpArrowButtonHover, .claro .dijitSpinner .dijitDownArrowButtonHover, .claro .dijitSpinnerFocused .dijitArrowButton {
+  background-color: #abd6ff;
 }
-
 .claro .dijitSpinner .dijitUpArrowButtonHover .dijitArrowButtonInner {
-	background-position:-174px;
+  background-position: -174px;
 }
 .claro .dijitSpinner .dijitDownArrowButtonHover .dijitArrowButtonInner {
-	background-position:-69px;
+  background-position: -69px;
 }
-
 .claro .dijitSpinnerFocused {
-	background-color: #fff;
-	background-image: none;
+  background-color: #ffffff;
+  background-image: none;
 }
-
 /* mouse down status */
-.claro .dijitSpinner .dijitDownArrowButtonActive,
-.claro .dijitSpinner .dijitUpArrowButtonActive {
-	background-color: #3299f9;
-	background-position:0px -177px;
+.claro .dijitSpinner .dijitDownArrowButtonActive, .claro .dijitSpinner .dijitUpArrowButtonActive {
+  background-color: #7dbefa;
+  background-position: 0 -177px;
 }
-.claro .dijitSpinner .dijitUpArrowButtonActive .dijitArrowButtonInner,
-.claro .dijitSpinner .dijitDownArrowButtonActive .dijitArrowButtonInner {
-	/* hide inner border while button is depressed */
-	border: 0px;
-	padding: 1px;
-	margin-right:2px;
-	margin-bottom:1px;
+.claro .dijitSpinner .dijitUpArrowButtonActive .dijitArrowButtonInner, .claro .dijitSpinner .dijitDownArrowButtonActive .dijitArrowButtonInner {
+  /* hide inner border while button is depressed */
+
+  border: 0;
+  padding: 1px;
+  margin-right: 2px;
+  margin-bottom: 1px;
 }
 .claro .dijitSpinner .dijitUpArrowButtonActive .dijitArrowButtonInner {
-	background-position:-173px;
+  background-position: -173px;
 }
 .claro .dijitSpinner .dijitDownArrowButtonActive .dijitArrowButtonInner {
-	background-position:-68px;
+  background-position: -68px;
 }
-
 /* disabled */
-
 .claro .dijitSpinnerDisabled .dijitArrowButtonInner {
-	background-color: #f1f1f1;
+  background-color: #efefef;
 }
 .claro .dijitSpinnerDisabled .dijitUpArrowButton .dijitArrowButtonInner {
-	background-position:-104px;
+  background-position: -104px;
 }
 .claro .dijitSpinnerDisabled .dijitDownArrowButton .dijitArrowButtonInner {
-	background-position:1px;
+  background-position: 1px;
 }
-
 /** hacks for browsers **/
-
 /* for IE 7, when div is enlarged, 
  * should be no empty space between dijitInputLayoutContainer and dijitSpinner*/
 .dj_ie7 .claro .dijitSpinner {
-	overflow:visible;
-} 
+  overflow: visible;
+}

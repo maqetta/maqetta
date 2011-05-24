@@ -7,97 +7,85 @@ dojo.require("dojox.gfx.matrix");
 
 	// Generic interpolators. Should they be moved to dojox.fx?
 
-	var InterpolNumber = function(start, end){
+	function InterpolNumber(start, end){
 		this.start = start, this.end = end;
+	}
+	InterpolNumber.prototype.getValue = function(r){
+		return (this.end - this.start) * r + this.start;
 	};
-	d.extend(InterpolNumber, {
-		getValue: function(r){
-			return (this.end - this.start) * r + this.start;
-		}
-	});
 
-	var InterpolUnit = function(start, end, units){
+	function InterpolUnit(start, end, units){
 		this.start = start, this.end = end;
 		this.units = units;
+	}
+	InterpolUnit.prototype.getValue = function(r){
+		return (this.end - this.start) * r + this.start + this.units;
 	};
-	d.extend(InterpolUnit, {
-		getValue: function(r){
-			return (this.end - this.start) * r + this.start + this.units;
-		}
-	});
 
-	var InterpolColor = function(start, end){
+	function InterpolColor(start, end){
 		this.start = start, this.end = end;
 		this.temp = new dojo.Color();
+	}
+	InterpolColor.prototype.getValue = function(r){
+		return d.blendColors(this.start, this.end, r, this.temp);
 	};
-	d.extend(InterpolColor, {
-		getValue: function(r){
-			return d.blendColors(this.start, this.end, r, this.temp);
-		}
-	});
 
-	var InterpolValues = function(values){
+	function InterpolValues(values){
 		this.values = values;
 		this.length = values.length;
+	}
+	InterpolValues.prototype.getValue = function(r){
+		return this.values[Math.min(Math.floor(r * this.length), this.length - 1)];
 	};
-	d.extend(InterpolValues, {
-		getValue: function(r){
-			return this.values[Math.min(Math.floor(r * this.length), this.length - 1)];
-		}
-	});
 
-	var InterpolObject = function(values, def){
+	function InterpolObject(values, def){
 		this.values = values;
 		this.def = def ? def : {};
-	};
-	d.extend(InterpolObject, {
-		getValue: function(r){
-			var ret = dojo.clone(this.def);
-			for(var i in this.values){
-				ret[i] = this.values[i].getValue(r);
-			}
-			return ret;
+	}
+	InterpolObject.prototype.getValue = function(r){
+		var ret = dojo.clone(this.def);
+		for(var i in this.values){
+			ret[i] = this.values[i].getValue(r);
 		}
-	});
+		return ret;
+	};
 
-	var InterpolTransform = function(stack, original){
+	function InterpolTransform(stack, original){
 		this.stack = stack;
 		this.original = original;
+	}
+	InterpolTransform.prototype.getValue = function(r){
+		var ret = [];
+		dojo.forEach(this.stack, function(t){
+			if(t instanceof m.Matrix2D){
+				ret.push(t);
+				return;
+			}
+			if(t.name == "original" && this.original){
+				ret.push(this.original);
+				return;
+			}
+			if(!(t.name in m)){ return; }
+			var f = m[t.name];
+			if(typeof f != "function"){
+				// constant
+				ret.push(f);
+				return;
+			}
+			var val = dojo.map(t.start, function(v, i){
+							return (t.end[i] - v) * r + v;
+						}),
+				matrix = f.apply(m, val);
+			if(matrix instanceof m.Matrix2D){
+				ret.push(matrix);
+			}
+		}, this);
+		return ret;
 	};
-	d.extend(InterpolTransform, {
-		getValue: function(r){
-			var ret = [];
-			dojo.forEach(this.stack, function(t){
-				if(t instanceof m.Matrix2D){
-					ret.push(t);
-					return;
-				}
-				if(t.name == "original" && this.original){
-					ret.push(this.original);
-					return;
-				}
-				if(!(t.name in m)){ return; }
-				var f = m[t.name];
-				if(typeof f != "function"){
-					// constant
-					ret.push(f);
-					return;
-				}
-				var val = dojo.map(t.start, function(v, i){
-								return (t.end[i] - v) * r + v;
-							}),
-					matrix = f.apply(m, val);
-				if(matrix instanceof m.Matrix2D){
-					ret.push(matrix);
-				}
-			}, this);
-			return ret;
-		}
-	});
 
 	var transparent = new d.Color(0, 0, 0, 0);
 
-	var getColorInterpol = function(prop, obj, name, def){
+	function getColorInterpol(prop, obj, name, def){
 		if(prop.values){
 			return new InterpolValues(prop.values);
 		}
@@ -116,9 +104,9 @@ dojo.require("dojox.gfx.matrix");
 			end = value;
 		}
 		return new InterpolColor(start, end);
-	};
+	}
 
-	var getNumberInterpol = function(prop, obj, name, def){
+	function getNumberInterpol(prop, obj, name, def){
 		if(prop.values){
 			return new InterpolValues(prop.values);
 		}
@@ -137,7 +125,7 @@ dojo.require("dojox.gfx.matrix");
 			end = value;
 		}
 		return new InterpolNumber(start, end);
-	};
+	}
 
 	g.fx.animateStroke = function(/*Object*/ args){
 		// summary:

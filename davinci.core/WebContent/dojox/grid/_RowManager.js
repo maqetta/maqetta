@@ -19,7 +19,7 @@ dojo.provide("dojox.grid._RowManager");
 		// styles
 		prepareStylingRow: function(inRowIndex, inRowNode){
 			return {
-				index: inRowIndex, 
+				index: inRowIndex,
 				node: inRowNode,
 				odd: Boolean(inRowIndex&1),
 				selected: !!this.grid.selection.isSelected(inRowIndex),

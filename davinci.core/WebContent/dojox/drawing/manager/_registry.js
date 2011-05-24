@@ -14,11 +14,11 @@ dojo.provide("dojox.drawing.manager._registry");
 		if(type=="drawing"){
 			_registered.drawing[item.id] = item;
 		}else if(type=="tool"){
-			_registered.tool[item.name] = item;	
+			_registered.tool[item.name] = item;
 		}else if(type=="stencil"){
-			_registered.stencil[item.name] = item;	
+			_registered.stencil[item.name] = item;
 		}else if(type=="plugin"){
-			_registered.plugin[item.name] = item;	
+			_registered.plugin[item.name] = item;
 		}else if(type=="button"){
 			_registered.button[item.toolType] = item;
 		}

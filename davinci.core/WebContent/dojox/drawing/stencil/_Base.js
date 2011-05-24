@@ -364,9 +364,7 @@ dojox.drawing.stencil._Base = dojox.drawing.util.oo.declare(
 			//		only fire once. But the mechanism for determining
 			//		this is more complicated than it sounds.
 			//
-			//if(!this._postRenderCon){
-				this._postRenderCon = dojo.connect(this, "render", this, "_onPostRender");
-			//}
+			this._postRenderCon = dojo.connect(this, "render", this, "_onPostRender");
 			this.created = true;
 			this.disconnectMouse();
 
@@ -860,11 +858,11 @@ dojox.drawing.stencil._Base = dojox.drawing.util.oo.declare(
 					container:this.container,
 					labelPosition:this.labelPosition
 				});
-			}else if(text){
+			}else if(text!=undefined){
 				this._label.setLabel(text);
 			}
 		},
-
+		
 		getLabel: function(){
 			// summary:
 			//		Get the text of the label.
@@ -1034,7 +1032,8 @@ dojox.drawing.stencil._Base = dojox.drawing.util.oo.declare(
 			//		"onStencilUp". To disable the selectability,
 			//		make the att "", which causes a standard
 			//		mouse event.
-			var att = this.enabled && !this.annotation ? this.drawingType : "";
+			//		Labels are special and used to select master stencils.
+			var att = this.enabled && (!this.annotation || this.drawingType=="label") ? this.drawingType : "";
 			this.util.attr(shape, "drawingType", att);
 		},
 

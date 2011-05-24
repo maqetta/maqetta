@@ -60,7 +60,7 @@ dojox.drawing.manager.Anchors = dojox.drawing.util.oo.declare(
 				
 				
 				if(anchor.id == a.id || anchor.stencil.anchorType!="group"){
-					// nothing 
+					// nothing
 				}else{
 					if(anchor.org.y == a.org.y){
 						a.setPoint({
@@ -120,7 +120,7 @@ dojox.drawing.manager.Anchors = dojox.drawing.util.oo.declare(
 			// summary:
 			//		Creates anchor points on a Stencil, based on the
 			//		Stencil's points.
-			//	
+			//
 			this.items[item.id] = {
 				item:item,
 				anchors:[]
@@ -168,7 +168,7 @@ dojox.drawing.manager.Anchors = dojox.drawing.util.oo.declare(
 								anchor.y_anchor = a;
 							}
 						}
-					},this);	
+					},this);
 				},this);
 				
 			}
@@ -202,7 +202,7 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 		//		arguments:
 		//			dojox.__stencilArgs plus some additional
 		//			data, like which point this is (pointIdx)
-		//		
+		//
 		this.defaults = dojox.drawing.defaults.copy();
 		this.mouse = options.mouse;
 		this.point = options.point;
@@ -267,7 +267,7 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 		},
 		onAnchorDown: function(/*Mouse.EventObject*/obj){
 			// summary:
-			//		Event fires for mousedown on anchor 
+			//		Event fires for mousedown on anchor
 			this.selected = obj.id == this.id;
 		},
 		onAnchorUp: function(/*Mouse.EventObject*/obj){
@@ -336,7 +336,7 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 							y = conT;
 						}else if(y > conB){
 							// overlapping other anchor
-							y = conB; 
+							y = conB;
 						}
 					}
 				}else{
@@ -363,7 +363,7 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 						if(x < conL){
 							// overlapping other anchor
 							x = conL;
-						}							
+						}
 						
 					}else{
 						// left anchor
@@ -375,7 +375,7 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 							x = conL;
 						}else if(x > conR){
 							// overlapping other anchor
-							x = conR; 
+							x = conR;
 						}
 					}
 				}else{
@@ -387,9 +387,9 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 				}
 				//Constrains anchor point, returns null if not overwritten by stencil
 				var constrained = this.anchorConstrain(x, y);
-				if(constrained != null){ 
+				if(constrained != null){
 					x=constrained.x;
-					y=constrained.y; 
+					y=constrained.y;
 				}
 				
 				this.shape.setTransform({
@@ -423,7 +423,7 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 			//		and it will automatically overwrite this stub.
 			//		Should return x and y coords. Success is both
 			//		being greater than zero, fail is if one or both
-			//		are less than zero. 
+			//		are less than zero.
 			return {x:1, y:1};
 		},
 		

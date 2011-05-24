@@ -5,7 +5,7 @@ dojo.experimental("dojox.widget.gauge.AnalogArrowIndicator");
 
 dojo.declare("dojox.widget.gauge.AnalogArrowIndicator",[dojox.widget.gauge.AnalogLineIndicator],{
 	_getShapes: function(){
-		// summary: 
+		// summary:
 		//		Override of dojox.widget.AnalogLineIndicator._getShapes
 		if(!this._gauge){
 			return null;

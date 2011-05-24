@@ -9,8 +9,6 @@ dojo.require("dojox.lang.functional");
 dojo.require("dojox.lang.utils");
 dojo.require("dojox.gfx");
 
-dojo.require("dojo.number");
-
 /*=====
 dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {
 	//	summary:
@@ -77,7 +75,7 @@ dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__Defa
 			fixed:			true,
 			precision:		1,
 			labelOffset:	20,
-			labelStyle:		"default",	// default/rows/auto
+			labelStyle:		"default",	// default/rows/auto/columns
 			htmlLabels:		true,		// use HTML to draw labels
 			radGrad:        "native",	// or "linear", or "fan"
 			fanSize:		5,			// maximum fan size in degrees
@@ -91,7 +89,8 @@ dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__Defa
 			shadow:		{},
 			fill:		{},
 			font:		"",
-			fontColor:	""
+			fontColor:	"",
+			labelWiring: {}
 		},
 
 		constructor: function(chart, kwArgs){
@@ -348,40 +347,86 @@ dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__Defa
 			}, this);
 			// draw labels
 			if(this.opt.labels){
-				start = startAngle;
-				dojo.some(slices, function(slice, i){
-					if(slice <= 0){
-						// degenerated slice
-						return false;	// continue
-					}
-					var theme = themes[i];
-					if(slice >= 1){
-						// whole pie
-						var v = run[i], elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"](
-								this.chart, s, circle.cx, circle.cy + size / 2, "middle", labels[i],
-								theme.series.font, theme.series.fontColor);
+				if(this.opt.labelStyle == "default"){
+					start = startAngle;
+					dojo.some(slices, function(slice, i){
+						if(slice <= 0){
+							// degenerated slice
+							return false;	// continue
+						}
+						var theme = themes[i];
+						if(slice >= 1){
+							// whole pie
+							var v = run[i], elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"](
+									this.chart, s, circle.cx, circle.cy + size / 2, "middle", labels[i],
+									theme.series.font, theme.series.fontColor);
+							if(this.opt.htmlLabels){
+								this.htmlElements.push(elem);
+							}
+							return true;	// stop iteration
+						}
+						// calculate the geometry of the slice
+						var end = start + slice * 2 * Math.PI, v = run[i];
+						if(i + 1 == slices.length){
+							end = startAngle + 2 * Math.PI;
+						}
+						var	labelAngle = (start + end) / 2,
+							x = circle.cx + labelR * Math.cos(labelAngle),
+							y = circle.cy + labelR * Math.sin(labelAngle) + size / 2;
+						// draw the label
+						var elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"]
+								(this.chart, s, x, y, "middle", labels[i], theme.series.font, theme.series.fontColor);
 						if(this.opt.htmlLabels){
 							this.htmlElements.push(elem);
 						}
-						return true;	// stop iteration
-					}
-					// calculate the geometry of the slice
-					var end = start + slice * 2 * Math.PI, v = run[i];
-					if(i + 1 == slices.length){
-						end = startAngle + 2 * Math.PI;
-					}
-					var	labelAngle = (start + end) / 2,
-						x = circle.cx + labelR * Math.cos(labelAngle),
-						y = circle.cy + labelR * Math.sin(labelAngle) + size / 2;
-					// draw the label
-					var elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"]
-							(this.chart, s, x, y, "middle", labels[i], theme.series.font, theme.series.fontColor);
-					if(this.opt.htmlLabels){
-						this.htmlElements.push(elem);
-					}
-					start = end;
-					return false;	// continue
-				}, this);
+						start = end;
+						return false;	// continue
+					}, this);
+				}else if(this.opt.labelStyle == "columns"){
+					start = startAngle;
+					//calculate label angles
+					var labeledSlices = [];
+					dojo.forEach(slices, function(slice, i){
+						var end = start + slice * 2 * Math.PI;
+						if(i + 1 == slices.length){
+							end = startAngle + 2 * Math.PI;
+						}
+						var labelAngle = (start + end) / 2;
+						labeledSlices.push({
+							angle: labelAngle,
+							left: Math.cos(labelAngle) < 0,
+							theme: themes[i],
+							index: i,
+							omit: end - start < 0.001
+						});
+						start = end;
+					});
+					//calculate label radius to each slice
+					var labelHeight = dojox.gfx._base._getTextBox("a",{font:taFont}).h;
+					this._getProperLabelRadius(labeledSlices, labelHeight, circle.r * 1.1);
+					//draw label and wiring
+					dojo.forEach(labeledSlices, function(slice, i){
+						if (!slice.omit) {
+							var leftColumn = circle.cx - circle.r * 2,
+								rightColumn = circle.cx + circle.r * 2,
+								labelWidth = dojox.gfx._base._getTextBox(labels[i], {font: taFont}).w,
+								x = circle.cx + slice.labelR * Math.cos(slice.angle),
+								y = circle.cy + slice.labelR * Math.sin(slice.angle),
+								jointX = (slice.left) ? (leftColumn + labelWidth) : (rightColumn - labelWidth),
+								labelX = (slice.left) ? leftColumn : jointX;
+							var wiring = s.createPath().moveTo(circle.cx + circle.r * Math.cos(slice.angle), circle.cy + circle.r * Math.sin(slice.angle))
+							if (Math.abs(slice.labelR * Math.cos(slice.angle)) < circle.r * 2 - labelWidth) {
+								wiring.lineTo(x, y);
+							}
+							wiring.lineTo(jointX, y).setStroke(slice.theme.series.labelWiring);
+							var elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"](
+								this.chart, s, labelX, y, "left", labels[i], slice.theme.series.font, slice.theme.series.fontColor);
+							if (this.opt.htmlLabels) {
+								this.htmlElements.push(elem);
+							}
+						}
+					},this);
+				}
 			}
 			// post-process events to restore the original indexing
 			var esi = 0;
@@ -390,10 +435,59 @@ dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__Defa
 			});
 			return this;	//	dojox.charting.plot2d.Pie
 		},
-
+		
+		_getProperLabelRadius: function(slices, labelHeight, minRidius){
+			var leftCenterSlice = {},rightCenterSlice = {},leftMinSIN = 1, rightMinSIN = 1;
+			if (slices.length == 1) {
+				slices[0].labelR = minRidius;
+				return;
+			}
+			for(var i = 0;i<slices.length;i++){
+				var tempSIN = Math.abs(Math.sin(slices[i].angle));
+				if(slices[i].left){
+					if(leftMinSIN > tempSIN){
+						leftMinSIN = tempSIN;
+						leftCenterSlice = slices[i];
+					}
+				}else{
+					if(rightMinSIN > tempSIN){
+						rightMinSIN = tempSIN;
+						rightCenterSlice = slices[i];
+					}
+				}
+			}
+			leftCenterSlice.labelR = rightCenterSlice.labelR = minRidius;
+			this._caculateLabelR(leftCenterSlice,slices,labelHeight);
+			this._caculateLabelR(rightCenterSlice,slices,labelHeight);
+		},
+		_caculateLabelR: function(firstSlice,slices,labelHeight){
+			var i = firstSlice.index,length = slices.length,
+				currentLabelR = firstSlice.labelR;
+			while(!(slices[i%length].left ^ slices[(i+1)%length].left)){
+				if (!slices[(i + 1) % length].omit) {
+					var nextLabelR = (Math.sin(slices[i % length].angle) * currentLabelR + ((slices[i % length].left) ? (-labelHeight) : labelHeight)) /
+					Math.sin(slices[(i + 1) % length].angle);
+					currentLabelR = (nextLabelR < firstSlice.labelR) ? firstSlice.labelR : nextLabelR;
+					slices[(i + 1) % length].labelR = currentLabelR;
+				}
+				i++;
+			}
+			i = firstSlice.index,j = (i == 0)?length-1 : i - 1;
+			while(!(slices[i].left ^ slices[j].left)){
+				if (!slices[j].omit) {
+					var nextLabelR = (Math.sin(slices[i].angle) * currentLabelR + ((slices[i].left) ? labelHeight : (-labelHeight))) /
+					Math.sin(slices[j].angle);
+					currentLabelR = (nextLabelR < firstSlice.labelR) ? firstSlice.labelR : nextLabelR;
+					slices[j].labelR = currentLabelR;
+				}
+				i--;j--;
+				i = (i < 0)?i+slices.length:i;
+				j = (j < 0)?j+slices.length:j;
+			}
+		},
 		// utilities
 		_getLabel: function(number){
-			return this.opt.fixed ? dojo.number.format(number, {places: this.opt.precision}) : number.toString();
+			return dc.getLabel(number, this.opt.fixed, this.opt.precision);
 		}
 	});
 })();

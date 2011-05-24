@@ -5,8 +5,9 @@
 		<title>Editor Table Plugins</title>
 		<style type="text/css">
 			@import "../../../dojo/resources/dojo.css";
-			@import "../../../dijit/themes/tundra/tundra.css";
+			@import "../../../dijit/themes/claro/claro.css";
 			@import "../../../dijit/themes/dijit.css";
+			@import "../../widget/ColorPicker/ColorPicker.css";
 		</style>
 
 		<link href="../plugins/resources/editorPlugins.css" type="text/css" rel="stylesheet" />
@@ -21,11 +22,16 @@
 		</script>
 
 		<script type="text/javascript" src="../../../dojo/dojo.js"></script>
+		
+		<!-- only needed for alternate theme testing: -->
+		<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
+		
 		<script>
 			dojo.require("dojo.parser");
 			dojo.require("dijit.Editor");
 			dojo.require("dijit.form.Button");
 			dojo.require("dojox.editor.plugins.TablePlugins");
+			dojo.require("dijit._editor.plugins.ViewSource");
 			dojo.addOnLoad(function(){
 				console.log(dojo.version.toString());
 			});
@@ -47,7 +53,7 @@
 			}
 		</style>
 	</head>
-	<body class="tundra">
+	<body class="claro">
 		<div id="main">
 			<div id="editor" dojoType="dijit.Editor" height="200px" plugins="[
 				'undo', 'redo', 'bold','italic','|',
@@ -63,7 +69,8 @@
 				{name: 'dojox.editor.plugins.TablePlugins', command: 'tableContextMenu'}
 			]">
 				Dojo Rocks with a fox in socks. Red socks. In a box.
-			        <table width="200" border="2" align="center" cellpadding="2" cellspacing="2" bordercolor="#00FFFF" bgcolor="#FF0000" id="myTable">
+				<br/><br/>
+			        <table width="200" border="2" cellpadding="2" cellspacing="2" bordercolor="#00FFFF" bgcolor="#FF0000" id="myTable">
 					<tr>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>

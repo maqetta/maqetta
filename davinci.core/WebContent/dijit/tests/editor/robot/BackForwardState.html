@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
+			dojo.require("dojo.DeferredList");
 			dojo.require("dijit.robotx");
 
 			// This page tests that the editor's value won't be lost if the user
@@ -26,6 +27,15 @@
 				doh.robot.initRobot('../BackForwardState.html');
 
 				doh.register("back button restore", [
+					{
+						name: "wait for editors to load",
+						timeout: 5000,
+						runTest: function(){
+						    return new dojo.DeferredList(
+						        dijit.registry.filter(function(w){ return w.onLoadDeferred; }).map(function(w){return w.onLoadDeferred;})
+						    );
+						}
+					},
 					{
 						name: "set editor value",
 						timeout: 10000,
@@ -69,7 +79,6 @@
 							doh.is("Back/forward test helper page", (dojo.query("h1")[0]||{}).innerHTML);
 						}
 					},
-
 					{
 						name: "go back to original page",
 						timeout: 10000,
@@ -81,6 +90,15 @@
 								back.focus();
 								doh.robot.keyPress(dojo.keys.ENTER, 500);
 							});
+						}
+					},
+					{
+						name: "wait for editors to load again",
+						timeout: 5000,
+						runTest: function(){
+						    return new dojo.DeferredList(
+						        dijit.registry.filter(function(w){ return w.onLoadDeferred; }).map(function(w){return w.onLoadDeferred;})
+						    );
 						}
 					},
 

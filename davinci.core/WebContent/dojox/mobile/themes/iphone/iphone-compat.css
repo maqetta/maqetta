@@ -6,13 +6,15 @@
 /* Heading Arrow Button */
 .mblArrowButtonHead {
 	position: absolute;
-	top: 5px;
-	left: 6px;
+	top: 6px;
+	left: 7px;
 	width: 19px;
 	height: 29px;
+	border-style: none;
 	background-image: url(compat/arrow-button-head.png);
 }
 .mblArrowButtonBody {
+	padding: 0px 10px 0px 10px;
 	background-image: url(compat/arrow-button-bg.png);
 }
 
@@ -91,15 +93,20 @@
 	height: 0;
 }
 
-li.mblListItem .mblArrow, div.mblListItem .mblArrow {
+.mblListItem .mblArrow {
 	border-style: none;
 	top: 16px;
 	width: 9px;
 	height: 13px;
 	background-image: url(compat/gray-arrow.png);
 }
-li.mblItemSelected .mblArrow, div.mblItemSelected .mblArrow {
+.mblItemSelected .mblArrow {
 	background-image: url(compat/white-arrow.png);
+}
+
+/* dojox.mobile.TabBarButton */
+.dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
+	left: auto;
 }
 
 /* Switch */
@@ -226,10 +233,10 @@ li.mblItemSelected .mblArrow, div.mblItemSelected .mblArrow {
 .mblTabPanelHeader {
 	background-image: url(compat/heading-bg.png);
 }
-.mblTabButton {
+.mblTabContainer .mblTabButton {
 	background-image: url(compat/tab-button-bg.png);
 }
-.mblTabButtonSelected {
+.mblTabContainer .mblTabButtonSelected {
 	background-image: url(compat/tab-sel-button-bg.png);
 }
 *html .mblTabButton { /* IE6 hack */

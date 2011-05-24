@@ -1,9 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+<!--
+	Deprecated: Use dojox.mobile.TabBar instead.
+	See test_iPhone-TabBar-seg-grouped.html for an equivalent example.
+-->
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<title>Tab Container</title>
+		<title>Tab Container (deprecated)</title>
 		<link href="../themes/android/android.css" rel="stylesheet"></link>
 		<style>
 		.lnk {
@@ -18,6 +22,7 @@
 			//dojo.require("dojo.parser"); // Use the lightweight parser.
 			dojo.require("dojox.mobile.parser");
 			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile.TabContainer");
 			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 		</script>
 	</head>

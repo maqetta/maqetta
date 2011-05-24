@@ -10,7 +10,7 @@ dojo.require("dojox.highlight._base");
 	
 	var XML_ATTR = {
 		className: 'attribute',
-		begin: ' [a-zA-Z-]+\\s*=\\s*', end: '^',
+		begin: ' [a-zA-Z-]+=', end: '^',
 		contains: ['value']
 	};
 	

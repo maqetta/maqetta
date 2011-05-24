@@ -1,11 +1,4 @@
-dojo.provide("dijit.form.HorizontalSlider");
-
-dojo.require("dijit.form._FormWidget");
-dojo.require("dijit._Container");
-dojo.require("dojo.dnd.move");
-dojo.require("dijit.form.Button");
-dojo.require("dojo.number");
-dojo.require("dojo._base.fx");
+define("dijit/form/HorizontalSlider", ["dojo", "dijit", "text!dijit/form/templates/HorizontalSlider.html", "dijit/form/_FormWidget", "dijit/_Container", "dojo/dnd/move", "dijit/form/Button", "dojo/number"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.form.HorizontalSlider",
@@ -19,22 +12,22 @@ dojo.declare(
 	// Overrides FormValueWidget.value to indicate numeric value
 	value: 0,
 
-	// showButtons: Boolean
+	// showButtons: [const] Boolean
 	//		Show increment/decrement buttons at the ends of the slider?
 	showButtons: true,
 
-	// minimum:: Integer
+	// minimum:: [const] Integer
 	//		The minimum value the slider can be set to.
 	minimum: 0,
 
-	// maximum: Integer
+	// maximum: [const] Integer
 	//		The maximum value the slider can be set to.
 	maximum: 100,
 
 	// discreteValues: Integer
 	//		If specified, indicates that the slider handle has only 'discreteValues' possible positions,
-	//      and that after dragging the handle, it will snap to the nearest possible position.
-	//      Thus, the slider has only 'discreteValues' possible values.
+	//		and that after dragging the handle, it will snap to the nearest possible position.
+	//		Thus, the slider has only 'discreteValues' possible values.
 	//
 	//		For example, if minimum=10, maxiumum=30, and discreteValues=3, then the slider handle has
 	//		three possible positions, representing values 10, 20, or 30.
@@ -42,13 +35,13 @@ dojo.declare(
 	//		If discreteValues is not specified or if it's value is higher than the number of pixels
 	//		in the slider bar, then the slider handle can be moved freely, and the slider's value will be
 	//		computed/reported based on pixel position (in this case it will likely be fractional,
-	//      such as 123.456789).
+	//		such as 123.456789).
 	discreteValues: Infinity,
 
 	// pageIncrement: Integer
 	//		If discreteValues is also specified, this indicates the amount of clicks (ie, snap positions)
-	//      that the slider handle is moved via pageup/pagedown keys.
-	//	If discreteValues is not specified, it indicates the number of pixels.
+	//		that the slider handle is moved via pageup/pagedown keys.
+	//		If discreteValues is not specified, it indicates the number of pixels.
 	pageIncrement: 2,
 
 	// clickSelect: Boolean
@@ -60,7 +53,7 @@ dojo.declare(
 	//		when clicking the slider bar to make the handle move.
 	slideDuration: dijit.defaultDuration,
 
-	// Flag to _Templated  (TODO: why is this here?   I see no widgets in the template.)
+	// Flag to _Templated  (TODO: why is this here?  I see no widgets in the template.)
 	widgetsInTemplate: true,
 
 	attributeMap: dojo.delegate(dijit.form._FormWidget.prototype.attributeMap, {
@@ -143,7 +136,7 @@ dojo.declare(
 		this._movable.onMouseDown(e);
 	},
 
-	_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean, optional*/ priorityChange){
+	_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean?*/ priorityChange){
 		if(this.disabled || this.readOnly){ return; }
 		pixelValue = pixelValue < 0 ? 0 : maxPixels < pixelValue ? maxPixels : pixelValue;
 		var count = this.discreteValues;
@@ -154,10 +147,11 @@ dojo.declare(
 		this._setValueAttr((this.maximum-this.minimum)*wholeIncrements/count + this.minimum, priorityChange);
 	},
 
-	_setValueAttr: function(/*Number*/ value, /*Boolean, optional*/ priorityChange){
+	_setValueAttr: function(/*Number*/ value, /*Boolean?*/ priorityChange){
 		// summary:
-		//		Hook so attr('value', value) works.
-		this.valueNode.value = this.value = value;
+		//		Hook so set('value', value) works.
+		this._set("value", value);
+		this.valueNode.value = value;
 		dijit.setWaiState(this.focusNode, "valuenow", value);
 		this.inherited(arguments);
 		var percent = (value - this.minimum) / (this.maximum - this.minimum);
@@ -181,14 +175,13 @@ dojo.declare(
 				properties: props
 			})
 			this._inProgressAnim.play();
-		}
-		else{
+		}else{
 			progressBar.style[this._progressPixelSize] = (percent*100) + "%";
 			remainingBar.style[this._progressPixelSize] = ((1-percent)*100) + "%";
 		}
 	},
 
-	_bumpValue: function(signedChange, /*Boolean, optional*/ priorityChange){
+	_bumpValue: function(signedChange, /*Boolean?*/ priorityChange){
 		if(this.disabled || this.readOnly){ return; }
 		var s = dojo.getComputedStyle(this.sliderBarContainer);
 		var c = dojo._getContentBox(this.sliderBarContainer, s);
@@ -260,10 +253,28 @@ dojo.declare(
 		}
 	},
 
-	postCreate: function(){
+	buildRendering: function(){
+		this.inherited(arguments);
 		if(this.showButtons){
 			this.incrementButton.style.display="";
 			this.decrementButton.style.display="";
+		}
+
+		// find any associated label element and add to slider focusnode.
+		var label = dojo.query('label[for="'+this.id+'"]');
+		if(label.length){
+			label[0].id = (this.id+"_label");
+			dijit.setWaiState(this.focusNode, "labelledby", label[0].id);
+		}
+
+		dijit.setWaiState(this.focusNode, "valuemin", this.minimum);
+		dijit.setWaiState(this.focusNode, "valuemax", this.maximum);
+	},
+
+	postCreate: function(){
+		this.inherited(arguments);
+
+		if(this.showButtons){
 			this._connects.push(dijit.typematic.addMouseListener(
 				this.decrementButton, this, "_typematicCallback", 25, 500));
 			this._connects.push(dijit.typematic.addMouseListener(
@@ -275,18 +286,8 @@ dojo.declare(
 		var mover = dojo.declare(dijit.form._SliderMover, {
 			widget: this
 		});
-
 		this._movable = new dojo.dnd.Moveable(this.sliderHandle, {mover: mover});
-		// find any associated label element and add to slider focusnode.
-		var label=dojo.query('label[for="'+this.id+'"]');
-		if(label.length){
-			label[0].id = (this.id+"_label");
-			dijit.setWaiState(this.focusNode, "labelledby", label[0].id);
-		}
-		dijit.setWaiState(this.focusNode, "valuemin", this.minimum);
-		dijit.setWaiState(this.focusNode, "valuemax", this.maximum);
 
-		this.inherited(arguments);
 		this._layoutHackIE7();
 	},
 
@@ -311,7 +312,8 @@ dojo.declare("dijit.form._SliderMover",
 			widget._setPixelValue_ = dojo.hitch(widget, "_setPixelValue");
 			widget._isReversed_ = widget._isReversed();
 		}
-		var pixelValue = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
+		var coordEvent = e.touches ? e.touches[0] : e, // if multitouch take first touch for coords
+			pixelValue = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
 		widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false);
 	},
 
@@ -324,3 +326,5 @@ dojo.declare("dijit.form._SliderMover",
 });
 
 
+return dijit.form.HorizontalSlider;
+});

@@ -5,14 +5,14 @@ dojo.provide("dojox.storage.manager");
 dojox.storage.manager = new function(){
 	// summary: A singleton class in charge of the dojox.storage system
 	// description:
-	//		Initializes the storage systems and figures out the best available 
-	//		storage options on this platform.	
-	
+	//		Initializes the storage systems and figures out the best available
+	//		storage options on this platform.
+
 	// currentProvider: Object
 	//	The storage provider that was automagically chosen to do storage
 	//	on this platform, such as dojox.storage.FlashStorageProvider.
 	this.currentProvider = null;
-	
+
 	// available: Boolean
 	//	Whether storage of some kind is available.
 	this.available = false;
@@ -21,32 +21,32 @@ dojox.storage.manager = new function(){
   //  Array of all the static provider instances, useful if you want to
   //  loop through and see what providers have been registered.
   this.providers = [];
-	
+
 	this._initialized = false;
 
 	this._onLoadListeners = [];
-	
+
 	this.initialize = function(){
-		// summary: 
+		// summary:
 		//		Initializes the storage system and autodetects the best storage
 		//		provider we can provide on this platform
 		this.autodetect();
 	};
-	
+
 	this.register = function(/*string*/ name, /*Object*/ instance){
 		// summary:
 		//		Registers the existence of a new storage provider; used by
 		//		subclasses to inform the manager of their existence. The
-		//		storage manager will select storage providers based on 
+		//		storage manager will select storage providers based on
 		//		their ordering, so the order in which you call this method
-		//		matters. 
+		//		matters.
 		// name:
 		//		The full class name of this provider, such as
 		//		"dojox.storage.FlashStorageProvider".
 		// instance:
 		//		An instance of this provider, which we will use to call
-		//		isAvailable() on. 
-		
+		//		isAvailable() on.
+
 		// keep list of providers as a list so that we can know what order
 		// storage providers are preferred; also, store the providers hashed
 		// by name in case someone wants to get a provider that uses
@@ -54,7 +54,7 @@ dojox.storage.manager = new function(){
 		this.providers.push(instance);
 		this.providers[name] = instance;
 	};
-	
+
 	this.setProvider = function(storageClass){
 		// summary:
 		//		Instructs the storageManager to use the given storage class for
@@ -63,22 +63,22 @@ dojox.storage.manager = new function(){
 		//		Example-
 		//			dojox.storage.setProvider(
 		//				dojox.storage.IEStorageProvider)
-	
+
 	};
-	
+
 	this.autodetect = function(){
 		// summary:
 		//		Autodetects the best possible persistent storage provider
-		//		available on this platform. 
-		
+		//		available on this platform.
+
 		//console.debug("dojox.storage.manager.autodetect");
-		
+
 		if(this._initialized){ // already finished
 			return;
 		}
 
-		// a flag to force the storage manager to use a particular 
-		// storage provider type, such as 
+		// a flag to force the storage manager to use a particular
+		// storage provider type, such as
 		// djConfig = {forceStorageProvider: "dojox.storage.WhatWGStorageProvider"};
 		var forceProvider = dojo.config["forceStorageProvider"] || false;
 
@@ -98,7 +98,7 @@ dojox.storage.manager = new function(){
 				break;
 			}
 		}
-		
+
 		if(!providerToUse){ // no provider available
 			this._initialized = true;
 			this.available = false;
@@ -107,25 +107,25 @@ dojox.storage.manager = new function(){
 			this.loaded();
 			return;
 		}
-			
+
 		// create this provider and mix in it's properties
 		// so that developers can do dojox.storage.put rather
 		// than dojox.storage.currentProvider.put, for example
 		this.currentProvider = providerToUse;
 		dojo.mixin(dojox.storage, this.currentProvider);
-		
+
 		// have the provider initialize itself
 		dojox.storage.initialize();
-		
+
 		this._initialized = true;
 		this.available = true;
 	};
-	
+
 	this.isAvailable = function(){ /*Boolean*/
 		// summary: Returns whether any storage options are available.
 		return this.available;
 	};
-	
+
 	this.addOnLoad = function(func){ /* void */
 		// summary:
 		//		Adds an onload listener to know when Dojo Offline can be used.
@@ -138,33 +138,33 @@ dojox.storage.manager = new function(){
 		// func: Function
 		//		A function to call when Dojo Offline is ready to go
 		this._onLoadListeners.push(func);
-		
+
 		if(this.isInitialized()){
 			this._fireLoaded();
 		}
 	};
-	
+
 	this.removeOnLoad = function(func){ /* void */
 		// summary: Removes the given onLoad listener
 		for(var i = 0; i < this._onLoadListeners.length; i++){
 			if(func == this._onLoadListeners[i]){
-				this._onLoadListeners = this._onLoadListeners.splice(i, 1);
+				this._onLoadListeners.splice(i, 1);
 				break;
 			}
 		}
 	};
-	
+
 	this.isInitialized = function(){ /*Boolean*/
 	 	// summary:
 		//		Returns whether the storage system is initialized and ready to
-		//		be used. 
+		//		be used.
 
 		// FIXME: This should REALLY not be in here, but it fixes a tricky
 		// Flash timing bug.
 		// Confirm that this is still needed with the newly refactored Dojo
 		// Flash. Used to be for Internet Explorer. -- Brad Neuberg
 		if(this.currentProvider != null
-			&& this.currentProvider.declaredClass == "dojox.storage.FlashStorageProvider" 
+			&& this.currentProvider.declaredClass == "dojox.storage.FlashStorageProvider"
 			&& dojox.flash.ready == false){
 			return false;
 		}else{
@@ -196,7 +196,7 @@ dojox.storage.manager = new function(){
 		// summary: Gets the current provider
 		return this.currentProvider;
 	};
-	
+
 	this.loaded = function(){
 		// summary:
 		//		The storage provider should call this method when it is loaded
@@ -207,7 +207,7 @@ dojox.storage.manager = new function(){
 		//		a listener that does not depend on the dojo.event package.
 		// description:
 		//		Example 1-
-		//			if(dojox.storage.manager.isInitialized() == false){ 
+		//			if(dojox.storage.manager.isInitialized() == false){
 		//				dojo.connect(dojox.storage.manager, "loaded", TestStorage, "initialize");
 		//			}else{
 		//				dojo.connect(dojo, "loaded", TestStorage, "initialize");
@@ -220,21 +220,21 @@ dojox.storage.manager = new function(){
 		// don't care when this happens or has happened. Deferreds are in Base
 		this._fireLoaded();
 	};
-	
+
 	this._fireLoaded = function(){
 		//console.debug("dojox.storage.manager._fireLoaded");
-		
-		dojo.forEach(this._onLoadListeners, function(i){ 
-			try{ 
-				i(); 
-			}catch(e){ console.debug(e); } 
+
+		dojo.forEach(this._onLoadListeners, function(i){
+			try{
+				i();
+			}catch(e){ console.debug(e); }
 		});
 	};
-	
+
 	this.getResourceList = function(){
 		// summary:
 		//		Returns a list of whatever resources are necessary for storage
-		//		providers to work. 
+		//		providers to work.
 		// description:
 		//		This will return all files needed by all storage providers for
 		//		this particular environment type. For example, if we are in the
@@ -251,7 +251,7 @@ dojox.storage.manager = new function(){
 		dojo.forEach(dojox.storage.manager.providers, function(currentProvider){
 			results = results.concat(currentProvider.getResourceList());
 		});
-		
+
 		return results;
 	}
 };

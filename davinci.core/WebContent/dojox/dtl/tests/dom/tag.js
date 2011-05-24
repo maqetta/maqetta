@@ -4,7 +4,7 @@ dojo.require("dojox.dtl.dom");
 dojo.require("dojox.dtl.Context");
 dojo.require("dojox.dtl.tests.dom.util");
 
-doh.register("dojox.dtl.dom.tag", 
+doh.register("dojox.dtl.dom.tag",
 	[
 		function test_errors(t){
 			var dd = dojox.dtl;

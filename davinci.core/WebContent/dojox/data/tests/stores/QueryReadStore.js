@@ -11,7 +11,7 @@ dojox.data.tests.stores.QueryReadStore.getStore = function(){
 };
 
 
-tests.register("dojox.data.tests.stores.QueryReadStore", 
+tests.register("dojox.data.tests.stores.QueryReadStore",
 	[
 		/*
 		function testDocTests(t) {
@@ -24,7 +24,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		*/
 		
 		function testReadApi_getValue(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
@@ -52,7 +52,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_getValues(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
@@ -84,7 +84,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 		
 		function testReadApi_getAttributes(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
@@ -115,7 +115,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_hasAttribute(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
@@ -142,7 +142,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_containsValue(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 
@@ -157,7 +157,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_isItem(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
@@ -176,7 +176,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_isItemLoaded(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
@@ -193,13 +193,13 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		//function testReadApi_loadItem(t){
-		//	//	summary: 
+		//	//	summary:
 		//	//	description:
 		//	t.assertTrue(false);
 		//},
 
 		function testReadApi_fetch_all(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of fetching all items.
 			//	description:
 			//		Simple test of fetching all items.
@@ -218,7 +218,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 		
 		function testReadApi_fetch_onBegin(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			//	description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
@@ -246,7 +246,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_onBegin_ServersidePaging(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			//	description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
@@ -274,7 +274,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_onBegin_ClientsidePaging(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			//	description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
@@ -303,7 +303,7 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_one(t){
-			//	summary: 
+			//	summary:
 			//	description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			

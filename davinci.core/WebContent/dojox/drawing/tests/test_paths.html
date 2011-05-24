@@ -1,10 +1,11 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
 <head>
     <title>Drawing Paths Test</title>
-	<link href="../resources/drawing.css" rel="stylesheet" />
-	<link href="../resources/toolbar.css" rel="stylesheet" />
-
 	<style>
+		@import url("../../../dijit/themes/dijit.css");
+		@import url("../../../dojox/drawing/resources/drawing.css");
+		@import url("../../../dojox/drawing/resources/toolbar.css");
+		@import url("../../../dojox/drawing/resources/GreekPalette.css");
 		href, body{
 			overflow:hidden;
 		}
@@ -54,6 +55,7 @@
 		dojo.require("dojox.drawing.tools.Path");
 		dojo.require("dojox.drawing.tools.Pencil");
 		
+		dojo.require("dojox.drawing.plugins.drawing.GreekPalette");
 		dojo.require("dojox.drawing.plugins.drawing.Grid");
 		
 		dojo.require("dojox.drawing.ui.Toolbar");
@@ -99,16 +101,16 @@
 	</script>
 
 </head>
-<body>
+<body class="tundra">
     <h2>Drawing Paths Test</h2>
 	<div id="conEdit" contenteditable="true"></div>
 	<div id="wrapper">
 		
 		
-		<div dojoType="dojox.drawing.ui.Toolbar" id="gfxToolbarNode" drawingId="drawingNode" class="gfxToolbar" tools="all" plugs="all" selected="pencil"></div>
+		<div dojoType="dojox.drawing.ui.Toolbar" id="gfxToolbarNode" drawingId="drawingNode" class="gfxToolbar" orient="H" tools="all" plugs="all" selected="pencil"></div>
 		
 		<div dojoType="dojox.drawing.Drawing" id="drawingNode" jsId="myDrawing" class="drawing"
-			 plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{minor:20, major:100}}]">
+			 plugins="[{'name':'dojox.drawing.plugins.drawing.GreekPalette'},{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{minor:20, major:100}}]">
 		</div>
 	</div>
 	

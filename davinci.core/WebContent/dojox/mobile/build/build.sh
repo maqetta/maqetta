@@ -30,11 +30,11 @@ if [ $# -eq 0 ]; then
 fi
 
 optimize=shrinksafe
-profile=mobile.profile.js
+profile=mobile
 dir=release-mobile-separate
 webkit=
 if [ "$1" == "single" ]; then
-  profile=mobile-all.profile.js
+  profile=mobile-all
 fi
 if [ "$1" == "single" ]; then
   dir=release-mobile-single
@@ -45,6 +45,6 @@ fi
 
 cd ../../../util/buildscripts
 
-./build.sh profileFile=../../dojox/mobile/build/profiles/$profile action=release customDijitBase=true optimize=$optimize layerOptimize=$optimize cssOptimize=comments releaseDir=../../$dir/ $webkit
+./build.sh profile=$profile action=release customDijitBase=true optimize=$optimize layerOptimize=$optimize cssOptimize=comments releaseDir=../../$dir/ $webkit
 
 cd ../../dojox/mobile/build

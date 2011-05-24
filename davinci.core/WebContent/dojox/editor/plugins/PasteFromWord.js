@@ -1,24 +1,15 @@
-dojo.provide("dojox.editor.plugins.PasteFromWord");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.Dialog");
-dojo.require("dojo.i18n");
-dojo.require("dojo.string");
-dojo.require("dojox.html.format");
-
-dojo.requireLocalization("dojox.editor.plugins", "PasteFromWord");
+define("dojox/editor/plugins/PasteFromWord", ["dojo", "dijit", "dojox", "dojo/string", "dijit/_editor/_Plugin", "dijit/form/Button", "dijit/Dialog", "dojo/i18n", "dojox/html/format", "i18n!dojox/editor/plugins/nls/PasteFromWord"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides PasteFromWord cabability to the editor.  When 
+	//		This plugin provides PasteFromWord cabability to the editor.  When
 	//		clicked, a dialog opens with a spartan RichText instance to paste
-	//		word content into via the keyboard commands.  The contents are 
+	//		word content into via the keyboard commands.  The contents are
 	//		then filtered to remove word style classes and other meta-junk
 	//		that tends to cause issues.
 
 	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from `iconClassPrefix` 
+	//		The CSS class name for the button node is formed from `iconClassPrefix`
 	//		and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
@@ -33,7 +24,7 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 	_template: ["<div class='dijitPasteFromWordEmbeddedRTE'>",
 				"<div style='width: ${width}; padding-top: 5px; padding-bottom: 5px;'>${instructions}</div>",
 				"<div id='${uId}_rte' style='width: ${width}; height: ${height}'></div>",
-				"<table style='width: ${width}' tabindex='-1'>", 
+				"<table style='width: ${width}' tabindex='-1'>",
 					"<tbody>",
 						"<tr>",
 							"<td align='center'>",
@@ -49,18 +40,18 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 	// _filters: [private] Array
 	//		The filters is an array of regular expressions to try and strip out a lot
 	//		of style data MS Word likes to insert when pasting into a contentEditable.
-	//		Prettymuch all of it is junk and not good html.  The hander is a place to put a function 
+	//		Prettymuch all of it is junk and not good html.  The hander is a place to put a function
 	//		for match handling.  In most cases, it just handles it as empty string.  But the option is
 	//		there for more complex handling.
 	_filters: [
 		// Meta tags, link tags, and prefixed tags
-		{regexp: /(<meta\s*[^>]*\s*>)|(<\s*link\s* href="file:[^>]*\s*>)|(<\/?\s*\w+:[^>]*\s*>)/gi, handler: ""},  
+		{regexp: /(<meta\s*[^>]*\s*>)|(<\s*link\s* href="file:[^>]*\s*>)|(<\/?\s*\w+:[^>]*\s*>)/gi, handler: ""},
 		// Style tags
-		{regexp: /(?:<style([^>]*)>([\s\S]*?)<\/style>|<link\s+(?=[^>]*rel=['"]?stylesheet)([^>]*?href=(['"])([^>]*?)\4[^>\/]*)\/?>)/gi, handler: ""}, 
+		{regexp: /(?:<style([^>]*)>([\s\S]*?)<\/style>|<link\s+(?=[^>]*rel=['"]?stylesheet)([^>]*?href=(['"])([^>]*?)\4[^>\/]*)\/?>)/gi, handler: ""},
 		// MS class tags and comment tags.
 		{regexp: /(class="Mso[^"]*")|(<!--(.|\s){1,}?-->)/gi, handler: ""},
 		// blank p tags
-		{regexp: /(<p[^>]*>\s*(\&nbsp;|\u00A0)*\s*<\/p[^>]*>)|(<p[^>]*>\s*<font[^>]*>\s*(\&nbsp;|\u00A0)*\s*<\/\s*font\s*>\s<\/p[^>]*>)/ig, handler: ""}, 
+		{regexp: /(<p[^>]*>\s*(\&nbsp;|\u00A0)*\s*<\/p[^>]*>)|(<p[^>]*>\s*<font[^>]*>\s*(\&nbsp;|\u00A0)*\s*<\/\s*font\s*>\s<\/p[^>]*>)/ig, handler: ""},
 		// Strip out styles containing mso defs and margins, as likely added in IE and are not good to have as it mangles presentation.
 		{regexp: /(style="[^"]*mso-[^;][^"]*")|(style="margin:\s*[^;"]*;")/gi, handler: ""},
 		// Scripts (if any)
@@ -99,6 +90,12 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 		this.connect(this._dialog, "onHide", "_clearDialog");
 	},
 
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
+	
 	setEditor: function(editor){
 		// summary:
 		//		Over-ride for the setting of the editor.
@@ -115,7 +112,7 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 		//		private
 		this._dialog.show();
 		if(!this._rte){
-			// RTE hasn't been created yet, so we need to create it now that the 
+			// RTE hasn't been created yet, so we need to create it now that the
 			// dialog is showing up.
 			setTimeout(dojo.hitch(this, function() {
 				this._rte = new dijit._editor.RichText({height: this.height || "300px"}, this._uId + "_rte");
@@ -130,7 +127,7 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 
 	_paste: function(){
 		// summary:
-		//		Function to handle setting the contents of the copy from dialog 
+		//		Function to handle setting the contents of the copy from dialog
 		//		into the editor.
 		// tags:
 		//		private
@@ -159,7 +156,7 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 
 	_cancel: function(){
 		// summary:
-		//		Function to handle cancelling setting the contents of the 
+		//		Function to handle cancelling setting the contents of the
 		//		copy from dialog into the editor.
 		// tags:
 		//		private
@@ -203,4 +200,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 			height: ("height" in o.args)?o.args.width:"300px"
 		});
 	}
+});
+
 });

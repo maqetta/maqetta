@@ -1,17 +1,19 @@
 <h1 dojoType="dojox.mobile.Heading" back="Back">
 	Flickr ImageThumbView
 </h1>
-<input 
+<input
 	dojoType="dojox.mobile.app.TextBox"
 	value="mountain"
-	class="fullWidthInput"
+	class="halfWidthInput"
 	style="visibility: hidden;"
 	placeholder="Enter Search Text"
 	intermediateChanges="true"
 	id="searchTextThumbInput">
-<div 
-	dojoType="dojox.mobile.app.ImageThumbView" 
-	id="flickrImageThumbView" 
-	urlParam="thumb"
-	style="width:320px; height: 400px;">
+<button id="btnSmall" dojoType="dojox.mobile.Button">S</button>
+<button id="btnMedium" dojoType="dojox.mobile.Button">M</button>
+<button id="btnLarge" dojoType="dojox.mobile.Button">L</button>
+<div
+	dojoType="dojox.mobile.app.ImageThumbView"
+	id="flickrImageThumbView"
+	urlParam="thumb">
 </div>

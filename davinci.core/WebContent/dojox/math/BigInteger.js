@@ -1,4 +1,6 @@
-dojo.provide("dojox.math.BigInteger");
+// AMD-ID "dojox/math/BigInteger"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.BigInteger", true, dojox);
 dojo.experimental("dojox.math.BigInteger");
 
 // Contributed under CLA by Tom Wu <tjw@cs.Stanford.EDU>
@@ -571,12 +573,12 @@ dojo.experimental("dojox.math.BigInteger");
 		// "constants"
 		ZERO:	nbv(0),
 		ONE:	nbv(1),
-		
+
 		// internal functions
 		_nbi: nbi,
 		_nbv: nbv,
 		_nbits: nbits,
-		
+
 		// internal classes
 		_Montgomery: Montgomery
 	});
@@ -584,3 +586,6 @@ dojo.experimental("dojox.math.BigInteger");
 	// export to DojoX
 	dojox.math.BigInteger = BigInteger;
 })();
+
+return dojox.math.BigInteger;
+});

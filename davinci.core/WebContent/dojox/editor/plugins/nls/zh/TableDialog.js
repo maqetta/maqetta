@@ -18,6 +18,7 @@
 	right: "右边对齐",
 	buttonSet: "设置", // translated elsewhere?
 	buttonInsert: "插入",
+	buttonCancel: "取消",
 
 	selectTableLabel: "选择表",
 	insertTableRowBeforeLabel: "在之前添加行",

@@ -202,7 +202,7 @@ dojox.color.Colorspace=new (function(){
 		}
 	};
 	var converters={
-		"CMY":{ 
+		"CMY":{
 			"CMYK":function(obj, kwArgs){ return dxc.fromCmy(obj).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromCmy(obj).toHsl(); },
 			"HSV":function(obj, kwArgs){ return dxc.fromCmy(obj).toHsv(); },
@@ -214,7 +214,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return dxc.fromCmy(obj).toXYZ(kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](dxc.fromCmy(obj).toXYZ(kwArgs)); }
 		},
-		"CMYK":{ 
+		"CMYK":{
 			"CMY":function(obj, kwArgs){ return dxc.fromCmyk(obj).toCmy(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromCmyk(obj).toHsl(); },
 			"HSV":function(obj, kwArgs){ return dxc.fromCmyk(obj).toHsv(); },
@@ -226,7 +226,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return dxc.fromCmyk(obj).toXYZ(kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](dxc.fromCmyk(obj).toXYZ(kwArgs)); }
 		},
-		"HSL":{ 
+		"HSL":{
 			"CMY":function(obj, kwArgs){ return dxc.fromHsl(obj).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromHsl(obj).toCmyk(); },
 			"HSV":function(obj, kwArgs){ return dxc.fromHsl(obj).toHsv(); },
@@ -238,7 +238,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return dxc.fromHsl(obj).toXYZ(kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](dxc.fromHsl(obj).toXYZ(kwArgs)); }
 		},
-		"HSV":{ 
+		"HSV":{
 			"CMY":function(obj, kwArgs){ return dxc.fromHsv(obj).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromHsv(obj).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromHsv(obj).toHsl(); },
@@ -250,7 +250,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return dxc.fromHsv(obj).toXYZ(kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](dxc.fromHsv(obj).toXYZ(kwArgs)); }
 		},
-		"Lab":{ 
+		"Lab":{
 			"CMY":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Lab"]["XYZ"](obj, kwArgs)).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Lab"]["XYZ"](obj, kwArgs)).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Lab"]["XYZ"](obj, kwArgs)).toHsl(); },
@@ -262,7 +262,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return cMaps["Lab"]["XYZ"](obj, kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](cMaps["Lab"]["XYZ"](obj, kwArgs), kwArgs); }
 		},
-		"LCHab":{ 
+		"LCHab":{
 			"CMY":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Lab"]["XYZ"](cMaps["LCHab"]["Lab"](obj), kwArgs), kwArgs).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Lab"]["XYZ"](cMaps["LCHab"]["Lab"](obj), kwArgs), kwArgs).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Lab"]["XYZ"](cMaps["LCHab"]["Lab"](obj), kwArgs), kwArgs).toHsl(); },
@@ -274,7 +274,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return cMaps["Lab"]["XYZ"](cMaps["LCHab"]["Lab"](obj, kwArgs), kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](cMaps["Lab"]["XYZ"](cMaps["LCHab"]["Lab"](obj), kwArgs), kwArgs); }
 		},
-		"LCHuv":{ 
+		"LCHuv":{
 			"CMY":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Luv"]["XYZ"](cMaps["LCHuv"]["Luv"](obj), kwArgs), kwArgs).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Luv"]["XYZ"](cMaps["LCHuv"]["Luv"](obj), kwArgs), kwArgs).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Luv"]["XYZ"](cMaps["LCHuv"]["Luv"](obj), kwArgs), kwArgs).toHsl(); },
@@ -286,7 +286,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return cMaps["Luv"]["XYZ"](cMaps["LCHuv"]["Luv"](obj), kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](cMaps["Luv"]["XYZ"](cMaps["LCHuv"]["Luv"](obj), kwArgs), kwArgs); }
 		},
-		"Luv":{ 
+		"Luv":{
 			"CMY":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Luv"]["XYZ"](obj, kwArgs), kwArgs).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Luv"]["XYZ"](obj, kwArgs), kwArgs).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["Luv"]["XYZ"](obj, kwArgs), kwArgs).toHsl(); },
@@ -298,7 +298,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return cMaps["Luv"]["XYZ"](obj, kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](cMaps["Luv"]["XYZ"](obj, kwArgs), kwArgs); }
 		},
-		"RGB":{ 
+		"RGB":{
 			"CMY":function(obj, kwArgs){ return obj.toCmy(); },
 			"CMYK":function(obj, kwArgs){ return obj.toCmyk(); },
 			"HSL":function(obj, kwArgs){ return obj.toHsl(); },
@@ -310,7 +310,7 @@ dojox.color.Colorspace=new (function(){
 			"XYZ":function(obj, kwArgs){ return obj.toXYZ(kwArgs); },
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](obj.toXYZ(kwArgs), kwArgs); }
 		},
-		"XYZ":{ 
+		"XYZ":{
 			"CMY":function(obj, kwArgs){ return dxc.fromXYZ(obj, kwArgs).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromXYZ(obj, kwArgs).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromXYZ(obj, kwArgs).toHsl(); },
@@ -323,7 +323,7 @@ dojox.color.Colorspace=new (function(){
 			"xyY":function(obj, kwArgs){ return cMaps["XYZ"]["xyY"](dxc.fromXYZ(obj, kwArgs), kwArgs); }
 		},
 		// TODO: revisit this. xyY represents a single color, not a spectrum of colors.
-		"xyY":{ 
+		"xyY":{
 			"CMY":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["xyY"]["XYZ"](obj, kwArgs), kwArgs).toCmy(); },
 			"CMYK":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["xyY"]["XYZ"](obj, kwArgs), kwArgs).toCmyk(); },
 			"HSL":function(obj, kwArgs){ return dxc.fromXYZ(cMaps["xyY"]["XYZ"](obj, kwArgs), kwArgs).toHsl(); },
@@ -346,7 +346,7 @@ dojox.color.Colorspace=new (function(){
 			t=wpMap[observer][wpName].t;
 		} else {
 			console.warn(
-				"dojox.color.Colorspace::whitepoint: either the observer or the whitepoint name was not found. ", 
+				"dojox.color.Colorspace::whitepoint: either the observer or the whitepoint name was not found. ",
 				observer, wpName
 			);
 		}
@@ -389,13 +389,13 @@ dojox.color.Colorspace=new (function(){
 		} else {
 			console.warn(
 				"dojox.color.Colorspace::primaries: the passed profile was not found.  ",
-				"Available profiles include: ", profiles, 
+				"Available profiles include: ", profiles,
 				".  The profile passed was ", kwArgs.profile
 			);
 		}
 		var primary={
 			name:kwArgs.profile,
-			gamma:m[0], whitepoint:m[1], 
+			gamma:m[0], whitepoint:m[1],
 			xr:m[2], yr:m[3], Yr:m[4],
 			xg:m[5], yg:m[6], Yg:m[7],
 			xb:m[8], yb:m[9], Yb:m[10]
@@ -406,8 +406,8 @@ dojox.color.Colorspace=new (function(){
 			var r=this.convert(
 				this.adapt({
 					color:this.convert({ x:xr, y:yr, Y:Yr }, "xyY", "XYZ"),
-					adaptor:kwArgs.adaptor, 
-					source:primary.whitepoint, 
+					adaptor:kwArgs.adaptor,
+					source:primary.whitepoint,
 					destination:kwArgs.whitepoint
 				}),
 				"XYZ",
@@ -416,8 +416,8 @@ dojox.color.Colorspace=new (function(){
 			var g=this.convert(
 				this.adapt({
 					color:this.convert({ x:xg, y:yg, Y:Yg }, "xyY", "XYZ"),
-					adaptor:kwArgs.adaptor, 
-					source:primary.whitepoint, 
+					adaptor:kwArgs.adaptor,
+					source:primary.whitepoint,
 					destination:kwArgs.whitepoint
 				}),
 				"XYZ",
@@ -426,8 +426,8 @@ dojox.color.Colorspace=new (function(){
 			var b=this.convert(
 				this.adapt({
 					color:this.convert({ x:xb, y:yb, Y:Yb }, "xyY", "XYZ"),
-					adaptor:kwArgs.adaptor, 
-					source:primary.whitepoint, 
+					adaptor:kwArgs.adaptor,
+					source:primary.whitepoint,
 					destination:kwArgs.whitepoint
 				}),
 				"XYZ",
@@ -481,21 +481,21 @@ dojox.color.Colorspace=new (function(){
 	};
 
 	this.matrix=function(/* String */to, /* Object */primary){
-		var wp=this.whitepoint(primary.whitepoint);
+		var p=primary, wp=this.whitepoint(p.whitepoint);
 		var Xr = p.xr/p.yr, Yr = 1, Zr = (1-p.xr-p.yr)/p.yr;
 		var Xg = p.xg/p.yg, Yg = 1, Zg = (1-p.xg-p.yg)/p.yg;
-		var Xb = p.xb/p.yb, Yb = 1, Zr = (1-p.xb-p.yb)/p.yb;
+		var Xb = p.xb/p.yb, Yb = 1, Zb = (1-p.xb-p.yb)/p.yb;
 
 		var m1 = [[ Xr, Yr, Zr ], [ Xg, Yg, Zg ], [ Xb, Yb, Zb ]];
 		var m2 = [[ wp.X, wp.Y, wp.Z ]];
-		var sm = dojox.math.matrix.multiply(m2, dojox.math.matrix.inverse(m1));
+		var sm = dxm.multiply(m2, dxm.inverse(m1));
 		var Sr = sm[0][0], Sg = sm[0][1], Sb = sm[0][2];
 		var result=[
 			[Sr*Xr, Sr*Yr, Sr*Zr],
 			[Sg*Xg, Sg*Yg, Sg*Zg],
 			[Sb*Xb, Sb*Yb, Sb*Zb]
 		];
-		if(to=="RGB"){ return dojox.math.inverse(result); }
+		if(to=="RGB"){ return dxm.inverse(result); }
 		return result;
 	};
 
@@ -508,7 +508,7 @@ dojox.color.Colorspace=new (function(){
 
 	this.convert=function(/* Object */color, /* string */from, /* string */to, /* Object? */kwArgs){
 		if(converters[from] && converters[from][to]){
-			return converters[from][to](obj, kwArgs);
+			return converters[from][to](color, kwArgs);
 		}
 		console.warn("dojox.color.Colorspace::convert: Can't convert ", color, " from ", from, " to ", to, ".");
 	};
@@ -520,7 +520,7 @@ dojo.mixin(dojox.color, {
 		kwArgs=kwArgs||{};
 		var p=dojox.color.Colorspace.primaries(kwArgs);
 		var m=dojox.color.Colorspace.matrix("RGB", p);
-		var rgb=dojox.math.matrix.mutliply([[ xyz.X, xyz.Y, xyz.Z ]], m);
+		var rgb=dojox.math.matrix.multiply([[ xyz.X, xyz.Y, xyz.Z ]], m);
 		var r=rgb[0][0], g=rgb[0][1], b=rgb[0][2];
 		if(p.profile=="sRGB"){
 			var R = (r>0.0031308)?(1.055*Math.pow(r, 1/2.4))-0.055: 12.92*r;

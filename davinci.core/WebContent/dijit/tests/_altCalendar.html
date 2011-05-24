@@ -12,13 +12,8 @@
 				<span dojoAttachPoint="increaseArrowNode" class="dijitA11ySideArrow">+</span>
 			</span></th>
 			<th class='dijitReset' colspan="6">
-				<div class="dijitVisible">
-					<div class="dijitPopup dijitMenu dijitMenuPassive dijitHidden" dojoAttachPoint="monthDropDown" dojoAttachEvent="onmouseup: _onMonthSelect, onmouseover: _onMenuHover, onmouseout: _onMenuHover">
-						<div class="dijitCalendarMonthLabelTemplate dijitCalendarMonthLabel"></div>
-					</div>
+				<div data-dojo-type="dijit.form.DropDownButton" data-dojo-attach-point="monthDropDownButton">
 				</div>
-				<div dojoAttachPoint="monthLabelSpacer" class="dijitSpacer"></div>
-				<div dojoAttachPoint="monthLabelNode" class="dijitCalendarMonthLabel dijitInline dijitVisible" dojoAttachEvent="onmousedown: _onMonthToggle"></div>
 			</th>
 		</tr>
 		<tr>

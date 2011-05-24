@@ -1,11 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Dialog Widget Dojo Tests</title>
 
 	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
+		@import "../themes/claro/document.css";
 		@import "css/dijitTests.css";
 
 		body { font-family : sans-serif; }
@@ -15,11 +15,11 @@
 	</style>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<!-- not needed, for testing alternate themes -->
 	<script type="text/javascript" src="_testCommon.js"></script>
@@ -29,8 +29,12 @@
 		dojo.require("dijit.Dialog");
 		dojo.require("dijit.form.Button");
 
+    //-sie
+    //the dojo.required code might not be here yet!
+    dojo.addOnLoad(function() {
+
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
-		function createAndShow() {
+		createAndShow= function() {
 			var node = document.createElement("div");
 			dojo.body().appendChild(node);
 			var dlg = new dijit.Dialog({ title: "test input focus" }, node);
@@ -39,7 +43,7 @@
 			dojo.attr(input,"tabIndex","0");
 			dlg.containerNode.appendChild(input);
 
-			var btn = new dijit.form.Button({ label: "Close" });
+			var btn = new dijit.form.Button({ id:"destroyButton", label: "Close" });
 			dlg.containerNode.appendChild(btn.domNode);
 
 			dojo.connect(btn, "onClick", function(){
@@ -49,6 +53,8 @@
 			});
 			dlg.show();
 		}
+
+    });
 	</script>
 </head>
 <body class="claro">
@@ -61,8 +67,7 @@
 
 	<input id="testInput" name="foo" value="bar" />
 
-	<button dojoType="dijit.form.Button" onclick="createAndShow()">Show Dialog</button>
+	<button id="showDialog" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ createAndShow() }'>Show Dialog</button>
 
 </body>
 </html>
-

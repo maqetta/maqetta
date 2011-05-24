@@ -1,6 +1,4 @@
-dojo.provide("dojo.dnd.Moveable");
-
-dojo.require("dojo.dnd.Mover");
+define("dojo/dnd/Moveable", ["dojo", "dojo/dnd/Mover"], function(dojo) {
 
 /*=====
 dojo.declare("dojo.dnd.__MoveableArgs", [], {
@@ -45,6 +43,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		this.mover = params.mover ? params.mover : dojo.dnd.Mover;
 		this.events = [
 			dojo.connect(this.handle, "onmousedown", this, "onMouseDown"),
+			dojo.connect(this.handle, "ontouchstart", this, "onMouseDown"),
 			// cancel text selection and text dragging
 			dojo.connect(this.handle, "ondragstart",   this, "onSelectStart"),
 			dojo.connect(this.handle, "onselectstart", this, "onSelectStart")
@@ -67,17 +66,20 @@ dojo.declare("dojo.dnd.Moveable", null, {
 	// mouse event processors
 	onMouseDown: function(e){
 		// summary:
-		//		event processor for onmousedown, creates a Mover for the node
+		//		event processor for onmousedown/ontouchstart, creates a Mover for the node
 		// e: Event
-		//		mouse event
+		//		mouse/touch event
 		if(this.skip && dojo.dnd.isFormElement(e)){ return; }
 		if(this.delay){
 			this.events.push(
 				dojo.connect(this.handle, "onmousemove", this, "onMouseMove"),
-				dojo.connect(this.handle, "onmouseup", this, "onMouseUp")
+				dojo.connect(this.handle, "ontouchmove", this, "onMouseMove"),
+				dojo.connect(this.handle, "onmouseup", this, "onMouseUp"),
+				dojo.connect(this.handle, "ontouchend", this, "onMouseUp")
 			);
-			this._lastX = e.pageX;
-			this._lastY = e.pageY;
+			var pos = e.touches ? e.touches[0] : e;
+			this._lastX = pos.pageX;
+			this._lastY = pos.pageY;
 		}else{
 			this.onDragDetected(e);
 		}
@@ -85,10 +87,11 @@ dojo.declare("dojo.dnd.Moveable", null, {
 	},
 	onMouseMove: function(e){
 		// summary:
-		//		event processor for onmousemove, used only for delayed drags
+		//		event processor for onmousemove/ontouchmove, used only for delayed drags
 		// e: Event
-		//		mouse event
-		if(Math.abs(e.pageX - this._lastX) > this.delay || Math.abs(e.pageY - this._lastY) > this.delay){
+		//		mouse/touch event
+		var pos = e.touches ? e.touches[0] : e;
+		if(Math.abs(pos.pageX - this._lastX) > this.delay || Math.abs(pos.pageY - this._lastY) > this.delay){
 			this.onMouseUp(e);
 			this.onDragDetected(e);
 		}
@@ -125,8 +128,8 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		// summary:
 		//		called before every move operation
 		dojo.publish("/dnd/move/start", [mover]);
-		dojo.addClass(dojo.body(), "dojoMove"); 
-		dojo.addClass(this.node, "dojoMoveItem"); 
+		dojo.addClass(dojo.body(), "dojoMove");
+		dojo.addClass(this.node, "dojoMoveItem");
 	},
 	onMoveStop: function(/* dojo.dnd.Mover */ mover){
 		// summary:
@@ -164,4 +167,7 @@ dojo.declare("dojo.dnd.Moveable", null, {
 		
 		// default implementation does nothing
 	}
+});
+
+return dojo.dnd.Moveable;
 });

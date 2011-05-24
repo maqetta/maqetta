@@ -13,10 +13,10 @@ dojo.require("dojox.encoding.digests.MD5");
 			t.assertEqual(base64, ded.MD5(message));
 		},
 		function testHexCompute(t){
-			t.assertEqual(hex, ded.MD5(message, ded.outputTypes.Hex)); 
+			t.assertEqual(hex, ded.MD5(message, ded.outputTypes.Hex));
 		},
 		function testStringCompute(t){
-			t.assertEqual(s, ded.MD5(message, ded.outputTypes.String)); 
+			t.assertEqual(s, ded.MD5(message, ded.outputTypes.String));
 		}
 	]);
 })();

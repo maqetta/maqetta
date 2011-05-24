@@ -1,6 +1,4 @@
-dojo.provide("dijit.PopupMenuItem");
-
-dojo.require("dijit.MenuItem");
+define("dijit/PopupMenuItem", ["dojo", "dijit", "dijit/MenuItem"], function(dojo, dijit) {
 
 dojo.declare("dijit.PopupMenuItem",
 		dijit.MenuItem,
@@ -62,3 +60,6 @@ dojo.declare("dijit.PopupMenuItem",
 		}
 	});
 
+
+return dijit.PopupMenuItem;
+});

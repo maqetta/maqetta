@@ -2,12 +2,12 @@ dojo.provide("dojox.html.tests.format");
 dojo.require("dojox.html.format");
 
 
-doh.register("dojox.html.tests.format", 
+doh.register("dojox.html.tests.format",
 	[
 		{
 			name: "Format:  Basic HTML Format test",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting.
 				// description:
 				//		Simple test of basic HTML formatting.
@@ -22,7 +22,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with three space indent",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
 				// description:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
@@ -37,7 +37,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with three space indent and custom encoding",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
 				// description:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
@@ -52,7 +52,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with comment node",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with a comment node"
 				// description:
 				//		Simple test of basic HTML formatting with a comment node"
@@ -74,7 +74,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with inline tags",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
 				// description:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
@@ -89,7 +89,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with inline tags (2)",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
 				// description:
 				//		Simple test of basic HTML formatting with spaced indenting instead of tab
@@ -106,7 +106,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with id",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an id attr set.
 				// description:
 				//		Simple test of basic HTML formatting with an id attr set.
@@ -121,7 +121,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with attributes (sorting attributes)",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an id attr set.
 				// description:
 				//		Simple test of basic HTML formatting with an id attr set.
@@ -136,7 +136,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with attributes (multiple unquoted)",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an id attr set.
 				// description:
 				//		Simple test of basic HTML formatting with an id attr set.
@@ -151,7 +151,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with style",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an id attr set.
 				// description:
 				//		Simple test of basic HTML formatting with an id attr set.
@@ -166,7 +166,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format test with multi style",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an id attr set.
 				// description:
 				//		Simple test of basic HTML formatting with an id attr set.
@@ -181,7 +181,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format with script test",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an embedded script tag.
 				// description:
 				//		Simple test of basic HTML formatting with an embedded script tag.
@@ -205,7 +205,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format with script test and three space indent",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an embedded script tag.
 				// description:
 				//		Simple test of basic HTML formatting with an embedded script tag.
@@ -229,7 +229,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format with script test and three space indent, XHTML",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an embedded script tag.
 				// description:
 				//		Simple test of basic HTML formatting with an embedded script tag.
@@ -255,7 +255,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format with &lt;pre&gt; tag",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an embedded pre tag.
 				// description:
 				//		Simple test of basic HTML formatting with an embedded pre tag.
@@ -280,7 +280,7 @@ doh.register("dojox.html.tests.format",
 		{
 			name: "Format:  Basic HTML Format with &lt;pre&gt; tag and three space indent",
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of basic HTML formatting with an embedded pre tag.
 				// description:
 				//		Simple test of basic HTML formatting with an embedded pre tag.
@@ -305,14 +305,14 @@ doh.register("dojox.html.tests.format",
 			name: "Format:  Semi-complex HTML format",
 			timeout: 10000,
 			runTest: function(t) {
-				// summary: 
+				// summary:
 				//		Simple test of somewhat complex HTML in an external file getting formatted.
 				// description:
 				//		Simple test of basic HTML formatting with an embedded pre tag.
 				if(!dojo.isIE){
 					// Still working out minor comparison issues on IE.  Sigh.
 					// the output is pretty accurate, just need to fix a few things.
-					// Like I think the newlines differ or somesuch.  
+					// Like I think the newlines differ or somesuch.
 					var deferred = new doh.Deferred();
 
 					var args = {

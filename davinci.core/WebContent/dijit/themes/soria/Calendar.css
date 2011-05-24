@@ -61,6 +61,7 @@
 .soria .dijitCalendarMonthLabel {
 	color:#293a4b;
 	font-weight: bold;
+	padding: 0 4px;
 }
 
 .soria .dijitCalendarDateTemplate {
@@ -134,4 +135,25 @@
 	/* label for next/prev years */
 	color:black !important;
 	font-weight:normal;
+}
+
+/* Styling for month DropDownButton */
+
+.soria .dijitCalendar .dijitDropDownButton {
+	margin: 0;
+}
+.soria .dijitCalendar .dijitButtonText {
+	padding: 0;
+}
+.soria .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+	background-color: transparent;
+	background-image: none;
+	padding: 0;
+}
+
+/* Styling for month drop down list */
+
+.soria .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+	background-color: #d9e6f9;
+	color: #243C5F;
 }

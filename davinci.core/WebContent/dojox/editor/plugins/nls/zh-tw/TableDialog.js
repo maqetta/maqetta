@@ -18,6 +18,7 @@
 	right: "靠右",
 	buttonSet: "設定", // translated elsewhere?
 	buttonInsert: "插入",
+	buttonCancel: "取消",
 
 	selectTableLabel: "選取表格",
 	insertTableRowBeforeLabel: "在前面新增一個列",

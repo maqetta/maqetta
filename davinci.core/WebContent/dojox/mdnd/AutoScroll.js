@@ -1,8 +1,8 @@
 dojo.provide("dojox.mdnd.AutoScroll");
 
 dojo.declare(
-	"dojox.mdnd.AutoScroll", 
-	null, 
+	"dojox.mdnd.AutoScroll",
+	null,
 {
 	// summary:
 	//		Activate scrolling while dragging a widget.
@@ -29,7 +29,7 @@ dojo.declare(
 	init: function(){
 		//console.log("dojox.mdnd.AutoScroll ::: init ");
 		this._html = (dojo.isWebKit) ? dojo.body() : dojo.body().parentNode;
-		this.getViewport();	
+		this.getViewport();
 	},
 
 	getViewport:function(){

@@ -538,7 +538,7 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 				var preScriptCount = dojo.query("head script").length;
 				
 				function onComplete(items){
-					var postScriptCount = dojo.query("head script").length;					
+					var postScriptCount = dojo.query("head script").length;
 					t.is(preScriptCount, postScriptCount);
 					d.callback(true);
 				}

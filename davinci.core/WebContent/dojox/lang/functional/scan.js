@@ -6,7 +6,7 @@ dojo.require("dojox.lang.functional.lambda");
 //	- "scan" family of functions
 
 // Notes:
-//	- missing high-level functions are provided with the compatible API: 
+//	- missing high-level functions are provided with the compatible API:
 //		scanl, scanl1, scanr, scanr1
 
 // Defined methods:
@@ -21,7 +21,7 @@ dojo.require("dojox.lang.functional.lambda");
 	d.mixin(df, {
 		// classic reduce-class functions
 		scanl: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
-			// summary: repeatedly applies a binary function to an array from left 
+			// summary: repeatedly applies a binary function to an array from left
 			//	to right using a seed value as a starting point; returns an array
 			//	of values produced by foldl() at that point.
 			if(typeof a == "string"){ a = a.split(""); }
@@ -48,8 +48,8 @@ dojo.require("dojox.lang.functional.lambda");
 			return t;	// Array
 		},
 		scanl1: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: repeatedly applies a binary function to an array from left 
-			//	to right; returns an array of values produced by foldl1() at that 
+			// summary: repeatedly applies a binary function to an array from left
+			//	to right; returns an array of values produced by foldl1() at that
 			//	point.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -93,7 +93,7 @@ dojo.require("dojox.lang.functional.lambda");
 		},
 		scanr1: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
 			// summary: repeatedly applies a binary function to an array from right
-			//	to left; returns an array of values produced by foldr1() at that 
+			//	to left; returns an array of values produced by foldr1() at that
 			//	point.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);

@@ -1,4 +1,4 @@
-dojo.provide("dijit._editor.range");
+define("dijit/_editor/range", ["dojo", "dijit"], function(dojo, dijit) {
 
 dijit.range={};
 
@@ -527,3 +527,7 @@ dojo.declare("dijit.range.W3CRange",null, {
 }
 });
 } //if(!dijit.range._w3c)
+
+
+return dijit.range;
+});

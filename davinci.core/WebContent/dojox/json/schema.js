@@ -4,18 +4,18 @@ dojo.provide("dojox.json.schema");
 dojox.json.schema.validate = function(/*Any*/instance,/*Object*/schema){
 	// summary:
 	//  	To use the validator call this with an instance object and an optional schema object.
-	// 		If a schema is provided, it will be used to validate. If the instance object refers to a schema (self-validating), 
-	// 		that schema will be used to validate and the schema parameter is not necessary (if both exist, 
+	// 		If a schema is provided, it will be used to validate. If the instance object refers to a schema (self-validating),
+	// 		that schema will be used to validate and the schema parameter is not necessary (if both exist,
 	// 		both validations will occur).
 	//	instance:
 	//		The instance value/object to validate
 	// schema:
 	//		The schema to use to validate
-	// description: 
+	// description:
 	// 		The validate method will return an object with two properties:
 	// 			valid: A boolean indicating if the instance is valid by the schema
-	// 			errors: An array of validation errors. If there are no errors, then an 
-	// 					empty list will be returned. A validation error will have two properties: 
+	// 			errors: An array of validation errors. If there are no errors, then an
+	// 					empty list will be returned. A validation error will have two properties:
 	// 						property: which indicates which property had the error
 	// 						message: which indicates what the error was
 	//
@@ -25,14 +25,14 @@ dojox.json.schema.checkPropertyChange = function(/*Any*/value,/*Object*/schema, 
 	// summary:
 	// 		The checkPropertyChange method will check to see if an value can legally be in property with the given schema
 	// 		This is slightly different than the validate method in that it will fail if the schema is readonly and it will
-	// 		not check for self-validation, it is assumed that the passed in value is already internally valid.  
-	// 		The checkPropertyChange method will return the same object type as validate, see JSONSchema.validate for 
+	// 		not check for self-validation, it is assumed that the passed in value is already internally valid.
+	// 		The checkPropertyChange method will return the same object type as validate, see JSONSchema.validate for
 	// 		information.
 	//	value:
 	//		The new instance value/object to check
 	// schema:
 	//		The schema to use to validate
-	// return: 
+	// return:
 	// 		see dojox.validate.jsonSchema.validate
 	//
 	return this._validate(value,schema, property || "property");
@@ -43,7 +43,7 @@ dojox.json.schema.mustBeValid = function(result){
 	// result: the result returned from checkPropertyChange or validate
 	if(!result.valid){
 		throw new TypeError(dojo.map(result.errors,function(error){return "for property " + error.property + ': ' + error.message;}).join(", "));
-	}	
+	}
 }
 dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolean*/ _changing){
 	
@@ -65,7 +65,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 				addError("Invalid schema/property definition " + schema);
 			}
 			return null;
-		}			
+		}
 		if(_changing && schema.readonly){
 			addError("is a readonly field, it can not be changed");
 		}
@@ -75,15 +75,15 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 		// validate a value against a type definition
 		function checkType(type,value){
 			if(type){
-				if(typeof type == 'string' && type != 'any' && 
-						(type == 'null' ? value !== null : typeof value != type) && 
+				if(typeof type == 'string' && type != 'any' &&
+						(type == 'null' ? value !== null : typeof value != type) &&
 						!(value instanceof Array && type == 'array') &&
 						!(type == 'integer' && value%1===0)){
 					return [{property:path,message:(typeof value) + " value found, but a " + type + " is required"}];
 				}
 				if(type instanceof Array){
 					var unionErrors=[];
-					for(var j = 0; j < type.length; j++){ // a union type 
+					for(var j = 0; j < type.length; j++){ // a union type
 						if(!(unionErrors=checkType(type[j],value)).length){
 							break;
 						}
@@ -93,17 +93,17 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 					}
 				}else if(typeof type == 'object'){
 					var priorErrors = errors;
-					errors = []; 
+					errors = [];
 					checkProp(value,type,path);
 					var theseErrors = errors;
 					errors = priorErrors;
-					return theseErrors; 
-				} 
+					return theseErrors;
+				}
 			}
 			return [];
 		}
 		if(value === undefined){
-			if(!schema.optional){  
+			if(!schema.optional){
 				addError("is missing and it is not optional");
 			}
 		}else{
@@ -122,7 +122,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 							for(i=0,l=value.length; i<l; i++){
 								errors.concat(checkProp(value[i],schema.items,path,i));
 							}
-						}							
+						}
 					}
 					if(schema.minItems && value.length < schema.minItems){
 						addError("There must be a minimum of " + schema.minItems + " in the array");
@@ -142,11 +142,11 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 				if(schema.minLength && typeof value == 'string' && value.length < schema.minLength){
 					addError("must be at least " + schema.minLength + " characters long");
 				}
-				if(typeof schema.minimum !== undefined && typeof value == typeof schema.minimum && 
+				if(typeof schema.minimum !== undefined && typeof value == typeof schema.minimum &&
 						schema.minimum > value){
 					addError("must have a minimum value of " + schema.minimum);
 				}
-				if(typeof schema.maximum !== undefined && typeof value == typeof schema.maximum && 
+				if(typeof schema.maximum !== undefined && typeof value == typeof schema.maximum &&
 						schema.maximum < value){
 					addError("must have a maximum value of " + schema.maximum);
 				}
@@ -164,7 +164,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 						addError("does not have a value in the enumeration " + enumer.join(", "));
 					}
 				}
-				if(typeof schema.maxDecimal == 'number' && 
+				if(typeof schema.maxDecimal == 'number' &&
 					(value.toString().match(new RegExp("\\.[0-9]{" + (schema.maxDecimal + 1) + ",}")))){
 					addError("may only have " + schema.maxDecimal + " digits of decimal places");
 				}
@@ -180,7 +180,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 				errors.push({property:path,message:"an object is required"});
 			}
 			
-			for(var i in objTypeDef){ 
+			for(var i in objTypeDef){
 				if(objTypeDef.hasOwnProperty(i) && !(i.charAt(0) == '_' && i.charAt(1) == '_')){
 					var value = instance[i];
 					var propDef = objTypeDef[i];
@@ -199,7 +199,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 			}
 			value = instance[i];
 			if(objTypeDef && typeof objTypeDef == 'object' && !(i in objTypeDef)){
-				checkProp(value,additionalProp,path,i); 
+				checkProp(value,additionalProp,path,i);
 			}
 			if(!_changing && value && value.$schema){
 				errors = errors.concat(checkProp(value,value.$schema,path,i));

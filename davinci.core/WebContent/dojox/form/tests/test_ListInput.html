@@ -37,17 +37,17 @@
 		
 		
 		getValues=function() {
-			console.warn(window[current].attr("value"));
+			console.warn(window[current].get("value"));
 		};
 		getValuesMatch=function() {
-			console.warn(window[current].attr("MatchedValue"));
+			console.warn(window[current].get("MatchedValue"));
 		};
 		getValuesMisMatch=function() {
-			console.warn(window[current].attr("MismatchedValue"));
+			console.warn(window[current].get("MismatchedValue"));
 		};
 		
 		disable=function(disable) {
-			window[current].attr("disabled",disable);
+			window[current].set("disabled",disable);
 		};
 		reset=function() {
 			window[current].reset();

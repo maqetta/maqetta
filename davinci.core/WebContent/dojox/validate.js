@@ -1,2 +1,2 @@
 dojo.provide("dojox.validate");
-dojo.require("dojox.validate._base"); 
+dojo.require("dojox.validate._base");

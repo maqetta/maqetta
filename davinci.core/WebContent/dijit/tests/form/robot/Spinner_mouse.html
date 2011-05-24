@@ -84,7 +84,7 @@
 						runTest: function(){
 							// assert invalid works
 							var d=new doh.Deferred();
-							doh.robot.mouseMoveAt(spin1.focusNode, 500);
+							doh.robot.mouseMoveAt(spin1.focusNode, 1, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(function(){
 								spin1.focusNode.value="";
@@ -114,7 +114,7 @@
 						runTest: function(){
 							// assert invalid works
 							var d=new doh.Deferred();
-							doh.robot.mouseMoveAt(spin3.focusNode, 500);
+							doh.robot.mouseMoveAt(spin3.focusNode, 1, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(function(){
 								spin3.focusNode.value="";
@@ -149,19 +149,17 @@
 						runTest: function(){
 							// test typematic
 							var d=new doh.Deferred();
-							doh.robot.mouseMoveAt(spin1.downArrowNode, 500);
-							doh.robot.mousePress({left:true,  middle:false,  right:false}, 500);
+							doh.robot.mouseMoveAt(spin1.focusNode, 1, 0); // scroll both buttons into view
+							doh.robot.mouseMoveAt(spin1.downArrowNode, 1, 0);
+							doh.robot.mousePress({left:true,  middle:false,  right:false}, 1000);
 							doh.robot.mouseRelease({left:true,  middle:false,  right:false}, 5000); // going too fast overwhelms the CPU and starves the robot thread
 							doh.robot.mousePress({left:true,  middle:false,  right:false}, 500);
 							doh.robot.mouseRelease({left:true,  middle:false,  right:false}, 5000);
-							doh.robot.sequence(function(){
+							doh.robot.sequence(d.getTestCallback(function(){
 								var v = spin1.get('value');
-								if(v <= 875){
-									d.callback(true);
-								}else{
-									d.errback(new Error('Error in typematic test. Expected <= 875, got ' + v));
-								}
-							}, 1000);
+								// also test after user clicks away
+								doh.t(v <= 875, "Error in typematic test. Expected <= 875, got " + v);
+							}), 500);
 							return d;
 						}
 					},
@@ -176,9 +174,10 @@
 							// test max with arrow button
 							var d=new doh.Deferred();
 							// press once: should move up
-							doh.robot.mouseMoveAt(spin1.upArrowNode, 500);
+							doh.robot.mouseMoveAt(spin1.focusNode, 1, 0); // scroll both buttons into view
+							doh.robot.mouseMoveAt(spin1.upArrowNode, 1, 0);
 							doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
-							doh.robot.mouseMoveAt('sv1_4', 500);
+							doh.robot.mouseMoveAt('sv1_4', 1, 0);
 							doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.is(1550, spin1.get('value'));
@@ -186,9 +185,9 @@
 								doh.is("1550", dojo.byId('oc1').value);
 								doh.is(true, spin1.isValid());
 								// press again: shouldn't move
-								doh.robot.mouseMoveAt(spin1.upArrowNode, 500);
+								doh.robot.mouseMoveAt(spin1.upArrowNode, 1, 0);
 								doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
-								doh.robot.mouseMoveAt('sv1_4', 500);
+								doh.robot.mouseMoveAt('sv1_4', 1, 0);
 								doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 								doh.robot.sequence(d.getTestCallback(function(){
 									doh.is(1550, spin1.get('value'));
@@ -212,9 +211,10 @@
 							// test min with arrow button
 							var d=new doh.Deferred();
 							// press once: should move up
-							doh.robot.mouseMoveAt(spin1.downArrowNode, 500);
+							doh.robot.mouseMoveAt(spin1.focusNode, 1, 0); // scroll both buttons into view
+							doh.robot.mouseMoveAt(spin1.downArrowNode, 1, 0);
 							doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
-							doh.robot.mouseMoveAt('sv1_4', 500);
+							doh.robot.mouseMoveAt('sv1_4', 1, 0);
 							doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.is(0, spin1.get('value'));
@@ -222,9 +222,9 @@
 								doh.is("0", dojo.byId('oc1').value);
 								doh.is(true, spin1.isValid());
 								// press again: can move since no min
-								doh.robot.mouseMoveAt(spin1.downArrowNode, 500);
+								doh.robot.mouseMoveAt(spin1.downArrowNode, 1, 0);
 								doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
-								doh.robot.mouseMoveAt('sv1_4', 500);
+								doh.robot.mouseMoveAt('sv1_4', 1, 0);
 								doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 								doh.robot.sequence(d.getTestCallback(function(){
 									doh.is(-1, spin1.get('value'));
@@ -251,19 +251,16 @@
 							// note that Spinner spins backwards!
 							delta=-doh.robot.mouseWheelSize;
 							var d=new doh.Deferred();
-							doh.robot.mouseMoveAt(spin1.domNode, 1000);
+							doh.robot.mouseMoveAt(spin1.domNode, 1, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							// wheel up 10 times
 							// this should increase the value by 10
 							// takes 100ms/click
 							doh.robot.mouseWheel(-10, 1000, 1000);
-							doh.robot.sequence(function(){
+							doh.robot.sequence(d.getTestCallback(function(){
 								var v=spin1.get('value');
-								if(v==(900+10*delta)){
-									d.callback(true);
-								}else{
-									d.errback(new Error("spinner 1: wrong value, expected "+(900+10*delta)+", got "+spin1.get('value')));							}
-							}, 1000);
+								doh.is(v, (900+10*delta), "spinner 1: wrong value, expected "+(900+10*delta)+", got "+v);
+							}), 1000);
 							return d;
 						}
 					},
@@ -278,19 +275,16 @@
 							// test custom delta with mouse wheel
 							// it should increment 10 per mouse wheel
 							var d=new doh.Deferred();
-							doh.robot.mouseMoveAt(spin2.domNode, 1000);
+							doh.robot.mouseMoveAt(spin2.domNode, 1, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							// wheel down 9 times
 							// this should decrease the value by 90
 							// takes 100ms/click
 							doh.robot.mouseWheel(9, 1000, 900);
-							doh.robot.sequence(function(){
-								if(spin2.get('value')==(1000-90*delta)){
-									d.callback(true);
-								}else{
-									d.errback(new Error("spinner 2: wrong value, expected "+(1000-90*delta)+", got "+spin2.get('value')));
-								}
-							}, 1000);
+							doh.robot.sequence(d.getTestCallback(function(){
+								var v = spin2.get('value');
+								doh.is(v, (1000-90*delta), "spinner 2: wrong value, expected "+(1000-90*delta)+", got "+v);
+							}), 1000);
 							return d;
 						}
 					},
@@ -305,19 +299,16 @@
 							// test real number spinner with mouse wheel
 							// it should increment 0.1 per mouse wheel
 							var d=new doh.Deferred();
-							doh.robot.mouseMoveAt(spin3.domNode, 1000);
+							doh.robot.mouseMoveAt(spin3.domNode, 1, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							// wheel up 10
 							// this should increase the value by 1.0
 							// takes 100ms/click
 							doh.robot.mouseWheel(-10, 1000, 1000);
-							doh.robot.sequence(function(){
-								if(spin3.get('value')==(1.0+1.0*delta)){
-									d.callback(true);
-								}else{
-									d.errback(new Error("spinner 3: wrong value, expected "+(1.0+1.0*delta)+", got "+spin3.get('value')));
-								}
-							}, 1000);
+							doh.robot.sequence(d.getTestCallback(function(){
+								var v = spin3.get('value');
+								doh.is(v, (1.0+1.0*delta), "spinner 3: wrong value, expected "+(1.0+1.0*delta)+", got "+v);
+							}), 1000);
 							return d;
 						}
 					},
@@ -332,7 +323,7 @@
 							// test max with arrow key
 							var d=new doh.Deferred();
 							// press once: should move up
-							doh.robot.mouseMoveAt(spin3.focusNode, 500);
+							doh.robot.mouseMoveAt(spin3.focusNode, 1, 0);
 							doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 							// wheel up 1; this will increase the value by delta
 							doh.robot.mouseWheel(-1, 500, 1);
@@ -341,7 +332,7 @@
 								doh.is("155.0", spin3.focusNode.value);
 								doh.is(true, spin3.isValid());
 								// press again: shouldn't move
-								doh.robot.mouseMoveAt(spin3.focusNode, 500);
+								doh.robot.mouseMoveAt(spin3.focusNode, 1, 0);
 								doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 								// wheel up 1; this will increase the value by delta
 								doh.robot.mouseWheel(-1, 500, 1);
@@ -366,7 +357,7 @@
 							// test min with arrow key
 							var d=new doh.Deferred();
 							// press once: should move up
-							doh.robot.mouseMoveAt(spin3.focusNode, 500);
+							doh.robot.mouseMoveAt(spin3.focusNode, 1, 0);
 							doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
 							doh.robot.mouseWheel(1, 500, 1);
@@ -375,7 +366,7 @@
 								doh.is("-10.9", spin3.focusNode.value);
 								doh.is(true, spin3.isValid());
 								// press again: shouldn't move
-								doh.robot.mouseMoveAt(spin3.focusNode, 500);
+								doh.robot.mouseMoveAt(spin3.focusNode, 1, 0);
 								doh.robot.mouseClick({left:true,  middle:false,  right:false}, 500);
 								doh.robot.mouseWheel(1, 500, 1);
 								doh.robot.sequence(d.getTestCallback(function(){

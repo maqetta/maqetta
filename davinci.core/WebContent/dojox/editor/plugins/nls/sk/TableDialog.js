@@ -3,21 +3,22 @@
 	modifyTableTitle: "Upraviť tabuľku",
 	rows: "Riadky:",
 	columns: "Stĺpce:",
-	align: "Zarovnať:",
-	cellPadding: "Odsadenie obsahu buniek:",
-	cellSpacing: "Rozstupy buniek:",
+	align: "Zarovnanie:",
+	cellPadding: "Výplň buniek:",
+	cellSpacing: "Rozstup buniek:",
 	tableWidth: "Šírka tabuľky:",
 	backgroundColor: "Farba pozadia:",
-	borderColor: "Farba rámčeka:",
-	borderThickness: "Hrúbka rámčeka",
-	percent: "percentá",
-	pixels: "pixely",
-	"default": "štandardne",
+	borderColor: "Farba rámika:",
+	borderThickness: "Hrúbka rámika:",
+	percent: "percent",
+	pixels: "pixlov",
+	"default": "predvolené",
 	left: "vľavo",
-	center: "na stred",
+	center: "stred",
 	right: "vpravo",
 	buttonSet: "Nastaviť", // translated elsewhere?
 	buttonInsert: "Vložiť",
+	buttonCancel: "Zrušiť",
 
 	selectTableLabel: "Vybrať tabuľku",
 	insertTableRowBeforeLabel: "Pridať riadok pred",
@@ -27,4 +28,5 @@
 	deleteTableRowLabel: "Vymazať riadok",
 	deleteTableColumnLabel: "Vymazať stĺpec"
 })
+	
 

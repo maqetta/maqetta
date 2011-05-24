@@ -1,11 +1,10 @@
-dojo.provide("dojox.data.GoogleFeedStore");
-dojo.experimental("dojox.data.GoogleFeedStore");
+define("dojox/data/GoogleFeedStore", ["dojo", "dojox", "dojox/data/GoogleSearchStore"], function(dojo, dojox) {
 
-dojo.require("dojox.data.GoogleSearchStore");
+dojo.experimental("dojox.data.GoogleFeedStore");
 
 dojo.declare("dojox.data.GoogleFeedStore", dojox.data.GoogleSearchStore,{
 	// summary:
-	//	A data store for retrieving RSS and Atom feeds from Google. The 
+	//	A data store for retrieving RSS and Atom feeds from Google. The
 	//  feeds can come from any source, which is specified in the "url"
 	//  parameter of the query passed to the "fetch" function.
 	//	The following attributes are supported on each item:
@@ -72,4 +71,7 @@ dojo.declare("dojox.data.GoogleFeedStore", dojox.data.GoogleSearchStore,{
 		cb.num = (request.count || 10) + (request.start || 0);
 		return cb;
 	}
+});
+
+return dojox.data.GoogleFeedStore;
 });

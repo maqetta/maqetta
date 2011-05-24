@@ -23,42 +23,50 @@
 						name: "keyboard",
 						timeout: 9000,
 						runTest: function(){
-							var input = dojo.byId("typematicInput");
+							var
+								d = new doh.Deferred(),
+								input = dojo.byId("typematicInput"),
+								v;
 							input.value = "";
 							input.focus();
-							var d = new doh.Deferred();
 
 							doh.robot.keyDown(dojo.keys.CTRL, 1000);
 							doh.robot.keyDown(dojo.keys.F11, 200);
-							doh.robot.keyUp(dojo.keys.F11, 2000);
-							doh.robot.keyUp(dojo.keys.CTRL, 200);
+							doh.robot.sequence(function(){
+								v = input.value; // get value before releasing key to reduce timing dependence on the robot
+							}, 2000);
+							doh.robot.keyUp(dojo.keys.F11, 100);
+							doh.robot.keyUp(dojo.keys.CTRL, 100);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								var v = input.value;
 								// allow off by 1
-								doh.t(v=="aaaaaaaaa"||v=="aaaaaaaaaa"||v=="aaaaaaaaaaa", "a letters typed");
-							}), 500);
+								doh.t(v=="aaaaaaaaa"||v=="aaaaaaaaaa"||v=="aaaaaaaaaaa", "a letters typed " + v);
+							}), 100);
 
 							return d;
 						}
 					},
 					{
 						name: "mouse",
-						timeout: 9000,
+						timeout: 5000,
 						runTest: function(){
-							var input = dojo.byId("typematicInput");
+							var
+								d = new doh.Deferred(),
+								input = dojo.byId("typematicInput"),
+								v;
 							input.value = "";
-							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("typematicButton", 1000, 1000);
+							doh.robot.mouseMoveAt("typematicButton", 500, 1);
 							doh.robot.mousePress({left: true}, 500);
-							doh.robot.mouseRelease({left: true}, 1000);
+							doh.robot.sequence(function(){
+								v = input.value; // get value before releasing button to reduce timing dependence on the robot
+							}, 1000);
+							doh.robot.mouseRelease({left: true}, 100);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								var v = input.value;
 								// allow off by 1
-								doh.t(v=="bbbbbb"||v=="bbbbbbb"||v=="bbbbbbbb", "b letters typed");
-							}), 500);
+								doh.t(v=="bbbbbb"||v=="bbbbbbb"||v=="bbbbbbbb", "b letters typed " + v);
+							}), 100);
 
 							return d;
 						}

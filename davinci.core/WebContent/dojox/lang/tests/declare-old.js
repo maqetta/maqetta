@@ -5,7 +5,7 @@ dojo.provide("dojox.lang.tests.declare-old");
 // this file courtesy of the TurboAjax Group, licensed under a Dojo CLA
 
 dojox.lang.tests.declareOld = function(/*String*/ className, /*Function|Function[]*/ superclass, /*Object*/ props){
-	//	summary: 
+	//	summary:
 	//		Create a feature-rich constructor from compact notation
 	//
 	//	description:
@@ -15,21 +15,21 @@ dojox.lang.tests.declareOld = function(/*String*/ className, /*Function|Function
 	//		The name of the constructor (loosely, a "class")
 	//		stored in the "declaredClass" property in the created prototype
 	//	superclass:
-	//		May be null, a Function, or an Array of Functions. If an array, 
+	//		May be null, a Function, or an Array of Functions. If an array,
 	//		the first element is used as the prototypical ancestor and
 	//		any following Functions become mixin ancestors.
 	//	props:
 	//		An object whose properties are copied to the
 	//		created prototype.
-	//		Add an instance-initialization function by making it a property 
+	//		Add an instance-initialization function by making it a property
 	//		named "constructor".
 	//	description:
 	//		Create a constructor using a compact notation for inheritance and
-	//		prototype extension. 
+	//		prototype extension.
 	//
 	//		All superclasses (including mixins) must be Functions (not simple Objects).
 	//
-	//		Mixin ancestors provide a type of multiple inheritance. Prototypes of mixin 
+	//		Mixin ancestors provide a type of multiple inheritance. Prototypes of mixin
 	//		ancestors are copied to the new class: changes to mixin prototypes will
 	//		not affect classes to which they have been mixed in.
 	//
@@ -40,7 +40,7 @@ dojox.lang.tests.declareOld = function(/*String*/ className, /*Function|Function
 	//	|	dojo.declare("my.ClassyThing", null, {
 	//	|		aProperty:"string",
 	//	|		constructor: function(args){
-	//	|			dojo.mixin(this, args);	
+	//	|			dojo.mixin(this, args);
 	//	|		}
 	//	|	});
 	//
@@ -51,11 +51,11 @@ dojox.lang.tests.declareOld = function(/*String*/ className, /*Function|Function
 	//	|		someValue: 2,
 	//	|		// initialization function
 	//	|		constructor: function(){
-	//	|			this.myComplicatedObject = new ReallyComplicatedObject(); 
+	//	|			this.myComplicatedObject = new ReallyComplicatedObject();
 	//	|		},
 	//	|		// other functions
-	//	|		someMethod: function(){ 
-	//	|			doStuff(); 
+	//	|		someMethod: function(){
+	//	|			doStuff();
 	//	|		}
 	//	|	);
 	//
@@ -119,14 +119,14 @@ dojo.mixin(dojox.lang.tests.declareOld, {
 		// we have to make a function, but don't want to close over anything
 		return function(){ this._construct(arguments); };
 	},
-	_core: { 
+	_core: {
 		_construct: function(args){
-			var c = args.callee, s = c.superclass, ct = s && s.constructor, 
+			var c = args.callee, s = c.superclass, ct = s && s.constructor,
 				m = c.mixin, mct = m && m.constructor, a = args, ii, fn;
 			// side-effect of = used on purpose here, lint may complain, don't try this at home
-			if(a[0]){ 
+			if(a[0]){
 				// FIXME: preambles for each mixin should be allowed
-				// FIXME: 
+				// FIXME:
 				//		should we allow the preamble here NOT to modify the
 				//		default args, but instead to act on each mixin
 				//		independently of the class instance being constructed
@@ -134,13 +134,13 @@ dojo.mixin(dojox.lang.tests.declareOld, {
 
 				// allow any first argument w/ a "preamble" property to act as a
 				// class preamble (not exclusive of the prototype preamble)
-				if(/*dojo.isFunction*/((fn = a[0].preamble))){ 
-					a = fn.apply(this, a) || a; 
+				if(/*dojo.isFunction*/((fn = a[0].preamble))){
+					a = fn.apply(this, a) || a;
 				}
-			} 
+			}
 			// prototype preamble
 			if((fn = c.prototype.preamble)){ a = fn.apply(this, a) || a; }
-			// FIXME: 
+			// FIXME:
 			//		need to provide an optional prototype-settable
 			//		"_explicitSuper" property which disables this
 			// initialize superclass
@@ -179,17 +179,17 @@ dojo.mixin(dojox.lang.tests.declareOld, {
 			return !has && (p = this._findMixin(ptype)) && this._findMethod(name, method, p, has);
 		},
 		inherited: function(name, args, newArgs){
-			// summary: 
+			// summary:
 			//		Call an inherited member function of this declared class.
 			//
 			// description:
 			//		Call an inherited member function of this declared class, allowing advanced
 			//		manipulation of passed arguments to inherited functions.
 			//		Explicitly cannot handle the case of intending to pass no `newArgs`, though
-			//		hoping the use in conjuction with `dojo.hitch`. Calling an inherited 
+			//		hoping the use in conjuction with `dojo.hitch`. Calling an inherited
 			//		function directly via hitch() is not supported.
 			//
-			// name: String? 
+			// name: String?
 			//		The name of the method to call. If omitted, the special `arguments` passed is
 			//		used to determine the inherited function. All subsequent positional arguments
 			//		are shifted left if `name` has been omitted. (eg: args becomes name)
@@ -200,9 +200,9 @@ dojo.mixin(dojox.lang.tests.declareOld, {
 			//		object, and must be passed.
 			//
 			// newArgs: Array?
-			//		An Array of argument values to pass to the inherited function. If omitted, 
+			//		An Array of argument values to pass to the inherited function. If omitted,
 			//		the original arguments are passed (determined from the `args` variable)
-			// 
+			//
 			// example:
 			//		Simply call an inherited function with the same signature.
 			//	|	this.inherited(arguments);

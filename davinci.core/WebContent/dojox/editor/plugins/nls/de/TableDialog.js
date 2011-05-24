@@ -18,6 +18,7 @@
 	right: "Rechts",
 	buttonSet: "Festlegen", // translated elsewhere?
 	buttonInsert: "Einfügen",
+	buttonCancel: "Abbrechen",
 
 	selectTableLabel: "Tabelle auswählen",
 	insertTableRowBeforeLabel: "Zeile oberhalb einfügen",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "Zeile löschen",
 	deleteTableColumnLabel: "Spalte löschen"
 })
-

@@ -1,9 +1,9 @@
 <div class="dijit dijitReset dijitInlineTable dijitLeft"
 	id="widget_${id}"
-	waiRole="combobox" tabIndex="-1"
+	role="combobox" tabIndex="-1"
 	><div style="overflow:hidden;"
 		><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'
-			dojoAttachPoint="downArrowNode,_buttonNode,_popupStateNode" waiRole="presentation"
+			dojoAttachPoint="downArrowNode,_buttonNode,_popupStateNode" role="presentation"
 			><div class="dijitArrowButtonInner">&thinsp;</div
 			><div class="dijitArrowButtonChar">&#9660;</div
 		></div
@@ -12,7 +12,7 @@
 		><div class="dijitReset dijitInputField"
 			><input type="text" autocomplete="off" ${!nameAttrSetting} class='dijitReset'
 				dojoAttachEvent='onkeypress:_onKey' 
-				dojoAttachPoint='textbox,focusNode' waiRole="textbox" waiState="haspopup-true,autocomplete-list"
+				dojoAttachPoint='textbox,focusNode' role="textbox" aria-haspopup="true" aria-autocomplete="list"
 		/></div
 	></div
 ></div>

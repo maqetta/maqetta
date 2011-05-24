@@ -1,28 +1,33 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
 	<title>Container</title>
 
-	<script type="text/javascript" src="../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="isDebug: true"></script>
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dijit._Widget");
 		dojo.require("dijit._Container");
 		dojo.require("dijit._Contained");
 
-		dojo.declare("dijit.TestContainer",
-			[dijit._Widget, dijit._Container], { }
-		);
-
-		dojo.declare("dijit.TestContained",
-			[dijit._Widget, dijit._Contained], {}
-		);
-
 		dojo.require("dojo.parser");
 
 		dojo.addOnLoad(function(){
+			dojo.declare("dijit.TestContainer",
+				[dijit._Widget, dijit._Container], { }
+			);
+	
+			dojo.declare("dijit.TestContained",
+				[dijit._Widget, dijit._Contained], {}
+			);
+
+			doh.register("parse", function(){
+				dojo.parser.parse();
+			});
+
 			doh.register("dijit._Container",
 				[
 					{
@@ -90,6 +95,7 @@
 					}
 				]
 			);
+
 			doh.run();
 		});
 
@@ -97,13 +103,13 @@
 </head>
 <body class="claro">
 
-	<div id="container" dojoType="dijit.TestContainer">
-		<div id="zero" dojoType="dijit.TestContained"></div>
-		<div id="one" dojoType="dijit.TestContained"></div>
-		<div id="two" dojoType="dijit.TestContained"></div>
-		<div id="three" dojoType="dijit._Widget"></div>
+	<div id="container" data-dojo-type="dijit.TestContainer">
+		<div id="zero" data-dojo-type="dijit.TestContained"></div>
+		<div id="one" data-dojo-type="dijit.TestContained"></div>
+		<div id="two" data-dojo-type="dijit.TestContained"></div>
+		<div id="three" data-dojo-type="dijit._Widget"></div>
 	</div>
-	<div id="outside" dojoType="dijit._Widget"></div>
-	<div id="outsideCont" dojoType="dijit.TestContained"></div>
+	<div id="outside" data-dojo-type="dijit._Widget"></div>
+	<div id="outsideCont" data-dojo-type="dijit.TestContained"></div>
 </body>
 </html>

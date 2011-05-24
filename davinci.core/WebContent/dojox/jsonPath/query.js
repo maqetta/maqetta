@@ -5,7 +5,7 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 	// 	Perform jsonPath query `expr` on javascript object or json string `obj`
 	//	obj - object || json string to perform query on
 	//	expr - jsonPath expression (string) to be evaluated
-	//	arg - {}special arugments.  
+	//	arg - {}special arugments.
 	//		resultType: "VALUE"||"BOTH"||"PATH"} (defaults to value)
 	//		evalType: "RESULT"||"ITEM"} (defaults to ?)
 
@@ -53,9 +53,9 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 			var paths=[path];
 			function add(v, p,def){
 			  if (v && v.hasOwnProperty(p) && P.resultType != "VALUE") paths.push(path.concat([p]));
-				if (def) 
+				if (def)
 				  result = v[p];
-			  else if (v && v.hasOwnProperty(p))  
+			  else if (v && v.hasOwnProperty(p))
 					result.push(v[p]);
 			}
 			function desc(v){
@@ -92,11 +92,11 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 					function(i){P.walk(val[i],function(j){ add(val[i],j); })} :
 					function(i){ add(val,i); });
 				}
-				else if (loc === "..") 
+				else if (loc === "..")
 					desc(val);
 				else if (/,/.test(loc)){ // [name1,name2,...]
 					for (var s=loc.split(/'?,'?/),i=0,n=s.length; i<n; i++)
-						add(val,repStr(s[i])); 
+						add(val,repStr(s[i]));
 				}
 				else if (/^\?\(.*?\)$/.test(loc)) // [?(expr)]
 					P.walk(val, function(i){ if (P.eval(loc.replace(/^\?\((.*?)\)$/,"$1"),val[i])) add(val,i); });
@@ -104,10 +104,10 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 					slice(loc, val);
 				else {
 					loc=repStr(loc);
-					if (rb && val instanceof Array && !/^[0-9*]+$/.test(loc)) 
+					if (rb && val instanceof Array && !/^[0-9*]+$/.test(loc))
 						P.walk(val, function(i){ add(val[i], loc)});
-					else 
-						add(val,loc,rb);		
+					else
+						add(val,loc,rb);
 				}
 
 			}
@@ -117,7 +117,7 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 				result = [];
 				var valPaths = paths;
 				paths = [];
-				if (rb) 
+				if (rb)
 					oper(val)
 				else
 					P.walk(val,function(i){path=valPaths[i]||path;oper(val[i])});
@@ -152,8 +152,8 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 	var $ = obj;
 	if (expr && obj){
 		return P.exec(P.normalize(expr).slice(1), obj, arg.evalType == "RESULT");
-	}	
+	}
 
 	return false;
 
-}; 
+};

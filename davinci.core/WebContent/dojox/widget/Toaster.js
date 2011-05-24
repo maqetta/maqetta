@@ -48,7 +48,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		duration: 2000,
 
 		// slideDuration: Integer
-		//		Number of milliseconds for the slide animation, increasing will cause the Toaster 
+		//		Number of milliseconds for the slide animation, increasing will cause the Toaster
 		//    to slide in more slowly.
 		slideDuration: 500,
 
@@ -121,7 +121,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 			this._cancelHideTimer();
 			if(this.isVisible){
 				this._placeClip();
-				//update hide timer if no sticky message in stack 
+				//update hide timer if no sticky message in stack
 				if(!this._stickyMessage) {
 					this._setHideTimer(duration);
 				}

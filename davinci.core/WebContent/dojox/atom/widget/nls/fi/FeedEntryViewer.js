@@ -2,10 +2,11 @@
 	displayOptions: "[näyttöasetukset]",
 	title: "Otsikko",
 	authors: "Tekijät",
-	contributors: "Osallistujat",
+	contributors: "Lisääjät",
 	id: "Tunnus",
 	close: "[sulje]",
 	updated: "Päivitetty",
-	summary: "Yhteenveto",
+	summary: "Tiivistelmä",
 	content: "Sisältö"
 })
+

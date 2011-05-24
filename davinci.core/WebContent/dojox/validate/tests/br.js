@@ -6,7 +6,7 @@ tests.register("dojox.validate.tests.br",[
 	//Randomy generated valid CNJP/CGC numbers.
 	{
 		name:"isValidCnpj",
-		runTest: function(doh) { 
+		runTest: function(doh) {
 			doh.assertTrue(dojox.validate.br.isValidCnpj('75.730.657/0001-03'), "1 Checking ##.###.###/####-## format");
 			doh.assertTrue(dojox.validate.br.isValidCnpj('75730657/0001-03'), "1 Checking ########/####-## format");
 			doh.assertTrue(dojox.validate.br.isValidCnpj('757306570001-03'), "1 Checking ############-## format");
@@ -38,7 +38,7 @@ tests.register("dojox.validate.tests.br",[
 	},
 	{
 		name:"computeCnpjDv",
-		runTest: function(doh) { 
+		runTest: function(doh) {
 			doh.assertEqual("03", dojox.validate.br.computeCnpjDv('75.730.657/0001'), "1 Checking ##.###.###/#### format");
 			doh.assertEqual("03", dojox.validate.br.computeCnpjDv('75730657/0001'), "1 Checking ########/#### format");
 			doh.assertEqual("03", dojox.validate.br.computeCnpjDv('757306570001'), "1 Checking ############ format");
@@ -58,7 +58,7 @@ tests.register("dojox.validate.tests.br",[
 	//All CPF numbers randomly generated from: http://www.gerardocumentos.com.br
 	{
 		name:"isValidCpf",
-		runTest: function(doh) { 
+		runTest: function(doh) {
 			doh.assertTrue(dojox.validate.br.isValidCpf('362.866.226-59'), "1 Checking ###.###.###-## format");
 			doh.assertTrue(dojox.validate.br.isValidCpf('362866226-59'), "1 Checking #########-## format");
 			doh.assertTrue(dojox.validate.br.isValidCpf('36286622659'), "1 Checking ########### format");
@@ -82,7 +82,7 @@ tests.register("dojox.validate.tests.br",[
 	},
 	{
 		name:"computeCpfDv",
-		runTest: function(doh) { 
+		runTest: function(doh) {
 			doh.assertEqual("59", dojox.validate.br.computeCpfDv('362.866.226'), "1 Checking ###.###.### format");
 			doh.assertEqual("59", dojox.validate.br.computeCpfDv('362866226'), "1 Checking ######### format");
 			doh.assertEqual("59", dojox.validate.br.computeCpfDv(362866226), "1 Checking numeric ######### format");

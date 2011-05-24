@@ -5,6 +5,8 @@ blueLabel: "m",
 hueLabel: "t",
 saturationLabel: "d",
 valueLabel: "d", /* aka intensity or brightness */
-hexLabel: "onaltılı"
+hexLabel: "onaltılı",
+huePickerTitle: "Ton Seçici",
+saturationPickerTitle: "Doygunluk Seçici"
 })
 

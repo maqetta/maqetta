@@ -5,7 +5,7 @@ dojo.require("dojox.string.tokenize");
 dojox.date.php.format = function(/*Date*/ date, /*String*/ format){
 	// summary: Get a formatted string for a given date object
 	var df = new dojox.date.php.DateFormat(format);
-	return df.format(date);	
+	return df.format(date);
 }
 
 dojox.date.php.DateFormat = function(/*String*/ format){

@@ -65,8 +65,8 @@
 }
 
 .dj_ie6 .dropIndicator,
-.dj_ie6 .dijitContentPane,
-.dj_ie6 .dojoxPortlet, .dj_ie6 .dijitTitlePane{
+.dj_ie6 .dojoxPortlet .dijitContentPane,
+.dj_ie6 .dojoxPortlet, .dj_ie6 .dojoxPortlet.dijitTitlePane{
 	margin: 10px;
 }
 .gridContainerZone > *{

@@ -5,10 +5,10 @@ dojo.require("dijit.form.Button");
 dojo.requireLocalization("dijit", "loading");
 
 dojo.declare("dojox.form._BusyButtonMixin",
-	null, 
+	null,
 	{
 		
-	isBusy: false,	
+	isBusy: false,
 	busyLabel: "", // text while button is busy
 	timeout: null, // timeout, should be controlled by xhr call
 	useIcon: true, // use a busy icon
@@ -56,15 +56,15 @@ dojo.declare("dojox.form._BusyButtonMixin",
 	resetTimeout: function(/*Int*/ timeout){
 		// summary:
 		//	to reset existing timeout and setting a new timeout
-		if(this._timeout){	
-			clearTimeout(this._timeout); 
+		if(this._timeout){
+			clearTimeout(this._timeout);
 		}
 		
 		// new timeout
 		if(timeout){
 			this._timeout = setTimeout(dojo.hitch(this, function(){
 				this.cancel();
-			}), timeout);			
+			}), timeout);
 		}else if(timeout == undefined || timeout === 0){
 			this.cancel();
 		}
@@ -109,10 +109,10 @@ dojo.declare("dojox.form._BusyButtonMixin",
 	
 	_clicked: function(e){
 		// summary:
-		//	on button click the button state gets changed 
+		//	on button click the button state gets changed
 		
 		// only do something if button is not busy
-		if(!this.isBusy){ 
+		if(!this.isBusy){
 			this.makeBusy();
 		}
 	}

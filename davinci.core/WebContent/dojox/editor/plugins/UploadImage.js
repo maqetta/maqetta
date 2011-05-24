@@ -1,15 +1,13 @@
-dojo.provide("dojox.editor.plugins.UploadImage");
-dojo.require("dijit._editor._Plugin");
-dojo.require("dojox.form.FileUploader");
+define("dojox/editor/plugins/UploadImage", ["dojo", "dijit", "dojox", "dojox/form/FileUploader", "dijit/_editor/_Plugin"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.UploadImage");
 
 dojo.declare("dojox.editor.plugins.UploadImage",
 	dijit._editor._Plugin,
 	{
-		//summary: 
+		//summary:
 		// 	Adds an icon to the Editor toolbar that when clicked, opens a system dialog
-		//	Although the toolbar icon is a tiny "image" the uploader could be used for 
+		//	Although the toolbar icon is a tiny "image" the uploader could be used for
 		//	any file type
 		
 		tempImageUrl: "",
@@ -29,6 +27,12 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 			this.editor.commands[this.command] = "Upload Image";
 			this.inherited("_initButton", arguments);
 			delete this.command;
+		},
+		
+		updateState: function(){
+			// summary:
+			//		Over-ride for button state control for disabled to work.
+			this.button.set("disabled", this.get("disabled"));
 		},
 		
 		createFileInput: function(){
@@ -79,7 +83,7 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 		insertTempImage: function(){
 			// inserting a "busy" image to show something is hapening
 			//	during upload and download of the image.
-			this.currentImageId = "img_"+(new Date().getTime()); 
+			this.currentImageId = "img_"+(new Date().getTime());
 			var iTxt = '<img id="'+this.currentImageId+'" src="'+this.tempImageUrl+'" width="32" height="32"/>';
 			this.editor.execCommand('inserthtml', iTxt);
 		}
@@ -93,4 +97,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	case "uploadImage":
 		o.plugin = new dojox.editor.plugins.UploadImage({url: o.args.url});
 	}
+});
+
+return dojox.editor.plugins.UploadImage;
+
 });

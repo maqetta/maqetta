@@ -3,16 +3,16 @@
 .soria .dijitDialog {
 	background: #eee;
 	border: 1px solid #cbcbcb;
-	-webkit-box-shadow: 0px 5px 10px #adadad;
-	padding: 0px;
+	-webkit-box-shadow: 0 5px 10px #adadad;
+	padding: 0;
 }
 
 .soria .dijitDialog .dijitDialogTitle {
 	/* typography and styling of the dialog title */
 	font-weight: bold;
-	padding: 0px 4px;
+	padding: 0 4px;
 	font-size: 0.9em;
-	color: #3243C5F;
+	color: #243C5F;
 }
 
 .soria .dijitDialog .dijitDialogPaneContent {
@@ -33,7 +33,7 @@
 	/* the default close icon for the dialog */
 	background-image: url("images/spriteRoundedIconsSmallBl.png");
 	background-repeat: no-repeat;
-	background-position: -60px 0px;
+	background-position: -60px 0;
 	position: absolute;
 	vertical-align: middle;
 	right: 6px;
@@ -83,7 +83,7 @@
 
 .soria .dijitTooltipConnector {
 	/* the arrow piece */
-	border:0px;
+	border:0;
 	z-index: 2;
 }
 
@@ -96,7 +96,7 @@
 
 .soria .dijitTooltipBelow .dijitTooltipConnector {
 	/* the arrow piece for tooltips below an element */
-	top: 0px;
+	top: 0;
 	left: 6px;
 	background:url("images/tooltipConnectorUp.png") no-repeat top left;
 	width:17px;
@@ -109,7 +109,7 @@
 
 .soria .dijitTooltipAbove .dijitTooltipConnector {
 	/* the arrow piece for tooltips above an element */
-	bottom: 0px;
+	bottom: 0;
 	left: 6px;
 	background:url("images/tooltipConnectorDown.png") no-repeat top left;
 	width:17px;
@@ -128,13 +128,9 @@
 .soria .dijitTooltipLeft {
 	padding-right: 10px;
 }
-.dj_ie6 .soria .dijitTooltipLeft {
-	padding-left: 11px;
-}
 .soria .dijitTooltipLeft .dijitTooltipConnector {
 	/* the arrow piece for tooltips to the left of an element, bottom borders aligned */
-	right: 0px;
-	bottom: 3px;
+	right: 0;
 	background:url("images/tooltipConnectorRight.png") no-repeat top left;
 	width:11px;
 	height:17px;
@@ -148,8 +144,7 @@
 }
 .soria .dijitTooltipRight .dijitTooltipConnector {
 	/* the arrow piece for tooltips to the right of an element, bottom borders aligned */
-	left: 0px;
-	bottom: 3px;
+	left: 0;
 	background:url("images/tooltipConnectorLeft.png") no-repeat top left;
 	width:11px;
 	height:17px;

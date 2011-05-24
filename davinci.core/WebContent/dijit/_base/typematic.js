@@ -1,4 +1,4 @@
-dojo.provide("dijit._base.typematic");
+define("dijit/_base/typematic", ["dojo", "dijit"], function(dojo, dijit) {
 
 dijit.typematic = {
 	// summary:
@@ -177,3 +177,7 @@ dijit.typematic = {
 			this.addMouseListener(mouseNode, _this, callback, subsequentDelay, initialDelay, minDelay));
 	}
 };
+
+
+return dijit.typematic;
+});

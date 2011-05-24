@@ -1,31 +1,31 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>dijit.form.Select test</title>
 
 		<style>
-			@import url(../../../dojo/resources/dojo.css);
-			@import url(../../themes/tundra/tundra.css);
+			@import url(../../themes/claro/document.css);
+			@import url(../../themes/claro/claro.css);
 			@import url(../css/dijitTests.css);
 			.ark { text-decoration: underline; }
 		</style>
 
 		<!-- required: the default dijit theme: -->
-		<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+		<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 	
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+			data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 	
 		<!-- only needed for alternate theme testing: -->
 		<script type="text/javascript" src="../_testCommon.js"></script>
 
 		<script type="text/javascript" src="../helpers.js"></script>
 
-	    <script type="text/javascript">
+		<script type="text/javascript">
 			dojo.require("doh.runner");
-	        dojo.require("dojo.parser");
+			dojo.require("dojo.parser");
 			dojo.require("dijit.form.Select");
 			dojo.require("dijit.form.Button");
 			dojo.require("dijit.form.Form");
@@ -106,11 +106,8 @@
 							timeout: 5000,
 							runTest: function(t){
 								var d = new doh.Deferred();
-								t.is(dojo.toJson({s1:"VA", s2:"CA", s3:"AL", s4: "AK", s5: "move", s6: "", s7:"NY", s8a:"AL", s8b:"AL",
-									s9:"CT", s10:"AL", s11:"AL", s12: "AL"}), dojo.toJson(form.get("value")));
-									
-								// set s1 to a valid value
-								s1.set("value", "WA");
+								t.is("VA", form.get("value").s1, "initial value");
+								s1.set("value", "WA"); // set s1 to a valid value
 								t.is("WA", s1.value);
 
 								setTimeout(function(){ try{ // allow onChange to fire
@@ -122,7 +119,14 @@
 
 									setTimeout(function(){ try{ // allow onChange to fire
 										t.is(2, numChanges);
-										d.callback(true);
+										
+										// prevent onChange from firing
+										s1.set("value", "FL", false);
+										
+										setTimeout(function(){ try{ // allow onChange to fire if it's wrong
+											t.is(2, numChanges);
+											d.callback(true);
+										}catch(e){ d.errback(e); }}, 0)
 									}catch(e){ d.errback(e); }}, 0);
 								}catch(e){ d.errback(e); }}, 0);
 								return d;
@@ -332,24 +336,21 @@
 			</select>
 		</form>
 		<h2>dijit.form.Select</h2>
-		<form dojoType="dijit.form.Form" jsId="form" method="get">
+		<form data-dojo-id="form" data-dojo-type="dijit.form.Form" data-dojo-props='method:"get"'>
 			<h4 class="testSubtitle">Setting Defaults</h4>
 			<label for="s1">Test One: </label>
-			<select jsId="s1" name="s1" id="s1" dojoType="dijit.form.Select" >
+			<select id="s1" data-dojo-id="s1" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s1" '>
 				<option value="TN">Tennessee</option>
 				<option value="VA" selected="selected">Virginia</option>
 				<option value="WA">Washington</option>
 				<option value="FL">Florida</option>
 				<option value="CA">California</option>
 			</select>
-			<button id="s1button" dojoType="dijit.form.Button" type="button">
-				<script type="dojo/method" event="onClick">
-					console.log(s1.get("displayedValue"));
-				</script>
+			<button id="s1button" data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ console.log(s1.get("displayedValue")); }'>
 				Get Displayed Value
 			</button>
 			<label for="s2">Test Two: </label>
-			<select jsId="s2" name="s2" id="s2" value="CA" dojoType="dijit.form.Select">
+			<select id="s2" data-dojo-id="s2" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s2", value:"CA" '>
 				<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>
@@ -357,72 +358,67 @@
 				<option value="CA">California</option>
 			</select>
 			<label for="s3">Test Three: </label>
-			<select jsId="s3" name="s3" id="s3" style="width: 150px;" dojoType="dijit.form.Select">
+			<select id="s3" data-dojo-id="s3" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s3", style:{width:"150px"},
+					required:true,
+					onChange: function(){
+						if(!this.options[0].value){
+							this.removeOption(0);
+						}
+					}
+				'>
+				<option>&nbsp;</option>
 				<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
-				<option type="separator"></option>
+				<option></option>
 				<option value="AZ">Arizona</option>
 				<option value="AR">Arkansas</option>
-				<option type="separator"></option>
+				<option></option>
 				<option value="CA">California</option>
 			</select>
 		<hr>
 			<h4 class="testSubtitle">Rich Text (Need to use divs and spans - since browsers hack selects to pieces)</h4>
-			<label for="s4">Rich text One: </label>
-			<div jsId="s4" name="s4" id="s4" value="AK" dojoType="dijit.form.Select">
-				<span value="AL"><b>Alabama</b></span>
-				<span value="AK"><font color="red">A</font><font color="orange">l</font><font color="yellow">a</font><font color="green">s</font><font color="blue">k</font><font color="purple">a</font></span>
-				<span value="AZ"><i>Arizona</i></span>
-				<span value="AR"><span class="ark">Arkansas</span></span>
-				<span value="CA"><span style="font-size:25%">C</span><span style="font-size:50%">a</span><span style="font-size:75%">l</span><span style="font-size:90%">i</span><span style="font-size:100%">f</span><span style="font-size:125%">o</span><span style="font-size:133%">r</span><span style="font-size:150%">n</span><span style="font-size:175%">i</span><span style="font-size:200%">a</span></span>
-				<span value="NM" disabled="disabled">New<br>&nbsp;&nbsp;Mexico</span>
-			</div>
-			<button dojoType="dijit.form.Button" type="button">
-				<script type="dojo/method" event="onClick">
-					s4.set("disabled", !s4.get("disabled"));
-				</script>
+			<label>Rich text One: 
+			<span id="s4" data-dojo-id="s4" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s4", value:"AK" '>
+				<span data-dojo-value="AL"><b>Alabama</b></span>
+				<span data-dojo-value="AK"><span style="color:red;">A</span><span style="color:orange;">l</span><span style="color:yellow;">a</span><span style="color:green;">s</span><span style="color:blue;">k</span><span style="color:purple;">a</span></span>
+				<span data-dojo-value="AZ"><i>Arizona</i></span>
+				<span data-dojo-value="AR"><span class="ark">Arkansas</span></span>
+				<span data-dojo-value="CA"><span style="font-size:25%">C</span><span style="font-size:50%">a</span><span style="font-size:75%">l</span><span style="font-size:90%">i</span><span style="font-size:100%">f</span><span style="font-size:125%">o</span><span style="font-size:133%">r</span><span style="font-size:150%">n</span><span style="font-size:175%">i</span><span style="font-size:200%">a</span></span>
+				<button value="NM" disabled="disabled">New<br>&nbsp;&nbsp;Mexico</button>
+			</span></label>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ s4.set("disabled", !s4.get("disabled")); }'>
 				Toggle Disabled
 			</button>
-			<label for="s5">Rich text two: </label>
-			<div jsId="s5" name="s5" id="s5" value="move" dojoType="dijit.form.Select">
-				<span value="copy"><img style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndCopy.png" /> Copy</span>
-				<span value="move"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndMove.png" /> Move</span>
-				<span value="nocopy"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndNoCopy.png" /> No Copy</span>
-				<span value="nomove"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndNoMove.png" /> No Move</span>
-				<span value="long"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndNoMove.png" /> Very Long Menu Entry</span>
-			</div>
+			<label>Rich text two: 
+			<span id="s5" data-dojo-id="s5" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s5", value:"move" '>
+				<span data-dojo-value="copy"><img style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndCopy.png" /> Copy</span>
+				<span data-dojo-value="move"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndMove.png" /> Move</span>
+				<span data-dojo-value="nocopy"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndNoCopy.png" /> No Copy</span>
+				<span data-dojo-value="nomove"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndNoMove.png" /> No Move</span>
+				<span data-dojo-value="long"><img  style="vertical-align: middle;margin-top: 1px;margin-bottom:1px;" src="../../../dijit/themes/tundra/images/dndNoMove.png" /> Very Long Menu Entry</span>
+			</span></label>
 		<hr>
 			<h4 class="testSubtitle"><label for="s6">Initially Empty</label></h4>
-			<select jsId="s6" name="s6" id="s6" maxHeight="100" dojoType="dijit.form.Select">
+			<select id="s6" data-dojo-id="s6" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s6", maxHeight:100 '>
 			</select>
-			<button dojoType="dijit.form.Button" type="button">
-				<script type="dojo/method" event="onClick">
-					numOptions++;
-					s6.addOption({value: numOptions + "", label: "Option " + numOptions});
-				</script>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ numOptions++; s6.addOption({value: numOptions + "", label: "Option " + numOptions}); }'>
 				Add Option
 			</button>
-			<button dojoType="dijit.form.Button" type="button">
-				<script type="dojo/method" event="onClick">
-					s6.removeOption(0);
-				</script>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ s6.removeOption(0); }'>
 				Remove Top Option
 			</button>
-			<button dojoType="dijit.form.Button" type="button">
-				<script type="dojo/method" event="onClick">
-					s6.set("disabled", !s6.get("disabled"));
-				</script>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ s6.set("disabled", !s6.get("disabled")); }'>
 				Toggle Disabled
 			</button>
 			<hr>
 		<h4 class="testSubtitle"><label for="s7">Single Item</label></h4>
-			<select jsId="s7" name="s7" id="s7" dojoType="dijit.form.Select">
+			<select id="s7" data-dojo-id="s7" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s7" '>
 				<option value="NY">New York</option>
 			</select>
 		<hr>
 		<h4 class="testSubtitle">Long lists</h4>
 			<label for="s8a">maxHeight=200:</label>
-			<select jsId="s8a" name="s8a" id="s8a" maxHeight="200" dojoType="dijit.form.Select">
+			<select id="s8a" data-dojo-id="s8a" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s8a", maxHeight:200 '>
 				<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>
@@ -476,7 +472,7 @@
 				<option value="WY">Wyoming</option>
 			</select>
 			<label for="s8b">no maxHeight:</label>
-			<select jsId="s8b" name="s8b" id="s8b" dojoType="dijit.form.Select">
+			<select id="s8b" data-dojo-id="s8b" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s8b" '>
 				<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>
@@ -532,37 +528,34 @@
 			<hr>
 			<h4 class="testSubtitle">Store-based</h4>
 			<label for="s9">Example 1</label>
-			<select jsId="s9" name="s9" id="s9" store="readStore" value="CT" dojoType="dijit.form.Select">
+			<select id="s9" data-dojo-id="s9" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s9", store:readStore, value:"CT" '>
 			</select>
 			<label for="s10">Example 2</label>
-			<select jsId="s10" name="s10" id="s10" store="readStore" dojoType="dijit.form.Select">
+			<select id="s10" data-dojo-id="s10" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s10", store:readStore '>
 			</select>
 			<label for="s11">Example 3</label>
-			<select jsId="s11" name="s11" id="s11" store="writeStore" dojoType="dijit.form.Select">
+			<select id="s11" data-dojo-id="s11" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s11", store:writeStore '>
 			</select>
 			<label for="s12">Example 4</label>
-			<select jsId="s12" name="s12" id="s12" store="readStore" dojoType="dijit.form.Select">
+			<select id="s12" data-dojo-id="s12" data-dojo-type="dijit.form.Select" data-dojo-props='name:"s12", store:readStore '>
 			</select>
 			<hr>
 			<h4 class="testSubtitle">Inlined with text (all IE modes except for IE8 Standards)</h4>
 			<label for="txtPrompt">Text Prompt:</label>
-			<select dojoType="dijit.form.Select" id="txtPrompt">
+			<select id="txtPrompt" data-dojo-type="dijit.form.Select" >
 				<option value="SEL" selected="selected">Select</option>
 				<option value="OTHER">Other</option>
 			</select>
 			<hr>
-			<button dojoType="dijit.form.Button" type="button">
-				<script type="dojo/method" event="onClick">
-					console.dir(form.getValues());
-				</script>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ console.dir(form.getValues()); }'>
 				Get Values
 			</button>
-			<button dojoType="dijit.form.Button" type="submit">Submit</button>
+			<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit"'>Submit</button>
 		</form>
 		<hr>
 		<h4 class="testSubtitle">Disabled</h4>
 		<label for="testDisabled">Disabled:</label>
-		<select dojoType="dijit.form.Select" disabled="disabled" jsId='testDisabled' name='testDisabled' id='testDisabled'>
+		<select id='testDisabled' data-dojo-id='testDisabled' data-dojo-type="dijit.form.Select" data-dojo-props='disabled:true, name:"testDisabled" '>
 			<option value="foo">foo</option>
 			<option value="bar">bar</option>
 		</select>

@@ -1,8 +1,12 @@
 ({
-	singleSort: "Enkele sorteerbewerking",
-	nestedSort: "Geneste sorteerbewerking",
+	singleSort: "Enkelvoudig sorteren",
+	nestedSort: "Genest sorteren",
 	ascending: "Oplopend",
 	descending: "Aflopend",
-	unsorted: "Deze kolom niet sorteren"
+	sortingState: "${0} - ${1}",
+	unsorted: "Deze kolom niet sorteren",
+	indirectSelectionRadio: "Rij ${0}, enkele selectie, keuzerondje",
+	indirectSelectionCheckBox: "Rij ${0}, meerdere selecties, selectievakje",
+	selectAll: "Alles selecteren"
 })
 

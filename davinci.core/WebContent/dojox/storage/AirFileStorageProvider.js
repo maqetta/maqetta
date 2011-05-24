@@ -12,7 +12,7 @@ if (dojo.isAIR) {
 		air.FileStream = window.runtime.flash.filesystem.FileStream;
 		air.FileMode = window.runtime.flash.filesystem.FileMode;
 		
-		// summary: 
+		// summary:
 		//		Storage provider that uses features in the Adobe AIR runtime to achieve
 		//		permanent storage
 		dojo.declare("dojox.storage.AirFileStorageProvider", [ dojox.storage.Provider ], {
@@ -144,14 +144,14 @@ if (dojo.isAIR) {
 			},
 			
 			putMultiple: function(keys, values, resultsHandler, namespace) {
- 				if(this.isValidKeyArray(keys) === false 
-						|| ! values instanceof Array 
+ 				if(this.isValidKeyArray(keys) === false
+						|| ! values instanceof Array
 						|| keys.length != values.length){
 					throw new Error("Invalid arguments: keys = [" + keys + "], values = [" + values + "]");
 				}
 				
 				if(namespace == null || typeof namespace == "undefined"){
-					namespace = this.DEFAULT_NAMESPACE;		
+					namespace = this.DEFAULT_NAMESPACE;
 				}
 	
 				if(this.isValidKey(namespace) == false){
@@ -160,7 +160,7 @@ if (dojo.isAIR) {
 	
 				this._statusHandler = resultsHandler;
 
-				// try to store the value	
+				// try to store the value
 				try{
 					for(var i=0;i<keys.length;i++) {
 						this.put(keys[i], values[i], null, namespace);
@@ -185,7 +185,7 @@ if (dojo.isAIR) {
 				}
 				
 				if(namespace == null || typeof namespace == "undefined"){
-					namespace = this.DEFAULT_NAMESPACE;		
+					namespace = this.DEFAULT_NAMESPACE;
 				}
 				
 				if(this.isValidKey(namespace) == false){
@@ -205,7 +205,7 @@ if (dojo.isAIR) {
 				for(var i=0;i<keys.length;i++){
 					this.remove(keys[i], namespace);
 				}
-			}, 				
+			},
 			
 			isPermanent: function(){ return true; },
 

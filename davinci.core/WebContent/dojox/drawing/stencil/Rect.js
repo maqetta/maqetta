@@ -78,5 +78,5 @@ dojox.drawing.stencil.Rect = dojox.drawing.util.oo.declare(
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Rect"	
+	name:"dojox.drawing.stencil.Rect"
 }, "stencil");

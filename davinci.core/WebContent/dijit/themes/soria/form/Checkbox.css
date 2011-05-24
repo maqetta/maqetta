@@ -43,7 +43,7 @@
 .soria .dijitCheckBoxChecked,
 .soria .dijitToggleButtonChecked .dijitCheckBoxIcon {
 	/* checked */
-	background-position: 0px;
+	background-position: 0;
 }
 
 .soria .dijitCheckBoxDisabled {

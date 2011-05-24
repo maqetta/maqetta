@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.VerticalRule");
-
-dojo.require("dijit.form.HorizontalRule");
+define("dijit/form/VerticalRule", ["dojo", "dijit", "dijit/form/HorizontalRule"], function(dojo, dijit) {
 
 dojo.declare("dijit.form.VerticalRule", dijit.form.HorizontalRule,
 {
@@ -23,3 +21,6 @@ dojo.declare("dijit.form.VerticalRule", dijit.form.HorizontalRule,
 
 });
 
+
+return dijit.form.VerticalRule;
+});

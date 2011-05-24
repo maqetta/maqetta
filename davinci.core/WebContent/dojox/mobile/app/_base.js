@@ -2,7 +2,7 @@ dojo.provide("dojox.mobile.app._base");
 dojo.experimental("dojox.mobile.app._base");
 
 dojo.require("dijit._base");
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
 dojo.require("dojox.mobile");
 dojo.require("dojox.mobile.parser");
 
@@ -27,12 +27,12 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 		"dojox.mobile",
 		"dojox.mobile.parser"
 	];
-	
+
 	var loadedResources = {};
 	var loadingDependencies;
 
 	var rootNode;
-	
+
 	var sceneResources = [];
 
 	// Load the required resources asynchronously, since not all mobile OSes
@@ -43,10 +43,10 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 		//		the first scene is pushed onto the stack.
 		// resources:
 		//		An array of module names, e.g. 'dojox.mobile.AlertDialog'
-		
+
 		var resource;
 		var url;
-		
+
 		do {
 			resource = resources.pop();
 			if (resource.source) {
@@ -58,22 +58,19 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 				return;
 			}
 		}while (resources.length > 0 && loadedResources[url]);
-		
+
 		if(resources.length < 1 && loadedResources[url]){
-			console.log("All resources already loaded");
 			// All resources have already been loaded
 			callback();
 			return;
 		}
-		
-		console.log("loading url " + url);
-	
+
 		dojo.xhrGet({
 			url: url,
 			sync: false
 		}).addCallbacks(function(text){
 			dojo["eval"](text);
-	
+			loadedResources[url] = true;
 			if(resources.length > 0){
 				loadResources(resources, callback);
 			}else{
@@ -84,7 +81,7 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 			alert("Failed to load resource " + url);
 		});
 	}
-	
+
 	var pushFirstScene = function(){
 		// summary:
 		//		Pushes the first scene onto the stack.
@@ -98,8 +95,8 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 
 		// If the application info has been defined, as it should be,
 		// use it.
-		if(window["appInfo"]){
-			dojo.mixin(defaultInfo, window["appInfo"]);
+		if(dojo.global["appInfo"]){
+			dojo.mixin(defaultInfo, dojo.global["appInfo"]);
 		}
 		appInfo = dojox.mobile.app.info = defaultInfo;
 
@@ -111,38 +108,55 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 		}
 
 		stageController.pushScene(appInfo.initialScene);
-	}
+	};
+
+	var initBackButton = function(){
+		var hasNativeBack = false;
+		if(dojo.global.BackButton){
+			// Android phonegap support
+			BackButton.override();
+			dojo.connect(document, 'backKeyDown', function(e) {
+				dojo.publish("/dojox/mobile/app/goback");
+			});
+			hasNativeBack = true;
+		}else if(dojo.global.Mojo){
+			// TODO: add webOS support
+		}
+		if(hasNativeBack){
+			dojo.addClass(dojo.body(), "mblNativeBack");
+		}
+	};
 
 	dojo.mixin(dojox.mobile.app, {
 		init: function(node){
 			// summary:
 			//    Initializes the mobile app. Creates the
-	
+
 			rootNode = node || dojo.body();
-	
-//			loadingDependencies = dojo.clone(jsDependencies);
-//			loadResources(loadingDependencies, function(){dojox.mobile.app._pushFirstScene()});
-	
+			dojox.mobile.app.STAGE_CONTROLLER_ACTIVE = true;
+
 			dojo.subscribe("/dojox/mobile/app/goback", function(){
 				stageController.popScene();
 			});
-	
+
 			dojo.subscribe("/dojox/mobile/app/alert", function(params){
 				dojox.mobile.app.getActiveSceneController().showAlertDialog(params);
 			});
-			
+
+			dojo.subscribe("/dojox/mobile/app/pushScene", function(sceneName, params){
+				stageController.pushScene(sceneName, params || {});
+			});
+
 			// Get the list of files to load per scene/view
 			dojo.xhrGet({
 				url: "view-resources.json",
 				load: function(data){
 					var resources = [];
-					
+
 					if(data){
 						// Should be an array
 						sceneResources = data = dojo.fromJson(data);
-						
-						console.log("Got scene resources", sceneResources);
-						
+
 						// Get the list of files to load that have no scene
 						// specified, and therefore should be loaded on
 						// startup
@@ -153,38 +167,37 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 						}
 					}
 					if(resources.length > 0){
-						console.log("Loading initial resources");
 						loadResources(resources, pushFirstScene);
 					}else{
-						console.log("No initial resources");
 						pushFirstScene();
 					}
 				},
 				error: pushFirstScene
 			});
-//			pushFirstScene();
+
+			initBackButton();
 		},
-		
+
 		getActiveSceneController: function(){
 			// summary:
 			//		Gets the controller for the active scene.
 
 			return stageController.getActiveSceneController();
 		},
-	
+
 		getStageController: function(){
 			// summary:
 			//		Gets the stage controller.
 			return stageController;
 		},
-		
+
 		loadResources: function(resources, callback){
 			loadResources(resources, callback);
 		},
-		
+
 		loadResourcesForScene: function(sceneName, callback){
 			var resources = [];
-			
+
 			// Get the list of files to load that have no scene
 			// specified, and therefore should be loaded on
 			// startup
@@ -193,16 +206,14 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 					resources.push(sceneResources[i]);
 				}
 			}
-			
+
 			if(resources.length > 0){
-				console.log("Loading " + resources.length + " resources for" +
-								sceneName);
 				loadResources(resources, callback);
 			}else{
 				callback();
 			}
 		},
-	
+
 		resolveTemplate: function(sceneName){
 			// summary:
 			//		Given the name of a scene, returns the path to it's template
@@ -212,7 +223,7 @@ dojo.require("dojox.mobile.app.ImageThumbView");
 			//		a different name to file mapping.
 			return "app/views/" + sceneName + "/" + sceneName + "-scene.html";
 		},
-	
+
 		resolveAssistant: function(sceneName){
 			// summary:
 			//		Given the name of a scene, returns the path to it's assistant

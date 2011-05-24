@@ -1,7 +1,8 @@
-dojo.provide("dojo.gears");
+define("dojo/gears", ["dojo"], function(dojo) {
+dojo.getObject("gears", true, dojo);
 
 dojo.gears._gearsObject = function(){
-	// summary: 
+	// summary:
 	//		factory method to get a Google Gears plugin instance to
 	//		expose in the browser runtime environment, if present
 	var factory;
@@ -50,3 +51,6 @@ dojo.gears.available = {
 // so, make it available in the runtime environment
 // and in the Google standard 'google.gears' global object
 dojo.gears.available = (!!dojo.gears._gearsObject())||0;
+
+return dojo.gears;
+});

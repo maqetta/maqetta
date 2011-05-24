@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Tamanho",
 	fontName: "Tipo de letra",
@@ -9,6 +11,7 @@
 	cursive: "cursive",
 	fantasy: "fantasy",
 
+	noFormat: "Nenhum",
 	p: "Parágrafo",
 	h1: "Título",
 	h2: "Sub-título",
@@ -23,3 +26,5 @@
 	6: "xl",
 	7: "xxl"
 })
+//end v1.x content
+);

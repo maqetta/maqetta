@@ -5,6 +5,7 @@ blueLabel: "m",
 hueLabel: "o",
 saturationLabel: "n",
 valueLabel: "j", /* aka intensity or brightness */
-hexLabel: "hex"
+huePickerTitle: "Selektor odstínu",
+saturationPickerTitle: "Selektor sytosti"
 })
 

@@ -79,7 +79,24 @@
 						]);
 						t.t(ph._replaced);
 						t.is(4, m2.getChildren().length);
-					}
+					},
+					function test_destroyRecursive(t){
+						var menu = new dijit.Menu(),
+							ph = new dojox.widget.PlaceholderMenuItem(),
+							subMenu = new dijit.Menu();
+						menu.addChild(ph);
+						t.f(ph._replaced, "ph._replaced 1");
+						ph.replace([
+							new dijit.PopupMenuItem({label: "Popup 1", popup: subMenu})
+						]);
+						t.t(ph._replaced, "ph._replaced 2");
+						ph.unReplace(true);
+						t.f(ph._replaced, "ph._replaced 3");
+						// subMenu is destroyed iff the Placeholder called
+						// destroyRecursive on the PopupMenuItem instead of just
+						// destroy.
+						t.t(subMenu._destroyed, "subMenu._destroyed");
+					} 
 				]
 			);
 			doh.run();

@@ -1,4 +1,6 @@
-dojo.provide("dojox.encoding.easy64");
+// AMD-ID "dojox/encoding/easy64"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("encoding.easy64", true, dojox);
 
 (function(){
 	var c = function(input, length, result){
@@ -11,7 +13,7 @@ dojo.provide("dojox.encoding.easy64");
 			);
 		}
 	};
-	
+
 	dojox.encoding.easy64.encode = function(input){
 		// summary: encodes input data in easy64 string
 		// input: Array: an array of numbers (0-255) to encode
@@ -44,3 +46,7 @@ dojo.provide("dojox.encoding.easy64");
 		return r;
 	};
 })();
+
+
+return dojox.encoding.easy64;
+});

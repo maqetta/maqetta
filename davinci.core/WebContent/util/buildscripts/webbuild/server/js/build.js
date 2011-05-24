@@ -84,7 +84,7 @@ build = {
 		//"1.1.1" or "1.3.2": used to choose directory of dojo to use.
 		/*String*/version,
 		
-		//"google" or "aol" 
+		//"google" or "aol"
 		/*String*/cdnType,
 		
 		//comma-separated list of resource names. No double-quotes or quotes around values.
@@ -117,7 +117,7 @@ build = {
 		xdDojoPath += version;
 
 		//Directory that holds dojo source distro. Direct child under the helma dir
-		var dojoDir = builderPath + version + "/"; 
+		var dojoDir = builderPath + version + "/";
 		
 		//Normalize the dependencies so that have double-quotes
 		//around each dependency.

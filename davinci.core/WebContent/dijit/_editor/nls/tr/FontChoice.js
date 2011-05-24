@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Boyut",
 	fontName: "Yazı Tipi",
@@ -9,6 +11,7 @@
 	cursive: "el yazısı",
 	fantasy: "fantazi",
 
+	noFormat: "Yok",
 	p: "Paragraf",
 	h1: "Başlık",
 	h2: "Alt Başlık",
@@ -23,3 +26,5 @@
 	6: "x-büyük",
 	7: "xx-büyük"
 })
+//end v1.x content
+);

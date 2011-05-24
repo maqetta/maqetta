@@ -12,8 +12,9 @@
 			background-color: darkblue;
 			width: 250px;
 			height: 250px;
+			border-radius: 15px;
 			-moz-border-radius: 15px 15px 15px 15px; 
-			-webkit-border-radius: 15px;"        
+			-webkit-border-radius: 15px;"
 		}
 	</style>
 	
@@ -148,8 +149,8 @@
 			var overlay18= dijit.byId("standby18");
 			connects.push(dojo.connect(button35, "onClick", function(){
 				showCount++;
-				console.log(overlay18.attr("text"));
-				overlay18.attr("text", "Shown: " + showCount);
+				console.log(overlay18.get("text"));
+				overlay18.set("text", "Shown: " + showCount);
 				overlay18.show()}));
 			connects.push(dojo.connect(button36, "onClick", function(){overlay18.hide()}));
 
@@ -159,8 +160,8 @@
 			var button38 = dijit.byId("overlay19Button2");
 			var overlay19= dijit.byId("standby19");
 			connects.push(dojo.connect(button37, "onClick", function(){
-				console.log(overlay19.attr("color"));
-				overlay19.attr("color", colors[cPos]);
+				console.log(overlay19.get("color"));
+				overlay19.set("color", colors[cPos]);
 				cPos++;
 				if(cPos === colors.length - 1){
 					cPos = 0;
@@ -268,7 +269,7 @@
 	<button id ="overlay6Button1" dojoType="dijit.form.Button">Click to show the standby overlay</button>
 	<br>
 	<button id ="overlay6Button2" dojoType="dijit.form.Button">Click to hide the standby overlay</button>
-	<div id ="overlayTarget6" style="width: 200px; height: 100px; background-color: darkblue; -moz-border-radius: 15px; -webkit-border-radius: 15px;"></div>
+	<div id ="overlayTarget6" style="width: 200px; height: 100px; background-color: darkblue; border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;"></div>
 	<div id ="standby6" target="overlayTarget6" dojoType="dojox.widget.Standby"></div>
 	<hr>
 
@@ -276,7 +277,7 @@
 	<button id ="overlay7Button1" dojoType="dijit.form.Button">Click to show the standby overlay</button>
 	<br>
 	<button id ="overlay7Button2" dojoType="dijit.form.Button">Click to hide the standby overlay</button>
-	<div id ="overlayTarget7" style="width: 200px; height: 100px; background-color: darkblue; -moz-border-radius: 15px; -webkit-border-radius: 15px; margin: auto"></div>
+	<div id ="overlayTarget7" style="width: 200px; height: 100px; background-color: darkblue; border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px; margin: auto"></div>
 	<div id ="standby7" target="overlayTarget7" dojoType="dojox.widget.Standby" color="lightblue"></div>
 	<hr>
 

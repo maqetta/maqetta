@@ -18,6 +18,7 @@
 	right: "derecha",
 	buttonSet: "Establecer", // translated elsewhere?
 	buttonInsert: "Insertar",
+	buttonCancel: "Cancelar",
 
 	selectTableLabel: "Seleccionar tabla",
 	insertTableRowBeforeLabel: "Añadir fila antes",
@@ -27,4 +28,5 @@
 	deleteTableRowLabel: "Suprimir fila",
 	deleteTableColumnLabel: "Suprimir columna"
 })
+	
 

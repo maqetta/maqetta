@@ -1,11 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Inline Edit Box Test</title>
 
 		<style type="text/css">
-			@import "../../dojo/resources/dojo.css";
+			@import "../themes/claro/document.css";
 			@import "css/dijitTests.css";
 
 			.inlineEdit { background-color: #CCC76A; }
@@ -17,11 +17,11 @@
 		</style>
 
 		<!-- required: a default dijit theme: -->
-		<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+		<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
 
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../dojo/dojo.js"
-			djConfig="parseOnLoad: true, isDebug: true"></script>
+			data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 		<!-- not needed, for testing alternate themes -->
 		<script type="text/javascript" src="_testCommon.js"></script>
@@ -44,29 +44,18 @@
 
 			dojo.require("dojo.parser");	  // scan page for widgets and instantiate them
 
-			function myHandler(id,newValue){
-				console.debug("onChange for id = " + id + ", value: " + newValue);
-			};
-			/*
-			dojo.addOnLoad(function(){
-				dojo.subscribe("widgetFocus", function(widget){
-					console.log("focused on widget " + (widget?widget:"nothing"));
-				});
-				dojo.subscribe("widgetBlur", function(widget){
-					console.log("blurred widget " + (widget?widget:"nothing"));
-				});
-				dojo.subscribe("focusNode", function(node){ console.log("focused on node " + (node?(node.id||node.tagName):"nothing"));});
-			});
-			*/
+			function myHandler(newValue){
+				this._onChangeValue = newValue;	// used by robot test file
+				console.debug("onChange for id = " + this.id + ", value: " + newValue);
+			}
 		</script>
 	</head>
 	<body class="claro">
 
 		<h1 class="testTitle">Dijit InlineEditBox Test</h1>
 
-		<span dojoType="dojo.data.ItemFileReadStore" jsId="stateStore"
-			url="_data/states.json"></span>
-		<span dojoType="dojo.data.ItemFileReadStore" jsId="productStore">
+		<span data-dojo-id="stateStore" data-dojo-type="dojo.data.ItemFileReadStore" data-dojo-props='url:"_data/states.json"'></span>
+		<span data-dojo-id="productStore" data-dojo-type="dojo.data.ItemFileReadStore" >
 			<script type="dojo/method">
 				this._jsonData =
 					{ identifier: 'name',
@@ -82,50 +71,50 @@
 
 		<h2>Form Letter with blanks</h2>
 		<div class="letter">
-			<h3 id="editable" dojoType="dijit.InlineEditBox" onChange="myHandler(this.id,arguments[0])" autoSave="true" title="company name"></h3>
+			<h3 id="editable" data-dojo-type="dijit.InlineEditBox" data-dojo-props='value:"markup value", onChange:myHandler, autoSave:true, title:"company name"'></h3>
 			<p>
-				Dear <span id="MrSmith" dojoType="dijit.InlineEditBox" width="200px" title="recipient name"></span>,
+				Dear <span id="MrSmith" data-dojo-type="dijit.InlineEditBox" data-dojo-props='width:"200px", title:"recipient name"'></span>,
 			</p>
 			<p class="letter">
 				Thank you for your recent order.
 				Please remit
-				<span id="dollar_as" dojoType="dijit.InlineEditBox" editor="dijit.form.CurrencyTextBox" editorParams="{currency: 'USD'}" width="100px" title="dollar amount"></span>&nbsp;for
+				<span id="dollar_as" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.CurrencyTextBox", editorParams:{currency: "USD"}, width:"100px", title:"dollar amount"'></span>&nbsp;for
 				your purchase of
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.NumberSpinner" editorParams="{constraints: {places:0} }" width="70px" title="quantity"></span>&nbsp;deluxe
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.ComboBox" title="item name"
-					editorParams="{searchAttr: 'name', store: productStore, autocomplete: false, hasDownArrow: false}"
-					 width="200px"></span>&nbsp;on
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="200px" title="purchase date as mm/dd/yy"></span>&nbsp;in
-				<span dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
-					editorParams="{searchAttr: 'name', keyAttr: 'abbreviation', store: stateStore, autocomplete: true, hasDownArrow: true}"
-					 width="200px" title="state of purchase"></span>.
+				<span data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.NumberSpinner", editorParams:{constraints: {places:0} }, width:"70px", title:"quantity"'></span>&nbsp;deluxe
+				<span data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.ComboBox", title:"item name",
+					editorParams:{searchAttr: "name", store: productStore, autocomplete: false, hasDownArrow: false},
+					 width:"200px"'></span>&nbsp;on
+				<span data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.DateTextBox", width:"200px", title:"purchase date as mm/dd/yy"'></span>&nbsp;in
+				<span data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.FilteringSelect",
+					editorParams:{searchAttr: "name", keyAttr: "abbreviation", store: stateStore, autocomplete: true, hasDownArrow: true},
+					 width:"200px", title:"state of purchase"'></span>.
 			</p>
-			<p id="textarea" dojoType="dijit.InlineEditBox" autoSave="true" editor="dijit.form.Textarea" title="additional details"></p>
+			<p id="textarea" data-dojo-type="dijit.InlineEditBox" data-dojo-props='autoSave:true, editor:"dijit.form.Textarea", title:"additional details"'></p>
 			<p>
 				Sincerely,
 			</p>
-			<span  style="margin-left: 2em; font-family: cursive;" dojoType="dijit.InlineEditBox" width="400px" title="sender name"                                                                           ></span>
+			<span data-dojo-type="dijit.InlineEditBox" data-dojo-props='style:"margin-left: 2em; font-family: cursive;", width:"400px", title:"sender name"                                                                           '></span>
 		</div>
-		<hr style="margin-bottom: 1em;">
+		<hr style="margin-bottom: 1em;"/>
 
 		<h2>Form Letter with <span id="predefined">predefined values</span>, and no auto-save</h2>
 		<div class="letter">
-			<h3 id="editable2" dojoType="dijit.InlineEditBox" onChange="myHandler(this.id,arguments[0])" autoSave="false" title="company name">
+			<h3 id="editable2" data-dojo-type="dijit.InlineEditBox" data-dojo-props='onChange:myHandler, autoSave:false, title:"company name"'>
 				Bob Vance Refrigeration
 			</h3>
 			<p>
-				Dear <span dojoType="dijit.InlineEditBox" width="200px" autoSave="false" title="recipient name">John</span>,
+				Dear <span data-dojo-type="dijit.InlineEditBox" data-dojo-props='width:"200px", autoSave:false, title:"recipient name"'>John</span>,
 			</p>
 			<p class="letter">
 				Thank you for your recent order.
 				Please remit
-				<span id="dollar" dojoType="dijit.InlineEditBox" editor="dijit.form.CurrencyTextBox" editorParams="{currency: 'USD'}" width="100px" autoSave="false" title="dollar amount">$2,000</span>
+				<span id="dollar" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.CurrencyTextBox", editorParams:{currency: "USD"}, width:"100px", autoSave:false, title:"dollar amount"'>$2,000</span>
 				for your purchase of
-				<span id="quantity" dojoType="dijit.InlineEditBox" editor="dijit.form.NumberSpinner" editorParams="{constraints: {places:0} }" width="70px" autoSave="false" title="quantity">3</span>
+				<span id="quantity" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.NumberSpinner", editorParams:{constraints: {places:0} }, width:"70px", autoSave:false, title:"quantity"'>3</span>
 				deluxe
-				<span id="item" dojoType="dijit.InlineEditBox" editor="dijit.form.ComboBox"
-					editorParams="{searchAttr: 'name', store: productStore, autocomplete: false, hasDownArrow: false}"
-					 width="200px" autoSave="false" title="item name">refrigerators</span>
+				<span id="item" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.ComboBox",
+					editorParams:{searchAttr: "name", store: productStore, autocomplete: false, hasDownArrow: false},
+					 width:"200px", autoSave:false, title:"item name"'>refrigerators</span>
 				on
 				<!--
 					normally the server is in charge of formatting the displayed date pattern (01/05/2007) below
@@ -133,25 +122,25 @@
 					but since this test is static HTML, we instead hardcode the displayed value and use editorParams
 					to tell DateTextBox to expect that pattern regardless of the machine's locale
 				-->
-				<span id="purchase" dojoType="dijit.InlineEditBox"
-					editor="dijit.form.DateTextBox" editorParams="{constraints: {datePattern: 'MM/dd/yyyy'}}"
-					width="200px" autoSave="false" title="purchase date as mm/dd/yy">01/05/2007</span>
+				<span id="purchase" data-dojo-type="dijit.InlineEditBox"
+					data-dojo-props='editor:"dijit.form.DateTextBox", editorParams:{constraints: {datePattern: "MM/dd/yyyy"}},
+					width:"200px", autoSave:false, title:"purchase date as mm/dd/yy"'>01/05/2007</span>
 				in
-				<span id="state" dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
-					editorParams="{searchAttr: 'name', keyAttr: 'abbreviation', store: stateStore, autocomplete: true, hasDownArrow: false}"
-					 width="200px" autoSave="false" title="state of purchase">
+				<span id="state" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.FilteringSelect",
+					editorParams:{searchAttr: "name", keyAttr: "abbreviation", store: stateStore, autocomplete: true, hasDownArrow: false},
+					 width:"200px", autoSave:false, title:"state of purchase"'>
 					 Pennsylvania
 				</span>.
 			</p>
-			<p dojoType="dijit.InlineEditBox" autoSave="false" editor="dijit.form.Textarea" title="additional details">
+			<p data-dojo-type="dijit.InlineEditBox" data-dojo-props='autoSave:false, editor:"dijit.form.Textarea", title:"additional details"'>
 				We sincerely appreciate your business and hope we can do business again.
 			</p>
 			<p>
 				Sincerely,
 			</p>
-			<span  style="margin-left: 2em; font-family: cursive;" dojoType="dijit.InlineEditBox" width="400px" autoSave="false" title="sender name">Bob Vance</span>
+			<span data-dojo-type="dijit.InlineEditBox" data-dojo-props='style:"margin-left: 2em; font-family: cursive;", width:"400px", autoSave:false, title:"sender name"'>Bob Vance</span>
 		</div>
-		<hr style="margin-bottom: 1em;">
+		<hr style="margin-bottom: 1em;"/>
 
 
 		<h2>Inline-block Text (of 400px width)</h2>
@@ -162,11 +151,11 @@
 		(before plain inline) <fieldset class="dijitInline"><div style="width: 400px;">hello world</div></fieldset> (after plain inline)
 		<br>
 		(before editable inline)
-		<fieldset class="dijitInline"><div dojoType="dijit.InlineEditBox" onChange="myHandler(this.id,arguments[0])" width="400px" style="width: 400px;">
+		<fieldset class="dijitInline"><div data-dojo-type="dijit.InlineEditBox" data-dojo-props='onChange:myHandler, width:"400px", style:"width: 400px;"'>
 			hello world
 		</div></fieldset>
 		(after editable inline)
-		<hr style="width:100%;">
+		<hr style="width:100%;"/>
 
 		<h2>Pararagraph</h2>
 		(before plain paragraph)
@@ -185,7 +174,7 @@ pulvinar in, consequat ut, leo. Nullam nec est. Aenean id risus blandit
 tortor pharetra congue. Suspendisse pulvinar.
 		</p>
 		(before editable paragraph.  the editable paragraph has Save/Cancel buttons when open.)
-		<p id="areaEditable" dojoType="dijit.InlineEditBox" autoSave="false" editor="dijit.form.Textarea">
+		<p id="areaEditable" data-dojo-type="dijit.InlineEditBox" data-dojo-props='autoSave:false, editor:"dijit.form.Textarea"'>
 			Aliquam vitae enim. Duis scelerisque metus auctor est venenatis
 imperdiet. Fusce dignissim porta augue. Nulla vestibulum. Integer lorem
 nunc, ullamcorper a, commodo ac, malesuada sed, dolor. Aenean id mi in
@@ -203,14 +192,14 @@ tortor pharetra congue. Suspendisse pulvinar.
 		<button onClick="dijit.byId('areaEditable').set('disabled', true)">disable</button> /
 		<button onClick="dijit.byId('areaEditable').set('disabled', false)">enable</button>
 		the InlineEditBox above.
-		<hr style="width:100%;">
+		<hr style="width:100%;"/>
 
 		<h2>Editor</h2>
-		<div id="inlineRTE" dojoType="dijit.InlineEditBox" editor="dijit.Editor"
-			autoSave="false" renderAsHtml="true"
-			editorParams="{height: '', extraPlugins: ['dijit._editor.plugins.AlwaysShowToolbar']}">
+		<div id="inlineRTE" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.Editor",
+			autoSave:false, renderAsHtml:true,
+			editorParams:{height: "", extraPlugins: ["dijit._editor.plugins.AlwaysShowToolbar"]}'>
 			<b>Aliquam</b> vitae enim. <i>Duis</i> scelerisque metus auctor est venenatis
-imperdiet. <u>Fusce</u> dignissim porta augue. Nulla vestibulum. Integer lorem
+imperdiet. <span style="text-decoration: underline;"> Fusce</span> dignissim porta augue. Nulla vestibulum. Integer lorem
 nunc, ullamcorper a, commodo ac, malesuada sed, dolor. Aenean id mi in
 massa bibendum suscipit. Integer eros. Nullam suscipit mauris. In
 pellentesque. Mauris ipsum est, pharetra semper, pharetra in, viverra
@@ -230,31 +219,31 @@ tortor pharetra congue. Suspendisse pulvinar.
 
 		<h2>FilteringSelect (no down arrow, and save/cancel buttons):</h2>
 		before
-		<span id="filteringSelect2" dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
-			editorParams="{searchAttr: 'name', keyAttr: 'abbreviation', store: stateStore, autocomplete: true, hasDownArrow: false}"
-			 width="200px" autoSave="false">
+		<span id="filteringSelect2" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.FilteringSelect",
+			editorParams:{searchAttr: "name", keyAttr: "abbreviation", store: stateStore, autocomplete: true, hasDownArrow: false},
+			 width:"200px", autoSave:false'>
 			Indiana
 		</span>
 		<button onclick="dijit.byId('filteringSelect2').edit();return false;">Edit previous value</button>
 		after
-		<hr style="width:100%;">
+		<hr style="width:100%;"/>
 
 		<h2>Programmatically created:</h2>
 		before block<div style="display:block;" id="programmatic">Click here to edit a block programmatically created inline edit region</div>after
 		<script type="text/javascript">
 			// See if we can make a widget in script
 			dojo.addOnLoad(function(){
-				var inlineWidget = new dijit.InlineEditBox({renderAsHtml: true}, 'programmatic');
+				var inlineWidget = new dijit.InlineEditBox({ renderAsHtml: true, onChange:myHandler }, 'programmatic');
  			});
 		</script>
-		<hr style="width:100%;">
+		<hr style="width:100%;"/>
 		<h2>Complex renderAsHtml="false"</h2>
-		<div id="renderAsHtml_false" dojoType="dijit.InlineEditBox" renderAsHtml="false" width="400px" style="width:400px;">
+		<div id="renderAsHtml_false" data-dojo-type="dijit.InlineEditBox" data-dojo-props='renderAsHtml:false, width:"400px", style:"width:400px;"'>
 			&lt;B&gt;not bold&lt;/B&gt;&amp;lt;input&amp;gt;
 		</div>
-		<hr style="width:100%;">
+		<hr style="width:100%;"/>
 		<h2>Complex renderAsHtml="true"</h2>
-		<div id="renderAsHtml_true" dojoType="dijit.InlineEditBox" renderAsHtml="true" width="400px" style="width:400px;">
+		<div id="renderAsHtml_true" data-dojo-type="dijit.InlineEditBox" data-dojo-props='renderAsHtml:true, width:"400px", style:"width:400px;"'>
 			&lt;B&gt;not bold&lt;/B&gt;<B>bold</B>&amp;lt;input&amp;gt;
 		</div>
 	</body>

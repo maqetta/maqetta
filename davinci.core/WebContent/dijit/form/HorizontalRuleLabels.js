@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.HorizontalRuleLabels");
-
-dojo.require("dijit.form.HorizontalRule");
+define("dijit/form/HorizontalRuleLabels", ["dojo", "dijit", "dijit/form/HorizontalRule"], function(dojo, dijit) {
 
 dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule,
 {
@@ -86,3 +84,5 @@ dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule,
 });
 
 
+return dijit.form.HorizontalRuleLabels;
+});

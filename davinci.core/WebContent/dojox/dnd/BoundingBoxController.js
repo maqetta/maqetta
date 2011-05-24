@@ -6,7 +6,7 @@ dojo.declare(
 	{
 		// summary: Allows the user draw bounding boxes around nodes on the page.
 		// Publishes to the "/dojox/dnd/bounding" topic to tell the selector to check
-		// to see whether any dnd items fall within the coordinates of the bounding box 
+		// to see whether any dnd items fall within the coordinates of the bounding box
 		
 		// x,y start and end coordinates for the bounding box
 		_startX: null,

@@ -67,10 +67,12 @@
 
 <script>
     
-    dojo.require("dojox.charting.Chart2D");
+    dojo.require("dojox.charting.Chart");
     dojo.require("dojox.charting.DataSeries");
     dojo.require("dojox.charting.themes.ThreeD");
     dojo.require("dojox.charting.widget.Legend");
+
+    dojo.require("dojox.charting.axis2d.Default");
     
     dojo.require("dojox.charting.plot2d.Markers");
     dojo.require("dojox.charting.plot2d.Columns");
@@ -113,7 +115,7 @@
     var chartL, chartC, chartP;
     
     makeCharts = function(){
-        chartL = new dojox.charting.Chart2D("lines").
+        chartL = new dojox.charting.Chart("lines").
                 setTheme(dojox.charting.themes.ThreeD).
                 addAxis("x", {fixLower: "major", fixUpper: "major", natural: true, majorTickStep: 5}).
                 addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true}).
@@ -125,7 +127,7 @@
         new dojox.charting.action2d.Magnify(chartL);
         new dojox.charting.action2d.Tooltip(chartL);
 
-        chartC = new dojox.charting.Chart2D("cols").
+        chartC = new dojox.charting.Chart("cols").
                 setTheme(dojox.charting.themes.ThreeD).
                 addAxis("x", {natural: true}).
                 addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true}).
@@ -141,7 +143,7 @@
         new dojox.charting.action2d.Shake(chartC, "default", {shiftY: 0});
         new dojox.charting.action2d.Tooltip(chartC);
         
-        chartP = new dojox.charting.Chart2D("pie").
+        chartP = new dojox.charting.Chart("pie").
                 setTheme(dojox.charting.themes.ThreeD).
                 addPlot("default", {type: dojox.charting.plot2d.Pie, radius: 125}).
                 addSeries("Price", new dojox.charting.DataSeries(

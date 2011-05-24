@@ -1,9 +1,9 @@
 dojo.provide("dojox.mobile.app._Widget");
 dojo.experimental("dojox.mobile.app._Widget");
 
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
 
-dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
+dojo.declare("dojox.mobile.app._Widget", dijit._WidgetBase, {
 	// summary:
 	//		The base mobile app widget.
 
@@ -11,8 +11,8 @@ dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
 		// summary:
 		//		Returns the scroll position.
 		return {
-			x: window.scrollX,
-			y: window.scrollY
+			x: dojo.global.scrollX,
+			y: dojo.global.scrollY
 		};
 	},
 
@@ -20,7 +20,7 @@ dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
 		if(event.toLowerCase() == "dblclick"
 			|| event.toLowerCase() == "ondblclick"){
 
-			if(window["Mojo"]){
+			if(dojo.global["Mojo"]){
 				// Handle webOS tap event
 				return this.connect(target, Mojo.Event.tap, fn);
 			}

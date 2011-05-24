@@ -11,72 +11,72 @@ dojox.flash = function(){
 	// description:
 	//	The goal of dojox.flash is to make it easy to extend Flash's capabilities
 	//	into an Ajax/DHTML environment.
-	//  
-	//	dojox.flash provides an easy object for interacting with the Flash plugin. 
+	//
+	//	dojox.flash provides an easy object for interacting with the Flash plugin.
 	//	This object provides methods to determine the current version of the Flash
-	//	plugin (dojox.flash.info); write out the necessary markup to 
-	//	dynamically insert a Flash object into the page (dojox.flash.Embed; and 
-	//	do dynamic installation and upgrading of the current Flash plugin in 
+	//	plugin (dojox.flash.info); write out the necessary markup to
+	//	dynamically insert a Flash object into the page (dojox.flash.Embed; and
+	//	do dynamic installation and upgrading of the current Flash plugin in
 	//	use (dojox.flash.Install). If you want to call methods on the Flash object
 	//	embedded into the page it is your responsibility to use Flash's ExternalInterface
 	//	API and get a reference to the Flash object yourself.
-	//		
-	//	To use dojox.flash, you must first wait until Flash is finished loading 
-	//	and initializing before you attempt communication or interaction. 
+	//
+	//	To use dojox.flash, you must first wait until Flash is finished loading
+	//	and initializing before you attempt communication or interaction.
 	//	To know when Flash is finished use dojo.connect:
-	//		
+	//
 	//|	dojo.connect(dojox.flash, "loaded", myInstance, "myCallback");
-	//		
+	//
 	//	Then, while the page is still loading provide the file name:
-	//		
+	//
 	//|	dojox.flash.setSwf(dojo.moduleUrl("dojox", "_storage/storage.swf"));
-	//			
+	//
 	//	If no SWF files are specified, then Flash is not initialized.
-	//		
+	//
 	//	Your Flash must use Flash's ExternalInterface to expose Flash methods and
 	//	to call JavaScript.
-	//		
+	//
 	//	setSwf can take an optional 'visible' attribute to control whether
 	//	the Flash object is visible or not on the page; the default is visible:
-	//		
+	//
 	//|	dojox.flash.setSwf(dojo.moduleUrl("dojox", "_storage/storage.swf"),
 	//						false);
-	//		
+	//
 	//	Once finished, you can query Flash version information:
-	//		
+	//
 	//|	dojox.flash.info.version
-	//		
-	//	Or can communicate with Flash methods that were exposed:	
+	//
+	//	Or can communicate with Flash methods that were exposed:
 	//
 	//|	var f = dojox.flash.get();
-	//|	var results = f.sayHello("Some Message");	
-	// 
+	//|	var results = f.sayHello("Some Message");
+	//
 	//	Your Flash files should use DojoExternalInterface.as to register methods;
 	//	this file wraps Flash's normal ExternalInterface but correct various
 	//	serialization bugs that ExternalInterface has.
 	//
 	//	Note that dojox.flash is not meant to be a generic Flash embedding
 	//	mechanism; it is as generic as necessary to make Dojo Storage's
-	//	Flash Storage Provider as clean and modular as possible. If you want 
+	//	Flash Storage Provider as clean and modular as possible. If you want
 	//	a generic Flash embed mechanism see [SWFObject](http://blog.deconcept.com/swfobject/).
 	//
 	// 	Notes:
 	//	Note that dojox.flash can currently only work with one Flash object
 	//	on the page; it does not yet support multiple Flash objects on
-	//	the same page. 
-	//		
+	//	the same page.
+	//
 	//	Your code can detect whether the Flash player is installing or having
 	//	its version revved in two ways. First, if dojox.flash detects that
 	//	Flash installation needs to occur, it sets dojox.flash.info.installing
 	//	to true. Second, you can detect if installation is necessary with the
 	//	following callback:
-	//		
+	//
 	//|	dojo.connect(dojox.flash, "installing", myInstance, "myCallback");
-	//		
+	//
 	//	You can use this callback to delay further actions that might need Flash;
 	//	when installation is finished the full page will be refreshed and the
 	//	user will be placed back on your page with Flash installed.
-	//		
+	//
 	//	-------------------
 	//	Todo/Known Issues
 	//	-------------------
@@ -89,7 +89,7 @@ dojox.flash = function(){
 	//	to initialize the dojox.flash subsystem.
 	//	* Things aren't super tested for sending complex objects to Flash
 	//	methods, since Dojo Storage only needs strings
-	//		
+	//
 	//	Author- Brad Neuberg, http://codinginparadise.org
 }
 
@@ -106,7 +106,7 @@ dojox.flash = {
 		// url: String
 		//	The URL to this Flash file.
 		// visible: boolean?
-		//	Whether the Flash file is visible or not. If it is not visible we hide 
+		//	Whether the Flash file is visible or not. If it is not visible we hide
 		//	it off the screen. This defaults to true (i.e. the Flash file is
 		//	visible).
 		this.url = url;
@@ -116,13 +116,13 @@ dojox.flash = {
 			this._visible = visible;
 		}
 		
-		// initialize ourselves		
+		// initialize ourselves
 		this._initialize();
 	},
 	
 	addLoadedListener: function(/* Function */ listener){
 		// summary:
-		//	Adds a listener to know when Flash is finished loading. 
+		//	Adds a listener to know when Flash is finished loading.
 		//	Useful if you don't want a dependency on dojo.event.
 		// listener: Function
 		//	A function that will be called when Flash is done loading.
@@ -132,21 +132,21 @@ dojox.flash = {
 
 	addInstallingListener: function(/* Function */ listener){
 		// summary:
-		//	Adds a listener to know if Flash is being installed. 
+		//	Adds a listener to know if Flash is being installed.
 		//	Useful if you don't want a dependency on dojo.event.
 		// listener: Function
 		//	A function that will be called if Flash is being
 		//	installed
 		
 		this._installingListeners.push(listener);
-	},	
+	},
 	
 	loaded: function(){
 		// summary: Called back when the Flash subsystem is finished loading.
 		// description:
 		//	A callback when the Flash subsystem is finished loading and can be
 		//	worked with. To be notified when Flash is finished loading, add a
-		//  loaded listener: 
+		//  loaded listener:
 		//
 		//  dojox.flash.addLoadedListener(loadedListener);
 	
@@ -164,7 +164,7 @@ dojox.flash = {
 		//	A callback to know if Flash is currently being installed or
 		//	having its version revved. To be notified if Flash is installing, connect
 		//	your callback to this method using the following:
-		//	
+		//
 		//	dojo.event.connect(dojox.flash, "installing", myInstance, "myCallback");
 		
 		if(dojox.flash._installingListeners.length){ // FIXME: redundant if? use forEach?
@@ -181,7 +181,7 @@ dojox.flash = {
 		var installer = new dojox.flash.Install();
 		dojox.flash.installer = installer;
 
-		if(installer.needed()){		
+		if(installer.needed()){
 			installer.install();
 		}else{
 			// write the flash object into the page
@@ -201,9 +201,9 @@ dojox.flash.Info = function(){
 	//	A class that helps us determine whether Flash is available,
 	//	it's major and minor versions, and what Flash version features should
 	//	be used for Flash/JavaScript communication. Parts of this code
-	//	are adapted from the automatic Flash plugin detection code autogenerated 
-	//	by the Macromedia Flash 8 authoring environment. 
-	//	
+	//	are adapted from the automatic Flash plugin detection code autogenerated
+	//	by the Macromedia Flash 8 authoring environment.
+	//
 	//	An instance of this class can be accessed on dojox.flash.info after
 	//	the page is finished loading.
 
@@ -218,7 +218,7 @@ dojox.flash.Info.prototype = {
 	// versionMajor, versionMinor, versionRevision: String
 	//		The major, minor, and revisions of the plugin. For example, if the
 	//		plugin is 8r22, then the major version is 8, the minor version is 0,
-	//		and the revision is 22. 
+	//		and the revision is 22.
 	versionMajor: -1,
 	versionMinor: -1,
 	versionRevision: -1,
@@ -232,18 +232,18 @@ dojox.flash.Info.prototype = {
 	installing: false,
 	
 	isVersionOrAbove: function(
-							/* int */ reqMajorVer, 
-							/* int */ reqMinorVer, 
+							/* int */ reqMajorVer,
+							/* int */ reqMinorVer,
 							/* int */ reqVer){ /* Boolean */
-		// summary: 
+		// summary:
 		//	Asserts that this environment has the given major, minor, and revision
 		//	numbers for the Flash player.
 		// description:
 		//	Asserts that this environment has the given major, minor, and revision
-		//	numbers for the Flash player. 
-		//	
+		//	numbers for the Flash player.
+		//
 		//	Example- To test for Flash Player 7r14:
-		//	
+		//
 		//	dojox.flash.info.isVersionOrAbove(7, 0, 14)
 		// returns:
 		//	Returns true if the player is equal
@@ -264,13 +264,13 @@ dojox.flash.Info.prototype = {
 	_detectVersion: function(){
 		var versionStr;
 		
-		// loop backwards through the versions until we find the newest version	
+		// loop backwards through the versions until we find the newest version
 		for(var testVersion = 25; testVersion > 0; testVersion--){
 			if(dojo.isIE){
 				var axo;
 				try{
 					if(testVersion > 6){
-						axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash." 
+						axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash."
 																		+ testVersion);
 					}else{
 						axo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
@@ -285,11 +285,11 @@ dojox.flash.Info.prototype = {
 					continue;
 				}
 			}else{
-				versionStr = this._JSFlashInfo(testVersion);		
+				versionStr = this._JSFlashInfo(testVersion);
 			}
 				
 			if(versionStr == -1 ){
-				this.capable = false; 
+				this.capable = false;
 				return;
 			}else if(versionStr != 0){
 				var versionArray;
@@ -316,13 +316,13 @@ dojox.flash.Info.prototype = {
 		}
 	},
 	 
-	// JavaScript helper required to detect Flash Player PlugIn version 
+	// JavaScript helper required to detect Flash Player PlugIn version
 	// information. Internet Explorer uses a corresponding Visual Basic
-	// version to interact with the Flash ActiveX control. 
+	// version to interact with the Flash ActiveX control.
 	_JSFlashInfo: function(testVersion){
 		// NS/Opera version >= 3 check for Flash plugin in plugin array
 		if(navigator.plugins != null && navigator.plugins.length > 0){
-			if(navigator.plugins["Shockwave Flash 2.0"] || 
+			if(navigator.plugins["Shockwave Flash 2.0"] ||
 				 navigator.plugins["Shockwave Flash"]){
 				var swVer2 = navigator.plugins["Shockwave Flash 2.0"] ? " 2.0" : "";
 				var flashDescription = navigator.plugins["Shockwave Flash" + swVer2].description;
@@ -355,11 +355,11 @@ dojox.flash.Embed = function(visible){
 dojox.flash.Embed.prototype = {
 	// width: int
 	//	The width of this Flash applet. The default is the minimal width
-	//	necessary to show the Flash settings dialog. Current value is 
+	//	necessary to show the Flash settings dialog. Current value is
 	//  215 pixels.
 	width: 215,
 	
-	// height: int 
+	// height: int
 	//	The height of this Flash applet. The default is the minimal height
 	//	necessary to show the Flash settings dialog. Current value is
 	// 138 pixels.
@@ -387,7 +387,7 @@ dojox.flash.Embed.prototype = {
 		// summary: Writes the Flash into the page.
 		// description:
 		//	This must be called before the page
-		//	is finished loading. 
+		//	is finished loading.
 		// doExpressInstall: Boolean
 		//	Whether to write out Express Install
 		//	information. Optional value; defaults to false.
@@ -410,7 +410,7 @@ dojox.flash.Embed.prototype = {
 			                + "&MMdoctitle=" + docTitle
 			                + "&baseUrl=" + escape(dojoUrl)
 			                + "&xdomain=" + escape(xdomainBase);
-			swflocEmbed += "?MMredirectURL=" + redirectURL 
+			swflocEmbed += "?MMredirectURL=" + redirectURL
 			                + "&MMplayerType=PlugIn"
 			                + "&baseUrl=" + escape(dojoUrl)
 			                + "&xdomain=" + escape(xdomainBase);
@@ -418,7 +418,7 @@ dojox.flash.Embed.prototype = {
 			// IE/Flash has an evil bug that shows up some time: if we load the
 			// Flash and it isn't in the cache, ExternalInterface works fine --
 			// however, the second time when its loaded from the cache a timing
-			// bug can keep ExternalInterface from working. The trick below 
+			// bug can keep ExternalInterface from working. The trick below
 			// simply invalidates the Flash object in the cache all the time to
 			// keep it loading fresh. -- Brad Neuberg
 			swflocObject += "?cachebust=" + new Date().getTime();
@@ -497,7 +497,7 @@ dojox.flash.Embed.prototype = {
 			body = body[0];
 			body.appendChild(div);
 		}));
-	},  
+	},
 	
 	get: function(){ /* Object */
 		// summary: Gets the Flash object DOM node.
@@ -508,7 +508,7 @@ dojox.flash.Embed.prototype = {
 		}else{
 			// different IDs on OBJECT and EMBED tags or
 			// else Firefox will return wrong one and
-			// communication won't work; 
+			// communication won't work;
 			// also, document.getElementById() returns a
 			// plugin but ExternalInterface calls don't
 			// work on it so we have to use
@@ -520,7 +520,7 @@ dojox.flash.Embed.prototype = {
 	setVisible: function(/* Boolean */ visible){
 		//console.debug("setVisible, visible="+visible);
 		
-		// summary: Sets the visibility of this Flash object.		
+		// summary: Sets the visibility of this Flash object.
 		var container = dojo.byId(this.id + "Container");
 		if(visible){
 			container.style.position = "absolute"; // IE -- Brad Neuberg
@@ -540,9 +540,9 @@ dojox.flash.Embed.prototype = {
 
 		var viewport = dojo.window.getBox();
 
-		// compute the centered position    
+		// compute the centered position
 		var x = viewport.l + (viewport.w - elementWidth) / 2;
-		var y = viewport.t + (viewport.h - elementHeight) / 2; 
+		var y = viewport.t + (viewport.h - elementHeight) / 2;
 		
 		// set the centered position
 		var container = dojo.byId(this.id + "Container");
@@ -557,13 +557,13 @@ dojox.flash.Communicator = function(){
 	//	A class that is used to communicate between Flash and JavaScript.
 	// description:
 	//	This class helps mediate Flash and JavaScript communication. Internally
-	//	it uses Flash 8's ExternalInterface API, but adds functionality to fix 
+	//	it uses Flash 8's ExternalInterface API, but adds functionality to fix
 	//	various encoding bugs that ExternalInterface has.
 }
 
 dojox.flash.Communicator.prototype = {
 	// Registers the existence of a Flash method that we can call with
-	// JavaScript, using Flash 8's ExternalInterface. 
+	// JavaScript, using Flash 8's ExternalInterface.
 	_addExternalInterfaceCallback: function(methodName){
 		//console.debug("addExternalInterfaceCallback, methodName="+methodName);
 		var wrapperCall = dojo.hitch(this, function(){
@@ -594,7 +594,7 @@ dojox.flash.Communicator.prototype = {
 		// transforming \ into \\ doesn't work; just use a custom encoding
 		data = data.replace("\\", "&custom_backslash;");
 
-		// also use custom encoding for the null character to avoid problems 
+		// also use custom encoding for the null character to avoid problems
 		data = data.replace(/\0/g, "&custom_null;");
 
 		return data;
@@ -617,11 +617,11 @@ dojox.flash.Communicator.prototype = {
 			return data;
 		}
 		
-		// needed for IE; \0 is the NULL character 
+		// needed for IE; \0 is the NULL character
 		data = data.replace(/\&custom_null\;/g, "\0");
 	
 		// certain XMLish characters break Flash's wire serialization for
-		// ExternalInterface; these are encoded on the 
+		// ExternalInterface; these are encoded on the
 		// DojoExternalInterface side into a custom encoding, rather than
 		// the standard entity encoding, because otherwise we won't be able to
 		// differentiate between our own encoding and any entity characters
@@ -647,22 +647,22 @@ dojox.flash.Communicator.prototype = {
 			}
 		}
 
-		// we use this gnarly hack below instead of 
+		// we use this gnarly hack below instead of
 		// plugin[methodName] for two reasons:
 		// 1) plugin[methodName] has no call() method, which
 		// means we can't pass in multiple arguments dynamically
 		// to a Flash method -- we can only have one
-		// 2) On IE plugin[methodName] returns undefined -- 
+		// 2) On IE plugin[methodName] returns undefined --
 		// plugin[methodName] used to work on IE when we
 		// used document.write but doesn't now that
 		// we use dynamic DOM insertion of the Flash object
 		// -- Brad Neuberg
-		var flashExec = function(){ 
+		var flashExec = function(){
 			return eval(plugin.CallFunction(
 						 "<invoke name=\"" + methodName
-						+ "\" returntype=\"javascript\">" 
-						+ __flash__argumentsToXML(methodArgs, 0) 
-						+ "</invoke>")); 
+						+ "\" returntype=\"javascript\">"
+						+ __flash__argumentsToXML(methodArgs, 0)
+						+ "</invoke>"));
 		};
 		var results = flashExec.call(methodArgs);
 		
@@ -676,10 +676,10 @@ dojox.flash.Communicator.prototype = {
 
 // FIXME: dojo.declare()-ify this
 
-// TODO: I did not test the Install code when I refactored Dojo Flash from 0.4 to 
-// 1.0, so am not sure if it works. If Flash is not present I now prefer 
+// TODO: I did not test the Install code when I refactored Dojo Flash from 0.4 to
+// 1.0, so am not sure if it works. If Flash is not present I now prefer
 // that Gears is installed instead of Flash because GearsStorageProvider is
-// much easier to work with than Flash's hacky ExternalInteface. 
+// much easier to work with than Flash's hacky ExternalInteface.
 // -- Brad Neuberg
 dojox.flash.Install = function(){
 	// summary: Helps install Flash plugin if needed.
@@ -693,7 +693,7 @@ dojox.flash.Install.prototype = {
 	needed: function(){ /* Boolean */
 		// summary:
 		//		Determines if installation or revving of the current plugin is
-		//		needed. 
+		//		needed.
 	
 		// do we even have flash?
 		if(!dojox.flash.info.capable){
@@ -751,7 +751,7 @@ dojox.flash.Install.prototype = {
 			alert("There was an error downloading the Flash Player update. "
 						+ "Please try again later, or visit macromedia.com to download "
 						+ "the latest version of the Flash plugin.");
-		}	
+		}
 	}
 }
 

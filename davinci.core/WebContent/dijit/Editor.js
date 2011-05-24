@@ -1,16 +1,4 @@
-dojo.provide("dijit.Editor");
-dojo.require("dijit._editor.RichText");
-
-dojo.require("dijit.Toolbar");
-dojo.require("dijit.ToolbarSeparator");
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit._editor.plugins.EnterKeyHandling");
-dojo.require("dijit._editor.range");
-dojo.require("dijit._Container");
-dojo.require("dojo.i18n");
-dojo.require("dijit.layout._LayoutWidget");
-dojo.require("dijit._editor.range");
-dojo.requireLocalization("dijit._editor", "commands");
+define("dijit/Editor", ["dojo", "dijit", "dijit/_editor/RichText", "dijit/Toolbar", "dijit/ToolbarSeparator", "dijit/_editor/_Plugin", "dijit/_editor/plugins/EnterKeyHandling", "dijit/_editor/range", "dijit/_Container", "dojo/i18n", "dijit/layout/_LayoutWidget", "i18n!dijit/_editor/nls/commands"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.Editor",
@@ -28,7 +16,7 @@ dojo.declare(
 		//		a few limitations.  Note: this widget should not be used with the HTML
 		//		&lt;TEXTAREA&gt; tag -- see dijit._editor.RichText for details.
 
-		// plugins: Object[]
+		// plugins: [const] Object[]
 		//		A list of plugin names (as strings) or instances (as objects)
 		//		for this widget.
 		//
@@ -36,7 +24,7 @@ dojo.declare(
 		//	|	plugins="['bold',{name:'dijit._editor.plugins.FontChoice', command:'fontName', generic:true}]"
 		plugins: null,
 
-		// extraPlugins: Object[]
+		// extraPlugins: [const] Object[]
 		//		A list of extra plugin names which will be appended to plugins array
 		extraPlugins: null,
 
@@ -71,6 +59,18 @@ dojo.declare(
 			}
 		},
 
+		postMixInProperties: function() {
+			// summary:
+			//	Extension to make sure a deferred is in place before certain functions
+			//	execute, like making sure all the plugins are properly inserted.
+
+			// Set up a deferred so that the value isn't applied to the editor
+			// until all the plugins load, needed to avoid timing condition
+			// reported in #10537.
+			this.setValueDeferred = new dojo.Deferred();
+			this.inherited(arguments);
+		},
+	
 		postCreate: function(){
 			//for custom undo/redo, if enabled.
 			this._steps=this._steps.slice(0);
@@ -79,11 +79,6 @@ dojo.declare(
 			if(dojo.isArray(this.extraPlugins)){
 				this.plugins=this.plugins.concat(this.extraPlugins);
 			}
-
-			// Set up a deferred so that the value isn't applied to the editor 
-			// until all the plugins load, needed to avoid timing condition
-			// reported in #10537.
-			this.setValueDeferred = new dojo.Deferred();
 
 			this.inherited(arguments);
 
@@ -205,8 +200,8 @@ dojo.declare(
 			// except what's needed for the header (toolbars) and footer (breadcrumbs, etc).
 			// A class was added to the iframe container and some themes style it, so we have to
 			// calc off the added margins and padding too. See tracker: #10662
-			var areaHeight = (this._contentBox.h - 
-				(this.getHeaderHeight() + this.getFooterHeight() + 
+			var areaHeight = (this._contentBox.h -
+				(this.getHeaderHeight() + this.getFooterHeight() +
 				 dojo._getPadBorderExtents(this.iframe.parentNode).h +
 				 dojo._getMarginExtents(this.iframe.parentNode).h));
 			this.editingArea.style.height = areaHeight + "px";
@@ -233,9 +228,9 @@ dojo.declare(
 			var offsetLeft = b.offsetLeft;
 
 			//Check for vertical scroller click.
-			bodyDir = b.dir?b.dir.toLowerCase():""
+			bodyDir = b.dir ? b.dir.toLowerCase() : "";
 			if(bodyDir != "rtl"){
-				if(clientWidth < offsetWidth && e.x > clientWidth && e.x < offsetWidth){ 
+				if(clientWidth < offsetWidth && e.x > clientWidth && e.x < offsetWidth){
 					// Check the click was between width and offset width, if so, scroller
 					outsideClientArea = true;
 				}
@@ -254,7 +249,7 @@ dojo.declare(
 				}
 			}
 			if(!outsideClientArea){
-				delete this._cursorToStart; // Remove the force to cursor to start position. 
+				delete this._cursorToStart; // Remove the force to cursor to start position.
 				delete this._savedSelection; // new mouse position overrides old selection
 				if(e.target.tagName == "BODY"){
 					setTimeout(dojo.hitch(this, "placeCursorAtEnd"), 0);
@@ -285,11 +280,11 @@ dojo.declare(
 
 		// customUndo: Boolean
 		//		Whether we shall use custom undo/redo support instead of the native
-		//		browser support. By default, we only enable customUndo for IE, as it
-		//		has broken native undo/redo support. Note: the implementation does
-		//		support other browsers which have W3C DOM2 Range API implemented.
-		//		It was also enabled on WebKit, to fix undo/redo enablement. (#9613)
-		customUndo: dojo.isIE || dojo.isWebKit,
+		//		browser support. By default, we now use custom undo.  It works better
+		//		than native browser support and provides a consistent behavior across
+		//		browsers with a minimal performance hit.  We already had the hit on
+		//		the slowest browser, IE, anyway.
+		customUndo: true,
 
 		// editActionInterval: Integer
 		//		When using customUndo, not every keystroke will be saved as a step.
@@ -317,8 +312,11 @@ dojo.declare(
 				this._editTimer = setTimeout(dojo.hitch(this, this.endEditing), this._editInterval);
 			}
 		},
+
+		// TODO: declaring these in the prototype is meaningless, just create in the constructor/postCreate
 		_steps:[],
 		_undoedSteps:[],
+
 		execCommand: function(cmd){
 			// summary:
 			//		Main handler for executing any commands to the editor, like paste, bold, etc.
@@ -333,14 +331,15 @@ dojo.declare(
 					this._beginEditing();
 				}
 				var r;
+				var isClipboard = /copy|cut|paste/.test(cmd);
 				try{
-					r = this.inherited('execCommand', arguments);
-					if(dojo.isWebKit && cmd == 'paste' && !r){ //see #4598: safari does not support invoking paste from js
+					r = this.inherited(arguments);
+					if(dojo.isWebKit && isClipboard && !r){ //see #4598: webkit does not guarantee clipboard support from js
 						throw { code: 1011 }; // throw an object like Mozilla's error
 					}
 				}catch(e){
 					//TODO: when else might we get an exception?  Do we need the Mozilla test below?
-					if(e.code == 1011 /* Mozilla: service denied */ && /copy|cut|paste/.test(cmd)){
+					if(e.code == 1011 /* Mozilla: service denied */ && isClipboard){
 						// Warn user of platform limitation.  Cannot programmatically access clipboard. See ticket #4136
 						var sub = dojo.string.substitute,
 							accel = {cut:'X', copy:'C', paste:'V'};
@@ -364,7 +363,7 @@ dojo.declare(
 			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
 				return cmd == 'undo' ? (this._steps.length > 1) : (this._undoedSteps.length > 0);
 			}else{
-				return this.inherited('queryCommandEnabled',arguments);
+				return this.inherited(arguments);
 			}
 		},
 		_moveToBookmark: function(b){
@@ -377,7 +376,7 @@ dojo.declare(
 			var col = b.isCollapsed;
 			var r, sNode, eNode, sel;
 			if(mark){
-				if(dojo.isIE){
+				if(dojo.isIE < 9){
 					if(dojo.isArray(mark)){
 						//IE CONTROL, have to use the native bookmark.
 						bookmark = [];
@@ -456,7 +455,7 @@ dojo.declare(
 					ret = true;
 				}
 				delete this._undoRedoActive;
-			}	
+			}
 			return ret;
 		},
 		redo: function(){
@@ -505,7 +504,7 @@ dojo.declare(
 			var tmp=[];
 			if(b && b.mark){
 				var mark = b.mark;
-				if(dojo.isIE){
+				if(dojo.isIE < 9){
 					// Try to use the pseudo range API on IE for better accuracy.
 					var sel = dijit.range.getSelection(this.window);
 					if(!dojo.isArray(mark)){
@@ -551,7 +550,7 @@ dojo.declare(
 			if(this._steps.length === 0){
 				// You want to use the editor content without post filtering
 				// to make sure selection restores right for the 'initial' state.
-				// and undo is called.  So not using this.savedContent, as it was 'processed'
+				// and undo is called.  So not using this.value, as it was 'processed'
 				// and the line-up for selections may have been altered.
 				this._steps.push({'text':dijit._editor.getChildrenHtml(this.editNode),'bookmark':this._getBookmark()});
 			}
@@ -652,7 +651,7 @@ dojo.declare(
 			//		protected
 
 			//this._saveSelection();
-			this.inherited('_onBlur',arguments);
+			this.inherited(arguments);
 			this.endEditing(true);
 		},
 		_saveSelection: function(){
@@ -660,8 +659,9 @@ dojo.declare(
 			//		Save the currently selected text in _savedSelection attribute
 			// tags:
 			//		private
-			this._savedSelection=this._getBookmark();
-			//console.log('save selection',this._savedSelection,this);
+			try{
+				this._savedSelection=this._getBookmark();
+			}catch(e){ /* Squelch any errors that occur if selection save occurs due to being hidden simultaniously. */}
 		},
 		_restoreSelection: function(){
 			// summary:
@@ -691,38 +691,56 @@ dojo.declare(
 			this.inherited(arguments);
 		},
 
-		_setDisabledAttr: function(/*Boolean*/ value){
-			if(!this.disabled && value){
-				// Disable editor: disable all enabled buttons and remember that list
-				this._buttonEnabledPlugins = dojo.filter(this._plugins, function(p){
-					if (p && p.button && !p.button.get("disabled")) {
-						p.button.set("disabled", true);
-						return true;
+		replaceValue: function(/*String*/ html){
+			// summary:
+			//		over-ride of replaceValue to support custom undo and stack maintainence.
+			// tags:
+			//		protected
+			if(!this.customUndo){
+				this.inherited(arguments);
+			}else{
+				if(this.isClosed){
+					this.setValue(html);
+				}else{
+					this.beginEditing();
+					if(!html){
+						html = "&nbsp;"
 					}
-					return false;
+					this.setValue(html);
+					this.endEditing();
+				}
+			}
+		},
+		
+		_setDisabledAttr: function(/*Boolean*/ value){
+			var disableFunc = dojo.hitch(this, function(){
+				if((!this.disabled && value) || (!this._buttonEnabledPlugins && value)){
+				// Disable editor: disable all enabled buttons and remember that list
+					dojo.forEach(this._plugins, function(p){
+						p.set("disabled", true);
 				});
 			}else if(this.disabled && !value){
-				// Enable editor: we only want to enable the buttons that should be
-				// enabled (for example, the outdent button shouldn't be enabled if the current
-				// text can't be outdented).
-				dojo.forEach(this._buttonEnabledPlugins, function(p){
-					p.button.attr("disabled", false);
-					p.updateState && p.updateState();	// just in case something changed, like caret position
+					// Restore plugins to being active.
+					dojo.forEach(this._plugins, function(p){
+						p.set("disabled", false);
 				});
 			}
-			
+			});
+			this.setValueDeferred.addCallback(disableFunc);
 			this.inherited(arguments);
 		},
 		
 		_setStateClass: function(){
-			this.inherited(arguments);
+			try{
+				this.inherited(arguments);
 			
-			// Let theme set the editor's text color based on editor enabled/disabled state.
-			// We need to jump through hoops because the main document (where the theme CSS is)
-			// is separate from the iframe's document.
-			if(this.document && this.document.body){
-				dojo.style(this.document.body, "color", dojo.style(this.iframe, "color"));
-			}
+				// Let theme set the editor's text color based on editor enabled/disabled state.
+				// We need to jump through hoops because the main document (where the theme CSS is)
+				// is separate from the iframe's document.
+				if(this.document && this.document.body){
+					dojo.style(this.document.body, "color", dojo.style(this.iframe, "color"));
+				}
+			}catch(e){ /* Squelch any errors caused by focus change if hidden during a state change */}
 		}
 	}
 );
@@ -751,4 +769,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	}
 //	console.log('name',name,p);
 	o.plugin=p;
+});
+
+
+return dijit.Editor;
 });

@@ -1,4 +1,5 @@
 dojo.provide("dojox.mobile.compat");
+dojo.require("dijit._base.sniff");
 dojo.require("dojo._base.fx");
 dojo.require("dojo.fx");
 dojo.require("dojox.fx.flip");
@@ -18,12 +19,14 @@ dojo.require("dojox.fx.flip");
 //		dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 //
 //		This module also loads compatibility CSS files, which has -compat.css
-//		suffix. You should use the <link> tag instead of @import to load theme
-//		CSS files. Then, this module searches for the <link> tags and loads
-//		compatibility CSS files. For example, if you load iphone.css with a
-//		link tag, this module automatically loads iphone-compat.css.
-//		Of course, you can explicitly load iphone.css and iphone-compat.css
-//		with the @import rule if you would like.
+//		suffix. You can use either the <link> tag or @import to load theme
+//		CSS files. Then, this module searches for the loaded CSS files and loads
+//		compatibility CSS files. For example, if you load iphone.css in a page,
+//		this module automatically loads iphone-compat.css.
+//		If you explicitly load iphone-compat.css with <link> or @import,
+//		this module will not load the already loaded file.
+
+if(!dojo.isWebKit){
 
 dojo.extend(dojox.mobile.View, {
 	_doTransition: function(fromNode, toNode, transition, dir){
@@ -203,7 +206,7 @@ dojo.extend(dojox.mobile.Switch, {
 	}
 });
 
-if(dojo.isIE){
+if(dojo.isIE || dojo.isBB){
 
 dojo.extend(dojox.mobile.RoundRect, {
 	buildRendering: function(){
@@ -269,6 +272,8 @@ dojo.extend(dojox.mobile.EdgeToEdgeList, {
 	}
 });
 
+if(dojox.mobile.IconContainer){
+
 dojox.mobile.IconContainer._addChild = dojox.mobile.IconContainer.prototype.addChild;
 dojo.extend(dojox.mobile.IconContainer, {
 	addChild: function(widget){
@@ -278,6 +283,8 @@ dojo.extend(dojox.mobile.IconContainer, {
 		}
 	}
 });
+
+} // if(dojox.mobile.IconContainer)
 
 dojo.mixin(dojox.mobile, {
 	createRoundRect: function(_this, isList){
@@ -314,6 +321,24 @@ dojo.mixin(dojox.mobile, {
 	}
 });
 
+if(dojox.mobile.ScrollableView){
+
+dojo.extend(dojox.mobile.ScrollableView, {
+	postCreate: function(){
+		// On IE, margin-top of the first child does not seem to be effective,
+		// probably because padding-top is specified for containerNode
+		// to make room for a fixed header. This dummy node is a workaround for that.
+		var dummy = dojo.create("DIV", {className:"mblDummyForIE", innerHTML:"&nbsp;"}, this.containerNode, "first");
+		dojo.style(dummy, {
+			position: "relative",
+			marginBottom: "-2px",
+			fontSize: "1px"
+		});
+	}
+});
+
+} // if(dojox.mobile.ScrollableView)
+
 } // if(dojo.isIE)
 
 if(dojo.isIE <= 6){
@@ -325,7 +350,17 @@ if(dojo.isIE <= 6){
 			var img = nodes[i];
 			var w = img.offsetWidth;
 			var h = img.offsetHeight;
-			if(w === 0 || h === 0){ return; }
+			if(w === 0 || h === 0){
+				// The reason why the image has no width/height may be because
+				// display is "none". If that is the case, let's change the
+				// display to "" temporarily and see if the image returns them.
+				if(dojo.style(img, "display") != "none"){ continue; }
+				img.style.display = "";
+				w = img.offsetWidth;
+				h = img.offsetHeight;
+				img.style.display = "none";
+				if(w === 0 || h === 0){ continue; }
+			}
 			var src = img.src;
 			if(src.indexOf("resources/blank.gif") != -1){ continue; }
 			img.src = blank;
@@ -345,8 +380,8 @@ dojox.mobile.loadCss = function(/*String|Array*/files){
 	//		private
 	if(!dojo.global._loadedCss){
 		var obj = {};
-		dojo.forEach(dojo.doc.getElementsByTagName("link"), function(item){
-			obj[item.href] = true;
+		dojo.forEach(dojox.mobile.getCssPaths(), function(path){
+			obj[path] = true;
 		});
 		dojo.global._loadedCss = obj;
 	}
@@ -375,25 +410,60 @@ dojox.mobile.loadCss = function(/*String|Array*/files){
 	}
 };
 
+dojox.mobile.getCssPaths = function(){
+	var paths = [];
+	var i, j;
+
+	// find @import
+	var s = dojo.doc.styleSheets;
+	for(i = 0; i < s.length; i++){
+		var r = s[i].cssRules || s[i].imports;
+		if(!r){ continue; }
+		for(j = 0; j < r.length; j++){
+			if(r[j].href){
+				paths.push(r[j].href);
+			}
+		}
+	}
+	
+	// find <link>
+	var elems = dojo.doc.getElementsByTagName("link");
+	for(i = 0, len = elems.length; i < len; i++){
+		if(elems[i].href){
+			paths.push(elems[i].href);
+		}
+	}
+	return paths;
+};
+
+dojox.mobile.loadCompatPattern = /\/themes\/(domButtons|buttons|iphone|android).*\.css$/;
+
 dojox.mobile.loadCompatCssFiles = function(){
 	// summary:
 	//		Function to perform page-level adjustments on browsers such as
 	//		IE and firefox.  It loads compat specific css files into the
 	//		page header.
-	var elems = dojo.doc.getElementsByTagName("link");
-	for(var i = 0, len = elems.length; i < len; i++){
-		var href = elems[i].href;
-		if((href.indexOf("/mobile/themes/") != -1 || location.href.indexOf("/mobile/tests/") != -1)
-			 && href.substring(href.length - 4) == ".css"){
+	var paths = dojox.mobile.getCssPaths();
+	for(var i = 0; i < paths.length; i++){
+		var href = paths[i];
+		if(href.match(dojox.mobile.loadCompatPattern) && href.indexOf("-compat.css") == -1){
 			var compatCss = href.substring(0, href.length-4)+"-compat.css";
 			dojox.mobile.loadCss(compatCss);
 		}
 	}
 };
 
+dojox.mobile.hideAddressBar = function(){
+	// nop
+};
+
 dojo.addOnLoad(function(){
-	dojox.mobile.loadCompatCssFiles();
+	if(dojo.config["mblLoadCompatCssFiles"] !== false){
+		dojox.mobile.loadCompatCssFiles();
+	}
 	if(dojox.mobile.applyPngFilter){
 		dojox.mobile.applyPngFilter();
 	}
 });
+
+} // end of if(!dojo.isWebKit){

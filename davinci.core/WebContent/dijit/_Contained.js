@@ -1,4 +1,4 @@
-dojo.provide("dijit._Contained");
+define("dijit/_Contained", ["dojo", "dijit"], function(dojo, dijit) {
 
 dojo.declare("dijit._Contained",
 		null,
@@ -63,3 +63,6 @@ dojo.declare("dijit._Contained",
 		}
 	);
 
+
+return dijit._Contained;
+});

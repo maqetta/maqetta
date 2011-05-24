@@ -12,9 +12,9 @@ dojo.require("dojo.AdapterRegistry");
  * extensions modules may be loaded (eg "dojox.cometd.timestamp", that use
  * the cometd._extendInList and cometd._extendOutList fields to provide functions
  * that extend and handling incoming and outgoing messages.
- * 
+ *
  * By default the long-polling and callback-polling transports will be required.
- * If specific or alternative transports are required, then they can be directly 
+ * If specific or alternative transports are required, then they can be directly
  * loaded. For example dojo.require('dojox.cometd.longPollTransportJsonEncoded')
  * will load cometd with only the json encoded variant of the long polling transport.
  */
@@ -23,7 +23,7 @@ dojox.cometd = {
 	Connection: function(prefix){ // This constructor is stored as dojox.cometd.Connection
 		// summary
 		// This constructor is used to create new cometd connections. Generally, you should use
-		// one cometd connection for each server you connect to. A default connection instance is 
+		// one cometd connection for each server you connect to. A default connection instance is
 		// created at dojox.cometd.
 		// To connect to a new server you can create an instance like:
 		// var cometd = new dojox.cometd.Connection("/otherServer");
@@ -84,8 +84,8 @@ dojox.cometd = {
 			//		until a handshake response is received and the first successful connect message
 			//		has returned.
 			//		The protocol state changes may be monitored
-			//		by subscribing to the dojo topic "/prefix/meta" (typically "/cometd/meta") where 
-			//		events are published in the form 
+			//		by subscribing to the dojo topic "/prefix/meta" (typically "/cometd/meta") where
+			//		events are published in the form
 			//		   {cometd:this,action:"handshake",successful:true,state:this.state()}
 			//	root:
 			//		The URL of the cometd server. If the root is absolute, the host
@@ -218,7 +218,7 @@ dojox.cometd = {
 			//		passing to `dojox.cometd.unsubscribe()` as a "subscription
 			//		handle" (much like the handle object that `dojo.connect()`
 			//		produces and which `dojo.disconnect()` expects).
-			//		
+			//
 			//		Note that of a subscription is registered before a connection
 			//		with the server is established, events sent before the
 			//		connection is established will not be delivered to this client.
@@ -281,9 +281,9 @@ dojox.cometd = {
 				}
 				
 				var topic = dojo.subscribe(tname, objOrFunc, funcName);
-				subs.push({ 
-					topic: topic, 
-					objOrFunc: objOrFunc, 
+				subs.push({
+					topic: topic,
+					objOrFunc: objOrFunc,
 					funcName: funcName
 				});
 				this._subscriptions[tname] = subs;
@@ -449,7 +449,7 @@ dojox.cometd = {
 
 
 			var wasHandshook = this._handshook;
-			var successful = false;	
+			var successful = false;
 			var metaMsg = {};
 
 			if (data instanceof Error) {
@@ -478,10 +478,10 @@ dojox.cometd = {
 					this._advice.reconnect="none";
 				}
 				dojo.mixin(metaMsg,{reestablish: successful && wasHandshook, response:data});
-			} 
+			}
 
 			this._publishMeta("handshake",successful,metaMsg);
-			//in the meta listeners, disconnect() may have been called, so recheck it now to 
+			//in the meta listeners, disconnect() may have been called, so recheck it now to
 			//prevent resends or continuing with initializing the protocol
 			if(this._status!="handshaking") {return;}
 
@@ -693,7 +693,7 @@ dojox.cometd = {
 }
 
 // create the default instance
-dojox.cometd.Connection.call(dojox.cometd,"/cometd"); 
+dojox.cometd.Connection.call(dojox.cometd,"/cometd");
 
 /*
 

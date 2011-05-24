@@ -2,9 +2,7 @@ dojo.provide("dojox.layout.DragPane");
 
 dojo.require("dijit._Widget");
 
-dojo.declare("dojox.layout.DragPane",
-	dijit._Widget, {
-	//
+dojo.declare("dojox.layout.DragPane", dijit._Widget, {
 	// summary: Makes a pane's content dragable by/within it's surface
 	//
 	// description:
@@ -16,34 +14,34 @@ dojo.declare("dojox.layout.DragPane",
 	//		Naturally, the behavior is to invert the axis of the drag.
 	//		Setting invert:false will make the pane drag in the same
 	//		direction as the mouse.
-	invert:true,
+	invert: true,
 	
 	postCreate: function(){
-
-		this.inherited(arguments);
-		this.connect(this.domNode,"onmousedown","_down");
-		this.connect(this.domNode,"onmouseup","_up");
+		this.connect(this.domNode, "onmousedown", "_down");
+		this.connect(this.domNode, "onmouseleave", "_up");
+		this.connect(this.domNode, "onmouseup", "_up");
 	},
 	
 	_down: function(e){
 		// summary: mousedown handler, start the dragging
 		var t = this.domNode;
-		dojo.style(t,"cursor","move");
+		e.preventDefault();
+		dojo.style(t, "cursor", "move");
 		this._x = e.pageX;
 		this._y = e.pageY;
 		if ((this._x < t.offsetLeft + t.clientWidth) &&
 			(this._y < t.offsetTop + t.clientHeight)) {
 			dojo.setSelectable(t,false);
-			this._mover = this.connect(t,"onmousemove","_move");
+			this._mover = this.connect(t, "onmousemove", "_move");
 		}
 	},
 	
 	_up: function(e){
 		// summary: mouseup handler, stop the dragging
-		
 		dojo.setSelectable(this.domNode,true);
-		dojo.style(this.domNode,"cursor","pointer");
-		this.disconnect(this._mover);
+		dojo.style(this.domNode, "cursor", "pointer");
+		this._mover && this.disconnect(this._mover);
+		delete this._mover;
 	},
 	
 	_move: function(e){

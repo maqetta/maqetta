@@ -55,7 +55,7 @@ var TestStorage = {
 		var keyNameField = dojo.byId("storageKey");
 		dojo.connect(keyNameField, "onfocus", function(evt){
 			directory.selectedIndex = -1;
-		});			
+		});
 											 
 		// add onclick listeners to all of our buttons
 		var buttonContainer = dojo.byId("buttonContainer");
@@ -66,7 +66,7 @@ var TestStorage = {
 				var functionName = buttonName.match(/^(.*)Button$/)[1];
 				dojo.connect(currentChild, "onclick", this, this[functionName]);
 				currentChild.disabled = false;
-			}		
+			}
 			
 			currentChild = currentChild.nextSibling;
 		}
@@ -76,7 +76,7 @@ var TestStorage = {
 		
 		// disable the configuration button if none is supported for this provider
 		if(dojox.storage.hasSettingsUI() == false){
-			dojo.byId("configureButton").disabled = true; 
+			dojo.byId("configureButton").disabled = true;
 		}
 	},
 	
@@ -114,7 +114,7 @@ var TestStorage = {
 		var keyNameField = dojo.byId("storageKey");
 		keyNameField.value = key;
 		
-		this._handleLoad(key);		
+		this._handleLoad(key);
 	},
 	
 	load: function(evt){
@@ -133,30 +133,30 @@ var TestStorage = {
 		this._handleLoad(key);
 	},
 	
-	loadMultiple: function(evt){ 
-		// cancel the button's default behavior 
-		evt.preventDefault(); 
-		evt.stopPropagation(); 
+	loadMultiple: function(evt){
+		// cancel the button's default behavior
+		evt.preventDefault();
+		evt.stopPropagation();
            
-		// get the keys to load 
-		var dir = dojo.byId("directory"); 
-		if(dir.selectedIndex < 0){ 
-			alert("Please select a key from the 'All Keys' list"); 
-			return; 
-		} 
+		// get the keys to load
+		var dir = dojo.byId("directory");
+		if(dir.selectedIndex < 0){
+			alert("Please select a key from the 'All Keys' list");
+			return;
+		}
                  
-		var keyArray = [dir.value], i; 
+		var keyArray = [dir.value], i;
   
-		for(i = dir.options.selectedIndex + 1; i < dir.options.length 
-									&& keyArray.length < 10; i++){ 
-										keyArray.push(dir.options[i].value); 
-		} 
+		for(i = dir.options.selectedIndex + 1; i < dir.options.length
+									&& keyArray.length < 10; i++){
+										keyArray.push(dir.options[i].value);
+		}
 
-		for(i = dir.options.selectedIndex - 1; i >= 0 && keyArray.length < 10; i--){ 
-			keyArray.push(dir.options[i].value); 
-		} 
+		for(i = dir.options.selectedIndex - 1; i >= 0 && keyArray.length < 10; i--){
+			keyArray.push(dir.options[i].value);
+		}
                                  
-		this._handleLoadMultiple(keyArray); 
+		this._handleLoadMultiple(keyArray);
 	},
 	
 	save: function(evt){
@@ -180,42 +180,42 @@ var TestStorage = {
 		}
 		
 		// print out the size of the value
-		this.printValueSize(); 
+		this.printValueSize();
 		
 		// do the save
 		this._save(key, value, namespace);
 	},
 	
-	saveMultiple: function(evt) { 
-		// cancel the button's default behavior 
-		evt.preventDefault(); 
-		evt.stopPropagation(); 
+	saveMultiple: function(evt) {
+		// cancel the button's default behavior
+		evt.preventDefault();
+		evt.stopPropagation();
                 
-		// get the new values 
-		var key = dojo.byId("storageKey").value; 
-		var value = dojo.byId("storageValue").value; 
-		var namespace = dojo.byId("storageNamespace").value; 
+		// get the new values
+		var key = dojo.byId("storageKey").value;
+		var value = dojo.byId("storageValue").value;
+		var namespace = dojo.byId("storageNamespace").value;
           
-		if(key == null || typeof key == "undefined" || key == ""){ 
-			alert("Please enter a key name"); 
-			return; 
-		} 
+		if(key == null || typeof key == "undefined" || key == ""){
+			alert("Please enter a key name");
+			return;
+		}
      
-		if(value == null || typeof value == "undefined" || value == ""){ 
-			alert("Please enter a key value"); 
-			return; 
-		} 
+		if(value == null || typeof value == "undefined" || value == ""){
+			alert("Please enter a key value");
+			return;
+		}
                  
-		// print out the size of the value 
-		this.printValueSize();  
+		// print out the size of the value
+		this.printValueSize();
                  
-		// do the save 
-		var keyArray = [], valueArray = []; 
-		for(var i = 0; i < 10; i++) { 
-			keyArray.push(key+i); 
-			valueArray.push(i + ") " + value); 
-		} 
-		this._saveMultiple(keyArray, valueArray, namespace); 
+		// do the save
+		var keyArray = [], valueArray = [];
+		for(var i = 0; i < 10; i++) {
+			keyArray.push(key+i);
+			valueArray.push(i + ") " + value);
+		}
+		this._saveMultiple(keyArray, valueArray, namespace);
 	},
 	
 	clearNamespace: function(evt){
@@ -230,39 +230,39 @@ var TestStorage = {
 	},
 	
 	_saveMultiple: function(keyArray, valueArray, namespace) {
-		this._printStatus("Saving 10 keys, starting with '" + keyArray[0] + "'..."); 
-		var self = this; 
-		var saveHandler = function(status, keyName){ 
-			//console.debug("saveHandler, status="+status+", keyName="+keyName); 
-			if(status == dojox.storage.FAILED){ 
-				alert("You do not have permission to store data for this web site. " 
-							+ "Press the Configure button to grant permission."); 
-			}else if(status == dojox.storage.SUCCESS){ 
-				// clear out the old value 
-				dojo.byId("storageKey").value = ""; 
-				dojo.byId("storageValue").value = ""; 
- 				self._printStatus("Saved '" + keyArray[0] + "' and " 
-													+ (keyArray.length - 1) + " others"); 
+		this._printStatus("Saving 10 keys, starting with '" + keyArray[0] + "'...");
+		var self = this;
+		var saveHandler = function(status, keyName){
+			//console.debug("saveHandler, status="+status+", keyName="+keyName);
+			if(status == dojox.storage.FAILED){
+				alert("You do not have permission to store data for this web site. "
+							+ "Press the Configure button to grant permission.");
+			}else if(status == dojox.storage.SUCCESS){
+				// clear out the old value
+				dojo.byId("storageKey").value = "";
+				dojo.byId("storageValue").value = "";
+ 				self._printStatus("Saved '" + keyArray[0] + "' and "
+													+ (keyArray.length - 1) + " others");
               
-				if(typeof namespace != "undefined" && namespace != null){ 
-					self.currentNamespace = namespace; 
+				if(typeof namespace != "undefined" && namespace != null){
+					self.currentNamespace = namespace;
 				}
              
-				self._printAvailableKeys(); 
-				self._printAvailableNamespaces(); 
-			} 
-		}; 
+				self._printAvailableKeys();
+				self._printAvailableNamespaces();
+			}
+		};
              
-		try{ 
-			if(namespace == dojox.storage.DEFAULT_NAMESPACE){ 
-				dojox.storage.putMultiple(keyArray, valueArray, saveHandler); 
-			}else{ 
-				dojox.storage.putMultiple(keyArray, valueArray, saveHandler, namespace); 
-			} 
-		}catch(exp){ 
-			alert(exp); 
-		} 
-	},	
+		try{
+			if(namespace == dojox.storage.DEFAULT_NAMESPACE){
+				dojox.storage.putMultiple(keyArray, valueArray, saveHandler);
+			}else{
+				dojox.storage.putMultiple(keyArray, valueArray, saveHandler, namespace);
+			}
+		}catch(exp){
+			alert(exp);
+		}
+	},
 	
 	configure: function(evt){
 		// cancel the button's default behavior
@@ -332,16 +332,16 @@ var TestStorage = {
 		//	Try to help the user understands what she's doing
 		if(confirm("Are you sure you want to delete the entry for the selected key and up to 10 more entries?")){
 
-			// get the keys for entries to remove 
-			var dir = dojo.byId("directory"); 
-			if(dir.selectedIndex < 0){ 
-				alert("Please select a key from the 'All Keys' list"); 
-				return; 
+			// get the keys for entries to remove
+			var dir = dojo.byId("directory");
+			if(dir.selectedIndex < 0){
+				alert("Please select a key from the 'All Keys' list");
+				return;
 			}
 	                 
-			var keyArray = []; 
-			for(var i = dir.options.selectedIndex; i < dir.options.length && keyArray.length < 10; i++){ 
-				keyArray.push( dir.options[i].value); 
+			var keyArray = [];
+			for(var i = dir.options.selectedIndex; i < dir.options.length && keyArray.length < 10; i++){
+				keyArray.push( dir.options[i].value);
 			}
 
 			this._printStatus("Removing '" + (dir.options.selectedIndex - i) + "' keys starting with '" + dir.options[dir.options.selectedIndex].value + "' ...");
@@ -353,7 +353,7 @@ var TestStorage = {
 				
 			//	Remove the entries from the option list
 			var options = directory.childNodes;
-			for(i = dir.options.selectedIndex; i < dir.options.length && (i - dir.options.selectedIndex) < 10; i++){ 
+			for(i = dir.options.selectedIndex; i < dir.options.length && (i - dir.options.selectedIndex) < 10; i++){
 				directory.removeChild(options[i]);
 			}
 		}
@@ -395,7 +395,7 @@ var TestStorage = {
 			this._save("testBook", results);
 		}));
 		
-		d.addErrback(dojo.hitch(this, function(error){ 
+		d.addErrback(dojo.hitch(this, function(error){
 			alert("Unable to load testBook.txt: " + error);
 		}));
 		
@@ -420,7 +420,7 @@ var TestStorage = {
 			this._save("testXML", results);
 		}));
 		
-		d.addErrback(dojo.hitch(this, function(error){ 
+		d.addErrback(dojo.hitch(this, function(error){
 			alert("Unable to load testXML.xml: " + error);
 		}));
 		
@@ -449,7 +449,7 @@ var TestStorage = {
 				if(typeof namespace != "undefined"
 					&& namespace != null){
 					self.currentNamespace = namespace;
-				}		
+				}
 				
 				self._printAvailableKeys();
 				self._printAvailableNamespaces();
@@ -489,34 +489,34 @@ var TestStorage = {
 		}
 	},
 	
-	_handleLoadMultiple: function(keyArray){ 
-		this._printStatus("Loading '" + keyArray + "'..."); 
+	_handleLoadMultiple: function(keyArray){
+		this._printStatus("Loading '" + keyArray + "'...");
               
-		// get the value 
-		var resultArray; 
-		if(this.currentNamespace == dojox.storage.DEFAULT_NAMESPACE){ 
-			resultArray = dojox.storage.getMultiple(keyArray); 
-		}else{ 
-			resultArray = dojox.storage.getMultiple(keyArray, this.currentNamespace); 
-		} 
+		// get the value
+		var resultArray;
+		if(this.currentNamespace == dojox.storage.DEFAULT_NAMESPACE){
+			resultArray = dojox.storage.getMultiple(keyArray);
+		}else{
+			resultArray = dojox.storage.getMultiple(keyArray, this.currentNamespace);
+		}
                
-		// jsonify it if it is a JavaScript object 
-		for(var i = 0; i < resultArray.length; i++) { 
-			if(typeof resultArray[i] != "string"){ 
-				resultArray[i] = dojo.toJson(resultArray[i]); 
-			} 
-		} 
+		// jsonify it if it is a JavaScript object
+		for(var i = 0; i < resultArray.length; i++) {
+			if(typeof resultArray[i] != "string"){
+				resultArray[i] = dojo.toJson(resultArray[i]);
+			}
+		}
                 
-		// print out its value 
-		this._printStatus("Loaded '" + keyArray[0] + "' and " 
-											+ (keyArray.length - 1) + " others"); 
-		dojo.byId("storageValue").value = ""; 
-		for(i = 0; i < resultArray.length; i++){ 
-			dojo.byId("storageValue").value += resultArray[i] + "\n----\n"; 
-		} 
+		// print out its value
+		this._printStatus("Loaded '" + keyArray[0] + "' and "
+											+ (keyArray.length - 1) + " others");
+		dojo.byId("storageValue").value = "";
+		for(i = 0; i < resultArray.length; i++){
+			dojo.byId("storageValue").value += resultArray[i] + "\n----\n";
+		}
 	                 
-		// print out the size of the value 
-		this.printValueSize();  
+		// print out the size of the value
+		this.printValueSize();
 	},
 	
 	_printAvailableNamespaces: function(){
@@ -559,7 +559,7 @@ var TestStorage = {
 		dojo.byId("storageValue").value = results;
 		
 		// print out the size of the value
-		this.printValueSize(); 
+		this.printValueSize();
 	},
 	
 	_printProviderMetadata: function(){
@@ -569,7 +569,7 @@ var TestStorage = {
 		var permanent = dojox.storage.isPermanent();
 		var uiConfig = dojox.storage.hasSettingsUI();
 		var moreInfo = "";
-		if(dojox.storage.manager.currentProvider.declaredClass 
+		if(dojox.storage.manager.currentProvider.declaredClass
 				== "dojox.storage.FlashStorageProvider"){
 			moreInfo = "Flash Version " + dojox.flash.info.version;
 		}
@@ -589,7 +589,7 @@ var TestStorage = {
 			if (currentNode.nodeType == 1 &&
 					currentNode.className == "status"){
 				top.removeChild(currentNode);
-			}		
+			}
 		}
 		
 		var status = document.createElement("span");
@@ -647,7 +647,7 @@ var TestStorage = {
 // wait until the storage system is finished loading
 dojo.addOnLoad(function(){
 	// is the storage already loaded?
-	if(dojox.storage.manager.isInitialized() == false){ 
+	if(dojox.storage.manager.isInitialized() == false){
 		dojo.connect(dojox.storage.manager, "loaded", TestStorage, TestStorage.initialize);
 	}else{
 		dojo.connect(dojo, "loaded", TestStorage, TestStorage.initialize);

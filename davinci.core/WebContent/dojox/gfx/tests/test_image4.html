@@ -14,11 +14,16 @@
 dojo.require("dojox.gfx");
 dojo.require("dojo.colors");
 
-makeShapes = function(){
+var grid_size = 200, grid_step = 20;
+
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("test", grid_size, grid_size)
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
     var g = dojox.gfx, m = g.matrix;
     
-	var grid_size = 200, grid_step = 20,
-        surface = g.createSurface("test", grid_size, grid_size)
 	for(var i = 0; i <= grid_size; i += grid_step){
 		surface.createLine({x1: 0, x2: grid_size, y1: i, y2: i}).setStroke("grey");
 		surface.createLine({y1: 0, y2: grid_size, x1: i, x2: i}).setStroke("grey");
@@ -40,7 +45,7 @@ makeShapes = function(){
     rect3.connect("onclick", function(){ alert("green"); });
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

@@ -3,7 +3,7 @@ dojo.provide("dojox.gfx.path");
 dojo.require("dojox.gfx.matrix");
 dojo.require("dojox.gfx.shape");
 
-dojo.declare("dojox.gfx.path.Path", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.path.Path", dojox.gfx.shape.Shape, {
 	// summary: a generalized path shape
 
 	constructor: function(rawNode){
@@ -69,7 +69,7 @@ dojo.declare("dojox.gfx.path.Path", dojox.gfx.Shape, {
 
 	_applyTransform: function(){
 		this.tbbox = null;
-		return dojox.gfx.Shape.prototype._applyTransform.call(this);
+		return this.inherited(arguments);
 	},
 
 	// segment interpretation
@@ -196,7 +196,7 @@ dojo.declare("dojox.gfx.path.Path", dojox.gfx.Shape, {
 		if(typeof this.shape.path == "string"){
 			this.shape.path += path.join("");
 		}else{
-			Array.prototype.push.apply(this.shape.path, path);
+			Array.prototype.push.apply(this.shape.path, path); //FIXME: why not simple push()?
 		}
 	},
 
@@ -366,7 +366,7 @@ dojo.declare("dojox.gfx.path.Path", dojox.gfx.Shape, {
 	setShape: function(newShape){
 		// summary: forms a path using a shape
 		// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
-		dojox.gfx.Shape.prototype.setShape.call(this, typeof newShape == "string" ? {path: newShape} : newShape);
+		this.inherited(arguments, [typeof newShape == "string" ? {path: newShape} : newShape]);
 		
 		this.segmented = false;
 		this.segments = [];

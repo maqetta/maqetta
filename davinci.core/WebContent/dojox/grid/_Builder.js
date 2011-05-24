@@ -89,7 +89,7 @@ dojo.require("dojo.dnd.Moveable");
 			}
 			// result[0] => td opener, style
 			result.push(html.join(''));
-			// SLOT: result[1] => td classes 
+			// SLOT: result[1] => td classes
 			result.push('');
 			html = ['" idx="', inCell.index, '" style="'];
 			if(inMoreStyles && inMoreStyles[inMoreStyles.length-1] != ';'){
@@ -101,7 +101,7 @@ dojo.require("dojo.dnd.Moveable");
 			}
 			// result[2] => markup
 			result.push(html.join(''));
-			// SLOT: result[3] => td style 
+			// SLOT: result[3] => td style
 			result.push('');
 			html = [ '"' ];
 			if(inCell.attrs){
@@ -127,8 +127,8 @@ dojo.require("dojo.dnd.Moveable");
 		},
 		
 		getCellNode: function(inRowNode, inCellIndex){
-			for(var i=0, row; (row=getTr(inRowNode.firstChild, i)); i++){
-				for(var j=0, cell; (cell=row.cells[j]); j++){
+			for(var i=0, row; ((row = getTr(inRowNode.firstChild, i)) && row.cells); i++){
+				for(var j=0, cell; (cell = row.cells[j]); j++){
 					if(this.getCellNodeIndex(cell) == inCellIndex){
 						return cell;
 					}
@@ -161,7 +161,7 @@ dojo.require("dojo.dnd.Moveable");
 			while(n && (n!=this.domNode) && (!(inTag in n) || (gridViewTag in n && n[gridViewTag] != this.view.id))){
 				n = n.parentNode;
 			}
-			return (n != this.domNode) ? n : null; 
+			return (n != this.domNode) ? n : null;
 		},
 
 		findRowTarget: function(inSource){
@@ -180,7 +180,7 @@ dojo.require("dojo.dnd.Moveable");
 		isIntraRowEvent: function(e){
 			try{
 				var row = e.relatedTarget && this.findRowTarget(e.relatedTarget);
-				return !row && (e.rowIndex==-1) || row && (e.rowIndex==row.gridRowIndex);			
+				return !row && (e.rowIndex==-1) || row && (e.rowIndex==row.gridRowIndex);
 			}catch(x){
 				// e.relatedTarget on INPUT has permission problem in FF: https://bugzilla.mozilla.org/show_bug.cgi?id=208427
 				return false;
@@ -220,7 +220,7 @@ dojo.require("dojo.dnd.Moveable");
 		}
 	});
 
-	// Produces html for grid data content. Owned by grid and used internally 
+	// Produces html for grid data content. Owned by grid and used internally
 	// for rendering data. Override to implement custom rendering.
 	dg._ContentBuilder = dojo.extend(function(view){
 		dg._Builder.call(this, view);
@@ -284,7 +284,7 @@ dojo.require("dojo.dnd.Moveable");
 		}
 	});
 
-	// Produces html for grid header content. Owned by grid and used internally 
+	// Produces html for grid header content. Owned by grid and used internally
 	// for rendering data. Override to implement custom rendering.
 	dg._HeaderBuilder = dojo.extend(function(view){
 		this.moveable = null;
@@ -350,7 +350,7 @@ dojo.require("dojo.dnd.Moveable");
 		// event helpers
 		getCellX: function(e){
 			var n, x = e.layerX;
-			if(dojo.isMoz){
+			if(dojo.isMoz || dojo.isIE >= 9){
 				n = ascendDom(e.target, makeNotTagName("th"));
 				x -= (n && n.offsetLeft) || 0;
 				var t = e.sourceView.getScrollbarWidth();
@@ -397,7 +397,7 @@ dojo.require("dojo.dnd.Moveable");
 			if(!e.cellNode || e.cellNode.colSpan > 1){
 				return false;
 			}
-			var cell = this.grid.getCell(e.cellIndex); 
+			var cell = this.grid.getCell(e.cellIndex);
 			return !cell.noresize && cell.canResize();
 		},
 
@@ -408,20 +408,20 @@ dojo.require("dojo.dnd.Moveable");
 			}
 			//Bugfix for crazy IE problem (#8807).  IE returns position information for the icon and text arrow divs
 			//as if they were still on the left instead of returning the position they were 'float: right' to.
-			//So, the resize check ends up checking the wrong adjacent cell.  This checks to see if the hover was over 
+			//So, the resize check ends up checking the wrong adjacent cell.  This checks to see if the hover was over
 			//the image or text nodes, then just ignored them/treat them not in scale range.
 			if(dojo.isIE){
 				var tN = e.target;
-				if(dojo.hasClass(tN, "dojoxGridArrowButtonNode") || 
+				if(dojo.hasClass(tN, "dojoxGridArrowButtonNode") ||
 					dojo.hasClass(tN, "dojoxGridArrowButtonChar")){
 					return false;
 				}
 			}
 
 			if(dojo._isBodyLtr()){
-				return (e.cellIndex>0) && (e.cellX < this.overResizeWidth) && this.prepareResize(e, -1);
+				return (e.cellIndex>0) && (e.cellX > 0 && e.cellX < this.overResizeWidth) && this.prepareResize(e, -1);
 			}
-			var t = e.cellNode && (e.cellX < this.overResizeWidth);
+			var t = e.cellNode && (e.cellX > 0 && e.cellX < this.overResizeWidth);
 			return t;
 		},
 
@@ -432,11 +432,11 @@ dojo.require("dojo.dnd.Moveable");
 			}
 			//Bugfix for crazy IE problem (#8807).  IE returns position information for the icon and text arrow divs
 			//as if they were still on the left instead of returning the position they were 'float: right' to.
-			//So, the resize check ends up checking the wrong adjacent cell.  This checks to see if the hover was over 
+			//So, the resize check ends up checking the wrong adjacent cell.  This checks to see if the hover was over
 			//the image or text nodes, then just ignored them/treat them not in scale range.
 			if(dojo.isIE){
 				var tN = e.target;
-				if(dojo.hasClass(tN, "dojoxGridArrowButtonNode") || 
+				if(dojo.hasClass(tN, "dojoxGridArrowButtonNode") ||
 					dojo.hasClass(tN, "dojoxGridArrowButtonChar")){
 					return false;
 				}
@@ -496,17 +496,17 @@ dojo.require("dojo.dnd.Moveable");
 			// Also called from keyboard shift-arrow event when focus is on a header
 			var headContentBox = dojo.contentBox(e.sourceView.headerNode);
 			
-			if(isMouse){  //IE draws line even with no mouse down so separate from keyboard 
+			if(isMouse){  //IE draws line even with no mouse down so separate from keyboard
 				this.lineDiv = document.createElement('div');
 
 				// NOTE: this is for backwards compatibility with Dojo 1.3
 				var vw = (dojo.position||dojo._abs)(e.sourceView.headerNode, true);
 				var bodyContentBox = dojo.contentBox(e.sourceView.domNode);
 				//fix #11340
-				var l = e.clientX;
+				var l = e.pageX;
 				if(!dojo._isBodyLtr() && dojo.isIE < 8){
 					l -= dojox.html.metrics.getScrollbar().w;
-				}				
+				}
 				dojo.style(this.lineDiv, {
 					top: vw.y + "px",
 					left: l + "px",
@@ -612,6 +612,7 @@ dojo.require("dojo.dnd.Moveable");
 				};
 				// Only resize the columns when the drag has finished
 				this.doResizeNow(inDrag, data);
+				delete this.dragRecord;
 			}
 			
 			dojo.destroy(this.lineDiv);
@@ -634,10 +635,12 @@ dojo.require("dojo.dnd.Moveable");
 			var i, s, sw, f, fl;
 			for(i=0; (s=inDrag.spanners[i]); i++){
 				sw = s.width + data.deltaX;
-				s.node.style.width = sw + 'px';
-				inDrag.view.setColWidth(s.index, sw);
+				if(sw > 0){
+					s.node.style.width = sw + 'px';
+					inDrag.view.setColWidth(s.index, sw);
+				}
 			}
-			if(dojo._isBodyLtr() || !dojo.isIE){//fix #11339			
+			if(dojo._isBodyLtr() || !dojo.isIE){//fix #11339
 				for(i=0; (f=inDrag.followers[i]); i++){
 					fl = f.left + data.deltaX;
 					f.node.style.left = fl + 'px';

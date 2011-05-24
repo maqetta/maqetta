@@ -1,17 +1,4 @@
-dojo.provide("dojox.editor.plugins.InsertAnchor");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.form.ValidationTextBox");
-dojo.require("dijit.form.Select");
-dojo.require("dijit._editor.range");
-dojo.require("dojo.i18n");
-dojo.require("dojo.string");
-dojo.requireLocalization("dijit", "common");
-dojo.requireLocalization("dojox.editor.plugins", "InsertAnchor");
+define("dojox/editor/plugins/InsertAnchor", ["dojo", "dijit", "dojox", "dojo/string", "dijit/_Widget", "dijit/_editor/range", "dijit/_Templated", "dijit/TooltipDialog", "dijit/form/ValidationTextBox", "dijit/form/Select", "dijit/_editor/_Plugin", "dijit/form/Button", "dojox/editor/plugins/ToolbarLineBreak",  "dojo/i18n", "i18n!dojox/editor/plugins/nls/InsertAnchor", "i18n!dijit/nls/common"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 	// summary:
@@ -103,6 +90,12 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 		this.editor.contentDomPostFilters.push(dojo.hitch(this, this._postDomFilter));
 		this._setup();
 	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
 
 	setEditor: function(editor){
 		// summary:
@@ -115,7 +108,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 
 	_checkInput: function(){
 		// summary:
-		//		Function to check the input to the dialog is valid 
+		//		Function to check the input to the dialog is valid
 		//		and enable/disable set button
 		// tags:
 		//		private
@@ -159,7 +152,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 		var modurl = dojo.moduleUrl(dojox._scopeName, "editor/plugins/resources").toString();
 		if(!(modurl.match(/^https?:\/\//i)) &&
 			!(modurl.match(/^file:\/\//i))){
-			// We have to root it to the page location on webkit for some nutball reason. 
+			// We have to root it to the page location on webkit for some nutball reason.
 			// Probably has to do with how iframe was loaded.
 			var bUrl;
 			if(modurl.charAt(0) === "/"){
@@ -216,7 +209,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 				fullUrl = fullUrl.substring(0,index);
 			}
 
-			// Now we need to trim if necessary.  If it ends in /, then we don't 
+			// Now we need to trim if necessary.  If it ends in /, then we don't
 			// have a filename to trim off so we can return.
 			index = fullUrl.lastIndexOf("/");
 			if (index > 0 && index < fullUrl.length) {
@@ -232,8 +225,8 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 		// summary:
 		//		Function to check the values in args and 'fix' them up as needed.
 		// args: Object
-		//		Content being set.		
-		// tags: 
+		//		Content being set.
+		// tags:
 		//		protected
 		if(args){
 			if(args.anchorInput){
@@ -287,7 +280,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 			}
 		}
 		// make sure values are properly escaped, etc.
-		args = this._checkValues(args); 
+		args = this._checkValues(args);
 		this.editor.execCommand('inserthtml',
 			dojo.string.substitute(this.htmlTemplate, args));
 	},
@@ -377,7 +370,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 
 	_preDomFilter: function(node){
 		// summary:
-		//		A filter to identify the 'a' tags and if they're anchors, 
+		//		A filter to identify the 'a' tags and if they're anchors,
 		//		apply the right style to them.
 		// node:
 		//		The node to search from.
@@ -397,7 +390,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 
 	_postDomFilter: function(node){
 		// summary:
-		//		A filter to identify the 'a' tags and if they're anchors, 
+		//		A filter to identify the 'a' tags and if they're anchors,
 		//		remove the class style that shows up in the editor from
 		//		them.
 		// node:
@@ -427,4 +420,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(name === "insertanchor"){
 		o.plugin = new dojox.editor.plugins.InsertAnchor();
 	}
+});
+
+return dojox.editor.plugins.InsertAnchor;
+
 });

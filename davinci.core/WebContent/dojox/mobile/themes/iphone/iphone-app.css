@@ -36,7 +36,7 @@
 	text-align: center;
 }
 
-.alertText {	
+.alertText {
 	text-align: center;
 }
 
@@ -128,14 +128,14 @@
 
 .list .buttons .deleteBtn {
 	background-color: red;
-	
+
 }
 .list .buttons .cancelBtn {
 	margin-left: 10px;
 	background-color: blue;
 }
 
-.row.collapsed { 
+.row.collapsed {
 	-webkit-animation-name: collapse-vert;
 	-webkit-animation-duration: 0.5s;
 	-webkit-animation-timing-function: linear;
@@ -149,7 +149,7 @@
 	to {
 		height: 0px;
 		padding: 0px;
-	} 
+	}
 }
 
 .listSelector {
@@ -189,22 +189,27 @@
 input {
 	-webkit-text-size-adjust: 140%;
 }
- 
- 
+
+
 /* ImageThumbView styles */
 .mblImageThumbView {
 	position: relative;
+	-webkit-transition-property: height;
+	-webkit-transition-duration: 0.8s;
+	-webkit-transition-delay: 0;
 }
 
 .mblImageThumbView .mblThumb {
-	width: 93px;
+	width: 100px;
 	min-height: 100px;
 	display: inline-block;
-	padding: 4px 3px 0px 4px;
 	z-index: 2;
 	position: absolute;
+}
+
+.mblImageThumbView.animated .mblThumb {
 	-webkit-transition-property: -webkit-transform, opacity;
-	-webkit-transition-duration: 0.5s, 0.5s;
+	-webkit-transition-duration: 1.3s, 1s;
 	-webkit-transition-delay: 0, 0;
 }
 
@@ -212,7 +217,6 @@ input {
 	z-index: 1;
 	opacity: 0;
 }
-
 .mblImageThumbView .mblThumbInner {
 	width: 102px;
 	height: 102px;
@@ -227,55 +231,111 @@ input {
 	z-index: 20;
 	overflow: hidden;
 }
-
 .mblImageThumbView .mblThumb.selected .mblThumbOverlay {
-	background: url(images/thumb-overlay.png) center bottom no-repeat;
+	background-position: center bottom;
 }
-
-
 .mblImageThumbView .mblThumbInner .mblThumbMask {
-  width: 90px;
-  height: 90px;
-  overflow: hidden;
-  padding-left: 6px;
-  padding-top: 5px;
-  z-index: 10;
-  
+	width: 90px;
+	height: 90px;
+	overflow: hidden;
+	padding-left: 6px;
+	padding-top: 5px;
+	z-index: 10;
 }
-
 .mblImageThumbView .mblThumbInner .mblThumbMask img {
-  left: 0px;
-  top: 0px;
-  width: 90px;
-  height: 90px;
+	left: 0px;
+	top: 0px;
+	width: 90px;
+	height: 90px;
 }
 
 .mblImageThumbView .mblThumbInner .mblThumbMask .mblThumbSrc {
-  left: 6px;
-  top: 5px;
-  background-position: center center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-  position: absolute;
-  -webkit-background-size: 100% 100%;
-  -webkit-border-radius: 5px;
-  width: 90px;
-  height: 90px;
-  z-index: 5;
+	left: 6px;
+	top: 5px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	position: absolute;
+	-webkit-background-size: 100% 100%;
+	-webkit-border-radius: 5px;
+	width: 90px;
+	height: 90px;
+	z-index: 5;
 }
 
 .mblImageThumbView .mblThumbMask div {
-  left: 0px;
-  top: 0px;
-  width: 90px;
-  height: 90px;
-  background-repeat: no-repeat;
+	left: 0px;
+	top: 0px;
+	width: 90px;
+	height: 90px;
+	background-repeat: no-repeat;
 }
-
 .mblImageThumbView .mblThumb:hover,
-.mblImageThumbView .mblThumb.selected  {
+.mblImageThumbView .mblThumb.selected {
 	-webkit-transform: scale(1.2);
+	transform: scale(1.2);
 }
 
+/* Large Images */
+.mblImageThumbView.large .mblThumb {
+	width: 150px;
+	min-height: 150px;
+}
 
+.mblImageThumbView.large .mblThumbInner{
+	width: 152px;
+	height: 152px;
+}
 
+.mblImageThumbView.large .mblThumbOverlay {
+	background: url(images/thumb-overlay-large.png) center top no-repeat;
+	width: 152px;
+	height: 152px;
+}
+.mblImageThumbView.large .mblThumbInner .mblThumbMask,
+.mblImageThumbView.large .mblThumbInner .mblThumbMask img,
+.mblImageThumbView.large .mblThumbInner .mblThumbMask .mblThumbSrc,
+.mblImageThumbView.large .mblThumbMask div {
+	width: 133px;
+	height: 133px;
+}
+
+.mblImageThumbView.large .mblThumbInner .mblThumbMask .mblThumbSrc {
+	left: 9px;
+	top: 7px;
+}
+/* Small Images */
+.mblImageThumbView.small .mblThumb {
+	width: 75px;
+	min-height: 75px;
+}
+
+.mblImageThumbView.small .mblThumbInner{
+	width: 77px;
+	height: 77px;
+}
+
+.mblImageThumbView.small .mblThumbOverlay {
+	background: url(images/thumb-overlay-small.png) center top no-repeat;
+	width: 77px;
+	height: 77px;
+}
+.mblImageThumbView.small .mblThumbInner .mblThumbMask,
+.mblImageThumbView.small .mblThumbInner .mblThumbMask img,
+.mblImageThumbView.small .mblThumbInner .mblThumbMask .mblThumbSrc,
+.mblImageThumbView.small .mblThumbMask div {
+	width: 70px;
+	height: 70px;
+}
+
+.mblImageThumbView.small .mblThumbInner .mblThumbMask .mblThumbSrc {
+	left: 4px;
+	top: 3px;
+}
+
+.mblImageThumbView .mblThumbLabel {
+	font-size: smaller;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
+}

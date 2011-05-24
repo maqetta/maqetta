@@ -1,12 +1,4 @@
-dojo.provide("dijit.Calendar");
-
-dojo.require("dojo.cldr.supplemental");
-dojo.require("dojo.date");
-dojo.require("dojo.date.locale");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._CssStateMixin");
+define("dijit/Calendar", ["dojo", "dijit", "text!dijit/templates/Calendar.html", "dojo/cldr/supplemental", "dojo/date", "dojo/date/locale", "dijit/_Widget", "dijit/_Templated", "dijit/_CssStateMixin", "dijit/form/DropDownButton"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.Calendar",
@@ -31,10 +23,12 @@ dojo.declare(
 		//	|	<div dojoType="dijit.Calendar"></div>
 
 		templateString: dojo.cache("dijit", "templates/Calendar.html"),
+		widgetsInTemplate: true,
 
 		// value: Date
-		//		The currently selected Date
-		value: new Date(),
+		//		The currently selected Date, initially set to invalid date to indicate no selection.
+		value: new Date(""),
+		// TODO: for 2.0 make this a string (ISO format) rather than a Date
 
 		// datePackage: String
 		//		JavaScript namespace to find Calendar routines.  Uses Gregorian Calendar routines
@@ -49,23 +43,35 @@ dojo.declare(
 		//		Order fields are traversed when user hits the tab key
 		tabIndex: "0",
 		
+		// currentFocus: Date
+		//		Date object containing the currently focused date, or the date which would be focused
+		//		if the calendar itself was focused.   Also indicates which year and month to display,
+		//		i.e. the current "page" the calendar is on.
+		currentFocus: new Date(),
+
 		baseClass:"dijitCalendar",
 
-		// Set node classes for various mouse events, see dijit._CssStateMixin for more details 
+		// Set node classes for various mouse events, see dijit._CssStateMixin for more details
 		cssStateNodes: {
 			"decrementMonth": "dijitCalendarArrow",
 			"incrementMonth": "dijitCalendarArrow",
 			"previousYearLabelNode": "dijitCalendarPreviousYear",
-			"nextYearLabelNode": "dijitCalendarNextYear"			
+			"nextYearLabelNode": "dijitCalendarNextYear"
 		},
 
-		attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
-			tabIndex: "domNode"
- 		}),
+		_isValidDate: function(/*Date*/ value){
+			// summary:
+			//		Runs various tests on the value, checking that it's a valid date, rather
+			//		than blank or NaN.
+			// tags:
+			//		private
+			return value && !isNaN(value) && typeof value == "object" &&
+				value.toString() != this.constructor.prototype.value.toString();
+		},
 
 		setValue: function(/*Date*/ value){
 			// summary:
-			//      Deprecated.   Used attr('value', ...) instead.
+			//      Deprecated.   Use set('value', ...) instead.
 			// tags:
 			//      deprecated
 			dojo.deprecated("dijit.Calendar:setValue() is deprecated.  Use set('value', ...) instead.", "", "2.0");
@@ -74,9 +80,11 @@ dojo.declare(
 
 		_getValueAttr: function(){
 			// summary:
-			//		Support getter attr('value')
+			//		Support get('value')
+
+			// this.value is set to 1AM, but return midnight, local time for back-compat
 			var value = new this.dateClassObj(this.value);
-			value.setHours(0, 0, 0, 0); // return midnight, local time for back-compat
+			value.setHours(0, 0, 0, 0);
 
 			// If daylight savings pushes midnight to the previous date, fix the Date
 			// object to point at 1am so it will represent the correct day. See #9366
@@ -86,26 +94,43 @@ dojo.declare(
 			return value;
 		},
 
-		_setValueAttr: function(/*Date*/ value){
+		_setValueAttr: function(/*Date|Number*/ value, /*Boolean*/ priorityChange){
 			// summary:
-			//		Support setter attr("value", ...)
+			//		Support set("value", ...)
 			// description:
 			// 		Set the current date and update the UI.  If the date is disabled, the value will
 			//		not change, but the display will change to the corresponding month.
+			// value:
+			//		Either a Date or the number of seconds since 1970.
 			// tags:
 			//      protected
-			if(!this.value || this.dateFuncObj.compare(value, this.value)){
+			if(value){
+				// convert from Number to Date, or make copy of Date object so that setHours() call below
+				// doesn't affect original value
 				value = new this.dateClassObj(value);
-				value.setHours(1); // to avoid issues when DST shift occurs at midnight, see #8521, #9366
-				this.displayMonth = new this.dateClassObj(value);
-				if(!this.isDisabledDate(value, this.lang)){
-					this.value = value;
-					this.onChange(this.get('value'));
+			}
+			if(this._isValidDate(value)){
+				if(!this._isValidDate(this.value) || this.dateFuncObj.compare(value, this.value)){
+					value.setHours(1, 0, 0, 0); // round to nearest day (1am to avoid issues when DST shift occurs at midnight, see #8521, #9366)
+	
+					if(!this.isDisabledDate(value, this.lang)){
+						this._set("value", value);
+		
+						// Set focus cell to the new value.   Arguably this should only happen when there isn't a current
+						// focus point.   This will also repopulate the grid, showing the new selected value (and possibly
+						// new month/year).
+						this.set("currentFocus", value);
+	
+						if(priorityChange || typeof priorityChange == "undefined"){
+							this.onChange(this.get('value'));
+							this.onValueSelected(this.get('value'));	// remove in 2.0
+						}
+					}
 				}
-				dojo.attr(this.domNode, "aria-label",
-					this.dateLocaleModule.format(value,
-						{selector:"date", formatLength:"full"}));
-				this._populateGrid();
+			}else{
+				// clear value, and repopulate grid (to deselect the previously selected day) without changing currentFocus
+				this._set("value", null);
+				this.set("currentFocus", this.currentFocus);
 			}
 		},
 
@@ -126,8 +151,10 @@ dojo.declare(
 			//      Fills in the calendar grid with each day (1-31)
 			// tags:
 			//      private
-			var month = this.displayMonth;
+
+			var month = new this.dateClassObj(this.currentFocus);
 			month.setDate(1);
+
 			var firstDay = month.getDay(),
 				daysInMonth = this.dateFuncObj.getDaysInMonth(month),
 				daysInPreviousMonth = this.dateFuncObj.getDaysInMonth(this.dateFuncObj.add(month, "month", -1)),
@@ -177,20 +204,24 @@ dojo.declare(
 				}
 
 				template.className = clazz + "Month dijitCalendarDateTemplate";
-				template.dijitDateValue = date.valueOf();
+				template.dijitDateValue = date.valueOf();				// original code
+				dojo.attr(template, "dijitDateValue", date.valueOf());	// so I can dojo.query() it
 				var label = dojo.query(".dijitCalendarDateLabel", template)[0],
 					text = date.getDateLocalized ? date.getDateLocalized(this.lang) : date.getDate();
 				this._setText(label, text);
 			}, this);
 
-			// Fill in localized month name
+			// Repopulate month drop down list based on current year.
+			// Need to do this to hide leap months in Hebrew calendar.
 			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang, month);
-			this._setText(this.monthLabelNode, monthNames[month.getMonth()]);
-			// Repopulate month list based on current year (Hebrew calendar)
-			dojo.query(".dijitCalendarMonthLabelTemplate", this.domNode).forEach(function(node, i){
-				dojo.toggleClass(node, "dijitHidden", !(i in monthNames)); // hide leap months (Hebrew)
-				this._setText(node, monthNames[i]);
-			}, this);
+			this.monthDropDownButton.dropDown.set("months", monthNames);
+
+			// Set name of current month and also fill in spacer element with all the month names
+			// (invisible) so that the maximum width will affect layout.   But not on IE6 because then
+			// the center <TH> overlaps the right <TH> (due to a browser bug).
+			this.monthDropDownButton.containerNode.innerHTML =
+				(dojo.isIE == 6 ? "" : "<div class='dijitSpacer'>" + this.monthDropDownButton.dropDown.domNode.innerHTML + "</div>") +
+				"<div class='dijitCalendarMonthLabel dijitCalendarCurrentMonthLabel'>" +  monthNames[month.getMonth()] + "</div>";
 
 			// Fill in localized prev/current/next years
 			var y = month.getFullYear() - 1;
@@ -200,21 +231,6 @@ dojo.declare(
 				this._setText(this[name+"YearLabelNode"],
 					this.dateLocaleModule.format(d, {selector:'year', locale:this.lang}));
 			}, this);
-
-			// Set up repeating mouse behavior
-			var _this = this;
-			var typematic = function(nodeProp, dateProp, adj){
-//FIXME: leaks (collects) listeners if populateGrid is called multiple times.  Do this once?
-				_this._connects.push(
-					dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
-						if(count >= 0){ _this._adjustDisplay(dateProp, adj); }
-					}, 0.8, 500)
-				);
-			};
-			typematic("incrementMonth", "month", 1);
-			typematic("decrementMonth", "month", -1);
-			typematic("nextYearLabelNode", "year", 1);
-			typematic("previousYearLabelNode", "year", -1);
 		},
 
 		goToToday: function(){
@@ -232,12 +248,14 @@ dojo.declare(
 		},
 
 		postMixInProperties: function(){
-			// parser.instantiate sometimes passes in NaN for IE.  Use default value in prototype instead.
+			// Parser.instantiate sometimes passes in NaN for IE.  Use default value in prototype instead.
+			// TODO: remove this for 2.0 (thanks to #11511)
 			if(isNaN(this.value)){ delete this.value; }
+
 			this.inherited(arguments);
 		},
 
-		postCreate: function(){
+		buildRendering: function(){
 			this.inherited(arguments);
 			dojo.setSelectable(this.domNode, false);
 
@@ -262,23 +280,28 @@ dojo.declare(
 				this._setText(label, dayNames[(i + dayOffset) % 7]);
 			}, this);
 
-			var dateObj = new this.dateClassObj(this.value);
-			// Fill in spacer/month dropdown element with all the month names (invisible) so that the maximum width will affect layout
-			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang, dateObj);
-			cloneClass(".dijitCalendarMonthLabelTemplate", monthNames.length-1);
-			dojo.query(".dijitCalendarMonthLabelTemplate", this.domNode).forEach(function(node, i){
-				dojo.attr(node, "month", i);
-				if(i in monthNames){ this._setText(node, monthNames[i]); }
-				dojo.place(node.cloneNode(true), this.monthLabelSpacer);
-			}, this);
+			var dateObj = new this.dateClassObj(this.currentFocus);
 
-			this.value = null;
-			this.set('value', dateObj);
-		},
+			this.monthDropDownButton.dropDown = new dijit.Calendar._MonthDropDown({
+				id: this.id + "_mdd",
+				onChange: dojo.hitch(this, "_onMonthSelect")
+			});
 
-		_onMenuHover: function(e){
-			dojo.stopEvent(e);
-			dojo.toggleClass(e.target, "dijitMenuItemHover");
+			this.set('currentFocus', dateObj, false);	// draw the grid to the month specified by currentFocus
+
+			// Set up repeating mouse behavior for increment/decrement of months/years
+			var _this = this;
+			var typematic = function(nodeProp, dateProp, adj){
+				_this._connects.push(
+					dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
+						if(count >= 0){ _this._adjustDisplay(dateProp, adj); }
+					}, 0.8, 500)
+				);
+			};
+			typematic("incrementMonth", "month", 1);
+			typematic("decrementMonth", "month", -1);
+			typematic("nextYearLabelNode", "year", 1);
+			typematic("previousYearLabelNode", "year", -1);
 		},
 
 		_adjustDisplay: function(/*String*/ part, /*int*/ amount){
@@ -290,47 +313,63 @@ dojo.declare(
 			//      Number of months or years
 			// tags:
 			//      private
-			this.displayMonth = this.dateFuncObj.add(this.displayMonth, part, amount);
-			this._populateGrid();
+			this._setCurrentFocusAttr(this.dateFuncObj.add(this.currentFocus, part, amount));
 		},
 
-		_onMonthToggle: function(/*Event*/ evt){
+		_setCurrentFocusAttr: function(/*Date*/ date, /*Boolean*/ forceFocus){
 			// summary:
-			//      Handler for when user triggers or dismisses the month list
-			// tags:
-			//      protected
-			dojo.stopEvent(evt);
+			//		If the calendar currently has focus, then focuses specified date,
+			//		changing the currently displayed month/year if necessary.
+			//		If the calendar doesn't have focus, updates currently
+			//		displayed month/year, and sets the cell that will get focus.
+			// forceFocus:
+			//		If true, will focus() the cell even if calendar itself doesn't have focus
 
-			if(evt.type == "mousedown"){
-				var coords = dojo.position(this.monthLabelNode);
-//				coords.y -= dojo.position(this.domNode, true).y;
-				// Size the dropdown's width to match the label in the widget
-				// so that they are horizontally aligned
-				var dim = {
-					width: coords.w + "px",
-					top: -this.displayMonth.getMonth() * coords.h + "px"
-				};
-				if((dojo.isIE && dojo.isQuirks) || dojo.isIE < 7){
-					dim.left = -coords.w/2 + "px";
-				}
-				dojo.style(this.monthDropDown, dim);
-				this._popupHandler = this.connect(document, "onmouseup", "_onMonthToggle");
-			}else{
-				this.disconnect(this._popupHandler);
-				delete this._popupHandler;
+			var oldFocus = this.currentFocus,
+				oldCell = oldFocus ? dojo.query("[dijitDateValue=" + oldFocus.valueOf() + "]", this.domNode)[0] : null;
+
+			// round specified value to nearest day (1am to avoid issues when DST shift occurs at midnight, see #8521, #9366)
+			date = new this.dateClassObj(date);
+			date.setHours(1, 0, 0, 0);
+
+			this._set("currentFocus", date);
+
+			// TODO: only re-populate grid when month/year has changed
+			this._populateGrid();
+
+			// set tabIndex=0 on new cell, and focus it (but only if Calendar itself is focused)
+			var newCell = dojo.query("[dijitDateValue=" + date.valueOf() + "]", this.domNode)[0];
+			newCell.setAttribute("tabIndex", this.tabIndex);
+			if(this._focused || forceFocus){
+				newCell.focus();
 			}
 
-			dojo.toggleClass(this.monthDropDown, "dijitHidden");
-			dojo.toggleClass(this.monthLabelNode, "dijitVisible");
+			// set tabIndex=-1 on old focusable cell
+			if(oldCell && oldCell != newCell){
+				if(dojo.isWebKit){	// see #11064 about webkit bug
+					oldCell.setAttribute("tabIndex", "-1");
+				}else{
+						oldCell.removeAttribute("tabIndex");
+				}
+			}
 		},
 
-		_onMonthSelect: function(/*Event*/ evt){
+		focus: function(){
 			// summary:
-			//      Handler for when user selects a month from a list
+			//		Focus the calendar by focusing one of the calendar cells
+			this._setCurrentFocusAttr(this.currentFocus, true);
+		},
+
+		_onMonthSelect: function(/*Number*/ newMonth){
+			// summary:
+			//      Handler for when user selects a month from the drop down list
 			// tags:
 			//      protected
-			this._onMonthToggle(evt);
-			this.displayMonth.setMonth(dojo.attr(evt.target, "month"));
+
+			// move to selected month, bounding by the number of days in the month
+			// (ex: dec 31 --> jan 28, not jan 31)
+			this.currentFocus = this.dateFuncObj.add(this.currentFocus, "month",
+				newMonth - this.currentFocus.getMonth());
 			this._populateGrid();
 		},
 
@@ -343,7 +382,6 @@ dojo.declare(
 			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
 			if(node && !dojo.hasClass(node, "dijitCalendarDisabledDate")){
 				this.set('value', node.dijitDateValue);
-				this.onValueSelected(this.get('value'));
 			}
 		},
 
@@ -376,11 +414,11 @@ dojo.declare(
 			
 			// if mouse out occurs moving from <td> to <span> inside <td>, ignore it
 			if(evt.relatedTarget && evt.relatedTarget.parentNode == this._currentNode){ return; }
-
-			dojo.removeClass(this._currentNode, "dijitCalendarHoveredDate");
+			var cls = "dijitCalendarHoveredDate";
 			if(dojo.hasClass(this._currentNode, "dijitCalendarActiveDate")) {
-				dojo.removeClass(this._currentNode, "dijitCalendarActiveDate");
+				cls += " dijitCalendarActiveDate";
 			}
+			dojo.removeClass(this._currentNode, cls);
 			this._currentNode = null;
 		},
 		
@@ -400,17 +438,22 @@ dojo.declare(
 		},
 
 //TODO: use typematic
-//TODO: skip disabled dates without ending up in a loop
-//TODO: could optimize by avoiding populate grid when month does not change
-		_onKeyPress: function(/*Event*/evt){
+		handleKey: function(/*Event*/ evt){
 			// summary:
-			//		Provides keyboard navigation of calendar
+			//		Provides keyboard navigation of calendar.
+			// description:
+			//		Called from _onKeyPress() to handle keypress on a stand alone Calendar,
+			//		and also from `dijit.form._DateTimeTextBox` to pass a keypress event
+			//		from the `dijit.form.DateTextBox` to be handled in this widget
+			// returns:
+			//		False if the key was recognized as a navigation key,
+			//		to indicate that the event was handled by Calendar and shouldn't be propogated
 			// tags:
 			//		protected
 			var dk = dojo.keys,
 				increment = -1,
 				interval,
-				newValue = this.value;
+				newValue = this.currentFocus;
 			switch(evt.keyCode){
 				case dk.RIGHT_ARROW:
 					increment = 1;
@@ -429,7 +472,7 @@ dojo.declare(
 					increment = 1;
 					//fallthrough...
 				case dk.PAGE_UP:
-					interval = evt.ctrlKey ? "year" : "month";
+					interval = evt.ctrlKey || evt.altKey ? "year" : "month";
 					break;
 				case dk.END:
 					// go to the next month
@@ -438,31 +481,40 @@ dojo.declare(
 					interval = "day";
 					//fallthrough...
 				case dk.HOME:
-					newValue = new Date(newValue).setDate(1);
+					newValue = new this.dateClassObj(newValue);
+					newValue.setDate(1);
 					break;
 				case dk.ENTER:
-					this.onValueSelected(this.get('value'));
+				case dk.SPACE:
+					this.set("value", this.currentFocus);
 					break;
-				case dk.ESCAPE:
-					//TODO
 				default:
-					return;
+					return true;
 			}
-			dojo.stopEvent(evt);
 
 			if(interval){
 				newValue = this.dateFuncObj.add(newValue, interval, increment);
 			}
 
-			this.set("value", newValue);
+			this._setCurrentFocusAttr(newValue);
+
+			return false;
+		},
+
+		_onKeyPress: function(/*Event*/ evt){
+			// summary:
+			//		For handling keypress events on a stand alone calendar
+			if(!this.handleKey(evt)){
+				dojo.stopEvent(evt);
+			}
 		},
 
 		onValueSelected: function(/*Date*/ date){
 			// summary:
 			//		Notification that a date cell was selected.  It may be the same as the previous value.
 			// description:
-			//      Used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.DateTextBox`)
-			//      to get notification when the user has clicked a date.
+			//      Formerly used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.DateTextBox`)
+			//      to get notification when the user has clicked a date.  Now onExecute() (above) is used.
 			// tags:
 			//      protected
 		},
@@ -478,7 +530,7 @@ dojo.declare(
 			//		support multiple (concurrently) selected dates
 			// tags:
 			//		protected extension
-			return !this.dateFuncObj.compare(dateObject, this.value, "date")
+			return this._isValidDate(this.value) && !this.dateFuncObj.compare(dateObject, this.value, "date")
 		},
 
 		isDisabledDate: function(/*Date*/ dateObject, /*String?*/ locale){
@@ -504,3 +556,38 @@ dojo.declare(
 		}
 	}
 );
+
+dojo.declare("dijit.Calendar._MonthDropDown", [dijit._Widget, dijit._Templated], {
+	// summary:
+	//		The month drop down
+
+	// months: String[]
+	//		List of names of months, possibly w/some undefined entries for Hebrew leap months
+	//		(ex: ["January", "February", undefined, "April", ...])
+	months: [],
+
+	templateString: "<div class='dijitCalendarMonthMenu dijitMenu' " +
+		"dojoAttachEvent='onclick:_onClick,onmouseover:_onMenuHover,onmouseout:_onMenuHover'></div>",
+
+	_setMonthsAttr: function(/*String[]*/ months){
+		this.domNode.innerHTML = dojo.map(months, function(month, idx){
+				return month ? "<div class='dijitCalendarMonthLabel' month='" + idx +"'>" + month + "</div>" : "";
+			}).join("");
+	},
+
+	_onClick: function(/*Event*/ evt){
+		this.onChange(dojo.attr(evt.target, "month"));
+	},
+
+	onChange: function(/*Number*/ month){
+		// summary:
+		//		Callback when month is selected from drop down
+	},
+
+	_onMenuHover: function(evt){
+		dojo.toggleClass(evt.target, "dijitCalendarMonthLabelHover", evt.type == "mouseover");
+	}
+});
+
+return dijit.Calendar;
+});

@@ -55,7 +55,9 @@
 	#zoom: 1;
 	overflow: hidden;
 	float: none !important; /* needed by FF to squeeze the INPUT in */
-	position:relative;
+	position: relative;
+	vertical-align: middle;
+	#display: inline;
 }
 
 .dj_ie INPUT.dijitTextBox,
@@ -94,7 +96,6 @@
 
 .dijitOffScreen {
 	position: absolute;
-	visibility: hidden;
 	left: 50%;
 	top: -10000px;
 }
@@ -109,12 +110,6 @@
 	margin: 0;
 	border: 0;
 	padding: 0;
-}
-.dijit_a11y .dijitPopup,
-.dijit_ally .dijitPopup DIV,
-.dijit_a11y .dijitPopup TABLE,
-.dijit_a11y .dijitTooltipContainer {
-	background-color: white !important;
 }
 
 .dijitPositionOnly {
@@ -161,15 +156,13 @@
 /****
 		A11Y
  ****/
-.dijit_a11y * {
-	background-image:none !important;
-}
 .dijit_a11y .dijitIcon,
 .dijit_a11y DIV.dijitArrowButtonInner, /* is this only for Spinner?  if so, it should be deleted */
 .dijit_a11y SPAN.dijitArrowButtonInner,
 .dijit_a11y IMG.dijitArrowButtonInner,
-.dijit_a11y .dijitCalendarIncrementControl {
-	/* hide icon nodes in high contrast mode; when necesary they will be replaced by character equivalents
+.dijit_a11y .dijitCalendarIncrementControl,
+.dijit_a11y .dijitTreeExpando {
+	/* hide icon nodes in high contrast mode; when necessary they will be replaced by character equivalents
 	 * exception for INPUT.dijitArrowButtonInner, because the icon and character are controlled by the same node */
 	display: none;
 }
@@ -194,20 +187,18 @@
 .dijit_a11y .dijitCalendarSelectedDate .dijitCalendarDateLabel {
 	border-style: dotted !important;
 	border-width: 1px;
-	padding: 0px;
+	padding: 0;
 }
 .dijit_a11y .dijitCalendarDateTemplate {
 	padding-bottom: 0.1em !important;	/* otherwise bottom border doesn't appear on IE */
 }
-
-.dijit_a11y .dijit * {
-	background:white !important;
-	color:black !important;
-}
 .dijit_a11y .dijitButtonNode {
-	border-color: black!important;
-	border-style: outset!important;
-	border-width: medium!important;
+	border: black outset medium !important;
+
+	/* In claro, hovering a toolbar button reduces padding and adds a border.
+	 * Not needed in a11y mode since Toolbar buttons always have a border.
+	 */
+	padding: 0 !important;
 }
 
 .dijit_a11y .dijitTextBoxReadOnly .dijitInputField,
@@ -262,6 +253,7 @@
 .dijitComboButton {
 	/* outside of button */
 	margin: 0.2em;
+	vertical-align: middle;
 }
 
 .dijitButtonContents {
@@ -277,13 +269,6 @@ td.dijitButtonContents {
 	/*margin-bottom:.2em;*/
 }
 
-TABLE.dijitComboButton { /* TODO: why not add dijitReset class to ComboButton? */
-	/* In ComboButton, borders are on each cell rather than on <table> itself */
-	border-collapse: collapse;
-	border:0;
-	padding:0;
-	margin:0;
-}
 .dijitToolbar .dijitComboButton {
 	/* because Toolbar only draws a border around the hovered thing */
 	border-collapse: separate;
@@ -301,10 +286,6 @@ TABLE.dijitComboButton { /* TODO: why not add dijitReset class to ComboButton? *
 	padding: 1px 2px;
 }
 
-.dj_ie .dijitComboButton {
-	/* hack to get inline-table to vertically align w/other buttons */
-	margin-bottom: -3px;
-}
 
 .dj_webkit .dijitToolbar .dijitDropDownButton {
 	padding-left: 0.3em;
@@ -364,7 +345,6 @@ DIV.dijitArrowButton {
 	#overflow: hidden; /* #6027, #6067 */
 	width: 15em;	/* need to set default size on outer node since inner nodes say <input style="width:100%"> and <td width=100%>.  user can override */
 	vertical-align: middle;
-	#vertical-align: auto;
 }
 
 .dijitTextBoxReadOnly,
@@ -377,7 +357,7 @@ DIV.dijitArrowButton {
 .dj_webkit TEXTAREA.dijitTextAreaDisabled {
 	color: #333; /* because WebKit lightens disabled input/textarea no matter what color you specify */
 }
-.dj_gecko .dijitTextBoxReadOnly INPUT,
+.dj_gecko .dijitTextBoxReadOnly INPUT.dijitInputField, /* disable arrow and validation presentation INPUTs but allow real INPUT for text selection */
 .dj_gecko .dijitTextBoxDisabled INPUT {
 	-moz-user-input: none; /* prevent focus of disabled textbox buttons */
 }
@@ -472,6 +452,15 @@ DIV.dijitArrowButton {
 	/* dividing line between input area and up/down button(s) for ComboBox and Spinner */
 	border-width: 0 0 0 1px !important; /* !important needed due to wayward ".theme .dijitButtonNode" rules */
 }
+.dijitToolbar .dijitComboBox .dijitArrowButtonContainer {
+	/* overrides above rule plus mirror-image rule in dijit_rtl.css to have no divider when ComboBox in Toolbar */
+	border-width: 0 !important;
+}
+
+.dijitComboBoxMenu {
+	/* Drop down menu is implemented as <ul> <li/> <li/> ... but we don't want circles before each item */
+	list-style-type: none;
+}
 .dijitSpinner .dijitSpinnerButtonContainer .dijitButtonNode {
 	/* dividing line between input area and up/down button(s) for ComboBox and Spinner */
 	border-width: 0;
@@ -479,16 +468,9 @@ DIV.dijitArrowButton {
 .dj_ie .dijit_a11y .dijitSpinner .dijitSpinnerButtonContainer .dijitButtonNode {
 	clear: both; /* IE workaround */
 }
-.dijit_a11y .dijitTextBox .dijitValidationContainer,
-.dijit_a11y .dijitTextBox .dijitSpinnerButtonContainer,
-.dijit_a11y .dijitComboBox .dijitArrowButtonContainer {
-	/* dividing line between input area and up/down button(s) for ComboBox and Spinner */
-	border: solid black !important;
-	border-width: 0 0 0 1px !important;
-}
 
 .dj_ie .dijitToolbar .dijitComboBox {
-	/* make combobox buttons align porperly with other buttons in a toolbar */
+	/* make combobox buttons align properly with other buttons in a toolbar */
 	vertical-align: middle;
 }
 
@@ -527,8 +509,8 @@ DIV.dijitArrowButton {
 	width: 1.4em !important;
 }
 .dj_ie7 .dijit_a11y .dijitSpinner .dijitArrowButtonInner .dijitInputField {
-	padding-left: 0.0em !important; /* manually center INPUT: character is .5em and total width = 1em */
-	padding-right: 0.0em !important;
+	padding-left: 0 !important; /* manually center INPUT: character is .5em and total width = 1em */
+	padding-right: 0 !important;
 	width: 1em !important;
 }
 .dj_ie6 .dijit_a11y .dijitSpinner .dijitArrowButtonInner .dijitInputField {
@@ -616,7 +598,7 @@ DIV.dijitArrowButton {
 	width: 1em;
 }
 .dijit_a11y .dijitSpinnerButtonContainer .dijitButtonNode {
-	border-width: 1px 0px 0px 0px;
+	border-width: 1px 0 0 0;
 	border-style: solid !important;
 }
 
@@ -721,10 +703,6 @@ DIV.dijitArrowButton {
 	height:1.6em;
 }
 
-.dijitProgressBarIndeterminate .dijitProgressBarLabel {
-	visibility:hidden;
-}
-
 .dijitProgressBarIndeterminate .dijitProgressBarTile {
 	/* animated gif for 'indeterminate' mode */
 }
@@ -761,7 +739,7 @@ DIV.dijitArrowButton {
 	z-index: 2000;
 	display: block;
 	/* make visible but off screen */
-	left: 50%;
+	left: 0;
 	top: -10000px;
 	overflow: visible;
 }
@@ -978,8 +956,8 @@ body .dijitAlignClient { position: absolute; }
 .dijitTitlePaneTitle {
 	cursor: pointer;
 }
-.dijitFixedOpen {
-	/* TitlePane that cannot be closed */
+.dijitFixedOpen, .dijitFixedClosed {
+	/* TitlePane that cannot be toggled */
 	cursor: default;
 }
 .dijitTitlePaneTitle * {
@@ -1016,13 +994,6 @@ body .dijitAlignClient { position: absolute; }
 	position: relative;
 }
 
-img.dijitColorPaletteUnder {
-	/* This single image contains the "icons" for every color in the color palette, and sits behind the transparent <table> */
-	border-style: none;
-	position: absolute;
-	left: 0;
-	top: 0;
-}
 .dijitColorPalette .dijitPaletteTable {
 	/* Table that holds the palette cells, and overlays image file with color swatches.
 	 * padding/margin to align table with image.
@@ -1044,28 +1015,30 @@ img.dijitColorPaletteUnder {
 }
 
 .dijitColorPalette .dijitPaletteCell {
-	/* <td> in the <table>, matching size of color swatches embedded in the img.dijitColorPaletteUnder */
-	height: 20px;
-	width: 20px;
+	/* <td> in the <table> */
 	font-size: 1px;
 	vertical-align: middle;
 	text-align: center;
+	background: none;
 }
 .dijitColorPalette .dijitPaletteImg {
-	/* transparent (but clickable) <img> node inside of each <td>, overlaying the color swatch.
-	 * displays border around a color swatch
-	 */
-	width: 16px;
-	height: 14px;
+	/* Called dijitPaletteImg for back-compat, this actually wraps the color swatch with a border and padding */
+	padding: 1px;		/* white area between gray border and color swatch */
 	border: 1px solid #999;
+	margin: 2px 1px;
 	cursor: default;
-	vertical-align: middle;
+	font-size: 1px;		/* prevent <span> from getting bigger just to hold a character */
 }
-.dj_iequirks .dijitColorPalette .dijitPaletteImg {
-	margin: 1px;	/* needed to fix spacing for ColorPalette in TooltipDialog on IE/quirks */
+.dj_gecko .dijitColorPalette .dijitPaletteImg {
+	padding-bottom: 0;	/* workaround rendering glitch on FF, it adds an extra pixel at the bottom */
+}
+.dijitColorPalette .dijitColorPaletteSwatch {
+	/* the actual part where the color is */
+	width: 14px;
+	height: 12px;
 }
 .dijitPaletteTable td {
-		padding: 0px;
+		padding: 0;
 }
 .dijitColorPalette .dijitPaletteCellHover .dijitPaletteImg {
 	/* hovered color swatch */
@@ -1075,6 +1048,7 @@ img.dijitColorPaletteUnder {
 .dijitColorPalette .dijitPaletteCellActive .dijitPaletteImg,
 .dijitColorPalette .dijitPaletteCellSelected .dijitPaletteImg {
 	border: 2px solid #000;
+	margin: 1px 0;	/* reduce margin to compensate for increased border */
 }
 
 
@@ -1082,14 +1056,6 @@ img.dijitColorPaletteUnder {
 .dijit_a11y .dijitColorPalette .dijitPaletteTable * {
 	/* table cells are to catch events, but the swatches are in the PaletteImg behind the table */
 	background-color: transparent !important;
-}
-.dj_gecko .dijit_a11y .dijitColorPalette .dijitPaletteCellFocused .dijitPaletteImg {
-	border: 3px dotted #000;	/* focus border on table cells broken in FF high contrast :-( */
-	margin: -1px;
-}
-
-.dijit_a11y  .dijitColorPalette .dijitPaletteCellHover .dijitPaletteImg {
-	border: 2px solid #000 !important;
 }
 
 /* AccordionContainer */
@@ -1122,12 +1088,9 @@ img.dijitColorPaletteUnder {
 	display: none;
 }
 
-.dj_ie6 .dijitAccordionTitle,
-.dj_iequirks .dijitAccordionTitle {
-	/* avoid IE6/IE quirks size calc bug where accordion ends up too short (themeTesterQuirk.html)
-	 * and IE6 bug where the first title bar turns white upon hovering any title bar
-	 */
-	zoom: 1;
+.dijitAccordionChildWrapper {
+	/* this is the node whose height is adjusted */
+	overflow: hidden;
 }
 
 /* Calendar */
@@ -1137,6 +1100,7 @@ img.dijitColorPaletteUnder {
 }
 .dijitCalendarContainer th, .dijitCalendarContainer td {
 	padding: 0;
+	vertical-align: middle;
 }
 
 .dijitCalendarNextYear {
@@ -1173,6 +1137,11 @@ img.dijitColorPaletteUnder {
   	visibility: hidden;
 }
 
+/* Styling for month drop down list */
+
+.dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+	text-align:center;
+}
 
 /* Menu */
 
@@ -1291,7 +1260,7 @@ img.dijitColorPaletteUnder {
 }
 .dj_ie .dijit_a11y .dijitMenuBar .dijitMenuItem {
 	/* so bottom border of MenuBar appears on IE7 in high-contrast mode */
-	margin: 0px;
+	margin: 0;
 }
 
 /* StackContainer */
@@ -1339,7 +1308,7 @@ img.dijitColorPaletteUnder {
 	border-bottom: 1px solid black;
 }
 .dijitTabContainerTop-container {
-	border-top: 0px;
+	border-top: 0;
 }
 
 .dijitTabContainerLeft-tabs {
@@ -1347,14 +1316,14 @@ img.dijitColorPaletteUnder {
 	float: left;
 }
 .dijitTabContainerLeft-container {
-	border-left: 0px;
+	border-left: 0;
 }
 
 .dijitTabContainerBottom-tabs {
 	border-top: 1px solid black;
 }
 .dijitTabContainerBottom-container {
-	border-bottom: 0px;
+	border-bottom: 0;
 }
 
 .dijitTabContainerRight-tabs {
@@ -1362,7 +1331,7 @@ img.dijitColorPaletteUnder {
 	float: left;
 }
 .dijitTabContainerRight-container {
-	border-right: 0px;
+	border-right: 0;
 }
 
 DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
@@ -1427,30 +1396,35 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	display:none;
 }
 
+.dijitTab .tabLabel {
+	/* make sure tabs w/close button and w/out close button are same height, even w/small (<15px) font.
+	 * assumes <=15px height for close button icon.
+	 */
+	min-height: 15px;
+	display: inline-block;
+}
+.dijitNoIcon {
+	/* applied to <img>/<span> node when there is no icon specified */
+	display: none;
+}
+.dj_ie6 .dijitTab .dijitNoIcon {
+	/* because min-height (on .tabLabel, above) doesn't work on IE6 */
+	display: inline;
+	height: 15px;
+	width: 1px;
+}
+
 /* images off, high-contrast mode styles */
 
 .dijit_a11y .dijitTabCloseButton {
 	background-image: none !important;
 	width: auto !important;
 	height: auto !important;
-	border: thin dotted;	/* non-hover state */
-}
-.dijit_a11y .dijitTabCloseButtonHover {
-	border:thin solid;	/* hover state */
 }
 
 .dijit_a11y .dijitTabCloseText {
 	display: inline;
 }
-
-.dijit_a11y .dijitTabChecked {
-	/* the selected tab */
-	border-style:dashed !important;
-}
-
-.dijit_a11y .dijitTabInnerDiv {
-	border-left:none !important;
- }
 
 .dijitTabPane,
 .dijitStackContainer-child,
@@ -1486,6 +1460,9 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 
 /* Tree */
+.dijitTree {
+	overflow: auto;	/* for scrollbars when Tree has a height setting, and to prevent wrapping around float elements, see #11491 */
+}
 
 .dijitTreeIndent {
 	/* amount to indent each tree node (relative to parent node) */
@@ -1520,7 +1497,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 
 .dijitTreeLabel {
-	margin: 0px 4px;
+	margin: 0 4px;
 }
 
 /* Dialog */
@@ -1661,14 +1638,14 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 
 .dijitSliderProgressBarV {
 	position:static !important;
-	height:0%;
+	height:0;
 	vertical-align:top;
 	text-align:left;
 }
 
 .dijitSliderProgressBarH {
 	position:absolute !important;
-	width:0%;
+	width:0;
 	vertical-align:middle;
 	overflow:visible;
 }
@@ -1719,7 +1696,9 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dijitSliderDecoration {
 	text-align:center;
 }
-.dijitSliderV TD {
+
+.dijitSliderDecorationC,
+.dijitSliderDecorationV {
 	position: relative; /* needed for IE+quirks+RTL+vertical (rendering bug) but add everywhere for custom styling consistency but this messes up IE horizontal sliders */
 }
 
@@ -1843,7 +1822,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	line-height: 1em;
 	height: auto;
 	width: auto;
-	margin: 0px 4px;
+	margin: 0 4px;
 }
 
 /* Icon-only buttons (often in toolbars) still display the text in high-contrast mode */
@@ -1863,6 +1842,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dj_ie .dijitTextAreaCols {
 	width:auto;
 }
+
+.dijitExpandingTextArea {
+	/* for auto exanding textarea (called Textarea currently, rename for 2.0) don't want to display the grip to resize */
+	resize: none;
+}
+
 
 /* Toolbar
  * Note that other toolbar rules (for objects in toolbars) are scattered throughout this file.
@@ -1990,7 +1975,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	color:#999 !important;
 }
 .dijitSelect .dijitButtonContents {
-	padding: 0px;
+	padding: 0;
 	background: transparent none;
 	white-space: nowrap;
 	text-align: left;
@@ -2028,7 +2013,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 /* Style the different areas of the button to look like a "real" dropdown */
 /* Remove margins on the sub-table */
 .dijitSelectMenu .dijitMenuTable {
-	margin: 0px;
+	margin: 0;
 	background-color: transparent;
 }
 

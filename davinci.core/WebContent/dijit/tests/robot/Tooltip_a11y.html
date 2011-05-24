@@ -342,6 +342,14 @@
 
 							return d;
 						}
+					},
+
+					// Nominal tests for old dojoType syntax, remove in 2.0
+					function oldDojoTypeSyntax(){
+						var tooltip = dijit.byId("oldmulti1,oldmulti2_tooltip");
+						doh.is(2, tooltip.get("connectId").length);
+						doh.is("oldmulti1", tooltip.get("connectId")[0]);
+						doh.is("oldmulti2", tooltip.get("connectId")[1]);
 					}
 				]);
 

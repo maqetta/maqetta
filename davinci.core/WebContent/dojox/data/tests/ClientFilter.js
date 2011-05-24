@@ -16,26 +16,26 @@ mockService = function(query){
 mockService.servicePath = "mock/";
 jsonStore = new dojox.data.JsonRestStore({service:mockService});
 
-doh.register("dojox.data.tests.ClientFilter", 
+doh.register("dojox.data.tests.ClientFilter",
 	[
 		function updateWhileLoading(t) {
 			var d = new doh.Deferred();
-			jsonStore.fetch({query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}], 
+			jsonStore.fetch({query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}],
 				onComplete: function(items, request){
 					t.is(5, items.length); // make sure it was added
 					t.is(newJack,items[4]); // make sure it is in the right location
 					console.log("updateWhileLoading",items[4],newJack);
-					d.callback(true);					
+					d.callback(true);
 				}
 			});
 			newJack = jsonStore.newItem({firstName:"Jack",lastName:"Smith"}); // this should fire while we are waiting for the fetch response
 			return d;
 		},
 		function makeChanges(t) {
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on JsonRestStore of a simple query.
 			var d = new doh.Deferred();
-			jsonStore.fetch({queryOptions:{cache:true},query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}], 
+			jsonStore.fetch({queryOptions:{cache:true},query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}],
 				onComplete: function(items, request){
 					t.is(5, items.length); // make sure it was added
 					t.is(newJack,items[4]); // make sure it is in the right location
@@ -66,7 +66,7 @@ doh.register("dojox.data.tests.ClientFilter",
 			});
 			console.log("sent first");
 			var finished;
-			jsonStore.fetch({query:{lastName:"Smith",firstName:"Jack"},sort:[{attribute:"firstName",descending:true}], 
+			jsonStore.fetch({query:{lastName:"Smith",firstName:"Jack"},sort:[{attribute:"firstName",descending:true}],
 				onComplete: function(items, request){
 					console.log("items first",items);
 					finished = true;
@@ -81,7 +81,7 @@ doh.register("dojox.data.tests.ClientFilter",
 		function cachedResults(t) {
 			var d = new doh.Deferred();
 			var finished;
-			jsonStore.fetch({query:{lastName:"Smith",firstName:"Jack"},sort:[{attribute:"firstName",descending:true}], 
+			jsonStore.fetch({query:{lastName:"Smith",firstName:"Jack"},sort:[{attribute:"firstName",descending:true}],
 				onComplete: function(items, request){
 					console.log("items",items);
 					finished = true;
@@ -95,19 +95,19 @@ doh.register("dojox.data.tests.ClientFilter",
 		function repeatedQueries(t) {
 			var d = new doh.Deferred();
 			var finished;
-			jsonStore.fetch({queryOptions:{cache:true},query:{}, 
+			jsonStore.fetch({queryOptions:{cache:true},query:{},
 				onComplete: function(items, request){
 					console.log("items",items);
 					t.is(6, items.length); // make sure we get the correct number of items
 					jsonStore.newItem({firstName:"Jack",lastName:"Jones"});
-					jsonStore.fetch({query:{}, 
+					jsonStore.fetch({query:{},
 						onComplete: function(items, request){
 							t.is(7, items.length); // make sure we get the correct number of items
 						}
 					});
 					jsonStore.serverVersion = jsonStore._updates.length;
 					jsonStore.newItem({firstName:"Jack",lastName:"Jones"});
-					jsonStore.fetch({query:{}, 
+					jsonStore.fetch({query:{},
 						onComplete: function(items, request){
 							finished = true;
 							t.is(8, items.length); // make sure we get the correct number of items
@@ -123,14 +123,14 @@ doh.register("dojox.data.tests.ClientFilter",
 			var d = new doh.Deferred();
 			var finished;
 			// test sorting. Descending order should be John,Jim,Jill,Jerry,Jack
-			jsonStore.fetch({query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}], 
+			jsonStore.fetch({query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}],
 				onComplete: function(items, request){
 					var last = jsonStore.getValue(items[0], "firstName");
 					console.log("last name: ",last, items[0]);
 
 					t.is("John", last); // make sure we get the correct number of items
 
-					jsonStore.fetch({query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName"}], 
+					jsonStore.fetch({query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName"}],
 						onComplete: function(items, request){
 							var first = jsonStore.getValue(items[0], "firstName");
 							console.log("first name",first, items[0]);

@@ -3,21 +3,21 @@ dojo.require("dijit._Widget");
 
 dojo.declare("dojox.widget.Roller", dijit._Widget, {
 	// summary: A simple widget to take an unordered-list of Text and roll through them
-	// 
-	// description: 
+	//
+	// description:
 	//		The Roller widget takes an unordered-list of items, and converts
 	//		them to a single-area (the size of one list-item, however you so choose
-	//		to style it) and loops continually, fading between items. 
-	//		
+	//		to style it) and loops continually, fading between items.
+	//
 	//		In it's current state, it requires it be created from an unordered (or ordered)
-	//		list, though can contain complex markup. 
+	//		list, though can contain complex markup.
 	//
 	//		You can manipulate the `items` array at any point during the cycle with
 	//		standard array manipulation techniques.
 	//
 	//		The class "dojoxRoller" is added to the UL element for styling purposes.
 	//
-	//	example: 
+	//	example:
 	//	|	// create a scroller from a unordered list with id="lister"
 	//  |	var thinger = new dojox.widget.Roller.Roller({},"lister");
 	//
@@ -29,7 +29,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 	//	|	// add an item:
 	//	|	dijit.byId("roller").items.push("I am a new Label");
 	//
-	//  example: 
+	//  example:
 	//	|	// stop a roller from rolling:
 	//	|	dijit.byId("roller").stop();
 	//
@@ -59,7 +59,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 	// items: Array
 	//		If populated prior to instantiation, is used as the Items over the children
 	items: [],
-=====*/	
+=====*/
 
 	// _idx: Integer
 	//		Index of the the currently visible item in the list of items[]
@@ -68,19 +68,19 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 	postCreate: function(){
 
 		// add some instance vars:
-		if(!this["items"]){ 
+		if(!this["items"]){
 			this.items = [];
 		}
 		
 		dojo.addClass(this.domNode,"dojoxRoller");
 		
-		// find all the items in this list, and popuplate 
+		// find all the items in this list, and popuplate
 		dojo.query(this.itemSelector, this.domNode).forEach(function(item, i){
 			this.items.push(item.innerHTML);
 			// reuse the first match, destroy the rest
-			if(i == 0){ 
-				this._roller = item; 
-				this._idx = 0; 
+			if(i == 0){
+				this._roller = item;
+				this._idx = 0;
 			}else{ dojo.destroy(item); }
 		}, this);
 		
@@ -99,7 +99,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 	makeAnims: function(){
 		// summary: Animation creator function. Need to create an 'in' and 'out'
 		// 		Animation stored in _anim Object, which the rest of the widget
-		//		will reuse. 
+		//		will reuse.
 		var n = this.domNode;
 		dojo.mixin(this, {
 			_anim: {
@@ -117,7 +117,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 
 		this.connect(anim["out"], "onEnd", function(){
 			// onEnd of the `out` animation, select the next items and play `in` animation
-			this._set(this._idx + 1);
+			this._setIndex(this._idx + 1);
 			anim["in"].play(15);
 		});
 		
@@ -143,7 +143,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 		// summary: Stops the Roller from looping anymore.
 		this.rolling = false;
 
-		var m = this._anim, 
+		var m = this._anim,
 			t = this._timeout;
 
 		if(t){ clearTimeout(t); }
@@ -151,7 +151,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 		m["out"].stop();
 	},
 	
-	_set: function(i){
+	_setIndex: function(i){
 		// summary: Set the Roller to some passed index. If beyond range, go to first.
 		var l = this.items.length - 1;
 		if(i < 0){ i = l; }
@@ -163,7 +163,7 @@ dojo.declare("dojox.widget.Roller", dijit._Widget, {
 });
 
 dojo.declare("dojox.widget.RollerSlide", dojox.widget.Roller, {
-	// summary: An add-on to the Roller to modify animations. This produces 
+	// summary: An add-on to the Roller to modify animations. This produces
 	//		a slide-from-bottom like effect. See `dojox.widget.Roller` for
 	//		full API information.
 	
@@ -174,7 +174,7 @@ dojo.declare("dojox.widget.RollerSlide", dojox.widget.Roller, {
 		// 		Animation stored in _anim Object, which the rest of the widget
 		//		will reuse.
 
-		var n = this.domNode, pos = "position", 
+		var n = this.domNode, pos = "position",
 			props = {
 				top: { end: 0, start: 25 },
 				opacity: 1
@@ -187,8 +187,8 @@ dojo.declare("dojox.widget.RollerSlide", dojox.widget.Roller, {
 		dojo.mixin(this, {
 			_anim: {
 				
-				"in": dojo.animateProperty({ 
-					node: n, 
+				"in": dojo.animateProperty({
+					node: n,
 					duration: this.durationIn,
 					properties: props
 				}),
@@ -205,11 +205,11 @@ dojo.declare("dojox.widget.RollerSlide", dojox.widget.Roller, {
 dojo.declare("dojox.widget._RollerHover", null, {
 	// summary: A mixin class to provide a way to automate the "stop on hover" functionality.
 	//
-	// description: 
+	// description:
 	//		A mixin class used to provide a way to automate a "stop on hover" behavior,
 	//		while still allowing for ambigious subclassing for custom animations.
-	//		Simply mix this class into a `dojox.widget.Roller` variant, and instantiate 
-	//		as you would. The hover connection is done automatically. 
+	//		Simply mix this class into a `dojox.widget.Roller` variant, and instantiate
+	//		as you would. The hover connection is done automatically.
 	//
 	//		The "hover" functionality is as such: Stop rotation while the mouse is over the
 	//		instance, and resume again once leaving. Even if autoStart is disabled, the widget

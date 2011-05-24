@@ -1,4 +1,5 @@
-dojo.provide("dojox.math.random.Simple");
+// AMD-ID "dojox/math/random/Simple"
+define(["dojo"], function(dojo) {
 
 dojo.declare("dojox.math.random.Simple", null, {
 	// summary:
@@ -20,4 +21,7 @@ dojo.declare("dojox.math.random.Simple", null, {
 			byteArray[i] = Math.floor(256 * Math.random());
 		}
 	}
+});
+
+return dojox.math.random.Simple;
 });

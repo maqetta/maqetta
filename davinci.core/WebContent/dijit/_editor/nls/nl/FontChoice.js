@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Grootte",
 	fontName: "Lettertype",
@@ -9,6 +11,7 @@
 	cursive: "cursief",
 	fantasy: "fantasy",
 
+	noFormat: "Geen",
 	p: "Alinea",
 	h1: "Kop",
 	h2: "Subkop",
@@ -23,3 +26,5 @@
 	6: "x-groot",
 	7: "xx-groot"
 })
+//end v1.x content
+);

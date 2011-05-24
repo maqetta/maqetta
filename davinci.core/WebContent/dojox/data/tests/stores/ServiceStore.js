@@ -7,21 +7,21 @@ dojo.require("dojo.data.api.Read");
 dojox.data.tests.stores.ServiceStore.error = function(t, d, errData){
 	//  summary:
 	//		The error callback function to be used for all of the tests.
-	d.errback(errData);	
+	d.errback(errData);
 }
 var testServices = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.tests.resources", "test.smd"));
 var jsonStore = new dojox.data.ServiceStore({service:testServices.jsonRestStore});
 
-doh.register("dojox.data.tests.stores.ServiceStore", 
+doh.register("dojox.data.tests.stores.ServiceStore",
 	[
 		{
 			name: "Fetch some items",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on ServiceStore of a simple query.
 				var d = new doh.Deferred();
-				jsonStore.fetch({query:"query", 
+				jsonStore.fetch({query:"query",
 					onComplete: function(items, request){
 						t.is(4, items.length);
 						d.callback(true);
@@ -35,10 +35,10 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "fetchItemByIdentity, getValue, getValues, hasAttribute,containsValue, getAttributes, getIdentity",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on ServiceStore of a single item.
 				var d = new doh.Deferred();
-				jsonStore.fetchItemByIdentity({identity:1, 
+				jsonStore.fetchItemByIdentity({identity:1,
 					onItem: function(item, request){
 						t.is("Object 1", item.name);
 						t.is("Object 1",jsonStore.getValue(item,"name"));
@@ -62,7 +62,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "createLazyItem",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on ServiceStore of a single item.
 				var d = new doh.Deferred();
 				var lazyItem = {
@@ -88,9 +88,9 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 				var d = new doh.Deferred();
 				jsonStore.idAttribute = "id";
 				jsonStore.syncMode = true;
-				jsonStore.fetch({query:"query", 
+				jsonStore.fetch({query:"query",
 					onComplete: function(items, request){
-						items[0]._loadObject = function(callback){							
+						items[0]._loadObject = function(callback){
 							jsonStore.fetch({query:this.id,onComplete:callback});
 						}
 						t.t(jsonStore.getValue(items[0],"testArray").length);
@@ -105,7 +105,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "ReadAPI:  Fetch_20_Streaming",
 			timeout:	10000, //10 seconds.  Json can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		fetching with paging
 
 				var d = new doh.Deferred();
@@ -121,7 +121,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 					d.callback(true);
 				}
 				//Get everything...
-				jsonStore.fetch({	
+				jsonStore.fetch({
 					query: "bigQuery",
 					onBegin: null,
 					count: 20,
@@ -133,7 +133,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			}
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary: 
+			//	summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 			//	description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.

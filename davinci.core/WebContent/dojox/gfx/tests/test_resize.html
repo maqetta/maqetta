@@ -20,8 +20,12 @@ dojo.require("dojox.gfx");
 
 var surface;
 
-makeShapes = function(){
+createSurface = function(){
 	surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(){
 	surface.createRect({width: 300, height: 300}).setFill([255, 0, 0, 0.3]).setStroke("red");
 	surface.createRect({x: 200, y: 200, width: 300, height: 300}).setFill([0, 0, 255, 0.3]).setStroke("green");
 };
@@ -35,7 +39,7 @@ make500x500 = function(){ surface.setDimensions(500, 500); };
 make400x400 = function(){ surface.setDimensions(400, 400); };
 make300x300 = function(){ surface.setDimensions(300, 300); };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

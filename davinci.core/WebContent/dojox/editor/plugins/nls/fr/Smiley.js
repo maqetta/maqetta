@@ -5,8 +5,8 @@
 	emoticonWink: "clin d'oeil",
 	emoticonGrin: "sourire large",
 	emoticonCool: "calme",
-	emoticonAngry: "colère",  
-	emoticonHalf: "demi", 
+	emoticonAngry: "colère",
+	emoticonHalf: "demi",
 	emoticonEyebrow: "sourcils",
 	emoticonFrown: "froncement de sourcils",
 	emoticonShy: "timide",
@@ -15,7 +15,7 @@
 	emoticonTongue: "langue",
 	emoticonIdea: "idée",
 	emoticonYes: "oui",
-	emoticonNo: "non",	
+	emoticonNo: "non",
 	emoticonAngel: "ange",
 	emoticonCrying: "pleurs"
 })

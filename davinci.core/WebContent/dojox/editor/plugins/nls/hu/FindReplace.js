@@ -1,12 +1,23 @@
 ({
-	"findLabel": "Keresés: ",
-	"replaceLabel": "Csere: ",
-	"findReplace": "Keresés/Csere váltása",
-	"matchCase": "Kis- és nagybetűk egyeztetése", 
+	"findLabel": "Keresés:",
+	"findTooltip": "Adja meg a keresett szöveget",
+	"replaceLabel": "Csere:",
+	"replaceTooltip": "Adja meg a cseréhez az új szöveget",
+	"findReplace": "Keresés és csere",
+	"matchCase": "Kis-nagybetűk egyeznek",
+	"matchCaseTooltip": "Kis-nagybetűk egyeznek",
 	"backwards": "Visszafelé",
-	"replaceAll": "Minden előfordulás", 
+	"backwardsTooltip": "Szöveg keresése visszafelé",
+	"replaceAll": "Minden előfordulás",
+	"replaceAllButton": "Mindent lecserél",
+	"replaceAllButtonTooltip": "Minden szöveg cseréje",
 	"findButton": "Keresés",
+	"findButtonTooltip": "Szöveg keresése",
 	"replaceButton": "Csere",
-	"replaceDialogText": "${0} előfordulás cseréje megtörtént. "
+	"replaceButtonTooltip": "Szöveg cseréje",
+	"replaceDialogText": "${0} előfordulás cseréje megtörtént.",
+	"eofDialogText": "Legutóbbi előfordulás: ${0}",
+	"eofDialogTextFind": "találat",
+	"eofDialogTextReplace": "cserélve"
 })
 

@@ -3,23 +3,23 @@ dojo.provide("dojox.secure.capability");
 dojox.secure.badProps = /^__|^(apply|call|callee|caller|constructor|eval|prototype|this|unwatch|valueOf|watch)$|__$/;
 dojox.secure.capability = {
 	keywords: ["break", "case", "catch", "const", "continue","debugger", "default", "delete", "do",
-		 "else", "enum","false", "finally", "for", "function","if", "in", "instanceof", "new", 
-		 "null","yield","return", "switch",  
+		 "else", "enum","false", "finally", "for", "function","if", "in", "instanceof", "new",
+		 "null","yield","return", "switch",
 		 "throw", "true", "try", "typeof", "var", "void", "while"],
 	validate : function(/*string*/script,/*Array*/safeLibraries,/*Object*/safeGlobals) {
 		// summary:
-		// 		pass in the text of a script. If it passes and it can be eval'ed, it should be safe. 
+		// 		pass in the text of a script. If it passes and it can be eval'ed, it should be safe.
 		// 		Note that this does not do full syntax checking, it relies on eval to reject invalid scripts.
 		// 		There are also known false rejections:
 		// 			Nesting vars inside blocks will not declare the variable for the outer block
-		// 	 		Named functions are not treated as declaration so they are generally not allowed unless the name is declared with a var.	
+		// 	 		Named functions are not treated as declaration so they are generally not allowed unless the name is declared with a var.
 		//			Var declaration that involve multiple comma delimited variable assignments are not accepted
 		//
 		// script:
 		// 		 the script to execute
 		//
 		// safeLibraries:
-		// 		The safe libraries that can be called (the functions can not be access/modified by the untrusted code, only called) 
+		// 		The safe libraries that can be called (the functions can not be access/modified by the untrusted code, only called)
 		//
 		// safeGlobals:
 		// 		These globals can be freely interacted with by the untrusted code
@@ -44,9 +44,9 @@ dojox.secure.capability = {
 			replace(/\/\/.*|\/\*[\w\W]*?\*\/|\/(\\[\/\\]|[^*\/])(\\.|[^\/\n\\])*\/[gim]*|("[^"]*")|('[^']*')/g,function(t) {
 				return t.match(/^\/\/|^\/\*/) ? ' ' : '0'; // comments are replaced with a space, strings and regex are replaced with a single safe token (0)
 			}).
-			replace(/\.\s*([a-z\$_A-Z][\w\$_]*)|([;,{])\s*([a-z\$_A-Z][\w\$_]*\s*):/g,function(t,prop,prefix,key) { 
+			replace(/\.\s*([a-z\$_A-Z][\w\$_]*)|([;,{])\s*([a-z\$_A-Z][\w\$_]*\s*):/g,function(t,prop,prefix,key) {
 				// find all the dot property references, all the object literal keys, and labels
-				prop = prop || key; 
+				prop = prop || key;
 				if(/^__|^(apply|call|callee|caller|constructor|eval|prototype|this|unwatch|valueOf|watch)$|__$/.test(prop)){
 					throw new Error("Illegal property name " + prop);
 				}
@@ -58,7 +58,7 @@ dojox.secure.capability = {
 			}
 		});
 		script = script.replace(new RegExp("(" + safeLibraries.join("|") + ")[\\s~]*\\(","g"),function(call) { // find library calls and make them look safe
-			return "new("; // turn into a known safe call 
+			return "new("; // turn into a known safe call
 		});
 		function findOuterRefs(block,func) {
 			var outerRefs = {};
@@ -84,12 +84,12 @@ dojox.secure.capability = {
 				outerRefs[identifier] = 1;
 			});
 			return outerRefs;
-		}	
+		}
 		var newScript,outerRefs;
 		function parseBlock(t,func,a,b,params,block) {
 			block.replace(/(^|,)0:\s*function#(\d+)/g,function(t,a,b) { // find functions in object literals
 			// note that if named functions are allowed, it could be possible to have label: function name() {} which is a security breach
-					var refs = blocks[b]; 
+					var refs = blocks[b];
 					refs[':method'] = 1;//mark it as a method
 			});
 			block = block.replace(/(^|[^_\w\$])Class\s*\(\s*([_\w\$]+\s*,\s*)*#(\d+)/g,function(t,p,a,b) { // find Class calls
@@ -112,11 +112,11 @@ dojox.secure.capability = {
 			}
 			block.replace(/(\W|^)(var) ([ \t,_\w\$]+)/g,parseVars); // and vars declare variables
 			// FIXME: Give named functions #name syntax so they can be detected as vars in outer scopes (but be careful of nesting)
-			return (a || '') + (b || '') + "#" + (blocks.push(outerRefs)-1); // return a block reference so the outer block can fetch it 
-		}	
+			return (a || '') + (b || '') + "#" + (blocks.push(outerRefs)-1); // return a block reference so the outer block can fetch it
+		}
 		do {
 			// get all the blocks, starting with inside and moving out, capturing the parameters of functions and catchs as variables along the way
-			newScript = script.replace(/((function|catch)(\s+[_\w\$]+)?\s*\(([^\)]*)\)\s*)?{([^{}]*)}/g, parseBlock); 
+			newScript = script.replace(/((function|catch)(\s+[_\w\$]+)?\s*\(([^\)]*)\)\s*)?{([^{}]*)}/g, parseBlock);
 		}
 		while(newScript != script && (script = newScript)); // keep going until we can't find anymore blocks
 		parseBlock(0,0,0,0,0,script); //findOuterRefs(script); // find the references in the outside scope

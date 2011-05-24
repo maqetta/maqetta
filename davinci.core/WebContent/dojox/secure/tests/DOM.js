@@ -1,7 +1,7 @@
 dojo.provide("dojox.secure.tests.DOM");
 dojo.require("dojox.secure.DOM");
 
-doh.register("dojox.secure.tests.DOM.good", 
+doh.register("dojox.secure.tests.DOM.good",
 	[
 		function setup(){
 			var div = document.createElement("div");
@@ -49,7 +49,7 @@ doh.register("dojox.secure.tests.DOM.good",
 		},*/
 		function addOnclickHandler(t){
 			securedElement.addEventListener("click",function(event) {
-				alert('proper click handler');	
+				alert('proper click handler');
 			});
 			
 		}
@@ -68,7 +68,7 @@ function violater(func) {
 		t.f(insecure);
 	}};
 }
-doh.register("dojox.secure.tests.DOM.bad", 
+doh.register("dojox.secure.tests.DOM.bad",
 	[
 		function parentNode(t){
 			t.f(securedElement.parentNode);
@@ -139,16 +139,16 @@ doh.register("dojox.secure.tests.DOM.bad",
 			}
 		},
 		/*violater(function addStyleTag(t) {
-			securedElement.innerHTML = "<style>div {color:expression(alert(\"hello\")}</style><div>test</div>";		
+			securedElement.innerHTML = "<style>div {color:expression(alert(\"hello\")}</style><div>test</div>";
 		}),
 		violater(function addStyleTag2(t) {
-			securedElement.innerHTML = "<style>@import 'unsafe.css'</style><div>unsafe css</div>";		
+			securedElement.innerHTML = "<style>@import 'unsafe.css'</style><div>unsafe css</div>";
 		}),*/
 		function addJavaScriptHref(t) {
-			securedElement.innerHTML = "<a href='javascript:alert(3)'>illegal link</a>";		
+			securedElement.innerHTML = "<a href='javascript:alert(3)'>illegal link</a>";
 		},
 		/*violater(function addNullCharSrc(t) {
-			securedElement.innerHTML = "<a href='java&#65533;script:alert(3)'>illegal link</a>";		
+			securedElement.innerHTML = "<a href='java&#65533;script:alert(3)'>illegal link</a>";
 		}),*/
 		function addOnclickHandler(t) {
 			try{

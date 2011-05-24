@@ -43,7 +43,7 @@
 }
 
 .soria .dijitSliderImageHandleH {
-	border:0px;
+	border:0;
 	width:15px;
 	height:18px;
 	background:url("../images/preciseSliderThumb.png") no-repeat center top;
@@ -70,7 +70,7 @@
 }
 
 .soria .dijitSliderImageHandleV {
-	border:0px;
+	border:0;
 	width:20px;
 	height:15px;
 	background:url("../images/sliderThumb.png") no-repeat center center;
@@ -113,8 +113,8 @@
 	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
 }
 .soria .dijitSliderDecrementIconH {
-	background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0px top;
-	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat 0px top;
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0 top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat 0 top;
 }
 
 .soria .dijitSliderButtonInner {
@@ -128,7 +128,7 @@
 }
 .soria .dijitSliderReadOnly .dijitSliderDecrementIconH,
 .soria .dijitSliderDisabled .dijitSliderDecrementIconH {
-	background-position: 0px -15px;
+	background-position: 0 -15px;
 }
 .soria .dijitSliderReadOnly .dijitSliderIncrementIconH,
 .soria .dijitSliderDisabled .dijitSliderIncrementIconH {

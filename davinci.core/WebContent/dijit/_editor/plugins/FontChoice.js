@@ -1,13 +1,4 @@
-dojo.provide("dijit._editor.plugins.FontChoice");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit._editor.range");
-dojo.require("dijit._editor.selection");
-dojo.require("dijit.form.FilteringSelect");
-dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("dijit._editor", "FontChoice");
+define("dijit/_editor/plugins/FontChoice", ["dojo", "dijit", "dijit/_editor/_Plugin", "dijit/_editor/range", "dijit/_editor/selection", "dijit/form/FilteringSelect", "dojo/data/ItemFileReadStore", "dojo/i18n", "i18n!dijit/_editor/nls/FontChoice"], function(dojo, dijit) {
 
 dojo.declare("dijit._editor.plugins._FontDropDown",
 	[dijit._Widget, dijit._Templated],{
@@ -34,13 +25,13 @@ dojo.declare("dijit._editor.plugins._FontDropDown",
 	templateString:
 		"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>" +
 			"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>" +
-			"<input dojoType='dijit.form.FilteringSelect' required=false labelType=html labelAttr=label searchAttr=name " +
+			"<input dojoType='dijit.form.FilteringSelect' required='false' labelType='html' labelAttr='label' searchAttr='name' " +
 					"tabIndex='-1' id='${selectId}' dojoAttachPoint='select' value=''/>" +
 		"</span>",
 
 	postMixInProperties: function(){
 		// summary:
-		//		Over-ride to misin specific properties.
+		//		Over-ride to set specific properties.
 		this.inherited(arguments);
 
 		this.strings = dojo.i18n.getLocalization("dijit._editor", "FontChoice");
@@ -264,7 +255,7 @@ dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins
 		//		The 'insert value' associated with a name
 		// name: String
 		//		The text name of the value
-		if(this.plainText){
+		if(this.plainText || value == "noFormat"){
 			return name;
 		}else{
 			return "<" + value + ">" + name + "</" + value + ">";
@@ -287,14 +278,14 @@ dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins
 					end = range.endContainer;
 
 					// find containing nodes of start/end.
-					while(start && start !== editor.editNode && 
-						  start !== editor.document.body && 
+					while(start && start !== editor.editNode &&
+						  start !== editor.document.body &&
 						  start.nodeType !== 1){
 						start = start.parentNode;
 					}
 
-					while(end && end !== editor.editNode && 
-						  end !== editor.document.body && 
+					while(end && end !== editor.editNode &&
+						  end !== editor.document.body &&
 						  end.nodeType !== 1){
 						end = end.parentNode;
 					}
@@ -348,7 +339,7 @@ dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins
 							node = node.parentNode;
 						}
 
-						//Also look for all child nodes in the selection that may need to be 
+						//Also look for all child nodes in the selection that may need to be
 						//cleared of formatting
 						processChildren(start, clearNodes);
 						if(block) { clearNodes = [block].concat(clearNodes); }
@@ -384,7 +375,7 @@ dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins
 		if(editor.customUndo){
 			// So of course IE doesn't work right with paste-overs.
 			// We have to do this manually, which is okay since IE already uses
-			// customUndo and we turned it on for WebKit.  WebKit pasted funny, 
+			// customUndo and we turned it on for WebKit.  WebKit pasted funny,
 			// so couldn't use the execCommand approach
 			while(node.firstChild){
 				dojo.place(node.firstChild, node, "before");
@@ -393,11 +384,11 @@ dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins
 		}else{
 			// Everyone else works fine this way, a paste-over and is native
 			// undo friendly.
-			dojo.withGlobal(editor.window, 
+			dojo.withGlobal(editor.window,
 				 "selectElementChildren", dijit._editor.selection, [node]);
-			var html = 	dojo.withGlobal(editor.window, 
+			var html = 	dojo.withGlobal(editor.window,
 				 "getSelectedHtml", dijit._editor.selection, [null]);
-			dojo.withGlobal(editor.window, 
+			dojo.withGlobal(editor.window,
 				 "selectElement", dijit._editor.selection, [node]);
 			editor.execCommand("inserthtml", html||"");
 		}
@@ -482,10 +473,6 @@ dojo.declare("dijit._editor.plugins.FontChoice", dijit._editor._Plugin,{
 			}else{
 				this.editor.execCommand(this.command, choice);
 			}
-			
-			// Enable custom undo for webkit, needed for noFormat to work properly
-			// and still undo.
-			this.editor.customUndo = this.editor.customUndo || dojo.isWebKit;
 		});
 	},
 
@@ -501,7 +488,11 @@ dojo.declare("dijit._editor.plugins.FontChoice", dijit._editor._Plugin,{
 		var _e = this.editor;
 		var _c = this.command;
 		if(!_e || !_e.isLoaded || !_c.length){ return; }
+		
 		if(this.button){
+			var disabled = this.get("disabled");
+			this.button.set("disabled", disabled);
+			if(disabled){ return; }
 			var value;
 			try{
 				value = _e.queryCommandValue(_c) || "";
@@ -570,4 +561,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 			plainText: o.args.plainText?o.args.plainText:false
 		});
 	}
+});
+
+
+return dijit._editor.plugins.FontChoice;
 });

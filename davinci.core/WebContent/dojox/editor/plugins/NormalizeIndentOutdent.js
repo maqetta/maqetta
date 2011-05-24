@@ -1,9 +1,4 @@
-dojo.provide("dojox.editor.plugins.NormalizeIndentOutdent");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit._editor.selection");
-
-dojo.experimental("dojox.editor.plugins.NormalizeIndentOutdent");
+define("dojox/editor/plugins/NormalizeIndentOutdent", ["dojo", "dijit", "dojox", "dijit/_editor/selection", "dijit/_editor/_Plugin"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin,{
 	// summary:
@@ -19,7 +14,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 	
 	// indentUnits: [public] String
 	//		The units to apply to the indent amount.  Usually 'px', but can also
-	//		be em.  
+	//		be em.
 	indentUnits: "px",
 
 	setEditor: function(editor){
@@ -41,9 +36,9 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 		editor.queryCommandEnabled = dojo.hitch(this, this._queryCommandEnabled);
 
 		// We need the custom undo code since we manipulate the dom
-		// outside of the browser natives and only customUndo really handles 
+		// outside of the browser natives and only customUndo really handles
 		// that.  It will incur a performance hit, but should hopefully be
-		// relatively small.  
+		// relatively small.
 		editor.customUndo = true;
 	},
 
@@ -130,7 +125,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 
 	_indentImpl: function(/*String*/ html) {
 		// summary:
-		//		Improved implementation of indent, generates correct indent for 
+		//		Improved implementation of indent, generates correct indent for
 		//		ul/ol
 		var ed = this.editor;
 
@@ -145,11 +140,11 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 				// No selection, just cursor point, we need to see if we're
 				// in an indentable block, or similar.
 				if(this._isRootInline(range.startContainer)){
-					// Text at the 'root' of the document, 
-					// we'll try to indent it and all inline selements around it 
+					// Text at the 'root' of the document,
+					// we'll try to indent it and all inline selements around it
 					// as they are visually a single line.
 
-					// First, we need to find the toplevel inline element that is rooted 
+					// First, we need to find the toplevel inline element that is rooted
 					// to the document 'editNode'
 					start = range.startContainer;
 					while(start && start.parentNode !== ed.editNode){
@@ -159,7 +154,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 					// Now we need to walk up its siblings and look for the first one in the rooting
 					// that isn't inline or text, as we want to grab all of that for indent.
 					while(start && start.previousSibling && (
-							this._isTextElement(start) || 
+							this._isTextElement(start) ||
 							(start.nodeType === 1 && this._isInlineFormat(this._getTagName(start))
 						))){
 						start = start.previousSibling;
@@ -169,7 +164,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 						start = start.nextSibling;
 					}
 
-					// Okay, we have a configured start, lets grab everything following it that's 
+					// Okay, we have a configured start, lets grab everything following it that's
 					// inline and make it an indentable block!
 					if(start){
 						div = ed.document.createElement("div");
@@ -178,17 +173,17 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 						end = div.nextSibling;
 						while(end && (
 							this._isTextElement(end) ||
-							(end.nodeType === 1 && 
+							(end.nodeType === 1 &&
 								this._isInlineFormat(this._getTagName(end)))
 							)){
-							// Add it. 
+							// Add it.
 							div.appendChild(end);
 							end = div.nextSibling;
 						}
 						this._indentElement(div);
-						dojo.withGlobal(ed.window, 
+						dojo.withGlobal(ed.window,
 							"selectElementChildren", dijit._editor.selection, [div]);
-						dojo.withGlobal(ed.window, 
+						dojo.withGlobal(ed.window,
 							"collapse", dijit._editor.selection, [true]);
 					}
 				}else{
@@ -224,13 +219,13 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 					// Okay, selection end is somewhere after start, we need to find the last node
 					// that is safely in the range.
 					curNode = start;
-					while(curNode.nextSibling && 
+					while(curNode.nextSibling &&
 						dojo.withGlobal(ed.window, "inSelection", dijit._editor.selection, [curNode])){
 						curNode = curNode.nextSibling;
 					}
-					end = curNode; 
+					end = curNode;
 					if(end === ed.editNode || end === ed.document.body){
-						// Unable to determine real selection end, so just make it 
+						// Unable to determine real selection end, so just make it
 						// a single node indent of start + all following inline styles, if
 						// present, then just exit.
 						tag = this._getTagName(start);
@@ -244,7 +239,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 							div = ed.document.createElement("div");
 							dojo.place(div, start, "after");
 
-							// Find and move all inline tags following the one we inserted also into the 
+							// Find and move all inline tags following the one we inserted also into the
 							// div so we don't split up content funny.
 							var next = start;
 							while(next && (
@@ -269,7 +264,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 					if(curNode.nodeType === 1){
 						tag = this._getTagName(curNode);
 						if(dojo.isIE){
-							// IE sometimes inserts blank P tags, which we want to skip 
+							// IE sometimes inserts blank P tags, which we want to skip
 							// as they end up indented, which messes up layout.
 							if(tag === "p" && this._isEmpty(curNode)){
 								curNode = curNode.nextSibling;
@@ -390,7 +385,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 
 	_outdentImpl: function(/*String*/ html) {
 		// summary:
-		//		Improved implementation of outdent, generates correct indent for 
+		//		Improved implementation of outdent, generates correct indent for
 		//		ul/ol and other elements.
 		// tags:
 		//		private
@@ -440,7 +435,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 
 					}
 					curNode = curNode.nextSibling;
-				}	
+				}
 			}
 		}
 		return null;
@@ -479,8 +474,8 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 			// There is a previous node in the list, so we want to append a new list
 			// element after it that contains a new list of the content to indent it.
 			if(prevTag && prevTag.tagName.toLowerCase() == "li"){
-				// Lets see if we can merge this into another  (Eg, 
-				// does the sibling li contain an embedded list already of 
+				// Lets see if we can merge this into another  (Eg,
+				// does the sibling li contain an embedded list already of
 				// the same type?  if so, we move into that one.
 				var embList;
 				if(prevTag.childNodes){
@@ -526,9 +521,9 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 				}
 
 				// Move cursor.
-				dojo.withGlobal(ed.window, 
+				dojo.withGlobal(ed.window,
 					"selectElementChildren", dijit._editor.selection, [listItem]);
-				dojo.withGlobal(ed.window, 
+				dojo.withGlobal(ed.window,
 					"collapse", dijit._editor.selection, [true]);
 			}
 		}
@@ -563,7 +558,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 		if(lpTg === "li" || lpTg === "ol" || lpTg === "ul"){
 			if(lpTg === "ol" || lpTg === "ul"){
 				// Okay, we need to fix this up, this is invalid html,
-				// So try to combine this into a previous element before 
+				// So try to combine this into a previous element before
 				// de do a shuffle of the nodes, to build an HTML compliant
 				// list.
 				var prevListLi = list.previousSibling;
@@ -624,14 +619,14 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 				dojo.place(listItem, listParent, "after");
 				listItem.appendChild(list);
 			}else if(!nextLi){
-				// Last item in a nested list, shuffle it out after 
+				// Last item in a nested list, shuffle it out after
 				// the nsted list only.
 				dojo.place(listItem, listParent, "after");
 			}else{
-				// Item is in the middle of an embedded  list, so we 
+				// Item is in the middle of an embedded  list, so we
 				// have to split it.
 
-				// Move all the items following current list item into 
+				// Move all the items following current list item into
 				// a list after it.
 				var newList = ed.document.createElement(type);
 				dojo.style(newList, {
@@ -643,23 +638,23 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 					newList.appendChild(listItem.nextSibling);
 				}
 
-				// Okay, now place the list item after the 
+				// Okay, now place the list item after the
 				// current list parent (li).
 				dojo.place(listItem, listParent, "after");
 			}
 			
 			// Clean up any empty lists left behind.
 			if(list && this._isEmpty(list)){
-				list.parentNode.removeChild(list);	
+				list.parentNode.removeChild(list);
 			}
 			if(listParent && this._isEmpty(listParent)){
 				listParent.parentNode.removeChild(listParent);
 			}
 			
 			// Move our cursor to the list item we moved.
-			dojo.withGlobal(ed.window, 
+			dojo.withGlobal(ed.window,
 				"selectElementChildren", dijit._editor.selection, [listItem]);
-			dojo.withGlobal(ed.window, 
+			dojo.withGlobal(ed.window,
 				"collapse", dijit._editor.selection, [true]);
 		}else{
 			// Not in a nested list, so we can just defer to the
@@ -685,7 +680,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 				if(n.nodeType === 1){
 					if(this._getTagName(n) === "p"){
 						if(!dojo.trim(n.innerHTML)){
-							continue;	
+							continue;
 						}
 					}
 					empty = false;
@@ -734,7 +729,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 
 	_convertIndent: function(indent){
 		// summary:
-		//		Function to convert the current indent style to 
+		//		Function to convert the current indent style to
 		//		the units we're using by some heuristic.
 		// indent:
 		//		The indent amount to convert.
@@ -772,7 +767,7 @@ dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin
 	_isInlineFormat: function(tag){
 		// summary:
 		//		Function to determine if the current tag is an inline
-		//		element that does formatting, as we don't want to 
+		//		element that does formatting, as we don't want to
 		//		break/indent around it, as it can screw up text.
 		// tag:
 		//		The tag to examine
@@ -862,12 +857,16 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	var name = o.args.name.toLowerCase();
 	if(name === "normalizeindentoutdent"){
 		o.plugin = new dojox.editor.plugins.NormalizeIndentOutdent({
-			indentBy: ("indentBy" in o.args) ? 
-				(o.args.indentBy > 0 ? o.args.indentBy : 40) : 
+			indentBy: ("indentBy" in o.args) ?
+				(o.args.indentBy > 0 ? o.args.indentBy : 40) :
 				40,
-			indentUnits: ("indentUnits" in o.args) ? 
-				(o.args.indentUnits.toLowerCase() == "em"? "em" : "px") : 
+			indentUnits: ("indentUnits" in o.args) ?
+				(o.args.indentUnits.toLowerCase() == "em"? "em" : "px") :
 				"px"
 		});
 	}
+});
+
+return dojox.editor.plugins.NormalizeIndentOutdent;
+
 });

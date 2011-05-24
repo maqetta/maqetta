@@ -1,4 +1,4 @@
-dojo.provide("dojo._base.window");
+define("dojo/_base/window", ["dojo/lib/kernel"], function(dojo){
 
 /*=====
 dojo.doc = {
@@ -25,7 +25,7 @@ dojo.body = function(){
 	// Note: document.body is not defined for a strict xhtml document
 	// Would like to memoize this, but dojo.doc can change vi dojo.withDoc().
 	return dojo.doc.body || dojo.doc.getElementsByTagName("body")[0]; // Node
-}
+};
 
 dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocument){
 	// summary:
@@ -38,9 +38,9 @@ dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocu
 	dojo.doc = globalDocument;
 };
 
-dojo.withGlobal = function(	/*Object*/globalObject, 
-							/*Function*/callback, 
-							/*Object?*/thisObject, 
+dojo.withGlobal = function(	/*Object*/globalObject,
+							/*Function*/callback,
+							/*Object?*/thisObject,
 							/*Array?*/cbArguments){
 	// summary:
 	//		Invoke callback with globalObject as dojo.global and
@@ -59,11 +59,11 @@ dojo.withGlobal = function(	/*Object*/globalObject,
 	}finally{
 		dojo.global = oldGlob;
 	}
-}
+};
 
-dojo.withDoc = function(	/*DocumentElement*/documentObject, 
-							/*Function*/callback, 
-							/*Object?*/thisObject, 
+dojo.withDoc = function(	/*DocumentElement*/documentObject,
+							/*Function*/callback,
+							/*Object?*/thisObject,
 							/*Array?*/cbArguments){
 	// summary:
 	//		Invoke callback with documentObject as dojo.doc.
@@ -94,4 +94,6 @@ dojo.withDoc = function(	/*DocumentElement*/documentObject,
 		dojo.isQuirks = oldQ;
 	}
 };
-	
+
+return dojo;
+});

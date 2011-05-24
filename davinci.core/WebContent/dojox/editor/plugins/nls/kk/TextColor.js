@@ -1,0 +1,5 @@
+({
+	"setButtonText": "Орнату",
+	"cancelButtonText": "Болдырмау"
+})
+

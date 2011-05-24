@@ -147,6 +147,9 @@
 					rmFiles+=d.file+";";
 				});
 			});
+			dojo.connect(f0, "onCancel", function(data){
+				dojo.byId("fileToUpload").value = "file selection cancelled by user.";
+			});
 
 			Destroy = function(){
 				f0.destroyAll();

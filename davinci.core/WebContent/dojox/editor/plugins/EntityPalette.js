@@ -1,11 +1,4 @@
-dojo.provide("dojox.editor.plugins.EntityPalette");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._PaletteMixin");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("dojox.editor.plugins", "latinEntities");
+define("dojox/editor/plugins/EntityPalette", ["dojo", "dijit", "dojox", "dijit/_Widget", "dijit/_Templated", "dijit/_PaletteMixin", "dojo/i18n", "i18n!dojox/editor/plugins/nls/latinEntities"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.EntityPalette");
 
@@ -220,4 +213,8 @@ dojo.declare("dojox.editor.plugins.LatinEntity",
 			// Deal with entities that have keys which are reserved words.
 			cell.innerHTML = this.getValue();
 		}
+});
+
+return dojox.editor.plugins.EntityPalette;
+
 });

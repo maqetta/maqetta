@@ -1,8 +1,8 @@
 .tundra .dijitMenu,
 .tundra .dijitMenuBar {
 	border: 1px solid #7eabcd;
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	background-color: #f7f7f7;
 }
 
@@ -42,13 +42,13 @@
 	width: 7px;
 	height: 7px;
 	background-image: url('images/spriteArrows.png');
-	background-position: -14px 0px;
+	background-position: -14px 0;
 }
 .dj_ie6 .tundra .dijitMenuExpand {
 	background-image: url('images/spriteArrows.gif');
 }
 
-/* separator can be two pixels -- set border of either one to 0px to have only one */
+/* separator can be two pixels -- set border of either one to 0 to have only one */
 .tundra .dijitMenuSeparatorTop {
 	border-bottom: 1px solid #9b9b9b;
 }

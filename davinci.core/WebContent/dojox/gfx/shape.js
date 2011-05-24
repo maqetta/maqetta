@@ -2,7 +2,7 @@ dojo.provide("dojox.gfx.shape");
 
 dojo.require("dojox.gfx._base");
 
-dojo.declare("dojox.gfx.Shape", null, {
+dojo.declare("dojox.gfx.shape.Shape", null, {
 	// summary: a Shape object, which knows how to apply
 	// graphical attributes and transformations
 
@@ -339,7 +339,7 @@ dojox.gfx.shape._eventsProcessing = {
 	}
 };
 
-dojo.extend(dojox.gfx.Shape, dojox.gfx.shape._eventsProcessing);
+dojo.extend(dojox.gfx.shape.Shape, dojox.gfx.shape._eventsProcessing);
 
 dojox.gfx.shape.Container = {
 	// summary: a container of shapes, which can be used
@@ -492,7 +492,7 @@ dojo.declare("dojox.gfx.Rectangle", null, {
 	//	You should use the naked object instead: {x: 1, y: 2, width: 100, height: 200}.
 });
 
-dojo.declare("dojox.gfx.shape.Rect", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Rect", dojox.gfx.shape.Shape, {
 	// summary: a generic rectangle
 	constructor: function(rawNode){
 		// rawNode: Node: a DOM Node
@@ -505,7 +505,7 @@ dojo.declare("dojox.gfx.shape.Rect", dojox.gfx.Shape, {
 	}
 });
 
-dojo.declare("dojox.gfx.shape.Ellipse", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Ellipse", dojox.gfx.shape.Shape, {
 	// summary: a generic ellipse
 	constructor: function(rawNode){
 		// rawNode: Node: a DOM Node
@@ -523,7 +523,7 @@ dojo.declare("dojox.gfx.shape.Ellipse", dojox.gfx.Shape, {
 	}
 });
 
-dojo.declare("dojox.gfx.shape.Circle", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Circle", dojox.gfx.shape.Shape, {
 	// summary: a generic circle
 	//	(this is a helper object, which is defined for convenience)
 	constructor: function(rawNode){
@@ -542,7 +542,7 @@ dojo.declare("dojox.gfx.shape.Circle", dojox.gfx.Shape, {
 	}
 });
 
-dojo.declare("dojox.gfx.shape.Line", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Line", dojox.gfx.shape.Shape, {
 	// summary: a generic line
 	//	(this is a helper object, which is defined for convenience)
 	constructor: function(rawNode){
@@ -565,7 +565,7 @@ dojo.declare("dojox.gfx.shape.Line", dojox.gfx.Shape, {
 	}
 });
 
-dojo.declare("dojox.gfx.shape.Polyline", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Polyline", dojox.gfx.shape.Shape, {
 	// summary: a generic polyline/polygon
 	//	(this is a helper object, which is defined for convenience)
 	constructor: function(rawNode){
@@ -579,12 +579,12 @@ dojo.declare("dojox.gfx.shape.Polyline", dojox.gfx.Shape, {
 		// closed: Boolean: close the polyline to make a polygon
 		if(points && points instanceof Array){
 			// points: Array: an array of points
-			dojox.gfx.Shape.prototype.setShape.call(this, {points: points});
+			this.inherited(arguments, [{points: points}]);
 			if(closed && this.shape.points.length){
 				this.shape.points.push(this.shape.points[0]);
 			}
 		}else{
-			dojox.gfx.Shape.prototype.setShape.call(this, points);
+			this.inherited(arguments, [points]);
 		}
 		return this;	// self
 	},
@@ -624,7 +624,7 @@ dojo.declare("dojox.gfx.shape.Polyline", dojox.gfx.Shape, {
 	}
 });
 
-dojo.declare("dojox.gfx.shape.Image", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Image", dojox.gfx.shape.Shape, {
 	// summary: a generic image
 	//	(this is a helper object, which is defined for convenience)
 	constructor: function(rawNode){
@@ -646,7 +646,7 @@ dojo.declare("dojox.gfx.shape.Image", dojox.gfx.Shape, {
 	}
 });
 
-dojo.declare("dojox.gfx.shape.Text", dojox.gfx.Shape, {
+dojo.declare("dojox.gfx.shape.Text", dojox.gfx.shape.Shape, {
 	// summary: a generic text
 	constructor: function(rawNode){
 		// rawNode: Node: a DOM Node
@@ -678,8 +678,8 @@ dojox.gfx.shape.Creator = {
 		switch(shape.type){
 			case gfx.defaultPath.type:		return this.createPath(shape);
 			case gfx.defaultRect.type:		return this.createRect(shape);
-			case gfx.defaultCircle.type:		return this.createCircle(shape);
-			case gfx.defaultEllipse.type:		return this.createEllipse(shape);
+			case gfx.defaultCircle.type:	return this.createCircle(shape);
+			case gfx.defaultEllipse.type:	return this.createEllipse(shape);
 			case gfx.defaultLine.type:		return this.createLine(shape);
 			case gfx.defaultPolyline.type:	return this.createPolyline(shape);
 			case gfx.defaultImage.type:		return this.createImage(shape);

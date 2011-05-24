@@ -4,7 +4,7 @@
 <head>
 	<title>Dijit.popup and BackgroundIFrame unit test</title>
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../../themes/dijit.css";
 		@import "../css/dijitTests.css";
 
@@ -117,11 +117,11 @@
 
 			// Create a button that displays a simple drop down
 			choiceDropDown = new SimpleChoiceWidget();
-			choiceDropDownButton = new SimpleDropDownButton({
+			(choiceDropDownButton = new SimpleDropDownButton({
 				id: "choiceDropDownButton",
 				label: "show choice drop down",
 				popup: choiceDropDown
-			}).placeAt(dojo.body());
+			})).placeAt(dojo.byId("widgets"));
 
 			dojo.declare("DialogWithPopupWidget",  [dijit._Widget, dijit._Templated], {
 				// summary:
@@ -173,7 +173,7 @@
 						id: "choiceFromDialog"
 					})
 				})
-			}).placeAt(dojo.body());
+			}).placeAt(dojo.byId("widgets"));
 
 			dojo.declare("NestedPopupOpener",  [dijit._Widget, dijit._Templated], {
 				// summary:
@@ -231,7 +231,7 @@
 				id: "showNestedMenuButton",
 				label: "show nested drop down",
 				popup: nestedOpener
-			}).placeAt(dojo.body());
+			}).placeAt(dojo.byId("widgets"));
 
 			// Create a button that displays a dialog that displays a nested drop down
 			dialogNestedChoice1 = new SimpleChoiceWidget({
@@ -257,14 +257,15 @@
 				id: "showComplexDialogButton",
 				label: "show dialog w/nested menu",
 				popup: dialogWithNestedPopup
-			}).placeAt(dojo.body());
+			}).placeAt(dojo.byId("widgets"));
 
 		});
-
 	</script>
 </head>
 <body>
 	<h1>dijit.popup and BackgroundIFrame Unit Test</h1>
-	<button>simple button</button>
+	<input id="inputAtStart">
+	<span id="widgets"></span>
+	<input id="inputAtEnd">
 </body>
 </html>

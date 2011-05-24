@@ -1,7 +1,4 @@
-dojo.provide("dojox.data.JsonRestStore");
-
-dojo.require("dojox.data.ServiceStore");
-dojo.require("dojox.rpc.JsonRest");
+define("dojox/data/JsonRestStore", ["dojo", "dojox", "dojox/rpc/JsonRest", "dojox/data/ServiceStore"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.JsonRestStore",
 	dojox.data.ServiceStore,
@@ -480,3 +477,6 @@ dojox.data._getStoreForItem = function(item){
 	return null;
 };
 dojox.json.ref._useRefs = true; // Use referencing when identifiable objects are referenced
+
+return dojox.data.JsonRestStore;
+});

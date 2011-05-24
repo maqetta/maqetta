@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>Heading</title>
+		<link href="../themes/android/android.css" rel="stylesheet"></link>
+		<link href="../themes/domButtons.css" rel="stylesheet"></link>
+
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+
+		<script language="JavaScript" type="text/javascript">
+			//dojo.require("dojo.parser"); // Use the lightweight parser.
+			dojo.require("dojox.mobile.parser");
+			dojo.require("dojox.mobile");
+			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
+			dojo.addOnLoad(function(){
+				var btn1 = dijit.byId("btn1");
+				btn1.connect(btn1.domNode, "onclick", function(){
+					alert(this.label + " button was clicked");
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="general" dojoType="dojox.mobile.View" selected="true">
+			<h1 dojoType="dojox.mobile.Heading" back="Settings" moveTo="settings">General</h1>
+			<h1 dojoType="dojox.mobile.Heading" back="Long Button" moveTo="settings">Very Very Long Title May Not Be Displayed in the Narrow Space</h1>
+		</div>
+
+		<h3 style="color:white;">Heading with buttons</div>
+
+		<h1 dojoType="dojox.mobile.Heading" label="World Clock">
+			<div id="btn1" dojoType="dojox.mobile.ToolBarButton" style="padding: 0px 14px">Edit</div>
+			<div dojoType="dojox.mobile.ToolBarButton" class="mblDomButton mblDomButtonPlus_2" style="float:right;" onclick="alert('+ was clicked')"></div>
+
+		</h1><br>
+
+
+		<h1 dojoType="dojox.mobile.Heading">
+			<div dojoType="dojox.mobile.ToolBarButton" style="padding: 0px 14px">Edit</div>
+			<div dojoType="dojox.mobile.ToolBarButton" class="mblDomButton mblDomButtonPlus_2" style="float:right;"></div>
+			Alarm Clock
+		</h1><br>
+
+
+		<h1 dojoType="dojox.mobile.Heading" label="Voice Memos">
+			<div dojoType="dojox.mobile.ToolBarButton" label="Speaker"></div>
+			<div dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue" style="width:45px;float:right;"></div>
+		</h1><br>
+
+
+		<h1 dojoType="dojox.mobile.Heading" label="Updates">
+			<!-- dummy hidden button to center the label -->
+			<div dojoType="dojox.mobile.ToolBarButton" label="Update All" style="visibility:hidden;"></div>
+			<div dojoType="dojox.mobile.ToolBarButton" label="Update All" style="float:right;"></div>
+		</h1><br>
+
+
+		<h1 dojoType="dojox.mobile.Heading" label="News" back="Bookmarks" moveTo="bookmarks">
+			<div dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue" style="width:45px;float:right;"></div>
+		</h1><br>
+
+
+		<h1 dojoType="dojox.mobile.Heading">
+			<div dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue"></div>
+			<div dojoType="dojox.mobile.ToolBarButton" label="New Folder" style="float:right;"></div>
+		</h1><br>
+
+
+		<div dojoType="dojox.mobile.Heading">
+			<div dojoType="dojox.mobile.ToolBarButton" toggle="true">New</div>
+			<div dojoType="dojox.mobile.ToolBarButton" toggle="true">Toggle</div>
+			<div dojoType="dojox.mobile.ToolBarButton" icon="images/a-icon-12.png" moveTo="view3"></div>
+			<div dojoType="dojox.mobile.ToolBarButton" icon="images/tab-icons.png" iconPos="29,0,29,29" moveTo="view3"></div>
+			<div dojoType="dojox.mobile.ToolBarButton" class="mblDomButton mblDomButtonPlus_2" moveTo="view3" style="float:right;"></div>
+		</div><br>
+	</body>
+</html>

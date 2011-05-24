@@ -10,7 +10,7 @@ load("jslib/buildUtil.js");
 var fileList = fileUtil.getFilteredFileList(startDir, /\.(html|htm)$/, true);
 
 for(var i = 0; i < fileList.length; i++){
-	var fileName = fileList[i];	
+	var fileName = fileList[i];
 	var fileContents = fileUtil.readFile(fileName);
 	fileContents = fileContents.replace(/src\=\".*dojo.js"/, 'src="' + xdDojoUrl + '"');
 	fileUtil.saveUtf8File(fileName, fileContents);

@@ -26,7 +26,7 @@ dojo.extend(dojo.Animation, {
 		// 		A function to use for the reverse easing. This allows for
 		// 		the possibility of custom eases that are not in the dojo.fx
 		// 		library.
-		// 		
+		//
 		var playing = this.status() == "playing";
 		this.pause();
 		this._reversed = !this._reversed;

@@ -22,7 +22,7 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 	rows: 4,
 	
 	// cols: Integer
-	//		Number of Columns to display 
+	//		Number of Columns to display
 	cols: 5,
 	
 	// cellSize: Integer
@@ -57,8 +57,8 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 	_init: function(){
 		// summary: Setup and layout the images
 	
-		var _row = 0, 
-			_w = this.cellSize; 
+		var _row = 0,
+			_w = this.cellSize;
 
 		dojo.style(this.domNode, {
 			width: _w * this.cols + "px",
@@ -89,7 +89,7 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 		var l = this._nl.length;
 		while(this.threads--){
 			var s = Math.floor(Math.random() * l);
-			setTimeout(dojo.hitch(this, "_enbiggen", { 
+			setTimeout(dojo.hitch(this, "_enbiggen", {
 				target: this._nl[s]
 			}), this.delay * this.threads);
 		}
@@ -131,7 +131,7 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 			var _tehDecider = function(){
 				// if we have room, we'll want to decide which direction to go
 				// let "teh decider" decide.
-				return Math.round(Math.random()); 
+				return Math.round(Math.random());
 			};
 			
 			if(_pos.x == this.cols - 1 || (_pos.x > 0 && _tehDecider() )){
@@ -150,14 +150,14 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 
 			dojo.animateProperty({ node: _pos.n, properties: props,
 				onEnd: dojo.hitch(this, "_loadUnder", _pos, props),
-				easing: this.easing 
+				easing: this.easing
 			}).play();
 			
 		}
 	},
 	
 	_loadUnder: function(info, props){
-		// summary: figure out which three images are being covered, and 
+		// summary: figure out which three images are being covered, and
 		//		determine if they need loaded or not
 
 		var idx = info.io;
@@ -197,13 +197,13 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 			props.top += this.cellSize;
 		}
 		if(props.left >= 0){
-			props.left += this.cellSize; 
+			props.left += this.cellSize;
 		}
 		var _cc = this.cellSize - (this.cellMargin * 2);
 		dojo.animateProperty({
-			node: info.n, 
+			node: info.n,
 			properties: dojo.mixin(props, {
-				width:_cc, 
+				width:_cc,
 				height:_cc
 			}),
 			onEnd: dojo.hitch(this, "_cycle", info, props)
@@ -213,7 +213,7 @@ dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._Templated], {
 	_cycle: function(info, props){
 		// summary: Select an un-viewed image from the list, and show it
 
-		var bc = this.baseClass; 
+		var bc = this.baseClass;
 		dojo.removeClass(info.n, bc + "Top");
 		var ns = this._nl.filter(function(n){
 			return !dojo.hasClass(n, bc + "Seen")

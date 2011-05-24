@@ -1,8 +1,6 @@
-dojo.provide("dojox.data.RailsStore");
-dojo.require("dojox.data.JsonRestStore");
+define("dojox/data/RailsStore", ["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
+
 // Contains code donated by Travis Tilley under CLA
-
-
 dojo.declare("dojox.data.RailsStore", dojox.data.JsonRestStore, {
 	constructor: function(){
 		//	summary:
@@ -164,4 +162,7 @@ dojo.declare("dojox.data.RailsStore", dojox.data.JsonRestStore, {
 		// if we don't know the length, and it is partial result, we will guess that it is twice as big, that will work for most widgets
 		return {totalCount:deferred.fullLength || (deferred.request.count == count ? (deferred.request.start || 0) + count * 2 : count), items: items};
 	}
+});
+
+return dojox.data.RailsStore;
 });

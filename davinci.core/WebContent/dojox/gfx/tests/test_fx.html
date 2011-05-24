@@ -26,8 +26,12 @@ dojo.require("dojo.colors");
 
 var rect, text;
 
-var makeShapes = function(){
+function createSurface(){
 	var surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+function makeShapes(surface){
 	rect = surface.createRect({x: 100, y: 100, width: 300, height: 300}).
 		setFill("yellow").setStroke({
 			color: "green",
@@ -38,7 +42,7 @@ var makeShapes = function(){
 		.setFill("black").setFont({family: "serif", size: "10pt"});
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 var animateStroke = function(){
 	var anim = dojox.gfx.fx.animateStroke({

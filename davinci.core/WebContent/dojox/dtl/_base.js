@@ -72,7 +72,7 @@ dojo.experimental("dojox.dtl");
 		}
 	});
 
-	var smart_split_re = /("(?:[^"\\]*(?:\\.[^"\\]*)*)"|'(?:[^'\\]*(?:\\.[^'\\]*)*)'|[^\s]+)/g;           
+	var smart_split_re = /("(?:[^"\\]*(?:\\.[^"\\]*)*)"|'(?:[^'\\]*(?:\\.[^'\\]*)*)'|[^\s]+)/g;
 	var split_re = /\s+/g;
 	var split = function(/*String|RegExp?*/ splitter, /*Integer?*/ limit){
 		splitter = splitter || split_re;

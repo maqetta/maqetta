@@ -1,12 +1,22 @@
 ({
-	"findLabel": "Que rechercher :",
+	"findLabel": "Rechercher :",
+	"findTooltip": "Entrez le texte à rechercher",
 	"replaceLabel": "Remplacer par :",
-	"findReplace": "Rechercher/Remplacer",
-	"matchCase": "Respecter la casse", 
+	"replaceTooltip": "Entrez le texte de remplacement",
+	"findReplace": "Rechercher et remplacer",
+	"matchCase": "Respecter la casse",
+	"matchCaseTooltip": "Respecter la casse",
 	"backwards": "Vers l'arrière",
-	"replaceAll": "Toutes les occurrences", 
+	"backwardsTooltip": "Recherchez le texte vers l'arrière",
+	"replaceAll": "Toutes les occurrences",
+	"replaceAllButton": "Remplacer tout",
+	"replaceAllButtonTooltip": "Remplacez tout le texte",
 	"findButton": "Rechercher",
+	"findButtonTooltip": "Recherchez le texte",
 	"replaceButton": "Remplacer",
-	"replaceDialogText": "${0} occurrence(s) remplacée(s)."
+	"replaceButtonTooltip": "Remplacez le texte",
+	"replaceDialogText": "${0} occurrence(s) remplacée(s)",
+	"eofDialogText": "Dernière occurrence ${0}",
+	"eofDialogTextFind": "trouvé",
+	"eofDialogTextReplace": "remplacé"
 })
-

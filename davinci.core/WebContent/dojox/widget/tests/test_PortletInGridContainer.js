@@ -33,11 +33,12 @@ dojo.require("dojox.charting.action2d.Tooltip");
 //This must be included on the page for FeedPortlets that
 //load local feeds.
 dojo.require("dojox.data.AtomReadStore");
-	
+
 dojo.require("dojo.parser");
 
 dojo.addOnLoad(function(){
 	dojo.parser.parse();
+
 	var chart = window.chart = new dojox.charting.Chart2D("zoomer");
 	chart.setTheme(dojox.charting.themes.PlotKit.orange);
 	chart.addAxis("x", {fixLower: "minor", natural: true, stroke: "grey",
@@ -54,7 +55,7 @@ dojo.addOnLoad(function(){
 	chart.addSeries("Series B", [15, 0, 15, 0, 15, 0, 15, 0, 15, 0, 15, 0, 15, 0, 15, 0, 15], {plot: "plot2"});
 	chart.addPlot("grid", {type: "Grid", hMinorLines: true});
 	chart.render();
-	
+
 	var show = setInterval(function(){
 		var w = dijit.byId("gridContainer");
 		if (w && w.domNode) {
@@ -62,7 +63,7 @@ dojo.addOnLoad(function(){
 			clearInterval(show);
 		}
 	}, 500);
-	
+
 
 	var scaleX = 1, scaleY = 1, offsetX = 0, offsetY = 0;
 	dojo.connect(dijit.byId("scaleXSlider"), "onChange", function(value){
@@ -70,24 +71,24 @@ dojo.addOnLoad(function(){
 		console.log("calling update");
 		update();
 	});
-	
+
 	function update() {
 		chart.setWindow(scaleX, scaleY, offsetX, offsetY).render();
 	}
-	
+
 	var _init = null;
 	var onMouseDown = function(e){
 		_init = {x: e.clientX, y: e.clientY, ox: offsetX, oy: offsetY};
 		dojo.stopEvent(e);
 	};
-	
+
 	var onMouseUp = function(e){
 		if(_init){
 			_init = null;
 			dojo.stopEvent(e);
 		}
 	};
-	
+
 	var onMouseMove = function(e){
 		if(_init){
 			var dx = e.clientX - _init.x,
@@ -98,19 +99,19 @@ dojo.addOnLoad(function(){
 			dojo.stopEvent(e);
 		}
 	};
-	
+
 	dojo.connect(chart.node, "onmousedown", onMouseDown);
 	dojo.connect(chart.node, "onmousemove", onMouseMove);
 	dojo.connect(chart.node, "onmouseup",   onMouseUp);
-	
-	
+
+
 	createProgrammaticPortlet();
 });
 
 function createProgrammaticPortlet() {
 	var portlet = new dojox.widget.FeedPortlet({
 		id: "ProgrammaticPortlet",
-		dndType: "Portlet", 
+		dndType: "Portlet",
 		title: "Programmatic FeedPortlet with multiple feeds"
 	}, dojo.create("div", {
 		innerHTML: "This portlet was created programmatically, and has mulitple feeds to select from."
@@ -120,7 +121,7 @@ function createProgrammaticPortlet() {
 		id: "ProgrammaticPortletSettings",
 		urls: [
 			{
-				url: "http://news.google.com/news?hl=en&topic=t&output=atom", 
+				url: "http://news.google.com/news?hl=en&topic=t&output=atom",
 				label: "Google News"
 			},
 			{
@@ -139,7 +140,7 @@ function createProgrammaticPortlet() {
 
 var count = 0;
 function loadFeed(url, nodeId, emptyMsg, type) {
-	
+
 	var query = {
 		url: url
 	};
@@ -159,10 +160,10 @@ function loadFeed(url, nodeId, emptyMsg, type) {
 	      var ul = dojo.create("ul", null, outNode);
 				dojo.forEach(items, function(item){
 					var li = dojo.create("li", {
-						innerHTML: '<a href="' + testStore.getValue(item, 'link') + '">' 
+						innerHTML: '<a href="' + testStore.getValue(item, 'link') + '">'
 												+ testStore.getValue(item, 'title') + '</a>'
 					},ul);
-					
+
 					dojo.connect(li, "onmouseover", function() {
 						dijit.showTooltip(testStore.getValue(item, "content"), li);
 					});
@@ -174,10 +175,10 @@ function loadFeed(url, nodeId, emptyMsg, type) {
 			else {
 				var accordion = new dijit.layout.AccordionContainer({});
 				dojo.byId(nodeId).appendChild(accordion.domNode);
-				
+
 				dojo.forEach(items, function(item){
 					var summary = testStore.getValue(item, "title");
-					
+
 					if (summary.length > 40) {
 						summary = summary.substring(0, 50);
 					}
@@ -189,7 +190,7 @@ function loadFeed(url, nodeId, emptyMsg, type) {
 					accordion.addChild(contentPane);
 					contentPane.startup();
 				});
-				
+
 				var portlet = dijit.getEnclosingWidget(dojo.byId(nodeId));
 				portlet.addChild(accordion);
 			}
@@ -214,9 +215,9 @@ var layoutHtmlTable = [
 		{name: 'DOB', field: 'DOB', width: '25%'}
 		]
 	];
-			
+
 var text_explode_2 = function(node){
-	
+
 	if(node.style.height){
 		return;
 	}

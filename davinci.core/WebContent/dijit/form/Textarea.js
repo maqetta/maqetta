@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.Textarea");
-
-dojo.require("dijit.form.SimpleTextarea");
+define("dijit/form/Textarea", ["dojo", "dijit", "dijit/form/SimpleTextarea"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.form.Textarea",
@@ -20,6 +18,10 @@ dojo.declare(
 	// |	<textarea dojoType="dijit.form.TextArea">...</textarea>
 
 
+	// TODO: for 2.0, rename this to ExpandingTextArea, and rename SimpleTextarea to Textarea
+
+	baseClass: "dijitTextBox dijitTextArea dijitExpandingTextArea",
+
 	// Override SimpleTextArea.cols to default to width:100%, for backward compatibility
 	cols: "",
 
@@ -32,9 +34,9 @@ dojo.declare(
 			newH += textarea.offsetHeight - textarea.clientHeight - ((dojo.isIE < 8 && this._strictMode) ? dojo._getPadBorderExtents(textarea).h : 0);
 		}else if(dojo.isMoz){
 			newH += textarea.offsetHeight - textarea.clientHeight; // creates room for horizontal scrollbar
-		}else if(dojo.isWebKit && !(dojo.isSafari < 4)){ // Safari 4.0 && Chrome
+		}else if(dojo.isWebKit){
 			newH += dojo._getBorderExtents(textarea).h;
-		}else{ // Safari 3.x and Opera 9.6
+		}else{ // Opera 9.6 (TODO: test if this is still needed)
 			newH += dojo._getPadBorderExtents(textarea).h;
 		}
 		return newH;
@@ -127,13 +129,19 @@ dojo.declare(
 		this.resize();
 	},
 
-	postCreate: function(){
+	buildRendering: function(){
 		this.inherited(arguments);
+
 		// tweak textarea style to reduce browser differences
 		dojo.style(this.textbox, { overflowY: 'hidden', overflowX: 'auto', boxSizing: 'border-box', MsBoxSizing: 'border-box', WebkitBoxSizing: 'border-box', MozBoxSizing: 'border-box' });
-		this.connect(this.textbox, "onscroll", this._onInput);
-		this.connect(this.textbox, "onresize", this._onInput);
-		this.connect(this.textbox, "onfocus", this._onInput); // useful when a previous estimate was off a bit
+	},
+
+	postCreate: function(){
+		this.inherited(arguments);
+
+		this.connect(this.textbox, "onscroll", "_onInput");
+		this.connect(this.textbox, "onresize", "_onInput");
+		this.connect(this.textbox, "onfocus", "_onInput"); // useful when a previous estimate was off a bit
 		this._setTimeoutHandle = setTimeout(dojo.hitch(this, "resize"), 0);
 	},
 
@@ -143,4 +151,8 @@ dojo.declare(
 		}
 		this.inherited(arguments);
 	}
+});
+
+
+return dijit.form.Textarea;
 });

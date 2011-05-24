@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Velikost",
 	fontName: "Písmo",
@@ -9,6 +11,7 @@
 	cursive: "cursive",
 	fantasy: "fantasy",
 
+	noFormat: "Žádný",
 	p: "Odstavec",
 	h1: "Nadpis",
 	h2: "Podnadpis",
@@ -23,3 +26,5 @@
 	6: "velmi velké",
 	7: "extra velké"
 })
+//end v1.x content
+);

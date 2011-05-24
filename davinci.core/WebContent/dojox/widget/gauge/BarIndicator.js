@@ -64,7 +64,7 @@ dojo.declare("dojox.widget.gauge.BarIndicator",[dojox.widget.gauge.BarLineIndica
 		}else{
 			if(c!=v){
 				var anim = new dojo.Animation({curve: [c, v], duration: this.duration, easing: this.easing});
-				dojo.connect(anim, "onAnimate", dojo.hitch(this, this._createShapes)); 
+				dojo.connect(anim, "onAnimate", dojo.hitch(this, this._createShapes));
 				anim.play();
 			}
 		}

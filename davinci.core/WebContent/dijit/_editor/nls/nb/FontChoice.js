@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Størrelse",
 	fontName: "Skrift",
@@ -9,6 +11,7 @@
 	cursive: "kursiv",
 	fantasy: "fantasi",
 
+	noFormat: "Ingen",
 	p: "Avsnitt",
 	h1: "Overskrift",
 	h2: "Undertittel",
@@ -23,3 +26,5 @@
 	6: "x-stor",
 	7: "xx-stor"
 })
+//end v1.x content
+);

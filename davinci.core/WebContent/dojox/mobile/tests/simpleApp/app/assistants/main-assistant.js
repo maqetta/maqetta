@@ -8,8 +8,8 @@ dojo.declare("MainAssistant", dojox.mobile.app.SceneAssistant, {
     
     var appInfoNode = this.controller.query(".appInfoArea")[0];
     
-    appInfoNode.innerHTML = 
-      "This app has the following info: \n" 
+    appInfoNode.innerHTML =
+      "This app has the following info: \n"
         + dojo.toJson(dojox.mobile.app.info, true)
     
   },

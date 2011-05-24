@@ -1,7 +1,7 @@
 dojo.provide("dojox.fx._base");
-// summary: Experimental and extended Animations beyond Dojo Core / Base functionality. 
+// summary: Experimental and extended Animations beyond Dojo Core / Base functionality.
 //	Provides advanced Lines, Animations, and convenience aliases.
-dojo.require("dojo.fx"); 
+dojo.require("dojo.fx");
 
 dojo.mixin(dojox.fx, {
 
@@ -13,7 +13,7 @@ dojo.mixin(dojox.fx, {
 	//	Alias of `dojo.animateProperty` - animate any CSS property
 	animateProperty: dojo.animateProperty,
 
-	// fadeTo: Function 
+	// fadeTo: Function
 	//		Fade an element from an opacity to an opacity.
 	//		Omit `start:` property to detect. `end:` property is required.
 	//		Ultimately an alias to `dojo._fade`
@@ -50,18 +50,18 @@ dojo.mixin(dojox.fx, {
 });
 
 dojox.fx.sizeTo = function(/* Object */args){
-	// summary: 
+	// summary:
 	//		Creates an animation that will size a node
 	//
 	// description:
 	//		Returns an animation that will size the target node
 	//		defined in args Object about it's center to
-	//		a width and height defined by (args.width, args.height), 
+	//		a width and height defined by (args.width, args.height),
 	//		supporting an optional method: chain||combine mixin
-	//		(defaults to chain).	
+	//		(defaults to chain).
 	//
 	//	- works best on absolutely or relatively positioned elements
-	//	
+	//
 	// example:
 	//	|	// size #myNode to 400px x 200px over 1 second
 	//	|	dojo.fx.sizeTo({
@@ -76,9 +76,9 @@ dojox.fx.sizeTo = function(/* Object */args){
 	var node = args.node = dojo.byId(args.node),
 		abs = "absolute";
 
-	var method = args.method || "chain"; 
+	var method = args.method || "chain";
 	if(!args.duration){ args.duration = 500; } // default duration needed
-	if(method == "chain"){ args.duration = Math.floor(args.duration / 2); } 
+	if(method == "chain"){ args.duration = Math.floor(args.duration / 2); }
 	
 	var top, newTop, left, newLeft, width, height = null;
 
@@ -95,8 +95,8 @@ dojox.fx.sizeTo = function(/* Object */args){
 			width = (w == "auto" ? 0 : parseInt(w));
 			height = (h == "auto" ? 0 : parseInt(h));
 			
-			newLeft = left - Math.floor((args.width - width) / 2); 
-			newTop = top - Math.floor((args.height - height) / 2); 
+			newLeft = left - Math.floor((args.width - width) / 2);
+			newTop = top - Math.floor((args.height - height) / 2);
 
 			if(pos != abs && pos != 'relative'){
 				var ret = dojo.coords(n, true);
@@ -137,19 +137,19 @@ dojox.fx.sizeTo = function(/* Object */args){
 };
 
 dojox.fx.slideBy = function(/* Object */args){
-	// summary: 
+	// summary:
 	//		Returns an animation to slide a node by a defined offset.
 	//
 	// description:
 	//		Returns an animation that will slide a node (args.node) from it's
 	//		current position to it's current posision plus the numbers defined
-	//		in args.top and args.left. standard dojo.fx mixin's apply. 
-	//	
+	//		in args.top and args.left. standard dojo.fx mixin's apply.
+	//
 	// example:
 	//	|	// slide domNode 50px down, and 22px left
-	//	|	dojox.fx.slideBy({ 
-	//	|		node: domNode, duration:400, 
-	//	|		top: 50, left: -22 
+	//	|	dojox.fx.slideBy({
+	//	|		node: domNode, duration:400,
+	//	|		top: 50, left: -22
 	//	|	}).play();
 
 	var node = args.node = dojo.byId(args.node),
@@ -179,7 +179,7 @@ dojox.fx.slideBy = function(/* Object */args){
 			// null start values allow chaining to work, animateProperty will
 			// determine them for us (except in ie6? -- ugh)
 			top: top + (args.top || 0),
-			left: left + (args.left || 0) 
+			left: left + (args.left || 0)
 		}
 	}, args));
 	dojo.connect(_anim, "beforeBegin", _anim, init);
@@ -187,9 +187,9 @@ dojox.fx.slideBy = function(/* Object */args){
 };
 
 dojox.fx.crossFade = function(/* Object */args){
-	// summary: 
+	// summary:
 	//		Returns an animation cross fading two element simultaneously
-	// 
+	//
 	// args:
 	//	args.nodes: Array - two element array of domNodes, or id's
 	//
@@ -215,15 +215,15 @@ dojox.fx.crossFade = function(/* Object */args){
 };
 
 dojox.fx.highlight = function(/*Object*/ args){
-	// summary: 
+	// summary:
 	//		Highlight a node
 	//
 	// description:
 	//		Returns an animation that sets the node background to args.color
 	//		then gradually fades back the original node background color
-	//	
+	//
 	// example:
-	//	|	dojox.fx.highlight({ node:"foo" }).play(); 
+	//	|	dojox.fx.highlight({ node:"foo" }).play();
 
 	var node = args.node = dojo.byId(args.node);
 
@@ -263,14 +263,14 @@ dojox.fx.highlight = function(/*Object*/ args){
 dojox.fx.wipeTo = function(/*Object*/ args){
 	// summary:
 	//		Animate a node wiping to a specific width or height
-	//	
+	//
 	// description:
 	//		Returns an animation that will expand the
 	//		node defined in 'args' object from it's current to
 	//		the height or width value given by the args object.
 	//
 	//		default to height:, so leave height null and specify width:
-	//		to wipeTo a width. note: this may be deprecated by a 
+	//		to wipeTo a width. note: this may be deprecated by a
 	//
 	//		Note that the final value should not include
 	//		units and should be an integer.  Thus a valid args object

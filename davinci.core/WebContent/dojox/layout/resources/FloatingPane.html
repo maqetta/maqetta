@@ -1,5 +1,5 @@
 <div class="dojoxFloatingPane" id="${id}">
-	<div tabindex="0" waiRole="button" class="dojoxFloatingPaneTitle" dojoAttachPoint="focusNode">
+	<div tabindex="0" role="button" class="dojoxFloatingPaneTitle" dojoAttachPoint="focusNode">
 		<span dojoAttachPoint="closeNode" dojoAttachEvent="onclick: close" class="dojoxFloatingCloseIcon"></span>
 		<span dojoAttachPoint="maxNode" dojoAttachEvent="onclick: maximize" class="dojoxFloatingMaximizeIcon">&thinsp;</span>
 		<span dojoAttachPoint="restoreNode" dojoAttachEvent="onclick: _restore" class="dojoxFloatingRestoreIcon">&thinsp;</span>	
@@ -7,7 +7,7 @@
 		<span dojoAttachPoint="titleNode" class="dijitInline dijitTitleNode"></span>
 	</div>
 	<div dojoAttachPoint="canvas" class="dojoxFloatingPaneCanvas">
-		<div dojoAttachPoint="containerNode" waiRole="region" tabindex="-1" class="${contentClass}">
+		<div dojoAttachPoint="containerNode" role="region" tabindex="-1" class="${contentClass}">
 		</div>
 		<span dojoAttachPoint="resizeHandle" class="dojoxFloatingResizeHandle"></span>
 	</div>

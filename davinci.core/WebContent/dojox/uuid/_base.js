@@ -18,11 +18,11 @@ dojox.uuid.variant = {
 	UNKNOWN: "111" };
 
 dojox.uuid.assert = function(/*Boolean*/ booleanValue, /*String?*/ message){
-	// summary: 
+	// summary:
 	//		Throws an exception if the assertion fails.
-	// description: 
+	// description:
 	//		If the asserted condition is true, this method does nothing. If the
-	//		condition is false, we throw an error with a error message. 
+	//		condition is false, we throw an error with a error message.
 	// booleanValue: Must be true for the assertion to succeed.
 	// message: A string describing the assertion.
 	// throws: Throws an Error if 'booleanValue' is false.
@@ -36,18 +36,18 @@ dojox.uuid.assert = function(/*Boolean*/ booleanValue, /*String?*/ message){
 };
 
 dojox.uuid.generateNilUuid = function(){
-	// summary: 
+	// summary:
 	//		This function returns the Nil UUID: "00000000-0000-0000-0000-000000000000".
-	// description: 
+	// description:
 	//		The Nil UUID is described in section 4.1.7 of
 	//		RFC 4122: http://tools.ietf.org/html/rfc4122#section-4.1.7
-	// examples: 
+	// examples:
 	//		var string = dojox.uuid.generateNilUuid();
 	return dojox.uuid.NIL_UUID; // String
 };
 
 dojox.uuid.isValid = function(/*String*/ uuidString){
-	// summary: 
+	// summary:
 	//		Returns true if the UUID was initialized with a valid value.
 	uuidString = uuidString.toString();
 	var valid = (dojo.isString(uuidString) &&
@@ -72,13 +72,13 @@ dojox.uuid.isValid = function(/*String*/ uuidString){
 };
 
 dojox.uuid.getVariant = function(/*String*/ uuidString){
-	// summary: 
+	// summary:
 	//		Returns a variant code that indicates what type of UUID this is.
 	//		Returns one of the enumerated dojox.uuid.variant values.
-	// example: 
+	// example:
 	//		var variant = dojox.uuid.getVariant("3b12f1df-5232-4804-897e-917bf397618a");
 	//		dojox.uuid.assert(variant == dojox.uuid.variant.DCE);
-	// example: 
+	// example:
 	// "3b12f1df-5232-4804-897e-917bf397618a"
 	//                     ^
 	//                     |
@@ -119,13 +119,13 @@ dojox.uuid.getVariant = function(/*String*/ uuidString){
 };
 
 dojox.uuid.getVersion = function(/*String*/ uuidString){
-	// summary: 
+	// summary:
 	//		Returns a version number that indicates what type of UUID this is.
 	//		Returns one of the enumerated dojox.uuid.version values.
-	// example: 
+	// example:
 	//		var version = dojox.uuid.getVersion("b4308fb0-86cd-11da-a72b-0800200c9a66");
 	//		dojox.uuid.assert(version == dojox.uuid.version.TIME_BASED);
-	// exceptions: 
+	// exceptions:
 	//		Throws an Error if this is not a DCE Variant UUID.
 	var errorMessage = "dojox.uuid.getVersion() was not passed a DCE Variant UUID.";
 	dojox.uuid.assert(dojox.uuid.getVariant(uuidString) == dojox.uuid.variant.DCE, errorMessage);
@@ -142,11 +142,11 @@ dojox.uuid.getVersion = function(/*String*/ uuidString){
 };
 
 dojox.uuid.getNode = function(/*String*/ uuidString){
-	// summary: 
-	//		If this is a version 1 UUID (a time-based UUID), getNode() returns a 
-	//		12-character string with the "node" or "pseudonode" portion of the UUID, 
-	//		which is the rightmost 12 characters. 
-	// exceptions: 
+	// summary:
+	//		If this is a version 1 UUID (a time-based UUID), getNode() returns a
+	//		12-character string with the "node" or "pseudonode" portion of the UUID,
+	//		which is the rightmost 12 characters.
+	// exceptions:
 	//		Throws an Error if this is not a version 1 UUID.
 	var errorMessage = "dojox.uuid.getNode() was not passed a TIME_BASED UUID.";
 	dojox.uuid.assert(dojox.uuid.getVersion(uuidString) == dojox.uuid.version.TIME_BASED, errorMessage);
@@ -158,22 +158,22 @@ dojox.uuid.getNode = function(/*String*/ uuidString){
 };
 
 dojox.uuid.getTimestamp = function(/*String*/ uuidString, /*String?*/ returnType){
-	// summary: 
+	// summary:
 	//		If this is a version 1 UUID (a time-based UUID), this method returns
 	//		the timestamp value encoded in the UUID.  The caller can ask for the
-	//		timestamp to be returned either as a JavaScript Date object or as a 
+	//		timestamp to be returned either as a JavaScript Date object or as a
 	//		15-character string of hex digits.
 	// returnType: Any of these five values: "string", String, "hex", "date", Date
-	// returns: 
+	// returns:
 	//		Returns the timestamp value as a JavaScript Date object or a 15-character string of hex digits.
-	// examples: 
+	// examples:
 	//		var uuidString = "b4308fb0-86cd-11da-a72b-0800200c9a66";
 	//		var date, string, hexString;
 	//		date   = dojox.uuid.getTimestamp(uuidString);         // returns a JavaScript Date
-	//		date   = dojox.uuid.getTimestamp(uuidString, Date);     // 
+	//		date   = dojox.uuid.getTimestamp(uuidString, Date);     //
 	//		string = dojox.uuid.getTimestamp(uuidString, String);   // "Mon, 16 Jan 2006 20:21:41 GMT"
 	//		hexString = dojox.uuid.getTimestamp(uuidString, "hex"); // "1da86cdb4308fb0"
-	// exceptions: 
+	// exceptions:
 	//		Throws an Error if this is not a version 1 UUID.
 	var errorMessage = "dojox.uuid.getTimestamp() was not passed a TIME_BASED UUID.";
 	dojox.uuid.assert(dojox.uuid.getVersion(uuidString) == dojox.uuid.version.TIME_BASED, errorMessage);
@@ -186,14 +186,14 @@ dojox.uuid.getTimestamp = function(/*String*/ uuidString, /*String?*/ returnType
 			return dojox.uuid.getTimestamp(uuidString, Date).toUTCString(); // String (e.g. "Mon, 16 Jan 2006 20:21:41 GMT")
 			break;
 		case "hex":
-			// Return a 15-character string of hex digits containing the 
+			// Return a 15-character string of hex digits containing the
 			// timestamp for this UUID, with the high-order bits first.
 			var arrayOfStrings = uuidString.split('-');
 			var hexTimeLow = arrayOfStrings[0];
 			var hexTimeMid = arrayOfStrings[1];
 			var hexTimeHigh = arrayOfStrings[2];
 		
-			// Chop off the leading "1" character, which is the UUID 
+			// Chop off the leading "1" character, which is the UUID
 			// version number for time-based UUIDs.
 			hexTimeHigh = hexTimeHigh.slice(1);
 		
@@ -204,7 +204,7 @@ dojox.uuid.getTimestamp = function(/*String*/ uuidString, /*String?*/ returnType
 		case null: // no returnType was specified, so default to Date
 		case "date":
 		case Date:
-			// Return a JavaScript Date object. 
+			// Return a JavaScript Date object.
 			var GREGORIAN_CHANGE_OFFSET_IN_HOURS = 3394248;
 			var HEX_RADIX = 16;
 		
@@ -215,7 +215,7 @@ dojox.uuid.getTimestamp = function(/*String*/ uuidString, /*String?*/ returnType
 			var hundredNanosecondIntervalsSince1582 = timeHigh & 0x0FFF;
 			hundredNanosecondIntervalsSince1582 <<= 16;
 			hundredNanosecondIntervalsSince1582 += timeMid;
-			// What we really want to do next is shift left 32 bits, but the 
+			// What we really want to do next is shift left 32 bits, but the
 			// result will be too big to fit in an int, so we'll multiply by 2^32,
 			// and the result will be a floating point approximation.
 			hundredNanosecondIntervalsSince1582 *= 0x100000000;

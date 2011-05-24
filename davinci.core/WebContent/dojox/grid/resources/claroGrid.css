@@ -122,10 +122,10 @@
 	background:url("images/row_back.png") #fff repeat-x;
 }
 .claro .dojoxGridRowOdd .dojoxGridRowTable tr {
-	background-color:#f4f9fd;
+	background-color:#f7fcff;
 }
 .claro .dojoxGridRowSelected .dojoxGridRowTable tr {
-	background-color:#d3e9fb;
+	background-color:#cee6fa;
 }
 
 /* cells */
@@ -157,7 +157,7 @@
 
 /*  Single Affordance Hover Effect */
 .claro .dojoxGridRowOver .dojoxGridCell {
-	background:url("images/row_back.png") #ABD6FF;
+	background:url("images/row_back.png") #ABD6FF repeat-x;
 	border-top:1px solid #769DC0;
 	border-bottom:1px solid #769DC0;
 }
@@ -194,7 +194,7 @@
 /* editing */
 .claro .dojoxGridRowEditing td {
 	/* background-color: #F4FFF4; */
-	background-color: #60a1ea; 
+	background-color: #cee6fa; 
 	/* padding: 0px 3px 0px 3px; */
 }
 .claro .dojoxGridRow-inserting td {
@@ -213,4 +213,71 @@
 }
 .claro .dojoxGrid .dojoDndItemAfter {
 	border-right-color: #3559ac;
+}
+
+/* Tree Grid */
+.claro .dojoxGridExpando {
+	float: left;
+	height: 18px;
+	width: 18px;
+	text-align: center;
+	margin-top: -3px;
+}
+.dijitRtl .claro .dojoxGridExpando {
+	float: right;
+}
+.claro .dojoxGridExpandoCell {
+	padding-top: 5px;
+	background-position: left top !important;
+}
+.claro .dojoxGridExpandoNode {
+	background-image: url('../../../dijit/themes/claro/images/treeExpandImages.png');
+    width: 16px;
+    height: 16px;
+	background-position: 1px 0px; /* for closed state */
+}
+.dj_ie6 .claro .dojoxGridExpandoNode {
+	background-image: url('../../../dijit/themes/claro/images/treeExpandImages8bit.png');
+}
+.claro .dojoxGridRowOver .dojoxGridExpandoNode {
+	background-position: -17px 0px;
+}
+.claro .dojoxGridExpandoOpened .dojoxGridExpandoNode {
+	background-position: -35px 0px;
+}
+.claro .dojoxGridRowOver .dojoxGridExpandoOpened .dojoxGridExpandoNode {
+	background-position: -53px 0px;
+}
+.claro .dojoxGridExpandoLoading .dojoxGridExpandoNode {
+	background-image: url('../../../dijit/themes/claro/images/loadingAnimation.gif');
+}
+.claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpando {
+	visibility: visible !important;
+	width: 18px !important;
+}
+.claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpandoNode,
+.dj_ie6 .claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpandoNode {
+	background-image:none;
+}
+.claro .dojoxGridExpandoNodeInner {
+	visibility: hidden;
+}
+.dijit_a11y .dojoxGridExpandoNodeInner {
+	visibility: visible;
+}
+
+.claro .dojoxGridSummaryRow .dojoxGridCell {
+	border:1px solid transparent;
+}
+.dj_ie6 .claro .dojoxGridSummaryRow .dojoxGridCell {
+	border-color:#fff
+}
+.claro tr.dojoxGridSubRowAlt {
+	background-color:#f4f9fd;
+}
+.claro .dojoxGridRowOdd tr.dojoxGridSubRowAlt {
+	background-color:#fff;
+}
+.claro .dojoxGridRow .dojoxGridRowTable tr.dojoxGridRowSelected {
+	background-color:#cee6fa;
 }

@@ -11,7 +11,7 @@ dojo.provide("dojox.gfx._base");
 		// return (new RegExp('(^|\\s+)'+classStr+'(\\s+|$)')).test(node.className)	// Boolean
 		var cls = node.getAttribute("className");
 		return cls && (" " + cls + " ").indexOf(" " + classStr + " ") >= 0;  // Boolean
-	}
+	};
 	g._addClass = function(/*DomNode*/node, /*String*/classStr){
 		//	summary:
 		//		Adds the specified classes to the end of the class list on the
@@ -20,17 +20,17 @@ dojo.provide("dojox.gfx._base");
 		if(!cls || (" " + cls + " ").indexOf(" " + classStr + " ") < 0){
 			node.setAttribute("className", cls + (cls ? " " : "") + classStr);
 		}
-	}
+	};
 	g._removeClass = function(/*DomNode*/node, /*String*/classStr){
 		//	summary: Removes classes from node.
 		var cls = node.getAttribute("className");
 		if(cls){
 			node.setAttribute(
-				"className", 
+				"className",
 				cls.replace(new RegExp('(^|\\s+)' + classStr + '(\\s+|$)'), "$1$2")
 			);
 		}
-	}
+	};
 
 	// candidate for dojox.html.metrics (dynamic font resize handler is not implemented here)
 
@@ -52,20 +52,19 @@ dojo.provide("dojox.gfx._base");
 		}
 
 		//	set up the measuring node.
-		var div = dojo.doc.createElement("div");
-		var s = div.style;
-		s.position = "absolute";
-		s.left = "-100px";
-		s.top = "0px";
-		s.width = "30px";
-		s.height = "1000em";
-		s.borderWidth = "0px";
-		s.margin = "0px";
-		s.padding = "0px";
-		s.outline = "none";
-		s.lineHeight = "1";
-		s.overflow = "hidden";
-		dojo.body().appendChild(div);
+		var div = dojo.create("div", {style: {
+				position: "absolute",
+				left: "0",
+				top: "-100px",
+				width: "30px",
+				height: "1000em",
+				borderWidth: "0",
+				margin: "0",
+				padding: "0",
+				outline: "none",
+				lineHeight: "1",
+				overflow: "hidden"
+			}}, dojo.body());
 
 		//	do the measurements.
 		for(var p in heights){
@@ -74,7 +73,6 @@ dojo.provide("dojox.gfx._base");
 		}
 
 		dojo.body().removeChild(div);
-		div = null;
 		return heights; 	//	object
 	};
 
@@ -95,18 +93,16 @@ dojo.provide("dojox.gfx._base");
 								/*String?*/ className){
 		var m, s, al = arguments.length;
 		if(!measuringNode){
-			m = measuringNode = dojo.doc.createElement("div");
-			s = m.style;
-			s.position = "absolute";
-			s.left = "-10000px";
-			s.top = "0";
-			dojo.body().appendChild(m);
-		}else{
-			m = measuringNode;
-			s = m.style;
+			measuringNode = dojo.create("div", {style: {
+				position: "absolute",
+				top: "-10000px",
+				left: "0"
+			}}, dojo.body());
 		}
+		m = measuringNode;
 		// reset styles
 		m.className = "";
+		s = m.style;
 		s.borderWidth = "0";
 		s.margin = "0";
 		s.padding = "0";
@@ -183,7 +179,7 @@ dojo.mixin(dojox.gfx, {
 
 	// default geometric attributes
 	defaultStroke: {
-		type: "stroke", color: "black", style: "solid", width: 1, 
+		type: "stroke", color: "black", style: "solid", width: 1,
 		cap: "butt", join: 4
 	},
 	defaultLinearGradient: {
@@ -202,7 +198,7 @@ dojo.mixin(dojox.gfx, {
 		type: "pattern", x: 0, y: 0, width: 0, height: 0, src: ""
 	},
 	defaultFont: {
-		type: "font", style: "normal", variant: "normal", 
+		type: "font", style: "normal", variant: "normal",
 		weight: "normal", size: "10pt", family: "serif"
 	},
 
@@ -366,5 +362,16 @@ dojo.mixin(dojox.gfx, {
 	equalSources: function(a, b){
 		// summary: compares event sources, returns true if they are equal
 		return a && b && a == b;
+	},
+	
+	switchTo: function(renderer){
+		var ns = dojox.gfx[renderer];
+		if(ns){
+			dojo.forEach(["Group", "Rect", "Ellipse", "Circle", "Line",
+					"Polyline", "Image", "Text", "Path", "TextPath",
+					"Surface", "createSurface"], function(name){
+				dojox.gfx[name] = ns[name];
+			});
+		}
 	}
 });

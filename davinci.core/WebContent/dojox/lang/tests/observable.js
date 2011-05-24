@@ -5,7 +5,7 @@ dojo.require("dojox.lang.observable");
 	tests.register("dojox.lang.tests.observable", [
 		function propertyAccessMakeObservable(t){
 			console.log("start");
-			var testStrs = []; 
+			var testStrs = [];
 			var observable = new dojox.lang.makeObservable(
 				function(obj,i){
 					testStrs.push("onRead " + i);
@@ -31,7 +31,7 @@ dojo.require("dojox.lang.observable");
 			t.assertEqual("onInvoke test,onRead foo,returned bar,onWrite foo,onRead foo,new",testStrs.join(','));
 		},
 		function propertyAccessObservable(t){
-			var testStrs = []; 
+			var testStrs = [];
 			var obj = {foo:"bar",test:function(){
 				return this.foo;
 			}};
@@ -53,7 +53,7 @@ dojo.require("dojox.lang.observable");
 		},
 		function readonlyProxy(t){
 			console.log("start");
-			var testStrs = []; 
+			var testStrs = [];
 			var obj = {foo:"bar"};
 			var newObj = dojox.lang.ReadOnlyProxy(obj);
 			testStrs.push(newObj.foo);
@@ -93,10 +93,10 @@ dojo.require("dojox.lang.observable");
 					//
 					//	item: /* object */
 					//	property: /* string */
-					//		property to look up value for	
-					// lazyCallback: /* function*/ 
+					//		property to look up value for
+					// lazyCallback: /* function*/
 					// 		not part of the API, but if you are using lazy loading properties, you may provide a callback to resume, in order to have asynchronous loading
-					var value = item[property]; 
+					var value = item[property];
 					if(value instanceof dojo.Deferred){
 						dojox.rpc._sync = !lazyCallback; // tell the service to operate synchronously (I have some concerns about the "thread" safety with FF3, as I think it does event stacking on sync calls)
 						value.addCallback(function(returned){

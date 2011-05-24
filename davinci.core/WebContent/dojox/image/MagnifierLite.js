@@ -8,7 +8,7 @@ dojo.declare("dojox.image.MagnifierLite", dijit._Widget,
 	// summary:	Adds magnification on a portion of an image element
 	//
 	// description: An unobtrusive way to add an unstyled overlay
-	// 		above the srcNode image element. The overlay/glass is a 
+	// 		above the srcNode image element. The overlay/glass is a
 	//		scaled version of the src image (so larger images sized down
 	//		are clearer).
 	//
@@ -21,14 +21,14 @@ dojo.declare("dojox.image.MagnifierLite", dijit._Widget,
 	glassSize: 125,
 
 	// scale: Decimal
-	// 		the multiplier of the Mangification. 
+	// 		the multiplier of the Mangification.
 	scale: 6,
 
 	postCreate: function(){
 		this.inherited(arguments);
 		
 		// images are hard to make into workable templates, so just add outer overlay
-		// and skip using dijit._Templated		
+		// and skip using dijit._Templated
 		this._adjustScale();
 		this._createGlass();
 		
@@ -56,7 +56,7 @@ dojo.declare("dojox.image.MagnifierLite", dijit._Widget,
 		this.surfaceNode = node.appendChild(dojo.create('div'));
 
 		this.img = dojo.place(dojo.clone(this.domNode), node);
-		// float the image around inside the .glassNode 
+		// float the image around inside the .glassNode
 		dojo.style(this.img, {
 			position: "relative",
 			top: 0, left: 0,
@@ -83,7 +83,7 @@ dojo.declare("dojox.image.MagnifierLite", dijit._Widget,
 		dojo.style(this.glassNode, {
 			visibility: "visible",
 			display:""
-		});			
+		});
 		
 	},
 	
@@ -100,8 +100,8 @@ dojo.declare("dojox.image.MagnifierLite", dijit._Widget,
 
 		this._setImage(e);
 		var sub = Math.floor(this.glassSize / 2);
-		dojo.style(this.glassNode,{ 
-			top: Math.floor(e.pageY - sub) + "px", 
+		dojo.style(this.glassNode,{
+			top: Math.floor(e.pageY - sub) + "px",
 			left:Math.floor(e.pageX - sub) + "px"
 		});
 		

@@ -16,8 +16,12 @@
 <script type="text/javascript">
 dojo.require("dojox.gfx");
 
-makeShapes = function(){
-	var surface = dojox.gfx.createSurface(document.getElementById("test"), 500, 500);
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var styles = ["none", "Solid", "ShortDash", "ShortDot", "ShortDashDot", "ShortDashDotDot", 
 		"Dot", "Dash", "LongDash", "DashDot", "LongDashDot", "LongDashDotDot"];
 	var font = "normal normal normal 10pt Arial";	// CSS font style
@@ -29,7 +33,7 @@ makeShapes = function(){
 	}
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

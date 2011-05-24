@@ -14,16 +14,16 @@ shrinksafe.tests.module.compress = function(source, stripConsole, escapeUnicode)
 
 shrinksafe.tests.module.loader = function(path, stripConsole, escapeUnicode){
 	// summary: Simple function to load and compress some file. Returns and object
-	//	 with 'original' and 'compressed' members, respectively. 
+	//	 with 'original' and 'compressed' members, respectively.
 	var s = shrinksafe.tests.module.getContents(path);
 	return {
-		original: s, 
+		original: s,
 		compressed: shrinksafe.tests.module.compress(s, stripConsole, escapeUnicode || false)
 	};
 }
 
 try{
-	tests.register("shrinksafe", 
+	tests.register("shrinksafe",
 	[
 		function forwardReference(t){
 			
@@ -53,7 +53,7 @@ try{
 		},
 		
 		function varConflict(t){
-			// ensuring a shrunken variable won't overwrite an existing variable 
+			// ensuring a shrunken variable won't overwrite an existing variable
 			// name, regardless of scope.
 			var src = shrinksafe.tests.module.loader("8974.js", null);
 
@@ -134,7 +134,7 @@ try{
 		},
 
 		function debuggerCall(t){
-			// make sure we don't die when we find a debugger; statement 
+			// make sure we don't die when we find a debugger; statement
 			var src = shrinksafe.tests.module.loader("9444.js", null);
 			t.t(src.compressed.indexOf("debugger") > -1);
 		},
@@ -158,12 +158,12 @@ try{
 
 		function mungeStrings(t){
 			
-			// this test is skipped intentionally. You must manually enabled the 
+			// this test is skipped intentionally. You must manually enabled the
 			// code in Compressor.java which enables this functionality. The functionality
 			// is not considered completely "safe" and thus has been disabled.
-			// simply uncomment the block in Compressor.java to reinstate functionality. 
+			// simply uncomment the block in Compressor.java to reinstate functionality.
 			// original patch came under [ccla]. See bugs.dojotoolkit.org/ticket/8828
-			return; 
+			return;
 			
 			var src = shrinksafe.tests.module.loader("8828.js");
 			

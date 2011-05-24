@@ -35,7 +35,7 @@ dojo.declare("dojox.xmpp.ChatService", null, {
 	},
 	
 	invite: function(contact){
-		if (this.uid){return;}	
+		if (this.uid){return;}
 
 
 		if(!contact || contact==''){
@@ -51,7 +51,7 @@ dojo.declare("dojox.xmpp.ChatService", null, {
 			type: "chat"
 		}
 		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("message", req, false));
-		request.append(dojox.xmpp.util.createElement("thread",{},false));	
+		request.append(dojox.xmpp.util.createElement("thread",{},false));
 		request.append(this.chatid);
 		request.append("</thread>");
 		request.append(dojox.xmpp.util.createElement("active",{xmlns: dojox.xmpp.chat.CHAT_STATE_NS},true));
@@ -125,17 +125,17 @@ dojo.declare("dojox.xmpp.ChatService", null, {
 			type: "chat"
 		}
 
-		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("message",req,false));	
+		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("message",req,false));
 		request.append(dojox.xmpp.util.createElement(state, {xmlns: dojox.xmpp.chat.CHAT_STATE_NS},true));
 		this._currentState = state;
 		request.append("<thread>");
 		request.append(this.chatid);
-		request.append("</thread></message>");	
+		request.append("</thread></message>");
 		
 		this.session.dispatchPacket(request.toString());
 	},
 
-	//EVENTS 
+	//EVENTS
 	onNewMessage: function(msg){},
 	onInvite: function(contact){}
 });

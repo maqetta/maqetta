@@ -1,9 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+<!--
+	Deprecated: Use dojox.mobile.TabBar instead.
+	See test_iPhone-TabBar-seg-grouped.html for an equivalent example.
+-->
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<title>Tab Container</title>
+		<title>Tab Container (deprecated)</title>
 		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
 
 		<style>
@@ -34,6 +38,7 @@
 			//dojo.require("dojo.parser"); // Use the lightweight parser.
 			dojo.require("dojox.mobile.parser");
 			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile.TabContainer");
 			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 		</script>
 	</head>
@@ -125,27 +130,27 @@
 					</ul>
 				</div>
 				<div dojoType="dojox.mobile.TabPane" label="What's Hot">
-					<ul dojoType="dojox.mobile.RoundRectList" iconBase="images/i-icon-all.png">
-						<li dojoType="dojox.mobile.ListItem" iconPos="0,0,29,29" moveTo="hello">
+					<ul dojoType="dojox.mobile.RoundRectList">
+						<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" moveTo="hello">
 							Sounds
 						</li>
-						<li dojoType="dojox.mobile.ListItem" iconPos="0,29,29,29" moveTo="hello">
+						<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-2.png" moveTo="hello">
 							Brightness
 						</li>
-						<li dojoType="dojox.mobile.ListItem" iconPos="0,58,29,29" moveTo="hello">
+						<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-3.png" moveTo="hello">
 							Wallpaper
 						</li>
 					</ul>
 				</div>
 				<div dojoType="dojox.mobile.TabPane" label="Genius">
-					<ul dojoType="dojox.mobile.RoundRectList" iconBase="images/i-icon-all.png">
-						<li dojoType="dojox.mobile.ListItem" iconPos="0,87,29,29" moveTo="hello">
+					<ul dojoType="dojox.mobile.RoundRectList">
+						<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-4.png" moveTo="hello">
 							General
 						</li>
-						<li dojoType="dojox.mobile.ListItem" iconPos="0,116,29,29" moveTo="hello">
+						<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-5.png" moveTo="hello">
 							Mail, Contacts, Calendars
 						</li>
-						<li dojoType="dojox.mobile.ListItem" iconPos="29,0,29,29" moveTo="hello">
+						<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-6.png" moveTo="hello">
 							Phone
 						</li>
 					</ul>

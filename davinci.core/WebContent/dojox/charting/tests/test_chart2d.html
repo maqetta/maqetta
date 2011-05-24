@@ -8,41 +8,27 @@
 		@import "../../../dijit/tests/css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
-	<!--
-	<script type="text/javascript" src="../../lang/functional.js"></script>
-	<script type="text/javascript" src="../../lang/utils.js"></script>
-	<script type="text/javascript" src="../Theme.js"></script>
-	<script type="text/javascript" src="../scaler/primitive.js"></script>
-	<script type="text/javascript" src="../scaler/linear.js"></script>
-	<script type="text/javascript" src="../Element.js"></script>
-	<script type="text/javascript" src="../axis2d/common.js"></script>
-	<script type="text/javascript" src="../axis2d/Base.js"></script>
-	<script type="text/javascript" src="../axis2d/Default.js"></script>
-	<script type="text/javascript" src="../plot2d/common.js"></script>
-	<script type="text/javascript" src="../plot2d/Base.js"></script>
-	<script type="text/javascript" src="../plot2d/Default.js"></script>
-	<script type="text/javascript" src="../plot2d/Lines.js"></script>
-	<script type="text/javascript" src="../plot2d/Areas.js"></script>
-	<script type="text/javascript" src="../plot2d/Markers.js"></script>
-	<script type="text/javascript" src="../plot2d/MarkersOnly.js"></script>
-	<script type="text/javascript" src="../plot2d/Scatter.js"></script>
-	<script type="text/javascript" src="../plot2d/Stacked.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedLines.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedAreas.js"></script>
-	<script type="text/javascript" src="../plot2d/Columns.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedColumns.js"></script>
-	<script type="text/javascript" src="../plot2d/ClusteredColumns.js"></script>
-	<script type="text/javascript" src="../plot2d/Bars.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedBars.js"></script>
-	<script type="text/javascript" src="../plot2d/ClusteredBars.js"></script>
-	<script type="text/javascript" src="../plot2d/Bubble.js"></script>
-	<script type="text/javascript" src="../plot2d/Grid.js"></script>
-	<script type="text/javascript" src="../plot2d/Pie.js"></script>
-	<script type="text/javascript" src="../Chart2D.js"></script>
-	-->
 	<script type="text/javascript">
 
-		dojo.require("dojox.charting.Chart2D");
+        dojo.require("dojox.charting.Chart");
+        dojo.require("dojox.charting.axis2d.Default");
+        dojo.require("dojox.charting.plot2d.Default");
+        dojo.require("dojox.charting.plot2d.Areas");
+        dojo.require("dojox.charting.plot2d.Markers");
+        dojo.require("dojox.charting.plot2d.MarkersOnly");
+        dojo.require("dojox.charting.plot2d.StackedLines");
+        dojo.require("dojox.charting.plot2d.StackedAreas");
+        dojo.require("dojox.charting.plot2d.Bars");
+        dojo.require("dojox.charting.plot2d.ClusteredBars");
+        dojo.require("dojox.charting.plot2d.StackedBars");
+        dojo.require("dojox.charting.plot2d.ClusteredColumns");
+        dojo.require("dojox.charting.plot2d.StackedColumns");
+        dojo.require("dojox.charting.plot2d.Bubble");
+        dojo.require("dojox.charting.plot2d.Grid");
+        dojo.require("dojox.charting.plot2d.Candlesticks");
+        dojo.require("dojox.charting.plot2d.OHLC");
+        dojo.require("dojox.charting.plot2d.Scatter");
+
 		dojo.require("dojox.charting.themes.Shrooms");
 		dojo.require("dojox.charting.themes.PlotKit.blue");
 		dojo.require("dojox.charting.themes.PlotKit.cyan");
@@ -58,7 +44,7 @@
 			{
 				description: "Clustered columns with positive and negative values, readable theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.Tufte).
 						addAxis("x", { fixLower: "minor", fixUpper: "minor", natural: true }).
 						addAxis("y", { vertical: true, fixLower: "major", fixUpper: "major", includeZero: true }).
@@ -73,7 +59,7 @@
 			{
 				description: "Bubble chart, green theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.SageToLime).
 						addPlot("default", { type: "Bubble", shadow:  {dx: 1, dy: 1, width: 2, color: [0, 0, 0, 0.3]} }).
 						addAxis("x", {
@@ -106,7 +92,7 @@
 			{
 				description: "Lines, calculated labels",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {
 							majorLabels: true, 
 							minorLabels: true, 
@@ -141,7 +127,7 @@
 			{
 				description: "Lines, pre-computed labels",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {
 							majorLabels: true, 
 							minorLabels: true, 
@@ -180,7 +166,7 @@
 			{
 				description: "Defaults: lines, no axes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addSeries("Series A", [ 1, 2, 1, 2, 1, 2, 1 ]).
 						addSeries("Series B", [ 2, 1, 2, 1, 2, 1, 2 ]).
 						render();
@@ -189,7 +175,7 @@
 			{
 				description: "Defaults: lines, no axes, and custom strokes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addSeries("Series A", [ 1, 2, 1, 2, 1, 2, 1 ], {stroke: "red"}).
 						addSeries("Series B", [ 2, 1, 2, 1, 2, 1, 2 ], {stroke: "blue"}).
 						render();
@@ -198,7 +184,7 @@
 			{
 				description: "Areas, Happy theme, no axes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "Areas", tension:"X"}).
 						setTheme(dojox.charting.themes.Shrooms).
 						addSeries("Series A", [1, 2, 0.5, 1.5, 1, 2.8, 0.4]).
@@ -210,7 +196,7 @@
 			{
 				description: "Areas, no axes, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "Areas"}).
 						addSeries("Series A",
 							[1, 2, 1, 2, 1, 2, 1],
@@ -232,7 +218,7 @@
 			{
 				description: "Lines, axes, blue theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.PlotKit.blue).
 						addAxis("x").
 						addAxis("y", {vertical: true}).
@@ -244,7 +230,7 @@
 			{
 				description: "Lines, axes (aligned on minor ticks), cyan theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.PlotKit.cyan).
 						addAxis("x", {
 							fixLower: "minor", fixUpper: "minor"
@@ -260,7 +246,7 @@
 			{
 				description: "Lines, axes (aligned on major ticks), green theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.PlotKit.green).
 						addAxis("x", {
 							fixLower: "major", fixUpper: "major"
@@ -276,7 +262,7 @@
 			{
 				description: "Lines and markers, no axes, purple theme, custom min/max.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.SageToLime).
 						addPlot("default", {type: "Markers"}).
 						addSeries("Series A", [1, 2, 1, 2, 1, 2, 1], {min: 0, max: 3}).
@@ -287,7 +273,7 @@
 			{
 				description: "Markers only, no axes, custom theme, custom markers, custom min/max.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", { type: "MarkersOnly" }).
 						addSeries("Series A",
 							[ 1, 2, 1, 2, 1, 2, 1 ],
@@ -313,7 +299,7 @@
 			{
 				description: "Lines and markers, shadows, no axes, custom theme, custom markers, custom min/max.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {
 							type: "Markers", shadow:  {dx: 1, dy: 1, width: 2, color: [0, 0, 0, 0.3]}
 						}).
@@ -341,7 +327,7 @@
 			{
 				description: "Stacked lines, markers, shadows, no axes, custom strokes, fills, and markers.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {
 							type: "StackedLines",
 							markers: true,
@@ -378,7 +364,7 @@
 			{
 				description: "Stacked areas, axes (aligned on major ticks), custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {fixLower: "major", fixUpper: "major"}).
 						addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", min: 0}).
 						addPlot("default", { type: "StackedAreas", tension:"S" }).
@@ -400,7 +386,7 @@
 			{
 				description: "Candlesticks with gaps, custom strokes and fills, optional mid points.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "Candlesticks", gap: 1}).
 						addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true}).
 						addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true}).
@@ -442,7 +428,7 @@
 			{
 				description: "Open/High/Low/Close with gaps, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "OHLC", gap: 2}).
 						addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true}).
 						addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true}).
@@ -484,7 +470,7 @@
 			{
 				description: "Columns, no axes, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "Columns"}).
 						addSeries("Series A", [ 1, 2, 3, 4, 5 ], { stroke: { color: "red" }, fill: "lightpink" }).
 						addSeries("Series B", [ 5, 4, 3, 2, 1 ], { stroke: {color: "blue"}, fill: "lightblue" }).
@@ -494,7 +480,7 @@
 			{
 				description: "Columns with gaps beetwen them, vertical axis aligned on major ticks, custom strokes, fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major"}).
 						addPlot("default", {type: "Columns", gap: 2}).
 						addSeries("Series A", [ 1, 2, 3, 4, 5 ], { stroke: {color: "red"}, fill: "lightpink" }).
@@ -505,7 +491,7 @@
 			{
 				description: "Stacked columns, no axes, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "StackedColumns"}).
 						addSeries("Series A", [ 1, 2, 3, 4, 5 ], {stroke: { color: "red" }, fill: "lightpink" }).
 						addSeries("Series B", [ 2, 1, 2, 1, 2 ], {stroke: { color: "blue" }, fill: "lightblue" }).
@@ -515,7 +501,7 @@
 			{
 				description: "Bars, axes aligned on major ticks, no minor ticks, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true}).
 						addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true}).
 						addPlot("default", {type: "Bars"}).
@@ -533,7 +519,7 @@
 			{
 				description: "Stacked bars, no axes, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addPlot("default", {type: "StackedBars"}).
 						addSeries("Series A", [ 1, 2, 3, 4, 5 ], { stroke: { color: "red" }, fill: "lightpink" }).
 						addSeries("Series B", [ 2, 1, 2, 1, 2 ], { stroke: { color: "blue" }, fill: "lightblue" }).
@@ -543,7 +529,7 @@
 			{
 				description: "Clustered columns, custom axes, custom strokes, fills, and gap.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {
 							fixLower: "minor", fixUpper: "minor", natural: true
 						}).
@@ -562,7 +548,7 @@
 			{
 				description: "Clustered bars, custom axes, custom strokes, fills, and gap.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true}).
 						addAxis("y", {vertical: true, fixLower: "minor", fixUpper: "minor", natural: true}).
 						addPlot("default", { type: "ClusteredBars", gap: 5 }).
@@ -574,7 +560,7 @@
 			{
 				description: "Columns with gaps beetwen them, grids, custom strokes, fills, axes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", { fixLower: "minor", fixUpper: "minor", natural: true }).
 						addAxis("y", {
 							vertical: true,
@@ -600,7 +586,7 @@
 			{
 				description: "Columns with gaps beetwen them, grids, custom strokes, fills, axes, with min=0, max=8, and manually specified ticks on the vertical axis.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x", {fixLower: "minor", fixUpper: "minor", natural: true}).
 						addAxis("y", {
 							vertical: true, fixLower: "major", fixUpper: "major",
@@ -629,7 +615,7 @@
 			{
 				description: "Columns with positive and negative values, axes, and grid.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x").
 						addAxis("y", { vertical: true }).
 						addPlot("default", { type: "Columns", gap: 10 }).
@@ -648,7 +634,7 @@
 			{
 				description: "Clustered columns with positive and negative values, axes, and grid.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x").
 						addAxis("y", { vertical: true }).
 						addPlot("default", { type: "ClusteredColumns", gap: 10 }).
@@ -671,7 +657,7 @@
 			{
 				description: "Bars with positive and negative values, axes, and grid.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x").
 						addAxis("y", { vertical: true }).
 						addPlot("default", { type: "Bars", gap: 10 }).
@@ -690,7 +676,7 @@
 			{
 				description: "Clustered bars with positive and negative values, axes, and grid.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						addAxis("x").
 						addAxis("y", { vertical: true }).
 						addPlot("default", { type: "ClusteredBars", gap: 10 }).
@@ -713,7 +699,7 @@
 			{
 				description: "Default lines with 2D data, custom axis, red theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.Minty).
 						addAxis("x", {
 							min: 0,
@@ -745,7 +731,7 @@
 			{
 				description: "Scatter chart, custom axis, purple theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.Ireland).
 						addPlot("default", {type: "Scatter"}).
 						addAxis("x", {
@@ -778,7 +764,7 @@
 			{
 				description: "Markers, lines, 2D data, custom axis, blue theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.PlotKit.blue).
 						addPlot("default", {
 							type: "Default",

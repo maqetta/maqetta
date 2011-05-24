@@ -1,6 +1,5 @@
-dojo.provide("dojox.encoding.digests.MD5");
-
-dojo.require("dojox.encoding.digests._base");
+// AMD-ID "dojox/encoding/digests/MD5"
+define(["dojo", "dojox", "dojox/encoding/digests/_base"], function(dojo, dojox) {
 
 /*	A port of Paul Johnstone's MD5 implementation
  *	http://pajhome.org.uk/crypt/md5/index.html
@@ -115,7 +114,7 @@ dojo.require("dojox.encoding.digests._base");
 
 	function hmac(data, key){
 		var wa=dxd.stringToWord(key);
-		if(wa.length>16){ 
+		if(wa.length>16){
 			wa=core(wa, key.length*chrsz);
 		}
 		var l=[], r=[];
@@ -171,3 +170,7 @@ dojo.require("dojox.encoding.digests._base");
 		}
 	};
 })();
+
+
+return dojox.encoding.digests.MD5;
+});

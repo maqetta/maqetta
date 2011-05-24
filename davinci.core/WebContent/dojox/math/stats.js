@@ -1,4 +1,6 @@
-dojo.provide("dojox.math.stats");
+// AMD-ID "dojox/math/stats"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.stats", true, dojox);
 
 (function(){
 	var st = dojox.math.stats;
@@ -188,3 +190,6 @@ dojo.provide("dojox.math.stats");
 		}
 	});
 })();
+
+return dojox.math.stats;
+});

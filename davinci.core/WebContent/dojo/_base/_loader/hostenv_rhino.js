@@ -51,6 +51,9 @@ dojo._isLocalUrl = function(/*String*/ uri) {
 
 // see comments in spidermonkey loadUri
 dojo._loadUri = function(uri, cb){
+	if(dojo._loadedUrls[uri]){
+		return true; // Boolean
+	}
 	try{
 		var local;
 		try{
@@ -60,29 +63,32 @@ dojo._loadUri = function(uri, cb){
 			return false;
 		}
 
+		dojo._loadedUrls[uri] = true;
 		//FIXME: Use Rhino 1.6 native readFile/readUrl if available?
 		if(cb){
 			var contents = (local ? readText : readUri)(uri, "UTF-8");
 
 			// patch up the input to eval until https://bugzilla.mozilla.org/show_bug.cgi?id=471005 is fixed.
 			if(!eval("'\u200f'").length){
-				contents = String(contents).replace(/[\u200E\u200F\u202A-\u202E]/g, function(match){ 
-					return "\\u" + match.charCodeAt(0).toString(16); 
+				contents = String(contents).replace(/[\u200E\u200F\u202A-\u202E]/g, function(match){
+					return "\\u" + match.charCodeAt(0).toString(16);
 				})
 			}
-
-			cb(eval('('+contents+')'));
+			contents = /^define\(/.test(contents) ? contents : '('+contents+')';
+			cb(eval(contents));
 		}else{
 			load(uri);
 		}
+		dojo._loadedUrls.push(uri);
 		return true;
 	}catch(e){
+		dojo._loadedUrls[uri] = false;
 		console.debug("rhino load('" + uri + "') failed. Exception: " + e);
 		return false;
 	}
 }
 
-dojo.exit = function(exitcode){ 
+dojo.exit = function(exitcode){
 	quit(exitcode);
 }
 
@@ -150,7 +156,7 @@ dojo._getText = function(/*URI*/ uri, /*Boolean*/ fail_ok){
 dojo.doc = typeof document != "undefined" ? document : null;
 
 dojo.body = function(){
-	return document.body;	
+	return document.body;
 }
 
 // Supply setTimeout/clearTimeout implementations if they aren't already there

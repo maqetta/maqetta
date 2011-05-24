@@ -1,15 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>ContentPane Test</title>
 
 	<style>
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 
 		.box {
-		  position: relative;
+			position: relative;
 			background-color: white;
 			border: 2px solid black;
 			padding: 8px;
@@ -18,11 +18,11 @@
 	</style>
 
 	<!-- required: the default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+		data-dojo-config="isDebug: true"></script>
 
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -38,16 +38,20 @@
 		dojo.require("dijit.InlineEditBox");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
-		// create a do nothing, only for test widget
-		dojo.declare("dijit.TestWidget",
-			[dijit._Widget, dijit._Templated], {
-			templateString: "<span class='dojoxTestWidget'></span>"
-		});
-
 		dojo.addOnLoad(function(){
 
-			var pane1 = dijit.byId('parsedPane');
-			var dialogCtrPane = dijit.byId("dialogContainer");
+			// create a do nothing, only for test widget
+			dojo.declare("dijit.TestWidget",
+				[dijit._Widget, dijit._Templated], {
+				templateString: "<span class='dojoxTestWidget'></span>"
+			});
+
+			doh.register("parse", function(){
+				dojo.parser.parse();				
+
+				pane1 = dijit.byId('parsedPane');
+				dialogCtrPane = dijit.byId("dialogContainer");
+			});
 
 			doh.register("basicChecks", [
 			{
@@ -73,7 +77,7 @@
 					console.log("basicChecks: " + this.name);
 					dialogCtrPane.set(
 						"content",
-						'<div dojoType="dijit.Dialog" id="sacrificialDlg" title="Life is short for this fellow">'
+						'<div data-dojo-type="dijit.Dialog" id="sacrificialDlg" title="Life is short for this fellow">'
 						+'	<p>This dialog should be cleanly destroyed when the unit tests run</p>'
 						+'</div>'
 					);
@@ -106,7 +110,7 @@
 					// do the same thing over again - we should be error free
 					dialogCtrPane.set(
 						"content",
-						'<div dojoType="dijit.Dialog" id="sacrificialDlg" title="Life is short for this fellow">'
+						'<div data-dojo-type="dijit.Dialog" id="sacrificialDlg" title="Life is short for this fellow">'
 						+'	<p>This dialog should be cleanly destroyed when the unit tests run</p>'
 						+'</div>'
 					);
@@ -154,26 +158,26 @@
 	<h1 class="testTitle">Dijit layout.ContentPane tests</h1>
 		<p>pre-container paragraph</p>
 
-		<div dojoType="dijit.layout.ContentPane" class="box">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box"'>
 			some text (top-level container)
 
-			<div dojoType="dijit.layout.ContentPane" class="box">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box"'>
 
 				text in the inner container (1)
 
-				<div dojoType="dijit.layout.ContentPane" class="box" href="tab2.html">
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box", href:"tab2.html"'>
 					hi
 				</div>
 
 				text in the inner container (2)
 
-				<div dojoType="dijit.layout.ContentPane" class="box">
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box"'>
 					inner-inner 2
 				</div>
 
 				text in the inner container (3)
 
-				<div dojoType="dijit.layout.ContentPane" class="box">
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box"'>
 					inner-inner 3
 				</div>
 
@@ -186,23 +190,23 @@
 
 		<p>mid-container paragraph</p>
 
-		<div dojoType="dijit.layout.ContentPane" class="box">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box"'>
 			2nd top-level container
 		</div>
 
 		<p>post-container paragraph</p>
 
-		<div dojoType="dijit.layout.ContentPane" class="box" href="combotab.html" id="test">
+		<div id="test" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box", href:"combotab.html" '>
 			<p style='background-color:yellow;border:1px solid red;text-align:center;'>This text should automatically be replaced by downloaded content from combotab.html</p>
 		</div>
 
 		<hr/>
 		<p>ContentPanes used by the unit tests to verify functionality
-		<div class='box' dojoType="dijit.layout.ContentPane" id='parsedPane'>
+		<div id='parsedPane' data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box" '>
 			Some Content Here
 		</div>
-		<div class='box' dojoType="dijit.layout.ContentPane" id='dialogContainer'>
-			<div dojoType="dijit.TestWidget" id="parserTest"></div>
+		<div id='dialogContainer' data-dojo-type="dijit.layout.ContentPane" data-dojo-props='"class":"box" '>
+			<div id="parserTest" data-dojo-type="dijit.TestWidget" ></div>
 		</div>
 	</body>
 </html>

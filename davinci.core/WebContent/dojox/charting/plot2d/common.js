@@ -37,8 +37,8 @@ dojo.require("dojox.lang.functional");
 		},
 
 		defaultStats: {
-			hmin: Number.POSITIVE_INFINITY, hmax: Number.NEGATIVE_INFINITY,
-			vmin: Number.POSITIVE_INFINITY, vmax: Number.NEGATIVE_INFINITY
+			vmin: Number.POSITIVE_INFINITY, vmax: Number.NEGATIVE_INFINITY,
+			hmin: Number.POSITIVE_INFINITY, hmax: Number.NEGATIVE_INFINITY
 		},
 
 		collectSimpleStats: function(series){
@@ -120,10 +120,12 @@ dojo.require("dojox.lang.functional");
 				// 2nd pass: stack values
 				for(var i = 0; i < stats.hmax; ++i){
 					var v = series[0].data[i];
+                    v = v && (typeof v == "number" ? v : v.y);
 					if(isNaN(v)){ v = 0; }
 					stats.vmin = Math.min(stats.vmin, v);
 					for(var j = 1; j < series.length; ++j){
 						var t = series[j].data[i];
+                        t = t && (typeof t == "number" ? t : t.y);
 						if(isNaN(t)){ t = 0; }
 						v += t;
 					}
@@ -202,6 +204,14 @@ dojo.require("dojox.lang.functional");
 				return "C"+(bz1x+","+bz1y+" "+bz2x+","+bz2y+" "+p2.x+","+p2.y);
 			});
 			return p.join(" ");
+		},
+		
+		getLabel: function(/*Number*/number, /*Boolean*/fixed, /*Number*/precision){
+			if(dojo.number){
+				return (fixed ? dojo.number.format(number, {places : precision}) :
+					dojo.number.format(number)) || "";
+			}
+			return fixed ? number.toFixed(precision) : number.toString();
 		}
 	});
 })();

@@ -15,7 +15,9 @@
     </style>
     <script src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
     <script>
-        dojo.require("dojox.charting.Chart2D");
+        dojo.require("dojox.charting.Chart");
+        dojo.require("dojox.charting.axis2d.Default");
+        dojo.require("dojox.charting.plot2d.Default");
         dojo.require("dojox.charting.widget.Legend");
         
         var data = [{x: 1, y: 1}, {x: 1, y: 2}, {x: 2, y: 2}, {x: 2, y: 1}];
@@ -26,7 +28,7 @@
                     plotarea: {fill: null}, // no background
                     colors: ["red", "green", "blue", "orange"]
                 });
-            var chart = new dojox.charting.Chart2D("test_chart").
+            var chart = new dojox.charting.Chart("test_chart").
                     setTheme(theme).
                     addAxis("x", {natural: true, min: 0, max: 3}).
                     addAxis("y", {vertical: true, natural: true, min: 0, max: 3}).

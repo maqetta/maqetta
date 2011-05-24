@@ -6,52 +6,57 @@ Release date: 10/31/2007
 -------------------------------------------------------------------------------
 Project state:
 
-[Calendar]	experimental
+[Calendar]		experimental
 [CalendarFx]	experimental
 [ColorPicker]	beta
-[Dialog]	experimental
+[Dialog]		experimental
+[DialogSimple]	beta
 [FeedPortlet]	experimental
 [FilePicker]	experimental
 [FisheyeList]	experimental
 [FisheyeLite]	beta
-[Iterator]	experimental
-[Loader]	experimental
-[Pager]		experimental
-[Portlet]	experimental
+[Iterator]		experimental
+[Loader]		experimental
+[Pager]			experimental
+[Portlet]		experimental
 [PlaceholderMenuItem]	experimental
-[Roller]	experimental
+[Roller]		experimental
 [RollingList]	experimental
-[SortList]	experimental
-[Toaster]	experimental
-[Wizard]	experimental
+[SortList]		experimental
+[TitleGroup]	beta
+[Toaster]		experimental
+[Wizard]		experimental
 [AnalogGauge]   experimental
 [BarGauge]      experimental
-[Standby]	experimental
+[Standby]		experimental
+
 -------------------------------------------------------------------------------
 Credits:
 
-[Calendar] Shane O'Sullivan
-[CalendarFx] Shane O'Sullivan
-[ColorPicker] Peter Higgins (dante)
-[Dialog] Peter Higgins (dante)
-[FeedPortlet] Shane O'Sullivan
-[FilePicker] Nathan Toone (toonetown)
-[FisheyeList] Karl Tiedt (kteidt)
-[FisheyeLite] Peter Higgins (dante)
-[Iterator] Alex Russell (slightlyoff)
-[Loader] Peter Higgins (dante)
-[Pager] Nikolai Onken (nonken), Peter Higgins (dante);
-[PlaceholderMenuItem] Nathan Toone (toonetown)
-[Portlet] Shane O'Sullivan
-[Roller] Peter Higgins (dante)
-[RollingList] Nathan Toone (toonetown)
-[SortList] Peter Higgins (dante)
-[Toaster] Adam Peller (peller)
-[Wizard] Peter Higgins (dante)
-[AnalogGauge] Benjamin Schell (bmschell) CCLA
-[BarGauge] Benjamin Schell (bmschell) CCLA 
-[Standby] Jared Jurkiewicz (jaredj) CCLA 
-[UpgradeBar] Mike Wilcox (mwilcox), Revin Guillen
+[Calendar]		Shane O'Sullivan
+[CalendarFx]	Shane O'Sullivan
+[ColorPicker]	Peter Higgins (dante)
+[Dialog]		Peter Higgins (dante)
+[DialogSimple]	Peter Higgins (dante)
+[FeedPortlet]	Shane O'Sullivan
+[FilePicker]	Nathan Toone (toonetown)
+[FisheyeList] 	Karl Tiedt (kteidt)
+[FisheyeLite] 	Peter Higgins (dante)
+[Iterator]		Alex Russell (slightlyoff)
+[Loader]		Peter Higgins (dante)
+[Pager]			Nikolai Onken (nonken), Peter Higgins (dante);
+[PlaceholderMenuItem]	Nathan Toone (toonetown)
+[Portlet]		Shane O'Sullivan
+[Roller]		Peter Higgins (dante)
+[RollingList] 	Nathan Toone (toonetown)
+[SortList]		Peter Higgins (dante)
+[TitleGroup]	Peter Higgins (dante)
+[Toaster]		Adam Peller (peller)
+[Wizard]		Peter Higgins (dante)
+[AnalogGauge]	Benjamin Schell (bmschell) CCLA
+[BarGauge]		Benjamin Schell (bmschell) CCLA 
+[Standby]		Jared Jurkiewicz (jaredj) CCLA 
+[UpgradeBar]	Mike Wilcox (mwilcox), Revin Guillen
 
 -------------------------------------------------------------------------------
 Project description
@@ -121,6 +126,8 @@ Other Notes (Brief widget list):
 	* CalendarFx - additional mixable FX for transitions in dojox.widget.Calendar
 
 	* Dialog - An extended version of dijit.Dialog with man options and transition.
+	
+	* DialogSimple - A simple Dijit Dialog providing `dojox.layout.ContentPane` integration
 
 	* FilePicker - a widget for browsing server-side file systems (can use
 		dojox.data.FileStore as backend store)
@@ -150,6 +157,9 @@ Other Notes (Brief widget list):
 		and sorting. Can be the direct descendant of a
 		LayoutContainer and will size to fit.
 
+	* TitleGroup - A container offering variable height TitlePane access, though
+		behaves like an AccordionContainer 
+
 	* Toaster - a messaging system to display unobtrusive 
 		alerts on screen.
 
@@ -167,8 +177,8 @@ Other Notes (Brief widget list):
 		etc.  Very flexible.
 		Requires dojo >= 1.3
 
-	* Standby - a 'blocker' style widget to overlay a translucent div + image over a DOM node/widget to indicate busy.
-		Overlay color, image, and alt text can all be customized.
+	* Standby - a 'blocker' style widget to overlay a translucent div + image over a DOM node/widget 
+		to indicate busy. Overlay color, image, and alt text can all be customized.
 		Requires dojo >= 1.3
 
 	* UpgradeBar - Displays the "yellow bar" at the top of a page to indicate the user

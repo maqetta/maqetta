@@ -18,8 +18,12 @@
 <script type="text/javascript">
 dojo.require("dojox.gfx");
 
-makeShapes = function(){
-	var surface = dojox.gfx.createSurface("test", 500, 300);
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var g = surface.createGroup();
 	
 	// create a reference ellipse
@@ -68,7 +72,7 @@ makeShapes = function(){
 	g.setTransform([dojox.gfx.matrix.translate(250, 150), dojox.gfx.matrix.rotateg(axisAngle)]);
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

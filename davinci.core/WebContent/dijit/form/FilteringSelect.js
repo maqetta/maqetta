@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.FilteringSelect");
-
-dojo.require("dijit.form.ComboBox");
+define("dijit/form/FilteringSelect", ["dojo", "dijit", "dijit/form/ComboBox"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.form.FilteringSelect",
@@ -32,17 +30,19 @@ dojo.declare(
 		//			- List can be specified either as a static list or via a javascript
 		//				function (that can get the list from a server)
 
-		_isvalid: true,
-
 		// required: Boolean
 		//		True (default) if user is required to enter a value into this field.
 		required: true,
 
 		_lastDisplayedValue: "",
 
+		_isValidSubset: function(){
+			return this._opened;
+		},
+
 		isValid: function(){
 			// Overrides ValidationTextBox.isValid()
-			return this._isvalid || (!this.required && this.get('displayedValue') == ""); // #5974
+			return this.item || (!this.required && this.get('displayedValue') == ""); // #5974
 		},
 
 		_refreshState: function(){
@@ -51,12 +51,12 @@ dojo.declare(
 			}
 		},
 
-		_callbackSetLabel: function(	/*Array*/ result,
+		_callbackSetLabel: function(
+						/*Array*/ result,
 						/*Object*/ dataObject,
 						/*Boolean?*/ priorityChange){
 			// summary:
-			//		Callback function that dynamically sets the label of the
-			//		ComboBox
+			//		Callback from dojo.data after lookup of user entered value finishes
 
 			// setValue does a synchronous lookup,
 			// so it calls _callbackSetLabel directly,
@@ -66,35 +66,38 @@ dojo.declare(
 				return;
 			}
 			if(!result.length){
-				//#3268: do nothing on bad input
+				//#3268: don't modify display value on bad input
 				//#3285: change CSS to indicate error
 				this.valueNode.value = "";
 				dijit.form.TextBox.superclass._setValueAttr.call(this, "", priorityChange || (priorityChange === undefined && !this._focused));
-				this._isvalid = false;
+				this._set("item", null);
 				this.validate(this._focused);
-				this.item = null;
 			}else{
 				this.set('item', result[0], priorityChange);
 			}
 		},
 
 		_openResultList: function(/*Object*/ results, /*Object*/ dataObject){
+			// Callback when a data store query completes.
 			// Overrides ComboBox._openResultList()
 
 			// #3285: tap into search callback to see if user's query resembles a match
 			if(dataObject.query[this.searchAttr] != this._lastQuery){
 				return;
 			}
+			dijit.form.ComboBoxMixin.prototype._openResultList.apply(this, arguments);
+
 			if(this.item === undefined){ // item == undefined for keyboard search
-				this._isvalid = results.length != 0 || this._maxOptions != 0; // result.length==0 && maxOptions != 0 implies the nextChoices item selected but then the datastore returned 0 more entries
+				// If the search returned no items that means that the user typed
+				// in something invalid (and they can't make it valid by typing more characters),
+				// so flag the FilteringSelect as being in an invalid state
 				this.validate(true);
 			}
-			dijit.form.ComboBoxMixin.prototype._openResultList.apply(this, arguments);
 		},
 
 		_getValueAttr: function(){
 			// summary:
-			//		Hook for attr('value') to work.
+			//		Hook for get('value') to work.
 
 			// don't get the textbox value but rather the previously set hidden value.
 			// Use this.valueNode.value which isn't always set for other MappedTextBox widgets until blur
@@ -108,7 +111,7 @@ dojo.declare(
 
 		_setValueAttr: function(/*String*/ value, /*Boolean?*/ priorityChange){
 			// summary:
-			//		Hook so attr('value', value) works.
+			//		Hook so set('value', value) works.
 			// description:
 			//		Sets the value of the select.
 			//		Also sets the label to the corresponding value by reverse lookup.
@@ -136,10 +139,9 @@ dojo.declare(
 			//		that gets submitted, based on a dojo.data store item.
 			// description:
 			//		Users shouldn't call this function; they should be calling
-			//		attr('item', value)
+			//		set('item', value)
 			// tags:
 			//		private
-			this._isvalid = true;
 			this.inherited(arguments);
 			this.valueNode.value = this.value;
 			this._lastDisplayedValue = this.textbox.value;
@@ -151,30 +153,38 @@ dojo.declare(
 
 		_setDisplayedValueAttr: function(/*String*/ label, /*Boolean?*/ priorityChange){
 			// summary:
-			//		Hook so attr('displayedValue', label) works.
+			//		Hook so set('displayedValue', label) works.
 			// description:
 			//		Sets textbox to display label. Also performs reverse lookup
-			//		to set the hidden value.
+			//		to set the hidden value.  label should corresponding to item.searchAttr.
 
-			// When this is called during initialization it'll ping the datastore
-			// for reverse lookup, and when that completes (after an XHR request)
-			// will call setValueAttr()... but that shouldn't trigger an onChange()
-			// event, even when it happens after creation has finished
+			if(label == null){ label = ''; }
+
+			// This is called at initialization along with every custom setter.
+			// Usually (or always?) the call can be ignored.   If it needs to be
+			// processed then at least make sure that the XHR request doesn't trigger an onChange()
+			// event, even if it returns after creation has finished
 			if(!this._created){
+				if(!("displayedValue" in this.params)){
+					return;
+				}
 				priorityChange = false;
 			}
 
+			// Do a reverse lookup to map the specified displayedValue to the hidden value.
+			// Note that if there's a custom labelFunc() this code
 			if(this.store){
-				this._hideResultList();
+				this.closeDropDown();
 				var query = dojo.clone(this.query); // #6196: populate query with user-specifics
 				// escape meta characters of dojo.data.util.filter.patternToRegExp().
 				this._lastQuery = query[this.searchAttr] = this._getDisplayQueryString(label);
-				// if the label is not valid, the callback will never set it,
-				// so the last valid value will get the warning textbox set the
+				// If the label is not valid, the callback will never set it,
+				// so the last valid value will get the warning textbox.   Set the
 				// textbox value now so that the impending warning will make
 				// sense to the user
 				this.textbox.value = label;
 				this._lastDisplayedValue = label;
+				this._set("displayedValue", label);	// for watch("displayedValue") notification
 				var _this = this;
 				var fetch = {
 					query: query,
@@ -197,13 +207,12 @@ dojo.declare(
 			}
 		},
 
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			this._isvalid = !this.required;
-		},
-
 		undo: function(){
 			this.set('displayedValue', this._lastDisplayedValue);
 		}
 	}
 );
+
+
+return dijit.form.FilteringSelect;
+});

@@ -37,7 +37,7 @@ tests.register("dojox.string.tests.Builder", [
 			var b = new dojox.string.Builder();
 			t.is("", b.toString());
 			b = new dojox.string.Builder("foo");
-			t.is("foo", b.toString()); 
+			t.is("foo", b.toString());
 		}
 	},
 	{

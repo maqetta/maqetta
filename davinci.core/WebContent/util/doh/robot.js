@@ -84,7 +84,7 @@ if(!doh.robot["_robotLoaded"]){
 			}catch(e){
 				return null;
 			}
-		}	
+		}
 	},
 	
 	startRobot: function(){
@@ -184,20 +184,13 @@ if(!doh.robot["_robotLoaded"]){
 		//		Delay to wait after firing.
 		//
 
-		delay = delay || 1;
-		doh.robot._time += delay;
-		setTimeout(function(){
-			doh.robot._time -= delay;
-			f();
-			if(duration){
-				setTimeout(function(){
-					doh.robot._time -= duration;
-				}, duration);
-			}
-		}, doh.robot._time);
-		if(duration){
-			doh.robot._time += duration;
+		var currentTime = (new Date()).getTime();
+		if(currentTime > (doh.robot._time || 0)){
+			doh.robot._time = currentTime;
 		}
+		doh.robot._time += delay || 1;
+		setTimeout(f, doh.robot._time - currentTime);
+		doh.robot._time += duration || 0;
 	},
 
 	typeKeys: function(/*String||Number*/ chars, /*Integer, optional*/ delay, /*Integer, optional*/ duration){
@@ -232,7 +225,7 @@ if(!doh.robot["_robotLoaded"]){
 			}else if(chars.length){
 				_keyPress(chars.charCodeAt(0), 0, false, false, false, false, 0);
 				for(var i = 1; i<chars.length; i++){
-					_keyPress(chars.charCodeAt(i), 0, false, false, false, false, Math.max(Math.floor(duration/chars.length)-20, 0)); // 20ms is fudge for processing time until robot handles wall clock
+					_keyPress(chars.charCodeAt(i), 0, false, false, false, false, Math.max(Math.floor(duration/chars.length), 0));
 				}
 			}
 		}, delay, duration);

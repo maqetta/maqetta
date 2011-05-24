@@ -15,11 +15,15 @@ dojo.require("dojox.gfx");
 dojo.require("dojox.gfx.move");
 dojo.require("dojo.colors");
 
-makeShapes = function(){
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("test", 800, 600);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
     var g = dojox.gfx, m = g.matrix;
     
-	var grid_size = 800, grid_step = 50,
-        surface = g.createSurface("test", 800, 600)
+	var grid_size = 800, grid_step = 50;
 	for(var i = 0; i <= grid_size; i += grid_step){
 		surface.createLine({x1: 0, x2: grid_size, y1: i, y2: i}).setStroke("grey");
 		surface.createLine({y1: 0, y2: grid_size, x1: i, x2: i}).setStroke("grey");
@@ -43,7 +47,7 @@ makeShapes = function(){
 	new g.Moveable(img3);
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

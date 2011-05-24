@@ -1,4 +1,6 @@
-dojo.provide("dijit._editor.selection");
+define("dijit/_editor/selection", ["dojo", "dijit"], function(dojo, dijit) {
+
+dojo.getObject("_editor.selection", true, dijit);
 
 // FIXME:
 //		all of these methods branch internally for IE. This is probably
@@ -9,7 +11,7 @@ dojo.mixin(dijit._editor.selection, {
 	getType: function(){
 		// summary:
 		//		Get the selection type (like dojo.doc.select.type in IE).
-		if(dojo.isIE){
+		if(dojo.isIE < 9){
 			return dojo.doc.selection.type.toLowerCase();
 		}else{
 			var stype = "text";
@@ -36,7 +38,7 @@ dojo.mixin(dijit._editor.selection, {
 	getSelectedText: function(){
 		// summary:
 		//		Return the text (no html tags) included in the current selection or null if no text is selected
-		if(dojo.isIE){
+		if(dojo.isIE < 9){
 			if(dijit._editor.selection.getType() == 'control'){
 				return null;
 			}
@@ -53,7 +55,7 @@ dojo.mixin(dijit._editor.selection, {
 	getSelectedHtml: function(){
 		// summary:
 		//		Return the html text of the current selection or null if unavailable
-		if(dojo.isIE){
+		if(dojo.isIE < 9){
 			if(dijit._editor.selection.getType() == 'control'){
 				return null;
 			}
@@ -82,7 +84,7 @@ dojo.mixin(dijit._editor.selection, {
 		//		a single element (object like and image or a table) is
 		//		selected.
 		if(dijit._editor.selection.getType() == "control"){
-			if(dojo.isIE){
+			if(dojo.isIE < 9){
 				var range = dojo.doc.selection.createRange();
 				if(range && range.item){
 					return dojo.doc.selection.createRange().item(0);
@@ -102,7 +104,7 @@ dojo.mixin(dijit._editor.selection, {
 			var p = this.getSelectedElement();
 			if(p){ return p.parentNode; }
 		}else{
-			if(dojo.isIE){
+			if(dojo.isIE < 9){
 				var r = dojo.doc.selection.createRange();
 				r.collapse(true);
 				return r.parentElement();
@@ -202,7 +204,7 @@ dojo.mixin(dijit._editor.selection, {
 		// summary:
 		//		Function to delete the currently selected content from the document.
 		var sel = dojo.doc.selection;
-		if(dojo.isIE){
+		if(dojo.isIE < 9){
 			if(sel.type.toLowerCase() != "none"){
 				sel.clear();
 			}
@@ -226,7 +228,7 @@ dojo.mixin(dijit._editor.selection, {
 		var doc = dojo.doc;
 		var range;
 		element = dojo.byId(element);
-		if(doc.selection && dojo.isIE && dojo.body().createTextRange){ // IE
+		if(doc.selection && dojo.isIE < 9 && dojo.body().createTextRange){ // IE
 			range = element.ownerDocument.body.createTextRange();
 			range.moveToElementText(element);
 			if(!nochangefocus){
@@ -265,9 +267,14 @@ dojo.mixin(dijit._editor.selection, {
 		var doc = dojo.doc;
 		var win = dojo.global;
 		element = dojo.byId(element);
-		if(dojo.isIE && dojo.body().createTextRange){
+		if(dojo.isIE < 9 && dojo.body().createTextRange){
 			try{
-				range = dojo.body().createControlRange();
+				var tg = element.tagName ? element.tagName.toLowerCase() : "";
+				if(tg === "img" || tg === "table"){
+					range = dojo.body().createControlRange();
+				}else{
+					range = dojo.body().createRange();
+				}
 				range.addElement(element);
 				if(!nochangefocus){
 					range.select();
@@ -322,7 +329,7 @@ dojo.mixin(dijit._editor.selection, {
 				}
 			}else if(doc.selection){
 				// Probably IE, so we can't use the range object as the pseudo
-				// range doesn't implement the boundry checking, we have to 
+				// range doesn't implement the boundry checking, we have to
 				// use IE specific crud.
 				range = doc.selection.createRange();
 				try{
@@ -347,4 +354,7 @@ dojo.mixin(dijit._editor.selection, {
 		return false; // boolean
 	}
 
+});
+
+return dijit._editor.selection;
 });

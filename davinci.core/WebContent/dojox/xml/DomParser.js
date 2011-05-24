@@ -12,8 +12,8 @@ dojox.xml.DomParser=new (function(){
 	 *	was to keep the resulting object model entirely JS-like.
 	 *
 	 *	All node types but document fragments are supported;
-	 *	all nodes support getElementsByTagName and 
-	 *	getElementsByTagNameNS (with short names byName and 
+	 *	all nodes support getElementsByTagName and
+	 *	getElementsByTagNameNS (with short names byName and
 	 *	byNameNS).  The document node supports getElementById
 	 *	(byId), and all nodes support a supplimental
 	 *	childrenByName/childrenByNameNS method as well.
@@ -21,7 +21,7 @@ dojox.xml.DomParser=new (function(){
 	 *	The object model is intended to be a READONLY format;
 	 *	mutation events are NOT supported, and though you
 	 *	can change properties on a node-by-node basis, certain
-	 *	operations are not supported (such as changing the ID 
+	 *	operations are not supported (such as changing the ID
 	 *	of an element).
 	 **********************************************************/
 
@@ -126,7 +126,7 @@ dojox.xml.DomParser=new (function(){
 	}
 
 	function _createTextNode(v){
-		return { 
+		return {
 			nodeType:nodeTypes.TEXT,
 			nodeName:"#text",
 			nodeValue:v.replace(normalize," ").replace(egt,">").replace(elt,"<").replace(eapos,"'").replace(equot,'"').replace(eamp,"&")
@@ -215,9 +215,9 @@ dojox.xml.DomParser=new (function(){
 				reEntity.lastIndex=0;
 				//	match entities
 				while((entity=reEntity.exec(str))!=null){
-					eRe.push({ 
-						entity:"&"+entity[1].replace(trim,"")+";", 
-						expression:entity[2] 
+					eRe.push({
+						entity:"&"+entity[1].replace(trim,"")+";",
+						expression:entity[2]
 					});
 				}
 				//	replace instances in the document.
@@ -258,44 +258,44 @@ dojox.xml.DomParser=new (function(){
 					//	processing instruction
 					var name=res[1].substr(1);
 					var target=res[2].substr(0,res[2].length-2);
-					obj.childNodes.push({ 
-						nodeType:nodeTypes.PROCESSING_INSTRUCTION, 
-						nodeName:name, 
-						nodeValue:target 
+					obj.childNodes.push({
+						nodeType:nodeTypes.PROCESSING_INSTRUCTION,
+						nodeName:name,
+						nodeValue:target
 					});
 				}
 				else if(res[1].charAt(0)=="!"){
 					//	CDATA; skip over any declaration elements.
 					if(res[1].indexOf("![CDATA[")==0){
 						var val=parseInt(res[1].replace("![CDATA[","").replace("]]",""));
-						obj.childNodes.push({ 
-							nodeType:nodeTypes.CDATA_SECTION, 
-							nodeName:"#cdata-section", 
-							nodeValue:cdSections[val] 
+						obj.childNodes.push({
+							nodeType:nodeTypes.CDATA_SECTION,
+							nodeName:"#cdata-section",
+							nodeValue:cdSections[val]
 						});
 					}
 					//	Comments.
 					else if(res[1].substr(0,3)=="!--"){
 						var val=parseInt(res[1].replace("!--","").replace("--",""));
-						obj.childNodes.push({ 
-							nodeType:nodeTypes.COMMENT, 
-							nodeName:"#comment", 
-							nodeValue:comments[val] 
+						obj.childNodes.push({
+							nodeType:nodeTypes.COMMENT,
+							nodeName:"#comment",
+							nodeValue:comments[val]
 						});
 					}
 				}
 				else {
 					//	Elements (with attribute and text)
 					var name=res[1].replace(trim,"");
-					var o={ 
-						nodeType:nodeTypes.ELEMENT, 
-						nodeName:name, 
-						localName:name, 
-						namespace:dNs, 
-						ownerDocument:root, 
-						attributes:[], 
-						parentNode:null, 
-						childNodes:[] 
+					var o={
+						nodeType:nodeTypes.ELEMENT,
+						nodeName:name,
+						localName:name,
+						namespace:dNs,
+						ownerDocument:root,
+						attributes:[],
+						parentNode:null,
+						childNodes:[]
 					};
 
 					//	check to see if it's namespaced.
@@ -346,11 +346,11 @@ dojox.xml.DomParser=new (function(){
 									ns=t[0];
 								}
 								o.attributes.push({
-									nodeType:nodeTypes.ATTRIBUTE, 
-									nodeName:name, 
-									localName:ln, 
-									namespace:ns, 
-									nodeValue:val 
+									nodeType:nodeTypes.ATTRIBUTE,
+									nodeName:name,
+									localName:ln,
+									namespace:ns,
+									nodeValue:val
 								});
 
 								//	only add id as a property.

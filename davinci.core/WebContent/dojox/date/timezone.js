@@ -16,8 +16,8 @@ dojo.require("dojo.date.locale");
 
 (function(_d){
 	var cfg = _d.config;
-	var _zoneFiles = [ "africa", "antarctica", "asia", "australasia", "backward", 
-					"etcetera", "europe", "northamerica", "pacificnew", 
+	var _zoneFiles = [ "africa", "antarctica", "asia", "australasia", "backward",
+					"etcetera", "europe", "northamerica", "pacificnew",
 					"southamerica" ];
 					
 	// Our mins an maxes for years that we care about
@@ -31,7 +31,7 @@ dojo.require("dojo.date.locale");
 	
 	// timezoneFileBasePath: String
 	//		A different location to pull zone files from
-	var timezoneFileBasePath = cfg.timezoneFileBasePath || 
+	var timezoneFileBasePath = cfg.timezoneFileBasePath ||
 								_d.moduleUrl("dojox.date", "zoneinfo");
 	
 	// loadingScheme: String
@@ -41,7 +41,7 @@ dojo.require("dojo.date.locale");
 	// defaultZoneFile: String or String[]
 	//		The default file (or files) to load on startup - other files will
 	//		be lazily-loaded on-demand
-	var defaultZoneFile = cfg.defaultZoneFile || 
+	var defaultZoneFile = cfg.defaultZoneFile ||
 					((loadingScheme == "preloadAll") ? _zoneFiles : "northamerica");
 
 	// Set our olson-zoneinfo content handler
@@ -96,7 +96,7 @@ dojo.require("dojo.date.locale");
 		return ret; // Object
 	};
 	
-	function loadZoneObj(/* Object */ data){
+	function loadZoneData(/* Object */ data){
 		// summary:
 		//		Loads the given data object into the zone database
 		//
@@ -127,14 +127,14 @@ dojo.require("dojo.date.locale");
 			url: timezoneFileBasePath + "/" + fileName,
 			sync: true, // Needs to be synchronous so we can return values
 			handleAs: "olson-zoneinfo",
-			load: loadZoneObj,
+			load: loadZoneData,
 			error: errorLoadingZoneFile
 		});
 	}
 	
 	var monthMap = { 'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3,'may': 4, 'jun': 5,
 				'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11 },
-		dayMap = {'sun': 0, 'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4, 
+		dayMap = {'sun': 0, 'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4,
 				'fri': 5, 'sat': 6 },
 		regionMap = {'EST': "northamerica", 'MST': "northamerica",
 					'HST': "northamerica", 'EST5EDT': "northamerica",
@@ -142,7 +142,7 @@ dojo.require("dojo.date.locale");
 					'PST8PDT': "northamerica", 'America': "northamerica",
 					'Pacific': "australasia", 'Atlantic': "europe",
 					'Africa': "africa", 'Indian': "africa",
-					'Antarctica': "antarctica", 'Asia': "asia", 
+					'Antarctica': "antarctica", 'Asia': "asia",
 					'Australia': "australasia", 'Europe': "europe",
 					'WET': "europe", 'CET': "europe", 'MET': "europe",
 					'EET': "europe"},
@@ -214,14 +214,14 @@ dojo.require("dojo.date.locale");
 							'America/Port_of_Spain':"southamerica",
 							'America/Montevideo':"southamerica",
 							'America/Caracas':"southamerica"},
-		abbrExceptions = { 'US': "S", 'Chatham': "S", 'NZ': "S", 'NT_YK': "S", 
+		abbrExceptions = { 'US': "S", 'Chatham': "S", 'NZ': "S", 'NT_YK': "S",
 							'Edm': "S", 'Salv': "S", 'Canada': "S", 'StJohns': "S",
 							'TC': "S", 'Guat': "S", 'Mexico': "S", 'Haiti': "S",
 							'Barb': "S", 'Belize': "S", 'CR': "S", 'Moncton': "S",
 							'Swift': "S", 'Hond': "S", 'Thule': "S", 'NZAQ': "S",
 							'Zion': "S", 'ROK': "S", 'PRC': "S", 'Taiwan': "S",
-							'Ghana': "GMT", 'SL': "WAT", 'Chicago': "S", 
-							'Detroit': "S", 'Vanc': "S", 'Denver': "S", 
+							'Ghana': "GMT", 'SL': "WAT", 'Chicago': "S",
+							'Detroit': "S", 'Vanc': "S", 'Denver': "S",
 							'Halifax': "S", 'Cuba': "S", 'Indianapolis': "S",
 							'Starke': "S", 'Marengo': "S", 'Pike': "S",
 							'Perry': "S", 'Vincennes': "S", 'Pulaski': "S",
@@ -231,7 +231,7 @@ dojo.require("dojo.date.locale");
 							'DR': "S", 'Toronto': "S", 'Winn': "S" };
 	
 	function invalidTZError(t) {
-		throw new Error('Timezone "' + t + 
+		throw new Error('Timezone "' + t +
 				'" is either incorrect, or not loaded in the timezone registry.');
 	}
 	
@@ -279,7 +279,7 @@ dojo.require("dojo.date.locale");
 		return hms; // int[]
 	}
 	
-	function getUTCStamp(/* int */ y, /* int */ m, /* int */ d, /* int */ h, 
+	function getUTCStamp(/* int */ y, /* int */ m, /* int */ d, /* int */ h,
 						/* int */ mn, /* int */ s, /* int? */ off){
 		// summary:
 		//		Returns the UTC timestamp, adjusted by the given (optional) offset
@@ -319,7 +319,7 @@ dojo.require("dojo.date.locale");
 				// Last day of the month at the desired time of day
 				day = dayMap[day.substr(4,3).toLowerCase()];
 				d = new Date(getUTCStamp(year, month + 1, 1,
-										time[1] - 24, time[2], time[3], 
+										time[1] - 24, time[2], time[3],
 										off));
 				dtDay = _d.date.add(d, "minute", -off).getUTCDay();
 				// Set it to the final day of the correct weekday that month
@@ -333,7 +333,7 @@ dojo.require("dojo.date.locale");
 				if(day != "undefined"){
 					if(rule[4].substr(3, 2) == '>='){
 						// The stated date of the month
-						d = new Date(getUTCStamp(year, month, parseInt(rule[4].substr(5), 10), 
+						d = new Date(getUTCStamp(year, month, parseInt(rule[4].substr(5), 10),
 									time[1], time[2], time[3], off));
 						dtDay = _d.date.add(d, "minute", -off).getUTCDay();
 						// Set to the first correct weekday after the stated date
@@ -344,7 +344,7 @@ dojo.require("dojo.date.locale");
 						return d;
 					}else if(day.substr(3, 2) == '<='){
 						// The stated date of the month
-						d = new Date(getUTCStamp(year, month, parseInt(rule[4].substr(5), 10), 
+						d = new Date(getUTCStamp(year, month, parseInt(rule[4].substr(5), 10),
 									time[1], time[2], time[3], off));
 						dtDay = _d.date.add(d, "minute", -off).getUTCDay();
 						// Set to first correct weekday before the stated date
@@ -358,7 +358,7 @@ dojo.require("dojo.date.locale");
 			}
 		}else{
 			// Numeric date
-			d = new Date(getUTCStamp(year, month, parseInt(day, 10), 
+			d = new Date(getUTCStamp(year, month, parseInt(day, 10),
 						time[1], time[2], time[3], off));
 			return d;
 		}
@@ -420,7 +420,7 @@ dojo.require("dojo.date.locale");
 			}
 			
 			if(i === 0){
-				// The beginning of zoneinfo time - let's not worry about 
+				// The beginning of zoneinfo time - let's not worry about
 				// to-the-hour accuracy before Jan 1, 1835
 				r[0] = Date.UTC(_minYear,0,1,0,0,0,0);
 			}else{
@@ -468,15 +468,15 @@ dojo.require("dojo.date.locale");
 				// get close to Dec 31, 2038
 				r[1] = Date.UTC(_maxYear,11,31,23,59,59,999);
 			}else{
-				var year = parseInt(z[3], 10), 
-					month = getMonthNumber(z[4]||"Jan"), 
-					day = parseInt(z[5]||"1", 10), 
+				var year = parseInt(z[3], 10),
+					month = getMonthNumber(z[4]||"Jan"),
+					day = parseInt(z[5]||"1", 10),
 					time = parseTimeString(z[6]||"0");
-				var utcStmp = r[1] = getUTCStamp(year, month, day, 
+				var utcStmp = r[1] = getUTCStamp(year, month, day,
 									time[1], time[2], time[3],
 									((time[4] == "u") ? 0 : z[0]));
 				if(isNaN(utcStmp)){
-					utcStmp = r[1] = _getRuleStart([0,0,0,z[4],z[5],z[6]||"0"], 
+					utcStmp = r[1] = _getRuleStart([0,0,0,z[4],z[5],z[6]||"0"],
 											year, ((time[4] == "u") ? 0 : z[0])).getTime();
 				}
 				var matches = _d.filter(rlz, function(rl, idx){
@@ -567,7 +567,7 @@ dojo.require("dojo.date.locale");
 				repl = abbrExceptions[zone[1]];
 			}else{
 				if(zoneInfo.idx > 0){
-					// Check if our previous zone's base is the same as our 
+					// Check if our previous zone's base is the same as our
 					// current in "S" (standard) mode.  If so, then use "S"
 					// for our replacement
 					var pz = _zones[tz][zoneInfo.idx - 1];
@@ -627,6 +627,14 @@ dojox.date.timezone.getTzInfo = function(dt, tz){
 	//	for date
 };
 
+dojox.date.timezone.loadZoneData = function(data){
+	// summary:
+	//		Loads the given data object into the zone database
+	//
+	// data: Object
+	//		The data to load - contains "zones" and "rules" parameters
+};
+
 dojox.date.timezone.getAllZones = function(){
 	// summary:
 	//	Returns an array of zones that have been loaded
@@ -664,6 +672,9 @@ dojox.date.timezone.getAllZones = function(){
 			var abbr = getAbbreviation(tz, zoneInfo, rule);
 			return { tzOffset: off, tzAbbr: abbr }; // Object
 		},
+		loadZoneData: function(data){
+			loadZoneData(data);
+		},
 		getAllZones: function(){
 			var arr = [];
 			for(var z in _zones){ arr.push(z); }
@@ -694,7 +705,7 @@ dojox.date.timezone.getAllZones = function(){
 			options._tzInfo = dojox.date.timezone.getTzInfo(dateObject, options.timezone);
 		}
 		if(options._tzInfo){
-			// Roll our date to display the correct time according to the 
+			// Roll our date to display the correct time according to the
 			// desired offset
 			var offset = dateObject.getTimezoneOffset() - options._tzInfo.tzOffset;
 			dateObject = new Date(dateObject.getTime() + (offset * 60 * 1000));

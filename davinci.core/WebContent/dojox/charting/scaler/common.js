@@ -15,9 +15,13 @@ dojo.provide("dojox.charting.scaler.common");
 			return false;
 		},
 		getNumericLabel: function(/*Number*/ number, /*Number*/ precision, /*Object*/ kwArgs){
-			var def = kwArgs.fixed ? 
-						number.toFixed(precision < 0 ? -precision : 0) : 
-						number.toString();
+			var def = "";
+			if(dojo.number){
+				def = (kwArgs.fixed ? dojo.number.format(number, {places : precision < 0 ? -precision : 0}) :
+					dojo.number.format(number)) || "";
+			}else{
+				def = kwArgs.fixed ? number.toFixed(precision < 0 ? -precision : 0) : number.toString();
+			}
 			if(kwArgs.labelFunc){
 				var r = kwArgs.labelFunc(def, number, precision);
 				if(r){ return r; }

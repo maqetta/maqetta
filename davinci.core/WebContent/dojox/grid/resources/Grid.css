@@ -88,19 +88,12 @@
 	padding-bottom: 0;
 	border-bottom-width: 3px;
 }
-
-.dojoxGridSortNode{
-	white-space:nowrap;
-}
 .dojoxGridArrowButtonNode {
 	display: none;
 	padding-left: 16px;
 }
 .dojoxGridArrowButtonChar {
 	display:inline;
-}
-.dojoxGridColCaption {
-	overflow:hidden;
 }
 
 /* Need to explicitly define how to treat hovering over the arrow on IE */ 
@@ -407,7 +400,7 @@
 
 /* Tree Grid */
 .dojoxGridExpandoCell {
-	vertical-align: top;
+	vertical-align: middle;
 }
 .dojoxGridSummarySpan {
 	visibility: hidden;

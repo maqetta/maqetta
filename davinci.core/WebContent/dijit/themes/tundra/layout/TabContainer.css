@@ -9,7 +9,7 @@
 .tundra .dijitTab {
 	line-height:normal;
 	margin-right:4px;	/* space between one tab and the next in top/bottom mode */
-	padding:0px;
+	padding:0;
 	border:1px solid #ccc;
 	background:#e2e2e2 url("../images/tabEnabled.png") repeat-x;
 }
@@ -33,7 +33,7 @@
 	top: 2px;
 }
 .tundra .dijitTabContainerBottom .nowrapTabStrip .dijitTab {
-	top: 0px;
+	top: 0;
 	bottom: 2px;
 }
 
@@ -96,7 +96,7 @@
 .tundra .dijitTabContainerTabListNested .dijitTab {
 	background: none;
 	border: none;
-	top: 0px;		/* to override top: 1px/-1px for normal tabs */
+	top: 0;		/* to override top: 1px/-1px for normal tabs */
 }
 .tundra .dijitTabContainerTabListNested .dijitTab .dijitTabContent {
 }
@@ -134,13 +134,13 @@
 /* top tabs */
 
 .tundra .dijitTabContainerTop-tabs {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 	border-color: #cccccc;
 	padding-left: 3px;
 	background-position: bottom;
 }
 .tundra .dijitTabContainerTop-tabs .dijitTab {
-	top: 0px;
+	top: 0;
 	margin-bottom: -1px;
 }
 
@@ -170,20 +170,20 @@
 }
 
 .tundra .dijitTabContainerTopNone {
-	padding-top: 0px;
+	padding-top: 0;
 }
 
 
 /* ================================ */
 /* bottom tabs */
 .tundra .dijitTabContainerBottom-tabs {
-	margin-top: 0px;
+	margin-top: 0;
 	border-color: #cccccc;
 	background-position: top;
 	padding-left: 3px;
 }
 .tundra .dijitTabContainerBottom-tabs .dijitTab {
-	bottom: 0px;
+	bottom: 0;
 	margin-top: -1px;
 }
 
@@ -267,7 +267,7 @@
 /* left/right tabs */
 .tundra .dijitTabContainerLeft-tabs .dijitTab,
 .tundra .dijitTabContainerRight-tabs .dijitTab {
-	margin-right:0px;
+	margin-right:0;
 	margin-bottom:4px;	/* space between one tab and the next in left/right mode */
 }
 
@@ -275,11 +275,11 @@
 
 /* this resets the tabcontainer stripe when within a contentpane */
 .tundra .dijitTabContainerTop-dijitContentPane .dijitTabContainerTop-tabs {
-	border-left: 0px solid #ccc;
-	border-top: 0px solid #ccc;
-	border-right: 0px solid #ccc;
-	padding-top: 0px;
-	padding-left: 0px;
+	border-left: 0 solid #ccc;
+	border-top: 0 solid #ccc;
+	border-right: 0 solid #ccc;
+	padding-top: 0;
+	padding-left: 0;
 }
 
 /* ================================ */

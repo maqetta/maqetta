@@ -1,21 +1,18 @@
-<html>
-	<!--
-		NOTE: we are INTENTIONALLY in quirks mode. It makes it much easier to
-		get a "full screen" UI w/ straightforward CSS.
-	-->
+<!DOCTYPE html>
+<html style="height:100%;">
 	<!--
 		// TODO: provide a UI for prompted tests
 	-->
 	<head>
-		<title>The Dojo Unit Test Harness, $Rev: 22331 $</title>
+		<title>The Dojo Unit Test Harness, $Rev: 24358 $</title>
 
 		<script type="text/javascript">
 			// workaround for bug in Safari 3.  See #7189
 			if (/3[\.0-9]+ Safari/.test(navigator.appVersion))
 			{
 				window.console = {
-				    origConsole: window.console,
-				    log: function(s){
+					origConsole: window.console,
+						log: function(s){
 						this.origConsole.log(s);
 					},
 					info: function(s){
@@ -62,17 +59,75 @@
 					}
 				}
 			}
-
 			document.write("<scr"+"ipt type='text/javascript' djConfig='isDebug: true' src='"+dojoUrl+"'></scr"+"ipt>");
 		</script>
 		<script type="text/javascript">
-			try{
-				dojo.require("doh.runner");
-			}catch(e){
-				document.write("<scr"+"ipt type='text/javascript' src='runner.js'></scr"+"ipt>");
+			function fixHeight(){
+				// IE9 doesn't give test iframe height because no nodes have an explicit pixel height!
+				// Give outer table a pixel height.
+				if(dojo.isIE){
+					var headerHeight=0;
+					var rows=dojo.query('#testLayout > tbody > tr');
+					for(var i=0; i<rows.length-1; i++){
+						headerHeight+=dojo.position(rows[i]).h;
+					}
+					dojo.byId('testLayout').style.height=(dojo.window.getBox().h-headerHeight)+"px";
+				}
 			}
-			if(testUrl.length){
-				document.write("<scr"+"ipt type='text/javascript' src='"+testUrl+".js'></scr"+"ipt>");
+			if(this.dojo){
+				// we're in the browser and are going to have to require _browserRunner, DocTest and some kind of testModule
+				dojo.require("doh.runner");
+				dojo.require("doh._browserRunner");
+				dojo.require("dojox.testing.DocTest");
+				dojo.require("dojo.window"); // to size iframe
+				dojo.addOnLoad(function(){
+					for(var moduleList= (window.testModule || "dojo.tests.module").split(","), i= 0; i<moduleList.length; i++){
+						dojo.require(moduleList[i]);
+					}
+					window.testModule= "";
+
+					fixHeight();
+
+					//we want to ensure that doh.run is the *last* thing run
+					dojo.addOnLoad(function(){
+						setTimeout(function(){
+							dojo.global.doh.run();
+						}, 200);
+					});
+				});
+			}else if(typeof define == "function"){
+				// AMD loader
+				(function() {
+					require({baseUrl:"./"});
+					require(["runner.js", "_browserRunner.js","../../dojox/testing/DocTest.js","../../dojo/window.js"], function(){
+						// runner.js and _browserRunner.js create the global object doh and stuff the factories into it
+						// run the factories to bring doh to life. this is a bit awkward compared to how pure AMD modules
+						// would look, but doh is being asked to operate in many non-AMD environments today and this works.
+						var factories= doh;
+						doh= {};
+						factories.runnerFactory(doh);
+						factories.browserRunnerFactory(doh);
+
+						//tell the loader about our new doh module
+						define("doh", [], doh);
+
+						// now load all the testUrls/testModules; test modules don't make much sense since there
+						// is no specific paths/package config at this point to map module ids to URLs; therefore,
+						// we just treat both as if they are URLs.
+						var deps= (window.testUrl || window.testModule || "dojo.tests.module").split(",");
+						for (var i= 0; i<deps.length; i++) {
+							deps[i]+= (/\.js$/.test(deps[i]) ? "" : ".js");
+						}
+						require(deps);
+
+						fixHeight();
+					});
+				})();
+			}else{
+				document.write("<scr"+"ipt type='text/javascript' src='runner.js'></scr"+"ipt>");
+				if(testUrl.length){
+					document.write("<scr"+"ipt type='text/javascript' src='"+testUrl+".js'></scr"+"ipt>");
+				}
 			}
 		</script>
 		<style type="text/css">
@@ -179,7 +234,7 @@
 				border: 1px solid black;
 				*/
 				position: relative;
-				height: 99%;
+				height: 100%;
 				width: 100%;
 				overflow: auto;
 			}
@@ -231,7 +286,7 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body style="height: 100%;">
 		<table id="testLayout" cellpadding="0" cellspacing="0" style="margin: 0;">
 			<tr valign="top" height="40">
 				<td colspan="2" id="logoBar">
@@ -264,7 +319,7 @@
 				</td>
 			</tr>
 			<tr valign="top" style="border: 0; padding: 0; margin: 0;">
-				<td height="100%" style="border: 0; padding: 0; margin: 0;">
+				<td style="border: 0; padding: 0; margin: 0; height:100%;">
 					<div id="testListContainer">
 						<table cellpadding="0" cellspacing="0" border="0"
 							width="100%" id="testList" style="margin: 0;" onclick="doh._jumpToLog(arguments[0]);">
@@ -298,8 +353,8 @@
 						</table>
 					</div>
 				</td>
-				<td>
-					<div style="position: relative; width: 99%; height: 100%; top: 0px; left: 0px;">
+				<td style="height: 100%;">
+					<div style="position: relative; width: 100%; height: 100%; top: 0px; left: 0px;">
 						<div class="tabBody"
 							style="z-index: 1;">
 							<pre id="logBody"></pre>

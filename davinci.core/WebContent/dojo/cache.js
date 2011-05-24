@@ -1,13 +1,12 @@
-dojo.provide("dojo.cache");
+define("dojo/cache", ["dojo"], function(dojo){
 
 /*=====
-dojo.cache = { 
+dojo.cache = {
 	// summary:
 	// 		A way to cache string content that is fetchable via `dojo.moduleUrl`.
 };
 =====*/
 
-(function(){
 	var cache = {};
 	dojo.cache = function(/*String||Object*/module, /*String*/url, /*String||Object?*/value){
 		// summary:
@@ -46,7 +45,7 @@ dojo.cache = {
 		//		|	var text = dojo["cache"]("my.module", "template.html");
 		//	example:
 		//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
-		// 		 (the dojo["cache"] style of call is used to avoid an issue with the build system 
+		// 		 (the dojo["cache"] style of call is used to avoid an issue with the build system
 		// 		erroneously trying to intern this example. To get the build system to intern your
 		// 		dojo.cache calls, use the "dojo.cache" style of call):
 		// 		|	//If template.html contains "<html><body><h1>Hello</h1></body></html>", the
@@ -96,7 +95,7 @@ dojo.cache = {
 	};
 
 	dojo.cache._sanitize = function(/*String*/val){
-		// summary: 
+		// summary:
 		//		Strips <?xml ...?> declarations so that external SVG and XML
 		// 		documents can be added to a document without worry. Also, if the string
 		//		is an HTML document, only the part inside the body tag is returned.
@@ -113,4 +112,5 @@ dojo.cache = {
 		}
 		return val; //String
 	};
-})();
+	return dojo.cache;
+});

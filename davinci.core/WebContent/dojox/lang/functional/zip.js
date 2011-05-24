@@ -12,7 +12,7 @@ dojo.provide("dojox.lang.functional.zip");
 	dojo.mixin(df, {
 		// combiners
 		zip: function(){
-			// summary: returns an array of arrays, where the i-th array 
+			// summary: returns an array of arrays, where the i-th array
 			//	contains the i-th element from each of the argument arrays.
 			// description: This is the venerable zip combiner (for example,
 			//	see Python documentation for general details). The returned
@@ -28,11 +28,11 @@ dojo.provide("dojox.lang.functional.zip");
 			return t;	// Array
 		},
 		unzip: function(/*Array*/ a){
-			// summary: similar to dojox.lang.functional.zip(), but takes 
+			// summary: similar to dojox.lang.functional.zip(), but takes
 			//	a single array of arrays as the input.
-			// description: This function is similar to dojox.lang.functional.zip() 
-			//	and can be used to unzip objects packed by 
-			//	dojox.lang.functional.zip(). It is here mostly to provide 
+			// description: This function is similar to dojox.lang.functional.zip()
+			//	and can be used to unzip objects packed by
+			//	dojox.lang.functional.zip(). It is here mostly to provide
 			//	a short-cut for the different method signature.
 			return df.zip.apply(null, a);	// Array
 		}

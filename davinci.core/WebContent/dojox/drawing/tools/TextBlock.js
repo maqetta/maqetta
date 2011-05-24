@@ -2,7 +2,6 @@ dojo.provide("dojox.drawing.tools.TextBlock");
 dojo.require("dojox.drawing.stencil.Text");
 
 (function(){
-	
 	var conEdit;
 	dojo.addOnLoad(function(){
 		//		In order to use VML in IE, it's necessary to remove the
@@ -12,6 +11,7 @@ dojo.require("dojox.drawing.stencil.Text");
 		//		that can be appended and removed as necessary:
 		//		<div id="conEdit" contenteditable="true"></div>
 		//
+		// console.log("Removing conedit");
 		conEdit = dojo.byId("conEdit");
 		if(!conEdit){
 			console.error("A contenteditable div is missing from the main document. See 'dojox.drawing.tools.TextBlock'")
@@ -44,12 +44,9 @@ dojo.require("dojox.drawing.stencil.Text");
 			//
 			if(options.data){
 				var d = options.data;
-				var text = d.text;
-				var w = !d.width ? this.style.text.minWidth : d.width=="auto" ? "auto" : Math.max(d.width, this.style.text.minWidth)
+				var text = d.text ? this.typesetter(d.text) : d.text;
+				var w = !d.width ? this.style.text.minWidth : d.width=="auto" ? "auto" : Math.max(d.width, this.style.text.minWidth);
 				var h = this._lineHeight;
-				
-				// need to typeset before measuring width
-				text = this.typesetter(text);
 				
 				if(text && w=="auto"){
 					var o = this.measureText(this.cleanText(text, false), w);
@@ -85,9 +82,12 @@ dojo.require("dojox.drawing.stencil.Text");
 						this.render(text);
 					}
 					setTimeout(dojo.hitch(this, function(){
-						this.editMode = false;	
+						this.editMode = false;
 					}),100)
 					
+				}else{
+					// Why make it if it won't render...
+					this.render();
 				}
 				
 			}else{
@@ -100,6 +100,9 @@ dojo.require("dojox.drawing.stencil.Text");
 			draws:true,
 			baseRender:false,
 			type:"dojox.drawing.tools.TextBlock",
+			_caretStart: 0,
+			_caretEnd: 0,
+			_blockExec: false,
 			
 /*=====
 StencilData: {
@@ -121,7 +124,7 @@ StencilData: {
 			
 			// selectOnExec: Boolean
 			//		Whether the Stencil is selected when the text field
-			//		is executed or not	
+			//		is executed or not
 			selectOnExec:true,
 			//
 			// showEmpty: Boolean
@@ -152,7 +155,7 @@ StencilData: {
 				
 				var c = dojo.connect(this, "render", this, function(){
 					dojo.disconnect(c);
-					this.onRender(this);	
+					this.onRender(this);
 					
 				});
 				this.editMode = true;
@@ -216,7 +219,7 @@ StencilData: {
 				// In Safari, if the txt ends with '&' it gets stripped
 				conEdit.innerHTML = txt || "";
 				
-				return conEdit; //HTMLNade
+				return conEdit; //HTMLNode
 			},
 			connectTextField: function(){
 				// summary:
@@ -224,11 +227,17 @@ StencilData: {
 				//		contenteditable HTML node.
 				//
 				if(this._textConnected){ return; } // good ol' IE and its double events
+				// FIXME:
+				// Ouch-getting dropdown by id.  At the minimum this should
+				// be from the plugin manager
+				var dropdown = dijit.byId("dropdown");
 				this._textConnected = true;
+				this._dropMode = false;
 				this.mouse.setEventMode("TEXT");
 				this.keys.editMode(true);
 				var kc1, kc2, kc3, kc4, self = this, _autoSet = false,
 					exec = function(){
+						if(self._dropMode){ return; }
 						dojo.forEach([kc1,kc2,kc3,kc4], function(c){
 							dojo.disconnect(c)
 						});
@@ -247,26 +256,77 @@ StencilData: {
 						dojo.style(conEdit, "height", this._lineHeight+"px"); _autoSet = false;
 					}
 					
-					
-					if(evt.keyCode==13 || evt.keyCode==27){
-						dojo.stopEvent(evt);
-						exec();
+					if(!this._blockExec){
+						if(evt.keyCode==13 || evt.keyCode==27){
+							dojo.stopEvent(evt);
+							exec();
+						}
+					} else {
+						if(evt.keyCode==dojo.keys.SPACE){
+							dojo.stopEvent(evt);
+							dropdown.onCancel();
+						}
 					}
 				});
 				kc2 = dojo.connect(conEdit, "keydown", this, function(evt){
 					if(evt.keyCode==13 || evt.keyCode==27){ // TODO: make escape an option
 						dojo.stopEvent(evt);
 					}
+					//	if backslash, user is inputting a special character
+					//	This gives popup help.
+					if(evt.keyCode==220){
+						if(dropdown==undefined){
+							console.warn("Dropdown not found");
+							return;
+						}
+						dojo.stopEvent(evt);
+						this.getSelection(conEdit);
+						// Differences in how browsers handle events made it necessary
+						// to stop the evt and add the backslash here.
+						this.insertText(conEdit,"\\");
+						this._dropMode = true;
+						this._blockExec = true;
+						dropdown._pushChangeTo = conEdit;
+						dropdown._textBlock = this;
+						dijit.popup.open({
+							parent:this.parentNode,
+							popup:dropdown,
+							around:this.parentNode,
+							orient:{'BL':'TL'}
+						});
+					}
+					if(!this._dropMode){
+						this._blockExec = false;
+					} else {
+						switch(evt.keyCode){
+							case dojo.keys.UP_ARROW:
+							case dojo.keys.DOWN_ARROW:
+							case dojo.keys.LEFT_ARROW:
+							case dojo.keys.RIGHT_ARROW:
+								dojo.stopEvent(evt);
+								dropdown._navigateByArrow(evt);
+								break;
+							case dojo.keys.ENTER:
+								dojo.stopEvent(evt);
+								dropdown._onCellClick(evt);
+								break;
+							case dojo.keys.BACKSPACE:
+							case dojo.keys.DELETE:
+								dojo.stopEvent(evt);
+								dropdown.onCancel();
+								break;
+						}
+					}
+					
 				});
 				
 				kc3 = dojo.connect(document, "mouseup", this, function(evt){
 					// note: _onAnchor means an anchor has been clicked upon
-					
 					if(!this._onAnchor && evt.target.id != "conEdit"){
 						dojo.stopEvent(evt);
 						exec();
-					}else{
-						// wonky stuff happens when you click on the 
+					}else if(evt.target.id == "conEdit" && conEdit.innerHTML == ""){
+						// wonky stuff happens when you click on the
 						// field when its empty.
 						conEdit.blur();
 						setTimeout(function(){
@@ -301,9 +361,10 @@ StencilData: {
 							exec();
 							self.onUp = function(){}
 						}
-					}	
+					}
 				}), 500);
 			},
+			
 			
 			execText: function(){
 				// summary:
@@ -349,8 +410,8 @@ StencilData: {
 					this._text = "";
 					this._textArray = [];
 				}
-				this.render(o.text);
 				// Only for Combo objects (vectors, rectangle, or ellipse).
+				this.render(o.text);
 				this.onChangeText(this.getText());
 			},
 			
@@ -425,7 +486,7 @@ StencilData: {
 				// arguments:
 				//		str: String
 				//			The text to display and measure.
-				//		width: [optional] Number 
+				//		width: [optional] Number
 				//			If the width is not provided, it will be assumed
 				//			that the text is one line and the width will be
 				//			measured and the _lineHeight used for th height.
@@ -472,7 +533,7 @@ StencilData: {
 					
 					dojo.forEach(strAr, function(ar, i){
 						strAr[i] = ar.join(" ");
-					});	
+					});
 					txt = strAr.join("\n");
 					
 					// get the resultant height
@@ -584,19 +645,96 @@ StencilData: {
 				for(var n in this._anchors){
 					dojo.forEach(this._anchors[n].con, dojo.disconnect, dojo);
 					dojo.destroy(this._anchors[n].a);
+				};
+			},
+			
+			setSavedCaret: function(val){
+				// summary:
+				//		Internal, called when caret needs to
+				//		be moved into position after text is added
+				this._caretStart = this._caretEnd = val;
+			},
+			
+			getSavedCaret: function(){
+				return {start: this._caretStart, end: this._caretEnd}
+			},
+			
+			insertText: function(node,val){
+				// summary:
+				//		Uses saved caret position to insert text
+				//		into position and place caret at the end of
+				//		insertion
+				//
+				var t, text = node.innerHTML;
+				var caret = this.getSavedCaret();
+				
+				text = text.replace(/&nbsp;/g, " ");
+				t = text.substr(0,caret.start) + val + text.substr(caret.end);
+				t = this.cleanText(t,true);
+				this.setSavedCaret(Math.min(t.length,(caret.end + val.length)));
+				node.innerHTML = t;
+				this.setSelection(node,"stored");
+			},
+			
+			getSelection: function(node){
+				// summary:
+				//		This gets and stores the caret position
+				//		in the contentEditable div (conEdit).
+				//		NOTE: Doesn't work with html nodes inside
+				//		the div.
+				//
+				var start, end;
+				if(dojo.doc.selection){
+					//debugger;
+					var r = dojo.doc.selection.createRange();
+					var rs = dojo.body().createTextRange();
+					rs.moveToElementText(node);
+					var re = rs.duplicate();
+					rs.moveToBookmark(r.getBookmark());
+					re.setEndPoint('EndToStart', rs);
+					start = this._caretStart = re.text.length;
+					end = this._caretEnd = re.text.length+r.text.length;
+					console.warn("Caret start: ",start," end: ",end," length: ",re.text.length," text: ",re.text);
+				} else {
+					this._caretStart = dojo.global.getSelection().getRangeAt(node).startOffset;
+					this._caretEnd = dojo.global.getSelection().getRangeAt(node).endOffset;
+					console.log("Caret start: ", this._caretStart," end: ", this._caretEnd);
 				}
 			},
+			
 			setSelection: function(node, what){
 				// summary:
-				//		Used for placing the cursor at the end of the
-				//		text on edit.
+				//		Used for placing the cursor during edits and character help.
+				//		Takes the values: end, beg, start, all or any numerical value
+				//		(in which case the number will constitute the caret position)
 				//
 				console.warn("setSelection:");
 				if(dojo.doc.selection){ // IE
-					var r = dojo.body().createTextRange();
-					r.moveToElementText(node);
-					r.collapse(false);
-					r.select();
+					//debugger;
+					var rs = dojo.body().createTextRange();
+					rs.moveToElementText(node);
+					
+					switch(what){
+						case "end":
+							rs.collapse(false);
+							break;
+						case "beg" || "start":
+							rs.collapse();
+							break;
+						case "all":
+							rs.collapse();
+							rs.moveStart("character", 0);
+							rs.moveEnd("character",node.text.length);
+							break;
+						case "stored":
+							rs.collapse();
+							var dif = this._caretStart-this._caretEnd;
+							//console.log("start: ",this._caretStart, " end: ",this._caretEnd," dif: ",dif);
+							rs.moveStart("character",this._caretStart);
+							rs.moveEnd("character",dif);
+							break;
+					};
+					rs.select();
 					
 				}else{
 					var getAllChildren = function(node, children){
@@ -607,11 +745,11 @@ StencilData: {
 								children.push(n);
 							}else if(n.tagName && n.tagName.toLowerCase()=="img"){
 								children.push(n);
-							}
-							
+							};
+								
 							if(n.childNodes && n.childNodes.length){
 								getAllChildren(n, children);
-							}
+							};
 						}
 						return children;
 					};
@@ -619,27 +757,29 @@ StencilData: {
 					node.focus();
 					var selection = dojo.global.getSelection();
 					selection.removeAllRanges();
-					console.log(1);
-					r = dojo.doc.createRange();
-					r.selectNodeContents(node);
-					console.log(2);
+					var r = dojo.doc.createRange();
 					var nodes = getAllChildren(node);
-					console.log(3);
-					if(what == "end"){
-						console.log("len:", nodes[nodes.length - 1].textContent.length);
-						r.setStart(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
-						r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
-					}else if(what=="beg" || what == "start"){
-						r.setStart(nodes[0], 0);
-						r.setEnd(nodes[0], 0);
-					}else if(what=="all"){
-						r.setStart(nodes[0], 0);
-						r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
+					switch(what){
+						case "end":
+							console.log("len:", nodes[nodes.length - 1].textContent.length);
+							r.setStart(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
+							r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
+							break;
+						case "beg" || "start":
+							r.setStart(nodes[0], 0);
+							r.setEnd(nodes[0], 0);
+							break;
+						case "all":
+							r.setStart(nodes[0], 0);
+							r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
+							break;
+						case "stored":
+							console.log("Caret start: ",this._caretStart," caret end: ",this._caretEnd);
+							r.setStart(nodes[0], this._caretStart);
+							r.setEnd(nodes[0], this._caretEnd);
 					}
-					
 					selection.addRange(r);
-					
-					console.log("sel ", what, " on ", node)
+					console.log("sel ", what, " on ", node);
 				}
 			}
 		}

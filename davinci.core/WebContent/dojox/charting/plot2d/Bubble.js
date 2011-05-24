@@ -35,8 +35,9 @@ dojo.require("dojox.lang.functional");
 			//	kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		Optional keyword arguments object to help define plot parameters.
 			this.opt = dojo.clone(this.defaultParams);
-			du.updateWithObject(this.opt, kwArgs);
-			this.series = [];
+            du.updateWithObject(this.opt, kwArgs);
+            du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+            this.series = [];
 			this.hAxis = this.opt.hAxis;
 			this.vAxis = this.opt.vAxis;
 			this.animate = this.opt.animate;

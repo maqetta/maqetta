@@ -1,6 +1,7 @@
-dojo.provide('dojox.data.css');
-dojo.provide('dojox.data.css.rules');
+define("dojox/data/css", ["dojo", "dojox"], function(dojo, dojox) {
 
+dojox.data.css.rules = {};
+		
 dojox.data.css.rules.forEach = function(fn,ctx,context){
 	if(context){
 		var _processSS = function(styleSheet){
@@ -49,7 +50,7 @@ dojox.data.css.findStyleSheet = function(sheet){
 			return true;
 		}
 		if(styleSheet.imports){
-			return dojo.some(styleSheet.imports, function(importedSS){ //IE stylesheet has imports[] containing @import'ed rules 
+			return dojo.some(styleSheet.imports, function(importedSS){ //IE stylesheet has imports[] containing @import'ed rules
 				//console.debug("Processing IE @import rule",importedSS);
 				return _processSS(importedSS);
 			});
@@ -67,7 +68,7 @@ dojox.data.css.findStyleSheet = function(sheet){
 	return sheetObjects;
 };
 dojox.data.css.determineContext = function(initialStylesheets){
-	// Takes an array of stylesheet paths and returns an array of all stylesheets that fall in the 
+	// Takes an array of stylesheet paths and returns an array of all stylesheets that fall in the
 	// given context.  If no paths are given, all stylesheets are returned.
 	var ret = [];
 	if(initialStylesheets && initialStylesheets.length > 0){
@@ -78,7 +79,7 @@ dojox.data.css.determineContext = function(initialStylesheets){
 	var _processSS = function(styleSheet){
 		ret.push(styleSheet);
 		if(styleSheet.imports){
-			dojo.forEach(styleSheet.imports, function(importedSS){ //IE stylesheet has imports[] containing @import'ed rules 
+			dojo.forEach(styleSheet.imports, function(importedSS){ //IE stylesheet has imports[] containing @import'ed rules
 				//console.debug("Processing IE @import rule",importedSS);
 				_processSS(importedSS);
 			});
@@ -93,3 +94,7 @@ dojox.data.css.determineContext = function(initialStylesheets){
 	dojo.forEach(initialStylesheets,_processSS);
 	return ret;
 };
+
+return dojox.data.css;
+
+});

@@ -1,6 +1,4 @@
-dojo.provide("dojox.data.FlickrRestStore");
-
-dojo.require("dojox.data.FlickrStore");
+define("dojox/data/FlickrRestStore", ["dojo", "dojox", "dojox/data/FlickrStore"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.FlickrRestStore",
 	dojox.data.FlickrStore, {
@@ -478,5 +476,8 @@ dojo.declare("dojox.data.FlickrRestStore",
 			return ((start >= item.start)&&(end <= item.end));
 		});
 	}
+});
+
+return dojox.data.FlickrRestStore;
 });
 

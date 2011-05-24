@@ -105,6 +105,14 @@
 	color:#fff;
 }
 
+.soria .dojoxGridRowOver .dojoxGridCell .dijit {
+	color: #000;
+}
+
+.soria .dojoxGridRowOver .dojoxGridCell .dijitDisabled {
+	color: gray;
+}
+
 .soria .dojoxGridRowOdd {
 	background-color: #f2f5f9;
 }

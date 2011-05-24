@@ -188,13 +188,13 @@ var schemaForSchemas ={"description":"This is the JSON Schema for JSON Schemas."
      "hidden":{
      	"type":"boolean",
 	"optional":true,
-     	"description":"This indicates whether the property should be hidden in user interfaces."},     	
+     	"description":"This indicates whether the property should be hidden in user interfaces."},
      "extends":{
      	"type":"object",
      	"properties":{"$ref":"$.properties"},
      	"description":"This indicates the schema extends the given schema. All instances of this schema must be valid to by the extended schema also.",
 	"optional":true,
-	"default":{}},     	
+	"default":{}},
      "id":{
      	"type":["string","number"],
 	"optional":true,
@@ -217,23 +217,23 @@ doh.register("dojox.validate.tests.jsonSchema",
 		}
 	},
 	{
-		name:"isValidPropertyChange", 
+		name:"isValidPropertyChange",
 		runTest: function(t){
-			doh.f(dojox.json.schema.checkPropertyChange(biggerObj,biggerSchema).valid); //this should fail because of the 
+			doh.f(dojox.json.schema.checkPropertyChange(biggerObj,biggerSchema).valid); //this should fail because of the
 			doh.t(dojox.json.schema.checkPropertyChange(schemaForSchemas,schemaForSchemas).valid); //schema should be valid
 		}
 	},
 	function disallow(t){
 		var schema={
 			disallow: [{maxLength:4}]
-		}		
+		}
 		doh.t(dojox.json.schema.validate("hello", schema).valid);
 		doh.f(dojox.json.schema.validate("hi", schema).valid);
 	},
 	function maxDecimal(t){
 		var schema={
 			maxDecimal: 4
-		}		
+		}
 		doh.t(dojox.json.schema.validate(4.44, schema).valid);
 		doh.f(dojox.json.schema.validate(4.444444, schema).valid);
 		
@@ -241,7 +241,7 @@ doh.register("dojox.validate.tests.jsonSchema",
 	function tuple(t){
 		var schema={
 			items: [{type:"string"},{type:"number"}]
-		};		
+		};
 		doh.t(dojox.json.schema.validate(["hi",33], schema).valid);
 		doh.f(dojox.json.schema.validate([22,22], schema).valid);
 		
@@ -249,7 +249,7 @@ doh.register("dojox.validate.tests.jsonSchema",
 	function union(t){
 		var schema={
 			type: ["string", "number"]
-		};		
+		};
 		doh.t(dojox.json.schema.validate(22, schema).valid);
 		doh.t(dojox.json.schema.validate("hi", schema).valid);
 		doh.f(dojox.json.schema.validate(null, schema).valid);
@@ -257,7 +257,7 @@ doh.register("dojox.validate.tests.jsonSchema",
 	},
 	function aLittleComplex(t){
 		var schema = {type:[
-			{type:"object", properties:{name:{type:"string"}, id:{type:"integer"}}, additionalProperties:false}, 
+			{type:"object", properties:{name:{type:"string"}, id:{type:"integer"}}, additionalProperties:false},
 			{type:"object", properties:{brand:{type:"string"}, id:{type:"integer"}}, additionalProperties:false}]
 		};
 		doh.t(dojox.json.schema.validate({name:"Bill", id:3}, schema).valid);

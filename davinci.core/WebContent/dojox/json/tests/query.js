@@ -5,32 +5,32 @@ dojo.require("dojox.json.query");
 dojox.json.tests.error = function(t, d, errData){
 	//  summary:
 	//		The error callback function to be used for all of the tests.
-	d.errback(errData);	
+	d.errback(errData);
 };
 
 dojox.json.tests.testData= {
 	store: {
-		"book": [ 
-			{ 
+		"book": [
+			{
 				"category":"reference",
 				"author":"Nigel Rees",
 				"title":"Sayings of the Century",
 				"price":8.95
 			},
-			{ 
+			{
 				"category":"fiction",
 				"author":"Evelyn Waugh",
 				"title":"Sword of Honour",
 				"price":12.99
 			},
-			{ 
+			{
 				"category":"fiction",
 				"author":"Herman Melville",
 				"title":"Moby Dick",
 				"isbn":"0-553-21311-3",
 				"price":8.99
 			},
-			{ 
+			{
 				"category":"fiction",
 				"author":"J. R. R. Tolkien",
 				"title":"The Lord of the\nRings",
@@ -46,7 +46,7 @@ dojox.json.tests.testData= {
 	"symbols":{"@.$;":5}
 };
 
-doh.register("dojox.json.tests.query", 
+doh.register("dojox.json.tests.query",
 	[
 		{
 			name: "$.store.book[=author]",
@@ -315,36 +315,36 @@ doh.register("dojox.json.tests.query",
 		{
 			name: "safeEval: Illegal Eval",
 			runTest: function(t) {
-				try { 
+				try {
 					var result = dojo.toJson(dojox.json.query("$.store.book[?(push(5))]",dojox.json.tests.testData));
 					console.log("Illegal eval permitted");
 					doh.e("Illegal eval was permitted");
 				} catch(e) {
-					console.log("Eval properly blocked", e);	
+					console.log("Eval properly blocked", e);
 				}
 			}
 		},
 		{
 			name: "safeEval: Illegal Eval 2",
 			runTest: function(t) {
-				try { 
+				try {
 					var result = dojo.toJson(dojox.json.query("$.store.book[?(new Danger)]",dojox.json.tests.testData ));
 					console.log("Illegal eval permitted");
 					doh.e("Illegal eval was permitted");
 				} catch(e) {
-					console.log("Eval properly blocked", e);						
+					console.log("Eval properly blocked", e);
 				}
 			}
 		},
 		{
 			name: "safeEval: Illegal Eval 3",
 			runTest: function(t) {
-				try { 
+				try {
 					var result = dojo.toJson(dojox.json.query("$.store.book[?(@+=2)]",dojox.json.tests.testData));
 					console.log("Illegal eval permitted");
 					doh.e("Illegal eval was permitted");
 				} catch(e) {
-					console.log("Eval properly blocked", e);	
+					console.log("Eval properly blocked", e);
 				}
 			}
 		}

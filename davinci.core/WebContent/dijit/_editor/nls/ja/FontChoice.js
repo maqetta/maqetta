@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "サイズ",
 	fontName: "フォント",
@@ -9,6 +11,7 @@
 	cursive: "cursive",
 	fantasy: "fantasy",
 
+	noFormat: "なし",
 	p: "段落",
 	h1: "見出し",
 	h2: "副見出し",
@@ -23,3 +26,5 @@
 	6: "特大",
 	7: "超特大"
 })
+//end v1.x content
+);

@@ -91,8 +91,8 @@ dojox.drawing.tools.custom.Axes = dojox.drawing.util.oo.declare(
 				{x:z.x, y:z.y}
 			];
 			var len = this.util.length({start:{x:c.x, y:c.y}, x:z.x, y:z.y});
-			len > this.zAxis.minimumSize ? this.zAxis.setPoints(p) : false; 
-			this.zAxis.cosphi = 1; 
+			len > this.zAxis.minimumSize ? this.zAxis.setPoints(p) : false;
+			this.zAxis.cosphi = 1;
 		},
 		
 		createLabels: function(){

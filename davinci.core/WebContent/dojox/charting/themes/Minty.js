@@ -5,7 +5,7 @@ dojo.require("dojox.charting.Theme");
 	var dxc=dojox.charting;
 	dxc.themes.Minty=new dxc.Theme({
 		colors: [
-			"#80ccbb", 
+			"#80ccbb",
 			"#539e8b",
 			"#335f54",
 			"#8dd1c2",

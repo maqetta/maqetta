@@ -18,6 +18,7 @@
 	right: "prawa strona",
 	buttonSet: "Ustaw", // translated elsewhere?
 	buttonInsert: "Wstaw",
+	buttonCancel: "Anuluj",
 
 	selectTableLabel: "Wybierz tabelę",
 	insertTableRowBeforeLabel: "Dodaj wiersz przed",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "Usuń wiersz",
 	deleteTableColumnLabel: "Usuń kolumnę"
 })
-

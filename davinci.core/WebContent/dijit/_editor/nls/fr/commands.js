@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Gras',
 	'copy': 'Copier',
@@ -31,18 +33,19 @@
 	'deleteTable': 'Supprimer le tableau',
 	'tableProp': 'Propriété du tableau',
 	'htmlToggle': 'Source HTML',
-	'foreColor': 'Couleur avant-plan',
-	'hiliteColor': 'Couleur arrière-plan',
+	'foreColor': 'Couleur d\'avant-plan',
+	'hiliteColor': 'Couleur d\'arrière-plan',
 	'plainFormatBlock': 'Style de paragraphe',
 	'formatBlock': 'Style de paragraphe',
 	'fontSize': 'Taille de police',
 	'fontName': 'Nom de police',
 	'tabIndent': 'Retrait de tabulation',
-	"fullScreen": "Basculer vers le mode plein écran",
+	"fullScreen": "Basculer en plein écran",
 	"viewSource": "Afficher la source HTML",
 	"print": "Imprimer",
 	"newPage": "Nouvelle page",
 	/* Error messages */
-	'systemShortcut': 'Action "${0}" uniquement disponible dans votre navigateur via un raccourci clavier. Utilisez ${1}.'
+	'systemShortcut': 'L\'action "${0}" est disponible dans votre navigateur uniquement, par le biais d\'un raccourci-clavier. Utilisez ${1}.'
 })
-
+//end v1.x content
+);

@@ -34,11 +34,11 @@ dojo.require("dojox.validate._base");
 			// dependant/conditional fields are required if the target field is present and not blank.
 			// At present only textbox, password, and textarea fields are supported.
 			dependencies:	{
-				cc_exp: "cc_no",	
-				cc_type: "cc_no"	
+				cc_exp: "cc_no",
+				cc_type: "cc_no"
 			},
 
-			// Fields can be validated using any boolean valued function.  
+			// Fields can be validated using any boolean valued function.
 			// Use arrays to specify parameters in addition to the field value.
 			constraints: {
 				field_name1: myValidationFunction,
@@ -52,7 +52,7 @@ dojo.require("dojox.validate._base");
 			// It associates each field in its property list with another field whose value should be equal.
 			// If the values are not equal, the field in the property list is reported as Invalid. Unless the target field is blank.
 			confirm: {
-				email_confirm: "email",	
+				email_confirm: "email",
 				pw2: "pw1"
 			}
 		};
@@ -153,18 +153,18 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 
 	// See if required input fields have values missing.
 	if(profile.required instanceof Array){
-		for(var i = 0; i < profile.required.length; i++){ 
+		for(var i = 0; i < profile.required.length; i++){
 			if(!dojo.isString(profile.required[i])){ continue; }
 			var elem = form[profile.required[i]];
 			// Are textbox, textarea, or password fields blank.
-			if(!_undef("type", elem) 
-				&& (elem.type == "text" || elem.type == "textarea" || elem.type == "password" || elem.type == "file") 
-				&& /^\s*$/.test(elem.value)){	
+			if(!_undef("type", elem)
+				&& (elem.type == "text" || elem.type == "textarea" || elem.type == "password" || elem.type == "file")
+				&& /^\s*$/.test(elem.value)){
 				missing[missing.length] = elem.name;
 			}
 			// Does drop-down box have option selected.
-			else if(!_undef("type", elem) && (elem.type == "select-one" || elem.type == "select-multiple") 
-						&& (elem.selectedIndex == -1 
+			else if(!_undef("type", elem) && (elem.type == "select-one" || elem.type == "select-multiple")
+						&& (elem.selectedIndex == -1
 						|| /^\s*$/.test(elem.options[elem.selectedIndex].value))){
 				missing[missing.length] = elem.name;
 			}
@@ -174,7 +174,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 				for(var j = 0; j < elem.length; j++){
 					if (elem[j].checked) { checked = true; }
 				}
-				if(!checked){	
+				if(!checked){
 					missing[missing.length] = elem[0].name;
 				}
 			}
@@ -183,11 +183,11 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 
 	// See if checkbox groups and select boxes have x number of required values.
 	if(profile.required instanceof Array){
-		for (var i = 0; i < profile.required.length; i++){ 
+		for (var i = 0; i < profile.required.length; i++){
 			if(!dojo.isObject(profile.required[i])){ continue; }
 			var elem, numRequired;
-			for(var name in profile.required[i]){ 
-				elem = form[name]; 
+			for(var name in profile.required[i]){
+				elem = form[name];
 				numRequired = profile.required[i][name];
 			}
 			// case 1: elem is a check box group
@@ -196,7 +196,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 				for(var j = 0; j < elem.length; j++){
 					if(elem[j].checked){ checked++; }
 				}
-				if(checked < numRequired){	
+				if(checked < numRequired){
 					missing[missing.length] = elem[0].name;
 				}
 			}
@@ -206,7 +206,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 				for(var j = 0; j < elem.options.length; j++){
 					if (elem.options[j].selected && !/^\s*$/.test(elem.options[j].value)) { selected++; }
 				}
-				if(selected < numRequired){	
+				if(selected < numRequired){
 					missing[missing.length] = elem.name;
 				}
 			}
@@ -241,11 +241,11 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 			
 			// skip if blank - its optional unless required, in which case it
 			// is already listed as missing.
-			if(!_undef("tagName",elem) 
+			if(!_undef("tagName",elem)
 				&& (elem.tagName.toLowerCase().indexOf("input") >= 0
-					|| elem.tagName.toLowerCase().indexOf("textarea") >= 0) 
-				&& /^\s*$/.test(elem.value)){ 
-				continue; 
+					|| elem.tagName.toLowerCase().indexOf("textarea") >= 0)
+				&& /^\s*$/.test(elem.value)){
+				continue;
 			}
 			
 			var isValid = true;
@@ -267,7 +267,7 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 				}
 			}
 			
-			if(!isValid){	
+			if(!isValid){
 				invalid[invalid.length] = elem.name;
 			}
 		}
@@ -278,13 +278,13 @@ dojox.validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 		for(name in profile.confirm){
 			var elem = form[name];	// the confirm element
 			var target = form[profile.confirm[name]];
-			if (_undef("type", elem) || _undef("type", target) || (elem.type != "text" && elem.type != "textarea" && elem.type != "password") 
+			if (_undef("type", elem) || _undef("type", target) || (elem.type != "text" && elem.type != "textarea" && elem.type != "password")
 				||(target.type != elem.type)
 				||(target.value == elem.value)	// it's valid
 				||(results.isInvalid(elem.name))// already listed as invalid
 				||(/^\s*$/.test(target.value)))	// skip if blank - only confirm if target has a value
 			{
-				continue; 
+				continue;
 			}
 			invalid[invalid.length] = elem.name;
 		}
@@ -303,10 +303,10 @@ dojox.validate.evaluateConstraint=function(profile, /*Array*/constraint, fieldNa
 	//              fieldName: [functionToCall, param1, param2, etc.],
 	//              fieldName: [[functionToCallFirst, param1],[functionToCallSecond,param2]]
 	//      }
-	// 
+	//
 	//  This function evaluates a single array function in the format of:
 	//      [functionName, argument1, argument2, etc]
-	// 
+	//
 	//  The function will be parsed out and evaluated against the incoming parameters.
 	//
 	// profile: The dojo.validate.check() profile that this evaluation is against.

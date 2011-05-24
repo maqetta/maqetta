@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Koblingsegenskaper",
 	insertImageTitle: "Bildeegenskaper",
@@ -11,3 +13,5 @@
 	newWindow: "Nytt vindu"
 })
 
+//end v1.x content
+);

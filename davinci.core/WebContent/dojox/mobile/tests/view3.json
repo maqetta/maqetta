@@ -5,36 +5,34 @@
       "@label": "view3.json"
     },
     "dojox.mobile.RoundRectList": [{
-      "@iconBase": "images/i-icon-all.png",
       "dojox.mobile.ListItem": [{
-        "@iconPos": "0,0,29,29",
+        "@icon": "images/i-icon-1.png",
         "@label": "Airplane Mode",
         "dojox.mobile.Switch": {
           "@class": "mblItemSwitch"
         }
       }, {
         "@href": "test_iPhone-Icon.html",
-        "@iconPos": "0,29,29,29",
+        "@icon": "images/i-icon-2.png",
         "@label": "Wi-Fi",
         "@rightText": "mac"
       }, {
-        "@iconPos": "0,58,29,29",
+        "@icon": "images/i-icon-3.png",
         "@label": "Carrier",
         "@moveTo": "foo",
         "@rightText": "AcmePhone"
       }]
     }, {
-      "@iconBase": "images/i-icon-all.png",
       "dojox.mobile.ListItem": [{
-        "@iconPos": "0,87,29,29",
+        "@icon": "images/i-icon-4.png",
         "@label": "Sounds",
         "@moveTo": "foo"
       }, {
-        "@iconPos": "0,116,29,29",
+        "@icon": "images/i-icon-5.png",
         "@label": "Brightness",
         "@moveTo": "foo"
       }, {
-        "@iconPos": "29,0,29,29",
+        "@icon": "images/i-icon-6.png",
         "@label": "Wallpaper",
         "@moveTo": "foo"
       }]

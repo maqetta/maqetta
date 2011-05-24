@@ -4,6 +4,8 @@ greenLabel: "จี",
 blueLabel: "บี",
 hueLabel: "เอช",
 saturationLabel: "เอส",
-valueLabel: "วี",
-hexLabel: "เลขฐานสิบหก"
+valueLabel: "วี", /* aka intensity or brightness */
+huePickerTitle: "ตัวเลือกสี",
+saturationPickerTitle: "ตัวเลือกความอิ่มของสี"
 })
+

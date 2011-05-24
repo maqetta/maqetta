@@ -33,10 +33,11 @@
 		</style>
 <script src="../../../dojo/dojo.js" djConfig="isDebug: false, gfxRenderer: 'svg,silverlight,vml,canvas'"></script>
 <script type="text/javascript">
-	dojo.require("dojox.charting.Chart2D");
+    dojo.require("dojox.charting.Chart");
+    dojo.require("dojox.charting.plot2d.Pie");
 
 	var themes = [
-		"Julie", "ThreeD", "Chris", "Tom", "PrimaryColors", "Electric", "Charged", "Renkoo",
+		"Julie", "ThreeD", "Chris", "Tom", "Claro", "PrimaryColors", "Electric", "Charged", "Renkoo",
 		"Adobebricks", "Algae", "Bahamation", "BlueDusk", "CubanShirts", "Desert", "Distinctive", "Dollar",
 		"Grasshopper", "Grasslands", "GreySkies", "Harmony", "IndigoNation", "Ireland", "MiamiNice",
 		"Minty", "PurpleRain", "RoyalPurples", "SageToLime", "Shrooms", "Tufte", "WatersEdge", "Wetland",
@@ -53,7 +54,7 @@
 				className: "title", 
 				innerHTML: 'See more of "<a href="test_themes.html?' + theme + '">' + theme + '</a>"' 
 			}, container);
-			var c = new dojox.charting.Chart2D(chart).
+			var c = new dojox.charting.Chart(chart).
 				setTheme(dojo.getObject("dojox.charting.themes." + theme)).
 				addPlot("default", {type: "Pie", radius: 60, labelOffset: -20, radGrad: dojox.gfx.renderer == "vml" ? "fan" : "native"}).
 				addSeries("Series A", [0.35, 0.25, 0.42, 0.53, 0.69]).

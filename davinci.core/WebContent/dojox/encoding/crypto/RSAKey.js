@@ -1,8 +1,8 @@
-dojo.provide("dojox.encoding.crypto.RSAKey");
+// AMD-ID "dojox/encoding/crypto/RSAKey"
+define(["dojo", "dojox", "dojox/math/BigInteger", "dojox/math/random/Simple"], function(dojo, dojox) {
+
 dojo.experimental("dojox.encoding.crypto.RSAKey");
 
-dojo.require("dojox.math.BigInteger");
-dojo.require("dojox.math.random.Simple");
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
@@ -71,3 +71,7 @@ dojo.require("dojox.math.random.Simple");
 		}
 	});
 })();
+
+
+return dojox.encoding.crypto.RSAKey;
+});

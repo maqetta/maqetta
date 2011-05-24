@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Свойства ссылки",
 	insertImageTitle: "Свойства изображения",
@@ -7,7 +9,9 @@
 	set: "Задать",
 	currentWindow: "Текущее окно",
 	parentWindow: "Родительское окно",
-	topWindow: "Окно верхнего уровня",
+	topWindow: "Верхнее окно",
 	newWindow: "Новое окно"
 })
 
+//end v1.x content
+);

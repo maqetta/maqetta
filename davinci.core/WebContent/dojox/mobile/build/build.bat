@@ -31,16 +31,16 @@ goto end
 :ok
 
 set optimize=shrinksafe
-set profile=mobile.profile.js
+set profile=mobile
 set dir=release-mobile-separate
 set webkit=
-if "%1"=="single" set profile=mobile-all.profile.js
+if "%1"=="single" set profile=mobile-all
 if "%1"=="single" set dir=release-mobile-single
 if "%2"=="webkit" set webkit=webkitMobile=true
 
 cd ..\..\..\util\buildscripts
 
-call build profileFile=../../dojox/mobile/build/profiles/%profile% action=release customDijitBase=true optimize=%optimize% layerOptimize=%optimize% cssOptimize=comments releaseDir=../../%dir%/ %webkit%
+call build profile=%profile% action=release customDijitBase=true optimize=%optimize% layerOptimize=%optimize% cssOptimize=comments releaseDir=../../%dir%/ %webkit%
 
 cd ..\..\dojox\mobile\build
 

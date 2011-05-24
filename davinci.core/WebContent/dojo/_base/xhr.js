@@ -1,8 +1,4 @@
-dojo.provide("dojo._base.xhr");
-dojo.require("dojo._base.Deferred");
-dojo.require("dojo._base.json");
-dojo.require("dojo._base.lang");
-dojo.require("dojo._base.query");
+define("dojo/_base/xhr", ["dojo/lib/kernel", "dojo/_base/Deferred", "dojo/_base/json", "dojo/_base/lang", "dojo/_base/query"], function(dojo){
 
 //>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
@@ -46,7 +42,7 @@ dojo.require("dojo._base.query");
 			var type = (item.type||"").toLowerCase();
 			if(_in && type && !item.disabled){
 				if(type == "radio" || type == "checkbox"){
-					if(item.checked){ ret = item.value }
+					if(item.checked){ ret = item.value; }
 				}else if(item.multiple){
 					ret = [];
 					_d.query("option", item).forEach(function(opt){
@@ -60,7 +56,7 @@ dojo.require("dojo._base.query");
 			}
 		}
 		return ret; // Object
-	}
+	};
 
 	dojo.formToObject = function(/*DOMNode||String*/ formNode){
 		// summary:
@@ -87,7 +83,7 @@ dojo.require("dojo._base.query");
 		//		yields this object structure as the result of a call to
 		//		formToObject():
 		//
-		//		|	{ 
+		//		|	{
 		//		|		blah: "blah",
 		//		|		multi: [
 		//		|			"thud",
@@ -108,7 +104,7 @@ dojo.require("dojo._base.query");
 			}
 		});
 		return ret; // Object
-	}
+	};
 
 	dojo.objectToQuery = function(/*Object*/ map){
 		//	summary:
@@ -117,7 +113,7 @@ dojo.require("dojo._base.query");
 		//	example:
 		//		this object:
 		//
-		//		|	{ 
+		//		|	{
 		//		|		blah: "blah",
 		//		|		multi: [
 		//		|			"thud",
@@ -126,7 +122,7 @@ dojo.require("dojo._base.query");
 		//		|	};
 		//
 		//	yields the following query string:
-		//	
+		//
 		//	|	"blah=blah&multi=thud&multi=thonk"
 
 		// FIXME: need to implement encodeAscii!!
@@ -147,21 +143,21 @@ dojo.require("dojo._base.query");
 			}
 		}
 		return pairs.join("&"); // String
-	}
+	};
 
 	dojo.formToQuery = function(/*DOMNode||String*/ formNode){
 		// summary:
 		//		Returns a URL-encoded string representing the form passed as either a
 		//		node or string ID identifying the form to serialize
 		return _d.objectToQuery(_d.formToObject(formNode)); // String
-	}
+	};
 
 	dojo.formToJson = function(/*DOMNode||String*/ formNode, /*Boolean?*/prettyPrint){
 		// summary:
 		//		Create a serialized JSON string from a form node or string
 		//		ID identifying the form to serialize
 		return _d.toJson(_d.formToObject(formNode), prettyPrint); // String
-	}
+	};
 
 	dojo.queryToObject = function(/*String*/ str){
 		// summary:
@@ -172,7 +168,7 @@ dojo.require("dojo._base.query");
 		//		This string:
 		//
 		//	|		"foo=bar&foo=baz&thinger=%20spaces%20=blah&zonk=blarg&"
-		//		
+		//
 		//		results in this object structure:
 		//
 		//	|		{
@@ -180,7 +176,7 @@ dojo.require("dojo._base.query");
 		//	|			thinger: " spaces =blah",
 		//	|			zonk: "blarg"
 		//	|		}
-		//	
+		//
 		//		Note that spaces and other urlencoded entities are correctly
 		//		handled.
 
@@ -205,7 +201,7 @@ dojo.require("dojo._base.query");
 			}
 		});
 		return ret; // Object
-	}
+	};
 
 	// need to block async callbacks from snatching this thread as the result
 	// of an async callback might call another sync XHR, this hangs khtml forever
@@ -215,7 +211,7 @@ dojo.require("dojo._base.query");
 
 	// MOW: remove dojo._contentHandlers alias in 2.0
 	var handlers = _d._contentHandlers = dojo.contentHandlers = {
-		// summary: 
+		// summary:
 		//		A map of availble XHR transport handle types. Name matches the
 		//		`handleAs` attribute passed to XHR calls.
 		//
@@ -223,41 +219,41 @@ dojo.require("dojo._base.query");
 		//		A map of availble XHR transport handle types. Name matches the
 		//		`handleAs` attribute passed to XHR calls. Each contentHandler is
 		//		called, passing the xhr object for manipulation. The return value
-		//		from the contentHandler will be passed to the `load` or `handle` 
-		//		functions defined in the original xhr call. 
-		//		
+		//		from the contentHandler will be passed to the `load` or `handle`
+		//		functions defined in the original xhr call.
+		//
 		// example:
 		//		Creating a custom content-handler:
 		//	|	dojo.contentHandlers.makeCaps = function(xhr){
 		//	|		return xhr.responseText.toUpperCase();
 		//	|	}
 		//	|	// and later:
-		//	|	dojo.xhrGet({ 
+		//	|	dojo.xhrGet({
 		//	|		url:"foo.txt",
 		//	|		handleAs:"makeCaps",
 		//	|		load: function(data){ /* data is a toUpper version of foo.txt */ }
 		//	|	});
 
-		text: function(xhr){ 
+		text: function(xhr){
 			// summary: A contentHandler which simply returns the plaintext response data
-			return xhr.responseText; 
+			return xhr.responseText;
 		},
 		json: function(xhr){
 			// summary: A contentHandler which returns a JavaScript object created from the response data
 			return _d.fromJson(xhr.responseText || null);
 		},
-		"json-comment-filtered": function(xhr){ 
-			// summary: A contentHandler which expects comment-filtered JSON. 
-			// description: 
-			//		A contentHandler which expects comment-filtered JSON. 
+		"json-comment-filtered": function(xhr){
+			// summary: A contentHandler which expects comment-filtered JSON.
+			// description:
+			//		A contentHandler which expects comment-filtered JSON.
 			//		the json-comment-filtered option was implemented to prevent
 			//		"JavaScript Hijacking", but it is less secure than standard JSON. Use
 			//		standard JSON instead. JSON prefixing can be used to subvert hijacking.
-			//		
+			//
 			//		Will throw a notice suggesting to use application/json mimetype, as
 			//		json-commenting can introduce security issues. To decrease the chances of hijacking,
-			//		use the standard `json` contentHandler, and prefix your "JSON" with: {}&& 
-			//		
+			//		use the standard `json` contentHandler, and prefix your "JSON" with: {}&&
+			//
 			//		use djConfig.useCommentedJson = true to turn off the notice
 			if(!dojo.config.useCommentedJson){
 				console.warn("Consider using the standard mimetype:application/json."
@@ -275,7 +271,7 @@ dojo.require("dojo._base.query");
 			}
 			return _d.fromJson(value.substring(cStartIdx+2, cEndIdx));
 		},
-		javascript: function(xhr){ 
+		javascript: function(xhr){
 			// summary: A contentHandler which evaluates the response data, expecting it to be valid JavaScript
 
 			// FIXME: try Moz and IE specific eval variants?
@@ -288,7 +284,7 @@ dojo.require("dojo._base.query");
 			if(_d.isIE && (!result || !result.documentElement)){
 				//WARNING: this branch used by the xml handling in dojo.io.iframe,
 				//so be sure to test dojo.io.iframe if making changes below.
-				var ms = function(n){ return "MSXML" + n + ".DOMDocument"; }
+				var ms = function(n){ return "MSXML" + n + ".DOMDocument"; };
 				var dp = ["Microsoft.XMLDOM", ms(6), ms(4), ms(3), ms(2)];
 				_d.some(dp, function(p){
 					try{
@@ -304,7 +300,7 @@ dojo.require("dojo._base.query");
 			return result; // DOMDocument
 		},
 		"json-comment-optional": function(xhr){
-			// summary: A contentHandler which checks the presence of comment-filtered JSON and 
+			// summary: A contentHandler which checks the presence of comment-filtered JSON and
 			//		alternates between the `json` and `json-comment-filtered` contentHandlers.
 			if(xhr.responseText && /^[^{\[]*\/\*/.test(xhr.responseText)){
 				return handlers["json-comment-filtered"](xhr);
@@ -336,7 +332,7 @@ dojo.require("dojo._base.query");
 		//	handleAs: String?
 		//		Acceptable values depend on the type of IO
 		//		transport (see specific IO calls for more information).
-		// 	rawBody: String?
+		//	rawBody: String?
 		// 		Sets the raw body for an HTTP request. If this is used, then the content
 		// 		property is ignored. This is mostly useful for HTTP methods that have
 		// 		a body to their requests, like PUT or POST. This property can be used instead
@@ -481,7 +477,7 @@ dojo.require("dojo._base.query");
 			/*Function*/canceller,
 			/*Function*/okHandler,
 			/*Function*/errHandler){
-		//	summary: 
+		//	summary:
 		//		sets up the Deferred and ioArgs property on the Deferred so it
 		//		can be used in an io call.
 		//	args:
@@ -497,19 +493,19 @@ dojo.require("dojo._base.query");
 		//		object returned from this function.
 		//	errHandler:
 		//		The first error callback to be registered with Deferred. It has the opportunity
-		//		to do cleanup on an error. It will receive two arguments: error (the 
+		//		to do cleanup on an error. It will receive two arguments: error (the
 		//		Error object) and dfd, the Deferred object returned from this function.
 
 		var ioArgs = {args: args, url: args.url};
 
 		//Get values from form if requestd.
 		var formObject = null;
-		if(args.form){ 
+		if(args.form){
 			var form = _d.byId(args.form);
-			//IE requires going through getAttributeNode instead of just getAttribute in some form cases, 
+			//IE requires going through getAttributeNode instead of just getAttribute in some form cases,
 			//so use it for all.  See #2844
 			var actnNode = form.getAttributeNode("action");
-			ioArgs.url = ioArgs.url || (actnNode ? actnNode.value : null); 
+			ioArgs.url = ioArgs.url || (actnNode ? actnNode.value : null);
 			formObject = _d.formToObject(form);
 		}
 
@@ -582,7 +578,7 @@ dojo.require("dojo._base.query");
 		// FIXME: need to wire up the xhr object's abort method to something
 		// analagous in the Deferred
 		return d;
-	}
+	};
 
 	var _deferredCancel = function(/*Deferred*/dfd){
 		// summary: canceller function for dojo._ioSetArgs call.
@@ -599,13 +595,13 @@ dojo.require("dojo._base.query");
 			err.dojoType="cancel";
 		}
 		return err;
-	}
+	};
 	var _deferredOk = function(/*Deferred*/dfd){
 		// summary: okHandler function for dojo._ioSetArgs call.
 
 		var ret = handlers[dfd.ioArgs.handleAs](dfd.ioArgs.xhr);
 		return ret === undefined ? null : ret;
-	}
+	};
 	var _deferError = function(/*Error*/error, /*Deferred*/dfd){
 		// summary: errHandler function for dojo._ioSetArgs call.
 
@@ -613,7 +609,7 @@ dojo.require("dojo._base.query");
 			console.error(error);
 		}
 		return error;
-	}
+	};
 
 	// avoid setting a timer per request. It degrades performance on IE
 	// something fierece if we don't use unified loops.
@@ -637,7 +633,7 @@ dojo.require("dojo._base.query");
 	};
 
 	var _watchInFlight = function(){
-		//summary: 
+		//summary:
 		//		internal method that checks each inflight XMLHttpRequest to see
 		//		if it has completed or if the timeout situation applies.
 		
@@ -652,7 +648,7 @@ dojo.require("dojo._base.query");
 				var dfd = tif.dfd;
 				var func = function(){
 					if(!dfd || dfd.canceled || !tif.validCheck(dfd)){
-						_inFlight.splice(i--, 1); 
+						_inFlight.splice(i--, 1);
 						_pubCount -= 1;
 					}else if(tif.ioCheck(dfd)){
 						_inFlight.splice(i--, 1);
@@ -690,7 +686,7 @@ dojo.require("dojo._base.query");
 			_inFlightIntvl = null;
 			return;
 		}
-	}
+	};
 
 	dojo._ioCancelAll = function(){
 		//summary: Cancels all pending IO requests, regardless of IO type
@@ -702,7 +698,7 @@ dojo.require("dojo._base.query");
 				}catch(e){/*squelch*/}
 			});
 		}catch(e){/*squelch*/}
-	}
+	};
 
 	//Automatically call cancel all io calls on unload
 	//in IE for trac issue #2357.
@@ -727,10 +723,10 @@ dojo.require("dojo._base.query");
 			_pubCount += 1;
 			_d.publish("/dojo/io/send", [dfd]);
 		}
-	}
+	};
 
 	_d._ioWatch = function(dfd, validCheck, ioCheck, resHandle){
-		// summary: 
+		// summary:
 		//		Watches the io request represented by dfd to see if it completes.
 		// dfd: Deferred
 		//		The Deferred object to watch.
@@ -760,16 +756,16 @@ dojo.require("dojo._base.query");
 		if(args.sync){
 			_watchInFlight();
 		}
-	}
+	};
 
 	var _defaultContentType = "application/x-www-form-urlencoded";
 
 	var _validCheck = function(/*Deferred*/dfd){
 		return dfd.ioArgs.xhr.readyState; //boolean
-	}
+	};
 	var _ioCheck = function(/*Deferred*/dfd){
 		return 4 == dfd.ioArgs.xhr.readyState; //boolean
-	}
+	};
 	var _resHandle = function(/*Deferred*/dfd){
 		var xhr = dfd.ioArgs.xhr;
 		if(_d._isDocumentOk(xhr)){
@@ -780,7 +776,7 @@ dojo.require("dojo._base.query");
 			err.responseText = xhr.responseText;
 			dfd.errback(err);
 		}
-	}
+	};
 
 	dojo._ioAddQueryToUrl = function(/*dojo.__IoCallbackArgs*/ioArgs){
 		//summary: Adds query params discovered by the io deferred construction to the URL.
@@ -788,8 +784,8 @@ dojo.require("dojo._base.query");
 		if(ioArgs.query.length){
 			ioArgs.url += (ioArgs.url.indexOf("?") == -1 ? "?" : "&") + ioArgs.query;
 			ioArgs.query = null;
-		}		
-	}
+		}
+	};
 
 	/*=====
 	dojo.declare("dojo.__XhrArgs", dojo.__IoArgs, {
@@ -890,13 +886,13 @@ dojo.require("dojo._base.query");
 		_d._ioWatch(dfd, _validCheck, _ioCheck, _resHandle);
 		xhr = null;
 		return dfd; // dojo.Deferred
-	}
+	};
 
 	dojo.xhrGet = function(/*dojo.__XhrArgs*/ args){
-		//	summary: 
+		//	summary:
 		//		Sends an HTTP GET request to the server.
 		return _d.xhr("GET", args); // dojo.Deferred
-	}
+	};
 
 	dojo.rawXhrPost = dojo.xhrPost = function(/*dojo.__XhrArgs*/ args){
 		//	summary:
@@ -905,7 +901,7 @@ dojo.require("dojo._base.query");
 		//	postData:
 		//		String. Send raw data in the body of the POST request.
 		return _d.xhr("POST", args, true); // dojo.Deferred
-	}
+	};
 
 	dojo.rawXhrPut = dojo.xhrPut = function(/*dojo.__XhrArgs*/ args){
 		//	summary:
@@ -914,13 +910,13 @@ dojo.require("dojo._base.query");
 		//	putData:
 		//		String. Send raw data in the body of the PUT request.
 		return _d.xhr("PUT", args, true); // dojo.Deferred
-	}
+	};
 
 	dojo.xhrDelete = function(/*dojo.__XhrArgs*/ args){
 		//	summary:
 		//		Sends an HTTP DELETE request to the server.
 		return _d.xhr("DELETE", args); //dojo.Deferred
-	}
+	};
 
 	/*
 	dojo.wrapForm = function(formNode){
@@ -936,3 +932,6 @@ dojo.require("dojo._base.query");
 //>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
 //>>excludeEnd("webkitMobile");
+
+return dojo.xhr;
+});

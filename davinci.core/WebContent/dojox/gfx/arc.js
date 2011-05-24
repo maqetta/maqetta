@@ -4,23 +4,24 @@ dojo.require("dojox.gfx.matrix");
 
 (function(){
 	var m = dojox.gfx.matrix,
-		unitArcAsBezier = function(alpha){
-			// summary: return a start point, 1st and 2nd control points, and an end point of
-			//		a an arc, which is reflected on the x axis
-			// alpha: Number: angle in radians, the arc will be 2 * angle size
-			var cosa  = Math.cos(alpha), sina  = Math.sin(alpha),
-				p2 = {x: cosa + (4 / 3) * (1 - cosa), y: sina - (4 / 3) * cosa * (1 - cosa) / sina};
-			return {	// Object
-				s:  {x: cosa, y: -sina},
-				c1: {x: p2.x, y: -p2.y},
-				c2: p2,
-				e:  {x: cosa, y: sina}
-			};
-		},
 		twoPI = 2 * Math.PI, pi4 = Math.PI / 4, pi8 = Math.PI / 8,
 		pi48 = pi4 + pi8, curvePI4 = unitArcAsBezier(pi8);
 
-	dojo.mixin(dojox.gfx.arc, {
+	function unitArcAsBezier(alpha){
+		// summary: return a start point, 1st and 2nd control points, and an end point of
+		//		a an arc, which is reflected on the x axis
+		// alpha: Number: angle in radians, the arc will be 2 * angle size
+		var cosa  = Math.cos(alpha), sina  = Math.sin(alpha),
+			p2 = {x: cosa + (4 / 3) * (1 - cosa), y: sina - (4 / 3) * cosa * (1 - cosa) / sina};
+		return {	// Object
+			s:  {x: cosa, y: -sina},
+			c1: {x: p2.x, y: -p2.y},
+			c2: p2,
+			e:  {x: cosa, y: sina}
+		};
+	}
+
+	dojox.gfx.arc = {
 		unitArcAsBezier: unitArcAsBezier,
 		curvePI4: curvePI4,
 		arcAsBezier: function(last, rx, ry, xRotg, large, sweep, x, y){
@@ -114,5 +115,5 @@ dojo.require("dojox.gfx.matrix");
 			}
 			return result;	// Array
 		}
-	});
+	};
 })();

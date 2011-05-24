@@ -11,7 +11,7 @@ dependencies = {
 				"dojox.analytics.plugins.mouseClick",
 				"dojox.analytics.plugins.idle"
                         ]
-                }        
+                }
 	],
 
 	prefixes: [

@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
 		<title>Button List</title>
@@ -35,6 +35,9 @@
 				}else if(dojo.hasClass(btnDiv, "mblCheckOnButton")){
 					dojo.removeClass(btnDiv, "mblCheckOnButton");
 					dojo.addClass(btnDiv, "mblCheckOffButton");
+				}
+				if(dojo.isBB){
+					btnDiv.parentNode.appendChild(btnDiv.parentNode.removeChild(btnDiv));
 				}
 			}
 		</script>

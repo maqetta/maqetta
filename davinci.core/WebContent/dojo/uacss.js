@@ -1,4 +1,4 @@
-dojo.provide("dojo.uacss");
+define("dojo/uacss", ["dojo"], function(dojo) {
 
 (function(){
 	// summary:
@@ -24,6 +24,7 @@ dojo.provide("dojo.uacss");
 			dj_ie6: maj(ie) == 6,
 			dj_ie7: maj(ie) == 7,
 			dj_ie8: maj(ie) == 8,
+			dj_ie9: maj(ie) == 9,
 			dj_quirks: d.isQuirks,
 			dj_iequirks: ie && d.isQuirks,
 
@@ -52,7 +53,7 @@ dojo.provide("dojo.uacss");
 	html.className = d.trim(html.className + " " + classStr);
 
 	// If RTL mode, then add dj_rtl flag plus repeat existing classes with -rtl extension.
-	// We can't run the code below until the <body> tag has loaded (so we can check for dir=rtl).  
+	// We can't run the code below until the <body> tag has loaded (so we can check for dir=rtl).
 	// Unshift() is to run sniff code before the parser.
 	dojo._loaders.unshift(function(){
 		if(!dojo._isBodyLtr()){
@@ -61,3 +62,6 @@ dojo.provide("dojo.uacss");
 		}
 	});
 })();
+
+  return dojo;
+});

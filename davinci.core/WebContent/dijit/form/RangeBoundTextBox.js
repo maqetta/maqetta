@@ -1,2 +1,6 @@
-dojo.provide("dijit.form.RangeBoundTextBox");
-dojo.require("dijit.form.ValidationTextBox");
+define("dijit/form/RangeBoundTextBox", ["dojo", "dijit", "dijit/form/ValidationTextBox"], function(dojo, dijit) {
+
+
+
+return dijit.form.RangeBoundTextBox;
+});

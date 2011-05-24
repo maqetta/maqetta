@@ -2,8 +2,8 @@ dojo.provide("dojox.cometd.longPollTransportJsonEncoded");
 dojo.require("dojox.cometd._base");
 
 dojox.cometd.longPollTransportJsonEncoded = new function(){
-	// This is an alternative implementation to that provided in logPollTransportFormEncoded.js 
-	// that sends messages as text/json rather than form encoding them. 
+	// This is an alternative implementation to that provided in logPollTransportFormEncoded.js
+	// that sends messages as text/json rather than form encoding them.
 	
 	this._connectionType="long-polling";
 	this._cometd=null;

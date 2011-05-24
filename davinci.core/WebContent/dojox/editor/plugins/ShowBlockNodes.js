@@ -1,14 +1,8 @@
-dojo.provide("dojox.editor.plugins.ShowBlockNodes");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.Button");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("dojox.editor.plugins", "ShowBlockNodes");
+define("dojox/editor/plugins/ShowBlockNodes", ["dojo", "dijit", "dojox", "dijit/_editor/_Plugin", "dijit/form/Button", "dojo/i18n", "i18n!dojox/editor/plugins/nls/ShowBlockNodes"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides ShowBlockNodes cabability to the editor.  When 
+	//		This plugin provides ShowBlockNodes cabability to the editor.  When
 	//		clicked, the document in the editor will apply a class to specific
 	//		block nodes to make them visible in the layout.  This info is not
 	//		exposed/extracted when the editor value is obtained, it is purely for help
@@ -39,6 +33,12 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 		});
 		this.editor.addKeyHandler(dojo.keys.F9, true, true, dojo.hitch(this, this.toggle));
 	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
 
 	setEditor: function(editor){
 		// summary:
@@ -67,10 +67,10 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 				this._styled = true;
 
 				var style = "";
-				var blocks = ["div", "p", "ul", "ol", "table", "h1", 
-					"h2", "h3", "h4", "h5", "h6", "pre", "dir", "center", 
+				var blocks = ["div", "p", "ul", "ol", "table", "h1",
+					"h2", "h3", "h4", "h5", "h6", "pre", "dir", "center",
 					"blockquote", "form", "fieldset", "address", "object",
-					"pre", "hr", "ins", "noscript", "li", "map", "button", 
+					"pre", "hr", "ins", "noscript", "li", "map", "button",
 					"dd", "dt"];
 
 				var template = "@media screen {\n" +
@@ -87,14 +87,14 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 				"}\n";
 
 				dojo.forEach(blocks, function(tag){
-					style += template.replace(/\{TAG\}/gi, tag); 
+					style += template.replace(/\{TAG\}/gi, tag);
 				});
 
 				//Finally associate in the image locations based off the module url.
 				var modurl = dojo.moduleUrl(dojox._scopeName, "editor/plugins/resources").toString();
 				if(!(modurl.match(/^https?:\/\//i)) &&
 					!(modurl.match(/^file:\/\//i))){
-					// We have to root it to the page location on webkit for some nutball reason. 
+					// We have to root it to the page location on webkit for some nutball reason.
 					// Probably has to do with how iframe was loaded.
 					var bUrl;
 					if(modurl.charAt(0) === "/"){
@@ -149,7 +149,7 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 				fullUrl = fullUrl.substring(0,index);
 			}
 
-			// Now we need to trim if necessary.  If it ends in /, then we don't 
+			// Now we need to trim if necessary.  If it ends in /, then we don't
 			// have a filename to trim off so we can return.
 			index = fullUrl.lastIndexOf("/");
 			if (index > 0 && index < fullUrl.length) {
@@ -169,4 +169,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(name ===  "showblocknodes"){
 		o.plugin = new dojox.editor.plugins.ShowBlockNodes();
 	}
+});
+
+return dojox.editor.plugins.ShowBlockNodes;
+
 });

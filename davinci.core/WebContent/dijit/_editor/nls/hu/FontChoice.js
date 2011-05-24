@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Méret",
 	fontName: "Betűtípus",
@@ -9,6 +11,7 @@
 	cursive: "kurzív",
 	fantasy: "fantázia",
 
+	noFormat: "Nincs",
 	p: "Bekezdés",
 	h1: "Címsor",
 	h2: "Alcím",
@@ -23,3 +26,5 @@
 	6: "x-nagy",
 	7: "xx-nagy"
 })
+//end v1.x content
+);

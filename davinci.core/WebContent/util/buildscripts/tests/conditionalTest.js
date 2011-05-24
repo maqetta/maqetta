@@ -9,7 +9,7 @@ load("../jslib/buildUtil.js");
 
 
 var result = buildUtil.processConditionals(
-	"conditionalTest.txt", 
+	"conditionalTest.txt",
 	fileUtil.readFile("conditionalTest.txt"),
 	{
 		loader: "xdomain",

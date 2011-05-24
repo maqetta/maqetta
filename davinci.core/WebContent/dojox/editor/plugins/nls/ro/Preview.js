@@ -1,4 +1,4 @@
 ({
-	"preview": "Previzualizare "
+	"preview": "Previzualizare"
 })
 

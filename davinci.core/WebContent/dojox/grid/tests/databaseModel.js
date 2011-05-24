@@ -1,10 +1,10 @@
 dojo.provide("dojox.grid.tests.databaseModel");
 dojo.require("dojox.grid._data.model");
 
-// Provides a sparse array that is also traversable inorder 
+// Provides a sparse array that is also traversable inorder
 // with basic Array:
 //   - iterating by index is slow for large sparse arrays
-//   - for...in iteration is in order of element creation 
+//   - for...in iteration is in order of element creation
 // maintains a secondary index for interating
 // over sparse elements inorder
 dojo.declare("dojox.grid.Sparse", null, {
@@ -20,10 +20,10 @@ dojo.declare("dojox.grid.Sparse", null, {
 	},
 	set: function(inIndex, inValue) {
 		for (var i=0,l=this.indices.length; i<l; i++) {
-			if (this.indices[i] >= inIndex) 
+			if (this.indices[i] >= inIndex)
 				break;
 		}
-		if (this.indices[i] != inIndex) 
+		if (this.indices[i] != inIndex)
 			this.indices.splice(i, 0, inIndex);
 		this.values[inIndex] = inValue;
 	},
@@ -31,7 +31,7 @@ dojo.declare("dojox.grid.Sparse", null, {
 		return this.values[inIndex];
 	},
 	remove: function(inIndex) {
-		for (var i=0,l=this.indices.length; i<l; i++) 
+		for (var i=0,l=this.indices.length; i<l; i++)
 			if (this.indices[i] == inIndex) {
 				this.indices.splice(i, 1);
 				break;
@@ -135,7 +135,7 @@ dojo.declare("dojox.grid._data.DbTable", dojox.grid._data.Dynamic, {
 		return d;
 	},
 	_callback: function(cb, eb, data) {
-		try{ cb && cb(data); } 
+		try{ cb && cb(data); }
 		catch(e){ eb && eb(data, e); }
 	},
 	receive: function(inCallbacks, inData) {
@@ -170,21 +170,21 @@ dojo.declare("dojox.grid._data.DbTable", dojox.grid._data.Dynamic, {
 	},
 	// NOTE: supported only in tables with pk
 	commitDelete: function(inRows, inCallbacks) {
-		var params = { 
+		var params = {
 			command: 'delete',
 			count: inRows.length
-		}	
+		}
 		var pk = this.getPkIndex();
 		if (pk < 0)
 			return;
 		for (var i=0; i < inRows.length; i++)	{
 			params['_' + i] = inRows[i][pk];
-		}	
+		}
 		this.send(true, params, inCallbacks);
 	},
 	getUpdateCallbacks: function(inRowIndex) {
 		return {
-			callback: dojo.hitch(this, this.callbacks.update, inRowIndex), 
+			callback: dojo.hitch(this, this.callbacks.update, inRowIndex),
 			errback: dojo.hitch(this, this.callbacks.updateError, inRowIndex)
 		};
 	},
@@ -193,7 +193,7 @@ dojo.declare("dojox.grid._data.DbTable", dojox.grid._data.Dynamic, {
 		for (var i=0, l=this.fields.count(), f; (i<l) && (f=this.fields.get(i)); i++)
 			if (f.Key = 'PRI')
 				return i;
-		return -1;		
+		return -1;
 	},
 	// model implementations
 	update: function(inOldData, inNewData, inRowIndex) {
@@ -231,7 +231,7 @@ dojo.declare("dojox.grid._data.DbTable", dojox.grid._data.Dynamic, {
 			this.removeInsert(inRowIndex);
 		} else
 			this.finishUpdate(inRowIndex);
-	},	
+	},
 	finishUpdate: function(inRowIndex, inData) {
 		this.clearState(inRowIndex);
 		var d = (inData&&inData[0]) || this.cache[inRowIndex];
@@ -246,20 +246,20 @@ dojo.declare("dojox.grid._data.DbTable", dojox.grid._data.Dynamic, {
 		this.clearState(inRowIndex);
 		dojox.grid._data.Dynamic.prototype.remove.call(this, [inRowIndex]);
 	},
-	// request data 
+	// request data
 	requestRows: function(inRowIndex, inCount)	{
-		var params = { 
+		var params = {
 			command: 'select',
-			orderby: this.sortField, 
+			orderby: this.sortField,
 			desc: (this.sortDesc ? "true" : ''),
-			offset: inRowIndex, 
+			offset: inRowIndex,
 			limit: inCount
 		}
 		this.send(true, params, {callback: dojo.hitch(this, this.callbacks.rows, inRowIndex)});
 	},
 	// sorting
-	canSort: function () { 
-		return true; 
+	canSort: function () {
+		return true;
 	},
 	setSort: function(inSortIndex) {
 		this.sortField = this.fields.get(Math.abs(inSortIndex) - 1).name || inSortIndex;
@@ -281,7 +281,7 @@ dojo.declare("dojox.grid._data.DbTable", dojox.grid._data.Dynamic, {
 			if(!dojox.grid.util.arrayCompare(cache, data)){
 				m = true;
 				this.update(cache, data, inRowIndex);
-			}	
+			}
 		}
 		if (!m)
 			this.cancelModifyRow(inRowIndex);

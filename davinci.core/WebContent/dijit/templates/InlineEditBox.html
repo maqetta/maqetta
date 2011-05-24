@@ -1,8 +1,10 @@
-<span dojoAttachPoint="editNode" waiRole="presentation" style="position: absolute; visibility:hidden" class="dijitReset dijitInline"
-	dojoAttachEvent="onkeypress: _onKeyPress"
-	><span dojoAttachPoint="editorPlaceholder"></span
-	><span dojoAttachPoint="buttonContainer"
-		><button class='saveButton' dojoAttachPoint="saveButton" dojoType="dijit.form.Button" dojoAttachEvent="onClick:save" label="${buttonSave}"></button
-		><button class='cancelButton' dojoAttachPoint="cancelButton" dojoType="dijit.form.Button" dojoAttachEvent="onClick:cancel" label="${buttonCancel}"></button
+<span data-dojo-attach-point="editNode" role="presentation" style="position: absolute; visibility:hidden" class="dijitReset dijitInline"
+	data-dojo-attach-event="onkeypress: _onKeyPress"
+	><span data-dojo-attach-point="editorPlaceholder"></span
+	><span data-dojo-attach-point="buttonContainer"
+		><button data-dojo-type="dijit.form.Button" data-dojo-props="label: '${buttonSave}', 'class': 'saveButton'"
+			data-dojo-attach-point="saveButton" data-dojo-attach-event="onClick:save"></button
+		><button data-dojo-type="dijit.form.Button"  data-dojo-props="label: '${buttonCancel}', 'class': 'cancelButton'"
+			data-dojo-attach-point="cancelButton" data-dojo-attach-event="onClick:cancel"></button
 	></span
 ></span>

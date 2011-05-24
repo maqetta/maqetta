@@ -1,11 +1,4 @@
-dojo.provide("dijit.form.Select");
-
-dojo.require("dijit.form._FormSelectWidget");
-dojo.require("dijit._HasDropDown");
-dojo.require("dijit.Menu");
-dojo.require("dijit.Tooltip");
-
-dojo.requireLocalization("dijit.form", "validate");
+define("dijit/form/Select", ["dojo", "dijit", "text!dijit/form/templates/Select.html", "dijit/form/_FormSelectWidget", "dijit/_HasDropDown", "dijit/Menu", "dijit/Tooltip", "i18n!dijit/form/nls/validate"], function(dojo, dijit) {
 
 dojo.declare("dijit.form._SelectMenu", dijit.Menu, {
 	// summary:
@@ -27,6 +20,16 @@ dojo.declare("dijit.form._SelectMenu", dijit.Menu, {
 		dijit.setWaiRole(n,"presentation");
 		n.appendChild(o);
 	},
+
+	postCreate: function(){
+		// summary:
+		//              stop mousemove from selecting text on IE to be consistent with other browsers
+
+		this.inherited(arguments);
+
+		this.connect(this.domNode, "onmousemove", dojo.stopEvent);
+	},
+
 	resize: function(/*Object*/ mb){
 		// summary:
 		//		Overridden so that we are able to handle resizing our
@@ -69,13 +72,17 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 	//		Shows current state (ie, validation result) of input (Normal, Warning, or Error)
 	state: "",
 
+	// message: String
+	//		Currently displayed error/prompt message
+	message: "",
+
 	//	tooltipPosition: String[]
 	//		See description of dijit.Tooltip.defaultPosition for details on this parameter.
 	tooltipPosition: [],
 
 	// emptyLabel: string
 	//		What to display in an "empty" dropdown
-	emptyLabel: "",
+	emptyLabel: "&nbsp;",
 
 	// _isLoaded: Boolean
 	//		Whether or not we have been loaded
@@ -89,11 +96,11 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 		// summary:
 		//		Set the value to be the first, or the selected index
 		this.inherited(arguments);
+		// set value from selected option
 		if(this.options.length && !this.value && this.srcNodeRef){
-			var si = this.srcNodeRef.selectedIndex;
-			this.value = this.options[si != -1 ? si : 0].value;
+			var si = this.srcNodeRef.selectedIndex || 0; // || 0 needed for when srcNodeRef is not a SELECT
+			this.value = this.options[si >= 0 ? si : 0].value;
 		}
-
 		// Create the dropDown widget
 		this.dropDown = new dijit.form._SelectMenu({id: this.id + "_menu"});
 		dojo.addClass(this.dropDown.domNode, this.baseClass + "Menu");
@@ -103,7 +110,7 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 		// summary:
 		//		For the given option, return the menu item that should be
 		//		used to display it.  This can be overridden as needed
-		if(!option.value){
+		if(!option.value && !option.label){
 			// We are a separator (no label set for it)
 			return new dijit.MenuSeparator();
 		}else{
@@ -111,7 +118,7 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 			var click = dojo.hitch(this, "_setValueAttr", option);
 			var item = new dijit.MenuItem({
 				option: option,
-				label: option.label,
+				label: option.label || this.emptyLabel,
 				onClick: click,
 				disabled: option.disabled || false
 			});
@@ -165,7 +172,6 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 			this._updateSelection();
 		}
 
-		var len = this.options.length;
 		this._isLoaded = false;
 		this._childrenLoaded = true;
 
@@ -183,10 +189,9 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 	_setDisplay: function(/*String*/ newDisplay){
 		// summary:
 		//		sets the display for the given value (or values)
-		this.containerNode.innerHTML = '<span class="dijitReset dijitInline ' + this.baseClass + 'Label">' +
-					(newDisplay || this.emptyLabel || "&nbsp;") +
-					'</span>';
-		dijit.setWaiState(this.focusNode, "valuetext", (newDisplay || this.emptyLabel || "&nbsp;") );
+		var lbl = newDisplay || this.emptyLabel;
+		this.containerNode.innerHTML = '<span class="dijitReset dijitInline ' + this.baseClass + 'Label">' + lbl + '</span>';
+		dijit.setWaiState(this.focusNode, "valuetext", lbl);
 	},
 
 	validate: function(/*Boolean*/ isFocused){
@@ -198,12 +203,11 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 		//		set the value.
 		
 		var isValid = this.isValid(isFocused);
-		this.state = isValid ? "" : "Error";
-		this._setStateClass();
+		this._set("state", isValid ? "" : "Error");
 		dijit.setWaiState(this.focusNode, "invalid", isValid ? "false" : "true");
 		var message = isValid ? "" : this._missingMsg;
-		if(this._message !== message){
-			this._message = message;
+		if(this.message !== message){
+			this._set("message", message);
 			dijit.hideTooltip(this.domNode);
 			if(message){
 				dijit.showTooltip(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
@@ -214,9 +218,9 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 
 	isValid: function(/*Boolean*/ isFocused){
 		// summary:
-		//		Whether or not this is a valid value.   The only way a Select
+		//		Whether or not this is a valid value.  The only way a Select
 		//		can be invalid is when it's required but nothing is selected.
-		return (!this.required || !(/^\s*$/.test(this.value)));
+		return (!this.required || this.value === 0 || !(/^\s*$/.test(this.value || ""))); // handle value is null or undefined
 	},
 
 	reset: function(){
@@ -224,9 +228,8 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 		//		Overridden so that the state will be cleared.
 		this.inherited(arguments);
 		dijit.hideTooltip(this.domNode);
-		this.state = "";
-		this._setStateClass();
-		delete this._message;
+		this._set("state", "");
+		this._set("message", "")
 	},
 
 	postMixInProperties: function(){
@@ -238,10 +241,17 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 	},
 
 	postCreate: function(){
+		// summary:
+		//		stop mousemove from selecting text on IE to be consistent with other browsers
+
 		this.inherited(arguments);
-		if(this.tableNode.style.width){
-			dojo.addClass(this.domNode, this.baseClass + "FixedWidth");
-		}
+
+		this.connect(this.domNode, "onmousemove", dojo.stopEvent);
+	},
+
+	_setStyleAttr: function(/*String||Object*/ value){
+		this.inherited(arguments);
+		dojo.toggleClass(this.domNode, this.baseClass + "FixedWidth", !!this.tableNode.style.width);
 	},
 
 	isLoaded: function(){
@@ -275,4 +285,8 @@ dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropD
 		}
 		this.inherited(arguments);
 	}
+});
+
+
+return dijit.form.Select;
 });

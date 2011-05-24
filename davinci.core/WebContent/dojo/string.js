@@ -1,7 +1,8 @@
-dojo.provide("dojo.string");
+define("dojo/string", ["dojo"], function(dojo) {
+dojo.getObject("string", true, dojo);
 
 /*=====
-dojo.string = { 
+dojo.string = {
 	// summary: String utilities for Dojo
 };
 =====*/
@@ -52,22 +53,22 @@ dojo.string.pad = function(/*String*/text, /*Integer*/size, /*String?*/ch, /*Boo
 	return end ? out + pad : pad + out;	// String
 };
 
-dojo.string.substitute = function(	/*String*/		template, 
-									/*Object|Array*/map, 
-									/*Function?*/	transform, 
+dojo.string.substitute = function(	/*String*/		template,
+									/*Object|Array*/map,
+									/*Function?*/	transform,
 									/*Object?*/		thisObject){
 	//	summary:
 	//		Performs parameterized substitutions on a string. Throws an
 	//		exception if any parameter is unmatched.
-	//	template: 
+	//	template:
 	//		a string with expressions in the form `${key}` to be replaced or
-	//		`${key:format}` which specifies a format function. keys are case-sensitive. 
+	//		`${key:format}` which specifies a format function. keys are case-sensitive.
 	//	map:
 	//		hash to search for substitutions
-	//	transform: 
+	//	transform:
 	//		a function to process all parameters before substitution takes
 	//		place, e.g. mylib.encodeXML
-	//	thisObject: 
+	//	thisObject:
 	//		where to look for optional format function; default to the global
 	//		namespace
 	//	example:
@@ -110,7 +111,7 @@ dojo.string.substitute = function(	/*String*/		template,
 	//	|	);
 
 	thisObject = thisObject || dojo.global;
-	transform = transform ? 
+	transform = transform ?
 		dojo.hitch(thisObject, transform) : function(v){ return v; };
 
 	return template.replace(/\$\{([^\s\:\}]+)(?:\:([^\s\:\}]+))?\}/g,
@@ -151,3 +152,6 @@ dojo.string.trim = String.prototype.trim ?
 		}
 		return str;
 	};
+
+return dojo.string;
+});

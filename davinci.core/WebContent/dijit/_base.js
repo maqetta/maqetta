@@ -1,11 +1,6 @@
-dojo.provide("dijit._base");
+define("dijit/_base", ["dojo", "dijit", "dijit/_base/focus", "dijit/_base/manager", "dijit/_base/place", "dijit/_base/popup", "dijit/_base/scroll", "dijit/_base/sniff", "dijit/_base/typematic", "dijit/_base/wai", "dijit/_base/window"], function(dojo, dijit) {
 
-dojo.require("dijit._base.focus");
-dojo.require("dijit._base.manager");
-dojo.require("dijit._base.place");
-dojo.require("dijit._base.popup");
-dojo.require("dijit._base.scroll");
-dojo.require("dijit._base.sniff");
-dojo.require("dijit._base.typematic");
-dojo.require("dijit._base.wai");
-dojo.require("dijit._base.window");
+
+
+return dijit._base;
+});

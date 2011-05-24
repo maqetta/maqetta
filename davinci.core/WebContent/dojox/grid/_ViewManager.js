@@ -76,9 +76,9 @@ dojo.declare('dojox.grid._ViewManager', null, {
 		if(this.grid.rowHeight){
 			h = this.grid.rowHeight;
 		}else{
-			if(inRowNodes.length <= 1){ 
+			if(inRowNodes.length <= 1){
 				// no need to normalize if we are the only one...
-				return; 
+				return;
 			}
 			for(var i=0, n; (n=inRowNodes[i]); i++){
 				// We only care about the height - so don't use marginBox.  This
@@ -189,7 +189,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 					hs.right = l + v.getScrollbarWidth() + 'px';
 					hs.width = parseInt(hs.width, 10) - v.getScrollbarWidth() + 'px';
 				}else{
-					hs.right = l + 'px';					
+					hs.right = l + 'px';
 				}
 			}else{
 				ds.left = l + 'px';
@@ -199,7 +199,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 			hs.top = 0;
 		};
 		// for views left of the client
-		//BiDi TODO: The left and right should not appear in BIDI environment. Should be replaced with 
+		//BiDi TODO: The left and right should not appear in BIDI environment. Should be replaced with
 		//leading and tailing concept.
 		for(i=0; (v=this.views[i])&&(i<c); i++){
 			// get width
@@ -215,7 +215,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 			// update position
 			l += vw;
 		}
-		// next view (is the client, i++ == c) 
+		// next view (is the client, i++ == c)
 		i++;
 		// start from the right edge
 		var r = w;
@@ -234,7 +234,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 		}
 		if(c<len){
 			v = this.views[c];
-			// position the client box between left and right boxes	
+			// position the client box between left and right boxes
 			vw = Math.max(1, r-l);
 			// set size
 			v.setSize(vw + 'px', 0);
@@ -290,7 +290,7 @@ dojo.declare('dojox.grid._ViewManager', null, {
 	},
 	
 	getFirstScrollingView: function(){
-		// summary: Returns the first grid view with a scroll bar 
+		// summary: Returns the first grid view with a scroll bar
 		for(var i=0, v; (v=this.views[i]); i++){
 			if(v.hasHScrollbar() || v.hasVScrollbar()){
 				return v;

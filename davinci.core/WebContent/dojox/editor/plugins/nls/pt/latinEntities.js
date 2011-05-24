@@ -254,4 +254,3 @@
 	rsaquo:"aspa latina de abertura",
 	euro:"símbolo de euro"
 })
-

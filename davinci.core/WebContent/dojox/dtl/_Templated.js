@@ -66,7 +66,7 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 				inherited: {dir: this.dir, lang: this.lang}
 			}));
 
-			//Restore the query. 
+			//Restore the query.
 			if(qry){
 				parser._query = qry;
 				parser._attrName = attr;
@@ -100,7 +100,7 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 
 		templateString = dojo.string.trim(templateString || dojo.cache(templatePath, {sanitize: true}));
 
-		if(	this._dijitTemplateCompat && 
+		if(	this._dijitTemplateCompat &&
 			(alwaysUseString || templateString.match(/\$\{([^\}]+)\}/g))
 		){
 			templateString = this._stringRepl(templateString);

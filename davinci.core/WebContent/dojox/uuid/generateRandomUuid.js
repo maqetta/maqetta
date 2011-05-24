@@ -6,23 +6,23 @@ dojox.uuid.generateRandomUuid = function(){
 	// description:
 	//		A typical generated value would be something like this:
 	//		"3b12f1df-5232-4804-897e-917bf397618a"
-	//		
-	//		For more information about random UUIDs, see sections 4.4 and 
+	//
+	//		For more information about random UUIDs, see sections 4.4 and
 	//		4.5 of RFC 4122: http://tools.ietf.org/html/rfc4122#section-4.4
-	//		
+	//
 	//		This generator function is designed to be small and fast,
 	//		but not necessarily good.
-	//		
+	//
 	//		Small: This generator has a small footprint. Once comments are
-	//		stripped, it's only about 25 lines of code, and it doesn't 
+	//		stripped, it's only about 25 lines of code, and it doesn't
 	//		dojo.require() any other modules.
-	//		
-	//		Fast: This generator can generate lots of new UUIDs fairly quickly 
+	//
+	//		Fast: This generator can generate lots of new UUIDs fairly quickly
 	//		(at least, more quickly than the other dojo UUID generators).
-	//		
+	//
 	//		Not necessarily good: We use Math.random() as our source
-	//		of randomness, which may or may not provide much randomness. 
-	// examples: 
+	//		of randomness, which may or may not provide much randomness.
+	// examples:
 	//		var string = dojox.uuid.generateRandomUuid();
 	var HEX_RADIX = 16;
 

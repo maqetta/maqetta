@@ -2,9 +2,9 @@ dojo.provide("dojox.date.tests.relative");
 dojo.require("dojox.date.relative");
 dojo.require("dojo.date");
 
-dojo.requireLocalization("dojo.cldr", "gregorian"); 
+dojo.requireLocalization("dojo.cldr", "gregorian");
 
-tests.register("dojox.date.tests.relative", 
+tests.register("dojox.date.tests.relative",
 	[
 		{
 			// Test formatting and parsing of dates in various locales pre-built in dojo.cldr
@@ -36,7 +36,7 @@ tests.register("dojox.date.tests.relative",
 				t.is("3:32 AM", dojox.date.relative.format(new Date(2009, 1, 1, 3, 32, 26), opts));
 				t.is("Sat 8:32 PM", dojox.date.relative.format(new Date(2009, 0, 31, 20, 32, 26), opts));
 				t.is("Jan 1", dojox.date.relative.format(new Date(2009, 0, 1, 20, 32, 26), opts));
-				t.is("Jan 1, 2008", dojox.date.relative.format(new Date(2008, 0, 1, 0), opts));				
+				t.is("Jan 1, 2008", dojox.date.relative.format(new Date(2008, 0, 1, 0), opts));
 				
 				//en-us: test various options as well as future dates and edge cases
 				t.is("8:32 PM", dojox.date.relative.format(new Date(2009, 1, 1, 20, 32, 26), opts));
@@ -51,7 +51,7 @@ tests.register("dojox.date.tests.relative",
 				t.is("\u4e0a\u53483:32", dojox.date.relative.format(new Date(2009, 1, 1, 3, 32, 26), opts));
 				t.is("\u5468\u516d \u4e0b\u53488:32", dojox.date.relative.format(new Date(2009, 0, 31, 20, 32, 26), opts));
 				t.is("1\u67081\u65e5", dojox.date.relative.format(new Date(2009, 0, 1, 20, 32, 26), opts));
-				t.is("2008-1-1", dojox.date.relative.format(new Date(2008, 0, 1, 0), opts));				
+				t.is("2008-1-1", dojox.date.relative.format(new Date(2008, 0, 1, 0), opts));
 			}
 		}
 	]

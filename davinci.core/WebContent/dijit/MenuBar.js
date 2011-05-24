@@ -1,6 +1,4 @@
-dojo.provide("dijit.MenuBar");
-
-dojo.require("dijit.Menu");
+define("dijit/MenuBar", ["dojo", "dijit", "text!dijit/templates/MenuBar.html", "dijit/Menu"], function(dojo, dijit) {
 
 dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 	// summary:
@@ -63,4 +61,8 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 			this.inherited(arguments);
 		}
 	}
+});
+
+
+return dijit.MenuBar;
 });

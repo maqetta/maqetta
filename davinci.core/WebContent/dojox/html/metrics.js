@@ -61,7 +61,7 @@ dojo.provide("dojox.html.metrics");
 			m = measuringNode = dojo.doc.createElement("div");
 			// Container that we can set contraints on so that it doesn't
 			// trigger a scrollbar.
-			var c = dojo.doc.createElement("div"); 
+			var c = dojo.doc.createElement("div");
 			c.appendChild(m);
 			s = c.style;
 			s.overflow='scroll';

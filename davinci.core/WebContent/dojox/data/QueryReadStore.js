@@ -1,7 +1,4 @@
-dojo.provide("dojox.data.QueryReadStore");
-
-dojo.require("dojo.string");
-dojo.require("dojo.data.util.sorter");
+define("dojox/data/QueryReadStore", ["dojo", "dojox", "dojo.data.util.sorter", "dojo/string"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.QueryReadStore",
 	null,
@@ -67,14 +64,14 @@ dojo.declare("dojox.data.QueryReadStore",
 		// This will contain the items we have loaded from the server.
 		// The contents of this array is optimized to satisfy all read-api requirements
 		// and for using lesser storage, so the keys and their content need some explaination:
-		// 		this._items[0].i - the item itself 
+		// 		this._items[0].i - the item itself
 		//		this._items[0].r - a reference to the store, so we can identify the item
 		//			securly. We set this reference right after receiving the item from the
 		//			server.
 		_items:[],
 		
 		// Store the last query that triggered xhr request to the server.
-		// So we can compare if the request changed and if we shall reload 
+		// So we can compare if the request changed and if we shall reload
 		// (this also depends on other factors, such as is caching used, etc).
 		_lastServerQuery:null,
 		
@@ -117,12 +114,11 @@ dojo.declare("dojox.data.QueryReadStore",
 				throw new Error(this._className+".getValue(): Invalid attribute, string expected!");
 			}
 			if(!this.hasAttribute(item, attribute)){
-				// read api says: return defaultValue "only if *item* does not have a value for *attribute*." 
+				// read api says: return defaultValue "only if *item* does not have a value for *attribute*."
 				// Is this the case here? The attribute doesn't exist, but a defaultValue, sounds reasonable.
 				if(defaultValue){
 					return defaultValue;
 				}
-				console.log(this._className+".getValue(): Item does not have the attribute '"+attribute+"'.");
 			}
 			return item.i[attribute];
 		},
@@ -146,7 +142,7 @@ dojo.declare("dojox.data.QueryReadStore",
 		},
 	
 		hasAttribute: function(/* item */ item,	/* attribute-name-string */ attribute){
-			//	summary: 
+			//	summary:
 			//		See dojo.data.api.Read.hasAttribute()
 			return this.isItem(item) && typeof item.i[attribute]!="undefined";
 		},
@@ -273,7 +269,7 @@ dojo.declare("dojox.data.QueryReadStore",
 		},
 	
 		close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
-			// I have no idea if this is really needed ... 
+			// I have no idea if this is really needed ...
 		},
 	
 		getLabel: function(/* item */ item){
@@ -305,9 +301,9 @@ dojo.declare("dojox.data.QueryReadStore",
 			// Store a ref to "this" in each item, so we can simply check if an item
 			// really origins form here (idea is from ItemFileReadStore, I just don't know
 			// how efficient the real storage use, garbage collection effort, etc. is).
-			dojo.forEach(data.items,function(e){ 
-				this._items.push({i:e, r:this}); 
-			},this); 
+			dojo.forEach(data.items,function(e){
+				this._items.push({i:e, r:this});
+			},this);
 			
 			var identifier = data.identifier;
 			this._itemsByIdentity = {};
@@ -334,7 +330,7 @@ dojo.declare("dojox.data.QueryReadStore",
 			// (does it really sanititze them) and store the data optimal. should we? for security reasons???
 			numRows = this._numRows = (numRows === -1) ? this._items.length : numRows;
 			fetchHandler(this._items, request, numRows);
-			this._numRows = numRows;		
+			this._numRows = numRows;
 		},
 		
 		_fetchItems: function(request, fetchHandler, errorHandler){
@@ -393,7 +389,10 @@ dojo.declare("dojox.data.QueryReadStore",
 				fetchHandler(this._items, request, this._numRows);
 			}else{
 				var xhrFunc = this.requestMethod.toLowerCase() == "post" ? dojo.xhrPost : dojo.xhrGet;
-				var xhrHandler = xhrFunc({url:this.url, handleAs:"json-comment-optional", content:serverQuery});
+				var xhrHandler = xhrFunc({url:this.url, handleAs:"json-comment-optional", content:serverQuery, failOk: true});
+				request.abort = function(){
+					xhrHandler.cancel();
+				};
 				xhrHandler.addCallback(dojo.hitch(this, function(data){
 					this._xhrFetchHandler(data, request, fetchHandler, errorHandler);
 				}));
@@ -411,7 +410,7 @@ dojo.declare("dojox.data.QueryReadStore",
 		_filterResponse: function(data){
 			//	summary:
 			//		If the data from servers needs to be processed before it can be processed by this
-			//		store, then this function should be re-implemented in subclass. This default 
+			//		store, then this function should be re-implemented in subclass. This default
 			//		implementation just return the data unchanged.
 			//	data:
 			//		The data received from server
@@ -422,7 +421,7 @@ dojo.declare("dojox.data.QueryReadStore",
 			//	summary:
 			//		It throws an error if item is not valid, so you can call it in every method that needs to
 			//		throw an error when item is invalid.
-			//	item: 
+			//	item:
 			//		The item to test for being contained by the store.
 			if(!this.isItem(item)){
 				throw new Error(this._className+": Invalid item argument.");
@@ -432,15 +431,15 @@ dojo.declare("dojox.data.QueryReadStore",
 		_assertIsAttribute: function(/* attribute-name-string */ attribute){
 			//	summary:
 			//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-			//	attribute: 
+			//	attribute:
 			//		The attribute to test for being contained by the store.
-			if(typeof attribute !== "string"){ 
+			if(typeof attribute !== "string"){
 				throw new Error(this._className+": Invalid attribute argument ('"+attribute+"').");
 			}
 		},
 	
 		fetchItemByIdentity: function(/* Object */ keywordArgs){
-			//	summary: 
+			//	summary:
 			//		See dojo.data.api.Identity.fetchItemByIdentity()
 	
 			// See if we have already loaded the item with that id
@@ -496,7 +495,7 @@ dojo.declare("dojox.data.QueryReadStore",
 		},
 		
 		getIdentity: function(/* item */ item){
-			//	summary: 
+			//	summary:
 			//		See dojo.data.api.Identity.getIdentity()
 			var identifier = null;
 			if(this._identifier === Number){
@@ -514,3 +513,6 @@ dojo.declare("dojox.data.QueryReadStore",
 		}
 	}
 );
+
+return dojox.data.QueryReadStore;
+});

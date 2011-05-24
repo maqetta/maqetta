@@ -51,7 +51,7 @@ dojox.drawing.annotations.Arrow = dojox.drawing.util.oo.declare(
 			}
 			var angle = this.util.angle(obj);
 			
-			var lineLength = this.util.length(obj); 
+			var lineLength = this.util.length(obj);
 			var al = style.arrows.length;
 			var aw = style.arrows.width/2;
 			if(lineLength<al){

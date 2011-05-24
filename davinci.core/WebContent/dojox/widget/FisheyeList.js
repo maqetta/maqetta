@@ -178,7 +178,7 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 		if(!this.conservativeTrigger){
 			this._onMouseMoveHandle = dojo.connect(document.documentElement, "onmousemove", this, "_onMouseMove");
 		}
-		if (this.isFixed){
+		if(this.isFixed){
 			this._onScrollHandle = dojo.connect(document,"onscroll",this,"_onScroll");
 		}
 			
@@ -237,7 +237,7 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 		//
 		// position the items
 		//
-		for(var i=0; i<this.children.length; i++){
+		for(i=0; i<this.children.length; i++){
 			var itm = this.children[i];
 			var elm = itm.domNode;
 			elm.style.left   = itm.posX + 'px';
@@ -336,7 +336,7 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 	},
 
 	_onScroll: function(){
-		this._calcHitGrid();	
+		this._calcHitGrid();
 	},
 
 	onResized: function(){
@@ -361,7 +361,7 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 		var pos = this.isHorizontal ? x : y;
 		var prx = this.isHorizontal ? this.proximityLeft : this.proximityTop;
 		var siz = this.isHorizontal ? this.itemWidth : this.itemHeight;
-		var sim = this.isHorizontal ? 
+		var sim = this.isHorizontal ?
 			(1.0-this.timerScale)*this.itemWidth + this.timerScale*this.itemMaxWidth :
 			(1.0-this.timerScale)*this.itemHeight + this.timerScale*this.itemMaxHeight ;
 
@@ -373,22 +373,22 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 		//
 		// figure out our off-axis weighting
 		//
-		var off_weight = 0;
+		var off_weight = 0, cen2;
 
 		if(this.anchorEdge == this.EDGE.BOTTOM){
-			var cen2 = (y - this.proximityTop) / this.itemHeight;
+			cen2 = (y - this.proximityTop) / this.itemHeight;
 			off_weight = (cen2 > 0.5) ? 1 : y / (this.proximityTop + (this.itemHeight / 2));
 		}
 		if(this.anchorEdge == this.EDGE.TOP){
-			var cen2 = (y - this.proximityTop) / this.itemHeight;
+			cen2 = (y - this.proximityTop) / this.itemHeight;
 			off_weight = (cen2 < 0.5) ? 1 : (this.totalHeight - y) / (this.proximityBottom + (this.itemHeight / 2));
 		}
 		if(this.anchorEdge == this.EDGE.RIGHT){
-			var cen2 = (x - this.proximityLeft) / this.itemWidth;
+			cen2 = (x - this.proximityLeft) / this.itemWidth;
 			off_weight = (cen2 > 0.5) ? 1 : x / (this.proximityLeft + (this.itemWidth / 2));
 		}
 		if(this.anchorEdge == this.EDGE.LEFT){
-			var cen2 = (x - this.proximityLeft) / this.itemWidth;
+			cen2 = (x - this.proximityLeft) / this.itemWidth;
 			off_weight = (cen2 < 0.5) ? 1 : (this.totalWidth - x) / (this.proximityRight + (this.itemWidth / 2));
 		}
 		if(this.anchorEdge == this.EDGE.CENTER){
@@ -444,6 +444,9 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 	},
 
 	_setItemSize: function(p, scale){
+		if(this.children[p].scale == scale){ return; }
+		this.children[p].scale = scale;
+
 		scale *= this.timerScale;
 		var w = Math.round(this.itemWidth  + ((this.itemMaxWidth  - this.itemWidth ) * scale));
 		var h = Math.round(this.itemHeight + ((this.itemMaxHeight - this.itemHeight) * scale));
@@ -480,7 +483,7 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 			var x = 0;
 			if(this.anchorEdge == this.EDGE.LEFT){
 				x = this.children[p].cenX - (this.itemWidth / 2);
-			}else if (this.anchorEdge == this.EDGE.RIGHT){
+			}else if(this.anchorEdge == this.EDGE.RIGHT){
 				x = this.children[p].cenX - (w - (this.itemWidth / 2));
 			}else{
 				x = this.children[p].cenX - (w / 2);
@@ -503,38 +506,39 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 	_positionElementsFrom: function(p, offset){
 		var pos = 0;
 
+		var usual, start;
 		if(this.isHorizontal){
-			pos = Math.round(this.children[p].usualX + offset);
-			this.children[p].domNode.style.left = pos + 'px';
+			usual = "usualX";
+			start = "left";
 		}else{
-			pos = Math.round(this.children[p].usualY + offset);
-			this.children[p].domNode.style.top = pos + 'px';
+			usual = "usualY";
+			start = "top";
 		}
-		this._positionLabel(this.children[p]);
+		pos = Math.round(this.children[p][usual] + offset);
+		if(this.children[p].domNode.style[start] != (pos + 'px')){
+			this.children[p].domNode.style[start] = pos + 'px';
+			this._positionLabel(this.children[p]);
+		}
 
 		// position before
 		var bpos = pos;
 		for(var i=p-1; i>=0; i--){
 			bpos -= this.children[i].sizeMain;
 
-			if (this.isHorizontal){
-				this.children[i].domNode.style.left = bpos + 'px';
-			}else{
-				this.children[i].domNode.style.top = bpos + 'px';
+			if(this.children[p].domNode.style[start] != (bpos + 'px')){
+				this.children[i].domNode.style[start] = bpos + 'px';
+				this._positionLabel(this.children[i]);
 			}
-			this._positionLabel(this.children[i]);
 		}
 
 		// position after
 		var apos = pos;
-		for(var i=p+1; i<this.itemCount; i++){
+		for(i=p+1; i<this.itemCount; i++){
 			apos += this.children[i-1].sizeMain;
-			if(this.isHorizontal){
-				this.children[i].domNode.style.left = apos + 'px';
-			}else{
-				this.children[i].domNode.style.top = apos + 'px';
+			if(this.children[p].domNode.style[start] != (apos + 'px')){
+				this.children[i].domNode.style[start] = apos + 'px';
+				this._positionLabel(this.children[i]);
 			}
-			this._positionLabel(this.children[i]);
 		}
 
 	},
@@ -599,8 +603,8 @@ dojo.declare("dojox.widget.FisheyeList", [dijit._Widget, dijit._Templated, dijit
 		dojo.disconnect(this._onMouseOutHandle);
 		dojo.disconnect(this._onMouseMoveHandle);
 		dojo.disconnect(this._addChildHandle);
-		if (this.isFixed) { dojo.disconnect(this._onScrollHandle); }
-		dojo.disconnect(this._onResizeHandle); 
+		if(this.isFixed){ dojo.disconnect(this._onScrollHandle); }
+		dojo.disconnect(this._onResizeHandle);
 		this.inherited("destroyRecursive",arguments);
 	}
 });
@@ -633,7 +637,7 @@ dojo.declare("dojox.widget.FisheyeListItem", [dijit._Widget, dijit._Templated, d
 	_isNode: function(/* object */wh){
 		//	summary:
 		//		checks to see if wh is actually a node.
-		if(typeof Element == "function") {
+		if(typeof Element == "function"){
 			try{
 				return wh instanceof Element;	//	boolean
 			}catch(e){}
@@ -641,6 +645,7 @@ dojo.declare("dojox.widget.FisheyeListItem", [dijit._Widget, dijit._Templated, d
 			// best-guess
 			return wh && !isNaN(wh.nodeType);	//	boolean
 		}
+		return false;
 	},
 
 	_hasParent: function(/*Node*/node){
@@ -649,20 +654,21 @@ dojo.declare("dojox.widget.FisheyeListItem", [dijit._Widget, dijit._Templated, d
 		return Boolean(node && node.parentNode && this._isNode(node.parentNode));	//	boolean
 	},
 
-	postCreate: function() {
+	postCreate: function(){
 
 		// set image
+		var parent;
 		if((this.iconSrc.toLowerCase().substring(this.iconSrc.length-4)==".png") && dojo.isIE < 7){
 			/* we set the id of the new fisheyeListItem to the id of the div defined in the HTML */
 			if(this._hasParent(this.imgNode) && this.id != ""){
-				var parent = this.imgNode.parentNode;
+				parent = this.imgNode.parentNode;
 				parent.setAttribute("id", this.id);
 			}
 			this.imgNode.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+this.iconSrc+"', sizingMethod='scale')";
 			this.imgNode.src = this._blankGif.toString();
 		}else{
 			if(this._hasParent(this.imgNode) && this.id != ""){
-				var parent = this.imgNode.parentNode;
+				parent = this.imgNode.parentNode;
 				parent.setAttribute("id", this.id);
 			}
 			this.imgNode.src = this.iconSrc;

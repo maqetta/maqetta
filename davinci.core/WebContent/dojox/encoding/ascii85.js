@@ -1,4 +1,6 @@
-dojo.provide("dojox.encoding.ascii85");
+// AMD-ID "dojox/encoding/ascii85"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("encoding.ascii85", true, dojox);
 
 (function(){
 	var c = function(input, length, result){
@@ -13,7 +15,7 @@ dojo.provide("dojox.encoding.ascii85");
 			result.push(String.fromCharCode(b[4], b[3], b[2], b[1], b[0]));
 		}
 	};
-	
+
 	dojox.encoding.ascii85.encode = function(input){
 		// summary: encodes input data in ascii85 string
 		// input: Array: an array of numbers (0-255) to encode
@@ -57,3 +59,7 @@ dojo.provide("dojox.encoding.ascii85");
 		return r;
 	};
 })();
+
+
+return dojox.encoding.ascii85;
+});

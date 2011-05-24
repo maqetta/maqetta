@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Vet',
 	'copy': 'Kopiëren',
@@ -45,4 +47,5 @@
 	/* Error messages */
 	'systemShortcut': 'De actie "${0}" is alleen beschikbaar in uw browser via een sneltoetscombinatie. Gebruik ${1}.'
 })
-
+//end v1.x content
+);

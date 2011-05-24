@@ -3,12 +3,12 @@ dojo.provide("dojox.cometd.RestChannels");
 dojo.require("dojox.rpc.Client");
 dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener");
 
-// Note that cometd _base is _not_ required, this can run standalone, but ifyou want 
+// Note that cometd _base is _not_ required, this can run standalone, but ifyou want
 // cometd functionality, you must explicitly load/require it elsewhere, and cometd._base
 // MUST be loaded prior to RestChannels ifyou use it.
 
 // summary:
-// 		REST Channels - An HTTP/REST Based approach to Comet transport with full REST messaging 
+// 		REST Channels - An HTTP/REST Based approach to Comet transport with full REST messaging
 // 		semantics
 // 		REST Channels is a efficient, reliable duplex transport for Comet
 
@@ -20,7 +20,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 // 		3. As a standalone transport. To use it as a standalone transport looks like this:
 // 	|		dojox.cometd.RestChannels.open();
 // 	|		dojox.cometd.RestChannels.get("/myResource",{callback:function(){
-// 	|			// this is called when the resource is first retrieved and any time the 
+// 	|			// this is called when the resource is first retrieved and any time the
 // 	|			// resource is changed in the future. This provides a means for retrieving a
 // 	|			// resource and subscribing to it in a single request
 // 	|		});
@@ -49,10 +49,10 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 			// The *reloadDataOnReconnect* parameter:
 			// 		This indicates whether RestChannels should re-download data when a connection
 			// 		is restored (value of true), or if it should re-subscribe with retroactive subscriptions
-			// 		(Subscribe-Since header) using HEAD requests (value of false). The 
-			// 		default is true.	
+			// 		(Subscribe-Since header) using HEAD requests (value of false). The
+			// 		default is true.
 			dojo.mixin(this,options);
-			// If we have a Rest service available and we are auto subscribing, we will augment the Rest service 
+			// If we have a Rest service available and we are auto subscribing, we will augment the Rest service
 			if(dojox.rpc.Rest && this.autoSubscribeRoot){
 				// override the default Rest handler so we can add subscription requests
 				var defaultGet = dojox.rpc.Rest._get;
@@ -63,7 +63,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 					dojo.xhrGet = function(r){
 						var autoSubscribeRoot = self.autoSubscribeRoot;
 						return (autoSubscribeRoot && r.url.substring(0, autoSubscribeRoot.length) == autoSubscribeRoot) ?
-							self.get(r.url,r) : // auto-subscribe 
+							self.get(r.url,r) : // auto-subscribe
 							defaultXhrGet(r); // plain XHR request
 					};
 		
@@ -101,7 +101,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				headers[clientIdHeader] = this.connectionId;
 				var dfd = dojo.xhrPost({headers:headers, url: this.url, noStatus: true});
 		  		var self = this;
-		  		this.lastIndex = 0; 
+		  		this.lastIndex = 0;
 				var onerror, onprogress = function(data){ // get all the possible event handlers
 					if(typeof dojo == 'undefined'){
 						return null;// this can be called after dojo is unloaded, just do nothing in that case
@@ -155,7 +155,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 	  					if(typeof responseText=='string'){
 	  						onprogress(responseText);
 	  					}
-	  				} 
+	  				}
 			  	}
 			  	
 	  			 
@@ -186,20 +186,20 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				method = "POST";
 			}else{
 				args.postData = dojo.toJson(data);
-			}			
+			}
 			return dojo.xhr(method,args,args.postData);
-		}, 
+		},
 		subscribe: function(/*String*/channel, /*dojo.__XhrArgs?*/args){
 			// summary:
-			// 		Subscribes to a channel/uri, and returns a dojo.Deferred object for the response from 
+			// 		Subscribes to a channel/uri, and returns a dojo.Deferred object for the response from
 			// 		the subscription request
 			//
-			// channel: 
+			// channel:
 			// 		the uri for the resource you want to monitor
-			// 
-			// args: 
+			//
+			// args:
 			// 		See dojo.xhr
-			// 
+			//
 			// headers:
 			// 		These are the headers to be applied to the channel subscription request
 			//
@@ -213,12 +213,12 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 			// 		getAllResponseHeaders() : The response headers
 			// 		getResponseHeaders(headerName) : Retrieve a header by name
 			// 		responseText : The response body as text
-			// 			with the following additional Bayeux properties 
+			// 			with the following additional Bayeux properties
 			// 		data : The response body as JSON
 			// 		channel : The channel/url of the response
 			args = args || {};
 			args.url = this.absoluteUrl(this.url, channel);
-			if(args.headers){ 
+			if(args.headers){
 				// FIXME: combining Ranges with notifications is very complicated, we will save that for a future version
 				delete args.headers.Range;
 			}
@@ -234,7 +234,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 					oldCallback(m);
 					callback(m);
 				} : callback;
-			} 
+			}
 			if(!this.connected){
 				this.open();
 			}
@@ -248,7 +248,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				var dfd = this._send(method,args);
 				
 				var self = this;
-				dfd.addBoth(function(result){					
+				dfd.addBoth(function(result){
 					var xhr = dfd.ioArgs.xhr;
 					if(!(result instanceof Error)){
 						if(args.confirmation){
@@ -258,7 +258,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 					if(xhr && xhr.getResponseHeader("Subscribed")  == "OK"){
 						var lastMod = xhr.getResponseHeader('Last-Modified');
 						
-						if(xhr.responseText){ 
+						if(xhr.responseText){
 							self.subscriptions[channel] = lastMod || new Date().toUTCString();
 						}else{
 							return null; // don't process the response, the response will be received in the main channels response
@@ -313,18 +313,18 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				message.result = message.result || dojo.fromJson(message.responseText);
 			}
 			catch(e){}
-			var self = this;	
+			var self = this;
 			var loc = message.channel = new dojo._Url(this.url, message.source || message.getResponseHeader('Content-Location'))+'';//for cometd
 			if(loc in this.subscriptions && message.getResponseHeader){
-				this.subscriptions[loc] = message.getResponseHeader('Last-Modified'); 
+				this.subscriptions[loc] = message.getResponseHeader('Last-Modified');
 			}
 			if(this.subCallbacks[loc]){
-				setTimeout(function(){ //give it it's own stack 
+				setTimeout(function(){ //give it it's own stack
 					self.subCallbacks[loc](message);
 				},0);
 			}
 			this.receive(message);
-			return null;		
+			return null;
 		},
 		onprogress: function(xhr,data,contentType){
 			// internal XHR progress handler
@@ -362,21 +362,21 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				//no streaming and we didn't get any message, must be an error
 				return "error";
 			}
-			if(xhr.readyState != 4){ // we only want finished responses here if we are not streaming 
+			if(xhr.readyState != 4){ // we only want finished responses here if we are not streaming
 				return null;
 			}
 			if(xhr.__proto__){// firefox uses this property, so we create an instance to shadow this property
 				xhr = {channel:"channel",__proto__:xhr};
-			}			
+			}
 			return this._processMessage(xhr);
 		
 		},
 		
 		get: function(/*String*/channel, /*dojo.__XhrArgs?*/args){
 			// summary:
-			// 		GET the initial value of the resource and subscribe to it  
+			// 		GET the initial value of the resource and subscribe to it
 			//		See subscribe for parameter values
-			(args = args || {}).method = "GET"; 
+			(args = args || {}).method = "GET";
 			return this.subscribe(channel,args);
 		},
 		receive: function(message){
@@ -392,7 +392,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 			// summary:
 			// 		called when our channel gets disconnected
 			var self = this;
-			if(this.connected){ 
+			if(this.connected){
 				this.connected = false;
 				if(this.started){ // if we are started, we shall try to reconnect
 					setTimeout(function(){ // auto reconnect
@@ -415,27 +415,27 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 		},
 		unsubscribe: function(/*String*/channel, /*dojo.__XhrArgs?*/args){
 			// summary:
-			// 		unsubscribes from the resource  
-			//		See subscribe for parameter values 
+			// 		unsubscribes from the resource
+			//		See subscribe for parameter values
 			
 			args = args || {};
 			args.unsubscribe = true;
-			this.subscribe(channel,args); // change the time frame to after 5000AD 
+			this.subscribe(channel,args); // change the time frame to after 5000AD
 		},
 		disconnect: function(){
 			// summary:
-			// 		disconnect from the server  
+			// 		disconnect from the server
 			this.started = false;
 			this.xhr.abort();
 		}
 	});
 	var Channels = dojox.cometd.RestChannels.defaultInstance = new dojox.cometd.RestChannels();
-	if(dojox.cometd.connectionTypes){ 
+	if(dojox.cometd.connectionTypes){
 		// register as a dojox.cometd transport and wire everything for cometd handling
 		// below are the necessary adaptions for cometd
 		Channels.startup = function(data){ // must be able to handle objects or strings
 			Channels.open();
-			this._cometd._deliver({channel:"/meta/connect",successful:true}); // tell cometd we are connected so it can proceed to send subscriptions, even though we aren't yet 
+			this._cometd._deliver({channel:"/meta/connect",successful:true}); // tell cometd we are connected so it can proceed to send subscriptions, even though we aren't yet
 
 		};
 		Channels.check = function(types, version, xdomain){
@@ -446,7 +446,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 			}
 			return false;
 		};
-		Channels.deliver = function(message){ 
+		Channels.deliver = function(message){
 			// nothing to do
 		};
 		dojo.connect(this,"receive",null,function(message){

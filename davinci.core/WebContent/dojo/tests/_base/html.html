@@ -54,6 +54,8 @@
 
 						"doh.is(100, dojo.marginBox('sq100').w);",
 						"doh.is(100, dojo.marginBox('sq100').h);",
+						"doh.is(100, dojo._getMarginSize('sq100').w);",
+						"doh.is(100, dojo._getMarginSize('sq100').h);",
 
 						"doh.is(120, dojo.marginBox('sq100margin10').w);",
 						"doh.is(120, dojo.marginBox('sq100margin10').h);",
@@ -62,6 +64,8 @@
 
 						"doh.is(140, dojo.marginBox('sq100margin10pad10').w);",
 						"doh.is(140, dojo.marginBox('sq100margin10pad10').h);",
+						"doh.is(140, dojo._getMarginSize('sq100margin10pad10').w);",
+						"doh.is(140, dojo._getMarginSize('sq100margin10pad10').h);",
 
 						"doh.is(120, dojo.marginBox('sq100pad10').w);",
 						"doh.is(120, dojo.marginBox('sq100pad10').h);",
@@ -114,7 +118,7 @@
 						"doh.is(40, dojo._getPadBorderExtents(dojo.byId('sq100border10margin10pad10')).h);",
 
 						function scrollUp(){
-							dojo.doc.documentElement.scrollTop = 0;
+							scrollTo(0, 0);
 						},
 
 						function coordsBasic(t){
@@ -242,6 +246,7 @@
 						},
 						function testClassFunctions(t){
 							var node = dojo.byId("sq100");
+							dojo.removeClass(node);
 							dojo.addClass(node, "a");
 							doh.is("a", node.className, "class is a");
 							dojo.removeClass(node, "c");
@@ -277,9 +282,24 @@
 								acuWorked = false;
 							}
 							doh.is(true, acuWorked, "addClass handles undefined class");
+							dojo.addClass(node, "a");
+							dojo.replaceClass(node, "b", "a");
+							t.assertTrue(dojo.hasClass(node, "b"), "class is b after replacing a, test for b");
+							t.assertFalse(dojo.hasClass(node, "a"), "class is b after replacing a, test for not a");
+							
+							dojo.replaceClass(node, "", "b");
+							t.assertFalse(dojo.hasClass(node, "b"), "class b should be removed, with no class added");
+							t.is("", node.className, "The className is empty");
+							
+							dojo.addClass(node, "b a");
+							dojo.replaceClass(node, "c", "");
+							t.is("b a c", node.className, 
+								"The className is  is 'b a c' after using an empty string in replaceClass");
+							
 						},
 						function testAddRemoveClassMultiple(t){
 							var node = dojo.byId("sq100");
+							dojo.removeClass(node);
 							dojo.addClass(node, "a");
 							t.is("a", node.className, "class is a");
 							dojo.addClass(node, "a b");
@@ -298,6 +318,12 @@
 							t.is("a", node.className, "class is a");
 							dojo.removeClass(node, ["a", "c"]);
 							t.is("", node.className, "empty class");
+							dojo.addClass(node, "a b");
+							dojo.replaceClass(node, "c", "a b");
+							t.is("c", node.className, "class is c");
+							dojo.replaceClass(node, "");
+							t.is("", node.className, "empty class");
+							node.className = "";
 						},
 						function getTypeInput(t){
 							doh.f(dojo.hasAttr(dojo.byId("input-no-type"), "type"));
@@ -565,6 +591,32 @@
 						}
 					]
 				);
+				
+				// test to make sure position() works with a variety of scrollbars
+				dojo.forEach(["None", "Vert", "Both"], function(scroll){
+					dojo.forEach(["Quirks", "Strict"], function(doctype){
+						var id = "scrolling" + doctype + "Iframe" + scroll;
+						doh.register(id, {
+							name: "test_" + id,
+							timeout: 3000,
+							runTest: function(t){
+								var d = new doh.Deferred(),
+									s = document.createElement('SPAN');
+								s.loaded = function(iframe){
+									// resultReady is called from inside the iframe
+									iframe.resultReady = d.getTestCallback(function(){
+										t.is('EQUAL', iframe.testResult);
+									});
+									iframe.runScrollingTest(iframe);
+								};
+								s.innerHTML = '<iframe class="iframeTest" id="' + id + '" src="scrolling' + doctype + 'Iframe.html?ltr&' + scroll + '&large" frameborder="0" onload="this.parentNode.loaded(this)" style="background-color:gray;" allowtransparency></iframe>';
+								dojo.byId("iframeContainer").appendChild(s);
+								return d;
+							}
+						});
+					});
+				});
+
 				doh.run();
 			});
 		</script>
@@ -719,6 +771,10 @@
 				margin: 0px;
 			}
 
+			#scrollingStrictIframe,
+			#scrollingQuirksIframe {
+				border: 10px solid black;
+			}
 		</style>
 	</head>
 	<body>
@@ -792,6 +848,7 @@
 			<label id="label-no-for">label with no for </label><input type="text" id="label-test-input">
 			<label id="label-with-for" for="input-with-label">label with for </label><input type="text" id="input-with-label">
 		</div>
+
+		<div id="iframeContainer"></div>
 	</body>
 </html>
-

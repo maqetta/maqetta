@@ -23,67 +23,67 @@ dojox = {
 	//	DojoX can also be an incubator for entirely new projects.
 }
 
-dojox.analytics = { 
-	// summary: Website analytics and client monitoring system 
+dojox.analytics = {
+	// summary: Website analytics and client monitoring system
 };
 
-dojox.atom = { 
-	// summary: Implements the Atom Syndication Format and Atom Publishing Protocol 
+dojox.atom = {
+	// summary: Implements the Atom Syndication Format and Atom Publishing Protocol
 };
 
-dojox.av = { 
-	// summary: Provides Audio/Video capabilities 
+dojox.av = {
+	// summary: Provides Audio/Video capabilities
 };
 
-dojox.charting = { 
-	// summary: Vector graphic, data-driven graphs and charts 
+dojox.charting = {
+	// summary: Vector graphic, data-driven graphs and charts
 };
 
-dojox.collections = { 
+dojox.collections = {
 	// summary: A set of lists and hashes for easy use within your applications.
 };
 
-dojox.color = { 
+dojox.color = {
 	// summary: Advanced color methods, including HSV, HSL, and CMYK conversion, a color generator and advanced colorspace calculations.
 };
 
-dojox.cometd = { 
+dojox.cometd = {
 	// summary: A cometd client written in Dojo
 };
 
-dojox.data = { 
+dojox.data = {
 	// summary: Additional dojo.data data stores and demos
 };
 
-dojox.date = { 	
+dojox.date = {
 	// summary: Additional date manipulation functions
 };
 
-dojox.drawing = { 	
+dojox.drawing = {
 	// summary: A vector drawing program
 };
 
-dojox.dtl = { 
-	// summary: Django Templating Language implementation	
+dojox.dtl = {
+	// summary: Django Templating Language implementation
 };
 
-dojox.editor = { 
+dojox.editor = {
 	// summary: Extensions for dijit.Editor
 };
 
-dojox.embed = { 
+dojox.embed = {
 	// summary: Base code for embedding for external objects like Flash, Quicktime
 };
 
-dojox.encoding = { 
+dojox.encoding = {
 	// summary: Various encoding algorithms, including crypto and digests.
 };
 
-dojox.flash = { 
+dojox.flash = {
 	// summary: Utilities to embed and communicate with Flash-based objects
 };
 
-dojox.form = { 
+dojox.form = {
 	// summary: Form-related widgets
 };
 
@@ -98,7 +98,7 @@ dojox.fx = {
 	style: { // summary: Module to provide CSS animations
 	},
 
-	scroll: { // summary: Module to provide scroll-related FX 
+	scroll: { // summary: Module to provide scroll-related FX
 	}
 };
 dojox.fx["ext-dojo"] = {
@@ -108,50 +108,50 @@ dojox.fx["ext-dojo"] = {
 	}
 };
 
-dojox.gfx = { 
+dojox.gfx = {
 	// summary: Cross-browser vector graphics API
-	// description: 
+	// description:
 	//
 	//	dojox.gfx is an advanced API providing normalized vector drawing
 	//	in a variety of browsers. It has individual renderers for SVG, VML,
 	//	Canvas, and Silverlight.
 };
 
-dojox.gfx3d = { 
+dojox.gfx3d = {
 	// summary: A 3d API for dojox.gfx
 };
 
-dojox.grid = { 
-	// summary: An advanced Grid widget with virtual scrolling, cell editing, and much more 
-};	
+dojox.grid = {
+	// summary: An advanced Grid widget with virtual scrolling, cell editing, and much more
+};
 
 dojox.help = {
 	// summary: TODOC
 };
 
-dojox.highlight = { 
+dojox.highlight = {
 	// summary: A client-side syntax highlighting engine.
 	// description:
 	//	This project parses pre > code nodes, and applies syntax highlighting for
-	//	a wide variety of languages. Simply dojo.require() in all the 
+	//	a wide variety of languages. Simply dojo.require() in all the
 	//	dojox.highlight.languages you wish to include in your highlighingting,
 	//	and customize colors in the highlight.css.
 	//
-	//	It is provided as a dojo package, contributed under CLA 
+	//	It is provided as a dojo package, contributed under CLA
 	//	by Ivan Sagalaev and is available originally from:
-	// 	http://softwaremaniacs.org/soft/highlight/en/	
-	//	
+	// 	http://softwaremaniacs.org/soft/highlight/en/
+	//
 };
 
 dojox.html = {
 	// summary: TODOC
 };
 
-dojox.image = { 
+dojox.image = {
 	// summary: A collection of image related widgets
 };
 
-dojox.io = { 
+dojox.io = {
 	// summary: Extensions to the Core dojo.io transports
 };
 
@@ -159,22 +159,22 @@ dojox.jq = {
 	// summary: A JQuery compatibility layer
 };
 
-dojox.jsonPath = { 
+dojox.jsonPath = {
 	// summary: A query system for JavaScript objects
 };
 
-dojox.lang = { 
+dojox.lang = {
 	// summary: Language specific extensions
 	functional: {
 		// summary: Functional language constructs, including currying and lambda.
 	}
 };
 
-dojox.layout = { 
+dojox.layout = {
 	// summary: A collection of layout related Widgets
 };
 
-dojox.math = { 
+dojox.math = {
 	// summary: A collection of various advanced math functions.
 };
 
@@ -182,23 +182,23 @@ dojox.robot = {
 	// summary: TODOC
 };
 
-dojox.rpc = { 
+dojox.rpc = {
 	// summary: TODOC
 };
 
-dojox.secure = { 
+dojox.secure = {
 	// summary: TODOC
 };
 
-dojox.sketch = { 
+dojox.sketch = {
 	// summary: TODOC
 };
 
-dojox.sql = { 
+dojox.sql = {
 	// summary: objects to support Dojo Offline (dojox.off)  DEPRECATED
 };
 
-dojox.storage = { 
+dojox.storage = {
 	// summary: Objects for mass storage within the browser.  For when cookies just aren't enough.
 };
 
@@ -214,25 +214,25 @@ dojox.timing = {
 	// summary: A set of objects to perform advanced time-based tasks, including a basic Timer.
 };
 
-dojox.uuid = { 
+dojox.uuid = {
 	// summary: Universally Unique Identifier (UUID) implementations, including an implementation of UUID 2
 };
 
-dojox.validate = { 
+dojox.validate = {
 	// summary: Additional input validation methods
 	ca : {
 		// summary: Methods specific to the Canadian provinces
 	},
 	creditCard : {
-		// summary: Validate various credit card types  
+		// summary: Validate various credit card types
 	}
 };
 
-dojox.widget = { 
+dojox.widget = {
 	// summary: A collection of un-categorized widgets, or code not requiring its own package.
-	// 
-	// description: 
-	// 	These are standalone widgets with varying levels of stability. Some are useful, 
+	//
+	// description:
+	// 	These are standalone widgets with varying levels of stability. Some are useful,
 	//	some were created for demonstration purposes, and learning tools. The each maintain
 	//	their own .css file (typically dojox/widget/WidgetName/WidgetName.css)
 };

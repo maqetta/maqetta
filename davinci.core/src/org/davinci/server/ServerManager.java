@@ -136,7 +136,6 @@ public class ServerManager {
 
 	public IConfigurationElement getExtension( String extensionPoint,String elementTag)
 	{
-		ArrayList list = new ArrayList();
 		IExtension[] extensions = this.getExtensions(extensionPoint);
 		for (int i = 0; i < extensions.length; i++) {
 			IConfigurationElement[] elements = extensions[i]
@@ -154,7 +153,6 @@ public class ServerManager {
 	private static final IExtension[] EMPTY_EXTENSIONS= {};
 	public IExtension[] getExtensions( String extensionPoint)
 	{
-		ArrayList list=new ArrayList();
 		if (this.registry==null)
 			this.registry = Activator.getActivator().getRegistry();
 		if (this.registry != null) {

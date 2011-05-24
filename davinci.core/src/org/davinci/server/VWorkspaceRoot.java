@@ -189,9 +189,6 @@ public class VWorkspaceRoot extends VDirectory {
 		if(!this.isDirectory()) return null;
 		
 		IPath a = new Path(this.file.getAbsolutePath()).append(path);
-		File f1 = new File(a.toOSString());
-		
-		
 		String[] segments = a.segments();
 		IPath me = new Path(this.file.getAbsolutePath());
 		IVResource parent = this;

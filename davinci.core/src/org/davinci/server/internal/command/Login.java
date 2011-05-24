@@ -18,9 +18,6 @@ public class Login extends Command {
 			User user) throws IOException {
 		String name=req.getParameter("userName");
 		String password=req.getParameter("password");
-		String noRedirect=req.getParameter("noRedirect");
-	
-		String response=null;
 		user = ServerManager.getServerManger().getUserManager().login(name, password);
 		if (user!=null)
 		{

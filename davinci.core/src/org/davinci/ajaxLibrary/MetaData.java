@@ -16,7 +16,6 @@ public class MetaData {
 	    	   this.modulePath=element.getAttribute(IDavinciServerConstants.EP_ATTR_METADATA_MODULEPATH);
 	    	   this.base=element.getAttribute(IDavinciServerConstants.EP_ATTR_METADATA_BASE);
 	    	   this.paletteDescriptors=element.getAttribute(IDavinciServerConstants.EP_ATTR_METADATA_PALETTEDESCRIPTORS);
-	    	   String loc= element.getAttribute("location");
 	       }
 	       public String toJSON(){
 	    	   return "{ module: \""+this.module+"\", modulePath: \""+this.modulePath+"\", base: \""+this.base+"\", paletteDescriptorNames: \""+this.paletteDescriptors+"\" }";

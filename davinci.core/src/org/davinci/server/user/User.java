@@ -91,7 +91,6 @@ public class User {
 	}
 	
 	private LibrarySettings getLibInfo(){
-		File settingsDirectory = getSettingsDirectory();
 		if (this.libSettings==null)
 			this.libSettings=new LibrarySettings(this.getSettingsDirectory());
 		
@@ -175,7 +174,6 @@ public class User {
 
 	public IVResource[] getLibFiles(String p1){
 		
-		IPath path = new Path(p1);
 		IVResource root = getLibFile(p1);
 		
 		if(root==null)

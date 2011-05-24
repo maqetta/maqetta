@@ -35,7 +35,6 @@ public abstract class XMLFile extends XMLElement {
 	public ArrayList load(File file)
 	{
 		ArrayList objects = null;
-		String rootTag=this.getRootTag();
 		InputStream input=null;
 		if (file.exists()) {
 			try {
@@ -83,8 +82,6 @@ public abstract class XMLFile extends XMLElement {
 
 			}
 			String rootName=this.getRootTag();
-			String elementTag=this.getElementTag();
-			String[] attributeNames = this.getAttributeNames();
 			out= new FileOutputStream(file); 
 			DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder= factory.newDocumentBuilder();		

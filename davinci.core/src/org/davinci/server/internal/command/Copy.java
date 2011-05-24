@@ -1,8 +1,6 @@
 package org.davinci.server.internal.command;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,8 +25,6 @@ public class Copy extends Command {
 			newResource.mkdir();
 			VResourceUtils.copyDirectory(source,newResource, recurse);
 		}else{
-			InputStream in = source.getInputStreem();
-			OutputStream out = source.getOutputStreem();
 			VResourceUtils.copyFile(source,newResource);
 		}
 		this.responseString="ok";

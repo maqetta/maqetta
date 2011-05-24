@@ -24,8 +24,6 @@ public class ModifyLib  extends Command {
 			String version = (String)libEntry.get("version");
 			Boolean installed = (Boolean)libEntry.get("installed");
 			String path = (String)libEntry.get("path");
-			String oldPath = (String)libEntry.get("oldPath");
-			
 			if(installed!=null){
 				// add or remove the library
 				this.updateLib(user, id, version,installed);// Boolean.parseBoolean(installedString));

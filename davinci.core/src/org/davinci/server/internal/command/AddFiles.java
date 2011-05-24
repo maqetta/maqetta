@@ -25,7 +25,6 @@ public class AddFiles extends Command {
 			User user) throws IOException {
 		String path=request.getParameter("path");
 
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		// Create a factory for disk-based file items
 		FileItemFactory factory = new DiskFileItemFactory();
 
@@ -42,12 +41,7 @@ public class AddFiles extends Command {
 			    FileItem item = (FileItem) iter.next();
 
 			    if (!item.isFormField()) {
-			        String fieldName = item.getFieldName();
 			        String fileName = item.getName();
-			        String contentType = item.getContentType();
-			        boolean isInMemory = item.isInMemory();
-			        long sizeInBytes = item.getSize();
-			        
 			        File f1 = new File(userDirectory.getURI());
 			        
 			        File uploadedFile = new File(f1,fileName);

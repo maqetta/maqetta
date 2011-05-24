@@ -20,7 +20,6 @@ public class FindResource extends Command {
 		String pathStr=req.getParameter("path");
 		String inFolder=req.getParameter("inFolder");
 		boolean ignoreCase="true".equals(req.getParameter("ignoreCase"));
-		boolean isWildcard=pathStr.indexOf('*')>=0;
 		boolean workspaceOnly="true".equals(req.getParameter("workspaceOnly"));
 		
 		/* REMOVE ME BRAD DONT CHECK IN!!! */

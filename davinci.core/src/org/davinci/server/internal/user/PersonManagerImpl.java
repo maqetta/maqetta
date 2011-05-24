@@ -56,7 +56,6 @@ public class PersonManagerImpl implements PersonManager {
     	protected Object createObject(Element element, String [] attributes)
     	 {
 				String userName=attributes[0];
-				File userDirectory=new File(PersonManagerImpl.this.baseDirectory,userName);
 				PersonImpl user=new PersonImpl(userName,attributes[1],
 						attributes[2]);
 				PersonManagerImpl.this.persons.put(user.getUserName(), user);

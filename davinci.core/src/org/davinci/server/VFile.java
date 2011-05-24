@@ -186,7 +186,6 @@ public class VFile implements IVResource {
 	public IVResource[] listFiles() {
 		File[] list = this.file.listFiles();
 		
-		String me = this.getPath();
 		Hashtable results = new Hashtable();
 		for(int i = 0;i<list.length;i++){
 				IVResource resource = new VFile(list[i], this, list[i].getName()); 
@@ -259,9 +258,6 @@ public class VFile implements IVResource {
 		if(!this.isDirectory()) return null;
 		
 		IPath a = new Path(this.file.getAbsolutePath()).append(path);
-		File f1 = new File(a.toOSString());
-		
-		
 		String[] segments = a.segments();
 		IPath me = new Path(this.file.getAbsolutePath());
 		IVResource parent = this;

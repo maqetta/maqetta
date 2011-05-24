@@ -16,8 +16,6 @@ public class Resource {
 	
 	static ArrayList resourceFilter=new ArrayList();
 	static {
-		/* add some global filters */
-		String[] filterNames = new String[]{};
 		DirectoryFilter df = new DirectoryFilter(new String[]{IDavinciServerConstants.SETTINGS_DIRECTORY_NAME,
 															  IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME,
 															  IDavinciServerConstants.SVN_DIRECTORY_NAME});

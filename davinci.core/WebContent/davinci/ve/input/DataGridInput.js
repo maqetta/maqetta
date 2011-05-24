@@ -2,6 +2,7 @@ dojo.provide("davinci.ve.input.DataGridInput");
 dojo.require("davinci.ve.input.SmartInput");
 //dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
+dojo.require("dojox.grid.cells");
 
 dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 
@@ -91,15 +92,16 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		var editor = this._getEditor();
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	},
-	
-    cellTypeTranslator: { 'Text':'dojox.grid.cells.Cell',
-	                      'CheckBox':'dojox.grid.cells.Bool',
-                          'Select':'dojox.grid.cells.Select',
+
+	/*
+    cellTypeTranslator: { 'Text':dojox.grid.cells.Cell,
+	                      'CheckBox':dojox.grid.cells.Bool,
+                          'Select':dojox.grid.cells.Select,
                           'dojox.grid.cells.Cell':'Text',
                           'dojox.grid.cells.Bool':'CheckBox',
                           'dojox.grid.cells.Select':'Select'
 	},
-	
+	*/
 	
 	refreshStoreView: function(){
 		var textArea = dijit.byId("davinciIleb");
@@ -160,7 +162,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	
     	var storeCmd = this.updateStore(structure);
     	structure = this._structure;
-    	var escapeHTML = (this.getFormat() === 'text') ? true : false;
+    	var escapeHTML = (this.getFormat() === 'text');
         var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure, escapeHTMLInData:escapeHTML}, null, context);
         var compoundCommand = new davinci.commands.OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
@@ -171,31 +173,31 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     },
     
     updateStore: function(structure) {
-    	var oldStructure = structure; // we are defining the structure by row one of text area
-    	var structure = [];
-    	var textArea = dijit.byId("davinciIleb");
-    	var value = textArea.attr('value');
-		var nodes = value;
-		var rows = value.split('\n');
-		var cols = rows[0].split(',');
-		for (var c = 0; c < cols.length; c++){
-			var cell = new Object();
-			cell.cellType = 'dojox.grid.cells.Cell';
-			cell.width = 'auto';
-			cell.name = cols[c];
-			cell.field = cols[c].replace(/\s+/g, '_').toLowerCase();
-			structure[c] = cell;
+    	var oldStructure = structure, // we are defining the structure by row one of text area
+    		structure = [],
+    		textArea = dijit.byId("davinciIleb"),
+    		value = textArea.attr('value'),
+    		nodes = value,
+    		rows = value.split('\n'),
+    		cols = rows[0].split(',');
+
+    	for (var c = 0; c < cols.length; c++){
+			structure[c] = {
+				cellType: dojox.grid.cells.Cell,
+				width: 'auto',
+				name: cols[c],
+				field: cols[c].replace(/\s+/g, '_').toLowerCase()				
+			};
 		}
-		this._structure = structure;
-		var data = { identifier: 'uniqe_id', items:[]};
-		
-		var rows = value.split('\n');
-		var items = data.items;
+
+    	this._structure = structure;
+		var data = { identifier: 'uniqe_id', items:[]},
+			rows = value.split('\n'),
+			items = data.items;
 		for (var r = 1; r < rows.length; r++){ // row 0 of the textarea defines colums in data grid structure
 			var cols = rows[r].split(',');
 		
-			var item = new Object();
-			item.uniqe_id = r; // unique id for items
+			var item = {uniqe_id: r};
 			for (var s = 0; s < structure.length; s++){
 				var fieldName = structure[s].field;
 				if (cols[s]){
@@ -309,20 +311,20 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	},
 	
 	_urlDataStoreLoaded : function(items){
-		var structure = [];
 		if (items.length < 1){
-			alert('Error: data store empty');
+			console.error('Data store empty');
 			return;
 		}
-		var item = items[0];
+		var structure = [],
+			item = items[0];
 		for (name in item){
 			if (name !== '_0' && name !== '_RI' && name !== '_S'){
-				var cell = new Object();
-				cell.cellType = 'dojox.grid.cells.Cell';
-				cell.width = 'auto';
-				cell.name = name;
-				cell.field = name;
-				structure.push(cell);
+				structure.push({
+					cellType: dojox.grid.cells.Cell,
+					width: 'auto',
+					name: name,
+					field: name					
+				});
 			}
 		}
 		for (var i = 0; i < items.length; i++) {

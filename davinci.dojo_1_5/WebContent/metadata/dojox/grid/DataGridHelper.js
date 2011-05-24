@@ -116,14 +116,40 @@ create: function(widget, srcElement){
 	if(storeId){
 		var storeWidget = davinci.ve.widget.byId(storeId);
 
-		if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
+		if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){ 
 			this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/);
 			//this.replaceStoreData(widget.dijitWidget.store, storeWidget.properties.data);
 		}
 	
 	}
+	widget.acceptsHTMLChildren=dojo.hitch(this,'_setContentAttr'); // wdr attempt to override selection
 
 },
+//wdr #79
+getChildren: function(widget){
+	debugger;
+	var children=[];
+	var x = widget.dijitWidget.getChildren();
+	var y = widget.domNode.children;
+	for (var c=0; c < y.length; c++){
+		children.push(y[c]._dvWidget);
+	}
+	dojo.map(widget.dijitWidget.getChildren(), function(widget){
+		debugger;
+		if (!widget){ return; }
+		if (attach && !widget.domNode._dvWidget)
+		{
+			davinci.ve.widget.getWidget(widget.domNode);
+		}
+		var child = widget.domNode && widget.domNode._dvWidget;
+		if (child) {
+			children.push(child);
+		}
+	});
+	return children;
+},
+//wdr #79
+
 
 updateStore: function(store, /*properties*/ storeWidget) { //wdr 3-11
 	var data = storeWidget._srcElement.getAttribute('data'); //wdr 3-11
@@ -171,6 +197,10 @@ updateStore: function(store, /*properties*/ storeWidget) { //wdr 3-11
 	
 	//return this.replaceDataGridStoreData(data);
 	//this.replaceStoreData(store, data);
+},
+
+_setContentAttr: function(args){
+	debugger; // wdr attempt to override selection
 }
 
 //replaceStoreData: function(store, data) {

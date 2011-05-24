@@ -1493,6 +1493,12 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	getChildren: function(attach)
 	{
 		var children=[];
+		// wdr DataGrid #79
+		var helper = this.getHelper();
+		if(helper && helper.getChildren){
+			return helper.getChildren(this);
+		}
+		// wdr DataGrid #79
 		if (this.acceptsHTMLChildren)
 		{
 			var dvWidget = function(child){

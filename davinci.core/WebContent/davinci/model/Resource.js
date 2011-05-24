@@ -555,7 +555,7 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 			 var response = davinci.Runtime.serverJSONRequest({
 				   url:"./cmd/findResource", 
 			          content:{'path': name, 'ignoreCase' : ignoreCase, 'workspaceOnly' : workspaceOnly, 'inFolder':inFolder!=null?inFolder.getPath():null},sync:true  });
-			debugger;
+			
 			 if (response && response.length>0)
 			{
 				for (var i=0;i<response.length;i++)

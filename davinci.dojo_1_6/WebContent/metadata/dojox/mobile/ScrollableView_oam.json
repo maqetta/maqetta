@@ -1,0 +1,63 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/ScrollableView",
+    "name": "dojox.mobile.ScrollableView",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "selected": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "keepScrollPos": {
+            "datatype": "boolean",
+            "defaultValue": true
+        },
+        "scrollBar": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "scrollDir": {
+            "datatype": "string",
+            "defaultValue": "v"
+        },
+        "fadeScrollBar": {
+            "datatype": "boolean",
+            "defaultValue": true
+        },
+        "disableFlashScrollBar": {
+            "datatype": "boolean",
+            "defaultValue": false
+        }
+    },
+    "content": "<div></div>"
+}

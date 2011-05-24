@@ -1,0 +1,57 @@
+.sketch .dijitToggleButton .dijitCheckBoxIcon {
+	background-image: url('../images/checkmarkNoBorder.png');
+}
+
+.dj_ie6 .sketch .dijitToggleButton .dijitCheckBoxIcon {
+	background-image: url('../images/checkmarkNoBorder.gif');
+}
+
+.sketch .dijitCheckBox,
+.sketch .dijitCheckBoxIcon		/* inside a toggle button */	{
+	background-image: url('images/checkboxRadioButtonStates.png'); /* checkbox sprite image */
+	background-position: -15px; /* wdr daVinci 0.5 */
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 16px;
+	margin: 0 2px 0 0;
+	padding: 0;
+}
+
+.dj_ie6 .sketch .dijitCheckBox,
+.dj_ie6 .sketch .dijitCheckBoxIcon		/* inside a toggle button */	{
+	background-image: url('images/checkboxAndRadioButtons_IE6.png'); /* checkbox sprite image */
+}
+
+/*.sketch .dijitCheckBox, wdr daVinci 0.5 */
+.sketch .dijitToggleButton .dijitCheckBoxIcon {
+	/* unchecked */
+	background-position: -15px;
+}
+
+.sketch .dijitCheckBoxChecked,
+.sketch .dijitToggleButtonChecked .dijitCheckBoxIcon {
+	/* checked */
+	background-position: -0px;
+}
+
+.sketch .dijitCheckBoxDisabled {
+	/* disabled */
+	background-position: -75px;
+}
+
+.sketch .dijitCheckBoxCheckedDisabled {
+	/* disabled but checked */
+	background-position: -60px;
+}
+
+.sketch .dijitCheckBoxHover {
+	/* hovering over an unchecked enabled checkbox */
+	background-position: -45px;
+}
+
+.sketch .dijitCheckBoxCheckedHover {
+	/* hovering over an checked enabled checkbox */
+	background-position: -30px;
+}
+
+

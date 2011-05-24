@@ -1,0 +1,61 @@
+.sketch .dijitToggleButton .dijitRadio,
+.sketch .dijitToggleButton .dijitRadioIcon {
+	background-image: url('images/checkboxRadioButtonStates.png');
+}
+
+.dj_ie6 .sketch .dijitToggleButton .dijitRadio,
+.dj_ie6 .sketch .dijitToggleButton .dijitRadioIcon {
+	background-image: url('images/checkboxAndRadioButtons_IE6.png');
+}
+
+.sketch .dijitRadio,
+.sketch .dijitRadioIcon	{		/* inside a toggle button */
+	background-image: url('images/checkboxRadioButtonStates.png'); /* checkbox sprite image */
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 15px;
+	margin: 0px 2px 0px 0px;
+	padding: 0px;
+}
+
+.dj_ie6 .sketch .dijitRadio,
+.dj_ie6 .sketch .dijitRadioIcon	{		/* inside a toggle button */
+	background-image: url('images/checkboxAndRadioButtons_IE6.png'); /* checkbox sprite image */
+}
+
+.sketch .dijitRadio{
+	/* unselected */
+	background-position: -105px;
+}
+
+.sketch .dijitToggleButton .dijitRadioIcon {
+	/* unselected */
+	background-position: -107px;
+}
+
+.sketch .dijitRadioDisabled {
+	/* unselected and disabled */
+	background-position: -165px;
+}
+
+.sketch .dijitRadioHover {
+	/* hovering over an unselected enabled radio button */
+	background-position: -135px;
+}
+
+.sketch .dijitRadioChecked{
+	background-position: -90px;
+}
+
+.sketch .dijitToggleButtonChecked .dijitRadioIcon {
+	background-position: -92px;
+}
+
+.sketch .dijitRadioCheckedHover{
+	background-position: -120px;
+}
+
+.sketch .dijitRadioCheckedDisabled {
+	/* selected but disabled */
+	background-position: -150px;
+}

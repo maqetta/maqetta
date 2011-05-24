@@ -45,14 +45,14 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	_loadPalette: function(){
 		
 		this._loadPalette = function(){}; // call this only once
-		var descriptors = davinci.ve.metadata.getDescriptors();
+		var libraries = davinci.ve.metadata.getLibrary();
 
 		// Merge descriptors that have the same category
 		// XXX Need a better solution for enumerating through descriptor items and creating
 		//    category groups.
         var descriptorObject = {};
-		for (var name in descriptors) if (descriptors.hasOwnProperty(name)) {
-		    var lib = descriptors[name];
+		for (var name in libraries) if (libraries.hasOwnProperty(name)) {
+		    var lib = libraries[name];
 		    dojo.forEach(lib.widgets, function(item) {
                 var category = lib.categories[item.category];
                 if (!descriptorObject[category.name]) {

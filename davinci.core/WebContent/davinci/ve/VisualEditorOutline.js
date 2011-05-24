@@ -130,10 +130,18 @@ dojo.declare("davinci.ve.OutlineTreeModel",	null, {
 	{
 		this._context=context;
 		this._handles=[];
-		this._connect("onContentChange", "refresh");
+		this._connect("onContentChange", "refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
 		this._connect("activate", "refresh");
 		this._connect("setSource", "refresh");
-	},
+
+		dojo.subscribe("/davinci/states/state/changed/start", dojo.hitch(this, function(e) {
+			this._skipRefresh = true;
+		}));
+		dojo.subscribe("/davinci/states/state/changed/end", dojo.hitch(this, function(e) {
+			delete this._skipRefresh;
+			this.refresh();
+		}));
+},
 	
 	_connect: function(contextFunction, thisFunction)
 	{
@@ -297,6 +305,7 @@ dojo.declare("davinci.ve.OutlineTreeModel",	null, {
 	
 	refresh: function()
 	{
+		if (this._skipRefresh) { return; }
 		var node = this._context.rootNode;
 		if (node){	// shouldn't be necessary, but sometime is null
 			this.onChildrenChange(node, this._childList(node));

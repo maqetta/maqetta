@@ -1,0 +1,103 @@
+/* Time Picker */
+
+/* override Button.css */
+.sketch .dijitTimePicker .dijitButtonNode {
+	padding: 0 0;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+}
+.sketch .dijitTimePicker{
+	border:1px #b5bcc7 solid;
+	border-top:none;
+	border-bottom:none;
+	background-color:#fff;
+}
+.sketch .dijitTimePickerItem{
+	/* dijitTimePickerItem refers to both Tick's (minor values like 2:15, 2:30, 2:45) and Marker's (major values like 2PM, 3PM) */
+	background-image: url("images/commonHighlight.png");
+	background-position:0px -1px;
+	background-repeat:repeat-x;
+	border-top:solid 1px #b5bcc7;
+	margin-right:-1px;
+	margin-left:-1px;
+	margin-top:-1px;
+}
+/* to make up for lack of alpha transparency in IE6 */
+.dj_ie6 .sketch .dijitTimePickerItem {
+	background-image: none;
+}
+.sketch .dijitTimePickerTick {
+	/* minor value */
+	color:#7a7a7a;
+	background-color:#f2f2f2;
+	font-size:0.818em;
+}
+.sketch .dijitTimePickerMarker {
+	/* major value - 1:00, 2:00, times on the hour */
+	color:#000;
+	background-color:#e3f2ff;
+	font-size: 1em;
+	white-space: nowrap;
+}
+.sketch .dijitTimePickerTickHover,
+.sketch .dijitTimePickerMarkerHover {
+	background-color: #83c0fa;
+	color:#000;
+	border:solid 1px #b5bcc7;
+	margin-left:-7px;
+	margin-right:-7px;
+}
+.sketch .dijitTimePickerMarkerSelected,
+.sketch .dijitTimePickerTickSelected {
+	background-color: #83c0fa;
+	color:#000;
+	border:solid 1px #b5bcc7;
+	margin-left:-7px;
+	margin-right:-7px;
+	font-size: 1em;
+}
+.dj_ie6 .sketch .dijitTimePickerTickHover,
+.dj_ie6 .sketch .dijitTimePickerMarkerHover,
+.dj_ie6 .sketch .dijitTimePickerMarkerSelected,
+.dj_ie6 .sketch .dijitTimePickerTickSelected  {
+	position: relative; /* creates widening of element */	
+	zoom: 1; /* creates widening of element */
+}
+.sketch .dijitTimePickerTick .dijitTimePickerItemInner {
+	padding:1px;
+	margin:0px;
+}
+
+.sketch .dijitTimePicker .dijitButtonNode {
+	border-left:none;
+	border-right:none;
+	border-color:#b5bcc7;
+	background-color: #f6f7fa;
+	background-image: url("images/commonHighlight.png");
+	background-position:0px -1px;
+	background-repeat:repeat-x;
+}
+.dj_ie6 .sketch .dijitTimePicker .dijitButtonNode {
+	background-image: none;
+}
+.sketch .dijitTimePicker .dijitArrowButtonInner{
+	height: 100%; /* hack claro.button.css */
+	background-image: url("form/images/commonFormArrows.png");
+	background-repeat: no-repeat;
+	background-position:-140px 45%;
+}
+.sketch .dijitTimePicker .dijitDownArrowButton .dijitArrowButtonInner{
+	background-position:-35px 45%;
+}
+/* hover */
+.sketch .dijitTimePicker .dijitUpArrowHover, 
+.sketch .dijitTimePicker .dijitDownArrowHover {
+	background-color: #abd6ff;
+}
+.sketch .dijitTimePicker .dijitUpArrowHover .dijitArrowButtonInner {
+	background-position:-175px 45%;
+}
+.sketch .dijitTimePicker .dijitDownArrowHover .dijitArrowButtonInner {
+	background-position:-70px 45%;
+}

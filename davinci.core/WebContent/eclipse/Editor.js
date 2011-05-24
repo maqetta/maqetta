@@ -1,11 +1,11 @@
 dojo.provide("eclipse.Editor");
 
 /*******************************************************************************
-
- * Copyright (c) 2010 IBM Corporation and others All rights reserved. This
- * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials are made 
+ * available under the terms of the Eclipse Public License v1.0 
+ * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
  *		Felipe Heidrich (IBM Corporation) - initial API and implementation
@@ -97,7 +97,9 @@ eclipse.KeyBinding = (function() {
  * @param {String|DOMElement} options.parent the parent element for the editor, it can be either a DOM element or an ID for a DOM element.
  * @param {eclipse.TextModel} [options.model] the text model for the editor. If this options is not set the editor creates an empty {@link eclipse.TextModel}.
  * @param {Boolean} [options.readonly=false] whether or not the editor is read-only.
+ * @param {Boolean} [options.fullSelection=true] whether or not the editor is in full selection mode.
  * @param {String|String[]} [options.stylesheet] one or more stylesheet URIs for the editor.
+ * @param {Number} [options.tabSize] The number of spaces in a tab.
  * 
  * @class A Editor is a user interface for editing text.
  * @name eclipse.Editor
@@ -120,15 +122,18 @@ eclipse.Editor = (function() {
 			node.detachEvent("on" + type, handler);
 		}
 	}
-	var isIE = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent);
-	var isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
+	var isIE = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent) ? document.documentMode : undefined;
+	var isFirefox = parseFloat(navigator.userAgent.split("Firefox/")[1] || navigator.userAgent.split("Minefield/")[1]) || undefined;
 	var isOpera = navigator.userAgent.indexOf("Opera") !== -1;
 	var isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
 	var isSafari = navigator.userAgent.indexOf("Safari") !== -1;
 	var isWebkit = navigator.userAgent.indexOf("WebKit") !== -1;
+	var isPad = navigator.userAgent.indexOf("iPad") !== -1;
 	var isMac = navigator.platform.indexOf("Mac") !== -1;
 	var isWindows = navigator.platform.indexOf("Win") !== -1;
+	var isLinux = navigator.platform.indexOf("Linux") !== -1;
 	var isW3CEvents = typeof window.document.documentElement.addEventListener === "function";
+	var isRangeRects = (!isIE || isIE >= 9) && typeof window.document.createRange().getBoundingClientRect === "function";
 
 	/** 
 	 * Constructs a new Selection object.
@@ -301,8 +306,8 @@ eclipse.Editor = (function() {
 		 * There are two types of rulers: page and document. A page ruler only shows the content for the lines that are
 		 * visible, while a document ruler always shows the whole content.
 		 * </p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#addRuler}
 		 * </p>		 
 		 * @name eclipse.Ruler
@@ -541,6 +546,15 @@ eclipse.Editor = (function() {
 			var frame = this._frame;
 			parent.removeChild(frame);
 			
+			if (isPad) {
+				parent.removeChild(this._touchDiv);
+				this._touchDiv = null;
+				this._selDiv1 = null;
+				this._selDiv2 = null;
+				this._selDiv3 = null;
+				this._textArea = null;
+			}
+			
 			var e = {};
 			this.onDestroy(e);
 			
@@ -557,7 +571,6 @@ eclipse.Editor = (function() {
 			this._editorDiv = null;
 			this._clientDiv = null;
 			this._overlayDiv = null;
-			this._textArea = null;
 			this._keyBindings = null;
 			this._actions = null;
 		},
@@ -573,8 +586,12 @@ eclipse.Editor = (function() {
 			* The fix is to call _updateDOMSelection() before calling focus().
 			*/
 			this._updateDOMSelection();
-			if (isOpera) { this._clientDiv.blur(); }
-			this._clientDiv.focus();
+			if (isPad) {
+				this._textArea.focus();
+			} else {
+				if (isOpera) { this._clientDiv.blur(); }
+				this._clientDiv.focus();
+			}
 			/*
 			* Feature in Safari. When focus is called the browser selects the clientDiv
 			* itself. The fix is to call _updateDOMSelection() after calling focus().
@@ -940,8 +957,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the editor is destroyed.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onDestroy}
 		 * </p>
 		 * @name eclipse.DestroyEvent
@@ -960,8 +977,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This object is used to define style information for the editor.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onLineStyle}
 		 * </p>		 
 		 * @name eclipse.Style
@@ -972,8 +989,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This object is used to style range.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onLineStyle}
 		 * </p>		 
 		 * @name eclipse.StyleRange
@@ -985,8 +1002,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the editor needs the style information for a line.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onLineStyle}
 		 * </p>		 
 		 * @name eclipse.LineStyleEvent
@@ -1009,9 +1026,9 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the text in the model has changed.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
-		 * {@link eclipse.Editor#event:onModelChanged}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
+		 * {@link eclipse.Editor#event:onModelChanged}<br/>
 		 * {@link eclipse.TextModel#onChanged}
 		 * </p>
 		 * @name eclipse.ModelChangedEvent
@@ -1034,9 +1051,9 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the text in the model is about to change.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
-		 * {@link eclipse.Editor#event:onModelChanging}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
+		 * {@link eclipse.Editor#event:onModelChanging}<br/>
 		 * {@link eclipse.TextModel#onChanging}
 		 * </p>
 		 * @name eclipse.ModelChangingEvent
@@ -1060,8 +1077,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the text is modified by the editor.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onModify}
 		 * </p>
 		 * @name eclipse.ModifyEvent
@@ -1082,8 +1099,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the selection changes in the editor.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onSelection}
 		 * </p>		 
 		 * @name eclipse.SelectionEvent
@@ -1103,8 +1120,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the editor scrolls.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onScroll}
 		 * </p>		 
 		 * @name eclipse.ScrollEvent
@@ -1124,8 +1141,8 @@ eclipse.Editor = (function() {
 		/**
 		 * @class This is the event sent when the text is about to be modified by the editor.
 		 * <p>
-		 * <b>See:</b><br>
-		 * {@link eclipse.Editor}<br>
+		 * <b>See:</b><br/>
+		 * {@link eclipse.Editor}<br/>
 		 * {@link eclipse.Editor#event:onVerify}
 		 * </p>
 		 * @name eclipse.VerifyEvent
@@ -1455,6 +1472,19 @@ eclipse.Editor = (function() {
 				this._columnX = -1;
 				this._setSelection(new Selection (0, 0, false), true);
 				this._showCaret();
+				
+				/*
+				* Bug in Firefox 4.  For some reason, the caret does not show after the
+				* editor is refreshed.  The fix is to toggle the contentEditable state and
+				* force the clientDiv to loose and receive focus.
+				*/
+				if (isFirefox >= 4) {
+					var clientDiv = this._clientDiv;
+					clientDiv.contentEditable = false;
+					clientDiv.contentEditable = true;
+					clientDiv.blur();
+					clientDiv.focus();
+				}
 			}
 		},
 		/**
@@ -1549,17 +1579,26 @@ eclipse.Editor = (function() {
 		_handleBlur: function (e) {
 			if (!e) { e = window.event; }
 			this._hasFocus = false;
-			if (isIE) {
-				/*
-				* Bug in IE. For some reason when text is deselected the overflow
-				* selection at the end of some lines does not get redrawn.  The
-				* fix is to create a DOM element in the body to force a redraw.
-				*/
+			/*
+			* Bug in IE 8 and earlier. For some reason when text is deselected
+			* the overflow selection at the end of some lines does not get redrawn.
+			* The fix is to create a DOM element in the body to force a redraw.
+			*/
+			if (isIE < 9) {
 				if (!this._getSelection().isEmpty()) {
+					var document = this._frameDocument;
 					var child = document.createElement("DIV");
-					var body = this._frameDocument.body;
+					var body = document.body;
 					body.appendChild(child);
 					body.removeChild(child);
+				}
+			}
+			if (isFirefox || isIE) {
+				if (this._selDiv1) {
+					var color = isIE ? "transparent" : "#AFAFAF";
+					this._selDiv1.style.background = color;
+					this._selDiv2.style.background = color;
+					this._selDiv3.style.background = color;
 				}
 			}
 		},
@@ -1600,6 +1639,17 @@ eclipse.Editor = (function() {
 			if (e.preventDefault) { e.preventDefault(); }
 			return false;
 		},
+		_handleDragOver: function (e) {
+			if (!e) { e = window.event; }
+			e.dataTransfer.dropEffect = "none";
+			if (e.preventDefault) { e.preventDefault(); }
+			return false;
+		},
+		_handleDrop: function (e) {
+			if (!e) { e = window.event; }
+			if (e.preventDefault) { e.preventDefault(); }
+			return false;
+		},
 		_handleDocFocus: function (e) {
 			if (!e) { e = window.event; }
 			this._clientDiv.focus();
@@ -1607,12 +1657,33 @@ eclipse.Editor = (function() {
 		_handleFocus: function (e) {
 			if (!e) { e = window.event; }
 			this._hasFocus = true;
+			/*
+			* Feature in IE.  The selection is not restored when the
+			* editor gets focus and the caret is always placed at the
+			* beginning of the document.  The fix is to update the DOM
+			* selection during the focus event.
+			*/
 			if (isIE) {
 				this._updateDOMSelection();
+			}
+			if (isFirefox || isIE) {
+				if (this._selDiv1) {
+					var color = this._hightlightRGB;
+					this._selDiv1.style.background = color;
+					this._selDiv2.style.background = color;
+					this._selDiv3.style.background = color;
+				}
 			}
 		},
 		_handleKeyDown: function (e) {
 			if (!e) { e = window.event; }
+			if (isPad) {
+				if (e.keyCode === 8) {
+					this._doBackspace({});
+					e.preventDefault();
+				}
+				return;
+			}
 			if (e.keyCode === 229) {
 				if (this.readonly) {
 					if (e.preventDefault) { e.preventDefault(); }
@@ -1628,24 +1699,41 @@ eclipse.Editor = (function() {
 			* unexpected and causes the editor to only execute an action
 			* just one time. The fix is to ignore the keydown event and 
 			* execute the actions from the keypress handler.
-			* Note: This only happens on the Mac (Firefox).
+			* Note: This only happens on the Mac and Linux (Firefox 3.6).
 			*
 			* Feature in Opera.  Opera sends keypress events even for non-printable
 			* keys.  The fix is to handle actions in keypress instead of keydown.
 			*/
-			if ((isMac && isFirefox) || isOpera) {
+			if (((isMac || isLinux) && isFirefox < 4) || isOpera) {
 				this._keyDownEvent = e;
 				return true;
 			}
 			
 			if (this._doAction(e)) {
-				if (e.preventDefault) { e.preventDefault(); }
+				if (e.preventDefault) {
+					e.preventDefault(); 
+				} else {
+					e.cancelBubble = true;
+					e.returnValue = false;
+					e.keyCode = 0;
+				}
 				return false;
 			}
 		},
 		_handleKeyPress: function (e) {
 			if (!e) { e = window.event; }
-			if ((isMac && isFirefox) || isOpera) {
+			/*
+			* Feature in Embedded WebKit.  Embedded WekKit on Mac runs in compatibility mode and
+			* generates key press events for these Unicode values (Function keys).  This does not
+			* happen in Safari or Chrome.  The fix is to ignore these key events.
+			*/
+			if (isMac && isWebkit) {
+				if ((0xF700 <= e.keyCode && e.keyCode <= 0xF7FF) || e.keyCode === 13 || e.keyCode === 8) {
+					if (e.preventDefault) { e.preventDefault(); }
+					return false;
+				}
+			}
+			if (((isMac || isLinux) && isFirefox < 4) || isOpera) {
 				if (this._doAction(this._keyDownEvent)) {
 					if (e.preventDefault) { e.preventDefault(); }
 					return false;
@@ -1699,10 +1787,6 @@ eclipse.Editor = (function() {
 		_handleMouse: function (e) {
 			var target = this._frameWindow;
 			if (isIE) { target = this._clientDiv; }
-			//BEGIN KLUDGE to make cursor appear in FF
-			this._clientDiv.contentEditable = false;
-			this._clientDiv.contentEditable = true;
-			//END KLUDGE
 			if (this._overlayDiv) {
 				var self = this;
 				setTimeout(function () {
@@ -1811,11 +1895,13 @@ eclipse.Editor = (function() {
 			} else {
 				this._endAutoScroll();
 				this._setSelectionTo(x, y, true);
-				// Feature in IE, IE does redraw the selection background right
-				// away after the selection changes because of mouse move events.
-				// The fix is to call getBoundingClientRect() on the
-				// body element to force the selection to be redraw. Some how
-				// calling this method forces a redraw.
+				/*
+				* Feature in IE. IE does redraw the selection background right
+				* away after the selection changes because of mouse move events.
+				* The fix is to call getBoundingClientRect() on the
+				* body element to force the selection to be redraw. Some how
+				* calling this method forces a redraw.
+				*/
 				if (isIE) {
 					var body = this._frameDocument.body;
 					body.getBoundingClientRect();
@@ -1906,13 +1992,19 @@ eclipse.Editor = (function() {
 			*/
 			if (isSafari) {
 				var lineDiv = e.target;
-				while (lineDiv.lineIndex === undefined) { lineDiv = lineDiv.parentNode; }
+				while (lineDiv && lineDiv.lineIndex === undefined) {
+					lineDiv = lineDiv.parentNode;
+				}
 				this._mouseWheelLine = lineDiv;
 			}
+			var oldScroll = this._getScroll();
 			this._scrollView(pixelX, pixelY);
+			var newScroll = this._getScroll();
 			if (isSafari) { this._mouseWheelLine = null; }
-			if (e.preventDefault) { e.preventDefault(); }
-			return false;
+			if (oldScroll.x !== newScroll.x || oldScroll.y !== newScroll.y) {
+				if (e.preventDefault) { e.preventDefault(); }
+				return false;
+			}
 		},
 		_handlePaste: function (e) {
 			if (this._ignorePaste) { return; }
@@ -1931,14 +2023,12 @@ eclipse.Editor = (function() {
 		},
 		_handleResize: function (e) {
 			if (!e) { e = window.event; }
-			var document = this._frameDocument;
-			var element = isIE ? document.documentElement : document.body;
+			var element = this._frameDocument.documentElement;
 			var newWidth = element.clientWidth;
 			var newHeight = element.clientHeight;
-			if (this._editorWidth !== newWidth || this._editorHeight !== newHeight) {
-				this._editorWidth = newWidth;
-				this._editorHeight = newHeight;
-//				this._queueUpdatePage();
+			if (this._frameWidth !== newWidth || this._frameHeight !== newHeight) {
+				this._frameWidth = newWidth;
+				this._frameHeight = newHeight;
 				this._updatePage();
 			}
 		},
@@ -1954,6 +2044,15 @@ eclipse.Editor = (function() {
 				element = element.parentNode;
 			}
 			var ruler = element ? element._ruler : null;
+			if (isPad && lineIndex === undefined && ruler && ruler.getOverview() === "document") {
+				var buttonHeight = 17;
+				var clientHeight = this._getClientHeight ();
+				var lineHeight = this._getLineHeight ();
+				var editorPad = this._getEditorPadding();
+				var trackHeight = clientHeight + editorPad.top + editorPad.bottom - 2 * buttonHeight;
+				var pixels = this._model.getLineCount () * lineHeight;
+				this.setTopPixel(Math.floor((e.clientY - buttonHeight - lineHeight) * pixels / trackHeight));
+			}
 			if (ruler) {
 				switch (e.type) {
 					case "click":
@@ -1966,20 +2065,7 @@ eclipse.Editor = (function() {
 			}
 		},
 		_handleScroll: function () {
-			var scroll = this._getScroll ();
-			var oldX = this._hScroll;
-			var oldY = this._vScroll;
-			if (oldX !== scroll.x || (oldY !== scroll.y)) {
-				this._hScroll = scroll.x;
-				this._vScroll = scroll.y;
-				this._commitIME();
-				this._updatePage();
-				var e = {
-					oldValue: {x: oldX, y: oldY},
-					newValue: scroll
-				};
-				this.onScroll(e);
-			}
+			this._doScroll(this._getScroll());
 		},
 		_handleSelectStart: function (e) {
 			if (!e) { e = window.event; }
@@ -1987,6 +2073,175 @@ eclipse.Editor = (function() {
 				if (e && e.preventDefault) { e.preventDefault(); }
 				return false;
 			}
+		},
+		_handleInput: function (e) {
+			var textArea = this._textArea;
+			this._doContent(textArea.value);
+			textArea.selectionStart = textArea.selectionEnd = 0;
+			textArea.value = "";
+			e.preventDefault();
+		},
+		_handleTextInput: function (e) {
+			this._doContent(e.data);
+			e.preventDefault();
+		},
+		_touchConvert: function (touch) {
+			var rect = this._frame.getBoundingClientRect();
+			var body = this._parentDocument.body;
+			return {left: touch.clientX - rect.left - body.scrollLeft, top: touch.clientY - rect.top - body.scrollTop};
+		},
+		_handleTouchStart: function (e) {
+			var touches = e.touches, touch, pt, sel;
+			this._touchMoved = false;
+			this._touchStartScroll = undefined;
+			if (touches.length === 1) {
+				touch = touches[0];
+				var pageX = touch.pageX;
+				var pageY = touch.pageY;
+				this._touchStartX = pageX;
+				this._touchStartY = pageY;
+				this._touchStartTime = e.timeStamp;
+				this._touchStartScroll = this._getScroll();
+				sel = this._getSelection();
+				pt = this._touchConvert(touches[0]);
+				this._touchGesture = "none";
+				if (!sel.isEmpty()) {
+					if (this._hitOffset(sel.end, pt.left, pt.top)) {
+						this._touchGesture = "extendEnd";
+					} else if (this._hitOffset(sel.start, pt.left, pt.top)) {
+						this._touchGesture = "extendStart";
+					}
+				}
+				if (this._touchGesture === "none") {
+					var textArea = this._textArea;
+					textArea.value = "";
+					textArea.style.left = "-1000px";
+					textArea.style.top = "-1000px";
+					textArea.style.width = "3000px";
+					textArea.style.height = "3000px";
+					var self = this;
+					var f = function() {
+						self._touchTimeout = null;
+						self._clickCount = 1;
+						self._setSelectionTo(pt.left, pt.top, false);
+					};
+					this._touchTimeout = setTimeout(f, 200);
+				}
+			} else if (touches.length === 2) {
+				this._touchGesture = "select";
+				if (this._touchTimeout) {
+					clearTimeout(this._touchTimeout);
+					this._touchTimeout = null;
+				}
+				pt = this._touchConvert(touches[0]);
+				var offset1 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
+				pt = this._touchConvert(touches[1]);
+				var offset2 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
+				sel = this._getSelection();
+				sel.setCaret(offset1);
+				sel.extend(offset2);
+				this._setSelection(sel, true, true);
+			}
+			//Cannot prevent to show maginifier
+//			e.preventDefault();
+		},
+		_handleTouchMove: function (e) {
+			this._touchMoved = true;
+			var touches = e.touches, pt, sel;
+			if (touches.length === 1) {
+				var touch = touches[0];
+				var pageX = touch.pageX;
+				var pageY = touch.pageY;
+				var deltaX = this._touchStartX - pageX;
+				var deltaY = this._touchStartY - pageY;
+				pt = this._touchConvert(touch);
+				sel = this._getSelection();
+				if (this._touchTimeout) {
+					clearTimeout(this._touchTimeout);
+					this._touchTimeout = null;
+				}
+				if (this._touchGesture === "none") {
+					if ((e.timeStamp - this._touchStartTime) < 200 && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
+						this._touchGesture = "scroll";
+					} else {
+						this._touchGesture = "caret";
+					}
+				}
+				if (this._touchGesture === "select") {
+					if (this._hitOffset(sel.end, pt.left, pt.top)) {
+						this._touchGesture = "extendEnd";
+					} else if (this._hitOffset(sel.start, pt.left, pt.top)) {
+						this._touchGesture = "extendStart";
+					} else {
+						this._touchGesture = "caret";
+					}
+				}
+				switch (this._touchGesture) {
+					case "scroll":
+						this._touchStartX = pageX;
+						this._touchStartY = pageY;
+						this._scrollView(deltaX, deltaY);
+						break;
+					case "extendStart":
+					case "extendEnd":
+						this._clickCount = 1;
+						var lineIndex = this._getYToLine(pt.top);
+						var offset = this._getXToOffset(lineIndex, pt.left);
+						sel.setCaret(this._touchGesture === "extendStart" ? sel.end : sel.start);
+						sel.extend(offset);
+						if (offset >= sel.end && this._touchGesture === "extendStart") {
+							this._touchGesture = "extendEnd";
+						}
+						if (offset <= sel.start && this._touchGesture === "extendEnd") {
+							this._touchGesture = "extendStart";
+						}
+						this._setSelection(sel, true, true);
+						break;
+					case "caret":
+						this._setSelectionTo(pt.left, pt.top, false);
+						break;
+				}
+			} else if (touches.length === 2) {
+				pt = this._touchConvert(touches[0]);
+				var offset1 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
+				pt = this._touchConvert(touches[1]);
+				var offset2 = this._getXToOffset(this._getYToLine(pt.top), pt.left);
+				sel = this._getSelection();
+				sel.setCaret(offset1);
+				sel.extend(offset2);
+				this._setSelection(sel, true, true);
+			}
+			e.preventDefault();
+		},
+		_handleTouchEnd: function (e) {
+			if (!this._touchMoved) {
+				if (e.touches.length === 0 && e.changedTouches.length === 1 && this._touchTimeout) {
+					clearTimeout(this._touchTimeout);
+					this._touchTimeout = null;
+					var touch = e.changedTouches[0];
+					this._clickCount = 1;
+					var pt = this._touchConvert(touch);
+					this._setSelectionTo(pt.left, pt.top, false);
+				}
+			}
+			if (e.touches.length === 0) {
+				var self = this;
+				setTimeout(function() {
+					var selection = self._getSelection();
+					var text = self._model.getText(selection.start, selection.end);
+					var textArea = self._textArea;
+					textArea.value = text;
+					textArea.selectionStart = 0;
+					textArea.selectionEnd = text.length;
+					if (!selection.isEmpty()) {
+						var touchRect = self._touchDiv.getBoundingClientRect();
+						var bounds = self._getOffsetBounds(selection.start);
+						textArea.style.left = (touchRect.width / 2) + "px";
+						textArea.style.top = ((bounds.top > 40 ? bounds.top - 30 : bounds.top + 30)) + "px";
+					}
+				}, 0);
+			}
+			e.preventDefault();
 		},
 
 		/************************************ Actions ******************************************/
@@ -2029,7 +2284,7 @@ eclipse.Editor = (function() {
 						selection.extend(model.getLineEnd(lineIndex - 1));
 					}
 				} else {
-					selection.extend(this._getOffset(caret, args.word, -1));
+					selection.extend(this._getOffset(caret, args.unit, -1));
 				}
 			}
 			this._modifyContent({text: "", start: selection.start, end: selection.end}, true);
@@ -2060,7 +2315,7 @@ eclipse.Editor = (function() {
 					selection.extend(model.getLineStart(lineIndex + 1));
 				}
 			} else {
-				selection.extend(this._getOffset(caret, args.word, 1));
+				selection.extend(this._getOffset(caret, args.unit, 1));
 			}
 			if (!args.select) { selection.collapse(); }
 			this._setSelection(selection, true);
@@ -2079,7 +2334,7 @@ eclipse.Editor = (function() {
 					selection.extend(model.getLineEnd(lineIndex - 1));
 				}
 			} else {
-				selection.extend(this._getOffset(caret, args.word, -1));
+				selection.extend(this._getOffset(caret, args.unit, -1));
 			}
 			if (!args.select) { selection.collapse(); }
 			this._setSelection(selection, true);
@@ -2105,7 +2360,7 @@ eclipse.Editor = (function() {
 						selection.extend(model.getLineStart(lineIndex + 1));
 					}
 				} else {
-					selection.extend(this._getOffset(caret, args.word, 1));
+					selection.extend(this._getOffset(caret, args.unit, 1));
 				}
 			}
 			this._modifyContent({text: "", start: selection.start, end: selection.end}, true);
@@ -2247,6 +2502,21 @@ eclipse.Editor = (function() {
 			}
 			return text !== null;
 		},
+		_doScroll: function (scroll) {
+			var oldX = this._hScroll;
+			var oldY = this._vScroll;
+			if (oldX !== scroll.x || oldY !== scroll.y) {
+				this._hScroll = scroll.x;
+				this._vScroll = scroll.y;
+				this._commitIME();
+				this._updatePage();
+				var e = {
+					oldValue: {x: oldX, y: oldY},
+					newValue: scroll
+				};
+				this.onScroll(e);
+			}
+		},
 		_doSelectAll: function (args) {
 			var model = this._model;
 			var selection = this._getSelection();
@@ -2299,23 +2569,83 @@ eclipse.Editor = (function() {
 			this._autoScrollTimerID = setTimeout(function () {self._autoScrollTimer();}, this._AUTO_SCROLL_RATE);
 		},
 		_calculateLineHeight: function() {
+			var parent = this._clientDiv;
+			var document = this._frameDocument;
+			var c = " ";
+			var line = document.createElement("DIV");
+			line.style.position = "fixed";
+			line.style.left = "-1000px";
+			var span1 = document.createElement("SPAN");
+			span1.appendChild(document.createTextNode(c));
+			line.appendChild(span1);
+			var span2 = document.createElement("SPAN");
+			span2.style.fontStyle = "italic";
+			span2.appendChild(document.createTextNode(c));
+			line.appendChild(span2);
+			var span3 = document.createElement("SPAN");
+			span3.style.fontWeight = "bold";
+			span3.appendChild(document.createTextNode(c));
+			line.appendChild(span3);
+			var span4 = document.createElement("SPAN");
+			span4.style.fontWeight = "bold";
+			span4.style.fontStyle = "italic";
+			span4.appendChild(document.createTextNode(c));
+			line.appendChild(span4);
+			parent.appendChild(line);
+			var spanRect1 = span1.getBoundingClientRect();
+			var spanRect2 = span2.getBoundingClientRect();
+			var spanRect3 = span3.getBoundingClientRect();
+			var spanRect4 = span4.getBoundingClientRect();
+			var h1 = spanRect1.bottom - spanRect1.top;
+			var h2 = spanRect2.bottom - spanRect2.top;
+			var h3 = spanRect3.bottom - spanRect3.top;
+			var h4 = spanRect4.bottom - spanRect4.top;
+			var fontStyle = 0;
+			var lineHeight = h1;
+			if (h2 > h1) {
+				lineHeight = h2;
+				fontStyle = 1;
+			}
+			if (h3 > h2) {
+				lineHeight = h3;
+				fontStyle = 2;
+			}
+			if (h4 > h3) {
+				lineHeight = h4;
+				fontStyle = 3;
+			}
+			this._largestFontStyle = fontStyle;
+			parent.removeChild(line);
+			return lineHeight;
+		},
+		_calculatePadding: function() {
 			var document = this._frameDocument;
 			var parent = this._clientDiv;
-			var span1 = document.createElement("SPAN");
-			span1.appendChild(document.createTextNode("W"));
-			parent.appendChild(span1);
-			var br = document.createElement("BR");
-			parent.appendChild(br);
-			var span2 = document.createElement("SPAN");
-			span2.appendChild(document.createTextNode("W"));
-			parent.appendChild(span2);
-			var rect1 = span1.getBoundingClientRect();
-			var rect2 = span2.getBoundingClientRect();
-			var lineHeight = rect2.top - rect1.top;
-			parent.removeChild(span1);
-			parent.removeChild(br);
-			parent.removeChild(span2);
-			return lineHeight; 
+			var pad = this._getPadding(this._editorDiv);
+			var div1 = document.createElement("DIV");
+			div1.style.position = "fixed";
+			div1.style.left = "-1000px";
+			div1.style.paddingLeft = pad.left + "px";
+			div1.style.paddingTop = pad.top + "px";
+			div1.style.paddingRight = pad.right + "px";
+			div1.style.paddingBottom = pad.bottom + "px";
+			div1.style.width = "100px";
+			div1.style.height = "100px";
+			var div2 = document.createElement("DIV");
+			div2.style.width = "100%";
+			div2.style.height = "100%";
+			div1.appendChild(div2);
+			parent.appendChild(div1);
+			var rect1 = div1.getBoundingClientRect();
+			var rect2 = div2.getBoundingClientRect();
+			parent.removeChild(div1);
+			pad = {
+				left: rect2.left - rect1.left,
+				top: rect2.top - rect1.top,
+				right: rect1.right - rect2.right,
+				bottom: rect1.bottom - rect2.bottom
+			};
+			return pad;
 		},
 		_clearSelection: function (direction) {
 			var selection = this._getSelection();
@@ -2420,9 +2750,15 @@ eclipse.Editor = (function() {
 				bindings.push({name: "deleteWordNext",		keyBinding: new KeyBinding(46, null, null, true), predefined: true});
 			}
 				
-			//bug in IE: prevent ctrl+'u' and ctrl+'i' from applying styles to the text
-			bindings.push({name: null,			keyBinding: new KeyBinding('u', true), predefined: true});
-			bindings.push({name: null,			keyBinding: new KeyBinding('i', true), predefined: true});
+			/*
+			* Feature in IE/Chrome: prevent ctrl+'u', ctrl+'i', and ctrl+'b' from applying styles to the text.
+			*
+			* Note that Chrome applies the styles on the Mac with Ctrl instead of Cmd.
+			*/
+			var isMacChrome = isMac && isChrome;
+			bindings.push({name: null, keyBinding: new KeyBinding('u', !isMacChrome, false, false, isMacChrome), predefined: true});
+			bindings.push({name: null, keyBinding: new KeyBinding('i', !isMacChrome, false, false, isMacChrome), predefined: true});
+			bindings.push({name: null, keyBinding: new KeyBinding('b', !isMacChrome, false, false, isMacChrome), predefined: true});
 
 			if (isFirefox) {
 				bindings.push({name: "copy", keyBinding: new KeyBinding(45, true), predefined: true});
@@ -2437,12 +2773,12 @@ eclipse.Editor = (function() {
 				{name: "lineDown",		defaultHandler: function() {return self._doLineDown({select: false});}},
 				{name: "lineStart",		defaultHandler: function() {return self._doHome({select: false, ctrl:false});}},
 				{name: "lineEnd",		defaultHandler: function() {return self._doEnd({select: false, ctrl:false});}},
-				{name: "charPrevious",		defaultHandler: function() {return self._doCursorPrevious({select: false, word:false});}},
-				{name: "charNext",		defaultHandler: function() {return self._doCursorNext({select: false, word:false});}},
+				{name: "charPrevious",		defaultHandler: function() {return self._doCursorPrevious({select: false, unit:"character"});}},
+				{name: "charNext",		defaultHandler: function() {return self._doCursorNext({select: false, unit:"character"});}},
 				{name: "pageUp",		defaultHandler: function() {return self._doPageUp({select: false});}},
 				{name: "pageDown",		defaultHandler: function() {return self._doPageDown({select: false});}},
-				{name: "wordPrevious",		defaultHandler: function() {return self._doCursorPrevious({select: false, word:true});}},
-				{name: "wordNext",		defaultHandler: function() {return self._doCursorNext({select: false, word:true});}},
+				{name: "wordPrevious",		defaultHandler: function() {return self._doCursorPrevious({select: false, unit:"word"});}},
+				{name: "wordNext",		defaultHandler: function() {return self._doCursorNext({select: false, unit:"word"});}},
 				{name: "textStart",		defaultHandler: function() {return self._doHome({select: false, ctrl:true});}},
 				{name: "textEnd",		defaultHandler: function() {return self._doEnd({select: false, ctrl:true});}},
 				
@@ -2450,19 +2786,19 @@ eclipse.Editor = (function() {
 				{name: "selectLineDown",	defaultHandler: function() {return self._doLineDown({select: true});}},
 				{name: "selectLineStart",	defaultHandler: function() {return self._doHome({select: true, ctrl:false});}},
 				{name: "selectLineEnd",		defaultHandler: function() {return self._doEnd({select: true, ctrl:false});}},
-				{name: "selectCharPrevious",	defaultHandler: function() {return self._doCursorPrevious({select: true, word:false});}},
-				{name: "selectCharNext",	defaultHandler: function() {return self._doCursorNext({select: true, word:false});}},
+				{name: "selectCharPrevious",	defaultHandler: function() {return self._doCursorPrevious({select: true, unit:"character"});}},
+				{name: "selectCharNext",	defaultHandler: function() {return self._doCursorNext({select: true, unit:"character"});}},
 				{name: "selectPageUp",		defaultHandler: function() {return self._doPageUp({select: true});}},
 				{name: "selectPageDown",	defaultHandler: function() {return self._doPageDown({select: true});}},
-				{name: "selectWordPrevious",	defaultHandler: function() {return self._doCursorPrevious({select: true, word:true});}},
-				{name: "selectWordNext",	defaultHandler: function() {return self._doCursorNext({select: true, word:true});}},
+				{name: "selectWordPrevious",	defaultHandler: function() {return self._doCursorPrevious({select: true, unit:"word"});}},
+				{name: "selectWordNext",	defaultHandler: function() {return self._doCursorNext({select: true, unit:"word"});}},
 				{name: "selectTextStart",	defaultHandler: function() {return self._doHome({select: true, ctrl:true});}},
 				{name: "selectTextEnd",		defaultHandler: function() {return self._doEnd({select: true, ctrl:true});}},
 				
-				{name: "deletePrevious",	defaultHandler: function() {return self._doBackspace({word:false});}},
-				{name: "deleteNext",		defaultHandler: function() {return self._doDelete({word:false});}},
-				{name: "deleteWordPrevious",	defaultHandler: function() {return self._doBackspace({word:true});}},
-				{name: "deleteWordNext",	defaultHandler: function() {return self._doDelete({word:true});}},
+				{name: "deletePrevious",	defaultHandler: function() {return self._doBackspace({unit:"character"});}},
+				{name: "deleteNext",		defaultHandler: function() {return self._doDelete({unit:"character"});}},
+				{name: "deleteWordPrevious",	defaultHandler: function() {return self._doBackspace({unit:"word"});}},
+				{name: "deleteWordNext",	defaultHandler: function() {return self._doDelete({unit:"word"});}},
 				{name: "tab",			defaultHandler: function() {return self._doTab();}},
 				{name: "enter",			defaultHandler: function() {return self._doEnter();}},
 				{name: "selectAll",		defaultHandler: function() {return self._doSelectAll();}},
@@ -2479,36 +2815,70 @@ eclipse.Editor = (function() {
 			var child = document.createElement("DIV");
 			child.lineIndex = lineIndex;
 			this._applyStyle(e.style, child);
-
-			/*
-			* Firefox does not extend the selection at the end of the line when the
-			* line is fully selected. The fix is to add an extra space at the end of
-			* the line.
-			*/
-			var extendSelection = isFirefox || isOpera;
-			if (lineText.length === 0) {
-				/*
-				* When the span is empty the height of the line div becomes zero.
-				* The fix is use a zero-width non-break space to preserve the default
-				* height in the line div. Note that in Chrome this character shows
-				* a glyph, for this reason the zero-width non-joiner character is
-				* used instead.
-				*/
-				if (!extendSelection) {
-					var span = document.createElement("SPAN");
-					span.ignoreChars = 1;
-					span.appendChild(document.createTextNode(isWebkit ? "\u200C" : "\uFEFF"));
-					child.appendChild(span);
+			if (lineText.length !== 0) {
+				var start = 0;
+				var tabSize = this._tabSize;
+				if (tabSize && tabSize !== 8) {
+					var tabIndex = lineText.indexOf("\t"), ignoreChars = 0;
+					while (tabIndex !== -1) {
+						this._createRange(child, document, e.ranges, start, tabIndex, lineText, lineStart);
+						var spacesCount = tabSize - ((tabIndex + ignoreChars) % tabSize);
+						var spaces = "\u00A0";
+						for (var i = 1; i < spacesCount; i++) {
+							spaces += " ";
+						}
+						var tabSpan = document.createElement("SPAN");
+						tabSpan.appendChild(document.createTextNode(spaces));
+						tabSpan.ignoreChars = spacesCount - 1;
+						ignoreChars += tabSpan.ignoreChars;
+						if (e.ranges) {
+							for (var j = 0; j < e.ranges.length; j++) {
+								var range = e.ranges[j];
+								var styleStart = range.start - lineStart;
+								var styleEnd = range.end - lineStart;
+								if (styleStart > tabIndex) { break; } 
+								if (styleStart <= tabIndex && tabIndex < styleEnd) {
+									this._applyStyle(range.style, tabSpan);
+									break;
+								}
+							}
+						} 
+						child.appendChild(tabSpan);
+						start = tabIndex + 1;
+						tabIndex = lineText.indexOf("\t", start);
+					}
 				}
-			} else {
-				this._createRange(child, document, e.ranges, 0, lineText.length, lineText, lineStart);
+				this._createRange(child, document, e.ranges, start, lineText.length, lineText, lineStart);
 			}
-			if (extendSelection) {
-				var ext = document.createElement("SPAN");
-				ext.ignoreChars = 1;
-				ext.appendChild(document.createTextNode(" "));
-				child.appendChild(ext);
+			
+			/*
+			* Firefox, Opera and IE9 do not extend the selection at the end of the line
+			* when the line is fully selected. The fix is to add an extra space at the end
+			* of the line.
+			*
+			* Note: the height of a div with only an empty span is zero.  The fix is
+			* the add a extra zero-width non-break space to preserve the default
+			* height in the line div. In Chrome this character shows a glyph, so the
+			* zero-width non-joiner character is used instead.
+			*
+			* Note: in order to support bold and italic fonts with fixed line
+			* height all lines need to have at least one span with the largest
+			* font.
+			*/
+			var span = document.createElement("SPAN");
+			span.ignoreChars = 1;
+			if ((this._largestFontStyle & 1) !== 0) {
+				span.style.fontStyle = "italic";
 			}
+			if ((this._largestFontStyle & 2) !== 0) {
+				span.style.fontWeight = "bold";
+			}
+			var fullSelection = this._fullSelection;
+			var extendSelection = !fullSelection && (isFirefox || isOpera || isIE >= 9);
+			var c = extendSelection ? " " : (isWebkit || isFirefox ? "\u200C" : "\uFEFF");
+			span.appendChild(document.createTextNode(c));
+			child.appendChild(span);
+			
 			parent.insertBefore(child, sibling);
 			return child;
 		},
@@ -2518,11 +2888,11 @@ eclipse.Editor = (function() {
 			if (ranges) {
 				for (var i = 0; i < ranges.length; i++) {
 					var range = ranges[i];
-					if (range.end <= lineStart) { continue; }
-					var styleStart = Math.max(lineStart, range.start) - lineStart;
-					var styleEnd = Math.min(lineStart + text.length, range.end) - lineStart;
+					if (range.end <= lineStart + start) { continue; }
+					var styleStart = Math.max(lineStart + start, range.start) - lineStart;
 					if (styleStart >= end) { break; }
-					if ((start <= styleStart && styleStart < end) || (start <= styleEnd && styleEnd < end)) {
+					var styleEnd = Math.min(lineStart + end, range.end) - lineStart;
+					if (styleStart < styleEnd) {
 						styleStart = Math.max(start, styleStart);
 						styleEnd = Math.min(end, styleEnd);
 						if (start < styleStart) {
@@ -2558,9 +2928,6 @@ eclipse.Editor = (function() {
 			this._autoScrollTimerID = undefined;
 		},
 		_getBoundsAtOffset: function (offset) {
-			return isIE ? this._getBoundsAtOffset_IE(offset) : this._getBoundsAtOffset_FF(offset);
-		},
-		_getBoundsAtOffset_FF: function (offset) {
 			var model = this._model;
 			var document = this._frameDocument;
 			var clientDiv = this._clientDiv;
@@ -2572,15 +2939,31 @@ eclipse.Editor = (function() {
 			}
 			var result = null;
 			if (offset < model.getLineEnd(lineIndex)) {
+				var lineOffset = model.getLineStart(lineIndex);
 				var lineChild = child.firstChild;
-				var spanOffset = model.getLineStart(lineIndex);
 				while (lineChild) {
-					if (!lineChild.ignoreChars) {
-						var textNode = lineChild.firstChild;
-						var spanEndOffset = spanOffset + textNode.length; 
-						if (spanEndOffset > offset) {
+					var textNode = lineChild.firstChild;
+					var nodeLength = textNode.length; 
+					if (lineChild.ignoreChars) {
+						nodeLength -= lineChild.ignoreChars;
+					}
+					if (lineOffset + nodeLength > offset) {
+						var index = offset - lineOffset;
+						var range;
+						if (isRangeRects) {
+							range = document.createRange();
+							range.setStart(textNode, index);
+							range.setEnd(textNode, index + 1);
+							result = range.getBoundingClientRect();
+						} else if (isIE) {
+							range = document.body.createTextRange();
+							range.moveToElementText(lineChild);
+							range.collapse();
+							range.moveEnd("character", index + 1);
+							range.moveStart("character", index);
+							result = range.getBoundingClientRect();
+						} else {
 							var text = textNode.data;
-							var index = offset - spanOffset;
 							lineChild.removeChild(textNode);
 							lineChild.appendChild(document.createTextNode(text.substring(0, index)));
 							var span = document.createElement("SPAN");
@@ -2596,58 +2979,27 @@ eclipse.Editor = (function() {
 								 * causes the selection to be lost. The fix is to detect this case
 								 * and restore the selection. 
 								 */
-								var selection = this._getSelection();
-								if ((spanOffset <= selection.start && selection.start < spanEndOffset) || (spanOffset <= selection.end && selection.end < spanEndOffset)) {
+								var s = this._getSelection();
+								if ((lineOffset <= s.start && s.start < lineOffset + nodeLength) ||  (lineOffset <= s.end && s.end < lineOffset + nodeLength)) {
 									this._updateDOMSelection();
 								}
 							}
-							break;
 						}
-						spanOffset = spanEndOffset;
+						if (isIE) {
+							var logicalXDPI = window.screen.logicalXDPI;
+							var deviceXDPI = window.screen.deviceXDPI;
+							result.left = result.left * logicalXDPI / deviceXDPI;
+							result.right = result.right * logicalXDPI / deviceXDPI;
+						}
+						break;
 					}
+					lineOffset += nodeLength;
 					lineChild = lineChild.nextSibling;
 				}
 			}
 			if (!result) {
 				var rect = this._getLineBoundingClientRect(child);
 				result = {left: rect.right, right: rect.right};
-			}
-			if (dummy) { clientDiv.removeChild(dummy); }
-			return result;
-		},
-		_getBoundsAtOffset_IE: function (offset) {
-			var document = this._frameDocument;
-			var clientDiv = this._clientDiv;
-			var model = this._model;
-			var lineIndex = model.getLineAtOffset(offset);
-			var dummy;
-			var child = this._getLineNode(lineIndex);
-			if (!child) {
-				child = dummy = this._createLine(clientDiv, null, document, lineIndex, model);
-			}
-			var result = {left: 0, right: 0};
-			if (offset === model.getLineEnd(lineIndex)) {
-				var rect = this._getLineBoundingClientRect(child);
-				result = {left: rect.right, right: rect.right};
-			} else {
-				var lineOffset = model.getLineStart(lineIndex);
-				var lineChild = child.firstChild;
-				while (lineChild) {
-					var node = lineChild.firstChild;
-					if (!node.ignoreChars) {
-						if (node.length + lineOffset > offset) {
-							var range = document.body.createTextRange();
-							range.moveToElementText(lineChild);
-							range.collapse();
-							range.moveEnd("character", offset - lineOffset + 1);
-							range.moveStart("character", offset - lineOffset);
-							result = range.getBoundingClientRect();
-							break;
-						}
-						lineOffset += node.length;
-					}
-					lineChild = lineChild.nextSibling;
-				}
 			}
 			if (dummy) { clientDiv.removeChild(dummy); }
 			return result;
@@ -2683,64 +3035,83 @@ eclipse.Editor = (function() {
 				return this._frameWindow.clipboardData.getData("Text");
 			}
 			if (isFirefox) {
-				var textArea = this._textArea;
-				textArea.innerHTML = "";
-				textArea.focus();
+				var window = this._frameWindow;
+				var document = this._frameDocument;
+				var child = document.createElement("PRE");
+				child.style.position = "fixed";
+				child.style.left = "-1000px";
+				child.appendChild(document.createTextNode(" "));
+				this._clientDiv.appendChild(child);
+				var range = document.createRange();
+				range.selectNodeContents(child);
+				var sel = window.getSelection();
+				if (sel.rangeCount > 0) { sel.removeAllRanges(); }
+				sel.addRange(range);
+				var self = this;
+				var cleanup = function() {
+					self._updateDOMSelection();
+					self._clientDiv.removeChild(child);
+				};
 				var delimiter = this._model.getLineDelimiter();
 				var _getText = function() {
-					var text;
-					if (textArea.firstChild) {
-						text = "";
-						var child = textArea.firstChild;
-						while (child) {
-							if (child.nodeType === child.TEXT_NODE) {
-								text += child.data;
-							} else if (child.tagName === "BR") {
-								text += delimiter; 
-							} 
-							child = child.nextSibling;
-						}
-					} else {
-						text = textArea.value;
+					/*
+					* Use the selection anchor to determine the end of the pasted text as it is possible that
+					* some browsers (like Firefox) add extra elements (<BR>) after the pasted text.
+					*/
+					var endNode = null;
+					if (sel.anchorNode.nodeType !== child.TEXT_NODE) {
+						endNode = sel.anchorNode.childNodes[sel.anchorOffset];
 					}
-					return text;
+					var text = [];
+					var getNodeText = function(node) {
+						var nodeChild = node.firstChild;
+						while (nodeChild !== endNode) {
+							if (nodeChild.nodeType === child.TEXT_NODE) {
+								text.push(nodeChild !== sel.anchorNode ? nodeChild.data : nodeChild.data.substring(0, sel.anchorOffset));
+							} else if (nodeChild.tagName === "BR") {
+								text.push(delimiter); 
+							} else {
+								getNodeText(nodeChild);
+							}
+							nodeChild = nodeChild.nextSibling;
+						}
+					};
+					getNodeText(child);
+					cleanup();
+					return text.join("");
 				};
 				
-				//Try execCommand first. Works on firefox with clipboard permission,
+				/* Try execCommand first. Works on firefox with clipboard permission. */
 				var result = false;
 				this._ignorePaste = true;
 				try {
-					var document = this._frameDocument;
 					result = document.execCommand("paste", false, null);
-				} catch (ex) {
-				}
+				} catch (ex) {}
 				this._ignorePaste = false;
-				
 				if (!result) {
-					//Try native paste in the text area, works for firefox (asynchronously) 
-					//only works during the paste event
+					/*
+					* Try native paste in DOM, works for firefox during the paste event.
+					*/
 					if (event) {
-						var self = this;
 						setTimeout(function() {
-							self.focus();
 							var text = _getText();
 							if (text) { self._doContent(text); }
 						}, 0);
 						return null;
 					} else {
-						//no event and no clipboard permission, paste can't be performed
-						//suggest allow clipboard helper to the user
-						this.focus();
+						/* no event and no clipboard permission, paste can't be performed */
+						cleanup();
 						return "";
 					}
 				}
-				this.focus();
 				return _getText();
 			}
 			//webkit
 			if (event && event.clipboardData) {
-				// Webkit (Chrome/Safari) allows getData during the paste event
-				// Note: setData is not allowed, not even during copy/cut event
+				/*
+				* Webkit (Chrome/Safari) allows getData during the paste event
+				* Note: setData is not allowed, not even during copy/cut event
+				*/
 				return event.clipboardData.getData("text/plain");
 			} else {
 				//TODO try paste using extension (Chrome only)
@@ -2752,30 +3123,32 @@ eclipse.Editor = (function() {
 			var lineChild = child.firstChild;
 			var text = "";
 			while (lineChild) {
-				var subNode = lineChild.firstChild;
-				while (subNode) {
-					// Note: This assumes that the ignoreChars are always at the end of the lineChild
-					if (lineChild.ignoreChars && lineChild.lastChild === subNode) {
-						text += subNode.data.substring (0, subNode.length - lineChild.ignoreChars);
+				var textNode = lineChild.firstChild;
+				while (textNode) {
+					if (lineChild.ignoreChars) {
+						for (var i = 0; i < textNode.length; i++) {
+							var ch = textNode.data.substring(i, i + 1);
+							if (ch !== " ") {
+								text += ch;
+							}
+						}
 					} else {
-						text += subNode.data;
+						text += textNode.data;
 					}
-					subNode = subNode.nextSibling;
+					textNode = textNode.nextSibling;
 				}
 				lineChild = lineChild.nextSibling;
 			}
 			return text;
 		},
 		_getEditorPadding: function() {
-			if (!this._editorPadding) {
-				this._editorPadding = this._getPadding(this._editorDiv);
-			}
 			return this._editorPadding;
 		},
 		_getLineBoundingClientRect: function (child) {
 			var rect = child.getBoundingClientRect();
 			var lastChild = child.lastChild;
-			while (lastChild && lastChild.ignoreChars) {
+			//Remove any artificial trailing whitespace in the line
+			while (lastChild && lastChild.ignoreChars === lastChild.firstChild.length) {
 				lastChild = lastChild.previousSibling;
 			}
 			if (!lastChild) {
@@ -2785,9 +3158,7 @@ eclipse.Editor = (function() {
 			return {left: rect.left, top: rect.top, right: lastRect.right, bottom: rect.bottom};
 		},
 		_getLineHeight: function() {
-			var document = this._frameDocument;
-			var body = document.body;
-			return parseInt(body.style.lineHeight, 10);
+			return this._lineHeight;
 		},
 		_getLineNode: function (lineIndex) {
 			var clientDiv = this._clientDiv;
@@ -2814,17 +3185,20 @@ eclipse.Editor = (function() {
 			}
 			return node;
 		},
-		_getOffset: function (offset, word, direction) {
-			return isIE ?  this._getOffset_IE(offset, word, direction) : this._getOffset_FF(offset, word, direction);
+		_getOffset: function (offset, unit, direction) {
+			if (unit === "wordend") {
+				return this._getOffset_W3C(offset, unit, direction);
+			}
+			return isIE ? this._getOffset_IE(offset, unit, direction) : this._getOffset_W3C(offset, unit, direction);
 		},
-		_getOffset_FF: function (offset, word, direction) {
+		_getOffset_W3C: function (offset, unit, direction) {
 			function _isPunctuation(c) {
 				return (33 <= c && c <= 47) || (58 <= c && c <= 64) || (91 <= c && c <= 94) || c === 96 || (123 <= c && c <= 126);
 			}
 			function _isWhitespace(c) {
 				return c === 32 || c === 9;
 			}
-			if (word) {
+			if (unit === "word" || unit === "wordend") {
 				var model = this._model;
 				var lineIndex = model.getLineAtOffset(offset);
 				var lineText = model.getLine(lineIndex);
@@ -2844,9 +3218,17 @@ eclipse.Editor = (function() {
 					while (offsetInLine < lineLength) {
 						c = lineText.charCodeAt(offsetInLine);
 						punctuation = _isPunctuation(c);
-						if (punctuation && !previousPunctuation) { break; }
+						if (unit === "wordend") {
+							if (!punctuation && previousPunctuation) { break; }
+						} else {
+							if (punctuation && !previousPunctuation) { break; }
+						}
 						letterOrDigit  = !punctuation && !_isWhitespace(c);
-						if (letterOrDigit && !previousLetterOrDigit) { break; }
+						if (unit === "wordend") {
+							if (!letterOrDigit && previousLetterOrDigit) { break; }
+						} else {
+							if (letterOrDigit && !previousLetterOrDigit) { break; }
+						}
 						previousLetterOrDigit = letterOrDigit;
 						previousPunctuation = punctuation;
 						offsetInLine++;
@@ -2860,9 +3242,17 @@ eclipse.Editor = (function() {
 					while (0 < offsetInLine) {
 						c = lineText.charCodeAt(offsetInLine - 1);
 						punctuation = _isPunctuation(c);
-						if (!punctuation && previousPunctuation) { break; }
+						if (unit === "wordend") {
+							if (punctuation && !previousPunctuation) { break; }
+						} else {
+							if (!punctuation && previousPunctuation) { break; }
+						}
 						letterOrDigit  = !punctuation && !_isWhitespace(c);
-						if (!letterOrDigit && previousLetterOrDigit) { break; }
+						if (unit === "wordend") {
+							if (letterOrDigit && !previousLetterOrDigit) { break; }
+						} else {
+							if (!letterOrDigit && previousLetterOrDigit) { break; }
+						}
 						previousLetterOrDigit = letterOrDigit;
 						previousPunctuation = punctuation;
 						offsetInLine--;
@@ -2872,7 +3262,7 @@ eclipse.Editor = (function() {
 			}
 			return offset + direction;
 		},
-		_getOffset_IE: function (offset, word, direction) {
+		_getOffset_IE: function (offset, unit, direction) {
 			var document = this._frameDocument;
 			var model = this._model;
 			var lineIndex = model.getLineAtOffset(offset);
@@ -2888,31 +3278,33 @@ eclipse.Editor = (function() {
 				range = document.body.createTextRange();
 				range.moveToElementText(child.lastChild);
 				length = range.text.length;
-				range.moveEnd(word ? "word" : "character", direction);
+				range.moveEnd(unit, direction);
 				result = offset + range.text.length - length;
 			} else if (offset === lineOffset && direction < 0) {
 				result = lineOffset;
 			} else {
 				var lineChild = child.firstChild;
 				while (lineChild) {
-					if (!lineChild.ignoreChars) {
-						var node = lineChild.firstChild;
-						if (node.length + lineOffset > offset) {
-							range = document.body.createTextRange();
-							if (offset === lineOffset && direction < 0) {
-								range.moveToElementText(lineChild.previousSibling);
-							} else {
-								range.moveToElementText(lineChild);
-								range.collapse();
-								range.moveEnd("character", offset - lineOffset);
-							}
-							length = range.text.length;
-							range.moveEnd(word ? "word" : "character", direction);
-							result = offset + range.text.length - length;
-							break;
-						}
-						lineOffset = node.length + lineOffset;
+					var textNode = lineChild.firstChild;
+					var nodeLength = textNode.length;
+					if (lineChild.ignoreChars) {
+						nodeLength -= lineChild.ignoreChars;
 					}
+					if (lineOffset + nodeLength > offset) {
+						range = document.body.createTextRange();
+						if (offset === lineOffset && direction < 0) {
+							range.moveToElementText(lineChild.previousSibling);
+						} else {
+							range.moveToElementText(lineChild);
+							range.collapse();
+							range.moveEnd("character", offset - lineOffset);
+						}
+						length = range.text.length;
+						range.moveEnd(unit, direction);
+						result = offset + range.text.length - length;
+						break;
+					}
+					lineOffset = nodeLength + lineOffset;
 					lineChild = lineChild.nextSibling;
 				}
 			}
@@ -2963,10 +3355,12 @@ eclipse.Editor = (function() {
 			return child.lineIndex;
 		},
 		_getXToOffset: function (lineIndex, x) {
-			return isIE ? this._getXToOffset_IE(lineIndex, x) : this._getXToOffset_FF(lineIndex, x);
-		},
-		_getXToOffset_FF: function (lineIndex, x) {
 			var model = this._model;
+			var lineStart = model.getLineStart(lineIndex);
+			var lineEnd = model.getLineEnd(lineIndex);
+			if (lineStart === lineEnd) {
+				return lineStart;
+			}
 			var document = this._frameDocument;
 			var clientDiv = this._clientDiv;
 			var dummy;
@@ -2977,20 +3371,113 @@ eclipse.Editor = (function() {
 			var lineRect = this._getLineBoundingClientRect(child);
 			if (x < lineRect.left) { x = lineRect.left; }
 			if (x > lineRect.right) { x = lineRect.right; }
-			var offset = model.getLineStart(lineIndex);
+			/*
+			* Bug in IE 8 and earlier. The coordinates of getClientRects() are relative to
+			* the browser window.  The fix is to convert to the frame window before using it. 
+			*/
+			var deltaX = 0, rects;
+			if (isIE < 9) {
+				rects = child.getClientRects();
+				var minLeft = rects[0].left;
+				for (var i=1; i<rects.length; i++) {
+					minLeft = Math.min(rects[i].left, minLeft);
+				}
+				deltaX = minLeft - lineRect.left;
+			}
+			var scrollX = this._getScroll().x;
+			function _getClientRects(element) {
+				var rects, newRects, i, r;
+				if (!element._rectsCache) {
+					rects = element.getClientRects();
+					newRects = [rects.length];
+					for (i = 0; i<rects.length; i++) {
+						r = rects[i];
+						newRects[i] = {left: r.left - deltaX + scrollX, top: r.top, right: r.right - deltaX + scrollX, bottom: r.bottom};
+					}
+					element._rectsCache = newRects; 
+				}
+				rects = element._rectsCache;
+				newRects = [rects.length];
+				for (i = 0; i<rects.length; i++) {
+					r = rects[i];
+					newRects[i] = {left: r.left - scrollX, top: r.top, right: r.right - scrollX, bottom: r.bottom};
+				}
+				return newRects;
+			}
+			var logicalXDPI = isIE ? window.screen.logicalXDPI : 1;
+			var deviceXDPI = isIE ? window.screen.deviceXDPI : 1;
+			var offset = lineStart;
 			var lineChild = child.firstChild;
 			done:
 			while (lineChild) {
-				if (!lineChild.ignoreChars) {
-					var textNode = lineChild.firstChild;
-					var rects = lineChild.getClientRects();
-					for (var i = 0; i < rects.length; i++) {
-						var rect = rects[i];
-						if (rect.left <= x && x < rect.right) {
+				var textNode = lineChild.firstChild;
+				var nodeLength = textNode.length;
+				if (lineChild.ignoreChars) {
+					nodeLength -= lineChild.ignoreChars;
+				}
+				rects = _getClientRects(lineChild);
+				for (var j = 0; j < rects.length; j++) {
+					var rect = rects[j];
+					if (rect.left <= x && x < rect.right) {
+						var range, start, end;
+						if (isIE || isRangeRects) {
+							range = isRangeRects ? document.createRange() : document.body.createTextRange();
+							var high = nodeLength;
+							var low = -1;
+							while ((high - low) > 1) {
+								var mid = Math.floor((high + low) / 2);
+								start = low + 1;
+								end = mid === nodeLength - 1 && lineChild.ignoreChars ? textNode.length : mid + 1;
+								if (isRangeRects) {
+									range.setStart(textNode, start);
+									range.setEnd(textNode, end);
+								} else {
+									range.moveToElementText(lineChild);
+									range.move("character", start);
+									range.moveEnd("character", end - start);
+								}
+								rects = range.getClientRects();
+								var found = false;
+								for (var k = 0; k < rects.length; k++) {
+									rect = rects[k];
+									var rangeLeft = rect.left * logicalXDPI / deviceXDPI - deltaX;
+									var rangeRight = rect.right * logicalXDPI / deviceXDPI - deltaX;
+									if (rangeLeft <= x && x < rangeRight) {
+										found = true;
+										break;
+									}
+								}
+								if (found) {
+									high = mid;
+								} else {
+									low = mid;
+								}
+							}
+							offset += high;
+							start = high;
+							end = high === nodeLength - 1 && lineChild.ignoreChars ? textNode.length : high + 1;
+							if (isRangeRects) {
+								range.setStart(textNode, start);
+								range.setEnd(textNode, end);
+							} else {
+								range.moveToElementText(lineChild);
+								range.move("character", start);
+								range.moveEnd("character", end - start);
+							}
+							rect = range.getClientRects()[0];
+							//TODO test for character trailing (wrong for bidi)
+							if (x > ((rect.left * logicalXDPI / deviceXDPI - deltaX) + ((rect.right - rect.left) * logicalXDPI / deviceXDPI / 2))) {
+								offset++;
+							}
+						} else {
 							var newText = [];
-							for (var j = 0; j < textNode.length; j++) {
+							for (var q = 0; q < nodeLength; q++) {
 								newText.push("<span>");
-								newText.push(textNode.substringData(j, 1));
+								if (q === nodeLength - 1) {
+									newText.push(textNode.data.substring(q));
+								} else {
+									newText.push(textNode.data.substring(q, q + 1));
+								}
 								newText.push("</span>");
 							}
 							lineChild.innerHTML = newText.join("");
@@ -3015,117 +3502,20 @@ eclipse.Editor = (function() {
 								 * causes the selection to be lost. The fix is to detect this case
 								 * and restore the selection. 
 								 */
-								var selection = this._getSelection();
-								var spanOffset = offset, spanEndOffset = offset + textNode.length;
-								if ((spanOffset <= selection.start && selection.start < spanEndOffset) || (spanOffset <= selection.end && selection.end < spanEndOffset)) {
+								var s = this._getSelection();
+								if ((offset <= s.start && s.start < offset + nodeLength) || (offset <= s.end && s.end < offset + nodeLength)) {
 									this._updateDOMSelection();
 								}
 							}
-							break done;
 						}
+						break done;
 					}
-					offset += textNode.length;
 				}
+				offset += nodeLength;
 				lineChild = lineChild.nextSibling;
 			}
 			if (dummy) { clientDiv.removeChild(dummy); }
-			return offset;
-		},
-		_getXToOffset_IE: function (lineIndex, x) {
-			var model = this._model;
-			var document = this._frameDocument;
-			var clientDiv = this._clientDiv;
-			var dummy;
-			var child = this._getLineNode(lineIndex);
-			if (!child) {
-				child = dummy = this._createLine(clientDiv, null, document, lineIndex, model);
-			}
-			var lineRect = this._getLineBoundingClientRect(child);
-			if (x < lineRect.left) { x = lineRect.left; }
-			if (x > lineRect.right) { x = lineRect.right; }
-			/*
-			* Bug in IE. The coordinates of getClientRects() are relative to
-			* the browser window.  The fix is to convert to the frame window
-			* before using it. 
-			*/
-			var rects = child.getClientRects();
-			var minLeft = rects[0].left;
-			for (var i=1; i<rects.length; i++) {
-				minLeft = Math.min(rects[i].left, minLeft);
-			}
-			var deltaX = minLeft - lineRect.left;
-			var scrollX = this._getScroll().x;
-			function _getClientRects(element) {
-				var rects, newRects, i, r;
-				if (!element._rectsCache) {
-					rects = element.getClientRects();
-					newRects = [rects.length];
-					for (i = 0; i<rects.length; i++) {
-						r = rects[i];
-						newRects[i] = {left: r.left - deltaX + scrollX, top: r.top, right: r.right - deltaX + scrollX, bottom: r.bottom};
-					}
-					element._rectsCache = newRects; 
-				}
-				rects = element._rectsCache;
-				newRects = [rects.length];
-				for (i = 0; i<rects.length; i++) {
-					r = rects[i];
-					newRects[i] = {left: r.left - scrollX, top: r.top, right: r.right - scrollX, bottom: r.bottom};
-				}
-				return newRects;
-			}
-			var offset = model.getLineStart(lineIndex);
-			var lineChild = child.firstChild;
-			done:
-			while (lineChild) {
-				if (!lineChild.ignoreChars) {
-					var textNode = lineChild.firstChild;
-					rects = _getClientRects(lineChild);
-					for (var j = 0; j < rects.length; j++) {
-						var rect = rects[j];
-						if (rect.left <= x && x < rect.right) {
-							var range = document.body.createTextRange();
-							var length = textNode.length;
-							var high = length;
-							var low = -1;
-							while ((high - low) > 1) {
-								var mid = Math.floor((high + low) / 2);
-								range.moveToElementText(lineChild);
-								range.move("character", low + 1);
-								range.moveEnd("character", mid - low);
-								rects = range.getClientRects();
-								var found = false;
-								for (var k = 0; k < rects.length; k++) {
-									rect = rects[k];
-									if ((rect.left - deltaX) <= x && x < (rect.right - deltaX)) {
-										found = true;
-										break;
-									}
-								}
-								if (found) {
-									high = mid;
-								} else {
-									low = mid;
-								}
-							}
-							offset += high;
-							range.moveToElementText(lineChild);
-							range.move("character", high);
-							range.moveEnd("character", 1);
-							rect = range.getClientRects()[0];
-							//TODO test for character trailing (wrong for bidi)
-							if (x > ((rect.left - deltaX) + ((rect.right - rect.left) / 2))) {
-								offset++;
-							}
-							break done;
-						}
-					}
-					offset += textNode.length;
-				}
-				lineChild = lineChild.nextSibling;
-			}
-			if (dummy) { clientDiv.removeChild(dummy); }
-			return offset;
+			return Math.min(lineEnd, Math.max(lineStart, offset));
 		},
 		_getYToLine: function (y) {
 			var editorPad = this._getEditorPadding();
@@ -3135,6 +3525,33 @@ eclipse.Editor = (function() {
 			var lineIndex = Math.floor((y + this._getScroll().y) / lineHeight);
 			var lineCount = this._model.getLineCount();
 			return Math.max(0, Math.min(lineCount - 1, lineIndex));
+		},
+		_getOffsetBounds: function(offset) {
+			var model = this._model;
+			var lineIndex = model.getLineAtOffset(offset);
+			var lineHeight = this._getLineHeight();
+			var scroll = this._getScroll();
+			var editorPad = this._getEditorPadding();
+			var editorRect = this._editorDiv.getBoundingClientRect();
+			var bounds = this._getBoundsAtOffset(offset);
+			var left = bounds.left;
+			var right = bounds.right;
+			var top = (lineIndex * lineHeight) - scroll.y + editorRect.top + editorPad.top;
+			var bottom = top + lineHeight;
+			return {left: left, top: top, right: right, bottom: bottom};
+		},
+		_hitOffset: function (offset, x, y) {
+			var bounds = this._getOffsetBounds(offset);
+			var left = bounds.left;
+			var right = bounds.right;
+			var top = bounds.top;
+			var bottom = bounds.bottom;
+			var area = 20;
+			left -= area;
+			top -= area;
+			right += area;
+			bottom += area;
+			return (left <= x && x <= right && top <= y && y <= bottom);
 		},
 		_hookEvents: function() {
 			var self = this;
@@ -3155,49 +3572,61 @@ eclipse.Editor = (function() {
 			
 			var clientDiv = this._clientDiv;
 			var editorDiv = this._editorDiv;
-			var topNode = this._overlayDiv || this._clientDiv;
 			var body = this._frameDocument.body; 
-			var resizeNode = isIE ? this._frame : this._frameWindow;
-			var focusNode = isIE ? this._clientDiv: this._frameWindow;
-			this._handlers = [
-				{target: editorDiv, type: "scroll", handler: function(e) { return self._handleScroll(e);}},
-				{target: clientDiv, type: "keydown", handler: function(e) { return self._handleKeyDown(e);}},
-				{target: clientDiv, type: "keypress", handler: function(e) { return self._handleKeyPress(e);}},
-				{target: clientDiv, type: "keyup", handler: function(e) { return self._handleKeyUp(e);}},
-				{target: clientDiv, type: "selectstart", handler: function(e) { return self._handleSelectStart(e);}},
-				{target: clientDiv, type: "contextmenu", handler: function(e) { return self._handleContextMenu(e);}},
-				{target: clientDiv, type: "copy", handler: function(e) { return self._handleCopy(e);}},
-				{target: clientDiv, type: "cut", handler: function(e) { return self._handleCut(e);}},
-				{target: clientDiv, type: "paste", handler: function(e) { return self._handlePaste(e);}},
-				{target: focusNode, type: "blur", handler: function(e) { return self._handleBlur(e);}},
-				{target: focusNode, type: "focus", handler: function(e) { return self._handleFocus(e);}},
-				{target: topNode, type: "mousedown", handler: function(e) { return self._handleMouseDown(e);}},
-				{target: body, type: "mousedown", handler: function(e) { return self._handleBodyMouseDown(e);}},
-				{target: topNode, type: "dragstart", handler: function(e) { return self._handleDragStart(e);}},
-				{target: resizeNode, type: "resize", handler: function(e) { return self._handleResize(e);}}
-			];
-			if (isIE) {
-				this._handlers.push({target: this._frameDocument, type: "activate", handler: function(e) { return self._handleDocFocus(e); }});
+			var handlers = this._handlers = [];
+			var resizeNode = isIE < 9 ? this._frame : this._frameWindow;
+			var focusNode = isPad ? this._textArea : (isIE ||  isFirefox ? this._clientDiv: this._frameWindow);
+			handlers.push({target: resizeNode, type: "resize", handler: function(e) { return self._handleResize(e);}});
+			handlers.push({target: focusNode, type: "blur", handler: function(e) { return self._handleBlur(e);}});
+			handlers.push({target: focusNode, type: "focus", handler: function(e) { return self._handleFocus(e);}});
+			handlers.push({target: editorDiv, type: "scroll", handler: function(e) { return self._handleScroll(e);}});
+			if (isPad) {
+				var touchDiv = this._touchDiv;
+				var textArea = this._textArea;
+				handlers.push({target: textArea, type: "keydown", handler: function(e) { return self._handleKeyDown(e);}});
+				handlers.push({target: textArea, type: "input", handler: function(e) { return self._handleInput(e); }});
+				handlers.push({target: textArea, type: "textInput", handler: function(e) { return self._handleTextInput(e); }});
+				handlers.push({target: touchDiv, type: "touchstart", handler: function(e) { return self._handleTouchStart(e); }});
+				handlers.push({target: touchDiv, type: "touchmove", handler: function(e) { return self._handleTouchMove(e); }});
+				handlers.push({target: touchDiv, type: "touchend", handler: function(e) { return self._handleTouchEnd(e); }});
+			} else {
+				var topNode = this._overlayDiv || this._clientDiv;
+				handlers.push({target: clientDiv, type: "keydown", handler: function(e) { return self._handleKeyDown(e);}});
+				handlers.push({target: clientDiv, type: "keypress", handler: function(e) { return self._handleKeyPress(e);}});
+				handlers.push({target: clientDiv, type: "keyup", handler: function(e) { return self._handleKeyUp(e);}});
+				handlers.push({target: clientDiv, type: "selectstart", handler: function(e) { return self._handleSelectStart(e);}});
+				handlers.push({target: clientDiv, type: "contextmenu", handler: function(e) { return self._handleContextMenu(e);}});
+				handlers.push({target: clientDiv, type: "copy", handler: function(e) { return self._handleCopy(e);}});
+				handlers.push({target: clientDiv, type: "cut", handler: function(e) { return self._handleCut(e);}});
+				handlers.push({target: clientDiv, type: "paste", handler: function(e) { return self._handlePaste(e);}});
+				handlers.push({target: topNode, type: "mousedown", handler: function(e) { return self._handleMouseDown(e);}});
+				handlers.push({target: body, type: "mousedown", handler: function(e) { return self._handleBodyMouseDown(e);}});
+				handlers.push({target: topNode, type: "dragstart", handler: function(e) { return self._handleDragStart(e);}});
+				handlers.push({target: topNode, type: "dragover", handler: function(e) { return self._handleDragOver(e);}});
+				handlers.push({target: topNode, type: "drop", handler: function(e) { return self._handleDrop(e);}});
+				if (isIE) {
+					handlers.push({target: this._frameDocument, type: "activate", handler: function(e) { return self._handleDocFocus(e); }});
+				}
+				if (isFirefox) {
+					handlers.push({target: this._frameDocument, type: "focus", handler: function(e) { return self._handleDocFocus(e); }});
+				}
+				if (!isIE && !isOpera) {
+					var wheelEvent = isFirefox ? "DOMMouseScroll" : "mousewheel";
+					handlers.push({target: this._editorDiv, type: wheelEvent, handler: function(e) { return self._handleMouseWheel(e); }});
+				}
+				if (isFirefox && !isWindows) {
+					handlers.push({target: this._clientDiv, type: "DOMCharacterDataModified", handler: function (e) { return self._handleDataModified(e); }});
+				}
+				if (this._overlayDiv) {
+					handlers.push({target: this._overlayDiv, type: "contextmenu", handler: function(e) { return self._handleContextMenu(e); }});
+				}
+				if (!isW3CEvents) {
+					handlers.push({target: this._clientDiv, type: "dblclick", handler: function(e) { return self._handleDblclick(e); }});
+				}
 			}
-			if (isFirefox) {
-				this._handlers.push({target: this._frameDocument, type: "focus", handler: function(e) { return self._handleDocFocus(e); }});
-			}
-			if (!isIE && !isOpera) {
-				var wheelEvent = isFirefox ? "DOMMouseScroll" : "mousewheel";
-				this._handlers.push({target: this._editorDiv, type: wheelEvent, handler: function(e) { return self._handleMouseWheel(e); }});
-			}
-			if (isFirefox && !isWindows) {
-				this._handlers.push({target: this._clientDiv, type: "DOMCharacterDataModified", handler: function (e) { return self._handleDataModified(e); }});
-			}
-			if (this._overlayDiv) {
-				this._handlers.push({target: this._overlayDiv, type: "contextmenu", handler: function(e) { return self._handleContextMenu(e); }});
-			}
-			if (!isW3CEvents) {
-				this._handlers.push({target: this._clientDiv, type: "dblclick", handler: function(e) { return self._handleDblclick(e); }});
-			}
-			for (var i=0; i<this._handlers.length; i++) {
-				var h = this._handlers[i];
-				addHandler(h.target, h.type, h.handler);
+			for (var i=0; i<handlers.length; i++) {
+				var h = handlers[i];
+				addHandler(h.target, h.type, h.handler, h.capture);
 			}
 		},
 		_init: function(options) {
@@ -3259,7 +3688,9 @@ eclipse.Editor = (function() {
 			html.push("<!DOCTYPE html>");
 			html.push("<html>");
 			html.push("<head>");
-			html.push("<meta http-equiv='X-UA-Compatible' content='IE=EmulateIE7'/>");
+			if (isIE < 9) {
+				html.push("<meta http-equiv='X-UA-Compatible' content='IE=EmulateIE7'/>");
+			}
 			html.push("<style>");
 			html.push(".editorContainer {font-family: monospace; font-size: 10pt;}");
 			html.push(".editor {padding: 1px 2px;}");
@@ -3301,16 +3732,40 @@ eclipse.Editor = (function() {
 			body.style.borderWidth = "0px";
 			body.style.padding = "0px";
 			
-			var textArea = document.createElement("TEXTAREA");
-			this._textArea = textArea;
-			textArea.id = "textArea";
-			textArea.tabIndex = -1;
-			textArea.style.position = "fixed";
-			textArea.style.whiteSpace = "pre";
-			textArea.style.top = "-1000px";
-			textArea.style.width = "100px";
-			textArea.style.height = "100px";
-			body.appendChild(textArea);
+			if (isPad) {
+				var touchDiv = parentDocument.createElement("DIV");
+				this._touchDiv = touchDiv;
+				touchDiv.style.position = "absolute";
+				touchDiv.style.border = "0px";
+				touchDiv.style.padding = "0px";
+				touchDiv.style.margin = "0px";
+				touchDiv.style.zIndex = "2";
+				touchDiv.style.overflow = "hidden";
+				touchDiv.style.background="transparent";
+//				touchDiv.style.background="green";
+//				touchDiv.style.opacity="0.5";
+				touchDiv.style.WebkitUserSelect = "none";
+				parent.appendChild(touchDiv);
+
+				var textArea = parentDocument.createElement("TEXTAREA");
+				this._textArea = textArea;
+				textArea.style.position = "absolute";
+				textArea.style.whiteSpace = "pre";
+				textArea.style.left = "-1000px";
+				textArea.tabIndex = 1;
+				textArea.autocapitalize = false;
+				textArea.autocorrect = false;
+				textArea.className = "editorContainer";
+				textArea.style.background = "transparent";
+				textArea.style.color = "transparent";
+				textArea.style.border = "0px";
+				textArea.style.padding = "0px";
+				textArea.style.margin = "0px";
+				textArea.style.borderRadius = "0px";
+				textArea.style.WebkitAppearance = "none";
+				textArea.style.WebkitTapHighlightColor = "transparent";
+				touchDiv.appendChild(textArea);
+			}
 
 			var editorDiv = document.createElement("DIV");
 			editorDiv.className = "editor";
@@ -3333,7 +3788,77 @@ eclipse.Editor = (function() {
 			scrollDiv.style.borderWidth = "0px";
 			scrollDiv.style.padding = "0px";
 			editorDiv.appendChild(scrollDiv);
+
+			this._fullSelection = options.fullSelection === undefined || options.fullSelection;
+			if (isPad || (this._fullSelection && !isWebkit)) {
+				this._hightlightRGB = "Highlight";
+				var selDiv1 = document.createElement("DIV");
+				this._selDiv1 = selDiv1;
+				selDiv1.id = "selDiv1";
+				selDiv1.style.position = "fixed";
+				selDiv1.style.borderWidth = "0px";
+				selDiv1.style.margin = "0px";
+				selDiv1.style.padding = "0px";
+				selDiv1.style.MozOutline = "none";
+				selDiv1.style.outline = "none";
+				selDiv1.style.background = this._hightlightRGB;
+				selDiv1.style.width="0px";
+				selDiv1.style.height="0px";
+				scrollDiv.appendChild(selDiv1);
+				var selDiv2 = document.createElement("DIV");
+				this._selDiv2 = selDiv2;
+				selDiv2.id = "selDiv2";
+				selDiv2.style.position = "fixed";
+				selDiv2.style.borderWidth = "0px";
+				selDiv2.style.margin = "0px";
+				selDiv2.style.padding = "0px";
+				selDiv2.style.MozOutline = "none";
+				selDiv2.style.outline = "none";
+				selDiv2.style.background = this._hightlightRGB;
+				selDiv2.style.width="0px";
+				selDiv2.style.height="0px";
+				scrollDiv.appendChild(selDiv2);
+				var selDiv3 = document.createElement("DIV");
+				this._selDiv3 = selDiv3;
+				selDiv3.id = "selDiv3";
+				selDiv3.style.position = "fixed";
+				selDiv3.style.borderWidth = "0px";
+				selDiv3.style.margin = "0px";
+				selDiv3.style.padding = "0px";
+				selDiv3.style.MozOutline = "none";
+				selDiv3.style.outline = "none";
+				selDiv3.style.background = this._hightlightRGB;
+				selDiv3.style.width="0px";
+				selDiv3.style.height="0px";
+				scrollDiv.appendChild(selDiv3);
 				
+				/*
+				* Bug in Firefox. The Highlight color is mapped to list selection
+				* background instead of the text selection background.  The fix
+				* is to map known colors using a table or fallback to light blue.
+				*/
+				if (isFirefox && isMac) {
+					var style = frameWindow.getComputedStyle(selDiv3, null);
+					var rgb = style.getPropertyValue("background-color");
+					switch (rgb) {
+						case "rgb(119, 141, 168)": rgb = "rgb(199, 208, 218)"; break;
+						case "rgb(127, 127, 127)": rgb = "rgb(198, 198, 198)"; break;
+						case "rgb(255, 193, 31)": rgb = "rgb(250, 236, 115)"; break;
+						case "rgb(243, 70, 72)": rgb = "rgb(255, 176, 139)"; break;
+						case "rgb(255, 138, 34)": rgb = "rgb(255, 209, 129)"; break;
+						case "rgb(102, 197, 71)": rgb = "rgb(194, 249, 144)"; break;
+						case "rgb(140, 78, 184)": rgb = "rgb(232, 184, 255)"; break;
+						default: rgb = "rgb(180, 213, 255)"; break;
+					}
+					this._hightlightRGB = rgb;
+					selDiv1.style.background = rgb;
+					selDiv2.style.background = rgb;
+					selDiv3.style.background = rgb;
+					var styleSheet = document.styleSheets[0];
+					styleSheet.insertRule("::-moz-selection {background: " + rgb + "; }", 0);
+				}
+			}
+
 			var clientDiv = document.createElement("DIV");
 			clientDiv.className = "editorContent";
 			this._clientDiv = clientDiv;
@@ -3345,6 +3870,9 @@ eclipse.Editor = (function() {
 			clientDiv.style.padding = "0px";
 			clientDiv.style.MozOutline = "none";
 			clientDiv.style.outline = "none";
+			if (isPad) {
+				clientDiv.style.WebkitTapHighlightColor = "transparent";
+			}
 			scrollDiv.appendChild(clientDiv);
 
 			if (isFirefox) {
@@ -3359,31 +3887,25 @@ eclipse.Editor = (function() {
 				overlayDiv.style.zIndex = "1";
 				scrollDiv.appendChild(overlayDiv);
 			}
-			clientDiv.contentEditable = "true";
-			body.style.lineHeight = this._calculateLineHeight() + "px";
+			if (!isPad) {
+				clientDiv.contentEditable = "true";
+			}
+			this._lineHeight = this._calculateLineHeight();
+			this._editorPadding = this._calculatePadding();
+			if (isIE) {
+				body.style.lineHeight = this._lineHeight + "px";
+			}
+			if (options.tabSize) {
+				if (isOpera) {
+					clientDiv.style.OTabSize = options.tabSize+"";
+				} else if (isFirefox >= 4) {
+					clientDiv.style.MozTabSize = options.tabSize+"";
+				} else if (options.tabSize !== 8) {
+					this._tabSize = options.tabSize;
+				}
+			}
 			this._createActions();
 			this._hookEvents();
-		},
-		_isDOMSelectionComplete: function() {
-			var selection = this._getSelection();
-			var topIndex = this._getTopIndex();
-			var bottomIndex = this._getBottomIndex();
-			var model = this._model;
-			var firstLine = model.getLineAtOffset(selection.start);
-			var lastLine = model.getLineAtOffset(selection.start !== selection.end ? selection.end - 1 : selection.end);
-			if (topIndex <= firstLine && firstLine <= bottomIndex && topIndex <= lastLine && lastLine <= bottomIndex) {
-				var child = this._getLineNode(firstLine);
-				while (child && child.lineIndex <= lastLine) {
-					var lineChild = child.firstChild;
-					while (lineChild) {
-						if (lineChild.ignoreChars) { return false; }
-						lineChild = lineChild.nextSibling;
-					}
-					child = this._getLineNext(child);
-				}
-				return true;
-			}
-			return false;
 		},
 		_modifyContent: function(e, updateCaret) {
 			if (this.readonly && !e._code) {
@@ -3468,41 +3990,114 @@ eclipse.Editor = (function() {
 				self._updatePage();
 			}, 0);
 		},
+		_resizeTouchDiv: function() {
+			var editorRect = this._editorDiv.getBoundingClientRect();
+			var parentRect = this._frame.getBoundingClientRect();
+			var temp = this._frame;
+			while (temp) {
+				if (temp.style && temp.style.top) { break; }
+				temp = temp.parentNode;
+			}
+			var parentTop = parentRect.top;
+			if (temp) {
+				parentTop -= temp.getBoundingClientRect().top;
+			} else {
+				parentTop += this._parentDocument.body.scrollTop;
+			}
+			temp = this._frame;
+			while (temp) {
+				if (temp.style && temp.style.left) { break; }
+				temp = temp.parentNode;
+			}
+			var parentLeft = parentRect.left;
+			if (temp) {
+				parentLeft -= temp.getBoundingClientRect().left;
+			} else {
+				parentLeft += this._parentDocument.body.scrollLeft;
+			}
+			var touchDiv = this._touchDiv;
+			touchDiv.style.left = (parentLeft + editorRect.left) + "px";
+			touchDiv.style.top = (parentTop + editorRect.top) + "px";
+			touchDiv.style.width = editorRect.width + "px";
+			touchDiv.style.height = editorRect.height + "px";
+		},
 		_scrollView: function (pixelX, pixelY) {
 			/*
-			* IE redraws the page when scrollTop is changed. This redraw is not necessary
-			* while scrolling since updatePage() will be called in _handleScroll(). In order
-			* to improve performance, the page is hidden during scroll causing only on redraw
-			* to happen. Note that this approach causes flashing on Firefox.
-			*
-			* This code is intentionally commented. It causes focus to loose focus.
+			* Always set _ensureCaretVisible to false so that the editor does not scroll
+			* to show the caret when scrollView is not called from showCaret().
 			*/
-//			if (isIE) {
-//				this._frameDocument.body.style.visibility = "hidden";
-//			}
-			this._editorDiv.scrollLeft += pixelX;
-			this._editorDiv.scrollTop += pixelY;
-			this._handleScroll();
-//			if (isIE) {
-//				this._frameDocument.body.style.visibility = "visible";
-//				this.focus();
-//			}
+			this._ensureCaretVisible = false;
+			
+			/*
+			* Scrolling is done only by setting the scrollLeft and scrollTop fields in the
+			* editor div. This causes an updatePage from the scroll event. In some browsers 
+			* this event is asynchromous and forcing update page to run synchronously
+			* (by calling doScroll) leads to redraw problems. On Chrome 11, the editor 
+			* stops redrawing at times when holding PageDown/PageUp key.
+			* On Firefox 4 for Linux, the editor redraws the first page when holding 
+			* PageDown/PageUp key, but it will not redraw again until the key is released.
+			*/
+			var editorDiv = this._editorDiv;
+			if (pixelX) { editorDiv.scrollLeft += pixelX; }
+			if (pixelY) { editorDiv.scrollTop += pixelY; }
 		},
 		_setClipboardText: function (text, event) {
 			if (this._frameWindow.clipboardData) {
 				//IE
 				return this._frameWindow.clipboardData.setData("Text", text);
 			}
+			/* Feature in Chrome, clipboardData.setData is no-op on Chrome even though it returns true */
 			if (isChrome || isFirefox || !event) {
-				/* Feature in Chrome, clipboardData.setData is no-op on chrome, the fix is to use execCommand */
+				var window = this._frameWindow;
 				var document = this._frameDocument;
-				var textArea = this._textArea;
-				textArea.value = text;
-				textArea.select();
+				var child = document.createElement("PRE");
+				child.style.position = "fixed";
+				child.style.left = "-1000px";
+				var cr = 0, lf = 0, index = 0, length = text.length;
+				while (index < length) {
+					if (cr !== -1 && cr <= index) { cr = text.indexOf("\r", index); }
+					if (lf !== -1 && lf <= index) { lf = text.indexOf("\n", index); }
+					var start = index, end;
+					if (lf === -1 && cr === -1) {
+						child.appendChild(document.createTextNode(text.substring(index)));
+						break;
+					}
+					if (cr !== -1 && lf !== -1) {
+						if (cr + 1 === lf) {
+							end = cr;
+							index = lf + 1;
+						} else {
+							end = cr < lf ? cr : lf;
+							index = (cr < lf ? cr : lf) + 1;
+						}
+					} else if (cr !== -1) {
+						end = cr;
+						index = cr + 1;
+					} else {
+						end = lf;
+						index = lf + 1;
+					}
+					child.appendChild(document.createTextNode(text.substring(start, end)));
+					child.appendChild(document.createElement("BR"));
+				}
+				child.appendChild(document.createTextNode(" "));
+				this._clientDiv.appendChild(child);
+				var range = document.createRange();
+				range.setStart(child.firstChild, 0);
+				range.setEndBefore(child.lastChild);
+				var sel = window.getSelection();
+				if (sel.rangeCount > 0) { sel.removeAllRanges(); }
+				sel.addRange(range);
+				var self = this;
+				var cleanup = function() {
+					self._clientDiv.removeChild(child);
+					self._updateDOMSelection();
+				};
 				var result = false;
-				
-				//Try execCommand first, it works on firefox with clipboard permission,
-				// chrome 5, safari 4.
+				/* 
+				* Try execCommand first, it works on firefox with clipboard permission,
+				* chrome 5, safari 4.
+				*/
 				this._ignoreCopy = true;
 				try {
 					result = document.execCommand("copy", false, null);
@@ -3510,27 +4105,17 @@ eclipse.Editor = (function() {
 				this._ignoreCopy = false;
 				if (!result) {
 					if (event) {
-						if (event.type === "copy" && this._isDOMSelectionComplete()) {
-							this.focus();
-							return false;
-						}
-						var self = this;
-						setTimeout(function() {
-							self.focus();
-						}, 0);
+						setTimeout(cleanup, 0);
 						return false;
-					} else {
-						//no event and no permission, give up
-						this.focus();
-						return true;
 					}
 				}
-				this.focus();
-				return result;
+				/* no event and no permission, copy can not be done */
+				cleanup();
+				return true;
 			}
 			if (event && event.clipboardData) {
 				//webkit
-				return event.clipboardData.setData("text/plain", text);
+				return event.clipboardData.setData("text/plain", text); 
 			}
 		},
 		_setDOMSelection: function (startNode, startOffset, endNode, endOffset) {
@@ -3539,46 +4124,157 @@ eclipse.Editor = (function() {
 			var startLineNode, startLineOffset, endLineNode, endLineOffset;
 			var offset = 0;
 			var lineChild = startNode.firstChild;
-			var node;
+			var node, nodeLength, model = this._model;
+			var startLineEnd = model.getLine(startNode.lineIndex).length;
 			while (lineChild) {
 				node = lineChild.firstChild;
-				if (node.length + offset > startOffset) {
+				nodeLength = node.length;
+				if (lineChild.ignoreChars) {
+					nodeLength -= lineChild.ignoreChars;
+				}
+				if (offset + nodeLength > startOffset || offset + nodeLength >= startLineEnd) {
 					startLineNode = node;
 					startLineOffset = startOffset - offset;
+					if (lineChild.ignoreChars && nodeLength > 0 && startLineOffset === nodeLength) {
+						startLineOffset += lineChild.ignoreChars; 
+					}
 					break;
 				}
-				offset += node.length;
-				if (lineChild.ignoreChars) {
-					startOffset += node.length;
-				}
+				offset += nodeLength;
 				lineChild = lineChild.nextSibling;
-			}
-			if (!lineChild) {
-				startLineNode = node;
-				startLineOffset = node.length;
 			}
 			offset = 0;
 			lineChild = endNode.firstChild;
+			var endLineEnd = this._model.getLine(endNode.lineIndex).length;
 			while (lineChild) {
 				node = lineChild.firstChild;
-				if (node.length + offset > endOffset) {
+				nodeLength = node.length;
+				if (lineChild.ignoreChars) {
+					nodeLength -= lineChild.ignoreChars;
+				}
+				if (nodeLength + offset > endOffset || offset + nodeLength >= endLineEnd) {
 					endLineNode = node;
 					endLineOffset = endOffset - offset;
+					if (lineChild.ignoreChars && nodeLength > 0 && endLineOffset === nodeLength) {
+						endLineOffset += lineChild.ignoreChars; 
+					}
 					break;
 				}
-				offset += node.length;
-				if (lineChild.ignoreChars) {
-					endOffset += node.length;
-				}
+				offset += nodeLength;
 				lineChild = lineChild.nextSibling;
 			}
-			if (!lineChild) {
-				endLineNode = node;
-				endLineOffset = node.length;
+			
+			if (this._selDiv1) {
+				var startLineBounds, l;
+				startLineBounds = this._getLineBoundingClientRect(startNode);
+				if (startOffset === 0) {
+					l = startLineBounds.left;
+				} else {
+					if (startOffset >= startLineEnd) {
+						l = startLineBounds.right;
+					} else {
+						this._ignoreDOMSelection = true;
+						l = this._getBoundsAtOffset(model.getLineStart(startNode.lineIndex) + startOffset).left;
+						this._ignoreDOMSelection = false;
+					}
+				}
+				var textArea = this._textArea;
+				if (textArea) {
+					textArea.selectionStart = textArea.selectionEnd = 0;
+					var rect = this._frame.getBoundingClientRect();
+					var touchRect = this._touchDiv.getBoundingClientRect();
+					var editorBounds = this._editorDiv.getBoundingClientRect();
+					if (!(editorBounds.left <= l && l <= editorBounds.left + editorBounds.width &&
+						editorBounds.top <= startLineBounds.top && startLineBounds.top <= editorBounds.top + editorBounds.height) ||
+						!(startNode === endNode && startOffset === endOffset))
+					{
+						textArea.style.left = "-1000px";
+					} else {
+						textArea.style.left = (l - 4 + rect.left - touchRect.left) + "px";
+					}
+					textArea.style.top = (startLineBounds.top + rect.top - touchRect.top) + "px";
+					textArea.style.width = "6px";
+					textArea.style.height = (startLineBounds.bottom - startLineBounds.top) + "px";
+				}
+			
+				var selDiv = this._selDiv1;
+				selDiv.style.width = "0px";
+				selDiv.style.height = "0px";
+				selDiv = this._selDiv2;
+				selDiv.style.width = "0px";
+				selDiv.style.height = "0px";
+				selDiv = this._selDiv3;
+				selDiv.style.width = "0px";
+				selDiv.style.height = "0px";
+				if (!(startNode === endNode && startOffset === endOffset)) {
+					var handleWidth = isPad ? 2 : 0;
+					var handleBorder = handleWidth + "px blue solid";
+					var editorPad = this._getEditorPadding();
+					var clientRect = this._clientDiv.getBoundingClientRect();
+					var editorRect = this._editorDiv.getBoundingClientRect();
+					var left = editorRect.left + editorPad.left;
+					var right = clientRect.right;
+					var top = editorRect.top + editorPad.top;
+					var bottom = clientRect.bottom;
+					var r;
+					var endLineBounds = this._getLineBoundingClientRect(endNode);
+					if (endOffset === 0) {
+						r = endLineBounds.left;
+					} else {
+						if (endOffset >= endLineEnd) {
+							r = endLineBounds.right;
+						} else {
+							this._ignoreDOMSelection = true;
+							r = this._getBoundsAtOffset(model.getLineStart(endNode.lineIndex) + endOffset).left;
+							this._ignoreDOMSelection = false;
+						}
+					}
+					var sel1Div = this._selDiv1;
+					var sel1Left = Math.min(right, Math.max(left, l));
+					var sel1Top = Math.min(bottom, Math.max(top, startLineBounds.top));
+					var sel1Right = right;
+					var sel1Bottom = Math.min(bottom, Math.max(top, startLineBounds.bottom));
+					sel1Div.style.left = sel1Left + "px";
+					sel1Div.style.top = sel1Top + "px";
+					sel1Div.style.width = Math.max(0, sel1Right - sel1Left) + "px";
+					sel1Div.style.height = Math.max(0, sel1Bottom - sel1Top) + (isPad ? 1 : 0) + "px";
+					if (isPad) {
+						sel1Div.style.borderLeft = handleBorder;
+						sel1Div.style.borderRight = "0px";
+					}
+					if (startNode === endNode) {
+						sel1Right = Math.min(r, right);
+						sel1Div.style.width = Math.max(0, sel1Right - sel1Left - handleWidth * 2) + "px";
+						if (isPad) {
+							sel1Div.style.borderRight = handleBorder;
+						}
+					} else {
+						var sel3Left = left;
+						var sel3Top = Math.min(bottom, Math.max(top, endLineBounds.top));
+						var sel3Right = Math.min(right, Math.max(left, r));
+						var sel3Bottom = Math.min(bottom, Math.max(top, endLineBounds.bottom));
+						var sel3Div = this._selDiv3;
+						sel3Div.style.left = sel3Left + "px";
+						sel3Div.style.top = sel3Top + "px";
+						sel3Div.style.width = Math.max(0, sel3Right - sel3Left - handleWidth) + "px";
+						sel3Div.style.height = Math.max(0, sel3Bottom - sel3Top) + "px";
+						if (isPad) {
+							sel3Div.style.borderRight = handleBorder;
+						}
+						if (sel3Top - sel1Bottom > 0) {
+							var sel2Div = this._selDiv2;
+							sel2Div.style.left = left + "px";
+							sel2Div.style.top = sel1Bottom + "px";
+							sel2Div.style.width = Math.max(0, right - left) + "px";
+							sel2Div.style.height = Math.max(0, sel3Top - sel1Bottom) + (isPad ? 1 : 0) + "px";
+						}
+					}
+				}
+				if (isPad) { return; }
 			}
 			var range;
 			if (window.getSelection) {
-				//FF
+				//W3C
 				range = document.createRange();
 				range.setStart(startLineNode, startLineOffset);
 				range.setEnd(endLineNode, endLineOffset);
@@ -3588,7 +4284,7 @@ eclipse.Editor = (function() {
 				sel.addRange(range);
 				this._ignoreSelect = true;
 			} else if (document.selection) {
-				//IE
+				//IE < 9
 				var body = document.body;
 
 				/*
@@ -3665,14 +4361,14 @@ eclipse.Editor = (function() {
 					if (this._doubleClickSelection) {
 						if (offset >= this._doubleClickSelection.start) {
 							start = this._doubleClickSelection.start;
-							end = this._getOffset(offset, true, +1);
+							end = this._getOffset(offset, "wordend", +1);
 						} else {
-							start = this._getOffset(offset, true, -1);
+							start = this._getOffset(offset, "word", -1);
 							end = this._doubleClickSelection.end;
 						}
 					} else {
-						start = this._getOffset(offset, true, -1);
-						end = this._getOffset(start, true, +1);
+						start = this._getOffset(offset, "word", -1);
+						end = this._getOffset(start, "wordend", +1);
 					}
 				} else {
 					if (this._doubleClickSelection) {
@@ -3757,8 +4453,16 @@ eclipse.Editor = (function() {
 
 			if (pixelX !== 0 || pixelY !== 0) {
 				this._scrollView (pixelX, pixelY);
+				/*
+				* When the editor scrolls it is possible that one of the scrollbars can show over the caret.
+				* Depending on the browser scrolling can be synchronous (Safari), in which case the change 
+				* can be detected before showCaret() returns. When scrolling is asynchronous (most browsers), 
+				* the detection is done during the next update page.
+				*/
 				if (clientHeight !== this._getClientHeight() || clientWidth !== this._getClientWidth()) {
 					this._showCaret();
+				} else {
+					this._ensureCaretVisible = true;
 				}
 				return true;
 			}
@@ -3871,44 +4575,50 @@ eclipse.Editor = (function() {
 				}
 				child = nextChild;
 			}
-			// Webkit still wraps even if pre is used
-			clientDiv.style.width = (0x7FFFF).toString() + "px";
 
 			child = this._getLineNext();
+			var frag = document.createDocumentFragment();
 			for (lineIndex=lineStart; lineIndex<=lineEnd; lineIndex++) {
 				if (!child || child.lineIndex > lineIndex) {
-					child = this._createLine(clientDiv, child, document, lineIndex, model);
-					var rect = this._getLineBoundingClientRect(child);
-					lineWidth = rect.right - rect.left;
-					child.lineWidth = lineWidth; 
-					// when the maxLineIndex is known measure only the lines that have changed
-					if (this._maxLineIndex !== -1) {
-						if (lineWidth >= this._maxLineWidth) {
-							this._maxLineWidth = lineWidth;
-							this._maxLineIndex = lineIndex;
-						}
+					this._createLine(frag, null, document, lineIndex, model);
+				} else {
+					if (frag.firstChild) {
+						clientDiv.insertBefore(frag, child);
+						frag = document.createDocumentFragment();
 					}
-				}
-				if (lineIndex === topIndex) { this._topChild = child; }
-				if (lineIndex === bottomIndex) { this._bottomChild = child; }
-				if (child.lineIndex === lineIndex) {
 					child = this._getLineNext(child);
 				}
+			}
+			if (frag.firstChild) { clientDiv.insertBefore(frag, child); }
+
+			/*
+			* Feature in WekKit. Webkit limits the width of the lines
+			* computed below to the width of the client div.  This causes
+			* the lines to be wrapped even though "pre" is set.  The fix
+			* is to set the width of the client div to a larger number
+			* before computing the lines width.  Note that this value is
+			* reset to the appropriate value further down.
+			*/ 
+			if (isWebkit) {
+				clientDiv.style.width = (0x7FFFF).toString() + "px";
 			}
 
-			// when the maxLineIndex is not known all the visible lines need to be measured
-			if (this._maxLineIndex === -1) {
-				child = this._getLineNext();
-				while (child) {
-					lineWidth = child.lineWidth;
-					if (lineWidth >= this._maxLineWidth) {
-						this._maxLineWidth = lineWidth;
-						this._maxLineIndex = child.lineIndex;
-					}
-					child = this._getLineNext(child);
+			child = this._getLineNext();
+			while (child) {
+				lineWidth = child.lineWidth;
+				if (lineWidth === undefined) {
+					var rect = this._getLineBoundingClientRect(child);
+					lineWidth = child.lineWidth = rect.right - rect.left;
 				}
+				if (lineWidth >= this._maxLineWidth) {
+					this._maxLineWidth = lineWidth;
+					this._maxLineIndex = child.lineIndex;
+				}
+				if (child.lineIndex === topIndex) { this._topChild = child; }
+				if (child.lineIndex === bottomIndex) { this._bottomChild = child; }
+				child = this._getLineNext(child);
 			}
-			
+
 			// Update rulers
 			this._updateRuler(this._leftDiv, topIndex, bottomIndex);
 			this._updateRuler(this._rightDiv, topIndex, bottomIndex);
@@ -3927,24 +4637,23 @@ eclipse.Editor = (function() {
 			scrollDiv.style.height = scrollHeight + "px";
 			var clientWidth = this._getClientWidth();
 			var width = Math.max(this._maxLineWidth, clientWidth);
-			/* Except by IE, all other browsers are not allocating enough space for the right padding 
-			 * in the scrollbar. It is possible this a bug since all other paddings are considered.
-			 */
+			/*
+			* Except by IE 8 and earlier, all other browsers are not allocating enough space for the right padding 
+			* in the scrollbar. It is possible this a bug since all other paddings are considered.
+			*/
 			var scrollWidth = width;
-			if (!isIE) { width += editorPad.right; }
+			if (!isIE || isIE >= 9) { width += editorPad.right; }
 			scrollDiv.style.width = width + "px";
 
-			/*
-			* Get client height after both scrollbars are visible and updatePage again to recalculate top and bottom indices.
-			* 
-			* Note that updateDOMSelection() has to be called on IE before getting the new client height because it
-			* forces the client area to be recomputed.
-			*/
-			this._updateDOMSelection();
-			if (clientHeight !== this._getClientHeight()) {
-				this._updatePage();
-				return;
-			}
+//			/*
+//			* Get client height after both scrollbars are visible and updatePage again to recalculate top and bottom indices.
+//			* 
+//			* Note that updateDOMSelection() has to be called on IE before getting the new client height because it
+//			* forces the client area to be recomputed.
+//			*/
+//			if (!isPad) {
+//				this._updateDOMSelection();
+//			}
 			// Get the left scroll after setting the width of the scrollDiv as this can change the horizontal scroll offset.
 			var scroll = this._getScroll();
 			var left = scroll.x;
@@ -3985,12 +4694,33 @@ eclipse.Editor = (function() {
 			}
 			_updateRulerSize(this._leftDiv);
 			_updateRulerSize(this._rightDiv);
+			if (isPad) {
+				var self = this;
+				setTimeout(function() {self._resizeTouchDiv();}, 0);
+			}
+			this._updateDOMSelection();
+
+			/*
+			* If the client height changed during the update page it means that scrollbar has either been shown or hidden.
+			* When this happens update page has to run again to ensure that the top and bottom lines div are correct.
+			* 
+			* Note: On IE, updateDOMSelection() has to be called before getting the new client height because it
+			* forces the client area to be recomputed.
+			*/
+			var ensureCaretVisible = this._ensureCaretVisible;
+			this._ensureCaretVisible = false;
+			if (clientHeight !== this._getClientHeight()) {
+				this._updatePage();
+				if (ensureCaretVisible) {
+					this._showCaret();
+				}
+			}
 		},
 		_updateRuler: function (divRuler, topIndex, bottomIndex) {
 			if (!divRuler) { return; }
 			var cells = divRuler.firstChild.rows[0].cells;
 			var lineHeight = this._getLineHeight();
-			var parentDocument = this._parentDocument;
+			var parentDocument = this._frameDocument;
 			var editorPad = this._getEditorPadding();
 			for (var i = 0; i < cells.length; i++) {
 				var div = cells[i].firstChild;
@@ -4020,7 +4750,7 @@ eclipse.Editor = (function() {
 					}
 				}
 
-				var overview = ruler.getOverview(), lineDiv;
+				var overview = ruler.getOverview(), lineDiv, frag;
 				if (overview === "page") {
 					while (child) {
 						lineIndex = child.lineIndex;
@@ -4031,6 +4761,7 @@ eclipse.Editor = (function() {
 						child = nextChild;
 					}
 					child = div.firstChild.nextSibling;
+					frag = document.createDocumentFragment();
 					for (lineIndex=topIndex; lineIndex<=bottomIndex; lineIndex++) {
 						if (!child || child.lineIndex > lineIndex) {
 							lineDiv = parentDocument.createElement("DIV");
@@ -4038,37 +4769,51 @@ eclipse.Editor = (function() {
 							lineDiv.innerHTML = ruler.getHTML(lineIndex);
 							lineDiv.lineIndex = lineIndex;
 							lineDiv.style.height = lineHeight + "px";
-							div.insertBefore(lineDiv, child);
-						}
-						if (child && child.lineIndex === lineIndex) {
-							child = child.nextSibling;
+							frag.appendChild(lineDiv);
+						} else {
+							if (frag.firstChild) {
+								div.insertBefore(frag, child);
+								frag = document.createDocumentFragment();
+							}
+							if (child) {
+								child = child.nextSibling;
+							}
 						}
 					}
+					if (frag.firstChild) { div.insertBefore(frag, child); }
 				} else {
+					var buttonHeight = 17;
+					var clientHeight = this._getClientHeight ();
+					var trackHeight = clientHeight + editorPad.top + editorPad.bottom - 2 * buttonHeight;
+					var lineCount = this._model.getLineCount ();
+					var divHeight = trackHeight / lineCount;
 					if (div.rulerChanged) {
 						var count = div.childNodes.length;
 						while (count > 1) {
 							div.removeChild(div.lastChild);
 							count--;
 						}
-	
-						var buttonHeight = 17;
-						var clientHeight = this._getClientHeight ();
-						var trackHeight = clientHeight + editorPad.top + editorPad.bottom - 2 * buttonHeight;
-						var lineCount = this._model.getLineCount ();
 						var lines = ruler.getAnnotations ();
+						frag = document.createDocumentFragment();
 						for (var j = 0; j < lines.length; j++) {
 							lineIndex = lines[j];
 							lineDiv = parentDocument.createElement("DIV");
 							this._applyStyle(ruler.getStyle(lineIndex), lineDiv);
 							lineDiv.style.position = "absolute";
-							var divHeight = trackHeight / lineCount;
 							lineDiv.style.top = buttonHeight + lineHeight + Math.floor(lineIndex * divHeight) + "px";
 							lineDiv.innerHTML = ruler.getHTML(lineIndex);
 							lineDiv.lineIndex = lineIndex;
-							div.appendChild(lineDiv);
+							frag.appendChild(lineDiv);
+						}
+						div.appendChild(frag);
+					} else if (div._oldTrackHeight !== trackHeight) {
+						lineDiv = div.firstChild ? div.firstChild.nextSibling : null;
+						while (lineDiv) {
+							lineDiv.style.top = buttonHeight + lineHeight + Math.floor(lineDiv.lineIndex * divHeight) + "px";
+							lineDiv = lineDiv.nextSibling;
 						}
 					}
+					div._oldTrackHeight = trackHeight;
 				}
 				div.rulerChanged = false;
 				div = div.nextSibling;

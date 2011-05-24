@@ -1,10 +1,11 @@
 dojo.provide("eclipse.TextStyler");
 
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others All rights reserved. This
- * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials are made 
+ * available under the terms of the Eclipse Public License v1.0 
+ * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
@@ -74,14 +75,14 @@ eclipse.TextStyler = (function() {
 	var WHITE_SPACE = 7;
 
 	// Styles 
-	var isIE = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent);
+	var isIE = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent) ? document.documentMode : undefined;
 	var commentStyle = {styleClass: "token_comment"};
 	var javadocStyle = {styleClass: "token_javadoc"};
 	var stringStyle = {styleClass: "token_string"};
 	var keywordStyle = {styleClass: "token_keyword"};
 	var spaceStyle = {styleClass: "token_space"};
 	var tabStyle = {styleClass: "token_tab"};
-	var bracketStyle = {styleClass: isIE ? "token_bracket" : "token_bracket_outline"};
+	var bracketStyle = {styleClass: isIE < 9 ? "token_bracket" : "token_bracket_outline"};
 	var caretLineStyle = {styleClass: "line_caret"};
 	
 	var Scanner = (function() {
@@ -254,6 +255,7 @@ eclipse.TextStyler = (function() {
 		editor.addEventListener("ModelChanged", this, this._onModelChanged);
 		editor.addEventListener("Destroy", this, this._onDestroy);
 		editor.addEventListener("LineStyle", this, this._onLineStyle);
+		editor.redrawLines();
 	}
 	
 	TextStyler.prototype = {

@@ -3,40 +3,114 @@ rem  you must have some version of eclipse installed to build against
 rem  create a directory to do the build in, build results will be in buildDirectory\result
 rem
 
-rem parent of the eclipse directory being build against
+rem
+rem Path to parent directory of the eclipse application directory. 
+rem That is, if eclipse is installed in '/usr/local/eclipse', this property 
+rem would be set as 'base="/usr/local"'. No trailing backslash.
+rem
 set base=C:\path\to\parent\of\eclipse 
 
-rem name of eclipse directory (usually but not necessarily'eclipse'), has subdirs /plugin, /configuration, etc
+rem
+rem Path to eclipse directory inclusive. The application directory is 
+rem usually, but not always, named 'eclipse'. It has sub-directories
+rem \configuration, \features, \plugins, etc. No trailing backslash.
+rem
 set baseLocation=%base%\eclipse
 
-rem version number of the launcher jar file, look at plugins/org.eclipse.equinox.launcher_*.jar, use just the number part
+rem
+rem Version number of the launcher jar file. See %baseLocation%\plugins\org.eclipse.equinox.launcher_*.jar. 
+rem The launcher version is the set of alphanumeric characters between 'launcher_' and the '.' character 
+rem before the 'jar' file name suffix.
+rem
 set launcherVersion=1.0.200.v20090520
 
-rem directory to do the build in
+rem
+rem Directory in which to do the build. No trailing backslash.
+rem
 set buildDirectory=c:\directory\to\build\in
 
-rem directory containing build.xml
-set relEngDir=%buildDirectory%\davinci.releng\buildAll.xml
+rem
+rem Directory containing build.xml (this should not have to be changed in most cases).
+rem No trailing backslash.
+rem
+set relEngDir=%buildDirectory%\repository\maqetta\releng\davinci.releng"
 
-rem url of repository
-set svnRepository=https://xxxxxxxxxx
+rem
+rem If 'maqettaCode' is set, copy files from your local workspace instead of GitHub repository
+rem
+rem Note: This build feature is in incubation and *cannot* be used for production builds.
+rem
+rem set maqettaCode=c:\your\local\eclipse\workspace
 
-rem if maqettaCode is set, copy from your local workspace instead of svn checkout
-set maqettaCode=c:\your\local\eclipse\workspace
+rem
+rem GitHub URL for Maqetta repository. This should not change.
+rem
+set gitRepository=git@github.com:maqetta/maqetta.git
 
-rem svn user id (include --username)
-set svnUser=--username xxxx@xxx.ibm.com
+rem
+rem Path to javax.activation and javax.mail Eclipse projects directory 
+rem
+rem Note: Users outside of IBM need to create these projects for
+rem       themselves as they are *not* checked-in to GitHub for
+rem       licensing reasons. Empty template projects with proper settings
+rem       are checked-in to GitHub in 'davinci.releng\javax_project_templates.zip'.
+rem
+set javaxPath=\path\to\directory\containing\javax\eclipse\projects
 
-rem svn user password (include --password)
-set svnPassword=--password xxxxx
-
-rem look at plugins\org.eclipse.equinox.launcher.xxx.xxx.xxx\  (for windows, only difference is x86 vs x86_64)
+rem
+rem Windowing System, Operating System and processor Architecture settings
+rem
+rem Note: See %baseLocation%\plugins\org.eclipse.equinox.launcher.xxx.yyy.xxx\ 
+rem       to determine your settings, they should be similar to 'cocoa.macosx.x86_64' 
+rem
 set myOS=win32
 set myWS=win32
 set myArch=x86
 
-cd %buildDirectory%
-rem check out the build files
-svn checkout --force %svnUser% %svnPassword% %svnRepository%/releng/davinci.releng 
+rem 
+rem Set up for and pull down the latest code from GitHub
+rem
+IF NOT EXIST %buildDirectory%\repository (
+    rem "Making repository directory..."
+    mkdir %buildDirectory%\repository
+)
 
-java -jar %baseLocation%\plugins\org.eclipse.equinox.launcher_%launcherVersion%.jar    -application org.eclipse.ant.core.antRunner -buildfile %relEngDir%\buildAll.xml   
+rem
+rem If '.git' directory exists we need only pull
+rem
+IF EXIST %buildDirectory%\repository\maqetta\.git (
+    rem "Doing 'git pull'..."
+    cd %buildDirectory%\repository\maqetta
+    git pull
+) ELSE (
+    rem "Cloning repository. This may take a few moments..."
+    cd %buildDirectory%\repository
+    git clone %gitRepository%
+)
+
+rem
+rem If '.git' directory exists we need to pull
+rem
+if EXIST %javaxPath%\.git (
+    rem "Fetching javax.activation and javax.mail projects..."
+    cd %javaxPath%
+    git pull
+)
+
+rem
+rem "Copying javax.activation and javax.mail projects..."
+rem
+cd %buildDirectory%\repository\maqetta
+xcopy %javaxPath%\javax.activation . /s /e 
+xcopy %javaxPath%\javax.mail . /s /e 
+
+
+rem
+rem Change directory to the build directory.
+rem
+rem Note: Many scripts use relative directory references making
+rem       running the build from this directory *imperative*.
+rem
+cd %buildDirectory%
+
+java -jar %baseLocation%\plugins\org.eclipse.equinox.launcher_%launcherVersion%.jar -application org.eclipse.ant.core.antRunner -buildfile %relEngDir%\buildAll.xml   

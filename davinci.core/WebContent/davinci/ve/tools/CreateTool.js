@@ -130,7 +130,9 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}
 
 		var parent = args.target,
-			parentNode, child;
+			parentNode,
+			child,
+			data = this._data;
 
 		// For absolute layout, always drop widgets at the top-level of the document to avoid container clipping issues #6879
 		if(!this._context.getFlowLayout()){
@@ -152,7 +154,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		var index = args.index;
 		var position = undefined;
 		var widgetAbsoluteLayout = false;
-		if (this._data.properties && this._data.properties.style && (this._data.properties.style.indexOf('absolute') > 0)){
+		if (data.properties && data.properties.style && (data.properties.style.indexOf('absolute') > 0)){
 			widgetAbsoluteLayout = true;
 		}
 		if (!widgetAbsoluteLayout  && this._context.getFlowLayout() || ( (parent.isHtmlWidget &&!parent.isRoot) ||
@@ -196,7 +198,10 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 //				d.properties.id = davinci.ve.widget.getUniqueId(metadata.tagName, this._context.rootNode);
 //			}
 //		}
-		this._data.context=this._context;
+		
+		data.context = this._context;
+		davinci.ve.metadata.invokeCallback(data.type, 'onAdd', [data.type, data.context]);
+		
 		this._create({parent: parent, index: index, position: position, size: args.size});
 	},
 

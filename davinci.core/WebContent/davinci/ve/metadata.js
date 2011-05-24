@@ -58,8 +58,18 @@ davinci.ve.metadata = function() {
         data = data.replace(/__MAQ_LIB_BASE_URL__/g, document.baseURI + path.toString());
         
         var descriptor = dojo.fromJson(data);
-        descriptor.$path = path.toString();;
+        descriptor.$path = path.toString();
         libraries[descriptor.name] = descriptor;
+        
+        if (descriptor.callbacks) {
+            dojo.xhrGet({
+                url: path.append(descriptor.callbacks).toString(),
+                handleAs: 'javascript',
+                load : function(data) {
+                    descriptor.callbacks = data;
+                }
+            });
+        }
         
         descriptor.$providedTypes = {};
         dojo.forEach(descriptor.widgets, function(item) {
@@ -273,7 +283,19 @@ davinci.ve.metadata = function() {
                     return lib.$path;
                 }
             }
-            return undefined;
+            return;
+        },
+        
+        invokeCallback: function(type, fnName, args) {
+        	var lib = getDescriptorForType(type),
+        		fn;
+        	if (lib) {
+        		fn = lib.callbacks[fnName];
+        		if (fn) {
+        			return fn.apply(lib.callbacks, args);
+        		}
+        	}
+        	// XXX handle/report errors?
         },
         
         /**

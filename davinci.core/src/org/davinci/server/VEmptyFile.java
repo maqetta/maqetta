@@ -37,7 +37,7 @@ public class VEmptyFile implements IVResource {
 		return false;
 	}
 
-	public IVResource find(String path) {
+	public IVResource[] find(String path) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -138,6 +138,17 @@ public class VEmptyFile implements IVResource {
 	public boolean committed() {
 		
 		return true;
+	}
+
+	public boolean readOnly() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	
+	public IVResource[] findChildren(String childName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

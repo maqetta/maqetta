@@ -237,7 +237,7 @@ public class VFile implements IVResource {
 		return this.file.mkdir();
 		
 	}
-	public IVResource find(String path) {
+	public IVResource[] find(String path) {
 		if(!this.isDirectory()) return null;
 		
 		IPath a = new Path(this.file.getAbsolutePath()).append(path);
@@ -253,7 +253,7 @@ public class VFile implements IVResource {
 			File f= new File(s);
 			parent = new VFile(f, parent, segments[i]);
 		}
-		return parent;
+		return new IVResource[]{parent};
 		
 	}
 	
@@ -352,5 +352,18 @@ public class VFile implements IVResource {
 
 	public boolean committed() {
 		return !this.file.exists();
+	}
+
+
+	public boolean readOnly() {
+		if(this.parent!=null)
+			return this.parent.readOnly();
+		else
+			return false;
+	}
+
+	public IVResource[] findChildren(String childName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

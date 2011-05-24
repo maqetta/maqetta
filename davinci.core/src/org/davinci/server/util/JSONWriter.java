@@ -75,9 +75,11 @@ public class JSONWriter {
 
 
 	
-	public JSONWriter addField(String name, String value){
+	public JSONWriter addField(String name, String val){
 		this.addFieldName(name);
-        sb.append('"');
+        String value = val==null?"":val;
+		
+		sb.append('"');
         char[] chars = null;
         int i=0;
         loop:

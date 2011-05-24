@@ -312,7 +312,7 @@ public class DavinciPageServlet extends HttpServlet {
 			if(rewriteSent!=null){
 				String id =  req.getParameter("id");
 				String version = req.getParameter("version");
-				String libRoot = user.getLibPath(id, version);
+				String libRoot = user.getLibPath(id, version, "/");
 				InputStream is = libraryURL.getInputStreem();
 				Writer writer = new StringWriter(); 
 				char[] buffer = new char[1024]; 

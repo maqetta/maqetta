@@ -41,6 +41,11 @@ public class FindResource extends Command {
 		boolean ignoreCase="true".equals(req.getParameter("ignoreCase"));
 		boolean isWildcard=pathStr.indexOf('*')>=0;
 		boolean workspaceOnly="true".equals(req.getParameter("workspaceOnly"));
+		
+		/* REMOVE ME BRAD DONT CHECK IN!!! */
+		workspaceOnly = false;
+		
+		
 		IVResource[] foundFiles = null;
 		if(inFolder!=null)
 			foundFiles = user.findFiles(pathStr, inFolder, ignoreCase, workspaceOnly);

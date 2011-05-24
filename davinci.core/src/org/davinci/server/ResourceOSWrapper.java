@@ -56,7 +56,7 @@ public class ResourceOSWrapper extends VFile {
 	}
 
 	@Override
-	public IVResource find(String path) {
+	public IVResource[] find(String path) {
 		// TODO Auto-generated method stub
 		return original.find(path);
 	}

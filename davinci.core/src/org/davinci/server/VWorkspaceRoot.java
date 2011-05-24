@@ -133,7 +133,31 @@ public class VWorkspaceRoot extends VDirectory {
 		return this.file.mkdir();
 		
 	}
-	public IVResource find(String path) {
+	
+	public IVResource[] find(String path){
+		IVResource[] found = this.findInFileSystem(path);
+		if(found==null)
+			return findInLib(path);
+		
+		return found;
+	}
+	
+
+	
+	private IVResource[] findInLib(String path){
+		String[] split = path.split("/");
+		IVResource parent = this;
+		for(int i=0;parent!=null && i<split.length;i++){
+			
+			if(split[i].indexOf("*")>-1 || split[i].indexOf("?")>-1)
+				return parent.findChildren(split[i]);
+				
+			parent = parent.get(split[i]);
+		}
+		return new IVResource[]{parent};
+	}
+	
+	private IVResource[] findInFileSystem(String path) {
 		if(!this.isDirectory()) return null;
 		
 		IPath a = new Path(this.file.getAbsolutePath()).append(path);
@@ -159,7 +183,7 @@ public class VWorkspaceRoot extends VDirectory {
 			File f= new File(s);
 			parent = new VFile(f, parent, segments[i]);
 		}
-		return parent;
+		return new IVResource[]{parent};
 		
 	}
 	
@@ -217,5 +241,8 @@ public class VWorkspaceRoot extends VDirectory {
 	public IVResource getParent() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public boolean readOnly() {
+		return false;
 	}
 }

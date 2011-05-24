@@ -23,8 +23,8 @@ public class GetUserLibs extends Command {
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
 		//Library[] libs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
-		
-		LibInfo[] installedLibs = user.getLibs();
+		String base = req.getParameter("base");
+		LibInfo[] installedLibs = user.getLibs(base);
 		
 		JSONWriter jsonWriter=new JSONWriter(true);
 		jsonWriter.startObject().addFieldName("userLibs").startArray();

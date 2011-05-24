@@ -51,13 +51,19 @@ davinci.ve.metadata = function() {
         davinci.ve.metadata.init();
     });
     
-    function parseLibraryDescriptor(data, path) {
-        path = new davinci.model.Path(path);
-        
+    function parseLibraryDescriptor(data) {
+       var  path = new davinci.model.Path(data.metaPath);
+     
         // handle substitutions
-        data = data.replace(/__MAQ_LIB_BASE_URL__/g, document.baseURI + path.toString());
-        
-        var descriptor = dojo.fromJson(data);
+       var descriptor  = null;
+       
+       if(data['data']!=null){
+    	   data = data['data'].replace(/__MAQ_LIB_BASE_URL__/g, document.baseURI + path.toString());
+       	   descriptor  = dojo.fromJson(data);;
+        }else{
+        	descriptor = {};
+        }
+       
         descriptor.$path = path.toString();;
         libraries[descriptor.name] = descriptor;
         
@@ -243,15 +249,23 @@ davinci.ve.metadata = function() {
          * Read the library metadata for all the libraries linked in the user's workspace
          */
         init : function() {
-            dojo.forEach(davinci.library.getUserLibs(), function(lib) {
-                var path = lib.metaRoot;
+        	
+            dojo.forEach(davinci.library.getInstalledLibs(), function(lib) {
+            	
+            //	var path = davinci.library.getMetaRoot(lib.id, lib.version);
+             
+                var data = davinci.library.getlibMetaData(lib.id, lib.version);
+                parseLibraryDescriptor(data)
+                /*
                 dojo.xhrGet({
                     url : path + "/widgets.json",
                     sync : true, // XXX should be async
                     load : function(data) {
-                        parseLibraryDescriptor(data, path);
+                        debugger;
+                    	parseLibraryDescriptor(data, path);
                     }
                 });
+                */
             });
         },
         

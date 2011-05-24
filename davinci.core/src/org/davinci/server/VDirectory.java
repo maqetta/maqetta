@@ -1,5 +1,6 @@
 package org.davinci.server;
  
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,9 +9,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.eclipse.core.runtime.Path;
 
 public class VDirectory implements IVResource{
@@ -53,7 +59,7 @@ public class VDirectory implements IVResource{
 		return false;
 	}
 
-	public IVResource find(String path) {
+	public IVResource[] find(String path) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -153,6 +159,10 @@ public class VDirectory implements IVResource{
 	}
 
 	public IVResource get(String childName) {
+		
+		if(childName!=null && childName.equals("."))
+			return this;
+		
 		for(int i=0;i<this.children.size();i++){
 			IVResource child = (IVResource)children.get(i);
 			if (child!=null && child.getName().equals(childName))
@@ -166,5 +176,45 @@ public class VDirectory implements IVResource{
 
 	public boolean committed() {
 		return true;
+	}
+	
+	public boolean readOnly() {
+		if(this.parent!=null)
+			return this.parent.readOnly();
+		else
+			return false;
+	}
+
+
+	public IVResource[] findChildren(String childName) {
+		// TODO Auto-generated method stub
+		Path path = new Path(childName);
+		IOFileFilter filter;
+		if (path.segment(0).equals("*")){
+		  filter=new NameFileFilter(path.lastSegment());
+		}else{
+			String lastSegment = path.lastSegment();
+			if (lastSegment.startsWith("*"))
+				filter = new SuffixFileFilter(lastSegment.substring(1));
+			else
+				filter=null;
+		}
+		Vector results = new Vector();
+		
+		for(int i=0;i<this.children.size();i++){
+			IVResource r1  = (IVResource)children.get(i);
+			File f1 = new File(r1.getName());
+			if(filter.accept(f1))
+				results.add(f1);
+			
+			if(r1.isDirectory()){
+				IVResource[] more = r1.findChildren(childName);
+				results.addAll(Arrays.asList(more));
+			}
+			
+		
+		}
+		return (IVResource[])results.toArray(new IVResource[results.size()]);
+		
 	}
 }

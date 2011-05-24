@@ -23,6 +23,8 @@ public interface IVResource {
 
 	public String getPath();
 	
+	public boolean readOnly();
+	
 	public void createNewInstance() throws IOException;
 	
 	public boolean delete();
@@ -48,7 +50,7 @@ public interface IVResource {
 	
 	public URI getURI() throws URISyntaxException; 
 	
-	public IVResource find(String path); 
+	public IVResource[] find(String path); 
 	
 	public boolean mkdir();
 
@@ -61,6 +63,11 @@ public interface IVResource {
 	public IVResource getParent() ;
 
 	IVResource get(String childName);
+	
+	
+	/* search for children, supports wild card */
+	IVResource[] findChildren(String childName);
+
 
 	void add(IVResource v);
 }

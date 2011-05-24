@@ -53,7 +53,17 @@ public class Resource {
 			 else
 				 pathName = listFiles[j].getName();
 			 
-			 jsonWriter.startObject().addField("name", pathName).addField("isDir", listFiles[j].isDirectory()).addField("isNew", listFiles[j].committed()).endObject();
+			 jsonWriter.startObject().addField("name", pathName);
+			 jsonWriter.addField("isDir", listFiles[j].isDirectory());
+			 jsonWriter.addField("isNew", listFiles[j].committed());
+			 jsonWriter.addField("readOnly", listFiles[j].readOnly());
+			 if(listFiles[j] instanceof VLibraryResource){
+				 VLibraryResource r = (VLibraryResource)listFiles[j];
+				 jsonWriter.addField("libraryId", r.getLibraryId());
+				 jsonWriter.addField("libVersion",r.getLibraryVersion());
+			 }
+			 
+			 jsonWriter.endObject();
 		 }
 		 return jsonWriter.getJSON();
 	}
@@ -81,6 +91,13 @@ public class Resource {
 						continue;
 			 		jsonWriter.startObject().addField("isDir", members[k].isDirectory());
 			 		jsonWriter.addField("name", members[k].getName());
+			 		jsonWriter.addField("readOnly", members[k].readOnly());
+			 		 if(members[k] instanceof VLibraryResource){
+						 VLibraryResource r = (VLibraryResource)members[k];
+						 jsonWriter.addField("libraryId", r.getLibraryId());
+						 jsonWriter.addField("libVersion",r.getLibraryVersion());
+					 }
+			 		
 			 		jsonWriter.endObject();
 			 	}
 				jsonWriter.endArray();

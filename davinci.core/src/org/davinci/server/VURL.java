@@ -104,7 +104,7 @@ public class VURL implements IVResource {
 	public boolean isFile() {
 		return !isDirectory();
 	}
-	public IVResource find(String path) {
+	public IVResource[] find(String path) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -148,5 +148,16 @@ public class VURL implements IVResource {
 	public boolean committed() {
 		
 		return true;
+	}
+	
+	public boolean readOnly() {
+	
+		return true;
+	}
+
+	
+	public IVResource[] findChildren(String childName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -73,7 +73,7 @@ public class User {
 
 	public void rebuildWorkspace(){
 		this.workspace = new VWorkspaceRoot(userDirectory,this);
-		LibInfo libs[] = getLibs();
+		LibInfo libs[] = getLibs("/");
 		for(int i = 0;i<libs.length;i++){
 			String defaultRoot = libs[i].getVirtualRoot();
 			IPath path = new Path(defaultRoot);
@@ -155,13 +155,19 @@ public class User {
 			}
 		}
 		/* add users library files */
-		
+		/*
 		IVResource[] libFiles = this.getLibFiles(path);
 		resource.addAll(Arrays.asList(libFiles));	
+		*/
 		return (IVResource[])resource.toArray(new IVResource[resource.size()]);
+		
 	}
 	private void findLibFiles(IPath path, ArrayList results) {
-		// TODO Auto-generated method stub
+		IVResource workspace = this.getWorkspace();
+		IVResource[] result = workspace.find(path.toString());
+		
+		for(int i=0;i<result.length;i++)
+			results.add(result[i]);
 	}
 	public IVResource getResource(String path){
 	
@@ -235,9 +241,11 @@ public class User {
 	
 		
 		
-		IVResource userFile = directory.find(path);
+		IVResource[] userFile = directory.find(path);
+		if(userFile.length>0)
+			return userFile[0];
 		
-		return userFile;
+		return null;
 	}
 	
 	public IVResource createUserFile(String path){
@@ -301,7 +309,7 @@ public class User {
 			rootDir = this.getWorkspace();
 		else{
 			IVResource workspace = this.getWorkspace();
-			rootDir = workspace.find(startFolder);
+			rootDir = workspace.get(startFolder);
 		}
 			
 	//	Links links = this.getLinks();
@@ -319,46 +327,47 @@ public class User {
 					filter=null;
 			}
 			// big todo here,  have to remove the file filter
-			File f1 = null;
-			try {
-				f1 = new File(rootDir.getURI());
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			Collection c = FileUtils.listFiles(f1, filter, TrueFileFilter.INSTANCE);
-			
-			File[] found = (File[])c.toArray(new File[c.size()]);
-			
-			for(int i=0;i<found.length;i++){
-				
-				File workspaceFile=null;
+			if(rootDir!=null){
+				File f1 = null;
 				try {
-					workspaceFile = new File(this.getWorkspace().getURI());
+					f1 = new File(rootDir.getURI());
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-				IPath workspacePath = new Path(workspaceFile.getPath());
-				IPath foundPath = new Path(found[i].getPath());
-				IPath elementPath = foundPath.makeRelativeTo(workspacePath);
+				Collection c = FileUtils.listFiles(f1, filter, TrueFileFilter.INSTANCE);
 				
-				IVResource[] wsFound = this.findFiles(elementPath.toString(), ignoreCase, true);
-				results.addAll(Arrays.asList(wsFound));
+				File[] found = (File[])c.toArray(new File[c.size()]);
+				
+				for(int i=0;i<found.length;i++){
+					
+					File workspaceFile=null;
+					try {
+						workspaceFile = new File(this.getWorkspace().getURI());
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					IPath workspacePath = new Path(workspaceFile.getPath());
+					IPath foundPath = new Path(found[i].getPath());
+					IPath elementPath = foundPath.makeRelativeTo(workspacePath);
+					
+					IVResource[] wsFound = this.findFiles(elementPath.toString(), ignoreCase, true);
+					results.addAll(Arrays.asList(wsFound));
+					
+				}
 				
 			}
-			
-			
 			Link[] allLinks = links.allLinks();
 			for (int i = 0; i < allLinks.length; i++) {
 				File file = new File(allLinks[i].location);
-				c = FileUtils.listFiles(file, filter, TrueFileFilter.INSTANCE);
-				found = (File[])c.toArray(new File[c.size()]);
+				Collection c = FileUtils.listFiles(file, filter, TrueFileFilter.INSTANCE);
+				File[] found = (File[])c.toArray(new File[c.size()]);
 				
 				for(int p=0;p<found.length;p++){
-					IPath workspacePath = new Path(f1.getPath());
+					IPath workspacePath = new Path(this.getWorkspace().getPath());
 					IPath foundPath = new Path(found[p].getPath());
 					IPath elementPath = foundPath.makeRelativeTo(workspacePath);
 					
@@ -368,6 +377,7 @@ public class User {
 				}
 				
 			}
+		
 			if (!workspaceOnly){
 				this.findLibFiles(path,results);
 			
@@ -432,15 +442,15 @@ public class User {
 		return null;
 		*/
 	}
-	public LibInfo[] getLibs(){
+	public LibInfo[] getLibs(String base){
 		return  this.getLibInfo().allLibs();
 	}
-	public String getLibPath(String id, String version){
+	public String getLibPath(String id, String version, String base){
 		/* returns the virtual path of library in the users workspace given ID and version
 		 * for now its going to be the default, but this will allow to remap/move etc..
 		 * 
 		 */
-			LibInfo[] mappedLibs = this.getLibs();
+			LibInfo[] mappedLibs = this.getLibs(base);
 			for(int i=0;i<mappedLibs.length;i++){
 				LibInfo library = mappedLibs[i];
 				if(library.getId().equals(id) && library.getVersion().equals(version)){

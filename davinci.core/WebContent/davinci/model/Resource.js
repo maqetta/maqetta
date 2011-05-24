@@ -555,7 +555,7 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 			 var response = davinci.Runtime.serverJSONRequest({
 				   url:"./cmd/findResource", 
 			          content:{'path': name, 'ignoreCase' : ignoreCase, 'workspaceOnly' : workspaceOnly, 'inFolder':inFolder!=null?inFolder.getPath():null},sync:true  });
-			
+			debugger;
 			 if (response && response.length>0)
 			{
 				for (var i=0;i<response.length;i++)
@@ -770,6 +770,7 @@ davinci.model.Resource.Resource= function(){
 					load : dojo.hitch(this, function(responseObject, ioArgs) {
 						this._addFiles(responseObject);
 						dojo.forEach(this._loading,function(item){
+							
 							 (item)(this.children);
 						},this);
 						delete this._loading;
@@ -797,6 +798,12 @@ davinci.model.Resource.Resource= function(){
           
             child.link=responseObject[i].link;
             child.isNew = responseObject[i].isNew;
+            child.readOnly = responseObject[i].readOnly;
+            if(responseObject[i].libraryId){
+            	child.libraryId = responseObject[i].libraryId;
+            	child.libVersion = responseObject[i].libVersion;
+            }
+            
             this.children.push(child);
 		}
 		this._isLoaded=true;

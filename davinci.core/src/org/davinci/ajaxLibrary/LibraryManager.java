@@ -116,7 +116,7 @@ public class LibraryManager {
 		public String getMetadata() {
 			if(this.metadatapath==null)
 				return "";
-			URL metadata= this.bundleBase.getEntry(this.metadatapath);
+			URL metadata= this.bundleBase.getEntry(this.metadatapath + "/widgets.json");
 			InputStream stream = null;
 			try {
 				stream = metadata.openStream();

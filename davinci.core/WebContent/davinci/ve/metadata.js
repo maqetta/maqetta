@@ -255,8 +255,15 @@ davinci.ve.metadata = function() {
             });
         },
         
-        getDescriptors : function() {
-            return libraries;
+        /**
+         * Get library metadata.
+         * @param {String} [name]
+         * 			Library identifier.
+         * @returns library metadata if 'name' is defined; otherwise, returns
+         * 			array of all libraries' metadata.
+         */
+        getLibrary: function(name) {
+        	return name ? libraries[name] : libraries;
         },
         
         getLibraryBase : function(type) {

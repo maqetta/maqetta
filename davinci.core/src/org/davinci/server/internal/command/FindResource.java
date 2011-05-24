@@ -2,35 +2,16 @@ package org.davinci.server.internal.command;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.ajaxLibrary.LibraryManager;
 import org.davinci.server.Command;
-import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.Resource;
-import org.davinci.server.ServerManager;
-import org.davinci.server.VFile;
 import org.davinci.server.IVResource;
-import org.davinci.server.internal.Links;
-import org.davinci.server.internal.Links.Link;
+import org.davinci.server.Resource;
 import org.davinci.server.user.User;
-import org.davinci.server.util.JSONWriter;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.NameFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 
 public class FindResource extends Command {
 

@@ -9,8 +9,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 
-import javax.naming.InsufficientResourcesException;
-
 public class VEmptyFile implements IVResource {
 
 	String virtualPath;

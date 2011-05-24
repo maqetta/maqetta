@@ -22,7 +22,6 @@ import org.davinci.server.user.PersonManager;
 import org.davinci.server.user.User;
 import org.davinci.server.user.UserException;
 import org.davinci.server.user.UserManager;
-import org.davinci.server.util.XMLFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.osgi.framework.Bundle;

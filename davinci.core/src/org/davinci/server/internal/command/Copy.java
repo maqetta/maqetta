@@ -1,6 +1,5 @@
 package org.davinci.server.internal.command;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
-import org.davinci.server.Resource;
 import org.davinci.server.VResourceUtils;
 import org.davinci.server.user.User;
 

@@ -10,10 +10,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Vector;
 
-import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;

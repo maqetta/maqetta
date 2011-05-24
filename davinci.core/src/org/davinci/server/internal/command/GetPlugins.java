@@ -1,7 +1,5 @@
 package org.davinci.server.internal.command;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,7 +16,6 @@ import org.davinci.server.ServerManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.user.User;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;
 
 public class GetPlugins extends Command {

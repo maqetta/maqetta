@@ -1,17 +1,11 @@
 package org.davinci.server.user;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
@@ -22,24 +16,17 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
-import org.davinci.ajaxLibrary.LibraryManager;
 import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.Resource;
+import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
 import org.davinci.server.VDirectory;
-import org.davinci.server.VEmptyFile;
 import org.davinci.server.VFile;
 import org.davinci.server.VLibraryResource;
-import org.davinci.server.IVResource;
-import org.davinci.server.VURL;
 import org.davinci.server.VWorkspaceRoot;
 import org.davinci.server.internal.Links;
 import org.davinci.server.internal.Links.Link;
-import org.davinci.server.util.JSONWriter;
-import org.davinci.server.util.XMLFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.w3c.dom.Element;
 
 public class User {
 

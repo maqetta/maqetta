@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
-import org.davinci.server.Resource;
 import org.davinci.server.VResourceUtils;
 import org.davinci.server.user.User;
 

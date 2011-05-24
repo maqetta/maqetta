@@ -1,10 +1,6 @@
 package org.davinci.ajaxLibrary;
 
-import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-
-import org.osgi.framework.Bundle;
 
 public abstract class Library {
 

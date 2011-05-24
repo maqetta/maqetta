@@ -1,6 +1,5 @@
 package org.davinci.server.internal.command;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;

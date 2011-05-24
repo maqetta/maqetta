@@ -20,8 +20,6 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.davinci.ajaxLibrary.Library;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.osgi.service.resolver.VersionRange;
-import org.osgi.framework.Bundle;
 
 public class VLibraryResource implements IVResource {
 	// abstracted file/resource class

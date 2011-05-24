@@ -3,7 +3,6 @@ package org.davinci.server;
 import java.io.IOException;
 import java.util.HashMap;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;

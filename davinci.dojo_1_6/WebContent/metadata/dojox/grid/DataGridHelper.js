@@ -171,7 +171,60 @@ updateStore: function(store, /*properties*/ storeWidget) { //wdr 3-11
 	
 	//return this.replaceDataGridStoreData(data);
 	//this.replaceStoreData(store, data);
+},
+
+//wdr #79
+getChildren: function(widget){
+	debugger;
+	var children=[];
+	var x = widget.dijitWidget.getChildren();
+	var y = widget.domNode.children;
+	var y = widget.domNode._dvWidget.domNode.children;
+	for (var c=0; c < y.length; c++){
+		if (y[c]._dvWidget){
+			children.push(y[c]._dvWidget);
+		} else {
+			y[c]._parentDataGrid = this;
+			var headerRowTable = dojo.query('.dojoxGridRowTable', widget.domNode);
+			var newWidget = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
+				                                                            "class":"dataGridTest"}, children: [], context: widget.getContext()});
+			y[c].getContext = dojo.hitch(this, "getContext");
+			//children.push(y[c]);
+			children.push(newWidget);
+			widget.addChild(  newWidget/*, this._index*/);
+			
+			var context = widget.getContext();
+			if(context){
+				context.attach(newWidget);
+				newWidget.startup();
+				newWidget.renderWidget();
+			}
+		}
+	}
+	dojo.map(widget.dijitWidget.getChildren(), function(widget){
+		debugger;
+		if (!widget){ return; }
+		if (attach && !widget.domNode._dvWidget)
+		{
+			davinci.ve.widget.getWidget(widget.domNode);
+		}
+		var child = widget.domNode && widget.domNode._dvWidget;
+		if (child) {
+			children.push(child);
+		}
+	});
+	return children;
+},
+
+getContext: function(){
+	debugger;
+	
+},
+_setContentAttr: function(args){
+	debugger; // wdr attempt to override selection
 }
+//wdr #79
+
 
 //replaceStoreData: function(store, data) {
 //	// Kludge to force reload of store data

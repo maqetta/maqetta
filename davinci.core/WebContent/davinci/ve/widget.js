@@ -117,12 +117,21 @@ davinci.ve.widget.getStyleString = function(style){
 };
 
 davinci.ve.widget.getEnclosingWidget = function(node){
+	// #79
+	var orgNode = node;
+	// #79
 	var richText = this.getEnclosingWidgetForRichText(node);
 	if (richText){
 		return richText;
 	}
 	while(node){
 		if (node._dvWidget) {
+			// #79
+			var helper = node._dvWidget.getHelper();
+			if (helper && helper.getEnclosingWidget){
+				return helper.getEnclosingWidget(orgNode);
+			}
+			// #79
 			return node._dvWidget;
 		}
 		node = node.parentNode;
@@ -669,7 +678,15 @@ dojo.declare("davinci.ve._Widget",null,{
     	        this._edit_helper = true;
     	    }
         }
-        return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
+        // #79
+        //return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
+        if ((typeof this._edit_helper === "boolean") && !this._srcElement){ 
+        	// not  _dvWidget may be a child of a widget that has a helper ex DataGrid
+        	return this.parent.getHelper();
+        } else {
+        	return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
+        }
+        //#79
     },
 	
 	attr: function(name,value)
@@ -1470,6 +1487,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			this.type=dijitWidget.declaredClass;
 		}
 		this.acceptsHTMLChildren=dijitWidget._setContentAttr;
+		//this.acceptsHTMLChildren=(dijitWidget._setContentAttr || dijitWidget.store) ? true : false ; // #79
 		this.dijitWidget=dijitWidget;
 		this.containerNode=dijitWidget.containerNode;
 		this.styleNode=dijitWidget.styleNode;

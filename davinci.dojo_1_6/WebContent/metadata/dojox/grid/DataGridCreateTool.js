@@ -141,6 +141,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 	//		}
 	//		debugger;
 	//	}
+		dataGrid.acceptsHTMLChildren=true;
 		this._select(dataGrid);
 		
 	}

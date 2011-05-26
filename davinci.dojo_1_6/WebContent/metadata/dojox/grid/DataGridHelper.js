@@ -122,6 +122,9 @@ create: function(widget, srcElement){
 		}
 	
 	}
+	
+	this.postCreate(widget); // #79
+	
 
 },
 
@@ -185,13 +188,31 @@ getChildren: function(widget){
 			children.push(y[c]._dvWidget);
 		} else {
 			y[c]._parentDataGrid = this;
-			var headerRowTable = dojo.query('.dojoxGridRowTable', widget.domNode);
+			var headerRowTable = dojo.query('.dojoxGridHeader', widget.domNode);
+			var headerGridCell = dojo.query('.dojoxGridCell', widget.domNode); 
+			for (var x=0; x < headerGridCell.length; x++){
+				
+				var node = headerGridCell[x];
+				var box = dojo.position(node, true);
+				var ldojo = widget.getContext().getDojo();
+				var lbox = ldojo.position(node, true);
+				console.log(" w:" + lbox.w+" h:" + lbox.h+ " x:"+lbox.x+" y: "+lbox.y);
+
+			}
 			var newWidget = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
 				                                                            "class":"dataGridTest"}, children: [], context: widget.getContext()});
+			var cell = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
+                "class":"dataGridCellTest"}, children: [], context: widget.getContext()});
 			y[c].getContext = dojo.hitch(this, "getContext");
+			newWidget.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+			newWidget._headerRowTable = headerRowTable;
+			cell.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+			cell._headerGridCell = headerGridCell;
 			//children.push(y[c]);
 			children.push(newWidget);
 			widget.addChild(  newWidget/*, this._index*/);
+			newWidget.addChild(cell);
+			//widget._srcElement.parent.addChild(newWidget);
 			
 			var context = widget.getContext();
 			if(context){
@@ -220,6 +241,61 @@ getContext: function(){
 	debugger;
 	
 },
+
+getDataGridRowHelper: function(){
+	debugger; 
+	// FIXME I think we should create a helper object for rows and return it here
+	return this;
+},
+
+getSelectNode: function(context, widget){
+	debugger;
+	if (widget._headerRowTable){
+		return widget._headerRowTable[0];
+	} else if(widget._headerGridCell){
+		var headerGridCell = dojo.query('.dojoxGridCell', widget.parent._headerRowTable[0]); 
+		var node = headerGridCell[0];
+		var box = dojo.position(node, true);
+		//return widget._headerGridCell[0];
+		return node;
+	}
+	return widget.getStyleNode();
+	
+},
+
+postCreate: function(widget){
+	debugger;
+	var headerRowTable = dojo.query('.dojoxGridRowTable', widget.domNode);
+	//var context = widget.getContext();
+	var newWidget = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
+		                                                            "class":"dataGridTest", id: "myDataGridTest_id"}, children: []/*, context: context*/});
+	widget.addChild(  newWidget/*, this._index*/);
+	
+	var context = widget.getContext();
+	if(context){
+		context.attach(newWidget);
+		newWidget.startup();
+		newWidget.renderWidget();
+	}
+},
+
+getEnclosingWidget: function(node){
+	debugger;
+	node.getContext = function () {
+		debugger;
+		var node = this;
+		while(node){
+			if (node._dvWidget) {
+				return node._dvWidget.getContext();
+			}
+			node = node.parentNode;
+		}
+		return null;
+	};
+	
+	
+},
+
 _setContentAttr: function(args){
 	debugger; // wdr attempt to override selection
 }

@@ -1143,7 +1143,8 @@ dojo.declare("davinci.ve.Context", null, {
 		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
 			var node = widget.getStyleNode();
 			if(helper && helper.getSelectNode){
-				node = helper.getSelectNode(this) || node;
+				//node = helper.getSelectNode(this) || node;
+				node = helper.getSelectNode(this, widget) || node; // #79
 			}
 			box = this.getDojo().position(node, true);
 /*

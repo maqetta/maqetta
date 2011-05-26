@@ -7,7 +7,7 @@ dojo.require("dojo.NodeList-fx");
 	var oldTimeout = setTimeout;
 	var oldInterval = setInterval;
 	if({}.__proto__){
-		// mozilla has unsafe methods on array	
+		// mozilla has unsafe methods on array
 		var fixMozArrayFunction = function (name) {
 			var method = Array.prototype[name];
 			if(method && !method.fixed){
@@ -46,7 +46,7 @@ dojo.require("dojo.NodeList-fx");
 		//		The DOM element to use as the container for the sandbox
 		//
 		//	description:
-		//		This function will create and return a sandbox object (see dojox.secure.__Sandbox) 
+		//		This function will create and return a sandbox object (see dojox.secure.__Sandbox)
 		// 		for the provided element.
 		var wrap = dojox.secure.DOM(element);
 		element = wrap(element);
@@ -58,7 +58,7 @@ dojo.require("dojo.NodeList-fx");
 										"alert","confirm","prompt", // some people may not want to allow these to be called, but they don't break capability-limiting
 										"Error","EvalError","RangeError","ReferenceError","SyntaxError","TypeError",
 										"Date","RegExp","Number","Object","Array","String","Math",
-										//"ADSAFE", // not using ADSAFE runtime for the time being 
+										//"ADSAFE", // not using ADSAFE runtime for the time being
 										"setTimeout","setInterval","clearTimeout","clearInterval", // we make these safe below
 										"dojo","get","set","forEach","load","evaluate"];
 	   	for(var i in dojo){
@@ -66,7 +66,7 @@ dojo.require("dojo.NodeList-fx");
 	    	imports.push("var " + i + "=dojo." + i); // add to the list of imports
 	    }
 		// open the dojo namespace (namespaces are pretty silly in an environment where you can't set globals)
-	   	eval(imports.join(";")); 
+	   	eval(imports.join(";"));
 		function get(obj,prop) {
 			// basic access by index function
 			prop = '' + prop;
@@ -76,7 +76,7 @@ dojo.require("dojo.NodeList-fx");
 			if(obj.__get__) {
 				return obj.__get__(prop);
 			}
-			return obj[prop];		
+			return obj[prop];
 		}
 		function set(obj,prop,value) {
 			// basic set by index function
@@ -89,7 +89,7 @@ dojo.require("dojo.NodeList-fx");
 			return value;
 		}
 		function forEach(obj,fun) {
-			//	short syntax iterator function 
+			//	short syntax iterator function
 			if(typeof fun != "function"){
 				throw new TypeError();
 			}
@@ -122,40 +122,40 @@ dojo.require("dojo.NodeList-fx");
 			}
 		}
 		function Class(/*Function*/superclass, /*Object*/properties, /*Object*/classProperties) {
-			// summary: 
+			// summary:
 			// 		A safe class constructor
-			// 
-			// superclass: 
-			// 		There may be zero or more superclass arguments. The constructed class 
-			// 		will inherit from any provided superclasses, protypically from the first, 
-			// 		via mixin for the subsequent. Later arguments
-			// 		will override properties/methods from earlier arguments 
-			// 
-			// properties: 
-			// 		The constructed
-			// 		"class" will also have the methods/properties defined in this argument. 
-			//		These methods may utilize the <em>this</em> operator, and they
-			// 		are only the code that has access to <em>this</em>. Inner functions 
-			// 		are also prohibited from using <em>this</em>. 
 			//
-			// 		If no superclasses are provided, this object will be the prototype of the 
+			// superclass:
+			// 		There may be zero or more superclass arguments. The constructed class
+			// 		will inherit from any provided superclasses, protypically from the first,
+			// 		via mixin for the subsequent. Later arguments
+			// 		will override properties/methods from earlier arguments
+			//
+			// properties:
+			// 		The constructed
+			// 		"class" will also have the methods/properties defined in this argument.
+			//		These methods may utilize the <em>this</em> operator, and they
+			// 		are only the code that has access to <em>this</em>. Inner functions
+			// 		are also prohibited from using <em>this</em>.
+			//
+			// 		If no superclasses are provided, this object will be the prototype of the
 			// 		constructed class (no copying
 			// 		will be done). Consequently you can "beget" by calling new (Class(obj)).
 			// 		All methods are "bound", each call results in |this| safety checking call.
 			//
-			// classProperties: 
+			// classProperties:
 			// 		This properties will be copied to the new class function.
 			//
 			// 		Note that neither dojo.declare nor dojo.extend are acceptable class constructors as
 			// 		they are completely unsecure. This class constructor is conceptually based on declare
-			// 		but also somewhat influenced by base2, prototype, YUI, resig's patterns, etc. 
+			// 		but also somewhat influenced by base2, prototype, YUI, resig's patterns, etc.
 			//
 			// example:
 			// |	var Car = Class({drive:function(speed) { ... } ); // create a Car class with a "drive" method
 			// |	var FastCar = Class(Car,{driveFast: function(speed) { return this.drive(2 * speed); } }); // create a FastCar that extends Car
 			// |	var fastCar = new FastCar; // instantiate
 			// |	fastCar.driveFast(50); // call a method
-			// |	var driveFast = fastCar.driveFast; 
+			// |	var driveFast = fastCar.driveFast;
 			// |	var driveFast(50); // this will throw an error, the method can be used with an object that is not an instance of FastCar
 			var proto,superConstructor,ourConstructor;
 			var arg;
@@ -163,7 +163,7 @@ dojo.require("dojo.NodeList-fx");
 				// go through each superclass argument
 				if(proto) { // we have a prototype now, we must mixin now
 					mixin(proto,arg.prototype);
-				}  
+				}
 				else {
 					// this is the first argument, so we can define the prototype ourselves
 					// link up the prototype chain to the superclass's prototype, so we are a subtype
@@ -184,7 +184,7 @@ dojo.require("dojo.NodeList-fx");
 							if(this instanceof Class){
 								return arguments.callee.__rawMethod__.apply(this,arguments);
 							}
-							throw new Error("Method called on wrong object");	
+							throw new Error("Method called on wrong object");
 						};
 						arg[j].__rawMethod__ = value; // may want to use this for reconstruction and toString,valueOf
 					}
@@ -195,16 +195,16 @@ dojo.require("dojo.NodeList-fx");
 			}
 			proto = proto ? mixin(proto,arg) : arg; // if there is no proto yet, we can use the provided object
 			function Class() {
-				// the super class may not have been constructed using the same technique, we will just call the constructor 
+				// the super class may not have been constructed using the same technique, we will just call the constructor
 				if(superConstructor){
 					superConstructor.apply(this,arguments);
-				} 
+				}
 				if(ourConstructor){
 					ourConstructor.apply(this,arguments);
 				}
 			}
 			mixin(Class,arguments[i]); // the optional second object adds properties to the class
-			proto.constructor = Class; 
+			proto.constructor = Class;
 			Class.prototype = proto;
 			return Class;
 		}
@@ -215,12 +215,12 @@ dojo.require("dojo.NodeList-fx");
 		}
 		function setTimeout(func,time) {
 			// sandboxed setTimeout
-			checkString(func); 
+			checkString(func);
 			return oldTimeout(func,time);
 		}
 		function setInterval(func,time) {
 			// sandboxed setInterval
-			checkString(func); 
+			checkString(func);
 			return oldInterval(func,time);
 		}
 		function evaluate(script){
@@ -232,8 +232,8 @@ dojo.require("dojo.NodeList-fx");
 			if (url.match(/^[\w\s]*:/)){
 				throw new Error("Access denied to cross-site requests");
 			}
-			return xhrGet({url:(new dojo._Url(wrap.rootUrl,url))+'',secure:true}); 
-		}  
+			return xhrGet({url:(new dojo._Url(wrap.rootUrl,url))+'',secure:true});
+		}
 		wrap.evaluate = function(script){
 			//if(!alreadyValidated) {
 			dojox.secure.capability.validate(script,safeCalls, // the safe dojo library and standard operators
@@ -252,9 +252,9 @@ dojo.require("dojo.NodeList-fx");
 		return /*===== dojo.declare("dojox.secure.__Sandbox", null, =====*/ { // dojox.secure.__Sandbox
 			loadJS : function(url){
 				//	summary:
-				// 		Loads the script from the given URL using XHR (assuming 
+				// 		Loads the script from the given URL using XHR (assuming
 				// 		a plugin system is in place for cross-site requests) within the sandbox
-				//	
+				//
 				//	url:
 				//		The url of the script to load
 				wrap.rootUrl = url;
@@ -279,7 +279,7 @@ dojo.require("dojo.NodeList-fx");
 			evaluate : function(script){
 				//	summary:
 				//		Evaluates the given script within the sandbox
-				//	
+				//
 				//	script:
 				//		The JavaScript text to evaluate
 				return wrap.evaluate(script);
@@ -287,9 +287,9 @@ dojo.require("dojo.NodeList-fx");
 			// TODO: could add something for pre-validated scripts
 		}/*===== ) =====*/;
 	};
-})(); 
+})();
 dojox.secure._safeDojoFunctions = function(element,wrap) {
-	//	Creates a safe subset of Dojo core library 
+	//	Creates a safe subset of Dojo core library
 	var safeFunctions = ["mixin","require","isString","isArray","isFunction","isObject","isArrayLike","isAlien",
 	"hitch","delegate","partial","trim","disconnect","subscribe","unsubscribe","Deferred","toJson","style","attr"];
 	//var domFunctions = ["clone","byId"];
@@ -316,9 +316,9 @@ dojox.secure._safeDojoFunctions = function(element,wrap) {
 		connect: function(el,event) {
 			var obj = el;
 			arguments[0] = unwrap(el);
-			if(obj!=arguments[0] && event.substring(0,2) != 'on'){ 
+			if(obj!=arguments[0] && event.substring(0,2) != 'on'){
 				// it is probably an element, and it doesn't look like an event handler, probably not safe
-				throw new Error("Invalid event name for element");				
+				throw new Error("Invalid event name for element");
 			}
 			return dojo.connect.apply(dojo,arguments);
 		},
@@ -330,13 +330,13 @@ dojox.secure._safeDojoFunctions = function(element,wrap) {
 		},
 		fromJson : function(str) {
 			// make sure it is safe before passing it to the unsafe dojo.fromJson
-			dojox.secure.capability.validate(str,[],{}); 
+			dojox.secure.capability.validate(str,[],{});
 			return dojo.fromJson(str);
 		}
 	};
 	for (var i = 0; i < safeFunctions.length; i++) {
 		safe[safeFunctions[i]] = dojo[safeFunctions[i]];
-	} 
+	}
 	return safe;
 };
 

@@ -19,15 +19,15 @@ dojo.mixin(dojox.validate.ca,{
 		// summary: Validates Canadian province abbreviations (2 characters)
 		var re = new RegExp("^" + dojox.validate.regexp.ca.province() + "$", "i");
 		return re.test(value); // Boolean
-	}, 
+	},
  
 	isSocialInsuranceNumber: function(/* String */value) {
-		// summary: Validates Canadian 9 digit social insurance number for several 
+		// summary: Validates Canadian 9 digit social insurance number for several
 		//		common formats
 		//
 		// description:
-		//		Validates Canadian 9 digit social insurance number for several 
-		//		common formats. This routine only pattern matches and does not 
+		//		Validates Canadian 9 digit social insurance number for several
+		//		common formats. This routine only pattern matches and does not
 		//		use the Luhn Algorithm to validate number.
 		//
 		var flags = { format: [ "###-###-###", "### ### ###", "#########" ]};
@@ -36,7 +36,7 @@ dojo.mixin(dojox.validate.ca,{
 
 	isPostalCode: function(value) {
 		// summary: Validates Canadian 6 digit postal code
-		// 
+		//
 		// description:
 		//		Validates Canadian 6 digit postal code.
 		//		Canadian postal codes are in the format ANA NAN,

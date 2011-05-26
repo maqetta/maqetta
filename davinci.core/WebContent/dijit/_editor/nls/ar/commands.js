@@ -1,9 +1,11 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'عري~ض',
 	'copy': 'نسخ',
 	'cut': 'قص',
 	'delete': 'حذف',
-	'indent': '‏ازاحة للداخل‏',
+	'indent': 'ازاحة للداخل',
 	'insertHorizontalRule': 'مسطرة أفقية',
 	'insertOrderedList': '‏كشف مرقم‏',
 	'insertUnorderedList': 'كشف نقطي',
@@ -16,7 +18,7 @@
 	'paste': 'لصق',
 	'redo': '‏اعادة‏',
 	'removeFormat': 'ازالة النسق',
-	'selectAll': 'اختيار كل',
+	'selectAll': '‏اختيار كل‏',
 	'strikethrough': 'تشطيب',
 	'subscript': 'رمز سفلي',
 	'superscript': 'رمز علوي',
@@ -37,13 +39,16 @@
 	'formatBlock': 'نمط الفقرة',
 	'fontSize': 'حجم طاقم الطباعة',
 	'fontName': 'اسم طاقم الطباعة',
-	'tabIndent': 'ازاحة للداخل باستخدام Tab',
-	"fullScreen": "تبديل الشاشة الكاملة",
-	"viewSource": "\u202bمشاهدة مصدر HTML\u202c",
-	"print": "‏طباعة‏",
+	'tabIndent': 'ازاحة علامة الجدولة للداخل',
+	"fullScreen": "تبديل  الشاشة الكاملة",
+	"viewSource": "مشاهدة مصدر HTML",
+	"print": "طباعة",
 	"newPage": "صفحة جديدة",
 	/* Error messages */
-	'systemShortcut': 'التصرف "${0}" يكون متاحا فقط في برنامج الاستعراض الخاص بك باستخدام المسار المختصر للوحة المفاتيح. استخدم ${1}.',
-	'ctrlKey':'ctrl+${0}'
+	'systemShortcut': 'يكون التصرف "${0}" متاحا فقط ببرنامج الاستعراض الخاص بك باستخدام المسار المختصر للوحة المفاتيح.  استخدم ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
 
+//end v1.x content
+);

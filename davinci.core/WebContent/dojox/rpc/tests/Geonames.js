@@ -16,11 +16,11 @@ dojox.rpc.tests._testMethod = function(method){
                         var def = dojox.rpc.tests.service[method.name](method.parameters);
                         def.addCallback(this, function(result){
 				if (method.debugTest) {
-					console.log("Results: ", dojo.toJson(result));	
+					console.log("Results: ", dojo.toJson(result));
 				}
 				var testType = method.testType || "compare";
 				switch(testType){
-					case "compare":	
+					case "compare":
 						console.log("Comparison Test");
 		                                if (dojo.toJson(result)==method.expectedResult){
                                         		d.callback(true);
@@ -31,11 +31,11 @@ dojox.rpc.tests._testMethod = function(method){
 					case "result":
 						console.log("Result Test");
 						if (result && dojo.toJson(result)){
-							d.callback(true);	
+							d.callback(true);
 						}else{
 							d.errback(new Error("Unexpected Return Value, no result or not valid json: ", result));
 
-						}	
+						}
 						break;
 					default:
 						d.errback(new Error("Unknown test type"));
@@ -48,7 +48,7 @@ dojox.rpc.tests._testMethod = function(method){
         }
 };
 
-doh.register("dojox.rpc.tests.geonames", 
+doh.register("dojox.rpc.tests.geonames",
 	[
 		{
 			name: "#1, getCities()",
@@ -153,7 +153,7 @@ doh.register("dojox.rpc.tests.geonames",
                         runTest: dojox.rpc.tests._testMethod({
                                 name: "getCountryCode",
                                 parameters:{lat:40.78343, lng:-73.96625},
-				expectedResult: dojo.toJson({"distance":0,"countryName":"United States","countryCode":"US"}) 
+				expectedResult: dojo.toJson({"distance":0,"countryName":"United States","countryCode":"US"})
                         })
                 },
                 {

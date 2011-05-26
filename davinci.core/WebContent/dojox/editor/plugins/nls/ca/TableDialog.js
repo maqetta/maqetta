@@ -18,6 +18,7 @@
 	right: "dreta",
 	buttonSet: "Defineix", // translated elsewhere?
 	buttonInsert: "Insereix",
+	buttonCancel: "Cancel·la",
 
 	selectTableLabel: "Selecciona taula",
 	insertTableRowBeforeLabel: "Afegeix fila abans",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "Suprimeix fila",
 	deleteTableColumnLabel: "Suprimeix columna"
 })
-

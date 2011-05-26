@@ -6,6 +6,7 @@ dojo.require("dojox.gfx");
 dojo.require("dojox.drawing.Drawing");
 dojo.require("dojox.drawing.util.oo");
 dojo.require("dojox.drawing.util.common");
+dojo.require("dojox.drawing.util.typeset");
 dojo.require("dojox.drawing.defaults");
 dojo.require("dojox.drawing.manager.Canvas");
 

@@ -9,7 +9,7 @@ dojo.declare("dojox.widget.gauge.BarLineIndicator",[dojox.widget.gauge._Indicato
 	width: 1,
 	_getShapes: function(){
 		// summary:
-		//		Private function for generating the shapes for this indicator. An indicator that behaves the 
+		//		Private function for generating the shapes for this indicator. An indicator that behaves the
 		//		same might override this one and simply replace the shapes (such as BarIndicator).
 		if(!this._gauge){
 			return null;
@@ -21,18 +21,18 @@ dojo.declare("dojox.widget.gauge.BarLineIndicator",[dojox.widget.gauge._Indicato
 		var shapes = [];
 		if(this.width > 1){
 			shapes[0] = this._gauge.surface.createRect({
-				x:pos, 
+				x:pos,
 				y:this._gauge.dataY + this.offset,
-				width:this.width, 
+				width:this.width,
 				height:this.length
 			});
 			shapes[0].setStroke({color: this.color});
 			shapes[0].setFill(this.color);
 		}else{
 			shapes[0] = this._gauge.surface.createLine({
-				x1:pos, 
+				x1:pos,
 				y1:this._gauge.dataY + this.offset,
-				x2:pos, 
+				x2:pos,
 				y2:this._gauge.dataY + this.offset + this.length
 			});
 			shapes[0].setStroke({color: this.color});
@@ -40,7 +40,7 @@ dojo.declare("dojox.widget.gauge.BarLineIndicator",[dojox.widget.gauge._Indicato
 		return shapes;
 	},
 	draw: function(/*Boolean?*/ dontAnimate){
-		// summary: 
+		// summary:
 		//		Override of dojox.widget.gauge._Indicator.draw
 		// dontAnimate: Boolean
 		//		Indicates if the drawing should not be animated (vs. the default of doing an animation)
@@ -88,7 +88,7 @@ dojo.declare("dojox.widget.gauge.BarLineIndicator",[dojox.widget.gauge._Indicato
 		}
 	},
 	_move: function(/*Boolean?*/ dontAnimate){
-		// summary: 
+		// summary:
 		//		Moves this indicator (since it's already been drawn once)
 		// dontAnimate: Boolean
 		//		Indicates if the drawing should not be animated (vs. the default of doing an animation)
@@ -152,7 +152,7 @@ dojo.declare("dojox.widget.BarGauge",dojox.widget.gauge._Gauge,{
 
 	startup: function(){
 		// handle settings from HTML by making sure all the options are
-		// converted correctly to numbers 
+		// converted correctly to numbers
 		//
 		// also connects mouse handling events
 
@@ -213,7 +213,7 @@ dojo.declare("dojox.widget.BarGauge",dojox.widget.gauge._Gauge,{
 		// summary:
 		//		This function is used to draw (or redraw) a range
 		// description:
-		//		Draws a range (colored area on the background of the gauge) 
+		//		Draws a range (colored area on the background of the gauge)
 		//		based on the given arguments.
 		// range:
 		//		A range is either a dojox.widget.gauge.Range or an object
@@ -225,9 +225,9 @@ dojo.declare("dojox.widget.BarGauge",dojox.widget.gauge._Gauge,{
 
 		var x1 = this._getPosition(range.low);
 		var x2 = this._getPosition(range.high);
-		var path = this.surface.createRect({x:x1, 
-											y:this.dataY, 
-											width:x2-x1, 
+		var path = this.surface.createRect({x:x1,
+											y:this.dataY,
+											width:x2-x1,
 											height:this.dataHeight});
 		if(dojo.isArray(range.color) || dojo.isString(range.color)){
 			path.setStroke({color: range.color});

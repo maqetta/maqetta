@@ -13,18 +13,26 @@ dojo.require("dojox.gfx");
 var surface, image = null, grid_size = 1000, grid_step = 50, surface2, image2
 	m = dojox.gfx.matrix;
 
-makeShapes = function(){
+createSurface = function(){
 	surface = dojox.gfx.createSurface("test", 800, 600);
+	surface.whenLoaded(makeShapes);
+
+    //create second test
+    surface2 = dojox.gfx.createSurface("test2", 600, 600);
+	surface2.whenLoaded(makeShapes2);
+};
+
+makeShapes = function(surface){
 	for(var i = 0; i <= grid_size; i += grid_step){
 		surface.createLine({x1: 0, x2: grid_size, y1: i, y2: i}).setStroke("black");
 		surface.createLine({y1: 0, y2: grid_size, x1: i, x2: i}).setStroke("black");
 	}
     image = surface.createImage({width: 150, height: 100, src: "images/eugene-sm.jpg"});
     image.connect("onclick", function(){ alert("You didn't expect a download, did you?"); });
+};
 
-    //create second test
-    surface2 = dojox.gfx.createSurface("test2", 600, 600);
-    image2 = surface2.createImage({width: 150, height: 100, src: "images/eugene-sm.jpg"});
+makeShapes2 = function(surface){
+    image2 = surface.createImage({width: 150, height: 100, src: "images/eugene-sm.jpg"});
 };
 
 transformImage = function(){
@@ -44,7 +52,7 @@ transformImage = function(){
 	window.scaled=!window.scaled;
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

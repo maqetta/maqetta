@@ -1,41 +1,41 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>TooltipDialog Widget Tests</title>
 
 	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
+		@import "../themes/claro/document.css";
 		@import "css/dijitTests.css";
 
 		body { font-family : sans-serif; }
 		form { margin-bottom : 0; }
 		table { border: none; }
-		.tundra .tooltipLink .dijitButtonNode,
-		.tundra .tooltipLink .dijitButtonNode .dijitDropDownButtonHover,
-		.tundra .buttonLink .dijitButtonNode,
-		.tundra .buttonLink .dijitButtonHover .dijitButtonNode {
-				background: none !important;
-				border:none;
+		.claro .tooltipLink .dijitButtonNode,
+		.claro .tooltipLink .dijitButtonNode .dijitDropDownButtonHover,
+		.claro .buttonLink .dijitButtonNode,
+		.claro .buttonLink .dijitButtonHover .dijitButtonNode {
+			background: none !important;
+			border:none;
 		}
-		.tundra .tooltipLink .dijitArrowButtonInner {
+		.claro .tooltipLink .dijitArrowButtonInner {
 			display:none;
 		}
-		.tundra .tooltipLink button,
-		.tundra .tooltipLink button .dijitButtonText,
-		.tundra .buttonLink button .dijitButtonText {
-				text-decoration:underline !important;
-				color:blue;
-				display:inline;
+		.claro .tooltipLink button,
+		.claro .tooltipLink button .dijitButtonText,
+		.claro .buttonLink button .dijitButtonText {
+			text-decoration:underline !important;
+			color:blue;
+			display:inline;
 		}
 	</style>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="isDebug: true"></script>
 
 	<!-- not needed, for testing alternate themes -->
 	<script type="text/javascript" src="_testCommon.js"></script>
@@ -43,7 +43,7 @@
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.TooltipDialog");
-		dojo.require("dijit.form.Button");
+		dojo.require("dijit.form.DropDownButton");
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.TimeTextBox");
@@ -52,46 +52,89 @@
 		dojo.require("dijit.layout.TabContainer");
 		dojo.require("dijit.InlineEditBox");
 		dojo.require("dijit.Menu");
-		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
-
-		// create a do nothing, only for test widget
-		dojo.declare("dijit.TestWidget",
-			[dijit._Widget, dijit._Templated], {
-			templateString: "<div style='margin: 10px; border: inset #700 4px; padding: 5px;' dojoAttachPoint='containerNode'></div>"
-		});
+		dojo.require("dojo.parser");
 
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
 		Date.prototype.json = function(){ return dojo.date.stamp.toISOString(this, {selector: 'date'});};
+
+		dojo.addOnLoad(function(){
+			// create a do nothing, only for test widget
+			dojo.declare("dijit.TestWidget",
+				[dijit._Widget, dijit._Templated], {
+				templateString: "<div style='margin: 10px; border: inset #700 4px; padding: 5px;' dojoAttachPoint='containerNode'></div>"
+			});
+
+			// scan page for widgets and instantiate them
+			dojo.parser.parse();
+
+			// Nested TooltipDialog that contains a nested Menu
+			var innerTtDialog = new dijit.TooltipDialog({
+				id: "innerTtDialog",
+				content:
+					'<div dojoType="dijit.Menu" id="navMenu"><div dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconCut" >Drama</div><div dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconCopy" >Comedy</div><div dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconPaste" >Romance</div><div dojoType="dijit.MenuSeparator"></div><div dojoType="dijit.PopupMenuItem" id="popupMenuItem"><span>Action</span><div dojoType="dijit.Menu" id="submenu"><div dojoType="dijit.MenuItem">Diehard</div><div dojoType="dijit.MenuItem">Indiana Jones</div></div></div></div>'
+					+ '<label for="name">Name:</label> <input dojoType="dijit.form.TextBox" id="name" name="name"><br>' 
+					+ '<label for="hobby">Hobby:</label> <input dojoType="dijit.form.TextBox" id="hobby" name="hobby"><br>' 
+					+ '<button dojoType="dijit.form.Button" type="button">Save</button>'
+					+ '<div id="plaintext">plain text</div>'
+			 });
+
+			var innerDdBtn = new dijit.form.DropDownButton({
+				id: "innerDdBtn",
+				label: "Inner TooltipDialog (innerTtDialog)",
+				dropDown: innerTtDialog
+			});
+
+			var ddDialogCp = new dijit.layout.ContentPane({
+				id: "ddDialogCp",
+				title: '',
+				refreshOnShow: true
+			});
+			ddDialogCp.startup();
+			ddDialogCp.set("content", innerDdBtn);
+
+			var outerTtDialog = new dijit.TooltipDialog({
+			   id: "outerTtDialog",
+			   content:ddDialogCp
+			});
+
+			var launcherBtn = new dijit.form.DropDownButton({
+				id: "outerDdBtn",
+				label: "Nested TooltipDialog (ttDialog)",
+				dropDown: outerTtDialog
+			});
+
+			dojo.byId("dropdownButtonContainer").appendChild(launcherBtn.domNode);
+		});
 	</script>
 </head>
 <body class="claro">
 
 	<h1 class="testTitle">dijit.TooltipDialog tests</h1>
 
-	<div dojoType="dijit.form.DropDownButton" id="tooltipDlgButton">
+	<div id="tooltipDlgButton" data-dojo-type="dijit.form.DropDownButton" >
 		<span>Show Tooltip Dialog</span>
-		<div dojoType="dijit.TooltipDialog" id="tooltipDlg" title="Enter Login information">
+		<div id="tooltipDlg" data-dojo-type="dijit.TooltipDialog" data-dojo-props='title:"Enter Login information"'>
 			<table>
 				<tr>
-					<td><label for="inline">InlineEditBox:</label></td>
-					<td><div dojoType=dijit.InlineEditBox type="text" name="inline" id="inline">inline</div></td>
+					<td><label>InlineEditBox:</label></td>
+					<td><div id="inline" data-dojo-type=dijit.InlineEditBox data-dojo-props='editorParams:{type:"text", name:"inline"}'>inline</div></td>
 				</tr>
 				<tr>
 					<td><label for="text">TextBox:</label></td>
-					<td><input dojoType=dijit.form.TextBox name="text" id="text"></td>
+					<td><input id="text" data-dojo-type=dijit.form.TextBox data-dojo-props='name:"text" '/></td>
 				</tr>
 				<tr>
 					<td><label for="date2">Date:</label></td>
-					<td><input dojoType=dijit.form.DateTextBox name="date" id="date2"></td>
+					<td><input id="date2" data-dojo-type=dijit.form.DateTextBox data-dojo-props='name:"date" '/></td>
 				</tr>
 				<tr>
 					<td><label for="time2">Time:</label></td>
-					<td><input dojoType=dijit.form.TimeTextBox name="time" id="time2"></td>
+					<td><input id="time2" data-dojo-type=dijit.form.TimeTextBox data-dojo-props='name:"time" '/></td>
 				</tr>
 				<tr>
 					<td><label for="combo">FilteringSelect:</label></td>
 					<td>
-						<select dojoType=dijit.form.FilteringSelect name="combo" id="combo" hasDownArrow="true">
+						<select id="combo" data-dojo-type=dijit.form.FilteringSelect data-dojo-props='name:"combo", hasDownArrow:true'>
 							<option value="cheese">cheese</option>
 							<option value="pepperoni">pepperoni</option>
 							<option value="sausage">sausage</option>
@@ -101,7 +144,7 @@
 				<tr>
 					<td><label for="select">Select:</label></td>
 					<td>
-						<select dojoType=dijit.form.Select name="select" id="select">
+						<select id="select" data-dojo-type=dijit.form.Select data-dojo-props='name:"select" '>
 							<option value="olives">olives</option>
 							<option value="peppers">peppers</option>
 							<option value="tomatoes">tomatoes</option>
@@ -109,8 +152,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center">
-						<button dojoType=dijit.form.Button type="submit" name="submit" id="submit">Order</button>
+					<td colspan="2" style="text-align:center;">
+						<button id="submit" data-dojo-type=dijit.form.Button data-dojo-props='type:"submit", name:"submit" '>Order</button>
 					</td>
 				</tr>
 			</table>
@@ -118,11 +161,11 @@
 		</div>
 	</div> |
 
-	<div dojoType="dijit.form.DropDownButton">
+	<div data-dojo-type="dijit.form.DropDownButton">
 		<span>Show Tooltip Dialog with TabContainer</span>
-		<div dojoType="dijit.TooltipDialog" id="tabTooltip" title="Tab Container Tooltip">
-			<div dojoType="dijit.layout.TabContainer" style="width: 400px; height: 300px;">
-				<div dojoType="dijit.layout.ContentPane" title="First tab">
+		<div id="tabTooltip" data-dojo-type="dijit.TooltipDialog" data-dojo-props='title:"Tab Container Tooltip"'>
+			<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"width: 400px; height: 300px;"'>
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"First tab"'>
 					<p>
 						This is the first tab.
 					</p>
@@ -135,7 +178,7 @@
 					risus.
 					</p>
 				</div>
-				<div dojoType="dijit.layout.ContentPane" title="Second tab">
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Second tab"'>
 					<p>
 						This is the second tab.
 					</p>
@@ -152,17 +195,17 @@
 		</div>
 	</div> |
 
-	<div dojoType="dijit.form.DropDownButton">
+	<div data-dojo-type="dijit.form.DropDownButton">
 		<span>Test slowloading HREF Tooltip Dialog</span>
-		<div dojoType="dijit.TooltipDialog" id="slowLoad" href="layout/getResponse.php?delay=500&messId=2"
-			title="tooltip dialog with no focusable items"></div>
+		<div id="slowLoad" data-dojo-type="dijit.TooltipDialog" data-dojo-props='href:"layout/getResponse.php?delay=500&amp;messId=2",
+			title:"tooltip dialog with no focusable items"'></div>
 	</div> |
 
-<div dojoType="dijit.form.DropDownButton" class="tooltipLink">
+<div data-dojo-type="dijit.form.DropDownButton" data-dojo-props='"class":"tooltipLink"'>
 	<span>What is this?</span>
-	<div dojoType="dijit.TooltipDialog" id="tooltipHelpDlg" title="Test Dialog tooltip" style="width:350px" >
-		<div class="buttonLink" style="float:right;font-size:x-small" title="close" tabindex="0" dojoType="dijit.form.Button">[close]
-			<script type="dojo/method" event="onClick">
+	<div id="tooltipHelpDlg" data-dojo-type="dijit.TooltipDialog" data-dojo-props='title:"Test Dialog tooltip", style:"width:350px" '>
+		<div data-dojo-type="dijit.form.Button" data-dojo-props='"class":"buttonLink", style:"float:right;font-size:x-small", title:"close", tabIndex:"0" '>[close]
+			<script type="dojo/method" data-dojo-event="onClick">
 					dijit.byId('tooltipHelpDlg').onCancel();
 			</script>
 		</div>
@@ -178,6 +221,9 @@
 	</div>
 </div>
 
+	<span id="dropdownButtonContainer">
+		<!-- programatically created nested TooltipDialog will be placed here -->
+	</span>
 
 	<p><b><i>(scroll down to see more links to click, for testing positioning / scroll handling)</i></b></p>
 
@@ -206,12 +252,12 @@
 	hymenaeos.
 	</p>
 	<form>
-		<center>
+		<div style="text-align:center;">
 			<select>
 				<option>1</option>
 				<option>2</option>
 			</select>
-		</center>
+		</div>
 	</form>
 	<p>Mauris pharetra lorem sit amet sapien. Nulla libero metus, tristique
 	et, dignissim a, tempus et, metus. Ut libero. Vivamus tempus purus vel
@@ -227,9 +273,9 @@
 	turpis sed odio. Curabitur in est id nibh tempus ultrices. Aliquam
 	consectetuer dapibus eros. Aliquam nisl.
 	</p>
-	<div style="float:right;clear:right;" dojoType="dijit.form.DropDownButton">
+	<div data-dojo-type="dijit.form.DropDownButton" data-dojo-props='style:"float:right;clear:right;" '>
 		<span>dropdown at right</span>
-	<div dojoType="dijit.TooltipDialog" id="dialogright">
+	<div id="dialogright" data-dojo-type="dijit.TooltipDialog" >
 			<div style="white-space:nowrap;">Aliquam vitae enim. Duis scelerisque metus auctor est venenatis</div>
 	</div>
 	</div>
@@ -255,9 +301,9 @@
 	tortor pharetra congue. Suspendisse pulvinar.
 	</p>
 
-	<div dojoType="dijit.form.DropDownButton" title="Enter Login information2">
+	<div data-dojo-type="dijit.form.DropDownButton" data-dojo-props='title:"Enter Login information2"'>
 		<span>Show Tooltip Dialog pointing upwards, with links</span>
-		<div dojoType="dijit.TooltipDialog" title="General Information Dialog">
+		<div data-dojo-type="dijit.TooltipDialog" data-dojo-props='title:"General Information Dialog"'>
 			<p>Vestibulum convallis eros ac justo. Proin dolor. Etiam aliquam. Nam
 			ornare elit vel augue. Suspendisse potenti. Etiam sed mauris eu neque
 			nonummy mollis. <a href="http://www.lipsum.com/">Vestibulum</a> vel purus ac pede semper accumsan. Vivamus
@@ -285,12 +331,12 @@
 	hymenaeos.
 	</p>
 	<form>
-		<center>
+		<div style="text-align:center;">
 			<select>
 				<option>1</option>
 				<option>2</option>
 			</select>
-		</center>
+		</div>
 	</form>
 	<p>Mauris pharetra lorem sit amet sapien. Nulla libero metus, tristique
 	et, dignissim a, tempus et, metus. Ut libero. Vivamus tempus purus vel
@@ -402,4 +448,3 @@
 
 </body>
 </html>
-

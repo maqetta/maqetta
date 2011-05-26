@@ -1,8 +1,4 @@
-dojo.provide("dijit.layout._LayoutWidget");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Container");
-dojo.require("dijit._Contained");
+define("dijit/layout/_LayoutWidget", ["dojo", "dijit", "dijit/_Widget", "dijit/_Container", "dijit/_Contained"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout._LayoutWidget",
 	[dijit._Widget, dijit._Container, dijit._Contained],
@@ -22,10 +18,9 @@ dojo.declare("dijit.layout._LayoutWidget",
 		//		children widgets, setting their size, when they become visible.
 		isLayoutContainer: true,
 
-		postCreate: function(){
-			dojo.addClass(this.domNode, "dijitContainer");
-
+		buildRendering: function(){
 			this.inherited(arguments);
+			dojo.addClass(this.domNode, "dijitContainer");
 		},
 
 		startup: function(){
@@ -159,10 +154,9 @@ dojo.declare("dijit.layout._LayoutWidget",
 			// tags:
 			//		protected extension
 
-			dojo.addClass(child.domNode, this.baseClass+"-child");
-			if(child.baseClass){
-				dojo.addClass(child.domNode, this.baseClass+"-"+child.baseClass);
-			}
+			var cls = this.baseClass + "-child "
+				+ (child.baseClass ? this.baseClass + "-" + child.baseClass : "");
+			dojo.addClass(child.domNode, cls);
 		},
 
 		addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
@@ -175,10 +169,11 @@ dojo.declare("dijit.layout._LayoutWidget",
 
 		removeChild: function(/*dijit._Widget*/ child){
 			// Overrides _Container.removeChild() to remove class added by _setupChild()
-			dojo.removeClass(child.domNode, this.baseClass+"-child");
-			if(child.baseClass){
-				dojo.removeClass(child.domNode, this.baseClass+"-"+child.baseClass);
-			}
+			var cls = this.baseClass + "-child"
+					+ (child.baseClass ?
+						" " + this.baseClass + "-" + child.baseClass : "");
+			dojo.removeClass(child.domNode, cls);
+			
 			this.inherited(arguments);
 		}
 	}
@@ -207,15 +202,22 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 
 	var size = function(widget, dim){
 		// size the child
-		widget.resize ? widget.resize(dim) : dojo.marginBox(widget.domNode, dim);
+		var newSize = widget.resize ? widget.resize(dim) : dojo.marginBox(widget.domNode, dim);
 
-		// record child's size, but favor our own numbers when we have them.
-		// the browser lies sometimes
-		dojo.mixin(widget, dojo.marginBox(widget.domNode));
-		dojo.mixin(widget, dim);
+		// record child's size
+		if(newSize){
+			// if the child returned it's new size then use that
+			dojo.mixin(widget, newSize);
+		}else{
+			// otherwise, call marginBox(), but favor our own numbers when we have them.
+			// the browser lies sometimes
+			dojo.mixin(widget, dojo.marginBox(widget.domNode));
+			dojo.mixin(widget, dim);
+		}
 	};
 
-	dijit.layout.layoutChildren = function(/*DomNode*/ container, /*Object*/ dim, /*Object[]*/ children){
+	dijit.layout.layoutChildren = function(/*DomNode*/ container, /*Object*/ dim, /*Widget[]*/ children,
+			/*String?*/ changedRegionId, /*Number?*/ changedRegionSize){
 		// summary
 		//		Layout a bunch of child dom nodes within a parent dom node
 		// container:
@@ -223,7 +225,16 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		// dim:
 		//		{l, t, w, h} object specifying dimensions of container into which to place children
 		// children:
-		//		an array like [ {domNode: foo, layoutAlign: "bottom" }, {domNode: bar, layoutAlign: "client"} ]
+		//		an array of Widgets or at least objects containing:
+		//			* domNode: pointer to DOM node to position
+		//			* region or layoutAlign: position to place DOM node
+		//			* resize(): (optional) method to set size of node
+		//			* id: (optional) Id of widgets, referenced from resize object, below.
+		// changedRegionId:
+		//		If specified, the slider for the region with the specified id has been dragged, and thus
+		//		the region's height or width should be adjusted according to changedRegionSize
+		// changedRegionSize:
+		//		See changedRegionId.
 
 		// copy dim because we are going to modify it
 		dim = dojo.mixin({}, dim);
@@ -232,27 +243,37 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 
 		// Move "client" elements to the end of the array for layout.  a11y dictates that the author
 		// needs to be able to put them in the document in tab-order, but this algorithm requires that
-		// client be last.
-		children = dojo.filter(children, function(item){ return item.layoutAlign != "client"; })
-			.concat(dojo.filter(children, function(item){ return item.layoutAlign == "client"; }));
+		// client be last.    TODO: move these lines to LayoutContainer?   Unneeded other places I think.
+		children = dojo.filter(children, function(item){ return item.region != "center" && item.layoutAlign != "client"; })
+			.concat(dojo.filter(children, function(item){ return item.region == "center" || item.layoutAlign == "client"; }));
 
 		// set positions/sizes
 		dojo.forEach(children, function(child){
 			var elm = child.domNode,
-				pos = child.layoutAlign;
+				pos = (child.region || child.layoutAlign);
 
 			// set elem to upper left corner of unused space; may move it later
 			var elmStyle = elm.style;
 			elmStyle.left = dim.l+"px";
 			elmStyle.top = dim.t+"px";
-			elmStyle.bottom = elmStyle.right = "auto";
+			elmStyle.position = "absolute";
 
 			dojo.addClass(elm, "dijitAlign" + capitalize(pos));
+
+			// Size adjustments to make to this child widget
+			var sizeSetting = {};
+
+			// Check for optional size adjustment due to splitter drag (height adjustment for top/bottom align
+			// panes and width adjustment for left/right align panes.
+			if(changedRegionId && changedRegionId == child.id){
+				sizeSetting[child.region == "top" || child.region == "bottom" ? "h" : "w"] = changedRegionSize;
+			}
 
 			// set size && adjust record of remaining space.
 			// note that setting the width of a <div> may affect its height.
 			if(pos == "top" || pos == "bottom"){
-				size(child, { w: dim.w });
+				sizeSetting.w = dim.w;
+				size(child, sizeSetting);
 				dim.h -= child.h;
 				if(pos == "top"){
 					dim.t += child.h;
@@ -260,17 +281,22 @@ dijit.layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 					elmStyle.top = dim.t + dim.h + "px";
 				}
 			}else if(pos == "left" || pos == "right"){
-				size(child, { h: dim.h });
+				sizeSetting.h = dim.h;
+				size(child, sizeSetting);
 				dim.w -= child.w;
 				if(pos == "left"){
 					dim.l += child.w;
 				}else{
 					elmStyle.left = dim.l + dim.w + "px";
 				}
-			}else if(pos == "client"){
+			}else if(pos == "client" || pos == "center"){
 				size(child, dim);
 			}
 		});
 	};
 
 })();
+
+
+return dijit.layout._LayoutWidget;
+});

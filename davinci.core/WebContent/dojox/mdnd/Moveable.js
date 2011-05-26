@@ -1,8 +1,8 @@
 dojo.provide("dojox.mdnd.Moveable");
 
 dojo.declare(
-	"dojox.mdnd.Moveable", 
-	null, 
+	"dojox.mdnd.Moveable",
+	null,
 {
 	// summary:
 	//		Allow end-users to track a DOM node into the web page
@@ -23,14 +23,14 @@ dojo.declare(
 	
 	constructor: function(/*Object*/params, /*DOMNode*/node){
 		// summary:
-		// 		Configure parameters and listen to mousedown events from handle 
+		// 		Configure parameters and listen to mousedown events from handle
 		//		node.
 		// params:
 		//		Hash of parameters
 		// node:
 		//		The draggable node
 
-		//console.log("dojox.mdnd.Moveable ::: constructor"); 
+		//console.log("dojox.mdnd.Moveable ::: constructor");
 		this.node = dojo.byId(node);
 		
 		this.d = this.node.ownerDocument;
@@ -89,24 +89,24 @@ dojo.declare(
 		this.events.push(dojo.connect(this.d, "onmousemove", this, "onFirstMove"));
 		this._selectStart = dojo.connect(dojo.body(), "onselectstart", dojo.stopEvent);
 		this._firstX = e.clientX;
-		this._firstY = e.clientY;	
+		this._firstY = e.clientY;
 		dojo.stopEvent(e);
 	},
 	
 	onFirstMove: function(/*DOMEvent*/e){
 		// summary:
-		//		Occurs when the user moves the mouse after clicking on the 
+		//		Occurs when the user moves the mouse after clicking on the
 		//		handle.
-		//		Determinate when the drag action will have to begin (see 
+		//		Determinate when the drag action will have to begin (see
 		//		dragDistance).
 		// e:
 		//		A DOM event
 		// tags:
 		//		callback
 
-		//console.log("dojox.mdnd.Moveable ::: onFirstMove"); 
+		//console.log("dojox.mdnd.Moveable ::: onFirstMove");
 		dojo.stopEvent(e);
-		var d = (this._firstX - e.clientX) * (this._firstX - e.clientX) 
+		var d = (this._firstX - e.clientX) * (this._firstX - e.clientX)
 				+ (this._firstY - e.clientY) * (this._firstY - e.clientY);
 		if(d > this.dragDistance * this.dragDistance){
 			this._isDragging = true;
@@ -158,7 +158,7 @@ dojo.declare(
 		dojo.stopEvent(e);
 		// hack to avoid too many calls to onMove in IE8 causing sometimes slowness
 		if(dojo.isIE == 8 && new Date() - this.date < 20){
-			return;		
+			return;
 		}
 		if(this.autoScroll){
 			this.autoScroll.checkAutoScroll(e);
@@ -182,19 +182,21 @@ dojo.declare(
 		// summary:
 		//		Occurs when the user releases the mouse
 		//		Calls the onDragEnd method.
-		// e: 
+		// e:
 		//		a DOM event
 
-		dojo.stopEvent(e);
-		this._isDragging = false;
-		if(this.autoScroll){
-			this.autoScroll.stopAutoScroll();
-		}
+		if (this._isDragging){
+			dojo.stopEvent(e);
+			this._isDragging = false;
+			if(this.autoScroll){
+				this.autoScroll.stopAutoScroll();
+			}
+			delete this.onMove;
+			this.onDragEnd(this.node);
+			this.node.focus();
+ 		}
 		dojo.disconnect(this.events.pop());
 		dojo.disconnect(this.events.pop());
-		delete this.onMove;
-		this.onDragEnd(this.node);
-		this.node.focus();
 	},
 	
 	onDragStart: function(/*DOMNode*/node, /*Object*/coords, /*Object*/size){

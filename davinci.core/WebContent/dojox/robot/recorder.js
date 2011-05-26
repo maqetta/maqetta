@@ -57,10 +57,10 @@ var addCommand = function(name, args){
 	//
 
 	// omit start/stop record
-	if(startTime == null 
-		|| name=="doh.robot.keyPress" 
-		&& args[0]==dojo.keys.ENTER 
-		&& eval("("+args[2]+")").ctrl 
+	if(startTime == null
+		|| name=="doh.robot.keyPress"
+		&& args[0]==dojo.keys.ENTER
+		&& eval("("+args[2]+")").ctrl
 		&& eval("("+args[2]+")").alt){ return; }
 	var dt = Math.max(Math.min(Math.round((new Date()).getTime() - prevTime.getTime()),MAXIMUM_DELAY),1);
 	// add in dt
@@ -80,13 +80,13 @@ var _optimize = function(){
 
 	// INITIAL OPTIMIZATIONS
 	// remove starting ENTER press
-	if(c[0].name == "doh.robot.keyPress" 
+	if(c[0].name == "doh.robot.keyPress"
 		&& (c[0].args[0] == dojo.keys.ENTER || c[0].args[0] == 77)){
 		c.splice(0,1);
 	}
 	// remove ending CTRL + ALT keypresses in IE
 	for(var i = c.length-1; (i >= c.length-2) && (i>=0); i-- ){
-		if(c[i].name == "doh.robot.keyPress" 
+		if(c[i].name == "doh.robot.keyPress"
 			&& c[i].args[0]==dojo.keys.ALT || c[i].args[0]==dojo.keys.CTRL){
 			c.splice(i,1);
 		}
@@ -94,9 +94,9 @@ var _optimize = function(){
 	// ITERATIVE OPTIMIZATIONS
 	for(i = 0; i<c.length; i++){
 		var next, nextdt;
-		if(c[i+1] 
-			&& c[i].name=="doh.robot.mouseMove" 
-			&& c[i+1].name==c[i].name 
+		if(c[i+1]
+			&& c[i].name=="doh.robot.mouseMove"
+			&& c[i+1].name==c[i].name
 			&& c[i+1].args[2]<MOUSEMOVE_MAXIMUM_DELAY){
 			// mouse movement optimization
 			// if the movement is temporally close, collapse it
@@ -107,19 +107,19 @@ var _optimize = function(){
 			// 	...
 			// 	c[i+n-1]: last mouseMove
 			// 	c[i+n]: something else
-			// result: 
+			// result:
 			// 	c[i]: last mouseMove
 			// 	c[i+1]: something else
 			// the c[i] mouse location changes to move to c[i+n-1]'s location, c[i+n] gains c[i+1]+c[i+2]+...c[i+n-1] delay so the timing is the same
 
 			next = c[i+1];
 			nextdt = 0;
-			while(next 
-				&& next.name==c[i].name 
+			while(next
+				&& next.name==c[i].name
 				&& next.args[2]<MOUSEMOVE_MAXIMUM_DELAY){
 				// cut out next
 				c.splice(i + 1,1);
-				// add next's delay to the total 
+				// add next's delay to the total
 				nextdt += next.args[2];
 				// move to next mouse position
 				c[i].args[0]=next.args[0];
@@ -128,9 +128,9 @@ var _optimize = function(){
 			}
 			// make the total delay the duration
 			c[i].args[3]=nextdt;
-		}else if(c[i+1] 
-			&& c[i].name=="doh.robot.mouseWheel" 
-			&& c[i+1].name==c[i].name 
+		}else if(c[i+1]
+			&& c[i].name=="doh.robot.mouseWheel"
+			&& c[i+1].name==c[i].name
 			&& c[i+1].args[1]<MOUSEMOVE_MAXIMUM_DELAY){
 			// mouse wheel optimization
 			// if the movement is temporally close, collapse it
@@ -142,18 +142,18 @@ var _optimize = function(){
 			// 	...
 			// 	c[i+n-1]: last mouseWheel
 			// 	c[i+n]: something else
-			// result: 
+			// result:
 			// 	c[i]: mouseWheel
 			// 	c[i+1]: something else
 
 			next = c[i+1];
 			nextdt = 0;
-			while(next 
-				&& next.name==c[i].name 
+			while(next
+				&& next.name==c[i].name
 				&& next.args[1]<MOUSEMOVE_MAXIMUM_DELAY){
 				// cut out next
 				c.splice(i + 1, 1);
-				// add next's delay to the total 
+				// add next's delay to the total
 				nextdt += next.args[1];
 				// add in wheel amount
 				c[i].args[0]+=next.args[0];
@@ -161,8 +161,8 @@ var _optimize = function(){
 			}
 			// make the total delay the duration
 			c[i].args[2]=nextdt;
-		}else if(c[i + 2] 
-			&& c[i].name=="doh.robot.mouseMoveAt" 
+		}else if(c[i + 2]
+			&& c[i].name=="doh.robot.mouseMoveAt"
 			&& c[i+2].name=="doh.robot.scrollIntoView"){
 			// swap scrollIntoView of widget and mouseMoveAt
 			// the recorder traps scrollIntoView after the mouse click registers, but in playback, it is better to go the other way
@@ -176,9 +176,9 @@ var _optimize = function(){
 			//	c[i+2]: mousePress
 			var temp = c.splice(i+2,1)[0];
 			c.splice(i,0,temp);
-		}else if(c[i + 1] 
-			&& c[i].name=="doh.robot.mousePress" 
-			&& c[i+1].name=="doh.robot.mouseRelease" 
+		}else if(c[i + 1]
+			&& c[i].name=="doh.robot.mousePress"
+			&& c[i+1].name=="doh.robot.mouseRelease"
 			&& c[i].args[0]==c[i+1].args[0]){
 			// convert mousePress+mouseRelease to mouseClick
 			// expected pattern:
@@ -192,10 +192,10 @@ var _optimize = function(){
 			if(c[i+1] && c[i+1].name == "doh.robot.mouseClick" && c[i].args[0] == c[i+1].args[0]){
 				c.splice(i + 1, 1);
 			}
-		}else if(c[i + 1] 
+		}else if(c[i + 1]
 			&& c[i - 1]
 			&& c[i - 1].name=="doh.robot.mouseMoveAt"
-			&& c[i].name=="doh.robot.mousePress" 
+			&& c[i].name=="doh.robot.mousePress"
 			&& c[i+1].name=="doh.robot.mouseMove"){
 			// convert mouseMoveAt+mousePress+mouseMove to mouseMoveAt+mousePress+mouseMoveAt+mouseMove
 			// this is to kick off dojo.dnd by moving the mouse 1 px
@@ -209,14 +209,14 @@ var _optimize = function(){
 			c.splice(i+1,0,cmd);
 		}else if(c[i + 1]
 			&& ((c[i].name=="doh.robot.keyPress"
-				&& typeof c[i].args[0] =="string") 
-				|| c[i].name=="doh.robot.typeKeys") 
-			&& c[i+1].name=="doh.robot.keyPress" 
+				&& typeof c[i].args[0] =="string")
+				|| c[i].name=="doh.robot.typeKeys")
+			&& c[i+1].name=="doh.robot.keyPress"
 			&& typeof c[i+1].args[0] =="string"
-			&& c[i+1].args[1]<=KEYPRESS_MAXIMUM_DELAY 
-			&& !eval("("+c[i].args[2]+")").ctrl 
-			&& !eval("("+c[i].args[2]+")").alt 
-			&& !eval("("+c[i+1].args[2]+")").ctrl 
+			&& c[i+1].args[1]<=KEYPRESS_MAXIMUM_DELAY
+			&& !eval("("+c[i].args[2]+")").ctrl
+			&& !eval("("+c[i].args[2]+")").alt
+			&& !eval("("+c[i+1].args[2]+")").ctrl
 			&& !eval("("+c[i+1].args[2]+")").alt){
 			// convert keyPress+keyPress+... to typeKeys
 			// expected pattern:
@@ -233,11 +233,11 @@ var _optimize = function(){
 			c[i].args.splice(3,1);
 			next = c[i+1];
 			var typeTime = 0;
-			while(next 
-				&& next.name == "doh.robot.keyPress" 
+			while(next
+				&& next.name == "doh.robot.keyPress"
 				&& typeof next.args[0] =="string"
-				&& next.args[1]<=KEYPRESS_MAXIMUM_DELAY 
-				&& !eval("("+next.args[2]+")").ctrl 
+				&& next.args[1]<=KEYPRESS_MAXIMUM_DELAY
+				&& !eval("("+next.args[2]+")").ctrl
 				&& !eval("("+next.args[2]+")").alt){
 				c.splice(i + 1,1);
 				c[i].args[0] += next.args[0];
@@ -474,7 +474,7 @@ dojo.addOnLoad(function(){
 });
 
 // Get Dojo widget events too!
-dojo.connect(dojo, "connect", 
+dojo.connect(dojo, "connect",
 	function(/*dijit._Widget*/ widget, /*String*/ event, /*Function*/ f){
 		// kill recursion
 		// check for private variable _mine to make sure this isn't a recursive loop

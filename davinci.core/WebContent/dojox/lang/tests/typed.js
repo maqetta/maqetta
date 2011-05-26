@@ -20,8 +20,8 @@ dojo.require("dojox.lang.typed");
 	}));
 	var TypedClass = dojox.lang.tests.TypedClass;
 	TypedClass.properties = {
-		aString:String, 
-		self: TypedClass, 
+		aString:String,
+		self: TypedClass,
 		anInt: {type:"integer", maximum: 100, optional: true}
 	};
 	TypedClass.methods = {
@@ -118,7 +118,7 @@ dojo.require("dojox.lang.typed");
 			});
 			var AutoTypedClass = dojox.lang.tests.AutoTypedClass;
 			AutoTypedClass.properties = {
-				foo:{type:"string"} 
+				foo:{type:"string"}
 			};
 			AutoTypedClass.methods = {
 				subtract: {

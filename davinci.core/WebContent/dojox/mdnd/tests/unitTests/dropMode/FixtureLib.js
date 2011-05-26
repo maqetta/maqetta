@@ -77,7 +77,7 @@ dojo.declare("ItemFixture", null, {
 		delete this.array;
 		delete this.moveableA;
 		delete this.moveableB;
-		delete this.moveableC; 
+		delete this.moveableC;
 		delete this.moveableD;
 		delete this.itemA;
 		delete this.itemB;

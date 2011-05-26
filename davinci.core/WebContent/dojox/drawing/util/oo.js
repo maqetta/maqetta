@@ -49,9 +49,9 @@ dojox.drawing.util.oo = {
 		//		|		{
 		//		|			customType:"equation", // mixed in property
 		//		|			doThing: function(){   // mixed in method
-		//		|					
+		//		|
 		//		|			}
-		//		|		}	
+		//		|		}
 		//		|	);
 		//		|
 		//		|	var f = new MyFunction();

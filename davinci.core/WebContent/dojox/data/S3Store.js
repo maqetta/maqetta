@@ -1,6 +1,4 @@
-dojo.provide("dojox.data.S3Store");
-dojo.require("dojox.rpc.ProxiedPath");
-dojo.require("dojox.data.JsonRestStore");
+define("dojox/data/S3Store", ["dojo", "dojox", "dojox/data/JsonRestStore", "dojox/rpc/ProxiedPath"], function(dojo, dojox) {
 
 // S3JsonRestStore is an extension of JsonRestStore to handle
 // Amazon's S3 service using JSON data
@@ -32,3 +30,6 @@ dojo.declare("dojox.data.S3Store",
 		}
 	}
 );
+
+return dojox.data.S3Store;
+});

@@ -3,7 +3,7 @@ dojo.experimental("dojox.fx.ext-dojo.NodeList");
 // summary: Core extensions to dojo.NodeList providing addtional fx to dojo.NodeList-fx
 // description:
 //	A Package to extend dojo base NodeList with fx provided by the dojox.fx project.
-//	These are experimental animations, in an experimental 
+//	These are experimental animations, in an experimental
 
 dojo.require("dojo.NodeList-fx");
 dojo.require("dojox.fx");
@@ -25,9 +25,9 @@ dojo.extend(dojo.NodeList, {
 	slideBy: function(args){
 		//	summary:
 		//		slide all elements of this NodeList. Returns an instance of dojo.Animation
-		//		
+		//
 		//	example:
-		//	|	// slide all tables with class "blah" 10 px 
+		//	|	// slide all tables with class "blah" 10 px
 		//	|	dojo.query("table.blah").slideBy({ top:10, left:10 }).play();
 		return this._anim(dojox.fx, "slideBy", args); // dojo.Animation
 	},
@@ -37,7 +37,7 @@ dojo.extend(dojo.NodeList, {
 		//		highlight all elements of the node list.
 		//		Returns an instance of dojo.Animation
 		//	example:
-		//	|	// highlight all links with class "foo" 
+		//	|	// highlight all links with class "foo"
 		//	|	dojo.query("a.foo").hightlight().play();
 		return this._anim(dojox.fx, "highlight", args); // dojo.Animation
 	},

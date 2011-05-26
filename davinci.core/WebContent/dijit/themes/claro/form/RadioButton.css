@@ -18,65 +18,62 @@
  * 5. Disabled state
  * 		.dijitRadioDisabled|.dijitRadioCheckedDisabled - for background image
  */
+.claro .dijitToggleButton .dijitRadio, .claro .dijitToggleButton .dijitRadioIcon {
+  background-image: url('images/checkboxRadioButtonStates.png');
+}
+.dj_ie6 .claro .dijitToggleButton .dijitRadio, .dj_ie6 .claro .dijitToggleButton .dijitRadioIcon {
+  background-image: url('images/checkboxAndRadioButtons_IE6.png');
+}
+.claro .dijitRadio, .claro .dijitRadioIcon {
+  /* inside a toggle button */
 
-.claro .dijitToggleButton .dijitRadio,
+  background-image: url('images/checkboxRadioButtonStates.png');
+  /* checkbox sprite image */
+
+  background-repeat: no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 0 2px 0 0;
+  padding: 0;
+}
+.dj_ie6 .claro .dijitRadio, .dj_ie6 .claro .dijitRadioIcon {
+  /* inside a toggle button */
+
+  background-image: url('images/checkboxAndRadioButtons_IE6.png');
+  /* checkbox sprite image */
+
+}
+.claro .dijitRadio {
+  /* unselected */
+
+  background-position: -105px;
+}
 .claro .dijitToggleButton .dijitRadioIcon {
-	background-image: url('images/checkboxRadioButtonStates.png');
-}
+  /* unselected */
 
-.dj_ie6 .claro .dijitToggleButton .dijitRadio,
-.dj_ie6 .claro .dijitToggleButton .dijitRadioIcon {
-	background-image: url('images/checkboxAndRadioButtons_IE6.png');
+  background-position: -107px;
 }
-
-.claro .dijitRadio,
-.claro .dijitRadioIcon	{		/* inside a toggle button */
-	background-image: url('images/checkboxRadioButtonStates.png'); /* checkbox sprite image */
-	background-repeat: no-repeat;
-	width: 15px;
-	height: 15px;
-	margin: 0px 2px 0px 0px;
-	padding: 0px;
-}
-
-.dj_ie6 .claro .dijitRadio,
-.dj_ie6 .claro .dijitRadioIcon	{		/* inside a toggle button */
-	background-image: url('images/checkboxAndRadioButtons_IE6.png'); /* checkbox sprite image */
-}
-
-.claro .dijitRadio{
-	/* unselected */
-	background-position: -105px;
-}
-
-.claro .dijitToggleButton .dijitRadioIcon {
-	/* unselected */
-	background-position: -107px;
-}
-
 .claro .dijitRadioDisabled {
-	/* unselected and disabled */
-	background-position: -165px;
-}
+  /* unselected and disabled */
 
+  background-position: -165px;
+}
 .claro .dijitRadioHover {
-	/* hovering over an unselected enabled radio button */
-	background-position: -135px;
-}
+  /* hovering over an unselected enabled radio button */
 
-.claro .dijitRadioChecked{
-	background-position: -90px;
+  background-position: -135px;
 }
-
+.claro .dijitRadioChecked {
+  background-position: -90px;
+}
 .claro .dijitToggleButtonChecked .dijitRadioIcon {
-	background-position: -92px;
+  background-position: -92px;
 }
-
-.claro .dijitRadioCheckedHover{
-	background-position: -120px;
+.claro .dijitRadioCheckedHover {
+  background-position: -120px;
 }
-
 .claro .dijitRadioCheckedDisabled {
-	/* selected but disabled */
-	background-position: -150px;
+  /* selected but disabled */
+
+  background-position: -150px;
 }

@@ -52,8 +52,13 @@ dojo.declare("dojox.widget._CalendarMonthView", [dojox.widget._CalendarView, dij
 	onClick: function(evt){
 		// summary: Handles clicks on month names
 		if(!dojo.hasClass(evt.target, "dojoxCalendarMonthLabel")){dojo.stopEvent(evt); return;}
-		var month = evt.target.parentNode.cellIndex + (evt.target.parentNode.parentNode.rowIndex * 4);
+		var parentNode = evt.target.parentNode;
+		var month = parentNode.cellIndex + (parentNode.parentNode.rowIndex * 4);
 		var date = this.get("value");
+
+		// Seeing a really strange bug in FF3.6 where this has to be called twice
+		// in order to take affect
+		date.setMonth(month);
 		date.setMonth(month);
 		this.onValueSelected(date, month);
 	}
@@ -124,11 +129,21 @@ dojo.declare("dojox.widget.MonthlyCalendar",
 	[dojox.widget._CalendarBase,
 	 dojox.widget._CalendarMonth], {
 	 	// summary: A calendar with only a month view.
+		_makeDate: function(value){
+			var now = new Date();
+			now.setMonth(value);
+			return now;
+		}
 	 }
 );
 dojo.declare("dojox.widget.YearlyCalendar",
 	[dojox.widget._CalendarBase,
 	 dojox.widget._CalendarYear], {
 	 	// summary: A calendar with only a year view.
+		_makeDate: function(value){
+			var now = new Date();
+			now.setFullYear(value);
+			return now;
+		}
 	 }
 );

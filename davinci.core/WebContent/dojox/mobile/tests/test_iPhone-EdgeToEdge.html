@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Edge to Edge</title>
 		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
@@ -17,15 +17,15 @@
 	<body>
 		<div id="settings" dojoType="dojox.mobile.View" selected="true">
 			<h1 dojoType="dojox.mobile.Heading">Settings</h1>
-			<ul dojoType="dojox.mobile.EdgeToEdgeList" iconBase="images/i-icon-all.png">
-				<li dojoType="dojox.mobile.ListItem" iconPos="0,0,29,29">
+			<ul dojoType="dojox.mobile.EdgeToEdgeList">
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png">
 					Airplane Mode
 					<div class="mblItemSwitch" dojoType="dojox.mobile.Switch"></div>
 				</li>
-				<li dojoType="dojox.mobile.ListItem" iconPos="0,29,29,29" rightText="mac" moveTo="hello">
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-2.png" rightText="mac" moveTo="hello">
 					Wi-Fi
 				</li>
-				<li dojoType="dojox.mobile.ListItem" iconPos="0,58,29,29" rightText="AcmePhone" moveTo="hello">
+				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-3.png" rightText="AcmePhone" moveTo="hello">
 					Carrier
 				</li>
 			</ul>

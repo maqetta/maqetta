@@ -138,9 +138,6 @@ dojo.provide("dojox.embed.Flash");
 				+ 'width="' + kwArgs.width + '" '
 				+ 'height="' + kwArgs.height + '"'
 				+ ((kwArgs.style)?' style="' + kwArgs.style + '" ':'')
-				+ 'swLiveConnect="'+kwArgs.swLiveConnect+'" '
-				+ 'allowScriptAccess="' +kwArgs.allowScriptAccess+  '" '
-				+ 'allowNetworking="' +kwArgs.allowNetworking+  '" '
 
 				+ 'pluginspage="' + window.location.protocol + '//www.adobe.com/go/getflashplayer" ';
 			if(kwArgs.params){

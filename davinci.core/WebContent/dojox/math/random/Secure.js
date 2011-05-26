@@ -1,4 +1,5 @@
-dojo.provide("dojox.math.random.Secure");
+// AMD-ID "dojox/math/random/Secure"
+define(["dojo"], function(dojo) {
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
@@ -40,7 +41,7 @@ dojo.declare("dojox.math.random.Secure", null, {
 			];
 		}
 	},
-	
+
 	destroy: function(){
 		// summary:
 		//	Disconnects events, if any, preparing the object for GC.
@@ -91,4 +92,7 @@ dojo.declare("dojox.math.random.Secure", null, {
 		}
 		this.pptr = i;
 	}
+});
+
+return dojox.math.random.Secure;
 });

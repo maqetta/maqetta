@@ -21,13 +21,13 @@ function isLocaleAliasSrc(prop, bundle){
 				isAlias = true;
 			}
 		}
-	}	
+	}
 	return isAlias;
 }
 
 function getNativeBundle(filePath){
 	//summary: get native bundle content with utf-8 encoding
-	//	native means the content of this bundle is not flattened with parent 
+	//	native means the content of this bundle is not flattened with parent
 	//	returns empty object if file not found
 	try{
 		var content = readFile(filePath, "utf-8");

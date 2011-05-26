@@ -9,7 +9,7 @@ dojo.require("dojox.cometd._base");
  * messages.
  *
  * To use, add dojo.require("dojox.cometd.ack"); and if the handshake will be sent
- * with ext:{ack:true}.  If the server supports the same extension, then the 
+ * with ext:{ack:true}.  If the server supports the same extension, then the
  * mechanism will be initialized.  The dojox.cometd.ackEnabled field may also be
  * used to optionally enable/disable the extension before init of cometd.
  *
@@ -31,13 +31,13 @@ dojox.cometd._ack = new function(){
 	this._out = function(msg){
 	
 		if (msg.channel == "/meta/handshake") {
-			if (!msg.ext) 
+			if (!msg.ext)
 				msg.ext = {};
 			msg.ext.ack = dojox.cometd.ackEnabled;
 			lastAck = -1;
 		}
 		if (supportAcks && msg.channel == "/meta/connect") {
-			if (!msg.ext) 
+			if (!msg.ext)
 				msg.ext = {};
 			msg.ext.ack = lastAck;
 		}

@@ -1,13 +1,9 @@
-dojo.provide("dojox.data.HtmlStore");
-
-dojo.require("dojox.xml.parser");
-dojo.require("dojo.data.util.simpleFetch");
-dojo.require("dojo.data.util.filter");
+define("dojox/data/HtmlStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/xml/parser"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.HtmlStore", null, {
 	constructor: function(/*Object*/args){
 		//	summary:
-		//		Initializer for the HTML table store.  
+		//		Initializer for the HTML table store.
 		//	description:
 		//		The HtmlStore can be created in one of two ways: a) by parsing an existing
 		//		table or list DOM node on the current page or b) by referencing an external url and giving
@@ -56,7 +52,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 		//		dataId:	The id of the table element in the remote page
 		//		and the option:
 		//		trimWhitespace:  Trim off any surrounding whitespace from the headers (attribute
-		//			names) and text content of the items in question.  Default is false for 
+		//			names) and text content of the items in question.  Default is false for
 		//			backwards compatibility.
 		if(args && "urlPreventCache" in args){
 			this.urlPreventCache = args.urlPreventCache?true:false;
@@ -65,18 +61,21 @@ dojo.declare("dojox.data.HtmlStore", null, {
 			this.trimWhitespace = args.trimWhitespace?true:false;
 		}
 		if(args.url){
-			if(!args.dataId)
+			if(!args.dataId){
 				throw new Error("dojo.data.HtmlStore: Cannot instantiate using url without an id!");
+			}
 			this.url = args.url;
 			this.dataId = args.dataId;
 		}else{
 			if(args.dataId){
-				this._rootNode = dojo.byId(args.dataId);
-				this.dataId = this._rootNode.id;
-			}else{
-				this._rootNode = dojo.byId(this.dataId);
+				this.dataId = args.dataId;
 			}
-			this._indexItems();
+		}
+		if(args && "fetchOnCreate" in args){
+			this.fetchOnCreate = args.fetchOnCreate?true:false;
+		}
+		if(this.fetchOnCreate && this.dataId){
+			this.fetch();
 		}
 	},
 
@@ -89,15 +88,21 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	dataId: "",
 
 	// trimWhitepace: [public] boolean
-	//		Boolean flag to denote if the store should trim whitepace around 
+	//		Boolean flag to denote if the store should trim whitepace around
 	//		header and data content of a node.  This matters if reformatters
 	//		alter the white spacing around the tags.  The default is false for
 	//		backwards compat.
-	trimWhitespace: false, 
+	trimWhitespace: false,
 
 	// urlPreventCache: [public] boolean
 	//		Flag to denote if peventCache should be used on xhrGet calls.
 	urlPreventCache: false,
+	
+	// fetchOnCreate: [public] boolean
+	// 		Flag to denote if it should try to load from a data id (nested in the page)
+	//		The moment the store is created, instead of waiting for first
+	//		fetch call.
+	fetchOnCreate: false,
 	
 	_indexItems: function(){
 		// summary:
@@ -111,14 +116,12 @@ dojo.declare("dojox.data.HtmlStore", null, {
 			}
 			var i;
 			for(i=0; i<this._rootNode.rows.length; i++){
-				this._rootNode.rows[i].store = this;
 				this._rootNode.rows[i]._ident = i+1;
 			}
 		}else{//lists
 			var c=1;
 			for(i=0; i<this._rootNode.childNodes.length; i++){
 				if(this._rootNode.childNodes[i].nodeType === 1){
-					this._rootNode.childNodes[i].store = this;
 					this._rootNode.childNodes[i]._ident = c;
 					c++;
 				}
@@ -128,13 +131,13 @@ dojo.declare("dojox.data.HtmlStore", null, {
 
 	_getHeadings: function(){
 		//	summary:
-		//		Function to load the attribute names from the table header so that the 
+		//		Function to load the attribute names from the table header so that the
 		//		attributes (cells in a row), can have a reasonable name.
 		//      For list items, returns single implicit heading, ["name"]
 		this._headings = [];
 		if(this._rootNode.tHead){
 			dojo.forEach(this._rootNode.tHead.rows[0].cells, dojo.hitch(this, function(th){
-				var text = dojox.xml.parser.textContent(th); 
+				var text = dojox.xml.parser.textContent(th);
 				this._headings.push(this.trimWhitespace?dojo.trim(text):text);
 			}));
 		}else{
@@ -164,9 +167,9 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	_assertIsItem: function(/* item */ item){
 		//	summary:
 		//      This function tests whether the item passed in is indeed an item in the store.
-		//	item: 
+		//	item:
 		//		The item to test for being contained by the store.
-		if(!this.isItem(item)){ 
+		if(!this.isItem(item)){
 			throw new Error("dojo.data.HtmlStore: a function was passed an item argument that was not an item");
 		}
 	},
@@ -174,12 +177,12 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	_assertIsAttribute: function(/* String */ attribute){
 		//	summary:
 		//      This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute: 
+		//	attribute:
 		//		The attribute to test for being contained by the store.
 		//
 		//	returns:
 		//		Returns the index (column) that the attribute resides in the row.
-		if(typeof attribute !== "string"){ 
+		if(typeof attribute !== "string"){
 			throw new Error("dojo.data.HtmlStore: a function was passed an attribute argument that was not an attribute name string");
 			return -1;
 		}
@@ -190,18 +193,18 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	 dojo.data.api.Read API
 ***************************************/
 	
-	getValue: function(	/* item */ item, 
-						/* attribute-name-string */ attribute, 
+	getValue: function(	/* item */ item,
+						/* attribute-name-string */ attribute,
 						/* value? */ defaultValue){
-		//	summary: 
+		//	summary:
 		//      See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		return (values.length > 0)?values[0]:defaultValue; //Object || int || Boolean
 	},
 
-	getValues: function(/* item */ item, 
+	getValues: function(/* item */ item,
 						/* attribute-name-string */ attribute){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getValues()
 
 		this._assertIsItem(item);
@@ -219,7 +222,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	},
 
 	getAttributes: function(/* item */ item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		var attributes = [];
@@ -232,15 +235,15 @@ dojo.declare("dojox.data.HtmlStore", null, {
 
 	hasAttribute: function(	/* item */ item,
 							/* attribute-name-string */ attribute){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.hasAttribute()
 		return this.getValues(item, attribute).length > 0;
 	},
 
-	containsValue: function(/* item */ item, 
-							/* attribute-name-string */ attribute, 
+	containsValue: function(/* item */ item,
+							/* attribute-name-string */ attribute,
 							/* anything */ value){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
@@ -249,22 +252,22 @@ dojo.declare("dojox.data.HtmlStore", null, {
 		return this._containsValue(item, attribute, value, regexp); //boolean.
 	},
 
-	_containsValue: function(	/* item */ item, 
-								/* attribute-name-string */ attribute, 
+	_containsValue: function(	/* item */ item,
+								/* attribute-name-string */ attribute,
 								/* anything */ value,
 								/* RegExp?*/ regexp){
-		//	summary: 
+		//	summary:
 		//		Internal function for looking at the values contained by the item.
-		//	description: 
-		//		Internal function for looking at the values contained by the item.  This 
+		//	description:
+		//		Internal function for looking at the values contained by the item.  This
 		//		function allows for denoting if the comparison should be case sensitive for
 		//		strings or not (for handling filtering cases where string case should not matter)
-		//	
+		//
 		//	item:
 		//		The data item to examine for attribute values.
 		//	attribute:
 		//		The attribute to inspect.
-		//	value:	
+		//	value:
 		//		The value to match.
 		//	regexp:
 		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
@@ -285,22 +288,19 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	},
 
 	isItem: function(/* anything */ something){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.isItem()
-		if(something && something.store && something.store === this){
-			return true; //boolean
-		}
-		return false; //boolean
+		return something && dojo.isDescendant(something, this._rootNode);
 	},
 
 	isItemLoaded: function(/* anything */ something){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.isItemLoaded()
 		return this.isItem(something);
 	},
 
 	loadItem: function(/* Object */ keywordArgs){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.loadItem()
 		this._assertIsItem(keywordArgs.item);
 	},
@@ -329,6 +329,8 @@ dojo.declare("dojox.data.HtmlStore", null, {
 		}else{
 			if(!this.url){
 				this._rootNode = dojo.byId(this.dataId);
+				this._indexItems();
+				this._finishFetchItems(request, fetchHandler, errorHandler);
 			}else{
 				var getArgs = {
 						url: this.url,
@@ -372,7 +374,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 		var items = [];
 		var arrayOfAllItems = this._getAllItems();
 		if(request.query){
-			var ignoreCase = request.queryOptions ? request.queryOptions.ignoreCase : false; 
+			var ignoreCase = request.queryOptions ? request.queryOptions.ignoreCase : false;
 			items = [];
 
 			//See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
@@ -402,17 +404,17 @@ dojo.declare("dojox.data.HtmlStore", null, {
 			}
 			fetchHandler(items, request);
 		}else{
-			// We want a copy to pass back in case the parent wishes to sort the array.  We shouldn't allow resort 
+			// We want a copy to pass back in case the parent wishes to sort the array.  We shouldn't allow resort
 			// of the internal list so that multiple callers can get listsand sort without affecting each other.
 			if(arrayOfAllItems.length> 0){
-				items = arrayOfAllItems.slice(0,arrayOfAllItems.length); 
+				items = arrayOfAllItems.slice(0,arrayOfAllItems.length);
 			}
 			fetchHandler(items, request);
 		}
 	},
 
 	getFeatures: function(){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getFeatures()
 		return {
 			'dojo.data.api.Read': true,
@@ -427,7 +429,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	},
 
 	getLabel: function(/* item */ item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getLabel()
 		if(this.isItem(item)){
 			if(item.cells){
@@ -440,7 +442,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	},
 
 	getLabelAttributes: function(/* item */ item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getLabelAttributes()
 		if(item.cells){
 			return null;
@@ -454,7 +456,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 ***************************************/
 
 	getIdentity: function(/* item */ item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Identity.getIdentity()
 		this._assertIsItem(item);
 		if(this.hasAttribute(item, "name")){
@@ -465,14 +467,14 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	},
 
 	getIdentityAttributes: function(/* item */ item){
-		 //	summary: 
+		 //	summary:
 		 //		See dojo.data.api.Identity.getIdentityAttributes()
 		 //Identity isn't taken from a public attribute.
 		 return null;
 	},
 
 	fetchItemByIdentity: function(keywordArgs){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Identity.fetchItemByIdentity()
 		var identity = keywordArgs.identity;
 		var self = this;
@@ -556,3 +558,5 @@ dojo.declare("dojox.data.HtmlStore", null, {
 	}
 });
 dojo.extend(dojox.data.HtmlStore,dojo.data.util.simpleFetch);
+return dojox.data.HtmlStore;
+});

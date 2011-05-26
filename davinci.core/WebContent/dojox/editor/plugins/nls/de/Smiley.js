@@ -5,8 +5,8 @@
 	emoticonWink: "Augenzwinkern",
 	emoticonGrin: "Grinsen",
 	emoticonCool: "Cool",
-	emoticonAngry: "Zornig",  
-	emoticonHalf: "Halb", 
+	emoticonAngry: "Zornig",
+	emoticonHalf: "Halb",
 	emoticonEyebrow: "Hochgezogene Augenbraue",
 	emoticonFrown: "Stirnrunzeln",
 	emoticonShy: "Schüchtern",
@@ -15,7 +15,7 @@
 	emoticonTongue: "Zunge",
 	emoticonIdea: "Idee",
 	emoticonYes: "Ja",
-	emoticonNo: "Nein",	
+	emoticonNo: "Nein",
 	emoticonAngel: "Engel",
 	emoticonCrying: "Weinen"
 })

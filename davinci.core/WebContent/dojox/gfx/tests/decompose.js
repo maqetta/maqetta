@@ -14,8 +14,8 @@ dojo.require("dojox.gfx.decompose");
 	};
 	var compose = function(r){
 		return m.normalize([
-			m.translate(r.dx, r.dy), 
-			m.rotate(r.angle2), 
+			m.translate(r.dx, r.dy),
+			m.rotate(r.angle2),
 			m.scale(r.sx, r.sy),
 			m.rotate(r.angle1)
 		]);

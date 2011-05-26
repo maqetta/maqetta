@@ -105,7 +105,7 @@ dojo.requireLocalization("dojo.cldr", "islamic");
 			if(pad){ s = dojo.string.pad(s, l); }
 			return s;
 		});
-	}	
+	}
 	
 // based on and similar to dojo.date.locale.format
 dojox.date.islamic.locale.format = function(/*islamic.Date*/dateObject, /*Object?*/options){
@@ -134,10 +134,10 @@ dojox.date.islamic.locale.format = function(/*islamic.Date*/dateObject, /*Object
 	var result = str.join(" "); //TODO: use locale-specific pattern to assemble date + time
 
 	return result; // String
-};	
+};
 
 dojox.date.islamic.locale.regexp = function(/*object?*/options){
-	//	based on and similar to dojo.date.locale.regexp	
+	//	based on and similar to dojo.date.locale.regexp
 	// summary:
 	//		Builds the regular needed to parse a islamic.Date
 	return dojox.date.islamic.locale._parseInfo(options).regexp; // String
@@ -173,7 +173,7 @@ dojox.date.islamic.locale._parseInfo = function(/*oblect?*/options){
 
 dojox.date.islamic.locale.parse= function(/*String*/value, /*Object?*/options){
 	// based on and similar to dojo.date.locale.parse
-	// summary: This function parse string date value according to options	
+	// summary: This function parse string date value according to options
 	
 	value =  value.replace(/[\u200E\u200F\u202A\u202E]/g, ""); //remove bidi non-printing chars
 
@@ -186,9 +186,9 @@ dojox.date.islamic.locale.parse= function(/*String*/value, /*Object?*/options){
 
 	var match = re.exec(value);
 
-	var locale = dojo.i18n.normalizeLocale(options.locale); 
+	var locale = dojo.i18n.normalizeLocale(options.locale);
 
-	if(!match){ 
+	if(!match){
 		console.debug("dojox.date.islamic.locale.parse: value  "+value+" doesn't match pattern   " + re);
 		return null;
 	} // null
@@ -222,7 +222,7 @@ dojox.date.islamic.locale.parse= function(/*String*/value, /*Object?*/options){
 					}
 					mLength = l;
 				}else{
-					v--;				
+					v--;
 				}
 				result[1] = Number(v);
 				break;
@@ -263,7 +263,7 @@ dojox.date.islamic.locale.parse= function(/*String*/value, /*Object?*/options){
 				break;
 			case 's': //seconds
 				result[5] = Number(v);
-				break; 
+				break;
 			case 'S': //milliseconds
 				result[6] = Number(v);
 		}
@@ -290,9 +290,9 @@ function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
 	applyLiteral = applyLiteral || identity;
 	applyAll = applyAll || identity;
 
-	//split on single quotes (which escape literals in date format strings) 
+	//split on single quotes (which escape literals in date format strings)
 	//but preserve escaped single quotes (e.g., o''clock)
-	var chunks = pattern.match(/(''|[^'])+/g); 
+	var chunks = pattern.match(/(''|[^'])+/g);
 	var literal = pattern.charAt(0) == "'";
 
 	dojo.forEach(chunks, function(chunk, i){
@@ -307,10 +307,10 @@ function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
 }
 
 function _buildDateTimeRE  (tokens, bundle, options, pattern){
-		// based on and similar to dojo.date.locale._buildDateTimeRE 
+		// based on and similar to dojo.date.locale._buildDateTimeRE
 		//
 	
-	pattern = dojo.regexp.escapeString(pattern); 
+	pattern = dojo.regexp.escapeString(pattern);
 	var locale = dojo.i18n.normalizeLocale(options.locale);
 	
 	return pattern.replace(/([a-z])\1*/ig, function(match){
@@ -371,7 +371,7 @@ function _buildDateTimeRE  (tokens, bundle, options, pattern){
 					break;
 				default:
 					s = ".*";
-			}	 
+			}
 			if(tokens){ tokens.push(match); }
 			return "(" + s + ")"; // add capture
 		}).replace(/[\xa0 ]/g, "[\\s\\xa0]"); // normalize whitespace.  Need explicit handling of \xa0 for IE. */
@@ -405,18 +405,18 @@ dojox.date.islamic.locale.getNames = function(/*String*/item, /*String*/type, /*
 	// summary:
 	//		Used to get localized strings from dojo.cldr for day or month names.
 	var label;
-	var lookup = dojox.date.islamic.locale._getIslamicBundle;
+	var lookup = dojox.date.islamic.locale._getIslamicBundle(locale);
 	var props = [item, context, type];
 	if(context == 'standAlone'){
 		var key = props.join('-');
-		label = lookup(locale)[key];
+		label = lookup[key];
 		// Fall back to 'format' flavor of name
-		if(label === lookup("ROOT")[key]){ label = undefined; } // a bit of a kludge, in the absense of real aliasing support in dojo.cldr
+		if(label[0] == 1){ label = undefined; } // kludge, in the absence of real aliasing support in dojo.cldr
 	}
 	props[1] = 'format';
 	
 	// return by copy so changes won't be made accidentally to the in-memory model
-	return (label || lookup(locale)[props.join('-')]).concat(); /*Array*/
+	return (label || lookup[props.join('-')]).concat(); /*Array*/
 };
 
 

@@ -50,12 +50,12 @@ dojo.declare(
 			// summary: sets the value of this widget
 			if(!this._searchInProgress){
 				this.inherited(arguments);
-				value = value||"";
-				var tVal = this.dropDown.attr("pathValue")||"";
+				value = value || "";
+				var tVal = this.dropDown.get("pathValue") || "";
 				if(value !== tVal){
 					this._skip = true;
 					var fx = dojo.hitch(this, "_setBlurValue");
-					this.dropDown._setPathValueAttr(value, !fromWidget, 
+					this.dropDown._setPathValueAttr(value, !fromWidget,
 											this._settingBlurValue ? fx : null);
 				}
 			}
@@ -91,7 +91,7 @@ dojo.declare(
 			// set width to 0 so that it will resize automatically
 			this.dropDown.domNode.style.width="0px";
 			if(!("minPaneWidth" in (this.constraints||{}))){
-				this.dropDown.attr("minPaneWidth", (this.domNode.offsetWidth / this.numPanes));
+				this.dropDown.set("minPaneWidth", (this.domNode.offsetWidth / this.numPanes));
 			}
 			this.inherited(arguments);
 		},
@@ -99,8 +99,8 @@ dojo.declare(
 		toggleDropDown: function(){
 			this.inherited(arguments);
 			// Make sure our display is up-to-date with our value
-			if(this._opened){ 
-				this.dropDown.attr("pathValue", this.get("value"));
+			if(this._opened){
+				this.dropDown.set("pathValue", this.get("value"));
 			}
 		},
 		
@@ -163,7 +163,7 @@ dojo.declare(
 				return value;
 			}
 			var dd = this.dropDown, topDir = dd.topDir, sep = dd.pathSeparator;
-			var ddVal = dd.attr("pathValue");
+			var ddVal = dd.get("pathValue");
 			var norm = function(v){
 				if(topDir.length && v.indexOf(topDir) === 0){
 					v = v.substring(topDir.length);
@@ -217,8 +217,8 @@ dojo.declare(
 						var first = dojo.filter(children, function(i){
 							return (i.label.indexOf(dir) === 0);
 						})[0];
-						if(exact && 
-							((dirs.length > idx + 1 && exact.children) || 
+						if(exact &&
+							((dirs.length > idx + 1 && exact.children) ||
 							(!exact.children))){
 							idx++;
 							child._menu.onItemClick(exact, {type: "internal",
@@ -251,7 +251,7 @@ dojo.declare(
 								if(this._menuFocus){
 									this.dropDown._updateClass(this._menuFocus, "Item", {"Hover": false, "Focus": false});
 								}
-								delete this._menuFocus;							
+								delete this._menuFocus;
 							}
 							_cleanup();
 						}

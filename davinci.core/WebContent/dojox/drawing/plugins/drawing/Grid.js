@@ -87,7 +87,7 @@ dojox.drawing.plugins.drawing.Grid = dojox.drawing.util.oo.declare(
 				x1 = mnr*i, x2 = x1;
 				clr = x1%mjr ? mn : mj;
 				createGridLine(x1,y1,x2,y2, clr);
-			}	
+			}
 		
 			s.moveToBack();
 			this.grid = s;

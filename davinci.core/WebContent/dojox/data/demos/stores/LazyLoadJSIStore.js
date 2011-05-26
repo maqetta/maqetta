@@ -3,9 +3,9 @@ dojo.require("dojo.data.ItemFileReadStore");
 
 dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadStore, {
 	constructor: function(/* object */ keywordParameters){
-		// LazyLoadJSIStore extends ItemFileReadStore to implement an 
+		// LazyLoadJSIStore extends ItemFileReadStore to implement an
 		// example of lazy-loading/faulting in items on-demand.
-		// Note this is certianly not a perfect implementation, it is 
+		// Note this is certianly not a perfect implementation, it is
 		// an example.
 	},
 	
@@ -17,7 +17,7 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 		//	item:
 		//		The item to examine.
 		
-		//For this store, if it has the value of stub for its type attribute, 
+		//For this store, if it has the value of stub for its type attribute,
 		//then the item basn't been fully loaded yet.  It's just a placeholder.
 		if(this.getValue(item, "type") === "stub"){
 			return false;
@@ -39,7 +39,7 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 		this._assertIsItem(item);
 
 		//Build the path to the data.json for this item
-		//The path consists of where its parent was loaded from 
+		//The path consists of where its parent was loaded from
 		//plus the item name.
 		var itemName = this.getValue(item, "name");
 		var parent   = this.getValue(item, "parent");
@@ -79,7 +79,7 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 			//Reset the item in the reference.
 			self._arrayOfAllItems[item[self._itemNumPropName]] = item;
 
-			//Scan the new values in the item for extra stub items we need to 
+			//Scan the new values in the item for extra stub items we need to
 			//add to the items array of the store so they can be lazy-loaded later...
 			var attributes = self.getAttributes(item);
 			for(i in attributes){
@@ -97,7 +97,7 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 							};
 							if (parent) {
 								//Add in any parents to your parent so URL construstruction is accurate.
-								stub.parent[0] = parent + "/" + stub.parent[0]; 
+								stub.parent[0] = parent + "/" + stub.parent[0];
 							}
 							//Finalize the addition of the new stub item into the ItemFileReadStore list.
 							self._arrayOfAllItems.push(stub);

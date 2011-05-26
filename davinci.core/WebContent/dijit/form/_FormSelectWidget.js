@@ -1,7 +1,4 @@
-dojo.provide("dijit.form._FormSelectWidget");
-
-dojo.require("dijit.form._FormWidget");
-dojo.require("dojo.data.util.sorter");
+define("dijit/form/_FormSelectWidget", ["dojo", "dijit", "dijit/form/_FormWidget", "dojo/data/util/sorter"], function(dojo, dijit) {
 
 /*=====
 dijit.form.__SelectOption = function(){
@@ -10,7 +7,7 @@ dijit.form.__SelectOption = function(){
 	//		place a separator at that location
 	// label: String
 	//		The label for our option.  It can contain html tags.
-	//  selected: Boolean
+	// selected: Boolean
 	//		Whether or not we are a selected option
 	// disabled: Boolean
 	//		Whether or not this specific option is disabled
@@ -28,13 +25,13 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 	//		This also provides the mechanism for reading the elements from
 	//		a store, if desired.
 
-	// multiple: Boolean
+	// multiple: [const] Boolean
 	//		Whether or not we are multi-valued
 	multiple: false,
 
 	// options: dijit.form.__SelectOption[]
 	//		The set of options for our select item.  Roughly corresponds to
-	//      the html <option> tag.
+	//		the html <option> tag.
 	options: null,
 
 	// store: dojo.data.api.Identity
@@ -56,20 +53,20 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 	//		iterated over (i.e. to filter even futher what you want to add)
 	onFetch: null,
 
-	// sortByLabel: boolean
+	// sortByLabel: Boolean
 	//		Flag to sort the options returned from a store by the label of
 	//		the store.
 	sortByLabel: true,
 
 
-	// loadChildrenOnOpen: boolean
+	// loadChildrenOnOpen: Boolean
 	//		By default loadChildren is called when the items are fetched from the
 	//		store.  This property allows delaying loadChildren (and the creation
-	//		of the options/menuitems) until the user opens the click the button.
-	//		dropdown
+	//		of the options/menuitems) until the user clicks the button to open the
+	//		dropdown.
 	loadChildrenOnOpen: false,
 
-	getOptions: function(/* anything */ valueOrIdx){
+	getOptions: function(/*anything*/ valueOrIdx){
 		// summary:
 		//		Returns a given option (or options).
 		// valueOrIdx:
@@ -135,7 +132,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		return null; // null
 	},
 
-	addOption: function(/* dijit.form.__SelectOption, dijit.form.__SelectOption[] */ option){
+	addOption: function(/*dijit.form.__SelectOption|dijit.form.__SelectOption[]*/ option){
 		// summary:
 		//		Adds an option or options to the end of the select.  If value
 		//		of the option is empty or missing, a separator is created instead.
@@ -150,7 +147,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		this._loadChildren();
 	},
 
-	removeOption: function(/* string, dijit.form.__SelectOption, number, or array */ valueOrIdx){
+	removeOption: function(/*String|dijit.form.__SelectOption|Number|Array*/ valueOrIdx){
 		// summary:
 		//		Removes the given option or options.  You can remove by string
 		//		(in which case the value is removed), number (in which case the
@@ -165,7 +162,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 			// that case, we don't want to blow up...
 			if(i){
 				this.options = dojo.filter(this.options, function(node, idx){
-					return (node.value !== i.value);
+					return (node.value !== i.value || node.label !== i.label);
 				});
 				this._removeOptionItem(i);
 			}
@@ -173,7 +170,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		this._loadChildren();
 	},
 
-	updateOption: function(/* dijit.form.__SelectOption, dijit.form.__SelectOption[] */ newOption){
+	updateOption: function(/*dijit.form.__SelectOption|dijit.form.__SelectOption[]*/ newOption){
 		// summary:
 		//		Updates the values of the given option.  The option to update
 		//		is matched based on the value of the entered option.  Passing
@@ -189,9 +186,9 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		this._loadChildren();
 	},
 
-	setStore: function(/* dojo.data.api.Identity */ store,
-						/* anything? */ selectedValue,
-						/* Object? */ fetchArgs){
+	setStore: function(/*dojo.data.api.Identity*/ store,
+						/*anything?*/ selectedValue,
+						/*Object?*/ fetchArgs){
 		// summary:
 		//		Sets the store you would like to use with this select widget.
 		//		The selected value is the value of the new store to set.  This
@@ -218,7 +215,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 					dojo.connect(store, "onSet", this, "_onSetItem")
 				];
 			}
-			this.store = store;
+			this._set("store", store);
 		}
 
 		// Turn off change notifications while we make all these changes
@@ -231,48 +228,52 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 
 		// Add our new options
 		if(store){
-			var cb = function(items){
-				if(this.sortByLabel && !fetchArgs.sort && items.length){
-					items.sort(dojo.data.util.sorter.createSortFunction([{
-						attribute: store.getLabelAttributes(items[0])[0]
-					}], store));
-				}
-
-				if(fetchArgs.onFetch){
-					items = fetchArgs.onFetch(items);
-				}
-				// TODO: Add these guys as a batch, instead of separately
-				dojo.forEach(items, function(i){
-					this._addOptionForItem(i);
-				}, this);
-
-				// Set our value (which might be undefined), and then tweak
-				// it to send a change event with the real value
-				this._loadingStore = false;
-				this.set("value", (("_pendingValue" in this) ? this._pendingValue : selectedValue));
-				delete this._pendingValue;
-
-				if(!this.loadChildrenOnOpen){
-					this._loadChildren();
-				}else{
-					this._pseudoLoadChildren(items);
-				}
-				this._fetchedWith = opts;
-				this._lastValueReported = this.multiple ? [] : null;
-				this._onChangeActive = true;
-				this.onSetStore();
-				this._handleOnChange(this.value);
-			};
-			var opts = dojo.mixin({onComplete:cb, scope: this}, fetchArgs);
 			this._loadingStore = true;
-			store.fetch(opts);
+			store.fetch(dojo.delegate(fetchArgs, {
+				onComplete: function(items, opts){
+					if(this.sortByLabel && !fetchArgs.sort && items.length){
+						items.sort(dojo.data.util.sorter.createSortFunction([{
+							attribute: store.getLabelAttributes(items[0])[0]
+						}], store));
+					}
+	
+					if(fetchArgs.onFetch){
+							items = fetchArgs.onFetch.call(this, items, opts);
+					}
+					// TODO: Add these guys as a batch, instead of separately
+					dojo.forEach(items, function(i){
+						this._addOptionForItem(i);
+					}, this);
+	
+					// Set our value (which might be undefined), and then tweak
+					// it to send a change event with the real value
+					this._loadingStore = false;
+						this.set("value", "_pendingValue" in this ? this._pendingValue : selectedValue);
+					delete this._pendingValue;
+	
+					if(!this.loadChildrenOnOpen){
+						this._loadChildren();
+					}else{
+						this._pseudoLoadChildren(items);
+					}
+					this._fetchedWith = opts;
+					this._lastValueReported = this.multiple ? [] : null;
+					this._onChangeActive = true;
+					this.onSetStore();
+					this._handleOnChange(this.value);
+				},
+				scope: this
+			}));
 		}else{
 			delete this._fetchedWith;
 		}
 		return oStore;	// dojo.data.api.Identity
 	},
 
-	_setValueAttr: function(/*anything*/ newValue, /*Boolean, optional*/ priorityChange){
+	// TODO: implement set() and watch() for store and query, although not sure how to handle
+	// setting them individually rather than together (as in setStore() above)
+
+	_setValueAttr: function(/*anything*/ newValue, /*Boolean?*/ priorityChange){
 		// summary:
 		//		set the value of the widget.
 		//		If a string is passed, then we set our value from looking it up.
@@ -308,7 +309,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		var val = dojo.map(newValue, function(i){ return i.value; }),
 			disp = dojo.map(newValue, function(i){ return i.label; });
 
-		this.value = this.multiple ? val : val[0];
+		this._set("value", this.multiple ? val : val[0]);
 		this._setDisplay(this.multiple ? disp : disp[0]);
 		this._updateSelection();
 		this._handleOnChange(this.value, priorityChange);
@@ -332,23 +333,10 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		return this.multiple ? ret : ret[0];
 	},
 
-	_getValueDeprecated: false, // remove when _FormWidget:getValue is removed
-	getValue: function(){
-		// summary:
-		//		get the value of the widget.
-		return this._lastValue;
-	},
-
-	undo: function(){
-		// summary:
-		//		restore the value to the last value passed to onChange
-		this._setValueAttr(this._lastValueReported, false);
-	},
-
 	_loadChildren: function(){
 		// summary:
 		//		Loads the children represented by this widget's options.
-		//		reset the menu to make it "populatable on the next click
+		//		reset the menu to make it populatable on the next click
 		if(this._loadingStore){ return; }
 		dojo.forEach(this._getChildren(), function(child){
 			child.destroyRecursive();
@@ -363,7 +351,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 	_updateSelection: function(){
 		// summary:
 		//		Sets the "selected" class on the item for styling purposes
-		this.value = this._getValueFromOpts();
+		this._set("value", this._getValueFromOpts());
 		var val = this.value;
 		if(!dojo.isArray(val)){
 			val = [val];
@@ -377,7 +365,6 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 				dijit.setWaiState(child.domNode, "selected", isSelected);
 			}, this);
 		}
-		this._handleOnChange(this.value);
 	},
 
 	_getValueFromOpts: function(){
@@ -408,17 +395,17 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 	},
 
 	// Internal functions to call when we have store notifications come in
-	_onNewItem: function(/* item */ item, /* Object? */ parentInfo){
+	_onNewItem: function(/*item*/ item, /*Object?*/ parentInfo){
 		if(!parentInfo || !parentInfo.parent){
 			// Only add it if we are top-level
 			this._addOptionForItem(item);
 		}
 	},
-	_onDeleteItem: function(/* item */ item){
+	_onDeleteItem: function(/*item*/ item){
 		var store = this.store;
 		this.removeOption(store.getIdentity(item));
 	},
-	_onSetItem: function(/* item */ item){
+	_onSetItem: function(/*item*/ item){
 		this.updateOption(this._getOptionObjForItem(item));
 	},
 
@@ -433,7 +420,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		return {value: value, label: label, item:item}; // dijit.form.__SelectOption
 	},
 
-	_addOptionForItem: function(/* item */ item){
+	_addOptionForItem: function(/*item*/ item){
 		// summary:
 		//		Creates (and adds) the option for the given item
 		var store = this.store;
@@ -449,11 +436,16 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		this.addOption(newOpt);
 	},
 
-	constructor: function(/* Object */ keywordArgs){
+	constructor: function(/*Object*/ keywordArgs){
 		// summary:
 		//		Saves off our value, if we have an initial one set so we
 		//		can use it if we have a store as well (see startup())
 		this._oValue = (keywordArgs || {}).value || null;
+	},
+
+	buildRendering: function(){
+		this.inherited(arguments);
+		dojo.setSelectable(this.focusNode, false);
 	},
 
 	_fillContent: function(){
@@ -468,16 +460,21 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 							if(node.getAttribute("type") === "separator"){
 								return { value: "", label: "", selected: false, disabled: false };
 							}
-							return { value: node.getAttribute("value"),
+							return {
+								value: (node.getAttribute("data-" + dojo._scopeName + "-value") || node.getAttribute("value")),
 										label: String(node.innerHTML),
+								// FIXME: disabled and selected are not valid on complex markup children (which is why we're
+								// looking for data-dojo-value above.  perhaps we should data-dojo-props="" this whole thing?)
+								// decide before 1.6
 										selected: node.getAttribute("selected") || false,
-										disabled: node.getAttribute("disabled") || false };
+								disabled: node.getAttribute("disabled") || false
+							};
 						}, this) : [];
 		}
 		if(!this.value){
-			this.value = this._getValueFromOpts();
+			this._set("value", this._getValueFromOpts());
 		}else if(this.multiple && typeof this.value == "string"){
-			this.value = this.value.split(",");
+			this_set("value", this.value.split(","));
 		}
 	},
 
@@ -485,7 +482,6 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		// summary:
 		//		sets up our event handling that we need for functioning
 		//		as a select
-		dojo.setSelectable(this.focusNode, false);
 		this.inherited(arguments);
 
 		// Make our event connections for updating state
@@ -521,7 +517,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		this.inherited(arguments);
 	},
 
-	_addOptionItem: function(/* dijit.form.__SelectOption */ option){
+	_addOptionItem: function(/*dijit.form.__SelectOption*/ option){
 		// summary:
 		//		User-overridable function which, for the given option, adds an
 		//		item to the select.  If the option doesn't have a value, then a
@@ -529,7 +525,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		//		in the created option widget.
 	},
 
-	_removeOptionItem: function(/* dijit.form.__SelectOption */ option){
+	_removeOptionItem: function(/*dijit.form.__SelectOption*/ option){
 		// summary:
 		//		User-overridable function which, for the given option, removes
 		//		its item from the select.
@@ -555,7 +551,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		return this.getOptions(this.get("value"));
 	},
 
-	_pseudoLoadChildren: function(/* item[] */ items){
+	_pseudoLoadChildren: function(/*item[]*/ items){
 		// summary:
 		//		a function that will "fake" loading children, if needed, and
 		//		if we have set to not load children until the widget opens.
@@ -569,4 +565,8 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		//		notification that the store has finished loading and all options
 		//		from that store are available
 	}
+});
+
+
+return dijit.form._FormSelectWidget;
 });

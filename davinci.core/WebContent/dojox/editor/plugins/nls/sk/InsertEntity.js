@@ -1,0 +1,4 @@
+({
+	insertEntity: "Vložiť symbol"
+})
+

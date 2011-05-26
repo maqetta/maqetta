@@ -15,7 +15,7 @@ function test(auth) {
 	var authTarget = auth && document.getElementById("authTarget");
 	var dfd = dojox.io.windowName.send("GET",{
 				url: prompt("Enter an address to retrieve data from",
-						auth ? "http://sitepen.com:80/labs/code/secure/dojox/io/tests/testResource.html" : "http://persevere.sitepen.com/Customer/37"),
+						auth ? "http://sitepen.com:80/labs/code/secure/dojox/io/tests/testResource.html" : "http://persevere.sitepen.com/Customer/550"),
 				handleAs:"text",
 				authElement: authTarget,
 				onAuthLoad: auth && function(){

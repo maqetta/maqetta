@@ -1,17 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Editor Test: ViewSource Plugin</title>
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!--<script type="text/javascript" src="../_testCommon.js"></script>-->
 
@@ -29,8 +29,8 @@
 	<br>
 	<br>
 	<div>
-		<div dojoType="dijit.Editor"
-			extraPlugins="['viewsource']" style="background-color: white; width: 800px;" height="400px" id="editor0">
+		<div id="editor0" data-dojo-type="dijit.Editor"
+			data-dojo-props='extraPlugins:["viewsource"], style:"background-color: white; width: 800px;", height:"400px" '>
 			<h1>ViewSource Plugin details</h1>
 			<ol>
 				<li>The ViewSource plugin provides an extra button on the toolbar to allow switching the
@@ -56,12 +56,12 @@
 					toggled off.</li>
 			</ol>
 		</div>
-	<div>
+	</div>
 	<br>
 	<br>
 	<div>
-		<div dojoType="dijit.Editor"
-			extraPlugins="['fullscreen','viewsource']" style="background-color: white; width: 800px;" height="300px" id="editor1">
+		<div id="editor1" data-dojo-type="dijit.Editor"
+			data-dojo-props='extraPlugins:["fullscreen","viewsource"], style:"background-color: white; width: 800px;", height:"300px" '>
 			<h1>ViewSource Plugin with FullScreen Plugin details</h1>
 			<ol>
 				<li>The ViewSource plugin is FullScreen aware.  It will  should work appropriately when in full screen mode.</li>
@@ -73,12 +73,12 @@
 					view source mode on and scales appropriately.</li>
 			</ol>
 		</div>
-	<div>
+	</div>
 	<br>
 	<br>
 	<div>
-		<div dojoType="dijit.Editor"
-			extraPlugins="['fullscreen',{name: 'viewsource', readOnly: true}]" style="background-color: white; width: 800px;" height="300px" id="editor2">
+		<div id="editor2" data-dojo-type="dijit.Editor"
+			data-dojo-props='extraPlugins:["fullscreen",{name: "viewsource", readOnly: true}], style:"background-color: white; width: 800px;", height:"300px" '>
 			<h1>ViewSource Plugin with readOnly enabled details</h1>
 			<ol>
 				<li>The ViewSource plugin supports a readonly mode.  This should display the content but not allow any edits..</li>
@@ -89,13 +89,13 @@
 				<li>Verify that while in View Source mode, the source cannot be edited.</li>
 			</ol>
 		</div>
-	<div>
+	</div>
 	<br>
 	<br>
 	<div>
-		<div dojoType="dijit.Editor"
-			extraPlugins="['fullscreen',{name: 'viewsource', stripScripts: false, stripComments: false, stripIFrames: false}]"
-			style="background-color: white; width: 800px;" height="300px" id="editor3">
+		<div id="editor3" data-dojo-type="dijit.Editor"
+			data-dojo-props='extraPlugins:["fullscreen",{name: "viewsource", stripScripts: false, stripComments: false, stripIFrames: false}],
+			style:"background-color: white; width: 800px;", height:"300px" '>
 			<h1>ViewSource Plugin with script* disabled</h1>
 			<ol>
 				<li>The ViewSource plugin supports disabling the script stripping, comment stripping, etc.  This can be dangerous, but sometimes it is desirable.</li>
@@ -106,7 +106,7 @@
 				<li>Verify that typed in script tags, comments, and iframes are left in the content when view switched.</li>
 			</ol>
 		</div>
-	<div>
+	</div>
 	<br>
 	<br>
 	<div>Content after the editors.</div>

@@ -1,9 +1,4 @@
-dojo.provide("dojox.editor.plugins.PageBreak");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("dojox.editor.plugins", "PageBreak");
+define("dojox/editor/plugins/PageBreak", ["dojo", "dijit", "dojox", "dijit/_editor/html", "dijit/_editor/_Plugin", "dojo/i18n", "i18n!dojox/editor/plugins/nls/PageBreak"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 	//	summary:
@@ -17,7 +12,7 @@ dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 	useDefaultCommand: false,
 
 	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from 
+	//		The CSS class name for the button node is formed from
 	//		`iconClassPrefix` and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
@@ -46,7 +41,7 @@ dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 				//Register our hotkey to CTRL-SHIFT-ENTER.
 				ed.addKeyHandler(dojo.keys.ENTER, true, true, dojo.hitch(this, this._insertPageBreak));
 				if(dojo.isWebKit || dojo.isOpera){
-					// Webkit and Opera based browsers don't generate keypress events when ctrl and shift are 
+					// Webkit and Opera based browsers don't generate keypress events when ctrl and shift are
 					// held then enter is pressed.  Odd, that.
 					this.connect(this.editor, "onKeyDown", dojo.hitch(this, function(e){
 						if((e.keyCode === dojo.keys.ENTER) && e.ctrlKey && e.shiftKey){
@@ -56,6 +51,12 @@ dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 				}
 			})
 		);
+	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -70,7 +71,7 @@ dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 	_style: function(){
 		// summary:
 		//		Internal function for inserting dynamic css.  This was originally
-		//		in an editor.onLoadDeferred, but I ran into issues in Chrome with 
+		//		in an editor.onLoadDeferred, but I ran into issues in Chrome with
 		//		the tag being ignored.  Having it done at insert worked better.
 		// tags:
 		//		private
@@ -156,4 +157,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(name === "pagebreak"){
 		o.plugin = new dojox.editor.plugins.PageBreak({});
 	}
+});
+
+return dojox.editor.plugins.PageBreak;
+
 });

@@ -1,5 +1,5 @@
 dojo.provide("dojox.timing.doLater");
-dojo.experimental("dojox.timing.doLater"); 
+dojo.experimental("dojox.timing.doLater");
 
 dojox.timing.doLater = function(/*anything*/conditional,/*Object ?*/context, /* Number ? */interval){
 	// summary:
@@ -7,12 +7,12 @@ dojox.timing.doLater = function(/*anything*/conditional,/*Object ?*/context, /* 
 	//		"do later". doLater will ping the parameter
 	//		until it evaluates to something (truthy).
 	//		It thens calls the caller with original
-	//		arguments, using the supplied context or 
+	//		arguments, using the supplied context or
 	//		window.
 	//	description:
 	//		dojox.timing.doLater(conditional) is testing if the call
 	//		should be done later. So it returns
-	//		true if the param is false. 
+	//		true if the param is false.
 	//	arguments:
 	//		conditional: anything
 	//			Can be a property that eventually gets set, or
@@ -22,7 +22,7 @@ dojox.timing.doLater = function(/*anything*/conditional,/*Object ?*/context, /* 
 	//			The namespace where the call originated.
 	//			Defaults to global and anonymous functions
 	//		interval:	Number
-	//			Poll time to check conditional in Milliseconds 
+	//			Poll time to check conditional in Milliseconds
 	// example:
 	//		| setTimeout(function(){
 	//		| 		if(dojox.timing.doLater(app.ready)){return;}

@@ -4,7 +4,7 @@ dojo.require("dojox.dtl.dom");
 dojo.require("dojox.dtl.Context");
 dojo.require("dojox.dtl.tests.dom.util");
 
-doh.register("dojox.dtl.dom.buffer", 
+doh.register("dojox.dtl.dom.buffer",
 	[
 		function test_insertion_order_text(t){
 			var dd = dojox.dtl;

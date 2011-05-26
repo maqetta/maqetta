@@ -1,5 +1,5 @@
 ({
-	displayOptions: "[opcions de visualització]",
+	displayOptions: "[mostra opcions]",
 	title: "Títol",
 	authors: "Autors",
 	contributors: "Col·laboradors",

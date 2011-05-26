@@ -1,0 +1,5 @@
+({
+	"setButtonText": "Nastaviť",
+	"cancelButtonText": "Zrušiť"
+})
+

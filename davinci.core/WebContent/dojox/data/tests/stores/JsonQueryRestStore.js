@@ -5,11 +5,11 @@ dojo.require("dojox.data.JsonQueryRestStore");
 dojox.data.tests.stores.JsonQueryRestStore.error = function(t, d, errData){
 	//  summary:
 	//		The error callback function to be used for all of the tests.
-	d.errback(errData);	
+	d.errback(errData);
 }
 testService = function(query){
 	lastQuery = query;
-	var deferred = new dojo.Deferred(); 
+	var deferred = new dojo.Deferred();
 	deferred.callback([
 		{id:1, name:"Ball", price: 5},
 		{id:2, name:"Car", price: 15},
@@ -22,16 +22,16 @@ testService = function(query){
 testService.servicePath = "/testing";
 jsonStore = new dojox.data.JsonQueryRestStore({service:testService});
 
-doh.register("dojox.data.tests.stores.JsonQueryRestStore", 
+doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 	[
 		{
 			name: "Fetch using a query object",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
-				jsonStore.fetch({query:{name:"Car"}, 
+				jsonStore.fetch({query:{name:"Car"},
 					onComplete: function(items, request){
 						t.is(lastQuery,"[?(@.name='Car')]");
 						d.callback(true);
@@ -45,11 +45,11 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Fetch+Sorting using a query object",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
 				jsonStore.fetch({query:{name:"Car"},
-					sort:[{attribute:"price"}], 
+					sort:[{attribute:"price"}],
 					onComplete: function(items, request){
 						t.is(lastQuery,"[?(@.name='Car')][/@['price']]");
 						d.callback(true);
@@ -63,10 +63,10 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Fetch all items (and cache for the next tests)",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
-				jsonStore.fetch({query:"", 
+				jsonStore.fetch({query:"",
 					onComplete: function(items, request){
 						testItems = items;
 						console.log(items.length, items);
@@ -83,11 +83,11 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Fetch using a query object",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
 				lastQuery = null;
-				jsonStore.fetch({query:{name:"Car"}, 
+				jsonStore.fetch({query:{name:"Car"},
 					onComplete: function(items, request){
 						t.is(1, items.length);
 						t.is(lastQuery, null); // should not be sent to the service
@@ -102,11 +102,11 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Fetch using a JSONQuery",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
 				lastQuery = null;
-				jsonStore.fetch({query:"?name='Car'", 
+				jsonStore.fetch({query:"?name='Car'",
 					onComplete: function(items, request){
 						t.is(1, items.length);
 						t.is(lastQuery, null); // should not be sent to the service
@@ -121,11 +121,11 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Fetch using a JSONQuery with operator",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
 				lastQuery = null;
-				jsonStore.fetch({query:"[?price<20]", 
+				jsonStore.fetch({query:"[?price<20]",
 					onComplete: function(items, request){
 						t.is(2, items.length);
 						t.is(lastQuery, null); // should not be sent to the service
@@ -140,11 +140,11 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Fetch using a JSONQuery with operator and paging",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
 				lastQuery = null;
-				jsonStore.fetch({query:"?price<20",start:1, count:1, 
+				jsonStore.fetch({query:"?price<20",start:1, count:1,
 					onComplete: function(items, request){
 						t.is(1, items.length);
 						t.is(lastQuery, null); // should not be sent to the service
@@ -160,11 +160,11 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Sorting",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				var d = new doh.Deferred();
 				lastQuery = null;
-				jsonStore.fetch({sort:[{attribute:"name", descending: true}], 
+				jsonStore.fetch({sort:[{attribute:"name", descending: true}],
 					onComplete: function(items, request){
 						t.is("Truck", items[0].name);
 						t.is("Ball", items[3].name);
@@ -180,7 +180,7 @@ doh.register("dojox.data.tests.stores.JsonQueryRestStore",
 			name: "Sorting + Paging",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on JsonQueryRestStore of a simple query.
 				jsonStore.jsonQueryPagination = true;
 				var d = new doh.Deferred();

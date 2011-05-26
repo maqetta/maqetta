@@ -9,7 +9,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 		//		This allows for more versatility.
 		//
 		//		Called internally from a dojox.Drawing.
-		//	
+		//
 		//		Note: Surface creation is asynchrous. Connect to
 		//  		onSurfaceReady in Drawing.
 		//
@@ -68,7 +68,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 				//		Method used to change size of canvas. Potentially
 				//		called from a container like ContentPane. May be
 				//		called directly.
-				//	
+				//
 				this.parentWidth = width;
 				this.parentHeight = height;
 				this.setDimensions(width, height);
@@ -133,7 +133,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 				//		Get the scroll position of the canvas
 				return {
 					top:this.domNode.parentNode.scrollTop,
-					left:this.domNode.parentNode.scrollLeft		
+					left:this.domNode.parentNode.scrollLeft
 				}; // Object
 			},
 			

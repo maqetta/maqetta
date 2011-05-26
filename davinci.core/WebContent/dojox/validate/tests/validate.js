@@ -1,9 +1,9 @@
-dojo.provide("dojox.validate.tests.validate"); 
+dojo.provide("dojox.validate.tests.validate");
 
 dojo.require("dojox.validate._base");
 dojo.require("dojox.validate.check");
 dojo.require("dojox.validate.us");
-dojo.require("dojox.validate.ca"); 
+dojo.require("dojox.validate.ca");
 dojo.require("dojox.validate.web");
 dojo.require("dojox.validate.isbn");
 
@@ -23,12 +23,12 @@ tests.register("dojox.validate.tests.validate",
 			tests.t(dojox.validate.isValidIsbn('0596007590')); //test string input
 			tests.t(dojox.validate.isValidIsbn('0-596-00759-0')); //test string input with dashes
 			tests.f(dojox.validate.isValidIsbn(596007590)); //test numerical input as well
-			tests.t(dojox.validate.isValidIsbn("960-425-059-0")); 
+			tests.t(dojox.validate.isValidIsbn("960-425-059-0"));
 			tests.t(dojox.validate.isValidIsbn(9604250590)); //test numerical input as well
 			tests.t(dojox.validate.isValidIsbn('0-9752298-0-X')); // test string with X
-			tests.t(dojox.validate.isValidIsbn('0-9752298-0-x')); 
-			tests.t(dojox.validate.isValidIsbn('097522980x')); 
-			tests.t(dojox.validate.isValidIsbn('097522980X')); 
+			tests.t(dojox.validate.isValidIsbn('0-9752298-0-x'));
+			tests.t(dojox.validate.isValidIsbn('097522980x'));
+			tests.t(dojox.validate.isValidIsbn('097522980X'));
 			tests.f(dojox.validate.isValidIsbn(596007598)); //testing failures
 			tests.f(dojox.validate.isValidIsbn('059-600759-X')); //testing failures
 			tests.f(dojox.validate.isValidIsbn('059600')); // too short
@@ -60,46 +60,46 @@ tests.register("dojox.validate.tests.validate",
 		name: "isIpAddress",
 		runTest: function(tests){
 			tests.t(dojox.validate.isIpAddress('24.17.155.40'));
-			tests.f(dojox.validate.isIpAddress('024.17.155.040'));       
-			tests.t(dojox.validate.isIpAddress('255.255.255.255'));       
-			tests.f(dojox.validate.isIpAddress('256.255.255.255'));       
-			tests.f(dojox.validate.isIpAddress('255.256.255.255'));       
-			tests.f(dojox.validate.isIpAddress('255.255.256.255'));       
-			tests.f(dojox.validate.isIpAddress('255.255.255.256'));       
+			tests.f(dojox.validate.isIpAddress('024.17.155.040'));
+			tests.t(dojox.validate.isIpAddress('255.255.255.255'));
+			tests.f(dojox.validate.isIpAddress('256.255.255.255'));
+			tests.f(dojox.validate.isIpAddress('255.256.255.255'));
+			tests.f(dojox.validate.isIpAddress('255.255.256.255'));
+			tests.f(dojox.validate.isIpAddress('255.255.255.256'));
 
-			// test dotted hex       
-			tests.t(dojox.validate.isIpAddress('0x18.0x11.0x9b.0x28'));       
-			tests.f(dojox.validate.isIpAddress('0x18.0x11.0x9b.0x28', {allowDottedHex: false}) );       
-			tests.t(dojox.validate.isIpAddress('0x18.0x000000011.0x9b.0x28'));       
-			tests.t(dojox.validate.isIpAddress('0xff.0xff.0xff.0xff'));       
-			tests.f(dojox.validate.isIpAddress('0x100.0xff.0xff.0xff'));       
+			// test dotted hex
+			tests.t(dojox.validate.isIpAddress('0x18.0x11.0x9b.0x28'));
+			tests.f(dojox.validate.isIpAddress('0x18.0x11.0x9b.0x28', {allowDottedHex: false}) );
+			tests.t(dojox.validate.isIpAddress('0x18.0x000000011.0x9b.0x28'));
+			tests.t(dojox.validate.isIpAddress('0xff.0xff.0xff.0xff'));
+			tests.f(dojox.validate.isIpAddress('0x100.0xff.0xff.0xff'));
 
-			// test dotted octal       
-			tests.t(dojox.validate.isIpAddress('0030.0021.0233.0050'));       
+			// test dotted octal
+			tests.t(dojox.validate.isIpAddress('0030.0021.0233.0050'));
 			tests.f(dojox.validate.isIpAddress('0030.0021.0233.0050', {allowDottedOctal: false}) );
-			tests.t(dojox.validate.isIpAddress('0030.0000021.0233.00000050'));       
-			tests.t(dojox.validate.isIpAddress('0377.0377.0377.0377'));       
-			tests.f(dojox.validate.isIpAddress('0400.0377.0377.0377'));       
-			tests.f(dojox.validate.isIpAddress('0377.0378.0377.0377'));       
-			tests.f(dojox.validate.isIpAddress('0377.0377.0380.0377'));       
-			tests.f(dojox.validate.isIpAddress('0377.0377.0377.377'));       
+			tests.t(dojox.validate.isIpAddress('0030.0000021.0233.00000050'));
+			tests.t(dojox.validate.isIpAddress('0377.0377.0377.0377'));
+			tests.f(dojox.validate.isIpAddress('0400.0377.0377.0377'));
+			tests.f(dojox.validate.isIpAddress('0377.0378.0377.0377'));
+			tests.f(dojox.validate.isIpAddress('0377.0377.0380.0377'));
+			tests.f(dojox.validate.isIpAddress('0377.0377.0377.377'));
 		
-			// test decimal       
-			tests.t(dojox.validate.isIpAddress('3482223595'));       
-			tests.t(dojox.validate.isIpAddress('0'));       
-			tests.t(dojox.validate.isIpAddress('4294967295'));       
-			tests.f(dojox.validate.isIpAddress('4294967296'));       
-			tests.f(dojox.validate.isIpAddress('3482223595', {allowDecimal: false}));       
+			// test decimal
+			tests.t(dojox.validate.isIpAddress('3482223595'));
+			tests.t(dojox.validate.isIpAddress('0'));
+			tests.t(dojox.validate.isIpAddress('4294967295'));
+			tests.f(dojox.validate.isIpAddress('4294967296'));
+			tests.f(dojox.validate.isIpAddress('3482223595', {allowDecimal: false}));
 		
-			// test hex       
-			tests.t(dojox.validate.isIpAddress('0xCF8E83EB'));       
-			tests.t(dojox.validate.isIpAddress('0x0'));       
-			tests.t(dojox.validate.isIpAddress('0x00ffffffff'));       
+			// test hex
+			tests.t(dojox.validate.isIpAddress('0xCF8E83EB'));
+			tests.t(dojox.validate.isIpAddress('0x0'));
+			tests.t(dojox.validate.isIpAddress('0x00ffffffff'));
 			tests.f(dojox.validate.isIpAddress('0x100000000'));
-			tests.f(dojox.validate.isIpAddress('0xCF8E83EB', {allowHex: false}));       
+			tests.f(dojox.validate.isIpAddress('0xCF8E83EB', {allowHex: false}));
 			
-			// IPv6       
-			tests.t(dojox.validate.isIpAddress('fedc:BA98:7654:3210:FEDC:BA98:7654:3210'));       
+			// IPv6
+			tests.t(dojox.validate.isIpAddress('fedc:BA98:7654:3210:FEDC:BA98:7654:3210'));
 			tests.t(dojox.validate.isIpAddress('1080:0:0:0:8:800:200C:417A'));
 			tests.f(dojox.validate.isIpAddress('1080:0:0:0:8:800:200C:417A', {allowIPv6: false}));
 		
@@ -112,7 +112,7 @@ tests.register("dojox.validate.tests.validate",
 	},
 	{
 		name: "isUrlTest",
-		runTest: function(tests){ 
+		runTest: function(tests){
 			
 			tests.t(dojox.validate.isUrl('www.yahoo.com'));
 			tests.t(dojox.validate.isUrl('http://www.yahoo.com'));
@@ -194,22 +194,22 @@ tests.register("dojox.validate.tests.validate",
 				"x@yahoo.com \n x.y.z.w@yahoo.com ; o'mally@yahoo.com , fred&barney@stonehenge.com \n" )
 			);
 			tests.t(dojox.validate.isEmailAddressList(
-				"x@yahoo.com \n x.y.z.w@localhost \n o'mally@yahoo.com \n fred&barney@localhost", 
+				"x@yahoo.com \n x.y.z.w@localhost \n o'mally@yahoo.com \n fred&barney@localhost",
 				{allowLocal: true} )
 			);
 			tests.f(dojox.validate.isEmailAddressList(
 				"x@yahoo.com; x.y.z.w@localhost; o'mally@yahoo.com; fred&barney@localhost", {listSeparator: ";"} )
 			);
 			tests.t(dojox.validate.isEmailAddressList(
-					"mailto:x@yahoo.com; <x.y.z.w@yahoo.com>; <mailto:o'mally@yahoo.com>; fred&barney@stonehenge.com", 
+					"mailto:x@yahoo.com; <x.y.z.w@yahoo.com>; <mailto:o'mally@yahoo.com>; fred&barney@stonehenge.com",
 					{allowCruft: true, listSeparator: ";"} )
 			);
 			tests.f(dojox.validate.isEmailAddressList(
-					"mailto:x@yahoo.com; <x.y.z.w@yahoo.com>; <mailto:o'mally@yahoo.com>; fred&barney@stonehenge.com", 
+					"mailto:x@yahoo.com; <x.y.z.w@yahoo.com>; <mailto:o'mally@yahoo.com>; fred&barney@stonehenge.com",
 					{listSeparator: ";"} )
 			);
 			tests.t(dojox.validate.isEmailAddressList(
-					"mailto:x@yahoo.com; <x.y.z.w@localhost>; <mailto:o'mally@localhost>; fred&barney@localhost", 
+					"mailto:x@yahoo.com; <x.y.z.w@localhost>; <mailto:o'mally@localhost>; fred&barney@localhost",
 					{allowLocal: true, allowCruft: true, listSeparator: ";"} )
 			);
 		}
@@ -257,7 +257,7 @@ tests.register("dojox.validate.tests.validate",
 			tests.f(dojox.validate.isInRange('1,500,000', { min: 1000, max: 20000, locale: 'en-us'}));
 		}
 	},
-	{	
+	{
 		name: "isUsPhoneNumber",
 		runTest: function(tests) {
 			tests.t(dojox.validate.us.isPhoneNumber('(111) 111-1111'));
@@ -303,7 +303,7 @@ tests.register("dojox.validate.tests.validate",
 			tests.f(dojox.validate.ca.isPostalCode('1AZ 3F3'));
 			tests.t(dojox.validate.ca.isPostalCode('a1z 3f3'));
 			tests.f(dojox.validate.ca.isPostalCode('xxxxxx'));
-			tests.f(dojox.validate.ca.isPostalCode('A1Z3F3')); 
+			tests.f(dojox.validate.ca.isPostalCode('A1Z3F3'));
 			
 		}
 	},

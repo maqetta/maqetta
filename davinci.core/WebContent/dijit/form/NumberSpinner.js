@@ -1,7 +1,4 @@
-dojo.provide("dijit.form.NumberSpinner");
-
-dojo.require("dijit.form._Spinner");
-dojo.require("dijit.form.NumberTextBox");
+define("dijit/form/NumberSpinner", ["dojo", "dijit", "dijit/form/_Spinner", "dijit/form/NumberTextBox"], function(dojo, dijit) {
 
 dojo.declare("dijit.form.NumberSpinner",
 	[dijit.form._Spinner, dijit.form.NumberTextBoxMixin],
@@ -18,7 +15,7 @@ dojo.declare("dijit.form.NumberSpinner",
 	// example:
 	//	| new dijit.form.NumberSpinner({ constraints:{ max:300, min:100 }}, "someInput");
 
-	adjust: function(/* Object */val, /* Number*/delta){
+	adjust: function(/*Object*/ val, /*Number*/ delta){
 		// summary:
 		//		Change Number val by the given amount
 		// tags:
@@ -57,4 +54,8 @@ dojo.declare("dijit.form.NumberSpinner",
 			dojo.stopEvent(e);
 		}
 	}
+});
+
+
+return dijit.form.NumberSpinner;
 });

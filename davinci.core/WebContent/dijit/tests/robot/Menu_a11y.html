@@ -21,7 +21,6 @@
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot('../test_Menu.html');
 
-				if(!(dojo.isSafari < 4)){ // Tab-focus not well supported on old Safari
 				doh.register("dijit.MenuBar general keyboard tests",[
 					{
 						name: "start focus on the link, outside of menubar",
@@ -439,7 +438,6 @@
 						}
 					}
 				]);
-				} // !dojo.isSafari
 				doh.run();
 			});
 		</script>

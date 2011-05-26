@@ -1,12 +1,9 @@
-dojo.provide("dijit.form.Slider");
+define("dijit/form/Slider", ["dojo", "dijit", "dijit/form/HorizontalSlider", "dijit/form/VerticalSlider", "dijit/form/HorizontalRule", "dijit/form/VerticalRule", "dijit/form/HorizontalRuleLabels", "dijit/form/VerticalRuleLabels"], function(dojo, dijit) {
 
 dojo.deprecated("Call require() for HorizontalSlider / VerticalRule, explicitly rather than 'dijit.form.Slider' itself", "", "2.0");
 
 // For back-compat, remove for 2.0
-dojo.require("dijit.form.HorizontalSlider");
-dojo.require("dijit.form.VerticalSlider");
-dojo.require("dijit.form.HorizontalRule");
-dojo.require("dijit.form.VerticalRule");
-dojo.require("dijit.form.HorizontalRuleLabels");
-dojo.require("dijit.form.VerticalRuleLabels");
 
+
+return dijit.form.Slider;
+});

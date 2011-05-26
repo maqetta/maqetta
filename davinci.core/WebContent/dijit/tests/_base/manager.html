@@ -1,39 +1,44 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Dijit manager unit test</title>
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+		data-dojo-config="isDebug: true"></script>
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
+		dojo.require("dojo.parser");
 		dojo.require("dijit.dijit");
 
-		dojo.declare("foo", dijit._Widget, {
-			name: "",
-			attr1: 0,
-			attr2: 0
-		});
-
-		dojo.declare("bar", dijit._Widget, {
-			name: "",
-			attr1: 0,
-			attr2: 0
-		});
-
-		dojo.declare("Baz", dijit._Widget, {
-			name: "",
-			attr1: 1,
-			attr2: 1
-		});
-
 		dojo.addOnLoad(function(){
+			dojo.declare("foo", dijit._Widget, {
+				name: "",
+				attr1: 0,
+				attr2: 0
+			});
+	
+			dojo.declare("bar", dijit._Widget, {
+				name: "",
+				attr1: 0,
+				attr2: 0
+			});
+	
+			dojo.declare("Baz", dijit._Widget, {
+				name: "",
+				attr1: 1,
+				attr2: 1
+			});
+
+			doh.register("parse", function(){
+				dojo.parser.parse();
+			});
+
 			doh.register("dijit._base.manager",
 				[
 					function forEachTest(t){
@@ -238,6 +243,7 @@
 					}
 				]
 			);
+
 			doh.run();
 		});
 
@@ -245,14 +251,14 @@
 </head>
 <body>
 	<h1>Dijit Manager Unit Test</h1>
-	<div dojoType="foo" id="one" name="bob" attr1="10" attr2="10"></div>
-	<div dojoType="foo" id="two" name="is" attr1="5" attr2="10"></div>
-	<div dojoType="bar" id="three" name="your" attr1="5" attr2="5">
+	<div id="one" data-dojo-type="foo" data-dojo-props='name:"bob", attr1:10, attr2:10'></div>
+	<div id="two" data-dojo-type="foo" data-dojo-props='name:"is", attr1:5, attr2:10'></div>
+	<div id="three" data-dojo-type="bar" data-dojo-props='name:"your", attr1:5, attr2:5'>
 		<div id="three.one">
 			<div id="three.one.one"></div>
 		</div>
 	</div>
-	<div dojoType="bar" id="four" name="uncle" attr1="10" attr2="5"></div>
+	<div id="four" data-dojo-type="bar" data-dojo-props='name:"uncle", attr1:10, attr2:5'></div>
 	<div id="not-a-widget"></div>
 </body>
 </html>

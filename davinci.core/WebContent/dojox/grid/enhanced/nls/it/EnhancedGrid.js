@@ -1,8 +1,12 @@
 ({
-	singleSort: "Ordinamento singolo",
-	nestedSort: "Ordinamento nidificato",
-	ascending: "Crescente",
+	singleSort: "Ordine singolo",
+	nestedSort: "Ordine nidificato",
+	ascending: "Ascendente",
 	descending: "Decrescente",
-	unsorted: "Non ordinare questa colonna"
+	sortingState: "${0} - ${1}",
+	unsorted: "Non ordinare questa colonna",
+	indirectSelectionRadio: "Riga ${0}, selezione singola, casella di opzione",
+	indirectSelectionCheckBox: "Riga ${0}, selezione multipla, casella di spunta",
+	selectAll: "Seleziona tutto"
 })
 

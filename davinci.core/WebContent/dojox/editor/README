@@ -18,6 +18,9 @@ Credits
 	David Schwartz and Gu Yi He (IBM) - Contributed enhancements to the
 		look and feel of FindReplace, as well as behavioral
 		improvements.
+	Eldon (IBM, CCLA) - LocalImage, AutoUrlLink, TablePluginsColorCell -
+		dojox.widget.ColorPicker, ResizeTableColumn, AutoSave, SpellCheck
+
 -------------------------------------------------------------------------------
 Project description
 
@@ -136,6 +139,26 @@ dojox.editor.plugins.StatusBar:
 	Status: Experimental (unsupported).
 	A plugin that adds a status bar and an optional resize handle to the footer of the editor.
 
+dojox.editor.plugins.LocalImage
+	Status: Beta
+	A plugin that adds local image upload and edit capability to the editor.
+
+dojox.editor.plugins.AutoUrlLink
+	Status: Experimental (Unsupported)
+	A plugin that adds auto url link creation capability as a headless plugin to the editor
+
+dojox.editor.plugins.ResizeColumnPlugin
+	Status: Experimental (Unsupported)
+	A plugin that adds column resize to the editor table plugins.
+
+dojox.editor.plugins.AutoSave
+	Status: Experimental (Unsupported)
+	A plugin that provides 'auto-save' capablity, eg, post back to some url at an interval.
+
+dojox.editor.plugins.SpellCheck
+	Status: Experimental (Unsupported)
+	A plugin that provides server-side spell-check support.
+
 -------------------------------------------------------------------------------
 Dependencies:
 
@@ -161,15 +184,21 @@ See also:
 	http://docs.dojocampus.org/dojox/editor/plugins/InsertEntity
 	http://docs.dojocampus.org/dojox/editor/plugins/NormalizeIndentOutdent
 	http://docs.dojocampus.org/dojox/editor/plugins/Breadcrumb
-        http://docs.dojocampus.org/dojox/editor/plugins/FindReplace
-        http://docs.dojocampus.org/dojox/editor/plugins/CollapsibleToolbar
+	http://docs.dojocampus.org/dojox/editor/plugins/FindReplace
+	http://docs.dojocampus.org/dojox/editor/plugins/CollapsibleToolbar
 	http://docs.dojocampus.org/dojox/editor/plugins/Blockquote
 	http://docs.dojocampus.org/dojox/editor/plugins/PasteFromWord
 	http://docs.dojocampus.org/dojox/editor/plugins/InsertAnchor       
 	http://docs.dojocampus.org/dojox/editor/plugins/TextColor
 	http://docs.dojocampus.org/dojox/editor/plugins/NormalizeStyle
 	http://docs.dojocampus.org/dojox/editor/plugins/StatusBar 
+	http://docs.dojocampus.org/dojox/editor/plugins/LocalImage
+	http://docs.dojocampus.org/dojox/editor/plugins/AutoUrlLink
+	http://docs.dojocampus.org/dojox/editor/plugins/ResizeTableColumn
+	http://docs.dojocampus.org/dojox/editor/plugins/AutoSave
+	http://docs.dojocampus.org/dojox/editor/plugins/SpellCheck
 
+	
 -------------------------------------------------------------------------------
 Plugin Installation instructions
 
@@ -254,9 +283,9 @@ For the PasteFromWord plugin:
 	<link href="[path]dojox/editor/plugins/resources/css/PasteFromWord.css" type="text/css" rel="stylesheet" />
 
 For the InsertAnchor plugin:
-        dojo.require("dojox.editor.plugins.InsertAnchor");
-        and CSS:
-        <link href="[path]dojox/editor/plugins/resources/css/InsertAnchor.css" type="text/css" rel="stylesheet" />
+	dojo.require("dojox.editor.plugins.InsertAnchor");
+	and CSS:
+	<link href="[path]dojox/editor/plugins/resources/css/InsertAnchor.css" type="text/css" rel="stylesheet" />
 
 For the TextColor plugin:
 	dojo.require("dojox.editor.plugins.TextColor");
@@ -269,10 +298,35 @@ For the NormalizeStyle plugin:
 	No CSS required.
 
 For the StatusBar plugin:
-        dojo.require("dojox.editor.plugins.StatusBar");
-        and CSS:
-        <link href="[path]dojox/editor/plugins/resources/css/StatusBar.css" type="text/css" rel="stylesheet" />
+	dojo.require("dojox.editor.plugins.StatusBar");
+	and CSS:
+	<link href="[path]dojox/editor/plugins/resources/css/StatusBar.css" type="text/css" rel="stylesheet" />
 
+For the LocalImage plugin:
+	dojo.require("dojox.editor.plugins.LocalImage");
+	and CSS:
+	<link href="[path]dojox/editor/plugins/resources/css/LocalImage.css" type="text/css" rel="stylesheet" />
+
+For the AutoUrlLink plugin:
+	dojo.require("dojox.editor.plugins.AutoUrlLink");
+	and CSS:
+	No CSS required.
+
+For the ResizeTableColumn plugin:
+	dojo.require("dojox.editor.plugins.ResizeTableColumn");
+	and CSS:
+	No CSS required in addition to the table plugins css.
+
+For the AutoSave plugin:
+	dojo.require("dojox.editor.plugins.AutoSave");
+	and CSS:
+	<link href="[path]dojox/editor/plugins/resources/css/AutoSave.css" type="text/css" rel="stylesheet" />
+        
+For the SpellCheck plugin:
+	dojo.require("dojox.editor.plugins.SpellCheck");
+	and CSS:
+	<link href="[path]dojox/editor/plugins/resources/css/SpellCheck.css" type="text/css" rel="stylesheet" />
+                
 See tests for examples:
 	dojox/editor/tests/editorTablePlugs.html
 	dojox/editor/tests/editorUploadPlug.html
@@ -293,4 +347,9 @@ See tests for examples:
 	dojox/editor/tests/editorTextColor.html
 	dojox/editor/tests/editorNormalizeStyle.html
 	dojox/editor/tests/editorStatusBar.html
+	dojox/editor/tests/editorLocalImage.html
+	dojox/editor/tests/editorAutoUrlLink.html
+	dojox/editor/tests/editorResizeTableColumn.html
+	dojox/editor/tests/editorAutoSave.html
+	dojox/editor/tests/editorSpellCheck.html
 	dojox/editor/tests/testPluginsAll.html

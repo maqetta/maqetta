@@ -1,4 +1,5 @@
-dojo.provide("dojo.DeferredList");
+define("dojo/DeferredList", ["dojo"], function(dojo) {
+
 dojo.DeferredList = function(/*Array*/ list, /*Boolean?*/ fireOnOneCallback, /*Boolean?*/ fireOnOneErrback, /*Boolean?*/ consumeErrors, /*Function?*/ canceller){
 	// summary:
 	//		Provides event handling for a group of Deferred objects.
@@ -56,7 +57,7 @@ dojo.DeferredList = function(/*Array*/ list, /*Boolean?*/ fireOnOneCallback, /*B
 dojo.DeferredList.prototype = new dojo.Deferred();
 
 dojo.DeferredList.prototype.gatherResults= function(deferredList){
-	// summary:	
+	// summary:
 	//	Gathers the results of the deferreds for packaging
 	//	as the parameters to the Deferred Lists' callback
 
@@ -70,3 +71,6 @@ dojo.DeferredList.prototype.gatherResults= function(deferredList){
 	});
 	return d;
 };
+
+return dojo.DeferredList;
+});

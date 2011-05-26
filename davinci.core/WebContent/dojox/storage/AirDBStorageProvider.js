@@ -12,7 +12,7 @@ if (dojo.isAIR) {
 		air.SQLConnection = window.runtime.flash.data.SQLConnection;
 		air.SQLStatement = window.runtime.flash.data.SQLStatement;
 
-		// summary: 
+		// summary:
 		//		Storage provider that uses features in the Adobe AIR runtime to achieve
 		//		permanent storage
 		dojo.declare("dojox.storage.AirDBStorageProvider", [ dojox.storage.Provider ], {
@@ -111,7 +111,7 @@ if (dojo.isAIR) {
 			},
 			
 			getNamespaces: function(){
-				var results = [ this.DEFAULT_NAMESPACE ];				
+				var results = [ this.DEFAULT_NAMESPACE ];
 				var rs = this._sql("SELECT namespace FROM " + this.TABLE_NAME + " DESC GROUP BY namespace");
 				if (rs.data){
 					for(var i = 0; i < rs.data.length; i++){
@@ -153,14 +153,14 @@ if (dojo.isAIR) {
 			},
 			
 			putMultiple: function(keys, values, resultsHandler, namespace) {
- 				if(this.isValidKeyArray(keys) === false 
-						|| ! values instanceof Array 
+ 				if(this.isValidKeyArray(keys) === false
+						|| ! values instanceof Array
 						|| keys.length != values.length){
 					throw new Error("Invalid arguments: keys = [" + keys + "], values = [" + values + "]");
 				}
 				
 				if(namespace == null || typeof namespace == "undefined"){
-					namespace = this.DEFAULT_NAMESPACE;		
+					namespace = this.DEFAULT_NAMESPACE;
 				}
 	
 				if(this.isValidKey(namespace) == false){
@@ -169,7 +169,7 @@ if (dojo.isAIR) {
 	
 				this._statusHandler = resultsHandler;
 
-				// try to store the value	
+				// try to store the value
 				try{
 					this._beginTransaction();
 					for(var i=0;i<keys.length;i++) {
@@ -199,7 +199,7 @@ if (dojo.isAIR) {
 				}
 				
 				if(namespace == null || typeof namespace == "undefined"){
-					namespace = this.DEFAULT_NAMESPACE;		
+					namespace = this.DEFAULT_NAMESPACE;
 				}
 				
 				if(this.isValidKey(namespace) == false){
@@ -225,7 +225,7 @@ if (dojo.isAIR) {
 						{ ":namespace":namespace, ":key":keys[i] });
 				}
 				this._commitTransaction();
-			},			
+			},
 			
 			isPermanent: function(){ return true; },
 

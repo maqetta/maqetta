@@ -95,7 +95,7 @@ dojox.io.proxy.xip = {
 		var stateId = "XhrIframeProxy" + (this._stateIdCounter++);
 		facade._stateId = stateId;
 
-		var frameUrl = facade._ifpServerUrl + "#0:init:id=" + stateId + "&client=" 
+		var frameUrl = facade._ifpServerUrl + "#0:init:id=" + stateId + "&client="
 			+ encodeURIComponent(this.fullXipClientUrl) + "&callback=" + encodeURIComponent(this._callbackName);
 
 		this._state[stateId] = {
@@ -173,7 +173,7 @@ dojox.io.proxy.xip = {
 			uri: facade._uri
 		};
 		if(reqHeaders.length > 0){
-			requestData.requestHeaders = reqHeaders.join("\r\n");		
+			requestData.requestHeaders = reqHeaders.join("\r\n");
 		}
 		if(facade._method){
 			requestData.method = facade._method;
@@ -326,7 +326,7 @@ dojox.io.proxy.xip = {
 				this.setServerUrl(stateId, "ok");
 				break;
 			case "part":
-				state.responseMessage += msg.message;			
+				state.responseMessage += msg.message;
 				this.setServerUrl(stateId, "ok");
 				break;
 			case "end":

@@ -1,12 +1,9 @@
-dojo.provide("dojo.dnd.Mover");
-
-dojo.require("dojo.dnd.common");
-dojo.require("dojo.dnd.autoscroll");
+define("dojo/dnd/Mover", ["dojo", "dojo/dnd/common", "dojo/dnd/autoscroll"], function(dojo) {
 
 dojo.declare("dojo.dnd.Mover", null, {
 	constructor: function(node, e, host){
 		// summary:
-		//		an object, which makes a node follow the mouse. 
+		//		an object which makes a node follow the mouse, or touch-drag on touch devices.
 		//		Used as a default mover, and as a base class for custom movers.
 		// node: Node
 		//		a node (or node's id) to be moved
@@ -17,17 +14,27 @@ dojo.declare("dojo.dnd.Mover", null, {
 		//		object which implements the functionality of the move,
 		//	 	and defines proper events (onMoveStart and onMoveStop)
 		this.node = dojo.byId(node);
-		this.marginBox = {l: e.pageX, t: e.pageY};
+		var pos = e.touches ? e.touches[0] : e;
+		this.marginBox = {l: pos.pageX, t: pos.pageY};
 		this.mouseButton = e.button;
-		var h = this.host = host, d = node.ownerDocument, 
-			firstEvent = dojo.connect(d, "onmousemove", this, "onFirstMove");
+		var h = (this.host = host), d = node.ownerDocument;
 		this.events = [
+			// At the start of a drag, onFirstMove is called, and then the following two
+			// connects are disconnected
+			dojo.connect(d, "onmousemove", this, "onFirstMove"),
+			dojo.connect(d, "ontouchmove", this, "onFirstMove"),
+
+			// These are called continually during the drag
 			dojo.connect(d, "onmousemove", this, "onMouseMove"),
+			dojo.connect(d, "ontouchmove", this, "onMouseMove"),
+
+			// And these are called at the end of the drag
 			dojo.connect(d, "onmouseup",   this, "onMouseUp"),
+			dojo.connect(d, "ontouchend", this, "onMouseUp"),
+
 			// cancel text selection and text dragging
 			dojo.connect(d, "ondragstart",   dojo.stopEvent),
-			dojo.connect(d.body, "onselectstart", dojo.stopEvent),
-			firstEvent
+			dojo.connect(d.body, "onselectstart", dojo.stopEvent)
 		];
 		// notify that the move has started
 		if(h && h.onMoveStart){
@@ -37,17 +44,18 @@ dojo.declare("dojo.dnd.Mover", null, {
 	// mouse event processors
 	onMouseMove: function(e){
 		// summary:
-		//		event processor for onmousemove
+		//		event processor for onmousemove/ontouchmove
 		// e: Event
-		//		mouse event
+		//		mouse/touch event
 		dojo.dnd.autoScroll(e);
-		var m = this.marginBox;
-		this.host.onMove(this, {l: m.l + e.pageX, t: m.t + e.pageY}, e);
+		var m = this.marginBox,
+			pos = e.touches ? e.touches[0] : e;
+		this.host.onMove(this, {l: m.l + pos.pageX, t: m.t + pos.pageY}, e);
 		dojo.stopEvent(e);
 	},
 	onMouseUp: function(e){
-		if(dojo.isWebKit && dojo.isMac && this.mouseButton == 2 ? 
-				e.button == 0 : this.mouseButton == e.button){
+		if(dojo.isWebKit && dojo.isMac && this.mouseButton == 2 ?
+				e.button == 0 : this.mouseButton == e.button){ // TODO Should condition be met for touch devices, too?
 			this.destroy();
 		}
 		dojo.stopEvent(e);
@@ -55,7 +63,7 @@ dojo.declare("dojo.dnd.Mover", null, {
 	// utilities
 	onFirstMove: function(e){
 		// summary:
-		//		makes the node absolute; it is meant to be called only once. 
+		//		makes the node absolute; it is meant to be called only once.
 		// 		relative and absolutely positioned nodes are assumed to use pixel units
 		var s = this.node.style, l, t, h = this.host;
 		switch(s.position){
@@ -75,7 +83,7 @@ dojo.declare("dojo.dnd.Mover", null, {
 				// space into account - so we need to subtract the combined
 				// padding and margin.  We use getComputedStyle and
 				// _getMarginBox/_getContentBox to avoid the extra lookup of
-				// the computed style. 
+				// the computed style.
 				var b = dojo.doc.body;
 				var bs = dojo.getComputedStyle(b);
 				var bm = dojo._getMarginBox(b, bs);
@@ -89,7 +97,10 @@ dojo.declare("dojo.dnd.Mover", null, {
 		if(h && h.onFirstMove){
 			h.onFirstMove(this, e);
 		}
-		dojo.disconnect(this.events.pop());
+		
+		// Disconnect onmousemove and ontouchmove events that call this function
+		dojo.disconnect(this.events.shift());
+		dojo.disconnect(this.events.shift());
 	},
 	destroy: function(){
 		// summary:
@@ -103,4 +114,7 @@ dojo.declare("dojo.dnd.Mover", null, {
 		// destroy objects
 		this.events = this.node = this.host = null;
 	}
+});
+
+return dojo.dnd.Mover;
 });

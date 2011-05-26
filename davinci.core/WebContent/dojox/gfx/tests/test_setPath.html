@@ -15,8 +15,12 @@
 <script type="text/javascript">
 dojo.require("dojox.gfx");
 
-makeShapes = function(){
+createSurface = function(){
 	var surface = dojox.gfx.createSurface("test", 500, 400);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	// relative path with cubic beziers
 	surface
 		.createPath("m100 100 100 0 0 100c0 50-50 50-100 0s-50-100 0-100z")
@@ -61,7 +65,7 @@ makeShapes = function(){
 		;
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

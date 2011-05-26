@@ -16,13 +16,13 @@
 }
 
 .dijitRtl .soria .dijitSliderLeftBumper {
-	border-left-width: 0px;
+	border-left-width: 0;
 	border-right-width: 1px;
 }
 
 .dijitRtl .soria .dijitSliderRightBumper {
 	border-left-width: 1px;
-	border-right-width: 0px;
+	border-right-width: 0;
 }
 
 .dijitRtl .soria .dijitSliderIncrementIconH {

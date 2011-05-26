@@ -5,8 +5,8 @@
 	emoticonWink: "ウィンク",
 	emoticonGrin: "笑顔",
 	emoticonCool: "無愛想",
-	emoticonAngry: "怒り",  
-	emoticonHalf: "半分", 
+	emoticonAngry: "怒り",
+	emoticonHalf: "半分",
 	emoticonEyebrow: "眉毛",
 	emoticonFrown: "眉をひそめる",
 	emoticonShy: "はにかんだ",
@@ -15,7 +15,7 @@
 	emoticonTongue: "舌を出す",
 	emoticonIdea: "アイデア",
 	emoticonYes: "はい",
-	emoticonNo: "いいえ",	
+	emoticonNo: "いいえ",
 	emoticonAngel: "エンジェル",
 	emoticonCrying: "泣く"
 })

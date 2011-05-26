@@ -1,10 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>dijit.layout.BorderContainer Test - Full Screen</title>
 
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 
 		html, body, #main{
@@ -18,11 +19,11 @@
 	</style>
 
 	<!-- required: the default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+		data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -36,27 +37,27 @@
 
 </head>
 <body class="claro">
-	<div dojoType="dijit.layout.BorderContainer" design="sidebar" id="main">
-		<div dojoType="dijit.layout.ContentPane" region="leading" style="background-color: #acb386; width: 100px;">
+	<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='design:"sidebar" '>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"main-leading", region:"leading", style:"background-color: #acb386; width: 100px;"'>
 			leading
 		</div>
-		<div dojoType="dijit.layout.ContentPane" region="top" style="background-color: #b39b86; height: 100px;">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"main-top", region:"top", style:"background-color: #b39b86; height: 100px;"'>
 			top bar
 		</div>
-		<div dojoType="dijit.layout.ContentPane" region="center" style="background-color: #f5ffbf; padding: 10px;">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"main-center", region:"center", style:"background-color: #f5ffbf; padding: 10px;"'>
 			main panel with <a href="http://www.dojotoolkit.org/">a link</a>.<br />
 			(to check we're copying children around properly).<br />
-			<select dojoType="dijit.form.FilteringSelect">
+			<select data-dojo-type="dijit.form.FilteringSelect">
 				<option value="1">foo</option>
 				<option value="2">bar</option>
 				<option value="3">baz</option>
 			</select>
 			Here's some text that comes AFTER the combo box.
 		</div>
-		<div dojoType="dijit.layout.ContentPane" region="bottom" style="background-color: #b39b86; height: 100px;" splitter="true">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"main-bottom", region:"bottom", style:"background-color: #b39b86; height: 100px;", splitter:true'>
 			bottom bar
 		</div>
-		<div dojoType="dijit.layout.ContentPane" region="trailing" style="background-color: #acb386; width: 100px;" splitter="true">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"main-trailing", region:"trailing", style:"background-color: #acb386; width: 100px;", splitter:true'>
 			trailing
 		</div>
 	</div>

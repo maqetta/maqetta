@@ -1,5 +1,5 @@
 ({
-	displayOptions: "[הצגת אפשרויות]",
+	displayOptions: "[אפשרויות הצגה]",
 	title: "כותרת",
 	authors: "מחברים",
 	contributors: "תורמים",
@@ -9,3 +9,4 @@
 	summary: "סיכום",
 	content: "תוכן"
 })
+

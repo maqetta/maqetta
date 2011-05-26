@@ -88,7 +88,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		Function to clear all the display nodes for the ATOM entry from the viewer.
 
 		dojo.forEach([
-			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow", 
+			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow",
 			"entryIdRow", "entryUpdatedRow"
 			], function(node){
 				dojo.style(this[node], "display", "none");
@@ -155,27 +155,27 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 			}
 
 			if(this.entryUpdatedHeader){
-				this.setUpdatedHeader(this.entryUpdatedHeader, entry); 
+				this.setUpdatedHeader(this.entryUpdatedHeader, entry);
 			}
 
 			if(this.entryUpdatedNode){
-				this.setUpdated(this.entryUpdatedNode, this._editMode, entry); 
+				this.setUpdated(this.entryUpdatedNode, this._editMode, entry);
 			}
 
 			if(this.entrySummaryHeader){
-				this.setSummaryHeader(this.entrySummaryHeader, entry); 
+				this.setSummaryHeader(this.entrySummaryHeader, entry);
 			}
 
 			if(this.entrySummaryNode){
-				this.setSummary(this.entrySummaryNode, this._editMode, entry); 
+				this.setSummary(this.entrySummaryNode, this._editMode, entry);
 			}
 
 			if(this.entryContentHeader){
-				this.setContentHeader(this.entryContentHeader, entry); 
+				this.setContentHeader(this.entryContentHeader, entry);
 			}
 
 			if(this.entryContentNode){
-				this.setContent(this.entryContentNode, this._editMode, entry); 
+				this.setContent(this.entryContentNode, this._editMode, entry);
 			}
 		}
 		this._displaySections();
@@ -495,7 +495,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		Internal function for determining which sections of the view to actually display.
 		//
 		//	returns:
-		//		Nothing. 
+		//		Nothing.
 		dojo.style(this.entryTitleRow, 'display', 'none');
 		dojo.style(this.entryAuthorRow, 'display', 'none');
 		dojo.style(this.entryContributorRow, 'display', 'none');

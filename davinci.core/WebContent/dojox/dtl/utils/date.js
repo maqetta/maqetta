@@ -9,7 +9,7 @@ dojo.extend(dojox.dtl.utils.date.DateFormat, dojox.date.php.DateFormat.prototype
 	f: function(){
 		// summary:
 		//		Time, in 12-hour hours and minutes, with minutes left off if they're zero.
-		// description: 
+		// description:
 		//		Examples: '1', '1:30', '2:05', '2'
 		//		Proprietary extension.
 		return (!this.date.getMinutes()) ? this.g() : this.g() + ":" + this.i();

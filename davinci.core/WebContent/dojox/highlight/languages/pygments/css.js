@@ -69,7 +69,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 			},
 			{
 				className: "string double",
-				begin: '"', 
+				begin: '"',
 				end: '"',
 				illegal: "\\n",
 				relevance: 0
@@ -195,7 +195,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 					}
 				},
 				contains: [
-					"comment", "comment preproc", 
+					"comment", "comment preproc",
 					"number",
 					"string single", "string double",
 					"punctuation",

@@ -1,8 +1,8 @@
 dojo.provide("dojox.timing._base");
-dojo.experimental("dojox.timing"); 
+dojo.experimental("dojox.timing");
 
 dojox.timing.Timer = function(/*int*/ interval){
-	// summary: Timer object executes an "onTick()" method repeatedly at a specified interval. 
+	// summary: Timer object executes an "onTick()" method repeatedly at a specified interval.
 	//			repeatedly at a given interval.
 	// interval: Interval between function calls, in milliseconds.
 	this.timer = null;
@@ -33,7 +33,7 @@ dojo.extend(dojox.timing.Timer, {
 	start : function(){
 		// summary: Start the timer ticking.
 		// description: Calls the "onStart()" handler, if defined.
-		// 				Note that the onTick() function is not called right away, 
+		// 				Note that the onTick() function is not called right away,
 		//				only after first interval passes.
 		if (typeof this.onStart == "function"){
 			this.onStart();

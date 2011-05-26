@@ -6,6 +6,7 @@
 	id: "Id",
 	close: "[luk]",
 	updated: "Opdateret",
-	summary: "Summary",
+	summary: "Resumé",
 	content: "Indhold"
 })
+

@@ -32,7 +32,7 @@ dojox.wire.register = function(/*Function||String*/wireClass, /*String*/key){
 
 dojox.wire._getClass = function(/*String*/name){
 	//	summary:
-	//		Returns a class 
+	//		Returns a class
 	//	description:
 	//		The class is loaded by dojo.require() and returned
 	//		by dojo.getObject().

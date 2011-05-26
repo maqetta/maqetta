@@ -1,18 +1,8 @@
-dojo.provide("dojox.editor.plugins.InsertEntity");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dojox.editor.plugins.EntityPalette");
-dojo.require("dojox.html.entities");
-
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("dojox.editor.plugins", "InsertEntity");
+define("dojox/editor/plugins/InsertEntity", ["dojo", "dijit", "dojox", "dijit/TooltipDialog", "dijit/_editor/_Plugin", "dijit/form/Button", "dojox/html/entities", "dojox/editor/plugins/EntityPalette", "dojo/i18n", "i18n!dojox/editor/plugins/nls/InsertEntity"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin allows the user to select from standard Symbols (HTML Entities) 
+	//		This plugin allows the user to select from standard Symbols (HTML Entities)
 	//		to insert at the current cursor position.  It binds to the key pattern:
 	//		ctrl-shift-s for opening the insert symbol dropdown.
 	//
@@ -41,6 +31,12 @@ dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 			tabIndex: "-1",
 			dropDown: this.dropDown
 		});
+	},
+
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -72,8 +68,8 @@ dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 
 	_postFilterEntities: function(s/*String content passed in*/){
 		// summary:
-		//		A function to filter out entity characters into encoded form so they 
-		//		are properly displayed in the editor.  It gets registered with the 
+		//		A function to filter out entity characters into encoded form so they
+		//		are properly displayed in the editor.  It gets registered with the
 		//		postFilters of the editor.
 		// tags:
 		//		private.
@@ -91,4 +87,7 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 			showEntityName: ("showEntityName" in o.args)?o.args.showEntityName:false
 		});
 	}
+});
+
+return dojox.editor.plugins.InsertEntity;
 });

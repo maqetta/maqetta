@@ -2,9 +2,9 @@
 
 .dijitRtl .nihilo .dijitMenuItem .dijitMenuItemIcon {
 	padding-left: 3px;
-	padding-right: 0px;
+	padding-right: 0;
 }
 
 .dijitRtl .nihilo .dijitMenuItem .dijitMenuExpand {
-	background-position: 0px top;
+	background-position: 0 top;
 }

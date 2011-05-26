@@ -7,7 +7,7 @@ dojo.require("dojox.validate.regexp"); 	// additional expressions
 
 dojox.validate.isText = function(/*String*/value, /*Object?*/flags){
 	// summary:
-	//	Checks if a string has non whitespace characters. 
+	//	Checks if a string has non whitespace characters.
 	//	Parameters allow you to constrain the length.
 	//
 	// value: A string
@@ -34,7 +34,7 @@ dojox.validate._isInRangeCache = {};
 dojox.validate.isInRange = function(/*String*/value, /*Object?*/flags){
 	// summary:
 	//	Validates whether a string denoting a number
-	//	is between a max and min. 
+	//	is between a max and min.
 	//
 	// value: A string
 	// flags: {max:Number, min:Number, decimal:String}
@@ -70,7 +70,7 @@ dojox.validate.isNumberFormat = function(/* String */value, /* Object? */flags){
 	//
 	// description:
 	//		Validates any sort of number based format. Use it for phone numbers,
-	//		social security numbers, zip-codes, etc. The value can be validated 
+	//		social security numbers, zip-codes, etc. The value can be validated
 	//		against one format or one of multiple formats.
 	//
 	// Format Definition
@@ -78,7 +78,7 @@ dojox.validate.isNumberFormat = function(/* String */value, /* Object? */flags){
 	// |   ?        Stands for an optional digit, 0-9 or nothing.
 	//    All other characters must appear literally in the expression.
 	//
-	// example:   
+	// example:
 	// |  "(###) ###-####"       ->   (510) 542-9742
 	// |  "(###) ###-#### x#???" ->   (510) 542-9742 x153
 	// |  "###-##-####"          ->   506-82-1089       i.e. social security number
@@ -86,10 +86,10 @@ dojox.validate.isNumberFormat = function(/* String */value, /* Object? */flags){
 	//
 	// value: A string
 	//
-	// flags: Object? 
+	// flags: Object?
 	//		FIXME: make pseudo-object for this
 	//		format: String
-	//			
+	//
 	//    flags.format  A string or an Array of strings for multiple formats.
 	//
 	// example:
@@ -98,7 +98,7 @@ dojox.validate.isNumberFormat = function(/* String */value, /* Object? */flags){
 	//
 	// example:
 	// 		Check Multiple formats:
-	// |	dojox.validate.isNumberFormat("123-45", {	
+	// |	dojox.validate.isNumberFormat("123-45", {
 	// |		format:["### ##","###-##","## ###"]
 	// |	});
 	//
@@ -111,7 +111,7 @@ dojox.validate.isValidLuhn = function(/* String */value){
 	// summary: Validate a String value against the Luhn algorithm.
 	// description:
 	//		Validate a String value against the Luhn algorithm to verify
-	//		its integrity. 
+	//		its integrity.
 	
 	var sum = 0, parity, curDigit;
 	if(!dojo.isString(value)){

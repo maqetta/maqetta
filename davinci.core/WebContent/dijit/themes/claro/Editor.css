@@ -14,43 +14,37 @@
  * 3. disabled Editor iframe container 
  * 		.dijitEditorDisabled - editor's inner iframe container disable status styles: background, border
  */
-
-.claro .dijitEditorIFrameContainer{
-	padding:3px 3px 1px 10px;
+.claro .dijitEditorIFrameContainer {
+  padding: 3px 3px 1px 10px;
 }
 .claro .dijitEditorIFrame {
-	background-color: #fff;
+  background-color: #ffffff;
 }
 .claro .dijitEditor {
-	border: 1px solid #b5bcc7;
+  border: 1px solid #b5bcc7;
 }
-.claro .dijitEditor .dijitEditorIFrameContainer{
-	background-color: #fff;
-	background-image: url('form/images/textBox_back.png');
-	background-repeat:repeat-x;
+.claro .dijitEditor .dijitEditorIFrameContainer {
+  background-color: #ffffff;
+  background-image: url('form/images/textBox_back.png');
+  background-repeat: repeat-x;
 }
-.dj_ie6 .claro .dijitEditor .dijitEditorIFrameContainer{
-	background-image: none;
+.dj_ie6 .claro .dijitEditor .dijitEditorIFrameContainer {
+  background-image: none;
 }
-.claro .dijitEditorHover .dijitEditorIFrameContainer,
-.claro .dijitEditorHover .dijitEditorIFrameContainer .dijitEditorIFrame{
-	background-color: #eef7ff;
+.claro .dijitEditorHover .dijitEditorIFrameContainer, .claro .dijitEditorHover .dijitEditorIFrameContainer .dijitEditorIFrame {
+  background-color: #e9f4fe;
 }
-.claro .dijitEditorFocused .dijitEditorIFrameContainer,
-.claro .dijitEditorFocused .dijitEditorIFrameContainer .dijitEditorIFrame{
-	/* TODO: contradicts rule above, which background-color do you want? */
-	background-color: #fff;
-}
+.claro .dijitEditorFocused .dijitEditorIFrameContainer, .claro .dijitEditorFocused .dijitEditorIFrameContainer .dijitEditorIFrame {
+  /* TODO: contradicts rule above, which background-color do you want? */
 
-
+  background-color: #ffffff;
+}
 /* Disabled */
 .claro .dijitEditorDisabled {
-	border: 1px solid #d3d3d3;
-	color: #818181;
+  border: 1px solid #d3d3d3;
+  color: #818181;
 }
-
-.claro .dijitDisabled .dijitEditorIFrame,
-.claro .dijitDisabled .dijitEditorIFrameContainer {
-	background-color: #efefef;
-	background-image: none;
+.claro .dijitDisabled .dijitEditorIFrame, .claro .dijitDisabled .dijitEditorIFrameContainer, .claro .dijitDisabled .dijitEditorIFrameContainer .dijitEditorIFrame {
+  background-color: #efefef;
+  background-image: none;
 }

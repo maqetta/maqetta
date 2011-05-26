@@ -26,10 +26,11 @@
 		dojo.require("dijit.form.NumberTextBox");
 		dojo.require("dijit.form.NumberSpinner");
 		dojo.require("dijit.form.CheckBox");
+		dojo.require("dijit.layout.BorderContainer");
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dojox.form.DateTextBox");
 		
-		dojo.addOnLoad(function(){
+		dojo.ready(function(){
 			dojo.parser.parse();
 			
 			var programmatic = new dojox.layout.TableContainer(
@@ -302,7 +303,8 @@
 			
 			<div dojoType="dijit.layout.ContentPane" label="Label 1">colspan = 1</div>
 			<div dojoType="dijit.layout.ContentPane" label="Label 1">colspan = 1</div>
-			<div dojoType="dijit.layout.ContentPane" label="Label 1">colspan = 1</div>			<div dojoType="dijit.layout.ContentPane" label="Label 2" colspan="2">colspan = 2</div>
+			<div dojoType="dijit.layout.ContentPane" label="Label 1">colspan = 1</div>
+			<div dojoType="dijit.layout.ContentPane" label="Label 2" colspan="2">colspan = 2</div>
 			<div dojoType="dijit.layout.ContentPane" label="Label 3" colspan="2">colspan = 2</div>
 			<div dojoType="dijit.layout.ContentPane" label="Label 4">colspan = 1</div>
 			<div dojoType="dijit.layout.ContentPane" label="Label 5">colspan = 1</div>
@@ -316,6 +318,39 @@
 	<br><br>
 	<div id="programmatic" style="width: 800px;">
 		
+	</div>
+
+	<h2>Test resize of the TableContainer</h2>
+	<p>Drag the splitter to resize the TableContainer in the right/center region and confirm the column widths resize correctly to their new width</p>
+	<div dojoType="dijit.layout.BorderContainer" style="height:100px; border: solid #ccc 1px;">
+		<div dojoType="dijit.layout.ContentPane" region="left" style="width:20%" splitter="true">(left)</div>
+		<div dojoType="dijit.layout.ContentPane" region="center">
+			<div dojoType="dojox.layout.TableContainer" region="center" jsId="tblContainerResize" cols="3" customClass="greyBlueLNF" labelWidth="-1">
+				<div dojoType="dijit.layout.ContentPane" label="Col 1 Label">
+					<script type="dojo/connect" event="resize">
+						this.domNode.innerHTML = "<strong>Width: " + dojo.contentBox(this.domNode).w + "</strong>";
+					</script>
+				</div>
+				<div dojoType="dijit.layout.ContentPane" label="Col 2 Label">
+					<script type="dojo/connect" event="resize">
+						this.domNode.innerHTML = "<strong>Width: " + dojo.contentBox(this.domNode).w + "</strong>";
+					</script>
+				</div>
+				<div dojoType="dijit.layout.BorderContainer" label="Col 1 Label" colspan="2" style="height: 50px">
+					<div dojoType="dijit.layout.ContentPane" region="left" style="width: 50%">
+						<script type="dojo/connect" event="resize">
+							this.domNode.innerHTML = "<strong>Nested BC region width: " + dojo.contentBox(this.domNode).w + "</strong>";
+						</script>
+					</div>
+					<div dojoType="dijit.layout.ContentPane" region="center" style="width: 50%">
+						<script type="dojo/connect" event="resize">
+							this.domNode.innerHTML = "<strong>Nested BC region width: " + dojo.contentBox(this.domNode).w + "</strong>";
+							console.log(this.id + " resize");
+						</script>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

@@ -36,7 +36,7 @@ dojo.declare("dojox.sketch.Toolbar", dijit.Toolbar, {
 		this.shapeGroup=new dojox.sketch.ButtonGroup;
 
 		if(!this.plugins){
-			this.plugins=['Slider','Lead','SingleArrow','DoubleArrow','Underline','Preexisting'];
+			this.plugins=['Lead','SingleArrow','DoubleArrow','Underline','Preexisting','Slider'];
 		}
 		this._plugins=[];
 

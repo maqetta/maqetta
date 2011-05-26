@@ -4,13 +4,13 @@
 	rows: "Righe:",
 	columns: "Colonne:",
 	align: "Allinea:",
-	cellPadding: "Riempimento cella:",
+	cellPadding: "Padding celle:",
 	cellSpacing: "Spaziatura celle:",
-	tableWidth: "Larghezza tabella:",
-	backgroundColor: "Colore sfondo:",
-	borderColor: "Colore bordo:",
-	borderThickness: "Spessore bordo",
-	percent: "percento",
+	tableWidth: "Larghezza tabelle:",
+	backgroundColor: "Colore di sfondo:",
+	borderColor: "Colore bordi:",
+	borderThickness: "Spessore bordi",
+	percent: "percentuale",
 	pixels: "pixel",
 	"default": "predefinito",
 	left: "sinistra",
@@ -18,13 +18,15 @@
 	right: "destra",
 	buttonSet: "Imposta", // translated elsewhere?
 	buttonInsert: "Inserisci",
+	buttonCancel: "Annulla",
 
 	selectTableLabel: "Seleziona tabella",
-	insertTableRowBeforeLabel: "Inserisci riga prima",
-	insertTableRowAfterLabel: "Inserisci riga dopo",
+	insertTableRowBeforeLabel: "Aggiungi riga prima",
+	insertTableRowAfterLabel: "Aggiungi riga dopo",
 	insertTableColumnBeforeLabel: "Aggiungi colonna prima",
 	insertTableColumnAfterLabel: "Aggiungi colonna dopo",
 	deleteTableRowLabel: "Elimina riga",
 	deleteTableColumnLabel: "Elimina colonna"
 })
+	
 

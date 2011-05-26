@@ -1,10 +1,11 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
 <head>
     <title>Drawing Test</title>
-	<link href="../resources/drawing.css" rel="stylesheet" />
-	<link href="../resources/toolbar.css" rel="stylesheet" />
-
 	<style>
+		@import url("../../../dijit/themes/dijit.css");
+		@import url("../../../dojox/drawing/resources/drawing.css");
+		@import url("../../../dojox/drawing/resources/toolbar.css");
+		@import url("../../../dojox/drawing/resources/GreekPalette.css");
 		href, body{
 		}
 		.drawing{
@@ -57,6 +58,7 @@
 		dojo.require("dojox.drawing.ui.dom.Pan");
 		dojo.require("dojox.drawing.ui.dom.Zoom");
 		dojo.require("dojox.drawing.plugins.drawing.Grid");
+		dojo.require("dojox.drawing.plugins.drawing.GreekPalette");
 
 
 		var doExport = function(){
@@ -160,7 +162,7 @@
 		</div>
 
 		<div dojoType="dojox.drawing.Drawing" id="drawingNode" jsId="myDrawing" drawingType="canvas" class="drawing"
-			 plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:100}}]">
+			 plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:100}},{'name':'dojox.drawing.plugins.drawing.GreekPalette'}]">
 
 		</div>
 	</div>

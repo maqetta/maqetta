@@ -1,17 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Editor Test: LinkDialog Plugin</title>
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
@@ -25,8 +25,7 @@
 </head>
 <body class="claro">
 	<div style="border: 1px dotted black;">
-		<div dojoType="dijit.Editor" id="editor"
-			extraPlugins="['createLink', 'insertImage', 'viewSource']">
+		<div id="editor" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["createLink", "insertImage", "viewSource"]'>
 			<ol>
 				<li>The LinkDialog plugin is an 'example' style plugin that shows how to insert basic web links as well as
 				image tags.  This plugin is intended to guide users in qriting their own, more complex, link and image handlers

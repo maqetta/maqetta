@@ -70,22 +70,16 @@
 							widgetClicks = buttonClicks = 0;
 							var d = new doh.Deferred();
 
-							// Keyboard-click with modifier shouldn't do anything
 							doh.robot.sequence(function(){
 								w.domNode.focus();
 							}, 500);
+				
+							// Try shift-space/shift-enter just to make sure it doesn't do anything.
+							// Don't try ctrl-space or meta-space since those keystrokes have special functions
+							// (like context menu) in various browsers
 							doh.robot.keyPress(dojo.keys[key], 100, {shift: true});
-							if(!dojo.isMac){
-								// Don't do this check on mac because ctrl-space causes the context menu to show up
-								doh.robot.keyPress(dojo.keys[key], 100, {ctrl: true});
-							}
 
-							// meta key can open browser menus etc.   let's just not
-							// even try it...
-							//doh.robot.keyPress(dojo.keys[key], 100, {meta: true});
-
-							// Check that ondijitclick fired but no spurious event
-							// on the widget that got focused in the ondijitclick handler
+							// Check that ondijitclick didn't fire
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is(0, widgetClicks, "ondijitclick handler wasn't fired");
 								doh.is(0, buttonClicks, "button click handler wasn't fired");

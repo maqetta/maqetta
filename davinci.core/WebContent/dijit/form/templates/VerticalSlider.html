@@ -2,7 +2,7 @@
 	><tr class="dijitReset"
 		><td class="dijitReset"></td
 		><td class="dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV"
-			><div class="dijitSliderIncrementIconV" tabIndex="-1" style="display:none" dojoAttachPoint="decrementButton"><span class="dijitSliderButtonInner">+</span></div
+			><div class="dijitSliderIncrementIconV" style="display:none" dojoAttachPoint="decrementButton"><span class="dijitSliderButtonInner">+</span></div
 		></td
 		><td class="dijitReset"></td
 	></tr
@@ -15,13 +15,13 @@
 	></tr
 	><tr class="dijitReset"
 		><td dojoAttachPoint="leftDecoration" class="dijitReset dijitSliderDecoration dijitSliderDecorationL dijitSliderDecorationV"></td
-		><td class="dijitReset" style="height:100%;"
+		><td class="dijitReset dijitSliderDecorationC" style="height:100%;"
 			><input dojoAttachPoint="valueNode" type="hidden" ${!nameAttrSetting}
-			/><center class="dijitReset dijitSliderBarContainerV" waiRole="presentation" dojoAttachPoint="sliderBarContainer"
-				><div waiRole="presentation" dojoAttachPoint="remainingBar" class="dijitSliderBar dijitSliderBarV dijitSliderRemainingBar dijitSliderRemainingBarV" dojoAttachEvent="onmousedown:_onBarClick"><!--#5629--></div
-				><div waiRole="presentation" dojoAttachPoint="progressBar" class="dijitSliderBar dijitSliderBarV dijitSliderProgressBar dijitSliderProgressBarV" dojoAttachEvent="onmousedown:_onBarClick"
+			/><center class="dijitReset dijitSliderBarContainerV" role="presentation" dojoAttachPoint="sliderBarContainer"
+				><div role="presentation" dojoAttachPoint="remainingBar" class="dijitSliderBar dijitSliderBarV dijitSliderRemainingBar dijitSliderRemainingBarV" dojoAttachEvent="onmousedown:_onBarClick"><!--#5629--></div
+				><div role="presentation" dojoAttachPoint="progressBar" class="dijitSliderBar dijitSliderBarV dijitSliderProgressBar dijitSliderProgressBarV" dojoAttachEvent="onmousedown:_onBarClick"
 					><div class="dijitSliderMoveable dijitSliderMoveableV" style="vertical-align:top;"
-						><div dojoAttachPoint="sliderHandle,focusNode" class="dijitSliderImageHandle dijitSliderImageHandleV" dojoAttachEvent="onmousedown:_onHandleClick" waiRole="slider" valuemin="${minimum}" valuemax="${maximum}"></div
+						><div dojoAttachPoint="sliderHandle,focusNode" class="dijitSliderImageHandle dijitSliderImageHandleV" dojoAttachEvent="onmousedown:_onHandleClick" role="slider" valuemin="${minimum}" valuemax="${maximum}"></div
 					></div
 				></div
 			></center
@@ -38,7 +38,7 @@
 	><tr class="dijitReset"
 		><td class="dijitReset"></td
 		><td class="dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV"
-			><div class="dijitSliderDecrementIconV" tabIndex="-1" style="display:none" dojoAttachPoint="incrementButton"><span class="dijitSliderButtonInner">-</span></div
+			><div class="dijitSliderDecrementIconV" style="display:none" dojoAttachPoint="incrementButton"><span class="dijitSliderButtonInner">-</span></div
 		></td
 		><td class="dijitReset"></td
 	></tr

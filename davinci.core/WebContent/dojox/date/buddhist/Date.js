@@ -19,7 +19,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 		//
 		// example:
 		// |		var date1 = new dojox.date.buddhist.Date();
-		// |		
+		// |
 		// |		var date2 = new dojox.date.buddhist.Date(date1);
 		// |
 		// |		var date3 = new dojox.date.buddhist.Date(2552,2,12);
@@ -38,13 +38,13 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 				this._date = new Date("");
 			}else{
 				this._year = arg0._year;
-				this._month =  arg0._month;  
+				this._month =  arg0._month;
 				this._date = arg0._date;
 				this._hours = arg0._hours;
 				this._minutes = arg0._minutes;
 				this._seconds = arg0._seconds;
-				this._milliseconds = arg0._milliseconds; 
-			}	
+				this._milliseconds = arg0._milliseconds;
+			}
 		}else if(len >=3){
 			this._year += arguments[0];
 			this._month += arguments[1];
@@ -52,7 +52,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 			
 			if(this._month >11){
 				console.warn("the month is incorrect , set 0");
-				this._month = 0;			
+				this._month = 0;
 			}
 			this._hours += arguments[3] || 0;
 			this._minutes += arguments[4] || 0;
@@ -83,7 +83,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 
 
 	getFullYear: function(){
-		// summary: This function return the Year value 
+		// summary: This function return the Year value
 		//
 		// example:
 		// |		var date1 = new dojox.date.buddhist.Date();
@@ -112,7 +112,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 		return this._milliseconds;
 	},
 
-	setDate: function(/*number*/date){	
+	setDate: function(/*number*/date){
 		// summary: This function sets the Date
 		// example:
 		// |		var date1 = new dojox.date.buddhist.Date();
@@ -124,8 +124,8 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 		}else{
 			var mdays;
 			if(date>0){
-				for(mdays = this._getDaysInMonth(this._month, this._year);	
-					date > mdays; 
+				for(mdays = this._getDaysInMonth(this._month, this._year);
+					date > mdays;
 						date -= mdays,mdays = this._getDaysInMonth(this._month, this._year)){
 					this._month++;
 					if(this._month >= 12){this._year++; this._month -= 12;}
@@ -133,8 +133,8 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 
 				this._date = date;
 			}else{
-				for(mdays = this._getDaysInMonth((this._month-1)>=0 ?(this._month-1) :11 ,((this._month-1)>=0)? this._year: this._year-1);	
-						date <= 0; 
+				for(mdays = this._getDaysInMonth((this._month-1)>=0 ?(this._month-1) :11 ,((this._month-1)>=0)? this._year: this._year-1);
+						date <= 0;
 							mdays = this._getDaysInMonth((this._month-1)>=0 ? (this._month-1) :11,((this._month-1)>=0)? this._year: this._year-1)){
 					this._month--;
 					if(this._month < 0){this._year--; this._month += 12;}
@@ -148,7 +148,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 	},
 	
 	setFullYear: function(/*number*/year, /*number?*/month, /*number?*/ date){
-		// summary: This function set Year 
+		// summary: This function set Year
 		//
 		// example:
 		// |		var date1 = new dojox.date.buddhist.Date();
@@ -205,7 +205,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 		//summary: set the Minutes  frm 0-59
 		while(minutes >= 60){
 			this._hours++;
-			if(this._hours >= 24){		 
+			if(this._hours >= 24){
 				this._date++;
 				this._hours -= 24;
 				var mdays = this._getDaysInMonth(this._month, this._year);
@@ -227,7 +227,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 			if(this._minutes >= 60){
 				this._hours++;
 				this._minutes -= 60;
-				if(this._hours >= 24){		 
+				if(this._hours >= 24){
 					this._date++;
 					this._hours -= 24;
 					var mdays = this._getDaysInMonth(this._month, this._year);
@@ -253,7 +253,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 				if(this._minutes >= 60){
 					this._hours++;
 					this._minutes -= 60;
-					if(this._hours >= 24){		 
+					if(this._hours >= 24){
 						this._date++;
 						this._hours -= 24;
 						var mdays = this._getDaysInMonth(this._month, this._year);
@@ -270,7 +270,7 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 		this._milliseconds = milliseconds;
 	},
 
-	toString: function(){ 
+	toString: function(){
 		// summary: This returns a string representation of the date in "dd, MM, YYYY HH:MM:SS" format
 		return this._date + ", " + this._month + ", " + this._year + "  " + this._hours + ":" + this._minutes + ":" + this._seconds; // String
 	},

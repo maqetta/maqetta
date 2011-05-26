@@ -1,24 +1,27 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Accordion Widget Automated Test</title>
 
 	<!-- only needed for test files: -->
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 
 	<!-- required: the default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+		data-dojo-config="isDebug: true"></script>
 
 	<!-- only needed for alternate theme testing: -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
+
+	<!-- helper methods -->
+	<script type="text/javascript" src="../helpers.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
@@ -54,12 +57,16 @@
 						name: "initially open pane",
 						runTest: function(t){
 							// Pane 2 is initially open
-							var openPanes = dojo.query(".dijitAccordionInnerContainer > .dijitVisible", accordion.containerNode);
+							var openPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+								return node.parentNode.style.display != "none";
+							});
 							t.is(1, openPanes.length, "exactly one open pane");
 							t.is("pane 2", dijit.byNode(openPanes[0]).title, "pane 2 is initially open");
 
 							// And others are closed
-							var closedPanes = dojo.query(".dijitAccordionInnerContainer > .dijitHidden", accordion.containerNode);
+							var closedPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+								return node.parentNode.style.display == "none";
+							});
 							t.is(2, closedPanes.length, "n-1 closed panes");
 						}
 					},
@@ -114,38 +121,66 @@
 						name: "initially open pane (checking again)",
 						runTest: function(t){
 							// Pane 2 is initially open
-							var openPanes = dojo.query(".dijitAccordionInnerContainer > .dijitVisible", accordion.containerNode);
+							var openPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+								return node.parentNode.style.display != "none";
+							});
 							t.is(1, openPanes.length, "exactly one open pane");
 							t.is("pane 2", dijit.byNode(openPanes[0]).title, "pane 2 is initially open");
 
 							// And others are closed
-							var closedPanes = dojo.query(".dijitAccordionInnerContainer > .dijitHidden", accordion.containerNode);
+							var closedPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+								return node.parentNode.style.display == "none";
+							});
 							t.is(3, closedPanes.length, "n-1 closed panes");
 						}
 					},
 					{
 						name: "select new pane",
+						runTest: function(t){
+							// Selecting pane 3 should open it and close pane 1
+
+							// select w/out animation
+							accordion.selectChild(dijit.byId('pane 3'));
+
+							// Pane 3 is now open
+							var openPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+								return node.parentNode.style.display != "none";
+							});
+							t.is(1, openPanes.length, "exactly one open pane");
+							t.is("pane 3", dijit.byNode(openPanes[0]).title, "pane 3 is now open");
+
+							// And others are closed
+							var closedPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+								return node.parentNode.style.display == "none";
+							});
+							t.is(3, closedPanes.length, "n-1 closed panes");
+						}
+					},
+					{
+						name: "select new pane with animation",
 						timeout: 3000,
 						setUp: function(t){
 							// Note that this kicks off an animation so it might be a while before the
 							// bottom setTimeout() fires, likely longer than the 300ms specified
-							accordion.selectChild(dijit.byId('pane 3'));
+							accordion.selectChild(dijit.byId('pane 2'), true);
 						},
 						runTest: function(t){
-							// Selecting pane 3 should open it and close pane 1
+							// Selecting pane 2 should open it and close pane 3
 							var d = new doh.Deferred();
-							setTimeout(d.getTestCallback(
-								function(){
-									// Pane 3 is now open
-									var openPanes = dojo.query(".dijitAccordionInnerContainer > .dijitVisible", accordion.containerNode);
-									t.is(1, openPanes.length, "exactly one open pane");
-									t.is("pane 3", dijit.byNode(openPanes[0]).title, "pane 3 is now open");
+							setTimeout(d.getTestCallback(function(){
+								// Pane 2 is now open
+								var openPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+									return node.parentNode.style.display != "none";
+								});
+								t.is(1, openPanes.length, "exactly one open pane");
+								t.is("pane 2", dijit.byNode(openPanes[0]).title, "pane 3 is now open");
 
-									// And others are closed
-									var closedPanes = dojo.query(".dijitAccordionInnerContainer > .dijitHidden", accordion.containerNode);
-									t.is(3, closedPanes.length, "n-1 closed panes");
-								})
-							, 300);
+								// And others are closed
+								var closedPanes = dojo.query(".dijitAccordionChildWrapper > *", accordion.containerNode).filter(function(node){
+									return node.parentNode.style.display == "none";
+								});
+								t.is(3, closedPanes.length, "n-1 closed panes");
+							}), 300);
 							return d;
 						}
 					},
@@ -158,6 +193,30 @@
 					}
 				]
 			);
+
+			doh.register("child events", function childEvents(t){
+				accordion = new dijit.layout.AccordionContainer({style: "width: 400px; height: 400px;"}).placeAt(dojo.body());
+
+				dojo.forEach([ "a", "b", "c" ], function(title, i){
+					var content = new dijit.layout.ContentPane({id: title, title: title, selected: i==1});
+					content.containerNode.innerHTML = "this is " + title;
+					accordion.addChild(content);
+				});
+				accordion.startup();
+
+				// Change title of a pane, should change corresponding button label			
+				dijit.byId("b").set("title", "b changed");
+				var titles = dojo.query(".dijitAccordionText", accordion.domNode);
+				t.is(3, titles.length, "number of titles");
+				t.is("b changed", titles[1].innerHTML);
+
+				// Change tooltip of a pane, should change corresponding button tooltip			
+				dijit.byId("c").set("tooltip", "c tooltip changed");
+				titles = dojo.query(".dijitAccordionText", accordion.domNode);
+				t.is(3, titles.length, "number of titles");
+				t.is("c tooltip changed", titles[2].title);
+			});
+
 			doh.register("zero children",
 				[
 					{
@@ -216,6 +275,144 @@
 					}
 				]
 			);
+
+			// This section tests that the animation doesn't leave residual height=... settings on the
+			// node that interfere with future operations
+			doh.register("animation",
+				[
+					{
+						name: "create",
+						runTest: function(t){
+							accordion = new dijit.layout.AccordionContainer({style: "width: 400px; height: 400px;"}).placeAt(dojo.body());
+
+							dojo.forEach([ "pane 1", "pane 2", "pane 3" ], function(title, i){
+								var content = new dijit.layout.ContentPane({id: title, title: title, selected: i==1});
+								content.containerNode.innerHTML = "this is " + title;
+								accordion.addChild(content);
+							});
+							accordion.startup();
+
+							// make sure size of selected child is correct						
+							doh.t(dojo.position(accordion.selectedChildWidget.domNode).h > 300, "child height > 300");
+							doh.t(dojo.position(accordion.selectedChildWidget.domNode).h < 400, "child height < 400");
+							doh.is(dojo.marginBox(accordion.selectedChildWidget.domNode).h, dojo.contentBox(accordion.selectedChildWidget._wrapperWidget.containerNode).h, "child height vs. wrapper height")
+						}
+					},
+					{
+						name: "select new pane with animation",
+						timeout: 3000,
+						setUp: function(t){
+							// Note that this kicks off an animation so it might be a while before the
+							// bottom setTimeout() fires, likely longer than the 300ms specified
+							accordion.selectChild(dijit.byId('pane 2'), true);
+						},
+						runTest: function(t){
+							// Selecting pane 2 should open it and close pane 3
+							var d = new doh.Deferred();
+							setTimeout(d.getTestCallback(function(){
+								doh.is("pane 2", accordion.selectedChildWidget.title);
+
+								// make sure size of selected child is correct						
+								doh.t(dojo.position(accordion.selectedChildWidget.domNode).h > 300, "child height > 300");
+								doh.t(dojo.position(accordion.selectedChildWidget.domNode).h < 400, "child height < 400");
+								doh.is(dojo.marginBox(accordion.selectedChildWidget.domNode).h, dojo.contentBox(accordion.selectedChildWidget._wrapperWidget.containerNode).h, "child height vs. wrapper height")
+							}), 300);
+							return d;
+						}
+					},
+
+					// Make sure that the animation didn't leave a residual height: 1px that affect
+					// pane #1 when it is reselected w/out an animation
+					{
+						name: "remove pane #2, reselecting pane #1",
+						runTest: function(t){
+							accordion.removeChild(dijit.byId("pane 2"));
+
+							doh.is("pane 1", accordion.selectedChildWidget.title);
+
+							// make sure size of selected child is correct						
+							doh.t(dojo.position(accordion.selectedChildWidget.domNode).h > 300, "child height > 300");
+							doh.t(dojo.position(accordion.selectedChildWidget.domNode).h < 400, "child height < 400");
+							doh.is(dojo.marginBox(accordion.selectedChildWidget.domNode).h, dojo.contentBox(accordion.selectedChildWidget._wrapperWidget.containerNode).h, "child height vs. wrapper height")
+						}
+					},
+					{
+						name: "select pane #3 with animation",
+						timeout: 3000,
+						setUp: function(t){
+							// Note that this kicks off an animation so it might be a while before the
+							// bottom setTimeout() fires, likely longer than the 300ms specified
+							accordion.selectChild(dijit.byId('pane 3'), true);
+						},
+						runTest: function(t){
+							// Selecting pane 2 should open it and close pane 3
+							var d = new doh.Deferred();
+							setTimeout(d.getTestCallback(function(){
+								doh.is("pane 3", accordion.selectedChildWidget.title);
+
+								// make sure size of selected child is correct						
+								doh.t(dojo.position(accordion.selectedChildWidget.domNode).h > 300, "child height > 300");
+								doh.t(dojo.position(accordion.selectedChildWidget.domNode).h < 400, "child height < 400");
+								doh.is(dojo.marginBox(accordion.selectedChildWidget.domNode).h, dojo.contentBox(accordion.selectedChildWidget._wrapperWidget.containerNode).h, "child height vs. wrapper height")
+							}), 300);
+							return d;
+						}
+					},
+
+					// Make sure that the wipe-in animation didn't leave a residual height: 300px type
+					// setting that will interfere with resizing
+					{
+						name: "resize",
+						timeout: 3000,
+						runTest: function(t){
+							accordion.resize({h: 200});
+
+							// make sure size of selected child is correct						
+							doh.t(dojo.position(accordion.selectedChildWidget.domNode).h > 100, "child height > 150");
+							doh.t(dojo.position(accordion.selectedChildWidget.domNode).h < 200, "child height < 200");
+							doh.is(dojo.marginBox(accordion.selectedChildWidget.domNode).h, dojo.contentBox(accordion.selectedChildWidget._wrapperWidget.containerNode).h, "child height vs. wrapper height")
+						}
+					}
+				]
+			);
+
+			doh.register("destroy", [
+				function setUp(){
+					accPane = new dijit.layout.ContentPane({
+						id: "accPane",
+						onContentError: function(msg){
+							throw new Error(msg);
+						}
+					});
+					accPane.placeAt(dojo.body());
+					html='<div data-dojo-type="dijit.layout.AccordionContainer" id="Accordion" style="height: 300px;">' +
+						 	'<div data-dojo-type="dijit.layout.ContentPane" title="first" id="first">' +
+								'<div data-dojo-type=dijit.form.Button id=myButton>hello world</div></div>' +
+						 	'<div data-dojo-type="dijit.layout.ContentPane" title="second" id="second">second</div>' +
+							'</div>';
+				},
+
+				function destroyUnstarted(){
+					// Since the wrapper ContentPane hasn't been started yet, the Accordion won't be started, and wrapper
+					// (AccordionInnerContainer) widgets won't be created...
+					accPane.set("content", html);
+					doh.t(dojo.byId("Accordion"), "accordion created #1");
+					accPane.set("content", html); //setting the content twice will initiate a destroy
+					dijit.byId("Accordion").destroy();
+					doh.is(undefined, dojo.byId("Accordion"), "accordion destroyed #1");
+				},
+				
+				function destroyStarted(){
+					// Try same tests again when wrapper ContentPane is started
+					accPane.startup();
+
+					accPane.set("content", html);
+					doh.t(dojo.byId("Accordion"), "accordion created #2");
+					accPane.set("content", html); //setting the content twice will initiate a destroy
+					dijit.byId("Accordion").destroy();
+					doh.is(undefined, dojo.byId("Accordion"), "accordion destroyed #2");
+				}
+			]);
 
 			doh.run();
 		});

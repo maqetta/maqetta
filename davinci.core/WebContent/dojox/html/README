@@ -14,7 +14,6 @@ Credits
 	Tom Trenka (ttrenka AT gmail.com)
 	Bryan Forbes (bryan AT reigndropsfall.net)
 	Mike Wilcox - dojox.html.styles (anm8tr AT yahoo.com)
-	Nathan Toone - dojox.html.ellipsis (toonetown AT dojotoolkit.org)
 	Jared Jurkiewicz - dojox.html.entites, dojox.html.format (jared.jurkiewicz AT gmail.com)
 -------------------------------------------------------------------------------
 Project description
@@ -25,8 +24,7 @@ measurement routines aren't used by the majority of developers, but are complex
 enough to not be duplicated.
 Styles adds the ability to create and remove dynamic cssRules, as well as 
 manipulate document style sheets.
-Ellipsis adds some css definitions and dojo.behavior rules (for FF) to support
-text-overflow: ellipsis
+Ellipsis adds support to match text-overflow: ellipsis for Firefox.
 -------------------------------------------------------------------------------
 Dependencies:
 

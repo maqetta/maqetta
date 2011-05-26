@@ -6,9 +6,9 @@ dojo.require("dojox.gfx.path");
 
 (function(){
 	var d = dojo, g = dojox.gfx, gs = g.shape, svg = g.svg;
-	svg.useSvgWeb = (typeof(window.svgweb)!=='undefined');
+	svg.useSvgWeb = (typeof window.svgweb != "undefined");
 	
-	var _createElementNS = function(ns, nodeType){
+	function _createElementNS(ns, nodeType){
 		// summary:
 		//		Internal helper to deal with creating elements that
 		//		are namespaced.  Mainly to get SVG markup output
@@ -20,18 +20,18 @@ dojo.require("dojox.gfx.path");
 		}
 	}
 	
-	var _createTextNode = function(text) {
-		if (svg.useSvgWeb) {
+	function _createTextNode(text){
+		if(svg.useSvgWeb){
 			return dojo.doc.createTextNode(text, true);
-		} else {
+		}else{
 			return dojo.doc.createTextNode(text);
 		}
 	}
 	
-	var _createFragment = function() {
-		if (svg.useSvgWeb) {
+	function _createFragment(){
+		if(svg.useSvgWeb){
 			return dojo.doc.createDocumentFragment(true);
-		} else {
+		}else{
 			return dojo.doc.createDocumentFragment();
 		}
 	}
@@ -70,7 +70,7 @@ dojo.require("dojox.gfx.path");
 		longdashdotdot:		[8, 3, 1, 3, 1, 3]
 	};
 
-	d.extend(g.Shape, {
+	d.declare("dojox.gfx.svg.Shape", gs.Shape, {
 		// summary: SVG-specific implementation of dojox.gfx.Shape methods
 
 		setFill: function(fill){
@@ -284,7 +284,9 @@ dojo.require("dojox.gfx.path");
 			//	or dojox.gfx.defaultImage)
 			this.shape = g.makeParameters(this.shape, newShape);
 			for(var i in this.shape){
-				if(i != "type"){ this.rawNode.setAttribute(i, this.shape[i]); }
+				if(i != "type"){
+					this.rawNode.setAttribute(i, this.shape[i]);
+				}
 			}
 			this.bbox = null;
 			return this;	// self
@@ -304,11 +306,11 @@ dojo.require("dojox.gfx.path");
 		}
 	});
 
-	dojo.declare("dojox.gfx.Group", g.Shape, {
+	dojo.declare("dojox.gfx.svg.Group", svg.Shape, {
 		// summary: a group shape (SVG), which can be used
 		//	to logically group shapes (e.g, to propagate matricies)
 		constructor: function(){
-			svg.Container._init.call(this);
+			gs.Container._init.call(this);
 		},
 		setRawNode: function(rawNode){
 			// summary: sets a raw SVG node to be used by this shape
@@ -316,9 +318,9 @@ dojo.require("dojox.gfx.path");
 			this.rawNode = rawNode;
 		}
 	});
-	g.Group.nodeType = "g";
+	svg.Group.nodeType = "g";
 
-	dojo.declare("dojox.gfx.Rect", gs.Rect, {
+	dojo.declare("dojox.gfx.svg.Rect", [svg.Shape, gs.Rect], {
 		// summary: a rectangle shape (SVG)
 		setShape: function(newShape){
 			// summary: sets a rectangle shape object (SVG)
@@ -326,7 +328,9 @@ dojo.require("dojox.gfx.path");
 			this.shape = g.makeParameters(this.shape, newShape);
 			this.bbox = null;
 			for(var i in this.shape){
-				if(i != "type" && i != "r"){ this.rawNode.setAttribute(i, this.shape[i]); }
+				if(i != "type" && i != "r"){
+					this.rawNode.setAttribute(i, this.shape[i]);
+				}
 			}
 			if(this.shape.r){
 				this.rawNode.setAttribute("ry", this.shape.r);
@@ -335,18 +339,18 @@ dojo.require("dojox.gfx.path");
 			return this;	// self
 		}
 	});
-	g.Rect.nodeType = "rect";
+	svg.Rect.nodeType = "rect";
 
-	g.Ellipse = gs.Ellipse;
-	g.Ellipse.nodeType = "ellipse";
+	dojo.declare("dojox.gfx.svg.Ellipse", [svg.Shape, gs.Ellipse], {});
+	svg.Ellipse.nodeType = "ellipse";
 
-	g.Circle = gs.Circle;
-	g.Circle.nodeType = "circle";
+	dojo.declare("dojox.gfx.svg.Circle", [svg.Shape, gs.Circle], {});
+	svg.Circle.nodeType = "circle";
 
-	g.Line = gs.Line;
-	g.Line.nodeType = "line";
+	dojo.declare("dojox.gfx.svg.Line", [svg.Shape, gs.Line], {});
+	svg.Line.nodeType = "line";
 
-	dojo.declare("dojox.gfx.Polyline", gs.Polyline, {
+	dojo.declare("dojox.gfx.svg.Polyline", [svg.Shape, gs.Polyline], {
 		// summary: a polyline/polygon shape (SVG)
 		setShape: function(points, closed){
 			// summary: sets a polyline/polygon shape object (SVG)
@@ -371,9 +375,9 @@ dojo.require("dojox.gfx.path");
 			return this;	// self
 		}
 	});
-	g.Polyline.nodeType = "polyline";
+	svg.Polyline.nodeType = "polyline";
 
-	dojo.declare("dojox.gfx.Image", gs.Image, {
+	dojo.declare("dojox.gfx.svg.Image", [svg.Shape, gs.Image], {
 		// summary: an image (SVG)
 		setShape: function(newShape){
 			// summary: sets an image shape object (SVG)
@@ -382,16 +386,18 @@ dojo.require("dojox.gfx.path");
 			this.bbox = null;
 			var rawNode = this.rawNode;
 			for(var i in this.shape){
-				if(i != "type" && i != "src"){ rawNode.setAttribute(i, this.shape[i]); }
+				if(i != "type" && i != "src"){
+					rawNode.setAttribute(i, this.shape[i]);
+				}
 			}
 			rawNode.setAttribute("preserveAspectRatio", "none");
 			rawNode.setAttributeNS(svg.xmlns.xlink, "xlink:href", this.shape.src);
 			return this;	// self
 		}
 	});
-	g.Image.nodeType = "image";
+	svg.Image.nodeType = "image";
 
-	dojo.declare("dojox.gfx.Text", gs.Text, {
+	dojo.declare("dojox.gfx.svg.Text", [svg.Shape, gs.Text], {
 		// summary: an anchored text (SVG)
 		setShape: function(newShape){
 			// summary: sets a text shape object (SVG)
@@ -441,14 +447,14 @@ else
 			return _width;
 		}
 	});
-	g.Text.nodeType = "text";
+	svg.Text.nodeType = "text";
 
-	dojo.declare("dojox.gfx.Path", g.path.Path, {
+	dojo.declare("dojox.gfx.svg.Path", [svg.Shape, g.path.Path], {
 		// summary: a path shape (SVG)
 		_updateWithSegment: function(segment){
 			// summary: updates the bounding box of path with new segment
 			// segment: Object: a segment
-			g.Path.superclass._updateWithSegment.apply(this, arguments);
+			this.inherited(arguments);
 			if(typeof(this.shape.path) == "string"){
 				this.rawNode.setAttribute("d", this.shape.path);
 			}
@@ -456,25 +462,29 @@ else
 		setShape: function(newShape){
 			// summary: forms a path using a shape (SVG)
 			// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
-			g.Path.superclass.setShape.apply(this, arguments);
-			this.rawNode.setAttribute("d", this.shape.path);
+			this.inherited(arguments);
+			if(this.shape.path){
+				this.rawNode.setAttribute("d", this.shape.path);
+			}else{
+				this.rawNode.removeAttribute("d");
+			}
 			return this;	// self
 		}
 	});
-	g.Path.nodeType = "path";
+	svg.Path.nodeType = "path";
 
-	dojo.declare("dojox.gfx.TextPath", g.path.TextPath, {
+	dojo.declare("dojox.gfx.svg.TextPath", [svg.Shape, g.path.TextPath], {
 		// summary: a textpath shape (SVG)
 		_updateWithSegment: function(segment){
 			// summary: updates the bounding box of path with new segment
 			// segment: Object: a segment
-			g.Path.superclass._updateWithSegment.apply(this, arguments);
+			this.inherited(arguments);
 			this._setTextPath();
 		},
 		setShape: function(newShape){
 			// summary: forms a path using a shape (SVG)
 			// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
-			g.Path.superclass.setShape.apply(this, arguments);
+			this.inherited(arguments);
 			this._setTextPath();
 			return this;	// self
 		},
@@ -538,12 +548,12 @@ else
 			r.firstChild.data = t.text;
 		}
 	});
-	g.TextPath.nodeType = "text";
+	svg.TextPath.nodeType = "text";
 
-	dojo.declare("dojox.gfx.Surface", gs.Surface, {
+	dojo.declare("dojox.gfx.svg.Surface", gs.Surface, {
 		// summary: a surface object to be used for drawings (SVG)
 		constructor: function(){
-			svg.Container._init.call(this);
+			gs.Container._init.call(this);
 		},
 		destroy: function(){
 			this.defNode = null;	// release the external reference
@@ -567,13 +577,13 @@ else
 		}
 	});
 
-	g.createSurface = function(parentNode, width, height){
+	svg.createSurface = function(parentNode, width, height){
 		// summary: creates a surface (SVG)
 		// parentNode: Node: a parent node
 		// width: String: width of surface, e.g., "100px"
 		// height: String: height of surface, e.g., "100px"
 
-		var s = new g.Surface();
+		var s = new svg.Surface();
 		s.rawNode = _createElementNS(svg.xmlns.svg, "svg");
 		if(width){
 			s.rawNode.setAttribute("width",  width);
@@ -594,7 +604,7 @@ else
 
 	// Extenders
 
-	svg.Font = {
+	var Font = {
 		_setFont: function(){
 			// summary: sets a font object (SVG)
 			var f = this.fontStyle;
@@ -608,10 +618,7 @@ else
 		}
 	};
 
-	svg.Container = {
-		_init: function(){
-			gs.Container._init.call(this);
-		},
+	var C = gs.Container, Container = {
 		openBatch: function() {
 			// summary: starts a new batch, subsequent new child shapes will be held in
 			//	the batch instead of appending to the container directly
@@ -633,9 +640,7 @@ else
 				} else {
 					this.rawNode.appendChild(shape.rawNode);
 				}
-				//dojox.gfx.Group.superclass.add.apply(this, arguments);
-				//this.inherited(arguments);
-				gs.Container.add.apply(this, arguments);
+				C.add.apply(this, arguments);
 			}
 			return this;	// self
 		},
@@ -650,9 +655,7 @@ else
 				if(this.fragment && this.fragment == shape.rawNode.parentNode){
 					this.fragment.removeChild(shape.rawNode);
 				}
-				//dojox.gfx.Group.superclass.remove.apply(this, arguments);
-				//this.inherited(arguments);
-				gs.Container.remove.apply(this, arguments);
+				C.remove.apply(this, arguments);
 			}
 			return this;	// self
 		},
@@ -669,14 +672,13 @@ else
 				}
 				r.appendChild(defNode);
 			}
-			//return this.inherited(arguments);	// self
-			return gs.Container.clear.apply(this, arguments);
+			return C.clear.apply(this, arguments);
 		},
-		_moveChildToFront: gs.Container._moveChildToFront,
-		_moveChildToBack:  gs.Container._moveChildToBack
+		_moveChildToFront: C._moveChildToFront,
+		_moveChildToBack:  C._moveChildToBack
 	};
 
-	d.mixin(gs.Creator, {
+	var Creator = {
 		// summary: SVG shape creators
 		createObject: function(shapeType, rawShape){
 			// summary: creates an instance of the passed shapeType class
@@ -692,27 +694,28 @@ else
 			this.add(shape);
 			return shape;	// dojox.gfx.Shape
 		}
-	});
+	};
 
-	d.extend(g.Text, svg.Font);
-	d.extend(g.TextPath, svg.Font);
+	d.extend(svg.Text, Font);
+	d.extend(svg.TextPath, Font);
 
-	d.extend(g.Group, svg.Container);
-	d.extend(g.Group, gs.Creator);
+	d.extend(svg.Group, Container);
+	d.extend(svg.Group, gs.Creator);
+	d.extend(svg.Group, Creator);
 
-	d.extend(g.Surface, svg.Container);
-	d.extend(g.Surface, gs.Creator);
+	d.extend(svg.Surface, Container);
+	d.extend(svg.Surface, gs.Creator);
+	d.extend(svg.Surface, Creator);
 
 
 	// some specific override for svgweb + flash
-	if (svg.useSvgWeb) {
-		
+	if(svg.useSvgWeb){
 		// override createSurface()
-		g.createSurface = function(parentNode, width, height) {
-			var s = new g.Surface();
+		svg.createSurface = function(parentNode, width, height){
+			var s = new svg.Surface();
 
 			// ensure width / height
-			if (!width || !height) {
+			if(!width || !height){
 				var pos = d.position(parentNode);
 				width  = width  || pos.w;
 				height = height || pos.h;
@@ -730,7 +733,7 @@ else
 			svgweb.appendChild(mockSvg, parentNode);
 
 			// notice: any call to the raw node before flash init will fail.
-			mockSvg.addEventListener('SVGLoad', function() {
+			mockSvg.addEventListener('SVGLoad', function(){
 				// become loaded
 				s.rawNode = this;
 				s.isLoaded = true;
@@ -748,35 +751,43 @@ else
 			// flash not loaded yet
 			s.isLoaded = false;
 			return s;
-		}
+		};
 		
 		// override Surface.destroy()
-		dojo.extend(dojox.gfx.shape.Surface, {
-			destroy: function() {
+		svg.Surface.extend({
+			destroy: function(){
 				var mockSvg = this.rawNode;
 				svgweb.removeChild(mockSvg, mockSvg.parentNode);
 			}
 		});
 
 		// override connect() & disconnect() for Shape & Surface event processing
-		gs._eventsProcessing.connect = function(name, object, method) {
-			// connect events using the mock addEventListener() provided by svgweb
-			if (name.substring(0, 2)==='on') { name = name.substring(2); }
-			if (arguments.length == 2) {
-				method = object;
-			} else {
-				method = d.hitch(object, method);
+		var _eventsProcessing = {
+			connect: function(name, object, method){
+				// connect events using the mock addEventListener() provided by svgweb
+				if (name.substring(0, 2)==='on') { name = name.substring(2); }
+				if (arguments.length == 2) {
+					method = object;
+				} else {
+					method = d.hitch(object, method);
+				}
+				this.getEventSource().addEventListener(name, method, false);
+				return [this, name, method];
+			},
+			disconnect: function(token){
+				// disconnect events using the mock removeEventListener() provided by svgweb
+				this.getEventSource().removeEventListener(token[1], token[2], false);
+				delete token[0];
 			}
-			this.getEventSource().addEventListener(name, method, false);
-			return [this, name, method];
-		}
-		gs._eventsProcessing.disconnect = function(token) {
-			// disconnect events using the mock removeEventListener() provided by svgweb
-			this.getEventSource().removeEventListener(token[1], token[2], false);
-			delete token[0];
-		}
-		dojo.extend(dojox.gfx.Shape, dojox.gfx.shape._eventsProcessing);
-		dojo.extend(dojox.gfx.shape.Surface, dojox.gfx.shape._eventsProcessing);
+		};
+		
+		dojo.extend(svg.Shape, _eventsProcessing);
+		dojo.extend(svg.Surface, _eventsProcessing);
 	}
 
+	// see if we are required to initilize
+	if(g.loadAndSwitch === "svg"){
+		g.switchTo("svg");
+		delete g.loadAndSwitch;
+	}
 })();

@@ -27,7 +27,7 @@ dojo.require("dojo.io.iframe");
 		},
 
 		_fixAttachUrl: function(/*String*/url){
-			//summary: fixes the URL so that 		
+			//summary: fixes the URL so that
 		},
 
 		_loaded: function(/*String*/frameId){

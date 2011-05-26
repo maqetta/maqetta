@@ -25,7 +25,7 @@ dojo.provide("dojox.drawing.manager.StencilUI");
 		},
 		{
 			register: function(/*Object*/stencil){
-				this.stencils[stencil.id] = stencil;	
+				this.stencils[stencil.id] = stencil;
 				return stencil;
 			},
 			onUiDown: function(/*EventObject*/obj){

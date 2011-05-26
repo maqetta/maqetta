@@ -20,7 +20,7 @@ tests.register("dojox.cometd.tests._base", [
 		dojox.cometd.subscribe("/basic/unit/test", function(e){
 			console.log("message received", e);
 		});
-		t.assertTrue(true);		
+		t.assertTrue(true);
 	},
 
 	function basicPublishCheck(t){

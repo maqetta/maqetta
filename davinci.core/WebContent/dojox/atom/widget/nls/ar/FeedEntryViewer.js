@@ -5,7 +5,7 @@
 	contributors: "المساهمين",
 	id: "الكود",
 	close: "[اغلاق]",
-	updated: "تعديل في",
+	updated: "تحديث في",
 	summary: "الملخص",
-	content: "محتويات"
+	content: "المحتويات"
 })

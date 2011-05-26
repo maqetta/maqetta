@@ -1,4 +1,4 @@
 .claro .dijitSelectRtl .dijitButtonContents {
-	border-right-width: 0px;
-	border-left-width: 1px;
+  border-right-width: 0;
+  border-left-width: 1px;
 }

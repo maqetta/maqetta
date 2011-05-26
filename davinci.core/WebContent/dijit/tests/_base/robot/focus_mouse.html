@@ -22,18 +22,33 @@
 				function resetEvents(){
 					focusEvents = {};
 					blurEvents = {};
+					focusedState = {};
+					focusedWatchLog = {};
 				}
 				resetEvents();
 
 				doh.register("Dijit focus manager tests", [
 
 					function setUp(){
-						dojo.forEach(["form", "fieldset1", "fieldset2", "select", "editor"], function(id){
-							dojo.connect(dijit.byId(id), "_onFocus", function(){
+						dojo.forEach(["form", "fieldset1", "fieldset2", "select", "editor", "spinner"], function(id){
+							var w = dijit.byId(id);
+
+							// old API is to connect to onFocus/onBlur (remove in 2.0)
+							dojo.connect(w, "onFocus", function(){
 								focusEvents[id] = true;
 							});
-							dojo.connect(dijit.byId(id), "_onBlur", function(){
+							dojo.connect(w, "onBlur", function(){
 								blurEvents[id] = true;
+							});
+
+							// new API is to watch "focused" attribute
+							w.watch("focused", function(name, oldValue, newValue){
+								// keep track of current state
+								focusedState[name] = newValue;
+
+								// keep log of every watch notification
+								var nvs = newValue ? "focused" : "blurred";
+								focusedWatchLog[w.id] = !focusedWatchLog[w.id] ? nvs : focusedWatchLog[w.id] + ", " + nvs;
 							});
 						});
 					},
@@ -59,6 +74,9 @@
 								// And that the dijit.form.Form widget is marked as
 								// being "in focus"
 								doh.t(focusEvents["form"], "form focused");
+								
+								// And that it got one watch event
+								doh.is("focused", focusedWatchLog["form"], "watch callback");
 							}), 500);
 
 							return d;
@@ -72,10 +90,7 @@
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
-
-							dijit.byId("select").focus();
-
-							doh.robot.sequence(d.getTestCallback(function(){
+							handle = dojo.connect(dijit.byId("select").focusNode, "onfocus", d.getTestCallback(function(){
 								// Focus goes to an <input> node deep inside of select.domNode,
 								// but that <input> node has the id of the widget
 								doh.is(dojo.byId("select"), dojo.global.dijit._curFocus);
@@ -92,9 +107,17 @@
 								doh.f(blurEvents["form"], "form wasn't blurred");
 								doh.t(focusEvents["fieldset1"], "fieldset1 focused");
 								doh.t(focusEvents["select"], "select focused");
-							}), 500);
+								
+								doh.f(focusedWatchLog["form"], "form watch callback (no new notification)");
+								doh.is("focused", focusedWatchLog["fieldset1"], "fieldset watch callback");
+								doh.is("focused", focusedWatchLog["select"], "select watch callback");
+							}));
+							dijit.byId("select").focus();
 
 							return d;
+						},
+						tearDown: function(){
+							dojo.disconnect(handle);
 						}
 					},
 					{
@@ -120,6 +143,11 @@
 								doh.f(blurEvents["form"], "form wasn't blurred");
 								doh.t(blurEvents["fieldset1"], "fieldset no longer focused");
 								doh.t(focusEvents["editor"], "editor focused");
+
+								doh.f(focusedWatchLog["form"], "form watch callback (no new notification)");
+								doh.is("blurred", focusedWatchLog["fieldset1"], "fieldset watch callback, no longer focused");
+								doh.is("blurred", focusedWatchLog["select"], "select watch callback, no longer focused");
+								doh.is("focused", focusedWatchLog["editor"], "editor watch callback");
 							}), 500);
 
 							return d;
@@ -147,19 +175,24 @@
 								doh.is("form", stack[0], "grandparent of spinner");
 								doh.is("fieldset2", stack[1], "parent of spinner");
 								doh.is("spinner", stack[2], "spinner itself (last in stack)");
+
+								// check watch callbacks
+								doh.f(focusedWatchLog["form"], "grandparent of spinner stayed focused, so no new watch event (watch)");
+								doh.is("focused", focusedWatchLog["fieldset2"], "parent of spinner (watch)");
+								doh.is("focused", focusedWatchLog["spinner"], "spinner (watch)");
 							}), 500);
 
 							return d;
 						}
-					},
-
+					}/*,
+					// FIXME: this test is invalid because focus is not designed to change on mouse click to the first item in the menu
 					{
 						name: "combo button menu",
 						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							var button = dojo.query("#button .dijitDownArrowButton")[0];
+							var button = dijit.byId('button').focusNode;
 							doh.t(button, "found drop down button");
 
 							doh.robot.mouseMoveAt(button);
@@ -167,7 +200,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Focus goes to an first item in the drop down menu
-								doh.is(dojo.byId("mi1"), dojo.global.dijit._curFocus);
+								doh.is(dojo.byId("mi1").id, dojo.global.dijit._curFocus.id);
 
 								// The focus stack should show the ComboBox plus all parent widgets
 								var stack = dojo.global.dijit._activeStack;
@@ -178,11 +211,14 @@
 								doh.is("button", stack[2], "combobutton");
 								doh.is("menu", stack[3], "menu");
 								doh.is("mi1", stack[4], "menuitem");
-							}), 1000);
+							}), 500);
 
 							return d;
+						},
+						tearDown: function(){
+							dojo.disconnect(handle);
 						}
-					}
+					}*/
 
 /*
 					// Commented out because

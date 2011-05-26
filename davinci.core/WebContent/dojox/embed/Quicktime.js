@@ -128,7 +128,7 @@ dojo.provide("dojox.embed.Quicktime");
 
 	dojox.embed.Quicktime=function(/* dojox.embed.__QTArgs */kwArgs, /* DOMNode */node){
 		//	summary:
-		//		Returns a reference to the HTMLObject/HTMLEmbed that is created to 
+		//		Returns a reference to the HTMLObject/HTMLEmbed that is created to
 		//		place the movie in the document.  You can use this either with or
 		//		without the new operator.  Note that with any other DOM manipulation,
 		//		you must wait until the document is finished loading before trying
@@ -175,7 +175,7 @@ dojo.provide("dojox.embed.Quicktime");
 		//	initialized: Boolean
 		//		Whether or not the QuickTime engine is available for use.
 		//	onInitialize: Function
-		//		A stub you can connect to if you are looking to fire code when the 
+		//		A stub you can connect to if you are looking to fire code when the
 		//		engine becomes available.  A note: do NOT use this stub to embed
 		//		a movie in your document; this WILL be fired before DOMContentLoaded
 		//		is fired, and you will get an error.  You should use dojo.addOnLoad
@@ -186,8 +186,8 @@ dojo.provide("dojox.embed.Quicktime");
 		supported: installed,
 		version: qtVersion,
 		initialized: false,
-		onInitialize: function(){ 
-			dojox.embed.Quicktime.initialized = true; 
+		onInitialize: function(){
+			dojox.embed.Quicktime.initialized = true;
 		},	//	stub function to let you know when this is ready
 
 		place: function(kwArgs, node){
@@ -255,7 +255,9 @@ dojo.provide("dojox.embed.Quicktime");
 		}
 		getVer();
 	}else if(d.isIE && installed){
-		// we already know if IE has QuickTime installed
-		dojox.embed.Quicktime.onInitialize();
+		// we already know if IE has QuickTime installed, but we need this to seem like a callback.
+		setTimeout(function(){
+			dojox.embed.Quicktime.onInitialize();
+		}, 10);
 	}
 })(dojo);

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Tučné',
 	'copy': 'Kopírovat',
@@ -38,11 +40,12 @@
 	'fontSize': 'Velikost písma',
 	'fontName': 'Název písma',
 	'tabIndent': 'Odsazení tabulátoru',
-	"fullScreen": "Přepnout režim celé obrazovky",
-	"viewSource": "Zobrazit zdroj ve formátu HTML",
+	"fullScreen": "Přepnout celou obrazovku",
+	"viewSource": "Zobrazit zdroj HTML",
 	"print": "Tisk",
 	"newPage": "Nová stránka",
 	/* Error messages */
 	'systemShortcut': 'Akce "${0}" je v prohlížeči dostupná pouze prostřednictvím klávesové zkratky. Použijte klávesovou zkratku ${1}.'
 })
-
+//end v1.x content
+);

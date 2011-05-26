@@ -7,7 +7,7 @@
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
-<!--<script type="text/javascript" src="../vml.js"></script>-->
+<script type="text/javascript" src="../vml.js"></script>
 <!--<script type="text/javascript" src="../svg.js"></script>-->
 <!--<script type="text/javascript" src="../silverlight.js"></script>-->
 <script type="text/javascript">
@@ -15,14 +15,17 @@ dojo.require("dojox.gfx");
 dojo.require("dojox.gfx.move");
 dojo.require("dojo.colors");
 
-makeShapes = function(){
-    var g = dojox.gfx;
-	var surface = g.createSurface("test", 800, 600)
-    var rect1 = surface.createRect({x: 100, y: 100, width: 300, height: 200, r: 50}).setFill("red").setStroke("black");
-	new g.Moveable(rect1);
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("test", 800, 600);
+	surface.whenLoaded(makeShapes);
 };
 
-dojo.addOnLoad(makeShapes);
+makeShapes = function(surface){
+    var rect1 = surface.createRect({x: 100, y: 100, width: 300, height: 200, r: 50}).setFill("red").setStroke("black");
+	new dojox.gfx.Moveable(rect1);
+};
+
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

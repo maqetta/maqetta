@@ -1,11 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Dialog Widget Dojo Tests</title>
 
 	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
+		@import "../themes/claro/document.css";
 		@import "css/dijitTests.css";
 
 		form { margin-bottom : 0; }
@@ -15,11 +15,11 @@
 	</style>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<!-- not needed, for testing alternate themes -->
 	<script type="text/javascript" src="_testCommon.js"></script>
@@ -40,12 +40,6 @@
 		dojo.require("dijit.Menu");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
-		// create a do nothing, only for test widget
-		dojo.declare("dijit.TestWidget",
-			[dijit._Widget, dijit._Templated], {
-			templateString: "<div style='margin: 10px; border: inset #700 4px; padding: 5px;' dojoAttachPoint='containerNode'></div>"
-		});
-
 		// make dojo.toJson() print dates correctly (this feels a bit dirty)
 		Date.prototype.json = function(){ return dojo.date.stamp.toISOString(this, {selector: 'date'});};
 
@@ -62,9 +56,7 @@
 			}
 			setTimeout(function(){ thirdDlg.show(); },"3000");
 		}
-		dojo.addOnLoad(function(){
-			dojo.subscribe("focusNode", function(node){ console.log("focused on " + (node?(node.id||node.tagName):"nothing"));});
-		});
+
 		function open2Dialogs(){
 			dijit.byId('dialog1').show();
 			setTimeout(dojo.hitch(dijit.byId('fifthDlg'), 'show'), 1000);
@@ -74,46 +66,46 @@
 <body class="claro">
 
 	<h1 class="testTitle">Dijit layout.Dialog tests</h1>
-	<button dojoType="dijit.form.Button"  id="dialog1button" onclick="dijit.byId('dialog1').show()">Show Dialog</button> |
+	<button id="dialog1button" data-dojo-type="dijit.form.Button"  data-dojo-props='onClick:function(){ dijit.byId("dialog1").show() }'>Show Dialog</button> |
 
-	<div dojoType="dijit.Dialog" id="dialog1" title="First Dialog"
-			aria-describedby="intro"
-			onfocus="console.log('user focus handler')"
-			onblur="console.log('user blur handler')"
-			execute="console.log('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	<div id="dialog1" data-dojo-type="dijit.Dialog" data-dojo-props='title:"First Dialog",
+			"aria-describedby":"intro",
+			onFocus:function(){ console.log("user focus handler") },
+			onBlur:function(){ console.log("user blur handler") },
+			execute:function(args){ console.log("submitted w/args:\n" + dojo.toJson(args, true)); }'>
 		<div id="intro" style="width:30em;">Introductory information spoken by screen reader if aria-describedby is
 		added to the declaration of dialog above with value equal to the id of the container element for this text. This technique
 		will work in Dojo 1.4. </div>
-		<table>
+		<table style="position:relative;">
 			<tr>
 				<td><label for="name">Name: </label></td>
-				<td><input dojoType=dijit.form.TextBox type="text" name="name" id="name"></td>
+				<td><input id="name" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", name:"name" '/></td>
 			</tr>
 			<tr>
 				<td><label for="loc">Location: </label></td>
-				<td><input dojoType=dijit.form.TextBox type="text" name="loc" id="loc"></td>
+				<td><input id="loc" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", name:"loc" '/></td>
 			</tr>
 			<tr>
 				<td><label for="date">Date: </label></td>
-				<td><input dojoType=dijit.form.DateTextBox type="text" name="date" id="date"></td>
+				<td><input id="date" data-dojo-type="dijit.form.DateTextBox" data-dojo-props='type:"text", name:"date" '/></td>
 			</tr>
 			<tr>
-				<td><label for="time">Time: </label></td>
-				<td><div dojoType="dijit.InlineEditBox" editor=dijit.form.TimeTextBox type="text" name="time" id="time" width="100px" style="width:100px;"></div></td>
+				<td><label>Time: </label></td>
+				<td><div id="time" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:"dijit.form.TimeTextBox", editorParams:{type:"text", name:"time"}, width:"100px", style:"width:100px;"'></div></td>
 			</tr>
 			<tr>
 				<td><label for="desc">Description: </label></td>
-				<td><input dojoType=dijit.form.TextBox type="text" name="desc" id="desc"></td>
+				<td><input id="desc" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", name:"desc" '/></td>
 			</tr>
 			<tr>
-				<td colspan="2" align="center">
-					<button dojoType=dijit.form.Button id="ok" type="submit">OK</button></td>
+				<td colspan="2" style="text-align:center;">
+					<button id="ok" data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit"'>OK</button></td>
 			</tr>
 		</table>
 	</div>
 
 
-	<button dojoType="dijit.form.Button" onclick="createDialog()" title="shows after 3 second delay, with blue background">Programatic Dialog (3 second delay)</button> |
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ createDialog() }, title:"shows after 3 second delay, with blue background"'>Programatic Dialog (3 second delay)</button> |
 
 
 	<div id="thirdDialog" style="display: none;">
@@ -140,11 +132,11 @@
 		</p>
 	</div>
 
-	<button dojoType="dijit.form.Button" onclick="dijit.byId('tabDialog').show()">Show TabContainer Dialog</button> |
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("tabDialog").show() }'>Show TabContainer Dialog</button> |
 
-	<div dojoType="dijit.Dialog" id="tabDialog" title="TabContainer Dialog">
-		<div dojoType="dijit.layout.TabContainer" id="tc" style="width: 400px; height: 400px;">
-			<div dojoType="dijit.layout.ContentPane" id="cp1" title="First tab">
+	<div id="tabDialog" data-dojo-type="dijit.Dialog" data-dojo-props='title:"TabContainer Dialog"'>
+		<div id="tc" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"width: 400px; height: 400px;"'>
+			<div id="cp1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"First tab"'>
 				<p>
 					This is the first tab.
 				</p>
@@ -157,7 +149,7 @@
 				risus.
 				</p>
 			</div>
-			<div dojoType="dijit.layout.ContentPane" id="cp2" title="Second tab">
+			<div id="cp2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Second tab"'>
 				<p>
 					This is the second tab.
 				</p>
@@ -189,39 +181,39 @@
 		</div>
 	</div>
 
-	<button dojoType="dijit.form.Button" onclick="dijit.byId('fifthDlg').show();">Test slow loading HREF Dialog</button> |
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("fifthDlg").show(); }'>Test slow loading HREF Dialog</button> |
 
-	<div dojoType="dijit.Dialog" id="fifthDlg" href="layout/getResponse.php?delay=3000&messId=3"
-		style="width: 300px" title="From HREF (slow network simulated)"></div>
+	<div id="fifthDlg" data-dojo-type="dijit.Dialog" data-dojo-props='href:"layout/getResponse.php?delay=3000&amp;messId=3",
+		style:"width: 300px", title:"From HREF (slow network simulated)"'></div>
 
-	<button dojoType="dijit.form.Button" onclick="dijit.byId('dialog6').show()">Show File Dialog</button>
+	<button id="filebutton" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("file").show() }'>Show File Dialog</button>
 
-	<div dojoType="dijit.Dialog" id="dialog6" title="File Dialog"
-			onfocus="console.log('user focus handler')"
-			onblur="console.log('user blur handler')"
-			execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));" style="min-width: 350px">
+	<div id="file" data-dojo-type="dijit.Dialog" data-dojo-props='title:"File Dialog",
+			onFocus:function(){ console.log("user focus handler") },
+			onBlur:function(){ console.log("user blur handler") },
+			execute:function(args){ alert("submitted w/args:\n" + dojo.toJson(args, true)); }, style:"min-width: 350px"'>
 		<!-- note: style="min-width: 350px" to workaround FF bug where width is too short, see http://bugs.dojotoolkit.org/ticket/5976 -->
 			<label for="afile">ID File: </label>
-			<input dojoType=dijit.form.TextBox type="file" name="afile" id="afile">
+			<input id="afile" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"file", name:"afile" '/>
 	</div>
 
-	<button dojoType="dijit.form.Button" onclick="dijit.byId('cantmove').show()">Show Unmovable</button>
+	<button id="unmovablebutton" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("unmovable").show() }'>Show Unmovable</button>
 
-	<div dojoType="dijit.Dialog" id="cantmove" title="unmovable" draggable="false">
+	<div id="unmovable" data-dojo-type="dijit.Dialog" data-dojo-props='title:"unmovable", draggable:false'>
 		<p>You should not be able to <br /> drag this dialog</p>
 	</div>
 
-	<button dojoType="dijit.form.Button" onclick="dijit.byId('preventer').show()">Show Close prevention</button>
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("preventer").show() }'>Show Close prevention</button>
 
-	<div dojoType="dijit.Dialog" id="preventer" title="Confirm Close">
+	<div id="preventer" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Confirm Close"'>
 		I am done entering data:
-		<button dojoType="dijit.form.Button" id="preventerOK" type="submit" onClick="return confirm('Are you sure?')">OK</button>
+		<button id="preventerOK" data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit", onClick:function(){ return confirm("Are you sure?") }'>OK</button>
 	</div>
 
-	<button dojoType="dijit.form.Button" onclick="dijit.byId('embedded').show()">Dialog w/embedded layout widgets</button> |
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("embedded").show() }'>Dialog w/embedded layout widgets</button> |
 
-	<div dojoType="dijit.Dialog" id="embedded" title="Embedded layout widgets"
-		onShow="dojo.attr(this.domNode, 'aria-describedby', 'describe');" >
+	<div id="embedded" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Embedded layout widgets",
+		onShow:function(){ dojo.attr(this.domNode, "aria-describedby", "describe"); } '>
 		<p id="describe">
 			The pane has some text, plus two embedded layout widgets, which should
 			appear correctly even though the pane is initially hidden.
@@ -229,8 +221,8 @@
 		<p>
 			Here's a BorderContainer:
 		</p>
-		<div dojoType="dijit.layout.BorderContainer" style="height:200px; width:300px">
-			<div dojoType="dijit.layout.ContentPane" region="left" style="width:100px" splitter="true">
+		<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='style:"height:200px; width:300px"'>
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"left", style:"width:100px", splitter:true'>
 				1Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 				Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 				vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -245,7 +237,7 @@
 				sollicitudin sed, consequat nec, facilisis sit amet, orci. Aenean
 				ut eros sit amet ante pharetra interdum.
 			</div>
-			<div dojoType="dijit.layout.ContentPane" region="center">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
 				2Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 				Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 				vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -264,8 +256,8 @@
 		<p>
 			And a TabContainer:
 		</p>
-		<div dojoType="dijit.layout.TabContainer" style="height:200px; width:300px">
-			<div dojoType="dijit.layout.ContentPane" title="Tab 1">
+		<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"height:200px; width:300px"'>
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 1"'>
 				1Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 				Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 				vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -280,7 +272,7 @@
 				sollicitudin sed, consequat nec, facilisis sit amet, orci. Aenean
 				ut eros sit amet ante pharetra interdum.
 			</div>
-			<div dojoType="dijit.layout.ContentPane" title="Tab 2">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 2"'>
 				2Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 				Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 				vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -303,12 +295,12 @@
 	
 	
 	<!-- Action Bar test case -->
-	<button dojoType="dijit.form.Button"  id="ABDlg1Btn" onclick="dijit.byId('ABDlg1').show()">Show Dialog With Action Buttons</button>
-	<div dojoType="dijit.Dialog" id="ABDlg1" title="ActionBar Dialog 1" 
-			onExecute="console.log('OK button pressed')"
-			onCancel="console.log('Cancel button pressed')"
-			aria-describedby="intro"
-			execute="console.log('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	<button id="ABDlg1Btn" data-dojo-type="dijit.form.Button"  data-dojo-props='onClick:function(){ dijit.byId("ABDlg1").show() }'>Show Dialog With Action Buttons</button>
+	<div id="ABDlg1" data-dojo-type="dijit.Dialog" data-dojo-props='title:"ActionBar Dialog 1",
+			onExecute:function(){ console.log("OK button pressed") },
+			onCancel:function(){ console.log("Cancel button pressed") },
+			"aria-describedby":"intro",
+			execute:function(args){ console.log("submitted w/args:\n" + dojo.toJson(args, true)); }'>
 		<div class="dijitDialogPaneContentArea">
 			<div id="ABintro1" style="width:30em;">Introductory information spoken by screen reader if aria-describedby is
 			added to the declaration of dialog above with value equal to the id of the container element for this text. This technique
@@ -317,18 +309,18 @@
 		
 		
 		<div class="dijitDialogPaneActionBar">
-			<button dojoType="dijit.form.Button" type="submit" id="ABdialog1button1">OK</button>
-			<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('ABDlg1').onCancel();" 
-					id="ABdialog1button2">Cancel</button>
+			<button id="ABdialog1button1" data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit" '>OK</button>
+			<button id="ABdialog1button2" data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ dijit.byId("ABDlg1").onCancel(); } 
+					'>Cancel</button>
 		</div>
 	</div>
 	
-	<button dojoType="dijit.form.Button"  id="NABDlgBtn" onclick="dijit.byId('NABDlg').show()">Show Dialog With No Action Buttons</button>
-	<div dojoType="dijit.Dialog" id="NABDlg" title="No Action Bar Dialog"
-			aria-describedby="intro"
-			onfocus="console.log('user focus handler')"
-			onblur="console.log('user blur handler')"
-			execute="console.log('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+	<button id="NABDlgBtn" data-dojo-type="dijit.form.Button"  data-dojo-props='onClick:function(){ dijit.byId("NABDlg").show() }'>Show Dialog With No Action Buttons</button>
+	<div id="NABDlg" data-dojo-type="dijit.Dialog" data-dojo-props='title:"No Action Bar Dialog",
+			"aria-describedby":"intro",
+			onFocus:function(){ console.log("user focus handler") },
+			onBlur:function(){ console.log("user blur handler") },
+			execute:function(args){ console.log("submitted w/args:\n" + dojo.toJson(args, true)); }'>
 				
 		<div class="dijitDialogPaneContentArea">
 			<div id="NABintro" style="width:30em;">Introductory information spoken by screen reader if aria-describedby is
@@ -336,33 +328,47 @@
 			will work in Dojo 1.4. </div>
 			<table>
 				<tr>
-					<td><label for="name">Name: </label></td>
-					<td><input dojoType=dijit.form.TextBox type="text" name="NABname" id="NABname"></td>
+					<td><label for="NABname">Name: </label></td>
+					<td><input id="NABname" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", name:"NABname" '/></td>
 				</tr>
 				<tr>
-					<td><label for="loc">Location: </label></td>
-					<td><input dojoType=dijit.form.TextBox type="text" name="NABloc" id="NABloc"></td>
+					<td><label for="NABloc">Location: </label></td>
+					<td><input id="NABloc" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", name:"NABloc" '/></td>
 				</tr>
 				<tr>
-					<td><label for="date">Date: </label></td>
-					<td><input dojoType=dijit.form.DateTextBox type="text" name="NABdate" id="NABdate"></td>
+					<td><label for="NABdate">Date: </label></td>
+					<td><input id="NABdate" data-dojo-type="dijit.form.DateTextBox" data-dojo-props='type:"text", name:"NABdate" '/></td>
 				</tr>
 				<tr>
-					<td><label for="desc">Description: </label></td>
-					<td><input dojoType=dijit.form.TextBox type="text" name="NABdesc" id="NABdesc"></td>
+					<td><label for="NABdesc">Description: </label></td>
+					<td><input id="NABdesc" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", name:"NABdesc" '/></td>
 				</tr>
 			</table>
 		</div>
 	</div>
 
 
-	<button dojoType="dijit.form.Button"  id="layeredDialogs" onclick="open2Dialogs">Show 2 Dialogs</button>
+	<button id="layeredDialogs" data-dojo-type="dijit.form.Button"  data-dojo-props='onClick:open2Dialogs'>Show 2 Dialogs</button>
 
-	<button dojoType="dijit.form.Button"  id="iframeDlg" onclick='dijit.byId("dlgFrame").show();'>Show iframe in dialog</button>
-	<div dojoType="dijit.Dialog" id="dlgFrame" title="Search">
-		<iframe title="Test IFrame" src="layout/getResponse.php?delay=3000&messId=3" style="width:600px; height: 400px;">
+	<button id="iframeDlg" data-dojo-type="dijit.form.Button"  data-dojo-props='onClick:function(){ dijit.byId("dlgFrame").show(); }'>Show iframe in dialog</button>
+	<div id="dlgFrame" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Search"'>
+		<iframe title="Test IFrame" src="layout/getResponse.php?delay=3000&amp;messId=3" style="width:600px; height: 400px;">
 	</iframe>
 				
+	</div>
+
+	<button id="RadioButtonDlgBtn" data-dojo-type="dijit.form.Button"  data-dojo-props='onClick:function(){ dijit.byId("RadioButtonDlg").show() }'>Show Dialog With Radio Button at End</button>
+	<div id="RadioButtonDlg" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Radio Button Dialog"'>
+	  <div class="dijitDialogPaneContentArea">
+	    <textarea id="textarea-radio-test" width="400" height="200"></textarea>
+	    <fieldset>
+	      <legend>Best Pet</legend>
+	      <input id="dograd" type="radio" name="pet" checked="checked"></input>
+	      <label for="dograd">Dog</label> -
+	      <input id="catrad" type="radio" name="pet"></input>
+	      <label for="catrad">Cat</label>
+	    </fieldset>
+	  </div>
 	</div>
 	
 	<p><b><i>(scroll down to see more links to click, for testing positioning / scroll handling)</i></b></p>
@@ -373,7 +379,7 @@
 	</p>
 
 	<form>
-	<input id="plainInput">
+	<input id="plainInput"/>
 	<br>
 	<button id="plainButton">hello</button>
 	<br>
@@ -412,12 +418,12 @@
 	hymenaeos.
 	</p>
 	<form>
-		<center>
+		<div style="text-align:center;">
 			<select>
 				<option>1</option>
 				<option>2</option>
 			</select>
-		</center>
+		</div>
 	</form>
 	<p>Mauris pharetra lorem sit amet sapien. Nulla libero metus, tristique
 	et, dignissim a, tempus et, metus. Ut libero. Vivamus tempus purus vel
@@ -467,12 +473,12 @@
 	hymenaeos.
 	</p>
 	<form>
-		<center>
+		<div style="text-align:center;">
 			<select>
 				<option>1</option>
 				<option>2</option>
 			</select>
-		</center>
+		</div>
 	</form>
 	<p>Mauris pharetra lorem sit amet sapien. Nulla libero metus, tristique
 	et, dignissim a, tempus et, metus. Ut libero. Vivamus tempus purus vel
@@ -490,7 +496,7 @@
 	</p>
 
 	<p>
-	<button dojoType="dijit.form.Button" onClick="dijit.byId('dialog1').show()">Show Dialog</button> |
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("dialog1").show() }'>Show Dialog</button> |
 	<!-- showing a dialog from an anchor with inline onclick="" is a solution to page onUnLoad firing
 		but you must return false; alternatively, you can dojo.connect() to the anchor links, and
 		e.preventDefault() on the event object passed. using href="javascript:" inline causes onUnLoad
@@ -595,5 +601,3 @@
 
 </body>
 </html>
-
-

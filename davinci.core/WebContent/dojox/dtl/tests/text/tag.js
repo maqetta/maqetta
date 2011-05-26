@@ -3,7 +3,7 @@ dojo.provide("dojox.dtl.tests.text.tag");
 dojo.require("dojox.dtl");
 dojo.require("dojox.dtl.Context");
 
-doh.register("dojox.dtl.text.tag", 
+doh.register("dojox.dtl.text.tag",
 	[
 		function test_tag_block_and_extends(t){
 			var dd = dojox.dtl;

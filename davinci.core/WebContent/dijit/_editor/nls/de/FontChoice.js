@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Größe",
 	fontName: "Schriftart",
@@ -9,6 +11,7 @@
 	cursive: "Kursiv",
 	fantasy: "Fantasie",
 
+	noFormat: "Keine Angabe",
 	p: "Absatz",
 	h1: "Überschrift",
 	h2: "Unterüberschrift",
@@ -23,3 +26,5 @@
 	6: "XL",
 	7: "XXL"
 })
+//end v1.x content
+);

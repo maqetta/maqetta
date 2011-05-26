@@ -81,7 +81,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			
 			this.clickOff = dojo.connect(dojo.doc, "onmousedown", this, "onDocClick");
 		}else{
-			this.onHideVolume();		
+			this.onHideVolume();
 		}
 	},
 	onDocClick: function(/*DOMEvent*/evt){
@@ -90,7 +90,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		//		of this widget or not.
 		//
 		if(!dojo.isDescendant(evt.target, this.domNode) && !dojo.isDescendant(evt.target, this.volumeSlider)){
-			this.onHideVolume();		
+			this.onHideVolume();
 		}
 	},
 	
@@ -105,7 +105,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 	
 	onDrag: function(/*DOMEvent*/evt){
 		// summary:
-		//		Fired on mousemove. Updates volume and position of 
+		//		Fired on mousemove. Updates volume and position of
 		//		slider handle.
 		var beg = this.handleWidth/2;
 		var end = beg + this.slotWidth
@@ -138,7 +138,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 	
 	handleOver: function(){
 		// summary:
-		//		Highlights the slider handle on mouseover, and 
+		//		Highlights the slider handle on mouseover, and
 		//		stays highlighted during drag.
 		//
 		dojo.addClass(this.handle, "over");
@@ -148,7 +148,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		//		Unhighlights handle onmouseover, or on endDrag.
 		//
 		if(!this.isDragging){
-			dojo.removeClass(this.handle, "over");	
+			dojo.removeClass(this.handle, "over");
 		}
 	},
 	
@@ -162,7 +162,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			return this._domCoords;
 		}
 		this._domCoords = dojo.coords(this.domNode);
-		return this._domCoords;	
+		return this._domCoords;
 	},
 	_getHandleDim: function(){
 		// summary:
@@ -172,7 +172,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 			return this._handleCoords;
 		}
 		this._handleCoords = dojo.marginBox(this.handle);
-		return this._handleCoords;	
+		return this._handleCoords;
 	},
 	
 	onResize: function(/*Object*/playerDimensions){

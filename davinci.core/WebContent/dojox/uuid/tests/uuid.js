@@ -9,7 +9,7 @@ dojox.uuid.tests.uuid.checkValidityOfUuidString = function(/*String*/uuidString)
 	//		A helper function that's used by the registered test functions
 	var NIL_UUID = "00000000-0000-0000-0000-000000000000";
 	if (uuidString == NIL_UUID) {
-		// We'll consider the Nil UUID to be valid, so now 
+		// We'll consider the Nil UUID to be valid, so now
 		// we can just return, with not further checks.
 		return;
 	}
@@ -71,7 +71,7 @@ dojox.uuid.tests.uuid.checkForPseudoNodeBitInTimeBasedUuidString = function(/*St
 	doh.assertTrue(firstBit == '1'); // first bit of section 4 is 1
 }
 
-doh.register("dojox.uuid.tests.uuid", 
+doh.register("dojox.uuid.tests.uuid",
 	[
 		/*
 		function test_uuid_performance(){
@@ -131,7 +131,7 @@ doh.register("dojox.uuid.tests.uuid",
 			doh.assertTrue(uuid.getVariant() == dojox.uuid.variant.DCE);
 			doh.assertTrue(uuid.getVersion() == dojox.uuid.version.RANDOM);
 			uuidToo = new dojox.uuid.Uuid(new String(randomUuidString));
-			doh.assertTrue(uuid.isEqual(uuidToo));	
+			doh.assertTrue(uuid.isEqual(uuidToo));
 		
 			var timeBasedUuidString = "b4308fb0-86cd-11da-a72b-0800200c9a66";
 			uuid = new dojox.uuid.Uuid(timeBasedUuidString);

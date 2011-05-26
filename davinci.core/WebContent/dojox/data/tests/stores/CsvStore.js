@@ -11,7 +11,7 @@ dojox.data.tests.stores.CsvStore.getDatasource = function(filepath){
 
 	var dataSource = {};
 	if(dojo.isBrowser){
-		dataSource.url = dojo.moduleUrl("dojox.data.tests", filepath).toString();            
+		dataSource.url = dojo.moduleUrl("dojox.data.tests", filepath).toString();
 	}else{
 		// When running tests in Rhino, xhrGet is not available,
 		// so we have the file data in the code below.
@@ -127,13 +127,13 @@ dojox.data.tests.stores.CsvStore.error = function(t, d, errData){
 	for (var i in errData) {
 		console.log(errData[i]);
 	}
-	d.errback(errData);	
+	d.errback(errData);
 };
 
-doh.register("dojox.data.tests.stores.CsvStore", 
+doh.register("dojox.data.tests.stores.CsvStore",
 	[
 		function testReadAPI_fetch_all(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore.
@@ -152,7 +152,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_empty(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore that's empty.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore that's empty.
@@ -171,7 +171,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_semicolon(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore with separator defined as |.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore with separator defined as |.
@@ -191,7 +191,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_pipe(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore with separator defined as |.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore with separator defined as |
@@ -210,7 +210,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_pipe_indata(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore with separator defined as |.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore with separator defined as |
@@ -229,7 +229,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_withnewlinedCsv(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore loading a CSV file with quoted newlines.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore loading a CSV file with quoted newlines.
@@ -248,7 +248,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_withEmptyStringField(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore.
@@ -267,7 +267,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
@@ -280,14 +280,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.is(1, items.length);
 				d.callback(true);
 			}
-			csvStore.fetch({ 	query: {Title: "*Sequel*"}, 
-								onComplete: onComplete, 
+			csvStore.fetch({ 	query: {Title: "*Sequel*"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 							});
 			return d; //Object
 		},
 		function testReadAPI_fetch_one_preventcache(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
@@ -301,14 +301,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.is(1, items.length);
 				d.callback(true);
 			}
-			csvStore.fetch({ 	query: {Title: "*Sequel*"}, 
-								onComplete: onComplete, 
+			csvStore.fetch({ 	query: {Title: "*Sequel*"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 							});
 			return d; //Object
 		},
 		function testReadAPI_fetch_Multiple(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
@@ -338,12 +338,12 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			
 			try
 			{
-				csvStore.fetch({ 	query: {Title: "*Sequel*"}, 
-									onComplete: onCompleteOne, 
+				csvStore.fetch({ 	query: {Title: "*Sequel*"},
+									onComplete: onCompleteOne,
 									onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 								});
-				csvStore.fetch({ 	query: {Title: "2001:*"}, 
-									onComplete: onCompleteTwo, 
+				csvStore.fetch({ 	query: {Title: "2001:*"},
+									onComplete: onCompleteTwo,
 									onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 								});
 			}
@@ -357,7 +357,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_MultipleMixed(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
@@ -386,8 +386,8 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				}
 			}
 
-			csvStore.fetch({ 	query: {Title: "*Sequel*"}, 
-								onComplete: onComplete, 
+			csvStore.fetch({ 	query: {Title: "*Sequel*"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 							});
 			
@@ -395,7 +395,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_streaming(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on CsvStore.
 			//	description:
 			//		Simple test of a basic fetch on CsvStore.
@@ -421,14 +421,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 
 			//Get everything...
 			csvStore.fetch({	onBegin: onBegin,
-								onItem: onItem, 
+								onItem: onItem,
 								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 							});
 			return d; //Object
 		},
 		function testReadAPI_fetch_paging(t){
-			 //	summary: 
+			 //	summary:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
 			 //	description:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
@@ -496,7 +496,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 		},
 		
 		function testReadAPI_getLabel(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 			//	description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
@@ -513,14 +513,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertEqual("The Sequel to \"Dances With Wolves.\"", label);
 				d.callback(true);
 			}
-			csvStore.fetch({ 	query: {Title: "*Sequel*"}, 
-								onComplete: onComplete, 
+			csvStore.fetch({ 	query: {Title: "*Sequel*"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 							});
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 			//	description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
@@ -537,14 +537,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertEqual("Title", labelList[0]);
 				d.callback(true);
 			}
-			csvStore.fetch({ 	query: {Title: "*Sequel*"}, 
-								onComplete: onComplete, 
+			csvStore.fetch({ 	query: {Title: "*Sequel*"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)
 							});
 			return d;
 		},
 		function testReadAPI_getValue(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -557,13 +557,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(item !== null);
 				t.is('Dymtryk "the King", Edward', csvStore.getValue(item,"Producer"));
 				t.is('Caine Mutiny, The', csvStore.getValue(item,"Title"));
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "6", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
-		},	
+		},
 		function testReadAPI_getValue_2(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -576,13 +576,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(item !== null);
 				t.is("City of God", csvStore.getValue(item,"Title"));
 				t.is("2002", csvStore.getValue(item,"Year"));
-				d.callback(true);	
+				d.callback(true);
 			}
             csvStore.fetchItemByIdentity({identity: "0", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
-		},	
+		},
 		function testReadAPI_getValue_3(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -595,13 +595,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(item !== null);
 				t.is("1979", csvStore.getValue(item,"Year"));
 				t.is("Alien", csvStore.getValue(item,"Title"));
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "4", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
-		},	
+		},
 		function testReadAPI_getValue_4(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -614,14 +614,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(item !== null);
 				t.is("2001: A Space Odyssey", csvStore.getValue(item,"Title"));
 				t.is("Stanley Kubrick", csvStore.getValue(item,"Producer"));
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "2", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
-		},	
+		},
 
 		function testReadAPI_getValues(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValues function of the store.
 			//	description:
 			//		Simple test of the getValues function of the store.
@@ -636,13 +636,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(dojo.isArray(names));
 				t.is(1, names.length);
 				t.is("Rain", names[0]);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -653,14 +653,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item !== null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_withDefinedIdentifier(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -672,14 +672,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item !== null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "City of God", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_withDefinedIdentifier_bad1(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -691,14 +691,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "No Such Title", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_bad1(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -709,13 +709,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "7", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad2(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -725,13 +725,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "-1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad3(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -741,13 +741,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "999999", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_getIdentity(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -775,7 +775,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 		},
 
 		function testIdentityAPI_getIdentity_withDefinedIdentifier(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -804,7 +804,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 		},
 
 		function testIdentityAPI_getIdentity_withBadDefinedIdentifier(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -827,7 +827,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 		},
 
 		function testIdentityAPI_getIdentityAttributes(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getIdentityAttributes
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -838,14 +838,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(csvStore.isItem(item));
-				t.assertEqual(null, csvStore.getIdentityAttributes(item)); 
-				d.callback(true);	
+				t.assertEqual(null, csvStore.getIdentityAttributes(item));
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_isItem(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the isItem function of the store
 			//	description:
 			//		Simple test of the isItem function of the store
@@ -860,13 +860,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(!csvStore.isItem({ item: "not an item" }));
 				t.assertTrue(!csvStore.isItem("not an item"));
 				t.assertTrue(!csvStore.isItem(["not an item"]));
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the hasAttribute function of the store
 			//	description:
 			//		Simple test of the hasAttribute function of the store
@@ -891,13 +891,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 					passed = true;
 				}
 				t.assertTrue(passed);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_containsValue(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the containsValue function of the store
 			//	description:
 			//		Simple test of the containsValue function of the store
@@ -923,13 +923,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 					passed = true;
 				}
 				t.assertTrue(passed);
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "4", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getAttributes function of the store
 			//	description:
 			//		Simple test of the getAttributes function of the store
@@ -947,14 +947,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				for(var i = 0; i < attributes.length; i++){
 					t.assertTrue((attributes[i] === "Title" || attributes[i] === "Year" || attributes[i] === "Producer"));
 				}
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "4", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 		   	return d;
 		},
 
 		function testReadAPI_getAttributes_onlyTwo(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getAttributes function of the store
 			//	description:
 			//		Simple test of the getAttributes function of the store
@@ -972,14 +972,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 				t.assertTrue(attributes.length === 2);
 				t.assertTrue(attributes[0] === "Title");
 				t.assertTrue(attributes[1] === "Producer");
-				d.callback(true);	
+				d.callback(true);
 			}
 			csvStore.fetchItemByIdentity({identity: "1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 		   	return d;
 		},
 
 		function testReadAPI_getFeatures(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getFeatures function of the store
 			//	description:
 			//		Simple test of the getFeatures function of the store
@@ -987,7 +987,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var args = dojox.data.tests.stores.CsvStore.getDatasource("stores/movies.csv");
 			var csvStore = new dojox.data.CsvStore(args);
 
-			var features = csvStore.getFeatures(); 
+			var features = csvStore.getFeatures();
 			var count = 0;
 			for(var i in features){
 				t.assertTrue((i === "dojo.data.api.Read" || i === "dojo.data.api.Identity"));
@@ -996,7 +996,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			t.assertTrue(count === 2);
 		},
 		function testReadAPI_fetch_patternMatch0(t){
-			//	summary: 
+			//	summary:
 			//		Function to test pattern matching of everything starting with lowercase e
 			//	description:
 			//		Function to test pattern matching of everything starting with lowercase e
@@ -1016,7 +1016,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch1(t){
-			//	summary: 
+			//	summary:
 			//		Function to test pattern matching of everything with $ in it.
 			//	description:
 			//		Function to test pattern matching of everything with $ in it.
@@ -1036,7 +1036,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch2(t){
-			//	summary: 
+			//	summary:
 			//		Function to test exact pattern match
 			//	description:
 			//		Function to test exact pattern match
@@ -1055,7 +1055,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseInsensitive(t){
-			//	summary: 
+			//	summary:
 			//		Function to test exact pattern match with case insensitivity set.
 			//	description:
 			//		Function to test exact pattern match with case insensitivity set.
@@ -1074,7 +1074,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseSensitive(t){
-			//	summary: 
+			//	summary:
 			//		Function to test exact pattern match with case insensitivity set.
 			//	description:
 			//		Function to test exact pattern match with case insensitivity set.
@@ -1092,7 +1092,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortNumeric(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting numerically.
 			//	description:
 			//		Function to test sorting numerically.
@@ -1110,13 +1110,13 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			}
 
 			var sortAttributes = [{attribute: "uniqueId"}];
-			csvStore.fetch({onComplete: completed, 
+			csvStore.fetch({onComplete: completed,
 							onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d),
 							sort: sortAttributes});
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortNumericDescending(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting numerically.
 			//	description:
 			//		Function to test sorting numerically.
@@ -1138,7 +1138,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortNumericWithCount(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting numerically in descending order, returning only a specified number of them.
 			//	description:
 			//		Function to test sorting numerically in descending order, returning only a specified number of them.
@@ -1156,14 +1156,14 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			}
 			
 			var sortAttributes = [{attribute: "uniqueId", descending: true}];
-			csvStore.fetch({sort: sortAttributes, 
+			csvStore.fetch({sort: sortAttributes,
 							count: 5,
 							onComplete: completed,
 							onError: dojo.partial(dojox.data.tests.stores.CsvStore.error, t, d)});
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabetic(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting alphabetic ordering.
 			//	description:
 			//		Function to test sorting alphabetic ordering.
@@ -1195,7 +1195,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabeticDescending(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting alphabetic ordering in descending mode.
 			//	description:
 			//		Function to test sorting alphabetic ordering in descending mode.
@@ -1227,7 +1227,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortMultiple(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting on multiple attributes.
 			//	description:
 			//		Function to test sorting on multiple attributes.
@@ -1260,7 +1260,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortMultipleSpecialComparator(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting on multiple attributes with a custom comparator.
 			//	description:
 			//		Function to test sorting on multiple attributes with a custom comparator.
@@ -1269,7 +1269,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			var csvStore = new dojox.data.CsvStore(args);
 			
 			csvStore.comparatorMap = {};
-			csvStore.comparatorMap["Producer"] = function(a,b){ 
+			csvStore.comparatorMap["Producer"] = function(a,b){
 				var ret = 0;
 				// We want to sort authors alphabetical by their last name
 				function lastName(name){
@@ -1312,12 +1312,12 @@ doh.register("dojox.data.tests.stores.CsvStore",
 		{
 			name: "testReadAPI_fetch_abort",
 			runTest: function(t){
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch abort on CsvStore.
 				//	description:
 				//		Simple test of a basic fetch abort on CsvStore.
 				//Can only async abort in a browser, so disable this test from rhino
-				if(dojo.isBrowser){                                            
+				if(dojo.isBrowser){
 					var args = dojox.data.tests.stores.CsvStore.getDatasource("stores/movies.csv");
 					var store = new dojox.data.CsvStore(args);
 				
@@ -1352,7 +1352,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 		},
 
 		function testReadAPI_functionConformance(t){
-			//	summary: 
+			//	summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 			//	description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
@@ -1380,7 +1380,7 @@ doh.register("dojox.data.tests.stores.CsvStore",
 			t.assertTrue(passed);
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary: 
+			//	summary:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 			//	description:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.

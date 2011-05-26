@@ -1,12 +1,23 @@
 ({
 	"findLabel": "Trova:",
+	"findTooltip": "Immettere il testo da trovare",
 	"replaceLabel": "Sostituisci con:",
-	"findReplace": "Mostra/Nascondi Trova/Sostituisci",
-	"matchCase": "Maiuscole/minuscole", 
+	"replaceTooltip": "Immettere il testo sostitutivo",
+	"findReplace": "Trova e sostituisci",
+	"matchCase": "Maiuscole/minuscole",
+	"matchCaseTooltip": "Maiuscole/minuscole",
 	"backwards": "Indietro",
-	"replaceAll": "Tutte le occorrenze", 
+	"backwardsTooltip": "Cerca testo indietro",
+	"replaceAll": "Tutte le ricorrenze",
+	"replaceAllButton": "Sostituisci tutto",
+	"replaceAllButtonTooltip": "Sostituisci tutto il testo",
 	"findButton": "Trova",
+	"findButtonTooltip": "Trova il testo",
 	"replaceButton": "Sostituisci",
-	"replaceDialogText": "Occorrenze sostituite: ${0}."
+	"replaceButtonTooltip": "Sostituisci il testo",
+	"replaceDialogText": "${0} ricorrenze sostituite.",
+	"eofDialogText": "Ultima ricorrenza ${0}",
+	"eofDialogTextFind": "trovato",
+	"eofDialogTextReplace": "sostituito"
 })
 

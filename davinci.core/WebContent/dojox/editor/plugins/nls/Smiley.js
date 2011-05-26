@@ -5,8 +5,8 @@
 	emoticonWink: "wink",
 	emoticonGrin: "grin",
 	emoticonCool: "cool",
-	emoticonAngry: "angry",  
-	emoticonHalf: "half", 
+	emoticonAngry: "angry",
+	emoticonHalf: "half",
 	emoticonEyebrow: "eyebrow",
 	emoticonFrown: "frown",
 	emoticonShy: "shy",
@@ -15,7 +15,7 @@
 	emoticonTongue: "tongue",
 	emoticonIdea: "idea",
 	emoticonYes: "yes",
-	emoticonNo: "no",	
+	emoticonNo: "no",
 	emoticonAngel: "angel",
 	emoticonCrying: "crying"
 })

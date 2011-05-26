@@ -23,7 +23,7 @@ dojo.declare("dojox.xmpp.UserService", null, {
 		var req={
 			id: this.session.getNextIqId(),
 			type: 'set'
-		}			
+		}
 		
 		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",req,false));
 		request.append(dojox.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},false));

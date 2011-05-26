@@ -6,7 +6,7 @@ dojo.require("dojox.charting.Chart2D");
 dojo.require("dojox.charting.widget.Legend");
 dojo.require("dojox.charting.action2d.Tooltip");
 dojo.require("dojox.charting.action2d.Highlight");
-dojo.require("dojo.colors");		
+dojo.require("dojo.colors");
 dojo.require("dojo.data.ItemFileWriteStore");
 
 (function(){
@@ -56,7 +56,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 
 		var args = { vertical: false, labels: labels, min: 0, max: labels.length-1, majorTickStep: 1, minorTickStep: 1 };
 		
-		// clustered or stacked bars have a vertical independent axis 
+		// clustered or stacked bars have a vertical independent axis
 		if((charttype === "ClusteredBars") || (charttype === "StackedBars")){
 			args.vertical = true;
 		}
@@ -80,7 +80,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			args.leftBottom = false;
 		}
 
-		// clustered or stacked bars have horizontal dependent axes 
+		// clustered or stacked bars have horizontal dependent axes
 		if((charttype === "ClusteredBars") || (charttype === "StackedBars")){
 			args.vertical = false;
 		}
@@ -99,28 +99,28 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		
 		var args = { type: charttype, hAxis: "independent", vAxis: "dependent-" + axistype, gap: 4, lines: false, areas: false, markers: false };
 		
-		// clustered or stacked bars have horizontal dependent axes 
+		// clustered or stacked bars have horizontal dependent axes
 		if((charttype === "ClusteredBars") || (charttype === "StackedBars")){
 			args.hAxis = args.vAxis;
 			args.vAxis = "independent";
 		}
 
-		// turn on lines for Lines, Areas and StackedAreas 
+		// turn on lines for Lines, Areas and StackedAreas
 		if((charttype === "Lines") || (charttype === "Hybrid-Lines") || (charttype === "Areas") || (charttype === "StackedAreas")){
 			args.lines = true;
 		}
 		
-		// turn on areas for Areas and StackedAreas 
+		// turn on areas for Areas and StackedAreas
 		if((charttype === "Areas") || (charttype === "StackedAreas")){
 			args.areas = true;
 		}
 		
-		// turn on markers and shadow for Lines 
+		// turn on markers and shadow for Lines
 		if(charttype === "Lines"){
 			args.markers = true;
 		}
 		
-		// turn on shadow for Hybrid-Lines 
+		// turn on shadow for Hybrid-Lines
 		// also, Hybrid-Lines is not a true chart type: use Lines for the actual plot
 		if(charttype === "Hybrid-Lines"){
 			args.shadows = {dx: 2, dy: 2, dw: 2};
@@ -187,7 +187,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			
 		var labels = getLabels(range, labelMod, type, domNode);
 
-		// collect details of whether primary and/or secondary axes are required 
+		// collect details of whether primary and/or secondary axes are required
 		// and what plots we have instantiated using each type of axis
 		var plots = {};
 		
@@ -290,7 +290,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		_chart.addAxis("dependent-secondary", getDependentAxisArgs(type, "secondary", minval, maxval));
 		
 		return _chart;
-	};		
+	};
 
 	// set up a legend presentation
 	var setupLegend = function(/*DomNode*/domNode, /*Legend*/legend, /*Chart2D*/chart, /*Boolean*/horizontal){
@@ -308,8 +308,8 @@ dojo.require("dojo.data.ItemFileWriteStore");
 	
 	// set up a grid presentation
 	var setupGrid = function(/*DomNode*/domNode, /*Object?*/grid, /*Object?*/store, /*String?*/query, /*String?*/queryOptions){
-		var _grid = grid || new dojox.grid.DataGrid({}, domNode);		
-		_grid.startup();		
+		var _grid = grid || new dojox.grid.DataGrid({}, domNode);
+		_grid.startup();
 		_grid.setStore(store, query, queryOptions);
 		
 		var structure = [];
@@ -344,9 +344,9 @@ dojo.require("dojo.data.ItemFileWriteStore");
 	var getSubfield = function(/*Object*/object, /*String*/field){
 		var result = object;
 		
-		if(field){			
+		if(field){
 			var fragments = field.split(/[.\[\]]+/);
-			for(var frag in fragments){
+			for(var frag = 0, l = fragments.length; frag < l; frag++){
 				if(result){
 					result = result[fragments[frag]];
 				}
@@ -409,7 +409,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//      a warning message in the console unless djConfig.useCommentedJson
 		//      has been set to true.
 		//
-		//  urlContent: Object   
+		//  urlContent: Object
 		//      Content to be passed to the URL when fetching data. If a URL has
 		//      not been supplied, this value is ignored.
 		//
@@ -432,7 +432,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//
 		//  series: Array
 		//      an array of objects describing the data series to be included
-		//      in the data presentation. Each object may contain the 
+		//      in the data presentation. Each object may contain the
 		//      following fields:
 		//			datapoints: the name of the field from the source data which
 		//				contains an array of the data points for this data series.
@@ -712,7 +712,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 						
 						if(series_chart[ser]){
 							// convert the data value to a float if possible
-							fdatavalue = parseFloat(datavalue);						
+							fdatavalue = parseFloat(datavalue);
 							if(!isNaN(fdatavalue)){
 								datavalue = fdatavalue;
 							}
@@ -739,15 +739,15 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			}
 			
 			store.series_data = series_data;
-			store.series_name = series_name; 
-			store.series_chart = series_chart; 
-			store.series_charttype = series_charttype; 
-			store.series_linestyle = series_linestyle; 
-			store.series_axis = series_axis; 
-			store.series_grid = series_grid; 
+			store.series_name = series_name;
+			store.series_chart = series_chart;
+			store.series_charttype = series_charttype;
+			store.series_linestyle = series_linestyle;
+			store.series_axis = series_axis;
+			store.series_grid = series_grid;
 			store.series_gridformatter = series_gridformatter;
 			
-			this.setPreparedStore(store);			
+			this.setPreparedStore(store);
 			
 			if(refreshInterval && (this.refreshInterval > 0)){
 				var me = this;
@@ -863,7 +863,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			
 			if(this.legendWidget){
 				// no legend.destroy()
-				delete this.legendWidget;				
+				delete this.legendWidget;
 			}
 
 			if(this.gridWidget){

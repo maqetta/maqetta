@@ -1,11 +1,12 @@
 -------------------------------------------------------------------------------
 Project Name:  dojox.mobile
 -------------------------------------------------------------------------------
-Version 0.01
+Version 1.0
 Release date: 03/23/2010
 -------------------------------------------------------------------------------
 Project state:
-        experimental
+dojox.mobile: stable
+dojox.mobile.app: experimental
 -------------------------------------------------------------------------------
 [ NO ]	l18n support?
 [ NO ]	a11y support?
@@ -13,6 +14,7 @@ Project state:
 Credits:
        Jared Jurkiewicz (jared.jurkiewicz@gmail.com)
        Yoshiroh Kamiyama (Contributor to Jared of base code).
+       Shane O'Sullivan (dojox.mobile.app)
 
 -------------------------------------------------------------------------------
 Project description
@@ -24,7 +26,7 @@ such as the Android and iPhone Smart Phones.
 
 The code is deliberately kept as lightweight as possible, using CSS3 animations
 and the like to perform the effects.  There is a compat.js, which will simulate
-most of the effects using dojo.animateProperty and dojox.gfx where possible on
+most of the effects using dojo.animateProperty and dojox.fx where possible on
 browsers such as FireFox and IE.  It will not load by default, it has to be
 required in separately.
 -------------------------------------------------------------------------------

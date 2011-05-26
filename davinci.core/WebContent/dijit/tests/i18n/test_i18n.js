@@ -54,7 +54,7 @@ function getAllTestCases(){
 			runTest: new Function("t", "startTestFormat(" + i + ", t)")
 		});
 	}
-	for(var i = 0; i < validateWidgetCount; i++){
+	for(i = 0; i < validateWidgetCount; i++){
 		allTestCases.push({
 			name: "validate-" + i,
 			runTest: new Function("t", "startTestValidate(" + i + ", t)")
@@ -117,21 +117,24 @@ function startTestValidate(i, t){
 }
 
 function genFormatTestCase(desc, dojoType, dojoAttrs, value, expValue, comment){
-	dojo.doc.write("<tr>");
-	dojo.doc.write("<td>" + desc + "</td>");
-	dojo.doc.write("<td>");
-	dojo.doc.write("<input id='test_display_" + formatWidgetCount + "' type='text' value='" + value + "' ");
-	dojo.doc.write("dojoType='" + dojoType + "' ");
+	var res = "";
+	res += "<tr>";
+	res += "<td>" + desc + "</td>";
+	res += "<td>";
+	res += "<input id='test_display_" + formatWidgetCount + "' type='text' value='" + value + "' ";
+	res += "dojoType='" + dojoType + "' ";
 	for(var attr in dojoAttrs){
-		dojo.doc.write(attr + "=\"" + dojoAttrs[attr] + "\" ");
+		res += attr + "=\"" + dojoAttrs[attr] + "\" ";
 	}
-	dojo.doc.write("/>");
-	dojo.doc.write("</td>");
-	dojo.doc.write("<td><input id='test_display_expected_" + formatWidgetCount + "' value='" + expValue + "'></td>");
-	dojo.doc.write("<td id='test_display_result_" + formatWidgetCount + "'></td>");
-	dojo.doc.write("<td style='white-space:normal'>" + comment + "</td>");
-	dojo.doc.write("</tr>");
+	res += "/>";
+	res += "</td>";
+	res += "<td><input id='test_display_expected_" + formatWidgetCount + "' value='" + expValue + "'></td>";
+	res += "<td id='test_display_result_" + formatWidgetCount + "'></td>";
+	res += "<td style='white-space:normal'>" + comment + "</td>";
+	res += "</tr>";
 	formatWidgetCount++;
+	
+	return res;
 }
 /*
 [
@@ -140,43 +143,49 @@ function genFormatTestCase(desc, dojoType, dojoAttrs, value, expValue, comment){
 ]
 */
 function genFormatTestCases(title, dojoType, testCases){
-	dojo.doc.write("<h2 class=testTitle>" + title + "</h2>");
-	dojo.doc.write("<table border=1>");
-	dojo.doc.write("<tr>");
-	dojo.doc.write("<td class=title><b>Test Description</b></td>");
-	dojo.doc.write("<td class=title><b>Test</b></td>");
-	dojo.doc.write("<td class=title><b>Expected</b></td>");
-	dojo.doc.write("<td class=title><b>Result</b></td>");
-	dojo.doc.write("<td class=title><b>Comment</b></td>");
-	dojo.doc.write("</tr>");
+	var res = "";
+	res += "<h2 class=testTitle>" + title + "</h2>";
+	res += "<table border=1>";
+	res += "<tr>";
+	res += "<td class=title><b>Test Description</b></td>";
+	res += "<td class=title><b>Test</b></td>";
+	res += "<td class=title><b>Expected</b></td>";
+	res += "<td class=title><b>Result</b></td>";
+	res += "<td class=title><b>Comment</b></td>";
+	res += "</tr>";
 
 	for(var i = 0; i < testCases.length; i++){
 		var testCase = testCases[i];
-		genFormatTestCase(testCase.desc, dojoType, testCase.attrs, testCase.value, testCase.expValue, testCase.comment);
+		res += genFormatTestCase(testCase.desc, dojoType, testCase.attrs, testCase.value, testCase.expValue, testCase.comment);
 	}
 
-	dojo.doc.write("</table>");
+	res += "</table>";
+	
+	dojo.place(res, dojo.body());
 }
 
 function genValidateTestCase(desc, dojoType, dojoAttrs, input, value, comment, isWrong){
-	dojo.doc.write("<tr>");
-	dojo.doc.write("<td>" + desc + "</td>");
-	dojo.doc.write("<td>");
-	dojo.doc.write("<input id='test_validate_" + validateWidgetCount + "' type='text' ");
-	dojo.doc.write("dojoType='" + dojoType + "' ");
+	var res = "";
+	res += "<tr>";
+	res += "<td>" + desc + "</td>";
+	res += "<td>";
+	res += "<input id='test_validate_" + validateWidgetCount + "' type='text' ";
+	res += "dojoType='" + dojoType + "' ";
 	for(var attr in dojoAttrs){
-		dojo.doc.write(attr + "=\"" + dojoAttrs[attr] + "\" ");
+		res += attr + "=\"" + dojoAttrs[attr] + "\" ";
 	}
-	dojo.doc.write("/>");
-	dojo.doc.write("</td>");
-	dojo.doc.write("<td><input id='test_validate_input_" + validateWidgetCount + "' value='" + input + "'></td>");
-	dojo.doc.write("<td id='test_display_value_" + validateWidgetCount + "'></td>");
-	dojo.doc.write("<td id='test_validate_expected_" + validateWidgetCount + "'>" + (isWrong ? "Wrong" : "Correct") + "</td>");
-	dojo.doc.write("<td id='test_validate_result_" + validateWidgetCount + "'></td>");
-	dojo.doc.write("<td style='white-space:normal'>" + comment + "</td>");
-	dojo.doc.write("</tr>");
+	res += "/>";
+	res += "</td>";
+	res += "<td><input id='test_validate_input_" + validateWidgetCount + "' value='" + input + "'></td>";
+	res += "<td id='test_display_value_" + validateWidgetCount + "'></td>";
+	res += "<td id='test_validate_expected_" + validateWidgetCount + "'>" + (isWrong ? "Wrong" : "Correct") + "</td>";
+	res += "<td id='test_validate_result_" + validateWidgetCount + "'></td>";
+	res += "<td style='white-space:normal'>" + comment + "</td>";
+	res += "</tr>";
 	validateValues.push(value);
 	validateWidgetCount++;
+	
+	return res;
 }
 /*
 [
@@ -185,22 +194,24 @@ function genValidateTestCase(desc, dojoType, dojoAttrs, input, value, comment, i
 ]
 */
 function genValidateTestCases(title, dojoType, testCases){
-	dojo.doc.write("<h2 class=testTitle>" + title + "</h2>");
-	dojo.doc.write("<table border=1>");
-	dojo.doc.write("<tr>");
-	dojo.doc.write("<td class=title><b>Test Description</b></td>");
-	dojo.doc.write("<td class=title><b>Test</b></td>");
-	dojo.doc.write("<td class=title><b>Input</b></td>");
-	dojo.doc.write("<td class=title><b>Parsed Value</b></td>");
-	dojo.doc.write("<td class=title><b>Expected</b></td>");
-	dojo.doc.write("<td class=title><b>Result</b></td>");
-	dojo.doc.write("<td class=title><b>Comment</b></td>");
-	dojo.doc.write("</tr>");
+	var res = "";
+	res += "<h2 class=testTitle>" + title + "</h2>";
+	res += "<table border=1>";
+	res += "<tr>";
+	res += "<td class=title><b>Test Description</b></td>";
+	res += "<td class=title><b>Test</b></td>";
+	res += "<td class=title><b>Input</b></td>";
+	res += "<td class=title><b>Parsed Value</b></td>";
+	res += "<td class=title><b>Expected</b></td>";
+	res += "<td class=title><b>Result</b></td>";
+	res += "<td class=title><b>Comment</b></td>";
+	res += "</tr>";
 
 	for(var i = 0; i < testCases.length; i++){
 		var testCase = testCases[i];
-		genValidateTestCase(testCase.desc, dojoType, testCase.attrs, testCase.expValue, testCase.value, testCase.comment, testCase.isWrong);
+		res += genValidateTestCase(testCase.desc, dojoType, testCase.attrs, testCase.expValue, testCase.value, testCase.comment, testCase.isWrong);
 	}
 
-	dojo.doc.write("</table>");
+	res += "</table>";
+	dojo.place(res, dojo.body());
 }

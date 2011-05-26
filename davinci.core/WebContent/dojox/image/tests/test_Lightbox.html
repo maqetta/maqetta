@@ -1,11 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<title>dojox.image.Lightbox Tests | The Dojo Toolkit</title>
 
 	<!-- required: a default theme file -->
-	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/tundra/tundra.css">
+	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/claro/claro.css">
 	<link rel="stylesheet" href="../resources/image.css">
 	
 	<style type="text/css">
@@ -139,27 +139,23 @@
 				e.preventDefault();
 				var lbd = dijit.byId("dojoxLightboxDialog");
 				lbd.removeGroup("group3");
-				
-				
-			})
+			});
 		})
 	</script>
 
 	<script type="text/javascript">
 		// programatic flickrstore implementation [basic]
 		function onComplete(items,request){
-			if (items.length>0){
-				dojo.forEach(items,function(item){
+			if(items.length > 0){
+				var lightbox = dijit.byId("fromStore");
+				dojo.forEach(items, function(item){
 					var part = {
 						title: flickrStore.getValue(item,"title"),
 						href: flickrStore.getValue(item,"imageUrl")
 					};
-					// FIXME: make addImage more accessible, or do this internally
-					// _attachedDialog is dijit.byId("dojoxLightboxDialog"), and the
-					// is only one per page.
-					dijit.byId('fromStore')._attachedDialog.addImage(part,"flickrStore");
-				});
-				dojo.byId('flickrButton').disabled = false; 
+					this.addImage(part, "flickrStore");
+				}, lightbox);
+				dijit.byId('flickrButton').set("disabled", false); 
 			}
 		}
 
@@ -183,7 +179,7 @@
 
 
 </head>
-<body class="tundra">
+<body class="claro">
 
 	<div id="container" style="padding:20px;">
 		<h1 class="testTitle">a Dojo based Lightbox implementation:</h1>
@@ -193,8 +189,13 @@
 			<a href="images/imageVert.jpg" dojoType="dojox.image.Lightbox" title="More Guatemala...">tall</a>
 			<a href="images/imageHoriz.jpg" dojoType="dojox.image.Lightbox" title="Antigua, Guatemala">4:3 image</a>
 			<a href="images/broken.jpg" dojoType="dojox.image.Lightbox" title="broken href example">Broken link</a>
+		</p>
+
+		<h3>Oversized</h3>
+		<p>
+			<a href="images/supertall.gif" dojoType="dojox.image.Lightbox" title="a large image">super tall image</a>
+			<a href="images/superwide.gif" dojoType="dojox.image.Lightbox" title="a large image">super wide image</a>
 			<a href="images/huuuge.png" modal="true" dojoType="dojox.image.Lightbox" title="a large image">large than viewport?</a> (also modal, no click on underlay)
-			
 			<a href="images/huuuge.png" dojoType="dojox.image.Lightbox" title="a large image with a really really long multi-line-title because I can. Okay, this title has to be really really supremely long in order to occupy the full width of the viewport provided. yymv.">large than viewport, long title</a>
 		</p>
 
@@ -221,16 +222,21 @@
 			<a href="images/imageHoriz.jpg" dojoType="dojox.image.Lightbox" group="group3" title="Antigua, Guatemala">4:3 image</a>
 			<a href="images/imageVert.jpg" dojoType="dojox.image.Lightbox" group="group3" title="More Guatemala...">tall</a>
 		</p>
-        <p>
-                <a href='#' id="groupremover">remove one from group3, then show group</a> | <a href="#" id="groupkiller">remove group3</a>
-        </p>
+		<p>
+				<a href='#' id="groupremover">remove one from group3, then show group</a> | <a href="#" id="groupkiller">remove group3</a>
+		</p>
 
 		<h3>From dojox.data.FlickrStore:</h3>
 
 		<div dojoType="dojox.data.FlickrStore" jsId="flickrStore" label="title"></div>
-		<div id="fromStore" dojoType="dojox.image.Lightbox" store="flickrStore" group="flickrStore"></div>
+		<div id="fromStore" dojoType="dojox.image.LightboxDialog" store="flickrStore" group="flickrStore"></div>
 
-		<input id="flickrButton" type="button" onclick="dijit.byId('fromStore').show()" value="show flickr lightbox" disabled="disabled">
+		<button dojoType="dijit.form.Button" id="flickrButton" disabled="disabled">
+			Show Flickr lightbox
+			<script type="dojo/connect" event="onClick">
+				dijit.byId('fromStore').show({ group:"flickrStore" });
+			</script>
+		</button>
 	
 	</div>
 

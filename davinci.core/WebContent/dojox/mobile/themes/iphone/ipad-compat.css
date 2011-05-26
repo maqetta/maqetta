@@ -1,0 +1,12 @@
+/* mbl.widget.Heading */
+.mblHeading {
+	background-image: url(compat/ipad-heading-bg.png);
+}
+
+/* Heading Arrow Button */
+.mblArrowButtonHead {
+	background-image: url(compat/ipad-arrow-button-head.png);
+}
+.mblArrowButtonBody {
+	background-image: url(compat/ipad-arrow-button-bg.png);
+}

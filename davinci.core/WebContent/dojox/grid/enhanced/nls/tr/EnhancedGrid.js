@@ -1,8 +1,12 @@
 ({
-	singleSort: "Tek Sıralama",
+	singleSort: "Tekli Sıralama",
 	nestedSort: "İç İçe Sıralama",
-	ascending: "Artan",
-	descending: "Azalan",
-	unsorted: "Bu sütunu sıralama"
+	ascending: "Artan Düzende",
+	descending: "Azalan Düzende",
+	sortingState: "${0} - ${1}",
+	unsorted: "Bu sütunu sıralama",
+	indirectSelectionRadio: "Satır ${0}, tek seçimli, radyo düğmesi",
+	indirectSelectionCheckBox: "Satır ${0}, çok seçimli, radyo düğmesi",
+	selectAll: "Tümünü seç"
 })
 

@@ -1,5 +1,5 @@
-dojo.provide("dojox.data.ClientFilter");
-dojo.require("dojo.data.util.filter"); 
+define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], function(dojo, dojox) {
+
 // This is an abstract data store module for adding updateable result set functionality to an existing data store class
 (function(){
 	var cf;
@@ -34,15 +34,15 @@ dojo.require("dojo.data.util.filter");
 				// 		information. However, queries can be opaque strings, and this module can not update
 				// 		results by itself in this case. In this situations, data stores can provide a isUpdateable(request) function
 				// 		and matchesQuery(item,request) function. If a data store can handle a query, it can return true from
-				// 		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is 
+				// 		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is
 				//		definition of isUpdateable and matchesQuery
 				// 		isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
 				// 		matchesQuery(item,request) - item is the item to test, and request is the value arguments object
 				//				for the fetch function.
 				//
-				//		You can define a property on this object instance "cacheByDefault" to a value of true that will 
+				//		You can define a property on this object instance "cacheByDefault" to a value of true that will
 				// 		cause all queries to be cached by default unless the cache queryOption is explicitly set to false.
-				// 		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes. 
+				// 		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes.
 				//
 				// example:
 				//		to make a updated-result-set data store from an existing data store:
@@ -54,7 +54,7 @@ dojo.require("dojo.data.util.filter");
 				this.onNew = addUpdate(this,true,false);
 				this.onDelete = addUpdate(this,false,true);
 				this._updates= [];
-				this._fetchCache = [];				
+				this._fetchCache = [];
 			},
 			clearCache: function(){
 				//	summary:
@@ -64,19 +64,19 @@ dojo.require("dojo.data.util.filter");
 			updateResultSet: function(/*Array*/ resultSet, /*Object*/ request){
 				//	summary:
 				//		Attempts to update the given result set based on previous notifications
-				//	resultSet:				
+				//	resultSet:
 				//		The result set array that should be updated
 				//	request:
 				//		This object follows the same meaning as the keywordArgs passed to a dojo.data.api.Read.fetch.
 				//	description:
-				// 		This will attempt to update the provide result based on previous notification, adding new items 
+				// 		This will attempt to update the provide result based on previous notification, adding new items
 				// 		from onNew calls, removing deleted items, and updating modified items, and properly removing
 				//  	and adding items as required by the query and sort parameters. This function will return:
 				//		0: Indicates it could not successfully update the result set
 				//		1: Indicates it could successfully handle all the notifications, but no changes were made to the result set
 				//		2: Indicates it successfully handled all the notifications and result set has been updated.
 				if(this.isUpdateable(request)){
-					// we try to avoid rerunning notification updates more than once on the same object for performance 
+					// we try to avoid rerunning notification updates more than once on the same object for performance
 					for(var i = request._version || 0; i < this._updates.length;i++){
 						// for each notification,we will update the result set
 						var create = this._updates[i].create;
@@ -89,7 +89,7 @@ dojo.require("dojo.data.util.filter");
 								}
 							}
 						}
-						if(create && this.matchesQuery(create,request) && // if there is a new/replacement item and it matches the query 
+						if(create && this.matchesQuery(create,request) && // if there is a new/replacement item and it matches the query
 								dojo.indexOf(resultSet,create) == -1){ // and it doesn't already exist in query
 							resultSet.push(create); // should this go at the beginning by default instead?
 							updated = true;
@@ -114,7 +114,7 @@ dojo.require("dojo.data.util.filter");
 				//	summary:
 				//		Determines whether the provided arguments are super/sub sets of each other
 				// argsSuper:
-				// 		Dojo Data Fetch arguments 
+				// 		Dojo Data Fetch arguments
 				// argsSub:
 				// 		Dojo Data Fetch arguments
 				if(argsSuper.query == argsSub.query){
@@ -129,8 +129,8 @@ dojo.require("dojo.data.util.filter");
 				for(var i in argsSuper.query){
 					if(clientQuery[i] == argsSuper.query[i]){
 						delete clientQuery[i];
-					}else if(!(typeof argsSuper.query[i] == 'string' && 
-							// if it is a pattern, we can test to see if it is a sub-pattern 
+					}else if(!(typeof argsSuper.query[i] == 'string' &&
+							// if it is a pattern, we can test to see if it is a sub-pattern
 							// FIXME: This is not technically correct, but it will work for the majority of cases
 							dojo.data.util.filter.patternToRegExp(argsSuper.query[i]).test(clientQuery[i]))){
 						return false;
@@ -216,7 +216,7 @@ dojo.require("dojo.data.util.filter");
 				//
 				//	request:
 				//		See dojo.data.api.Read.fetch request
-				//		
+				//
 				//	baseResults:
 				//		This provides the result set to start with for client side querying
 				if(request.queryOptions && request.queryOptions.results){
@@ -244,10 +244,10 @@ dojo.require("dojo.data.util.filter");
 				var start = request.start || 0;
 				var finalResults = (start || request.count) ? baseResults.slice(start,start + (request.count || baseResults.length)) : baseResults;
 				finalResults._fullLength = baseResults.length;
-				return finalResults; 
+				return finalResults;
 			},
 			matchesQuery: function(item,request){
-				var query = request.query; 
+				var query = request.query;
 				var ignoreCase = request.queryOptions && request.queryOptions.ignoreCase;
 				for(var i in query){
 					// if anything doesn't match, than this should be in the query
@@ -271,7 +271,7 @@ dojo.require("dojo.data.util.filter");
 					// sort order for ties and no sort orders
 					return function(){
 						return 0;// keep the order unchanged
-					}; 
+					};
 				}
 				var attribute = current.attribute;
 				var descending = !!current.descending;
@@ -283,10 +283,13 @@ dojo.require("dojo.data.util.filter");
 					if(av != bv){
 						return av < bv == descending ? 1 : -1;
 					}
-					return next(a,b); 
-				}; 
+					return next(a,b);
+				};
 			}
 		}
 	);
 	cf.onUpdate = function(){};
 })();
+
+return dojox.data.ClientFilter;
+});

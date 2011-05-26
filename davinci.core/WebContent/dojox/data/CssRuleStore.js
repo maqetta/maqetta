@@ -1,8 +1,4 @@
-dojo.provide("dojox.data.CssRuleStore");
-
-dojo.require("dojo.data.util.filter");
-dojo.require("dojo.data.util.sorter");
-dojo.require("dojox.data.css");
+define("dojox/data/CssRuleStore", ["dojo", "dojox", "dojo.data.util.sorter", "dojo/data/util/filter", "dojox/data/css"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.CssRuleStore", null, {
 	//	summary:
@@ -39,18 +35,18 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 		this._waiting = [];
 		this.gatherHandle = null;
 		var self = this;
-		// CSS files may not be finished loading by the time the store is constructed.  We need to 
+		// CSS files may not be finished loading by the time the store is constructed.  We need to
 		// give them a little time, so setting the stylesheet loading to retry every 250ms.
 		function gatherRules(){
 			try{
-				// Funkiness here is due to css that may still be loading.  This throws an DOM Access 
+				// Funkiness here is due to css that may still be loading.  This throws an DOM Access
 				// error if css isnt completely loaded.
 				self.context = dojox.data.css.determineContext(self.context);
 				if(self.gatherHandle){
 					clearInterval(self.gatherHandle);
 					self.gatherHandle = null;
 				}
-				// Handle any fetches that have been queued while we've been waiting on the CSS files 
+				// Handle any fetches that have been queued while we've been waiting on the CSS files
 				// to finish
 				while(self._waiting.length){
 					var item = self._waiting.pop();
@@ -72,15 +68,15 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getFeatures: function(){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getFeatures()
-		return { 
+		return {
 			"dojo.data.api.Read" : true
 		};
 	},
 
 	isItem: function(item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.isItem()
 		if(item && item[this._storeRef] == this){
 			return true;
@@ -89,7 +85,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	hasAttribute: function(item, attribute){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.hasAttribute()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -101,7 +97,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getAttributes: function(item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		var attrs = ['selector', 'classes', 'rule', 'style', 'cssText', 'styleSheet', 'parentStyleSheet', 'parentStyleSheetHref'];
@@ -116,7 +112,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		var value = defaultValue;
@@ -127,7 +123,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getValues: function(item, attribute){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getValues()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -180,22 +176,22 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getLabel: function(item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getLabel()
 		this._assertIsItem(item);
 		return this.getValue(item, this._labelAttribute);
 	},
 
 	getLabelAttributes: function(item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getLabelAttributes()
 		return [this._labelAttribute];
 	},
 
-	containsValue: function(/* item */ item, 
-							/* attribute-name-string */ attribute, 
+	containsValue: function(/* item */ item,
+							/* attribute-name-string */ attribute,
 							/* anything */ value){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
@@ -205,19 +201,19 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	},
 
 	isItemLoaded: function(/* anything */ something){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.isItemLoaded()
 		return this.isItem(something); //boolean
 	},
 
 	loadItem: function(/* object */ keywordArgs){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.loadItem()
 		this._assertIsItem(keywordArgs.item);
 	},
 
 	fetch: function(request){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.fetch()
 		request = request || {};
 		if(!request.store){
@@ -289,7 +285,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 		//	summary:
 		//		Handles the return from a fetching action.  Delegates requests to act on the resulting
 		//		item set to eitehr the _handleFetchReturn or _handleFetchByIdentityReturn depending on
-		//		where the request originated.  
+		//		where the request originated.
 		var _inProgress = [];
 		
 		var items = [];
@@ -332,9 +328,9 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 		}else if(request.query){
 			for(i in request._items){
 				var item = request._items[i];
-				// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText 
+				// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText
 				// of a rule in full lowercase.
-				var ignoreCase = dojo.isWebKit ? true : (request.queryOptions ? request.queryOptions.ignoreCase : false); 
+				var ignoreCase = dojo.isWebKit ? true : (request.queryOptions ? request.queryOptions.ignoreCase : false);
 				var regexpList = {};
 				var key;
 				var value;
@@ -352,7 +348,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 					}
 				}
 				if(match){
-					items.push(item); 
+					items.push(item);
 				}
 			}
 			this._cache[cacheKey] = items;
@@ -370,7 +366,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 		var start = 0;
 		var count = items.length;
 		if(request.start > 0 && request.start < items.length){
-			start = request.start;	
+			start = request.start;
 		}
 		if(request.count && request.count){
 			count = request.count;
@@ -388,20 +384,20 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 		if(request.onItem){
 			if(dojo.isArray(items)){
 				for(i = 0; i < items.length; i++){
-					request.onItem.call(scope, items[i], request); 
+					request.onItem.call(scope, items[i], request);
 				}
 				if(request.onComplete){
 					request.onComplete.call(scope, null, request);
 				}
 			}
 		}else if(request.onComplete){
-			request.onComplete.call(scope, items, request); 
+			request.onComplete.call(scope, items, request);
 		}
 		return request;
 	},
 
 	close: function(){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.close()
 		//		Clears out the cache and allItems objects, meaning all future fetches will requery
 		//		the stylesheets.
@@ -412,9 +408,9 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	_assertIsItem: function(/* item */ item){
 		//	summary:
 		//      This function tests whether the item passed in is indeed an item in the store.
-		//	item: 
+		//	item:
 		//		The item to test for being contained by the store.
-		if(!this.isItem(item)){ 
+		if(!this.isItem(item)){
 			throw new Error(this._cName + ": Invalid item argument.");
 		}
 	},
@@ -422,29 +418,29 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 	_assertIsAttribute: function(/* attribute-name-string */ attribute){
 		//	summary:
 		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute: 
+		//	attribute:
 		//		The attribute to test for being contained by the store.
-		if(typeof attribute !== "string"){ 
+		if(typeof attribute !== "string"){
 			throw new Error(this._cName + ": Invalid attribute argument.");
 		}
 	},
 
-	_containsValue: function(	/* item */ item, 
-								/* attribute-name-string */ attribute, 
+	_containsValue: function(	/* item */ item,
+								/* attribute-name-string */ attribute,
 								/* anything */ value,
 								/* RegExp?*/ regexp){
-		//	summary: 
+		//	summary:
 		//		Internal function for looking at the values contained by the item.
-		//	description: 
-		//		Internal function for looking at the values contained by the item.  This 
+		//	description:
+		//		Internal function for looking at the values contained by the item.  This
 		//		function allows for denoting if the comparison should be case sensitive for
 		//		strings or not (for handling filtering cases where string case should not matter)
-		//	
+		//
 		//	item:
 		//		The data item to examine for attribute values.
 		//	attribute:
 		//		The attribute to inspect.
-		//	value:	
+		//	value:
 		//		The value to match.
 		//	regexp:
 		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
@@ -460,4 +456,8 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 			return false;
 		});
 	}
+});
+
+return dojox.data.CssRuleStore;
+
 });

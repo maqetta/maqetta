@@ -1,11 +1,12 @@
 ({
-	displayOptions: "[Opcje wyświetlania]",
+	displayOptions: "[opcje wyświetlania]",
 	title: "Tytuł",
 	authors: "Autorzy",
 	contributors: "Kontrybutorzy",
 	id: "Identyfikator",
-	close: "[Zamknij]",
+	close: "[zamknij]",
 	updated: "Zaktualizowano",
 	summary: "Podsumowanie",
 	content: "Treść"
 })
+

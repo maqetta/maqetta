@@ -1,7 +1,5 @@
-dojo.provide("dojox.rpc.JsonRPC");
-dojo.require("dojox.rpc.Service");
+define("dojox/rpc/JsonRPC", ["dojo", "dojox", "dojox/rpc/Service"], function(dojo, dojox) {
 
-(function(){
 	function jsonRpcEnvelope(version){
 		return {
 			serialize: function(smd, method, data, options){
@@ -52,4 +50,5 @@ dojo.require("dojox.rpc.Service");
 		},
 		jsonRpcEnvelope("2.0")
 	);
-})();
+
+});

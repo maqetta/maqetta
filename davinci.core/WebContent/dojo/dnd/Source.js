@@ -1,7 +1,4 @@
-dojo.provide("dojo.dnd.Source");
-
-dojo.require("dojo.dnd.Selector");
-dojo.require("dojo.dnd.Manager");
+define("dojo/dnd/Source", ["dojo", "dojo/dnd/Selector", "dojo/dnd/Manager"], function(dojo) {
 
 /*
 	Container property:
@@ -80,11 +77,11 @@ dojo.declare("dojo.dnd.Source", dojo.dnd.Selector, {
 	generateText: true,
 	
 	constructor: function(/*DOMNode|String*/node, /*dojo.dnd.__SourceArgs?*/params){
-		// summary: 
+		// summary:
 		//		a constructor of the Source
 		// node:
 		//		node or node's id to build the source on
-		// params: 
+		// params:
 		//		any property of this class may be configured via the params
 		//		object which is mixed-in to the `dojo.dnd.Source` instance
 		dojo.mixin(this, dojo.mixin({}, params));
@@ -535,4 +532,7 @@ dojo.declare("dojo.dnd.AutoSource", dojo.dnd.Source, {
 		params._skipStartup = true;
 		return new dojo.dnd.AutoSource(node, params);
 	}
+});
+
+return dojo.dnd.Source;
 });

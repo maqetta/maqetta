@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
+			dojo.require("dojo.DeferredList");
 			dojo.require("dijit.robotx");
 
 			function dom2string(root){
@@ -57,97 +58,137 @@
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot('../EnterKeyHandling.html');
 
+				var metaKey = dojo.isMac? {meta: true} : {ctrl: true};
+				
 				// Tests for BR mode
-				if(dojo.isIE){
-					doh.register("blockNodeForEnter=BR / IE tests", [
-						{
-							name: "initial input",
-							timeout: 4000,
-							runTest: function(){
-								// The initial input was <p>para 1<br>line 2</p>  <p>para 2<br>line 2</p>,
-								// but the pre-filter should internally convert it to have a <p> for each line
-								// of text.
-								doh.is('<p>para 1</p><p>line 2</p><p>&nbsp;</p><p>para 2</p><p>line 2</p>',
-										dom2string(dijit.byId("br").editNode),
-										"innerHTML of editor (should have converted each line of text to a separate <p>)");
-
-								// getValue() should call the post-filter which recombines the separate <p> nodes into bigger
-								// paragraphs.
-								doh.is('<p>para 1<br />line 2</p><p>para 2<br />line 2</p>',
-										dijit.byId("br").get('value'),
-										"get('value')");
-
-								// Make sure that the post-filter didn't corrupt the data inside the editor
-								doh.is('<p>para 1</p><p>line 2</p><p>&nbsp;</p><p>para 2</p><p>line 2</p>',
-										dom2string(dijit.byId("br").editNode),
-										'innerHTML of editor DOM after getValue() call');
-
-								// Make sure that the margin:0 style was applied to the <p> nodes
-								var sampleP = dijit.byId("br").editNode.childNodes[0];
-								doh.is('P', sampleP.tagName, "found a P node");
-								doh.is(0, dojo.style(sampleP, "margin-top"));
-								doh.is(0, dojo.style(sampleP, "margin-bottom"));
-							}
-						},
-						/*******
-						Not currently working, see #9462
-						{
-							name: "text nodes at top level",
-							timeout: 4000,
-							runTest: function(){
-
-								var br = dijit.byId("br");
-
-								br.set("value", "<p>ab345<br>ab345<br>ab345<br>ab345<br></p>");
-
-								// Pre-filter should internally convert it to have a <p> for each line
-								// of text.
-								console.log(br.get("value"));
-								doh.is('<p>ab345</p><p>ab345</p><p>ab345</p><p>ab345</p>',
-										dom2string(dijit.byId("br").editNode),
-										"innerHTML of editor (should have converted each line of text to a separate <p>)");
-								// getValue() should call the post-filter which recombines the separate <p> nodes into bigger
-								// paragraphs.
-								doh.is('<p>ab345<br/>ab345<br/>ab345<br/>ab345</p>',
-										dijit.byId("br").get('value'),
-										"get('value')");
-							}
-						},
-						********/
-						{
-							name: "type in some text",
-							timeout: 10000,
-							runTest: function(){
-								var d = new doh.Deferred();
-
-								var br = dijit.byId("br");
-								br.set("value", "");
-								br.focus();
-
-								// tab to the MenuBar... then focus should automatically shift to "File" menu,
-								for(var i=0; i<4; i++){
-									doh.robot.typeKeys("ab345", 500);
-									i<3 && doh.robot.keyPress(dojo.keys.ENTER, 100, {});
-								}
-
-								doh.robot.sequence(d.getTestCallback(function(){
-									doh.is('<p>ab345</p><p>ab345</p><p>ab345</p><p>ab345</p>',
-											dom2string(br.editNode),
-											"innerHTML of editor (should have converted each line of text to a separate <p>)");
-
-									// get('value') should call the post-filter which recombines the separate <p> nodes into bigger
-									// paragraphs.
-									doh.is('<p>ab345<br />ab345<br />ab345<br />ab345</p>',
-											br.get('value'),
-											"get('value')");
-								}), 500);
-
-								return d;
-							}
+				doh.register("blockNodeForEnter=BR", [
+					{
+						name: "wait for editors to load",
+						timeout: 5000,
+						runTest: function(){
+						    return new dojo.DeferredList(
+						        dijit.registry.filter(function(w){ return w.onLoadDeferred; }).map(function(w){ return w.onLoadDeferred; })
+						    );
 						}
-					]);
-				}
+					},
+					{
+						name: "type in some text",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
 
+							var br = dijit.byId("br");
+							br.set("value", "");
+							br.focus();
+							
+							doh.robot.mouseMoveAt(br.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+							
+							// tab to the MenuBar... then focus should automatically shift to "File" menu,
+							for(var i=0; i<4; i++){
+								doh.robot.typeKeys("ab345", 500);
+								doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							}
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// get('value') should call the post-filter which recombines the separate <p> nodes into bigger
+								// paragraphs.
+								var value = br.get('value');
+								value = value.replace(/&nbsp;/g, "");
+								value = value.replace(/ /g, "");
+								value = value.replace(/\xA0/g, "");
+								doh.is('ab345<br/>ab345<br/>ab345<br/>ab345<br/>',
+										value,
+										"get('value')");
+							}), 1000);
+
+							return d;
+						}
+					},
+					{
+						name: "copy and paste",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var br = dijit.byId("br");
+							br.set("value", "");
+							br.focus();
+							
+							doh.robot.mouseMoveAt(br.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+								
+							doh.robot.typeKeys("testingCopyAndPaste", 500);
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.keyPress("c", 500, metaKey);	// copy
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {shift: false});
+							doh.robot.sequence(d.getTestCallback(function(){
+								// get('value') should call the post-filter which recombines the separate <p> nodes into bigger
+								// paragraphs.
+								var value = br.get('value');
+								value = value.replace(/ /g, "");
+								value = value.replace(/\xA0/g, "");
+								
+								// Safari may end with a trailing/extra br, so we need to remove it.
+								if(/<br\/><br\/>$/.test(value)){
+									value = value.substring(0, value.length - 5);
+								}
+								doh.is('testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste<br/>',
+										value,
+										"get('value')");
+							}), 1000);
+							return d;
+						}
+					},					
+					{
+						name: "copy and paste split",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var br = dijit.byId("br");
+							br.set("value", "");
+							br.focus();
+							
+							doh.robot.mouseMoveAt(br.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+								
+							doh.robot.typeKeys("testingCopyAndPaste", 500);
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.keyPress("c", 500, metaKey);	// copy
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								// get('value') should call the post-filter which recombines the separate <p> nodes into bigger
+								// paragraphs.
+								var value = br.get('value');
+								value = value.replace(/ /g, "");
+
+								// Safari may end with a trailing/extra br, so we need to remove it.
+								if(/aste<br\/>$/.test(value)){
+									value = value.substring(0, value.length - 5);
+								}
+								doh.is('testingCopyAndPastetestingCopyAndPastetestingCopyAndP<br/>aste',
+										value,
+										"get('value')");
+							}), 1000);
+							return d;
+						}
+					}
+				]);
+				
 				doh.register("Split tests", [
 					{
 						name: "Test div line split",
@@ -170,7 +211,7 @@
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -178,8 +219,8 @@
 								// Do tests here.
 								var val = editor.get("value");
 								// Check that it split the is into two and that the bold and div were properly split.
-								doh.assertTrue(val.indexOf("It <b id=\"boldLine0\">i</b></div>") > 0);
-								doh.assertTrue(val.indexOf("<div><b>s</b>") > 0);
+								doh.t(val.indexOf("It <b id=\"boldLine0\">i</b></div>") > 0, "start");
+								doh.t(val.indexOf("<div><b>s</b>") > 0, "end");
 							}), 500);
 
 							return d;
@@ -207,7 +248,7 @@
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -216,13 +257,121 @@
 								var val = editor.get("value");
 								// Check that it split the is into two and that the bold and div were properly split.
 								val = val.toLowerCase();
-								doh.assertTrue(/it <b\s+id="boldline1"\s+style\s*=\s*"\s*font-size:\s*4em;?\s*">i<\/b><\/div>/.test(val));
-								doh.assertTrue(/<div><b\s+style\s*=\s*"\s*font-size:\s*4em;?\s*">s<\/b>/.test(val));
+								doh.t(/it <b\s+id="boldline1"\s+style\s*=\s*"\s*font-size:\s*4em;?\s*">i<\/b><\/div>/.test(val), "start");
+								doh.t(/<div><b\s+style\s*=\s*"\s*font-size:\s*4em;?\s*">s<\/b>/.test(val), "end");
 							}), 500);
 
 							return d;
 						}
+					},
+					{
+						name: "Test div line split font clone",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							// The initial input was a div with a line of text with a font tag in the middle.
+							// we want to focus on the font and enter there, splitting it.
+							var editor = dijit.byId("div4");
+							dojo.window.scrollIntoView(editor.iframe);
+							var node = dojo.withGlobal(editor.window, function(){
+								return dojo.byId("fontLine1");
+							});
+							
+							doh.robot.mouseMoveAt(editor.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
 
+							doh.robot.sequence(function(){
+                                editor._sCall("selectElementChildren", [node]);
+							}, 500);
+							
+							//Keyboard kill the selection and shift position between i and s.
+							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
+							doh.robot.keyPress(dojo.keys.ENTER, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Do tests here.
+								var val = editor.get("value");
+								// Check that it split the is into two and that the bold and div were properly split.
+								val = val.toLowerCase();
+								doh.assertTrue(/it <font\s+id="fontline1"\s+size\s*=\s*"\s*5?\s*">i<\/font><\/div>/.test(val),"font not set on first line");
+								doh.assertTrue(/<div><font\s+size\s*=\s*"\s*5?\s*">s<\/font>/.test(val),"font not set on split line");
+							}), 500);
+
+							return d;
+						}
+					},					
+					{
+						name: "copy and paste DIV",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var editor = dijit.byId("div3");
+							dojo.window.scrollIntoView(editor.iframe);
+							editor.set("value", "");
+							editor.focus();
+							
+							doh.robot.mouseMoveAt(editor.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+								
+							doh.robot.typeKeys("testingCopyAndPaste", 500);
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.keyPress("c", 500, metaKey);	// copy
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								var value = editor.get('value');
+								value = value.replace(/\xA0/g, "");
+								var expVal = dojo.isWebKit? 'testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste<div></div>' : '<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste</div><div></div>';
+								doh.is(expVal,
+										value,
+										"get('value')");
+							}), 1000);
+							return d;
+						}
+					},
+					{
+						name: "copy and paste DIV split",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var editor = dijit.byId("div3");
+							dojo.window.scrollIntoView(editor.iframe);
+							editor.set("value", "");
+							editor.focus();
+							
+							doh.robot.mouseMoveAt(editor.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+								
+							doh.robot.typeKeys("testingCopyAndPaste", 500);
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.keyPress("c", 500, metaKey);	// copy
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								// get('value') should call the post-filter which recombines the separate <p> nodes into bigger
+								// paragraphs.
+								var value = editor.get('value');
+								value = value.replace(/\xA0/g, "");
+								var expVal = dojo.isWebKit? 'testingCopyAndPastetestingCopyAndPastetestingCopyAndP<div>aste</div>' : '<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndP</div><div>aste</div>';
+								doh.is(expVal,
+									value,
+									"get('value')");
+							}), 1000);
+							return d;
+						}
 					},
 					{
 						name: "Test p line split",
@@ -245,7 +394,7 @@
 							}, 500);
 							
 							//Keyboard kill the selection and shift position between i and s.
-							if(!dojo.isMoz) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
+							if(!dojo.isMoz || dojo.isMac) {doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); }
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 100, {});
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 
@@ -253,10 +402,80 @@
 								// Do tests here.
 								var val = editor.get("value");
 								// Check that it split the is into two and that the bold and div were properly split.
-								doh.assertTrue(val.indexOf("It <b id=\"boldLine2\">i</b></p>") > 0);
-								doh.assertTrue(val.indexOf("<p><b>s</b>") > 0);
+								doh.t(val.indexOf("It <b id=\"boldLine2\">i</b></p>") > 0, "start");
+								doh.t(val.indexOf("<p><b>s</b>") > 0, "end");
 							}), 500);
 
+							return d;
+						}
+					},
+					{
+						name: "copy and paste P",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var editor = dijit.byId("p2");
+							dojo.window.scrollIntoView(editor.iframe);
+							editor.set("value", "");
+							editor.focus();
+							
+							doh.robot.mouseMoveAt(editor.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+								
+							doh.robot.typeKeys("testingCopyAndPaste", 500);
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.keyPress("c", 500, metaKey);	// copy
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								var value = editor.get('value');
+								value = value.replace(/\xA0/g, "");
+								doh.is('<p>testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste</p><p></p>',
+									value,
+									"get('value')");
+							}), 1000);
+							return d;
+						}
+					},					
+					{
+						name: "copy and paste P split",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var editor = dijit.byId("p2");
+							dojo.window.scrollIntoView(editor.iframe);
+							editor.set("value", "");
+							editor.focus();
+							
+							doh.robot.mouseMoveAt(editor.iframe, 500);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});
+								
+							doh.robot.typeKeys("testingCopyAndPaste", 500);
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.keyPress("c", 500, metaKey);	// copy
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress("v", 500, metaKey);	// paste
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							doh.robot.sequence(d.getTestCallback(function(){
+								// get('value') should call the post-filter which recombines the separate <p> nodes into bigger
+								// paragraphs.
+								var value = editor.get('value');
+								value = value.replace(/\xA0/g, "");
+								doh.is('<p>testingCopyAndPastetestingCopyAndPastetestingCopyAndP</p><p>aste</p>',
+										value,
+										"get('value')");
+							}), 1000);
 							return d;
 						}
 					}

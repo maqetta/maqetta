@@ -17,8 +17,8 @@ doh.register("dojox.io.tests.xhrPlugins", [
 	},
 
 	function crossSiteRequest(t){
-		// Note: this isn't really testing much unless you are using IE8 (XDomainRequest) or a 
-		// browser that supports cross-site XHR (maybe FF3.1?) 
+		// Note: this isn't really testing much unless you are using IE8 (XDomainRequest) or a
+		// browser that supports cross-site XHR (maybe FF3.1?)
 		var d = new doh.Deferred();
 		// persevere supports both XDR and cross-site XHR so we can use it for cross-site testing for now
 		dojox.io.xhrPlugins.addXdr("http://persevere.sitepen.com/");
@@ -33,9 +33,9 @@ doh.register("dojox.io.tests.xhrPlugins", [
 			throw e;
 		}
 		dfd.addCallback(function(result){
-			d.callback(result.match(/transport/)); 
+			d.callback(result.match(/transport/));
 		});
-		// TODO: This should run off a fixed URL on some Dojo server.  
+		// TODO: This should run off a fixed URL on some Dojo server.
 		
 /*		dojox.io.xhrPlugins.addXdr("http://dojotoolkit.org/...");
 		dojox.io.xhrPlugins.addCrossSiteXhr("http://dojotoolkit.org/...");

@@ -1,8 +1,4 @@
-dojo.provide("dijit.MenuSeparator");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Contained");
+define("dijit/MenuSeparator", ["dojo", "dijit", "text!dijit/templates/MenuSeparator.html", "dijit/_Widget", "dijit/_Templated", "dijit/_Contained"], function(dojo, dijit) {
 
 dojo.declare("dijit.MenuSeparator",
 		[dijit._Widget, dijit._Templated, dijit._Contained],
@@ -12,7 +8,8 @@ dojo.declare("dijit.MenuSeparator",
 
 		templateString: dojo.cache("dijit", "templates/MenuSeparator.html"),
 
-		postCreate: function(){
+		buildRendering: function(){
+			this.inherited(arguments);
 			dojo.setSelectable(this.domNode, false);
 		},
 
@@ -26,3 +23,6 @@ dojo.declare("dijit.MenuSeparator",
 		}
 	});
 
+
+return dijit.MenuSeparator;
+});

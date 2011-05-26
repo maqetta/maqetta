@@ -3,7 +3,7 @@
 		dojoAttachEvent="ondijitclick:_onButtonClick"
 		><span class="dijitReset dijitStretch dijitButtonContents"
 			dojoAttachPoint="titleNode,focusNode"
-			waiRole="button" waiState="labelledby-${id}_label"
+			role="button" aria-labelledby="${id}_label"
 			><span class="dijitReset dijitInline dijitIcon" dojoAttachPoint="iconNode"></span
 			><span class="dijitReset dijitToggleButtonIconChar">&#x25CF;</span
 			><span class="dijitReset dijitInline dijitButtonText"
@@ -12,6 +12,6 @@
 			></span
 		></span
 	></span
-	><input ${!nameAttrSetting} type="${type}" value="${value}" class="dijitOffScreen"
+	><input ${!nameAttrSetting} type="${type}" value="${value}" class="dijitOffScreen" tabIndex="-1"
 		dojoAttachPoint="valueNode"
 /></span>

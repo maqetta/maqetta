@@ -39,7 +39,7 @@ dojox.highlight.languages.xml = {
 		},
 		{
 			className: "string",
-			begin: '"', 
+			begin: '"',
 			end: '"',
 			illegal: "\\n",
 			relevance: 0

@@ -1,7 +1,4 @@
-dojo.provide("dijit.layout.LinkPane");
-
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit._Templated");
+define("dijit/layout/LinkPane", ["dojo", "dijit", "dijit/layout/ContentPane", "dijit/_Templated"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.LinkPane",
 	[dijit.layout.ContentPane, dijit._Templated],
@@ -37,4 +34,8 @@ dojo.declare("dijit.layout.LinkPane",
 		// but in our case the srcNodeRef innerHTML is the title, so shouldn't be
 		// copied
 	}
+});
+
+
+return dijit.layout.LinkPane;
 });

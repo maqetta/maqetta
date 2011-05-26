@@ -1,10 +1,9 @@
-dojo.provide("dojox.encoding.crypto.SimpleAES");
-
-dojo.require("dojox.encoding.base64");
-dojo.require("dojox.encoding.crypto._base");
+// AMD-ID "dojox/encoding/crypto/SimpleAES"
+define(["dojo", "dojox", "dojox/encoding/base64", "dojox/encoding/crypto/_base"], function(dojo, dojox) {
+dojo.getObject("encoding.crypto.SimpleAES", true, dojox);
 
 (function(){
-		// Sbox is pre-computed multiplicative inverse in GF(2^8) used in SubBytes and KeyExpansion [Â§5.1.1]
+		// Sbox is pre-computed multiplicative inverse in GF(2^8) used in SubBytes and KeyExpansion [®ª5.1.1]
 		var Sbox =	[0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,
 					 0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,
 					 0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,
@@ -22,7 +21,7 @@ dojo.require("dojox.encoding.crypto._base");
 					 0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,
 					 0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16];
 
-		// Rcon is Round Constant used for the Key Expansion [1st col is 2^(r-1) in GF(2^8)] [Â§5.2]
+		// Rcon is Round Constant used for the Key Expansion [1st col is 2^(r-1) in GF(2^8)] [®ª5.2]
 		var Rcon = [ [0x00, 0x00, 0x00, 0x00],
 					 [0x01, 0x00, 0x00, 0x00],
 					 [0x02, 0x00, 0x00, 0x00],
@@ -33,7 +32,7 @@ dojo.require("dojox.encoding.crypto._base");
 					 [0x40, 0x00, 0x00, 0x00],
 					 [0x80, 0x00, 0x00, 0x00],
 					 [0x1b, 0x00, 0x00, 0x00],
-					 [0x36, 0x00, 0x00, 0x00] ]; 
+					 [0x36, 0x00, 0x00, 0x00] ];
 
 		/*
 		 * AES Cipher function: encrypt 'input' with Rijndael algorithm
@@ -45,11 +44,11 @@ dojo.require("dojox.encoding.crypto._base");
 		 *
 		 *	 returns byte-array encrypted value (16 bytes)
 		 */
-		function Cipher(input, w) {	   // main Cipher function [Â§5.1]
+		function Cipher(input, w) {	   // main Cipher function [®ª5.1]
 		  var Nb = 4;				// block size (in words): no of columns in state (fixed at 4 for AES)
 		  var Nr = w.length/Nb - 1; // no of rounds: 10/12/14 for 128/192/256-bit keys
 
-		  var state = [[],[],[],[]];  // initialise 4xNb byte-array 'state' with input [Â§3.4]
+		  var state = [[],[],[],[]];  // initialise 4xNb byte-array 'state' with input [®ª3.4]
 		  for (var i=0; i<4*Nb; i++) state[i%4][Math.floor(i/4)] = input[i];
 
 		  state = AddRoundKey(state, w, 0, Nb);
@@ -65,13 +64,13 @@ dojo.require("dojox.encoding.crypto._base");
 		  state = ShiftRows(state, Nb);
 		  state = AddRoundKey(state, w, Nr, Nb);
 
-		  var output = new Array(4*Nb);	 // convert state to 1-d array before returning [Â§3.4]
+		  var output = new Array(4*Nb);	 // convert state to 1-d array before returning [®ª3.4]
 		  for (var i=0; i<4*Nb; i++) output[i] = state[i%4][Math.floor(i/4)];
 		  return output;
 		}
 
 
-		function SubBytes(s, Nb) {	  // apply SBox to state S [Â§5.1.1]
+		function SubBytes(s, Nb) {	  // apply SBox to state S [®ª5.1.1]
 		  for (var r=0; r<4; r++) {
 			for (var c=0; c<Nb; c++) s[r][c] = Sbox[s[r][c]];
 		  }
@@ -79,25 +78,25 @@ dojo.require("dojox.encoding.crypto._base");
 		}
 
 
-		function ShiftRows(s, Nb) {	   // shift row r of state S left by r bytes [Â§5.1.2]
+		function ShiftRows(s, Nb) {	   // shift row r of state S left by r bytes [®ª5.1.2]
 		  var t = new Array(4);
 		  for (var r=1; r<4; r++) {
 			for (var c=0; c<4; c++) t[c] = s[r][(c+r)%Nb];	// shift into temp copy
 			for (var c=0; c<4; c++) s[r][c] = t[c];			// and copy back
 		  }			 // note that this will work for Nb=4,5,6, but not 7,8 (always 4 for AES):
-		  return s;	 // see fp.gladman.plus.com/cryptography_technology/rijndael/aes.spec.311.pdf 
+		  return s;	 // see fp.gladman.plus.com/cryptography_technology/rijndael/aes.spec.311.pdf
 		}
 
 
-		function MixColumns(s, Nb) {   // combine bytes of each col of state S [Â§5.1.3]
+		function MixColumns(s, Nb) {   // combine bytes of each col of state S [®ª5.1.3]
 		  for (var c=0; c<4; c++) {
 			var a = new Array(4);  // 'a' is a copy of the current column from 's'
-			var b = new Array(4);  // 'b' is aâ€¢{02} in GF(2^8)
+			var b = new Array(4);  // 'b' is a‰Þ{02} in GF(2^8)
 			for (var i=0; i<4; i++) {
 			  a[i] = s[i][c];
 			  b[i] = s[i][c]&0x80 ? s[i][c]<<1 ^ 0x011b : s[i][c]<<1;
 			}
-			// a[n] ^ b[n] is aâ€¢{03} in GF(2^8)
+			// a[n] ^ b[n] is a‰Þ{03} in GF(2^8)
 			s[0][c] = b[0] ^ a[1] ^ b[1] ^ a[2] ^ a[3]; // 2*a0 + 3*a1 + a2 + a3
 			s[1][c] = a[0] ^ b[1] ^ a[2] ^ b[2] ^ a[3]; // a0 * 2*a1 + 3*a2 + a3
 			s[2][c] = a[0] ^ a[1] ^ b[2] ^ a[3] ^ b[3]; // a0 + a1 + 2*a2 + 3*a3
@@ -107,7 +106,7 @@ dojo.require("dojox.encoding.crypto._base");
 		}
 
 
-		function AddRoundKey(state, w, rnd, Nb) {  // xor Round Key into state S [Â§5.1.4]
+		function AddRoundKey(state, w, rnd, Nb) {  // xor Round Key into state S [®ª5.1.4]
 		  for (var r=0; r<4; r++) {
 			for (var c=0; c<Nb; c++) state[r][c] ^= w[rnd*4+c][r];
 		  }
@@ -115,7 +114,7 @@ dojo.require("dojox.encoding.crypto._base");
 		}
 
 
-		function KeyExpansion(key) {  // generate Key Schedule (byte-array Nr+1 x Nb) from Key [Â§5.2]
+		function KeyExpansion(key) {  // generate Key Schedule (byte-array Nr+1 x Nb) from Key [®ª5.2]
 		  var Nb = 4;			 // block size (in words): no of columns in state (fixed at 4 for AES)
 		  var Nk = key.length/4	 // key length (in words): 4/6/8 for 128/192/256-bit keys
 		  var Nr = Nk + 6;		 // no of rounds: 10/12/14 for 128/192/256-bit keys
@@ -156,7 +155,7 @@ dojo.require("dojox.encoding.crypto._base");
 
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-		/* 
+		/*
 		 * Use AES to encrypt 'plaintext' with 'password' using 'nBits' key, in 'Counter' mode of operation
 		 *							 - see http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
 		 *	 for each block
@@ -166,7 +165,7 @@ dojo.require("dojox.encoding.crypto._base");
 		function AESEncryptCtr(plaintext, password, nBits) {
 		  if (!(nBits==128 || nBits==192 || nBits==256)) return '';	 // standard allows 128/192/256 bit keys
 
-		  // for this example script, generate the key by applying Cipher to 1st 16/24/32 chars of password; 
+		  // for this example script, generate the key by applying Cipher to 1st 16/24/32 chars of password;
 		  // for real-world applications, a more secure approach would be to hash the password e.g. with SHA-1
 		  var nBytes = nBits/8;	 // no bytes in key
 		  var pwBytes = new Array(nBytes);
@@ -176,7 +175,7 @@ dojo.require("dojox.encoding.crypto._base");
 
 		  key = key.concat(key.slice(0, nBytes-16));  // key is now 16/24/32 bytes long
 
-		  // initialise counter block (NIST SP800-38A Â§B.2): millisecond time-stamp for nonce in 1st 8 bytes,
+		  // initialise counter block (NIST SP800-38A ®ªB.2): millisecond time-stamp for nonce in 1st 8 bytes,
 		  // block counter in 2nd 8 bytes
 		  var blockSize = 16;  // block size fixed at 16 bytes / 128 bits (Nb=4) for AES
 		  var counterBlock = new Array(blockSize);	// block size fixed at 16 bytes / 128 bits (Nb=4) for AES
@@ -184,14 +183,14 @@ dojo.require("dojox.encoding.crypto._base");
 
 		  // encode nonce in two stages to cater for JavaScript 32-bit limit on bitwise ops
 		  for (var i=0; i<4; i++) counterBlock[i] = (nonce >>> i*8) & 0xff;
-		  for (var i=0; i<4; i++) counterBlock[i+4] = (nonce/0x100000000 >>> i*8) & 0xff; 
+		  for (var i=0; i<4; i++) counterBlock[i+4] = (nonce/0x100000000 >>> i*8) & 0xff;
 
 		  // generate key schedule - an expansion of the key into distinct Key Rounds for each round
 		  var keySchedule = KeyExpansion(key);
 
 		  var blockCount = Math.ceil(plaintext.length/blockSize);
 		  var ciphertext = new Array(blockCount);  // ciphertext as array of strings
- 
+
 		  for (var b=0; b<blockCount; b++) {
 			// set counter (block #) in last 8 bytes of counter block (leaving nonce in 1st 8 bytes)
 			// again done in two stages for 32-bit ops
@@ -232,7 +231,7 @@ dojo.require("dojox.encoding.crypto._base");
 			return ret;
 		}
 
-		/* 
+		/*
 		 * Use AES to decrypt 'ciphertext' with 'password' using 'nBits' key, in Counter mode of operation
 		 *
 		 *	 for each block
@@ -251,7 +250,7 @@ dojo.require("dojox.encoding.crypto._base");
 
 		  var keySchedule = KeyExpansion(key);
 
-		  ciphertext = ciphertext.split(' ');  // split ciphertext into array of block-length strings 
+		  ciphertext = ciphertext.split(' ');  // split ciphertext into array of block-length strings
 
 		  // recover nonce from 1st element of ciphertext
 		  var blockSize = 16;  // block size fixed at 16 bytes / 128 bits (Nb=4) for AES
@@ -302,7 +301,7 @@ dojo.require("dojox.encoding.crypto._base");
 		// summary:
 		// 		SimpleAES, ported from dojox.sql, and done without the need for
 		// 		a Google Gears worker pool.
-		// description: 
+		// description:
 		//		Taken from http://www.movable-type.co.uk/scripts/aes.html by
 		// 		Chris Veness (CLA signed); adapted for Dojo by Brad Neuberg
 		// 		(bkn3 AT columbia.edu) and moved to DojoX crypto by Tom Trenka
@@ -310,7 +309,7 @@ dojo.require("dojox.encoding.crypto._base");
 		//
 		// 		A few notes:
 		// 		1) This algorithm uses a customized version of CBC mode by creating
-		// 		a nonce, using it as an initialization vector, and storing the 
+		// 		a nonce, using it as an initialization vector, and storing the
 		// 		IV as the first portion of the encrypted text.  Because of this, it
 		// 		is HIGHLY PROBABLE that it will NOT be usable by other AES implementations.
 		// 		2) All encoding is done in hex format; other encoding formats (such
@@ -321,7 +320,7 @@ dojo.require("dojox.encoding.crypto._base");
 		// 		length) with null bytes.
 		this.encrypt = function(/* String */plaintext, /* String */key){
 			//	summary:
-			//		Encrypt the passed plaintext using the key, with a 
+			//		Encrypt the passed plaintext using the key, with a
 			//		hardcoded bit depth of 256.
 			return AESEncryptCtr(plaintext, key, 256);	//	String
 		};
@@ -331,5 +330,9 @@ dojo.require("dojox.encoding.crypto._base");
 			//		bit depth of 256.
 			return AESDecryptCtr(ciphertext, key, 256);	//	String
 		};
-	})();	
+	})();
 })();
+
+
+return dojox.encoding.crypto.SimpleAES;
+});

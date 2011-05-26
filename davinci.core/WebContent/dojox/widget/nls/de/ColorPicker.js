@@ -1,3 +1,5 @@
 ({
+huePickerTitle: "Farbtonauswahl",
+saturationPickerTitle: "Sättigungsauswahl"
 })
 

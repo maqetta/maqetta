@@ -34,7 +34,16 @@
 </style>
 <script src="../../../dojo/dojo.js" djConfig="isDebug: false, gfxRenderer: 'svg,silverlight,vml,canvas'"></script>
 <script>
-	dojo.require("dojox.charting.Chart2D");
+    dojo.require("dojox.charting.Chart");
+    dojo.require("dojox.charting.axis2d.Default");
+    dojo.require("dojox.charting.plot2d.ClusteredBars");
+    dojo.require("dojox.charting.plot2d.ClusteredColumns");
+    dojo.require("dojox.charting.plot2d.Default");
+    dojo.require("dojox.charting.plot2d.StackedAreas");
+    dojo.require("dojox.charting.plot2d.Bubble");
+    dojo.require("dojox.charting.plot2d.Candlesticks");
+    dojo.require("dojox.charting.plot2d.OHLC");
+    dojo.require("dojox.charting.plot2d.Pie");
 
 	var charts = {}, backgroundImage, backgroundColor, color, lastThemeName = "";
 
@@ -91,7 +100,7 @@
 		backgroundColor = dojo.style(dojo.body(), "backgroundColor");
 		color = dojo.style(dojo.body(), "color");
 
-		charts.bars = new dojox.charting.Chart2D("bars").
+		charts.bars = new dojox.charting.Chart("bars").
 			addAxis("y", {fixLower: "minor", fixUpper: "minor", natural: true}).
 			addAxis("x", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true}).
 			addPlot("default", {type: "ClusteredBars", gap: 5}).
@@ -100,7 +109,7 @@
 			addSeries("Series C", [0.68, 0.95]).
 			addSeries("Series D", [0.77, 0.66]);
 
-		charts.columns = new dojox.charting.Chart2D("columns").
+		charts.columns = new dojox.charting.Chart("columns").
 			addAxis("x", {fixLower: "minor", fixUpper: "minor", natural: true}).
 			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true}).
 			addPlot("default", {type: "ClusteredColumns", gap: 5}).
@@ -109,7 +118,7 @@
 			addSeries("Series C", [0.68, 0.95]).
 			addSeries("Series D", [0.77, 0.66]);
 
-		charts.lines = new dojox.charting.Chart2D("lines").
+		charts.lines = new dojox.charting.Chart("lines").
 			addAxis("x", {min: 0, max: 6, fixLower: "minor", fixUpper: "minor", natural: true}).
 			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true, max: 1}).
 			addPlot("default", {type: "Default", lines: true, markers: true, tension: "X"}).
@@ -118,11 +127,11 @@
 			addSeries("Series C", [{x: 0.8, y: 0.8}, {x: 3.4, y: 0.2}, {x: 5.3, y: 0.3}]).
 			addSeries("Series D", [{x: 0.6, y: 0.9}, {x: 3.2, y: 0.8}, {x: 5.0, y: 0.1}]);
 
-		charts.pieFan = new dojox.charting.Chart2D("pieFan").
+		charts.pieFan = new dojox.charting.Chart("pieFan").
 			addPlot("default", {type: "Pie", radius: 60, labelOffset: -20, radGrad: dojox.gfx.renderer == "vml" ? "fan" : "native"}).
 			addSeries("Series A", [0.35, 0.25, 0.42, 0.53, 0.69]);
 
-		charts.bubbles = new dojox.charting.Chart2D("bubbles").
+		charts.bubbles = new dojox.charting.Chart("bubbles").
 			addAxis("x", {min: 0, max: 6, fixLower: "minor", fixUpper: "minor", natural: true}).
 			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", includeZero: true}).
 			addPlot("default", {type: "Bubble"}).
@@ -131,7 +140,7 @@
 			addSeries("Series C", [{x: 2.0, y: 5.5, size: 2.5}, {x: 3.5, y: 2.5, size: 3.5}, {x: 5.2, y: 7.0, size: 3.0}]).
 			addSeries("Series D", [{x: 3.2, y: 8.0, size: 2.0}]);
 
-		charts.area = new dojox.charting.Chart2D("area").
+		charts.area = new dojox.charting.Chart("area").
 			addAxis("x", {fixLower: "major", fixUpper: "major"}).
 			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", min: 0}).
 			addPlot("default", {type: "StackedAreas", tension: "X"}).
@@ -139,11 +148,11 @@
 			addSeries("Series B", [1, 1.6, 1.3, 1.4, 1.1, 1.5, 1.1]).
 			addSeries("Series C", [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]);
 
-		charts.pieLin = new dojox.charting.Chart2D("pieLin").
+		charts.pieLin = new dojox.charting.Chart("pieLin").
 			addPlot("default", {type: "Pie", radius: 60, labelOffset: -20, radGrad: "linear"}).
 			addSeries("Series A", [0.35, 0.25, 0.42, 0.53, 0.69]);
 
-		charts.candle = new dojox.charting.Chart2D("candle").
+		charts.candle = new dojox.charting.Chart("candle").
 			addPlot("default", {type: "Candlesticks", gap: 1}).
 			addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true}).
 			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true}).
@@ -176,7 +185,7 @@
 					{ open: 16, close: 12, high: 19, low: 7 },
 					{ open: 12, close: 20, high: 22, low: 8 },
 					{ open: 20, close: 16, high: 22, low: 8 }]);
-		charts.ohlc = new dojox.charting.Chart2D("ohlc").
+		charts.ohlc = new dojox.charting.Chart("ohlc").
 			addPlot("default", {type: "OHLC", gap: 1}).
 			addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true}).
 			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true}).
@@ -236,6 +245,7 @@
 				<option value="ThreeD">ThreeD</option>
 				<option value="Chris">Chris</option>
 				<option value="Tom">Tom</option>
+				<option value="Claro">Claro</option>
 				<option value="PrimaryColors">PrimaryColors</option>
 				<option value="Electric">Electric</option>
 				<option value="Charged">Charged</option>

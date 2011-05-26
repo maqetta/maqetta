@@ -16,8 +16,12 @@
 <script type="text/javascript">
 dojo.require("dojox.gfx");
 
-makeShapes = function(){
+createSurface = function(){
 	var surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var path = surface.createPath("");
 	// form concentric circles
 	var center = {x: 250, y: 250};
@@ -31,13 +35,13 @@ makeShapes = function(){
 	path.setFill("red").setStroke("black");
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>
 <body>
 	<h1>Testing fill rule</h1>
-<div id="test" style="width: 500px; height: 500px;"></div>
-<p>That's all Folks!</p>
+	<div id="test" style="width: 500px; height: 500px;"></div>
+	<p>That's all Folks!</p>
 </body>
 </html>

@@ -8,7 +8,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 	//   deleted, and modified.  It also provides access to the introspection data.
 
 	constructor: function(/* Boolean */sync, /* Boolean */preventCache){
-		// 	summary: 
+		// 	summary:
 		//		initializer
 		this.sync = sync;
 		this.preventCache = preventCache;
@@ -19,83 +19,83 @@ dojo.declare("dojox.atom.io.Connection",null,{
 	alertsEnabled: false, //Flag to turn on alerts instead of throwing errors.
 
 	getFeed: function(/*String*/url, /*Function*/callback, /*Function*/errorCallback, scope){
-		// 	summary: 
+		// 	summary:
 		//		Function to obtain a s specific ATOM feed from a given ATOM Feed url.
-		//	description: 
-		//		This function takes the URL for a specific ATOM feed and returns 
+		//	description:
+		//		This function takes the URL for a specific ATOM feed and returns
 		//		the data from that feed to the caller through the use of a callback
 		//		handler.
 		//
 		// 	url: String
 		//		The URL of the ATOM feed to fetch.
-		//	callback: 
+		//	callback:
 		//		Function
 		//		A function reference that will handle the feed when it has been retrieved.
 		//		The callback should accept two parameters:  The feed object and the original complete DOM object.
 		//	scope: Object
 		//		The scope to use for all callbacks.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		this._getXmlDoc(url, "feed", new dojox.atom.io.model.Feed(), dojox.atom.io.model._Constants.ATOM_NS, callback, /*handleDocumentRetrieved,*/ errorCallback, scope);
 	},
 	
 	getService: function(url, callback, errorCallback, scope){
-		//	summary: 
+		//	summary:
 		//		Function to retrieve an introspection document from the given URL.
-		// 	description: 
-		//		This function takes the URL for an ATOM item and feed and returns 
+		// 	description:
+		//		This function takes the URL for an ATOM item and feed and returns
 		//		the introspection document.
 		//
-		//	url: 
+		//	url:
 		//		String
 		//		The URL of the ATOM document to obtain the introspection document of.
-		//	callback: 
-		//		Function 
+		//	callback:
+		//		Function
 		//		A function reference that will handle the introspection document when it has been retrieved.
 		//		The callback should accept two parameters:  The introspection document object and the original complete DOM object.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		this._getXmlDoc(url, "service", new dojox.atom.io.model.Service(url), dojox.atom.io.model._Constants.APP_NS, callback, errorCallback, scope);
 	},
 	
 	getEntry: function(url, callback, errorCallback, scope){
-		//	summary: 
+		//	summary:
 		//		Function to retrieve a single entry from an ATOM feed from the given URL.
-		//	description: 
+		//	description:
 		//		This function takes the URL for an ATOM entry and returns the constructed dojox.atom.io.model.Entry object through
 		//		the specified callback.
 		//
-		//	url: 
+		//	url:
 		//		String
 		//		The URL of the ATOM Entry document to parse.
-		//	callback: 
+		//	callback:
 		//		Function
-		//		A function reference that will handle the Entry object obtained.   
+		//		A function reference that will handle the Entry object obtained.
 		//		The callback should accept two parameters, the dojox.atom.io.model.Entry object and the original dom.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		this._getXmlDoc(url, "entry", new dojox.atom.io.model.Entry(), dojox.atom.io.model._Constants.ATOM_NS, callback, errorCallback, scope);
 	},
 
 	_getXmlDoc: function(url, nodeName, newNode, namespace, callback, errorCallback, scope){
-		//	summary: 
+		//	summary:
 		//		Internal Function to retrieve an XML document and pass the results to a callback.
-		//	description: 
-		//		This internal function takes the URL for an XML document and and passes the 
+		//	description:
+		//		This internal function takes the URL for an XML document and and passes the
 		//		parsed contents to a specified callback.
 		//
-		//	url: 
+		//	url:
 		//		String
 		//		The URL of the XML document to retrieve
-		//	callback: 
+		//	callback:
 		//		Function
 		//		A function reference that will handle the retrieved XML data.
 		//		The callback should accept one parameter, the DOM of the parsed XML document.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
 			scope = dojo.global;
@@ -121,7 +121,7 @@ dojo.declare("dojox.atom.io.Connection",null,{
 							// gooogle feeds often returns iTunes name_space qualifiers on elements)
 							// Treat this situation like name_spaces not enabled.
 							node = evaldObj.lastChild;
-						} 
+						}
 					}else if(typeof(evaldObj.getElementsByTagName)!= "undefined"){
 						// Find the first eith the correct tag name and correct namespace.
 						nodes = evaldObj.getElementsByTagName(nodeName);
@@ -171,33 +171,33 @@ dojo.declare("dojox.atom.io.Connection",null,{
 	},
 
 	updateEntry: function(entry, callback, errorCallback, retrieveUpdated, xmethod, scope){
-		//	summary: 
+		//	summary:
 		//		Function to update a specific ATOM entry by putting the new changes via APP.
-		//	description: 
-		//		This function takes a specific dojox.atom.io.model.Entry object and pushes the 
+		//	description:
+		//		This function takes a specific dojox.atom.io.model.Entry object and pushes the
 		//		changes back to the provider of the Entry.
 		//		The entry MUST have a link tag with rel="edit" for this to work.
 		//
-		//	entry: 
+		//	entry:
 		//		Object
 		//		The dojox.atom.io.model.Entry object to update.
-		//	callback: 
+		//	callback:
 		//		Function
 		//		A function reference that will handle the results from the entry update.
 		//		The callback should accept two parameters:  The first is an Entry object, and the second is the URL of that Entry
 		//		Either can be null, depending on the value of retrieveUpdated.
-		//	retrieveUpdated: 
+		//	retrieveUpdated:
 		//		boolean
-		//		A boolean flag denoting if the entry that was updated should then be 
+		//		A boolean flag denoting if the entry that was updated should then be
 		//		retrieved and returned to the caller via the callback.
-		//	xmethod: 
+		//	xmethod:
 		//		boolean
 		//		Whether to use POST for PUT/DELETE items and send the X-Method-Override header.
-		//	scope: 
+		//	scope:
 		//		Object
 		//		The scope to use for all callbacks.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
 			scope = dojo.global;
@@ -269,29 +269,29 @@ dojo.declare("dojox.atom.io.Connection",null,{
 	},
 
 	addEntry: function(entry, url, callback, errorCallback, retrieveEntry, scope){
-		//	summary: 
+		//	summary:
 		//		Function to add a new ATOM entry by posting the new entry via APP.
-		//	description: 
-		//		This function takes a specific dojox.atom.io.model.Entry object and pushes the 
+		//	description:
+		//		This function takes a specific dojox.atom.io.model.Entry object and pushes the
 		//		changes back to the provider of the Entry.
 		//
-		//	entry: 
+		//	entry:
 		//		Object
 		//		The dojox.atom.io.model.Entry object to publish.
-		//	callback: 
+		//	callback:
 		//		Function
 		//		A function reference that will handle the results from the entry publish.
 		//		The callback should accept two parameters:   The first is an dojox.atom.io.model.Entry object, and the second is the location of the entry
 		//		Either can be null, depending on the value of retrieveUpdated.
-		//	retrieveEntry: 
+		//	retrieveEntry:
 		//		boolean
-		//		A boolean flag denoting if the entry that was created should then be 
+		//		A boolean flag denoting if the entry that was created should then be
 		//		retrieved and returned to the caller via the callback.
-		//	scope: 
+		//	scope:
 		//		Object
 		//	 	The scope to use for all callbacks.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
 			scope = dojo.global;
@@ -365,22 +365,22 @@ dojo.declare("dojox.atom.io.Connection",null,{
 	},
 
 	deleteEntry: function(entry,callback,errorCallback,xmethod,scope){
-		//	summary: 
+		//	summary:
 		//		Function to delete a specific ATOM entry via APP.
-		//	description: 
+		//	description:
 		//		This function takes a specific dojox.atom.io.model.Entry object and calls for a delete on the
 		//		service housing the ATOM Entry database.
 		//		The entry MUST have a link tag with rel="edit" for this to work.
 		//
-		//	entry: 
+		//	entry:
 		//		Object
 		//		The dojox.atom.io.model.Entry object to delete.
-		//	callback: 
+		//	callback:
 		//		Function
 		//		A function reference that will handle the results from the entry delete.
 		//		The callback is called only if the delete is successful.
 		//
-		//	returns:  
+		//	returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
 			scope = dojo.global;
@@ -428,5 +428,5 @@ dojo.declare("dojox.atom.io.Connection",null,{
 		}else{
 			dojo.xhrDelete(xhrArgs);
 		}
-	} 
+	}
 });

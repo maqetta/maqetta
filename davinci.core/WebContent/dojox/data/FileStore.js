@@ -1,4 +1,4 @@
-dojo.provide("dojox.data.FileStore");
+define("dojox/data/FileStore", ["dojo", "dojox"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.FileStore", null, {
 	constructor: function(/*Object*/args){
@@ -57,14 +57,14 @@ dojo.declare("dojox.data.FileStore", null, {
 	_storeRef: "_S",
 
 	// label: [public] string
-	//		Default attribute to use to represent the item as a user-readable 
+	//		Default attribute to use to represent the item as a user-readable
 	//		string.  Public, so users can change it.
 	label: "name",
 
 	// _identifier: [private] string
-	//		Default attribute to use to represent the item's identifier.  
-	//		Path should always be unique in the store instance.		
-	_identifier: "path",	
+	//		Default attribute to use to represent the item's identifier.
+	//		Path should always be unique in the store instance.
+	_identifier: "path",
 
 	// _attributes: [private] string
 	//		Internal variable of attributes all file items should have.
@@ -76,7 +76,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	pathSeparator: "/",
 
 	// options: [public] array
-	//		Array of options to always send when doing requests.  
+	//		Array of options to always send when doing requests.
 	//		Back end service controls this, like 'dirsOnly', 'showHiddenFiles', 'expandChildren', etc.
 	options: [],
 
@@ -91,9 +91,9 @@ dojo.declare("dojox.data.FileStore", null, {
 	_assertIsItem: function(/* item */ item){
 		// summary:
 		//      This function tests whether the item passed in is indeed an item in the store.
-		// item: 
+		// item:
 		//		The item to test for being contained by the store.
-		if(!this.isItem(item)){ 
+		if(!this.isItem(item)){
 			throw new Error("dojox.data.FileStore: a function was passed an item argument that was not an item");
 		}
 	},
@@ -101,9 +101,9 @@ dojo.declare("dojox.data.FileStore", null, {
 	_assertIsAttribute: function(/* attribute-name-string */ attribute){
 		// summary:
 		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		// attribute: 
+		// attribute:
 		//		The attribute to test for being contained by the store.
-		if(typeof attribute !== "string"){ 
+		if(typeof attribute !== "string"){
 			throw new Error("dojox.data.FileStore: a function was passed an attribute argument that was not an attribute name string");
 		}
 	},
@@ -111,7 +111,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	pathAsQueryParam: false, //Function to switch between REST style URL lookups and passing the path to specific items as a query param: 'path'.
 
 	getFeatures: function(){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getFeatures()
 		return {
 			'dojo.data.api.Read': true, 'dojo.data.api.Identity':true
@@ -119,7 +119,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
@@ -129,13 +129,13 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 
 	getAttributes: function(item){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getAttributes()
-		return this._attributes; 
+		return this._attributes;
 	},
 
 	hasAttribute: function(item, attribute){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.hasAttribute()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -143,30 +143,30 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 	
 	getIdentity: function(/* item */ item){
-		// summary: 
+		// summary:
 		//		See dojo.data.api.Identity.getIdentity()
-		return this.getValue(item, this._identifier); 
+		return this.getValue(item, this._identifier);
 	},
 	
 	getIdentityAttributes: function(item){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getLabelAttributes()
 		return [this._identifier];
 	},
 
 
 	isItemLoaded: function(item){
-		 //	summary: 
+		 //	summary:
 		 //      See dojo.data.api.Read.isItemLoaded()
 		 var loaded = this.isItem(item);
 		 if(loaded && typeof item._loaded == "boolean" && !item._loaded){
-		 	loaded = false; 
+		 	loaded = false;
 		 }
 		 return loaded;
 	},
 
 	loadItem: function(keywordArgs){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.loadItem()
 		var item = keywordArgs.item;
 		var self = this;
@@ -208,19 +208,19 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 
 	getLabel: function(item){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getLabel()
 		return this.getValue(item,this.label);
 	},
 	
 	getLabelAttributes: function(item){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getLabelAttributes()
 		return [this.label];
 	},
 	
 	containsValue: function(item, attribute, value){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.containsValue()
 		var values = this.getValues(item,attribute);
 		for(var i = 0; i < values.length; i++){
@@ -232,7 +232,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 
 	getValues: function(item, attribute){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -240,14 +240,14 @@ dojo.declare("dojox.data.FileStore", null, {
 		var value = item[attribute];
 		if(typeof value !== "undefined" && !dojo.isArray(value)){
 			value = [value];
-		}else if(typeof value === "undefined"){	
+		}else if(typeof value === "undefined"){
 			value = [];
 		}
 		return value;
 	},
 
 	isItem: function(item){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.isItem()
 		if(item && item[this._storeRef] === this){
 			return true;
@@ -256,7 +256,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 	
 	close: function(request){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.close()
 	},
 
@@ -318,7 +318,7 @@ dojo.declare("dojox.data.FileStore", null, {
 	},
 
 	fetchItemByIdentity: function(keywordArgs){
-		// summary: 
+		// summary:
 		//      See dojo.data.api.Read.loadItem()
 		var path = keywordArgs.identity;
 		var self = this;
@@ -427,3 +427,5 @@ dojo.declare("dojox.data.FileStore", null, {
 	}
 });
 
+return dojox.data.FileStore;
+});

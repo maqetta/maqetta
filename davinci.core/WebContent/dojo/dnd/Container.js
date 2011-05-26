@@ -1,7 +1,4 @@
-dojo.provide("dojo.dnd.Container");
-
-dojo.require("dojo.dnd.common");
-dojo.require("dojo.parser");
+define("dojo/dnd/Container", ["dojo", "dojo/dnd/common", "dojo/parser"], function(dojo) {
 
 /*
 	Container states:
@@ -54,7 +51,7 @@ dojo.dnd.Item = function(){
 
 dojo.declare("dojo.dnd.Container", null, {
 	// summary:
-	//		a Container object, which knows when mouse hovers over it, 
+	//		a Container object, which knows when mouse hovers over it,
 	//		and over which element it hovers
 	
 	// object attributes (for markup)
@@ -131,7 +128,7 @@ dojo.declare("dojo.dnd.Container", null, {
 	},
 	forInItems: function(/*Function*/ f, /*Object?*/ o){
 		// summary:
-		//		iterates over a data map skipping members that 
+		//		iterates over a data map skipping members that
 		//		are present in the empty object (IE and/or 3rd-party libraries).
 		o = o || dojo.global;
 		var m = this.map, e = dojo.dnd._empty;
@@ -318,8 +315,7 @@ dojo.declare("dojo.dnd.Container", null, {
 		var prefix = "dojoDnd" + type;
 		var state  = type.toLowerCase() + "State";
 		//dojo.replaceClass(this.node, prefix + newState, prefix + this[state]);
-		dojo.removeClass(this.node, prefix + this[state]);
-		dojo.addClass(this.node, prefix + newState);
+		dojo.replaceClass(this.node, prefix + newState, prefix + this[state]);
 		this[state] = newState;
 	},
 	_addItemClass: function(node, type){
@@ -366,7 +362,7 @@ dojo.declare("dojo.dnd.Container", null, {
 
 dojo.dnd._createNode = function(tag){
 	// summary:
-	//		returns a function, which creates an element of given tag 
+	//		returns a function, which creates an element of given tag
 	//		(SPAN by default) and sets its innerHTML to given text
 	// tag: String
 	//		a tag name or empty for SPAN
@@ -426,3 +422,6 @@ dojo.dnd._defaultCreator = function(node){
 		return {node: n, data: data, type: type};
 	};
 };
+
+return dojo.dnd.Container;
+});

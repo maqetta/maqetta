@@ -161,23 +161,27 @@ dojo._xdIsXDomainPath = function(/*string*/relpath) {
 	var colonIndex = relpath.indexOf(":");
 	var slashIndex = relpath.indexOf("/");
 
-	if(colonIndex > 0 && colonIndex < slashIndex){
+	if(colonIndex > 0 && colonIndex < slashIndex || relpath.indexOf("//") === 0){
 		return true;
 	}else{
 		//Is the base script URI-based URL a cross domain URL?
 		//If so, then the relpath will be evaluated relative to
 		//baseUrl, and therefore qualify as xdomain.
 		//Only treat it as xdomain if the page does not have a
-		//host (file:// url) or if the baseUrl does not match the
-		//current window's domain.
+		//host (file:// url), if the baseUrl does not match the
+		//current window's domain, or if the baseUrl starts with //.
+		//If baseUrl starts with // then it probably means that xdomain
+		//is wanted since it is such a specific path request. This is not completely robust,
+		//but something more robust would require normalizing the protocol on baseUrl and on the location
+		//to see if they differ. However, that requires more code, and // as a start path is unusual.
 		var url = dojo.baseUrl;
 		colonIndex = url.indexOf(":");
 		slashIndex = url.indexOf("/");
-		if(colonIndex > 0 && colonIndex < slashIndex && (!location.host || url.indexOf("http://" + location.host) != 0)){
+		if(url.indexOf("//") === 0 || (colonIndex > 0 && colonIndex < slashIndex && (!location.host || url.indexOf("http://" + location.host) != 0))){
 			return true;
 		}
 	}
-    return false;     
+    return false;
 }
 
 dojo._loadPath = function(/*String*/relpath, /*String?*/module, /*Function?*/cb){
@@ -209,8 +213,8 @@ dojo._loadUri = function(/*String*/uri, /*Function?*/cb, /*boolean*/currentIsXDo
 	}
 
 	//Add the module (resource) to the list of modules.
-	//Only do this work if we have a modlue name. Otherwise, 
-	//it is a non-xd i18n bundle, which can load immediately and does not 
+	//Only do this work if we have a modlue name. Otherwise,
+	//it is a non-xd i18n bundle, which can load immediately and does not
 	//need to be tracked. Also, don't track dojo.i18n, since it is a prerequisite
 	//and will be loaded correctly if we load it right away: it has no dependencies.
 	if(dojo._isXDomain && module && module != "dojo.i18n"){
@@ -377,7 +381,7 @@ dojo._xdResourceLoaded = function(/*Object*/res){
 		}
 
 		//Now update the inflight status for any provided resources in this loaded resource.
-		//Do this at the very end (in a *separate* for loop) to avoid shutting down the 
+		//Do this at the very end (in a *separate* for loop) to avoid shutting down the
 		//inflight timer check too soon.
 		for(i = 0; i < provideList.length; i++){
 			dojo._xdInFlight[provideList[i]] = false;
@@ -481,7 +485,7 @@ dojo.xdRequireLocalization = function(/*String*/moduleName, /*String*/bundleName
 // Replace dojo.requireLocalization with a wrapper
 dojo._xdRealRequireLocalization = dojo.requireLocalization;
 dojo.requireLocalization = function(/*String*/moduleName, /*String*/bundleName, /*String?*/locale, /*String*/availableFlatLocales){
-    // summary: loads a bundle intelligently based on whether the module is 
+    // summary: loads a bundle intelligently based on whether the module is
     // local or xd. Overrides the local-case implementation.
     
     var modulePath = dojo.moduleUrl(moduleName).toString();
@@ -516,7 +520,7 @@ dojo._xdUnpackDependency = function(/*Array*/dep){
 		case "platformRequire":
 			var modMap = dep[1];
 			var common = modMap["common"]||[];
-			newDeps = (modMap[dojo.hostenv.name_]) ? common.concat(modMap[dojo.hostenv.name_]||[]) : common.concat(modMap["default"]||[]);	
+			newDeps = (modMap[dojo.hostenv.name_]) ? common.concat(modMap[dojo.hostenv.name_]||[]) : common.concat(modMap["default"]||[]);
 			//Flatten the array of arrays into a one-level deep array.
 			//Each result could be an array of 3 elements  (the 3 arguments to dojo.require).
 			//We only need the first one.
@@ -553,7 +557,7 @@ dojo._xdUnpackDependency = function(/*Array*/dep){
 }
 
 dojo._xdWalkReqs = function(){
-	//summary: Internal xd loader function. 
+	//summary: Internal xd loader function.
 	//Walks the requires and evaluates module resource contents in
 	//the right order.
 	var reqChain = null;
@@ -569,7 +573,7 @@ dojo._xdWalkReqs = function(){
 }
 
 dojo._xdEvalReqs = function(/*Array*/reqChain){
-	//summary: Internal xd loader function. 
+	//summary: Internal xd loader function.
 	//Does a depth first, breadth second search and eval of required modules.
 	while(reqChain.length > 0){
 		var req = reqChain[reqChain.length - 1];
@@ -664,7 +668,7 @@ dojo._xdWatchInFlight = function(){
 			dojo._xdDebugQueue.push({resourceName: content.resourceName, resourcePath: content.resourcePath});
 		}else{
 			//Evaluate the resource to bring it into being.
-			//Pass in scope args to allow multiple versions of modules in a page.	
+			//Pass in scope args to allow multiple versions of modules in a page.
 			content.apply(dojo.global, dojo._scopeArgs);
 		}
 	}
@@ -676,7 +680,7 @@ dojo._xdWatchInFlight = function(){
 	for(i = 0; i < dojo._xdContents.length; i++){
 		var current = dojo._xdContents[i];
 		if(current.content && !current.isDefined){
-			//Pass in scope args to allow multiple versions of modules in a page.	
+			//Pass in scope args to allow multiple versions of modules in a page.
 			current.content.apply(dojo.global, dojo._scopeArgs);
 		}
 	}
@@ -703,10 +707,10 @@ dojo._xdNotifyLoaded = function(){
 		}
 	}
 
-	dojo._inFlightCount = 0; 
+	dojo._inFlightCount = 0;
 
-	//Only trigger call loaded if dj_load_init has run. 
-	if(dojo._initFired && !dojo._loadNotifying){ 
+	//Only trigger call loaded if dj_load_init has run.
+	if(dojo._initFired && !dojo._loadNotifying){
 		dojo._callLoaded();
 	}
 }

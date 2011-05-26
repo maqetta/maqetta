@@ -159,18 +159,18 @@ dojo.declare("davinci.ui.widgets._TreeNode", dijit._TreeNode, {
 dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 	
 	
-	filters : [],
+	filters: [], //FIXME: shared array on prototype
 	lastFocusedNode: null, 
-	allFocusedNodes: [],
+	allFocusedNodes: [], //FIXME: shared array on prototype
 	ctrlKeyPressed: false,
 	
-	constructor : function()
+	constructor: function()
 	{
 	    var model= this.model || arguments[0].model;
 	    this._isMultiSelect=arguments[0].isMultiSelect;
 		this._orgModelGetChildren=model.getChildren;
 		model.getChildren=dojo.hitch(this, this._getChildrenIntercept);
-		this.selectedNodes = []; 
+		this.selectedNodes = [];
 	},
 
 	getNode: function(nodeItem) {
@@ -202,6 +202,9 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 	},
 
 	postCreate: function(){
+		if(!this.dndController){
+			this.dndController = dijit.Tree.prototype.dndController;
+		}
 		this.inherited(arguments);
 		this.onClick = this.onClickDummy;  
 		this.allFocusedNodes = [];  

@@ -1,6 +1,4 @@
-dojo.provide("dojo.dnd.Avatar");
-
-dojo.require("dojo.dnd.common");
+define("dojo/dnd/Avatar", ["dojo", "dojo/dnd/common"], function(dojo) {
 
 dojo.declare("dojo.dnd.Avatar", null, {
 	// summary:
@@ -84,7 +82,7 @@ dojo.declare("dojo.dnd.Avatar", null, {
 			var icon = dojo.byId("a11yIcon");
 			var text = '+';   // assume canDrop && copy
 			if (this.manager.canDropFlag && !this.manager.copy) {
-				text = '< '; // canDrop && move 
+				text = '< '; // canDrop && move
 			}else if (!this.manager.canDropFlag && !this.manager.copy) {
 				text = "o"; //!canDrop && move
 			}else if(!this.manager.canDropFlag){
@@ -102,4 +100,7 @@ dojo.declare("dojo.dnd.Avatar", null, {
 		// summary: generates a proper text to reflect copying or moving of items
 		return this.manager.nodes.length.toString();
 	}
+});
+
+return dojo.dnd.Avatar;
 });

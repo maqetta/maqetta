@@ -35,8 +35,12 @@ var makeText = function(surface, text, font, fill, stroke){
 	return t;
 };
 
-makeShapes = function(){
+createSurface = function(){
 	surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(){
 	var m = dojox.gfx.matrix;
 	surface.createLine({x1: 250, y1: 0, x2: 250, y2: 500}).setStroke("green");
 	t1 = makeText(surface, {x: 250, y: 50, text: "Start", align: "start"}, 
@@ -65,15 +69,15 @@ getSizes = function(){
 	dojo.byId("sizes").innerHTML = t.join("<br/>");
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>
 <body>
 	<h1>dojox.gfx Text test</h1>
-<div id="test" style="width: 500px; height: 500px;"></div>
-<div><button onclick="surface.clear();">Clear</button>&nbsp;<button onclick="getSizes();">Get sizes</button></div>
-<p id="sizes">&nbsp;</p>
-<p>That's all Folks!</p>
+	<div id="test" style="width: 500px; height: 500px;"></div>
+	<div><button onclick="surface.clear();">Clear</button>&nbsp;<button onclick="getSizes();">Get sizes</button></div>
+	<p id="sizes">&nbsp;</p>
+	<p>That's all Folks!</p>
 </body>
 </html>

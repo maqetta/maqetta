@@ -1,13 +1,15 @@
-dojo.provide("dojox.encoding.digests._base");
+// AMD-ID "dojox/encoding/digests/_base"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("encoding.digests", true, dojox);
 
 (function(){
 	//TODO: see if it makes sense to meld this into one with the
 	//	crypto base enums
 	var d=dojox.encoding.digests;
-	d.outputTypes={ 
+	d.outputTypes={
 		//	summary:
 		//		Enumeration for input and output encodings.
-		Base64:0, Hex:1, String:2, Raw:3 
+		Base64:0, Hex:1, String:2, Raw:3
 	};
 
 	//	word-based addition
@@ -24,7 +26,7 @@ dojo.provide("dojox.encoding.digests._base");
 	//	than the encoding version (which works on bytes).
 	var chrsz=8;	//	16 for Unicode
 	var mask=(1<<chrsz)-1;
-	
+
 	d.stringToWord=function(/* string */s){
 		//	summary:
 		//		convert a string to a word array
@@ -34,7 +36,7 @@ dojo.provide("dojox.encoding.digests._base");
 		}
 		return wa;	//	word[]
 	};
-	
+
 	d.wordToString=function(/* word[] */wa){
 		//	summary:
 		//		convert an array of words to a string
@@ -44,7 +46,7 @@ dojo.provide("dojox.encoding.digests._base");
 		}
 		return s.join("");	//	string
 	}
-	
+
 	d.wordToHex=function(/* word[] */wa){
 		//	summary:
 		//		convert an array of words to a hex tab
@@ -72,3 +74,7 @@ dojo.provide("dojox.encoding.digests._base");
 		return s.join("");	//	string
 	};
 })();
+
+
+return dojox.encoding.digests;
+});

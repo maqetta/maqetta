@@ -89,8 +89,9 @@ dojox.mobile.app.isIPhone = (dojo.isSafari
 		navigator.userAgent.indexOf("iPod") > -1
 	));
 dojox.mobile.app.isWebOS = (navigator.userAgent.indexOf("webOS") > -1);
+dojox.mobile.app.isAndroid = (navigator.userAgent.toLowerCase().indexOf("android") > -1);
 
-if(dojox.mobile.app.isIPhone){
+if(dojox.mobile.app.isIPhone || dojox.mobile.app.isAndroid){
 	// We are touchable.
 	// Override the dojo._connect function to replace mouse events with touch events
 
@@ -108,7 +109,7 @@ dojo._oldConnect = dojo._connect;
 dojo._connect = function(obj, event, context, method, dontFix){
 	event = dojox.mobile.app.eventMap[event] || event;
 	if(event == "flick" || event == "onflick"){
-		if(window["Mojo"]){
+		if(dojo.global["Mojo"]){
 			event = Mojo.Event.flick;
 		}else{
 			return dojox.mobile.app.connectFlick(obj, context, method);

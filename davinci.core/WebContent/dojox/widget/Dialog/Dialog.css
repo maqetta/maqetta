@@ -79,7 +79,7 @@ div.dojoxDialogNoTitle {
 	padding-top:9px;
 }
 
-.dojoxDialogCloseIcon {
+.dojoxDialogCloseIcon, .dojoxDialogCloseIconHover {
 	background : url("images/dialogCloseButton.png") no-repeat top right;
 	position: absolute;
 	vertical-align: middle;
@@ -92,6 +92,11 @@ div.dojoxDialogNoTitle {
 }
 .dj_ie6 .dojoxDialogCloseIcon {
 	background-image: url("images/dialogCloseButton.gif");
+}
+
+.dojoxDialog div.dijitDialogCloseIconHover,
+.dojoxDialog div.dijitDialogCloseIconActive {
+    background-position:0 0;
 }
 
 .dojoxDialog .dijitDialogCloseIconHover {

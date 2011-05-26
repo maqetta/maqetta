@@ -1,6 +1,7 @@
 ({
-	doNew: "[Nowy]",
-	edit: "[Edytuj]",
-	save: "[Zapisz]",
-	cancel: "[Anuluj]"
+	doNew: "[nowy]",
+	edit: "[edytuj]",
+	save: "[zapisz]",
+	cancel: "[anuluj]"
 })
+

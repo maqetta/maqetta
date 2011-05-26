@@ -18,6 +18,7 @@
 	right: "vpravo",
 	buttonSet: "Nastavit", // translated elsewhere?
 	buttonInsert: "Vložit",
+	buttonCancel: "Storno",
 
 	selectTableLabel: "Vybrat tabulku",
 	insertTableRowBeforeLabel: "Přidat řádek před",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "Odstranit řádek",
 	deleteTableColumnLabel: "Odstranit sloupec"
 })
-

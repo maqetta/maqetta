@@ -1,7 +1,7 @@
 dojo.provide("dojox.xml.tests.parser");
 dojo.require("dojox.xml.parser");
 
-tests.register("dojox.xml.tests.parser", 
+tests.register("dojox.xml.tests.parser",
 	[
 		function testParse(t){
 			var document = dojox.xml.parser.parse();

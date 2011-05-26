@@ -11,7 +11,7 @@ tests.register("dojox.date.tests.timezoneFormatting",
 
 				dojo.forEach(partLocaleList, function(locale){
 					dojo.requireLocalization("dojo.cldr", "gregorian", locale);
-				});			
+				});
 			},
 			runTest: function(t){
 				var date = new Date(1155257712345);

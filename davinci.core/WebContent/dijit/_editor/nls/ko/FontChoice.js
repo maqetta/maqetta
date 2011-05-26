@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "크기",
 	fontName: "글꼴",
@@ -9,6 +11,7 @@
 	cursive: "cursive",
 	fantasy: "fantasy",
 
+	noFormat: "없음",
 	p: "단락",
 	h1: "제목",
 	h2: "부제목",
@@ -23,3 +26,5 @@
 	6: "조금 크게",
 	7: "가장 크게"
 })
+//end v1.x content
+);

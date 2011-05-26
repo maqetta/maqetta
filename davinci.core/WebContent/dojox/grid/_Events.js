@@ -3,7 +3,7 @@ dojo.provide("dojox.grid._Events");
 dojo.declare("dojox.grid._Events", null, {
 	// summary:
 	//		_Grid mixin that provides default implementations for grid events.
-	// description: 
+	// description:
 	//		Default synthetic events dispatched for _Grid. dojo.connect to events to
 	//		retain default implementation or override them for custom handling.
 	
@@ -77,6 +77,7 @@ dojo.declare("dojox.grid._Events", null, {
 					var curView = this.focus.focusView || this.views.views[0];  //if no focusView than only one view
 					curView.content.decorateEvent(e);
 					this.onRowClick(e);
+					dojo.stopEvent(e);
 				}
 				break;
 			case dk.SPACE:

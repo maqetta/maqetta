@@ -5,8 +5,8 @@ dojo.require("dojo.data.util.sorter");
 
 dojox.data.tests.performance.CsvStore.getData = function(size){
 	//	summary:
-	//		This function generates a psuedorandom dataset collected 
-	//		from some templated entries.  
+	//		This function generates a psuedorandom dataset collected
+	//		from some templated entries.
 	//	returns:
 	//		A 2000 'row' CSV dataset.
 
@@ -93,7 +93,7 @@ doh.register("dojox.data.tests.performance.CsvStore",[
 			};
 			store.fetch({onComplete: complete, onError: err});
 			if(!dojo.isSafari){
-				//Well, realistically this is all sync so we don't *have* to 
+				//Well, realistically this is all sync so we don't *have* to
 				//pass back a deferred.  I think safari is blowing stack again.
 				//Need to look more at DOH once more.
 				return def;
@@ -124,7 +124,7 @@ doh.register("dojox.data.tests.performance.CsvStore",[
 			//about the fetch time, only the getValue processing.  So,
 			//I just gab the first item.
 			var value = dojox.data.tests.performance.CsvStore.store.getValue(
-				dojox.data.tests.performance.CsvStore.store._arrayOfAllItems[0], 
+				dojox.data.tests.performance.CsvStore.store._arrayOfAllItems[0],
 				"Title");
 		}
 	},
@@ -154,11 +154,11 @@ doh.register("dojox.data.tests.performance.CsvStore",[
 
 			//Create a clone array of all the data.  Yes, this accesses internals, but my goal here
 			//is to test the sorter code with respect to the store.
-			var data = dojox.data.tests.performance.CsvStore.store._arrayOfAllItems.slice(0, 
+			var data = dojox.data.tests.performance.CsvStore.store._arrayOfAllItems.slice(0,
 				dojox.data.tests.performance.CsvStore.store._arrayOfAllItems.length);
 
 			//Sort it using the generic sorter..
-			data.sort(dojo.data.util.sorter.createSortFunction(sort, 
+			data.sort(dojo.data.util.sorter.createSortFunction(sort,
 				dojox.data.tests.performance.CsvStore.store));
 		}
 	}

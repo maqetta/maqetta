@@ -13,8 +13,12 @@
 <script type="text/javascript">
 dojo.require("dojox.gfx");
 
-makeShapes = function(){
-	var surface = dojox.gfx.createSurface(document.getElementById("test"), 500, 500);
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var g1 = surface.createGroup();
 	// make a checkerboard
 	for(var i = 0; i < 500; i += 100){
@@ -82,7 +86,7 @@ makeShapes = function(){
 	//g1.setTransform([dojox.gfx.matrix.scaleAt(2, 1, 250, 250), dojox.gfx.matrix.rotategAt(-45, 250, 250)]);
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

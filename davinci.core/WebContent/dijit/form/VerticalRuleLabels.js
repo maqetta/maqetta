@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.VerticalRuleLabels");
-
-dojo.require("dijit.form.HorizontalRuleLabels");
+define("dijit/form/VerticalRuleLabels", ["dojo", "dijit", "dijit/form/HorizontalRuleLabels"], function(dojo, dijit) {
 
 dojo.declare("dijit.form.VerticalRuleLabels", dijit.form.HorizontalRuleLabels,
 {
@@ -19,4 +17,8 @@ dojo.declare("dijit.form.VerticalRuleLabels", dijit.form.HorizontalRuleLabels,
 
 	// needed to prevent labels from being reversed in RTL mode
 	_isHorizontal: false
+});
+
+
+return dijit.form.VerticalRuleLabels;
 });

@@ -1,6 +1,4 @@
-dojo.provide("dojo._base.NodeList");
-dojo.require("dojo._base.lang");
-dojo.require("dojo._base.array");
+define("dojo/_base/NodeList", ["dojo/lib/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/connect", "dojo/_base/html"], function(dojo){
 
 //>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
@@ -241,7 +239,7 @@ dojo.require("dojo._base.array");
 	});
 
 	// add forEach actions
-	d.forEach(["connect", "addClass", "removeClass", "toggleClass", "empty", "removeAttr"], function(name){
+	d.forEach(["connect", "addClass", "removeClass", "replaceClass", "toggleClass", "empty", "removeAttr"], function(name){
 		nlp[name] = adaptAsForEach(d[name]);
 	});
 
@@ -299,7 +297,7 @@ dojo.require("dojo._base.array");
 
 		_cloneNode: function(/*DOMNode*/ node){
 			// summary:
-			// 		private utiltity to clone a node. Not very interesting in the vanilla
+			// 		private utility to clone a node. Not very interesting in the vanilla
 			// 		dojo.NodeList case, but delegates could do interesting things like
 			// 		clone event handlers if that is derivable from the node.
 			return node.cloneNode(true);
@@ -393,7 +391,7 @@ dojo.require("dojo._base.array");
 			if(this._parent){
 				return this._parent;
 			}else{
-				//Just return empy list.
+				//Just return empty list.
 				return new this._NodeListCtor();
 			}
 		},
@@ -461,12 +459,12 @@ dojo.require("dojo._base.array");
 
 		indexOf: function(value, fromIndex){
 			//	summary:
-			//		see dojo.indexOf(). The primary difference is that the acted-on 
+			//		see dojo.indexOf(). The primary difference is that the acted-on
 			//		array is implicitly this NodeList
 			// value: Object:
 			//		The value to search for.
 			// fromIndex: Integer?:
-			//		The loction to start searching from. Optional. Defaults to 0.
+			//		The location to start searching from. Optional. Defaults to 0.
 			//	description:
 			//		For more details on the behavior of indexOf, see Mozilla's
 			//		(indexOf
@@ -487,7 +485,7 @@ dojo.require("dojo._base.array");
 			// value: Object
 			//		The value to search for.
 			// fromIndex: Integer?
-			//		The loction to start searching from. Optional. Defaults to 0.
+			//		The location to start searching from. Optional. Defaults to 0.
 			// returns:
 			//		Positive Integer or 0 for a match, -1 of not found.
 			return d.lastIndexOf(this, value, fromIndex); // Integer
@@ -565,12 +563,12 @@ dojo.require("dojo._base.array");
 
 		forEach: function(callback, thisObj){
 			//	summary:
-			//		see `dojo.forEach()`. The primary difference is that the acted-on 
+			//		see `dojo.forEach()`. The primary difference is that the acted-on
 			//		array is implicitly this NodeList. If you want the option to break out
 			//		of the forEach loop, use every() or some() instead.
 			d.forEach(this, callback, thisObj);
 			// non-standard return to allow easier chaining
-			return this; // dojo.NodeList 
+			return this; // dojo.NodeList
 		},
 
 		/*=====
@@ -587,7 +585,7 @@ dojo.require("dojo._base.array");
 			//	summary:
 			//		Returns border-box objects (x/y/w/h) of all elements in a node list
 			//		as an Array (*not* a NodeList). Acts like `dojo.position`, though
-			//		assumes the node passed is each node in this list. 
+			//		assumes the node passed is each node in this list.
 
 			return d.map(this, d.position); // Array
 		},
@@ -610,7 +608,7 @@ dojo.require("dojo._base.array");
 			//		Disable a group of buttons:
 			//	|	dojo.query("button.group").attr("disabled", true);
 			//	example:
-			//		innerHTML can be assigned or retreived as well:
+			//		innerHTML can be assigned or retrieved as well:
 			//	|	// get the innerHTML (as an array) for each list item
 			//	|	var ih = dojo.query("li.replaceable").attr("innerHTML");
 			return; // dojo.NodeList
@@ -675,7 +673,7 @@ dojo.require("dojo._base.array");
 			//		if 2 arguments are passed (methodName, objOrFunc), objOrFunc should
 			//		reference a function or be the name of the function in the global
 			//		namespace to attach. If 3 arguments are provided
-			//		(methodName, objOrFunc, funcName), objOrFunc must be the scope to 
+			//		(methodName, objOrFunc, funcName), objOrFunc must be the scope to
 			//		locate the bound function in
 			//	funcName: String?
 			//		optional. A string naming the function in objOrFunc to bind to the
@@ -721,7 +719,7 @@ dojo.require("dojo._base.array");
 			//		by queryOrNode. Returns the original NodeList. See: `dojo.place`
 			//	queryOrNode:
 			//		may be a string representing any valid CSS3 selector or a DOM node.
-			//		In the selector case, only the first matching element will be used 
+			//		In the selector case, only the first matching element will be used
 			//		for relative positioning.
 			//	position:
 			//		can be one of:
@@ -736,18 +734,15 @@ dojo.require("dojo._base.array");
 			return this.forEach(function(node){ d.place(node, item, position); }); // dojo.NodeList
 		},
 
-		orphan: function(/*String?*/ simpleFilter){
+		orphan: function(/*String?*/ filter){
 			//	summary:
-			//		removes elements in this list that match the simple filter
+			//		removes elements in this list that match the filter
 			//		from their parents and returns them as a new NodeList.
-			//	simpleFilter:
-			//		single-expression CSS rule. For example, ".thinger" or
-			//		"#someId[attrName='value']" but not "div > span". In short,
-			//		anything which does not invoke a descent to evaluate but
-			//		can instead be used to test a single node is acceptable.
+			//	filter:
+			//		CSS selector like ".foo" or "div > span"
 			//	returns:
-			//		`dojo.NodeList` containing the orpahned elements 
-			return (simpleFilter ? d._filterQueryResult(this, simpleFilter) : this).forEach(orphan); // dojo.NodeList
+			//		`dojo.NodeList` containing the orphaned elements
+			return (filter ? d._filterQueryResult(this, filter) : this).forEach(orphan); // dojo.NodeList
 		},
 
 		adopt: function(/*String||Array||DomNode*/ queryOrListOrNode, /*String?*/ position){
@@ -774,7 +769,7 @@ dojo.require("dojo._base.array");
 		// FIXME: do we need this?
 		query: function(/*String*/ queryStr){
 			//	summary:
-			//		Returns a new list whose memebers match the passed query,
+			//		Returns a new list whose members match the passed query,
 			//		assuming elements of the current NodeList as the root for
 			//		each search.
 			//	example:
@@ -785,9 +780,9 @@ dojo.require("dojo._base.array");
 			//	|		</p>
 			//	|	</div>
 			//	|	<div id="bar">
-			//	|		<p>great commedians may not be funny <span>in person</span></p>
+			//	|		<p>great comedians may not be funny <span>in person</span></p>
 			//	|	</div>
-			//		If we are presented with the following defintion for a NodeList:
+			//		If we are presented with the following definition for a NodeList:
 			//	|	var l = new dojo.NodeList(dojo.byId("foo"), dojo.byId("bar"));
 			//		it's possible to find all span elements under paragraphs
 			//		contained by these elements with this sub-query:
@@ -802,18 +797,14 @@ dojo.require("dojo._base.array");
 			return this._wrap(apc.apply([], ret), this);	// dojo.NodeList
 		},
 
-		filter: function(/*String|Function*/ simpleFilter){
+		filter: function(/*String|Function*/ filter){
 			//	summary:
 			// 		"masks" the built-in javascript filter() method (supported
 			// 		in Dojo via `dojo.filter`) to support passing a simple
 			// 		string filter in addition to supporting filtering function
 			// 		objects.
-			//	simpleFilter:
-			//		If a string, a single-expression CSS rule. For example,
-			//		".thinger" or "#someId[attrName='value']" but not "div >
-			//		span". In short, anything which does not invoke a descent
-			//		to evaluate but can instead be used to test a single node
-			//		is acceptable.
+			//	filter:
+			//		If a string, a CSS rule like ".thinger" or "div > span".
 			//	example:
 			//		"regular" JS filter syntax as exposed in dojo.filter:
 			//		|	dojo.query("*").filter(function(item){
@@ -825,7 +816,7 @@ dojo.require("dojo._base.array");
 			//		|	dojo.query("*").filter("p").styles("backgroundColor", "yellow");
 
 			var a = arguments, items = this, start = 0;
-			if(typeof simpleFilter == "string"){ // inline'd type check
+			if(typeof filter == "string"){ // inline'd type check
 				items = d._filterQueryResult(this, a[0]);
 				if(a.length == 1){
 					// if we only got a string query, pass back the filtered results
@@ -873,10 +864,10 @@ dojo.require("dojo._base.array");
 			//		|	"before"
 			//		|	"after"
 			//		|	"replace" (replaces nodes in this NodeList with new content)
-			//		|	"only" (removes other children of the nodes so new content is hte only child)
+			//		|	"only" (removes other children of the nodes so new content is the only child)
 			// 		or an offset in the childNodes property
 			//	example:
-			//		appends content to the end if the position is ommitted
+			//		appends content to the end if the position is omitted
 			//	|	dojo.query("h3 > p").addContent("hey there!");
 			//	example:
 			//		add something to the front of each element that has a
@@ -907,7 +898,7 @@ dojo.require("dojo._base.array");
 			//  		text: "Send"
 			//  	});
 			content = this._normalize(content, this[0]);
-			for(var i = 0, node; node = this[i]; i++){
+			for(var i = 0, node; (node = this[i]); i++){
 				this._place(content, node, position, i > 0);
 			}
 			return this; //dojo.NodeList
@@ -936,11 +927,11 @@ dojo.require("dojo._base.array");
 			//	index: Integer...
 			//		One or more 0-based indices of items in the current
 			//		NodeList. A negative index will start at the end of the
-			//		list and go backwards. 
+			//		list and go backwards.
 			//
 			//	example:
 			//	Shorten the list to the first, second, and third elements
-			//	|	dojo.query("a").at(0, 1, 2).forEach(fn); 
+			//	|	dojo.query("a").at(0, 1, 2).forEach(fn);
 			//
 			//	example:
 			//	Retrieve the first and last elements of a unordered list:
@@ -950,13 +941,13 @@ dojo.require("dojo._base.array");
 			//	Do something for the first element only, but end() out back to
 			//	the original list and continue chaining:
 			//	|	dojo.query("a").at(0).onclick(fn).end().forEach(function(n){
-			//	|		console.log(n); // all anchors on the page. 
-			//	|	})	
+			//	|		console.log(n); // all anchors on the page.
+			//	|	})
 			//
 			//	returns:
 			//		dojo.NodeList
 			var t = new this._NodeListCtor();
-			d.forEach(arguments, function(i){ 
+			d.forEach(arguments, function(i){
 				if(i < 0){ i = this.length + i }
 				if(this[i]){ t.push(this[i]); }
 			}, this);
@@ -966,7 +957,8 @@ dojo.require("dojo._base.array");
 	});
 
 	nl.events = [
-		// summary: list of all DOM events used in NodeList
+		// summary:
+		//		list of all DOM events used in NodeList
 		"blur", "focus", "change", "click", "error", "keydown", "keypress",
 		"keyup", "load", "mousedown", "mouseenter", "mouseleave", "mousemove",
 		"mouseout", "mouseover", "mouseup", "submit"
@@ -979,7 +971,7 @@ dojo.require("dojo._base.array");
 			var _oe = "on" + evt;
 			nlp[_oe] = function(a, b){
 				return this.connect(_oe, a, b);
-			}
+			};
 				// FIXME: should these events trigger publishes?
 				/*
 				return (a ? this.connect(_oe, a, b) :
@@ -1007,3 +999,6 @@ dojo.require("dojo._base.array");
 //>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
 //>>excludeEnd("webkitMobile");
+
+return dojo.NodeList;
+});

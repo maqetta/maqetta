@@ -2,10 +2,11 @@ dojo.provide("dojo.tests.module");
 
 try{
 	dojo.require("tests._base");
-	dojo.require("tests.i18n"); 
+	dojo.require("tests.i18n");
 	dojo.requireIf(dojo.isBrowser, "tests.back-hash");
 	dojo.requireIf(dojo.isBrowser, "tests.hash");
 	dojo.require("tests.cldr");
+	dojo.require("dojo.tests.store");
 	dojo.require("tests.data");
 	dojo.require("tests.date");
 	dojo.require("tests.number");
@@ -26,6 +27,7 @@ try{
 	dojo.require("tests.html");
 	dojo.requireIf(dojo.isBrowser,"tests.NodeList-traverse");
 	dojo.requireIf(dojo.isBrowser,"tests.NodeList-manipulate");
+	dojo.requireIf(dojo.isBrowser,"tests.NodeList-data");
 	dojo.require("tests.cache");
 	dojo.requireIf(dojo.isBrowser, "tests.uacss");
 	dojo.requireIf(dojo.isBrowser, "tests.window");

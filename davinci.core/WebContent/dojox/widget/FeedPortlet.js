@@ -6,27 +6,27 @@ dojo.require("dijit.form.Button");
 dojo.require("dojox.data.GoogleFeedStore");
 
 dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
-	// summary: 
+	// summary:
 	//		A Portlet that loads a XML feed.
 	// description: The feed is displayed as
 	//		an unordered list of links.	When a link is hovered over
 	//		by the mouse, it displays a summary in a tooltip.
-	
+
 	// local: Boolean
 	//		Specifies whether the feed is to be loaded from the same domain as the
 	//		page, or a remote domain.	If local is true, then the feed must be an
 	//		Atom feed.	If it is false, it can be an Atom or RSS feed.
-	local: false, 
-	
+	local: false,
+
 	// maxResults: Number
 	//		The number of results to display from the feed.
 	maxResults: 5,
-	
+
 	// url: String
 	//		The URL of the feed to load.	If this is different to the domain
 	//		of the HTML page, local should be set to false.
 	url: "",
-	
+
 	// openNew: Boolean
 	//		If true, when a link is clicked it will open in a new window.
 	//		If false, it will not.
@@ -36,20 +36,20 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 	//		If true, the title of the loaded feed is displayed in the title bar of the portlet.
 	//		If false, the title remains unchanged.
 	showFeedTitle: true,
-	
+
 	postCreate: function(){
 		this.inherited(arguments);
 		if(this.local && !dojox.data.AtomReadStore){
 			throw Error(this.declaredClass + ": To use local feeds, you must include dojox.data.AtomReadStore on the page.");
 		}
 	},
-	
+
 	onFeedError: function(){
-		// summary: 
+		// summary:
 		//		Called when a feed fails to load successfully.
 		this.containerNode.innerHTML = "Error accessing the feed."
 	},
-	
+
 	addChild: function(child){
 		this.inherited(arguments);
 		var url = child.attr("feedPortletUrl");
@@ -57,23 +57,23 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 			this.set("url", url);
 		}
 	},
-	
+
 	_getTitle: function(item){
-		// summary: 
+		// summary:
 		//		Gets the title of a feed item.
 		var t = this.store.getValue(item, "title");
 		return this.local ? t.text : t;
 	},
-	
+
 	_getLink: function(item){
-		// summary: 
+		// summary:
 		//		Gets the href link of a feed item.
 		var l = this.store.getValue(item, "link");
 		return this.local ? l.href : l;
 	},
-	
+
 	_getContent: function(item){
-		// summary: 
+		// summary:
 		//		Gets the summary of a feed item.
 		var c = this.store.getValue(item, "summary");
 		if(!c){
@@ -86,9 +86,9 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 		c = c.split("<script").join("<!--").split("</script>").join("-->");
 		c = c.split("<iframe").join("<!--").split("</iframe>").join("-->");
 		return c;
-		
+
 	},
-	
+
 	_setUrlAttr: function(url){
 		// summary:
 		//		Sets the URL to load.
@@ -97,14 +97,14 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 			this.load();
 		}
 	},
-	
+
 	startup: function(){
-		// summary: 
+		// summary:
 		//		Loads the widget.
 		if(this.started || this._started){return;}
-		
+
 		this.inherited(arguments);
-		
+
 		if(!this.url || this.url == ""){
 			throw new Error(this.id + ": A URL must be specified for the feed portlet");
 		}
@@ -112,7 +112,7 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 			this.load();
 		}
 	},
-	
+
 	load: function(){
 		// summary:
 		//		Loads the feed.
@@ -120,8 +120,8 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 			dojo.destroy(this._resultList);
 		}
 		var store, query;
-		
-		// If the feed is on the same domain, use the AtomReadStore, 
+
+		// If the feed is on the same domain, use the AtomReadStore,
 		// as we cannot be guaranteed that it will be available to
 		// Google services.
 		if(this.local){
@@ -129,7 +129,7 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 				url: this.url
 			});
 			query = {};
-			
+
 		}else{
 			store = new dojox.data.GoogleFeedStore();
 			query = {url: this.url};
@@ -148,57 +148,57 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 			}),
 			onError: dojo.hitch(this, "onFeedError")
 		};
-		
+
 		this.store = store;
 		store.fetch(request);
 	},
-	
+
 	generateResults: function (items){
-		// summary: 
+		// summary:
 		//		Generates a list of hyperlinks and displays a tooltip
 		//		containing a summary when the mouse hovers over them.
 		var store = this.store;
 		var timer;
-		var ul = (this._resultList = 
+		var ul = (this._resultList =
 			dojo.create("ul", {"class" : "dojoxFeedPortletList"}, this.containerNode));
 
 		dojo.forEach(items, dojo.hitch(this, function(item){
 			var li = dojo.create("li", {
-				innerHTML: '<a href="' 
-					+ this._getLink(item) 
-					+ '"' 
+				innerHTML: '<a href="'
+					+ this._getLink(item)
+					+ '"'
 					+ (this.openNew ? ' target="_blank"' : '')
-					+'>' 
+					+'>'
 					+ this._getTitle(item) + '</a>'
 			},ul);
-			
+
 			dojo.connect(li, "onmouseover", dojo.hitch(this, function(evt){
 				if(timer){
 					clearTimeout(timer);
 				}
-				
+
 				// Show the tooltip after the mouse has been hovering
 				// for a short time.
 				timer = setTimeout(dojo.hitch(this, function(){
 					timer = null;
 					var summary = this._getContent(item);
 					if(!summary){return;}
-					var content = '<div class="dojoxFeedPortletPreview">' 
+					var content = '<div class="dojoxFeedPortletPreview">'
 						+ summary + '</div>'
-					
+
 					dojo.query("li", ul).forEach(function(item){
 						if(item != evt.target){
 							dijit.hideTooltip(item);
 						}
 					});
-					
+
 					// Hover the tooltip over the anchor tag
 					dijit.showTooltip(content, li.firstChild, !this.isLeftToRight());
 				}), 500);
-				
-				
+
+
 			}));
-			
+
 			// Hide the tooltip when the mouse leaves a list item.
 			dojo.connect(li, "onmouseout", function(){
 				if(timer){
@@ -208,38 +208,38 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 				dijit.hideTooltip(li.firstChild);
 			});
 		}));
-		
+
 		this.resize();
 	}
 });
 
 dojo.declare("dojox.widget.ExpandableFeedPortlet", dojox.widget.FeedPortlet, {
-	// summary: 
-	//		A FeedPortlet that uses an list of expandable links to display 
+	// summary:
+	//		A FeedPortlet that uses an list of expandable links to display
 	//		a feed.	An icon is placed to the left of each item
 	//		which, when clicked, toggles the visible state
 	//		of the item summary.
-	
+
 	// onlyOpenOne: Boolean
 	//		If true, only a single item can be expanded at any given time.
 	onlyOpenOne: false,
-	
+
 	generateResults: function(items){
 		// summary:
 		//		Generates a list of items, and places an icon beside them that
 		//		can be used to show or hide a summary of that item.
-		
+
 		var store = this.store;
 		var iconCls = "dojoxPortletToggleIcon";
 		var collapsedCls = "dojoxPortletItemCollapsed";
 		var expandedCls = "dojoxPortletItemOpen";
-		
+
 		var timer;
 		var ul = (this._resultList = dojo.create("ul", {
 			"class": "dojoxFeedPortletExpandableList"
 		}, this.containerNode));
-		
-		// Create the LI elements.	Each LI has two DIV elements, the 
+
+		// Create the LI elements.	Each LI has two DIV elements, the
 		// top DIV contains the toggle icon and title, and the bottom
 		// div contains the extended summary.
 		dojo.forEach(items, dojo.hitch(this, dojo.hitch(this, function(item){
@@ -247,15 +247,15 @@ dojo.declare("dojox.widget.ExpandableFeedPortlet", dojox.widget.FeedPortlet, {
 			var upper = dojo.create("div", {style: "width: 100%;"}, li);
 			var lower = dojo.create("div", {"class": "dojoxPortletItemSummary", innerHTML: this._getContent(item)}, li);
 			dojo.create("span", {
-				"class": iconCls, 
+				"class": iconCls,
 				innerHTML: "<img src='" + dojo.config.baseUrl + "/resources/blank.gif'>"}, upper);
 			var a = dojo.create("a", {href: this._getLink(item), innerHTML: this._getTitle(item) }, upper);
-			
+
 			if(this.openNew){
 				dojo.attr(a, "target", "_blank");
 			}
 		})));
-		
+
 		// Catch all clicks on the list. If a toggle icon is clicked,
 		// toggle the visible state of the summary DIV.
 		dojo.connect(ul, "onclick", dojo.hitch(this, function(evt){
@@ -279,9 +279,9 @@ dojo.declare("dojox.widget.ExpandableFeedPortlet", dojox.widget.FeedPortlet, {
 });
 
 
-dojo.declare("dojox.widget.PortletFeedSettings", 
+dojo.declare("dojox.widget.PortletFeedSettings",
 	dojox.widget.PortletSettings, {
-		
+
 	// summary:
 	//		A Settings widget designed to be used with a dojox.widget.FeedPortlet
 	// description:
@@ -293,7 +293,7 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 	//		If a <select> DOM node is used as the source node for this widget,
 	//		it displays a list of predefined URLs that the user can select from
 	//		to load into the enclosing FeedPortlet.
-	//					
+	//
 	// example:
 	//		<div dojoType="dojox.widget.PortletFeedSettings"></div>
 	//
@@ -302,27 +302,27 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 	//			<option>http://www.dojotoolkit.org/aggregator/rss</option>
 	//			<option>http://dojocampus.org/content/category/podcast/feed/</option>
 	//		</select>
-	
+
 	"class" : "dojoxPortletFeedSettings",
-	
+
 	// urls: Array
 	//		An array of JSON object specifying URLs to display in the
 	//		PortletFeedSettings object. Each object contains a 'url' and 'label'
 	//		attribute, e.g.
 	//		[{url:'http:google.com', label:'Google'}, {url:'http://dojotoolkit.org', label: 'Dojo'}]
 	urls: null,
-	
+
 	// selectedIndex: Number
 	//		The selected URL. Defaults to zero.
 	selectedIndex: 0,
-	
-	buildRendering: function(){
 
+	buildRendering: function(){
 		// If JSON URLs have been specified, create a SELECT DOM node,
 		// and insert the required OPTION elements.
+		var s;
 		if(this.urls && this.urls.length > 0){
-			
-			var s = dojo.create("select");
+			console.log(this.id + " -> creating select with urls ", this.urls)
+			s = dojo.create("select");
 			if(this.srcNodeRef){
 				dojo.place(s, this.srcNodeRef, "before");
 				dojo.destroy(this.srcNodeRef);
@@ -342,15 +342,23 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 			this.srcNodeRef = div;
 			dojo.query("option", this.text).filter("return !item.value;").forEach("item.value = item.innerHTML");
 			if(!this.text.value){
+				if(this.content && this.text.options.length == 0){
+					this.text.appendChild(this.content);
+				}
 				dojo.attr(s || this.text, "value", this.text.options[this.selectedIndex].value);
 			}
 		}
 		this.inherited(arguments);
 	},
-	
+
+	_setContentAttr: function(){
+
+	},
+
 	postCreate: function(){
+		console.log(this.id + " -> postCreate");
 		if(!this.text){
-			// If a select node is not being used, create a new TextBox to 
+			// If a select node is not being used, create a new TextBox to
 			// edit the URL.
 			var text = this.text = new dijit.form.TextBox({});
 			dojo.create("span", {
@@ -364,7 +372,7 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 			label: "Load",
 			onClick: dojo.hitch(this, function(){
 				// Set the URL of the containing Portlet with the selected URL.
-				this.portlet.attr("url", 
+				this.portlet.attr("url",
 					(this.text.tagName == "SELECT") ? this.text.value : this.text.attr('value'));
 				if(this.text.tagName == "SELECT"){
 					// Set the selected index on the Select node.
@@ -380,7 +388,7 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 				this.toggle();
 			})
 		}));
-		
+
 		// Add a CANCEL button, which hides this widget
 		this.addChild(new dijit.form.Button({
 			label: "Cancel",
@@ -388,13 +396,14 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 		}));
 		this.inherited(arguments);
 	},
-		
+
 	startup: function(){
 		// summary:
 		//		Sets the portlet associated with this PortletSettings object.
 		if(this._started){return;}
+		console.log(this.id + " -> startup");
 		this.inherited(arguments);
-		
+
 		if(!this.portlet){
 			throw Error(this.declaredClass + ": A PortletFeedSettings widget cannot exist without a Portlet.");
 		}
@@ -423,7 +432,7 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 			this.portlet.attr("url", this.get("feedPortletUrl"));
 		}
 	},
-	
+
 	_getFeedPortletUrlAttr: function(){
 		return this.text.value;
 	}

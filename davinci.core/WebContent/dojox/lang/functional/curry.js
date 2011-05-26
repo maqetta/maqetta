@@ -7,7 +7,7 @@ dojo.require("dojox.lang.functional.lambda");
 //	- argument pre-processing: mixer and flip
 
 // Acknoledgements:
-//	- partial() is based on work by Oliver Steele 
+//	- partial() is based on work by Oliver Steele
 //		(http://osteele.com/sources/javascript/functional/functional.js)
 //		which was published under MIT License
 
@@ -30,7 +30,7 @@ dojo.require("dojox.lang.functional.lambda");
 	dojo.mixin(df, {
 		// currying and partial functions
 		curry: function(/*Function|String|Array*/ f, /*Number?*/ arity){
-			// summary: curries a function until the arity is satisfied, at 
+			// summary: curries a function until the arity is satisfied, at
 			//	which point it returns the calculated value.
 			f = df.lambda(f);
 			arity = typeof arity == "number" ? arity : f.length;
@@ -39,9 +39,9 @@ dojo.require("dojox.lang.functional.lambda");
 		arg: {},	// marker for missing arguments
 		partial: function(/*Function|String|Array*/ f){
 			// summary: creates a function where some arguments are bound, and
-			//	some arguments (marked as dojox.lang.functional.arg) are will be 
+			//	some arguments (marked as dojox.lang.functional.arg) are will be
 			//	accepted by the final function in the order they are encountered.
-			// description: This method is used to produce partially bound 
+			// description: This method is used to produce partially bound
 			//	functions. If you want to change the order of arguments, use
 			//	dojox.lang.functional.mixer() or dojox.lang.functional.flip().
 			var a = arguments, l = a.length, args = new Array(l - 1), p = [], i = 1, t;

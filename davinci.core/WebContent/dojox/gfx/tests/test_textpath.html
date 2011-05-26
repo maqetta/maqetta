@@ -30,8 +30,12 @@ var makeText = function(surface, text, font, fill, stroke){
 	return t;
 };
 
-makeShapes = function(){
+createSurface = function(){
 	surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(){
 	var p = surface.createPath({})
 		.setStroke("green")
 		.moveTo(0, 100)
@@ -42,7 +46,6 @@ makeShapes = function(){
 		.curveTo(CPD, 0, 100 - CPD, -300, 100, -300)
 		.curveTo(CPD, 0, 100 - CPD,  300, 100,  300)
 		;
-	console.debug(p);
 	var t = surface.createTextPath({
 			text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent erat. " + 
 					"In malesuada ultricies velit. Vestibulum tempor odio vitae diam. " + 
@@ -61,16 +64,15 @@ makeShapes = function(){
 		.setFont({family: "times", size: "12pt"})
 		.setFill("blue")
 		;
-	console.debug(t);
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>
 <body>
 	<h1>dojox.gfx Text on a Path test</h1>
-<div id="test" style="width: 500px; height: 500px;"></div>
-<p>That's all Folks!</p>
+	<div id="test" style="width: 500px; height: 500px;"></div>
+	<p>That's all Folks!</p>
 </body>
 </html>

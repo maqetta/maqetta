@@ -7,12 +7,12 @@
 		@import "../../../dojo/resources/dojo.css";
 		@import "../../../dijit/tests/css/dijitTests.css";
 	</style>
-    
+
     <script>
 		passthrough = function(msg){
 			//for catching messages from Flash
 			if(window.console){
-				console.log(msg);	
+				console.log(msg);
 			}
 		}
 		var djConfig={isDebug:true, parseOnLoad: true, debugAtAllCosts:false};
@@ -21,20 +21,23 @@
 	<script type="text/javascript">
 		dojo.require("dojox.av.FLVideo");
 		dojo.require("dojo.parser");
-		
+
 		var seeking = false;
 		var prgDim, volDim, progressNode, volumeNode, sliderNode, volsliderNode, durNode,timeNode;
 		dojo.addOnLoad(function(){
-			
+
 			progressNode = dojo.byId("progress");
-			volumeNode = dojo.byId("volume"); 
+			volumeNode = dojo.byId("volume");
 			sliderNode = dojo.byId("slider");
 			volsliderNode = dojo.byId("volslider");
 			durNode = dojo.byId("dur");
 			timeNode = dojo.byId("time");
-			
-			w = new dojox.av.FLVideo({initialVolume:.1, mediaUrl:"video/Grog.flv", autoPlay:true, isDebug:false}, "vid");
-			
+
+			// crossdomain test:
+			//var url = "http://video.bettervideo.com/video/ClubAJAX/Grog.flv";
+			var url = "video/Grog.flv";
+			w = new dojox.av.FLVideo({initialVolume:.1, mediaUrl:url, autoPlay:true, isDebug:false}, "vid");
+
 			toggle = function(){
 				if(w.isPlaying){
 					w.pause();
@@ -42,21 +45,21 @@
 					w.play();
 				}
 			}
-			
+
 			dojo.connect(w, "onMetaData", function(data){
 				durNode.value = data.duration;
 			});
-			
+
 			dojo.connect(w, "onSwfSized", function(){
 				prgDim = dojo.coords(progressNode);
 				volDim = dojo.coords(volumeNode);
 			});
-			
+
 			dojo.connect(w, "onPosition", function(time){
 				setSlider(time);
 				timeNode.value = time;
 			});
-			
+
 			dojo.connect(w, "onLoad", function(){
 				prgDim = dojo.coords(progressNode);
 			});
@@ -69,14 +72,14 @@
 					var p = time/dur;
 					var x = p*w
 					if(x){
-						dojo.style(sliderNode, "left", x+"px");	
+						dojo.style(sliderNode, "left", x+"px");
 					}
-					
+
 				}
 			};
-			
-			
-			
+
+
+
 			dragSlider = function(evt){
 				var x = evt.clientX - prgDim.x;
 				var p = x/prgDim.w;
@@ -94,11 +97,11 @@
 				if(cup) dojo.disconnect(cup);
 			}
 			dojo.connect(progressNode, "mousedown", null, "begSeek");
-			
+
 			dojo.setSelectable(progressNode, false);
 			dojo.setSelectable(volumeNode, false);
-			
-			
+
+
 			// volume silder
 			var vmove, vup;
 			dojo.connect(w, "onLoad", function(){
@@ -106,7 +109,7 @@
 				var v = w.volume(); // returns 0 - 1
 				dojo.style(volsliderNode, "left", volDim.w*v+"px");
 			});
-			
+
 			dragVolume = function(evt){
 				var x = evt.clientX - volDim.x;
 				if(x<0) x = 0;
@@ -127,10 +130,10 @@
 				endVolDrag();
 				endSeek();
 			});
-			console.log("init'd")
+
 		});
-		
-		
+
+
 
 	</script>
     <style>
@@ -140,7 +143,7 @@
 		html, body{
 			height:100%;
 			padding:0;
-		}	
+		}
 		#player{
 			width:100%;
 			height:100%;
@@ -196,6 +199,7 @@
         <button onclick="toggle();">Play/Pause</button>
         <button onclick="w.play('video/Grog.flv');">Play Grog</button>
         <button onclick="w.play('video/OldMan.flv');">Play Old Man</button>
+		<button onclick="w.destroy();">Destroy Test</button>
     </td>
     <td style="text-align:right;">
         <div id="volume"><div id="volslider"></div></div>

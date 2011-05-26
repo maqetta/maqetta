@@ -21,8 +21,7 @@
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot('../test_popup.html');
 
-			doh.register("simple open and close",
-				[
+				doh.register("simple open and close", [
 					function initialConditions(t){
 						// If the popup code has cached any iframes, make sure they are hidden
 						dojo.query("iframe").forEach(function(node){
@@ -70,26 +69,11 @@
 						around.closePopup();
 
 						// Make sure the popup is hidden
-						// (in a future release this might change to display:none etc but currently it's visibility:hidden)
-						doh.is("hidden", popup.domNode.style.visibility, "popup is hidden");
-
-						// If the popup code has cached the iframe for later use, make sure it's hidden
-						dojo.query("iframe").forEach(function(node){
-							doh.is("none", node.style.display, "background iframe is hidden");
-						});
+						doh.is("none", popup.domNode.parentNode.style.display, "popup is hidden");
 					}
 				]);
 
-			doh.register("nested open and close",
-				[
-					function initialConditions(t){
-						// If the popup code has cached any iframes, make sure they are hidden
-						dojo.query("iframe").forEach(function(node){
-							console.log("found iframe", node);
-							doh.is("none", node.style.display, "background iframe is hidden");
-						});
-					},
-
+				doh.register("nested open and close", [
 					// Open first level
 					function openAround(){
 						var d = new doh.Deferred();
@@ -105,7 +89,7 @@
 
 							if(dojo.isIE <= 6){
 								// Test the BackgroundIFrame
-								var iframes = dojo.query("iframe");
+								var iframes = dojo.query("iframe", popup.domNode.parentNode);
 								doh.is(1, iframes.length, "one background iframe on IE6");
 
 								var popupCoords = dojo.position(popup.domNode),
@@ -136,11 +120,14 @@
 
 							if(dojo.isIE <= 6){
 								// Test the BackgroundIFrame
-								var iframes = dojo.query("iframe");
-								doh.is(2, iframes.length, "two background iframe on IE6");
+								var iframes = dojo.query("iframe", popup.domNode.parentNode);
+								doh.is(1, iframes.length, "one background iframe for popup");
+
+								iframes = dojo.query("iframe", nestedPopup.domNode.parentNode);
+								doh.is(1, iframes.length, "another background iframe for nested popup");
 
 								var popupCoords = dojo.position(nestedPopup.domNode),
-									iframeCoords = dojo.position(iframes[1]);
+									iframeCoords = dojo.position(iframes[0]);
 								doh.is(popupCoords.x, iframeCoords.x, "x is same: " + popupCoords.x);
 								doh.is(popupCoords.y, iframeCoords.y, "y is same: " + popupCoords.y);
 								doh.is(popupCoords.w, iframeCoords.w, "w is same: " + popupCoords.w);
@@ -166,15 +153,68 @@
 
 						// Make sure the popups are both hidden
 						// (in a future release this might change to display:none etc but currently it's visibility:hidden)
-						doh.is("hidden", popup.domNode.style.visibility, "popup is hidden");
-						doh.is("hidden", nestedPopup.domNode.style.visibility, "nested popup is hidden");
-
-						// If the popup code has cached the iframes for later use, make sure they are hidden
-						dojo.query("iframe").forEach(function(node){
-							doh.is("none", node.style.display, "background iframe is hidden");
-						});
+						doh.is("none", popup.domNode.parentNode.style.display, "popup is hidden");
+						doh.is("none", nestedPopup.domNode.parentNode.style.display, "nested popup is hidden");
 					}
 				]);
+
+				// Make sure there are no hidden tab stops when popups are closed.
+				// This test doesn't work on safari (due to safari bugs) although there aren't any hidden tab stops.
+				if(!dojo.isSafari){
+					doh.register("no hidden tab stops", [
+						{
+							name: "tab off end of viewport",
+							timeout: 10000,
+							runTest: function (){
+								var d = new doh.Deferred();
+								var focusId;
+		
+								dojo.byId("inputAtEnd").focus();
+								doh.robot.sequence(function(){
+									// Just to make sure that focus is on the input
+									focusId = dojo.global.dijit._curFocus ? dojo.global.dijit._curFocus.id : null;
+								}, 1000);
+	
+								doh.robot.keyPress(dojo.keys.TAB, 500, {});
+		
+								// Focus should end up on URL bar etc., not on a hidden <input> or <button> in a popup
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.is("inputAtEnd", focusId);
+									doh.f(dojo.global.dijit._curFocus && dojo.isDescendant(dojo.global.dijit._curFocus, dojo.global.dojo.body()), "no focus inside viewport");
+								}), 1000);
+		
+								return d;
+							}
+						},
+						{
+							name: "tab off beginning of viewport",
+							timeout: 10000,
+							runTest: function (){
+								var d = new doh.Deferred();
+								var focusId;
+
+								doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
+								doh.robot.sequence(function(){
+									dojo.byId("inputAtStart").focus();
+								}, 1000);
+								doh.robot.sequence(function(){
+									// Just to make sure that focus is on the input
+									focusId = dojo.global.dijit._curFocus ? dojo.global.dijit._curFocus.id : null;
+								}, 1000);
+	
+								doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
+		
+								// Focus should end up on URL bar etc., not on a hidden <input> or <button> in a popup
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.is("inputAtStart", focusId);
+									doh.f(dojo.global.dijit._curFocus && dojo.isDescendant(dojo.global.dijit._curFocus, dojo.global.dojo.body()), "no focus inside viewport");
+								}), 1000);
+		
+								return d;
+							}
+						}
+					]);
+				}	// if(!dojo.isSafari)
 
 				// TODO: test x/y placement
 

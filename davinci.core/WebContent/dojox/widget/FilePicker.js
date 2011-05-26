@@ -2,10 +2,10 @@ dojo.provide("dojox.widget.FilePicker");
 
 dojo.require("dojox.widget.RollingList");
 
-dojo.require("dojo.i18n"); 
-dojo.requireLocalization("dojox.widget", "FilePicker"); 
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.widget", "FilePicker");
 
-dojo.declare("dojox.widget._FileInfoPane", 
+dojo.declare("dojox.widget._FileInfoPane",
 	[dojox.widget._RollingListPane], {
 	// summary: a pane to display the information for the currently-selected
 	//	file
@@ -63,7 +63,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 	pathAttr: "path",
 	
 	// preloadItems: boolean or int
-	//  Set this to a sane number - since we expect to mostly be using the 
+	//  Set this to a sane number - since we expect to mostly be using the
 	//	dojox.data.FileStore - which doesn't like loading lots of items
 	//	all at once.
 	preloadItems: 50,
@@ -81,7 +81,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 	_itemsMatch: function(/*item*/ item1, /*item*/ item2){
 		// Summary: returns whether or not the two items match - checks ID if
 		//  they aren't the exact same object - ignoring trailing slashes
-		if(!item1 && !item2){ 
+		if(!item1 && !item2){
 			return true;
 		}else if(!item1 || !item2){
 			return false;
@@ -91,7 +91,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 			var iArr = [ this.store.getIdentity(item1), this.store.getIdentity(item2) ];
 			dojo.forEach(iArr, function(i, idx){
 				if(i.lastIndexOf(this.pathSeparator) == (i.length - 1)){
-					iArr[idx] = i.substring(0, i.length - 1); 
+					iArr[idx] = i.substring(0, i.length - 1);
 				}else{
 				}
 			}, this);
@@ -182,7 +182,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 		}
 		this.store.fetchItemByIdentity({identity: path,
 										onItem: function(v){
-											if(resetLastExec){ 
+											if(resetLastExec){
 												this._lastExecutedValue = v;
 											}
 											this.set("value", v);
@@ -219,5 +219,5 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 			this.value = value;
 			this._onChange(value);
 		}
-	}	
+	}
 });

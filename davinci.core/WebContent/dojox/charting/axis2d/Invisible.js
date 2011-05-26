@@ -79,7 +79,9 @@ dojo.require("dojox.lang.utils");
 								// with corresponding numeric values
 								// ordered by values
 			labelFunc:		null, // function to compute label values
-			maxLabelSize:	0	// size in px. For use with labelFunc
+			maxLabelSize:	0,	// size in px. For use with labelFunc
+			maxLabelCharCount:	0,	// size in word count.
+			trailingSymbol:			null
 
 			// TODO: add support for minRange!
 			// minRange:		1,	// smallest distance from min allowed on the axis
@@ -92,8 +94,8 @@ dojo.require("dojox.lang.utils");
 			//		The chart the axis belongs to.
 			//	kwArgs: dojox.charting.axis2d.__AxisCtorArgs?
 			//		Any optional keyword arguments to be used to define this axis.
-			this.opt = dojo.delegate(this.defaultParams, kwArgs);
-			// du.updateWithObject(this.opt, kwArgs);
+			this.opt = dojo.clone(this.defaultParams);
+            du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 		},
 		dependOnData: function(){
@@ -141,12 +143,17 @@ dojo.require("dojox.lang.utils");
 			//		Get the current windowing offset for the axis.
 			return "offset" in this ? this.offset : 0;	//	Number
 		},
-		_groupLabelWidth: function(labels, font){
+		_groupLabelWidth: function(labels, font, wcLimit){
 			if(!labels.length){
 				return 0;
 			}
 			if(dojo.isObject(labels[0])){
 				labels = df.map(labels, function(label){ return label.text; });
+			}
+			if (wcLimit) {
+				labels = df.map(labels, function(label){
+					return dojo.trim(label).length == 0 ? "" : label.substring(0, wcLimit) + this.trailingSymbol;
+				}, this);
 			}
 			var s = labels.join("<br>");
 			return dojox.gfx._base._getTextBox(s, {font: font}).w || 0;
@@ -223,10 +230,8 @@ dojo.require("dojox.lang.utils");
 			if(size){
 				if(this.vertical ? rotation != 0 && rotation != 180 : rotation != 90 && rotation != 270){
 					// we need width of all labels
-					if(o.maxLabelSize){
-						labelWidth = o.maxLabelSize;
-					}else if(this.labels){
-						labelWidth = this._groupLabelWidth(this.labels, taFont);
+					if(this.labels){
+						labelWidth = this._groupLabelWidth(this.labels, taFont, o.maxLabelCharCount);
 					}else{
 						var labelLength = Math.ceil(
 								Math.log(
@@ -253,6 +258,7 @@ dojo.require("dojox.lang.utils");
 							{ font: taFont }
 						).w;
 					}
+					labelWidth = o.maxLabelSize ? Math.min(o.maxLabelSize, labelWidth) : labelWidth;
 				}else{
 					labelWidth = size;
 				}

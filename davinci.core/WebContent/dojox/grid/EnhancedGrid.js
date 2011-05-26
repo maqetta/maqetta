@@ -1,28 +1,22 @@
 dojo.provide("dojox.grid.EnhancedGrid");
 
 dojo.require("dojox.grid.DataGrid");
-dojo.require("dojox.grid.enhanced._Plugin");
+dojo.require("dojox.grid.enhanced._PluginManager");
 dojo.requireLocalization("dojox.grid.enhanced", "EnhancedGrid");
 
 dojo.experimental("dojox.grid.EnhancedGrid");
 
 dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
-	//	summary:
-	//		Provides enhanced features for DataGrid, including:
-	//		1. Nested Sorting
-	//		2. Built-in support for Indirect Selection (radio buttons and check boxes)
-	//		3. Declarative context menu
-	//		4. Selecting rows/columns via swipe
-	//		5. Drag-n-drop: columns,rows - MOVE
+	// summary:
+	//		Provides enhanced features based on DataGrid
 	//
-	//	description:
+	// description:
 	//		EnhancedGrid features are implemented as plugins that could be loaded on demand.
 	//		Explicit dojo.require() is needed to use these feature plugins.
 	//
-	//	
-	//  example:
-	//		A quick sample to use all EnhancedGrid features:
-	//      
+	// example:
+	//		A quick sample to use EnhancedGrid features:
+	//
 	//	   Step 1. Load EnhancedGrid and required features
 	// |   <script type="text/javascript">
 	// |		dojo.require("dojox.grid.EnhancedGrid");
@@ -35,107 +29,84 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 	//		Step 2. Use EnhancedGrid
 	//		- Via HTML markup
 	// |	<div dojoType="dojox.grid.EnhancedGrid" ...
-	// |		 plugins="{nestedSorting: true, dnd: true, indirectSelection: true, 
-	// |		 menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",  
-    // |         selectedRegionMenu:"selectedRegionMenuId"}}">
+	// |		plugins="{nestedSorting: true, dnd: true, indirectSelection: true,
+	// |		menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",
+	// |		selectedRegionMenu:"selectedRegionMenuId"}}">
 	// |			...
 	// |	</div>
 	//
 	//		- Or via JavaScript
 	// |	<script type="text/javascript">
-	// |		var grid = new dojox.grid.EnhancedGrid({plugins : {nestedSorting: true, dnd: true, indirectSelection: true, 
+	// |		var grid = new dojox.grid.EnhancedGrid({plugins : {nestedSorting: true, dnd: true, indirectSelection: true,
 	// |	               menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",selectedRegionMenu:"selectedRegionMenuId"}},
 	// |			       ... }, dojo.byId('gridDiv'));
 	// |		grid.startup();
 	// |	</script>
+	//
+	//
+	//		Plugin Support
+	//		[Note: Plugin support is still experimental]
+	//
+	//		You can either customize the default plugins or add new ones, more details please see
+	//		- dojox.grid.enhanced._PluginManager
+	//		- dojox.grid.enhanced._Plugin
+	//		- dojox.grid.enhanced.plugins.*
 
 	//plugins: Object
 	//		Plugin properties, e.g. {nestedSorting: true, dnd: true, ...}
 	plugins: null,
 
 	//pluginMgr: Object
-	//		Singleton plugin manager	
+	//		Singleton plugin manager
 	pluginMgr: null,
-	
-	//doubleAffordance: Boolean
-	//		For special cell hover style
-	doubleAffordance: false,
-	
-	//minRowHeight: Integer
-	//		Minimal row height	
-	minRowHeight: 10,	
 
-	//keepSortSelection: Boolean
-	//		Whether keep selection after sort - only applicable when client-side data store is used.	
-	keepSortSelection: false,
+	//keepSelection: Boolean
+	//		Whether keep selection after sort, filter, pagination etc.
+	keepSelection: false,
 	
-	//rowSelectionChangedTopic: String
-	//		Topic fired when row selection is changed 
-	rowSelectionChangedTopic: 'ROW_SELECTION_CHANGED',
-	
-	//sortRowSelectionChangedTopic: String
-	//		Topic only fired when row selection is changed by sorting.
-	sortRowSelectionChangedTopic: 'SORT_ROW_SELECTION_CHANGED',
-	
-	//rowMovedTopic: String
-	//		Topic fired when selected rows are moved.
-	rowMovedTopic: 'ROW_MOVED',		
+	//_pluginMgrClass: Object
+	//		Default plugin manager class
+	_pluginMgrClass: dojox.grid.enhanced._PluginManager,
 
 	postMixInProperties: function(){
 		//load nls bundle
 		this._nls = dojo.i18n.getLocalization("dojox.grid.enhanced", "EnhancedGrid", this.lang);
 		this.inherited(arguments);
 	},
-
 	postCreate: function(){
 		//create plugin manager
-		this.pluginMgr = new dojox.grid.enhanced._Plugin(this);
+		this.pluginMgr = new this._pluginMgrClass(this);
 		this.pluginMgr.preInit();
 		this.inherited(arguments);
 		this.pluginMgr.postInit();
 	},
-	
-	_fillContent: function(){
-		//cached for menu use(menu declared within Grid HTML markup)
-		this.menuContainer = this.srcNodeRef;
-		this.inherited(arguments);
+	plugin: function(/*String*/name){
+		// summary:
+		//		An easier way for getting a plugin, e.g. grid.plugin('dnd')
+		return this.pluginMgr.getPlugin(name);
 	},
-	
 	startup: function(){
-		this.menuContainer && this._initMenus && this._initMenus();
 		this.inherited(arguments);
-		if(this.doubleAffordance){
-			dojo.addClass(this.domNode, 'dojoxGridDoubleAffordance');
-		}
+		this.pluginMgr.startup();
 	},
-	
-	textSizeChanged: function(){
+	createSelection: function(){
+		this.selection = new dojox.grid.enhanced.DataSelection(this);
+	},
+	canSort: function(colIndex, field){
 		// summary:
-		//		Overwritten, see _Grid.textSizeChanged()	
-		//      fix #10088 - in Webkit, this method is invoked by two parallel threads which caused #10088
-		if(!dojo.isWebKit){
-			this.inherited(arguments);
-		}else{
-			if(this.textSizeChanging){ return; }
-			this.textSizeChanging = true;
-			this.inherited(arguments);
-			this.textSizeChanging = false;
-		}
+		//		Overwritten
+		return true;
 	},
-	
-	removeSelectedRows: function(){
+	doKeyEvent: function(e){
 		// summary:
-		//		Overwritten, see DataGrid.removeSelectedRows()
-		if(this.indirectSelection && this._canEdit){
-			//cache the selected info before cleaned by DataGrid
-			var selected = dojo.clone(this.selection.selected);
-			this.inherited(arguments);
-			dojo.forEach(selected, function(value, index){
-				value && this.grid.rowSelectCell.toggleRow(index, false);
-			});
-		}
+		//		Overwritten, see _Grid.doKeyEvent()
+		try{
+			var view = this.focus.focusView;
+			view.content.decorateEvent(e);
+			if(!e.cell){ view.header.decorateEvent(e); }
+		}catch(e){}
+		this.inherited(arguments);
 	},
-	
 	doApplyCellEdit: function(inValue, inRowIndex, inAttrName){
 		// summary:
 		//		Overwritten, see DataGrid.doApplyCellEdit()
@@ -144,28 +115,142 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 			return;
 		}
 		this.inherited(arguments);
-	},	
-	
+	},
 	mixin: function(target, source){
 		var props = {};
-		for(p in source){
-			if(p == '_inherited' || p == 'declaredClass' || p == 'constructor'){ continue; }
+		for(var p in source){
+			if(p == '_inherited' || p == 'declaredClass' || p == 'constructor' ||
+				source['privates'] && source['privates'][p]){
+				continue;
+			}
 			props[p] = source[p];
 		}
 		dojo.mixin(target, props);
 	},
-	
 	_copyAttr: function(idx, attr){
 		// summary:
 		//		Overwritten, see DataGrid._copyAttr()
-		//		Fix cell TAB navigation for single click editting
-		if(!attr) return;
+		//		Fix cell TAB navigation for single click editing
+		if(!attr){ return; }
 		return this.inherited(arguments);
+	},
+	_getHeaderHeight: function(){
+		// summary:
+		//		Overwritten, see _Grid._getHeaderHeight()
+		//		Should include borders/margins of this.viewsHeaderNode
+		this.inherited(arguments);
+		return dojo.marginBox(this.viewsHeaderNode).h;
+	},
+	_fetch: function(start, isRender){
+		// summary:
+		//		Overwritten, see DataGrid._fetch()
+		if(this.items){
+			return this.inherited(arguments);
+		}
+		start = start || 0;
+		if(this.store && !this._pending_requests[start]){
+			if(!this._isLoaded && !this._isLoading){
+				this._isLoading = true;
+				this.showMessage(this.loadingMessage);
+			}
+			this._pending_requests[start] = true;
+			try{
+				var req = {
+					start: start,
+					count: this.rowsPerPage,
+					query: this.query,
+					sort: this.getSortProps(),
+					queryOptions: this.queryOptions,
+					isRender: isRender,
+					onBegin: dojo.hitch(this, "_onFetchBegin"),
+					onComplete: dojo.hitch(this, "_onFetchComplete"),
+					onError: dojo.hitch(this, "_onFetchError")
+				};
+				this._storeLayerFetch(req);
+			}catch(e){
+				this._onFetchError(e, {start: start, count: this.rowsPerPage});
+			}
+		}
+		return 0;
+	},
+	_storeLayerFetch: function(req){
+		// summary:
+		//		Extracted fetch specifically for store layer use
+		this.store.fetch(req);
+	},
+	getCellByField: function(field){
+		return dojo.filter(this.layout.cells, function(cell){
+			return cell.field == field;
+		})[0];
+	},
+	onMouseUp: function(e){	},
+	createView: function(){
+		// summary
+		//		Overwrite: rewrite getCellX of view.header
+		var view = this.inherited(arguments);
+		if(dojo.isMoz){
+			var ascendDom = function(inNode, inWhile){
+				for(var n = inNode; n && inWhile(n); n = n.parentNode){}
+				return n;
+			};//copied from dojox.grid._Builder
+			var makeNotTagName = function(inTagName){
+				var name = inTagName.toUpperCase();
+				return function(node){ return node.tagName != name; };
+			};//copied from dojox.grid._Builder
+
+			var func = view.header.getCellX;
+			view.header.getCellX = function(e){
+				var x = func.call(view.header, e);
+				var n = ascendDom(e.target, makeNotTagName("th"));
+				if(n && n !== e.target && dojo.isDescendant(e.target, n)){ x += n.firstChild.offsetLeft; }
+				return x;
+			};
+		}
+		return view;
+	},
+	destroy: function(){
+		// summary:
+		//		Destroy all resources
+		delete this._nls;
+		this.selection.destroy();
+		this.pluginMgr.destroy();
+		this.inherited(arguments);
 	}
 });
 
+dojo.provide("dojox.grid.enhanced.DataSelection");
+dojo.require("dojox.grid.enhanced.plugins._SelectionPreserver");//default loaded plugin
+
+dojo.declare("dojox.grid.enhanced.DataSelection", dojox.grid.DataSelection, {
+	constructor: function(grid){
+		if(grid.keepSelection){
+			this.preserver = new dojox.grid.enhanced.plugins._SelectionPreserver(this);
+		}
+	},
+	_range: function(inFrom, inTo){
+		this.grid._selectingRange = true;
+		this.inherited(arguments);
+		this.grid._selectingRange = false;
+		this.onChanged();
+	},
+	deselectAll: function(inItemOrIndex){
+		this.grid._selectingRange = true;
+		this.inherited(arguments);
+		this.grid._selectingRange = false;
+		this.onChanged();
+	},
+	destroy: function(){
+		if(this.preserver){
+			this.preserver.destroy();
+		}
+	}
+});
 
 dojox.grid.EnhancedGrid.markupFactory = function(props, node, ctor, cellFunc){
-	return dojox.grid._Grid.markupFactory(props, node, ctor, 
+	return dojox.grid._Grid.markupFactory(props, node, ctor,
 					dojo.partial(dojox.grid.DataGrid.cell_markupFactory, cellFunc));
+};
+
+dojox.grid.EnhancedGrid.registerPlugin = function(clazz, props){
+	dojox.grid.enhanced._PluginManager.registerPlugin(clazz, props);
 };

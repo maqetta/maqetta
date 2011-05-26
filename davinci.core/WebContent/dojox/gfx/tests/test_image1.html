@@ -13,8 +13,12 @@ dojo.require("dojox.gfx");
 var image = null, grid_size = 500, grid_step = 50,
 	m = dojox.gfx.matrix;
 
-makeShapes = function(){
+createSurface = function(){
 	var surface = dojox.gfx.createSurface("test", 800, 600);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	for(var i = 0; i <= grid_size; i += grid_step){
 		surface.createLine({x1: 0, x2: grid_size, y1: i, y2: i}).setStroke("black");
 		surface.createLine({y1: 0, y2: grid_size, x1: i, x2: i}).setStroke("black");
@@ -47,7 +51,7 @@ transformImage = function(){
 	}
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

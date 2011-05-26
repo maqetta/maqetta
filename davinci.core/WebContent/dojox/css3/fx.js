@@ -76,7 +76,7 @@ dojo.mixin(dojox.css3.fx, {
 		//	|	// half flip
 		//	|	dojox.css3.fx.flip({
 		//	|		node: domNode,
-		//	|		whichAnim: [0, 1] 
+		//	|		whichAnim: [0, 1]
 		//	|	}).play();
 		//
 		var anims = [],

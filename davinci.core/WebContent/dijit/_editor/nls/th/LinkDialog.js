@@ -1,8 +1,10 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "คุณสมบัติลิงก์",
 	insertImageTitle: "คุณสมบัติอิมเมจ",
 	url: "URL:",
-	text: "รายละเอียด",
+	text: "รายละเอียด:",
 	target: "เป้าหมาย:",
 	set: "ตั้งค่า",
 	currentWindow: "หน้าต่างปัจจุบัน",
@@ -11,3 +13,5 @@
 	newWindow: "หน้าต่างใหม่"
 })
 
+//end v1.x content
+);

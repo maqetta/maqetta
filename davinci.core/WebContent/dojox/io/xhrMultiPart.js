@@ -101,7 +101,7 @@ dojo.require("dojox.uuid.generateRandomUuid");
 		//	error: Function?
 		//		function(response, ioArgs){}. response is an Object, ioArgs
 		//		is of type dojo.__IoCallbackArgs. The error function will
-		//		be called in an error case. 
+		//		be called in an error case.
 		//	handle: Function?
 		//		function(response, ioArgs){}. response is an Object, ioArgs
 		//		is of type dojo.__IoCallbackArgs. The handle function will

@@ -247,6 +247,54 @@
 					}
 				]);
 
+				doh.register("TitlePane in AccordionContainer", [
+					{
+						name: "initial conditions",
+						runTest: function(){
+							// none of the TitlePane's inside of the AccordionContainer should have loaded
+							// their href, since they are closed
+					    	doh.f(dojo.global["actp1Loaded"], "closed TitlePane in open accordion pane not loaded");
+					    	doh.t(dojo.global["actp2Loaded"], "open TitlePane in open accordion pane loaded");
+					    	doh.f(dojo.global["actp3Loaded"], "first TitlePane in closed accordion pane not loaded");
+					    	doh.f(dojo.global["actp4Loaded"], "open TitlePane in closed accordion pane not loaded");
+						}
+					},
+
+					{
+						name: "switch open accordion pane",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							dijit.byId("ac").selectChild(dijit.byId("accp2"));
+
+							setTimeout(d.getTestCallback(function(){
+						    	doh.f(dojo.global["actp1Loaded"], "closed TitlePane in newly closed accordion pane not loaded");
+						    	doh.f(dojo.global["actp3Loaded"], "closed TitlePane in newly opened accordion pane not loaded");
+						    	doh.t(dojo.global["actp4Loaded"], "opened TitlePane in newly opened accordion pane loaded");
+							}), 500);
+							
+							return d;
+						}
+					},
+
+					{
+						name: "open a TitlePane",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							dijit.byId("actp3").set("open", true);
+
+							setTimeout(d.getTestCallback(function(){
+						    	doh.t(dojo.global["actp3Loaded"], "opening TitlePane causes href to load");
+							}), 500);
+							
+							return d;
+						}
+					}
+				]);
+
 				doh.run();
 			});
 		</script>

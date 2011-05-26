@@ -20,11 +20,11 @@ read -p "If you mean to create a tag for Dojo $version from r$svnRevision ... pr
 
 #Make the SVN tag.
 svn mkdir -m "Using r$svnRevision to create a tag for the $version release." https://svn.dojotoolkit.org/src/tags/$tagName
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojo/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dijit/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojox/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/util/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/demos/trunk https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/dojo  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/dijit https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/dojox https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/util  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.6/demos https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
 
 #Check out the tag
 mkdir ../../build
@@ -122,10 +122,16 @@ mv build release-$1
 rm -rf release-$1/$srcName/
 cd release-$1
 
-# md5sum the release files
-for i in *.zip; do md5sum $i > $i.md5; done
-for i in *.gz; do md5sum $i > $i.md5; done
-for i in *.js; do md5sum $i > $i.md5; done
+# md5sum the release files -- OSX doesn't have md5sum, foundation servers don't have md5
+if [ -e `which md5` ]; then
+	md5=`which md5`
+elif [ -e `which md5sum` ]; then
+	md5=`which md5sum`
+fi
+
+for i in *.zip; do $md5 $i > $i.md5; done
+for i in *.gz; do $md5 $i > $i.md5; done
+for i in *.js; do $md5 $i > $i.md5; done
 
 # pack up the whole thing for easy copying
 cd ..

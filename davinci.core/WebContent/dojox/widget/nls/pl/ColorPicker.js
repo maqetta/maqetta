@@ -5,6 +5,8 @@ blueLabel: "n",
 hueLabel: "barwa",
 saturationLabel: "nas.",
 valueLabel: "jas.", /* aka intensity or brightness */
-hexLabel: "szesnastkowe"
+hexLabel: "szesnastkowe",
+huePickerTitle: "Selektor barwy",
+saturationPickerTitle: "Selektor nasycenia"
 })
 

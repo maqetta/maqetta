@@ -1,4 +1,4 @@
-dojo.provide("dojox.data.ServiceStore");
+define("dojox/data/ServiceStore", ["dojo", "dojox"], function(dojo, dojox) {
 
 // note that dojox.rpc.Service is not required, you can create your own services
 
@@ -397,3 +397,6 @@ dojo.declare("dojox.data.ServiceStore",
 
 	}
 );
+
+return dojox.data.ServiceStore;
+});

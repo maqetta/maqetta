@@ -37,7 +37,7 @@
 }
 
 .tundra .dijitSliderImageHandleH {
-	border:0px;
+	border:0;
 	width:16px;
 	height:16px;
 	background:url("../images/preciseSliderThumb.png") no-repeat center top;
@@ -64,7 +64,7 @@
 }
 
 .tundra .dijitSliderImageHandleV {
-	border:0px;
+	border:0;
 	width:16px;
 	height:16px;
 	background:url("../images/sliderThumb.png") no-repeat center center;
@@ -108,16 +108,16 @@
 }
 
 .tundra .dijitSliderDecrementIconH {
-	background-position: -7px 0px;
+	background-position: -7px 0;
 }
 .tundra .dijitSliderIncrementIconH {
-	background-position: -14px 0px;
+	background-position: -14px 0;
 }
 .tundra .dijitSliderDecrementIconV {
-	background-position: 0px 0px;
+	background-position: 0 0;
 }
 .tundra .dijitSliderIncrementIconV {
-	background-position: -21px 0px;
+	background-position: -21px 0;
 }
 
 .tundra .dijitSliderButtonInner {
@@ -131,17 +131,17 @@
 }
 .tundra .dijitSliderReadOnly .dijitSliderDecrementIconH,
 .tundra .dijitSliderDisabled .dijitSliderDecrementIconH {
-	background-position: -35px 0px;
+	background-position: -35px 0;
 }
 .tundra .dijitSliderReadOnly .dijitSliderIncrementIconH,
 .tundra .dijitSliderDisabled .dijitSliderIncrementIconH {
-	background-position: -42px 0px;
+	background-position: -42px 0;
 }
 .tundra .dijitSliderReadOnly .dijitSliderDecrementIconV,
 .tundra .dijitSliderDisabled .dijitSliderDecrementIconV {
-	background-position: -28px 0px;
+	background-position: -28px 0;
 }
 .tundra .dijitSliderReadOnly .dijitSliderIncrementIconV,
 .tundra .dijitSliderDisabled .dijitSliderIncrementIconV {
-	background-position: -49px 0px;
+	background-position: -49px 0;
 }

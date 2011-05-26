@@ -18,8 +18,12 @@
 <script type="text/javascript">
 dojo.require("dojox.gfx");
 
-makeShapes = function(){
+createSurface = function(){
 	var surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var line = surface.createLine({x1: 250, y1: 50, x2: 250, y2: 250})
 		.setStroke({color: "blue"})
 		;
@@ -37,7 +41,7 @@ makeShapes = function(){
 	);
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

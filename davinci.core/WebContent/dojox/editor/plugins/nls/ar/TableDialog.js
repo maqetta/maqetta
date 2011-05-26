@@ -18,6 +18,7 @@
 	right: "لليمين",
 	buttonSet: "تحديد", // translated elsewhere?
 	buttonInsert: "‏ادراج‏",
+	buttonCancel: "الغاء",
 
 	selectTableLabel: "تحديد جدول",
 	insertTableRowBeforeLabel: "اضافة صف قبل",

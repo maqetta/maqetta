@@ -1,10 +1,11 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
 <head>
     <title>Drawing GFX Toolbar Test</title>
-	<link href="../resources/drawing.css" rel="stylesheet" />
-	<link href="../resources/toolbar.css" rel="stylesheet" />
-
 	<style>
+		@import url("../../../dijit/themes/dijit.css");
+		@import url("../../../dojox/drawing/resources/drawing.css");
+		@import url("../../../dojox/drawing/resources/toolbar.css");
+		@import url("../../../dojox/drawing/resources/GreekPalette.css");
 		href, body{
 		}
 		.drawing{
@@ -61,8 +62,9 @@
 		dojo.require("dojox.drawing.plugins.tools.Zoom");
 		dojo.require("dojox.drawing.plugins.tools.Iconize");
 
+		dojo.require("dojox.drawing.plugins.drawing.GreekPalette");
 		dojo.require("dojox.drawing.plugins.drawing.Grid");
-
+		
 		dojo.require("dojox.drawing.ui.Toolbar");
 		dojo.require("dojox.drawing.ui.Button");
 		//dojo.require("dojox.drawing.ui.Tooltip");
@@ -89,7 +91,7 @@
 					drawing:myDrawing,
 					tools:"all",
 					plugs:"all",
-					selected:"ellipse",
+					selected:"",
 					size:30,
 					radius:2,
 					margin:5
@@ -136,7 +138,7 @@
 	<div id="conEdit" contenteditable="true"></div>
 	<div id="wrapper">
 		<div dojoType="dojox.drawing.Drawing" id="drawingNode" jsId="myDrawing" class="drawing"
-			 plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{minor:20, major:100}}]">
+			 plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{minor:20, major:100}},{'name':'dojox.drawing.plugins.drawing.GreekPalette'}]">
 		</div>
 	</div>
 

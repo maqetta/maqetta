@@ -96,7 +96,7 @@ if(isInputOk){
 		
 		result = "OK";
 	}catch(e){
-		result = "ERROR: " + e;	
+		result = "ERROR: " + e;
 	}
 
 	print(result);

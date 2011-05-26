@@ -154,7 +154,7 @@ dojo.provide("dojox.lang.aspect");
 		//		satisfy the RegExp condition are processed. This function
 		//		returns a handle, which can be used to unadvise, or null,
 		//		if advising has failed.
-		//		
+		//
 		//		This function is a convenience wrapper for
 		//		dojox.lang.aspect.adviseRaw().
 		//

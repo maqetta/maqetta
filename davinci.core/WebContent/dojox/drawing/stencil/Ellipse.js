@@ -96,5 +96,5 @@ dojox.drawing.stencil.Ellipse = dojox.drawing.util.oo.declare(
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Ellipse"	
+	name:"dojox.drawing.stencil.Ellipse"
 }, "stencil");

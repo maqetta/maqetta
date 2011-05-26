@@ -2,8 +2,19 @@
 /* dojox.image.Lightbox:base */
 /* FIXME: should be be doing this? I want a black underlay, but this sets ALL dialogs to black,
     but because it's decendant of body, i can't set this color any other way ... */
-.dijitDialogUnderlay {
+.tundra .dijitDialogUnderlay, 
+.nihilo .dijitDialogUnderlay,
+.soria .dijitDialogUnderlay {
 	background-color:#000; 
+}
+
+.claro .dojoxLightbox .dijitDialogCloseIconHover,
+.nihilo .dojoxLightbox .dijitDialogCloseIconHover,
+.tundra .dojoxLightbox .dijitDialogCloseIconHover, 
+.tundra .dojoxLightbox .dijitDialogCloseIconActive,
+.nihilo .dojoxLightbox .dijitDialogCloseIconActive,
+.claro .dojoxLightbox .dijitDialogCloseIconActive {
+    background:url('images/close.png') no-repeat 0 0;
 }
 
 /* more specific to override .theme .dijitDialog name. might try baseClass="dojoxLightbox" 
@@ -17,7 +28,7 @@
 	overflow:hidden;
 	width:100px;
 	height:100px; 
-	border:11px solid #fff;
+	border:11px solid #fff !important; /* not happy, but all themes overwrite this to 1px */
 	background:#fff url('images/loading.gif') no-repeat center center;
 
 	/* special safari + FF specific rounding + shadows */
@@ -29,7 +40,8 @@
 
 .dojoxLightboxContainer {
 	position:absolute;
-	top:0; left:0; 
+	top:0; left:0;
+	background-color:#fff;
 }
 
 .dojoxLightboxFooter {
@@ -59,26 +71,37 @@
 
 /* dojox.image.Lightbox:tundra:nihilo */
 
+.claro .LightboxClose,
 .nihilo .LightboxClose,
 .tundra .LightboxClose {
 	background:url('images/close.png') no-repeat center center;
 }
+
+.di_ie6 .claro .LightboxClose,
 .di_ie6 .nihilo .LightboxClose,
 .dj_ie6 .tundra .LightboxClose {
 	background:url('images/close.gif') no-repeat center center;
 }
+
+.claro .LightboxNext, 
 .nihilo .LightboxNext,
 .tundra .LightboxNext {
 	background:url('images/right.png') no-repeat center center;
 }
+
+.dj_ie6 .claro .LightboxNext,
 .dj_ie6 .nihilo .LightboxNext,
 .dj_ie6 .tundra .LightboxNext {
 	background:url('images/right.gif') no-repeat center center;
 }
+
+.claro .LightboxPrev,
 .nihilo .LightboxPrev,
 .tundra .LightboxPrev {
 	background:url('images/left.png') no-repeat center center;
 }
+
+.dj_ie6 .claro .LightboxPrev,
 .dj_ie6 .nihilo .LightboxPrev,
 .dj_ie6 .tundra .LightboxPrev {
 	background:url('images/left.gif') no-repeat center center;

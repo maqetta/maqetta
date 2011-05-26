@@ -34,7 +34,7 @@
 							doh.t(isHidden("fileMenu"), "File menu is hidden");
 
 							// Move over the File MenuBarItem
-							doh.robot.mouseMoveAt("file", 500);
+							doh.robot.mouseMoveAt("file", 500, 1000);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// The "File" MenuBarItem should be highlighted
@@ -56,7 +56,7 @@
 							var d = new doh.Deferred();
 
 							// click the File MenuBarItem
-							doh.robot.mouseMoveAt("file", 500);
+							doh.robot.mouseMoveAt("file", 500, 1);
 							doh.robot.mouseClick({left: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -85,7 +85,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("edit", 500);
+							doh.robot.mouseMoveAt("edit", 500, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Since we've already activated the MenuBar by clicking "File",
@@ -106,7 +106,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("copy", 500);
+							doh.robot.mouseMoveAt("copy", 500, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.f(dojo.hasClass("edit", "dijitMenuItemHover"),
@@ -126,21 +126,20 @@
 
 					{
 						name: "click copy",
-						timeout: 4000,
+						timeout: 2000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							var clicked = false;
-							dijit.byId("copy").onClick = function(){ clicked = true; };
-
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(clicked, "copy was clicked");
+							var w = dijit.byId("copy");
+							var orig = w.onClick;
+							w.onClick = d.getTestCallback(function(){
+								w.onClick = orig;
 								doh.t(isHidden("editMenu"), "edit menu disappeared");
 								doh.f(dojo.hasClass("edit", "dijitMenuItemSelected"),
 									"Edit MenuBarItem should no longer have selected effect, actual class is: " + dojo.byId("edit").className);
-							}), 500);
+							});
+
+							doh.robot.mouseClick({left: true}, 1);
 
 							return d;
 						}
@@ -157,7 +156,7 @@
 							doh.t(isHidden("fileMenu"), "File menu is hidden");
 
 							// Move over the File MenuBarItem
-							doh.robot.mouseMoveAt("file", 500);
+							doh.robot.mouseMoveAt("file", 500, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// The "File" MenuBarItem should be highlighted
@@ -191,7 +190,7 @@
 							doh.f(dojo.hasClass("navMenuPopupItem1", "dijitMenuItemHover"), "navMenuPopupItem1 MenuItem doesn't have hover effect");
 							doh.t(isHidden("navMenuSub1"), "sub menu is hidden");
 
-							doh.robot.mouseMoveAt("navMenuPopupItem1", 500);
+							doh.robot.mouseMoveAt("navMenuPopupItem1", 500, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// The "enabled submenu" MenuItem should be highlighted
@@ -240,7 +239,7 @@
 
 							doh.f(dijit.byId("checked2").get('checked'), "not initially checked");
 
-							doh.robot.mouseMoveAt("checked2", 500);
+							doh.robot.mouseMoveAt("checked2", 500, 1);
 							doh.robot.mouseClick({left: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -255,7 +254,7 @@
 				doh.register("Context menu mouse tests", [
 					{
 						name: "open global context menu (mouse)",
-						timeout: 3000,
+						timeout: 4000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
@@ -264,7 +263,7 @@
 							doh.t(isHidden(menu), "menu should be initially hidden");
 
 							// click random point on screen
-							doh.robot.mouseMoveAt("link", 500);
+							doh.robot.mouseMoveAt("link", 500, 500);
 							doh.robot.mouseClick({right: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -275,9 +274,9 @@
 
 								doh.t(menuCoords.x > linkCoords.x, "to right of link left edge");
 								doh.t(menuCoords.x < linkCoords.x + linkCoords.w, "to left of link right edge");
-								doh.t(menuCoords.y > linkCoords.y, "starts below top of link");
-								doh.t(menuCoords.y < linkCoords.x + linkCoords.h, "starts above bottom of link");
-							}), 500);
+								doh.t(menuCoords.y > linkCoords.y, "menu (" + menuCoords.y + ") starts below top of link (" + linkCoords.y + ")");
+								doh.t(menuCoords.y < linkCoords.y + linkCoords.h, "menu (" + menuCoords.y + ") starts above bottom of link (" + linkCoords.y + "+" + linkCoords.h + ")");
+							}), 1000);
 
 							return d;
 						}
@@ -301,24 +300,76 @@
 
 							return d;
 						}
+					},
+
+					{
+						name: "open context menu over form widget (mouse)",
+						timeout: 5000,
+						runTest: function(){
+							var d = new doh.Deferred();
+	
+							var menu = dijit.byId("windowContextMenu");
+	
+							doh.t(isHidden(menu), "menu should be initially hidden");
+	
+							// right-click on form widget
+							doh.robot.mouseMoveAt("formwidget", 500, 1);
+							doh.robot.mouseClick({right: true}, 500);
+	
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isVisible(menu), "menu is now shown");
+	
+								var widgetCoords = dojo.position("formwidget");
+									menuCoords = dojo.position(menu.domNode);
+	
+								doh.t(((menuCoords.x > widgetCoords.x) && (menuCoords.x < (widgetCoords.x + widgetCoords.w))) ||
+									(((menuCoords.x + menuCoords.w) > widgetCoords.x) && ((menuCoords.x + menuCoords.w) < (widgetCoords.x + widgetCoords.w))),
+									"begins or ends within the form widget horizontal boundaries");
+								doh.t(((menuCoords.y > widgetCoords.y) && (menuCoords.y < (widgetCoords.y + widgetCoords.h))) ||
+									(((menuCoords.y + menuCoords.h) > widgetCoords.y) && ((menuCoords.y + menuCoords.h) < (widgetCoords.y + widgetCoords.h))),
+									"begins or ends within the form widget vertical boundaries");
+							}), 1000);
+	
+							return d;
+						}
+					},
+
+					{
+						name: "close form widget context menu (mouse)",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var menu = dijit.byId("windowContextMenu");
+
+							// close menu from above test
+							doh.robot.mouseMove(2, 2, 100);
+							doh.robot.mouseClick({left: true}, 100);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(isHidden(menu), "menu should be hidden again");
+							}), 1000);
+
+							return d;
+						}
 					}
 				]);
 
 				doh.register("More MenuBar mouse tests", [
 					{
 						name: "MenuBar selection and cancellation",
-						timeout: 20000,
+						timeout: 15000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("file", 500);
+							doh.robot.mouseMoveAt("file", 500, 1000);
 							doh.robot.mouseClick({left: true}, 500); // click File
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible("fileMenu"), "File menu should be visible #1");
 							}), 1000);
 
 							doh.robot.mouseClick({left: true}, 500); // close File menu
-							doh.robot.mouseMoveAt("edit", 500);
+							doh.robot.mouseMoveAt("edit", 500, 500);
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isHidden("fileMenu"), "File menu is hidden #1");
@@ -333,9 +384,9 @@
 							}), 1000);
 
 							doh.robot.mouseClick({left: true}, 500); // open edit menu
-							doh.robot.mouseMoveAt("paste", 1000);
+							doh.robot.mouseMoveAt("paste", 1000, 1);
 							doh.robot.mouseClick({left: true}, 500); // click paste, closing edit menu
-							doh.robot.mouseMoveAt("edit", 1000);
+							doh.robot.mouseMoveAt("edit", 1000, 500);
 
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(dojo.hasClass("edit", "dijitMenuItemHover"),
@@ -343,31 +394,51 @@
 								doh.t(isHidden("editMenu"), "edit menu disappeared #1");
 							}), 1000);
 
-							doh.robot.mouseMoveAt("file", 500);
+							doh.robot.mouseMoveAt("file", 500, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isHidden("fileMenu"), "File menu should be hidden #2");
 							}), 500);
 
-							doh.robot.mouseClick({left: true}, 500); // click File
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(isVisible("fileMenu"), "File menu should be visible #2");
-							}), 1000);
-
-							doh.robot.mouseMoveAt("view", 0, 150); // #9846
-							doh.robot.mouseMoveAt("edit", 0, 75);
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(isHidden("fileMenu"), "File menu should be hidden #3");
-								doh.t(isVisible("editMenu"), "Edit menu should be visible");
-								var paste = dojo.position('paste');
-								doh.robot._mouseMove(paste.x + (paste.w >> 1), paste.y + paste.h + 20, false, 500);
-							}), 500, 1000);
-
-							// click point on screen under the Edit menu
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isHidden("editMenu"), "edit menu disappeared #2");
-							}), 1000);
+							doh.robot.sequence(function(){
+								var
+								fileMenu = dijit.byId("fileMenu"),
+								editMenu = dijit.byId("editMenu"),
+								handler = fileMenu.connect(fileMenu, 'onOpen',
+									function(){
+										fileMenu.disconnect(handler);
+										setTimeout(d.getTestErrback(function(){
+											doh.t(isVisible(fileMenu), "File menu should be visible #2");
+											handler = fileMenu.connect(fileMenu, 'onClose',
+												function(){
+													fileMenu.disconnect(handler);
+													setTimeout(d.getTestErrback(function(){
+														doh.t(isHidden(fileMenu), "File menu should be hidden #3");
+														handler = editMenu.connect(editMenu, 'onOpen',
+															function(){
+																editMenu.disconnect(handler);
+																setTimeout(d.getTestErrback(function(){
+																	doh.t(isVisible(editMenu), "Edit menu should be visible");
+																	handler = editMenu.connect(editMenu, 'onClose',
+																		function(){
+																			editMenu.disconnect(handler);
+																			setTimeout(d.getTestCallback(function(){
+																				doh.t(isHidden(editMenu), "Edit menu disappeared #2");
+																			}), 150);
+																		});
+																	var paste = dojo.position('paste');
+																	doh.robot._mouseMove(paste.x + (paste.w >> 1), paste.y + paste.h + 20, false, 1);
+																	// click point on screen under the Edit menu
+																	doh.robot.mouseClick({left: true}, 100);
+																}), 150);
+															});
+														doh.robot.mouseMoveAt("edit", 0, 1);
+													}), 150);
+												});
+											doh.robot.mouseMoveAt("view", 0, 1); // #9846
+										}), 150);
+									});
+							}, 1);
+							doh.robot.mouseClick({left: true}, 1); // click File that starts the event sequence above
 
 							return d;
 						}
@@ -377,14 +448,13 @@
 						name: "MenuBar navigation with BOTH mouse and keyboard",
 						timeout: 20000,
 						runTest: function(){
-						    if(!(dojo.isSafari < 4)){ // doesn't support keyboard navigation
 							var d = new doh.Deferred();
 
 							// click random point on screen
-							doh.robot.mouseMoveAt("link", 500);
+							doh.robot.mouseMoveAt("link", 500, 500);
 							doh.robot.mouseClick({left: true}, 500); // click link to focus it
 
-							doh.robot.mouseMoveAt("view", 500);
+							doh.robot.mouseMoveAt("view", 500, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(dojo.hasClass("view", "dijitMenuItemHover"),
 									"View MenuBarItem should have hover effect, actual class is: " + dojo.byId("view").className);
@@ -401,7 +471,7 @@
 									"View MenuBarItem shouldn't have hover effect anymore, actual class is: " + dojo.byId("view").className);
 							}), 1000);
 
-							doh.robot.mouseMoveAt("edit", 500);
+							doh.robot.mouseMoveAt("edit", 500, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(dojo.hasClass("edit", "dijitMenuItemHover"),
 									"Edit MenuBarItem should have hover effect, actual class is: " + dojo.byId("edit").className);
@@ -419,7 +489,6 @@
 							}), 1000);
 
 							return d;
-						    }
 						}
 					}
 				]);
@@ -431,7 +500,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt("navMenuPopupItem1", 500); // move to Enabled submenu
+							doh.robot.mouseMoveAt("navMenuPopupItem1", 500, 500); // move to Enabled submenu
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isHidden("navMenuSub1"), "Enabled submenu should be hidden");
 							}), 500);
@@ -441,7 +510,7 @@
 								doh.t(isVisible("navMenuSub1"), "Enabled submenu should be visible");
 							}), 1000);
 
-							doh.robot.mouseMoveAt("navMenuDisabledItem", 500);
+							doh.robot.mouseMoveAt("navMenuDisabledItem", 500, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isHidden("navMenuSub1"), "Enabled submenu should be hidden");
 							}), 1000); // linger long enough for menu to close

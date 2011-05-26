@@ -26,7 +26,7 @@
 .tundra .dijitBorderContainer-dijitBorderContainer {
 	/* also, make nested BorderContainers look like a single big widget with lots of splitters */
 	border: none;
-	padding: 0px;
+	padding: 0;
 }
 
 .tundra .dijitSplitterH,

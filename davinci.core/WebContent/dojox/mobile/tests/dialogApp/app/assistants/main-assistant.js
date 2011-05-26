@@ -11,8 +11,8 @@ dojo.declare("MainAssistant", dojox.mobile.app.SceneAssistant, {
     
     var appInfoNode = this.controller.query(".appInfoArea")[0];
     
-    appInfoNode.innerHTML = 
-      "This app has the following info: \n" 
+    appInfoNode.innerHTML =
+      "This app has the following info: \n"
         + dojo.toJson(dojox.mobile.app.info, true);
         
     function handleChoose(value){
@@ -21,7 +21,7 @@ dojo.declare("MainAssistant", dojox.mobile.app.SceneAssistant, {
     }
     
     
-    var controller = this.controller; 
+    var controller = this.controller;
     
     console.log("btn1 = ", dijit.byId("btn1"));
     

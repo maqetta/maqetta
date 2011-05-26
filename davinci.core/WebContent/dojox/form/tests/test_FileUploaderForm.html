@@ -7,8 +7,8 @@
 		@import "../../../dijit/themes/dijit.css";
 		@import "../../../dijit/themes/tundra/form/Button.css";
 		@import "../../../dijit/themes/tundra/ProgressBar.css";
-		@import "../../../dijit/tests/css/dijitTests.css"; 
-		@import "../resources/FileUploader.css"; 
+		@import "../../../dijit/tests/css/dijitTests.css";
+		@import "../resources/FileUploader.css";
 	</style>
 	<script>
         djConfig = {
@@ -22,7 +22,7 @@
         dojo.require("dojox.form.FileUploader");
         dojo.require("dijit.form.Button");
 		dojo.require("dijit.ProgressBar");
-		
+
 		addThumb = function(d, id){
 			console.log("THUMB:", d);
 			var fileRoot = dojo.moduleUrl("dojox.form", "tests").toString();
@@ -47,7 +47,7 @@
 			dojo.byId(id).innerHTML += str;
 		}
         dojo.addOnLoad(function(){
-		
+
 			var props = {
 				isDebug:true,
 				devmode:true,
@@ -62,9 +62,9 @@
 					["All Images", 	"*.jpg;*.jpeg;*.gif;*.png"]
 				]
 			}
-			
+
 			if(dojo.byId("btnF")){
-				dojo.byId("fFiles").value = ""; 
+				dojo.byId("fFiles").value = "";
 				var f = new dojox.form.FileUploader(dojo.mixin({
 					progressWidgetId:"progressBar",
 					showProgress:true,
@@ -74,9 +74,9 @@
 					//uploadOnChange:true,
 					deferredUploading:false
 				},props), "btnF");
-				f.attr("disabled", dojo.byId("fGroup").value=="");
+				f.set("disabled", dojo.byId("fGroup").value=="");
 				dojo.connect(dojo.byId("fGroup"), "keyup", function(){
-					f.attr("disabled", dojo.byId("fGroup").value=="");
+					f.set("disabled", dojo.byId("fGroup").value=="");
 				});
 				dojo.connect(dijit.byId("fSubmit"), "onClick", function(){
 					f.submit(dojo.byId("formF"));
@@ -105,10 +105,10 @@
 					tabIndex:11,
 					devMode:true
 				}, props), "btnH");
-				
-				h.attr("disabled", dojo.byId("hGroup").value=="");
+
+				h.set("disabled", dojo.byId("hGroup").value=="");
 				dojo.connect(dojo.byId("hGroup"), "keyup", function(){
-					h.attr("disabled", dojo.byId("hGroup").value=="");
+					h.set("disabled", dojo.byId("hGroup").value=="");
 				});
 				dojo.connect(dijit.byId("hSubmit"), "onClick", function(evt){
 					h.submit(dojo.byId("formH"));
@@ -126,20 +126,20 @@
 			}
 			if(dijit.byId("btnD")){
 				var d = new FlashHTML.widget(dojo.mixin({button:dijit.byId("btnD")}, props));
-				d.attr("disabled", dojo.byId("dTitle").value=="");
+				d.set("disabled", dojo.byId("dTitle").value=="");
 				dojo.connect(dojo.byId("dTitle"), "keyup", function(){
-					d.attr("disabled", dojo.byId("dTitle").value=="");
+					d.set("disabled", dojo.byId("dTitle").value=="");
 				});
 				dojo.connect(dijit.byId("fSubmit"), "onClick", function(evt){
 					f.submit(dojo.byId("formF"));
 					dojo.stopEvent(evt);
 				});
 			}
-			
-			
+
+
 		});
-        
-        
+
+
     </script>
     <style>
        html, body{
@@ -240,7 +240,7 @@
 		<strong>NOTE:</strong> This test does upload,
 		but the server scripts are renamed to <em>tests/UploadFile.php.<strong>disabled</strong></em> and
 		<em>tests/cLOG.php.<strong>disabled</strong></em> to prevent security attacks on hosted servers.
-		You should rename these files (removing <em>.disabled</em>) in your local copy to conduct tests. 
+		You should rename these files (removing <em>.disabled</em>) in your local copy to conduct tests.
 	</p>
 	<h3>Both forms on this page are the same except one is for testing the Flash Uploader and one
 	is for the HTML Uploader. The following features are being tested:</h3>
@@ -277,7 +277,7 @@
 			<div id="fThumbs" class="thumbList"></div>
 		</td>
 		<td>
-			<form id="formH" class="form">	
+			<form id="formH" class="form">
 				<label>Group Name:</label>
 				<input class="field" tabIndex="7" type="text" value="" id="hGroup" name='hGroup' /><br/>
 				<label>Date:</label>

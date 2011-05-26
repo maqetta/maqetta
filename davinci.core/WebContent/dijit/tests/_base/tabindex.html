@@ -1,23 +1,28 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Dijit tabindex related functions unit test</title>
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
-		@import "../../themes/tundra/tundra.css";
+		@import "../../themes/claro/claro.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+		data-dojo-config="isDebug: true"></script>
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
+		dojo.require("dojo.parser");
 		dojo.require("dijit.dijit");
 		dojo.require("dijit.Editor");
 
 		dojo.addOnLoad(function(){
+			doh.register("parse", function(){
+				dojo.parser.parse();
+			});
+
 			doh.register("dijit.tabindex",
 				[
 					function isTabNavigable(t){
@@ -126,6 +131,7 @@
 					}
 				]
 			);
+
 			doh.run();
 		});
 
@@ -140,25 +146,25 @@
 		<div id="div"></div>
 	</div>
 	<div id="a-without-href-container">
-		<a id="a-without-href" name="named-link-anchor"></a>
+		<a id="a-without-href"></a>
 	</div>
 	<div id="a-with-href-container">
-		<a id="a-with-href" href="#named-link-anchor"></a>
+		<a id="a-with-href" href="#a-without-href"></a>
 	</div>
 
-	<div><img src="../images/flatScreen.gif" alt="picture of a flat-screen monitor" usemap="#area-map"></div>
+	<div><img src="../images/flatScreen.gif" alt="picture of a flat-screen monitor" usemap="#area-map"/></div>
 	<map id="area-map" name="area-map">
-		<area id="area" href="#" alt="example area" shape="rect" coords="0,0,8,8">
+		<area id="area" href="#" alt="example area" shape="rect" coords="0,0,8,8"/>
 	</map>
 
 	<div id="button-container">
 		<button id="button"></button>
 	</div>
 	<div id="input-container">
-		<input id="input">
+		<input id="input"/>
 	</div>
 	<div id="object-container">
-		<object id="object"></object>
+		<object id="object" type="text/javascript"></object>
 	</div>
 	<div id="select-container">
 		<select id="select"></select>
@@ -168,9 +174,9 @@
 	</div>
 
 	<div id="skip-disabled">
-		<input id="disabled-input1" disabled="disabled">
-		<input id="not-disabled-input">
-		<input id="disabled-input2" disabled="disabled">
+		<input id="disabled-input1" disabled="disabled"/>
+		<input id="not-disabled-input"/>
+		<input id="disabled-input2" disabled="disabled"/>
 	</div>
 
 	<div id="zero-tabindex-div-container">
@@ -182,7 +188,7 @@
 	</div>
 
 	<div id="zero-tabindex-input-container">
-		<input id="zero-tabindex-input" tabindex="0">
+		<input id="zero-tabindex-input" tabindex="0"/>
 	</div>
 
 	<div id="iframe-container">
@@ -190,58 +196,58 @@
 	</div>
 
 	<div id="editor-container">
-		<div id="editor" dojoType="dijit.Editor"></div>
+		<div id="editor" data-dojo-type="dijit.Editor"></div>
 	</div>
 
 	<div id="positive-tabindex-mixed-with-no-tabindex">
-		<input id="no-tabindex-input1">
-		<input id="no-tabindex-input2">
-		<input id="positive-tabindex-input1a" tabindex="1">
-		<input id="positive-tabindex-input1b" tabindex="1">
-		<input id="positive-tabindex-input2a" tabindex="2">
-		<input id="positive-tabindex-input2b" tabindex="2">
+		<input id="no-tabindex-input1"/>
+		<input id="no-tabindex-input2"/>
+		<input id="positive-tabindex-input1a" tabindex="1"/>
+		<input id="positive-tabindex-input1b" tabindex="1"/>
+		<input id="positive-tabindex-input2a" tabindex="2"/>
+		<input id="positive-tabindex-input2b" tabindex="2"/>
 	</div>
 
 	<div id="positive-tabindex">
-		<input id="positive-tabindex-input3a" tabindex="3">
-		<input id="positive-tabindex-input3b" tabindex="3">
-		<input id="positive-tabindex-input4a" tabindex="4">
-		<input id="positive-tabindex-input4b" tabindex="4">
+		<input id="positive-tabindex-input3a" tabindex="3"/>
+		<input id="positive-tabindex-input3b" tabindex="3"/>
+		<input id="positive-tabindex-input4a" tabindex="4"/>
+		<input id="positive-tabindex-input4b" tabindex="4"/>
 	</div>
 
 	<div id="skip-minus-one">
-		<input id="minus-one-input1" tabindex="-1">
-		<input id="not-minus-one-input">
-		<input id="minus-one-input2" tabindex="-1">
+		<input id="minus-one-input1" tabindex="-1"/>
+		<input id="not-minus-one-input"/>
+		<input id="minus-one-input2" tabindex="-1"/>
 	</div>
 
 	<div id="descend">
-		<input disabled="disabled">
+		<input disabled="disabled"/>
 		<div>
-			<input disabled="disabled">
+			<input disabled="disabled"/>
 			<div>
-				<input disabled="disabled">
+				<input disabled="disabled"/>
 			</div>
 		</div>
 		<div>
-			<input disabled="disabled">
+			<input disabled="disabled"/>
 			<div>
-				<input disabled="disabled">
+				<input disabled="disabled"/>
 			</div>
 			<div>
-				<input id="child-input1">
+				<input id="child-input1"/>
 			</div>
 			<div>
-				<input id="child-input2">
+				<input id="child-input2"/>
 			</div>
 		</div>
 		<div>
 			<div>
-				<input disabled="disabled">
+				<input disabled="disabled"/>
 			</div>
-			<input disabled="disabled">
+			<input disabled="disabled"/>
 		</div>
-		<input disabled="disabled">
+		<input disabled="disabled"/>
 	</div>
 
 	<div id="outer-inner-container">

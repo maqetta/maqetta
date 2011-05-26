@@ -27,7 +27,7 @@ dojox.analytics = function(){
 dojo.extend(dojox.analytics, {
 	schedulePusher: function(/* Int */interval){
 		// summary: Schedule the data pushing routines to happen in interval ms
-		setTimeout(dojo.hitch(this, "checkData"), interval || this.sendInterval); 
+		setTimeout(dojo.hitch(this, "checkData"), interval || this.sendInterval);
 	},
 
 	addData: function(dataType, data){

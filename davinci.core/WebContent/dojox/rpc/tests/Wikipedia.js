@@ -26,7 +26,7 @@ dojox.rpc.tests.wikipediaService._query = function(q){
 	}
 };
 
-doh.register("dojox.rpc.tests.wikipedia", 
+doh.register("dojox.rpc.tests.wikipedia",
 	[
 		{
 			name: "#1, Wikipedia::parse",

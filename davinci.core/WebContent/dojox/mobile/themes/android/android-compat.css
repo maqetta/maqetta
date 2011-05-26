@@ -10,9 +10,11 @@
 	left: 8px;
 	width: 19px;
 	height: 29px;
+	border-style: none;
 	background-image: url(compat/arrow-button-head.png);
 }
 .mblArrowButtonBody {
+	padding: 0px 10px 0px 10px;
 	background-image: url(compat/arrow-button-bg.png);
 }
 
@@ -86,14 +88,19 @@
 	height: 0;
 }
 
-li.mblListItem .mblArrow {
+.mblListItem .mblArrow {
 	border-style: none;
 	width: 9px;
 	height: 13px;
 	background-image: url(compat/gray-arrow.png);
 }
-li.mblItemSelected .mblArrow {
+.mblItemSelected .mblArrow {
 	background-image: url(compat/white-arrow.png);
+}
+
+/* dojox.mobile.TabBarButton */
+.dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
+	left: auto;
 }
 
 /* Switch */
@@ -218,7 +225,6 @@ li.mblItemSelected .mblArrow {
 
 /* Tab Container */
 .mblTabPanelHeader {
-	background-image: url(compat/heading-bg.png);
 }
 .mblTabButton {
 	background-image: url(compat/tab-button-bg.png);

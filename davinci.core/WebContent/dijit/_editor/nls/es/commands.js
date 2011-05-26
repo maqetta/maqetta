@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Negrita',
 	'copy': 'Copiar',
@@ -47,3 +49,5 @@
 	'ctrlKey':'control+${0}'
 })
 
+//end v1.x content
+);

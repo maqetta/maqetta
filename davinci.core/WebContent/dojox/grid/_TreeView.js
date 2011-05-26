@@ -30,7 +30,7 @@ dojo.declare("dojox.grid._Expando", [ dijit._Widget, dijit._Templated ], {
 			if(p){
 				dojo.query("tr[dojoxTreeGridPath^=\"" + p + "/\"]", this.rowNode).forEach(function(n){
 					var en = dojo.query(".dojoxGridExpando", n)[0];
-					if(en && en.parentNode && en.parentNode.parentNode && 
+					if(en && en.parentNode && en.parentNode.parentNode &&
 								!dojo.hasClass(en.parentNode.parentNode, "dojoxGridNoChildren")){
 						var ew = dijit.byNode(en);
 						if(ew){
@@ -168,7 +168,7 @@ dojo.declare("dojox.grid._Expando", [ dijit._Widget, dijit._Templated ], {
 		this.open = this.expandoCell.getOpenState(this.itemId);
 		if(view.grid.treeModel){
 			// TODO: Rather than hard-code the 18px and 3px, we should probably
-			// calculate them based off css or something...  However, all the 
+			// calculate them based off css or something...  However, all the
 			// themes that we support use these values.
 			dojo.style(this.domNode , "marginLeft" , (this.level * 18) + "px");
 			if(this.domNode.parentNode){
@@ -197,7 +197,7 @@ dojo.declare("dojox.grid._TreeContentBuilder", dojox.grid._ContentBuilder, {
 				if(html[0].indexOf('dojoxGridRowTableNeedsRowUpdate') == -1){
 					html[0] = html[0].replace("dojoxGridRowTable", "dojoxGridRowTable dojoxGridRowTableNeedsRowUpdate");
 				}
-				return; 
+				return;
 			}
 			var rowNodeIdx = html.length;
 			toggleClasses = toggleClasses || [];
@@ -271,7 +271,7 @@ dojo.declare("dojox.grid._TreeContentBuilder", dojox.grid._ContentBuilder, {
 						iStack.push(values.length);
 						createRow(level, rowItem, true, toggleClasses, iStack, parentOpen);
 					}else{
-						html[rowNodeIdx] = '<tr class="' + tcString + ' dojoxGridNoChildren" dojoxTreeGridPath="' + rowStack.join('/') + '">';					
+						html[rowNodeIdx] = '<tr class="' + tcString + ' dojoxGridNoChildren" dojoxTreeGridPath="' + rowStack.join('/') + '">';
 					}
 				}else{
 					if(!store.isItemLoaded(rowItem)){
@@ -296,7 +296,7 @@ dojo.declare("dojox.grid._TreeContentBuilder", dojox.grid._ContentBuilder, {
 			}
 			n = n.parentNode;
 		}
-		return (n != this.domNode) ? n : null; 
+		return (n != this.domNode) ? n : null;
 	},
 	getCellNode: function(inRowNode, inCellIndex){
 		var node = dojo.query("td[idx='" + inCellIndex + "']", inRowNode)[0];

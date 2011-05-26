@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "リンク・プロパティー",
 	insertImageTitle: "イメージ・プロパティー",
@@ -11,3 +13,5 @@
 	newWindow: "新規ウィンドウ"
 })
 
+//end v1.x content
+);

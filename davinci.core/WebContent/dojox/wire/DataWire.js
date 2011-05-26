@@ -132,7 +132,7 @@ dojo.declare("dojox.wire.DataWire", dojox.wire.Wire, {
 		}else{
 			value = this.dataStore.getValue(item, attribute);
 		}
-		return value; //anything 
+		return value; //anything
 	},
 
 	_setAttributeValue: function(/*Object*/item, /*String*/attribute, /*anything*/value){

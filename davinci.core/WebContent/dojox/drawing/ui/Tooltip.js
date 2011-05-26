@@ -20,7 +20,7 @@ dojo.require("dojox.drawing.plugins._Plugin");
 				this.domNode.innerHTML = text;
 				
 				var dx = 30;
-				var px = button.data.x + button.data.width; 
+				var px = button.data.x + button.data.width;
 				var py = button.data.y + button.data.height;
 				var x =  px + this.mouse.origin.x + dx;
 				var y = py + this.mouse.origin.y + dx;
@@ -110,6 +110,6 @@ dojo.require("dojox.drawing.plugins._Plugin");
 	);
 	
 	dojox.drawing.register({
-		name:"dojox.drawing.ui.Tooltip"	
+		name:"dojox.drawing.ui.Tooltip"
 	}, "stencil");
 })();

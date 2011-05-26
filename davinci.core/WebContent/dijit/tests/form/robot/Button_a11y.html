@@ -68,7 +68,7 @@
 
 							doh.is("1465", dijit.getEnclosingWidget(dojo.global.dijit._curFocus).id, "focus starting on 1465");
 
-							dijit.byId("1467").set("disabled", true);
+							dijit.byId("1466").set("disabled", true);
 
 							// tab over disabled "View" button to "Create" combo-button
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
@@ -370,14 +370,20 @@
 
 				doh.register("dijit.form.ToggleButton", [
 					{
-						name: "change value",
+						name: "uncheck",
 						timeout: 15000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							var checked = dijit.byId("toggle1").get("checked");
-							dijit.byId("toggle1").set("onChange", function(v){ checked = v; });
 							doh.t(checked, "toggle1 initially checked");
+
+							var watchOld, watchNew;
+							dijit.byId("toggle1").set("onChange", function(v){ checked = v; });
+							dijit.byId("toggle1").watch("checked", function(name, o, n){
+								watchOld = o;
+								watchNew = n;
+							});
 
 							doh.robot.sequence(function(){
 								dijit.byId("toggle1").focus();
@@ -386,10 +392,42 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.f(checked, "toggle1 unchecked");
+								doh.t(watchOld, "watch: previous == checked");
+								doh.f(watchNew, "watch: new == unchecked");
+							}), 1000);
+							return d;
+						}
+					},
+					{
+						name: "check",
+						timeout: 15000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							var checked = dijit.byId("toggle1").get("checked");
+							doh.f(checked, "toggle1 unchecked");
+
+							var watchOld, watchNew;
+							dijit.byId("toggle1").set("onChange", function(v){ checked = v; });
+							dijit.byId("toggle1").watch("checked", function(name, o, n){
+								watchOld = o;
+								watchNew = n;
+							});
+
+							doh.robot.sequence(function(){
+								dijit.byId("toggle1").focus();
+							});
+							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(checked, "toggle1 checked");
+								doh.f(watchOld, "watch: previous == unchecked");
+								doh.t(watchNew, "watch: new == checked");
 							}), 1000);
 							return d;
 						}
 					}
+
 				]);
 
 				dojo.forEach(["SPACE", "ENTER"], function(key){

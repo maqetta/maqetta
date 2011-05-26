@@ -4,68 +4,73 @@
 <head>
 	<title>Widget.get()/set() unit test</title>
 	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
+		@import "../themes/claro/document.css";
 		@import "css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		djConfig="isDebug: true, parseOnLoad: true"></script>
+		djConfig="isDebug: true"></script>
 	<script type="text/javascript" src="_testCommon.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
+		dojo.require("dojo.parser");
 		dojo.require("dijit.dijit");
 
-		dojo.declare("Baz",
-			[ dijit._Widget, dijit._Templated ],
-			{
-				templateString: "<div><div dojoAttachPoint='nameNode'></div><span>${attr1}</span></div>",
-
-				attributeMap: {
-					name: {node: "nameNode", type: "innerHTML" }
-				},
-
-				name: "howdy!",
-
-				attr1: 0,
-				_setAttr1Attr: function(value){
-					this.domNode.lastChild.innerHTML = value;
-					this.attr1 = value;
-				},
-
-				attr2: 0,
-				_getAttr2Attr: function(){
-				}
-			}
-		);
-		dojo.declare("Textbox",
-			[ dijit._Widget, dijit._Templated ],
-			{
-				attributeMap: {id:"", dir:"", lang:"", "class":"", style:"", title:"", disabled: "", readonly: ""},
-				templateString: "<input>"
-			}
-		);
-
-		dojo.declare("Thud", Baz, {
-			get: function(name){
-				// default getter
-			},
-			set: function(name, value){
-				// default setter
-			}
-		});
-
-		dojo.declare("AttrMap", [dijit._Widget, dijit._Templated], {
-			attributeMap: {foo: "", bar: "buttonNode", plainText: {node: "plainTextNode", type: "innerText"}},
-			templateString: "<div class='class1' style='border: 1px solid red; width: 456px'>" +
-								"<button dojoAttachPoint='buttonNode,focusNode'>hi</button>" +
-								'<span><input dojoAttachPoint="inputNode" value="input"></span>' +
-								"<span dojoAttachPoint='containerNode'></span>" +
-								"<span dojoAttachPoint='plainTextNode'>original plain text</span>" +
-							"</div>"
-		});
-
 		dojo.addOnLoad(function(){
-			doh.register("dijit.attr",
+			dojo.declare("Baz",
+				[ dijit._Widget, dijit._Templated ],
+				{
+					templateString: "<div><div dojoAttachPoint='nameNode'></div><span>${attr1}</span></div>",
+	
+					attributeMap: {
+						name: {node: "nameNode", type: "innerHTML" }
+					},
+	
+					name: "howdy!",
+	
+					attr1: 0,
+					_setAttr1Attr: function(value){
+						this.domNode.lastChild.innerHTML = value;
+						this.attr1 = value;
+					},
+	
+					attr2: 0,
+					_getAttr2Attr: function(){
+					}
+				}
+			);
+			dojo.declare("Textbox",
+				[ dijit._Widget, dijit._Templated ],
+				{
+					attributeMap: {id:"", dir:"", lang:"", "class":"", style:"", title:"", disabled: "", readonly: ""},
+					templateString: "<input>"
+				}
+			);
+	
+			dojo.declare("Thud", Baz, {
+				get: function(name){
+					// default getter
+				},
+				set: function(name, value){
+					// default setter
+				}
+			});
+	
+			dojo.declare("AttrMap", [dijit._Widget, dijit._Templated], {
+				attributeMap: {foo: "", bar: "buttonNode", plainText: {node: "plainTextNode", type: "innerText"}},
+				templateString: "<div class='class1' style='border: 1px solid red; width: 456px'>" +
+									"<button dojoAttachPoint='buttonNode,focusNode'>hi</button>" +
+									'<span><input dojoAttachPoint="inputNode" value="input"></span>' +
+									"<span dojoAttachPoint='containerNode'></span>" +
+									"<span dojoAttachPoint='plainTextNode'>original plain text</span>" +
+								"</div>"
+			});
+
+			doh.register("parse", function(){
+				dojo.parser.parse();
+			});
+
+			doh.register("_Widget.attr",
 				[
 					function attr(){
 						var b = new Baz();
@@ -144,6 +149,7 @@
 					}
 				]
 			);
+
 			doh.run();
 		});
 

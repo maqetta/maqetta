@@ -1,4 +1,4 @@
-<div class="dijitDialog" tabindex="-1" waiRole="dialog" waiState="labelledby-${id}_title">
+<div class="dijitDialog" tabindex="-1" role="dialog" aria-labelledby="${id}_title">
 	<div dojoAttachPoint="titleBar" class="dijitDialogTitleBar">
 	<span dojoAttachPoint="titleNode" class="dijitDialogTitle" id="${id}_title">${insertTableTitle}</span>
 	<span dojoAttachPoint="closeButtonNode" class="dijitDialogCloseIcon" dojoAttachEvent="onclick: onCancel" title="${buttonCancel}">
@@ -7,31 +7,38 @@
 	</div>
     <div dojoAttachPoint="containerNode" class="dijitDialogPaneContent">
         <table class="etdTable"><tr>
-            <td class="left">
-                <span dojoAttachPoint="selectRow" dojoType="dijit.form.TextBox" value="2"></span>
+            <td>
                 <label>${rows}</label>
-            </td><td class="right">
-                <span dojoAttachPoint="selectCol" dojoType="dijit.form.TextBox" value="2"></span>
+			</td><td>
+                <span dojoAttachPoint="selectRow" dojoType="dijit.form.TextBox" value="2"></span>
+            </td><td><table><tr><td class="inner">
                 <label>${columns}</label>
-            </td></tr><tr><td>
-                <span dojoAttachPoint="selectWidth" dojoType="dijit.form.TextBox" value="100"></span>
+			</td><td class="inner">
+                <span dojoAttachPoint="selectCol" dojoType="dijit.form.TextBox" value="2"></span>
+            </td></tr></table></td></tr>		
+			<tr><td>
                 <label>${tableWidth}</label>
             </td><td>
+                <span dojoAttachPoint="selectWidth" dojoType="dijit.form.TextBox" value="100"></span>
+			</td><td>
                 <select dojoAttachPoint="selectWidthType" hasDownArrow="true" dojoType="dijit.form.FilteringSelect">
                   <option value="percent">${percent}</option>
                   <option value="pixels">${pixels}</option>
-                </select></td></tr>
-          <tr><td>
-                <span dojoAttachPoint="selectBorder" dojoType="dijit.form.TextBox" value="1"></span>
+                </select></td></tr>	
+            <tr><td>
                 <label>${borderThickness}</label></td>
-            <td>
+            </td><td>
+                <span dojoAttachPoint="selectBorder" dojoType="dijit.form.TextBox" value="1"></span>
+            </td><td>
                 ${pixels}
             </td></tr><tr><td>
-                <span dojoAttachPoint="selectPad" dojoType="dijit.form.TextBox" value="0"></span>
                 <label>${cellPadding}</label></td>
-            <td class="cellpad"></td></tr><tr><td>
-                <span dojoAttachPoint="selectSpace" dojoType="dijit.form.TextBox" value="0"></span>
+            </td><td>
+                <span dojoAttachPoint="selectPad" dojoType="dijit.form.TextBox" value="0"></span>
+            </td><td class="cellpad"></td></tr><tr><td>
                 <label>${cellSpacing}</label>
+            </td><td>
+                <span dojoAttachPoint="selectSpace" dojoType="dijit.form.TextBox" value="0"></span>
             </td><td class="cellspace"></td></tr></table>
         <div class="dialogButtonContainer">
             <div dojoType="dijit.form.Button" dojoAttachEvent="onClick: onInsert">${buttonInsert}</div>

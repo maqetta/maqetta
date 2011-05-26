@@ -67,6 +67,42 @@
 						}
 					},
 					{
+						name: "scrolling",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							// save original position of one of the tab labels
+							var pos0 = dojo.position("mainTabContainer_tablist_tab2").x,
+								pos1,
+								pos2;
+
+							// Initially scrolled all the way to the left, so left scroll button
+							// should be disabled
+							doh.t(dijit.byId("mainTabContainer_tablist_leftBtn").get("disabled"), "left scroll button disabled");
+							doh.f(dijit.byId("mainTabContainer_tablist_rightBtn").get("disabled"), "right scroll button enabled");
+
+							// Scroll to the right
+							doh.robot.mouseMoveAt('mainTabContainer_tablist_rightBtn', 500);
+							doh.robot.mouseClick({left: true}, 500);
+							doh.robot.sequence(d.getTestErrback(function(){
+								pos1 = dojo.position("mainTabContainer_tablist_tab2").x;
+								doh.t(pos1 < pos0, "scrolled to the right: " + pos1 + " < " + pos0);
+								doh.f(dijit.byId("mainTabContainer_tablist_leftBtn").get("disabled"), "left scroll button enabled");
+							}), 500);
+							
+							// And then scroll back to the left
+							doh.robot.mouseMoveAt('mainTabContainer_tablist_leftBtn', 500);
+							doh.robot.mouseClick({left: true}, 500);
+							doh.robot.sequence(d.getTestCallback(function(){
+								pos2 = dojo.position("mainTabContainer_tablist_tab2").x;
+								doh.t(pos2 > pos1, "scrolled to the left: " + pos2 + " > " + pos1);
+							}), 500);
+							
+							return d;
+						}
+					},
+					{
 						name: "close button hover state",
 						timeout: 10000,
 						runTest: function(t){

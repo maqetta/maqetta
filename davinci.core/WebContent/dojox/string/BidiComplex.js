@@ -3,17 +3,17 @@ dojo.experimental("dojox.string.BidiComplex");
 
 // summary:
 //		BiDiComplex module handles complex expression issues known when using BiDi characters
-//		in File Paths, URLs, E-mail Address, XPATH, etc. 
+//		in File Paths, URLs, E-mail Address, XPATH, etc.
 //		this module adds property listeners to the text fields to correct the text representation
-//		in both static text and dynamic text during user input. 
+//		in both static text and dynamic text during user input.
 
-(function(){  
+(function(){
 
 	var _str0 = []; //FIXME: shared reference here among various functions means the functions can't be reused
 
 	dojox.string.BidiComplex.attachInput = function(/*DOMNode*/field, /*String*/pattern){
 		// summary:
-		//		Attach key listeners to the INPUT field to accomodate dynamic complex BiDi expressions 
+		//		Attach key listeners to the INPUT field to accomodate dynamic complex BiDi expressions
 		// field: INPUT DOM node
 		// pattern: Complex Expression Pattern type. One of "FILE_PATH", "URL", "EMAIL", "XPATH"
 
@@ -25,19 +25,19 @@ dojo.experimental("dojox.string.BidiComplex");
 		dojo.connect(field, "oncut", this, "_ceCutText");
 		dojo.connect(field, "oncopy", this, "_ceCopyText");
 
-		field.value = dojox.string.BidiComplex.createDisplayString(field.value, field.alt);    
+		field.value = dojox.string.BidiComplex.createDisplayString(field.value, field.alt);
 	};
 		
 	dojox.string.BidiComplex.createDisplayString = function(/*String*/str, /*String*/pattern){
 		// summary:
-		//		Create the display string by adding the Unicode direction Markers 
+		//		Create the display string by adding the Unicode direction Markers
 		// pattern: Complex Expression Pattern type. One of "FILE_PATH", "URL", "EMAIL", "XPATH"
 
 		str = dojox.string.BidiComplex.stripSpecialCharacters(str);
-		var segmentsPointers = dojox.string.BidiComplex._parse(str, pattern); 
+		var segmentsPointers = dojox.string.BidiComplex._parse(str, pattern);
 		
 		var buf = '\u202A'/*LRE*/ + str;
-		var shift = 1;                                           
+		var shift = 1;
 		dojo.forEach(segmentsPointers, function(n){
 			if(n != null){
 				var preStr = buf.substring(0, n + shift);
@@ -46,7 +46,7 @@ dojo.experimental("dojox.string.BidiComplex");
 				shift++;
 			}
 		});
-		return buf;        
+		return buf;
 	};
 
 	dojox.string.BidiComplex.stripSpecialCharacters = function(str){
@@ -57,7 +57,7 @@ dojo.experimental("dojox.string.BidiComplex");
 	};
 
 	dojox.string.BidiComplex._ceKeyDown = function(event){
-		var elem = dojo.isIE ? event.srcElement : event.target;        
+		var elem = dojo.isIE ? event.srcElement : event.target;
 		_str0 = elem.value;
 	};
 				
@@ -93,7 +93,7 @@ dojo.experimental("dojox.string.BidiComplex");
 				return;
 			}
 
-			if(ieKey == dojo.keys.RIGHT_ARROW){             
+			if(ieKey == dojo.keys.RIGHT_ARROW){
 				if(str1.charAt(cursorEnd-1) == LRM){
 					cursorEnd1 = cursorEnd + 1;
 					if(cursorStart == cursorEnd){
@@ -101,9 +101,9 @@ dojo.experimental("dojox.string.BidiComplex");
 					}
 				}
 
-				dojox.string.BidiComplex._setSelectedRange(elem, cursorStart1, cursorEnd1);                        
+				dojox.string.BidiComplex._setSelectedRange(elem, cursorStart1, cursorEnd1);
 				return;
-			}                   
+			}
 		}else{ //Firefox
 			if(ieKey == dojo.keys.LEFT_ARROW){
 				if(str1.charAt(cursorEnd-1) == LRM){
@@ -131,7 +131,7 @@ dojo.experimental("dojox.string.BidiComplex");
 			}
 
 			if(ieKey == dojo.keys.DELETE){
-				dojox.string.BidiComplex._setSelectedRange(elem,cursorStart,cursorEnd); 
+				dojox.string.BidiComplex._setSelectedRange(elem,cursorStart,cursorEnd);
 			}else if(ieKey == dojo.keys.BACKSPACE){
 				if((_str0.length >= cursorEnd) && (_str0.charAt(cursorEnd-1)==LRM)){
 					dojox.string.BidiComplex._setSelectedRange(elem, cursorStart - 1, cursorEnd - 1);
@@ -175,13 +175,13 @@ dojo.experimental("dojox.string.BidiComplex");
 	dojox.string.BidiComplex._ceCutText = function(elem){
 
 		var ret = dojox.string.BidiComplex._processCopy(elem, null, false);
-		if(!ret){ 
+		if(!ret){
 			return false;
 		}
 
 		if(dojo.isIE){
-	//		curPos = elem.selectionStart; 
-			document.selection.clear(); 
+	//		curPos = elem.selectionStart;
+			document.selection.clear();
 		}else{
 			var curPos = elem.selectionStart;
 			elem.value = elem.value.substring(0, curPos) + elem.value.substring(elem.selectionEnd);
@@ -226,18 +226,18 @@ dojo.experimental("dojox.string.BidiComplex");
 					range.expand('textedit');
 				}
 
-				range.collapse();            
+				range.collapse();
 				range.moveEnd('character', selectionEnd);
 				range.moveStart('character', selectionStart);
 				range.select();
 			}
-		}else{        
+		}else{
 			elem.selectionStart = selectionStart;
 			elem.selectionEnd = selectionEnd;
 		}
 	};
 
-	var _isBidiChar = function(c){    
+	var _isBidiChar = function(c){
 		return (c >= '\u0030' && c <= '\u0039') || (c > '\u00ff');
 	};
 
@@ -246,11 +246,11 @@ dojo.experimental("dojox.string.BidiComplex");
 	};
 
 	var _isCharBeforeBiDiChar = function(buffer, i, previous){
-		while(i > 0){    
+		while(i > 0){
 			if(i == previous){
 				return false;
 			}
-			i--;                        
+			i--;
 			if(_isBidiChar(buffer.charAt(i))){
 				return true;
 			}
@@ -258,11 +258,11 @@ dojo.experimental("dojox.string.BidiComplex");
 				return false;
 			}
 		}
-		return false;       
+		return false;
 	};
 
 
-	dojox.string.BidiComplex._parse = function(/*String*/str, /*String*/pattern){    
+	dojox.string.BidiComplex._parse = function(/*String*/str, /*String*/pattern){
 		var previous = -1, segmentsPointers = [];
 		var delimiters = {
 			FILE_PATH: "/\\:.",
@@ -278,36 +278,36 @@ dojo.experimental("dojox.string.BidiComplex");
 				dojo.forEach(str, function(ch, i){
 					if(delimiters.indexOf(ch) >= 0 && _isCharBeforeBiDiChar(str, i, previous)){
 						previous = i;
-						segmentsPointers.push(i);  
+						segmentsPointers.push(i);
 					}
 				});
 				break;
 			case "EMAIL":
 				var inQuotes = false; // FIXME: unused?
 	
-				dojo.forEach(str, function(ch, i){     
+				dojo.forEach(str, function(ch, i){
 					if(ch== '\"'){
 						if(_isCharBeforeBiDiChar(str, i, previous)){
-							previous = i;    
-							segmentsPointers.push(i);  
-						}                    
+							previous = i;
+							segmentsPointers.push(i);
+						}
 						i++;
 						var i1 = str.indexOf('\"', i);
 						if(i1 >= i){
 							i = i1;
 						}
 						if(_isCharBeforeBiDiChar(str, i, previous)){
-							previous = i;    
-							segmentsPointers.push(i);  
-						}                                   
+							previous = i;
+							segmentsPointers.push(i);
+						}
 					}
 	
 					if(delimiters.indexOf(ch) >= 0 && _isCharBeforeBiDiChar(str, i, previous)){
-								previous = i;    
-								segmentsPointers.push(i); 
-					}                                            
+								previous = i;
+								segmentsPointers.push(i);
+					}
 				});
 		}
 		return segmentsPointers;
-	};  
+	};
 })();

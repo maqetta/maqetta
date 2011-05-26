@@ -1,9 +1,4 @@
-dojo.provide("dijit._Templated");
-
-dojo.require("dijit._Widget");
-dojo.require("dojo.string");
-dojo.require("dojo.parser");
-dojo.require("dojo.cache");
+define("dijit/_Templated", ["dojo", "dijit", "dijit/_Widget", "dojo/string", "dojo/parser", "dojo/cache"], function(dojo, dijit) {
 
 dojo.declare("dijit._Templated",
 	null,
@@ -45,15 +40,23 @@ dojo.declare("dijit._Templated",
 		//		'true' to re-enable to previous, arguably broken, behavior.
 		_earlyTemplatedStartup: false,
 
+/*=====
 		// _attachPoints: [private] String[]
 		//		List of widget attribute names associated with dojoAttachPoint=... in the
 		//		template, ex: ["containerNode", "labelNode"]
-/*=====
  		_attachPoints: [],
+ =====*/
+
+/*=====
+		// _attachEvents: [private] Handle[]
+		//		List of connections associated with dojoAttachEvent=... in the
+		//		template
+ 		_attachEvents: [],
  =====*/
 
 		constructor: function(){
 			this._attachPoints = [];
+			this._attachEvents = [];
 		},
 
 		_stringRepl: function(tmpl){
@@ -78,7 +81,6 @@ dojo.declare("dijit._Templated",
 			}, this);
 		},
 
-		// method over-ride
 		buildRendering: function(){
 			// summary:
 			//		Construct the UI for this widget from a template, setting this.domNode.
@@ -104,32 +106,23 @@ dojo.declare("dijit._Templated",
 
 			this.domNode = node;
 
+			// Call down to _Widget.buildRendering() to get base classes assigned
+			// TODO: change the baseClass assignment to attributeMap
+			this.inherited(arguments);
+
 			// recurse through the node, looking for, and attaching to, our
 			// attachment points and events, which should be defined on the template node.
 			this._attachTemplateNodes(node);
 
 			if(this.widgetsInTemplate){
-				// Make sure dojoType is used for parsing widgets in template.
-				// The dojo.parser.query could be changed from multiversion support.
-				var parser = dojo.parser, qry, attr;
-				if(parser._query != "[dojoType]"){
-					qry = parser._query;
-					attr = parser._attrName;
-					parser._query = "[dojoType]";
-					parser._attrName = "dojoType";
-				}
-
 				// Store widgets that we need to start at a later point in time
 				var cw = (this._startupWidgets = dojo.parser.parse(node, {
 					noStart: !this._earlyTemplatedStartup,
-					inherited: {dir: this.dir, lang: this.lang}
+					template: true,
+					inherited: {dir: this.dir, lang: this.lang},
+					propsThis: this,	// so data-dojo-props of widgets in the template can reference "this" to refer to me
+					scope: "dojo"	// even in multi-version mode templates use dojoType/data-dojo-type
 				}));
-
-				// Restore the query.
-				if(qry){
-					parser._query = qry;
-					parser._attrName = attr;
-				}
 
 				this._supportingWidgets = dijit.findWidgets(node);
 
@@ -156,9 +149,10 @@ dojo.declare("dijit._Templated",
 		},
 
 		_attachTemplateNodes: function(rootNode, getAttrFunc){
-			
 			// summary:
 			//		Iterate through the template and attach functions and nodes accordingly.
+			//		Alternately, if rootNode is an array of widgets, then will process dojoAttachPoint
+			//		etc. for those widgets.
 			// description:
 			//		Map widget properties and functions to the handlers specified in
 			//		the dom node and it's descendants. This function iterates over all
@@ -181,11 +175,11 @@ dojo.declare("dijit._Templated",
 			var x = dojo.isArray(rootNode) ? 0 : -1;
 			for(; x<nodes.length; x++){
 				var baseNode = (x == -1) ? rootNode : nodes[x];
-				if(this.widgetsInTemplate && getAttrFunc(baseNode, "dojoType")){
+				if(this.widgetsInTemplate && (getAttrFunc(baseNode, "dojoType") || getAttrFunc(baseNode, "data-dojo-type"))){
 					continue;
 				}
 				// Process dojoAttachPoint
-				var attachPoint = getAttrFunc(baseNode, "dojoAttachPoint");
+				var attachPoint = getAttrFunc(baseNode, "dojoAttachPoint") || getAttrFunc(baseNode, "data-dojo-attach-point");
 				if(attachPoint){
 					var point, points = attachPoint.split(/\s*,\s*/);
 					while((point = points.shift())){
@@ -199,7 +193,7 @@ dojo.declare("dijit._Templated",
 				}
 
 				// Process dojoAttachEvent
-				var attachEvent = getAttrFunc(baseNode, "dojoAttachEvent");
+				var attachEvent = getAttrFunc(baseNode, "dojoAttachEvent") || getAttrFunc(baseNode, "data-dojo-attach-event");;
 				if(attachEvent){
 					// NOTE: we want to support attributes that have the form
 					// "domEvent: nativeEvent; ..."
@@ -219,12 +213,13 @@ dojo.declare("dijit._Templated",
 							if(!thisFunc){
 								thisFunc = event;
 							}
-							this.connect(baseNode, event, thisFunc);
+							this._attachEvents.push(this.connect(baseNode, event, thisFunc));
 						}
 					}
 				}
 
 				// waiRole, waiState
+				// TODO: remove this in 2.0, templates are now using role=... and aria-XXX=... attributes directicly
 				var role = getAttrFunc(baseNode, "waiRole");
 				if(role){
 					dijit.setWaiRole(baseNode, role);
@@ -257,6 +252,10 @@ dojo.declare("dijit._Templated",
 			}, this);
 			this._attachPoints = [];
 
+			// And same for event handlers
+			dojo.forEach(this._attachEvents, this.disconnect, this);
+			this._attachEvents = [];
+			
 			this.inherited(arguments);
 		}
 	}
@@ -333,4 +332,8 @@ dojo.extend(dijit._Widget,{
 	dojoAttachPoint: "",
 	waiRole: "",
 	waiState:""
+});
+
+
+return dijit._Templated;
 });

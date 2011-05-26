@@ -13,12 +13,12 @@
 			dojo.require("dojox.gfx.VectorText");
 
 			var bg="#181818", fill="#464b44", padding=32;
-			dojo.addOnLoad(function(){
+			
+			function makeShapes(surface){
 				var url = dojo.moduleUrl("dojox", "gfx/resources/Gillius.svg");
 				var f = new dojox.gfx.VectorFont(url);
 
 				//	draw out the glyphs for testing.
-				var surface = dojox.gfx.createSurface("test", 500, 560);
 				var rect = surface.createRect({ x: 0, y: 0, width: 500, height: 560 })
 					.setFill(bg);
 				var g = surface.createGroup(), cx=0, count=0;
@@ -66,9 +66,14 @@
 							.setFill(s);
 					}
 				}
+			}
+			
+			function createSurface(){
+				var surface = dojox.gfx.createSurface("test", 500, 560);
+				surface.whenLoaded(makeShapes);
+			}
 
-
-			});
+			dojo.ready(createSurface);
 		</script>
 	</head>
 	<body>

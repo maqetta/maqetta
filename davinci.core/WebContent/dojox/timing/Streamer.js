@@ -3,9 +3,9 @@ dojo.provide("dojox.timing.Streamer");
 dojo.require("dojox.timing._base");
 
 dojox.timing.Streamer = function(
-	/* function */input, 
-	/* function */output, 
-	/* int */interval, 
+	/* function */input,
+	/* function */output,
+	/* int */interval,
 	/* int */minimum,
 	/* array */initialData
 ){

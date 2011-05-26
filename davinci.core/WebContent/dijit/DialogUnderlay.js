@@ -1,9 +1,4 @@
-dojo.provide("dijit.DialogUnderlay");
-
-dojo.require("dojo.window");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define("dijit/DialogUnderlay", ["dojo", "dijit", "dojo/window", "dijit/_Widget", "dijit/_Templated"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.DialogUnderlay",
@@ -41,10 +36,12 @@ dojo.declare(
 
 		_setDialogIdAttr: function(id){
 			dojo.attr(this.node, "id", id + "_underlay");
+			this._set("dialogId", id);
 		},
 
 		_setClassAttr: function(clazz){
 			this.node.className = "dijitDialogUnderlay " + clazz;
+			this._set("class", clazz);
 		},
 
 		postCreate: function(){
@@ -93,14 +90,12 @@ dojo.declare(
 			// summary:
 			//		Hides the dialog underlay
 			this.bgIframe.destroy();
+			delete this.bgIframe;
 			this.domNode.style.display = "none";
-		},
-
-		uninitialize: function(){
-			if(this.bgIframe){
-				this.bgIframe.destroy();
-			}
-			this.inherited(arguments);
 		}
 	}
 );
+
+
+return dijit.DialogUnderlay;
+});

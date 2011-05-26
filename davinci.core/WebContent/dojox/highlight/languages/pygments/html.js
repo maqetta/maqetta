@@ -45,7 +45,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 			},
 			{
 				className: "string",
-				begin: '"', 
+				begin: '"',
 				end: '"',
 				illegal: "\\n",
 				relevance: 0

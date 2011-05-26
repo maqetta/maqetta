@@ -21,6 +21,6 @@ doh.register("dojox.highlight.tests.highlight", [
 		var result = dojox.highlight.processString(unformatted, "javascript");
 		doh.assertEqual(unformatted, result.result);
 		doh.assertEqual(expected, result.partialResult);
-		doh.assertEqual("javascript", result.langName);		
+		doh.assertEqual("javascript", result.langName);
 	}
 	]);

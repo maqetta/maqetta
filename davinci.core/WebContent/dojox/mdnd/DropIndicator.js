@@ -3,14 +3,14 @@ dojo.provide("dojox.mdnd.DropIndicator");
 dojo.require("dojox.mdnd.AreaManager");
 
 dojo.declare(
-	"dojox.mdnd.DropIndicator", 
-	null, 
+	"dojox.mdnd.DropIndicator",
+	null,
 {
 	// summary:
 	//		DropIndicator managment for DnD.
 
 	// node: DOMNode
-	//		the drop indicator node	
+	//		the drop indicator node
 	node : null,
 		
 	constructor: function(){
@@ -63,7 +63,7 @@ dojo.declare(
 			if(this.node.parentNode){
 				this.node.parentNode.removeChild(this.node);
 			}
-		}	
+		}
 	},
 	 
 	destroy: function(){

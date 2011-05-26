@@ -9,7 +9,7 @@ dojo.require("dojox.rpc.Client");
 
 dojox.rpc.tests.service = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.tests.resources", "test.smd"));
 
-doh.register("dojox.rpc.tests.echo", 
+doh.register("dojox.rpc.tests.echo",
 	[
 		{
 			name: "#1 POST,URL,Named Parameters",
@@ -116,7 +116,7 @@ doh.register("dojox.rpc.tests.echo",
 				}
 
 				res = this.name + Math.random();
-				//test when given named params				
+				//test when given named params
 				var td = this.svc.restStore.put({location: "res"},res);
 				td.addCallback(this, function(result){
 					var td = this.svc.restStore({location: "res"});

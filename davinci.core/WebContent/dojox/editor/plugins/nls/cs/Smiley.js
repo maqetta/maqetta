@@ -5,8 +5,8 @@
 	emoticonWink: "mrknutí",
 	emoticonGrin: "úšklebek",
 	emoticonCool: "skvělé",
-	emoticonAngry: "hněv",  
-	emoticonHalf: "polovina", 
+	emoticonAngry: "hněv",
+	emoticonHalf: "polovina",
 	emoticonEyebrow: "obočí",
 	emoticonFrown: "zamračení",
 	emoticonShy: "stud",
@@ -15,7 +15,7 @@
 	emoticonTongue: "jazyk",
 	emoticonIdea: "nápad",
 	emoticonYes: "ano",
-	emoticonNo: "ne",	
+	emoticonNo: "ne",
 	emoticonAngel: "anděl",
 	emoticonCrying: "pláč"
 })

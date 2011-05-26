@@ -2,7 +2,7 @@
 Dojo Storage
 -------------------------------------------------------------------------------
 Version X.XXX (does not have separate versioning -- versioned by release date)
-Last Release date: March 2008
+Last Release date: January 2010
 -------------------------------------------------------------------------------
 Project state:
 experimental
@@ -10,18 +10,25 @@ experimental
 Credits
 	Brad Neuberg
 	Alex Russell
+
+LocalStorage, BehaviorStorage, CookieStorage:
+	Jens Arps
 -------------------------------------------------------------------------------
 Project description
 
 dojox.storage provides a JavaScript abstraction for persistent storage
-as well as pluggable implementations which typically use native browser extensions
-(e.g. Flash player, Gears)
+as well as pluggable implementations which typically use native browser
+extensions (e.g. Flash player, Gears)
 
 -------------------------------------------------------------------------------
 Dependencies:
 
 FlashStorageProvider requires the Flash player
 GearsStorageProvider requires the Gears extension
+LocalStorageProvider does not require any plugins but will run only in certain
+browsers (see below)
+BehaviorStorageProvider does not require any plugins but will run only in IE 5+
+CookieStorageProvider has no requirements
 The various Air*StorageProviders require Adobe's AIR software
 
 The open source mtasc compiler (www.mtasc.org) is needed to build the
@@ -32,8 +39,7 @@ is provided (buildFlashStorage.sh)
 -------------------------------------------------------------------------------
 Documentation
 
-See http://manual.dojotoolkit.org/WikiHome/DojoDotBook/Book50 for the
-authoritative Dojo Storage docs.
+See http://docs.dojocampus.org/dojox/storage for Dojo Storage docs.
 
 See dojox/storage/demos/helloworld.html for a simple Hello World example
 you can base your code off of.
@@ -47,26 +53,17 @@ These installation instructions are to use Dojo Storage in a web browser; at
 runtime, Dojo Storage will autodetect and use the best available storage
 option. This includes:
 
-  * Google Gears
-  * HTML 5 Web Browsers (Firefox 2+)
-  * Hidden Flash
-  
-If you are using a release build (if you downloaded Dojo from the Dojo
-website then this is a release build -- if you checked it out from
-Subversion yourself then you will have to build things yourself), if you 
-only want to grab just the files from Dojo to use Dojo Storage
-in the browser, take the following (but make sure to keep the directory
-layout the same, or else things won't work correctly!):
+  * localStorage: HTML 5 Web Browsers (Firefox 3+, Safari 4+, IE 8+)
+  * Google Gears (Plugin)
+  * globalStorage (Firefox 2+)
+  * userData Behavior (IE 5+)
+  * Hidden Flash (Plugin)
+  * Cookies
 
-* dojo/dojo.js
-* dojox/storage/storage-browser.js
-* dojox/storage/Storage.swf
+To have access to Dojo Storage, require "dojox.storage":
 
-To help with testing and development and to make sure you have everything 
-right, its also useful to grab the following files:
+dojo.require("dojox.storage");
 
-* dojox/storage/README
-* dojox/storage/demos/helloworld.html
 
 If you want to use Dojo Storage with Adobe AIR:
 
@@ -74,3 +71,45 @@ If you want to use Dojo Storage with Adobe AIR:
 
 -------------------------------------------------------------------------------
 Additional Notes
+
+
+STORAGE TABLE
+-------------
+
+
+Browser		Used StorageProvider, in order of preference
+
+IE 6 / IE7	GearsStorageProvider
+			FlashStorageProvider
+			BehaviorStorageProvider
+			CookieStorageProvider
+
+IE 8		LocalStorageProvider
+			GearsStorageProvider
+			FlashStorageProvider
+			BehaviorStorageProvider
+			CookieStorageProvider
+
+Safari 3	FlashStorageProvider
+			CookieStorageProvider
+
+Safari 4	LocalStorageProvider
+			FlashStorageProvider
+			CookieStorageProvider
+
+Chromium 4	FlashStorageProvider
+(Mac OS)	CookieStorageProvider
+
+Firefox 2	WhatWGStorageProvider (= globalStorage)
+			GearsStorageProvider
+			FlashStorageProvider
+			CookieStorageProvider
+
+Firefox 3	LocalStorageProvider
+			GearsStorageProvider
+			FlashStorageProvider
+			CookieStorageProvider
+
+Opera 10	LocalStorageProvider
+			FlashStorageProvider
+			CookieStorageProvider

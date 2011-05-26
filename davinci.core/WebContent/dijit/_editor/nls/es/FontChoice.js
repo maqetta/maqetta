@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Tamaño",
 	fontName: "Font",
@@ -9,6 +11,7 @@
 	cursive: "cursiva",
 	fantasy: "fantasía",
 
+	noFormat: "Ninguno",
 	p: "Párrafo",
 	h1: "Cabecera",
 	h2: "Subcabecera",
@@ -23,3 +26,5 @@
 	6: "x-grande",
 	7: "xx-grande"
 })
+//end v1.x content
+);

@@ -5,6 +5,8 @@ blueLabel: "μ",
 hueLabel: "α",
 saturationLabel: "κ",
 valueLabel: "τ", /* aka intensity or brightness */
-hexLabel: "16-αδικό"
+hexLabel: "16-αδικό",
+huePickerTitle: "Επιλογή απόχρωσης",
+saturationPickerTitle: "Επιλογή κορεσμού"
 })
 

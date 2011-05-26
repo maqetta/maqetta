@@ -1,11 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 	<title>dojox.layout.ExpandoPane</title>
 
 	<!-- required: a default theme file -->
-	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/tundra/tundra.css">
+	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/claro/claro.css">
 	<!-- test file style rollup, you need resources/ExpandoPane.css exclusively -->
 	<link rel="stylesheet" href="_expando.css">	
 
@@ -183,7 +182,7 @@
 
 	</script>
 </head>
-<body class="tundra">
+<body class="claro">
 		<div id="bc" style="width:100%; height:100%; padding: 5px;" dojoType="dijit.layout.BorderContainer">
 			<div id="header" dojoType="dijit.layout.ContentPane" region="top" splitter="true">Dojo Expando Pane Test</div>
 			<div dojoType="dojox.layout.ExpandoPane" 
@@ -309,7 +308,12 @@
 				style="height: 100px;">
 				<div dojoType="dijit.layout.TabContainer" attachParent="true" tabPosition="bottom" tabStrip="true">
 					<div dojoType="dijit.layout.ContentPane" title="Search">
-												
+						<button dojoType="dijit.form.Button">
+							Change Title
+							<script type="dojo/method" event="onClick">
+								dijit.byId("bottomPane").set("title", new Date())
+							</script>
+						</button>
 					</div>
 					<div dojoType="dijit.layout.AccordionContainer" title="Panes" style="width:275px;" attachParent="true">
 						

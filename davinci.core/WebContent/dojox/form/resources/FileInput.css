@@ -107,7 +107,7 @@
 	background-color: #fff;
 	background-repeat: repeat-x;
 	background-position: top left;
-	background-image:url("../../../dijit/themes/claro/images/textBox_back.png");
+	background-image:url("../../../dijit/themes/claro/form/images/textBox_back.png");
 	line-height:normal;
 	padding:0.2em 0.3em;
 }

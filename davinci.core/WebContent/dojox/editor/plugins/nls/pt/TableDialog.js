@@ -18,6 +18,7 @@
 	right: "direita",
 	buttonSet: "Configurar", // translated elsewhere?
 	buttonInsert: "Inserir",
+	buttonCancel: "Cancelar",
 
 	selectTableLabel: "Selecionar Tabela",
 	insertTableRowBeforeLabel: "Incluir Linha Antes",
@@ -27,4 +28,4 @@
 	deleteTableRowLabel: "Excluir Linha",
 	deleteTableColumnLabel: "Excluir Coluna"
 })
-
+	

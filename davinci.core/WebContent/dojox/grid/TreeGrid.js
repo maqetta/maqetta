@@ -103,7 +103,7 @@ dojo.declare("dojox.grid._TreeAggregator", null, {
 		}
 
 		// See if they have specified a valid field
-		var field = ((cell.parentCell && cell.parentCell.itemAggregates) ? 
+		var field = ((cell.parentCell && cell.parentCell.itemAggregates) ?
 							cell.parentCell.itemAggregates[cell.idxInParent] : "")||"";
 		if(field && store.hasAttribute(item, field)){
 			return this._cacheValue(typeCache, level, store.getValue(item, field));
@@ -165,7 +165,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 		};
 		var tCell = {children: cells, itemAggregates: []};
 		tree.cells[0] = getTreeCells(tCell, 0);
-		g.aggregator = new dojox.grid._TreeAggregator({cells: tree.cells[0], 
+		g.aggregator = new dojox.grid._TreeAggregator({cells: tree.cells[0],
 														grid: g,
 														childFields: cFields});
 		if(g.scroller && g.defaultOpen){
@@ -183,7 +183,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 		if(g && g.treeModel && !dojo.every(s, function(i){
 			return ("cells" in i);
 		})){
-			s = arguments[0] = [{cells:[s]}];			
+			s = arguments[0] = [{cells:[s]}];
 		}
 		if(s.length == 1 && s[0].cells.length == 1){
 			if(g && g.treeModel){
@@ -196,7 +196,7 @@ dojo.declare("dojox.grid._TreeLayout", dojox.grid._Layout, {
 				});
 				if(childCells.length === 1){
 					this._isCollapsable = true;
-				}			
+				}
 			}
 		}
 		if(this._isCollapsable && (!g || !g.treeModel)){
@@ -524,7 +524,7 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 	//		the values of subrows
 	//
 	// description:
-	//		TreeGrid currently only works on "simple" structures.  That is, 
+	//		TreeGrid currently only works on "simple" structures.  That is,
 	//		single-view structures with a single row in them.
 	//
 	//		The TreeGrid works using the concept of "levels" - level 0 are the
@@ -643,18 +643,30 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 		}
 		var s = this.store;
 		var itm = dojox.grid.DataGrid.prototype.getItem.call(this, idx[0]);
-		var cf;
+		var cf, i, j;
 		if(this.aggregator){
 			cf = this.aggregator.childFields||[];
+			if(cf){
+				for(i = 0; i < idx.length - 1 && itm; i++){
+					if(cf[i]){
+						itm = (s.getValues(itm, cf[i])||[])[idx[i + 1]];
+					}else{
+						itm = null;
+					}
+				}
+			}
 		}else if(this.treeModel){
 			cf = this.treeModel.childrenAttrs||[];
-		}
-		if(cf){
-			for(var i = 0; i < idx.length - 1 && itm; i++){
-				if(cf[i]){
-					itm = (s.getValues(itm, cf[i])||[])[idx[i + 1]];
-				}else{
-					itm = null;
+			if(cf&&itm){
+				for(i=1, il=idx.length; (i<il) && itm; i++) {
+					for(j=0, jl=cf.length; j<jl; j++) {
+						if(cf[j]){
+							itm = (s.getValues(itm, cf[j])||[])[idx[i]];
+						}else{
+							itm = null;
+						}
+						if(itm){ break; }
+					}
 				}
 			}
 		}
@@ -718,7 +730,7 @@ dojo.declare("dojox.grid.TreeGrid", dojox.grid.DataGrid, {
 	
 	_setModel: function(treeModel){
 		if(treeModel && (!dijit.tree.ForestStoreModel || !(treeModel instanceof dijit.tree.ForestStoreModel))){
-			throw new Error("dojox.grid.TreeGrid: treeModel must be an instance of dijit.tree.ForestStoreModel");			
+			throw new Error("dojox.grid.TreeGrid: treeModel must be an instance of dijit.tree.ForestStoreModel");
 		}
 		this.treeModel = treeModel;
 		dojo.toggleClass(this.domNode, "dojoxGridTreeModel", this.treeModel ? true : false);
@@ -880,7 +892,7 @@ dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 					type: d.trim(d.attr(th, "cellType")||""),
 					field: d.trim(d.attr(th, "field")||"")
 				};
-				if(cell.type){ 
+				if(cell.type){
 					cell.type = d.getObject(cell.type);
 				}
 				
@@ -890,8 +902,8 @@ dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 					cell.name = "";
 					cell.children = cellsFromMarkup(subTable);
 					if(d.hasAttr(th, "itemAggregates")){
-						cell.itemAggregates = d.map(d.attr(th, "itemAggregates").split(","), function(v){ 
-							return d.trim(v); 
+						cell.itemAggregates = d.map(d.attr(th, "itemAggregates").split(","), function(v){
+							return d.trim(v);
 						});
 					}else{
 						cell.itemAggregates = [];
@@ -901,7 +913,7 @@ dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 					}
 					cell.type = cell.type || dojox.grid.cells.SubtableCell;
 				}else{
-					// Grab our other stuff we need (mostly what's in the normal 
+					// Grab our other stuff we need (mostly what's in the normal
 					// Grid)
 					cell.name = d.trim(d.attr(th, "name")||th.innerHTML);
 					if(d.hasAttr(th, "width")){
@@ -919,7 +931,7 @@ dojox.grid.TreeGrid.markupFactory = function(props, node, ctor, cellFunc){
 				}
 				if(cell.type && cell.type.markupFactory){
 					cell.type.markupFactory(th, cell);
-				}			
+				}
 				return cell;
 			});
 		}

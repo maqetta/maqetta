@@ -5,7 +5,7 @@ dojo.require("dojox.charting.Theme");
 	var dxc=dojox.charting;
 	dxc.themes.Midwest=new dxc.Theme({
 		colors: [
-			"#927b51", 
+			"#927b51",
 			"#a89166",
 			"#80c31c",
 			"#bcdd5a",

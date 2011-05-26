@@ -1,12 +1,10 @@
-dojo.provide("dijit.layout.SplitContainer");
+define("dijit/layout/SplitContainer", ["dojo", "dijit", "dojo/cookie", "dijit/layout/_LayoutWidget"], function(dojo, dijit) {
 
 //
 // FIXME: make it prettier
 // FIXME: active dragging upwards doesn't always shift other bars (direction calculation is wrong in this case)
 //
 
-dojo.require("dojo.cookie");
-dojo.require("dijit.layout._LayoutWidget");
 
 dojo.declare("dijit.layout.SplitContainer",
 	dijit.layout._LayoutWidget,
@@ -574,4 +572,8 @@ dojo.extend(dijit._Widget, {
 	//		For example, if there are two children and each has sizeShare=10, then
 	//		each takes up 50% of the available space.
 	sizeShare: 10
+});
+
+
+return dijit.layout.SplitContainer;
 });

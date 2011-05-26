@@ -1,4 +1,4 @@
-dojo.provide("dijit._base.manager");
+define("dijit/_base/manager", ["dojo", "dijit"], function(dojo, dijit) {
 
 dojo.declare("dijit.WidgetSet", null, {
 	// summary:
@@ -255,7 +255,10 @@ dojo.declare("dijit.WidgetSet", null, {
 				if(node.nodeType == 1){
 					var widgetId = node.getAttribute("widgetId");
 					if(widgetId){
-						outAry.push(hash[widgetId]);
+						var widget = hash[widgetId];
+						if(widget){	// may be null on page w/multiple dojo's loaded
+							outAry.push(widget);
+						}
 					}else{
 						getChildrenHelper(node);
 					}
@@ -345,29 +348,25 @@ dojo.declare("dijit.WidgetSet", null, {
 				return true;
 			case "iframe":
 				// If it's an editor <iframe> then it's tab navigable.
-				//TODO: feature detect "designMode" in elem.contentDocument?
-				if(dojo.isMoz){
-					try{
-						return elem.contentDocument.designMode == "on";
-					}catch(err){
-						return false;
+				var body;
+				try{
+					// non-IE
+					var contentDocument = elem.contentDocument;
+					if("designMode" in contentDocument && contentDocument.designMode == "on"){
+						return true;
 					}
-				}else if(dojo.isWebKit){
-					var doc = elem.contentDocument,
-						body = doc && doc.body;
-					return body && body.contentEditable == 'true';
-				}else{
+					body = contentDocument.body;
+				}catch(e1){
 					// contentWindow.document isn't accessible within IE7/8
 					// if the iframe.src points to a foreign url and this
 					// page contains an element, that could get focus
 					try{
-						doc = elem.contentWindow.document;
-						body = doc && doc.body;
-						return body && body.firstChild && body.firstChild.contentEditable == 'true';
-					}catch(e){
+						body = elem.contentWindow.document.body;
+					}catch(e2){
 						return false;
 					}
 				}
+				return body.contentEditable == 'true' || (body.firstChild && body.firstChild.contentEditable == 'true');
 			default:
 				return elem.contentEditable == 'true';
 		}
@@ -403,7 +402,13 @@ dojo.declare("dijit.WidgetSet", null, {
 		//		  positive tabIndex value
 		//		* the last element in document order with the highest
 		//		  positive tabIndex value
-		var first, last, lowest, lowestTabindex, highest, highestTabindex;
+		var first, last, lowest, lowestTabindex, highest, highestTabindex, radioSelected = {};
+		function radioName(node) {
+			// If this element is part of a radio button group, return the name for that group.
+			return node && node.tagName.toLowerCase() == "input" &&
+				node.type && node.type.toLowerCase() == "radio" &&
+				node.name && node.name.toLowerCase();
+		}
 		var walkTree = function(/*DOMNode*/parent){
 			dojo.query("> *", parent).forEach(function(child){
 				// Skip hidden elements, and also non-HTML elements (those in custom namespaces) in IE,
@@ -427,6 +432,10 @@ dojo.declare("dijit.WidgetSet", null, {
 							highest = child;
 						}
 					}
+					var rn = radioName(child);
+					if(dojo.attr(child, "checked") && rn) {
+						radioSelected[rn] = child;
+					}
 				}
 				if(child.nodeName.toUpperCase() != 'SELECT'){
 					walkTree(child);
@@ -434,7 +443,11 @@ dojo.declare("dijit.WidgetSet", null, {
 			});
 		};
 		if(shown(root)){ walkTree(root) }
-		return { first: first, last: last, lowest: lowest, highest: highest };
+		function rs(node) {
+			// substitute checked radio button for unchecked one, if there is a checked one with the same name.
+			return radioSelected[radioName(node)] || node;
+		}
+		return { first: rs(first), last: rs(last), lowest: rs(lowest), highest: rs(highest) };
 	}
 	dijit.getFirstInTabbingOrder = function(/*String|DOMNode*/ root){
 		// summary:
@@ -466,3 +479,7 @@ dojo.declare("dijit.WidgetSet", null, {
 	dijit.defaultDuration = dojo.config["defaultDuration"] || 200;
 
 })();
+
+
+return dijit;
+});

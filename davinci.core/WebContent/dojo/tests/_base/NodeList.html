@@ -34,6 +34,9 @@
 			djConfig="isDebug: false"></script>
 		<script type="text/javascript">
 			dojo.require("doh.runner");
+			dojo.require("dojo.string");
+			dojo.require("dojo.parser");
+
 			dojo.addOnLoad(function(){
 				var c = dojo.byId("c1");
 				var t = dojo.byId("t");
@@ -330,6 +333,19 @@
 							tnl.removeClass(["a", "c"]);
 							doh.is("", s.className);
 							doh.is("", t.className);
+							tnl.addClass("a b c");
+							tnl.replaceClass("d e", "a b");
+							doh.is("c d e", s.className, "class is c d e after replacing a b with d e");
+							doh.is("c d e", t.className, "class is c d e after replacing a b with d e");
+							tnl.replaceClass("f", "d");
+							doh.is("c e f", s.className, "class is c e f after replacing d with f");
+							doh.is("c e f", t.className, "class is c e f after replacing d with f");
+							tnl.replaceClass("d");
+							doh.is("d", s.className);
+							doh.is("d", t.className);
+							tnl.removeClass();
+							doh.is("", s.className, "empty class");
+							doh.is("", t.className, "empty class");
 						},
 
 						function concat(){
@@ -445,7 +461,6 @@
 							});
 
 							//template with dojo.string.substitute used.
-							dojo.require("dojo.string");
 							templs.addContent({
 								template: "<p>${name}</p>",
 								name: "baz"
@@ -458,7 +473,6 @@
 							});
 
 							//Try a dojo.declared thing.
-							dojo.require("dojo.parser");
 							dojo.declare("dojo.tests.Mini", null, {
 								constructor: function(args, node){
 									dojo.mixin(this, args);

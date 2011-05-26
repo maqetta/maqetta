@@ -27,11 +27,12 @@
 		dojo.addOnLoad(function(){
 			dojo.byId("ta").value = "";
 			mixer = new dojox.av.FLAudio({initialVolume:.1, autoPlay:false, isDebug:true, statusInterval:50});
+
+			// Testing cross domain:
+			//mixer.load({url:"http://video.bettervideo.com/video/ClubAJAX/Ola.mp3", id:'OlaRemote'});
 			mixer.load({url:"../tests/audio/Ola.mp3", id:'Ola'});
 			mixer.load({url:"../tests/audio/Hio.mp3", id:"Hio"});
 			mixer.load({url:"../tests/audio/FuzzWah.mp3", id:"Wah"});
-			//mixer.load({url:"../tests/audio/BrassMonkey.mp3?cbust", id:"BM"});
-			//mixer.load({url:"../tests/audio/podcast.mp3?cbust", id:"Wah"});
 
 			var c = dojo.connect;
 			c(mixer, "onPlayStatus", function(obj){
@@ -93,8 +94,7 @@
 		<button onclick="mixer.doPlay({id:'Wah', volume:.7, pan:1})">Play FuzzWah</button>
 		<button onclick="mixer.pause({id:'Wah'})">Pause FuzzWah</button>
 		<button onclick="mixer.stop({id:'Wah'})">Stop FuzzWah</button>
-	<!--<br/>
-		<textarea style="width:100px;" rows="2" id="tf"></textarea>-->
+
 	<br/>
 		<textarea cols="50" rows="2" id="ta"></textarea>
 	</div>

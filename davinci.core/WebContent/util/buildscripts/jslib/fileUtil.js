@@ -8,7 +8,7 @@ fileUtil.getLineSeparator = function(){
 	return java.lang.System.getProperty("line.separator"); //Java String
 }
 
-fileUtil.getFilteredFileList = function(/*String*/startDir, /*RegExp*/regExpFilters, /*boolean?*/makeUnixPaths, /*boolean?*/startDirIsJavaObject){
+fileUtil.getFilteredFileList = function(/*String*/startDir, /*RegExp*/regExpFilters, /*boolean?*/makeUnixPaths, /*boolean?*/startDirIsJavaObject, /*boolean?*/dontRecurse){
 	//summary: Recurses startDir and finds matches to the files that match regExpFilters.include
 	//and do not match regExpFilters.exclude. Or just one regexp can be passed in for regExpFilters,
 	//and it will be treated as the "include" case.
@@ -48,7 +48,7 @@ fileUtil.getFilteredFileList = function(/*String*/startDir, /*RegExp*/regExpFilt
 				if(ok && !file.getName().match(/^\./)){
 					files.push(filePath);
 				}
-			}else if(file.isDirectory() && !file.getName().match(/^\./)){
+			}else if(file.isDirectory() && !file.getName().match(/^\./) && !dontRecurse){
 				var dirFiles = this.getFilteredFileList(file, regExpFilters, makeUnixPaths, true);
 				files.push.apply(files, dirFiles);
 			}
@@ -77,6 +77,76 @@ fileUtil.copyDir = function(/*String*/srcDir, /*String*/destDir, /*RegExp*/regEx
 	return copiedFiles.length ? copiedFiles : null; //Array or null
 }
 
+fileUtil.asyncFixEOLRe= new RegExp(fileUtil.getLineSeparator(), "g");
+
+fileUtil.transformAsyncModule= function(filename, contents) {
+	var match,
+		bundleMatch,
+		moduleId,
+		requireArgs = [],
+		lineSeparator = fileUtil.getLineSeparator(),
+		dojo = { isBrowser:true },
+		getAsyncArgs = function(moduleId_, deps){
+			if(!deps){
+				//no moduleId given
+				deps= moduleId_;
+			} else {
+				moduleId= moduleId_;
+			}
+			for (var i = 0; i < deps.length; i++) {
+				if (deps[i]!="require") {
+					requireArgs.push(deps[i].replace(/\//g, "."));
+				}
+			}
+		}
+	;
+
+	// the v1.x content in the i18n bundles is bracketed by "//begin v1.x content" and "//end v1.x content"
+	match = contents.match(/(\/\/begin\sv1\.x\scontent)([\s\S]+)(\/\/end\sv1\.x\scontent)/);
+	if(match){
+		return match[2];
+	}
+	// must not be an i18n bundle
+
+	match = contents.match(/\/\/\s*AMD\-ID\s*"([^\n"]+)"/i);
+	moduleId = (match && match[1]) || "";
+	if(moduleId || contents.substring(0, 8) == "define(\""){
+		if((match = contents.match(/^define\(([^\]]+)\]\s*\,[\s\n]*function.+$/m))){
+			eval("getAsyncArgs(" + match[1] + "])");
+			if(!moduleId){
+				logger.info("warning: the module " + filename + " looked like an AMD module, but didn't provide a module id");
+				return contents;
+			}
+			var prefix = "dojo.provide(\"" + moduleId.replace(/\//g, ".") + "\");" + lineSeparator;
+			for(var req, reqs = requireArgs, i = 0; i<reqs.length; i++){
+				req = reqs[i];
+				if(req.substring(0, 5) == "text!"){
+					// do nothing
+				}else if(req.substring(0, 5) == "i18n!"){
+					bundleMatch = req.match(/i18n\!(.+)\.nls\.(\w+)/);
+					prefix += "dojo.requireLocalization(\"" + bundleMatch[1].replace(/\//g, ".") + "\", \"" +	 bundleMatch[2] +	 "\");" + lineSeparator;
+				}else if(req != "dojo" && req != "dijit" && req != "dojox" && !/^dojo\.lib/.test(req)){
+					prefix += "dojo.require(\"" + req +	"\");" + lineSeparator;
+				}
+			}
+
+			// strip all module return values that end with the comment "// AMD-result"
+			contents = contents.replace( /^\s*return\s+.+\/\/\s*AMD-return((\s.+)|(\s*))$/img , "");
+			var matchLength = match.index + match[0].length + 1;
+			var contentsLength = contents.search(/\s*return\s+[_a-zA-Z\.0-9]+\s*;\s*(\/\/.+)?\s*\}\);\s*$/);
+			if(contentsLength == -1){
+				//logger.info("warning: no return for: " + fileUtil.asyncProvideArg);
+				contentsLength= contents.search(/\}\);\s*$/);
+			}
+			return prefix + lineSeparator + contents.substring(matchLength, contentsLength);
+		} else {
+			return contents;
+		}
+	} else {
+		return contents;
+	}
+};
+
 fileUtil.copyFile = function(/*String*/srcFileName, /*String*/destFileName, /*boolean?*/onlyCopyNew){
 	//summary: copies srcFileName to destFileName. If onlyCopyNew is set, it only copies the file if
 	//srcFileName is newer than destFileName. Returns a boolean indicating if the copy occurred.
@@ -102,12 +172,16 @@ fileUtil.copyFile = function(/*String*/srcFileName, /*String*/destFileName, /*bo
 		}
 	}
 
-	//Java's version of copy file.
-	var srcChannel = new java.io.FileInputStream(srcFileName).getChannel();
-	var destChannel = new java.io.FileOutputStream(destFileName).getChannel();
-	destChannel.transferFrom(srcChannel, 0, srcChannel.size());
-	srcChannel.close();
-	destChannel.close();
+	if (/.+\.js$/.test(srcFileName)) {
+		fileUtil.saveUtf8File(destFileName, fileUtil.transformAsyncModule(srcFileName, fileUtil.readFile(srcFileName)).replace(fileUtil.asyncFixEOLRe, "\n"));
+	} else {
+		//Java's version of copy file.
+		var srcChannel = new java.io.FileInputStream(srcFileName).getChannel();
+		var destChannel = new java.io.FileOutputStream(destFileName).getChannel();
+		destChannel.transferFrom(srcChannel, 0, srcChannel.size());
+		srcChannel.close();
+		destChannel.close();
+	}
 	
 	return true; //Boolean
 }

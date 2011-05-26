@@ -29,6 +29,8 @@ dojo.declare("dojox.charting.Element", null, {
 		this.group = null;
 		this.htmlElements = [];
 		this.dirty = true;
+		this.trailingSymbol = "...";
+		this._events = [];
 	},
 	createGroup: function(creator){
 		//	summary:
@@ -55,6 +57,12 @@ dojo.declare("dojox.charting.Element", null, {
 			this.group = null;
 		}
 		this.dirty = true;
+		if(this._events.length){
+			dojo.forEach(this._events, function(item){
+				item.shape.disconnect(item.handle);
+			});
+			this._events = [];
+		}
 		return this;	//	dojox.charting.Element
 	},
 	cleanGroup: function(creator){
@@ -86,6 +94,113 @@ dojo.declare("dojox.charting.Element", null, {
 		//	summary:
 		//		API addition to conform to the rest of the Dojo Toolkit's standard.
 		this.purgeGroup();
+	},
+	//text utilities
+	getTextWidth: function(s, font){
+		return dojox.gfx._base._getTextBox(s, {font: font}).w || 0;
+	},
+	getTextWithLimitLength: function(s, font, limitWidth, truncated){
+		//	summary:
+		//		Get the truncated string based on the limited width in px(dichotomy algorithm)
+		//	s: String?
+		//		candidate text.
+		//	font: String?
+		//		text's font style.
+		//	limitWidth: Number?
+		//		text limited width in px.
+		//	truncated: Boolean?
+		//		whether the input text(s) has already been truncated.
+		//	returns: Object
+		//		{
+		//			text: processed text, maybe truncated or not
+		//			truncated: whether text has been truncated
+		//		}
+		if (!s || s.length <= 0) {
+			return {
+				text: "",
+				truncated: truncated || false
+			};
+		}
+		if(!limitWidth || limitWidth <= 0){
+			return {
+				text: s,
+				truncated: truncated || false
+			};
+		}
+		var delta = 2,
+			//golden section for dichotomy algorithm
+			trucPercentage = 0.618,
+			minStr = s.substring(0,1) + this.trailingSymbol,
+			minWidth = this.getTextWidth(minStr, font);
+		if (limitWidth <= minWidth) {
+			return {
+				text: minStr,
+				truncated: true
+			};
+		}
+		var width = this.getTextWidth(s, font);
+		if(width <= limitWidth){
+			return {
+				text: s,
+				truncated: truncated || false
+			};
+		}else{
+			var begin = 0,
+				end = s.length;
+			while(begin < end){
+				if(end - begin <= delta ){
+					while (this.getTextWidth(s.substring(0, begin) + this.trailingSymbol, font) > limitWidth) {
+						begin -= 1;
+					}
+					return {
+						text: (s.substring(0,begin) + this.trailingSymbol),
+						truncated: true
+					};
+				}
+				var index = begin + Math.round((end - begin) * trucPercentage),
+					widthIntercepted = this.getTextWidth(s.substring(0, index), font);
+				if(widthIntercepted < limitWidth){
+					begin = index;
+					end = end;
+				}else{
+					begin = begin;
+					end = index;
+				}
+			}
+		}
+	},
+	getTextWithLimitCharCount: function(s, font, wcLimit, truncated){
+		//	summary:
+		//		Get the truncated string based on the limited character count(dichotomy algorithm)
+		//	s: String?
+		//		candidate text.
+		//	font: String?
+		//		text's font style.
+		//	wcLimit: Number?
+		//		text limited character count.
+		//	truncated: Boolean?
+		//		whether the input text(s) has already been truncated.
+		//	returns: Object
+		//		{
+		//			text: processed text, maybe truncated or not
+		//			truncated: whether text has been truncated
+		//		}
+		if (!s || s.length <= 0) {
+			return {
+				text: "",
+				truncated: truncated || false
+			};
+		}
+		if(!wcLimit || wcLimit <= 0 || s.length <= wcLimit){
+			return {
+				text: s,
+				truncated: truncated || false
+			};
+		}
+		return {
+			text: s.substring(0, wcLimit) + this.trailingSymbol,
+			truncated: true
+		};
 	},
 	// fill utilities
 	_plotFill: function(fill, dim, offsets){

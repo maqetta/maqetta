@@ -4,7 +4,7 @@ dojo.require("dojox.validate.creditCard");
 tests.register("dojox.validate.tests.creditcard",
 	[{
 		name:"isValidLuhn",
-		runTest: function(tests) { 
+		runTest: function(tests) {
 			tests.t(dojox.validate.isValidLuhn('5105105105105100')); //test string input
 			tests.t(dojox.validate.isValidLuhn('5105-1051 0510-5100')); //test string input with dashes and spaces (commonly used when entering card #'s)
 			tests.t(dojox.validate.isValidLuhn(38520000023237)); //test numerical input as well
@@ -14,7 +14,7 @@ tests.register("dojox.validate.tests.creditcard",
 		}
 	},
 	{
-		name:"isValidCvv", 
+		name:"isValidCvv",
 		runTest: function(tests) {
 			tests.t(dojox.validate.isValidCvv('123','mc')); //string is ok
 			tests.f(dojox.validate.isValidCvv('5AA','ec')); //invalid characters are not ok
@@ -23,7 +23,7 @@ tests.register("dojox.validate.tests.creditcard",
 			tests.t(dojox.validate.isValidCvv(612,'ec'));
 			tests.t(dojox.validate.isValidCvv(421,'vi'));
 			tests.t(dojox.validate.isValidCvv(543,'di'));
-			tests.t(dojox.validate.isValidCvv('1234','ax')); 
+			tests.t(dojox.validate.isValidCvv('1234','ax'));
 			tests.t(dojox.validate.isValidCvv(4321,'ax'));
 			tests.f(dojox.validate.isValidCvv(43215,'ax')); //too long
 			tests.f(dojox.validate.isValidCvv(215,'ax')); //too short
@@ -67,7 +67,7 @@ tests.register("dojox.validate.tests.creditcard",
 			tests.f(dojox.validate.isValidCreditCard('1800000000000002','jcb')); //should fail, good checksum, good prefix, but wrong length'
 			//Enroute card checks
 			tests.t(dojox.validate.isValidCreditCard('201400000000000','er'));
-			tests.t(dojox.validate.isValidCreditCard('214900000000000','er')); 
+			tests.t(dojox.validate.isValidCreditCard('214900000000000','er'));
 		}
 	},
 	{

@@ -9,58 +9,28 @@
 	@import "../../../dijit/tests/css/dijitTests.css";
 </style>
 <!-- required for Tooltip: a default dijit theme: -->
-<link rel="stylesheet" href="../../../dijit/themes/tundra/tundra.css">
+<link rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
 <style>
 .dojoxLegendNode {border: 1px solid #ccc; margin: 5px 10px 5px 10px; padding: 3px}
 .dojoxLegendText {vertical-align: text-top; padding-right: 10px}
 </style>
-<!--
-The next line should include Microsoft's Silverligth.js, if you plan to use the silverlight backend
-<script type="text/javascript" src="Silverlight.js"></script>
--->
 <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
-<script type="text/javascript" src="../../../dojo/_base/connect.js"></script>
-<script type="text/javascript" src="../../../dojo/fx.js"></script>
-<script type="text/javascript" src="../../lang/functional.js"></script>
-<script type="text/javascript" src="../../lang/utils.js"></script>
-<script type="text/javascript" src="../../gfx/fx.js"></script>
-<script type="text/javascript" src="../Theme.js"></script>
-<script type="text/javascript" src="../scaler/primitive.js"></script>
-<script type="text/javascript" src="../scaler/linear.js"></script>
-<script type="text/javascript" src="../Element.js"></script>
-<script type="text/javascript" src="../axis2d/common.js"></script>
-<script type="text/javascript" src="../axis2d/Base.js"></script>
-<script type="text/javascript" src="../axis2d/Default.js"></script>
-<script type="text/javascript" src="../plot2d/common.js"></script>
-<script type="text/javascript" src="../plot2d/Base.js"></script>
-<script type="text/javascript" src="../plot2d/Default.js"></script>
-<script type="text/javascript" src="../plot2d/Lines.js"></script>
-<script type="text/javascript" src="../plot2d/Areas.js"></script>
-<script type="text/javascript" src="../plot2d/Markers.js"></script>
-<script type="text/javascript" src="../plot2d/MarkersOnly.js"></script>
-<script type="text/javascript" src="../plot2d/Scatter.js"></script>
-<script type="text/javascript" src="../plot2d/Stacked.js"></script>
-<script type="text/javascript" src="../plot2d/StackedLines.js"></script>
-<script type="text/javascript" src="../plot2d/StackedAreas.js"></script>
-<script type="text/javascript" src="../plot2d/Columns.js"></script>
-<script type="text/javascript" src="../plot2d/StackedColumns.js"></script>
-<script type="text/javascript" src="../plot2d/ClusteredColumns.js"></script>
-<script type="text/javascript" src="../plot2d/Bars.js"></script>
-<script type="text/javascript" src="../plot2d/StackedBars.js"></script>
-<script type="text/javascript" src="../plot2d/ClusteredBars.js"></script>
-<script type="text/javascript" src="../plot2d/Bubble.js"></script>
-<script type="text/javascript" src="../plot2d/Grid.js"></script>
-<script type="text/javascript" src="../plot2d/Pie.js"></script>
-<script type="text/javascript" src="../Chart2D.js"></script>
-<script type="text/javascript" src="../action2d/Highlight.js"></script>
-<script type="text/javascript" src="../action2d/Magnify.js"></script>
-<script type="text/javascript" src="../action2d/MoveSlice.js"></script>
-<script type="text/javascript" src="../action2d/Shake.js"></script>
-<script type="text/javascript" src="../action2d/Tooltip.js"></script>
-<script type="text/javascript" src="../widget/Legend.js"></script>
 <script type="text/javascript">
 
-dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.Chart");
+dojo.require("dojox.charting.axis2d.Default");
+dojo.require("dojox.charting.plot2d.Default");
+dojo.require("dojox.charting.plot2d.StackedLines");
+dojo.require("dojox.charting.plot2d.Columns");
+dojo.require("dojox.charting.plot2d.ClusteredColumns");
+dojo.require("dojox.charting.plot2d.StackedColumns");
+dojo.require("dojox.charting.plot2d.Bars");
+dojo.require("dojox.charting.plot2d.ClusteredBars");
+dojo.require("dojox.charting.plot2d.StackedBars");
+dojo.require("dojox.charting.plot2d.Bubble");
+dojo.require("dojox.charting.plot2d.Grid");
+dojo.require("dojox.charting.plot2d.Pie");
+
 dojo.require("dojox.charting.themes.PlotKit.green");
 
 dojo.require("dojox.charting.action2d.Highlight");
@@ -79,7 +49,7 @@ var dc = dojox.charting;
 var dur = 450;
 
 makeObjects = function(){
-	var chart1 = new dc.Chart2D("test1");
+	var chart1 = new dc.Chart("test1");
 	chart1.setTheme(dc.themes.PlotKit.green);
 	chart1.addPlot("default", {type: "Default", lines: true, markers: true, tension:2});
 	chart1.addAxis("x", {min: 0, max: 6, majorTick: {stroke: "black", length: 3}, minorTick: {stroke: "gray", length: 3}});
@@ -91,7 +61,7 @@ makeObjects = function(){
 	chart1.render();
 	var legend1 = new dojox.charting.widget.Legend({chart: chart1, horizontal: false}, "legend1");
 
-	var chart2 = new dc.Chart2D("test2");
+	var chart2 = new dc.Chart("test2");
 	chart2.setTheme(dc.themes.PlotKit.green);
 	chart2.addPlot("default", {type: "StackedLines", markers: true, tension:3, shadows: {dx: 2, dy: 2, dw: 2}});
 	chart2.addSeries("Series A", [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6], {stroke: {color: "red", width: 2}, fill: "lightpink", marker: "m-3,-3 l0,6 6,0 0,-6 z"});
@@ -104,7 +74,7 @@ makeObjects = function(){
 	chart2.render();
 	var legend2 = new dojox.charting.widget.Legend({chart: chart2}, "legend2");
 
-	var chart3 = new dc.Chart2D("test3");
+	var chart3 = new dc.Chart("test3");
 	chart3.setTheme(dc.themes.PlotKit.green);
 	chart3.addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major"});
 	chart3.addPlot("default", {type: "Columns", gap: 2});
@@ -115,7 +85,7 @@ makeObjects = function(){
 	chart3.render();
 	var legend3 = new dojox.charting.widget.Legend({chart: chart3, horizontal: false}, "legend3");
 
-	var chart4 = new dc.Chart2D("test4");
+	var chart4 = new dc.Chart("test4");
 	chart4.setTheme(dc.themes.PlotKit.green);
 	chart4.addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true});
 	chart4.addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true});
@@ -129,7 +99,7 @@ makeObjects = function(){
 	chart4.render();
 	var legend4 = new dojox.charting.widget.Legend({chart: chart4}, "legend4");
 
-	var chart5 = new dc.Chart2D("test5");
+	var chart5 = new dc.Chart("test5");
 	chart5.setTheme(dc.themes.PlotKit.green);
 	chart5.addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true});
 	chart5.addAxis("y", {vertical: true, fixLower: "minor", fixUpper: "minor", natural: true});
@@ -144,7 +114,7 @@ makeObjects = function(){
 	chart5.render();
 	var legend5 = new dojox.charting.widget.Legend({chart: chart5, horizontal: false}, "legend5");
 
-	var chart6 = new dc.Chart2D("test6");
+	var chart6 = new dc.Chart("test6");
 	chart6.setTheme(dc.themes.PlotKit.green);
 	chart6.addAxis("x");
 	chart6.addAxis("y", {vertical: true});
@@ -162,7 +132,7 @@ makeObjects = function(){
 	chart6.render();
 	var legend6 = new dojox.charting.widget.Legend({chart: chart6}, "legend6");
 
-	var chart7 = new dc.Chart2D("test7");
+	var chart7 = new dc.Chart("test7");
 	chart7.setTheme(dc.themes.PlotKit.green);
 	chart7.addPlot("default", {type: "StackedColumns"});
 	chart7.addSeries("Series A", [1, 2, 3, 4, 5], {stroke: {color: "black"}, fill: "red"});
@@ -176,7 +146,7 @@ makeObjects = function(){
 	chart7.render();
 	var legend7 = new dojox.charting.widget.Legend({chart: chart7, horizontal: false}, "legend7");
 
-	var chart8 = new dc.Chart2D("test8");
+	var chart8 = new dc.Chart("test8");
 	chart8.setTheme(dc.themes.PlotKit.green);
 	chart8.addPlot("default", {type: "StackedBars"});
 	chart8.addSeries("Series A", [1, 2, 3, 4, 5], {stroke: {color: "black"}, fill: "red"});
@@ -187,7 +157,7 @@ makeObjects = function(){
 	chart8.render();
 	var legend8 = new dojox.charting.widget.Legend({chart: chart8}, "legend8");
 
-	var chart9 = new dc.Chart2D("test9");
+	var chart9 = new dc.Chart("test9");
 	chart9.setTheme(dc.themes.PlotKit.green);
 	chart9.addPlot("default", {type: "Bubble", shadows: {dx: 2, dy: 2, dw: 2}});
 	chart9.addAxis("x", {min: 0, max: 6, majorTick: {stroke: "black", length: 3}, minorTick: {stroke: "gray", length: 3}});
@@ -204,7 +174,7 @@ makeObjects = function(){
 	chart9.render();
 	var legend9 = new dojox.charting.widget.Legend({chart: chart9, horizontal: false}, "legend9");
 
-	var chart10 = new dc.Chart2D("test10");
+	var chart10 = new dc.Chart("test10");
 	chart10.setTheme(dc.themes.PlotKit.green);
 	chart10.addPlot("default", {
 		type: "Pie", 
@@ -231,7 +201,7 @@ dojo.addOnLoad(makeObjects);
 
 </script>
 </head>
-<body class="tundra">
+<body class="claro">
 <h1>Event 2D</h1>
 <!--<p><button onclick="makeObjects();">Go</button></p>-->
 <p>Hover over markers, bars, columns, slices, and so on.</p>

@@ -38,6 +38,20 @@ dojo.provide("dojox.drawing.manager.Stencil");
 			_secondClick:false,
 			_isBusy:false,
 			
+			setRecentStencil: function(stencil){
+				// summary:
+				//		Keeps track of the most recent stencil interacted
+				//		with, whether created or selected.
+				this.recent = stencil;
+			},
+			
+			getRecentStencil: function(){
+				// summary:
+				//		Returns the stencil most recently interacted
+				//		with whether it's last created or last selected
+				return this.recent;
+			},
+			
 			register: function(/*Object*/stencil){
 				// summary:
 				//		Key method for adding Stencils. Stencils
@@ -55,6 +69,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				}
 				
 				this.stencils[stencil.id] = stencil;
+				this.setRecentStencil(stencil);
 				
 				if(stencil.execText){
 					if(stencil._text && !stencil.editMode){
@@ -148,7 +163,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				if(this._throttle){ return; }
 				this._throttle = true;
 				
-				this.saveMoveState();					
+				this.saveMoveState();
 				
 			},
 			unDelete: function(/*Array*/stencils){
@@ -165,7 +180,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				// summary:
 				//		Event fired on deletion of a stencil
 				//
-				console.log("onDelete", noundo);
+				console.log("Stencil onDelete", noundo);
 				if(noundo!==true){
 					this.undo.add({
 						before:dojo.hitch(this, "unDelete", this.selectedStencils),
@@ -343,6 +358,16 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				this.setConstraint();
 			},
 			
+			onLabelDoubleClick: function(/*EventObject*/obj){
+				// summary:
+				//		Event to connect a textbox to
+				//		for label edits
+				console.info("mgr.onLabelDoubleClick:", obj);
+				if(this.selectedStencils[obj.id]){
+					this.deselect();
+				}
+			},
+			
 			onStencilDoubleClick: function(/*EventObject*/obj){
 				// summary:
 				//		Event fired on the double-click of a stencil
@@ -374,6 +399,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				//
 				console.info(" >>> onStencilDown:", obj.id, this.keys.meta);
 				if(!this.stencils[obj.id]){ return; }
+				this.setRecentStencil(this.stencils[obj.id]);
 				this._isBusy = true;
 				
 				
@@ -398,7 +424,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 					// clicking on same selected item(s)
 					// RESET OFFSETS
 					var mx = this.group.getTransform();
-					this._offx = obj.x - mx.dx; 
+					this._offx = obj.x - mx.dx;
 					this._offy = obj.y - mx.dy;
 					return;
 				
@@ -416,7 +442,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				this.selectItem(obj.id);
 				
 				mx = this.group.getTransform();
-				this._offx = obj.x - mx.dx; 
+				this._offx = obj.x - mx.dx;
 				this._offy = obj.y - mx.dx;
 				
 				this.orgx = obj.x;
@@ -438,16 +464,29 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				});
 			},
 			
+			onLabelDown: function(/*EventObject*/obj, evt){
+				// summary:
+				//		Event fired on mousedown of a stencil's label
+				//		Because it's an annotation the id will be the
+				//		master stencil.
+				//console.info("===============>>>Label click: ",obj, " evt: ",evt);
+				this.onStencilDown(obj,evt);
+			},
+			
 			onStencilUp: function(/*EventObject*/obj){
 				// summary:
 				//		Event fired on mouseup off of a stencil
 				//
 			},
 			
+			onLabelUp: function(/*EventObject*/obj){
+				this.onStencilUp(obj);
+			},
+			
 			onStencilDrag: function(/*EventObject*/obj){
 				// summary:
 				//		Event fired on every mousemove of a stencil drag
-				//	
+				//
 				if(!this._dragBegun){
 					// bug, in FF anyway - first mouse move shows x=0
 					// the 'else' fixes it
@@ -479,6 +518,10 @@ dojo.provide("dojox.drawing.manager.Stencil");
 					
 					
 				}
+			},
+			
+			onLabelDrag: function(/*EventObject*/obj){
+				this.onStencilDrag(obj);
 			},
 			
 			onDragEnd: function(/*EventObject*/obj){

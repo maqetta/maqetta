@@ -1,17 +1,17 @@
 /**
  * In CLDR, there are some special locales with abnormal hierarchy.
- * 
+ *
  * E.g.zh-hk.xml is aliased to zh-hant-hk.xml for all the calendar/number/currency data.
  * So after CLDR transformation, JSON bundles under zh-hk is totally the same as those under zh-hant-hk.
  * Problems will occur when dojo loads zh-hk bundle, as dojo will flatten it with the following sequence:
  * Root -> zh -> zh-hk, but the right sequence should be Root -> zh -> zh-hant -> zh-hk(zh-hant-hk)
  * so the bundles under zh-hant locale is missing.
- * 
+ *
  * This script is used to process all the special locales so that after CLDR transformation,
  * zh-hk bundle will be flatted both with zh-hant and zh-hant-hk, nothing will be lost then.
  * Please see the following SPECIAL_LOCALES_MAP for detail mapping info.
- * 
- * Note: Here for simplification, we name zh-hk as source locale,and name zh-hant-hk as alias locale.  
+ *
+ * Note: Here for simplification, we name zh-hk as source locale,and name zh-hant-hk as alias locale.
  */
 djConfig={baseUrl: "../../../dojo/"};
 
@@ -43,10 +43,10 @@ var SPECIAL_LOCALES_MAP = {
 	//Currently for CLDR 1.6, will be updated with latest CLDR release.
 
 	'zh-hk':'zh-hant-hk',
-	'zh-mo':'zh-hant-mo',		
-	'sh':'sr-latn',	
+	'zh-mo':'zh-hant-mo',
+	'sh':'sr-latn',
 	'mo':'ro-md',
-	'pa-pk':'pa-arab-pk',//pa-pk and pa-arab-pk don't exist, but pa-arab exists		
+	'pa-pk':'pa-arab-pk',//pa-pk and pa-arab-pk don't exist, but pa-arab exists
 	'zh-tw':'zh-hant-tw',//zh-tw and zh-hant-tw don't exist, but zh-hant exists
 	'uz-af':'uz-arab-af',//uz-af and uz-arab-af don't exist, but uz-arab exists
 	'ha-sd':'ha-arab-sd',//ha-sd and ha-arab-sd don't exist, but ha-arab exists
@@ -54,7 +54,7 @@ var SPECIAL_LOCALES_MAP = {
 	
 	/* The following locales don't have any bundles currently (CLDR 1.6),
 	 * listed here for CLDR future release.
-	 *  
+	 *
 	'az-az':'az-latn-az',
 	'ha-gh':'ha-latn-gh',
 	'ha-ne':'ha-latn-ne',
@@ -63,11 +63,11 @@ var SPECIAL_LOCALES_MAP = {
 	'ku-iq':'ku-latn-iq',
 	'ku-ir':'ku-latn-ir',
 	'ku-sy':'ku-latn-sy',
-	'pa-in':'pa-guru-in',	
+	'pa-in':'pa-guru-in',
 	'sr-cs':'sr-cyrl-cs',
 	'sr-me':'sr-cyrl-me',
 	'sr-rs':'sr-cyrl-rs',
-	'sr-yu':'sr-cyrl-rs',	
+	'sr-yu':'sr-cyrl-rs',
 	'uz-uz':'uz-cyrl-uz',
 	'zh-sg':'zh-hans-sg',
 	'zh-cn':'zh-hans-cn',
@@ -137,8 +137,8 @@ for(var i= 0; i < srcLocaleList.length; i++){
 			var aliasBundle = dojo.i18n.getLocalization('dojo.cldr', BUNDLE_MAP[len], aliasLocale);
 		}catch(e){print(e);/*it's ok if no bundle found*/}
 		
-		if(!aliasBundle && !srcBundle){ 
-			break;			
+		if(!aliasBundle && !srcBundle){
+			break;
 		}else if(!aliasBundle && srcBundle){
 			//should be an error case
 			//logStr += 'specialLocale.js error: source locale has more bundles than alias locale\n';
@@ -159,9 +159,9 @@ for(var i= 0; i < srcLocaleList.length; i++){
 			}
 
 			for(p in aliasBundle){
-				if(!isLocaleAliasSrc(p, aliasBundle) // p is not the source of a 'locale' alias mapping 
+				if(!isLocaleAliasSrc(p, aliasBundle) // p is not the source of a 'locale' alias mapping
 				   && (!srcBundle[p] || !compare(srcBundle[p], aliasBundle[p]))){
-				   //inherit 
+				   //inherit
 				   nativeSrcBundle[p] = aliasBundle[p];
 				   //logStr += "copied " + p + "=" + aliasBundle[p] + "\n";
 				   isUpdated = true;
@@ -171,7 +171,7 @@ for(var i= 0; i < srcLocaleList.length; i++){
 			if(isUpdated){
 				validateDir(srcLocalePath);
 				fileUtil.saveUtf8File(srcLocalePath + '/' + BUNDLE_MAP[len] + '.js', NLS_JSON_HEAD[len] + '(' + dojo.toJson(nativeSrcBundle, true) + ')');
-				//logStr += 'specialLocale.js : updated ' + BUNDLE_MAP[len] + '.js in ' + srcLocalePath + '\n';				
+				//logStr += 'specialLocale.js : updated ' + BUNDLE_MAP[len] + '.js in ' + srcLocalePath + '\n';
 			}
 		}
 	}
@@ -184,5 +184,5 @@ function validateDir(/*String*/dirPath){
 	var dir = new java.io.File(dirPath);
 	if(!dir.exists()){
 		dir.mkdir();
-	}	
+	}
 }

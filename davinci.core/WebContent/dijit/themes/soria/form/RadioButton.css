@@ -42,7 +42,7 @@
 .soria .dijitRadioChecked,
 .soria .dijitToggleButtonChecked .dijitRadioIcon {
 	/* selected */
-	background-position: 0px;
+	background-position: 0;
 }
 
 .soria .dijitRadioDisabled {

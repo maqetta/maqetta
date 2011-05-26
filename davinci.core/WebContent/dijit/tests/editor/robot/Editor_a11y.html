@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
+			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
 
@@ -24,7 +25,8 @@
 				// the same.   Would be nice if we didn't need this, the normalization should
 				// probably happen as pre and post filters on the editor
 				return str.
-					replace('<br />', '').		// FF.  Because of EnterKeyHandling plugin?
+					replace(' />', '/>').
+					replace('<br/>', '').		// FF.  Because of EnterKeyHandling plugin?
 					replace(/^<p>/, '').replace(/<\/p>$/, '').		// Safari.  Because of EnterKeyHandling plugin?
 					replace(new RegExp(String.fromCharCode(160), "g"), " ");	// Safari: nbsp (char code 160) to normal space (char code 32)
 			}
@@ -32,52 +34,71 @@
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot('../test_Editor.html');
 
-				// For some reason the meta key (meta-a for selection, meta-b for bold, etc) isn't working
-				// on mac... use ctrl- instead, just like on windows. (#9553)
+				// For some reason the meta key (meta-a for selection, meta-b for bold, etc) doesn't work
+				// on mac/safari... use ctrl- instead, just like on windows. (#9553)
 				var metaKey = {ctrl: true}
 
-				var editor0, editor1;
+				var editor0,
+					editor1, editor1oldValue, editor1newValue, editor1onChange = "no onchange event yet";
 
-				doh.register("setup", function setup(){
-					editor0 = dijit.byId("editor0");
-					editor1 = dijit.byId("editor1");
-				});
+				doh.register("setup", [
+					{
+						name: "wait for editors to load",
+						timeout: 5000,
+						runTest: function(){
+						    return new dojo.DeferredList(
+						        dijit.registry.filter(function(w){ return w.onLoadDeferred; }).map(function(w){ return w.onLoadDeferred; })
+						    );
+						}
+					},
+					function setUp(){
+						editor0 = dijit.byId("editor0");
+						editor1 = dijit.byId("editor1");					
+						editor1.watch("value", function(attr, oldVal, newVal){
+							editor1oldValue = normalize(oldVal);
+							editor1newValue = normalize(newVal);
+						});
+						editor1.onChange = function(newValue){
+							editor1onChange = normalize(newValue);
+						};
+					}
+				]);
 
 				doh.register("keyboard shortcuts", [
 					{
 						name: "bold/italic",
-						timeout: 10000,
+						timeout: 15000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							dojo.window.scrollIntoView(editor1.domNode);
 
 							// Set contents of editor1
-							doh.robot.sequence(function(){
+							doh.robot.sequence(d.getTestErrback(function(){
 								editor1.focus();
-							}, 500);
+							}), 500);
 							doh.robot.keyPress("a", 500, metaKey);	// select all
-							doh.robot.typeKeys("hello ", 500);		// and erase (by typing something new)
+							doh.robot.typeKeys("hello ", 500, 750);		// and erase (by typing something new)
 							doh.robot.keyPress("b", 500, metaKey);	// start bold
-							doh.robot.typeKeys("bold", 500);
+							doh.robot.typeKeys("bold", 500, 600);
 							doh.robot.keyPress("b", 500, metaKey);	// stop bold
-							doh.robot.typeKeys(" and ", 500);
+							doh.robot.typeKeys(" and ", 500, 750);
 							doh.robot.keyPress("i", 500, metaKey);	// start italic
-							doh.robot.typeKeys("exciting", 500);
+							doh.robot.typeKeys("exciting", 500, 1200);
 							doh.robot.keyPress("i", 500, metaKey);	// stop italic
-							doh.robot.typeKeys(" new world.", 500);
+							doh.robot.typeKeys(" new world.", 500, 1650);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								var val = normalize(editor1.get('value'));
 								doh.is("hello <b>bold</b> and <i>exciting</i> new world.", val);
-							}), 1500);
+							}), 500);
 
 							return d;
 						}
 					}
 				]);
 
-				// Check that toolbar buttons are highlighted/not highlighted (etc.) based on
+				// Check that toolbar buttons are depressed/not depressed (etc.) based on
 				// where caret is in document
 				doh.register("toolbar state", [
 					{
@@ -91,13 +112,30 @@
 							// strange things happen if you alter an editor's value while it is focused,
 							// so temporarily move to the toolbar while setting content
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});	// go to toolbar
-							doh.robot.sequence(function(){
-								editor1.set("value", "toolbar <b>state</b> <i>test</i>.")
-							}, 500);
+							doh.robot.sequence(d.getTestErrback(function(){
+								editor1.set("value", "toolbar <b>state</b> <i>test</i>.");
+
+								// set() should fire watch() callbacks but not call onChange()
+								doh.is("toolbar <b>state</b> <i>test</i>.", editor1newValue, "value set successfully");
+								doh.is("no onchange event yet", editor1onChange, "onChange not called");
+							}), 500);
 							doh.robot.keyPress(dojo.keys.TAB, 500);	// goes to content
+							doh.robot.sequence(d.getTestCallback(function(){
+								// just to signal that we are done
+							}));
 
+							return d;
+						}
+					},
+					{
+						name: "no buttons depressed",
+						timeout: 10000,
+						runTest: function(){
+							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.HOME, 500);
+							doh.robot.sequence(d.getTestErrback(function(){
+								editor1.placeCursorAtStart();
+							}), 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								var toolbar = editor1.toolbar;
@@ -116,15 +154,14 @@
 						}
 					},
 					{
-						name: "bold higlighted",
+						name: "bold button depressed",
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							doh.robot.sequence(function(){
+							doh.robot.sequence(d.getTestErrback(function(){
 								editor1.placeCursorAtStart();
-							}, 500);
-							var i;
-							for(i = 0; i < 9; i++){
+							}), 500);
+							for(var i = 0; i < 9; i++){
 								// Move to second letter of second word.
 								doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500);
 							}
@@ -145,16 +182,15 @@
 						}
 					},
 					{
-						name: "italic higlighted",
+						name: "italic button depressed",
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.sequence(function(){
+							doh.robot.sequence(d.getTestErrback(function(){
 								editor1.placeCursorAtStart();
-							}, 500);
-							var i;
-							for(i = 0; i < 15; i++){
+							}), 500);
+							for(var i = 0; i < 15; i++){
 								// Move to second letter of third word.
 								doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500);
 							}
@@ -179,27 +215,33 @@
 				doh.register("toolbar navigation", [
 					{
 						name: "bold",
-						timeout: 10000,
+						timeout: 15000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							dojo.window.scrollIntoView(editor1.domNode);
 
-							doh.robot.sequence(function(){
+							// Write "hello" in editor and also make sure there's something in the system
+							// clipboard, so that the paste button in the toolbar is guaranteed to be enabled.
+							// (otherwise the two RIGHT_ARROW commands below will overshoot the bold button
+							// and end up on the italic button)
+							doh.robot.sequence(d.getTestErrback(function(){
 								editor1.focus();
-							}, 500);
-							doh.robot.keyPress("a", 500, metaKey);	// select all
-							doh.robot.typeKeys("hello ", 500);		// and erase (by typing something new)
+							}), 500);
+							doh.robot.keyPress("a", 1000, metaKey);	// select all
+							doh.robot.keyPress("c", 500, dojo.isMac ? {meta: true} : {ctrl: true});	// copy into clipboard
+							doh.robot.typeKeys("hello ", 500, 900);		// and erase (by typing something new)
 
 							// Go to toolbar and turn on bold.
 							// We only have to right-arrow twice because it skips the vertical divider bars
 							// and also skips cut and copy (they are disabled b/c nothing is selected)
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
-							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500);
+							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000);
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500);
 							doh.robot.keyPress(dojo.keys.SPACE, 500);
 
-							doh.robot.typeKeys("world", 500);
+							// Focus and caret should be back after "hello ", type "world" in bold
+							doh.robot.typeKeys("world", 1000, 750);
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Get the value and try to do some normalization to make all browsers look
@@ -207,7 +249,7 @@
 								// probably happen as pre and post filters on the editor
 								var val = normalize(editor1.get('value'));
 								doh.is("hello <b>world</b>", val);
-							}), 1000);
+							}), 500);
 
 							return d;
 						}
@@ -224,9 +266,9 @@
 							dojo.window.scrollIntoView(editor1.domNode);
 
 							// Focus on link before editor
-							doh.robot.sequence(function(){
+							doh.robot.sequence(d.getTestErrback(function(){
 								dojo.byId("focusBefore").focus();
-							}, 500);
+							}), 500);
 
 							// Go to toolbar of editor1
 							doh.robot.keyPress(dojo.keys.TAB, 500);
@@ -251,8 +293,15 @@
 							// Go to content of editor1
 							doh.robot.keyPress(dojo.keys.TAB, 500);
 
-							doh.robot.sequence(d.getTestCallback(function(){
+							doh.robot.sequence(d.getTestErrback(function(){
 								doh.is("editor1_iframe", dojo.global.dijit._curFocus.id, "focused on editor content");
+							}), 500);
+
+							doh.robot.keyPress("a", 500, metaKey);	// select all
+							doh.robot.typeKeys("tabbing test", 500, 1800);		// and replace with "tabbing test"
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								// just here to make deferred fire
 							}), 500);
 
 							return d;
@@ -269,6 +318,9 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is("focusAfter", dojo.global.dijit._curFocus.id, "focused after editor1");
+								
+								doh.is("tabbing test", editor1newValue, "watch()");
+								doh.is("tabbing test", editor1onChange, "onChange");
 							}), 500);
 
 							return d;

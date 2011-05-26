@@ -1,4 +1,4 @@
-dojo.provide("dojo._base.lang");
+define("dojo/_base/lang", ["dojo/lib/kernel"], function(dojo){
 
 (function(){
 	var d = dojo, opts = Object.prototype.toString;
@@ -9,14 +9,14 @@ dojo.provide("dojo._base.lang");
 		//	summary:
 		//		Return true if it is a String
 		return (typeof it == "string" || it instanceof String); // Boolean
-	}
+	};
 
 	dojo.isArray = function(/*anything*/ it){
 		//	summary:
 		//		Return true if it is an Array.
 		//		Does not work on Arrays created in other windows.
 		return it && (it instanceof Array || typeof it == "array"); // Boolean
-	}
+	};
 
 	dojo.isFunction = function(/*anything*/ it){
 		// summary:
@@ -30,7 +30,7 @@ dojo.provide("dojo._base.lang");
 		//		or null)
 		return it !== undefined &&
 			(it === null || typeof it == "object" || d.isArray(it) || d.isFunction(it)); // Boolean
-	}
+	};
 
 	dojo.isArrayLike = function(/*anything*/ it){
 		//	summary:
@@ -49,14 +49,14 @@ dojo.provide("dojo._base.lang");
 			!d.isString(it) && !d.isFunction(it) &&
 			!(it.tagName && it.tagName.toLowerCase() == 'form') &&
 			(d.isArray(it) || isFinite(it.length));
-	}
+	};
 
 	dojo.isAlien = function(/*anything*/ it){
 		// summary:
 		//		Returns true if it is a built-in function or some other kind of
 		//		oddball that *should* report as a function but doesn't
 		return it && !d.isFunction(it) && /\{\s*\[native code\]\s*\}/.test(String(it)); // Boolean
-	}
+	};
 
 	dojo.extend = function(/*Object*/ constructor, /*Object...*/ props){
 		// summary:
@@ -67,7 +67,7 @@ dojo.provide("dojo._base.lang");
 			d._mixin(constructor.prototype, arguments[i]);
 		}
 		return constructor; // Object
-	}
+	};
 
 	dojo._hitchArgs = function(scope, method /*,...*/){
 		var pre = d._toArray(arguments, 2);
@@ -79,8 +79,8 @@ dojo.provide("dojo._base.lang");
 			var f = named ? (scope||d.global)[method] : method;
 			// invoke with collected args
 			return f && f.apply(scope || this, pre.concat(args)); // mixed
-		} // Function
-	}
+		}; // Function
+	};
 
 	dojo.hitch = function(/*Object*/scope, /*Function|String*/method /*,...*/){
 		//	summary:
@@ -88,7 +88,7 @@ dojo.provide("dojo._base.lang");
 		//		This allows for easy use of object member functions
 		//		in callbacks and other places in which the "this" keyword may
 		//		otherwise not reference the expected scope.
-		//		Any number of default positional arguments may be passed as parameters 
+		//		Any number of default positional arguments may be passed as parameters
 		//		beyond "method".
 		//		Each of these values will be used to "placehold" (similar to curry)
 		//		for the hitched function.
@@ -128,7 +128,7 @@ dojo.provide("dojo._base.lang");
 			return function(){ return scope[method].apply(scope, arguments || []); }; // Function
 		}
 		return !scope ? method : function(){ return method.apply(scope, arguments || []); }; // Function
-	}
+	};
 
 	/*=====
 	dojo.delegate = function(obj, props){
@@ -172,7 +172,7 @@ dojo.provide("dojo._base.lang");
 				d._mixin(tmp, props);
 			}
 			return tmp; // Object
-		}
+		};
 	})();
 
 	/*=====
@@ -225,7 +225,7 @@ dojo.provide("dojo._base.lang");
 		//		|	dojo.hitch(null, funcName, ...);
 		var arr = [ null ];
 		return d.hitch.apply(d, arr.concat(d._toArray(arguments))); // Function
-	}
+	};
 
 	var extraNames = d._extraNames, extraLen = extraNames.length, empty = {};
 
@@ -244,6 +244,10 @@ dojo.provide("dojo._base.lang");
 		if(o instanceof Date){
 			// Date
 			return new Date(o.getTime());	// Date
+		}
+		if(o instanceof RegExp){
+			// RegExp
+			return new RegExp(o);   // RegExp
 		}
 		var r, i, l, s, name;
 		if(d.isArray(o)){
@@ -285,7 +289,7 @@ dojo.provide("dojo._base.lang");
 		}
 		//>>excludeEnd("webkitMobile");
 		return r; // Object
-	}
+	};
 
 	/*=====
 	dojo.trim = function(str){
@@ -314,7 +318,7 @@ dojo.provide("dojo._base.lang");
 	dojo.replace = function(tmpl, map, pattern){
 		//	summary:
 		//		Performs parameterized substitutions on a string. Throws an
-		//		exception if any parameter is unmatched. 
+		//		exception if any parameter is unmatched.
 		//	tmpl: String
 		//		String to be used as a template.
 		//	map: Object|Function
@@ -385,3 +389,6 @@ dojo.provide("dojo._base.lang");
 			map : function(_, k){ return d.getObject(k, false, map); });
 	};
 })();
+
+return dojo;
+});

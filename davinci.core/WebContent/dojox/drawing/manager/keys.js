@@ -89,12 +89,12 @@ dojo.provide("dojox.drawing.manager.keys");
 				scope: options.scope || window,
 				callback:options.callback,
 				keyCode:options.keyCode
-			});	
+			});
 		},
 		
 		_getLetter: function(evt){
 			if(!evt.meta && evt.keyCode>=65 && evt.keyCode<=90){
-				return alphabet.charAt(evt.keyCode-65);	
+				return alphabet.charAt(evt.keyCode-65);
 			}
 			return null;
 		},
@@ -140,10 +140,10 @@ dojo.provide("dojox.drawing.manager.keys");
 			this._fieldCons = [];
 			dojo.query("input").forEach(function(n){
 				var a = dojo.connect(n, "focus", this, function(evt){
-					this.enable(false);	
+					this.enable(false);
 				});
 				var b = dojo.connect(n, "blur", this, function(evt){
-					this.enable(true);	
+					this.enable(true);
 				});
 				this._fieldCons.push(a);
 				this._fieldCons.push(b);
@@ -224,7 +224,7 @@ dojo.provide("dojox.drawing.manager.keys");
 				}
 				
 				if(_stop && !isEdit){
-					dojo.stopEvent(evt);	
+					dojo.stopEvent(evt);
 				}
 			});
 			
@@ -252,9 +252,9 @@ dojo.provide("dojox.drawing.manager.keys");
 					evt.x = x;
 					evt.y = y;
 					evt.shift = this.shift;
-					this.onArrow(evt);
 					if(!isEdit){
-						dojo.stopEvent(evt);	
+						this.onArrow(evt);
+						dojo.stopEvent(evt);
 					}
 				}
 			});

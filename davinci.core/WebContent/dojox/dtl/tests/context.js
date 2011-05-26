@@ -3,7 +3,7 @@ dojo.provide("dojox.dtl.tests.context");
 dojo.require("dojox.dtl");
 dojo.require("dojox.dtl.Context");
 
-doh.register("dojox.dtl.context", 
+doh.register("dojox.dtl.context",
 	[
 		function test_context_creation(t){
 			var context = new dojox.dtl.Context({ foo: "foo", bar: "bar" });

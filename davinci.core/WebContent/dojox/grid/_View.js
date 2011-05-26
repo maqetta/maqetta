@@ -10,12 +10,12 @@ dojo.require("dojo.dnd.Source");
 dojo.require("dojo.dnd.Manager");
 
 (function(){
-	// private
+	// a private function
 	var getStyleText = function(inNode, inStyleText){
 		return inNode.style.cssText == undefined ? inNode.getAttribute("style") : inNode.style.cssText;
 	};
 
-	// public
+	// some public functions
 	dojo.declare('dojox.grid._View', [dijit._Widget, dijit._Templated], {
 		// summary:
 		//		A collection of grid columns. A grid is comprised of a set of views that stack horizontally.
@@ -78,7 +78,7 @@ dojo.require("dojo.dnd.Manager");
 			this.inherited(arguments);
 		},
 
-		// focus 
+		// focus
 		focus: function(){
 			if(dojo.isIE || dojo.isWebKit || dojo.isOpera){
 				this.hiddenFocusNode.focus();
@@ -556,7 +556,7 @@ dojo.require("dojo.dnd.Manager");
 				this.contentWidth = this.getContentWidth();
 				this.headerContentNode.firstChild.style.width = this.contentWidth;
 			}
-			// FIXME: it should be easier to get w from this.scrollboxNode.clientWidth, 
+			// FIXME: it should be easier to get w from this.scrollboxNode.clientWidth,
 			// but clientWidth seemingly does not include scrollbar width in some cases
 			var w = this.scrollboxNode.offsetWidth - this.getScrollbarWidth();
 			if(!this._removingColumn){
@@ -615,7 +615,7 @@ dojo.require("dojo.dnd.Manager");
 		},
 
 		buildRowContent: function(inRowIndex, inRowNode){
-			inRowNode.innerHTML = this.content.generateHtml(inRowIndex, inRowIndex); 
+			inRowNode.innerHTML = this.content.generateHtml(inRowIndex, inRowIndex);
 			if(this.flexCells && this.contentWidth){
 				// FIXME: accessing firstChild here breaks encapsulation
 				inRowNode.firstChild.style.width = this.contentWidth;

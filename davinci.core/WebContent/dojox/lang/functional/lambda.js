@@ -4,12 +4,12 @@ dojo.provide("dojox.lang.functional.lambda");
 //	- anonymous functions built from the string
 
 // Acknoledgements:
-//	- lambda() is based on work by Oliver Steele 
+//	- lambda() is based on work by Oliver Steele
 //		(http://osteele.com/sources/javascript/functional/functional.js)
 //		which was published under MIT License
 
 // Notes:
-//	- lambda() produces functions, which after the compilation step are 
+//	- lambda() produces functions, which after the compilation step are
 //		as fast as regular JS functions (at least theoretically).
 
 // Lambda input values:
@@ -52,7 +52,7 @@ dojo.provide("dojox.lang.functional.lambda");
 					s = s + "$2";
 				}
 			}else{
-				// the point of the long regex below is to exclude all well-known 
+				// the point of the long regex below is to exclude all well-known
 				// lower-case words from the list of potential arguments
 				var vars = s.
 					replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*:|this|true|false|null|undefined|typeof|instanceof|in|delete|new|void|arguments|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|escape|eval|isFinite|isNaN|parseFloat|parseInt|unescape|dojo|dijit|dojox|window|document|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, "").
@@ -69,13 +69,13 @@ dojo.provide("dojox.lang.functional.lambda");
 	};
 
 	var compose = function(/*Array*/ a){
-		return a.length ? 
+		return a.length ?
 					function(){
 						var i = a.length - 1, x = df.lambda(a[i]).apply(this, arguments);
 						for(--i; i >= 0; --i){ x = df.lambda(a[i]).call(this, x); }
 						return x;
 					}
-				: 
+				:
 					// identity
 					function(x){ return x; };
 	};

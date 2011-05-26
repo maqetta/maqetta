@@ -37,7 +37,7 @@ var getLink = function(inRowIndex, inItem){
 
 var formatLink = function(result){
 	return typeof result == 'object' ? dojo.string.substitute(
-		'<a target="_blank" href="${href}">${text}</a>', 
+		'<a target="_blank" href="${href}">${text}</a>',
 		result
 	) : result;
 }
@@ -65,7 +65,7 @@ var getImage = function(inRowIndex, inItem){
 var formatImage = function(result){
 	return typeof result == "object" ? dojo.string.substitute(
 		'<a href="${href}" target="_blank"><img border=0 src="${src}" width="${width}" height="${height}"></a>', result) :
-		result;	
+		result;
 }
 
 var getDimensions = function(inRowIndex, inItem){

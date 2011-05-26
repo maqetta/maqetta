@@ -10,19 +10,19 @@ dojox.io.xhrWindowNamePlugin = function(/*String*/url, /*Function?*/httpAdapter,
 	//		dojox.io.windowName for more information on the transport.
 	//	url:
 	//		Url prefix of the site which can handle windowName requests.
-	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be 
+	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be
 	// 		sent with window.name, so you can use a convention for headers and PUT/DELETE methods.
 	dojox.io.xhrPlugins.register(
 		"windowName",
 		function(method,args){
-			 return args.sync !== true && 
-				(method == "GET" || method == "POST" || httpAdapter) && 
+			 return args.sync !== true &&
+				(method == "GET" || method == "POST" || httpAdapter) &&
 				(args.url.substring(0,url.length) == url);
 		},
 		function(method,args,hasBody){
 			var send = dojox.io.windowName.send;
-			var load = args.load; 
-			args.load = undefined; //we don't want send to set this callback 
+			var load = args.load;
+			args.load = undefined; //we don't want send to set this callback
 			var dfd = (httpAdapter ? httpAdapter(send, true) : send)(method, args, hasBody); // use the windowName transport
 			dfd.addCallback(function(result){
 				var ioArgs = dfd.ioArgs;
@@ -38,13 +38,13 @@ dojox.io.xhrWindowNamePlugin = function(/*String*/url, /*Function?*/httpAdapter,
 					if(!trusted){
 						dojox.secure.capability.validate(result,["Date"],{});
 					}
-					return dojo.fromJson(result); 
+					return dojo.fromJson(result);
 				}
-				return dojo._contentHandlers[ioArgs.handleAs || "text"]({responseText:result}); 
+				return dojo._contentHandlers[ioArgs.handleAs || "text"]({responseText:result});
 			});
-			args.load = load; 
-			if(load){ 
- 				dfd.addCallback(load); 
+			args.load = load;
+			if(load){
+ 				dfd.addCallback(load);
  			}
 			return dfd;
 		}

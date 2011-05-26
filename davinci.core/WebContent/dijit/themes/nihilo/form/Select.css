@@ -1,5 +1,5 @@
 .nihilo .dijitSelect .dijitButtonNode {
-	padding: 0px;
+	padding: 0;
 }
 
 /* Make unselected "look" more like a text box and less like a button */
@@ -16,11 +16,11 @@
 	background: transparent none;
 }
 .dj_ie .nihilo .dijitSelect .dijitButtonContents {
-	padding-top: 0px;
+	padding-top: 0;
 }
 
 .nihilo .dijitSelect .dijitArrowButton {
-	padding: 0px 2px;
+	padding: 0 2px;
 }
 
 /* Mirror DropDownButton */
@@ -45,7 +45,7 @@
 
 /* Make the menu look more combobox-like */
 .nihilo .dijitSelectMenu td {
-	padding: 0em;
+	padding: 0;
 }
 .nihilo .dijitSelectMenu .dijitMenuItemLabel,
 .nihilo .dijitSelectMenu .dijitMenuArrowCell {

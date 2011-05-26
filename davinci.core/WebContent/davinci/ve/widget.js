@@ -1036,10 +1036,9 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 
 	_getPropertyValue: function( name){
-		var getter = "get" + name.charAt(0).toUpperCase() + name.substring(1);
 		var widget=this._getWidget();
-		if(widget && widget[getter]){
-			return widget[getter]();
+		if(widget && widget.get){
+			return widget.get(name);
 		}
 		return widget && widget[name];
 	},

@@ -1611,7 +1611,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	
 	_attr: function (name,value)
 	{
-		return this.dijitWidget.attr.apply(this.dijitWidget, arguments);
+		return this.dijitWidget.get.apply(this.dijitWidget, arguments);
 	}
 });
 

@@ -408,9 +408,13 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	
 		function isReadOnly(value){
 			
-			var file = value.rule.getCSSFile();
-			var resource = file.getResource();
-			return resource.readOnly;
+			if(value && value.rule && value.rule.getCSSFile){
+				var file = value.rule.getCSSFile();
+				var resource = file.getResource();
+				return resource.readOnly;
+			}else{
+				return false;
+			}
 			
 		}
 		
@@ -546,12 +550,14 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	_updateFieldValue : function(){
 		
-		function isReadOnly(value){
-			
-			var file = value.rule.getCSSFile();
-			var resource = file.getResource();
-			return resource.readOnly;
-			
+		function isReadOnly(value){	
+			if(value && value.rule && value.rule.getCSSFile){
+				var file = value.rule.getCSSFile();
+				var resource = file.getResource();
+				return resource.readOnly;
+			}else{
+				return false;
+			}
 		}
 		
 		if(this._widget==null)

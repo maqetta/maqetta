@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Standard Calculator Test</title>
+
+	<style>
+		@import "../../../dojo/resources/dojo.css";
+		@import "../../../dijit/tests/css/dijitTests.css";
+		@import "../../../dijit/themes/claro/claro.css";
+		@import "../../../dojox/layout/resources/FloatingPane.css";
+		@import "../../../dojox/calc/resources/Standard.css";
+	</style>
+
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true"></script>
+
+	<script type="text/javascript">
+		//TODO make the graphing window textboxes respond to the input buttons on the layout
+
+		dojo.require("dojox.calc.Standard");
+		dojo.require("dojo.data.ItemFileReadStore");
+		dojo.require("dojo.data.ItemFileWriteStore");
+		dojo.require("dojo.number");
+
+		dojo.addOnLoad(function(){
+			new dojox.calc.Standard(
+			{
+				readStore: new dojo.data.ItemFileReadStore({data: {identifier: 'name', items:[{name:"test2", args:"a, b", body:"return a/b;"}]}}),
+				writeStore: new dojo.data.ItemFileWriteStore({data: {identifier: 'name', items:[{name:"test", args:"a, b", body:"for(var i = 0;i<1;i++)return a/b;"}, {name:"newFunc", args:"", body:"var a,b; return test(b=8,a=4);"}, {name:"exampleFunction", args:"x", body:"return 2*x;"}]}})
+			}, "calculator");
+
+		});
+
+	</script>
+</head>
+<body class=claro>
+	<div id="calculator"></div>
+</body>
+</html>

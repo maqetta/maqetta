@@ -1,0 +1,168 @@
+
+  /* claro/form/Common.css */
+/*========================= common css =========================*/
+/* 'dijitTextBox' refers to 'dijit(TextBox|DateTextBox|CurrencyTextBox|...)' */
+ .sketch .dijitTextBoxError .dijitValidationContainer {
+    background-color : #d46363;
+}
+ .sketch .dijitTextBoxError .dijitValidationIcon {
+    background : transparent url('images/error.png') repeat-y top center;
+    border : solid #d46464 0px;
+    border-left-width : 1px;
+    width : 4px;
+    padding-top : 2px;
+    padding-bottom : 2px;
+    padding-right : 3px  !important;
+    padding-left : 2px  !important;
+}
+
+  /* .dijitInputField .dijitPlaceHolder is explicitly listed below because
+   dijitPlaceHolder is absolutely positioned, so padding set on dijitInputField
+   won't affect it */
+ .sketch .dijitTextBox .dijitInputContainer, .sketch .dijitTextArea, .sketch .dijitInputField .dijitPlaceHolder {
+    padding : 2px;
+}
+ .sketch .dijitTextBox .dijitInputField {
+    padding-top : 2px;
+    padding-bottom : 2px;
+}
+ .sketch .dijitTextBox, .sketch .dijitTextBox .dijitButtonNode {
+    
+  /* color for (outer) border on *TextBox widgets, and border between input and buttons on ComboBox and Spinner */
+border-color : black;
+    -webkit-transition-property : background-color, border;
+    -webkit-transition-duration : .35s;
+}
+ .sketch .dijitTextBox {
+    background-color : #ffffff;
+    border-color : #000000;
+    border-width : 3px;
+    -moz-border-radius : 6px;
+    -webkit-border-radius : 6px;
+    background-position :  ;
+}
+
+  /* hover */
+ /*.sketch .dijitTextBoxHover, .sketch .dijitTextBoxHover .dijitButtonNode {
+    border-color : #769dc0;
+    -webkit-transition-duration : .25s;
+}*/
+ .sketch .dijitTextBoxHover {
+    background-color : #ffffff;
+    background-image : url('../../.././themes/claro/form/images/textBox_back.png');
+    background-repeat : repeat-x;
+    border-color : #000000;
+    background-position :  ;
+}
+
+  /* error state */
+ .sketch .dijitTextBoxError, .sketch .dijitTextBoxError .dijitButtonNode {
+    border-color : #d46464;
+}
+ .sketch .dijitTextBoxError, .sketch .dijitTextBoxError .dijitInputContainer {
+    background-color : #fdf7f7;
+}
+
+  /* focused state */
+ /*
+ .sketch .dijitTextBoxFocused, .sketch .dijitTextBoxFocused .dijitButtonNode {
+    border-color : #769dc0;
+    -webkit-transition-duration : .1s;
+}
+*/
+ .sketch .dijitTextBoxFocused {
+    background-color : #fff;
+    background-image : url('images/textBox_back.png');
+    background-repeat : repeat-x;
+    border-color : #000000;
+}
+ .sketch .dijitTextBoxFocused .dijitInputContainer {
+    background : #fff;
+}
+ .sketch .dijitTextBoxErrorFocused, .sketch .dijitTextBoxErrorFocused .dijitButtonNode {
+    border-color : #ce4f4f;
+}
+
+  /* disabled state */
+ .sketch .dijitTextBoxDisabled, .sketch .dijitTextBoxDisabled .dijitButtonNode {
+    border-color : #d3d3d3;
+}
+ .sketch .dijitTextBoxDisabled {
+    background-color : #efefef;
+    background-image : none;
+    color : #818181;
+}
+ .dijitTextBoxReadOnly, color:gray .sketch .dijitComboBox .dijitArrowButtonInner {
+    background-image : url("images/commonFormArrows.png");
+    background-position : -35px 53%;
+    background-repeat : no-repeat;
+    margin : 0px;
+    width : 16px;
+    height : 100%;
+    border : 1px solid #fff;
+}
+
+  /* ComboBox */
+ .sketch .dijitComboBox .dijitInputField {
+    padding-top : 1px;/* 1px and not 2px due to 1px padding on the INPUT */
+
+    padding-bottom : 1px;
+}
+ .sketch .dijitComboBox .dijitInputInner {
+    
+  /* left padding helps line up input text with menu text */
+padding : 1px 2px 1px 0;/* match 1px vertical border on button */
+
+}
+ .sketch .dijitComboBox .dijitValidationContainer {
+    padding : 0 0 2px 0;/* match 1px border height in button */
+
+}
+ .sketch .dijitComboBox .dijitButtonNode {
+    background-color : #ebeef4;
+    background-image : url("images/formHighlight.png");
+    background-repeat : repeat-x;
+}
+
+  /* hover state */
+ /*
+ .sketch .dijitComboBoxHover .dijitButtonNode {
+    background-color : #abd6ff;
+}
+ .sketch .dijitComboBoxHover .dijitArrowButtonInner {
+	background-position: 0 0; width: 24px; height: 20px;
+}
+*/
+
+  /* focused state */
+ /*.sketch .dijitComboBoxFocused .dijitButtonNode {
+    background-color : #7dbefa;
+    background-position : 0px -177px;
+    padding : 1px;
+}*/
+/* .sketch .dijitComboBoxFocused .dijitArrowButtonInner {
+    background-position : -70px 53%;
+    border : 0px none;
+}*/
+
+  /* disabled state */
+ .sketch div.dijitComboBoxDisabled .dijitArrowButtonInner {
+    
+  /* specific selector set to override background-position setting from Button.js
+   * (.sketch .dijitComboBoxDisabled .dijitArrowButtonInner) */
+background-position : 0px 50%;
+    background-color : #f1f1f1;
+}
+
+  /*========================= hacks for browsers =========================*/
+/* it seems the input[type="hidden"] has a height (16px) too... this may cause the widget's height calcuate error */
+ .dj_ff3 .sketch .dijitInputField input[type="hidden"] {
+    display : none;
+    height : 0;
+    width : 0;
+}
+
+  /* ie6 doesn't support transparent background img */
+ .dj_ie6 .sketch .dijitTextBox, .dj_ie6 .sketch .dijitComboBox .dijitButtonNode {
+    background-image : none;
+}

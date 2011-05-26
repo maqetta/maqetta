@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>Dojox DnD selector test</title>
+		<style type="text/css">
+			@import "../../../dojo/resources/dojo.css";
+			@import "../../../dojo/tests/dnd/dndDefault.css";
+			body { padding: 20px; }
+		</style>
+		<style title="text/css">
+			#boundingBox {
+				background: #999;
+				border: 1px solid #2B2B2B;
+				opacity: 0.5;
+				filter: alpha(opacity = 60); /* for IE */
+				position: absolute;
+				z-index: 19999;
+			}
+			#albums {
+				position: relative;
+				width: 200px;
+			}
+		</style>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
+		<script type="text/javascript">
+			dojo.require("dojox.dnd.Selector");
+			dojo.require("dojox.dnd.BoundingBoxController");
+			var albums, bb;
+			var init = function() {
+				albums = new dojox.dnd.Selector(dojo.byId("albums"));
+				dojo.connect(dojo.doc, "onkeydown", dojo.hitch(this, function(evt) {
+					// would usually use dojo.keys.UP_ARROW/dojo.keys.DOWN_ARROW
+					// but can't seem to get that working with doh. Instead, I'm using
+					// 'u' as an indicator for up and 'd' as an indicator for down.
+					if(evt.keyCode == dojo.keys.UP_ARROW) {
+						albums.shift(false, evt.shiftKey);
+					}
+					if(evt.keyCode == dojo.keys.DOWN_ARROW) {
+						albums.shift(true, evt.shiftKey);
+					}
+				}));
+				bb = new dojox.dnd.BoundingBoxController([albums], "boundingBox");
+			};
+			dojo.addOnLoad(init);
+		</script>
+	</head>
+	<body>
+		<h1 id="header">Dojox DnD selector test</h1>
+		<p>Use the up/down arrows to iterate through the list after selecting one.</p>
+		<div id="albums" class="container">
+			<div id="blonde"  class="dojoDndItem">Blonde on Blonde</div>
+			<div id="highway" class="dojoDndItem">Highway 61 Revisited</div>
+			<div id="tracks"  class="dojoDndItem">Blood on the Tracks</div>
+		</div>
+		<div id="boundingBox" style="display:none;"></div>
+	</body>
+</html>

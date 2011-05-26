@@ -1,0 +1,20 @@
+.mblFlip2.mblOut {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblFlip2Out;
+	-webkit-animation-timing-function: linear;
+}
+.mblFlip2.mblIn {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblFlip2In;
+	-webkit-animation-timing-function: linear;
+}
+@-webkit-keyframes mblFlip2Out {
+	0% { -webkit-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -webkit-transform: scale(0,1) skew(0deg,30deg); }
+	100% { -webkit-transform: scale(0,1) skew(0deg,30deg); }
+}
+@-webkit-keyframes mblFlip2In {
+	0% { -webkit-transform: scale(0,1) skew(0deg,-30deg); }
+	50% { -webkit-transform: scale(0,1) skew(0deg,-30deg); }
+	100% { -webkit-transform: scale(1,1) skew(0deg,0deg); }
+}

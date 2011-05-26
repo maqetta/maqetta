@@ -1,0 +1,128 @@
+ .sketch .dijitButtonNode {
+    
+  /* rules for dijit.form.*Button widgets and arrow nodes on ComboBox, Spinner etc. */
+-webkit-transition-property : background-color;
+    -webkit-transition-duration : .3s;
+}
+ .sketch .dijitButton .dijitButtonNode, .sketch .dijitDropDownButton .dijitButtonNode, .sketch .dijitComboButton .dijitButtonNode, .sketch .dijitToggleButton .dijitButtonNode {
+    
+  /* rules for the dijit.form.*Button widgets (see also ComboButton section below) */
+border : 1px solid #769dc0;
+    padding : 2px 4px 4px 4px;
+    background-position : center top;
+    background-repeat : repeat-x;
+    background-color : #ffffff;
+    border-radius : 4px;
+    -moz-border-radius : 8px;
+    -webkit-border-radius : 8px;
+    box-shadow : 0px 1px 1px rgba(0,0,0,0.15);
+    -webkit-box-shadow : 0px 1px 1px rgba(0,0,0,0.15);
+    -moz-box-shadow : 0px 1px 1px rgba(0,0,0,0.15);
+    border-color : #000000;
+    border-width : 3px;
+}
+ .sketch .dijitComboButton .dijitArrowButton {
+    border-left-width : 0px;
+    padding : 4px 2px 4px 2px;/* TODO: still needed? */
+
+}
+
+  /*arrow styles for down/up/left/right directions*/
+ .sketch .dijitArrowButtonInner {
+    width : 15px;
+    height : 15px;
+    margin : 0 auto;
+    background-image : url('images/buttonArrows.png');
+    background-repeat : no-repeat;
+    background-position : -51px 53%;
+    background-color : #ffffff;
+}
+ .sketch .dijitLeftArrowButton .dijitArrowButtonInner {
+   background-position : -77px 53%;
+}
+ .sketch .dijitRightArrowButton .dijitArrowButtonInner {
+    background-position : -26px 53%;
+}
+ .sketch .dijitUpArrowButton .dijitArrowButtonInner {
+    background-position : 0px 53%;
+}
+
+ .sketch .dijitDisabled .dijitArrowButtonInner {
+   background-position : -151px 53%;
+}
+ .sketch .dijitDisabled .dijitLeftArrowButton .dijitArrowButtonInner {
+    background-position : -177px 53%;
+}
+ .sketch .dijitDisabled .dijitRightArrowButton .dijitArrowButtonInner {
+    background-position : -126px 53%;
+}
+ .sketch .dijitDisabled .dijitUpArrowButton .dijitArrowButtonInner {
+    background-position : -100px 53%;
+}
+
+ .sketch .dijitButtonText {
+    padding : 0 0.3em;
+    text-align : center;
+}
+ .sketch .dijitDisabled .dijitButtonText {
+    color : #7F7F7F;
+}
+
+  /* hover status */
+ .sketch .dijitButtonHover .dijitButtonNode, .sketch .dijitDropDownButtonHover .dijitButtonNode, .sketch .dijitComboButton .dijitButtonNodeHover, .sketch .dijitComboButton .dijitDownArrowButtonHover {
+    background-color : #ffffff;
+    color : #000;
+    -webkit-transition-duration : .2s;
+    background-position :  ;
+}
+
+  /* checked status */
+ .sketch .dijitButtonActive .dijitButtonNode, .sketch .dijitDropDownButtonActive .dijitButtonNode, .sketch .dijitComboButtonActive .dijitButtonNode {
+    background-color : #ffffff;
+    box-shadow : 0px 0px 0px rgba(0,0,0,0);
+    -webkit-box-shadow : 0px 0px 0px rgba(0,0,0,0);
+    -moz-box-shadow : 0px 0px 0px rgba(0,0,0,0);
+    -webkit-transition-duration : .1s;
+    background-position :  ;
+}
+
+  /* disabled status */
+ .sketch .dijitButtonDisabled, .sketch .dijitDropDownButtonDisabled, .sketch .dijitComboButtonDisabled {
+    background-image : none;
+    outline : none;
+}
+ .sketch .dijitButtonDisabled .dijitButtonNode, .sketch .dijitDropDownButtonDisabled .dijitButtonNode, .sketch .dijitComboButtonDisabled .dijitButtonNode, .sketch .dijitToggleButtonDisabled .dijitButtonNode {
+    background-position : 0px -149px;
+    background-color : #e3e3e3;
+    border : solid 1px #c9c9c9;
+    color : #696969;
+    box-shadow : 0px 0px 0px rgba(0,0,0,0);
+    -webkit-box-shadow : 0px 0px 0px rgba(0,0,0,0);
+    -moz-box-shadow : 0px 0px 0px rgba(0,0,0,0);
+}
+ .sketch .dijitComboButtonDisabled .dijitArrowButton {
+    border-left-width : 0px;
+}
+
+  /* for ComboButton */
+ .sketch table.dijitComboButton {
+    border-collapse : separate;/* override dijit.css so that ComboBox rounded corners work */
+
+}
+ .dj_ie6 .sketch .dijitButtonNode {
+    background-image : none;
+}
+ .sketch .dijitComboButton .dijitStretch {
+    -moz-border-radius : 4px 0px 0px 4px;
+    -webkit-border-top-left-radius : 4px;
+    -webkit-border-top-right-radius : 0px;
+    -webkit-border-bottom-right-radius : 0px;
+    -webkit-border-bottom-left-radius : 4px;
+}
+ .sketch .dijitComboButton .dijitArrowButton {
+    -moz-border-radius : 0px 4px 4px 0px;
+    -webkit-border-top-left-radius : 0px;
+    -webkit-border-top-right-radius : 4px;
+    -webkit-border-bottom-right-radius : 4px;
+    -webkit-border-bottom-left-radius : 0px;
+}

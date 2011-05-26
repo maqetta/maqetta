@@ -1,0 +1,94 @@
+@import url("../common/domButtons/DomButtonGrayArrow.css");
+
+@import url("../common/domButtons/DomButtonDarkBlueCheck.css");
+/* dojox.mobile.ListItem */
+.mblListItem {
+  position: relative;
+  list-style-type: none;
+  vertical-align: bottom;
+  /* To avoid IE6 LI bug */
+
+  padding: 6px;
+  height: 43px;
+  border-bottom: solid 1px #DEDFDE;
+  font-size: 18px;
+  color: black;
+  line-height: 43px;
+}
+.mblListItem.mblVariableHeight {
+  height: auto;
+  padding: 11px 6px 10px 6px;
+  line-height: normal;
+}
+.mblListItem a.mblListItemAnchor {
+  display: block;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  background-position: 14px 17px;
+  padding-left: 40px;
+  text-decoration: none;
+}
+.mblListItem a.mblListItemAnchorNoIcon {
+  padding-left: 10px;
+}
+.mblListItem a.mblListItemAnchorHasRightButton {
+  padding-right: 50px;
+}
+.mblListItem .mblLeftButton {
+  position: absolute;
+  top: 50%;
+  margin-top: -15px;
+  line-height: normal;
+}
+.mblListItem .mblRightButton {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  margin-top: -15px;
+  line-height: normal;
+}
+.mblListItem .mblRightButton2 {
+  right: 36px;
+}
+.mblListItemIcon {
+  position: absolute;
+  top: 15px;
+}
+.mblItemSelected {
+  background-color: #0869C6;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6));
+}
+.mblItemSelected a.mblListItemAnchor {
+  color: white;
+}
+.mblItemSelected .mblDomButton DIV {
+  border-color: white;
+}
+.mblItemSelected .mblListItemSubText {
+  color: white;
+}
+.mblListItemTextBox {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 28px;
+}
+.mblListItemTextBox2 {
+  padding-right: 58px;
+}
+.mblListItemTextBoxSelected {
+  background-color: #0869C6;
+}
+.mblVariableHeight .mblListItemTextBox {
+  white-space: normal;
+}
+.mblRightText {
+  position: absolute;
+  top: 17px;
+  right: 30px;
+  color: black;
+  line-height: normal;
+}
+.mblListItemSubText {
+  font-size: 14px;
+  color: #7B7D48;
+}

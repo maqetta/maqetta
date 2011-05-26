@@ -1,0 +1,80 @@
+/* dojox.mobile.ListItem */
+.mblListItem {
+	position: relative;
+	list-style-type: none;
+	vertical-align: bottom; /* To avoid IE6 LI bug */
+	.mblListItem-styles;
+	&.mblVariableHeight {
+		height: auto;
+		.mblListItem-mblVariableHeight-styles;
+	}
+	a {
+		&.mblListItemAnchor {
+			display: block;
+			-webkit-tap-highlight-color: rgba(255,255,255,0);
+			.mblListItem-mblListItemAnchor-styles;
+		}
+		&.mblListItemAnchorNoIcon {
+			.mblListItem-mblListItemAnchorNoIcon-styles;
+		}
+		&.mblListItemAnchorHasRightButton {
+			.mblListItem-mblListItemAnchorHasRightButton-styles;
+		}
+	}
+	.mblLeftButton {
+		position: absolute;
+		.mblListItem-mblLeftButton-styles;
+	}
+	.mblRightButton {
+		position: absolute;
+		.mblListItem-mblRightButton-styles;
+	}
+	.mblRightButton2 {
+		.mblListItem-mblRightButton2-styles;
+	}
+}
+.mblListItemIcon {
+	position: absolute;
+	.mblListItemIcon-styles;
+}
+.mblItemSelected {
+	.mblItemSelected-styles;
+	a {
+		&.mblListItemAnchor {
+			.mblItemSelected-mblListItemAnchor-styles;
+		}
+	}
+	.mblDomButton {
+		DIV {
+			.mblItemSelected-mblDomButton-Div-styles;
+		}
+	}
+	.mblListItemSubText {
+		.mblItemSelected-mblListItemSubText-styles;
+	}
+}
+.mblListItemTextBox {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	.mblListItemTextBox-styles;
+}
+.mblListItemTextBox2 {
+	.mblListItemTextBox2-styles;
+}
+.mblListItemTextBoxSelected {
+	.mblListItemTextBoxSelected-styles;
+}
+.mblVariableHeight .mblListItemTextBox {
+	white-space: normal;
+}
+.mblRightText {
+	position: absolute;
+	.mblRightText-styles;
+}
+.mblItemChecked {
+	.mblItemChecked-styles;
+}
+.mblListItemSubText {
+	.mblListItemSubText-styles;
+}

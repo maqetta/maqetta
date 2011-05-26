@@ -1,0 +1,34 @@
+/* mbl.widget.Heading */
+.mblHeading {
+	background-image: url(compat/heading-bg.png);
+}
+
+/* Heading Arrow Button */
+.mblArrowButtonHead {
+	_top: 5px;
+	_left: 7px;
+	_height: 30px;
+	background-image: url(compat/ui-widget-bg.png);
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+	transform-origin: left top;
+	-moz-transform: scale(0.9, 0.99) rotate(45deg);
+	-o-transform: scale(0.9, 0.99) rotate(45deg);
+	transform: scale(0.9, 0.99) rotate(45deg);
+}
+.mblArrowButtonBody {
+	-moz-border-radius-topright: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-o-border-top-right-radius: 2px;
+	-o-border-bottom-right-radius: 2px;
+	-ms-border-top-right-radius: 2px;
+	-ms-border-bottom-right-radius: 2px;
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+	background-image: url(compat/ui-widget-bg.png);
+}
+*html .mblArrowButtonBody { /* IE6 hack */
+	padding: 0px 10px 0px 10px;
+	top: 0px;
+	left: 17px;
+}

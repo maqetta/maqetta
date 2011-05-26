@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>doh.robot dojox DnD Test</title>
+	
+		<style>
+			@import "../../../../util/doh/robot/robot.css";
+		</style>
+
+		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+		<script type="text/javascript">
+			dojo.require("dojo.robotx");
+			
+			dojo.addOnLoad(function() {
+	
+				doh.robot.initRobot('../test_selector.html');
+	
+				doh.register('dojox.robot.DndSelectorTest', [
+					{
+						name: 'dojox dnd shift down test',
+						timeout: 10000,
+						runTest: function() {
+							var d = new doh.Deferred();
+							doh.robot.mouseMoveAt('blonde', 1000);
+							doh.robot.mouseClick({left:true, middle:false, right:false}, 100);
+							doh.robot.mouseClick({left:true, middle:false, right:false}, 100);
+							doh.robot.mouseMoveAt('header', 250);
+							doh.robot.mouseClick({left:true, middle:false, right:false}, 100);
+							doh.robot.typeKeys("d", 100);
+							doh.robot.sequence(function() {
+								dojo.query("> div", dojo.byId('albums')).forEach(function(item, index, array) {
+									if(index == 1) {
+										if(dojo.hasClass(item, "dojoDndItemSelected") && item.id == "highway") {
+											d.callback(true);		
+										} else {
+											d.errback(new Error("Second item in the album list was not selected"));		
+										}
+									} else {
+										doh.assertFalse(dojo.hasClass(item, "dojoDndItemSelected"));
+									}
+								});
+							}, 3000);
+							return d;
+						}
+					},
+					{
+						name: 'dojox dnd shift up test',
+						timeout: 10000,
+						runTest: function() {
+							var d = new doh.Deferred();
+							doh.robot.typeKeys("u", 100);
+							doh.robot.sequence(function() {
+								dojo.query("> div", dojo.byId('albums')).forEach(function(item, index, array) {
+									if(index == 0) {
+										if(dojo.hasClass(item, "dojoDndItemSelected") && item.id == "blonde") {
+											d.callback(true);		
+										} else {
+											d.errback(new Error("First item in the album list was not selected"));		
+										}
+									}
+								});
+							}, 1000);
+							return d;
+						}
+					}
+				]);
+				doh.run();
+			});
+		</script>
+	</head>
+</html>

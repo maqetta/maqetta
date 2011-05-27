@@ -183,57 +183,100 @@ getChildren: function(widget){
 	var x = widget.dijitWidget.getChildren();
 	var y = widget.domNode.children;
 	var y = widget.domNode._dvWidget.domNode.children;
-	for (var c=0; c < y.length; c++){
-		if (y[c]._dvWidget){
-			children.push(y[c]._dvWidget);
-		} else {
-			y[c]._parentDataGrid = this;
-			var headerRowTable = dojo.query('.dojoxGridHeader', widget.domNode);
-			var headerGridCell = dojo.query('.dojoxGridCell', widget.domNode); 
-			for (var x=0; x < headerGridCell.length; x++){
-				
-				var node = headerGridCell[x];
-				var box = dojo.position(node, true);
-				var ldojo = widget.getContext().getDojo();
-				var lbox = ldojo.position(node, true);
-				console.log(" w:" + lbox.w+" h:" + lbox.h+ " x:"+lbox.x+" y: "+lbox.y);
-
-			}
-			var newWidget = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
-				                                                            "class":"dataGridTest"}, children: [], context: widget.getContext()});
-			var cell = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
-                "class":"dataGridCellTest"}, children: [], context: widget.getContext()});
-			y[c].getContext = dojo.hitch(this, "getContext");
-			newWidget.getHelper = dojo.hitch(this, "getDataGridRowHelper");
-			newWidget._headerRowTable = headerRowTable;
-			cell.getHelper = dojo.hitch(this, "getDataGridRowHelper");
-			cell._headerGridCell = headerGridCell;
-			//children.push(y[c]);
-			children.push(newWidget);
-			widget.addChild(  newWidget/*, this._index*/);
-			newWidget.addChild(cell);
-			//widget._srcElement.parent.addChild(newWidget);
-			
-			var context = widget.getContext();
-			if(context){
-				context.attach(newWidget);
-				newWidget.startup();
-				newWidget.renderWidget();
-			}
+	var context = widget.getContext();
+	
+	// First create the headers
+	var rowWidget = davinci.ve.widget.createWidget({type: "html.tr" , properties: {
+        "class":"dataGridHeaderRowTest"}, children: [], context: context});
+	rowWidget.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+	rowWidget.selectChild = dojo.hitch(this, "selectChild");
+	widget.addChild(rowWidget);
+	children.push(rowWidget);
+	rowWidget.dataGridLocation = {row: 0, col: -1};
+	var headerRowTable = dojo.query('TH.dojoxGridCell', widget.domNode);
+	for (var rh = 0; rh < headerRowTable.length; rh++){
+		var cell = davinci.ve.widget.createWidget({type: "html.th" , properties: {"class":"dataGridHeaderCellTest"}, children: [], context: context});
+		cell.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+		cell.dataGridLocation = {row: 0, col: rh}; 
+		rowWidget.addChild(cell);
+	}
+	// Now create the cells for Data
+	var dataGridRows = dojo.query('table.dojoxGridRowTable',widget.domNode);
+	for (var tr = 1; tr < dataGridRows.length; tr++){
+		rowWidget = davinci.ve.widget.createWidget({type: "html.tr" , properties: {
+	        "class":"dataGridRowTest"}, children: [], context: context});
+		rowWidget.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+		rowWidget.selectChild = dojo.hitch(this, "selectChild");
+		rowWidget.dataGridLocation = {row: tr, col: -1};
+		widget.addChild(rowWidget);
+		children.push(rowWidget);
+		var gridCells = dojo.query('TD.dojoxGridCell', dataGridRows[tr]); // get the cells for this row
+		for (var td = 0; td < gridCells.length; td++){
+			cellWidget = davinci.ve.widget.createWidget({type: "html.td" , properties: {
+		        "class":"dataGridCellTest"}, children: [], context: context});
+			cellWidget.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+			cell.dataGridLocation = {row: tr, col: td};
+			rowWidget.addChild(cellWidget);
 		}
 	}
-	dojo.map(widget.dijitWidget.getChildren(), function(widget){
-		debugger;
-		if (!widget){ return; }
-		if (attach && !widget.domNode._dvWidget)
-		{
-			davinci.ve.widget.getWidget(widget.domNode);
-		}
-		var child = widget.domNode && widget.domNode._dvWidget;
-		if (child) {
-			children.push(child);
-		}
-	});
+
+//	for (var c=0; c < y.length; c++){
+//		if (y[c]._dvWidget){
+//			children.push(y[c]._dvWidget);
+//		} else {
+//			y[c]._parentDataGrid = this;
+//			//var headerRowTable = dojo.query('.dojoxGridHeader', widget.domNode);
+//			var headerRowTable = dojo.query('TH.dojoxGridCell', widget.domNode);
+//			var headerGridCell = dojo.query('.dojoxGridCell', widget.domNode); 
+//			for (var x=0; x < headerGridCell.length; x++){
+//				
+//				var node = headerGridCell[x];
+//				var box = dojo.position(node, true);
+//				var ldojo = widget.getContext().getDojo();
+//				var lbox = ldojo.position(node, true);
+//				console.log(" w:" + lbox.w+" h:" + lbox.h+ " x:"+lbox.x+" y: "+lbox.y);
+//				node = headerRowTable[0];
+//				box = dojo.position(node, true);
+//				lbox = ldojo.position(node, true);
+//				console.log("th w:" + lbox.w+" th h:" + lbox.h+ " x:"+lbox.x+" y: "+lbox.y);
+//
+//			}
+//			var newWidget = davinci.ve.widget.createWidget({type: "html.th" , properties: {
+//				                                                   "class":"dataGridTest"}, children: [], context: widget.getContext()});
+//			var cell = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
+//                "class":"dataGridCellTest"}, children: [], context: widget.getContext()});
+//			y[c].getContext = dojo.hitch(this, "getContext");
+//			newWidget.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+//			newWidget._headerRowTable = headerRowTable;
+//			cell.getHelper = dojo.hitch(this, "getDataGridRowHelper");
+//			cell._headerGridCell = headerGridCell;
+//			//children.push(y[c]);
+//			children.push(newWidget);
+//			widget.addChild(  newWidget/*, this._index*/);
+//			newWidget.addChild(cell);
+//			//widget._srcElement.parent.addChild(newWidget);
+//			
+//			var context = widget.getContext();
+//			if(context){
+//				context.attach(newWidget);
+//				newWidget.startup();
+//				newWidget.renderWidget();
+//			}
+//		}
+//	}
+//
+//	dojo.map(widget.dijitWidget.getChildren(), function(widget){
+//		debugger;
+//		if (!widget){ return; }
+//		if (attach && !widget.domNode._dvWidget)
+//		{
+//			davinci.ve.widget.getWidget(widget.domNode);
+//		}
+//		var child = widget.domNode && widget.domNode._dvWidget;
+//		if (child) {
+//			children.push(child);
+//		}
+//	});
 	return children;
 },
 
@@ -250,8 +293,9 @@ getDataGridRowHelper: function(){
 
 getSelectNode: function(context, widget){
 	debugger;
-	if (widget._headerRowTable){
-		return widget._headerRowTable[0];
+	if (widget.type === 'html.th' /*_headerRowTable*/){
+		var headerRowTable = dojo.query('TH.dojoxGridCell', widget.parent.parent.domNode);
+		return headerRowTable[widget.dataGridLocation.col]; //widget._headerRowTable[0];
 	} else if(widget._headerGridCell){
 		var headerGridCell = dojo.query('.dojoxGridCell', widget.parent._headerRowTable[0]); 
 		var node = headerGridCell[0];
@@ -265,7 +309,10 @@ getSelectNode: function(context, widget){
 
 postCreate: function(widget){
 	debugger;
-	var headerRowTable = dojo.query('.dojoxGridRowTable', widget.domNode);
+	var headerRowTable = dojo.query('TH.dojoxGridCell', widget.domNode);
+	widget.dijitWidget
+	//dojo.connect(widget.dijitWidget, "onCellClick", null, function() {alert("onClick");}); 
+	dojo.connect(widget.dijitWidget, "onCellClick", this, "onClick"); 
 	//var context = widget.getContext();
 	var newWidget = davinci.ve.widget.createWidget({type: "html.div" , properties: {"style": "height:20px; width:400px; background-color:red;",
 		                                                            "class":"dataGridTest", id: "myDataGridTest_id"}, children: []/*, context: context*/});
@@ -292,8 +339,18 @@ getEnclosingWidget: function(node){
 		}
 		return null;
 	};
+	return node._dvWidget; //maybe??
 	
 	
+},
+
+onClick : function(e){
+	debugger;
+	//alert("onClick");
+},
+
+selectChild: function(widget){
+	debugger;
 },
 
 _setContentAttr: function(args){

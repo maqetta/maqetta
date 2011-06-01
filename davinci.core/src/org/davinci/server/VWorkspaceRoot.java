@@ -3,6 +3,8 @@ package org.davinci.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -208,20 +210,20 @@ public class VWorkspaceRoot extends VDirectory {
 		// noop
 	}
 
-	private void copyfile(File source, File destination){
-	    try{
-	        InputStream in = new FileInputStream(source);
-	        OutputStream out = new FileOutputStream(destination);
+	private void copyfile(File source, File destination) throws IOException{ // FIXME: unused?
+		InputStream in = null;
+		OutputStream out = null;
+		try{
+	        in = new BufferedInputStream(new FileInputStream(source));
+	        out = new BufferedOutputStream(new FileOutputStream(destination));
 	        byte[] buf = new byte[1024];
 	        int len;
 	        while ((len = in.read(buf)) > 0){
 	          out.write(buf, 0, len);
 	        }
-	        in.close();
-	        out.close();
-	      }catch(Exception ex){
-	        System.out.println(ex.getMessage());
-	        
+	      }finally{
+	        if(in!=null)in.close();
+	        if(out!=null)out.close();	    	  
 	      }
 	}
 	

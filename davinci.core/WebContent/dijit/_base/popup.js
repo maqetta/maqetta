@@ -77,7 +77,7 @@ dijit.popup = {
 		//		Puts widget inside a wrapper DIV (if not already in one),
 		//		and returns pointer to that wrapper DIV.
 
-		var wrapper = widget.declaredClass ? widget._popupWrapper : (widget.parentNode && dojo.hasClass(widget.parentNode, "dijitPopup")),
+		var wrapper = /*widget.declaredClass ?*/ widget._popupWrapper /*: (widget.parentNode && dojo.hasClass(widget.parentNode, "dijitPopup")),*/
 			node = widget.domNode || widget;
 
 		if(!wrapper){

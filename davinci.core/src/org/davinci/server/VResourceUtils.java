@@ -4,9 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 
 public class VResourceUtils {
-	public static void copyDirectory(IVResource source, IVResource destination, boolean recurse){
+	public static void copyDirectory(IVResource source, IVResource destination, boolean recurse){ //FIXME: should throw IOException?
 		IVResource[] list = source.listFiles();
 		
 		for(int i=0;i<list.length;i++){
@@ -37,16 +39,19 @@ public class VResourceUtils {
 	}
 	
 	public static void copyFile (IVResource src, IVResource dest) throws IOException{
-		 InputStream in = src.getInputStreem();
-		 OutputStream out = dest.getOutputStreem();
+		 InputStream in = new BufferedInputStream(src.getInputStreem());
+		 OutputStream out = new BufferedOutputStream(dest.getOutputStreem());
 		 
-		 byte[] buf = new byte[1024];
-		 int len;
-		 while ((len = in.read(buf)) > 0){
-		    out.write(buf, 0, len);
+		 try {
+			 byte[] buf = new byte[1024];
+			 int len;
+			 while ((len = in.read(buf)) > 0){
+			    out.write(buf, 0, len);
+			 }
+		 } finally {
+			 in.close();
+			 out.close();
 		 }
-		 in.close();
-		 out.close();
 		 dest.flushWorkingCopy();
 	}
 	

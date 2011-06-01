@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.BufferedOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ public class SetPreferences extends Command {
 		File settingsFile=new File(settingsDir,id+IDavinciServerConstants.SETTINGS_EXTENSION);
 		if (!settingsFile.exists())
 			settingsFile.createNewFile();
-		OutputStream os=new FileOutputStream(settingsFile);
+		OutputStream os=new BufferedOutputStream(new FileOutputStream(settingsFile));
 		transferStreams(req.getInputStream(), os, false);
 	}
 

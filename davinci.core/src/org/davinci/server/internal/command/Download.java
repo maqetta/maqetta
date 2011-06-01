@@ -1,8 +1,8 @@
 package org.davinci.server.internal.command;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -40,30 +40,31 @@ public class Download extends Command {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		ZipOutputStream zos = null;
 	    try {
-			resp.setContentType("application/x-download");
+			resp.setContentType("application/x-download"); //FIXME: is this a good mime type for zip?
 			resp.setHeader("Content-Disposition", "attachment; filename=" + path);
 
-	    	ZipOutputStream zos = new ZipOutputStream(resp.getOutputStream()); 
+	    	zos = new ZipOutputStream(resp.getOutputStream()); 
 			zipFiles(files,  zos); 
-			zos.close();
 			//responseString="OK";
 
 	    } catch (IOException e) {
-			responseString="Error createing download file : " + e;
+			responseString="Error creating download file : " + e;
+			throw e;
 		}finally{
-			resp.getOutputStream().close();
+			if(zos != null)zos.close();
 		}
 		
 			
 	}
-	private void zipDir(IVResource zipDir,   ZipOutputStream zos){
+	private void zipDir(IVResource zipDir,   ZipOutputStream zos) throws IOException {
 			IVResource[] dirList = zipDir.listFiles(); 
 	        zipFiles(dirList, zos);
 	}
 
-	private void zipFiles(IVResource[] files,  ZipOutputStream zos){ 
-	        byte[] readBuffer = new byte[2156]; 
+	private void zipFiles(IVResource[] files,  ZipOutputStream zos) throws IOException { 
+	        byte[] readBuffer = new byte[2156]; // why 2156?
 	        int bytesIn = 0; 
 	        //loop through dirList, and zip the files 
 	        for(int i=0; i<files.length; i++){ 
@@ -71,8 +72,9 @@ public class Download extends Command {
 					zipDir(files[i], zos); 
 					continue; 
 				}
+				InputStream fis = null;
 	            try {
-					InputStream fis = files[i].getInputStreem();
+					fis = new BufferedInputStream(files[i].getInputStreem());
 					ZipEntry anEntry = new ZipEntry(files[i].getPath().toString()); 
 					//place the zip entry in the ZipOutputStream object 
 					zos.putNextEntry(anEntry); 
@@ -80,16 +82,10 @@ public class Download extends Command {
 					while((bytesIn = fis.read(readBuffer)) != -1){ 
 					    zos.write(readBuffer, 0, bytesIn); 
 					} 
-         //close the Stream 
-					fis.close();
 					files[i].removeWorkingCopy();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
+				} finally {
+					if(fis != null) fis.close();
+				}
 	        }
 	    } 
  

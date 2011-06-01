@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -143,8 +145,8 @@ public class UserManagerImpl implements UserManager {
         File userDir = null;
         try {
             userDir = new File(this.baseDirectory, userName);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
+        } catch (RuntimeException e) {
+            // TODO how's this possible?
             e.printStackTrace();
         }
         
@@ -165,10 +167,8 @@ public class UserManagerImpl implements UserManager {
         for (int i=0; i<theFiles.length; i++) {
             if ( theFiles[i].isDirectory() ) {
                 deleteContents(theFiles[i]);
-                theFiles[i].delete();
-            } else {
-                theFiles[i].delete();
             }
+            theFiles[i].delete();
         }
     }
     
@@ -201,23 +201,27 @@ public class UserManagerImpl implements UserManager {
 		
 		for(int i = 0;i<elements.size();i++){
 			URL source = (URL)elements.get(i);
+			InputStream in = null;
+			OutputStream out = null;
 			try {
-				URLConnection connection = source.openConnection();
-				String path = source.getPath();
-				String tail = path.substring(bundleDirName.length()+1);
-				File destination = new File(userDir.getAbsolutePath() + "/" + tail);	
-				if(tail.indexOf(".svn")>-1) continue;
-				destination.getParentFile().mkdirs();
-				InputStream in = connection.getInputStream();
-				OutputStream out = new FileOutputStream(destination); 
-				byte[] buf = new byte[1024];
-			      int len;
-			      while ((len = in.read(buf)) > 0){
-			        out.write(buf, 0, len);
-			      }
-			      in.close();
-			      out.close();
-
+				try {
+					URLConnection connection = source.openConnection();
+					String path = source.getPath();
+					String tail = path.substring(bundleDirName.length()+1);
+					File destination = new File(userDir.getAbsolutePath() + "/" + tail);	
+					if(tail.indexOf(".svn")>-1) continue;
+					destination.getParentFile().mkdirs();
+					in = new BufferedInputStream(connection.getInputStream());
+					out = new BufferedOutputStream(new FileOutputStream(destination)); 
+					byte[] buf = new byte[1024];
+				      int len;
+				      while ((len = in.read(buf)) > 0){
+				        out.write(buf, 0, len);
+				      }
+				} finally {
+				    if (in!=null) in.close();
+				    if (out!=null) out.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				//throw new UserException(UserException.ERROR_COPYING_USER_BASE_DIRECTORY);

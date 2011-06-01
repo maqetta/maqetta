@@ -53,7 +53,7 @@ public abstract class Command {
 						bytesRead = source.read(buffer);
 					if (bytesRead == -1)
 						break;
-						destination.write(buffer, 0, bytesRead);
+					destination.write(buffer, 0, bytesRead);
 				}
 			}
 		} finally {

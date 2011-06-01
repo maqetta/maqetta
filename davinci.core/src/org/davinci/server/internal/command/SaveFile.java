@@ -2,6 +2,7 @@ package org.davinci.server.internal.command;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.BufferedOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ public class SaveFile extends Command {
 		IVResource file = user.getResource(path);
 		
 		if (file.exists()){
-			OutputStream os=file.getOutputStreem();
+			OutputStream os=new BufferedOutputStream(file.getOutputStreem());
 			transferStreams(req.getInputStream(), os, false);
 			if (!isWorkingCopy){
 				// flush the working copy

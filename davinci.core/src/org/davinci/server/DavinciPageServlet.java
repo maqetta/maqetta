@@ -1,6 +1,7 @@
 package org.davinci.server;
 
 import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -302,8 +303,8 @@ public class DavinciPageServlet extends HttpServlet {
 		IVResource libraryURL = user.getResource(path.toString());
 		if (libraryURL != null) {
 			/*
-			 * This code will re-write a sentinal with the base library URL.  pass in lib id and version as parameters as well
-			 * as the sentinal to replace (%root% works well) then sprinkly %root% through HTML as needed. this should
+			 * This code will re-write a sentinel with the base library URL.  pass in lib id and version as parameters as well
+			 * as the sentinel to replace (%root% works well) then sprinkly %root% through HTML as needed. this should
 			 * NOT be used for user pages, only davinci internal.
 			 */
 			String rewriteSent = req.getParameter("updateRoot");
@@ -407,7 +408,7 @@ public class DavinciPageServlet extends HttpServlet {
 			// open the input stream
 			InputStream is = null;
 			try {
-				is = connection.getInputStream();
+				is = new BufferedInputStream(connection.getInputStream());
 				// write the resource
 				try {
 					OutputStream os = resp.getOutputStream();

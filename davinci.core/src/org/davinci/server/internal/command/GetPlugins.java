@@ -3,6 +3,8 @@ package org.davinci.server.internal.command;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -48,9 +50,10 @@ public class GetPlugins extends Command {
 				URL resourceURL=bundle.getEntry(resourcePath+"_plugin.js");
 				if (resourceURL!=null)
 				{
+					InputStream inputStream = null;
 					try {
-						InputStream inputStream = resourceURL.openConnection().getInputStream();
-						InputStreamReader reader=new InputStreamReader(inputStream);
+						inputStream = resourceURL.openConnection().getInputStream();
+						Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 						int firstChar=reader.read();
 						boolean isParen=false;
 						if (firstChar=='(')		// some plugins are surrounded by '(' ')' , get rid of them
@@ -66,8 +69,13 @@ public class GetPlugins extends Command {
 						  if (isParen)
 							  sb.deleteCharAt(sb.length()-1);
 					} catch (IOException e) {
+						// FIXME: why catch?
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						throw e;
+					} finally {
+						if(inputStream != null)
+							inputStream.close();
 					}
 				}
 

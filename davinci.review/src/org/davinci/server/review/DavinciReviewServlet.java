@@ -112,7 +112,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
 		if (welcomeExtension==null)
-			writePage(req, resp, "welcome.html");
+			writeInternalPage(req, resp, "welcome.html");
 		else{
 			String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
 			Bundle bundle=Activator.getActivator().getOtherBundle(name);

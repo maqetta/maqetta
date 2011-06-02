@@ -13,20 +13,19 @@ import org.davinci.server.user.User;
 public class LoadFile extends Command {
 
 	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,	User user) throws IOException {
-		String path=req.getParameter("path");
-		
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
+			User user) throws IOException {
+		String path = req.getParameter("path");
+
 		IVResource file = user.getResource(path);
-		
-		if (file.exists()){
-			InputStream is=file.getInputStreem();
-			transferStreams(is, resp.getOutputStream(), true);
-		}else{
+
+		if (file.exists()) {
+			InputStream is = file.getInputStreem();
+			Command.transferStreams(is, resp.getOutputStream(), true);
+		} else {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
-		
+
 	}
-
-
 
 }

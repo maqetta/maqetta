@@ -115,12 +115,6 @@
                class="org.davinci.server.internal.command.GetFileInfo" />
          <command path="logoff" 
                class="org.davinci.server.internal.command.LogOff" />
-         <command path="systemFileList" 
-               class="org.davinci.server.internal.command.SystemFileList" />
-         <command path="getWidgetProviders" 
-               class="org.davinci.server.internal.command.GetWidgetProviders" />
-         <command path="createLink" 
-               class="org.davinci.server.internal.command.CreateLink" />
          <command path="download" 
                class="org.davinci.server.internal.command.Download" />
          <command path="findResource" 

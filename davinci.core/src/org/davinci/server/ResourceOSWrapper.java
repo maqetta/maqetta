@@ -10,20 +10,21 @@ import java.net.URLConnection;
 public class ResourceOSWrapper extends VFile {
 
 	IVResource original;
-	
-	/* use this class to temporarily rewrite data of a resource.. just 
-	 * save the new IO in a temp file...
+
+	/*
+	 * use this class to temporarily rewrite data of a resource.. just save the
+	 * new IO in a temp file...
 	 */
-	public ResourceOSWrapper (IVResource original, File tempFile){
-	
+	public ResourceOSWrapper(IVResource original, File tempFile) {
+
 		super(tempFile);
 		this.original = original;
 	}
-	
+
 	@Override
 	public void add(IVResource v) {
 		original.add(v);
-		
+
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class ResourceOSWrapper extends VFile {
 	@Override
 	public void createNewInstance() throws IOException {
 		original.createNewInstance();
-		
+
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class ResourceOSWrapper extends VFile {
 	@Override
 	public void flushWorkingCopy() {
 		original.flushWorkingCopy();
-		
+
 	}
 
 	@Override
@@ -124,13 +125,14 @@ public class ResourceOSWrapper extends VFile {
 		return original.mkdir();
 	}
 
-
 	@Override
 	public void removeWorkingCopy() {
-		 original.removeWorkingCopy();
-		
+		original.removeWorkingCopy();
+
 	}
-	public URLConnection openConnection() throws MalformedURLException, IOException{
+
+	public URLConnection openConnection() throws MalformedURLException,
+			IOException {
 		return this.file.toURI().toURL().openConnection();
 	}
 

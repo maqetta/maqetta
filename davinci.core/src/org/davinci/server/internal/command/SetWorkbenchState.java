@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.BufferedOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,11 +18,13 @@ public class SetWorkbenchState extends Command {
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			User user) throws IOException {
 		File settingsDir = user.getSettingsDirectory();
-		File settingsFile=new File(settingsDir,IDavinciServerConstants.WORKBENCH_STATE_FILE);
-		if (!settingsFile.exists())
+		File settingsFile = new File(settingsDir,
+				IDavinciServerConstants.WORKBENCH_STATE_FILE);
+		if (!settingsFile.exists()) {
 			settingsFile.createNewFile();
-		OutputStream os=new BufferedOutputStream(new FileOutputStream(settingsFile));
-		transferStreams(req.getInputStream(), os, false);
+		}
+		OutputStream os = new FileOutputStream(settingsFile);
+		Command.transferStreams(req.getInputStream(), os, false);
 	}
 
 }

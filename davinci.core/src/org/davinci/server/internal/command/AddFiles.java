@@ -21,9 +21,9 @@ import org.davinci.server.user.User;
 public class AddFiles extends Command {
 
 	@Override
-	public void handleCommand(HttpServletRequest request, HttpServletResponse resp,
-			User user) throws IOException {
-		String path=request.getParameter("path");
+	public void handleCommand(HttpServletRequest request,
+			HttpServletResponse resp, User user) throws IOException {
+		String path = request.getParameter("path");
 
 		// Create a factory for disk-based file items
 		FileItemFactory factory = new DiskFileItemFactory();
@@ -31,43 +31,39 @@ public class AddFiles extends Command {
 		// Create a new file upload handler
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
-		ArrayList fileNames=new ArrayList();
+		ArrayList fileNames = new ArrayList();
 		try {
 			// Parse the request
-			List  /* FileItem */ items = upload.parseRequest(request);
-			Iterator  iter = items.iterator();
+			List /* FileItem */items = upload.parseRequest(request);
+			Iterator iter = items.iterator();
 			IVResource userDirectory = user.getResource(path);
 			while (iter.hasNext()) {
-			    FileItem item = (FileItem) iter.next();
+				FileItem item = (FileItem) iter.next();
 
-			    if (!item.isFormField()) {
-			        String fileName = item.getName();
-			        File f1 = new File(userDirectory.getURI());
-			        
-			        File uploadedFile = new File(f1,fileName);
-			        fileNames.add(fileName);
-			        item.write(uploadedFile);
-			    }
+				if (!item.isFormField()) {
+					String fileName = item.getName();
+					File f1 = new File(userDirectory.getURI());
+
+					File uploadedFile = new File(f1, fileName);
+					fileNames.add(fileName);
+					item.write(uploadedFile);
+				}
 			}
-			
-			StringBuffer nms=new StringBuffer();
-			boolean first=true;
+
+			StringBuffer nms = new StringBuffer();
+			boolean first = true;
 			for (Iterator iterator = fileNames.iterator(); iterator.hasNext();) {
-				if (!first)
+				if (!first) {
 					nms.append(",");
-				first=false;
+				}
+				first = false;
 				String name = (String) iterator.next();
 				nms.append("{ file:'").append(name).append("'}");
 			}
-			responseString="<html>\n"+
-			  "<body>\n"+
-			  "  <textarea>\n"+
-			  "     ["+nms.toString()+"]"
-			  
-			  +"\n"+
-			  "  </textarea>\n"+
-			  "</body>\n"+
-			"</html>\n";
+			responseString = "<html>\n" + "<body>\n" + "  <textarea>\n"
+					+ "     [" + nms.toString() + "]"
+
+					+ "\n" + "  </textarea>\n" + "</body>\n" + "</html>\n";
 
 		} catch (FileUploadException e) {
 			// TODO Auto-generated catch block
@@ -77,7 +73,5 @@ public class AddFiles extends Command {
 			e.printStackTrace();
 		}
 	}
-
-
 
 }

@@ -1,5 +1,5 @@
 package org.davinci.server;
- 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,26 +17,27 @@ import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.eclipse.core.runtime.Path;
 
-public class VDirectory implements IVResource{
+public class VDirectory implements IVResource {
 
 	Vector children;
 	IVResource parent;
 	String name;
-	public VDirectory(IVResource parent, String name){
+
+	public VDirectory(IVResource parent, String name) {
 		this.parent = parent;
 		this.name = name;
 		this.children = new Vector();
 	}
-	
+
 	protected VDirectory() {
 		// TODO Auto-generated constructor stub
 		this.children = new Vector();
 	}
 
-	public void addChild(IVResource child){
+	public void addChild(IVResource child) {
 		this.children.add(child);
 	}
-	
+
 	public IVResource create(String path) {
 		// TODO Auto-generated method stub
 		return null;
@@ -44,7 +45,7 @@ public class VDirectory implements IVResource{
 
 	public void createNewInstance() throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean delete() {
@@ -64,7 +65,7 @@ public class VDirectory implements IVResource{
 
 	public void flushWorkingCopy() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public InputStream getInputStreem() throws IOException {
@@ -74,15 +75,19 @@ public class VDirectory implements IVResource{
 
 	public String getName() {
 		// TODO Auto-generated method stub
-		String name =  this.name;
-		
-		if(name!=null && name.length() > 0 && name.charAt(name.length()-1) == '/')
-			name = name.substring(0,name.length()-1);
-		if(name!=null && name.length() > 0 && name.charAt(0) == '.')
+		String name = this.name;
+
+		if (name != null && name.length() > 0
+				&& name.charAt(name.length() - 1) == '/') {
+			name = name.substring(0, name.length() - 1);
+		}
+		if (name != null && name.length() > 0 && name.charAt(0) == '.') {
 			name = name.substring(1);
-		if(name!=null && name.length() > 0 && name.charAt(0) == '/')
+		}
+		if (name != null && name.length() > 0 && name.charAt(0) == '/') {
 			name = name.substring(1);
-		
+		}
+
 		return name;
 	}
 
@@ -104,10 +109,11 @@ public class VDirectory implements IVResource{
 
 	public String getPath() {
 		// TODO Auto-generated method stub
-		if(parent==null)
+		if (parent == null) {
 			return this.name;
+		}
 		return new Path(this.parent.getPath()).append(this.name).toString();
-		
+
 	}
 
 	public URI getURI() throws URISyntaxException {
@@ -132,7 +138,8 @@ public class VDirectory implements IVResource{
 
 	public IVResource[] listFiles() {
 		// TODO Auto-generated method stub
-		return (IVResource[])this.children.toArray(new IVResource[this.children.size()]);
+		return (IVResource[]) this.children
+				.toArray(new IVResource[this.children.size()]);
 	}
 
 	public boolean mkdir() {
@@ -148,71 +155,75 @@ public class VDirectory implements IVResource{
 
 	public void removeWorkingCopy() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void add(IVResource v) {
 		this.children.add(v);
-		
+
 	}
 
 	public IVResource get(String childName) {
-		
-		if(childName!=null && childName.equals("."))
+
+		if (childName != null && childName.equals(".")) {
 			return this;
-		
-		for(int i=0;i<this.children.size();i++){
-			IVResource child = (IVResource)children.get(i);
-			if (child!=null && child.getName().equals(childName))
+		}
+
+		for (int i = 0; i < this.children.size(); i++) {
+			IVResource child = (IVResource) children.get(i);
+			if (child != null && child.getName().equals(childName)) {
 				return (IVResource) children.get(i);
+			}
 		}
 		return null;
 	}
-	public String toString (){
+
+	public String toString() {
 		return this.getPath();
 	}
 
 	public boolean committed() {
 		return true;
 	}
-	
-	public boolean readOnly() {
-		if(this.parent!=null)
-			return this.parent.readOnly();
-		else
-			return false;
-	}
 
+	public boolean readOnly() {
+		if (this.parent != null) {
+			return this.parent.readOnly();
+		} else {
+			return false;
+		}
+	}
 
 	public IVResource[] findChildren(String childName) {
 		// TODO Auto-generated method stub
 		Path path = new Path(childName);
 		IOFileFilter filter;
-		if (path.segment(0).equals("*")){
-		  filter=new NameFileFilter(path.lastSegment());
-		}else{
+		if (path.segment(0).equals("*")) {
+			filter = new NameFileFilter(path.lastSegment());
+		} else {
 			String lastSegment = path.lastSegment();
-			if (lastSegment.startsWith("*"))
+			if (lastSegment.startsWith("*")) {
 				filter = new SuffixFileFilter(lastSegment.substring(1));
-			else
-				filter=null;
+			} else {
+				filter = null;
+			}
 		}
 		Vector results = new Vector();
-		
-		for(int i=0;i<this.children.size();i++){
-			IVResource r1  = (IVResource)children.get(i);
+
+		for (int i = 0; i < this.children.size(); i++) {
+			IVResource r1 = (IVResource) children.get(i);
 			File f1 = new File(r1.getName());
-			if(filter.accept(f1))
+			if (filter.accept(f1)) {
 				results.add(f1);
-			
-			if(r1.isDirectory()){
+			}
+
+			if (r1.isDirectory()) {
 				IVResource[] more = r1.findChildren(childName);
 				results.addAll(Arrays.asList(more));
 			}
-			
-		
+
 		}
-		return (IVResource[])results.toArray(new IVResource[results.size()]);
-		
+		return (IVResource[]) results.toArray(new IVResource[results.size()]);
+
 	}
 }

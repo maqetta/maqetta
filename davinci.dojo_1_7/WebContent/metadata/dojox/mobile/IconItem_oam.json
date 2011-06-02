@@ -2,21 +2,11 @@
     "id": "http://dojotoolkit.org/dojox/mobile/IconItem",
     "name": "dojox.mobile.IconItem",
     "spec": "1.0",
-    "version": "1.0",
+    "version": "1.7",
     "require": [
         {
             "type": "javascript",
             "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
-            "type": "css",
-            "src": "dojo/resources/dojo.css",
-            "$library": "dojo"
-        },
-        {
-            "type": "css",
-            "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"
         },
         {
@@ -26,6 +16,15 @@
         {
             "type": "javascript",
             "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
         }
     ],
     "library": {
@@ -34,16 +33,13 @@
         }
     },
     "property": {
-        "lazy": {
-            "datatype": "boolean",
-            "defaultValue": false
+        "transition": {
+            "datatype": "string",
+            "defaultValue": "slide"
         },
-        "requires": {
-            "datatype": "string"
-        },
-        "timeout": {
+        "transitionDir": {
             "datatype": "number",
-            "defaultValue": "10"
+            "defaultValue": 1
         },
         "icon": {
             "datatype": "string"
@@ -51,20 +47,19 @@
         "iconPos": {
             "datatype": "string"
         },
-        "href": {
-            "datatype": "string"
-        },
         "moveTo": {
             "datatype": "string"
         },
-        "clickable": {
-            "datatype": "boolean",
-            "defaultValue": false
+        "href": {
+            "datatype": "string"
+        },
+        "hrefTarget": {
+            "datatype": "string"
         },
         "url": {
             "datatype": "string"
         },
-        "transition": {
+        "callback": {
             "datatype": "string"
         },
         "sync": {
@@ -74,6 +69,17 @@
         "label": {
             "datatype": "string",
             "defaultValue": "IconItem"
+        },
+        "lazy": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "requires": {
+            "datatype": "string"
+        },
+        "timeout": {
+            "datatype": "number",
+            "defaultValue": 10
         }
     },
     "content": "<li label='IconItem'></li>"

@@ -1406,7 +1406,6 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtWKf21SLvVKHuWKh21OHuWKf2WKh2VWLvVaOv7nW78jg84C/64K/64DB64DB6ZfX9v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZ0wJJwSCwOOcikMinkjJ7QKJRTqoRAIJJ2SxJ9PpsSJkOhXDIatEZDIVtKE4l8Tp9HShKPfs/fQ/BcgVx/DiQAhgABAgcLEhYWJA8lDIKVDSUJHZqbnJsKJQaVggglBIaIioyOkAUlA6KBA64DtLW2tka5Q0EAOw==",
             "isContainer": true
         },
-/* Dojo 1.6+ only
         {
             "name": "ScrollableView",
             "type": "dojox.mobile.ScrollableView",
@@ -1416,14 +1415,13 @@
             "isContainer": true
         },
         {
-            "name": "FlippableView",
-            "type": "dojox.mobile.FlippableView",
+            "name": "SwapView",
+            "type": "dojox.mobile.SwapView",
             "category": "mobile",
             "icon": "resources/images/dx-mbl--flippable-iew.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
             "isContainer": true
         },
-*/
         {
             "name": "Heading",
             "type": "dojox.mobile.Heading",
@@ -1436,15 +1434,6 @@
                 "supportsHTML": true
             }
         },
-/* Dojo 1.6+ only
-        {
-            "name": "ToolbarButton",
-            "type": "dojox.mobile.ToolbarButton",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl--toolbar-button.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw=="
-        },
-*/
         {
             "name": "RoundRect",
             "type": "dojox.mobile.RoundRect",
@@ -1488,6 +1477,14 @@
             ]
         },
         {
+            "name": "RoundRectDataList",
+            "type": "dojox.mobile.RoundRectDataList",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrectlist.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
+            "isContainer": true
+        },
+        {
             "name": "EdgeToEdgeCategory",
             "type": "dojox.mobile.EdgeToEdgeCategory",
             "category": "mobile",
@@ -1520,6 +1517,14 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "EdgeToEdgeDataList",
+            "type": "dojox.mobile.EdgeToEdgeDataList",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-edge-edgellist.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
+            "isContainer": true
         },
         {
             "name": "ListItem",
@@ -1585,37 +1590,17 @@
             }
         },
         {
-            "name": "TabContainer",
-            "type": "dojox.mobile.TabContainer",
+            "name": "ToolBarButton",
+            "type": "dojox.mobile.ToolBarButton",
             "category": "mobile",
-            "icon": "resources/images/dx-mbl--tab-container.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
-            "isContainer": true,
-            "children": [
-                {
-                    "type": "dojox.mobile.TabPane",
-                    "properties": {
-                        "label": "Pane 1",
-                        "selected": true
-                    }
-                },
-                {
-                    "type": "dojox.mobile.TabPane",
-                    "properties": {
-                        "label": "Pane 2"
-                    }
-                }
-            ]
+            "icon": "resources/images/dx-mbl--toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
         },
-        {
-            "name": "TabPane",
-            "type": "dojox.mobile.TabPane",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl-tab-pane.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAABs6dhw6dU5rpBs6dRs7dRw7dSZMiDlckztfljtglj5km3yRrz5lmkFqoEJqoHuRsHuRrzFhnUZxpkVypkl3q0p4qzt0r0x9sU1+sVaOv8jg84fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZ+wJJwSCwKBUhBYMlMCo6jaMBANQSio2dJABJ9ApFwJBD6fLQCj6cTsLgtgQ3Hg348FoGMPhN4QCBaAwCDAwQDAwUEAIcDQhgakJGSkBdCFBokmZqbJBVCEpicnBNCDaGimg5CCqeoJAxCCK2oCUIHs6IHQhoHvb6/vRpGw0RBADs=",
-            "isContainer": true
-        }
-/* Dojo 1.6+ only
         {
             "name": "TabBar",
             "type": "dojox.mobile.TabBar",
@@ -1630,7 +1615,35 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw=="
+        },
+        {
+            "name": "SpinWheel",
+            "type": "dojox.mobile.SpinWheel",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--tab-container.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
+            "isContainer": true
+        },
+        {
+            "name": "SpinWheelSlot",
+            "type": "dojox.mobile.SpinWheelSlot",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw=="
+        },
+        {
+            "name": "SpinWheelDatePicker",
+            "type": "dojox.mobile.SpinWheelDatePicker",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--tab-container.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs="
+        },
+        {
+            "name": "SpinWheelTimePicker",
+            "type": "dojox.mobile.SpinWheelTimePicker",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--tab-container.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs="
         }
-*/
     ]
 }

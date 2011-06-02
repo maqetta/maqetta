@@ -2,21 +2,11 @@
     "id": "http://dojotoolkit.org/dojox/mobile/ScrollableView",
     "name": "dojox.mobile.ScrollableView",
     "spec": "1.0",
-    "version": "1.0",
+    "version": "1.7",
     "require": [
         {
             "type": "javascript",
             "src": "dojo/dojo.js",
-            "$library": "dojo"
-        },
-        {
-            "type": "css",
-            "src": "dojo/resources/dojo.css",
-            "$library": "dojo"
-        },
-        {
-            "type": "css",
-            "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"
         },
         {
@@ -26,6 +16,15 @@
         {
             "type": "javascript",
             "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
         }
     ],
     "library": {

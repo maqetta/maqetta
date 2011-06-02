@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/RoundRect",
-    "name": "dojox.mobile.RoundRect",
+    "id": "http://dojotoolkit.org/dojox/mobile/EdgeToEdgeDataList",
+    "name": "dojox.mobile.EdgeToEdgeDataList",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -33,10 +33,25 @@
         }
     },
     "property": {
-        "shadow": {
-            "datatype": "boolean",
-            "defaultValue": "false"
+        "transition": {
+            "datatype": "string",
+            "defaultValue": "slide"
+        },
+        "iconBase": {
+            "datatype": "string"
+        },
+        "iconPos": {
+            "datatype": "string"
+        },
+        "store": {
+            "datatype": "string"
+        },
+        "query": {
+            "datatype": "string"
+        },
+        "queryOptions": {
+            "datatype": "string"
         }
     },
-    "content": "<div></div>"
+    "content": "<ul></ul>"
 }

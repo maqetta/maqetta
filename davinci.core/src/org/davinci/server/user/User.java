@@ -30,12 +30,13 @@ import org.eclipse.core.runtime.Path;
 
 public class User {
 
-	File userDirectory;
-	File settingsDirectory;
-	Links links;
-	Person person;
-	IVResource workspace;
-	LibrarySettings libSettings;
+	private File userDirectory;
+	private File settingsDirectory;
+	private File themesDirectory;
+	private Links links;
+	private Person person;
+	private IVResource workspace;
+	private LibrarySettings libSettings;
 
 	public User(Person person, IVResource userDirectory) {
 		this.person = person;
@@ -285,9 +286,24 @@ public class User {
 		return this.settingsDirectory;
 	}
 
-	synchronized public Links getLinks() {
-		if (this.links == null) {
-			this.links = new Links(this.getSettingsDirectory());
+	public File getThemesDirectory() {
+		if (this.themesDirectory==null){
+			File userDir = null;
+			try {
+				userDir = new File(getWorkspace().getURI());
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.settingsDirectory= new File(userDir,IDavinciServerConstants.THEMES_DIRECTORY_NAME);
+		}
+			
+		return this.themesDirectory;
+	}
+
+	synchronized public Links getLinks(){
+		if (this.links==null) }
+			this.links=new Links(this.getSettingsDirectory());
 		}
 		return this.links;
 	}
@@ -311,8 +327,8 @@ public class User {
 			rootDir = workspace.get(startFolder);
 		}
 
-		// Links links = this.getLinks();
-		if (isWildcard) {
+		Links links = this.getLinks();
+		if (isWildcard){
 			IOFileFilter filter;
 			if (path.segment(0).equals("*")) {
 				IOCase ioCase = ignoreCase ? IOCase.INSENSITIVE

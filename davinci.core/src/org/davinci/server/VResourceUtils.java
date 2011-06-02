@@ -10,8 +10,12 @@ public class VResourceUtils {
 			boolean recurse) {
 		IVResource[] list = source.listFiles();
 
+		if(!destination.mkdir()){
+			System.err.println("copyDirectory failed to create destination "+destination.getPath());
+			return;
+		}
+
 		for (int i = 0; i < list.length; i++) {
-			destination.mkdir();
 			IVResource r = destination.create(list[i].getName());
 			if (list[i].isDirectory()) {
 				r.mkdir();

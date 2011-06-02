@@ -20,6 +20,7 @@ public interface IDavinciServerConstants {
 	public static final String USER_URL = "/user";
 	public static final String GUEST_USER_PREFIX = "_Guest_";
 
+	public static final String THEMES_DIRECTORY_NAME= "themes";
 	public static final String SETTINGS_DIRECTORY_NAME = ".settings";
 	public static final String SETTINGS_EXTENSION = ".settings";
 	public static final String WORKBENCH_STATE_FILE = "workbenchState.settings";

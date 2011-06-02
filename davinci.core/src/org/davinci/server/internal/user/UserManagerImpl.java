@@ -141,6 +141,8 @@ public class UserManagerImpl implements UserManager {
 			userDir.mkdir();
 			File settingsDir = user.getSettingsDirectory();
 			settingsDir.mkdir();
+			File themesDir=user.getThemesDirectory();
+			themesDir.mkdir();
 			initializeNewUserFiles(userDir);
 			this.usersCount++;
 			return user;
@@ -307,6 +309,8 @@ public class UserManagerImpl implements UserManager {
 				IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		if (!settingsDir.exists()) {
 			settingsDir.mkdir();
+			File themesDir= new File(userDir,IDavinciServerConstants.THEMES_DIRECTORY_NAME);;
+			themesDir.mkdir();
 			initializeNewUserFiles(userDir);
 		}
 		return new User(new LocalPerson(), userDir);

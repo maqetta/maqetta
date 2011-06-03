@@ -17,13 +17,14 @@ public class Register extends Command {
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			User user) throws IOException {
-		String name=req.getParameter("userName");
-		String password=req.getParameter("password");
-		String email=req.getParameter("email");
-	
+		String name = req.getParameter("userName");
+		String password = req.getParameter("password");
+		String email = req.getParameter("email");
+
 		try {
-			 user=ServerManager.getServerManger().getUserManager().addUser(name, password, email);
-			this.responseString="OK";
+			user = ServerManager.getServerManger().getUserManager()
+					.addUser(name, password, email);
+			this.responseString = "OK";
 			HttpSession session = req.getSession(true);
 			session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
 		} catch (UserException e) {

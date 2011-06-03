@@ -14,12 +14,15 @@ public class CommandDescriptor {
 	boolean isNoLogin;
 
 	public CommandDescriptor(IConfigurationElement configurationElement) {
-		this.configElement=configurationElement;
-		this.path=configurationElement.getAttribute(IDavinciServerConstants.EP_ATTR_COMMAND_PATH);
-		String str=configurationElement.getAttribute(IDavinciServerConstants.EP_ATTR_COMMAND_ISPUT);
-		this.isPut=str!=null && str.equalsIgnoreCase("true");
-		str=configurationElement.getAttribute(IDavinciServerConstants.EP_ATTR_COMMAND_NOLOGIN);
-		this.isNoLogin=str!=null && str.equalsIgnoreCase("true");
+		this.configElement = configurationElement;
+		this.path = configurationElement
+				.getAttribute(IDavinciServerConstants.EP_ATTR_COMMAND_PATH);
+		String str = configurationElement
+				.getAttribute(IDavinciServerConstants.EP_ATTR_COMMAND_ISPUT);
+		this.isPut = str != null && str.equalsIgnoreCase("true");
+		str = configurationElement
+				.getAttribute(IDavinciServerConstants.EP_ATTR_COMMAND_NOLOGIN);
+		this.isNoLogin = str != null && str.equalsIgnoreCase("true");
 	}
 
 	public String getPath() {
@@ -36,14 +39,14 @@ public class CommandDescriptor {
 
 	public Command getCommand() {
 
-		if (this.command==null)
-		{
+		if (this.command == null) {
 			try {
-				this.command= (Command) this.configElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_COMMAND_CLASS);
+				this.command = (Command) this.configElement
+						.createExecutableExtension(IDavinciServerConstants.EP_ATTR_COMMAND_CLASS);
 			} catch (CoreException e) {
 				e.printStackTrace();
 				return null;
-			}			
+			}
 		}
 		return this.command;
 

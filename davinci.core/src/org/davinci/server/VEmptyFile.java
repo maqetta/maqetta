@@ -12,14 +12,13 @@ import java.net.URLConnection;
 public class VEmptyFile implements IVResource {
 
 	String virtualPath;
-	boolean directory; 
-	
-	
-	public VEmptyFile(String path, boolean directory){
+	boolean directory;
+
+	public VEmptyFile(String path, boolean directory) {
 		this.virtualPath = path;
 		this.directory = directory;
 	}
-	
+
 	public void createNewInstance() throws IOException {
 		// TODO Auto-generated method stub
 
@@ -44,7 +43,6 @@ public class VEmptyFile implements IVResource {
 		// TODO Auto-generated method stub
 
 	}
-
 
 	public InputStream getInputStreem() throws IOException {
 		// TODO Auto-generated method stub
@@ -125,7 +123,7 @@ public class VEmptyFile implements IVResource {
 
 	public void add(IVResource v) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public IVResource get(String childName) {
@@ -134,7 +132,7 @@ public class VEmptyFile implements IVResource {
 	}
 
 	public boolean committed() {
-		
+
 		return true;
 	}
 
@@ -143,7 +141,6 @@ public class VEmptyFile implements IVResource {
 		return true;
 	}
 
-	
 	public IVResource[] findChildren(String childName) {
 		// TODO Auto-generated method stub
 		return null;

@@ -11,9 +11,10 @@ import org.davinci.server.Resource;
 import org.davinci.server.user.User;
 
 public class ListFiles extends Command {
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,	User user) throws IOException {
-		String path=req.getParameter("path");
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
+			User user) throws IOException {
+		String path = req.getParameter("path");
 		IVResource[] listDir = user.listFiles(path);
-		this.responseString= Resource.vRsourcesToJson(listDir,false);
+		this.responseString = Resource.vRsourcesToJson(listDir, false);
 	}
 }

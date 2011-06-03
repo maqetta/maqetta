@@ -18,10 +18,10 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	
 	multiLine: "true",
 	supportsHTML: "true", 
-	helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
+	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
 
-//	helpText:  'If the CSV data format button is selected enter text in the format: first line is column headers separated by commons all following lines are data for those columns.'+
-//    		   ' If the URL button is selected enter the absolute location of the json item file.',
+	helpText:  'If the CSV data format button is selected enter text in the format: first line is column headers separated by commons all following lines are data for those columns.'+
+    		   ' If the URL button is selected enter the location of the json item file.',
 
 
 
@@ -144,10 +144,15 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     
 	
 	onOk: function(e){
+		if (this._fileSelectionDialog){
+			// file selection dialog is active so don't close inline edit
+			return;
+		}
 		var dummyDataRadioButton = dijit.byId("davinci.ve.input.DataGridInput.dummyData");
 	    if (dummyDataRadioButton.checked){
 	    	this.updateWidget();
 	    }else{
+	    	this._format = this.getFormat();
 	    	this.updateWidgetForUrlStore();
 	    	 
 	    }
@@ -295,7 +300,15 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		var structure = [];
     	//var textBox = dijit.byId("davinci.ve.input.DataGridInput.url"); 
     	var textArea = dijit.byId("davinciIleb");
-    	var url = textArea.value;
+    	this._url = textArea.value;
+    	var tempURL = this._url.toLowerCase();
+    	var url;
+    	if (tempURL.indexOf('http://') === 0){ // absolute url
+    		url = this._url;
+    	} else {
+    		var file = davinci.model.Resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
+    		url = file.getURL();
+    	}
     	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
     	//url = 'http://localhost:8080/davinci/user/user5/ws/workspace/' + url;
     	var store = new dojo.data.ItemFileReadStore({url: url});
@@ -338,11 +351,12 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		var properties = {};
 		var context = this._getContext();
         var widget = this._widget;
-		properties['url'] = this._urlDataStore.url;
+		properties['url'] = this._url; //this._urlDataStore.url;
 		storeWidget._srcElement.setAttribute('data', ''); //wdr 3-11
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back//delete properties.data; //3-11
 		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
-        var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure}, null, context);
+		var escapeHTML = (this._format === 'text');
+        var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure, escapeHTMLInData:escapeHTML}, null, context);
         var compoundCommand = new davinci.commands.OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
         compoundCommand.add(command);
@@ -372,6 +386,8 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
  
         this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
         this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
+		var folder = dojo.byId('davinci.ve.input.DataGridInput_img_folder');
+		this._connection.push(dojo.connect(folder, "onclick", this, "fileSelection"));
 		//this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent")); 
 		//this._connection.push(dojo.connect(this._inline.eb, "onClick", this, "updateSimStyle"));
 		this._connectHelpDiv();
@@ -396,8 +412,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         
         this._inline.eb = dijit.byId("davinciIleb");
         this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
-        //if(this._data){ 
-        if(true){  // FIXME: this is to hide url for 0.80
+        if(this._data){ 
         	dataRadioButton.setChecked(true);
         	urlRadioButton.setChecked(false);
         	this._url = ' ';
@@ -409,7 +424,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	this._inline.eb.setValue(/* this._widget.dijitWidget.store.url*/ this._url); 
         	this._data = ' ';
         }
-        this.updateFormats();
+        //this.updateFormats();
         var html = this._widget.getPropertyValue('escapeHTMLInData');
         var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
@@ -420,7 +435,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	htmlRadio.setChecked(true);
 			textRadio.setChecked(false);        	
         }
-
+        this.updateFormats();
         this.toggleInputBoxes(null);
         
 	},
@@ -439,43 +454,155 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		this.updateSimStyle();
 	},
 	
+	fileSelection: function(e){
+		var definition = [
+      	    {  
+              type: "tree",
+      	      data: "file",
+      	      style: "height:10em;overflow:auto",
+      	      model: "davinci.ui.widgets.ResourceTreeModel",
+      	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
+//      	      link : { target: "textValue",
+//              targetFunction : function (input){
+//      			  var path=new davinci.model.Path(input.getPath());
+//      			  return path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
+//              }}
+      	    }
+      	  ];
+      	  
+      	  var data={
+      			  file  : null
 
+            };
+      	
+      		this._fileSelectionDialog = davinci.ui.Panel.openDialog( {
+      			definition: definition,
+      			data: data,
+      			style: "width:275px;height:225px;padding:0px;background-color:white;",
+      			title:"Select a source",
+      			contextObject: this,
+      			buttonStyle: 'padding:8px;',
+      			onOK : function ()
+      			{
+      				if(data.file){
+      					debugger;
+      					var path=new davinci.model.Path(data.file.getPath());
+      					var value=path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
+      					var dataRadioButton = dijit.byId("davinci.ve.input.DataGridInput.dummyData");
+      			        var urlRadioButton = dijit.byId("davinci.ve.input.DataGridInput.urlData");
+   			        	dataRadioButton.setChecked(false);
+   			        	urlRadioButton.setChecked(true);
+      					var textArea = dijit.byId("davinciIleb");
+      			    	textArea.setValue(value); 
+      			    	textArea.focus();
+      			    	this._url = data.file;
+      			    	delete this._fileSelectionDialog;
+      			    	this.updateFormats();
+      					//this.updateWidget(data.textValue,data.altText);
+      				}
+      			
+      			}
+
+      		});
+      		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this, "onCancelFileSelection"));
+      		
+
+	},
+	
+	onCancelFileSelection: function(e)
+	{
+		debugger;
+		delete this._fileSelectionDialog;
+	},
+	
+	updateFormats: function(){
+			
+		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
+		var urlRadioButton = dijit.byId("davinci.ve.input.DataGridInput.urlData");
+		if (urlRadioButton.checked){
+			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
+			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
+			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
+			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
+			var table = dojo.byId('davinci.ve.input.SmartInput_table');
+			
+			textObj.innerHTML = '<div class="dojoxEllipsis">Plain text  </div>';
+			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">HTML markup</div>';
+			htmlRadio.setDisabled(false);
+			textRadio.setDisabled(false);
+			dojo.removeClass(textObj,'inlineEditDisabled');
+			dojo.removeClass(htmlObj,'inlineEditDisabled');
+			dojo.style(textRadio.domNode, 'display', '');
+			dojo.style(htmlRadio.domNode, 'display', '');
+			dojo.style(htmlObj, 'display', '');
+			dojo.style(textObj, 'display', '');
+			dojo.style(table, 'display', '');
+		} else {
+			this.inherited(arguments);	
+		}
+	},
 	
 	_getTemplate: function(){
 		
 		var editBox = ''+
-		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 200px; height: 60px;" >' + 
+		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" > ' +
+		'<table id="davinci.ve.input.DataGridInput_table" > ' +
+			'<tbody>' + 
+				'<tr> '+
+					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" />  </td> '+
+					'<td class="smartInputTd2">'+
+						'<div  class="smartInputRadioTextDiv">'+
+							'Create data grid from CSV data:'+
+						'</div>'+
+	 				'</td> '+
+	 				'<td></td>' +
+				'</tr> '+
+				'<tr> '+
+					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" />  </td> '+
+					'<td class="smartInputTd2">'+
+						'<div id="davinci.ve.input.DataGridInput.urlData_width_div" class="smartInputRadioTextDiv">'+
+							'Create data grid from URL data:'+
+						'</div>'+
+					'</td>' +
+					'<td>' +
+						'<span id="davinci.ve.input.DataGridInput_img_folder"  title="Folder" class="inlineEditFolder" > </span>'+
+					'</td> '+
+				'</tr> '+
+			'</tbody>'+ 
+		'</table> '+
+		'</div>' +
+		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 240px; height: 60px;" >' + 
 //	    '    <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" /><label for="davinci.ve.input.DataGridInput.dummyData">Create data grid from CSV data:</label><br /> ' +
 //        '    <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" /><label for="davinci.ve.input.DataGridInput.urlData">Create data grid from URL data:</label><br /> ' +
-        '	<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" style="width:200px; height:60px;" class="smartInputTextArea" ></textarea>' +
+        '	<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" style="width:240px; height:60px;" class="smartInputTextArea" ></textarea>' +
 //        '   <input type="text" name="davinci.ve.input.DataGridInput.url" value="" placeHolder="Enter url" dojoType="dijit.form.TextBox"    trim="true" id="davinci.ve.input.DataGridInput.url" /> ' +
 			'<div id="smartInputSim" class="smartInputSim" ></div>'+
-			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="200" minHeight="40"  activeResize="true" intermediateChanges="true" ></div>' +
+			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="240" minHeight="40"  activeResize="true" intermediateChanges="true" ></div>' +
 		'</div>';
 
 		var template = ''+ editBox +
 		'<div  id="davinci.ve.input.SmartInput_div"  class="davinciVeInputSmartInputDiv" >' + 
 			'<div id="davinci.ve.input.SmartInput_radio_div" class="smartInputRadioDiv" >' + 
-				'<table id="davinci.ve.input.DataGridInput_table" style="display:none;"> ' +
-					'<tbody>' + 
-						'<tr> '+
-		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" />  </td> '+
-		 					'<td class="smartInputTd2">'+
-		 						'<div  class="smartInputRadioTextDiv">'+
-		 							'Create data grid from CSV data:'+
-		 						'</div>'+
-		     				'</td> '+
-							'</tr> '+
-							'<tr> '+
-		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" />  </td> '+
-		 					'<td class="smartInputTd2">'+
-		 						'<div id="davinci.ve.input.DataGridInput.urlData_width_div" class="smartInputRadioTextDiv">'+
-		 							'Create data grid from URL data:'+
-		 						'</div>'+
-		     				'</td> '+
-						'</tr> '+
-					'</tbody>'+ 
-				'</table> '+
+//				'<table id="davinci.ve.input.DataGridInput_table" style="display:none;"> ' +
+//					'<tbody>' + 
+//						'<tr> '+
+//		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" />  </td> '+
+//		 					'<td class="smartInputTd2">'+
+//		 						'<div  class="smartInputRadioTextDiv">'+
+//		 							'Create data grid from CSV data:'+
+//		 						'</div>'+
+//		     				'</td> '+
+//							'</tr> '+
+//							'<tr> '+
+//		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" />  </td> '+
+//		 					'<td class="smartInputTd2">'+
+//		 						'<div id="davinci.ve.input.DataGridInput.urlData_width_div" class="smartInputRadioTextDiv">'+
+//		 							'Create data grid from URL data:'+
+//		 						'</div>'+
+//		     				'</td> '+
+//						'</tr> '+
+//					'</tbody>'+ 
+//				'</table> '+
 				'<table id="davinci.ve.input.SmartInput_table"> ' +
 					'<tbody>' + 
 						'<tr> ' +

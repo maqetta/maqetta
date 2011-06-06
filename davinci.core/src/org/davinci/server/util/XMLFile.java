@@ -27,15 +27,12 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 public abstract class XMLFile extends XMLElement {
-	
 
 	protected abstract String getRootTag();
-	
 
-	public ArrayList load(File file)
-	{
+	public ArrayList load(File file) {
 		ArrayList objects = null;
-		InputStream input=null;
+		InputStream input = null;
 		if (file.exists()) {
 			try {
 				DocumentBuilder parser = DocumentBuilderFactory.newInstance()
@@ -43,7 +40,7 @@ public abstract class XMLFile extends XMLElement {
 				input = new FileInputStream(file);
 				Document document = parser.parse(input);
 				Element rootElement = document.getDocumentElement();
-				objects=this.load(rootElement);
+				objects = this.load(rootElement);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -58,41 +55,44 @@ public abstract class XMLFile extends XMLElement {
 				e.printStackTrace();
 			} finally {
 				try {
-					if (input != null)
+					if (input != null) {
 						input.close();
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-		if (objects==null)
-			objects=new ArrayList();
+		if (objects == null) {
+			objects = new ArrayList();
+		}
 		return objects;
 	}
-	
-	public void save(File file, Collection  values)
-	{
-		OutputStream out= null;
+
+	public void save(File file, Collection values) {
+		OutputStream out = null;
 		try {
-			if (!file.exists()){
+			if (!file.exists()) {
 				file.mkdirs();
 				file.delete();
 				file.createNewFile();
 
 			}
-			String rootName=this.getRootTag();
-			out= new FileOutputStream(file); 
-			DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder= factory.newDocumentBuilder();		
-			Document document= builder.newDocument();
-			
+			String rootName = this.getRootTag();
+			out = new FileOutputStream(file);
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.newDocument();
+
 			Element rootElement = document.createElement(rootName);
 			document.appendChild(rootElement);
 
 			this.save(rootElement, values);
-			
-			Transformer transformer=TransformerFactory.newInstance().newTransformer();
+
+			Transformer transformer = TransformerFactory.newInstance()
+					.newTransformer();
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
@@ -126,6 +126,5 @@ public abstract class XMLFile extends XMLElement {
 			}
 		}
 	}
-
 
 }

@@ -81,7 +81,7 @@ dojo.declare("davinci.actions.SaveAsWidget", davinci.actions.Action, {
             }, this);
         }
         
-        var types = types | {};
+        var types = types || {};
         getreqs.call(this, widgets, metadata, types);
         
         // consolidate consecutive requires with $text into a single element

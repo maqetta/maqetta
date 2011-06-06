@@ -80,9 +80,9 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     		       	    {display:"background-position", type:"multi", target:'background-position', values:['','0px','left top','center center','right bottom']},
     		       	    {display:"background-size", type:"multi", target:'size', target:'background-size', values:['','auto','contain','cover','100%']},
     		       	    {display:"background-origin", type:"combo", target:'background-origin', values:['','padding-box','border-box','content-box']},
-    		       	    {display:"background-clip", type:"combo", target:'background-clip', values:['','padding-box','border-box','content-box']},
+    		       	    {display:"background-clip", type:"combo", target:'background-clip', values:['','padding-box','border-box','content-box']}
 /* FIXME: Gradients not working yet. Comment out for now 
-    		       	    {display:"dpi", type:"combo", target:'background-dpi', values:['']},  
+,    		       	    {display:"dpi", type:"combo", target:'background-dpi', values:['']},  
     			        
     		       	    {display:"type", type:"combo", target:"none", values:['']},
     			 	    {display:"origin", type:"combo",target:"none",values:[''] },
@@ -114,7 +114,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		       								dojo.addClass(thisRow,"propertiesSectionHidden");
 		       							}
 		       						}
-		       					}
+		       					};
 		       					if(this.pageTemplate){
 		       						var propObj = this.pageTemplate[propIndex];
 		       						var value;
@@ -167,7 +167,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		                     {display:"border-top-right-radius", type:"multi", target:['border-top-right-radius','-moz-border-radius-topright'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
 		                     {display:"border-bottom-right-radius", type:"multi", target:['border-bottom-right-radius','-moz-border-radius-bottomright'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
 		                     {display:"border-bottom-left-radius", type:"multi", target:['border-bottom-left-radius','-moz-border-radius-bottomleft'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"}
-	    	                ]},
+	    	                ]}
 		            	  ]},
 	           {title:"Fonts and Text",
 	                  pageTemplate:[{display:"font", type:"text", target:"font"},
@@ -400,14 +400,14 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 			var sectionId = this.pageTemplate[v].id;
 			if(sectionId){
 				this.pageTemplate[v].widget = dijit.byId(sectionId);
-				dojo.connect(this.pageTemplate[v].widget, "_onShow", this, function(targetIndex){return function(){this._titlePaneOpen(targetIndex)}}(v) );
+				dojo.connect(this.pageTemplate[v].widget, "_onShow", this, function(targetIndex){return function(){this._titlePaneOpen(targetIndex);};}(v) );
 			}
 			var nodeList = dojo.query("#" + sectionId + " .CascadeTop");
 			
 			nodeList.forEach(function(target){ return function(p){
 				var cascade = dijit.byId(p.id);
 				target['cascade'].push(cascade);
-			}}(this.pageTemplate[v]));
+			};}(this.pageTemplate[v]));
 			
 		}
 		this.setReadOnly(true);
@@ -465,7 +465,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 			dojo.removeClass(this.domNode,this._oldClassName);
 		
 		if( this._editor){
-			this._oldClassName = this._editor.editorID.replace(/\./g, "_")
+			this._oldClassName = this._editor.editorID.replace(/\./g, "_");
 			dojo.addClass(this.domNode,this._oldClassName);
 		}
 		var visibleCascade = [];

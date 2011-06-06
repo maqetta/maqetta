@@ -14,9 +14,9 @@ public class GetUserInfo extends Command {
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			User user) throws IOException {
-		this.responseString="{ userName: '"+user.getUserName()+
-		"', isLocalInstall: "+String.valueOf(ServerManager.LOCAL_INSTALL)+" }";
-
+		this.responseString = "{ userName: '" + user.getUserName()
+				+ "', isLocalInstall: "
+				+ String.valueOf(ServerManager.LOCAL_INSTALL) + " }";
 
 	}
 

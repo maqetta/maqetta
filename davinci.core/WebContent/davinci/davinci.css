@@ -852,6 +852,14 @@ davinci_top_bar .dijitButtonNode {
 	opacity: .5;
 }
 
+.inlineEditFolder{
+	background-image: url('img/sprite.png');
+	background-position: -80px -337px;
+	height: 16px; 
+	width: 16px;
+	display:inline-block;
+	margin-top: 5px;
+}
 
 .inlineEditHelp{
 	background-image: url('img/sprite.png');
@@ -912,6 +920,14 @@ davinci_top_bar .dijitButtonNode {
     overflow: auto;
     resize:none;
     outline:none;
+}
+
+.smartInputDataGridFolderDiv {
+	border-color: #769DC0;
+	border-style: solid; 
+	border-width: 0px 0px 1px 0px;  
+	background-color: #F7FCFF;
+	margin: 0 0 0 -1px;
 }
 
 .smartInputSim {

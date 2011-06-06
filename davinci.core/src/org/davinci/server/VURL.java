@@ -18,34 +18,38 @@ public class VURL implements IVResource {
 	URL file = null;
 	boolean isWorkingCopy;
 	String virtualPath;
-	
-	public VURL(URL file){
+
+	public VURL(URL file) {
 		this.file = file;
 		this.virtualPath = file.getPath();
 		this.isWorkingCopy = false;
 	}
-	public VURL(URL file, String virtualPath){
+
+	public VURL(URL file, String virtualPath) {
 		this.file = file;
 		this.virtualPath = virtualPath;
 	}
-	
-	public boolean exists(){
+
+	public boolean exists() {
 		return true;
 	}
-	 
-	public String toString(){
-		
+
+	public String toString() {
+
 		return this.getPath();
 	}
-	public URLConnection openConnection() throws MalformedURLException, IOException{
+
+	public URLConnection openConnection() throws MalformedURLException,
+			IOException {
 		return this.file.openConnection();
 	}
 
-	
 	public String getPath() {
-		String name =  this.virtualPath;
-		if(name!=null && name.length() > 0 && name.charAt(name.length()-1) == '/')
-			name = name.substring(0,name.length()-1);
+		String name = this.virtualPath;
+		if (name != null && name.length() > 0
+				&& name.charAt(name.length() - 1) == '/') {
+			name = name.substring(0, name.length() - 1);
+		}
 		return name;
 	}
 
@@ -59,10 +63,10 @@ public class VURL implements IVResource {
 		return false;
 	}
 
-	public OutputStream getOutputStreem() throws FileNotFoundException{
+	public OutputStream getOutputStreem() throws FileNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
-		
+
 	}
 
 	public InputStream getInputStreem() throws IOException {
@@ -73,13 +77,11 @@ public class VURL implements IVResource {
 	public String getName() {
 		return new Path(this.virtualPath).lastSegment();
 		/*
-		String name =  this.virtualPath;
-		if(name.length() > 0 && name.charAt(name.length()-1) == '/')
-			name = name.substring(0,name.length()-1);
-		return name;
-		*/
+		 * String name = this.virtualPath; if(name.length() > 0 &&
+		 * name.charAt(name.length()-1) == '/') name =
+		 * name.substring(0,name.length()-1); return name;
+		 */
 	}
-
 
 	public URI getURI() throws URISyntaxException {
 		// TODO Auto-generated method stub
@@ -104,27 +106,32 @@ public class VURL implements IVResource {
 	public boolean isFile() {
 		return !isDirectory();
 	}
+
 	public IVResource[] find(String path) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public void flushWorkingCopy() {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	public boolean isDirty() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	public void removeWorkingCopy() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public IVResource getParent() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public IVResource[] getParents() {
 		// TODO Auto-generated method stub
 		return null;
@@ -137,25 +144,24 @@ public class VURL implements IVResource {
 
 	public void add(IVResource v) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public IVResource get(String childName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	public boolean committed() {
-		
-		return true;
-	}
-	
-	public boolean readOnly() {
-	
+
 		return true;
 	}
 
-	
+	public boolean readOnly() {
+
+		return true;
+	}
+
 	public IVResource[] findChildren(String childName) {
 		// TODO Auto-generated method stub
 		return null;

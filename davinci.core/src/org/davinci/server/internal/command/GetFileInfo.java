@@ -14,14 +14,14 @@ public class GetFileInfo extends Command {
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			User user) throws IOException {
-		String path=req.getParameter("path");
+		String path = req.getParameter("path");
 		IVResource file = user.getResource(path);
-		StringBuffer sb=new StringBuffer("{");
-		
-		boolean isDirty=file.isDirty();
+		StringBuffer sb = new StringBuffer("{");
+
+		boolean isDirty = file.isDirty();
 		sb.append("isDirty : ").append(isDirty);
 		sb.append("}");
-		responseString=sb.toString();
+		responseString = sb.toString();
 	}
 
 }

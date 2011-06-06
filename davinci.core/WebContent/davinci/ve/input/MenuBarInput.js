@@ -28,9 +28,11 @@ dojo.declare("davinci.ve.input.MenuBarInput", davinci.ve.input.ContainerInput, {
 			var menu = popupMenuBarItem.children[0];
 			if (menu) {
 				var menuItems = menu.children;
-				for (var j = 0; j < menuItems.length; j++) {
-					var menuItem = menuItems[j];
-					result.push("> " + menuItem.properties[this.propertyName]);
+				if (menuItems){
+					for (var j = 0; j < menuItems.length; j++) {
+						var menuItem = menuItems[j];
+						result.push("> " + menuItem.properties[this.propertyName]);
+					}
 				}
 			}
 		}
@@ -64,25 +66,38 @@ dojo.declare("davinci.ve.input.MenuBarInput", davinci.ve.input.ContainerInput, {
 					popupMenuBarItem = this.createPopupMenuBarItemData(text);
 					popupMenuBarItems.push(popupMenuBarItem);
 				}
-			} else {
-				menuItemIndex++;
+				// now process the children
 				menuItems = popupMenuBarItem.children[0].children;
-				var menuItem = menuItems[menuItemIndex];
-				if (menuItem) {
-					menuItem.properties.label = text;
-				} else {
-					menuItem = this.createMenuItemData(text);
-					menuItems.push(menuItem);
+				if (!menuItems){
+					menuItems = [];
+					popupMenuBarItem.children[0].children = menuItems;
+				}
+				menuItemIndex = -1;
+				while(i+1 < values.length && values[i+1].indent ){
+					var value = values[++i];
+					var indent = value.indent;
+					var text = value.text;
+					menuItemIndex++;
+					//menuItems = popupMenuBarItem.children[0].children;
+					var menuItem = menuItems[menuItemIndex];
+					if (menuItem) {
+						menuItem.properties.label = text;
+					} else {
+						menuItem = this.createMenuItemData(text);
+						menuItems.push(menuItem);
+					}
+					
+				}
+				// remove the leftovers
+				if (menuItems && (menuItemIndex + 1 < menuItems.length)) {
+					var length = menuItems.length;
+					for (var x = menuItemIndex + 1; x < length; x++) {
+						menuItems.pop();
+					}
 				}
 			}
 		}
 
-		if (menuItems && (menuItemIndex + 1 > 0)) {
-			var length = menuItems.length;
-			for (var i = menuItemIndex + 1; i < length; i++) {
-				menuItems.pop();
-			}
-		}
 		
 		if (popupMenuBarItemIndex + 1 > 0) {
 			var length = popupMenuBarItems.length;

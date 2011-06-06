@@ -1,0 +1,8 @@
+{
+  "identifier": "name",
+  "items": [
+    { "name": "Bob", "spouse": "Sally"},
+    { "name": "Sally", "spouse": "Bob"},
+    { "name": "Nancy", "spouse": "Biff"}
+  ]
+}

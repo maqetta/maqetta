@@ -302,7 +302,7 @@ public class User {
 	}
 
 	synchronized public Links getLinks(){
-		if (this.links==null) }
+		if (this.links==null) {
 			this.links=new Links(this.getSettingsDirectory());
 		}
 		return this.links;

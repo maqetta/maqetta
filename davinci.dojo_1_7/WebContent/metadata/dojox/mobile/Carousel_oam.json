@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/SpinWheel",
-    "name": "dojox.mobile.SpinWheel",
+    "id": "http://dojotoolkit.org/dojox/mobile/Carousel",
+    "name": "dojox.mobile.Carousel",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -23,7 +23,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+            "$text": "dojo.require('dojox.mobile.Carousel');"
         },
         {
             "type": "css",
@@ -37,11 +37,33 @@
         }
     },
     "property": {
-        "slotClasses": {
-            "datatype": "[*]"
+        "numVisible": {
+            "datatype": "number",
+            "defaultValue": 3
         },
-        "slotProps": {
-            "datatype": "[*]"
+        "title": {
+            "datatype": "string"
+        },
+        "pageIndicator": {
+            "datatype": "boolean",
+            "defaultValue": true
+        },
+        "navButton": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "height": {
+            "datatype": "string",
+            "defaultValue": "300px"
+        },
+        "store": {
+            "datatype": "string"
+        },
+        "query": {
+            "datatype": "string"
+        },
+        "queryOptions": {
+            "datatype": "string"
         }
     },
     "content": "<div></div>"

@@ -27,11 +27,6 @@
         },
         {
             "type": "css",
-            "src": "dojox/mobile/themes/SpinWheel.css",
-            "$library": "dojo"
-        },
-        {
-            "type": "css",
             "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"
         }

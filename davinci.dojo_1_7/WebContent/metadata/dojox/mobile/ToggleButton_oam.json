@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/SpinWheel",
-    "name": "dojox.mobile.SpinWheel",
+    "id": "http://dojotoolkit.org/dojox/mobile/ToggleButton",
+    "name": "dojox.mobile.ToggleButton",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -23,7 +23,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+            "$text": "dojo.require('dojox.mobile.ToggleButton');"
         },
         {
             "type": "css",
@@ -37,12 +37,22 @@
         }
     },
     "property": {
-        "slotClasses": {
-            "datatype": "[*]"
+        "btnClass": {
+            "datatype": "string",
+            "defaultValue": "mblToggleButton"
         },
-        "slotProps": {
-            "datatype": "[*]"
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 1000
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "ToggleButton"
+        },
+        "checked": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
-    "content": "<div></div>"
+    "content": "<button label='ToggleButton'></button>"
 }

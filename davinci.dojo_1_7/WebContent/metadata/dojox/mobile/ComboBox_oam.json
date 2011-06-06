@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/SpinWheel",
-    "name": "dojox.mobile.SpinWheel",
+    "id": "http://dojotoolkit.org/dojox/mobile/ComboBox",
+    "name": "dojox.mobile.ComboBox",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -23,7 +23,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+            "$text": "dojo.require('dojox.mobile.ComboBox');"
         },
         {
             "type": "css",
@@ -37,12 +37,14 @@
         }
     },
     "property": {
-        "slotClasses": {
-            "datatype": "[*]"
+        "selectOnClick": {
+            "datatype": "boolean",
+            "defaultValue": false
         },
-        "slotProps": {
-            "datatype": "[*]"
+        "autoComplete": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
-    "content": "<div></div>"
+    "content": "<input type='text'>"
 }

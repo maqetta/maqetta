@@ -1432,7 +1432,8 @@
                 "property": "label",
                 "displayOnCreate": true,
                 "supportsHTML": true
-            }
+            },
+            "isContainer": true
         },
         {
             "name": "RoundRect",
@@ -1620,30 +1621,110 @@
             "name": "SpinWheel",
             "type": "dojox.mobile.SpinWheel",
             "category": "mobile",
-            "icon": "resources/images/dx-mbl--tab-container.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
             "isContainer": true
         },
         {
             "name": "SpinWheelSlot",
             "type": "dojox.mobile.SpinWheelSlot",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl--toolbar-button.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw=="
+            "category": "mobile"
         },
         {
             "name": "SpinWheelDatePicker",
             "type": "dojox.mobile.SpinWheelDatePicker",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl--tab-container.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs="
+            "category": "mobile"
         },
         {
             "name": "SpinWheelTimePicker",
             "type": "dojox.mobile.SpinWheelTimePicker",
+            "category": "mobile"
+        },
+        {
+            "name": "Carousel",
+            "type": "dojox.mobile.Carousel",
             "category": "mobile",
-            "icon": "resources/images/dx-mbl--tab-container.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs="
+            "isContainer": true
+        },
+        {
+            "name": "CheckBox",
+            "type": "dojox.mobile.CheckBox",
+            "category": "mobile"
+        },
+        {
+            "name": "ComboBox",
+            "type": "dojox.mobile.ComboBox",
+            "category": "mobile"
+        },
+        {
+            "name": "ContentPane",
+            "type": "dojox.mobile.ContentPane",
+            "category": "mobile",
+            "isContainer": true
+        },
+        {
+            "name": "ExpandingTextArea",
+            "type": "dojox.mobile.ExpandingTextArea",
+            "category": "mobile"
+        },
+        {
+            "name": "FixedSplitter",
+            "type": "dojox.mobile.FixedSplitter",
+            "category": "mobile",
+            "isContainer": true,
+             "properties": {
+                "orientation": "H"
+            },
+            "children": [
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "style": "width: 200px; border-right: 1px solid black;"
+                    }
+                },
+                {
+                    "type": "html.div"
+                }
+            ]
+        },
+        {
+            "name": "FixedSplitterPane",
+            "type": "dojox.mobile.FixedSplitterPane",
+            "category": "mobile",
+            "isContainer": true
+        },
+        {
+            "name": "Overlay",
+            "type": "dojox.mobile.Overlay",
+            "category": "mobile"
+        },
+        {
+            "name": "RadioButton",
+            "type": "dojox.mobile.RadioButton",
+            "category": "mobile"
+        },
+        {
+            "name": "Slider",
+            "type": "dojox.mobile.Slider",
+            "category": "mobile"
+        },
+        {
+            "name": "TextArea",
+            "type": "dojox.mobile.TextArea",
+            "category": "mobile"
+        },
+        {
+            "name": "TextBox",
+            "type": "dojox.mobile.TextBox",
+            "category": "mobile"
+        },
+        {
+            "name": "ToggleButton",
+            "type": "dojox.mobile.ToggleButton",
+            "category": "mobile",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
         }
     ]
 }

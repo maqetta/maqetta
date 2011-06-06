@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/SpinWheel",
-    "name": "dojox.mobile.SpinWheel",
+    "id": "http://dojotoolkit.org/dojox/mobile/RadioButton",
+    "name": "dojox.mobile.RadioButton",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -23,7 +23,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+            "$text": "dojo.require('dojox.mobile.RadioButton');"
         },
         {
             "type": "css",
@@ -37,12 +37,32 @@
         }
     },
     "property": {
-        "slotClasses": {
-            "datatype": "[*]"
+        "name": {
+            "datatype": "string"
         },
-        "slotProps": {
-            "datatype": "[*]"
+        "baseClass": {
+            "datatype": "string",
+            "defaultValue": "mblRadioBox"
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 1000
+        },
+        "label": {
+            "datatype": "string"
+        },
+        "checked": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "value": {
+            "datatype": "string",
+            "defaultValue": "on"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
-    "content": "<div></div>"
+    "content": "<input type='radio'>"
 }

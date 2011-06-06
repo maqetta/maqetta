@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/TabPane",
-    "name": "dojox.mobile.TabPane",
+    "id": "http://dojotoolkit.org/dojox/mobile/TabButton",
+    "name": "dojox.mobile.TabButton",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -20,6 +20,10 @@
         {
             "type": "javascript",
             "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.TabBarButton');"
         },
         {
             "type": "css",

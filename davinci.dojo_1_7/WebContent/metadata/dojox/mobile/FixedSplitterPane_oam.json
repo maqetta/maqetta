@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/SpinWheel",
-    "name": "dojox.mobile.SpinWheel",
+    "id": "http://dojotoolkit.org/dojox/mobile/FixedSplitterPane",
+    "name": "dojox.mobile.FixedSplitterPane",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -23,7 +23,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+            "$text": "dojo.require('dojox.mobile.FixedSplitterPane');"
         },
         {
             "type": "css",
@@ -37,11 +37,9 @@
         }
     },
     "property": {
-        "slotClasses": {
-            "datatype": "[*]"
-        },
-        "slotProps": {
-            "datatype": "[*]"
+        "isContainer": {
+            "datatype": "boolean",
+            "defaultValue": true
         }
     },
     "content": "<div></div>"

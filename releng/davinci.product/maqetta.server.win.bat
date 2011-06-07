@@ -23,4 +23,4 @@ mkdir "%usersdir%" 2>nul
 echo Using directory : %usersdir%
 
 FOR /F "tokens=*" %%R IN ('dir /b plugins\org.eclipse.equinox.launcher*.jar') DO SET EQUINOX=%%R
-java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta "-Dmaqetta.baseDirectory=%usersdir%" -jar "%scriptdir%plugins\%EQUINOX%" -console -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta "-Dmaqetta.baseDirectory=%usersdir%" -DloginUrl="/maqetta/welcome" -jar "%scriptdir%plugins\%EQUINOX%" -console -noExit

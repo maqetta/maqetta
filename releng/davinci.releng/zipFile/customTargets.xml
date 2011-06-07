@@ -152,7 +152,6 @@
 		<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveNamePrefix}-${myOS}.${myWS}.${myArch}.zip"/>
 		<property name="assemblyTempDir" value="${buildDirectory}/tmp"/>
 		<property name="davinciZipPath" value="${buildDirectory}/${buildLabel}/${maqettaArchiveName}.zip"/>
-		<echo>davinciZipPath= ${davinciZipPath}</echo>
 		<mkdir dir ="${assemblyTempDir}"/>
 		<unzip dest="${assemblyTempDir}" src="${archiveFullPath}" />
 		<zip destfile="${davinciZipPath}" filesonly="false" >

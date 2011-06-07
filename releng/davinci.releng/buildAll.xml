@@ -82,8 +82,23 @@
             <property name="builder" value="${basedir}/warFile"/>
         </ant>
     </target>
-    
-    <target name="populate">
+	
+	  <target name="w3war">
+	    <!-- build servlet bridge separately first because it is not part of the feature built -->
+	    <!--
+	     -->
+		<antcall target="buildPlugin">
+			<param name="pluginName" value="org.eclipse.equinox.servletbridge"/>
+		</antcall>  	
+		<delete >
+			<fileset dir="${buildDirectory}/${buildLabel}" includes="org.eclipse.equinox.servletbridge*.jar"></fileset>
+		</delete>
+		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+			<property name="builder" value="${basedir}/W3warFile" />
+		</ant>
+	  </target>	
+	
+<target name="populate">
         <condition property="getMethod" value="fromGit" else="localCopy">
             <not>
                 <isset property="maqettaCode"/>

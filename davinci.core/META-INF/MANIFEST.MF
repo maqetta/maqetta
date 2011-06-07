@@ -4,7 +4,7 @@ Bundle-Name: Server
 Bundle-SymbolicName: davinci.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.davinci.server.internal.Activator
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet;version="[2.1.0,3.0.0]",
  javax.servlet.http;version="[2.1.0,3.0.0)",
  org.osgi.framework;version="1.3.0"

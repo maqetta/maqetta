@@ -71,7 +71,7 @@ public class DavinciPageServlet extends HttpServlet {
         } else if (pathInfo.equals("/welcome")) {
             /* write the welcome page (may come from extension point) */
             writeWelcomePage(req, resp);
-        } else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL + "/" + pathInfo.startsWith(IDavinciServerConstants.PREVIEW_URL))) {
+        } else if (pathInfo.startsWith(IDavinciServerConstants.PREVIEW_URL )) {
             /* server things from the users workspace */
             writeInternalPage(req, resp, "preview.html");
             

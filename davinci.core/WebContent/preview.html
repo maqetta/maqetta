@@ -5,8 +5,8 @@
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
-    <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-    <script type="text/javascript" src="app/dijit/dijit.js"></script>
+    <script type="text/javascript" src="../app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script type="text/javascript" src="../app/dijit/dijit.js"></script>
 
   </head>
 	<script>
@@ -21,9 +21,9 @@
 		<h2>Davinci Previewer.</h2><br>
 		I would suggest passing in the users workspace file as the last path segment.
 		<br><br>
-		ie: http://www.maqetta.org/maqetta/preview/Sample1.html
+		ie: <b>http://www.maqetta.org/maqetta/preview/Sample1.html?user=childsb@us.ibm.com</b>
 		<br><br>
-		then populating an iframe accordingly.
+		Then populating an iframe with something like: <b>http://www.maqetta.org/maqetta/user/childsb@us.ibm.com/Sample1.html</b>
 		<br><br>
 		URL : <div id='currentUrl'></div>
 

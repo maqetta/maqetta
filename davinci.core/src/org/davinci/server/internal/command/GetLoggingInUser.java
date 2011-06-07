@@ -11,16 +11,14 @@ import org.davinci.server.user.User;
 
 public class GetLoggingInUser extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
-		String loggingInUser = (String) req.getSession().getAttribute(
-				IDavinciServerConstants.LOGGING_IN_USER);
-		if (loggingInUser != null && loggingInUser.length() > 0) {
-			this.responseString = loggingInUser;
-		} else {
-			this.responseString = "";
-		}
-	}
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        String loggingInUser = (String) req.getSession().getAttribute(IDavinciServerConstants.LOGGING_IN_USER);
+        if (loggingInUser != null && loggingInUser.length() > 0) {
+            this.responseString = loggingInUser;
+        } else {
+            this.responseString = "";
+        }
+    }
 
 }

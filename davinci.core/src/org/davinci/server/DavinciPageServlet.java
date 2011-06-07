@@ -31,358 +31,343 @@ import org.osgi.framework.Bundle;
 
 public class DavinciPageServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
-	private static final String LAST_MODIFIED = "Last-Modified"; //$NON-NLS-1$
-	private static final String IF_MODIFIED_SINCE = "If-Modified-Since"; //$NON-NLS-1$
-	private static final String IF_NONE_MATCH = "If-None-Match"; //$NON-NLS-1$
-	private static final String ETAG = "ETag"; //$NON-NLS-1$
-	private static final String CACHE_CONTROL = "Cache-Control";
+    private static final long   serialVersionUID  = 1L;
+    private static final String LAST_MODIFIED     = "Last-Modified";    //$NON-NLS-1$
+    private static final String IF_MODIFIED_SINCE = "If-Modified-Since"; //$NON-NLS-1$
+    private static final String IF_NONE_MATCH     = "If-None-Match";    //$NON-NLS-1$
+    private static final String ETAG              = "ETag";             //$NON-NLS-1$
+    private static final String CACHE_CONTROL     = "Cache-Control";
 
-	protected UserManager userManager;
-	protected ServerManager serverManager;
-	protected LibraryManager libraryManager;
+    protected UserManager       userManager;
+    protected ServerManager     serverManager;
+    protected LibraryManager    libraryManager;
 
-	public DavinciPageServlet() {
-		serverManager = ServerManager.createServerManger(getServletConfig());
-		userManager = serverManager.getUserManager();
-		libraryManager = serverManager.getLibraryManager();
-	}
+    public DavinciPageServlet() {
+        serverManager = ServerManager.createServerManger(getServletConfig());
+        userManager = serverManager.getUserManager();
+        libraryManager = serverManager.getLibraryManager();
+    }
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-		String pathInfo = req.getPathInfo();
-		if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-			System.out.println("request: " + pathInfo + ", logged in="	+ (user != null));
-		}
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        String pathInfo = req.getPathInfo();
+        if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+            System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
+        }
 
-		if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/"))) {
-			if (!ServerManager.LOCAL_INSTALL) {
-				if (user == null) {
-					resp.sendRedirect("./welcome");
-				} else {
-					writeInternalPage(req, resp, "pagedesigner.html");
-				}
-			} else {
-				/* local install, set user to single user */
-				user = this.userManager.getSingleUser();
-				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER,	user);
-				writeInternalPage(req, resp, "pagedesigner.html");
-			}
-		}else if (pathInfo.equals("/welcome")) {
-			/* write the welcome page (may come from extension point)*/
-			writeWelcomePage(req, resp);
-		} else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {
-			/* server things from the users workspace */
-			handleWSRequest(req, resp, user);
-		} else {
-			/* resource not found */
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/"))) {
+            if (!ServerManager.LOCAL_INSTALL) {
+                if (user == null) {
+                    resp.sendRedirect("./welcome");
+                } else {
+                    writeInternalPage(req, resp, "pagedesigner.html");
+                }
+            } else {
+                /* local install, set user to single user */
+                user = this.userManager.getSingleUser();
+                req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
+                writeInternalPage(req, resp, "pagedesigner.html");
+            }
+        } else if (pathInfo.equals("/welcome")) {
+            /* write the welcome page (may come from extension point) */
+            writeWelcomePage(req, resp);
+        } else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL + "/" + pathInfo.startsWith(IDavinciServerConstants.PREVIEW_URL))) {
+            /* server things from the users workspace */
+            writeInternalPage(req, resp, "preview.html");
+            
+        } else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {    
+            /* server things from the users workspace */
+            handleWSRequest(req, resp, user);
+        }else {
+            /* resource not found */
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        resp.getOutputStream().close();
+    }
 
-		}
-		resp.getOutputStream().close();
-	}
+    private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE,
+                IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
+        if (welcomeExtension == null) {
+            writeInternalPage(req, resp, "welcome.html");
+        } else {
+            String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
+            Bundle bundle = Activator.getActivator().getOtherBundle(name);
+            if (bundle != null) {
+                String path = welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
+                VURL resourceURL = new VURL(bundle.getResource(path));
+                this.writePage(req, resp, resourceURL, false);
+            }
 
-	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
-		if (welcomeExtension == null) {
-			writeInternalPage(req, resp, "welcome.html");
-		} else {
-			String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
-			Bundle bundle = Activator.getActivator().getOtherBundle(name);
-			if (bundle != null) {
-				String path = welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
-				VURL resourceURL = new VURL(bundle.getResource(path));
-				this.writePage(req, resp, resourceURL, false);
-			}
+        }
+    }
 
-		}
-	}
+    private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException, ServletException {
 
+        // System.out.println("enter ws request");
+        String pathInfo = req.getPathInfo();
+        // Code further down expects pathInfo==null if user goes to root of
+        // daVinci server
+        IPath path = new Path(pathInfo);
+        // FIXME: what's this doing? If it's trying to remove trailing slash, it
+        // needs to subtract 1
+        if (path.hasTrailingSeparator()) {
+            path = path.removeTrailingSeparator();
+        }
 
+        // Path path = new Path()
+        path = path.removeFirstSegments(1);
+        String userName = path.segment(0);
+        if (path.segmentCount() < 4 || !path.segment(1).equals("ws") || !path.segment(2).equals("workspace")) {
+            if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+                System.out.println("incorrectly formed workspace url");
+            }
 
-	private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException, ServletException {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            // String s=null;
+            // s.toString();
 
-		// System.out.println("enter ws request");
-		String pathInfo = req.getPathInfo();
-		// Code further down expects pathInfo==null if user goes to root of
-		// daVinci server
-		IPath path = new Path(pathInfo);
-		// FIXME: what's this doing? If it's trying to remove trailing slash, it
-		// needs to subtract 1
-		if (path.hasTrailingSeparator()) {
-			path = path.removeTrailingSeparator();
-		}
+        }
+        path = path.removeFirstSegments(3);
 
-		// Path path = new Path()
-		path = path.removeFirstSegments(1);
-		String userName = path.segment(0);
-		if (path.segmentCount() < 4 || !path.segment(1).equals("ws")
-				|| !path.segment(2).equals("workspace")) {
-			if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-				System.out.println("incorrectly formed workspace url");
-			}
+        /* unlocking user directory to un-authenticated users */
+        if (user == null) {
+            user = ServerManager.getServerManger().getUserManager().getUser(userName);
+        }
 
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			// String s=null;
-			// s.toString();
+        if (handleLibraryRequest(req, resp, path, user)) {
+            // System.out.println("was library");
+            return;
+        }
 
-		}
-		path = path.removeFirstSegments(3);
+        if (user == null) {
+            user = ServerManager.getServerManger().getUserManager().getUser(userName);
+            if (user == null) {
+                if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+                    System.out.println("user not found: " + userName);
+                }
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+        }
 
-		/* unlocking user directory to un-authenticated users */
-		if (user == null) {
-			user = ServerManager.getServerManger().getUserManager()
-					.getUser(userName);
-		}
+        IVResource userFile = user.getResource(path.toString());
 
-		if (handleLibraryRequest(req, resp, path, user)) {
-			// System.out.println("was library");
-			return;
-		}
+        if (userFile != null && !userFile.exists()) {
+            if (path.getFileExtension() == null) {
+                userFile = user.getResource(path.addFileExtension("html").toString());
+            }
+            if (!userFile.exists()) {
+                if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+                    System.out.println("user file not found: " + path);
+                }
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            // writePage(req, resp, userFile, true);
+        }
 
-		if (user == null) {
-			user = ServerManager.getServerManger().getUserManager()
-					.getUser(userName);
-			if (user == null) {
-				if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-					System.out.println("user not found: " + userName);
-				}
-				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-				return;
-			}
-		}
+    }
 
-		IVResource userFile = user.getResource(path.toString());
+    protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, User user) throws ServletException, IOException {
+        IVResource libraryURL = user.getResource(path.toString());
+        if (libraryURL != null) {
+            /*
+             * This code will re-write a sentinal with the base library URL.
+             * pass in lib id and version as parameters as well as the sentinal
+             * to replace (%root% works well) then sprinkly %root% through HTML
+             * as needed. this should NOT be used for user pages, only davinci
+             * internal.
+             */
+            String rewriteSent = req.getParameter("updateRoot");
+            if (rewriteSent != null) {
+                String id = req.getParameter("id");
+                String version = req.getParameter("version");
+                String libRoot = user.getLibPath(id, version, "/");
+                InputStream is = libraryURL.getInputStreem();
+                Writer writer = new StringWriter();
+                char[] buffer = new char[1024];
+                try {
+                    Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                    int n;
+                    while ((n = reader.read(buffer)) != -1) {
+                        writer.write(buffer, 0, n);
 
-		if (userFile != null && !userFile.exists()) {
-			if (path.getFileExtension() == null) {
-				userFile = user.getResource(path.addFileExtension("html")
-						.toString());
-			}
-			if (!userFile.exists()) {
-				if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-					System.out.println("user file not found: " + path);
-				}
-				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-				return;
-			}
-		} else {
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-			// writePage(req, resp, userFile, true);
-		}
+                    }
+                } finally {
+                    is.close();
+                }
+                String replacedString = writer.toString().replaceAll(rewriteSent, "./" + libRoot);
+                File tempFile = File.createTempFile("temp_" + System.currentTimeMillis(), "tmp");
+                tempFile.createNewFile();
+                FileUtils.writeStringToFile(tempFile, replacedString);
+                ResourceOSWrapper wrappedTemp = new ResourceOSWrapper(libraryURL, tempFile);
+                writePage(req, resp, wrappedTemp, false);
+                return true;
 
-	}
+            }
+            writePage(req, resp, libraryURL, false);
+            return true;
+        }
 
-	protected boolean handleLibraryRequest(HttpServletRequest req,	HttpServletResponse resp, IPath path, User user) throws ServletException, IOException {
-		IVResource libraryURL = user.getResource(path.toString());
-		if (libraryURL != null) {
-			/*
-			 * This code will re-write a sentinal with the base library URL.
-			 * pass in lib id and version as parameters as well as the sentinal
-			 * to replace (%root% works well) then sprinkly %root% through HTML
-			 * as needed. this should NOT be used for user pages, only davinci
-			 * internal.
-			 */
-			String rewriteSent = req.getParameter("updateRoot");
-			if (rewriteSent != null) {
-				String id = req.getParameter("id");
-				String version = req.getParameter("version");
-				String libRoot = user.getLibPath(id, version, "/");
-				InputStream is = libraryURL.getInputStreem();
-				Writer writer = new StringWriter();
-				char[] buffer = new char[1024];
-				try {
-					Reader reader = new BufferedReader(new InputStreamReader(
-							is, "UTF-8"));
-					int n;
-					while ((n = reader.read(buffer)) != -1) {
-						writer.write(buffer, 0, n);
+        return false;
+    }
 
-					}
-				} finally {
-					is.close();
-				}
-				String replacedString = writer.toString().replaceAll(
-						rewriteSent, "./" + libRoot);
-				File tempFile = File.createTempFile(
-						"temp_" + System.currentTimeMillis(), "tmp");
-				tempFile.createNewFile();
-				FileUtils.writeStringToFile(tempFile, replacedString);
-				ResourceOSWrapper wrappedTemp = new ResourceOSWrapper(
-						libraryURL, tempFile);
-				writePage(req, resp, wrappedTemp, false);
-				return true;
+    protected void writePage(HttpServletRequest req, HttpServletResponse resp, IVResource resourceURL, boolean cacheExpires) throws ServletException,
+            IOException {
 
-			}
-			writePage(req, resp, libraryURL, false);
-			return true;
-		}
+        if (resourceURL == null) {
+            if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+                System.out.println("resource URL not found");
+            }
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        String path = resourceURL.getPath();
 
-		return false;
-	}
+        URLConnection connection = resourceURL.openConnection();
+        long lastModified = connection.getLastModified();
+        int contentLength = connection.getContentLength();
 
-	protected void writePage(HttpServletRequest req, HttpServletResponse resp, IVResource resourceURL, boolean cacheExpires) throws ServletException, IOException {
+        String etag = null;
+        if (lastModified != -1 && contentLength != -1) {
+            etag = "W/\"" + contentLength + "-" + lastModified + "\""; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+        }
 
-		if (resourceURL == null) {
-			if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-				System.out.println("resource URL not found");
-			}
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-			return;
-		}
-		String path = resourceURL.getPath();
+        // Check for cache revalidation.
+        // We should prefer ETag validation as the guarantees are stronger and
+        // all HTTP 1.1 clients should be using it
+        String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
+        if (ifNoneMatch != null && etag != null && ifNoneMatch.indexOf(etag) != -1) {
+            resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            return;
+        }
 
-		URLConnection connection = resourceURL.openConnection();
-		long lastModified = connection.getLastModified();
-		int contentLength = connection.getContentLength();
+        long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
+        // for purposes of comparison we add 999 to ifModifiedSince since the
+        // fidelity
+        // of the IMS header generally doesn't include milli-seconds
+        if (ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
+            resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            return;
+        }
 
-		String etag = null;
-		if (lastModified != -1 && contentLength != -1) {
-			etag = "W/\"" + contentLength + "-" + lastModified + "\""; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		}
+        // return the full contents regularly
+        if (contentLength != -1) {
+            resp.setContentLength(contentLength);
+        }
 
-		// Check for cache revalidation.
-		// We should prefer ETag validation as the guarantees are stronger and
-		// all HTTP 1.1 clients should be using it
-		String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
-		if (ifNoneMatch != null && etag != null
-				&& ifNoneMatch.indexOf(etag) != -1) {
-			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-			return;
-		}
+        // String contentType ="text/html";
+        String contentType = req.getSession().getServletContext().getMimeType(path);
+        // if (contentType == null)
+        // contentType = servletContext.getMimeType(resourcePath);
 
-		long ifModifiedSince = req
-				.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
-		// for purposes of comparison we add 999 to ifModifiedSince since the
-		// fidelity
-		// of the IMS header generally doesn't include milli-seconds
-		if (ifModifiedSince > -1 && lastModified > 0
-				&& lastModified <= (ifModifiedSince + 999)) {
-			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-			return;
-		}
+        if (contentType != null) {
+            resp.setContentType(contentType);
+        }
 
-		// return the full contents regularly
-		if (contentLength != -1) {
-			resp.setContentLength(contentLength);
-		}
+        if (lastModified > 0) {
+            resp.setDateHeader(DavinciPageServlet.LAST_MODIFIED, lastModified);
+        }
 
-		// String contentType ="text/html";
-		String contentType = req.getSession().getServletContext()
-				.getMimeType(path);
-		// if (contentType == null)
-		// contentType = servletContext.getMimeType(resourcePath);
+        resp.setCharacterEncoding("UTF-8");
 
-		if (contentType != null) {
-			resp.setContentType(contentType);
-		}
+        if (etag != null) {
+            resp.setHeader(DavinciPageServlet.ETAG, etag);
+        }
 
-		if (lastModified > 0) {
-			resp.setDateHeader(DavinciPageServlet.LAST_MODIFIED, lastModified);
-		}
+        if (!cacheExpires) {
+            String dateStamp = "Mon, 25 Aug " + (Calendar.getInstance().get(Calendar.YEAR) + 5) + " 01:00:00 GMT";
+            resp.setHeader(DavinciPageServlet.CACHE_CONTROL, "Expires:" + dateStamp);
+        }
 
-		resp.setCharacterEncoding("UTF-8");
+        if (contentLength != 0) {
+            // open the input stream
+            InputStream is = null;
+            try {
+                is = connection.getInputStream();
+                // write the resource
+                try {
+                    OutputStream os = resp.getOutputStream();
+                    int writtenContentLength = writeResource(is, os);
+                    if (contentLength == -1 || contentLength != writtenContentLength) {
+                        resp.setContentLength(writtenContentLength);
+                    }
+                } catch (IllegalStateException e) { // can occur if the response
+                                                    // output is already open as
+                                                    // a Writer
+                    Writer writer = resp.getWriter();
+                    writeResource(is, writer);
+                    // Since ContentLength is a measure of the number of bytes
+                    // contained in the body
+                    // of a message when we use a Writer we lose control of the
+                    // exact byte count and
+                    // defer the problem to the Servlet Engine's Writer
+                    // implementation.
+                }
+            } catch (FileNotFoundException e) {
+                // FileNotFoundException may indicate the following scenarios
+                // - url is a directory
+                // - url is not accessible
+                if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+                    System.out.println("file not found exception: " + e.toString());
+                }
+                resp.reset();
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 
-		if (etag != null) {
-			resp.setHeader(DavinciPageServlet.ETAG, etag);
-		}
+            } catch (SecurityException e) {
+                // SecurityException may indicate the following scenarios
+                // - url is not accessible
+                resp.reset();
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            }
+        }
 
-		if (!cacheExpires) {
-			String dateStamp = "Mon, 25 Aug "
-					+ (Calendar.getInstance().get(Calendar.YEAR) + 5)
-					+ " 01:00:00 GMT";
-			resp.setHeader(DavinciPageServlet.CACHE_CONTROL, "Expires:"
-					+ dateStamp);
-		}
+    }
 
-		if (contentLength != 0) {
-			// open the input stream
-			InputStream is = null;
-			try {
-				is = connection.getInputStream();
-				// write the resource
-				try {
-					OutputStream os = resp.getOutputStream();
-					int writtenContentLength = writeResource(is,os);
-					if (contentLength == -1
-							|| contentLength != writtenContentLength) {
-						resp.setContentLength(writtenContentLength);
-					}
-				} catch (IllegalStateException e) { // can occur if the response
-													// output is already open as
-													// a Writer
-					Writer writer = resp.getWriter();
-					writeResource(is, writer);
-					// Since ContentLength is a measure of the number of bytes
-					// contained in the body
-					// of a message when we use a Writer we lose control of the
-					// exact byte count and
-					// defer the problem to the Servlet Engine's Writer
-					// implementation.
-				}
-			} catch (FileNotFoundException e) {
-				// FileNotFoundException may indicate the following scenarios
-				// - url is a directory
-				// - url is not accessible
-				if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-					System.out.println("file not found exception: "
-							+ e.toString());
-				}
-				resp.reset();
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-				
-			} catch (SecurityException e) {
-				// SecurityException may indicate the following scenarios
-				// - url is not accessible
-				resp.reset();
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			}
-		}
+    protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, String path) throws ServletException, IOException {
+        URL url = Activator.getActivator().getBundle().getEntry("/WebContent/" + path);
+        VURL resourceURL = new VURL(url);
 
-	}
+        writePage(req, resp, resourceURL, false);
+    }
 
-	protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, String path) throws ServletException, IOException {
-		URL url = Activator.getActivator().getBundle().getEntry("/WebContent/" + path);
-		VURL resourceURL = new VURL(url);
+    private static int writeResource(InputStream is, OutputStream os) throws IOException {
+        byte[] buffer = new byte[8192];
+        int bytesRead = is.read(buffer);
+        int writtenContentLength = 0;
+        while (bytesRead != -1) {
+            os.write(buffer, 0, bytesRead);
+            writtenContentLength += bytesRead;
+            bytesRead = is.read(buffer);
+        }
+        return writtenContentLength;
+    }
 
-		writePage(req, resp, resourceURL, false);
-	}
-	
-	private static int writeResource(InputStream is, OutputStream os)throws IOException {
-		byte[] buffer = new byte[8192];
-		int bytesRead = is.read(buffer);
-		int writtenContentLength = 0;
-		while (bytesRead != -1) {
-			os.write(buffer, 0, bytesRead);
-			writtenContentLength += bytesRead;
-			bytesRead = is.read(buffer);
-		}
-		return writtenContentLength;
-	}
-
-	private static void writeResource(InputStream is, Writer writer) throws IOException {
-		Reader reader = new InputStreamReader(is);
-		try {
-			char[] buffer = new char[8192];
-			int charsRead = reader.read(buffer);
-			while (charsRead != -1) {
-				writer.write(buffer, 0, charsRead);
-				charsRead = reader.read(buffer);
-			}
-		} finally {
-			if (reader != null) {
-				reader.close(); // will also close input stream
-			}
-		}
-	}
-
+    private static void writeResource(InputStream is, Writer writer) throws IOException {
+        Reader reader = new InputStreamReader(is);
+        try {
+            char[] buffer = new char[8192];
+            int charsRead = reader.read(buffer);
+            while (charsRead != -1) {
+                writer.write(buffer, 0, charsRead);
+                charsRead = reader.read(buffer);
+            }
+        } finally {
+            if (reader != null) {
+                reader.close(); // will also close input stream
+            }
+        }
+    }
 
 }

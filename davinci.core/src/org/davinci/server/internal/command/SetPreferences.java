@@ -14,18 +14,16 @@ import org.davinci.server.user.User;
 
 public class SetPreferences extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
-		String id = req.getParameter("id");
-		File settingsDir = user.getSettingsDirectory();
-		File settingsFile = new File(settingsDir, id
-				+ IDavinciServerConstants.SETTINGS_EXTENSION);
-		if (!settingsFile.exists()) {
-			settingsFile.createNewFile();
-		}
-		OutputStream os = new FileOutputStream(settingsFile);
-		Command.transferStreams(req.getInputStream(), os, false);
-	}
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        String id = req.getParameter("id");
+        File settingsDir = user.getSettingsDirectory();
+        File settingsFile = new File(settingsDir, id + IDavinciServerConstants.SETTINGS_EXTENSION);
+        if (!settingsFile.exists()) {
+            settingsFile.createNewFile();
+        }
+        OutputStream os = new FileOutputStream(settingsFile);
+        Command.transferStreams(req.getInputStream(), os, false);
+    }
 
 }

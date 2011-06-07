@@ -19,211 +19,221 @@ import org.eclipse.core.runtime.Path;
 
 public class VDirectory implements IVResource {
 
-	Vector children;
-	IVResource parent;
-	String name;
+    Vector     children;
+    IVResource parent;
+    String     name;
 
-	public VDirectory(IVResource parent, String name) {
-		this.parent = parent;
-		this.name = name;
-		this.children = new Vector();
-	}
+    public VDirectory(IVResource parent, String name) {
+        this.parent = parent;
+        this.name = name;
+        this.children = new Vector();
+    }
 
-	protected VDirectory() {
-		// TODO Auto-generated constructor stub
-		this.children = new Vector();
-	}
+    protected VDirectory() {
+        // TODO Auto-generated constructor stub
+        this.children = new Vector();
+    }
 
-	public void addChild(IVResource child) {
-		this.children.add(child);
-	}
+    public void addChild(IVResource child) {
+        this.children.add(child);
+    }
 
-	public IVResource create(String path) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public IVResource create(String path) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public void createNewInstance() throws IOException {
-		// TODO Auto-generated method stub
+    public void createNewInstance() throws IOException {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public boolean delete() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean delete() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public boolean exists() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean exists() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public IVResource[] find(String path) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public IVResource[] find(String path) {
+      
+          return findInLib(path);
+     }
 
-	public void flushWorkingCopy() {
-		// TODO Auto-generated method stub
+    private IVResource[] findInLib(String path) {
+        String[] split = path.split("/");
+        IVResource parent = this;
+        for (int i = 0; parent != null && i < split.length; i++) {
 
-	}
+            if (split[i].indexOf("*") > -1 || split[i].indexOf("?") > -1) {
+                return parent.findChildren(split[i]);
+            }
 
-	public InputStream getInputStreem() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            parent = parent.get(split[i]);
+        }
+        return new IVResource[] { parent };
+    }
 
-	public String getName() {
-		// TODO Auto-generated method stub
-		String name = this.name;
+    public void flushWorkingCopy() {
+        // TODO Auto-generated method stub
 
-		if (name != null && name.length() > 0
-				&& name.charAt(name.length() - 1) == '/') {
-			name = name.substring(0, name.length() - 1);
-		}
-		if (name != null && name.length() > 0 && name.charAt(0) == '.') {
-			name = name.substring(1);
-		}
-		if (name != null && name.length() > 0 && name.charAt(0) == '/') {
-			name = name.substring(1);
-		}
+    }
 
-		return name;
-	}
+    public InputStream getInputStreem() throws IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public OutputStream getOutputStreem() throws FileNotFoundException,
-			IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getName() {
+        // TODO Auto-generated method stub
+        String name = this.name;
 
-	public IVResource getParent() {
-		// TODO Auto-generated method stub
-		return this.parent;
-	}
+        if (name != null && name.length() > 0 && name.charAt(name.length() - 1) == '/') {
+            name = name.substring(0, name.length() - 1);
+        }
+        if (name != null && name.length() > 0 && name.charAt(0) == '.') {
+            name = name.substring(1);
+        }
+        if (name != null && name.length() > 0 && name.charAt(0) == '/') {
+            name = name.substring(1);
+        }
 
-	public IVResource[] getParents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        return name;
+    }
 
-	public String getPath() {
-		// TODO Auto-generated method stub
-		if (parent == null) {
-			return this.name;
-		}
-		return new Path(this.parent.getPath()).append(this.name).toString();
+    public OutputStream getOutputStreem() throws FileNotFoundException, IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	}
+    public IVResource getParent() {
+        // TODO Auto-generated method stub
+        return this.parent;
+    }
 
-	public URI getURI() throws URISyntaxException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public IVResource[] getParents() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public boolean isDirectory() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+    public String getPath() {
+        // TODO Auto-generated method stub
+        if (parent == null) {
+            return this.name;
+        }
+        return new Path(this.parent.getPath()).append(this.name).toString();
 
-	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-	public boolean isFile() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public URI getURI() throws URISyntaxException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public IVResource[] listFiles() {
-		// TODO Auto-generated method stub
-		return (IVResource[]) this.children
-				.toArray(new IVResource[this.children.size()]);
-	}
+    public boolean isDirectory() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 
-	public boolean mkdir() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean isDirty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public URLConnection openConnection() throws MalformedURLException,
-			IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public boolean isFile() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public void removeWorkingCopy() {
-		// TODO Auto-generated method stub
+    public IVResource[] listFiles() {
+        // TODO Auto-generated method stub
+        return (IVResource[]) this.children.toArray(new IVResource[this.children.size()]);
+    }
 
-	}
+    public boolean mkdir() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public void add(IVResource v) {
-		this.children.add(v);
+    public URLConnection openConnection() throws MalformedURLException, IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	}
+    public void removeWorkingCopy() {
+        // TODO Auto-generated method stub
 
-	public IVResource get(String childName) {
+    }
 
-		if (childName != null && childName.equals(".")) {
-			return this;
-		}
+    public void add(IVResource v) {
+        this.children.add(v);
 
-		for (int i = 0; i < this.children.size(); i++) {
-			IVResource child = (IVResource) children.get(i);
-			if (child != null && child.getName().equals(childName)) {
-				return (IVResource) children.get(i);
-			}
-		}
-		return null;
-	}
+    }
 
-	public String toString() {
-		return this.getPath();
-	}
+    public IVResource get(String childName) {
 
-	public boolean committed() {
-		return true;
-	}
+        if (childName != null && childName.equals(".")) {
+            return this;
+        }
 
-	public boolean readOnly() {
-		if (this.parent != null) {
-			return this.parent.readOnly();
-		} else {
-			return false;
-		}
-	}
+        for (int i = 0; i < this.children.size(); i++) {
+            IVResource child = (IVResource) children.get(i);
+            if (child != null && child.getName().equals(childName)) {
+                return (IVResource) children.get(i);
+            }
+        }
+        return null;
+    }
 
-	public IVResource[] findChildren(String childName) {
-		// TODO Auto-generated method stub
-		Path path = new Path(childName);
-		IOFileFilter filter;
-		if (path.segment(0).equals("*")) {
-			filter = new NameFileFilter(path.lastSegment());
-		} else {
-			String lastSegment = path.lastSegment();
-			if (lastSegment.startsWith("*")) {
-				filter = new SuffixFileFilter(lastSegment.substring(1));
-			} else {
-				filter = null;
-			}
-		}
-		Vector results = new Vector();
+    public String toString() {
+        return this.getPath();
+    }
 
-		for (int i = 0; i < this.children.size(); i++) {
-			IVResource r1 = (IVResource) children.get(i);
-			File f1 = new File(r1.getName());
-			if (filter.accept(f1)) {
-				results.add(f1);
-			}
+    public boolean committed() {
+        return true;
+    }
 
-			if (r1.isDirectory()) {
-				IVResource[] more = r1.findChildren(childName);
-				results.addAll(Arrays.asList(more));
-			}
+    public boolean readOnly() {
+        if (this.parent != null) {
+            return this.parent.readOnly();
+        } else {
+            return false;
+        }
+    }
 
-		}
-		return (IVResource[]) results.toArray(new IVResource[results.size()]);
+    public IVResource[] findChildren(String childName) {
+        // TODO Auto-generated method stub
+        Path path = new Path(childName);
+        IOFileFilter filter;
+        if (path.segment(0).equals("*")) {
+            filter = new NameFileFilter(path.lastSegment());
+        } else {
+            String lastSegment = path.lastSegment();
+            if (lastSegment.startsWith("*")) {
+                filter = new SuffixFileFilter(lastSegment.substring(1));
+            } else {
+                filter = null;
+            }
+        }
+        Vector results = new Vector();
 
-	}
+        for (int i = 0; i < this.children.size(); i++) {
+            IVResource r1 = (IVResource) children.get(i);
+            File f1 = new File(r1.getName());
+            if (filter.accept(f1)) {
+                results.add(f1);
+            }
+
+            if (r1.isDirectory()) {
+                IVResource[] more = r1.findChildren(childName);
+                results.addAll(Arrays.asList(more));
+            }
+
+        }
+        return (IVResource[]) results.toArray(new IVResource[results.size()]);
+
+    }
 }

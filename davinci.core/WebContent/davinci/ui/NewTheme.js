@@ -82,6 +82,13 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_getThemeLocation : function(){
 		var selector = dojo.attr(this._selector, 'value');
 		
+		//var resource = davinci.model.Resource.findResource("./themes");
+
+		/* the directory is virtual, so create an actual instance */
+		//if(resource.libraryId)
+		//	resource.mkdir();
+		
+		
 		return  "./themes/" + selector;
 	},
 	

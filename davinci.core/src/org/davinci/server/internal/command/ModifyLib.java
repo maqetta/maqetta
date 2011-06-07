@@ -13,39 +13,36 @@ import org.davinci.server.util.JSONReader;
 
 public class ModifyLib extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
 
-		String libJson = req.getParameter("libChanges");
-		List list = (List) JSONReader.read(libJson);
-		for (int i = 0; i < list.size(); i++) {
-			HashMap libEntry = (HashMap) list.get(i);
-			String id = (String) libEntry.get("id");
-			String version = (String) libEntry.get("version");
-			Boolean installed = (Boolean) libEntry.get("installed");
-			String path = (String) libEntry.get("path");
-			if (installed != null) {
-				// add or remove the library
-				this.updateLib(user, id, version, installed);// Boolean.parseBoolean(installedString));
-			}
-			if (path != null) {
-				// update library root
-				this.changeLibraryRoot(user, id, version, path);
-			}
-		}
+        String libJson = req.getParameter("libChanges");
+        List list = (List) JSONReader.read(libJson);
+        for (int i = 0; i < list.size(); i++) {
+            HashMap libEntry = (HashMap) list.get(i);
+            String id = (String) libEntry.get("id");
+            String version = (String) libEntry.get("version");
+            Boolean installed = (Boolean) libEntry.get("installed");
+            String path = (String) libEntry.get("path");
+            if (installed != null) {
+                // add or remove the library
+                this.updateLib(user, id, version, installed);// Boolean.parseBoolean(installedString));
+            }
+            if (path != null) {
+                // update library root
+                this.changeLibraryRoot(user, id, version, path);
+            }
+        }
 
-		responseString = "OK";
-	}
+        responseString = "OK";
+    }
 
-	public void changeLibraryRoot(User user, String id, String version,
-			String path) {
-		user.modifyLibrary(id, version, path);
-	}
+    public void changeLibraryRoot(User user, String id, String version, String path) {
+        user.modifyLibrary(id, version, path);
+    }
 
-	public void updateLib(User user, String id, String version,
-			boolean installed) {
-		user.modifyLibrary(id, version, installed);
-	}
+    public void updateLib(User user, String id, String version, boolean installed) {
+        user.modifyLibrary(id, version, installed);
+    }
 
 }

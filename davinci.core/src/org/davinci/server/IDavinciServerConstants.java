@@ -18,9 +18,9 @@ public interface IDavinciServerConstants {
 	public static final String APP_URL = "/app";
 	public static final String WSFILE_URL = "/wsfile";
 	public static final String USER_URL = "/user";
+	public static final String PREVIEW_URL = "/preview";
 	public static final String GUEST_USER_PREFIX = "_Guest_";
 
-	public static final String THEMES_DIRECTORY_NAME= "themes";
 	public static final String SETTINGS_DIRECTORY_NAME = ".settings";
 	public static final String SETTINGS_EXTENSION = ".settings";
 	public static final String WORKBENCH_STATE_FILE = "workbenchState.settings";
@@ -73,5 +73,6 @@ public interface IDavinciServerConstants {
 	public static final String LOCAL_INSTALL_USER = "maqettaUser";
 	public static final String EP_ATTR_METADATA_VERSION = "version";
 	public static final String EP_ATTR_METADATA_ID = "id";
+    public static final String THEMES_DIRECTORY_NAME = "themes";
 
 }

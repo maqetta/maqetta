@@ -14,15 +14,28 @@
 		function populate(){
 			var theDiv = dojo.byId('display');
 			theDiv.innerHTML = dojo.cookie("preview");
+			var previewUrl = location.href;
+			/* Strip out URL params */
+			previewUrl = previewUrl.substring(0,previewUrl.lastIndexOf("?"));
+			var previewDiv = dojo.byId('previewFrame');
+			var previewIframe = dojo.doc.createElement("iframe");
+			dojo.style(previewIframe, "width", "500px");
+			dojo.style(previewIframe, "height", "500px");
+			previewIframe.src = previewUrl;
+			
+			previewDiv.appendChild(previewIframe)
+			
 		}
 		dojo.addOnLoad(populate );
 	</script>
 	<body class="claro">
 		<h2>Davinci Previewer.</h2><br>
 		
-		I am <b>preview.html</b>!!
+		I am <b>preview.html</b>
 		<br><br>
-		And I read this cookie: <b><span id='display'></span></b> (proxied through the servlet from the ?preview= param)
+		And I read the cookie: <b>preview=<span id='display'></span></b> (proxied through the servlet from the ?preview= param)
+		
+		<div id='previewFrame'></div>
 		
 		
 

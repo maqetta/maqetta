@@ -15,6 +15,7 @@ import java.net.URLConnection;
 import java.util.Calendar;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,12 +72,9 @@ public class DavinciPageServlet extends HttpServlet {
         } else if (pathInfo.equals("/welcome")) {
             /* write the welcome page (may come from extension point) */
             writeWelcomePage(req, resp);
-        } else if (pathInfo.startsWith(IDavinciServerConstants.PREVIEW_URL )) {
-            /* server things from the users workspace */
-            writeInternalPage(req, resp, "preview.html");
-            
-        } else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {    
-            /* server things from the users workspace */
+        } else if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
+            handlePreview(req,resp);
+        }else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {    
             handleWSRequest(req, resp, user);
         }else {
             /* resource not found */
@@ -102,6 +100,13 @@ public class DavinciPageServlet extends HttpServlet {
         }
     }
 
+    private void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String preview = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
+        Cookie k = new Cookie("preview", preview);
+        resp.addCookie(k);
+        writeInternalPage(req, resp, "preview.html");
+    }
+    
     private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException, ServletException {
 
         // System.out.println("enter ws request");
@@ -123,8 +128,9 @@ public class DavinciPageServlet extends HttpServlet {
                 System.out.println("incorrectly formed workspace url");
             }
 
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            // String s=null;
+           resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+           return;
+           // String s=null;
             // s.toString();
 
         }
@@ -165,6 +171,7 @@ public class DavinciPageServlet extends HttpServlet {
                 return;
             }
         } else {
+            resp.resetBuffer();
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             // writePage(req, resp, userFile, true);
         }
@@ -174,44 +181,9 @@ public class DavinciPageServlet extends HttpServlet {
     protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, User user) throws ServletException, IOException {
         IVResource libraryURL = user.getResource(path.toString());
         if (libraryURL != null) {
-            /*
-             * This code will re-write a sentinal with the base library URL.
-             * pass in lib id and version as parameters as well as the sentinal
-             * to replace (%root% works well) then sprinkly %root% through HTML
-             * as needed. this should NOT be used for user pages, only davinci
-             * internal.
-             */
-            String rewriteSent = req.getParameter("updateRoot");
-            if (rewriteSent != null) {
-                String id = req.getParameter("id");
-                String version = req.getParameter("version");
-                String libRoot = user.getLibPath(id, version, "/");
-                InputStream is = libraryURL.getInputStreem();
-                Writer writer = new StringWriter();
-                char[] buffer = new char[1024];
-                try {
-                    Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                    int n;
-                    while ((n = reader.read(buffer)) != -1) {
-                        writer.write(buffer, 0, n);
-
-                    }
-                } finally {
-                    is.close();
-                }
-                String replacedString = writer.toString().replaceAll(rewriteSent, "./" + libRoot);
-                File tempFile = File.createTempFile("temp_" + System.currentTimeMillis(), "tmp");
-                tempFile.createNewFile();
-                FileUtils.writeStringToFile(tempFile, replacedString);
-                ResourceOSWrapper wrappedTemp = new ResourceOSWrapper(libraryURL, tempFile);
-                writePage(req, resp, wrappedTemp, false);
-                return true;
-
-            }
             writePage(req, resp, libraryURL, false);
             return true;
         }
-
         return false;
     }
 

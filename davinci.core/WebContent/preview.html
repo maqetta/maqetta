@@ -5,27 +5,26 @@
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
-    <script type="text/javascript" src="../app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-    <script type="text/javascript" src="../app/dijit/dijit.js"></script>
+    <script type="text/javascript" src="../../../../app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script type="text/javascript" src="../../../../app/dijit/dijit.js"></script>
 
   </head>
 	<script>
-		function populateUrl(){
-			
-			var theDiv = dojo.byId('currentUrl');
-			theDiv.innerHTML = location.href;
+    	dojo.require("dojo.cookie");      
+		function populate(){
+			var theDiv = dojo.byId('display');
+			theDiv.innerHTML = dojo.cookie("preview");
 		}
-		dojo.addOnLoad(populateUrl );
+		dojo.addOnLoad(populate );
 	</script>
 	<body class="claro">
 		<h2>Davinci Previewer.</h2><br>
-		I would suggest passing in the users workspace file as the last path segment.
+		
+		I am <b>preview.html</b>!!
 		<br><br>
-		ie: <b>http://www.maqetta.org/maqetta/preview/Sample1.html?user=childsb@us.ibm.com</b>
-		<br><br>
-		Then populating an iframe with something like: <b>http://www.maqetta.org/maqetta/user/childsb@us.ibm.com/Sample1.html</b>
-		<br><br>
-		URL : <div id='currentUrl'></div>
+		And I read this cookie: <b><span id='display'></span></b> (proxied through the servlet from the ?preview= param)
+		
+		
 
 	</body>
 </html>

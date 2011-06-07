@@ -18,7 +18,7 @@ public interface IDavinciServerConstants {
 	public static final String APP_URL = "/app";
 	public static final String WSFILE_URL = "/wsfile";
 	public static final String USER_URL = "/user";
-	public static final String PREVIEW_URL = "/preview";
+	public static final String PREVIEW_PARAM = "preview";
 	public static final String GUEST_USER_PREFIX = "_Guest_";
 
 	public static final String SETTINGS_DIRECTORY_NAME = ".settings";

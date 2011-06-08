@@ -515,7 +515,7 @@ dojo.declare("davinci.ve.Context", null, {
     				win.dojo.isArray=function(it){
     					return it && Object.prototype.toString.call(it)=="[object Array]";
     				};
-
+console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
 				} catch(e) {
 					// recreate the Error since we crossed frames

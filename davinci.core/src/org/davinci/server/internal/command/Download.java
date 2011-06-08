@@ -44,19 +44,19 @@ public class Download extends Command {
             // responseString="OK";
 
         } catch (IOException e) {
-            responseString = "Error createing download file : " + e;
+            responseString = "Error creating download file : " + e;
         } finally {
             resp.getOutputStream().close();
         }
 
     }
 
-    private void zipDir(IVResource zipDir, ZipOutputStream zos) {
+    private static void zipDir(IVResource zipDir, ZipOutputStream zos) throws IOException {
         IVResource[] dirList = zipDir.listFiles();
         zipFiles(dirList, zos);
     }
 
-    private void zipFiles(IVResource[] files, ZipOutputStream zos) {
+    private static void zipFiles(IVResource[] files, ZipOutputStream zos) throws IOException {
         byte[] readBuffer = new byte[2156];
         int bytesIn = 0;
         // loop through dirList, and zip the files
@@ -65,7 +65,7 @@ public class Download extends Command {
                 zipDir(files[i], zos);
                 continue;
             }
-            try {
+          
                 InputStream fis = files[i].getInputStreem();
                 ZipEntry anEntry = new ZipEntry(files[i].getPath().toString());
                 // place the zip entry in the ZipOutputStream object
@@ -77,14 +77,7 @@ public class Download extends Command {
                 // close the Stream
                 fis.close();
                 files[i].removeWorkingCopy();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+       }
     }
 
 }

@@ -1,8 +1,9 @@
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html",
+		"dojo/_base/lang", "dojo/_base/event", "dojo/_base/window" ], function(dojo, declare,
+		connectArg, htmlArg, langArg, eventArg, windowArg){
 
-define([ "dojo/_base/connect", "dojo/_base/html", "dojo/_base/lang", "dojo/_base/event", "dojo/_base/window" ],
-		function(connectArg, htmlArg, langArg, eventArg, windowArg){
-
-			return dojo.declare("dojox.geo.openlayers.TouchInteractionSupport", null, {
+	return dojo.declare("dojox.geo.openlayers.TouchInteractionSupport", null,
+			{
 				//	summary: 
 				//		class to handle touch interactions on a OpenLayers.Map widget
 				//	tags:
@@ -243,4 +244,4 @@ define([ "dojo/_base/connect", "dojo/_base/html", "dojo/_base/lang", "dojo/_base
 
 				}
 			});
-		});
+});

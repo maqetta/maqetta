@@ -1,6 +1,16 @@
-define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, darray, Stateful){
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/Stateful"
+], function(dojo, lang, array, declare, Stateful){
+	/*=====
+		declare = dojo.declare;
+		Stateful = dojo.Stateful;
+	=====*/
 
-	dojo.declare("dojox.mvc.StatefulModel", [dojo.Stateful], {
+	var StatefulModel = declare("dojox.mvc.StatefulModel", [Stateful], {
 		// summary:
 		//		The first-class native JavaScript data model based on dojo.Stateful
 		//		that wraps any data structure(s) that may be relevant for a view,
@@ -176,9 +186,9 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			//		Resets this data model values to its original state.
 			//		Structural changes to the data model (such as adds or removes)
 			//		are not restored.
-			if(dojo.isObject(this.data)){
+			if(lang.isObject(this.data)){
 				for(var x in this){
-					if(this[x] && dojo.isFunction(this[x].reset)){
+					if(this[x] && lang.isFunction(this[x].reset)){
 						this[x].reset();
 					}
 				}
@@ -217,7 +227,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			var ret = {};
 			var nested = false;
 			for(var p in this){
-				if(this[p] && dojo.isFunction(this[p].toPlainObject)){
+				if(this[p] && lang.isFunction(this[p].toPlainObject)){
 					if(!nested && typeof this.get("length") === "number"){
 						ret = [];
 					}
@@ -244,7 +254,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			//		In case of arrays, the property names are indices passed
 			//		as Strings. An addition of such a dojo.Stateful node
 			//		results in right-shifting any trailing sibling nodes.
-			var n, n1, elem, elem1, save = new dojox.mvc.StatefulModel({ data : "" });
+			var n, n1, elem, elem1, save = new StatefulModel({ data : "" });
 			if(typeof this.get("length") === "number" && /^[0-9]+$/.test(name.toString())){
 				n = name;
 				if(!this.get(n)){
@@ -353,12 +363,12 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			//		The input for the model, as a plain JavaScript object.
 			// tags:
 			//		private
-			if(dojo.isObject(obj)){
+			if(lang.isObject(obj)){
 				for(var x in obj){
-					var newProp = new dojox.mvc.StatefulModel({ data : obj[x] });
+					var newProp = new StatefulModel({ data : obj[x] });
 					this.set(x, newProp);
 				}
-				if(dojo.isArray(obj)){
+				if(lang.isArray(obj)){
 					this.set("length", obj.length);
 				}
 			}else{
@@ -373,7 +383,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			// tags:
 			//		private
 			for(var x in this){
-				if(this[x] && dojo.isFunction(this[x]._commit)){
+				if(this[x] && lang.isFunction(this[x]._commit)){
 					this[x]._commit();
 				}
 			}
@@ -390,16 +400,16 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			// tags:
 			//		private
 			if(this._removals){
-				dojo.forEach(this._removals, dojo.hitch(this, function(d){
+				array.forEach(this._removals, function(d){
 					store.remove(store.getIdentity(d));
-				}));
+				}, this);
 				delete this._removals;
 			}
 			var dataToCommit = this.toPlainObject();
-			if(dojo.isArray(dataToCommit)){
-				dojo.forEach(dataToCommit, dojo.hitch(this, function(d){
+			if(lang.isArray(dataToCommit)){
+				array.forEach(dataToCommit, function(d){
 					store.put(d);
-				}));
+				}, this);
 			}else{
 				store.put(dataToCommit);
 			}
@@ -417,54 +427,12 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/Stateful"], function(dojo, 
 			//		private
 			for(var x in src){
 				var o = src.get(x);
-				if(o && dojo.isObject(o) && dojo.isFunction(o.get)){
+				if(o && lang.isObject(o) && lang.isFunction(o.get)){
 					dest.set(x, o);
 				}
 			}
 		}
 	});
 
-	// Factory method for dojox.mvc.StatefulModel instances
-	dojox.mvc.newStatefulModel = function(args){
-		// summary:
-		//		Factory method that instantiates a new data model that view
-		//		components may bind to.
-		//	args:
-		//		The mixin properties.
-		// description:
-		//		Factory method that returns a client-side data model, which is a
-		//		tree of dojo.Stateful objects matching the initial data structure
-		//		passed as input:
-		//		- The mixin property "data" is used to provide a plain JavaScript
-		//		  object directly representing the data structure.
-		//		- The mixin property "store", along with an optional mixin property
-		//		  "query", is used to provide a data store to query to obtain the
-		//		  initial data.
-		//		This function returns an immediate dojox.mvc.StatefulModel instance or
-		//		a Promise for such an instance as follows:
-		//		- if args.data: returns immediate
-		//		- if args.store:
-		//			- if store returns immediate: this function returns immediate
-		//			- if store returns a Promise: this function returns a model
-		//			  Promise
-		if(args.data){
-			return new dojox.mvc.StatefulModel({ data : args.data });
-		}else if(args.store && typeof dojo.isFunction(args.store.query)){
-			var model;
-			var result = args.store.query(args.query);
-			if(result.then){
-				return (result.then(function(data){
-					model = new dojox.mvc.StatefulModel({ data : data });
-					model.store = args.store;
-					return model;
-				}));
-			}else{
-				model = new dojox.mvc.StatefulModel({ data : result });
-				model.store = args.store;
-				return model;
-			}
-		}
-	};
-
-	return dojox.mvc.StatefulModel;
+	return StatefulModel;
 });

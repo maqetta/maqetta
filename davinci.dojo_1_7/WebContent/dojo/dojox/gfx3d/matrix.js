@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","dojox"],function(dojo,dojox) { 
+define(["dojo/_base/kernel", "dojox", "dojo/_base/lang"],function(dojo, dojox, lang) { 
 
 	dojo.getObject("gfx3d",true,dojox);
 	

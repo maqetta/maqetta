@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojox/color/_base", "dojox/color/Palette", "dojox/lang/utils", "dojox/gfx/gradutils"], 
-	function(dojo, declare, dcolor, Palette, dlu, dgg){ 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojox/color/_base", "dojox/color/Palette", "dojox/lang/utils", "dojox/gfx/gradutils"], 
+	function(dojo, lang, declare, dcolor, Palette, dlu, dgg){ 
 	
 	dojo.declare("dojox.charting.Theme", null, {
 	//	summary:

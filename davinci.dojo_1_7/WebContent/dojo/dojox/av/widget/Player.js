@@ -1,4 +1,4 @@
-define(['dojo/_base', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
+define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
 
 dojo.experimental("dojox.av.widget.Player");
 dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._TemplatedMixin], {

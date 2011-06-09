@@ -2,15 +2,15 @@ define([
 	"dojo",
 	"dijit",
 	"dojox",
+	"dojo/text!./resources/View.html",
 	"dojo/dnd/Source",
 	"dojo/dnd/Manager",	
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget",
 	"dojox/html/metrics",
 	"./_Builder",
-	"./util"], function(dojo, dijit, dojox){
+	"./util"], function(dojo, dijit, dojox, template){
 
-(function(){
 	// a private function
 	var getStyleText = function(inNode, inStyleText){
 		return inNode.style.cssText == undefined ? inNode.getAttribute("style") : inNode.style.cssText;
@@ -31,7 +31,7 @@ define([
 		// 		Width for the view, in valid css unit
 		viewWidth: "",
 
-		templatePath: dojo.moduleUrl("dojox.grid","resources/View.html"),
+		templateString: template,
 		
 		themeable: false,
 		classTag: 'dojoxGrid',
@@ -585,7 +585,7 @@ define([
 		renderRow: function(inRowIndex){
 			var rowNode = this.createRowNode(inRowIndex);
 			this.buildRow(inRowIndex, rowNode);
-			this.grid.edit.restore(this, inRowIndex);
+			//this.grid.edit.restore(this, inRowIndex);
 			return rowNode;
 		},
 
@@ -597,7 +597,7 @@ define([
 			}else{
 				dojo.attr(node,"role","row");
 				if (this.grid.selectionMode != "none") {
-					dojo.attr(node, "aria-selected", "false"); //rows can be selected so add aria-selected prop
+					node.setAttribute("aria-selected", "false"); //rows can be selected so add aria-selected prop
 				}
 			}
 			node[dojox.grid.util.gridViewTag] = this.id;
@@ -831,8 +831,7 @@ define([
 		}
 		return oldMakeAvatar.call(dojo.dnd.manager());
 	};
-})();
 
-return dojox.grid._View;
+	return dojox.grid._View;
 
 });

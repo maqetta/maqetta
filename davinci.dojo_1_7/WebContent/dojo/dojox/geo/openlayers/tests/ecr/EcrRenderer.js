@@ -3,7 +3,8 @@
 
 //dojo.require("dojo.data.ItemFileReadStore");
 
-define([ "dojo/_base/array", "dojo/_base/lang", "dojo/data/ItemFileReadStore" ], function(){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang",
+		"dojo/data/ItemFileReadStore" ], function(dojo, declare){
 
 	return dojo.declare("dojox.geo.openlayers.tests.ecr.EcrRenderer", null, {
 

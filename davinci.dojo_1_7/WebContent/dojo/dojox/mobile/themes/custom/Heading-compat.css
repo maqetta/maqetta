@@ -2,19 +2,32 @@
 .mblHeading {
 	background-image: url(compat/heading-bg.png);
 }
+.mblHeadingSpanTitle {
+	white-space: normal;
+}
 
 /* Heading Arrow Button */
 .mblArrowButtonHead {
-	_top: 5px;
-	_left: 7px;
-	_height: 30px;
 	background-image: url(compat/ui-widget-bg.png);
 	-moz-transform-origin: left top;
 	-o-transform-origin: left top;
+	-ms-transform-origin: left top;
 	transform-origin: left top;
 	-moz-transform: scale(0.9, 0.99) rotate(45deg);
 	-o-transform: scale(0.9, 0.99) rotate(45deg);
+	-ms-transform: scale(0.9, 0.99) rotate(45deg);
 	transform: scale(0.9, 0.99) rotate(45deg);
+	left: 1px\9; /* IE7/8 hack */
+	_left: 9px; /* IE6 hack */
+	height: 32px\9; /* IE6/7/8 hack */
+	border-width: 0\9; /* IE6/7/8 hack */
+	background-image: url(compat/arrow-button-head.png)\9; /* IE6/7/8 hack */
+}
+.mblArrowButtonHead:not(:target) { /* IE9 hack */
+	background-image: url(compat/ui-widget-bg.png)\9;
+	left: 17px\9;
+	height: 21px\9;
+	border-width: 1px\9;
 }
 .mblArrowButtonBody {
 	-moz-border-radius-topright: 2px;

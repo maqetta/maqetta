@@ -86,7 +86,7 @@
 			noteChanges = dojo.global.dojo.connect(slider, "onChange", function(){
 				eaVals[strokeIndex++].actual = slider.get('value');
 			});
-		}
+		};
 
 		var populateExpected = function(/*Slider Widget*/inSlider){
 			// summary:
@@ -124,7 +124,7 @@
 			// reset <inSlider> back to its initial value, and return
 			inSlider.set('value', initVal, false);
 			return eVals;
-		}
+		};
 
 		var a11yTabFocusTest = function(inSliderId){
 			var d = new doh.Deferred();
@@ -160,7 +160,7 @@
 			};
 			doh.robot.sequence(d.getTestCallback(checkGotFocus), 1000, 500);
 			return d;
-		}
+		};
 
 		var a11yKeystrokeTest = function(inSliderId){
 			var d = new doh.Deferred();
@@ -168,7 +168,9 @@
 			var initVal = slider.get('value');
 			// get focus on slider thumb before pressing keys.
 			slider.focus();
-			doh.robot.sequence(function(){ strokeIndex = 0; }, 1000); // insure onChange events have stopped
+			doh.robot.sequence(function(){
+				strokeIndex = 0;
+			}, 1000); // insure onChange events have stopped
 			doh.robot.keyPress(dojo.keys.HOME, 200);
 			doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000);
 			doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 200);
@@ -192,7 +194,7 @@
 			};
 			doh.robot.sequence(d.getTestCallback(testPresses), 1000, 500);
 			return d;
-		}
+		};
 
 		dojo.addOnLoad(function(){
 			doh.robot.initRobot('../test_Slider.html');
@@ -250,15 +252,15 @@
 			[
 				function ariaRole(){
 					var slider = dijit.byId(sliderIds[0]);
-					doh.is(dijit.getWaiRole(slider.focusNode), "slider", "aria role (slider)");
+					doh.is(slider.focusNode.getAttribute("role"), "slider", "aria role (slider)");
 				},
 
 				// test aria valuemin, valuemax, valuenow.
 				function ariaValue(){
 					var slider = dijit.byId(sliderIds[0]);
-					doh.is(dijit.getWaiState(slider.focusNode, "valuemin"), slider.minimum, "aria-valuemin");
-					doh.is(dijit.getWaiState(slider.focusNode, "valuemax"), slider.maximum, "aria-valuemax");
-					doh.is(dijit.getWaiState(slider.focusNode, "valuenow"), slider.get('value'), "aria-valuenow");
+					doh.is(slider.focusNode.getAttribute("aria-valuemin"), slider.minimum, "aria-valuemin");
+					doh.is(slider.focusNode.getAttribute("aria-valuemax"), slider.maximum, "aria-valuemax");
+					doh.is(slider.focusNode.getAttribute("aria-valuenow"), slider.get('value'), "aria-valuenow");
 				}
 			]);
 

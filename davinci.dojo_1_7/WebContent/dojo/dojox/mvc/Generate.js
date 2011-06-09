@@ -1,5 +1,16 @@
-define(["dojox/mvc/_Container", "dojox/mvc/Group", "dijit/form/TextBox"], function(){
-	return dojo.declare("dojox.mvc.Generate", [dojox.mvc._Container], {
+define([
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"./_Container",
+	"./Group",
+	"dijit/form/TextBox"
+], function(lang, declare, Container){
+	/*=====
+		Container = dojox.mvc._Container;
+		declare = dojo.declare;
+	=====*/
+
+	return declare("dojox.mvc.Generate", [Container], {
 		// summary:
 		//		A container that generates a view based on the data model its bound to.
 		//
@@ -64,7 +75,7 @@ define(["dojox/mvc/_Container", "dojox/mvc/Group", "dijit/form/TextBox"], functi
 			//		private
 			var body = "";
 			for(var prop in binding){
-				if(binding[prop] && dojo.isFunction(binding[prop].toPlainObject)){
+				if(binding[prop] && lang.isFunction(binding[prop].toPlainObject)){
 					if(binding[prop].get(0)){
 						body += this._generateRepeat(binding[prop], prop);
 					}else if(binding[prop].value){

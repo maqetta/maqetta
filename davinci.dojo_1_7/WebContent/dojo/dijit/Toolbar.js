@@ -1,9 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
+	"require",
 	"./_Widget",
 	"./_KeyNavContainer",
-	"./_TemplatedMixin"], function(dojo, dijit){
+	"./_TemplatedMixin",
+	"dojo/_base/connect", // dojo.keys.LEFT_ARROW dojo.keys.RIGHT_ARROW
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit, require){
 
 	// module:
 	//		dijit/Toolbar
@@ -29,6 +33,13 @@ define([
 			);
 		}
 	});
+
+	// Back compat w/1.6, remove for 2.0
+	if(!dojo.isAsync){
+		dojo.ready(0, function(){
+			require(["dijit/ToolbarSeparator"]);
+		});
+	}
 
 	return dijit.Toolbar;
 });

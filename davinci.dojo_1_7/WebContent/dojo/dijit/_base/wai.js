@@ -1,4 +1,10 @@
-define(["dojo", "..", "../hccss"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.mixin
+	"..",
+	"../hccss",
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/lang" // dojo.trim
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_base/wai

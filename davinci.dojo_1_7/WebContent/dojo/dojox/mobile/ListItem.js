@@ -1,24 +1,46 @@
-define(["dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent"], function(darray,dhtml, ItemBase, TransitionEvent){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent"],
+	function(dojo, declare, darray, dhtml, ItemBase, TransitionEvent){
 	// module:
 	//		dojox/mobile/ListItem
 	// summary:
 	//		TODOC
 
 	return dojo.declare("dojox.mobile.ListItem", dojox.mobile._ItemBase, {
+		//icon: "", // inherit from _ItemBase
+		//label: "", // inherit from _ItemBase
 		rightText: "",
-		btnClass: "",
-		btnClass2: "",
+		rightIcon2: "",
+		rightIcon: "",
+
 		anchorLabel: false,
 		noArrow: false,
 		selected: false,
 		checked: false,
-		rightIconClass: "",
 		arrowClass: "mblDomButtonArrow",
 		checkClass: "mblDomButtonCheck",
+		variableHeight: false,
+
+		rightIconTitle: "",
+		rightIcon2Title: "",
+
+		// for backward compatibility
+		btnClass: "",
+		btnClass2: "",
 	
+		postMixInProperties: function(){
+			// for backward compatibility
+			if(this.btnClass){
+				this.rightIcon = this.btnClass;
+			}
+			this._setBtnClassAttr = this._setRightIconAttr;
+			this._setBtnClass2Attr = this._setRightIcon2Attr;
+		},
+
 		buildRendering: function(){
-			var a = this.anchorNode = dojo.create("A");
-			a.className = "mblListItemAnchor";
+			this.inherited(arguments);
+			this.domNode.className = "mblListItem" + (this.selected ? " mblItemSelected" : "");
+
+			// label
 			var box = this.box = dojo.create("DIV");
 			box.className = "mblListItemTextBox";
 			if(this.anchorLabel){
@@ -31,25 +53,38 @@ define(["dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent
 					var n = r.firstChild;
 					if(n.nodeType === 3 && dojo.trim(n.nodeValue) !== ""){
 						n.nodeValue = this._cv(n.nodeValue);
-						this.labelNode = dojo.create("SPAN");
+						this.labelNode = dojo.create("SPAN", {className:"mblListItemLabel"});
 						this.labelNode.appendChild(n);
 						n = this.labelNode;
 					}
 					box.appendChild(n);
 				}
 			}
-			if(this.label){
-				this.labelNode = dojo.create("SPAN", null, box);
+			if(!this.labelNode){
+				this.labelNode = dojo.create("SPAN", {className:"mblListItemLabel"}, box);
 			}
-			a.appendChild(box);
 			if(this.anchorLabel){
 				box.style.display = "inline"; // to narrow the text region
 			}
-			var li = this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("LI");
-			li.className = "mblListItem" + (this.selected ? " mblItemSelected" : "");
-			li.appendChild(a);
+
+			var a = this.anchorNode = dojo.create("A");
+			a.className = "mblListItemAnchor";
+			this.domNode.appendChild(a);
+			a.appendChild(box);
+
+			// right text
+			this.rightTextNode = dojo.create("DIV", {className:"mblListItemRightText"}, a, "first");
+
+			// right icon2
+			this.rightIcon2Node = dojo.create("DIV", {className:"mblListItemRightIcon2"}, a, "first");
+
+			// right icon
+			this.rightIconNode = dojo.create("DIV", {className:"mblListItemRightIcon"}, a, "first");
+
+			// icon
+			this.iconNode = dojo.create("DIV", {className:"mblListItemIcon"}, a, "first");
 		},
-	
+
 		startup: function(){
 			if(this._started){ return; }
 			this.inheritParams();
@@ -62,16 +97,25 @@ define(["dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent
 				this.connect(this.anchorNode, "onclick", "onClick");
 			}
 
+			if(dojo.hasClass(this.domNode, "mblVariableHeight")){
+				this.variableHeight = true;
+			}
+			if(this.variableHeight){
+				dojo.addClass(this.domNode, "mblVariableHeight");
+				dojo.subscribe("/dojox/mobile/resizeAll", this, "layoutVariableHeight");
+				setTimeout(dojo.hitch(this, "layoutVariableHeight"));
+			}
+
 			this.set("icon", this.icon);
 			this.inherited(arguments);
 		},
-	
+
 		onClick: function(e){
 			var a = e.currentTarget;
 			var li = a.parentNode;
 			if(dojo.hasClass(li, "mblItemSelected")){ return; } // already selected
 			if(this.anchorLabel){
-				for(var p = e.target; p.tagName != "LI"; p = p.parentNode){
+				for(var p = e.target; p.tagName !== "LI"; p = p.parentNode){
 					if(p.className == "mblListItemTextBox"){
 						dojo.addClass(p, "mblListItemTextBoxSelected");
 						setTimeout(function(){
@@ -127,7 +171,20 @@ define(["dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent
 		onAnchorLabelClicked: function(e){
 			// Stub function to connect to from your application.
 		},
-	
+
+		layoutVariableHeight: function(e){
+			var h = this.anchorNode.offsetHeight;
+			dojo.forEach([
+					this.rightTextNode,
+					this.rightIcon2Node,
+					this.rightIconNode,
+					this.iconNode
+				], function(n){
+					var t = Math.round((h - n.offsetHeight) / 2);
+					n.style.marginTop = t + "px";
+				});
+		},
+
 		setArrow: function(){
 			if(this.checked){ return; }
 			var c = "";
@@ -138,63 +195,24 @@ define(["dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent
 				}
 			}
 			if(c){
-				this._setBtnClassAttr(c);
+				this._setRightIconAttr(c);
 			}
 		},
-	
+
 		_setIconAttr: function(icon){
 			if(!this.getParent()){ return; } // icon may be invalid because inheritParams is not called yet
 			this.icon = icon;
 			var a = this.anchorNode;
-			if(this.icon && this.icon.indexOf("mblDomButton") === 0){
-				if(!this.iconNode){
-					this.iconNode = dojo.create("DIV");
-					this.domNode.insertBefore(this.iconNode, a);
+			dojo.empty(this.iconNode);
+			if(icon && icon !== "none"){
+				dojox.mobile.createIcon(icon, this.iconPos, null, this.alt, this.iconNode);
+				if(this.iconPos){
+					dojo.addClass(this.iconNode.firstChild, "mblListItemSpriteIcon");
 				}
-				this.iconNode.className = this.icon + " mblLeftButton";
-				dojox.mobile.createDomButton(this.iconNode);
-				dojo.removeClass(a, "mblListItemAnchorNoIcon");
-				a.style.paddingLeft = (this.iconNode.offsetWidth + 11) + "px";
-			}else if(this.icon && this.icon != "none"){
-				if(!this.iconNode){
-					this.iconNode = dojo.create("IMG", {
-						className: "mblListItemIcon",
-						alt: this.alt
-					});
-					this.domNode.insertBefore(this.iconNode, a);
-				}
-				this.iconNode.src = this.icon;
-				dojox.mobile.setupIcon(this.iconNode, this.iconPos);
 				dojo.removeClass(a, "mblListItemAnchorNoIcon");
 			}else{
 				dojo.addClass(a, "mblListItemAnchorNoIcon");
 			}
-		},
-	
-		_setBtnClass: function(/*String*/btnClass, /*DomNode*/node, /*String*/className){
-			var div;
-			if(node){
-				if(node.className.match(/(mblDomButton\w+)/)){
-					dojo.removeClass(node, RegExp.$1);
-				}
-			dojo.addClass(node, btnClass);
-				div = node;
-			}else{
-				div = dojo.create("DIV", {className:btnClass+" "+className}, this.anchorNode);
-			}
-			dojox.mobile.createDomButton(div);
-			return div;
-		},
-	
-		_setBtnClassAttr: function(/*String*/rightIconClass){
-			this.rightIconNode = this._setBtnClass(rightIconClass, this.rightIconNode, "mblRightButton");
-			this._layoutRightText();
-		},
-	
-		_setBtnClass2Attr: function(/*String*/rightIconClass){
-			this.rightIconNode2 = this._setBtnClass(rightIconClass, this.rightIconNode2, "mblRightButton mblRightButton2");
-			dojo.addClass(this.box, "mblListItemTextBox2");
-			this._layoutRightText();
 		},
 	
 		_setCheckedAttr: function(/*Boolean*/checked){
@@ -204,39 +222,35 @@ define(["dojo/_base/array", "dojo/_base/html", "./_ItemBase", "./TransitionEvent
 					child.set("checked", false);
 				});
 			}
-			if(!this.checkNode){
-				this._setBtnClassAttr(this.checkClass);
-				this.checkNode = this.rightIconNode;
-			}
-			this.checkNode.style.display = checked ? "" : "none";
-			dojo.toggleClass(this.domNode, "mblItemChecked", checked);
+			this._setRightIconAttr(this.checkClass);
+			this.rightIconNode.style.display = checked ? "" : "none";
+			dojo.toggleClass(this.domNode, "mblListItemChecked", checked);
 			if(this.checked !== checked){
 				this.getParent().onCheckStateChanged(this, checked);
 			}
 			this.checked = checked;
-			this._layoutRightText();
 		},
 	
 		_setRightTextAttr: function(/*String*/text){
 			this.rightText = text;
-			if(!this._rightTextNode){
-				this._rightTextNode = dojo.create("DIV", {className:"mblRightText"}, this.anchorNode);
-			}
-			this._rightTextNode.innerHTML = this._cv(text);
-			this._layoutRightText();
+			this.rightTextNode.innerHTML = this._cv(text);
+		},
+	
+		_setRightIconAttr: function(/*String*/icon){
+			this.rightIcon = icon;
+			dojo.empty(this.rightIconNode);
+			dojox.mobile.createIcon(icon, null, null, this.rightIconTitle, this.rightIconNode);
+		},
+	
+		_setRightIcon2Attr: function(/*String*/icon){
+			this.rightIcon2 = icon;
+			dojo.empty(this.rightIcon2Node);
+			dojox.mobile.createIcon(icon, null, null, this.rightIcon2Title, this.rightIcon2Node);
 		},
 	
 		_setLabelAttr: function(/*String*/text){
 			this.label = text;
 			this.labelNode.innerHTML = this._cv(text);
-		},
-	
-		_layoutRightText: function(){
-			if(this._rightTextNode){
-				var w = (this.rightIconNode ? this.rightIconNode.offsetWidth : 0) +
-					(this.rightIconNode2 ? this.rightIconNode2.offsetWidth : 0);
-				this._rightTextNode.style.right = w + 11 + "px";
-			}
 		}
 	});
 });

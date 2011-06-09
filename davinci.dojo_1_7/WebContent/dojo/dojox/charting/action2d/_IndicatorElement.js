@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common", "../axis2d/common", "dojox/gfx"], 
-	function(dojo, declare, Element, dcpc, dcac, gfx){ 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common", "../axis2d/common", "dojox/gfx"], 
+	function(dojo, lang, declare, Element, dcpc, dcac, gfx){ 
 
 	// all the code below should be removed when http://trac.dojotoolkit.org/ticket/11299 will be available
 	var getBoundingBox = function(shape){
@@ -62,7 +62,11 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 		return sz;
 	};
 
-	return dojo.declare("dojox.charting.action2d._IndicatorElement", Element, {
+	return dojo.declare(Element, {
+		//	summary:
+		//		Internal element used by indicator actions.
+		//	tags:
+		//		private
 		constructor: function(chart, kwArgs){
 			if(!kwArgs){ kwArgs = {}; }
 			this.inter = kwArgs.inter;

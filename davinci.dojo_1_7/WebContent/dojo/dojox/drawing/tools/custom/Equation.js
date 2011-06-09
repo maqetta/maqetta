@@ -1,5 +1,6 @@
-dojo.provide("dojox.drawing.tools.custom.Equation");
-dojo.require("dojox.drawing.tools.TextBlock");
+define([
+	"../../util/oo",
+	"../TextBlock"], function(){
 
 dojox.drawing.tools.custom.Equation = dojox.drawing.util.oo.declare(
 	// summary:
@@ -24,3 +25,6 @@ dojox.drawing.tools.custom.Equation.setup = {
 	iconClass:"iconEq"
 };
 dojox.drawing.register(dojox.drawing.tools.custom.Equation.setup, "tool");
+
+return dojox.drawing.tools.custom.Equation;
+});

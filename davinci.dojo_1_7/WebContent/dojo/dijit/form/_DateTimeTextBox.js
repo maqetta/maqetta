@@ -1,12 +1,14 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	"..",
 	"dojo/text!./templates/DropDownBox.html",
-	"dojo/date",
-	"dojo/date/locale",
-	"dojo/date/stamp",
+	"dojo/date", // dojo.date dojo.date.compare
+	"dojo/date/locale", // dojo.date.locale.regexp
+	"dojo/date/stamp", // dojo.date.stamp.fromISOString dojo.date.stamp.toISOString
 	"./RangeBoundTextBox",
-	"../_HasDropDown"], function(dojo, dijit, template){
+	"../_HasDropDown",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/form/_DateTimeTextBox
@@ -62,6 +64,11 @@ define([
 		//		JavaScript namespace to find calendar routines.	 Uses Gregorian calendar routines
 		//		at dojo.date, by default.
 		datePackage: "dojo.date",
+
+		postMixInProperties: function(){
+			this.inherited(arguments);
+			this._set("type", "text"); // in case type="date"|"time" was specified which messes up parse/format
+		},
 
 		// Override _FormWidget.compare() to work for dates/times
 		compare: function(/*Date*/ val1, /*Date*/ val2){

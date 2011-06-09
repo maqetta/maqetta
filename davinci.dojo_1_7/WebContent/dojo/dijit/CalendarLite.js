@@ -1,13 +1,21 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	".",
 	"dojo/text!./templates/Calendar.html",
-	"dojo/string",
-	"dojo/cldr/supplemental",
-	"dojo/date",
+	"dojo/string", // dojo.string.substitute
+	"dojo/cldr/supplemental", // dojo.cldr.supplemental.getFirstDayOfWeek
+	"dojo/date", // dojo.date
 	"dojo/date/locale",
 	"./_WidgetBase",
-	"./_TemplatedMixin"], function(dojo, dijit, template){
+	"./_TemplatedMixin",
+	"dojo/_base/array", // dojo.forEach dojo.map
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.hasClass dojo.setSelectable
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isWebKit
+	"dojo/_base/window" // dojo.doc.createTextNode
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/CalendarLite

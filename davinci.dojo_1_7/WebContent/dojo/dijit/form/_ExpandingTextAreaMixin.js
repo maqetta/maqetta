@@ -1,4 +1,11 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.create
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/_ExpandingTextAreaMixin

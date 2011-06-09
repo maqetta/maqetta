@@ -19,6 +19,8 @@ define(["dojo/_base/kernel", "dojo/_base/connect", "dojo/_base/declare", "./Base
 		DEFAULT_EASING   = dfe.backOut;
 
 	return dojo.declare("dojox.charting.action2d.PlotAction", dojox.charting.action2d.Base, {
+		//	summary:
+		//		Base action class for plot actions.
 
 		overOutEvents: {onmouseover: 1, onmouseout: 1},
 

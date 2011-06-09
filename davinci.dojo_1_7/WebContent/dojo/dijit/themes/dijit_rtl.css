@@ -96,6 +96,9 @@
 
 /* TabContainer */
 
+.dijitRtl .nowrapTabStrip {
+    text-align: right;  /* just in case ancestor has non-standard setting */
+}
 .dijitTabRtl .dijitTabCloseButton {
 	margin-left: 0;
 	margin-right: 1em;

@@ -20,74 +20,64 @@
 }
 .mblListItem.mblVariableHeight {
   height: auto;
-  padding: 11px 6px 10px 6px;
+  padding: 11px 0px 10px 6px;
   line-height: normal;
 }
-.mblListItem a.mblListItemAnchor {
+.mblListItem .mblListItemAnchor {
   display: block;
+  height: 100%;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   background-position: 9px 7px;
-  padding-left: 40px;
   text-decoration: none;
+  padding-right: 7px;
 }
-.mblListItem a.mblListItemAnchorNoIcon {
-  padding-left: 10px;
-}
-.mblListItem a.mblListItemAnchorHasRightButton {
-  padding-right: 40px;
-}
-.mblListItem .mblLeftButton {
-  position: absolute;
-  top: 50%;
-  margin-top: -15px;
-  line-height: normal;
-}
-.mblListItem .mblRightButton {
-  position: absolute;
-  top: 50%;
-  right: 7px;
-  margin-top: -15px;
-  line-height: normal;
-}
-.mblListItem .mblRightButton2 {
-  right: 36px;
-}
-.mblListItemIcon {
-  position: absolute;
-  top: 7px;
+.mblListItem .mblListItemAnchor * {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
 }
 .mblItemSelected {
   background-color: #abd6ff;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.8)), color-stop(1, rgba(255, 255, 255, 0.5)));
 }
-.mblItemSelected a.mblListItemAnchor {
+.mblItemSelected .mblListItemAnchor {
   color: #000000;
 }
 .mblItemSelected .mblDomButton DIV {
   border-color: white;
 }
+.mblListItemTextBoxSelected {
+  background-color: #abd6ff;
+}
+.mblListItemChecked {
+  color: #000000;
+}
+.mblListItemIcon {
+  float: left;
+  line-height: normal;
+  margin-top: 7px;
+  margin-right: 11px;
+}
+.mblListItemSpriteIcon {
+  position: absolute;
+  margin-top: 7px;
+}
+.mblListItemRightIcon, .mblListItemRightIcon2 {
+  position: relative;
+  float: right;
+  margin-top: 7px;
+  margin-bottom: -7px;
+}
+.mblListItemRightText {
+  position: relative;
+  float: right;
+  line-height: normal;
+  color: #131313;
+  margin: 11px 4px 0 0;
+}
 .mblListItemTextBox {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding-right: 28px;
-}
-.mblListItemTextBox2 {
-  padding-right: 58px;
-}
-.mblListItemTextBoxSelected {
-  background-color: #abd6ff;
 }
 .mblVariableHeight .mblListItemTextBox {
   white-space: normal;
-}
-.mblRightText {
-  position: absolute;
-  top: 12px;
-  right: 30px;
-  color: #131313;
-  line-height: normal;
-}
-.mblItemChecked {
-  color: #000000;
 }

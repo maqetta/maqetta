@@ -1,13 +1,13 @@
 
-define(["dojo/_base/lang","dojo/_base/declare", "dojo/_base/connect","dojo/_base/window","dojo/_base/html"],
-											function(dojo, declare, connect, window, dhtml) {
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare", "dojo/_base/connect","dojo/_base/window","dojo/_base/html"],
+											function(dojo, lang, declare, connect, window, dhtml) {
 
 
 return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
-	// summary: 
-	//   class to handle mouse interactions on a dojox.geo.charting.Map widget
-	// tags:
-	//   private
+	//	summary: 
+	//		class to handle mouse interactions on a dojox.geo.charting.Map widget
+	//	tags:
+	//		private
 	
 	_map : null,
 	_mapClickLocation : null,
@@ -29,12 +29,12 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	mouseClickThreshold: 2,
 
 	constructor : function(/* Map */map,/*boolean*/options) {
-		// summary: 
-		//   Constructs a new _MouseInteractionSupport instance
-		// map: dojox.geo.charting.Map
-		//   the Map widget this class provides touch navigation for.
-		// options: object
-		//  to enable panning and mouse wheel zooming
+		//	summary: 
+		//		Constructs a new _MouseInteractionSupport instance
+		//	map: dojox.geo.charting.Map
+		//		the Map widget this class provides touch navigation for.
+		//	options: object
+		//		to enable panning and mouse wheel zooming
 		this._map = map;
 		this._mapClickLocation = {x: 0,y: 0};
 		this._screenClickLocation = {x: 0,y: 0};
@@ -49,8 +49,8 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	setEnableZoom: function(enable){
-		// summary: 
-		//   enables mouse zoom on the map
+		//	summary: 
+		//		enables mouse zoom on the map
 		if (enable && !this._mouseWheelListener) {
 			// enable
 			var wheelEventName = !dojo.isMozilla ? "onmousewheel" : "DOMMouseScroll";
@@ -64,14 +64,14 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	setEnablePan: function(enable){
-		// summary: 
-		//   enables mouse panning on the map
+		//	summary: 
+		//		enables mouse panning on the map
 		this._panEnabled = enable;
 	},
 	
 	connect: function() {
-		// summary: 
-		//   connects this mouse support class to the Map component
+		//	summary: 
+		//		connects this mouse support class to the Map component
 		
 		// install mouse listeners
 		this._mouseMoveListener = this._map.surface.connect("onmousemove", this, this._mouseMoveHandler);
@@ -87,8 +87,8 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	disconnect: function() {
-		// summary: 
-		//   disconnects any installed listeners
+		//	summary: 
+		//		disconnects any installed listeners
 		
 		// store zoomPan state
 		var isZoom = this._zoomEnabled;
@@ -117,11 +117,11 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	
 	
 	_mouseClickHandler: function(mouseEvent) {
-		// summary: 
-		//   action performed on the map when a mouse click was performed
-		// mouseEvent: the mouse event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a mouse click was performed
+		//	mouseEvent: the mouse event
+		//	tags:
+		//		private
 		
 		var feature = this._getFeatureFromMouseEvent(mouseEvent);
 		
@@ -139,11 +139,13 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	_mouseDownHandler: function(mouseEvent){
-		// summary: 
-		//   action performed on the map when a mouse down was performed
-		// mouseEvent: the mouse event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a mouse down was performed
+		//	mouseEvent: the mouse event
+		//	tags:
+		//		private
+		
+		
 		//dojo.stopEvent(mouseEvent);
 		
 		this._map.focused = true;
@@ -188,11 +190,11 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 
 	
 	_mouseUpHandler: function(mouseEvent) {
-		// summary: 
-		//   action performed on the map when a mouse up was performed
-		// mouseEvent: the mouse event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a mouse up was performed
+		//	mouseEvent: the mouse event
+		//	tags:
+		//		private
 		
 		dojo.stopEvent(mouseEvent);
 		
@@ -218,13 +220,13 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	_getFeatureFromMouseEvent: function(mouseEvent) {
-		// summary: 
-		//   utility function to return the feature located at this mouse event location
-		// mouseEvent: the mouse event
-		// returns: dojox.geo.charting.Feature
-		//   the feature found if any, null otherwise.
-		// tags:
-		//   private
+		//	summary: 
+		//		utility function to return the feature located at this mouse event location
+		//	mouseEvent: the mouse event
+		//	returns: dojox.geo.charting.Feature
+		//		the feature found if any, null otherwise.
+		//	tags:
+		//		private
 		var feature = null;
 		if (mouseEvent.gfxTarget && mouseEvent.gfxTarget.getParent) {
 			feature = this._map.mapObj.features[mouseEvent.gfxTarget.getParent().id];
@@ -233,11 +235,11 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	_mouseMoveHandler: function(mouseEvent) {
-		// summary: 
-		//   action performed on the map when a mouse move was performed
-		// mouseEvent: the mouse event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a mouse move was performed
+		//	mouseEvent: the mouse event
+		//	tags:
+		//		private
 
 		
 		// do nothing more if dragging
@@ -266,11 +268,11 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 
 	
 	_mouseDragHandler: function(mouseEvent){
-		// summary: 
-		//   action performed on the map when a mouse drag was performed
-		// mouseEvent: the mouse event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a mouse drag was performed
+		//	mouseEvent: the mouse event
+		//	tags:
+		//		private
 		
 		// prevent browser interaction
 		dojo.stopEvent(mouseEvent);
@@ -306,11 +308,11 @@ return dojo.declare("dojox.geo.charting.MouseInteractionSupport", null, {
 	},
 	
 	_mouseWheelHandler: function(mouseEvent) {
-		// summary: 
-		//   action performed on the map when a mouse wheel up/down was performed
-		// mouseEvent: the mouse event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a mouse wheel up/down was performed
+		//	mouseEvent: the mouse event
+		//	tags:
+		//		private
 		
 
 		// prevent browser interaction

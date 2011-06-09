@@ -277,7 +277,7 @@ dojo.declare("dojox.form.PasswordValidator", dijit.form._FormValueWidget, {
 	_setRequiredAttribute: function(value){
 		this.required = value;
 		dojo.attr(this.focusNode, "required", value);
-		dijit.setWaiState(this.focusNode, "required", value);
+		this.focusNode.setAttribute("aria-required", value);
 		this._refreshState();
 		dojo.forEach(this._inputWidgets, function(i){
 			if(i && i.set){ i.set("required", value);}

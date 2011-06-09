@@ -1,10 +1,8 @@
 // AMD-ID "dojox/encoding/crypto/RSAKey-ext"
 define(["dojo/_base/kernel", "dojox/encoding/crypto/RSAKey", "dojox/math/BigInteger-ext"], function(dojo, RSAKey, BigInteger) {
 
-dojo.experimental("dojox.encoding.crypto.RSAKey-ext");
+	dojo.experimental("dojox.encoding.crypto.RSAKey-ext");
 
-
-(function(){
 	// Undo PKCS#1 (type 2, random) padding and, if valid, return the plaintext
 	function pkcs1unpad2(d, n){
 		var b = d.toByteArray();
@@ -115,8 +113,6 @@ dojo.experimental("dojox.encoding.crypto.RSAKey-ext");
 			return pkcs1unpad2(m, (this.n.bitLength() + 7) >> 3);
 		}
 	});
-})();
-
-
-return RSAKey;
+	
+	return RSAKey;
 });

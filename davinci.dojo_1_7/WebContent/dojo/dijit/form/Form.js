@@ -1,10 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	"..",
 	"../_Widget",
 	"../_TemplatedMixin",
 	"./_FormMixin",
-	"../layout/_ContentPaneResizeMixin"], function(dojo, dijit){
+	"../layout/_ContentPaneResizeMixin",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/sniff" // dojo.isIE
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/Form

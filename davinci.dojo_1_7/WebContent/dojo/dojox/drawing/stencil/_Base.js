@@ -1,6 +1,11 @@
-dojo.provide("dojox.drawing.stencil._Base");
-dojo.require("dojo.fx.easing");
-
+define([
+	"dojo",
+	"../..",
+	"dojo/fx/easing",
+	"../defaults"], function(dojo, dojox){
+	
+dojo.getObject("drawing.stencil", true, dojox);
+dojo.getObject("drawing.tools.custom", true, dojox);
 /*=====
 StencilArgs = {
 //	container: [readonly] dojo.gfx.group
@@ -597,7 +602,7 @@ dojox.drawing.stencil._Base = dojox.drawing.util.oo.declare(
 			}
 
 			if(o.height!==undefined && o.angle===undefined){
-			console.log("Doing P2D-2");
+			console.log("Doing P2D-2", this);
 				p[2].y = p[3].y = p[0].y + o.height;
 				this.pointsToData(p);
 			}
@@ -1205,3 +1210,5 @@ dojox.drawing.stencil._Base = dojox.drawing.util.oo.declare(
 	}
 );
 
+return dojox.drawing.stencil._Base;
+});

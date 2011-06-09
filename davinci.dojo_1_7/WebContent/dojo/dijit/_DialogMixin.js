@@ -1,4 +1,9 @@
-define(["dojo", ".", "./_Widget"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	".",
+	"./_Widget",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_DialogMixin

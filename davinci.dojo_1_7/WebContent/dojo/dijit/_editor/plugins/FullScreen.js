@@ -1,11 +1,20 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"../..",
-	"dojo/window",
-	"dojo/i18n",
+	"../../focus",			// dijit.focus()
+	"../../_base/focus",	// dijit.getFocus(),
+	"dojo/window", // dojo.window.getBox dojo.window.scrollIntoView
+	"dojo/i18n", // dojo.i18n.getLocalization
 	"../_Plugin",
 	"../../form/ToggleButton",
-	"dojo/i18n!../nls/commands"], function(dojo, dijit){
+	"dojo/i18n!../nls/commands",
+	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.keys.F11 dojo.keys.TAB
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.addClass dojo.marginBox dojo.removeClass dojo.style
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isQuirks
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/FullScreen

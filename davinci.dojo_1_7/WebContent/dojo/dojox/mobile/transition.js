@@ -1,4 +1,5 @@
-define(["dojo/_base/array","dojo/_base/html","dojo/DeferredList"], function(darray, dhtml,DeferredList){
+define(["dojo/_base/kernel", "dojo/_base/array","dojo/_base/html","dojo/DeferredList"],
+	function(dojo, darray, dhtml, DeferredList){
 	return function(from, to, options){
 		var rev = (options && options.reverse) ? " mblReverse" : "";
 		if(!options || !options.transition){

@@ -1,4 +1,5 @@
-define([ "dojox/geo/openlayers/Map" ], function(mapArg){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Map" ], function(dojo,
+		declare, mapArg){
 
 	return dojo.declare("dojox.geo.openlayers.Feature", null, {
 		//	summary:

@@ -1,5 +1,5 @@
-
-define(["dojox/geo/openlayers/Geometry" ], function(geometryArg){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Geometry" ], function(
+		dojo, declare, geometryArg){
 
 	return dojo.declare("dojox.geo.openlayers.Point", dojox.geo.openlayers.Geometry, {
 		//	summary:
@@ -13,8 +13,7 @@ define(["dojox/geo/openlayers/Geometry" ], function(geometryArg){
 			this.coordinates = p;
 		},
 
-
-		getPoint : function(){		
+		getPoint : function(){
 			//	summary:
 			//		Gets the point defining this geometry.
 			//	returns: {x, y} Object

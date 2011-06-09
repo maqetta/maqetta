@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.pygments.javascript");
+define(["dojox/main", "../../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-
-(function(){
 	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.javascript = {
 		defaultMode: {
@@ -145,4 +142,6 @@ dojo.require("dojox.highlight._base");
 			*/
 		]
 	};
-})();
+
+	return dh.languages.javascript;
+});

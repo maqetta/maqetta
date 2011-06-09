@@ -6,8 +6,8 @@
 //dojo.require("dojox.geo.openlayers.GeometryFeature");
 //dojo.require("dojox.geo.openlayers.Geometry");
 
-define([ "dojox/geo/openlayers/tests/ecr/EcrRenderer", "dojox/geo/openlayers/GeometryFeature",
-		"dojox/geo/openlayers/Point"], function(){
+define(["dojo/_base/kernel",  "dojo/_base/declare", "dojox/geo/openlayers/tests/ecr/EcrRenderer", "dojox/geo/openlayers/GeometryFeature",
+		"dojox/geo/openlayers/Point"], function(dojo, declare){
 
 	return dojo.declare("dojox.geo.openlayers.tests.ecr.PortRenderer",
 			[ dojox.geo.openlayers.tests.ecr.EcrRenderer ], {

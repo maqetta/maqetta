@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_base/html"], function(dojo,dd,dxst){
+define(["dojo/_base/kernel","dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_base/html"], function(dojo,lang,dd,dxst){
 
 	dd.BOOLS = {checked: 1, disabled: 1, readonly: 1};
 	dd.TOKEN_CHANGE = -11;
@@ -467,6 +467,9 @@ define(["dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_b
 			}else{
 				dojo.attr(this._parent, key, value);
 				//console.log(this._parent, key, value);
+				if (key == "value"){
+					this._parent.setAttribute(key, value);
+				}
 			}
 			return this;
 		},

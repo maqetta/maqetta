@@ -1,8 +1,12 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"..",
 	"../_Widget",
-	"../form/Button"], function(dojo, dijit){
+	"../form/Button",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.connect dojo.disconnect
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/_Plugin
@@ -12,7 +16,7 @@ define([
 
 
 dojo.declare("dijit._editor._Plugin", null, {
-	// summary
+	// summary:
 	//		Base class for a "plugin" to the editor, which is usually
 	//		a single button on the Toolbar and some associated code
 

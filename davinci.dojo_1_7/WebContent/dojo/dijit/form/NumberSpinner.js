@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"./_Spinner",
-	"./NumberTextBox"], function(dojo, dijit){
+	"./NumberTextBox",
+	"dojo/_base/connect", // dojo.keys.END dojo.keys.HOME
+	"dojo/_base/event" // dojo.stopEvent
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/NumberSpinner

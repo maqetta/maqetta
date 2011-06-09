@@ -1,9 +1,16 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"../..",
-	"dojo/window",
+	"dojo/window", // dojo.window.scrollIntoView
 	"../_Plugin",
-	"../range"], function(dojo, dijit){
+	"../range",
+	"dojo/_base/connect", // dojo.keys.ENTER
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.destroy dojo.place
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isMoz dojo.isWebKit
+	"dojo/_base/window" // dojo.global dojo.withGlobal
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/EnterKeyHandling
@@ -545,7 +552,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 					selection.removeAllRanges();
 					selection.addRange(newrange);
 					if(this.editor.height){
-						dijit.scrollIntoView(newblock);
+						dojo.window.scrollIntoView(newblock);
 					}
 					if(dojo.isMoz){
 						// press enter in middle of P may leave a trailing <br/>, let's remove it later
@@ -559,7 +566,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 				selection.removeAllRanges();
 				selection.addRange(newrange);
 				if(this.editor.height){
-					dijit.scrollIntoView(newblock);
+					dojo.window.scrollIntoView(newblock);
 				}
 				if(dojo.isMoz){
 					// press enter in middle of P may leave a trailing <br/>, let's remove it later
@@ -585,8 +592,7 @@ dojo.declare("dijit._editor.plugins.EnterKeyHandling", dijit._editor._Plugin, {
 			offset = offset - node.length;
 			node = node.nextSibling;
 		}
-		var ret = {"node": node, "offset": offset};
-		return ret;
+		return {"node": node, "offset": offset};
 	},
 
 	removeTrailingBr: function(container){

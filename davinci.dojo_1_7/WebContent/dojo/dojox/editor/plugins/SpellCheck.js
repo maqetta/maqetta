@@ -1,5 +1,6 @@
 dojo.provide("dojox.editor.plugins.SpellCheck");
 
+dojo.require("dijit._base.popup");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit.form.TextBox");
@@ -616,7 +617,7 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		});
 		_this._dialogContent.isOpen = false;
 		
-		dijit.setWaiState(dialogPane.domNode, "label", this._strings["widgetLabel"]);
+		dialogPane.domNode.setAttribute("aria-label", this._strings["widgetLabel"]);
 	},
 	
 	_setNetwork: function(){

@@ -1,4 +1,5 @@
-define(["dojo/_base/html", "dojo/_base/array", "dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],function(dhtml,darray, WidgetBase,Container,Contained){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/array", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained"],
+	function(dojo, declare, dhtml, darray, WidgetBase, Container, Contained){
 	return dojo.declare("dojox.mobile.FixedSplitterPane",[dijit._WidgetBase,dijit._Container,dijit._Contained],{
 		buildRendering: function(){
 			this.inherited(arguments);

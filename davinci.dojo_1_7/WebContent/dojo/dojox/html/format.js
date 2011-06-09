@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","./entities","dojo/_base/window"], function(d, dhe) {
+define(["dojo/_base/kernel", "./entities", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/window"], function(d, dhe) {
 	var dhf = d.getObject("html.format",true,dojox);
 	
 	dhf.prettyPrint = function(html/*String*/, indentBy /*Integer?*/, maxLineLength /*Integer?*/, map/*Array?*/, /*boolean*/ xhtml){

@@ -26,9 +26,7 @@
 
 		function getDate(node, v){
 			if(v === true){ // Done clicked
-				var w = dijit.byId("spin1");
-				var date = w.getValue().join('-');
-				node.value = date;
+				node.value = dijit.byId("spin1").getValue().join('-');
 			}
 		}
 		function setDate(node){

@@ -64,7 +64,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after click");
-								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu")
+								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu");
 								
 								var selectedOptions = dojo.query(".dijitSelectSelectedOption .dijitMenuItemLabel", s1_menu.domNode);
 								doh.is(1, selectedOptions.length, "one selected option");
@@ -99,7 +99,7 @@
 							}), 1000);
 
 							// clicking away should close the drop down
-							doh.robot.mouseMove(10, 10, 500)
+							doh.robot.mouseMove(10, 10, 500);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden(s1_menu), "clicking away hides menu");
@@ -123,7 +123,7 @@
 							doh.robot.mousePress({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after mouse down");
-								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu")
+								doh.is(5, dojo.query("tr", s1_menu.domNode).length, "5 options in menu");
 								
 								var selectedOptions = dojo.query(".dijitSelectSelectedOption .dijitMenuItemLabel", s1_menu.domNode);
 								doh.is(1, selectedOptions.length, "one selected option");
@@ -158,7 +158,7 @@
 							}), 1000);
 
 							// mouse up away from node should leave drop down open
-							doh.robot.mouseMove(10, 10, 500)
+							doh.robot.mouseMove(10, 10, 500);
 							doh.robot.mouseRelease({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "mouse up away from menu leaves menu open");
@@ -191,7 +191,7 @@
 							}), 1000);
 
 							// close drop down
-							doh.robot.mouseMove(10, 10, 500, 1)
+							doh.robot.mouseMove(10, 10, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden(s8a_menu), "clicking on blank screen hides menu");
@@ -253,19 +253,19 @@
 							// tab to s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1", dojo.global.dijit._curFocus.id)
+								doh.is("s1", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// tab to button after s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1button", dojo.global.dijit._curFocus.id)
+								doh.is("s1button", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// tab again should skip disabled s2, and go to s3
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("s3", dojo.global.dijit._curFocus.id)
+								doh.is("s3", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							return d;
@@ -286,7 +286,7 @@
 							// tab to s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1", dojo.global.dijit._curFocus.id)
+								doh.is("s1", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// down arrow to open drop down and focus first item
@@ -294,7 +294,7 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after down arrow");
 								Tenessee = dojo.query("tr", s1_menu.domNode)[0];
-								doh.is(Tenessee, dojo.global.dijit._curFocus, "focused on first menu item")
+								doh.is(Tenessee, dojo.global.dijit.focus.curNode, "focused on first menu item")
 							}), 1000);
 
 							// down arrow to next menu choice
@@ -302,7 +302,7 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu still displayed");
 								Virginia = dojo.query("tr", s1_menu.domNode)[1];
-								doh.is(Virginia, dojo.global.dijit._curFocus, "focused on second menu item")
+								doh.is(Virginia, dojo.global.dijit.focus.curNode, "focused on second menu item")
 							}), 1000);
 
 							// ENTER to select option
@@ -330,7 +330,7 @@
 							// tab to s1
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is("s1", dojo.global.dijit._curFocus.id)
+								doh.is("s1", dojo.global.dijit.focus.curNode.id)
 							}), 1000);
 
 							// down arrow to open drop down and focus first item
@@ -338,7 +338,7 @@
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.t(isVisible(s1_menu), "drop down menu displayed after down arrow");
 								Tenessee = dojo.query("tr", s1_menu.domNode)[0];
-								doh.is(Tenessee, dojo.global.dijit._curFocus, "focused on first menu item")
+								doh.is(Tenessee, dojo.global.dijit.focus.curNode, "focused on first menu item")
 							}), 1000);
 
 							// ESC to close menu

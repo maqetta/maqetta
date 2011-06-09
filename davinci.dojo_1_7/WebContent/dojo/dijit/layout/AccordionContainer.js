@@ -1,12 +1,23 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	"..",
 	"dojo/text!./templates/AccordionButton.html",
+	"require",
 	"../_Container",
 	"../_TemplatedMixin",
 	"../_CssStateMixin",
 	"./StackContainer",
-	"./ContentPane"], function(dojo, dijit, template){
+	"./ContentPane",
+	"../focus",			// dijit.focus()
+	"dojo/_base/array", // dojo.forEach dojo.map
+	"dojo/_base/connect", // dojo.keys dojo.publish
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/fx", // dojo.Animation
+	"dojo/_base/html", // dojo.attr dojo.place dojo.removeClass dojo.setSelectable
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff" // dojo.isIE
+], function(dojo, dijit, template, require){
 
 	// module:
 	//		dijit/layout/AccordionContainer
@@ -68,7 +79,7 @@ define([
 		buildRendering: function(){
 			this.inherited(arguments);
 			this.domNode.style.overflow = "hidden";		// TODO: put this in dijit.css
-			dijit.setWaiRole(this.domNode, "tablist");	// TODO: put this in template
+			this.domNode.setAttribute("role", "tablist");	// TODO: put this in template
 		},
 
 		startup: function(){
@@ -103,6 +114,9 @@ define([
 			var totalCollapsedHeight = 0;
 			dojo.forEach(this.getChildren(), function(child){
 	            if(child != openPane){
+					// Using dojo._getMarginSize() rather than dojo.position() since claro has 1px bottom margin
+					// to separate accordion panes.  Not sure that works perfectly, it's probably putting a 1px
+					// margin below the bottom pane (even though we don't want one).
 					totalCollapsedHeight += dojo._getMarginSize(child._wrapperWidget.domNode).h;
 				}
 			});
@@ -465,7 +479,7 @@ define([
 			this.inherited(arguments);
 			var titleTextNodeId = this.id.replace(' ','_');
 			dojo.attr(this.titleTextNode, "id", titleTextNodeId+"_title");
-			dijit.setWaiState(this.focusNode, "labelledby", dojo.attr(this.titleTextNode, "id"));
+			this.focusNode.setAttribute("aria-labelledby", dojo.attr(this.titleTextNode, "id"));
 			dojo.setSelectable(this.domNode, false);
 		},
 
@@ -491,12 +505,18 @@ define([
 
 		_setSelectedAttr: function(/*Boolean*/ isSelected){
 			this._set("selected", isSelected);
-			dijit.setWaiState(this.focusNode, "expanded", isSelected);
-			dijit.setWaiState(this.focusNode, "selected", isSelected);
+			this.focusNode.setAttribute("aria-expanded", isSelected);
+			this.focusNode.setAttribute("aria-selected", isSelected);
 			this.focusNode.setAttribute("tabIndex", isSelected ? "0" : "-1");
 		}
 	});
 
+	// Back compat w/1.6, remove for 2.0
+	if(!dojo.isAsync){
+		dojo.ready(0, function(){
+			require(["dijit/layout/AccordionPane"]);
+		});
+	}
 
 	return dijit.layout.AccordionContainer;
 });

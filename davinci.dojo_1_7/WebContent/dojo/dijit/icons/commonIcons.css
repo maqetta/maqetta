@@ -123,7 +123,7 @@ The 16 x 16px icons in these sprites are action and object type images which can
 }
 
 /*Action icons*/
-.dijitIconSave { background-position: 0px; }
+.dijitIconSave { background-position: 0; }
 .dijitIconPrint { background-position: -16px; }
 .dijitIconCut { background-position: -32px; }
 .dijitIconCopy { background-position: -48px; }

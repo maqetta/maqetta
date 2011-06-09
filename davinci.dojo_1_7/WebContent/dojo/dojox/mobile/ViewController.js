@@ -1,5 +1,5 @@
-define(["dojo/_base/declare","dojo/listen","dojo/_base/array","dojo/DeferredList","./TransitionEvent","./ProgressIndicator"],
-	function(declare,listen,darra,DeferredList,TransitionEvent,ProgressIndicator){
+define(["dojo/_base/kernel", "dojo/_base/declare","dojo/on","dojo/_base/array","dojo/DeferredList","./TransitionEvent","./ProgressIndicator"],
+	function(dojo, declare, on, darra, DeferredList, TransitionEvent, ProgressIndicator){
 
 	var Controller = dojo.declare(null, {
 		constructor: function(){
@@ -7,13 +7,13 @@ define(["dojo/_base/declare","dojo/listen","dojo/_base/array","dojo/DeferredList
 			this.currentView=null;
 			this.defaultView=null;
 			dojo.ready(dojo.hitch(this, function(){
-				listen(dojo.body(), "startTransition", dojo.hitch(this, "onStartTransition"));
+				on(dojo.body(), "startTransition", dojo.hitch(this, "onStartTransition"));
 			}));
 		},
 
 		findCurrentView: function(moveTo,src){
 			if(moveTo){
-				w = dijit.byId(moveTo);
+				var w = dijit.byId(moveTo);
 				if(w && w.getShowingView){ return w.getShowingView(); }
 			}
 			if (dojox.mobile.currentView) {

@@ -36,7 +36,7 @@
 
 		var async= 0;
 		if(async){
-			require.ready(["dijit/dijit", "dijit/ColorPalette", "dojo/parser"], programatic);
+			require(["dijit/dijit", "dijit/ColorPalette", "dojo/parser", "dojo/domReady!"], programatic);
 		}else{
 			dojo.require("dijit.dijit"); // optimize: load dijit layer
 			dojo.require("dijit.ColorPalette");

@@ -1,4 +1,6 @@
-define(["dojo"], function(dojo){
+define([
+	"dojo/_base/kernel"
+], function(dojo){
 	// module:
 	//		dijit
 	// summary:

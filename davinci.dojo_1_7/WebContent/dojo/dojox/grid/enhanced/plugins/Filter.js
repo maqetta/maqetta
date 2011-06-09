@@ -10,7 +10,6 @@ define([
 	"./filter/ClearFilterConfirm",
 	"dojo/i18n!../nls/Filter"], function(dojo, dojox){
 
-(function(){
 	var ns = dojo.getObject("grid.enhanced.plugins", true, dojox),
 		fns = dojo.getObject("grid.enhanced.plugins.filter", true, dojox);
 		
@@ -156,10 +155,9 @@ define([
 			return cell.get(rowIndex, datarow);
 		}
 	});
-})();
 
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Filter/*name:'filter'*/);
+	dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Filter/*name:'filter'*/);
 
-return dojox.grid.enhanced.plugins.Filter;
+	return dojox.grid.enhanced.plugins.Filter;
 
 });

@@ -5,6 +5,7 @@ dojo.require("dojo.window");
 
 dojo.require("dijit._Templated");
 dojo.require("dijit._Widget");
+dojo.require("dijit.BackgroundIframe");
 dojo.require("dojo.dnd.Moveable");
 
 dojo.require("dojox.layout.ContentPane");

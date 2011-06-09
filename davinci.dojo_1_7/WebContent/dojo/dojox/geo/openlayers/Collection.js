@@ -1,5 +1,5 @@
-
-define([ "dojox/geo/openlayers/Geometry" ], function(geometryArg){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Geometry" ], function(
+		dojo, declare, geometryArg){
 
 	return dojo.declare("dojox.geo.openlayers.Collection", dojox.geo.openlayers.Geometry, {
 		//	summary:

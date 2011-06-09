@@ -8,7 +8,7 @@
   height: 48px;
   border-top: 1px solid #000000;
   background-color: #000000;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000), color-stop(0.5, #141414), color-stop(0.5, #000000));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000));
   color: white;
   text-align: center;
 }
@@ -31,7 +31,7 @@
 .mblTabBar .mblTabBarButton.mblTabButtonSelected {
   -webkit-border-radius: 3px;
   background-color: #404040;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424), color-stop(0.5, #353535), color-stop(0.5, #242424));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424));
 }
 .mblTabBarButtonAnchor {
   display: block;
@@ -52,7 +52,6 @@
   top: 2px;
 }
 .mblTabBarButtonTextBox {
-  color: #979797;
   font-family: "Helvetica Neue", Helvetica;
   font-size: 11px;
 }
@@ -122,9 +121,38 @@
   color: white;
   text-align: center;
 }
+.mblTabPanelHeader .mblTabButton {
+  margin-top: 3px;
+}
 .mblTabPanelHeader .mblTabButtonDomButton {
   width: 43px;
 }
 .mblTabPanelHeader .mblDomButton {
   left: 8px;
+}
+.mblHeading .mblTabPanelHeader {
+  height: 25px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton {
+  margin-top: 0;
+  margin-right: 0;
+  height: 23px;
+  border-width: 1px 1px 1px 0px;
+  border-style: inset;
+  border-color: #3F3E3E;
+  background-color: #ADADAD;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#7f7f7f), color-stop(0.5, #adadad), color-stop(0.5, #909090));
+}
+.mblHeading .mblTabPanelHeader .mblTabButton:first-child {
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  border-left-width: 1px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton:last-child {
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButtonSelected {
+  background-color: #FFC700;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700));
 }

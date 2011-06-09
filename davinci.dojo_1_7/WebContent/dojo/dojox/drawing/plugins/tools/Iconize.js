@@ -1,5 +1,8 @@
-dojo.provide("dojox.drawing.plugins.tools.Iconize");
-dojo.require("dojox.drawing.plugins._Plugin");
+define([
+	"dojo",
+	"../../util/oo",
+	"../_Plugin",
+	"../../manager/_registry"],function(dojo){
 
 dojox.drawing.plugins.tools.Iconize = dojox.drawing.util.oo.declare(
 	// summary:
@@ -98,3 +101,6 @@ dojox.drawing.plugins.tools.Iconize.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.plugins.tools.Iconize.setup, "plugin");
+
+return dojox.drawing.plugins.tools.Iconize;
+});

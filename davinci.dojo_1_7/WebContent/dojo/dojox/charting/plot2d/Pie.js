@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "./_PlotEvents", "./common", "../axis2d/common", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "../Element", "./_PlotEvents", "./common", "../axis2d/common", 
 	"dojox/gfx", "dojox/gfx/matrix", "dojox/lang/functional", "dojox/lang/utils"],
-	function(dojo, declare, Element, PlotEvents, dc, da, g, m, df, du){
+	function(dojo, lang, declare, Element, PlotEvents, dc, da, g, m, df, du){
 
 	/*=====
 	dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {

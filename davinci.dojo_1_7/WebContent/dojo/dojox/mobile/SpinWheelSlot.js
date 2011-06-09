@@ -1,4 +1,5 @@
-define(["dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Contained","./_ScrollableMixin"],function(darray,dbase,WidgetBase,Contained,ScrollableMixin){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Contained","./_ScrollableMixin"],
+	function(dojo, declare, darray, dbase, WidgetBase, Contained, ScrollableMixin){
 	// module:
 	//		dojox/mobile/SpinWheelSlot
 	// summary:
@@ -39,7 +40,7 @@ define(["dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Contain
 			this.containerNode.style.height
 				= (dojo.global.innerHeight||dojo.doc.documentElement.clientHeight) * 2 + "px"; // must bigger than the screen
 			this.panelNodes = [];
-			for(k = 0; k < 3; k++){
+			for(var k = 0; k < 3; k++){
 				this.panelNodes[k] = dojo.create("DIV", {className:"mblSpinWheelSlotPanel"});
 				var len = this.items.length;
 				var n = Math.ceil(this.minItems / len);
@@ -56,6 +57,7 @@ define(["dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Contain
 			}
 			this.domNode.appendChild(this.containerNode);
 			this.touchNode = dojo.create("DIV", {className:"mblSpinWheelSlotTouch"}, this.domNode);
+			this.setSelectable(this.domNode, false);
 		},
 	
 		startup: function(){

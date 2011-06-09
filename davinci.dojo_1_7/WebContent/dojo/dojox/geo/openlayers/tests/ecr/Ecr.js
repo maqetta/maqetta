@@ -7,10 +7,10 @@
 //dojo.require("dojox.geo.openlayers.tests.ecr.PortRenderer");
 //dojo.require("dojox.geo.openlayers.tests.ecr.LegsRenderer");
 
-define([ "dojo/_base/html", "dojo/_base/array", "dojo/_base/lang",
+define(["dojo/_base/kernel",  "dojo/_base/declare", "dojo/_base/html", "dojo/_base/array", "dojo/_base/lang",
 		"dojox/geo/openlayers/widget/Map", "dojox/geo/openlayers/GfxLayer",
 		"dojo/data/ItemFileReadStore", "dojox/geo/openlayers/tests/ecr/PortRenderer",
-		"dojox/geo/openlayers/tests/ecr/LegsRenderer" ], function(){
+		"dojox/geo/openlayers/tests/ecr/LegsRenderer" ], function(dojo, declare){
 
 	return dojo.declare("dojox.geo.openlayers.tests.ecr.Ecr", null, {
 		constructor : function(){

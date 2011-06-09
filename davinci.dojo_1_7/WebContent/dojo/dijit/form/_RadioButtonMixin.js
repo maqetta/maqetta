@@ -1,4 +1,15 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/_base/NodeList", // .forEach
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/window", // dojo.doc
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/_RadioButtonMixin

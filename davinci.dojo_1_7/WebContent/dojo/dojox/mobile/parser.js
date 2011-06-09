@@ -1,4 +1,4 @@
-define(["dojo/_base/load"], function(dlang){
+define(["dojo/ready"], function(dlang){
 
 	dojo.getObject("mobile", true, dojox);
 
@@ -70,7 +70,7 @@ define(["dojo/_base/load"], function(dlang){
 				args = rootNode;
 				rootNode = rootNode.rootNode;
 			}
-	
+
 			var nodes = rootNode.getElementsByTagName("*");
 			var i, list = [];
 			for(i = 0; i < nodes.length; i++){

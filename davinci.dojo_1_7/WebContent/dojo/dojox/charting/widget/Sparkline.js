@@ -1,12 +1,13 @@
-define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/html", "dojo/query", 
-	"./Chart", "../themes/GreySkies", "../plot2d/Lines"], function(dojo, declare, dhtml, dquery, Chart, GreySkies, Lines){
+define(["dojo/_base/kernel", "dojo/_base/array", "dojo/_base/declare", "dojo/_base/html", "dojo/query", 
+	"./Chart", "../themes/GreySkies", "../plot2d/Lines"], 
+	function(dojo, array, declare, dhtml, dquery, Chart, GreySkies, Lines){
 
 	var d = dojo;
 
 	dojo.declare("dojox.charting.widget.Sparkline",
 		dojox.charting.widget.Chart,
 		{
-			theme: dojox.charting.themes.GreySkies,
+			theme: GreySkies,
 			margins: { l: 0, r: 0, t: 0, b: 0 },
 			type: "Lines",
 			valueFn: "Number(x)",

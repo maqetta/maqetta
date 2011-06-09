@@ -1,5 +1,5 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"../..",
 	"../../_Widget",
 	"../../_TemplatedMixin",
@@ -8,9 +8,14 @@ define([
 	"../range",
 	"../selection",
 	"../../form/FilteringSelect",
-	"dojo/store/Memory",
-	"dojo/i18n",
-	"dojo/i18n!../nls/FontChoice"], function(dojo, dijit){
+	"dojo/store/Memory", // dojo.store.Memory
+	"dojo/i18n", // dojo.i18n.getLocalization
+	"dojo/i18n!../nls/FontChoice",
+	"dojo/_base/array", // dojo.indexOf dojo.map
+	"dojo/_base/html", // dojo.place
+	"dojo/_base/lang", // dojo.delegate dojo.hitch dojo.isString
+	"dojo/_base/window" // dojo.withGlobal
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/FontChoice
@@ -91,8 +96,8 @@ dojo.declare("dijit._editor.plugins._FontDropDown",
 		//		Optional parameter used to tell the select whether or not to fire
 		//		onChange event.
 
-		//if the value is not a permitted value, just set empty string to prevent showing the warning icon
-		priorityChange = priorityChange !== false?true:false;
+		// if the value is not a permitted value, just set empty string to prevent showing the warning icon
+		priorityChange = priorityChange !== false;
 		this.select.set('value', dojo.indexOf(this.values,value) < 0 ? "" : value, priorityChange);
 		if(!priorityChange){
 			// Clear the last state in case of updateState calls.  Ref: #10466
@@ -171,7 +176,7 @@ dojo.declare("dijit._editor.plugins._FontNameDropDown", dijit._editor.plugins._F
 		//		Over-ride for the default action of setting the
 		//		widget value, maps the input to known values
 
-		priorityChange = priorityChange !== false?true:false;
+		priorityChange = priorityChange !== false;
 		if(this.generic){
 			var map = {
 				"Arial": "sans-serif",
@@ -226,7 +231,7 @@ dojo.declare("dijit._editor.plugins._FontSizeDropDown", dijit._editor.plugins._F
 		// summary:
 		//		Over-ride for the default action of setting the
 		//		widget value, maps the input to known values
-		priorityChange = priorityChange !== false?true:false;
+		priorityChange = priorityChange !== false;
 		if(value.indexOf && value.indexOf("px") != -1){
 			var pixels = parseInt(value, 10);
 			value = {10:1, 13:2, 16:3, 18:4, 24:5, 32:6, 48:7}[pixels] || value;

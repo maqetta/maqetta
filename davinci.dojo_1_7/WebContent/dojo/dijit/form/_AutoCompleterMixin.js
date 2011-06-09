@@ -1,11 +1,21 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject dojo.mixin
 	"..",
-	"dojo/string",
-	"dojo/regexp",
-	"dojo/data/util/filter",
+	"dojo/string", // dojo.string.substitute
+	"dojo/regexp", // dojo.regexp.escapeString
+	"dojo/data/util/filter", // dojo.data.util.filter.patternToRegExp
 	"dojo/i18n!./nls/ComboBox",
-	"./DataList"], function(dojo, dijit){
+	"./DataList",
+	"dojo/_base/Deferred", // dojo.when
+	"dojo/_base/connect", // dojo.keys dojo.keys.SHIFT
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/lang", // dojo.clone dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE
+	"dojo/_base/window", // dojo.doc.selection.createRange
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/_AutoCompleterMixin
@@ -683,7 +693,7 @@ define([
 			// summary:
 			//		Adds escape sequences for special characters in XML: &<>"'
 			str = String(str).replace(/&/gm, "&amp;").replace(/</gm, "&lt;")
-				.replace(/>/gm, "&gt;").replace(/"/gm, "&quot;");
+				.replace(/>/gm, "&gt;").replace(/"/gm, "&quot;"); //balance"
 			return str; // string
 		},
 

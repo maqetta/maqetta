@@ -1,4 +1,4 @@
-define("dojox/editor/plugins/SafePaste", ["dojo", "dijit", "dojox", "dojox/editor/plugins/PasteFromWord", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/SafePaste"], function(dojo, dijit, dojox) {
+define("dojox/editor/plugins/SafePaste", ["dojo", "dijit", "dojox", "dojox/editor/plugins/PasteFromWord", "dojo/string", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/SafePaste"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWord],{
 	// summary:
@@ -11,6 +11,9 @@ dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWo
 	_initButton: function(){
 		// summary:
 		//		Over-ride the editor paste controls
+
+		// Create instance local copy.
+		this._filters = this._filters.slice(0); 
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "SafePaste");
 
 		this._uId = dijit.getUniqueId(this.editor.id);
@@ -31,6 +34,22 @@ dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWo
 		this.connect(dijit.byId(this._uId + "_paste"), "onClick", "_paste");
 		this.connect(dijit.byId(this._uId + "_cancel"), "onClick", "_cancel");
 		this.connect(this._dialog, "onHide", "_clearDialog");
+		
+		// Create regular expressions for sripping out user-specified tags and register 
+		// them with the filters.
+		dojo.forEach(this.stripTags, function(tag){
+			var tagName = tag + "";
+			var rxStartTag = new RegExp("<\\s*" + tagName + "[^>]*>", "igm");
+			var rxEndTag = new RegExp("<\\\\?\\/\\s*" + tagName + "\\s*>", "igm");
+			this._filters.push({regexp: 
+				rxStartTag, 
+				handler: ""
+			});
+			this._filters.push({regexp: 
+				rxEndTag, 
+				handler: ""
+			});
+		}, this);
 	},
 	
 	updateState: function(){
@@ -68,8 +87,9 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	var name = o.args.name.toLowerCase();
 	if(name === "safepaste"){
 		o.plugin = new dojox.editor.plugins.SafePaste({
-			width: ("width" in o.args)?o.args.width:"400px",
-			height: ("height" in o.args)?o.args.width:"300px"
+			width: (o.args.hasOwnProperty("width"))?o.args.width:"400px",
+			height: (o.args.hasOwnProperty("height"))?o.args.width:"300px",
+			stripTags: (o.args.hasOwnProperty("stripTags"))?o.args.stripTags:null 
 		});
 	}
 });

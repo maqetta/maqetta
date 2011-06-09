@@ -131,8 +131,8 @@ dojo.declare("dojox.form._CheckedMultiSelectMenu", dijit.Menu, {
 		dojo.removeClass(o, "dijitMenuTable");
 		n.className = o.className + " dojoxCheckedMultiSelectMenu";
 		o.className = "dijitReset dijitMenuTable";
-		dijit.setWaiRole(o,"listbox");
-		dijit.setWaiRole(n,"presentation");
+		o.setAttribute("role", "listbox");
+		n.setAttribute("role", "presentation");
 		n.appendChild(o);
 	},
 	
@@ -235,7 +235,7 @@ dojo.declare("dojox.form._CheckedMultiSelectMenuItem", dijit.MenuItem, {
 		// summary:
 		//		Called to force the box to match the state of the select
 		dojo.toggleClass(this.domNode, "dojoxCheckedMultiSelectMenuItemChecked", !!this.option.selected);
-		dijit.setWaiState(this.domNode, "checked", this.option.selected);
+		this.domNode.setAttribute("aria-checked", this.option.selected);
 		this.inputNode.checked = this.option.selected;
 		if(!this.parent.multiple){
 			dojo.toggleClass(this.domNode, "dijitSelectSelectedOption", !!this.option.selected);

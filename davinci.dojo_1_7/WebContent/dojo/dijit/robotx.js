@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.experimental dojo.mixin
 	".",
 	"./robot",
-	"dojo/robotx"], function(dojo, dijit_){
+	"dojo/robotx",
+	"dojo/_base/window" // dojo.global
+], function(dojo, dijit_){
 
 	// module:
 	//		dijit/robotx

@@ -1,8 +1,7 @@
-dojo.provide("dojox.drawing.util.oo");
-
+define(["./common"],function(dojo){
+	
 // TODO:
 // allow a declare without a mixin
-
 dojox.drawing.util.oo = {
 	// summary:
 	//		Inheritance utilities used in DojoX Drawing
@@ -58,7 +57,7 @@ dojox.drawing.util.oo = {
 		//
 		var f, o, ext=0, a = arguments;
 				
-		if(a.length<2){ console.error("gfx.oo.declare; not enough arguments")}
+		if(a.length<2){ console.error("drawing.util.oo.declare; not enough arguments")}
 		if(a.length==2){
 			f = a[0]; o = a[1];
 		}else{
@@ -99,7 +98,7 @@ dojox.drawing.util.oo = {
 		//		|	var e = new D();
 		//
 		var a = arguments, sub = a[0];
-		if(a.length<2){ console.error("gfx.oo.extend; not enough arguments")}
+		if(a.length<2){ console.error("drawing.util.oo.extend; not enough arguments")}
 		var f = function (){
 			for(var i=1;i<a.length;i++){
 				a[i].prototype.constructor.apply(this, arguments);
@@ -120,3 +119,6 @@ dojox.drawing.util.oo = {
 		return f; // Function
 	}
 };
+
+return dojox.drawing.util.oo;
+});

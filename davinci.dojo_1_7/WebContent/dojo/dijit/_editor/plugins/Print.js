@@ -1,10 +1,14 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"../..",
+	"../../focus",		// dijit.focus()
 	"../_Plugin",
 	"../../form/Button",
-	"dojo/i18n",
-	"dojo/i18n!../nls/commands"], function(dojo, dijit){
+	"dojo/i18n", // dojo.i18n.getLocalization
+	"dojo/i18n!../nls/commands",
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff" // dojo.isChrome dojo.isOpera
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/Print

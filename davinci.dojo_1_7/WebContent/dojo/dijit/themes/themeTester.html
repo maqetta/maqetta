@@ -54,7 +54,7 @@
 		hr.spacer { border:0; background-color:#ededed; width:80%; height:1px; }
 
 		/* rules used to test custom setting of TextBox padding */
-		.inputPadding0 .dijitInputField { padding: 0px !important; }
+		.inputPadding0 .dijitInputField { padding: 0 !important; }
 		.inputPadding1 .dijitInputField { padding: 1px !important; }
 		.inputPadding2 .dijitInputField { padding: 2px !important; }
 		.inputPadding3 .dijitInputField { padding: 3px !important; }
@@ -84,19 +84,19 @@
 			"dojo/data/ItemFileReadStore",
 			"dojo/dnd/Source"], function(dojo, dijit){
 				// various function ripped out of inline script type=dojo/* blocks
-				showDialog= function(){
+				showDialog = function(){
 					var dlg = dijit.byId('dialog1');
 					dlg.show();
 					// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
 					dlg._savedFocus = dojo.byId("header");
-				}
+				};
 				
-				showDialogAb= function(){
+				showDialogAb = function(){
 					var dlg = dijit.byId('dialogAB');
 					dlg.show();
 					// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
 					dlg._savedFocus = dojo.byId("header");
-				}
+				};
 
 				//var setTextBoxPadding;
 				// current setting (if there is one) to override theme default padding on TextBox based widgets
@@ -106,15 +106,15 @@
 					// summary:
 					//		Handler for when a MenuItem is clicked to set non-default padding for
 					//		TextBox widgets
-		
+
 					// Effectively ignore clicks on the	 currently checked MenuItem
 					if(!this.get("checked")){
 						this.set("checked", true);
 					}
-		
+
 					// val will be "theme default", "0px", "1px", ..., "5px"
 					var val = this.get("label");
-					
+
 					// Set class on body to get requested padding, and remove any previously set class
 					if(currentInputPadding){
 						dojo.removeClass(dojo.body(), currentInputPadding);
@@ -124,44 +124,46 @@
 						currentInputPadding = "inputPadding" + val.replace("px", "");
 						dojo.addClass(dojo.body(), currentInputPadding);
 					}
-		
+
 					// Clear previously checked MenuItem (radio-button effect).
 					dojo.forEach(this.getParent().getChildren(), function(mi){
 						if(mi != this){
 							mi.set("checked", false);
 						}
 					}, this);
-				}
+				};
 
-				logStrayGlobals= function(){
+				logStrayGlobals = function(){
 					// summary:
 					//		Print all the global variables that we've created [by mistake] inside of dojo
 					var strayGlobals = [];
 					for(var i in window){
-						if(!window.__globalList[i]){ strayGlobals.push(i); }
+						if(!window.__globalList[i]){
+							strayGlobals.push(i);
+						}
 					}
 					if(strayGlobals.length){
-						console.warn("Stray globals: "+strayGlobals.join(", "));
+						console.warn("Stray globals: " + strayGlobals.join(", "));
 					}
-				}
+				};
 		
-				logWidgets= function(){
+				logWidgets = function(){
 					// summary:
 					//		Print all the widgets to console
 					console.log("Widgets in registry:");
 					dijit.registry.forEach(function(w){
 						console.log(w);
 					});
-				}
+				};
 		
-				tearDown= function(){
+				tearDown = function(){
 					// summary:
 					//		Destroy all widgets, top down, and then check for any orphaned widgets
 					dijit._destroyAll();
 					logWidgets();
-				}
+				};
 		
-				require.ready(function(){
+				dojo.ready(function(){
 					var loadCompleteTime = +new Date();
 					console.log("Total load time: " + (loadCompleteTime - startTime) + "ms");
 		
@@ -207,7 +209,7 @@
 					dojo.byId('themeData').innerHTML = tmpString;
 				});
 		
-				require.ready(function(){
+				dojo.ready(function(){
 					// It's the server's responsibility to localize the date displayed in the (non-edit) version of an InlineEditBox,
 					// but since we don't have a server we'll hack it in the client
 					dijit.byId("backgroundArea").set('value', dojo.date.locale.format(new Date(2005, 11, 30), { selector: 'date' }));

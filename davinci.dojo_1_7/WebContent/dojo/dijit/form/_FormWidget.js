@@ -1,12 +1,14 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	"..",
 	"dojo/window",
 	"../_Widget",
 	"../_TemplatedMixin",
 	"../_CssStateMixin",
 	"./_FormValueMixin",
-	"./_FormWidgetMixin"], function(dojo, dijit){
+	"./_FormWidgetMixin",
+	"dojo/_base/sniff" // dojo.isIE
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_FormWidget

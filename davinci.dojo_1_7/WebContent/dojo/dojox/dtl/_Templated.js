@@ -1,4 +1,4 @@
-define(["dojo/_base/declare","../_base","dijit/_Templated","../_Templated","dojo/_base/html"], function(dojo,dd,dt){
+define(["dojo/_base/kernel","dojo/_base/declare","./_base","dijit/_Templated","dojo/_base/html"], function(dojo,declare,dd,dt){
 
 	return dojo.declare("dojox.dtl._Templated", dt, {
 		_dijitTemplateCompat: false,

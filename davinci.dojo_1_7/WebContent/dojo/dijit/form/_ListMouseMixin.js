@@ -1,13 +1,19 @@
-define(["dojo", "..", "./_ListBase"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/touch",
+	"./_ListBase",
+	"dojo/_base/event" // dojo.stopEvent
+], function(dojo, dijit, touch){
 
 // module:
 //		dijit/form/_ListMouseMixin
 // summary:
-//		a Mixin to handle mouse events for a focus-less menu
+//		a mixin to handle mouse or touch events for a focus-less menu
 
 dojo.declare( "dijit.form._ListMouseMixin", dijit.form._ListBase, {
 	// summary:
-	//		a Mixin to handle mouse events for a focus-less menu
+	//		a Mixin to handle mouse or touch events for a focus-less menu
 	//		Abstract methods that must be defined externally:
 	//			onClick: item was chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
 	// tags:
@@ -15,8 +21,8 @@ dojo.declare( "dijit.form._ListMouseMixin", dijit.form._ListBase, {
 
 	postCreate: function(){
 		this.inherited(arguments);
-		this.connect(this.domNode, "onmousedown", "_onMouseDown");
-		this.connect(this.domNode, "onmouseup", "_onMouseUp");
+		this.connect(this.domNode, touch.press, "_onMouseDown");
+		this.connect(this.domNode, touch.release, "_onMouseUp");
 		this.connect(this.domNode, "onmouseover", "_onMouseOver");
 		this.connect(this.domNode, "onmouseout", "_onMouseOut");
 	},

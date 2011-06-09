@@ -1,9 +1,16 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	".",
 	"./_Widget",
 	"./_TemplatedMixin",
-	"./_WidgetsInTemplateMixin"], function(dojo, dijit){
+	"./_WidgetsInTemplateMixin",
+	"dojo/_base/NodeList", // .forEach .orphan
+	"dojo/_base/array", // dojo.forEach dojo.map
+	"dojo/_base/connect", // dojo.connect
+	"dojo/_base/declare", // dojo.declare
+	"dojo/parser", // dojo.parser._functionFromScript
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/Declaration

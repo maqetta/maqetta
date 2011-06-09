@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base"], function(dojo,da){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base"], function(dojo,dlang,da){
 
 		// summary:
 		//	plugin to have analyitcs return the base info dojo collects

@@ -1,4 +1,11 @@
-define(["dojo", "..", "dojo/window"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.deprecated dojo.getObject dojo.setObject
+	"..",
+	"dojo/window", // dojo.window.scrollIntoView
+	"dojo/_base/array", // dojo.every dojo.filter dojo.forEach dojo.indexOf dojo.map
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/lang" // dojo.hitch dojo.isArray
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/_FormMixin
@@ -287,13 +294,13 @@ define(["dojo", "..", "dojo/window"], function(dojo, dijit){
 						if(typeof(myObj[nameA[0]][nameIndex]) == "undefined"){
 							myObj[nameA[0]][nameIndex] = { };
 						}
-					} else if(typeof(myObj[nameA[0]]) == "undefined"){
+					}else if(typeof(myObj[nameA[0]]) == "undefined"){
 						myObj[nameA[0]] = { }
 					} // if
 
 					if(nameA.length == 1){
 						myObj=myObj[nameA[0]];
-					} else{
+					}else{
 						myObj=myObj[nameA[0]][nameIndex];
 					} // if
 				} // for
@@ -301,15 +308,15 @@ define(["dojo", "..", "dojo/window"], function(dojo, dijit){
 				if((elm.type != "select-multiple" && elm.type != "checkbox" && elm.type != "radio") || (elm.type == "radio" && elm.checked)){
 					if(name == name.split("[")[0]){
 						myObj[name]=elm.value;
-					} else{
+					}else{
 						// can not set value when there is no name
 					}
-				} else if(elm.type == "checkbox" && elm.checked){
+				}else if(elm.type == "checkbox" && elm.checked){
 					if(typeof(myObj[name]) == 'undefined'){
 						myObj[name]=[ ];
 					}
 					myObj[name].push(elm.value);
-				} else if(elm.type == "select-multiple"){
+				}else if(elm.type == "select-multiple"){
 					if(typeof(myObj[name]) == 'undefined'){
 						myObj[name]=[ ];
 					}

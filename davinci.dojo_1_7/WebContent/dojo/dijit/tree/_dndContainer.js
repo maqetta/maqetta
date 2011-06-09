@@ -1,8 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject dojo.mixin
 	"..",
 	"dojo/dnd/common",
-	"dojo/dnd/Container"], function(dojo, dijit){
+	"dojo/dnd/Container",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.connect dojo.disconnect
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html" // dojo.addClass dojo.removeClass dojo.replaceClass
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/tree/_dndContainer
@@ -11,7 +16,7 @@ define([
 	//		It's modeled after `dojo.dnd.Container`.
 
 
-	dojo.getObject("tree", true, dojo);
+	dojo.getObject("tree", true, dijit);
 
 	dijit.tree._compareNodes = function(n1, n2){
 		if(n1 === n2){
@@ -95,13 +100,11 @@ define([
 			// tags:
 			//		protected
 
-			var widget = this.selection[key],
-				ret = {
-					data: widget,
-					type: ["treeNode"]
-				};
-
-			return ret;	// dojo.dnd.Item
+			var widget = this.selection[key];
+			return {
+				data: widget,
+				type: ["treeNode"]
+			}; // dojo.dnd.Item
 		},
 
 		destroy: function(){

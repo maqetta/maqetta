@@ -1,4 +1,5 @@
-define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./TransitionEvent"],function(dhtml, darray,mcommon,ItemBase,TransitionEvent){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./TransitionEvent"],
+	function(dojo, declare, dhtml, darray, mcommon, ItemBase, TransitionEvent){
 	// module:
 	//		dojox/mobile/IconItem
 	// summary:
@@ -95,13 +96,6 @@ define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./Trans
 			dojo.removeClass(this.iconDivNode, "mblVibrate");
 		},
 
-		setOpacity: function(node, val){
-			node.style.opacity = val;
-			node.style.mozOpacity = val;
-			node.style.khtmlOpacity = val;
-			node.style.webkitOpacity = val;
-		},
-	
 		instantiateWidget: function(e){
 			// avoid use of dojo.query
 			/*
@@ -132,7 +126,7 @@ define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./Trans
 		},
 	
 		onMouseDownIcon: function (e){
-			this.setOpacity(this.iconNode, this.getParent().pressedIconOpacity);
+			dojo.style(this.iconNode, "opacity", this.getParent().pressedIconOpacity);
 		},
 	
 		iconClicked: function(e){
@@ -150,7 +144,7 @@ define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./Trans
 			}
 			if(transOpts){
 				setTimeout(dojo.hitch(this, function(d){
-					this.setOpacity(this.iconNode, 1);
+					dojo.style(this.iconNode, "opacity", 1);
 				}), 1500);
 			}else{
 				return this.open(e);
@@ -174,7 +168,7 @@ define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./Trans
 			if(this.transition == "below"){
 				if(parent.single){
 					parent.closeAll();
-					this.setOpacity(this.iconNode, this.getParent().pressedIconOpacity);
+					dojo.style(this.iconNode, "opacity", this.getParent().pressedIconOpacity);
 				}
 				this._open_1();
 			}else{
@@ -219,7 +213,7 @@ define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./Trans
 			}else{
 				this.containerNode.parentNode.style.display = "none";
 			}
-			this.setOpacity(this.iconNode, 1);
+			dojo.style(this.iconNode, "opacity", 1);
 			this.onClose();
 		},
 	
@@ -246,8 +240,8 @@ define(["dojo/_base/html", "dojo/_base/array", "./common","./_ItemBase","./Trans
 		_setLabelAttr: function(/*String*/text){
 			this.label = text;
 			var s = this._cv(text);
-			this.labelNode1.innerHTML = s
-			this.labelNode2.innerHTML = s
+			this.labelNode1.innerHTML = s;
+			this.labelNode2.innerHTML = s;
 		}
 	});
 });

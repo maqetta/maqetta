@@ -1,7 +1,5 @@
-dojo.provide("dojox.drawing.manager.keys");
+define(["dojo","../util/common","./Stencil"], function(dojo){
 
-(function(){
-	
 	// Ref: isEdit allows events to happen in Drawing, like TextBlocks
 	var isEdit = false;
 	
@@ -83,7 +81,7 @@ dojo.provide("dojox.drawing.manager.keys");
 			//		NOTE: Not really used in code, but should work.
 			//		See manager.mouse for similar usage
 			//
-			var _handle = dojox.drawing.util.uid("listener");
+			var _handle = dojox.drawing.util.common.uid("listener");
 			this.listeners.push({
 				handle:_handle,
 				scope: options.scope || window,
@@ -260,5 +258,8 @@ dojo.provide("dojox.drawing.manager.keys");
 			});
 		}
 	};
+	
 	dojo.addOnLoad(dojox.drawing.manager.keys, "init");
-})();
+
+	return dojox.drawing.manager.keys;
+});

@@ -1,4 +1,4 @@
-define(["dojo/_base"], function(dojo) {
+define(["dojo"], function(dojo) {
 
 	/*******************************************************
 		dojox.embed.Flash
@@ -492,7 +492,7 @@ dojox.embed.__flashArgs = function(path, id, width, height, style, params, vars,
 			}, obj);
 		}
 	});
-	
+
 	dojox.embed.Flash.place = function(kwArgs, node){
 		var o = fMarkup(kwArgs);
 		node = dojo.byId(node);

@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.groovy");
+define(["dojox/main", "../_base"], function(dojox){
 
-dojo.require("dojox.highlight._base");
-
-(function(){
 	var dh = dojox.highlight, dhc = dh.constants;
 	var GROOVY_KEYWORDS = {
 				'false': 1, 'int': 1, 'float': 1, 'while': 1, 'private': 1,
@@ -64,4 +61,7 @@ dojo.require("dojox.highlight._base");
 		//exporting constants
 		GROOVY_KEYWORDS: GROOVY_KEYWORDS
 	};
-})();
+
+	return dh.languages.groovy;
+	
+});

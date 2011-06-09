@@ -17,13 +17,13 @@ define([
 	"dijit/layout/AccordionContainer",
 	"dijit/layout/ContentPane",
 	"dijit/_WidgetsInTemplateMixin",
+	"dijit/focus",		// dijit.focus()
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./FilterBuilder",
 	"../Dialog",
 	"../../../cells/dijit"], function(dojo, dijit, dojox){
 		
-(function(){
 var fns = dojo.getObject("grid.enhanced.plugins.filter", true, dojox);
 	_tabIdxes = {
 		// summary:
@@ -611,11 +611,11 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterDefPane",[dijit._Widget, 
 		this._filterBtn.set("tabIndex", _tabIdxes.filterBtn);
 		
 		var nls = this.plugin.nls;
-		dijit.setWaiState(this._relSelect.domNode, "label", nls.waiRelAll);
-		dijit.setWaiState(this._addCBoxBtn.domNode, "label", nls.waiAddRuleButton);
-		dijit.setWaiState(this._cancelBtn.domNode, "label", nls.waiCancelButton);
-		dijit.setWaiState(this._clearFilterBtn.domNode, "label", nls.waiClearButton);
-		dijit.setWaiState(this._filterBtn.domNode, "label", nls.waiFilterButton);
+		this._relSelect.domNode.setAttribute("aria-label", nls.waiRelAll);
+		this._addCBoxBtn.domNode.setAttribute("aria-label", nls.waiAddRuleButton);
+		this._cancelBtn.domNode.setAttribute("aria-label", nls.waiCancelButton);
+		this._clearFilterBtn.domNode.setAttribute("aria-label", nls.waiClearButton);
+		this._filterBtn.domNode.setAttribute("aria-label", nls.waiFilterButton);
 		
 		this._relSelect.set("value", this.dlg._relOpCls === "logicall" ? "0" : "1");
 	},
@@ -626,7 +626,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterDefPane",[dijit._Widget, 
 	},
 	_onRelSelectChange: function(val){
 		this.dlg._relOpCls = val == "0" ? "logicall" : "logicany";
-		dijit.setWaiState(this._relSelect.domNode,"label", this.plugin.nls[val == "0" ? "waiRelAll" : "waiRelAny"]);
+		this._relSelect.domNode.setAttribute("aria-label", this.plugin.nls[val == "0" ? "waiRelAll" : "waiRelAny"]);
 	},
 	_onAddCBox: function(){
 		this.dlg.addCriteriaBoxes(1);
@@ -925,9 +925,9 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[dijit._Widget,dij
 	},
 	setAriaInfo: function(idx){
 		var dss = dojo.string.substitute, nls = this.plugin.nls;
-		dijit.setWaiState(this._colSelect.domNode,"label", dss(nls.waiColumnSelectTemplate, [idx]));
-		dijit.setWaiState(this._condSelect.domNode,"label", dss(nls.waiConditionSelectTemplate, [idx]));
-		dijit.setWaiState(this._pane._removeCBoxBtn.domNode,"label", dss(nls.waiRemoveRuleButtonTemplate, [idx]));
+		this._colSelect.domNode.setAttribute("aria-label", dss(nls.waiColumnSelectTemplate, [idx]));
+		this._condSelect.domNode.setAttribute("aria-label", dss(nls.waiConditionSelectTemplate, [idx]));
+		this._pane._removeCBoxBtn.domNode.setAttribute("aria-label", dss(nls.waiRemoveRuleButtonTemplate, [idx]));
 		this._index = idx;
 	},
 	_getUsableConditions: function(type){
@@ -978,7 +978,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[dijit._Widget,dij
 		this.valueNode.appendChild(this._curValueBox.domNode);
 		
 		//Can not move to setAriaInfo, 'cause the value box is created after the defpane is loaded.
-		dijit.setWaiState(this._curValueBox.domNode, "label", dojo.string.substitute(this.plugin.nls.waiValueBoxTemplate,[this._index]));
+		this._curValueBox.domNode.setAttribute("aria-label", dojo.string.substitute(this.plugin.nls.waiValueBoxTemplate,[this._index]));
 		//Now our cbox is completely ready
 		this.dlg.onRendered(this);
 	},
@@ -1228,8 +1228,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.BooleanValueBox", [dijit._Widge
 		}
 	}
 });
-})();
 
-return dojox.grid.enhanced.plugins.filter.FilterDefDialog;
+	return dojox.grid.enhanced.plugins.filter.FilterDefDialog;
 
 });

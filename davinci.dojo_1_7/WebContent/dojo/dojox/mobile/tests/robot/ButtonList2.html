@@ -28,15 +28,15 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt(dojo.query(".mblRightButton", dijit.byId("dojox_mobile_ListItem_0").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dojo.query(".mblDomButton", dijit.byId("dojox_mobile_ListItem_0").domNode)[0], 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblRightButton", dijit.byId("dojox_mobile_ListItem_1").domNode)[0], 500);
+							doh.robot.mouseMoveAt(dojo.query(".mblDomButton", dijit.byId("dojox_mobile_ListItem_1").domNode)[0], 500);
 							doh.robot.mouseClick({left: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.assertEqual("mblRightButton mblRedMinusButton", dojo.query(".mblRightButton", dijit.byId("dojox_mobile_ListItem_0").domNode)[0].className);
-								doh.assertEqual("mblRightButton mblBluePlusButton", dojo.query(".mblRightButton", dijit.byId("dojox_mobile_ListItem_1").domNode)[0].className);
+								doh.assertTrue(dojo.hasClass(dojo.query(".mblDomButton", dijit.byId("dojox_mobile_ListItem_0").domNode)[0], "mblDomButtonRedMinus"));
+								doh.assertTrue(dojo.hasClass(dojo.query(".mblDomButton", dijit.byId("dojox_mobile_ListItem_1").domNode)[0], "mblDomButtonBluePlus"));
 							}), 500);
 							return d;
 						}

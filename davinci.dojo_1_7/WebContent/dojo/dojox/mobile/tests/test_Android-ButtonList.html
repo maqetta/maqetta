@@ -6,9 +6,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 
 		<title>Button List</title>
-		<link href="../themes/android/base.css" rel="stylesheet"></link>
-		<link href="../themes/common/domButtons/DomButtonCheckboxOn.css" rel="stylesheet"></link>
-		<link href="../themes/common/domButtons/DomButtonCheckboxOff.css" rel="stylesheet"></link>
+		<link href="../themes/android/base.css" rel="stylesheet">
+		<link href="../themes/common/domButtons/DomButtonCheckboxOn.css" rel="stylesheet">
+		<link href="../themes/common/domButtons/DomButtonCheckboxOff.css" rel="stylesheet">
 
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -27,7 +27,7 @@
 			});
 			function btnClicked(e){
 				var listItem = dijit.getEnclosingWidget(e.currentTarget);
-				var btnDiv = listItem.rightIconNode;
+				var btnDiv = listItem.rightIconNode.firstChild;
 				if(dojo.hasClass(btnDiv, "mblDomButtonCheckboxOn")){
 					listItem.set("btnClass", "mblDomButtonCheckboxOff");
 				}else if(dojo.hasClass(btnDiv, "mblDomButtonCheckboxOff")){

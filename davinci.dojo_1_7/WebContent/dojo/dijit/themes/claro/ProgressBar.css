@@ -30,7 +30,7 @@
 .claro .dijitProgressBarEmpty {
   /* outer container and background of the bar that's not finished yet*/
 
-  background: #ffffff url("images/progressBarEmpty.png") repeat-none left;
+  background: #ffffff url("images/progressBarEmpty.png") no-repeat left;
   border-color: #769dc0;
 }
 .claro .dijitProgressBarTile {

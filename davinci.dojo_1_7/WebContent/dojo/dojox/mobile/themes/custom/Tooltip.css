@@ -130,7 +130,8 @@
   border-bottom-width: 0;
   border-top-color: #d5ebff;
 }
-.mblTooltipHidden {
+.mblTooltipHidden,
+.mblTooltipHidden * {
   visibility: hidden !important;
 }
 .mblTooltip .mblHeading {

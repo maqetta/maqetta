@@ -9,8 +9,7 @@ dojo.declare("SecondAssistant", dojox.mobile.app.SceneAssistant, {
     this.controller.parse();
     
     var _this = this;
-    var launcher = dijit.byId("secondSceneLauncher");
-    this.connect(dijit.byId("btn1"), "onClick", function(){
+     this.connect(dijit.byId("btn1"), "onClick", function(){
       _this.controller.stageController.popScene("Button 1");
     });
     this.connect(dijit.byId("btn2"), "onClick", function(){

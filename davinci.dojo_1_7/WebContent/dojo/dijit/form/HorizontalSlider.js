@@ -1,12 +1,26 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"dojo/text!./templates/HorizontalSlider.html",
 	"./_FormWidget",
 	"../_Container",
 	"dojo/dnd/move",
 	"./Button",
-	"dojo/number"], function(dojo, dijit, template){
+	"../focus",		// dijit.focus()
+	"dojo/number",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.keys.DOWN_ARROW dojo.keys.END dojo.keys.HOME dojo.keys.LEFT_ARROW dojo.keys.PAGE_DOWN dojo.keys.PAGE_UP dojo.keys.RIGHT_ARROW dojo.keys.UP_ARROW
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/fx", // dojo.animateProperty
+	"dojo/_base/html", // dojo.getComputedStyle dojo.position
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isMozilla
+	"dojo/dnd/Moveable", // dojo.dnd.Moveable
+	"dojo/dnd/Mover", // dojo.dnd.Mover dojo.dnd.Mover.prototype.destroy.apply
+	"dojo/query", // dojo.query
+	"dijit/typematic"
+], function(dojo, dijit, template){
 
 // module:
 //		dijit/form/HorizontalSlider
@@ -159,7 +173,7 @@ dojo.declare("dijit.form.HorizontalSlider", [dijit.form._FormValueWidget, dijit.
 		//		Hook so set('value', value) works.
 		this._set("value", value);
 		this.valueNode.value = value;
-		dijit.setWaiState(this.focusNode, "valuenow", value);
+		this.focusNode.setAttribute("aria-valuenow", value);
 		this.inherited(arguments);
 		var percent = (value - this.minimum) / (this.maximum - this.minimum);
 		var progressBar = (this._descending === false) ? this.remainingBar : this.progressBar;
@@ -177,10 +191,14 @@ dojo.declare("dijit.form.HorizontalSlider", [dijit.form._FormValueWidget, dijit.
 			if(duration < 0){ duration = 0 - duration; }
 			props[this._progressPixelSize] = { start: start, end: percent*100, units:"%" };
 			this._inProgressAnim = dojo.animateProperty({ node: progressBar, duration: duration,
-				onAnimate: function(v){ remainingBar.style[_this._progressPixelSize] = (100-parseFloat(v[_this._progressPixelSize])) + "%"; },
-				onEnd: function(){ delete _this._inProgressAnim; },
+				onAnimate: function(v){
+					remainingBar.style[_this._progressPixelSize] = (100 - parseFloat(v[_this._progressPixelSize])) + "%";
+				},
+				onEnd: function(){
+					delete _this._inProgressAnim;
+				},
 				properties: props
-			})
+			});
 			this._inProgressAnim.play();
 		}else{
 			progressBar.style[this._progressPixelSize] = (percent*100) + "%";
@@ -271,11 +289,11 @@ dojo.declare("dijit.form.HorizontalSlider", [dijit.form._FormValueWidget, dijit.
 		var label = dojo.query('label[for="'+this.id+'"]');
 		if(label.length){
 			label[0].id = (this.id+"_label");
-			dijit.setWaiState(this.focusNode, "labelledby", label[0].id);
+			this.focusNode.setAttribute("aria-labelledby", label[0].id);
 		}
 
-		dijit.setWaiState(this.focusNode, "valuemin", this.minimum);
-		dijit.setWaiState(this.focusNode, "valuemax", this.maximum);
+		this.focusNode.setAttribute("aria-valuemin", this.minimum);
+		this.focusNode.setAttribute("aria-valuemax", this.maximum);
 	},
 
 	postCreate: function(){
@@ -319,8 +337,7 @@ dojo.declare("dijit.form._SliderMover",
 			widget._setPixelValue_ = dojo.hitch(widget, "_setPixelValue");
 			widget._isReversed_ = widget._isReversed();
 		}
-		var coordEvent = e.touches ? e.touches[0] : e, // if multitouch take first touch for coords
-			pixelValue = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
+		var pixelValue = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
 		widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false);
 	},
 

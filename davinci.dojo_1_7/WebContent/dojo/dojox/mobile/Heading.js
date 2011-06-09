@@ -1,4 +1,5 @@
-define(["dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],function(dhtml,darray,dlang, mcommon,WidgetBase,Container,Contained){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],
+	function(dojo, declare, dhtml, darray, dlang, mcommon, WidgetBase, Container, Contained){
 	// module:
 	//		dojox/mobile/Heading
 	// summary:
@@ -61,7 +62,7 @@ define(["dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "./common","di
 				// +-----------------------------+
 				var leftBtn, rightBtn;
 				var children = this.containerNode.childNodes;
-				for(i = children.length - 1; i >= 0; i--){
+				for(var i = children.length - 1; i >= 0; i--){
 					var c = children[i];
 					if(c.nodeType === 1){
 						if(!rightBtn && dojo.hasClass(c, "mblToolbarButton") && dojo.style(c, "float") === "right"){
@@ -71,6 +72,12 @@ define(["dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "./common","di
 							leftBtn = c;
 						}
 					}
+				}
+
+				if(!this.labelNodeLen && this.label){
+					this.labelNode.style.display = "inline";
+					this.labelNodeLen = this.labelNode.offsetWidth;
+					this.labelNode.style.display = "";
 				}
 
 				var bw = this.domNode.offsetWidth; // bar width
@@ -105,9 +112,6 @@ define(["dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "./common","di
 		_setLabelAttr: function(/*String*/label){
 			this.label = label;
 			this.labelNode.innerHTML = this.labelDivNode.innerHTML = this._cv(label);
-			this.labelNode.style.display = "inline";
-			this.labelNodeLen = this.labelNode.offsetWidth;
-			this.labelNode.style.display = "";
 		},
 	
 		findCurrentView: function(){

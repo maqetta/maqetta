@@ -39,6 +39,12 @@
 	#vertical-align: auto;	/* makes TextBox,Button line up w/native counterparts on IE6 */
 }
 
+table.dijitInline {
+	/* To inline tables with a given width set */
+	display:inline-table;
+	box-sizing: content-box; -moz-box-sizing: content-box;
+}
+
 .dijitHidden {
 	/* To hide unselected panes in StackContainer etc. */
 	display: none !important;
@@ -77,16 +83,6 @@
 }
 .dijitTextBox .dijitValidationContainer {
 	display: none;
-}
-.dijitInlineTable {
-	/* To inline tables with a given width set (otherwise, use dijitInline above) */
-	display:inline-table;
-	display:inline-block;		/* webkit and FF3 */
-	#zoom: 1; /* set hasLayout:true to mimic inline-block */
-	#display:inline; /* don't use .dj_ie since that increases the priority */
-	box-sizing: content-box; -moz-box-sizing: content-box;
-	border:0;
-	padding:0;
 }
 
 .dijitTeeny {
@@ -381,7 +377,7 @@ DIV.dijitArrowButton {
 	outline: none;	/* blue fuzzy line looks wrong on combobox or something w/validation icon showing */
 }
 .dijitTextBoxFocused {
-	outline: auto 5px -webkit-focus-ring-color;
+	outline: 5px -webkit-focus-ring-color;
 }
 
 .dijitTextBox INPUT {
@@ -775,10 +771,10 @@ DIV.dijitArrowButton {
 	overflow: hidden;
 }
 
-body .dijitAlignTop,
-body .dijitAlignBottom,
-body .dijitAlignLeft,
-body .dijitAlignRight {
+.dijitAlignTop,
+.dijitAlignBottom,
+.dijitAlignLeft,
+.dijitAlignRight {
 	position: absolute;
 	overflow: hidden;
 }
@@ -786,7 +782,7 @@ body .dijitAlignRight {
 body .dijitAlignClient { position: absolute; }
 
 /*
- * BorderContaienr
+ * BorderContainer
  *
  * .dijitBorderContainer is a stylized layout where panes have border and margin.
  * .dijitBorderContainerNoGutter is a raw layout.
@@ -860,13 +856,13 @@ body .dijitAlignClient { position: absolute; }
 	height: 7px;
 	border-top:1px;
 	border-bottom:1px;
-	cursor: ns-resize;
+	cursor: row-resize;
 }
 .dijitSplitterV {
 	width: 7px;
 	border-left:1px;
 	border-right:1px;
-	cursor: ew-resize;
+	cursor: col-resize;
 }
 .dijitSplitContainer {
 	position: relative;
@@ -886,8 +882,6 @@ body .dijitAlignClient { position: absolute; }
 .dijitSplitContainerSizerV {
 	position:absolute;
 	font-size: 1px;
-	cursor: move;
-	cursor: w-resize;
 	background-color: ThreeDFace;
 	border: 1px solid;
 	border-color: ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight;
@@ -916,11 +910,12 @@ body .dijitAlignClient { position: absolute; }
 	margin: 0;
 }
 
-.dj_ie .dijitSplitterV, .dijitSplitContainerVirtualSizerH {
-	cursor: w-resize;
+.dijitSplitContainerSizerH, .dijitSplitContainerVirtualSizerH {
+	cursor: col-resize;
 }
-.dj_ie .dijitSplitterH, .dijitSplitContainerSizerV, .dijitSplitContainerVirtualSizerV {
-	cursor: n-resize;
+
+.dijitSplitContainerSizerV, .dijitSplitContainerVirtualSizerV {
+	cursor: row-resize;
 }
 
 .dijit_a11y .dijitSplitterH {
@@ -1211,7 +1206,7 @@ body .dijitAlignClient { position: absolute; }
 	border: 1px dotted black !important;
 }
 .dj_ff3 .dijit_a11y .dijitMenuItem td {
-	padding: none !important;
+	padding: 0 !important;
 	background:none !important;
 }
 .dijit_a11y .dijitMenuItemSelected .dijitMenuItemLabel {
@@ -1299,6 +1294,7 @@ body .dijitAlignClient { position: absolute; }
 	width: 50000px;
 	display: block;
 	position: relative;
+    text-align: left;  /* just in case ancestor has non-standard setting */
 }
 .dijitTabListWrapper {
 	overflow: hidden;

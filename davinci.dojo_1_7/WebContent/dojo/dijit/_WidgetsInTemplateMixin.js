@@ -1,4 +1,10 @@
-define(["dojo", ".", "dojo/parser"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	".",
+	"dojo/parser", // dojo.parser.parse
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_WidgetsInTemplateMixin

@@ -1,4 +1,8 @@
-dojo.provide("dojox.drawing.manager.Mouse");
+define([
+	"dojo",
+	"../util/oo",
+	"../defaults",
+	"./Stencil"],function(dojo){
 
 dojox.drawing.manager.Mouse = dojox.drawing.util.oo.declare(
 	// summary:
@@ -514,3 +518,6 @@ EventObject: function(){
 		}
 	}
 );
+
+return dojox.drawing.manager.Mouse;
+});

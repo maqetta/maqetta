@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","./_base"], function(dojo,dd){
+define(["dojo/_base/kernel","dojo/_base/lang","./_base"], function(dojo,lang,dd){
 
 	dojox.dtl.Context = dojo.extend(function(dict){
 		this._this = {};

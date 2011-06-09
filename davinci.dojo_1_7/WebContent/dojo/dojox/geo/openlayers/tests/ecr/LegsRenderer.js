@@ -6,9 +6,9 @@
 //dojo.require("dojox.geo.openlayers.LineString");
 //dojo.require("dojox.geo.openlayers.GreatCircle");
 
-define([ "dojo/_base/array", "dojox/geo/openlayers/tests/ecr/EcrRenderer",
+define(["dojo/_base/kernel",  "dojo/_base/declare", "dojo/_base/array", "dojox/geo/openlayers/tests/ecr/EcrRenderer",
 		"dojox/geo/openlayers/GeometryFeature", "dojox/geo/openlayers/LineString",
-		"dojox/geo/openlayers/GreatCircle" ], function(){
+		"dojox/geo/openlayers/GreatCircle" ], function(dojo, declare){
 
 	return dojo.declare("dojox.geo.openlayers.tests.ecr.LegsRenderer",
 			[ dojox.geo.openlayers.tests.ecr.EcrRenderer ], {

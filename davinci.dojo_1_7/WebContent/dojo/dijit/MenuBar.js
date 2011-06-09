@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/MenuBar.html",
-	"./Menu"], function(dojo, dijit, template){
+	"./Menu",
+	"dojo/_base/connect", // dojo.keys dojo.keys.DOWN_ARROW
+	"dojo/_base/event" // dojo.stopEvent
+], function(dojo, dijit, template){
 
 // module:
 //		dijit/MenuBar

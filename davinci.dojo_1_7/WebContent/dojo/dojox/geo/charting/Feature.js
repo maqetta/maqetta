@@ -1,13 +1,13 @@
 
-define(["dojo/_base/lang", "dojo/_base/declare","dojo/_base/html","dojo/_base/event", "dojox/gfx/fx", "dojox/color"], 
-			function(dojo, declare, dhtml, event, fx,color) {
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare","dojo/_base/html","dojo/_base/event", "dojox/gfx/fx", "dojox/color"], 
+			function(dojo, lang, declare, dhtml, event, fx,color) {
 
 
 return dojo.declare("dojox.geo.charting.Feature", null, {
-	// summary: 
-	//   class to encapsulate a map element.
-	// tags:
-	//   private
+	//	summary: 
+	//		class to encapsulate a map element.
+	//	tags:
+	//		private
 
 	_isZoomIn: false,
 	isSelected: false,
@@ -15,6 +15,10 @@ return dojo.declare("dojox.geo.charting.Feature", null, {
 
 
 	constructor: function(parent, name, shapeData){
+		//	summary: 
+		//		constructs a new Feature.
+		//	tags:
+		//		private
 		this.id = name;
 		this.shape = parent.mapObj.createGroup();
 		this.parent = parent;
@@ -37,6 +41,9 @@ return dojo.declare("dojox.geo.charting.Feature", null, {
 		this.unsetValue();
 	},
 	unsetValue:function(){
+		//	summary: 
+		//		clears the numeric value on this Feature object (removes color).
+		
 		this.value = null;
 		this._defaultFill = this.parent.defaultColor;
 //		var color = new dojox.color.Color(this.parent.defaultColor);
@@ -48,6 +55,10 @@ return dojo.declare("dojox.geo.charting.Feature", null, {
 		this._setFillWith(this._defaultFill);
 	},
 	setValue:function(value){
+		//	summary: 
+		//		sets a numeric value on this Feature object (used together with series to apply a color).
+		//	value:
+		//		a number
 		this.value = value;
 		if(this.parent.series.length != 0){
 			for(var i = 0;i < this.parent.series.length;i++){

@@ -1,4 +1,4 @@
-define("dojox/calc/GraphPro", ["dojo", "dojox/calc/Standard", "dijit/dijit", "dijit/form/ComboBox", "dijit/form/Select", "dijit/form/CheckBox", "dijit/ColorPalette", "dojox/charting/Chart2D", "dojox/calc/Grapher", "dojox/layout/FloatingPane", "dojox/charting/themes/Tufte", "dojo/colors"], function(dojo) {
+define(["dojo", "dojox/calc/Standard", "dijit/dijit", "dijit/Menu", "dijit/MenuItem", "dijit/form/ComboButton", "dijit/form/Select", "dijit/form/CheckBox", "dijit/ColorPalette", "dojox/charting/Chart2D", "dojox/calc/Grapher", "dojox/layout/FloatingPane", "dojox/charting/themes/Tufte", "dojo/colors"], function(dojo) {
 
 dojo.experimental("dojox.calc.GraphPro");
 

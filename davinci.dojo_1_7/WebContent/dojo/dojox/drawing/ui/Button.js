@@ -1,4 +1,10 @@
-dojo.provide("dojox.drawing.ui.Button");
+define([
+	"dojo",
+	"../stencil/Ellipse",
+	"../stencil/Rect",
+	"../stencil/Text",
+	"../manager/_registry",
+	"../util/oo"],function(dojo){
 
 dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 	// summary:
@@ -224,3 +230,6 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 dojox.drawing.register({
 	name:"dojox.drawing.ui.Button"
 }, "stencil");
+
+return dojox.drawing.ui.Button;
+});

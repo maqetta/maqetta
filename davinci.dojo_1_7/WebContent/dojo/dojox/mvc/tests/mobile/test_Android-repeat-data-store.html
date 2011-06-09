@@ -4,9 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Android Repeat Data Example</title>
-		<link href="../../../../dojox/mobile/themes/android/android.css" rel="stylesheet">
-		<link href="../../../../dojox/mobile/themes/buttons.css" rel="stylesheet"></link>
-		<link href="../css/android-format.css" rel="stylesheet">
+		<link href="../../../../dojox/mobile/themes/android/android.css" rel="stylesheet"/>
+		<link href="../css/android-format.css" rel="stylesheet"/>
 
 	<!--  use below for iPhone theme  
 		<link href="../../../../dojox/mobile/themes/iphone/iphone.css" rel="stylesheet"></link>
@@ -51,7 +50,7 @@
 		<div dojoType="dojox.mvc.Repeat" class="row" ref="model">
 			<div class="row" dojoType="dojox.mvc.Group" ref="'rel:${this.index}'">
 				<input dojoType="dojox.mobile.TextBox"
-					id="nameInput${this.index}" ref="'rel:First'" placeHolder="First Name"></input>
+					id="nameInput${this.index}" ref="'rel:First'" placeHolder="First Name"/>
 				<button id="details${this.index}" type="button" dojoType="dojox.mobile.Button" class="mblBlueButton" onclick="setDetailsContext('${this.index}')">Details</button>
 			</div>
 		</div>
@@ -60,15 +59,15 @@
 			<div id="detailsBanner">Details for selected index:</div>
 				<div id="detailsGroup" dojoType="dojox.mvc.Group" ref="'rel:0'">
 					<div><label for="firstInput">First Name:</label></div>
-					<div><input id="firstInput" dojoType="dojox.mobile.TextBox" ref="'rel:First'" placeHolder="First Name"></input></div>
+					<div><input id="firstInput" dojoType="dojox.mobile.TextBox" ref="'rel:First'" placeHolder="First Name"/></div>
 					<div><label for="lastInput">Last Name:</label></div>
-					<div><input id="lastInput" dojoType="dojox.mobile.TextBox" ref="'rel:Last'" placeHolder="Last Name"></input></div>
+					<div><input id="lastInput" dojoType="dojox.mobile.TextBox" ref="'rel:Last'" placeHolder="Last Name"/></div>
 					<div><label for="emailInput">Email:</label></div>
-					<div><input id="emailInput" dojoType="dojox.mobile.TextBox" ref="'rel:Email'" placeHolder="Email"></input></div>
+					<div><input id="emailInput" dojoType="dojox.mobile.TextBox" ref="'rel:Email'" placeHolder="Email"/></div>
 					<div><label for="telInput">Telephone:</label></div>
-					<div><input id="telInput" dojoType="dojox.mobile.TextBox" ref="'rel:Tel'" placeHolder="Telephone"></input></div>
+					<div><input id="telInput" dojoType="dojox.mobile.TextBox" ref="'rel:Tel'" placeHolder="Telephone"/></div>
 					<div><label for="faxInput">Fax:</label></div>
-					<div><input id="faxInput" dojoType="dojox.mobile.TextBox" ref="'rel:Fax'" placeHolder="Fax"></input></div>
+					<div><input id="faxInput" dojoType="dojox.mobile.TextBox" ref="'rel:Fax'" placeHolder="Fax"/></div>
 				</div>
 			</div>		   
 		<div class="spacer"></div>

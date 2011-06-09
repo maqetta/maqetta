@@ -1,6 +1,6 @@
 // dojox/renderer! plugin
 
-define(["dojo/_base/lang", "dojo/_base/sniff"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/sniff"], function(dojo){
 	var currentRenderer = null;
 	return {
 		load: function(id, require, load){

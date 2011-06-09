@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Transition Listener (dojo.connect)</title>
-		<link href="../themes/iphone/base.css" rel="stylesheet"></link>
+		<link href="../themes/iphone/base.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 		<script language="JavaScript" type="text/javascript">
 			//dojo.require("dojo.parser"); // Use the lightweight parser.
@@ -19,7 +19,7 @@
 							", transition=" + transition +
 							", context=" + context +
 							", method=" + method);
-			}
+			};
 			dojo.ready(function(){
 				var view1 = dijit.byId("view1");
 				dojo.connect(view1, "onStartView", null, function(){

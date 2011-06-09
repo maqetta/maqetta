@@ -203,8 +203,15 @@
 						var tc1 = dijit.byId("tc1");
 						var cp = dijit.byId("cpTitle");
 						
-						tc1.removeChild(cp);
+
+						// track resizes to cp, removing it from tc1 shouldn't cause a resize call
+						var cpResizes = 0;
+						dojo.connect(cp, "resize", function(){
+							cpResizes++;
+						})
 						
+						tc1.removeChild(cp);
+
 						var childPanes = tc1.getChildren();
 						
 						t.is(5, childPanes.length, "verify there are now only 4 tabs instead of 5");
@@ -212,6 +219,8 @@
 
 						var label = dojo.byId("#tc1_tablist_cpTitle");
 						t.f(label, "verify that deleted tab's label does not exist");
+
+						t.is(0, cpResizes, "no resize");
 					}
 				},
 				

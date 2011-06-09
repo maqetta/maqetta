@@ -1,9 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"..",
 	"../_Widget",
 	"../_Container",
-	"../_Contained"], function(dojo, dijit){
+	"../_Contained",
+	"dojo/_base/array", // dojo.filter dojo.forEach
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.addClass dojo.getComputedStyle dojo.marginBox dojo.removeClass
+	"dojo/_base/sniff", // dojo.isIE
+	"dojo/_base/window" // dojo.global
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/layout/_LayoutWidget
@@ -54,7 +60,7 @@ define([
 			this.inherited(arguments);
 
 			// If I am a not being controlled by a parent layout widget...
-			var parent = this.getParent && this.getParent()
+			var parent = this.getParent && this.getParent();
 			if(!(parent && parent.isLayoutContainer)){
 				// Do recursive sizing and layout of all my descendants
 				// (passing in no argument to resize means that it has to glean the size itself)
@@ -228,7 +234,7 @@ define([
 
 	dijit.layout.layoutChildren = function(/*DomNode*/ container, /*Object*/ dim, /*Widget[]*/ children,
 			/*String?*/ changedRegionId, /*Number?*/ changedRegionSize){
-		// summary
+		// summary:
 		//		Layout a bunch of child dom nodes within a parent dom node
 		// container:
 		//		parent node

@@ -4,7 +4,7 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 	// summary:
 	//		This module defines dojo.declare.
 
-	var d = dojo, mix = d._mixin, op = Object.prototype, opts = op.toString,
+	var mix = dojo._mixin, op = Object.prototype, opts = op.toString,
 		xtor = new Function, counter = 0, cname = "constructor";
 
 	function err(msg, cls){ throw new Error("declare" + (cls ? " " + cls : "") + ": " + msg); }
@@ -200,9 +200,9 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 		return this.__inherited(name, true);
 	}
 
-	function inherited__debug(args, a){
-		var f = this.getInherited(args, a);
-		if(f){ return f.apply(this, a || args); }
+	function inherited__debug(args, a1, a2){
+		var f = this.getInherited(args, a1);
+		if(f){ return f.apply(this, a2 || a1 || args); }
 		// intentionally no return if a super method was not found
 	}
 
@@ -227,7 +227,7 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 			}
 		}
 		if(has("bug-for-in-skips-shadowed")){
-			for(var extraNames= d._extraNames, i= extraNames.length; i;){
+			for(var extraNames= dojo._extraNames, i= extraNames.length; i;){
 				name = extraNames[--i];
 				if(name != cname && source.hasOwnProperty(name)){
 					  target[name] = source[name];
@@ -251,7 +251,7 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 			}
 		}
 		if(has("bug-for-in-skips-shadowed")){
-			for(var extraNames= d._extraNames, i= extraNames.length; i;){
+			for(var extraNames= dojo._extraNames, i= extraNames.length; i;){
 				name = extraNames[--i];
 				t = source[name];
 				if((t !== op[name] || !(name in op)) && name != cname){
@@ -450,7 +450,7 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 		return t;
 	}
 
-	d.declare = function(className, superclass, props){
+	dojo.declare = function(className, superclass, props){
 		// crack parameters
 		if(typeof className != "string"){
 			props = superclass;
@@ -542,7 +542,7 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 		// add name if specified
 		if(className){
 			proto.declaredClass = className;
-			d.setObject(className, ctor);
+			dojo.setObject(className, ctor);
 		}
 
 		// build chains and add them to the prototype
@@ -560,7 +560,7 @@ define(["./kernel", "../has", "./lang", "./array"], function(dojo, has){
 		return ctor;	// Function
 	};
 
-	d.safeMixin = safeMixin;
+	dojo.safeMixin = safeMixin;
 
 	/*=====
 	dojo.declare = function(className, superclass, props){

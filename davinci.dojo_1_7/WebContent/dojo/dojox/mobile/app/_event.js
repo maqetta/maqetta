@@ -111,10 +111,10 @@ dojo._connect = function(obj, event, context, method, dontFix){
 	if(event == "flick" || event == "onflick"){
 		if(dojo.global["Mojo"]){
 			event = Mojo.Event.flick;
-		}else{
+		} else{
 			return dojox.mobile.app.connectFlick(obj, context, method);
 		}
 	}
 
 	return dojo._oldConnect(obj, event, context, method, dontFix);
-}
+};

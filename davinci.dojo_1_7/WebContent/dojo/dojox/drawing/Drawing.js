@@ -1,7 +1,33 @@
-dojo.provide("dojox.drawing.Drawing");
+define([
+	"dojo",
+	"../",
+	"./manager/_registry",
+	"../gfx",
+	"./util/oo",
+	"./util/common",
+	"./util/typeset",
+	"./defaults",
+	"./manager/Anchors",
+	"./manager/Canvas",
+	"./manager/keys",
+	"./manager/Mouse",
+	"./manager/Stencil",
+	"./manager/StencilUI",
+	"./manager/Undo",
+	"./stencil/_Base",
+	"./stencil/Ellipse",
+	"./stencil/Image",
+	"./stencil/Line",
+	"./stencil/Path",
+	"./stencil/Rect",
+	"./stencil/Text",
+	"./annotations/Angle",
+	"./annotations/Arrow",
+	"./annotations/BoxShadow",
+	"./annotations/Label"], function(dojo, dojox){
 
-(function(){
-	
+	dojo.experimental("dojox.drawing");
+
 	var _plugsInitialized = false;
 	
 	dojo.declare("dojox.drawing.Drawing", [], {
@@ -131,9 +157,8 @@ dojo.provide("dojox.drawing.Drawing");
 			this.stencilTypeMap = {};
 			this.srcRefNode = node; // need this?
 			this.domNode = node;
-			var str = dojo.attr(node, "plugins"); // FIXME: get this from props if available
-			if(str){
-				this.plugins = eval(str);
+			if(props.plugins){
+				this.plugins = eval(props.plugins);
 			}else{
 				this.plugins = [];
 			}
@@ -248,7 +273,6 @@ dojo.provide("dojox.drawing.Drawing");
 				});
 				return;
 			}
-			
 			dojo.forEach(this.plugins, function(p, i){
 				var props = dojo.mixin({
 					util:this.util,
@@ -267,7 +291,7 @@ dojo.provide("dojox.drawing.Drawing");
 					console.error("Failed to initilaize plugin:	" +p.name + ". Did you require it?");
 				}
 			}, this);
-			this.plugins = [];
+			
 			_plugsInitialized = true;
 			// In IE, because the timing is different we have to get the
 			// canvas position after everything has drawn. *sigh*
@@ -561,4 +585,5 @@ dojo.provide("dojox.drawing.Drawing");
 		}
 	});
 	
-})();
+	return dojox.drawing.Drawing;
+});

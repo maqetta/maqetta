@@ -74,7 +74,7 @@
 					node = node.nextSibling;
 				}
 				return node;
-			}
+			};
 
 			// Select a value from the drop down using the keyboard, using "more choices" button to page as necessary
 			var robot_a11ySelectValue = function(combo, text, value, expectedText){
@@ -222,7 +222,7 @@
 							if(!isComboBox){
 								doh.t(combo.isValid(), "isValid()");
 							}
-							doh.is(isComboBox ? "Kentucky" : "KY", v, "watch of value")
+							doh.is(isComboBox ? "Kentucky" : "KY", v, "watch of value");
 							doh.is("Kentucky", dv, "watch of displayedValue")
 						}), 900);
 						return d;
@@ -699,13 +699,13 @@
 						var d = new doh.Deferred();
 
 						dojo.byId("datatestDijit").focus();
-						doh.is("datatestDijit", dojo.global.dijit._curFocus.id, "focused on elem before disabled combo");
+						doh.is("datatestDijit", dojo.global.dijit.focus.curNode.id, "focused on elem before disabled combo");
 
 						// Tab over the disabled ComboBox
 						doh.robot.keyPress(dojo.keys.TAB, 1000);
 
 						doh.robot.sequence(d.getTestCallback(function(){
-							doh.is("combobox4", dojo.global.dijit._curFocus.id, "focused on 'enable' button after disabled combo");
+							doh.is("combobox4", dojo.global.dijit.focus.curNode.id, "focused on 'enable' button after disabled combo");
 						}), 1000);
 
 						return d;
@@ -813,8 +813,7 @@
 					name:"labelFunc_type",
 					combo:"labelFunc",
 					runTest:function(){
-						var d = robot_typeValue((this.combo = dijit.byId(this.combo)), "Alabama", isComboBox? "Alabama" : "AL", "Alabama");
-						return d;
+						return robot_typeValue((this.combo = dijit.byId(this.combo)), "Alabama", isComboBox ? "Alabama" : "AL", "Alabama");
 					}
 				},
 

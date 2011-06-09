@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "./Base", "../scaler/linear", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Base", "../scaler/linear", 
 	"dojo/string", "dojox/gfx", "dojox/lang/utils", "dojox/lang/functional"],
-	function(dojo, declare, Base, lin, dstring, g, du, df){
+	function(dojo, lang, declare, Base, lin, dstring, g, du, df){
  
 	var merge = du.merge,
 		labelGap = 4,			// in pixels
@@ -8,7 +8,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "./Base", "../scaler/linear",
 
 	return dojo.declare("dojox.charting.axis2d.Invisible", dojox.charting.axis2d.Base, {
 		//	summary:
-		//		The default axis object used in dojox.charting.  See dojox.charting.Chart2D.addAxis for details.
+		//		The default axis object used in dojox.charting.  See dojox.charting.Chart.addAxis for details.
 		//
 		//	defaultParams: Object
 		//		The default parameters used to define any axis.

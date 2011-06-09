@@ -1,11 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"..",
 	"dojo/text!./templates/DropDownBox.html",
 	"./_AutoCompleterMixin",
 	"./_ComboBoxMenu",
 	"../_HasDropDown",
-	"dojo/store/DataStore"], function(dojo, dijit, template){
+	"dojo/store/DataStore", // dojo.store.DataStore
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/form/ComboBoxMixin

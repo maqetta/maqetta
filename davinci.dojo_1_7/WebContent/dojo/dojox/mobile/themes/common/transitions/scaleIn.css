@@ -10,6 +10,9 @@
 	-webkit-animation-name: mblScaleInIn;
 	-webkit-animation-timing-function: ease-out;
 }
+.dj_android .mblScaleIn.mblIn {
+	-webkit-animation-name: mblScaleInInAndroid;
+}
 @-webkit-keyframes mblScaleInOut {
 	from {}
 	to {}
@@ -22,5 +25,13 @@
 	to {
 		-webkit-transform: scale(1.0);
 		opacity: 1;
+	}
+}
+@-webkit-keyframes mblScaleInInAndroid {
+	from {
+		-webkit-transform: scale(0.0);
+	}
+	to {
+		-webkit-transform: scale(1.0);
 	}
 }

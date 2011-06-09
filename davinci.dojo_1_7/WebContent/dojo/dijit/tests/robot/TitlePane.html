@@ -82,21 +82,21 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is(pane1.focusNode, dojo.global.dijit._curFocus,"focused on pane1 title")
+								doh.is(pane1.focusNode, dojo.global.dijit.focus.curNode,"focused on pane1 title")
 							}), 500);
 
 							// should skip hidden content and go to button
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is(dojo.byId("titleButton"), dojo.global.dijit._curFocus,"focused on title button after pane")
+								doh.is(dojo.byId("titleButton"), dojo.global.dijit.focus.curNode,"focused on title button after pane")
 							}), 500);
 
 							// go back to title bar
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(pane1.focusNode, dojo.global.dijit._curFocus,"focused on pane1 title")
+								doh.is(pane1.focusNode, dojo.global.dijit.focus.curNode,"focused on pane1 title")
 							}), 500);
 
 							return d;

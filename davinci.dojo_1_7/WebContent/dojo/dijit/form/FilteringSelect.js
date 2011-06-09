@@ -1,8 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"..",
 	"./MappedTextBox",
-	"./ComboBoxMixin"], function(dojo, dijit){
+	"./ComboBoxMixin",
+	"dojo/_base/Deferred", // dojo.when
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/lang", // dojo.clone dojo.isString
+	"dojo/data/util/filter" // dojo.data.util.filter.patternToRegExp
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/FilteringSelect

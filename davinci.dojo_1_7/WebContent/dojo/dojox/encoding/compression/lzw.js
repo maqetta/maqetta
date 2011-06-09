@@ -1,9 +1,9 @@
 // AMD-ID "dojox/encoding/compression/lzw"
 define(["dojo/_base/kernel", "dojox/encoding/bits"], function(dojo) {
-dojo.getObject("encoding.compression.lzw", true, dojox);
 
-(function(){
-		var _bits = function(x){
+	dojo.getObject("encoding.compression.lzw", true, dojox);
+
+	var _bits = function(x){
 		var w = 1;
 		for(var v = 2; x >= v; v <<= 1, ++w);
 		return w;
@@ -85,8 +85,6 @@ dojo.getObject("encoding.compression.lzw", true, dojox);
 			return v;
 		}
 	});
-})();
 
-
-return dojox.encoding.compression.lzw;
+	return dojox.encoding.compression.lzw;
 });

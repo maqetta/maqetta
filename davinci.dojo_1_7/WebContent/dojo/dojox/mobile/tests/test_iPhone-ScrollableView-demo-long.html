@@ -5,7 +5,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>ScrollableView demo</title>
 	<link href="../themes/iphone/base.css" rel="stylesheet">
-	<link href="../themes/iphone/TabBar.css" rel="stylesheet"></link>
+	<link href="../themes/iphone/TabBar.css" rel="stylesheet">
 	<style>
 	html,body{
 		height: 100%;
@@ -74,19 +74,22 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, mblAlwaysHideAddressBar: true"></script>
 	<script language="JavaScript" type="text/javascript">
 		require([
+			"dojo/ready",
+			"dijit/_base/manager",	// for dijit.byId()
 			"dojox/mobile",			// This is a mobile app.
 			"dojox/mobile/compat", 	// This mobile app supports running on desktop browsers
 			"dojox/mobile/parser", 	// This mobile app uses declarative programming with fast mobile parser
 			"dojox/mobile/ScrollableView",
-			"dojox/mobile/TabBar",
-		]);
-		dojo.ready(function(){
-			var w = dijit.byId("categ1");
-			for(var i = 1; i <= 300; i++){
-				var item = new dojox.mobile.ListItem({label:"Category "+i});
-				item.domNode.className = "mblVariableHeight";
-				w.addChild(item);
-			}
+			"dojox/mobile/TabBar"
+		], function(ready, dijit){
+			dojo.ready(function(){
+				var w = dijit.byId("categ1");
+				for(var i = 1; i <= 300; i++){
+					var item = new dojox.mobile.ListItem({label:"Category "+i});
+					item.domNode.className = "mblVariableHeight";
+					w.addChild(item);
+				}
+			});
 		});
 	</script>
 </head>

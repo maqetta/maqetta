@@ -1,9 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"dojo/text!./templates/TabContainer.html",
 	"./StackContainer",
-	"../_TemplatedMixin"], function(dojo, dijit, template){
+	"../_TemplatedMixin",
+	"dojo/_base/html" // dojo.addClass dojo.contentBox dojo.style
+], function(dojo, dijit, template){
 
 // module:
 //		dijit/layout/_TabContainerBase

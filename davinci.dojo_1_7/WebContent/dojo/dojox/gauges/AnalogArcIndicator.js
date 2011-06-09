@@ -1,5 +1,5 @@
-define(["dojo/_base/lang","dojo/_base/declare","dojo/_base/kernel","dojo/_base/connect","dojo/_base/fx","./AnalogIndicatorBase"],
-function(dojo,ddeclare,dkernel,dconnect,dfx,AnalogIndicatorBase) { 
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojo/_base/fx","./AnalogIndicatorBase"],
+function(dojo,ddeclare,dlang,dconnect,dfx,AnalogIndicatorBase) { 
 
 dojo.experimental("dojox.gauges.AnalogArcIndicator");
 

@@ -19,6 +19,7 @@
 }
 .mblSliderProgressBar {
 	background-image: url(compat/slider-h-bar-bg.png);
+	background-repeat: repeat-x;
 	-moz-border-radius: 8px;
 	-o-border-radius: 8px;
 	-ms-border-radius: 8px; 

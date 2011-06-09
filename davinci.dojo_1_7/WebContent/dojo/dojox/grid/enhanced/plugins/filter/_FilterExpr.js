@@ -1,7 +1,6 @@
 define(["dojo", "dojox", "dojo/date", "./_DataExprs"], function(dojo, dojox){
 //This is the main file that should be 'required' if filter expression facility is necessary.
 
-(function(){
 	var fns = dojo.getObject("grid.enhanced.plugins.filter", true, dojox);
 	/* Logic Operations */
 	dojo.declare("dojox.grid.enhanced.plugins.filter.LogicAND", fns._BiOpExpr, {
@@ -222,8 +221,7 @@ define(["dojo", "dojox", "dojo/date", "./_DataExprs"], function(dojo, dojox){
 			return new fns.BooleanExpr(res === "" || res == null);
 		}
 	});
-})();
 
-return dojox.grid.enhanced.plugins.filter._FilterExpr;
+	return dojox.grid.enhanced.plugins.filter._FilterExpr;
 
 });

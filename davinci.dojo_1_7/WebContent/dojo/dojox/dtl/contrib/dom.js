@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","../dom","dojo/_base/html"], function(dojo,dd){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base","../dom","dojo/_base/html"], function(dojo,lang,dd){
 	dojo.getObject("dtl.contrib.dom", true, dojox);
 
 	var ddch = dd.contrib.dom;

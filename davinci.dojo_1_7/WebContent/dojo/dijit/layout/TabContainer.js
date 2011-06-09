@@ -1,9 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	"..",
 	"./_TabContainerBase",
 	"./TabController",
-	"./ScrollingTabController"], function(dojo, dijit){
+	"./ScrollingTabController",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/layout/TabContainer

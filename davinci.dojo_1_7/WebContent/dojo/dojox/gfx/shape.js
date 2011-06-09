@@ -1,4 +1,4 @@
-define(["..", "dojo/_base/html", "./matrix", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/Color"], function(dojox, dojo){
+define(["..", "dojo/_base/kernel", "dojo/_base/html", "./matrix", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/Color"], function(dojox, dojo){
 	dojo.getObject("gfx.shape", true, dojox);
 	// a set of ids (keys=type)
 	var _ids = {};

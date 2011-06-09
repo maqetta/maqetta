@@ -1,4 +1,5 @@
-define(["../..", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/window", "dojox/gfx"], function(dojox, dojo, dhtml, dwindow, g){
+define(["dojo/_base/kernel", "../../main", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/window", "dojox/gfx"], 
+	function(dojo, dojox, lang, html, window, g){
 	
 	var common = dojo.getObject("charting.axis2d.common", true, dojox);
 	
@@ -34,7 +35,7 @@ define(["../..", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/window", "doj
 			gfx: function(chart, creator, x, y, align, text, font, fontColor){
 				//	summary:
 				//		Use dojox.gfx to create any text.
-				//	chart: dojox.charting.Chart2D
+				//	chart: dojox.charting.Chart
 				//		The chart to create the text into.
 				//	creator: dojox.gfx.Surface
 				//		The graphics surface to use for creating the text.
@@ -59,7 +60,7 @@ define(["../..", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/window", "doj
 			html: function(chart, creator, x, y, align, text, font, fontColor, labelWidth){
 				//	summary:
 				//		Use the HTML DOM to create any text.
-				//	chart: dojox.charting.Chart2D
+				//	chart: dojox.charting.Chart
 				//		The chart to create the text into.
 				//	creator: dojox.gfx.Surface
 				//		The graphics surface to use for creating the text.

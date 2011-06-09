@@ -1,4 +1,12 @@
-define(["dojo", "..", "./_FormWidgetMixin"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./_FormWidgetMixin",
+	"dojo/_base/connect", // dojo.keys.ESCAPE
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/sniff" // dojo.isIE dojo.isQuirks
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/_FormValueMixin

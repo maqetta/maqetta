@@ -1,4 +1,8 @@
-define(["dojo", "./_WidgetBase"], function(dojo, _WidgetBase){
+define([
+	"dojo/_base/kernel",
+	"./_WidgetBase",
+	"dojo/_base/lang" // dojo.extend
+], function(dojo, _WidgetBase){
 
 	// module:
 	//		dijit/_BidiSupport

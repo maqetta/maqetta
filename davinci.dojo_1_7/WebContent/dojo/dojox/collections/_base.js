@@ -1,4 +1,4 @@
-define(["dojo/_base/array"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/array"], function(dojo, darray){
 	dojo.getObject("collections", true, dojox);
 
 	dojox.collections.DictionaryEntry=function(/* string */k, /* object */v){

@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"./ContentPane",
-	"../_TemplatedMixin"], function(dojo, dijit){
+	"../_TemplatedMixin",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/layout/LinkPane

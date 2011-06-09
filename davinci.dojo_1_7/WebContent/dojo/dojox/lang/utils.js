@@ -1,4 +1,4 @@
-define(["..", "dojo/_base/lang"], function(dojox, dojo){
+define(["..", "dojo/_base/kernel", "dojo/_base/lang"], function(dojox, dojo){
 	var du = dojo.getObject("lang.utils", true, dojox);
 	
 	var empty = {}, opts = Object.prototype.toString;

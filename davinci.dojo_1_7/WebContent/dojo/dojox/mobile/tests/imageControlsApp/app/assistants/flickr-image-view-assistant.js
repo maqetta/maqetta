@@ -26,8 +26,6 @@ dojo.declare("FlickrImageViewAssistant", dojox.mobile.app.SceneAssistant, {
 			}
 		});
 		
-		var index = 1;
-		
 		var reportDiv = this.controller.query(".report")[0];
 		
 		this.connect(viewer, "onChange", function(direction){
@@ -86,8 +84,7 @@ dojo.declare("FlickrImageViewAssistant", dojox.mobile.app.SceneAssistant, {
   
 	loadInteresting: function(){
 		console.log("loading interesting");
-		var _this = this;
-		
+
 		var url = "http://api.flickr.com/services/rest/?method=" +
 					"flickr.interestingness.getList";
 					
@@ -105,8 +102,7 @@ dojo.declare("FlickrImageViewAssistant", dojox.mobile.app.SceneAssistant, {
 
 	loadGroup: function(groupData){
 		console.log("loading group ", groupData);
-		var _this = this;
-		
+
 		var url = "http://api.flickr.com/services/rest/?method=" +
 					"flickr.groups.pools.getPhotos";
 					

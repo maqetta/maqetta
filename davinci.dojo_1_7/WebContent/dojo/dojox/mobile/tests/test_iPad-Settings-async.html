@@ -17,18 +17,18 @@
 			background-color: #DBDDE2;
 		}
 		</style>
-		<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="parseOnLoad: 1, isDebug:1, async:1"></script>
+		<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"></script>
 		<script language="JavaScript" type="text/javascript">
 		require([
-			"dojox/mobile",			// This is a mobile app.
-			"dojox/mobile/compat", 	// This mobile app supports running on desktop browsers
 			"dojox/mobile/parser", 	// This mobile app uses declarative programming with fast mobile parser
+			"dojox/mobile",			// This is a mobile app.
 			"dojox/mobile/FixedSplitter",
 			"dojox/mobile/ScrollableView",
 			"dojox/mobile/EdgeToEdgeList",
 			"dojox/mobile/EdgeToEdgeCategory",
 			"dojox/mobile/Heading",
-			"dojox/mobile/FixedSplitterPane"
+			"dojox/mobile/FixedSplitterPane",
+			"dojox/mobile/compat" 	// This mobile app supports running on desktop browsers
 			// "domReady!" // Enable if user code placed in the callback here that needs DOMReady
 		]);
 		</script>

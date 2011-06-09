@@ -1,6 +1,6 @@
-define(["dojo/_base/html", "dojo/_base/declare", "dojo/_base/window", "dojo/_base/html", 
-	"dojo/_base/connect", "dojo/_base/sniff", "./ChartAction"], 
-	function(dojo, declare, ddwindow, dhtml, dconnect, dsniff, ChartAction){
+define(["dojo/_base/kernel", "dojo/_base/html", "dojo/_base/declare", "dojo/_base/window",  
+	"dojo/_base/connect", "./ChartAction"], 
+	function(dojo, html, declare, window, connect, ChartAction){
 
 	/*=====
 	dojo.declare("dojox.charting.action2d.__MouseZoomAndPanCtorArgs", null, {
@@ -173,6 +173,13 @@ define(["dojo/_base/html", "dojo/_base/declare", "dojo/_base/window", "dojo/_bas
 			//	summary:
 			//		Called when mouse wheel is used on the chart.
 			var scroll = event[(dojo.isMozilla ? "detail" : "wheelDelta")] / sUnit;
+			// on Mozilla the sUnit might actually not always be 3
+			// make sure we never have -1 < scroll < 1
+			if(scroll > -1 && scroll < 0){
+				scroll = -1;
+			}else if(scroll > 0 && scroll < 1){
+				scroll = 1;
+			}
  			this._onZoom(scroll, event);
 		},
 		
@@ -209,7 +216,8 @@ define(["dojo/_base/html", "dojo/_base/declare", "dojo/_base/window", "dojo/_bas
 		},
 		
 		_onZoom: function(scroll, event){
-			var scale = (scroll < 0 ? Math.abs(scroll)*this.scaleFactor : 1 / (Math.abs(scroll)*this.scaleFactor));
+			var scale = (scroll < 0 ? Math.abs(scroll)*this.scaleFactor : 
+				1 / (Math.abs(scroll)*this.scaleFactor));
 			var chart = this.chart, axis = chart.getAxis(this.axis);
 			// after wheel reset event position exactly if we could start a new scroll action
 			var cscale = axis.getWindowScale();

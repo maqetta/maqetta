@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	"..",
 	"./Button",
-	"./_ToggleButtonMixin"], function(dojo, dijit){
+	"./_ToggleButtonMixin",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/ToggleButton

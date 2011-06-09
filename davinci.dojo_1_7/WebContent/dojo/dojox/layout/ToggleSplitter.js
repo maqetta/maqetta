@@ -62,7 +62,7 @@ dojo.declare("dojox.layout.ToggleSplitter", dijit.layout._Splitter, {
 			paneNode = this.child.domNode, 
 			intPaneSize = dojo.style(paneNode, (this.horizontal ? "height" : "width"));
 		
-		dijit.setWaiState(this.domNode, "controls", paneNode.id);
+		this.domNode.setAttribute("aria-controls", paneNode.id);
 		
 		// creation of splitters is an opaque process in BorderContainer, 
 		// so if we want to get init params, we have to retrieve them from the attached BC child
@@ -262,15 +262,15 @@ dojo.declare("dojox.layout.ToggleSplitter", dijit.layout._Splitter, {
 		var evtName;
 		switch(state){
 			case "full":
-				dijit.setWaiState(this.domNode, "expanded", true);
+				this.domNode.setAttribute("aria-expanded", true);
 				evtName = "onOpen";
 				break;
 			case "collapsed":
-				dijit.setWaiState(this.domNode, "expanded", true);
+				this.domNode.setAttribute("aria-expanded", true);
 				evtName = "onCollapsed";
 				break;
 			default:
-				dijit.setWaiState(this.domNode, "expanded", false);
+				this.domNode.setAttribute("aria-expanded", false);
 				evtName = "onClosed";
 		}
 		this[evtName](this.child);

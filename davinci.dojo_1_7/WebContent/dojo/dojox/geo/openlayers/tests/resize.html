@@ -13,7 +13,7 @@
 <!--  Google API -->
 <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 
-<!-- Virtual Earth / Bing -->
+<!-- Virtual Earth -->
 <script src='http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.3'></script>
 
 <!-- Yahoo -->
@@ -27,6 +27,43 @@
 	dojo.require("dijit.layout.ContentPane");
 	dojo.require("dijit.layout.BorderContainer");
 	dojo.require("dojo.parser");
+
+	var maps = [ "osm", "google", "yahoo", "arcGis", "virtualEarth" ];
+
+	dojo.addOnLoad(function(){
+		dojo.forEach(maps, function(map){
+			var m = dijit.byId(map);
+			dojo.connect(m.map.olMap, "setCenter", m, update);
+		});
+	});
+
+	var _updating = false;
+
+	function update(center, zoom, dragging, forceZoomChange){
+		if (dragging)
+			return;
+		if (_updating)
+			return;
+		var from = this.map.olMap.getProjectionObject();
+		var to = dojox.geo.openlayers.EPSG4326;
+		var p = {
+			x : center.lon,
+			y : center.lat
+		};
+		OpenLayers.Projection.transform(p, from, to);
+		_updating = true;
+		dojo.forEach(maps, function(map){
+			var m = dijit.byId(map);
+			if (m != this) {
+				from = dojox.geo.openlayers.EPSG4326;
+				to = m.map.olMap.getProjectionObject();
+				var c = dojo.mixin({}, p);
+				OpenLayers.Projection.transform(c, from, to);
+				m.map.olMap.setCenter(new OpenLayers.LonLat(c.x, c.y));
+			}
+		});
+		_updating = false;
+	}
 </script>
 
 <style type="text/css">
@@ -37,40 +74,40 @@
 
 </head>
 <body class="claro">
-<div dojoType="dijit.layout.BorderContainer" design="headline" style="height: 100%; width: 100%; ">
+  <div dojoType="dijit.layout.BorderContainer" design="headline" style="height: 100%; width: 100%;">
 
-<div dojoType="dijit.layout.ContentPane" region="top" style="height: 200px;" splitter="true" >
-<div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="OSM" initialLocation="{
+    <div dojoType="dijit.layout.ContentPane" region="top" style="height: 200px;" splitter="true">
+      <div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="OSM" initialLocation="{
     position : [7.154126, 43.651748],
-    extent : 0.2 }" ></div>
+    extent : 0.2 }" id="osm"></div>
 
-</div>
+    </div>
 
-<div dojoType="dijit.layout.ContentPane" region="center">
-<div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="Google" initialLocation="{
+    <div dojoType="dijit.layout.ContentPane" region="center">
+      <div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="Google" initialLocation="{
     position : [7.154126, 43.651748],
-    extent : 0.2 }" ></div>
-</div>
+    extent : 0.2 }" id="google"></div>
+    </div>
 
-<div dojoType="dijit.layout.ContentPane" region="bottom" style="height: 200px;" splitter="true">
-<div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="Yahoo" initialLocation="{
+    <div dojoType="dijit.layout.ContentPane" region="bottom" style="height: 200px;" splitter="true">
+      <div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="Yahoo" initialLocation="{
     position : [7.154126, 43.651748],
-    extent : 0.2 }" ></div>
-</div>
+    extent : 0.2 }" id="yahoo"></div>
+    </div>
 
-<div dojoType="dijit.layout.ContentPane" region="left" style="width: 200px;" splitter="true">
-<div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="ArcGIS" initialLocation="{
+    <div dojoType="dijit.layout.ContentPane" region="left" style="width: 200px;" splitter="true">
+      <div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="ArcGIS" initialLocation="{
     position : [7.154126, 43.651748],
-    extent : 0.2 }" ></div>
-</div>
+    extent : 0.2 }" id="arcGis"></div>
+    </div>
 
-<div dojoType="dijit.layout.ContentPane" region="right" style="width: 200px;" splitter="true">
-<div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="VirtualEarth" initialLocation="{
+    <div dojoType="dijit.layout.ContentPane" region="right" style="width: 200px;" splitter="true">
+      <div dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="VirtualEarth" initialLocation="{
     position : [7.154126, 43.651748],
-    extent : 0.2 }" ></div>
-</div>
+    extent : 0.2 }" id="virtualEarth"></div>
+    </div>
 
-</div>
+  </div>
 </body>
 </html>
 

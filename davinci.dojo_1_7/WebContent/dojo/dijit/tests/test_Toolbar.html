@@ -50,7 +50,7 @@
                         // note: should always specify a label, for accessibility reasons.
                         // Just set showLabel=false if you don't want it to be displayed normally
                         label: label,
-                        showLabel: (toolbarId == "toolbar2" ? false : true),
+                        showLabel: (toolbarId != "toolbar2"),
                         iconClass: toolbarId == "toolbar4" ? "" : "dijitEditorIcon dijitEditorIcon"+label
                     });
                     toolbar.addChild(button);

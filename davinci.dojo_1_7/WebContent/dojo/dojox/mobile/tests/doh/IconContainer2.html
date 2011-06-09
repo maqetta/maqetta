@@ -4,8 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Icon</title>
-		<link href="../../themes/iphone/iphone.css" rel="stylesheet"></link>
-		<link href="../../themes/common/domButtons.css" rel="stylesheet"></link>
+		<link href="../../themes/iphone/iphone.css" rel="stylesheet">
+		<link href="../../themes/common/domButtons.css" rel="stylesheet">
 
 		<style>
 			.box {
@@ -50,20 +50,25 @@
 							var d = new doh.Deferred();
 							var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
 							doh.assertEqual('none', demoWidget.contentNode.style.display);
-							if(dojo.isIE)
-							{
+							if(dojo.isIE){
 								demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].fireEvent( "onclick" );
-							} else {
+							}else{
 								var e = document.createEvent('Events');
 								e.initEvent('click', true, true);
 								demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].dispatchEvent(e);
 							}
 							demoWidget = dijit.byId("dojox_mobile_IconItem_1");
 							doh.assertEqual('none', demoWidget.contentNode.style.display);
+							var t = 1000;
+							if(dojo.isIE || dojo.isAndroid || dojo.isIPhone || dojo.isBB) {
+								t=2500;
+							}
 
 							setTimeout(d.getTestCallback(function(){
 								var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
-								doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/a-icon-2-41x41.png/i) != -1);
+								if(!dojo.isIE && !dojo.isFF) {
+									doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/a-icon-2-41x41.png/i) != -1);
+								}
 								doh.assertEqual('app1', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 								doh.assertEqual('', demoWidget.contentNode.style.display);
 								doh.assertEqual('mblIconContentHeading', demoWidget.contentNode.childNodes[0].className);
@@ -71,14 +76,16 @@
 								doh.assertEqual('app1', demoWidget.contentNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 
 								demoWidget = dijit.byId("dojox_mobile_IconItem_1");
-								doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/icon-1.png/i) != -1);
+								if(!dojo.isIE) {
+									doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/icon-1.png/i) != -1);
+								}
 								doh.assertEqual('app2', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 								doh.assertEqual('none', demoWidget.contentNode.style.display);
 								doh.assertEqual('mblIconContentHeading', demoWidget.contentNode.childNodes[0].className);
 								doh.assertEqual('mblDomButtonBlueMinus mblDomButton', demoWidget.contentNode.childNodes[0].childNodes[0].className);
 								doh.assertEqual('app2', demoWidget.contentNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 								
-							}),500);
+							}),t);
 							return d;
 						}
 					}

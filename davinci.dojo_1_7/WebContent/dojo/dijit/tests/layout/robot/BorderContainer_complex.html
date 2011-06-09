@@ -51,7 +51,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab1", dojo.global.dijit._curFocus.id, "current focus was not tab1");
+								doh.is("mainTabContainer_tablist_tab1", dojo.global.dijit.focus.curNode.id, "current focus was not tab1");
 								doh.is("tab1", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab1 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab1")), "Tab1 is hidden");
 								doh.t(isHidden(dijit.byId("tab2")), "Tab2 is visible");
@@ -68,7 +68,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab2", dojo.global.dijit._curFocus.id, "current focus was not tab2");
+								doh.is("mainTabContainer_tablist_tab2", dojo.global.dijit.focus.curNode.id, "current focus was not tab2");
 								doh.is("tab2", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab2 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab2")), "Tab2 is hidden");
 								doh.t(isHidden(dijit.byId("tab1")), "Tab1 is visible");
@@ -85,7 +85,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab3", dojo.global.dijit._curFocus.id, "current focus was not tab3");
+								doh.is("mainTabContainer_tablist_tab3", dojo.global.dijit.focus.curNode.id, "current focus was not tab3");
 								doh.is("tab3", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab3 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab3")), "Tab3 is hidden");
 								doh.t(isHidden(dijit.byId("tab2")), "Tab2 is visible");
@@ -102,7 +102,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab4", dojo.global.dijit._curFocus.id, "current focus was not tab4");
+								doh.is("mainTabContainer_tablist_tab4", dojo.global.dijit.focus.curNode.id, "current focus was not tab4");
 								doh.is("tab4", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab4 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab4")), "Tab4 is hidden");
 								doh.t(isHidden(dijit.byId("tab3")), "Tab3 is visible");
@@ -119,7 +119,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab5", dojo.global.dijit._curFocus.id, "current focus was not tab5");
+								doh.is("mainTabContainer_tablist_tab5", dojo.global.dijit.focus.curNode.id, "current focus was not tab5");
 								doh.is("tab5", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab5 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab5")), "Tab5 is hidden");
 								doh.t(isHidden(dijit.byId("tab4")), "Tab4 is visible");
@@ -136,7 +136,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("mainTabContainer_tablist_tab6", dojo.global.dijit._curFocus.id, "current focus was not tab6");
+								doh.is("mainTabContainer_tablist_tab6", dojo.global.dijit.focus.curNode.id, "current focus was not tab6");
 								doh.is("tab6", dijit.byId("mainTabContainer").selectedChildWidget.id, "Tab6 pane is not the selected pane");
 								doh.t(isVisible(dijit.byId("tab6")), "Tab6 is hidden");
 								doh.t(isHidden(dijit.byId("tab5")), "Tab5 is visible");
@@ -174,7 +174,7 @@
 							// Connect to _hideChild() as a trick to tell when animation is finished
 							handle = dojo.connect(dijit.byId("ac1"), "_hideChild", function(){
 								setTimeout(d.getTestCallback(function(){
-									doh.is("ap2_button", dojo.global.dijit._curFocus.parentNode.id, "current focus was not ap2");
+									doh.is("ap2_button", dojo.global.dijit.focus.curNode.parentNode.id, "current focus was not ap2");
 									doh.is("ap2", dijit.byId("ac1").selectedChildWidget.id, "ap2 is not the selected pane");
 									doh.t(isVisible(dijit.byId("ap2")), "ap2 is visible");
 									doh.t(isHidden(dijit.byId("ap1")), "ap1 is hidden");
@@ -198,7 +198,7 @@
 							// Connect to _hideChild() as a trick to tell when animation is finished
 							handle = dojo.connect(dijit.byId("ac1"), "_hideChild", function(){
 								setTimeout(d.getTestCallback(function(){
-									doh.is("ap3_button", dojo.global.dijit._curFocus.parentNode.id, "current focus was not ap3");
+									doh.is("ap3_button", dojo.global.dijit.focus.curNode.parentNode.id, "current focus was not ap3");
 									doh.is("ap3", dijit.byId("ac1").selectedChildWidget.id, "ap3 is not the selected pane");
 									doh.t(isVisible(dijit.byId("ap3")), "ap3 is visible");
 									doh.t(isHidden(dijit.byId("ap2")), "ap2 is hidden");

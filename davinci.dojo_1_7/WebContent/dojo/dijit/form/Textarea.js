@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"./SimpleTextarea",
-	"./_ExpandingTextAreaMixin"], function(dojo, dijit){
+	"./_ExpandingTextAreaMixin",
+	"dojo/_base/html" // dojo.style
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/Textarea

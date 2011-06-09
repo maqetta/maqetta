@@ -1,8 +1,8 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html", "../Element", "./_PlotEvents", "dojo/_base/Color", "dojox/color/_base", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html", "../Element", "./_PlotEvents", "dojo/_base/Color", "dojox/color/_base", 
 	"./common", "../axis2d/common", "../scaler/primitive", 
 	"dojox/gfx", "dojox/gfx/matrix", "dojox/gfx/fx", "dojox/lang/functional", "dojox/lang/utils",
 	"dojo/fx", "dojo/fx/easing"],
-	function(dojo, declare, dconnect, dhtml, Element, PlotEvents, dcolors, dxcolor, dc, da, primitive, g, m, gfxfx, df, du, fx, easing){
+	function(dojo, lang, declare, connect, html, Element, PlotEvents, dcolors, dxcolor, dc, da, primitive, g, m, gfxfx, df, du, fx, easing){
 
 	var FUDGE_FACTOR = 0.2; // use to overlap fans
 

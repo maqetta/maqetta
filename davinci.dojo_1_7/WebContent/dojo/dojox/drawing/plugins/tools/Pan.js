@@ -1,5 +1,8 @@
-dojo.provide("dojox.drawing.plugins.tools.Pan");
-dojo.require("dojox.drawing.plugins._Plugin");
+define([
+	"dojo",
+	"../../util/oo",
+	"../_Plugin",
+	"../../manager/_registry"],function(dojo){
 
 dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 	// summary:
@@ -240,3 +243,6 @@ dojox.drawing.plugins.tools.Pan.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.plugins.tools.Pan.setup, "plugin");
+
+return dojox.drawing.plugins.tools.Pan;
+});

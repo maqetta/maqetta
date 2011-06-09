@@ -1,6 +1,11 @@
 define([
-	"dojo",
-	"dojo/window"], function(dojo){
+	"dojo/_base/kernel",
+	".",	// dijit (defining dijit.place to make doc parser happy)
+	"dojo/window", // dojo.window.getBox
+	"dojo/_base/array", // dojo.forEach dojo.map dojo.some
+	"dojo/_base/html", // dojo.marginBox dojo.position
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/place
@@ -136,7 +141,7 @@ define([
 	}
 
 	/*=====
-	dijit.__Position = function(){
+	dijit.place.__Position = function(){
 		// x: Integer
 		//		horizontal coordinate in pixels, relative to document body
 		// y: Integer
@@ -148,7 +153,7 @@ define([
 	=====*/
 
 	/*=====
-	dijit.__Rectangle = function(){
+	dijit.place.__Rectangle = function(){
 		// x: Integer
 		//		horizontal offset in pixels, relative to document body
 		// y: Integer
@@ -164,7 +169,11 @@ define([
 		this.h = h;
 	}
 	=====*/
-	return {
+
+	dijit.place = {
+		// summary:
+		//		Code to place a DOMNode relative to another DOMNode.
+		//		Load using require(["dijit/place"], function(place){ ... }).
 
 		at: function(node, pos, corners, padding){
 			// summary:
@@ -174,7 +183,7 @@ define([
 			//		NOTE: node is assumed to be absolutely or relatively positioned.
 			// node: DOMNode
 			//		The node to position
-			// pos: dijit.__Position
+			// pos: dijit.place.__Position
 			//		Object like {x: 10, y: 20}
 			// corners: String[]
 			//		Array of Strings representing order to try corners in, like ["TR", "BL"].
@@ -183,7 +192,7 @@ define([
 			//			* "BR" - bottom right
 			//			* "TL" - top left
 			//			* "TR" - top right
-			// padding: dijit.__Position?
+			// padding: dijit.place.__Position?
 			//		optional param to set padding, to put some buffer around the element you want to position.
 			// example:
 			//		Try to place node's top right corner at (10,20).
@@ -204,7 +213,7 @@ define([
 
 		around: function(
 			/*DomNode*/		node,
-			/*DomNode || dijit.__Rectangle*/anchor,
+			/*DomNode || dijit.place.__Rectangle*/ anchor,
 			/*String[]*/	positions,
 			/*Boolean*/		leftToRight,
 			/*Function?*/	layoutNode){
@@ -255,8 +264,8 @@ define([
 
 			var x = anchor.x,
 				y = anchor.y,
-				width = "w" in anchor ? anchor.w : anchor.width,
-				height = "h" in anchor ? anchor.h : anchor.height;
+				width = "w" in anchor ? anchor.w : (anchor.w = anchor.width),
+				height = "h" in anchor ? anchor.h : (dojo.deprecated("place.around: dijit.place.__Rectangle: { x:"+x+", y:"+y+", height:"+anchor.height+", width:"+width+" } has been deprecated.  Please use { x:"+x+", y:"+y+", h:"+anchor.height+", w:"+width+" }", "", "2.0"), anchor.h = anchor.height);
 
 			// Convert positions arguments into choices argument for _place()
 			var choices = [];
@@ -319,4 +328,6 @@ define([
 			return _place(node, choices, layoutNode, {w: width, h: height});
 		}
 	};
+
+	return dijit.place;
 });

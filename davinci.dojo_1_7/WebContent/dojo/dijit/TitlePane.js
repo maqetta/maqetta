@@ -1,11 +1,16 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	".",
 	"dojo/text!./templates/TitlePane.html",
-	"dojo/fx",
+	"dojo/fx", // dojo.fx.wipeIn dojo.fx.wipeOut
 	"./_TemplatedMixin",
 	"./layout/ContentPane",
-	"./_CssStateMixin"], function(dojo, dijit, template){
+	"./_CssStateMixin",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.keys.DOWN_ARROW dojo.keys.ENTER
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html" // dojo.attr dojo.marginBox dojo.removeAttr dojo.replaceClass dojo.setSelectable
+], function(dojo, dijit, template){
 
 // module:
 //		dijit/TitlePane
@@ -132,8 +137,8 @@ dojo.declare("dijit.TitlePane", [dijit.layout.ContentPane, dijit._TemplatedMixin
 
 		this.arrowNodeInner.innerHTML = open ? "-" : "+";
 
-		dijit.setWaiState(this.containerNode,"hidden", open ? "false" : "true");
-		dijit.setWaiState(this.focusNode, "pressed", open ? "true" : "false");
+		this.containerNode.setAttribute("aria-hidden", open ? "false" : "true");
+		this.focusNode.setAttribute("aria-pressed", open ? "true" : "false");
 
 		this._set("open", open);
 
@@ -146,10 +151,10 @@ dojo.declare("dijit.TitlePane", [dijit.layout.ContentPane, dijit._TemplatedMixin
 		// canToggle: Boolean
 		//		True to allow user to open/close pane by clicking title bar.
 
-		dijit.setWaiRole(this.focusNode, canToggle ? "button" : "heading");
+		this.focusNode.setAttribute("role", canToggle ? "button" : "heading");
 		if(canToggle){
 			// TODO: if canToggle is switched from true to false shouldn't we remove this setting?
-			dijit.setWaiState(this.focusNode, "controls", this.id+"_pane");
+			this.focusNode.setAttribute("aria-controls", this.id+"_pane");
 			dojo.attr(this.focusNode, "tabIndex", this.tabIndex);
 		}else{
 			dojo.removeAttr(this.focusNode, "tabIndex");

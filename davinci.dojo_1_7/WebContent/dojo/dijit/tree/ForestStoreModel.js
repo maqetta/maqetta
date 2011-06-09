@@ -1,4 +1,11 @@
-define(["dojo", "..", "./TreeStoreModel"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./TreeStoreModel",
+	"dojo/_base/array", // dojo.indexOf dojo.some
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/window" // dojo.global
+], function(dojo, dijit){
 
 // module:
 //		dijit/tree/ForestStoreModel

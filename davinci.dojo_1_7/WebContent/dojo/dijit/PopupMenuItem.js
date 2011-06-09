@@ -1,4 +1,13 @@
-define(["dojo", ".", "./MenuItem", "./hccss"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	".",
+	"./MenuItem",
+	"./hccss",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.style
+	"dojo/_base/window", // dojo.body
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/PopupMenuItem

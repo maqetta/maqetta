@@ -201,7 +201,7 @@
 								var popup = dijit.byId('q2_popup');
 								doh.t(!popup || isHidden(popup), "popup hidden");
 								
-								doh.is("q3", dojo.global.dijit._curFocus.id, "tab moved to next input widget");
+								doh.is("q3", dojo.global.dijit.focus.curNode.id, "tab moved to next input widget");
 							}), 1000);
 
 							return d;

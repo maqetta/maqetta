@@ -1,8 +1,14 @@
-define(["dojo", "dojo/Stateful"], function(dojo, Stateful){
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/array"
+], function(dojo, lang, array){
+	var mvc = dojo.getObject("dojox.mvc", true);
+	/*=====
+		mvc = dojox.mvc;
+	=====*/
 
-	dojo.getObject("mvc", true, dojox);
-
-	dojo.mixin(dojox.mvc, {
+	return dojo.mixin(mvc, {
 		bind: function(/*dojo.Stateful*/ source, /*String*/ sourceProp,
 					/*dojo.Stateful*/ target, /*String*/ targetProp,
 					/*Function?*/ func, /*Boolean?*/ bindOnlyIfUnequal){
@@ -27,13 +33,13 @@ define(["dojo", "dojo/Stateful"], function(dojo, Stateful){
 			//		new values are unequal (optional, defaults to false).
 			var convertedValue;
 			return source.watch(sourceProp, function(prop, oldValue, newValue){
-				convertedValue = dojo.isFunction(func) ? func(newValue) : newValue;
+				convertedValue = lang.isFunction(func) ? func(newValue) : newValue;
 				if(!bindOnlyIfUnequal || convertedValue != target.get(targetProp)){
 					target.set(targetProp, convertedValue);
 				}
 			});
 		},
-	
+
 		bindInputs: function(/*dojo.Stateful[]*/ sourceBindArray, /*Function*/ func){
 			// summary:
 			//		Bind the values at the sources specified in the first argument
@@ -47,12 +53,10 @@ define(["dojo", "dojo/Stateful"], function(dojo, Stateful){
 			// tags:
 			//		protected
 			var watchHandles = [];
-			dojo.forEach(sourceBindArray, function(h){
+			array.forEach(sourceBindArray, function(h){
 				watchHandles.push(h.watch("value", func));
 			});
 			return watchHandles;
 		}
 	});
-	
-	return dojox.mvc;
 });

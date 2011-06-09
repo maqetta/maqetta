@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","./_base","dijit/_Widget"], function(dojo,dd,djw){
+define(["dojo/_base/kernel","dojo/_base/lang","./_base","dijit/_Widget"], function(dojo,lang,dd,djw){
 
 	dd.Inline = dojo.extend(function(args, node){
 		this.create(args, node);

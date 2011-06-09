@@ -1,6 +1,5 @@
 define(["dojo", "dojox", "./Selection", "./_View", "./_Builder"], function(dojo, dojox){
 	
-(function(){
 	dojox.grid._InputSelectorHeaderBuilder = dojo.extend(function(view){
 		dojox.grid._HeaderBuilder.call(this, view);
 	},dojox.grid._HeaderBuilder.prototype,{
@@ -209,8 +208,7 @@ define(["dojo", "dojox", "./Selection", "./_View", "./_Builder"], function(dojo,
 			dojo.toggleClass(inputDiv, "dijitCheckBoxChecked", g.allItemsSelected);
 		}
 	});
-})();
-
-return dojox.grid._Selector;
+	
+	return dojox.grid._Selector;
 
 });

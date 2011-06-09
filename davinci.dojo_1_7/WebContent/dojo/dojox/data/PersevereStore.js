@@ -1,4 +1,4 @@
-define("dojox/data/PersevereStore", ["dojo", "dojox", "dojox/data/JsonQueryRestStore", "dojox/rpc/Client"], function(dojo, dojox) {
+define("dojox/data/PersevereStore", ["dojo", "dojox", "dojox/data/JsonQueryRestStore", "dojox/rpc/Client", "dojo/_base/url"], function(dojo, dojox) {
 
 // PersevereStore is an extension of JsonRestStore to handle Persevere's special features
 
@@ -8,7 +8,7 @@ dojo.declare("dojox.data.PersevereStore",dojox.data.JsonQueryRestStore,{
 	useFullIdInQueries: true, // in JSONQuerys use the full id
 	jsonQueryPagination: false // use the Range headers instead
 });
-	
+
 dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync){
 	// summary:
 	//		Creates Dojo data stores for all the table/classes on a Persevere server

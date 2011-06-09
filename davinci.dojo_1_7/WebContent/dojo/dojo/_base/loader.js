@@ -4,16 +4,18 @@ define(["./kernel", "../has", "require"], function(dojo, has, require) {
 	// summary:
 	//		This module defines the v1.x synchronous loader API.
 
+	// signal the loader in sync mode...
+	//>>pure-amd
+
 	if (!has("dojo-loader")){
 		console.error("cannot load the Dojo v1.x loader with a foreign loader");
 		return;
 	}
 
-	has.add("dojo-loader", 1, 0, 1);
-
-	var dojoRequire = require.getDojoLoader(dojo, dojo.dijit, dojo.dojox);
+	var dojoRequire = require.getDojoLoader(dojo);
 
 	has.add("config-publishRequireResult", 1, 0, 0);
+
 	dojo.require = function(moduleName, omitModuleCheck) {
 		var result = dojoRequire(moduleName);
 		if (!omitModuleCheck && !result) {

@@ -1,4 +1,11 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/window", // dojo.doc.createTextNode
+	"dojo/i18n" // dojo.i18n.getLocalization
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_ComboBoxMenuMixin
@@ -46,6 +53,13 @@ dojo.declare( "dijit.form._ComboBoxMenuMixin", null, {
 	},
 
 	// stubs
+	onChange: function(/*Number*/ direction){
+		// summary:
+		//		Notifies ComboBox/FilteringSelect that user selected an option.
+		// tags:
+		//		callback
+	},
+
 	onPage: function(/*Number*/ direction){
 		// summary:
 		//		Notifies ComboBox/FilteringSelect that user clicked to advance to next/previous page.

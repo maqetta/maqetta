@@ -1,8 +1,8 @@
 // AMD-ID "dojox/encoding/base64"
 define(["dojo/_base/kernel"], function(dojo) {
-dojo.getObject("encoding.base64", true, dojox);
+	
+	dojo.getObject("encoding.base64", true, dojox);
 
-(function(){
 	var p="=";
 	var tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	var dxe=dojox.encoding;
@@ -61,8 +61,6 @@ dojo.getObject("encoding.base64", true, dojox);
 		while(out[out.length-1]==0){ out.pop(); }
 		return out;	//	byte[]
 	};
-})();
-
-
-return dojox.encoding.base64;
+	
+	return dojox.encoding.base64;
 });

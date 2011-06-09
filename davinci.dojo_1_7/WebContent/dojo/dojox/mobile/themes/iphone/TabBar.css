@@ -123,6 +123,9 @@
   line-height: 44px;
   text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
 }
+.mblTabPanelHeader .mblTabButton {
+  margin-top: 3px;
+}
 .mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
   background-color: #5877A2;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
@@ -132,4 +135,7 @@
 }
 .mblTabPanelHeader .mblDomButton {
   left: 8px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton {
+  margin-top: 6px;
 }

@@ -1,8 +1,12 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"../_TimePicker",
-	"./_DateTimeTextBox"], function(dojo, dijit){
+	"./_DateTimeTextBox",
+	"dojo/_base/connect", // dojo.keys.DOWN_ARROW dojo.keys.ENTER dojo.keys.ESCAPE dojo.keys.TAB dojo.keys.UP_ARROW
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/TimeTextBox

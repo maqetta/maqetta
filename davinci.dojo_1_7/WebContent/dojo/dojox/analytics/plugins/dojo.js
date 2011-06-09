@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base"], function(dojo,dxa){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base"], function(dojo,dlang,dxa){
 	dojo.getObject("analytics.plugins", true, dojox);
 
 	dojox.analytics.plugins.dojo = new (function(){

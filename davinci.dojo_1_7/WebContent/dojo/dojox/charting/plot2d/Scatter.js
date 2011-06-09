@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", 
 	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx", "dojox/gfx/gradutils"],
-	function(dojo, declare, Base, dc, df, dfr, du, fx, gradutils){
+	function(dojo, lang, declare, Base, dc, df, dfr, du, fx, gradutils){
 
 	var purgeGroup = df.lambda("item.purgeGroup()");
 

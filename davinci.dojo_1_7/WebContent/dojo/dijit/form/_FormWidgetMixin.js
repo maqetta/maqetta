@@ -1,4 +1,15 @@
-define(["dojo", "..", "dojo/window"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/window", // dojo.window.scrollIntoView
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.attr dojo.style
+	"dojo/_base/lang", // dojo.hitch dojo.isArray
+	"dojo/_base/sniff", // dojo.isWebKit
+	"dojo/_base/window", // dojo.body
+	"dojo/mouse" // dojo.mouseButtons.isLeft
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_FormWidgetMixin
@@ -89,7 +100,7 @@ return dojo.declare("dijit.form._FormWidgetMixin", null, {
 			}, this);
 		}else{
 			if(this.tabIndex != ""){
-				this.focusNode.setAttribute('tabIndex', this.tabIndex);
+				this.set('tabIndex', this.tabIndex);
 			}
 		}
 	},

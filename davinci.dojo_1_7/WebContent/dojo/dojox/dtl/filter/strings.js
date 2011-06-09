@@ -1,5 +1,5 @@
-define(["dojo/_base/lang","dojox/string/tokenize","dojox/string/sprintf","../filter/htmlstrings","dojo/_base/array"], 
-function(dojo,dxst){
+define(["dojo/_base/kernel","dojo/_base/lang","dojox/string/tokenize","dojox/string/sprintf","../filter/htmlstrings","dojo/_base/array"], 
+function(dojo,lang,dxst){
 	dojo.getObject("dtl.filter.strings", true, dojox);
 
 	dojo.mixin(dojox.dtl.filter.strings, {

@@ -1,4 +1,4 @@
-define(["dojo/_base/lang", "./tokenize"], function(dojo, tokenize){
+define(["dojo/_base/kernel", "./tokenize"], function(dojo, tokenize){
 	dojo.getObject("string", true, dojox);
 
 	dojox.string.sprintf = function(/*String*/ format, /*mixed...*/ filler){

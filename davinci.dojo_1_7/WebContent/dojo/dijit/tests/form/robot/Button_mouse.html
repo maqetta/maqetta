@@ -53,7 +53,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){		// webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("disabled").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("disabled").domNode), "not focused on button")
 								}
 								doh.f(clicked, "click event wasn't fired");
 							}), 1000);
@@ -174,7 +174,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){ // webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("save").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("save").domNode), "not focused on button")
 								}
 								doh.f(clicked, "click event wasn't fired");
 							}), 1000);
@@ -196,11 +196,30 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){		// webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("save").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("save").domNode), "not focused on button")
 								}
 								doh.t(isHidden("saveMenu"), "save menu is still hidden: " + dijit.byId("saveMenu").domNode.style.cssText);
 							}), 1000);
 							return d;
+						}
+					},
+					{
+						name: "tabIndex",
+						timeout: 1000,
+						runTest: function(){
+							var btn = dijit.byId("save"),
+								focusNode = btn.focusNode,
+								titleNode = btn.titleNode;
+
+							btn.set("disabled", true);
+							doh.t(btn.get("disabled"), "save button is disabled");
+							doh.f(dojo.hasAttr(focusNode, "tabIndex") && dojo.attr(focusNode, "tabIndex") >= 0, "disabled focusNode tabIndex");
+							doh.f(dojo.hasAttr(titleNode, "tabIndex") && dojo.attr(titleNode, "tabIndex") >= 0, "disabled titleNode tabIndex");
+
+							btn.set("disabled", false);
+							doh.f(btn.get("disabled"), "save button is enabled");
+							doh.is(0, dojo.attr(focusNode, "tabIndex"), "enabled focusNode tabIndex");
+							doh.is(0, dojo.attr(titleNode, "tabIndex"), "enabled titleNode tabIndex");
 						}
 					}
 				]);
@@ -260,7 +279,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								if(!dojo.isWebKit){		// webkit bug, see #11064
-									doh.f(dojo.isDescendant(dojo.global.dijit._curFocus, dijit.byId("toggle1").domNode), "not focused on button")
+									doh.f(dojo.isDescendant(dojo.global.dijit.focus.curNode, dijit.byId("toggle1").domNode), "not focused on button")
 								}
 								doh.f(changed, "value didn't change");
 							}), 1000);

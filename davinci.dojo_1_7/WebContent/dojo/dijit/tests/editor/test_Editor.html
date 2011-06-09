@@ -78,7 +78,7 @@
 				setTimeout(function(){ try {
 					dijit.byId('automated').document.execCommand('bold', false, false);
 					document.getElementById('disabledOK').checked = (dijit.byId('automated').document.queryCommandState('bold') == false);
-				} catch(e){ document.getElementById('disabledOK').checked = true; }}, 0);
+				}catch(e){ document.getElementById('disabledOK').checked = true; }}, 0);
 			}
 		</script
 		><script type='dojo/method' data-dojo-event='onChange'>

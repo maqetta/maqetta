@@ -1,12 +1,12 @@
 
-define(["dojo/_base/lang","dojo/_base/declare", "dojo/_base/connect","dojo/_base/window"],
-				function(dojo,declare,connect,window) {
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare", "dojo/_base/connect","dojo/_base/window"],
+				function(dojo,lang,declare,connect,window) {
 
-return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
-	// summary: 
-	//   class to handle touch interactions on a dojox.geo.charting.Map widget
-	// tags:
-	//   private
+return dojo.declare("dojox.geo.charting.TouchInteractionSupport",null, {
+	//	summary: 
+	//		class to handle touch interactions on a dojox.geo.charting.Map widget
+	//	tags:
+	//		private
 	
 	_map : null,
 	_centerTouchLocation : null,
@@ -25,10 +25,10 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	
 	
 	constructor : function(/* dojox.geo.charting.Map */map,options) {
-		// summary: 
-		//   Constructs a new _TouchInteractionSupport instance
-		// map: dojox.geo.charting.Map
-		//   the Map widget this class provides touch navigation for.
+		//	summary: 
+		//		Constructs a new _TouchInteractionSupport instance
+		//	map: dojox.geo.charting.Map
+		//		the Map widget this class provides touch navigation for.
 		this._map = map;
 		this._centerTouchLocation = {x: 0,y: 0};		
 				
@@ -39,13 +39,14 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	connect: function() {
-		// install touch listeners
+		//	summary: 
+		//		install touch listeners
 		_touchStartListener = this._map.surface.connect("touchstart", this, this._touchStartHandler);
 	},
 	
 	disconnect: function() {
-		// summary: 
-		//   disconnects any installed listeners. Must be called only when disposing of this instance 
+		//	summary: 
+		//		disconnects any installed listeners. Must be called only when disposing of this instance 
 		if (this._touchStartListener) {
 			dojo.disconnect(this._touchStartListener);
 			this._touchStartListener = null;
@@ -53,13 +54,13 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_getTouchBarycenter: function(touchEvent) {
-		// summary: 
-		//   returns the midpoint of the two first fingers (or the first finger location if only one)
-		// touchEvent: a touch event
-		// returns: dojox.gfx.Point
-		//   the midpoint
-		// tags:
-		//   private
+		//	summary: 
+		//		returns the midpoint of the two first fingers (or the first finger location if only one)
+		//	touchEvent: a touch event
+		//	returns: dojox.gfx.Point
+		//		the midpoint
+		//	tags:
+		//		private
 		var touches = touchEvent.touches;
 		var firstTouch = touches[0];
 		var secondTouch = null;
@@ -78,13 +79,13 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_getFingerSpacing: function(touchEvent) {
-		// summary: 
-		//   computes the distance between the first two fingers
-		// touchEvent: a touch event
-		// returns: float
-		//   a distance. -1 if less that 2 fingers
-		// tags:
-		//   private
+		//	summary: 
+		//		computes the distance between the first two fingers
+		//	touchEvent: a touch event
+		//	returns: float
+		//		a distance. -1 if less that 2 fingers
+		//	tags:
+		//		private
 		var touches = touchEvent.touches;
 		var spacing = -1;
 		if (touches.length >= 2) {
@@ -96,14 +97,14 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_isDoubleTap: function(touchEvent) {
-		// summary: 
-		//   checks whether the specified touchStart event is a double tap 
-		//   (i.e. follows closely a previous touchStart at approximately the same location)
-		// touchEvent: a touch event
-		// returns: boolean
-		//   true if this event is considered a double tap
-		// tags:
-		//   private
+		//	summary: 
+		//		checks whether the specified touchStart event is a double tap 
+		//		(i.e. follows closely a previous touchStart at approximately the same location)
+		//	touchEvent: a touch event
+		//	returns: boolean
+		//		true if this event is considered a double tap
+		//	tags:
+		//		private
 		var isDoubleTap = false;
 		var touches = touchEvent.touches;
 		if ((this._tapCount > 0) && touches.length == 1) {
@@ -127,11 +128,11 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_doubleTapHandler: function(touchEvent) {
-		// summary: 
-		//   action performed on the map when a double tap was triggered 
-		// touchEvent: a touch event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a double tap was triggered 
+		//	touchEvent: a touch event
+		//	tags:
+		//		private
 		var feature = this._getFeatureFromTouchEvent(touchEvent);
 		if (feature) {
 			this._map.fitToMapArea(feature._bbox, 15, true);
@@ -150,13 +151,13 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_getFeatureFromTouchEvent: function(touchEvent) {
-		// summary: 
-		//   utility function to return the feature located at this touch event location
-		// touchEvent: a touch event
-		// returns: dojox.geo.charting.Feature
-		//   the feature found if any, null otherwise.
-		// tags:
-		//   private
+		//	summary: 
+		//		utility function to return the feature located at this touch event location
+		//	touchEvent: a touch event
+		//	returns: dojox.geo.charting.Feature
+		//		the feature found if any, null otherwise.
+		//	tags:
+		//		private
 		var feature = null;
 		//console.log("touchEvent.gfxTarget " + touchEvent.gfxTarget);
 		//console.log(" touchEvent.gfxTarget.getParent " + touchEvent.gfxTarget.getParent);
@@ -168,18 +169,13 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 
 
 	_touchStartHandler: function(touchEvent){
-		// summary: 
-		//   action performed on the map when a touch start was triggered 
-		// touchEvent: a touch event
-		// tags:
-		//   private
-		
-		//console.log("touch start caught !");
+		//	summary: 
+		//		action performed on the map when a touch start was triggered 
+		//	touchEvent: a touch event
+		//	tags:
+		//		private
 		
 		dojo.stopEvent(touchEvent);
-		
-		
-		//console.log("touchEvent.gfxTarget on touch START : " + touchEvent.gfxTarget);
 		
 		this._oneFingerTouch = (touchEvent.touches.length == 1);
 		this._tapCancel = !this._oneFingerTouch;
@@ -219,6 +215,11 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_touchEndTapHandler: function(touchEvent) {
+		//	summary: 
+		//		action performed on the map when a tap was triggered 
+		//	touchEvent: a touch event
+		//	tags:
+		//		private
 		var touches = touchEvent.touches;
 
 		if (touches.length == 0) {
@@ -248,11 +249,11 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 
 	_touchEndHandler: function(touchEvent) {
-		// summary: 
-		//   action performed on the map when a touch end was triggered 
-		// touchEvent: a touch event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a touch end was triggered 
+		//	touchEvent: a touch event
+		//	tags:
+		//		private
 		dojo.stopEvent(touchEvent);
 
 		var touches = touchEvent.touches;
@@ -278,11 +279,11 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 	},
 	
 	_singleTapHandler: function(touchEvent) {
-		// summary: 
-		//   action performed on the map when a single tap was triggered 
-		// touchEvent: a touch event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a single tap was triggered 
+		//	touchEvent: a touch event
+		//	tags:
+		//		private
 		var feature = this._getFeatureFromTouchEvent(touchEvent);
 		
 		if (feature) {
@@ -300,11 +301,11 @@ return dojo.declare("dojox.geo.charting.TouchInteractionSupport", [], {
 
 	
 	_touchMoveHandler: function(touchEvent){
-		// summary: 
-		//   action performed on the map when a touch move was triggered 
-		// touchEvent: a touch event
-		// tags:
-		//   private
+		//	summary: 
+		//		action performed on the map when a touch move was triggered 
+		//	touchEvent: a touch event
+		//	tags:
+		//		private
 		
 		// prevent browser interaction
 		dojo.stopEvent(touchEvent);

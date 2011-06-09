@@ -1,5 +1,5 @@
-define(["dojo/_base/lang","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/connect","dijit/_Widget"], 
-function(dojo,ddeclare,dfx,dhml,dconnect,_Widget) {
+define(["dojo/_base/kernel", "dojo/_base/lang","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/connect","dijit/_Widget"], 
+function(dojo,dlang,ddeclare,dfx,dhml,dconnect,_Widget) {
 
 return dojo.declare("dojox.gauges._Indicator",[_Widget],{
 	// summary:

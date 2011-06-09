@@ -84,7 +84,7 @@
 								// Check that data store update was reflected in the tree
 								doh.t(fruitsTreeNode.isExpanded, "drop caused the node to expand");
 								var treeNodeChildren = fruitsTreeNode.getChildren();
-								doh.is(2, treeNodeChildren.length, "2 TreeNode children")
+								doh.is(2, treeNodeChildren.length, "2 TreeNode children");
 								doh.is("Citrus", innerText(treeNodeChildren[0].labelNode));
 								doh.is("Vegetables", innerText(treeNodeChildren[1].labelNode));
 							}), 1000);	// 1000ms to wait for 'Fruits' node to expand and show 'Apple' node

@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", "dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx"], 
-	function(dojo, declare, Base, dc, df, dfr, du, fx){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", "dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx"], 
+	function(dojo, lang, declare, Base, dc, df, dfr, du, fx){
 
 	/*=====
 	dojo.declare("dojox.charting.plot2d.__DefaultCtorArgs", dojox.charting.plot2d.__PlotCtorArgs, {

@@ -1,4 +1,14 @@
-define(["dojo", ".", "./_CssStateMixin"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.getObject
+	".",
+	"./_CssStateMixin",
+	"dojo/_base/connect", // dojo.keys
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.addClass dojo.attr dojo.create dojo.place dojo.removeClass
+	"dojo/_base/lang", // dojo.hitch
+	"./typematic",
+	"./focus"
+], function(dojo, dijit){
 
 // module:
 //		dijit/_PaletteMixin

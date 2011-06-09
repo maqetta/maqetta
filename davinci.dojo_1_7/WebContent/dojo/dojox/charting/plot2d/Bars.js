@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", 
 	"dojox/gfx/fx", "dojox/lang/utils", "dojox/lang/functional", "dojox/lang/functional/reversed"], 
-	function(dojo, declare, Base, dc, fx, du, df, dfr){
+	function(dojo, lang, declare, Base, dc, fx, du, df, dfr){
 		
 	/*=====
 	dojo.declare("dojox.charting.plot2d.__BarCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {

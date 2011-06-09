@@ -1,4 +1,4 @@
-define(["dojo", "dijit", "dojox"], function(dojo, dijit, dojox){
+define(["dojo", "dijit", "dojox", "dijit/focus"], function(dojo, dijit, dojox){
 
 dojo.declare("dojox.grid.enhanced._FocusArea",null,{
 	// summary:

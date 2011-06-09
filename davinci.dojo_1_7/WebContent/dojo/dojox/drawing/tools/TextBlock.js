@@ -1,7 +1,5 @@
-dojo.provide("dojox.drawing.tools.TextBlock");
-dojo.require("dojox.drawing.stencil.Text");
+define(["dojo","../stencil/Text","../util/oo","../manager/_registry"], function(dojo){
 
-(function(){
 	var conEdit;
 	dojo.addOnLoad(function(){
 		//		In order to use VML in IE, it's necessary to remove the
@@ -228,9 +226,18 @@ StencilData: {
 				//
 				if(this._textConnected){ return; } // good ol' IE and its double events
 				// FIXME:
-				// Ouch-getting dropdown by id.  At the minimum this should
+				// Ouch-getting greekPalette by id.  At the minimum this should
 				// be from the plugin manager
-				var dropdown = dijit.byId("dropdown");
+				var greekPalette = dijit.byId("greekPalette");
+				var greekHelp = greekPalette==undefined ? false : true;
+				if(greekHelp){
+					//set it up
+					dojo.mixin(greekPalette,{
+						_pushChangeTo: conEdit,
+						_textBlock: this
+					});
+				};
+				
 				this._textConnected = true;
 				this._dropMode = false;
 				this.mouse.setEventMode("TEXT");
@@ -264,7 +271,7 @@ StencilData: {
 					} else {
 						if(evt.keyCode==dojo.keys.SPACE){
 							dojo.stopEvent(evt);
-							dropdown.onCancel();
+							greekHelp && greekPalette.onCancel();
 						}
 					}
 				});
@@ -275,8 +282,8 @@ StencilData: {
 					//	if backslash, user is inputting a special character
 					//	This gives popup help.
 					if(evt.keyCode==220){
-						if(dropdown==undefined){
-							console.warn("Dropdown not found");
+						if(!greekHelp){
+							console.info("For greek letter assistance instantiate: dojox.drawing.plugins.drawing.GreekPalette");
 							return;
 						}
 						dojo.stopEvent(evt);
@@ -286,11 +293,7 @@ StencilData: {
 						this.insertText(conEdit,"\\");
 						this._dropMode = true;
 						this._blockExec = true;
-						dropdown._pushChangeTo = conEdit;
-						dropdown._textBlock = this;
-						dijit.popup.open({
-							parent:this.parentNode,
-							popup:dropdown,
+						greekPalette.show({
 							around:this.parentNode,
 							orient:{'BL':'TL'}
 						});
@@ -298,22 +301,23 @@ StencilData: {
 					if(!this._dropMode){
 						this._blockExec = false;
 					} else {
+						// Controls for when we have a character helper and it's active
 						switch(evt.keyCode){
 							case dojo.keys.UP_ARROW:
 							case dojo.keys.DOWN_ARROW:
 							case dojo.keys.LEFT_ARROW:
 							case dojo.keys.RIGHT_ARROW:
 								dojo.stopEvent(evt);
-								dropdown._navigateByArrow(evt);
+								greekPalette._navigateByArrow(evt);
 								break;
 							case dojo.keys.ENTER:
 								dojo.stopEvent(evt);
-								dropdown._onCellClick(evt);
+								greekPalette._onCellClick(evt);
 								break;
 							case dojo.keys.BACKSPACE:
 							case dojo.keys.DELETE:
 								dojo.stopEvent(evt);
-								dropdown.onCancel();
+								greekPalette.onCancel();
 								break;
 						}
 					}
@@ -794,4 +798,5 @@ StencilData: {
 	};
 	dojox.drawing.register(dojox.drawing.tools.TextBlock.setup, "tool");
 	
-})();
+	return dojox.drawing.tools.TextBlock;
+});

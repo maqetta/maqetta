@@ -20,14 +20,17 @@
 			dojo.require("dojox.mobile.FixedSplitter");
 			dojo.ready(function(){
 					var w = new dojox.mobile.FixedSplitter({orientation:"H"}, dojo.byId("container"));
-					dojo.create("div", {
-						style: "background-color:yellow;width:200px;",
+					var p0 = dojo.create("div", {
 						innerHTML: "pane #1 (width=200px)"
 					}, w.containerNode);
-					dojo.create("div", {
+					dojo.style(p0, {backgroundColor:"yellow",width:"200px"});
+
+					var p1 = dojo.create("div", {
 						style:"background-color:pink;",
 						innerHTML: "pane #2"
 					}, w.containerNode);
+					dojo.style(p1, {backgroundColor:"pink"});
+
 					w.startup();
 			});
 		</script>

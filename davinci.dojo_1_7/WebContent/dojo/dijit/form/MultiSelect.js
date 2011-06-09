@@ -1,4 +1,12 @@
-define(["dojo", "..", "./_FormWidget"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./_FormWidget",
+	"dojo/_base/NodeList", // .filter .forEach .map
+	"dojo/_base/array", // dojo.indexOf
+	"dojo/_base/html", // dojo.marginBox
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/MultiSelect

@@ -1,8 +1,17 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"./_FormWidget",
-	"dojo/data/util/sorter"], function(dojo, dijit){
+	"dojo/data/util/sorter", // dojo.data.util.sorter.createSortFunction
+	"dojo/_base/NodeList", // .map
+	"dojo/_base/array", // dojo.filter dojo.forEach dojo.map dojo.some
+	"dojo/_base/connect", // dojo.connect dojo.disconnect
+	"dojo/_base/html", // dojo.setSelectable dojo.toggleClass
+	"dojo/_base/lang", // dojo.delegate dojo.isArray dojo.isObject
+	"dojo/data/api/Identity", // dojo.data.api.Identity
+	"dojo/data/api/Notification", // dojo.data.api.Notification
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_FormSelectWidget
@@ -138,7 +147,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 			}
 		}
 		if(typeof lookupValue == "number" && lookupValue >= 0 && lookupValue < l){
-			return this.options[lookupValue] // dijit.form.__SelectOption
+			return this.options[lookupValue]; // dijit.form.__SelectOption
 		}
 		return null; // null
 	},
@@ -373,7 +382,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 					return child.option && (v === child.option.value);
 				});
 				dojo.toggleClass(child.domNode, this.baseClass + "SelectedOption", isSelected);
-				dijit.setWaiState(child.domNode, "selected", isSelected);
+				child.domNode.setAttribute("aria-selected", isSelected);
 			}, this);
 		}
 	},
@@ -466,7 +475,7 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		//		function.
 		var opts = this.options;
 		if(!opts){
-			opts = this.options = this.srcNodeRef ? dojo.query(">",
+			opts = this.options = this.srcNodeRef ? dojo.query("> *",
 						this.srcNodeRef).map(function(node){
 							if(node.getAttribute("type") === "separator"){
 								return { value: "", label: "", selected: false, disabled: false };

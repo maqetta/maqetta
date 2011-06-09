@@ -1,10 +1,19 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/Tooltip.html",
 	"./place",
 	"./_Widget",
-	"./_TemplatedMixin"], function(dojo, dijit, template, place){
+	"./_TemplatedMixin",
+	"./BackgroundIframe",
+	"dojo/_base/array", // dojo.forEach dojo.indexOf dojo.map
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/fx", // dojo.fadeIn dojo.fadeOut
+	"dojo/_base/html", // dojo.addClass dojo.byId dojo.contentBox dojo.marginBox dojo.position dojo.style
+	"dojo/_base/lang", // dojo.hitch dojo.isArrayLike
+	"dojo/_base/sniff", // dojo.isIE
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit, template, place){
 
 	// module:
 	//		dijit/Tooltip

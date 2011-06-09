@@ -1,4 +1,5 @@
-define(["dojo/_base/html","dojo/_base/array", "dijit/_WidgetBase", "dijit/form/_FormValueMixin"], function(dhtml, darray, WidgetBase, FormValueMixin) {
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html","dojo/_base/array", "dijit/_WidgetBase", "dijit/form/_FormValueMixin"],
+	function(dojo, declare, dhtml, darray, WidgetBase, FormValueMixin) {
 
 	return dojo.declare("dojox.mobile.Slider", [dijit._WidgetBase, dijit.form._FormValueMixin], {
 		// summary:

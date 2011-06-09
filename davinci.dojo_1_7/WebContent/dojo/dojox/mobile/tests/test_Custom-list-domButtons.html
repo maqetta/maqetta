@@ -4,8 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>List with domButtons</title>
-		<link href="../themes/custom/base.css" rel="stylesheet"></link>
-		<link href="../themes/common/domButtons.css" rel="stylesheet"></link>
+		<link href="../themes/custom/base.css" rel="stylesheet">
+		<link href="../themes/common/domButtons.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
@@ -14,11 +14,11 @@
 			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
 			function setRightIcon2Value(id, val){
 				var txt = dojo.doc.createTextNode(val);
-				dijit.byId(id).rightIconNode2.firstChild.appendChild(txt);
+				dijit.byId(id).rightIcon2Node.firstChild.firstChild.appendChild(txt);
 			}
 			function setIconValue(id, val){
 				var txt = dojo.doc.createTextNode(val);
-				dijit.byId(id).iconNode.firstChild.firstChild.firstChild.appendChild(txt);
+				dijit.byId(id).iconNode.firstChild.firstChild.firstChild.firstChild.appendChild(txt);
 			}
 			dojo.ready(function(){
 				setRightIcon2Value("item1", "32");
@@ -43,9 +43,6 @@
 		#item1, #item2, #item3 {
 			font-weight: normal;
 			font-size: 12px;
-		}
-		.mblListItem .mblDomButtonGrayRoundRect {
-			right: 25px;
 		}
 		.subject {
 			font: bold 16px Helvetica;

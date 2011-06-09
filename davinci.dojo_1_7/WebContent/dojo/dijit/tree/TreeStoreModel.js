@@ -1,4 +1,14 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.mixin
+	"..",
+	"dojo/_base/array", // dojo.filter dojo.forEach dojo.indexOf dojo.some
+	"dojo/_base/connect", // dojo.connect dojo.disconnect
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/json", // dojo.toJson
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/data/api/Identity", // dojo.data.api.Identity
+	"dojo/data/api/Notification" // dojo.data.api.Notification
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/tree/TreeStoreModel

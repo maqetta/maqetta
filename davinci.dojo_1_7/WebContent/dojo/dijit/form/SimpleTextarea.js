@@ -1,4 +1,11 @@
-define(["dojo", "..", "./TextBox"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./TextBox",
+	"dojo/_base/html", // dojo.addClass
+	"dojo/_base/sniff", // dojo.isIE dojo.isOpera
+	"dojo/_base/window" // dojo.doc.selection dojo.doc.selection.createRange
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/SimpleTextarea

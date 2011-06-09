@@ -1,4 +1,4 @@
-define(["dojo", "dijit", "dojox", "../_Plugin", "./exporter/TableWriter"], function(dojo, dijit, dojox){
+define(["dojo", "dijit", "dojox", "../_Plugin", "./exporter/TableWriter", "dijit/focus"], function(dojo, dijit, dojox){
 
 dojo.declare("dojox.grid.enhanced.plugins.Printer", dojox.grid.enhanced._Plugin, {
 	// summary:

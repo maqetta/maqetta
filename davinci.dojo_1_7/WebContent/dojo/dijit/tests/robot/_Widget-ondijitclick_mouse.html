@@ -26,9 +26,9 @@
 						dojo.connect(w, "_onClick", function(){
 							widgetClicks++;
 						}),
-						dojo.connect(dojo.byId("plainbutton"), "onclick", function(){
-							buttonClicks++;
-						})
+								dojo.connect(dojo.byId("plainbutton"), "onclick", function(){
+									buttonClicks++;
+								});
 						w.domNode.focus();
 					}, 100);
 

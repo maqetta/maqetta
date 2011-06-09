@@ -1,4 +1,4 @@
-define("dojox/image/LightboxNano", ["dojo", "dojo/fx"], function(dojo, fx) {
+define(["dojo", "dojo/fx"], function(dojo, fx) {
 
 	var abs = "absolute",
 		vis = "visibility",
@@ -10,7 +10,7 @@ define("dojox/image/LightboxNano", ["dojo", "dojo/fx"], function(dojo, fx) {
 			}
 	;
 
-	dojo.declare("dojox.image.LightboxNano", null, {
+	return dojo.declare("dojox.image.LightboxNano", null, {
 		//	summary:
 		//		A simple "nano" version of the lightbox.
 		//
@@ -306,5 +306,4 @@ define("dojox/image/LightboxNano", ["dojo", "dojo/fx"], function(dojo, fx) {
 		}
 	});
 
-	return dojox.image.LightboxNano;
 });

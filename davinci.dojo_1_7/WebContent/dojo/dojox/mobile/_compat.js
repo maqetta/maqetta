@@ -1,4 +1,5 @@
-define(["dojo/_base/lang", "./common","dijit/_base/sniff","dojo/_base/fx","dojox/fx","dojox/fx/flip"],function(dlang, common,sniff,fxbase,fx,flip){
+define(["dojo/_base/kernel", "./common","dojo/uacss","dojo/_base/fx","dojo/fx","dojo/fx/easing","dojox/fx","dojox/fx/flip"],
+	function(dojo, common, uacss, fxbase, fx, easing, xfx, flip){
 	// module:
 	//		dojox/mobile/compat
 	// summary:
@@ -56,7 +57,7 @@ define(["dojo/_base/lang", "./common","dijit/_base/sniff","dojo/_base/fx","dojox
 							fromNode.style.display = "none";
 							fromNode.style.left = "0px";
 							toNode.style.position = "relative";
-							toWidget = dijit.byNode(toNode);
+							var toWidget = dijit.byNode(toNode);
 							if(toWidget && !dojo.hasClass(toWidget.domNode, "out")){
 								// Reset the temporary padding
 								toWidget.containerNode.style.paddingTop = "";
@@ -129,6 +130,7 @@ define(["dojo/_base/lang", "./common","dijit/_base/sniff","dojo/_base/fx","dojox
 						});
 						anim.play();
 					}
+					dojox.mobile.currentView = dijit.byNode(toNode);
 				},
 			
 				wakeUp: function(node){
@@ -295,7 +297,7 @@ define(["dojo/_base/lang", "./common","dijit/_base/sniff","dojo/_base/fx","dojox
 					//		Deals with IE's lack of borderRadius support
 					// tags:
 					//		public
-					var i;
+					var i, len;
 					_this.domNode = dojo.doc.createElement("DIV");
 					_this.domNode.style.padding = "0px";
 					_this.domNode.style.backgroundColor = "transparent";
@@ -416,7 +418,7 @@ define(["dojo/_base/lang", "./common","dijit/_base/sniff","dojo/_base/fx","dojox
 
 		dojox.mobile.getCssPaths = function(){
 			var paths = [];
-			var i, j;
+			var i, j, len;
 
 			// find @import
 			var s = dojo.doc.styleSheets;

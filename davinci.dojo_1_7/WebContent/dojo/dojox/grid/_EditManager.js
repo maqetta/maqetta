@@ -134,6 +134,9 @@ dojo.declare("dojox.grid._EditManager", null, {
 	// end boomerang fix API
 
 	start: function(inCell, inRowIndex, inEditing){
+		if(!this._isValidInput()){
+			return;
+		}
 		this.grid.beginUpdate();
 		this.editorApply();
 		if(this.isEditing() && !this.isEditRow(inRowIndex)){
@@ -185,7 +188,7 @@ dojo.declare("dojox.grid._EditManager", null, {
 	apply: function(){
 		// summary:
 		//		Apply a grid edit
-		if(this.isEditing()){
+		if(this.isEditing() && this._isValidInput()){
 			this.grid.beginUpdate();
 			this.editorApply();
 			this.applyRowEdit();
@@ -233,6 +236,16 @@ dojo.declare("dojox.grid._EditManager", null, {
 		if(this.isEditRow(inRowIndex) && c.view == inView && c.editable){
 			c.restore(c, this.info.rowIndex);
 		}
+	},
+	
+	_isValidInput: function(){
+		var w = (this.info.cell || {}).widget;		
+		if(!w || !w.isValid){
+			//no validation needed
+			return true;
+		}		
+		w.focused = true;
+		return w.isValid(true);
 	}
 });
 

@@ -4,7 +4,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>View</title>
-	<link href="../../themes/iphone/iphone.css" rel="stylesheet">
+	<link href="../../themes/iphone/base.css" rel="stylesheet">
 	<style>
 	html,body{
 		height: 100%;
@@ -83,12 +83,13 @@
 		dojo.requireIf(!dojo.isWebKit, "dojo.fx.easing");
 
         dojo.require("doh.runner");
+
 		dojo.addOnLoad(function(){
 			doh.register("dojox.mobile.test.doh.View", [
 				{
 					name: "test View Verification",
 					timeout: 3000,
-					runtest: function (){
+					runTest: function (){
 						var demoWidget = dijit.byId("group1");
 						doh.assertEqual('mblView', demoWidget.domNode.className);
 						doh.assertEqual('visible', demoWidget.domNode.style.visibility);
@@ -101,7 +102,7 @@
 			]);
 			setTimeout(function(){ // to get the correct dimension
 				doh.run();
-			}, 0);
+			}, 500);
 		});
 	</script>
 </head>

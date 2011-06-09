@@ -1,10 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/MenuSeparator.html",
 	"./_WidgetBase",
 	"./_TemplatedMixin",
-	"./_Contained"], function(dojo, dijit, template){
+	"./_Contained",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html" // dojo.setSelectable
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/MenuSeparator

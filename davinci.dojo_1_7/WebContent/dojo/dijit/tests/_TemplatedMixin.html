@@ -124,7 +124,7 @@
 							// ExclamationVariableTemplate should create markup like
 							//		<div><span>hello world</span></div>
 							// The <span> comes from the ${!markup} variable.
-							var span = dojo.query(">", widget.domNode);
+							var span = dojo.query("> *", widget.domNode);
 							t.is(1, span.length, "dom node has one child");
 							t.is("SPAN", span[0].nodeName.toUpperCase(), "which is a span");
 							t.is("hello world", span[0].innerHTML, "and the text is set correctly too");

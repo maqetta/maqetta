@@ -1,6 +1,4 @@
-dojo.provide("dojox.drawing.manager.Canvas");
-
-(function(){
+define(["dojo","../util/oo","./Stencil"], function(dojo){
 	
 	dojox.drawing.manager.Canvas = dojox.drawing.util.oo.declare(
 		// summary:
@@ -157,5 +155,6 @@ dojo.provide("dojox.drawing.manager.Canvas");
 			}
 		}
 	);
-	
-})();
+
+	return dojox.drawing.manager.Canvas;
+});

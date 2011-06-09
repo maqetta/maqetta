@@ -136,6 +136,38 @@
 				}
 			]);
 
+			doh.register("removeChild", function removeChild(){
+				var container = new dijit.layout.StackContainer({ id: "sc2" });
+				container.addChild(new dijit.layout.ContentPane({
+						id: "rpage1Prog",
+						title: "Page 1",
+						content: "IT WAS the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way -- in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only"
+				}));
+				container.addChild(new dijit.layout.ContentPane({
+						id: "rpage2Prog",
+						title: "Page 2",
+						content: "There were a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of France. In both countries it was clearer than crystal to the lords of the State preserves of loaves and fishes, that things in general were settled for ever."
+				}));
+				var page3;
+				container.addChild(page3 = new dijit.layout.ContentPane({
+						id: "rpage3Prog",
+						title: "Page 3",
+						content: "It was the year of Our Lord one thousand seven hundred and seventy- five. Spiritual revelations were conceded to England at that favoured period, as at this. Mrs. Southcott had recently attained her five-and- twentieth blessed birthday, of whom a prophetic private in the Life Guards had heralded the sublime appearance by announcing that arrangements were made for the swallowing up of London and Westminster. Even the Cock-lane ghost had been laid only a round dozen of years, after rapping out its messages, as the spirits of this very year last past (supernaturally deficient in originality) rapped out theirs. Mere messages in the earthly order of events had lately come to the English Crown and People, from a congress of British subjects in America:"
+				}));
+
+				container.placeAt(dojo.body());
+				container.startup();
+				container.selectChild(page3);
+
+				var resizes = 0;
+				dojo.connect(page3, "resize", function(){
+					resizes++;
+				});
+				container.removeChild(page3);
+				doh.is(0, resizes, "removing selected child doesn't call resize on it");
+				doh.is(2, container.getChildren().length, "2 children");
+			});
+
 			doh.run();
 		});
 

@@ -46,6 +46,8 @@ try{
 
 	doh.registerUrl("dijit.tests.form.verticalAlign", dojo.moduleUrl("dijit","tests/form/test_verticalAlign.html"+userArgs), 999999);
 
+	doh.registerUrl("dijit.tests.form.Textbox_types", dojo.moduleUrl("dijit","tests/form/Textbox_types.html"+userArgs), 999999);
+
 	doh.registerUrl("dijit.tests.form.TextBox_sizes.tundra.ltr", dojo.moduleUrl("dijit", "tests/form/TextBox_sizes.html?theme=tundra&dir=ltr"), 999999);
 	doh.registerUrl("dijit.tests.form.TextBox_sizes.tundra.rtl", dojo.moduleUrl("dijit", "tests/form/TextBox_sizes.html?theme=tundra&dir=rtl"), 999999);
 	doh.registerUrl("dijit.tests.form.TextBox_sizes.tundra.quirks", dojo.moduleUrl("dijit", "tests/quirks.html?file=form/TextBox_sizes.html&theme=tundra&dir=ltr"), 999999);

@@ -1,4 +1,5 @@
-define(["dojo/_base/html","./TextBox"], function(dhtml,TextBox){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html","./TextBox"],
+	function(dojo, declare, dhtml, TextBox){
 
 	return dojo.declare("dojox.mobile.TextArea",dojox.mobile.TextBox,{
 		// summary:

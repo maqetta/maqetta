@@ -1,5 +1,6 @@
-dojo.provide("dojox.drawing.ui.Toolbar");
-dojo.require("dojox.drawing.library.icons");
+define([
+	"dojo",
+	"../util/common"], function(dojo){
 
 dojo.declare("dojox.drawing.ui.Toolbar", [], {
 	// summary:
@@ -277,4 +278,7 @@ dojo.declare("dojox.drawing.ui.Toolbar", [], {
 		}, this);
 	}
 	
+});
+
+return dojox.drawing.ui.Toolbar;
 });

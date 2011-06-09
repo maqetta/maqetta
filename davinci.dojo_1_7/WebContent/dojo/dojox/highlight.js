@@ -1,2 +1,1 @@
-dojo.provide("dojox.highlight");
-dojo.require("dojox.highlight._base");
+define(["./highlight/_base"], function(){});

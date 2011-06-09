@@ -1,8 +1,8 @@
 
-define(["dojo/_base/lang","dojo/_base/kernel", "dojo/_base/html", "dojox/gfx/matrix","dijit/Tooltip","dojo/NodeList-traverse"],
+define(["dojo/_base/kernel", "dojo/_base/lang", "../../main", "dojo/_base/html", "dojox/gfx/matrix","dijit/Tooltip","dojo/NodeList-traverse"],
 						
 
-function(dojo, kernel, dhtml, matrix, Tooltip, NodeListTraverse) {
+function(dojo, lang, dojox, dhtml, matrix, Tooltip, NodeListTraverse) {
 	var dgc = dojo.getObject("geo.charting", true, dojox); 
 
 	dgc.showTooltip = function(/*String*/innerHTML, /*dojox.gfx.shape*/ gfxObject, /*String[]?*/ positions){

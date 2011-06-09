@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","dojo/date","dojox/string/tokenize"], function(dojo,ddate,dxst){
+define(["dojo/_base/kernel", "dojo/_base/lang","dojo/date","dojox/string/tokenize"], function(dojo,dlang,ddate,dxst){
 dojo.getObject("date.php", true, dojox);
 
 dojox.date.php.format = function(/*Date*/ date, /*String*/ format){

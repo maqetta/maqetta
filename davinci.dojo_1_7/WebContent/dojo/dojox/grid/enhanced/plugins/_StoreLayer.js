@@ -32,7 +32,7 @@ define(["dojo", "dojox"], function(dojo, dojox){
 //		//now use the store as usual...
 //
 //		store.unwrap(); //remove all the layers, get the original store back.
-(function(){
+
 	var ns = dojo.getObject("grid.enhanced.plugins", true, dojox);
 	
 	getPrevTags = function(tags){
@@ -380,8 +380,7 @@ define(["dojo", "dojox"], function(dojo, dojox){
 			throw error;
 		}
 	});
-})();
 
-return dojox.grid.enhanced.plugins._StoreLayer;
+	return dojox.grid.enhanced.plugins._StoreLayer;
 
 });

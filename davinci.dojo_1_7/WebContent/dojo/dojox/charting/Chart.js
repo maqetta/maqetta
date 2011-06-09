@@ -1,7 +1,7 @@
 define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/Color",  
 	"./Element", "./Theme", "./Series", "./axis2d/common",
 	"dojox/gfx", "dojox/lang/functional", "dojox/lang/functional/fold", "dojox/lang/functional/reversed"], 
-	function(dojo, declare, dhtml, dcolor, Element, Theme, Series, common, g, df){
+	function(dojo, declare, html, color, Element, Theme, Series, common, g, df){
 	/*=====
 	dojox.charting.__ChartCtorArgs = function(margins, stroke, fill, delayInMs){
 		//	summary:
@@ -753,7 +753,7 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_bas
 
 			// set up a theme
 			if(!this.theme){
-				this.setTheme(new dojox.charting.Theme(dojox.charting._def));
+				this.setTheme(new Theme(dojox.charting._def));
 			}
 
 			// assign series

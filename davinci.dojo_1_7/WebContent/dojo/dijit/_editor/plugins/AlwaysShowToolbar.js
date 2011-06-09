@@ -1,4 +1,14 @@
-define(["dojo", "../..", "../_Plugin"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"../..",
+	"../_Plugin",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.disconnect
+	"dojo/_base/html", // dojo.addClass dojo.marginBox dojo.place dojo.position dojo.removeClass
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isOpera
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/AlwaysShowToolbar

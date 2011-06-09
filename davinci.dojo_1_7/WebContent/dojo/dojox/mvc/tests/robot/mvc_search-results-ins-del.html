@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>doh.robot MVC search-results-ins-del Test</title>
 
@@ -12,7 +11,7 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
+		<script type="text/javascript" src="../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
@@ -41,7 +40,7 @@
 						return d;
 						}
 					 },
-					{
+			/*		{
 						name: "selectBen",
 						timeout: 9000,
 						runTest: function(){
@@ -58,6 +57,7 @@
 							return d;
 						}
 					},
+			*/		
 					{
 						name: "selectJohn",
 						timeout: 9000,
@@ -88,7 +88,7 @@
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
-							doh.robot.typeKeys("Johnny", 1000, 2000);													  
+							doh.robot.typeKeys("Johnny", 300, 600);													  
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});							
 							
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -110,7 +110,7 @@
 							doh.robot.mouseMoveAt("nameInput1", 500, 0);
 							doh.robot.mouseClick({left:true}, 500);
 
-							doh.robot.typeKeys("jamin", 500, 1000);														
+							doh.robot.typeKeys("jamin", 300, 600);														
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});							
 							
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -135,19 +135,19 @@
 							doh.robot.mouseMoveAt("firstInput", 500, 0);
 							doh.robot.mouseClick({left:true}, 500);
 
-							doh.robot.typeKeys("Ken", 500, 1000);													  
+							doh.robot.typeKeys("Ken", 300, 600);													  
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("Kelly", 500, 1000);														
+							doh.robot.typeKeys("Kelly", 300, 600);														
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("CA", 500, 1000);													 
+							doh.robot.typeKeys("CA", 300, 600);													 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("5623", 500, 1000);													   
+							doh.robot.typeKeys("5623", 300, 600);													   
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("k.k@test.com", 500, 1000);													   
+							doh.robot.typeKeys("k.k@test.com", 300, 600);													   
+							doh.robot.keyPress(dojo.keys.TAB, 300, {});	 
+							doh.robot.typeKeys("408-764-3454", 300, 600);													   
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("408-764-3454", 500, 1000);													   
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("408-764-6000", 500, 1000);													   
+							doh.robot.typeKeys("408-764-6000", 300, 600);													   
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is("Ken", dijit.byId("firstInput").get('value'),"firstInput should be Ken");
@@ -162,7 +162,7 @@
 							return d;
 						}
 					},
-					{
+			/*		{
 						name: "AddBetty",
 						timeout: 20000,
 						runTest: function(){
@@ -232,7 +232,7 @@
 							}), 1000);
 							return d;
 						}
-					},
+					},					
 					{
 						name: "RemoveKen",
 						timeout: 20000,
@@ -249,9 +249,28 @@
 							return d;
 						}
 					}
+		*/			
+					{
+						name: "RemoveKen",
+						timeout: 20000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							
+							doh.robot.mouseMoveAt("dijit_form_Button_37", 500, 0);
+							doh.robot.mouseClick({left:true}, 500);
+
+							doh.robot.mouseMoveAt("dijit_form_Button_63", 500, 0);
+							doh.robot.mouseClick({left:true}, 500);
+							
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("Chad", dijit.byId("firstInput").get('value'),"firstInput should be set");
+								doh.is(undefined, dijit.byId("nameInput10"),"nameInput10 should be set");
+							}), 1000);
+							return d;
+						}
+					}
 				]);
 				doh.run();
 			});
 		</script>
-	</head>
 </html>

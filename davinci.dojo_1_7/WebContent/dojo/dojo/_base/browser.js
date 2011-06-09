@@ -2,11 +2,11 @@ if(require.has){
 	require.has.add("config-selectorEngine", "acme");
 }
 define([
+	"../ready",
 	"./kernel",
 	"./sniff",
 	"./connect", // until we decide if connect is going back into non-browser environments
 	"./unload",
-	"./url",
 	"./window",
 	"./event",
 	"./html",

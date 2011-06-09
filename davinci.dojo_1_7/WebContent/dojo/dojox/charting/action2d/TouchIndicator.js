@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAction", "./_IndicatorElement", "dojox/lang/utils"],
-	function(dojo, declare, devent, ChartAction, _IndicatorElement, du){ 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAction", "./_IndicatorElement", "dojox/lang/utils"],
+	function(dojo, lang, declare, devent, ChartAction, IndicatorElement, du){ 
 	
 	/*=====
 	dojo.declare("dojox.charting.action2d.__TouchIndicatorCtorArgs", null, {
@@ -143,7 +143,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAct
 			this.opt = dojo.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
-			this.uName = "touchIndicator"+this.opt.series.name;
+			this.uName = "touchIndicator"+this.opt.series;
 			this._handles = [];
 			this.connect();
 		},
@@ -154,7 +154,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAct
 			//		to the chart that's why Chart.render() must be called after connect.
 			this.inherited(arguments);
 			// add plot with unique name
-			this.chart.addPlot(this.uName, {type: dojox.charting.action2d._IndicatorElement, inter: this});
+			this.chart.addPlot(this.uName, {type: IndicatorElement, inter: this});
 		},
 
 		disconnect: function(){
@@ -171,10 +171,9 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAct
 
 		onTouchStart: function(event){
 			//	summary:
-			//		Called when touch is started on the chart.
-			// make sure our layer goes on top
+			//		Called when touch is started on the chart.		
 			if(event.touches.length==1){
-				this._onTouchSingle(event);
+				this._onTouchSingle(event, true);
 			}else if(this.opt.dualIndicator && event.touches.length==2){
 				this._onTouchDual(event);
 			}
@@ -190,11 +189,22 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAct
 			}
 		},
 
-		_onTouchSingle: function(event){
+		_onTouchSingle: function(event, delayed){
+			// sync
+			if(this.chart._delayedRenderHandle && !delayed){
+				// we have pending rendering from a previous call, let's sync
+				clearTimeout(this.chart._delayedRenderHandle);
+				this.chart._delayedRenderHandle = null;
+				this.chart.render();
+			}
 			var plot = this.chart.getPlot(this.uName);
 			plot.pageCoord  = {x: event.touches[0].pageX, y: event.touches[0].pageY};
 			plot.dirty = true;
-			this.chart.render();
+			if(delayed){
+				this.chart.delayedRender();
+			}else{
+				this.chart.render();
+			}
 			dojo.stopEvent(event);
 		},
 		
@@ -215,7 +225,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", "./ChartAct
 			plot.pageCoord = null;
 			plot.secondCoord = null;
 			plot.dirty = true;
-			this.chart.render();
+			this.chart.delayedRender();
 		}
 	});
 });

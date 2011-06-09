@@ -56,9 +56,9 @@
 					var e = document.createEvent('Events');
 					if(!hasTouch){
 						switch(type){
-							case 'touchstart': type = 'mousedown'; break;;
-							case 'touchmove': type = 'mousemove'; break;;
-							case 'touchend': type = 'mouseup'; break;;
+							case 'touchstart': type = 'mousedown'; break;
+							case 'touchmove': type = 'mousemove'; break;
+							case 'touchend': type = 'mouseup'; break;
 						}
 					}
 					e.initEvent(type, true, true);
@@ -447,7 +447,7 @@
 						dojo.style(sv.handle, "WebkitTransitionDuration", "");
 					}
 				})
-			};
+			}
 
 			doh.register("log", function(){
 				dojo.byId('failures').innerHTML = doh._failureCount;

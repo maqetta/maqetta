@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","dojo/_base/array"], function(dojo,dd){
+define(["dojo/_base/kernel", "dojo/_base/lang","../_base","dojo/_base/array"], function(dojo,lang,dd){
 	dojo.getObject("dtl.contrib.data", true, dojox);
 
 	var ddcd = dd.contrib.data;

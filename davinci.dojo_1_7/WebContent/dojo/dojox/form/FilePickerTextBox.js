@@ -3,6 +3,7 @@ dojo.provide("dojox.form.FilePickerTextBox");
 dojo.require("dojo.window");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit._HasDropDown");
+dojo.require("dijit._base.focus");	// dijit.getFocus()
 dojo.require("dojox.widget.FilePicker");
 
 dojo.declare(

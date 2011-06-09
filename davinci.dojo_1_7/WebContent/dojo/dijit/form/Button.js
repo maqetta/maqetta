@@ -1,11 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	"..",
 	"dojo/text!./templates/Button.html",
+	"require",
 	"./_FormWidget",
 	"./_ButtonMixin",
 	"../_Container",
-	"../_HasDropDown"], function(dojo, dijit, template){
+	"../_HasDropDown",
+	"dojo/_base/html", // dojo.toggleClass
+	"dojo/_base/lang" // dojo.trim
+], function(dojo, dijit, template, require){
 
 // module:
 //		dijit/form/Button
@@ -95,11 +99,19 @@ dojo.declare("dijit.form.Button", [dijit.form._FormWidget, dijit.form._ButtonMix
 		//		If the label is hidden (showLabel=false) then and no title has
 		//		been specified, then label is also set as title attribute of icon.
 		this.inherited(arguments);
-		if(this.showLabel == false && !("title" in this.params)){
+		if(!this.showLabel && !("title" in this.params)){
 			this.titleNode.title = dojo.trim(this.containerNode.innerText || this.containerNode.textContent || '');
 		}
 	}
 });
 
+// Back compat w/1.6, remove for 2.0
+if(!dojo.isAsync){
+	dojo.ready(0, function(){
+		require(["dijit/form/DropDownButton", "dijit/form/ComboButton", "dijit/form/ToggleButton"]);
+	});
+}
+
 return dijit.form.Button;
 });
+

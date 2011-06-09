@@ -4,7 +4,8 @@
 //dojo.require("dojox.mobile.IconContainer");
 //dojo.require("dojox.mobile.Button");
 
-define([ "dojox/mobile/IconContainer", "dojox/mobile/Button" ], function(ic, but){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojox/mobile/IconContainer",
+		"dojox/mobile/Button" ], function(dojo, declare, ic, but){
 	return dojo.declare("dojox.geo.openlayers.tests.mobile.goto.NavigationControl",
 			[ OpenLayers.Control ], {
 				constructor : function(options, element){

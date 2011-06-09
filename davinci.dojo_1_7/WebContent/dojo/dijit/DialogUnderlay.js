@@ -1,9 +1,14 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
-	"dojo/window",
+	"dojo/window", // dojo.window.getBox
 	"./_Widget",
-	"./_TemplatedMixin"], function(dojo, dijit){
+	"./_TemplatedMixin",
+	"./BackgroundIframe",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/DialogUnderlay

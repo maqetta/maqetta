@@ -1,5 +1,5 @@
-define(["../..", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", "dojox/gfx", "dojox/lang/functional"], 
-	function(dojox, dojo, darray, dcolor, g, df){
+define(["dojo/_base/kernel", "../../main", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", "dojox/gfx", "dojox/lang/functional"], 
+	function(dojo, dojox, lang, array, color, g, df){
 	
 	var common = dojo.getObject("charting.plot2.common", true, dojox);
 	

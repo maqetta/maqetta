@@ -49,7 +49,7 @@ dojox.grid.cells.TreeCell = {
 					id = store.getIdentity(inItem);
 				}
 				cellClasses.push("dojoxGridExpandoCell");
-				ret = '<span dojoType="dojox.grid._Expando" level="' + level + '" class="dojoxGridExpando"' +
+				ret = '<span ' + dojo._scopeName + 'Type="dojox.grid._Expando" level="' + level + '" class="dojoxGridExpando"' +
 						'" toggleClass="' + toggleClass + '" itemId="' + id + '" cellIdx="' + this.index + '"></span>';
 			}
 			result = ret + this.formatIndexes(inRowIndexes, inItem);

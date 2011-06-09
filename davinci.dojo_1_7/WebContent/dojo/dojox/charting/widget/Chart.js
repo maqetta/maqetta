@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/query", "dijit/_Widget", "../Chart", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/query", "dijit/_Widget", "../Chart", 
 	"dojox/lang/utils", "dojox/lang/functional"], 
-	function(dojo, declare, dquery, Widget, Chart, du, df){
+	function(dojo, lang, declare, query, Widget, Chart, du, df){
 	var collectParams, collectAxisParams, collectPlotParams,
 		collectActionParams, collectDataParams,
 		notNull = function(o){ return o; },

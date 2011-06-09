@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"..",
-	"dojo/currency",
-	"./NumberTextBox"], function(dojo, dijit){
+	"dojo/currency", // dojo.currency._mixInDefaults dojo.currency.format dojo.currency.parse dojo.currency.regexp
+	"./NumberTextBox",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/CurrencyTextBox

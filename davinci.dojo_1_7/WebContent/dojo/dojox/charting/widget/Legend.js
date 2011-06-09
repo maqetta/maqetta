@@ -1,5 +1,5 @@
-define(["dojo/_base/html", "dojo/_base/declare", "dijit/_Widget", "dojox/gfx", "dojox/lang/functional", "dojox/lang/functional/array", "dojox/lang/functional/fold"], 
-		function(dojo, declare, Widget, gfx, df){
+define(["dojo/_base/kernel", "dojo/_base/html", "dojo/_base/declare", "dijit/_Widget", "dojox/gfx", "dojox/lang/functional", "dojox/lang/functional/array", "dojox/lang/functional/fold"], 
+		function(dojo, html, declare, Widget, gfx, df){
 
 	var REVERSED_SERIES = /\.(StackedColumns|StackedAreas|ClusteredBars)$/;
 

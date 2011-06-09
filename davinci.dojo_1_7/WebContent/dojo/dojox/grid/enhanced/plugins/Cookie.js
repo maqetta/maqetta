@@ -7,7 +7,6 @@ define([
 	"../../_RowSelector",
 	"../../cells/_base"], function(dojo, dijit, dojox){
 
-(function(){
 	// Generate a cookie key for the given grid.
 	var _cookieKeyBuilder = function(grid){
 		return window.location + "/" + grid.id;
@@ -344,8 +343,7 @@ define([
 		}
 	});
 	dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Cookie/*name:'cookie'*/, {"preInit": true});
-})();
 
-return dojox.grid.enhanced.plugins.Cookie;
+	return dojox.grid.enhanced.plugins.Cookie;
 
 });

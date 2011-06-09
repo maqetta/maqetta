@@ -5,9 +5,10 @@ define([
 	"dojo/fx",
 	"dojo/string",
 	"dijit/form/Button",
-	"dijit/_WidgetsInTemplateMixin"], function(dojo, dijit, dojox){
+	"dijit/_WidgetsInTemplateMixin",
+	"dijit/focus"	// dijit.focus()
+], function(dojo, dijit, dojox){
 
-(function(){
 var _focusClass = "dojoxGridFBarHover",
 	_filteredClass = "dojoxGridFBarFiltered",
 	_stopEvent = function(evt){
@@ -320,8 +321,8 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		this._focusPos = 0;
 	},
 	_initAriaInfo: function(){
-		dijit.setWaiState(this.defineFilterButton.domNode, "label", this.plugin.nls["waiFilterBarDefButton"]);
-		dijit.setWaiState(this.clearFilterButton.domNode,"label", this.plugin.nls["waiFilterBarClearButton"]);
+		this.defineFilterButton.domNode.setAttribute("aria-label", this.plugin.nls["waiFilterBarDefButton"]);
+		this.clearFilterButton.domNode.setAttribute("aria-label", this.plugin.nls["waiFilterBarClearButton"]);
 	},
 	_isInColumn: function(/* int */mousePos_x, /* domNode */headerNode, /* int */colIndex){
 		var coord = dojo.coords(headerNode);
@@ -368,8 +369,7 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.FilterBar",[dijit._Widget, diji
 		}
 	}
 });
-})();
 
-return dojox.grid.enhanced.plugins.filter.FilterBar;
+	return dojox.grid.enhanced.plugins.filter.FilterBar;
 
 });

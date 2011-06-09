@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", 
 	"dojox/gfx", "dojox/gfx/_gfxBidiSupport", "./Chart", "./axis2d/common", "dojox/string/BidiEngine", "dojox/lang/functional"], 
-	function(dojo, dhtml, darray, g, gBidi, Chart, da, BidiEngine, df){
+	function(dojo, lang, html, array, g, gBidi, Chart, da, BidiEngine, df){
 
 	var bidiEngine = new dojox.string.BidiEngine();
 	

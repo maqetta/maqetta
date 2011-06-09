@@ -1,13 +1,20 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/ColorPalette.html",
 	"./_Widget",
 	"./_TemplatedMixin",
 	"dojo/colors",
-	"dojo/i18n",
+	"dojo/i18n", // dojo.i18n.getLocalization
 	"./_PaletteMixin",
-	"dojo/i18n!dojo/nls/colors"], function(dojo, dijit, template){
+	"dojo/i18n!dojo/nls/colors",
+	"dojo/_base/Color", // dojo.Color dojo.Color.named
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.hasClass dojo.place
+	"dojo/_base/url", // dojo.moduleUrl
+	"dojo/_base/window", // dojo.body
+	"dojo/string" // dojo.string.substitute
+], function(dojo, dijit, template){
 
 // module:
 //		dijit/ColorPalette

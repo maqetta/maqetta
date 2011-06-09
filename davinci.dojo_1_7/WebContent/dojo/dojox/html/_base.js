@@ -2,15 +2,16 @@
 	Status: dont know where this will all live exactly
 	Need to pull in the implementation of the various helper methods
 	Some can be static method, others maybe methods of the ContentSetter (?)
-	
+
 	Gut the ContentPane, replace its _setContent with our own call to dojox.html.set()
-	
+
 
 */
 
 dojo.provide("dojox.html._base");
 
 dojo.require("dojo.html");
+dojo.require("dojo._base.url");
 
 (function() {
 
@@ -28,7 +29,7 @@ dojo.require("dojo.html");
 	// @namespace dojo "http://dojotoolkit.org/dojo.css"; /* namespace URL should always be a absolute URI */
 	// @charset 'utf-8';
 	// @media print{ #menuRoot {display:none;} }
-		
+
 	// we adjust all paths that dont start on '/' or contains ':'
 	//(?![a-z]+:|\/)
 
@@ -100,7 +101,7 @@ dojo.require("dojo.html");
 			}
 		);
 	};
-	
+
 	var snarfStyles = dojox.html._snarfStyles = function	(/*String*/cssUrl, /*String*/cont, /*Array*/styles){
 		/****************  cut out all <style> and <link rel="stylesheet" href=".."> **************/
 		// also return any attributes from this tag (might be a media attribute)
@@ -171,7 +172,7 @@ dojo.require("dojo.html");
 				});
 			}
 		}
-		
+
 		// match <script>, <script type="text/..., but not <script type="dojo(/method)...
 		return cont.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))(?:[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?)*>([\s\S]*?)<\/script>/gi,
 			function(ignore, delim, src, code){
@@ -184,7 +185,7 @@ dojo.require("dojo.html");
 			}
 		);
 	};
-	
+
 	var evalInGlobal = dojox.html.evalInGlobal = function(code, appendNode){
 		// we do our own eval here as dojo.eval doesn't eval in global crossbrowser
 		// This work X browser but but it relies on a DOM
@@ -207,7 +208,7 @@ dojo.require("dojo.html");
 		executeScripts: false,
 		scriptHasHooks: false,
 		scriptHookReplacement: null,
-		
+
 		_renderStyles: function(styles){
 			// insert css from content into document head
 			this._styleNodes = [];
@@ -236,11 +237,11 @@ dojo.require("dojo.html");
 
 		empty: function() {
 			this.inherited("empty", arguments);
-			
+
 			// empty out the styles array from any previous use
 			this._styles = [];
 		},
-		
+
 		onBegin: function() {
 			// summary
 			//		Called after instantiation, but before set();
@@ -249,10 +250,10 @@ dojo.require("dojo.html");
 			//		This implementation extends that of dojo.html._ContentSetter
 			//		to add handling for adjustPaths, renderStyles on the html string content before it is set
 			this.inherited("onBegin", arguments);
-			
+
 			var cont = this.content,
 				node = this.node;
-				
+
 			var styles = this._styles;// init vars
 
 			if(dojo.isString(cont)){
@@ -280,16 +281,16 @@ dojo.require("dojo.html");
 			}
 			this.content = cont;
 		},
-		
+
 		onEnd: function() {
 			// summary
 			//		Called after set(), when the new content has been pushed into the node
 			//		It provides an opportunity for post-processing before handing back the node to the caller
 			//		This implementation extends that of dojo.html._ContentSetter
-			
+
 			var code = this._code,
 				styles = this._styles;
-				
+
 			// clear old stylenodes from the DOM
 			// these were added by the last set call
 			// (in other words, if you dont keep and reuse the ContentSetter for a particular node
@@ -338,9 +339,9 @@ dojo.require("dojo.html");
 			// reset the defaults from the prototype
 			dojo.mixin(this, dojo.getObject(this.declaredClass).prototype);
 		}
-		
+
 	});
-	
+
 	dojox.html.set = function(/* DomNode */ node, /* String|DomNode|NodeList */ cont, /* Object? */ params){
 		// TODO: add all the other options
 			// summary:
@@ -358,7 +359,7 @@ dojo.require("dojo.html");
 			//		dojo.html.set(node, "some string");
 			//		dojo.html.set(node, contentNode, {options});
 			//		dojo.html.set(node, myNode.childNodes, {options});
-	 
+
 		if(!params){
 			// simple and fast
 			return dojo.html._setNodeContent(node, cont, true);
@@ -371,5 +372,5 @@ dojo.require("dojo.html");
 			return op.set();
 		}
 	};
-	
+
 })();

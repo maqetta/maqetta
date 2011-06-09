@@ -37,7 +37,7 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 				"</table>",
 			   "</div>"].join(""),
 
-	// _filters: [private] Array
+	// _filters: [protected] Array
 	//		The filters is an array of regular expressions to try and strip out a lot
 	//		of style data MS Word likes to insert when pasting into a contentEditable.
 	//		Prettymuch all of it is junk and not good html.  The hander is a place to put a function
@@ -59,6 +59,8 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 	],
 
 	_initButton: function(){
+		this._filters = this._filters.slice(0); 
+		
 		// summary:
 		//		Over-ride for creation of the save button.
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "PasteFromWord");

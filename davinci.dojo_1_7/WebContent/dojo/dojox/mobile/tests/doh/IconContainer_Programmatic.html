@@ -4,8 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Icon</title>
-		<link href="../../themes/iphone/base.css" rel="stylesheet"></link>
-		<link href="../../themes/iphone/IconContainer.css" rel="stylesheet"></link>
+		<link href="../../themes/iphone/base.css" rel="stylesheet">
+		<link href="../../themes/iphone/IconContainer.css" rel="stylesheet">
 
 		<style>
 			.box {
@@ -78,30 +78,35 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
+							var e;
 							doh.assertEqual('none', demoWidget.contentNode.style.display);
-							if(dojo.isIE)
-							{
+							if(dojo.isIE){
 								demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].fireEvent( "onclick" );
-							} else {
-								var e = document.createEvent('Events');
+							}else{
+								e = document.createEvent('Events');
 								e.initEvent('click', true, true);
 								demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].dispatchEvent(e);
 							}
 
-							var demoWidget = dijit.byId("dojox_mobile_IconItem_1");
+							demoWidget = dijit.byId("dojox_mobile_IconItem_1");
 							doh.assertEqual('none', demoWidget.contentNode.style.display);
-							if(dojo.isIE)
-							{
+							demoWidget = dijit.byId("dojox_mobile_IconItem_0");
+							if(dojo.isIE){
 								demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].fireEvent( "onclick" );
-							} else {
+							}else{
 								e.initEvent('click', true, true);
-								var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
 								demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].dispatchEvent(e);
 							}
 
+							var t = 500;
+							if(dojo.isIE){
+								t=2000;
+							}
 							setTimeout(d.getTestCallback(function(){
 								var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
-								doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/icon-1.png/i) != -1);
+								if(!dojo.isIE) {
+									doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/icon-1.png/i) != -1);
+								}
 								doh.assertEqual('app1', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 								doh.assertEqual('', demoWidget.contentNode.style.display);
 								doh.assertEqual('mblIconContentHeading', demoWidget.contentNode.childNodes[0].className);
@@ -109,14 +114,16 @@
 								doh.assertEqual('app1', demoWidget.contentNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 
 								demoWidget = dijit.byId("dojox_mobile_IconItem_1");
-								doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/icon-1.png/i) != -1);
+								if(!dojo.isIE) {
+									doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/icon-1.png/i) != -1);
+								}
 								doh.assertEqual('app2', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 								doh.assertEqual('none', demoWidget.contentNode.style.display);
 								doh.assertEqual('mblIconContentHeading', demoWidget.contentNode.childNodes[0].className);
 								doh.assertEqual('mblDomButtonBlueMinus mblDomButton', demoWidget.contentNode.childNodes[0].childNodes[0].className);
 								doh.assertEqual('app2', demoWidget.contentNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
 								
-							}));
+							}),t);
 							return d;
 						}
 					}

@@ -8,50 +8,57 @@
 		height: auto;
 		.mblListItem-mblVariableHeight-styles;
 	}
-	a {
-		&.mblListItemAnchor {
-			display: block;
-			-webkit-tap-highlight-color: rgba(255,255,255,0);
-			.mblListItem-mblListItemAnchor-styles;
-		}
-		&.mblListItemAnchorNoIcon {
-			.mblListItem-mblListItemAnchorNoIcon-styles;
-		}
-		&.mblListItemAnchorHasRightButton {
-			.mblListItem-mblListItemAnchorHasRightButton-styles;
+	.mblListItemAnchor {
+		display: block;
+		height: 100%;
+		-webkit-tap-highlight-color: rgba(255,255,255,0);
+		.mblListItem-mblListItemAnchor-styles;
+		* {
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
 		}
 	}
-	.mblLeftButton {
-		position: absolute;
-		.mblListItem-mblLeftButton-styles;
-	}
-	.mblRightButton {
-		position: absolute;
-		.mblListItem-mblRightButton-styles;
-	}
-	.mblRightButton2 {
-		.mblListItem-mblRightButton2-styles;
-	}
-}
-.mblListItemIcon {
-	position: absolute;
-	.mblListItemIcon-styles;
 }
 .mblItemSelected {
 	.mblItemSelected-styles;
-	a {
-		&.mblListItemAnchor {
-			.mblItemSelected-mblListItemAnchor-styles;
-		}
+	.mblListItemSubText {
+		.mblItemSelected-mblListItemSubText-styles;
+	}
+	.mblListItemAnchor {
+		.mblItemSelected-mblListItemAnchor-styles;
 	}
 	.mblDomButton {
 		DIV {
 			.mblItemSelected-mblDomButton-Div-styles;
 		}
 	}
-	.mblListItemSubText {
-		.mblItemSelected-mblListItemSubText-styles;
-	}
+}
+.mblListItemTextBoxSelected {
+	.mblListItemTextBoxSelected-styles;
+}
+.mblListItemChecked {
+	.mblListItemChecked-styles;
+}
+.mblListItemIcon {
+	float: left;
+	line-height: normal;
+	.mblListItemIcon-styles;
+}
+.mblListItemSpriteIcon {
+	position: absolute;
+	.mblListItemSpriteIcon-styles;
+
+}
+.mblListItemRightIcon,
+.mblListItemRightIcon2 {
+	position: relative;
+	float: right;
+	.mblListItemRightIcon-styles;
+}
+.mblListItemRightText {
+	position: relative;
+	float: right;
+	line-height: normal;
+	.mblListItemRightText-styles;
 }
 .mblListItemTextBox {
 	overflow: hidden;
@@ -59,21 +66,11 @@
 	text-overflow: ellipsis;
 	.mblListItemTextBox-styles;
 }
-.mblListItemTextBox2 {
-	.mblListItemTextBox2-styles;
-}
-.mblListItemTextBoxSelected {
-	.mblListItemTextBoxSelected-styles;
-}
 .mblVariableHeight .mblListItemTextBox {
 	white-space: normal;
 }
-.mblRightText {
-	position: absolute;
-	.mblRightText-styles;
-}
-.mblItemChecked {
-	.mblItemChecked-styles;
+.mblListItemAnchorNoIcon .mblListItemTextBox {
+	.mblListItemAnchorNoIcon-mblListItemTextBox-styles;
 }
 .mblListItemSubText {
 	.mblListItemSubText-styles;

@@ -1,5 +1,5 @@
-define(["dojo/_base/lang","dojo/_base/array","dojox/gfx","./scheduler","./gradient","./vector","./matrix","./lighting"],
-function() {
+define(["dojo/_base/kernel", "dojo/_base/lang","dojo/_base/array","dojox/gfx","./scheduler","./gradient","./vector","./matrix","./lighting"],
+function(dojo) {
 	
 // FIXME: why the global "out" var here?
 var out = function(o, x){

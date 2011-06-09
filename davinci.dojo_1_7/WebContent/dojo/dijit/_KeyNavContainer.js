@@ -1,4 +1,15 @@
-define(["dojo", ".", "./_Container", "./_FocusMixin"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.deprecated
+	".",
+	"./_Container",
+	"./_FocusMixin",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.keys.END dojo.keys.HOME
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_KeyNavContainer

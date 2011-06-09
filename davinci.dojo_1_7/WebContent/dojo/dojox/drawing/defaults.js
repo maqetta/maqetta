@@ -1,5 +1,5 @@
-dojo.provide("dojox.drawing.defaults");
-
+define([], function(){
+	
 dojox.drawing.defaults = {
 	// summary:
 	//		Styles and defaults used for Drawing stencils and text.
@@ -35,9 +35,9 @@ dojox.drawing.defaults = {
 	angleSnap:1,
 
 	// zAxis:  Boolean
-    // 		If true, draw current object in z-direction.
+	// 		If true, draw current object in z-direction.
 	// zAxisEnabled: Boolean
-    // 		If true, render axes with Z-axis included, allow objects drawn in z-direction.
+	// 		If true, render axes with Z-axis included, allow objects drawn in z-direction.
 	//		If false the z-axis button will not show up.
 	zAxis: false,
 	zAxisEnabled: true,
@@ -286,3 +286,5 @@ dojox.drawing.defaults = {
 	}
 
 };
+return dojox.drawing.defaults;
+});

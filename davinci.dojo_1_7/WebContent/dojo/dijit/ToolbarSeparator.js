@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"./_Widget",
-	"./_TemplatedMixin"], function(dojo, dijit){
+	"./_TemplatedMixin",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html" // dojo.setSelectable
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/ToolbarSeparator

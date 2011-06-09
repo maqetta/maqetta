@@ -96,5 +96,10 @@
 		</p>
 		<center>Centered Text</center>
 	</div>
+	
+	<h1>SafePaste with bold, ul, ol, li, and center tag stripping.</h1>
+	Copy the content from the above editor and paste it down here, it will strip the b, center, and the ul/li/ol tags (the ones specified in stripTags)
+	<div dojoType="dijit.Editor" id="editor2" extraPlugins="[{name: 'safepaste', stripTags: ['b', 'ul', 'li', 'ol', 'center']}, 'viewsource', 'prettyprint']">
+	</div>
 </body>
 </html>

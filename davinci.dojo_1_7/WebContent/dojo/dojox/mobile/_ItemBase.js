@@ -54,7 +54,7 @@ define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./
 				}
 				var transOpts;
 				if (this.moveTo || this.href || this.url || this.scene){
-					transOpts = {moveTo: this.moveTo, href: this.href, url: this.url, scene: this.scene};
+					transOpts = {moveTo: this.moveTo, href: this.href, url: this.url, scene: this.scene, transition: this.transition, transitionDir: this.transitionDir};
 				}else if (this.transitionOptions){
 					transOpts = this.transitionOptions;
 				}	

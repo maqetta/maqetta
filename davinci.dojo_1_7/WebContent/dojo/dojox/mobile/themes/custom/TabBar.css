@@ -134,6 +134,9 @@
   text-align: center;
   line-height: 42px;
 }
+.mblTabPanelHeader .mblTabButton {
+  margin-top: 4px;
+}
 .mblTabPanelHeader .mblTabButton.mblTabButtonSelected {
   background-color: #128bff;
 }
@@ -142,4 +145,16 @@
 }
 .mblTabPanelHeader .mblDomButton {
   left: 8px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton {
+  margin-top: 5px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton:first-child {
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+  border-left-width: 1px;
+}
+.mblHeading .mblTabPanelHeader .mblTabButton:last-child {
+  -webkit-border-top-right-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
 }

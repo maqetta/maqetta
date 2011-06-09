@@ -1,12 +1,8 @@
-dojo.provide("dojox.widget.Toaster");
+define(["dojo", "dijit", "dojox/main", "dijit/_Widget", "dijit/_Templated", "dijit/BackgroundIframe", "dojo/fx", "dojo/window"], function(dojo, dijit, dojox){
 
-dojo.require("dojo.fx");
-dojo.require("dojo.window");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-
-dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
+	dojo.getObject("widget", true, dojox);
+	
+	return dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		// summary:
 		//		Message that slides in from the corner of the screen, used for notifications
 		//		like "new email".
@@ -38,7 +34,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		//		Position from which message slides into screen, one of
 		//		["br-up", "br-left", "bl-up", "bl-right", "tr-down", "tr-left", "tl-down", "tl-right"]
 		positionDirection: "br-up",
-		
+
 		// positionDirectionTypes: Array
 		//		Possible values for positionDirection parameter
 		positionDirectionTypes: ["br-up", "br-left", "bl-up", "bl-right", "tr-down", "tr-left", "tl-down", "tl-right"],
@@ -59,10 +55,10 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		postCreate: function(){
 			this.inherited(arguments);
 			this.hide();
-			
+
 			// place node as a child of body for positioning
 			dojo.body().appendChild(this.domNode);
-			
+
 			if(this.messageTopic){
 				dojo.subscribe(this.messageTopic, this, "_handleMessage");
 			}
@@ -172,7 +168,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 				this.slideAnim.play();
 			}
 		},
-		
+
 		_setContent: function(message){
 			if(dojo.isFunction(message)){
 				message(this);
@@ -189,7 +185,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 				this._hideTimer=null;
 			}
 		},
-		
+
 		_setHideTimer:function(duration){
 			this._cancelHideTimer();
 			//if duration == 0 we keep the message displayed until clicked
@@ -210,7 +206,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 			else
 				this._stickyMessage=true;
 		},
-		
+
 		_placeClip: function(){
 			var view = dojo.window.getBox();
 
@@ -272,5 +268,6 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 
 			dojo.style(this.containerNode, "opacity", 1);
 		}
-	}
-);
+	});
+
+});

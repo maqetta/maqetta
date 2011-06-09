@@ -1,8 +1,7 @@
 // AMD-ID "dojox/encoding/easy64"
 define(["dojo/_base/kernel"], function(dojo) {
-dojo.getObject("encoding.easy64", true, dojox);
+	dojo.getObject("encoding.easy64", true, dojox);
 
-(function(){
 	var c = function(input, length, result){
 		for(var i = 0; i < length; i += 3){
 			result.push(
@@ -45,8 +44,6 @@ dojo.getObject("encoding.easy64", true, dojox);
 		}
 		return r;
 	};
-})();
 
-
-return dojox.encoding.easy64;
+	return dojox.encoding.easy64;
 });

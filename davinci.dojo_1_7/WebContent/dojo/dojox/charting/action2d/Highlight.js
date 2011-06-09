@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojox/color/_base", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojox/color/_base", 
 		"./PlotAction", "dojo/fx/easing", "dojox/gfx/fx"], 
-	function(dojo, declare, connect, c, PlotAction, dfe, dgf){
+	function(dojo, lang, declare, connect, c, PlotAction, dfe, dgf){
 
 	/*=====
 	dojo.declare("dojox.charting.action2d.__HighlightCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {

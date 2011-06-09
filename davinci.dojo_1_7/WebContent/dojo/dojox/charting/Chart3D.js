@@ -1,5 +1,5 @@
-define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/html", "dojox/gfx", "dojox/gfx3d"], 
-	function(dojo, declare, dhtml, gfx, gfx3d){
+define(["dojo/_base/kernel", "dojo/_base/array", "dojo/_base/declare", "dojo/_base/html", "dojox/gfx", "dojox/gfx3d"], 
+	function(dojo, array, declare, html, gfx, gfx3d){
 
 	var observerVector = {x: 0, y: 0, z: 1}, v = gfx3d.vector, n = gfx.normalizedLength;
 

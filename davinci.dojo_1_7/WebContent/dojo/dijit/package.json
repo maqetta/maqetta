@@ -1,13 +1,14 @@
 {
 	"name": "dijit",
+	"version":"1.7.0b1",
 	"directories": {
 		"lib": "."
 	},
-	"main":"./main",
+	"main":"main",
 	"mappings": {
 		"dojo": "https://github.com/dojo/dojo/zipball/1.0.2"
 	},
-	"description": "Dijit is Dojo’s UI Library",
+	"description": "Dijit is Dojoï¿½s UI Library",
 	"licenses": [
 		 {
 				 "type": "AFLv2.1",
@@ -24,10 +25,9 @@
 	"dojoBuild": {
 		"resourceTags":{
 			"test": [".*/dijit/tests.*", ".*/dijit/robot.*"],
-			"amd": [".*\.js$", "!", ".*/nls/.*", "!", "resources/_modules.js", "!", "/themes/claro/compile.js"]
+			"amd": [".*\\.js$", "!", ".*/nls/.*", "!", "resources/_modules.js", "!", "/themes/claro/compile.js"]
 		},
 		"trees":[
-			// don't discover hidden (e.g., .svn), the 1.6- AMD layer, query-sizzle, or any of the old loader
 			[".", ".", "/\\."]
 		]
 	}

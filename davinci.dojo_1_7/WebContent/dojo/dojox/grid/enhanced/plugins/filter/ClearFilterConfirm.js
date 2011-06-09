@@ -14,8 +14,8 @@ dojo.declare("dojox.grid.enhanced.plugins.filter.ClearFilterConfirm",[dijit._Wid
 	},
 	postCreate: function(){
 		this.inherited(arguments);
-		dijit.setWaiState(this.cancelBtn.domNode, "label", this.plugin.nls["waiCancelButton"]);
-		dijit.setWaiState(this.clearBtn.domNode, "label", this.plugin.nls["waiClearButton"]);
+		this.cancelBtn.domNode.setAttribute("aria-label", this.plugin.nls["waiCancelButton"]);
+		this.clearBtn.domNode.setAttribute("aria-label", this.plugin.nls["waiClearButton"]);
 	},
 	uninitialize: function(){
 		this.plugin = null;

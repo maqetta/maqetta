@@ -1,4 +1,9 @@
-define(["dojo", "..", "../_WidgetBase", "./_LayoutWidget"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.deprecated
+	"..",
+	"../_WidgetBase",
+	"./_LayoutWidget"
+], function(dojo, dijit){
 
 // module:
 //		dijit/layout/LayoutContainer

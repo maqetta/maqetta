@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"./focus",
-	"./_WidgetBase"], function(dojo, dijit, focus){
+	"./_WidgetBase",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/lang" // dojo.extend
+], function(dojo, dijit, focus){
 
 	// module:
 	//		dijit/_FocusMixin

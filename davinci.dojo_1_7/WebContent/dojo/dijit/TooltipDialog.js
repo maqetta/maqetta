@@ -1,11 +1,18 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/TooltipDialog.html",
 	"./layout/ContentPane",
 	"./_TemplatedMixin",
 	"./form/_FormMixin",
-	"./_DialogMixin"], function(dojo, dijit, template){
+	"./_DialogMixin",
+	"./focus",
+	"dojo/_base/connect", // dojo.keys
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.replaceClass
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/TooltipDialog

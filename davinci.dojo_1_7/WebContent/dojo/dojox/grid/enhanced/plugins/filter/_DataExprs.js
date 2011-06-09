@@ -1,6 +1,5 @@
 define(["dojo", "dojox", "dojo/date/locale", "./_ConditionExpr"], function(dojo, dojox){
 
-(function(){
 	var fns = dojo.getObject("grid.enhanced.plugins.filter", true, dojox);
 
 	dojo.declare("dojox.grid.enhanced.plugins.filter.BooleanExpr", fns._DataExpr, {
@@ -71,8 +70,7 @@ define(["dojo", "dojox", "dojo/date/locale", "./_ConditionExpr"], function(dojo,
 		//		A condition expression wrapper for time values
 		_name: "time"
 	});
-})();
 
-return dojox.grid.enhanced.plugins.filter._DataExprs;
+	return dojox.grid.enhanced.plugins.filter._DataExprs;
 
 });

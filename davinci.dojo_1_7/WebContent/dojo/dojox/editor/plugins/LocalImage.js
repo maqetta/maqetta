@@ -1,4 +1,4 @@
-define("dojox/editor/plugins/LocalImage", ["dojo", "dijit", "dojox", "dijit/_editor/plugins/LinkDialog", "dijit/form/Button", "dijit/form/DropDownButton", "dojox/form/FileUploader", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/LocalImage"], function(dojo, dijit, dojox) {
+define("dojox/editor/plugins/LocalImage", ["dojo", "dijit", "dojox", "dijit/_base/popup", "dijit/_editor/plugins/LinkDialog", "dijit/form/Button", "dijit/form/DropDownButton", "dojox/form/FileUploader", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/LocalImage"], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.LocalImage", dijit._editor.plugins.ImgLinkDialog, {
 	// summary:

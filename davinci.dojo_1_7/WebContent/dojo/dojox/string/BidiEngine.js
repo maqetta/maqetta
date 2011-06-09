@@ -1,4 +1,4 @@
-define(["dojo/_base/lang"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/declare"], function(dojo){
 dojo.getObject("string", true, dojox);
 
 dojo.declare("dojox.string.BidiEngine", null, {

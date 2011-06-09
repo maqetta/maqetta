@@ -1,12 +1,16 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	".",
 	"./_WidgetBase",
 	"./_TemplatedMixin",
 	"./_WidgetsInTemplateMixin",
 	"dojo/string",
 	"dojo/parser",
-	"dojo/cache"], function(dojo, dijit){
+	"dojo/cache",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/lang" // dojo.extend dojo.isArray
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_Templated
@@ -40,14 +44,14 @@ define([
 				// waiRole, waiState
 				var role = getAttrFunc(baseNode, "waiRole");
 				if(role){
-					dijit.setWaiRole(baseNode, role);
+					baseNode.setAttribute("role", role);
 				}
 				var values = getAttrFunc(baseNode, "waiState");
 				if(values){
 					dojo.forEach(values.split(/\s*,\s*/), function(stateValue){
 						if(stateValue.indexOf('-') != -1){
 							var pair = stateValue.split('-');
-							dijit.setWaiState(baseNode, pair[0], pair[1]);
+							baseNode.setAttribute("aria-"+pair[0], pair[1]);
 						}
 					});
 				}

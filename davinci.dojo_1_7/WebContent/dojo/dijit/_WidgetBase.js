@@ -1,8 +1,19 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.config.blankGif
 	".",
+	"dojo/aspect",
 	"./_base/manager",
-	"dojo/Stateful"], function(dojo, dijit){
+	"dojo/Stateful", // dojo.Stateful
+	"dojo/_base/NodeList", // .map
+	"dojo/_base/array", // dojo.forEach dojo.map
+	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.subscribe dojo.unsubscribe
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.addClass dojo.attr dojo.byId dojo.create dojo.destroy dojo.place dojo.removeAttr dojo.replaceClass dojo.style
+	"dojo/_base/lang", // dojo.hitch dojo.isArray dojo.isFunction dojo.isObject
+	"dojo/_base/url", // dojo.moduleUrl
+	"dojo/_base/window", // dojo.doc.createTextNode
+	"dojo/query" // dojo.query
+], function(dojo, dijit, aspect){
 
 // module:
 //		dijit/_WidgetBase
@@ -242,13 +253,8 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		// store pointer to original DOM tree
 		this.srcNodeRef = dojo.byId(srcNodeRef);
 
-		// For garbage collection.  An array of handles returned by Widget.connect()
-		// Each handle returned from Widget.connect() is an array of handles from dojo.connect()
+		// For garbage collection.  An array of listener handles returned by this.connect() / this.subscribe()
 		this._connects = [];
-
-		// For garbage collection.  An array of handles returned by Widget.subscribe()
-		// The handle returned from Widget.subscribe() is the handle returned from dojo.subscribe()
-		this._subscribes = [];
 
 		// For widgets internal to this widget, invisible to calling code
 		this._supportingWidgets = [];
@@ -442,24 +448,22 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 		this._beingDestroyed = true;
 		this.uninitialize();
-		var d = dojo,
-			dfe = d.forEach,
-			dun = d.unsubscribe;
-		dfe(this._connects, function(handle){
-			d.disconnect(handle);
-		});
-		dfe(this._subscribes, function(handle){
-			dun(handle);
-		});
+
+		// remove dojo.connect() and dojo.subscribe() listeners
+		var c;
+		while(c = this._connects.pop()){
+			c.remove();
+		}
 
 		// destroy widgets created as part of template, etc.
-		dfe(this._supportingWidgets || [], function(w){
+		var w;
+		while(w = this._supportingWidgets.pop()){
 			if(w.destroyRecursive){
 				w.destroyRecursive();
 			}else if(w.destroy){
 				w.destroy();
 			}
-		});
+		}
 
 		this.destroyRendering(preserveDom);
 		dijit.registry.remove(this.id);
@@ -709,6 +713,19 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		}
 	},
 
+	on: function(/*String*/ type, /*Function*/ func){
+		// summary:
+		//		Call specified function when event "type" occurs, ex: myWidget.on("click", function(){ ... }).
+		// description:
+		//		Call specified function when event "type" occurs, ex: myWidget.on("click", function(){ ... }).
+		//		It's also implicitly called from dojo.connect(myWidget, "onClick", ...).
+		//		Note that the function is not run in any particular scope, so if (for example) you want it to run in the
+		//		widget's scope you must do myWidget.on("click", dojo.hitch(myWidget, func)).
+
+		type = type.replace(/^on/, "");
+		return aspect.after(this, "on" + type.charAt(0).toUpperCase() + type.substr(1), func, true);
+	},
+
 	toString: function(){
 		// summary:
 		//		Returns a string that represents the widget
@@ -774,7 +791,7 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 
 		for(var i=0; i<this._connects.length; i++){
 			if(this._connects[i] == handle){
-				dojo.disconnect(handle);
+				handle.remove();
 				this._connects.splice(i, 1);
 				return;
 			}
@@ -797,24 +814,20 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 		//	|	btn.subscribe("/my/topic", function(v){
 		//	|		this.set("label", v);
 		//	|	});
+		// tags:
+		//		protected
 		var handle = dojo.subscribe(topic, this, method);
-
-		// return handles for Any widget that may need them
-		this._subscribes.push(handle);
-		return handle;
+		this._connects.push(handle);
+		return handle;		// _Widget.Handle
 	},
 
 	unsubscribe: function(/*Object*/ handle){
 		// summary:
 		//		Unsubscribes handle created by this.subscribe.
 		//		Also removes handle from this widget's list of subscriptions
-		for(var i=0; i<this._subscribes.length; i++){
-			if(this._subscribes[i] == handle){
-				dojo.unsubscribe(handle);
-				this._subscribes.splice(i, 1);
-				return;
-			}
-		}
+		// tags:
+		//		protected
+		this.disconnect(handle);
 	},
 
 	isLeftToRight: function(){

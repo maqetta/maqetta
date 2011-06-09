@@ -1,5 +1,6 @@
-dojo.provide("dojox.drawing.ui.dom.Zoom");
-dojo.require("dojox.drawing.plugins._Plugin");
+define([
+	"dojo",
+	"../../plugins/_Plugin"], function(dojo){
 
 dojox.drawing.ui.dom.Zoom = dojox.drawing.util.oo.declare(
 	// NOTE:
@@ -126,4 +127,5 @@ dojox.drawing.ui.dom.Zoom = dojox.drawing.util.oo.declare(
 
 
 //dojox.drawing.register(dojox.drawing.plugins.tools.Pan, "plugin");
-
+return dojox.drawing.ui.dom.Zoom;
+});

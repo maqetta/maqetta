@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"../Calendar",
-	"./_DateTimeTextBox"], function(dojo, dijit){
+	"./_DateTimeTextBox",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/DateTextBox

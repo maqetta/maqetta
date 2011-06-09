@@ -9,7 +9,6 @@ dojo.declare("ThirdAssistant", dojox.mobile.app.SceneAssistant, {
     this.controller.parse();
     
     var _this = this;
-    var launcher = dijit.byId("secondSceneLauncher");
     this.connect(dijit.byId("btn3"), "onClick", function(){
       _this.controller.stageController.popScenesTo("main", "From Third Scene");
     });

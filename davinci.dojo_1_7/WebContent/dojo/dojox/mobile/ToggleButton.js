@@ -1,4 +1,5 @@
-define(["dojo/_base/html", "dojo/_base/array", "./Button", "dijit/form/_ToggleButtonMixin"], function(dhtml,darray,Button,ToggleButtonMixin) {
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/array", "./Button", "dijit/form/_ToggleButtonMixin"],
+	function(dojo, declare, dhtml, darray, Button, ToggleButtonMixin) {
 
 	return dojo.declare("dojox.mobile.ToggleButton", [dojox.mobile.Button, dijit.form._ToggleButtonMixin], {
 		// summary:

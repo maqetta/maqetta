@@ -4,6 +4,8 @@ dojo.experimental("dojox.widget.Calendar");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit._Container");
+dojo.require("dijit.typematic");
+
 dojo.require("dojo.date");
 dojo.require("dojo.date.locale");
 

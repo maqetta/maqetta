@@ -1,4 +1,8 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/_base/html" // dojo.attr
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_ToggleButtonMixin

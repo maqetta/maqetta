@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "../Element", "./common", "dojox/lang/utils", "dojox/gfx/fx"], 
-	function(dojo, declare, dconnect, Element, dc, du, fx){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "../Element", "./common", "dojox/lang/utils", "dojox/gfx/fx"], 
+	function(dojo, lang, declare, dconnect, Element, dc, du, fx){
 
 	/*=====
 	dojo.declare("dojox.charting.plot2d.__GridCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {
@@ -58,7 +58,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "../Eleme
 		constructor: function(chart, kwArgs){
 			//	summary:
 			//		Create the faux Grid plot.
-			//	chart: dojox.charting.Chart2D
+			//	chart: dojox.charting.Chart
 			//		The chart this plot belongs to.
 			//	kwArgs: dojox.charting.plot2d.__GridCtorArgs?
 			//		An optional keyword arguments object to help define the parameters of the underlying grid.

@@ -1,5 +1,5 @@
-define(["dojo/_base/array", "../Theme", "./gradientGenerator", "./PrimaryColors", "dojo/colors" /* for sanitize */, "./common"], 
-	function(dojo, Theme, gradientGenerator, PrimaryColors){
+define(["dojo/_base/kernel", "dojo/_base/array", "../Theme", "./gradientGenerator", "./PrimaryColors", "dojo/colors" /* for sanitize */, "./common"], 
+	function(dojo, array, Theme, gradientGenerator, PrimaryColors){
 
 	var themes = dojox.charting.themes, 
 		colors = ["#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f", "./common"],	// the same is in PrimaryColors

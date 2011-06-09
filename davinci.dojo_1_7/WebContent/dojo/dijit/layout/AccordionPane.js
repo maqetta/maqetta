@@ -1,4 +1,9 @@
-define(["dojo", "..", "./ContentPane"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel", // dojo.deprecated
+	"..",
+	"./ContentPane",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/layout/AccordionPane

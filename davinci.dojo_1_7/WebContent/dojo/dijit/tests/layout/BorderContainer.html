@@ -40,6 +40,7 @@
 				function initialConditions(){
 					checkBCpanes(dijit.byId("border1"));
 					checkBCpanes(dijit.byId("border2"));
+					doh.is("auto", dojo.style("border1-left", "overflow"), "overflow on ContentPane should be auto");
 				},
 
 				function resize(){
@@ -97,9 +98,9 @@
 
 					// remove top pane... should expand left/center/right
 					dijit.byId("border1").removeChild(dijit.byId("border1-top"));
-					doh.is("auto", dijit.byId("border1-top").domNode.style.top, "border1-topremove, style.top-->auto")
-					doh.is("auto", dijit.byId("border1-top").domNode.style.left, "border1-topremove, style.left-->auto")
-					doh.is("static", dijit.byId("border1-top").domNode.style.position, "border1-topremove, style.position")
+					doh.is("auto", dijit.byId("border1-top").domNode.style.top, "border1-topremove, style.top-->auto");
+					doh.is("auto", dijit.byId("border1-top").domNode.style.left, "border1-topremove, style.left-->auto");
+					doh.is("static", dijit.byId("border1-top").domNode.style.position, "border1-topremove, style.position");
 
 					// new size of panes
 					var nLeft = dojo.position(dojo.byId("border1-left")),

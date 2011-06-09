@@ -1,7 +1,7 @@
 
-define([ "dojo/_base/connect", "dojo/_base/html", "dojox/gfx", "dojox/gfx/_base",
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html", "dojox/gfx", "dojox/gfx/_base",
 		"dojox/gfx/shape", "dojox/gfx/path", "dojox/geo/openlayers/Feature",
-		"dojox/geo/openlayers/Layer" ], function(connectArg, htmlArg, gfxArg, gbaseArg, shapeArg,
+		"dojox/geo/openlayers/Layer" ], function(dojo, declare, connectArg, htmlArg, gfxArg, gbaseArg, shapeArg,
 		pathArg, featureArg, layerArg){
 
 	return dojo.declare("dojox.geo.openlayers.GfxLayer", dojox.geo.openlayers.Layer, {

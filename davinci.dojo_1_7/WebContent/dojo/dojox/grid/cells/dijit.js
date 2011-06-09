@@ -18,7 +18,6 @@ define([
 // TODO: shouldn't it be the test file's job to require these modules,
 // if it is using them?  Most of these modules aren't referenced by this file.
 	
-(function(){
 	var dgc = dojox.grid.cells;
 	dojo.declare("dojox.grid.cells._Widget", dgc._Base, {
 		widgetClass: dijit.form.TextBox,
@@ -241,8 +240,7 @@ define([
 			cell.widgetHeight = h;
 		}
 	};
-})();
 
-return dojox.grid.cells.dijit;
+	return dojox.grid.cells.dijit;
 
 });

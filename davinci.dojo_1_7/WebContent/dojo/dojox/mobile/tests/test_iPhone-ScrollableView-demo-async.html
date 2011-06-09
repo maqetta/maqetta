@@ -5,7 +5,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>ScrollableView demo</title>
 	<link href="../themes/iphone/base.css" rel="stylesheet">
-	<link href="../themes/iphone/TabBar.css" rel="stylesheet"></link>
+	<link href="../themes/iphone/TabBar.css" rel="stylesheet">
 	<style>
 	html,body{
 		height: 100%;
@@ -71,14 +71,14 @@
 		list-style-type: square;
 	}
 	</style>
-	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, mblAlwaysHideAddressBar: true"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, async:true, mblAlwaysHideAddressBar: true"></script>
 	<script language="JavaScript" type="text/javascript">
 		require([
-			"dojox/mobile",			// This is a mobile app.
-			"dojox/mobile/compat", 	// This mobile app supports running on desktop browsers
 			"dojox/mobile/parser", 	// This mobile app uses declarative programming with fast mobile parser
+			"dojox/mobile",			// This is a mobile app.
 			"dojox/mobile/ScrollableView",
 			"dojox/mobile/TabBar",
+			"dojox/mobile/compat" 	// This mobile app supports running on desktop browsers
 		]);
 	</script>
 </head>

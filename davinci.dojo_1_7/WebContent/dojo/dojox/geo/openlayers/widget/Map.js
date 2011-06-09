@@ -1,7 +1,7 @@
 
-define([ "dojo/query", "dojo/_base/array", "dojo/_base/kernel", "dijit/_Widget",
-		"dojox/geo/openlayers/Map", "dojox/geo/openlayers/GfxLayer" ], function(queryArg, arrayArg,
-		kernelArg, widgetArg, mapArg, gfxLayerArg){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojo/query", "dojo/_base/array",  "dijit/_Widget",
+		"dojox/geo/openlayers/Map", "dojox/geo/openlayers/GfxLayer" ], function(dojo, declare, queryArg, arrayArg,
+		widgetArg, mapArg, gfxLayerArg){
 
 	return dojo.declare("dojox.geo.openlayers.widget.Map", dijit._Widget, {
 		//	summary: 

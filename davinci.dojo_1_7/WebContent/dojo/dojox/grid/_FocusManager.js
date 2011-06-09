@@ -104,7 +104,9 @@ dojo.declare("dojox.grid._FocusManager", null, {
 			try{
 				if(!this.grid.edit.isEditing()){
 					dojo.toggleClass(n, this.focusClass, true);
-					this.blurHeader();
+					if(this._colHeadNode){
+						this.blurHeader();
+					}
 					dojox.grid.util.fire(n, "focus");
 				}
 			}
@@ -144,7 +146,7 @@ dojo.declare("dojox.grid._FocusManager", null, {
 	},
 	_setActiveColHeader: function(/*Node*/colHeaderNode, /*Integer*/colFocusIdx, /*Integer*/ prevColFocusIdx){
 		//console.log("setActiveColHeader() - colHeaderNode:colFocusIdx:prevColFocusIdx = " + colHeaderNode + ":" + colFocusIdx + ":" + prevColFocusIdx);
-		dojo.attr(this.grid.domNode, "aria-activedescendant",colHeaderNode.id);
+		this.grid.domNode.setAttribute("aria-activedescendant",colHeaderNode.id);
 		if (prevColFocusIdx != null && prevColFocusIdx >= 0 && prevColFocusIdx != colFocusIdx){
 			dojo.toggleClass(this._findHeaderCells()[prevColFocusIdx],this.focusClass,false);
 		}

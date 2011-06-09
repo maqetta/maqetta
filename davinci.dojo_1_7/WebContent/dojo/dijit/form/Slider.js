@@ -1,12 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	"..",
 	"./HorizontalSlider",
 	"./VerticalSlider",
 	"./HorizontalRule",
 	"./VerticalRule",
 	"./HorizontalRuleLabels",
-	"./VerticalRuleLabels"], function(dojo, dijit){
+	"./VerticalRuleLabels"
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/Slider

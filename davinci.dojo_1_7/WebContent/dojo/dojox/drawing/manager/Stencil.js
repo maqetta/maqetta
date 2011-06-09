@@ -1,6 +1,6 @@
-dojo.provide("dojox.drawing.manager.Stencil");
+define(["dojo","../util/oo"], function(dojo){
 
-(function(){
+	dojo.getObject("drawing.manager", true, dojox);
 	var surface, surfaceNode;
 	dojox.drawing.manager.Stencil = dojox.drawing.util.oo.declare(
 		// summary:
@@ -637,4 +637,6 @@ dojo.provide("dojox.drawing.manager.Stencil");
 		}
 		
 	);
-})();
+	
+	return dojox.drawing.manager.Stencil;
+});

@@ -12,7 +12,7 @@ dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._
 	postCreate: function(){
 		dojo.setSelectable(this.domNode, false);
 		var label = this.id+"_text";
-		dijit.setWaiState(this.domNode, "labelledby", label);
+		this.domNode.setAttribute("aria-labelledby", label);
 	},
 
 	_setMenuTitleAttr: function(str){

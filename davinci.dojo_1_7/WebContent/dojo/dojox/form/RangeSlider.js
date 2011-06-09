@@ -1,6 +1,7 @@
 dojo.provide("dojox.form.RangeSlider");
 dojo.require("dijit.form.HorizontalSlider");
 dojo.require("dijit.form.VerticalSlider");
+dojo.require("dijit.focus");		// dijit.focus()
 dojo.require("dojox.fx");
 
 (function(){
@@ -33,8 +34,8 @@ dojo.require("dojox.fx");
             });
 
 			this._movableMax = new dojo.dnd.Moveable(this.sliderHandleMax,{ mover: mover });
-			dijit.setWaiState(this.focusNodeMax, "valuemin", this.minimum);
-			dijit.setWaiState(this.focusNodeMax, "valuemax", this.maximum);
+			this.focusNodeMax.setAttribute("aria-valuemin", this.minimum);
+			this.focusNodeMax.setAttribute("aria-valuemax", this.maximum);
 		
 			// a dnd for the bar!
             var barMover = dojo.declare(dijit.form._SliderBarMover, {
@@ -235,8 +236,8 @@ dojo.require("dojox.fx");
 			// we have to reset this values. don't know the reason for that
 			this._lastValueReported = "";
 			this.valueNode.value = this.value = value = actValue;
-			dijit.setWaiState(this.focusNode, "valuenow", actValue[0]);
-			dijit.setWaiState(this.focusNodeMax, "valuenow", actValue[1]);
+			this.focusNode.setAttribute("aria-valuenow", actValue[0]);
+			this.focusNodeMax.setAttribute("aria-valuenow", actValue[1]);
 		
 			this.value.sort(this._isReversed() ? sortReversed : sortForward);
 			

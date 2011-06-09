@@ -1,4 +1,5 @@
-define(["../..", "dojo/_base/lang", "./common"], function(dojox, dojo, common){
+define(["dojo/_base/kernel", "../../main", "dojo/_base/lang", "./common"], 
+	function(dojo, dojox, lang, common){
 	var linear = dojo.getObject("charting.scaler.linear", true, dojox);
 	
 	var deltaLimit = 3,	// pixels

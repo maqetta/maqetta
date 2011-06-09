@@ -1,11 +1,8 @@
-dojo.provide("dojox.highlight.languages.css");
-
-dojo.require("dojox.highlight._base");
-dojo.require("dojox.highlight.languages.html");
-
-(function(){
+define(["dojox/main", "../_base"], function(dojox){
+	
 	var dh = dojox.highlight, dhc = dh.constants, dhl = dh.languages;
 	dhl.css = {
+		// summary: CSS Language definition file. 
 		defaultMode: {
 			contains: ['id', 'class', 'attr_selector', 'rules', 'comment'],
 			keywords: dhl.html.HTML_TAGS,
@@ -89,4 +86,7 @@ dojo.require("dojox.highlight.languages.html");
 			}
 		]
 	};
-})();
+	
+	return dhl.css;
+
+});

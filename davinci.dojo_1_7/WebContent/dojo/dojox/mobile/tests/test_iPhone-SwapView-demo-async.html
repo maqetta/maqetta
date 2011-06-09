@@ -5,9 +5,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SwapView</title>
 		<link href="../themes/iphone/base.css" rel="stylesheet">
-		<link href="../themes/iphone/PageIndicator.css" rel="stylesheet"></link>
-		<link href="../themes/common/FixedSplitter.css" rel="stylesheet"></link>
-		<link href="../themes/common/domButtons.css" rel="stylesheet"></link>
+		<link href="../themes/iphone/PageIndicator.css" rel="stylesheet">
+		<link href="../themes/common/FixedSplitter.css" rel="stylesheet">
+		<link href="../themes/common/domButtons.css" rel="stylesheet">
 		<style>
 		html,body{
 			height: 100%;
@@ -78,23 +78,23 @@
 			color: #CC0000
 		}
 		</style>
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, mblAlwaysHideAddressBar: true"></script>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, async: true, mblAlwaysHideAddressBar: true"></script>
 		<script language="JavaScript" type="text/javascript">
 		require([
-			"dojox/mobile",			// This is a mobile app.
-			"dojox/mobile/compat", 	// This mobile app supports running on desktop browsers
 			"dojox/mobile/parser", 	// This mobile app uses declarative programming with fast mobile parser
+			"dojox/mobile",			// This is a mobile app.
 			"dojox/mobile/FixedSplitter",
 			"dojox/mobile/ScrollableView",
 			"dojox/mobile/SwapView",
-			"dojox/mobile/PageIndicator"
+			"dojox/mobile/PageIndicator",
+			"dojox/mobile/compat" 	// This mobile app supports running on desktop browsers
 			// "domReady!" // Enable if user code placed in the callback here that needs DOMReady
 		]);
 		</script>
 	</head>
 	<body>
 		<div dojoType="dojox.mobile.FixedSplitter" orientation="V">
-			<div dojoType="dojox.mobile.FixedSplitterPane" style="height:50%;">
+			<div dojoType="dojox.mobile.FixedSplitterPane" style="height:50%;overflow:hidden;">
 				<div id="general" dojoType="dojox.mobile.ScrollableView" height="inherit">
 					<ul dojoType="dojox.mobile.RoundRectList" class="list1" stateful="true">
 						<li dojoType="dojox.mobile.ListItem" moveTo="#">
@@ -141,10 +141,10 @@
 				</div>
 			</div>
 
-			<div dojoType="dojox.mobile.FixedSplitterPane" style="height:10px;">
+			<div dojoType="dojox.mobile.FixedSplitterPane" style="height:10px;overflow:hidden;">
 			</div>
 
-			<div dojoType="dojox.mobile.FixedSplitterPane">
+			<div dojoType="dojox.mobile.FixedSplitterPane" style="overflow:hidden;">
 				<div id="swap1" dojoType="dojox.mobile.SwapView">
 					<div dojoType="dojox.mobile.ScrollableView" style="height:100%">
 						<ul id="news" dojoType="dojox.mobile.RoundRectList">

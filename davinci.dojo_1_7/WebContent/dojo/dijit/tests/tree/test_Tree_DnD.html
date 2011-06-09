@@ -105,25 +105,17 @@
 			if(item && (item.root || myStore.hasAttribute(item,"numberOfItems"))){
 				return true;
 			}
-			if(position != "over"){
-				return true;
-			}
-			return false;
+			return position != "over";
+
 		}
 
 		//on collection tree, only accept itself as the source tree
 		function collectionTreeCheckItemAcceptance(node,source,position){
-			if(source.tree && source.tree.id == "collectionsTree"){
-				return true;
-			}
-			return false;
+			return source.tree && source.tree.id == "collectionsTree";
 		}
 
 		function dndAccept(source,nodes){
-			if(this.tree.id=="myTree"){
-				return false;
-			}
-			return true;
+			return this.tree.id != "myTree";
 		}
 
 		function getIcon(item){
@@ -155,7 +147,7 @@
 
 	<div data-dojo-id="myStore" data-dojo-type="dojo.data.ItemFileWriteStore" data-dojo-props='url:"../_data/categories.json"'></div>
 
-	<table style="margin:5px solid gray;width:100%;" >
+	<table style="margin:5px; width:100%;" >
 
 	<tr style="width:100%">
 		<td style="width: 50%">

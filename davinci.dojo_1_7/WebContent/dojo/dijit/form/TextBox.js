@@ -1,9 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated
 	"..",
 	"dojo/text!./templates/TextBox.html",
 	"./_FormWidget",
-	"./_TextBoxMixin"], function(dojo, dijit, template){
+	"./_TextBoxMixin",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.create dojo.getComputedStyle
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isMoz
+	"dojo/_base/window" // dojo.doc.selection.createRange
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/form/TextBox

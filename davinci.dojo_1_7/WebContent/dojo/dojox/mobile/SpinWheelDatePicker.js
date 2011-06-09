@@ -12,8 +12,7 @@ define(["dojo/date","dojo/date/locale","./SpinWheel","./SpinWheelSlot"],function
 				var i, idx;
 				for(i = this.labelFrom, idx = 0; i <= this.labelTo; i++, idx++){
 					dtA.setFullYear(i);
-					yearStr = dojo.date.locale.format(dtA,{datePattern:"yyyy", selector:"date"});
-					this.labels.push(yearStr);
+					this.labels.push(dojo.date.locale.format(dtA,{datePattern:"yyyy", selector:"date"}));
 				}
 			}
 			this.inherited(arguments);

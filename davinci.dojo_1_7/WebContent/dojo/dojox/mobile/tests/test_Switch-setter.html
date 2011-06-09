@@ -21,9 +21,9 @@
 			}
 			dojo.ready(function(){
 				var w = dijit.byId("sw");
-				dojo.connect(w, "onStateChanged", null, function(){
+				dojo.connect(w, "onStateChanged", null, function(value){
 					var span = dojo.byId("msgArea");
-					span.innerHTML = "onStateChanged: "+w.get("value");
+					span.innerHTML = "onStateChanged: "+value;
 					setTimeout(function(){
 						span.innerHTML = "";
 					}, 1000);

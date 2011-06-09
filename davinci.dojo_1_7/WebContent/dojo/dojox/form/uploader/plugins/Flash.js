@@ -123,22 +123,23 @@ dojo.declare("dojox.form.uploader.plugins.Flash", [], {
 	 *	   Private Methods	 *
 	 *************************/
 
-	uploadFlash: function(){
+	uploadFlash: function(/*Object ? */formData){
 		// summary:
 		// 		Uploads selected files. Alias "upload()" should be used instead.
 		// tags:
 		//		private
 		this.onBegin(this.getFileList());
-		this.flashMovie.doUpload();
+		this.flashMovie.doUpload(formData);
 	},
 
-	submitFlash: function(/* Object */formParams){
+	submitFlash: function(/* form node ? */form){
 		// summary:
 		// 		Uploads selected files with form data. Alias "submit()" should be used instead.
 		// tags:
 		//		private
+		var formData = form ? dojo.formToObject(form) : null;
 		this.onBegin(this.getFileList());
-		this.flashMovie.doUpload(formParams);
+		this.flashMovie.doUpload(formData);
 	},
 
 

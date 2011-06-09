@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","../utils/date"], function(dojo,dd,ddud){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base","../utils/date"], function(dojo,lang,dd,ddud){
 	dojo.getObject("dtl.tag.date", true, dojox);
 
 	dojox.dtl.tag.date.NowNode = function(format, node){

@@ -1,8 +1,12 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
-	"dojo/text!./templates/CheckedMenuItem.html", "./hccss",
-	"./MenuItem"], function(dojo, dijit, template){
+	"dojo/text!./templates/CheckedMenuItem.html",
+	"./hccss",
+	"./MenuItem",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html" // dojo.toggleClass
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/CheckedMenuItem

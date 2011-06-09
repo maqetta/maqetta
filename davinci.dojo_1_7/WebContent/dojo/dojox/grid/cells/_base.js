@@ -1,20 +1,19 @@
 define(["dojo", "dijit", "dojox", "../util", "dijit/_Widget"], function(dojo, dijit, dojox){
 
-dojo.declare("dojox.grid._DeferredTextWidget", dijit._Widget, {
-	deferred: null,
-	_destroyOnRemove: true,
-	postCreate: function(){
-		if(this.deferred){
-			this.deferred.addBoth(dojo.hitch(this, function(text){
-				if(this.domNode){
-					this.domNode.innerHTML = text;
-				}
-			}));
+	dojo.declare("dojox.grid._DeferredTextWidget", dijit._Widget, {
+		deferred: null,
+		_destroyOnRemove: true,
+		postCreate: function(){
+			if(this.deferred){
+				this.deferred.addBoth(dojo.hitch(this, function(text){
+					if(this.domNode){
+						this.domNode.innerHTML = text;
+					}
+				}));
+			}
 		}
-	}
-});
+	});
 
-(function(){
 	var focusSelectNode = function(inNode){
 		try{
 			dojox.grid.util.fire(inNode, "focus");
@@ -237,9 +236,7 @@ dojo.declare("dojox.grid._DeferredTextWidget", dijit._Widget, {
 			//	restore editor state
 			// inRowIndex: int
 			// grid row index
-			if(this.value){
-				this.setValue(inRowIndex, this.value);
-			}
+			this.setValue(inRowIndex, this.value);
 			//console.log("restore", this.value, inCell.index, inRowIndex);
 		},
 		//protected
@@ -451,8 +448,7 @@ dojo.declare("dojox.grid._DeferredTextWidget", dijit._Widget, {
 	dgc.Bool.markupFactory = function(node, cell){
 		dgc.AlwaysEdit.markupFactory(node, cell);
 	};
-})();
 
-return dojox.grid.cells._base;
+	return dojox.grid.cells._base;
 
 });

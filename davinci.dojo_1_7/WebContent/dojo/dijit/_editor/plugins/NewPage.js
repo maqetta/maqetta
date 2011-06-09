@@ -1,10 +1,12 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"../..",
 	"../_Plugin",
 	"../../form/Button",
-	"dojo/i18n",
-	"dojo/i18n!../nls/commands"], function(dojo, dijit){
+	"dojo/i18n", // dojo.i18n.getLocalization
+	"dojo/i18n!../nls/commands",
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/NewPage

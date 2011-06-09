@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","dojo/_base/array"], function(dojo,dd){
+define(["dojo/_base/kernel", "dojo/_base/lang","../_base","dojo/_base/array"], function(dojo,lang, dd){
 	dojo.getObject("dtl.tag.logic", true, dojox);
 
 	var ddt = dd.text;

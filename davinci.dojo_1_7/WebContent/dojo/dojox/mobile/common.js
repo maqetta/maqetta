@@ -1,4 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_WidgetBase"], function(dlang,darray, dhtml, WidgetBase){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dojo/ready", "dijit/_WidgetBase"],
+	function(dojo, dlang, darray, dhtml, ready, WidgetBase){
 
 	dojo.getObject("mobile", true, dojox);
 
@@ -22,14 +23,13 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_Widget
 //		Note that use of dijit._Templated and dojo.query was intentionally
 //		avoided to reduce download code size.
 
-	var d = dojo;
 	var ua = navigator.userAgent;
 
 	// BlackBerry (OS 6 or later only)
-	d.isBB = ua.indexOf("BlackBerry") >= 0 && parseFloat(ua.split("Version/")[1]) || undefined;
+	dojo.isBB = ua.indexOf("BlackBerry") >= 0 && parseFloat(ua.split("Version/")[1]) || undefined;
 
 	// Android
-	d.isAndroid = parseFloat(ua.split("Android ")[1]) || undefined;
+	dojo.isAndroid = parseFloat(ua.split("Android ")[1]) || undefined;
 
 	// iPhone, iPod, or iPad
 	// If iPod or iPad is detected, in addition to dojo.isIPod or dojo.isIPad,
@@ -37,16 +37,16 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_Widget
 	if(ua.match(/(iPhone|iPod|iPad)/)){
 		var p = "is" + RegExp.$1.replace(/i/, 'I');
 		var v = ua.match(/OS ([\d_]+)/) ? RegExp.$1 : "1";
-		d.isIPhone = d[p] = parseFloat(v.replace(/_/, '.').replace(/_/g, ''));
+		dojo.isIPhone = dojo[p] = parseFloat(v.replace(/_/, '.').replace(/_/g, ''));
 	}
 
-	var html = d.doc.documentElement;
-	html.className += d.trim([
-		d.isBB ? "dj_bb" : "",
-		d.isAndroid ? "dj_android" : "",
-		d.isIPhone ? "dj_iphone" : "",
-		d.isIPod ? "dj_ipod" : "",
-		d.isIPad ? "dj_ipad" : ""
+	var html = dojo.doc.documentElement;
+	html.className += dojo.trim([
+		dojo.isBB ? "dj_bb" : "",
+		dojo.isAndroid ? "dj_android" : "",
+		dojo.isIPhone ? "dj_iphone" : "",
+		dojo.isIPod ? "dj_ipod" : "",
+		dojo.isIPad ? "dj_ipad" : ""
 	].join(" ").replace(/ +/g," "));
 
 	var dm = dojox.mobile;
@@ -93,13 +93,17 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_Widget
 			var r = arr[1] + arr[2]; // right
 			var b = arr[0] + arr[3]; // bottom
 			var l = arr[1]; // left
-			iconNode.style.clip = "rect("+t+"px "+r+"px "+b+"px "+l+"px)";
-			iconNode.style.top = dojo.style(iconNode, "top") - t + "px";
-			iconNode.style.left = dojo.style(iconNode.parentNode, "paddingLeft") - l + "px";
+			var offset = iconNode.parentNode ? dojo.style(iconNode.parentNode, "paddingLeft") : 8;
+			dojo.style(iconNode, {
+				clip: "rect("+t+"px "+r+"px "+b+"px "+l+"px)",
+				top: (iconNode.parentNode ? dojo.style(iconNode, "top") : 0) - t + "px",
+				left: offset - l + "px"
+			});
 		}
 	};
 
-	dm.hideAddressBarWait = dojo.config["mblHideAddressBarWait"] || 2000; // [ms]
+	dm.hideAddressBarWait = typeof(dojo.config["mblHideAddressBarWait"]) === "number" ?
+		dojo.config["mblHideAddressBarWait"] : 2000; // [ms]
 	dm.hideAddressBar = function(/*Event?*/evt, /*Boolean?*/doResize){
 		dojo.body().style.minHeight = "1000px"; // to ensure enough height for scrollTo to work
 		setTimeout(function(){ scrollTo(0, 1); }, 200);
@@ -183,6 +187,46 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_Widget
 		return node;
 	};
 	
+	dm.createIcon = function(/*String*/icon, /*String*/iconPos, /*DomNode*/node, /*String?*/title, /*DomNode?*/parent){
+		// summary:
+		//		Create or update a ListItem icon node
+		// description:
+		//		If node exists, update the existing node. Otherwise, create a new one.
+		// icon:
+		//		Path for an image, or DOM button class name.
+		if(icon && icon.indexOf("mblDomButton") === 0){
+			// DOM button
+			if(node && node.className.match(/(mblDomButton\w+)/)){
+				dojo.removeClass(node, RegExp.$1);
+			}else{
+				node = dojo.create("DIV");
+			}
+			node.title = title;
+			dojo.addClass(node, icon);
+			dm.createDomButton(node);
+		}else if(icon && icon !== "none"){
+			// Image
+			if(!node || node.nodeName !== "IMG"){
+				node = dojo.create("IMG", {
+					alt: title
+				});
+			}
+			node.src = icon;
+			dm.setupIcon(node, iconPos);
+			if(parent && iconPos){
+				var arr = iconPos.split(/[ ,]/);
+				dojo.style(parent, {
+					width: arr[2] + "px",
+					height: arr[3] + "px"
+				});
+			}
+		}
+		if(parent){
+			parent.appendChild(node);
+		}
+		return node;
+	};
+
 	if(dojo.config.parseOnLoad){
 		dojo.ready(90, function(){
 			// avoid use of dojo.query
@@ -215,15 +259,28 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_Widget
 			dojo.addClass(dojo.doc.documentElement, "mobile");
 		}
 
-		if(dojo.config["mblAndroidWorkaround"] !== false && dojo.isAndroid >= 2.2 && dojo.isAndroid < 3){ // workaround for android screen flicker problem
-			dojo.style(dojo.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
-			// workaround for auto-scroll issue when focusing input fields
-			dojo.connect(null, "onfocus", null, function(e){
-				dojo.style(dojo.doc.documentElement, "webkitTransform", "");
-			});
-			dojo.connect(null, "onblur", null, function(e){
+		if(dojo.config["mblAndroidWorkaround"] !== false && dojo.isAndroid >= 2.2 && dojo.isAndroid < 3.1){ // workaround for android screen flicker problem
+			if(dojo.config["mblAndroidWorkaroundButtonStyle"] !== false){
+				// workaround to avoid buttons disappear due to the side-effect of the webkitTransform workaroud below
+				dojo.create("style", {innerHTML:"BUTTON,INPUT[type='button'],INPUT[type='submit'],INPUT[type='reset'],INPUT[type='file']::-webkit-file-upload-button{-webkit-appearance:none;}"}, dojo.doc.head, "first");
+			}
+			if(dojo.isAndroid < 3){ // for Android 2.2.x and 2.3.x
 				dojo.style(dojo.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
-			});
+				// workaround for auto-scroll issue when focusing input fields
+				dojo.connect(null, "onfocus", null, function(e){
+					dojo.style(dojo.doc.documentElement, "webkitTransform", "");
+				});
+				dojo.connect(null, "onblur", null, function(e){
+					dojo.style(dojo.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
+				});
+			}else{ // for Android 3.0.x
+				if(dojo.config["mblAndroid3Workaround"] !== false){
+					dojo.style(dojo.doc.documentElement, {
+						webkitBackfaceVisibility: "hidden",
+						webkitPerspective: 8000
+					});
+				}
+			}
 		}
 	
 		//	You can disable hiding the address bar with the following djConfig.
@@ -315,7 +372,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dijit/_Widget
 		// feature detection
 		if(dojo.isWebKit){
 			dm.hasTouch = (typeof dojo.doc.documentElement.ontouchstart != "undefined" &&
-				navigator.appVersion.indexOf("Mobile") != -1) || !!d.isAndroid;
+				navigator.appVersion.indexOf("Mobile") != -1) || !!dojo.isAndroid;
 		}
 	})();
 

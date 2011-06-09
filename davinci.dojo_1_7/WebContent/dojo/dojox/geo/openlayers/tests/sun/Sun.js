@@ -1,7 +1,7 @@
 // dojo.provide allows pages to use all of the types declared in this resource.
 //dojo.provide("dojox.geo.openlayers.tests.sun.Sun");
 
-define([], function(){
+define(["dojo/_base/kernel",  "dojo/_base/declare"], function(dojo, declare){
 	return dojo.declare("dojox.geo.openlayers.tests.sun.Sun", null, {
 
 		constructor : function(date){

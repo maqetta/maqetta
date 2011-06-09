@@ -1,13 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"./popup",
 	"dojo/window",
-	"./_WidgetBase",
+	"./_Widget",
 	"./_FocusMixin",
 	"./_KeyNavContainer",
-	"./_FocusMixin",
-	"./_TemplatedMixin"], function(dojo, dijit, pm){
+	"./_TemplatedMixin",
+	"dojo/_base/html", // dojo.isDescendant dojo.replaceClass
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit, pm){
 
 // module:
 //		dijit/_MenuBase
@@ -15,7 +17,7 @@ define([
 //		Base class for Menu and MenuBar
 
 dojo.declare("dijit._MenuBase",
-	[dijit._WidgetBase, dijit._FocusMixin, dijit._TemplatedMixin, dijit._KeyNavContainer, dijit._FocusMixin],
+	[dijit._Widget, dijit._TemplatedMixin, dijit._KeyNavContainer],
 {
 	// summary:
 	//		Base class for Menu and MenuBar

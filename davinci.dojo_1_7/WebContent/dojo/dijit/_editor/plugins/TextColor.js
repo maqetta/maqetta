@@ -1,9 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"../..",
 	"../_Plugin",
 	"../../form/DropDownButton",
-	"../../ColorPalette"], function(dojo, dijit){
+	"../../ColorPalette",
+	"dojo/colors" // dojo.colorFromRgb
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/TextColor

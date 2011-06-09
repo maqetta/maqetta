@@ -1,6 +1,17 @@
-define(
-	["dojo", ".", "./place", "./BackgroundIframe"],
-	function(dojo, dijit, place, BackgroundIframe){
+define([
+	"dojo/_base/kernel",
+	".",	// dijit (defining dijit.popup to make doc parser happy)
+	"./place",
+	"./BackgroundIframe",
+	"dojo/_base/array", // dojo.forEach dojo.some
+	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.keys.ESCAPE dojo.keys.TAB
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.attr dojo.create dojo.destroy dojo.isDescendant dojo.style
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isMoz
+	"dojo/_base/window" // dojo.body
+], function(dojo, dijit, place, BackgroundIframe){
 
 	// module:
 	//		dijit/popup
@@ -61,6 +72,64 @@ define(
 		this.onExecute = onExecute;
 		this.padding = padding;
 	}
+	=====*/
+
+	/*=====
+	dijit.popup = {
+		// summary:
+		//		Used to show drop downs (ex: the select list of a ComboBox)
+		//		or popups (ex: right-click context menus).
+		//
+		//		Access via require(["dijit/popup"], function(popup){ ... }).
+
+		moveOffScreen: function(widget){
+			// summary:
+			//		Moves the popup widget off-screen.
+			//		Do not use this method to hide popups when not in use, because
+			//		that will create an accessibility issue: the offscreen popup is
+			//		still in the tabbing order.
+			// widget: dijit._WidgetBase
+			//		The widget
+		},
+
+		hide: function(widget){
+			// summary:
+			//		Hide this popup widget (until it is ready to be shown).
+			//		Initialization for widgets that will be used as popups
+			//
+			// 		Also puts widget inside a wrapper DIV (if not already in one)
+			//
+			//		If popup widget needs to layout it should
+			//		do so when it is made visible, and popup._onShow() is called.
+			// widget: dijit._WidgetBase
+			//		The widget
+		},
+
+		open: function(args){
+			// summary:
+			//		Popup the widget at the specified position
+			// example:
+			//		opening at the mouse position
+			//		|		popup.open({popup: menuWidget, x: evt.pageX, y: evt.pageY});
+			// example:
+			//		opening the widget as a dropdown
+			//		|		popup.open({parent: this, popup: menuWidget, around: this.domNode, onClose: function(){...}});
+			//
+			//		Note that whatever widget called dijit.popup.open() should also listen to its own _onBlur callback
+			//		(fired from _base/focus.js) to know that focus has moved somewhere else and thus the popup should be closed.
+			// args: dijit.popup.__OpenArgs
+			//		Parameters
+			return {};	// Object specifying which position was chosen
+		},
+
+		close: function(popup){
+			// summary:
+			//		Close specified popup and any popups that it parented.
+			//		If no popup is specified, closes all popups.
+			// widget: dijit._WidgetBase?
+			//		The widget, optional
+		}
+	};
 	=====*/
 
 	var PopupManager = dojo.declare(null, {
@@ -233,7 +302,7 @@ define(
 
 			// watch for cancel/execute events on the popup and notify the caller
 			// (for a menu, "execute" means clicking an item)
-			if(widget.onCancel){
+			if(widget.onCancel && args.onCancel){
 				handlers.push(dojo.connect(widget, "onCancel", args.onCancel));
 			}
 
@@ -297,5 +366,6 @@ define(
 		}
 	});
 
-	return new PopupManager();
+	dijit.popup = new PopupManager();
+	return dijit.popup;
 });

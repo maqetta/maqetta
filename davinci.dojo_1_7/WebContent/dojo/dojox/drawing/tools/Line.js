@@ -1,4 +1,8 @@
-dojo.provide("dojox.drawing.tools.Line");
+define([
+	"../stencil/Line",
+	"../util/oo",
+	"../manager/_registry"],function(){
+//dojo.provide("dojox.drawing.tools.Line");
 
 dojox.drawing.tools.Line = dojox.drawing.util.oo.declare(
 	// summary:
@@ -116,3 +120,6 @@ dojox.drawing.tools.Line.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.tools.Line.setup, "tool");
+
+return dojox.drawing.tools.Line;
+});

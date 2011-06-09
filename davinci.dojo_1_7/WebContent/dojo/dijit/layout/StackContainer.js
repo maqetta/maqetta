@@ -1,11 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
-	"dojo/cookie",
+	"dojo/cookie", // dojo.cookie
 	"dojo/i18n!../nls/common",
 	"../_WidgetBase",
 	"./_LayoutWidget",
-	"./StackController"], function(dojo, dijit){
+	"./StackController",
+	"dojo/_base/array", // dojo.forEach dojo.indexOf dojo.some
+	"dojo/_base/connect", // dojo.publish
+	"dojo/_base/html" // dojo.addClass dojo.replaceClass
+], function(dojo, dijit){
 
 // module:
 //		dijit/layout/StackContainer
@@ -45,7 +49,7 @@ dojo.declare("dijit.layout.StackContainer", dijit.layout._LayoutWidget, {
 	buildRendering: function(){
 		this.inherited(arguments);
 		dojo.addClass(this.domNode, "dijitLayoutContainer");
-		dijit.setWaiRole(this.containerNode, "tabpanel");
+		this.containerNode.setAttribute("role", "tabpanel");
 	},
 
 	postCreate: function(){
@@ -267,7 +271,7 @@ dojo.declare("dijit.layout.StackContainer", dijit.layout._LayoutWidget, {
 
 		dojo.replaceClass(page.domNode, "dijitVisible", "dijitHidden");
 
-		return page._onShow() || true;
+		return (page._onShow && page._onShow()) || true;
 	},
 
 	_hideChild: function(/*dijit._Widget*/ page){
@@ -277,7 +281,7 @@ dojo.declare("dijit.layout.StackContainer", dijit.layout._LayoutWidget, {
 		page._set("selected", false);
 		dojo.replaceClass(page.domNode, "dijitHidden", "dijitVisible");
 
-		page.onHide();
+		page.onHide && page.onHide();
 	},
 
 	closeChild: function(/*dijit._Widget*/ page){

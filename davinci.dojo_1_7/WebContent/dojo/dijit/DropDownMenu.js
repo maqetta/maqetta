@@ -1,9 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/Menu.html",
 	"./_OnDijitClickMixin",
-	"./_MenuBase"], function(dojo, dijit, template){
+	"./_MenuBase",
+	"dojo/_base/connect", // dojo.keys
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event" // dojo.stopEvent
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/DropDownMenu

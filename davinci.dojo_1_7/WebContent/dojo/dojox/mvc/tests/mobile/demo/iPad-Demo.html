@@ -18,17 +18,19 @@
 			background-color: #DBDDE2;
 		}
 		</style>
-		<script type="text/javascript" src="../../../../../dojo/dojo.js" djConfig="parseOnLoad: false"></script>
-		<script type="text/javascript" src="src.js" charset="utf-8"></script>
+	<!--<script type="text/javascript" src="../../../../../dojo/dojo.js" djConfig="parseOnLoad: false"></script> -->
+		<script type="text/javascript" djConfig="parseOnLoad:0,isDebug:1,async:1" src="../../../../../dojo/dojo.js"></script>
+		<script type="text/javascript" src="src-async-store.js" charset="utf-8"></script>
 
 	</head>
 	<body>
+	<div id="wholepage" style="display:none">	
 		<div dojoType="dojox.mobile.FixedSplitter" orientation="H">
 			<div dojoType="dojox.mobile.FixedSplitterPane" style="width:300px;border-right:1px solid black;">
 				<div id="foo" dojoType="dojox.mobile.ScrollableView" selected="true">
 					<h1 dojoType="dojox.mobile.Heading">Mobile MVC Demo for iPad</h1>
 					<ul dojoType="dojox.mobile.EdgeToEdgeList" transition="flip" stateful="true">
-					<li id="sdb" dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" transition="slide" moveTo="settings">
+					<li id="sdb" dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" transition="slide" moveTo="settings"  selected="true">
 						Simple Data Binding
 					</li>
 					<li id="rdb" dojoType="dojox.mobile.ListItem" icon="images/i-icon-2.png" transition="slide" moveTo="repeat">
@@ -52,17 +54,17 @@
 				<div class="field-row">
 					<span>Order #</span>
 					<input type=text id="lastnameInput" dojoType="dojox.mobile.TextBox"
-						placeholder="Order #" ref="'rel:Serial'"></input>
+						placeholder="Order #" ref="'rel:Serial'"/>
 				</div>
 				<div class="field-row">
 					<span>Last</span>
 					<input type=text id="serialInput" dojoType="dojox.mobile.TextBox"
-						placeholder="Last" ref="'rel:Last'"></input>
+						placeholder="Last" ref="'rel:Last'"/>
 				</div>
 				<div class="field-row">
 					<span>Email</span>
 					<input type=text id="emailInput1" dojoType="dojox.mobile.TextBox"
-						placeholder="Last" ref="'rel:Email'"></input>
+						placeholder="Last" ref="'rel:Email'"/>
 				</div>
 			</div>
 			<div class="spacer"></div>
@@ -73,22 +75,22 @@
 				<div class="field-row">
 					<span>Street</span>
 					<input type=text id="streetInput" dojoType="dojox.mobile.TextBox"
-						placeholder="Street" ref="'rel:Street'"></input>
+						placeholder="Street" ref="'rel:Street'"/>
 				</div>
 				<div class="field-row">
 					<span>City</span>
 					<input type=text id="cityInput" dojoType="dojox.mobile.TextBox"
-						placeholder="City" ref="'rel:City'"></input>
+						placeholder="City" ref="'rel:City'"/>
 				</div>
 				<div class="field-row">
 					<span>State</span>
 					<input type=text id="stateInput" dojoType="dojox.mobile.TextBox"
-						placeholder="State" ref="'rel:State'"></input>
+						placeholder="State" ref="'rel:State'"/>
 				</div>
 				<div class="field-row">
 					<span>ZIP Code</span>
 					<input type=text id="zipInput" dojoType="dojox.mobile.TextBox"
-						placeholder="ZIP Code" ref="'rel:Zip'"></input>
+						placeholder="ZIP Code" ref="'rel:Zip'"/>
 				</div>
 			</div>
 			<div class="spacer"></div>
@@ -105,7 +107,7 @@
 				<div dojoType="dojox.mvc.Group" ref="'rel:${this.index}'">
 					<div class="row">			 
 						<input dojoType="dojox.mobile.TextBox"
-							id="nameInput${this.index}" ref="'rel:First'" placeHolder="First Name"></input>
+							id="nameInput${this.index}" ref="'rel:First'" placeHolder="First Name"/>
 						<button id="details${this.index}" type="button" dojoType="dojox.mobile.Button" class="mblBlueButton" onclick="setDetailsContext('${this.index}')">Details</button>
 					</div>
 				</div>
@@ -117,22 +119,22 @@
 						<div class="field-row">
 							<span>First Name</span>
 							<input type=text id="firstInput" dojoType="dojox.mobile.TextBox"
-								placeholder="First Name" ref="'rel:First'"></input>
+								placeholder="First Name" ref="'rel:First'"/>
 						</div>
 						<div class="field-row">
 							<span>Last Name</span>
 							<input type=text id="lastInput" dojoType="dojox.mobile.TextBox"
-								placeholder="Last Name" ref="'rel:Last'"></input>
+								placeholder="Last Name" ref="'rel:Last'"/>
 						</div>
 						<div class="field-row">
 							<span>Email</span>
 							<input type=text id="emailInput2" dojoType="dojox.mobile.TextBox"
-								placeholder="Email" ref="'rel:Email'"></input>
+								placeholder="Email" ref="'rel:Email'"/>
 						</div>
 						<div class="field-row">
 							<span>Telephone</span>
 							<input type=text id="telInput" dojoType="dojox.mobile.TextBox"
-								placeholder="Telephone" ref="'rel:Tel'"></input>
+								placeholder="Telephone" ref="'rel:Tel'"/>
 						</div>
 					</div>
 				</div>		   
@@ -206,6 +208,6 @@
 		  			</div>
 				</div>
 			</div>
-		</div></div>
+		</div></div></div>
 	</body>
 </html>

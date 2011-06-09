@@ -13,16 +13,14 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 	<script language="JavaScript" type="text/javascript">
-		require.ready(function(){
-			require([
-				"dojox/mobile",				// This is a mobile app.
-				"dojox/mobile/compat",		// This mobile app supports running on desktop browsers
-				"dojox/mobile/parser",		// This mobile app uses declarative programming with fast mobile parser
-				"dojox/mobile/deviceTheme",	// This mobile app automatically changes it's theme to match devices
-				"dojox/mobile/Opener",
-				"dojox/widget/ColorPicker"
-			]);
-		});
+		require([
+			"dojox/mobile",				// This is a mobile app.
+			"dojox/mobile/compat",		// This mobile app supports running on desktop browsers
+			"dojox/mobile/parser",		// This mobile app uses declarative programming with fast mobile parser
+			"dojox/mobile/deviceTheme",	// This mobile app automatically changes it's theme to match devices
+			"dojox/mobile/Opener",
+			"dojox/widget/ColorPicker"
+		]);
 
 		function getColor2(node, v){
 			if(v === true){ // Done clicked

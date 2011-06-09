@@ -1,4 +1,5 @@
-define(["dojo/_base/array", "./_base"], function(darray,mbase){
+define(["dojo/_base/kernel", "dojo/_base/array", "dojo/dom-construct", "dojo/_base/window", "./_base"],
+	function(dojo, darray, domConstruct, dwindow, mbase){
 	// module:
 	//		dojox/mobile/deviceTheme
 	// summary:
@@ -85,6 +86,11 @@ define(["dojo/_base/array", "./_base"], function(darray,mbase){
 			"iPad",
 			"iphone",
 			[dojo.moduleUrl("dojox.mobile", "themes/iphone/ipad.css")]
+		],
+		[
+			"Custom",
+			"custom",
+			[]
 		],
 		[
 			".*",

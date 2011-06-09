@@ -1,15 +1,13 @@
 define("dojox/calc/toFrac", ["dojo"], function(dojo) {
 
-(function(){
-
-	var a = [];
-	var sqrts = [2,3,5,6,7,10,11,13,14,15,17,19,21,22,23,26,29,
-		30,31,33,34,35,37,38,39,41,42,43,46,47,51,53,55,57,58,59,
-		61,62,65,66,67,69,70,71,73,74,77,78,79,82,83,85,86,87,89,91,93,94,95,97];
-	var _fracHashInitialized = false;
-	var i = -3;
-	var d = 2;
-	var epsilon = 1e-15 / 9;
+var a = [];
+var sqrts = [2,3,5,6,7,10,11,13,14,15,17,19,21,22,23,26,29,
+	30,31,33,34,35,37,38,39,41,42,43,46,47,51,53,55,57,58,59,
+	61,62,65,66,67,69,70,71,73,74,77,78,79,82,83,85,86,87,89,91,93,94,95,97];
+var _fracHashInitialized = false;
+var i = -3;
+var d = 2;
+var epsilon = 1e-15 / 9;
 
 function _fracHashInit(searchNumber){
 	// summary
@@ -130,8 +128,6 @@ function reduceError(number){
 	return f ? ((number < 0 ? -1 : 1) * f.n * f.m / f.d) : number;
 }
 */
-})();
-
 
 return dojox.calc.toFrac;
 });

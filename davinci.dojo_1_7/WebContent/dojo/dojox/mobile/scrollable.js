@@ -28,8 +28,8 @@
 //		several dojo APIs used in this module, such as dojo.connect,
 //		dojo.create, etc., are re-defined so that the code works without dojo.
 //		When in dojo, of course those re-defined functions are not necessary.
-//		So, they are surrounded by the excludeStart and excludeEnd directives
-//		so that they will be excluded from the build.
+//		So, they are surrounded by the includeStart and includeEnd directives
+//		so that they can be excluded from the build.
 //
 //		If you use this module for non-dojo application, you need to explicitly
 //		assign your outer fixed node and inner scrollable node to this.domNode
@@ -41,7 +41,7 @@
 // example:
 //		Use this module from a non-dojo applicatoin:
 //		| function onLoad(){
-//		| 	var scrollable = new dojox.mobile.scrollable();
+//		| 	var scrollable = new dojox.mobile.scrollable(dojo, dojox);
 //		| 	scrollable.init({
 //		| 		domNode: "outer", // id or node
 //		| 		containerNode: "inner" // id or node
@@ -83,7 +83,7 @@ dojox.mobile.scrollable = function(dojo, dojox){
 	this.dirLock = false; // disable the move handler if scroll starts in the unexpected direction
 	this.height = ""; // explicitly specified height of this widget (ex. "300px")
 
-//>>excludeStart("dojo", true);
+//>>includeStart("standaloneScrollable", kwArgs.standaloneScrollable);
 	if(!dojo){ // namespace objects are not passed
 		dojo = window.dojo;
 		dojox = window.dojox;
@@ -147,7 +147,7 @@ dojox.mobile.scrollable = function(dojo, dojox){
 			node.className = node.className.replace(" " + s, "");
 		};
 	}
-//>>excludeEnd("dojo");
+//>>includeEnd("standaloneScrollable");
 
 	this.init = function(/*Object?*/params){
 		if (params){
@@ -223,15 +223,21 @@ dojox.mobile.scrollable = function(dojo, dojox){
 
 		// adjust the height of this view
 		var h;
+		var dh = (dojo.global.innerHeight||dojo.doc.documentElement.clientHeight) -
+					top - this._appFooterHeight; // default height
 		if(this.height === "inherit"){
 			if(this.domNode.offsetParent){
 				h = this.domNode.offsetParent.offsetHeight + "px";
 			}
+		}else if(this.height === "auto"){
+			// content could be smaller than entire screen height
+			var contentHeight = Math.max(this.domNode.scrollHeight, this.containerNode.scrollHeight);
+			h = (contentHeight ? Math.min(contentHeight, dh) : dh) + "px";
 		}else if(this.height){
 			h = this.height;
 		}
 		if(!h){
-			h = (dojo.global.innerHeight||dojo.doc.documentElement.clientHeight) - top - this._appFooterHeight + "px";
+			h = dh + "px";
 		}
 		this.domNode.style.height = h;
 
@@ -520,7 +526,9 @@ dojox.mobile.scrollable = function(dojo, dojox){
 	this.stopAnimation = function(){
 		// stop the currently running animation
 		dojo.removeClass(this.containerNode, "mblScrollableScrollTo2");
-		dojo.style(this.containerNode, "webkitAnimationDuration", "0s"); // workaround for android screen flicker problem
+		if(dojo.isAndroid){
+			dojo.style(this.containerNode, "webkitAnimationDuration", "0s"); // workaround for android screen flicker problem
+		}
 		if(this._scrollBarV){
 			this._scrollBarV.className = "";
 		}
@@ -678,7 +686,7 @@ dojox.mobile.scrollable = function(dojo, dojox){
 		var f = function(bar){
 			dojo.style(bar, {
 				opacity: 0,
-				webkitAnimationDuration: "0s" // workaround for android screen flicker problem
+				webkitAnimationDuration: dojo.isAndroid ? "0s" : "" // workaround for android screen flicker problem
 			});
 			bar.className = "mblScrollableFadeScrollBar";
 		};
@@ -923,12 +931,14 @@ dojox.mobile.scrollable = function(dojo, dojox){
 		node.style.KhtmlUserSelect = selectable ? "auto" : "none";
 		node.style.MozUserSelect = selectable ? "" : "none";
 		node.onselectstart = selectable ? null : function(){return false;};
-		node.unselectable = selectable ? "" : "on";
+		if(dojo.isIE){
+			node.unselectable = selectable ? "" : "on";
+			dojo.forEach(node.getElementsByTagName("*"), function(n){
+				n.unselectable = selectable ? "" : "on";
+			});
+		}
 	};
 
-};
-
-(function(){
 	// feature detection
 	if(dojo.isWebKit){
 		var elem = dojo.doc.createElement("div");
@@ -941,7 +951,7 @@ dojox.mobile.scrollable = function(dojo, dojox){
 		dojox.mobile.hasTouch = (typeof dojo.doc.documentElement.ontouchstart != "undefined" &&
 			navigator.appVersion.indexOf("Mobile") != -1) || !!dojo.isAndroid;
 	}
-})();
+};
 
 return dojox.mobile.scrollable;
 });

@@ -1,5 +1,9 @@
-dojo.provide("dojox.drawing.annotations.Angle");
+define([
+	"dojo",
+	"../util/oo",
+	"../util/positioning"], function(dojo){
 
+dojo.getObject("drawing.annotations", true, dojox);
 dojox.drawing.annotations.Angle = dojox.drawing.util.oo.declare(
 	// summary:
 	//	When initiated, an HTML box will hover near the Stencil,
@@ -101,4 +105,7 @@ dojox.drawing.annotations.Angle = dojox.drawing.util.oo.declare(
 		}
 	}
 
-)
+);
+
+return dojox.drawing.annotations.Angle;
+});

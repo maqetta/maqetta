@@ -1,11 +1,6 @@
-dojo.provide("dojox.widget.TitleGroup");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit.TitlePane");
-
-(function(d){
+define(["dojo", "dijit", "dijit/_Widget", "dijit/TitlePane"], function(dojo, dijit, widget, titlepane){
 	
-	var tp = dijit.TitlePane.prototype,
+	var d = dojo, tp = titlepane.prototype,
 		lookup = function(){
 			// generic handler function for click and keypress
 			var parent = this._dxfindParent && this._dxfindParent();
@@ -16,7 +11,7 @@ dojo.require("dijit.TitlePane");
 	// this might hide this uberprivate function from the docparser.
 	tp._dxfindParent = function(){
 		// summary: TitlePane's MUST be first-children of a TitleGroup. only used by
-		//		`dojox.widget.TitleGroup`. Find a possible parent TitleGroup of a TitlePane
+		//		`dojox.widget.TitleGroup`. Finds a possible parent TitleGroup of a TitlePane
 		var n = this.domNode.parentNode;
 		if(n){
 			n = dijit.getEnclosingWidget(n);
@@ -35,7 +30,7 @@ dojo.require("dijit.TitlePane");
 		}
 	});
 		
-	d.declare("dojox.widget.TitleGroup", dijit._Widget, {
+	return d.declare("dojox.widget.TitleGroup", dijit._Widget, {
 		// summary: A container which controls a series of `dijit.TitlePane`s,
 		//		allowing one to be visible and hiding siblings
 		//
@@ -84,4 +79,4 @@ dojo.require("dijit.TitlePane");
 	
 	});
 
-})(dojo);
+});

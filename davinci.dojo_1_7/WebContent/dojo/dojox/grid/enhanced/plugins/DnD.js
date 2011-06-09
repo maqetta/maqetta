@@ -7,7 +7,6 @@ define([
 	"./Selector",
 	"./Rearrange"], function(dojo, dojox){
 
-(function(){
 var _devideToArrays = function(a){
 		a.sort(function(v1, v2){
 			return v1 - v2;
@@ -1071,9 +1070,7 @@ dojo.declare("dojox.grid.enhanced.plugins.GridDnDAvatar", dojo.dnd.Avatar, {
 dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.DnD/*name:'dnd'*/, {
 	"dependency": ["selector", "rearrange"]
 });
-})();
 
-
-return dojox.grid.enhanced.plugins.DnD;
+	return dojox.grid.enhanced.plugins.DnD;
 
 });

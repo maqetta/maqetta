@@ -1,4 +1,8 @@
-define(["dojo", "..", "dojo/window"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/window" // dojo.window.get
+], function(dojo, dijit){
 	// module:
 	//		dijit/_base/window
 	// summary:

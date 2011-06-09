@@ -1,4 +1,9 @@
-define(["dojo", "..", "./HorizontalRule"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./HorizontalRule",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/VerticalRule

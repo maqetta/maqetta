@@ -1,7 +1,7 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", 
 	"../Element", "./_PlotEvents", 
 	"../scaler/primitive", "./common", "dojox/gfx/fx"],
-	function(dojo, declare, dconnect, Element, PlotEvents, primitive, common, fx){
+	function(dojo, lang, declare, connect, Element, PlotEvents, primitive, common, fx){
 
 /*=====
 dojox.charting.plot2d.__PlotCtorArgs = function(){

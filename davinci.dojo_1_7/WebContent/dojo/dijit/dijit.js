@@ -1,5 +1,5 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"./_base",
 	"dojo/parser",
@@ -7,7 +7,8 @@ define([
 	"./_TemplatedMixin",
 	"./_Container",
 	"./layout/_LayoutWidget",
-	"./form/_FormWidget"], function(dojo, dijit){
+	"./form/_FormWidget"
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/dijit

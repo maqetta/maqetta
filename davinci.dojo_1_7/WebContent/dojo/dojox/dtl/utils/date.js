@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","dojox/date/php"], function(dojo,ddp){
+define(["dojo/_base/kernel","dojo/_base/lang","dojox/date/php"], function(dojo,lang,ddp){
 	dojo.getObject("dtl.utils.date", true, dojox);
 
 	dojox.dtl.utils.date.DateFormat = function(/*String*/ format){

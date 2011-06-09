@@ -1,4 +1,5 @@
-define(["dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/_Contained"],function(dhtml,darray,dlang,WidgetBase,Contained){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/array", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/_Contained"],
+	function(dojo, declare, dhtml, darray, dlang, WidgetBase, Contained){
 	// module:
 	//		dojox/mobile/Heading
 	// summary:

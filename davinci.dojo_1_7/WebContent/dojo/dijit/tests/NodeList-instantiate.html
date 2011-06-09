@@ -87,7 +87,9 @@
 						
 						var tabs = tc.tablist.getChildren();
 						doh.is(3, tabs.length);
-						dojo.forEach(tabs, function(tab, i){ doh.is("tab"+(i+1), tab.label); })
+						dojo.forEach(tabs, function(tab, i){
+							doh.is("tab" + (i + 1), tab.label);
+						});
 	
 						var childrenContent = tc.containerNode.childNodes;
 						doh.is(3, childrenContent.length);

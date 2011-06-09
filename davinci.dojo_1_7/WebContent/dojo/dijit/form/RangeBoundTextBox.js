@@ -1,4 +1,10 @@
-define(["dojo", "..", "./MappedTextBox"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./MappedTextBox",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/i18n" // dojo.i18n.getLocalization
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/RangeBoundTextBox
@@ -101,14 +107,14 @@ define(["dojo", "..", "./MappedTextBox"], function(dojo, dijit){
 			this.inherited(arguments);
 			if(this.focusNode){ // not set when called from postMixInProperties
 				if(this.constraints.min !== undefined){
-					dijit.setWaiState(this.focusNode, "valuemin", this.constraints.min);
+					this.focusNode.setAttribute("aria-valuemin", this.constraints.min);
 				}else{
-					dijit.removeWaiState(this.focusNode, "valuemin");
+					this.focusNode.removeAttribute("aria-valuemin");
 				}
 				if(this.constraints.max !== undefined){
-					dijit.setWaiState(this.focusNode, "valuemax", this.constraints.max);
+					this.focusNode.setAttribute("aria-valuemax", this.constraints.max);
 				}else{
-					dijit.removeWaiState(this.focusNode, "valuemax");
+					this.focusNode.removeAttribute("aria-valuemax");
 				}
 			}
 		},
@@ -117,7 +123,7 @@ define(["dojo", "..", "./MappedTextBox"], function(dojo, dijit){
 			// summary:
 			//		Hook so set('value', ...) works.
 
-			dijit.setWaiState(this.focusNode, "valuenow", value);
+			this.focusNode.setAttribute("aria-valuenow", value);
 			this.inherited(arguments);
 		},
 

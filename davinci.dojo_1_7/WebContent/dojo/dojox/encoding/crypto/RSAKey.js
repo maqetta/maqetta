@@ -1,15 +1,13 @@
 // AMD-ID "dojox/encoding/crypto/RSAKey"
 define(["dojo/_base/kernel", "dojo/_base/declare", "dojox/math/BigInteger", "dojox/math/random/Simple"], function(dojo, declare, BigInteger, Simple) {
 
-dojo.getObject("encoding.crypto.RSAKey", true, dojox);
-dojo.experimental("dojox.encoding.crypto.RSAKey");
-
+	dojo.getObject("encoding.crypto.RSAKey", true, dojox);
+	dojo.experimental("dojox.encoding.crypto.RSAKey");
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
 // See "LICENSE-BigInteger" in dojox.math for details.
 
-(function(){
 	var defaultRngf = function(){ return new Simple(); };
 
 	// PKCS#1 (type 2, random) pad input string s to n bytes, and return a bigint
@@ -34,7 +32,7 @@ dojo.experimental("dojox.encoding.crypto.RSAKey");
 		return new BigInteger(ba);
 	}
 
-	declare("dojox.encoding.crypto.RSAKey", null, {
+	dojo.declare("dojox.encoding.crypto.RSAKey", null, {
 		constructor: function(rngf){
 			// summary:
 			//	"empty" RSA key constructor
@@ -70,8 +68,6 @@ dojo.experimental("dojox.encoding.crypto.RSAKey");
 			return h.length % 2 ? "0" + h : h;
 		}
 	});
-})();
 
-
-return dojox.encoding.crypto.RSAKey;
+	return dojox.encoding.crypto.RSAKey;
 });

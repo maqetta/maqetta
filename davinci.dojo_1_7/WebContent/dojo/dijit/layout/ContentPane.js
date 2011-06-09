@@ -1,11 +1,19 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated dojo.mixin
 	"..",
 	"../_Widget",
 	"./_ContentPaneResizeMixin",
-	"dojo/string",
-	"dojo/html",
-	"dojo/i18n!../nls/loading"], function(dojo, dijit){
+	"dojo/string", // dojo.string.substitute
+	"dojo/html", // dojo.html._ContentSetter dojo.html._emptyNode
+	"dojo/i18n!../nls/loading",
+	"dojo/_base/Deferred", // dojo.Deferred
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/html", // dojo.attr dojo.byId
+	"dojo/_base/lang", // dojo.delegate dojo.hitch dojo.isFunction dojo.isObject
+	"dojo/_base/window", // dojo.body dojo.doc.createDocumentFragment
+	"dojo/_base/xhr", // dojo.xhrGet
+	"dojo/i18n" // dojo.i18n.getLocalization
+], function(dojo, dijit){
 
 // module:
 //		dijit/layout/ContentPane
@@ -137,7 +145,7 @@ dojo.declare("dijit.layout.ContentPane", [dijit._Widget, dijit.layout._ContentPa
 		// Avoid modifying original params object since that breaks NodeList instantiation, see #11906.
 		if((!params || !params.template) && srcNodeRef && !("href" in params) && !("content" in params)){
 			var df = dojo.doc.createDocumentFragment();
-			srcNodeRef = dojo.byId(srcNodeRef)
+			srcNodeRef = dojo.byId(srcNodeRef);
 			while(srcNodeRef.firstChild){
 				df.appendChild(srcNodeRef.firstChild);
 			}
@@ -167,7 +175,7 @@ dojo.declare("dijit.layout.ContentPane", [dijit._Widget, dijit.layout._ContentPa
 		this.domNode.title = "";
 
 		if(!dojo.attr(this.domNode,"role")){
-			dijit.setWaiRole(this.domNode, "group");
+			this.domNode.setAttribute("role", "group");
 		}
 	},
 

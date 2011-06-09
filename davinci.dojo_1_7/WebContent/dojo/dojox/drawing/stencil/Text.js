@@ -1,4 +1,9 @@
-dojo.provide("dojox.drawing.stencil.Text");
+define([
+	"dojo",
+	"./_Base",
+	"../util/oo",
+	"../manager/_registry",
+	"../util/typeset"],function(dojo){
 
 dojox.drawing.stencil.Text = dojox.drawing.util.oo.declare(
 	// summary:
@@ -226,3 +231,6 @@ StencilPoints: [
 dojox.drawing.register({
 	name:"dojox.drawing.stencil.Text"
 }, "stencil");
+
+return dojox.drawing.stencil.Text;
+});

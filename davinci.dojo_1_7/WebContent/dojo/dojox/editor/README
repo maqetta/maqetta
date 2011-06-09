@@ -161,7 +161,7 @@ dojox.editor.plugins.SpellCheck
 
 	
 dojox.editor.plugins.SafePaste
-	Status: Experimental (Unsupported)
+	Status: Beta (Supported)
 	A plugin that provides a safer paste function to the editor.  It strips out script tags, 
 	tries to fix up odd input from Word, Wordpad, etc.  Very similar to PasteFromWord except that
 	it takes complete control of paste in dijit.Editor instead of being an alternate paste icon.

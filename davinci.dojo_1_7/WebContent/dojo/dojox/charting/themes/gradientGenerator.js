@@ -1,5 +1,5 @@
 define(["dojo/_base/kernel", "dojo/_base/array", "dojo/_base/Color", "../Theme", "dojox/color/_base", "./common"], 
-	function(dojo, darray, dcolor, Theme, dxcolor, themes){
+	function(dojo, array, color, Theme, dxcolor, themes){
 	
 	var gg = dojo.getObject("gradientGenerator", true, themes);
 

@@ -253,7 +253,7 @@ dojo.declare("dojox.grid.cells.RowSelector", dojox.grid.cells._Widget, {
 			if(this.disabledMap[index]){
 				dojo.toggleClass(selector, this.checkedDisabledClass, value);
 			}
-			dijit.setWaiState(selector, 'pressed', value);
+			selector.setAttribute("aria-pressed", value);
 			if(this.inA11YMode){
 				dojo.attr(selector.firstChild, 'innerHTML', value ? this.checkedText : this.unCheckedText);
 			}
@@ -268,7 +268,7 @@ dojo.declare("dojox.grid.cells.RowSelector", dojox.grid.cells._Widget, {
 			if(this.getValue(index)){
 				dojo.toggleClass(selector, this.checkedDisabledClass, disabled);
 			}
-			dijit.setWaiState(selector, 'disabled', disabled);
+			selector.setAttribute("aria-disabled", disabled);
 		}
 		this.disabledMap[index] = disabled;
 		if(index >= 0){

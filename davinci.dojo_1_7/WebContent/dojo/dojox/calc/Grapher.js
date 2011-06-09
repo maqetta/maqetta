@@ -1,4 +1,4 @@
-define("dojox/calc/Grapher", ["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/form/DropDownButton", "dijit/TooltipDialog", "dijit/form/TextBox", "dijit/form/Button", "dijit/form/ComboBox", "dijit/form/Select", "dijit/form/CheckBox", "dijit/ColorPalette", "dojox/charting/Chart2D", "dojox/charting/themes/Tufte", "dojo/colors"], function(dojo) {
+define(["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/form/DropDownButton", "dijit/TooltipDialog", "dijit/form/TextBox", "dijit/form/Button", "dijit/form/ComboBox", "dijit/form/Select", "dijit/form/CheckBox", "dijit/ColorPalette", "dojox/charting/Chart2D", "dojox/charting/themes/Tufte", "dojo/colors"], function(dojo) {
 
 dojo.experimental("dojox.calc.Grapher");
 
@@ -309,7 +309,6 @@ dojo.declare(
 	}
 });
 
-(function(){
 	// summary
 	//	provide static functions for Grapher
 	var
@@ -616,8 +615,6 @@ dojo.declare(
 			return (p2[y] - p1[y]) / (p2[x] - p1[x]);
 		}
 	};
-})();
-
 
 return dojox.calc.Grapher;
 });

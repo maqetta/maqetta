@@ -1,4 +1,4 @@
-define(["dojo/_base/kernel","../DomInLine"], function(dojo,dddnl){
+define(["dojo/_base/kernel","./DomInline"], function(dojo,dddnl){
 	dojo.getObject("dtl.HtmlInline", true, dojox);
 
 	dojo.deprecated("dojox.dtl.html", "All packages and classes in dojox.dtl that start with Html or html have been renamed to Dom or dom");

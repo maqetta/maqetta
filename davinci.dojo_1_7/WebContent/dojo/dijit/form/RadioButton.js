@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"./CheckBox",
-	"./_RadioButtonMixin"], function(dojo, dijit){
+	"./_RadioButtonMixin",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/RadioButton

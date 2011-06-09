@@ -1,7 +1,80 @@
-define(["dojo/_base/array", "dojo/_base/declare", "dojo/query", "dojo/_base/html", "dojo/_base/connect", "dojo/_base/Color",
-	"./Legend", "dijit/form/CheckBox", "../action2d/Highlight", "dojox/lang/functional"], 
-	function(dojo, declare, dquery, dhtml, dconnect, dcolor, Legend, CheckBox, Highlight, df){
-	
+define(["dojo/_base/kernel", "dojo/_base/array", "dojo/_base/declare", "dojo/query", "dojo/_base/html", "dojo/_base/connect", "dojo/_base/Color",
+	"./Legend", "dijit/form/CheckBox", "../action2d/Highlight", "dojox/lang/functional", "dojox/gfx/fx"], 
+	function(dojo, array, declare, query, html, connect, color, Legend, CheckBox, Highlight, df, fx){
+
+	var FocusManager = dojo.declare(null, {
+		//	summary:
+		//		It will take legend as a tab stop, and using
+		//		cursor keys to navigate labels within the legend.
+		constructor: function(legend){
+			this.legend = legend;
+			this.index = 0;
+			this.horizontalLength = this._getHrizontalLength();
+			dojo.forEach(legend.legends, function(item, i){
+				if(i > 0){
+					dojo.query("input", item).attr("tabindex", -1);
+				}
+			});
+			this.firstLabel = dojo.query("input", legend.legends[0])[0];
+			dojo.connect(this.firstLabel, "focus", this, function(){this.legend.active = true;});
+			dojo.connect(this.legend.domNode, "keydown", this, "_onKeyEvent");
+		},
+		_getHrizontalLength: function(){
+			var horizontal = this.legend.horizontal;
+			if(typeof horizontal == "number"){
+				return Math.min(horizontal, this.legend.legends.length);
+			}else if(!horizontal){
+				return 1;
+			}else{
+				return this.legend.legends.length;
+			}
+		},
+		_onKeyEvent: function(e){
+			//	if not focused
+			if(!this.legend.active){
+				return;
+			}
+			//	lose focus
+			if(e.keyCode == dojo.keys.TAB){
+				this.legend.active = false;
+				return;
+			}
+			//	handle with arrow keys
+			var max = this.legend.legends.length;
+			switch(e.keyCode){
+				case dojo.keys.LEFT_ARROW:
+					this.index--;
+					if(this.index < 0){
+						this.index += max;
+					}
+					break;
+				case dojo.keys.RIGHT_ARROW:
+					this.index++;
+					if(this.index >= max){
+						this.index -= max;
+					}
+					break;
+				case dojo.keys.UP_ARROW:
+					if(this.index - this.horizontalLength >= 0){
+						this.index -= this.horizontalLength;
+					}
+					break;
+				case dojo.keys.DOWN_ARROW:
+					if(this.index + this.horizontalLength < max){
+						this.index += this.horizontalLength;
+					}
+					break;
+				default:
+					return;
+			}
+			this._moveToFocus();
+			dojo.stopEvent(e);
+		},
+		_moveToFocus: function(){
+			dojo.query("input", this.legend.legends[this.index])[0].focus();
+		}
+	});
+			
 	dojo.declare("dojox.charting.widget.SelectableLegend", dojox.charting.widget.Legend, {
 		//	summary:
 		//		An enhanced chart legend supporting interactive events on data series
@@ -20,7 +93,7 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/query", "dojo/_base/html
 			this.legends = [];
 			this.inherited(arguments);
 			this._applyEvents();
-			new dojox.charting.widget._FocusManager(this);
+			new FocusManager(this);
 		},
 		_addLabel: function(dyn, label){
 			this.inherited(arguments);
@@ -85,7 +158,7 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/query", "dojo/_base/html
 					endStroke = this.transitionStroke;
 				if(startFill){
 					if(endFill && (typeof startFill == "string" || startFill instanceof dojo.Color)){
-						dojox.gfx.fx.animateFill({
+						fx.animateFill({
 							shape: shape,
 							color: {
 								start: isOff ? endFill : startFill,
@@ -161,79 +234,6 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/query", "dojo/_base/html
 		if(type == "mouseleave")return "onmouseout";
 		return "on" + type;
 	}
-	
-	dojo.declare("dojox.charting.widget._FocusManager", null, {
-		//	summary:
-		//		It will take legend as a tab stop, and using
-		//		cursor keys to navigate labels within the legend.
-		constructor: function(legend){
-			this.legend = legend;
-			this.index = 0;
-			this.horizontalLength = this._getHrizontalLength();
-			dojo.forEach(legend.legends, function(item, i){
-				if(i > 0){
-					dojo.query("input", item).attr("tabindex", -1);
-				}
-			});
-			this.firstLabel = dojo.query("input", legend.legends[0])[0];
-			dojo.connect(this.firstLabel, "focus", this, function(){this.legend.active = true;});
-			dojo.connect(this.legend.domNode, "keydown", this, "_onKeyEvent");
-		},
-		_getHrizontalLength: function(){
-			var horizontal = this.legend.horizontal;
-			if(typeof horizontal == "number"){
-				return Math.min(horizontal, this.legend.legends.length);
-			}else if(!horizontal){
-				return 1;
-			}else{
-				return this.legend.legends.length;
-			}
-		},
-		_onKeyEvent: function(e){
-			//	if not focused
-			if(!this.legend.active){
-				return;
-			}
-			//	lose focus
-			if(e.keyCode == dojo.keys.TAB){
-				this.legend.active = false;
-				return;
-			}
-			//	handle with arrow keys
-			var max = this.legend.legends.length;
-			switch(e.keyCode){
-				case dojo.keys.LEFT_ARROW:
-					this.index--;
-					if(this.index < 0){
-						this.index += max;
-					}
-					break;
-				case dojo.keys.RIGHT_ARROW:
-					this.index++;
-					if(this.index >= max){
-						this.index -= max;
-					}
-					break;
-				case dojo.keys.UP_ARROW:
-					if(this.index - this.horizontalLength >= 0){
-						this.index -= this.horizontalLength;
-					}
-					break;
-				case dojo.keys.DOWN_ARROW:
-					if(this.index + this.horizontalLength < max){
-						this.index += this.horizontalLength;
-					}
-					break;
-				default:
-					return;
-			}
-			this._moveToFocus();
-			dojo.stopEvent(e);
-		},
-		_moveToFocus: function(){
-			dojo.query("input", this.legend.legends[this.index])[0].focus();
-		}
-	});
-	
+
 	return dojox.charting.widget.SelectableLegend;
 });

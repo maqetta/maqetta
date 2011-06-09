@@ -1,3 +1,3 @@
-define(["../..", "dojo/_base/kernel"], function(dojox, dojo){
+define(["dojo/_base/kernel", "../../main"], function(dojo, dojox){
 	return dojo.getObject("charting.themes", true, dojox);
 });

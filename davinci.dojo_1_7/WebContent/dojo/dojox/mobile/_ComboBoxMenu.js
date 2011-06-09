@@ -1,4 +1,5 @@
-define(["dojo/_base/html", "dijit/form/_ComboBoxMenuMixin", "dijit/_WidgetBase", "dojox/mobile/_ListTouchMixin", "./scrollable"], function(dhtml, ComboBoxMenuMixin,WidgetBase,ListTouchMixin,Scrollable) {
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dijit/form/_ComboBoxMenuMixin", "dijit/_WidgetBase", "dojox/mobile/_ListTouchMixin", "./scrollable"],
+	function(dojo, declare, dhtml, ComboBoxMenuMixin, WidgetBase, ListTouchMixin, Scrollable) {
 
 	return dojo.declare("dojox.mobile._ComboBoxMenu", [dijit._WidgetBase,dojox.mobile._ListTouchMixin,dijit.form._ComboBoxMenuMixin], {
 		// summary:
@@ -58,7 +59,7 @@ define(["dojo/_base/html", "dijit/form/_ComboBoxMenuMixin", "dijit/_WidgetBase",
 
 		postCreate: function(){
 			this.inherited(arguments);
-			this.scrollable = new dojox.mobile.scrollable();
+			this.scrollable = new dojox.mobile.scrollable(dojo, dojox);
 			this.scrollable.resize = function(){}; // resize changes the height rudely
 		}
 	});

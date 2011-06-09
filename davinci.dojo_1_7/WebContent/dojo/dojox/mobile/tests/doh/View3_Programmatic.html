@@ -90,14 +90,14 @@
 			var demoWidget = new dojox.mobile.RoundRectCategory({label:"Page flipping demo"});
 			view.addChild(demoWidget);
 
-			demoWidget = new dojox.mobile.RoundRect({innerHTML:"Swipe the screen left or right to flip between the views. There are 4 views in this demo. Virtical scrolling and page indicator are not supported."});
+			demoWidget = new dojox.mobile.RoundRect({innerHTML:"Swipe the screen left or right to flip between the views. There are 4 views in this demo. Vertical scrolling and page indicator are not supported."});
 			view.addChild(demoWidget);
 			view.startup();
 
 			view = new dojox.mobile.SwapView({id:"bar"});
 			dojo.doc.body.appendChild(view.domNode);
 			var list = new dojox.mobile.RoundRectList();
-			demoWidget = new dojox.mobile.ListItem({class:"mblVariableHeight"});
+			demoWidget = new dojox.mobile.ListItem({className:"mblVariableHeight"});
 //			demoWidget.domNode.style = {font-size:"10px"};
 			view.addChild(list);
 			demoWidget.domNode.innerHTML ='1. <a href="#" class="lnk">Dojo: Traditional Karate-do Spirit</a><br> Sarah Connor Hardcover<br> Eligible for FREE Super Saver Shipping<br> <font color="red">$14.50 (50%)</font> In Stock<br> # (531)';

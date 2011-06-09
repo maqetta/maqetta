@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>doh.robot MVC demo-shipto-billto-simple Declarative Test</title>
 
@@ -12,7 +11,7 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true"></script>
 
-		<!-- <script type="text/javascript" src="../../helpers.js"></script>  -->
+		<!-- <script type="text/javascript" src="../helpers.js"></script>  -->
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
@@ -37,19 +36,42 @@
 					 },
 					 {						
 						name: "testSimpleDataBinding",
-						timeout: 9000,
+						timeout: 18000,
 						runTest: function(){
 							var d = new doh.Deferred();
 							
 							doh.robot.mouseMoveAt("sdb", 500, 0);
 							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.mouseMoveAt("cityInput", 500, 0);
+							doh.robot.mouseClick({left:true}, 500);
+							
+							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});							
+							doh.robot.keyPress(dojo.keys.DELETE, 500, {});							
+							
+							doh.robot.typeKeys("456 Mountain Rd", 300, 800);							
+							doh.robot.keyPress(dojo.keys.TAB, 300, {shift:true});							
+							
+							doh.robot.mouseMoveAt("billto", 500, 0);
+							doh.robot.mouseClick({left:true}, 500);
+							
+							doh.robot.mouseMoveAt("shipto", 500, 0);
+							doh.robot.mouseClick({left:true}, 500);
+
+							doh.robot.mouseMoveAt("streetInput", 500, 0);
+							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
+								var w = dijit.byId("streetInput");
+								var v  = w.get('value');
+								doh.is("456 Mountain Rd", dijit.byId("streetInput").get('value'),"streetInput should be set");
+							}), 1000);
+							
+						//	doh.robot.sequence(d.getTestCallback(function(){
 								//"SendTo" selected 
 								//"BillTo" selected 
-								doh.is("123 Valley Rd", dijit.byId("streetInput").get('value'),"streetInput should be set");
+						//		doh.is("123 Valley Rd", dijit.byId("streetInput").get('value'),"streetInput should be set");
 								//doh.is("17 Skyline Dr", dijit.byId("streetInput").get('value'),"streetInput should be set");
-							}), 1000);
+						//	}), 1000);
 							return d;
 						}
 					},
@@ -80,12 +102,12 @@
 							
 							doh.robot.sequence(d.getTestCallback(function(){
 								//"ShipTo" selected 
-								doh.is("123 Valley Rd", dijit.byId("streetInput").get('value'),"streetInput should be set");
+								doh.is("456 Mountain Rd", dijit.byId("streetInput").get('value'),"streetInput should be set");
 							}), 1000);
 							return d;
 						}
 					},					
-					{
+/*					{
 						name: "changeShipToAddress",
 						timeout: 9000,
 						runTest: function(){
@@ -117,7 +139,7 @@
 							return d;
 						}
 					 },
-				 
+				*/ 
 					 {						
 						name: "testRepeatDataBinding",
 						timeout: 9000,
@@ -144,7 +166,7 @@
 							return d;
 						}
 					},
-					{
+			/*		{
 						name: "selectIrene",
 						timeout: 9000,
 						runTest: function(){
@@ -161,6 +183,7 @@
 							return d;
 						}
 					},
+			*/		
 					{
 						name: "selectJohn",
 						timeout: 9000,
@@ -214,12 +237,12 @@
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 500, {});						  
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
+							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
-							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
-							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
-							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
-							doh.robot.keyPress(dojo.keys.BACKSPACE, 200, {});						  
-							doh.robot.typeKeys("Howard", 500, 1000);													 
+							doh.robot.typeKeys("Howard", 300, 800);													 
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});							
 							
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -238,19 +261,19 @@
 							//doh.robot.mouseMoveAt("dijit_form_Button_29", 500, 0);
 							//doh.robot.mouseClick({left:true}, 500);
 
-							doh.robot.mouseMoveAt("add", 2000, 0);
+							doh.robot.mouseMoveAt("add", 1000, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.mouseMoveAt("firstInput", 500, 0);
 							doh.robot.mouseClick({left:true}, 500);
 
-							doh.robot.typeKeys("Ken", 500, 1000);													  
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("Kelly", 500, 1000);														
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("k.k@test.com", 500, 1000);													   
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});	 
-							doh.robot.typeKeys("408-764-3454", 500, 1000);													   
+							doh.robot.typeKeys("Ken", 300, 600);													  
+							doh.robot.keyPress(dojo.keys.TAB, 300, {});	 
+							doh.robot.typeKeys("Kelly", 300, 600);														
+							doh.robot.keyPress(dojo.keys.TAB, 300, {});	 
+							doh.robot.typeKeys("k.k@test.com", 300, 600);													   
+							doh.robot.keyPress(dojo.keys.TAB, 300, {});	 
+							doh.robot.typeKeys("408-764-3454", 300, 600);													   
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is("Ken", dijit.byId("firstInput").get('value'),"firstInput should be Ken");
@@ -274,10 +297,10 @@
 							doh.robot.mouseMoveAt(dojo.query('.mblArrowButtonBody')[1], 500);							
 							doh.robot.mouseClick({left:true}, 500);
 							
-							doh.robot.mouseMoveAt("sfg", 1500, 0);
+							doh.robot.mouseMoveAt("sfg", 1000, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							
-							doh.robot.mouseMoveAt("generate1", 1500, 0);
+							doh.robot.mouseMoveAt("generate1", 1000, 0);
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -303,7 +326,7 @@
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
 							doh.robot.keyPress(dojo.keys.BACKSPACE, 100, {});						  
-							doh.robot.typeKeys("Johnny", 200, 1000);													  
+							doh.robot.typeKeys("Johnny", 200, 800);													  
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});							
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});							
 							
@@ -378,5 +401,4 @@
 				doh.run();
 			});
 		</script>
-	</head>
 </html>

@@ -1,6 +1,5 @@
-define(["dojo", "dijit", "dojox", "../../cells/_base", "../_Plugin", "./AutoScroll"], function(dojo, dijit, dojox){
+define(["dojo", "dijit", "dojox", "dijit/focus", "../../cells/_base", "../_Plugin", "./AutoScroll"], function(dojo, dijit, dojox){
 
-(function(){
 /*=====
 dojo.declare("__SelectItem", null,{
 	// summary:
@@ -1441,8 +1440,7 @@ dojo.declare("dojox.grid.enhanced.plugins.Selector", dojox.grid.enhanced._Plugin
 dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Selector/*name:'selector'*/, {
 	"dependency": ["autoScroll"]
 });
-})();
 
-return dojox.grid.enhanced.plugins.Selector;
+	return dojox.grid.enhanced.plugins.Selector;
 
 });

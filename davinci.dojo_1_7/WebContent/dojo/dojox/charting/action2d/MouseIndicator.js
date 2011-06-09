@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/window", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/window", 
 	"./ChartAction", "./_IndicatorElement", "dojox/lang/utils"],
-	function(dojo, declare, dconnect, dwindow, ChartAction, _IndicatorElement, du){ 
+	function(dojo, lang, declare, dconnect, dwindow, ChartAction, IndicatorElement, du){ 
 
 	/*=====
 	dojo.declare("dojox.charting.action2d.__MouseIndicatorCtorArgs", null, {
@@ -137,7 +137,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_ba
 			this.opt = dojo.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
-			this.uName = "mouseIndicator"+this.opt.series.name;
+			this.uName = "mouseIndicator"+this.opt.series;
 			this._handles = [];
 			this.connect();
 		},
@@ -156,7 +156,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_ba
 			//		to the chart that's why Chart.render() must be called after connect.
 			this.inherited(arguments);
 			// add plot with unique name
-			this.chart.addPlot(this.uName, {type: _IndicatorElement, inter: this});
+			this.chart.addPlot(this.uName, {type: IndicatorElement, inter: this});
 		},
 
 		disconnect: function(){

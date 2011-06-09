@@ -1,4 +1,4 @@
-define("dojox/calc/Standard", ["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/Menu", "dijit/form/DropDownButton", "dijit/TooltipDialog", "dijit/form/TextBox", "dijit/form/Button", "dojox/calc/_Executor"], function(dojo) {
+define(["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/Menu", "dijit/MenuItem", "dijit/form/ComboButton", "dijit/TooltipDialog", "dijit/form/TextBox", "dijit/form/Button", "dojox/calc/_Executor"], function(dojo) {
 
 dojo.experimental("dojox.calc.Standard");
 

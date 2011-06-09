@@ -4,8 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Button List</title>
-		<link href="../themes/iphone/base.css" rel="stylesheet"></link>
-		<link href="../themes/common/domButtons/DomButtonColorButtons.css" rel="stylesheet"></link>
+		<link href="../themes/iphone/base.css" rel="stylesheet">
+		<link href="../themes/common/domButtons/DomButtonColorButtons.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
@@ -23,7 +23,7 @@
 			});
 			function btnClicked(e){
 				var listItem = dijit.getEnclosingWidget(e.currentTarget);
-				var btnDiv = listItem.rightIconNode;
+				var btnDiv = listItem.rightIconNode.firstChild;
 				if(dojo.hasClass(btnDiv, "mblDomButtonBluePlus")){
 					listItem.set("btnClass", "mblDomButtonRedMinus");
 				}else if(dojo.hasClass(btnDiv, "mblDomButtonRedMinus")){

@@ -4,7 +4,7 @@
 //		this module adds property listeners to the text fields to correct the text representation
 //		in both static text and dynamic text during user input.
 
-define(["dojo/_base/lang"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/array", "dojo/_base/connect"], function(dojo){
 	dojo.experimental("dojox.string.BidiComplex");
 	dojo.getObject("string.BidiComplex", true, dojox);
 

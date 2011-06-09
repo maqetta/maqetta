@@ -1,6 +1,7 @@
 dojo.provide("dojox.cometd.RestChannels");
- 
+
 dojo.require("dojox.rpc.Client");
+dojo.require("dojo._base.url");
 dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener");
 
 // Note that cometd _base is _not_ required, this can run standalone, but ifyou want
@@ -66,7 +67,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 							self.get(r.url,r) : // auto-subscribe
 							defaultXhrGet(r); // plain XHR request
 					};
-		
+
 					var result = defaultGet.apply(this,arguments);
 					dojo.xhrGet = defaultXhrGet;
 					return result;
@@ -157,8 +158,8 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 	  					}
 	  				}
 			  	}
-			  	
-	  			 
+
+
 				if(window.attachEvent){// IE needs a little help with cleanup
 					window.attachEvent("onunload",function(){
 						self.connected= false;
@@ -167,7 +168,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 						}
 					});
 				}
-				
+
 				this.connected = true;
 			}
 		},
@@ -246,7 +247,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				}
 				headers["Subscribe"] = args.unsubscribe ? 'none' : '*';
 				var dfd = this._send(method,args);
-				
+
 				var self = this;
 				dfd.addBoth(function(result){
 					var xhr = dfd.ioArgs.xhr;
@@ -257,7 +258,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 					}
 					if(xhr && xhr.getResponseHeader("Subscribed")  == "OK"){
 						var lastMod = xhr.getResponseHeader('Last-Modified');
-						
+
 						if(xhr.responseText){
 							self.subscriptions[channel] = lastMod || new Date().toUTCString();
 						}else{
@@ -369,9 +370,9 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 				xhr = {channel:"channel",__proto__:xhr};
 			}
 			return this._processMessage(xhr);
-		
+
 		},
-		
+
 		get: function(/*String*/channel, /*dojo.__XhrArgs?*/args){
 			// summary:
 			// 		GET the initial value of the resource and subscribe to it
@@ -417,7 +418,7 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 			// summary:
 			// 		unsubscribes from the resource
 			//		See subscribe for parameter values
-			
+
 			args = args || {};
 			args.unsubscribe = true;
 			this.subscribe(channel,args); // change the time frame to after 5000AD

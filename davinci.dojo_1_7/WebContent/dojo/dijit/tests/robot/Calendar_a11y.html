@@ -46,20 +46,20 @@
 							// Tab in
 							doh.robot.keyPress(dojo.keys.TAB, 1000, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(16, innerText(dojo.global.dijit._curFocus), "first tab goes to selected day");
+								doh.is(16, innerText(dojo.global.dijit.focus.curNode), "first tab goes to selected day");
 							})), 500);
 
 							// Move around some
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 0, {});
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(24, innerText(dojo.global.dijit._curFocus), "move around some");
+								doh.is(24, innerText(dojo.global.dijit.focus.curNode), "move around some");
 							})), 500);
 
 							// Tab out
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("after", dojo.global.dijit._curFocus.id, "next tab leaves calendar");
+								doh.is("after", dojo.global.dijit.focus.curNode.id, "next tab leaves calendar");
 							})), 500);
 
 							return d;
@@ -74,13 +74,13 @@
 							// shift-tab back into calendar, should go to previously focused day
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(24, innerText(dojo.global.dijit._curFocus), "shift-tab returns to previously focused day");
+								doh.is(24, innerText(dojo.global.dijit.focus.curNode), "shift-tab returns to previously focused day");
 							})), 500);
 
 							// shift-tab out
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("before", dojo.global.dijit._curFocus.id, "next shift-tab leaves calendar");
+								doh.is("before", dojo.global.dijit.focus.curNode.id, "next shift-tab leaves calendar");
 							})), 500);
 
 							return d;
@@ -95,19 +95,19 @@
 							// Tab in
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(24, innerText(dojo.global.dijit._curFocus), "first tab goes to selected day");
+								doh.is(24, innerText(dojo.global.dijit.focus.curNode), "first tab goes to selected day");
 							})), 500);
 
 							// Move to next month
 							doh.robot.keyPress(dojo.keys.PAGE_DOWN, 0, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(24, innerText(dojo.global.dijit._curFocus), "moved to same day, but new month");
+								doh.is(24, innerText(dojo.global.dijit.focus.curNode), "moved to same day, but new month");
 							})), 500);
 
 							// Tab out
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("after", dojo.global.dijit._curFocus.id, "next tab leaves calendar");
+								doh.is("after", dojo.global.dijit.focus.curNode.id, "next tab leaves calendar");
 							})), 500);
 
 							return d;
@@ -122,13 +122,13 @@
 							// shift-tab back into calendar, should go to previously focused day
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(24, innerText(dojo.global.dijit._curFocus), "shift-tab returns to previously focused day");
+								doh.is(24, innerText(dojo.global.dijit.focus.curNode), "shift-tab returns to previously focused day");
 							})), 500);
 
 							// shift-tab out
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("before", dojo.global.dijit._curFocus.id, "next shift-tab leaves calendar");
+								doh.is("before", dojo.global.dijit.focus.curNode.id, "next shift-tab leaves calendar");
 							})), 500);
 
 							return d;
@@ -169,7 +169,7 @@
 								doh.is("16", innerText(selected[0]));
 
 								// initial focus is on selected value
-								doh.is("16", innerText(dojo.global.dijit._curFocus));
+								doh.is("16", innerText(dojo.global.dijit.focus.curNode));
 
 								// and get("value") working
 								doh.is(0, dojo.date.compare(new Date(2009, 8, 16), cal1.get('value')), 'get("value")');
@@ -179,7 +179,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
 								// focus moved from 16 to 17
-								doh.is(17, innerText(dojo.global.dijit._curFocus));
+								doh.is(17, innerText(dojo.global.dijit.focus.curNode));
 
 								doh.is(0, dojo.date.compare(new Date(2009, 8, 16), cal1.get('value')), 'value unchanged');
 								
@@ -190,23 +190,23 @@
 							})), 500);
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 0, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(18, innerText(dojo.global.dijit._curFocus));
+								doh.is(18, innerText(dojo.global.dijit.focus.curNode));
 							})), 500);
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 0, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(25, innerText(dojo.global.dijit._curFocus));
+								doh.is(25, innerText(dojo.global.dijit.focus.curNode));
 							})), 500);
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 0, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(24, innerText(dojo.global.dijit._curFocus));
+								doh.is(24, innerText(dojo.global.dijit.focus.curNode));
 							})), 500);
 							doh.robot.keyPress(dojo.keys.UP_ARROW, 0, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(17, innerText(dojo.global.dijit._curFocus));
+								doh.is(17, innerText(dojo.global.dijit.focus.curNode));
 							})), 500);
 							doh.robot.keyPress(dojo.keys.UP_ARROW, 0, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
-								doh.is(10, innerText(dojo.global.dijit._curFocus));
+								doh.is(10, innerText(dojo.global.dijit.focus.curNode));
 							})), 500);
 							doh.robot.keyPress(dojo.keys.ENTER, 0, {});
 
@@ -239,7 +239,7 @@
 							doh.robot.keyPress(dojo.keys.PAGE_DOWN, 1000, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
 								// focus moved from jan 31 to feb 29
-								doh.is(29, innerText(dojo.global.dijit._curFocus));
+								doh.is(29, innerText(dojo.global.dijit.focus.curNode));
 
 								doh.is(0, dojo.date.compare(new Date(2008, 0, 31), cal1.get('value')), 'value unchanged (first page down)');
 
@@ -256,7 +256,7 @@
 							doh.robot.keyPress(dojo.keys.PAGE_DOWN, 500, {});
 							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
 								// focus moved from jan 31 to feb 29
-								doh.is(29, innerText(dojo.global.dijit._curFocus));
+								doh.is(29, innerText(dojo.global.dijit.focus.curNode));
 
 								doh.is(0, dojo.date.compare(new Date(2008, 0, 31), cal1.get('value')), 'value unchanged (second page down)');
 								

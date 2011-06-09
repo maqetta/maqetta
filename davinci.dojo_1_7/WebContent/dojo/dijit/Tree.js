@@ -1,19 +1,27 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated dojo.getObject dojo.mixin
 	".",
 	"dojo/text!./templates/TreeNode.html",
 	"dojo/text!./templates/Tree.html",
-	"dojo/fx",
-	"dojo/DeferredList",
+	"dojo/fx", // dojo.fx.wipeIn dojo.fx.wipeOut
+	"dojo/DeferredList", // dojo.DeferredList
 	"./_Widget",
 	"./_TemplatedMixin",
 	"./_Container",
 	"./_Contained",
 	"./_CssStateMixin",
-	"dojo/cookie",
+	"./focus",
+	"dojo/cookie", // dojo.cookie
 	"./tree/TreeStoreModel",
 	"./tree/ForestStoreModel",
-	"./tree/_dndSelector"], function(dojo, dijit, treeNodeTemplate, treeTemplate){
+	"./tree/_dndSelector",
+	"dojo/_base/Deferred", // dojo.Deferred
+	"dojo/_base/array", // dojo.filter dojo.forEach dojo.map
+	"dojo/_base/connect", // dojo.isCopyKey dojo.keys dojo.publish
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.addClass dojo.isDescendant dojo.marginBox dojo.removeClass dojo.replaceClass dojo.style dojo.toggleClass
+	"dojo/_base/lang" // dojo.hitch dojo.isString
+], function(dojo, dijit, treeNodeTemplate, treeTemplate){
 
 // module:
 //		dijit/Tree
@@ -82,7 +90,7 @@ dojo.declare(
 		this._updateItemClasses(this.item);
 
 		if(this.isExpandable){
-			dijit.setWaiState(this.labelNode, "expanded", this.isExpanded);
+			this.labelNode.setAttribute("aria-expanded", this.isExpanded);
 		}
 
 		//aria-selected should be false on all selectable elements.
@@ -218,15 +226,15 @@ dojo.declare(
 		// All the state information for when a node is expanded, maybe this should be
 		// set when the animation completes instead
 		this.isExpanded = true;
-		dijit.setWaiState(this.labelNode, "expanded", "true");
+		this.labelNode.setAttribute("aria-expanded", "true");
 		if(this.tree.showRoot || this !== this.tree.rootNode){
-			dijit.setWaiRole(this.containerNode, "group");
+			this.containerNode.setAttribute("role", "group");
 		}
 		dojo.addClass(this.contentNode,'dijitTreeContentExpanded');
 		this._setExpando();
 		this._updateItemClasses(this.item);
 		if(this == this.tree.rootNode){
-			dijit.setWaiState(this.tree.domNode, "expanded", "true");
+			this.tree.domNode.setAttribute("aria-expanded", "true");
 		}
 
 		var def,
@@ -261,9 +269,9 @@ dojo.declare(
 		}
 
 		this.isExpanded = false;
-		dijit.setWaiState(this.labelNode, "expanded", "false");
+		this.labelNode.setAttribute("aria-expanded", "false");
 		if(this == this.tree.rootNode){
-			dijit.setWaiState(this.tree.domNode, "expanded", "false");
+			this.tree.domNode.setAttribute("aria-expanded", "false");
 		}
 		dojo.removeClass(this.contentNode,'dijitTreeContentExpanded');
 		this._setExpando();
@@ -441,7 +449,7 @@ dojo.declare(
 		// description:
 		//		In particular, setting a node as selected involves setting tabIndex
 		//		so that when user tabs to the tree, focus will go to that node (only).
-		dijit.setWaiState(this.labelNode, "selected", selected);
+		this.labelNode.setAttribute("aria-selected", selected);
 		dojo.toggleClass(this.rowNode, "dijitTreeRowSelected", selected);
 	},
 
@@ -789,10 +797,10 @@ dojo.declare(
 					rn.rowNode.style.display="none";
 					// if root is not visible, move tree role to the invisible
 					// root node's containerNode, see #12135
-					dijit.setWaiRole(this.domNode, 'presentation');
+					this.domNode.setAttribute("role", "presentation");
 
-					dijit.setWaiRole(rn.labelNode, 'presentation');
-					dijit.setWaiRole(rn.containerNode, 'tree');
+					rn.labelNode.setAttribute("role", "presentation");
+					rn.containerNode.setAttribute("role", "tree");
 				}
 				this.domNode.appendChild(rn.domNode);
 				var identity = this.model.getIdentity(item);
@@ -855,8 +863,8 @@ dojo.declare(
 		//      Singular variant of _setPathsAttr
 		if(path.length){
 			return this.set("paths", [path]);
-		} else {
-			//Empty list is interpreted as "select nothing"
+		}else{
+			// Empty list is interpreted as "select nothing"
 			return this.set("paths", []);
 		}
 	},
@@ -903,7 +911,7 @@ dojo.declare(
 					//Successfully reached the end of this path
 					def.callback(nextNode);
 				}
-			} else {
+			}else{
 				def.errback("Could not expand path at " + nextPath);
 			}
 		}
@@ -1598,7 +1606,7 @@ dojo.declare(
 		// The only JS sizing involved w/tree is the indentation, which is specified
 		// in CSS and read in through this dummy indentDetector node (tree must be
 		// visible and attached to the DOM to read this)
-		this._nodePixelIndent = dojo._getMarginSize(this.tree.indentDetector).w;
+		this._nodePixelIndent = dojo.position(this.tree.indentDetector).w;
 
 		if(this.tree.rootNode){
 			// If tree has already loaded, then reset indent for all the nodes

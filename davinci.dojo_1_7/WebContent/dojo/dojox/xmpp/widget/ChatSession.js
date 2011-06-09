@@ -1,4 +1,8 @@
 dojo.provide("dojox.xmpp.widget.ChatSession");
+
+dojo.require("dijit.layout.LayoutContainer");
+dojo.require("dijit._Templated");
+
 dojo.declare("dojox.xmpp.widget.ChatSession",
 	[dijit.layout.LayoutContainer, dijit._Templated],
 	{

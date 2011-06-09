@@ -1,21 +1,23 @@
 define(["dojo", "dojox", "./_FilterExpr", "../_StoreLayer"], function(dojo, dojox){
 
-(function(){
-var ns = dojo.getObject("grid.enhanced.plugins", true, dojox);
-	cmdSetFilter = "filter",
-	cmdClearFilter = "clear",
-	hitchIfCan = function(scope, func){
-		return func ? dojo.hitch(scope || dojo.global, func) : function(){};
-	},
-	shallowClone = function(obj){
-		var res = {};
-		if(obj && dojo.isObject(obj)){
-			for(var name in obj){
-				res[name] = obj[name];
+	var ns = dojo.getObject("grid.enhanced.plugins", true, dojox),
+		cmdSetFilter = "filter",
+		cmdClearFilter = "clear",
+		hitchIfCan = function(scope, func){
+			return func ? dojo.hitch(scope || dojo.global, func) : function(){};
+		},
+		
+		shallowClone = function(obj){
+			var res = {};
+			if(obj && dojo.isObject(obj)){
+				for(var name in obj){
+					res[name] = obj[name];
+				}
 			}
+			return res;
 		}
-		return res;
-	};
+	;
+
 	dojo.declare("dojox.grid.enhanced.plugins.filter._FilterLayerMixin", null, {
 /*=====
 		// _filter: _ConditionExpr
@@ -398,8 +400,7 @@ var ns = dojo.getObject("grid.enhanced.plugins", true, dojox);
 			}
 		}
 	});
-})();
 
-return dojox.grid.enhanced.plugins.filter.FilterLayer;
+	return dojox.grid.enhanced.plugins.filter.FilterLayer;
 
 });

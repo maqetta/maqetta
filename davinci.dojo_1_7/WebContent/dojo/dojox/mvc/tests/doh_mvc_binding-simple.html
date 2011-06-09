@@ -6,18 +6,18 @@
 
 	<style>
 		@import "../../../dojo/resources/dojo.css";
-		@import "../css/dijitTests.css";
+		@import "./css/dijitTests.css";
 		@import "css/app-format.css";
 	</style>
 
 	<!-- required: the default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"></link>
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script src="../../../dojo/dojo.js" type="text/javascript"
 		djConfig="isDebug: true">
 	</script>
-	<script type="text/javascript" src="../helpers.js"></script>
+	<script type="text/javascript" src="./helpers.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("dojox.mvc");
@@ -346,7 +346,7 @@
 			<div class="row">
 				<label class="cell" for="firstnameInput">First:</label>
 				<input class="cell" id="firstnameInput" data-dojo-type="dijit.form.ValidationTextBox"
-									data-dojo-props="ref: model.First"></input>
+									data-dojo-props="ref: model.First"/>
 				<!-- Content in output below will always be in sync with value of textbox above -->
 				<span id="tout" data-dojo-type="dojox.mvc.Output" data-dojo-props="ref: model.First">
 					(first name is: ${this.value})
@@ -365,7 +365,7 @@
 			<div class="row">
 				<label class="cell" for="numInput">Num:</label>
 				<input class="cell" id="numInput" data-dojo-type="dijit.form.NumberTextBox"
-									data-dojo-props="ref: model.Num"></input>
+									data-dojo-props="ref: model.Num"/>
 				<span data-dojo-type="dojox.mvc.Output" data-dojo-props="ref: model.Num">
 					(num is: ${this.value})
 				</span>
@@ -382,7 +382,7 @@
 			<div class="row">
 				<label class="cell" for="lastnameInput">Last:</label>
 				<input class="cell" id="lastnameInput" data-dojo-type="dijit.form.TextBox"
-									data-dojo-props="ref: model.Last"></input>
+									data-dojo-props="ref: model.Last"/>
 				<span data-dojo-type="dojox.mvc.Output" data-dojo-props="ref: model.Last">
 					(last name is: ${this.value})
 				</span>
@@ -390,7 +390,7 @@
 			<div class="row">
 				<label class="cell" for="emailInput">Email:</label>
 				<input class="cell" id="emailInput" data-dojo-type="dijit.form.ValidationTextBox"
-									data-dojo-props="ref: model.Email"></input>
+									data-dojo-props="ref: model.Email"/>
 				<span data-dojo-type="dojox.mvc.Output" data-dojo-props="ref: model.Email">
 					(email is: ${this.value})
 				</span>

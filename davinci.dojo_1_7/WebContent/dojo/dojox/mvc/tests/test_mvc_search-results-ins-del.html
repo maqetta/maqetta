@@ -147,7 +147,7 @@
 		 <div data-dojo-type="dojox.mvc.Group" data-dojo-props="ref: 'searchRecords'">
 			<div class="row">
 				<label class="cell" for="queryInput">Search for:</label>
-				<input class="cell" id="queryInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Query'"></input>
+				<input class="cell" id="queryInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Query'"/>
 				<button type="button" data-dojo-type="dijit.form.Button" data-dojo-props="onClick: function(){setSearchBanner();}">Search</button>
 			</div>
 			<div class="spacer"></div>
@@ -163,7 +163,7 @@
 			<div data-dojo-type="dojox.mvc.Repeat" data-dojo-props="ref: 'Results'">
 				<div class="row" data-dojo-type="dojox.mvc.Group" data-dojo-props="ref: '${this.index}'">
 					<label class="cell" for="nameInput${this.index}">Name:</label>
-					<input class="cell" data-dojo-type="dijit.form.TextBox" id="nameInput${this.index}" data-dojo-props="ref: 'First'"></input>
+					<input class="cell" data-dojo-type="dijit.form.TextBox" id="nameInput${this.index}" data-dojo-props="ref: 'First'"/>
 					<button type="button" data-dojo-type="dijit.form.Button" data-dojo-props="onClick: function(){setDetailsContext('${this.index}');}">Details</button>
 					<button type="button" data-dojo-type="dijit.form.Button" data-dojo-props="onClick: function(){insertResult('${this.index}');}">+</button>
 					<button type="button" data-dojo-type="dijit.form.Button" data-dojo-props="onClick: function(){deleteResult('${this.index}');}">-</button>
@@ -177,31 +177,31 @@
 				<div id="detailsGroup" data-dojo-type="dojox.mvc.Group" data-dojo-props="ref: '0'">
 					<div class="row">
 						<label class="cell" for="firstInput">First Name:</label>
-						<input class="cell" id="firstInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'First'"></input>
+						<input class="cell" id="firstInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'First'"/>
 					</div>
 					<div class="row">
 						<label class="cell" for="lastInput">Last Name:</label>
-						<input class="cell" id="lastInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Last'"></input>
+						<input class="cell" id="lastInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Last'"/>
 					</div>
 					<div class="row">
 						<label class="cell" for="locationInput">Location:</label>
-						<input class="cell" id="locationInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Location'"></input>
+						<input class="cell" id="locationInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Location'"/>
 					</div>
 					<div class="row">
 						<label class="cell" for="officeInput">Office:</label>
-						<input class="cell" id="officeInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Office'"></input>
+						<input class="cell" id="officeInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Office'"/>
 					</div>
 					<div class="row">
 						<label class="cell" for="emailInput">Email:</label>
-						<input class="cell" id="emailInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Email'"></input>
+						<input class="cell" id="emailInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Email'"/>
 					</div>
 					<div class="row">
 						<label class="cell" for="telInput">Telephone:</label>
-						<input class="cell" id="telInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Tel'"></input>
+						<input class="cell" id="telInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Tel'"/>
 					</div>
 					<div class="row">
 						<label class="cell" for="faxInput">Fax:</label>
-						<input class="cell" id="faxInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Fax'"></input>
+						<input class="cell" id="faxInput" data-dojo-type="dijit.form.TextBox" data-dojo-props="ref: 'Fax'"/>
 					</div>
 				</div>
 			</div>

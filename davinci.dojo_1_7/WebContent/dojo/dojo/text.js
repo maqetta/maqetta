@@ -1,24 +1,22 @@
-define(["./_base/kernel", "./_base/xhr", "require", "./has"], function(dojo, xhr, require, has){
+define(["./_base/kernel", "require", "./has", "./has!host-browser?./_base/xhr"], function(dojo, require, has, xhr){
 	// module:
 	//		dojo/text
 	// summary:
 	//		This module implements the !dojo/text plugin and the dojo.cache API.
 	// description:
 	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various loader implementations. Also, this
-	//		allows foreign AMD loaders to be used without their plugins.
+	//		and thereby reduce the size of the plugin compared to various foreign loader implementations.
+	//		Also, this allows foreign AMD loaders to be used without their plugins.
 	//
-	//		CAUTION: this module may return improper results if the AMD loader does not support toAbsMid and client
-	//		code passes relative plugin resource module ids. In that case, you should consider using the text! plugin
-	//		that comes with your loader.
-	//
-	//		CAUTION: this module is designed to optional function synchronously to support the dojo v1.x synchronous
+	//		CAUTION: this module is designed to optionally function synchronously to support the dojo v1.x synchronous
 	//		loader. This feature is outside the scope of the CommonJS plugins specification.
 
-	var getText= function(url, sync, load){
-		xhr("GET", {url:url, sync:sync, load:load});
-	};
-	if(!has("host-browser")){
+	var getText;
+	if(has("host-browser")){
+		getText= function(url, sync, load){
+			xhr("GET", {url:url, sync:sync, load:load});
+		};
+	}else{
 		// TODOC: only works for dojo AMD loader
 		if(require.getText){
 			getText= require.getText;
@@ -30,22 +28,16 @@ define(["./_base/kernel", "./_base/xhr", "require", "./has"], function(dojo, xhr
 	var
 		theCache= {},
 
-		getCacheId= function(resourceId, require) {
-			if(require.toAbsMid){
-				var match= resourceId.match(/(.+)(\.[^\/\.]+)$/);
-				return match ? require.toAbsMid(match[1]) + match[2] : require.toAbsMid(resourceId);
-			}
-			return resourceId;
-		},
-
-		cache= function(cacheId, url, value){
-			// if cacheId is not given, just use a trash location
-			cacheId= cacheId || "*garbage*";
-			theCache[cacheId]= theCache[url]= value;
-		},
+		toAbsMid= has("dojo-loader") ?
+			function(id, require){
+				var result = require.toAbsMid(id + "/x");
+				return result.substring(0, result.length-2);
+			} :
+			function(id, require){
+				return require.toUrl(id);
+			},
 
 		strip= function(text){
-			//note: this function courtesy of James Burke (https://github.com/jrburke/requirejs)
 			//Strips <?xml ...?> declarations so that external SVG and XML
 			//documents can be added to a document without worry. Also, if the string
 			//is an HTML document, only the part inside the body tag is returned.
@@ -61,60 +53,58 @@ define(["./_base/kernel", "./_base/xhr", "require", "./has"], function(dojo, xhr
 			return text;
 		},
 
+		notFound = {},
+
 		result= {
 			load:function(id, require, load){
-				// id is something like:
-				//	 * "path/to/text.html
-				//	 * "path/to/text.html!strip
+				// id is something like (path may be relative):
+				//
+				//	 "path/to/text.html"
+				//	 "path/to/text.html!strip"
 				var
 					parts= id.split("!"),
-					resourceId= parts[0],
-					cacheId= getCacheId(resourceId, require),
 					stripFlag= parts.length>1,
-					url;
-				if(cacheId in theCache){
-					load(stripFlag ? strip(theCache[cacheId]) : theCache[cacheId]);
-					return;
+					absMid= toAbsMid(parts[0], require),
+					url = require.toUrl(parts[0]),
+					text = notFound,
+					finish = function(text){
+						theCache[absMid]= theCache[url]= text;
+						load(stripFlag ? strip(text) : text);
+					};
+				if(absMid in theCache){
+					text = theCache[absMid];
+				}else if(absMid in require.cache){
+					text = require.cache[absMid];
+				}else if(url in theCache){
+					text = theCache[url];
 				}
-				url= require.toUrl(resourceId);
-				if(url in theCache){
-					load(stripFlag ? strip(theCache[url]) : theCache[url]);
-					return;
+				if(text===notFound){
+					getText(url, !require.async, finish);
+				}else{
+					finish(text);
 				}
-				var
-					inject= function(text){
-						cache(cacheId, url, text);
-						load(stripFlag ? strip(theCache[url]) : theCache[url]);
-					},
-					text;
-				try{
-					text= require("*text/" + cacheId);
-					if(text!==undefined){
-						inject(text);
-						return;
-					}
-				}catch(e){}
-				getText(url, !require.async, inject);
-			},
-
-			cache:function(cacheId, mid, type, value) {
-				cache(cacheId, require.nameToUrl(mid) + type, value);
 			}
 		};
 
 		dojo.cache= function(/*String||Object*/module, /*String*/url, /*String||Object?*/value){
 			//	 * (string string [value]) => (module, url, value)
-			//	 * (object [value])				 => (module, value), url defaults to ""
+			//	 * (object [value])        => (module, value), url defaults to ""
 			//
 			//	 * if module is an object, then it must be convertable to a string
-			//	 * (module, url) must be legal arguments (once converted to strings iff required) to dojo.moduleUrl
+			//	 * (module, url) module + (url ? ("/" + url) : "") must be a legal argument to require.toUrl
 			//	 * value may be a string or an object; if an object then may have the properties "value" and/or "sanitize"
 			var key;
-			if(typeof module == "string"){
-				module = (module.replace(/\./g, "/") + (url ? ("/" + url) : "")).replace(/^dojo\//, "./");
-				key = require.nameToUrl(module);
+			if(typeof module=="string"){
+				if(/\//.test(module)){
+					// module is a version 1.7+ resolved path
+					key = module;
+					value = url;
+				}else{
+					// module is a version 1.6- argument to dojo.moduleUrl
+					key = require.toUrl(module.replace(/\./g, "/") + (url ? ("/" + url) : ""));
+				}
 			}else{
-				key = module+"";
+				key = module + "";
 				value = url;
 			}
 			var
@@ -124,7 +114,7 @@ define(["./_base/kernel", "./_base/xhr", "require", "./has"], function(dojo, xhr
 			if(typeof val == "string"){
 				//We have a string, set cache value
 				theCache[key] = val;
-				return strip ? strip(val) : val;
+				return sanitize ? strip(val) : val;
 			}else if(val === null){
 				//Remove cached value
 				delete theCache[key];
@@ -134,10 +124,10 @@ define(["./_base/kernel", "./_base/xhr", "require", "./has"], function(dojo, xhr
 				//not exist, fetch it.
 				if(!(key in theCache)){
 					getText(key, true, function(text){
-						cache(0, key, text);
+						theCache[key]= text;
 					});
 				}
-				return strip ? strip(theCache[key]) : theCache[key];
+				return sanitize ? strip(theCache[key]) : theCache[key];
 			}
 		};
 
@@ -145,12 +135,16 @@ define(["./_base/kernel", "./_base/xhr", "require", "./has"], function(dojo, xhr
 });
 
 /*=====
-dojo.cache = function(className, superclass, props){
+dojo.cache = function(module, url, value){
 	// summary:
 	//		A getter and setter for storing the string content associated with the
 	//		module and url arguments.
 	// description:
-	//		module and url are used to call `dojo.moduleUrl()` to generate a module URL.
+	//		If module is a string that contains slashes, then it is interpretted as a fully
+	//		resolved path (typically a result returned by require.toUrl), and url should not be
+	//		provided. This is the preferred signature. If module is a string that does not
+	//		contain slashes, then url must also be provided and module and url are used to
+	//		call `dojo.moduleUrl()` to generate a module URL. This signature is deprecated.
 	//		If value is specified, the cache value for the moduleUrl will be set to
 	//		that value. Otherwise, dojo.cache will fetch the moduleUrl and store it
 	//		in its internal cache and return that cached value for the URL. To clear
@@ -158,7 +152,8 @@ dojo.cache = function(className, superclass, props){
 	//		the URL contents, only modules on the same domain of the page can use this capability.
 	//		The build system can inline the cache values though, to allow for xdomain hosting.
 	// module: String||Object
-	//		If a String, the module name to use for the base part of the URL, similar to module argument
+	//		If a String with slashes, a fully resolved path; if a String without slashes, the
+	//		module name to use for the base part of the URL, similar to module argument
 	//		to `dojo.moduleUrl`. If an Object, something that has a .toString() method that
 	//		generates a valid path for the cache item. For example, a dojo._Url object.
 	// url: String

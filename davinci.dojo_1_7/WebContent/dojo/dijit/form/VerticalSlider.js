@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"dojo/text!./templates/VerticalSlider.html",
-	"./HorizontalSlider"], function(dojo, dijit, template){
+	"./HorizontalSlider",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/form/VerticalSlider

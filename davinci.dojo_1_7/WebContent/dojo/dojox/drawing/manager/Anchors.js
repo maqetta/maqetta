@@ -1,4 +1,7 @@
-dojo.provide("dojox.drawing.manager.Anchors");
+define([
+	"dojo",
+	"../util/oo",
+	"./Stencil"], function(dojo){
 
 dojox.drawing.manager.Anchors = dojox.drawing.util.oo.declare(
 	// summary:
@@ -462,3 +465,6 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 		}
 	}
 );
+
+return dojox.drawing.manager.Anchors;
+});

@@ -1,4 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/Color", "dojo/colors"], function(dojo, Color, colors){
+define(["dojo/_base/kernel", "../main", "dojo/_base/lang", "dojo/_base/Color", "dojo/colors"], 
+	function(dojo, dojox, dlang, Color, colors){
 
 dojo.getObject("color", true, dojox);
 

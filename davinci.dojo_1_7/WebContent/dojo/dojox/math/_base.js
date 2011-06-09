@@ -1,8 +1,7 @@
 // AMD-ID "dojox/math/_base"
 define(["dojo", "dojox"], function(dojo, dojox) {
-dojo.getObject("math", true, dojox);
+	dojo.getObject("math", true, dojox);
 
-(function(){
 	var m = dojox.math;
 	dojo.mixin(dojox.math, {
 		toRadians: function(/* Number */n){
@@ -158,7 +157,6 @@ dojo.getObject("math", true, dojox);
 			return m;	//	Array
 		}
 	});
-})();
 
-return dojox.math;
+	return dojox.math;
 });

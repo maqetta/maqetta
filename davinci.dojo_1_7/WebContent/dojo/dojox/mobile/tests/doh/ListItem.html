@@ -4,10 +4,10 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>ListItem</title>
-		<link href="../../themes/iphone/iphone.css" rel="stylesheet"></link>
-		<link href="../../themes/common/domButtons/DomButtonColorButtons.css" rel="stylesheet"></link>
-		<link href="../../themes/common/domButtons/DomButtonCheckboxOn.css" rel="stylesheet"></link>
-		<link href="../../themes/common/domButtons/DomButtonCheckboxOff.css" rel="stylesheet"></link>
+		<link href="../../themes/iphone/iphone.css" rel="stylesheet">
+		<link href="../../themes/common/domButtons/DomButtonColorButtons.css" rel="stylesheet">
+		<link href="../../themes/common/domButtons/DomButtonCheckboxOn.css" rel="stylesheet">
+		<link href="../../themes/common/domButtons/DomButtonCheckboxOff.css" rel="stylesheet">
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
 		<script language="JavaScript" type="text/javascript">
@@ -28,99 +28,184 @@
 							setTimeout(d.getTestCallback(function(){
 							var demoWidget = dijit.byId("dojox_mobile_ListItem_0");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertTrue(demoWidget.domNode.childNodes[0].src.search(/i-icon-1.png/i) != -1);
-							if(dojo.isIE)
-								doh.assertEqual('<DIV class=mblListItemTextBox><SPAN>External View #1 (sync) </SPAN></DIV><DIV class=mblDomButtonArrow mblRightButton mblDomButton><DIV><DIV><DIV><DIV></DIV></DIV></DIV></DIV></DIV>', demoWidget.domNode.childNodes[1].innerHTML.replace(/\r\n/g,""));
-							else
-								doh.assertEqual('<div class="mblListItemTextBox"><span>External View #1 (sync)</span></div><div class="mblDomButtonArrow mblRightButton mblDomButton"><div><div><div><div></div></div></div></div></div>', demoWidget.domNode.childNodes[1].innerHTML.replace(/\r\n/g,""));
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('External View #1 (sync)', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
+							if(!dojo.isIE) {
+								doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/i-icon-1.png/i) != -1);
+							}
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_1");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							if(dojo.isIE)
-								doh.assertEqual('<DIV class=mblListItemTextBox><SPAN>External View #2 (async) </SPAN></DIV><DIV class=mblDomButtonArrow mblRightButton mblDomButton><DIV><DIV><DIV><DIV></DIV></DIV></DIV></DIV></DIV>', demoWidget.domNode.childNodes[1].innerHTML.replace(/\r\n/g,""));
-							else
-								doh.assertEqual('<div class="mblListItemTextBox"><span>External View #2 (async)</span></div><div class="mblDomButtonArrow mblRightButton mblDomButton"><div><div><div><div></div></div></div></div></div>', demoWidget.domNode.childNodes[1].innerHTML.replace(/\r\n/g,""));
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('External View #2 (async)', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_2");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							if(dojo.isIE)
-								doh.assertEqual('<DIV class=mblListItemTextBox><SPAN>External View #3 (sync) </SPAN></DIV><DIV class=mblDomButtonArrow mblRightButton mblDomButton><DIV><DIV><DIV><DIV></DIV></DIV></DIV></DIV></DIV>', demoWidget.domNode.childNodes[1].innerHTML.replace(/\r\n/g,""));
-							else
-								doh.assertEqual('<div class="mblListItemTextBox"><span>External View #3 (sync)</span></div><div class="mblDomButtonArrow mblRightButton mblDomButton"><div><div><div><div></div></div></div></div></div>', demoWidget.domNode.childNodes[1].innerHTML.replace(/\r\n/g,""));
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('External View #3 (sync)', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_3");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[0].className);
-							doh.assertEqual('mblRightText', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Video', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('Off', dojo.isFF ==3.6 ? demoWidget.domNode.childNodes[0].childNodes[3].childNodes[0].innerHTML : demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_4");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Maps', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('VPN', dojo.isFF ==3.6 ? demoWidget.domNode.childNodes[0].childNodes[3].childNodes[0].innerHTML : demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_5");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
 							doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Jack Coleman', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_6");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Sounds', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_7");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Brightness', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_8");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Wallpaper', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_9");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonBluePlus mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonBluePlus mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('XX Widget', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_10");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonRedMinus mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonRedMinus mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('YY Widget', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_11");
 							doh.assertEqual('mblListItem mblVariableHeight', demoWidget.domNode.className);
 							doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('A', demoWidget.domNode.childNodes[0].nodeName);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[0].className);
-							doh.assertEqual('mblDomButtonCheckboxOff mblRightButton mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonCheckboxOff mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Use wireless networks', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_12");
 							doh.assertEqual('mblListItem mblVariableHeight', demoWidget.domNode.className);
 							doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('A', demoWidget.domNode.childNodes[0].nodeName);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[0].className);
-							doh.assertEqual('mblCheckOnButton mblRightButton', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Use GPS satellites', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 
 							demoWidget = dijit.byId("dojox_mobile_ListItem_13");
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
 							doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('A', demoWidget.domNode.childNodes[0].nodeName);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Set unlock pattern', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 								
 							}));
 							return d;
@@ -139,17 +224,15 @@
 							doh.assertTrue(demoWidget.get("anchorLabel"));
 							doh.assertEqual("Value Changed", demoWidget.get("rightText"));
 
-							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							if(dojo.isIE)
-								doh.assertEqual('<SPAN>External View #1 (sync) </SPAN>', demoWidget.domNode.childNodes[1].childNodes[0].innerHTML.replace(/\r\n/g,""));
-							else
-								doh.assertEqual('<span>External View #1 (sync)</span>', demoWidget.domNode.childNodes[1].childNodes[0].innerHTML.replace(/\r\n/g,""));
-							doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
-							doh.assertEqual('mblRightText', demoWidget.domNode.childNodes[1].childNodes[2].className);
-							doh.assertEqual('Value Changed', demoWidget.domNode.childNodes[1].childNodes[2].innerHTML);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('External View #1 (sync)', dojo.trim(demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('Value Changed', dojo.isFF ==3.6 ? demoWidget.domNode.childNodes[0].childNodes[3].childNodes[0].innerHTML : demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
 						}
 					},
 					{
@@ -168,13 +251,16 @@
 							doh.assertEqual(1600, demoWidget.get("_duration"));
 							doh.assertEqual("Value Changed", demoWidget.get("label"));
 
-							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
-							doh.assertTrue(demoWidget.domNode.childNodes[0].src.search(/i-icon-4.png/i) != -1);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
-							doh.assertEqual('<span>Value Changed</span>', demoWidget.domNode.childNodes[1].childNodes[0].innerHTML.replace(/\r\n/g,""));
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].childNodes[0].className);
+							doh.assertEqual('mblListItemRightIcon', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblListItemRightIcon2', demoWidget.domNode.childNodes[0].childNodes[2].className);
+							doh.assertEqual('mblListItemRightText', demoWidget.domNode.childNodes[0].childNodes[3].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('DIV', demoWidget.domNode.childNodes[0].childNodes[4].tagName);
+							doh.assertEqual('Value Changed', dojo.trim(dojo.isFF ==3.6 ? demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].childNodes[0].innerHTML : demoWidget.domNode.childNodes[0].childNodes[4].childNodes[0].innerHTML));
+							doh.assertEqual('', demoWidget.domNode.childNodes[0].childNodes[3].innerHTML);
+							doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/i-icon-4.png/i) != -1);
 						}
 					},
 					{
@@ -189,16 +275,18 @@
 							doh.assertEqual("fade", demoWidget.get("transition"));
 
 							doh.assertEqual('mblListItem', demoWidget.domNode.className);
-							doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
 							
-//							doh.assertEqual('rect(0px 145px 29px 116px)', demoWidget.domNode.childNodes[0].style.clip);
-							doh.assertEqual('7px', demoWidget.domNode.childNodes[0].style.top);
-//							doh.assertEqual('-108px', demoWidget.domNode.childNodes[0].style.left);
+//							doh.assertEqual('rect(0px 145px 29px 116px)', demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].style.clip);
+//							doh.assertEqual('0px', demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].style.top);
+//							doh.assertEqual('-108px', demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].style.left);
 							
-							doh.assertTrue(demoWidget.domNode.childNodes[0].src.search(/i-icon-all.png/i) != -1);
-							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[1].className);
-							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[1].childNodes[0].className);
-							doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							if(!dojo.isIE) {
+								doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/i-icon-all.png/i) != -1);
+							}
+							doh.assertEqual('mblListItemAnchor', demoWidget.domNode.childNodes[0].className);
+							doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[4].className);
+							doh.assertEqual('mblDomButtonArrow mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
 						}
 					},
 					{
@@ -221,7 +309,7 @@
 						runTest: function(){
 							var demoWidget = dijit.byId("dojox_mobile_ListItem_9");
 							demoWidget.set({btnClass:"mblDomButtonRedMinus"});
-							doh.assertEqual('mblRightButton mblDomButton mblDomButtonRedMinus', demoWidget.domNode.childNodes[1].childNodes[1].className);
+							doh.assertEqual('mblDomButtonRedMinus mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
 //							doh.assertEqual("mblDomButtonRedMinus", demoWidget.get("btnClass"));
 						}
 					},
@@ -232,7 +320,7 @@
 							var demoWidget = dijit.byId("dojox_mobile_ListItem_11");
 							demoWidget.set({btnClass:"mblDomButtonCheckboxOn"});
 
-							doh.assertEqual('mblRightButton mblDomButton mblDomButtonCheckboxOn', demoWidget.domNode.childNodes[0].childNodes[1].className);
+							doh.assertEqual('mblDomButtonCheckboxOn mblDomButton', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].className);
 //							doh.assertEqual("mblDomButtonCheckboxOn", demoWidget.get("btnClass"));
 						}
 					}
@@ -267,7 +355,7 @@
 					    See location in applications (such as Maps) using wireless networks
 				    </div>
 			    </li>
-			    <li class="mblVariableHeight" dojoType="dojox.mobile.ListItem" btnClass="mblCheckOnButton">
+			    <li class="mblVariableHeight" dojoType="dojox.mobile.ListItem" btnClass="mblDomButtonCheckboxOn">
 				    Use GPS satellites
 				    <div class="mblListItemSubText">
 					    When locating, accurate to street level (uncheck to conserve battery)

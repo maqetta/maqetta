@@ -1,4 +1,11 @@
-define(["dojo"], function(dojo){
+define([
+	"dojo/_base/kernel", // dojo.config.blankGif
+	"dojo/_base/html", // dojo.addClass dojo.create dojo.getComputedStyle
+	"dojo/ready", // dojo.ready
+	"dojo/_base/sniff", // dojo.isIE dojo.isMoz
+	"dojo/_base/url", // dojo.moduleUrl
+	"dojo/_base/window" // dojo.body
+], function(dojo){
 
 	// module:
 	//		dijit/hccss

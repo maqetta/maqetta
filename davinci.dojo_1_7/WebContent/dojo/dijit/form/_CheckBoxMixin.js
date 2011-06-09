@@ -1,4 +1,10 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html" // dojo.attr
+], function(dojo, dijit){
 	// module:
 	//		dijit/form/_CheckBoxMixin
 	// summary:

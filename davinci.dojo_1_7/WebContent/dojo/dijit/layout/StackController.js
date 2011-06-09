@@ -1,11 +1,19 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	"..",
 	"../_Widget",
 	"../_TemplatedMixin",
 	"../_Container",
 	"../form/ToggleButton",
-	"dojo/i18n!../nls/common"], function(dojo, dijit){
+	"../focus",		// dijit.focus()
+	"dojo/i18n!../nls/common",
+	"dojo/_base/array", // dojo.forEach dojo.indexOf dojo.map
+	"dojo/_base/connect", // dojo.keys
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff" // dojo.isIE
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/layout/StackController
@@ -34,11 +42,6 @@ define([
 			this.pane2button = {};		// mapping from pane id to buttons
 			this.pane2connects = {};	// mapping from pane id to this.connect() handles
 			this.pane2watches = {};		// mapping from pane id to watch() handles
-		},
-
-		buildRendering: function(){
-			this.inherited(arguments);
-			dijit.setWaiRole(this.domNode, "tablist");	// TODO: unneeded?   it's in template above.
 		},
 
 		postCreate: function(){
@@ -92,7 +95,7 @@ define([
 				closeButton: page.closable,
 				title: page.tooltip
 			});
-			dijit.setWaiState(button.focusNode,"selected", "false");
+			button.focusNode.setAttribute("aria-selected", "false");
 
 
 			// map from page attribute to corresponding tab button attribute
@@ -117,7 +120,7 @@ define([
 			page.controlButton = button;	// this value might be overwritten if two tabs point to same container
 			if(!this._currentChild){ // put the first child into the tab order
 				button.focusNode.setAttribute("tabIndex", "0");
-				dijit.setWaiState(button.focusNode, "selected", "true");
+				button.focusNode.setAttribute("aria-selected", "true");
 				this._currentChild = page;
 			}
 			// make sure all tabs have the same length
@@ -161,17 +164,17 @@ define([
 			if(this._currentChild){
 				var oldButton=this.pane2button[this._currentChild.id];
 				oldButton.set('checked', false);
-				dijit.setWaiState(oldButton.focusNode, "selected", "false");
+				oldButton.focusNode.setAttribute("aria-selected", "false");
 				oldButton.focusNode.setAttribute("tabIndex", "-1");
 			}
 
 			var newButton=this.pane2button[page.id];
 			newButton.set('checked', true);
-			dijit.setWaiState(newButton.focusNode, "selected", "true");
+			newButton.focusNode.setAttribute("aria-selected", "true");
 			this._currentChild = page;
 			newButton.focusNode.setAttribute("tabIndex", "0");
 			var container = dijit.byId(this.containerId);
-			dijit.setWaiState(container.containerNode, "labelledby", newButton.id);
+			container.containerNode.setAttribute("aria-labelledby", newButton.id);
 		},
 
 		onButtonClick: function(/*dijit._Widget*/ page){
@@ -307,7 +310,7 @@ define([
 
 		buildRendering: function(/*Event*/ evt){
 			this.inherited(arguments);
-			dijit.setWaiRole((this.focusNode || this.domNode), "tab");
+			(this.focusNode || this.domNode).setAttribute("role", "tab");
 		},
 
 		onClick: function(/*Event*/ evt){

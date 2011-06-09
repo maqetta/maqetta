@@ -1,4 +1,11 @@
-define(["dojo", "..", "./HorizontalRule"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"./HorizontalRule",
+	"dojo/_base/NodeList", // .map
+	"dojo/number", // dojo.number.format
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/HorizontalRuleLabels

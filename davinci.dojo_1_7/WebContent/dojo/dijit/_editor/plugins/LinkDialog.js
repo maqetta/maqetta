@@ -1,5 +1,5 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"../..",
 	"../../_Widget",
 	"../_Plugin",
@@ -8,10 +8,16 @@ define([
 	"../../form/ValidationTextBox",
 	"../../form/Select",
 	"../range",
-	"dojo/i18n",
-	"dojo/string",
+	"dojo/i18n", // dojo.i18n.getLocalization
+	"dojo/string", // dojo.string.substitute
 	"dojo/i18n!../../nls/common",
-	"dojo/i18n!../nls/LinkDialog"], function(dojo, dijit){
+	"dojo/i18n!../nls/LinkDialog",
+	"dojo/_base/connect", // dojo.keys.ENTER
+	"dojo/_base/html", // dojo.attr
+	"dojo/_base/lang", // dojo.delegate dojo.hitch dojo.trim
+	"dojo/_base/sniff", // dojo.isIE
+	"dojo/_base/window" // dojo.withGlobal
+], function(dojo, dijit){
 
 // module:
 //		dijit/_editor/plugins/LinkDialog
@@ -135,6 +141,17 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 			// Function over-ride of isValid to test if the input matches a url or a mailto style link.
 			var value = this._urlInput.get("value");
 			return this._urlRegExp.test(value) || this._emailRegExp.test(value);
+		});
+		
+		// Listen for enter and execute if valid.
+		this.connect(dropDown.domNode, "onkeypress", function(e){
+			if(e && e.charOrCode == dojo.keys.ENTER && 
+				!e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey){
+				if(!this._setButton.get("disabled")){
+					dropDown.onExecute();
+					dropDown.execute(dropDown.get('value'));
+				}
+			}
 		});
 
 		this._connectTagEvents();

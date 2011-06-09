@@ -1,7 +1,6 @@
 define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], function(dojo, dojox) {
 
 // This is an abstract data store module for adding updateable result set functionality to an existing data store class
-(function(){
 	var cf;
 	var addUpdate = function(store,create,remove){
 		// create a handler that adds to the list of notifications
@@ -20,29 +19,29 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 			constructor: function(){
 				// summary:
 				//		This is an abstract class that data stores can extend to add updateable result set functionality
-				// 		as well as client side querying capabilities. This enables
+				//		as well as client side querying capabilities. This enables
 				//		widgets to be aware of how active results change in response to the modifications/notifications.
 				//
 				//	description:
 				//		To a update a result set after a notification (onNew, onSet, and onDelete),
-				// 		widgets can call the updateResultSet method. Widgets can use the updated
+				//		widgets can call the updateResultSet method. Widgets can use the updated
 				//		result sets to determine how to react to notifications, and how to update their displayed results
 				//		based on changes.
 				//
-				// 		This module will use the best available information to update result sets, using query attribute
-				// 		objects to determine if items are in a result set, and using the sort arrays to maintain sort
-				// 		information. However, queries can be opaque strings, and this module can not update
-				// 		results by itself in this case. In this situations, data stores can provide a isUpdateable(request) function
-				// 		and matchesQuery(item,request) function. If a data store can handle a query, it can return true from
-				// 		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is
+				//		This module will use the best available information to update result sets, using query attribute
+				//		objects to determine if items are in a result set, and using the sort arrays to maintain sort
+				//		information. However, queries can be opaque strings, and this module can not update
+				//		results by itself in this case. In this situations, data stores can provide a isUpdateable(request) function
+				//		and matchesQuery(item,request) function. If a data store can handle a query, it can return true from
+				//		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is
 				//		definition of isUpdateable and matchesQuery
-				// 		isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
-				// 		matchesQuery(item,request) - item is the item to test, and request is the value arguments object
+				//		isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
+				//		matchesQuery(item,request) - item is the item to test, and request is the value arguments object
 				//				for the fetch function.
 				//
 				//		You can define a property on this object instance "cacheByDefault" to a value of true that will
-				// 		cause all queries to be cached by default unless the cache queryOption is explicitly set to false.
-				// 		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes.
+				//		cause all queries to be cached by default unless the cache queryOption is explicitly set to false.
+				//		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes.
 				//
 				// example:
 				//		to make a updated-result-set data store from an existing data store:
@@ -114,9 +113,9 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 				//	summary:
 				//		Determines whether the provided arguments are super/sub sets of each other
 				// argsSuper:
-				// 		Dojo Data Fetch arguments
+				//		Dojo Data Fetch arguments
 				// argsSub:
-				// 		Dojo Data Fetch arguments
+				//		Dojo Data Fetch arguments
 				if(argsSuper.query == argsSub.query){
 					return {};
 				}
@@ -263,7 +262,7 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 			},
 			makeComparator: function(sort){
 				//	summary:
-				// 		returns a comparator function for the given sort order array
+				//		returns a comparator function for the given sort order array
 				//	sort:
 				//		See dojox.data.api.Read.fetch
 				var current = sort.shift();
@@ -289,7 +288,6 @@ define("dojox/data/ClientFilter", ["dojo", "dojox", "dojo/data/util/filter"], fu
 		}
 	);
 	cf.onUpdate = function(){};
-})();
 
-return dojox.data.ClientFilter;
+	return dojox.data.ClientFilter;
 });

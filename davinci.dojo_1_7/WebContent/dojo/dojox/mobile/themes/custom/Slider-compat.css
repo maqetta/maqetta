@@ -19,10 +19,13 @@
 }
 .mblSliderProgressBar {
 	background-image: url(compat/ui-widget-bg.png);
+	background-repeat: repeat-x;
 	-moz-border-radius: 8px;
 	-o-border-radius: 8px;
 	-ms-border-radius: 8px; 
 	border-radius: 8px;
+	_background-image: url(compat/slider-h-bar-bg.png); /* IE6 hack */
+	_background-color: transparent; /* IE6 hack */
 }
 .mblSliderV .mblSliderProgressBar {
 	background: #0D48A8;

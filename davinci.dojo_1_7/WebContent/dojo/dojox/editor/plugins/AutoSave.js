@@ -1,4 +1,4 @@
-define("dojox/editor/plugins/AutoSave", ["dojo", "dijit", "dojox", "dojo/string", "dojo/date/locale", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dijit/Dialog", "dijit/MenuItem", "dijit/Menu", "dijit/form/Button", "dijit/form/ComboButton", "dijit/form/ComboBox", "dijit/form/TextBox", "dijit/TooltipDialog", "dijit/_editor/_Plugin", "dijit/form/Button", "dojo/i18n", "dojox/editor/plugins/Save", "dojo/i18n!dojox/editor/plugins/nls/AutoSave"], function(dojo, dijit, dojox) {
+define("dojox/editor/plugins/AutoSave", ["dojo", "dijit", "dojox", "dojo/string", "dojo/date/locale", "dijit/_base/popup", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dijit/Dialog", "dijit/MenuItem", "dijit/Menu", "dijit/form/Button", "dijit/form/ComboButton", "dijit/form/ComboBox", "dijit/form/TextBox", "dijit/TooltipDialog", "dijit/_editor/_Plugin", "dijit/form/Button", "dojo/i18n", "dojox/editor/plugins/Save", "dojo/i18n!dojox/editor/plugins/nls/AutoSave"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.AutoSave");
 

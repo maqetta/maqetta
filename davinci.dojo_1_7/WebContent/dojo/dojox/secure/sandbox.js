@@ -2,6 +2,7 @@ dojo.provide("dojox.secure.sandbox");
 dojo.require("dojox.secure.DOM");
 dojo.require("dojox.secure.capability");
 dojo.require("dojo.NodeList-fx");
+dojo.require("dojo._base.url");
 
 (function() {
 	var oldTimeout = setTimeout;
@@ -173,7 +174,7 @@ dojo.require("dojo.NodeList-fx");
 					proto = new F;
 				}
 			}
-	
+
 			if(arg) { // the next object should be the properties
 				// apply binding checking on all the functions
 				for (var j in arg) {
@@ -238,7 +239,7 @@ dojo.require("dojo.NodeList-fx");
 			//if(!alreadyValidated) {
 			dojox.secure.capability.validate(script,safeCalls, // the safe dojo library and standard operators
 											{document:1,element:1}); // these are secured DOM starting points
-		
+
 			//}
 			if(script.match(/^\s*[\[\{]/)) {
 				var result = eval('(' + script + ')');
@@ -270,7 +271,7 @@ dojo.require("dojo.NodeList-fx");
 				//
 				//	url:
 				//		The url of the web page to load
-				
+
 				wrap.rootUrl = url;
 				return xhrGet({url:url,secure:true}).addCallback(function(result){
 					element.innerHTML = result;

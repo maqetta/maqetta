@@ -4,6 +4,7 @@ dojo.experimental("dojox.mobile.app._FormWidget");
 dojo.require("dojo.window");
 
 dojo.require("dijit._WidgetBase");
+dojo.require("dijit.focus");	// dijit.focus()
 
 dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 	// summary:

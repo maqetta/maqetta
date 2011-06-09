@@ -1,4 +1,4 @@
-define("dojox/calc/FuncGen", ["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/form/ComboBox", "dijit/form/SimpleTextarea", "dijit/form/Button", "dojo/data/ItemFileWriteStore"], function(dojo) {
+define(["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/form/ComboBox", "dijit/form/SimpleTextarea", "dijit/form/Button", "dojo/data/ItemFileWriteStore"], function(dojo) {
 
 dojo.experimental("dojox.calc.FuncGen");
 

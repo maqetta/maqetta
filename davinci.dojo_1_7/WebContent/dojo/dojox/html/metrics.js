@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","dojo/_base/window"],function(dojo,window){
+define(["dojo/_base/kernel", "dojo/_base/window", "dojo/_base/lang", "dojo/_base/html"],function(dojo,window){
 	var dhm = dojo.getObject("html.metrics",true,dojox);
 
 	//	derived from Morris John's emResized measurer

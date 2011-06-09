@@ -1,7 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
-	"dojo/store/Memory"], function(dojo, dijit){
+	"dojo/store/Memory", // dojo.store.Memory
+	"dojo/_base/NodeList", // .map
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.byId
+	"dojo/_base/lang", // dojo.trim
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/DataList

@@ -1,4 +1,4 @@
-define(["dojo/_base/array", "./_base"], function(dojo, dxc){
+define(["dojo/_base/kernel", "dojo/_base/array", "./_base"], function(dojo, darray, dxc){
 /*=====
 var dxc = dojox.collections;
 =====*/

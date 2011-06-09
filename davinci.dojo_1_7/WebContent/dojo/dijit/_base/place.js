@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"../place",
-	"dojo/window"], function(dojo, dijit, place){
+	"dojo/window", // dojo.window.getBox
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/lang" // dojo.isArray
+], function(dojo, dijit, place){
 
 	// module:
 	//		dijit/_base/place

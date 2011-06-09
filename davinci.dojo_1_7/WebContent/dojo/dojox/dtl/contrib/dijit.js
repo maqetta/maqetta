@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","../dom","dojo/parser"], function(dojo,dd){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base","../dom","dojo/parser"], function(dojo,lang,dd){
 	dojo.getObject("dtl.contrib.dijit", true, dojox);
 
 	var ddcd = dd.contrib.dijit;

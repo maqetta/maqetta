@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Round Rect List</title>
-		<link href="../../themes/iphone/iphone.css" rel="stylesheet"></link>
+		<link href="../../themes/iphone/iphone.css" rel="stylesheet">
 
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -56,46 +56,55 @@
 								doh.assertEqual('mblRoundRectList', demoWidget.domNode.className);
 
 								demoWidget = dijit.byId("item1");
-								childNodes = demoWidget.domNode.childNodes;
-								doh.assertEqual('mblListItemIcon', childNodes[0].className);
-								doh.assertEqual('mblListItemAnchor', childNodes[1].className);
-								doh.assertEqual('A', childNodes[1].tagName);
+								var childNodes = demoWidget.domNode.childNodes;
+								doh.assertEqual('mblListItemAnchor', childNodes[0].className);
+								doh.assertEqual('A', childNodes[0].tagName);
 								
-								childNodes = childNodes[1].childNodes;
-								doh.assertEqual('mblListItemTextBox', childNodes[0].className);
-								doh.assertEqual('mblRightText', childNodes[1].className);
-								doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', childNodes[2].className);
-								doh.assertEqual('DIV', childNodes[2].tagName);
-								doh.assertEqual('<span>u1space</span>', childNodes[0].innerHTML);
-								doh.assertEqual('Off', childNodes[1].innerHTML);
+								childNodes = childNodes[0].childNodes;
+								doh.assertEqual('mblListItemIcon', childNodes[0].className);
+								doh.assertEqual('mblListItemRightIcon', childNodes[1].className);
+								doh.assertEqual('mblListItemRightIcon2', childNodes[2].className);
+								doh.assertEqual('mblListItemRightText', childNodes[3].className);
+								doh.assertEqual('mblListItemTextBox', childNodes[4].className);
+								doh.assertEqual('mblDomButtonArrow mblDomButton', childNodes[1].childNodes[0].className);
+								doh.assertEqual('DIV', childNodes[4].tagName);
+								doh.assertEqual('mblListItemLabel', dojo.trim(childNodes[4].className));
+								doh.assertEqual('u1space', dojo.trim(childNodes[4].childNodes[0].innerHTML));
+								doh.assertEqual('Off', dojo.isFF ==3.6 ? childNodes[3].childNodes[0].innerHTML : childNodes[3].innerHTML);
 
 								demoWidget = dijit.byId("item2");
-								childNodes = demoWidget.domNode.childNodes;
-								doh.assertEqual('mblListItemIcon', childNodes[0].className);
-								doh.assertEqual('mblListItemAnchor', childNodes[1].className);
-								doh.assertEqual('A', childNodes[1].tagName);
+								var childNodes = demoWidget.domNode.childNodes;
+								doh.assertEqual('mblListItemAnchor', childNodes[0].className);
+								doh.assertEqual('A', childNodes[0].tagName);
 								
-								childNodes = childNodes[1].childNodes;
-								doh.assertEqual('mblListItemTextBox', childNodes[0].className);
-								doh.assertEqual('mblRightText', childNodes[1].className);
-								doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', childNodes[2].className);
-								doh.assertEqual('DIV', childNodes[2].tagName);
-								doh.assertEqual('<span>u2space</span>', childNodes[0].innerHTML);
-								doh.assertEqual('On', childNodes[1].innerHTML);
+								childNodes = childNodes[0].childNodes;
+								doh.assertEqual('mblListItemIcon', childNodes[0].className);
+								doh.assertEqual('mblListItemRightIcon', childNodes[1].className);
+								doh.assertEqual('mblListItemRightIcon2', childNodes[2].className);
+								doh.assertEqual('mblListItemRightText', childNodes[3].className);
+								doh.assertEqual('mblListItemTextBox', childNodes[4].className);
+								doh.assertEqual('mblDomButtonArrow mblDomButton', childNodes[1].childNodes[0].className);
+								doh.assertEqual('DIV', childNodes[4].tagName);
+								doh.assertEqual('mblListItemLabel', dojo.trim(childNodes[4].className));
+								doh.assertEqual('u2space', dojo.trim(childNodes[4].childNodes[0].innerHTML));
+								doh.assertEqual('On', dojo.isFF ==3.6 ? childNodes[3].childNodes[0].innerHTML : childNodes[3].innerHTML);
 
 								demoWidget = dijit.byId("item3");
-								childNodes = demoWidget.domNode.childNodes;
+								var childNodes = demoWidget.domNode.childNodes;
 								doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', childNodes[0].className);
 								doh.assertEqual('A', childNodes[0].tagName);
 								
 								childNodes = childNodes[0].childNodes;
-								doh.assertEqual('mblListItemTextBox', childNodes[0].className);
-								doh.assertEqual('mblRightText', childNodes[1].className);
-								doh.assertEqual('<span>Wi-Fi</span>', childNodes[0].innerHTML);
-								doh.assertEqual('Off', childNodes[1].innerHTML);
-								doh.assertTrue(childNodes[2]);
-								doh.assertEqual('mblDomButtonArrow mblRightButton mblDomButton', childNodes[2].className);
-								doh.assertEqual('DIV', childNodes[2].tagName);
+								doh.assertEqual('mblListItemIcon', childNodes[0].className);
+								doh.assertEqual('mblListItemRightIcon', childNodes[1].className);
+								doh.assertEqual('mblListItemRightIcon2', childNodes[2].className);
+								doh.assertEqual('mblListItemRightText', childNodes[3].className);
+								doh.assertEqual('mblListItemTextBox', childNodes[4].className);
+//								doh.assertEqual('mblDomButtonArrow mblDomButton', childNodes[1].childNodes[0].className);
+								doh.assertEqual('DIV', childNodes[4].tagName);
+								doh.assertEqual('mblListItemLabel', dojo.trim(childNodes[4].className));
+								doh.assertEqual('Wi-Fi', dojo.trim(childNodes[4].childNodes[0].innerHTML));
+								doh.assertEqual('Off', dojo.isFF ==3.6 ? childNodes[3].childNodes[0].innerHTML : childNodes[3].innerHTML);
 								
 							}));
 							return d;
@@ -106,41 +115,59 @@
 						timeout: 1000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var e = document.createEvent('Events');
-							e.initEvent('click', true, true);
-							var demoWidget = dijit.byId("item2");
-							demoWidget.anchorNode.dispatchEvent(e);
+							var demoWidget = dijit.byId("dojox_mobile_RoundRectList_0");
+							demoWidget.set({transition :"flip"});
+							doh.assertEqual("flip", demoWidget.get("transition"));
+							demoWidget.set({transition :"fade"});
+							doh.assertEqual("fade", demoWidget.get("transition"));
+
+							demoWidget = dijit.byId("item3");
+							if(dojo.isIE){
+								demoWidget.anchorNode.fireEvent( "onclick" );
+							}else{
+								var e = document.createEvent('Events');
+								e.initEvent('click', true, true);
+								demoWidget.anchorNode.dispatchEvent(e);
+							}
 							setTimeout(d.getTestCallback(function(){
 
 								var demoWidget = dijit.byId("dojox_mobile_RoundRectCategory_0");
 								doh.assertEqual('mblRoundRectCategory', demoWidget.domNode.className);
-								doh.assertEqual('Applications', demoWidget.domNode.innerHTML);
+								doh.assertEqual('Applications', dojo.trim(demoWidget.domNode.innerHTML));
 
 								demoWidget = dijit.byId("dojox_mobile_RoundRectList_1");
 								doh.assertEqual('mblRoundRectList', demoWidget.domNode.className);
 
 								demoWidget = dijit.byId("dojox_mobile_ListItem_0");
-								childNodes = demoWidget.domNode.childNodes;
+								var childNodes = demoWidget.domNode.childNodes;
 								doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', childNodes[0].className);
 								doh.assertEqual('A', childNodes[0].tagName);
 								
 								childNodes = childNodes[0].childNodes;
-								doh.assertEqual('mblListItemTextBox', childNodes[0].className);
-								doh.assertEqual('mblRightText', childNodes[1].className);
-								doh.assertEqual('<span>Video</span>', childNodes[0].innerHTML);
-								doh.assertEqual('Off', childNodes[1].innerHTML);
+								doh.assertEqual('mblListItemIcon', childNodes[0].className);
+								doh.assertEqual('mblListItemRightIcon', childNodes[1].className);
+								doh.assertEqual('mblListItemRightIcon2', childNodes[2].className);
+								doh.assertEqual('mblListItemRightText', childNodes[3].className);
+								doh.assertEqual('mblListItemTextBox', childNodes[4].className);
+//								doh.assertEqual('mblDomButtonArrow mblDomButton', childNodes[1].childNodes[0].className);
+								doh.assertEqual('mblListItemLabel', dojo.trim(childNodes[4].className));
+								doh.assertEqual('Video', dojo.trim(childNodes[4].childNodes[0].innerHTML));
+								doh.assertEqual('Off', dojo.isFF ==3.6 ? childNodes[3].childNodes[0].innerHTML : childNodes[3].innerHTML);
 
 								demoWidget = dijit.byId("dojox_mobile_ListItem_1");
 								childNodes = demoWidget.domNode.childNodes;
-								doh.assertEqual('mblListItemIcon', childNodes[0].className);
-								doh.assertEqual('mblListItemAnchor', childNodes[1].className);
-								doh.assertEqual('A', childNodes[1].tagName);
+								doh.assertEqual('mblListItemAnchor', childNodes[0].className);
+								doh.assertEqual('A', childNodes[0].tagName);
 								
-								childNodes = childNodes[1].childNodes;
-								doh.assertEqual('mblListItemTextBox', childNodes[0].className);
-								doh.assertEqual('mblRightText', childNodes[1].className);
-								doh.assertEqual('<span>Maps</span>', childNodes[0].innerHTML);
-								doh.assertEqual('VPN', childNodes[1].innerHTML);
+								childNodes = childNodes[0].childNodes;
+								doh.assertEqual('mblListItemIcon', childNodes[0].className);
+								doh.assertEqual('mblListItemRightIcon', childNodes[1].className);
+								doh.assertEqual('mblListItemRightIcon2', childNodes[2].className);
+								doh.assertEqual('mblListItemRightText', childNodes[3].className);
+								doh.assertEqual('mblListItemTextBox', childNodes[4].className);
+								doh.assertEqual('mblListItemLabel', dojo.trim(childNodes[4].className));
+								doh.assertEqual('Maps', dojo.trim(childNodes[4].childNodes[0].innerHTML));
+								doh.assertEqual('VPN', dojo.isFF ==3.6 ? childNodes[3].childNodes[0].innerHTML : childNodes[3].innerHTML);
 
 								demoWidget = dijit.byId("dojox_mobile_ListItem_2");
 								childNodes = demoWidget.domNode.childNodes;
@@ -148,11 +175,15 @@
 								doh.assertEqual('A', childNodes[0].tagName);
 								
 								childNodes = childNodes[0].childNodes;
-								doh.assertEqual('mblListItemTextBox', childNodes[0].className);
-								doh.assertEqual('mblRightText', childNodes[1].className);
-								doh.assertEqual('<span>Phone Number</span>', childNodes[0].innerHTML);
-								doh.assertEqual('Off', childNodes[1].innerHTML);
-							}));
+								doh.assertEqual('mblListItemIcon', childNodes[0].className);
+								doh.assertEqual('mblListItemRightIcon', childNodes[1].className);
+								doh.assertEqual('mblListItemRightIcon2', childNodes[2].className);
+								doh.assertEqual('mblListItemRightText', childNodes[3].className);
+								doh.assertEqual('mblListItemTextBox', childNodes[4].className);
+								doh.assertEqual('mblListItemLabel', dojo.trim(childNodes[4].className));
+								doh.assertEqual('Phone Number', dojo.trim(childNodes[4].childNodes[0].innerHTML));
+								doh.assertEqual('Off', dojo.isFF ==3.6 ? childNodes[3].childNodes[0].innerHTML : childNodes[3].innerHTML);
+							}),500);
 							return d;
 						}
 					},

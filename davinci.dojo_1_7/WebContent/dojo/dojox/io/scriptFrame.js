@@ -1,5 +1,5 @@
 define(["dojo/_base/html", "dojo/io/script", "dojo/io/iframe"], function(dojo, ioScript, iframe){
-
+	dojo.deprecated("dojox.io.scriptFrame", "dojo.io.script now supports parallel requests without dojox.io.scriptFrame", "2.0");
 	dojo.getObject("io.scriptFrame", true, dojox);
 
 //This module extends dojo.io.script to use an iframe for the dojo.io.script.attach calls

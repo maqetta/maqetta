@@ -126,7 +126,7 @@
 								placeholder="Telephone" ref="'rel:Tel'"/>
 						</div>
 					</div>
-				</div>		   
+				</div>
 			<div class="spacer"></div>
 			<button id="add" type="button" dojoType="dojox.mobile.Button" class="mblBlueButton" onclick="insertResult(nextIndexToAdd)">Add</button>
 			<button id="save" type="button" dojoType="dojox.mobile.Button" class="mblBlueButton" onclick="console.log(repeatmodel[selectedIndex].toPlainObject());repeatmodel[selectedIndex].commit()">Save</button>
@@ -136,16 +136,15 @@
 	</div>
 
 	<div id="generate" data-dojo-type="dojox.mobile.ScrollableView">
-	<h1 data-dojo-type="dojox.mobile.Heading" back="Home" moveTo="foo">Simple Form Generate Example</h1>
-	<div class="field-title"></div>
-		<div id="main">
-		  <div id="leftNav">
-		  </div>
-		  <div id="mainContent" class="generate-maincontent">
-			<div id="outerModelArea">
-				<h3 data-dojo-type="dojox.mobile.RoundRectCategory">Model</h3>
-				<div class="generate-textarea-row">
-					<textarea class="generate-textarea-cell" data-dojo-type="dojox.mobile.TextArea" id="modelArea">
+		<h1 data-dojo-type="dojox.mobile.Heading" back="Home" moveTo="foo">Simple Form Generate Example</h1>
+		<div class="field-title"></div>
+			<div id="main">
+				<div id="leftNav"></div>
+				<div id="mainContent" class="generate-maincontent">
+					<div id="outerModelArea">
+						<h3 data-dojo-type="dojox.mobile.RoundRectCategory">Model</h3>
+						<div class="generate-textarea-row">
+							<textarea class="generate-textarea-cell" data-dojo-type="dojox.mobile.TextArea" id="modelArea">
 {
 	"Serial": "11111",
 	"First": "John",
@@ -160,21 +159,23 @@
 		}
 	]
 }
-					</textarea>
-				</div>
-				<div class="fieldset">
-					<div class="spacer"></div>
-					<button id="generate1" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton" onclick="updateView()">Generate Form</button>
-				</div>
-			</div>
-			<div id="viewArea" style="display:none">
-				<h3 data-dojo-type="dojox.mobile.RoundRectCategory">Generated View</h3>
-				<div class="fieldset">
-					<div id="view" data-dojo-type="dojox.mvc.Generate" data-dojo-props="widgetMapping:{'String' : 'dojox.mobile.TextBox'}, idNameMapping:{'String' : 'TB'}"></div>
-				</div>
-				<div class="fieldset">
-					<div class="spacer"></div>
-					<button id="updateModel" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton" onclick="updateModel()">Update Model</button>
+							</textarea>
+						</div>
+						<div class="fieldset">
+							<div class="spacer"></div>
+							<button id="generate1" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton" onclick="updateView()">Generate Form</button>
+						</div>
+					</div>
+					<div id="viewArea" style="display:none">
+						<h3 data-dojo-type="dojox.mobile.RoundRectCategory">Generated View</h3>
+							<div class="fieldset">
+							<div id="view" data-dojo-type="dojox.mvc.Generate" data-dojo-props="widgetMapping:{'String' : 'dojox.mobile.TextBox'}, idNameMapping:{'String' : 'TB'}"></div>
+						</div>
+						<div class="fieldset">
+							<div class="spacer"></div>
+							<button id="updateModel" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton" onclick="updateModel()">Update Model</button>
+						</div>
+					</div>
 				</div>
 			</div>
 					<textarea style="display:none" data-dojo-type="dojox.mobile.TextArea" id="modelArea2">
@@ -196,9 +197,6 @@
 					</textarea>
 			
 		  </div>
-		</div></div>
-		
-		
 		
 	</body>
 </html>

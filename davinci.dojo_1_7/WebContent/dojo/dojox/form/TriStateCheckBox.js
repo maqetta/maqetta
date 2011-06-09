@@ -100,7 +100,7 @@ dojo.declare("dojox.form.TriStateCheckBox",
 			this._stateType = this._getStateType(checked);
 			dojo.attr(this.focusNode || this.domNode, "checked", checked);
 			dojo.attr(this.focusNode, "value", this.stateValues[this._stateType]);
-			dijit.setWaiState(this.focusNode || this.domNode, "checked", checked);
+			(this.focusNode || this.domNode).setAttribute("aria-checked", checked);
 			this._handleOnChange(checked, priorityChange);
 		},
 
@@ -114,7 +114,7 @@ dojo.declare("dojox.form.TriStateCheckBox",
 		_setReadOnlyAttr: function(/*Boolean*/ value){
 			this._set("readOnly", value);
 			dojo.attr(this.focusNode, "readOnly", value);
-			dijit.setWaiState(this.focusNode, "readonly", value);
+			this.focusNode.setAttribute("aria-readonly", value);
 		},
 
 		_setValueAttr: function(/*String|Boolean*/ newValue, /*Boolean*/ priorityChange){

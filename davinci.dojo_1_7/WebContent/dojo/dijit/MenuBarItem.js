@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"dojo/text!./templates/MenuBarItem.html",
-	"./MenuItem"], function(dojo, dijit, template){
+	"./MenuItem",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/MenuBarItem

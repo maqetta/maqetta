@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","dojo/_base/window"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window"], function(dojo){
 
 	/*=====
 	dojo.mixin(djConfig,{

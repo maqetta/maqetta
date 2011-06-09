@@ -1,5 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/connect",
-	 "./Chart2D", "./themes/PlotKit/blue"], function(dojo, declare, dhtml, dconnect, Chart2D){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/connect",
+	 "./Chart2D", "./themes/PlotKit/blue"], 
+	 function(dojo, lang, declare, html, connect, Chart2D, blue){
 
 	dojo.experimental("dojox.charting.DataChart");
 
@@ -111,7 +112,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/
 		//
 		//		chartTheme: dojox.charting.themes.*
 		//			The theme to style the chart. Defaults to PlotKit.blue.
-		chartTheme: dojox.charting.themes.PlotKit.blue,
+		chartTheme: blue,
 		//
 		//		displayRange: Number
 		//			The number of major ticks to show on the xaxis

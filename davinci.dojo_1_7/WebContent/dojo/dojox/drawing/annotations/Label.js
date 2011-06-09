@@ -1,5 +1,7 @@
-dojo.provide("dojox.drawing.annotations.Label");
-dojo.require("dojox.drawing.stencil.Text");
+define([
+	"dojo",
+	"../stencil/Text",
+	"./Angle"], function(dojo){
 
 dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
 	// summary:
@@ -110,3 +112,6 @@ dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
 	}
 
 );
+
+return dojox.drawing.annotations.Label;
+});

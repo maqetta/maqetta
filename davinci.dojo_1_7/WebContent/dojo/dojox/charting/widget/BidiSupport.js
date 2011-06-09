@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/array",  "dojo/_base/connect", "dojo/query",
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/array",  "dojo/_base/connect", "dojo/query",
 	"dijit/_BidiSupport", "../BidiSupport"], 
-	function(dojo, dhtml, darray, dconnect, dquery, dBidi, cBidi){
+	function(dojo, lang, html, array, connect, query, dBidi, cBidi){
 
 	// patch only if present
 	if(dojox.charting.widget.Legend){

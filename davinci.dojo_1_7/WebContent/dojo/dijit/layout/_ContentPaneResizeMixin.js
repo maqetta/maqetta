@@ -1,8 +1,15 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	"..",
 	"../_Contained",
-	"./_LayoutWidget"], function(dojo, dijit){
+	"./_LayoutWidget",
+	"dojo/_base/NodeList", // .filter
+	"dojo/_base/array", // dojo.filter dojo.forEach
+	"dojo/_base/html", // dojo.contentBox dojo.hasAttr dojo.hasClass dojo.marginBox dojo.toggleClass
+	"dojo/_base/sniff", // dojo.isIE
+	"dojo/_base/window", // dojo.global
+	"dojo/query" // dojo.query
+], function(dojo, dijit){
 
 // module:
 //		dijit/layout/_ContentPaneResizeMixin

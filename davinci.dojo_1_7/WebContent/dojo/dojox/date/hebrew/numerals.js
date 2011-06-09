@@ -1,4 +1,4 @@
-define(["dojo/_base/array"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/array"], function(dojo){
 	dojo.getObject("date.hebrew.numerals", true, dojox);
 	dojo.experimental("dojox.date.hebrew.numerals");
 

@@ -1,4 +1,5 @@
-define(["dojo/_base/array","dojo/_base/html","./View","./_ScrollableMixin"], function(darray, dhtml, View,ScrollableMixin){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array","dojo/_base/html","./View","./_ScrollableMixin"],
+	function(dojo, declare, darray, dhtml, View,ScrollableMixin){
 	// module:
 	//		dojox/mobile/ScrollableView
 	// summary:

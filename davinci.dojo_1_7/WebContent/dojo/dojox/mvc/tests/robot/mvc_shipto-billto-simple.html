@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>doh.robot MVC demo-shipto-billto-simple Declarative Test</title>
 
@@ -12,7 +11,7 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
 			djConfig="isDebug: true, parseOnLoad: true"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
+		<script type="text/javascript" src="../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
@@ -89,6 +88,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
+								console.debug("check data "+dijit.byId("streetInput").get('binding').data);
 								doh.is("456 Mountain Rd", dijit.byId("streetInput").get('value'),"streetInput should be set");
 							}), 1000);
 							return d;
@@ -98,5 +98,4 @@
 				doh.run();
 			});
 		</script>
-	</head>
 </html>

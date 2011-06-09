@@ -1,4 +1,8 @@
-define(["dojo", "..", "dojo/window"], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/window" // dojo.window.scrollIntoView
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_ListBase
@@ -19,7 +23,7 @@ dojo.declare( "dijit.form._ListBase", null, {
 	selected: null,
 
 	_getTarget: function(/*Event*/ evt){
-		var tgt = evt.touches ? evt.touches[0].target : evt.target;
+		var tgt = evt.target;
 		var container = this.containerNode;
 		if(tgt == container || tgt == this.domNode){ return null; }
 		while(tgt && tgt.parentNode != container){

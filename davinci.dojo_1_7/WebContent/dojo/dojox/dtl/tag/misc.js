@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","dojo/_base/array","dojo/_base/connect"], function(dojo,dd){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array","dojo/_base/connect"], function(dojo,lang,dd){
 	dojo.getObject("dtl.tag.misc", true, dojox);
 
 	var ddtm = dd.tag.misc;

@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 	<title>dojox.image.Lightbox Tests | The Dojo Toolkit</title>
@@ -28,13 +27,10 @@
 	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
 	<!-- for debugging: -->
-	<script type="text/javascript" src="../Lightbox.js"></script>
 	<script type="text/javascript">
-		dojo.require("dijit.form.Button");
-		dojo.require("dojox.image.Lightbox"); 
-		dojo.require("dojox.data.FlickrStore");
-		dojo.ready(function(){
-			// sample with super-rich text content (no widgets or undelegated events please).
+	    require(["dojo", "dijit/form/Button", "dojox/image/Lightbox", "dojox/data/FlickrStore", "dojo/parser", "dojo/domReady!"], function(){
+	        
+	    	// sample with super-rich text content (no widgets or undelegated events please).
 			
 			var title = dojo.byId("customExample").innerHTML;
 			dojo.empty("customExample");
@@ -80,7 +76,7 @@
 			
 			// and example of onClick for the image (to hide the lightbox);
 			var clb = new dojox.image.Lightbox({
-				title:"fun fun fun",
+				title:"fun fun fun fun",
 				href:"images/chris1_lg.jpg",
 				onClick: function(){
 					this.hide();
@@ -97,7 +93,7 @@
 
 			// and example of onClick for the image (to toggle between large/small);
 			var clb2 = new dojox.image.Lightbox({
-				title:"fun fun fun",
+				title:"fun fun fun fun", // friday, friday!
 				href:"images/chris1_sm.jpg",
 				onClick: function(info){
 					
@@ -140,10 +136,9 @@
 				var lbd = dijit.byId("dojoxLightboxDialog");
 				lbd.removeGroup("group3");
 			});
-		})
-	</script>
+		
+		});
 
-	<script type="text/javascript">
 		// programatic flickrstore implementation [basic]
 		function onComplete(items,request){
 			if(items.length > 0){
@@ -174,9 +169,8 @@
 			};
 			flickrStore.fetch(flickrRequest);
 		}
-		dojo.addOnLoad(init);
+		dojo.ready(init);
 	</script>
-
 
 </head>
 <body class="claro">

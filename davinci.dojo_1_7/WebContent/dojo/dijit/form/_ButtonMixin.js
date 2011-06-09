@@ -1,4 +1,9 @@
-define(["dojo", ".."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	"..",
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html" // dojo.setSelectable
+], function(dojo, dijit){
 
 // module:
 //		dijit/form/_ButtonMixin

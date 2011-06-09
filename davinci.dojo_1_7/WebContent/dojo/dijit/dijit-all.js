@@ -1,5 +1,5 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"./dijit",
 	"./ColorPalette",
@@ -57,7 +57,8 @@ define([
 	"./layout/LinkPane",
 	"./layout/SplitContainer",
 	"./layout/StackContainer",
-	"./layout/TabContainer"], function(dojo, dijit){
+	"./layout/TabContainer"
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/dijit-all

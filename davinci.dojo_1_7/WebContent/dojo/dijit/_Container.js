@@ -1,4 +1,10 @@
-define(["dojo", "."], function(dojo, dijit){
+define([
+	"dojo/_base/kernel",
+	".",
+	"dojo/_base/array", // dojo.forEach dojo.indexOf
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html" // dojo.place
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_Container

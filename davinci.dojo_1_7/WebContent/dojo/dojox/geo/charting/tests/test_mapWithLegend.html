@@ -28,8 +28,9 @@
 				// install mouse navigation
 				var mouseInteraction = new dojox.geo.charting.MouseInteractionSupport(map,{enablePan:true,enableZoom:true});
 				mouseInteraction.connect();
+				// install keyboard navigation
 				var keyboardInteraction = new dojox.geo.charting.KeyboardInteractionSupport(map, {enableZoom: true});
-        keyboardInteraction.connect();
+        		keyboardInteraction.connect();
 				
 				//set data store to map
 				var dataStore = new dojo.data.ItemFileWriteStore({

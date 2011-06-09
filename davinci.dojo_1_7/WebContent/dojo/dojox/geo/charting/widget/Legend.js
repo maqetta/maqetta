@@ -1,6 +1,6 @@
 
-define(["dojo/_base/lang", "dojo/_base/declare","dojo/_base/html", "dojo/_base/window", "dijit/_Widget"],
-							function(dojo,declare, dhtml, window, Widget) {
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare","dojo/_base/html", "dojo/_base/window", "dijit/_Widget"],
+							function(dojo, lang, declare, dhtml, window, Widget) {
 
 return dojo.declare("dojox.geo.charting.widget.Legend",dijit._Widget, {
 	horizontal:true,

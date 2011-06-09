@@ -55,7 +55,7 @@
 
 			dojo.addOnLoad(function(){
 				var view = dijit.byId("foo");
-				var demoWidget = new dojox.mobile.EdgeToEdgeDataList({id:"list", store:store, query:"{label: '*'}"});
+				var demoWidget = new dojox.mobile.EdgeToEdgeDataList({id:"list", store:store, query:{label: '*'}});
 				view.addChild(demoWidget);
 
 				doh.register("dojox.mobile.test.doh.EdgeToEdgeDataList", [
@@ -74,7 +74,7 @@
 								doh.assertEqual('Wi-Fi', demoWidget.domNode.childNodes[1].childNodes[0].innerHTML);
 								doh.assertEqual('mblArrow', demoWidget.domNode.childNodes[1].childNodes[1].className);
 
-								var demoWidget = dijit.byId("dojox_mobile_ListItem_3");
+								demoWidget = dijit.byId("dojox_mobile_ListItem_3");
 								doh.assertEqual('mblListItem mblItemSelected', demoWidget.domNode.className);
 								doh.assertEqual('mblListItemIcon', demoWidget.domNode.childNodes[0].className);
 								doh.assertTrue(demoWidget.domNode.childNodes[0].src.search(/i-icon-4.png/i) != -1);
@@ -108,7 +108,7 @@
 								demoWidget = dijit.byId("dojox_mobile_ListItem_12");
 								doh.assertTrue(!demoWidget);
 
-								var demoWidget = dijit.byId("dojox_mobile_ListItem_11");
+								demoWidget = dijit.byId("dojox_mobile_ListItem_11");
 								doh.assertEqual('mblListItem', demoWidget.domNode.className);
 								doh.assertEqual('mblListItemAnchor mblListItemAnchorNoIcon', demoWidget.domNode.childNodes[0].className);
 								doh.assertEqual('mblListItemTextBox', demoWidget.domNode.childNodes[0].childNodes[0].className);

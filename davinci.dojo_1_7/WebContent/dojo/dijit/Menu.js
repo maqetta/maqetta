@@ -1,9 +1,18 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	".",
 	"./popup",
-	"dojo/window",
-	"./DropDownMenu"], function(dojo, dijit, pm){
+	"require",
+	"dojo/window", // dojo.window.get
+	"./DropDownMenu",
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.keys.F10
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.attr dojo.byId dojo.getComputedStyle dojo.hasAttr dojo.isDescendant dojo.position dojo.removeAttr
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isQuirks
+	"dojo/_base/window" // dojo.body dojo.doc.documentElement dojo.doc.frames dojo.withGlobal
+], function(dojo, dijit, pm, require){
 
 // module:
 //		dijit/Menu
@@ -11,7 +20,7 @@ define([
 //		Includes dijit.Menu widget and base class dijit._MenuBase
 
 dojo.declare("dijit.Menu", dijit.DropDownMenu, {
-	// summary
+	// summary:
 	//		A context menu you can assign to multiple elements
 
 	constructor: function(){
@@ -54,11 +63,10 @@ dojo.declare("dijit.Menu", dijit.DropDownMenu, {
 		//		Returns the window reference of the passed iframe
 		// tags:
 		//		private
-		var win = dojo.window.get(this._iframeContentDocument(iframe_el)) ||
+		return dojo.window.get(this._iframeContentDocument(iframe_el)) ||
 			// Moz. TODO: is this available when defaultView isn't?
 			this._iframeContentDocument(iframe_el)['__parent__'] ||
-			(iframe_el.name && dojo.doc.frames[iframe_el.name]) || null;
-		return win;	//	Window
+			(iframe_el.name && dojo.doc.frames[iframe_el.name]) || null;	//	Window
 	},
 
 	_iframeContentDocument: function(/* HTMLIFrameElement */iframe_el){
@@ -66,11 +74,10 @@ dojo.declare("dijit.Menu", dijit.DropDownMenu, {
 		//		Returns a reference to the document object inside iframe_el
 		// tags:
 		//		protected
-		var doc = iframe_el.contentDocument // W3
+		return iframe_el.contentDocument // W3
 			|| (iframe_el.contentWindow && iframe_el.contentWindow.document) // IE
 			|| (iframe_el.name && dojo.doc.frames[iframe_el.name] && dojo.doc.frames[iframe_el.name].document)
-			|| null;
-		return doc;	//	HTMLDocument
+			|| null;	//	HTMLDocument
 	},
 
 	bindDomNode: function(/*String|DomNode*/ node){
@@ -87,7 +94,7 @@ dojo.declare("dijit.Menu", dijit.DropDownMenu, {
 				win = this._iframeContentWindow(iframe);
 			cn = dojo.withGlobal(win, dojo.body);
 		}else{
-			
+
 			// To capture these events at the top level, attach to <html>, not <body>.
 			// Otherwise right-click context menu just doesn't work.
 			cn = (node == dojo.body() ? dojo.doc.documentElement : node);
@@ -239,7 +246,7 @@ dojo.declare("dijit.Menu", dijit.DropDownMenu, {
 					ifc = dojo.position(iframe, true),
 					win = this._iframeContentWindow(iframe),
 					scroll = dojo.withGlobal(win, "_docScroll", dojo);
-	
+
 				var cs = dojo.getComputedStyle(iframe),
 					tp = dojo._toPixelValue,
 					left = (dojo.isIE && dojo.isQuirks ? 0 : tp(iframe, cs.paddingLeft)) + (dojo.isIE && dojo.isQuirks ? tp(iframe, cs.borderLeftWidth) : 0),
@@ -291,6 +298,13 @@ dojo.declare("dijit.Menu", dijit.DropDownMenu, {
  		this.inherited(arguments);
 	}
 });
+
+// Back compat w/1.6, remove for 2.0
+if(!dojo.isAsync){
+	dojo.ready(0, function(){
+		require(["dijit/MenuItem", "dijit/PopupMenuItem", "dijit/CheckedMenuItem", "dijit/MenuSeparator"]);
+	});
+}
 
 return dijit.Menu;
 });

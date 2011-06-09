@@ -1,7 +1,7 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html",
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html",
 	"./Invisible", "../scaler/common", "../scaler/linear", "./common", 
 	"dojox/gfx", "dojox/lang/utils"], 
-	function(dojo, declare, dconnect, dhtml, Invisible, scommon, lin, acommon, g, du){
+	function(dojo, lang, declare, connect, html, Invisible, scommon, lin, acommon, g, du){
 
 	/*=====
 		dojox.charting.axis2d.__AxisCtorArgs = function(

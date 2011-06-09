@@ -1,6 +1,6 @@
 @import url("../common/domButtons/DomButtonGrayArrow.css");
 
-@import url("../common/domButtons/DomButtonDarkBlueCheck.css");
+@import url("../common/domButtons/DomButtonWhiteCheck.css");
 /* dojox.mobile.ListItem */
 .mblListItem {
   position: relative;
@@ -18,51 +18,55 @@
 }
 .mblListItem.mblVariableHeight {
   height: auto;
-  padding: 11px 6px 10px 6px;
+  padding: 11px 0px 10px 6px;
   line-height: normal;
 }
-.mblListItem a.mblListItemAnchor {
+.mblListItem .mblListItemAnchor {
   display: block;
+  height: 100%;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   background-position: 14px 17px;
-  padding-left: 53px;
   text-decoration: none;
+  padding-right: 7px;
 }
-.mblListItem a.mblListItemAnchorNoIcon {
-  padding-left: 14px;
-}
-.mblListItem a.mblListItemAnchorHasRightButton {
-  padding-right: 50px;
-}
-.mblListItem .mblLeftButton {
-  position: absolute;
-  top: 50%;
-  margin-top: -15px;
-  line-height: normal;
-}
-.mblListItem .mblRightButton {
-  position: absolute;
-  top: 50%;
-  right: 7px;
-  margin-top: -15px;
-  line-height: normal;
-}
-.mblListItem .mblRightButton2 {
-  right: 36px;
-}
-.mblListItemIcon {
-  position: absolute;
-  top: 18px;
+.mblListItem .mblListItemAnchor * {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
 }
 .mblItemSelected {
   background-color: #FFC700;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#ad7500), to(#ffaa00), color-stop(0.06, #ffb200), color-stop(0.5, #ffc700));
 }
-.mblItemSelected a.mblListItemAnchor {
+.mblItemSelected .mblListItemAnchor {
   color: black;
 }
 .mblItemSelected .mblDomButton DIV {
   border-color: white;
+}
+.mblListItemTextBoxSelected {
+  background-color: #048BF4;
+}
+.mblListItemIcon {
+  float: left;
+  line-height: normal;
+  margin-top: 17px;
+  margin-right: 11px;
+}
+.mblListItemSpriteIcon {
+  position: absolute;
+  margin-top: 7px;
+}
+.mblListItemRightIcon, .mblListItemRightIcon2 {
+  position: relative;
+  float: right;
+  margin-top: 17px;
+  margin-bottom: -17px;
+}
+.mblListItemRightText {
+  position: relative;
+  float: right;
+  line-height: normal;
+  color: white;
+  margin: 20px 4px 0 0;
 }
 .mblListItemTextBox {
   overflow: hidden;
@@ -70,21 +74,8 @@
   text-overflow: ellipsis;
   padding-right: 28px;
 }
-.mblListItemTextBox2 {
-  padding-right: 58px;
-}
-.mblListItemTextBoxSelected {
-  background-color: #048BF4;
-}
 .mblVariableHeight .mblListItemTextBox {
   white-space: normal;
-}
-.mblRightText {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  color: white;
-  line-height: normal;
 }
 .mblListItemSubText {
   font-size: 14px;

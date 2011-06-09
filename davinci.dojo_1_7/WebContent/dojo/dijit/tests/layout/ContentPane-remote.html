@@ -190,7 +190,7 @@
 						var d = new doh.Deferred();
 
 						setTimeout(d.getTestErrback(function(){
-							var msg = 'refreshed load'
+							var msg = 'refreshed load';
 							cp.href = "getResponse.php?message="+encodeURI(msg);
 							cp.refresh().then(d.getTestCallback(function(){
 								doh.is(msg, cp.domNode.innerHTML);
@@ -278,7 +278,7 @@
 
 						cp.onDownloadError = function(){
 							return msg;
-						}
+						};
 
 						var d = new doh.Deferred();
 

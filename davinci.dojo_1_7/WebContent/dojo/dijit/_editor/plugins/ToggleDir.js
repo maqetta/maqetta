@@ -1,8 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.experimental
 	"../..",
 	"../_Plugin",
-	"../../form/ToggleButton"], function(dojo, dijit){
+	"../../form/ToggleButton",
+	"dojo/_base/connect", // dojo.subscribe
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/html", // dojo.getComputedStyle
+	"dojo/_base/lang" // dojo.hitch
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_editor/plugins/ToggleDir

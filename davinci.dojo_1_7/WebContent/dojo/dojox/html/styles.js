@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","dojo/_base/window"], function(d) {
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/window"], function(d) {
 	// summary:
 	//		Methods for creating and minipulating dynamic CSS Styles and Style Sheets
 	//

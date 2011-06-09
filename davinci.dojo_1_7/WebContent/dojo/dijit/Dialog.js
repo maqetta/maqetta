@@ -1,12 +1,9 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.mixin
 	".",
 	"dijit/focus",
 	"dojo/text!./templates/Dialog.html",
-	"dojo/dnd/move",
-	"dojo/dnd/TimedMoveable",
-	"dojo/fx",
-	"dojo/window",
+	"require",
 	"./_Widget",
 	"./_TemplatedMixin",
 	"./_CssStateMixin",
@@ -14,7 +11,23 @@ define([
 	"./_DialogMixin",
 	"./DialogUnderlay",
 	"./layout/ContentPane",
-	"dojo/i18n!./nls/common"], function(dojo, dijit, focus, template){
+	"./focus",
+	"dojo/i18n!./nls/common",
+	"dojo/_base/Deferred", // dojo.Deferred
+	"dojo/_base/array", // dojo.forEach dojo.indexOf dojo.map
+	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.keys dojo.subscribe dojo.unsubscribe
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/fx", // dojo.fadeIn dojo.fadeOut
+	"dojo/_base/html", // dojo.addClass dojo.hasClass dojo.isDescendant dojo.position dojo.style
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isOpera
+	"dojo/_base/window", // dojo.body
+	"dojo/window", // dojo.window.getBox
+	"dojo/dnd/Moveable", // dojo.dnd.Moveable
+	"dojo/dnd/TimedMoveable", // dojo.dnd.TimedMoveable
+	"dojo/i18n" // dojo.i18n.getLocalization
+], function(dojo, dijit, focus, template, require){
 
 	// module:
 	//		dijit/Dialog
@@ -157,14 +170,16 @@ define([
 			this.inherited(arguments);
 		},
 
-		_endDrag: function(e){
+		_endDrag: function(){
 			// summary:
-			//		Called after dragging the Dialog. Saves the position of the dialog in the viewport.
-			// tags:
-			//		private
-			if(e && e.node && e.node === this.domNode){
-				this._relativePosition = dojo.position(e.node);
-			}
+			//		Called after dragging the Dialog. Saves the position of the dialog in the viewport,
+			//		and also adjust position to be fully within the viewport, so user doesn't lose access to handle
+			var nodePosition = dojo.position(this.domNode),
+				viewport = dojo.window.getBox();
+			nodePosition.y = Math.min(Math.max(nodePosition.y, 0), (viewport.h - nodePosition.h));
+			nodePosition.x = Math.min(Math.max(nodePosition.x, 0), (viewport.w - nodePosition.w));
+			this._relativePosition = nodePosition;
+			this._position();
 		},
 
 		_setup: function(){
@@ -181,7 +196,7 @@ define([
 				this._moveable = (dojo.isIE == 6) ?
 					new dojo.dnd.TimedMoveable(node, { handle: this.titleBar }) :	// prevent overload, see #5285
 					new dojo.dnd.Moveable(node, { handle: this.titleBar, timeout: 0 });
-				this._dndListener = dojo.subscribe("/dnd/move/stop",this,"_endDrag");
+				this.connect(this._moveable, "onMoveStop", "_endDrag");
 			}else{
 				dojo.addClass(node,"dijitDialogFixed");
 			}
@@ -215,13 +230,13 @@ define([
 				});
 			}
 
-			var mb = dojo._getMarginSize(this.domNode);
+			var bb = dojo.position(this.domNode);
 			var viewport = dojo.window.getBox();
-			if(mb.w >= viewport.w || mb.h >= viewport.h){
+			if(bb.w >= viewport.w || bb.h >= viewport.h){
 				// Reduce size of dialog contents so that dialog fits in viewport
 
-				var w = Math.min(mb.w, Math.floor(viewport.w * 0.75)),
-					h = Math.min(mb.h, Math.floor(viewport.h * 0.75));
+				var w = Math.min(bb.w, Math.floor(viewport.w * 0.75)),
+					h = Math.min(bb.h, Math.floor(viewport.h * 0.75));
 
 				if(this._singleChild && this._singleChild.resize){
 					this._singleChildOriginalStyle = this._singleChild.domNode.style.cssText;
@@ -247,13 +262,11 @@ define([
 			//		in the viewport has been determined (by dragging, for instance),
 			//		center the node. Otherwise, use the Dialog's stored relative offset,
 			//		and position the node to top: left: values based on the viewport.
-			// tags:
-			//		private
-			if(!dojo.hasClass(dojo.body(),"dojoMove")){
+			if(!dojo.hasClass(dojo.body(), "dojoMove")){	// don't do anything if called during auto-scroll
 				var node = this.domNode,
 					viewport = dojo.window.getBox(),
 					p = this._relativePosition,
-					bb = p ? null : dojo._getBorderBox(node),
+					bb = p ? null : dojo.position(node),
 					l = Math.floor(viewport.l + (p ? p.x : (viewport.w - bb.w) / 2)),
 					t = Math.floor(viewport.t + (p ? p.y : (viewport.h - bb.h) / 2))
 				;
@@ -461,9 +474,6 @@ define([
 			if(this._moveable){
 				this._moveable.destroy();
 			}
-			if(this._dndListener){
-				dojo.unsubscribe(this._dndListener);
-			}
 			dojo.forEach(this._modalconnects, dojo.disconnect);
 
 			dijit._DialogLevelManager.hide(this);
@@ -599,6 +609,13 @@ define([
 	dijit._dialogStack = [
 		{dialog: null, focus: null, underlayAttrs: null}	// entry for stuff at z-index: 0
 	];
+
+	// Back compat w/1.6, remove for 2.0
+	if(!dojo.isAsync){
+		dojo.ready(0, function(){
+			require(["dijit/TooltipDialog"], function(){});
+		});
+	}
 
 	return dijit.Dialog;
 });

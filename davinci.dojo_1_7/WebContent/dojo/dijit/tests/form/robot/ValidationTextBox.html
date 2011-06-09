@@ -127,14 +127,14 @@
 								// check that watch() callbacks were called
 								for(attr in watchExpected){
 									doh.t(attr in watchActual, "watch(" + attr + ") fired");
-									doh.is(watchExpected[attr], watchActual[attr], "watch(" + attr + ")")
+									doh.is(watchExpected[attr], watchActual[attr], "watch(" + attr + ")");
 									doh.is(typeof watchExpected[attr], typeof watchActual[attr], "typeof watch(" + attr + ")")
 								}
 		
 								// check that direct get(...) calls are also working, for both the attributes
 								// that were supposed to change and the attributes that weren't supposed to change
 								for(attr in expectedState){
-									doh.is(expectedState[attr], fixNbsp(textbox.get(attr)), "get(" + attr + ")")
+									doh.is(expectedState[attr], fixNbsp(textbox.get(attr)), "get(" + attr + ")");
 									doh.is(typeof expectedState[attr], typeof textbox.get(attr), "typeof get(" + attr + ")")
 								}
 
@@ -845,7 +845,7 @@
 							doh.robot.typeKeys('abc', 1000, 600);
 
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("q24", (dojo.global.dijit._curFocus||{}).id, "did focus");
+								doh.is("q24", (dojo.global.dijit.focus.curNode||{}).id, "did focus");
 								doh.is('cannot type here', this.textbox.focusNode.value, "focusNode.value");
 								doh.is('cannot type here', this.textbox.get('value'), "get('value')");
 							})), 1000);
@@ -897,7 +897,7 @@
 							doh.robot.mouseClick({left: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.isNot("q24", (dojo.global.dijit._curFocus||{}).id, "didn't focus");
+								doh.isNot("q24", (dojo.global.dijit.focus.curNode||{}).id, "didn't focus");
 							})), 500);
 							return d;
 						}
@@ -918,7 +918,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500);
 
 							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("q26", dojo.global.dijit._curFocus.id,
+								doh.is("q26", dojo.global.dijit.focus.curNode.id,
 										"tabbed past input, to the button after it");
 							})), 500);
 							return d;

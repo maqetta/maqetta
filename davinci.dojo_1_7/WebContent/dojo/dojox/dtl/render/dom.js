@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../Context","../dom","dojo/_base/html","dojo/_base/kernel"], function(dojo,ddc){
+define(["dojo/_base/kernel","dojo/_base/lang","../Context","../dom","dojo/_base/html","dojo/_base/kernel"], function(dojo,lang,ddc){
 	dojo.getObject("dtl.render.dom", true, dojox);
 
 	dojox.dtl.render.dom.Render = function(/*DOMNode?*/ attachPoint, /*dojox.dtl.DomTemplate?*/ tpl){

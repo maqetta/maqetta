@@ -1,8 +1,5 @@
-dojo.provide("dojox.highlight.languages.cpp");
-
-dojo.require("dojox.highlight._base");
-
-(function(){
+define(["dojo", "dojox/main", "../_base"], function(dojo, dojox){
+	
 	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.cpp = {
 		// summary: C++ highlight definitions
@@ -46,4 +43,7 @@ dojo.require("dojox.highlight._base");
 			}
 		]
 	};
-})();
+	
+	return dh.languages.cpp;
+
+});

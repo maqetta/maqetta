@@ -1,4 +1,4 @@
-define(["dojo/_base/lang"], function(dojo){
+define(["dojo/_base/kernel"], function(dojo){
 	dojo.getObject("string", true, dojox);
 	dojox.string.Builder = function(/*String?*/str){
 		//	summary:

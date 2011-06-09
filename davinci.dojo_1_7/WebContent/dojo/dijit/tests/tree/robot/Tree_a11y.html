@@ -35,7 +35,7 @@
 			that.testTreeItemRole = function(/*dijit._TreeNode*/inRoot, /*dijit.Tree*/inTree){
 				if(inRoot){
 					var expectedrole = inTree.showRoot || inRoot!==inTree.rootNode ? 'treeitem' : 'presentation';
-					doh.is(expectedrole, dijit.getWaiRole(inRoot.labelNode), inRoot.label + "[" + inTree.id + "]: aria role (" + expectedrole + ")");
+					doh.is(expectedrole, inRoot.labelNode.getAttribute("role"), inRoot.label + "[" + inTree.id + "]: aria role (" + expectedrole + ")");
 					//recurse
 					forceLoadChildItems(inRoot, inTree);
 					var children = inRoot.getChildren();
@@ -50,16 +50,16 @@
 					if(inItem.isExpandable){
 						var wasExpanded = inItem.isExpanded;
 						inTree._expandNode(inItem);
-						var nowExpanded = dijit.getWaiState(inItem.labelNode, "expanded");
+						var nowExpanded = inItem.labelNode.getAttribute("aria-expanded");
 						inTree._collapseNode(inItem);
-						var nowCollapsed = dijit.getWaiState(inItem.labelNode, "expanded");
+						var nowCollapsed = inItem.labelNode.getAttribute("aria-expanded");
 						if(wasExpanded){
 							inTree._expandNode(inItem);
 						}
 						doh.is("true", nowExpanded, inItem.label + "[" + inTree.id + "]: aria state expanded=true");
 						doh.is("false", nowCollapsed, inItem.label + "[" + inTree.id + "]: aria state expanded=false");
 					}else{
-						doh.is("", dijit.getWaiState(inItem.labelNode, "expanded"), inItem.label + "[" + inTree.id + "]: aria state expanded=false");
+						doh.is(null, inItem.labelNode.getAttribute("aria-expanded"), inItem.label + "[" + inTree.id + "]: aria state expanded=false");
 					}
 				}
 			};
@@ -315,7 +315,7 @@
 				var checkAtHomeEnd = function(){
 					tree.disconnect(focusConnect);
 					doh.is(expectedNode.label, actualNode.innerHTML);
-				}
+				};
 				doh.robot.sequence(d.getTestCallback(checkAtHomeEnd), 500);
 				return d;
 			};
@@ -331,7 +331,7 @@
 				timeout:20000,
 				runTest:function(){
 					var d = new doh.Deferred();
-					var store = dojo.global.dijit.byId('mytree3').get('store');
+					var store = dijit.byId('mytree3').get('store');
 					store.fetch({query:{id:'*'}, onComplete:function(){
 						d.callback(true);
 					}});
@@ -345,7 +345,7 @@
 				function ariaTreeRole(){
 					for(i=0; i<treeIds.length; i++){
 						var tree = dijit.byId(treeIds[i]), expectedrole = tree.showRoot?'tree':'presentation';
-						doh.is(expectedrole, dijit.getWaiRole(tree.domNode), tree.id + ": aria role (" + expectedrole + ")");
+						doh.is(expectedrole, tree.domNode.getAttribute("role"), tree.id + ": aria role (" + expectedrole + ")");
 					}
 				},
 
@@ -354,9 +354,9 @@
 						var tree = dijit.byId(treeIds[i]);
 						var wasExpanded = tree.rootNode.isExpanded;
 						tree.rootNode.expand();
-						var nowExpanded = dijit.getWaiState(tree.domNode, "expanded");
+						var nowExpanded = tree.domNode.getAttribute("aria-expanded");
 						tree.rootNode.collapse();
-						var nowCollapsed = dijit.getWaiState(tree.domNode, "expanded");
+						var nowCollapsed = tree.domNode.getAttribute("aria-expanded");
 						if(wasExpanded){
 							tree.rootNode.expand();
 						}
@@ -571,7 +571,7 @@
 						tree.focusNode(tree.rootNode);
 
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dojo.global.dijit._curFocus;
+							var focus = dojo.global.dijit.focus.curNode;
 							doh.t(tree.rootNode.labelNode, "focused on continents");
 						}), 500);
 
@@ -587,7 +587,7 @@
 						// From Continents node, press "A".   Should go to Africa.
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Africa", focus.label);
 						}), 500);
@@ -604,7 +604,7 @@
 						// From Africa node, press "A" again.   Should go to Asia.
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Asia", focus.label);
 						}), 500);
@@ -624,7 +624,7 @@
 
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Australia", focus.label);
 						}), 500);
@@ -640,7 +640,7 @@
 
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Africa", focus.label);
 						}), 500);
@@ -657,7 +657,7 @@
 						// Skip over China and go to Continents
 						doh.robot.typeKeys("co", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Continents", focus.label);
 						}), 500);
@@ -674,7 +674,7 @@
 						// By typing AS should skip over Africa and go to Asia
 						doh.robot.typeKeys("as", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Asia", focus.label);
 						}), 500);
@@ -692,7 +692,7 @@
 						// start a new search
 						doh.robot.typeKeys("n", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit._curFocus);
+							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("North America", focus.label);
 						}), 500);

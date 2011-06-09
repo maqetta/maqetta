@@ -1,33 +1,33 @@
 
-define(["dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/lang/functional"],
-					function(dojo,declare,connect,dhtml,functional) {
+define(["dojo/_base/kernel", "dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/lang/functional"],
+					function(dojo, lang, declare, connect, dhtml, functional) {
 
 return dojo.declare("dojox.geo.charting.KeyboardInteractionSupport", null, {
-	// summary: 
-	//   class to handle keyboard interactions on a dojox.geo.charting.Map widget
+	//	summary: 
+	//		class to handle keyboard interactions on a dojox.geo.charting.Map widget
 	//
-	//	The sections on the leading edge should receive the focus in response to a TAB event. 
-	//	Then use cursor keys to the peer sections. The cursor event should go the adjacent section 
-	//	in that direction. With the focus, the section zooms in upon SPACE. The map should zoom out 
-	//	on ESC. Finally, while it has the focus, the map should lose the focus on TAB.
-	// tags:
-	//   private
+	//		The sections on the leading edge should receive the focus in response to a TAB event. 
+	//		Then use cursor keys to the peer sections. The cursor event should go the adjacent section 
+	//		in that direction. With the focus, the section zooms in upon SPACE. The map should zoom out 
+	//		on ESC. Finally, while it has the focus, the map should lose the focus on TAB.
+	//	tags:
+	//		private
 	_map: null,
 	_zoomEnabled: false,
 	
 	constructor: function(map, options){
-		// summary: 
-		//   Constructs a new _KeyboardInteractionSupport instance
-		// map: dojox.geo.charting.Map
-		//   the Map widget this class provides touch navigation for.
+		//	summary: 
+		//		Constructs a new _KeyboardInteractionSupport instance
+		//	map: dojox.geo.charting.Map
+		//		the Map widget this class provides touch navigation for.
 		this._map = map;
 		if(options){
 			this._zoomEnabled = options.enableZoom;
 		}
 	},
 	connect: function(){
-		// summary: 
-		//   connects this keyboard support class to the Map component
+		//	summary: 
+		//		connects this keyboard support class to the Map component
 		var container = dojo.byId(this._map.container);
 		//	tab accessing enable
 		dojo.attr(container, {
@@ -41,8 +41,8 @@ return dojo.declare("dojox.geo.charting.KeyboardInteractionSupport", null, {
 		this._onBlurListener = dojo.connect(container, "blur", this, "onBlur");
 	},
 	disconnect: function(){
-		// summary: 
-		//   disconnects any installed listeners
+		//	summary: 
+		//		disconnects any installed listeners
 		dojo.disconnect(this._keydownListener);
 		this._keydownListener = null;
 		dojo.disconnect(this._onFocusListener);

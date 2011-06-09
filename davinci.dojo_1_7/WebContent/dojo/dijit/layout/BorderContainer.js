@@ -1,10 +1,18 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.getObject
 	"..",
-	"dojo/cookie",
+	"dojo/touch",
+	"dojo/cookie", // dojo.cookie
 	"../_WidgetBase",
 	"../_TemplatedMixin",
-	"./_LayoutWidget"], function(dojo, dijit){
+	"./_LayoutWidget",
+	"dojo/_base/array", // dojo.filter dojo.forEach dojo.map
+	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.keys
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.addClass dojo.destroy dojo.getComputedStyle dojo.marginBox dojo.place dojo.removeClass dojo.style dojo.toggleClass
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/window" // dojo.body dojo.doc dojo.doc.createElement
+], function(dojo, dijit, touch){
 
 // module:
 //		dijit/layout/BorderContainer
@@ -136,7 +144,7 @@ dojo.declare("dijit.layout.BorderContainer", dijit.layout._LayoutWidget, {
 		// Override _LayoutWidget.removeChild().
 
 		var region = child.region;
-		var splitter = child._splitterWidget
+		var splitter = child._splitterWidget;
 		if(splitter){
 			splitter.destroy();
 			delete child._splitterWidget;
@@ -340,7 +348,7 @@ dojo.declare("dijit.layout._Splitter", [ dijit._Widget, dijit._TemplatedMixin ],
 	//		otherwise, the size doesn't change until you drop the splitter (by mouse-up)
 	live: true,
 
-	templateString: '<div class="dijitSplitter" dojoAttachEvent="onkeypress:_onKeyPress,onmousedown:_startDrag,onmouseenter:_onMouse,onmouseleave:_onMouse" tabIndex="0" role="separator"><div class="dijitSplitterThumb"></div></div>',
+	templateString: '<div class="dijitSplitter" dojoAttachEvent="onkeypress:_onKeyPress,press:_startDrag,onmouseenter:_onMouse,onmouseleave:_onMouse" tabIndex="0" role="separator"><div class="dijitSplitterThumb"></div></div>',
 
 	postMixInProperties: function(){
 		this.inherited(arguments);
@@ -415,7 +423,7 @@ dojo.declare("dijit.layout._Splitter", [ dijit._Widget, dijit._TemplatedMixin ],
 			de = dojo.doc;
 
 		this._handlers = (this._handlers || []).concat([
-			dojo.connect(de, "onmousemove", this._drag = function(e, forceResize){
+			dojo.connect(de, touch.move, this._drag = function(e, forceResize){
 				var delta = e[axis] - pageStart,
 					childSize = factor * delta + childStart,
 					boundChildSize = Math.max(Math.min(childSize, max), min);
@@ -428,12 +436,14 @@ dojo.declare("dijit.layout._Splitter", [ dijit._Widget, dijit._TemplatedMixin ],
 			}),
 			dojo.connect(de, "ondragstart", dojo.stopEvent),
 			dojo.connect(dojo.body(), "onselectstart", dojo.stopEvent),
-			dojo.connect(de, "onmouseup", this, "_stopDrag")
+			dojo.connect(de, touch.release, this, "_stopDrag")
 		]);
 		dojo.stopEvent(e);
 	},
 
 	_onMouse: function(e){
+		// summary:
+		//		Handler for onmouseenter / onmouseleave events
 		var o = (e.type == "mouseover" || e.type == "mouseenter");
 		dojo.toggleClass(this.domNode, "dijitSplitterHover", o);
 		dojo.toggleClass(this.domNode, "dijitSplitter" + (this.horizontal ? "H" : "V") + "Hover", o);

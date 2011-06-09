@@ -1,5 +1,13 @@
-define(["dojox/mvc/_Container"], function(_Container){
-	return dojo.declare("dojox.mvc.Repeat", [dojox.mvc._Container], {
+define([
+	"dojo/_base/declare",
+	"./_Container"
+], function(declare, _Container){
+	/*=====
+		declare = dojo.declare;
+		_Container = dojox.mvc._Container;
+	=====*/
+
+	return declare("dojox.mvc.Repeat", [_Container], {
 		// summary:
 		//		A model-bound container which binds to a collection within a data model
 		//		and produces a repeating user-interface from a template for each

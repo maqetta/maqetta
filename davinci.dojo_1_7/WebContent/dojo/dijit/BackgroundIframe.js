@@ -1,4 +1,13 @@
-define(["dojo"], function(dojo){
+define([
+	"dojo/_base/kernel", // dojo.config
+	".",
+	"dojo/_base/connect", // dojo.connect dojo.disconnect
+	"dojo/_base/html", // dojo.create dojo.style
+	"dojo/_base/lang", // dojo.extend
+	"dojo/_base/sniff", // dojo.isIE dojo.isMoz dojo.isQuirks
+	"dojo/_base/url", // dojo.moduleUrl
+	"dojo/_base/window" // dojo.doc.createElement
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/BackgroundIFrame
@@ -46,7 +55,7 @@ define(["dojo"], function(dojo){
 	}();
 
 
-	var BackgroundIframe = function(/*DomNode*/ node){
+	dijit.BackgroundIframe = function(/*DomNode*/ node){
 		// summary:
 		//		For IE/FF z-index schenanigans. id attribute is required.
 		//
@@ -73,7 +82,7 @@ define(["dojo"], function(dojo){
 		}
 	};
 
-	dojo.extend(BackgroundIframe, {
+	dojo.extend(dijit.BackgroundIframe, {
 		resize: function(node){
 			// summary:
 			// 		Resize the iframe so it's the same size as node.
@@ -99,5 +108,5 @@ define(["dojo"], function(dojo){
 		}
 	});
 
-	return BackgroundIframe;
+	return dijit.BackgroundIframe;
 });

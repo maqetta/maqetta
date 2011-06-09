@@ -104,8 +104,8 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Check that focus was returned to the textarea
-								doh.t(dojo.global.dijit._curFocus, "curFocus defined");
-								doh.is("textarea", dojo.global.dijit._curFocus.id, "focused on textarea");
+								doh.t(dojo.global.dijit.focus.curNode, "curFocus defined");
+								doh.is("textarea", dojo.global.dijit.focus.curNode.id, "focused on textarea");
 
 								// And that " there" was selected then deleted
 								doh.is("hello!", dojo.byId("textarea").value);

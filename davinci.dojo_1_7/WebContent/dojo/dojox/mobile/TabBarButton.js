@@ -1,4 +1,5 @@
-define(["dojo/_base/array","dojo/_base/html","./common","./_ItemBase"],function(darray,dhtml, mcommon,ItemBase){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array","dojo/_base/html","./common","./_ItemBase"],
+	function(dojo, declare, darray, dhtml, mcommon, ItemBase){
 	// module:
 	//		dojox/mobile/TabBar
 	// summary:

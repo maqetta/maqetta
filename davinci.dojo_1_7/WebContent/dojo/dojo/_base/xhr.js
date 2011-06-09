@@ -1,4 +1,4 @@
-define(["./kernel", "../has", "require", "../listen", "./sniff", "./Deferred", "./json", "./lang"], function(dojo, has, require, listen){
+define(["./kernel", "../has", "require", "../on", "./sniff", "./Deferred", "./json", "./lang"], function(dojo, has, require, on){
 	//	module:
 	//		dojo/_base.xhr
 	// summary:
@@ -729,7 +729,6 @@ define(["./kernel", "../has", "require", "../listen", "./sniff", "./Deferred", "
 		if(!_inFlight.length){
 			clearInterval(_inFlightIntvl);
 			_inFlightIntvl = null;
-			return;
 		}
 	};
 
@@ -748,7 +747,7 @@ define(["./kernel", "../has", "require", "../listen", "./sniff", "./Deferred", "
 	//Automatically call cancel all io calls on unload
 	//in IE for trac issue #2357.
 	if(has("ie")){
-		listen(window, "unload", _d._ioCancelAll);
+		on(window, "unload", _d._ioCancelAll);
 	}
 
 	_d._ioNotifyStart = function(/*Deferred*/dfd){
@@ -817,6 +816,7 @@ define(["./kernel", "../has", "require", "../listen", "./sniff", "./Deferred", "
 			var err = new Error("Unable to load " + dfd.ioArgs.url + " status:" + xhr.status);
 			err.status = xhr.status;
 			err.responseText = xhr.responseText;
+			err.xhr = xhr;
 			dfd.errback(err);
 		}
 	};
@@ -848,6 +848,10 @@ define(["./kernel", "../has", "require", "../listen", "./sniff", "./Deferred", "
 			//		false is default. Indicates whether a request should be
 			//		allowed to fail (and therefore no console error message in
 			//		the event of a failure)
+			//	contentType: String|Boolean
+			//		"application/x-www-form-urlencoded" is default. Set to false to
+			//		prevent a Content-Type header from being sent, or to a string
+			//		to send a different Content-Type.
 			this.handleAs = handleAs;
 			this.sync = sync;
 			this.headers = headers;
@@ -910,7 +914,9 @@ define(["./kernel", "../has", "require", "../listen", "./sniff", "./Deferred", "
 			}
 		}
 		// FIXME: is this appropriate for all content types?
-		xhr.setRequestHeader("Content-Type", args.contentType || _defaultContentType);
+		if(args.contentType !== false){
+			xhr.setRequestHeader("Content-Type", args.contentType || _defaultContentType);
+		}
 		if(!args.headers || !("X-Requested-With" in args.headers)){
 			xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		}

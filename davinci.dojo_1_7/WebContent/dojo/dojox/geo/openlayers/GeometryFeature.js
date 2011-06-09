@@ -1,7 +1,7 @@
 
-define([ "dojo/_base/array", "dojo/_base/kernel", "dojo/_base/lang", "dojox/geo/openlayers/Point",
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang", "dojox/geo/openlayers/Point",
 		"dojox/geo/openlayers/LineString", "dojox/geo/openlayers/Collection",
-		"dojox/geo/openlayers/Feature" ], function(arrayArg, kernalArg, langArg, pointArg,
+		"dojox/geo/openlayers/Feature" ], function(dojo, declare, arrayArg, langArg, pointArg,
 		lineStringArg, collectionArg, featureArg){
 
 	return dojo.declare("dojox.geo.openlayers.GeometryFeature", dojox.geo.openlayers.Feature, {

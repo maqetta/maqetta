@@ -1,6 +1,5 @@
-
-define([ "dojo/_base/kernel", "dojo/_base/html", "dojox/geo/openlayers/Feature" ], function(
-		kernelArg, htmlArg, featureArg){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html",
+		"dojox/geo/openlayers/Feature" ], function(dojo, declare, htmlArg, featureArg){
 
 	return dojo.declare("dojox.geo.openlayers.WidgetFeature", dojox.geo.openlayers.Feature, {
 		//	summary:
@@ -9,7 +8,7 @@ define([ "dojo/_base/kernel", "dojo/_base/html", "dojox/geo/openlayers/Feature" 
 		//	description:
 		//		This class allows to add a widget in a `dojox.geo.openlayers.Layer`.
 		//		Parameters are passed to the constructor. These parameters describe the widget
-		//		and provide geolocalisation of this widget.
+		//		and provide geo-localisation of this widget.
 		//		parameters can be: 
 		//	* _createWidget_: Function for widget creation. Must return a `dijit._Widget`.
 		//	* _dojoType_: The class of a widget to create;

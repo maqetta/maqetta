@@ -16,8 +16,7 @@
 */
 require(["dojo"], function(dojo){
 
-	var d = dojo,
-		dir = "",
+	var dir = "",
 		theme = false,
 		testMode = null,
 		defTheme = "claro",
@@ -50,9 +49,9 @@ require(["dojo"], function(dojo){
 			vars[key] = value;
 		}
 	}
-	d._getVar = function(k, def){
+	dojo._getVar = function(k, def){
 		return vars[k] || def;
-	}
+	};
 
 	// If URL specifies a non-claro theme then pull in those theme CSS files and modify
 	// <body> to point to that new theme instead of claro.
@@ -62,8 +61,8 @@ require(["dojo"], function(dojo){
 	if(theme || testMode || dir){
 
 		if(theme){
-			var themeCss = d.moduleUrl("dijit.themes",theme+"/"+theme+".css");
-			var themeCssRtl = d.moduleUrl("dijit.themes",theme+"/"+theme+"_rtl.css");
+			var themeCss = dojo.moduleUrl("dijit.themes",theme+"/"+theme+".css");
+			var themeCssRtl = dojo.moduleUrl("dijit.themes",theme+"/"+theme+"_rtl.css");
 			document.write('<link rel="stylesheet" type="text/css" href="'+themeCss+'"/>');
 			document.write('<link rel="stylesheet" type="text/css" href="'+themeCssRtl+'"/>');
 		}
@@ -85,11 +84,11 @@ require(["dojo"], function(dojo){
 			var b = dojo.body();
 			if(theme){
 					dojo.removeClass(b, defTheme);
-					if(!d.hasClass(b, theme)){ d.addClass(b, theme); }
-					var n = d.byId("themeStyles");
-					if(n){ d.destroy(n); }
+					if(!dojo.hasClass(b, theme)){ dojo.addClass(b, theme); }
+					var n = dojo.byId("themeStyles");
+					if(n){ dojo.destroy(n); }
 			}
-			if(testMode){ d.addClass(b, testMode); }
+			if(testMode){ dojo.addClass(b, testMode); }
 
 			// Claro has it's own reset css but for other themes using dojo/resources/dojo.css
 			if(theme){

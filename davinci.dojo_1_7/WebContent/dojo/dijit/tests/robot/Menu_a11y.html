@@ -34,8 +34,8 @@
 							}, 500, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit._curFocus, "something has focus");
-								doh.is("random link", dojo.global.dijit._curFocus.innerHTML, "check that focus is on the link");
+								doh.t(dojo.global.dijit.focus.curNode, "something has focus");
+								doh.is("random link", dojo.global.dijit.focus.curNode.innerHTML, "check that focus is on the link");
 							}), 1000);
 
 							return d;
@@ -52,7 +52,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("File", dojo.trim(dojo.global.dijit._curFocus.innerText || dojo.global.dijit._curFocus.textContent),
+								doh.is("File", dojo.trim(dojo.global.dijit.focus.curNode.innerText || dojo.global.dijit.focus.curNode.textContent),
 										"check that focus is on File menu");
 							}), 1000);
 
@@ -69,7 +69,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});		// TODO: use left arrow in RTL mode
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("Edit", dojo.trim(dojo.global.dijit._curFocus.innerText || dojo.global.dijit._curFocus.textContent),
+								doh.is("Edit", dojo.trim(dojo.global.dijit.focus.curNode.innerText || dojo.global.dijit.focus.curNode.textContent),
 										"check that focus is on Edit MenuItem");
 							}), 1000);
 
@@ -86,7 +86,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("random link", dojo.trim(dojo.global.dijit._curFocus.innerText || dojo.global.dijit._curFocus.textContent),
+								doh.is("random link", dojo.trim(dojo.global.dijit.focus.curNode.innerText || dojo.global.dijit.focus.curNode.textContent),
 										"check that focus is back on the link");
 							}), 1000);
 
@@ -112,7 +112,7 @@
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t((dojo.global.dijit._curFocus.innerText || dojo.global.dijit._curFocus.textContent).indexOf("New") >= 0,
+								doh.t((dojo.global.dijit.focus.curNode.innerText || dojo.global.dijit.focus.curNode.textContent).indexOf("New") >= 0,
 										"check that focus is on New menu item of the File menu (indirectly checks that menu is visible)");
 							}), 1000);
 
@@ -170,7 +170,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t( (dojo.global.dijit._curFocus.innerText || dojo.global.dijit._curFocus.textContent).indexOf("50%") >= 0,
+								doh.t( (dojo.global.dijit.focus.curNode.innerText || dojo.global.dijit.focus.curNode.textContent).indexOf("50%") >= 0,
 										"check that focus is on '50%'");
 								doh.robot.keyPress(dojo.keys.ENTER, 0, {}, true); // close popup menus
 							}), 1000, 500);
@@ -194,8 +194,8 @@
 							}, 500, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit._curFocus, "something has focus");
-								doh.is("random link", dojo.global.dijit._curFocus.innerHTML, "check that focus is on the link");
+								doh.t(dojo.global.dijit.focus.curNode, "something has focus");
+								doh.is("random link", dojo.global.dijit.focus.curNode.innerHTML, "check that focus is on the link");
 							}), 1000);
 
 							return d;
@@ -212,7 +212,7 @@
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("File", dijit.getEnclosingWidget(dojo.global.dijit._curFocus).label,
+								doh.is("File", dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode).label,
 										"check that focus is on File MenuItem");
 							}), 1000);
 
@@ -230,7 +230,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});		// TODO: use left arrow in RTL mode
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("View", dojo.trim(dojo.global.dijit._curFocus.innerText || dojo.global.dijit._curFocus.textContent),
+								doh.is("View", dojo.trim(dojo.global.dijit.focus.curNode.innerText || dojo.global.dijit.focus.curNode.textContent),
 										"check that focus is on View MenuItem");
 							}), 1000);
 
@@ -249,7 +249,7 @@
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});	// focuses "Zoom", third menu item
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("Zoom", dijit.getEnclosingWidget(dojo.global.dijit._curFocus).label,
+								doh.is("Zoom", dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode).label,
 										"check that focus is on Zoom MenuItem");
 							}), 1000);
 
@@ -266,7 +266,7 @@
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("50%", dijit.getEnclosingWidget(dojo.global.dijit._curFocus).label,
+								doh.is("50%", dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode).label,
 										"check that focus is on Zoom MenuItem");
 							}), 1000);
 
@@ -283,7 +283,7 @@
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("Zoom", dijit.getEnclosingWidget(dojo.global.dijit._curFocus).label,
+								doh.is("Zoom", dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode).label,
 										"check that focus is on Zoom MenuItem");
 										
 								doh.is(0, dojo.query("#zoomMenu .dijitMenuItemSelected").length,
@@ -305,7 +305,7 @@
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("Cut", dijit.getEnclosingWidget(dojo.global.dijit._curFocus).label,
+								doh.is("Cut", dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode).label,
 										"check that focus is on first MenuItem in Edit Menu");
 
 								doh.is(0, dojo.query("#viewMenu .dijitMenuItemSelected").length,

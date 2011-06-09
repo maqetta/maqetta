@@ -226,7 +226,7 @@
 	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("embedded").show() }'>Dialog w/embedded layout widgets</button> |
 
 	<div id="embedded" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Embedded layout widgets",
-		onShow:function(){ dojo.attr(this.domNode, "aria-describedby", "describe"); } '>
+		onShow:function(){ this.domNode.setAttribute("aria-describedby", "describe"); } '>
 		<p id="describe">
 			The pane has some text, plus two embedded layout widgets, which should
 			appear correctly even though the pane is initially hidden.
@@ -385,7 +385,7 @@
 	</div>
 	
 	<button id="SelfDestructDlgBtn" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:showSelfDestructDlg'>Show Self-Destruct Dialog</button>
-	<span id="SelfDestructDlgBtn2" style="border: 1px solid black;" onclick="showSelfDestructDlg();">Show Self-Destruct Dialog (unfocusable span)</span>
+	<div id="SelfDestructDlgBtn2" style="border: 1px solid black;" class="dijitInline" onclick="showSelfDestructDlg();">Show Self-Destruct Dialog (unfocusable div)</div>
 
 	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ createDialog() }, title:"shows after 3 second delay, with blue background"'>Programatic Dialog (3 second delay)</button> |
 

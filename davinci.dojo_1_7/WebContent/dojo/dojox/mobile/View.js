@@ -29,8 +29,24 @@ define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./
 		buildRendering: function(){
 			this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("DIV");
 			this.domNode.className = "mblView";
-			if(dojo.config["mblAndroidWorkaround"] !== false && dojo.isAndroid >= 2.2 && dojo.isAndroid < 3){ // workaround for android screen flicker problem
-				dojo.style(this.domNode, "webkitTransform", "translate3d(0,0,0)");
+			if(dojo.config["mblAndroidWorkaround"] !== false && dojo.isAndroid >= 2.2 && dojo.isAndroid < 3.1){ // workaround for android screen flicker problem
+				if(dojo.isAndroid < 3){ // for Android 2.2.x and 2.3.x
+					dojo.style(this.domNode, "webkitTransform", "translate3d(0,0,0)");
+					// workaround for auto-scroll issue when focusing input fields
+					this.connect(null, "onfocus", function(e){
+						dojo.style(this.domNode, "webkitTransform", "");
+					});
+					this.connect(null, "onblur", function(e){
+						dojo.style(this.domNode, "webkitTransform", "translate3d(0,0,0)");
+					});
+				}else{ // for Android 3.0.x
+					if(dojo.config["mblAndroid3Workaround"] !== false){
+						dojo.style(this.domNode, {
+							webkitBackfaceVisibility: "hidden",
+							webkitPerspective: 8000
+						});
+					}
+				}
 			}
 			this.connect(this.domNode, "webkitAnimationEnd", "onAnimationEnd");
 			this.connect(this.domNode, "webkitAnimationStart", "onAnimationStart");
@@ -120,7 +136,7 @@ define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./
 			this._arguments = dojo._toArray(arguments);
 			this._args = [];
 			if(context || method){
-				for(i = 5; i < arguments.length; i++){
+				for(var i = 5; i < arguments.length; i++){
 					this._args.push(arguments[i]);
 				}
 			}
@@ -314,7 +330,7 @@ define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./
 				toWidget.onAfterTransitionIn.apply(toWidget, this._arguments);
 				dojo.publish("/dojox/mobile/afterTransitionIn", [toWidget].concat(this._arguments));
 			}
-	
+
 			var c = this._context, m = this._method;
 			if(!c && !m){ return; }
 			if(!m){

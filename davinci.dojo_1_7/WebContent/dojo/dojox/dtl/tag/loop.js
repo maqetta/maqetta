@@ -1,4 +1,4 @@
-define(["dojo/_base/lang","../_base","dojox/string/tokenize","dojo/_base/array"], function(dojo,dd,dxst){
+define(["dojo/_base/kernel","dojo/_base/lang","../_base","dojox/string/tokenize","dojo/_base/array"], function(dojo,lang,dd,dxst){
 	dojo.getObject("dtl.tag.loop", true, dojox);
 
 	var ddtl = dd.tag.loop;

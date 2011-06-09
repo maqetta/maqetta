@@ -1,5 +1,5 @@
-define(["dojo/_base/html",".","./contrib/dijit","./render/dom","dojo/cache","dijit/_Templated"], 
-function(dojo,dtl,ddcd,ddrd){
+define(["dojo/_base/kernel","dojo/_base/html",".","./contrib/dijit","./render/dom","dojo/cache","dijit/_Templated"], 
+function(dojo,html,dtl,ddcd,ddrd){
 
 	dtl._DomTemplated = function(){};
 	dtl._DomTemplated.prototype = {

@@ -16,7 +16,7 @@
 
 <body class="claro">
 <div>Calendar #1: No date selected dijit.byId('MSC1').get('value') should return an empty array. Add some dates and check again. You can select/unselect single dates or ranges from right to left or left to right. Use your mouse or keyboard</div>
-<div dojoType="dojox.widget.MultiSelectCalendar" id="MSC1" style="display:inline-block"></div>
+<div dojoType="dojox.widget.MultiSelectCalendar" id="MSC1" value="[]" style="display:inline-block"></div>
 </br>
 <div style="margin-top: 2em;">Calendar #2: a few date selected upon instantiation dijit.byId('MSC2').get('value') should return those selected dates. Since returnIsoRanges is by default set to false, it will return all the dates individually</div>
 <div dojoType="dojox.widget.MultiSelectCalendar" value=['2011-05-07','2011-05-08','2011-05-09','2011-05-23'] id="MSC2" style="display:inline-block"></div>

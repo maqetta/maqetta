@@ -1,4 +1,4 @@
-define(["dojo/_base/lang"], function(dojo){
+define(["dojo/_base/kernel", "dojo/_base/lang"], function(dojo){
 
 	dojox.analytics = function(){
 		// summary: TODOC

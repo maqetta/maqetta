@@ -1,4 +1,4 @@
-define("dojox/editor/plugins/TablePlugins", ["dojo", "dijit", "dojox", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dijit/MenuItem", "dijit/MenuSeparator", "dijit/TooltipDialog", "dijit/form/Button", "dijit/form/DropDownButton", "dijit/Dialog", "dijit/form/TextBox", "dijit/form/FilteringSelect", "dijit/_editor/_Plugin", "dijit/_editor/selection", "dijit/Menu", "dijit/ColorPalette", "dojox/widget/ColorPicker", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/TableDialog"], function(dojo, dijit, dojox) {
+define("dojox/editor/plugins/TablePlugins", ["dojo", "dijit", "dojox", "dijit/_base/popup", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dijit/MenuItem", "dijit/MenuSeparator", "dijit/TooltipDialog", "dijit/form/Button", "dijit/form/DropDownButton", "dijit/Dialog", "dijit/form/TextBox", "dijit/form/FilteringSelect", "dijit/_editor/_Plugin", "dijit/_editor/selection", "dijit/Menu", "dijit/ColorPalette", "dojox/widget/ColorPicker", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/TableDialog"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.TablePlugins");
 

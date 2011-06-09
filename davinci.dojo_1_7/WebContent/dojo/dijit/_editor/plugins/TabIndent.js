@@ -1,8 +1,11 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.experimental
 	"../..",
 	"../_Plugin",
-	"../../form/ToggleButton"], function(dojo, dijit){
+	"../../form/ToggleButton",
+	"dojo/_base/connect", // dojo.subscribe
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/_editor/plugins/TabIndent

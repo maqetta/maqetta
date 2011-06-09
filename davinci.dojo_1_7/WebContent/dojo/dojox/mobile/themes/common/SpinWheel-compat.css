@@ -15,3 +15,16 @@
 *html .mblSpinWheelBar {
 	z-index: -1;
 }
+*:first-child+html .mblSpinWheelSlotTouch { /* IE7 hack */
+	background: white;
+	filter: alpha(opacity=0);
+	height: 200px;
+}
+*html .mblSpinWheelSlotTouch { /* IE6 hack */
+	background: white;
+	filter: alpha(opacity=0);
+	height: 200px;
+}
+.mblSpinWheelSlotTouch, .mblSpinWheelSlotPanel {
+	left: 0px;
+}

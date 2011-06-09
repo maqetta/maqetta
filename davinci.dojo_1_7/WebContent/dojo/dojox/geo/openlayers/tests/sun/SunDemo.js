@@ -1,19 +1,8 @@
-// dojo.provide allows pages to use all of the types declared in this resource.
-//dojo.provide("dojox.geo.openlayers.tests.sun.SunDemo");
 
-//dojo.require("dojox.geo.openlayers.tests.sun.Sun");
-
-//dojo.require("dojox.geo.openlayers.widget.Map");
-//dojo.require("dojox.geo.openlayers.GfxLayer");
-//dojo.require("dojox.geo.openlayers.GeometryFeature");
-//dojo.require("dojox.geo.openlayers.LineString");
-//dojo.require("dojox.geo.openlayers.Point");
-//dojo.require("dojox.geo.openlayers.JsonImport");
-
-define([ "dojox/geo/openlayers/tests/sun/Sun", "dojox/geo/openlayers/widget/Map",
-		"dojox/geo/openlayers/GfxLayer", "dojox/geo/openlayers/GeometryFeature",
-		"dojox/geo/openlayers/LineString", "dojox/geo/openlayers/Point",
-		"dojox/geo/openlayers/JsonImport" ], function(){
+define([ "dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/tests/sun/Sun",
+		"dojox/geo/openlayers/widget/Map", "dojox/geo/openlayers/GfxLayer",
+		"dojox/geo/openlayers/GeometryFeature", "dojox/geo/openlayers/LineString",
+		"dojox/geo/openlayers/Point", "dojox/geo/openlayers/JsonImport" ], function(dojo, declare){
 
 	return dojo.declare("dojox.geo.openlayers.tests.sun.SunDemo", [], {
 

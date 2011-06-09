@@ -1,4 +1,5 @@
-define(["dojo/_base/lang", "./_base", "dojox/math/matrix"], function(dojo, dxc, dxm){
+define(["dojo/_base/kernel", "../main", "dojo/_base/lang", "./_base", "dojox/math/matrix"], 
+	function(dojo, dojox, dlang, dxc, dxm){
 
 dojox.color.Colorspace=new (function(){
 	var self=this;

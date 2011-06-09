@@ -1,8 +1,10 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"./ValidationTextBox",
-	"./ComboBoxMixin"], function(dojo, dijit){
+	"./ComboBoxMixin",
+	"dojo/_base/declare" // dojo.declare
+], function(dojo, dijit){
 
 	// module:
 	//		dijit/form/ComboBox

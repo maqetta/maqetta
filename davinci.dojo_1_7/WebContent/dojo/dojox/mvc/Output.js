@@ -1,5 +1,14 @@
-define(["dijit/_WidgetBase"], function(_WidgetBase){
-	return dojo.declare("dojox.mvc.Output", [dijit._WidgetBase], {
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dijit/_WidgetBase"
+], function(declare, lang, _WidgetBase){
+	/*=====
+		declare = dojo.declare;
+		_WidgetBase = dijit._WidgetBase
+	=====*/
+
+	return declare("dojox.mvc.Output", [_WidgetBase], {
 		// summary:
 		//		A simple widget that displays templated output, parts of which may
 		//		be data-bound.
@@ -70,7 +79,7 @@ define(["dijit/_WidgetBase"], function(_WidgetBase){
 				exp = exp.substr(0, exp.length - 1);
 				return eval(exp, pThis) || "";
 			};
-			transform = dojo.hitch(this, transform);
+			transform = lang.hitch(this, transform);
 			return tmpl.replace(/\$\{.*?\}/g,
 				function(match, key, format){
 					return transform(match, key).toString();

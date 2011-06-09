@@ -1,8 +1,6 @@
 define(['dojo', 'dijit', 'dojox/form/uploader/Base', 'dijit/form/Button'],function(dojo, dijit){
-
-
-dojo.experimental("dojox.form.Uploader");
-
+	
+	dojo.experimental("dojox.form.Uploader");
 	//
 	// TODO:
 	//		i18n
@@ -378,7 +376,6 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 	}
 });
 
-(function(){
 	dojox.form.UploaderOrg = dojox.form.Uploader;
 	var extensions = [dojox.form.UploaderOrg];
 	dojox.form.addUploaderPlugin = function(plug){
@@ -389,6 +386,6 @@ dojo.declare("dojox.form.Uploader", [dojox.form.uploader.Base], {
 		extensions.push(plug);
 		dojo.declare("dojox.form.Uploader", extensions, {});
 	}
-})();
-return dojox.form.Uploader;
+
+	return dojox.form.Uploader;
 });

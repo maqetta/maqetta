@@ -4,7 +4,7 @@ define("dojox/widget/MultiSelectCalendar", [
     "dojo/cldr/supplemental", 
     "dojo/date", 
     "dojo/date/locale", 
-    "dijit/_Widget", "dijit/_Templated", "dijit/_CssStateMixin", "dijit/form/DropDownButton"], 
+    "dijit/_Widget", "dijit/_Templated", "dijit/_CssStateMixin", "dijit/form/DropDownButton", "dijit/typematic"],
     function(dojo, dijit, template) {
 
 dojo.experimental("dojox.widget.MultiSelectCalendar");
@@ -126,7 +126,9 @@ dojo.declare(
 						}
 					}
 				},this);
-			this.focusOnLastDate(value[value.length-1]);			
+			if(value.length > 0){
+				this.focusOnLastDate(value[value.length-1]);
+			}
 			}else{
 				if(value){
 					// convert from Number to Date, or make copy of Date object so that setHours() call below

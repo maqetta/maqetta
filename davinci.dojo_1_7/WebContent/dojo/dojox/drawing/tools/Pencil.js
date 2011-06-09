@@ -1,4 +1,7 @@
-dojo.provide("dojox.drawing.tools.Pencil");
+define([
+	"../stencil/Path",
+	"../util/oo",
+	"../manager/_registry"], function(){
 
 dojox.drawing.tools.Pencil = dojox.drawing.util.oo.declare(
 	// summary:
@@ -81,3 +84,6 @@ dojox.drawing.tools.Pencil.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.tools.Pencil.setup, "tool");
+
+return dojox.drawing.tools.Pencil;
+});

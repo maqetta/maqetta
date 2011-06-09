@@ -1,9 +1,20 @@
 define([
-	"dojo",
+	"dojo/_base/kernel", // dojo.deprecated dojo.mixin
 	".",
 	"dojo/text!./templates/TimePicker.html",
 	"./form/_FormWidget",
-	"dojo/date/locale"], function(dojo, dijit, template){
+	"dojo/date/locale", // dojo.date.locale.format
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/connect", // dojo.keys
+	"dojo/_base/declare", // dojo.declare
+	"dojo/_base/event", // dojo.stopEvent
+	"dojo/_base/html", // dojo.addClass dojo.create dojo.hasClass dojo.toggleClass
+	"dojo/_base/sniff", // dojo.isIE
+	"dojo/date", // dojo.date.compare
+	"dojo/date/stamp", // dojo.date.stamp.fromISOString dojo.date.stamp.toISOString
+	"dojo/query", // dojo.query
+	"dijit/typematic"
+], function(dojo, dijit, template){
 
 	// module:
 	//		dijit/_TimePicker

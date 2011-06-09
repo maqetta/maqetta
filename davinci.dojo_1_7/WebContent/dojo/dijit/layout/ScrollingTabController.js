@@ -1,5 +1,5 @@
 define([
-	"dojo",
+	"dojo/_base/kernel",
 	"..",
 	"dojo/text!./templates/ScrollingTabController.html",
 	"dojo/text!./templates/_ScrollingTabControllerButton.html",
@@ -7,7 +7,15 @@ define([
 	"../_WidgetsInTemplateMixin",
 	"../Menu",
 	"../form/Button",
-	"../_HasDropDown"], function(dojo, dijit, tabControllerTemplate, buttonTemplate){
+	"../_HasDropDown",
+	"dojo/_base/NodeList", // .filter
+	"dojo/_base/array", // dojo.forEach
+	"dojo/_base/html", // dojo.addClass dojo.contentBox dojo.hasClass dojo.style
+	"dojo/_base/lang", // dojo.hitch
+	"dojo/_base/sniff", // dojo.isIE dojo.isQuirks dojo.isWebKit
+	"dojo/fx", // .play
+	"dojo/query" // dojo.query
+], function(dojo, dijit, tabControllerTemplate, buttonTemplate){
 
 // module:
 //		dijit/layout/ScrollingTabController
@@ -192,9 +200,7 @@ dojo.declare("dijit.layout.ScrollingTabController", [dijit.layout.TabController,
 			if(this._anim && this._anim.status() == "playing"){
 				this._anim.stop();
 			}
-			var w = this.scrollNode,
-				sl = this._convertToScrollLeft(this._getScrollForSelectedTab());
-			w.scrollLeft = sl;
+			this.scrollNode.scrollLeft = this._convertToScrollLeft(this._getScrollForSelectedTab());
 		}
 
 		// Enable/disabled left right buttons depending on whether or not user can scroll to left or right
@@ -212,10 +218,9 @@ dojo.declare("dijit.layout.ScrollingTabController", [dijit.layout.TabController,
 		//		Returns the current scroll of the tabs where 0 means
 		//		"scrolled all the way to the left" and some positive number, based on #
 		//		of pixels of possible scroll (ex: 1000) means "scrolled all the way to the right"
-		var sl = (this.isLeftToRight() || dojo.isIE < 8 || (dojo.isIE && dojo.isQuirks) || dojo.isWebKit) ? this.scrollNode.scrollLeft :
+		return (this.isLeftToRight() || dojo.isIE < 8 || (dojo.isIE && dojo.isQuirks) || dojo.isWebKit) ? this.scrollNode.scrollLeft :
 				dojo.style(this.containerNode, "width") - dojo.style(this.scrollNode, "width")
 					 + (dojo.isIE == 8 ? -1 : 1) * this.scrollNode.scrollLeft;
-		return sl;
 	},
 
 	_convertToScrollLeft: function(val){

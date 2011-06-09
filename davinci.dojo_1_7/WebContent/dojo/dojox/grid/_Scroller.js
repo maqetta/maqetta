@@ -1,6 +1,5 @@
 define(["dojo", "dijit", "dojox"], function(dojo, dijit, dojox){
 
-(function(){
 	var indexInParent = function(inNode){
 		var i=0, n, p=inNode.parentNode;
 		while((n = p.childNodes[i++])){
@@ -501,8 +500,7 @@ define(["dojo", "dijit", "dojox"], function(dojo, dijit, dojox){
 		},
 		dummy: 0
 	});
-})();
 
-return dojox.grid._Scroller;
+	return dojox.grid._Scroller;
 
 });

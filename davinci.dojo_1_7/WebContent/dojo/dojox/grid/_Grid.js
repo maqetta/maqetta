@@ -2,8 +2,10 @@ define([
 	"dojo",
 	"dijit",
 	"dojox",
+	"dojo/text!./resources/_Grid.html",
 	"dojo/i18n!dijit/nls/loading",
 	"dijit/dijit",
+	"dijit/CheckedMenuItem",
 	"dijit/Menu",
 	"dojox/html/metrics",
 	"./util",
@@ -16,9 +18,8 @@ define([
 	"./_EditManager",
 	"./Selection",
 	"./_RowSelector",
-	"./_Events"], function(dojo, dijit, dojox){
+	"./_Events"], function(dojo, dijit, dojox, template){
 
-(function(){
 	// NOTE: this is for backwards compatibility with Dojo 1.3
 	if(!dojo.isCopyKey){
 		dojo.isCopyKey = dojo.dnd.getCopyKeyState;
@@ -180,7 +181,7 @@ define([
 		//	|		structure="structure"
 		//	|		dojoType="dojox.grid._Grid"></div>
 
-		templatePath: dojo.moduleUrl("dojox.grid","resources/_Grid.html"),
+		templateString: template,
 
 		// classTag: String
 		// 		CSS class applied to the grid's domNode
@@ -346,7 +347,7 @@ define([
 			this.connect(dojox.html.metrics, "onFontResize", "textSizeChanged");
 			dojox.grid.util.funnelEvents(this.domNode, this, 'doKeyEvent', dojox.grid.util.keyEvents);
 			if (this.selectionMode != "none") {
-				dojo.attr(this.domNode, "aria-multiselectable", this.selectionMode == "single" ? "false" : "true");
+				this.domNode.setAttribute("aria-multiselectable", this.selectionMode == "single" ? "false" : "true");
 			}
 
 			dojo.addClass(this.domNode, this.classTag);
@@ -726,7 +727,7 @@ define([
 			if(resultSize){
 				changeSize = resultSize;
 			}
-			if(changeSize){
+			if(!this._autoHeight && changeSize){
 				dojo.marginBox(this.domNode, changeSize);
 				this.height = this.domNode.style.height;
 				delete this.fitTo;
@@ -1368,8 +1369,7 @@ define([
 
 		return new ctor(props, node);
 	};
-})();
 
-return dojox.grid._Grid;
+	return dojox.grid._Grid;
 
 });

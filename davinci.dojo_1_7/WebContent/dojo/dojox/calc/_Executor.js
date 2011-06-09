@@ -2,7 +2,8 @@ define("dojox/calc/_Executor", ["dojo", "dijit/_Templated", "dojox/math/_base"],
 
 dojo.experimental("dojox.calc._Executor");
 
-(function(){
+dojo.getObject("calc", true, dojox);
+
 var calcEnv; // private
 
 // do not override toFrac's pow function if it won the race
@@ -125,22 +126,19 @@ dojo.declare(
 		calcEnv = null; // assist garbage collection
 	}
 });
-})();
 
-(function(){
-	var magicBigInt = (1 << 30) - 35; // 2^30 - 35 is a prime that ensures approx(n/(2^k)) != n/(2^k) for k >= 1 and n < 2^k
-	dojo.mixin(dojox.calc, {
-		approx: function(r){
-			// summary:
-			//	Return a less exact approximation of r such that approx(r * (1 +- eps)) == approx(r)
-			if(typeof r == "number"){
-				return Math.round(r * magicBigInt) / magicBigInt;
-			}
-			return r;
+var magicBigInt = (1 << 30) - 35; // 2^30 - 35 is a prime that ensures approx(n/(2^k)) != n/(2^k) for k >= 1 and n < 2^k
+dojo.mixin(dojox.calc, {
+	approx: function(r){
+		// summary:
+		//	Return a less exact approximation of r such that approx(r * (1 +- eps)) == approx(r)
+		if(typeof r == "number"){
+			return Math.round(r * magicBigInt) / magicBigInt;
 		}
-	});
-})();
-
+		return r;
+	}
+});
 
 return dojox.calc._Executor;
+
 });

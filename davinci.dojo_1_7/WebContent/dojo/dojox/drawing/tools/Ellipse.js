@@ -1,4 +1,7 @@
-dojo.provide("dojox.drawing.tools.Ellipse");
+define([
+	"../stencil/Ellipse",
+	"../util/oo",
+	"../manager/_registry"],function(){
 
 dojox.drawing.tools.Ellipse = dojox.drawing.util.oo.declare(
 	// summary:
@@ -77,3 +80,6 @@ dojox.drawing.tools.Ellipse.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.tools.Ellipse.setup, "tool");
+
+return dojox.drawing.tools.Ellipse;
+});

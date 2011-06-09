@@ -1,8 +1,4 @@
-dojo.provide("dojox.drawing.ui.Tooltip");
-dojo.require("dojox.drawing.plugins._Plugin");
-
-
-(function(){
+define(["dojo","../util/oo","../manager/_registry","../plugins/_Plugin"], function(dojo){
 	
 	//	summary:
 	//		Used for UI tooltips. Buttons in the toolbar.
@@ -112,4 +108,6 @@ dojo.require("dojox.drawing.plugins._Plugin");
 	dojox.drawing.register({
 		name:"dojox.drawing.ui.Tooltip"
 	}, "stencil");
-})();
+	
+	return dojox.drawing.ui.Tooltip;
+});

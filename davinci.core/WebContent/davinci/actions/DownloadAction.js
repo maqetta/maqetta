@@ -39,6 +39,9 @@ download : function(value)
 	var resources=dojo.map(this._files,function(item){return item.getPath();});
 	this.dialog.destroyRecursive(false);
 	var path=value.zipFileName;
+	
+	davinci.model.Resource.download(resources, path + ".zip");	
+	/*
 	 response = davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/download", handleAs:"text",
 	          content:{'fileName':path, 'resources' : resources},sync:true  });
@@ -52,8 +55,8 @@ download : function(value)
 
 		  window.location.href=loc;
 	  }
-	  else if (response)
-		  alert(response);
+	  */
+
 }
 //,
 //shouldShow: function(selection){

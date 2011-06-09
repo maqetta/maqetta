@@ -274,6 +274,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 					this.visualEditor.context.select(selectionItem.model,selectionItem.add);
 		}
 	},
+	
 	save : function (isAutoSave)
 	{
 	//	this.inherited(arguments);
@@ -284,7 +285,12 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		if (this.editorContainer)
 			this.editorContainer.setDirty(isAutoSave);
 	},
-	
+
+	previewInBrowser : function ()
+	{
+		this.visualEditor.previewInBrowser();
+	},
+
 	destroy : function (){
 		
 		this.inherited(arguments);

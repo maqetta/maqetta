@@ -18,7 +18,7 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 		var e = davinci.Workbench.getOpenEditor(),
 			c = e.getContext(),
 			device = c.visualEditor.deviceName,
-			deviceList = ["none", "ipad", "iphone", "android_480x800", "blackberry"],
+			deviceList = ["none", "iphone", "ipad", "android_340x480", "android_480x800", "androidtablet", "blackberry"],
 			formHtml = '<select dojoType="dijit.form.ComboBox" id="devices" name="devices">';
 		e._visualChanged();
 		formHtml += deviceList.map(function(name){
@@ -44,10 +44,9 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 dojo.declare("davinci.ve.actions.RotateDeviceAction", davinci.actions.Action, {
 	
 	run: function(selection){
-
 		var e = davinci.Workbench.getOpenEditor();
 		var context = e.getContext();
-		dojo.toggleClass(context.visualEditor.contentPane.domNode, 'landscape');
+		context.visualEditor.toggleOrientation();		
 	},
 	
 	isEnabled: function(selection){

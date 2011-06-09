@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- How to use 100% size with a border, without getting the scrollbar due to the 1px border -->
+<html>
+<head>
+<style type="text/css">
+* {
+	margin:0;
+}
+html {
+	width:100%;
+	height:100%;
+}
+body {
+	width:100%;
+	height:100%;
+}
+#outer {
+	width:100%;
+	height:100%;
+	/* You need to put padding of twice the borderwidth on parent box on right and bottom */
+	padding:0px 4px 4px 0px;
+	/* This is the magic. This makes the parent box's contentbox subtract out the padding
+		and therefore provide a smaller overall box container for its children. */
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+}	
+#inner {
+	width:100%;
+	height:100%;
+	/* Without box-sizing, this border or the padding on the parent will cause scrollbars to appear */
+	border:2px solid purple;
+}	
+</style>
+</head>
+<body>
+	<div id="outer">
+		<div id="inner">
+				Sample text
+		</div>
+	</div>
+</body>
+</html>

@@ -66,7 +66,11 @@ public class DavinciPageServlet extends HttpServlet {
                 /* local install, set user to single user */
                 user = this.userManager.getSingleUser();
                 req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-                writeInternalPage(req, resp, "pagedesigner.html");
+                if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
+                	handlePreview(req,resp);
+                }else{
+                	writeInternalPage(req, resp, "pagedesigner.html");
+                }
             }
         } else if (pathInfo.equals("/welcome")) {
             /* write the welcome page (may come from extension point) */

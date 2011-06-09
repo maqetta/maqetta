@@ -21,153 +21,140 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 
 public class ServerManager {
 
-	static ServerManager theServerManager;
+    static ServerManager  theServerManager;
 
-	UserManager userManager;
+    UserManager           userManager;
 
-	IExtensionRegistry registry;
+    IExtensionRegistry    registry;
 
-	LibraryManager libraryManager;
+    LibraryManager        libraryManager;
 
-	public ServletConfig servletConfig;
+    public ServletConfig  servletConfig;
 
-	public static boolean DEBUG_IO_TO_CONSOLE;
-	public static boolean LOCAL_INSTALL;
-	public static boolean IN_WAR;
+    public static boolean DEBUG_IO_TO_CONSOLE;
+    public static boolean LOCAL_INSTALL;
+    public static boolean IN_WAR;
 
-	{
-		String localInstall = System
-				.getProperty(IDavinciServerConstants.LOCAL_INSTALL);
-		if (localInstall != null) {
-			ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
-		} else {
-			ServerManager.LOCAL_INSTALL = false;
-		}
+    {
+        String localInstall = System.getProperty(IDavinciServerConstants.LOCAL_INSTALL);
+        if (localInstall != null) {
+            ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
+        } else {
+            ServerManager.LOCAL_INSTALL = false;
+        }
 
-		String base = System
-				.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-		ServerManager.IN_WAR = base == null;
+        String base = System.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
+        ServerManager.IN_WAR = base == null;
 
-	}
+    }
 
-	ServerManager(ServletConfig servletConfig) {
-		this.servletConfig = servletConfig;
-		String shouldDebug = this
-				.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
-		if (shouldDebug != null && "true".equals(shouldDebug)) {
-			ServerManager.DEBUG_IO_TO_CONSOLE = Boolean
-					.parseBoolean(shouldDebug);
-		} else {
-			ServerManager.DEBUG_IO_TO_CONSOLE = false;
-		}
+    ServerManager(ServletConfig servletConfig) {
+        this.servletConfig = servletConfig;
+        String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
+        if (shouldDebug != null && "true".equals(shouldDebug)) {
+            ServerManager.DEBUG_IO_TO_CONSOLE = Boolean.parseBoolean(shouldDebug);
+        } else {
+            ServerManager.DEBUG_IO_TO_CONSOLE = false;
+        }
 
-		Activator.getActivator().addRegistryChangeListener(
-				new IRegistryListener() {
-					public void registryChanged() {
-						ServerManager.this.registry = Activator.getActivator()
-								.getRegistry();
-					}
-				});
-	}
+        Activator.getActivator().addRegistryChangeListener(new IRegistryListener() {
+            public void registryChanged() {
+                ServerManager.this.registry = Activator.getActivator().getRegistry();
+            }
+        });
+    }
 
-	public static ServerManager getServerManger() {
-		return ServerManager.theServerManager;
-	}
+    public static ServerManager getServerManger() {
+        return ServerManager.theServerManager;
+    }
 
-	public static ServerManager createServerManger(ServletConfig servletConfig) {
-		if (ServerManager.theServerManager == null) {
-			ServerManager.theServerManager = new ServerManager(servletConfig);
-		}
-		return ServerManager.theServerManager;
-	}
+    public static ServerManager createServerManger(ServletConfig servletConfig) {
+        if (ServerManager.theServerManager == null) {
+            ServerManager.theServerManager = new ServerManager(servletConfig);
+        }
+        return ServerManager.theServerManager;
+    }
 
-	public String getDavinciProperty(String propertyName) {
-		String property = null;
-		if (ServerManager.IN_WAR) {
-			try {
-				Context env = (Context) new InitialContext()
-						.lookup("java:comp/env");
-				property = (String) env.lookup(propertyName);
-			} catch (NameNotFoundException e) {
-				// ignore
-			} catch (NamingException e) {
-				e.printStackTrace();
-			}
+    public String getDavinciProperty(String propertyName) {
+        String property = null;
+        if (ServerManager.IN_WAR) {
+            try {
+                Context env = (Context) new InitialContext().lookup("java:comp/env");
+                property = (String) env.lookup(propertyName);
+            } catch (NameNotFoundException e) {
+                // ignore
+            } catch (NamingException e) {
+                e.printStackTrace();
+            }
 
-			// String property
-			// =this.servletConfig.getServletContext().getInitParameter(propertyName);
-			System.out.println("servlet parm '" + propertyName + "' is : "
-					+ property);
+            // String property
+            // =this.servletConfig.getServletContext().getInitParameter(propertyName);
+            System.out.println("servlet parm '" + propertyName + "' is : " + property);
 
-		}
-		if (property == null) {
-			property = System.getProperty(propertyName);
-			System.out.println("servlet parm '" + propertyName + "' is : "
-					+ property);
-		}
-		return property;
-	}
+        }
+        if (property == null) {
+            property = System.getProperty(propertyName);
+            System.out.println("servlet parm '" + propertyName + "' is : " + property);
+        }
+        return property;
+    }
 
-	public UserManager getUserManager() {
-		if (userManager == null) {
-			userManager = new UserManagerImpl();
-		}
-		return userManager;
-	}
+    public UserManager getUserManager() {
+        if (userManager == null) {
+            userManager = new UserManagerImpl();
+        }
+        return userManager;
+    }
 
-	public List getExtensions(String extensionPoint, String elementTag) {
-		ArrayList list = new ArrayList();
-		IExtension[] extensions = this.getExtensions(extensionPoint);
-		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] elements = extensions[i]
-					.getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(elementTag)) {
-					list.add(elements[j]);
-				}
-			}
-		}
+    public List getExtensions(String extensionPoint, String elementTag) {
+        ArrayList list = new ArrayList();
+        IExtension[] extensions = this.getExtensions(extensionPoint);
+        for (int i = 0; i < extensions.length; i++) {
+            IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+            for (int j = 0; j < elements.length; j++) {
+                if (elements[j].getName().equals(elementTag)) {
+                    list.add(elements[j]);
+                }
+            }
+        }
 
-		return list;
-	}
+        return list;
+    }
 
-	public IConfigurationElement getExtension(String extensionPoint,
-			String elementTag) {
-		IExtension[] extensions = this.getExtensions(extensionPoint);
-		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] elements = extensions[i]
-					.getConfigurationElements();
-			for (int j = 0; j < elements.length; j++) {
-				if (elements[j].getName().equals(elementTag)) {
-					return elements[j];
-				}
-			}
-		}
+    public IConfigurationElement getExtension(String extensionPoint, String elementTag) {
+        IExtension[] extensions = this.getExtensions(extensionPoint);
+        for (int i = 0; i < extensions.length; i++) {
+            IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+            for (int j = 0; j < elements.length; j++) {
+                if (elements[j].getName().equals(elementTag)) {
+                    return elements[j];
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private static final IExtension[] EMPTY_EXTENSIONS = {};
+    private static final IExtension[] EMPTY_EXTENSIONS = {};
 
-	public IExtension[] getExtensions(String extensionPoint) {
-		if (this.registry == null) {
-			this.registry = Activator.getActivator().getRegistry();
-		}
-		if (this.registry != null) {
-			IExtensionPoint point = this.registry.getExtensionPoint(
-					IDavinciServerConstants.BUNDLE_ID, extensionPoint);
+    public IExtension[] getExtensions(String extensionPoint) {
+        if (this.registry == null) {
+            this.registry = Activator.getActivator().getRegistry();
+        }
+        if (this.registry != null) {
+            IExtensionPoint point = this.registry.getExtensionPoint(IDavinciServerConstants.BUNDLE_ID, extensionPoint);
 
-			if (point != null) {
-				return point.getExtensions();
-			}
-		}
-		return ServerManager.EMPTY_EXTENSIONS;
-	}
+            if (point != null) {
+                return point.getExtensions();
+            }
+        }
+        return ServerManager.EMPTY_EXTENSIONS;
+    }
 
-	public synchronized LibraryManager getLibraryManager() {
-		if (libraryManager == null) {
-			libraryManager = new LibraryManager();
-		}
-		return libraryManager;
-	}
+    public synchronized LibraryManager getLibraryManager() {
+        if (libraryManager == null) {
+            libraryManager = new LibraryManager();
+        }
+        return libraryManager;
+    }
 }

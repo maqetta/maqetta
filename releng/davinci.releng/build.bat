@@ -4,22 +4,22 @@ rem  create a directory to do the build in, build results will be in buildDirect
 rem
 
 rem
-rem Path to parent directory of the eclipse application directory. 
-rem That is, if eclipse is installed in '/usr/local/eclipse', this property 
+rem Path to parent directory of the eclipse application directory.
+rem That is, if eclipse is installed in '/usr/local/eclipse', this property
 rem would be set as 'base="/usr/local"'. No trailing backslash.
 rem
-set base=C:\path\to\parent\of\eclipse 
+set base=C:\path\to\parent\of\eclipse
 
 rem
-rem Path to eclipse directory inclusive. The application directory is 
+rem Path to eclipse directory inclusive. The application directory is
 rem usually, but not always, named 'eclipse'. It has sub-directories
 rem \configuration, \features, \plugins, etc. No trailing backslash.
 rem
 set baseLocation=%base%\eclipse
 
 rem
-rem Version number of the launcher jar file. See %baseLocation%\plugins\org.eclipse.equinox.launcher_*.jar. 
-rem The launcher version is the set of alphanumeric characters between 'launcher_' and the '.' character 
+rem Version number of the launcher jar file. See %baseLocation%\plugins\org.eclipse.equinox.launcher_*.jar.
+rem The launcher version is the set of alphanumeric characters between 'launcher_' and the '.' character
 rem before the 'jar' file name suffix.
 rem
 set launcherVersion=1.0.200.v20090520
@@ -48,26 +48,16 @@ rem
 set gitRepository=git@github.com:maqetta/maqetta.git
 
 rem
-rem Path to javax.activation and javax.mail Eclipse projects directory 
-rem
-rem Note: Users outside of IBM need to create these projects for
-rem       themselves as they are *not* checked-in to GitHub for
-rem       licensing reasons. Empty template projects with proper settings
-rem       are checked-in to GitHub in 'davinci.releng\javax_project_templates.zip'.
-rem
-set javaxPath=\path\to\directory\containing\javax\eclipse\projects
-
-rem
 rem Windowing System, Operating System and processor Architecture settings
 rem
-rem Note: See %baseLocation%\plugins\org.eclipse.equinox.launcher.xxx.yyy.xxx\ 
-rem       to determine your settings, they should be similar to 'cocoa.macosx.x86_64' 
+rem Note: See %baseLocation%\plugins\org.eclipse.equinox.launcher.xxx.yyy.xxx\
+rem       to determine your settings, they should be similar to 'cocoa.macosx.x86_64'
 rem
 set myOS=win32
 set myWS=win32
 set myArch=x86
 
-rem 
+rem
 rem Set up for and pull down the latest code from GitHub
 rem
 IF NOT EXIST %buildDirectory%\repository (
@@ -89,23 +79,6 @@ IF EXIST %buildDirectory%\repository\maqetta\.git (
 )
 
 rem
-rem If '.git' directory exists we need to pull
-rem
-if EXIST %javaxPath%\.git (
-    rem "Fetching javax.activation and javax.mail projects..."
-    cd %javaxPath%
-    git pull
-)
-
-rem
-rem "Copying javax.activation and javax.mail projects..."
-rem
-cd %buildDirectory%\repository\maqetta
-xcopy %javaxPath%\javax.activation . /s /e 
-xcopy %javaxPath%\javax.mail . /s /e 
-
-
-rem
 rem Change directory to the build directory.
 rem
 rem Note: Many scripts use relative directory references making
@@ -113,4 +86,4 @@ rem       running the build from this directory *imperative*.
 rem
 cd %buildDirectory%
 
-java -jar %baseLocation%\plugins\org.eclipse.equinox.launcher_%launcherVersion%.jar -application org.eclipse.ant.core.antRunner -buildfile %relEngDir%\buildAll.xml   
+java -jar %baseLocation%\plugins\org.eclipse.equinox.launcher_%launcherVersion%.jar -application org.eclipse.ant.core.antRunner -buildfile %relEngDir%\buildAll.xml

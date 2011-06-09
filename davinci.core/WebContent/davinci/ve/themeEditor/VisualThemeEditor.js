@@ -51,11 +51,12 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			this.context.setPreferences(prefs);
 		}
 		// have the server insert the dojo URL dynamically 
+		
 		dojo.xhrGet({
 				url: resource.getURL(),
 				handleAs: "text",
 				sync: true,
-				content:{'updateRoot':'%root%', 'id':'dojo', 'version':'1.7'} //FIXME: Dojo version is hard-coded
+				content:{/*'updateRoot':'%root%', 'id':theme.libId, 'version':theme.libVersion*/} //FIXME: Dojo version is hard-coded
 			}).addCallback(dojo.hitch(this, function(result){
 				this.setContent("DEFAULT_PAGE", 
 								result,

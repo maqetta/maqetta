@@ -14,17 +14,15 @@ import org.davinci.server.user.User;
 
 public class SetWorkbenchState extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
-		File settingsDir = user.getSettingsDirectory();
-		File settingsFile = new File(settingsDir,
-				IDavinciServerConstants.WORKBENCH_STATE_FILE);
-		if (!settingsFile.exists()) {
-			settingsFile.createNewFile();
-		}
-		OutputStream os = new FileOutputStream(settingsFile);
-		Command.transferStreams(req.getInputStream(), os, false);
-	}
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        File settingsDir = user.getSettingsDirectory();
+        File settingsFile = new File(settingsDir, IDavinciServerConstants.WORKBENCH_STATE_FILE);
+        if (!settingsFile.exists()) {
+            settingsFile.createNewFile();
+        }
+        OutputStream os = new FileOutputStream(settingsFile);
+        Command.transferStreams(req.getInputStream(), os, false);
+    }
 
 }

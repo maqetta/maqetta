@@ -29,4 +29,3 @@ dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dojox.form.PasswordValidator");
 dojo.require("dojox.validate.regexp");
-dojo.require("davinci.appcache");

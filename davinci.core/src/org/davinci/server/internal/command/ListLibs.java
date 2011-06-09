@@ -13,24 +13,22 @@ import org.davinci.server.util.JSONWriter;
 
 public class ListLibs extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
-		Library[] libs = ServerManager.getServerManger().getLibraryManager()
-				.getAllLibraries();
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        Library[] libs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
 
-		JSONWriter jsonWriter = new JSONWriter(true);
-		jsonWriter.startObject().addFieldName("userLibs").startArray();
-		for (int i = 0; i < libs.length; i++) {
-			String id = libs[i].getID();
-			String version = libs[i].getVersion();
-			jsonWriter.startObject().addField("id", id);
-			jsonWriter.addField("version", version);
-			jsonWriter.addField("root", libs[i].getDefaultRoot());
-			jsonWriter.endObject();
-		}
-		jsonWriter.endArray().endObject();
-		this.responseString = jsonWriter.getJSON();
-	}
+        JSONWriter jsonWriter = new JSONWriter(true);
+        jsonWriter.startObject().addFieldName("userLibs").startArray();
+        for (int i = 0; i < libs.length; i++) {
+            String id = libs[i].getID();
+            String version = libs[i].getVersion();
+            jsonWriter.startObject().addField("id", id);
+            jsonWriter.addField("version", version);
+            jsonWriter.addField("root", libs[i].getDefaultRoot());
+            jsonWriter.endObject();
+        }
+        jsonWriter.endArray().endObject();
+        this.responseString = jsonWriter.getJSON();
+    }
 
 }

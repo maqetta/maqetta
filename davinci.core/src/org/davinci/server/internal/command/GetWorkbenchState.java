@@ -15,21 +15,19 @@ import org.davinci.server.user.User;
 
 public class GetWorkbenchState extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
-		File userSettings = user.getSettingsDirectory();
-		File settingsFile = new File(userSettings,
-				IDavinciServerConstants.WORKBENCH_STATE_FILE);
-		InputStream inputStream;
-		if (settingsFile.exists()) {
-			inputStream = new FileInputStream(settingsFile);
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        File userSettings = user.getSettingsDirectory();
+        File settingsFile = new File(userSettings, IDavinciServerConstants.WORKBENCH_STATE_FILE);
+        InputStream inputStream;
+        if (settingsFile.exists()) {
+            inputStream = new FileInputStream(settingsFile);
 
-		} else {
-			inputStream = new ByteArrayInputStream("{}".getBytes());
-		}
-		Command.transferStreams(inputStream, resp.getOutputStream(), true);
+        } else {
+            inputStream = new ByteArrayInputStream("{}".getBytes());
+        }
+        Command.transferStreams(inputStream, resp.getOutputStream(), true);
 
-	}
+    }
 
 }

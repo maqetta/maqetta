@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/RoundRect",
-    "name": "dojox.mobile.RoundRect",
+    "id": "http://dojotoolkit.org/dojox/mobile/CheckBox",
+    "name": "dojox.mobile.CheckBox",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -22,6 +22,10 @@
             "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
         },
         {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.CheckBox');"
+        },
+        {
             "type": "css",
             "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"
@@ -33,10 +37,29 @@
         }
     },
     "property": {
-        "shadow": {
+        "baseClass": {
+            "datatype": "string",
+            "defaultValue": "mblCheckBox"
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 1000
+        },
+        "label": {
+            "datatype": "string"
+        },
+        "checked": {
             "datatype": "boolean",
-            "defaultValue": "false"
+            "defaultValue": false
+        },
+        "value": {
+            "datatype": "string",
+            "defaultValue": "on"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
-    "content": "<div></div>"
+    "content": "<input type='checkbox'>"
 }

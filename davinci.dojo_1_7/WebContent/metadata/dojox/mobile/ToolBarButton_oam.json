@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/EdgeToEdgeList",
-    "name": "dojox.mobile.EdgeToEdgeList",
+    "id": "http://dojotoolkit.org/dojox/mobile/ToolBarButton",
+    "name": "dojox.mobile.ToolBarButton",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -37,12 +37,43 @@
             "datatype": "string",
             "defaultValue": "slide"
         },
-        "iconBase": {
+        "transitionDir": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "icon": {
             "datatype": "string"
         },
         "iconPos": {
             "datatype": "string"
+        },
+        "moveTo": {
+            "datatype": "string"
+        },
+        "href": {
+            "datatype": "string"
+        },
+        "hrefTarget": {
+            "datatype": "string"
+        },
+        "url": {
+            "datatype": "string"
+        },
+        "callback": {
+            "datatype": "string"
+        },
+        "sync": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "ToolBarButton"
+        },
+        "selected": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
-    "content": "<ul></ul>"
+    "content": "<div label='ToolBarButton'></div>"
 }

@@ -1,0 +1,97 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/Slider",
+    "name": "dojox.mobile.Slider",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.Slider');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string"
+        },
+        "baseClass": {
+            "datatype": "string",
+            "defaultValue": "mblSlider"
+        },
+        "value": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "min": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "max": {
+            "datatype": "number",
+            "defaultValue": 100
+        },
+        "step": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "flip": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "orientation": {
+            "datatype": "string",
+            "defaultValue": "auto"
+        },
+        "halo": {
+            "datatype": "string",
+            "defaultValue": "8pt"
+        },
+        "tabIndex": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "defaultValue": true
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "defaultValue": false
+        }
+    },
+    "content": "<input type='range'>"
+}

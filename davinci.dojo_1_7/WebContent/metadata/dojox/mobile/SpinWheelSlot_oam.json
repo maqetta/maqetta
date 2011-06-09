@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/RoundRect",
-    "name": "dojox.mobile.RoundRect",
+    "id": "http://dojotoolkit.org/dojox/mobile/SpinWheelSlot",
+    "name": "dojox.mobile.SpinWheelSlot",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -22,6 +22,10 @@
             "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
         },
         {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.SpinWheel');"
+        },
+        {
             "type": "css",
             "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"
@@ -33,9 +37,20 @@
         }
     },
     "property": {
-        "shadow": {
-            "datatype": "boolean",
-            "defaultValue": "false"
+        "items": {
+            "datatype": "[[]]"
+        },
+        "labels": {
+            "datatype": "[string]"
+        },
+        "labelFrom": {
+            "datatype": "number"
+        },
+        "labelTo": {
+            "datatype": "number"
+        },
+        "value": {
+            "datatype": "*"
         }
     },
     "content": "<div></div>"

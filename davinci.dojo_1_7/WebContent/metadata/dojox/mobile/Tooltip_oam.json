@@ -1,6 +1,6 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/RoundRect",
-    "name": "dojox.mobile.RoundRect",
+    "id": "http://dojotoolkit.org/dojox/mobile/Tooltip",
+    "name": "dojox.mobile.Tooltip",
     "spec": "1.0",
     "version": "1.7",
     "require": [
@@ -22,6 +22,10 @@
             "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
         },
         {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.Tooltip');"
+        },
+        {
             "type": "css",
             "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"
@@ -33,9 +37,9 @@
         }
     },
     "property": {
-        "shadow": {
-            "datatype": "boolean",
-            "defaultValue": "false"
+        "baseClass": {
+            "datatype": "string",
+            "defaultValue": "mblTooltip mblTooltipHidden"
         }
     },
     "content": "<div></div>"

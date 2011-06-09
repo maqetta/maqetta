@@ -127,7 +127,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target build.sources                           -->
 	<!-- Available parameters :                                                -->
@@ -174,7 +174,7 @@
 
 	<target name="post.compile.@dot">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the compilation target <name>                       -->
 	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
@@ -188,7 +188,7 @@
 
 	<target name="post.@dot">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target gather.bin.parts                         -->
 	<!-- Available parameters :                                                -->
@@ -197,7 +197,7 @@
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
 	</target>
-		
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the target gather.bin.parts                         -->
 	<!-- Available parameters :                                                -->
@@ -221,6 +221,7 @@
 			</fileset>
 		</copy>
 		<java fork="true" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
+		    maxmemory="1024m"
 			classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
 			classname="org.mozilla.javascript.tools.shell.Main"
 			description="Run Dojo build script"
@@ -273,7 +274,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.gather.logs">        
+	<target name="pre.gather.logs">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -281,7 +282,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="post.gather.logs">       
+	<target name="post.gather.logs">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -289,7 +290,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.clean">              
+	<target name="pre.clean">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -299,6 +300,6 @@
 	<!--   build.result.folder - results of the compilation                    -->
 	<!--   temp.folder - temporary folder                                      -->
 	<!-- ===================================================================== -->
-	<target name="post.clean">             
+	<target name="post.clean">
 	</target>
 </project>

@@ -31,7 +31,8 @@ dojo.mixin(davinci.model.Resource,	{
 		var destPath = destFile.getPath? destFile.getPath() : destFile;
 		var response = davinci.Runtime.serverJSONRequest({url:"./cmd/copy", 
 														  handleAs:"text", 
-														  content:{'source':path, 'dest' : destPath, 'recurse': new String(recurse)},sync:true  });
+														  sync:true,
+														  content:{'source':path, 'dest' : destPath, 'recurse': new String(recurse)}  });
 		this.workspaceChanged();
 	},
 	
@@ -582,6 +583,8 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 					var resource=this.root;
 					seg1=0;
 					segments=foundFile.file.split('/');
+					if (segments[0]=='.')
+						seg1=1;
 
 					foundResources[i]=doFind();
 				}
@@ -667,7 +670,8 @@ davinci.model.Resource.Resource= function(){
 		
 		var response = davinci.Runtime.serverJSONRequest({url:"./cmd/rename", 
 														  handleAs:"text", 
-														  content:{'oldName':this.getPath(), 'newName' : newPath.toString()}, sync:true
+														  sync:true,
+														  content:{'oldName':this.getPath(), 'newName' : newPath.toString()} 
 															});
 		this.name = newName;
 		dojo.publish("/davinci/resource/resourceChanged",["renamed",this]);
@@ -715,7 +719,7 @@ davinci.model.Resource.Resource= function(){
 			  }
 			dojo.publish("/davinci/resource/resourceChanged",["deleted",this]);
 	  }
-	  else if (response)
+	  else if (response!="OK")
 		  alert(response);
  }
  
@@ -733,23 +737,31 @@ davinci.model.Resource.Resource= function(){
  }
   davinci.Inherits(davinci.model.Resource.Folder,davinci.model.Resource.Resource);
 
-  davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder, localOnly)
-  {
-	  var file= isFolder ? 
-			  new davinci.model.Resource.Folder(name,this)
-			:  new davinci.model.Resource.File(name,this);
+  davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder, localOnly){
+	 var file;
+	 
+	 if(name!=null){
+		 file = isFolder ?   new davinci.model.Resource.Folder(name,this) :  new davinci.model.Resource.File(name,this);
+  	 }else{
+		 
+		 file = this;
+		 isFolder = this.elementType=="Folder";
+	 }
+			 
 	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/createResource", handleAs:"text",
-	          content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  })
-	          : "OK";
-	  if (response=="OK")
-	  {
+	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
+	  if (response=="OK" && name!=null){
 		  this.children.push(file);
-			dojo.publish("/davinci/resource/resourceChanged",["created",file]);
+		  dojo.publish("/davinci/resource/resourceChanged",["created",file]);
 		  return file;
-	  }
-	  else if (response)
+	  } else if (response!="OK"){
 		  alert(response);
+	  }else{
+		  this.libraryId = this.libVersion = null;
+		  return this;
+	  }
+	  
   }
   
   davinci.model.Resource.Folder.prototype.getChildren= function(onComplete,sync)

@@ -3,6 +3,7 @@
 <plugin>
 	<extension id="dojoMetaData" point="org.eclipse.equinox.http.registry.resources">
 	        <resource alias="/app/metadata/dojo/1.5" base-name="/WebContent/metadata" />
+	        <resource alias="/app/static/lib/dojo/1.5" base-name="/WebContent/dojo"/>
 	</extension>
 	
 	
@@ -16,9 +17,5 @@
 	         <libraryPath location="WebContent/maqetta/themes" name="/themes"></libraryPath>
 	    </ajaxLibrary>
 	</extension>
-	   
-	   
-	<extension point="davinci.core.initialUserFiles">
-	            <initalUserFile path="WebContent/davinci"/>
-	</extension>
+
 </plugin>

@@ -855,10 +855,12 @@ davinci_top_bar .dijitButtonNode {
 .inlineEditFolder{
 	background-image: url('img/sprite.png');
 	background-position: -80px -337px;
+	background-color: #F7FDFF;
 	height: 16px; 
 	width: 16px;
 	display:inline-block;
 	margin-top: 5px;
+	position: absolute;
 }
 
 .inlineEditHelp{
@@ -881,29 +883,22 @@ davinci_top_bar .dijitButtonNode {
 
 .inlineEditHelpOk .dijitButtonNode, .inlineEditHelpCancel .dijitButtonNode{
 	width:40px;
-	/*padding: 0 .7em; 
-	display: inline-block;*/
+
 }
 
-/*.inlineEditHelpOkCancel {
-	text-decoration: underline;
-}*/
 
 .davinciIleb {
 	width: 200px; 
-	/*border-width:3px; */
-	/*border-width:1px;*/
 	border-width:0px 0px 1px 0px;
 	border-style:solid;
 	border-color: #769DC0;
-	/*-moz-border-radius: 4px 4px 0px 0px;
-	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);*/
+
 }
 
 .iedResizeDiv {
 	position: relative; 
 	width: 200px; 
-	/*height:19px; not needed for textarea*/ 
+
 }
 
 .smartInputTextBox {
@@ -914,29 +909,17 @@ davinci_top_bar .dijitButtonNode {
 }
 
 .smartInputTextArea {
-	/*border-style: solid;*/
-    /*border-width: 3px 3px 0;*/
     border-width: 0px;
     overflow: auto;
     resize:none;
     outline:none;
 }
 
-.smartInputDataGridFolderDiv {
-	border-color: #769DC0;
-	border-style: solid; 
-	border-width: 0px 0px 1px 0px;  
-	background-color: #F7FCFF;
-	margin: 0 0 0 -1px;
-}
 
 .smartInputSim {
-	/*height:10px;*/
 	height:18px; 
-	/*border-color: #B5BCC7;*/ 
 	border-color: #769DC0;
 	border-style: solid; 
-	/*border-width: 0px 3px 3px 3px;  */
 	border-width: 0px 0px 1px 0px;  
 	background-color: #F7FCFF;
 	margin: -1px;

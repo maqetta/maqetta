@@ -1,1508 +1,928 @@
-define("dojox/data/XmlStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/xml/parser"], function(dojo, dojox) {
-
-dojo.declare("dojox.data.XmlStore", null, {
-	//	summary:
-	//		A data store for XML based services or documents
-	//	description:
-	//		A data store for XML based services or documents
-	
-	constructor: function(/* object */ args){
-		//	summary:
-		//		Constructor for the XML store.
-		//	args:
-		//		An anonymous object to initialize properties.  It expects the following values:
-		//		url:		The url to a service or an XML document that represents the store
-		//		rootItem:	A tag name for root items
-		//		keyAttribute:	An attribute name for a key or an identity (unique identifier)
-		//						Required for serverside fetchByIdentity, etc.  Not required for
-		//						client side fetchItemBIdentity, as it will use an XPath-like
-		//						structure if keyAttribute was not specified.  Recommended to always
-		//						set this, though, for consistent identity behavior.
-		// 		attributeMap:   An anonymous object contains properties for attribute mapping,
-		//						{"tag_name.item_attribute_name": "@xml_attribute_name", ...}
-		//		sendQuery:		A boolean indicate to add a query string to the service URL.
-		//						Default is false.
-		//		urlPreventCache: Parameter to indicate whether or not URL calls should apply
-		//		                 the preventCache option to the xhr request.
-		if(args){
-			this.url = args.url;
-			this.rootItem = (args.rootItem || args.rootitem || this.rootItem);
-			this.keyAttribute = (args.keyAttribute || args.keyattribute || this.keyAttribute);
-			this._attributeMap = (args.attributeMap || args.attributemap);
-			this.label = args.label || this.label;
-			this.sendQuery = (args.sendQuery || args.sendquery || this.sendQuery);
-			if("urlPreventCache" in args){
-				this.urlPreventCache = args.urlPreventCache?true:false;
-			}
-		}
-		this._newItems = [];
-		this._deletedItems = [];
-		this._modifiedItems = [];
-	},
-
-	//Values that may be set by the parser.
-	//Ergo, have to be instantiated to something
-	//So the parser knows how to set them.
-	url: "",
-
-	//	A tag name for XML tags to be considered root items in the hierarchy
-	rootItem: "",
-
-	//	An attribute name for a key or an identity (unique identifier)
-	//	Required for serverside fetchByIdentity, etc.  Not required for
-	//	client side fetchItemBIdentity, as it will use an XPath-like
-	//	structure if keyAttribute was not specified.  Recommended to always
-	//	set this, though, for consistent identity behavior.
-	keyAttribute: "",
-
-	//	An attribute of the item to use as the label.
-	label: "",
-
-	//	A boolean indicate to add a query string to the service URL.
-	//	Default is false.
-	sendQuery: false,
-
-	//	An anonymous object that contains properties for attribute mapping,
-	//	for example {"tag_name.item_attribute_name": "@xml_attribute_name", ...}.
-	//	This is optional. This is done so that attributes which are actual
-	//	XML tag attributes (and not sub-tags of an XML tag), can be referenced.
-	attributeMap: null,
-
-	//	Parameter to indicate whether or not URL calls should apply the preventCache option to the xhr request.
-	urlPreventCache: true,
-
-	/* dojo.data.api.Read */
-
-	getValue: function(/* item */ item, /* attribute || attribute-name-string */ attribute, /* value? */ defaultValue){
-		//	summary:
-		//		Return an attribute value
-		//	description:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//		If 'attribute' specifies "tagName", the tag name of the element is
-		//		returned.
-		//		If 'attribute' specifies "childNodes", the first element child is
-		//		returned.
-		//		If 'attribute' specifies "text()", the value of the first text
-		//		child is returned.
-		//		For generic attributes, if '_attributeMap' is specified,
-		//		an actual attribute name is looked up with the tag name of
-		//		the element and 'attribute' (concatenated with '.').
-		//		Then, if 'attribute' starts with "@", the value of the XML
-		//		attribute is returned.
-		//		Otherwise, the first child element of the tag name specified with
-		//		'attribute' is returned.
-		//	item:
-		//		An XML element that holds the attribute
-		//	attribute:
-		//		A tag name of a child element, An XML attribute name or one of
-		// 		special names
-		//	defaultValue:
-		//		A default value
-		//	returns:
-		//		An attribute value found, otherwise 'defaultValue'
-		var element = item.element;
-		var i;
-		var node;
-		if(attribute === "tagName"){
-			return element.nodeName;
-		}else if(attribute === "childNodes"){
-			for(i = 0; i < element.childNodes.length; i++){
-				node = element.childNodes[i];
-				if(node.nodeType === 1 /*ELEMENT_NODE*/){
-					return this._getItem(node); //object
-				}
-			}
-			return defaultValue;
-		}else if(attribute === "text()"){
-			for(i = 0; i < element.childNodes.length; i++){
-				node = element.childNodes[i];
-				if(node.nodeType === 3 /*TEXT_NODE*/ ||
-					node.nodeType === 4 /*CDATA_SECTION_NODE*/){
-					return node.nodeValue; //string
-				}
-			}
-			return defaultValue;
-		}else{
-			attribute = this._getAttribute(element.nodeName, attribute);
-			if(attribute.charAt(0) === '@'){
-				var name = attribute.substring(1);
-				var value = element.getAttribute(name);
-				//Note that getAttribute will return null or empty string for undefined/unset
-				//attributes, therefore, we should just check the return was valid
-				//non-empty string and not null.
-				return (value) ? value : defaultValue; //object
-			}else{
-				for(i = 0; i < element.childNodes.length; i++){
-					node = element.childNodes[i];
-					if(	node.nodeType === 1 /*ELEMENT_NODE*/ &&
-						node.nodeName === attribute){
-						return this._getItem(node); //object
-					}
-				}
-				return defaultValue; //object
-			}
-		}
-	},
-
-	getValues: function(/* item */ item, /* attribute || attribute-name-string */ attribute){
-		//	summary:
-		//		Return an array of attribute values
-		//	description:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//		If 'attribute' specifies "tagName", the tag name of the element is
-		//		returned.
-		//		If 'attribute' specifies "childNodes", child elements are returned.
-		//		If 'attribute' specifies "text()", the values of child text nodes
-		//		are returned.
-		//		For generic attributes, if 'attributeMap' is specified,
-		//		an actual attribute name is looked up with the tag name of
-		//		the element and 'attribute' (concatenated with '.').
-		//		Then, if 'attribute' starts with "@", the value of the XML
-		//		attribute is returned.
-		//		Otherwise, child elements of the tag name specified with
-		//		'attribute' are returned.
-		//	item:
-		//		An XML element that holds the attribute
-		//	attribute:
-		//		A tag name of child elements, An XML attribute name or one of
-		//		special names
-		//	returns:
-		//		An array of attribute values found, otherwise an empty array
-		var element = item.element;
-		var values = [];
-		var i;
-		var node;
-		if(attribute === "tagName"){
-			return [element.nodeName];
-		}else if(attribute === "childNodes"){
-			for(i = 0; i < element.childNodes.length; i++){
-				node = element.childNodes[i];
-				if(node.nodeType === 1 /*ELEMENT_NODE*/){
-					values.push(this._getItem(node));
-				}
-			}
-			return values; //array
-		}else if(attribute === "text()"){
-			var ec = element.childNodes;
-			for(i = 0; i < ec.length; i++){
-				node = ec[i];
-				if(node.nodeType === 3 || node.nodeType === 4){
-					values.push(node.nodeValue);
-				}
-			}
-			return values; //array
-		}else{
-			attribute = this._getAttribute(element.nodeName, attribute);
-			if(attribute.charAt(0) === '@'){
-				var name = attribute.substring(1);
-				var value = element.getAttribute(name);
-				return (value !== undefined) ? [value] : []; //array
-			}else{
-				for(i = 0; i < element.childNodes.length; i++){
-					node = element.childNodes[i];
-					if(	node.nodeType === 1 /*ELEMENT_NODE*/ &&
-						node.nodeName === attribute){
-						values.push(this._getItem(node));
-					}
-				}
-				return values; //array
-			}
-		}
-	},
-
-	getAttributes: function(/* item */ item){
-		//	summary:
-		//		Return an array of attribute names
-		// 	description:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//		tag names of child elements and XML attribute names of attributes
-		//		specified to the element are returned along with special attribute
-		//		names applicable to the element including "tagName", "childNodes"
-		//		if the element has child elements, "text()" if the element has
-		//		child text nodes, and attribute names in '_attributeMap' that match
-		//		the tag name of the element.
-		//	item:
-		//		An XML element
-		//	returns:
-		//		An array of attributes found
-		var element = item.element;
-		var attributes = [];
-		var i;
-		attributes.push("tagName");
-		if(element.childNodes.length > 0){
-			var names = {};
-			var childNodes = true;
-			var text = false;
-			for(i = 0; i < element.childNodes.length; i++){
-				var node = element.childNodes[i];
-				if(node.nodeType === 1 /*ELEMENT_NODE*/){
-					var name = node.nodeName;
-					if(!names[name]){
-						attributes.push(name);
-						names[name] = name;
-					}
-					childNodes = true;
-				}else if(node.nodeType === 3){
-					text = true;
-				}
-			}
-			if(childNodes){
-				attributes.push("childNodes");
-			}
-			if(text){
-				attributes.push("text()");
-			}
-		}
-		for(i = 0; i < element.attributes.length; i++){
-			attributes.push("@" + element.attributes[i].nodeName);
-		}
-		if(this._attributeMap){
-			for(var key in this._attributeMap){
-				i = key.indexOf('.');
-				if(i > 0){
-					var tagName = key.substring(0, i);
-					if(tagName === element.nodeName){
-						attributes.push(key.substring(i + 1));
-					}
-				}else{ // global attribute
-					attributes.push(key);
-				}
-			}
-		}
-		return attributes; //array
-	},
-
-	hasAttribute: function(/* item */ item, /* attribute || attribute-name-string */ attribute){
-		//	summary:
-		//		Check whether an element has the attribute
-		//	item:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//	attribute:
-		//		A tag name of a child element, An XML attribute name or one of
-		//		special names
-		//	returns:
-		//		True if the element has the attribute, otherwise false
-		return (this.getValue(item, attribute) !== undefined); //boolean
-	},
-
-	containsValue: function(/* item */ item, /* attribute || attribute-name-string */ attribute, /* anything */ value){
-		//	summary:
-		//		Check whether the attribute values contain the value
-		//	item:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//	attribute:
-		//		A tag name of a child element, An XML attribute name or one of
-		//		special names
-		//	returns:
-		//		True if the attribute values contain the value, otherwise false
-		var values = this.getValues(item, attribute);
-		for(var i = 0; i < values.length; i++){
-			if((typeof value === "string")){
-				if(values[i].toString && values[i].toString() === value){
-					return true;
-				}
-			}else if(values[i] === value){
-				return true; //boolean
-			}
-		}
-		return false;//boolean
-	},
-
-	isItem: function(/* anything */ something){
-		//	summary:
-		//		Check whether the object is an item (XML element)
-		//	item:
-		//		An object to check
-		// 	returns:
-		//		True if the object is an XML element, otherwise false
-		if(something && something.element && something.store && something.store === this){
-			return true; //boolean
-		}
-		return false; //boolran
-	},
-
-	isItemLoaded: function(/* anything */ something){
-		//	summary:
-		//		Check whether the object is an item (XML element) and loaded
-		//	item:
-		//		An object to check
-		//	returns:
-		//		True if the object is an XML element, otherwise false
-		return this.isItem(something); //boolean
-	},
-
-	loadItem: function(/* object */ keywordArgs){
-		//	summary:
-		//		Load an item (XML element)
-		//	keywordArgs:
-		//		object containing the args for loadItem.  See dojo.data.api.Read.loadItem()
-	},
-
-	getFeatures: function(){
-		//	summary:
-		//		Return supported data APIs
-		//	returns:
-		//		"dojo.data.api.Read" and "dojo.data.api.Write"
-		var features = {
-			"dojo.data.api.Read": true,
-			"dojo.data.api.Write": true
-		};
-
-		//Local XML parsing can implement Identity fairly simple via
-		if(!this.sendQuery || this.keyAttribute !== ""){
-			features["dojo.data.api.Identity"] = true;
-		}
-		return features; //array
-	},
-
-	getLabel: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Read.getLabel()
-		if((this.label !== "") && this.isItem(item)){
-			var label = this.getValue(item,this.label);
-			if(label){
-				return label.toString();
-			}
-		}
-		return undefined; //undefined
-	},
-
-	getLabelAttributes: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Read.getLabelAttributes()
-		if(this.label !== ""){
-			return [this.label]; //array
-		}
-		return null; //null
-	},
-
-	_fetchItems: function(request, fetchHandler, errorHandler){
-		//	summary:
-		//		Fetch items (XML elements) that match to a query
-		//	description:
-		//		If 'sendQuery' is true, an XML document is loaded from
-		//		'url' with a query string.
-		//		Otherwise, an XML document is loaded and list XML elements that
-		//		match to a query (set of element names and their text attribute
-		//		values that the items to contain).
-		//		A wildcard, "*" can be used to query values to match all
-		//		occurrences.
-		//		If 'rootItem' is specified, it is used to fetch items.
-		//	request:
-		//		A request object
-		//	fetchHandler:
-		//		A function to call for fetched items
-		//	errorHandler:
-		//		A function to call on error
-		var url = this._getFetchUrl(request);
-		if(!url){
-			errorHandler(new Error("No URL specified."));
-			return;
-		}
-		var localRequest = (!this.sendQuery ? request : {}); // use request for _getItems()
-
-		var self = this;
-		var getArgs = {
-				url: url,
-				handleAs: "xml",
-				preventCache: self.urlPreventCache
-			};
-		var getHandler = dojo.xhrGet(getArgs);
-		getHandler.addCallback(function(data){
-			var items = self._getItems(data, localRequest);
-			if(items && items.length > 0){
-				fetchHandler(items, request);
-			}else{
-				fetchHandler([], request);
-			}
-		});
-		getHandler.addErrback(function(data){
-			errorHandler(data, request);
-		});
-	},
-
-	_getFetchUrl: function(request){
-		//	summary:
-		//		Generate a URL for fetch
-		//	description:
-		//		This default implementation generates a query string in the form of
-		//		"?name1=value1&name2=value2..." off properties of 'query' object
-		//		specified in 'request' and appends it to 'url', if 'sendQuery'
-		//		is set to false.
-		//		Otherwise, 'url' is returned as is.
-		//		Sub-classes may override this method for the custom URL generation.
-		//	request:
-		//		A request object
-		//	returns:
-		//		A fetch URL
-		if(!this.sendQuery){
-			return this.url;
-		}
-		var query = request.query;
-		if(!query){
-			return this.url;
-		}
-		if(dojo.isString(query)){
-			return this.url + query;
-		}
-		var queryString = "";
-		for(var name in query){
-			var value = query[name];
-			if(value){
-				if(queryString){
-					queryString += "&";
-				}
-				queryString += (name + "=" + value);
-			}
-		}
-		if(!queryString){
-			return this.url;
-		}
-		//Check to see if the URL already has query params or not.
-		var fullUrl = this.url;
-		if(fullUrl.indexOf("?") < 0){
-			fullUrl += "?";
-		}else{
-			fullUrl += "&";
-		}
-		return fullUrl + queryString;
-	},
-
-	_getItems: function(document, request){
-		//	summary:
-		//		Fetch items (XML elements) in an XML document based on a request
-		//	description:
-		//		This default implementation walks through child elements of
-		//		the document element to see if all properties of 'query' object
-		//		match corresponding attributes of the element (item).
-		//		If 'request' is not specified, all child elements are returned.
-		//		Sub-classes may override this method for the custom search in
-		//		an XML document.
-		//	document:
-		//		An XML document
-		//	request:
-		//		A request object
-		//	returns:
-		//		An array of items
-		var query = null;
-		if(request){
-			query = request.query;
-		}
-		var items = [];
-		var nodes = null;
-
-		if(this.rootItem !== ""){
-			nodes = dojo.query(this.rootItem, document);
-		}else{
-			nodes = document.documentElement.childNodes;
-		}
-
-		var deep = request.queryOptions ? request.queryOptions.deep : false;
-		if(deep){
-			nodes = this._flattenNodes(nodes);
-		}
-		for(var i = 0; i < nodes.length; i++){
-			var node = nodes[i];
-			if(node.nodeType != 1 /*ELEMENT_NODE*/){
-				continue;
-			}
-			var item = this._getItem(node);
-			if(query){
-				var ignoreCase = request.queryOptions ? request.queryOptions.ignoreCase : false;
-				var value;
-				var match = false;
-				var j;
-				var emptyQuery = true;
-
-				//See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
-				//same value for each item examined.  Much more efficient.
-				var regexpList = {};
-				for(var key in query){
-					value = query[key];
-					if(typeof value === "string"){
-						regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
-					}
-				}
-				for(var attribute in query){
-					emptyQuery = false;
-					var values = this.getValues(item, attribute);
-					for(j = 0; j < values.length; j++){
-						value = values[j];
-						if(value){
-							var queryValue = query[attribute];
-							if((typeof value) === "string" &&
-								(regexpList[attribute])){
-								if((value.match(regexpList[attribute])) !== null){
-									match = true;
-								}else{
-									match = false;
-								}
-							}else if((typeof value) === "object"){
-								if(	value.toString &&
-									(regexpList[attribute])){
-									var stringValue = value.toString();
-									if((stringValue.match(regexpList[attribute])) !== null){
-										match = true;
-									}else{
-										match = false;
-									}
-								}else{
-									if(queryValue === "*" || queryValue === value){
-										match = true;
-									}else{
-										match = false;
-									}
-								}
-							}
-						}
-						//One of the multiValue values matched,
-						//so quit looking.
-						if(match){
-							break;
-						}
-					}
-					if(!match){
-						break;
-					}
-				}
-				//Either the query was an empty object {}, which is match all, or
-				//was an actual match.
-				if(emptyQuery || match){
-					items.push(item);
-				}
-			}else{
-				//No query, everything matches.
-				items.push(item);
-			}
-		}
-		dojo.forEach(items,function(item){
-			if(item.element.parentNode){
-				item.element.parentNode.removeChild(item.element); // make it root
-			}
-		},this);
-		return items;
-	},
-
-	_flattenNodes: function(nodes){
-		//	Summary:
-		//		Function used to flatten a hierarchy of XML nodes into a single list for
-		//		querying over.  Used when deep = true;
-		var flattened = [];
-		if(nodes){
-			var i;
-			for(i = 0; i < nodes.length; i++){
-				var node = nodes[i];
-				flattened.push(node);
-				if(node.childNodes && node.childNodes.length > 0){
-					flattened = flattened.concat(this._flattenNodes(node.childNodes));
-				}
-			}
-		}
-		return flattened;
-	},
-
-	close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
-		 //	summary:
-		 //		See dojo.data.api.Read.close()
-	},
-
-/* dojo.data.api.Write */
-
-	newItem: function(/* object? */ keywordArgs, parentInfo){
-		//	summary:
-		//		Return a new dojox.data.XmlItem
-		//	description:
-		//		At least, 'keywordArgs' must contain "tagName" to be used for
-		//		the new	element.
-		//		Other attributes in 'keywordArgs' are set to the new element,
-		//		including "text()", but excluding "childNodes".
-		// 	keywordArgs:
-		//		An object containing initial attributes
-		//	returns:
-		//		An XML element
-		keywordArgs = (keywordArgs || {});
-		var tagName = keywordArgs.tagName;
-		if(!tagName){
-			tagName = this.rootItem;
-			if(tagName === ""){
-				return null;
-			}
-		}
-
-		var document = this._getDocument();
-		var element = document.createElement(tagName);
-		for(var attribute in keywordArgs){
-			var text;
-			if(attribute === "tagName"){
-				continue;
-			}else if(attribute === "text()"){
-				text = document.createTextNode(keywordArgs[attribute]);
-				element.appendChild(text);
-			}else{
-				attribute = this._getAttribute(tagName, attribute);
-				if(attribute.charAt(0) === '@'){
-					var name = attribute.substring(1);
-					element.setAttribute(name, keywordArgs[attribute]);
-				}else{
-					var child = document.createElement(attribute);
-					text = document.createTextNode(keywordArgs[attribute]);
-					child.appendChild(text);
-					element.appendChild(child);
-				}
-			}
-		}
-
-		var item = this._getItem(element);
-		this._newItems.push(item);
-
-		var pInfo = null;
-		if(parentInfo && parentInfo.parent && parentInfo.attribute){
-			pInfo = {
-				item: parentInfo.parent,
-				attribute: parentInfo.attribute,
-				oldValue: undefined
-			};
-
-			//See if it is multi-valued or not and handle appropriately
-			//Generally, all attributes are multi-valued for this store
-			//So, we only need to append if there are already values present.
-			var values = this.getValues(parentInfo.parent, parentInfo.attribute);
-			if(values && values.length > 0){
-				var tempValues = values.slice(0, values.length);
-				if(values.length === 1){
-					pInfo.oldValue = values[0];
-				}else{
-					pInfo.oldValue = values.slice(0, values.length);
-				}
-				tempValues.push(item);
-				this.setValues(parentInfo.parent, parentInfo.attribute, tempValues);
-				pInfo.newValue = this.getValues(parentInfo.parent, parentInfo.attribute);
-			}else{
-				this.setValues(parentInfo.parent, parentInfo.attribute, item);
-				pInfo.newValue = item;
-			}
-		}
-		return item; //object
-	},
-	
-	deleteItem: function(/* item */ item){
-		//	summary:
-		//		Delete an dojox.data.XmlItem (wrapper to a XML element).
-		//	item:
-		//		An XML element to delete
-		//	returns:
-		//		True
-		var element = item.element;
-		if(element.parentNode){
-			this._backupItem(item);
-			element.parentNode.removeChild(element);
-			return true;
-		}
-		this._forgetItem(item);
-		this._deletedItems.push(item);
-		return true; //boolean
-	},
-	
-	setValue: function(/* item */ item, /* attribute || string */ attribute, /* almost anything */ value){
-		//	summary:
-		//		Set an attribute value
-		//	description:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//		If 'attribute' specifies "tagName", nothing is set and false is
-		//		returned.
-		//		If 'attribute' specifies "childNodes", the value (XML element) is
-		//		added to the element.
-		//		If 'attribute' specifies "text()", a text node is created with
-		//		the value and set it to the element as a child.
-		//		For generic attributes, if '_attributeMap' is specified,
-		//		an actual attribute name is looked up with the tag name of
-		//		the element and 'attribute' (concatenated with '.').
-		//		Then, if 'attribute' starts with "@", the value is set to the XML
-		//		attribute.
-		//		Otherwise, a text node is created with the value and set it to
-		//		the first child element of the tag name specified with 'attribute'.
-		//		If the child element does not exist, it is created.
-		//	item:
-		//		An XML element that holds the attribute
-		//	attribute:
-		//		A tag name of a child element, An XML attribute name or one of
-		//		special names
-		//	value:
-		//		A attribute value to set
-		//	returns:
-		//		False for "tagName", otherwise true
-		if(attribute === "tagName"){
-			return false; //boolean
-		}
-
-		this._backupItem(item);
-
-		var element = item.element;
-		var child;
-		var text;
-		if(attribute === "childNodes"){
-			child = value.element;
-			element.appendChild(child);
-		}else if(attribute === "text()"){
-			while(element.firstChild){
-				element.removeChild(element.firstChild);
-			}
-			text = this._getDocument(element).createTextNode(value);
-			element.appendChild(text);
-		}else{
-			attribute = this._getAttribute(element.nodeName, attribute);
-			if(attribute.charAt(0) === '@'){
-				var name = attribute.substring(1);
-				element.setAttribute(name, value);
-			}else{
-				for(var i = 0; i < element.childNodes.length; i++){
-					var node = element.childNodes[i];
-					if(	node.nodeType === 1 /*ELEMENT_NODE*/ &&
-						node.nodeName === attribute){
-						child = node;
-						break;
-					}
-				}
-				var document = this._getDocument(element);
-				if(child){
-					while(child.firstChild){
-						child.removeChild(child.firstChild);
-					}
-				}else{
-					child = document.createElement(attribute);
-					element.appendChild(child);
-				}
-				text = document.createTextNode(value);
-				child.appendChild(text);
-			}
-		}
-		return true; //boolean
-	},
-		
-	setValues: function(/* item */ item, /* attribute || string */ attribute, /*array*/ values){
-		//	summary:
-		//		Set attribute values
-		//	description:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//		If 'attribute' specifies "tagName", nothing is set and false is
-		//		returned.
-		//		If 'attribute' specifies "childNodes", the value (array of XML
-		//		elements) is set to the element's childNodes.
-		//		If 'attribute' specifies "text()", a text node is created with
-		//		the values and set it to the element as a child.
-		//		For generic attributes, if '_attributeMap' is specified,
-		//		an actual attribute name is looked up with the tag name of
-		//		the element and 'attribute' (concatenated with '.').
-		//		Then, if 'attribute' starts with "@", the first value is set to
-		//		the XML attribute.
-		//		Otherwise, child elements of the tag name specified with
-		//		'attribute' are replaced with new child elements and their
-		//		child text nodes of values.
-		//	item:
-		//		An XML element that holds the attribute
-		//	attribute:
-		//		A tag name of child elements, an XML attribute name or one of
-		//		special names
-		//	value:
-		//		A attribute value to set
-		//	notify:
-		//		A non-API optional argument, used to indicate if notification API should be called
-		//		or not.
-
-		//	returns:
-		//		False for "tagName", otherwise true
-		if(attribute === "tagName"){
-			return false; //boolean
-		}
-
-		this._backupItem(item);
-
-		var element = item.element;
-		var i;
-		var child;
-		var text;
-		if(attribute === "childNodes"){
-			while(element.firstChild){
-				element.removeChild(element.firstChild);
-			}
-			for(i = 0; i < values.length; i++){
-				child = values[i].element;
-				element.appendChild(child);
-			}
-		}else if(attribute === "text()"){
-			while(element.firstChild){
-				element.removeChild(element.firstChild);
-			}
-			var value = "";
-			for(i = 0; i < values.length; i++){
-				value += values[i];
-			}
-			text = this._getDocument(element).createTextNode(value);
-			element.appendChild(text);
-		}else{
-			attribute = this._getAttribute(element.nodeName, attribute);
-			if(attribute.charAt(0) === '@'){
-				var name = attribute.substring(1);
-				element.setAttribute(name, values[0]);
-			}else{
-				for(i = element.childNodes.length - 1; i >= 0; i--){
-					var node = element.childNodes[i];
-					if(	node.nodeType === 1 /*ELEMENT_NODE*/ &&
-						node.nodeName === attribute){
-						element.removeChild(node);
-					}
-				}
-				var document = this._getDocument(element);
-				for(i = 0; i < values.length; i++){
-					child = document.createElement(attribute);
-					text = document.createTextNode(values[i]);
-					child.appendChild(text);
-					element.appendChild(child);
-				}
-			}
-		}
-		return true; //boolean
-	},
-	
-	unsetAttribute: function(/* item */ item, /* attribute || string */ attribute){
-		//	summary:
-		//		Remove an attribute
-		//	description:
-		//		'item' must be an instance of a dojox.data.XmlItem from the store instance.
-		//		'attribute' can be an XML attribute name of the element or one of
-		//		special names described below.
-		//		If 'attribute' specifies "tagName", nothing is removed and false is
-		//		returned.
-		//		If 'attribute' specifies "childNodes" or "text()", all child nodes
-		//		are removed.
-		//		For generic attributes, if '_attributeMap' is specified,
-		//		an actual attribute name is looked up with the tag name of
-		//		the element and 'attribute' (concatenated with '.').
-		//		Then, if 'attribute' starts with "@", the XML attribute is removed.
-		//		Otherwise, child elements of the tag name specified with
-		//		'attribute' are removed.
-		//	item:
-		//		An XML element that holds the attribute
-		//	attribute:
-		//		A tag name of child elements, an XML attribute name or one of
-		//		special names
-		//	returns:
-		//		False for "tagName", otherwise true
-		if(attribute === "tagName"){
-			return false; //boolean
-		}
-
-		this._backupItem(item);
-
-		var element = item.element;
-		if(attribute === "childNodes" || attribute === "text()"){
-			while(element.firstChild){
-				element.removeChild(element.firstChild);
-			}
-		}else{
-			attribute = this._getAttribute(element.nodeName, attribute);
-			if(attribute.charAt(0) === '@'){
-				var name = attribute.substring(1);
-				element.removeAttribute(name);
-			}else{
-				for(var i = element.childNodes.length - 1; i >= 0; i--){
-					var node = element.childNodes[i];
-					if(	node.nodeType === 1 /*ELEMENT_NODE*/ &&
-						node.nodeName === attribute){
-						element.removeChild(node);
-					}
-				}
-			}
-		}
-		return true; //boolean
-	},
-	
-	save: function(/* object */ keywordArgs){
-		//	summary:
-		//		Save new and/or modified items (XML elements)
-		// 	description:
-		//		'url' is used to save XML documents for new, modified and/or
-		//		deleted XML elements.
-		// 	keywordArgs:
-		//		An object for callbacks
-		if(!keywordArgs){
-			keywordArgs = {};
-		}
-		var i;
-		for(i = 0; i < this._modifiedItems.length; i++){
-			this._saveItem(this._modifiedItems[i], keywordArgs, "PUT");
-		}
-		for(i = 0; i < this._newItems.length; i++){
-			var item = this._newItems[i];
-			if(item.element.parentNode){ // reparented
-				this._newItems.splice(i, 1);
-				i--;
-				continue;
-			}
-			this._saveItem(this._newItems[i], keywordArgs, "POST");
-		}
-		for(i = 0; i < this._deletedItems.length; i++){
-			this._saveItem(this._deletedItems[i], keywordArgs, "DELETE");
-		}
-	},
-
-	revert: function(){
-		// summary:
-		//	Invalidate changes (new and/or modified elements)
-		// returns:
-		//	True
-		this._newItems = [];
-		this._restoreItems(this._deletedItems);
-		this._deletedItems = [];
-		this._restoreItems(this._modifiedItems);
-		this._modifiedItems = [];
-		return true; //boolean
-	},
-	
-	isDirty: function(/* item? */ item){
-		//	summary:
-		//		Check whether an item is new, modified or deleted
-		//	description:
-		//		If 'item' is specified, true is returned if the item is new,
-		//		modified or deleted.
-		//		Otherwise, true is returned if there are any new, modified
-		//		or deleted items.
-		//	item:
-		//		An item (XML element) to check
-		//	returns:
-		//		True if an item or items are new, modified or deleted, otherwise
-		//		false
-		if(item){
-			var element = this._getRootElement(item.element);
-			return (this._getItemIndex(this._newItems, element) >= 0 ||
-				this._getItemIndex(this._deletedItems, element) >= 0 ||
-				this._getItemIndex(this._modifiedItems, element) >= 0); //boolean
-		}else{
-			return (this._newItems.length > 0 ||
-				this._deletedItems.length > 0 ||
-				this._modifiedItems.length > 0); //boolean
-		}
-	},
-
-	_saveItem: function(item, keywordArgs, method){
-		var url;
-		var scope;
-		if(method === "PUT"){
-			url = this._getPutUrl(item);
-		}else if(method === "DELETE"){
-			url = this._getDeleteUrl(item);
-		}else{ // POST
-			url = this._getPostUrl(item);
-		}
-		if(!url){
-			if(keywordArgs.onError){
-				scope = keywordArgs.scope || dojo.global;
-				keywordArgs.onError.call(scope, new Error("No URL for saving content: " + this._getPostContent(item)));
-			}
-			return;
-		}
-
-		var saveArgs = {
-			url: url,
-			method: (method || "POST"),
-			contentType: "text/xml",
-			handleAs: "xml"
-		};
-		var saveHandler;
-		if(method === "PUT"){
-			saveArgs.putData = this._getPutContent(item);
-			saveHandler = dojo.rawXhrPut(saveArgs);
-		}else if(method === "DELETE"){
-			saveHandler = dojo.xhrDelete(saveArgs);
-		}else{ // POST
-			saveArgs.postData = this._getPostContent(item);
-			saveHandler = dojo.rawXhrPost(saveArgs);
-		}
-		scope = (keywordArgs.scope || dojo.global);
-		var self = this;
-		saveHandler.addCallback(function(data){
-			self._forgetItem(item);
-			if(keywordArgs.onComplete){
-				keywordArgs.onComplete.call(scope);
-			}
-		});
-		saveHandler.addErrback(function(error){
-			if(keywordArgs.onError){
-				keywordArgs.onError.call(scope, error);
-			}
-		});
-	},
-
-	_getPostUrl: function(item){
-		//	summary:
-		//		Generate a URL for post
-		//	description:
-		//		This default implementation just returns 'url'.
-		//		Sub-classes may override this method for the custom URL.
-		//	item:
-		//		An item to save
-		//	returns:
-		//		A post URL
-		return this.url; //string
-	},
-
-	_getPutUrl: function(item){
-		//	summary:
-		//		Generate a URL for put
-		//	description:
-		//		This default implementation just returns 'url'.
-		//		Sub-classes may override this method for the custom URL.
-		//	item:
-		//		An item to save
-		//	returns:
-		//		A put URL
-		return this.url; //string
-	},
-
-	_getDeleteUrl: function(item){
-		//	summary:
-		//		Generate a URL for delete
-		// 	description:
-		//		This default implementation returns 'url' with 'keyAttribute'
-		//		as a query string.
-		//		Sub-classes may override this method for the custom URL based on
-		//		changes (new, deleted, or modified).
-		// 	item:
-		//		An item to delete
-		// 	returns:
-		//		A delete URL
-		var url = this.url;
-		if(item && this.keyAttribute !== ""){
-			var value = this.getValue(item, this.keyAttribute);
-			if(value){
-				var key = this.keyAttribute.charAt(0) ==='@' ? this.keyAttribute.substring(1): this.keyAttribute;
-				url += url.indexOf('?') < 0 ? '?' : '&';
-				url += key + '=' + value;
-			}
-		}
-		return url;	//string
-	},
-
-	_getPostContent: function(item){
-		//	summary:
-		//		Generate a content to post
-		// 	description:
-		//		This default implementation generates an XML document for one
-		//		(the first only) new or modified element.
-		//		Sub-classes may override this method for the custom post content
-		//		generation.
-		//	item:
-		//		An item to save
-		//	returns:
-		//		A post content
-		var element = item.element;
-		var declaration = "<?xml version=\"1.0\"?>"; // FIXME: encoding?
-		return declaration + dojox.xml.parser.innerXML(element); //XML string
-	},
-
-	_getPutContent: function(item){
-		//	summary:
-		//		Generate a content to put
-		// 	description:
-		//		This default implementation generates an XML document for one
-		//		(the first only) new or modified element.
-		//		Sub-classes may override this method for the custom put content
-		//		generation.
-		//	item:
-		//		An item to save
-		//	returns:
-		//		A post content
-		var element = item.element;
-		var declaration = "<?xml version=\"1.0\"?>"; // FIXME: encoding?
-		return declaration + dojox.xml.parser.innerXML(element); //XML string
-	},
-
-/* internal API */
-
-	_getAttribute: function(tagName, attribute){
-		if(this._attributeMap){
-			var key = tagName + "." + attribute;
-			var value = this._attributeMap[key];
-			if(value){
-				attribute = value;
-			}else{ // look for global attribute
-				value = this._attributeMap[attribute];
-				if(value){
-					attribute = value;
-				}
-			}
-		}
-		return attribute; //object
-	},
-
-	_getItem: function(element){
-		try{
-			var q = null;
-			//Avoid function call if possible.
-			if(this.keyAttribute === ""){
-				q = this._getXPath(element);
-			}
-			return new dojox.data.XmlItem(element, this, q); //object
-		}catch (e){
-			console.log(e);
-		}
-		return null;
-	},
-
-	_getItemIndex: function(items, element){
-		for(var i = 0; i < items.length; i++){
-			if(items[i].element === element){
-				return i; //int
-			}
-		}
-		return -1; //int
-	},
-
-	_backupItem: function(item){
-		var element = this._getRootElement(item.element);
-		if(	this._getItemIndex(this._newItems, element) >= 0 ||
-			this._getItemIndex(this._modifiedItems, element) >= 0){
-			return; // new or already modified
-		}
-		if(element != item.element){
-			item = this._getItem(element);
-		}
-		item._backup = element.cloneNode(true);
-		this._modifiedItems.push(item);
-	},
-
-	_restoreItems: function(items){
-
-		dojo.forEach(items,function(item){
-			if(item._backup){
-				item.element = item._backup;
-				item._backup = null;
-			}
-		},this);
-	},
-
-	_forgetItem: function(item){
-		var element = item.element;
-		var index = this._getItemIndex(this._newItems, element);
-		if(index >= 0){
-			this._newItems.splice(index, 1);
-		}
-		index = this._getItemIndex(this._deletedItems, element);
-		if(index >= 0){
-			this._deletedItems.splice(index, 1);
-		}
-		index = this._getItemIndex(this._modifiedItems, element);
-		if(index >= 0){
-			this._modifiedItems.splice(index, 1);
-		}
-	},
-
-	_getDocument: function(element){
-		if(element){
-			return element.ownerDocument; //DOMDocument
-		}else if(!this._document){
-			return dojox.xml.parser.parse(); // DOMDocument
-		}
-		return null; //null
-	},
-
-	_getRootElement: function(element){
-		while(element.parentNode){
-			element = element.parentNode;
-		}
-		return element; //DOMElement
-	},
-
-	_getXPath: function(element){
-		//	summary:
-		//		A function to compute the xpath of a node in a DOM document.
-		//	description:
-		//		A function to compute the xpath of a node in a DOM document.  Used for
-		//		Client side query handling and identity.
-		var xpath = null;
-		if(!this.sendQuery){
-			//xpath should be null for any server queries, as we don't have the entire
-			//XML dom to figure it out.
-			var node = element;
-			xpath = "";
-			while(node && node != element.ownerDocument){
-				var pos = 0;
-				var sibling = node;
-				var name = node.nodeName;
-				while(sibling){
-					sibling = sibling.previousSibling;
-					if(sibling && sibling.nodeName === name){
-						pos++;
-					}
-				}
-				var temp = "/" + name + "[" + pos + "]";
-				if(xpath){
-					xpath = temp + xpath;
-				}else{
-					xpath = temp;
-				}
-				node = node.parentNode;
-			}
-		}
-		return xpath; //string
-	},
-
-	/*************************************
-	 * Dojo.data Identity implementation *
-	 *************************************/
-	getIdentity: function(/* item */ item){
-		//	summary:
-		//		Returns a unique identifier for an item.
-		//	item:
-		//		The XML Item from the store from which to obtain its identifier.
-		if(!this.isItem(item)){
-			throw new Error("dojox.data.XmlStore: Object supplied to getIdentity is not an item");
-		}else{
-			var id = null;
-			if(this.sendQuery && this.keyAttribute !== ""){
-				id = this.getValue(item, this.keyAttribute).toString();
-			}else if(!this.serverQuery){
-				if(this.keyAttribute !== ""){
-					id = this.getValue(item,this.keyAttribute).toString();
-				}else{
-					//No specified identity, so return the dojo.query/xpath
-					//for the node as fallback.
-					id = item.q;
-				}
-			}
-			return id; //String.
-		}
-	},
-
-	getIdentityAttributes: function(/* item */ item){
-		//	summary:
-		//		Returns an array of attribute names that are used to generate the identity.
-		//	description:
-		//		For XmlStore, if sendQuery is false and no keyAttribute was set, then this function
-		//		returns null, as xpath is used for the identity, which is not a public attribute of
-		//		the item.  If sendQuery is true and keyAttribute is set, then this function
-		//		returns an array of one attribute name: keyAttribute.   This means the server side
-		//		implementation must apply a keyAttribute to a returned node that always allows
-		//		it to be looked up again.
-		//	item:
-		//		The item from the store from which to obtain the array of public attributes that
-		//		compose the identifier, if any.
-		if(!this.isItem(item)){
-			throw new Error("dojox.data.XmlStore: Object supplied to getIdentity is not an item");
-		}else{
-			if(this.keyAttribute !== ""){
-				return [this.keyAttribute]; //array
-			}else{
-				//Otherwise it's either using xpath (not an attribute), or the remote store
-				//doesn't support identity.
-				return null; //null
-			}
-		}
-	},
-
-
-	fetchItemByIdentity: function(/* object */ keywordArgs){
-		//	summary:
-		//		See dojo.data.api.Identity.fetchItemByIdentity(keywordArgs)
-		var handleDocument = null;
-		var scope = null;
-		var self = this;
-		var url = null;
-		var getArgs = null;
-		var getHandler = null;
-
-		if(!self.sendQuery){
-			handleDocument = function(data){
-				if(data){
-					if(self.keyAttribute !== ""){
-						//We have a key attribute specified.  So ... we can process the items and locate the item
-						//that contains a matching key attribute.  Its identity, as it were.
-						var request = {};
-						request.query={};
-						request.query[self.keyAttribute] = keywordArgs.identity;
-						request.queryOptions = {deep: true};
-						var items = self._getItems(data,request);
-						scope = keywordArgs.scope || dojo.global;
-						if(items.length === 1){
-							if(keywordArgs.onItem){
-								keywordArgs.onItem.call(scope, items[0]);
-							}
-						}else if(items.length === 0){
-							if(keywordArgs.onItem){
-								keywordArgs.onItem.call(scope, null);
-							}
-						}else{
-							if(keywordArgs.onError){
-								keywordArgs.onError.call(scope, new Error("Items array size for identity lookup greater than 1, invalid keyAttribute."));
-							}
-						}
-					}else{
-						//Since dojo.query doesn't really support the functions needed
-						//to do child node selection on IE well and since xpath support
-						//is flakey across browsers, it's simpler to implement a
-						//pseudo-xpath parser here.
-						var qArgs = keywordArgs.identity.split("/");
-						var i;
-						var node = data;
-						for(i = 0; i < qArgs.length; i++){
-							if(qArgs[i] && qArgs[i] !== ""){
-								var section = qArgs[i];
-								section = section.substring(0,section.length - 1);
-								var vals = section.split("[");
-								var tag = vals[0];
-								var index = parseInt(vals[1], 10);
-								var pos = 0;
-								if(node){
-									var cNodes = node.childNodes;
-									if(cNodes){
-										var j;
-										var foundNode = null;
-										for(j = 0; j < cNodes.length; j++){
-											var pNode = cNodes[j];
-											if(pNode.nodeName === tag){
-												if(pos < index){
-													pos++;
-												}else{
-													foundNode = pNode;
-													break;
-												}
-											}
-										}
-										if(foundNode){
-											node = foundNode;
-										}else{
-											node = null;
-										}
-									}else{
-										node = null;
-									}
-								}else{
-									break;
-								}
-							}
-						}
-						//Return what we found, if any.
-						var item = null;
-						if(node){
-							item = self._getItem(node);
-							if(item.element.parentNode){
-								item.element.parentNode.removeChild(item.element);
-							}
-						}
-						if(keywordArgs.onItem){
-							scope = keywordArgs.scope || dojo.global;
-							keywordArgs.onItem.call(scope, item);
-						}
-					}
-				}
-			};
-			url = this._getFetchUrl(null);
-			getArgs = {
-				url: url,
-				handleAs: "xml",
-				preventCache: self.urlPreventCache
-			};
-			getHandler = dojo.xhrGet(getArgs);
-			
-			//Add in the callbacks for completion of data load.
-			getHandler.addCallback(handleDocument);
-			if(keywordArgs.onError){
-				getHandler.addErrback(function(error){
-					var s = keywordArgs.scope || dojo.global;
-					keywordArgs.onError.call(s, error);
-				});
-			}
-		}else{
-			//Server side querying, so need to pass the keyAttribute back to the server and let it return
-			//what it will.  It SHOULD be only one item.
-			if(self.keyAttribute !== ""){
-				var request = {query:{}};
-				request.query[self.keyAttribute] = keywordArgs.identity;
-				url = this._getFetchUrl(request);
-				handleDocument = function(data){
-					var item = null;
-					if(data){
-						var items = self._getItems(data, {});
-						if(items.length === 1){
-							item = items[0];
-						}else{
-							if(keywordArgs.onError){
-								var scope = keywordArgs.scope || dojo.global;
-								keywordArgs.onError.call(scope, new Error("More than one item was returned from the server for the denoted identity"));
-							}
-						}
-					}
-					if(keywordArgs.onItem){
-						scope = keywordArgs.scope || dojo.global;
-						keywordArgs.onItem.call(scope, item);
-					}
-				};
-
-				getArgs = {
-					url: url,
-					handleAs: "xml",
-					preventCache: self.urlPreventCache
-				};
-				getHandler = dojo.xhrGet(getArgs);
-
-				//Add in the callbacks for completion of data load.
-				getHandler.addCallback(handleDocument);
-				if(keywordArgs.onError){
-					getHandler.addErrback(function(error){
-						var s = keywordArgs.scope || dojo.global;
-						keywordArgs.onError.call(s, error);
-					});
-				}
-			}else{
-				if(keywordArgs.onError){
-					var s = keywordArgs.scope || dojo.global;
-					keywordArgs.onError.call(s, new Error("XmlStore is not told that the server to provides identity support.  No keyAttribute specified."));
-				}
-			}
-		}
-	}
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define("dojox/data/XmlStore",["dojo","dojox","dojo/data/util/simpleFetch","dojo/data/util/filter","dojox/xml/parser"],function(_1,_2){
+_1.declare("dojox.data.XmlStore",null,{constructor:function(_3){
+if(_3){
+this.url=_3.url;
+this.rootItem=(_3.rootItem||_3.rootitem||this.rootItem);
+this.keyAttribute=(_3.keyAttribute||_3.keyattribute||this.keyAttribute);
+this._attributeMap=(_3.attributeMap||_3.attributemap);
+this.label=_3.label||this.label;
+this.sendQuery=(_3.sendQuery||_3.sendquery||this.sendQuery);
+if("urlPreventCache" in _3){
+this.urlPreventCache=_3.urlPreventCache?true:false;
+}
+}
+this._newItems=[];
+this._deletedItems=[];
+this._modifiedItems=[];
+},url:"",rootItem:"",keyAttribute:"",label:"",sendQuery:false,attributeMap:null,urlPreventCache:true,getValue:function(_4,_5,_6){
+var _7=_4.element;
+var i;
+var _8;
+if(_5==="tagName"){
+return _7.nodeName;
+}else{
+if(_5==="childNodes"){
+for(i=0;i<_7.childNodes.length;i++){
+_8=_7.childNodes[i];
+if(_8.nodeType===1){
+return this._getItem(_8);
+}
+}
+return _6;
+}else{
+if(_5==="text()"){
+for(i=0;i<_7.childNodes.length;i++){
+_8=_7.childNodes[i];
+if(_8.nodeType===3||_8.nodeType===4){
+return _8.nodeValue;
+}
+}
+return _6;
+}else{
+_5=this._getAttribute(_7.nodeName,_5);
+if(_5.charAt(0)==="@"){
+var _9=_5.substring(1);
+var _a=_7.getAttribute(_9);
+return (_a)?_a:_6;
+}else{
+for(i=0;i<_7.childNodes.length;i++){
+_8=_7.childNodes[i];
+if(_8.nodeType===1&&_8.nodeName===_5){
+return this._getItem(_8);
+}
+}
+return _6;
+}
+}
+}
+}
+},getValues:function(_b,_c){
+var _d=_b.element;
+var _e=[];
+var i;
+var _f;
+if(_c==="tagName"){
+return [_d.nodeName];
+}else{
+if(_c==="childNodes"){
+for(i=0;i<_d.childNodes.length;i++){
+_f=_d.childNodes[i];
+if(_f.nodeType===1){
+_e.push(this._getItem(_f));
+}
+}
+return _e;
+}else{
+if(_c==="text()"){
+var ec=_d.childNodes;
+for(i=0;i<ec.length;i++){
+_f=ec[i];
+if(_f.nodeType===3||_f.nodeType===4){
+_e.push(_f.nodeValue);
+}
+}
+return _e;
+}else{
+_c=this._getAttribute(_d.nodeName,_c);
+if(_c.charAt(0)==="@"){
+var _10=_c.substring(1);
+var _11=_d.getAttribute(_10);
+return (_11!==undefined)?[_11]:[];
+}else{
+for(i=0;i<_d.childNodes.length;i++){
+_f=_d.childNodes[i];
+if(_f.nodeType===1&&_f.nodeName===_c){
+_e.push(this._getItem(_f));
+}
+}
+return _e;
+}
+}
+}
+}
+},getAttributes:function(_12){
+var _13=_12.element;
+var _14=[];
+var i;
+_14.push("tagName");
+if(_13.childNodes.length>0){
+var _15={};
+var _16=true;
+var _17=false;
+for(i=0;i<_13.childNodes.length;i++){
+var _18=_13.childNodes[i];
+if(_18.nodeType===1){
+var _19=_18.nodeName;
+if(!_15[_19]){
+_14.push(_19);
+_15[_19]=_19;
+}
+_16=true;
+}else{
+if(_18.nodeType===3){
+_17=true;
+}
+}
+}
+if(_16){
+_14.push("childNodes");
+}
+if(_17){
+_14.push("text()");
+}
+}
+for(i=0;i<_13.attributes.length;i++){
+_14.push("@"+_13.attributes[i].nodeName);
+}
+if(this._attributeMap){
+for(var key in this._attributeMap){
+i=key.indexOf(".");
+if(i>0){
+var _1a=key.substring(0,i);
+if(_1a===_13.nodeName){
+_14.push(key.substring(i+1));
+}
+}else{
+_14.push(key);
+}
+}
+}
+return _14;
+},hasAttribute:function(_1b,_1c){
+return (this.getValue(_1b,_1c)!==undefined);
+},containsValue:function(_1d,_1e,_1f){
+var _20=this.getValues(_1d,_1e);
+for(var i=0;i<_20.length;i++){
+if((typeof _1f==="string")){
+if(_20[i].toString&&_20[i].toString()===_1f){
+return true;
+}
+}else{
+if(_20[i]===_1f){
+return true;
+}
+}
+}
+return false;
+},isItem:function(_21){
+if(_21&&_21.element&&_21.store&&_21.store===this){
+return true;
+}
+return false;
+},isItemLoaded:function(_22){
+return this.isItem(_22);
+},loadItem:function(_23){
+},getFeatures:function(){
+var _24={"dojo.data.api.Read":true,"dojo.data.api.Write":true};
+if(!this.sendQuery||this.keyAttribute!==""){
+_24["dojo.data.api.Identity"]=true;
+}
+return _24;
+},getLabel:function(_25){
+if((this.label!=="")&&this.isItem(_25)){
+var _26=this.getValue(_25,this.label);
+if(_26){
+return _26.toString();
+}
+}
+return undefined;
+},getLabelAttributes:function(_27){
+if(this.label!==""){
+return [this.label];
+}
+return null;
+},_fetchItems:function(_28,_29,_2a){
+var url=this._getFetchUrl(_28);
+if(!url){
+_2a(new Error("No URL specified."));
+return;
+}
+var _2b=(!this.sendQuery?_28:{});
+var _2c=this;
+var _2d={url:url,handleAs:"xml",preventCache:_2c.urlPreventCache};
+var _2e=_1.xhrGet(_2d);
+_2e.addCallback(function(_2f){
+var _30=_2c._getItems(_2f,_2b);
+if(_30&&_30.length>0){
+_29(_30,_28);
+}else{
+_29([],_28);
+}
 });
-
-dojo.declare("dojox.data.XmlItem", null, {
-	constructor: function(element, store, query){
-		//	summary:
-		//		Initialize with an XML element
-		//	element:
-		//		An XML element
-		//	store:
-		//		The containing store, if any.
-		//	query:
-		//		The query to use to look up a specific element.
-		//		Usually an XPath or dojo.query statement.
-		this.element = element;
-		this.store = store;
-		this.q = query;
-	},
-	//	summary:
-	//		A data item of 'XmlStore'
-	//	description:
-	//		This class represents an item of 'XmlStore' holding an XML element.
-	//		'element'
-	//	element:
-	//		An XML element
-	toString: function(){
-		//	summary:
-		//		Return a value of the first text child of the element
-		// 	returns:
-		//		a value of the first text child of the element
-		var str = "";
-		if(this.element){
-			for(var i = 0; i < this.element.childNodes.length; i++){
-				var node = this.element.childNodes[i];
-				if(node.nodeType === 3 || node.nodeType === 4){
-					str += node.nodeValue;
-				}
-			}
-		}
-		return str;	//String
-	}
+_2e.addErrback(function(_31){
+_2a(_31,_28);
 });
-dojo.extend(dojox.data.XmlStore,dojo.data.util.simpleFetch);
-
-return dojox.data.XmlStore;
+},_getFetchUrl:function(_32){
+if(!this.sendQuery){
+return this.url;
+}
+var _33=_32.query;
+if(!_33){
+return this.url;
+}
+if(_1.isString(_33)){
+return this.url+_33;
+}
+var _34="";
+for(var _35 in _33){
+var _36=_33[_35];
+if(_36){
+if(_34){
+_34+="&";
+}
+_34+=(_35+"="+_36);
+}
+}
+if(!_34){
+return this.url;
+}
+var _37=this.url;
+if(_37.indexOf("?")<0){
+_37+="?";
+}else{
+_37+="&";
+}
+return _37+_34;
+},_getItems:function(_38,_39){
+var _3a=null;
+if(_39){
+_3a=_39.query;
+}
+var _3b=[];
+var _3c=null;
+if(this.rootItem!==""){
+_3c=_1.query(this.rootItem,_38);
+}else{
+_3c=_38.documentElement.childNodes;
+}
+var _3d=_39.queryOptions?_39.queryOptions.deep:false;
+if(_3d){
+_3c=this._flattenNodes(_3c);
+}
+for(var i=0;i<_3c.length;i++){
+var _3e=_3c[i];
+if(_3e.nodeType!=1){
+continue;
+}
+var _3f=this._getItem(_3e);
+if(_3a){
+var _40=_39.queryOptions?_39.queryOptions.ignoreCase:false;
+var _41;
+var _42=false;
+var j;
+var _43=true;
+var _44={};
+for(var key in _3a){
+_41=_3a[key];
+if(typeof _41==="string"){
+_44[key]=_1.data.util.filter.patternToRegExp(_41,_40);
+}
+}
+for(var _45 in _3a){
+_43=false;
+var _46=this.getValues(_3f,_45);
+for(j=0;j<_46.length;j++){
+_41=_46[j];
+if(_41){
+var _47=_3a[_45];
+if((typeof _41)==="string"&&(_44[_45])){
+if((_41.match(_44[_45]))!==null){
+_42=true;
+}else{
+_42=false;
+}
+}else{
+if((typeof _41)==="object"){
+if(_41.toString&&(_44[_45])){
+var _48=_41.toString();
+if((_48.match(_44[_45]))!==null){
+_42=true;
+}else{
+_42=false;
+}
+}else{
+if(_47==="*"||_47===_41){
+_42=true;
+}else{
+_42=false;
+}
+}
+}
+}
+}
+if(_42){
+break;
+}
+}
+if(!_42){
+break;
+}
+}
+if(_43||_42){
+_3b.push(_3f);
+}
+}else{
+_3b.push(_3f);
+}
+}
+_1.forEach(_3b,function(_49){
+if(_49.element.parentNode){
+_49.element.parentNode.removeChild(_49.element);
+}
+},this);
+return _3b;
+},_flattenNodes:function(_4a){
+var _4b=[];
+if(_4a){
+var i;
+for(i=0;i<_4a.length;i++){
+var _4c=_4a[i];
+_4b.push(_4c);
+if(_4c.childNodes&&_4c.childNodes.length>0){
+_4b=_4b.concat(this._flattenNodes(_4c.childNodes));
+}
+}
+}
+return _4b;
+},close:function(_4d){
+},newItem:function(_4e,_4f){
+_4e=(_4e||{});
+var _50=_4e.tagName;
+if(!_50){
+_50=this.rootItem;
+if(_50===""){
+return null;
+}
+}
+var _51=this._getDocument();
+var _52=_51.createElement(_50);
+for(var _53 in _4e){
+var _54;
+if(_53==="tagName"){
+continue;
+}else{
+if(_53==="text()"){
+_54=_51.createTextNode(_4e[_53]);
+_52.appendChild(_54);
+}else{
+_53=this._getAttribute(_50,_53);
+if(_53.charAt(0)==="@"){
+var _55=_53.substring(1);
+_52.setAttribute(_55,_4e[_53]);
+}else{
+var _56=_51.createElement(_53);
+_54=_51.createTextNode(_4e[_53]);
+_56.appendChild(_54);
+_52.appendChild(_56);
+}
+}
+}
+}
+var _57=this._getItem(_52);
+this._newItems.push(_57);
+var _58=null;
+if(_4f&&_4f.parent&&_4f.attribute){
+_58={item:_4f.parent,attribute:_4f.attribute,oldValue:undefined};
+var _59=this.getValues(_4f.parent,_4f.attribute);
+if(_59&&_59.length>0){
+var _5a=_59.slice(0,_59.length);
+if(_59.length===1){
+_58.oldValue=_59[0];
+}else{
+_58.oldValue=_59.slice(0,_59.length);
+}
+_5a.push(_57);
+this.setValues(_4f.parent,_4f.attribute,_5a);
+_58.newValue=this.getValues(_4f.parent,_4f.attribute);
+}else{
+this.setValues(_4f.parent,_4f.attribute,_57);
+_58.newValue=_57;
+}
+}
+return _57;
+},deleteItem:function(_5b){
+var _5c=_5b.element;
+if(_5c.parentNode){
+this._backupItem(_5b);
+_5c.parentNode.removeChild(_5c);
+return true;
+}
+this._forgetItem(_5b);
+this._deletedItems.push(_5b);
+return true;
+},setValue:function(_5d,_5e,_5f){
+if(_5e==="tagName"){
+return false;
+}
+this._backupItem(_5d);
+var _60=_5d.element;
+var _61;
+var _62;
+if(_5e==="childNodes"){
+_61=_5f.element;
+_60.appendChild(_61);
+}else{
+if(_5e==="text()"){
+while(_60.firstChild){
+_60.removeChild(_60.firstChild);
+}
+_62=this._getDocument(_60).createTextNode(_5f);
+_60.appendChild(_62);
+}else{
+_5e=this._getAttribute(_60.nodeName,_5e);
+if(_5e.charAt(0)==="@"){
+var _63=_5e.substring(1);
+_60.setAttribute(_63,_5f);
+}else{
+for(var i=0;i<_60.childNodes.length;i++){
+var _64=_60.childNodes[i];
+if(_64.nodeType===1&&_64.nodeName===_5e){
+_61=_64;
+break;
+}
+}
+var _65=this._getDocument(_60);
+if(_61){
+while(_61.firstChild){
+_61.removeChild(_61.firstChild);
+}
+}else{
+_61=_65.createElement(_5e);
+_60.appendChild(_61);
+}
+_62=_65.createTextNode(_5f);
+_61.appendChild(_62);
+}
+}
+}
+return true;
+},setValues:function(_66,_67,_68){
+if(_67==="tagName"){
+return false;
+}
+this._backupItem(_66);
+var _69=_66.element;
+var i;
+var _6a;
+var _6b;
+if(_67==="childNodes"){
+while(_69.firstChild){
+_69.removeChild(_69.firstChild);
+}
+for(i=0;i<_68.length;i++){
+_6a=_68[i].element;
+_69.appendChild(_6a);
+}
+}else{
+if(_67==="text()"){
+while(_69.firstChild){
+_69.removeChild(_69.firstChild);
+}
+var _6c="";
+for(i=0;i<_68.length;i++){
+_6c+=_68[i];
+}
+_6b=this._getDocument(_69).createTextNode(_6c);
+_69.appendChild(_6b);
+}else{
+_67=this._getAttribute(_69.nodeName,_67);
+if(_67.charAt(0)==="@"){
+var _6d=_67.substring(1);
+_69.setAttribute(_6d,_68[0]);
+}else{
+for(i=_69.childNodes.length-1;i>=0;i--){
+var _6e=_69.childNodes[i];
+if(_6e.nodeType===1&&_6e.nodeName===_67){
+_69.removeChild(_6e);
+}
+}
+var _6f=this._getDocument(_69);
+for(i=0;i<_68.length;i++){
+_6a=_6f.createElement(_67);
+_6b=_6f.createTextNode(_68[i]);
+_6a.appendChild(_6b);
+_69.appendChild(_6a);
+}
+}
+}
+}
+return true;
+},unsetAttribute:function(_70,_71){
+if(_71==="tagName"){
+return false;
+}
+this._backupItem(_70);
+var _72=_70.element;
+if(_71==="childNodes"||_71==="text()"){
+while(_72.firstChild){
+_72.removeChild(_72.firstChild);
+}
+}else{
+_71=this._getAttribute(_72.nodeName,_71);
+if(_71.charAt(0)==="@"){
+var _73=_71.substring(1);
+_72.removeAttribute(_73);
+}else{
+for(var i=_72.childNodes.length-1;i>=0;i--){
+var _74=_72.childNodes[i];
+if(_74.nodeType===1&&_74.nodeName===_71){
+_72.removeChild(_74);
+}
+}
+}
+}
+return true;
+},save:function(_75){
+if(!_75){
+_75={};
+}
+var i;
+for(i=0;i<this._modifiedItems.length;i++){
+this._saveItem(this._modifiedItems[i],_75,"PUT");
+}
+for(i=0;i<this._newItems.length;i++){
+var _76=this._newItems[i];
+if(_76.element.parentNode){
+this._newItems.splice(i,1);
+i--;
+continue;
+}
+this._saveItem(this._newItems[i],_75,"POST");
+}
+for(i=0;i<this._deletedItems.length;i++){
+this._saveItem(this._deletedItems[i],_75,"DELETE");
+}
+},revert:function(){
+this._newItems=[];
+this._restoreItems(this._deletedItems);
+this._deletedItems=[];
+this._restoreItems(this._modifiedItems);
+this._modifiedItems=[];
+return true;
+},isDirty:function(_77){
+if(_77){
+var _78=this._getRootElement(_77.element);
+return (this._getItemIndex(this._newItems,_78)>=0||this._getItemIndex(this._deletedItems,_78)>=0||this._getItemIndex(this._modifiedItems,_78)>=0);
+}else{
+return (this._newItems.length>0||this._deletedItems.length>0||this._modifiedItems.length>0);
+}
+},_saveItem:function(_79,_7a,_7b){
+var url;
+var _7c;
+if(_7b==="PUT"){
+url=this._getPutUrl(_79);
+}else{
+if(_7b==="DELETE"){
+url=this._getDeleteUrl(_79);
+}else{
+url=this._getPostUrl(_79);
+}
+}
+if(!url){
+if(_7a.onError){
+_7c=_7a.scope||_1.global;
+_7a.onError.call(_7c,new Error("No URL for saving content: "+this._getPostContent(_79)));
+}
+return;
+}
+var _7d={url:url,method:(_7b||"POST"),contentType:"text/xml",handleAs:"xml"};
+var _7e;
+if(_7b==="PUT"){
+_7d.putData=this._getPutContent(_79);
+_7e=_1.rawXhrPut(_7d);
+}else{
+if(_7b==="DELETE"){
+_7e=_1.xhrDelete(_7d);
+}else{
+_7d.postData=this._getPostContent(_79);
+_7e=_1.rawXhrPost(_7d);
+}
+}
+_7c=(_7a.scope||_1.global);
+var _7f=this;
+_7e.addCallback(function(_80){
+_7f._forgetItem(_79);
+if(_7a.onComplete){
+_7a.onComplete.call(_7c);
+}
+});
+_7e.addErrback(function(_81){
+if(_7a.onError){
+_7a.onError.call(_7c,_81);
+}
+});
+},_getPostUrl:function(_82){
+return this.url;
+},_getPutUrl:function(_83){
+return this.url;
+},_getDeleteUrl:function(_84){
+var url=this.url;
+if(_84&&this.keyAttribute!==""){
+var _85=this.getValue(_84,this.keyAttribute);
+if(_85){
+var key=this.keyAttribute.charAt(0)==="@"?this.keyAttribute.substring(1):this.keyAttribute;
+url+=url.indexOf("?")<0?"?":"&";
+url+=key+"="+_85;
+}
+}
+return url;
+},_getPostContent:function(_86){
+var _87=_86.element;
+var _88="<?xml version=\"1.0\"?>";
+return _88+_2.xml.parser.innerXML(_87);
+},_getPutContent:function(_89){
+var _8a=_89.element;
+var _8b="<?xml version=\"1.0\"?>";
+return _8b+_2.xml.parser.innerXML(_8a);
+},_getAttribute:function(_8c,_8d){
+if(this._attributeMap){
+var key=_8c+"."+_8d;
+var _8e=this._attributeMap[key];
+if(_8e){
+_8d=_8e;
+}else{
+_8e=this._attributeMap[_8d];
+if(_8e){
+_8d=_8e;
+}
+}
+}
+return _8d;
+},_getItem:function(_8f){
+try{
+var q=null;
+if(this.keyAttribute===""){
+q=this._getXPath(_8f);
+}
+return new _2.data.XmlItem(_8f,this,q);
+}
+catch(e){
+}
+return null;
+},_getItemIndex:function(_90,_91){
+for(var i=0;i<_90.length;i++){
+if(_90[i].element===_91){
+return i;
+}
+}
+return -1;
+},_backupItem:function(_92){
+var _93=this._getRootElement(_92.element);
+if(this._getItemIndex(this._newItems,_93)>=0||this._getItemIndex(this._modifiedItems,_93)>=0){
+return;
+}
+if(_93!=_92.element){
+_92=this._getItem(_93);
+}
+_92._backup=_93.cloneNode(true);
+this._modifiedItems.push(_92);
+},_restoreItems:function(_94){
+_1.forEach(_94,function(_95){
+if(_95._backup){
+_95.element=_95._backup;
+_95._backup=null;
+}
+},this);
+},_forgetItem:function(_96){
+var _97=_96.element;
+var _98=this._getItemIndex(this._newItems,_97);
+if(_98>=0){
+this._newItems.splice(_98,1);
+}
+_98=this._getItemIndex(this._deletedItems,_97);
+if(_98>=0){
+this._deletedItems.splice(_98,1);
+}
+_98=this._getItemIndex(this._modifiedItems,_97);
+if(_98>=0){
+this._modifiedItems.splice(_98,1);
+}
+},_getDocument:function(_99){
+if(_99){
+return _99.ownerDocument;
+}else{
+if(!this._document){
+return _2.xml.parser.parse();
+}
+}
+return null;
+},_getRootElement:function(_9a){
+while(_9a.parentNode){
+_9a=_9a.parentNode;
+}
+return _9a;
+},_getXPath:function(_9b){
+var _9c=null;
+if(!this.sendQuery){
+var _9d=_9b;
+_9c="";
+while(_9d&&_9d!=_9b.ownerDocument){
+var pos=0;
+var _9e=_9d;
+var _9f=_9d.nodeName;
+while(_9e){
+_9e=_9e.previousSibling;
+if(_9e&&_9e.nodeName===_9f){
+pos++;
+}
+}
+var _a0="/"+_9f+"["+pos+"]";
+if(_9c){
+_9c=_a0+_9c;
+}else{
+_9c=_a0;
+}
+_9d=_9d.parentNode;
+}
+}
+return _9c;
+},getIdentity:function(_a1){
+if(!this.isItem(_a1)){
+throw new Error("dojox.data.XmlStore: Object supplied to getIdentity is not an item");
+}else{
+var id=null;
+if(this.sendQuery&&this.keyAttribute!==""){
+id=this.getValue(_a1,this.keyAttribute).toString();
+}else{
+if(!this.serverQuery){
+if(this.keyAttribute!==""){
+id=this.getValue(_a1,this.keyAttribute).toString();
+}else{
+id=_a1.q;
+}
+}
+}
+return id;
+}
+},getIdentityAttributes:function(_a2){
+if(!this.isItem(_a2)){
+throw new Error("dojox.data.XmlStore: Object supplied to getIdentity is not an item");
+}else{
+if(this.keyAttribute!==""){
+return [this.keyAttribute];
+}else{
+return null;
+}
+}
+},fetchItemByIdentity:function(_a3){
+var _a4=null;
+var _a5=null;
+var _a6=this;
+var url=null;
+var _a7=null;
+var _a8=null;
+if(!_a6.sendQuery){
+_a4=function(_a9){
+if(_a9){
+if(_a6.keyAttribute!==""){
+var _aa={};
+_aa.query={};
+_aa.query[_a6.keyAttribute]=_a3.identity;
+_aa.queryOptions={deep:true};
+var _ab=_a6._getItems(_a9,_aa);
+_a5=_a3.scope||_1.global;
+if(_ab.length===1){
+if(_a3.onItem){
+_a3.onItem.call(_a5,_ab[0]);
+}
+}else{
+if(_ab.length===0){
+if(_a3.onItem){
+_a3.onItem.call(_a5,null);
+}
+}else{
+if(_a3.onError){
+_a3.onError.call(_a5,new Error("Items array size for identity lookup greater than 1, invalid keyAttribute."));
+}
+}
+}
+}else{
+var _ac=_a3.identity.split("/");
+var i;
+var _ad=_a9;
+for(i=0;i<_ac.length;i++){
+if(_ac[i]&&_ac[i]!==""){
+var _ae=_ac[i];
+_ae=_ae.substring(0,_ae.length-1);
+var _af=_ae.split("[");
+var tag=_af[0];
+var _b0=parseInt(_af[1],10);
+var pos=0;
+if(_ad){
+var _b1=_ad.childNodes;
+if(_b1){
+var j;
+var _b2=null;
+for(j=0;j<_b1.length;j++){
+var _b3=_b1[j];
+if(_b3.nodeName===tag){
+if(pos<_b0){
+pos++;
+}else{
+_b2=_b3;
+break;
+}
+}
+}
+if(_b2){
+_ad=_b2;
+}else{
+_ad=null;
+}
+}else{
+_ad=null;
+}
+}else{
+break;
+}
+}
+}
+var _b4=null;
+if(_ad){
+_b4=_a6._getItem(_ad);
+if(_b4.element.parentNode){
+_b4.element.parentNode.removeChild(_b4.element);
+}
+}
+if(_a3.onItem){
+_a5=_a3.scope||_1.global;
+_a3.onItem.call(_a5,_b4);
+}
+}
+}
+};
+url=this._getFetchUrl(null);
+_a7={url:url,handleAs:"xml",preventCache:_a6.urlPreventCache};
+_a8=_1.xhrGet(_a7);
+_a8.addCallback(_a4);
+if(_a3.onError){
+_a8.addErrback(function(_b5){
+var s=_a3.scope||_1.global;
+_a3.onError.call(s,_b5);
+});
+}
+}else{
+if(_a6.keyAttribute!==""){
+var _b6={query:{}};
+_b6.query[_a6.keyAttribute]=_a3.identity;
+url=this._getFetchUrl(_b6);
+_a4=function(_b7){
+var _b8=null;
+if(_b7){
+var _b9=_a6._getItems(_b7,{});
+if(_b9.length===1){
+_b8=_b9[0];
+}else{
+if(_a3.onError){
+var _ba=_a3.scope||_1.global;
+_a3.onError.call(_ba,new Error("More than one item was returned from the server for the denoted identity"));
+}
+}
+}
+if(_a3.onItem){
+_ba=_a3.scope||_1.global;
+_a3.onItem.call(_ba,_b8);
+}
+};
+_a7={url:url,handleAs:"xml",preventCache:_a6.urlPreventCache};
+_a8=_1.xhrGet(_a7);
+_a8.addCallback(_a4);
+if(_a3.onError){
+_a8.addErrback(function(_bb){
+var s=_a3.scope||_1.global;
+_a3.onError.call(s,_bb);
+});
+}
+}else{
+if(_a3.onError){
+var s=_a3.scope||_1.global;
+_a3.onError.call(s,new Error("XmlStore is not told that the server to provides identity support.  No keyAttribute specified."));
+}
+}
+}
+}});
+_1.declare("dojox.data.XmlItem",null,{constructor:function(_bc,_bd,_be){
+this.element=_bc;
+this.store=_bd;
+this.q=_be;
+},toString:function(){
+var str="";
+if(this.element){
+for(var i=0;i<this.element.childNodes.length;i++){
+var _bf=this.element.childNodes[i];
+if(_bf.nodeType===3||_bf.nodeType===4){
+str+=_bf.nodeValue;
+}
+}
+}
+return str;
+}});
+_1.extend(_2.data.XmlStore,_1.data.util.simpleFetch);
+return _2.data.XmlStore;
 });

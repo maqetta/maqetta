@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[näyttöasetukset]",
 	title: "Otsikko",
 	authors: "Tekijät",
@@ -10,3 +10,4 @@
 	content: "Sisältö"
 })
 
+);

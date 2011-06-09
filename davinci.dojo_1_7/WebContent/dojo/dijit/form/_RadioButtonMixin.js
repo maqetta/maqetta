@@ -1,74 +1,46 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/_base/NodeList", // .forEach
-	"dojo/_base/array", // dojo.forEach
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/event", // dojo.stopEvent
-	"dojo/_base/html", // dojo.attr
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/_base/window", // dojo.doc
-	"dojo/query" // dojo.query
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/form/_RadioButtonMixin
-	// summary:
-	// 		Mixin to provide widget functionality for an HTML radio button
-
-	dojo.declare("dijit.form._RadioButtonMixin", null, {
-		// summary:
-		// 		Mixin to provide widget functionality for an HTML radio button
-
-		// type: [private] String
-		//		type attribute on <input> node.
-		//		Users should not change this value.
-		type: "radio",
-
-		_getRelatedWidgets: function(){
-			// Private function needed to help iterate over all radio buttons in a group.
-			var ary = [];
-			dojo.query("input[type=radio]", this.focusNode.form || dojo.doc).forEach( // can't use name= since dojo.query doesn't support [] in the name
-				dojo.hitch(this, function(inputNode){
-					if(inputNode.name == this.name && inputNode.form == this.focusNode.form){
-						var widget = dijit.getEnclosingWidget(inputNode);
-						if(widget){
-							ary.push(widget);
-						}
-					}
-				})
-			);
-			return ary;
-		},
-
-		_setCheckedAttr: function(/*Boolean*/ value){
-			// If I am being checked then have to deselect currently checked radio button
-			this.inherited(arguments);
-			if(!this._created){ return; }
-			if(value){
-				dojo.forEach(this._getRelatedWidgets(), dojo.hitch(this, function(widget){
-					if(widget != this && widget.checked){
-						widget.set('checked', false);
-					}
-				}));
-			}
-		},
-
-		_onClick: function(/*Event*/ e){
-			if(this.checked || this.disabled){ // nothing to do
-				dojo.stopEvent(e);
-				return false;
-			}
-			if(this.readOnly){ // ignored by some browsers so we have to resync the DOM elements with widget values
-				dojo.stopEvent(e);
-				dojo.forEach(this._getRelatedWidgets(), dojo.hitch(this, function(widget){
-					dojo.attr(this.focusNode || this.domNode, 'checked', widget.checked);
-				}));
-				return false;
-			}
-			return this.inherited(arguments);
-		}
-	});
-
-	return dijit.form._RadioButtonMixin;
+define("dijit/form/_RadioButtonMixin",["dojo/_base/kernel","..","dojo/_base/NodeList","dojo/_base/array","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/window","dojo/query"],function(_1,_2){
+_1.declare("dijit.form._RadioButtonMixin",null,{type:"radio",_getRelatedWidgets:function(){
+var _3=[];
+_1.query("input[type=radio]",this.focusNode.form||_1.doc).forEach(_1.hitch(this,function(_4){
+if(_4.name==this.name&&_4.form==this.focusNode.form){
+var _5=_2.getEnclosingWidget(_4);
+if(_5){
+_3.push(_5);
+}
+}
+}));
+return _3;
+},_setCheckedAttr:function(_6){
+this.inherited(arguments);
+if(!this._created){
+return;
+}
+if(_6){
+_1.forEach(this._getRelatedWidgets(),_1.hitch(this,function(_7){
+if(_7!=this&&_7.checked){
+_7.set("checked",false);
+}
+}));
+}
+},_onClick:function(e){
+if(this.checked||this.disabled){
+_1.stopEvent(e);
+return false;
+}
+if(this.readOnly){
+_1.stopEvent(e);
+_1.forEach(this._getRelatedWidgets(),_1.hitch(this,function(_8){
+_1.attr(this.focusNode||this.domNode,"checked",_8.checked);
+}));
+return false;
+}
+return this.inherited(arguments);
+}});
+return _2.form._RadioButtonMixin;
 });

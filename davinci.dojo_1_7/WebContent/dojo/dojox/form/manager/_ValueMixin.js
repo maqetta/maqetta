@@ -1,77 +1,48 @@
-dojo.provide("dojox.form.manager._ValueMixin");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.form.manager._ValueMixin", null, {
-	// summary:
-	//		Form manager's mixin for getting/setting form values in the unified manner.
-	// description:
-	//		This mixin adds unified access to form widgets and form elements
-	//		in terms of name-value regardless of the underlying type of
-	//		an element. It should be used together with dojox.form.manager.Mixin.
-
-	elementValue: function(name, value){
-		// summary:
-		//		Set or get a form widget/element or an attached point node by name.
-		// name: String:
-		//		The name.
-		// value: Object?:
-		//		Optional. The value to set.
-
-		if(name in this.formWidgets){
-			return this.formWidgetValue(name, value);	// Object
-		}
-
-		if(this.formNodes && name in this.formNodes){
-			return this.formNodeValue(name, value);	// Object
-		}
-
-		return this.formPointValue(name, value);	// Object
-	},
-
-	gatherFormValues: function(names){
-		// summary:
-		//		Collect form values.
-		// names: Object?:
-		//		If it is an array, it is a list of names of form elements to be collected.
-		//		If it is an object, dictionary keys are names to be collected.
-		//		If it is omitted, all known form elements are to be collected.
-
-		var result = this.inspectFormWidgets(function(name){
-			return this.formWidgetValue(name);
-		}, names);
-
-		if(this.inspectFormNodes){
-			dojo.mixin(result, this.inspectFormNodes(function(name){
-				return this.formNodeValue(name);
-			}, names));
-		}
-
-		dojo.mixin(result, this.inspectAttachedPoints(function(name){
-			return this.formPointValue(name);
-		}, names));
-
-		return result;	// Object
-	},
-
-	setFormValues: function(values){
-		// summary:
-		//		Set values to form elements
-		// values: Object:
-		//		A dictionary of key-value pairs.
-		if(values){
-			this.inspectFormWidgets(function(name, widget, value){
-				this.formWidgetValue(name, value);
-			}, values);
-
-			if(this.inspectFormNodes){
-				this.inspectFormNodes(function(name, node, value){
-					this.formNodeValue(name, value);
-				}, values);
-			}
-
-			this.inspectAttachedPoints(function(name, node, value){
-				this.formPointValue(name, value);
-			}, values);
-		}
-		return this;
-	}
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.form.manager._ValueMixin",1);
+_1.declare("dojox.form.manager._ValueMixin",null,{elementValue:function(_4,_5){
+if(_4 in this.formWidgets){
+return this.formWidgetValue(_4,_5);
+}
+if(this.formNodes&&_4 in this.formNodes){
+return this.formNodeValue(_4,_5);
+}
+return this.formPointValue(_4,_5);
+},gatherFormValues:function(_6){
+var _7=this.inspectFormWidgets(function(_8){
+return this.formWidgetValue(_8);
+},_6);
+if(this.inspectFormNodes){
+_1.mixin(_7,this.inspectFormNodes(function(_9){
+return this.formNodeValue(_9);
+},_6));
+}
+_1.mixin(_7,this.inspectAttachedPoints(function(_a){
+return this.formPointValue(_a);
+},_6));
+return _7;
+},setFormValues:function(_b){
+if(_b){
+this.inspectFormWidgets(function(_c,_d,_e){
+this.formWidgetValue(_c,_e);
+},_b);
+if(this.inspectFormNodes){
+this.inspectFormNodes(function(_f,_10,_11){
+this.formNodeValue(_f,_11);
+},_b);
+}
+this.inspectAttachedPoints(function(_12,_13,_14){
+this.formPointValue(_12,_14);
+},_b);
+}
+return this;
+}});
+return _1.getObject("dojox.form.manager._ValueMixin");
 });
+require(["dojox/form/manager/_ValueMixin"]);

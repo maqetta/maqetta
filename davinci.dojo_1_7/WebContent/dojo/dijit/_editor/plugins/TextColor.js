@@ -1,108 +1,63 @@
-define([
-	"dojo/_base/kernel",
-	"../..",
-	"../_Plugin",
-	"../../form/DropDownButton",
-	"../../ColorPalette",
-	"dojo/colors" // dojo.colorFromRgb
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/_editor/plugins/TextColor
-// summary:
-//		This plugin provides dropdown color pickers for setting text color and background color
-
-
-dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
-	// summary:
-	//		This plugin provides dropdown color pickers for setting text color and background color
-	//
-	// description:
-	//		The commands provided by this plugin are:
-	//		* foreColor - sets the text color
-	//		* hiliteColor - sets the background color
-
-	// Override _Plugin.buttonClass to use DropDownButton (with ColorPalette) to control this plugin
-	buttonClass: dijit.form.DropDownButton,
-
-	// useDefaultCommand: Boolean
-	//		False as we do not use the default editor command/click behavior.
-	useDefaultCommand: false,
-
-	constructor: function(){
-		this.dropDown = new dijit.ColorPalette();
-		this.connect(this.dropDown, "onChange", function(color){
-			this.editor.execCommand(this.command, color);
-
-		});
-	},
-
-	updateState: function(){
-		// summary:
-		//		Overrides _Plugin.updateState().  This updates the ColorPalette
-		//		to show the color of the currently selected text.
-		// tags:
-		//		protected
-
-		var _e = this.editor;
-		var _c = this.command;
-		if(!_e || !_e.isLoaded || !_c.length){
-			return;
-		}
-
-		if(this.button){
-			var disabled = this.get("disabled");
-			this.button.set("disabled", disabled);
-			if(disabled){ return; }
-
-			var value;
-			try{
-				value = _e.queryCommandValue(_c)|| "";
-			}catch(e){
-				//Firefox may throw error above if the editor is just loaded, ignore it
-				value = "";
-			}
-		}
-
-		if(value == ""){
-			value = "#000000";
-		}
-		if(value == "transparent"){
-			value = "#ffffff";
-		}
-
-		if(typeof value == "string"){
-			//if RGB value, convert to hex value
-			if(value.indexOf("rgb")> -1){
-				value = dojo.colorFromRgb(value).toHex();
-			}
-		}else{	//it's an integer(IE returns an MS access #)
-			value =((value & 0x0000ff)<< 16)|(value & 0x00ff00)|((value & 0xff0000)>>> 16);
-			value = value.toString(16);
-			value = "#000000".slice(0, 7 - value.length)+ value;
-
-		}
-
-		if(value !== this.dropDown.get('value')){
-			this.dropDown.set('value', value, false);
-		}
-	}
+define("dijit/_editor/plugins/TextColor",["dojo/_base/kernel","../..","../_Plugin","../../form/DropDownButton","../../ColorPalette","dojo/colors"],function(_1,_2){
+_1.declare("dijit._editor.plugins.TextColor",_2._editor._Plugin,{buttonClass:_2.form.DropDownButton,useDefaultCommand:false,constructor:function(){
+this.dropDown=new _2.ColorPalette();
+this.connect(this.dropDown,"onChange",function(_3){
+this.editor.execCommand(this.command,_3);
 });
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
-	if(o.plugin){
-		return;
-	}
-	switch(o.args.name){
-		case "foreColor":
-		case "hiliteColor":
-			o.plugin = new dijit._editor.plugins.TextColor({
-				command: o.args.name
-			});
-	}
+},updateState:function(){
+var _4=this.editor;
+var _5=this.command;
+if(!_4||!_4.isLoaded||!_5.length){
+return;
+}
+if(this.button){
+var _6=this.get("disabled");
+this.button.set("disabled",_6);
+if(_6){
+return;
+}
+var _7;
+try{
+_7=_4.queryCommandValue(_5)||"";
+}
+catch(e){
+_7="";
+}
+}
+if(_7==""){
+_7="#000000";
+}
+if(_7=="transparent"){
+_7="#ffffff";
+}
+if(typeof _7=="string"){
+if(_7.indexOf("rgb")>-1){
+_7=_1.colorFromRgb(_7).toHex();
+}
+}else{
+_7=((_7&255)<<16)|(_7&65280)|((_7&16711680)>>>16);
+_7=_7.toString(16);
+_7="#000000".slice(0,7-_7.length)+_7;
+}
+if(_7!==this.dropDown.get("value")){
+this.dropDown.set("value",_7,false);
+}
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+switch(o.args.name){
+case "foreColor":
+case "hiliteColor":
+o.plugin=new _2._editor.plugins.TextColor({command:o.args.name});
+}
 });
-
-
-return dijit._editor.plugins.TextColor;
+return _2._editor.plugins.TextColor;
 });

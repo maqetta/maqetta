@@ -1,17 +1,13 @@
 .soria .dijitToolbar .dijitToolbarSeparator {
-	background: url('../../icons/images/editorIconsEnabled.png'); /* separator in editor icons sprite image - enabled state */
+	background: url('../../icons/images/editorIconsEnabled.png'); 
 }
-
-/**** ICONS *****/
-
 .soria .dijitEditorIcon {
-	background-image: url('../../icons/images/editorIconsEnabled.png'); /* editor icons sprite image - enabled state */
+	background-image: url('../../icons/images/editorIconsEnabled.png'); 
 	background-repeat: no-repeat;
 	width: 18px;
 	height: 18px;
 	text-align: center;
 }
 .soria .dijitDisabled .dijitEditorIcon {
-	background-image: url('../../icons/images/editorIconsDisabled.png'); /* editor icons sprite image - disabled state */
+	background-image: url('../../icons/images/editorIconsDisabled.png'); 
 }
-

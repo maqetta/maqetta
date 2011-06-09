@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[opţiuni afişare]",
 	title: "Titlu",
 	authors: "Autori",
@@ -10,3 +10,4 @@
 	content: "Conţinut"
 })
 
+);

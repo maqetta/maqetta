@@ -18,9 +18,7 @@
 .dj_ie6 .claro .dojoxGridRowActive .dojoxGridCell {
 	border-color: #7DBEFA;
 }
-
-/* Pagination */
 .claro .dojoxGridPaginator{
 	background: url("../../../resources/images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
-	/*background-color: #EAF1F6;*/
+	
 }

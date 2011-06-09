@@ -1,4 +1,5 @@
-({
+define(({
 	deleteButton: "[Izbriši]"
 })
 
+);

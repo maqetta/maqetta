@@ -1,74 +1,35 @@
-define(["../main", "./Moveable"], function(dojo) {
-	// module:
-	//		dojo/dnd/TimedMoveable
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	/*=====
-	dojo.declare("dojo.dnd.__TimedMoveableArgs", [dojo.dnd.__MoveableArgs], {
-		// timeout: Number
-		//		delay move by this number of ms,
-		//		accumulating position changes during the timeout
-		timeout: 0
-	});
-	=====*/
-
-	// precalculate long expressions
-	var oldOnMove = dojo.dnd.Moveable.prototype.onMove;
-
-	dojo.declare("dojo.dnd.TimedMoveable", dojo.dnd.Moveable, {
-		// summary:
-		//		A specialized version of Moveable to support an FPS throttling.
-		//		This class puts an upper restriction on FPS, which may reduce
-		//		the CPU load. The additional parameter "timeout" regulates
-		//		the delay before actually moving the moveable object.
-
-		// object attributes (for markup)
-		timeout: 40,	// in ms, 40ms corresponds to 25 fps
-
-		constructor: function(node, params){
-			// summary:
-			//		an object that makes a node moveable with a timer
-			// node: Node||String
-			//		a node (or node's id) to be moved
-			// params: dojo.dnd.__TimedMoveableArgs
-			//		object with additional parameters.
-
-			// sanitize parameters
-			if(!params){ params = {}; }
-			if(params.timeout && typeof params.timeout == "number" && params.timeout >= 0){
-				this.timeout = params.timeout;
-			}
-		},
-
-		// markup methods
-		markupFactory: function(params, node){
-			return new dojo.dnd.TimedMoveable(node, params);
-		},
-
-		onMoveStop: function(/* dojo.dnd.Mover */ mover){
-			if(mover._timer){
-				// stop timer
-				clearTimeout(mover._timer);
-				// reflect the last received position
-				oldOnMove.call(this, mover, mover._leftTop)
-			}
-			dojo.dnd.Moveable.prototype.onMoveStop.apply(this, arguments);
-		},
-		onMove: function(/* dojo.dnd.Mover */ mover, /* Object */ leftTop){
-			mover._leftTop = leftTop;
-			if(!mover._timer){
-				var _t = this;	// to avoid using dojo.hitch()
-				mover._timer = setTimeout(function(){
-					// we don't have any pending requests
-					mover._timer = null;
-					// reflect the last received position
-					oldOnMove.call(_t, mover, mover._leftTop);
-				}, this.timeout);
-			}
-		}
-	});
-
-	return dojo.dnd.TimedMoveable;
-	
+define("dojo/dnd/TimedMoveable",["../main","./Moveable"],function(_1){
+var _2=_1.dnd.Moveable.prototype.onMove;
+_1.declare("dojo.dnd.TimedMoveable",_1.dnd.Moveable,{timeout:40,constructor:function(_3,_4){
+if(!_4){
+_4={};
+}
+if(_4.timeout&&typeof _4.timeout=="number"&&_4.timeout>=0){
+this.timeout=_4.timeout;
+}
+},markupFactory:function(_5,_6){
+return new _1.dnd.TimedMoveable(_6,_5);
+},onMoveStop:function(_7){
+if(_7._timer){
+clearTimeout(_7._timer);
+_2.call(this,_7,_7._leftTop);
+}
+_1.dnd.Moveable.prototype.onMoveStop.apply(this,arguments);
+},onMove:function(_8,_9){
+_8._leftTop=_9;
+if(!_8._timer){
+var _a=this;
+_8._timer=setTimeout(function(){
+_8._timer=null;
+_2.call(_a,_8,_8._leftTop);
+},this.timeout);
+}
+}});
+return _1.dnd.TimedMoveable;
 });

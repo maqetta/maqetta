@@ -4,68 +4,56 @@
 	background-color: #FFF;
 	position: relative;
 }
-
 .dijitPopup .dojoxRollingList {
 	position: static;
 }
-
 .dojoxRollingListContainer {
 	overflow: scroll;
 	overflow-y: hidden;
 	overflow-x: scroll;
 	white-space: nowrap;
 }
-
 .dojoxRollingListButtons {
 	position: absolute;
 	right: 5px;
 	padding: 5px 0px;
 }
-
 .dojoxRollingListButtonsHidden .dojoxRollingListButtons {
 	display: none;
 }
-
 .dojoxRollingListPane {
 	overflow: scroll;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	display:-moz-inline-box;		/* FF2 */
-	display:inline-block;			/* webkit and FF3 */
-	#zoom: 1; /* set hasLayout:true to mimic inline-block */
-	#display:inline; /* don't use .dj_ie since that increases the priority */
+	display:-moz-inline-box;		
+	display:inline-block;			
+	#zoom: 1; 
+	#display:inline; 
 	border:0;
 	padding:0;
 	vertical-align:middle;
-	#vertical-align: auto;	/* makes TextBox,Button line up w/native counterparts on IE6 */
+	#vertical-align: auto;	
 }
-
 .dojoxRollingListPane .dijitMenuItem td {
 	width: 1px;
 }
 .dojoxRollingListPane .dijitMenuItem td.dijitMenuItemLabel {
 	width: auto;
 }
-
 .dojoxRollingListPane .dijitMenuItemLabel,
 .dojoxRollingListPane .dijitMenuItemIcon {
 	position: static !important;
 }
-
 .dj_webkit .dojoxRollingListPane,
 .dj_ie .dojoxRollingListPane {
-	padding-right: 15px; /* Account for scroll bar */
+	padding-right: 15px; 
 }
-
 .dojoxRollingListPane .dijitMenu {
 	border: none !important;
 }
-
 .dojoxRollingListItem {
 	cursor: default;
 }
-
-/* Background colors to match menus */
 .tundra .dojoxRollingList {
 	border-color: #b3b3b3;
 }
@@ -94,7 +82,6 @@
 .tundra .dojoxRollingListItem {
 	font-family: inherit;
 }
-
 .soria .dojoxRollingList {
 	border-color: #8ba0bd;
 }
@@ -123,8 +110,6 @@
 .soria .dojoxRollingListItem {
 	font-family: inherit;
 }
-
-
 .nihilo .dojoxRollingList {
 	border-color: #d3d3d3;
 }
@@ -153,4 +138,3 @@
 .nihilo .dojoxRollingListItem {
 	font-family: inherit;
 }
-

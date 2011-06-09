@@ -1,142 +1,77 @@
-dojo.provide("dojox.wire.ml.Data");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dijit._Widget");
-dojo.require("dijit._Container");
-dojo.require("dojox.wire.ml.util");
-
-dojo.declare("dojox.wire.ml.Data", [dijit._Widget, dijit._Container], {
-	//	summary:
-	//		A widget for a data object
-	//	description:
-	//		This widget represents an object with '_properties' property.
-	//		If child 'DataProperty' widgets exist, they are used to initialize
-	//		propertiy values of '_properties' object.
-
-	startup: function(){
-		//	summary:
-		//		Call _initializeProperties()
-		//	description:
-		//		See _initializeProperties().
-		this._initializeProperties();
-	},
-
-	_initializeProperties: function(/*Boolean*/reset){
-		//	summary:
-		//		Initialize a data object
-		//	description:
-		//		If this widget has child DataProperty widgets, their getValue()
-		//		methods are called and set the return value to a property
-		//		specified by 'name' attribute of the child widgets.
-		//	reset:
-		//		A boolean to reset current properties
-		if(!this._properties || reset){
-			this._properties = {};
-		}
-		var children = this.getChildren();
-		for(var i in children){
-			var child = children[i];
-			if((child instanceof dojox.wire.ml.DataProperty) && child.name){
-				this.setPropertyValue(child.name, child.getValue());
-			}
-		}
-	},
-
-	getPropertyValue: function(/*String*/property){
-		//	summary:
-		//		Return a property value
-		//	description:
-		//		This method returns the value of a property, specified with
-		//		'property' argument, in '_properties' object.
-		//	property:
-		//		A property name
-		//	returns:
-		//		A property value
-		return this._properties[property]; //anything
-	},
-
-	setPropertyValue: function(/*String*/property, /*anything*/value){
-		//	summary:
-		//		Store a property value
-		//	description:
-		//		This method stores 'value' as a property, specified with
-		//		'property' argument, in '_properties' object.
-		//	property:
-		//		A property name
-		//	value:
-		//		A property value
-		this._properties[property] = value;
-	}
+define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Container","dojox/wire/ml/util"],function(_1,_2,_3){
+_1.getObject("dojox.wire.ml.Data",1);
+_1.declare("dojox.wire.ml.Data",[_2._Widget,_2._Container],{startup:function(){
+this._initializeProperties();
+},_initializeProperties:function(_4){
+if(!this._properties||_4){
+this._properties={};
+}
+var _5=this.getChildren();
+for(var i in _5){
+var _6=_5[i];
+if((_6 instanceof _3.wire.ml.DataProperty)&&_6.name){
+this.setPropertyValue(_6.name,_6.getValue());
+}
+}
+},getPropertyValue:function(_7){
+return this._properties[_7];
+},setPropertyValue:function(_8,_9){
+this._properties[_8]=_9;
+}});
+_1.declare("dojox.wire.ml.DataProperty",[_2._Widget,_2._Container],{name:"",type:"",value:"",_getValueAttr:function(){
+return this.getValue();
+},getValue:function(){
+var _a=this.value;
+if(this.type){
+if(this.type=="number"){
+_a=parseInt(_a);
+}else{
+if(this.type=="boolean"){
+_a=(_a=="true");
+}else{
+if(this.type=="array"){
+_a=[];
+var _b=this.getChildren();
+for(var i in _b){
+var _c=_b[i];
+if(_c instanceof _3.wire.ml.DataProperty){
+_a.push(_c.getValue());
+}
+}
+}else{
+if(this.type=="object"){
+_a={};
+var _b=this.getChildren();
+for(var i in _b){
+var _c=_b[i];
+if((_c instanceof _3.wire.ml.DataProperty)&&_c.name){
+_a[_c.name]=_c.getValue();
+}
+}
+}else{
+if(this.type=="element"){
+_a=new _3.wire.ml.XmlElement(_a);
+var _b=this.getChildren();
+for(var i in _b){
+var _c=_b[i];
+if((_c instanceof _3.wire.ml.DataProperty)&&_c.name){
+_a.setPropertyValue(_c.name,_c.getValue());
+}
+}
+}
+}
+}
+}
+}
+}
+return _a;
+}});
+return _1.getObject("dojox.wire.ml.Data");
 });
-
-dojo.declare("dojox.wire.ml.DataProperty", [dijit._Widget, dijit._Container], {
-	//	summary:
-	//		A widget to define a data property
-	//	description:
-	//		Attributes of this widget are used to add a property to the parent
-	//		Data widget.
-	//		'type' attribute specifies one of "string", "number", "boolean",
-	//		"array", "object" and "element" (DOM Element)
-	//		(default to "string").
-	//		If 'type' is "array" or "object", child DataProperty widgets are
-	//		used to initialize the array elements or the object properties.
-	//	name:
-	//		A property name
-	//	type:
-	//		A property type name
-	//	value:
-	//		A property value
-	name: "",
-	type: "",
-	value: "",
-
-	_getValueAttr: function(){
-		return this.getValue();
-	},
-
-	getValue: function(){
-		//	summary:
-		//		Returns a property value
-		//	description:
-		//		If 'type' is specified, 'value' attribute is converted to
-		//		the specified type and returned.
-		//		Otherwise, 'value' attribute is returned as is.
-		//	returns:
-		//		A property value
-		var value = this.value;
-		if(this.type){
-			if(this.type == "number"){
-				value = parseInt(value);
-			}else if(this.type == "boolean"){
-				value = (value == "true");
-			}else if(this.type == "array"){
-				value = [];
-				var children = this.getChildren();
-				for(var i in children){
-					var child = children[i];
-					if(child instanceof dojox.wire.ml.DataProperty){
-						value.push(child.getValue());
-					}
-				}
-			}else if(this.type == "object"){
-				value = {};
-				var children = this.getChildren();
-				for(var i in children){
-					var child = children[i];
-					if((child instanceof dojox.wire.ml.DataProperty) && child.name){
-						value[child.name] = child.getValue();
-					}
-				}
-			}else if(this.type == "element"){
-				value = new dojox.wire.ml.XmlElement(value);
-				var children = this.getChildren();
-				for(var i in children){
-					var child = children[i];
-					if((child instanceof dojox.wire.ml.DataProperty) && child.name){
-						value.setPropertyValue(child.name, child.getValue());
-					}
-				}
-			}
-		}
-		return value; //anything
-	}
-});
+require(["dojox/wire/ml/Data"]);

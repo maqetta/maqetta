@@ -1,1293 +1,946 @@
-dojo.provide("dojox.atom.io.model");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.xml.parser");
-dojo.require("dojo.string");
-dojo.require("dojo.date.stamp");
-
-dojox.atom.io.model._Constants = {
-	//	summary:
-	//		Container for general constants.
-	//	description:
-	//		Container for general constants.
-	"ATOM_URI": "http://www.w3.org/2005/Atom",
-	"ATOM_NS": "http://www.w3.org/2005/Atom",
-	"PURL_NS": "http://purl.org/atom/app#",
-	"APP_NS": "http://www.w3.org/2007/app"
+define(["dojo","dijit","dojox","dojox/xml/parser","dojo/string","dojo/date/stamp"],function(_1,_2,_3){
+_1.getObject("dojox.atom.io.model",1);
+_3.atom.io.model._Constants={"ATOM_URI":"http://www.w3.org/2005/Atom","ATOM_NS":"http://www.w3.org/2005/Atom","PURL_NS":"http://purl.org/atom/app#","APP_NS":"http://www.w3.org/2007/app"};
+_3.atom.io.model._actions={"link":function(_4,_5){
+if(_4.links===null){
+_4.links=[];
+}
+var _6=new _3.atom.io.model.Link();
+_6.buildFromDom(_5);
+_4.links.push(_6);
+},"author":function(_7,_8){
+if(_7.authors===null){
+_7.authors=[];
+}
+var _9=new _3.atom.io.model.Person("author");
+_9.buildFromDom(_8);
+_7.authors.push(_9);
+},"contributor":function(_a,_b){
+if(_a.contributors===null){
+_a.contributors=[];
+}
+var _c=new _3.atom.io.model.Person("contributor");
+_c.buildFromDom(_b);
+_a.contributors.push(_c);
+},"category":function(_d,_e){
+if(_d.categories===null){
+_d.categories=[];
+}
+var _f=new _3.atom.io.model.Category();
+_f.buildFromDom(_e);
+_d.categories.push(_f);
+},"icon":function(obj,_10){
+obj.icon=_3.xml.parser.textContent(_10);
+},"id":function(obj,_11){
+obj.id=_3.xml.parser.textContent(_11);
+},"rights":function(obj,_12){
+obj.rights=_3.xml.parser.textContent(_12);
+},"subtitle":function(obj,_13){
+var cnt=new _3.atom.io.model.Content("subtitle");
+cnt.buildFromDom(_13);
+obj.subtitle=cnt;
+},"title":function(obj,_14){
+var cnt=new _3.atom.io.model.Content("title");
+cnt.buildFromDom(_14);
+obj.title=cnt;
+},"updated":function(obj,_15){
+obj.updated=_3.atom.io.model.util.createDate(_15);
+},"issued":function(obj,_16){
+obj.issued=_3.atom.io.model.util.createDate(_16);
+},"modified":function(obj,_17){
+obj.modified=_3.atom.io.model.util.createDate(_17);
+},"published":function(obj,_18){
+obj.published=_3.atom.io.model.util.createDate(_18);
+},"entry":function(obj,_19){
+if(obj.entries===null){
+obj.entries=[];
+}
+var _1a=obj.createEntry?obj.createEntry():new _3.atom.io.model.Entry();
+_1a.buildFromDom(_19);
+obj.entries.push(_1a);
+},"content":function(obj,_1b){
+var cnt=new _3.atom.io.model.Content("content");
+cnt.buildFromDom(_1b);
+obj.content=cnt;
+},"summary":function(obj,_1c){
+var _1d=new _3.atom.io.model.Content("summary");
+_1d.buildFromDom(_1c);
+obj.summary=_1d;
+},"name":function(obj,_1e){
+obj.name=_3.xml.parser.textContent(_1e);
+},"email":function(obj,_1f){
+obj.email=_3.xml.parser.textContent(_1f);
+},"uri":function(obj,_20){
+obj.uri=_3.xml.parser.textContent(_20);
+},"generator":function(obj,_21){
+obj.generator=new _3.atom.io.model.Generator();
+obj.generator.buildFromDom(_21);
+}};
+_3.atom.io.model.util={createDate:function(_22){
+var _23=_3.xml.parser.textContent(_22);
+if(_23){
+return _1.date.stamp.fromISOString(_1.trim(_23));
+}
+return null;
+},escapeHtml:function(str){
+return str.replace(/&/gm,"&amp;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;").replace(/"/gm,"&quot;").replace(/'/gm,"&#39;");
+},unEscapeHtml:function(str){
+return str.replace(/&lt;/gm,"<").replace(/&gt;/gm,">").replace(/&quot;/gm,"\"").replace(/&#39;/gm,"'").replace(/&amp;/gm,"&");
+},getNodename:function(_24){
+var _25=null;
+if(_24!==null){
+_25=_24.localName?_24.localName:_24.nodeName;
+if(_25!==null){
+var _26=_25.indexOf(":");
+if(_26!==-1){
+_25=_25.substring((_26+1),_25.length);
+}
+}
+}
+return _25;
+}};
+_1.declare("dojox.atom.io.model.Node",null,{constructor:function(_27,_28,_29,_2a,_2b){
+this.name_space=_27;
+this.name=_28;
+this.attributes=[];
+if(_29){
+this.attributes=_29;
+}
+this.content=[];
+this.rawNodes=[];
+this.textContent=null;
+if(_2a){
+this.content.push(_2a);
+}
+this.shortNs=_2b;
+this._objName="Node";
+},buildFromDom:function(_2c){
+this._saveAttributes(_2c);
+this.name_space=_2c.namespaceURI;
+this.shortNs=_2c.prefix;
+this.name=_3.atom.io.model.util.getNodename(_2c);
+for(var x=0;x<_2c.childNodes.length;x++){
+var c=_2c.childNodes[x];
+if(_3.atom.io.model.util.getNodename(c)!="#text"){
+this.rawNodes.push(c);
+var n=new _3.atom.io.model.Node();
+n.buildFromDom(c,true);
+this.content.push(n);
+}else{
+this.content.push(c.nodeValue);
+}
+}
+this.textContent=_3.xml.parser.textContent(_2c);
+},_saveAttributes:function(_2d){
+if(!this.attributes){
+this.attributes=[];
+}
+var _2e=function(_2f){
+var _30=_2f.attributes;
+if(_30===null){
+return false;
+}
+return (_30.length!==0);
 };
-
-dojox.atom.io.model._actions = {
-	//	summary:
-	//		Container for tag handling functions.
-	//	description:
-	//		Container for tag handling functions.  Each child of this container is
-	//		a handler function for the given type of node. Each accepts two parameters:
-	//	obj:  Object.
-	//		  The object to insert data into.
-	//	node: DOM Node.
-	//		  The dom node containing the data
-	"link": function(obj,node){
-		if(obj.links === null){obj.links = [];}
-		var link = new dojox.atom.io.model.Link();
-		link.buildFromDom(node);
-		obj.links.push(link);
-	},
-	"author": function(obj,node){
-		if(obj.authors === null){obj.authors = [];}
-		var person = new dojox.atom.io.model.Person("author");
-		person.buildFromDom(node);
-		obj.authors.push(person);
-	},
-	"contributor": function(obj,node){
-		if(obj.contributors === null){obj.contributors = [];}
-		var person = new dojox.atom.io.model.Person("contributor");
-		person.buildFromDom(node);
-		obj.contributors.push(person);
-	},
-	"category": function(obj,node){
-		if(obj.categories === null){obj.categories = [];}
-		var cat = new dojox.atom.io.model.Category();
-		cat.buildFromDom(node);
-		obj.categories.push(cat);
-	},
-	"icon": function(obj,node){
-		obj.icon = dojox.xml.parser.textContent(node);
-	},
-	"id": function(obj,node){
-		obj.id = dojox.xml.parser.textContent(node);
-	},
-	"rights": function(obj,node){
-		obj.rights = dojox.xml.parser.textContent(node);
-	},
-	"subtitle": function(obj,node){
-		var cnt = new dojox.atom.io.model.Content("subtitle");
-		cnt.buildFromDom(node);
-		obj.subtitle = cnt;
-	},
-	"title": function(obj,node){
-		var cnt = new dojox.atom.io.model.Content("title");
-		cnt.buildFromDom(node);
-		obj.title = cnt;
-	},
-	"updated": function(obj,node){
-		obj.updated = dojox.atom.io.model.util.createDate(node);
-	},
-	// Google news
-	"issued": function(obj,node){
-		obj.issued = dojox.atom.io.model.util.createDate(node);
-	},
-	// Google news
-	"modified": function(obj,node){
-		obj.modified = dojox.atom.io.model.util.createDate(node);
-	},
-	"published": function(obj,node){
-		obj.published = dojox.atom.io.model.util.createDate(node);
-	},
-	"entry": function(obj,node){
-		if(obj.entries === null){obj.entries = [];}
-		//The object passed in should be a Feed object, since only feeds can contain Entries
-		var entry = obj.createEntry ? obj.createEntry() : new dojox.atom.io.model.Entry();
-		entry.buildFromDom(node);
-		obj.entries.push(entry);
-	},
-	"content": function(obj, node){
-		var cnt = new dojox.atom.io.model.Content("content");
-		cnt.buildFromDom(node);
-		obj.content = cnt;
-	},
-	"summary": function(obj, node){
-		var summary = new dojox.atom.io.model.Content("summary");
-		summary.buildFromDom(node);
-		obj.summary = summary;
-	},
-
-	"name": function(obj,node){
-		obj.name = dojox.xml.parser.textContent(node);
-	},
-	"email" : function(obj,node){
-		obj.email = dojox.xml.parser.textContent(node);
-	},
-	"uri" : function(obj,node){
-		obj.uri = dojox.xml.parser.textContent(node);
-	},
-	"generator" : function(obj,node){
-		obj.generator = new dojox.atom.io.model.Generator();
-		obj.generator.buildFromDom(node);
-	}
-};
-
-dojox.atom.io.model.util = {
-	createDate: function(/*DOM node*/node){
-		//	summary:
-		//		Utility function to create a date from a DOM node's text content.
-		//	description:
-		//		Utility function to create a date from a DOM node's text content.
-		//
-		//	node:
-		//		The DOM node to inspect.
-		//	returns:
-		//		Date object from a DOM Node containing a ISO-8610 string.
-		var textContent = dojox.xml.parser.textContent(node);
-		if(textContent){
-			return dojo.date.stamp.fromISOString(dojo.trim(textContent));
-		}
-		return null;
-	},
-	escapeHtml: function(/*String*/str){
-		//	summary:
-		//		Utility function to escape XML special characters in an HTML string.
-		//	description:
-		//		Utility function to escape XML special characters in an HTML string.
-		//
-		//	str:
-		//		The string to escape
-		//	returns:
-		//		HTML String with special characters (<,>,&, ", etc,) escaped.
-		return str.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;")
-			.replace(/'/gm, "&#39;"); // String
-	},
-	unEscapeHtml: function(/*String*/str){
-		//	summary:
-		//		Utility function to un-escape XML special characters in an HTML string.
-		//	description:
-		//		Utility function to un-escape XML special characters in an HTML string.
-		//
-		//	str:
-		//		The string to un-escape.
-		//	returns:
-		//		HTML String converted back to the normal text (unescaped) characters (<,>,&, ", etc,).
-		return str.replace(/&lt;/gm, "<").replace(/&gt;/gm, ">").replace(/&quot;/gm, "\"")
-			.replace(/&#39;/gm, "'").replace(/&amp;/gm, "&"); // String
-	},
-	getNodename: function(/*DOM node*/node){
-		//	summary:
-		//		Utility function to get a node name and deal with IE's bad handling of namespaces
-		//		on tag names.
-		//	description:
-		//		Utility function to get a node name and deal with IE's bad handling of namespaces
-		//		on tag names.
-		//
-		//	node:
-		//		The DOM node whose name to retrieve.
-		//	returns:
-		//		String
-		//	The name without namespace prefixes.
-		var name = null;
-		if(node !== null){
-			name = node.localName ? node.localName: node.nodeName;
-			if(name !== null){
-				var nsSep = name.indexOf(":");
-				if(nsSep !== -1){
-					name = name.substring((nsSep + 1), name.length);
-				}
-			}
-		}
-		return name;
-	}
-};
-
-dojo.declare('dojox.atom.io.model.Node', null, {
-	constructor: function(name_space,name, attributes,content, shortNs){
-		this.name_space = name_space;
-		this.name = name;
-		this.attributes = [];
-		if(attributes){
-			this.attributes = attributes;
-		}
-		this.content = [];
-		this.rawNodes = [];
-		this.textContent = null;
-		if(content){
-			this.content.push(content);
-		}
-		this.shortNs = shortNs;
-		this._objName = "Node";//for debugging purposes
-	},
-	buildFromDom: function(node){
-		this._saveAttributes(node);
-		this.name_space = node.namespaceURI;
-		this.shortNs = node.prefix;
-		this.name = dojox.atom.io.model.util.getNodename(node);
-		for(var x=0; x < node.childNodes.length; x++){
-			var c = node.childNodes[x];
-			if(dojox.atom.io.model.util.getNodename(c) != "#text" ){
-				this.rawNodes.push(c);
-				var n = new dojox.atom.io.model.Node();
-				n.buildFromDom(c, true);
-				this.content.push(n);
-			}else{
-				this.content.push(c.nodeValue);
-			}
-		}
-		this.textContent = dojox.xml.parser.textContent(node);
-	},
-	_saveAttributes: function(node){
-		if(!this.attributes){this.attributes = [];}
-		// Work around lack of hasAttributes() in IE
-		var hasAttributes = function(node){
-			var attrs = node.attributes;
-			if(attrs === null){return false;}
-			return (attrs.length !== 0);
-		};
-	
-		if(hasAttributes(node) && this._getAttributeNames){
-			var names = this._getAttributeNames(node);
-			if(names && names.length > 0){
-				for(var x in names){
-					var attrib = node.getAttribute(names[x]);
-					if(attrib){this.attributes[names[x]] = attrib;}
-				}
-			}
-		}
-	},
-	addAttribute: function(name, value){
-		this.attributes[name]=value;
-	},
-	getAttribute: function(name){
-		return this.attributes[name];
-	},
-	//if child objects want their attributes parsed, they should override
-	//to return an array of attrib names
-	_getAttributeNames: function(node){
-		var names = [];
-		for(var i =0; i<node.attributes.length; i++){
-			names.push(node.attributes[i].nodeName);
-		}
-		return names;
-	},
-	toString: function(){
-		var xml = [];
-		var x;
-		var name = (this.shortNs?this.shortNs+":":'')+this.name;
-		var cdata = (this.name == "#cdata-section");
-		if(cdata){
-			xml.push("<![CDATA[");
-			xml.push(this.textContent);
-			xml.push("]]>");
-		}else{
-			xml.push("<");
-			xml.push(name);
-			if(this.name_space){
-				xml.push(" xmlns='" + this.name_space + "'");
-			}
-			if(this.attributes){
-				for(x in this.attributes){
-					xml.push(" " + x + "='" + this.attributes[x] + "'");
-				}
-			}
-			if(this.content){
-				xml.push(">");
-				for(x in this.content){
-					xml.push(this.content[x]);
-				}
-				xml.push("</" + name + ">\n");
-			}else{
-				xml.push("/>\n");
-			}
-		}
-		return xml.join('');
-	},
-	addContent: function(content){
-		this.content.push(content);
-	}
+if(_2e(_2d)&&this._getAttributeNames){
+var _31=this._getAttributeNames(_2d);
+if(_31&&_31.length>0){
+for(var x in _31){
+var _32=_2d.getAttribute(_31[x]);
+if(_32){
+this.attributes[_31[x]]=_32;
+}
+}
+}
+}
+},addAttribute:function(_33,_34){
+this.attributes[_33]=_34;
+},getAttribute:function(_35){
+return this.attributes[_35];
+},_getAttributeNames:function(_36){
+var _37=[];
+for(var i=0;i<_36.attributes.length;i++){
+_37.push(_36.attributes[i].nodeName);
+}
+return _37;
+},toString:function(){
+var xml=[];
+var x;
+var _38=(this.shortNs?this.shortNs+":":"")+this.name;
+var _39=(this.name=="#cdata-section");
+if(_39){
+xml.push("<![CDATA[");
+xml.push(this.textContent);
+xml.push("]]>");
+}else{
+xml.push("<");
+xml.push(_38);
+if(this.name_space){
+xml.push(" xmlns='"+this.name_space+"'");
+}
+if(this.attributes){
+for(x in this.attributes){
+xml.push(" "+x+"='"+this.attributes[x]+"'");
+}
+}
+if(this.content){
+xml.push(">");
+for(x in this.content){
+xml.push(this.content[x]);
+}
+xml.push("</"+_38+">\n");
+}else{
+xml.push("/>\n");
+}
+}
+return xml.join("");
+},addContent:function(_3a){
+this.content.push(_3a);
+}});
+_1.declare("dojox.atom.io.model.AtomItem",_3.atom.io.model.Node,{constructor:function(_3b){
+this.ATOM_URI=_3.atom.io.model._Constants.ATOM_URI;
+this.links=null;
+this.authors=null;
+this.categories=null;
+this.contributors=null;
+this.icon=this.id=this.logo=this.xmlBase=this.rights=null;
+this.subtitle=this.title=null;
+this.updated=this.published=null;
+this.issued=this.modified=null;
+this.content=null;
+this.extensions=null;
+this.entries=null;
+this.name_spaces={};
+this._objName="AtomItem";
+},_getAttributeNames:function(){
+return null;
+},_accepts:{},accept:function(tag){
+return Boolean(this._accepts[tag]);
+},_postBuild:function(){
+},buildFromDom:function(_3c){
+var i,c,n;
+for(i=0;i<_3c.attributes.length;i++){
+c=_3c.attributes.item(i);
+n=_3.atom.io.model.util.getNodename(c);
+if(c.prefix=="xmlns"&&c.prefix!=n){
+this.addNamespace(c.nodeValue,n);
+}
+}
+c=_3c.childNodes;
+for(i=0;i<c.length;i++){
+if(c[i].nodeType==1){
+var _3d=_3.atom.io.model.util.getNodename(c[i]);
+if(!_3d){
+continue;
+}
+if(c[i].namespaceURI!=_3.atom.io.model._Constants.ATOM_NS&&_3d!="#text"){
+if(!this.extensions){
+this.extensions=[];
+}
+var _3e=new _3.atom.io.model.Node();
+_3e.buildFromDom(c[i]);
+this.extensions.push(_3e);
+}
+if(!this.accept(_3d.toLowerCase())){
+continue;
+}
+var fn=_3.atom.io.model._actions[_3d];
+if(fn){
+fn(this,c[i]);
+}
+}
+}
+this._saveAttributes(_3c);
+if(this._postBuild){
+this._postBuild();
+}
+},addNamespace:function(_3f,_40){
+if(_3f&&_40){
+this.name_spaces[_40]=_3f;
+}
+},addAuthor:function(_41,_42,uri){
+if(!this.authors){
+this.authors=[];
+}
+this.authors.push(new _3.atom.io.model.Person("author",_41,_42,uri));
+},addContributor:function(_43,_44,uri){
+if(!this.contributors){
+this.contributors=[];
+}
+this.contributors.push(new _3.atom.io.model.Person("contributor",_43,_44,uri));
+},addLink:function(_45,rel,_46,_47,_48){
+if(!this.links){
+this.links=[];
+}
+this.links.push(new _3.atom.io.model.Link(_45,rel,_46,_47,_48));
+},removeLink:function(_49,rel){
+if(!this.links||!_1.isArray(this.links)){
+return;
+}
+var _4a=0;
+for(var i=0;i<this.links.length;i++){
+if((!_49||this.links[i].href===_49)&&(!rel||this.links[i].rel===rel)){
+this.links.splice(i,1);
+_4a++;
+}
+}
+return _4a;
+},removeBasicLinks:function(){
+if(!this.links){
+return;
+}
+var _4b=0;
+for(var i=0;i<this.links.length;i++){
+if(!this.links[i].rel){
+this.links.splice(i,1);
+_4b++;
+i--;
+}
+}
+return _4b;
+},addCategory:function(_4c,_4d,_4e){
+if(!this.categories){
+this.categories=[];
+}
+this.categories.push(new _3.atom.io.model.Category(_4c,_4d,_4e));
+},getCategories:function(_4f){
+if(!_4f){
+return this.categories;
+}
+var arr=[];
+for(var x in this.categories){
+if(this.categories[x].scheme===_4f){
+arr.push(this.categories[x]);
+}
+}
+return arr;
+},removeCategories:function(_50,_51){
+if(!this.categories){
+return;
+}
+var _52=0;
+for(var i=0;i<this.categories.length;i++){
+if((!_50||this.categories[i].scheme===_50)&&(!_51||this.categories[i].term===_51)){
+this.categories.splice(i,1);
+_52++;
+i--;
+}
+}
+return _52;
+},setTitle:function(str,_53){
+if(!str){
+return;
+}
+this.title=new _3.atom.io.model.Content("title");
+this.title.value=str;
+if(_53){
+this.title.type=_53;
+}
+},addExtension:function(_54,_55,_56,_57,_58){
+if(!this.extensions){
+this.extensions=[];
+}
+this.extensions.push(new _3.atom.io.model.Node(_54,_55,_56,_57,_58||"ns"+this.extensions.length));
+},getExtensions:function(_59,_5a){
+var arr=[];
+if(!this.extensions){
+return arr;
+}
+for(var x in this.extensions){
+if((this.extensions[x].name_space===_59||this.extensions[x].shortNs===_59)&&(!_5a||this.extensions[x].name===_5a)){
+arr.push(this.extensions[x]);
+}
+}
+return arr;
+},removeExtensions:function(_5b,_5c){
+if(!this.extensions){
+return;
+}
+for(var i=0;i<this.extensions.length;i++){
+if((this.extensions[i].name_space==_5b||this.extensions[i].shortNs===_5b)&&this.extensions[i].name===_5c){
+this.extensions.splice(i,1);
+i--;
+}
+}
+},destroy:function(){
+this.links=null;
+this.authors=null;
+this.categories=null;
+this.contributors=null;
+this.icon=this.id=this.logo=this.xmlBase=this.rights=null;
+this.subtitle=this.title=null;
+this.updated=this.published=null;
+this.issued=this.modified=null;
+this.content=null;
+this.extensions=null;
+this.entries=null;
+}});
+_1.declare("dojox.atom.io.model.Category",_3.atom.io.model.Node,{constructor:function(_5d,_5e,_5f){
+this.scheme=_5d;
+this.term=_5e;
+this.label=_5f;
+this._objName="Category";
+},_postBuild:function(){
+},_getAttributeNames:function(){
+return ["label","scheme","term"];
+},toString:function(){
+var s=[];
+s.push("<category ");
+if(this.label){
+s.push(" label=\""+this.label+"\" ");
+}
+if(this.scheme){
+s.push(" scheme=\""+this.scheme+"\" ");
+}
+if(this.term){
+s.push(" term=\""+this.term+"\" ");
+}
+s.push("/>\n");
+return s.join("");
+},buildFromDom:function(_60){
+this._saveAttributes(_60);
+this.label=this.attributes.label;
+this.scheme=this.attributes.scheme;
+this.term=this.attributes.term;
+if(this._postBuild){
+this._postBuild();
+}
+}});
+_1.declare("dojox.atom.io.model.Content",_3.atom.io.model.Node,{constructor:function(_61,_62,src,_63,_64){
+this.tagName=_61;
+this.value=_62;
+this.src=src;
+this.type=_63;
+this.xmlLang=_64;
+this.HTML="html";
+this.TEXT="text";
+this.XHTML="xhtml";
+this.XML="xml";
+this._useTextContent="true";
+},_getAttributeNames:function(){
+return ["type","src"];
+},_postBuild:function(){
+},buildFromDom:function(_65){
+var _66=_65.getAttribute("type");
+if(_66){
+_66=_66.toLowerCase();
+if(_66=="xml"||"text/xml"){
+_66=this.XML;
+}
+}else{
+_66="text";
+}
+if(_66===this.XML){
+if(_65.firstChild){
+var i;
+this.value="";
+for(i=0;i<_65.childNodes.length;i++){
+var c=_65.childNodes[i];
+if(c){
+this.value+=_3.xml.parser.innerXML(c);
+}
+}
+}
+}else{
+if(_65.innerHTML){
+this.value=_65.innerHTML;
+}else{
+this.value=_3.xml.parser.textContent(_65);
+}
+}
+this._saveAttributes(_65);
+if(this.attributes){
+this.type=this.attributes.type;
+this.scheme=this.attributes.scheme;
+this.term=this.attributes.term;
+}
+if(!this.type){
+this.type="text";
+}
+var _67=this.type.toLowerCase();
+if(_67==="html"||_67==="text/html"||_67==="xhtml"||_67==="text/xhtml"){
+this.value=this.value?_3.atom.io.model.util.unEscapeHtml(this.value):"";
+}
+if(this._postBuild){
+this._postBuild();
+}
+},toString:function(){
+var s=[];
+s.push("<"+this.tagName+" ");
+if(!this.type){
+this.type="text";
+}
+if(this.type){
+s.push(" type=\""+this.type+"\" ");
+}
+if(this.xmlLang){
+s.push(" xml:lang=\""+this.xmlLang+"\" ");
+}
+if(this.xmlBase){
+s.push(" xml:base=\""+this.xmlBase+"\" ");
+}
+if(this.type.toLowerCase()==this.HTML){
+s.push(">"+_3.atom.io.model.util.escapeHtml(this.value)+"</"+this.tagName+">\n");
+}else{
+s.push(">"+this.value+"</"+this.tagName+">\n");
+}
+var ret=s.join("");
+return ret;
+}});
+_1.declare("dojox.atom.io.model.Link",_3.atom.io.model.Node,{constructor:function(_68,rel,_69,_6a,_6b){
+this.href=_68;
+this.hrefLang=_69;
+this.rel=rel;
+this.title=_6a;
+this.type=_6b;
+},_getAttributeNames:function(){
+return ["href","jrefLang","rel","title","type"];
+},_postBuild:function(){
+},buildFromDom:function(_6c){
+this._saveAttributes(_6c);
+this.href=this.attributes.href;
+this.hrefLang=this.attributes.hreflang;
+this.rel=this.attributes.rel;
+this.title=this.attributes.title;
+this.type=this.attributes.type;
+if(this._postBuild){
+this._postBuild();
+}
+},toString:function(){
+var s=[];
+s.push("<link ");
+if(this.href){
+s.push(" href=\""+this.href+"\" ");
+}
+if(this.hrefLang){
+s.push(" hrefLang=\""+this.hrefLang+"\" ");
+}
+if(this.rel){
+s.push(" rel=\""+this.rel+"\" ");
+}
+if(this.title){
+s.push(" title=\""+this.title+"\" ");
+}
+if(this.type){
+s.push(" type = \""+this.type+"\" ");
+}
+s.push("/>\n");
+return s.join("");
+}});
+_1.declare("dojox.atom.io.model.Person",_3.atom.io.model.Node,{constructor:function(_6d,_6e,_6f,uri){
+this.author="author";
+this.contributor="contributor";
+if(!_6d){
+_6d=this.author;
+}
+this.personType=_6d;
+this.name=_6e||"";
+this.email=_6f||"";
+this.uri=uri||"";
+this._objName="Person";
+},_getAttributeNames:function(){
+return null;
+},_postBuild:function(){
+},accept:function(tag){
+return Boolean(this._accepts[tag]);
+},buildFromDom:function(_70){
+var c=_70.childNodes;
+for(var i=0;i<c.length;i++){
+var _71=_3.atom.io.model.util.getNodename(c[i]);
+if(!_71){
+continue;
+}
+if(c[i].namespaceURI!=_3.atom.io.model._Constants.ATOM_NS&&_71!="#text"){
+if(!this.extensions){
+this.extensions=[];
+}
+var _72=new _3.atom.io.model.Node();
+_72.buildFromDom(c[i]);
+this.extensions.push(_72);
+}
+if(!this.accept(_71.toLowerCase())){
+continue;
+}
+var fn=_3.atom.io.model._actions[_71];
+if(fn){
+fn(this,c[i]);
+}
+}
+this._saveAttributes(_70);
+if(this._postBuild){
+this._postBuild();
+}
+},_accepts:{"name":true,"uri":true,"email":true},toString:function(){
+var s=[];
+s.push("<"+this.personType+">\n");
+if(this.name){
+s.push("\t<name>"+this.name+"</name>\n");
+}
+if(this.email){
+s.push("\t<email>"+this.email+"</email>\n");
+}
+if(this.uri){
+s.push("\t<uri>"+this.uri+"</uri>\n");
+}
+s.push("</"+this.personType+">\n");
+return s.join("");
+}});
+_1.declare("dojox.atom.io.model.Generator",_3.atom.io.model.Node,{constructor:function(uri,_73,_74){
+this.uri=uri;
+this.version=_73;
+this.value=_74;
+},_postBuild:function(){
+},buildFromDom:function(_75){
+this.value=_3.xml.parser.textContent(_75);
+this._saveAttributes(_75);
+this.uri=this.attributes.uri;
+this.version=this.attributes.version;
+if(this._postBuild){
+this._postBuild();
+}
+},toString:function(){
+var s=[];
+s.push("<generator ");
+if(this.uri){
+s.push(" uri=\""+this.uri+"\" ");
+}
+if(this.version){
+s.push(" version=\""+this.version+"\" ");
+}
+s.push(">"+this.value+"</generator>\n");
+var ret=s.join("");
+return ret;
+}});
+_1.declare("dojox.atom.io.model.Entry",_3.atom.io.model.AtomItem,{constructor:function(id){
+this.id=id;
+this._objName="Entry";
+this.feedUrl=null;
+},_getAttributeNames:function(){
+return null;
+},_accepts:{"author":true,"content":true,"category":true,"contributor":true,"created":true,"id":true,"link":true,"published":true,"rights":true,"summary":true,"title":true,"updated":true,"xmlbase":true,"issued":true,"modified":true},toString:function(_76){
+var s=[];
+var i;
+if(_76){
+s.push("<?xml version='1.0' encoding='UTF-8'?>");
+s.push("<entry xmlns='"+_3.atom.io.model._Constants.ATOM_URI+"'");
+}else{
+s.push("<entry");
+}
+if(this.xmlBase){
+s.push(" xml:base=\""+this.xmlBase+"\" ");
+}
+for(i in this.name_spaces){
+s.push(" xmlns:"+i+"=\""+this.name_spaces[i]+"\"");
+}
+s.push(">\n");
+s.push("<id>"+(this.id?this.id:"")+"</id>\n");
+if(this.issued&&!this.published){
+this.published=this.issued;
+}
+if(this.published){
+s.push("<published>"+_1.date.stamp.toISOString(this.published)+"</published>\n");
+}
+if(this.created){
+s.push("<created>"+_1.date.stamp.toISOString(this.created)+"</created>\n");
+}
+if(this.issued){
+s.push("<issued>"+_1.date.stamp.toISOString(this.issued)+"</issued>\n");
+}
+if(this.modified){
+s.push("<modified>"+_1.date.stamp.toISOString(this.modified)+"</modified>\n");
+}
+if(this.modified&&!this.updated){
+this.updated=this.modified;
+}
+if(this.updated){
+s.push("<updated>"+_1.date.stamp.toISOString(this.updated)+"</updated>\n");
+}
+if(this.rights){
+s.push("<rights>"+this.rights+"</rights>\n");
+}
+if(this.title){
+s.push(this.title.toString());
+}
+if(this.summary){
+s.push(this.summary.toString());
+}
+var _77=[this.authors,this.categories,this.links,this.contributors,this.extensions];
+for(var x in _77){
+if(_77[x]){
+for(var y in _77[x]){
+s.push(_77[x][y]);
+}
+}
+}
+if(this.content){
+s.push(this.content.toString());
+}
+s.push("</entry>\n");
+return s.join("");
+},getEditHref:function(){
+if(this.links===null||this.links.length===0){
+return null;
+}
+for(var x in this.links){
+if(this.links[x].rel&&this.links[x].rel=="edit"){
+return this.links[x].href;
+}
+}
+return null;
+},setEditHref:function(url){
+if(this.links===null){
+this.links=[];
+}
+for(var x in this.links){
+if(this.links[x].rel&&this.links[x].rel=="edit"){
+this.links[x].href=url;
+return;
+}
+}
+this.addLink(url,"edit");
+}});
+_1.declare("dojox.atom.io.model.Feed",_3.atom.io.model.AtomItem,{_accepts:{"author":true,"content":true,"category":true,"contributor":true,"created":true,"id":true,"link":true,"published":true,"rights":true,"summary":true,"title":true,"updated":true,"xmlbase":true,"entry":true,"logo":true,"issued":true,"modified":true,"icon":true,"subtitle":true},addEntry:function(_78){
+if(!_78.id){
+throw new Error("The entry object must be assigned an ID attribute.");
+}
+if(!this.entries){
+this.entries=[];
+}
+_78.feedUrl=this.getSelfHref();
+this.entries.push(_78);
+},getFirstEntry:function(){
+if(!this.entries||this.entries.length===0){
+return null;
+}
+return this.entries[0];
+},getEntry:function(_79){
+if(!this.entries){
+return null;
+}
+for(var x in this.entries){
+if(this.entries[x].id==_79){
+return this.entries[x];
+}
+}
+return null;
+},removeEntry:function(_7a){
+if(!this.entries){
+return;
+}
+var _7b=0;
+for(var i=0;i<this.entries.length;i++){
+if(this.entries[i]===_7a){
+this.entries.splice(i,1);
+_7b++;
+}
+}
+return _7b;
+},setEntries:function(_7c){
+for(var x in _7c){
+this.addEntry(_7c[x]);
+}
+},toString:function(){
+var s=[];
+var i;
+s.push("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+s.push("<feed xmlns=\""+_3.atom.io.model._Constants.ATOM_URI+"\"");
+if(this.xmlBase){
+s.push(" xml:base=\""+this.xmlBase+"\"");
+}
+for(i in this.name_spaces){
+s.push(" xmlns:"+i+"=\""+this.name_spaces[i]+"\"");
+}
+s.push(">\n");
+s.push("<id>"+(this.id?this.id:"")+"</id>\n");
+if(this.title){
+s.push(this.title);
+}
+if(this.copyright&&!this.rights){
+this.rights=this.copyright;
+}
+if(this.rights){
+s.push("<rights>"+this.rights+"</rights>\n");
+}
+if(this.issued){
+s.push("<issued>"+_1.date.stamp.toISOString(this.issued)+"</issued>\n");
+}
+if(this.modified){
+s.push("<modified>"+_1.date.stamp.toISOString(this.modified)+"</modified>\n");
+}
+if(this.modified&&!this.updated){
+this.updated=this.modified;
+}
+if(this.updated){
+s.push("<updated>"+_1.date.stamp.toISOString(this.updated)+"</updated>\n");
+}
+if(this.published){
+s.push("<published>"+_1.date.stamp.toISOString(this.published)+"</published>\n");
+}
+if(this.icon){
+s.push("<icon>"+this.icon+"</icon>\n");
+}
+if(this.language){
+s.push("<language>"+this.language+"</language>\n");
+}
+if(this.logo){
+s.push("<logo>"+this.logo+"</logo>\n");
+}
+if(this.subtitle){
+s.push(this.subtitle.toString());
+}
+if(this.tagline){
+s.push(this.tagline.toString());
+}
+var _7d=[this.alternateLinks,this.authors,this.categories,this.contributors,this.otherLinks,this.extensions,this.entries];
+for(i in _7d){
+if(_7d[i]){
+for(var x in _7d[i]){
+s.push(_7d[i][x]);
+}
+}
+}
+s.push("</feed>");
+return s.join("");
+},createEntry:function(){
+var _7e=new _3.atom.io.model.Entry();
+_7e.feedUrl=this.getSelfHref();
+return _7e;
+},getSelfHref:function(){
+if(this.links===null||this.links.length===0){
+return null;
+}
+for(var x in this.links){
+if(this.links[x].rel&&this.links[x].rel=="self"){
+return this.links[x].href;
+}
+}
+return null;
+}});
+_1.declare("dojox.atom.io.model.Service",_3.atom.io.model.AtomItem,{constructor:function(_7f){
+this.href=_7f;
+},buildFromDom:function(_80){
+var i;
+this.workspaces=[];
+if(_80.tagName!="service"){
+return;
+}
+if(_80.namespaceURI!=_3.atom.io.model._Constants.PURL_NS&&_80.namespaceURI!=_3.atom.io.model._Constants.APP_NS){
+return;
+}
+var ns=_80.namespaceURI;
+this.name_space=_80.namespaceURI;
+var _81;
+if(typeof (_80.getElementsByTagNameNS)!="undefined"){
+_81=_80.getElementsByTagNameNS(ns,"workspace");
+}else{
+_81=[];
+var _82=_80.getElementsByTagName("workspace");
+for(i=0;i<_82.length;i++){
+if(_82[i].namespaceURI==ns){
+_81.push(_82[i]);
+}
+}
+}
+if(_81&&_81.length>0){
+var _83=0;
+var _84;
+for(i=0;i<_81.length;i++){
+_84=(typeof (_81.item)==="undefined"?_81[i]:_81.item(i));
+var _85=new _3.atom.io.model.Workspace();
+_85.buildFromDom(_84);
+this.workspaces[_83++]=_85;
+}
+}
+},getCollection:function(url){
+for(var i=0;i<this.workspaces.length;i++){
+var _86=this.workspaces[i].collections;
+for(var j=0;j<_86.length;j++){
+if(_86[j].href==url){
+return _86;
+}
+}
+}
+return null;
+}});
+_1.declare("dojox.atom.io.model.Workspace",_3.atom.io.model.AtomItem,{constructor:function(_87){
+this.title=_87;
+this.collections=[];
+},buildFromDom:function(_88){
+var _89=_3.atom.io.model.util.getNodename(_88);
+if(_89!="workspace"){
+return;
+}
+var c=_88.childNodes;
+var len=0;
+for(var i=0;i<c.length;i++){
+var _8a=c[i];
+if(_8a.nodeType===1){
+_89=_3.atom.io.model.util.getNodename(_8a);
+if(_8a.namespaceURI==_3.atom.io.model._Constants.PURL_NS||_8a.namespaceURI==_3.atom.io.model._Constants.APP_NS){
+if(_89==="collection"){
+var _8b=new _3.atom.io.model.Collection();
+_8b.buildFromDom(_8a);
+this.collections[len++]=_8b;
+}
+}else{
+if(_8a.namespaceURI===_3.atom.io.model._Constants.ATOM_NS){
+if(_89==="title"){
+this.title=_3.xml.parser.textContent(_8a);
+}
+}
+}
+}
+}
+}});
+_1.declare("dojox.atom.io.model.Collection",_3.atom.io.model.AtomItem,{constructor:function(_8c,_8d){
+this.href=_8c;
+this.title=_8d;
+this.attributes=[];
+this.features=[];
+this.children=[];
+this.memberType=null;
+this.id=null;
+},buildFromDom:function(_8e){
+this.href=_8e.getAttribute("href");
+var c=_8e.childNodes;
+for(var i=0;i<c.length;i++){
+var _8f=c[i];
+if(_8f.nodeType===1){
+var _90=_3.atom.io.model.util.getNodename(_8f);
+if(_8f.namespaceURI==_3.atom.io.model._Constants.PURL_NS||_8f.namespaceURI==_3.atom.io.model._Constants.APP_NS){
+if(_90==="member-type"){
+this.memberType=_3.xml.parser.textContent(_8f);
+}else{
+if(_90=="feature"){
+if(_8f.getAttribute("id")){
+this.features.push(_8f.getAttribute("id"));
+}
+}else{
+var _91=new _3.atom.io.model.Node();
+_91.buildFromDom(_8f);
+this.children.push(_91);
+}
+}
+}else{
+if(_8f.namespaceURI===_3.atom.io.model._Constants.ATOM_NS){
+if(_90==="id"){
+this.id=_3.xml.parser.textContent(_8f);
+}else{
+if(_90==="title"){
+this.title=_3.xml.parser.textContent(_8f);
+}
+}
+}
+}
+}
+}
+}});
+return _1.getObject("dojox.atom.io.model");
 });
-//Types are as follows: links: array of Link, authors: array of Person, categories: array of Category
-//contributors: array of Person, ico
-dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
-	 constructor: function(args){
-		this.ATOM_URI = dojox.atom.io.model._Constants.ATOM_URI;
-		this.links = null;						//Array of Link
-		this.authors = null;					//Array of Person
-		this.categories = null;					//Array of Category
-		this.contributors = null;				//Array of Person
-		this.icon = this.id = this.logo = this.xmlBase = this.rights = null; //String
-		this.subtitle = this.title = null;		//Content
-		this.updated = this.published = null;	//Date
-		// Google news
-		this.issued = this.modified = null;		//Date
-		this.content =  null;					//Content
-		this.extensions = null;					//Array of Node, non atom based
-		this.entries = null;					//Array of Entry
-		this.name_spaces = {};
-		this._objName = "AtomItem";			 //for debugging purposes
-	},
-	// summary: Class container for generic Atom items.
-	// description: Class container for generic Atom items.
-	_getAttributeNames: function(){return null;},
-	_accepts: {},
-	accept: function(tag){return Boolean(this._accepts[tag]);},
-	_postBuild: function(){},//child objects can override this if they want to be called after a Dom build
-	buildFromDom: function(node){
-		var i, c, n;
-		for(i=0; i<node.attributes.length; i++){
-			c = node.attributes.item(i);
-			n = dojox.atom.io.model.util.getNodename(c);
-			if(c.prefix == "xmlns" && c.prefix != n){
-				this.addNamespace(c.nodeValue, n);
-			}
-		}
-		c = node.childNodes;
-		for(i = 0; i< c.length; i++){
-			if(c[i].nodeType == 1) {
-				var name = dojox.atom.io.model.util.getNodename(c[i]);
-				if(!name){continue;}
-				if(c[i].namespaceURI != dojox.atom.io.model._Constants.ATOM_NS && name != "#text"){
-					if(!this.extensions){this.extensions = [];}
-					var extensionNode = new dojox.atom.io.model.Node();
-					extensionNode.buildFromDom(c[i]);
-					this.extensions.push(extensionNode);
-				}
-				if(!this.accept(name.toLowerCase())){
-					continue;
-				}
-				var fn = dojox.atom.io.model._actions[name];
-				if(fn) {
-					fn(this,c[i]);
-				}
-			}
-		}
-		this._saveAttributes(node);
-		if(this._postBuild){this._postBuild();}
-	},
-	addNamespace: function(fullName, shortName){
-		if(fullName && shortName){
-			this.name_spaces[shortName] = fullName;
-		}
-	},
-	addAuthor: function(/*String*/name, /*String*/email, /*String*/uri){
-		//	summary:
-		//		Function to add in an author to the list of authors.
-		//	description:
-		//		Function to add in an author to the list of authors.
-		//
-		//	name:
-		//		The author's name.
-		//	email:
-		//		The author's e-mail address.
-		//	uri:
-		//		A URI associated with the author.
-		if(!this.authors){this.authors = [];}
-		this.authors.push(new dojox.atom.io.model.Person("author",name,email,uri));
-	},
-	addContributor: function(/*String*/name, /*String*/email, /*String*/uri){
-		//	summary:
-		//		Function to add in an author to the list of authors.
-		//	description:
-		//		Function to add in an author to the list of authors.
-		//
-		//	name:
-		//		The author's name.
-		//	email:
-		//		The author's e-mail address.
-		//	uri:
-		//		A URI associated with the author.
-		if(!this.contributors){this.contributors = [];}
-		this.contributors.push(new dojox.atom.io.model.Person("contributor",name,email,uri));
-	},
-	addLink: function(/*String*/href,/*String*/rel,/*String*/hrefLang,/*String*/title,/*String*/type){
-		//	summary:
-		//		Function to add in a link to the list of links.
-		//	description:
-		//		Function to add in a link to the list of links.
-		//
-		//	href:
-		//		The href.
-		//	rel:
-		//		String
-		//	hrefLang:
-		//		String
-		//	title:
-		//		A title to associate with the link.
-		//	type:
-		//		The type of link is is.
-		if(!this.links){this.links=[];}
-		this.links.push(new dojox.atom.io.model.Link(href,rel,hrefLang,title,type));
-	},
-	removeLink: function(/*String*/href, /*String*/rel){
-		//	summary:
-		//		Function to remove a link from the list of links.
-		//	description:
-		//		Function to remove a link from the list of links.
-		//
-		//	href:
-		//		The href.
-		//	rel:
-		//		String
-		if(!this.links || !dojo.isArray(this.links)){return;}
-		var count = 0;
-		for(var i = 0; i < this.links.length; i++){
-			if((!href || this.links[i].href === href) && (!rel || this.links[i].rel === rel)){
-				this.links.splice(i,1); count++;
-			}
-		}
-		return count;
-	},
-	removeBasicLinks: function(){
-		//	summary:
-		//		Function to remove all basic links from the list of links.
-		//	description:
-		//		Function to remove all basic link from the list of links.
-		if(!this.links){return;}
-		var count = 0;
-		for(var i = 0; i < this.links.length; i++){
-			if(!this.links[i].rel){this.links.splice(i,1); count++; i--;}
-		}
-		return count;
-	},
-	addCategory: function(/*String*/scheme, /*String*/term, /*String*/label){
-		//	summary:
-		//		Function to add in a category to the list of categories.
-		//	description:
-		//		Function to add in a category to the list of categories.
-		//
-		//	scheme:
-		//		String
-		//	term:
-		//		String
-		//	label:
-		//		String
-		if(!this.categories){this.categories = [];}
-		this.categories.push(new dojox.atom.io.model.Category(scheme,term,label));
-	},
-	getCategories: function(/*String*/scheme){
-		//	summary:
-		//		Function to get all categories that match a particular scheme.
-		//	description:
-		//		Function to get all categories that match a particular scheme.
-		//
-		//	scheme:
-		//		String
-		//		The scheme to filter on.
-		if(!scheme){return this.categories;}
-		//If categories belonging to a particular scheme are required, then create a new array containing these
-		var arr = [];
-		for(var x in this.categories){
-			if(this.categories[x].scheme === scheme){arr.push(this.categories[x]);}
-		}
-		return arr;
-	},
-	removeCategories: function(/*String*/scheme, /*String*/term){
-		//	summary:
-		//		Function to remove all categories that match a particular scheme and term.
-		//	description:
-		//		Function to remove all categories that match a particular scheme and term.
-		//
-		//	scheme:
-		//		The scheme to filter on.
-		//	term:
-		//		The term to filter on.
-		if(!this.categories){return;}
-		var count = 0;
-		for(var i=0; i<this.categories.length; i++){
-			if((!scheme || this.categories[i].scheme === scheme) && (!term || this.categories[i].term === term)){
-				this.categories.splice(i, 1); count++; i--;
-			}
-		}
-		return count;
-	},
-	setTitle: function(/*String*/str, /*String*/type){
-		//	summary:
-		//		Function to set the title of the item.
-		//	description:
-		//		Function to set the title of the item.
-		//
-		//	str:
-		//		The title to set.
-		//	type:
-		//		The type of title format, text, xml, xhtml, etc.
-		if(!str){return;}
-		this.title = new dojox.atom.io.model.Content("title");
-		this.title.value = str;
-		if(type){this.title.type = type;}
-	},
-	addExtension: function(/*String*/name_space,/*String*/name, /*Array*/attributes, /*String*/content, /*String*/shortNS){
-		//	summary:
-		//		Function to add in an extension namespace into the item.
-		//	description:
-		//		Function to add in an extension namespace into the item.
-		//
-		//	name_space:
-		//		The namespace of the extension.
-		//	name:
-		//		The name of the extension
-		//	attributes:
-		//		The attributes associated with the extension.
-		//	content:
-		//		The content of the extension.
-		if(!this.extensions){this.extensions=[];}
-		this.extensions.push(new dojox.atom.io.model.Node(name_space,name,attributes,content, shortNS || "ns"+this.extensions.length));
-	},
-	getExtensions: function(/*String*/name_space, /*String*/name){
-		//	summary:
-		//		Function to get extensions that match a namespace and name.
-		//	description:
-		//		Function to get extensions that match a namespace and name.
-		//
-		//	name_space:
-		//		The namespace of the extension.
-		//	name:
-		//		The name of the extension
-		var arr = [];
-		if(!this.extensions){return arr;}
-		for(var x in this.extensions){
-			if((this.extensions[x].name_space === name_space || this.extensions[x].shortNs === name_space) && (!name || this.extensions[x].name === name)){
-				arr.push(this.extensions[x]);
-			}
-		}
-		return arr;
-	},
-	removeExtensions: function(/*String*/name_space, /*String*/name){
-		//	summary:
-		//		Function to remove extensions that match a namespace and name.
-		//	description:
-		//		Function to remove extensions that match a namespace and name.
-		//
-		//	name_space:
-		//		The namespace of the extension.
-		//	name:
-		//		The name of the extension
-		if(!this.extensions){return;}
-		for(var i=0; i< this.extensions.length; i++){
-			if((this.extensions[i].name_space == name_space || this.extensions[i].shortNs === name_space) && this.extensions[i].name === name){
-				this.extensions.splice(i,1);
-				i--;
-			}
-		}
-	},
-	destroy: function() {
-		this.links = null;
-		this.authors = null;
-		this.categories = null;
-		this.contributors = null;
-		this.icon = this.id = this.logo = this.xmlBase = this.rights = null;
-		this.subtitle = this.title = null;
-		this.updated = this.published = null;
-		// Google news
-		this.issued = this.modified = null;
-		this.content =  null;
-		this.extensions = null;
-		this.entries = null;
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Category",dojox.atom.io.model.Node,{
-	//	summary:
-	//		Class container for 'Category' types.
-	//	description:
-	//		Class container for 'Category' types.
-	constructor: function(/*String*/scheme, /*String*/term, /*String*/label){
-		this.scheme = scheme; this.term = term; this.label = label;
-		this._objName = "Category";//for debugging
-	},
-	_postBuild: function(){},
-	_getAttributeNames: function(){
-		return ["label","scheme","term"];
-	},
-	toString: function(){
-		//	summary:
-		//		Function to construct string form of the category tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the category tag, which is an XML structure.
-		var s = [];
-		s.push('<category ');
-		if(this.label){s.push(' label="'+this.label+'" ');}
-		if(this.scheme){s.push(' scheme="'+this.scheme+'" ');}
-		if(this.term){s.push(' term="'+this.term+'" ');}
-		s.push('/>\n');
-		return s.join('');
-	},
-	buildFromDom: function(/*DOM node*/node){
-		//	summary:
-		//		Function to do construction of the Category data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the Category data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for content.
-		this._saveAttributes(node);//just get the attributes from the node
-		this.label = this.attributes.label;
-		this.scheme = this.attributes.scheme;
-		this.term = this.attributes.term;
-		if(this._postBuild){this._postBuild();}
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Content",dojox.atom.io.model.Node,{
-	//	summary:
-	//		Class container for 'Content' types. Such as summary, content, username, and so on types of data.
-	//	description:
-	//		Class container for 'Content' types. Such as summary, content, username, and so on types of data.
-	constructor: function(tagName, value, src, type,xmlLang){
-		this.tagName = tagName; this.value = value; this.src = src; this.type=type; this.xmlLang = xmlLang;
-		this.HTML = "html"; this.TEXT = "text"; this.XHTML = "xhtml"; this.XML="xml";
-		this._useTextContent = "true";
-	},
-	_getAttributeNames: function(){return ["type","src"];},
-	_postBuild: function(){},
-	buildFromDom: function(/*DOM node*/node){
-		//	summary:
-		//		Function to do construction of the Content data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the Content data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for content.
-		//Handle checking for XML content as the content type
-		var type = node.getAttribute("type");
-		if(type){
-			type = type.toLowerCase();
-			if(type == "xml" || "text/xml"){
-				type = this.XML;
-			}
-		}else{
-			type="text";
-		}
-		if(type === this.XML){
-			if(node.firstChild){
-				var i;
-				this.value = "";
-				for(i = 0; i < node.childNodes.length; i++){
-					var c = node.childNodes[i];
-					if(c){
-						this.value += dojox.xml.parser.innerXML(c);
-					}
-				}
-			}
-		} else if(node.innerHTML){
-			this.value = node.innerHTML;
-		}else{
-			this.value = dojox.xml.parser.textContent(node);
-		}
-
-		this._saveAttributes(node);
-
-		if(this.attributes){
-			this.type = this.attributes.type;
-			this.scheme = this.attributes.scheme;
-			this.term = this.attributes.term;
-		}
-		if(!this.type){this.type = "text";}
-
-		//We need to unescape the HTML content here so that it can be displayed correctly when the value is fetched.
-		var lowerType = this.type.toLowerCase();
-		if(lowerType === "html" || lowerType === "text/html" || lowerType === "xhtml" || lowerType === "text/xhtml"){
-			this.value = this.value?dojox.atom.io.model.util.unEscapeHtml(this.value):"";
-		}
-
-		if(this._postBuild){this._postBuild();}
-	},
-	toString: function(){
-		//	summary:
-		//		Function to construct string form of the content tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the content tag, which is an XML structure.
-		var s = [];
-		s.push('<'+this.tagName+' ');
-		if(!this.type){this.type = "text";}
-		if(this.type){s.push(' type="'+this.type+'" ');}
-		if(this.xmlLang){s.push(' xml:lang="'+this.xmlLang+'" ');}
-		if(this.xmlBase){s.push(' xml:base="'+this.xmlBase+'" ');}
-		
-		//all HTML must be escaped
-		if(this.type.toLowerCase() == this.HTML){
-			s.push('>'+dojox.atom.io.model.util.escapeHtml(this.value)+'</'+this.tagName+'>\n');
-		}else{
-			s.push('>'+this.value+'</'+this.tagName+'>\n');
-		}
-		var ret = s.join('');
-		return ret;
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Link",dojox.atom.io.model.Node,{
-	//	summary:
-	//		Class container for 'link' types.
-	//	description:
-	//		Class container for 'link' types.
-	constructor: function(href,rel,hrefLang,title,type){
-		this.href = href; this.hrefLang = hrefLang; this.rel = rel; this.title = title;this.type = type;
-	},
-	_getAttributeNames: function(){return ["href","jrefLang","rel","title","type"];},
-	_postBuild: function(){},
-	buildFromDom: function(node){
-		//	summary:
-		//		Function to do construction of the link data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the link data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for link data.
-		this._saveAttributes(node);//just get the attributes from the node
-		this.href = this.attributes.href;
-		this.hrefLang = this.attributes.hreflang;
-		this.rel = this.attributes.rel;
-		this.title = this.attributes.title;
-		this.type = this.attributes.type;
-		if(this._postBuild){this._postBuild();}
-	},
-	toString: function(){
-		//	summary:
-		//		Function to construct string form of the link tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the link tag, which is an XML structure.
-		var s = [];
-		s.push('<link ');
-		if(this.href){s.push(' href="'+this.href+'" ');}
-		if(this.hrefLang){s.push(' hrefLang="'+this.hrefLang+'" ');}
-		if(this.rel){s.push(' rel="'+this.rel+'" ');}
-		if(this.title){s.push(' title="'+this.title+'" ');}
-		if(this.type){s.push(' type = "'+this.type+'" ');}
-		s.push('/>\n');
-		return s.join('');
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Person",dojox.atom.io.model.Node,{
-	//	summary:
-	//		Class container for 'person' types, such as Author, controbutors, and so on.
-	//	description:
-	//		Class container for 'person' types, such as Author, controbutors, and so on.
-	constructor: function(personType, name, email, uri){
-		this.author = "author";
-		this.contributor = "contributor";
-		if(!personType){
-			personType = this.author;
-		}
-		this.personType = personType;
-		this.name = name || '';
-		this.email = email || '';
-		this.uri = uri || '';
-		this._objName = "Person";//for debugging
-	},
-	_getAttributeNames: function(){return null;},
-	_postBuild: function(){},
-	accept: function(tag){return Boolean(this._accepts[tag]);},
-	buildFromDom: function(node){
-		//	summary:
-		//		Function to do construction of the person data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the person data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for person data.
-		var c = node.childNodes;
-		for(var i = 0; i< c.length; i++){
-			var name = dojox.atom.io.model.util.getNodename(c[i]);
-			
-			if(!name){continue;}
-
-			if(c[i].namespaceURI != dojox.atom.io.model._Constants.ATOM_NS && name != "#text"){
-				if(!this.extensions){this.extensions = [];}
-				var extensionNode = new dojox.atom.io.model.Node();
-				extensionNode.buildFromDom(c[i]);
-				this.extensions.push(extensionNode);
-			}
-			if(!this.accept(name.toLowerCase())){
-				continue;
-			}
-			var fn = dojox.atom.io.model._actions[name];
-			if(fn) {
-				fn(this,c[i]);
-			}
-		}
-		this._saveAttributes(node);
-		if(this._postBuild){this._postBuild();}
-	},
-	_accepts: {
-		'name': true,
-		'uri': true,
-		'email': true
-	},
-	toString: function(){
-		//	summary:
-		//		Function to construct string form of the Person tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the Person tag, which is an XML structure.
-		var s = [];
-		s.push('<'+this.personType+'>\n');
-		if(this.name){s.push('\t<name>'+this.name+'</name>\n');}
-		if(this.email){s.push('\t<email>'+this.email+'</email>\n');}
-		if(this.uri){s.push('\t<uri>'+this.uri+'</uri>\n');}
-		s.push('</'+this.personType+'>\n');
-		return s.join('');
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Generator",dojox.atom.io.model.Node,{
-	//	summary:
-	//		Class container for 'Generator' types.
-	//	description:
-	//		Class container for 'Generator' types.
-	constructor: function(/*String*/uri, /*String*/version, /*String*/value){
-		this.uri = uri;
-		this.version = version;
-		this.value = value;
-	},
-	_postBuild: function(){},
-	buildFromDom: function(node){
-		//	summary:
-		//		Function to do construction of the generator data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the generator data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for link data.
-
-		this.value = dojox.xml.parser.textContent(node);
-		this._saveAttributes(node);
-
-		this.uri = this.attributes.uri;
-		this.version = this.attributes.version;
-
-		if(this._postBuild){this._postBuild();}
-	},
-	toString: function(){
-		//	summary:
-		//		Function to construct string form of the Generator tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the Generator tag, which is an XML structure.
-		var s = [];
-		s.push('<generator ');
-		if(this.uri){s.push(' uri="'+this.uri+'" ');}
-		if(this.version){s.push(' version="'+this.version+'" ');}
-		s.push('>'+this.value+'</generator>\n');
-		var ret = s.join('');
-		return ret;
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Entry",dojox.atom.io.model.AtomItem,{
-	//	summary:
-	//		Class container for 'Entry' types.
-	//	description:
-	//		Class container for 'Entry' types.
-	constructor: function(/*String*/id){
-		this.id = id; this._objName = "Entry"; this.feedUrl = null;
-	},
-	_getAttributeNames: function(){return null;},
-	_accepts: {
-		'author': true,
-		'content': true,
-		'category': true,
-		'contributor': true,
-		'created': true,
-		'id': true,
-		'link': true,
-		'published': true,
-		'rights': true,
-		'summary': true,
-		'title': true,
-		'updated': true,
-		'xmlbase': true,
-		'issued': true,
-		'modified': true
-	},
-	toString: function(amPrimary){
-		//	summary:
-		//		Function to construct string form of the entry tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the entry tag, which is an XML structure.
-		var s = [];
-		var i;
-		if(amPrimary){
-			s.push("<?xml version='1.0' encoding='UTF-8'?>");
-			s.push("<entry xmlns='"+dojox.atom.io.model._Constants.ATOM_URI+"'");
-		}else{s.push("<entry");}
-		if(this.xmlBase){s.push(' xml:base="'+this.xmlBase+'" ');}
-		for(i in this.name_spaces){s.push(' xmlns:'+i+'="'+this.name_spaces[i]+'"');}
-		s.push('>\n');
-		s.push('<id>' + (this.id ? this.id: '') + '</id>\n');
-		if(this.issued && !this.published){this.published = this.issued;}
-		if(this.published){s.push('<published>'+dojo.date.stamp.toISOString(this.published)+'</published>\n');}
-		if(this.created){s.push('<created>'+dojo.date.stamp.toISOString(this.created)+'</created>\n');}
-		//Google News
-		if(this.issued){s.push('<issued>'+dojo.date.stamp.toISOString(this.issued)+'</issued>\n');}
-
-		//Google News
-		if(this.modified){s.push('<modified>'+dojo.date.stamp.toISOString(this.modified)+'</modified>\n');}
-
-		if(this.modified && !this.updated){this.updated = this.modified;}
-		if(this.updated){s.push('<updated>'+dojo.date.stamp.toISOString(this.updated)+'</updated>\n');}
-		if(this.rights){s.push('<rights>'+this.rights+'</rights>\n');}
-		if(this.title){s.push(this.title.toString());}
-		if(this.summary){s.push(this.summary.toString());}
-		var arrays = [this.authors,this.categories,this.links,this.contributors,this.extensions];
-		for(var x in arrays){
-			if(arrays[x]){
-				for(var y in arrays[x]){
-					s.push(arrays[x][y]);
-				}
-			}
-		}
-		if(this.content){s.push(this.content.toString());}
-		s.push("</entry>\n");
-		return s.join(''); //string
-	},
-	getEditHref: function(){
-		//	summary:
-		//		Function to get the href that allows editing of this feed entry.
-		//	description:
-		//		Function to get the href that allows editing of this feed entry.
-		//
-		//	returns:
-		//		The href that specifies edit capability.
-		if(this.links === null || this.links.length === 0){
-			return null;
-		}
-		for(var x in this.links){
-			if(this.links[x].rel && this.links[x].rel == "edit"){
-				return this.links[x].href; //string
-			}
-		}
-		return null;
-	},
-	setEditHref: function(url){
-		if(this.links === null){
-			this.links = [];
-		}
-		for(var x in this.links){
-			if(this.links[x].rel && this.links[x].rel == "edit"){
-				this.links[x].href = url;
-				return;
-			}
-		}
-		this.addLink(url, 'edit');
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
-	//	summary:
-	//		Class container for 'Feed' types.
-	//	description:
-	//		Class container for 'Feed' types.
-	_accepts: {
-		'author': true,
-		'content': true,
-		'category': true,
-		'contributor': true,
-		'created': true,
-		'id': true,
-		'link': true,
-		'published': true,
-		'rights': true,
-		'summary': true,
-		'title': true,
-		'updated': true,
-		'xmlbase': true,
-		'entry': true,
-		'logo': true,
-		'issued': true,
-		'modified': true,
-		'icon': true,
-		'subtitle': true
-	},
-	addEntry: function(/*object*/entry){
-		//	summary:
-		//		Function to add an entry to this feed.
-		//	description:
-		//		Function to add an entry to this feed.
-		//	entry:
-		//		The entry object to add.
-		if(!entry.id){
-			throw new Error("The entry object must be assigned an ID attribute.");
-		}
-		if(!this.entries){this.entries = [];}
-		entry.feedUrl = this.getSelfHref();
-		this.entries.push(entry);
-	},
-	getFirstEntry: function(){
-		//	summary:
-		//		Function to get the first entry of the feed.
-		//	description:
-		//		Function to get the first entry of the feed.
-		//
-		//	returns:
-		//		The first entry in the feed.
-		if(!this.entries || this.entries.length === 0){return null;}
-		return this.entries[0]; //object
-	},
-	getEntry: function(/*String*/entryId){
-		//	summary:
-		//		Function to get an entry by its id.
-		//	description:
-		//		Function to get an entry by its id.
-		//
-		//	returns:
-		//		The entry desired, or null if none.
-		if(!this.entries){return null;}
-		for(var x in this.entries){
-			if(this.entries[x].id == entryId){
-				return this.entries[x];
-			}
-		}
-		return null;
-	},
-	removeEntry: function(/*object*/entry){
-		//	summary:
-		//		Function to remove an entry from the list of links.
-		//	description:
-		//		Function to remove an entry from the list of links.
-		//
-		//	entry:
-		//		The entry.
-		if(!this.entries){return;}
-		var count = 0;
-		for(var i = 0; i < this.entries.length; i++){
-			if(this.entries[i] === entry){
-				this.entries.splice(i,1);
-				count++;
-			}
-		}
-		return count;
-	},
-	setEntries: function(/*array*/arrayOfEntry){
-		//	summary:
-		//		Function to add a set of entries to the feed.
-		//	description:
-		//		Function to get an entry by its id.
-		//
-		//	arrayOfEntry:
-		//		An array of entry objects to add to the feed.
-		for(var x in arrayOfEntry){
-			this.addEntry(arrayOfEntry[x]);
-		}
-	},
-	toString: function(){
-		//	summary:
-		//		Function to construct string form of the feed tag, which is an XML structure.
-		//	description:
-		//		Function to construct string form of the feed tag, which is an XML structure.
-		var s = [];
-		var i;
-		s.push('<?xml version="1.0" encoding="utf-8"?>\n');
-		s.push('<feed xmlns="'+dojox.atom.io.model._Constants.ATOM_URI+'"');
-		if(this.xmlBase){s.push(' xml:base="'+this.xmlBase+'"');}
-		for(i in this.name_spaces){s.push(' xmlns:'+i+'="'+this.name_spaces[i]+'"');}
-		s.push('>\n');
-		s.push('<id>' + (this.id ? this.id: '') + '</id>\n');
-		if(this.title){s.push(this.title);}
-		if(this.copyright && !this.rights){this.rights = this.copyright;}
-		if(this.rights){s.push('<rights>' + this.rights + '</rights>\n');}
-		
-		// Google news
-		if(this.issued){s.push('<issued>'+dojo.date.stamp.toISOString(this.issued)+'</issued>\n');}
-		if(this.modified){s.push('<modified>'+dojo.date.stamp.toISOString(this.modified)+'</modified>\n');}
-
-		if(this.modified && !this.updated){this.updated=this.modified;}
-		if(this.updated){s.push('<updated>'+dojo.date.stamp.toISOString(this.updated)+'</updated>\n');}
-		if(this.published){s.push('<published>'+dojo.date.stamp.toISOString(this.published)+'</published>\n');}
-		if(this.icon){s.push('<icon>'+this.icon+'</icon>\n');}
-		if(this.language){s.push('<language>'+this.language+'</language>\n');}
-		if(this.logo){s.push('<logo>'+this.logo+'</logo>\n');}
-		if(this.subtitle){s.push(this.subtitle.toString());}
-		if(this.tagline){s.push(this.tagline.toString());}
-		//TODO: need to figure out what to do with xmlBase
-		var arrays = [this.alternateLinks,this.authors,this.categories,this.contributors,this.otherLinks,this.extensions,this.entries];
-		for(i in arrays){
-			if(arrays[i]){
-				for(var x in arrays[i]){
-					s.push(arrays[i][x]);
-				}
-			}
-		}
-		s.push('</feed>');
-		return s.join('');
-	},
-	createEntry: function(){
-		//	summary:
-		//		Function to Create a new entry object in the feed.
-		//	description:
-		//		Function to Create a new entry object in the feed.
-		//	returns:
-		//		An empty entry object in the feed.
-		var entry = new dojox.atom.io.model.Entry();
-		entry.feedUrl = this.getSelfHref();
-		return entry; //object
-	},
-	getSelfHref: function(){
-		//	summary:
-		//		Function to get the href that refers to this feed.
-		//	description:
-		//		Function to get the href that refers to this feed.
-		//	returns:
-		//		The href that refers to this feed or null if none.
-		if(this.links === null || this.links.length === 0){
-			return null;
-		}
-		for(var x in this.links){
-			if(this.links[x].rel && this.links[x].rel == "self"){
-				return this.links[x].href; //string
-			}
-		}
-		return null;
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Service",dojox.atom.io.model.AtomItem,{
-	//	summary:
-	//		Class container for 'Feed' types.
-	//	description:
-	//		Class container for 'Feed' types.
-	constructor: function(href){
-		this.href = href;
-	},
-	//builds a Service document.  each element of this, except for the namespace, is the href of
-	//a service that the server supports.  Some of the common services are:
-	//"create-entry" , "user-prefs" , "search-entries" , "edit-template" , "categories"
-	buildFromDom: function(/*DOM node*/node){
-		//	summary:
-		//		Function to do construction of the Service data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the Service data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for content.
-		var i;
-		this.workspaces = [];
-		if(node.tagName != "service"){
-			// FIXME: Need 0.9 DOM util...
-			//node = dojox.xml.parser.firstElement(node,"service");
-			//if(!node){return;}
-			return;
-		}
-		if(node.namespaceURI != dojox.atom.io.model._Constants.PURL_NS && node.namespaceURI != dojox.atom.io.model._Constants.APP_NS){return;}
-		var ns = node.namespaceURI;
-		this.name_space = node.namespaceURI;
-		//find all workspaces, and create them
-		var workspaces ;
-		if(typeof(node.getElementsByTagNameNS)!= "undefined"){
-			workspaces = node.getElementsByTagNameNS(ns,"workspace");
-		}else{
-			// This block is IE only, which doesn't have a 'getElementsByTagNameNS' function
-			workspaces = [];
-			var temp = node.getElementsByTagName('workspace');
-			for(i=0; i<temp.length; i++){
-				if(temp[i].namespaceURI == ns){
-					workspaces.push(temp[i]);
-				}
-			}
-		}
-		if(workspaces && workspaces.length > 0){
-			var wkLen = 0;
-			var workspace;
-			for(i = 0; i< workspaces.length; i++){
-				workspace = (typeof(workspaces.item)==="undefined"?workspaces[i]:workspaces.item(i));
-				var wkspace = new dojox.atom.io.model.Workspace();
-				wkspace.buildFromDom(workspace);
-				this.workspaces[wkLen++] = wkspace;
-			}
-		}
-	},
-	getCollection: function(/*String*/url){
-		//	summary:
-		//		Function to collections that match a specific url.
-		//	description:
-		//		Function to collections that match a specific url.
-		//
-		//	url:
-		//		e URL to match collections against.
-		for(var i=0;i<this.workspaces.length;i++){
-			var coll=this.workspaces[i].collections;
-			for(var j=0;j<coll.length;j++){
-				if(coll[j].href == url){
-					return coll;
-				}
-			}
-		}
-		return null;
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Workspace",dojox.atom.io.model.AtomItem,{
-	//	summary:
-	//		Class container for 'Workspace' types.
-	//	description:
-	//		Class container for 'Workspace' types.
-	constructor: function(title){
-		this.title = title;
-		this.collections = [];
-	},
-
-	buildFromDom: function(/*DOM node*/node){
-		//	summary:
-		//		Function to do construction of the Workspace data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the Workspace data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for content.
-		var name = dojox.atom.io.model.util.getNodename(node);
-		if(name != "workspace"){return;}
-		var c = node.childNodes;
-		var len = 0;
-		for(var i = 0; i< c.length; i++){
-			var child = c[i];
-			if(child.nodeType === 1){
-				name = dojox.atom.io.model.util.getNodename(child);
-				if(child.namespaceURI == dojox.atom.io.model._Constants.PURL_NS || child.namespaceURI == dojox.atom.io.model._Constants.APP_NS){
-					if(name === "collection"){
-						var coll = new dojox.atom.io.model.Collection();
-						coll.buildFromDom(child);
-						this.collections[len++] = coll;
-					}
-				}else if(child.namespaceURI === dojox.atom.io.model._Constants.ATOM_NS){
-					if(name === "title"){
-						this.title = dojox.xml.parser.textContent(child);
-					}
-				}
-				//FIXME: Add an extension point so others can impl different namespaces.  For now just
-				//ignore unknown namespace tags.
-			}
-		}
-	}
-});
-
-dojo.declare("dojox.atom.io.model.Collection",dojox.atom.io.model.AtomItem,{
-	//	summary:
-	//		Class container for 'Collection' types.
-	//	description:
-	//		Class container for 'Collection' types.
-	constructor: function(href, title){
-		this.href = href;
-		this.title = title;
-		this.attributes = [];
-		this.features = [];
-		this.children = [];
-		this.memberType = null;
-		this.id = null;
-	},
-
-	buildFromDom: function(/*DOM node*/node){
-		//	summary:
-		//		Function to do construction of the Collection data from the DOM node containing it.
-		//	description:
-		//		Function to do construction of the Collection data from the DOM node containing it.
-		//
-		//	node:
-		//		The DOM node to process for content.
-		this.href = node.getAttribute("href");
-		var c = node.childNodes;
-		for(var i = 0; i< c.length; i++){
-			var child = c[i];
-			if(child.nodeType === 1){
-				var name = dojox.atom.io.model.util.getNodename(child);
-				if(child.namespaceURI == dojox.atom.io.model._Constants.PURL_NS || child.namespaceURI == dojox.atom.io.model._Constants.APP_NS){
-					if(name === "member-type"){
-						this.memberType = dojox.xml.parser.textContent(child);
-					}else if(name == "feature"){//this IF stmt might need some more work
-						if(child.getAttribute("id")){this.features.push(child.getAttribute("id"));}
-					}else{
-						var unknownTypeChild = new dojox.atom.io.model.Node();
-						unknownTypeChild.buildFromDom(child);
-						this.children.push(unknownTypeChild);
-					}
-				}else if(child.namespaceURI === dojox.atom.io.model._Constants.ATOM_NS){
-					if(name === "id"){
-						this.id = dojox.xml.parser.textContent(child);
-					}else if(name === "title"){
-						this.title = dojox.xml.parser.textContent(child);
-					}
-				}
-			}
-		}
-	}
-});
+require(["dojox/atom/io/model"]);

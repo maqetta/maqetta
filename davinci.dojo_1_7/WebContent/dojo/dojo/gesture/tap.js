@@ -1,106 +1,54 @@
-define(["dojo", "../gesture"], function(dojo, gesture){
-// module:
-//		dojo/gesture/tap
-// summary:
-//		This module provides tap gesture event handlers
-//		- dojo.gesture.tap -> to fire 'tap' event
-//		- dojo.gesture.tap.hold -> to fire 'tap.hold' event
-//		- dojo.gesture.tap.doubletap -> to fire 'tap.doubletap' event
-// example:
-//		A. Used with dojo.connect()
-//		|	dojo.connect(node, dojo.gesture.tap, function(e){});
-//		|	dojo.connect(node, dojo.gesture.tap.hold, function(e){});
-//		|	dojo.connect(node, dojo.gesture.tap.doubletap, function(e){});		
-//
-//		B. Used with dojo.on
-//		|	define(["dojo/on", "dojo/gesture/tap"], function(on, tap){
-//		|		on(node, tap, function(e){});
-//		|		on(node, tap.hold, function(e){});
-//		|		on(node, tap.doubletap, function(e){});
-//
-//		C. Used with dojo.gesture.tap.* directly
-//		|	dojo.gesture.tap(node, function(e){});
-//		|	dojo.gesture.tap.hold(node, function(e){});
-//		|	dojo.gesture.tap.doubletap(node, function(e){});
-//
-//		Though there is always a default singleton gesture instance if required e.g. require("dojo.gesture.tap")
-//		It's possible to create a new one with different parameters to overwrite it
-//		|	var myTap = new dojo.gesture.tap.Tap({holdThreshold: 300});
-//		|	dojo.gesture.register(myTap);
-//		|	dojo.connect(node, myTap, function(e){});
-//		|	dojo.connect(node, myTap.hold, function(e){});
-//		|	dojo.connect(node, myTap.doubletap, function(e){});
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-function clearTimer(timer){
-	clearTimeout(timer);
-	delete timer;
+define("dojo/gesture/tap",["dojo","../gesture"],function(_1,_2){
+function _3(_4){
+clearTimeout(_4);
+delete _4;
+};
+var _5=_1.declare(null,{holdThreshold:500,doubleTapTimeout:250,tapRadius:8,tapContext:{x:0,y:0,t:0,c:0},defaultEvent:"tap",subEvents:["hold","doubletap"],constructor:function(_6){
+_1.mixin(this,_6);
+},press:function(_7,e){
+this._initTap(e);
+_3(_7.tapTimeOut);
+_7.tapTimeOut=setTimeout(_1.hitch(this,function(){
+if(this._isTap(e)){
+_2.fire(_7,"tap.hold",e);
 }
-
-var clz = dojo.declare(null, {
-	
-	holdThreshold: 500,
-	
-	doubleTapTimeout: 250,
-	
-	tapRadius: 8,
-	
-	tapContext: {x:0,y:0,t:0,c:0},
-	
-	defaultEvent: 'tap',
-	
-	subEvents: ["hold", "doubletap"],
-	
-	constructor: function(args){
-		dojo.mixin(this, args);
-	},
-	press: function(gestureElement, e){
-		this._initTap(e);
-		clearTimer(gestureElement.tapTimeOut);
-		gestureElement.tapTimeOut = setTimeout(dojo.hitch(this, function(){
-			if(this._isTap(e)){
-				gesture.fire(gestureElement, 'tap.hold', e);
-			}
-			clearTimer(gestureElement.tapTimeOut);
-			this.tapContext.t = 0;
-			this.tapContext.c = 0;
-		}), this.holdThreshold);
-	},
-	release: function(gestureElement, e){
-		switch(this.tapContext.c){
-		case 1: 
-			gesture.fire(gestureElement, 'tap', e);
-			break;
-		case 2:
-			gesture.fire(gestureElement, 'tap.doubletap', e);
-			break;
-		}
-		clearTimer(gestureElement.tapTimeOut);
-	},
-	_initTap: function(e){
-		var ct = new Date().getTime();
-		if(ct - this.tapContext.t <= this.doubleTapTimeout){
-			this.tapContext.c++;
-		}else{
-			this.tapContext.c = 1;
-			this.tapContext.x = e.screenX;
-			this.tapContext.y = e.screenY;
-		}
-		this.tapContext.t = ct;
-	},
-	_isTap: function(e){
-		var dx = Math.abs(this.tapContext.x - e.screenX);
-		var dy = Math.abs(this.tapContext.y - e.screenY);
-		return dx <= this.tapRadius && dy <= this.tapRadius;
-	}
-});
-
-//register a default singleton Tap instance
-dojo.gesture.tap = new clz();
-
-dojo.gesture.tap.Tap = clz;
-
-gesture.register(dojo.gesture.tap);
-
-return dojo.gesture.tap;
-
+_3(_7.tapTimeOut);
+this.tapContext.t=0;
+this.tapContext.c=0;
+}),this.holdThreshold);
+},release:function(_8,e){
+switch(this.tapContext.c){
+case 1:
+_2.fire(_8,"tap",e);
+break;
+case 2:
+_2.fire(_8,"tap.doubletap",e);
+break;
+}
+_3(_8.tapTimeOut);
+},_initTap:function(e){
+var ct=new Date().getTime();
+if(ct-this.tapContext.t<=this.doubleTapTimeout){
+this.tapContext.c++;
+}else{
+this.tapContext.c=1;
+this.tapContext.x=e.screenX;
+this.tapContext.y=e.screenY;
+}
+this.tapContext.t=ct;
+},_isTap:function(e){
+var dx=Math.abs(this.tapContext.x-e.screenX);
+var dy=Math.abs(this.tapContext.y-e.screenY);
+return dx<=this.tapRadius&&dy<=this.tapRadius;
+}});
+_1.gesture.tap=new _5();
+_1.gesture.tap.Tap=_5;
+_2.register(_1.gesture.tap);
+return _1.gesture.tap;
 });

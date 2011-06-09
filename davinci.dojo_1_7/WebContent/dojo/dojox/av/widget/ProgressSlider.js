@@ -1,133 +1,84 @@
-define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedMixin], {
-	// summary:
-	//		A custom slider widget to use with dojox.av.widget.Player.
-	//	description:
-	//		Displays the current playhead position of the media. Has two
-	//		progress bars: one for playhead position, and one for download
-	//		progress.
-	//
-	templateString: dojo.cache("dojox.av.widget","resources/ProgressSlider.html"),
-	postCreate: function(){
-		// summary:
-		//		Initialize slider.
-		//
-		this.seeking = false;
-		this.handleWidth = dojo.marginBox(this.handle).w;
-		var dim = dojo.coords(this.domNode);
-		this.finalWidth = dim.w
-		this.width = dim.w-this.handleWidth;
-		this.x = dim.x;
-
-		dojo.setSelectable(this.domNode, false);
-		dojo.setSelectable(this.handle, false);
-	},
-	setMedia: function(/* Object */med, playerWidget){
-		// summary:
-		//		A common method to set the media in all Player widgets.
-		//		May do connections and initializations.
-		//
-		this.playerWidget = playerWidget;
-		this.media = med;
-		dojo.connect(this.media, "onMetaData", this, function(data){
-			if(data && data.duration){
-				this.duration = data.duration;
-			}
-		});
-		dojo.connect(this.media, "onEnd", this,  function(){
-			dojo.disconnect(this.posCon);
-			this.setHandle(this.duration);
-		});
-		dojo.connect(this.media, "onStart", this, function(){
-			this.posCon = dojo.connect(this.media, "onPosition", this, "setHandle");
-		});
-
-		dojo.connect(this.media, "onDownloaded", this, function(percent){
-			this.setLoadedPosition(percent*.01);
-			this.width = this.finalWidth * .01 * percent;
-		});
-
-	},
-	onDrag: function(/* HTMLEvent */ evt){
-		// summary:
-		//		Fired when the mouse is moved. Sets the slider.
-		//
-		var x = evt.clientX - this.x;
-		if(x<0) x = 0;
-		if(x>this.width-this.handleWidth) x=this.width-this.handleWidth;
-
-		var p = x/this.finalWidth;
-		this.media.seek( this.duration * p );
-		dojo.style(this.handle, "marginLeft", x+"px");
-		dojo.style(this.progressPosition, "width", x+"px");
-	},
-	startDrag: function(){
-		// summary:
-		// 		Fired onmousedown of the slider handle.
-		//
-		dojo.setSelectable(this.playerWidget.domNode, false);
-		this.seeking = true;
-		this.cmove = dojo.connect(dojo.doc, "mousemove", this, "onDrag");
-		this.cup = dojo.connect(dojo.doc, "mouseup", this, "endDrag");
-	},
-	endDrag: function(){
-		// summary:
-		// 		Fired on document.onmouseup.
-		//
-		dojo.setSelectable(this.playerWidget.domNode, true);
-		this.seeking = false;
-		if(this.cmove) dojo.disconnect(this.cmove);
-		if(this.cup) dojo.disconnect(this.cup);
-		this.handleOut();
-	},
-
-	setHandle: function(time){
-		// summary:
-		//		Sets the slider handle (when it is not being dragged)
-		//
-		if(!this.seeking){
-			var w = this.width-this.handleWidth;
-			var p = time/this.duration;
-			var x = p*w;
-
-			dojo.style(this.handle, "marginLeft", x+"px");
-			dojo.style(this.progressPosition, "width", x+"px");
-		}
-	},
-
-	setLoadedPosition: function(decimal){
-		// summary:
-		//		Sets the download progress bar to the percentage of how much
-		//		the media has been downloaded.
-		dojo.style(this.progressLoaded, "width", (this.finalWidth*decimal)+"px");
-	},
-
-	handleOver: function(){
-		// summary:
-		//		Highlights the slider handle on mouseover, and
-		//		stays highlighted during drag.
-		//
-		dojo.addClass(this.handle, "over");
-	},
-	handleOut: function(){
-		// summary:
-		//		Unhighlights handle onmouseover, or on endDrag.
-		//
-		if(!this.seeking){
-			dojo.removeClass(this.handle, "over");
-		}
-	},
-	onResize: function(playerDimensions){
-		//	summary:
-		//		Handles player resize. Need to recalculate the width of
-		//		position an download bars.
-		var dim = dojo.coords(this.domNode);
-		this.finalWidth = dim.w;
-
-	}
-
+define(["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
+_1.declare("dojox.av.widget.ProgressSlider",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.av.widget","resources/ProgressSlider.html"),postCreate:function(){
+this.seeking=false;
+this.handleWidth=_1.marginBox(this.handle).w;
+var _3=_1.coords(this.domNode);
+this.finalWidth=_3.w;
+this.width=_3.w-this.handleWidth;
+this.x=_3.x;
+_1.setSelectable(this.domNode,false);
+_1.setSelectable(this.handle,false);
+},setMedia:function(_4,_5){
+this.playerWidget=_5;
+this.media=_4;
+_1.connect(this.media,"onMetaData",this,function(_6){
+if(_6&&_6.duration){
+this.duration=_6.duration;
+}
 });
-
+_1.connect(this.media,"onEnd",this,function(){
+_1.disconnect(this.posCon);
+this.setHandle(this.duration);
+});
+_1.connect(this.media,"onStart",this,function(){
+this.posCon=_1.connect(this.media,"onPosition",this,"setHandle");
+});
+_1.connect(this.media,"onDownloaded",this,function(_7){
+this.setLoadedPosition(_7*0.01);
+this.width=this.finalWidth*0.01*_7;
+});
+},onDrag:function(_8){
+var x=_8.clientX-this.x;
+if(x<0){
+x=0;
+}
+if(x>this.width-this.handleWidth){
+x=this.width-this.handleWidth;
+}
+var p=x/this.finalWidth;
+this.media.seek(this.duration*p);
+_1.style(this.handle,"marginLeft",x+"px");
+_1.style(this.progressPosition,"width",x+"px");
+},startDrag:function(){
+_1.setSelectable(this.playerWidget.domNode,false);
+this.seeking=true;
+this.cmove=_1.connect(_1.doc,"mousemove",this,"onDrag");
+this.cup=_1.connect(_1.doc,"mouseup",this,"endDrag");
+},endDrag:function(){
+_1.setSelectable(this.playerWidget.domNode,true);
+this.seeking=false;
+if(this.cmove){
+_1.disconnect(this.cmove);
+}
+if(this.cup){
+_1.disconnect(this.cup);
+}
+this.handleOut();
+},setHandle:function(_9){
+if(!this.seeking){
+var w=this.width-this.handleWidth;
+var p=_9/this.duration;
+var x=p*w;
+_1.style(this.handle,"marginLeft",x+"px");
+_1.style(this.progressPosition,"width",x+"px");
+}
+},setLoadedPosition:function(_a){
+_1.style(this.progressLoaded,"width",(this.finalWidth*_a)+"px");
+},handleOver:function(){
+_1.addClass(this.handle,"over");
+},handleOut:function(){
+if(!this.seeking){
+_1.removeClass(this.handle,"over");
+}
+},onResize:function(_b){
+var _c=_1.coords(this.domNode);
+this.finalWidth=_c.w;
+}});
 return dojox.av.widget.ProgressSlider;
 });

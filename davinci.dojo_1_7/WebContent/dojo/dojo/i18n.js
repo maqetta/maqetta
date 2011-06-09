@@ -1,177 +1,91 @@
-define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/lang", "./_base/xhr"], function(dojo, require, has) {
-	// module:
-	//		dojo/i18n
-	// summary:
-	//		This module implements the !dojo/i18n plugin and the v1.6- i18n API
-	// description:
-	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various loader implementations. Also, this
-	//		allows foreign AMD loaders to be used without their plugins.
-	//
-	//		CAUTION: this module may return improper results if the AMD loader does not support toAbsMid and client
-	//		code passes relative plugin resource module ids. In that case, you should consider using the i18n! plugin
-	//		that comes with your loader.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var
-		thisModule= dojo.i18n=
-			// the dojo.i18n module
-			{},
-
-		nlsRe=
-			// regexp for reconstructing the master bundle name from parts of the regexp match
-			// nlsRe.exec("foo/bar/baz/nls/en-ca/foo") gives:
-			// ["foo/bar/baz/nls/en-ca/foo", "foo/bar/baz/nls/", "/", "/", "en-ca", "foo"]
-			// nlsRe.exec("foo/bar/baz/nls/foo") gives:
-			// ["foo/bar/baz/nls/foo", "foo/bar/baz/nls/", "/", "/", "foo", ""]
-			// so, if match[5] is blank, it means this is the top bundle definition.
-			// courtesy of http://requirejs.org
-			/(^.*(^|\/)nls)(\/|$)([^\/]*)\/?([^\/]*)/,
-
-		getAvailableLocales= function(
-			root,
-			locale,
-			bundlePath,
-			bundleName
-		){
-			// return a vector of module ids containing all available locales with respect to the target locale
-			// For example, assuming:
-			//	 * the root bundle indicates specific bundles for "fr" and "fr-ca",
-			//	 * bundlePath is "myPackage/nls"
-			//	 * bundleName is "myBundle"
-			// Then a locale argument of "fr-ca" would return
-			//	 ["myPackage/nls/myBundle", "myPackage/nls/fr/myBundle", "myPackage/nls/fr-ca/myBundle"]
-			// Notice that bundles are returned least-specific to most-specific, starting with the root.
-			//
-			// If root===false indicates we're working with a pre-AMD i18n bundle that doesn't tell about the available locales;
-			// therefore, assume everything is available and get 404 errors that indicate a particular localization is not available
-			//
-
-			for(var result= [bundlePath + bundleName], localeParts= locale.split("-"), current= "", i= 0; i<localeParts.length; i++){
-				current+= (current ? "-" : "") + localeParts[i];
-				if(!root || root[current]){
-					result.push(bundlePath + current + "/" + bundleName);
-				}
-			}
-			return result;
-		},
-
-		cache= {},
-
-		getL10nName= dojo.getL10nName = function(moduleName, bundleName, locale){
-			locale = locale ? locale.toLowerCase() : dojo.locale;
-			moduleName = "dojo/i18n!" + moduleName.replace(/\./g, "/");
-			bundleName = bundleName.replace(/\./g, "/");
-			return (/root/i.test(locale)) ?
-				(moduleName + "/nls/" + bundleName) :
-				(moduleName + "/nls/"	 + locale + "/" + bundleName);
-		},
-
-		load= function(id, require, load){
-			// note: id may be relative
-			var
-				match= nlsRe.exec(id),
-				bundlePath= ((require.toAbsMid && require.toAbsMid(match[1])) || match[1]) + "/",
-				bundleName= match[5] || match[4],
-				bundlePathAndName= bundlePath + bundleName,
-				locale= (match[5] && match[4]) || dojo.locale,
-				target= bundlePathAndName + "/" + locale;
-
-			// if we've already resolved this request, just return it
-			if (cache[target]) {
-				load(cache[target]);
-				return;
-			}
-
-			// get the root bundle which instructs which other bundles are required to contruct the localized bundle
-			require([bundlePathAndName], function(root){
-				var
-					current= cache[bundlePathAndName + "/"]= dojo.clone(root.root),
-					availableLocales= getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
-				require(availableLocales, function(){
-					for (var i= 1; i<availableLocales.length; i++){
-						cache[availableLocales[i]]= current= dojo.mixin(dojo.clone(current), arguments[i]);
-					}
-					// target may not have been resolve (e.g., maybe only "fr" exists when "fr-ca" was requested)
-					cache[target]= current;
-					load(dojo.delegate(current));
-				});
-			});
-		};
-
-
-	has.add("dojo-v1x-i18n-Api",
-		// if true, define the v1.x i18n functions
-		1
-	);
-
-	if(has("dojo-v1x-i18n-Api")){
-		var
-			evalBundle=
-				// keep the minifiers off our define!
-				// if bundle is an AMD bundle, then __amdResult will be defined; otherwise it's a pre-amd bundle and the bundle value is returned by eval
-				new Function("bundle", "var __preAmdResult, __amdResult; function define(bundle){__amdResult= bundle;} __preAmdResult= eval(bundle); return [__preAmdResult, __amdResult];"),
-
-			fixup= function(url, preAmdResult, amdResult){
-				// nls/<locale>/<bundle-name> indicates not the root.
-				return preAmdResult ? (/nls\/[^\/]+\/[^\/]+$/.test(url) ? preAmdResult : {root:preAmdResult, _v1x:1}) : amdResult;
-			},
-
-			syncRequire= function(deps, callback){
-				var results= [];
-				dojo.forEach(deps, function(mid){
-					var url= require.toUrl(mid + ".js");
-					if(cache[url]){
-						results.push(cache[url]);
-					}else{
-						try {
-							var bundle= require(mid);
-							if(bundle){
-								results.push(bundle);
-								return;
-							}
-						}catch(e){}
-						dojo.xhrGet({
-							url:url,
-							sync:true,
-							load:function(text){
-								var result = evalBundle(text);
-								results.push(cache[url]= fixup(url, result[0], result[1]));
-							},
-							error:function(){
-								results.push(cache[url]= {});
-							}
-						});
-					}
-				});
-				callback.apply(callback, results);
-			};
-
-		syncRequire.toAbsMid= function(mid){
-			return require.toAbsMid(mid);
-		};
-
-		thisModule.getLocalization= function(moduleName, bundleName, locale){
-			var
-				result,
-				l10nName= getL10nName(moduleName, bundleName, locale);
-			load(l10nName.substring(10), syncRequire, function(result_){ result= result_; });
-			return result;
-		};
-
-		thisModule.normalizeLocale= function(locale){
-			var result = locale ? locale.toLowerCase() : dojo.locale;
-			if(result == "root"){
-				result = "ROOT";
-			}
-			return result;
-		};
-	}
-
-	thisModule.load= load;
-
-	thisModule.cache= function(mid, value){
-		cache[mid]= value;
-	};
-
-	return thisModule;
+define("dojo/i18n",["./_base/kernel","require","./has","./_base/array","./_base/lang","./_base/xhr"],function(_1,_2,_3){
+var _4=_1.i18n={},_5=/(^.*(^|\/)nls)(\/|$)([^\/]*)\/?([^\/]*)/,_6=function(_7,_8,_9,_a){
+for(var _b=[_9+_a],_c=_8.split("-"),_d="",i=0;i<_c.length;i++){
+_d+=(_d?"-":"")+_c[i];
+if(!_7||_7[_d]){
+_b.push(_9+_d+"/"+_a);
+}
+}
+return _b;
+},_e={},_f=_1.getL10nName=function(_10,_11,_12){
+_12=_12?_12.toLowerCase():_1.locale;
+_10="dojo/i18n!"+_10.replace(/\./g,"/");
+_11=_11.replace(/\./g,"/");
+return (/root/i.test(_12))?(_10+"/nls/"+_11):(_10+"/nls/"+_12+"/"+_11);
+},_13=function(id,_14,_15){
+var _16=_5.exec(id),_17=((_14.toAbsMid&&_14.toAbsMid(_16[1]))||_16[1])+"/",_18=_16[5]||_16[4],_19=_17+_18,_1a=(_16[5]&&_16[4])||_1.locale,_1b=_19+"/"+_1a;
+if(_e[_1b]){
+_15(_e[_1b]);
+return;
+}
+_14([_19],function(_1c){
+var _1d=_e[_19+"/"]=_1.clone(_1c.root),_1e=_6(!_1c._v1x&&_1c,_1a,_17,_18);
+_14(_1e,function(){
+for(var i=1;i<_1e.length;i++){
+_e[_1e[i]]=_1d=_1.mixin(_1.clone(_1d),arguments[i]);
+}
+_e[_1b]=_1d;
+_15(_1.delegate(_1d));
+});
+});
+};
+true||_3.add("dojo-v1x-i18n-Api",1);
+if(1){
+var _1f=new Function("bundle","var __preAmdResult, __amdResult; function define(bundle){__amdResult= bundle;} __preAmdResult= eval(bundle); return [__preAmdResult, __amdResult];"),_20=function(url,_21,_22){
+return _21?(/nls\/[^\/]+\/[^\/]+$/.test(url)?_21:{root:_21,_v1x:1}):_22;
+},_23=function(_24,_25){
+var _26=[];
+_1.forEach(_24,function(mid){
+var url=_2.toUrl(mid+".js");
+if(_e[url]){
+_26.push(_e[url]);
+}else{
+try{
+var _27=_2(mid);
+if(_27){
+_26.push(_27);
+return;
+}
+}
+catch(e){
+}
+_1.xhrGet({url:url,sync:true,load:function(_28){
+var _29=_1f(_28);
+_26.push(_e[url]=_20(url,_29[0],_29[1]));
+},error:function(){
+_26.push(_e[url]={});
+}});
+}
+});
+_25.apply(_25,_26);
+};
+_23.toAbsMid=function(mid){
+return _2.toAbsMid(mid);
+};
+_4.getLocalization=function(_2a,_2b,_2c){
+var _2d,_2e=_f(_2a,_2b,_2c);
+_13(_2e.substring(10),_23,function(_2f){
+_2d=_2f;
+});
+return _2d;
+};
+_4.normalizeLocale=function(_30){
+var _31=_30?_30.toLowerCase():_1.locale;
+if(_31=="root"){
+_31="ROOT";
+}
+return _31;
+};
+}
+_4.load=_13;
+_4.cache=function(mid,_32){
+_e[mid]=_32;
+};
+return _4;
 });

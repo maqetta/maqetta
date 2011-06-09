@@ -81,7 +81,6 @@
 	margin: 2px 9px 0 9px;
 	background-position: -37px -17px;
 }
-
 .dojoxGridnextPageBtn {
 	cursor: pointer;
 	margin-left: 3px;
@@ -98,7 +97,7 @@
 	cursor: pointer;
 	margin: 1px 6px 0 5px;
 	float: left;
-	zoom: 1; /* for IE */
+	zoom: 1; 
 }
 .dojoxGridActived {
 	font-weight: bold;
@@ -106,7 +105,7 @@
 	margin: 1px 6px 0 5px;
 	float: left;
 	text-decoration: none!important; 
-	zoom: 1; /* for IE */
+	zoom: 1; 
 }
 .dojoxGridInactiveSwitch {
 	font-weight: normal;
@@ -114,7 +113,7 @@
 	float: left;
 	cursor: pointer;
 	margin: 1px 7px 0 7px;
-	zoom: 1; /* for IE */
+	zoom: 1; 
 }
 .dojoxGridActivedSwitch {
 	font-weight: bold;
@@ -122,7 +121,7 @@
 	float: left;
 	margin: 1px 7px 0 7px;
 	text-decoration: none!important; 
-	zoom: 1; /* for IE */
+	zoom: 1; 
 }
 .dojoxGridSeparator {
 	float: left;

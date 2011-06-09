@@ -15,7 +15,6 @@
 	
 	cursor: pointer;
 }
-
 .uploaderInsideNode{
 	visibility:hidden;
 }
@@ -34,8 +33,6 @@
 	border-color: #d5d5d5 #d5d5d5 #bdbdbd #d5d5d5; 
 	background:#e4e4e4 url("../../../dijit/themes/tundra/images/buttonDisabled.png") top repeat-x;
 }
-
-
 .soria .dojoxUploaderNorm {
 	border: 1px solid #8ba0bd;
 	border-bottom:1px solid #657c9c;
@@ -55,8 +52,6 @@
 	background:#c3d3e5 url("../../../dijit/themes/soria/images/buttonDisabled.png") top repeat-x !important;
 	opacity: 0.60;
 }
-
-
 .nihilo .dojoxUploaderNorm {
 	border:1px solid #dedede;
 	border-bottom:1px solid #dedede;
@@ -76,7 +71,6 @@
 	background:#fafafa url("../../../dijit/themes/nihilo/images/buttonDisabled.png") top repeat-x !important;
 	opacity: 0.60;
 }
-
 .fileToUpload,
 .fileToUploadClose,
 .fileToUploadName,
@@ -84,7 +78,6 @@
 	height:18px;
 	line-height:18px;
 }
-
 .fileToUpload{
 	font-size:12px;
 	font-family:sans-serif;
@@ -111,8 +104,6 @@
 .fileToUploadClose:hover{
 	background:url(../../../dijit/themes/tundra/images/tabCloseHover.png) no-repeat 2px center;
 }
-
-
 .thumb{
 	height:50px;
 	padding:3px;
@@ -138,7 +129,6 @@
 	font-size:10px;
 }
 .dj_ie object{
-	/* When clicking on the object inspector in Firebug Lite, IE
-	sets display:none on (flash) objects. Amazing!! */
+	
 	display:block !important;
 }

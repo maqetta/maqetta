@@ -1,115 +1,60 @@
-define(["dojo/_base/kernel", "dojo/_base/connect", "dojo/_base/declare", 
-	"./PlotAction", "dojox/gfx/matrix", 
-	"dojox/gfx/fx", "dojo/fx", "dojo/fx/easing"], 
-	function(dojo, connect, declare, PlotAction, m, gf, df, dfe){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	/*=====
-	dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
-		//	summary:
-		//		Additional arguments for highlighting actions.
-	
-		//	scale: Number?
-		//		The amount to magnify the given object to.  Default is 2.
-		scale: 2
-	});
-	=====*/
-	
-	var DEFAULT_SCALE = 2;
-
-	return dojo.declare("dojox.charting.action2d.Magnify", dojox.charting.action2d.PlotAction, {
-		//	summary:
-		//		Create an action that magnifies the object the action is applied to.
-
-		// the data description block for the widget parser
-		defaultParams: {
-			duration: 400,	// duration of the action in ms
-			easing:   dfe.backOut,	// easing for the action
-			scale:    DEFAULT_SCALE	// scale of magnification
-		},
-		optionalParams: {},	// no optional parameters
-
-		constructor: function(chart, plot, kwArgs){
-			//	summary:
-			//		Create the magnifying action.
-			//	chart: dojox.charting.Chart
-			//		The chart this action belongs to.
-			//	plot: String?
-			//		The plot to apply the action to. If not passed, "default" is assumed.
-			//	kwArgs: dojox.charting.action2d.__MagnifyCtorArgs?
-			//		Optional keyword arguments for this action.
-
-			// process optional named parameters
-			this.scale = kwArgs && typeof kwArgs.scale == "number" ? kwArgs.scale : DEFAULT_SCALE;
-
-			this.connect();
-		},
-
-		process: function(o){
-			//	summary:
-			//		Process the action on the given object.
-			//	o: dojox.gfx.Shape
-			//		The object on which to process the magnifying action.
-			if(!o.shape || !(o.type in this.overOutEvents) ||
-				!("cx" in o) || !("cy" in o)){ return; }
-
-			var runName = o.run.name, index = o.index, vector = [], anim, init, scale;
-
-			if(runName in this.anim){
-				anim = this.anim[runName][index];
-			}else{
-				this.anim[runName] = {};
-			}
-
-			if(anim){
-				anim.action.stop(true);
-			}else{
-				this.anim[runName][index] = anim = {};
-			}
-
-			if(o.type == "onmouseover"){
-				init  = m.identity;
-				scale = this.scale;
-			}else{
-				init  = m.scaleAt(this.scale, o.cx, o.cy);
-				scale = 1 / this.scale;
-			}
-
-			var kwArgs = {
-				shape:    o.shape,
-				duration: this.duration,
-				easing:   this.easing,
-				transform: [
-					{name: "scaleAt", start: [1, o.cx, o.cy], end: [scale, o.cx, o.cy]},
-					init
-				]
-			};
-			if(o.shape){
-				vector.push(gf.animateTransform(kwArgs));
-			}
-			if(o.oultine){
-				kwArgs.shape = o.outline;
-				vector.push(gf.animateTransform(kwArgs));
-			}
-			if(o.shadow){
-				kwArgs.shape = o.shadow;
-				vector.push(gf.animateTransform(kwArgs));
-			}
-
-			if(!vector.length){
-				delete this.anim[runName][index];
-				return;
-			}
-
-			anim.action = df.combine(vector);
-			if(o.type == "onmouseout"){
-				dojo.connect(anim.action, "onEnd", this, function(){
-					if(this.anim[runName]){
-						delete this.anim[runName][index];
-					}
-				});
-			}
-			anim.action.play();
-		}
-	});
-	
+define(["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./PlotAction","dojox/gfx/matrix","dojox/gfx/fx","dojo/fx","dojo/fx/easing"],function(_1,_2,_3,_4,m,gf,df,_5){
+var _6=2;
+return _1.declare("dojox.charting.action2d.Magnify",dojox.charting.action2d.PlotAction,{defaultParams:{duration:400,easing:_5.backOut,scale:_6},optionalParams:{},constructor:function(_7,_8,_9){
+this.scale=_9&&typeof _9.scale=="number"?_9.scale:_6;
+this.connect();
+},process:function(o){
+if(!o.shape||!(o.type in this.overOutEvents)||!("cx" in o)||!("cy" in o)){
+return;
+}
+var _a=o.run.name,_b=o.index,_c=[],_d,_e,_f;
+if(_a in this.anim){
+_d=this.anim[_a][_b];
+}else{
+this.anim[_a]={};
+}
+if(_d){
+_d.action.stop(true);
+}else{
+this.anim[_a][_b]=_d={};
+}
+if(o.type=="onmouseover"){
+_e=m.identity;
+_f=this.scale;
+}else{
+_e=m.scaleAt(this.scale,o.cx,o.cy);
+_f=1/this.scale;
+}
+var _10={shape:o.shape,duration:this.duration,easing:this.easing,transform:[{name:"scaleAt",start:[1,o.cx,o.cy],end:[_f,o.cx,o.cy]},_e]};
+if(o.shape){
+_c.push(gf.animateTransform(_10));
+}
+if(o.oultine){
+_10.shape=o.outline;
+_c.push(gf.animateTransform(_10));
+}
+if(o.shadow){
+_10.shape=o.shadow;
+_c.push(gf.animateTransform(_10));
+}
+if(!_c.length){
+delete this.anim[_a][_b];
+return;
+}
+_d.action=df.combine(_c);
+if(o.type=="onmouseout"){
+_1.connect(_d.action,"onEnd",this,function(){
+if(this.anim[_a]){
+delete this.anim[_a][_b];
+}
+});
+}
+_d.action.play();
+}});
 });

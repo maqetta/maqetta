@@ -1,97 +1,49 @@
-define("dojox/editor/plugins/Preview", ["dojo", "dijit", "dojox", "dijit/form/Button", "dijit/_editor/_Plugin", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/Preview"], function(dojo, dijit, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.editor.plugins.Preview",dijit._editor._Plugin,{
-	//	summary:
-	//		This plugin provides Preview cabability to the editor.  When
-	//		clicked, the document in the editor frame will displayed in a separate
-	//		window/tab
-
-	//	useDefaultCommand [protected]
-	//		Over-ride indicating that the command processing is done all by this plugin.
-	useDefaultCommand: false,
-
-	// styles: [public] String
-	//		A string of CSS styles to apply to the previewed content, if any.
-	styles: "",
-
-	// stylesheets: [public] Array
-	//		An array of stylesheets to import into the preview, if any.
-	stylesheets: null,
-
-	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node icon.
-	iconClassPrefix: "dijitAdditionalEditorIcon",
-
-	_initButton: function(){
-		// summary:
-		//		Over-ride for creation of the preview button.
-		this._nlsResources = dojo.i18n.getLocalization("dojox.editor.plugins", "Preview");
-		this.button = new dijit.form.Button({
-			label: this._nlsResources["preview"],
-			showLabel: false,
-			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "Preview",
-			tabIndex: "-1",
-			onClick: dojo.hitch(this, "_preview")
-		});
-	},
-
-	setEditor: function(editor){
-		// summary:
-		//		Over-ride for the setting of the editor.
-		// editor: Object
-		//		The editor to configure for this plugin to use.
-		this.editor = editor;
-		this._initButton();
-	},
-
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
-	},
-	
-	_preview: function(){
-		// summary:
-		//		Function to trigger previewing of the editor document
-		// tags:
-		//		private
-		try{
-			var content = this.editor.get("value");
-			var head = "\t\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>\n";
-			var i;
-			// Apply the stylesheets, then apply the styles.
-			if(this.stylesheets){
-				for(i = 0; i < this.stylesheets.length; i++){
-					head += "\t\t<link rel='stylesheet' type='text/css' href='" + this.stylesheets[i] + "'>\n";
-				}
-			}
-			if(this.styles){
-				head += ("\t\t<style>" + this.styles + "</style>\n");
-			}
-			content = "<html>\n\t<head>\n" + head + "\t</head>\n\t<body>\n" + content + "\n\t</body>\n</html>";
-			var win = window.open("javascript: ''", this._nlsResources["preview"], "status=1,menubar=0,location=0,toolbar=0");
-			win.document.open();
-			win.document.write(content);
-			win.document.close();
-
-		}catch(e){
-			console.warn(e);
-		}
-	}
+define("dojox/editor/plugins/Preview",["dojo","dijit","dojox","dijit/form/Button","dijit/_editor/_Plugin","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Preview"],function(_1,_2,_3){
+_1.declare("dojox.editor.plugins.Preview",_2._editor._Plugin,{useDefaultCommand:false,styles:"",stylesheets:null,iconClassPrefix:"dijitAdditionalEditorIcon",_initButton:function(){
+this._nlsResources=_1.i18n.getLocalization("dojox.editor.plugins","Preview");
+this.button=new _2.form.Button({label:this._nlsResources["preview"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Preview",tabIndex:"-1",onClick:_1.hitch(this,"_preview")});
+},setEditor:function(_4){
+this.editor=_4;
+this._initButton();
+},updateState:function(){
+this.button.set("disabled",this.get("disabled"));
+},_preview:function(){
+try{
+var _5=this.editor.get("value");
+var _6="\t\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>\n";
+var i;
+if(this.stylesheets){
+for(i=0;i<this.stylesheets.length;i++){
+_6+="\t\t<link rel='stylesheet' type='text/css' href='"+this.stylesheets[i]+"'>\n";
+}
+}
+if(this.styles){
+_6+=("\t\t<style>"+this.styles+"</style>\n");
+}
+_5="<html>\n\t<head>\n"+_6+"\t</head>\n\t<body>\n"+_5+"\n\t</body>\n</html>";
+var _7=window.open("javascript: ''",this._nlsResources["preview"],"status=1,menubar=0,location=0,toolbar=0");
+_7.document.open();
+_7.document.write(_5);
+_7.document.close();
+}
+catch(e){
+console.warn(e);
+}
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _8=o.args.name.toLowerCase();
+if(_8==="preview"){
+o.plugin=new _3.editor.plugins.Preview({styles:("styles" in o.args)?o.args.styles:"",stylesheets:("stylesheets" in o.args)?o.args.stylesheets:null});
+}
 });
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name === "preview"){
-		o.plugin = new dojox.editor.plugins.Preview({
-			styles: ("styles" in o.args)?o.args.styles:"",
-			stylesheets: ("stylesheets" in o.args)? o.args.stylesheets:null
-		});
-	}
-});
-
-return dojox.editor.plugins.Preview;
-
+return _3.editor.plugins.Preview;
 });

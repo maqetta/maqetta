@@ -1,65 +1,24 @@
-define(["./_base/kernel", "./dom-geometry", "./_base/lang", "./ready", "./_base/sniff", "./_base/window"], function(dojo){
-	// module:
-	//		dojo/uacss
-	// summary:
-	//		Applies pre-set CSS classes to the top-level HTML node, based on:
-	//			- browser (ex: dj_ie)
-	//			- browser version (ex: dj_ie6)
-	//			- box model (ex: dj_contentBox)
-	//			- text direction (ex: dijitRtl)
-	//
-	//		In addition, browser, browser version, and box model are
-	//		combined with an RTL flag when browser text is RTL. ex: dj_ie-rtl.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var
-		html = dojo.doc.documentElement,
-		ie = dojo.isIE,
-		opera = dojo.isOpera,
-		maj = Math.floor,
-		ff = dojo.isFF,
-		boxModel = dojo.boxModel.replace(/-/,''),
-
-		classes = {
-			"dj_ie": ie,
-			"dj_ie6": maj(ie) == 6,
-			"dj_ie7": maj(ie) == 7,
-			"dj_ie8": maj(ie) == 8,
-			"dj_ie9": maj(ie) == 9,
-			"dj_quirks": dojo.isQuirks,
-			"dj_iequirks": ie && dojo.isQuirks,
-
-			// NOTE: Opera not supported by dijit
-			"dj_opera": opera,
-
-			"dj_khtml": dojo.isKhtml,
-
-			"dj_webkit": dojo.isWebKit,
-			"dj_safari": dojo.isSafari,
-			"dj_chrome": dojo.isChrome,
-
-			"dj_gecko": dojo.isMozilla,
-			"dj_ff3": maj(ff) == 3
-		}; // no dojo unsupported browsers
-
-	classes["dj_" + boxModel] = true;
-
-	// apply browser, browser version, and box model class names
-	var classStr = "";
-	for(var clz in classes){
-		if(classes[clz]){
-			classStr += clz + " ";
-		}
-	}
-	html.className = dojo.trim(html.className + " " + classStr);
-
-	// If RTL mode, then add dj_rtl flag plus repeat existing classes with -rtl extension.
-	// We can't run the code below until the <body> tag has loaded (so we can check for dir=rtl).
-	// priority is 90 to run ahead of parser priority of 100
-	dojo.ready(90, function(){
-		if(!dojo._isBodyLtr()){
-			var rtlClassStr = "dj_rtl dijitRtl " + classStr.replace(/ /g, "-rtl ");
-			html.className = dojo.trim(html.className + " " + rtlClassStr + "dj_rtl dijitRtl " + classStr.replace(/ /g, "-rtl "));
-		}
-	});
-	return dojo;
+define("dojo/uacss",["./_base/kernel","./dom-geometry","./_base/lang","./ready","./_base/sniff","./_base/window"],function(_1){
+var _2=_1.doc.documentElement,ie=_1.isIE,_3=_1.isOpera,_4=Math.floor,ff=_1.isFF,_5=_1.boxModel.replace(/-/,""),_6={"dj_ie":ie,"dj_ie6":_4(ie)==6,"dj_ie7":_4(ie)==7,"dj_ie8":_4(ie)==8,"dj_ie9":_4(ie)==9,"dj_quirks":_1.isQuirks,"dj_iequirks":ie&&_1.isQuirks,"dj_opera":_3,"dj_khtml":_1.isKhtml,"dj_webkit":_1.isWebKit,"dj_safari":_1.isSafari,"dj_chrome":_1.isChrome,"dj_gecko":_1.isMozilla,"dj_ff3":_4(ff)==3};
+_6["dj_"+_5]=true;
+var _7="";
+for(var _8 in _6){
+if(_6[_8]){
+_7+=_8+" ";
+}
+}
+_2.className=_1.trim(_2.className+" "+_7);
+_1.ready(90,function(){
+if(!_1._isBodyLtr()){
+var _9="dj_rtl dijitRtl "+_7.replace(/ /g,"-rtl ");
+_2.className=_1.trim(_2.className+" "+_9+"dj_rtl dijitRtl "+_7.replace(/ /g,"-rtl "));
+}
+});
+return _1;
 });

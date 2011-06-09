@@ -1,14 +1,14 @@
-define(["dojo/_base/kernel"], function(dojo){
-	dojo.getObject("dtl.contrib.objects", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.mixin(dojox.dtl.contrib.objects, {
-		key: function(value, arg){
-			return value[arg];
-		}
-	});
-
-	dojox.dtl.register.filters("dojox.dtl.contrib", {
-		"objects": ["key"]
-	});
-	return dojox.dtl.contrib.objects;
+define(["dojo/_base/kernel"],function(_1){
+_1.getObject("dtl.contrib.objects",true,dojox);
+_1.mixin(dojox.dtl.contrib.objects,{key:function(_2,_3){
+return _2[_3];
+}});
+dojox.dtl.register.filters("dojox.dtl.contrib",{"objects":["key"]});
+return dojox.dtl.contrib.objects;
 });

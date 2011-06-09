@@ -4,12 +4,10 @@
 	cursor:default;
 	padding:2px;
 }
-
 .feedViewerTable, .feedViewerTable table {
 	border-width: 0;
 	margin: 0;
 }
-
 .feedViewerTableBody {
 	overflow-x: auto;
 	overflow-y: auto;

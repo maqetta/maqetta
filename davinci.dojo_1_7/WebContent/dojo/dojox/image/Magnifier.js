@@ -1,72 +1,25 @@
-define(["dojo", "dojox", "dojox/gfx", "./MagnifierLite"], function(dojo, dojox){
-	
-	dojo.getObject("image", true, dojox);
-	return dojo.declare("dojox.image.Magnifier", dojox.image.MagnifierLite, {
-		// summary:
-		//		Adds magnification on a portion of an image element, using `dojox.gfx`
-		//
-		// description:
-		//		An unobtrusive way to add an unstyled overlay
-		// 		above the srcNode image element. The overlay/glass is a
-		//		scaled version of the src image (so larger images sized down
-		//		are clearer).
-		//
-		//		over-ride the _createGlass method to create your custom surface,
-		//		being sure to create an img node on that surface.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		_createGlass: function(){
-			// summary: create the glassNode, and an img on a dojox.gfx surface
-
-			// images are hard to make into workable templates, so just add outer overlay
-			// and skip using dijit._Templated
-			this.glassNode = dojo.create('div', {
-				style:{
-					height: this.glassSize + "px",
-					width: this.glassSize + "px"
-				},
-				"className":"glassNode"
-			}, dojo.body());
-			this.surfaceNode = dojo.create('div', null, this.glassNode);
-
-			this.surface = dojox.gfx.createSurface(this.surfaceNode, this.glassSize, this.glassSize);
-			this.img = this.surface.createImage({
-			   src: this.domNode.src,
-			   width: this._zoomSize.w,
-			   height: this._zoomSize.h
-			});
-
-		},
-
-		_placeGlass: function(e){
-			// summary: position the overlay centered under the cursor
-			var x = e.pageX - 2,
-				y = e.pageY - 2,
-				xMax = this.offset.x + this.offset.w + 2,
-				yMax = this.offset.y + this.offset.h + 2
-			;
-
-			// with svg, our mouseout connection to the image surface doesn't
-			// fire, so we'r have to manually calculate offsets
-			if(x < this.offset.x || y < this.offset.y || x > xMax || y > yMax){
-				this._hideGlass();
-			}else{
-				this.inherited(arguments);
-			}
-		},
-
-		_setImage: function(e){
-			// summary: set the image's offset in the clipping window relative to the mouse position
-
-			var xOff = (e.pageX - this.offset.x) / this.offset.w,
-				yOff = (e.pageY - this.offset.y) / this.offset.h,
-				x = (this._zoomSize.w * xOff * -1)+(this.glassSize*xOff),
-				y = (this._zoomSize.h * yOff * -1)+(this.glassSize*yOff)
-			;
-			// set the image offset
-			this.img.setShape({ x: x, y: y });
-
-		}
-
-	});	
-
+define(["dojo","dojox","dojox/gfx","./MagnifierLite"],function(_1,_2){
+_1.getObject("image",true,_2);
+return _1.declare("dojox.image.Magnifier",_2.image.MagnifierLite,{_createGlass:function(){
+this.glassNode=_1.create("div",{style:{height:this.glassSize+"px",width:this.glassSize+"px"},"className":"glassNode"},_1.body());
+this.surfaceNode=_1.create("div",null,this.glassNode);
+this.surface=_2.gfx.createSurface(this.surfaceNode,this.glassSize,this.glassSize);
+this.img=this.surface.createImage({src:this.domNode.src,width:this._zoomSize.w,height:this._zoomSize.h});
+},_placeGlass:function(e){
+var x=e.pageX-2,y=e.pageY-2,_3=this.offset.x+this.offset.w+2,_4=this.offset.y+this.offset.h+2;
+if(x<this.offset.x||y<this.offset.y||x>_3||y>_4){
+this._hideGlass();
+}else{
+this.inherited(arguments);
+}
+},_setImage:function(e){
+var _5=(e.pageX-this.offset.x)/this.offset.w,_6=(e.pageY-this.offset.y)/this.offset.h,x=(this._zoomSize.w*_5*-1)+(this.glassSize*_5),y=(this._zoomSize.h*_6*-1)+(this.glassSize*_6);
+this.img.setShape({x:x,y:y});
+}});
 });

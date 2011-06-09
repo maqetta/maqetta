@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[opções de visualização]",
 	title: "Título",
 	authors: "Autores",
@@ -9,3 +9,4 @@
 	summary: "Resumo",
 	content: "Conteúdo"
 })
+);

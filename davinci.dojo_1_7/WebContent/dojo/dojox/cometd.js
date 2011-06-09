@@ -1,5 +1,11 @@
-// stub loader for the cometd module since no implementation code is allowed to live in top-level files
-dojo.provide("dojox.cometd");
-dojo.require("dojox.cometd._base");
-dojo.require("dojox.cometd.longPollTransport");
-dojo.require("dojox.cometd.callbackPollTransport");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["dojo","dijit","dojox","dojox/cometd/_base","dojox/cometd/longPollTransport","dojox/cometd/callbackPollTransport"],function(_1,_2,_3){
+_1.getObject("dojox.cometd",1);
+return _1.getObject("dojox.cometd");
+});
+require(["dojox/cometd"]);

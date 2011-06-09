@@ -1,4 +1,4 @@
-/* filter bar */
+
 .dojoxGridFBar {
 	width: 100%;
 	cursor: pointer;
@@ -73,14 +73,12 @@
 .dijitButtonActive .dojoxGridFBarCloseBtnIcon {
 	background-position: -160px -20px;
 }
-
-/* filter def dialog */
 .dojoxGridFDTitlePane {
 	width: 316px;
 	height: 330px;
 }
 .dijit_a11y .dojoxGridFDTitlePane .dijitArrowButtonInner{
-	/* This should be fixed in dijit */
+	
 	display:none !important;
 }
 .dojoxGridFDTitlePane .dijitDialogPaneContent {
@@ -101,7 +99,7 @@
 .dojoxGridFDPaneRulePane {
 	height: 222px;
 	overflow: auto;
-	/* for ie6/7 only */
+	
 	position: relative;
 }
 .dj_ie6 .dojoxGridFDPaneRulePane {
@@ -112,7 +110,7 @@
 }
 .dojoxGridFDPane .dijitAccordionTitle {
 	position: relative;
-	/* for non-claro theme, this can ensure a correct height change when adding/removing child */
+	
 	min-height: 17px;
 }
 .dojoxGridFDPane .dijitAccordionTitle .dijitButton {
@@ -170,8 +168,6 @@
 .dijitButtonDisabled .dojoxGridFDPaneAddCBoxBtnIcon {
 	background-position: -218px -18px;
 }
-
-/* criteria box */
 .dojoxGridFCBox {
 	height: 125px;
 }
@@ -184,7 +180,7 @@
 .dojoxGridFCBox .dojoxGridFCBoxValueBox {
 	margin: 5px 0 0 0;
 	width: 100%;
-	/* inherited is inline-block this will cause width "error" in non IE for html tables */
+	
 	display: inline-table;
 }
 .dojoxGridFCBoxCondSelectAlt {
@@ -205,8 +201,6 @@
 .dojoxGridFCBoxRangeValueTxt {
 	margin-left: 4px;
 }
-
-/* status tip */
 .dojoxGridFStatusTipDialog .dijitTooltipContainer {
 	padding: 9px 5px;
 }
@@ -254,8 +248,6 @@
 .dijitButtonHover .dojoxGridFStatusTipDelRuleBtnIcon {
 	background-position: -198px 2px;
 }
-
-/* clear dlg */
 .dj_ie7 .dojoxGridClearFilterConfirm,
 .dj_ie6 .dojoxGridClearFilterConfirm {
 	width: 300px;
@@ -267,8 +259,6 @@
 .dojoxGridClearFilterBtns .dijitButton {
 	float: right;
 }
-
-/* bool value box */
 .dojoxGridTrueBox {
 	float: left;
 	width: 49%;

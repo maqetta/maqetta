@@ -1,80 +1,49 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/declare",
-	"dojo/_base/connect",
-	"dijit/form/ToggleButton"
-], function(dojo){
-	dojo.getObject("sketch", true, dojox);
-	dojo.declare("dojox.sketch._Plugin", null, {
-		// summary
-		//		This represents a "plugin" to the dojox.sketch.Figure, which is basically
-		//		a single button on the Toolbar and some associated code
-		constructor: function(/*Object?*/args){
-			if(args){
-				dojo.mixin(this, args);
-			}
-			this._connects=[];
-		},
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		figure: null,
-		iconClassPrefix: "dojoxSketchIcon",
-		itemGroup: 'toolsGroup',
-		button: null,
-		queryCommand: null,
-		shape: "",
-		useDefaultCommand: true,
-		buttonClass: dijit.form.ToggleButton,
-		_initButton: function(){
-			if(this.shape.length){
-				//TODO: i18n
-	//			var label = dojox.sketch.shapes[this.shape];
-				var className = this.iconClassPrefix+" "+this.iconClassPrefix + this.shape.charAt(0).toUpperCase() + this.shape.substr(1);
-				if(!this.button){
-					var props = {
-						label: this.shape, //I18N
-						showLabel: false,
-						iconClass: className,
-						dropDown: this.dropDown,
-						tabIndex: "-1"
-					};
-					this.button = new this.buttonClass(props);
-					this.connect(this.button,'onClick','activate');
-				}
-			}
-		},
-		attr: function(name,/*?*/value){
-			return this.button.attr(name,value);
-		},
-		onActivate: function(){},
-		activate: function(/*?*/e){
-			this.onActivate();
-			this.figure.setTool(this);
-			this.attr('checked',true);
-		},
-		onMouseDown: function(e){},
-		onMouseMove: function(e){},
-		onMouseUp: function(e){},
-		destroy: function(f){
-			dojo.forEach(this._connects,dojo.disconnect);
-		},
-		connect: function(o,f,tf){
-			this._connects.push(dojo.connect(o,f,this,tf));
-		},
-		setFigure: function(/*dijit._Widget*/ figure){
-			// FIXME: detatch from previous figure!!
-			this.figure = figure;
-		},
-		setToolbar: function(/*dijit._Widget*/ toolbar){
-			// FIXME: prevent creating this if we don't need to (i.e., figure can't handle our command)
-			this._initButton();
-			if(this.button){
-				toolbar.addChild(this.button);
-			}
-			if(this.itemGroup){
-				toolbar.addGroupItem(this,this.itemGroup);
-			}
-		}
-	});
-	return dojox.sketch._Plugin;
+define(["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/connect","dijit/form/ToggleButton"],function(_1){
+_1.getObject("sketch",true,dojox);
+_1.declare("dojox.sketch._Plugin",null,{constructor:function(_2){
+if(_2){
+_1.mixin(this,_2);
+}
+this._connects=[];
+},figure:null,iconClassPrefix:"dojoxSketchIcon",itemGroup:"toolsGroup",button:null,queryCommand:null,shape:"",useDefaultCommand:true,buttonClass:dijit.form.ToggleButton,_initButton:function(){
+if(this.shape.length){
+var _3=this.iconClassPrefix+" "+this.iconClassPrefix+this.shape.charAt(0).toUpperCase()+this.shape.substr(1);
+if(!this.button){
+var _4={label:this.shape,showLabel:false,iconClass:_3,dropDown:this.dropDown,tabIndex:"-1"};
+this.button=new this.buttonClass(_4);
+this.connect(this.button,"onClick","activate");
+}
+}
+},attr:function(_5,_6){
+return this.button.attr(_5,_6);
+},onActivate:function(){
+},activate:function(e){
+this.onActivate();
+this.figure.setTool(this);
+this.attr("checked",true);
+},onMouseDown:function(e){
+},onMouseMove:function(e){
+},onMouseUp:function(e){
+},destroy:function(f){
+_1.forEach(this._connects,_1.disconnect);
+},connect:function(o,f,tf){
+this._connects.push(_1.connect(o,f,this,tf));
+},setFigure:function(_7){
+this.figure=_7;
+},setToolbar:function(_8){
+this._initButton();
+if(this.button){
+_8.addChild(this.button);
+}
+if(this.itemGroup){
+_8.addGroupItem(this,this.itemGroup);
+}
+}});
+return dojox.sketch._Plugin;
 });

@@ -3,29 +3,23 @@
 	position:absolute;
 	z-index:3;
 }
-
 .dojoxRotatorContent {
 	position:absolute;
 	z-index:1;
 }
-
 .dojoxRotatorContainer {
 	border:1px solid #9b9b9b;
 }
-
 .dojoxRotatorContainer .dijitStackController {
 	right:5px;
 	top:5px;
 }
-
 .dojoxRotatorContainer .dijitStackController .dijitToggleButtonChecked .dijitButtonNode {
 	background-color:#000;
 	background-image:none;
 	color:#fff;
 }
-
 .dojoxRotatorContainer .dojoxRotatorPager{bottom:5px;right:5px;}
-
 .rotatorIcons .dijitButton{margin:0;}
 .rotatorIcons .dijitButtonNode{background:none !important;border:0 !important;padding:0 !important;}
 .rotatorIcons .dijitButtonText{display:none;}

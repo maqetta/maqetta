@@ -1,6 +1,5 @@
-/* Editor Table Dialog */
-.EditorTableDialog{
 
+.EditorTableDialog{
 }
 .EditorTableDialog .etdTable{
 	border:none;
@@ -38,7 +37,6 @@
 	margin-top:10px;
 	cursor:pointer;
 }
-
 .colorSwatchBtn{
 	display:block;
 	border:#666666 2px solid;
@@ -56,8 +54,6 @@
 	height:16px;
 	cursor:pointer;
 }
-
-/* Editor Buttons */
 .editorIcon{
 	background-image:url(images/tableIcons.png);
 	background-repeat: no-repeat;
@@ -68,7 +64,6 @@
 .editorIconUploadImage{
 	background:url(images/uploadImageIcon.gif) no-repeat 0px 4px;
 }
-
 .editorIconInsertTable{				
 	background-position:0px 0px;	}
 .dijitDisabled .editorIconInsertTable{				
@@ -82,7 +77,6 @@
 	background-position:-54px 0px;	}
 .dijitDisabled .editorIconInsertTableRowAfter{ 	
 	background-position:-216px 0px;	}
-
 .editorIconInsertTableColumnBefore{ 	
 	background-position:-72px 0px;	}
 .dijitDisabled .editorIconInsertTableColumnBefore{ 	
@@ -107,21 +101,15 @@
 	background-position:-144px 0px;	}
 .dijitDisabled .editorIconColorTableCell{ 	
 	background-position:-306px 0px;	}
-
 .editorIconModifyTable{ 	
 	background-position:-18px 0px;	}
 .dijitDisabled .editorIconModifyTable{ 	
 	background-position:-180px 0px;	}
-
-
-
-
 .RichTextEditable .dijitTextBox, 
 .RichTextEditable .dijitComboBox,
 .RichTextEditable  .dijitSpinner {
 	width: 5em;
 }
-
 .dojoxDropDownSelect {
 	background:#FFFFFF url(images/dropBk.png) repeat-x scroll left top;
 	border: 1px solid;
@@ -140,13 +128,11 @@
 	text-align:left;
 	color:#8397b9;
 }
-
 .dijitButtonNode .dijitArrowButtonInner{
-	/* fixing the dijit drop arrows - can't figure why this broke */
+	
 	background:url(../../../../dijit/themes/tundra/images/spriteArrows.png) no-repeat left top;
 	width:7px;
 }
-
 .dojoxEditorUploadNorm{
 	font-family:Arial;
 	font-size:12px;
@@ -162,7 +148,6 @@
 	cursor: pointer;
 	background: #ccc url("images/uploadImageIcon.gif") no-repeat 2px 2px;
 }
-
 .dojoxEditorUploadHover{
 	background: #ccc url("images/uploadImageIcon.gif") no-repeat 2px 0px;
 }

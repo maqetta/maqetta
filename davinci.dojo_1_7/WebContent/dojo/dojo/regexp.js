@@ -1,73 +1,31 @@
-define(["./_base/kernel"], function(dojo) {
-	// module:
-	//		dojo/regexp
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("regexp", true, dojo);
-
-/*=====
-dojo.regexp = {
-	// summary: Regular expressions and Builder resources
+define("dojo/regexp",["./_base/kernel"],function(_1){
+_1.getObject("regexp",true,_1);
+_1.regexp.escapeString=function(_2,_3){
+return _2.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g,function(ch){
+if(_3&&_3.indexOf(ch)!=-1){
+return ch;
+}
+return "\\"+ch;
+});
 };
-=====*/
-
-dojo.regexp.escapeString = function(/*String*/str, /*String?*/except){
-	//	summary:
-	//		Adds escape sequences for special characters in regular expressions
-	// except:
-	//		a String with special characters to be left unescaped
-
-	return str.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, function(ch){
-		if(except && except.indexOf(ch) != -1){
-			return ch;
-		}
-		return "\\" + ch;
-	}); // String
+_1.regexp.buildGroupRE=function(_4,re,_5){
+if(!(_4 instanceof Array)){
+return re(_4);
+}
+var b=[];
+for(var i=0;i<_4.length;i++){
+b.push(re(_4[i]));
+}
+return _1.regexp.group(b.join("|"),_5);
 };
-
-dojo.regexp.buildGroupRE = function(/*Object|Array*/arr, /*Function*/re, /*Boolean?*/nonCapture){
-	//	summary:
-	//		Builds a regular expression that groups subexpressions
-	//	description:
-	//		A utility function used by some of the RE generators. The
-	//		subexpressions are constructed by the function, re, in the second
-	//		parameter.  re builds one subexpression for each elem in the array
-	//		a, in the first parameter. Returns a string for a regular
-	//		expression that groups all the subexpressions.
-	// arr:
-	//		A single value or an array of values.
-	// re:
-	//		A function. Takes one parameter and converts it to a regular
-	//		expression.
-	// nonCapture:
-	//		If true, uses non-capturing match, otherwise matches are retained
-	//		by regular expression. Defaults to false
-
-	// case 1: a is a single value.
-	if(!(arr instanceof Array)){
-		return re(arr); // String
-	}
-
-	// case 2: a is an array
-	var b = [];
-	for(var i = 0; i < arr.length; i++){
-		// convert each elem to a RE
-		b.push(re(arr[i]));
-	}
-
-	 // join the REs as alternatives in a RE group.
-	return dojo.regexp.group(b.join("|"), nonCapture); // String
+_1.regexp.group=function(_6,_7){
+return "("+(_7?"?:":"")+_6+")";
 };
-
-dojo.regexp.group = function(/*String*/expression, /*Boolean?*/nonCapture){
-	// summary:
-	//		adds group match to expression
-	// nonCapture:
-	//		If true, uses non-capturing match, otherwise matches are retained
-	//		by regular expression.
-	return "(" + (nonCapture ? "?:":"") + expression + ")"; // String
-};
-
-return dojo.regexp;
+return _1.regexp;
 });

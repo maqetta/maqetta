@@ -1,204 +1,89 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/declare",
-	"dojo/_base/Deferred",
-	"dojo/store/util/QueryResults"
-], function(dojo){
-	dojo.getObject("store", true, dojox);
-	
-	//	NOTE: The usual Lightstreamer web client MUST be loaded to use this store,
-	//	and will not be wrapped as an AMD module for now.
-	var nextId = 0;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	function translate(id, updateInfo, schema, o){
-		//	private function to convert the returned object from an update to a JSON-like object.
-		o = o || {};
-		dojo.forEach(schema, function(field){
-			o[field] = updateInfo.getNewValue(field);
-		});
-		if(!("id" in o)){ o["id"] = id; }
-		return o;
-	}
-
-/*=====
-dojox.store.LightstreamerStore.__queryOptionsArgs = function(dataAdapter, itemsRange, requestedBufferSize, requestedMaxFrequency, selector, snapshotRequired, commandLogic){
-	//	dataAdapter: String?
-	//		The data adapter to be used for a query.
-	//	itemsRange: Array?
-	//		The range of items in the form of [ start, end ] to receive back from Lightstreamer.
-	//	requestedBufferSize: Number?
-	//		The length of the internal queuing buffers to be used by the server.
-	//	requestedMaxFrequency: Number?
-	//		The maximum update frequency (updates per second) to be used by Lightstreamer.
-	//	selector: String?
-	//		The name of a selector, to be recognized by the Metadata Adapter in Lightstreamer.
-	//	snapshotRequired: Boolean?
-	//		Whether or not to request snapshot delivery.
-	//	commandLogic: Array?
-	//		An array of arguments in the following form: [ flag, commandPos, keyPos, underSchema, underDataAdapter ]
-
-	this.dataAdapter = dataAdapter;
-	this.itemsRange = itemsRange;
-	this.requestedBufferSize = requestedBufferSize;
-	this.requestedMaxFrequency = requestedMaxFrequency;
-	this.selector = selector;
-	this.snapshotRequired = snapshotRequired;
-	this.commandLogic = commandLogic;
+define(["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred","dojo/store/util/QueryResults"],function(_1){
+_1.getObject("store",true,dojox);
+var _2=0;
+function _3(id,_4,_5,o){
+o=o||{};
+_1.forEach(_5,function(_6){
+o[_6]=_4.getNewValue(_6);
+});
+if(!("id" in o)){
+o["id"]=id;
 }
-=====*/
-
-	dojo.declare("dojox.store.LightstreamerStore", [], {
-		_index: {},	//	a cache for data objects returned
-
-		//	pushPage: (Lightstreamer)pushPage
-		//		The main connection created by the typical Lightstreamer Web Client
-		pushPage: null,
-
-		//	group: String[]
-		//		The group of items to be returned from the Lightstreamer Server.
-		group: [],
-
-		//	schema: String[]
-		//		The list of fields for each item you wish to get back from Lightstreamer
-		schema: [],
-
-		constructor: function(pushPage, group, schema, dataAdapter){
-			//	summary:
-			//		The constructor for the LightstreamerStore.
-			//	pushPage: pushPage
-			//		This is the pushPage created by using the typical Lightstreamer web client
-			//	dataAdapter: String
-			//		This is the data adapter to connect to (defined with the Lightstreamer server)
-			//	group: String[]
-			//		An array of the item names you wish to get back from Lightstreamer.
-			//	schema: String[]
-			//		The list of fields for each item you wish to get back from Lightstreamer.
-
-			this.pushPage = pushPage;
-			this.group = group;
-			this.schema = schema;
-			this.dataAdapter = dataAdapter || "DEFAULT";
-		},
-
-		query: function(query, options){
-			//	summary:
-			//		Start receiving streams from the Lightstreamer server.
-			//
-			//	description:
-			//		The main method of the LightstreamerStore, query opens up a data stream
-			//		from a Lightstreamer server (based on the pushPage definition used in the
-			//		constructor) and sets up a way to observe the returned results from said
-			//		stream.  It is based on Lightstreamer's NonVisualTable object, and by
-			//		default will run the return from the Lightstreamer server through a 
-			//		private "translate" function, which takes the updateInfo object normally
-			//		returned by Lightstreamer's web client and converts it into a straight
-			//		JSON-like object that can be used for data consumption.
-			//
-			//	query: String
-			//		The name of the mode to use for the resulting stream. (RAW, MERGE, COMMAND or DISTINCT)
-			//		
-			//	options: LightstreamerStore.__QueryOptionsArgs
-			//		Additional options to consume. See http://www.lightstreamer.com/docs/client_web_jsdoc/NonVisualTable.html
-			//		for more information on these properties. All properties are optional.
-			//
-			//	returns: dojo.store.util.QueryResults
-			//		A query results object that can be used to observe data being returned,
-			//		as well as stop the stream of data.  Note that this results object is
-			//		customized with an "observe" method and a "close" method; observe is the
-			//		main hook into the constant data stream returned by Lightstreamer, and
-			//		the close method will stop the query/stream.
-			//
-			//	example:
-			//		Query a server:
-			//	|	var results = myLSStore.query("MERGE", { dataAdapter: "QUOTE_ADAPTER", snapshotRequired: true });
-			//	|	results.observe(function(obj){
-			//	|		//	do something with obj
-			//	|	});
-
-			options = options || {};
-			var results = new dojo.Deferred(),
-				snapshotReceived,
-				resultsArray = [],
-				self = this,
-				id = "store-" + nextId++,
-				pushPage = this.pushPage,
-				table = new NonVisualTable(this.group, this.schema, query);
-        
-			if(!("dataAdapter" in options) && this.dataAdapter){
-				table.setDataAdapter(this.dataAdapter);
-			}
-
-			for(var prop in options) {
-				var setter = "set" + prop.charAt(0).toUpperCase() + prop.slice(1);
-				if(setter in table && dojo.isFunction(table[setter])){
-					table[setter][(dojo.isArray(options[prop])?"apply":"call")](table, options[prop]);
-				}
-			}
-        
-			table.onItemUpdate = function(id, updateInfo){
-				var obj = translate(id, updateInfo, self.schema, self._index[id]);
-				var newObject;
-				if(!self._index[id]){
-					newObject = true;
-					self._index[id] = obj;
-					if(!snapshotReceived){
-						resultsArray.push(obj);
-					}
-				}
-				table[snapshotReceived?"onPostSnapShot":"onPreSnapShot"](obj, newObject);
-			};
-
-			if(query == "MERGE" || options.snapshotRequired === false){
-				snapshotReceived = true;
-				results.resolve(resultsArray);
-			} else { // eventually properly handle other subscription modes
-				table.onEndOfSnapshot = function(){
-					snapshotReceived = true;
-					results.resolve(resultsArray);
-				};
-			}			
-
-			//	note that these need to be two separate function objects.
-			table.onPreSnapShot = function(){};
-			table.onPostSnapShot = function(){};
-
-			//	modify the deferred
-			results = dojo.store.util.QueryResults(results);
-
-			//	set up the two main ways of working with results
-			var foreachHandler;
-			results.forEach = function(callback){
-				foreachHandler = dojo.connect(table, "onPreSnapShot", callback);
-			};
-
-			var observeHandler;
-			results.observe = function(listener){
-				observeHandler = dojo.connect(table, "onPostSnapShot", function(object, newObject){
-					listener.call(results, object, newObject ? -1 : undefined);
-				});
-			};
-
-			//	set up the way to stop the stream
-			results.close = function(){
-				if(foreachHandler){ dojo.disconnect(foreachHandler); }
-				if(observeHandler){ dojo.disconnect(observeHandler); }
-				pushPage.removeTable(id);
-				table = null;
-			};
-
-			//	start up the stream
-			pushPage.addTable(table, id);
-			return results;
-		},
-		get: function(id){
-			//	summary:
-			//		Return a (cached) object from the Lightstreamer.
-			//	id: String
-			//		The identity of the object to retrieve.
-			return this._index[id];
-		}
-	});
-
-	return dojox.store.LightstreamerStore;
+return o;
+};
+_1.declare("dojox.store.LightstreamerStore",[],{_index:{},pushPage:null,group:[],schema:[],constructor:function(_7,_8,_9,_a){
+this.pushPage=_7;
+this.group=_8;
+this.schema=_9;
+this.dataAdapter=_a||"DEFAULT";
+},query:function(_b,_c){
+_c=_c||{};
+var _d=new _1.Deferred(),_e,_f=[],_10=this,id="store-"+_2++,_11=this.pushPage,_12=new NonVisualTable(this.group,this.schema,_b);
+if(!("dataAdapter" in _c)&&this.dataAdapter){
+_12.setDataAdapter(this.dataAdapter);
+}
+for(var _13 in _c){
+var _14="set"+_13.charAt(0).toUpperCase()+_13.slice(1);
+if(_14 in _12&&_1.isFunction(_12[_14])){
+_12[_14][(_1.isArray(_c[_13])?"apply":"call")](_12,_c[_13]);
+}
+}
+_12.onItemUpdate=function(id,_15){
+var obj=_3(id,_15,_10.schema,_10._index[id]);
+var _16;
+if(!_10._index[id]){
+_16=true;
+_10._index[id]=obj;
+if(!_e){
+_f.push(obj);
+}
+}
+_12[_e?"onPostSnapShot":"onPreSnapShot"](obj,_16);
+};
+if(_b=="MERGE"||_c.snapshotRequired===false){
+_e=true;
+_d.resolve(_f);
+}else{
+_12.onEndOfSnapshot=function(){
+_e=true;
+_d.resolve(_f);
+};
+}
+_12.onPreSnapShot=function(){
+};
+_12.onPostSnapShot=function(){
+};
+_d=_1.store.util.QueryResults(_d);
+var _17;
+_d.forEach=function(_18){
+_17=_1.connect(_12,"onPreSnapShot",_18);
+};
+var _19;
+_d.observe=function(_1a){
+_19=_1.connect(_12,"onPostSnapShot",function(_1b,_1c){
+_1a.call(_d,_1b,_1c?-1:undefined);
+});
+};
+_d.close=function(){
+if(_17){
+_1.disconnect(_17);
+}
+if(_19){
+_1.disconnect(_19);
+}
+_11.removeTable(id);
+_12=null;
+};
+_11.addTable(_12,id);
+return _d;
+},get:function(id){
+return this._index[id];
+}});
+return dojox.store.LightstreamerStore;
 });

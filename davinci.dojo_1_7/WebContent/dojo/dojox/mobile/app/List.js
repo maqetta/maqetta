@@ -1,645 +1,339 @@
-dojo.provide("dojox.mobile.app.List");
-dojo.experimental("dojox.mobile.app.List");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojo.string");
-dojo.require("dijit._WidgetBase");
-
+define(["dojo","dijit","dojox","dojo/string","dijit/_WidgetBase"],function(_1,_2,_3){
+_1.getObject("dojox.mobile.app.List",1);
+_1.experimental("dojox.mobile.app.List");
 (function(){
-
-	var templateCache = {};
-
-	dojo.declare("dojox.mobile.app.List", dijit._WidgetBase, {
-		// summary:
-		//		A templated list widget. Given a simple array of data objects
-		//		and a HTML template, it renders a list of elements, with
-		//		support for a swipe delete action.  An optional template
-		//		can be provided for when the list is empty.
-
-		// items: Array
-		//    The array of data items that will be rendered.
-		items: null,
-
-		// itemTemplate: String
-		//		The URL to the HTML file containing the markup for each individual
-		//		data item.
-		itemTemplate: "",
-
-		// emptyTemplate: String
-		//		The URL to the HTML file containing the HTML to display if there
-		//		are no data items. This is optional.
-		emptyTemplate: "",
-
-		//  dividerTemplate: String
-		//    The URL to the HTML file containing the markup for the dividers
-		//    between groups of list items
-		dividerTemplate: "",
-
-		// dividerFunction: Function
-		//    Function to create divider elements. This should return a divider
-		//    value for each item in the list
-		dividerFunction: null,
-
-		// labelDelete: String
-		//		The label to display for the Delete button
-		labelDelete: "Delete",
-
-		// labelCancel: String
-		//		The label to display for the Cancel button
-		labelCancel: "Cancel",
-
-		// controller: Object
-		//
-		controller: null,
-
-		// autoDelete: Boolean
-		autoDelete: true,
-
-		// enableDelete: Boolean
-		enableDelete: true,
-
-		// enableHold: Boolean
-		enableHold: true,
-
-		// formatters: Object
-		//		A name/value map of functions used to format data for display
-		formatters: null,
-
-		// _templateLoadCount: Number
-		//		The number of templates remaining to load before the list renders.
-		_templateLoadCount: 0,
-
-		// _mouseDownPos: Object
-		//    The coordinates of where a mouseDown event was detected
-		_mouseDownPos: null,
-
-		baseClass: "list",
-
-		constructor: function(){
-			this._checkLoadComplete = dojo.hitch(this, this._checkLoadComplete);
-			this._replaceToken = dojo.hitch(this, this._replaceToken);
-			this._postDeleteAnim = dojo.hitch(this, this._postDeleteAnim);
-		},
-
-		postCreate: function(){
-
-			var _this = this;
-
-			if(this.emptyTemplate){
-				this._templateLoadCount++;
-			}
-			if(this.itemTemplate){
-				this._templateLoadCount++;
-			}
-			if(this.dividerTemplate){
-				this._templateLoadCount++;
-			}
-
-			this.connect(this.domNode, "onmousedown", function(event){
-				var touch = event;
-				if(event.targetTouches && event.targetTouches.length > 0){
-					touch = event.targetTouches[0];
-				}
-
-				// Find the node that was tapped/clicked
-				var rowNode = _this._getRowNode(event.target);
-
-				if(rowNode){
-					// Add the rows data to the event so it can be picked up
-					// by any listeners
-					_this._setDataInfo(rowNode, event);
-
-					// Select and highlight the row
-					_this._selectRow(rowNode);
-
-					// Record the position that was tapped
-					_this._mouseDownPos = {
-						x: touch.pageX,
-						y: touch.pageY
-					};
-					_this._dragThreshold = null;
-				}
-			});
-
-			this.connect(this.domNode, "onmouseup", function(event){
-				// When the mouse/finger comes off the list,
-				// call the onSelect function and deselect the row.
-				if(event.targetTouches && event.targetTouches.length > 0){
-					event = event.targetTouches[0];
-				}
-				var rowNode = _this._getRowNode(event.target);
-
-				if(rowNode){
-
-					_this._setDataInfo(rowNode, event);
-
-					if(_this._selectedRow){
-						_this.onSelect(rowNode._data, rowNode._idx, rowNode);
-					}
-
-					this._deselectRow();
-				}
-			});
-
-			// If swipe-to-delete is enabled, listen for the mouse moving
-			if(this.enableDelete){
-				this.connect(this.domNode, "mousemove", function(event){
-					dojo.stopEvent(event);
-					if(!_this._selectedRow){
-						return;
-					}
-					var rowNode = _this._getRowNode(event.target);
-
-					// Still check for enableDelete in case it's changed after
-					// this listener is added.
-					if(_this.enableDelete && rowNode && !_this._deleting){
-						_this.handleDrag(event);
-					}
-				});
-			}
-
-			// Put the data and index onto each onclick event.
-			this.connect(this.domNode, "onclick", function(event){
-				if(event.touches && event.touches.length > 0){
-					event = event.touches[0];
-				}
-				var rowNode = _this._getRowNode(event.target, true);
-
-				if(rowNode){
-					_this._setDataInfo(rowNode, event);
-				}
-			});
-
-			// If the mouse or finger moves off the selected row,
-			// deselect it.
-			this.connect(this.domNode, "mouseout", function(event){
-				if(event.touches && event.touches.length > 0){
-					event = event.touches[0];
-				}
-				if(event.target == _this._selectedRow){
-					_this._deselectRow();
-				}
-			});
-
-			// If no item template has been provided, it is an error.
-			if(!this.itemTemplate){
-				throw Error("An item template must be provided to " + this.declaredClass);
-			}
-
-			// Load the item template
-			this._loadTemplate(this.itemTemplate, "itemTemplate", this._checkLoadComplete);
-
-			if(this.emptyTemplate){
-				// If the optional empty template has been provided, load it.
-				this._loadTemplate(this.emptyTemplate, "emptyTemplate", this._checkLoadComplete);
-			}
-
-			if(this.dividerTemplate){
-				this._loadTemplate(this.dividerTemplate, "dividerTemplate", this._checkLoadComplete);
-			}
-		},
-
-		handleDrag: function(event){
-			// summary:
-			//		Handles rows being swiped for deletion.
-			var touch = event;
-			if(event.targetTouches && event.targetTouches.length > 0){
-				touch = event.targetTouches[0];
-			}
-
-			// Get the distance that the mouse or finger has moved since
-			// beginning the swipe action.
-			var diff = touch.pageX - this._mouseDownPos.x;
-
-			var absDiff = Math.abs(diff);
-			if(absDiff > 10 && !this._dragThreshold){
-				// Make the user drag the row 60% of the width to remove it
-				this._dragThreshold = dojo.marginBox(this._selectedRow).w * 0.6;
-				if(!this.autoDelete){
-					this.createDeleteButtons(this._selectedRow);
-				}
-			}
-
-			this._selectedRow.style.left = (absDiff > 10 ? diff : 0) + "px";
-
-			// If the user has dragged the row more than the threshold, slide
-			// it off the screen in preparation for deletion.
-			if(this._dragThreshold && this._dragThreshold < absDiff){
-				this.preDelete(diff);
-			}
-		},
-
-		handleDragCancel: function(){
-			// summary:
-			//		Handle a drag action being cancelled, for whatever reason.
-			//		Reset handles, remove CSS classes etc.
-			if(this._deleting){
-				return;
-			}
-			dojo.removeClass(this._selectedRow, "hold");
-			this._selectedRow.style.left = 0;
-			this._mouseDownPos = null;
-			this._dragThreshold = null;
-
-			this._deleteBtns && dojo.style(this._deleteBtns, "display", "none");
-		},
-
-		preDelete: function(currentLeftPos){
-			// summary:
-			//    Slides the row offscreen before it is deleted
-
-			// TODO: do this with CSS3!
-			var self = this;
-
-			this._deleting = true;
-
-			dojo.animateProperty({
-				node: this._selectedRow,
-				duration: 400,
-				properties: {
-					left: {
-					end: currentLeftPos +
-						((currentLeftPos > 0 ? 1 : -1) * this._dragThreshold * 0.8)
-					}
-				},
-				onEnd: dojo.hitch(this, function(){
-					if(this.autoDelete){
-						this.deleteRow(this._selectedRow);
-					}
-				})
-			}).play();
-		},
-
-		deleteRow: function(row){
-
-			// First make the row invisible
-			// Put it back where it came from
-			dojo.style(row, {
-				visibility: "hidden",
-				minHeight: "0px"
-			});
-			dojo.removeClass(row, "hold");
-
-			this._deleteAnimConn =
-				this.connect(row, "webkitAnimationEnd", this._postDeleteAnim);
-
-			dojo.addClass(row, "collapsed");
-		},
-
-		_postDeleteAnim: function(event){
-			// summary:
-			//		Completes the deletion of a row.
-
-			if(this._deleteAnimConn){
-				this.disconnect(this._deleteAnimConn);
-				this._deleteAnimConn = null;
-			}
-
-			var row = this._selectedRow;
-			var sibling = row.nextSibling;
-			var prevSibling = row.previousSibling;
-
-			// If the previous node is a divider and either this is
-			// the last element in the list, or the next node is
-			// also a divider, remove the divider for the deleted section.
-			if(prevSibling && prevSibling._isDivider){
-				if(!sibling || sibling._isDivider){
-					prevSibling.parentNode.removeChild(prevSibling);
-				}
-			}
-
-			row.parentNode.removeChild(row);
-			this.onDelete(row._data, row._idx, this.items);
-
-			// Decrement the index of each following row
-			while(sibling){
-				if(sibling._idx){
-					sibling._idx--;
-				}
-				sibling = sibling.nextSibling;
-			}
-
-			dojo.destroy(row);
-
-			// Fix up the 'first' and 'last' CSS classes on the rows
-			dojo.query("> *:not(.buttons)", this.domNode).forEach(this.applyClass);
-
-			this._deleting = false;
-			this._deselectRow();
-		},
-
-		createDeleteButtons: function(aroundNode){
-			// summary:
-			//		Creates the two buttons displayed when confirmation is
-			//		required before deletion of a row.
-			// aroundNode:
-			//		The DOM node of the row about to be deleted.
-			var mb = dojo.marginBox(aroundNode);
-			var pos = dojo._abs(aroundNode, true);
-
-			if(!this._deleteBtns){
-			// Create the delete buttons.
-				this._deleteBtns = dojo.create("div",{
-					"class": "buttons"
-				}, this.domNode);
-
-				this.buttons = [];
-
-				this.buttons.push(new dojox.mobile.Button({
-					btnClass: "mblRedButton",
-					label: this.labelDelete
-				}));
-				this.buttons.push(new dojox.mobile.Button({
-					btnClass: "mblBlueButton",
-					label: this.labelCancel
-				}));
-
-				dojo.place(this.buttons[0].domNode, this._deleteBtns);
-				dojo.place(this.buttons[1].domNode, this._deleteBtns);
-
-				dojo.addClass(this.buttons[0].domNode, "deleteBtn");
-				dojo.addClass(this.buttons[1].domNode, "cancelBtn");
-
-				this._handleButtonClick = dojo.hitch(this._handleButtonClick);
-				this.connect(this._deleteBtns, "onclick", this._handleButtonClick);
-			}
-			dojo.removeClass(this._deleteBtns, "fade out fast");
-			dojo.style(this._deleteBtns, {
-				display: "",
-				width: mb.w + "px",
-				height: mb.h + "px",
-				top: (aroundNode.offsetTop) + "px",
-				left: "0px"
-			});
-		},
-
-		onDelete: function(data, index, array){
-			// summary:
-			//    Called when a row is deleted
-			// data:
-			//		The data related to the row being deleted
-			// index:
-			//		The index of the data in the total array
-			// array:
-			//		The array of data used.
-
-			array.splice(index, 1);
-
-			// If the data is empty, rerender in case an emptyTemplate has
-			// been provided
-			if(array.length < 1){
-				this.render();
-			}
-		},
-
-		cancelDelete: function(){
-			// summary:
-			//		Cancels the deletion of a row.
-			this._deleting = false;
-			this.handleDragCancel();
-		},
-
-		_handleButtonClick: function(event){
-			// summary:
-			//		Handles the click of one of the deletion buttons, either to
-			//		delete the row or to cancel the deletion.
-			if(event.touches && event.touches.length > 0){
-				event = event.touches[0];
-			}
-			var node = event.target;
-			if(dojo.hasClass(node, "deleteBtn")){
-				this.deleteRow(this._selectedRow);
-			}else if(dojo.hasClass(node, "cancelBtn")){
-				this.cancelDelete();
-			}else{
-				return;
-			}
-			dojo.addClass(this._deleteBtns, "fade out");
-		},
-
-		applyClass: function(node, idx, array){
-			// summary:
-			//		Applies the 'first' and 'last' CSS classes to the relevant
-			//		rows.
-
-			dojo.removeClass(node, "first last");
-			if(idx == 0){
-				dojo.addClass(node, "first");
-			}
-			if(idx == array.length - 1){
-				dojo.addClass(node, "last");
-			}
-		},
-
-		_setDataInfo: function(rowNode, event){
-			// summary:
-			//    Attaches the data item and index for each row to any event
-			//    that occurs on that row.
-			event.item = rowNode._data;
-			event.index = rowNode._idx;
-		},
-
-		onSelect: function(data, index, rowNode){
-			// summary:
-			//		Dummy function that is called when a row is tapped
-		},
-
-		_selectRow: function(row){
-			// summary:
-			//		Selects a row, applies the relevant CSS classes.
-			if(this._deleting && this._selectedRow && row != this._selectedRow){
-				this.cancelDelete();
-			}
-
-			if(!dojo.hasClass(row, "row")){
-				return;
-			}
-			if(this.enableHold || this.enableDelete){
-				dojo.addClass(row, "hold");
-			}
-			this._selectedRow = row;
-		},
-
-		_deselectRow: function(){
-			// summary:
-			//		Deselects a row, and cancels any drag actions that were
-			//		occurring.
-			if(!this._selectedRow || this._deleting){
-				return;
-			}
-			this.handleDragCancel();
-			dojo.removeClass(this._selectedRow, "hold");
-			this._selectedRow = null;
-		},
-
-		_getRowNode: function(fromNode, ignoreNoClick){
-			// summary:
-			//		Gets the DOM node of the row that is equal to or the parent
-			//		of the node passed to this function.
-			while(fromNode && !fromNode._data && fromNode != this.domNode){
-				if(!ignoreNoClick && dojo.hasClass(fromNode, "noclick")){
-					return null;
-				}
-				fromNode = fromNode.parentNode;
-			}
-			return fromNode == this.domNode ? null : fromNode;
-		},
-
-		applyTemplate: function(template, data){
-			return dojo._toDom(dojo.string.substitute(
-					template, data, this._replaceToken, this.formatters || this));
-		},
-
-		render: function(){
-			// summary:
-			//		Renders the list.
-
-			// Delete all existing nodes, except the deletion buttons.
-			dojo.query("> *:not(.buttons)", this.domNode).forEach(dojo.destroy);
-
-			// If there is no data, and an empty template has been provided,
-			// render it.
-			if(this.items.length < 1 && this.emptyTemplate){
-				dojo.place(dojo._toDom(this.emptyTemplate), this.domNode, "first");
-			}else{
-				this.domNode.appendChild(this._renderRange(0, this.items.length));
-			}
-			if(dojo.hasClass(this.domNode.parentNode, "mblRoundRect")){
-				dojo.addClass(this.domNode.parentNode, "mblRoundRectList")
-			}
-
-			var divs = dojo.query("> .row", this.domNode);
-			if(divs.length > 0){
-				dojo.addClass(divs[0], "first");
-				dojo.addClass(divs[divs.length - 1], "last");
-			}
-		},
-
-		_renderRange: function(startIdx, endIdx){
-
-			var rows = [];
-			var row, i;
-			var frag = document.createDocumentFragment();
-			startIdx = Math.max(0, startIdx);
-			endIdx = Math.min(endIdx, this.items.length);
-
-			for(i = startIdx; i < endIdx; i++){
-				// Create a document fragment containing the templated row
-				row = this.applyTemplate(this.itemTemplate, this.items[i]);
-				dojo.addClass(row, 'row');
-				row._data = this.items[i];
-				row._idx = i;
-				rows.push(row);
-			}
-			if(!this.dividerFunction || !this.dividerTemplate){
-				for(i = startIdx; i < endIdx; i++){
-					rows[i]._data = this.items[i];
-					rows[i]._idx = i;
-					frag.appendChild(rows[i]);
-				}
-			}else{
-				var prevDividerValue = null;
-				var dividerValue;
-				var divider;
-				for(i = startIdx; i < endIdx; i++){
-					rows[i]._data = this.items[i];
-					rows[i]._idx = i;
-
-					dividerValue = this.dividerFunction(this.items[i]);
-					if(dividerValue && dividerValue != prevDividerValue){
-						divider = this.applyTemplate(this.dividerTemplate, {
-							label: dividerValue,
-							item: this.items[i]
-						});
-						divider._isDivider = true;
-						frag.appendChild(divider);
-						prevDividerValue = dividerValue;
-					}
-					frag.appendChild(rows[i]);
-				}
-			}
-			return frag;
-		},
-
-		_replaceToken: function(value, key){
-			if(key.charAt(0) == '!'){ value = dojo.getObject(key.substr(1), false, _this); }
-			if(typeof value == "undefined"){ return ""; } // a debugging aide
-			if(value == null){ return ""; }
-
-			// Substitution keys beginning with ! will skip the transform step,
-			// in case a user wishes to insert unescaped markup, e.g. ${!foo}
-			return key.charAt(0) == "!" ? value :
-				// Safer substitution, see heading "Attribute values" in
-				// http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3.2
-				value.toString().replace(/"/g,"&quot;"); //TODO: add &amp? use encodeXML method?
-
-		},
-
-		_checkLoadComplete: function(){
-			// summary:
-			//		Checks if all templates have loaded
-			this._templateLoadCount--;
-
-			if(this._templateLoadCount < 1 && this.get("items")){
-				this.render();
-			}
-		},
-
-		_loadTemplate: function(url, thisAttr, callback){
-			// summary:
-			//		Loads a template
-			if(!url){
-				callback();
-				return;
-			}
-
-			if(templateCache[url]){
-				this.set(thisAttr, templateCache[url]);
-				callback();
-			}else{
-				var _this = this;
-
-				dojo.xhrGet({
-					url: url,
-					sync: false,
-					handleAs: "text",
-					load: function(text){
-						templateCache[url] = dojo.trim(text);
-						_this.set(thisAttr, templateCache[url]);
-						callback();
-					}
-				});
-			}
-		},
-
-
-		_setFormattersAttr: function(formatters){
-			// summary:
-			//    Sets the data items, and causes a rerender of the list
-			this.formatters = formatters;
-		},
-
-		_setItemsAttr: function(items){
-			// summary:
-			//    Sets the data items, and causes a rerender of the list
-
-			this.items = items || [];
-
-			if(this._templateLoadCount < 1 && items){
-				this.render();
-			}
-		},
-
-		destroy: function(){
-			if(this.buttons){
-				dojo.forEach(this.buttons, function(button){
-					button.destroy();
-				});
-				this.buttons = null;
-			}
-
-			this.inherited(arguments);
-		}
-
-	});
-
+var _4={};
+_1.declare("dojox.mobile.app.List",_2._WidgetBase,{items:null,itemTemplate:"",emptyTemplate:"",dividerTemplate:"",dividerFunction:null,labelDelete:"Delete",labelCancel:"Cancel",controller:null,autoDelete:true,enableDelete:true,enableHold:true,formatters:null,_templateLoadCount:0,_mouseDownPos:null,baseClass:"list",constructor:function(){
+this._checkLoadComplete=_1.hitch(this,this._checkLoadComplete);
+this._replaceToken=_1.hitch(this,this._replaceToken);
+this._postDeleteAnim=_1.hitch(this,this._postDeleteAnim);
+},postCreate:function(){
+var _5=this;
+if(this.emptyTemplate){
+this._templateLoadCount++;
+}
+if(this.itemTemplate){
+this._templateLoadCount++;
+}
+if(this.dividerTemplate){
+this._templateLoadCount++;
+}
+this.connect(this.domNode,"onmousedown",function(_6){
+var _7=_6;
+if(_6.targetTouches&&_6.targetTouches.length>0){
+_7=_6.targetTouches[0];
+}
+var _8=_5._getRowNode(_6.target);
+if(_8){
+_5._setDataInfo(_8,_6);
+_5._selectRow(_8);
+_5._mouseDownPos={x:_7.pageX,y:_7.pageY};
+_5._dragThreshold=null;
+}
+});
+this.connect(this.domNode,"onmouseup",function(_9){
+if(_9.targetTouches&&_9.targetTouches.length>0){
+_9=_9.targetTouches[0];
+}
+var _a=_5._getRowNode(_9.target);
+if(_a){
+_5._setDataInfo(_a,_9);
+if(_5._selectedRow){
+_5.onSelect(_a._data,_a._idx,_a);
+}
+this._deselectRow();
+}
+});
+if(this.enableDelete){
+this.connect(this.domNode,"mousemove",function(_b){
+_1.stopEvent(_b);
+if(!_5._selectedRow){
+return;
+}
+var _c=_5._getRowNode(_b.target);
+if(_5.enableDelete&&_c&&!_5._deleting){
+_5.handleDrag(_b);
+}
+});
+}
+this.connect(this.domNode,"onclick",function(_d){
+if(_d.touches&&_d.touches.length>0){
+_d=_d.touches[0];
+}
+var _e=_5._getRowNode(_d.target,true);
+if(_e){
+_5._setDataInfo(_e,_d);
+}
+});
+this.connect(this.domNode,"mouseout",function(_f){
+if(_f.touches&&_f.touches.length>0){
+_f=_f.touches[0];
+}
+if(_f.target==_5._selectedRow){
+_5._deselectRow();
+}
+});
+if(!this.itemTemplate){
+throw Error("An item template must be provided to "+this.declaredClass);
+}
+this._loadTemplate(this.itemTemplate,"itemTemplate",this._checkLoadComplete);
+if(this.emptyTemplate){
+this._loadTemplate(this.emptyTemplate,"emptyTemplate",this._checkLoadComplete);
+}
+if(this.dividerTemplate){
+this._loadTemplate(this.dividerTemplate,"dividerTemplate",this._checkLoadComplete);
+}
+},handleDrag:function(_10){
+var _11=_10;
+if(_10.targetTouches&&_10.targetTouches.length>0){
+_11=_10.targetTouches[0];
+}
+var _12=_11.pageX-this._mouseDownPos.x;
+var _13=Math.abs(_12);
+if(_13>10&&!this._dragThreshold){
+this._dragThreshold=_1.marginBox(this._selectedRow).w*0.6;
+if(!this.autoDelete){
+this.createDeleteButtons(this._selectedRow);
+}
+}
+this._selectedRow.style.left=(_13>10?_12:0)+"px";
+if(this._dragThreshold&&this._dragThreshold<_13){
+this.preDelete(_12);
+}
+},handleDragCancel:function(){
+if(this._deleting){
+return;
+}
+_1.removeClass(this._selectedRow,"hold");
+this._selectedRow.style.left=0;
+this._mouseDownPos=null;
+this._dragThreshold=null;
+this._deleteBtns&&_1.style(this._deleteBtns,"display","none");
+},preDelete:function(_14){
+var _15=this;
+this._deleting=true;
+_1.animateProperty({node:this._selectedRow,duration:400,properties:{left:{end:_14+((_14>0?1:-1)*this._dragThreshold*0.8)}},onEnd:_1.hitch(this,function(){
+if(this.autoDelete){
+this.deleteRow(this._selectedRow);
+}
+})}).play();
+},deleteRow:function(row){
+_1.style(row,{visibility:"hidden",minHeight:"0px"});
+_1.removeClass(row,"hold");
+this._deleteAnimConn=this.connect(row,"webkitAnimationEnd",this._postDeleteAnim);
+_1.addClass(row,"collapsed");
+},_postDeleteAnim:function(_16){
+if(this._deleteAnimConn){
+this.disconnect(this._deleteAnimConn);
+this._deleteAnimConn=null;
+}
+var row=this._selectedRow;
+var _17=row.nextSibling;
+var _18=row.previousSibling;
+if(_18&&_18._isDivider){
+if(!_17||_17._isDivider){
+_18.parentNode.removeChild(_18);
+}
+}
+row.parentNode.removeChild(row);
+this.onDelete(row._data,row._idx,this.items);
+while(_17){
+if(_17._idx){
+_17._idx--;
+}
+_17=_17.nextSibling;
+}
+_1.destroy(row);
+_1.query("> *:not(.buttons)",this.domNode).forEach(this.applyClass);
+this._deleting=false;
+this._deselectRow();
+},createDeleteButtons:function(_19){
+var mb=_1.marginBox(_19);
+var pos=_1._abs(_19,true);
+if(!this._deleteBtns){
+this._deleteBtns=_1.create("div",{"class":"buttons"},this.domNode);
+this.buttons=[];
+this.buttons.push(new _3.mobile.Button({btnClass:"mblRedButton",label:this.labelDelete}));
+this.buttons.push(new _3.mobile.Button({btnClass:"mblBlueButton",label:this.labelCancel}));
+_1.place(this.buttons[0].domNode,this._deleteBtns);
+_1.place(this.buttons[1].domNode,this._deleteBtns);
+_1.addClass(this.buttons[0].domNode,"deleteBtn");
+_1.addClass(this.buttons[1].domNode,"cancelBtn");
+this._handleButtonClick=_1.hitch(this._handleButtonClick);
+this.connect(this._deleteBtns,"onclick",this._handleButtonClick);
+}
+_1.removeClass(this._deleteBtns,"fade out fast");
+_1.style(this._deleteBtns,{display:"",width:mb.w+"px",height:mb.h+"px",top:(_19.offsetTop)+"px",left:"0px"});
+},onDelete:function(_1a,_1b,_1c){
+_1c.splice(_1b,1);
+if(_1c.length<1){
+this.render();
+}
+},cancelDelete:function(){
+this._deleting=false;
+this.handleDragCancel();
+},_handleButtonClick:function(_1d){
+if(_1d.touches&&_1d.touches.length>0){
+_1d=_1d.touches[0];
+}
+var _1e=_1d.target;
+if(_1.hasClass(_1e,"deleteBtn")){
+this.deleteRow(this._selectedRow);
+}else{
+if(_1.hasClass(_1e,"cancelBtn")){
+this.cancelDelete();
+}else{
+return;
+}
+}
+_1.addClass(this._deleteBtns,"fade out");
+},applyClass:function(_1f,idx,_20){
+_1.removeClass(_1f,"first last");
+if(idx==0){
+_1.addClass(_1f,"first");
+}
+if(idx==_20.length-1){
+_1.addClass(_1f,"last");
+}
+},_setDataInfo:function(_21,_22){
+_22.item=_21._data;
+_22.index=_21._idx;
+},onSelect:function(_23,_24,_25){
+},_selectRow:function(row){
+if(this._deleting&&this._selectedRow&&row!=this._selectedRow){
+this.cancelDelete();
+}
+if(!_1.hasClass(row,"row")){
+return;
+}
+if(this.enableHold||this.enableDelete){
+_1.addClass(row,"hold");
+}
+this._selectedRow=row;
+},_deselectRow:function(){
+if(!this._selectedRow||this._deleting){
+return;
+}
+this.handleDragCancel();
+_1.removeClass(this._selectedRow,"hold");
+this._selectedRow=null;
+},_getRowNode:function(_26,_27){
+while(_26&&!_26._data&&_26!=this.domNode){
+if(!_27&&_1.hasClass(_26,"noclick")){
+return null;
+}
+_26=_26.parentNode;
+}
+return _26==this.domNode?null:_26;
+},applyTemplate:function(_28,_29){
+return _1._toDom(_1.string.substitute(_28,_29,this._replaceToken,this.formatters||this));
+},render:function(){
+_1.query("> *:not(.buttons)",this.domNode).forEach(_1.destroy);
+if(this.items.length<1&&this.emptyTemplate){
+_1.place(_1._toDom(this.emptyTemplate),this.domNode,"first");
+}else{
+this.domNode.appendChild(this._renderRange(0,this.items.length));
+}
+if(_1.hasClass(this.domNode.parentNode,"mblRoundRect")){
+_1.addClass(this.domNode.parentNode,"mblRoundRectList");
+}
+var _2a=_1.query("> .row",this.domNode);
+if(_2a.length>0){
+_1.addClass(_2a[0],"first");
+_1.addClass(_2a[_2a.length-1],"last");
+}
+},_renderRange:function(_2b,_2c){
+var _2d=[];
+var row,i;
+var _2e=document.createDocumentFragment();
+_2b=Math.max(0,_2b);
+_2c=Math.min(_2c,this.items.length);
+for(i=_2b;i<_2c;i++){
+row=this.applyTemplate(this.itemTemplate,this.items[i]);
+_1.addClass(row,"row");
+row._data=this.items[i];
+row._idx=i;
+_2d.push(row);
+}
+if(!this.dividerFunction||!this.dividerTemplate){
+for(i=_2b;i<_2c;i++){
+_2d[i]._data=this.items[i];
+_2d[i]._idx=i;
+_2e.appendChild(_2d[i]);
+}
+}else{
+var _2f=null;
+var _30;
+var _31;
+for(i=_2b;i<_2c;i++){
+_2d[i]._data=this.items[i];
+_2d[i]._idx=i;
+_30=this.dividerFunction(this.items[i]);
+if(_30&&_30!=_2f){
+_31=this.applyTemplate(this.dividerTemplate,{label:_30,item:this.items[i]});
+_31._isDivider=true;
+_2e.appendChild(_31);
+_2f=_30;
+}
+_2e.appendChild(_2d[i]);
+}
+}
+return _2e;
+},_replaceToken:function(_32,key){
+if(key.charAt(0)=="!"){
+_32=_1.getObject(key.substr(1),false,_this);
+}
+if(typeof _32=="undefined"){
+return "";
+}
+if(_32==null){
+return "";
+}
+return key.charAt(0)=="!"?_32:_32.toString().replace(/"/g,"&quot;");
+},_checkLoadComplete:function(){
+this._templateLoadCount--;
+if(this._templateLoadCount<1&&this.get("items")){
+this.render();
+}
+},_loadTemplate:function(url,_33,_34){
+if(!url){
+_34();
+return;
+}
+if(_4[url]){
+this.set(_33,_4[url]);
+_34();
+}else{
+var _35=this;
+_1.xhrGet({url:url,sync:false,handleAs:"text",load:function(_36){
+_4[url]=_1.trim(_36);
+_35.set(_33,_4[url]);
+_34();
+}});
+}
+},_setFormattersAttr:function(_37){
+this.formatters=_37;
+},_setItemsAttr:function(_38){
+this.items=_38||[];
+if(this._templateLoadCount<1&&_38){
+this.render();
+}
+},destroy:function(){
+if(this.buttons){
+_1.forEach(this.buttons,function(_39){
+_39.destroy();
+});
+this.buttons=null;
+}
+this.inherited(arguments);
+}});
 })();
+return _1.getObject("dojox.mobile.app.List");
+});
+require(["dojox/mobile/app/List"]);

@@ -1,99 +1,35 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"./HorizontalRule",
-	"dojo/_base/NodeList", // .map
-	"dojo/number", // dojo.number.format
-	"dojo/query" // dojo.query
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/form/HorizontalRuleLabels
-// summary:
-//		Labels for `dijit.form.HorizontalSlider`
-
-dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule, {
-	// summary:
-	//		Labels for `dijit.form.HorizontalSlider`
-
-	templateString: '<div class="dijitRuleContainer dijitRuleContainerH dijitRuleLabelsContainer dijitRuleLabelsContainerH"></div>',
-
-	// labelStyle: String
-	//		CSS style to apply to individual text labels
-	labelStyle: "",
-
-	// labels: String[]?
-	//		Array of text labels to render - evenly spaced from left-to-right or bottom-to-top.
-	//		Alternately, minimum and maximum can be specified, to get numeric labels.
-	labels: [],
-
-	// numericMargin: Integer
-	//		Number of generated numeric labels that should be rendered as '' on the ends when labels[] are not specified
-	numericMargin: 0,
-
-	// numericMinimum: Integer
-	//		Leftmost label value for generated numeric labels when labels[] are not specified
-	minimum: 0,
-
-	// numericMaximum: Integer
-	//		Rightmost label value for generated numeric labels when labels[] are not specified
-	maximum: 1,
-
-	// constraints: Object
-	//		pattern, places, lang, et al (see dojo.number) for generated numeric labels when labels[] are not specified
-	constraints: {pattern:"#%"},
-
-	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerH" style="left:',
-	_labelPrefix: '"><div class="dijitRuleLabel dijitRuleLabelH">',
-	_suffix: '</div></div>',
-
-	_calcPosition: function(pos){
-		// summary:
-		//		Returns the value to be used in HTML for the label as part of the left: attribute
-		// tags:
-		//		protected extension
-		return pos;
-	},
-
-	_genHTML: function(pos, ndx){
-		return this._positionPrefix + this._calcPosition(pos) + this._positionSuffix + this.labelStyle + this._labelPrefix + this.labels[ndx] + this._suffix;
-	},
-
-	getLabels: function(){
-		// summary:
-		//		Overridable function to return array of labels to use for this slider.
-		//		Can specify a getLabels() method instead of a labels[] array, or min/max attributes.
-		// tags:
-		//		protected extension
-
-		// if the labels array was not specified directly, then see if <li> children were
-		var labels = this.labels;
-		if(!labels.length){
-			// for markup creation, labels are specified as child elements
-			labels = dojo.query("> li", this.srcNodeRef).map(function(node){
-				return String(node.innerHTML);
-			});
-		}
-		this.srcNodeRef.innerHTML = '';
-		// if the labels were not specified directly and not as <li> children, then calculate numeric labels
-		if(!labels.length && this.count > 1){
-			var start = this.minimum;
-			var inc = (this.maximum - start) / (this.count-1);
-			for(var i=0; i < this.count; i++){
-				labels.push((i < this.numericMargin || i >= (this.count-this.numericMargin)) ? '' : dojo.number.format(start, this.constraints));
-				start += inc;
-			}
-		}
-		return labels;
-	},
-
-	postMixInProperties: function(){
-		this.inherited(arguments);
-		this.labels = this.getLabels();
-		this.count = this.labels.length;
-	}
+define("dijit/form/HorizontalRuleLabels",["dojo/_base/kernel","..","./HorizontalRule","dojo/_base/NodeList","dojo/number","dojo/query"],function(_1,_2){
+_1.declare("dijit.form.HorizontalRuleLabels",_2.form.HorizontalRule,{templateString:"<div class=\"dijitRuleContainer dijitRuleContainerH dijitRuleLabelsContainer dijitRuleLabelsContainerH\"></div>",labelStyle:"",labels:[],numericMargin:0,minimum:0,maximum:1,constraints:{pattern:"#%"},_positionPrefix:"<div class=\"dijitRuleLabelContainer dijitRuleLabelContainerH\" style=\"left:",_labelPrefix:"\"><div class=\"dijitRuleLabel dijitRuleLabelH\">",_suffix:"</div></div>",_calcPosition:function(_3){
+return _3;
+},_genHTML:function(_4,_5){
+return this._positionPrefix+this._calcPosition(_4)+this._positionSuffix+this.labelStyle+this._labelPrefix+this.labels[_5]+this._suffix;
+},getLabels:function(){
+var _6=this.labels;
+if(!_6.length){
+_6=_1.query("> li",this.srcNodeRef).map(function(_7){
+return String(_7.innerHTML);
 });
-
-
-return dijit.form.HorizontalRuleLabels;
+}
+this.srcNodeRef.innerHTML="";
+if(!_6.length&&this.count>1){
+var _8=this.minimum;
+var _9=(this.maximum-_8)/(this.count-1);
+for(var i=0;i<this.count;i++){
+_6.push((i<this.numericMargin||i>=(this.count-this.numericMargin))?"":_1.number.format(_8,this.constraints));
+_8+=_9;
+}
+}
+return _6;
+},postMixInProperties:function(){
+this.inherited(arguments);
+this.labels=this.getLabels();
+this.count=this.labels.length;
+}});
+return _2.form.HorizontalRuleLabels;
 });

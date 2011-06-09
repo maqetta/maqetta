@@ -1,337 +1,182 @@
-define([
-	"dojo/_base/kernel", // dojo.getObject
-	"..",
-	"../_Widget",
-	"../_TemplatedMixin",
-	"../_Container",
-	"../form/ToggleButton",
-	"../focus",		// dijit.focus()
-	"dojo/i18n!../nls/common",
-	"dojo/_base/array", // dojo.forEach dojo.indexOf dojo.map
-	"dojo/_base/connect", // dojo.keys
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/event", // dojo.stopEvent
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/_base/sniff" // dojo.isIE
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/layout/StackController
-	// summary:
-	//		Set of buttons to select a page in a `dijit.layout.StackContainer`
-
-
-	dojo.declare("dijit.layout.StackController", [dijit._Widget, dijit._TemplatedMixin, dijit._Container], {
-		// summary:
-		//		Set of buttons to select a page in a `dijit.layout.StackContainer`
-		// description:
-		//		Monitors the specified StackContainer, and whenever a page is
-		//		added, deleted, or selected, updates itself accordingly.
-
-		templateString: "<span role='tablist' dojoAttachEvent='onkeypress' class='dijitStackController'></span>",
-
-		// containerId: [const] String
-		//		The id of the page container that I point to
-		containerId: "",
-
-		// buttonWidget: [const] String
-		//		The name of the button widget to create to correspond to each page
-		buttonWidget: "dijit.layout._StackButton",
-
-		constructor: function(){
-			this.pane2button = {};		// mapping from pane id to buttons
-			this.pane2connects = {};	// mapping from pane id to this.connect() handles
-			this.pane2watches = {};		// mapping from pane id to watch() handles
-		},
-
-		postCreate: function(){
-			this.inherited(arguments);
-
-			// Listen to notifications from StackContainer
-			this.subscribe(this.containerId+"-startup", "onStartup");
-			this.subscribe(this.containerId+"-addChild", "onAddChild");
-			this.subscribe(this.containerId+"-removeChild", "onRemoveChild");
-			this.subscribe(this.containerId+"-selectChild", "onSelectChild");
-			this.subscribe(this.containerId+"-containerKeyPress", "onContainerKeyPress");
-		},
-
-		onStartup: function(/*Object*/ info){
-			// summary:
-			//		Called after StackContainer has finished initializing
-			// tags:
-			//		private
-			dojo.forEach(info.children, this.onAddChild, this);
-			if(info.selected){
-				// Show button corresponding to selected pane (unless selected
-				// is null because there are no panes)
-				this.onSelectChild(info.selected);
-			}
-		},
-
-		destroy: function(){
-			for(var pane in this.pane2button){
-				this.onRemoveChild(dijit.byId(pane));
-			}
-			this.inherited(arguments);
-		},
-
-		onAddChild: function(/*dijit._Widget*/ page, /*Integer?*/ insertIndex){
-			// summary:
-			//		Called whenever a page is added to the container.
-			//		Create button corresponding to the page.
-			// tags:
-			//		private
-
-			// create an instance of the button widget
-			var cls = dojo.getObject(this.buttonWidget);
-			var button = new cls({
-				id: this.id + "_" + page.id,
-				label: page.title,
-				dir: page.dir,
-				lang: page.lang,
-				textDir: page.textDir,
-				showLabel: page.showTitle,
-				iconClass: page.iconClass,
-				closeButton: page.closable,
-				title: page.tooltip
-			});
-			button.focusNode.setAttribute("aria-selected", "false");
-
-
-			// map from page attribute to corresponding tab button attribute
-			var pageAttrList = ["title", "showTitle", "iconClass", "closable", "tooltip"],
-				buttonAttrList = ["label", "showLabel", "iconClass", "closeButton", "title"];
-
-			// watch() so events like page title changes are reflected in tab button
-			this.pane2watches[page.id] = dojo.map(pageAttrList, function(pageAttr, idx){
-				return page.watch(pageAttr, function(name, oldVal, newVal){
-					button.set(buttonAttrList[idx], newVal);
-				});
-			});
-
-			// connections so that clicking a tab button selects the corresponding page
-			this.pane2connects[page.id] = [
-				this.connect(button, 'onClick', dojo.hitch(this,"onButtonClick", page)),
-				this.connect(button, 'onClickCloseButton', dojo.hitch(this,"onCloseButtonClick", page))
-			];
-
-			this.addChild(button, insertIndex);
-			this.pane2button[page.id] = button;
-			page.controlButton = button;	// this value might be overwritten if two tabs point to same container
-			if(!this._currentChild){ // put the first child into the tab order
-				button.focusNode.setAttribute("tabIndex", "0");
-				button.focusNode.setAttribute("aria-selected", "true");
-				this._currentChild = page;
-			}
-			// make sure all tabs have the same length
-			if(!this.isLeftToRight() && dojo.isIE && this._rectifyRtlTabList){
-				this._rectifyRtlTabList();
-			}
-		},
-
-		onRemoveChild: function(/*dijit._Widget*/ page){
-			// summary:
-			//		Called whenever a page is removed from the container.
-			//		Remove the button corresponding to the page.
-			// tags:
-			//		private
-
-			if(this._currentChild === page){ this._currentChild = null; }
-
-			// disconnect/unwatch connections/watches related to page being removed
-			dojo.forEach(this.pane2connects[page.id], dojo.hitch(this, "disconnect"));
-			delete this.pane2connects[page.id];
-			dojo.forEach(this.pane2watches[page.id], function(w){ w.unwatch(); });
-			delete this.pane2watches[page.id];
-
-			var button = this.pane2button[page.id];
-			if(button){
-				this.removeChild(button);
-				delete this.pane2button[page.id];
-				button.destroy();
-			}
-			delete page.controlButton;
-		},
-
-		onSelectChild: function(/*dijit._Widget*/ page){
-			// summary:
-			//		Called when a page has been selected in the StackContainer, either by me or by another StackController
-			// tags:
-			//		private
-
-			if(!page){ return; }
-
-			if(this._currentChild){
-				var oldButton=this.pane2button[this._currentChild.id];
-				oldButton.set('checked', false);
-				oldButton.focusNode.setAttribute("aria-selected", "false");
-				oldButton.focusNode.setAttribute("tabIndex", "-1");
-			}
-
-			var newButton=this.pane2button[page.id];
-			newButton.set('checked', true);
-			newButton.focusNode.setAttribute("aria-selected", "true");
-			this._currentChild = page;
-			newButton.focusNode.setAttribute("tabIndex", "0");
-			var container = dijit.byId(this.containerId);
-			container.containerNode.setAttribute("aria-labelledby", newButton.id);
-		},
-
-		onButtonClick: function(/*dijit._Widget*/ page){
-			// summary:
-			//		Called whenever one of my child buttons is pressed in an attempt to select a page
-			// tags:
-			//		private
-
-			var container = dijit.byId(this.containerId);
-			container.selectChild(page);
-		},
-
-		onCloseButtonClick: function(/*dijit._Widget*/ page){
-			// summary:
-			//		Called whenever one of my child buttons [X] is pressed in an attempt to close a page
-			// tags:
-			//		private
-
-			var container = dijit.byId(this.containerId);
-			container.closeChild(page);
-			if(this._currentChild){
-				var b = this.pane2button[this._currentChild.id];
-				if(b){
-					dijit.focus(b.focusNode || b.domNode);
-				}
-			}
-		},
-
-		// TODO: this is a bit redundant with forward, back api in StackContainer
-		adjacent: function(/*Boolean*/ forward){
-			// summary:
-			//		Helper for onkeypress to find next/previous button
-			// tags:
-			//		private
-
-			if(!this.isLeftToRight() && (!this.tabPosition || /top|bottom/.test(this.tabPosition))){ forward = !forward; }
-			// find currently focused button in children array
-			var children = this.getChildren();
-			var current = dojo.indexOf(children, this.pane2button[this._currentChild.id]);
-			// pick next button to focus on
-			var offset = forward ? 1 : children.length - 1;
-			return children[ (current + offset) % children.length ]; // dijit._Widget
-		},
-
-		onkeypress: function(/*Event*/ e){
-			// summary:
-			//		Handle keystrokes on the page list, for advancing to next/previous button
-			//		and closing the current page if the page is closable.
-			// tags:
-			//		private
-
-			if(this.disabled || e.altKey ){ return; }
-			var forward = null;
-			if(e.ctrlKey || !e._djpage){
-				var k = dojo.keys;
-				switch(e.charOrCode){
-					case k.LEFT_ARROW:
-					case k.UP_ARROW:
-						if(!e._djpage){ forward = false; }
-						break;
-					case k.PAGE_UP:
-						if(e.ctrlKey){ forward = false; }
-						break;
-					case k.RIGHT_ARROW:
-					case k.DOWN_ARROW:
-						if(!e._djpage){ forward = true; }
-						break;
-					case k.PAGE_DOWN:
-						if(e.ctrlKey){ forward = true; }
-						break;
-					case k.HOME:
-					case k.END:
-						var children = this.getChildren();
-						if(children && children.length){
-							children[e.charOrCode == k.HOME ? 0 : children.length-1].onClick();
-						}
-						dojo.stopEvent(e);
-						break;
-					case k.DELETE:
-						if(this._currentChild.closable){
-							this.onCloseButtonClick(this._currentChild);
-						}
-						dojo.stopEvent(e);
-						break;
-					default:
-						if(e.ctrlKey){
-							if(e.charOrCode === k.TAB){
-								this.adjacent(!e.shiftKey).onClick();
-								dojo.stopEvent(e);
-							}else if(e.charOrCode == "w"){
-								if(this._currentChild.closable){
-									this.onCloseButtonClick(this._currentChild);
-								}
-								dojo.stopEvent(e); // avoid browser tab closing.
-							}
-						}
-				}
-				// handle next/previous page navigation (left/right arrow, etc.)
-				if(forward !== null){
-					this.adjacent(forward).onClick();
-					dojo.stopEvent(e);
-				}
-			}
-		},
-
-		onContainerKeyPress: function(/*Object*/ info){
-			// summary:
-			//		Called when there was a keypress on the container
-			// tags:
-			//		private
-			info.e._djpage = info.page;
-			this.onkeypress(info.e);
-		}
-	});
-
-
-	dojo.declare("dijit.layout._StackButton", dijit.form.ToggleButton, {
-		// summary:
-		//		Internal widget used by StackContainer.
-		// description:
-		//		The button-like or tab-like object you click to select or delete a page
-		// tags:
-		//		private
-
-		// Override _FormWidget.tabIndex.
-		// StackContainer buttons are not in the tab order by default.
-		// Probably we should be calling this.startupKeyNavChildren() instead.
-		tabIndex: "-1",
-
-		// closeButton: Boolean
-		//		When true, display close button for this tab
-		closeButton: false,
-
-		buildRendering: function(/*Event*/ evt){
-			this.inherited(arguments);
-			(this.focusNode || this.domNode).setAttribute("role", "tab");
-		},
-
-		onClick: function(/*Event*/ evt){
-			// summary:
-			//		This is for TabContainer where the tabs are <span> rather than button,
-			//		so need to set focus explicitly (on some browsers)
-			//		Note that you shouldn't override this method, but you can connect to it.
-			dijit.focus(this.focusNode);
-
-			// ... now let StackController catch the event and tell me what to do
-		},
-
-		onClickCloseButton: function(/*Event*/ evt){
-			// summary:
-			//		StackContainer connects to this function; if your widget contains a close button
-			//		then clicking it should call this function.
-			//		Note that you shouldn't override this method, but you can connect to it.
-			evt.stopPropagation();
-		}
-	});
-
-
-	return dijit.layout.StackController;
+define("dijit/layout/StackController",["dojo/_base/kernel","..","../_Widget","../_TemplatedMixin","../_Container","../form/ToggleButton","../focus","dojo/i18n!../nls/common","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
+_1.declare("dijit.layout.StackController",[_2._Widget,_2._TemplatedMixin,_2._Container],{templateString:"<span role='tablist' dojoAttachEvent='onkeypress' class='dijitStackController'></span>",containerId:"",buttonWidget:"dijit.layout._StackButton",constructor:function(){
+this.pane2button={};
+this.pane2connects={};
+this.pane2watches={};
+},postCreate:function(){
+this.inherited(arguments);
+this.subscribe(this.containerId+"-startup","onStartup");
+this.subscribe(this.containerId+"-addChild","onAddChild");
+this.subscribe(this.containerId+"-removeChild","onRemoveChild");
+this.subscribe(this.containerId+"-selectChild","onSelectChild");
+this.subscribe(this.containerId+"-containerKeyPress","onContainerKeyPress");
+},onStartup:function(_3){
+_1.forEach(_3.children,this.onAddChild,this);
+if(_3.selected){
+this.onSelectChild(_3.selected);
+}
+},destroy:function(){
+for(var _4 in this.pane2button){
+this.onRemoveChild(_2.byId(_4));
+}
+this.inherited(arguments);
+},onAddChild:function(_5,_6){
+var _7=_1.getObject(this.buttonWidget);
+var _8=new _7({id:this.id+"_"+_5.id,label:_5.title,dir:_5.dir,lang:_5.lang,textDir:_5.textDir,showLabel:_5.showTitle,iconClass:_5.iconClass,closeButton:_5.closable,title:_5.tooltip});
+_8.focusNode.setAttribute("aria-selected","false");
+var _9=["title","showTitle","iconClass","closable","tooltip"],_a=["label","showLabel","iconClass","closeButton","title"];
+this.pane2watches[_5.id]=_1.map(_9,function(_b,_c){
+return _5.watch(_b,function(_d,_e,_f){
+_8.set(_a[_c],_f);
+});
+});
+this.pane2connects[_5.id]=[this.connect(_8,"onClick",_1.hitch(this,"onButtonClick",_5)),this.connect(_8,"onClickCloseButton",_1.hitch(this,"onCloseButtonClick",_5))];
+this.addChild(_8,_6);
+this.pane2button[_5.id]=_8;
+_5.controlButton=_8;
+if(!this._currentChild){
+_8.focusNode.setAttribute("tabIndex","0");
+_8.focusNode.setAttribute("aria-selected","true");
+this._currentChild=_5;
+}
+if(!this.isLeftToRight()&&_1.isIE&&this._rectifyRtlTabList){
+this._rectifyRtlTabList();
+}
+},onRemoveChild:function(_10){
+if(this._currentChild===_10){
+this._currentChild=null;
+}
+_1.forEach(this.pane2connects[_10.id],_1.hitch(this,"disconnect"));
+delete this.pane2connects[_10.id];
+_1.forEach(this.pane2watches[_10.id],function(w){
+w.unwatch();
+});
+delete this.pane2watches[_10.id];
+var _11=this.pane2button[_10.id];
+if(_11){
+this.removeChild(_11);
+delete this.pane2button[_10.id];
+_11.destroy();
+}
+delete _10.controlButton;
+},onSelectChild:function(_12){
+if(!_12){
+return;
+}
+if(this._currentChild){
+var _13=this.pane2button[this._currentChild.id];
+_13.set("checked",false);
+_13.focusNode.setAttribute("aria-selected","false");
+_13.focusNode.setAttribute("tabIndex","-1");
+}
+var _14=this.pane2button[_12.id];
+_14.set("checked",true);
+_14.focusNode.setAttribute("aria-selected","true");
+this._currentChild=_12;
+_14.focusNode.setAttribute("tabIndex","0");
+var _15=_2.byId(this.containerId);
+_15.containerNode.setAttribute("aria-labelledby",_14.id);
+},onButtonClick:function(_16){
+var _17=_2.byId(this.containerId);
+_17.selectChild(_16);
+},onCloseButtonClick:function(_18){
+var _19=_2.byId(this.containerId);
+_19.closeChild(_18);
+if(this._currentChild){
+var b=this.pane2button[this._currentChild.id];
+if(b){
+_2.focus(b.focusNode||b.domNode);
+}
+}
+},adjacent:function(_1a){
+if(!this.isLeftToRight()&&(!this.tabPosition||/top|bottom/.test(this.tabPosition))){
+_1a=!_1a;
+}
+var _1b=this.getChildren();
+var _1c=_1.indexOf(_1b,this.pane2button[this._currentChild.id]);
+var _1d=_1a?1:_1b.length-1;
+return _1b[(_1c+_1d)%_1b.length];
+},onkeypress:function(e){
+if(this.disabled||e.altKey){
+return;
+}
+var _1e=null;
+if(e.ctrlKey||!e._djpage){
+var k=_1.keys;
+switch(e.charOrCode){
+case k.LEFT_ARROW:
+case k.UP_ARROW:
+if(!e._djpage){
+_1e=false;
+}
+break;
+case k.PAGE_UP:
+if(e.ctrlKey){
+_1e=false;
+}
+break;
+case k.RIGHT_ARROW:
+case k.DOWN_ARROW:
+if(!e._djpage){
+_1e=true;
+}
+break;
+case k.PAGE_DOWN:
+if(e.ctrlKey){
+_1e=true;
+}
+break;
+case k.HOME:
+case k.END:
+var _1f=this.getChildren();
+if(_1f&&_1f.length){
+_1f[e.charOrCode==k.HOME?0:_1f.length-1].onClick();
+}
+_1.stopEvent(e);
+break;
+case k.DELETE:
+if(this._currentChild.closable){
+this.onCloseButtonClick(this._currentChild);
+}
+_1.stopEvent(e);
+break;
+default:
+if(e.ctrlKey){
+if(e.charOrCode===k.TAB){
+this.adjacent(!e.shiftKey).onClick();
+_1.stopEvent(e);
+}else{
+if(e.charOrCode=="w"){
+if(this._currentChild.closable){
+this.onCloseButtonClick(this._currentChild);
+}
+_1.stopEvent(e);
+}
+}
+}
+}
+if(_1e!==null){
+this.adjacent(_1e).onClick();
+_1.stopEvent(e);
+}
+}
+},onContainerKeyPress:function(_20){
+_20.e._djpage=_20.page;
+this.onkeypress(_20.e);
+}});
+_1.declare("dijit.layout._StackButton",_2.form.ToggleButton,{tabIndex:"-1",closeButton:false,buildRendering:function(evt){
+this.inherited(arguments);
+(this.focusNode||this.domNode).setAttribute("role","tab");
+},onClick:function(evt){
+_2.focus(this.focusNode);
+},onClickCloseButton:function(evt){
+evt.stopPropagation();
+}});
+return _2.layout.StackController;
 });

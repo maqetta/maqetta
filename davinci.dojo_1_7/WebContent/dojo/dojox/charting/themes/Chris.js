@@ -1,75 +1,35 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// created by Christopher Anderson
-
-	var themes = dojox.charting.themes, g = Theme.generateGradient,
-		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
-	
-	themes.Chris = new Theme({
-		chart: {
-			fill:   "#c1c1c1",
-			stroke: {color: "#666"}
-		},
-		plotarea: {
-			fill: "#c1c1c1"
-		},
-		series: {
-			stroke:  {width: 2, color: "white"},
-			outline: null,
-			fontColor: "#333"
-		},
-		marker: {
-			stroke:  {width: 2, color: "white"},
-			outline: {width: 2, color: "white"},
-			fontColor: "#333"
-		},
-		seriesThemes: [
-			{fill: g(defaultFill, "#01b717", "#238c01")},	// green
-			{fill: g(defaultFill, "#d04918", "#7c0344")},	// red
-			{fill: g(defaultFill, "#0005ec", "#002578")},	// blue
-			{fill: g(defaultFill, "#f9e500", "#786f00")},	// yellow
-			{fill: g(defaultFill, "#e27d00", "#773e00")},	// orange
-			{fill: g(defaultFill, "#00b5b0", "#005f5d")},	// teal
-			{fill: g(defaultFill, "#ac00cb", "#590060")}	// purple
-		],
-		markerThemes: [
-			{fill: "#01b717", stroke: {color: "#238c01"}},	// green
-			{fill: "#d04918", stroke: {color: "#7c0344"}},	// red
-			{fill: "#0005ec", stroke: {color: "#002578"}},	// blue
-			{fill: "#f9e500", stroke: {color: "#786f00"}},	// yellow
-			{fill: "#e27d00", stroke: {color: "#773e00"}},	// orange
-			{fill: "#00b5b0", stroke: {color: "#005f5d"}},	// teal
-			{fill: "#ac00cb", stroke: {color: "#590060"}}	// purple
-		]
-	});
-	
-	themes.Chris.next = function(elementType, mixin, doPost){
-		var isLine = elementType == "line";
-		if(isLine || elementType == "area"){
-			// custom processing for lines: substitute colors
-			var s = this.seriesThemes[this._current % this.seriesThemes.length];
-			s.fill.space = "plot";
-			if(isLine){
-				s.stroke  = {color: s.fill.colors[1].color};
-				s.outline = {width: 2, color: "white"};
-			}
-			var theme = Theme.prototype.next.apply(this, arguments);
-			// cleanup
-			delete s.outline;
-			delete s.stroke;
-			s.fill.space = "shape";
-			return theme;
-		}
-		return Theme.prototype.next.apply(this, arguments);
-	};
-	
-	themes.Chris.post = function(theme, elementType){
-		theme = Theme.prototype.post.apply(this, arguments);
-		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
-		}
-		return theme;
-	};
-	
-	return themes.Chris;
+define(["../Theme","dojox/gfx/gradutils","./common"],function(_1,_2){
+var _3=dojox.charting.themes,g=_1.generateGradient,_4={type:"linear",space:"shape",x1:0,y1:0,x2:0,y2:100};
+_3.Chris=new _1({chart:{fill:"#c1c1c1",stroke:{color:"#666"}},plotarea:{fill:"#c1c1c1"},series:{stroke:{width:2,color:"white"},outline:null,fontColor:"#333"},marker:{stroke:{width:2,color:"white"},outline:{width:2,color:"white"},fontColor:"#333"},seriesThemes:[{fill:g(_4,"#01b717","#238c01")},{fill:g(_4,"#d04918","#7c0344")},{fill:g(_4,"#0005ec","#002578")},{fill:g(_4,"#f9e500","#786f00")},{fill:g(_4,"#e27d00","#773e00")},{fill:g(_4,"#00b5b0","#005f5d")},{fill:g(_4,"#ac00cb","#590060")}],markerThemes:[{fill:"#01b717",stroke:{color:"#238c01"}},{fill:"#d04918",stroke:{color:"#7c0344"}},{fill:"#0005ec",stroke:{color:"#002578"}},{fill:"#f9e500",stroke:{color:"#786f00"}},{fill:"#e27d00",stroke:{color:"#773e00"}},{fill:"#00b5b0",stroke:{color:"#005f5d"}},{fill:"#ac00cb",stroke:{color:"#590060"}}]});
+_3.Chris.next=function(_5,_6,_7){
+var _8=_5=="line";
+if(_8||_5=="area"){
+var s=this.seriesThemes[this._current%this.seriesThemes.length];
+s.fill.space="plot";
+if(_8){
+s.stroke={color:s.fill.colors[1].color};
+s.outline={width:2,color:"white"};
+}
+var _9=_1.prototype.next.apply(this,arguments);
+delete s.outline;
+delete s.stroke;
+s.fill.space="shape";
+return _9;
+}
+return _1.prototype.next.apply(this,arguments);
+};
+_3.Chris.post=function(_a,_b){
+_a=_1.prototype.post.apply(this,arguments);
+if((_b=="slice"||_b=="circle")&&_a.series.fill&&_a.series.fill.type=="radial"){
+_a.series.fill=_2.reverse(_a.series.fill);
+}
+return _a;
+};
+return _3.Chris;
 });

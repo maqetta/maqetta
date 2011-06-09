@@ -1,74 +1,51 @@
-define(["../.."], function(dojo) {
-	// module:
-	//		dojo/data/util/filter
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("data.util.filter", true, dojo);
-
-dojo.data.util.filter.patternToRegExp = function(/*String*/pattern, /*boolean?*/ ignoreCase){
-	//	summary:
-	//		Helper function to convert a simple pattern to a regular expression for matching.
-	//	description:
-	//		Returns a regular expression object that conforms to the defined conversion rules.
-	//		For example:
-	//			ca*   -> /^ca.*$/
-	//			*ca*  -> /^.*ca.*$/
-	//			*c\*a*  -> /^.*c\*a.*$/
-	//			*c\*a?*  -> /^.*c\*a..*$/
-	//			and so on.
-	//
-	//	pattern: string
-	//		A simple matching pattern to convert that follows basic rules:
-	//			* Means match anything, so ca* means match anything starting with ca
-	//			? Means match single character.  So, b?b will match to bob and bab, and so on.
-	//      	\ is an escape character.  So for example, \* means do not treat * as a match, but literal character *.
-	//				To use a \ as a character in the string, it must be escaped.  So in the pattern it should be
-	//				represented by \\ to be treated as an ordinary \ character instead of an escape.
-	//
-	//	ignoreCase:
-	//		An optional flag to indicate if the pattern matching should be treated as case-sensitive or not when comparing
-	//		By default, it is assumed case sensitive.
-
-	var rxp = "^";
-	var c = null;
-	for(var i = 0; i < pattern.length; i++){
-		c = pattern.charAt(i);
-		switch(c){
-			case '\\':
-				rxp += c;
-				i++;
-				rxp += pattern.charAt(i);
-				break;
-			case '*':
-				rxp += ".*"; break;
-			case '?':
-				rxp += "."; break;
-			case '$':
-			case '^':
-			case '/':
-			case '+':
-			case '.':
-			case '|':
-			case '(':
-			case ')':
-			case '{':
-			case '}':
-			case '[':
-			case ']':
-				rxp += "\\"; //fallthrough
-			default:
-				rxp += c;
-		}
-	}
-	rxp += "$";
-	if(ignoreCase){
-		return new RegExp(rxp,"mi"); //RegExp
-	}else{
-		return new RegExp(rxp,"m"); //RegExp
-	}
-
+define("dojo/data/util/filter",["../.."],function(_1){
+_1.getObject("data.util.filter",true,_1);
+_1.data.util.filter.patternToRegExp=function(_2,_3){
+var _4="^";
+var c=null;
+for(var i=0;i<_2.length;i++){
+c=_2.charAt(i);
+switch(c){
+case "\\":
+_4+=c;
+i++;
+_4+=_2.charAt(i);
+break;
+case "*":
+_4+=".*";
+break;
+case "?":
+_4+=".";
+break;
+case "$":
+case "^":
+case "/":
+case "+":
+case ".":
+case "|":
+case "(":
+case ")":
+case "{":
+case "}":
+case "[":
+case "]":
+_4+="\\";
+default:
+_4+=c;
+}
+}
+_4+="$";
+if(_3){
+return new RegExp(_4,"mi");
+}else{
+return new RegExp(_4,"m");
+}
 };
-
-return dojo.data.util.filter;
+return _1.data.util.filter;
 });

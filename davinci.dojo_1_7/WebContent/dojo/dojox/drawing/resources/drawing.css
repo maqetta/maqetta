@@ -3,7 +3,6 @@ html, body{
 	height:100%;
 	font-family:sans-serif;
 }
-
 .textAnnotation{
 	position:absolute;
 	border:1px solid #ccc;
@@ -15,16 +14,12 @@ html, body{
 	margin-top:-10px;
 	z-index:501;
 }
-
 #conEdit{
 	border:0;
-	/*background:#ccc;
-	border:1px solid #ff0000;
-	outline:none;*/
+	
 	padding:3px;
 	margin:0;
 }
-
 .drawingTooltip{
 	font-family:sans-serif;
 	font-family:sans-serif;

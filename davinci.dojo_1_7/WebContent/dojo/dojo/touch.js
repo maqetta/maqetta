@@ -1,43 +1,16 @@
-define(["./_base/kernel", "./on", "./has"], function(dojo, on, has){
-// module:
-//		dojo/touch
-// summary:
-//		This module provides unified touch event handlers by exporting
-//		press, move and release which can also run well on desktop.
-// press:
-//		Mapped to mousedown on desktop or touchstart on touch devices
-// move:
-//		Mapped to mousemove on desktop or touchmove on touch devices
-// release:
-//		Mapped to mouseup on desktop or touchend on touch devices
-// example:
-//		1. Used with dojo.connect()
-//		|	dojo.connect(node, dojo.touch.press, function(e){});
-//		|	dojo.connect(node, dojo.touch.move, function(e){});
-//		|	dojo.connect(node, dojo.touch.release, function(e){});
-//
-//		2. Used with dojo.on
-//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
-//		|		on(node, touch.press, function(e){});
-//		|		on(node, touch.move, function(e){});
-//		|		on(node, touch.release, function(e){});
-//
-//		3. Used with dojo.touch directly
-//		|	dojo.touch.press(node, function(e){});
-//		|	dojo.touch.move(node, function(e){});
-//		|	dojo.touch.release(node, function(e){});
-		
-	function _handle(/*String - press | move | release*/type){
-		return function(node, listener){//called by on(), see dojo.on
-			return on(node, type, listener);
-		};
-	}
-	var touch = has("touch");
-	//device neutral events - dojo.touch.press|move|release
-	dojo.touch = {
-		press: _handle(touch ? "touchstart": "mousedown"),
-		move: _handle(touch ? "touchmove": "mousemove"),
-		release: _handle(touch ? "touchend": "mouseup")
-	};
-	return dojo.touch;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define("dojo/touch",["./_base/kernel","./on","./has"],function(_1,on,_2){
+function _3(_4){
+return function(_5,_6){
+return on(_5,_4,_6);
+};
+};
+var _7=_2("touch");
+_1.touch={press:_3(_7?"touchstart":"mousedown"),move:_3(_7?"touchmove":"mousemove"),release:_3(_7?"touchend":"mouseup")};
+return _1.touch;
 });

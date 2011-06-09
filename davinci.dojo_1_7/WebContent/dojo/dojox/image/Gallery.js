@@ -1,189 +1,60 @@
-dojo.provide("dojox.image.Gallery");
-dojo.experimental("dojox.image.Gallery");
-//
-// dojox.image.Gallery courtesy Shane O Sullivan, licensed under a Dojo CLA
-//
-// For a sample usage, see http://www.skynet.ie/~sos/photos.php
-//
-//	TODO: Make public, document params and privitize non-API conformant methods.
-//	document topics.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojo.fx");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dojox.image.ThumbnailPicker");
-dojo.require("dojox.image.SlideShow");
-
-dojo.declare("dojox.image.Gallery",
-	[dijit._Widget, dijit._Templated],
-	{
-	// summary:
-	//		Gallery widget that wraps a dojox.image.ThumbnailPicker and dojox.image.SlideShow widget
-	//
-	// imageHeight: Number
-	//		Maximum height of an image in the SlideShow widget
-	imageHeight: 375,
-	
-	// imageWidth: Number
-	//		Maximum width of an image in the SlideShow widget
-	imageWidth: 500,
-		
-	// pageSize: Number
-	//		The number of records to retrieve from the data store per request.
-	pageSize: dojox.image.SlideShow.prototype.pageSize,
-	
-	// autoLoad: Boolean
-	//		If true, images are loaded before the user views them. If false, an
-	//		image is loaded when the user displays it.
-	autoLoad: true,
-	
-	// linkAttr: String
-	//		Defines the name of the attribute to request from the store to retrieve the
-	//		URL to link to from an image, if any.
-	linkAttr: "link",
-	
-	// imageThumbAttr: String
-	//		Defines the name of the attribute to request from the store to retrieve the
-	//		URL to the thumbnail image.
-	imageThumbAttr: "imageUrlThumb",
-	
-	// imageLargeAttr: String
-	//		Defines the name of the attribute to request from the store to retrieve the
-	//		URL to the image.
-	imageLargeAttr: "imageUrl",
-	
-	// titleAttr: String
-	//		Defines the name of the attribute to request from the store to retrieve the
-	//		title of the picture, if any.
-	titleAttr: "title",
- 
-	// slideshowInterval: Integer
-	//		Time, in seconds, between image changes in the slide show.
-	slideshowInterval: 3,
-	
-	templateString: dojo.cache("dojox.image", "resources/Gallery.html"),
-
-	postCreate: function(){
-		// summary:
-		//		Initializes the widget, creates the ThumbnailPicker and SlideShow widgets
-		this.widgetid = this.id;
-		this.inherited(arguments)
-		
-		this.thumbPicker = new dojox.image.ThumbnailPicker({
-			linkAttr: this.linkAttr,
-			imageLargeAttr: this.imageLargeAttr,
-			imageThumbAttr: this.imageThumbAttr,
-			titleAttr: this.titleAttr,
-			useLoadNotifier: true,
-			size: this.imageWidth
-		}, this.thumbPickerNode);
-		
-		
-		this.slideShow = new dojox.image.SlideShow({
-			imageHeight: this.imageHeight,
-			imageWidth: this.imageWidth,
-			autoLoad: this.autoLoad,
-			linkAttr: this.linkAttr,
-			imageLargeAttr: this.imageLargeAttr,
-			titleAttr: this.titleAttr,
-			slideshowInterval: this.slideshowInterval,
-			pageSize: this.pageSize
-		}, this.slideShowNode);
-		
-		var _this = this;
-		//When an image is shown in the Slideshow, make sure it is visible
-		//in the ThumbnailPicker
-		dojo.subscribe(this.slideShow.getShowTopicName(), function(packet){
-			_this.thumbPicker._showThumbs(packet.index);
-		});
-		//When the user clicks a thumbnail, show that image
-		dojo.subscribe(this.thumbPicker.getClickTopicName(), function(evt){
-			_this.slideShow.showImage(evt.index);
-		});
-		//When the ThumbnailPicker moves to show a new set of pictures,
-		//make the Slideshow start loading those pictures first.
-		dojo.subscribe(this.thumbPicker.getShowTopicName(), function(evt){
-			_this.slideShow.moveImageLoadingPointer(evt.index);
-		});
-		//When an image finished loading in the slideshow, update the loading
-		//notification in the ThumbnailPicker
-		dojo.subscribe(this.slideShow.getLoadTopicName(), function(index){
-			_this.thumbPicker.markImageLoaded(index);
-		});
-		this._centerChildren();
-	},
-	  
-  	setDataStore: function(dataStore, request, /*optional*/paramNames){
-		// summary:
-		//		Sets the data store and request objects to read data from.
-		// dataStore:
-		//		An implementation of the dojo.data.api.Read API. This accesses the image
-		//		data.
-		// request:
-		//		An implementation of the dojo.data.api.Request API. This specifies the
-		//		query and paging information to be used by the data store
-		// paramNames:
-		//		An object defining the names of the item attributes to fetch from the
-		//		data store.  The four attributes allowed are 'linkAttr', 'imageLargeAttr',
-		//		'imageThumbAttr' and 'titleAttr'
-		this.thumbPicker.setDataStore(dataStore, request, paramNames);
-		this.slideShow.setDataStore(dataStore, request, paramNames);
-  	},
-  
-  	reset: function(){
-		// summary:
-		//		Resets the widget to its initial state
-		this.slideShow.reset();
-		this.thumbPicker.reset();
-  	},
-  
-	showNextImage: function(inTimer){
-		// summary:
-		//		Changes the image being displayed in the SlideShow to the next
-		//		image in the data store
-		// inTimer: Boolean
-		//		If true, a slideshow is active, otherwise the slideshow is inactive.
-		this.slideShow.showNextImage();
-	},
-
-	toggleSlideshow: function(){
-		dojo.deprecated("dojox.widget.Gallery.toggleSlideshow is deprecated.  Use toggleSlideShow instead.", "", "2.0");
-		this.toggleSlideShow();
-	},
-
-	toggleSlideShow: function(){
-		// summary:
-		//		Switches the slideshow mode on and off.
-		this.slideShow.toggleSlideShow();
-	},
-
-	showImage: function(index, /*optional*/callback){
-		// summary:
-		//		Shows the image at index 'idx'.
-		// idx: Number
-		//		The position of the image in the data store to display
-		// callback: Function
-		//		Optional callback function to call when the image has finished displaying.
-		this.slideShow.showImage(index, callback);
-	},
-	
-	resize: function(dim){
-		this.thumbPicker.resize(dim);
-	},
-	
-	_centerChildren: function() {
-		// summary:
-		//		Ensures that the ThumbnailPicker and the SlideShow widgets
-		//		are centered.
-		var thumbSize = dojo.marginBox(this.thumbPicker.outerNode);
-		var slideSize = dojo.marginBox(this.slideShow.outerNode);
-		
-		var diff = (thumbSize.w - slideSize.w) / 2;
-		
-		if(diff > 0) {
-			dojo.style(this.slideShow.outerNode, "marginLeft", diff + "px");
-		} else if(diff < 0) {
-			dojo.style(this.thumbPicker.outerNode, "marginLeft", (diff * -1) + "px");
-		}
-	}
+define(["dojo","dijit","dojox","dojo/fx","dijit/_Widget","dijit/_Templated","dojox/image/ThumbnailPicker","dojox/image/SlideShow"],function(_1,_2,_3){
+_1.getObject("dojox.image.Gallery",1);
+_1.experimental("dojox.image.Gallery");
+_1.declare("dojox.image.Gallery",[_2._Widget,_2._Templated],{imageHeight:375,imageWidth:500,pageSize:_3.image.SlideShow.prototype.pageSize,autoLoad:true,linkAttr:"link",imageThumbAttr:"imageUrlThumb",imageLargeAttr:"imageUrl",titleAttr:"title",slideshowInterval:3,templateString:_1.cache("dojox.image","resources/Gallery.html","<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\n</div>"),postCreate:function(){
+this.widgetid=this.id;
+this.inherited(arguments);
+this.thumbPicker=new _3.image.ThumbnailPicker({linkAttr:this.linkAttr,imageLargeAttr:this.imageLargeAttr,imageThumbAttr:this.imageThumbAttr,titleAttr:this.titleAttr,useLoadNotifier:true,size:this.imageWidth},this.thumbPickerNode);
+this.slideShow=new _3.image.SlideShow({imageHeight:this.imageHeight,imageWidth:this.imageWidth,autoLoad:this.autoLoad,linkAttr:this.linkAttr,imageLargeAttr:this.imageLargeAttr,titleAttr:this.titleAttr,slideshowInterval:this.slideshowInterval,pageSize:this.pageSize},this.slideShowNode);
+var _4=this;
+_1.subscribe(this.slideShow.getShowTopicName(),function(_5){
+_4.thumbPicker._showThumbs(_5.index);
 });
+_1.subscribe(this.thumbPicker.getClickTopicName(),function(_6){
+_4.slideShow.showImage(_6.index);
+});
+_1.subscribe(this.thumbPicker.getShowTopicName(),function(_7){
+_4.slideShow.moveImageLoadingPointer(_7.index);
+});
+_1.subscribe(this.slideShow.getLoadTopicName(),function(_8){
+_4.thumbPicker.markImageLoaded(_8);
+});
+this._centerChildren();
+},setDataStore:function(_9,_a,_b){
+this.thumbPicker.setDataStore(_9,_a,_b);
+this.slideShow.setDataStore(_9,_a,_b);
+},reset:function(){
+this.slideShow.reset();
+this.thumbPicker.reset();
+},showNextImage:function(_c){
+this.slideShow.showNextImage();
+},toggleSlideshow:function(){
+_1.deprecated("dojox.widget.Gallery.toggleSlideshow is deprecated.  Use toggleSlideShow instead.","","2.0");
+this.toggleSlideShow();
+},toggleSlideShow:function(){
+this.slideShow.toggleSlideShow();
+},showImage:function(_d,_e){
+this.slideShow.showImage(_d,_e);
+},resize:function(_f){
+this.thumbPicker.resize(_f);
+},_centerChildren:function(){
+var _10=_1.marginBox(this.thumbPicker.outerNode);
+var _11=_1.marginBox(this.slideShow.outerNode);
+var _12=(_10.w-_11.w)/2;
+if(_12>0){
+_1.style(this.slideShow.outerNode,"marginLeft",_12+"px");
+}else{
+if(_12<0){
+_1.style(this.thumbPicker.outerNode,"marginLeft",(_12*-1)+"px");
+}
+}
+}});
+return _1.getObject("dojox.image.Gallery");
+});
+require(["dojox/image/Gallery"]);

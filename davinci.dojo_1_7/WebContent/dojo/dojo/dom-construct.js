@@ -1,371 +1,141 @@
-define(["./_base/kernel", "./_base/sniff", "./_base/window", "./dom", "./dom-prop", "./on"], function(dojo, sniff, win, dom, prop, on){
-	// module:
-	//		dojo/dom-construct
-	// summary:
-	//		This module defines the core dojo DOM construction API.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	/*=====
-	dojo.toDom = function(frag, doc){
-			// summary:
-			//		instantiates an HTML fragment returning the corresponding DOM.
-			// frag: String
-			//		the HTML fragment
-			// doc: DocumentNode?
-			//		optional document to use when creating DOM nodes, defaults to
-			//		dojo.doc if not specified.
-			// returns: DocumentFragment
-			//
-			// example:
-			//		Create a table row:
-			//	|	var tr = dojo.toDom("<tr><td>First!</td></tr>");
-	}
-	=====*/
-
-	// support stuff for dojo.toDom
-	var tagWrap = {
-			option: ["select"],
-			tbody: ["table"],
-			thead: ["table"],
-			tfoot: ["table"],
-			tr: ["table", "tbody"],
-			td: ["table", "tbody", "tr"],
-			th: ["table", "thead", "tr"],
-			legend: ["fieldset"],
-			caption: ["table"],
-			colgroup: ["table"],
-			col: ["table", "colgroup"],
-			li: ["ul"]
-		},
-		reTag = /<\s*([\w\:]+)/,
-		masterNode = {}, masterNum = 0,
-		masterName = "__" + dojo._scopeName + "ToDomId";
-
-	// generate start/end tag strings to use
-	// for the injection for each special tag wrap case.
-	for(var param in tagWrap){
-		if(tagWrap.hasOwnProperty(param)){
-			var tw = tagWrap[param];
-			tw.pre = param == "option" ? '<select multiple="multiple">' : "<" + tw.join("><") + ">";
-			tw.post = "</" + tw.reverse().join("></") + ">";
-			// the last line is destructive: it reverses the array,
-			// but we don't care at this point
-		}
-	}
-
-	dojo.toDom = dojo._toDom = function(frag, doc){
-		// summary:
-		//		converts HTML string into DOM nodes.
-
-		doc = doc || win.doc;
-		var masterId = doc[masterName];
-		if(!masterId){
-			doc[masterName] = masterId = ++masterNum + "";
-			masterNode[masterId] = doc.createElement("div");
-		}
-
-		// make sure the frag is a string.
-		frag += "";
-
-		// find the starting tag, and get node wrapper
-		var match = frag.match(reTag),
-			tag = match ? match[1].toLowerCase() : "",
-			master = masterNode[masterId],
-			wrap, i, fc, df;
-		if(match && tagWrap[tag]){
-			wrap = tagWrap[tag];
-			master.innerHTML = wrap.pre + frag + wrap.post;
-			for(i = wrap.length; i; --i){
-				master = master.firstChild;
-			}
-		}else{
-			master.innerHTML = frag;
-		}
-
-		// one node shortcut => return the node itself
-		if(master.childNodes.length == 1){
-			return master.removeChild(master.firstChild); // DOMNode
-		}
-
-		// return multiple nodes as a document fragment
-		df = doc.createDocumentFragment();
-		while(fc = master.firstChild){ // intentional assignment
-			df.appendChild(fc);
-		}
-		return df; // DOMNode
-	};
-
-	function _insertBefore(/*DomNode*/node, /*DomNode*/ref){
-		var parent = ref.parentNode;
-		if(parent){
-			parent.insertBefore(node, ref);
-		}
-	}
-
-	function _insertAfter(/*DomNode*/node, /*DomNode*/ref){
-		// summary:
-		//		Try to insert node after ref
-		var parent = ref.parentNode;
-		if(parent){
-			if(parent.lastChild == ref){
-				parent.appendChild(node);
-			}else{
-				parent.insertBefore(node, ref.nextSibling);
-			}
-		}
-	}
-
-	dojo.place = function(/*String|DomNode*/node, /*String|DomNode*/refNode, /*String|Number?*/position){
-		// summary:
-		//		Attempt to insert node into the DOM, choosing from various positioning options.
-		//		Returns the first argument resolved to a DOM node.
-		//
-		// node: String|DomNode
-		//		id or node reference, or HTML fragment starting with "<" to place relative to refNode
-		//
-		// refNode: String|DomNode
-		//		id or node reference to use as basis for placement
-		//
-		// position: String|Number?
-		//		string noting the position of node relative to refNode or a
-		//		number indicating the location in the childNodes collection of refNode.
-		//		Accepted string values are:
-		//	|	* before
-		//	|	* after
-		//	|	* replace
-		//	|	* only
-		//	|	* first
-		//	|	* last
-		//		"first" and "last" indicate positions as children of refNode, "replace" replaces refNode,
-		//		"only" replaces all children.  position defaults to "last" if not specified
-		//
-		// returns: DomNode
-		//		Returned values is the first argument resolved to a DOM node.
-		//
-		//		.place() is also a method of `dojo.NodeList`, allowing `dojo.query` node lookups.
-		//
-		// example:
-		//		Place a node by string id as the last child of another node by string id:
-		//	|	dojo.place("someNode", "anotherNode");
-		//
-		// example:
-		//		Place a node by string id before another node by string id
-		//	|	dojo.place("someNode", "anotherNode", "before");
-		//
-		// example:
-		//		Create a Node, and place it in the body element (last child):
-		//	|	dojo.place("<div></div>", dojo.body());
-		//
-		// example:
-		//		Put a new LI as the first child of a list by id:
-		//	|	dojo.place("<li></li>", "someUl", "first");
-
-		refNode = dom.byId(refNode);
-		if(typeof node == "string"){ // inline'd type check
-			node = /^\s*</.test(node) ? dojo.toDom(node, refNode.ownerDocument) : dom.byId(node);
-		}
-		if(typeof position == "number"){ // inline'd type check
-			var cn = refNode.childNodes;
-			if(!cn.length || cn.length <= position){
-				refNode.appendChild(node);
-			}else{
-				_insertBefore(node, cn[position < 0 ? 0 : position]);
-			}
-		}else{
-			switch(position){
-				case "before":
-					_insertBefore(node, refNode);
-					break;
-				case "after":
-					_insertAfter(node, refNode);
-					break;
-				case "replace":
-					refNode.parentNode.replaceChild(node, refNode);
-					break;
-				case "only":
-					dojo.empty(refNode);
-					refNode.appendChild(node);
-					break;
-				case "first":
-					if(refNode.firstChild){
-						_insertBefore(node, refNode.firstChild);
-						break;
-					}
-					// else fallthrough...
-				default: // aka: last
-					refNode.appendChild(node);
-			}
-		}
-		return node; // DomNode
-	};
-
-	dojo.create = function(/*String|DomNode*/tag, /*Object*/attrs, /*String?|DomNode?*/refNode, /*String?*/pos){
-		// summary:
-		//		Create an element, allowing for optional attribute decoration
-		//		and placement.
-		//
-		// description:
-		//		A DOM Element creation function. A shorthand method for creating a node or
-		//		a fragment, and allowing for a convenient optional attribute setting step,
-		//		as well as an optional DOM placement reference.
-		//|
-		//		Attributes are set by passing the optional object through `dojo.attr`.
-		//		See `dojo.attr` for noted caveats and nuances, and API if applicable.
-		//|
-		//		Placement is done via `dojo.place`, assuming the new node to be the action
-		//		node, passing along the optional reference node and position.
-		//
-		// tag: String|DomNode
-		//		A string of the element to create (eg: "div", "a", "p", "li", "script", "br"),
-		//		or an existing DOM node to process.
-		//
-		// attrs: Object
-		//		An object-hash of attributes to set on the newly created node.
-		//		Can be null, if you don't want to set any attributes/styles.
-		//		See: `dojo.attr` for a description of available attributes.
-		//
-		// refNode: String?|DomNode?
-		//		Optional reference node. Used by `dojo.place` to place the newly created
-		//		node somewhere in the dom relative to refNode. Can be a DomNode reference
-		//		or String ID of a node.
-		//
-		// pos: String?
-		//		Optional positional reference. Defaults to "last" by way of `dojo.place`,
-		//		though can be set to "first","after","before","last", "replace" or "only"
-		//		to further control the placement of the new node relative to the refNode.
-		//		'refNode' is required if a 'pos' is specified.
-		//
-		// returns: DomNode
-		//
-		// example:
-		//		Create a DIV:
-		//	|	var n = dojo.create("div");
-		//
-		// example:
-		//		Create a DIV with content:
-		//	|	var n = dojo.create("div", { innerHTML:"<p>hi</p>" });
-		//
-		// example:
-		//		Place a new DIV in the BODY, with no attributes set
-		//	|	var n = dojo.create("div", null, dojo.body());
-		//
-		// example:
-		//		Create an UL, and populate it with LI's. Place the list as the first-child of a
-		//		node with id="someId":
-		//	|	var ul = dojo.create("ul", null, "someId", "first");
-		//	|	var items = ["one", "two", "three", "four"];
-		//	|	dojo.forEach(items, function(data){
-		//	|		dojo.create("li", { innerHTML: data }, ul);
-		//	|	});
-		//
-		// example:
-		//		Create an anchor, with an href. Place in BODY:
-		//	|	dojo.create("a", { href:"foo.html", title:"Goto FOO!" }, dojo.body());
-		//
-		// example:
-		//		Create a `dojo.NodeList()` from a new element (for syntatic sugar):
-		//	|	dojo.query(dojo.create('div'))
-		//	|		.addClass("newDiv")
-		//	|		.onclick(function(e){ console.log('clicked', e.target) })
-		//	|		.place("#someNode"); // redundant, but cleaner.
-
-		var doc = win.doc;
-		if(refNode){
-			refNode = dom.byId(refNode);
-			doc = refNode.ownerDocument;
-		}
-		if(typeof tag == "string"){ // inline'd type check
-			tag = doc.createElement(tag);
-		}
-		if(attrs){ prop.attr(tag, attrs); }
-		if(refNode){ dojo.place(tag, refNode, pos); }
-		return tag; // DomNode
-	};
-
-	/*=====
-	dojo.empty = function(node){
-			// summary:
-			//		safely removes all children of the node.
-			// node: DOMNode|String
-			//		a reference to a DOM node or an id.
-			// example:
-			//		Destroy node's children byId:
-			//	|	dojo.empty("someId");
-			//
-			// example:
-			//		Destroy all nodes' children in a list by reference:
-			//	|	dojo.query(".someNode").forEach(dojo.empty);
-	}
-	=====*/
-
-	dojo.empty =
-		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-		sniff.isIE ? function(node){
-			node = dom.byId(node);
-			for(var c; c = node.lastChild;){ // intentional assignment
-				dojo.destroy(c);
-			}
-		} :
-		//>>excludeEnd("webkitMobile");
-		function(node){
-			dom.byId(node).innerHTML = "";
-		};
-
-	var _destroyContainer = null,
-		_destroyDoc;
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	on(window, "unload", function(){
-		_destroyContainer = null; //prevent IE leak
-	});
-	//>>excludeEnd("webkitMobile");
-
-/*=====
-	dojo._destroyElement = function(node){
-		// summary:
-		//		Existing alias for `dojo.destroy`. Deprecated, will be removed
-		//		in 2.0
-	}
-=====*/
-	dojo._destroyElement = dojo.destroy = function(/*String|DomNode*/node){
-		// summary:
-		//		Removes a node from its parent, clobbering it and all of its
-		//		children.
-		//
-		// description:
-		//		Removes a node from its parent, clobbering it and all of its
-		//		children. Function only works with DomNodes, and returns nothing.
-		//
-		// node:
-		//		A String ID or DomNode reference of the element to be destroyed
-		//
-		// example:
-		//		Destroy a node byId:
-		//	|	dojo.destroy("someId");
-		//
-		// example:
-		//		Destroy all nodes in a list by reference:
-		//	|	dojo.query(".someNode").forEach(dojo.destroy);
-
-		node = dom.byId(node);
-		try{
-			var doc = node.ownerDocument;
-			// cannot use _destroyContainer.ownerDocument since this can throw an exception on IE
-			if(!_destroyContainer || _destroyDoc != doc){
-				_destroyContainer = doc.createElement("div");
-				_destroyDoc = doc;
-			}
-			_destroyContainer.appendChild(node.parentNode ? node.parentNode.removeChild(node) : node);
-			// NOTE: see http://trac.dojotoolkit.org/ticket/2931. This may be a bug and not a feature
-			_destroyContainer.innerHTML = "";
-		}catch(e){
-			/* squelch */
-		}
-	};
-
-	return {
-		toDom:   dojo.toDom,
-		place:   dojo.place,
-		create:  dojo.create,
-		empty:   dojo.empty,
-		destroy: dojo.destroy
-	};
+define("dojo/dom-construct",["./_base/kernel","./_base/sniff","./_base/window","./dom","./dom-prop","./on"],function(_1,_2,_3,_4,_5,on){
+var _6={option:["select"],tbody:["table"],thead:["table"],tfoot:["table"],tr:["table","tbody"],td:["table","tbody","tr"],th:["table","thead","tr"],legend:["fieldset"],caption:["table"],colgroup:["table"],col:["table","colgroup"],li:["ul"]},_7=/<\s*([\w\:]+)/,_8={},_9=0,_a="__"+_1._scopeName+"ToDomId";
+for(var _b in _6){
+if(_6.hasOwnProperty(_b)){
+var tw=_6[_b];
+tw.pre=_b=="option"?"<select multiple=\"multiple\">":"<"+tw.join("><")+">";
+tw.post="</"+tw.reverse().join("></")+">";
+}
+}
+_1.toDom=_1._toDom=function(_c,_d){
+_d=_d||_3.doc;
+var _e=_d[_a];
+if(!_e){
+_d[_a]=_e=++_9+"";
+_8[_e]=_d.createElement("div");
+}
+_c+="";
+var _f=_c.match(_7),tag=_f?_f[1].toLowerCase():"",_10=_8[_e],_11,i,fc,df;
+if(_f&&_6[tag]){
+_11=_6[tag];
+_10.innerHTML=_11.pre+_c+_11.post;
+for(i=_11.length;i;--i){
+_10=_10.firstChild;
+}
+}else{
+_10.innerHTML=_c;
+}
+if(_10.childNodes.length==1){
+return _10.removeChild(_10.firstChild);
+}
+df=_d.createDocumentFragment();
+while(fc=_10.firstChild){
+df.appendChild(fc);
+}
+return df;
+};
+function _12(_13,ref){
+var _14=ref.parentNode;
+if(_14){
+_14.insertBefore(_13,ref);
+}
+};
+function _15(_16,ref){
+var _17=ref.parentNode;
+if(_17){
+if(_17.lastChild==ref){
+_17.appendChild(_16);
+}else{
+_17.insertBefore(_16,ref.nextSibling);
+}
+}
+};
+_1.place=function(_18,_19,_1a){
+_19=_4.byId(_19);
+if(typeof _18=="string"){
+_18=/^\s*</.test(_18)?_1.toDom(_18,_19.ownerDocument):_4.byId(_18);
+}
+if(typeof _1a=="number"){
+var cn=_19.childNodes;
+if(!cn.length||cn.length<=_1a){
+_19.appendChild(_18);
+}else{
+_12(_18,cn[_1a<0?0:_1a]);
+}
+}else{
+switch(_1a){
+case "before":
+_12(_18,_19);
+break;
+case "after":
+_15(_18,_19);
+break;
+case "replace":
+_19.parentNode.replaceChild(_18,_19);
+break;
+case "only":
+_1.empty(_19);
+_19.appendChild(_18);
+break;
+case "first":
+if(_19.firstChild){
+_12(_18,_19.firstChild);
+break;
+}
+default:
+_19.appendChild(_18);
+}
+}
+return _18;
+};
+_1.create=function(tag,_1b,_1c,pos){
+var doc=_3.doc;
+if(_1c){
+_1c=_4.byId(_1c);
+doc=_1c.ownerDocument;
+}
+if(typeof tag=="string"){
+tag=doc.createElement(tag);
+}
+if(_1b){
+_5.attr(tag,_1b);
+}
+if(_1c){
+_1.place(tag,_1c,pos);
+}
+return tag;
+};
+_1.empty=_2.isIE?function(_1d){
+_1d=_4.byId(_1d);
+for(var c;c=_1d.lastChild;){
+_1.destroy(c);
+}
+}:function(_1e){
+_4.byId(_1e).innerHTML="";
+};
+var _1f=null,_20;
+on(window,"unload",function(){
+_1f=null;
+});
+_1._destroyElement=_1.destroy=function(_21){
+_21=_4.byId(_21);
+try{
+var doc=_21.ownerDocument;
+if(!_1f||_20!=doc){
+_1f=doc.createElement("div");
+_20=doc;
+}
+_1f.appendChild(_21.parentNode?_21.parentNode.removeChild(_21):_21);
+_1f.innerHTML="";
+}
+catch(e){
+}
+};
+return {toDom:_1.toDom,place:_1.place,create:_1.create,empty:_1.empty,destroy:_1.destroy};
 });

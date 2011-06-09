@@ -1,85 +1,78 @@
-define(["./_base", "./ArrayList"], function(dxc, ArrayList){
-/*=====
-var dxc = dojox.collections;
-=====*/
-	dxc.Set=new (function(){
-		function conv(arr){
-			if(arr.constructor==Array){
-				return new ArrayList(arr);	//	dojox.collections.ArrayList
-			}
-			return arr;		//	dojox.collections.ArrayList
-		}
-		this.union = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Return the union of the two passed sets.
-			setA=conv(setA);
-			setB=conv(setB);
-			var result = new ArrayList(setA.toArray());
-			var e = setB.getIterator();
-			while(!e.atEnd()){
-				var item=e.get();
-				if(!result.contains(item)){
-					result.add(item);
-				}
-			}
-			return result;	//	dojox.collections.ArrayList
-		};
-		this.intersection = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Return the intersection of the two passed sets.
-			setA=conv(setA);
-			setB=conv(setB);
-			var result = new ArrayList();
-			var e = setB.getIterator();
-			while(!e.atEnd()){
-				var item=e.get();
-				if(setA.contains(item)){
-					result.add(item);
-				}
-			}
-			return result;	//	dojox.collections.ArrayList
-		};
-		this.difference = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Returns everything in setA that is not in setB.
-			setA=conv(setA);
-			setB=conv(setB);
-			var result = new ArrayList();
-			var e=setA.getIterator();
-			while(!e.atEnd()){
-				var item=e.get();
-				if(!setB.contains(item)){
-					result.add(item);
-				}
-			}
-			return result;	//	dojox.collections.ArrayList
-		};
-		this.isSubSet = function(/* array */setA, /* array */setB) {
-			//	summary
-			//	Returns if set B is a subset of set A.
-			setA=conv(setA);
-			setB=conv(setB);
-			var e = setA.getIterator();
-			while(!e.atEnd()){
-				if(!setB.contains(e.get())){
-					return false;	//	boolean
-				}
-			}
-			return true;	//	boolean
-		};
-		this.isSuperSet = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Returns if set B is a superset of set A.
-			setA=conv(setA);
-			setB=conv(setB);
-			var e = setB.getIterator();
-			while(!e.atEnd()){
-				if(!setA.contains(e.get())){
-					return false;	//	boolean
-				}
-			}
-			return true;	//	boolean
-		};
-	})();
-	return dxc.Set;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["./_base","./ArrayList"],function(_1,_2){
+_1.Set=new (function(){
+function _3(_4){
+if(_4.constructor==Array){
+return new _2(_4);
+}
+return _4;
+};
+this.union=function(_5,_6){
+_5=_3(_5);
+_6=_3(_6);
+var _7=new _2(_5.toArray());
+var e=_6.getIterator();
+while(!e.atEnd()){
+var _8=e.get();
+if(!_7.contains(_8)){
+_7.add(_8);
+}
+}
+return _7;
+};
+this.intersection=function(_9,_a){
+_9=_3(_9);
+_a=_3(_a);
+var _b=new _2();
+var e=_a.getIterator();
+while(!e.atEnd()){
+var _c=e.get();
+if(_9.contains(_c)){
+_b.add(_c);
+}
+}
+return _b;
+};
+this.difference=function(_d,_e){
+_d=_3(_d);
+_e=_3(_e);
+var _f=new _2();
+var e=_d.getIterator();
+while(!e.atEnd()){
+var _10=e.get();
+if(!_e.contains(_10)){
+_f.add(_10);
+}
+}
+return _f;
+};
+this.isSubSet=function(_11,_12){
+_11=_3(_11);
+_12=_3(_12);
+var e=_11.getIterator();
+while(!e.atEnd()){
+if(!_12.contains(e.get())){
+return false;
+}
+}
+return true;
+};
+this.isSuperSet=function(_13,_14){
+_13=_3(_13);
+_14=_3(_14);
+var e=_14.getIterator();
+while(!e.atEnd()){
+if(!_13.contains(e.get())){
+return false;
+}
+}
+return true;
+};
+})();
+return _1.Set;
 });

@@ -1,57 +1,40 @@
-define(["dojo/_base/lang"], function(dojo){
-	dojo.experimental("dojox.timing");
-	dojo.getObject("timing", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojox.timing.Timer = function(/*int*/ interval){
-		// summary: Timer object executes an "onTick()" method repeatedly at a specified interval.
-		//			repeatedly at a given interval.
-		// interval: Interval between function calls, in milliseconds.
-		this.timer = null;
-		this.isRunning = false;
-		this.interval = interval;
-
-		this.onStart = null;
-		this.onStop = null;
-	};
-
-	dojo.extend(dojox.timing.Timer, {
-		onTick : function(){
-			// summary: Method called every time the interval passes.  Override to do something useful.
-		},
-			
-		setInterval : function(interval){
-			// summary: Reset the interval of a timer, whether running or not.
-			// interval: New interval, in milliseconds.
-			if (this.isRunning){
-				window.clearInterval(this.timer);
-			}
-			this.interval = interval;
-			if (this.isRunning){
-				this.timer = window.setInterval(dojo.hitch(this, "onTick"), this.interval);
-			}
-		},
-		
-		start : function(){
-			// summary: Start the timer ticking.
-			// description: Calls the "onStart()" handler, if defined.
-			// 				Note that the onTick() function is not called right away,
-			//				only after first interval passes.
-			if (typeof this.onStart == "function"){
-				this.onStart();
-			}
-			this.isRunning = true;
-			this.timer = window.setInterval(dojo.hitch(this, "onTick"), this.interval);
-		},
-		
-		stop : function(){
-			// summary: Stop the timer.
-			// description: Calls the "onStop()" handler, if defined.
-			if (typeof this.onStop == "function"){
-				this.onStop();
-			}
-			this.isRunning = false;
-			window.clearInterval(this.timer);
-		}
-	});
-	return dojox.timing;
+define(["dojo/_base/lang"],function(_1){
+_1.experimental("dojox.timing");
+_1.getObject("timing",true,dojox);
+dojox.timing.Timer=function(_2){
+this.timer=null;
+this.isRunning=false;
+this.interval=_2;
+this.onStart=null;
+this.onStop=null;
+};
+_1.extend(dojox.timing.Timer,{onTick:function(){
+},setInterval:function(_3){
+if(this.isRunning){
+window.clearInterval(this.timer);
+}
+this.interval=_3;
+if(this.isRunning){
+this.timer=window.setInterval(_1.hitch(this,"onTick"),this.interval);
+}
+},start:function(){
+if(typeof this.onStart=="function"){
+this.onStart();
+}
+this.isRunning=true;
+this.timer=window.setInterval(_1.hitch(this,"onTick"),this.interval);
+},stop:function(){
+if(typeof this.onStop=="function"){
+this.onStop();
+}
+this.isRunning=false;
+window.clearInterval(this.timer);
+}});
+return dojox.timing;
 });

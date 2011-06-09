@@ -1,60 +1,48 @@
-dojo.provide("dojox.lang.oo.general");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.lang.oo.Decorator");
-
+define(["dojo","dijit","dojox","dojox/lang/oo/Decorator"],function(_1,_2,_3){
+_1.getObject("dojox.lang.oo.general",1);
 (function(){
-	var oo = dojox.lang.oo, md = oo.makeDecorator, oog = oo.general,
-		isF = dojo.isFunction;
-
-	// generally useful decorators
-
-	oog.augment = md(function(name, newValue, oldValue){
-		// summary: add property, if it was not defined before
-		return typeof oldValue == "undefined" ? newValue : oldValue;
-	});
-
-	oog.override = md(function(name, newValue, oldValue){
-		// summary: override property only if it was already present
-		return typeof oldValue != "undefined" ? newValue : oldValue;
-	});
-
-	oog.shuffle = md(function(name, newValue, oldValue){
-		// summary: replaces arguments for an old method
-		return isF(oldValue) ?
-			function(){
-				return oldValue.apply(this, newValue.apply(this, arguments));
-			} : oldValue;
-	});
-
-	oog.wrap = md(function(name, newValue, oldValue){
-		// summary: wraps the old values with a supplied function
-		return function(){ return newValue.call(this, oldValue, arguments); };
-	});
-
-	oog.tap = md(function(name, newValue, oldValue){
-		// summary: always returns "this" ignoring the actual return
-		return function(){ newValue.apply(this, arguments); return this; };
-	});
-
-	oog.before = md(function(name, newValue, oldValue){
-		//	summary:
-		//		creates a chain of calls where the new method is called
-		//		before the old method
-		return isF(oldValue) ?
-			function(){
-				newValue.apply(this, arguments);
-				return oldValue.apply(this, arguments);
-			} : newValue;
-	});
-
-	oog.after = md(function(name, newValue, oldValue){
-		//	summary:
-		//		creates a chain of calls where the new method is called
-		//		after the old method
-		return isF(oldValue) ?
-			function(){
-				oldValue.apply(this, arguments);
-				return newValue.apply(this, arguments);
-			} : newValue;
-	});
+var oo=_3.lang.oo,md=oo.makeDecorator,_4=oo.general,_5=_1.isFunction;
+_4.augment=md(function(_6,_7,_8){
+return typeof _8=="undefined"?_7:_8;
+});
+_4.override=md(function(_9,_a,_b){
+return typeof _b!="undefined"?_a:_b;
+});
+_4.shuffle=md(function(_c,_d,_e){
+return _5(_e)?function(){
+return _e.apply(this,_d.apply(this,arguments));
+}:_e;
+});
+_4.wrap=md(function(_f,_10,_11){
+return function(){
+return _10.call(this,_11,arguments);
+};
+});
+_4.tap=md(function(_12,_13,_14){
+return function(){
+_13.apply(this,arguments);
+return this;
+};
+});
+_4.before=md(function(_15,_16,_17){
+return _5(_17)?function(){
+_16.apply(this,arguments);
+return _17.apply(this,arguments);
+}:_16;
+});
+_4.after=md(function(_18,_19,_1a){
+return _5(_1a)?function(){
+_1a.apply(this,arguments);
+return _19.apply(this,arguments);
+}:_19;
+});
 })();
+return _1.getObject("dojox.lang.oo.general");
+});
+require(["dojox/lang/oo/general"]);

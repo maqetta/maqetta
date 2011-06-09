@@ -1,457 +1,317 @@
-dojo.provide("dojox.gantt.GanttResourceItem");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojo.date.locale");
-
-dojo.declare("dojox.gantt.GanttResourceItem", null, {
-	constructor: function(ganttchart){
-		this.ganttChart = ganttchart;
-		this.ownerItem = [];
-		this.ownerNameItem = [];
-		this.ownerTaskNodeMapping = {};
-		this.ownerTaskNodeMapping_time = {};
-		this.resourceInfo = {};
-		this.ownerTimeConsume = {};
-	},
-	clearAll: function(){
-		this.clearData();
-		this.clearItems();
-	},
-	clearData: function(){
-		this.ownerItem = [];
-		this.ownerNameItem = [];
-		this.ownerTaskNodeMapping = {};
-		this.ownerTaskNodeMapping_time = {};
-		this.resourceInfo = {};
-		this.ownerTimeConsume = {};
-	},
-	clearItems: function(){
-		if(this.content.firstChild){
-		    dojo.destroy(this.content.firstChild);
-		}
-	},
-	buildResource: function(){
-		var resourceInfo = {};
-		dojo.forEach(this.ganttChart.arrProjects, function(project){
-			dojo.forEach(project.arrTasks, function(task){
-				task.buildResourceInfo(resourceInfo);
-			}, this);
-		}, this);
-		return resourceInfo;
-	},
-	buildOwnerTimeConsume: function(){
-		var ownerTimeConsume = {};
-		for(var owner in this.resourceInfo){
-			var tasks = this.resourceInfo[owner];
-			//combine time zone  (startTime - this.startDate) / (60 * 60 * 1000) * this.pixelsPerHour;
-			var timeZoom = {};
-			for(var i = 0; i < tasks.length; i++){
-				var task = tasks[i];
-				var startTime = task.taskItem.startTime.getTime(), dur = task.taskItem.duration * 24 * 60 * 60 * 1000 / this.ganttChart.hsPerDay;
-				timeZoom.min = timeZoom.min ? Math.min(timeZoom.min, startTime) : startTime;
-				timeZoom.max = timeZoom.max ? Math.max(timeZoom.max, (startTime + dur)) : (startTime + dur);
-			}
-			timeZoom.dur = (timeZoom.max - timeZoom.min) * this.ganttChart.hsPerDay / (24 * 60 * 60 * 1000);
-			timeZoom.min = new Date(timeZoom.min);
-			timeZoom.max = new Date(timeZoom.max);
-			ownerTimeConsume[owner] = timeZoom;
-		}
-		return ownerTimeConsume;
-	},
-	refresh: function(){
-		this.ownerTimeConsume = this.buildOwnerTimeConsume();
-		//resize outer div
-		this.contentData.firstChild.style.width = Math.max(1200, this.ganttChart.pixelsPerDay * this.ganttChart.totalDays) + "px";
-		for(var owner in this.resourceInfo){
-			this.refreshOwnerEntry(owner);
-		}
-	},
-	reConstruct: function(){
-		this.clearAll();
-		this.resourceInfo = this.buildResource();
-		this.ownerTimeConsume = this.buildOwnerTimeConsume();
-		this.tableControl = dojo.create("table", {
-			cellPadding: "0",
-			cellSpacing: "0",
-			className: "ganttResourceTableControl"
-		});
-		var newRowTblControl = this.tableControl.insertRow(this.tableControl.rows.length);
-		//Add to content Table
-		this.contentHeight = this.content.offsetHeight;
-		this.contentWidth = this.content.offsetWidth;
-		this.content.appendChild(this.tableControl);
-		//Creation panel contentData
-		this.contentData = dojo.create("div", {className: "ganttResourceContentDataContainer"});
-		this.contentData.appendChild(this.createPanelOwners());
-		dojo.style(this.contentData, "height", (this.contentHeight - this.ganttChart.panelTimeHeight) + "px");
-		//Creation panel of names
-		var newCellTblControl = dojo.create("td", {
-			vAlign: "top"
-		});
-		this.panelNames = dojo.create("div", {className: "ganttResourcePanelNames"});
-		this.panelNames.appendChild(this.createPanelNamesOwners());
-		newCellTblControl.appendChild(this.panelNames);
-		newRowTblControl.appendChild(newCellTblControl);
-		//add to control contentData and contentDataTime
-		newCellTblControl = dojo.create("td", {
-			vAlign: "top"
-		});
-		var divCell = dojo.create("div", {className: "ganttResourceDivCell"});
-		divCell.appendChild(this.contentData);
-		newCellTblControl.appendChild(divCell);
-		newRowTblControl.appendChild(newCellTblControl);
-		//Show panel of names
-		dojo.style(this.panelNames, {
-			height: (this.contentHeight - this.ganttChart.panelTimeHeight - this.ganttChart.scrollBarWidth) + "px",
-			width: this.ganttChart.maxWidthPanelNames + "px"
-		});
-		this.contentData.style.width = (this.contentWidth - this.ganttChart.maxWidthPanelNames) + "px";
-		this.contentData.firstChild.style.width = this.ganttChart.pixelsPerDay * (this.ganttChart.panelTime.firstChild.firstChild.rows[3].cells.length) + "px";
-		var _this = this;
-		this.contentData.onscroll = function(){
-			if(_this.panelNames){
-				_this.panelNames.scrollTop = this.scrollTop;
-			}
-		}
-		this.contentData.scrollLeft = this.ganttChart.contentData.scrollLeft;
-		for(var owner in this.resourceInfo){
-			this.createOwnerEntry(owner);
-		}
-		this.postAdjustment();
-	},
-	create: function(){
-		var resourceHeader = dojo.create("div", {
-			innerHTML: "Resource Chart:",
-			className: "ganttResourceHeader"
-		}, this.ganttChart.content, "after");
-		dojo.style(resourceHeader, "width", this.ganttChart.contentWidth + "px");
-		var content = dojo.create("div", {className: "ganttResourceContent"}, resourceHeader, "after");
-		dojo.style(content, {
-			width: this.ganttChart.contentWidth + "px",
-			height: (this.ganttChart.resourceChartHeight || (this.ganttChart.contentHeight * 0.8)) + "px"
-		});
-		this.content = content || this.content;
-		//create Table
-		this.reConstruct();
-	},
-	postAdjustment: function(){
-		//contentData height
-		this.contentData.firstChild.style.height = (this.ownerItem.length * 23) + "px";
-		this.panelNames.firstChild.style.height = (this.ownerItem.length * 23) + "px";
-	},
-	
-	refreshOwnerEntry: function(owner){
-		this.refreshOwnerItem(owner);
-		dojo.forEach(this.resourceInfo[owner], function(task, i){
-			var item = this.ownerTaskNodeMapping[owner].tasks[i][0];
-			this.refreshDetailedTaskEntry(owner, item, task);
-		}, this);
-	},
-	createOwnerEntry: function(owner){
-		var containerOwner = this.contentData.firstChild;
-		var previousOwner = this.ownerItem[this.ownerItem.length - 1];
-		this.ownerTaskNodeMapping[owner] = {};
-		this.ownerTaskNodeMapping[owner][owner] = [];
-		//create nodes
-		var pos = dojo.position(containerOwner);
-		//creation arrTasks
-		var posY = (previousOwner ? parseInt(previousOwner.style.top) : (6 - 23)) + this.ganttChart.heightTaskItem + 11;
-		//creation task item
-		var oItem = this.createOwnerItem(owner, posY);
-		containerOwner.appendChild(oItem);
-		this.ownerItem.push(oItem);
-		this.ownerTaskNodeMapping[owner][owner].push(oItem);
-		if(this.panelNames){
-			var oNameItem = this.createOwnerNameItem(owner, posY);
-			this.panelNames.firstChild.appendChild(oNameItem);
-			this.ownerNameItem.push(oNameItem);
-			this.ownerTaskNodeMapping[owner][owner].push(oNameItem);
-		}
-		var currentOwnerNode = this.ownerItem[this.ownerNameItem.length - 1],
-			currentOwnerNameNode = this.ownerNameItem[this.ownerNameItem.length - 1];
-		//adjust nodes
-		if(this.panelNames){
-			this.checkWidthTaskNameItem(currentOwnerNameNode);
-			var treeImg = this.createTreeImg(currentOwnerNameNode);
-			this.panelNames.firstChild.appendChild(treeImg);
-			this.ownerTaskNodeMapping[owner][owner].push(treeImg);
-		}
-		this.ownerTaskNodeMapping[owner]["taskCount"] = this.resourceInfo[owner].length;
-		this.ownerTaskNodeMapping[owner]["isOpen"] = false;
-		this.ownerTaskNodeMapping[owner]["tasks"] = [];
-		dojo.forEach(this.resourceInfo[owner], function(task){
-			this.ownerTaskNodeMapping[owner]["tasks"].push(this.createDetailedTaskEntry(owner, currentOwnerNameNode, task));
-		}, this);
-		return this;
-	},
-	createOwnerNameItem: function(owner, posY){
-		var ownerName = dojo.create("div", {
-			id: owner,
-			title: owner,
-			innerHTML: owner,
-			className: "ganttOwnerNameItem"
-		});
-		dojo.style(ownerName, "top", posY + "px");
-		return ownerName;
-	},
-	refreshOwnerItem: function(owner){
-		var item = this.ownerTaskNodeMapping[owner][owner][0],
-			start = this.ownerTimeConsume[owner].min, end = this.ownerTimeConsume[owner].max, dur = this.ownerTimeConsume[owner].dur,
-			posX = this.ganttChart.getPosOnDate(start); // should be task start date
-		item.style.left = posX + "px";
-		item.style.width = dur * this.ganttChart.pixelsPerWorkHour + "px";
-		dojo.forEach(this.resourceInfo[owner], function(task, i){
-			var tposX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
-			dojo.style(item.childNodes[i], {
-				left: (tposX - posX) + "px",
-				width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px"
-			});
-		}, this);
-	},
-	createOwnerItem: function(owner, posY){
-		var start = this.ownerTimeConsume[owner].min, end = this.ownerTimeConsume[owner].max, dur = this.ownerTimeConsume[owner].dur;
-		var posX = this.ganttChart.getPosOnDate(start); // should be task start date
-		var ownerControl = dojo.create("div", {
-			id: owner,
-			owner: true,
-			className: "ganttOwnerBar"
-		});
-		dojo.style(ownerControl, {
-			left: posX + "px",
-			top: posY + "px",
-			width: dur * this.ganttChart.pixelsPerWorkHour + "px",
-			height: this.ganttChart.heightTaskItem + "px"
-		});
-		dojo.forEach(this.resourceInfo[owner], function(task){
-			var ownerTaskItem = dojo.create("div", {
-				id: owner,
-				className: "ganttOwnerTaskBar"
-			}, ownerControl);
-			var tposX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
-			dojo.style(ownerTaskItem, {
-				left: (tposX - posX) + "px",
-				width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px", // should be task duration
-				height: this.ganttChart.heightTaskItem + "px"
-			});
-		}, this);
-		return ownerControl;
-	},
-	refreshDetailedTaskEntry: function(owner, item, task){
-		this.refreshTaskItem(item, task);
-	},
-	createDetailedTaskEntry: function(owner, parentNode, task){
-		var taskItems = [];
-		var containerTasks = this.contentData.firstChild;
-		var posY = parseInt(parentNode.style.top);
-		
-		//creation task item
-		var taskItem = this.createTaskItem(task, posY);
-		taskItem.style.display = "none";
-		containerTasks.appendChild(taskItem);
-		this.ownerItem.push(taskItem);
-		taskItems.push(taskItem);
-		if(this.panelNames){
-			var taskNameItem = this.createTaskNameItem(task.taskItem.name, posY);
-			this.panelNames.firstChild.appendChild(taskNameItem);
-			taskNameItem.style.display = "none";
-			this.ownerNameItem.push(taskNameItem);
-			taskItems.push(taskNameItem);
-		}
-		if(this.panelNames){
-			this.ownerNameItem[this.ownerNameItem.length - 1].style.left = dojo.style(parentNode, "left") + 15 + "px";
-			var arrConnectingLinesNames = this.createConnectingLinesPN(parentNode, this.ownerNameItem[this.ownerNameItem.length - 1]);
-			dojo.forEach(arrConnectingLinesNames, function(lineName){
-				lineName.style.display = "none";
-			}, this);
-			taskItems.push({
-				"v": arrConnectingLinesNames[0],
-				"h": arrConnectingLinesNames[1]
-			});
-			this.checkWidthTaskNameItem(this.ownerNameItem[this.ownerNameItem.length - 1]);
-		}
-		return taskItems;
-	},
-	createTaskNameItem: function(owner, posY){
-		var taskNameItem = dojo.create("div", {
-			id: owner,
-			className: "ganttTaskNameItem",
-			title: owner,
-			innerHTML: owner
-		});
-		dojo.style(taskNameItem, "top", posY + "px");
-		return taskNameItem;
-	},
-	refreshTaskItem: function(item, task){
-		var posX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
-		dojo.style(item, {
-			left: posX + "px",
-			width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px"
-		});
-	},
-	createTaskItem: function(task, posY){
-		var posX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
-		var itemControl = dojo.create("div", {
-			id: task.taskItem.name,
-			className: "ganttTaskBar"
-		});
-		dojo.style(itemControl, {
-			left: posX + "px",
-			top: posY + "px",
-			width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px",
-			height: this.ganttChart.heightTaskItem + "px"
-		});
-		return itemControl;
-	},
-	createConnectingLinesPN: function(parentNode, currentNode){
-		var arrConnectingLinesNames = [];
-		var lineVerticalLeft = dojo.create("div", {
-			innerHTML: "&nbsp;",
-			className: "ganttResourceLineVerticalLeft"
-		}, this.panelNames.firstChild);
-		lineVerticalLeft.cNode = currentNode;
-		lineVerticalLeft.pNode = parentNode;
-		var LineHorizontalLeft = dojo.create("div", {
-			noShade: true,
-			color: "#000",
-			className: "ganttResourceLineHorizontalLeft"
-		}, this.panelNames.firstChild);
-		LineHorizontalLeft.cNode = currentNode;
-		LineHorizontalLeft.pNode = parentNode;
-		this.panelNames.firstChild.appendChild(LineHorizontalLeft);
-		arrConnectingLinesNames.push(lineVerticalLeft);
-		arrConnectingLinesNames.push(LineHorizontalLeft);
-		return arrConnectingLinesNames;
-	},
-	createTreeImg: function(ownerNameItem){
-		var treeImg = dojo.create("div", {
-			id: ownerNameItem.id,
-			className: "ganttImageTreeExpand"
-		});
-		dojo.attr(treeImg, "tabIndex", 0);
-		var currentItem = this.ownerTaskNodeMapping[ownerNameItem.id];
-		dojo.forEach(["onclick", "onkeydown"], function(e){
-			this.ganttChart._events.push(
-				dojo.connect(treeImg, e, this, function(evt){
-					var reachTarget = false, owner, ownerItem;
-					if(e == "onkeydown" && evt.keyCode != dojo.keys.ENTER){ return; }
-					//TODO: perhaps the following conditional can be collapsed?  Duplicate code.
-					if(currentItem.isOpen){
-						dojo.removeClass(treeImg, "ganttImageTreeCollapse");
-						dojo.addClass(treeImg, "ganttImageTreeExpand");
-						currentItem.isOpen = false;
-						//collapse
-						for(owner in this.ownerTaskNodeMapping){
-							ownerItem = this.ownerTaskNodeMapping[owner];
-							if(reachTarget){
-								dojo.forEach(ownerItem[owner], function(tItem){
-									dojo.style(tItem, "top", dojo.style(tItem, "top") - currentItem.taskCount * 23 + "px");
-								});
-								dojo.forEach(ownerItem.tasks, function(tItems){
-									dojo.forEach(tItems, function(tItem){
-										var item = !tItem.v && !tItem.h ? [tItem] : [tItem.v, tItem.h];
-										dojo.forEach(item, function(t){
-											dojo.style(t, "top", dojo.style(t, "top") - currentItem.taskCount * 23 + "px");
-										});
-									});
-								});
-							}else{
-								if(owner == ownerNameItem.id){
-									reachTarget = true;
-									dojo.forEach(ownerItem.tasks, function(tItems, i){
-										dojo.forEach(tItems, function(tItem){
-											this.styleOwnerItem(tItem, ownerItem[owner][0], "none", 0);
-										}, this);
-									}, this);
-								}
-							}
-						}
-					}else{
-						dojo.removeClass(treeImg, "ganttImageTreeExpand");
-						dojo.addClass(treeImg, "ganttImageTreeCollapse");
-						currentItem.isOpen = true;
-						//expand
-						for(owner in this.ownerTaskNodeMapping){
-							ownerItem = this.ownerTaskNodeMapping[owner];
-							if(reachTarget){
-								dojo.forEach(ownerItem[owner], function(tItem){
-									dojo.style(tItem, "top", dojo.style(tItem, "top") + currentItem.taskCount * 23 + "px");
-								});
-								dojo.forEach(ownerItem.tasks, function(tItems){
-									dojo.forEach(tItems, function(tItem){
-										var item = !tItem.v && !tItem.h ? [tItem] : [tItem.v, tItem.h];
-										dojo.forEach(item, function(t){
-											dojo.style(t, "top", dojo.style(t, "top") + currentItem.taskCount * 23 + "px");
-										});
-									});
-								});
-							}else{
-								if(owner == ownerNameItem.id){
-									reachTarget = true;
-									dojo.forEach(ownerItem.tasks, function(tItems, i){
-										dojo.forEach(tItems, function(tItem){
-											this.styleOwnerItem(tItem, ownerItem[owner][0], "inline", (i + 1) * 23);
-										}, this);
-									}, this);
-								}
-							}
-						}
-					}
-				})
-			);
-		}, this);
-		dojo.addClass(treeImg, "ganttResourceTreeImage");
-		dojo.style(treeImg, {
-			left: (dojo.style(ownerNameItem, "left") - 12) + "px",
-			top: (dojo.style(ownerNameItem, "top") + 3) + "px"
-		});
-		return treeImg;
-	},
-	styleOwnerItem: function(tItem, owner, displayType, topOffset){
-		if(tItem.v || tItem.h){
-			dojo.style(tItem.v, {
-				height: Math.max(1, (tItem.v.cNode.offsetTop - tItem.v.pNode.offsetTop)) + "px",
-				top: (tItem.v.pNode.offsetTop + 5) + "px",
-				left: (tItem.v.pNode.offsetLeft - 9) + "px",
-				display: displayType
-			});
-			dojo.style(tItem.h, {
-				width: Math.max(1, (tItem.h.cNode.offsetLeft - tItem.h.pNode.offsetLeft + 4)) + "px",
-				top: (tItem.h.cNode.offsetTop + 5) + "px",
-				left: (tItem.h.pNode.offsetLeft - 9) + "px",
-				display: displayType
-			});
-		}else{
-			dojo.style(tItem, {
-				display: displayType,
-				top: parseInt(owner.style.top) + topOffset + "px"
-			});
-		}
-	},
-	checkWidthTaskNameItem: function(taskNameItem){
-		if(taskNameItem && taskNameItem.offsetWidth + taskNameItem.offsetLeft > this.ganttChart.maxWidthPanelNames){
-			var width = taskNameItem.offsetWidth + taskNameItem.offsetLeft - this.ganttChart.maxWidthPanelNames,
-				countChar = Math.round(width / (taskNameItem.offsetWidth / taskNameItem.firstChild.length)),
-				tName = taskNameItem.id.substring(0, taskNameItem.firstChild.length - countChar - 3);
-			taskNameItem.innerHTML = tName + "...";
-		}
-	},
-	createPanelOwners: function(){
-		var panelOwner = dojo.create("div", {
-			className: "ganttOwnerPanel"
-		});
-		dojo.style(panelOwner, {
-			height: (this.contentHeight - this.ganttChart.panelTimeHeight - this.ganttChart.scrollBarWidth) + "px"
-		});
-		return panelOwner;
-	},
-	createPanelNamesOwners: function(){
-		var panelNameOwner = dojo.create("div", {
-			innerHTML: "&nbsp;",
-			className: "ganttResourcePanelNamesOwners"
-		});
-		dojo.style(panelNameOwner, {
-			height: (this.contentHeight - this.ganttChart.panelTimeHeight - this.ganttChart.scrollBarWidth) + "px",
-			width: this.ganttChart.maxWidthPanelNames + "px"
-		});
-		return panelNameOwner;
-	}
+define(["dojo","dijit","dojox","dojo/date/locale"],function(_1,_2,_3){
+_1.getObject("dojox.gantt.GanttResourceItem",1);
+_1.declare("dojox.gantt.GanttResourceItem",null,{constructor:function(_4){
+this.ganttChart=_4;
+this.ownerItem=[];
+this.ownerNameItem=[];
+this.ownerTaskNodeMapping={};
+this.ownerTaskNodeMapping_time={};
+this.resourceInfo={};
+this.ownerTimeConsume={};
+},clearAll:function(){
+this.clearData();
+this.clearItems();
+},clearData:function(){
+this.ownerItem=[];
+this.ownerNameItem=[];
+this.ownerTaskNodeMapping={};
+this.ownerTaskNodeMapping_time={};
+this.resourceInfo={};
+this.ownerTimeConsume={};
+},clearItems:function(){
+if(this.content.firstChild){
+_1.destroy(this.content.firstChild);
+}
+},buildResource:function(){
+var _5={};
+_1.forEach(this.ganttChart.arrProjects,function(_6){
+_1.forEach(_6.arrTasks,function(_7){
+_7.buildResourceInfo(_5);
+},this);
+},this);
+return _5;
+},buildOwnerTimeConsume:function(){
+var _8={};
+for(var _9 in this.resourceInfo){
+var _a=this.resourceInfo[_9];
+var _b={};
+for(var i=0;i<_a.length;i++){
+var _c=_a[i];
+var _d=_c.taskItem.startTime.getTime(),_e=_c.taskItem.duration*24*60*60*1000/this.ganttChart.hsPerDay;
+_b.min=_b.min?Math.min(_b.min,_d):_d;
+_b.max=_b.max?Math.max(_b.max,(_d+_e)):(_d+_e);
+}
+_b.dur=(_b.max-_b.min)*this.ganttChart.hsPerDay/(24*60*60*1000);
+_b.min=new Date(_b.min);
+_b.max=new Date(_b.max);
+_8[_9]=_b;
+}
+return _8;
+},refresh:function(){
+this.ownerTimeConsume=this.buildOwnerTimeConsume();
+this.contentData.firstChild.style.width=Math.max(1200,this.ganttChart.pixelsPerDay*this.ganttChart.totalDays)+"px";
+for(var _f in this.resourceInfo){
+this.refreshOwnerEntry(_f);
+}
+},reConstruct:function(){
+this.clearAll();
+this.resourceInfo=this.buildResource();
+this.ownerTimeConsume=this.buildOwnerTimeConsume();
+this.tableControl=_1.create("table",{cellPadding:"0",cellSpacing:"0",className:"ganttResourceTableControl"});
+var _10=this.tableControl.insertRow(this.tableControl.rows.length);
+this.contentHeight=this.content.offsetHeight;
+this.contentWidth=this.content.offsetWidth;
+this.content.appendChild(this.tableControl);
+this.contentData=_1.create("div",{className:"ganttResourceContentDataContainer"});
+this.contentData.appendChild(this.createPanelOwners());
+_1.style(this.contentData,"height",(this.contentHeight-this.ganttChart.panelTimeHeight)+"px");
+var _11=_1.create("td",{vAlign:"top"});
+this.panelNames=_1.create("div",{className:"ganttResourcePanelNames"});
+this.panelNames.appendChild(this.createPanelNamesOwners());
+_11.appendChild(this.panelNames);
+_10.appendChild(_11);
+_11=_1.create("td",{vAlign:"top"});
+var _12=_1.create("div",{className:"ganttResourceDivCell"});
+_12.appendChild(this.contentData);
+_11.appendChild(_12);
+_10.appendChild(_11);
+_1.style(this.panelNames,{height:(this.contentHeight-this.ganttChart.panelTimeHeight-this.ganttChart.scrollBarWidth)+"px",width:this.ganttChart.maxWidthPanelNames+"px"});
+this.contentData.style.width=(this.contentWidth-this.ganttChart.maxWidthPanelNames)+"px";
+this.contentData.firstChild.style.width=this.ganttChart.pixelsPerDay*(this.ganttChart.panelTime.firstChild.firstChild.rows[3].cells.length)+"px";
+var _13=this;
+this.contentData.onscroll=function(){
+if(_13.panelNames){
+_13.panelNames.scrollTop=this.scrollTop;
+}
+};
+this.contentData.scrollLeft=this.ganttChart.contentData.scrollLeft;
+for(var _14 in this.resourceInfo){
+this.createOwnerEntry(_14);
+}
+this.postAdjustment();
+},create:function(){
+var _15=_1.create("div",{innerHTML:"Resource Chart:",className:"ganttResourceHeader"},this.ganttChart.content,"after");
+_1.style(_15,"width",this.ganttChart.contentWidth+"px");
+var _16=_1.create("div",{className:"ganttResourceContent"},_15,"after");
+_1.style(_16,{width:this.ganttChart.contentWidth+"px",height:(this.ganttChart.resourceChartHeight||(this.ganttChart.contentHeight*0.8))+"px"});
+this.content=_16||this.content;
+this.reConstruct();
+},postAdjustment:function(){
+this.contentData.firstChild.style.height=(this.ownerItem.length*23)+"px";
+this.panelNames.firstChild.style.height=(this.ownerItem.length*23)+"px";
+},refreshOwnerEntry:function(_17){
+this.refreshOwnerItem(_17);
+_1.forEach(this.resourceInfo[_17],function(_18,i){
+var _19=this.ownerTaskNodeMapping[_17].tasks[i][0];
+this.refreshDetailedTaskEntry(_17,_19,_18);
+},this);
+},createOwnerEntry:function(_1a){
+var _1b=this.contentData.firstChild;
+var _1c=this.ownerItem[this.ownerItem.length-1];
+this.ownerTaskNodeMapping[_1a]={};
+this.ownerTaskNodeMapping[_1a][_1a]=[];
+var pos=_1.position(_1b);
+var _1d=(_1c?parseInt(_1c.style.top):(6-23))+this.ganttChart.heightTaskItem+11;
+var _1e=this.createOwnerItem(_1a,_1d);
+_1b.appendChild(_1e);
+this.ownerItem.push(_1e);
+this.ownerTaskNodeMapping[_1a][_1a].push(_1e);
+if(this.panelNames){
+var _1f=this.createOwnerNameItem(_1a,_1d);
+this.panelNames.firstChild.appendChild(_1f);
+this.ownerNameItem.push(_1f);
+this.ownerTaskNodeMapping[_1a][_1a].push(_1f);
+}
+var _20=this.ownerItem[this.ownerNameItem.length-1],_21=this.ownerNameItem[this.ownerNameItem.length-1];
+if(this.panelNames){
+this.checkWidthTaskNameItem(_21);
+var _22=this.createTreeImg(_21);
+this.panelNames.firstChild.appendChild(_22);
+this.ownerTaskNodeMapping[_1a][_1a].push(_22);
+}
+this.ownerTaskNodeMapping[_1a]["taskCount"]=this.resourceInfo[_1a].length;
+this.ownerTaskNodeMapping[_1a]["isOpen"]=false;
+this.ownerTaskNodeMapping[_1a]["tasks"]=[];
+_1.forEach(this.resourceInfo[_1a],function(_23){
+this.ownerTaskNodeMapping[_1a]["tasks"].push(this.createDetailedTaskEntry(_1a,_21,_23));
+},this);
+return this;
+},createOwnerNameItem:function(_24,_25){
+var _26=_1.create("div",{id:_24,title:_24,innerHTML:_24,className:"ganttOwnerNameItem"});
+_1.style(_26,"top",_25+"px");
+return _26;
+},refreshOwnerItem:function(_27){
+var _28=this.ownerTaskNodeMapping[_27][_27][0],_29=this.ownerTimeConsume[_27].min,end=this.ownerTimeConsume[_27].max,dur=this.ownerTimeConsume[_27].dur,_2a=this.ganttChart.getPosOnDate(_29);
+_28.style.left=_2a+"px";
+_28.style.width=dur*this.ganttChart.pixelsPerWorkHour+"px";
+_1.forEach(this.resourceInfo[_27],function(_2b,i){
+var _2c=this.ganttChart.getPosOnDate(_2b.taskItem.startTime);
+_1.style(_28.childNodes[i],{left:(_2c-_2a)+"px",width:_2b.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px"});
+},this);
+},createOwnerItem:function(_2d,_2e){
+var _2f=this.ownerTimeConsume[_2d].min,end=this.ownerTimeConsume[_2d].max,dur=this.ownerTimeConsume[_2d].dur;
+var _30=this.ganttChart.getPosOnDate(_2f);
+var _31=_1.create("div",{id:_2d,owner:true,className:"ganttOwnerBar"});
+_1.style(_31,{left:_30+"px",top:_2e+"px",width:dur*this.ganttChart.pixelsPerWorkHour+"px",height:this.ganttChart.heightTaskItem+"px"});
+_1.forEach(this.resourceInfo[_2d],function(_32){
+var _33=_1.create("div",{id:_2d,className:"ganttOwnerTaskBar"},_31);
+var _34=this.ganttChart.getPosOnDate(_32.taskItem.startTime);
+_1.style(_33,{left:(_34-_30)+"px",width:_32.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px",height:this.ganttChart.heightTaskItem+"px"});
+},this);
+return _31;
+},refreshDetailedTaskEntry:function(_35,_36,_37){
+this.refreshTaskItem(_36,_37);
+},createDetailedTaskEntry:function(_38,_39,_3a){
+var _3b=[];
+var _3c=this.contentData.firstChild;
+var _3d=parseInt(_39.style.top);
+var _3e=this.createTaskItem(_3a,_3d);
+_3e.style.display="none";
+_3c.appendChild(_3e);
+this.ownerItem.push(_3e);
+_3b.push(_3e);
+if(this.panelNames){
+var _3f=this.createTaskNameItem(_3a.taskItem.name,_3d);
+this.panelNames.firstChild.appendChild(_3f);
+_3f.style.display="none";
+this.ownerNameItem.push(_3f);
+_3b.push(_3f);
+}
+if(this.panelNames){
+this.ownerNameItem[this.ownerNameItem.length-1].style.left=_1.style(_39,"left")+15+"px";
+var _40=this.createConnectingLinesPN(_39,this.ownerNameItem[this.ownerNameItem.length-1]);
+_1.forEach(_40,function(_41){
+_41.style.display="none";
+},this);
+_3b.push({"v":_40[0],"h":_40[1]});
+this.checkWidthTaskNameItem(this.ownerNameItem[this.ownerNameItem.length-1]);
+}
+return _3b;
+},createTaskNameItem:function(_42,_43){
+var _44=_1.create("div",{id:_42,className:"ganttTaskNameItem",title:_42,innerHTML:_42});
+_1.style(_44,"top",_43+"px");
+return _44;
+},refreshTaskItem:function(_45,_46){
+var _47=this.ganttChart.getPosOnDate(_46.taskItem.startTime);
+_1.style(_45,{left:_47+"px",width:_46.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px"});
+},createTaskItem:function(_48,_49){
+var _4a=this.ganttChart.getPosOnDate(_48.taskItem.startTime);
+var _4b=_1.create("div",{id:_48.taskItem.name,className:"ganttTaskBar"});
+_1.style(_4b,{left:_4a+"px",top:_49+"px",width:_48.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px",height:this.ganttChart.heightTaskItem+"px"});
+return _4b;
+},createConnectingLinesPN:function(_4c,_4d){
+var _4e=[];
+var _4f=_1.create("div",{innerHTML:"&nbsp;",className:"ganttResourceLineVerticalLeft"},this.panelNames.firstChild);
+_4f.cNode=_4d;
+_4f.pNode=_4c;
+var _50=_1.create("div",{noShade:true,color:"#000",className:"ganttResourceLineHorizontalLeft"},this.panelNames.firstChild);
+_50.cNode=_4d;
+_50.pNode=_4c;
+this.panelNames.firstChild.appendChild(_50);
+_4e.push(_4f);
+_4e.push(_50);
+return _4e;
+},createTreeImg:function(_51){
+var _52=_1.create("div",{id:_51.id,className:"ganttImageTreeExpand"});
+_1.attr(_52,"tabIndex",0);
+var _53=this.ownerTaskNodeMapping[_51.id];
+_1.forEach(["onclick","onkeydown"],function(e){
+this.ganttChart._events.push(_1.connect(_52,e,this,function(evt){
+var _54=false,_55,_56;
+if(e=="onkeydown"&&evt.keyCode!=_1.keys.ENTER){
+return;
+}
+if(_53.isOpen){
+_1.removeClass(_52,"ganttImageTreeCollapse");
+_1.addClass(_52,"ganttImageTreeExpand");
+_53.isOpen=false;
+for(_55 in this.ownerTaskNodeMapping){
+_56=this.ownerTaskNodeMapping[_55];
+if(_54){
+_1.forEach(_56[_55],function(_57){
+_1.style(_57,"top",_1.style(_57,"top")-_53.taskCount*23+"px");
 });
+_1.forEach(_56.tasks,function(_58){
+_1.forEach(_58,function(_59){
+var _5a=!_59.v&&!_59.h?[_59]:[_59.v,_59.h];
+_1.forEach(_5a,function(t){
+_1.style(t,"top",_1.style(t,"top")-_53.taskCount*23+"px");
+});
+});
+});
+}else{
+if(_55==_51.id){
+_54=true;
+_1.forEach(_56.tasks,function(_5b,i){
+_1.forEach(_5b,function(_5c){
+this.styleOwnerItem(_5c,_56[_55][0],"none",0);
+},this);
+},this);
+}
+}
+}
+}else{
+_1.removeClass(_52,"ganttImageTreeExpand");
+_1.addClass(_52,"ganttImageTreeCollapse");
+_53.isOpen=true;
+for(_55 in this.ownerTaskNodeMapping){
+_56=this.ownerTaskNodeMapping[_55];
+if(_54){
+_1.forEach(_56[_55],function(_5d){
+_1.style(_5d,"top",_1.style(_5d,"top")+_53.taskCount*23+"px");
+});
+_1.forEach(_56.tasks,function(_5e){
+_1.forEach(_5e,function(_5f){
+var _60=!_5f.v&&!_5f.h?[_5f]:[_5f.v,_5f.h];
+_1.forEach(_60,function(t){
+_1.style(t,"top",_1.style(t,"top")+_53.taskCount*23+"px");
+});
+});
+});
+}else{
+if(_55==_51.id){
+_54=true;
+_1.forEach(_56.tasks,function(_61,i){
+_1.forEach(_61,function(_62){
+this.styleOwnerItem(_62,_56[_55][0],"inline",(i+1)*23);
+},this);
+},this);
+}
+}
+}
+}
+}));
+},this);
+_1.addClass(_52,"ganttResourceTreeImage");
+_1.style(_52,{left:(_1.style(_51,"left")-12)+"px",top:(_1.style(_51,"top")+3)+"px"});
+return _52;
+},styleOwnerItem:function(_63,_64,_65,_66){
+if(_63.v||_63.h){
+_1.style(_63.v,{height:Math.max(1,(_63.v.cNode.offsetTop-_63.v.pNode.offsetTop))+"px",top:(_63.v.pNode.offsetTop+5)+"px",left:(_63.v.pNode.offsetLeft-9)+"px",display:_65});
+_1.style(_63.h,{width:Math.max(1,(_63.h.cNode.offsetLeft-_63.h.pNode.offsetLeft+4))+"px",top:(_63.h.cNode.offsetTop+5)+"px",left:(_63.h.pNode.offsetLeft-9)+"px",display:_65});
+}else{
+_1.style(_63,{display:_65,top:parseInt(_64.style.top)+_66+"px"});
+}
+},checkWidthTaskNameItem:function(_67){
+if(_67&&_67.offsetWidth+_67.offsetLeft>this.ganttChart.maxWidthPanelNames){
+var _68=_67.offsetWidth+_67.offsetLeft-this.ganttChart.maxWidthPanelNames,_69=Math.round(_68/(_67.offsetWidth/_67.firstChild.length)),_6a=_67.id.substring(0,_67.firstChild.length-_69-3);
+_67.innerHTML=_6a+"...";
+}
+},createPanelOwners:function(){
+var _6b=_1.create("div",{className:"ganttOwnerPanel"});
+_1.style(_6b,{height:(this.contentHeight-this.ganttChart.panelTimeHeight-this.ganttChart.scrollBarWidth)+"px"});
+return _6b;
+},createPanelNamesOwners:function(){
+var _6c=_1.create("div",{innerHTML:"&nbsp;",className:"ganttResourcePanelNamesOwners"});
+_1.style(_6c,{height:(this.contentHeight-this.ganttChart.panelTimeHeight-this.ganttChart.scrollBarWidth)+"px",width:this.ganttChart.maxWidthPanelNames+"px"});
+return _6c;
+}});
+return _1.getObject("dojox.gantt.GanttResourceItem");
+});
+require(["dojox/gantt/GanttResourceItem"]);

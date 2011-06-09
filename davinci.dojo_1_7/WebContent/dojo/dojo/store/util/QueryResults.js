@@ -1,63 +1,38 @@
-define(["../../_base/kernel", "../../_base/lang", "../../_base/Deferred"], function(dojo) {
-  //  module:
-  //    dojo/store/util/QueryResults
-  //  summary:
-  //    The module defines a query results wrapper 
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("store.util", true, dojo);
-
-dojo.store.util.QueryResults = function(results){
-	// summary:
-	//		A function that wraps the results of a store query with additional
-	//		methods.
-	//
-	// description:
-	//		QueryResults is a basic wrapper that allows for array-like iteration
-	//		over any kind of returned data from a query.  While the simplest store
-	//		will return a plain array of data, other stores may return deferreds or
-	//		promises; this wrapper makes sure that *all* results can be treated
-	//		the same.
-	//
-	//		Additional methods include `forEach`, `filter` and `map`.
-	//
-	// returns: Object
-	//		An array-like object that can be used for iterating over.
-	//
-	// example:
-	//		Query a store and iterate over the results.
-	//
-	//	|	store.query({ prime: true }).forEach(function(item){
-	//	|		//	do something
-	//	|	});
-
-	if(!results){
-		return results;
-	}
-	// if it is a promise it may be frozen
-	if(results.then){
-		results = dojo.delegate(results);
-	}
-	function addIterativeMethod(method){
-		if(!results[method]){
-			results[method] = function(){
-				var args = arguments;
-				return dojo.when(results, function(results){
-					Array.prototype.unshift.call(args, results);
-					return dojo.store.util.QueryResults(dojo[method].apply(dojo, args));
-				});
-			};
-		}
-	}
-	addIterativeMethod("forEach");
-	addIterativeMethod("filter");
-	addIterativeMethod("map");
-	if(!results.total){
-		results.total = dojo.when(results, function(results){
-			return results.length;
-		});
-	}
-	return results;
+define("dojo/store/util/QueryResults",["../../_base/kernel","../../_base/lang","../../_base/Deferred"],function(_1){
+_1.getObject("store.util",true,_1);
+_1.store.util.QueryResults=function(_2){
+if(!_2){
+return _2;
+}
+if(_2.then){
+_2=_1.delegate(_2);
+}
+function _3(_4){
+if(!_2[_4]){
+_2[_4]=function(){
+var _5=arguments;
+return _1.when(_2,function(_6){
+Array.prototype.unshift.call(_5,_6);
+return _1.store.util.QueryResults(_1[_4].apply(_1,_5));
+});
 };
-
-return dojo.store.util.QueryResults;
+}
+};
+_3("forEach");
+_3("filter");
+_3("map");
+if(!_2.total){
+_2.total=_1.when(_2,function(_7){
+return _7.length;
+});
+}
+return _2;
+};
+return _1.store.util.QueryResults;
 });

@@ -1,504 +1,122 @@
-define(["./main"], function(dojo) {
-	// module:
-	//		dojo/NodeList-traverse
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-
-/*=====
-dojo["NodeList-traverse"] = {
-	// summary: Adds a chainable methods to dojo.query() / Nodelist instances for traversing the DOM
-};
-=====*/
-
-dojo.extend(dojo.NodeList, {
-	_buildArrayFromCallback: function(/*Function*/callback){
-		// summary:
-		// 		builds a new array of possibly differing size based on the input list.
-		// 		Since the returned array is likely of different size than the input array,
-		// 		the array's map function cannot be used.
-		var ary = [];
-		for(var i = 0; i < this.length; i++){
-			var items = callback.call(this[i], this[i], ary);
-			if(items){
-				ary = ary.concat(items);
-			}
-		}
-		return ary;
-	},
-
-	_getUniqueAsNodeList: function(nodes){
-		// summary:
-		// 		given a list of nodes, make sure only unique
-		// 		elements are returned as our NodeList object.
-		// 		Does not call _stash().
-		var ary = [];
-		//Using for loop for better speed.
-		for(var i = 0, node; node = nodes[i]; i++){
-			//Should be a faster way to do this. dojo.query has a private
-			//_zip function that may be inspirational, but there are pathways
-			//in query that force nozip?
-			if(node.nodeType == 1 && dojo.indexOf(ary, node) == -1){
-				ary.push(node);
-			}
-		}
-		return this._wrap(ary, null, this._NodeListCtor);	 //dojo.NodeList
-	},
-
-	_getUniqueNodeListWithParent: function(nodes, query){
-		// summary:
-		// 		gets unique element nodes, filters them further
-		// 		with an optional query and then calls _stash to track parent NodeList.
-		var ary = this._getUniqueAsNodeList(nodes);
-		ary = (query ? dojo._filterQueryResult(ary, query) : ary);
-		return ary._stash(this);  //dojo.NodeList
-	},
-
-	_getRelatedUniqueNodes: function(/*String?*/query, /*Function*/callback){
-		// summary:
-		// 		cycles over all the nodes and calls a callback
-		// 		to collect nodes for a possible inclusion in a result.
-		// 		The callback will get two args: callback(node, ary),
-		// 		where ary is the array being used to collect the nodes.
-		return this._getUniqueNodeListWithParent(this._buildArrayFromCallback(callback), query);  //dojo.NodeList
-	},
-
-	children: function(/*String?*/query){
-		// summary:
-		// 		Returns all immediate child elements for nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the child elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, all immediate child elements for the nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue">Blue One</div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".container").children();
-		//		returns the four divs that are children of the container div.
-		//		Running this code:
-		//	|	dojo.query(".container").children(".red");
-		//		returns the two divs that have the class "red".
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			return dojo._toArray(node.childNodes);
-		}); //dojo.NodeList
-	},
-
-	closest: function(/*String*/query, /*String|DOMNode?*/ root){
-		// summary:
-		// 		Returns closest parent that matches query, including current node in this
-		// 		dojo.NodeList if it matches the query.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// query:
-		//		a CSS selector.
-		// root:
-		//		If specified, query is relative to "root" rather than document body.
-		// returns:
-		//		dojo.NodeList, the closest parent that matches the query, including the current
-		//		node in this dojo.NodeList if it matches the query.
-		// example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		//	|		<div class="red">Red One</div>
-		//	|		Some Text
-		//	|		<div class="blue">Blue One</div>
-		//	|		<div class="red">Red Two</div>
-		//	|		<div class="blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".red").closest(".container");
-		//		returns the div with class "container".
-		return this._getRelatedUniqueNodes(null, function(node, ary){
-			do{
-				if(dojo._filterQueryResult([node], query, root).length){
-					return node;
-				}
-			}while(node != root && (node = node.parentNode) && node.nodeType == 1);
-			return null; //To make rhino strict checking happy.
-		}); //dojo.NodeList
-	},
-
-	parent: function(/*String?*/query){
-		// summary:
-		// 		Returns immediate parent elements for nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the parent elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, immediate parent elements for nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		<div class="blue first"><span class="text">Blue One</span></div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue"><span class="text">Blue Two</span></div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".text").parent();
-		//		returns the two divs with class "blue".
-		//		Running this code:
-		//	|	dojo.query(".text").parent(".first");
-		//		returns the one div with class "blue" and "first".
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			return node.parentNode;
-		}); //dojo.NodeList
-	},
-
-	parents: function(/*String?*/query){
-		// summary:
-		// 		Returns all parent elements for nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the child elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, all parent elements for nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		<div class="blue first"><span class="text">Blue One</span></div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue"><span class="text">Blue Two</span></div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".text").parents();
-		//		returns the two divs with class "blue", the div with class "container",
-		// 	|	the body element and the html element.
-		//		Running this code:
-		//	|	dojo.query(".text").parents(".container");
-		//		returns the one div with class "container".
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			var pary = [];
-			while(node.parentNode){
-				node = node.parentNode;
-				pary.push(node);
-			}
-			return pary;
-		}); //dojo.NodeList
-	},
-
-	siblings: function(/*String?*/query){
-		// summary:
-		// 		Returns all sibling elements for nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the sibling elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, all sibling elements for nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue first">Blue One</div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".first").siblings();
-		//		returns the two divs with class "red" and the other div
-		// 	|	with class "blue" that does not have "first".
-		//		Running this code:
-		//	|	dojo.query(".first").siblings(".red");
-		//		returns the two div with class "red".
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			var pary = [];
-			var nodes = (node.parentNode && node.parentNode.childNodes);
-			for(var i = 0; i < nodes.length; i++){
-				if(nodes[i] != node){
-					pary.push(nodes[i]);
-				}
-			}
-			return pary;
-		}); //dojo.NodeList
-	},
-
-	next: function(/*String?*/query){
-		// summary:
-		// 		Returns the next element for nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the next elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, the next element for nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue first">Blue One</div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue last">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".first").next();
-		//		returns the div with class "red" and has innerHTML of "Red Two".
-		//		Running this code:
-		//	|	dojo.query(".last").next(".red");
-		//		does not return any elements.
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			var next = node.nextSibling;
-			while(next && next.nodeType != 1){
-				next = next.nextSibling;
-			}
-			return next;
-		}); //dojo.NodeList
-	},
-
-	nextAll: function(/*String?*/query){
-		// summary:
-		// 		Returns all sibling elements that come after the nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the sibling elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, all sibling elements that come after the nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue first">Blue One</div>
-		// 	|		<div class="red next">Red Two</div>
-		// 	|		<div class="blue next">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".first").nextAll();
-		//		returns the two divs with class of "next".
-		//		Running this code:
-		//	|	dojo.query(".first").nextAll(".red");
-		//		returns the one div with class "red" and innerHTML "Red Two".
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			var pary = [];
-			var next = node;
-			while((next = next.nextSibling)){
-				if(next.nodeType == 1){
-					pary.push(next);
-				}
-			}
-			return pary;
-		}); //dojo.NodeList
-	},
-
-	prev: function(/*String?*/query){
-		// summary:
-		// 		Returns the previous element for nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the previous elements.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, the previous element for nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue first">Blue One</div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".first").prev();
-		//		returns the div with class "red" and has innerHTML of "Red One".
-		//		Running this code:
-		//	|	dojo.query(".first").prev(".blue");
-		//		does not return any elements.
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			var prev = node.previousSibling;
-			while(prev && prev.nodeType != 1){
-				prev = prev.previousSibling;
-			}
-			return prev;
-		}); //dojo.NodeList
-	},
-
-	prevAll: function(/*String?*/query){
-		// summary:
-		// 		Returns all sibling elements that come before the nodes in this dojo.NodeList.
-		// 		Optionally takes a query to filter the sibling elements.
-		// description:
-		// 		The returned nodes will be in reverse DOM order -- the first node in the list will
-		// 		be the node closest to the original node/NodeList.
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		//	query:
-		//		a CSS selector.
-		// returns:
-		//		dojo.NodeList, all sibling elements that come before the nodes in this dojo.NodeList.
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red prev">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue prev">Blue One</div>
-		// 	|		<div class="red second">Red Two</div>
-		// 	|		<div class="blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".second").prevAll();
-		//		returns the two divs with class of "prev".
-		//		Running this code:
-		//	|	dojo.query(".first").prevAll(".red");
-		//		returns the one div with class "red prev" and innerHTML "Red One".
-		return this._getRelatedUniqueNodes(query, function(node, ary){
-			var pary = [];
-			var prev = node;
-			while((prev = prev.previousSibling)){
-				if(prev.nodeType == 1){
-					pary.push(prev);
-				}
-			}
-			return pary;
-		}); //dojo.NodeList
-	},
-
-	andSelf: function(){
-		// summary:
-		// 		Adds the nodes from the previous dojo.NodeList to the current dojo.NodeList.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// returns:
-		//		dojo.NodeList
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red prev">Red One</div>
-		// 	|		Some Text
-		// 	|		<div class="blue prev">Blue One</div>
-		// 	|		<div class="red second">Red Two</div>
-		// 	|		<div class="blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".second").prevAll().andSelf();
-		//		returns the two divs with class of "prev", as well as the div with class "second".
-		return this.concat(this._parent);
-	},
-
-	//Alternate methods for the :first/:last/:even/:odd pseudos.
-	first: function(){
-		// summary:
-		// 		Returns the first node in this dojo.NodeList as a dojo.NodeList.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// returns:
-		//		dojo.NodeList, with the first node in this dojo.NodeList
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		<div class="blue first">Blue One</div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue last">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".blue").first();
-		//		returns the div with class "blue" and "first".
-		return this._wrap(((this[0] && [this[0]]) || []), this); //dojo.NodeList
-	},
-
-	last: function(){
-		// summary:
-		// 		Returns the last node in this dojo.NodeList as a dojo.NodeList.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// returns:
-		//		dojo.NodeList, with the last node in this dojo.NodeList
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="red">Red One</div>
-		// 	|		<div class="blue first">Blue One</div>
-		// 	|		<div class="red">Red Two</div>
-		// 	|		<div class="blue last">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".blue").last();
-		//		returns the last div with class "blue",
-		return this._wrap((this.length ? [this[this.length - 1]] : []), this); //dojo.NodeList
-	},
-
-	even: function(){
-		// summary:
-		// 		Returns the even nodes in this dojo.NodeList as a dojo.NodeList.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// returns:
-		//		dojo.NodeList, with the even nodes in this dojo.NodeList
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="interior red">Red One</div>
-		// 	|		<div class="interior blue">Blue One</div>
-		// 	|		<div class="interior red">Red Two</div>
-		// 	|		<div class="interior blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".interior").even();
-		//		returns the two divs with class "blue"
-		return this.filter(function(item, i){
-			return i % 2 != 0;
-		}); //dojo.NodeList
-	},
-
-	odd: function(){
-		// summary:
-		// 		Returns the odd nodes in this dojo.NodeList as a dojo.NodeList.
-		// description:
-		// 		.end() can be used on the returned dojo.NodeList to get back to the
-		// 		original dojo.NodeList.
-		// returns:
-		//		dojo.NodeList, with the odd nodes in this dojo.NodeList
-		//	example:
-		//		assume a DOM created by this markup:
-		//	|	<div class="container">
-		// 	|		<div class="interior red">Red One</div>
-		// 	|		<div class="interior blue">Blue One</div>
-		// 	|		<div class="interior red">Red Two</div>
-		// 	|		<div class="interior blue">Blue Two</div>
-		//	|	</div>
-		//		Running this code:
-		//	|	dojo.query(".interior").odd();
-		//		returns the two divs with class "red"
-		return this.filter(function(item, i){
-			return i % 2 == 0;
-		}); //dojo.NodeList
-	}
+define("dojo/NodeList-traverse",["./main"],function(_1){
+_1.extend(_1.NodeList,{_buildArrayFromCallback:function(_2){
+var _3=[];
+for(var i=0;i<this.length;i++){
+var _4=_2.call(this[i],this[i],_3);
+if(_4){
+_3=_3.concat(_4);
+}
+}
+return _3;
+},_getUniqueAsNodeList:function(_5){
+var _6=[];
+for(var i=0,_7;_7=_5[i];i++){
+if(_7.nodeType==1&&_1.indexOf(_6,_7)==-1){
+_6.push(_7);
+}
+}
+return this._wrap(_6,null,this._NodeListCtor);
+},_getUniqueNodeListWithParent:function(_8,_9){
+var _a=this._getUniqueAsNodeList(_8);
+_a=(_9?_1._filterQueryResult(_a,_9):_a);
+return _a._stash(this);
+},_getRelatedUniqueNodes:function(_b,_c){
+return this._getUniqueNodeListWithParent(this._buildArrayFromCallback(_c),_b);
+},children:function(_d){
+return this._getRelatedUniqueNodes(_d,function(_e,_f){
+return _1._toArray(_e.childNodes);
 });
-
-return dojo.NodeList;
+},closest:function(_10,_11){
+return this._getRelatedUniqueNodes(null,function(_12,ary){
+do{
+if(_1._filterQueryResult([_12],_10,_11).length){
+return _12;
+}
+}while(_12!=_11&&(_12=_12.parentNode)&&_12.nodeType==1);
+return null;
+});
+},parent:function(_13){
+return this._getRelatedUniqueNodes(_13,function(_14,ary){
+return _14.parentNode;
+});
+},parents:function(_15){
+return this._getRelatedUniqueNodes(_15,function(_16,ary){
+var _17=[];
+while(_16.parentNode){
+_16=_16.parentNode;
+_17.push(_16);
+}
+return _17;
+});
+},siblings:function(_18){
+return this._getRelatedUniqueNodes(_18,function(_19,ary){
+var _1a=[];
+var _1b=(_19.parentNode&&_19.parentNode.childNodes);
+for(var i=0;i<_1b.length;i++){
+if(_1b[i]!=_19){
+_1a.push(_1b[i]);
+}
+}
+return _1a;
+});
+},next:function(_1c){
+return this._getRelatedUniqueNodes(_1c,function(_1d,ary){
+var _1e=_1d.nextSibling;
+while(_1e&&_1e.nodeType!=1){
+_1e=_1e.nextSibling;
+}
+return _1e;
+});
+},nextAll:function(_1f){
+return this._getRelatedUniqueNodes(_1f,function(_20,ary){
+var _21=[];
+var _22=_20;
+while((_22=_22.nextSibling)){
+if(_22.nodeType==1){
+_21.push(_22);
+}
+}
+return _21;
+});
+},prev:function(_23){
+return this._getRelatedUniqueNodes(_23,function(_24,ary){
+var _25=_24.previousSibling;
+while(_25&&_25.nodeType!=1){
+_25=_25.previousSibling;
+}
+return _25;
+});
+},prevAll:function(_26){
+return this._getRelatedUniqueNodes(_26,function(_27,ary){
+var _28=[];
+var _29=_27;
+while((_29=_29.previousSibling)){
+if(_29.nodeType==1){
+_28.push(_29);
+}
+}
+return _28;
+});
+},andSelf:function(){
+return this.concat(this._parent);
+},first:function(){
+return this._wrap(((this[0]&&[this[0]])||[]),this);
+},last:function(){
+return this._wrap((this.length?[this[this.length-1]]:[]),this);
+},even:function(){
+return this.filter(function(_2a,i){
+return i%2!=0;
+});
+},odd:function(){
+return this.filter(function(_2b,i){
+return i%2==0;
+});
+}});
+return _1.NodeList;
 });

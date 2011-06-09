@@ -1,583 +1,259 @@
-define([
-	"dojo/_base/kernel",
-	"../..",
-	"../../_Widget",
-	"../../_TemplatedMixin",
-	"../../_WidgetsInTemplateMixin",
-	"../_Plugin",
-	"../range",
-	"../selection",
-	"../../form/FilteringSelect",
-	"dojo/store/Memory", // dojo.store.Memory
-	"dojo/i18n", // dojo.i18n.getLocalization
-	"dojo/i18n!../nls/FontChoice",
-	"dojo/_base/array", // dojo.indexOf dojo.map
-	"dojo/_base/html", // dojo.place
-	"dojo/_base/lang", // dojo.delegate dojo.hitch dojo.isString
-	"dojo/_base/window" // dojo.withGlobal
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/_editor/plugins/FontChoice
-// summary:
-//		fontchoice, fontsize, and formatblock editor plugins
-
-
-dojo.declare("dijit._editor.plugins._FontDropDown",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
-	// summary:
-	//		Base class for widgets that contains a label (like "Font:")
-	//		and a FilteringSelect drop down to pick a value.
-	//		Used as Toolbar entry.
-
-	// label: [public] String
-	//		The label to apply to this particular FontDropDown.
-	label: "",
-
-	// plainText: [public] boolean
-	//		Flag to indicate that the returned label should be plain text
-	//		instead of an example.
-	plainText: false,
-
-	// templateString: [public] String
-	//		The template used to construct the labeled dropdown.
-	templateString:
-		"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>" +
-			"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>" +
-			"<input dojoType='dijit.form.FilteringSelect' required='false' labelType='html' labelAttr='label' searchAttr='name' " +
-					"tabIndex='-1' id='${selectId}' dojoAttachPoint='select' value=''/>" +
-		"</span>",
-
-	postMixInProperties: function(){
-		// summary:
-		//		Over-ride to set specific properties.
-		this.inherited(arguments);
-
-		this.strings = dojo.i18n.getLocalization("dijit._editor", "FontChoice");
-
-		// Set some substitution variables used in the template
-		this.label = this.strings[this.command];
-		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
-		this.selectId = this.id + "_select";
-
-		this.inherited(arguments);
-	},
-
-	postCreate: function(){
-		// summary:
-		//		Over-ride for the default postCreate action
-		//		This establishes the filtering selects and the like.
-
-		// Initialize the list of items in the drop down by creating data store with items like:
-		// {value: 1, name: "xx-small", label: "<font size=1>xx-small</font-size>" }
-		this.select.set("store", new dojo.store.Memory({
-			idProperty: "value",
-			data: dojo.map(this.values, function(value){
-				var name = this.strings[value] || value;
-				return {
-					label: this.getLabel(value, name),
-					name: name,
-					value: value
-				};
-			}, this)
-		}));
-
-		this.select.set("value", "", false);
-		this.disabled = this.select.get("disabled");
-	},
-
-	_setValueAttr: function(value, priorityChange){
-		// summary:
-		//		Over-ride for the default action of setting the
-		//		widget value, maps the input to known values
-		// value: Object|String
-		//		The value to set in the select.
-		// priorityChange:
-		//		Optional parameter used to tell the select whether or not to fire
-		//		onChange event.
-
-		// if the value is not a permitted value, just set empty string to prevent showing the warning icon
-		priorityChange = priorityChange !== false;
-		this.select.set('value', dojo.indexOf(this.values,value) < 0 ? "" : value, priorityChange);
-		if(!priorityChange){
-			// Clear the last state in case of updateState calls.  Ref: #10466
-			this.select._lastValueReported=null;
-		}
-	},
-
-	_getValueAttr: function(){
-		// summary:
-		//		Allow retreiving the value from the composite select on
-		//		call to button.get("value");
-		return this.select.get('value');
-	},
-
-	focus: function(){
-		// summary:
-		//		Over-ride for focus control of this widget.  Delegates focus down to the
-		//		filtering select.
-		this.select.focus();
-	},
-
-	_setDisabledAttr: function(value){
-		// summary:
-		//		Over-ride for the button's 'disabled' attribute so that it can be
-		//		disabled programmatically.
-
-		// Save off ths disabled state so the get retrieves it correctly
-		//without needing to have a function proxy it.
-		this.disabled = value;
-		this.select.set("disabled", value);
-	}
+define("dijit/_editor/plugins/FontChoice",["dojo/_base/kernel","../..","../../_Widget","../../_TemplatedMixin","../../_WidgetsInTemplateMixin","../_Plugin","../range","../selection","../../form/FilteringSelect","dojo/store/Memory","dojo/i18n","dojo/i18n!../nls/FontChoice","dojo/_base/array","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
+_1.declare("dijit._editor.plugins._FontDropDown",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{label:"",plainText:false,templateString:"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>"+"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>"+"<input dojoType='dijit.form.FilteringSelect' required='false' labelType='html' labelAttr='label' searchAttr='name' "+"tabIndex='-1' id='${selectId}' dojoAttachPoint='select' value=''/>"+"</span>",postMixInProperties:function(){
+this.inherited(arguments);
+this.strings=_1.i18n.getLocalization("dijit._editor","FontChoice");
+this.label=this.strings[this.command];
+this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+this.selectId=this.id+"_select";
+this.inherited(arguments);
+},postCreate:function(){
+this.select.set("store",new _1.store.Memory({idProperty:"value",data:_1.map(this.values,function(_3){
+var _4=this.strings[_3]||_3;
+return {label:this.getLabel(_3,_4),name:_4,value:_3};
+},this)}));
+this.select.set("value","",false);
+this.disabled=this.select.get("disabled");
+},_setValueAttr:function(_5,_6){
+_6=_6!==false;
+this.select.set("value",_1.indexOf(this.values,_5)<0?"":_5,_6);
+if(!_6){
+this.select._lastValueReported=null;
+}
+},_getValueAttr:function(){
+return this.select.get("value");
+},focus:function(){
+this.select.focus();
+},_setDisabledAttr:function(_7){
+this.disabled=_7;
+this.select.set("disabled",_7);
+}});
+_1.declare("dijit._editor.plugins._FontNameDropDown",_2._editor.plugins._FontDropDown,{generic:false,command:"fontName",postMixInProperties:function(){
+if(!this.values){
+this.values=this.generic?["serif","sans-serif","monospace","cursive","fantasy"]:["Arial","Times New Roman","Comic Sans MS","Courier New"];
+}
+this.inherited(arguments);
+},getLabel:function(_8,_9){
+if(this.plainText){
+return _9;
+}else{
+return "<div style='font-family: "+_8+"'>"+_9+"</div>";
+}
+},_setValueAttr:function(_a,_b){
+_b=_b!==false;
+if(this.generic){
+var _c={"Arial":"sans-serif","Helvetica":"sans-serif","Myriad":"sans-serif","Times":"serif","Times New Roman":"serif","Comic Sans MS":"cursive","Apple Chancery":"cursive","Courier":"monospace","Courier New":"monospace","Papyrus":"fantasy"};
+_a=_c[_a]||_a;
+}
+this.inherited(arguments,[_a,_b]);
+}});
+_1.declare("dijit._editor.plugins._FontSizeDropDown",_2._editor.plugins._FontDropDown,{command:"fontSize",values:[1,2,3,4,5,6,7],getLabel:function(_d,_e){
+if(this.plainText){
+return _e;
+}else{
+return "<font size="+_d+"'>"+_e+"</font>";
+}
+},_setValueAttr:function(_f,_10){
+_10=_10!==false;
+if(_f.indexOf&&_f.indexOf("px")!=-1){
+var _11=parseInt(_f,10);
+_f={10:1,13:2,16:3,18:4,24:5,32:6,48:7}[_11]||_f;
+}
+this.inherited(arguments,[_f,_10]);
+}});
+_1.declare("dijit._editor.plugins._FormatBlockDropDown",_2._editor.plugins._FontDropDown,{command:"formatBlock",values:["noFormat","p","h1","h2","h3","pre"],postCreate:function(){
+this.inherited(arguments);
+this.set("value","noFormat",false);
+},getLabel:function(_12,_13){
+if(this.plainText||_12=="noFormat"){
+return _13;
+}else{
+return "<"+_12+">"+_13+"</"+_12+">";
+}
+},_execCommand:function(_14,_15,_16){
+if(_16==="noFormat"){
+var _17;
+var end;
+var sel=_2.range.getSelection(_14.window);
+if(sel&&sel.rangeCount>0){
+var _18=sel.getRangeAt(0);
+var _19,tag;
+if(_18){
+_17=_18.startContainer;
+end=_18.endContainer;
+while(_17&&_17!==_14.editNode&&_17!==_14.document.body&&_17.nodeType!==1){
+_17=_17.parentNode;
+}
+while(end&&end!==_14.editNode&&end!==_14.document.body&&end.nodeType!==1){
+end=end.parentNode;
+}
+var _1a=_1.hitch(this,function(_1b,_1c){
+if(_1b.childNodes&&_1b.childNodes.length){
+var i;
+for(i=0;i<_1b.childNodes.length;i++){
+var c=_1b.childNodes[i];
+if(c.nodeType==1){
+if(_1.withGlobal(_14.window,"inSelection",_2._editor.selection,[c])){
+var tag=c.tagName?c.tagName.toLowerCase():"";
+if(_1.indexOf(this.values,tag)!==-1){
+_1c.push(c);
+}
+_1a(c,_1c);
+}
+}
+}
+}
 });
-
-
-dojo.declare("dijit._editor.plugins._FontNameDropDown", dijit._editor.plugins._FontDropDown, {
-	// summary:
-	//		Dropdown to select a font; goes in editor toolbar.
-
-	// generic: Boolean
-	//		Use generic (web standard) font names
-	generic: false,
-
-	// command: [public] String
-	//		The editor 'command' implemented by this plugin.
-	command: "fontName",
-
-	postMixInProperties: function(){
-		// summary:
-		//		Over-ride for the default posr mixin control
-		if(!this.values){
-			this.values = this.generic ?
-				["serif", "sans-serif", "monospace", "cursive", "fantasy"] : // CSS font-family generics
-					["Arial", "Times New Roman", "Comic Sans MS", "Courier New"];
-		}
-		this.inherited(arguments);
-	},
-
-	getLabel: function(value, name){
-		// summary:
-		//		Function used to generate the labels of the format dropdown
-		//		will return a formatted, or plain label based on the value
-		//		of the plainText option.
-		// value: String
-		//		The 'insert value' associated with a name
-		// name: String
-		//		The text name of the value
-		if(this.plainText){
-			return name;
-		}else{
-			return "<div style='font-family: "+value+"'>" + name + "</div>";
-		}
-	},
-
-	_setValueAttr: function(value, priorityChange){
-		// summary:
-		//		Over-ride for the default action of setting the
-		//		widget value, maps the input to known values
-
-		priorityChange = priorityChange !== false;
-		if(this.generic){
-			var map = {
-				"Arial": "sans-serif",
-				"Helvetica": "sans-serif",
-				"Myriad": "sans-serif",
-				"Times": "serif",
-				"Times New Roman": "serif",
-				"Comic Sans MS": "cursive",
-				"Apple Chancery": "cursive",
-				"Courier": "monospace",
-				"Courier New": "monospace",
-				"Papyrus": "fantasy"
-//					,"????": "fantasy" TODO: IE doesn't map fantasy font-family?
-			};
-			value = map[value] || value;
-		}
-		this.inherited(arguments, [value, priorityChange]);
-	}
+var _1d=_1.hitch(this,function(_1e){
+if(_1e&&_1e.length){
+_14.beginEditing();
+while(_1e.length){
+this._removeFormat(_14,_1e.pop());
+}
+_14.endEditing();
+}
 });
-
-dojo.declare("dijit._editor.plugins._FontSizeDropDown", dijit._editor.plugins._FontDropDown, {
-	// summary:
-	//		Dropdown to select a font size; goes in editor toolbar.
-
-	// command: [public] String
-	//		The editor 'command' implemented by this plugin.
-	command: "fontSize",
-
-	// values: [public] Number[]
-	//		The HTML font size values supported by this plugin
-	values: [1,2,3,4,5,6,7], // sizes according to the old HTML FONT SIZE
-
-	getLabel: function(value, name){
-		// summary:
-		//		Function used to generate the labels of the format dropdown
-		//		will return a formatted, or plain label based on the value
-		//		of the plainText option.
-		//		We're stuck using the deprecated FONT tag to correspond
-		//		with the size measurements used by the editor
-		// value: String
-		//		The 'insert value' associated with a name
-		// name: String
-		//		The text name of the value
-		if(this.plainText){
-			return name;
-		}else{
-			return "<font size=" + value + "'>" + name + "</font>";
-		}
-	},
-
-	_setValueAttr: function(value, priorityChange){
-		// summary:
-		//		Over-ride for the default action of setting the
-		//		widget value, maps the input to known values
-		priorityChange = priorityChange !== false;
-		if(value.indexOf && value.indexOf("px") != -1){
-			var pixels = parseInt(value, 10);
-			value = {10:1, 13:2, 16:3, 18:4, 24:5, 32:6, 48:7}[pixels] || value;
-		}
-
-		this.inherited(arguments, [value, priorityChange]);
-	}
+var _1f=[];
+if(_17==end){
+var _20;
+_19=_17;
+while(_19&&_19!==_14.editNode&&_19!==_14.document.body){
+if(_19.nodeType==1){
+tag=_19.tagName?_19.tagName.toLowerCase():"";
+if(_1.indexOf(this.values,tag)!==-1){
+_20=_19;
+break;
+}
+}
+_19=_19.parentNode;
+}
+_1a(_17,_1f);
+if(_20){
+_1f=[_20].concat(_1f);
+}
+_1d(_1f);
+}else{
+_19=_17;
+while(_1.withGlobal(_14.window,"inSelection",_2._editor.selection,[_19])){
+if(_19.nodeType==1){
+tag=_19.tagName?_19.tagName.toLowerCase():"";
+if(_1.indexOf(this.values,tag)!==-1){
+_1f.push(_19);
+}
+_1a(_19,_1f);
+}
+_19=_19.nextSibling;
+}
+_1d(_1f);
+}
+_14.onDisplayChanged();
+}
+}
+}else{
+_14.execCommand(_15,_16);
+}
+},_removeFormat:function(_21,_22){
+if(_21.customUndo){
+while(_22.firstChild){
+_1.place(_22.firstChild,_22,"before");
+}
+_22.parentNode.removeChild(_22);
+}else{
+_1.withGlobal(_21.window,"selectElementChildren",_2._editor.selection,[_22]);
+var _23=_1.withGlobal(_21.window,"getSelectedHtml",_2._editor.selection,[null]);
+_1.withGlobal(_21.window,"selectElement",_2._editor.selection,[_22]);
+_21.execCommand("inserthtml",_23||"");
+}
+}});
+_1.declare("dijit._editor.plugins.FontChoice",_2._editor._Plugin,{useDefaultCommand:false,_initButton:function(){
+var _24={fontName:_2._editor.plugins._FontNameDropDown,fontSize:_2._editor.plugins._FontSizeDropDown,formatBlock:_2._editor.plugins._FormatBlockDropDown}[this.command],_25=this.params;
+if(this.params.custom){
+_25.values=this.params.custom;
+}
+var _26=this.editor;
+this.button=new _24(_1.delegate({dir:_26.dir,lang:_26.lang},_25));
+this.connect(this.button.select,"onChange",function(_27){
+this.editor.focus();
+if(this.command=="fontName"&&_27.indexOf(" ")!=-1){
+_27="'"+_27+"'";
+}
+if(this.button._execCommand){
+this.button._execCommand(this.editor,this.command,_27);
+}else{
+this.editor.execCommand(this.command,_27);
+}
 });
-
-
-dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins._FontDropDown, {
-	// summary:
-	//		Dropdown to select a format (like paragraph or heading); goes in editor toolbar.
-
-	// command: [public] String
-	//		The editor 'command' implemented by this plugin.
-	command: "formatBlock",
-
-	// values: [public] Array
-	//		The HTML format tags supported by this plugin
-	values: ["noFormat", "p", "h1", "h2", "h3", "pre"],
-
-	postCreate: function(){
-		// Init and set the default value to no formatting.  Update state will adjust it
-		// as needed.
-		this.inherited(arguments);
-		this.set("value", "noFormat", false);
-	},
-
-	getLabel: function(value, name){
-		// summary:
-		//		Function used to generate the labels of the format dropdown
-		//		will return a formatted, or plain label based on the value
-		//		of the plainText option.
-		// value: String
-		//		The 'insert value' associated with a name
-		// name: String
-		//		The text name of the value
-		if(this.plainText || value == "noFormat"){
-			return name;
-		}else{
-			return "<" + value + ">" + name + "</" + value + ">";
-		}
-	},
-
-	_execCommand: function(editor, command, choice){
-		// summary:
-		//		Over-ride for default exec-command label.
-		// 		Allows us to treat 'none' as special.
-		if(choice === "noFormat"){
-			var start;
-			var end;
-			var sel = dijit.range.getSelection(editor.window);
-			if(sel && sel.rangeCount > 0){
-				var range = sel.getRangeAt(0);
-				var node, tag;
-				if(range){
-					start = range.startContainer;
-					end = range.endContainer;
-
-					// find containing nodes of start/end.
-					while(start && start !== editor.editNode &&
-						  start !== editor.document.body &&
-						  start.nodeType !== 1){
-						start = start.parentNode;
-					}
-
-					while(end && end !== editor.editNode &&
-						  end !== editor.document.body &&
-						  end.nodeType !== 1){
-						end = end.parentNode;
-					}
-
-					var processChildren = dojo.hitch(this, function(node, array){
-						if(node.childNodes && node.childNodes.length){
-							var i;
-							for(i = 0; i < node.childNodes.length; i++){
-								var c = node.childNodes[i];
-								if(c.nodeType == 1){
-									if(dojo.withGlobal(editor.window, "inSelection", dijit._editor.selection, [c])){
-										var tag = c.tagName? c.tagName.toLowerCase(): "";
-										if(dojo.indexOf(this.values, tag) !== -1){
-											array.push(c);
-										}
-										processChildren(c,array);
-									}
-								}
-							}
-						}
-					});
-
-					var unformatNodes = dojo.hitch(this, function(nodes){
-						// summary:
-						//		Internal function to clear format nodes.
-						// nodes:
-						//		The array of nodes to strip formatting from.
-						if(nodes && nodes.length){
-							editor.beginEditing();
-							while(nodes.length){
-								this._removeFormat(editor, nodes.pop());
-							}
-							editor.endEditing();
-						}
-					});
-
-					var clearNodes = [];
-					if(start == end){
-						//Contained within the same block, may be collapsed, but who cares, see if we
-						// have a block element to remove.
-						var block;
-						node = start;
-						while(node && node !== editor.editNode && node !== editor.document.body){
-							if(node.nodeType == 1){
-								tag = node.tagName? node.tagName.toLowerCase(): "";
-								if(dojo.indexOf(this.values, tag) !== -1){
-									block = node;
-									break;
-								}
-							}
-							node = node.parentNode;
-						}
-
-						//Also look for all child nodes in the selection that may need to be
-						//cleared of formatting
-						processChildren(start, clearNodes);
-						if(block){ clearNodes = [block].concat(clearNodes); }
-						unformatNodes(clearNodes);
-					}else{
-						// Probably a multi select, so we have to process it.  Whee.
-						node = start;
-						while(dojo.withGlobal(editor.window, "inSelection", dijit._editor.selection, [node])){
-							if(node.nodeType == 1){
-								tag = node.tagName? node.tagName.toLowerCase(): "";
-								if(dojo.indexOf(this.values, tag) !== -1){
-									clearNodes.push(node);
-								}
-								processChildren(node,clearNodes);
-							}
-							node = node.nextSibling;
-						}
-						unformatNodes(clearNodes);
-					}
-					editor.onDisplayChanged();
-				}
-			}
-		}else{
-			editor.execCommand(command, choice);
-		}
-	},
-
-	_removeFormat: function(editor, node){
-		// summary:
-		//		function to remove the block format node.
-		// node:
-		//		The block format node to remove (and leave the contents behind)
-		if(editor.customUndo){
-			// So of course IE doesn't work right with paste-overs.
-			// We have to do this manually, which is okay since IE already uses
-			// customUndo and we turned it on for WebKit.  WebKit pasted funny,
-			// so couldn't use the execCommand approach
-			while(node.firstChild){
-				dojo.place(node.firstChild, node, "before");
-			}
-			node.parentNode.removeChild(node);
-		}else{
-			// Everyone else works fine this way, a paste-over and is native
-			// undo friendly.
-			dojo.withGlobal(editor.window,
-				 "selectElementChildren", dijit._editor.selection, [node]);
-			var html = 	dojo.withGlobal(editor.window,
-				 "getSelectedHtml", dijit._editor.selection, [null]);
-			dojo.withGlobal(editor.window,
-				 "selectElement", dijit._editor.selection, [node]);
-			editor.execCommand("inserthtml", html||"");
-		}
-	}
+},updateState:function(){
+var _28=this.editor;
+var _29=this.command;
+if(!_28||!_28.isLoaded||!_29.length){
+return;
+}
+if(this.button){
+var _2a=this.get("disabled");
+this.button.set("disabled",_2a);
+if(_2a){
+return;
+}
+var _2b;
+try{
+_2b=_28.queryCommandValue(_29)||"";
+}
+catch(e){
+_2b="";
+}
+var _2c=_1.isString(_2b)&&_2b.match(/'([^']*)'/);
+if(_2c){
+_2b=_2c[1];
+}
+if(_29==="formatBlock"){
+if(!_2b||_2b=="p"){
+_2b=null;
+var _2d;
+var sel=_2.range.getSelection(this.editor.window);
+if(sel&&sel.rangeCount>0){
+var _2e=sel.getRangeAt(0);
+if(_2e){
+_2d=_2e.endContainer;
+}
+}
+while(_2d&&_2d!==_28.editNode&&_2d!==_28.document){
+var tg=_2d.tagName?_2d.tagName.toLowerCase():"";
+if(tg&&_1.indexOf(this.button.values,tg)>-1){
+_2b=tg;
+break;
+}
+_2d=_2d.parentNode;
+}
+if(!_2b){
+_2b="noFormat";
+}
+}else{
+if(_1.indexOf(this.button.values,_2b)<0){
+_2b="noFormat";
+}
+}
+}
+if(_2b!==this.button.get("value")){
+this.button.set("value",_2b,false);
+}
+}
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+switch(o.args.name){
+case "fontName":
+case "fontSize":
+case "formatBlock":
+o.plugin=new _2._editor.plugins.FontChoice({command:o.args.name,plainText:o.args.plainText?o.args.plainText:false});
+}
 });
-
-// TODO: for 2.0, split into FontChoice plugin into three separate classes,
-// one for each command (and change registry below)
-dojo.declare("dijit._editor.plugins.FontChoice", dijit._editor._Plugin,{
-	// summary:
-	//		This plugin provides three drop downs for setting style in the editor
-	//		(font, font size, and format block), as controlled by command.
-	//
-	// description:
-	//		The commands provided by this plugin are:
-	//
-	//		* fontName
-	//	|		Provides a drop down to select from a list of font names
-	//		* fontSize
-	//	|		Provides a drop down to select from a list of font sizes
-	//		* formatBlock
-	//	|		Provides a drop down to select from a list of block styles
-	//	|
-	//
-	//		which can easily be added to an editor by including one or more of the above commands
-	//		in the `plugins` attribute as follows:
-	//
-	//	|	plugins="['fontName','fontSize',...]"
-	//
-	//		It is possible to override the default dropdown list by providing an Array for the `custom` property when
-	//		instantiating this plugin, e.g.
-	//
-	//	|	plugins="[{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond']},...]"
-	//
-	//		Alternatively, for `fontName` only, `generic:true` may be specified to provide a dropdown with
-	//		[CSS generic font families](http://www.w3.org/TR/REC-CSS2/fonts.html#generic-font-families)
-	//
-	//		Note that the editor is often unable to properly handle font styling information defined outside
-	//		the context of the current editor instance, such as pre-populated HTML.
-
-	// useDefaultCommand: [protected] booleam
-	//		Override _Plugin.useDefaultCommand...
-	//		processing is handled by this plugin, not by dijit.Editor.
-	useDefaultCommand: false,
-
-	_initButton: function(){
-		// summary:
-		//		Overrides _Plugin._initButton(), to initialize the FilteringSelect+label in toolbar,
-		//		rather than a simple button.
-		// tags:
-		//		protected
-
-		// Create the widget to go into the toolbar (the so-called "button")
-		var clazz = {
-				fontName: dijit._editor.plugins._FontNameDropDown,
-				fontSize: dijit._editor.plugins._FontSizeDropDown,
-				formatBlock: dijit._editor.plugins._FormatBlockDropDown
-			}[this.command],
-		params = this.params;
-
-		// For back-compat reasons support setting custom values via "custom" parameter
-		// rather than "values" parameter
-		if(this.params.custom){
-			params.values = this.params.custom;
-		}
-
-		var editor = this.editor;
-		this.button = new clazz(dojo.delegate({dir: editor.dir, lang: editor.lang}, params));
-
-		// Reflect changes to the drop down in the editor
-		this.connect(this.button.select, "onChange", function(choice){
-			// User invoked change, since all internal updates set priorityChange to false and will
-			// not trigger an onChange event.
-			this.editor.focus();
-
-			if(this.command == "fontName" && choice.indexOf(" ") != -1){ choice = "'" + choice + "'"; }
-
-			// Invoke, the editor already normalizes commands called through its
-			// execCommand.
-			if(this.button._execCommand){
-				this.button._execCommand(this.editor, this.command, choice);
-			}else{
-				this.editor.execCommand(this.command, choice);
-			}
-		});
-	},
-
-	updateState: function(){
-		// summary:
-		//		Overrides _Plugin.updateState().  This controls updating the menu
-		//		options to the right values on state changes in the document (that trigger a
-		//		test of the actions.)
-		//		It set value of drop down in toolbar to reflect font/font size/format block
-		//		of text at current caret position.
-		// tags:
-		//		protected
-		var _e = this.editor;
-		var _c = this.command;
-		if(!_e || !_e.isLoaded || !_c.length){ return; }
-
-		if(this.button){
-			var disabled = this.get("disabled");
-			this.button.set("disabled", disabled);
-			if(disabled){ return; }
-			var value;
-			try{
-				value = _e.queryCommandValue(_c) || "";
-			}catch(e){
-				//Firefox may throw error above if the editor is just loaded, ignore it
-				value = "";
-			}
-
-			// strip off single quotes, if any
-			var quoted = dojo.isString(value) && value.match(/'([^']*)'/);
-			if(quoted){ value = quoted[1]; }
-
-			if(_c === "formatBlock"){
-				if(!value || value == "p"){
-					// Some browsers (WebKit) doesn't actually get the tag info right.
-					// and IE returns paragraph when in a DIV!, so incorrect a lot,
-					// so we have double-check it.
-					value = null;
-					var elem;
-					// Try to find the current element where the caret is.
-					var sel = dijit.range.getSelection(this.editor.window);
-					if(sel && sel.rangeCount > 0){
-						var range = sel.getRangeAt(0);
-						if(range){
-							elem = range.endContainer;
-						}
-					}
-
-					// Okay, now see if we can find one of the formatting types we're in.
-					while(elem && elem !== _e.editNode && elem !== _e.document){
-						var tg = elem.tagName?elem.tagName.toLowerCase():"";
-						if(tg && dojo.indexOf(this.button.values, tg) > -1){
-							value = tg;
-							break;
-						}
-						elem = elem.parentNode;
-					}
-					if(!value){
-						// Still no value, so lets select 'none'.
-						value = "noFormat";
-					}
-				}else{
-					// Check that the block format is one allowed, if not,
-					// null it so that it gets set to empty.
-					if(dojo.indexOf(this.button.values, value) < 0){
-						value = "noFormat";
-					}
-				}
-			}
-			if(value !== this.button.get("value")){
-				// Set the value, but denote it is not a priority change, so no
-				// onchange fires.
-				this.button.set('value', value, false);
-			}
-		}
-	}
-});
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	switch(o.args.name){
-	case "fontName": case "fontSize": case "formatBlock":
-		o.plugin = new dijit._editor.plugins.FontChoice({
-			command: o.args.name,
-			plainText: o.args.plainText?o.args.plainText:false
-		});
-	}
-});
-
-
-return dijit._editor.plugins.FontChoice;
+return _2._editor.plugins.FontChoice;
 });

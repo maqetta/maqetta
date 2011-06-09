@@ -1,133 +1,57 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html", "dojox/gfx", "dojox/gfx/_base",
-		"dojox/gfx/shape", "dojox/gfx/path", "dojox/geo/openlayers/Feature",
-		"dojox/geo/openlayers/Layer" ], function(dojo, declare, connectArg, htmlArg, gfxArg, gbaseArg, shapeArg,
-		pathArg, featureArg, layerArg){
-
-	return dojo.declare("dojox.geo.openlayers.GfxLayer", dojox.geo.openlayers.Layer, {
-		//	summary: 
-		//		A layer dedicated to render dojox.geo.openlayers.GeometryFeature
-		//	description:
-		//		A layer class for rendering geometries as dojox.gfx.Shape objects.
-		//		This layer class accepts Features which encapsulates graphic objects to be added to the map.
-		//	All objects should be added to this group.
-		//	tags:
-		//		private
-		_viewport : null,
-
-		constructor : function(name, options){
-			//	summary:
-			//		Constructs a new GFX layer.
-			var s = dojox.gfx.createSurface(this.olLayer.div, 100, 100);
-			this._surface = s;
-			if (options && options.viewport)
-				this._viewport = options.viewport;
-			else
-				this._viewport = s.createGroup();
-			dojo.connect(this.olLayer, "onMapResize", this, "onMapResize");
-			this.olLayer.getDataExtent = this.getDataExtent;
-		},
-
-		getViewport : function(){
-			//	summary:
-			//		Gets the viewport
-			//	tags:
-			//		internal
-			return this._viewport;
-		},
-
-		setViewport : function(g){
-			//	summary:
-			//		Sets the viewport
-			//	g: dojox.gfx.Group
-			//	tags:
-			//		internal
-			if (this._viewport)
-				this._viewport.removeShape();
-			this._viewport = g;
-			this._surface.add(g);
-		},
-
-		onMapResize : function(){
-			//	summary:
-			//		Called when map is resized.
-			//	tag:
-			//	protected
-			this._surfaceSize();
-		},
-
-		setMap : function(map){
-			//	summary:
-			//		Sets the map for this layer.
-			//	tag:
-			//		protected
-			this.inherited(arguments);
-			this._surfaceSize();
-		},
-
-		getDataExtent : function(){
-			//	summary:
-			//		Get data extent
-			//	tags:
-			//		private
-			var ret = this._surface.getDimensions();;
-			return ret;
-		},
-		getSurface : function(){
-			//	summary:
-			//		Get the underlying dojox.gfx.Surface
-			//	returns: dojox.gfx.Surface 
-			//		The dojox.gfx.Surface this layer uses to draw its GFX rendering.
-			return this._surface;
-		},
-
-		_surfaceSize : function(){
-			//	summary:
-			//		Recomputes the surface size when being resized.
-			//	tags:
-			//		private
-			var s = this.olLayer.map.getSize();
-			this._surface.setDimensions(s.w, s.h);
-		},
-
-		moveTo : function(event){
-			// summary:
-			//   Called when this layer is moved or zoommed.
-			//	event:
-			//		The event
-			var s = dojo.style(this.olLayer.map.layerContainerDiv);
-			var left = parseInt(s.left);
-			var top = parseInt(s.top);
-
-			if (event.zoomChanged || left || top) {
-				var d = this.olLayer.div;
-				dojo.style(d, {
-					left : -left + "px",
-					top : -top + "px"
-				});
-
-				if (this._features == null)
-					return;
-				var vp = this.getViewport();
-
-				vp.setTransform(dojox.gfx.matrix.translate(left, top));
-
-				this.inherited(arguments);
-
-				//			if (event.zoomChanged) {
-				//				dojo.forEach(this._features, function(f){
-				//					this.renderFeature(f);
-				//				}, this);
-				//			}
-			}
-		},
-
-		added : function(){
-			//	summary:
-			//		Called when added to a map.
-			this.inherited(arguments);
-			this._surfaceSize();
-		}
-
-	});
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/gfx","dojox/gfx/_base","dojox/gfx/shape","dojox/gfx/path","dojox/geo/openlayers/Feature","dojox/geo/openlayers/Layer"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+return _1.declare("dojox.geo.openlayers.GfxLayer",dojox.geo.openlayers.Layer,{_viewport:null,constructor:function(_b,_c){
+var s=dojox.gfx.createSurface(this.olLayer.div,100,100);
+this._surface=s;
+if(_c&&_c.viewport){
+this._viewport=_c.viewport;
+}else{
+this._viewport=s.createGroup();
+}
+_1.connect(this.olLayer,"onMapResize",this,"onMapResize");
+this.olLayer.getDataExtent=this.getDataExtent;
+},getViewport:function(){
+return this._viewport;
+},setViewport:function(g){
+if(this._viewport){
+this._viewport.removeShape();
+}
+this._viewport=g;
+this._surface.add(g);
+},onMapResize:function(){
+this._surfaceSize();
+},setMap:function(_d){
+this.inherited(arguments);
+this._surfaceSize();
+},getDataExtent:function(){
+var _e=this._surface.getDimensions();
+return _e;
+},getSurface:function(){
+return this._surface;
+},_surfaceSize:function(){
+var s=this.olLayer.map.getSize();
+this._surface.setDimensions(s.w,s.h);
+},moveTo:function(_f){
+var s=_1.style(this.olLayer.map.layerContainerDiv);
+var _10=parseInt(s.left);
+var top=parseInt(s.top);
+if(_f.zoomChanged||_10||top){
+var d=this.olLayer.div;
+_1.style(d,{left:-_10+"px",top:-top+"px"});
+if(this._features==null){
+return;
+}
+var vp=this.getViewport();
+vp.setTransform(dojox.gfx.matrix.translate(_10,top));
+this.inherited(arguments);
+}
+},added:function(){
+this.inherited(arguments);
+this._surfaceSize();
+}});
 });

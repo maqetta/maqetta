@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[megjelenítési beállítások]",
 	title: "Cím",
 	authors: "Szerzők",
@@ -8,4 +8,4 @@
 	updated: "Frissítve",
 	summary: "Összegzés",
 	content: "Tartalom"
-})
+}));

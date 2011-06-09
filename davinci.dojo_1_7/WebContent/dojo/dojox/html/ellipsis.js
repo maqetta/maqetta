@@ -1,193 +1,169 @@
-define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", "dojo/colors"], function(d){
-	/*=====
-	dojox.html.ellipsis = {
-		// summary: offers cross-browser support for text-overflow: ellipsis
-		//
-		// description: Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
-		//	the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
-		//	It should also be a block-level element (i.e. <div>) - it will not work on td elements.
-		//	NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
-	}
-	=====*/
-	
-	if(d.isMoz){ //TODO: feature detect text-overflow in computed style?
-		// The delay (in ms) to wait so that we don't keep querying when many
-		// changes happen at once - set config "dojoxFFEllipsisDelay" if you
-		// want a different value
-		var delay = 1;
-		if("dojoxFFEllipsisDelay" in d.config){
-			delay = Number(d.config.dojoxFFEllipsisDelay);
-			if(isNaN(delay)){
-				delay = 1;
-			}
-		}
-		try{
-			var createXULEllipsis = (function(){
-				// Create our stub XUL elements for cloning later
-				// NOTE: this no longer works as of FF 4.0:
-				// https://developer.mozilla.org/En/Firefox_4_for_developers#Remote_XUL_support_removed
-				var sNS = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
-				var xml = document.createElementNS(sNS, 'window');
-				var label = document.createElementNS(sNS, 'description');
-				label.setAttribute('crop', 'end');
-				xml.appendChild(label);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-				return function(/* Node */ n){
-					// Summary:
-					//		Given a node, it creates the XUL and sets its
-					//		content so that it will have an ellipsis
-					var x = xml.cloneNode(true);
-					x.firstChild.setAttribute('value', n.textContent);
-					n.innerHTML = '';
-					n.appendChild(x);
-				};
-			})();
-		}catch(e){}
-		
-		// Create our iframe elements for cloning later
-		var create = d.create;
-		var dd = d.doc;
-		var dp = d.place;
-		var iFrame = create("iframe", {className: "dojoxEllipsisIFrame",
-					src: "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'"});
-		var rollRange = function(/* W3C Range */ r, /* int? */ cnt){
-			// Summary:
-			//		Rolls the given range back one character from the end
-			//
-			//	r: W3C Range
-			//		The range to roll back
-			//	cnt: int?
-			//		An optional number of times to roll back (defaults 1)
-			if(r.collapsed){
-				// Do nothing - we are already collapsed
-				return;
-			}
-			if(cnt > 0){
-				do{
-					rollRange(r);
-					cnt--;
-				}while(cnt);
-				return;
-			}
-			if(r.endContainer.nodeType == 3 && r.endOffset > 0){
-				r.setEnd(r.endContainer, r.endOffset - 1);
-			}else if(r.endContainer.nodeType == 3){
-				r.setEndBefore(r.endContainer);
-				rollRange(r);
-				return;
-			}else if(r.endOffset && r.endContainer.childNodes.length >= r.endOffset){
-				var nCont = r.endContainer.childNodes[r.endOffset - 1];
-				if(nCont.nodeType == 3){
-					r.setEnd(nCont, nCont.length - 1);
-				}else if(nCont.childNodes.length){
-					r.setEnd(nCont, nCont.childNodes.length);
-					rollRange(r);
-					return;
-				}else{
-					r.setEndBefore(nCont);
-					rollRange(r);
-					return;
-				}
-			}else{
-				r.setEndBefore(r.endContainer);
-				rollRange(r);
-				return;
-			}
-		};
-		var createIFrameEllipsis = function(/* Node */ n){
-			// Summary:
-			//		Given a node, it creates an iframe and and ellipsis div and
-			//		sets up the connections so that they will work correctly.
-			//		This function is used when createXULEllipsis is not able
-			//		to be used (because there is markup within the node) - it's
-			//		a bit slower, but does the trick
-			var c = create("div", {className: "dojoxEllipsisContainer"});
-			var e = create("div", {className: "dojoxEllipsisShown", style: {display: "none"}});
-			n.parentNode.replaceChild(c, n);
-			c.appendChild(n);
-			c.appendChild(e);
-			var i = iFrame.cloneNode(true);
-			var ns = n.style;
-			var es = e.style;
-			var ranges;
-			var resizeNode = function(){
-				ns.display = "";
-				es.display = "none";
-				if(n.scrollWidth <= n.offsetWidth){ return; }
-				var r = dd.createRange();
-				r.selectNodeContents(n);
-				ns.display = "none";
-				es.display = "";
-				var done = false;
-				do{
-					var numRolls = 1;
-					dp(r.cloneContents(), e, "only");
-					var sw = e.scrollWidth, ow = e.offsetWidth;
-					done = (sw <= ow);
-					var pct = (1 - ((ow * 1) / sw));
-					if(pct > 0){
-						numRolls = Math.max(Math.round(e.textContent.length * pct) - 1, 1);
-					}
-					rollRange(r, numRolls);
-				}while(!r.collapsed && !done);
-			};
-			i.onload = function(){
-				i.contentWindow.onresize = resizeNode;
-				resizeNode();
-			};
-			c.appendChild(i);
-		};
-
-		// Function for updating the ellipsis
-		var hc = d.hasClass;
-		var doc = d.doc;
-		var s, fn, opt;
-		if(doc.querySelectorAll){
-			s = doc;
-			fn = "querySelectorAll";
-			opt = ".dojoxEllipsis";
-		}else if(doc.getElementsByClassName){
-			s = doc;
-			fn = "getElementsByClassName";
-			opt = "dojoxEllipsis";
-		}else{
-			s = d;
-			fn = "query";
-			opt = ".dojoxEllipsis";
-		}
-		fx = function(){
-			d.forEach(s[fn].apply(s, [opt]), function(n){
-				if(!n || n._djx_ellipsis_done){ return; }
-				n._djx_ellipsis_done = true;
-				if(createXULEllipsis && n.textContent == n.innerHTML && !hc(n, "dojoxEllipsisSelectable")){
-					// We can do the faster XUL version, instead of calculating
-					createXULEllipsis(n);
-				}else{
-					createIFrameEllipsis(n);
-				}
-			});
-		};
-		
-		d.addOnLoad(function(){
-			// Apply our initial stuff
-			var t = null;
-			var c = null;
-			var connFx = function(){
-				if(c){
-					// disconnect us - so we don't fire anymore
-					d.disconnect(c);
-					c = null;
-				}
-				if(t){ clearTimeout(t); }
-				t = setTimeout(function(){
-					t = null;
-					fx();
-					// Connect to the modified function so that we can catch
-					// our next change
-					c = d.connect(d.body(), "DOMSubtreeModified", connFx);
-				}, delay);
-			};
-			connFx();
-		});
-	}
+define("dojox/html/ellipsis",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/Color","dojo/colors"],function(d){
+if(d.isMoz){
+var _1=1;
+if("dojoxFFEllipsisDelay" in d.config){
+_1=Number(d.config.dojoxFFEllipsisDelay);
+if(isNaN(_1)){
+_1=1;
+}
+}
+try{
+var _2=(function(){
+var _3="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+var _4=document.createElementNS(_3,"window");
+var _5=document.createElementNS(_3,"description");
+_5.setAttribute("crop","end");
+_4.appendChild(_5);
+return function(n){
+var x=_4.cloneNode(true);
+x.firstChild.setAttribute("value",n.textContent);
+n.innerHTML="";
+n.appendChild(x);
+};
+})();
+}
+catch(e){
+}
+var _6=d.create;
+var dd=d.doc;
+var dp=d.place;
+var _7=_6("iframe",{className:"dojoxEllipsisIFrame",src:"javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'"});
+var _8=function(r,_9){
+if(r.collapsed){
+return;
+}
+if(_9>0){
+do{
+_8(r);
+_9--;
+}while(_9);
+return;
+}
+if(r.endContainer.nodeType==3&&r.endOffset>0){
+r.setEnd(r.endContainer,r.endOffset-1);
+}else{
+if(r.endContainer.nodeType==3){
+r.setEndBefore(r.endContainer);
+_8(r);
+return;
+}else{
+if(r.endOffset&&r.endContainer.childNodes.length>=r.endOffset){
+var _a=r.endContainer.childNodes[r.endOffset-1];
+if(_a.nodeType==3){
+r.setEnd(_a,_a.length-1);
+}else{
+if(_a.childNodes.length){
+r.setEnd(_a,_a.childNodes.length);
+_8(r);
+return;
+}else{
+r.setEndBefore(_a);
+_8(r);
+return;
+}
+}
+}else{
+r.setEndBefore(r.endContainer);
+_8(r);
+return;
+}
+}
+}
+};
+var _b=function(n){
+var c=_6("div",{className:"dojoxEllipsisContainer"});
+var e=_6("div",{className:"dojoxEllipsisShown",style:{display:"none"}});
+n.parentNode.replaceChild(c,n);
+c.appendChild(n);
+c.appendChild(e);
+var i=_7.cloneNode(true);
+var ns=n.style;
+var es=e.style;
+var _c;
+var _d=function(){
+ns.display="";
+es.display="none";
+if(n.scrollWidth<=n.offsetWidth){
+return;
+}
+var r=dd.createRange();
+r.selectNodeContents(n);
+ns.display="none";
+es.display="";
+var _e=false;
+do{
+var _f=1;
+dp(r.cloneContents(),e,"only");
+var sw=e.scrollWidth,ow=e.offsetWidth;
+_e=(sw<=ow);
+var pct=(1-((ow*1)/sw));
+if(pct>0){
+_f=Math.max(Math.round(e.textContent.length*pct)-1,1);
+}
+_8(r,_f);
+}while(!r.collapsed&&!_e);
+};
+i.onload=function(){
+i.contentWindow.onresize=_d;
+_d();
+};
+c.appendChild(i);
+};
+var hc=d.hasClass;
+var doc=d.doc;
+var s,fn,opt;
+if(doc.querySelectorAll){
+s=doc;
+fn="querySelectorAll";
+opt=".dojoxEllipsis";
+}else{
+if(doc.getElementsByClassName){
+s=doc;
+fn="getElementsByClassName";
+opt="dojoxEllipsis";
+}else{
+s=d;
+fn="query";
+opt=".dojoxEllipsis";
+}
+}
+fx=function(){
+d.forEach(s[fn].apply(s,[opt]),function(n){
+if(!n||n._djx_ellipsis_done){
+return;
+}
+n._djx_ellipsis_done=true;
+if(_2&&n.textContent==n.innerHTML&&!hc(n,"dojoxEllipsisSelectable")){
+_2(n);
+}else{
+_b(n);
+}
+});
+};
+d.addOnLoad(function(){
+var t=null;
+var c=null;
+var _10=function(){
+if(c){
+d.disconnect(c);
+c=null;
+}
+if(t){
+clearTimeout(t);
+}
+t=setTimeout(function(){
+t=null;
+fx();
+c=d.connect(d.body(),"DOMSubtreeModified",_10);
+},_1);
+};
+_10();
+});
+}
 });

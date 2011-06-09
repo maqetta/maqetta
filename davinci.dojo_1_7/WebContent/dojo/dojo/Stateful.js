@@ -1,135 +1,66 @@
-define(["./_base/kernel", "./_base/declare", "./_base/array"], function(dojo, declare) {
-	// module:
-	//		dojo/Stateful
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-return dojo.declare("dojo.Stateful", null, {
-	// summary:
-	//		Base class for objects that provide named properties with optional getter/setter
-	//		control and the ability to watch for property changes
-	// example:
-	//	|	var obj = new dojo.Stateful();
-	//	|	obj.watch("foo", function(){
-	//	|		console.log("foo changed to " + this.get("foo"));
-	//	|	});
-	//	|	obj.set("foo","bar");
-	postscript: function(mixin){
-		if(mixin){
-			dojo.mixin(this, mixin);
-		}
-	},
-
-	get: function(/*String*/name){
-		// summary:
-		//		Get a property on a Stateful instance.
-		//	name:
-		//		The property to get.
-		// description:
-		//		Get a named property on a Stateful object. The property may
-		//		potentially be retrieved via a getter method in subclasses. In the base class
-		// 		this just retrieves the object's property.
-		// 		For example:
-		//	|	stateful = new dojo.Stateful({foo: 3});
-		//	|	stateful.get("foo") // returns 3
-		//	|	stateful.foo // returns 3
-
-		return this[name];
-	},
-	set: function(/*String*/name, /*Object*/value){
-		// summary:
-		//		Set a property on a Stateful instance
-		//	name:
-		//		The property to set.
-		//	value:
-		//		The value to set in the property.
-		// description:
-		//		Sets named properties on a stateful object and notifies any watchers of
-		// 		the property. A programmatic setter may be defined in subclasses.
-		// 		For example:
-		//	|	stateful = new dojo.Stateful();
-		//	|	stateful.watch(function(name, oldValue, value){
-		//	|		// this will be called on the set below
-		//	|	}
-		//	|	stateful.set(foo, 5);
-		//
-		//	set() may also be called with a hash of name/value pairs, ex:
-		//	|	myObj.set({
-		//	|		foo: "Howdy",
-		//	|		bar: 3
-		//	|	})
-		//	This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
-		if(typeof name === "object"){
-			for(var x in name){
-				this.set(x, name[x]);
-			}
-			return this;
-		}
-		var oldValue = this[name];
-		this[name] = value;
-		if(this._watchCallbacks){
-			this._watchCallbacks(name, oldValue, value);
-		}
-		return this;
-	},
-	watch: function(/*String?*/name, /*Function*/callback){
-		// summary:
-		//		Watches a property for changes
-		//	name:
-		//		Indicates the property to watch. This is optional (the callback may be the
-		// 		only parameter), and if omitted, all the properties will be watched
-		// returns:
-		//		An object handle for the watch. The unwatch method of this object
-		// 		can be used to discontinue watching this property:
-		//		|	var watchHandle = obj.watch("foo", callback);
-		//		|	watchHandle.unwatch(); // callback won't be called now
-		//	callback:
-		//		The function to execute when the property changes. This will be called after
-		//		the property has been changed. The callback will be called with the |this|
-		//		set to the instance, the first argument as the name of the property, the
-		// 		second argument as the old value and the third argument as the new value.
-
-		var callbacks = this._watchCallbacks;
-		if(!callbacks){
-			var self = this;
-			callbacks = this._watchCallbacks = function(name, oldValue, value, ignoreCatchall){
-				var notify = function(propertyCallbacks){
-					if(propertyCallbacks){
-                        propertyCallbacks = propertyCallbacks.slice();
-						for(var i = 0, l = propertyCallbacks.length; i < l; i++){
-							try{
-								propertyCallbacks[i].call(self, name, oldValue, value);
-							}catch(e){
-								console.error(e);
-							}
-						}
-					}
-				};
-				notify(callbacks['_' + name]);
-				if(!ignoreCatchall){
-					notify(callbacks["*"]); // the catch-all
-				}
-			}; // we use a function instead of an object so it will be ignored by JSON conversion
-		}
-		if(!callback && typeof name === "function"){
-			callback = name;
-			name = "*";
-		}else{
-			// prepend with dash to prevent name conflicts with function (like "name" property)
-			name = '_' + name;
-		}
-		var propertyCallbacks = callbacks[name];
-		if(typeof propertyCallbacks !== "object"){
-			propertyCallbacks = callbacks[name] = [];
-		}
-		propertyCallbacks.push(callback);
-		return {
-			unwatch: function(){
-				propertyCallbacks.splice(dojo.indexOf(propertyCallbacks, callback), 1);
-			}
-		};
-	}
-
-});
-
+define("dojo/Stateful",["./_base/kernel","./_base/declare","./_base/array"],function(_1,_2){
+return _1.declare("dojo.Stateful",null,{postscript:function(_3){
+if(_3){
+_1.mixin(this,_3);
+}
+},get:function(_4){
+return this[_4];
+},set:function(_5,_6){
+if(typeof _5==="object"){
+for(var x in _5){
+this.set(x,_5[x]);
+}
+return this;
+}
+var _7=this[_5];
+this[_5]=_6;
+if(this._watchCallbacks){
+this._watchCallbacks(_5,_7,_6);
+}
+return this;
+},watch:function(_8,_9){
+var _a=this._watchCallbacks;
+if(!_a){
+var _b=this;
+_a=this._watchCallbacks=function(_c,_d,_e,_f){
+var _10=function(_11){
+if(_11){
+_11=_11.slice();
+for(var i=0,l=_11.length;i<l;i++){
+try{
+_11[i].call(_b,_c,_d,_e);
+}
+catch(e){
+console.error(e);
+}
+}
+}
+};
+_10(_a["_"+_c]);
+if(!_f){
+_10(_a["*"]);
+}
+};
+}
+if(!_9&&typeof _8==="function"){
+_9=_8;
+_8="*";
+}else{
+_8="_"+_8;
+}
+var _12=_a[_8];
+if(typeof _12!=="object"){
+_12=_a[_8]=[];
+}
+_12.push(_9);
+return {unwatch:function(){
+_12.splice(_1.indexOf(_12,_9),1);
+}};
+}});
 });

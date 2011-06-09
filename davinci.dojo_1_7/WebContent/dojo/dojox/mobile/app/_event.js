@@ -1,120 +1,76 @@
-dojo.provide("dojox.mobile.app._event");
-dojo.experimental("dojox.mobile.app._event.js");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.mixin(dojox.mobile.app, {
-	eventMap: {},
-
-	connectFlick: function(target, context, method){
-		// summary:
-		//		Listens for a flick event on a DOM node.  If the mouse/touch
-		//		moves more than 15 pixels in any given direction it is a flick.
-		//		The synthetic event fired specifies the direction as
-		//		<ul>
-		//			<li><b>'ltr'</b> Left To Right</li>
-		//			<li><b>'rtl'</b> Right To Left</li>
-		//			<li><b>'ttb'</b> Top To Bottom</li>
-		//			<li><b>'btt'</b> Bottom To Top</li>
-		//		</ul>
-		// target: Node
-		//		The DOM node to connect to
-
-		var startX;
-		var startY;
-		var isFlick = false;
-
-		var currentX;
-		var currentY;
-
-		var connMove;
-		var connUp;
-
-		var direction;
-
-		var time;
-
-		// Listen to to the mousedown/touchstart event
-		var connDown = dojo.connect("onmousedown", target, function(event){
-			isFlick = false;
-			startX = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
-			startY = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
-
-			time = (new Date()).getTime();
-
-			connMove = dojo.connect(target, "onmousemove", onMove);
-			connUp = dojo.connect(target, "onmouseup", onUp);
-		});
-
-		// The function that handles the mousemove/touchmove event
-		var onMove = function(event){
-			dojo.stopEvent(event);
-
-			currentX = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
-			currentY = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
-			if(Math.abs(Math.abs(currentX) - Math.abs(startX)) > 15){
-				isFlick = true;
-
-				direction = (currentX > startX) ? "ltr" : "rtl";
-			}else if(Math.abs(Math.abs(currentY) - Math.abs(startY)) > 15){
-				isFlick = true;
-
-				direction = (currentY > startY) ? "ttb" : "btt";
-			}
-		};
-
-		var onUp = function(event){
-			dojo.stopEvent(event);
-
-			connMove && dojo.disconnect(connMove);
-			connUp && dojo.disconnect(connUp);
-
-			if(isFlick){
-				var flickEvt = {
-					target: target,
-					direction: direction,
-					duration: (new Date()).getTime() - time
-				};
-				if(context && method){
-					context[method](flickEvt);
-				}else{
-					method(flickEvt);
-				}
-			}
-		};
-
-	}
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.mobile.app._event",1);
+_1.experimental("dojox.mobile.app._event.js");
+_1.mixin(_3.mobile.app,{eventMap:{},connectFlick:function(_4,_5,_6){
+var _7;
+var _8;
+var _9=false;
+var _a;
+var _b;
+var _c;
+var _d;
+var _e;
+var _f;
+var _10=_1.connect("onmousedown",_4,function(_11){
+_9=false;
+_7=_11.targetTouches?_11.targetTouches[0].clientX:_11.clientX;
+_8=_11.targetTouches?_11.targetTouches[0].clientY:_11.clientY;
+_f=(new Date()).getTime();
+_c=_1.connect(_4,"onmousemove",_12);
+_d=_1.connect(_4,"onmouseup",_13);
 });
-
-dojox.mobile.app.isIPhone = (dojo.isSafari
-	&& (navigator.userAgent.indexOf("iPhone") > -1 ||
-		navigator.userAgent.indexOf("iPod") > -1
-	));
-dojox.mobile.app.isWebOS = (navigator.userAgent.indexOf("webOS") > -1);
-dojox.mobile.app.isAndroid = (navigator.userAgent.toLowerCase().indexOf("android") > -1);
-
-if(dojox.mobile.app.isIPhone || dojox.mobile.app.isAndroid){
-	// We are touchable.
-	// Override the dojo._connect function to replace mouse events with touch events
-
-	dojox.mobile.app.eventMap = {
-		onmousedown: "ontouchstart",
-		mousedown: "ontouchstart",
-		onmouseup: "ontouchend",
-		mouseup: "ontouchend",
-		onmousemove: "ontouchmove",
-		mousemove: "ontouchmove"
-	};
-
+var _12=function(_14){
+_1.stopEvent(_14);
+_a=_14.targetTouches?_14.targetTouches[0].clientX:_14.clientX;
+_b=_14.targetTouches?_14.targetTouches[0].clientY:_14.clientY;
+if(Math.abs(Math.abs(_a)-Math.abs(_7))>15){
+_9=true;
+_e=(_a>_7)?"ltr":"rtl";
+}else{
+if(Math.abs(Math.abs(_b)-Math.abs(_8))>15){
+_9=true;
+_e=(_b>_8)?"ttb":"btt";
 }
-dojo._oldConnect = dojo._connect;
-dojo._connect = function(obj, event, context, method, dontFix){
-	event = dojox.mobile.app.eventMap[event] || event;
-	if(event == "flick" || event == "onflick"){
-		if(dojo.global["Mojo"]){
-			event = Mojo.Event.flick;
-		} else{
-			return dojox.mobile.app.connectFlick(obj, context, method);
-		}
-	}
-
-	return dojo._oldConnect(obj, event, context, method, dontFix);
+}
 };
+var _13=function(_15){
+_1.stopEvent(_15);
+_c&&_1.disconnect(_c);
+_d&&_1.disconnect(_d);
+if(_9){
+var _16={target:_4,direction:_e,duration:(new Date()).getTime()-_f};
+if(_5&&_6){
+_5[_6](_16);
+}else{
+_6(_16);
+}
+}
+};
+}});
+_3.mobile.app.isIPhone=(_1.isSafari&&(navigator.userAgent.indexOf("iPhone")>-1||navigator.userAgent.indexOf("iPod")>-1));
+_3.mobile.app.isWebOS=(navigator.userAgent.indexOf("webOS")>-1);
+_3.mobile.app.isAndroid=(navigator.userAgent.toLowerCase().indexOf("android")>-1);
+if(_3.mobile.app.isIPhone||_3.mobile.app.isAndroid){
+_3.mobile.app.eventMap={onmousedown:"ontouchstart",mousedown:"ontouchstart",onmouseup:"ontouchend",mouseup:"ontouchend",onmousemove:"ontouchmove",mousemove:"ontouchmove"};
+}
+_1._oldConnect=_1._connect;
+_1._connect=function(obj,_17,_18,_19,_1a){
+_17=_3.mobile.app.eventMap[_17]||_17;
+if(_17=="flick"||_17=="onflick"){
+if(_1.global["Mojo"]){
+_17=Mojo.Event.flick;
+}else{
+return _3.mobile.app.connectFlick(obj,_18,_19);
+}
+}
+return _1._oldConnect(obj,_17,_18,_19,_1a);
+};
+return _1.getObject("dojox.mobile.app._event");
+});
+require(["dojox/mobile/app/_event"]);

@@ -1,115 +1,58 @@
-define("dojox/data/WikipediaStore", ["dojo", "dojox", "dojo/io/script", "dojox/rpc/Service", "dojox/data/ServiceStore"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.experimental("dojox.data.WikipediaStore");
-
-dojo.declare("dojox.data.WikipediaStore", dojox.data.ServiceStore,{
-	//	summary:
-	//		Initializer for the Wikipedia data store interface.
-	//	description:
-	//		The WikipediaStore is a data store interface to Wikipedia, using the
-	//		Wikipedia SMD spec from dojox.rpc. It currently is useful only for
-	//		finding articles that contain some particular text or grabbing single
-	//		articles by full name; no wildcards or other filtering are supported.
-	//	example:
-	//		|	var store = new dojox.data.WikipediaStore();
-	//		|	store.fetch({
-	//		|		query: {title:"Dojo Toolkit"},
-	//		|		onItem: function(item){
-	//		|			dojo.byId("somediv").innerHTML = item.text["*"];
-	//		|		}
-	//		|	});
-	constructor: function(options){
-		if(options && options.service){
-			this.service = options.service;
-		}else{
-			var svc = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.SMDLibrary", "wikipedia.smd"));
-			this.service = svc.query;
-		}
-
-		this.idAttribute = this.labelAttribute = "title";
-	},
-
-	fetch: function(/* object */ request){
-		//	summary:
-		//		Fetch a page or some partially-loaded search results from
-		//		Wikipedia. Note that there isn't a way to sort data coming
-		//		in from the API, so we just ignore the *sort* parameter.
-		//	example:
-		//		Loading a page:
-		//		|	store.fetch({
-		//		|		query: {title:"Dojo Toolkit"},
-		//		|		// define your handlers here
-		//		|	});
-		//	example:
-		//		Searching for pages containing "dojo":
-		//		|	store.fetch({
-		//		|		query: {
-		//		|			action: "query",
-		//		|			text: "dojo"
-		//		|		},
-		//		|		// define your handlers here
-		//		|	});
-		//	example:
-		//		Searching for the next 50 pages containing "dojo":
-		//		|	store.fetch({
-		//		|		query: {
-		//		|			action: "query",
-		//		|			text: "dojo",
-		//		|			start: 10,
-		//		|			count: 50 // max 500; will be capped if necessary
-		//		|		},
-		//		|		// define your handlers here
-		//		|	});
-		var rq = dojo.mixin({}, request.query);
-		if(rq && (!rq.action || rq.action === "parse")){
-			// default to a single page fetch
-			rq.action = "parse";
-			rq.page = rq.title;
-			delete rq.title;
-
-		}else if(rq.action === "query"){
-			// perform a full text search on page content
-			rq.list = "search";
-			rq.srwhat = "text";
-			rq.srsearch = rq.text;
-			if(request.start){
-				rq.sroffset = request.start-1;
-			}
-			if(request.count){
-				rq.srlimit = request.count >= 500 ? 500 : request.count;
-			}
-			delete rq.text;
-		}
-		request.query = rq;
-		return this.inherited(arguments);
-	},
-
-	_processResults: function(results, def){
-		if(results.parse){
-			// loading a complete page
-			results.parse.title = dojo.queryToObject(def.ioArgs.url.split("?")[1]).page;
-			results = [results.parse];
-
-		}else if(results.query && results.query.search){
-			// loading some search results; all we have here is page titles,
-			// so we mark our items as incomplete
-			results = results.query.search;
-			var _thisStore = this;
-			for(var i in results){
-				results[i]._loadObject = function(callback){
-					_thisStore.fetch({
-						query: { action:"parse", title:this.title },
-						onItem: callback
-					});
-					delete this._loadObject;
-				}
-			}
-		}
-		return this.inherited(arguments);
-	}
+define("dojox/data/WikipediaStore",["dojo","dojox","dojo/io/script","dojox/rpc/Service","dojox/data/ServiceStore"],function(_1,_2){
+_1.experimental("dojox.data.WikipediaStore");
+_1.declare("dojox.data.WikipediaStore",_2.data.ServiceStore,{constructor:function(_3){
+if(_3&&_3.service){
+this.service=_3.service;
+}else{
+var _4=new _2.rpc.Service(_1.moduleUrl("dojox.rpc.SMDLibrary","wikipedia.smd"));
+this.service=_4.query;
+}
+this.idAttribute=this.labelAttribute="title";
+},fetch:function(_5){
+var rq=_1.mixin({},_5.query);
+if(rq&&(!rq.action||rq.action==="parse")){
+rq.action="parse";
+rq.page=rq.title;
+delete rq.title;
+}else{
+if(rq.action==="query"){
+rq.list="search";
+rq.srwhat="text";
+rq.srsearch=rq.text;
+if(_5.start){
+rq.sroffset=_5.start-1;
+}
+if(_5.count){
+rq.srlimit=_5.count>=500?500:_5.count;
+}
+delete rq.text;
+}
+}
+_5.query=rq;
+return this.inherited(arguments);
+},_processResults:function(_6,_7){
+if(_6.parse){
+_6.parse.title=_1.queryToObject(_7.ioArgs.url.split("?")[1]).page;
+_6=[_6.parse];
+}else{
+if(_6.query&&_6.query.search){
+_6=_6.query.search;
+var _8=this;
+for(var i in _6){
+_6[i]._loadObject=function(_9){
+_8.fetch({query:{action:"parse",title:this.title},onItem:_9});
+delete this._loadObject;
+};
+}
+}
+}
+return this.inherited(arguments);
+}});
+return _2.data.WikipediaStore;
 });
-
-return dojox.data.WikipediaStore;
-
-});
-

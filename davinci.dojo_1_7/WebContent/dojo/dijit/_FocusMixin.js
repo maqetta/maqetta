@@ -1,71 +1,16 @@
-define([
-	"dojo/_base/kernel",
-	".",
-	"./focus",
-	"./_WidgetBase",
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/lang" // dojo.extend
-], function(dojo, dijit, focus){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/_FocusMixin
-	// summary:
-	//		Mixin to widget to provide _onFocus() and _onBlur() methods that
-	//		fire when a widget or it's descendants get/lose focus
-
-	// We don't know where _FocusMixin will occur in the inheritance chain, but we need the _onFocus()/_onBlur() below
-	// to be last in the inheritance chain, so mixin to _WidgetBase.
-	dojo.extend(dijit._WidgetBase, {
-		// focused: [readonly] Boolean
-		//		This widget or a widget it contains has focus, or is "active" because
-		//		it was recently clicked.
-		focused: false,
-
-		onFocus: function(){
-			// summary:
-			//		Called when the widget becomes "active" because
-			//		it or a widget inside of it either has focus, or has recently
-			//		been clicked.
-			// tags:
-			//		callback
-		},
-
-		onBlur: function(){
-			// summary:
-			//		Called when the widget stops being "active" because
-			//		focus moved to something outside of it, or the user
-			//		clicked somewhere outside of it, or the widget was
-			//		hidden.
-			// tags:
-			//		callback
-		},
-
-		_onFocus: function(e){
-			// summary:
-			//		This is where widgets do processing for when they are active,
-			//		such as changing CSS classes.  See onFocus() for more details.
-			// tags:
-			//		protected
-			this.onFocus();
-		},
-
-		_onBlur: function(){
-			// summary:
-			//		This is where widgets do processing for when they stop being active,
-			//		such as changing CSS classes.  See onBlur() for more details.
-			// tags:
-			//		protected
-			this.onBlur();
-		}
-	});
-
-	return dojo.declare("dijit._FocusMixin", null, {
-		// summary:
-		//		Mixin to widget to provide _onFocus() and _onBlur() methods that
-		//		fire when a widget or it's descendants get/lose focus
-
-		// flag that I want _onFocus()/_onBlur() notifications from focus manager
-		_focusManager: focus
-	});
-
+define("dijit/_FocusMixin",["dojo/_base/kernel",".","./focus","./_WidgetBase","dojo/_base/declare","dojo/_base/lang"],function(_1,_2,_3){
+_1.extend(_2._WidgetBase,{focused:false,onFocus:function(){
+},onBlur:function(){
+},_onFocus:function(e){
+this.onFocus();
+},_onBlur:function(){
+this.onBlur();
+}});
+return _1.declare("dijit._FocusMixin",null,{_focusManager:_3});
 });

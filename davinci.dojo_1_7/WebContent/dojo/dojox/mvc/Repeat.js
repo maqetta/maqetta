@@ -1,100 +1,41 @@
-define([
-	"dojo/_base/declare",
-	"./_Container"
-], function(declare, _Container){
-	/*=====
-		declare = dojo.declare;
-		_Container = dojox.mvc._Container;
-	=====*/
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return declare("dojox.mvc.Repeat", [_Container], {
-		// summary:
-		//		A model-bound container which binds to a collection within a data model
-		//		and produces a repeating user-interface from a template for each
-		//		iteration within the collection.
-		//
-		// description:
-		//		A repeat is bound to an intermediate dojo.Stateful node corresponding
-		//		to an array in the data model. Child dijits or custom view components
-		//		inside it inherit their parent data binding context from it.
-
-		// index: Integer
-		//		An index used to track the current iteration when the repeating UI is
-		//		produced. This may be used to parameterize the content in the repeat
-		//		template for the current iteration.
-		//
-		//		For example, consider a collection of search or query results where
-		//		each item contains a "Name" property used to prime the "Results" data
-		//		model. Then, the following CRUD-style UI displays all the names in
-		//		the search results in text boxes where they may be updated or such.
-		//
-		//		|	<div dojoType="dojox.mvc.Repeat" ref="Results">
-		//		|		<div class="row" dojoType="dojox.mvc.Group" ref="${this.index}">
-		//		|			<label for="nameInput${this.index}">Name:</label>
-		//		|			<input dojoType="dijit.form.TextBox" id="nameInput${this.index}" ref="'Name'"></input>
-		//		|		</div>
-		//		|	</div>
-		index : 0,
-
-		// summary:
-		//		Override and save template from body.
-		postscript: function(params, srcNodeRef){
-			this.srcNodeRef = dojo.byId(srcNodeRef);
-			if(this.srcNodeRef){
-				this.templateString = this.srcNodeRef.innerHTML;
-				this.srcNodeRef.innerHTML = "";
-			}
-			this.inherited(arguments);
-		},
-
-		////////////////////// PRIVATE METHODS ////////////////////////
-
-		_updateBinding: function(name, old, current){
-			// summary:
-			//		Rebuild repeating UI if data binding changes.
-			// tags:
-			//		private
-			this.inherited(arguments);
-			this._buildContained();
-		},
-
-		_buildContained: function(){
-			// summary:
-			//		Destroy any existing contained view, recreate the repeating UI
-			//		markup and parse the new contents.
-			// tags:
-			//		private
-
-			// TODO: Potential optimization: only create new widgets for insert, only destroy for delete.
-			this._destroyBody();
-			this._updateAddRemoveWatch();
-
-			var insert = "";
-			for(this.index = 0; this.get("binding").get(this.index); this.index++){
-				insert += this._exprRepl(this.templateString);
-			}
-			var repeatNode = this.srcNodeRef || this.domNode;
-			repeatNode.innerHTML = insert;
-
-			this._createBody();
-		},
-
-		_updateAddRemoveWatch: function(){
-			// summary:
-			//		Updates the watch handle when binding changes.
-			// tags:
-			//		private
-			if(this._addRemoveWatch){
-				this._addRemoveWatch.unwatch();
-			}
-			var pThis = this;
-			this._addRemoveWatch = this.get("binding").watch(function(name,old,current){
-				if(/^[0-9]+$/.test(name.toString())){
-					if(!old || !current){
-						pThis._buildContained();
-					} // else not an insert or delete, will get updated in above
-				}
-			});
-		}
-	});
+define(["dojo/_base/declare","./_Container"],function(_1,_2){
+return _1("dojox.mvc.Repeat",[_2],{index:0,postscript:function(_3,_4){
+this.srcNodeRef=dojo.byId(_4);
+if(this.srcNodeRef){
+this.templateString=this.srcNodeRef.innerHTML;
+this.srcNodeRef.innerHTML="";
+}
+this.inherited(arguments);
+},_updateBinding:function(_5,_6,_7){
+this.inherited(arguments);
+this._buildContained();
+},_buildContained:function(){
+this._destroyBody();
+this._updateAddRemoveWatch();
+var _8="";
+for(this.index=0;this.get("binding").get(this.index);this.index++){
+_8+=this._exprRepl(this.templateString);
+}
+var _9=this.srcNodeRef||this.domNode;
+_9.innerHTML=_8;
+this._createBody();
+},_updateAddRemoveWatch:function(){
+if(this._addRemoveWatch){
+this._addRemoveWatch.unwatch();
+}
+var _a=this;
+this._addRemoveWatch=this.get("binding").watch(function(_b,_c,_d){
+if(/^[0-9]+$/.test(_b.toString())){
+if(!_c||!_d){
+_a._buildContained();
+}
+}
+});
+}});
 });

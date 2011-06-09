@@ -1,7 +1,6 @@
 .dojoxEditorBreadcrumbArrow .dijitDownArrowButton {
 	width: 10px;
 }
-
 .dojoxEditorBreadcrumbArrow .dijitArrowButtonInner {
 	background-image: url(../icons/breadcrumbDown.gif);
 	background-repeat: no-repeat;
@@ -9,5 +8,3 @@
 	width: 8px;
 	height: 8px;
 }
-
-

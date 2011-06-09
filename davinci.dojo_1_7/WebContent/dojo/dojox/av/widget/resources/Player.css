@@ -30,23 +30,18 @@
 	width:60px;
 	height:60px;
 }
-
-
 .Progress{
 	height:10px;
 }
-
 .Time, .Duration, .Status{
 	height:16px;
 	margin-top:0px;
 	color:#F5FFC8;
 	width:100%;
 }
-
 .Time{
 	padding-left:2px;
 } 
-
 .Duration{
 	padding-right:2px;
 	text-align:right;
@@ -71,17 +66,14 @@
 	font-weight:normal;
 	color:#3770D6;
 }
-
 .Time, .Duration, .Status{
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	font-size:9px;
 	background:#000000;
 }
-
 .Time, .Duration{
 	width:60px;
 }
-
 .Volume{
 	width:30px;
 	height:30px;
@@ -116,7 +108,6 @@
 	width:22px;
 	height:22px;
 }
-
 .PlayPauseToggle .icon{
 	position:relative;
 	top:19px;
@@ -129,9 +120,6 @@
 .PlayPauseToggle.Pause .icon{
 	background-position:-24px -1px;
 }
-
-
-
 .Progress{
 	
 }

@@ -1,287 +1,155 @@
-define(["./_base/kernel", "./on", "./touch", "./has"], function(dojo, on, touch, has){
-// module:
-//		dojo/gesture
-//
-// summary:
-//		This module provides an internal central management for all gestures, including
-//		1. Registering/un-registering singleton gesture instances
-//		2. Binding listen handlers for gesture events
-//		3. Normalizing, dispatching and bubbling gesture events etc.
-//
-// register(gesture):
-//		Register a new gesture(e.g dojo.gesture.tap) with 
-//		its event list(e.g. 'tap', 'tap.hold' and 'tap.dobletap')
-//
-// unRegister(gesture):
-//		Un-register a gesture and remove all corresponding event handlers
-//
-// handle(eventType):
-//		Bind a static listen handler for the given gesture event, 
-//		the handle will be internally used by on(), e.g.
-//		|	var dojo.gesture.tap = handle('tap');
-//		|	//so that listen can use it
-//		|	on(node, dojo.gesture.tap, func(e){});
-//		|	//or used directly as
-//		|	dojo.gesture.tap(node, func(e){});
-//
-// isGestureEvent(event):
-//		Whether the given event is a supported gesture event
-//
-// fire(element, eventType, rawEvent, info):
-//		Used by gesture implementations to fire a recognized gesture event, fire() invokes appropriate callbacks
-//		with a wrapped gesture event(that contains gesture information, the raw event etc.)
-//
-// example:
-//		1. A gesture can be used in the following ways:
-//		A. Used with dojo.connect()
-//		|	dojo.connect(node, dojo.gesture.tap, function(e){});
-//		|	dojo.connect(node, dojo.gesture.tap.hold, function(e){});
-//		|	dojo.connect(node, dojo.gesture.tap.doubletap, function(e){});		
-//
-//		B. Used with dojo.on
-//		|	define(["dojo/on", "dojo/gesture/tap"], function(on, tap){
-//		|		on(node, tap, function(e){});
-//		|		on(node, tap.hold, function(e){});
-//		|		on(node, tap.doubletap, function(e){});
-//
-//		C. Used with dojo.gesture.tap.* directly
-//		|	dojo.gesture.tap(node, function(e){});
-//		|	dojo.gesture.tap.hold(node, function(e){});
-//		|	dojo.gesture.tap.doubletap(node, function(e){});
-//
-//		Though there is always a default singleton gesture instance after required e.g. require("dojo.gesture.tap")
-//		It's possible to create a new one with different parameters to overwrite it
-//		|	var myTap = new dojo.gesture.tap.Tap({holdThreshold: 300});
-//		|	dojo.gesture.register(myTap);
-//		|	dojo.connect(node, myTap, function(e){});
-//		|	dojo.connect(node, myTap.hold, function(e){});
-//		|	dojo.connect(node, myTap.doubletap, function(e){});
-//		
-//		Please refer to dojo/gesture/* for more gesture usages
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-//singleton gesture manager
-dojo.gesture = {
-	events: {},//<event, gesture> map, e.g {'taphold': xxx, 'rotate': xxx}
-	gestures: [],
-	_gestureElements: [],
-	
-	register: function(/*Object*/gesture){
-		// summary:
-		//		Register a new singleton gesture instance
-		// description:
-		//		The gesture event list will be added for listening.
-		if(!has("touch") && gesture.touchOnly){
-			console.warn("Gestures:[", gesture.defaultEvent, "] is only supported on touch devices!");
-			return;
-		}
-		if(dojo.indexOf(this.gestures, gesture) < 0){
-			this.gestures.push(gesture);
-		}
-		
-		var evt = gesture.defaultEvent;
-		this.events[evt] = gesture;
-		gesture.call = this.handle(evt);
-		
-		dojo.forEach(gesture.subEvents, function(type){
-			gesture[type] = this.handle(evt + '.' + type);
-			this.events[evt + '.' + type] = gesture;
-		}, this);
-	},
-	unRegister: function(/*Object*/gesture){
-		// summary:
-		//		Un-register the given singleton gesture instance
-		// description:
-		//		The gesture event list will also be removed
-		var i = dojo.indexOf(this.gestures, gesture);
-		if(i >= 0){
-			this.gestures.splice(i, 1);
-		}
-		var evt = gesture.defaultEvent;
-		delete this.events[evt];
-		dojo.forEach(gesture.subEvents, function(type){
-			delete this.events[evt + '.' + type];
-		}, this);
-	},
-	handle: function(/*String*/eventType){
-		// summary:
-		//		Bind a static listen handler for the given gesture event,
-		//		the handle will be used internally by on()
-		var self = this;
-		return function(node, listener){//called by on(), see dojo.on
-			//normalize, arguments might be (null, node, listener)
-			var a = arguments;
-			if(a.length > 2){
-				node = a[1];
-				listener = a[2];
-			}
-			var isNode = node && (node.nodeType || node.attachEvent || node.addEventListener);
-			if(!isNode || !self.isGestureEvent(eventType)){
-				return on(node, eventType, listener);
-			}else{
-				var signal = {
-					remove: function(){
-						self._remove(node, eventType, listener);
-					}			
-				};
-				self._add(node, eventType, listener);
-				return signal;
-			}
-		};
-	},
-	isGestureEvent: function(/*String*/e){
-		return !!this.events[e];
-	},
-	isMouseEvent: function(/*String*/type){
-		return (/^mousedown$|^mousemove$|^mouseup$|^click$|^contextmenu$/).test(type);
-	},
-	_add: function(node, type, listener){
-		var element = this.getGestureElement(node);
-		if(element === null){
-			element = {
-				target: node,
-				gestures: {},
-				listening: false
-			};
-			this._gestureElements.push(element);
-		}
-		if(!element.gestures[type]){
-			element.gestures[type] = {
-				callbacks: [listener],
-				stopped: false //to cancel event bubbling
-			};
-		}else{//TBD - remove the previous one for the same type?
-			element.gestures[type].callbacks.push(listener);
-		}
-		if(!element.listening){
-			var _press = dojo.hitch(this, "_press", element);
-			var _move = dojo.hitch(this, "_move", element);
-			var _release = dojo.hitch(this, "_release", element);
-			
-			//TBD - disconnect element.press | move | release?
-			var touchOnly = this.events[type].touchOnly;
-			if(touchOnly){
-				element.press = on(node, 'touchstart', _press);
-				element.move = on(node, 'touchmove', _move);
-				element.release = on(node, 'touchend', _release);
-			}else{
-				element.press = touch.press(node, _press);
-				element.move = touch.move(node, _move);
-				element.release = touch.release(node, _release);
-			}
-			if(has("touch")){
-				var _cancel = dojo.hitch(this, "_cancel", element);
-				element.cancel = on(node, 'touchcancel', _cancel);
-			}
-			element.listening = true;
-		}
-	},
-	_remove: function(node, type, listener){
-		var element = this.getGestureElement(node);
-		var i = dojo.indexOf(element.gestures[type].callbacks, listener);
-		element.gestures[type].callbacks.splice(i, 1);
-//		TBD - when element.count == 0
-//		dojo.forEach(['press', 'move', 'release', 'cancel'], function(type){
-//			if(element[type] && element[type].cancel){
-//				element[type].remove();//disconnect native listeners
-//			}
-//		});
-	},
-	getGestureElement: function(node){
-		var i;
-		for(i = 0; i < this._gestureElements.length; i++){
-			var element = this._gestureElements[i];
-			if(element.target === node){
-				return element;
-			}
-		}
-		return null;
-	},
-	_press: function(element, e){
-		this._forEach(element, 'press', e);
-	},
-	_move: function(element, e){
-		this._forEach(element, 'move', e);
-	},
-	_release: function(element, e){
-		this._forEach(element, 'release', e);
-	},
-	_cancel: function(element, e){
-		this._forEach(element, 'cancel', e);
-	},
-	_forEach: function(element, type, e){
-		e.preventDefault();
-		if(e.locking){
-			return;
-		}
-		var visited = [], x;
-		for(x in element.gestures){
-			var gesture = this.events[x];
-			if(gesture[type] && dojo.indexOf(visited, gesture) < 0){
-				//add a lock attr indicating the event is being processed by the most inner node,
-				//so that we can do gesture bubbling manually				
-				e.locking = true;
-				gesture[type](element, e);
-				visited.push(gesture);
-			}
-		}
-	},
-	fire: function(element, eventType, rawEvent, info){
-		// summary:
-		//		Used by gesture implementations to fire a recognized gesture event, invoking appropriate callbacks
-		//		with a wrapped gesture event(that contains gesture information and raw event etc.)
-		// element: Object
-		//		Gesture element that wraps various gesture information for the target node
-		//		e.g gesture events being listening, related callbacks
-		// eventType: String
-		//		Gesture event type e.g. 'tap.hold', 'swipe.left'
-		// rawEvent: Event
-		//		Raw event that triggers the gesture, might be touchxxx or mousexxx
-		// info: Object
-		//		Gesture specific information
-
-		//create a gesture event wrapper
-		var event = this._createEvent(rawEvent, info);
-		event.type = eventType;
-		event.stopPropagation = function(){
-			element.gestures[eventType].stopped = true;
-		};
-		this._fire(element, eventType, event);
-	},
-	_fire: function(element, eventType, e){
-		var gesture = element.gestures[eventType];//{callbacks:[...], stopped:true|false}
-		if(!gesture){ return;}
-		
-		dojo.forEach(gesture.callbacks, function(func){
-			func(e);
-		});
-		
-		//gesture bubbling - also fire for parents unless stopped explicitly
-		if(!gesture.stopped){
-			var parentNode = element.target.parentNode,
-			parentGestureElement = dojo.gesture.getGestureElement(parentNode);
-			if(parentNode && parentGestureElement){
-				e.target = parentNode;
-				this._fire(parentGestureElement, eventType, e);
-			}
-		}
-	},
-	_createEvent: function(e, info){
-		var newEvt = {
-			target: e.target,
-			currentTarget: e.currentTarget,
-			srcEvent: e,
-			preventDefault: function(){
-				e.preventDefault();
-			}
-		};
-		var i;
-		for(i in info){
-			newEvt[i] = info[i];
-		}
-		return newEvt;
-	}
+define("dojo/gesture",["./_base/kernel","./on","./touch","./has"],function(_1,on,_2,_3){
+_1.gesture={events:{},gestures:[],_gestureElements:[],register:function(_4){
+if(!_3("touch")&&_4.touchOnly){
+console.warn("Gestures:[",_4.defaultEvent,"] is only supported on touch devices!");
+return;
+}
+if(_1.indexOf(this.gestures,_4)<0){
+this.gestures.push(_4);
+}
+var _5=_4.defaultEvent;
+this.events[_5]=_4;
+_4.call=this.handle(_5);
+_1.forEach(_4.subEvents,function(_6){
+_4[_6]=this.handle(_5+"."+_6);
+this.events[_5+"."+_6]=_4;
+},this);
+},unRegister:function(_7){
+var i=_1.indexOf(this.gestures,_7);
+if(i>=0){
+this.gestures.splice(i,1);
+}
+var _8=_7.defaultEvent;
+delete this.events[_8];
+_1.forEach(_7.subEvents,function(_9){
+delete this.events[_8+"."+_9];
+},this);
+},handle:function(_a){
+var _b=this;
+return function(_c,_d){
+var a=arguments;
+if(a.length>2){
+_c=a[1];
+_d=a[2];
+}
+var _e=_c&&(_c.nodeType||_c.attachEvent||_c.addEventListener);
+if(!_e||!_b.isGestureEvent(_a)){
+return on(_c,_a,_d);
+}else{
+var _f={remove:function(){
+_b._remove(_c,_a,_d);
+}};
+_b._add(_c,_a,_d);
+return _f;
+}
 };
-
-return dojo.gesture;
-
+},isGestureEvent:function(e){
+return !!this.events[e];
+},isMouseEvent:function(_10){
+return (/^mousedown$|^mousemove$|^mouseup$|^click$|^contextmenu$/).test(_10);
+},_add:function(_11,_12,_13){
+var _14=this.getGestureElement(_11);
+if(_14===null){
+_14={target:_11,gestures:{},listening:false};
+this._gestureElements.push(_14);
+}
+if(!_14.gestures[_12]){
+_14.gestures[_12]={callbacks:[_13],stopped:false};
+}else{
+_14.gestures[_12].callbacks.push(_13);
+}
+if(!_14.listening){
+var _15=_1.hitch(this,"_press",_14);
+var _16=_1.hitch(this,"_move",_14);
+var _17=_1.hitch(this,"_release",_14);
+var _18=this.events[_12].touchOnly;
+if(_18){
+_14.press=on(_11,"touchstart",_15);
+_14.move=on(_11,"touchmove",_16);
+_14.release=on(_11,"touchend",_17);
+}else{
+_14.press=_2.press(_11,_15);
+_14.move=_2.move(_11,_16);
+_14.release=_2.release(_11,_17);
+}
+if(_3("touch")){
+var _19=_1.hitch(this,"_cancel",_14);
+_14.cancel=on(_11,"touchcancel",_19);
+}
+_14.listening=true;
+}
+},_remove:function(_1a,_1b,_1c){
+var _1d=this.getGestureElement(_1a);
+var i=_1.indexOf(_1d.gestures[_1b].callbacks,_1c);
+_1d.gestures[_1b].callbacks.splice(i,1);
+},getGestureElement:function(_1e){
+var i;
+for(i=0;i<this._gestureElements.length;i++){
+var _1f=this._gestureElements[i];
+if(_1f.target===_1e){
+return _1f;
+}
+}
+return null;
+},_press:function(_20,e){
+this._forEach(_20,"press",e);
+},_move:function(_21,e){
+this._forEach(_21,"move",e);
+},_release:function(_22,e){
+this._forEach(_22,"release",e);
+},_cancel:function(_23,e){
+this._forEach(_23,"cancel",e);
+},_forEach:function(_24,_25,e){
+e.preventDefault();
+if(e.locking){
+return;
+}
+var _26=[],x;
+for(x in _24.gestures){
+var _27=this.events[x];
+if(_27[_25]&&_1.indexOf(_26,_27)<0){
+e.locking=true;
+_27[_25](_24,e);
+_26.push(_27);
+}
+}
+},fire:function(_28,_29,_2a,_2b){
+var _2c=this._createEvent(_2a,_2b);
+_2c.type=_29;
+_2c.stopPropagation=function(){
+_28.gestures[_29].stopped=true;
+};
+this._fire(_28,_29,_2c);
+},_fire:function(_2d,_2e,e){
+var _2f=_2d.gestures[_2e];
+if(!_2f){
+return;
+}
+_1.forEach(_2f.callbacks,function(_30){
+_30(e);
+});
+if(!_2f.stopped){
+var _31=_2d.target.parentNode,_32=_1.gesture.getGestureElement(_31);
+if(_31&&_32){
+e.target=_31;
+this._fire(_32,_2e,e);
+}
+}
+},_createEvent:function(e,_33){
+var _34={target:e.target,currentTarget:e.currentTarget,srcEvent:e,preventDefault:function(){
+e.preventDefault();
+}};
+var i;
+for(i in _33){
+_34[i]=_33[i];
+}
+return _34;
+}};
+return _1.gesture;
 });

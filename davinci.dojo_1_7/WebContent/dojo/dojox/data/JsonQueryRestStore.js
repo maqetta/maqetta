@@ -1,14 +1,12 @@
-define("dojox/data/JsonQueryRestStore", ["dojo", "dojox", "dojox/data/JsonRestStore", "dojox/data/util/JsonQuery", "dojox.data.ClientFilter", "dojox.json.query"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// this is an extension of JsonRestStore to convert object attribute queries to
-// JSONQuery/JSONPath syntax to be sent to the server. This also enables
-//	JSONQuery/JSONPath queries to be performed locally if dojox.data.ClientFilter
-//	has been loaded
-dojo.declare("dojox.data.JsonQueryRestStore",[dojox.data.JsonRestStore,dojox.data.util.JsonQuery],{
-	matchesQuery: function(item,request){
-		return item.__id && (item.__id.indexOf("#") == -1) && this.inherited(arguments);
-	}
-});
-
-return dojox.data.JsonQueryRestStore;
+define("dojox/data/JsonQueryRestStore",["dojo","dojox","dojox/data/JsonRestStore","dojox/data/util/JsonQuery","dojox.data.ClientFilter","dojox.json.query"],function(_1,_2){
+_1.declare("dojox.data.JsonQueryRestStore",[_2.data.JsonRestStore,_2.data.util.JsonQuery],{matchesQuery:function(_3,_4){
+return _3.__id&&(_3.__id.indexOf("#")==-1)&&this.inherited(arguments);
+}});
+return _2.data.JsonQueryRestStore;
 });

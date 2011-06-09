@@ -1,131 +1,54 @@
-define([
-	"dojo",
-	"../../plugins/_Plugin"], function(dojo){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojox.drawing.ui.dom.Zoom = dojox.drawing.util.oo.declare(
-	// NOTE:
-	//			dojox.drawing.ui.dom.Zoom is DEPRECATED.
-	//			This was a temporary DOM solution. Use the non-dom
-	//			tools for Toobar and Plugins.
-	//
-	// summary:
-	//		A plugin that allows for zooming the canvas in and out. An
-	//		action-tool is added to the toolbar with plus, minus and 100%
-	//		buttons.
-	// example:
-	//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawingNode" class="drawingToolbar vertical">
-	//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
-	//		|		<div plugin="dojox.drawing.ui.dom.Zoom" options="{zoomInc:.1,minZoom:.5,maxZoom:2}">Zoom</div>
-	//		|	</div>
-	//
-	dojox.drawing.plugins._Plugin,
-	function(options){
-		var cls = options.node.className;
-		var txt = options.node.innerHTML;
-		this.domNode = dojo.create("div", {id:"btnZoom", "class":"toolCombo"}, options.node, "replace");
-		
-		this.makeButton("ZoomIn", this.topClass);
-		this.makeButton("Zoom100", this.midClass);
-		this.makeButton("ZoomOut", this.botClass);
-		
-	},
-	{
-		type:"dojox.drawing.ui.dom.Zoom",
-		//
-		// 	zoomInc: Float
-		//		The amount of zoom that will occur upon each click.
-		zoomInc:.1,
-		//
-		//	maxZoom: Number
-		//		The maximum the canvas can be zoomed in. 10 = 1000%
-		maxZoom:10,
-		//
-		//	minZoom: Float
-		//		The most the canvas can be zoomed out. .1 = 10%
-		minZoom:.1,
-		//
-		//	zoomFactor: [readonly] Float
-		//		The current zoom amount
-		zoomFactor:1,
-		//
-		//	baseClass: String
-		//		The CSS class added to the Toolbar buttons
-		baseClass:"drawingButton",
-		//
-		//	topClass: String
-		//		The CSS class added to the top (or left) Toolbar button
-		topClass:"toolComboTop",
-		//
-		//	midClass: String
-		//		The CSS class added to the middle Toolbar button
-		midClass:"toolComboMid",
-		//
-		//	botClass: String
-		//		The CSS class added to the bottom (or right) Toolbar button
-		botClass:"toolComboBot",
-		//
-		makeButton: function(name, cls){
-			// summary:
-			//		Internal. Creates one of the buttons in the zoom-button set.
-			//
-			var node = dojo.create("div", {id:"btn"+name, "class":this.baseClass+" "+cls,
-				innerHTML:'<div title="Zoom In" class="icon icon'+name+'"></div>'}, this.domNode);
-			
-			dojo.connect(document, "mouseup", function(evt){
-				dojo.stopEvent(evt);
-				dojo.removeClass(node, "active");
-			});
-			dojo.connect(node, "mouseup", this, function(evt){
-				dojo.stopEvent(evt);
-				dojo.removeClass(node, "active");
-				this["on"+name](); // this is what calls the methods below
-			});
-			dojo.connect(node, "mouseover", function(evt){
-				dojo.stopEvent(evt);
-				dojo.addClass(node, "hover");
-			});
-			dojo.connect(node, "mousedown", this, function(evt){
-				dojo.stopEvent(evt);
-				dojo.addClass(node, "active");
-			});
-			
-			dojo.connect(node, "mouseout", this, function(evt){
-				dojo.stopEvent(evt);
-				dojo.removeClass(node, "hover");
-			});
-		
-		},
-		
-		onZoomIn: function(/*Mouse Event*/evt){
-			// summary:
-			//		Handles zoom in.
-			//
-			this.zoomFactor += this.zoomInc;
-			this.zoomFactor = Math.min(this.zoomFactor, this.maxZoom);
-			this.canvas.setZoom(this.zoomFactor);
-			this.mouse.setZoom(this.zoomFactor);
-		},
-		onZoom100: function(/*Mouse Event*/evt){
-			// summary:
-			//		Zooms to 100%
-			//
-			this.zoomFactor = 1;
-			this.canvas.setZoom(this.zoomFactor);
-			this.mouse.setZoom(this.zoomFactor);
-		},
-		onZoomOut: function(/*Mouse Event*/evt){
-			// summary:
-			//		Handles zoom out.
-			//
-			this.zoomFactor -= this.zoomInc;
-			this.zoomFactor = Math.max(this.zoomFactor, this.minZoom);
-			this.canvas.setZoom(this.zoomFactor);
-			this.mouse.setZoom(this.zoomFactor);
-		}
-	}
-);
-
-
-//dojox.drawing.register(dojox.drawing.plugins.tools.Pan, "plugin");
+define(["dojo","../../plugins/_Plugin"],function(_1){
+dojox.drawing.ui.dom.Zoom=dojox.drawing.util.oo.declare(dojox.drawing.plugins._Plugin,function(_2){
+var _3=_2.node.className;
+var _4=_2.node.innerHTML;
+this.domNode=_1.create("div",{id:"btnZoom","class":"toolCombo"},_2.node,"replace");
+this.makeButton("ZoomIn",this.topClass);
+this.makeButton("Zoom100",this.midClass);
+this.makeButton("ZoomOut",this.botClass);
+},{type:"dojox.drawing.ui.dom.Zoom",zoomInc:0.1,maxZoom:10,minZoom:0.1,zoomFactor:1,baseClass:"drawingButton",topClass:"toolComboTop",midClass:"toolComboMid",botClass:"toolComboBot",makeButton:function(_5,_6){
+var _7=_1.create("div",{id:"btn"+_5,"class":this.baseClass+" "+_6,innerHTML:"<div title=\"Zoom In\" class=\"icon icon"+_5+"\"></div>"},this.domNode);
+_1.connect(document,"mouseup",function(_8){
+_1.stopEvent(_8);
+_1.removeClass(_7,"active");
+});
+_1.connect(_7,"mouseup",this,function(_9){
+_1.stopEvent(_9);
+_1.removeClass(_7,"active");
+this["on"+_5]();
+});
+_1.connect(_7,"mouseover",function(_a){
+_1.stopEvent(_a);
+_1.addClass(_7,"hover");
+});
+_1.connect(_7,"mousedown",this,function(_b){
+_1.stopEvent(_b);
+_1.addClass(_7,"active");
+});
+_1.connect(_7,"mouseout",this,function(_c){
+_1.stopEvent(_c);
+_1.removeClass(_7,"hover");
+});
+},onZoomIn:function(_d){
+this.zoomFactor+=this.zoomInc;
+this.zoomFactor=Math.min(this.zoomFactor,this.maxZoom);
+this.canvas.setZoom(this.zoomFactor);
+this.mouse.setZoom(this.zoomFactor);
+},onZoom100:function(_e){
+this.zoomFactor=1;
+this.canvas.setZoom(this.zoomFactor);
+this.mouse.setZoom(this.zoomFactor);
+},onZoomOut:function(_f){
+this.zoomFactor-=this.zoomInc;
+this.zoomFactor=Math.max(this.zoomFactor,this.minZoom);
+this.canvas.setZoom(this.zoomFactor);
+this.mouse.setZoom(this.zoomFactor);
+}});
 return dojox.drawing.ui.dom.Zoom;
 });

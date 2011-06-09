@@ -1,18 +1,14 @@
 .dojoxWizard {
 	position:relative; 
 }
-
 .dojoxWizardButtons {
 	position:absolute;
 	bottom:5px;
 	right:5px;
 }
-
-/* allot room for the buttons. never let a child overlap */
 .dojoxWizardContainer > * {
 	margin-bottom:39px;
 }
-
 .tundra .dojoxWizard {
 	background: #eeeeee;
 	border: #b7b7b7 1px solid;
@@ -23,7 +19,6 @@
 	-o-border-radius:4pt;
 	-ms-border-radius:4pt;
 }
-
 .soria .dojoxWizard {
 	border:1px solid #b7b7b7;
 	padding:2px;
@@ -33,7 +28,6 @@
 	-o-border-radius:4pt;
 	-ms-border-radius:4pt;
 }
-
 .claro .dojoxWizard {
 	border:1px solid #b5bcc7;
 	padding:2px;
@@ -43,15 +37,12 @@
 	-o-border-radius:4pt;
 	-ms-border-radius:4pt;
 }
-
-/* remove the border and padding when we're in a dialog, it wraps us */
 .tundra .dijitDialogSingleChild .dojoxWizard, 
 .soria .dijitDialogSingleChild .dojoxWizard, 
 .claro .dijitDialogSingleChild .dojoxWizard {
 	border:none;
 	padding:0;
 }
-
 .claro .dijitDialogSingleChild .dojoxWizardButtons {
 	bottom:1px;
 }

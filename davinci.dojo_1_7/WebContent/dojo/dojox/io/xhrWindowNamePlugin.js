@@ -1,52 +1,38 @@
-define(["dojo/_base/json", "dojox/io/xhrPlugins", "dojox/io/windowName", "dojox/io/httpParse", "dojox/secure/capability", "dojo/_base/xhr"], function(dojo, xhrPlugins, windowName, httpParse, capability){
-dojo.getObject("io.xhrWindowNamePlugin", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojox.io.xhrWindowNamePlugin = function(/*String*/url, /*Function?*/httpAdapter, /*Boolean?*/trusted){
-	// summary:
-	//		Adds the windowName transport as an XHR plugin for the given site. See
-	//		dojox.io.windowName for more information on the transport.
-	//	url:
-	//		Url prefix of the site which can handle windowName requests.
-	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be
-	// 		sent with window.name, so you can use a convention for headers and PUT/DELETE methods.
-	xhrPlugins.register(
-		"windowName",
-		function(method,args){
-			 return args.sync !== true &&
-				(method == "GET" || method == "POST" || httpAdapter) &&
-				(args.url.substring(0,url.length) == url);
-		},
-		function(method,args,hasBody){
-			var send = windowName.send;
-			var load = args.load;
-			args.load = undefined; //we don't want send to set this callback
-			var dfd = (httpAdapter ? httpAdapter(send, true) : send)(method, args, hasBody); // use the windowName transport
-			dfd.addCallback(function(result){
-				var ioArgs = dfd.ioArgs;
-				ioArgs.xhr = {
-					getResponseHeader: function(name){
-						// convert the hash to an object to act like response headers
-						return dojo.queryToObject(ioArgs.hash.match(/[^#]*$/)[0])[name];
-					}
-				}
-				// use the XHR content handlers for handling
-				if(ioArgs.handleAs == 'json'){
-					// use a secure json verifier, using object capability validator for now
-					if(!trusted){
-						capability.validate(result,["Date"],{});
-					}
-					return dojo.fromJson(result);
-				}
-				return dojo._contentHandlers[ioArgs.handleAs || "text"]({responseText:result});
-			});
-			args.load = load;
-			if(load){
- 				dfd.addCallback(load);
- 			}
-			return dfd;
-		}
-	);
+define(["dojo/_base/json","dojox/io/xhrPlugins","dojox/io/windowName","dojox/io/httpParse","dojox/secure/capability","dojo/_base/xhr"],function(_1,_2,_3,_4,_5){
+_1.getObject("io.xhrWindowNamePlugin",true,dojox);
+dojox.io.xhrWindowNamePlugin=function(_6,_7,_8){
+_2.register("windowName",function(_9,_a){
+return _a.sync!==true&&(_9=="GET"||_9=="POST"||_7)&&(_a.url.substring(0,_6.length)==_6);
+},function(_b,_c,_d){
+var _e=_3.send;
+var _f=_c.load;
+_c.load=undefined;
+var dfd=(_7?_7(_e,true):_e)(_b,_c,_d);
+dfd.addCallback(function(_10){
+var _11=dfd.ioArgs;
+_11.xhr={getResponseHeader:function(_12){
+return _1.queryToObject(_11.hash.match(/[^#]*$/)[0])[_12];
+}};
+if(_11.handleAs=="json"){
+if(!_8){
+_5.validate(_10,["Date"],{});
+}
+return _1.fromJson(_10);
+}
+return _1._contentHandlers[_11.handleAs||"text"]({responseText:_10});
+});
+_c.load=_f;
+if(_f){
+dfd.addCallback(_f);
+}
+return dfd;
+});
 };
-
 return dojox.io.xhrWindowNamePlugin;
 });

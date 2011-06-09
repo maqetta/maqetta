@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[volby zobrazení]",
 	title: "Název",
 	authors: "Autoři",
@@ -8,4 +8,4 @@
 	updated: "Aktualizováno",
 	summary: "Souhrn",
 	content: "Obsah"
-})
+}));

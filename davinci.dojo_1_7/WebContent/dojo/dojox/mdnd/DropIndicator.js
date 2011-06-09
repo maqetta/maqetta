@@ -1,84 +1,47 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./AreaManager"],function(dojo){
-	var di = dojo.declare(
-		"dojox.mdnd.DropIndicator",
-		null,
-	{
-		// summary:
-		//		DropIndicator managment for DnD.
-	
-		// node: DOMNode
-		//		the drop indicator node
-		node : null,
-			
-		constructor: function(){
-			//console.log("dojox.mdnd.DropIndicator ::: constructor");
-			var dropIndicator = document.createElement("div");
-			var subDropIndicator = document.createElement("div");
-			dropIndicator.appendChild(subDropIndicator);
-			dojo.addClass(dropIndicator, "dropIndicator");
-			this.node = dropIndicator;
-		},
-		
-		place: function(/*Node*/area, /*Node*/nodeRef, /*Object*/size){
-			// summary:
-			//		Place the DropIndicator in the right place
-			// area:
-			//		the dnd targer area node
-			// nodeRef:
-			//		node where the dropIndicator have to be placed into the area
-			// dragNode:
-			//		the node which is dragged
-			// returns:
-			//		the node inserted or null if it crashes
-	
-			//console.log("dojox.mdnd.DropIndicator ::: place");
-			if(size){
-				this.node.style.height = size.h + "px";
-			}
-			try{
-				if(nodeRef){
-					area.insertBefore(this.node, nodeRef);
-				}
-				else{
-					// empty target area or last node => appendChild
-					area.appendChild(this.node);
-				}
-				return this.node;	// DOMNode
-			}catch(e){
-				return null;
-			}
-		},
-		
-		remove: function(){
-			// summary:
-			//		remove the DropIndicator (not destroy)
-	
-			//console.log("dojox.mdnd.DropIndicator ::: remove");
-			if(this.node){
-				//FIX : IE6 problem
-				this.node.style.height = "";
-				if(this.node.parentNode){
-					this.node.parentNode.removeChild(this.node);
-				}
-			}
-		},
-		 
-		destroy: function(){
-			// summary:
-			//		destroy the dropIndicator
-	
-			//console.log("dojox.mdnd.DropIndicator ::: destroy");
-			if(this.node){
-				if(this.node.parentNode){
-					this.node.parentNode.removeChild(this.node);
-				}
-				dojo._destroyElement(this.node);
-				delete this.node;
-			}
-		}
-	});
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojox.mdnd.areaManager()._dropIndicator = new dojox.mdnd.DropIndicator();
-	
-	return di;
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./AreaManager"],function(_1){
+var di=_1.declare("dojox.mdnd.DropIndicator",null,{node:null,constructor:function(){
+var _2=document.createElement("div");
+var _3=document.createElement("div");
+_2.appendChild(_3);
+_1.addClass(_2,"dropIndicator");
+this.node=_2;
+},place:function(_4,_5,_6){
+if(_6){
+this.node.style.height=_6.h+"px";
+}
+try{
+if(_5){
+_4.insertBefore(this.node,_5);
+}else{
+_4.appendChild(this.node);
+}
+return this.node;
+}
+catch(e){
+return null;
+}
+},remove:function(){
+if(this.node){
+this.node.style.height="";
+if(this.node.parentNode){
+this.node.parentNode.removeChild(this.node);
+}
+}
+},destroy:function(){
+if(this.node){
+if(this.node.parentNode){
+this.node.parentNode.removeChild(this.node);
+}
+_1._destroyElement(this.node);
+delete this.node;
+}
+}});
+dojox.mdnd.areaManager()._dropIndicator=new dojox.mdnd.DropIndicator();
+return di;
 });

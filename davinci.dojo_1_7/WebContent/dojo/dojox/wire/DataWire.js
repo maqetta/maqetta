@@ -1,175 +1,83 @@
-dojo.provide("dojox.wire.DataWire");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.wire.Wire");
-
-dojo.declare("dojox.wire.DataWire", dojox.wire.Wire, {
-	//	summary:
-	//		A Wire for item attributes of data stores
-	//	description:
-	//		This class accesses item attributes of data stores with a dotted
-	//		notation of attribute names specified to 'attribute' property,
-	//		using data APIs of a data store specified to 'dataStore' property.
-	//		The root object for this class must be an item of the data store.
-	//		Intermediate attribute names in the dotted notation specify
-	//		attributes for child items, which are used for repeated calls to
-	//		data APIs until reached to a descendant attribute.
-	//		Attribute names may have an array index, such as "a[0]", to
-	//		identify an array element of the attribute value.
-	
-	_wireClass: "dojox.wire.DataWire",
-
-	constructor: function(/*Object*/args){
-		//	summary:
-		//		Initialize properties
-		//	description:
-		//		If 'dataStore' property is not specified, but 'parent' property
-		//		is specified, 'dataStore' property is copied from the parent.
-		//	args:
-		//		Arguments to initialize properties
-		//		dataStore:
-		//			A data store
-		//		attribute:
-		//			A dotted notation to a descendant attribute
-		if(!this.dataStore && this.parent){
-			this.dataStore = this.parent.dataStore;
-		}
-	},
-	_getValue: function(/*Object*/object){
-		//	summary:
-		//		Return an attribute value of an item
-		//	description:
-		//		This method uses a root item passed in 'object' argument and
-		//		'attribute' property to call getValue() method of
-		//		'dataStore'.
-		//		If an attribute name have an array suffix ("[]"), getValues()
-		//		method is called, instead.
-		//		If an index is specified in the array suffix, an array element
-		//		for the index is returned, instead of the array itself.
-		//	object:
-		//		A root item
-		//	returns:
-		//		A value found, otherwise 'undefined'
-		if(!object || !this.attribute || !this.dataStore){
-			return object; //Object
-		}
-
-		var value = object;
-		var list = this.attribute.split('.');
-		for(var i in list){
-			value = this._getAttributeValue(value, list[i]);
-			if(!value){
-				return undefined; //undefined
-			}
-		}
-		return value; //anything
-	},
-
-	_setValue: function(/*Object*/object, /*anything*/value){
-		//	summary:
-		//		Set an attribute value to an item
-		//	description:
-		//		This method uses a root item passed in 'object' argument and
-		//		'attribute' property to identify an item.
-		//		Then, setValue() method of 'dataStore' is called with a leaf
-		//		attribute name and 'value' argument.
-		//		If an attribute name have an array suffix ("[]"), setValues()
-		//		method is called, instead.
-		//		If an index is specified in the array suffix, an array element
-		//		for the index is set to 'value', instead of the array itself.
-		//	object:
-		//		A root item
-		//	value:
-		//		A value to set
-		//	returns:
-		//		'object', or 'undefined' for invalid attribute
-		if(!object || !this.attribute || !this.dataStore){
-			return object; //Object
-		}
-
-		var item = object;
-		var list = this.attribute.split('.');
-		var last = list.length - 1;
-		for(var i = 0; i < last; i++){
-			item = this._getAttributeValue(item, list[i]);
-			if(!item){
-				return undefined; //undefined
-			}
-		}
-		this._setAttributeValue(item, list[last], value);
-		return object; //Object
-	},
-
-	_getAttributeValue: function(/*Object*/item, /*String*/attribute){
-		//	summary:
-		//		Return an attribute value of an item
-		//	description:
-		//		This method uses an item passed in 'item' argument and
-		//		'attribute' argument to call getValue() method of 'dataStore'.
-		//		If an attribute name have an array suffix ("[]"), getValues()
-		//		method is called, instead.
-		//		If an index is specified in the array suffix, an array element
-		//		for the index is returned, instead of the array itself.
-		//	item:
-		//		An item
-		//	attribute
-		//		An attribute name
-		//	returns:
-		//		A value found, otherwise 'undefined'
-		var value = undefined;
-		var i1 = attribute.indexOf('[');
-		if(i1 >= 0){
-			var i2 = attribute.indexOf(']');
-			var index = attribute.substring(i1 + 1, i2);
-			attribute = attribute.substring(0, i1);
-			var array = this.dataStore.getValues(item, attribute);
-			if(array){
-				if(!index){ // return array for "attribute[]"
-					value = array;
-				}else{
-					value = array[index];
-				}
-			}
-		}else{
-			value = this.dataStore.getValue(item, attribute);
-		}
-		return value; //anything
-	},
-
-	_setAttributeValue: function(/*Object*/item, /*String*/attribute, /*anything*/value){
-		//	summary:
-		//		Set an attribute value to an item
-		//	description:
-		//		This method uses an item passed in 'item' argument and
-		//		'attribute' argument to call setValue() method of 'dataStore'
-		//		with 'value' argument.
-		//		If an attribute name have an array suffix ("[]"), setValues()
-		//		method is called, instead.
-		//		If an index is specified in the array suffix, an array element
-		//		for the index is set to 'value', instead of the array itself.
-		//	item:
-		//		An item
-		//	attribute:
-		//		An attribute name
-		//	value:
-		//		A value to set
-		var i1 = attribute.indexOf('[');
-		if(i1 >= 0){
-			var i2 = attribute.indexOf(']');
-			var index = attribute.substring(i1 + 1, i2);
-			attribute = attribute.substring(0, i1);
-			var array = null;
-			if(!index){ // replace whole array for "attribute[]"
-				array = value;
-			}else{
-				array = this.dataStore.getValues(item, attribute);
-				if(!array){
-					array = [];
-				}
-				array[index] = value;
-			}
-			this.dataStore.setValues(item, attribute, array);
-		}else{
-			this.dataStore.setValue(item, attribute, value);
-		}
-	}
+define(["dojo","dijit","dojox","dojox/wire/Wire"],function(_1,_2,_3){
+_1.getObject("dojox.wire.DataWire",1);
+_1.declare("dojox.wire.DataWire",_3.wire.Wire,{_wireClass:"dojox.wire.DataWire",constructor:function(_4){
+if(!this.dataStore&&this.parent){
+this.dataStore=this.parent.dataStore;
+}
+},_getValue:function(_5){
+if(!_5||!this.attribute||!this.dataStore){
+return _5;
+}
+var _6=_5;
+var _7=this.attribute.split(".");
+for(var i in _7){
+_6=this._getAttributeValue(_6,_7[i]);
+if(!_6){
+return undefined;
+}
+}
+return _6;
+},_setValue:function(_8,_9){
+if(!_8||!this.attribute||!this.dataStore){
+return _8;
+}
+var _a=_8;
+var _b=this.attribute.split(".");
+var _c=_b.length-1;
+for(var i=0;i<_c;i++){
+_a=this._getAttributeValue(_a,_b[i]);
+if(!_a){
+return undefined;
+}
+}
+this._setAttributeValue(_a,_b[_c],_9);
+return _8;
+},_getAttributeValue:function(_d,_e){
+var _f=undefined;
+var i1=_e.indexOf("[");
+if(i1>=0){
+var i2=_e.indexOf("]");
+var _10=_e.substring(i1+1,i2);
+_e=_e.substring(0,i1);
+var _11=this.dataStore.getValues(_d,_e);
+if(_11){
+if(!_10){
+_f=_11;
+}else{
+_f=_11[_10];
+}
+}
+}else{
+_f=this.dataStore.getValue(_d,_e);
+}
+return _f;
+},_setAttributeValue:function(_12,_13,_14){
+var i1=_13.indexOf("[");
+if(i1>=0){
+var i2=_13.indexOf("]");
+var _15=_13.substring(i1+1,i2);
+_13=_13.substring(0,i1);
+var _16=null;
+if(!_15){
+_16=_14;
+}else{
+_16=this.dataStore.getValues(_12,_13);
+if(!_16){
+_16=[];
+}
+_16[_15]=_14;
+}
+this.dataStore.setValues(_12,_13,_16);
+}else{
+this.dataStore.setValue(_12,_13,_14);
+}
+}});
+return _1.getObject("dojox.wire.DataWire");
 });
+require(["dojox/wire/DataWire"]);

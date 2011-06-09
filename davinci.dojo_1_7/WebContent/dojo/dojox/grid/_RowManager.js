@@ -1,62 +1,42 @@
-define(["dojo", "dojox"], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var setStyleText = function(inNode, inStyleText){
-		if(inNode.style.cssText == undefined){
-			inNode.setAttribute("style", inStyleText);
-		}else{
-			inNode.style.cssText = inStyleText;
-		}
-	};
-
-	dojo.declare("dojox.grid._RowManager", null, {
-		//	Stores information about grid rows. Owned by grid and used internally.
-		constructor: function(inGrid){
-			this.grid = inGrid;
-		},
-		linesToEms: 2,
-		overRow: -2,
-		// styles
-		prepareStylingRow: function(inRowIndex, inRowNode){
-			return {
-				index: inRowIndex,
-				node: inRowNode,
-				odd: Boolean(inRowIndex&1),
-				selected: !!this.grid.selection.isSelected(inRowIndex),
-				over: this.isOver(inRowIndex),
-				customStyles: "",
-				customClasses: "dojoxGridRow"
-			};
-		},
-		styleRowNode: function(inRowIndex, inRowNode){
-			var row = this.prepareStylingRow(inRowIndex, inRowNode);
-			this.grid.onStyleRow(row);
-			this.applyStyles(row);
-		},
-		applyStyles: function(inRow){
-			var i = inRow;
-
-			i.node.className = i.customClasses;
-			var h = i.node.style.height;
-			setStyleText(i.node, i.customStyles + ';' + (i.node._style||''));
-			i.node.style.height = h;
-		},
-		updateStyles: function(inRowIndex){
-			this.grid.updateRowStyles(inRowIndex);
-		},
-		// states and events
-		setOverRow: function(inRowIndex){
-			var last = this.overRow;
-			this.overRow = inRowIndex;
-			if((last!=this.overRow)&&(dojo.isString(last) || last >= 0)){
-				this.updateStyles(last);
-			}
-			this.updateStyles(this.overRow);
-		},
-		isOver: function(inRowIndex){
-			return (this.overRow == inRowIndex && !dojo.hasClass(this.grid.domNode, "dojoxGridColumnResizing"));
-		}
-	});
-
-	return dojox.grid._RowManager;
-
+define(["dojo","dojox"],function(_1,_2){
+var _3=function(_4,_5){
+if(_4.style.cssText==undefined){
+_4.setAttribute("style",_5);
+}else{
+_4.style.cssText=_5;
+}
+};
+_1.declare("dojox.grid._RowManager",null,{constructor:function(_6){
+this.grid=_6;
+},linesToEms:2,overRow:-2,prepareStylingRow:function(_7,_8){
+return {index:_7,node:_8,odd:Boolean(_7&1),selected:!!this.grid.selection.isSelected(_7),over:this.isOver(_7),customStyles:"",customClasses:"dojoxGridRow"};
+},styleRowNode:function(_9,_a){
+var _b=this.prepareStylingRow(_9,_a);
+this.grid.onStyleRow(_b);
+this.applyStyles(_b);
+},applyStyles:function(_c){
+var i=_c;
+i.node.className=i.customClasses;
+var h=i.node.style.height;
+_3(i.node,i.customStyles+";"+(i.node._style||""));
+i.node.style.height=h;
+},updateStyles:function(_d){
+this.grid.updateRowStyles(_d);
+},setOverRow:function(_e){
+var _f=this.overRow;
+this.overRow=_e;
+if((_f!=this.overRow)&&(_1.isString(_f)||_f>=0)){
+this.updateStyles(_f);
+}
+this.updateStyles(this.overRow);
+},isOver:function(_10){
+return (this.overRow==_10&&!_1.hasClass(this.grid.domNode,"dojoxGridColumnResizing"));
+}});
+return _2.grid._RowManager;
 });

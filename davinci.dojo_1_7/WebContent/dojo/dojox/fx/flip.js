@@ -1,505 +1,179 @@
-define(["dojo/_base/html", "dojo/_base/connect","dojo/_base/Color", "dojo/fx","./_base"], function() {
-//kernel,lang->(sniff,array,has),sniff,unload,window
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.getObject("fx.flip", true, dojox);
-
-	dojo.experimental("dojox.fx.flip");
-	// because ShrinkSafe will eat this up:
-	var borderConst = "border",
-		widthConst = "Width",
-		heightConst = "Height",
-		topConst = "Top",
-		rightConst = "Right",
-		leftConst = "Left",
-		bottomConst = "Bottom"
-	;
-
-	dojox.fx.flip = function(/*Object*/ args){
-		// summary: Animate a node flipping following a specific direction
-		//
-		// description:
-		//		Returns an animation that will flip the
-		//		node around a central axis:
-		//		if args.dir is "left" or "right" --> y axis
-		//		if args.dir is "top" or "bottom" --> x axis
-		//
-		//		This effect is obtained using a border distorsion applied to a helper node.
-		//
-		//		The user can specify three background colors for the helper node:
-		//		darkColor: the darkest color reached during the animation
-		//		lightColor: the brightest color
-		//		endColor: the final backgroundColor for the node
-		//
-		//		depth: Float
-		//			 0 <= depth <= 1 overrides the computed "depth"
-		//			(0: min distorsion, 1: max distorsion)
-		//
-		//		whichAnim: String
-		//			"first"			 : the first half animation
-		//			"last"			 : the second one
-		//			"both" (default) : both
-		//
-		//		axis: String
-		//			"center" (default)	  : the node is flipped around his center
-		//			"shortside"			  : the node is flipped around his "short" (in perspective) side
-		//			"longside"			  : the node is flipped around his "long" (in perspective) side
-		//			"cube"				  : the node flips around the central axis of the cube
-		//
-		//		shift: Integer
-		//			node translation, perpendicular to the rotation axis
-		//
-		//	example:
-		//	|	var anim = dojox.fx.flip({
-		//	|		node: dojo.byId("nodeId"),
-		//	|		dir: "top",
-		//	|		darkColor: "#555555",
-		//	|		lightColor: "#dddddd",
-		//	|		endColor: "#666666",
-		//	|		depth: .5,
-		//	|		shift: 50,
-		//	|		duration:300
-		//	|	  });
-
-		var helperNode = dojo.create("div"),
-			node = args.node = dojo.byId(args.node),
-			s = node.style,
-			dims = null,
-			hs = null,
-			pn = null,
-			lightColor = args.lightColor || "#dddddd",
-			darkColor = args.darkColor || "#555555",
-			bgColor = dojo.style(node, "backgroundColor"),
-			endColor = args.endColor || bgColor,
-			staticProps = {},
-			anims = [],
-			duration = args.duration ? args.duration / 2 : 250,
-			dir = args.dir || "left",
-			pConst = .9,
-			transparentColor = "transparent",
-			whichAnim = args.whichAnim,
-			axis = args.axis || "center",
-			depth = args.depth
-		;
-		// IE6 workaround: IE6 doesn't support transparent borders
-		var convertColor = function(color){
-			return ((new dojo.Color(color)).toHex() === "#000000") ? "#000001" : color;
-		};
-
-		if(dojo.isIE < 7){
-			endColor = convertColor(endColor);
-			lightColor = convertColor(lightColor);
-			darkColor = convertColor(darkColor);
-			bgColor = convertColor(bgColor);
-			transparentColor = "black";
-			helperNode.style.filter = "chroma(color='#000000')";
-		}
-
-		var init = (function(n){
-			return function(){
-				var ret = dojo.coords(n, true);
-				dims = {
-					top: ret.y,
-					left: ret.x,
-					width: ret.w,
-					height: ret.h
-				};
-			}
-		})(node);
-		init();
-		// helperNode initialization
-		hs = {
-			position: "absolute",
-			top: dims["top"] + "px",
-			left: dims["left"] + "px",
-			height: "0",
-			width: "0",
-			zIndex: args.zIndex || (s.zIndex || 0),
-			border: "0 solid " + transparentColor,
-			fontSize: "0",
-			visibility: "hidden"
-		};
-		var props = [ {},
-			{
-				top: dims["top"],
-				left: dims["left"]
-			}
-		];
-		var dynProperties = {
-			left: [leftConst, rightConst, topConst, bottomConst, widthConst, heightConst, "end" + heightConst + "Min", leftConst, "end" + heightConst + "Max"],
-			right: [rightConst, leftConst, topConst, bottomConst, widthConst, heightConst, "end" + heightConst + "Min", leftConst, "end" + heightConst + "Max"],
-			top: [topConst, bottomConst, leftConst, rightConst, heightConst, widthConst, "end" + widthConst + "Min", topConst, "end" + widthConst + "Max"],
-			bottom: [bottomConst, topConst, leftConst, rightConst, heightConst, widthConst, "end" + widthConst + "Min", topConst, "end" + widthConst + "Max"]
-		};
-		// property names
-		pn = dynProperties[dir];
-
-		// .4 <= pConst <= .9
-		if(typeof depth != "undefined"){
-			depth = Math.max(0, Math.min(1, depth)) / 2;
-			pConst = .4 + (.5 - depth);
-		}else{
-			pConst = Math.min(.9, Math.max(.4, dims[pn[5].toLowerCase()] / dims[pn[4].toLowerCase()]));
-		}
-		var p0 = props[0];
-		for(var i = 4; i < 6; i++){
-			if(axis == "center" || axis == "cube"){ // find a better name for "cube"
-				dims["end" + pn[i] + "Min"] = dims[pn[i].toLowerCase()] * pConst;
-				dims["end" + pn[i] + "Max"] = dims[pn[i].toLowerCase()] / pConst;
-			}else if(axis == "shortside"){
-				dims["end" + pn[i] + "Min"] = dims[pn[i].toLowerCase()];
-				dims["end" + pn[i] + "Max"] = dims[pn[i].toLowerCase()] / pConst;
-			}else if(axis == "longside"){
-				dims["end" + pn[i] + "Min"] = dims[pn[i].toLowerCase()] * pConst;
-				dims["end" + pn[i] + "Max"] = dims[pn[i].toLowerCase()];
-			}
-		}
-		if(axis == "center"){
-			p0[pn[2].toLowerCase()] = dims[pn[2].toLowerCase()] - (dims[pn[8]] - dims[pn[6]]) / 4;
-		}else if(axis == "shortside"){
-			p0[pn[2].toLowerCase()] = dims[pn[2].toLowerCase()] - (dims[pn[8]] - dims[pn[6]]) / 2;
-		}
-
-		staticProps[pn[5].toLowerCase()] = dims[pn[5].toLowerCase()] + "px";
-		staticProps[pn[4].toLowerCase()] = "0";
-		staticProps[borderConst + pn[1] + widthConst] = dims[pn[4].toLowerCase()] + "px";
-		staticProps[borderConst + pn[1] + "Color"] = bgColor;
-
-		p0[borderConst + pn[1] + widthConst] = 0;
-		p0[borderConst + pn[1] + "Color"] = darkColor;
-		p0[borderConst + pn[2] + widthConst] = p0[borderConst + pn[3] + widthConst] = axis != "cube"
-			? (dims["end" + pn[5] +	 "Max"] - dims["end" + pn[5] + "Min"]) / 2
-			: dims[pn[6]] / 2
-		;
-		p0[pn[7].toLowerCase()] = dims[pn[7].toLowerCase()] + dims[pn[4].toLowerCase()] / 2 + (args.shift || 0);
-		p0[pn[5].toLowerCase()] = dims[pn[6]];
-
-		var p1 = props[1];
-		p1[borderConst + pn[0] + "Color"] = { start: lightColor, end: endColor };
-		p1[borderConst + pn[0] + widthConst] = dims[pn[4].toLowerCase()];
-		p1[borderConst + pn[2] + widthConst] = 0;
-		p1[borderConst + pn[3] + widthConst] = 0;
-		p1[pn[5].toLowerCase()] = { start: dims[pn[6]], end: dims[pn[5].toLowerCase()] };
-
-		dojo.mixin(hs, staticProps);
-		dojo.style(helperNode, hs);
-		dojo.body().appendChild(helperNode);
-
-		var finalize = function(){
-//			helperNode.parentNode.removeChild(helperNode);
-			dojo.destroy(helperNode);
-			// fixes a flicker when the animation ends
-			s.backgroundColor = endColor;
-			s.visibility = "visible";
-		};
-		if(whichAnim == "last"){
-			for(i in p0){
-				p0[i] = { start: p0[i] };
-			}
-			p0[borderConst + pn[1] + "Color"] = { start: darkColor, end: endColor };
-			p1 = p0;
-		}
-		if(!whichAnim || whichAnim == "first"){
-			anims.push(dojo.animateProperty({
-				node: helperNode,
-				duration: duration,
-				properties: p0
-			}));
-		}
-		if(!whichAnim || whichAnim == "last"){
-			anims.push(dojo.animateProperty({
-				node: helperNode,
-				duration: duration,
-				properties: p1,
-				onEnd: finalize
-			}));
-		}
-
-		// hide the original node
-		dojo.connect(anims[0], "play", function(){
-			helperNode.style.visibility = "visible";
-			s.visibility = "hidden";
-		});
-
-		return dojo.fx.chain(anims); // dojo.Animation
-
-	}
-
-	dojox.fx.flipCube = function(/*Object*/ args){
-		// summary: An extension to `dojox.fx.flip` providing a more 3d-like rotation
-		//
-		// description:
-		//		An extension to `dojox.fx.flip` providing a more 3d-like rotation.
-		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
-		//		other standard `dojo.Animation` properties.
-		//
-		//	example:
-		//		See `dojox.fx.flip`
-		var anims = [],
-			mb = dojo.marginBox(args.node),
-			shiftX = mb.w / 2,
-			shiftY = mb.h / 2,
-			dims = {
-				top: {
-					pName: "height",
-					args:[
-						{
-							whichAnim: "first",
-							dir: "top",
-							shift: -shiftY
-						},
-						{
-							whichAnim: "last",
-							dir: "bottom",
-							shift: shiftY
-						}
-					]
-				},
-				right: {
-					pName: "width",
-					args:[
-						{
-							whichAnim: "first",
-							dir: "right",
-							shift: shiftX
-						},
-						{
-							whichAnim: "last",
-							dir: "left",
-							shift: -shiftX
-						}
-					]
-				},
-				bottom: {
-					pName: "height",
-					args:[
-						{
-							whichAnim: "first",
-							dir: "bottom",
-							shift: shiftY
-						},
-						{
-							whichAnim: "last",
-							dir: "top",
-							shift: -shiftY
-						}
-					]
-				},
-				left: {
-					pName: "width",
-					args:[
-						{
-							whichAnim: "first",
-							dir: "left",
-							shift: -shiftX
-						},
-						{
-							whichAnim: "last",
-							dir: "right",
-							shift: shiftX
-						}
-					]
-				}
-			}
-		;
-		var d = dims[args.dir || "left"],
-			p = d.args
-		;
-		args.duration = args.duration ? args.duration * 2 : 500;
-		args.depth = .8;
-		args.axis = "cube";
-		for(var i = p.length - 1; i >= 0; i--){
-			dojo.mixin(args, p[i]);
-			anims.push(dojox.fx.flip(args));
-		}
-		return dojo.fx.combine(anims);
-	};
-	
-	dojox.fx.flipPage = function(/*Object*/ args){
-		// summary: An extension to `dojox.fx.flip` providing a page flip like animation.
-		//
-		// description:
-		//		An extension to `dojox.fx.flip` providing a page flip effect.
-		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
-		//		other standard `dojo.Animation` properties.
-		//
-		//	example:
-		//		See `dojox.fx.flip`
-		var n = args.node,
-			coords = dojo.coords(n, true),
-			x = coords.x,
-			y = coords.y,
-			w = coords.w,
-			h = coords.h,
-			bgColor = dojo.style(n, "backgroundColor"),
-			lightColor = args.lightColor || "#dddddd",
-			darkColor = args.darkColor,
-			helperNode = dojo.create("div"),
-			anims = [],
-			hn = [],
-			dir = args.dir || "right",
-			pn = {
-				left: ["left", "right", "x", "w"],
-				top: ["top", "bottom", "y", "h"],
-				right: ["left", "left", "x", "w"],
-				bottom: ["top", "top", "y", "h"]
-			},
-			shiftMultiplier = {
-				right: [1, -1],
-				left: [-1, 1],
-				top: [-1, 1],
-				bottom: [1, -1]
-			}
-		;
-		dojo.style(helperNode, {
-			position: "absolute",
-			width  : w + "px",
-			height : h + "px",
-			top	   : y + "px",
-			left   : x + "px",
-			visibility: "hidden"
-		});
-		var hs = [];
-		for(var i = 0; i < 2; i++){
-			var r = i % 2,
-				d = r ? pn[dir][1] : dir,
-				wa = r ? "last" : "first",
-				endColor = r ? bgColor : lightColor,
-				startColor = r ? endColor : args.startColor || n.style.backgroundColor
-			;
-			hn[i] = dojo.clone(helperNode);
-			var finalize = function(x){
-					return function(){
-						dojo.destroy(hn[x]);
-					}
-				}(i)
-			;
-			dojo.body().appendChild(hn[i]);
-			hs[i] = {
-				backgroundColor: r ? startColor : bgColor
-			};
-			
-			hs[i][pn[dir][0]] = coords[pn[dir][2]] + shiftMultiplier[dir][0] * i * coords[pn[dir][3]] + "px";
-			dojo.style(hn[i], hs[i]);
-			anims.push(dojox.fx.flip({
-				node: hn[i],
-				dir: d,
-				axis: "shortside",
-				depth: args.depth,
-				duration: args.duration / 2,
-				shift: shiftMultiplier[dir][i] * coords[pn[dir][3]] / 2,
-				darkColor: darkColor,
-				lightColor: lightColor,
-				whichAnim: wa,
-				endColor: endColor
-			}));
-			dojo.connect(anims[i], "onEnd", finalize);
-		}
-		return dojo.fx.chain(anims);
-	};
-	
-	
-	dojox.fx.flipGrid = function(/*Object*/ args){
-		// summary: An extension to `dojox.fx.flip` providing a decomposition in rows * cols flipping elements
-		//
-		// description:
-		//		An extension to `dojox.fx.flip` providing a page flip effect.
-		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
-		//		other standard `dojo.Animation` properties and
-		//
-		//		cols: Integer columns
-		//		rows: Integer rows
-		//
-		//		duration: the single flip duration
-		//
-		//	example:
-		//		See `dojox.fx.flip`
-		var rows = args.rows || 4,
-			cols = args.cols || 4,
-			anims = [],
-			helperNode = dojo.create("div"),
-			n = args.node,
-			coords = dojo.coords(n, true),
-			x = coords.x,
-			y = coords.y,
-			nw = coords.w,
-			nh = coords.h,
-			w = coords.w / cols,
-			h = coords.h / rows,
-			cAnims = []
-		;
-		dojo.style(helperNode, {
-			position: "absolute",
-			width: w + "px",
-			height: h + "px",
-			backgroundColor: dojo.style(n, "backgroundColor")
-		});
-		for(var i = 0; i < rows; i++){
-			var r = i % 2,
-				d = r ? "right" : "left",
-				signum = r ? 1 : -1
-			;
-			// cloning
-			var cn = dojo.clone(n);
-			dojo.style(cn, {
-				position: "absolute",
-				width: nw + "px",
-				height: nh + "px",
-				top: y + "px",
-				left: x + "px",
-				clip: "rect(" + i * h + "px," + nw + "px," + nh + "px,0)"
-			});
-			dojo.body().appendChild(cn);
-			anims[i] = [];
-			for(var j = 0; j < cols; j++){
-				var hn = dojo.clone(helperNode),
-					l = r ? j : cols - (j + 1)
-				;
-				var adjustClip = function(xn, yCounter, xCounter){
-					return function(){
-						if(!(yCounter % 2)){
-							dojo.style(xn, {
-								clip: "rect(" + yCounter * h + "px," + (nw - (xCounter + 1) * w ) + "px," + ((yCounter + 1) * h) + "px,0px)"
-							});
-						}else{
-							dojo.style(xn, {
-								clip: "rect(" + yCounter * h + "px," + nw + "px," + ((yCounter + 1) * h) + "px," + ((xCounter + 1) * w) + "px)"
-							});
-						}
-					}
-				}(cn, i, j);
-				dojo.body().appendChild(hn);
-				dojo.style(hn, {
-					left: x + l * w + "px",
-					top: y + i * h + "px",
-					visibility: "hidden"
-				});
-				var a = dojox.fx.flipPage({
-				   node: hn,
-				   dir: d,
-				   duration: args.duration || 900,
-				   shift: signum * w/2,
-				   depth: .2,
-				   darkColor: args.darkColor,
-				   lightColor: args.lightColor,
-				   startColor: args.startColor || args.node.style.backgroundColor
-				}),
-				removeHelper = function(xn){
-					return function(){
-						dojo.destroy(xn);
-					}
-				}(hn)
-				;
-				dojo.connect(a, "play", this, adjustClip);
-				dojo.connect(a, "play", this, removeHelper);
-				anims[i].push(a);
-			}
-			cAnims.push(dojo.fx.chain(anims[i]));
-			
-		}
-		dojo.connect(cAnims[0], "play", function(){
-			dojo.style(n, {visibility: "hidden"});
-		});
-		return dojo.fx.combine(cAnims);
-	};
-	return dojox.fx;
+define(["dojo/_base/html","dojo/_base/connect","dojo/_base/Color","dojo/fx","./_base"],function(){
+dojo.getObject("fx.flip",true,dojox);
+dojo.experimental("dojox.fx.flip");
+var _1="border",_2="Width",_3="Height",_4="Top",_5="Right",_6="Left",_7="Bottom";
+dojox.fx.flip=function(_8){
+var _9=dojo.create("div"),_a=_8.node=dojo.byId(_8.node),s=_a.style,_b=null,hs=null,pn=null,_c=_8.lightColor||"#dddddd",_d=_8.darkColor||"#555555",_e=dojo.style(_a,"backgroundColor"),_f=_8.endColor||_e,_10={},_11=[],_12=_8.duration?_8.duration/2:250,dir=_8.dir||"left",_13=0.9,_14="transparent",_15=_8.whichAnim,_16=_8.axis||"center",_17=_8.depth;
+var _18=function(_19){
+return ((new dojo.Color(_19)).toHex()==="#000000")?"#000001":_19;
+};
+if(dojo.isIE<7){
+_f=_18(_f);
+_c=_18(_c);
+_d=_18(_d);
+_e=_18(_e);
+_14="black";
+_9.style.filter="chroma(color='#000000')";
+}
+var _1a=(function(n){
+return function(){
+var ret=dojo.coords(n,true);
+_b={top:ret.y,left:ret.x,width:ret.w,height:ret.h};
+};
+})(_a);
+_1a();
+hs={position:"absolute",top:_b["top"]+"px",left:_b["left"]+"px",height:"0",width:"0",zIndex:_8.zIndex||(s.zIndex||0),border:"0 solid "+_14,fontSize:"0",visibility:"hidden"};
+var _1b=[{},{top:_b["top"],left:_b["left"]}];
+var _1c={left:[_6,_5,_4,_7,_2,_3,"end"+_3+"Min",_6,"end"+_3+"Max"],right:[_5,_6,_4,_7,_2,_3,"end"+_3+"Min",_6,"end"+_3+"Max"],top:[_4,_7,_6,_5,_3,_2,"end"+_2+"Min",_4,"end"+_2+"Max"],bottom:[_7,_4,_6,_5,_3,_2,"end"+_2+"Min",_4,"end"+_2+"Max"]};
+pn=_1c[dir];
+if(typeof _17!="undefined"){
+_17=Math.max(0,Math.min(1,_17))/2;
+_13=0.4+(0.5-_17);
+}else{
+_13=Math.min(0.9,Math.max(0.4,_b[pn[5].toLowerCase()]/_b[pn[4].toLowerCase()]));
+}
+var p0=_1b[0];
+for(var i=4;i<6;i++){
+if(_16=="center"||_16=="cube"){
+_b["end"+pn[i]+"Min"]=_b[pn[i].toLowerCase()]*_13;
+_b["end"+pn[i]+"Max"]=_b[pn[i].toLowerCase()]/_13;
+}else{
+if(_16=="shortside"){
+_b["end"+pn[i]+"Min"]=_b[pn[i].toLowerCase()];
+_b["end"+pn[i]+"Max"]=_b[pn[i].toLowerCase()]/_13;
+}else{
+if(_16=="longside"){
+_b["end"+pn[i]+"Min"]=_b[pn[i].toLowerCase()]*_13;
+_b["end"+pn[i]+"Max"]=_b[pn[i].toLowerCase()];
+}
+}
+}
+}
+if(_16=="center"){
+p0[pn[2].toLowerCase()]=_b[pn[2].toLowerCase()]-(_b[pn[8]]-_b[pn[6]])/4;
+}else{
+if(_16=="shortside"){
+p0[pn[2].toLowerCase()]=_b[pn[2].toLowerCase()]-(_b[pn[8]]-_b[pn[6]])/2;
+}
+}
+_10[pn[5].toLowerCase()]=_b[pn[5].toLowerCase()]+"px";
+_10[pn[4].toLowerCase()]="0";
+_10[_1+pn[1]+_2]=_b[pn[4].toLowerCase()]+"px";
+_10[_1+pn[1]+"Color"]=_e;
+p0[_1+pn[1]+_2]=0;
+p0[_1+pn[1]+"Color"]=_d;
+p0[_1+pn[2]+_2]=p0[_1+pn[3]+_2]=_16!="cube"?(_b["end"+pn[5]+"Max"]-_b["end"+pn[5]+"Min"])/2:_b[pn[6]]/2;
+p0[pn[7].toLowerCase()]=_b[pn[7].toLowerCase()]+_b[pn[4].toLowerCase()]/2+(_8.shift||0);
+p0[pn[5].toLowerCase()]=_b[pn[6]];
+var p1=_1b[1];
+p1[_1+pn[0]+"Color"]={start:_c,end:_f};
+p1[_1+pn[0]+_2]=_b[pn[4].toLowerCase()];
+p1[_1+pn[2]+_2]=0;
+p1[_1+pn[3]+_2]=0;
+p1[pn[5].toLowerCase()]={start:_b[pn[6]],end:_b[pn[5].toLowerCase()]};
+dojo.mixin(hs,_10);
+dojo.style(_9,hs);
+dojo.body().appendChild(_9);
+var _1d=function(){
+dojo.destroy(_9);
+s.backgroundColor=_f;
+s.visibility="visible";
+};
+if(_15=="last"){
+for(i in p0){
+p0[i]={start:p0[i]};
+}
+p0[_1+pn[1]+"Color"]={start:_d,end:_f};
+p1=p0;
+}
+if(!_15||_15=="first"){
+_11.push(dojo.animateProperty({node:_9,duration:_12,properties:p0}));
+}
+if(!_15||_15=="last"){
+_11.push(dojo.animateProperty({node:_9,duration:_12,properties:p1,onEnd:_1d}));
+}
+dojo.connect(_11[0],"play",function(){
+_9.style.visibility="visible";
+s.visibility="hidden";
+});
+return dojo.fx.chain(_11);
+};
+dojox.fx.flipCube=function(_1e){
+var _1f=[],mb=dojo.marginBox(_1e.node),_20=mb.w/2,_21=mb.h/2,_22={top:{pName:"height",args:[{whichAnim:"first",dir:"top",shift:-_21},{whichAnim:"last",dir:"bottom",shift:_21}]},right:{pName:"width",args:[{whichAnim:"first",dir:"right",shift:_20},{whichAnim:"last",dir:"left",shift:-_20}]},bottom:{pName:"height",args:[{whichAnim:"first",dir:"bottom",shift:_21},{whichAnim:"last",dir:"top",shift:-_21}]},left:{pName:"width",args:[{whichAnim:"first",dir:"left",shift:-_20},{whichAnim:"last",dir:"right",shift:_20}]}};
+var d=_22[_1e.dir||"left"],p=d.args;
+_1e.duration=_1e.duration?_1e.duration*2:500;
+_1e.depth=0.8;
+_1e.axis="cube";
+for(var i=p.length-1;i>=0;i--){
+dojo.mixin(_1e,p[i]);
+_1f.push(dojox.fx.flip(_1e));
+}
+return dojo.fx.combine(_1f);
+};
+dojox.fx.flipPage=function(_23){
+var n=_23.node,_24=dojo.coords(n,true),x=_24.x,y=_24.y,w=_24.w,h=_24.h,_25=dojo.style(n,"backgroundColor"),_26=_23.lightColor||"#dddddd",_27=_23.darkColor,_28=dojo.create("div"),_29=[],hn=[],dir=_23.dir||"right",pn={left:["left","right","x","w"],top:["top","bottom","y","h"],right:["left","left","x","w"],bottom:["top","top","y","h"]},_2a={right:[1,-1],left:[-1,1],top:[-1,1],bottom:[1,-1]};
+dojo.style(_28,{position:"absolute",width:w+"px",height:h+"px",top:y+"px",left:x+"px",visibility:"hidden"});
+var hs=[];
+for(var i=0;i<2;i++){
+var r=i%2,d=r?pn[dir][1]:dir,wa=r?"last":"first",_2b=r?_25:_26,_2c=r?_2b:_23.startColor||n.style.backgroundColor;
+hn[i]=dojo.clone(_28);
+var _2d=function(x){
+return function(){
+dojo.destroy(hn[x]);
+};
+}(i);
+dojo.body().appendChild(hn[i]);
+hs[i]={backgroundColor:r?_2c:_25};
+hs[i][pn[dir][0]]=_24[pn[dir][2]]+_2a[dir][0]*i*_24[pn[dir][3]]+"px";
+dojo.style(hn[i],hs[i]);
+_29.push(dojox.fx.flip({node:hn[i],dir:d,axis:"shortside",depth:_23.depth,duration:_23.duration/2,shift:_2a[dir][i]*_24[pn[dir][3]]/2,darkColor:_27,lightColor:_26,whichAnim:wa,endColor:_2b}));
+dojo.connect(_29[i],"onEnd",_2d);
+}
+return dojo.fx.chain(_29);
+};
+dojox.fx.flipGrid=function(_2e){
+var _2f=_2e.rows||4,_30=_2e.cols||4,_31=[],_32=dojo.create("div"),n=_2e.node,_33=dojo.coords(n,true),x=_33.x,y=_33.y,nw=_33.w,nh=_33.h,w=_33.w/_30,h=_33.h/_2f,_34=[];
+dojo.style(_32,{position:"absolute",width:w+"px",height:h+"px",backgroundColor:dojo.style(n,"backgroundColor")});
+for(var i=0;i<_2f;i++){
+var r=i%2,d=r?"right":"left",_35=r?1:-1;
+var cn=dojo.clone(n);
+dojo.style(cn,{position:"absolute",width:nw+"px",height:nh+"px",top:y+"px",left:x+"px",clip:"rect("+i*h+"px,"+nw+"px,"+nh+"px,0)"});
+dojo.body().appendChild(cn);
+_31[i]=[];
+for(var j=0;j<_30;j++){
+var hn=dojo.clone(_32),l=r?j:_30-(j+1);
+var _36=function(xn,_37,_38){
+return function(){
+if(!(_37%2)){
+dojo.style(xn,{clip:"rect("+_37*h+"px,"+(nw-(_38+1)*w)+"px,"+((_37+1)*h)+"px,0px)"});
+}else{
+dojo.style(xn,{clip:"rect("+_37*h+"px,"+nw+"px,"+((_37+1)*h)+"px,"+((_38+1)*w)+"px)"});
+}
+};
+}(cn,i,j);
+dojo.body().appendChild(hn);
+dojo.style(hn,{left:x+l*w+"px",top:y+i*h+"px",visibility:"hidden"});
+var a=dojox.fx.flipPage({node:hn,dir:d,duration:_2e.duration||900,shift:_35*w/2,depth:0.2,darkColor:_2e.darkColor,lightColor:_2e.lightColor,startColor:_2e.startColor||_2e.node.style.backgroundColor}),_39=function(xn){
+return function(){
+dojo.destroy(xn);
+};
+}(hn);
+dojo.connect(a,"play",this,_36);
+dojo.connect(a,"play",this,_39);
+_31[i].push(a);
+}
+_34.push(dojo.fx.chain(_31[i]));
+}
+dojo.connect(_34[0],"play",function(){
+dojo.style(n,{visibility:"hidden"});
+});
+return dojo.fx.combine(_34);
+};
+return dojox.fx;
 });

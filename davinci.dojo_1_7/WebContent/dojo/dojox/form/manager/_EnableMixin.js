@@ -1,81 +1,42 @@
-dojo.provide("dojox.form.manager._EnableMixin");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.form.manager._Mixin");
-
+define(["dojo","dijit","dojox","dojox/form/manager/_Mixin"],function(_1,_2,_3){
+_1.getObject("dojox.form.manager._EnableMixin",1);
 (function(){
-	var fm = dojox.form.manager,
-		aa = fm.actionAdapter,
-		ia = fm.inspectorAdapter;
-
-	dojo.declare("dojox.form.manager._EnableMixin", null, {
-		// summary:
-		//		Form manager's mixin for controlling enable/disable state of
-		//		form elements.
-		// description:
-		//		This mixin provides unified enable/disable functionality for
-		//		form widgets and form elements. It should be used together
-		//		with dojox.form.manager.Mixin.
-
-		gatherEnableState: function(names){
-			// summary:
-			//		Gather enable state of all form elements and return as a dictionary.
-			// names: Object?:
-			//		If it is an array, it is a list of names to be processed.
-			//		If it is an object, dictionary keys are names to be processed.
-			//		If it is omitted, all known form elements are to be processed.
-
-			var result = this.inspectFormWidgets(ia(function(name, widget){
-				return !widget.get("disabled");
-			}), names);
-
-			if(this.inspectFormNodes){
-				dojo.mixin(result, this.inspectFormNodes(ia(function(name, node){
-					return !dojo.attr(node, "disabled");
-				}), names));
-			}
-
-			return result;	// Object
-		},
-
-		enable: function(state, defaultState){
-			// summary:
-			//		Enable form controls according to the supplied state object.
-			// state: Object?:
-			//		Optional. If a name-value dictionary, the value is true
-			//		to enable and false to disable. If an array, all names in the
-			//		array will be set to defaultState. If omitted, all form
-			//		elements will be set to defaultState.
-			// defaultState: Boolean:
-			//		The default state (true, if omitted).
-
-			if(arguments.length < 2 || defaultState === undefined){
-				defaultState = true;
-			}
-
-			this.inspectFormWidgets(aa(function(name, widget, value){
-				widget.set("disabled", !value);
-			}), state, defaultState);
-
-			if(this.inspectFormNodes){
-				this.inspectFormNodes(aa(function(name, node, value){
-					dojo.attr(node, "disabled", !value);
-				}), state, defaultState);
-			}
-
-			return this;	// self
-		},
-
-		disable: function(state){
-			// summary:
-			//		Disable form controls according to the supplied state object
-			//		returning the previous state.
-			// state: Object?:
-			//		Optional. If a name-value dictionary, the value is true
-			//		to enable and false to disable. If an array, all names in the
-			//		array will be disabled. If omitted, disables all.
-			var oldState = this.gatherEnableState();
-			this.enable(state, false);
-			return oldState;	// Object
-		}
-	});
+var fm=_3.form.manager,aa=fm.actionAdapter,ia=fm.inspectorAdapter;
+_1.declare("dojox.form.manager._EnableMixin",null,{gatherEnableState:function(_4){
+var _5=this.inspectFormWidgets(ia(function(_6,_7){
+return !_7.get("disabled");
+}),_4);
+if(this.inspectFormNodes){
+_1.mixin(_5,this.inspectFormNodes(ia(function(_8,_9){
+return !_1.attr(_9,"disabled");
+}),_4));
+}
+return _5;
+},enable:function(_a,_b){
+if(arguments.length<2||_b===undefined){
+_b=true;
+}
+this.inspectFormWidgets(aa(function(_c,_d,_e){
+_d.set("disabled",!_e);
+}),_a,_b);
+if(this.inspectFormNodes){
+this.inspectFormNodes(aa(function(_f,_10,_11){
+_1.attr(_10,"disabled",!_11);
+}),_a,_b);
+}
+return this;
+},disable:function(_12){
+var _13=this.gatherEnableState();
+this.enable(_12,false);
+return _13;
+}});
 })();
+return _1.getObject("dojox.form.manager._EnableMixin");
+});
+require(["dojox/form/manager/_EnableMixin"]);

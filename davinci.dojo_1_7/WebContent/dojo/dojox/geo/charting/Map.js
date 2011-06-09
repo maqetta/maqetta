@@ -1,599 +1,257 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/xhr","dojo/_base/connect",
-		"dojo/_base/window", "dojox/gfx", "dojox/geo/charting/_base", "dojox/geo/charting/Feature",
-		"dojox/geo/charting/_Marker","dojo/number"],
-				function(dojo, lang, declare, dhtml, xhr, connect, window, gfx, base, Feature, Marker, number) {
-
-	return dojo.declare("dojox.geo.charting.Map", null, {
-	//	summary:
-	//		Map widget interacted with charting.
-	//	description:
-	//		Support rendering Americas, AsiaPacific, ContinentalEurope, EuropeMiddleEastAfrica,
-	//		USStates, WorldCountries, and WorldCountriesMercator by default.
-	//	example:
-	//	|	var usaMap = new dojox.geo.charting.Map(srcNode, "dojotoolkit/dojox/geo/charting/resources/data/USStates.json");
-	//	|	<div id="map" style="width:600px;height:400px;"></div>
-	
-	//	defaultColor: String
-	//		Default map feature color, e.g: "#B7B7B7"
-	defaultColor:"#B7B7B7",
-	//	highlightColor: String
-	//		Map feature color when mouse over it, e.g: "#"
-	highlightColor:"#D5D5D5",
-	//	series: Array
-	//		stack to data range, e.g: [{name:'label 1', min:20, max:70, color:'#DDDDDD'},{...},...]
-	series:[],
-	dataBindingAttribute:null,
-	dataBindingValueFunction:null,
-	dataStore:null,
-	showTooltips: true,
-	enableFeatureZoom: true,
-	colorAnimationDuration:0,
-	_idAttributes:null,
-	_onSetListener:null,
-	_onNewListener:null,
-	_onDeleteListener:null,
-	constructor: function(/*HTML Node*/container, /*String or Json object*/shapeData){
-		//	container:
-		//		map container html node/id
-		//	shapeData:
-		//		map shape data json object, or url to json file
-		
-		dojo.style(container, "display", "block");
-		
-		this.container = container;
-		var containerBounds = this._getContainerBounds();
-		// get map container coords
-		this.surface = gfx.createSurface(container, containerBounds.w, containerBounds.h);
-		
-		this._createZoomingCursor();
-		
-		this.mapObj = this.surface.createGroup();
-		this.mapObj.features = {};
-		
-		if (typeof shapeData == "object") {
-			this._init(shapeData);
-		} else {
-	        // load map shape file
-			if (typeof shapeData == "string" && shapeData.length > 0) {
-				dojo.xhrGet({
-					url: shapeData,
-					handleAs: "json",
-					sync: true,
-					load: dojo.hitch(this, "_init")
-				});
-			}
-		}
-	},
-	
-	_getContainerBounds: function() {
-		//	summary: 
-		//		returns the bounds {x:, y:, w: ,h:} of the DOM node container in absolute coordinates 
-		//	tags:
-		//		private
-		
-		var coords = dojo.coords(this.container,true);
-		var marginBox = dojo.marginBox(this.container);
-		// use contentBox for correct width and height - surface spans outside border otherwise
-		var contentBox = dojo.contentBox(this.container);
-		this._storedContainerBounds = {
-				x: coords.x,
-				y: coords.y,
-				w: contentBox.w || 100,
-				h: contentBox.h || 100
-			};
-		return this._storedContainerBounds;
-	},
-	
-	resize: function(/**boolean**/ adjustMapCenter/**boolean**/,adjustMapScale,/**boolean**/ animate) {
-		//	summary: 
-		//		resize the underlying GFX surface to accommodate to parent DOM Node size change
-		//	adjustMapCenter: boolean
-		//		keeps the center of the map when resizing the surface
-		//	adjustMapScale: boolean
-		//		adjusts the map scale to keep the visible portion of the map as much as possible 
-		
-		var oldBounds = this._storedContainerBounds; 
-		var newBounds = this._getContainerBounds();
-		
-		if ((oldBounds.w == newBounds.w) && (oldBounds.h == newBounds.h)) {
-			return;
-		}
-		
-		// set surface dimensions
-		this.surface.setDimensions(newBounds.w,newBounds.h);
-		
-		this.mapObj.marker.hide();
-		this.mapObj.marker._needTooltipRefresh = true;
-		
-		if (adjustMapCenter) {
-			
-			var mapScale = this.getMapScale();
-			var newScale = mapScale;
-			
-			if (adjustMapScale) {
-				var bbox = this.mapObj.boundBox;
-				var widthFactor = newBounds.w / oldBounds.w;
-				var heightFactor = newBounds.h / oldBounds.h;
-				newScale = mapScale * Math.sqrt(widthFactor * heightFactor);
-			}
-			
-			//	current map center
-			var invariantMapPoint = this.screenCoordsToMapCoords(oldBounds.w/2,oldBounds.h/2);
-
-			//	apply new parameters
-			this.setMapCenterAndScale(invariantMapPoint.x,invariantMapPoint.y,newScale,animate);
-		}
-	},
-	
-	_isMobileDevice: function() {
-		//	summary: 
-		//		tests whether the application is running on a mobile device (android or iOS)
-		//	tags:
-		//		private
-		return (dojo.isSafari
-				&& (navigator.userAgent.indexOf("iPhone") > -1 ||
-					navigator.userAgent.indexOf("iPod") > -1 ||
-					navigator.userAgent.indexOf("iPad") > -1
-				)) || (navigator.userAgent.toLowerCase().indexOf("android") > -1);
-	},
-	
-	
-	setMarkerData: function(/*String*/ markerFile){
-		//	summary:
-		//		import markers from outside file, associate with map feature by feature id
-		//		which identified in map shape file, e.g: "NY":"New York"
-		//	markerFile:
-		//		outside marker data url, handled as json style.
-		//		data format: {"NY":"New York",.....}
-		dojo.xhrGet({
-			url: markerFile,
-			handleAs: "json",
-			handle: dojo.hitch(this, "_appendMarker")
-		});
-	},
-	
-	setDataBindingAttribute: function(/*String*/prop) {
-		//  summary:
-		//		sets the property name of the dataStore items to use as value (see Feature.setValue function)
-		//	prop:
-		//		the property
-		this.dataBindingAttribute = prop;
-		
-		// refresh data
-		if (this.dataStore) {
-			this._queryDataStore();
-		}
-	},
-	
-	setDataBindingValueFunction: function(/* function */valueFunction) {
-		//  summary:
-		//		sets the function that extracts values from dataStore items,to use as Feature values (see Feature.setValue function)
-		//	prop:
-		//		the function
-		this.dataBindingValueFunction = valueFunction;
-		
-		// refresh data
-		if (this.dataStore) {
-			this._queryDataStore();
-		}
-	},
-	
-	
-	
-	_queryDataStore: function() {
-		if (!this.dataBindingAttribute || (this.dataBindingAttribute.length == 0))
-			return;
-		
-		var mapInstance = this;
-		this.dataStore.fetch({
-			scope: this,
-			onComplete: function(items){
-				this._idAttributes = mapInstance.dataStore.getIdentityAttributes({});
-				dojo.forEach(items, function(item) {
-					var id = mapInstance.dataStore.getValue(item, this._idAttributes[0]);
-					if(mapInstance.mapObj.features[id]){
-						var val = null;
-						var itemVal = mapInstance.dataStore.getValue(item, mapInstance.dataBindingAttribute);
-						if (itemVal) {
-							if (this.dataBindingValueFunction) {
-								val = this.dataBindingValueFunction(itemVal);
-							} else {
-								if (isNaN(val)) {
-									// regular parse
-									val=number.parse(itemVal);
-								} else {
-									val = itemVal;
-								}
-							}
-						}
-						if (val)
-							mapInstance.mapObj.features[id].setValue(val);
-					}
-				},this);						
-			}
-		});
-	},
-	
-	_onSet:function(item,attribute,oldValue,newValue){
-		// look for matching feature
-		var id = this.dataStore.getValue(item, this._idAttributes[0]);
-		var feature = this.mapObj.features[id];
-		if (feature && (attribute == this.dataBindingAttribute)) {
-			if (newValue)
-				feature.setValue(newValue);
-			else
-				feature.unsetValue();
-		}
-	},
-
-	_onNew:function(newItem,  parentItem){
-		var id = this.dataStore.getValue(item, this._idAttributes[0]);
-		var feature = this.mapObj.features[id];
-		if (feature && (attribute == this.dataBindingAttribute)) {
-			feature.setValue(newValue);
-		}
-	},
-	
-	_onDelete:function(item){
-		var id = item[this._idAttributes[0]];
-		var feature = this.mapObj.features[id];
-		if (feature) {
-			feature.unsetValue();
-		}
-	},
-	
-	setDataStore: function(/*ItemFileReadStore*/ dataStore, /*String*/ dataBindingProp){
-		//	summary:
-		//		populate data for each map feature from fetched data store
-		//	dataStore:
-		//		the dataStore to fetch the information from
-		//	dataBindingProp:
-		//		sets the property name of the dataStore items to use as value
-		if (this.dataStore != dataStore) {
-			// disconnect previous listener if any
-			if (this._onSetListener) {
-				dojo.disconnect(this._onSetListener);
-				dojo.disconnect(this._onNewListener);
-				dojo.disconnect(this._onDeleteListener);
-			}
-			
-			// set new dataStore
-			this.dataStore = dataStore;
-			
-			// install listener on new dataStore
-			if (dataStore) {
-				_onSetListener = dojo.connect(this.dataStore,"onSet",this,this._onSet);
-				_onNewListener = dojo.connect(this.dataStore,"onNew",this,this._onNew);
-				_onDeleteListener = dojo.connect(this.dataStore,"onDelete",this,this._onDelete);
-			}
-		}
-		if (dataBindingProp)
-			this.setDataBindingAttribute(dataBindingProp);
-
-	},
-	
-	
-	
-	addSeries: function(/*url or Json Object*/ series){
-		//	summary: 
-		//		sets ranges of data values (associated with label, color) to style map data values
-		//	series:
-		//		array of range objects such as : [{name:'label 1', min:20, max:70, color:'#DDDDDD'},{...},...]
-		
-		if (typeof series == "object") {
-			this._addSeriesImpl(series);
-		} else {
-	        // load map shape file
-			if (typeof series == "string" && series.length > 0) {
-				dojo.xhrGet({
-					url: series,
-					handleAs: "json",
-					sync: true,
-					load: dojo.hitch(this, function(content){
-						this._addSeriesImpl(content.series);
-					})
-				});
-			}
-		}
-		
-	},
-	
-	_addSeriesImpl: function(/*Json object*/series) {
-		
-		this.series = series;
-		
-		// refresh color scheme
-		for (var item in this.mapObj.features) {
-			var feature = this.mapObj.features[item];
-			feature.setValue(feature.value);
-		}
-	},
-
-	
-	fitToMapArea: function(/*bbox: {x,y,w,h}*/mapArea,pixelMargin,animate,/* callback function */onAnimationEnd){
-		//	summary: 
-		//		set this component's transformation so that the specified area fits in the component (centered)
-		//	mapArea: 
-		//		the map area that needs to fill the component
-		//	pixelMargin: int
-		//		a margin (in pixels) from the borders of the Map component.
-		//	animate: boolean
-		//		true if the transform change should be animated
-		//	onAnimationEnd: function
-		//		a callback function to be executed when the animation completes (if animate set to true).
-		
-		if(!pixelMargin){
-			pixelMargin = 0;
-		}
-		var width = mapArea.w,
-			height = mapArea.h,
-			containerBounds = this._getContainerBounds(),
-			scale = Math.min((containerBounds.w - 2 * pixelMargin) / width,
-							(containerBounds.h - 2 * pixelMargin) / height);
-		
-		this.setMapCenterAndScale(mapArea.x + mapArea.w / 2,mapArea.y + mapArea.h / 2,scale,animate,onAnimationEnd);
-	},
-	
-	fitToMapContents: function(pixelMargin,animate,/* callback function */onAnimationEnd){
-		//	summary: 
-		//		set this component's transformation so that the whole map data fits in the component (centered)
-		//	pixelMargin: int
-		//		a margin (in pixels) from the borders of the Map component.
-		//	animate: boolean
-		//		true if the transform change should be animated
-		//	onAnimationEnd: function
-		//		a callback function to be executed when the animation completes (if animate set to true).
-		
-		//transform map to fit container
-		var bbox = this.mapObj.boundBox;
-		this.fitToMapArea(bbox,pixelMargin,animate,onAnimationEnd);
-	},
-	
-	setMapCenter: function(centerX,centerY,animate,/* callback function */onAnimationEnd) {
-		//	summary: 
-		//		set this component's transformation so that the map is centered on the specified map coordinates
-		//	centerX: float
-		//		the X coordinate (in map coordinates) of the new center
-		//	centerY: float
-		//		the Y coordinate (in map coordinates) of the new center
-		//	animate: boolean
-		//		true if the transform change should be animated
-		//	onAnimationEnd: function
-		//		a callback function to be executed when the animation completes (if animate set to true).
-		
-		// call setMapCenterAndScale with current map scale 
-		var currentScale = this.getMapScale();
-		this.setMapCenterAndScale(centerX,centerY,currentScale,animate,onAnimationEnd);
-		
-	},
-	
-	_createAnimation: function(onShape,fromTransform,toTransform,/* callback function */onAnimationEnd) {
-		//	summary: 
-		//		creates a transform animation object (between two transforms) used internally
-		//	fromTransform: dojox.gfx.matrix.Matrix2D
-		//		the start transformation (when animation begins)
-		//	toTransform: dojox.gfx.matrix.Matrix2D
-		//		the end transormation (when animation ends)
-		//	onAnimationEnd: function
-		//		callback function to be executed when the animation completes.
-		var fromDx = fromTransform.dx?fromTransform.dx:0;
-		var fromDy = fromTransform.dy?fromTransform.dy:0;
-		var toDx = toTransform.dx?toTransform.dx:0;
-		var toDy = toTransform.dy?toTransform.dy:0;
-		var fromScale = fromTransform.xx?fromTransform.xx:1.0;
-		var toScale = toTransform.xx?toTransform.xx:1.0;
-		
-		var anim = gfx.fx.animateTransform({
-			duration: 1000,
-			shape: onShape,
-			transform: [{
-				name: "translate",
-				start: [fromDx,fromDy],
-				end: [toDx,toDy]
-			},
-			{
-				name: "scale",
-				start: [fromScale],
-				end: [toScale]
-			}
-			]
-		});
-
-		//install callback
-		if (onAnimationEnd) {
-			var listener = dojo.connect(anim,"onEnd",this,function(event){
-				onAnimationEnd(event);
-				dojo.disconnect(listener);
-			});
-		}
-		
-		return anim;
-	},
-
-	
-	setMapCenterAndScale: function(centerX,centerY,scale, animate,/* callback function */onAnimationEnd) {
-		
-		//	summary: 
-		//		set this component's transformation so that the map is centered on the specified map coordinates
-		//		and scaled to the specified scale.
-		//	centerX: float
-		//		the X coordinate (in map coordinates) of the new center
-		//	centerY: float
-		//		the Y coordinate (in map coordinates) of the new center
-		//	scale: float
-		//		the scale of the map
-		//	animate: boolean
-		//		true if the transform change should be animated
-		//	onAnimationEnd: function
-		//		a callback function to be executed when the animation completes (if animate set to true).
-		
-		
-		// compute matrix parameters
-		var bbox = this.mapObj.boundBox;
-		var containerBounds = this._getContainerBounds();
-		var offsetX = containerBounds.w/2 - scale * (centerX - bbox.x);
-		var offsetY = containerBounds.h/2 - scale * (centerY - bbox.y);
-		var newTransform = new gfx.matrix.Matrix2D({xx: scale, yy: scale, dx:offsetX, dy:offsetY});
-		
-		
-		var currentTransform = this.mapObj.getTransform();
-		
-		// can animate only if specified AND curentTransform exists
-		if (!animate || !currentTransform) {
-			this.mapObj.setTransform(newTransform);
-		} else {
-			var anim = this._createAnimation(this.mapObj,currentTransform,newTransform,onAnimationEnd);
-			anim.play();
-		}
-	},
-	
-	getMapCenter: function() {
-		//	summary: 
-		//		returns the map coordinates of the center of this Map component.
-		//	returns: {x:,y:}
-		//		the center in map coordinates
-		var containerBounds = this._getContainerBounds();
-		return this.screenCoordsToMapCoords(containerBounds.w/2,containerBounds.h/2);
-	},
-	
-	setMapScale: function(scale,animate,/* callback function */onAnimationEnd) {
-		//	summary: 
-		//		set this component's transformation so that the map is scaled to the specified scale.
-		//	animate: boolean
-		//		true if the transform change should be animated
-		//	onAnimationEnd: function
-		//		a callback function to be executed when the animation completes (if animate set to true).
-		
-		
-		// default invariant is map center
-		var containerBounds = this._getContainerBounds();
-		var invariantMapPoint = this.screenCoordsToMapCoords(containerBounds.w/2,containerBounds.h/2);
-		this.setMapScaleAt(scale,invariantMapPoint.x,invariantMapPoint.y,animate,onAnimationEnd);
-	},
-	
-	setMapScaleAt: function(scale,fixedMapX,fixedMapY,animate,/* callback function */onAnimationEnd) {
-		//	summary: 
-	    //		set this component's transformation so that the map is scaled to the specified scale, and the specified 
-		//		point (in map coordinates) stays fixed on this Map component
-		//	fixedMapX: float
-		//		the X coordinate (in map coordinates) of the fixed screen point
-		//	fixedMapY: float
-		//		the Y coordinate (in map coordinates) of the fixed screen point
-		//	animate: boolean
-		//		true if the transform change should be animated
-		//	onAnimationEnd: function
-		//		a callback function to be executed when the animation completes (if animate set to true).
-		
-		
-		var invariantMapPoint = null;
-		var invariantScreenPoint = null;
-
-		invariantMapPoint = {x: fixedMapX, y: fixedMapY};
-		invariantScreenPoint = this.mapCoordsToScreenCoords(invariantMapPoint.x,invariantMapPoint.y);
-		
-		// compute matrix parameters
-		var bbox = this.mapObj.boundBox;
-		var offsetX = invariantScreenPoint.x - scale * (invariantMapPoint.x - bbox.x);
-		var offsetY = invariantScreenPoint.y - scale * (invariantMapPoint.y - bbox.y);
-		var newTransform = new gfx.matrix.Matrix2D({xx: scale, yy: scale, dx:offsetX, dy:offsetY});
-
-		var currentTransform = this.mapObj.getTransform();
-
-		// can animate only if specified AND curentTransform exists
-		if (!animate || !currentTransform) {
-			this.mapObj.setTransform(newTransform);
-		} else {
-			var anim = this._createAnimation(this.mapObj,currentTransform,newTransform,onAnimationEnd);
-			anim.play();
-		}
-	},
-	
-	getMapScale: function() {
-		//	summary: 
-		//		returns the scale of this Map component.
-		//	returns: float
-		//		the scale
-		var mat = this.mapObj.getTransform();
-		var scale = mat?mat.xx:1.0;
-		return scale;
-	},
-	
-	mapCoordsToScreenCoords: function(mapX,mapY) {
-		//	summary: 
-		//		converts map coordinates to screen coordinates given the current transform of this Map component
-		//	returns: {x:,y:}
-		//		the screen coordinates correspondig to the specified map coordinates.
-		var matrix = this.mapObj.getTransform();
-		var screenPoint = gfx.matrix.multiplyPoint(matrix, mapX, mapY);
-		return screenPoint;
-	},
-	
-	screenCoordsToMapCoords: function(screenX, screenY) {
-		//	summary: 
-		//		converts screen coordinates to map coordinates given the current transform of this Map component
-		//	returns: {x:,y:}
-		//		the map coordinates corresponding to the specified screen coordinates.
-		var invMatrix = gfx.matrix.invert(this.mapObj.getTransform());
-		var mapPoint = gfx.matrix.multiplyPoint(invMatrix, screenX, screenY);
-		return mapPoint;
-	},
-	deselectAll: function(){
-		//	summary:
-		//		deselect all features of map
-		for(var name in this.mapObj.features){
-			this.mapObj.features[name].select(false);
-		}
-		this.selectedFeature = null;
-		this.focused = false;
-	},
-	
-	_init: function(shapeData){
-		
-		//	summary: 
-		//		inits this Map component.
-		
-		//transform map to fit container
-		this.mapObj.boundBox = {x: shapeData.layerExtent[0],
-								y: shapeData.layerExtent[1],
-								w: (shapeData.layerExtent[2] - shapeData.layerExtent[0]),
-								h: shapeData.layerExtent[3] - shapeData.layerExtent[1]};
-		this.fitToMapContents(3);
-
-
-		//	if there are "features", then implement them now.
-		dojo.forEach(shapeData.featureNames, function(item){
-			var featureShape = shapeData.features[item];
-			featureShape.bbox.x = featureShape.bbox[0];
-			featureShape.bbox.y = featureShape.bbox[1];
-			featureShape.bbox.w = featureShape.bbox[2];
-			featureShape.bbox.h = featureShape.bbox[3];
-			var feature = new Feature(this, item, featureShape);
-			feature.init();
-			this.mapObj.features[item] = feature;
-		}, this);
-		
-
-		//	set up a marker.
-		this.mapObj.marker = new Marker({}, this);
-	},
-	_appendMarker: function(markerData){
-		this.mapObj.marker = new Marker(markerData, this);
-	},
-	_createZoomingCursor: function(){
-		if(!dojo.byId("mapZoomCursor")){
-			var mapZoomCursor = dojo.doc.createElement("div");
-			dojo.attr(mapZoomCursor,"id","mapZoomCursor");
-			dojo.addClass(mapZoomCursor,"mapZoomIn");
-			dojo.style(mapZoomCursor,"display","none");
-			dojo.body().appendChild(mapZoomCursor);
-		}
-	},
-	onFeatureClick: function(feature){
-	},
-	onFeatureOver: function(feature){
-	},
-	onZoomEnd:function(feature){
-	}
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/xhr","dojo/_base/connect","dojo/_base/window","dojox/gfx","dojox/geo/charting/_base","dojox/geo/charting/Feature","dojox/geo/charting/_Marker","dojo/number"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
+return _1.declare("dojox.geo.charting.Map",null,{defaultColor:"#B7B7B7",highlightColor:"#D5D5D5",series:[],dataBindingAttribute:null,dataBindingValueFunction:null,dataStore:null,showTooltips:true,enableFeatureZoom:true,colorAnimationDuration:0,_idAttributes:null,_onSetListener:null,_onNewListener:null,_onDeleteListener:null,constructor:function(_d,_e){
+_1.style(_d,"display","block");
+this.container=_d;
+var _f=this._getContainerBounds();
+this.surface=_8.createSurface(_d,_f.w,_f.h);
+this._createZoomingCursor();
+this.mapObj=this.surface.createGroup();
+this.mapObj.features={};
+if(typeof _e=="object"){
+this._init(_e);
+}else{
+if(typeof _e=="string"&&_e.length>0){
+_1.xhrGet({url:_e,handleAs:"json",sync:true,load:_1.hitch(this,"_init")});
+}
+}
+},_getContainerBounds:function(){
+var _10=_1.coords(this.container,true);
+var _11=_1.marginBox(this.container);
+var _12=_1.contentBox(this.container);
+this._storedContainerBounds={x:_10.x,y:_10.y,w:_12.w||100,h:_12.h||100};
+return this._storedContainerBounds;
+},resize:function(_13,_14,_15){
+var _16=this._storedContainerBounds;
+var _17=this._getContainerBounds();
+if((_16.w==_17.w)&&(_16.h==_17.h)){
+return;
+}
+this.surface.setDimensions(_17.w,_17.h);
+this.mapObj.marker.hide();
+this.mapObj.marker._needTooltipRefresh=true;
+if(_13){
+var _18=this.getMapScale();
+var _19=_18;
+if(_14){
+var _1a=this.mapObj.boundBox;
+var _1b=_17.w/_16.w;
+var _1c=_17.h/_16.h;
+_19=_18*Math.sqrt(_1b*_1c);
+}
+var _1d=this.screenCoordsToMapCoords(_16.w/2,_16.h/2);
+this.setMapCenterAndScale(_1d.x,_1d.y,_19,_15);
+}
+},_isMobileDevice:function(){
+return (_1.isSafari&&(navigator.userAgent.indexOf("iPhone")>-1||navigator.userAgent.indexOf("iPod")>-1||navigator.userAgent.indexOf("iPad")>-1))||(navigator.userAgent.toLowerCase().indexOf("android")>-1);
+},setMarkerData:function(_1e){
+_1.xhrGet({url:_1e,handleAs:"json",handle:_1.hitch(this,"_appendMarker")});
+},setDataBindingAttribute:function(_1f){
+this.dataBindingAttribute=_1f;
+if(this.dataStore){
+this._queryDataStore();
+}
+},setDataBindingValueFunction:function(_20){
+this.dataBindingValueFunction=_20;
+if(this.dataStore){
+this._queryDataStore();
+}
+},_queryDataStore:function(){
+if(!this.dataBindingAttribute||(this.dataBindingAttribute.length==0)){
+return;
+}
+var _21=this;
+this.dataStore.fetch({scope:this,onComplete:function(_22){
+this._idAttributes=_21.dataStore.getIdentityAttributes({});
+_1.forEach(_22,function(_23){
+var id=_21.dataStore.getValue(_23,this._idAttributes[0]);
+if(_21.mapObj.features[id]){
+var val=null;
+var _24=_21.dataStore.getValue(_23,_21.dataBindingAttribute);
+if(_24){
+if(this.dataBindingValueFunction){
+val=this.dataBindingValueFunction(_24);
+}else{
+if(isNaN(val)){
+val=_c.parse(_24);
+}else{
+val=_24;
+}
+}
+}
+if(val){
+_21.mapObj.features[id].setValue(val);
+}
+}
+},this);
+}});
+},_onSet:function(_25,_26,_27,_28){
+var id=this.dataStore.getValue(_25,this._idAttributes[0]);
+var _29=this.mapObj.features[id];
+if(_29&&(_26==this.dataBindingAttribute)){
+if(_28){
+_29.setValue(_28);
+}else{
+_29.unsetValue();
+}
+}
+},_onNew:function(_2a,_2b){
+var id=this.dataStore.getValue(item,this._idAttributes[0]);
+var _2c=this.mapObj.features[id];
+if(_2c&&(attribute==this.dataBindingAttribute)){
+_2c.setValue(newValue);
+}
+},_onDelete:function(_2d){
+var id=_2d[this._idAttributes[0]];
+var _2e=this.mapObj.features[id];
+if(_2e){
+_2e.unsetValue();
+}
+},setDataStore:function(_2f,_30){
+if(this.dataStore!=_2f){
+if(this._onSetListener){
+_1.disconnect(this._onSetListener);
+_1.disconnect(this._onNewListener);
+_1.disconnect(this._onDeleteListener);
+}
+this.dataStore=_2f;
+if(_2f){
+_onSetListener=_1.connect(this.dataStore,"onSet",this,this._onSet);
+_onNewListener=_1.connect(this.dataStore,"onNew",this,this._onNew);
+_onDeleteListener=_1.connect(this.dataStore,"onDelete",this,this._onDelete);
+}
+}
+if(_30){
+this.setDataBindingAttribute(_30);
+}
+},addSeries:function(_31){
+if(typeof _31=="object"){
+this._addSeriesImpl(_31);
+}else{
+if(typeof _31=="string"&&_31.length>0){
+_1.xhrGet({url:_31,handleAs:"json",sync:true,load:_1.hitch(this,function(_32){
+this._addSeriesImpl(_32.series);
+})});
+}
+}
+},_addSeriesImpl:function(_33){
+this.series=_33;
+for(var _34 in this.mapObj.features){
+var _35=this.mapObj.features[_34];
+_35.setValue(_35.value);
+}
+},fitToMapArea:function(_36,_37,_38,_39){
+if(!_37){
+_37=0;
+}
+var _3a=_36.w,_3b=_36.h,_3c=this._getContainerBounds(),_3d=Math.min((_3c.w-2*_37)/_3a,(_3c.h-2*_37)/_3b);
+this.setMapCenterAndScale(_36.x+_36.w/2,_36.y+_36.h/2,_3d,_38,_39);
+},fitToMapContents:function(_3e,_3f,_40){
+var _41=this.mapObj.boundBox;
+this.fitToMapArea(_41,_3e,_3f,_40);
+},setMapCenter:function(_42,_43,_44,_45){
+var _46=this.getMapScale();
+this.setMapCenterAndScale(_42,_43,_46,_44,_45);
+},_createAnimation:function(_47,_48,_49,_4a){
+var _4b=_48.dx?_48.dx:0;
+var _4c=_48.dy?_48.dy:0;
+var _4d=_49.dx?_49.dx:0;
+var _4e=_49.dy?_49.dy:0;
+var _4f=_48.xx?_48.xx:1;
+var _50=_49.xx?_49.xx:1;
+var _51=_8.fx.animateTransform({duration:1000,shape:_47,transform:[{name:"translate",start:[_4b,_4c],end:[_4d,_4e]},{name:"scale",start:[_4f],end:[_50]}]});
+if(_4a){
+var _52=_1.connect(_51,"onEnd",this,function(_53){
+_4a(_53);
+_1.disconnect(_52);
 });
+}
+return _51;
+},setMapCenterAndScale:function(_54,_55,_56,_57,_58){
+var _59=this.mapObj.boundBox;
+var _5a=this._getContainerBounds();
+var _5b=_5a.w/2-_56*(_54-_59.x);
+var _5c=_5a.h/2-_56*(_55-_59.y);
+var _5d=new _8.matrix.Matrix2D({xx:_56,yy:_56,dx:_5b,dy:_5c});
+var _5e=this.mapObj.getTransform();
+if(!_57||!_5e){
+this.mapObj.setTransform(_5d);
+}else{
+var _5f=this._createAnimation(this.mapObj,_5e,_5d,_58);
+_5f.play();
+}
+},getMapCenter:function(){
+var _60=this._getContainerBounds();
+return this.screenCoordsToMapCoords(_60.w/2,_60.h/2);
+},setMapScale:function(_61,_62,_63){
+var _64=this._getContainerBounds();
+var _65=this.screenCoordsToMapCoords(_64.w/2,_64.h/2);
+this.setMapScaleAt(_61,_65.x,_65.y,_62,_63);
+},setMapScaleAt:function(_66,_67,_68,_69,_6a){
+var _6b=null;
+var _6c=null;
+_6b={x:_67,y:_68};
+_6c=this.mapCoordsToScreenCoords(_6b.x,_6b.y);
+var _6d=this.mapObj.boundBox;
+var _6e=_6c.x-_66*(_6b.x-_6d.x);
+var _6f=_6c.y-_66*(_6b.y-_6d.y);
+var _70=new _8.matrix.Matrix2D({xx:_66,yy:_66,dx:_6e,dy:_6f});
+var _71=this.mapObj.getTransform();
+if(!_69||!_71){
+this.mapObj.setTransform(_70);
+}else{
+var _72=this._createAnimation(this.mapObj,_71,_70,_6a);
+_72.play();
+}
+},getMapScale:function(){
+var mat=this.mapObj.getTransform();
+var _73=mat?mat.xx:1;
+return _73;
+},mapCoordsToScreenCoords:function(_74,_75){
+var _76=this.mapObj.getTransform();
+var _77=_8.matrix.multiplyPoint(_76,_74,_75);
+return _77;
+},screenCoordsToMapCoords:function(_78,_79){
+var _7a=_8.matrix.invert(this.mapObj.getTransform());
+var _7b=_8.matrix.multiplyPoint(_7a,_78,_79);
+return _7b;
+},deselectAll:function(){
+for(var _7c in this.mapObj.features){
+this.mapObj.features[_7c].select(false);
+}
+this.selectedFeature=null;
+this.focused=false;
+},_init:function(_7d){
+this.mapObj.boundBox={x:_7d.layerExtent[0],y:_7d.layerExtent[1],w:(_7d.layerExtent[2]-_7d.layerExtent[0]),h:_7d.layerExtent[3]-_7d.layerExtent[1]};
+this.fitToMapContents(3);
+_1.forEach(_7d.featureNames,function(_7e){
+var _7f=_7d.features[_7e];
+_7f.bbox.x=_7f.bbox[0];
+_7f.bbox.y=_7f.bbox[1];
+_7f.bbox.w=_7f.bbox[2];
+_7f.bbox.h=_7f.bbox[3];
+var _80=new _a(this,_7e,_7f);
+_80.init();
+this.mapObj.features[_7e]=_80;
+},this);
+this.mapObj.marker=new _b({},this);
+},_appendMarker:function(_81){
+this.mapObj.marker=new _b(_81,this);
+},_createZoomingCursor:function(){
+if(!_1.byId("mapZoomCursor")){
+var _82=_1.doc.createElement("div");
+_1.attr(_82,"id","mapZoomCursor");
+_1.addClass(_82,"mapZoomIn");
+_1.style(_82,"display","none");
+_1.body().appendChild(_82);
+}
+},onFeatureClick:function(_83){
+},onFeatureOver:function(_84){
+},onZoomEnd:function(_85){
+}});
 });

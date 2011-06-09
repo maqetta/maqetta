@@ -1,73 +1,59 @@
-define(["dojo/_base/kernel", "./lambda"], function(dojo, df){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// This module adds high-level functions and related constructs:
-//	- object/dictionary helpers
-
-// Defined methods:
-//	- take any valid lambda argument as the functional argument
-//	- skip all attributes that are present in the empty object
-//		(IE and/or 3rd-party libraries).
-
-	var d = dojo, empty = {};
-
-	d.mixin(df, {
-		// object helpers
-		keys: function(/*Object*/ obj){
-			// summary: returns an array of all keys in the object
-			var t = [];
-			for(var i in obj){
-				if(!(i in empty)){
-					t.push(i);
-				}
-			}
-			return	t; // Array
-		},
-		values: function(/*Object*/ obj){
-			// summary: returns an array of all values in the object
-			var t = [];
-			for(var i in obj){
-				if(!(i in empty)){
-					t.push(obj[i]);
-				}
-			}
-			return	t; // Array
-		},
-		filterIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates new object with all attributes that pass the test
-			//	implemented by the provided function.
-			o = o || d.global; f = df.lambda(f);
-			var t = {}, v, i;
-			for(i in obj){
-				if(!(i in empty)){
-					v = obj[i];
-					if(f.call(o, v, i, obj)){ t[i] = v; }
-				}
-			}
-			return t;	// Object
-		},
-		forIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: iterates over all object attributes.
-			o = o || d.global; f = df.lambda(f);
-			for(var i in obj){
-				if(!(i in empty)){
-					f.call(o, obj[i], i, obj);
-				}
-			}
-			return o;	// Object
-		},
-		mapIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates new object with the results of calling
-			//	a provided function on every attribute in this object.
-			o = o || d.global; f = df.lambda(f);
-			var t = {}, i;
-			for(i in obj){
-				if(!(i in empty)){
-					t[i] = f.call(o, obj[i], i, obj);
-				}
-			}
-			return t;	// Object
-		}
-	});
-	
-	return df;
+define(["dojo/_base/kernel","./lambda"],function(_1,df){
+var d=_1,_2={};
+d.mixin(df,{keys:function(_3){
+var t=[];
+for(var i in _3){
+if(!(i in _2)){
+t.push(i);
+}
+}
+return t;
+},values:function(_4){
+var t=[];
+for(var i in _4){
+if(!(i in _2)){
+t.push(_4[i]);
+}
+}
+return t;
+},filterIn:function(_5,f,o){
+o=o||d.global;
+f=df.lambda(f);
+var t={},v,i;
+for(i in _5){
+if(!(i in _2)){
+v=_5[i];
+if(f.call(o,v,i,_5)){
+t[i]=v;
+}
+}
+}
+return t;
+},forIn:function(_6,f,o){
+o=o||d.global;
+f=df.lambda(f);
+for(var i in _6){
+if(!(i in _2)){
+f.call(o,_6[i],i,_6);
+}
+}
+return o;
+},mapIn:function(_7,f,o){
+o=o||d.global;
+f=df.lambda(f);
+var t={},i;
+for(i in _7){
+if(!(i in _2)){
+t[i]=f.call(o,_7[i],i,_7);
+}
+}
+return t;
+}});
+return df;
 });

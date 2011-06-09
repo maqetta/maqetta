@@ -1,152 +1,84 @@
-dojo.provide("dojox.form.manager._FormMixin");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.form.manager._Mixin");
-
+define(["dojo","dijit","dojox","dojox/form/manager/_Mixin"],function(_1,_2,_3){
+_1.getObject("dojox.form.manager._FormMixin",1);
 (function(){
-	var fm = dojox.form.manager,
-		aa = fm.actionAdapter;
-
-	dojo.declare("dojox.form.manager._FormMixin", null, {
-		// summary:
-		//		Form manager's mixin for form-specific functionality.
-		// description:
-		//		This mixin adds automated "onreset", and "onsubmit" event processing
-		//		if we are based on a form node, defines onReset(), onSubmit(),
-		//		reset(), submit(), and isValid() methods like dijit.form.Form.
-		//		It should be used together with dojox.form.manager.Mixin.
-
-		// HTML <FORM> attributes (if we are based on the form element)
-		name: "",
-		action: "",
-		method: "",
-		encType: "",
-		"accept-charset": "",
-		accept: "",
-		target: "",
-
-		startup: function(){
-			this.isForm = this.domNode.tagName.toLowerCase() == "form";
-			if(this.isForm){
-				this.connect(this.domNode, "onreset", "_onReset");
-				this.connect(this.domNode, "onsubmit", "_onSubmit");
-			}
-			this.inherited(arguments);
-		},
-
-		// form-specific functionality
-
-		_onReset: function(evt){
-			// NOTE: this function is taken from dijit.formForm, it works only
-			// for form-based managers.
-
-			// create fake event so we can know if preventDefault() is called
-			var faux = {
-				returnValue: true, // the IE way
-				preventDefault: function(){  // not IE
-							this.returnValue = false;
-						},
-				stopPropagation: function(){}, currentTarget: evt.currentTarget, target: evt.target
-			};
-			// if return value is not exactly false, and haven't called preventDefault(), then reset
-			if(!(this.onReset(faux) === false) && faux.returnValue){
-				this.reset();
-			}
-			dojo.stopEvent(evt);
-			return false;
-		},
-
-		onReset: function(){
-			//	summary:
-			//		Callback when user resets the form. This method is intended
-			//		to be over-ridden. When the `reset` method is called
-			//		programmatically, the return value from `onReset` is used
-			//		to compute whether or not resetting should proceed
-			return true; // Boolean
-		},
-
-		reset: function(){
-			// summary:
-			//		Resets form widget values.
-			this.inspectFormWidgets(aa(function(_, widget){
-				if(widget.reset){
-					widget.reset();
-				}
-			}));
-			if(this.isForm){
-				this.domNode.reset();
-			}
-			return this;
-		},
-
-		_onSubmit: function(evt){
-			// NOTE: this function is taken from dijit.formForm, it works only
-			// for form-based managers.
-
-			if(this.onSubmit(evt) === false){ // only exactly false stops submit
-				dojo.stopEvent(evt);
-			}
-		},
-
-		onSubmit: function(){
-			//	summary:
-			//		Callback when user submits the form. This method is
-			//		intended to be over-ridden, but by default it checks and
-			//		returns the validity of form elements. When the `submit`
-			//		method is called programmatically, the return value from
-			//		`onSubmit` is used to compute whether or not submission
-			//		should proceed
-
-			return this.isValid(); // Boolean
-		},
-
-		submit: function(){
-			// summary:
-			//		programmatically submit form if and only if the `onSubmit` returns true
-			if(this.isForm){
-				if(!(this.onSubmit() === false)){
-					this.domNode.submit();
-				}
-			}
-		},
-
-		isValid: function(){
-			// summary:
-			//		Make sure that every widget that has a validator function returns true.
-			for(var name in this.formWidgets){
-				var stop = false;
-				aa(function(_, widget){
-					if(!widget.get("disabled") && widget.isValid && !widget.isValid()){
-						stop = true;
-					}
-				}).call(this, null, this.formWidgets[name].widget);
-				if(stop){
-					return false;
-				}
-			}
-			return true;
-		},
-		validate: function () {
-			var isValid = true,
-				formWidgets = this.formWidgets,
-				didFocus = false, name;
-
-			for(name in formWidgets){
-				aa(function(_, widget){
-					// Need to set this so that "required" widgets get their
-					// state set.
-					widget._hasBeenBlurred = true;
-					var valid = widget.disabled || !widget.validate || widget.validate();
-					if(!valid && !didFocus){
-						// Set focus of the first non-valid widget
-						dojo.window.scrollIntoView(widget.containerNode || widget.domNode);
-						widget.focus();
-						didFocus = true;
-					}
-					isValid = isValid && valid;
-				}).call(this, null, formWidgets[name].widget);
-			}
-
-			return isValid;
-		}
-	});
+var fm=_3.form.manager,aa=fm.actionAdapter;
+_1.declare("dojox.form.manager._FormMixin",null,{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",startup:function(){
+this.isForm=this.domNode.tagName.toLowerCase()=="form";
+if(this.isForm){
+this.connect(this.domNode,"onreset","_onReset");
+this.connect(this.domNode,"onsubmit","_onSubmit");
+}
+this.inherited(arguments);
+},_onReset:function(_4){
+var _5={returnValue:true,preventDefault:function(){
+this.returnValue=false;
+},stopPropagation:function(){
+},currentTarget:_4.currentTarget,target:_4.target};
+if(!(this.onReset(_5)===false)&&_5.returnValue){
+this.reset();
+}
+_1.stopEvent(_4);
+return false;
+},onReset:function(){
+return true;
+},reset:function(){
+this.inspectFormWidgets(aa(function(_6,_7){
+if(_7.reset){
+_7.reset();
+}
+}));
+if(this.isForm){
+this.domNode.reset();
+}
+return this;
+},_onSubmit:function(_8){
+if(this.onSubmit(_8)===false){
+_1.stopEvent(_8);
+}
+},onSubmit:function(){
+return this.isValid();
+},submit:function(){
+if(this.isForm){
+if(!(this.onSubmit()===false)){
+this.domNode.submit();
+}
+}
+},isValid:function(){
+for(var _9 in this.formWidgets){
+var _a=false;
+aa(function(_b,_c){
+if(!_c.get("disabled")&&_c.isValid&&!_c.isValid()){
+_a=true;
+}
+}).call(this,null,this.formWidgets[_9].widget);
+if(_a){
+return false;
+}
+}
+return true;
+},validate:function(){
+var _d=true,_e=this.formWidgets,_f=false,_10;
+for(_10 in _e){
+aa(function(_11,_12){
+_12._hasBeenBlurred=true;
+var _13=_12.disabled||!_12.validate||_12.validate();
+if(!_13&&!_f){
+_1.window.scrollIntoView(_12.containerNode||_12.domNode);
+_12.focus();
+_f=true;
+}
+_d=_d&&_13;
+}).call(this,null,_e[_10].widget);
+}
+return _d;
+}});
 })();
+return _1.getObject("dojox.form.manager._FormMixin");
+});
+require(["dojox/form/manager/_FormMixin"]);

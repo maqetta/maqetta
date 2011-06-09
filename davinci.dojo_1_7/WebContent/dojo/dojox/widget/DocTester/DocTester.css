@@ -12,7 +12,6 @@
 .dojoxDocTester pre.odd.resultNok{
 	background-color:#FFC3C3;
 }
-
 .dojoxDocTester pre.even{
         background-color:#F3F3F3;
 }
@@ -22,7 +21,6 @@
 .dojoxDocTester pre.even.resultNok{
 	background-color:#FFCFCF;
 }
-
 .dojoxDocTester .actualResult{
 	display:none;
 	font-weight:bold;

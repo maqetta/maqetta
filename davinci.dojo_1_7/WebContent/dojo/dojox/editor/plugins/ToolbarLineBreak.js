@@ -1,37 +1,25 @@
-define("dojox/editor/plugins/ToolbarLineBreak", ["dojo", "dijit", "dojox", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_editor/_Plugin"], function(dojo, dijit, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.editor.plugins.ToolbarLineBreak",
-	[ dijit._Widget, dijit._TemplatedMixin ],
-	{
-	// summary:
-	//		A 'line break' between two `dijit.Toolbar` items so that very
-	//		long toolbars can be organized a bit.
-	templateString: "<span class='dijit dijitReset'><br></span>",
-	postCreate: function(){ dojo.setSelectable(this.domNode, false); },
-	isFocusable: function(){
-		// summary:
-		//		This widget isn't focusable, so pass along that fact.
-		// tags:
-		//		protected
-		return false;
-	}
+define("dojox/editor/plugins/ToolbarLineBreak",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dijit/_editor/_Plugin"],function(_1,_2,_3){
+_1.declare("dojox.editor.plugins.ToolbarLineBreak",[_2._Widget,_2._TemplatedMixin],{templateString:"<span class='dijit dijitReset'><br></span>",postCreate:function(){
+_1.setSelectable(this.domNode,false);
+},isFocusable:function(){
+return false;
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _4=o.args.name.toLowerCase();
+if(_4==="||"||_4==="toolbarlinebreak"){
+o.plugin=new _2._editor._Plugin({button:new _3.editor.plugins.ToolbarLineBreak(),setEditor:function(_5){
+this.editor=_5;
+}});
+}
 });
-
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name ===  "||" || name === "toolbarlinebreak"){
-		o.plugin = new dijit._editor._Plugin({
-			button: new dojox.editor.plugins.ToolbarLineBreak(),
-			setEditor: function(editor){
-				this.editor = editor;
-			}
-		});
-	}
-});
-
-return dojox.editor.plugins.ToolbarLineBreak;
-
+return _3.editor.plugins.ToolbarLineBreak;
 });

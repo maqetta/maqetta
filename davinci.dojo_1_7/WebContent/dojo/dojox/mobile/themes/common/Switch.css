@@ -1,4 +1,4 @@
-/* Switch - default */
+
 .mblSwitch {
 	margin: 0;
 	position: relative;
@@ -79,8 +79,6 @@
 .mblSwitchTextRight {
 	left: 40px;
 }
-
-/* Round Shape1 */
 .mblSwRoundShape1 {
 	height: 28px;
 	-webkit-mask-image: -webkit-canvas(mblSwRoundShape1Mask);
@@ -116,8 +114,6 @@
 .mblSwRoundShape1 .mblSwitchTextRight {
 	left: 26px;
 }
-
-/* Round Shape2 */
 .mblSwRoundShape2 {
 	height: 28px;
 	-webkit-mask-image: -webkit-canvas(mblSwRoundShape2Mask);
@@ -151,8 +147,6 @@
 .mblSwRoundShape2 .mblSwitchTextRight {
 	left: 42px;
 }
-
-/* Arc Shape1 */
 .mblSwArcShape1 {
 	height: 28px;
 	-webkit-border-radius: 6px/14px;
@@ -186,8 +180,6 @@
 .mblSwArcShape1 .mblSwitchTextRight {
 	left: 26px;
 }
-
-/* Arc Shape2 */
 .mblSwArcShape2 {
 	height: 28px;
 	-webkit-border-radius: 6px/14px;
@@ -221,4 +213,3 @@
 .mblSwArcShape2 .mblSwitchTextRight {
 	left: 42px;
 }
-

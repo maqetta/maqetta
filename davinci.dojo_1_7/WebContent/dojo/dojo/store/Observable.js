@@ -1,167 +1,120 @@
-define(["../main"], function(dojo) {
-	// module:
-	//		dojo/store/Observable
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("store", true, dojo);
-
-return dojo.store.Observable = function(store){
-	// summary:
-	//		The Observable store wrapper takes a store and sets an observe method on query()
-	//		results that can be used to monitor results for changes.
-	//
-	// description:
-	//		Observable wraps an existing store so that notifications can be made when a query
-	//		is performed.
-	//
-	// example:
-	//		Create a Memory store that returns an observable query, and then log some
-	//		information about that query.
-	//
-	//	|	var store = dojo.store.Observable(new dojo.store.Memory({
-	//	|		data: [
-	//	|			{id: 1, name: "one", prime: false},
-	//	|			{id: 2, name: "two", even: true, prime: true},
-	//	|			{id: 3, name: "three", prime: true},
-	//	|			{id: 4, name: "four", even: true, prime: false},
-	//	|			{id: 5, name: "five", prime: true}
-	//	|		]
-	//	|	}));
-	//	|	var changes = [], results = store.query({ prime: true });
-	//	|	var observer = results.observe(function(object, previousIndex, newIndex){
-	//	|		changes.push({previousIndex:previousIndex, newIndex:newIndex, object:object});
-	//	|	});
-	//
-	//		See the Observable tests for more information.
-
-	var queryUpdaters = [], revision = 0;
-	// a Comet driven store could directly call notify to notify observers when data has
-	// changed on the backend
-	store.notify = function(object, existingId){
-		revision++;
-		var updaters = queryUpdaters.slice();
-		for(var i = 0, l = updaters.length; i < l; i++){
-			updaters[i](object, existingId);
-		}
-	};
-	var originalQuery = store.query;
-	store.query = function(query, options){
-		options = options || {};
-		var results = originalQuery.apply(this, arguments);
-		if(results && results.forEach){
-			var nonPagedOptions = dojo.mixin({}, options);
-			delete nonPagedOptions.start;
-			delete nonPagedOptions.count;
-
-			var queryExecutor = store.queryEngine && store.queryEngine(query, nonPagedOptions);
-			var queryRevision = revision;
-			var listeners = [], queryUpdater;
-			results.observe = function(listener, includeObjectUpdates){
-				if(listeners.push(listener) == 1){
-					// first listener was added, create the query checker and updater
-					queryUpdaters.push(queryUpdater = function(changed, existingId){
-						dojo.when(results, function(resultsArray){
-							var atEnd = resultsArray.length != options.count;
-							var i, l;
-							if(++queryRevision != revision){
-								throw new Error("Query is out of date, you must observe() the query prior to any data modifications");
-							}
-							var removedObject, removedFrom = -1, insertedInto = -1;
-							if(existingId){
-								// remove the old one
-								for(i = 0, l = resultsArray.length; i < l; i++){
-									var object = resultsArray[i];
-									if(store.getIdentity(object) == existingId){
-										removedObject = object;
-										removedFrom = i;
-										if(queryExecutor || !changed){// if it was changed and we don't have a queryExecutor, we shouldn't remove it because updated objects would be eliminated
-											resultsArray.splice(i, 1);
-										}
-										break;
-									}
-								}
-							}
-							if(queryExecutor){
-								// add the new one
-								if(changed &&
-										// if a matches function exists, use that (probably more efficient)
-										(queryExecutor.matches ? queryExecutor.matches(changed) : queryExecutor([changed]).length)){
-
-									if(removedFrom > -1){
-										// put back in the original slot so it doesn't move unless it needs to (relying on a stable sort below)
-										resultsArray.splice(removedFrom, 0, changed);
-									}else{
-										resultsArray.push(changed);
-									}
-									insertedInto = dojo.indexOf(queryExecutor(resultsArray), changed);
-									if((options.start && insertedInto == 0) ||
-										(!atEnd && insertedInto == resultsArray.length -1)){
-										// if it is at the end of the page, assume it goes into the prev or next page
-										insertedInto = -1;
-									}
-								}
-							}else if(changed){
-								// we don't have a queryEngine, so we can't provide any information
-								// about where it was inserted, but we can at least indicate a new object
-								insertedInto = removedFrom >= 0 ? removedFrom : (store.defaultIndex || 0);
-							}
-							if((removedFrom > -1 || insertedInto > -1) &&
-									(includeObjectUpdates || !queryExecutor || (removedFrom != insertedInto))){
-								var copyListeners = listeners.slice();
-								for(i = 0;listener = copyListeners[i]; i++){
-									listener(changed || removedObject, removedFrom, insertedInto);
-								}
-							}
-						});
-					});
-				}
-				return {
-					cancel: function(){
-						// remove this listener
-						listeners.splice(dojo.indexOf(listeners, listener), 1);
-						if(!listeners.length){
-							// no more listeners, remove the query updater too
-							queryUpdaters.splice(dojo.indexOf(queryUpdaters, queryUpdater), 1);
-						}
-					}
-				};
-			};
-		}
-		return results;
-	};
-	var inMethod;
-	function whenFinished(method, action){
-		var original = store[method];
-		if(original){
-			store[method] = function(value){
-				if(inMethod){
-					// if one method calls another (like add() calling put()) we don't want two events
-					return original.apply(this, arguments);
-				}
-				inMethod = true;
-				try{
-					return dojo.when(original.apply(this, arguments), function(results){
-						action((typeof results == "object" && results) || value);
-						return results;
-					});
-				}finally{
-					inMethod = false;
-				}
-			};
-		}
-	}
-	// monitor for updates by listening to these methods
-	whenFinished("put", function(object){
-		store.notify(object, store.getIdentity(object));
-	});
-	whenFinished("add", function(object){
-		store.notify(object);
-	});
-	whenFinished("remove", function(id){
-		store.notify(undefined, id);
-	});
-
-	return store;
+define("dojo/store/Observable",["../main"],function(_1){
+_1.getObject("store",true,_1);
+return _1.store.Observable=function(_2){
+var _3=[],_4=0;
+_2.notify=function(_5,_6){
+_4++;
+var _7=_3.slice();
+for(var i=0,l=_7.length;i<l;i++){
+_7[i](_5,_6);
+}
+};
+var _8=_2.query;
+_2.query=function(_9,_a){
+_a=_a||{};
+var _b=_8.apply(this,arguments);
+if(_b&&_b.forEach){
+var _c=_1.mixin({},_a);
+delete _c.start;
+delete _c.count;
+var _d=_2.queryEngine&&_2.queryEngine(_9,_c);
+var _e=_4;
+var _f=[],_10;
+_b.observe=function(_11,_12){
+if(_f.push(_11)==1){
+_3.push(_10=function(_13,_14){
+_1.when(_b,function(_15){
+var _16=_15.length!=_a.count;
+var i,l;
+if(++_e!=_4){
+throw new Error("Query is out of date, you must observe() the query prior to any data modifications");
+}
+var _17,_18=-1,_19=-1;
+if(_14){
+for(i=0,l=_15.length;i<l;i++){
+var _1a=_15[i];
+if(_2.getIdentity(_1a)==_14){
+_17=_1a;
+_18=i;
+if(_d||!_13){
+_15.splice(i,1);
+}
+break;
+}
+}
+}
+if(_d){
+if(_13&&(_d.matches?_d.matches(_13):_d([_13]).length)){
+if(_18>-1){
+_15.splice(_18,0,_13);
+}else{
+_15.push(_13);
+}
+_19=_1.indexOf(_d(_15),_13);
+if((_a.start&&_19==0)||(!_16&&_19==_15.length-1)){
+_19=-1;
+}
+}
+}else{
+if(_13){
+_19=_18>=0?_18:(_2.defaultIndex||0);
+}
+}
+if((_18>-1||_19>-1)&&(_12||!_d||(_18!=_19))){
+var _1b=_f.slice();
+for(i=0;_11=_1b[i];i++){
+_11(_13||_17,_18,_19);
+}
+}
+});
+});
+}
+return {cancel:function(){
+_f.splice(_1.indexOf(_f,_11),1);
+if(!_f.length){
+_3.splice(_1.indexOf(_3,_10),1);
+}
+}};
+};
+}
+return _b;
+};
+var _1c;
+function _1d(_1e,_1f){
+var _20=_2[_1e];
+if(_20){
+_2[_1e]=function(_21){
+if(_1c){
+return _20.apply(this,arguments);
+}
+_1c=true;
+try{
+return _1.when(_20.apply(this,arguments),function(_22){
+_1f((typeof _22=="object"&&_22)||_21);
+return _22;
+});
+}
+finally{
+_1c=false;
+}
+};
+}
+};
+_1d("put",function(_23){
+_2.notify(_23,_2.getIdentity(_23));
+});
+_1d("add",function(_24){
+_2.notify(_24);
+});
+_1d("remove",function(id){
+_2.notify(undefined,id);
+});
+return _2;
 };
 });

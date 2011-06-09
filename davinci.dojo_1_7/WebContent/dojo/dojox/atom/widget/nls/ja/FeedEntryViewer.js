@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[表示オプション]",
 	title: "タイトル",
 	authors: "作成者",
@@ -8,4 +8,4 @@
 	updated: "更新",
 	summary: "要約",
 	content: "内容"
-})
+}));

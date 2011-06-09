@@ -1,292 +1,135 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/text!./templates/ValidationTextBox.html",
-	"dojo/i18n", // dojo.i18n.getLocalization
-	"./TextBox",
-	"../Tooltip",
-	"dojo/i18n!./nls/validate",
-	"dojo/_base/declare" // dojo.declare
-], function(dojo, dijit, template){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/form/ValidationTextBox
-	// summary:
-	//		Base class for textbox widgets with the ability to validate content of various types and provide user feedback.
-
-
-	/*=====
-		dijit.form.ValidationTextBox.__Constraints = function(){
-			// locale: String
-			//		locale used for validation, picks up value from this widget's lang attribute
-			// _flags_: anything
-			//		various flags passed to regExpGen function
-			this.locale = "";
-			this._flags_ = "";
-		}
-	=====*/
-
-	dojo.declare("dijit.form.ValidationTextBox", dijit.form.TextBox, {
-		// summary:
-		//		Base class for textbox widgets with the ability to validate content of various types and provide user feedback.
-		// tags:
-		//		protected
-
-		templateString: template,
-		baseClass: "dijitTextBox dijitValidationTextBox",
-
-		// required: Boolean
-		//		User is required to enter data into this field.
-		required: false,
-
-		// promptMessage: String
-		//		If defined, display this hint string immediately on focus to the textbox, if empty.
-		//		Also displays if the textbox value is Incomplete (not yet valid but will be with additional input).
-		//		Think of this like a tooltip that tells the user what to do, not an error message
-		//		that tells the user what they've done wrong.
-		//
-		//		Message disappears when user starts typing.
-		promptMessage: "",
-
-		// invalidMessage: String
-		// 		The message to display if value is invalid.
-		//		The translated string value is read from the message file by default.
-		// 		Set to "" to use the promptMessage instead.
-		invalidMessage: "$_unset_$",
-
-		// missingMessage: String
-		// 		The message to display if value is empty and the field is required.
-		//		The translated string value is read from the message file by default.
-		// 		Set to "" to use the invalidMessage instead.
-		missingMessage: "$_unset_$",
-
-		// message: String
-		//		Currently error/prompt message.
-		//		When using the default tooltip implementation, this will only be
-		//		displayed when the field is focused.
-		message: "",
-
-		// constraints: dijit.form.ValidationTextBox.__Constraints
-		//		user-defined object needed to pass parameters to the validator functions
-		constraints: {},
-
-		// regExp: [extension protected] String
-		//		regular expression string used to validate the input
-		//		Do not specify both regExp and regExpGen
-		regExp: ".*",
-
-		regExpGen: function(/*dijit.form.ValidationTextBox.__Constraints*/ constraints){
-			// summary:
-			//		Overridable function used to generate regExp when dependent on constraints.
-			//		Do not specify both regExp and regExpGen.
-			// tags:
-			//		extension protected
-			return this.regExp; // String
-		},
-
-		// state: [readonly] String
-		//		Shows current state (ie, validation result) of input (""=Normal, Incomplete, or Error)
-		state: "",
-
-		// tooltipPosition: String[]
-		//		See description of `dijit.Tooltip.defaultPosition` for details on this parameter.
-		tooltipPosition: [],
-
-		_setValueAttr: function(){
-			// summary:
-			//		Hook so set('value', ...) works.
-			this.inherited(arguments);
-			this.validate(this.focused);
-		},
-
-		validator: function(/*anything*/ value, /*dijit.form.ValidationTextBox.__Constraints*/ constraints){
-			// summary:
-			//		Overridable function used to validate the text input against the regular expression.
-			// tags:
-			//		protected
-			return (new RegExp("^(?:" + this.regExpGen(constraints) + ")"+(this.required?"":"?")+"$")).test(value) &&
-				(!this.required || !this._isEmpty(value)) &&
-				(this._isEmpty(value) || this.parse(value, constraints) !== undefined); // Boolean
-		},
-
-		_isValidSubset: function(){
-			// summary:
-			//		Returns true if the value is either already valid or could be made valid by appending characters.
-			//		This is used for validation while the user [may be] still typing.
-			return this.textbox.value.search(this._partialre) == 0;
-		},
-
-		isValid: function(/*Boolean*/ isFocused){
-			// summary:
-			//		Tests if value is valid.
-			//		Can override with your own routine in a subclass.
-			// tags:
-			//		protected
-			return this.validator(this.textbox.value, this.constraints);
-		},
-
-		_isEmpty: function(value){
-			// summary:
-			//		Checks for whitespace
-			return (this.trim ? /^\s*$/ : /^$/).test(value); // Boolean
-		},
-
-		getErrorMessage: function(/*Boolean*/ isFocused){
-			// summary:
-			//		Return an error message to show if appropriate
-			// tags:
-			//		protected
-			return (this.required && this._isEmpty(this.textbox.value)) ? this.missingMessage : this.invalidMessage; // String
-		},
-
-		getPromptMessage: function(/*Boolean*/ isFocused){
-			// summary:
-			//		Return a hint message to show when widget is first focused
-			// tags:
-			//		protected
-			return this.promptMessage; // String
-		},
-
-		_maskValidSubsetError: true,
-		validate: function(/*Boolean*/ isFocused){
-			// summary:
-			//		Called by oninit, onblur, and onkeypress.
-			// description:
-			//		Show missing or invalid messages if appropriate, and highlight textbox field.
-			// tags:
-			//		protected
-			var message = "";
-			var isValid = this.disabled || this.isValid(isFocused);
-			if(isValid){ this._maskValidSubsetError = true; }
-			var isEmpty = this._isEmpty(this.textbox.value);
-			var isValidSubset = !isValid && isFocused && this._isValidSubset();
-			this._set("state", isValid ? "" : (((((!this._hasBeenBlurred || isFocused) && isEmpty) || isValidSubset) && this._maskValidSubsetError) ? "Incomplete" : "Error"));
-			this.focusNode.setAttribute("aria-invalid", isValid ? "false" : "true");
-
-			if(this.state == "Error"){
-				this._maskValidSubsetError = isFocused && isValidSubset; // we want the error to show up after a blur and refocus
-				message = this.getErrorMessage(isFocused);
-			}else if(this.state == "Incomplete"){
-				message = this.getPromptMessage(isFocused); // show the prompt whenever the value is not yet complete
-				this._maskValidSubsetError = !this._hasBeenBlurred || isFocused; // no Incomplete warnings while focused
-			}else if(isEmpty){
-				message = this.getPromptMessage(isFocused); // show the prompt whenever there's no error and no text
-			}
-			this.set("message", message);
-
-			return isValid;
-		},
-
-		displayMessage: function(/*String*/ message){
-			// summary:
-			//		Overridable method to display validation errors/hints.
-			//		By default uses a tooltip.
-			// tags:
-			//		extension
-			dijit.hideTooltip(this.domNode);
-			if(message && this.focused){
-				dijit.showTooltip(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
-			}
-		},
-
-		_refreshState: function(){
-			// Overrides TextBox._refreshState()
-			this.validate(this.focused);
-			this.inherited(arguments);
-		},
-
-		//////////// INITIALIZATION METHODS ///////////////////////////////////////
-
-		constructor: function(){
-			this.constraints = {};
-		},
-
-		_setConstraintsAttr: function(/*Object*/ constraints){
-			if(!constraints.locale && this.lang){
-				constraints.locale = this.lang;
-			}
-			this._set("constraints", constraints);
-			this._computePartialRE();
-		},
-
-		_computePartialRE: function(){
-			var p = this.regExpGen(this.constraints);
-			this.regExp = p;
-			var partialre = "";
-			// parse the regexp and produce a new regexp that matches valid subsets
-			// if the regexp is .* then there's no use in matching subsets since everything is valid
-			if(p != ".*"){ this.regExp.replace(/\\.|\[\]|\[.*?[^\\]{1}\]|\{.*?\}|\(\?[=:!]|./g,
-				function(re){
-					switch(re.charAt(0)){
-						case '{':
-						case '+':
-						case '?':
-						case '*':
-						case '^':
-						case '$':
-						case '|':
-						case '(':
-							partialre += re;
-							break;
-						case ")":
-							partialre += "|$)";
-							break;
-						 default:
-							partialre += "(?:"+re+"|$)";
-							break;
-					}
-				}
-			);}
-			try{ // this is needed for now since the above regexp parsing needs more test verification
-				"".search(partialre);
-			}catch(e){ // should never be here unless the original RE is bad or the parsing is bad
-				partialre = this.regExp;
-				console.warn('RegExp error in ' + this.declaredClass + ': ' + this.regExp);
-			} // should never be here unless the original RE is bad or the parsing is bad
-			this._partialre = "^(?:" + partialre + ")$";
-		},
-
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			this.messages = dojo.i18n.getLocalization("dijit.form", "validate", this.lang);
-			if(this.invalidMessage == "$_unset_$"){ this.invalidMessage = this.messages.invalidMessage; }
-			if(!this.invalidMessage){ this.invalidMessage = this.promptMessage; }
-			if(this.missingMessage == "$_unset_$"){ this.missingMessage = this.messages.missingMessage; }
-			if(!this.missingMessage){ this.missingMessage = this.invalidMessage; }
-			this._setConstraintsAttr(this.constraints); // this needs to happen now (and later) due to codependency on _set*Attr calls attachPoints
-		},
-
-		_setDisabledAttr: function(/*Boolean*/ value){
-			this.inherited(arguments);	// call FormValueWidget._setDisabledAttr()
-			this._refreshState();
-		},
-
-		_setRequiredAttr: function(/*Boolean*/ value){
-			this._set("required", value);
-			this.focusNode.setAttribute("aria-required", value);
-			this._refreshState();
-		},
-
-		_setMessageAttr: function(/*String*/ message){
-			this._set("message", message);
-			this.displayMessage(message);
-		},
-
-		reset:function(){
-			// Overrides dijit.form.TextBox.reset() by also
-			// hiding errors about partial matches
-			this._maskValidSubsetError = true;
-			this.inherited(arguments);
-		},
-
-		_onBlur: function(){
-			// the message still exists but for back-compat, and to erase the tooltip
-			// (if the message is being displayed as a tooltip), call displayMessage('')
-			this.displayMessage('');
-
-			this.inherited(arguments);
-		}
-	});
-
-	return dijit.form.ValidationTextBox;
+require.cache["dijit/form/templates/ValidationTextBox.html"]="<div class=\"dijit dijitReset dijitInline dijitLeft\"\n\tid=\"widget_${id}\" role=\"presentation\"\n\t><div class='dijitReset dijitValidationContainer'\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t/></div\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\n\t\t><input class=\"dijitReset dijitInputInner\" dojoAttachPoint='textbox,focusNode' autocomplete=\"off\"\n\t\t\t${!nameAttrSetting} type='${type}'\n\t/></div\n></div>\n";
+define("dijit/form/ValidationTextBox",["dojo/_base/kernel","..","dojo/text!./templates/ValidationTextBox.html","dojo/i18n","./TextBox","../Tooltip","dojo/i18n!./nls/validate","dojo/_base/declare"],function(_1,_2,_3){
+_1.declare("dijit.form.ValidationTextBox",_2.form.TextBox,{templateString:_3,baseClass:"dijitTextBox dijitValidationTextBox",required:false,promptMessage:"",invalidMessage:"$_unset_$",missingMessage:"$_unset_$",message:"",constraints:{},regExp:".*",regExpGen:function(_4){
+return this.regExp;
+},state:"",tooltipPosition:[],_setValueAttr:function(){
+this.inherited(arguments);
+this.validate(this.focused);
+},validator:function(_5,_6){
+return (new RegExp("^(?:"+this.regExpGen(_6)+")"+(this.required?"":"?")+"$")).test(_5)&&(!this.required||!this._isEmpty(_5))&&(this._isEmpty(_5)||this.parse(_5,_6)!==undefined);
+},_isValidSubset:function(){
+return this.textbox.value.search(this._partialre)==0;
+},isValid:function(_7){
+return this.validator(this.textbox.value,this.constraints);
+},_isEmpty:function(_8){
+return (this.trim?/^\s*$/:/^$/).test(_8);
+},getErrorMessage:function(_9){
+return (this.required&&this._isEmpty(this.textbox.value))?this.missingMessage:this.invalidMessage;
+},getPromptMessage:function(_a){
+return this.promptMessage;
+},_maskValidSubsetError:true,validate:function(_b){
+var _c="";
+var _d=this.disabled||this.isValid(_b);
+if(_d){
+this._maskValidSubsetError=true;
+}
+var _e=this._isEmpty(this.textbox.value);
+var _f=!_d&&_b&&this._isValidSubset();
+this._set("state",_d?"":(((((!this._hasBeenBlurred||_b)&&_e)||_f)&&this._maskValidSubsetError)?"Incomplete":"Error"));
+this.focusNode.setAttribute("aria-invalid",_d?"false":"true");
+if(this.state=="Error"){
+this._maskValidSubsetError=_b&&_f;
+_c=this.getErrorMessage(_b);
+}else{
+if(this.state=="Incomplete"){
+_c=this.getPromptMessage(_b);
+this._maskValidSubsetError=!this._hasBeenBlurred||_b;
+}else{
+if(_e){
+_c=this.getPromptMessage(_b);
+}
+}
+}
+this.set("message",_c);
+return _d;
+},displayMessage:function(_10){
+_2.hideTooltip(this.domNode);
+if(_10&&this.focused){
+_2.showTooltip(_10,this.domNode,this.tooltipPosition,!this.isLeftToRight());
+}
+},_refreshState:function(){
+this.validate(this.focused);
+this.inherited(arguments);
+},constructor:function(){
+this.constraints={};
+},_setConstraintsAttr:function(_11){
+if(!_11.locale&&this.lang){
+_11.locale=this.lang;
+}
+this._set("constraints",_11);
+this._computePartialRE();
+},_computePartialRE:function(){
+var p=this.regExpGen(this.constraints);
+this.regExp=p;
+var _12="";
+if(p!=".*"){
+this.regExp.replace(/\\.|\[\]|\[.*?[^\\]{1}\]|\{.*?\}|\(\?[=:!]|./g,function(re){
+switch(re.charAt(0)){
+case "{":
+case "+":
+case "?":
+case "*":
+case "^":
+case "$":
+case "|":
+case "(":
+_12+=re;
+break;
+case ")":
+_12+="|$)";
+break;
+default:
+_12+="(?:"+re+"|$)";
+break;
+}
+});
+}
+try{
+"".search(_12);
+}
+catch(e){
+_12=this.regExp;
+console.warn("RegExp error in "+this.declaredClass+": "+this.regExp);
+}
+this._partialre="^(?:"+_12+")$";
+},postMixInProperties:function(){
+this.inherited(arguments);
+this.messages=_1.i18n.getLocalization("dijit.form","validate",this.lang);
+if(this.invalidMessage=="$_unset_$"){
+this.invalidMessage=this.messages.invalidMessage;
+}
+if(!this.invalidMessage){
+this.invalidMessage=this.promptMessage;
+}
+if(this.missingMessage=="$_unset_$"){
+this.missingMessage=this.messages.missingMessage;
+}
+if(!this.missingMessage){
+this.missingMessage=this.invalidMessage;
+}
+this._setConstraintsAttr(this.constraints);
+},_setDisabledAttr:function(_13){
+this.inherited(arguments);
+this._refreshState();
+},_setRequiredAttr:function(_14){
+this._set("required",_14);
+this.focusNode.setAttribute("aria-required",_14);
+this._refreshState();
+},_setMessageAttr:function(_15){
+this._set("message",_15);
+this.displayMessage(_15);
+},reset:function(){
+this._maskValidSubsetError=true;
+this.inherited(arguments);
+},_onBlur:function(){
+this.displayMessage("");
+this.inherited(arguments);
+}});
+return _2.form.ValidationTextBox;
 });

@@ -1,54 +1,43 @@
-dojo.provide("dojox.socket.Reconnect");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojox.socket.Reconnect = function(socket, options){
-	// summary:
-	//		Provides auto-reconnection to a websocket after it has been closed
-	//	socket:
-	//		Socket to add reconnection support to.
-	// returns:
-	// 		An object that implements the WebSocket API
-	// example:
-	//		You can use the Reconnect module:
-	//		| dojo.require("dojox.socket");
-	//		| dojo.require("dojox.socket.Reconnect");
-	//		| var socket = dojox.socket({url:"/comet"});
-	//		| // add auto-reconnect support
-	//		| socket = dojox.socket.Reconnect(socket);
-	options = options || {};
-	var reconnectTime = options.reconnectTime || 10000;
-	
-	var connectHandle = dojo.connect(socket, "onclose", function(event){
-		clearTimeout(checkForOpen);
-		if(!event.wasClean){
-			socket.disconnected(function(){
-				dojox.socket.replace(socket, newSocket = socket.reconnect());
-			});
-		}
-	});
-	var checkForOpen, newSocket;
-	if(!socket.disconnected){
-		// add a default impl if it doesn't exist
-		socket.disconnected = function(reconnect){
-			setTimeout(function(){
-				reconnect();
-				checkForOpen = setTimeout(function(){
-					//reset the backoff
-					if(newSocket.readyState < 2){
-						reconnectTime = options.reconnectTime || 10000;
-					}
-				}, 10000);
-			}, reconnectTime);
-			// backoff each time
-			reconnectTime *= options.backoffRate || 2;
-		};
-	}
-	if(!socket.reconnect){
-		// add a default impl if it doesn't exist
-		socket.reconnect = function(){
-			return socket.args ?
-				dojox.socket.LongPoll(socket.args) :
-				dojox.socket.WebSocket({url: socket.URL || socket.url}); // different cases for different impls
-		};
-	}
-	return socket;
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.socket.Reconnect",1);
+_3.socket.Reconnect=function(_4,_5){
+_5=_5||{};
+var _6=_5.reconnectTime||10000;
+var _7=_1.connect(_4,"onclose",function(_8){
+clearTimeout(_9);
+if(!_8.wasClean){
+_4.disconnected(function(){
+_3.socket.replace(_4,_a=_4.reconnect());
+});
+}
+});
+var _9,_a;
+if(!_4.disconnected){
+_4.disconnected=function(_b){
+setTimeout(function(){
+_b();
+_9=setTimeout(function(){
+if(_a.readyState<2){
+_6=_5.reconnectTime||10000;
+}
+},10000);
+},_6);
+_6*=_5.backoffRate||2;
 };
+}
+if(!_4.reconnect){
+_4.reconnect=function(){
+return _4.args?_3.socket.LongPoll(_4.args):_3.socket.WebSocket({url:_4.URL||_4.url});
+};
+}
+return _4;
+};
+return _1.getObject("dojox.socket.Reconnect");
+});
+require(["dojox/socket/Reconnect"]);

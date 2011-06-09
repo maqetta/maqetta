@@ -1,247 +1,115 @@
-define([ "dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/html",
-		"dojo/_base/lang", "dojo/_base/event", "dojo/_base/window" ], function(dojo, declare,
-		connectArg, htmlArg, langArg, eventArg, windowArg){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.declare("dojox.geo.openlayers.TouchInteractionSupport", null,
-			{
-				//	summary: 
-				//		class to handle touch interactions on a OpenLayers.Map widget
-				//	tags:
-				//		private
-
-				_map : null,
-				_centerTouchLocation : null,
-				_touchMoveListener : null,
-				_touchEndListener : null,
-				_initialFingerSpacing : null,
-				_initialScale : null,
-				_tapCount : null,
-				_tapThreshold : null,
-				_lastTap : null,
-
-				constructor : function(/* OpenLayers.Map */map){
-					//	summary: 
-					//		Constructs a new TouchInteractionSupport instance
-					//	map: OpenLayers.Map
-					//		the Map widget this class provides touch navigation for.
-					this._map = map;
-					this._centerTouchLocation = new OpenLayers.LonLat(0, 0);
-
-					var div = this._map.div;
-
-					// install touch listeners
-					dojo.connect(div, "touchstart", this, this._touchStartHandler);
-					dojo.connect(div, "touchmove", this, this._touchMoveHandler);
-					dojo.connect(div, "touchend", this, this._touchEndHandler);
-
-					this._tapCount = 0;
-					this._lastTap = {
-						x : 0,
-						y : 0
-					};
-					this._tapThreshold = 100; // square distance in pixels
-
-				},
-
-				_getTouchBarycenter : function(touchEvent){
-					//	summary: 
-					//		returns the midpoint of the two first fingers (or the first finger location if only one)
-					//	touchEvent:
-					//		a touch event
-					//	returns: dojox.gfx.Point
-					//		the midpoint
-					//	tags:
-					//		private
-					var touches = touchEvent.touches;
-					var firstTouch = touches[0];
-					var secondTouch = null;
-					if (touches.length > 1) {
-						secondTouch = touches[1];
-					} else {
-						secondTouch = touches[0];
-					}
-
-					var marginBox = dojo.marginBox(this._map.div);
-
-					var middleX = (firstTouch.pageX + secondTouch.pageX) / 2.0 - marginBox.l;
-					var middleY = (firstTouch.pageY + secondTouch.pageY) / 2.0 - marginBox.t;
-
-					return {
-						x : middleX,
-						y : middleY
-					};
-
-				},
-
-				_getFingerSpacing : function(touchEvent){
-					//	summary: 
-					//		computes the distance between the first two fingers
-					//	touchEvent: 
-					//		a touch event
-					//	returns: float
-					//		a distance. -1 if less that 2 fingers
-					//	tags:
-					//		private
-					var touches = touchEvent.touches;
-					var spacing = -1;
-					if (touches.length >= 2) {
-						var dx = (touches[1].pageX - touches[0].pageX);
-						var dy = (touches[1].pageY - touches[0].pageY);
-						spacing = Math.sqrt(dx * dx + dy * dy);
-					}
-					return spacing;
-				},
-
-				_isDoubleTap : function(touchEvent){
-					//	summary: 
-					//		checks whether the specified touchStart event is a double tap 
-					//		(i.e. follows closely a previous touchStart at approximately the same location)
-					//	touchEvent: 
-					//		a touch event
-					//	returns: boolean
-					//		true if this event is considered a double tap
-					//	tags:
-					//		private
-					var isDoubleTap = false;
-					var touches = touchEvent.touches;
-					if ((this._tapCount > 0) && touches.length == 1) {
-						// test distance from last tap
-						var dx = (touches[0].pageX - this._lastTap.x);
-						var dy = (touches[0].pageY - this._lastTap.y);
-						var distance = dx * dx + dy * dy;
-						if (distance < this._tapThreshold) {
-							isDoubleTap = true;
-						} else {
-							this._tapCount = 0;
-						}
-					}
-					this._tapCount++;
-					this._lastTap.x = touches[0].pageX;
-					this._lastTap.y = touches[0].pageY;
-					setTimeout(dojo.hitch(this, function(){
-						this._tapCount = 0;
-					}), 300);
-
-					return isDoubleTap;
-				},
-
-				_doubleTapHandler : function(touchEvent){
-					//	summary: 
-					//		action performed on the map when a double tap was triggered 
-					//	touchEvent: a touch event
-					//	tags:
-					//		private
-					// perform a basic 2x zoom on touch
-					var touches = touchEvent.touches;
-					var marginBox = dojo.marginBox(this._map.div);
-					var offX = touches[0].pageX - marginBox.l;
-					var offY = touches[0].pageY - marginBox.t;
-					// clicked map point before zooming
-					var mapPoint = this._map.getLonLatFromPixel(new OpenLayers.Pixel(offX, offY));
-					// zoom increment power
-					this._map.setCenter(new OpenLayers.LonLat(mapPoint.lon, mapPoint.lat), this._map
-							.getZoom() + 1);
-				},
-
-				_touchStartHandler : function(touchEvent){
-					//	summary: 
-					//		action performed on the map when a touch start was triggered 
-					//	touchEvent: a touch event
-					//	tags:
-					//		private
-					dojo.stopEvent(touchEvent);
-
-					// test double tap
-					if (this._isDoubleTap(touchEvent)) {
-						this._doubleTapHandler(touchEvent);
-						return;
-					}
-
-					// compute map midpoint between fingers		
-					var middlePoint = this._getTouchBarycenter(touchEvent);
-
-					this._centerTouchLocation = this._map.getLonLatFromPixel(new OpenLayers.Pixel(
-							middlePoint.x, middlePoint.y));
-
-					// store initial finger spacing to compute zoom later
-					this._initialFingerSpacing = this._getFingerSpacing(touchEvent);
-
-					// store initial map scale
-					this._initialScale = this._map.getScale();
-
-					// install touch move and up listeners (if not done by other fingers before)
-					if (!this._touchMoveListener)
-						this._touchMoveListener = dojo.connect(dojo.global, "touchmove", this,
-								this._touchMoveHandler);
-					if (!this._touchEndListener)
-						this._touchEndListener = dojo.connect(dojo.global, "touchend", this,
-								this._touchEndHandler);
-
-				},
-
-				_touchEndHandler : function(touchEvent){
-					//	summary: 
-					//		action performed on the map when a touch end was triggered 
-					//	touchEvent: a touch event
-					//	tags:
-					//		private
-					dojo.stopEvent(touchEvent);
-
-					var touches = touchEvent.touches;
-
-					if (touches.length == 0) {
-						// disconnect listeners only when all fingers are up
-						if (this._touchMoveListener) {
-							dojo.disconnect(this._touchMoveListener);
-							this._touchMoveListener = null;
-						}
-						if (this._touchEndListener) {
-							dojo.disconnect(this._touchEndListener);
-							this._touchEndListener = null;
-						}
-					} else {
-						// recompute touch center
-						var middlePoint = this._getTouchBarycenter(touchEvent);
-
-						this._centerTouchLocation = this._map.getLonLatFromPixel(new OpenLayers.Pixel(
-								middlePoint.x, middlePoint.y));
-					}
-				},
-
-				_touchMoveHandler : function(touchEvent){
-					//	summary: 
-					//		action performed on the map when a touch move was triggered 
-					//	touchEvent: 
-					//		a touch event
-					//	tags:
-					//		private
-
-					// prevent browser interaction
-					dojo.stopEvent(touchEvent);
-
-					var middlePoint = this._getTouchBarycenter(touchEvent);
-
-					// compute map offset
-					var mapPoint = this._map.getLonLatFromPixel(new OpenLayers.Pixel(middlePoint.x,
-							middlePoint.y));
-					var mapOffsetLon = mapPoint.lon - this._centerTouchLocation.lon;
-					var mapOffsetLat = mapPoint.lat - this._centerTouchLocation.lat;
-
-					// compute scale factor
-					var scaleFactor = 1;
-					var touches = touchEvent.touches;
-					if (touches.length >= 2) {
-						var fingerSpacing = this._getFingerSpacing(touchEvent);
-						scaleFactor = fingerSpacing / this._initialFingerSpacing;
-						// weird openlayer bug : setting several times the same scale value lead to visual zoom...
-						this._map.zoomToScale(this._initialScale / scaleFactor);
-					}
-
-					// adjust map center on barycenter
-					var currentMapCenter = this._map.getCenter();
-					this._map.setCenter(new OpenLayers.LonLat(currentMapCenter.lon - mapOffsetLon,
-							currentMapCenter.lat - mapOffsetLat));
-
-				}
-			});
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojo/_base/lang","dojo/_base/event","dojo/_base/window"],function(_1,_2,_3,_4,_5,_6,_7){
+return _1.declare("dojox.geo.openlayers.TouchInteractionSupport",null,{_map:null,_centerTouchLocation:null,_touchMoveListener:null,_touchEndListener:null,_initialFingerSpacing:null,_initialScale:null,_tapCount:null,_tapThreshold:null,_lastTap:null,constructor:function(_8){
+this._map=_8;
+this._centerTouchLocation=new OpenLayers.LonLat(0,0);
+var _9=this._map.div;
+_1.connect(_9,"touchstart",this,this._touchStartHandler);
+_1.connect(_9,"touchmove",this,this._touchMoveHandler);
+_1.connect(_9,"touchend",this,this._touchEndHandler);
+this._tapCount=0;
+this._lastTap={x:0,y:0};
+this._tapThreshold=100;
+},_getTouchBarycenter:function(_a){
+var _b=_a.touches;
+var _c=_b[0];
+var _d=null;
+if(_b.length>1){
+_d=_b[1];
+}else{
+_d=_b[0];
+}
+var _e=_1.marginBox(this._map.div);
+var _f=(_c.pageX+_d.pageX)/2-_e.l;
+var _10=(_c.pageY+_d.pageY)/2-_e.t;
+return {x:_f,y:_10};
+},_getFingerSpacing:function(_11){
+var _12=_11.touches;
+var _13=-1;
+if(_12.length>=2){
+var dx=(_12[1].pageX-_12[0].pageX);
+var dy=(_12[1].pageY-_12[0].pageY);
+_13=Math.sqrt(dx*dx+dy*dy);
+}
+return _13;
+},_isDoubleTap:function(_14){
+var _15=false;
+var _16=_14.touches;
+if((this._tapCount>0)&&_16.length==1){
+var dx=(_16[0].pageX-this._lastTap.x);
+var dy=(_16[0].pageY-this._lastTap.y);
+var _17=dx*dx+dy*dy;
+if(_17<this._tapThreshold){
+_15=true;
+}else{
+this._tapCount=0;
+}
+}
+this._tapCount++;
+this._lastTap.x=_16[0].pageX;
+this._lastTap.y=_16[0].pageY;
+setTimeout(_1.hitch(this,function(){
+this._tapCount=0;
+}),300);
+return _15;
+},_doubleTapHandler:function(_18){
+var _19=_18.touches;
+var _1a=_1.marginBox(this._map.div);
+var _1b=_19[0].pageX-_1a.l;
+var _1c=_19[0].pageY-_1a.t;
+var _1d=this._map.getLonLatFromPixel(new OpenLayers.Pixel(_1b,_1c));
+this._map.setCenter(new OpenLayers.LonLat(_1d.lon,_1d.lat),this._map.getZoom()+1);
+},_touchStartHandler:function(_1e){
+_1.stopEvent(_1e);
+if(this._isDoubleTap(_1e)){
+this._doubleTapHandler(_1e);
+return;
+}
+var _1f=this._getTouchBarycenter(_1e);
+this._centerTouchLocation=this._map.getLonLatFromPixel(new OpenLayers.Pixel(_1f.x,_1f.y));
+this._initialFingerSpacing=this._getFingerSpacing(_1e);
+this._initialScale=this._map.getScale();
+if(!this._touchMoveListener){
+this._touchMoveListener=_1.connect(_1.global,"touchmove",this,this._touchMoveHandler);
+}
+if(!this._touchEndListener){
+this._touchEndListener=_1.connect(_1.global,"touchend",this,this._touchEndHandler);
+}
+},_touchEndHandler:function(_20){
+_1.stopEvent(_20);
+var _21=_20.touches;
+if(_21.length==0){
+if(this._touchMoveListener){
+_1.disconnect(this._touchMoveListener);
+this._touchMoveListener=null;
+}
+if(this._touchEndListener){
+_1.disconnect(this._touchEndListener);
+this._touchEndListener=null;
+}
+}else{
+var _22=this._getTouchBarycenter(_20);
+this._centerTouchLocation=this._map.getLonLatFromPixel(new OpenLayers.Pixel(_22.x,_22.y));
+}
+},_touchMoveHandler:function(_23){
+_1.stopEvent(_23);
+var _24=this._getTouchBarycenter(_23);
+var _25=this._map.getLonLatFromPixel(new OpenLayers.Pixel(_24.x,_24.y));
+var _26=_25.lon-this._centerTouchLocation.lon;
+var _27=_25.lat-this._centerTouchLocation.lat;
+var _28=1;
+var _29=_23.touches;
+if(_29.length>=2){
+var _2a=this._getFingerSpacing(_23);
+_28=_2a/this._initialFingerSpacing;
+this._map.zoomToScale(this._initialScale/_28);
+}
+var _2b=this._map.getCenter();
+this._map.setCenter(new OpenLayers.LonLat(_2b.lon-_26,_2b.lat-_27));
+}});
 });

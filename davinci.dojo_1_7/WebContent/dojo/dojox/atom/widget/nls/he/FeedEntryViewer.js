@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[אפשרויות הצגה]",
 	title: "כותרת",
 	authors: "מחברים",
@@ -10,3 +10,4 @@
 	content: "תוכן"
 })
 
+);

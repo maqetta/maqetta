@@ -1,10 +1,9 @@
-/* === Blue Circle Plus Buttons ==*/
+
 .mblDomButtonBlueCirclePlus {
 	position: relative;
 	width: 29px;
 	height: 29px;
 }
-
 .mblDomButtonBlueCirclePlus > DIV {
 	position: relative;
 	top: 2px;

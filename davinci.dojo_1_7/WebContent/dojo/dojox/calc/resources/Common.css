@@ -8,7 +8,7 @@
 	#border-right: .3em;
 }
 .dojoxCalcLayout .dojoxCalcInputContainer .dijitTextBox {
-	/* IE bug workaround where the input caret is not visible (extends into the table border) */
+	
 	position: relative;
 	border-left: 0 none;
 	border-right: 0 none;
@@ -29,7 +29,7 @@
 	text-align: left;
 	padding-left: 0.2em !important;
 	padding-right: 0 !important;
-	#padding-right: 0.3em !important; /* IE workaround to make sure the input caret is visible */
+	#padding-right: 0.3em !important; 
 	overflow: hidden;
 }
 .dojoxCalcMinusButtonContainer {
@@ -53,7 +53,6 @@
 	padding-left: 0px;
 	padding-right: 0px;
 }
-
 .dojoxCalcButtonContainer {
 	width: 4em;
 	min-width: 4em;
@@ -63,7 +62,6 @@
 	margin: 0.1em;
 	width: 3.8em;
 }
-
 .dojoxCalcLayout .dojoxCalcButtonContainer .dijitButtonText,
 .dojoxCalcLayout .dojoxCalcButtonContainer .dijitButtonNode {
 	padding-left: 0px;
@@ -79,7 +77,6 @@
 .dojoxCalc {
 	border: 0.4em ridge #909090;
 }
-
 .dojoxCalcGrapherLayout span.dijitButtonNode,
 .dojoxCalcGrapherLayout span.dijitButtonContents{
 	display:block;

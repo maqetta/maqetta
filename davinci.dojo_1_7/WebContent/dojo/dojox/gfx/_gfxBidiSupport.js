@@ -1,403 +1,235 @@
-define(["./utils", "./shape", "dojox/string/BidiEngine"], function(){
-	dojo.getObject("dojox.gfx._gfxBidiSupport", true);
-	var g = dojox.gfx;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	switch (g.renderer){
-		case 'vml':
-			g.isVml = true;
-			break;
-		case 'svg':
-			g.isSvg = true;
-			if(g.svg.useSvgWeb){
-				g.isSvgWeb = true;
-			}
-			break;
-		case 'silverlight':
-			g.isSilverlight = true;
-			break;
-		case 'canvas':
-			g.isCanvas = true;
-			break;
-	}
-
-	var bidi_const = {
-		LRM : '\u200E',
-		LRE : '\u202A',
-		PDF : '\u202C',
-		RLM : '\u200f',
-		RLE : '\u202B'
-	};
-
-	// the object that performs text transformations.
-	var bidiEngine = new dojox.string.BidiEngine();
-
-	dojo.extend(dojox.gfx.shape.Surface, {
-		// textDir:
-		//		Will be used as default for Text/TextPath/Group objects that created by this surface
-		//		and textDir wasn't directly specified for them, though the bidi support was loaded.
-		//		Can be setted in two ways:
-		//			1. When the surface is created and textDir value passed to it as fourth 
-		//			parameter.
-		//			2. Using the setTextDir(String) function, when this function is used the value
-		//			of textDir propogates to all of it's children and the children of children (for Groups) etc.
-		textDir: "",
-
-		setTextDir: function(newTextDir){
-			// summary:
-			//		Used for propogation and change of textDir.
-			//		newTextDir will be forced as textDir for all of it's children (Group/Text/TextPath).
-			setTextDir(this, newTextDir);
-		},
-
-		getTextDir: function(){
-			return this.textDir;
-		}
-	});
-
-	dojo.extend(dojox.gfx.Group, {                          
-		// textDir:
-		//		Will be used for inheritance, or as default for text objects
-		//		that textDir wasn't directly specified for them but the bidi support was required.
-		textDir: "",
-
-		setTextDir: function(newTextDir){
-			// summary:
-			//		Used for propogation and change of textDir.
-			//		newTextDir will be forced as textDir for all of it's children (Group/Text/TextPath).
-			setTextDir(this, newTextDir);
-		},
-
-		getTextDir: function(){
-			return this.textDir;
-		}	
-	});
-	
-	dojo.extend(dojox.gfx.Text, {  
-		// summary:
-		//		Overrides some of dojox.gfx.Text properties, and adds some 
-		//		for bidi support.
-		
-		// textDir: String
-		//		Used for displaying bidi scripts in right layout.
-		//		Defines the base direction of text that displayed, can have 3 values:
-		//			1. "ltr" - base direction is left to right.
-		//			2. "rtl" - base direction is right to left.
-		//			3. "auto" - base direction is contextual (defined by first strong character).
-		textDir: "",
-
-		formatText: function (/*String*/ text, /*String*/ textDir){
-			// summary: 
-			//		Applies the right transform on text, according to renderer.
-			// text:	
-			//		the string for manipulation, by default return value.
-			// textDir:	
-			//		Text direction.
-			//		Can be:
-			//			1. "ltr" - for left to right layout.
-			//			2. "rtl" - for right to left layout
-			//			3. "auto" - for contextual layout: the first strong letter decides the direction.	
-			// discription:
-			//		Finds the right transformation that should be applied on the text, according to renderer.
-			//		Was tested in:
-			//			Renderers (browser for testing): 
-			//				canvas (FF, Chrome, Safari), 
-			//				vml (IE), 
-			//				svg (FF, Chrome, Safari, Opera), 
-			//				silverlight (IE, Chrome, Safari, Opera), 
-			//				svgWeb(FF, Chrome, Safari, Opera, IE).
-			//			Browsers [browser version that was tested]: 
-			//				IE [6,7,8], FF [3.6], 
-			//				Chrome (latest for March 2011), 
-			//				Safari [5.0.3], 
-			//				Opera [11.01].
-
-			if(textDir && text && text.length > 1){
-			var sourceDir = "ltr", targetDir = textDir;
-
-			if(targetDir == "auto"){
-				//is auto by default
-				if(dojox.gfx.isVml){
-					return text;
-				}
-				targetDir = bidiEngine.checkContextual(text);
-			}
-
-			if(dojox.gfx.isVml){
-				sourceDir = bidiEngine.checkContextual(text);
-				if(targetDir != sourceDir){
-					if(targetDir == "rtl"){
-						return !bidiEngine.hasBidiChar(text) ? bidiEngine.bidiTransform(text,"IRNNN","ILNNN") : bidi_const.RLM + bidi_const.RLM + text;
-					}else{
-						return bidi_const.LRM + text;
-					}
-				}
-				return text;
-			}
-
-			if(dojox.gfx.isSvgWeb){
-				if(targetDir == "rtl"){
-					return bidiEngine.bidiTransform(text,"IRNNN","ILNNN");
-				}
-				return text;
-			}
-
-			if(dojox.gfx.isSilverlight){
-				return (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRNNN","VLYNN") : bidiEngine.bidiTransform(text,"ILNNN","VLYNN");
-			}
-
-			if(dojox.gfx.isCanvas){
-				return (targetDir == "rtl") ? bidi_const.RLE + text + bidi_const.PDF : bidi_const.LRE + text + bidi_const.PDF;
-			}
-
-			if(dojox.gfx.isSvg){
-				if(dojo.isFF){
-					return (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRYNN","VLNNN") : bidiEngine.bidiTransform(text,"ILYNN","VLNNN");
-				}
-				if(dojo.isChrome || dojo.isSafari || dojo.isOpera){
-					return bidi_const.LRM + (targetDir == "rtl" ? bidi_const.RLE : bidi_const.LRE) + text + bidi_const.PDF;
-				}					
-			}					
+define(["./utils","./shape","dojox/string/BidiEngine"],function(){
+dojo.getObject("dojox.gfx._gfxBidiSupport",true);
+var g=dojox.gfx;
+switch(g.renderer){
+case "vml":
+g.isVml=true;
+break;
+case "svg":
+g.isSvg=true;
+if(g.svg.useSvgWeb){
+g.isSvgWeb=true;
 }
-			return text;
-		},	
-
-		bidiPreprocess: function(newShape){     
-			return newShape;
-		}	
-	});
-
-	dojo.extend(dojox.gfx.TextPath, {          
-			// textDir: String
-			//		Used for displaying bidi scripts in right layout.
-			//		Defines the base direction of text that displayed, can have 3 values:
-			//			1. "ltr" - base direction is left to right.
-			//			2. "rtl" - base direction is right to left.
-			//			3. "auto" - base direction is contextual (defined by first strong character).
-		textDir: "",
-
-		formatText: function (text, textDir){
-			// summary: 
-			//		Applies the right transform on text, according to renderer.
-			// text:	the string for manipulation, by default return value.
-			// textDir:	text direction direction.
-			//		Can be:
-			//			1. "ltr" - for left to right layout.
-			//			2. "rtl" - for right to left layout
-			//			3. "auto" - for contextual layout: the first strong letter decides the direction.	
-			// discription:
-			//		Finds the right transformation that should be applied on the text, according to renderer.
-			//		Was tested in:
-			//			Renderers: 
-			//				canvas (FF, Chrome, Safari), vml (IE), svg (FF, Chrome, Safari, Opera), silverlight (IE8), svgWeb(FF, Chrome, Safari, Opera, IE).
-			//			Browsers: 
-			//				IE [6,7,8], FF [3.6], Chrome (latest for February 2011), Safari [5.0.3], Opera [11.01].
-
-			if(textDir && text && text.length > 1){
-				var sourceDir = "ltr", targetDir = textDir;
-
-				if(targetDir == "auto"){
-					//is auto by default
-					if(dojox.gfx.isVml){
-						return text;
-					}
-					targetDir = bidiEngine.checkContextual(text);
-				}
-
-				if(dojox.gfx.isVml){
-					sourceDir = bidiEngine.checkContextual(text);
-					if(targetDir != sourceDir){
-						if(targetDir == "rtl"){
-							return !bidiEngine.hasBidiChar(text) ? bidiEngine.bidiTransform(text,"IRNNN","ILNNN") : bidi_const.RLM + bidi_const.RLM + text;
-						}else{
-							return bidi_const.LRM + text;
-						}
-					}
-					return text;
-				}
-				if(dojox.gfx.isSvgWeb){
-					if(targetDir == "rtl"){
-						return bidiEngine.bidiTransform(text,"IRNNN","ILNNN");
-					}
-					return text;
-				}
-				//unlike the g.Text that is rendered in logical layout for Bidi scripts.
-				//for g.TextPath in svg always visual -> bidi script is unreadable (except Opera).
-				if(dojox.gfx.isSvg){
-					if(dojo.isOpera){
-						text = bidi_const.LRM + (targetDir == "rtl"? bidi_const.RLE : bidi_const.LRE) + text + bidi_const.PDF;
-					}else{
-						text = (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRYNN","VLNNN") : bidiEngine.bidiTransform(text,"ILYNN","VLNNN");
-					}
-				}					
-			}	
-			return text;
-		},
-		bidiPreprocess: function(newText){
-			if(newText && (typeof newText == "string")){
-				this.origText = newText;
-				newText = this.formatText(newText,this.textDir);
-			}
-			return newText;
-		}
-	});	
-		
-	var extendMethod = function(shape, method, before, after){
-		// Some helper function. Used for extending metod of shape.
-		// shape: Object
-		//		The shape we overriding it's metod.
-		// method: String
-		//		The method that is extended, the original metod is called before or after
-		//		functions that passed to extendMethod. 
-		// before: function
-		//		If defined this function will be executed before the original method.
-		// after: function
-		//		If defined this function will be executed after the original method.
-		var old = shape.prototype[method];
-		shape.prototype[method] = 
-			function(){
-				var rBefore;
-				if (before){
-					rBefore = before.apply(this, arguments);
-				}
-				var r = old.call(this, rBefore);
-				if (after){
-					r = after.call(this, r, arguments);
-				}
-				return r;
-			};
-	};
-
-	var bidiPreprocess = function(newText){
-		if (newText){  
-			if (newText.textDir){
-				newText.textDir = validateTextDir(newText.textDir);
-			}
-			if (newText.text && (newText.text instanceof Array)){
-				newText.text = newText.text.join(",");
-			}
-		}
-		if(newText && (newText.text != undefined || newText.textDir) && (this.textDir != newText.textDir || newText.text != this.origText)){
-			// store the original text. 
-			this.origText = (newText.text != undefined) ? newText.text : this.origText;
-			if(newText.textDir){
-				this.textDir = newText.textDir;
-			}
-			newText.text = this.formatText(this.origText,this.textDir);
-		}
-		return this.bidiPreprocess(newText);
-
-	};
-
-	// Istead of adding bidiPreprocess to all renders one by one
-	// use the extendMethod, at first there's a need for bidi transformation 
-	// on text then call to original setShape.
-	extendMethod(dojox.gfx.Text,"setShape", bidiPreprocess, null);
-	extendMethod(dojox.gfx.TextPath,"setText", bidiPreprocess, null);
-	
-	var restoreText = function(origObj){
-		var obj = dojo.clone(origObj);
-		if (obj && this.origText){
-			obj.text = this.origText;
-		}
-		return obj;
-	};
-
-	// Istead of adding restoreText to all renders one by one
-	// use the extendMethod, at first get the shape by calling the original getShape,
-	// than resrore original text (without the text transformations).
-	extendMethod(dojox.gfx.Text, "getShape", null, restoreText);
-	extendMethod(dojox.gfx.TextPath, "getText", null, restoreText);
-
-	var groupTextDir = function(group, args){
-		var textDir;
-		if (args && args[0]){
-			textDir = validateTextDir(args[0]);
-		}
-		group.setTextDir(textDir ? textDir : this.textDir);
-		return group;	// dojox.gfx.Group				
-	};
-
-	// In creation of Group there's a need to update it's textDir,
-	// so instead of doing it in renders one by one (vml vs others)
-	// use the extendMethod, at first the original createGroup is applied, the
-	// groupTextDir which is setts Group's textDir as it's father's or if was defined
-	// by user by this value.
-	extendMethod(dojox.gfx.Surface, "createGroup", null, groupTextDir);
-	extendMethod(dojox.gfx.Group, "createGroup", null, groupTextDir);
-
-	var textDirPreprocess =  function(text){
-		//  inherit from surface / group  if textDir is defined there
-		if(text){
-			var textDir = text.textDir ? validateTextDir(text.textDir) : this.textDir;
-			if(textDir){
-				text.textDir = textDir;
-			}
-		}
-		return text;
-	};
-
-	// In creation there's a need to some preprocess,
-	// so instead of doing it in renders one by one (vml vs others)
-	// use the extendMethod, at first the textDirPreprocess function handles the input
-	// then the original createXXXXXX is applied.
-	extendMethod(dojox.gfx.Surface,"createText", textDirPreprocess, null);
-	extendMethod(dojox.gfx.Surface,"createTextPath", textDirPreprocess, null);
-	extendMethod(dojox.gfx.Group,"createText", textDirPreprocess, null);
-	extendMethod(dojox.gfx.Group,"createTextPath", textDirPreprocess, null);
-
-	dojox.gfx.createSurface = function(parentNode, width, height, textDir) {        
-		var s = dojox.gfx[dojox.gfx.renderer].createSurface(parentNode, width, height);
-		var tDir = validateTextDir(textDir);
-		
-		if(dojox.gfx.isSvgWeb){
-			s.textDir = tDir ? tDir : dojo.style(dojo.byId(parentNode),"direction");
-			return s;
-		}
-		// if textDir was defined use it, else get default value.
-		//s.textDir = tDir ? tDir : dojo.style(s.rawNode,"direction");
-		if(dojox.gfx.isVml || dojox.gfx.isSvg || dojox.gfx.isCanvas){
-			s.textDir = tDir ? tDir : dojo.style(s.rawNode,"direction");
-		}
-		if(dojox.gfx.isSilverlight){
-			// allow this once rawNode will be able for the silverlight
-			//s.textDir = tDir ? tDir : dojo.style(s.rawNode,"direction");
-			s.textDir = tDir ? tDir : dojo.style(s._nodes[1],"direction");
-		}
-		
-		return s;
-	};
-
-	// some helper functions
-	
-	function setTextDir(/*Object*/ obj, /*String*/ newTextDir){
-		var tDir = validateTextDir(newTextDir);
-		if (tDir){
-			dojox.gfx.utils.forEach(obj,function(e){
-				if(e instanceof dojox.gfx.Surface || e instanceof dojox.gfx.Group){
-					e.textDir = tDir;
-				}		
-				if(e instanceof dojox.gfx.Text){
-					e.setShape({textDir: tDir});
-				}
-				if(e instanceof dojox.gfx.TextPath){
-					e.setText({textDir: tDir})
-				}
-			}, obj);
-		}
-		return obj;
-	}
-
-	function validateTextDir(textDir){
-		var validValues = ["ltr","rtl","auto"]; 
-		if (textDir){
-			textDir = textDir.toLowerCase();
-			if (dojo.indexOf(validValues, textDir) < 0){
-				return null;
-			}
-		}
-		return textDir;
-	}
-
-	return g; // return gfx api augmented with bidi support	
+break;
+case "silverlight":
+g.isSilverlight=true;
+break;
+case "canvas":
+g.isCanvas=true;
+break;
+}
+var _1={LRM:"‎",LRE:"‪",PDF:"‬",RLM:"‏",RLE:"‫"};
+var _2=new dojox.string.BidiEngine();
+dojo.extend(dojox.gfx.shape.Surface,{textDir:"",setTextDir:function(_3){
+_4(this,_3);
+},getTextDir:function(){
+return this.textDir;
+}});
+dojo.extend(dojox.gfx.Group,{textDir:"",setTextDir:function(_5){
+_4(this,_5);
+},getTextDir:function(){
+return this.textDir;
+}});
+dojo.extend(dojox.gfx.Text,{textDir:"",formatText:function(_6,_7){
+if(_7&&_6&&_6.length>1){
+var _8="ltr",_9=_7;
+if(_9=="auto"){
+if(dojox.gfx.isVml){
+return _6;
+}
+_9=_2.checkContextual(_6);
+}
+if(dojox.gfx.isVml){
+_8=_2.checkContextual(_6);
+if(_9!=_8){
+if(_9=="rtl"){
+return !_2.hasBidiChar(_6)?_2.bidiTransform(_6,"IRNNN","ILNNN"):_1.RLM+_1.RLM+_6;
+}else{
+return _1.LRM+_6;
+}
+}
+return _6;
+}
+if(dojox.gfx.isSvgWeb){
+if(_9=="rtl"){
+return _2.bidiTransform(_6,"IRNNN","ILNNN");
+}
+return _6;
+}
+if(dojox.gfx.isSilverlight){
+return (_9=="rtl")?_2.bidiTransform(_6,"IRNNN","VLYNN"):_2.bidiTransform(_6,"ILNNN","VLYNN");
+}
+if(dojox.gfx.isCanvas){
+return (_9=="rtl")?_1.RLE+_6+_1.PDF:_1.LRE+_6+_1.PDF;
+}
+if(dojox.gfx.isSvg){
+if(dojo.isFF){
+return (_9=="rtl")?_2.bidiTransform(_6,"IRYNN","VLNNN"):_2.bidiTransform(_6,"ILYNN","VLNNN");
+}
+if(dojo.isChrome||dojo.isSafari||dojo.isOpera){
+return _1.LRM+(_9=="rtl"?_1.RLE:_1.LRE)+_6+_1.PDF;
+}
+}
+}
+return _6;
+},bidiPreprocess:function(_a){
+return _a;
+}});
+dojo.extend(dojox.gfx.TextPath,{textDir:"",formatText:function(_b,_c){
+if(_c&&_b&&_b.length>1){
+var _d="ltr",_e=_c;
+if(_e=="auto"){
+if(dojox.gfx.isVml){
+return _b;
+}
+_e=_2.checkContextual(_b);
+}
+if(dojox.gfx.isVml){
+_d=_2.checkContextual(_b);
+if(_e!=_d){
+if(_e=="rtl"){
+return !_2.hasBidiChar(_b)?_2.bidiTransform(_b,"IRNNN","ILNNN"):_1.RLM+_1.RLM+_b;
+}else{
+return _1.LRM+_b;
+}
+}
+return _b;
+}
+if(dojox.gfx.isSvgWeb){
+if(_e=="rtl"){
+return _2.bidiTransform(_b,"IRNNN","ILNNN");
+}
+return _b;
+}
+if(dojox.gfx.isSvg){
+if(dojo.isOpera){
+_b=_1.LRM+(_e=="rtl"?_1.RLE:_1.LRE)+_b+_1.PDF;
+}else{
+_b=(_e=="rtl")?_2.bidiTransform(_b,"IRYNN","VLNNN"):_2.bidiTransform(_b,"ILYNN","VLNNN");
+}
+}
+}
+return _b;
+},bidiPreprocess:function(_f){
+if(_f&&(typeof _f=="string")){
+this.origText=_f;
+_f=this.formatText(_f,this.textDir);
+}
+return _f;
+}});
+var _10=function(_11,_12,_13,_14){
+var old=_11.prototype[_12];
+_11.prototype[_12]=function(){
+var _15;
+if(_13){
+_15=_13.apply(this,arguments);
+}
+var r=old.call(this,_15);
+if(_14){
+r=_14.call(this,r,arguments);
+}
+return r;
+};
+};
+var _16=function(_17){
+if(_17){
+if(_17.textDir){
+_17.textDir=_18(_17.textDir);
+}
+if(_17.text&&(_17.text instanceof Array)){
+_17.text=_17.text.join(",");
+}
+}
+if(_17&&(_17.text!=undefined||_17.textDir)&&(this.textDir!=_17.textDir||_17.text!=this.origText)){
+this.origText=(_17.text!=undefined)?_17.text:this.origText;
+if(_17.textDir){
+this.textDir=_17.textDir;
+}
+_17.text=this.formatText(this.origText,this.textDir);
+}
+return this.bidiPreprocess(_17);
+};
+_10(dojox.gfx.Text,"setShape",_16,null);
+_10(dojox.gfx.TextPath,"setText",_16,null);
+var _19=function(_1a){
+var obj=dojo.clone(_1a);
+if(obj&&this.origText){
+obj.text=this.origText;
+}
+return obj;
+};
+_10(dojox.gfx.Text,"getShape",null,_19);
+_10(dojox.gfx.TextPath,"getText",null,_19);
+var _1b=function(_1c,_1d){
+var _1e;
+if(_1d&&_1d[0]){
+_1e=_18(_1d[0]);
+}
+_1c.setTextDir(_1e?_1e:this.textDir);
+return _1c;
+};
+_10(dojox.gfx.Surface,"createGroup",null,_1b);
+_10(dojox.gfx.Group,"createGroup",null,_1b);
+var _1f=function(_20){
+if(_20){
+var _21=_20.textDir?_18(_20.textDir):this.textDir;
+if(_21){
+_20.textDir=_21;
+}
+}
+return _20;
+};
+_10(dojox.gfx.Surface,"createText",_1f,null);
+_10(dojox.gfx.Surface,"createTextPath",_1f,null);
+_10(dojox.gfx.Group,"createText",_1f,null);
+_10(dojox.gfx.Group,"createTextPath",_1f,null);
+dojox.gfx.createSurface=function(_22,_23,_24,_25){
+var s=dojox.gfx[dojox.gfx.renderer].createSurface(_22,_23,_24);
+var _26=_18(_25);
+if(dojox.gfx.isSvgWeb){
+s.textDir=_26?_26:dojo.style(dojo.byId(_22),"direction");
+return s;
+}
+if(dojox.gfx.isVml||dojox.gfx.isSvg||dojox.gfx.isCanvas){
+s.textDir=_26?_26:dojo.style(s.rawNode,"direction");
+}
+if(dojox.gfx.isSilverlight){
+s.textDir=_26?_26:dojo.style(s._nodes[1],"direction");
+}
+return s;
+};
+function _4(obj,_27){
+var _28=_18(_27);
+if(_28){
+dojox.gfx.utils.forEach(obj,function(e){
+if(e instanceof dojox.gfx.Surface||e instanceof dojox.gfx.Group){
+e.textDir=_28;
+}
+if(e instanceof dojox.gfx.Text){
+e.setShape({textDir:_28});
+}
+if(e instanceof dojox.gfx.TextPath){
+e.setText({textDir:_28});
+}
+},obj);
+}
+return obj;
+};
+function _18(_29){
+var _2a=["ltr","rtl","auto"];
+if(_29){
+_29=_29.toLowerCase();
+if(dojo.indexOf(_2a,_29)<0){
+return null;
+}
+}
+return _29;
+};
+return g;
 });
-

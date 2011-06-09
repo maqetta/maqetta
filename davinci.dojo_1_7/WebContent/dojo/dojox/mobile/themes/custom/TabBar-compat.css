@@ -1,4 +1,4 @@
-/* dojox.mobile.TabBarButton */
+
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
@@ -10,7 +10,7 @@
 }
 .mblTabBarButton, .mblTabButton {
 	background-image: url(compat/ui-widget-bg.png);
-	_background-image: none; /* IE6 */
+	_background-image: none; 
 }
 .mblTabBar .mblTabBarButton.mblTabButtonSelected {
 	-moz-border-radius: 2px;
@@ -38,7 +38,7 @@
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
-*html .mblTabButton { /* IE6 hack */
+*html .mblTabButton { 
 	behavior: expression(
 		(function(el){
 			if(!el.previousSibling)

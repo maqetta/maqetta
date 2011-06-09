@@ -1,1446 +1,1014 @@
-define(["dojo", "dijit", "dojox", "dijit/focus", "../../cells/_base", "../_Plugin", "./AutoScroll"], function(dojo, dijit, dojox){
-
-/*=====
-dojo.declare("__SelectItem", null,{
-	// summary:
-	//		An abstract representation of an item.
-});
-dojo.declare("__SelectCellItem", __SelectItem,{
-	// summary:
-	//		An abstract representation of a cell.
-	
-	// row: Integer
-	//		Row index of this cell
-	row: 0,
-	
-	// col: Integer
-	//		Column index of this cell
-	col: 0
-});
-dojo.declare("__SelectRowItem", __SelectItem,{
-	// summary:
-	//		An abstract representation of a row.
-	
-	// row: Integer
-	//		Row index of this row
-	row: 0,
-	
-	// except: Integer[]
-	//		An array of column indexes of all the unselected cells in this row.
-	except: []
-});
-dojo.declare("__SelectColItem", __SelectItem,{
-	// summary:
-	//		An abstract representation of a column.
-	
-	// col: Integer
-	//		Column index of this column
-	col: 0,
-	
-	// except: Integer[]
-	//		An array of row indexes of all the unselected cells in this column.
-	except: []
-});
-=====*/
-
-var DISABLED = 0, SINGLE = 1, MULTI = 2,
-	_theOther = { col: "row", row: "col" },
-	_inRange = function(type, value, start, end, halfClose){
-		if(type !== "cell"){
-			value = value[type];
-			start = start[type];
-			end = end[type];
-			if(typeof value !== "number" || typeof start !== "number" || typeof end !== "number"){
-				return false;
-			}
-			return halfClose ? ((value >= start && value < end) || (value > end && value <= start))
-							: ((value >= start && value <= end) || (value >= end && value <= start));
-		}else{
-			return _inRange("col", value, start, end, halfClose) && _inRange("row", value, start, end, halfClose);
-		}
-	},
-	_isEqual = function(type, v1, v2){
-		try{
-			if(v1 && v2){
-				switch(type){
-					case "col": case "row":
-						return v1[type] == v2[type] && typeof v1[type] == "number" &&
-								!(_theOther[type] in v1) && !(_theOther[type] in v2);
-					case "cell":
-						return v1.col == v2.col && v1.row == v2.row && typeof v1.col == "number" && typeof v1.row == "number";
-				}
-			}
-		}catch(e){}
-		return false;
-	},
-	_stopEvent = function(evt){
-		try{
-			if(evt && evt.preventDefault){
-				dojo.stopEvent(evt);
-			}
-		}catch(e){}
-	},
-	_createItem = function(type, rowIndex, colIndex){
-		switch(type){
-			case "col":
-				return {
-					"col": typeof colIndex == "undefined" ? rowIndex : colIndex,
-					"except": []
-				};
-			case "row":
-				return {
-					"row": rowIndex,
-					"except": []
-				};
-			case "cell":
-				return {
-					"row": rowIndex,
-					"col": colIndex
-				};
-		}
-		return null;
-	};
-dojo.declare("dojox.grid.enhanced.plugins.Selector", dojox.grid.enhanced._Plugin, {
-	// summary:
-	//		Provides standard extended selection for grid.
-	//		Supports mouse/keyboard selection, multi-selection, and de-selection.
-	//		Acceptable plugin parameters:
-	//			The whole plugin parameter object is a config object passed to the setupConfig function.
-	//
-	//		Acceptable cell parameters defined in layout:
-	//		1. notselectable: boolean
-	//			Whether this column is (and all the cells in it are) selectable.
-	
-	// name: String
-	//		plugin name
-	name: "selector",
 /*
-	//	_config: null,
-	//	_enabled: true,
-	//	_selecting: {
-	//		row: false,
-	//		col: false,
-	//		cell: false
-	//	},
-	//	_selected: {
-	//		row: [],
-	//		col: [],
-	//		cell: []
-	//	},
-	//	_startPoint: {},
-	//	_currentPoint: {},
-	//	_lastAnchorPoint: {},
-	//	_lastEndPoint: {},
-	//	_lastSelectedAnchorPoint: {},
-	//	_lastSelectedEndPoint: {},
-	//	_keyboardSelect: {
-	//		row: 0,
-	//		col: 0,
-	//		cell: 0
-	//	},
-	//	_curType: null,
-	//	_lastType: null,
-	//	_usingKeyboard: false,
-	//	_toSelect: true,
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
 
-	constructor: function(grid, args){
-		this.grid = grid;
-		this._config = {
-			row: MULTI,
-			col: MULTI,
-			cell: MULTI
-		};
-		this.setupConfig(args);
-		if(grid.selectionMode === "single"){
-			this._config.row = SINGLE;
-		}
-		this._enabled = true;
-		this._selecting = {};
-		this._selected = {
-			"col": [],
-			"row": [],
-			"cell": []
-		};
-		this._startPoint = {};
-		this._currentPoint = {};
-		this._lastAnchorPoint = {};
-		this._lastEndPoint = {};
-		this._lastSelectedAnchorPoint = {};
-		this._lastSelectedEndPoint = {};
-		this._keyboardSelect = {};
-		this._lastType = null;
-		this._selectedRowModified = {};
-		this._hacks();
-		this._initEvents();
-		this._initAreas();
-		this._mixinGrid();
-	},
-	destroy: function(){
-		this.inherited(arguments);
-	},
-	//------------public--------------------
-	setupConfig: function(config){
-		// summary:
-		//		Set selection mode for row/col/cell.
-		// config: Object
-		//		An object with the following structure (all properties are optional):
-		//		{
-		//			//Default is "multi", all other values are same as "multi".
-		//			row: false|"disabled"|"single",
-		//			col: false|"disabled"|"single",
-		//			cell: false|"disabled"|"single"
-		//		}
-		if(!config || !dojo.isObject(config)){
-			return;
-		}
-		var types = ["row", "col", "cell"];
-		for(var type in config){
-			if(dojo.indexOf(types, type) >= 0){
-				if(!config[type] || config[type] == "disabled"){
-					this._config[type] = DISABLED;
-				}else if(config[type] == "single"){
-					this._config[type] = SINGLE;
-				}else{
-					this._config[type] = MULTI;
-				}
-			}
-		}
-		
-		//Have to set mode to default grid selection.
-		var mode = ["none","single","extended"][this._config.row];
-		this.grid.selection.setMode(mode);
-	},
-	isSelected: function(type, rowIndex, colIndex){
-		// summary:
-		//		Check whether a location (a cell, a column or a row) is selected.
-		// tag:
-		//		public
-		// type: String
-		//		"row" or "col" or "cell"
-		// rowIndex: Integer
-		//		If type is "row" or "cell", this is the row index.
-		//		If type if "col", this is the column index.
-		// colIndex: Integer?
-		//		Only valid when type is "cell"
-		// return: Boolean
-		//		true if selected, false if not. If cell is covered by a selected column, it's selected.
-		return this._isSelected(type, _createItem(type, rowIndex, colIndex));
-	},
-	toggleSelect: function(type, rowIndex, colIndex){
-		this._startSelect(type, _createItem(type, rowIndex, colIndex), this._config[type] === MULTI, false, false, !this.isSelected(type, rowIndex, colIndex));
-		this._endSelect(type);
-	},
-	select: function(type, rowIndex, colIndex){
-		// summary:
-		//		Select a location (a cell, a column or a row).
-		// tag:
-		//		public
-		// type: String
-		//		"row" or "col" or "cell"
-		// rowIndex: Integer
-		//		If type is "row" or "cell", this is the row index.
-		//		If type if "col", this is the column index.
-		// colIndex: Integer?
-		//		Only valid when type is "cell"
-		if(!this.isSelected(type, rowIndex, colIndex)){
-			this.toggleSelect(type, rowIndex, colIndex);
-		}
-	},
-	deselect: function(type, rowIndex, colIndex){
-		if(this.isSelected(type, rowIndex, colIndex)){
-			this.toggleSelect(type, rowIndex, colIndex);
-		}
-	},
-	selectRange: function(type, start, end, toSelect){
-		// summary:
-		//		Select a continuous range (a block of cells, a set of continuous columns or rows)
-		// tag:
-		//		public
-		// type: String
-		//		"row" or "col" or "cell"
-		// start: Integer | Object
-		//		If type is "row" or "col", this is the index of the starting row or column.
-		//		If type if "cell", this is the left-top cell of the range.
-		// end: Integer | Object
-		//		If type is "row" or "col", this is the index of the ending row or column.
-		//		If type if "cell", this is the right-bottom cell of the range.
-		this.grid._selectingRange = true;
-		var startPoint = type == "cell" ? _createItem(type, start.row, start.col) : _createItem(type, start),
-			endPoint = type == "cell" ? _createItem(type, end.row, end.col) : _createItem(type, end);
-		this._startSelect(type, startPoint, false, false, false, toSelect);
-		this._highlight(type, endPoint, toSelect === undefined ? true : toSelect);
-		this._endSelect(type);
-		this.grid._selectingRange = false;
-	},
-	clear: function(type){
-		// summary:
-		//		Clear all selections.
-		// tag:
-		//		public
-		// type: String?
-		//		"row" or "col" or "cell". If omitted, clear all.
-		this._clearSelection(type || "all");
-	},
-	isSelecting: function(type){
-		// summary:
-		//		Check whether the user is currently selecting something.
-		// tag:
-		//		public
-		// type: String
-		//		"row" or "col" or "cell"
-		// return: Boolean
-		//		true if is selection, false otherwise.
-		if(typeof type == "undefined"){
-			return this._selecting.col || this._selecting.row || this._selecting.cell;
-		}
-		return this._selecting[type];
-	},
-	selectEnabled: function(toEnable){
-		// summary:
-		//		Turn on/off this selection functionality if *toEnable* is provided.
-		//		Check whether this selection functionality is enabled if nothing is passed in.
-		// tag:
-		//		public
-		// toEnable: Boolean?
-		//		To enable or not. Optional.
-		// return: Boolean | undefined
-		//		Enabled or not.
-		if(typeof toEnable != "undefined" && !this.isSelecting()){
-			this._enabled = !!toEnable;
-		}
-		return this._enabled;
-	},
-	getSelected: function(type, includeExceptions){
-		// summary:
-		//		Get an array of selected locations.
-		// tag:
-		//		public
-		// type: String
-		//		"row" or "col" or "cell"
-		// includeExceptions: Boolean
-		//		Only meaningful for rows/columns. If true, all selected rows/cols, even they are partly selected, are all returned.
-		// return: __SelectItem[]
-		switch(type){
-			case "cell":
-				return dojo.map(this._selected[type], function(item){ return item; });
-			case "col": case "row":
-				return dojo.map(includeExceptions ? this._selected[type]
-				: dojo.filter(this._selected[type], function(item){
-					return item.except.length === 0;
-				}), function(item){
-					return includeExceptions ? item : item[type];
-				});
-		}
-		return [];
-	},
-	getSelectedCount: function(type, includeExceptions){
-		// summary:
-		//		Get the number of selected items.
-		// tag:
-		//		public
-		// type: String
-		//		"row" or "col" or "cell"
-		// includeExceptions: Boolean
-		//		Only meaningful for rows/columns. If true, all selected rows/cols, even they are partly selected, are all returned.
-		// return: Integer
-		//		The number of selected items.
-		switch(type){
-			case "cell":
-				return this._selected[type].length;
-			case "col": case "row":
-				return (includeExceptions ? this._selected[type]
-				: dojo.filter(this._selected[type], function(item){
-					return item.except.length === 0;
-				})).length;
-		}
-		return 0;
-	},
-	getSelectedType: function(){
-		// summary:
-		//		Get the type of selected items.
-		// tag:
-		//		public
-		// return: String
-		//		"row" or "col" or "cell", or any mix of these (separator is | ).
-		var s = this._selected;
-		return ["",		"cell",		"row",		"row|cell",
-				"col",	"col|cell",	"col|row",	"col|row|cell"
-			][(!!s.cell.length) | (!!s.row.length << 1) | (!!s.col.length << 2)];
-	},
-	getLastSelectedRange: function(type){
-		// summary:
-		//		Get last selected range of the given type.
-		// tag:
-		//		public
-		// return: Object
-		//		{start: __SelectItem, end: __SelectItem}
-		//		return null if nothing is selected.
-		return this._lastAnchorPoint[type] ? {
-			"start": this._lastAnchorPoint[type],
-			"end": this._lastEndPoint[type]
-		} : null;
-	},
-	
-	//--------------------------private----------------------------
-	_hacks: function(){
-		// summary:
-		//		Complete the event system of grid, hack some grid functions to prevent default behavior.
-		var g = this.grid;
-		var doContentMouseUp = function(e){
-			if(e.cellNode){
-				g.onMouseUp(e);
-			}
-			g.onMouseUpRow(e);
-		};
-		var mouseUp = dojo.hitch(g, "onMouseUp");
-		var mouseDown = dojo.hitch(g, "onMouseDown");
-		var doRowSelectorFocus = function(e){
-			e.cellNode.style.border = "solid 1px";
-		};
-		dojo.forEach(g.views.views, function(view){
-			view.content.domouseup = doContentMouseUp;
-			view.header.domouseup = mouseUp;
-			if(view.declaredClass == "dojox.grid._RowSelector"){
-				view.domousedown = mouseDown;
-				view.domouseup = mouseUp;
-				view.dofocus = doRowSelectorFocus;
-			}
-		});
-		//Disable default selection.
-		g.selection.clickSelect = function(){};
-		
-		this._oldDeselectAll = g.selection.deselectAll;
-		var _this = this;
-		g.selection.selectRange = function(from, to){
-			_this.selectRange("row", from, to, true);
-			if(g.selection.preserver){
-				g.selection.preserver._updateMapping(true, true, false, from, to);
-			}
-			g.selection.onChanged();
-		};
-		g.selection.deselectRange = function(from, to){
-			_this.selectRange("row", from, to, false);
-			if(g.selection.preserver){
-				g.selection.preserver._updateMapping(true, false, false, from, to);
-			}
-			g.selection.onChanged();
-		};
-		g.selection.deselectAll = function(){
-			g._selectingRange = true;
-			_this._oldDeselectAll.apply(g.selection, arguments);
-			_this._clearSelection("row");
-			g._selectingRange = false;
-			if(g.selection.preserver){
-				g.selection.preserver._updateMapping(true, false, true);
-			}
-			g.selection.onChanged();
-		};
-		
-		var rowSelector = g.views.views[0];
-		//The default function re-write the whole className, so can not insert any other classes.
-		if(rowSelector instanceof dojox.grid._RowSelector){
-			rowSelector.doStyleRowNode = function(inRowIndex, inRowNode){
-				dojo.removeClass(inRowNode, "dojoxGridRow");
-				dojo.addClass(inRowNode, "dojoxGridRowbar");
-				dojo.addClass(inRowNode, "dojoxGridNonNormalizedCell");
-				dojo.toggleClass(inRowNode, "dojoxGridRowbarOver", g.rows.isOver(inRowIndex));
-				dojo.toggleClass(inRowNode, "dojoxGridRowbarSelected", !!g.selection.isSelected(inRowIndex));
-			};
-		}
-		this.connect(g, "updateRow", function(rowIndex){
-			dojo.forEach(g.layout.cells, function(cell){
-				if(this.isSelected("cell", rowIndex, cell.index)){
-					this._highlightNode(cell.getNode(rowIndex), true);
-				}
-			}, this);
-		});
-	},
-	_mixinGrid: function(){
-		// summary:
-		//		Expose events to grid.
-		var g = this.grid;
-		g.setupSelectorConfig = dojo.hitch(this, this.setupConfig);
-		g.onStartSelect = function(){};
-		g.onEndSelect = function(){};
-		g.onStartDeselect = function(){};
-		g.onEndDeselect = function(){};
-		g.onSelectCleared = function(){};
-	},
-	_initEvents: function(){
-		// summary:
-		//		Connect events, create event handlers.
-		var g = this.grid,
-			_this = this,
-			dp = dojo.partial,
-			starter = function(type, e){
-				if(type === "row"){
-					_this._isUsingRowSelector = true;
-				}
-				//only left mouse button can select.
-				if(_this.selectEnabled() && _this._config[type] && e.button != 2){
-					if(_this._keyboardSelect.col || _this._keyboardSelect.row || _this._keyboardSelect.cell){
-						_this._endSelect("all");
-						_this._keyboardSelect.col = _this._keyboardSelect.row = _this._keyboardSelect.cell = 0;
-					}
-					if(_this._usingKeyboard){
-						_this._usingKeyboard = false;
-					}
-					var target = _createItem(type, e.rowIndex, e.cell && e.cell.index);
-					_this._startSelect(type, target, e.ctrlKey, e.shiftKey);
-				}
-			},
-			ender = dojo.hitch(this, "_endSelect");
-		this.connect(g, "onHeaderCellMouseDown", dp(starter, "col"));
-		this.connect(g, "onHeaderCellMouseUp", dp(ender, "col"));
-		
-		this.connect(g, "onRowSelectorMouseDown", dp(starter, "row"));
-		this.connect(g, "onRowSelectorMouseUp", dp(ender, "row"));
-		
-		this.connect(g, "onCellMouseDown", function(e){
-			if(e.cell && e.cell.isRowSelector){ return; }
-			if(g.singleClickEdit){
-				_this._singleClickEdit = true;
-				g.singleClickEdit = false;
-			}
-			starter(_this._config["cell"] == DISABLED ? "row" : "cell", e);
-		});
-		this.connect(g, "onCellMouseUp", function(e){
-			if(_this._singleClickEdit){
-				delete _this._singleClickEdit;
-				g.singleClickEdit = true;
-			}
-			ender("all", e);
-		});
-		
-		this.connect(g, "onCellMouseOver", function(e){
-			if(_this._curType != "row" && _this._selecting[_this._curType] && _this._config[_this._curType] == MULTI){
-				_this._highlight("col", _createItem("col", e.cell.index), _this._toSelect);
-				if(!_this._keyboardSelect.cell){
-					_this._highlight("cell", _createItem("cell", e.rowIndex, e.cell.index), _this._toSelect);
-				}
-			}
-		});
-		this.connect(g, "onHeaderCellMouseOver", function(e){
-			if(_this._selecting.col && _this._config.col == MULTI){
-				_this._highlight("col", _createItem("col", e.cell.index), _this._toSelect);
-			}
-		});
-		this.connect(g, "onRowMouseOver", function(e){
-			if(_this._selecting.row && _this._config.row == MULTI){
-				_this._highlight("row", _createItem("row", e.rowIndex), _this._toSelect);
-			}
-		});
-		
-		//When row order has changed in a unpredictable way (sorted or filtered), map the new rowindex.
-		this.connect(g, "onSelectedById", "_onSelectedById");
-		
-		//When the grid refreshes, all those selected should still appear selected.
-		this.connect(g, "_onFetchComplete", function(){
-			//console.debug("refresh after buildPage:", g._notRefreshSelection);
-			if(!g._notRefreshSelection){
-				this._refreshSelected(true);
-			}
-		});
-
-		//Small scroll might not refresh the grid.
-		this.connect(g.scroller, "buildPage", function(){
-			//console.debug("refresh after buildPage:", g._notRefreshSelection);
-			if(!g._notRefreshSelection){
-				this._refreshSelected(true);
-			}
-		});
-		
-		//Whenever the mouse is up, end selecting.
-		this.connect(dojo.doc, "onmouseup", dp(ender, "all"));
-		
-		//If autoscroll is enabled, connect to it.
-		this.connect(g, "onEndAutoScroll", function(isVertical, isForward, view, target){
-			var selectCell = _this._selecting.cell,
-				type, current, dir = isForward ? 1 : -1;
-			if(isVertical && (selectCell || _this._selecting.row)){
-				type = selectCell ? "cell" : "row";
-				current = _this._currentPoint[type];
-				_this._highlight(type, _createItem(type, current.row + dir, current.col), _this._toSelect);
-			}else if(!isVertical && (selectCell || _this._selecting.col)){
-				type = selectCell ? "cell" : "col";
-				current = _this._currentPoint[type];
-				_this._highlight(type, _createItem(type, current.row, target), _this._toSelect);
-			}
-		});
-		//If the grid is changed, selection should be consistent.
-		this.subscribe("dojox/grid/rearrange/move/" + g.id, "_onInternalRearrange");
-		this.subscribe("dojox/grid/rearrange/copy/" + g.id, "_onInternalRearrange");
-		this.subscribe("dojox/grid/rearrange/change/" + g.id, "_onExternalChange");
-		this.subscribe("dojox/grid/rearrange/insert/" + g.id, "_onExternalChange");
-		this.subscribe("dojox/grid/rearrange/remove/" + g.id, "clear");
-		
-		//have to also select when the grid's default select is used.
-		this.connect(g, "onSelected", function(rowIndex){
-			if(this._selectedRowModified && this._isUsingRowSelector){
-				delete this._selectedRowModified;
-			}else if(!this.grid._selectingRange){
-				this.select("row", rowIndex);
-			}
-		});
-		this.connect(g, "onDeselected", function(rowIndex){
-			if(this._selectedRowModified && this._isUsingRowSelector){
-				delete this._selectedRowModified;
-			}else if(!this.grid._selectingRange){
-				this.deselect("row", rowIndex);
-			}
-		});
-	},
-	_onSelectedById: function(id, newIndex, isSelected){
-		if(this.grid._noInternalMapping){
-			return;
-		}
-		var pointSet = [this._lastAnchorPoint.row, this._lastEndPoint.row,
-			this._lastSelectedAnchorPoint.row, this._lastSelectedEndPoint.row];
-		pointSet = pointSet.concat(this._selected.row);
-		var found = false;
-		dojo.forEach(pointSet, function(item){
-			if(item){
-				if(item.id === id){
-					found = true;
-					item.row = newIndex;
-				}else if(item.row === newIndex && item.id){
-					item.row = -1;
-				}
-			}
-		});
-		if(!found && isSelected){
-			dojo.some(this._selected.row, function(item){
-				if(item && !item.id && !item.except.length){
-					item.id = id;
-					item.row = newIndex;
-					return true;
-				}
-				return false;
-			});
-		}
-		found = false;
-		pointSet = [this._lastAnchorPoint.cell, this._lastEndPoint.cell,
-			this._lastSelectedAnchorPoint.cell, this._lastSelectedEndPoint.cell];
-		pointSet = pointSet.concat(this._selected.cell);
-		dojo.forEach(pointSet, function(item){
-			if(item){
-				if(item.id === id){
-					found = true;
-					item.row = newIndex;
-				}else if(item.row === newIndex && item.id){
-					item.row = -1;
-				}
-			}
-		});
-	},
-	onSetStore: function(){
-		this._clearSelection("all");
-	},
-	_onInternalRearrange: function(type, mapping){
-		try{
-		//The column can not refresh it self!
-		this._refresh("col", false);
-		
-		dojo.forEach(this._selected.row, function(item){
-			dojo.forEach(this.grid.layout.cells, function(cell){
-				this._highlightNode(cell.getNode(item.row), false);
-			}, this);
-		}, this);
-		//The rowbar must be cleaned manually
-		dojo.query(".dojoxGridRowSelectorSelected").forEach(function(node){
-			dojo.removeClass(node, "dojoxGridRowSelectorSelected");
-			dojo.removeClass(node, "dojoxGridRowSelectorSelectedUp");
-			dojo.removeClass(node, "dojoxGridRowSelectorSelectedDown");
-		});
-		
-		var cleanUp = function(item){
-			if(item){
-				delete item.converted;
-			}
-		},
-		pointSet = [this._lastAnchorPoint[type], this._lastEndPoint[type],
-			this._lastSelectedAnchorPoint[type], this._lastSelectedEndPoint[type]];
-		
-		if(type === "cell"){
-			this.selectRange("cell", mapping.to.min, mapping.to.max);
-			var cells = this.grid.layout.cells;
-			dojo.forEach(pointSet, function(item){
-				if(item.converted){ return; }
-				for(var r = mapping.from.min.row, tr = mapping.to.min.row; r <= mapping.from.max.row; ++r, ++tr){
-					for(var c = mapping.from.min.col, tc = mapping.to.min.col; c <= mapping.from.max.col; ++c, ++tc){
-						while(cells[c].hidden){ ++c; }
-						while(cells[tc].hidden){ ++tc; }
-						if(item.row == r && item.col == c){
-							//console.log('mapping found: (', item.row, ",",item.col,") to (", tr, ",", tc,")");
-							item.row = tr;
-							item.col = tc;
-							item.converted = true;
-							return;
-						}
-					}
-				}
-			});
-		}else{
-			pointSet = this._selected.cell.concat(this._selected[type]).concat(pointSet).concat(
-				[this._lastAnchorPoint.cell, this._lastEndPoint.cell,
-				this._lastSelectedAnchorPoint.cell, this._lastSelectedEndPoint.cell]);
-			dojo.forEach(pointSet, function(item){
-				if(item && !item.converted){
-					var from = item[type];
-					if(from in mapping){
-						item[type] = mapping[from];
-					}
-					item.converted = true;
-				}
-			});
-			dojo.forEach(this._selected[_theOther[type]], function(item){
-				for(var i = 0, len = item.except.length; i < len; ++i){
-					var from = item.except[i];
-					if(from in mapping){
-						item.except[i] = mapping[from];
-					}
-				}
-			});
-		}
-		
-		dojo.forEach(pointSet, cleanUp);
-		
-		this._refreshSelected(true);
-		this._focusPoint(type, this._lastEndPoint);
-		}catch(e){
-			console.warn("Selector._onInternalRearrange() error",e);
-		}
-	},
-	_onExternalChange: function(type, target){
-		var start = type == "cell" ? target.min : target[0],
-			end = type == "cell" ? target.max : target[target.length - 1];
-		this.selectRange(type, start, end);
-	},
-	_refresh: function(type, toHighlight){
-		if(!this._keyboardSelect[type]){
-			dojo.forEach(this._selected[type], function(item){
-				this._highlightSingle(type, toHighlight, item, undefined, true);
-			}, this);
-		}
-	},
-	_refreshSelected: function(){
-		this._refresh("col", true);
-		this._refresh("row", true);
-		this._refresh("cell", true);
-	},
-	_initAreas: function(){
-		var g = this.grid, f = g.focus, _this = this, dk = dojo.keys,
-			keyboardSelectReady = 1, duringKeyboardSelect = 2,
-			onmove = function(type, createNewEnd, rowStep, colStep, evt){
-				//Keyboard swipe selection is SHIFT + Direction Keys.
-				var ks = _this._keyboardSelect;
-				//Tricky, rely on valid status not being 0.
-				if(evt.shiftKey && ks[type]){
-					if(ks[type] === keyboardSelectReady){
-						if(type === "cell"){
-							var item = _this._lastEndPoint[type];
-							if(f.cell != g.layout.cells[item.col + colStep] || f.rowIndex != item.row + rowStep){
-								ks[type] = 0;
-								return;
-							}
-						}
-						//If selecting is not started, start it
-						_this._startSelect(type, _this._lastAnchorPoint[type], true, false, true);
-						_this._highlight(type, _this._lastEndPoint[type], _this._toSelect);
-						ks[type] = duringKeyboardSelect;
-					}
-					//Highlight to the new end point.
-					var newEnd = createNewEnd(type, rowStep, colStep, evt);
-					if(_this._isValid(type, newEnd, g)){
-						_this._highlight(type, newEnd, _this._toSelect);
-					}
-					_stopEvent(evt);
-				}
-			},
-			onkeydown = function(type, getTarget, evt, isBubble){
-				if(isBubble && _this.selectEnabled() && _this._config[type] != DISABLED){
-					switch(evt.keyCode){
-						case dk.SPACE:
-							//Keyboard single point selection is SPACE.
-							_this._startSelect(type, getTarget(), evt.ctrlKey, evt.shiftKey);
-							_this._endSelect(type);
-							break;
-						case dk.SHIFT:
-							//Keyboard swipe selection starts with SHIFT.
-							if(_this._config[type] == MULTI && _this._isValid(type, _this._lastAnchorPoint[type], g)){
-								//End last selection if any.
-								_this._endSelect(type);
-								_this._keyboardSelect[type] = keyboardSelectReady;
-								_this._usingKeyboard = true;
-							}
-					}
-				}
-			},
-			onkeyup = function(type, evt, isBubble){
-				if(isBubble && evt.keyCode == dojo.keys.SHIFT && _this._keyboardSelect[type]){
-					_this._endSelect(type);
-					_this._keyboardSelect[type] = 0;
-				}
-			};
-		//TODO: this area "rowHeader" should be put outside, same level as header/content.
-		if(g.views.views[0] instanceof dojox.grid._RowSelector){
-			this._lastFocusedRowBarIdx = 0;
-			f.addArea({
-				name:"rowHeader",
-				onFocus: function(evt, step){
-					var view = g.views.views[0];
-					if(view instanceof dojox.grid._RowSelector){
-						var rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
-						if(rowBarNode){
-							dojo.toggleClass(rowBarNode, f.focusClass, false);
-						}
-						//evt might not be real event, it may be a mock object instead.
-						if(evt && "rowIndex" in evt){
-							if(evt.rowIndex >= 0){
-								_this._lastFocusedRowBarIdx = evt.rowIndex;
-							}else if(!_this._lastFocusedRowBarIdx){
-								_this._lastFocusedRowBarIdx = 0;
-							}
-						}
-						rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
-						if(rowBarNode){
-							dijit.focus(rowBarNode);
-							dojo.toggleClass(rowBarNode, f.focusClass, true);
-						}
-						f.rowIndex = _this._lastFocusedRowBarIdx;
-						_stopEvent(evt);
-						return true;
-					}
-					return false;
-				},
-				onBlur: function(evt, step){
-					var view = g.views.views[0];
-					if(view instanceof dojox.grid._RowSelector){
-						var rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
-						if(rowBarNode){
-							dojo.toggleClass(rowBarNode, f.focusClass, false);
-						}
-						_stopEvent(evt);
-					}
-					return true;
-				},
-				onMove: function(rowStep, colStep, evt){
-					var view = g.views.views[0];
-					if(rowStep && view instanceof dojox.grid._RowSelector){
-						var next = _this._lastFocusedRowBarIdx + rowStep;
-						if(next >= 0 && next < g.rowCount){
-							//TODO: these logic require a better Scroller.
-							_stopEvent(evt);
-							var rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
-							dojo.toggleClass(rowBarNode, f.focusClass, false);
-							//If the row is not fetched, fetch it.
-							var sc = g.scroller;
-							var lastPageRow = sc.getLastPageRow(sc.page);
-							var rc = g.rowCount - 1, row = Math.min(rc, next);
-							if(next > lastPageRow){
-								g.setScrollTop(g.scrollTop + sc.findScrollTop(row) - sc.findScrollTop(_this._lastFocusedRowBarIdx));
-							}
-							//Now we have fetched the row.
-							rowBarNode = view.getCellNode(next, 0);
-							dijit.focus(rowBarNode);
-							dojo.toggleClass(rowBarNode, f.focusClass, true);
-							_this._lastFocusedRowBarIdx = next;
-							//If the row is out of view, scroll to it.
-							f.cell = rowBarNode;
-							f.cell.view = view;
-							f.cell.getNode = function(index){
-								return f.cell;
-							};
-							f.rowIndex = _this._lastFocusedRowBarIdx;
-							f.scrollIntoView();
-							f.cell = null;
-						}
-					}
-				}
-			});
-			f.placeArea("rowHeader","before","content");
-		}
-		//Support keyboard selection.
-		f.addArea({
-			name:"cellselect",
-			onMove: dojo.partial(onmove, "cell", function(type, rowStep, colStep, evt){
-				var current = _this._currentPoint[type];
-				return _createItem("cell", current.row + rowStep, current.col + colStep);
-			}),
-			onKeyDown: dojo.partial(onkeydown, "cell", function(){
-				return _createItem("cell", f.rowIndex, f.cell.index);
-			}),
-			onKeyUp: dojo.partial(onkeyup, "cell")
-		});
-		f.placeArea("cellselect","below","content");
-		f.addArea({
-			name:"colselect",
-			onMove: dojo.partial(onmove, "col", function(type, rowStep, colStep, evt){
-				var current = _this._currentPoint[type];
-				return _createItem("col", current.col + colStep);
-			}),
-			onKeyDown: dojo.partial(onkeydown, "col", function(){
-				return _createItem("col", f.getHeaderIndex());
-			}),
-			onKeyUp: dojo.partial(onkeyup, "col")
-		});
-		f.placeArea("colselect","below","header");
-		f.addArea({
-			name:"rowselect",
-			onMove: dojo.partial(onmove, "row", function(type, rowStep, colStep, evt){
-				return _createItem("row", f.rowIndex);
-			}),
-			onKeyDown: dojo.partial(onkeydown, "row", function(){
-				return _createItem("row", f.rowIndex);
-			}),
-			onKeyUp: dojo.partial(onkeyup, "row")
-		});
-		f.placeArea("rowselect","below","rowHeader");
-	},
-	_clearSelection: function(type, reservedItem){
-		// summary:
-		//		Clear selection for given type and fire events, but retain the highlight for *reservedItem*,
-		//		thus avoid "flashing".
-		// tag:
-		//		private
-		// type: String
-		//		"row", "col", or "cell
-		// reservedItem: __SelectItem
-		//		The item to retain highlight.
-		if(type == "all"){
-			this._clearSelection("cell", reservedItem);
-			this._clearSelection("col", reservedItem);
-			this._clearSelection("row", reservedItem);
-			return;
-		}
-		this._isUsingRowSelector = true;
-		dojo.forEach(this._selected[type], function(item){
-			if(!_isEqual(type, reservedItem, item)){
-				this._highlightSingle(type, false, item);
-			}
-		}, this);
-		this._blurPoint(type, this._currentPoint);
-		this._selecting[type] = false;
-		this._startPoint[type] = this._currentPoint[type] = null;
-		this._selected[type] = [];
-		
-		//Have to also deselect default grid selection.
-		if(type == "row" && !this.grid._selectingRange){
-			this._oldDeselectAll.call(this.grid.selection);
-			this.grid.selection._selectedById = {};
-		}
-		
-		//Fire events.
-		this.grid.onEndDeselect(type, null, null, this._selected);
-		this.grid.onSelectCleared(type);
-	},
-	_startSelect: function(type, start, extending, isRange, mandatarySelect, toSelect){
-		// summary:
-		//		Start selection, setup start point and current point, fire events.
-		// tag:
-		//		private
-		// type: String
-		//		"row", "col", or "cell"
-		// extending: Boolean
-		//		Whether this is a multi selection
-		// isRange: Boolean
-		//		Whether this is a range selection (i.e. select from the last end point to this point)
-		// start: __SelectItem
-		//		The start point
-		// mandatarySelect: Boolean
-		//		If true, toSelect will be same as the original selection status.
-		if(!this._isValid(type, start)){
-			return;
-		}
-		var lastIsSelected = this._isSelected(type, this._lastEndPoint[type]),
-			isSelected = this._isSelected(type, start);
-		
-		//If we are modifying the selection using keyboard, retain the old status.
-		this._toSelect = mandatarySelect ? isSelected : !isSelected;
-		
-		//If CTRL is not pressed or it's SINGLE mode, this is a brand new selection.
-		if(!extending || (!isSelected && this._config[type] == SINGLE)){
-			this._clearSelection("all", start);
-			this._toSelect = toSelect === undefined ? true : toSelect;
-		}
-		
-		this._selecting[type] = true;
-		this._currentPoint[type] = null;
-		
-		//We're holding SHIFT while clicking, it's a Click-Range selection.
-		if(isRange && this._lastType == type && lastIsSelected == this._toSelect){
-			if(type === "row"){
-				this._isUsingRowSelector = true;
-			}
-			this._startPoint[type] = this._lastEndPoint[type];
-			this._highlight(type, this._startPoint[type]);
-			this._isUsingRowSelector = false;
-		}else{
-			this._startPoint[type] = start;
-		}
-		//Now start selection
-		this._curType = type;
-		this._fireEvent("start", type);
-		this._isStartFocus = true;
-		this._isUsingRowSelector = true;
-		this._highlight(type, start, this._toSelect);
-		this._isStartFocus = false;
-	},
-	_endSelect: function(type){
-		// summary:
-		//		End selection. Keep records, fire events and cleanup status.
-		// tag:
-		//		private
-		// type: String
-		//		"row", "col", or "cell"
-		if(type === "row"){
-			delete this._isUsingRowSelector;
-		}
-		if(type == "all"){
-			this._endSelect("col");
-			this._endSelect("row");
-			this._endSelect("cell");
-		}else if(this._selecting[type]){
-			this._addToSelected(type);
-			this._lastAnchorPoint[type] = this._startPoint[type];
-			this._lastEndPoint[type] = this._currentPoint[type];
-			if(this._toSelect){
-				this._lastSelectedAnchorPoint[type] = this._lastAnchorPoint[type];
-				this._lastSelectedEndPoint[type] = this._lastEndPoint[type];
-			}
-			this._startPoint[type] = this._currentPoint[type] = null;
-			this._selecting[type] = false;
-			this._lastType = type;
-			this._fireEvent("end", type);
-		}
-	},
-	_fireEvent: function(evtName, type){
-		switch(evtName){
-			case "start":
-				this.grid[this._toSelect ? "onStartSelect" : "onStartDeselect"](type, this._startPoint[type], this._selected);
-				break;
-			case "end":
-				this.grid[this._toSelect ? "onEndSelect" : "onEndDeselect"](type, this._lastAnchorPoint[type], this._lastEndPoint[type], this._selected);
-				break;
-		}
-	},
-	_calcToHighlight: function(type, target, toHighlight, toSelect){
-		// summary:
-		//		Calculate what status should *target* have.
-		//		If *toSelect* is not provided, this is a no op.
-		// This function is time-critical!!
-		if(toSelect !== undefined){
-			var sltd;
-			if(this._usingKeyboard && !toHighlight){
-				var last = this._isInLastRange(this._lastType, target);
-				if(last){
-					sltd = this._isSelected(type, target);
-					//This 2 cases makes the keyboard swipe selection valid!
-					if(toSelect && sltd){
-						return false;
-					}
-					if(!toSelect && !sltd && this._isInLastRange(this._lastType, target, true)){
-						return true;
-					}
-				}
-			}
-			return toHighlight ? toSelect : (sltd || this._isSelected(type, target));
-		}
-		return toHighlight;
-	},
-	_highlightNode: function(node, toHighlight){
-		// summary:
-		//		Do the actual highlight work.
-		if(node){
-			var selectCSSClass = "dojoxGridRowSelected";
-			var selectCellClass = "dojoxGridCellSelected";
-			dojo.toggleClass(node, selectCSSClass, toHighlight);
-			dojo.toggleClass(node, selectCellClass, toHighlight);
-		}
-	},
-	_highlightHeader: function(colIdx, toHighlight){
-		var cells = this.grid.layout.cells;
-		var node = cells[colIdx].getHeaderNode();
-		var selectedClass = "dojoxGridHeaderSelected";
-		dojo.toggleClass(node, selectedClass, toHighlight);
-	},
-	_highlightRowSelector: function(rowIdx, toHighlight){
-		//var t1 = (new Date()).getTime();
-		var rowSelector = this.grid.views.views[0];
-		if(rowSelector instanceof dojox.grid._RowSelector){
-			var node = rowSelector.getRowNode(rowIdx);
-			if(node){
-				var selectedClass = "dojoxGridRowSelectorSelected";
-				dojo.toggleClass(node, selectedClass, toHighlight);
-			}
-		}
-		//console.log((new Date()).getTime() - t1);
-	},
-	_highlightSingle: function(type, toHighlight, target, toSelect, isRefresh){
-		// summary:
-		//		Highlight a single item.
-		// This function is time critical!!
-		var _this = this, toHL, g = _this.grid, cells = g.layout.cells;
-		switch(type){
-			case "cell":
-				toHL = this._calcToHighlight(type, target, toHighlight, toSelect);
-				var c = cells[target.col];
-				if(!c.hidden && !c.notselectable){
-					this._highlightNode(target.node || c.getNode(target.row), toHL);
-				}
-				break;
-			case "col":
-				toHL = this._calcToHighlight(type, target, toHighlight, toSelect);
-				this._highlightHeader(target.col, toHL);
-				dojo.query("td[idx='" + target.col + "']", g.domNode).forEach(function(cellNode){
-					var rowNode = cells[target.col].view.content.findRowTarget(cellNode);
-					if(rowNode){
-						var rowIndex = rowNode[dojox.grid.util.rowIndexTag];
-						_this._highlightSingle("cell", toHL, {
-							"row": rowIndex,
-							"col": target.col,
-							"node": cellNode
-						});
-					}
-				});
-				break;
-			case "row":
-				toHL = this._calcToHighlight(type, target, toHighlight, toSelect);
-				this._highlightRowSelector(target.row, toHL);
-				dojo.forEach(cells, function(cell){
-					_this._highlightSingle("cell", toHL, {
-						"row": target.row,
-						"col": cell.index,
-						"node": cell.getNode(target.row)
-					});
-				});
-				//To avoid dead lock
-				this._selectedRowModified = true;
-				if(!isRefresh){
-					g.selection.setSelected(target.row, toHL);
-				}
-		}
-	},
-	_highlight: function(type, target, toSelect){
-		// summary:
-		//		Highlight from start point to target.
-		// toSelect: Boolean
-		//		Whether we are selecting or deselecting.
-		// This function is time critical!!
-		if(this._selecting[type] && target !== null){
-			var start = this._startPoint[type],
-				current = this._currentPoint[type],
-				_this = this,
-				highlight = function(from, to, toHL){
-					_this._forEach(type, from, to, function(item){
-						_this._highlightSingle(type, toHL, item, toSelect);
-					}, true);
-				};
-			switch(type){
-				case "col": case "row":
-					if(current !== null){
-						if(_inRange(type, target, start, current, true)){
-							//target is between start and current, some selected should be deselected.
-							highlight(current, target, false);
-						}else{
-							if(_inRange(type, start, target, current, true)){
-								//selection has jumped to different direction, all should be deselected.
-								highlight(current, start, false);
-								current = start;
-							}
-							highlight(target, current, true);
-						}
-					}else{
-						//First time select.
-						this._highlightSingle(type, true, target, toSelect);
-					}
-					break;
-				case "cell":
-					if(current !== null){
-						if(_inRange("row", target, start, current, true) ||
-							_inRange("col", target, start, current, true) ||
-							_inRange("row", start, target, current, true) ||
-							_inRange("col", start, target, current, true)){
-							highlight(start, current, false);
-						}
-					}
-					highlight(start, target, true);
-			}
-			this._currentPoint[type] = target;
-			this._focusPoint(type, this._currentPoint);
-		}
-	},
-	_focusPoint: function(type, point){
-		// summary:
-		//		Focus the current point, so when you move mouse, the focus indicator follows you.
-		if(!this._isStartFocus){
-			var current = point[type],
-				f = this.grid.focus;
-			if(type == "col"){
-				f._colHeadFocusIdx = current.col;
-				f.focusArea("header");
-			}else if(type == "row"){
-				f.focusArea("rowHeader", {
-					"rowIndex": current.row
-				});
-			}else if(type == "cell"){
-				f.setFocusIndex(current.row, current.col);
-			}
-		}
-	},
-	_blurPoint: function(type, point){
-		// summary:
-		//		Blur the current point.
-		var f = this.grid.focus;
-		if(type == "col"){
-			f._blurHeader();
-		}else if(type == "cell"){
-			f._blurContent();
-		}
-	},
-	_addToSelected: function(type){
-		// summary:
-		//		Record the selected items.
-		var toSelect = this._toSelect, _this = this,
-			toAdd = [], toRemove = [],
-			start = this._startPoint[type],
-			end = this._currentPoint[type];
-		if(this._usingKeyboard){
-			//If using keyboard, selection will be ended after every move. But we have to remember the original selection status,
-			//so as to return to correct status when we shrink the selection region.
-			this._forEach(type, this._lastAnchorPoint[type], this._lastEndPoint[type], function(item){
-				//If the original selected item is not in current range, change its status.
-				if(!_inRange(type, item, start, end)){
-					(toSelect ? toRemove : toAdd).push(item);
-				}
-			});
-		}
-		this._forEach(type, start, end, function(item){
-			var isSelected = _this._isSelected(type, item);
-			if(toSelect && !isSelected){
-				//Add new selected items
-				toAdd.push(item);
-			}else if(!toSelect){
-				//Remove deselected items.
-				toRemove.push(item);
-			}
-		});
-		this._add(type, toAdd);
-		this._remove(type, toRemove);
-		
-		// have to keep record in original grid selection
-		dojo.forEach(this._selected.row, function(item){
-			if(item.except.length > 0){
-				//to avoid dead lock
-				this._selectedRowModified = true;
-				this.grid.selection.setSelected(item.row, false);
-			}
-		}, this);
-	},
-	_forEach: function(type, start, end, func, halfClose){
-		// summary:
-		//		Go through items from *start* point to *end* point.
-		// This function is time critical!!
-		if(!this._isValid(type, start, true) || !this._isValid(type, end, true)){
-			return;
-		}
-		switch(type){
-			case "col": case "row":
-				start = start[type];
-				end = end[type];
-				var dir = end > start ? 1 : -1;
-				if(!halfClose){
-					end += dir;
-				}
-				for(; start != end; start += dir){
-					func(_createItem(type, start));
-				}
-				break;
-			case "cell":
-				var colDir = end.col > start.col ? 1 : -1,
-					rowDir = end.row > start.row ? 1 : -1;
-				for(var i = start.row, p = end.row + rowDir; i != p; i += rowDir){
-					for(var j = start.col, q = end.col + colDir; j != q; j += colDir){
-						func(_createItem(type, i, j));
-					}
-				}
-		}
-	},
-	_makeupForExceptions: function(type, newCellItems){
-		// summary:
-		//		When new cells is selected, maybe they will fill in the "holes" in selected rows and columns.
-		var makedUps = [];
-		dojo.forEach(this._selected[type], function(v1){
-			dojo.forEach(newCellItems, function(v2){
-				if(v1[type] == v2[type]){
-					var pos = dojo.indexOf(v1.except, v2[_theOther[type]]);
-					if(pos >= 0){
-						v1.except.splice(pos, 1);
-					}
-					makedUps.push(v2);
-				}
-			});
-		});
-		return makedUps;
-	},
-	_makeupForCells: function(type, newItems){
-		// summary:
-		//		When some rows/cols are selected, maybe they can cover some of the selected cells,
-		//		and fill some of the "holes" in the selected cols/rows.
-		var toRemove = [];
-		dojo.forEach(this._selected.cell, function(v1){
-			dojo.some(newItems, function(v2){
-				if(v1[type] == v2[type]){
-					toRemove.push(v1);
-					return true;
-				}
-				return false;
-			});
-		});
-		this._remove("cell", toRemove);
-		dojo.forEach(this._selected[_theOther[type]], function(v1){
-			dojo.forEach(newItems, function(v2){
-				var pos = dojo.indexOf(v1.except, v2[type]);
-				if(pos >= 0){
-					v1.except.splice(pos, 1);
-				}
-			});
-		});
-	},
-	_addException: function(type, items){
-		// summary:
-		//		If some rows/cols are deselected, maybe they have created "holes" in selected cols/rows.
-		dojo.forEach(this._selected[type], function(v1){
-			dojo.forEach(items, function(v2){
-				v1.except.push(v2[_theOther[type]]);
-			});
-		});
-	},
-	_addCellException: function(type, items){
-		// summary:
-		//		If some cells are deselected, maybe they have created "holes" in selected rows/cols.
-		dojo.forEach(this._selected[type], function(v1){
-			dojo.forEach(items, function(v2){
-				if(v1[type] == v2[type]){
-					v1.except.push(v2[_theOther[type]]);
-				}
-			});
-		});
-	},
-	_add: function(type, items){
-		// summary:
-		//		Add to the selection record.
-		var cells = this.grid.layout.cells;
-		if(type == "cell"){
-			var colMakedup = this._makeupForExceptions("col", items);
-			var rowMakedup = this._makeupForExceptions("row", items);
-			//Step over hidden columns.
-			items = dojo.filter(items, function(item){
-				return dojo.indexOf(colMakedup, item) < 0 && dojo.indexOf(rowMakedup, item) < 0 &&
-					!cells[item.col].hidden && !cells[item.col].notselectable;
-			});
-		}else{
-			if(type == "col"){
-				//Step over hidden columns.
-				items = dojo.filter(items, function(item){
-					return !cells[item.col].hidden && !cells[item.col].notselectable;
-				});
-			}
-			this._makeupForCells(type, items);
-			this._selected[type] = dojo.filter(this._selected[type], function(v){
-				return dojo.every(items, function(item){
-					return v[type] !== item[type];
-				});
-			});
-		}
-		if(type != "col" && this.grid._hasIdentity){
-			dojo.forEach(items, function(item){
-				var record = this.grid._by_idx[item.row];
-				if(record){
-					item.id = record.idty;
-				}
-			}, this);
-		}
-		this._selected[type] = this._selected[type].concat(items);
-	},
-	_remove: function(type, items){
-		// summary:
-		//		Remove from the selection record.
-		var comp = dojo.partial(_isEqual, type);
-		this._selected[type] = dojo.filter(this._selected[type], function(v1){
-			return !dojo.some(items, function(v2){
-				return comp(v1, v2);
-			});
-		});
-		if(type == "cell"){
-			this._addCellException("col", items);
-			this._addCellException("row", items);
-		}else{
-			this._addException(_theOther[type], items);
-		}
-	},
-	_isCellNotInExcept: function(type, item){
-		// summary:
-		//		Return true only when a cell is covered by selected row/col, and its not a "hole".
-		var attr = item[type], corres = item[_theOther[type]];
-		return dojo.some(this._selected[type], function(v){
-			return v[type] == attr && dojo.indexOf(v.except, corres) < 0;
-		});
-	},
-	_isSelected: function(type, item){
-		// summary:
-		//		Return true when the item is selected. (or logically selected, i.e, covered by a row/col).
-		if(!item){ return false; }
-		var res = dojo.some(this._selected[type], function(v){
-			var ret = _isEqual(type, item, v);
-			if(ret && type !== "cell"){
-				return v.except.length === 0;
-			}
-			return ret;
-		});
-		if(!res && type === "cell"){
-			res = (this._isCellNotInExcept("col", item) || this._isCellNotInExcept("row", item));
-			if(type === "cell"){
-				res = res && !this.grid.layout.cells[item.col].notselectable;
-			}
-		}
-		return res;
-	},
-	_isInLastRange: function(type, item, isSelected){
-		// summary:
-		//		Return true only when the item is in the last seletion/deseletion range.
-		var start = this[isSelected ? "_lastSelectedAnchorPoint" : "_lastAnchorPoint"][type],
-			end = this[isSelected ? "_lastSelectedEndPoint" : "_lastEndPoint"][type];
-		if(!item || !start || !end){ return false; }
-		return _inRange(type, item, start, end);
-	},
-	_isValid: function(type, item, allowNotSelectable){
-		// summary:
-		//		Check whether the item is a valid __SelectItem for the given type.
-		if(!item){ return false; }
-		try{
-			var g = this.grid, index = item[type];
-			switch(type){
-				case "col":
-					return index >= 0 && index < g.layout.cells.length && dojo.isArray(item.except) &&
-							(allowNotSelectable || !g.layout.cells[index].notselectable);
-				case "row":
-					return index >= 0 && index < g.rowCount && dojo.isArray(item.except);
-				case "cell":
-					return item.col >= 0 && item.col < g.layout.cells.length &&
-							item.row >= 0 && item.row < g.rowCount &&
-							(allowNotSelectable || !g.layout.cells[item.col].notselectable);
-			}
-		}catch(e){}
-		return false;
-	}
+define(["dojo","dijit","dojox","dijit/focus","../../cells/_base","../_Plugin","./AutoScroll"],function(_1,_2,_3){
+var _4=0,_5=1,_6=2,_7={col:"row",row:"col"},_8=function(_9,_a,_b,_c,_d){
+if(_9!=="cell"){
+_a=_a[_9];
+_b=_b[_9];
+_c=_c[_9];
+if(typeof _a!=="number"||typeof _b!=="number"||typeof _c!=="number"){
+return false;
+}
+return _d?((_a>=_b&&_a<_c)||(_a>_c&&_a<=_b)):((_a>=_b&&_a<=_c)||(_a>=_c&&_a<=_b));
+}else{
+return _8("col",_a,_b,_c,_d)&&_8("row",_a,_b,_c,_d);
+}
+},_e=function(_f,v1,v2){
+try{
+if(v1&&v2){
+switch(_f){
+case "col":
+case "row":
+return v1[_f]==v2[_f]&&typeof v1[_f]=="number"&&!(_7[_f] in v1)&&!(_7[_f] in v2);
+case "cell":
+return v1.col==v2.col&&v1.row==v2.row&&typeof v1.col=="number"&&typeof v1.row=="number";
+}
+}
+}
+catch(e){
+}
+return false;
+},_10=function(evt){
+try{
+if(evt&&evt.preventDefault){
+_1.stopEvent(evt);
+}
+}
+catch(e){
+}
+},_11=function(_12,_13,_14){
+switch(_12){
+case "col":
+return {"col":typeof _14=="undefined"?_13:_14,"except":[]};
+case "row":
+return {"row":_13,"except":[]};
+case "cell":
+return {"row":_13,"col":_14};
+}
+return null;
+};
+_1.declare("dojox.grid.enhanced.plugins.Selector",_3.grid.enhanced._Plugin,{name:"selector",constructor:function(_15,_16){
+this.grid=_15;
+this._config={row:_6,col:_6,cell:_6};
+this.setupConfig(_16);
+if(_15.selectionMode==="single"){
+this._config.row=_5;
+}
+this._enabled=true;
+this._selecting={};
+this._selected={"col":[],"row":[],"cell":[]};
+this._startPoint={};
+this._currentPoint={};
+this._lastAnchorPoint={};
+this._lastEndPoint={};
+this._lastSelectedAnchorPoint={};
+this._lastSelectedEndPoint={};
+this._keyboardSelect={};
+this._lastType=null;
+this._selectedRowModified={};
+this._hacks();
+this._initEvents();
+this._initAreas();
+this._mixinGrid();
+},destroy:function(){
+this.inherited(arguments);
+},setupConfig:function(_17){
+if(!_17||!_1.isObject(_17)){
+return;
+}
+var _18=["row","col","cell"];
+for(var _19 in _17){
+if(_1.indexOf(_18,_19)>=0){
+if(!_17[_19]||_17[_19]=="disabled"){
+this._config[_19]=_4;
+}else{
+if(_17[_19]=="single"){
+this._config[_19]=_5;
+}else{
+this._config[_19]=_6;
+}
+}
+}
+}
+var _1a=["none","single","extended"][this._config.row];
+this.grid.selection.setMode(_1a);
+},isSelected:function(_1b,_1c,_1d){
+return this._isSelected(_1b,_11(_1b,_1c,_1d));
+},toggleSelect:function(_1e,_1f,_20){
+this._startSelect(_1e,_11(_1e,_1f,_20),this._config[_1e]===_6,false,false,!this.isSelected(_1e,_1f,_20));
+this._endSelect(_1e);
+},select:function(_21,_22,_23){
+if(!this.isSelected(_21,_22,_23)){
+this.toggleSelect(_21,_22,_23);
+}
+},deselect:function(_24,_25,_26){
+if(this.isSelected(_24,_25,_26)){
+this.toggleSelect(_24,_25,_26);
+}
+},selectRange:function(_27,_28,end,_29){
+this.grid._selectingRange=true;
+var _2a=_27=="cell"?_11(_27,_28.row,_28.col):_11(_27,_28),_2b=_27=="cell"?_11(_27,end.row,end.col):_11(_27,end);
+this._startSelect(_27,_2a,false,false,false,_29);
+this._highlight(_27,_2b,_29===undefined?true:_29);
+this._endSelect(_27);
+this.grid._selectingRange=false;
+},clear:function(_2c){
+this._clearSelection(_2c||"all");
+},isSelecting:function(_2d){
+if(typeof _2d=="undefined"){
+return this._selecting.col||this._selecting.row||this._selecting.cell;
+}
+return this._selecting[_2d];
+},selectEnabled:function(_2e){
+if(typeof _2e!="undefined"&&!this.isSelecting()){
+this._enabled=!!_2e;
+}
+return this._enabled;
+},getSelected:function(_2f,_30){
+switch(_2f){
+case "cell":
+return _1.map(this._selected[_2f],function(_31){
+return _31;
 });
-
-dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Selector/*name:'selector'*/, {
-	"dependency": ["autoScroll"]
+case "col":
+case "row":
+return _1.map(_30?this._selected[_2f]:_1.filter(this._selected[_2f],function(_32){
+return _32.except.length===0;
+}),function(_33){
+return _30?_33:_33[_2f];
 });
-
-	return dojox.grid.enhanced.plugins.Selector;
-
+}
+return [];
+},getSelectedCount:function(_34,_35){
+switch(_34){
+case "cell":
+return this._selected[_34].length;
+case "col":
+case "row":
+return (_35?this._selected[_34]:_1.filter(this._selected[_34],function(_36){
+return _36.except.length===0;
+})).length;
+}
+return 0;
+},getSelectedType:function(){
+var s=this._selected;
+return ["","cell","row","row|cell","col","col|cell","col|row","col|row|cell"][(!!s.cell.length)|(!!s.row.length<<1)|(!!s.col.length<<2)];
+},getLastSelectedRange:function(_37){
+return this._lastAnchorPoint[_37]?{"start":this._lastAnchorPoint[_37],"end":this._lastEndPoint[_37]}:null;
+},_hacks:function(){
+var g=this.grid;
+var _38=function(e){
+if(e.cellNode){
+g.onMouseUp(e);
+}
+g.onMouseUpRow(e);
+};
+var _39=_1.hitch(g,"onMouseUp");
+var _3a=_1.hitch(g,"onMouseDown");
+var _3b=function(e){
+e.cellNode.style.border="solid 1px";
+};
+_1.forEach(g.views.views,function(_3c){
+_3c.content.domouseup=_38;
+_3c.header.domouseup=_39;
+if(_3c.declaredClass=="dojox.grid._RowSelector"){
+_3c.domousedown=_3a;
+_3c.domouseup=_39;
+_3c.dofocus=_3b;
+}
+});
+g.selection.clickSelect=function(){
+};
+this._oldDeselectAll=g.selection.deselectAll;
+var _3d=this;
+g.selection.selectRange=function(_3e,to){
+_3d.selectRange("row",_3e,to,true);
+if(g.selection.preserver){
+g.selection.preserver._updateMapping(true,true,false,_3e,to);
+}
+g.selection.onChanged();
+};
+g.selection.deselectRange=function(_3f,to){
+_3d.selectRange("row",_3f,to,false);
+if(g.selection.preserver){
+g.selection.preserver._updateMapping(true,false,false,_3f,to);
+}
+g.selection.onChanged();
+};
+g.selection.deselectAll=function(){
+g._selectingRange=true;
+_3d._oldDeselectAll.apply(g.selection,arguments);
+_3d._clearSelection("row");
+g._selectingRange=false;
+if(g.selection.preserver){
+g.selection.preserver._updateMapping(true,false,true);
+}
+g.selection.onChanged();
+};
+var _40=g.views.views[0];
+if(_40 instanceof _3.grid._RowSelector){
+_40.doStyleRowNode=function(_41,_42){
+_1.removeClass(_42,"dojoxGridRow");
+_1.addClass(_42,"dojoxGridRowbar");
+_1.addClass(_42,"dojoxGridNonNormalizedCell");
+_1.toggleClass(_42,"dojoxGridRowbarOver",g.rows.isOver(_41));
+_1.toggleClass(_42,"dojoxGridRowbarSelected",!!g.selection.isSelected(_41));
+};
+}
+this.connect(g,"updateRow",function(_43){
+_1.forEach(g.layout.cells,function(_44){
+if(this.isSelected("cell",_43,_44.index)){
+this._highlightNode(_44.getNode(_43),true);
+}
+},this);
+});
+},_mixinGrid:function(){
+var g=this.grid;
+g.setupSelectorConfig=_1.hitch(this,this.setupConfig);
+g.onStartSelect=function(){
+};
+g.onEndSelect=function(){
+};
+g.onStartDeselect=function(){
+};
+g.onEndDeselect=function(){
+};
+g.onSelectCleared=function(){
+};
+},_initEvents:function(){
+var g=this.grid,_45=this,dp=_1.partial,_46=function(_47,e){
+if(_47==="row"){
+_45._isUsingRowSelector=true;
+}
+if(_45.selectEnabled()&&_45._config[_47]&&e.button!=2){
+if(_45._keyboardSelect.col||_45._keyboardSelect.row||_45._keyboardSelect.cell){
+_45._endSelect("all");
+_45._keyboardSelect.col=_45._keyboardSelect.row=_45._keyboardSelect.cell=0;
+}
+if(_45._usingKeyboard){
+_45._usingKeyboard=false;
+}
+var _48=_11(_47,e.rowIndex,e.cell&&e.cell.index);
+_45._startSelect(_47,_48,e.ctrlKey,e.shiftKey);
+}
+},_49=_1.hitch(this,"_endSelect");
+this.connect(g,"onHeaderCellMouseDown",dp(_46,"col"));
+this.connect(g,"onHeaderCellMouseUp",dp(_49,"col"));
+this.connect(g,"onRowSelectorMouseDown",dp(_46,"row"));
+this.connect(g,"onRowSelectorMouseUp",dp(_49,"row"));
+this.connect(g,"onCellMouseDown",function(e){
+if(e.cell&&e.cell.isRowSelector){
+return;
+}
+if(g.singleClickEdit){
+_45._singleClickEdit=true;
+g.singleClickEdit=false;
+}
+_46(_45._config["cell"]==_4?"row":"cell",e);
+});
+this.connect(g,"onCellMouseUp",function(e){
+if(_45._singleClickEdit){
+delete _45._singleClickEdit;
+g.singleClickEdit=true;
+}
+_49("all",e);
+});
+this.connect(g,"onCellMouseOver",function(e){
+if(_45._curType!="row"&&_45._selecting[_45._curType]&&_45._config[_45._curType]==_6){
+_45._highlight("col",_11("col",e.cell.index),_45._toSelect);
+if(!_45._keyboardSelect.cell){
+_45._highlight("cell",_11("cell",e.rowIndex,e.cell.index),_45._toSelect);
+}
+}
+});
+this.connect(g,"onHeaderCellMouseOver",function(e){
+if(_45._selecting.col&&_45._config.col==_6){
+_45._highlight("col",_11("col",e.cell.index),_45._toSelect);
+}
+});
+this.connect(g,"onRowMouseOver",function(e){
+if(_45._selecting.row&&_45._config.row==_6){
+_45._highlight("row",_11("row",e.rowIndex),_45._toSelect);
+}
+});
+this.connect(g,"onSelectedById","_onSelectedById");
+this.connect(g,"_onFetchComplete",function(){
+if(!g._notRefreshSelection){
+this._refreshSelected(true);
+}
+});
+this.connect(g.scroller,"buildPage",function(){
+if(!g._notRefreshSelection){
+this._refreshSelected(true);
+}
+});
+this.connect(_1.doc,"onmouseup",dp(_49,"all"));
+this.connect(g,"onEndAutoScroll",function(_4a,_4b,_4c,_4d){
+var _4e=_45._selecting.cell,_4f,_50,dir=_4b?1:-1;
+if(_4a&&(_4e||_45._selecting.row)){
+_4f=_4e?"cell":"row";
+_50=_45._currentPoint[_4f];
+_45._highlight(_4f,_11(_4f,_50.row+dir,_50.col),_45._toSelect);
+}else{
+if(!_4a&&(_4e||_45._selecting.col)){
+_4f=_4e?"cell":"col";
+_50=_45._currentPoint[_4f];
+_45._highlight(_4f,_11(_4f,_50.row,_4d),_45._toSelect);
+}
+}
+});
+this.subscribe("dojox/grid/rearrange/move/"+g.id,"_onInternalRearrange");
+this.subscribe("dojox/grid/rearrange/copy/"+g.id,"_onInternalRearrange");
+this.subscribe("dojox/grid/rearrange/change/"+g.id,"_onExternalChange");
+this.subscribe("dojox/grid/rearrange/insert/"+g.id,"_onExternalChange");
+this.subscribe("dojox/grid/rearrange/remove/"+g.id,"clear");
+this.connect(g,"onSelected",function(_51){
+if(this._selectedRowModified&&this._isUsingRowSelector){
+delete this._selectedRowModified;
+}else{
+if(!this.grid._selectingRange){
+this.select("row",_51);
+}
+}
+});
+this.connect(g,"onDeselected",function(_52){
+if(this._selectedRowModified&&this._isUsingRowSelector){
+delete this._selectedRowModified;
+}else{
+if(!this.grid._selectingRange){
+this.deselect("row",_52);
+}
+}
+});
+},_onSelectedById:function(id,_53,_54){
+if(this.grid._noInternalMapping){
+return;
+}
+var _55=[this._lastAnchorPoint.row,this._lastEndPoint.row,this._lastSelectedAnchorPoint.row,this._lastSelectedEndPoint.row];
+_55=_55.concat(this._selected.row);
+var _56=false;
+_1.forEach(_55,function(_57){
+if(_57){
+if(_57.id===id){
+_56=true;
+_57.row=_53;
+}else{
+if(_57.row===_53&&_57.id){
+_57.row=-1;
+}
+}
+}
+});
+if(!_56&&_54){
+_1.some(this._selected.row,function(_58){
+if(_58&&!_58.id&&!_58.except.length){
+_58.id=id;
+_58.row=_53;
+return true;
+}
+return false;
+});
+}
+_56=false;
+_55=[this._lastAnchorPoint.cell,this._lastEndPoint.cell,this._lastSelectedAnchorPoint.cell,this._lastSelectedEndPoint.cell];
+_55=_55.concat(this._selected.cell);
+_1.forEach(_55,function(_59){
+if(_59){
+if(_59.id===id){
+_56=true;
+_59.row=_53;
+}else{
+if(_59.row===_53&&_59.id){
+_59.row=-1;
+}
+}
+}
+});
+},onSetStore:function(){
+this._clearSelection("all");
+},_onInternalRearrange:function(_5a,_5b){
+try{
+this._refresh("col",false);
+_1.forEach(this._selected.row,function(_5c){
+_1.forEach(this.grid.layout.cells,function(_5d){
+this._highlightNode(_5d.getNode(_5c.row),false);
+},this);
+},this);
+_1.query(".dojoxGridRowSelectorSelected").forEach(function(_5e){
+_1.removeClass(_5e,"dojoxGridRowSelectorSelected");
+_1.removeClass(_5e,"dojoxGridRowSelectorSelectedUp");
+_1.removeClass(_5e,"dojoxGridRowSelectorSelectedDown");
+});
+var _5f=function(_60){
+if(_60){
+delete _60.converted;
+}
+},_61=[this._lastAnchorPoint[_5a],this._lastEndPoint[_5a],this._lastSelectedAnchorPoint[_5a],this._lastSelectedEndPoint[_5a]];
+if(_5a==="cell"){
+this.selectRange("cell",_5b.to.min,_5b.to.max);
+var _62=this.grid.layout.cells;
+_1.forEach(_61,function(_63){
+if(_63.converted){
+return;
+}
+for(var r=_5b.from.min.row,tr=_5b.to.min.row;r<=_5b.from.max.row;++r,++tr){
+for(var c=_5b.from.min.col,tc=_5b.to.min.col;c<=_5b.from.max.col;++c,++tc){
+while(_62[c].hidden){
+++c;
+}
+while(_62[tc].hidden){
+++tc;
+}
+if(_63.row==r&&_63.col==c){
+_63.row=tr;
+_63.col=tc;
+_63.converted=true;
+return;
+}
+}
+}
+});
+}else{
+_61=this._selected.cell.concat(this._selected[_5a]).concat(_61).concat([this._lastAnchorPoint.cell,this._lastEndPoint.cell,this._lastSelectedAnchorPoint.cell,this._lastSelectedEndPoint.cell]);
+_1.forEach(_61,function(_64){
+if(_64&&!_64.converted){
+var _65=_64[_5a];
+if(_65 in _5b){
+_64[_5a]=_5b[_65];
+}
+_64.converted=true;
+}
+});
+_1.forEach(this._selected[_7[_5a]],function(_66){
+for(var i=0,len=_66.except.length;i<len;++i){
+var _67=_66.except[i];
+if(_67 in _5b){
+_66.except[i]=_5b[_67];
+}
+}
+});
+}
+_1.forEach(_61,_5f);
+this._refreshSelected(true);
+this._focusPoint(_5a,this._lastEndPoint);
+}
+catch(e){
+console.warn("Selector._onInternalRearrange() error",e);
+}
+},_onExternalChange:function(_68,_69){
+var _6a=_68=="cell"?_69.min:_69[0],end=_68=="cell"?_69.max:_69[_69.length-1];
+this.selectRange(_68,_6a,end);
+},_refresh:function(_6b,_6c){
+if(!this._keyboardSelect[_6b]){
+_1.forEach(this._selected[_6b],function(_6d){
+this._highlightSingle(_6b,_6c,_6d,undefined,true);
+},this);
+}
+},_refreshSelected:function(){
+this._refresh("col",true);
+this._refresh("row",true);
+this._refresh("cell",true);
+},_initAreas:function(){
+var g=this.grid,f=g.focus,_6e=this,dk=_1.keys,_6f=1,_70=2,_71=function(_72,_73,_74,_75,evt){
+var ks=_6e._keyboardSelect;
+if(evt.shiftKey&&ks[_72]){
+if(ks[_72]===_6f){
+if(_72==="cell"){
+var _76=_6e._lastEndPoint[_72];
+if(f.cell!=g.layout.cells[_76.col+_75]||f.rowIndex!=_76.row+_74){
+ks[_72]=0;
+return;
+}
+}
+_6e._startSelect(_72,_6e._lastAnchorPoint[_72],true,false,true);
+_6e._highlight(_72,_6e._lastEndPoint[_72],_6e._toSelect);
+ks[_72]=_70;
+}
+var _77=_73(_72,_74,_75,evt);
+if(_6e._isValid(_72,_77,g)){
+_6e._highlight(_72,_77,_6e._toSelect);
+}
+_10(evt);
+}
+},_78=function(_79,_7a,evt,_7b){
+if(_7b&&_6e.selectEnabled()&&_6e._config[_79]!=_4){
+switch(evt.keyCode){
+case dk.SPACE:
+_6e._startSelect(_79,_7a(),evt.ctrlKey,evt.shiftKey);
+_6e._endSelect(_79);
+break;
+case dk.SHIFT:
+if(_6e._config[_79]==_6&&_6e._isValid(_79,_6e._lastAnchorPoint[_79],g)){
+_6e._endSelect(_79);
+_6e._keyboardSelect[_79]=_6f;
+_6e._usingKeyboard=true;
+}
+}
+}
+},_7c=function(_7d,evt,_7e){
+if(_7e&&evt.keyCode==_1.keys.SHIFT&&_6e._keyboardSelect[_7d]){
+_6e._endSelect(_7d);
+_6e._keyboardSelect[_7d]=0;
+}
+};
+if(g.views.views[0] instanceof _3.grid._RowSelector){
+this._lastFocusedRowBarIdx=0;
+f.addArea({name:"rowHeader",onFocus:function(evt,_7f){
+var _80=g.views.views[0];
+if(_80 instanceof _3.grid._RowSelector){
+var _81=_80.getCellNode(_6e._lastFocusedRowBarIdx,0);
+if(_81){
+_1.toggleClass(_81,f.focusClass,false);
+}
+if(evt&&"rowIndex" in evt){
+if(evt.rowIndex>=0){
+_6e._lastFocusedRowBarIdx=evt.rowIndex;
+}else{
+if(!_6e._lastFocusedRowBarIdx){
+_6e._lastFocusedRowBarIdx=0;
+}
+}
+}
+_81=_80.getCellNode(_6e._lastFocusedRowBarIdx,0);
+if(_81){
+_2.focus(_81);
+_1.toggleClass(_81,f.focusClass,true);
+}
+f.rowIndex=_6e._lastFocusedRowBarIdx;
+_10(evt);
+return true;
+}
+return false;
+},onBlur:function(evt,_82){
+var _83=g.views.views[0];
+if(_83 instanceof _3.grid._RowSelector){
+var _84=_83.getCellNode(_6e._lastFocusedRowBarIdx,0);
+if(_84){
+_1.toggleClass(_84,f.focusClass,false);
+}
+_10(evt);
+}
+return true;
+},onMove:function(_85,_86,evt){
+var _87=g.views.views[0];
+if(_85&&_87 instanceof _3.grid._RowSelector){
+var _88=_6e._lastFocusedRowBarIdx+_85;
+if(_88>=0&&_88<g.rowCount){
+_10(evt);
+var _89=_87.getCellNode(_6e._lastFocusedRowBarIdx,0);
+_1.toggleClass(_89,f.focusClass,false);
+var sc=g.scroller;
+var _8a=sc.getLastPageRow(sc.page);
+var rc=g.rowCount-1,row=Math.min(rc,_88);
+if(_88>_8a){
+g.setScrollTop(g.scrollTop+sc.findScrollTop(row)-sc.findScrollTop(_6e._lastFocusedRowBarIdx));
+}
+_89=_87.getCellNode(_88,0);
+_2.focus(_89);
+_1.toggleClass(_89,f.focusClass,true);
+_6e._lastFocusedRowBarIdx=_88;
+f.cell=_89;
+f.cell.view=_87;
+f.cell.getNode=function(_8b){
+return f.cell;
+};
+f.rowIndex=_6e._lastFocusedRowBarIdx;
+f.scrollIntoView();
+f.cell=null;
+}
+}
+}});
+f.placeArea("rowHeader","before","content");
+}
+f.addArea({name:"cellselect",onMove:_1.partial(_71,"cell",function(_8c,_8d,_8e,evt){
+var _8f=_6e._currentPoint[_8c];
+return _11("cell",_8f.row+_8d,_8f.col+_8e);
+}),onKeyDown:_1.partial(_78,"cell",function(){
+return _11("cell",f.rowIndex,f.cell.index);
+}),onKeyUp:_1.partial(_7c,"cell")});
+f.placeArea("cellselect","below","content");
+f.addArea({name:"colselect",onMove:_1.partial(_71,"col",function(_90,_91,_92,evt){
+var _93=_6e._currentPoint[_90];
+return _11("col",_93.col+_92);
+}),onKeyDown:_1.partial(_78,"col",function(){
+return _11("col",f.getHeaderIndex());
+}),onKeyUp:_1.partial(_7c,"col")});
+f.placeArea("colselect","below","header");
+f.addArea({name:"rowselect",onMove:_1.partial(_71,"row",function(_94,_95,_96,evt){
+return _11("row",f.rowIndex);
+}),onKeyDown:_1.partial(_78,"row",function(){
+return _11("row",f.rowIndex);
+}),onKeyUp:_1.partial(_7c,"row")});
+f.placeArea("rowselect","below","rowHeader");
+},_clearSelection:function(_97,_98){
+if(_97=="all"){
+this._clearSelection("cell",_98);
+this._clearSelection("col",_98);
+this._clearSelection("row",_98);
+return;
+}
+this._isUsingRowSelector=true;
+_1.forEach(this._selected[_97],function(_99){
+if(!_e(_97,_98,_99)){
+this._highlightSingle(_97,false,_99);
+}
+},this);
+this._blurPoint(_97,this._currentPoint);
+this._selecting[_97]=false;
+this._startPoint[_97]=this._currentPoint[_97]=null;
+this._selected[_97]=[];
+if(_97=="row"&&!this.grid._selectingRange){
+this._oldDeselectAll.call(this.grid.selection);
+this.grid.selection._selectedById={};
+}
+this.grid.onEndDeselect(_97,null,null,this._selected);
+this.grid.onSelectCleared(_97);
+},_startSelect:function(_9a,_9b,_9c,_9d,_9e,_9f){
+if(!this._isValid(_9a,_9b)){
+return;
+}
+var _a0=this._isSelected(_9a,this._lastEndPoint[_9a]),_a1=this._isSelected(_9a,_9b);
+this._toSelect=_9e?_a1:!_a1;
+if(!_9c||(!_a1&&this._config[_9a]==_5)){
+this._clearSelection("all",_9b);
+this._toSelect=_9f===undefined?true:_9f;
+}
+this._selecting[_9a]=true;
+this._currentPoint[_9a]=null;
+if(_9d&&this._lastType==_9a&&_a0==this._toSelect){
+if(_9a==="row"){
+this._isUsingRowSelector=true;
+}
+this._startPoint[_9a]=this._lastEndPoint[_9a];
+this._highlight(_9a,this._startPoint[_9a]);
+this._isUsingRowSelector=false;
+}else{
+this._startPoint[_9a]=_9b;
+}
+this._curType=_9a;
+this._fireEvent("start",_9a);
+this._isStartFocus=true;
+this._isUsingRowSelector=true;
+this._highlight(_9a,_9b,this._toSelect);
+this._isStartFocus=false;
+},_endSelect:function(_a2){
+if(_a2==="row"){
+delete this._isUsingRowSelector;
+}
+if(_a2=="all"){
+this._endSelect("col");
+this._endSelect("row");
+this._endSelect("cell");
+}else{
+if(this._selecting[_a2]){
+this._addToSelected(_a2);
+this._lastAnchorPoint[_a2]=this._startPoint[_a2];
+this._lastEndPoint[_a2]=this._currentPoint[_a2];
+if(this._toSelect){
+this._lastSelectedAnchorPoint[_a2]=this._lastAnchorPoint[_a2];
+this._lastSelectedEndPoint[_a2]=this._lastEndPoint[_a2];
+}
+this._startPoint[_a2]=this._currentPoint[_a2]=null;
+this._selecting[_a2]=false;
+this._lastType=_a2;
+this._fireEvent("end",_a2);
+}
+}
+},_fireEvent:function(_a3,_a4){
+switch(_a3){
+case "start":
+this.grid[this._toSelect?"onStartSelect":"onStartDeselect"](_a4,this._startPoint[_a4],this._selected);
+break;
+case "end":
+this.grid[this._toSelect?"onEndSelect":"onEndDeselect"](_a4,this._lastAnchorPoint[_a4],this._lastEndPoint[_a4],this._selected);
+break;
+}
+},_calcToHighlight:function(_a5,_a6,_a7,_a8){
+if(_a8!==undefined){
+var _a9;
+if(this._usingKeyboard&&!_a7){
+var _aa=this._isInLastRange(this._lastType,_a6);
+if(_aa){
+_a9=this._isSelected(_a5,_a6);
+if(_a8&&_a9){
+return false;
+}
+if(!_a8&&!_a9&&this._isInLastRange(this._lastType,_a6,true)){
+return true;
+}
+}
+}
+return _a7?_a8:(_a9||this._isSelected(_a5,_a6));
+}
+return _a7;
+},_highlightNode:function(_ab,_ac){
+if(_ab){
+var _ad="dojoxGridRowSelected";
+var _ae="dojoxGridCellSelected";
+_1.toggleClass(_ab,_ad,_ac);
+_1.toggleClass(_ab,_ae,_ac);
+}
+},_highlightHeader:function(_af,_b0){
+var _b1=this.grid.layout.cells;
+var _b2=_b1[_af].getHeaderNode();
+var _b3="dojoxGridHeaderSelected";
+_1.toggleClass(_b2,_b3,_b0);
+},_highlightRowSelector:function(_b4,_b5){
+var _b6=this.grid.views.views[0];
+if(_b6 instanceof _3.grid._RowSelector){
+var _b7=_b6.getRowNode(_b4);
+if(_b7){
+var _b8="dojoxGridRowSelectorSelected";
+_1.toggleClass(_b7,_b8,_b5);
+}
+}
+},_highlightSingle:function(_b9,_ba,_bb,_bc,_bd){
+var _be=this,_bf,g=_be.grid,_c0=g.layout.cells;
+switch(_b9){
+case "cell":
+_bf=this._calcToHighlight(_b9,_bb,_ba,_bc);
+var c=_c0[_bb.col];
+if(!c.hidden&&!c.notselectable){
+this._highlightNode(_bb.node||c.getNode(_bb.row),_bf);
+}
+break;
+case "col":
+_bf=this._calcToHighlight(_b9,_bb,_ba,_bc);
+this._highlightHeader(_bb.col,_bf);
+_1.query("td[idx='"+_bb.col+"']",g.domNode).forEach(function(_c1){
+var _c2=_c0[_bb.col].view.content.findRowTarget(_c1);
+if(_c2){
+var _c3=_c2[_3.grid.util.rowIndexTag];
+_be._highlightSingle("cell",_bf,{"row":_c3,"col":_bb.col,"node":_c1});
+}
+});
+break;
+case "row":
+_bf=this._calcToHighlight(_b9,_bb,_ba,_bc);
+this._highlightRowSelector(_bb.row,_bf);
+_1.forEach(_c0,function(_c4){
+_be._highlightSingle("cell",_bf,{"row":_bb.row,"col":_c4.index,"node":_c4.getNode(_bb.row)});
+});
+this._selectedRowModified=true;
+if(!_bd){
+g.selection.setSelected(_bb.row,_bf);
+}
+}
+},_highlight:function(_c5,_c6,_c7){
+if(this._selecting[_c5]&&_c6!==null){
+var _c8=this._startPoint[_c5],_c9=this._currentPoint[_c5],_ca=this,_cb=function(_cc,to,_cd){
+_ca._forEach(_c5,_cc,to,function(_ce){
+_ca._highlightSingle(_c5,_cd,_ce,_c7);
+},true);
+};
+switch(_c5){
+case "col":
+case "row":
+if(_c9!==null){
+if(_8(_c5,_c6,_c8,_c9,true)){
+_cb(_c9,_c6,false);
+}else{
+if(_8(_c5,_c8,_c6,_c9,true)){
+_cb(_c9,_c8,false);
+_c9=_c8;
+}
+_cb(_c6,_c9,true);
+}
+}else{
+this._highlightSingle(_c5,true,_c6,_c7);
+}
+break;
+case "cell":
+if(_c9!==null){
+if(_8("row",_c6,_c8,_c9,true)||_8("col",_c6,_c8,_c9,true)||_8("row",_c8,_c6,_c9,true)||_8("col",_c8,_c6,_c9,true)){
+_cb(_c8,_c9,false);
+}
+}
+_cb(_c8,_c6,true);
+}
+this._currentPoint[_c5]=_c6;
+this._focusPoint(_c5,this._currentPoint);
+}
+},_focusPoint:function(_cf,_d0){
+if(!this._isStartFocus){
+var _d1=_d0[_cf],f=this.grid.focus;
+if(_cf=="col"){
+f._colHeadFocusIdx=_d1.col;
+f.focusArea("header");
+}else{
+if(_cf=="row"){
+f.focusArea("rowHeader",{"rowIndex":_d1.row});
+}else{
+if(_cf=="cell"){
+f.setFocusIndex(_d1.row,_d1.col);
+}
+}
+}
+}
+},_blurPoint:function(_d2,_d3){
+var f=this.grid.focus;
+if(_d2=="col"){
+f._blurHeader();
+}else{
+if(_d2=="cell"){
+f._blurContent();
+}
+}
+},_addToSelected:function(_d4){
+var _d5=this._toSelect,_d6=this,_d7=[],_d8=[],_d9=this._startPoint[_d4],end=this._currentPoint[_d4];
+if(this._usingKeyboard){
+this._forEach(_d4,this._lastAnchorPoint[_d4],this._lastEndPoint[_d4],function(_da){
+if(!_8(_d4,_da,_d9,end)){
+(_d5?_d8:_d7).push(_da);
+}
+});
+}
+this._forEach(_d4,_d9,end,function(_db){
+var _dc=_d6._isSelected(_d4,_db);
+if(_d5&&!_dc){
+_d7.push(_db);
+}else{
+if(!_d5){
+_d8.push(_db);
+}
+}
+});
+this._add(_d4,_d7);
+this._remove(_d4,_d8);
+_1.forEach(this._selected.row,function(_dd){
+if(_dd.except.length>0){
+this._selectedRowModified=true;
+this.grid.selection.setSelected(_dd.row,false);
+}
+},this);
+},_forEach:function(_de,_df,end,_e0,_e1){
+if(!this._isValid(_de,_df,true)||!this._isValid(_de,end,true)){
+return;
+}
+switch(_de){
+case "col":
+case "row":
+_df=_df[_de];
+end=end[_de];
+var dir=end>_df?1:-1;
+if(!_e1){
+end+=dir;
+}
+for(;_df!=end;_df+=dir){
+_e0(_11(_de,_df));
+}
+break;
+case "cell":
+var _e2=end.col>_df.col?1:-1,_e3=end.row>_df.row?1:-1;
+for(var i=_df.row,p=end.row+_e3;i!=p;i+=_e3){
+for(var j=_df.col,q=end.col+_e2;j!=q;j+=_e2){
+_e0(_11(_de,i,j));
+}
+}
+}
+},_makeupForExceptions:function(_e4,_e5){
+var _e6=[];
+_1.forEach(this._selected[_e4],function(v1){
+_1.forEach(_e5,function(v2){
+if(v1[_e4]==v2[_e4]){
+var pos=_1.indexOf(v1.except,v2[_7[_e4]]);
+if(pos>=0){
+v1.except.splice(pos,1);
+}
+_e6.push(v2);
+}
+});
+});
+return _e6;
+},_makeupForCells:function(_e7,_e8){
+var _e9=[];
+_1.forEach(this._selected.cell,function(v1){
+_1.some(_e8,function(v2){
+if(v1[_e7]==v2[_e7]){
+_e9.push(v1);
+return true;
+}
+return false;
+});
+});
+this._remove("cell",_e9);
+_1.forEach(this._selected[_7[_e7]],function(v1){
+_1.forEach(_e8,function(v2){
+var pos=_1.indexOf(v1.except,v2[_e7]);
+if(pos>=0){
+v1.except.splice(pos,1);
+}
+});
+});
+},_addException:function(_ea,_eb){
+_1.forEach(this._selected[_ea],function(v1){
+_1.forEach(_eb,function(v2){
+v1.except.push(v2[_7[_ea]]);
+});
+});
+},_addCellException:function(_ec,_ed){
+_1.forEach(this._selected[_ec],function(v1){
+_1.forEach(_ed,function(v2){
+if(v1[_ec]==v2[_ec]){
+v1.except.push(v2[_7[_ec]]);
+}
+});
+});
+},_add:function(_ee,_ef){
+var _f0=this.grid.layout.cells;
+if(_ee=="cell"){
+var _f1=this._makeupForExceptions("col",_ef);
+var _f2=this._makeupForExceptions("row",_ef);
+_ef=_1.filter(_ef,function(_f3){
+return _1.indexOf(_f1,_f3)<0&&_1.indexOf(_f2,_f3)<0&&!_f0[_f3.col].hidden&&!_f0[_f3.col].notselectable;
+});
+}else{
+if(_ee=="col"){
+_ef=_1.filter(_ef,function(_f4){
+return !_f0[_f4.col].hidden&&!_f0[_f4.col].notselectable;
+});
+}
+this._makeupForCells(_ee,_ef);
+this._selected[_ee]=_1.filter(this._selected[_ee],function(v){
+return _1.every(_ef,function(_f5){
+return v[_ee]!==_f5[_ee];
+});
+});
+}
+if(_ee!="col"&&this.grid._hasIdentity){
+_1.forEach(_ef,function(_f6){
+var _f7=this.grid._by_idx[_f6.row];
+if(_f7){
+_f6.id=_f7.idty;
+}
+},this);
+}
+this._selected[_ee]=this._selected[_ee].concat(_ef);
+},_remove:function(_f8,_f9){
+var _fa=_1.partial(_e,_f8);
+this._selected[_f8]=_1.filter(this._selected[_f8],function(v1){
+return !_1.some(_f9,function(v2){
+return _fa(v1,v2);
+});
+});
+if(_f8=="cell"){
+this._addCellException("col",_f9);
+this._addCellException("row",_f9);
+}else{
+this._addException(_7[_f8],_f9);
+}
+},_isCellNotInExcept:function(_fb,_fc){
+var _fd=_fc[_fb],_fe=_fc[_7[_fb]];
+return _1.some(this._selected[_fb],function(v){
+return v[_fb]==_fd&&_1.indexOf(v.except,_fe)<0;
+});
+},_isSelected:function(_ff,item){
+if(!item){
+return false;
+}
+var res=_1.some(this._selected[_ff],function(v){
+var ret=_e(_ff,item,v);
+if(ret&&_ff!=="cell"){
+return v.except.length===0;
+}
+return ret;
+});
+if(!res&&_ff==="cell"){
+res=(this._isCellNotInExcept("col",item)||this._isCellNotInExcept("row",item));
+if(_ff==="cell"){
+res=res&&!this.grid.layout.cells[item.col].notselectable;
+}
+}
+return res;
+},_isInLastRange:function(type,item,_100){
+var _101=this[_100?"_lastSelectedAnchorPoint":"_lastAnchorPoint"][type],end=this[_100?"_lastSelectedEndPoint":"_lastEndPoint"][type];
+if(!item||!_101||!end){
+return false;
+}
+return _8(type,item,_101,end);
+},_isValid:function(type,item,_102){
+if(!item){
+return false;
+}
+try{
+var g=this.grid,_103=item[type];
+switch(type){
+case "col":
+return _103>=0&&_103<g.layout.cells.length&&_1.isArray(item.except)&&(_102||!g.layout.cells[_103].notselectable);
+case "row":
+return _103>=0&&_103<g.rowCount&&_1.isArray(item.except);
+case "cell":
+return item.col>=0&&item.col<g.layout.cells.length&&item.row>=0&&item.row<g.rowCount&&(_102||!g.layout.cells[item.col].notselectable);
+}
+}
+catch(e){
+}
+return false;
+}});
+_3.grid.EnhancedGrid.registerPlugin(_3.grid.enhanced.plugins.Selector,{"dependency":["autoScroll"]});
+return _3.grid.enhanced.plugins.Selector;
 });

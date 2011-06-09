@@ -1,109 +1,43 @@
-define([
-	"dojo/_base/kernel", // dojo.deprecated
-	"..",
-	"dojo/window",
-	"../_Widget",
-	"../_TemplatedMixin",
-	"../_CssStateMixin",
-	"./_FormValueMixin",
-	"./_FormWidgetMixin",
-	"dojo/_base/sniff" // dojo.isIE
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/form/_FormWidget
-// summary:
-//		FormWidget and FormValueWidget
-
-
-dojo.declare("dijit.form._FormWidget",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._CssStateMixin, dijit.form._FormWidgetMixin],
-	{
-	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-	//		which can be children of a <form> node or a `dijit.form.Form` widget.
-	//
-	// description:
-	//		Represents a single HTML element.
-	//		All these widgets should have these attributes just like native HTML input elements.
-	//		You can set them during widget construction or afterwards, via `dijit._Widget.attr`.
-	//
-	//		They also share some common methods.
-
-	setDisabled: function(/*Boolean*/ disabled){
-		// summary:
-		//		Deprecated.  Use set('disabled', ...) instead.
-		dojo.deprecated("setDisabled("+disabled+") is deprecated. Use set('disabled',"+disabled+") instead.", "", "2.0");
-		this.set('disabled', disabled);
-	},
-
-	setValue: function(/*String*/ value){
-		// summary:
-		//		Deprecated.  Use set('value', ...) instead.
-		dojo.deprecated("dijit.form._FormWidget:setValue("+value+") is deprecated.  Use set('value',"+value+") instead.", "", "2.0");
-		this.set('value', value);
-	},
-
-	getValue: function(){
-		// summary:
-		//		Deprecated.  Use get('value') instead.
-		dojo.deprecated(this.declaredClass+"::getValue() is deprecated. Use get('value') instead.", "", "2.0");
-		return this.get('value');
-	},
-
-	postMixInProperties: function(){
-		// Setup name=foo string to be referenced from the template (but only if a name has been specified)
-		// Unfortunately we can't use _setNameAttr to set the name due to IE limitations, see #8484, #8660.
-		// Regarding escaping, see heading "Attribute values" in
-		// http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3.2
-		this.nameAttrSetting = this.name ? ('name="' + this.name.replace(/'/g, "&quot;") + '"') : '';
-		this.inherited(arguments);
-	},
-
-	// Override automatic assigning type --> focusNode, it causes exception on IE.
-	// Instead, type must be specified as ${type} in the template, as part of the original DOM
-	_setTypeAttr: null
+define("dijit/form/_FormWidget",["dojo/_base/kernel","..","dojo/window","../_Widget","../_TemplatedMixin","../_CssStateMixin","./_FormValueMixin","./_FormWidgetMixin","dojo/_base/sniff"],function(_1,_2){
+_1.declare("dijit.form._FormWidget",[_2._Widget,_2._TemplatedMixin,_2._CssStateMixin,_2.form._FormWidgetMixin],{setDisabled:function(_3){
+_1.deprecated("setDisabled("+_3+") is deprecated. Use set('disabled',"+_3+") instead.","","2.0");
+this.set("disabled",_3);
+},setValue:function(_4){
+_1.deprecated("dijit.form._FormWidget:setValue("+_4+") is deprecated.  Use set('value',"+_4+") instead.","","2.0");
+this.set("value",_4);
+},getValue:function(){
+_1.deprecated(this.declaredClass+"::getValue() is deprecated. Use get('value') instead.","","2.0");
+return this.get("value");
+},postMixInProperties:function(){
+this.nameAttrSetting=this.name?("name=\""+this.name.replace(/'/g,"&quot;")+"\""):"";
+this.inherited(arguments);
+},_setTypeAttr:null});
+_1.declare("dijit.form._FormValueWidget",[_2.form._FormWidget,_2.form._FormValueMixin],{_layoutHackIE7:function(){
+if(_1.isIE==7){
+var _5=this.domNode;
+var _6=_5.parentNode;
+var _7=_5.firstChild||_5;
+var _8=_7.style.filter;
+var _9=this;
+while(_6&&_6.clientHeight==0){
+(function ping(){
+var _a=_9.connect(_6,"onscroll",function(e){
+_9.disconnect(_a);
+_7.style.filter=(new Date()).getMilliseconds();
+setTimeout(function(){
+_7.style.filter=_8;
+},0);
 });
-
-dojo.declare("dijit.form._FormValueWidget", [dijit.form._FormWidget, dijit.form._FormValueMixin],
-{
-	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
-	// description:
-	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) <input> element,
-	//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
-	//		works as expected.
-
-	// Don't attempt to mixin the 'type', 'name' attributes here programatically -- they must be declared
-	// directly in the template as read by the parser in order to function. IE is known to specifically
-	// require the 'name' attribute at element creation time.  See #8484, #8660.
-
-	_layoutHackIE7: function(){
-		// summary:
-		//		Work around table sizing bugs on IE7 by forcing redraw
-
-		if(dojo.isIE == 7){ // fix IE7 layout bug when the widget is scrolled out of sight
-			var domNode = this.domNode;
-			var parent = domNode.parentNode;
-			var pingNode = domNode.firstChild || domNode; // target node most unlikely to have a custom filter
-			var origFilter = pingNode.style.filter; // save custom filter, most likely nothing
-			var _this = this;
-			while(parent && parent.clientHeight == 0){ // search for parents that haven't rendered yet
-				(function ping(){
-					var disconnectHandle = _this.connect(parent, "onscroll",
-						function(e){
-							_this.disconnect(disconnectHandle); // only call once
-							pingNode.style.filter = (new Date()).getMilliseconds(); // set to anything that's unique
-							setTimeout(function(){ pingNode.style.filter = origFilter }, 0); // restore custom filter, if any
-						}
-					);
-				})();
-				parent = parent.parentNode;
-			}
-		}
-	}
-});
-
-
-return dijit.form._FormWidget;
+})();
+_6=_6.parentNode;
+}
+}
+}});
+return _2.form._FormWidget;
 });

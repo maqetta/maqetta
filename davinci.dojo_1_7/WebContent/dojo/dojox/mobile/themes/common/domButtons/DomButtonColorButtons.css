@@ -1,10 +1,9 @@
-/* === Minus and Plus Buttons ==*/
+
 .mblDomButtonBlueMinus, .mblDomButtonBluePlus, .mblDomButtonDarkBlueMinus, .mblDomButtonDarkBluePlus, .mblDomButtonRedMinus, .mblDomButtonRedPlus {
 	position: relative;
 	width: 29px;
 	height: 29px;
 }
-
 .mblDomButtonBlueMinus > DIV, .mblDomButtonBluePlus > DIV, .mblDomButtonDarkBlueMinus > DIV, .mblDomButtonDarkBluePlus > DIV, .mblDomButtonRedMinus > DIV, .mblDomButtonRedPlus > DIV {
 	position: relative;
 	top: 4px;

@@ -1,33 +1,29 @@
-dojo.provide("dojox.lang.aspect.profiler");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.lang.aspect.profiler",1);
 (function(){
-	var aop = dojox.lang.aspect,
-		uniqueNumber = 0;
-	
-	var Profiler = function(title){
-		this.args = title ? [title] : [];
-		this.inCall = 0;
-	};
-	dojo.extend(Profiler, {
-		before: function(/*arguments*/){
-			if(!(this.inCall++)){
-				console.profile.apply(console, this.args);
-			}
-		},
-		after: function(/*excp*/){
-			if(!--this.inCall){
-				console.profileEnd();
-			}
-		}
-	});
-	
-	aop.profiler = function(/*String?*/ title){
-		// summary:
-		//		Returns an object, which can be used to time calls to methods.
-		//
-		// title:
-		//		The optional name of the profile section.
-	
-		return new Profiler(title);	// Object
-	};
+var _4=_3.lang.aspect,_5=0;
+var _6=function(_7){
+this.args=_7?[_7]:[];
+this.inCall=0;
+};
+_1.extend(_6,{before:function(){
+if(!(this.inCall++)){
+console.profile.apply(console,this.args);
+}
+},after:function(){
+if(!--this.inCall){
+}
+}});
+_4.profiler=function(_8){
+return new _6(_8);
+};
 })();
+return _1.getObject("dojox.lang.aspect.profiler");
+});
+require(["dojox/lang/aspect/profiler"]);

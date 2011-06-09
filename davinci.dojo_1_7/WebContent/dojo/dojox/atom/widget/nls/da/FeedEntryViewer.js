@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[fremvisningsvalg]",
 	title: "Titel",
 	authors: "Forfattere",
@@ -10,3 +10,4 @@
 	content: "Indhold"
 })
 
+);

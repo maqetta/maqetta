@@ -1,85 +1,25 @@
-define(["./kernel", "../json"], function(dojo, json){
-  // module:
-  //    dojo/_base/json
-  // summary:
-  //    This module defines the dojo JSON API.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.fromJson = function(/*String*/ js){
-	// summary:
-	//		Parses a JavaScript expression and returns a JavaScript value.
-	// description:
-	//		Throws for invalid JavaScript expressions. It does not use a strict JSON parser. It
-	//		always delegates to eval(). The content passed to this method must therefore come
-	//		from a trusted source.
-	//		It is recommend that you use dojo/json's parse function for an
-	//		implementation uses the (faster) native JSON parse when available.
-	// js:
-	//		a string literal of a JavaScript expression, for instance:
-	//			`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
-
-	return eval("(" + js + ")"); // Object
+define("dojo/_base/json",["./kernel","../json"],function(_1,_2){
+_1.fromJson=function(js){
+return eval("("+js+")");
 };
-
-/*=====
-dojo._escapeString = function(){
-	// summary:
-	//		Adds escape sequences for non-visual characters, double quote and
-	//		backslash and surrounds with double quotes to form a valid string
-	//		literal.
+_1._escapeString=_2.stringify;
+_1.toJsonIndentStr="\t";
+_1.toJson=function(it,_3,_4){
+return _2.stringify(it,function(_5,_6){
+if(_6){
+var tf=_6.__json__||_6.json;
+if(typeof tf=="function"){
+return tf.call(_6);
+}
+}
+return _6;
+},_3&&_1.toJsonIndentStr);
 };
-=====*/
-dojo._escapeString = json.stringify; // just delegate to json.stringify
-
-dojo.toJsonIndentStr = "\t";
-dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _indentStr){
-	// summary:
-	//		Returns a [JSON](http://json.org) serialization of an object.
-	// description:
-	//		Returns a [JSON](http://json.org) serialization of an object.
-	//		Note that this doesn't check for infinite recursion, so don't do that!
-	//		It is recommend that you use dojo/json's stringify function for an lighter
-	//		and faster implementation that matches the native JSON API and uses the
-	//		native JSON serializer when available.
-	// it:
-	//		an object to be serialized. Objects may define their own
-	//		serialization via a special "__json__" or "json" function
-	//		property. If a specialized serializer has been defined, it will
-	//		be used as a fallback.
-	//		Note that in 1.6, toJson would serialize undefined, but this no longer supported
-	//		since it is not supported by native JSON serializer.
-	// prettyPrint:
-	//		if true, we indent objects and arrays to make the output prettier.
-	//		The variable `dojo.toJsonIndentStr` is used as the indent string --
-	//		to use something other than the default (tab), change that variable
-	//		before calling dojo.toJson().
-	//		Note that if native JSON support is available, it will be used for serialization,
-	//		and native implementations vary on the exact spacing used in pretty printing.
-	//	_indentStr:
-	//		private variable for recursive calls when pretty printing, do not use.
-	// example:
-	//		simple serialization of a trivial object
-	//		|	var jsonStr = dojo.toJson({ howdy: "stranger!", isStrange: true });
-	//		|	doh.is('{"howdy":"stranger!","isStrange":true}', jsonStr);
-	// example:
-	//		a custom serializer for an objects of a particular class:
-	//		|	dojo.declare("Furby", null, {
-	//		|		furbies: "are strange",
-	//		|		furbyCount: 10,
-	//		|		__json__: function(){
-	//		|		},
-	//		|	});
-
-	// use dojo/json
-	return json.stringify(it, function(key, value){
-		if(value){
-			var tf = value.__json__||value.json;
-			if(typeof tf == "function"){
-				return tf.call(value);
-			}
-		}
-		return value;
-	}, prettyPrint && dojo.toJsonIndentStr);
-};
-
-return dojo;
+return _1;
 });

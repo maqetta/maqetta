@@ -1,172 +1,84 @@
-define("dojox/editor/plugins/CollapsibleToolbar", ["dojo", "dijit", "dojox", "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_editor/_Plugin", "dijit/form/Button", "dijit/focus", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/CollapsibleToolbar"], function(dojo, dijit, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.editor.plugins._CollapsibleToolbarButton", [dijit._Widget, dijit._TemplatedMixin], {
-	// summary:
-	//		Simple internal widget for representing a clickable button for expand/collapse
-	//		with A11Y support.
-	// tags:
-	//		private
-	templateString: "<div tabindex='0' role='button' title='${title}' class='${buttonClass}' " +
-		"dojoAttachEvent='ondijitclick: onClick'><span class='${textClass}'>${text}</span></div>",
-
-
-	// title [public] String
-	//		The text to read by a screen reader that gets button focus.
-	title: "",
-
-	// buttonClass [public] String
-	//		The classname to apply to the expand/collapse button.
-	buttonClass: "",
-
-	// text [public] String
-	//		The text to use as expand/collapse in A11Y mode.
-	text: "",
-	
-	// textClass [public] String
-	//		The classname to apply to the expand/collapse text.
-	textClass: "",
-
-	onClick: function(e){
-		// summary:
-		//		Simple synthetic event to listen for dijit click events (mouse or keyboard)
-	}
+define("dojox/editor/plugins/CollapsibleToolbar",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dijit/_editor/_Plugin","dijit/form/Button","dijit/focus","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/CollapsibleToolbar"],function(_1,_2,_3){
+_1.declare("dojox.editor.plugins._CollapsibleToolbarButton",[_2._Widget,_2._TemplatedMixin],{templateString:"<div tabindex='0' role='button' title='${title}' class='${buttonClass}' "+"dojoAttachEvent='ondijitclick: onClick'><span class='${textClass}'>${text}</span></div>",title:"",buttonClass:"",text:"",textClass:"",onClick:function(e){
+}});
+_1.declare("dojox.editor.plugins.CollapsibleToolbar",_2._editor._Plugin,{_myWidgets:null,setEditor:function(_4){
+this.editor=_4;
+this._constructContainer();
+},_constructContainer:function(){
+var _5=_1.i18n.getLocalization("dojox.editor.plugins","CollapsibleToolbar");
+this._myWidgets=[];
+var _6=_1.create("table",{style:{width:"100%"},tabindex:-1,"class":"dojoxCollapsibleToolbarContainer"});
+var _7=_1.create("tbody",{tabindex:-1},_6);
+var _8=_1.create("tr",{tabindex:-1},_7);
+var _9=_1.create("td",{"class":"dojoxCollapsibleToolbarControl",tabindex:-1},_8);
+var _a=_1.create("td",{"class":"dojoxCollapsibleToolbarControl",tabindex:-1},_8);
+var _b=_1.create("td",{style:{width:"100%"},tabindex:-1},_8);
+var m=_1.create("span",{style:{width:"100%"},tabindex:-1},_b);
+var _c=new _3.editor.plugins._CollapsibleToolbarButton({buttonClass:"dojoxCollapsibleToolbarCollapse",title:_5.collapse,text:"-",textClass:"dojoxCollapsibleToolbarCollapseText"});
+_1.place(_c.domNode,_9);
+var _d=new _3.editor.plugins._CollapsibleToolbarButton({buttonClass:"dojoxCollapsibleToolbarExpand",title:_5.expand,text:"+",textClass:"dojoxCollapsibleToolbarExpandText"});
+_1.place(_d.domNode,_a);
+this._myWidgets.push(_c);
+this._myWidgets.push(_d);
+_1.style(_a,"display","none");
+_1.place(_6,this.editor.toolbar.domNode,"after");
+_1.place(this.editor.toolbar.domNode,m);
+this.openTd=_9;
+this.closeTd=_a;
+this.menu=m;
+this.connect(_c,"onClick","_onClose");
+this.connect(_d,"onClick","_onOpen");
+},_onClose:function(e){
+if(e){
+_1.stopEvent(e);
+}
+var _e=_1.marginBox(this.editor.domNode);
+_1.style(this.openTd,"display","none");
+_1.style(this.closeTd,"display","");
+_1.style(this.menu,"display","none");
+this.editor.resize({h:_e.h});
+if(_1.isIE){
+this.editor.header.className=this.editor.header.className;
+this.editor.footer.className=this.editor.footer.className;
+}
+_2.focus(this.closeTd.firstChild);
+},_onOpen:function(e){
+if(e){
+_1.stopEvent(e);
+}
+var _f=_1.marginBox(this.editor.domNode);
+_1.style(this.closeTd,"display","none");
+_1.style(this.openTd,"display","");
+_1.style(this.menu,"display","");
+this.editor.resize({h:_f.h});
+if(_1.isIE){
+this.editor.header.className=this.editor.header.className;
+this.editor.footer.className=this.editor.footer.className;
+}
+_2.focus(this.openTd.firstChild);
+},destroy:function(){
+this.inherited(arguments);
+if(this._myWidgets){
+while(this._myWidgets.length){
+this._myWidgets.pop().destroy();
+}
+delete this._myWidgets;
+}
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _10=o.args.name.toLowerCase();
+if(_10==="collapsibletoolbar"){
+o.plugin=new _3.editor.plugins.CollapsibleToolbar({});
+}
 });
-
-
-dojo.declare("dojox.editor.plugins.CollapsibleToolbar",dijit._editor._Plugin,{
-	// summary:
-	//		This plugin provides a weappable toolbar container to allow expand/collapse
-	//		of the editor toolbars.  This plugin should be registered first in most cases to
-	//		avoid conflicts in toolbar construction.
-
-	// _myWidgets: [private] array
-	//		Container for widgets I allocate that will need to be destroyed.
-	_myWidgets: null,
-
-	setEditor: function(editor){
-		// summary:
-		//		Over-ride for the setting of the editor.
-		// editor: Object
-		//		The editor to configure for this plugin to use.
-		this.editor = editor;
-		this._constructContainer();
-	},
-
-	_constructContainer: function(){
-		// summary:
-		//		Internal function to construct a wrapper for the toolbar/header that allows
-		//		it to expand and collapse.  It effectively builds a containing table,
-		//		which handles the layout nicely and gets BIDI support by default.
-		// tags:
-		//		private
-		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "CollapsibleToolbar");
-		this._myWidgets = [];
-		
-		// Build the containers.
-		var container = dojo.create("table", {style: { width: "100%" }, tabindex: -1, "class": "dojoxCollapsibleToolbarContainer"});
-		var tbody = dojo.create("tbody", {tabindex: -1}, container);
-		var row = dojo.create("tr", {tabindex: -1}, tbody);
-		var openTd = dojo.create("td", {"class": "dojoxCollapsibleToolbarControl", tabindex: -1}, row);
-		var closeTd = dojo.create("td", {"class": "dojoxCollapsibleToolbarControl",  tabindex: -1}, row);
-		var menuTd = dojo.create("td", {style: { width: "100%" }, tabindex: -1}, row);
-		var m = dojo.create("span", {style: { width: "100%" }, tabindex: -1}, menuTd);
-
-		var collapseButton = new dojox.editor.plugins._CollapsibleToolbarButton({
-			buttonClass: "dojoxCollapsibleToolbarCollapse",
-			title: strings.collapse,
-			text: "-",
-			textClass: "dojoxCollapsibleToolbarCollapseText"
-		});
-		dojo.place(collapseButton.domNode, openTd);
-		var expandButton = new dojox.editor.plugins._CollapsibleToolbarButton({
-			buttonClass: "dojoxCollapsibleToolbarExpand",
-			title: strings.expand,
-			text: "+",
-			textClass: "dojoxCollapsibleToolbarExpandText"
-		});
-		dojo.place(expandButton.domNode, closeTd);
-
-		this._myWidgets.push(collapseButton);
-		this._myWidgets.push(expandButton);
-
-		// Attach everything in now.
-		dojo.style(closeTd, "display", "none");
-		dojo.place(container, this.editor.toolbar.domNode, "after");
-		dojo.place(this.editor.toolbar.domNode, m);
-
-		this.openTd = openTd;
-		this.closeTd = closeTd;
-		this.menu = m;
-
-		// Establish the events to handle open/close.
-		this.connect(collapseButton, "onClick", "_onClose");
-		this.connect(expandButton, "onClick", "_onOpen");
-	},
-
-	_onClose: function(e){
-		// summary:
-		//		Internal function for handling a click event that will close the toolbar.
-		// e:
-		//		The click event.
-		// tags:
-		//		private
-		if(e){ dojo.stopEvent(e); }
-		var size = dojo.marginBox(this.editor.domNode);
-		dojo.style(this.openTd, "display", "none");
-		dojo.style(this.closeTd, "display", "");
-		dojo.style(this.menu, "display", "none");
-		this.editor.resize({h: size.h});
-		// work around IE rendering glitch in a11y mode.
-		if(dojo.isIE){
-			this.editor.header.className = this.editor.header.className;
-			this.editor.footer.className = this.editor.footer.className;
-		}
-		dijit.focus(this.closeTd.firstChild);
-	},
-
-	_onOpen: function(e) {
-		// summary:
-		//		Internal function for handling a click event that will open the toolbar.
-		// e:
-		//		The click event.
-		// tags:
-		//		private
-		if(e){ dojo.stopEvent(e); }
-		var size = dojo.marginBox(this.editor.domNode);
-		dojo.style(this.closeTd, "display", "none");
-		dojo.style(this.openTd, "display", "");
-		dojo.style(this.menu, "display", "");
-		this.editor.resize({h: size.h});
-		 // work around IE rendering glitch in a11y mode.
-		if(dojo.isIE){
-			this.editor.header.className = this.editor.header.className;
-			this.editor.footer.className = this.editor.footer.className;
-		}
-		dijit.focus(this.openTd.firstChild);
-	},
-
-	destroy: function(){
-		// summary:
-		//		Over-ride of destroy method for cleanup.
-		this.inherited(arguments);
-		if(this._myWidgets){
-			while(this._myWidgets.length){
-				this._myWidgets.pop().destroy();
-			}
-			delete this._myWidgets;
-		}
-	}
-});
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name === "collapsibletoolbar"){
-		o.plugin = new dojox.editor.plugins.CollapsibleToolbar({});
-	}
-});
-
-return dojox.editor.plugins.CollapsibleToolbar;
-
+return _3.editor.plugins.CollapsibleToolbar;
 });

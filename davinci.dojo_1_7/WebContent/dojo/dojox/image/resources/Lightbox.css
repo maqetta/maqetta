@@ -1,13 +1,9 @@
 
-/* dojox.image.Lightbox:base */
-/* FIXME: should be be doing this? I want a black underlay, but this sets ALL dialogs to black,
-    but because it's decendant of body, i can't set this color any other way ... */
 .tundra .dijitDialogUnderlay, 
 .nihilo .dijitDialogUnderlay,
 .soria .dijitDialogUnderlay {
 	background-color:#000; 
 }
-
 .claro .dojoxLightbox .dijitDialogCloseIconHover,
 .nihilo .dojoxLightbox .dijitDialogCloseIconHover,
 .tundra .dojoxLightbox .dijitDialogCloseIconHover, 
@@ -16,9 +12,6 @@
 .claro .dojoxLightbox .dijitDialogCloseIconActive {
     background:url('images/close.png') no-repeat 0 0;
 }
-
-/* more specific to override .theme .dijitDialog name. might try baseClass="dojoxLightbox" 
-   but that would require additional overriden CSS on top of the original Dialog.css       */
 .claro .dojoxLightbox,
 .soria .dojoxLightbox,
 .nihilo .dojoxLightbox,
@@ -28,22 +21,19 @@
 	overflow:hidden;
 	width:100px;
 	height:100px; 
-	border:11px solid #fff !important; /* not happy, but all themes overwrite this to 1px */
+	border:11px solid #fff !important; 
 	background:#fff url('images/loading.gif') no-repeat center center;
-
-	/* special safari + FF specific rounding + shadows */
-	-webkit-box-shadow: 0px 6px 10px #636363; /* #adadad; */
+	
+	-webkit-box-shadow: 0px 6px 10px #636363; 
 	-webkit-border-radius: 3px;
 	-moz-border-radius:4px;
 	border-radius: 4px;
 }
-
 .dojoxLightboxContainer {
 	position:absolute;
 	top:0; left:0;
 	background-color:#fff;
 }
-
 .dojoxLightboxFooter {
 	padding-bottom:5px;
 	position:relative;
@@ -54,12 +44,10 @@
 	z-index:1000;
 	font-size:10pt;
 }
-
 .dojoxLightboxGroupText {
 	color:#666; 
 	font-size:8pt;
 }
-
 .LightboxNext,
 .LightboxPrev,
 .LightboxClose {
@@ -68,46 +56,36 @@
 	height:16px;
 	cursor:pointer;
 }
-
-/* dojox.image.Lightbox:tundra:nihilo */
-
 .claro .LightboxClose,
 .nihilo .LightboxClose,
 .tundra .LightboxClose {
 	background:url('images/close.png') no-repeat center center;
 }
-
 .di_ie6 .claro .LightboxClose,
 .di_ie6 .nihilo .LightboxClose,
 .dj_ie6 .tundra .LightboxClose {
 	background:url('images/close.gif') no-repeat center center;
 }
-
 .claro .LightboxNext, 
 .nihilo .LightboxNext,
 .tundra .LightboxNext {
 	background:url('images/right.png') no-repeat center center;
 }
-
 .dj_ie6 .claro .LightboxNext,
 .dj_ie6 .nihilo .LightboxNext,
 .dj_ie6 .tundra .LightboxNext {
 	background:url('images/right.gif') no-repeat center center;
 }
-
 .claro .LightboxPrev,
 .nihilo .LightboxPrev,
 .tundra .LightboxPrev {
 	background:url('images/left.png') no-repeat center center;
 }
-
 .dj_ie6 .claro .LightboxPrev,
 .dj_ie6 .nihilo .LightboxPrev,
 .dj_ie6 .tundra .LightboxPrev {
 	background:url('images/left.gif') no-repeat center center;
 }
-
-/* dojox.image.Lightbox:soria */
 .soria .LightboxClose,
 .soria .LightboxNext,
 .soria .LightboxPrev {
@@ -122,7 +100,6 @@
 .soria .LightboxPrev {
 	background-position:0 0;
 }
-
 .dojoxLightboxText {
 	margin:0; padding:0; 
 }

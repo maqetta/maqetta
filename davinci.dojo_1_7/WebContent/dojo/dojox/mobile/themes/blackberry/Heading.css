@@ -1,4 +1,4 @@
-/* dojox.mobile.Heading */
+
 .mblHeading {
   position: relative;
   margin: 0px;
@@ -33,7 +33,6 @@
 .mblHeadingCenterTitle .mblHeadingSpanTitle {
   display: none;
 }
-/* Heading Arrow Button */
 .mblArrowButton {
   position: relative;
   float: left;

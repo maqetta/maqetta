@@ -1,107 +1,76 @@
-define(["dojo", "dijit", "dojox", "dijit/tree/ForestStoreModel"], function(dojo, dijit, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.grid.LazyTreeGridStoreModel", dijit.tree.ForestStoreModel, {
-
-	// There are different approaches to get children for client-side
-	// DataStore (e.g. dojo.data.ItemFileReadStore) or server-side DataStore
-	// (e.g. dojox.data.QueryReadStore), so we need to be sure what kind of
-	// DataStore is being used
-	serverStore: false, // server side store
-	
-	constructor: function(/* Object */ args){
-		this.serverStore = args.serverStore === true ? true : false;
-	},
-
-	mayHaveChildren: function(/*dojo.data.Item*/ item){
-		var children = null;
-		return dojo.some(this.childrenAttrs, function(attr){
-				children = this.store.getValue(item, attr);
-				if(dojo.isString(children)){
-					return parseInt(children, 10) > 0 || children.toLowerCase() === "true" ? true : false;
-				}else if(typeof children == "number"){
-					return children > 0;
-				}else if(typeof children == "boolean"){
-					return children;
-				}else if(this.store.isItem(children)){
-					children = this.store.getValues(item, attr);
-					return dojo.isArray(children) ? children.length > 0 : false;
-				}else{
-					return false;
-				}
-		}, this);
-	},
-	
-	getChildren: function(/*dojo.data.Item*/parentItem, /*function(items, size)*/onComplete, /*function*/ onError, /*object*/queryObj){
-		if(queryObj){
-			var start = queryObj.start || 0,
-				count = queryObj.count,
-				parentId = queryObj.parentId,
-				sort = queryObj.sort;
-			if(parentItem === this.root){
-				this.root.size = 0;
-				this.store.fetch({
-					start: start,
-					count: count,
-					sort: sort,
-					query: this.query,
-					onBegin: dojo.hitch(this, function(size){
-						this.root.size = size;
-					}),
-					onComplete: dojo.hitch(this, function(items){
-						onComplete(items, queryObj, this.root.size);
-					}),
-					onError: onError
-				});
-			}else{
-				var store = this.store;
-				if(!store.isItemLoaded(parentItem)){
-					var getChildren = dojo.hitch(this, arguments.callee);
-					store.loadItem({
-						item: parentItem,
-						onItem: function(parentItem){
-							getChildren(parentItem, onComplete, onError, queryObj);
-						},
-						onError: onError
-					});
-					return;
-				}
-				if(this.serverStore && !this._isChildrenLoaded(parentItem)){
-					this.childrenSize = 0;
-					this.store.fetch({
-						start: start,
-						count: count,
-						sort: sort,
-						query: dojo.mixin({parentId: parentId}, this.query || {}),
-						onBegin: dojo.hitch(this, function(size){
-							this.childrenSize = size;
-						}),
-						onComplete: dojo.hitch(this, function(items){
-							onComplete(items, queryObj, this.childrenSize);
-						}),
-						onError: onError
-					});
-				}else{
-					this.inherited(arguments);
-				}
-			}
-		}else{
-			this.inherited(arguments);
-		}
-	},
-	
-	_isChildrenLoaded: function(parentItem){
-		// summary:
-		//		Check if all children of the given item have been loaded
-		var children = null;
-		return dojo.every(this.childrenAttrs, function(attr){
-			children = this.store.getValues(parentItem, attr);
-			return dojo.every(children, function(c){
-				return this.store.isItemLoaded(c);
-			}, this);
-		}, this);
-	}
-});
-
-return dojox.grid.LazyTreeGridStoreModel;
-
+define(["dojo","dijit","dojox","dijit/tree/ForestStoreModel"],function(_1,_2,_3){
+_1.declare("dojox.grid.LazyTreeGridStoreModel",_2.tree.ForestStoreModel,{serverStore:false,constructor:function(_4){
+this.serverStore=_4.serverStore===true?true:false;
+},mayHaveChildren:function(_5){
+var _6=null;
+return _1.some(this.childrenAttrs,function(_7){
+_6=this.store.getValue(_5,_7);
+if(_1.isString(_6)){
+return parseInt(_6,10)>0||_6.toLowerCase()==="true"?true:false;
+}else{
+if(typeof _6=="number"){
+return _6>0;
+}else{
+if(typeof _6=="boolean"){
+return _6;
+}else{
+if(this.store.isItem(_6)){
+_6=this.store.getValues(_5,_7);
+return _1.isArray(_6)?_6.length>0:false;
+}else{
+return false;
+}
+}
+}
+}
+},this);
+},getChildren:function(_8,_9,_a,_b){
+if(_b){
+var _c=_b.start||0,_d=_b.count,_e=_b.parentId,_f=_b.sort;
+if(_8===this.root){
+this.root.size=0;
+this.store.fetch({start:_c,count:_d,sort:_f,query:this.query,onBegin:_1.hitch(this,function(_10){
+this.root.size=_10;
+}),onComplete:_1.hitch(this,function(_11){
+_9(_11,_b,this.root.size);
+}),onError:_a});
+}else{
+var _12=this.store;
+if(!_12.isItemLoaded(_8)){
+var _13=_1.hitch(this,arguments.callee);
+_12.loadItem({item:_8,onItem:function(_14){
+_13(_14,_9,_a,_b);
+},onError:_a});
+return;
+}
+if(this.serverStore&&!this._isChildrenLoaded(_8)){
+this.childrenSize=0;
+this.store.fetch({start:_c,count:_d,sort:_f,query:_1.mixin({parentId:_e},this.query||{}),onBegin:_1.hitch(this,function(_15){
+this.childrenSize=_15;
+}),onComplete:_1.hitch(this,function(_16){
+_9(_16,_b,this.childrenSize);
+}),onError:_a});
+}else{
+this.inherited(arguments);
+}
+}
+}else{
+this.inherited(arguments);
+}
+},_isChildrenLoaded:function(_17){
+var _18=null;
+return _1.every(this.childrenAttrs,function(_19){
+_18=this.store.getValues(_17,_19);
+return _1.every(_18,function(c){
+return this.store.isItemLoaded(c);
+},this);
+},this);
+}});
+return _3.grid.LazyTreeGridStoreModel;
 });

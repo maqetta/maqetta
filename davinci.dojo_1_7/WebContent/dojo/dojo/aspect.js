@@ -1,196 +1,93 @@
-define([], function(){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// TODOC: after/before/around return object
-// TODOC: after/before/around param types. 
-
-/*=====
-	dojo.aspect = {
-		// summary: provides aspect oriented programming functionality, allowing for
-		//		one to add before, around, or after advice on existing methods.
-		//
-		// example:
-		//	|	define(["dojo/aspect"], function(aspect){
-		//	|		var signal = aspect.after(targetObject, "methodName", function(someArgument){
-		//	|			this will be called when targetObject.methodName() is called, after the original function is called
-		//	|		});
-		//
-		// example:
-		//	The returned signal object can be used to cancel the advice.
-		//	|	signal.remove(); // this will stop the advice from being executed anymore
-		//	|	aspect.before(targetObject, "methodName", function(someArgument){
-		//	|		// this will be called when targetObject.methodName() is called, before the original function is called
-		//	|	 });
-		
-		after: function(target, methodName, advice, receiveArguments){
-			// summary: The "after" export of the aspect module is a function that can be used to attach
-			//		"after" advice to a method. This function will be executed after the original method
-			//		is executed. By default the function will be called with a single argument, the return
-			//		value of the original method, or the the return value of the last executed advice (if a previous one exists).
-			//		The fourth (optional) argument can be set to true to so the function receives the original
-			//		arguments (from when the original method was called) rather than the return value.
-			//		If there are multiple "after" advisors, they are executed in the order they were registered.
-			// target:
-			//		This is the target object
-			// methodName:
-			//		This is the name of the method to attach to.
-			// advice:
-			//		This is function to be called before, after, or around the original method
-		},
-		
-		before: function(target, methodName, advice){
-			// summary: The "before" export of the aspect module is a function that can be used to attach
-			//		"before" advice to a method. This function will be executed before the original method
-			//		is executed. This function will be called with the arguments used to call the method.
-			//		This function may optionally return an array as the new arguments to use to call
-			//		the original method (or the previous, next-to-execute before advice, if one exists).
-			//		If the before method doesn't return anything (returns undefined) the original arguments
-			//		will be preserved.
-			//		If there are multiple "before" advisors, they are executed in the reverse order they were registered.
-			//
-			// target:
-			//		This is the target object
-			// methodName:
-			//		This is the name of the method to attach to.
-			// advice:
-			//		This is function to be called before, after, or around the original method	 
-		},
-
-		around: function(target, methodName, advice){
-			// summary: The "around" export of the aspect module is a function that can be used to attach
-			//		"around" advice to a method. The advisor function is immediately executed when
-			//		the around() is called, is passed a single argument that is a function that can be
-			//		called to continue execution of the original method (or the next around advisor).
-			//		The advisor function should return a function, and this function will be called whenever
-			//		the method is called. It will be called with the arguments used to call the method.
-			//		Whatever this function returns will be returned as the result of the method call (unless after advise changes it).
-			//
-			// example:
-			//		If there are multiple "around" advisors, the most recent one is executed first,
-			//		which can then delegate to the next one and so on. For example:
-			//		|	around(obj, "foo", function(originalFoo){
-			//		|		return function(){
-			//		|			var start = new Date().getTime();
-			//		|			var results = originalFoo.apply(this, arguments); // call the original
-			//		|			var end = new Date().getTime();
-			//		|			console.log("foo execution took " + (end - start) + " ms");
-			//		|			return results;
-			//		|		};
-			//		|	});
-			//
-			// target:
-			//		This is the target object
-			// methodName:
-			//		This is the name of the method to attach to.
-			// advice:
-			//		This is function to be called before, after, or around the original method
-		}
-
-	};
-=====*/
-
-	"use strict";
-	function advise(dispatcher, type, advice, receiveArguments){
-		var previous = dispatcher[type];
-		var around = type == "around";
-		var signal;
-		if(around){
-			var advised = advice(function(){
-				return previous.advice(this, arguments);
-			});
-			signal = {
-				remove: function(){
-					signal.cancelled = true;
-				},
-				advice: function(target, args){
-					return signal.cancelled ?
-						previous.advice(target, args) : // cancelled, skip to next one
-						advised.apply(target, args);	// called the advised function
-				}
-			};
-		}else{
-			// create the remove handler
-			signal = {
-				remove: function(){
-					var previous = signal.previous;
-					var next = signal.next;
-					if(!next && !previous){
-						delete dispatcher[type];
-					}else{
-						if(previous){
-							previous.next = next;
-						}else{
-							dispatcher[type] = next;
-						}
-						if(next){
-							next.previous = previous;
-						}
-					}
-				},
-				advice: advice,
-				receiveArguments: receiveArguments
-			};
-		}
-		if(previous && !around){
-			if(type == "after"){
-				// add the listener to the end of the list
-				var next = previous;
-				while(next){
-					previous = next;
-					next = next.next;
-				}
-				previous.next = signal;
-				signal.previous = previous;
-			}else if(type == "before"){
-				// add to beginning
-				dispatcher[type] = signal;
-				signal.next = previous;
-				previous.previous = signal;
-			}
-		}else{
-			// around or first one just replaces
-			dispatcher[type] = signal;
-		}
-		return signal;
-	}
-	function aspect(type){
-		return function(target, methodName, advice, receiveArguments){
-			var existing = target[methodName], dispatcher;
-			if(!existing || !existing.around){
-				// no dispatcher in place
-				dispatcher = target[methodName] = function(){
-					// before advice
-					var args = arguments;
-					var before = dispatcher.before;
-					while(before){
-						args = before.advice.apply(this, args) || args;
-						before = before.next;
-					}
-					// around advice
-					if(typeof dispatcher.around == "object"){
-						var results = dispatcher.around.advice(this, args);
-					}
-					// after advice
-					var after = dispatcher.after;
-					while(after){
-						results = after.receiveArguments ? after.advice.apply(this, args) || results :
-								after.advice.call(this, results);
-						after = after.next;
-					}
-					return results;
-				};
-				target = null; // make sure we don't have cycles for IE
-				dispatcher.around = existing ? {advice: function(target, args){
-					return existing.apply(target, args);
-				}} : "none";
-			}
-			var results = advise((dispatcher || existing), type, advice, receiveArguments);
-			advice = null;
-			return results;
-		};
-	}
-	return {
-		before: aspect("before"),
-		around: aspect("around"),
-		after: aspect("after")
-	};
+define("dojo/aspect",[],function(){
+"use strict";
+function _1(_2,_3,_4,_5){
+var _6=_2[_3];
+var _7=_3=="around";
+var _8;
+if(_7){
+var _9=_4(function(){
+return _6.advice(this,arguments);
+});
+_8={remove:function(){
+_8.cancelled=true;
+},advice:function(_a,_b){
+return _8.cancelled?_6.advice(_a,_b):_9.apply(_a,_b);
+}};
+}else{
+_8={remove:function(){
+var _c=_8.previous;
+var _d=_8.next;
+if(!_d&&!_c){
+delete _2[_3];
+}else{
+if(_c){
+_c.next=_d;
+}else{
+_2[_3]=_d;
+}
+if(_d){
+_d.previous=_c;
+}
+}
+},advice:_4,receiveArguments:_5};
+}
+if(_6&&!_7){
+if(_3=="after"){
+var _e=_6;
+while(_e){
+_6=_e;
+_e=_e.next;
+}
+_6.next=_8;
+_8.previous=_6;
+}else{
+if(_3=="before"){
+_2[_3]=_8;
+_8.next=_6;
+_6.previous=_8;
+}
+}
+}else{
+_2[_3]=_8;
+}
+return _8;
+};
+function _f(_10){
+return function(_11,_12,_13,_14){
+var _15=_11[_12],_16;
+if(!_15||!_15.around){
+_16=_11[_12]=function(){
+var _17=arguments;
+var _18=_16.before;
+while(_18){
+_17=_18.advice.apply(this,_17)||_17;
+_18=_18.next;
+}
+if(typeof _16.around=="object"){
+var _19=_16.around.advice(this,_17);
+}
+var _1a=_16.after;
+while(_1a){
+_19=_1a.receiveArguments?_1a.advice.apply(this,_17)||_19:_1a.advice.call(this,_19);
+_1a=_1a.next;
+}
+return _19;
+};
+_11=null;
+_16.around=_15?{advice:function(_1b,_1c){
+return _15.apply(_1b,_1c);
+}}:"none";
+}
+var _1d=_1((_16||_15),_10,_13,_14);
+_13=null;
+return _1d;
+};
+};
+return {before:_f("before"),around:_f("around"),after:_f("after")};
 });

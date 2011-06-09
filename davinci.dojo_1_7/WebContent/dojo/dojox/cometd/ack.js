@@ -1,50 +1,45 @@
-dojo.provide("dojox.cometd.ack");
-dojo.require("dojox.cometd._base");
-
 /*
- * This file provides the dojox cometd ack extension which
- * acknowledges the messages received in /meta/connect responses.
- * Each meta/connect is sent with the id of the last successful meta/connect
- * received.  The server uses this information to manage a queue of unacknowleged
- * messages.
- *
- * To use, add dojo.require("dojox.cometd.ack"); and if the handshake will be sent
- * with ext:{ack:true}.  If the server supports the same extension, then the
- * mechanism will be initialized.  The dojox.cometd.ackEnabled field may also be
- * used to optionally enable/disable the extension before init of cometd.
- *
- */
-dojox.cometd._ack = new function(){
-	var supportAcks = false;
-	var lastAck = -1;
-	
-	this._in = function(msg){
-		if (msg.channel == "/meta/handshake") {
-			supportAcks = msg.ext && msg.ext.ack;
-		} else if (supportAcks && msg.channel == "/meta/connect" && msg.ext && msg.ext.ack && msg.successful) {
-			var ackId = parseInt(msg.ext.ack);
-			lastAck = ackId;
-		}
-		return msg;
-	}
-	
-	this._out = function(msg){
-	
-		if (msg.channel == "/meta/handshake") {
-			if (!msg.ext)
-				msg.ext = {};
-			msg.ext.ack = dojox.cometd.ackEnabled;
-			lastAck = -1;
-		}
-		if (supportAcks && msg.channel == "/meta/connect") {
-			if (!msg.ext)
-				msg.ext = {};
-			msg.ext.ack = lastAck;
-		}
-		return msg;
-	}
-};
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojox.cometd._extendInList.push(dojo.hitch(dojox.cometd._ack, "_in"));
-dojox.cometd._extendOutList.push(dojo.hitch(dojox.cometd._ack, "_out"));
-dojox.cometd.ackEnabled = true;
+define(["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
+_1.getObject("dojox.cometd.ack",1);
+_3.cometd._ack=new function(){
+var _4=false;
+var _5=-1;
+this._in=function(_6){
+if(_6.channel=="/meta/handshake"){
+_4=_6.ext&&_6.ext.ack;
+}else{
+if(_4&&_6.channel=="/meta/connect"&&_6.ext&&_6.ext.ack&&_6.successful){
+var _7=parseInt(_6.ext.ack);
+_5=_7;
+}
+}
+return _6;
+};
+this._out=function(_8){
+if(_8.channel=="/meta/handshake"){
+if(!_8.ext){
+_8.ext={};
+}
+_8.ext.ack=_3.cometd.ackEnabled;
+_5=-1;
+}
+if(_4&&_8.channel=="/meta/connect"){
+if(!_8.ext){
+_8.ext={};
+}
+_8.ext.ack=_5;
+}
+return _8;
+};
+};
+_3.cometd._extendInList.push(_1.hitch(_3.cometd._ack,"_in"));
+_3.cometd._extendOutList.push(_1.hitch(_3.cometd._ack,"_out"));
+_3.cometd.ackEnabled=true;
+return _1.getObject("dojox.cometd.ack");
+});
+require(["dojox/cometd/ack"]);

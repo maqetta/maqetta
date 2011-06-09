@@ -1,80 +1,39 @@
-define([
-	"dojo/_base/kernel", // dojo.experimental
-	"../..",
-	"../_Plugin",
-	"../../form/ToggleButton",
-	"dojo/_base/connect", // dojo.subscribe
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/html", // dojo.getComputedStyle
-	"dojo/_base/lang" // dojo.hitch
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/_editor/plugins/ToggleDir
-	// summary:
-	//		This plugin is used to toggle direction of the edited document,
-	//		independent of what direction the whole page is.
-
-
-	dojo.experimental("dijit._editor.plugins.ToggleDir");
-
-	dojo.declare("dijit._editor.plugins.ToggleDir", dijit._editor._Plugin, {
-		// summary:
-		//		This plugin is used to toggle direction of the edited document,
-		//		independent of what direction the whole page is.
-
-		// Override _Plugin.useDefaultCommand: processing is done in this plugin
-		// rather than by sending commands to the Editor
-		useDefaultCommand: false,
-
-		command: "toggleDir",
-
-		// Override _Plugin.buttonClass to use a ToggleButton for this plugin rather than a vanilla Button
-		buttonClass: dijit.form.ToggleButton,
-
-		_initButton: function(){
-			// Override _Plugin._initButton() to setup handler for button click events.
-			this.inherited(arguments);
-			this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
-				var editDoc = this.editor.editorObject.contentWindow.document.documentElement;
-				//IE direction has to toggle on the body, not document itself.
-				//If you toggle just the document, things get very strange in the
-				//view.  But, the nice thing is this works for all supported browsers.
-				editDoc = editDoc.getElementsByTagName("body")[0];
-				var isLtr = dojo.getComputedStyle(editDoc).direction == "ltr";
-				this.button.set("checked", !isLtr);
-				this.connect(this.button, "onChange", "_setRtl");
-			}));
-		},
-
-		updateState: function(){
-			// summary:
-			//		Over-ride for button state control for disabled to work.
-			this.button.set("disabled", this.get("disabled"));
-		},
-
-		_setRtl: function(rtl){
-			// summary:
-			//		Handler for button click events, to switch the text direction of the editor
-			var dir = "ltr";
-			if(rtl){
-				dir = "rtl";
-			}
-			var editDoc = this.editor.editorObject.contentWindow.document.documentElement;
-			editDoc = editDoc.getElementsByTagName("body")[0];
-			editDoc.dir/*html node*/ = dir;
-		}
-	});
-
-	// Register this plugin.
-	dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-		if(o.plugin){ return; }
-		switch(o.args.name){
-		case "toggleDir":
-			o.plugin = new dijit._editor.plugins.ToggleDir({command: o.args.name});
-		}
-	});
-
-
-	return dijit._editor.plugins.ToggleDir;
+define("dijit/_editor/plugins/ToggleDir",["dojo/_base/kernel","../..","../_Plugin","../../form/ToggleButton","dojo/_base/connect","dojo/_base/declare","dojo/_base/html","dojo/_base/lang"],function(_1,_2){
+_1.experimental("dijit._editor.plugins.ToggleDir");
+_1.declare("dijit._editor.plugins.ToggleDir",_2._editor._Plugin,{useDefaultCommand:false,command:"toggleDir",buttonClass:_2.form.ToggleButton,_initButton:function(){
+this.inherited(arguments);
+this.editor.onLoadDeferred.addCallback(_1.hitch(this,function(){
+var _3=this.editor.editorObject.contentWindow.document.documentElement;
+_3=_3.getElementsByTagName("body")[0];
+var _4=_1.getComputedStyle(_3).direction=="ltr";
+this.button.set("checked",!_4);
+this.connect(this.button,"onChange","_setRtl");
+}));
+},updateState:function(){
+this.button.set("disabled",this.get("disabled"));
+},_setRtl:function(_5){
+var _6="ltr";
+if(_5){
+_6="rtl";
+}
+var _7=this.editor.editorObject.contentWindow.document.documentElement;
+_7=_7.getElementsByTagName("body")[0];
+_7.dir=_6;
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+switch(o.args.name){
+case "toggleDir":
+o.plugin=new _2._editor.plugins.ToggleDir({command:o.args.name});
+}
+});
+return _2._editor.plugins.ToggleDir;
 });

@@ -2,7 +2,6 @@
 	position:absolute; 
 	z-index:999; 
 }
-
 .dojoxLoader {
 	float:right; 
 	position:fixed; 
@@ -15,12 +14,10 @@
 	background:#fff;  
 	min-width:42px; 
 }
-
 .dojoxLoaderIcon {
 	height:22px; width:22px; 
 	vertical-align:middle; 
 }
-
 .dojoxLoaderMessage {
 	font:8pt Arial,san-serif;
 	color:#666; 

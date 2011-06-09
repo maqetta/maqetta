@@ -5,12 +5,6 @@
 .graphic-tab-lgray {
 		margin-bottom: 10px;
 }
-/*
-        background: #d9d9d9;
-        border-bottom: #d9d9d9 solid 7px;
-}*/
-
-/* headers for listview */
 .newgraphic-tab-lgray {
         border-bottom: #d9d9d9 solid 7px;
 }
@@ -20,12 +14,10 @@ td.lp {
         background: #d9d9d9;
         border-bottom: #d9d9d9 solid 7px;
 }
-
 td.lp2 { 
         background: #FFFFFF;
         border-bottom: #d9d9d9 solid 7px;
 }
-
 span.lp {
         padding: 0px 13px 0px 10px;
         font-weight: bold;

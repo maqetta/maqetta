@@ -1,145 +1,79 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-define(["dojo/_base/kernel",  "dojo/_base/declare", "dojo/_base/xhr", "dojo/_base/lang", "dojox/geo/openlayers/LineString",
-		"dojox/geo/openlayers/Collection", "dojo/data/ItemFileReadStore",
-		"dojox/geo/openlayers/GeometryFeature" ], function(dojo, declare, xhrArg, langArg, lineStringArg,
-		collectionArg, fileReadStoreArg, geometryFeatureArg){
-
-	return dojo.declare("dojox.geo.openlayers.JsonImport", null, {
-		//	summary:
-		//		Class to load JSON formated ShapeFile as output of the JSon Custom Map Converter.
-		//	description:
-		//		This class loads JSON formated ShapeFile produced by the JSon Custom Map Converter.
-		//		When loading the JSON file, it calls a iterator function each time a feature is read.
-		//		This iterator function is provided as parameter to the constructor.
-		//
-		constructor : function(/* Object */params){
-			//	summary:
-			//		Construct a new JSON importer.
-			//	description:
-			//		Construct a new JSON importer with the specified parameters. These parameters are
-			//		passed through an Object and include:
-			//	<ul>
-			//		<li> url : <em>url</em> </li> The url pointing to the JSON file to load.
-			//		<li> nextFeature : <em>function</em> </li> The function called each time a feature is read.
-			//		The function is called with a GeometryFeature as argument.
-			//		<li> error : <em>function</em> </li> Error function called if something goes wrong.
-			//	</ul>
-			this._params = params;
-		},
-
-		loadData : function(){
-			//	summary:
-			//		Triggers the loading.
-			var p = this._params;
-			dojo.xhrGet({
-				url : p.url,
-				handleAs : "json",
-				sync : true,
-				load : dojo.hitch(this, this._gotData),
-				error : dojo.hitch(this, this._loadError)
-			});
-		},
-
-		_gotData : function(/* Object */items){
-			//	summary:
-			//		Called when loading is complete.
-			//	tags:
-			//		private
-			var nf = this._params.nextFeature;
-			if (!dojo.isFunction(nf))
-				return;
-
-			var extent = items.layerExtent;
-			var ulx = extent[0];
-			var uly = extent[1];
-			var lrx = ulx + extent[2];
-			var lry = uly + extent[3];
-
-			var extentLL = items.layerExtentLL;
-			var x1 = extentLL[0];
-			var y1 = extentLL[1];
-			var x2 = x1 + extentLL[2];
-			var y2 = y1 + extentLL[3];
-
-			var ulxLL = x1;
-			var ulyLL = y2;
-			var lrxLL = x2;
-			var lryLL = y1;
-
-			var features = items.features;
-
-			for ( var f in features) {
-				var o = features[f];
-				var s = o["shape"];
-				var gf = null;
-				if (dojo.isArray(s[0])) {
-
-					var a = [];
-					dojo.forEach(s, function(item){
-						var ls = this._makeGeometry(item, ulx, uly, lrx, lry, ulxLL, ulyLL, lrxLL, lryLL);
-						a.push(ls);
-					}, this);
-					var g = new collectionArg(a);
-					gf = new geometryFeatureArg(g);
-					nf.call(this, gf);
-
-				} else {
-					gf = this._makeFeature(s, ulx, uly, lrx, lry, ulxLL, ulyLL, lrxLL, lryLL);
-					nf.call(this, gf);
-				}
-			}
-			var complete = this._params.complete;
-			if (dojo.isFunction(complete))
-				complete.call(this, complete);
-		},
-
-		_makeGeometry : function(/* Array */s, /* Float */ulx, /* Float */uly, /* Float */lrx, /* Float */
-				lry, /* Float */ulxLL, /* Float */ulyLL, /* Float */lrxLL, /* Float */lryLL){
-			//	summary:
-			//		Make a geometry with the specified points.
-			//	tags:
-			//		private
-			var a = [];
-			var k = 0.0;
-			for ( var i = 0; i < s.length - 1; i += 2) {
-				var x = s[i];
-				var y = s[i + 1];
-
-				k = (x - ulx) / (lrx - ulx);
-				var px = k * (lrxLL - ulxLL) + ulxLL;
-
-				k = (y - uly) / (lry - uly);
-				var py = k * (lryLL - ulyLL) + ulyLL;
-
-				a.push({
-					x : px,
-					y : py
-				});
-
-			}
-			var ls = new lineStringArg(a);
-			return ls;
-		},
-
-		_makeFeature : function(/* Array */s, /* Float */ulx, /* Float */uly, /* Float */lrx, /* Float */
-				lry, /* Float */ulxLL, /* Float */ulyLL, /* Float */lrxLL, /* Float */lryLL){
-			//	summary:
-			//		Make a GeometryFeature with the specified points.
-			//	tags:
-			//		private
-			var ls = this._makeGeometry(s, ulx, uly, lrx, lry, ulxLL, ulyLL, lrxLL, lryLL);
-			var gf = new geometryFeatureArg(ls);
-			return gf;
-		},
-
-		_loadError : function(){
-			//	summary:
-			//		Called when an error occurs. Calls the error function is provided in the parameters.
-			//	tags:
-			//		private
-			var f = this._params.error;
-			if (dojo.isFunction(f))
-				f.apply(this, parameters);
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/xhr","dojo/_base/lang","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojo/data/ItemFileReadStore","dojox/geo/openlayers/GeometryFeature"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+return _1.declare("dojox.geo.openlayers.JsonImport",null,{constructor:function(_9){
+this._params=_9;
+},loadData:function(){
+var p=this._params;
+_1.xhrGet({url:p.url,handleAs:"json",sync:true,load:_1.hitch(this,this._gotData),error:_1.hitch(this,this._loadError)});
+},_gotData:function(_a){
+var nf=this._params.nextFeature;
+if(!_1.isFunction(nf)){
+return;
+}
+var _b=_a.layerExtent;
+var _c=_b[0];
+var _d=_b[1];
+var _e=_c+_b[2];
+var _f=_d+_b[3];
+var _10=_a.layerExtentLL;
+var x1=_10[0];
+var y1=_10[1];
+var x2=x1+_10[2];
+var y2=y1+_10[3];
+var _11=x1;
+var _12=y2;
+var _13=x2;
+var _14=y1;
+var _15=_a.features;
+for(var f in _15){
+var o=_15[f];
+var s=o["shape"];
+var gf=null;
+if(_1.isArray(s[0])){
+var a=[];
+_1.forEach(s,function(_16){
+var ls=this._makeGeometry(_16,_c,_d,_e,_f,_11,_12,_13,_14);
+a.push(ls);
+},this);
+var g=new _6(a);
+gf=new _8(g);
+nf.call(this,gf);
+}else{
+gf=this._makeFeature(s,_c,_d,_e,_f,_11,_12,_13,_14);
+nf.call(this,gf);
+}
+}
+var _17=this._params.complete;
+if(_1.isFunction(_17)){
+_17.call(this,_17);
+}
+},_makeGeometry:function(s,ulx,uly,lrx,lry,_18,_19,_1a,_1b){
+var a=[];
+var k=0;
+for(var i=0;i<s.length-1;i+=2){
+var x=s[i];
+var y=s[i+1];
+k=(x-ulx)/(lrx-ulx);
+var px=k*(_1a-_18)+_18;
+k=(y-uly)/(lry-uly);
+var py=k*(_1b-_19)+_19;
+a.push({x:px,y:py});
+}
+var ls=new _5(a);
+return ls;
+},_makeFeature:function(s,ulx,uly,lrx,lry,_1c,_1d,_1e,_1f){
+var ls=this._makeGeometry(s,ulx,uly,lrx,lry,_1c,_1d,_1e,_1f);
+var gf=new _8(ls);
+return gf;
+},_loadError:function(){
+var f=this._params.error;
+if(_1.isFunction(f)){
+f.apply(this,parameters);
+}
+}});
 });

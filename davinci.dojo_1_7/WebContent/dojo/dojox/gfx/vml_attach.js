@@ -1,364 +1,301 @@
-define(["./vml"],function (){
-	dojo.getObject("dojox.gfx.vml_attach", true);
-	dojo.experimental("dojox.gfx.vml_attach");
-	var g = dojox.gfx, m = g.matrix, vml = g.vml;
-	
-	vml.attachNode = function(node){
-		// summary: creates a shape from a Node
-		// node: Node: an VML node
-		if(!node) return null;
-		var s = null;
-		switch(node.tagName.toLowerCase()){
-			case vml.Rect.nodeType:
-				s = new vml.Rect(node);
-				attachRect(s);
-				break;
-			case vml.Ellipse.nodeType:
-				if(node.style.width == node.style.height){
-					s = new vml.Circle(node);
-					attachCircle(s);
-				}else{
-					s = new vml.Ellipse(node);
-					attachEllipse(s);
-				}
-				break;
-			case vml.Path.nodeType:
-				switch(node.getAttribute("dojoGfxType")){
-					case "line":
-						s = new vml.Line(node);
-						attachLine(s);
-						break;
-					case "polyline":
-						s = new vml.Polyline(node);
-						attachPolyline(s);
-						break;
-					case "path":
-						s = new vml.Path(node);
-						attachPath(s);
-						break;
-					case "text":
-						s = new vml.Text(node);
-						attachText(s);
-						attachFont(s);
-						attachTextTransform(s);
-						break;
-					case "textpath":
-						s = new vml.TextPath(node);
-						attachPath(s);
-						attachText(s);
-						attachFont(s);
-						break;
-				}
-				break;
-			case vml.Image.nodeType:
-				switch(node.getAttribute("dojoGfxType")){
-					case "image":
-						s = new vml.Image(node);
-						attachImage(s);
-						attachImageTransform(s);
-						break;
-				}
-				break;
-			default:
-				//console.debug("FATAL ERROR! tagName = " + node.tagName);
-				return null;
-		}
-		if(!(s instanceof vml.Image)){
-			attachFill(s);
-			attachStroke(s);
-			if(!(s instanceof vml.Text)){
-				attachTransform(s);
-			}
-		}
-		return s;	// dojox.gfx.Shape
-	};
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	vml.attachSurface = function(node){
-		// summary: creates a surface from a Node
-		// node: Node: an VML node
-		var s = new vml.Surface();
-		s.clipNode = node;
-		var r = s.rawNode = node.firstChild;
-		var b = r.firstChild;
-		if(!b || b.tagName != "rect"){
-			return null;	// dojox.gfx.Surface
-		}
-		s.bgNode = r;
-		return s;	// dojox.gfx.Surface
-	};
-
-	var attachFill = function(object){
-		// summary: deduces a fill style from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var fillStyle = null, r = object.rawNode, fo = r.fill, stops, i, t;
-		if(fo.on && fo.type == "gradient"){
-			fillStyle = dojo.clone(g.defaultLinearGradient),
-				rad = m._degToRad(fo.angle);
-			fillStyle.x2 = Math.cos(rad);
-			fillStyle.y2 = Math.sin(rad);
-			fillStyle.colors = [];
-			stops = fo.colors.value.split(";");
-			for(i = 0; i < stops.length; ++i){
-				 t = stops[i].match(/\S+/g);
-				if(!t || t.length != 2){ continue; }
-				fillStyle.colors.push({offset: vml._parseFloat(t[0]), color: new dojo.Color(t[1])});
-			}
-		}else if(fo.on && fo.type == "gradientradial"){
-			fillStyle = dojo.clone(g.defaultRadialGradient),
-				w = parseFloat(r.style.width), h = parseFloat(r.style.height);
-			fillStyle.cx = isNaN(w) ? 0 : fo.focusposition.x * w;
-			fillStyle.cy = isNaN(h) ? 0 : fo.focusposition.y * h;
-			fillStyle.r  = isNaN(w) ? 1 : w / 2;
-			fillStyle.colors = [];
-			stops = fo.colors.value.split(";");
-			for(i = stops.length - 1; i >= 0; --i){
-				t = stops[i].match(/\S+/g);
-				if(!t || t.length != 2){ continue; }
-				fillStyle.colors.push({offset: vml._parseFloat(t[0]), color: new dojo.Color(t[1])});
-			}
-		}else if(fo.on && fo.type == "tile"){
-			fillStyle = dojo.clone(g.defaultPattern);
-			fillStyle.width  = g.pt2px(fo.size.x); // from pt
-			fillStyle.height = g.pt2px(fo.size.y); // from pt
-			fillStyle.x = fo.origin.x * fillStyle.width;
-			fillStyle.y = fo.origin.y * fillStyle.height;
-			fillStyle.src = fo.src;
-		}else if(fo.on && r.fillcolor){
-			// a color object !
-			fillStyle = new dojo.Color(r.fillcolor+"");
-			fillStyle.a = fo.opacity;
-		}
-		object.fillStyle = fillStyle;
-	};
-
-	var attachStroke = function(object) {
-		// summary: deduces a stroke style from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var r = object.rawNode;
-		if(!r.stroked){
-			object.strokeStyle = null;
-			return;
-		}
-		var strokeStyle = object.strokeStyle = dojo.clone(g.defaultStroke),
-			rs = r.stroke;
-		strokeStyle.color = new dojo.Color(r.strokecolor.value);
-		strokeStyle.width = g.normalizedLength(r.strokeweight+"");
-		strokeStyle.color.a = rs.opacity;
-		strokeStyle.cap = this._translate(this._capMapReversed, rs.endcap);
-		strokeStyle.join = rs.joinstyle == "miter" ? rs.miterlimit : rs.joinstyle;
-		strokeStyle.style = rs.dashstyle;
-	};
-
-	var attachTransform = function(object) {
-		// summary: deduces a transformation matrix from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var s = object.rawNode.skew, sm = s.matrix, so = s.offset;
-		object.matrix = m.normalize({
-			xx: sm.xtox,
-			xy: sm.ytox,
-			yx: sm.xtoy,
-			yy: sm.ytoy,
-			dx: g.pt2px(so.x),
-			dy: g.pt2px(so.y)
-		});
-	};
-
-	var attachGroup = function(object){
-		// summary: reconstructs all group shape parameters from a node (VML).
-		// object: dojox.gfx.Shape: an VML shape
-		// attach the background
-		object.bgNode = object.rawNode.firstChild;	// TODO: check it first
-	};
-
-	var attachRect = function(object){
-		// summary: builds a rectangle shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		// a workaround for the VML's arcsize bug: cannot read arcsize of an instantiated node
-		var r = object.rawNode, arcsize = r.outerHTML.match(/arcsize = \"(\d*\.?\d+[%f]?)\"/)[1],
-			style = r.style, width = parseFloat(style.width), height = parseFloat(style.height);
-		arcsize = (arcsize.indexOf("%") >= 0) ? parseFloat(arcsize) / 100 : vml._parseFloat(arcsize);
-		// make an object
-		object.shape = g.makeParameters(g.defaultRect, {
-			x: parseInt(style.left),
-			y: parseInt(style.top),
-			width:  width,
-			height: height,
-			r: Math.min(width, height) * arcsize
-		});
-	};
-
-	var attachEllipse = function(object){
-		// summary: builds an ellipse shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var style = object.rawNode.style,
-			rx = parseInt(style.width ) / 2,
-			ry = parseInt(style.height) / 2;
-		object.shape = g.makeParameters(g.defaultEllipse, {
-			cx: parseInt(style.left) + rx,
-			cy: parseInt(style.top ) + ry,
-			rx: rx,
-			ry: ry
-		});
-	};
-
-	var attachCircle = function(object){
-		// summary: builds a circle shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var style = object.rawNode.style, r = parseInt(style.width) / 2;
-		object.shape = g.makeParameters(g.defaultCircle, {
-			cx: parseInt(style.left) + r,
-			cy: parseInt(style.top)  + r,
-			r:  r
-		});
-	};
-
-	var attachLine = function(object){
-		// summary: builds a line shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var shape = object.shape = dojo.clone(g.defaultLine),
-			p = object.rawNode.path.v.match(g.pathVmlRegExp);
-		do{
-			if(p.length < 7 || p[0] != "m" || p[3] != "l" || p[6] != "e"){ break; }
-			shape.x1 = parseInt(p[1]);
-			shape.y1 = parseInt(p[2]);
-			shape.x2 = parseInt(p[4]);
-			shape.y2 = parseInt(p[5]);
-		}while(false);
-	};
-
-	var attachPolyline = function(object){
-		// summary: builds a polyline/polygon shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var shape = object.shape = dojo.clone(g.defaultPolyline),
-			p = object.rawNode.path.v.match(g.pathVmlRegExp);
-		do{
-			if(p.length < 3 || p[0] != "m"){ break; }
-			var x = parseInt(p[0]), y = parseInt(p[1]);
-			if(isNaN(x) || isNaN(y)){ break; }
-			shape.points.push({x: x, y: y});
-			if(p.length < 6 || p[3] != "l"){ break; }
-			for(var i = 4; i < p.length; i += 2){
-				x = parseInt(p[i]);
-				y = parseInt(p[i + 1]);
-				if(isNaN(x) || isNaN(y)){ break; }
-				shape.points.push({x: x, y: y});
-			}
-		}while(false);
-	};
-
-	var attachImage = function(object){
-		// summary: builds an image shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		object.shape = dojo.clone(g.defaultImage);
-		object.shape.src = object.rawNode.firstChild.src;
-	};
-
-	var attachImageTransform = function(object) {
-		// summary: deduces a transformation matrix from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var mm = object.rawNode.filters["DXImageTransform.Microsoft.Matrix"];
-		object.matrix = m.normalize({
-			xx: mm.M11,
-			xy: mm.M12,
-			yx: mm.M21,
-			yy: mm.M22,
-			dx: mm.Dx,
-			dy: mm.Dy
-		});
-	};
-
-	var attachText = function(object){
-		// summary: builds a text shape from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var shape = object.shape = dojo.clone(g.defaultText),
-			r = object.rawNode, p = r.path.v.match(g.pathVmlRegExp);
-		do{
-			if(!p || p.length != 7){ break; }
-			var c = r.childNodes, i = 0;
-			for(; i < c.length && c[i].tagName != "textpath"; ++i);
-			if(i >= c.length){ break; }
-			var s = c[i].style;
-			shape.text = c[i].string;
-			switch(s["v-text-align"]){
-				case "left":
-					shape.x = parseInt(p[1]);
-					shape.align = "start";
-					break;
-				case "center":
-					shape.x = (parseInt(p[1]) + parseInt(p[4])) / 2;
-					shape.align = "middle";
-					break;
-				case "right":
-					shape.x = parseInt(p[4]);
-					shape.align = "end";
-					break;
-			}
-			shape.y = parseInt(p[2]);
-			shape.decoration = s["text-decoration"];
-			shape.rotated = s["v-rotate-letters"].toLowerCase() in vml._bool;
-			shape.kerning = s["v-text-kern"].toLowerCase() in vml._bool;
-			return;
-		}while(false);
-		object.shape = null;
-	};
-
-	var attachFont = function(object){
-		// summary: deduces a font style from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		var fontStyle = object.fontStyle = dojo.clone(g.defaultFont),
-			c = object.rawNode.childNodes, i = 0;
-		for(; i < c.length && c[i].tagName == "textpath"; ++i);
-		if(i >= c.length){
-			object.fontStyle = null;
-			return;
-		}
-		var s = c[i].style;
-		fontStyle.style = s.fontstyle;
-		fontStyle.variant = s.fontvariant;
-		fontStyle.weight = s.fontweight;
-		fontStyle.size = s.fontsize;
-		fontStyle.family = s.fontfamily;
-	};
-
-	var attachTextTransform = function(object) {
-		// summary: deduces a transformation matrix from a node.
-		// object: dojox.gfx.Shape: an VML shape
-		attachTransform(object);
-		var matrix = object.matrix, fs = object.fontStyle;
-		// see comments in _getRealMatrix()
-		if(matrix && fs){
-			object.matrix = m.multiply(matrix, {dy: g.normalizedLength(fs.size) * 0.35});
-		}
-	};
-
-	var attachPath = function(object){
-		// summary: builds a path shape from a Node.
-		// object: dojox.gfx.Shape: an VML shape
-		var shape = object.shape = dojo.clone(g.defaultPath),
-			p = object.rawNode.path.v.match(g.pathVmlRegExp),
-			t = [], skip = false, map = g.Path._pathVmlToSvgMap;
-		for(var i = 0; i < p.length; ++p){
-			var s = p[i];
-			if(s in map) {
-				skip = false;
-				t.push(map[s]);
-			} else if(!skip){
-				var n = parseInt(s);
-				if(isNaN(n)){
-					skip = true;
-				}else{
-					t.push(n);
-				}
-			}
-		}
-		var l = t.length;
-		if(l >= 4 && t[l - 1] == "" && t[l - 2] == 0 && t[l - 3] == 0 && t[l - 4] == "l"){
-			t.splice(l - 4, 4);
-		}
-		if(l){
-			shape.path = t.join(" ");
-		}
-	};
-
-	return vml; //return augmented vml api
+define(["./vml"],function(){
+dojo.getObject("dojox.gfx.vml_attach",true);
+dojo.experimental("dojox.gfx.vml_attach");
+var g=dojox.gfx,m=g.matrix,_1=g.vml;
+_1.attachNode=function(_2){
+if(!_2){
+return null;
+}
+var s=null;
+switch(_2.tagName.toLowerCase()){
+case _1.Rect.nodeType:
+s=new _1.Rect(_2);
+_3(s);
+break;
+case _1.Ellipse.nodeType:
+if(_2.style.width==_2.style.height){
+s=new _1.Circle(_2);
+_4(s);
+}else{
+s=new _1.Ellipse(_2);
+_5(s);
+}
+break;
+case _1.Path.nodeType:
+switch(_2.getAttribute("dojoGfxType")){
+case "line":
+s=new _1.Line(_2);
+_6(s);
+break;
+case "polyline":
+s=new _1.Polyline(_2);
+_7(s);
+break;
+case "path":
+s=new _1.Path(_2);
+_8(s);
+break;
+case "text":
+s=new _1.Text(_2);
+_9(s);
+_a(s);
+_b(s);
+break;
+case "textpath":
+s=new _1.TextPath(_2);
+_8(s);
+_9(s);
+_a(s);
+break;
+}
+break;
+case _1.Image.nodeType:
+switch(_2.getAttribute("dojoGfxType")){
+case "image":
+s=new _1.Image(_2);
+_c(s);
+_d(s);
+break;
+}
+break;
+default:
+return null;
+}
+if(!(s instanceof _1.Image)){
+_e(s);
+_f(s);
+if(!(s instanceof _1.Text)){
+_10(s);
+}
+}
+return s;
+};
+_1.attachSurface=function(_11){
+var s=new _1.Surface();
+s.clipNode=_11;
+var r=s.rawNode=_11.firstChild;
+var b=r.firstChild;
+if(!b||b.tagName!="rect"){
+return null;
+}
+s.bgNode=r;
+return s;
+};
+var _e=function(_12){
+var _13=null,r=_12.rawNode,fo=r.fill,_14,i,t;
+if(fo.on&&fo.type=="gradient"){
+_13=dojo.clone(g.defaultLinearGradient),rad=m._degToRad(fo.angle);
+_13.x2=Math.cos(rad);
+_13.y2=Math.sin(rad);
+_13.colors=[];
+_14=fo.colors.value.split(";");
+for(i=0;i<_14.length;++i){
+t=_14[i].match(/\S+/g);
+if(!t||t.length!=2){
+continue;
+}
+_13.colors.push({offset:_1._parseFloat(t[0]),color:new dojo.Color(t[1])});
+}
+}else{
+if(fo.on&&fo.type=="gradientradial"){
+_13=dojo.clone(g.defaultRadialGradient),w=parseFloat(r.style.width),h=parseFloat(r.style.height);
+_13.cx=isNaN(w)?0:fo.focusposition.x*w;
+_13.cy=isNaN(h)?0:fo.focusposition.y*h;
+_13.r=isNaN(w)?1:w/2;
+_13.colors=[];
+_14=fo.colors.value.split(";");
+for(i=_14.length-1;i>=0;--i){
+t=_14[i].match(/\S+/g);
+if(!t||t.length!=2){
+continue;
+}
+_13.colors.push({offset:_1._parseFloat(t[0]),color:new dojo.Color(t[1])});
+}
+}else{
+if(fo.on&&fo.type=="tile"){
+_13=dojo.clone(g.defaultPattern);
+_13.width=g.pt2px(fo.size.x);
+_13.height=g.pt2px(fo.size.y);
+_13.x=fo.origin.x*_13.width;
+_13.y=fo.origin.y*_13.height;
+_13.src=fo.src;
+}else{
+if(fo.on&&r.fillcolor){
+_13=new dojo.Color(r.fillcolor+"");
+_13.a=fo.opacity;
+}
+}
+}
+}
+_12.fillStyle=_13;
+};
+var _f=function(_15){
+var r=_15.rawNode;
+if(!r.stroked){
+_15.strokeStyle=null;
+return;
+}
+var _16=_15.strokeStyle=dojo.clone(g.defaultStroke),rs=r.stroke;
+_16.color=new dojo.Color(r.strokecolor.value);
+_16.width=g.normalizedLength(r.strokeweight+"");
+_16.color.a=rs.opacity;
+_16.cap=this._translate(this._capMapReversed,rs.endcap);
+_16.join=rs.joinstyle=="miter"?rs.miterlimit:rs.joinstyle;
+_16.style=rs.dashstyle;
+};
+var _10=function(_17){
+var s=_17.rawNode.skew,sm=s.matrix,so=s.offset;
+_17.matrix=m.normalize({xx:sm.xtox,xy:sm.ytox,yx:sm.xtoy,yy:sm.ytoy,dx:g.pt2px(so.x),dy:g.pt2px(so.y)});
+};
+var _18=function(_19){
+_19.bgNode=_19.rawNode.firstChild;
+};
+var _3=function(_1a){
+var r=_1a.rawNode,_1b=r.outerHTML.match(/arcsize = \"(\d*\.?\d+[%f]?)\"/)[1],_1c=r.style,_1d=parseFloat(_1c.width),_1e=parseFloat(_1c.height);
+_1b=(_1b.indexOf("%")>=0)?parseFloat(_1b)/100:_1._parseFloat(_1b);
+_1a.shape=g.makeParameters(g.defaultRect,{x:parseInt(_1c.left),y:parseInt(_1c.top),width:_1d,height:_1e,r:Math.min(_1d,_1e)*_1b});
+};
+var _5=function(_1f){
+var _20=_1f.rawNode.style,rx=parseInt(_20.width)/2,ry=parseInt(_20.height)/2;
+_1f.shape=g.makeParameters(g.defaultEllipse,{cx:parseInt(_20.left)+rx,cy:parseInt(_20.top)+ry,rx:rx,ry:ry});
+};
+var _4=function(_21){
+var _22=_21.rawNode.style,r=parseInt(_22.width)/2;
+_21.shape=g.makeParameters(g.defaultCircle,{cx:parseInt(_22.left)+r,cy:parseInt(_22.top)+r,r:r});
+};
+var _6=function(_23){
+var _24=_23.shape=dojo.clone(g.defaultLine),p=_23.rawNode.path.v.match(g.pathVmlRegExp);
+do{
+if(p.length<7||p[0]!="m"||p[3]!="l"||p[6]!="e"){
+break;
+}
+_24.x1=parseInt(p[1]);
+_24.y1=parseInt(p[2]);
+_24.x2=parseInt(p[4]);
+_24.y2=parseInt(p[5]);
+}while(false);
+};
+var _7=function(_25){
+var _26=_25.shape=dojo.clone(g.defaultPolyline),p=_25.rawNode.path.v.match(g.pathVmlRegExp);
+do{
+if(p.length<3||p[0]!="m"){
+break;
+}
+var x=parseInt(p[0]),y=parseInt(p[1]);
+if(isNaN(x)||isNaN(y)){
+break;
+}
+_26.points.push({x:x,y:y});
+if(p.length<6||p[3]!="l"){
+break;
+}
+for(var i=4;i<p.length;i+=2){
+x=parseInt(p[i]);
+y=parseInt(p[i+1]);
+if(isNaN(x)||isNaN(y)){
+break;
+}
+_26.points.push({x:x,y:y});
+}
+}while(false);
+};
+var _c=function(_27){
+_27.shape=dojo.clone(g.defaultImage);
+_27.shape.src=_27.rawNode.firstChild.src;
+};
+var _d=function(_28){
+var mm=_28.rawNode.filters["DXImageTransform.Microsoft.Matrix"];
+_28.matrix=m.normalize({xx:mm.M11,xy:mm.M12,yx:mm.M21,yy:mm.M22,dx:mm.Dx,dy:mm.Dy});
+};
+var _9=function(_29){
+var _2a=_29.shape=dojo.clone(g.defaultText),r=_29.rawNode,p=r.path.v.match(g.pathVmlRegExp);
+do{
+if(!p||p.length!=7){
+break;
+}
+var c=r.childNodes,i=0;
+for(;i<c.length&&c[i].tagName!="textpath";++i){
+}
+if(i>=c.length){
+break;
+}
+var s=c[i].style;
+_2a.text=c[i].string;
+switch(s["v-text-align"]){
+case "left":
+_2a.x=parseInt(p[1]);
+_2a.align="start";
+break;
+case "center":
+_2a.x=(parseInt(p[1])+parseInt(p[4]))/2;
+_2a.align="middle";
+break;
+case "right":
+_2a.x=parseInt(p[4]);
+_2a.align="end";
+break;
+}
+_2a.y=parseInt(p[2]);
+_2a.decoration=s["text-decoration"];
+_2a.rotated=s["v-rotate-letters"].toLowerCase() in _1._bool;
+_2a.kerning=s["v-text-kern"].toLowerCase() in _1._bool;
+return;
+}while(false);
+_29.shape=null;
+};
+var _a=function(_2b){
+var _2c=_2b.fontStyle=dojo.clone(g.defaultFont),c=_2b.rawNode.childNodes,i=0;
+for(;i<c.length&&c[i].tagName=="textpath";++i){
+}
+if(i>=c.length){
+_2b.fontStyle=null;
+return;
+}
+var s=c[i].style;
+_2c.style=s.fontstyle;
+_2c.variant=s.fontvariant;
+_2c.weight=s.fontweight;
+_2c.size=s.fontsize;
+_2c.family=s.fontfamily;
+};
+var _b=function(_2d){
+_10(_2d);
+var _2e=_2d.matrix,fs=_2d.fontStyle;
+if(_2e&&fs){
+_2d.matrix=m.multiply(_2e,{dy:g.normalizedLength(fs.size)*0.35});
+}
+};
+var _8=function(_2f){
+var _30=_2f.shape=dojo.clone(g.defaultPath),p=_2f.rawNode.path.v.match(g.pathVmlRegExp),t=[],_31=false,map=g.Path._pathVmlToSvgMap;
+for(var i=0;i<p.length;++p){
+var s=p[i];
+if(s in map){
+_31=false;
+t.push(map[s]);
+}else{
+if(!_31){
+var n=parseInt(s);
+if(isNaN(n)){
+_31=true;
+}else{
+t.push(n);
+}
+}
+}
+}
+var l=t.length;
+if(l>=4&&t[l-1]==""&&t[l-2]==0&&t[l-3]==0&&t[l-4]=="l"){
+t.splice(l-4,4);
+}
+if(l){
+_30.path=t.join(" ");
+}
+};
+return _1;
 });

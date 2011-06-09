@@ -1,41 +1,38 @@
-define(["dojo/_base/lang", "./_base"], function(dojo, validate){
-// summary: Provides ISBN validation functions in `dojox.validate`
-//
-dojox.validate.isValidIsbn = function(/* String */value) {
-	// summary: Validate ISBN-10 or ISBN-13 based on the length of value
-	// value: String
-	//		An ISBN to validate
-	// returns: Boolean
-	var len, sum = 0, weight;
-	if(!dojo.isString(value)){
-		value = String(value);
-	}
-	value = value.replace(/[- ]/g,''); //ignore dashes and whitespaces
-	len = value.length;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	switch(len){
-		case 10:
-			weight = len;
-			// ISBN-10 validation algorithm
-			for(var i = 0; i < 9; i++){
-				sum += parseInt(value.charAt(i)) * weight;
-				weight--;
-			}
-			var t = value.charAt(9).toUpperCase();
-			sum += t == 'X' ? 10 : parseInt(t);
-			return sum % 11 == 0; // Boolean
-			break;
-		case 13:
-			weight = -1;
-			for(var i = 0; i< len; i++){
-				sum += parseInt(value.charAt(i)) * (2 + weight);
-				weight *= -1;
-			}
-			return sum % 10 == 0; // Boolean
-			break;
-	}
-	return false;
+define(["dojo/_base/lang","./_base"],function(_1,_2){
+dojox.validate.isValidIsbn=function(_3){
+var _4,_5=0,_6;
+if(!_1.isString(_3)){
+_3=String(_3);
+}
+_3=_3.replace(/[- ]/g,"");
+_4=_3.length;
+switch(_4){
+case 10:
+_6=_4;
+for(var i=0;i<9;i++){
+_5+=parseInt(_3.charAt(i))*_6;
+_6--;
+}
+var t=_3.charAt(9).toUpperCase();
+_5+=t=="X"?10:parseInt(t);
+return _5%11==0;
+break;
+case 13:
+_6=-1;
+for(var i=0;i<_4;i++){
+_5+=parseInt(_3.charAt(i))*(2+_6);
+_6*=-1;
+}
+return _5%10==0;
+break;
+}
+return false;
 };
-
 return dojox.validate.isValidIsbn;
 });

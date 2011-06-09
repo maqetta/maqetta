@@ -1,140 +1,79 @@
-define(["../main", "./util/QueryResults"], function(dojo) {
-	// module:
-	//		dojo/store/DataStore
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-
-dojo.declare("dojo.store.DataStore", null, {
-	target: "",
-	constructor: function(options){
-		// summary:
-		//		This is an adapter for using Dojo Data stores with an object store consumer.
-		//		You can provide a Dojo data store and use this adapter to interact with it through
-		//		the Dojo object store API
-		// options: Object?
-		//		This provides any configuration information that will be mixed into the store,
-		//		including a reference to the Dojo data store under the property "store".
-		dojo.mixin(this, options);
-	},
-	// store:
-	//		The object store to convert to a data store
-	store: null,
-	_objectConverter: function(callback){
-		var store = this.store;
-		return function(item){
-			var object = {};
-			var attributes = store.getAttributes(item);
-			for(var i = 0; i < attributes.length; i++){
-				object[attributes[i]] = store.getValue(item, attributes[i]);
-			}
-			return callback(object);
-		};
-	},
-	get: function(id, options){
-		// summary:
-		//		Retrieves an object by it's identity. This will trigger a fetchItemByIdentity
-		// id: Object?
-		//		The identity to use to lookup the object
-		var returnedObject, returnedError;
-		var deferred = new dojo.Deferred();
-		this.store.fetchItemByIdentity({
-			identity: id,
-			onItem: this._objectConverter(function(object){
-				deferred.resolve(returnedObject = object);
-			}),
-			onError: function(error){
-				deferred.reject(returnedError = error);
-			}
-		});
-		if(returnedObject){
-			// if it was returned synchronously
-			return returnedObject;
-		}
-		if(returnedError){
-			throw returnedError;
-		}
-		return deferred.promise;
-	},
-	put: function(object, options){
-		// summary:
-		//		Stores an object by its identity.
-		// object: Object
-		//		The object to store.
-		// options: Object?
-		//		Additional metadata for storing the data.  Includes a reference to an id
-		//		that the object may be stored with (i.e. { id: "foo" }).
-		var id = options && typeof options.id != "undefined" || this.getIdentity(object);
-		var store = this.store;
-		if(typeof id == "undefined"){
-			store.newItem(object);
-		}else{
-			store.fetchItemByIdentity({
-				identity: id,
-				onItem: function(item){
-					if(item){
-						for(var i in object){
-							if(store.getValue(item, i) != object[i]){
-								store.setValue(item, i, object[i]);
-							}
-						}
-					}else{
-						store.newItem(object);
-					}
-				}
-			});
-		}
-	},
-	remove: function(id){
-		// summary:
-		//		Deletes an object by its identity.
-		// id: Object
-		//		The identity to use to delete the object
-		var store = this.store;
-		this.store.fetchItemByIdentity({
-			identity: id,
-			onItem: function(item){
-				store.deleteItem(item);
-			}
-		});
-	},
-	query: function(query, options){
-		// summary:
-		//		Queries the store for objects.
-		// query: Object
-		//		The query to use for retrieving objects from the store
-		// options: Object?
-		//		Optional options object as used by the underlying dojo.data Store.
-		// returns: dojo.store.util.QueryResults
-		//		A query results object that can be used to iterate over results.
-		var fetchHandle;
-		var deferred = new dojo.Deferred(function(){ fetchHandle.abort && fetchHandle.abort(); });
-		deferred.total = new dojo.Deferred();
-		var converter = this._objectConverter(function(object){return object;});
-		fetchHandle = this.store.fetch(dojo.mixin({
-			query: query,
-			onBegin: function(count){
-				deferred.total.resolve(count);
-			},
-			onComplete: function(results){
-				deferred.resolve(dojo.map(results, converter));
-			},
-			onError: function(error){
-				deferred.reject(error);
-			}
-		}, options));
-		return dojo.store.util.QueryResults(deferred);
-	},
-	getIdentity: function(object){
-		// summary:
-		//		Fetch the identity for the given object.
-		// object: Object
-		//		The data object to get the identity from.
-		// returns: Number
-		//		The id of the given object.
-		return object[this.idProperty || this.store.getIdentityAttributes()[0]];
-	}
+define("dojo/store/DataStore",["../main","./util/QueryResults"],function(_1){
+_1.declare("dojo.store.DataStore",null,{target:"",constructor:function(_2){
+_1.mixin(this,_2);
+},store:null,_objectConverter:function(_3){
+var _4=this.store;
+return function(_5){
+var _6={};
+var _7=_4.getAttributes(_5);
+for(var i=0;i<_7.length;i++){
+_6[_7[i]]=_4.getValue(_5,_7[i]);
+}
+return _3(_6);
+};
+},get:function(id,_8){
+var _9,_a;
+var _b=new _1.Deferred();
+this.store.fetchItemByIdentity({identity:id,onItem:this._objectConverter(function(_c){
+_b.resolve(_9=_c);
+}),onError:function(_d){
+_b.reject(_a=_d);
+}});
+if(_9){
+return _9;
+}
+if(_a){
+throw _a;
+}
+return _b.promise;
+},put:function(_e,_f){
+var id=_f&&typeof _f.id!="undefined"||this.getIdentity(_e);
+var _10=this.store;
+if(typeof id=="undefined"){
+_10.newItem(_e);
+}else{
+_10.fetchItemByIdentity({identity:id,onItem:function(_11){
+if(_11){
+for(var i in _e){
+if(_10.getValue(_11,i)!=_e[i]){
+_10.setValue(_11,i,_e[i]);
+}
+}
+}else{
+_10.newItem(_e);
+}
+}});
+}
+},remove:function(id){
+var _12=this.store;
+this.store.fetchItemByIdentity({identity:id,onItem:function(_13){
+_12.deleteItem(_13);
+}});
+},query:function(_14,_15){
+var _16;
+var _17=new _1.Deferred(function(){
+_16.abort&&_16.abort();
 });
-
-return dojo.store.DataStore;
+_17.total=new _1.Deferred();
+var _18=this._objectConverter(function(_19){
+return _19;
+});
+_16=this.store.fetch(_1.mixin({query:_14,onBegin:function(_1a){
+_17.total.resolve(_1a);
+},onComplete:function(_1b){
+_17.resolve(_1.map(_1b,_18));
+},onError:function(_1c){
+_17.reject(_1c);
+}},_15));
+return _1.store.util.QueryResults(_17);
+},getIdentity:function(_1d){
+return _1d[this.idProperty||this.store.getIdentityAttributes()[0]];
+}});
+return _1.store.DataStore;
 });

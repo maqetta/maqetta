@@ -1,91 +1,33 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/date/locale", "dojo/i18n"], function(d, dlang, ddl, i18n){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.getObject("date.relative", true, dojox);
-
-/*=====
-	dojox.date.relative.__FormatOptions = function(){
-	//	locale: String
-	//		override the locale used to determine formatting rules
-	//	relativeDate: Date
-	//		Date to calculate relation to (defaults to new Date())
-	//	weekCheck: boolean
-	//		Whether or not to display the day of week (defaults true)
-		this.locale = locale;
-		this.relativeDate = relativeDate;
-		this.weekCheck = weekCheck;
-	}
-=====*/
-
-	var DAY = 1000*60*60*24,
-	    SIX_DAYS = 6 * DAY,
-	    del = d.delegate,
-	    ggb = ddl._getGregorianBundle,
-	    fmt = ddl.format;
-
-	function _clearTime(date){
-	    date = new Date(date);
-	    date.setHours(0, 0, 0, 0);
-	    return date;
-	}
-
-dojox.date.relative.format = function(/*Date*/dateObject, /*dojox.date.relative.__FormatOptions?*/options){
-	// summary:
-	//		Format a Date object as a String, using locale-specific settings,
-	//		relative to the current date or some other date.
-	//
-	// description:
-	//		Create a string from a Date object using the most significant information
-	//		and a known localized pattern.  This method formats both the date and
-	//		time from dateObject.  Formatting patterns are chosen appropriate to
-	//		the locale.
-	//
-	//		If the day portion of the date falls within the current date (or the
-	//		relativeDate option, if present), then the time will be all that
-	//		is displayed
-	//
-	//		If the day portion of the date falls within the past week (or the
-	//		week preceeding relativeDate, if present), then the display will show
-	//		day of week and time.  This functionality can be turned off by setting
-	//		weekCheck to false.
-	//
-	//		If the year portion of the date falls within the current year (or the
-	//		year portion of relativeDate, if present), then the display will show
-	//		month and day.
-	//
-	//		Otherwise, this function is equivalent to calling dojo.date.format with
-	//		formatLength of "medium"
-	//
-	// dateObject:
-	//		the date and time to be formatted.
-	
-	options = options || {};
-	
-	var today = _clearTime(options.relativeDate || new Date()),
-		diff = today.getTime() - _clearTime(dateObject).getTime(),
-		fmtOpts = {locale: options.locale};
-	
-	if(diff === 0){
-		// today: 9:32 AM
-		return fmt(dateObject, del(fmtOpts, {selector: "time"}));
-	}else if(diff <= SIX_DAYS && diff > 0 && options.weekCheck !== false){
-		// within the last week: Mon 9:32 am
-		return fmt(dateObject, del(fmtOpts, {selector: "date", datePattern: "EEE"})) +
-				" " +
-				fmt(dateObject, del(fmtOpts, {selector: "time", formatLength: "short"}));
-	}else if(dateObject.getFullYear() == today.getFullYear()){
-		// this year: Nov 1
-		var bundle = ggb(i18n.normalizeLocale(options.locale));
-		return fmt(dateObject, del(fmtOpts, {
-			selector: "date",
-			datePattern: bundle["dateFormatItem-MMMd"]
-		}));
-	}else{
-		// default: Jun 1, 2010
-		return fmt(dateObject, del(fmtOpts, {
-			selector: "date",
-			formatLength: "medium",
-			locale: options.locale
-		}));
-	}
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/date/locale","dojo/i18n"],function(d,_1,_2,_3){
+dojo.getObject("date.relative",true,dojox);
+var _4=1000*60*60*24,_5=6*_4,_6=d.delegate,_7=_2._getGregorianBundle,_8=_2.format;
+function _9(_a){
+_a=new Date(_a);
+_a.setHours(0,0,0,0);
+return _a;
+};
+dojox.date.relative.format=function(_b,_c){
+_c=_c||{};
+var _d=_9(_c.relativeDate||new Date()),_e=_d.getTime()-_9(_b).getTime(),_f={locale:_c.locale};
+if(_e===0){
+return _8(_b,_6(_f,{selector:"time"}));
+}else{
+if(_e<=_5&&_e>0&&_c.weekCheck!==false){
+return _8(_b,_6(_f,{selector:"date",datePattern:"EEE"}))+" "+_8(_b,_6(_f,{selector:"time",formatLength:"short"}));
+}else{
+if(_b.getFullYear()==_d.getFullYear()){
+var _10=_7(_3.normalizeLocale(_c.locale));
+return _8(_b,_6(_f,{selector:"date",datePattern:_10["dateFormatItem-MMMd"]}));
+}else{
+return _8(_b,_6(_f,{selector:"date",formatLength:"medium",locale:_c.locale}));
+}
+}
+}
 };
 });

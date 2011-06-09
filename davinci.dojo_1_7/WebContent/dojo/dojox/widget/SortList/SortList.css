@@ -1,5 +1,4 @@
 .sortListBody { margin:0; padding:0; background:#fff; }
-
 .soria .sortListBody li,
 .tundra .sortListBody li {
 	border-bottom:1px solid #b7b7b7;
@@ -9,23 +8,17 @@
 	cursor:pointer; 
 	padding:4px 4px 3px 4px;
 }
-
 .sortList { height:100%; width:100%; }
-
-/* for nested layout elements */
 .dijitBorderContainer .dojoxSortList { width: auto; height: auto;}
-
 .sortListBodyWrapper { 
 	border:1px solid #b7b7b7; 
 	overflow:auto; 
 	height:100%; 
 	cursor:pointer;
 } 
-
 .soria .sortListBodyWrapper {
 	border:1px solid #333; 
 }
-
 .soria .sortListItemOdd,
 .tundra .sortListItemOdd { background:#f2f5f9; }
 .tundra .sortListTitle {
@@ -41,10 +34,8 @@
 	font-weight:bold;
 	color:#fff; 
 }
-
 .sortListItemSelected { background:#b7cdee !important; }
 .sortListItemHover { background:#ff6 !important; }
-
 .soria .sortListIcon,
 .tundra .sortListIcon { 
 	float:right;
@@ -57,12 +48,10 @@
 .tundra .sortListAsc .sortListIcon {
 	background-position: -21px center;
 }
-
 .soria .sortListDesc .sortListIcon,
 .soria .sortListAsc .sortListIcon {
 	background:url('../../../dijit/themes/soria/images/spriteRoundedIconsSmall.png') no-repeat -15px top;
 }
-
 .soria .sortListDesc .sortListIcon {
 	background-position:-45px 0px; 
 }

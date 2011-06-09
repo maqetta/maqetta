@@ -1,202 +1,112 @@
-define([ "dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html",
-		"dojox/geo/openlayers/Feature" ], function(dojo, declare, htmlArg, featureArg){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.declare("dojox.geo.openlayers.WidgetFeature", dojox.geo.openlayers.Feature, {
-		//	summary:
-		//		Wraps a Dojo widget, provide geolocalisation of the widget and interface
-		//		to Layer class.
-		//	description:
-		//		This class allows to add a widget in a `dojox.geo.openlayers.Layer`.
-		//		Parameters are passed to the constructor. These parameters describe the widget
-		//		and provide geo-localisation of this widget.
-		//		parameters can be: 
-		//	* _createWidget_: Function for widget creation. Must return a `dijit._Widget`.
-		//	* _dojoType_: The class of a widget to create;
-		//	* _dijitId_: The digitId of an existing widget.
-		//	* _widget_: An already created widget.
-		//	* _width_: The width of the widget.
-		//	* _height_: The height of the widget.
-		//	* _longitude_: The longitude, in decimal degrees where to place the widget.
-		//	* _latitude_: The latitude, in decimal degrees where to place the widget.
-		//	You must define a least one widget retrieval parameter and the geo-localization parameters.
-		_widget : null,
-		_bbox : null,
-
-		constructor : function(params){
-			//	summary:
-			//		Constructs a new `dojox.geo.openlayers.WidgetFeature`
-			//	params: Object
-			//		The parameters describing the widget.
-			this._params = params;
-		},
-
-		setParameters : function(params){
-			//	summary:
-			//		Sets the parameters describing the widget.
-			//	params: Object
-			//		The parameters describing the widget.
-			this._params = params;
-		},
-
-		getParameters : function(){
-			//	summary:
-			//		Retreives the parameters describing the widget.
-			//	returns:
-			//		The parameters describing the widget.
-			return this._params;
-		},
-
-		_getWidget : function(){
-			//	summary:
-			//		Creates, if necessary the widget and returns it;
-			//	tags:
-			//		private
-			var params = this._params;
-
-			if ((this._widget == null) && (params != null)) {
-				var w = null;
-
-				if (typeof (params.createWidget) == "function") {
-					w = params.createWidget.call(this);
-				} else if (params.dojoType) {
-					dojo["require"](params.dojoType);
-					var c = dojo.getObject(params.dojoType);
-					w = new c(params);
-				} else if (params.dijitId) {
-					w = dijit.byId(params.dijitId);
-				} else if (params.widget) {
-					w = params.widget;
-				}
-
-				if (w != null) {
-					this._widget = w;
-					if (typeof (w.startup) == "function")
-						w.startup();
-					var n = w.domNode;
-					if (n != null)
-						dojo.style(n, {
-							position : "absolute"
-						});
-				}
-				this._widget = w;
-			}
-			return this._widget;
-		},
-
-		_getWidgetWidth : function(){
-			//	summary:
-			//		gets the widget width
-			//	tags:
-			//		private
-			var p = this._params;
-			if (p.width)
-				return p.width;
-			var w = this._getWidget();
-			if (w)
-				return dojo.style(w.domNode, "width");
-		},
-
-		_getWidgetHeight : function(){
-			//	summary:
-			//		gets the widget height
-			//	tags:
-			//		private
-			var p = this._params;
-			if (p.height)
-				return p.height;
-			var w = this._getWidget();
-			if (w)
-				return dojo.style(w.domNode, "height");
-		},
-
-		render : function(){
-			//	summary:
-			//		renders the widget.
-			//	descrption:
-			//		Places the widget accordingly to longitude and latitude defined in parameters.
-			//		This function is called when the center of the maps or zoom factor changes.
-			var layer = this.getLayer();
-
-			var widget = this._getWidget();
-			if (widget == null)
-				return;
-			var params = this._params;
-			var lon = params.longitude;
-			var lat = params.latitude;
-			var from = this.getCoordinateSystem();
-			var map = layer.getDojoMap();
-			var p = map.transformXY(lon, lat, from);
-			var a = this._getLocalXY(p);
-
-			var width = this._getWidgetWidth();
-			var height = this._getWidgetHeight();
-
-			var x = a[0] - width / 2;
-			var y = a[1] - height / 2;
-			var dom = widget.domNode;
-
-			// var p = layer._surface._parent;
-			// var p = layer._surface.rawNode.parentNode;
-			var p = layer.olLayer.div;
-			if (dom.parentNode != p) {
-				if (dom.parentNode)
-					dom.parentNode.removeChild(dom);
-				p.appendChild(dom);
-			}
-
-			this._updateWidgetPosition({
-				x : x,
-				y : y,
-				width : width,
-				height : height
-			});
-		},
-
-		_updateWidgetPosition : function(box){
-			//	summary:
-			//		Places the widget with the computed x and y values
-			//	tags:
-			//		private
-			//	var box = this._params;
-			var w = this._widget;
-			var dom = w.domNode;
-
-			dojo.style(dom, {
-				position : "absolute",
-				left : box.x + "px",
-				top : box.y + "px",
-				width : box.width + "px",
-				height : box.height + "px"
-			});
-
-			if (w.srcNodeRef) {
-				dojo.style(w.srcNodeRef, {
-					position : "absolute",
-					left : box.x + "px",
-					top : box.y + "px",
-					width : box.width + "px",
-					height : box.height + "px"
-				});
-			}
-
-			if (dojo.isFunction(w.resize))
-				w.resize({
-					w : box.width,
-					h : box.height
-				});
-		},
-
-		remove : function(){
-			//	summary:
-			//		removes this feature.
-			//	description:
-			//		Remove this feature by disconnecting the widget from the dom.
-			var w = this.getWidget();
-			if (!w)
-				return;
-			var dom = w.domNode;
-			if (dom.parentNode)
-				dom.parentNode.removeChild(dom);
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4){
+return _1.declare("dojox.geo.openlayers.WidgetFeature",dojox.geo.openlayers.Feature,{_widget:null,_bbox:null,constructor:function(_5){
+this._params=_5;
+},setParameters:function(_6){
+this._params=_6;
+},getParameters:function(){
+return this._params;
+},_getWidget:function(){
+var _7=this._params;
+if((this._widget==null)&&(_7!=null)){
+var w=null;
+if(typeof (_7.createWidget)=="function"){
+w=_7.createWidget.call(this);
+}else{
+if(_7.dojoType){
+_1["require"](_7.dojoType);
+var c=_1.getObject(_7.dojoType);
+w=new c(_7);
+}else{
+if(_7.dijitId){
+w=dijit.byId(_7.dijitId);
+}else{
+if(_7.widget){
+w=_7.widget;
+}
+}
+}
+}
+if(w!=null){
+this._widget=w;
+if(typeof (w.startup)=="function"){
+w.startup();
+}
+var n=w.domNode;
+if(n!=null){
+_1.style(n,{position:"absolute"});
+}
+}
+this._widget=w;
+}
+return this._widget;
+},_getWidgetWidth:function(){
+var p=this._params;
+if(p.width){
+return p.width;
+}
+var w=this._getWidget();
+if(w){
+return _1.style(w.domNode,"width");
+}
+},_getWidgetHeight:function(){
+var p=this._params;
+if(p.height){
+return p.height;
+}
+var w=this._getWidget();
+if(w){
+return _1.style(w.domNode,"height");
+}
+},render:function(){
+var _8=this.getLayer();
+var _9=this._getWidget();
+if(_9==null){
+return;
+}
+var _a=this._params;
+var _b=_a.longitude;
+var _c=_a.latitude;
+var _d=this.getCoordinateSystem();
+var _e=_8.getDojoMap();
+var p=_e.transformXY(_b,_c,_d);
+var a=this._getLocalXY(p);
+var _f=this._getWidgetWidth();
+var _10=this._getWidgetHeight();
+var x=a[0]-_f/2;
+var y=a[1]-_10/2;
+var dom=_9.domNode;
+var p=_8.olLayer.div;
+if(dom.parentNode!=p){
+if(dom.parentNode){
+dom.parentNode.removeChild(dom);
+}
+p.appendChild(dom);
+}
+this._updateWidgetPosition({x:x,y:y,width:_f,height:_10});
+},_updateWidgetPosition:function(box){
+var w=this._widget;
+var dom=w.domNode;
+_1.style(dom,{position:"absolute",left:box.x+"px",top:box.y+"px",width:box.width+"px",height:box.height+"px"});
+if(w.srcNodeRef){
+_1.style(w.srcNodeRef,{position:"absolute",left:box.x+"px",top:box.y+"px",width:box.width+"px",height:box.height+"px"});
+}
+if(_1.isFunction(w.resize)){
+w.resize({w:box.width,h:box.height});
+}
+},remove:function(){
+var w=this.getWidget();
+if(!w){
+return;
+}
+var dom=w.domNode;
+if(dom.parentNode){
+dom.parentNode.removeChild(dom);
+}
+}});
 });

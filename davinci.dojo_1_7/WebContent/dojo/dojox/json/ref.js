@@ -1,359 +1,252 @@
-define(["dojo/_base/kernel", "dojox", "dojo/date/stamp", "dojo/_base/array", "dojo/_base/json"], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("json", true, dojox);
-
-return dojox.json.ref = {
-	// summary:
-	// 		Adds advanced JSON {de}serialization capabilities to the base json library.
-	// 		This enhances the capabilities of dojo.toJson and dojo.fromJson,
-	// 		adding referencing support, date handling, and other extra format handling.
-	// 		On parsing, references are resolved. When references are made to
-	// 		ids/objects that have been loaded yet, the loader function will be set to
-	// 		_loadObject to denote a lazy loading (not loaded yet) object.
-
-
-	resolveJson: function(/*Object*/ root,/*Object?*/ args){
-		// summary:
-		// 		Indexes and resolves references in the JSON object.
-		// description:
-		// 		A JSON Schema object that can be used to advise the handling of the JSON (defining ids, date properties, urls, etc)
-		//
-		// root:
-		//		The root object of the object graph to be processed
-		// args:
-		//		Object with additional arguments:
-		//
-		// The *index* parameter.
-		//		This is the index object (map) to use to store an index of all the objects.
-		// 		If you are using inter-message referencing, you must provide the same object for each call.
-		// The *defaultId* parameter.
-		//		This is the default id to use for the root object (if it doesn't define it's own id)
-		//	The *idPrefix* parameter.
-		//		This the prefix to use for the ids as they enter the index. This allows multiple tables
-		// 		to use ids (that might otherwise collide) that enter the same global index.
-		// 		idPrefix should be in the form "/Service/".  For example,
-		//		if the idPrefix is "/Table/", and object is encountered {id:"4",...}, this would go in the
-		//		index as "/Table/4".
-		//	The *idAttribute* parameter.
-		//		This indicates what property is the identity property. This defaults to "id"
-		//	The *assignAbsoluteIds* parameter.
-		//		This indicates that the resolveJson should assign absolute ids (__id) as the objects are being parsed.
-		//
-		// The *schemas* parameter
-		//		This provides a map of schemas, from which prototypes can be retrieved
-		// The *loader* parameter
-		//		This is a function that is called added to the reference objects that can't be resolved (lazy objects)
-		// return:
-		//		An object, the result of the processing
-		args = args || {};
-		var idAttribute = args.idAttribute || 'id';
-		var refAttribute = this.refAttribute;
-		var idAsRef = args.idAsRef;
-		var prefix = args.idPrefix || '';
-		var assignAbsoluteIds = args.assignAbsoluteIds;
-		var index = args.index || {}; // create an index if one doesn't exist
-		var timeStamps = args.timeStamps;
-		var ref,reWalk=[];
-		var pathResolveRegex = /^(.*\/)?(\w+:\/\/)|[^\/\.]+\/\.\.\/|^.*\/(\/)/;
-		var addProp = this._addProp;
-		var F = function(){};
-		function walk(it, stop, defaultId, needsPrefix, schema, defaultObject){
-			// this walks the new graph, resolving references and making other changes
-		 	var i, update, val, id = idAttribute in it ? it[idAttribute] : defaultId;
-		 	if(idAttribute in it || ((id !== undefined) && needsPrefix)){
-		 		id = (prefix + id).replace(pathResolveRegex,'$2$3');
-		 	}
-		 	var target = defaultObject || it;
-			if(id !== undefined){ // if there is an id available...
-				if(assignAbsoluteIds){
-					it.__id = id;
-				}
-				if(args.schemas && (!(it instanceof Array)) && // won't try on arrays to do prototypes, plus it messes with queries
-		 					(val = id.match(/^(.+\/)[^\.\[]*$/))){ // if it has a direct table id (no paths)
-		 			schema = args.schemas[val[1]];
-				}
-				// if the id already exists in the system, we should use the existing object, and just
-				// update it... as long as the object is compatible
-				if(index[id] && ((it instanceof Array) == (index[id] instanceof Array))){
-					target = index[id];
-					delete target.$ref; // remove this artifact
-					delete target._loadObject;
-					update = true;
-				}else{
-				 	var proto = schema && schema.prototype; // and if has a prototype
-					if(proto){
-						// if the schema defines a prototype, that needs to be the prototype of the object
-						F.prototype = proto;
-						target = new F();
-					}
-				}
-				index[id] = target; // add the prefix, set _id, and index it
-				if(timeStamps){
-					timeStamps[id] = args.time;
-				}
-			}
-			while(schema){
-				var properties = schema.properties;
-				if(properties){
-					for(i in it){
-						var propertyDefinition = properties[i];
-						if(propertyDefinition && propertyDefinition.format == 'date-time' && typeof it[i] == 'string'){
-							it[i] = dojo.date.stamp.fromISOString(it[i]);
-						}
-					}
-				}
-				schema = schema["extends"];
-			}
-			var length = it.length;
-			for(i in it){
-				if(i==length){
-					break;
-				}
-				if(it.hasOwnProperty(i)){
-					val=it[i];
-					if((typeof val =='object') && val && !(val instanceof Date) && i != '__parent'){
-						ref=val[refAttribute] || (idAsRef && val[idAttribute]);
-						if(!ref || !val.__parent){
-							if(it != reWalk){
-								val.__parent = target;
-							}
-						}
-						if(ref){ // a reference was found
-							// make sure it is a safe reference
-							delete it[i];// remove the property so it doesn't resolve to itself in the case of id.propertyName lazy values
-							var path = ref.toString().replace(/(#)([^\.\[])/,'$1.$2').match(/(^([^\[]*\/)?[^#\.\[]*)#?([\.\[].*)?/); // divide along the path
-							if(index[(prefix + ref).replace(pathResolveRegex,'$2$3')]){
-								ref = index[(prefix + ref).replace(pathResolveRegex,'$2$3')];
-							}else if((ref = (path[1]=='$' || path[1]=='this' || path[1]=='') ? root : index[(prefix + path[1]).replace(pathResolveRegex,'$2$3')])){  // a $ indicates to start with the root, otherwise start with an id
-								// if there is a path, we will iterate through the path references
-								if(path[3]){
-									path[3].replace(/(\[([^\]]+)\])|(\.?([^\.\[]+))/g,function(t,a,b,c,d){
-										ref = ref && ref[b ? b.replace(/[\"\'\\]/,'') : d];
-									});
-								}
-							}
-							if(ref){
-								val = ref;
-							}else{
-								// otherwise, no starting point was found (id not found), if stop is set, it does not exist, we have
-								// unloaded reference, if stop is not set, it may be in a part of the graph not walked yet,
-								// we will wait for the second loop
-								if(!stop){
-									var rewalking;
-									if(!rewalking){
-										reWalk.push(target); // we need to rewalk it to resolve references
-									}
-									rewalking = true; // we only want to add it once
-									val = walk(val, false, val[refAttribute], true, propertyDefinition);
-									// create a lazy loaded object
-									val._loadObject = args.loader;
-								}
-							}
-						}else{
-							if(!stop){ // if we are in stop, that means we are in the second loop, and we only need to check this current one,
-								// further walking may lead down circular loops
-								val = walk(
-									val,
-									reWalk==it,
-									id === undefined ? undefined : addProp(id, i), // the default id to use
-									false,
-									propertyDefinition,
-									// if we have an existing object child, we want to
-									// maintain it's identity, so we pass it as the default object
-									target != it && typeof target[i] == 'object' && target[i]
-								);
-							}
-						}
-					}
-					it[i] = val;
-					if(target!=it && !target.__isDirty){// do updates if we are updating an existing object and it's not dirty
-						var old = target[i];
-						target[i] = val; // only update if it changed
-						if(update && val !== old && // see if it is different
-								!target._loadObject && // no updates if we are just lazy loading
-								!(i.charAt(0) == '_' && i.charAt(1) == '_') && i != "$ref" &&
-								!(val instanceof Date && old instanceof Date && val.getTime() == old.getTime()) && // make sure it isn't an identical date
-								!(typeof val == 'function' && typeof old == 'function' && val.toString() == old.toString()) && // make sure it isn't an indentical function
-								index.onUpdate){
-							index.onUpdate(target,i,old,val); // call the listener for each update
-						}
-					}
-				}
-			}
-	
-			if(update && (idAttribute in it || target instanceof Array)){
-				// this means we are updating with a full representation of the object, we need to remove deleted
-				for(i in target){
-					if(!target.__isDirty && target.hasOwnProperty(i) && !it.hasOwnProperty(i) && !(i.charAt(0) == '_' && i.charAt(1) == '_') && !(target instanceof Array && isNaN(i))){
-						if(index.onUpdate && i != "_loadObject" && i != "_idAttr"){
-							index.onUpdate(target,i,target[i],undefined); // call the listener for each update
-						}
-						delete target[i];
-						while(target instanceof Array && target.length && target[target.length-1] === undefined){
-							// shorten the target if necessary
-							target.length--;
-						}
-					}
-				}
-			}else{
-				if(index.onLoad){
-					index.onLoad(target);
-				}
-			}
-			return target;
-		}
-		if(root && typeof root == 'object'){
-			root = walk(root,false,args.defaultId, true); // do the main walk through
-			walk(reWalk,false); // re walk any parts that were not able to resolve references on the first round
-		}
-		return root;
-	},
-
-
-	fromJson: function(/*String*/ str,/*Object?*/ args){
-	// summary:
-	// 		evaluates the passed string-form of a JSON object.
-	//
-	// str:
-	//		a string literal of a JSON item, for instance:
-	//			'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'
-	// args: See resolveJson
-	//
-	// return:
-	//		An object, the result of the evaluation
-		function ref(target){ // support call styles references as well
-			var refObject = {};
-			refObject[this.refAttribute] = target;
-			return refObject;
-		}
-		try{
-			var root = eval('(' + str + ')'); // do the eval
-		}catch(e){
-			throw new SyntaxError("Invalid JSON string: " + e.message + " parsing: "+ str);
-		}
-		if(root){
-			return this.resolveJson(root, args);
-		}
-		return root;
-	},
-	
-	toJson: function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*Object?*/ idPrefix, /*Object?*/ indexSubObjects){
-		// summary:
-		//		Create a JSON serialization of an object.
-		//		This has support for referencing, including circular references, duplicate references, and out-of-message references
-		// 		id and path-based referencing is supported as well and is based on http://www.json.com/2007/10/19/json-referencing-proposal-and-library/.
-		//
-		// it:
-		//		an object to be serialized.
-		//
-		// prettyPrint:
-		//		if true, we indent objects and arrays to make the output prettier.
-		//		The variable dojo.toJsonIndentStr is used as the indent string
-		//		-- to use something other than the default (tab),
-		//		change that variable before calling dojo.toJson().
-		//
-		// idPrefix: The prefix that has been used for the absolute ids
-		//
-		// return:
-		//		a String representing the serialized version of the passed object.
-		var useRefs = this._useRefs;
-		var addProp = this._addProp;
-		var refAttribute = this.refAttribute;
-		idPrefix = idPrefix || ''; // the id prefix for this context
-		var paths={};
-		var generated = {};
-		function serialize(it,path,_indentStr){
-			if(typeof it == 'object' && it){
-				var value;
-				if(it instanceof Date){ // properly serialize dates
-					return '"' + dojo.date.stamp.toISOString(it,{zulu:true}) + '"';
-				}
-				var id = it.__id;
-				if(id){ // we found an identifiable object, we will just serialize a reference to it... unless it is the root
-					if(path != '#' && ((useRefs && !id.match(/#/)) || paths[id])){
-						var ref = id;
-						if(id.charAt(0)!='#'){
-							if(it.__clientId == id){
-								ref = "cid:" + id;
-							}else if(id.substring(0, idPrefix.length) == idPrefix){ // see if the reference is in the current context
-								// a reference with a prefix matching the current context, the prefix should be removed
-								ref = id.substring(idPrefix.length);
-							}else{
-								// a reference to a different context, assume relative url based referencing
-								ref = id;
-							}
-						}
-						var refObject = {};
-						refObject[refAttribute] = ref;
-						return serialize(refObject,'#');
-					}
-					path = id;
-				}else{
-					it.__id = path; // we will create path ids for other objects in case they are circular
-					generated[path] = it;
-				}
-				paths[path] = it;// save it here so they can be deleted at the end
-				_indentStr = _indentStr || "";
-				var nextIndent = prettyPrint ? _indentStr + dojo.toJsonIndentStr : "";
-				var newLine = prettyPrint ? "\n" : "";
-				var sep = prettyPrint ? " " : "";
-	
-				if(it instanceof Array){
-					var res = dojo.map(it, function(obj,i){
-						var val = serialize(obj, addProp(path, i), nextIndent);
-						if(typeof val != "string"){
-							val = "undefined";
-						}
-						return newLine + nextIndent + val;
-					});
-					return "[" + res.join("," + sep) + newLine + _indentStr + "]";
-				}
-	
-				var output = [];
-				for(var i in it){
-					if(it.hasOwnProperty(i)){
-						var keyStr;
-						if(typeof i == "number"){
-							keyStr = '"' + i + '"';
-						}else if(typeof i == "string" && (i.charAt(0) != '_' || i.charAt(1) != '_')){
-							// we don't serialize our internal properties __id and __clientId
-							keyStr = dojo._escapeString(i);
-						}else{
-							// skip non-string or number keys
-							continue;
-						}
-						var val = serialize(it[i],addProp(path, i),nextIndent);
-						if(typeof val != "string"){
-							// skip non-serializable values
-							continue;
-						}
-						output.push(newLine + nextIndent + keyStr + ":" + sep + val);
-					}
-				}
-				return "{" + output.join("," + sep) + newLine + _indentStr + "}";
-			}else if(typeof it == "function" && dojox.json.ref.serializeFunctions){
-				return it.toString();
-			}
-	
-			return dojo.toJson(it); // use the default serializer for primitives
-		}
-		var json = serialize(it,'#','');
-		if(!indexSubObjects){
-			for(var i in generated)  {// cleanup the temporary path-generated ids
-				delete generated[i].__id;
-			}
-		}
-		return json;
-	},
-	_addProp: function(id, prop){
-		return id + (id.match(/#/) ? id.length == 1 ? '' : '.' : '#') + prop;
-	},
-	//	refAttribute: String
-	//		This indicates what property is the reference property. This acts like the idAttribute
-	// 		except that this is used to indicate the current object is a reference or only partially
-	// 		loaded. This defaults to "$ref".
-	refAttribute: "$ref",
-	_useRefs: false,
-	serializeFunctions: false
+define(["dojo/_base/kernel","dojox","dojo/date/stamp","dojo/_base/array","dojo/_base/json"],function(_1,_2){
+_1.getObject("json",true,_2);
+return _2.json.ref={resolveJson:function(_3,_4){
+_4=_4||{};
+var _5=_4.idAttribute||"id";
+var _6=this.refAttribute;
+var _7=_4.idAsRef;
+var _8=_4.idPrefix||"";
+var _9=_4.assignAbsoluteIds;
+var _a=_4.index||{};
+var _b=_4.timeStamps;
+var _c,_d=[];
+var _e=/^(.*\/)?(\w+:\/\/)|[^\/\.]+\/\.\.\/|^.*\/(\/)/;
+var _f=this._addProp;
+var F=function(){
 };
+function _10(it,_11,_12,_13,_14,_15){
+var i,_16,val,id=_5 in it?it[_5]:_12;
+if(_5 in it||((id!==undefined)&&_13)){
+id=(_8+id).replace(_e,"$2$3");
+}
+var _17=_15||it;
+if(id!==undefined){
+if(_9){
+it.__id=id;
+}
+if(_4.schemas&&(!(it instanceof Array))&&(val=id.match(/^(.+\/)[^\.\[]*$/))){
+_14=_4.schemas[val[1]];
+}
+if(_a[id]&&((it instanceof Array)==(_a[id] instanceof Array))){
+_17=_a[id];
+delete _17.$ref;
+delete _17._loadObject;
+_16=true;
+}else{
+var _18=_14&&_14.prototype;
+if(_18){
+F.prototype=_18;
+_17=new F();
+}
+}
+_a[id]=_17;
+if(_b){
+_b[id]=_4.time;
+}
+}
+while(_14){
+var _19=_14.properties;
+if(_19){
+for(i in it){
+var _1a=_19[i];
+if(_1a&&_1a.format=="date-time"&&typeof it[i]=="string"){
+it[i]=_1.date.stamp.fromISOString(it[i]);
+}
+}
+}
+_14=_14["extends"];
+}
+var _1b=it.length;
+for(i in it){
+if(i==_1b){
+break;
+}
+if(it.hasOwnProperty(i)){
+val=it[i];
+if((typeof val=="object")&&val&&!(val instanceof Date)&&i!="__parent"){
+_c=val[_6]||(_7&&val[_5]);
+if(!_c||!val.__parent){
+if(it!=_d){
+val.__parent=_17;
+}
+}
+if(_c){
+delete it[i];
+var _1c=_c.toString().replace(/(#)([^\.\[])/,"$1.$2").match(/(^([^\[]*\/)?[^#\.\[]*)#?([\.\[].*)?/);
+if(_a[(_8+_c).replace(_e,"$2$3")]){
+_c=_a[(_8+_c).replace(_e,"$2$3")];
+}else{
+if((_c=(_1c[1]=="$"||_1c[1]=="this"||_1c[1]=="")?_3:_a[(_8+_1c[1]).replace(_e,"$2$3")])){
+if(_1c[3]){
+_1c[3].replace(/(\[([^\]]+)\])|(\.?([^\.\[]+))/g,function(t,a,b,c,d){
+_c=_c&&_c[b?b.replace(/[\"\'\\]/,""):d];
+});
+}
+}
+}
+if(_c){
+val=_c;
+}else{
+if(!_11){
+var _1d;
+if(!_1d){
+_d.push(_17);
+}
+_1d=true;
+val=_10(val,false,val[_6],true,_1a);
+val._loadObject=_4.loader;
+}
+}
+}else{
+if(!_11){
+val=_10(val,_d==it,id===undefined?undefined:_f(id,i),false,_1a,_17!=it&&typeof _17[i]=="object"&&_17[i]);
+}
+}
+}
+it[i]=val;
+if(_17!=it&&!_17.__isDirty){
+var old=_17[i];
+_17[i]=val;
+if(_16&&val!==old&&!_17._loadObject&&!(i.charAt(0)=="_"&&i.charAt(1)=="_")&&i!="$ref"&&!(val instanceof Date&&old instanceof Date&&val.getTime()==old.getTime())&&!(typeof val=="function"&&typeof old=="function"&&val.toString()==old.toString())&&_a.onUpdate){
+_a.onUpdate(_17,i,old,val);
+}
+}
+}
+}
+if(_16&&(_5 in it||_17 instanceof Array)){
+for(i in _17){
+if(!_17.__isDirty&&_17.hasOwnProperty(i)&&!it.hasOwnProperty(i)&&!(i.charAt(0)=="_"&&i.charAt(1)=="_")&&!(_17 instanceof Array&&isNaN(i))){
+if(_a.onUpdate&&i!="_loadObject"&&i!="_idAttr"){
+_a.onUpdate(_17,i,_17[i],undefined);
+}
+delete _17[i];
+while(_17 instanceof Array&&_17.length&&_17[_17.length-1]===undefined){
+_17.length--;
+}
+}
+}
+}else{
+if(_a.onLoad){
+_a.onLoad(_17);
+}
+}
+return _17;
+};
+if(_3&&typeof _3=="object"){
+_3=_10(_3,false,_4.defaultId,true);
+_10(_d,false);
+}
+return _3;
+},fromJson:function(str,_1e){
+function ref(_1f){
+var _20={};
+_20[this.refAttribute]=_1f;
+return _20;
+};
+try{
+var _21=eval("("+str+")");
+}
+catch(e){
+throw new SyntaxError("Invalid JSON string: "+e.message+" parsing: "+str);
+}
+if(_21){
+return this.resolveJson(_21,_1e);
+}
+return _21;
+},toJson:function(it,_22,_23,_24){
+var _25=this._useRefs;
+var _26=this._addProp;
+var _27=this.refAttribute;
+_23=_23||"";
+var _28={};
+var _29={};
+function _2a(it,_2b,_2c){
+if(typeof it=="object"&&it){
+var _2d;
+if(it instanceof Date){
+return "\""+_1.date.stamp.toISOString(it,{zulu:true})+"\"";
+}
+var id=it.__id;
+if(id){
+if(_2b!="#"&&((_25&&!id.match(/#/))||_28[id])){
+var ref=id;
+if(id.charAt(0)!="#"){
+if(it.__clientId==id){
+ref="cid:"+id;
+}else{
+if(id.substring(0,_23.length)==_23){
+ref=id.substring(_23.length);
+}else{
+ref=id;
+}
+}
+}
+var _2e={};
+_2e[_27]=ref;
+return _2a(_2e,"#");
+}
+_2b=id;
+}else{
+it.__id=_2b;
+_29[_2b]=it;
+}
+_28[_2b]=it;
+_2c=_2c||"";
+var _2f=_22?_2c+_1.toJsonIndentStr:"";
+var _30=_22?"\n":"";
+var sep=_22?" ":"";
+if(it instanceof Array){
+var res=_1.map(it,function(obj,i){
+var val=_2a(obj,_26(_2b,i),_2f);
+if(typeof val!="string"){
+val="undefined";
+}
+return _30+_2f+val;
+});
+return "["+res.join(","+sep)+_30+_2c+"]";
+}
+var _31=[];
+for(var i in it){
+if(it.hasOwnProperty(i)){
+var _32;
+if(typeof i=="number"){
+_32="\""+i+"\"";
+}else{
+if(typeof i=="string"&&(i.charAt(0)!="_"||i.charAt(1)!="_")){
+_32=_1._escapeString(i);
+}else{
+continue;
+}
+}
+var val=_2a(it[i],_26(_2b,i),_2f);
+if(typeof val!="string"){
+continue;
+}
+_31.push(_30+_2f+_32+":"+sep+val);
+}
+}
+return "{"+_31.join(","+sep)+_30+_2c+"}";
+}else{
+if(typeof it=="function"&&_2.json.ref.serializeFunctions){
+return it.toString();
+}
+}
+return _1.toJson(it);
+};
+var _33=_2a(it,"#","");
+if(!_24){
+for(var i in _29){
+delete _29[i].__id;
+}
+}
+return _33;
+},_addProp:function(id,_34){
+return id+(id.match(/#/)?id.length==1?"":".":"#")+_34;
+},refAttribute:"$ref",_useRefs:false,serializeFunctions:false};
 });

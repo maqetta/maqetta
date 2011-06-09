@@ -1,58 +1,51 @@
-define(["dojo/_base/kernel"], function(dojo){
-	dojo.getObject("dtl.filter.misc", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.mixin(dojox.dtl.filter.misc, {
-		filesizeformat: function(value){
-			// summary: Format the value like a 'human-readable' file size (i.e. 13 KB, 4.1 MB, 102bytes, etc).
-			value = parseFloat(value);
-			if(value < 1024){
-				return (value == 1) ? value + " byte" : value + " bytes";
-			}else if(value < 1024 * 1024){
-				return (value / 1024).toFixed(1) + " KB";
-			}else if(value < 1024 * 1024 * 1024){
-				return (value / 1024 / 1024).toFixed(1) + " MB";
-			}
-			return (value / 1024 / 1024 / 1024).toFixed(1) + " GB";
-		},
-		pluralize: function(value, arg){
-			// summary:
-			//		Returns a plural suffix if the value is not 1, for '1 vote' vs. '2 votes'
-			//	description:
-			//		By default, 's' is used as a suffix; if an argument is provided, that string
-			//		is used instead. If the provided argument contains a comma, the text before
-			//		the comma is used for the singular case.
-			arg = arg || 's';
-			if(arg.indexOf(",") == -1){
-				arg = "," + arg;
-			}
-			var parts = arg.split(",");
-			if(parts.length > 2){
-				return "";
-			}
-			var singular = parts[0];
-			var plural = parts[1];
-
-			if(parseInt(value, 10) != 1){
-				return plural;
-			}
-			return singular;
-		},
-		_phone2numeric: { a: 2, b: 2, c: 2, d: 3, e: 3, f: 3, g: 4, h: 4, i: 4, j: 5, k: 5, l: 5, m: 6, n: 6, o: 6, p: 7, r: 7, s: 7, t: 8, u: 8, v: 8, w: 9, x: 9, y: 9 },
-		phone2numeric: function(value){
-			// summary: Takes a phone number and converts it in to its numerical equivalent
-			var dm = dojox.dtl.filter.misc;
-			value = value + "";
-			var output = "";
-			for(var i = 0; i < value.length; i++){
-				var chr = value.charAt(i).toLowerCase();
-				(dm._phone2numeric[chr]) ? output += dm._phone2numeric[chr] : output += value.charAt(i);
-			}
-			return output;
-		},
-		pprint: function(value){
-			// summary: A wrapper around toJson unless something better comes along
-			return dojo.toJson(value);
-		}
-	});
-	return dojox.dtl.filter.misc;
+define(["dojo/_base/kernel"],function(_1){
+_1.getObject("dtl.filter.misc",true,dojox);
+_1.mixin(dojox.dtl.filter.misc,{filesizeformat:function(_2){
+_2=parseFloat(_2);
+if(_2<1024){
+return (_2==1)?_2+" byte":_2+" bytes";
+}else{
+if(_2<1024*1024){
+return (_2/1024).toFixed(1)+" KB";
+}else{
+if(_2<1024*1024*1024){
+return (_2/1024/1024).toFixed(1)+" MB";
+}
+}
+}
+return (_2/1024/1024/1024).toFixed(1)+" GB";
+},pluralize:function(_3,_4){
+_4=_4||"s";
+if(_4.indexOf(",")==-1){
+_4=","+_4;
+}
+var _5=_4.split(",");
+if(_5.length>2){
+return "";
+}
+var _6=_5[0];
+var _7=_5[1];
+if(parseInt(_3,10)!=1){
+return _7;
+}
+return _6;
+},_phone2numeric:{a:2,b:2,c:2,d:3,e:3,f:3,g:4,h:4,i:4,j:5,k:5,l:5,m:6,n:6,o:6,p:7,r:7,s:7,t:8,u:8,v:8,w:9,x:9,y:9},phone2numeric:function(_8){
+var dm=dojox.dtl.filter.misc;
+_8=_8+"";
+var _9="";
+for(var i=0;i<_8.length;i++){
+var _a=_8.charAt(i).toLowerCase();
+(dm._phone2numeric[_a])?_9+=dm._phone2numeric[_a]:_9+=_8.charAt(i);
+}
+return _9;
+},pprint:function(_b){
+return _1.toJson(_b);
+}});
+return dojox.dtl.filter.misc;
 });

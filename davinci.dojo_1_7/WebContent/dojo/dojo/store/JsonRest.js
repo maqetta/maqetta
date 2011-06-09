@@ -1,143 +1,52 @@
-define(["../_base/kernel", "../_base/xhr", "../json", "../_base/declare", "./util/QueryResults"], function(dojo, xhr, JSON, declare, QueryResults) {
-  //  module:
-  //    dojo/store/JsonRest
-  //  summary:
-  //    The module defines a JSON/REST based object store 
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-return declare("dojo.store.JsonRest", null, {
-	// summary:
-	//		This is a basic store for RESTful communicating with a server through JSON
-	//		formatted data. It implements dojo.store.api.Store.
-
-	constructor: function(/*dojo.store.JsonRest*/ options){
-		// summary:
-		//		This is a basic store for RESTful communicating with a server through JSON
-		//		formatted data.
-		// options:
-		//		This provides any configuration information that will be mixed into the store
-		dojo.safeMixin(this, options);
-	},
-	// target: String
-	//		The target base URL to use for all requests to the server. This string will be
-	// 	prepended to the id to generate the URL (relative or absolute) for requests
-	// 	sent to the server
-	target: "",
-	// idProperty: String
-	//		Indicates the property to use as the identity property. The values of this
-	//		property should be unique.
-	idProperty: "id",
-
-	get: function(id, options){
-		//	summary:
-		//		Retrieves an object by its identity. This will trigger a GET request to the server using
-		//		the url `this.target + id`.
-		//	id: Number
-		//		The identity to use to lookup the object
-		//	returns: Object
-		//		The object in the store that matches the given id.
-		var headers = options || {};
-		headers.Accept = "application/javascript, application/json";
-		return xhr("GET", {
-			url:this.target + id,
-			handleAs: "json",
-			headers: headers
-		});
-	},
-	getIdentity: function(object){
-		// summary:
-		//		Returns an object's identity
-		// object: Object
-		//		The object to get the identity from
-		//	returns: Number
-		return object[this.idProperty];
-	},
-	put: function(object, options){
-		// summary:
-		//		Stores an object. This will trigger a PUT request to the server
-		//		if the object has an id, otherwise it will trigger a POST request.
-		// object: Object
-		//		The object to store.
-		// options: dojo.store.api.Store.PutDirectives?
-		//		Additional metadata for storing the data.  Includes an "id"
-		//		property if a specific id is to be used.
-		//	returns: Number
-		options = options || {};
-		var id = ("id" in options) ? options.id : this.getIdentity(object);
-		var hasId = typeof id != "undefined";
-		return xhr(hasId && !options.incremental ? "PUT" : "POST", {
-				url: hasId ? this.target + id : this.target,
-				postData: JSON.stringify(object),
-				handleAs: "json",
-				headers:{
-					"Content-Type": "application/json",
-					"If-Match": options.overwrite === true ? "*" : null,
-					"If-None-Match": options.overwrite === false ? "*" : null
-				}
-			});
-	},
-	add: function(object, options){
-		// summary:
-		//		Adds an object. This will trigger a PUT request to the server
-		//		if the object has an id, otherwise it will trigger a POST request.
-		// object: Object
-		//		The object to store.
-		// options: dojo.store.api.Store.PutDirectives?
-		//		Additional metadata for storing the data.  Includes an "id"
-		//		property if a specific id is to be used.
-		options = options || {};
-		options.overwrite = false;
-		return this.put(object, options);
-	},
-	remove: function(id){
-		// summary:
-		//		Deletes an object by its identity. This will trigger a DELETE request to the server.
-		// id: Number
-		//		The identity to use to delete the object
-		return xhr("DELETE",{
-			url:this.target + id
-		});
-	},
-	query: function(query, options){
-		// summary:
-		//		Queries the store for objects. This will trigger a GET request to the server, with the
-		//		query added as a query string.
-		// query: Object
-		//		The query to use for retrieving objects from the store.
-		//	options: dojo.store.api.Store.QueryOptions?
-		//		The optional arguments to apply to the resultset.
-		//	returns: dojo.store.api.Store.QueryResults
-		//		The results of the query, extended with iterative methods.
-		var headers = {Accept: "application/javascript, application/json"};
-		options = options || {};
-
-		if(options.start >= 0 || options.count >= 0){
-			headers.Range = "items=" + (options.start || '0') + '-' +
-				(("count" in options && options.count != Infinity) ?
-					(options.count + (options.start || 0) - 1) : '');
-		}
-		if(query && typeof query == "object"){
-			query = dojo.objectToQuery(query);
-			query = query ? "?" + query: "";
-		}
-		if(options && options.sort){
-			query += (query ? "&" : "?") + "sort(";
-			for(var i = 0; i<options.sort.length; i++){
-				var sort = options.sort[i];
-				query += (i > 0 ? "," : "") + (sort.descending ? '-' : '+') + encodeURIComponent(sort.attribute);
-			}
-			query += ")";
-		}
-		var results = xhr("GET", {
-			url: this.target + (query || ""),
-			handleAs: "json",
-			headers: headers
-		});
-		results.total = results.then(function(){
-			var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
-			return range && (range=range.match(/\/(.*)/)) && +range[1];
-		});
-		return QueryResults(results);
-	}
+define("dojo/store/JsonRest",["../_base/kernel","../_base/xhr","../json","../_base/declare","./util/QueryResults"],function(_1,_2,_3,_4,_5){
+return _4("dojo.store.JsonRest",null,{constructor:function(_6){
+_1.safeMixin(this,_6);
+},target:"",idProperty:"id",get:function(id,_7){
+var _8=_7||{};
+_8.Accept="application/javascript, application/json";
+return _2("GET",{url:this.target+id,handleAs:"json",headers:_8});
+},getIdentity:function(_9){
+return _9[this.idProperty];
+},put:function(_a,_b){
+_b=_b||{};
+var id=("id" in _b)?_b.id:this.getIdentity(_a);
+var _c=typeof id!="undefined";
+return _2(_c&&!_b.incremental?"PUT":"POST",{url:_c?this.target+id:this.target,postData:_3.stringify(_a),handleAs:"json",headers:{"Content-Type":"application/json","If-Match":_b.overwrite===true?"*":null,"If-None-Match":_b.overwrite===false?"*":null}});
+},add:function(_d,_e){
+_e=_e||{};
+_e.overwrite=false;
+return this.put(_d,_e);
+},remove:function(id){
+return _2("DELETE",{url:this.target+id});
+},query:function(_f,_10){
+var _11={Accept:"application/javascript, application/json"};
+_10=_10||{};
+if(_10.start>=0||_10.count>=0){
+_11.Range="items="+(_10.start||"0")+"-"+(("count" in _10&&_10.count!=Infinity)?(_10.count+(_10.start||0)-1):"");
+}
+if(_f&&typeof _f=="object"){
+_f=_1.objectToQuery(_f);
+_f=_f?"?"+_f:"";
+}
+if(_10&&_10.sort){
+_f+=(_f?"&":"?")+"sort(";
+for(var i=0;i<_10.sort.length;i++){
+var _12=_10.sort[i];
+_f+=(i>0?",":"")+(_12.descending?"-":"+")+encodeURIComponent(_12.attribute);
+}
+_f+=")";
+}
+var _13=_2("GET",{url:this.target+(_f||""),handleAs:"json",headers:_11});
+_13.total=_13.then(function(){
+var _14=_13.ioArgs.xhr.getResponseHeader("Content-Range");
+return _14&&(_14=_14.match(/\/(.*)/))&&+_14[1];
 });
-
+return _5(_13);
+}});
 });

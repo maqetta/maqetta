@@ -1,104 +1,52 @@
-define([
-	"dojo",
-	"../_Plugin",
-	"../../util/oo"], function(dojo){
-	
-dojo.getObject("drawing.plugins.drawing",true,dojox);
-dojox.drawing.plugins.drawing.Grid = dojox.drawing.util.oo.declare(
-	// summary:
-	//		Plugin that displays a grid on the Drawing canvas.
-	// example:
-	//		|	<div dojoType="dojox.drawing.Drawing" id="drawingNode"
-	//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:50}}]">
-	//		|	</div>
-	//
-	dojox.drawing.plugins._Plugin,
-	function(options){
-		if(options.gap){
-			this.major = options.gap;
-		}
-		this.majorColor = options.majorColor || this.majorColor;
-		this.minorColor = options.minorColor || this.minorColor;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		this.setGrid();
-		dojo.connect(this.canvas, "setZoom", this, "setZoom");
-	},
-	{
-		type:"dojox.drawing.plugins.drawing.Grid",
-		//
-		// gap: Number
-		//		How far apart to set the grid lines
-		gap:100,
-		major:100,
-		minor:0,
-		//
-		// majorColor: String
-		//		Major lines color
-		majorColor: "#00ffff",
-		//
-		// minorColor: String
-		//		Minor lines color
-		minorColor: "#d7ffff",
-		//
-		// zoom: [readonly] Number
-		//		The current zoom of the grid
-		zoom:1,
-		
-		setZoom: function(zoom){
-			// summary:
-			//		Set's the zoom of the canvas
-			this.zoom = zoom;
-			this.setGrid();
-		},
-		setGrid: function(options){
-			// summary:
-			//		Renders grid
-			//
-			// TODO: major minor lines
-			//	minors dont show on zoom out
-			//	draw minors first
-			//
-			var mjr = Math.floor(this.major * this.zoom);
-			var mnr = this.minor ? Math.floor(this.minor * this.zoom) : mjr;
-			
-			this.grid && this.grid.removeShape();
-			
-			var x1,x2,y1,y2,i,clr,len;
-			var s = this.canvas.underlay.createGroup();
-			var w = 2000;//this.canvas.width;
-			var h = 1000;//this.canvas.height;
-			var b = 1;
-			var mj = this.majorColor;
-			var mn = this.minorColor;
-			
-			var createGridLine = function(x1,y1,x2,y2, c){
-				s.createLine({x1: x1, y1: y1, x2: x2, y2: y2}).setStroke({style: "Solid", width: b, cap: "round", color:c});
-			};
-			
-			// horz
-			for(i=1,len = h/mnr; i<len; i++){
-				x1 = 0, x2 = w;
-				y1 = mnr*i, y2 = y1;
-				
-				
-				clr = y1%mjr ? mn : mj;
-				createGridLine(x1,y1,x2,y2, clr);
-			}
-			// vert
-			for(i=1,len = w/mnr; i<len; i++){
-				y1 = 0, y2 = h;
-				x1 = mnr*i, x2 = x1;
-				clr = x1%mjr ? mn : mj;
-				createGridLine(x1,y1,x2,y2, clr);
-			}
-		
-			s.moveToBack();
-			this.grid = s;
-			this.util.attr(s, "id", "grid");
-			return s;
-		}
-	}
-);
-
+define(["dojo","../_Plugin","../../util/oo"],function(_1){
+_1.getObject("drawing.plugins.drawing",true,dojox);
+dojox.drawing.plugins.drawing.Grid=dojox.drawing.util.oo.declare(dojox.drawing.plugins._Plugin,function(_2){
+if(_2.gap){
+this.major=_2.gap;
+}
+this.majorColor=_2.majorColor||this.majorColor;
+this.minorColor=_2.minorColor||this.minorColor;
+this.setGrid();
+_1.connect(this.canvas,"setZoom",this,"setZoom");
+},{type:"dojox.drawing.plugins.drawing.Grid",gap:100,major:100,minor:0,majorColor:"#00ffff",minorColor:"#d7ffff",zoom:1,setZoom:function(_3){
+this.zoom=_3;
+this.setGrid();
+},setGrid:function(_4){
+var _5=Math.floor(this.major*this.zoom);
+var _6=this.minor?Math.floor(this.minor*this.zoom):_5;
+this.grid&&this.grid.removeShape();
+var x1,x2,y1,y2,i,_7,_8;
+var s=this.canvas.underlay.createGroup();
+var w=2000;
+var h=1000;
+var b=1;
+var mj=this.majorColor;
+var mn=this.minorColor;
+var _9=function(x1,y1,x2,y2,c){
+s.createLine({x1:x1,y1:y1,x2:x2,y2:y2}).setStroke({style:"Solid",width:b,cap:"round",color:c});
+};
+for(i=1,_8=h/_6;i<_8;i++){
+x1=0,x2=w;
+y1=_6*i,y2=y1;
+_7=y1%_5?mn:mj;
+_9(x1,y1,x2,y2,_7);
+}
+for(i=1,_8=w/_6;i<_8;i++){
+y1=0,y2=h;
+x1=_6*i,x2=x1;
+_7=x1%_5?mn:mj;
+_9(x1,y1,x2,y2,_7);
+}
+s.moveToBack();
+this.grid=s;
+this.util.attr(s,"id","grid");
+return s;
+}});
 return dojox.drawing.plugins.drawing.Grid;
 });

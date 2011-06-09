@@ -1,164 +1,75 @@
-define("dojox/editor/plugins/PageBreak", ["dojo", "dijit", "dojox", "dijit/_editor/html", "dijit/_editor/_Plugin", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/PageBreak"], function(dojo, dijit, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
-	//	summary:
-	//		This plugin provides a simple CSS page break plugin that
-	//		lets you insert browser pring recognizable page breaks in
-	//		the document.
-	//		This plugin registers the hotkey command: CTRL-SHIFT-ENTER
-
-	//	useDefaultCommand [protected]
-	//		Over-ride indicating that the command processing is done all by this plugin.
-	useDefaultCommand: false,
-
-	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from
-	//		`iconClassPrefix` and `command`
-	iconClassPrefix: "dijitAdditionalEditorIcon",
-
-	// _unbreakableNodes: [private] Array
-	//		The nodes that should not allow page breaks to be inserted into them.
-	_unbreakableNodes: ["li", "ul", "ol"],
-
-	// _pbContent: [private] String
-	//		The markup used for the pagebreak insert.
-	_pbContent: "<hr style='page-break-after: always;' class='dijitEditorPageBreak'>",
-
-	_initButton: function(){
-		//	summary:
-		//		Over-ride for creation of the resize button.
-		var ed = this.editor;
-		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "PageBreak");
-		this.button = new dijit.form.Button({
-			label: strings["pageBreak"],
-			showLabel: false,
-			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "PageBreak",
-			tabIndex: "-1",
-			onClick: dojo.hitch(this, "_insertPageBreak")
-		});
-		ed.onLoadDeferred.addCallback(
-			dojo.hitch(this, function(){
-				//Register our hotkey to CTRL-SHIFT-ENTER.
-				ed.addKeyHandler(dojo.keys.ENTER, true, true, dojo.hitch(this, this._insertPageBreak));
-				if(dojo.isWebKit || dojo.isOpera){
-					// Webkit and Opera based browsers don't generate keypress events when ctrl and shift are
-					// held then enter is pressed.  Odd, that.
-					this.connect(this.editor, "onKeyDown", dojo.hitch(this, function(e){
-						if((e.keyCode === dojo.keys.ENTER) && e.ctrlKey && e.shiftKey){
-							this._insertPageBreak();
-						}
-					}));
-				}
-			})
-		);
-	},
-	
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
-	},
-
-	setEditor: function(editor){
-		// summary:
-		//		Over-ride for the setting of the editor.
-		// editor: Object
-		//		The editor to configure for this plugin to use.
-		this.editor = editor;
-		this._initButton();
-	},
-
-	_style: function(){
-		// summary:
-		//		Internal function for inserting dynamic css.  This was originally
-		//		in an editor.onLoadDeferred, but I ran into issues in Chrome with
-		//		the tag being ignored.  Having it done at insert worked better.
-		// tags:
-		//		private
-		if(!this._styled){
-			this._styled = true;
-			var doc = this.editor.document;
-			var style = ".dijitEditorPageBreak {\n" +
-				"\tborder-top-style: solid;\n" +
-				"\tborder-top-width: 3px;\n" +
-				"\tborder-top-color: #585858;\n" +
-				"\tborder-bottom-style: solid;\n" +
-				"\tborder-bottom-width: 1px;\n" +
-				"\tborder-bottom-color: #585858;\n" +
-				"\tborder-left-style: solid;\n" +
-				"\tborder-left-width: 1px;\n" +
-				"\tborder-left-color: #585858;\n" +
-				"\tborder-right-style: solid;\n" +
-				"\tborder-right-width: 1px;\n" +
-				"\tborder-right-color: #585858;\n" +
-				"\tcolor: #A4A4A4;\n" +
-				"\tbackground-color: #A4A4A4;\n" +
-				"\theight: 10px;\n"+
-				"\tpage-break-after: always;\n" +
-				"\tpadding: 0px 0px 0px 0px;\n" +
-			"}\n\n" +
-			"@media print {\n" +
-				"\t.dijitEditorPageBreak { page-break-after: always; " +
-				"background-color: rgba(0,0,0,0); color: rgba(0,0,0,0); " +
-				"border: 0px none rgba(0,0,0,0); display: hidden; " +
-				"width: 0px; height: 0px;}\n" +
-			"}";
-
-			if(!dojo.isIE){
-				var sNode = doc.createElement("style");
-				sNode.appendChild(doc.createTextNode(style));
-				doc.getElementsByTagName("head")[0].appendChild(sNode);
-			}else{
-				var ss = doc.createStyleSheet("");
-				ss.cssText = style;
-			}
-		}
-	},
-
-	_insertPageBreak: function(){
-		// summary:
-		//		Function to insert a CSS page break at the current point in the document
-		// tags:
-		//		private
-		try{
-			if(!this._styled){ this._style(); }
-			//this.editor.focus();
-			if(this._allowBreak()){
-				this.editor.execCommand("inserthtml", this._pbContent);
-			}
-		}catch(e){
-			console.warn(e);
-		}
-	},
-
-	_allowBreak: function(){
-		// summary:
-		//		Internal function to see if we should allow a page break at the document
-		//		location.
-		// tags:
-		//		private
-		var ed = this.editor;
-		var doc = ed.document;
-		var node = ed._sCall("getSelectedElement", null) || ed._sCall("getParentElement", null);
-		while(node && node !== doc.body && node !== doc.html){
-			if(ed._sCall("isTag", [node, this._unbreakableNodes])){
-				return false;
-			}
-			node = node.parentNode;
-		}
-		return true;
-	}
+define("dojox/editor/plugins/PageBreak",["dojo","dijit","dojox","dijit/_editor/html","dijit/_editor/_Plugin","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/PageBreak"],function(_1,_2,_3){
+_1.declare("dojox.editor.plugins.PageBreak",_2._editor._Plugin,{useDefaultCommand:false,iconClassPrefix:"dijitAdditionalEditorIcon",_unbreakableNodes:["li","ul","ol"],_pbContent:"<hr style='page-break-after: always;' class='dijitEditorPageBreak'>",_initButton:function(){
+var ed=this.editor;
+var _4=_1.i18n.getLocalization("dojox.editor.plugins","PageBreak");
+this.button=new _2.form.Button({label:_4["pageBreak"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"PageBreak",tabIndex:"-1",onClick:_1.hitch(this,"_insertPageBreak")});
+ed.onLoadDeferred.addCallback(_1.hitch(this,function(){
+ed.addKeyHandler(_1.keys.ENTER,true,true,_1.hitch(this,this._insertPageBreak));
+if(_1.isWebKit||_1.isOpera){
+this.connect(this.editor,"onKeyDown",_1.hitch(this,function(e){
+if((e.keyCode===_1.keys.ENTER)&&e.ctrlKey&&e.shiftKey){
+this._insertPageBreak();
+}
+}));
+}
+}));
+},updateState:function(){
+this.button.set("disabled",this.get("disabled"));
+},setEditor:function(_5){
+this.editor=_5;
+this._initButton();
+},_style:function(){
+if(!this._styled){
+this._styled=true;
+var _6=this.editor.document;
+var _7=".dijitEditorPageBreak {\n"+"\tborder-top-style: solid;\n"+"\tborder-top-width: 3px;\n"+"\tborder-top-color: #585858;\n"+"\tborder-bottom-style: solid;\n"+"\tborder-bottom-width: 1px;\n"+"\tborder-bottom-color: #585858;\n"+"\tborder-left-style: solid;\n"+"\tborder-left-width: 1px;\n"+"\tborder-left-color: #585858;\n"+"\tborder-right-style: solid;\n"+"\tborder-right-width: 1px;\n"+"\tborder-right-color: #585858;\n"+"\tcolor: #A4A4A4;\n"+"\tbackground-color: #A4A4A4;\n"+"\theight: 10px;\n"+"\tpage-break-after: always;\n"+"\tpadding: 0px 0px 0px 0px;\n"+"}\n\n"+"@media print {\n"+"\t.dijitEditorPageBreak { page-break-after: always; "+"background-color: rgba(0,0,0,0); color: rgba(0,0,0,0); "+"border: 0px none rgba(0,0,0,0); display: hidden; "+"width: 0px; height: 0px;}\n"+"}";
+if(!_1.isIE){
+var _8=_6.createElement("style");
+_8.appendChild(_6.createTextNode(_7));
+_6.getElementsByTagName("head")[0].appendChild(_8);
+}else{
+var ss=_6.createStyleSheet("");
+ss.cssText=_7;
+}
+}
+},_insertPageBreak:function(){
+try{
+if(!this._styled){
+this._style();
+}
+if(this._allowBreak()){
+this.editor.execCommand("inserthtml",this._pbContent);
+}
+}
+catch(e){
+console.warn(e);
+}
+},_allowBreak:function(){
+var ed=this.editor;
+var _9=ed.document;
+var _a=ed._sCall("getSelectedElement",null)||ed._sCall("getParentElement",null);
+while(_a&&_a!==_9.body&&_a!==_9.html){
+if(ed._sCall("isTag",[_a,this._unbreakableNodes])){
+return false;
+}
+_a=_a.parentNode;
+}
+return true;
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _b=o.args.name.toLowerCase();
+if(_b==="pagebreak"){
+o.plugin=new _3.editor.plugins.PageBreak({});
+}
 });
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name === "pagebreak"){
-		o.plugin = new dojox.editor.plugins.PageBreak({});
-	}
-});
-
-return dojox.editor.plugins.PageBreak;
-
+return _3.editor.plugins.PageBreak;
 });

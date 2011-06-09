@@ -1,310 +1,130 @@
-define([
-	"dojo/_base/kernel",
-	".",
-	"./popup",
-	"require",
-	"dojo/window", // dojo.window.get
-	"./DropDownMenu",
-	"dojo/_base/array", // dojo.forEach
-	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.keys.F10
-	"dojo/_base/event", // dojo.stopEvent
-	"dojo/_base/html", // dojo.attr dojo.byId dojo.getComputedStyle dojo.hasAttr dojo.isDescendant dojo.position dojo.removeAttr
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/_base/sniff", // dojo.isIE dojo.isQuirks
-	"dojo/_base/window" // dojo.body dojo.doc.documentElement dojo.doc.frames dojo.withGlobal
-], function(dojo, dijit, pm, require){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/Menu
-// summary:
-//		Includes dijit.Menu widget and base class dijit._MenuBase
-
-dojo.declare("dijit.Menu", dijit.DropDownMenu, {
-	// summary:
-	//		A context menu you can assign to multiple elements
-
-	constructor: function(){
-		this._bindings = [];
-	},
-
-	// targetNodeIds: [const] String[]
-	//		Array of dom node ids of nodes to attach to.
-	//		Fill this with nodeIds upon widget creation and it becomes context menu for those nodes.
-	targetNodeIds: [],
-
-	// contextMenuForWindow: [const] Boolean
-	//		If true, right clicking anywhere on the window will cause this context menu to open.
-	//		If false, must specify targetNodeIds.
-	contextMenuForWindow: false,
-
-	// leftClickToOpen: [const] Boolean
-	//		If true, menu will open on left click instead of right click, similar to a file menu.
-	leftClickToOpen: false,
-
-	// refocus: Boolean
-	// 		When this menu closes, re-focus the element which had focus before it was opened.
-	refocus: true,
-
-	postCreate: function(){
-		if(this.contextMenuForWindow){
-			this.bindDomNode(dojo.body());
-		}else{
-			// TODO: should have _setTargetNodeIds() method to handle initialization and a possible
-			// later set('targetNodeIds', ...) call.  There's also a problem that targetNodeIds[]
-			// gets stale after calls to bindDomNode()/unBindDomNode() as it still is just the original list (see #9610)
-			dojo.forEach(this.targetNodeIds, this.bindDomNode, this);
-		}
-		this.inherited(arguments);
-	},
-
-	// thanks burstlib!
-	_iframeContentWindow: function(/* HTMLIFrameElement */iframe_el){
-		// summary:
-		//		Returns the window reference of the passed iframe
-		// tags:
-		//		private
-		return dojo.window.get(this._iframeContentDocument(iframe_el)) ||
-			// Moz. TODO: is this available when defaultView isn't?
-			this._iframeContentDocument(iframe_el)['__parent__'] ||
-			(iframe_el.name && dojo.doc.frames[iframe_el.name]) || null;	//	Window
-	},
-
-	_iframeContentDocument: function(/* HTMLIFrameElement */iframe_el){
-		// summary:
-		//		Returns a reference to the document object inside iframe_el
-		// tags:
-		//		protected
-		return iframe_el.contentDocument // W3
-			|| (iframe_el.contentWindow && iframe_el.contentWindow.document) // IE
-			|| (iframe_el.name && dojo.doc.frames[iframe_el.name] && dojo.doc.frames[iframe_el.name].document)
-			|| null;	//	HTMLDocument
-	},
-
-	bindDomNode: function(/*String|DomNode*/ node){
-		// summary:
-		//		Attach menu to given node
-		node = dojo.byId(node);
-
-		var cn;	// Connect node
-
-		// Support context menus on iframes.  Rather than binding to the iframe itself we need
-		// to bind to the <body> node inside the iframe.
-		if(node.tagName.toLowerCase() == "iframe"){
-			var iframe = node,
-				win = this._iframeContentWindow(iframe);
-			cn = dojo.withGlobal(win, dojo.body);
-		}else{
-
-			// To capture these events at the top level, attach to <html>, not <body>.
-			// Otherwise right-click context menu just doesn't work.
-			cn = (node == dojo.body() ? dojo.doc.documentElement : node);
-		}
-
-
-		// "binding" is the object to track our connection to the node (ie, the parameter to bindDomNode())
-		var binding = {
-			node: node,
-			iframe: iframe
-		};
-
-		// Save info about binding in _bindings[], and make node itself record index(+1) into
-		// _bindings[] array.  Prefix w/_dijitMenu to avoid setting an attribute that may
-		// start with a number, which fails on FF/safari.
-		dojo.attr(node, "_dijitMenu" + this.id, this._bindings.push(binding));
-
-		// Setup the connections to monitor click etc., unless we are connecting to an iframe which hasn't finished
-		// loading yet, in which case we need to wait for the onload event first, and then connect
-		// On linux Shift-F10 produces the oncontextmenu event, but on Windows it doesn't, so
-		// we need to monitor keyboard events in addition to the oncontextmenu event.
-		var doConnects = dojo.hitch(this, function(cn){
-			return [
-				// TODO: when leftClickToOpen is true then shouldn't space/enter key trigger the menu,
-				// rather than shift-F10?
-				dojo.connect(cn, this.leftClickToOpen ? "onclick" : "oncontextmenu", this, function(evt){
-					// Schedule context menu to be opened unless it's already been scheduled from onkeydown handler
-					dojo.stopEvent(evt);
-					this._scheduleOpen(evt.target, iframe, {x: evt.pageX, y: evt.pageY});
-				}),
-				dojo.connect(cn, "onkeydown", this, function(evt){
-					if(evt.shiftKey && evt.keyCode == dojo.keys.F10){
-						dojo.stopEvent(evt);
-						this._scheduleOpen(evt.target, iframe);	// no coords - open near target node
-					}
-				})
-			];
-		});
-		binding.connects = cn ? doConnects(cn) : [];
-
-		if(iframe){
-			// Setup handler to [re]bind to the iframe when the contents are initially loaded,
-			// and every time the contents change.
-			// Need to do this b/c we are actually binding to the iframe's <body> node.
-			// Note: can't use dojo.connect(), see #9609.
-
-			binding.onloadHandler = dojo.hitch(this, function(){
-				// want to remove old connections, but IE throws exceptions when trying to
-				// access the <body> node because it's already gone, or at least in a state of limbo
-
-				var win = this._iframeContentWindow(iframe);
-					cn = dojo.withGlobal(win, dojo.body);
-				binding.connects = doConnects(cn);
-			});
-			if(iframe.addEventListener){
-				iframe.addEventListener("load", binding.onloadHandler, false);
-			}else{
-				iframe.attachEvent("onload", binding.onloadHandler);
-			}
-		}
-	},
-
-	unBindDomNode: function(/*String|DomNode*/ nodeName){
-		// summary:
-		//		Detach menu from given node
-
-		var node;
-		try{
-			node = dojo.byId(nodeName);
-		}catch(e){
-			// On IE the dojo.byId() call will get an exception if the attach point was
-			// the <body> node of an <iframe> that has since been reloaded (and thus the
-			// <body> node is in a limbo state of destruction.
-			return;
-		}
-
-		// node["_dijitMenu" + this.id] contains index(+1) into my _bindings[] array
-		var attrName = "_dijitMenu" + this.id;
-		if(node && dojo.hasAttr(node, attrName)){
-			var bid = dojo.attr(node, attrName)-1, b = this._bindings[bid];
-			dojo.forEach(b.connects, dojo.disconnect);
-
-			// Remove listener for iframe onload events
-			var iframe = b.iframe;
-			if(iframe){
-				if(iframe.removeEventListener){
-					iframe.removeEventListener("load", b.onloadHandler, false);
-				}else{
-					iframe.detachEvent("onload", b.onloadHandler);
-				}
-			}
-
-			dojo.removeAttr(node, attrName);
-			delete this._bindings[bid];
-		}
-	},
-
-	_scheduleOpen: function(/*DomNode?*/ target, /*DomNode?*/ iframe, /*Object?*/ coords){
-		// summary:
-		//		Set timer to display myself.  Using a timer rather than displaying immediately solves
-		//		two problems:
-		//
-		//		1. IE: without the delay, focus work in "open" causes the system
-		//		context menu to appear in spite of stopEvent.
-		//
-		//		2. Avoid double-shows on linux, where shift-F10 generates an oncontextmenu event
-		//		even after a dojo.stopEvent(e).  (Shift-F10 on windows doesn't generate the
-		//		oncontextmenu event.)
-
-		if(!this._openTimer){
-			this._openTimer = setTimeout(dojo.hitch(this, function(){
-				delete this._openTimer;
-				this._openMyself({
-					target: target,
-					iframe: iframe,
-					coords: coords
-				});
-			}), 1);
-		}
-	},
-
-	_openMyself: function(args){
-		// summary:
-		//		Internal function for opening myself when the user does a right-click or something similar.
-		// args:
-		//		This is an Object containing:
-		//		* target:
-		//			The node that is being clicked
-		//		* iframe:
-		//			If an <iframe> is being clicked, iframe points to that iframe
-		//		* coords:
-		//			Put menu at specified x/y position in viewport, or if iframe is
-		//			specified, then relative to iframe.
-		//
-		//		_openMyself() formerly took the event object, and since various code references
-		//		evt.target (after connecting to _openMyself()), using an Object for parameters
-		//		(so that old code still works).
-
-		var target = args.target,
-			iframe = args.iframe,
-			coords = args.coords;
-
-		// Get coordinates to open menu, either at specified (mouse) position or (if triggered via keyboard)
-		// then near the node the menu is assigned to.
-		if(coords){
-			if(iframe){
-				// Specified coordinates are on <body> node of an <iframe>, convert to match main document
-				var od = target.ownerDocument,
-					ifc = dojo.position(iframe, true),
-					win = this._iframeContentWindow(iframe),
-					scroll = dojo.withGlobal(win, "_docScroll", dojo);
-
-				var cs = dojo.getComputedStyle(iframe),
-					tp = dojo._toPixelValue,
-					left = (dojo.isIE && dojo.isQuirks ? 0 : tp(iframe, cs.paddingLeft)) + (dojo.isIE && dojo.isQuirks ? tp(iframe, cs.borderLeftWidth) : 0),
-					top = (dojo.isIE && dojo.isQuirks ? 0 : tp(iframe, cs.paddingTop)) + (dojo.isIE && dojo.isQuirks ? tp(iframe, cs.borderTopWidth) : 0);
-
-				coords.x += ifc.x + left - scroll.x;
-				coords.y += ifc.y + top - scroll.y;
-			}
-		}else{
-			coords = dojo.position(target, true);
-			coords.x += 10;
-			coords.y += 10;
-		}
-
-		var self=this;
-		var prevFocusNode = this._focusManager.get("prevNode");
-		var curFocusNode = this._focusManager.get("curNode");
-		var savedFocusNode = !curFocusNode || (dojo.isDescendant(curFocusNode, this.domNode)) ? prevFocusNode : curFocusNode;
-
-		function closeAndRestoreFocus(){
-			// user has clicked on a menu or popup
-			if(self.refocus && savedFocusNode){
-				savedFocusNode.focus();
-			}
-			pm.close(self);
-		}
-		pm.open({
-			popup: this,
-			x: coords.x,
-			y: coords.y,
-			onExecute: closeAndRestoreFocus,
-			onCancel: closeAndRestoreFocus,
-			orient: this.isLeftToRight() ? 'L' : 'R'
-		});
-		this.focus();
-
-		this._onBlur = function(){
-			this.inherited('_onBlur', arguments);
-			// Usually the parent closes the child widget but if this is a context
-			// menu then there is no parent
-			pm.close(this);
-			// don't try to restore focus; user has clicked another part of the screen
-			// and set focus there
-		};
-	},
-
-	uninitialize: function(){
- 		dojo.forEach(this._bindings, function(b){ if(b){ this.unBindDomNode(b.node); } }, this);
- 		this.inherited(arguments);
-	}
-});
-
-// Back compat w/1.6, remove for 2.0
-if(!dojo.isAsync){
-	dojo.ready(0, function(){
-		require(["dijit/MenuItem", "dijit/PopupMenuItem", "dijit/CheckedMenuItem", "dijit/MenuSeparator"]);
-	});
+define("dijit/Menu",["dojo/_base/kernel",".","./popup","require","dojo/window","./DropDownMenu","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2,pm,_3){
+_1.declare("dijit.Menu",_2.DropDownMenu,{constructor:function(){
+this._bindings=[];
+},targetNodeIds:[],contextMenuForWindow:false,leftClickToOpen:false,refocus:true,postCreate:function(){
+if(this.contextMenuForWindow){
+this.bindDomNode(_1.body());
+}else{
+_1.forEach(this.targetNodeIds,this.bindDomNode,this);
 }
-
-return dijit.Menu;
+this.inherited(arguments);
+},_iframeContentWindow:function(_4){
+return _1.window.get(this._iframeContentDocument(_4))||this._iframeContentDocument(_4)["__parent__"]||(_4.name&&_1.doc.frames[_4.name])||null;
+},_iframeContentDocument:function(_5){
+return _5.contentDocument||(_5.contentWindow&&_5.contentWindow.document)||(_5.name&&_1.doc.frames[_5.name]&&_1.doc.frames[_5.name].document)||null;
+},bindDomNode:function(_6){
+_6=_1.byId(_6);
+var cn;
+if(_6.tagName.toLowerCase()=="iframe"){
+var _7=_6,_8=this._iframeContentWindow(_7);
+cn=_1.withGlobal(_8,_1.body);
+}else{
+cn=(_6==_1.body()?_1.doc.documentElement:_6);
+}
+var _9={node:_6,iframe:_7};
+_1.attr(_6,"_dijitMenu"+this.id,this._bindings.push(_9));
+var _a=_1.hitch(this,function(cn){
+return [_1.connect(cn,this.leftClickToOpen?"onclick":"oncontextmenu",this,function(_b){
+_1.stopEvent(_b);
+this._scheduleOpen(_b.target,_7,{x:_b.pageX,y:_b.pageY});
+}),_1.connect(cn,"onkeydown",this,function(_c){
+if(_c.shiftKey&&_c.keyCode==_1.keys.F10){
+_1.stopEvent(_c);
+this._scheduleOpen(_c.target,_7);
+}
+})];
+});
+_9.connects=cn?_a(cn):[];
+if(_7){
+_9.onloadHandler=_1.hitch(this,function(){
+var _d=this._iframeContentWindow(_7);
+cn=_1.withGlobal(_d,_1.body);
+_9.connects=_a(cn);
+});
+if(_7.addEventListener){
+_7.addEventListener("load",_9.onloadHandler,false);
+}else{
+_7.attachEvent("onload",_9.onloadHandler);
+}
+}
+},unBindDomNode:function(_e){
+var _f;
+try{
+_f=_1.byId(_e);
+}
+catch(e){
+return;
+}
+var _10="_dijitMenu"+this.id;
+if(_f&&_1.hasAttr(_f,_10)){
+var bid=_1.attr(_f,_10)-1,b=this._bindings[bid];
+_1.forEach(b.connects,_1.disconnect);
+var _11=b.iframe;
+if(_11){
+if(_11.removeEventListener){
+_11.removeEventListener("load",b.onloadHandler,false);
+}else{
+_11.detachEvent("onload",b.onloadHandler);
+}
+}
+_1.removeAttr(_f,_10);
+delete this._bindings[bid];
+}
+},_scheduleOpen:function(_12,_13,_14){
+if(!this._openTimer){
+this._openTimer=setTimeout(_1.hitch(this,function(){
+delete this._openTimer;
+this._openMyself({target:_12,iframe:_13,coords:_14});
+}),1);
+}
+},_openMyself:function(_15){
+var _16=_15.target,_17=_15.iframe,_18=_15.coords;
+if(_18){
+if(_17){
+var od=_16.ownerDocument,ifc=_1.position(_17,true),win=this._iframeContentWindow(_17),_19=_1.withGlobal(win,"_docScroll",_1);
+var cs=_1.getComputedStyle(_17),tp=_1._toPixelValue,_1a=(_1.isIE&&_1.isQuirks?0:tp(_17,cs.paddingLeft))+(_1.isIE&&_1.isQuirks?tp(_17,cs.borderLeftWidth):0),top=(_1.isIE&&_1.isQuirks?0:tp(_17,cs.paddingTop))+(_1.isIE&&_1.isQuirks?tp(_17,cs.borderTopWidth):0);
+_18.x+=ifc.x+_1a-_19.x;
+_18.y+=ifc.y+top-_19.y;
+}
+}else{
+_18=_1.position(_16,true);
+_18.x+=10;
+_18.y+=10;
+}
+var _1b=this;
+var _1c=this._focusManager.get("prevNode");
+var _1d=this._focusManager.get("curNode");
+var _1e=!_1d||(_1.isDescendant(_1d,this.domNode))?_1c:_1d;
+function _1f(){
+if(_1b.refocus&&_1e){
+_1e.focus();
+}
+pm.close(_1b);
+};
+pm.open({popup:this,x:_18.x,y:_18.y,onExecute:_1f,onCancel:_1f,orient:this.isLeftToRight()?"L":"R"});
+this.focus();
+this._onBlur=function(){
+this.inherited("_onBlur",arguments);
+pm.close(this);
+};
+},uninitialize:function(){
+_1.forEach(this._bindings,function(b){
+if(b){
+this.unBindDomNode(b.node);
+}
+},this);
+this.inherited(arguments);
+}});
+if(!_1.isAsync){
+_1.ready(0,function(){
+_3(["dijit/MenuItem","dijit/PopupMenuItem","dijit/CheckedMenuItem","dijit/MenuSeparator"]);
+});
+}
+return _2.Menu;
 });

@@ -1,80 +1,40 @@
-define([
-	"dojo/_base/kernel",
-	".",
-	"./MenuItem",
-	"./hccss",
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/html", // dojo.style
-	"dojo/_base/window", // dojo.body
-	"dojo/query" // dojo.query
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/PopupMenuItem
-	// summary:
-	//		An item in a Menu that spawn a drop down (usually a drop down menu)
-
-	dojo.declare("dijit.PopupMenuItem", dijit.MenuItem, {
-		// summary:
-		//		An item in a Menu that spawn a drop down (usually a drop down menu)
-
-		_fillContent: function(){
-			// summary:
-			//		When Menu is declared in markup, this code gets the menu label and
-			//		the popup widget from the srcNodeRef.
-			// description:
-			//		srcNodeRefinnerHTML contains both the menu item text and a popup widget
-			//		The first part holds the menu item text and the second part is the popup
-			// example:
-			// |	<div dojoType="dijit.PopupMenuItem">
-			// |		<span>pick me</span>
-			// |		<popup> ... </popup>
-			// |	</div>
-			// tags:
-			//		protected
-
-			if(this.srcNodeRef){
-				var nodes = dojo.query("*", this.srcNodeRef);
-				dijit.PopupMenuItem.superclass._fillContent.call(this, nodes[0]);
-
-				// save pointer to srcNode so we can grab the drop down widget after it's instantiated
-				this.dropDownContainer = this.srcNodeRef;
-			}
-		},
-
-		startup: function(){
-			if(this._started){ return; }
-			this.inherited(arguments);
-
-			// we didn't copy the dropdown widget from the this.srcNodeRef, so it's in no-man's
-			// land now.  move it to dojo.doc.body.
-			if(!this.popup){
-				var node = dojo.query("[widgetId]", this.dropDownContainer)[0];
-				this.popup = dijit.byNode(node);
-			}
-			dojo.body().appendChild(this.popup.domNode);
-			this.popup.startup();
-
-			this.popup.domNode.style.display="none";
-			if(this.arrowWrapper){
-				dojo.style(this.arrowWrapper, "visibility", "");
-			}
-			this.focusNode.setAttribute("aria-haspopup", "true");
-		},
-
-		destroyDescendants: function(){
-			if(this.popup){
-				// Destroy the popup, unless it's already been destroyed.  This can happen because
-				// the popup is a direct child of <body> even though it's logically my child.
-				if(!this.popup._destroyed){
-					this.popup.destroyRecursive();
-				}
-				delete this.popup;
-			}
-			this.inherited(arguments);
-		}
-	});
-
-
-	return dijit.PopupMenuItem;
+define("dijit/PopupMenuItem",["dojo/_base/kernel",".","./MenuItem","./hccss","dojo/_base/declare","dojo/_base/html","dojo/_base/window","dojo/query"],function(_1,_2){
+_1.declare("dijit.PopupMenuItem",_2.MenuItem,{_fillContent:function(){
+if(this.srcNodeRef){
+var _3=_1.query("*",this.srcNodeRef);
+_2.PopupMenuItem.superclass._fillContent.call(this,_3[0]);
+this.dropDownContainer=this.srcNodeRef;
+}
+},startup:function(){
+if(this._started){
+return;
+}
+this.inherited(arguments);
+if(!this.popup){
+var _4=_1.query("[widgetId]",this.dropDownContainer)[0];
+this.popup=_2.byNode(_4);
+}
+_1.body().appendChild(this.popup.domNode);
+this.popup.startup();
+this.popup.domNode.style.display="none";
+if(this.arrowWrapper){
+_1.style(this.arrowWrapper,"visibility","");
+}
+this.focusNode.setAttribute("aria-haspopup","true");
+},destroyDescendants:function(){
+if(this.popup){
+if(!this.popup._destroyed){
+this.popup.destroyRecursive();
+}
+delete this.popup;
+}
+this.inherited(arguments);
+}});
+return _2.PopupMenuItem;
 });

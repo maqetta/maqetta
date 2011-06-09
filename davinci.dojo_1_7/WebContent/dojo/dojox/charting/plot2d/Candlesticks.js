@@ -1,224 +1,122 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", "dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx"], 
-	function(dojo, lang, declare, Base, dc, df, dfr, du, fx){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var purgeGroup = df.lambda("item.purgeGroup()");
-
-	//	Candlesticks are based on the Bars plot type; we expect the following passed
-	//	as values in a series:
-	//	{ x?, open, close, high, low, mid? }
-	//	if x is not provided, the array index is used.
-	//	failing to provide the OHLC values will throw an error.
-	return dojo.declare("dojox.charting.plot2d.Candlesticks", dojox.charting.plot2d.Base, {
-		//	summary:
-		//		A plot that represents typical candlesticks (financial reporting, primarily).
-		//		Unlike most charts, the Candlestick expects data points to be represented by
-		//		an object of the form { x?, open, close, high, low, mid? }, where both
-		//		x and mid are optional parameters.  If x is not provided, the index of the
-		//		data array is used.
-		defaultParams: {
-			hAxis: "x",		// use a horizontal axis named "x"
-			vAxis: "y",		// use a vertical axis named "y"
-			gap:	2,		// gap between columns in pixels
-			animate: null   // animate bars into place
-		},
-		optionalParams: {
-			minBarSize:	1,	// minimal candle width in pixels
-			maxBarSize:	1,	// maximal candle width in pixels
-			// theme component
-			stroke:		{},
-			outline:	{},
-			shadow:		{},
-			fill:		{},
-			font:		"",
-			fontColor:	""
-		},
-
-		constructor: function(chart, kwArgs){
-			//	summary:
-			//		The constructor for a candlestick chart.
-			//	chart: dojox.charting.Chart
-			//		The chart this plot belongs to.
-			//	kwArgs: dojox.charting.plot2d.__BarCtorArgs?
-			//		An optional keyword arguments object to help define the plot.
-			this.opt = dojo.clone(this.defaultParams);
-			du.updateWithObject(this.opt, kwArgs);
-			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
-			this.series = [];
-			this.hAxis = this.opt.hAxis;
-			this.vAxis = this.opt.vAxis;
-			this.animate = this.opt.animate;
-		},
-
-		collectStats: function(series){
-			//	summary:
-			//		Collect all statistics for drawing this chart.  Since the common
-			//		functionality only assumes x and y, Candlesticks must create it's own
-			//		stats (since data has no y value, but open/close/high/low instead).
-			//	series: dojox.charting.Series[]
-			//		The data series array to be drawn on this plot.
-			//	returns: Object
-			//		Returns an object in the form of { hmin, hmax, vmin, vmax }.
-
-			//	we have to roll our own, since we need to use all four passed
-			//	values to figure out our stats, and common only assumes x and y.
-			var stats = dojo.delegate(dc.defaultStats);
-			for(var i=0; i<series.length; i++){
-				var run = series[i];
-				if(!run.data.length){ continue; }
-				var old_vmin = stats.vmin, old_vmax = stats.vmax;
-				if(!("ymin" in run) || !("ymax" in run)){
-					dojo.forEach(run.data, function(val, idx){
-						if(val !== null){
-							var x = val.x || idx + 1;
-							stats.hmin = Math.min(stats.hmin, x);
-							stats.hmax = Math.max(stats.hmax, x);
-							stats.vmin = Math.min(stats.vmin, val.open, val.close, val.high, val.low);
-							stats.vmax = Math.max(stats.vmax, val.open, val.close, val.high, val.low);
-						}
-					});
-				}
-				if("ymin" in run){ stats.vmin = Math.min(old_vmin, run.ymin); }
-				if("ymax" in run){ stats.vmax = Math.max(old_vmax, run.ymax); }
-			}
-			return stats;	//	Object
-		},
-
-		getSeriesStats: function(){
-			//	summary:
-			//		Calculate the min/max on all attached series in both directions.
-			//	returns: Object
-			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			var stats = this.collectStats(this.series);
-			stats.hmin -= 0.5;
-			stats.hmax += 0.5;
-			return stats;
-		},
-
-		render: function(dim, offsets){
-			//	summary:
-			//		Run the calculations for any axes for this plot.
-			//	dim: Object
-			//		An object in the form of { width, height }
-			//	offsets: Object
-			//		An object of the form { l, r, t, b}.
-			//	returns: dojox.charting.plot2d.Candlesticks
-			//		A reference to this plot for functional chaining.
-			if(this.zoom && !this.isDataDirty()){
-				return this.performZoom(dim, offsets);
-			}
-			this.resetEvents();
-			this.dirty = this.isDirty();
-			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
-				this._eventSeries = {};
-				this.cleanGroup();
-				var s = this.group;
-				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
-			}
-			var t = this.chart.theme, f, gap, width,
-				ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
-				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
-				baseline = Math.max(0, this._vScaler.bounds.lower),
-				baselineHeight = vt(baseline),
-				events = this.events();
-			f = dc.calculateBarSize(this._hScaler.bounds.scale, this.opt);
-			gap = f.gap;
-			width = f.size;
-			for(var i = this.series.length - 1; i >= 0; --i){
-				var run = this.series[i];
-				if(!this.dirty && !run.dirty){
-					t.skip();
-					this._reconnectEvents(run.name);
-					continue;
-				}
-				run.cleanGroup();
-				var theme = t.next("candlestick", [this.opt, run]), s = run.group,
-					eventSeries = new Array(run.data.length);
-				for(var j = 0; j < run.data.length; ++j){
-					var v = run.data[j];
-					if(v !== null){
-						var finalTheme = t.addMixin(theme, "candlestick", v, true);
-
-						//	calculate the points we need for OHLC
-						var x = ht(v.x || (j+0.5)) + offsets.l + gap,
-							y = dim.height - offsets.b,
-							open = vt(v.open),
-							close = vt(v.close),
-							high = vt(v.high),
-							low = vt(v.low);
-						if("mid" in v){
-							var mid = vt(v.mid);
-						}
-						if(low > high){
-							var tmp = high;
-							high = low;
-							low = tmp;
-						}
-
-						if(width >= 1){
-							//	draw the line and rect, set up as a group and pass that to the events.
-							var doFill = open > close;
-							var line = { x1: width/2, x2: width/2, y1: y - high, y2: y - low },
-								rect = {
-									x: 0, y: y-Math.max(open, close),
-									width: width, height: Math.max(doFill ? open-close : close-open, 1)
-								};
-							var shape = s.createGroup();
-							shape.setTransform({dx: x, dy: 0 });
-							var inner = shape.createGroup();
-							inner.createLine(line).setStroke(finalTheme.series.stroke);
-							inner.createRect(rect).setStroke(finalTheme.series.stroke).
-								setFill(doFill ? finalTheme.series.fill : "white");
-							if("mid" in v){
-								//	add the mid line.
-								inner.createLine({
-									x1: (finalTheme.series.stroke.width||1), x2: width - (finalTheme.series.stroke.width || 1),
-									y1: y - mid, y2: y - mid
-								}).setStroke(doFill ? "white" : finalTheme.series.stroke);
-							}
-
-							//	TODO: double check this.
-							run.dyn.fill   = finalTheme.series.fill;
-							run.dyn.stroke = finalTheme.series.stroke;
-							if(events){
-								var o = {
-									element: "candlestick",
-									index:   j,
-									run:     run,
-									shape:   inner,
-									x:       x,
-									y:       y-Math.max(open, close),
-									cx:		 width/2,
-									cy:		 (y-Math.max(open, close)) + (Math.max(doFill ? open-close : close-open, 1)/2),
-									width:	 width,
-									height:  Math.max(doFill ? open-close : close-open, 1),
-									data:	 v
-								};
-								this._connectEvents(o);
-								eventSeries[j] = o;
-							}
-						}
-						if(this.animate){
-							this._animateCandlesticks(shape, y - low, high - low);
-						}
-					}
-				}
-				this._eventSeries[run.name] = eventSeries;
-				run.dirty = false;
-			}
-			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.Candlesticks
-		},
-		_animateCandlesticks: function(shape, voffset, vsize){
-			fx.animateTransform(dojo.delegate({
-				shape: shape,
-				duration: 1200,
-				transform: [
-					{name: "translate", start: [0, voffset - (voffset/vsize)], end: [0, 0]},
-					{name: "scale", start: [1, 1/vsize], end: [1, 1]},
-					{name: "original"}
-				]
-			}, this.animate)).play();
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,dc,df,_5,du,fx){
+var _6=df.lambda("item.purgeGroup()");
+return _1.declare("dojox.charting.plot2d.Candlesticks",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",gap:2,animate:null},optionalParams:{minBarSize:1,maxBarSize:1,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:""},constructor:function(_7,_8){
+this.opt=_1.clone(this.defaultParams);
+du.updateWithObject(this.opt,_8);
+du.updateWithPattern(this.opt,_8,this.optionalParams);
+this.series=[];
+this.hAxis=this.opt.hAxis;
+this.vAxis=this.opt.vAxis;
+this.animate=this.opt.animate;
+},collectStats:function(_9){
+var _a=_1.delegate(dc.defaultStats);
+for(var i=0;i<_9.length;i++){
+var _b=_9[i];
+if(!_b.data.length){
+continue;
+}
+var _c=_a.vmin,_d=_a.vmax;
+if(!("ymin" in _b)||!("ymax" in _b)){
+_1.forEach(_b.data,function(_e,_f){
+if(_e!==null){
+var x=_e.x||_f+1;
+_a.hmin=Math.min(_a.hmin,x);
+_a.hmax=Math.max(_a.hmax,x);
+_a.vmin=Math.min(_a.vmin,_e.open,_e.close,_e.high,_e.low);
+_a.vmax=Math.max(_a.vmax,_e.open,_e.close,_e.high,_e.low);
+}
+});
+}
+if("ymin" in _b){
+_a.vmin=Math.min(_c,_b.ymin);
+}
+if("ymax" in _b){
+_a.vmax=Math.max(_d,_b.ymax);
+}
+}
+return _a;
+},getSeriesStats:function(){
+var _10=this.collectStats(this.series);
+_10.hmin-=0.5;
+_10.hmax+=0.5;
+return _10;
+},render:function(dim,_11){
+if(this.zoom&&!this.isDataDirty()){
+return this.performZoom(dim,_11);
+}
+this.resetEvents();
+this.dirty=this.isDirty();
+if(this.dirty){
+_1.forEach(this.series,_6);
+this._eventSeries={};
+this.cleanGroup();
+var s=this.group;
+df.forEachRev(this.series,function(_12){
+_12.cleanGroup(s);
+});
+}
+var t=this.chart.theme,f,gap,_13,ht=this._hScaler.scaler.getTransformerFromModel(this._hScaler),vt=this._vScaler.scaler.getTransformerFromModel(this._vScaler),_14=Math.max(0,this._vScaler.bounds.lower),_15=vt(_14),_16=this.events();
+f=dc.calculateBarSize(this._hScaler.bounds.scale,this.opt);
+gap=f.gap;
+_13=f.size;
+for(var i=this.series.length-1;i>=0;--i){
+var run=this.series[i];
+if(!this.dirty&&!run.dirty){
+t.skip();
+this._reconnectEvents(run.name);
+continue;
+}
+run.cleanGroup();
+var _17=t.next("candlestick",[this.opt,run]),s=run.group,_18=new Array(run.data.length);
+for(var j=0;j<run.data.length;++j){
+var v=run.data[j];
+if(v!==null){
+var _19=t.addMixin(_17,"candlestick",v,true);
+var x=ht(v.x||(j+0.5))+_11.l+gap,y=dim.height-_11.b,_1a=vt(v.open),_1b=vt(v.close),_1c=vt(v.high),low=vt(v.low);
+if("mid" in v){
+var mid=vt(v.mid);
+}
+if(low>_1c){
+var tmp=_1c;
+_1c=low;
+low=tmp;
+}
+if(_13>=1){
+var _1d=_1a>_1b;
+var _1e={x1:_13/2,x2:_13/2,y1:y-_1c,y2:y-low},_1f={x:0,y:y-Math.max(_1a,_1b),width:_13,height:Math.max(_1d?_1a-_1b:_1b-_1a,1)};
+var _20=s.createGroup();
+_20.setTransform({dx:x,dy:0});
+var _21=_20.createGroup();
+_21.createLine(_1e).setStroke(_19.series.stroke);
+_21.createRect(_1f).setStroke(_19.series.stroke).setFill(_1d?_19.series.fill:"white");
+if("mid" in v){
+_21.createLine({x1:(_19.series.stroke.width||1),x2:_13-(_19.series.stroke.width||1),y1:y-mid,y2:y-mid}).setStroke(_1d?"white":_19.series.stroke);
+}
+run.dyn.fill=_19.series.fill;
+run.dyn.stroke=_19.series.stroke;
+if(_16){
+var o={element:"candlestick",index:j,run:run,shape:_21,x:x,y:y-Math.max(_1a,_1b),cx:_13/2,cy:(y-Math.max(_1a,_1b))+(Math.max(_1d?_1a-_1b:_1b-_1a,1)/2),width:_13,height:Math.max(_1d?_1a-_1b:_1b-_1a,1),data:v};
+this._connectEvents(o);
+_18[j]=o;
+}
+}
+if(this.animate){
+this._animateCandlesticks(_20,y-low,_1c-low);
+}
+}
+}
+this._eventSeries[run.name]=_18;
+run.dirty=false;
+}
+this.dirty=false;
+return this;
+},_animateCandlesticks:function(_22,_23,_24){
+fx.animateTransform(_1.delegate({shape:_22,duration:1200,transform:[{name:"translate",start:[0,_23-(_23/_24)],end:[0,0]},{name:"scale",start:[1,1/_24],end:[1,1]},{name:"original"}]},this.animate)).play();
+}});
 });

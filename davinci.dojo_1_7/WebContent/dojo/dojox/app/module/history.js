@@ -1,73 +1,44 @@
-define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/declare", "dojo/on"],function(dojo,dlang,declare,listen){
-	return dojo.declare(null, {
-		postCreate: function(params,node){
-			this.inherited(arguments);
-			var hash=window.location.hash;
-			this._startView= ((hash && hash.charAt(0)=="#")?hash.substr(1):hash)||this.defaultView;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-			listen(this.domNode, "startTransition", dojo.hitch(this, "onStartTransition"));
-			listen(window,"popstate", dojo.hitch(this, "onPopState"));
-		},
-		startup: function(){
-			this.inherited(arguments);
-		},
-
-		onStartTransition: function(evt){
-			console.log("onStartTransition", evt.detail.href, history.state);
-			if (evt.preventDefault){
-				evt.preventDefault();
-			}
-
-			dojo.when(this.transition(evt.detail.target, dojo.mixin({reverse: false},evt.detail)), dojo.hitch(this, function(){
-				history.pushState(evt.detail,evt.detail.href, evt.detail.url);
-			}))
-	
-		},
-
-		/*
-		onHashChange: function(evt){
-			var target = window.location.hash.substr(1);;
-			var evt = {target: window.location.hash, url: "#" + target,title:null};
-			//this.onStartTransition(evt);
-		},
-		*/
-
-		onPopState: function(evt){
-			console.log("evt: ",evt, evt.state);
-			var state = evt.state;
-			if (!state){
-
-				if(!this._startView && window.location.hash){
-					state={
-						target: (location.hash && location.hash.charAt(0)=="#")?location.hash.substr(1):location.hash,
-						url: location.hash
-					}		
-				}else{
-					state={};	
-				}
-			}
-			console.log("Check state: ", state);	
-			var target = state.target || this._startView || this.defaultView;
-
-			if (this._startView){
-				this._startView=null;
-			}
-			var title = state.title||null;
-			var href = state.url || null;
-
-			console.log('onPopState: ',target,title,href,  arguments);
-			if (evt._sim) {
-				history.replaceState(state, title, href );
-			}
-
-			/*
-			dojo.when(this.transition(window.history.state, {rev: true}), dojo.hitch(this, function(){
-
-				console.log('done transition from onPopState');
-			}))
-			*/
-			var currentState = history.state;
-			this.transition(target, dojo.mixin({reverse: true},state));	
-		}
-	});	
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/on"],function(_1,_2,_3,_4){
+return _1.declare(null,{postCreate:function(_5,_6){
+this.inherited(arguments);
+var _7=window.location.hash;
+this._startView=((_7&&_7.charAt(0)=="#")?_7.substr(1):_7)||this.defaultView;
+_4(this.domNode,"startTransition",_1.hitch(this,"onStartTransition"));
+_4(window,"popstate",_1.hitch(this,"onPopState"));
+},startup:function(){
+this.inherited(arguments);
+},onStartTransition:function(_8){
+if(_8.preventDefault){
+_8.preventDefault();
+}
+_1.when(this.transition(_8.detail.target,_1.mixin({reverse:false},_8.detail)),_1.hitch(this,function(){
+history.pushState(_8.detail,_8.detail.href,_8.detail.url);
+}));
+},onPopState:function(_9){
+var _a=_9.state;
+if(!_a){
+if(!this._startView&&window.location.hash){
+_a={target:(location.hash&&location.hash.charAt(0)=="#")?location.hash.substr(1):location.hash,url:location.hash};
+}else{
+_a={};
+}
+}
+var _b=_a.target||this._startView||this.defaultView;
+if(this._startView){
+this._startView=null;
+}
+var _c=_a.title||null;
+var _d=_a.url||null;
+if(_9._sim){
+history.replaceState(_a,_c,_d);
+}
+var _e=history.state;
+this.transition(_b,_1.mixin({reverse:true},_a));
+}});
 });

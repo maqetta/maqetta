@@ -1,380 +1,276 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/html", "dojo/ready", "dijit/_WidgetBase"],
-	function(dojo, dlang, darray, dhtml, ready, WidgetBase){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.getObject("mobile", true, dojox);
-
-// summary:
-//		Mobile Widgets
-// description:
-//		This module provides a number of widgets that can be used to build
-//		web-based applications for mobile devices such as iPhone or Android.
-//		These widgets work best with webkit-based browsers, such as Safari or
-//		Chrome, since webkit-specific CSS3 features are used.
-//		However, the widgets should work in a "graceful degradation" manner
-//		even on non-CSS3 browsers, such as IE or Firefox. In that case,
-//		fancy effects, such as animation, gradient color, or round corner
-//		rectangle, may not work, but you can still operate your application.
-//
-//		Furthermore, as a separate file, a compatibility module,
-//		dojox.mobile.compat, is available that simulates some of CSS3 features
-//		used in this module. If you use the compatibility module, fancy visual
-//		effects work better even on non-CSS3 browsers.
-//
-//		Note that use of dijit._Templated and dojo.query was intentionally
-//		avoided to reduce download code size.
-
-	var ua = navigator.userAgent;
-
-	// BlackBerry (OS 6 or later only)
-	dojo.isBB = ua.indexOf("BlackBerry") >= 0 && parseFloat(ua.split("Version/")[1]) || undefined;
-
-	// Android
-	dojo.isAndroid = parseFloat(ua.split("Android ")[1]) || undefined;
-
-	// iPhone, iPod, or iPad
-	// If iPod or iPad is detected, in addition to dojo.isIPod or dojo.isIPad,
-	// dojo.isIPhone will also have iOS version number.
-	if(ua.match(/(iPhone|iPod|iPad)/)){
-		var p = "is" + RegExp.$1.replace(/i/, 'I');
-		var v = ua.match(/OS ([\d_]+)/) ? RegExp.$1 : "1";
-		dojo.isIPhone = dojo[p] = parseFloat(v.replace(/_/, '.').replace(/_/g, ''));
-	}
-
-	var html = dojo.doc.documentElement;
-	html.className += dojo.trim([
-		dojo.isBB ? "dj_bb" : "",
-		dojo.isAndroid ? "dj_android" : "",
-		dojo.isIPhone ? "dj_iphone" : "",
-		dojo.isIPod ? "dj_ipod" : "",
-		dojo.isIPad ? "dj_ipad" : ""
-	].join(" ").replace(/ +/g," "));
-
-	var dm = dojox.mobile;
-
-	dm.getScreenSize = function(){
-		return {
-			h: dojo.global.innerHeight || dojo.doc.documentElement.clientHeight,
-			w: dojo.global.innerWidth || dojo.doc.documentElement.clientWidth
-		};
-	};
-
-	dm.updateOrient = function(){
-		var dim = dm.getScreenSize();
-		dojo.replaceClass(dojo.doc.documentElement,
-				  dim.h > dim.w ? "dj_portrait" : "dj_landscape",
-				  dim.h > dim.w ? "dj_landscape" : "dj_portrait");
-	};
-	dm.updateOrient();
-
-	dm.tabletSize = 500;
-	dm.detectScreenSize = function(/*Boolean?*/force){
-		var dim = dm.getScreenSize();
-		var sz = Math.min(dim.w, dim.h);
-		var from, to;
-		if(sz >= dm.tabletSize && (force || (!this._sz || this._sz < dm.tabletSize))){
-			from = "phone";
-			to = "tablet";
-		}else if(sz < dm.tabletSize && (force || (!this._sz || this._sz >= dm.tabletSize))){
-			from = "tablet";
-			to = "phone";
-		}
-		if(to){
-			dojo.replaceClass(dojo.doc.documentElement, "dj_"+to, "dj_"+from);
-			dojo.publish("/dojox/mobile/screenSize/"+to, [dim]);
-		}
-		this._sz = sz;
-	};
-	dm.detectScreenSize();
-
-	dm.setupIcon = function(/*DomNode*/iconNode, /*String*/iconPos){
-		if(iconNode && iconPos){
-			var arr = dojo.map(iconPos.split(/[ ,]/),function(item){return item-0});
-			var t = arr[0]; // top
-			var r = arr[1] + arr[2]; // right
-			var b = arr[0] + arr[3]; // bottom
-			var l = arr[1]; // left
-			var offset = iconNode.parentNode ? dojo.style(iconNode.parentNode, "paddingLeft") : 8;
-			dojo.style(iconNode, {
-				clip: "rect("+t+"px "+r+"px "+b+"px "+l+"px)",
-				top: (iconNode.parentNode ? dojo.style(iconNode, "top") : 0) - t + "px",
-				left: offset - l + "px"
-			});
-		}
-	};
-
-	dm.hideAddressBarWait = typeof(dojo.config["mblHideAddressBarWait"]) === "number" ?
-		dojo.config["mblHideAddressBarWait"] : 2000; // [ms]
-	dm.hideAddressBar = function(/*Event?*/evt, /*Boolean?*/doResize){
-		dojo.body().style.minHeight = "1000px"; // to ensure enough height for scrollTo to work
-		setTimeout(function(){ scrollTo(0, 1); }, 200);
-		setTimeout(function(){ scrollTo(0, 1); }, 800);
-		setTimeout(function(){
-			scrollTo(0, 1);
-			// re-define the min-height with the actual height
-			dojo.body().style.minHeight = dm.getScreenSize().h + "px";
-			if(doResize !== false){ dm.resizeAll(); }
-		}, dm.hideAddressBarWait);
-	};
-
-	dm.resizeAll = function(/*Event?*/evt, /*Widget?*/root){
-		// summary:
-		//		Call the resize() method of all the top level resizable widgets.
-		// description:
-		//		Find all widgets that do not have a parent or the parent does not
-		//		have the resize() method, and call resize() for them.
-		//		If a widget has a parent that has resize(), call of the widget's
-		//		resize() is its parent's responsibility.
-		// evt:
-		//		Native event object
-		// root:
-		//		If specified, search the specified widget recursively for top level
-		//		resizable widgets.
-		//		root.resize() is always called regardless of whether root is a
-		//		top level widget or not.
-		//		If omitted, search the entire page.
-		dojo.publish("/dojox/mobile/resizeAll", [evt, root]);
-		dm.updateOrient();
-		dm.detectScreenSize();
-		var isTopLevel = function(w){
-			var parent = w.getParent && w.getParent();
-			return !!((!parent || !parent.resize) && w.resize);
-		};
-		var resizeRecursively = function(w){
-			dojo.forEach(w.getChildren(), function(child){
-				if(isTopLevel(child)){ child.resize(); }
-				resizeRecursively(child);
-			});
-		};
-		if(root){
-			if(root.resize){ root.resize(); }
-			resizeRecursively(root);
-		}else{
-			dijit.registry.filter(isTopLevel).forEach(function(w){
-				w.resize();
-			});
-		}
-	};
-
-	dm.openWindow = function(url, target){
-		dojo.global.open(url, target || "_blank");
-	};
-
-	dm.createDomButton = function(/*DomNode*/refNode, /*Object?*/style, /*DomNode?*/toNode){
-		var s = refNode.className;
-		var node = toNode || refNode;
-		if(s.match(/(mblDomButton\w+)/) && s.indexOf("/") === -1){
-			var btnClass = RegExp.$1;
-			var nDiv = 4;
-			if(s.match(/(mblDomButton\w+_(\d+))/)){
-				nDiv = RegExp.$2 - 0;
-			}
-			for(var i = 0, p = node; i < nDiv; i++){
-				p = p.firstChild || dojo.create("DIV", null, p);
-			}
-			if(toNode){
-				setTimeout(function(){
-					dojo.removeClass(refNode, btnClass);
-				}, 0);
-				dojo.addClass(toNode, btnClass);
-			}
-		}else if(s.indexOf(".") !== -1){ // file name
-			dojo.create("IMG", {src:s}, node);
-		}else{
-			return null;
-		}
-		dojo.addClass(node, "mblDomButton");
-		dojo.style(node, style);
-		return node;
-	};
-	
-	dm.createIcon = function(/*String*/icon, /*String*/iconPos, /*DomNode*/node, /*String?*/title, /*DomNode?*/parent){
-		// summary:
-		//		Create or update a ListItem icon node
-		// description:
-		//		If node exists, update the existing node. Otherwise, create a new one.
-		// icon:
-		//		Path for an image, or DOM button class name.
-		if(icon && icon.indexOf("mblDomButton") === 0){
-			// DOM button
-			if(node && node.className.match(/(mblDomButton\w+)/)){
-				dojo.removeClass(node, RegExp.$1);
-			}else{
-				node = dojo.create("DIV");
-			}
-			node.title = title;
-			dojo.addClass(node, icon);
-			dm.createDomButton(node);
-		}else if(icon && icon !== "none"){
-			// Image
-			if(!node || node.nodeName !== "IMG"){
-				node = dojo.create("IMG", {
-					alt: title
-				});
-			}
-			node.src = icon;
-			dm.setupIcon(node, iconPos);
-			if(parent && iconPos){
-				var arr = iconPos.split(/[ ,]/);
-				dojo.style(parent, {
-					width: arr[2] + "px",
-					height: arr[3] + "px"
-				});
-			}
-		}
-		if(parent){
-			parent.appendChild(node);
-		}
-		return node;
-	};
-
-	if(dojo.config.parseOnLoad){
-		dojo.ready(90, function(){
-			// avoid use of dojo.query
-			/*
-			var list = dojo.query('[lazy=true] [dojoType]', null);
-			list.forEach(function(node, index, nodeList){
-				node.setAttribute("__dojoType", node.getAttribute("dojoType"));
-				node.removeAttribute("dojoType");
-			});
-			*/
-		
-			var nodes = dojo.body().getElementsByTagName("*");
-			var i, len, s;
-			len = nodes.length;
-			for(i = 0; i < len; i++){
-				s = nodes[i].getAttribute("dojoType");
-				if(s){
-					if(nodes[i].parentNode.getAttribute("lazy") == "true"){
-						nodes[i].setAttribute("__dojoType", s);
-						nodes[i].removeAttribute("dojoType");
-					}
-				}
-			}
-		});
-	}
-	
-	dojo.addOnLoad(function(){
-		dm.detectScreenSize(true);
-		if(dojo.config["mblApplyPageStyles"] !== false){
-			dojo.addClass(dojo.doc.documentElement, "mobile");
-		}
-
-		if(dojo.config["mblAndroidWorkaround"] !== false && dojo.isAndroid >= 2.2 && dojo.isAndroid < 3.1){ // workaround for android screen flicker problem
-			if(dojo.config["mblAndroidWorkaroundButtonStyle"] !== false){
-				// workaround to avoid buttons disappear due to the side-effect of the webkitTransform workaroud below
-				dojo.create("style", {innerHTML:"BUTTON,INPUT[type='button'],INPUT[type='submit'],INPUT[type='reset'],INPUT[type='file']::-webkit-file-upload-button{-webkit-appearance:none;}"}, dojo.doc.head, "first");
-			}
-			if(dojo.isAndroid < 3){ // for Android 2.2.x and 2.3.x
-				dojo.style(dojo.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
-				// workaround for auto-scroll issue when focusing input fields
-				dojo.connect(null, "onfocus", null, function(e){
-					dojo.style(dojo.doc.documentElement, "webkitTransform", "");
-				});
-				dojo.connect(null, "onblur", null, function(e){
-					dojo.style(dojo.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
-				});
-			}else{ // for Android 3.0.x
-				if(dojo.config["mblAndroid3Workaround"] !== false){
-					dojo.style(dojo.doc.documentElement, {
-						webkitBackfaceVisibility: "hidden",
-						webkitPerspective: 8000
-					});
-				}
-			}
-		}
-	
-		//	You can disable hiding the address bar with the following djConfig.
-		//	var djConfig = { mblHideAddressBar: false };
-		var f = dm.resizeAll;
-		if(dojo.config["mblHideAddressBar"] !== false &&
-			navigator.appVersion.indexOf("Mobile") != -1 ||
-			dojo.config["mblForceHideAddressBar"] === true){
-			dm.hideAddressBar();
-			if(dojo.config["mblAlwaysHideAddressBar"] === true){
-				f = dm.hideAddressBar;
-			}
-		}
-		dojo.connect(null, (dojo.global.onorientationchange !== undefined && !dojo.isAndroid)
-			? "onorientationchange" : "onresize", null, f);
-	
-		// avoid use of dojo.query
-		/*
-		var list = dojo.query('[__dojoType]', null);
-		list.forEach(function(node, index, nodeList){
-			node.setAttribute("dojoType", node.getAttribute("__dojoType"));
-			node.removeAttribute("__dojoType");
-		});
-		*/
-	
-		var nodes = dojo.body().getElementsByTagName("*");
-		var i, len = nodes.length, s;
-		for(i = 0; i < len; i++){
-			s = nodes[i].getAttribute("__dojoType");
-			if(s){
-				nodes[i].setAttribute("dojoType", s);
-				nodes[i].removeAttribute("__dojoType");
-			}
-		}
-	
-		if(dojo.hash){
-			// find widgets under root recursively
-			var findWidgets = function(root){
-				var arr;
-				arr = dijit.findWidgets(root);
-				var widgets = arr;
-				for(var i = 0; i < widgets.length; i++){
-					arr = arr.concat(findWidgets(widgets[i].containerNode));
-				}
-				return arr;
-			};
-			dojo.subscribe("/dojo/hashchange", null, function(value){
-				var view = dm.currentView;
-				if(!view){ return; }
-				var params = dm._params;
-				if(!params){ // browser back/forward button was pressed
-					var moveTo = value ? value : dm._defaultView.id;
-					var widgets = findWidgets(view.domNode);
-					var dir = 1, transition = "slide";
-					for(i = 0; i < widgets.length; i++){
-						var w = widgets[i];
-						if("#"+moveTo == w.moveTo){
-							// found a widget that has the given moveTo
-							transition = w.transition;
-								dir = (w instanceof dm.Heading) ? -1 : 1;
-							break;
-						}
-					}
-					params = [ moveTo, dir, transition ];
-				}
-				view.performTransition.apply(view, params);
-				dm._params = null;
-			});
-		}
-	
-		dojo.body().style.visibility = "visible";
-	});
-	
-	dijit.getEnclosingWidget = function(node){
-		while(node && node.tagName !== "BODY"){
-			if(node.getAttribute && node.getAttribute("widgetId")){
-				return dijit.registry.byId(node.getAttribute("widgetId"));
-			}
-			node = node._parentNode || node.parentNode;
-		}
-		return null;
-	};
-
-	dojo.extend(dijit._WidgetBase, {
-		_cv: function(s){ return s; } // convert the given string
-	});
-
-	(function(){
-		// feature detection
-		if(dojo.isWebKit){
-			dm.hasTouch = (typeof dojo.doc.documentElement.ontouchstart != "undefined" &&
-				navigator.appVersion.indexOf("Mobile") != -1) || !!dojo.isAndroid;
-		}
-	})();
-
-	return dm;
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/ready","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
+_1.getObject("mobile",true,dojox);
+var ua=navigator.userAgent;
+_1.isBB=ua.indexOf("BlackBerry")>=0&&parseFloat(ua.split("Version/")[1])||undefined;
+_1.isAndroid=parseFloat(ua.split("Android ")[1])||undefined;
+if(ua.match(/(iPhone|iPod|iPad)/)){
+var p="is"+RegExp.$1.replace(/i/,"I");
+var v=ua.match(/OS ([\d_]+)/)?RegExp.$1:"1";
+_1.isIPhone=_1[p]=parseFloat(v.replace(/_/,".").replace(/_/g,""));
+}
+var _7=_1.doc.documentElement;
+_7.className+=_1.trim([_1.isBB?"dj_bb":"",_1.isAndroid?"dj_android":"",_1.isIPhone?"dj_iphone":"",_1.isIPod?"dj_ipod":"",_1.isIPad?"dj_ipad":""].join(" ").replace(/ +/g," "));
+var dm=dojox.mobile;
+dm.getScreenSize=function(){
+return {h:_1.global.innerHeight||_1.doc.documentElement.clientHeight,w:_1.global.innerWidth||_1.doc.documentElement.clientWidth};
+};
+dm.updateOrient=function(){
+var _8=dm.getScreenSize();
+_1.replaceClass(_1.doc.documentElement,_8.h>_8.w?"dj_portrait":"dj_landscape",_8.h>_8.w?"dj_landscape":"dj_portrait");
+};
+dm.updateOrient();
+dm.tabletSize=500;
+dm.detectScreenSize=function(_9){
+var _a=dm.getScreenSize();
+var sz=Math.min(_a.w,_a.h);
+var _b,to;
+if(sz>=dm.tabletSize&&(_9||(!this._sz||this._sz<dm.tabletSize))){
+_b="phone";
+to="tablet";
+}else{
+if(sz<dm.tabletSize&&(_9||(!this._sz||this._sz>=dm.tabletSize))){
+_b="tablet";
+to="phone";
+}
+}
+if(to){
+_1.replaceClass(_1.doc.documentElement,"dj_"+to,"dj_"+_b);
+_1.publish("/dojox/mobile/screenSize/"+to,[_a]);
+}
+this._sz=sz;
+};
+dm.detectScreenSize();
+dm.setupIcon=function(_c,_d){
+if(_c&&_d){
+var _e=_1.map(_d.split(/[ ,]/),function(_f){
+return _f-0;
+});
+var t=_e[0];
+var r=_e[1]+_e[2];
+var b=_e[0]+_e[3];
+var l=_e[1];
+var _10=_c.parentNode?_1.style(_c.parentNode,"paddingLeft"):8;
+_1.style(_c,{clip:"rect("+t+"px "+r+"px "+b+"px "+l+"px)",top:(_c.parentNode?_1.style(_c,"top"):0)-t+"px",left:_10-l+"px"});
+}
+};
+dm.hideAddressBarWait=typeof (_1.config["mblHideAddressBarWait"])==="number"?_1.config["mblHideAddressBarWait"]:2000;
+dm.hideAddressBar=function(evt,_11){
+_1.body().style.minHeight="1000px";
+setTimeout(function(){
+scrollTo(0,1);
+},200);
+setTimeout(function(){
+scrollTo(0,1);
+},800);
+setTimeout(function(){
+scrollTo(0,1);
+_1.body().style.minHeight=dm.getScreenSize().h+"px";
+if(_11!==false){
+dm.resizeAll();
+}
+},dm.hideAddressBarWait);
+};
+dm.resizeAll=function(evt,_12){
+_1.publish("/dojox/mobile/resizeAll",[evt,_12]);
+dm.updateOrient();
+dm.detectScreenSize();
+var _13=function(w){
+var _14=w.getParent&&w.getParent();
+return !!((!_14||!_14.resize)&&w.resize);
+};
+var _15=function(w){
+_1.forEach(w.getChildren(),function(_16){
+if(_13(_16)){
+_16.resize();
+}
+_15(_16);
+});
+};
+if(_12){
+if(_12.resize){
+_12.resize();
+}
+_15(_12);
+}else{
+dijit.registry.filter(_13).forEach(function(w){
+w.resize();
+});
+}
+};
+dm.openWindow=function(url,_17){
+_1.global.open(url,_17||"_blank");
+};
+dm.createDomButton=function(_18,_19,_1a){
+var s=_18.className;
+var _1b=_1a||_18;
+if(s.match(/(mblDomButton\w+)/)&&s.indexOf("/")===-1){
+var _1c=RegExp.$1;
+var _1d=4;
+if(s.match(/(mblDomButton\w+_(\d+))/)){
+_1d=RegExp.$2-0;
+}
+for(var i=0,p=_1b;i<_1d;i++){
+p=p.firstChild||_1.create("DIV",null,p);
+}
+if(_1a){
+setTimeout(function(){
+_1.removeClass(_18,_1c);
+},0);
+_1.addClass(_1a,_1c);
+}
+}else{
+if(s.indexOf(".")!==-1){
+_1.create("IMG",{src:s},_1b);
+}else{
+return null;
+}
+}
+_1.addClass(_1b,"mblDomButton");
+_1.style(_1b,_19);
+return _1b;
+};
+dm.createIcon=function(_1e,_1f,_20,_21,_22){
+if(_1e&&_1e.indexOf("mblDomButton")===0){
+if(_20&&_20.className.match(/(mblDomButton\w+)/)){
+_1.removeClass(_20,RegExp.$1);
+}else{
+_20=_1.create("DIV");
+}
+_20.title=_21;
+_1.addClass(_20,_1e);
+dm.createDomButton(_20);
+}else{
+if(_1e&&_1e!=="none"){
+if(!_20||_20.nodeName!=="IMG"){
+_20=_1.create("IMG",{alt:_21});
+}
+_20.src=_1e;
+dm.setupIcon(_20,_1f);
+if(_22&&_1f){
+var arr=_1f.split(/[ ,]/);
+_1.style(_22,{width:arr[2]+"px",height:arr[3]+"px"});
+}
+}
+}
+if(_22){
+_22.appendChild(_20);
+}
+return _20;
+};
+if(_1.config.parseOnLoad){
+_1.ready(90,function(){
+var _23=_1.body().getElementsByTagName("*");
+var i,len,s;
+len=_23.length;
+for(i=0;i<len;i++){
+s=_23[i].getAttribute("dojoType");
+if(s){
+if(_23[i].parentNode.getAttribute("lazy")=="true"){
+_23[i].setAttribute("__dojoType",s);
+_23[i].removeAttribute("dojoType");
+}
+}
+}
+});
+}
+_1.addOnLoad(function(){
+dm.detectScreenSize(true);
+if(_1.config["mblApplyPageStyles"]!==false){
+_1.addClass(_1.doc.documentElement,"mobile");
+}
+if(_1.config["mblAndroidWorkaround"]!==false&&_1.isAndroid>=2.2&&_1.isAndroid<3.1){
+if(_1.config["mblAndroidWorkaroundButtonStyle"]!==false){
+_1.create("style",{innerHTML:"BUTTON,INPUT[type='button'],INPUT[type='submit'],INPUT[type='reset'],INPUT[type='file']::-webkit-file-upload-button{-webkit-appearance:none;}"},_1.doc.head,"first");
+}
+if(_1.isAndroid<3){
+_1.style(_1.doc.documentElement,"webkitTransform","translate3d(0,0,0)");
+_1.connect(null,"onfocus",null,function(e){
+_1.style(_1.doc.documentElement,"webkitTransform","");
+});
+_1.connect(null,"onblur",null,function(e){
+_1.style(_1.doc.documentElement,"webkitTransform","translate3d(0,0,0)");
+});
+}else{
+if(_1.config["mblAndroid3Workaround"]!==false){
+_1.style(_1.doc.documentElement,{webkitBackfaceVisibility:"hidden",webkitPerspective:8000});
+}
+}
+}
+var f=dm.resizeAll;
+if(_1.config["mblHideAddressBar"]!==false&&navigator.appVersion.indexOf("Mobile")!=-1||_1.config["mblForceHideAddressBar"]===true){
+dm.hideAddressBar();
+if(_1.config["mblAlwaysHideAddressBar"]===true){
+f=dm.hideAddressBar;
+}
+}
+_1.connect(null,(_1.global.onorientationchange!==undefined&&!_1.isAndroid)?"onorientationchange":"onresize",null,f);
+var _24=_1.body().getElementsByTagName("*");
+var i,len=_24.length,s;
+for(i=0;i<len;i++){
+s=_24[i].getAttribute("__dojoType");
+if(s){
+_24[i].setAttribute("dojoType",s);
+_24[i].removeAttribute("__dojoType");
+}
+}
+if(_1.hash){
+var _25=function(_26){
+var arr;
+arr=dijit.findWidgets(_26);
+var _27=arr;
+for(var i=0;i<_27.length;i++){
+arr=arr.concat(_25(_27[i].containerNode));
+}
+return arr;
+};
+_1.subscribe("/dojo/hashchange",null,function(_28){
+var _29=dm.currentView;
+if(!_29){
+return;
+}
+var _2a=dm._params;
+if(!_2a){
+var _2b=_28?_28:dm._defaultView.id;
+var _2c=_25(_29.domNode);
+var dir=1,_2d="slide";
+for(i=0;i<_2c.length;i++){
+var w=_2c[i];
+if("#"+_2b==w.moveTo){
+_2d=w.transition;
+dir=(w instanceof dm.Heading)?-1:1;
+break;
+}
+}
+_2a=[_2b,dir,_2d];
+}
+_29.performTransition.apply(_29,_2a);
+dm._params=null;
+});
+}
+_1.body().style.visibility="visible";
+});
+dijit.getEnclosingWidget=function(_2e){
+while(_2e&&_2e.tagName!=="BODY"){
+if(_2e.getAttribute&&_2e.getAttribute("widgetId")){
+return dijit.registry.byId(_2e.getAttribute("widgetId"));
+}
+_2e=_2e._parentNode||_2e.parentNode;
+}
+return null;
+};
+_1.extend(dijit._WidgetBase,{_cv:function(s){
+return s;
+}});
+(function(){
+if(_1.isWebKit){
+dm.hasTouch=(typeof _1.doc.documentElement.ontouchstart!="undefined"&&navigator.appVersion.indexOf("Mobile")!=-1)||!!_1.isAndroid;
+}
+})();
+return dm;
 });

@@ -1,3 +1,3 @@
-({
+define(({
 	deleteButton: "[Löschen]"
-})
+}));

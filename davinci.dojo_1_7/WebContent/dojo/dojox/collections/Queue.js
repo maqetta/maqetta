@@ -1,73 +1,54 @@
-define(["dojo/_base/kernel", "dojo/_base/array", "./_base"], function(dojo, darray, dxc){
-/*=====
-var dxc = dojox.collections;
-=====*/
-	dxc.Queue=function(/* array? */arr){
-		//	summary
-		//	return an object of type dojox.collections.Queue
-		var q=[];
-		if (arr){
-			q=q.concat(arr);
-		}
-		this.count=q.length;
-		this.clear=function(){
-			//	summary
-			//	clears the internal collection
-			q=[];
-			this.count=q.length;
-		};
-		this.clone=function(){
-			//	summary
-			//	creates a new Queue based on this one
-			return new dxc.Queue(q);	//	dojox.collections.Queue
-		};
-		this.contains=function(/* object */ o){
-			//	summary
-			//	Check to see if the passed object is an element in this queue
-			for(var i=0; i<q.length; i++){
-				if (q[i]==o){
-					return true;	//	bool
-				}
-			}
-			return false;	//	bool
-		};
-		this.copyTo=function(/* array */ arr, /* int */ i){
-			//	summary
-			//	Copy the contents of this queue into the passed array at index i.
-			arr.splice(i,0,q);
-		};
-		this.dequeue=function(){
-			//	summary
-			//	shift the first element off the queue and return it
-			var r=q.shift();
-			this.count=q.length;
-			return r;	//	object
-		};
-		this.enqueue=function(/* object */ o){
-			//	summary
-			//	put the passed object at the end of the queue
-			this.count=q.push(o);
-		};
-		this.forEach=function(/* function */ fn, /* object? */ scope){
-			//	summary
-			//	functional iterator, following the mozilla spec.
-			dojo.forEach(q, fn, scope);
-		};
-		this.getIterator=function(){
-			//	summary
-			//	get an Iterator based on this queue.
-			return new dxc.Iterator(q);	//	dojox.collections.Iterator
-		};
-		this.peek=function(){
-			//	summary
-			//	get the next element in the queue without altering the queue.
-			return q[0];
-		};
-		this.toArray=function(){
-			//	summary
-			//	return an array based on the internal array of the queue.
-			return [].concat(q);
-		};
-	};
-	return dxc.Queue;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["dojo/_base/kernel","dojo/_base/array","./_base"],function(_1,_2,_3){
+_3.Queue=function(_4){
+var q=[];
+if(_4){
+q=q.concat(_4);
+}
+this.count=q.length;
+this.clear=function(){
+q=[];
+this.count=q.length;
+};
+this.clone=function(){
+return new _3.Queue(q);
+};
+this.contains=function(o){
+for(var i=0;i<q.length;i++){
+if(q[i]==o){
+return true;
+}
+}
+return false;
+};
+this.copyTo=function(_5,i){
+_5.splice(i,0,q);
+};
+this.dequeue=function(){
+var r=q.shift();
+this.count=q.length;
+return r;
+};
+this.enqueue=function(o){
+this.count=q.push(o);
+};
+this.forEach=function(fn,_6){
+_1.forEach(q,fn,_6);
+};
+this.getIterator=function(){
+return new _3.Iterator(q);
+};
+this.peek=function(){
+return q[0];
+};
+this.toArray=function(){
+return [].concat(q);
+};
+};
+return _3.Queue;
 });

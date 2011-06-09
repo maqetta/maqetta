@@ -1,360 +1,238 @@
-dojo.provide("dojox.form.manager._NodeMixin");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.form.manager._Mixin");
-
+define(["dojo","dijit","dojox","dojox/form/manager/_Mixin"],function(_1,_2,_3){
+_1.getObject("dojox.form.manager._NodeMixin",1);
 (function(){
-	var fm = dojox.form.manager,
-		aa = fm.actionAdapter,
-		keys = fm._keys,
-
-		ce = fm.changeEvent = function(node){
-			// summary:
-			//		Function that returns a valid "onchange" event for a given form node.
-			// node: Node:
-			//		Form node.
-
-			var eventName = "onclick";
-			switch(node.tagName.toLowerCase()){
-				case "textarea":
-					eventName = "onkeyup";
-					break;
-				case "select":
-					eventName = "onchange";
-					break;
-				case "input":
-					switch(node.type.toLowerCase()){
-						case "text":
-						case "password":
-							eventName = "onkeyup";
-							break;
-					}
-					break;
-				// button, input/button, input/checkbox, input/radio,
-				// input/file, input/image, input/submit, input/reset
-				// use "onclick" (the default)
-			}
-			return eventName;	// String
-		},
-
-		registerNode = function(node, groupNode){
-			var name = dojo.attr(node, "name");
-			groupNode = groupNode || this.domNode;
-			if(name && !(name in this.formWidgets)){
-				// verify that it is not part of any widget
-				for(var n = node; n && n !== groupNode; n = n.parentNode){
-					if(dojo.attr(n, "widgetId") && dijit.byNode(n) instanceof dijit.form._FormWidget){
-						// this is a child of some widget --- bail out
-						return null;
-					}
-				}
-				// register the node
-				if(node.tagName.toLowerCase() == "input" && node.type.toLowerCase() == "radio"){
-					var a = this.formNodes[name];
-					a = a && a.node;
-					if(a && dojo.isArray(a)){
-						a.push(node);
-					}else{
-						this.formNodes[name] = {node: [node], connections: []};
-					}
-				}else{
-					this.formNodes[name] = {node: node, connections: []};
-				}
-			}else{
-				name = null;
-			}
-			return name;
-		},
-
-		getObserversFromNode = function(name){
-			var observers = {};
-			aa(function(_, n){
-				var o = dojo.attr(n, "observer");
-				if(o && typeof o == "string"){
-					dojo.forEach(o.split(","), function(o){
-						o = dojo.trim(o);
-						if(o && dojo.isFunction(this[o])){
-							observers[o] = 1;
-						}
-					}, this);
-				}
-			}).call(this, null, this.formNodes[name].node);
-			return keys(observers);
-		},
-
-		connectNode = function(name, observers){
-			var t = this.formNodes[name], c = t.connections;
-			if(c.length){
-				dojo.forEach(c, dojo.disconnect);
-				c = t.connections = [];
-			}
-			aa(function(_, n){
-				// the next line is a crude workaround for dijit.form.Button that fires onClick instead of onChange
-				var eventName = ce(n);
-				dojo.forEach(observers, function(o){
-					c.push(dojo.connect(n, eventName, this, function(evt){
-						if(this.watching){
-							this[o](this.formNodeValue(name), name, n, evt);
-						}
-					}));
-				}, this);
-			}).call(this, null, t.node);
-		};
-	dojo.declare("dojox.form.manager._NodeMixin", null, {
-		// summary:
-		//		Mixin to orchestrate dynamic forms (works with DOM nodes).
-		// description:
-		//		This mixin provideas a foundation for an enhanced form
-		//		functionality: unified access to individual form elements,
-		//		unified "onchange" event processing, and general event
-		//		processing. It complements dojox.form.manager._Mixin
-		//		extending the functionality to DOM nodes.
-
-		destroy: function(){
-			// summary:
-			//		Called when the widget is being destroyed
-
-			for(var name in this.formNodes){
-				dojo.forEach(this.formNodes[name].connections, dojo.disconnect);
-			}
-			this.formNodes = {};
-
-			this.inherited(arguments);
-		},
-
-		// register/unregister widgets and nodes
-
-		registerNode: function(node){
-			// summary:
-			//		Register a node with the form manager
-			// node: String|Node:
-			//		A node, or its id
-			// returns: Object:
-			//		Returns self
-			if(typeof node == "string"){
-				node = dojo.byId(node);
-			}
-			var name = registerNode.call(this, node);
-			if(name){
-				connectNode.call(this, name, getObserversFromNode.call(this, name));
-			}
-			return this;
-		},
-
-		unregisterNode: function(name){
-			// summary:
-			//		Removes the node by name from internal tables unregistering
-			//		connected observers
-			// name: String:
-			//		Name of the to unregister
-			// returns: Object:
-			//		Returns self
-			if(name in this.formNodes){
-				dojo.forEach(this.formNodes[name].connections, this.disconnect, this);
-				delete this.formNodes[name];
-			}
-			return this;
-		},
-
-		registerNodeDescendants: function(node){
-			// summary:
-			//		Register node's descendants (form nodes) with the form manager
-			// node: String|Node:
-			//		A widget, or its widgetId, or its DOM node
-			// returns: Object:
-			//		Returns self
-
-			if(typeof node == "string"){
-				node = dojo.byId(node);
-			}
-
-			dojo.query("input, select, textarea, button", node).
-				map(function(n){
-					return registerNode.call(this, n, node);
-				}, this).
-				forEach(function(name){
-					if(name){
-						connectNode.call(this, name, getObserversFromNode.call(this, name));
-					}
-				}, this);
-
-			return this;
-		},
-
-		unregisterNodeDescendants: function(node){
-			// summary:
-			//		Unregister node's descendants (form nodes) with the form manager
-			// node: String|Node:
-			//		A widget, or its widgetId, or its DOM node
-			// returns: Object:
-			//		Returns self
-
-			if(typeof node == "string"){
-				node = dojo.byId(node);
-			}
-
-			dojo.query("input, select, textarea, button", node).
-				map(function(n){ return dojo.attr(node, "name") || null; }).
-				forEach(function(name){
-					if(name){
-						this.unregisterNode(name);
-					}
-				}, this);
-
-			return this;
-		},
-
-		// value accessors
-
-		formNodeValue: function(elem, value){
-			// summary:
-			//		Set or get a form element by name.
-			// elem: String|Node|Array:
-			//		Form element's name, DOM node, or array or radio nodes.
-			// value: Object?:
-			//		Optional. The value to set.
-			// returns: Object:
-			//		For a getter it returns the value, for a setter it returns
-			//		self. If the elem is not valid, null will be returned.
-
-			var isSetter = arguments.length == 2 && value !== undefined, result;
-
-			if(typeof elem == "string"){
-				elem = this.formNodes[elem];
-				if(elem){
-					elem = elem.node;
-				}
-			}
-
-			if(!elem){
-				return null;	// Object
-			}
-
-			if(dojo.isArray(elem)){
-				// input/radio array
-				if(isSetter){
-					dojo.forEach(elem, function(node){
-						node.checked = "";
-					});
-					dojo.forEach(elem, function(node){
-						node.checked = node.value === value ? "checked" : "";
-					});
-					return this;	// self
-				}
-				// getter
-				dojo.some(elem, function(node){
-					if(node.checked){
-						result = node;
-						return true;
-					}
-					return false;
-				});
-				return result ? result.value : "";	// String
-			}
-			// all other elements
-			switch(elem.tagName.toLowerCase()){
-				case "select":
-					if(elem.multiple){
-						// multiple is allowed
-						if(isSetter){
-							if(dojo.isArray(value)){
-								var dict = {};
-								dojo.forEach(value, function(v){
-									dict[v] = 1;
-								});
-								dojo.query("> option", elem).forEach(function(opt){
-									opt.selected = opt.value in dict;
-								});
-								return this;	// self
-							}
-							// singular property
-							dojo.query("> option", elem).forEach(function(opt){
-								opt.selected = opt.value === value;
-							});
-							return this;	// self
-						}
-						// getter
-						var result = dojo.query("> option", elem).filter(function(opt){
-							return opt.selected;
-						}).map(function(opt){
-							return opt.value;
-						});
-						return result.length == 1 ? result[0] : result;	// Object
-					}
-					// singular
-					if(isSetter){
-						dojo.query("> option", elem).forEach(function(opt){
-							opt.selected = opt.value === value;
-						});
-						return this;	// self
-					}
-					// getter
-					return elem.value || ""; // String
-				case "button":
-					if(isSetter){
-						elem.innerHTML = "" + value;
-						return this;
-					}
-					// getter
-					return elem.innerHTML;
-				case "input":
-					if(elem.type.toLowerCase() == "checkbox"){
-						// input/checkbox element
-						if(isSetter){
-							elem.checked = value ? "checked" : "";
-							return this;
-						}
-						// getter
-						return Boolean(elem.checked);
-					}
-			}
-			// the rest of inputs
-			if(isSetter){
-				elem.value = "" + value;
-				return this;
-			}
-			// getter
-			return elem.value;
-		},
-
-		// inspectors
-
-		inspectFormNodes: function(inspector, state, defaultValue){
-			// summary:
-			//		Run an inspector function on controlled form elements returning a result object.
-			// inspector: Function:
-			//		A function to be called on a form element. Takes three arguments: a name, a node or
-			//		an array of nodes, and a supplied value. Runs in the context of the form manager.
-			//		Returns a value that will be collected and returned as a state.
-			// state: Object?:
-			//		Optional. If a name-value dictionary --- only listed names will be processed.
-			//		If an array, all names in the array will be processed with defaultValue.
-			//		If omitted or null, all form elements will be processed with defaultValue.
-			// defaultValue: Object?:
-			//		Optional. The default state (true, if omitted).
-
-			var name, result = {};
-
-			if(state){
-				if(dojo.isArray(state)){
-					dojo.forEach(state, function(name){
-						if(name in this.formNodes){
-							result[name] = inspector.call(this, name, this.formNodes[name].node, defaultValue);
-						}
-					}, this);
-				}else{
-					for(name in state){
-						if(name in this.formNodes){
-							result[name] = inspector.call(this, name, this.formNodes[name].node, state[name]);
-						}
-					}
-				}
-			}else{
-				for(name in this.formNodes){
-					result[name] = inspector.call(this, name, this.formNodes[name].node, defaultValue);
-				}
-			}
-
-			return result;	// Object
-		}
-	});
+var fm=_3.form.manager,aa=fm.actionAdapter,_4=fm._keys,ce=fm.changeEvent=function(_5){
+var _6="onclick";
+switch(_5.tagName.toLowerCase()){
+case "textarea":
+_6="onkeyup";
+break;
+case "select":
+_6="onchange";
+break;
+case "input":
+switch(_5.type.toLowerCase()){
+case "text":
+case "password":
+_6="onkeyup";
+break;
+}
+break;
+}
+return _6;
+},_7=function(_8,_9){
+var _a=_1.attr(_8,"name");
+_9=_9||this.domNode;
+if(_a&&!(_a in this.formWidgets)){
+for(var n=_8;n&&n!==_9;n=n.parentNode){
+if(_1.attr(n,"widgetId")&&_2.byNode(n) instanceof _2.form._FormWidget){
+return null;
+}
+}
+if(_8.tagName.toLowerCase()=="input"&&_8.type.toLowerCase()=="radio"){
+var a=this.formNodes[_a];
+a=a&&a.node;
+if(a&&_1.isArray(a)){
+a.push(_8);
+}else{
+this.formNodes[_a]={node:[_8],connections:[]};
+}
+}else{
+this.formNodes[_a]={node:_8,connections:[]};
+}
+}else{
+_a=null;
+}
+return _a;
+},_b=function(_c){
+var _d={};
+aa(function(_e,n){
+var o=_1.attr(n,"observer");
+if(o&&typeof o=="string"){
+_1.forEach(o.split(","),function(o){
+o=_1.trim(o);
+if(o&&_1.isFunction(this[o])){
+_d[o]=1;
+}
+},this);
+}
+}).call(this,null,this.formNodes[_c].node);
+return _4(_d);
+},_f=function(_10,_11){
+var t=this.formNodes[_10],c=t.connections;
+if(c.length){
+_1.forEach(c,_1.disconnect);
+c=t.connections=[];
+}
+aa(function(_12,n){
+var _13=ce(n);
+_1.forEach(_11,function(o){
+c.push(_1.connect(n,_13,this,function(evt){
+if(this.watching){
+this[o](this.formNodeValue(_10),_10,n,evt);
+}
+}));
+},this);
+}).call(this,null,t.node);
+};
+_1.declare("dojox.form.manager._NodeMixin",null,{destroy:function(){
+for(var _14 in this.formNodes){
+_1.forEach(this.formNodes[_14].connections,_1.disconnect);
+}
+this.formNodes={};
+this.inherited(arguments);
+},registerNode:function(_15){
+if(typeof _15=="string"){
+_15=_1.byId(_15);
+}
+var _16=_7.call(this,_15);
+if(_16){
+_f.call(this,_16,_b.call(this,_16));
+}
+return this;
+},unregisterNode:function(_17){
+if(_17 in this.formNodes){
+_1.forEach(this.formNodes[_17].connections,this.disconnect,this);
+delete this.formNodes[_17];
+}
+return this;
+},registerNodeDescendants:function(_18){
+if(typeof _18=="string"){
+_18=_1.byId(_18);
+}
+_1.query("input, select, textarea, button",_18).map(function(n){
+return _7.call(this,n,_18);
+},this).forEach(function(_19){
+if(_19){
+_f.call(this,_19,_b.call(this,_19));
+}
+},this);
+return this;
+},unregisterNodeDescendants:function(_1a){
+if(typeof _1a=="string"){
+_1a=_1.byId(_1a);
+}
+_1.query("input, select, textarea, button",_1a).map(function(n){
+return _1.attr(_1a,"name")||null;
+}).forEach(function(_1b){
+if(_1b){
+this.unregisterNode(_1b);
+}
+},this);
+return this;
+},formNodeValue:function(_1c,_1d){
+var _1e=arguments.length==2&&_1d!==undefined,_1f;
+if(typeof _1c=="string"){
+_1c=this.formNodes[_1c];
+if(_1c){
+_1c=_1c.node;
+}
+}
+if(!_1c){
+return null;
+}
+if(_1.isArray(_1c)){
+if(_1e){
+_1.forEach(_1c,function(_20){
+_20.checked="";
+});
+_1.forEach(_1c,function(_21){
+_21.checked=_21.value===_1d?"checked":"";
+});
+return this;
+}
+_1.some(_1c,function(_22){
+if(_22.checked){
+_1f=_22;
+return true;
+}
+return false;
+});
+return _1f?_1f.value:"";
+}
+switch(_1c.tagName.toLowerCase()){
+case "select":
+if(_1c.multiple){
+if(_1e){
+if(_1.isArray(_1d)){
+var _23={};
+_1.forEach(_1d,function(v){
+_23[v]=1;
+});
+_1.query("> option",_1c).forEach(function(opt){
+opt.selected=opt.value in _23;
+});
+return this;
+}
+_1.query("> option",_1c).forEach(function(opt){
+opt.selected=opt.value===_1d;
+});
+return this;
+}
+var _1f=_1.query("> option",_1c).filter(function(opt){
+return opt.selected;
+}).map(function(opt){
+return opt.value;
+});
+return _1f.length==1?_1f[0]:_1f;
+}
+if(_1e){
+_1.query("> option",_1c).forEach(function(opt){
+opt.selected=opt.value===_1d;
+});
+return this;
+}
+return _1c.value||"";
+case "button":
+if(_1e){
+_1c.innerHTML=""+_1d;
+return this;
+}
+return _1c.innerHTML;
+case "input":
+if(_1c.type.toLowerCase()=="checkbox"){
+if(_1e){
+_1c.checked=_1d?"checked":"";
+return this;
+}
+return Boolean(_1c.checked);
+}
+}
+if(_1e){
+_1c.value=""+_1d;
+return this;
+}
+return _1c.value;
+},inspectFormNodes:function(_24,_25,_26){
+var _27,_28={};
+if(_25){
+if(_1.isArray(_25)){
+_1.forEach(_25,function(_29){
+if(_29 in this.formNodes){
+_28[_29]=_24.call(this,_29,this.formNodes[_29].node,_26);
+}
+},this);
+}else{
+for(_27 in _25){
+if(_27 in this.formNodes){
+_28[_27]=_24.call(this,_27,this.formNodes[_27].node,_25[_27]);
+}
+}
+}
+}else{
+for(_27 in this.formNodes){
+_28[_27]=_24.call(this,_27,this.formNodes[_27].node,_26);
+}
+}
+return _28;
+}});
 })();
+return _1.getObject("dojox.form.manager._NodeMixin");
+});
+require(["dojox/form/manager/_NodeMixin"]);

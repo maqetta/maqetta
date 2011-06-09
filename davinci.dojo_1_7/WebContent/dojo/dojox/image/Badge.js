@@ -1,228 +1,98 @@
-define(["dojo", "dijit", "dojox/main", "dijit/_Widget", "dijit/_TemplatedMixin", "dojo/fx/easing"], function(dojo, dijit, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.experimental("dojox.image.Badge");
-	dojo.getObject("image", true, dojox);
-	
-	dojo.declare("dojox.image.Badge", [dijit._Widget, dijit._TemplatedMixin], {
-		// summary: A simple grid of Images that loops through thumbnails
-		//
-
-		baseClass: "dojoxBadge",
-
-		templateString:'<div class="dojoxBadge" dojoAttachPoint="containerNode"></div>',
-
-		// children: String
-		// 		A CSS3 Selector that determines the node to become a child
-		children: "div.dojoxBadgeImage",
-
-		// rows: Integer
-		//		Number of Rows to display
-		rows: 4,
-
-		// cols: Integer
-		//		Number of Columns to display
-		cols: 5,
-
-		// cellSize: Integer
-		//		Size in PX of each thumbnail
-		cellSize: 50,
-
-		// cellMargin: Integer
-		//		Size in PX to adjust for cell margins
-		cellMargin: 1,
-
-		// delay: Integer
-		//		Time (in ms) to show the image before sizing down again
-		delay: 2000,
-
-		// threads: Integer
-		//		how many cycles will be going "simultaneously" (>2 not reccommended)
-		threads: 1,
-
-		// easing: Function|String
-		//		An easing function to use when showing the node (does not apply to shrinking)
-		easing: "dojo.fx.easing.backOut",
-
-		startup: function(){
-			if(this._started){ return; }
-			if(dojo.isString(this.easing)){
-				this.easing = dojo.getObject(this.easing);
-			}
-			this.inherited(arguments);
-			this._init();
-		},
-
-		_init: function(){
-			// summary: Setup and layout the images
-
-			var _row = 0,
-				_w = this.cellSize;
-
-			dojo.style(this.domNode, {
-				width: _w * this.cols + "px",
-				height: _w * this.rows + "px"
-			});
-
-			this._nl = dojo.query(this.children, this.containerNode)
-				.forEach(function(n, _idx){
-
-					var _col = _idx % this.cols,
-						t = _row * _w,
-						l = _col * _w,
-						m = this.cellMargin * 2;
-
-					dojo.style(n, {
-			 			top: t + "px",
-			 			left: l + "px",
-						width: _w - m + "px",
-						height: _w - m + "px"
-			 		});
-
-					if(_col == this.cols - 1){ _row++; }
-					dojo.addClass(n, this.baseClass + "Image");
-
-				}, this)
-			;
-
-			var l = this._nl.length;
-			while(this.threads--){
-				var s = Math.floor(Math.random() * l);
-				setTimeout(dojo.hitch(this, "_enbiggen", {
-					target: this._nl[s]
-				}), this.delay * this.threads);
-			}
-
-		},
-
-		_getCell: function(/* DomNode */ n){
-			// summary: Return information about the position for a given node
-			var _pos = this._nl.indexOf(n);
-			if(_pos >= 0){
-				var _col = _pos % this.cols;
-				var _row = Math.floor(_pos / this.cols);
-				return { x: _col, y: _row, n: this._nl[_pos], io: _pos };
-			}else{
-				return undefined;
-			}
-		},
-
-		_getImage: function(){
-			// summary: Returns the next image in the list, or the first one if not available
-			return "url('')";
-		},
-
-		_enbiggen: function(/* Event|DomNode */ e){
-			// summary: Show the passed node in the picker
-			var _pos = this._getCell(e.target || e);
-
-			if (_pos){
-				// we have a node, and know where it is
-
-				var m = this.cellMargin,
-					_cc = (this.cellSize * 2) - (m * 2),
-					props = {
-						height: _cc,
-						width: _cc
-					}
-				;
-
-				var _tehDecider = function(){
-					// if we have room, we'll want to decide which direction to go
-					// let "teh decider" decide.
-					return Math.round(Math.random());
-				};
-
-				if(_pos.x == this.cols - 1 || (_pos.x > 0 && _tehDecider() )){
-					// we have to go left, at right edge (or we want to and not on left edge)
-					props.left = this.cellSize * (_pos.x - m);
-				}
-
-				if(_pos.y == this.rows - 1 || (_pos.y > 0 && _tehDecider() )){
-					// we have to go up, at bottom edge (or we want to and not at top)
-					props.top = this.cellSize * (_pos.y - m);
-				}
-
-				var bc = this.baseClass;
-				dojo.addClass(_pos.n, bc + "Top");
-				dojo.addClass(_pos.n, bc + "Seen");
-
-				dojo.animateProperty({ node: _pos.n, properties: props,
-					onEnd: dojo.hitch(this, "_loadUnder", _pos, props),
-					easing: this.easing
-				}).play();
-
-			}
-		},
-
-		_loadUnder: function(info, props){
-			// summary: figure out which three images are being covered, and
-			//		determine if they need loaded or not
-
-			var idx = info.io;
-			var nodes = [];
-
-			var isLeft = (props.left >= 0);
-			var isUp = (props.top >= 0);
-
-			var c = this.cols,
-				// the three node index's we're allegedly over:
-				e = idx + (isLeft ? -1 : 1),
-				f = idx + (isUp ? -c : c),
-				// don't ask:
-				g = (isUp ? (isLeft ? e - c : f + 1) : (isLeft ? f - 1 : e + c)),
-
-				bc = this.baseClass;
-
-			dojo.forEach([e, f, g], function(x){
-				var n = this._nl[x];
-				if(n){
-					if(dojo.hasClass(n, bc + "Seen")){
-						// change the background image out?
-						dojo.removeClass(n, bc + "Seen");
-					}
-				}
-			},this);
-
-			setTimeout(dojo.hitch(this, "_disenbiggen", info, props), this.delay * 1.25);
-
-		},
-
-		_disenbiggen: function(info, props){
-			// summary: Hide the passed node (info.n), passing along properties
-			//		received.
-
-			if(props.top >= 0){
-				props.top += this.cellSize;
-			}
-			if(props.left >= 0){
-				props.left += this.cellSize;
-			}
-			var _cc = this.cellSize - (this.cellMargin * 2);
-			dojo.animateProperty({
-				node: info.n,
-				properties: dojo.mixin(props, {
-					width:_cc,
-					height:_cc
-				}),
-				onEnd: dojo.hitch(this, "_cycle", info, props)
-			}).play(5);
-		},
-
-		_cycle: function(info, props){
-			// summary: Select an un-viewed image from the list, and show it
-
-			var bc = this.baseClass;
-			dojo.removeClass(info.n, bc + "Top");
-			var ns = this._nl.filter(function(n){
-				return !dojo.hasClass(n, bc + "Seen")
-			});
-			var c = ns[Math.floor(Math.random() * ns.length)];
-			setTimeout(dojo.hitch(this,"_enbiggen", { target: c }), this.delay / 2)
-
-		}
-
-	});
-
-	return dojox.image.Badge;
-})
-
+define(["dojo","dijit","dojox/main","dijit/_Widget","dijit/_TemplatedMixin","dojo/fx/easing"],function(_1,_2,_3){
+_1.experimental("dojox.image.Badge");
+_1.getObject("image",true,_3);
+_1.declare("dojox.image.Badge",[_2._Widget,_2._TemplatedMixin],{baseClass:"dojoxBadge",templateString:"<div class=\"dojoxBadge\" dojoAttachPoint=\"containerNode\"></div>",children:"div.dojoxBadgeImage",rows:4,cols:5,cellSize:50,cellMargin:1,delay:2000,threads:1,easing:"dojo.fx.easing.backOut",startup:function(){
+if(this._started){
+return;
+}
+if(_1.isString(this.easing)){
+this.easing=_1.getObject(this.easing);
+}
+this.inherited(arguments);
+this._init();
+},_init:function(){
+var _4=0,_5=this.cellSize;
+_1.style(this.domNode,{width:_5*this.cols+"px",height:_5*this.rows+"px"});
+this._nl=_1.query(this.children,this.containerNode).forEach(function(n,_6){
+var _7=_6%this.cols,t=_4*_5,l=_7*_5,m=this.cellMargin*2;
+_1.style(n,{top:t+"px",left:l+"px",width:_5-m+"px",height:_5-m+"px"});
+if(_7==this.cols-1){
+_4++;
+}
+_1.addClass(n,this.baseClass+"Image");
+},this);
+var l=this._nl.length;
+while(this.threads--){
+var s=Math.floor(Math.random()*l);
+setTimeout(_1.hitch(this,"_enbiggen",{target:this._nl[s]}),this.delay*this.threads);
+}
+},_getCell:function(n){
+var _8=this._nl.indexOf(n);
+if(_8>=0){
+var _9=_8%this.cols;
+var _a=Math.floor(_8/this.cols);
+return {x:_9,y:_a,n:this._nl[_8],io:_8};
+}else{
+return undefined;
+}
+},_getImage:function(){
+return "url('')";
+},_enbiggen:function(e){
+var _b=this._getCell(e.target||e);
+if(_b){
+var m=this.cellMargin,_c=(this.cellSize*2)-(m*2),_d={height:_c,width:_c};
+var _e=function(){
+return Math.round(Math.random());
+};
+if(_b.x==this.cols-1||(_b.x>0&&_e())){
+_d.left=this.cellSize*(_b.x-m);
+}
+if(_b.y==this.rows-1||(_b.y>0&&_e())){
+_d.top=this.cellSize*(_b.y-m);
+}
+var bc=this.baseClass;
+_1.addClass(_b.n,bc+"Top");
+_1.addClass(_b.n,bc+"Seen");
+_1.animateProperty({node:_b.n,properties:_d,onEnd:_1.hitch(this,"_loadUnder",_b,_d),easing:this.easing}).play();
+}
+},_loadUnder:function(_f,_10){
+var idx=_f.io;
+var _11=[];
+var _12=(_10.left>=0);
+var _13=(_10.top>=0);
+var c=this.cols,e=idx+(_12?-1:1),f=idx+(_13?-c:c),g=(_13?(_12?e-c:f+1):(_12?f-1:e+c)),bc=this.baseClass;
+_1.forEach([e,f,g],function(x){
+var n=this._nl[x];
+if(n){
+if(_1.hasClass(n,bc+"Seen")){
+_1.removeClass(n,bc+"Seen");
+}
+}
+},this);
+setTimeout(_1.hitch(this,"_disenbiggen",_f,_10),this.delay*1.25);
+},_disenbiggen:function(_14,_15){
+if(_15.top>=0){
+_15.top+=this.cellSize;
+}
+if(_15.left>=0){
+_15.left+=this.cellSize;
+}
+var _16=this.cellSize-(this.cellMargin*2);
+_1.animateProperty({node:_14.n,properties:_1.mixin(_15,{width:_16,height:_16}),onEnd:_1.hitch(this,"_cycle",_14,_15)}).play(5);
+},_cycle:function(_17,_18){
+var bc=this.baseClass;
+_1.removeClass(_17.n,bc+"Top");
+var ns=this._nl.filter(function(n){
+return !_1.hasClass(n,bc+"Seen");
+});
+var c=ns[Math.floor(Math.random()*ns.length)];
+setTimeout(_1.hitch(this,"_enbiggen",{target:c}),this.delay/2);
+}});
+return _3.image.Badge;
+});

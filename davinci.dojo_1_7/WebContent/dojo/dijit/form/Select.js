@@ -1,311 +1,136 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/text!./templates/Select.html",
-	"./_FormSelectWidget",
-	"../_HasDropDown",
-	"../Menu",
-	"../MenuItem",
-	"../MenuSeparator",
-	"../Tooltip",
-	"dojo/i18n!./nls/validate",
-	"dojo/_base/array", // dojo.forEach
-	"dojo/_base/event", // dojo.stopEvent
-	"dojo/_base/html", // dojo.addClass dojo.attr dojo.create dojo.marginBox dojo.removeClass dojo.toggleClass
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/i18n" // dojo.i18n.getLocalization
-], function(dojo, dijit, template){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/form/Select
-// summary:
-//		This is a "styleable" select box - it is basically a DropDownButton which
-//		can take a <select> as its input.
-
-
-dojo.declare("dijit.form._SelectMenu", dijit.Menu, {
-	// summary:
-	//		An internally-used menu for dropdown that allows us a vertical scrollbar
-	buildRendering: function(){
-		// summary:
-		//		Stub in our own changes, so that our domNode is not a table
-		//		otherwise, we won't respond correctly to heights/overflows
-		this.inherited(arguments);
-		var o = (this.menuTableNode = this.domNode);
-		var n = (this.domNode = dojo.create("div", {style: {overflowX: "hidden", overflowY: "scroll"}}));
-		if(o.parentNode){
-			o.parentNode.replaceChild(n, o);
-		}
-		dojo.removeClass(o, "dijitMenuTable");
-		n.className = o.className + " dijitSelectMenu";
-		o.className = "dijitReset dijitMenuTable";
-		o.setAttribute("role", "listbox");
-		n.setAttribute("role", "presentation");
-		n.appendChild(o);
-	},
-
-	postCreate: function(){
-		// summary:
-		//		stop mousemove from selecting text on IE to be consistent with other browsers
-
-		this.inherited(arguments);
-
-		this.connect(this.domNode, "onmousemove", dojo.stopEvent);
-	},
-
-	resize: function(/*Object*/ mb){
-		// summary:
-		//		Overridden so that we are able to handle resizing our
-		//		internal widget.  Note that this is not a "full" resize
-		//		implementation - it only works correctly if you pass it a
-		//		marginBox.
-		//
-		// mb: Object
-		//		The margin box to set this dropdown to.
-		if(mb){
-			dojo.marginBox(this.domNode, mb);
-			if("w" in mb){
-				// We've explicitly set the wrapper <div>'s width, so set <table> width to match.
-				// 100% is safer than a pixel value because there may be a scroll bar with
-				// browser/OS specific width.
-				this.menuTableNode.style.width = "100%";
-			}
-		}
-	}
+require.cache["dijit/form/templates/Select.html"]="<table class=\"dijit dijitReset dijitInline dijitLeft\"\n\tdojoAttachPoint=\"_buttonNode,tableNode,focusNode\" cellspacing='0' cellpadding='0'\n\trole=\"combobox\" aria-haspopup=\"true\"\n\t><tbody role=\"presentation\"><tr role=\"presentation\"\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents dijitButtonNode\" role=\"presentation\"\n\t\t\t><span class=\"dijitReset dijitInline dijitButtonText\"  dojoAttachPoint=\"containerNode,_popupStateNode\"></span\n\t\t\t><input type=\"hidden\" ${!nameAttrSetting} dojoAttachPoint=\"valueNode\" value=\"${value}\" aria-hidden=\"true\"\n\t\t/></td><td class=\"dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton\"\n\t\t\t\tdojoAttachPoint=\"titleNode\" role=\"presentation\"\n\t\t\t><div class=\"dijitReset dijitArrowButtonInner\" role=\"presentation\"></div\n\t\t\t><div class=\"dijitReset dijitArrowButtonChar\" role=\"presentation\">&#9660;</div\n\t\t></td\n\t></tr></tbody\n></table>\n";
+define("dijit/form/Select",["dojo/_base/kernel","..","dojo/text!./templates/Select.html","./_FormSelectWidget","../_HasDropDown","../Menu","../MenuItem","../MenuSeparator","../Tooltip","dojo/i18n!./nls/validate","dojo/_base/array","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/i18n"],function(_1,_2,_3){
+_1.declare("dijit.form._SelectMenu",_2.Menu,{buildRendering:function(){
+this.inherited(arguments);
+var o=(this.menuTableNode=this.domNode);
+var n=(this.domNode=_1.create("div",{style:{overflowX:"hidden",overflowY:"scroll"}}));
+if(o.parentNode){
+o.parentNode.replaceChild(n,o);
+}
+_1.removeClass(o,"dijitMenuTable");
+n.className=o.className+" dijitSelectMenu";
+o.className="dijitReset dijitMenuTable";
+o.setAttribute("role","listbox");
+n.setAttribute("role","presentation");
+n.appendChild(o);
+},postCreate:function(){
+this.inherited(arguments);
+this.connect(this.domNode,"onmousemove",_1.stopEvent);
+},resize:function(mb){
+if(mb){
+_1.marginBox(this.domNode,mb);
+if("w" in mb){
+this.menuTableNode.style.width="100%";
+}
+}
+}});
+_1.declare("dijit.form.Select",[_2.form._FormSelectWidget,_2._HasDropDown],{baseClass:"dijitSelect",templateString:_3,required:false,state:"",message:"",tooltipPosition:[],emptyLabel:"&nbsp;",_isLoaded:false,_childrenLoaded:false,_fillContent:function(){
+this.inherited(arguments);
+if(this.options.length&&!this.value&&this.srcNodeRef){
+var si=this.srcNodeRef.selectedIndex||0;
+this.value=this.options[si>=0?si:0].value;
+}
+this.dropDown=new _2.form._SelectMenu({id:this.id+"_menu"});
+_1.addClass(this.dropDown.domNode,this.baseClass+"Menu");
+},_getMenuItemForOption:function(_4){
+if(!_4.value&&!_4.label){
+return new _2.MenuSeparator();
+}else{
+var _5=_1.hitch(this,"_setValueAttr",_4);
+var _6=new _2.MenuItem({option:_4,label:_4.label||this.emptyLabel,onClick:_5,disabled:_4.disabled||false});
+_6.focusNode.setAttribute("role","listitem");
+return _6;
+}
+},_addOptionItem:function(_7){
+if(this.dropDown){
+this.dropDown.addChild(this._getMenuItemForOption(_7));
+}
+},_getChildren:function(){
+if(!this.dropDown){
+return [];
+}
+return this.dropDown.getChildren();
+},_loadChildren:function(_8){
+if(_8===true){
+if(this.dropDown){
+delete this.dropDown.focusedChild;
+}
+if(this.options.length){
+this.inherited(arguments);
+}else{
+_1.forEach(this._getChildren(),function(_9){
+_9.destroyRecursive();
 });
-
-dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropDown], {
-	// summary:
-	//		This is a "styleable" select box - it is basically a DropDownButton which
-	//		can take a <select> as its input.
-
-	baseClass: "dijitSelect",
-
-	templateString: template,
-
-	// required: Boolean
-	//		Can be true or false, default is false.
-	required: false,
-
-	// state: String
-	//		Shows current state (ie, validation result) of input (Normal, Warning, or Error)
-	state: "",
-
-	// message: String
-	//		Currently displayed error/prompt message
-	message: "",
-
-	//	tooltipPosition: String[]
-	//		See description of dijit.Tooltip.defaultPosition for details on this parameter.
-	tooltipPosition: [],
-
-	// emptyLabel: string
-	//		What to display in an "empty" dropdown
-	emptyLabel: "&nbsp;",
-
-	// _isLoaded: Boolean
-	//		Whether or not we have been loaded
-	_isLoaded: false,
-
-	// _childrenLoaded: Boolean
-	//		Whether or not our children have been loaded
-	_childrenLoaded: false,
-
-	_fillContent: function(){
-		// summary:
-		//		Set the value to be the first, or the selected index
-		this.inherited(arguments);
-		// set value from selected option
-		if(this.options.length && !this.value && this.srcNodeRef){
-			var si = this.srcNodeRef.selectedIndex || 0; // || 0 needed for when srcNodeRef is not a SELECT
-			this.value = this.options[si >= 0 ? si : 0].value;
-		}
-		// Create the dropDown widget
-		this.dropDown = new dijit.form._SelectMenu({id: this.id + "_menu"});
-		dojo.addClass(this.dropDown.domNode, this.baseClass + "Menu");
-	},
-
-	_getMenuItemForOption: function(/*dijit.form.__SelectOption*/ option){
-		// summary:
-		//		For the given option, return the menu item that should be
-		//		used to display it.  This can be overridden as needed
-		if(!option.value && !option.label){
-			// We are a separator (no label set for it)
-			return new dijit.MenuSeparator();
-		}else{
-			// Just a regular menu option
-			var click = dojo.hitch(this, "_setValueAttr", option);
-			var item = new dijit.MenuItem({
-				option: option,
-				label: option.label || this.emptyLabel,
-				onClick: click,
-				disabled: option.disabled || false
-			});
-			item.focusNode.setAttribute("role", "listitem");
-			return item;
-		}
-	},
-
-	_addOptionItem: function(/*dijit.form.__SelectOption*/ option){
-		// summary:
-		//		For the given option, add an option to our dropdown.
-		//		If the option doesn't have a value, then a separator is added
-		//		in that place.
-		if(this.dropDown){
-			this.dropDown.addChild(this._getMenuItemForOption(option));
-		}
-	},
-
-	_getChildren: function(){
-		if(!this.dropDown){
-			return [];
-		}
-		return this.dropDown.getChildren();
-	},
-
-	_loadChildren: function(/*Boolean*/ loadMenuItems){
-		// summary:
-		//		Resets the menu and the length attribute of the button - and
-		//		ensures that the label is appropriately set.
-		//	loadMenuItems: Boolean
-		//		actually loads the child menu items - we only do this when we are
-		//		populating for showing the dropdown.
-
-		if(loadMenuItems === true){
-			// this.inherited destroys this.dropDown's child widgets (MenuItems).
-			// Avoid this.dropDown (Menu widget) having a pointer to a destroyed widget (which will cause
-			// issues later in _setSelected). (see #10296)
-			if(this.dropDown){
-				delete this.dropDown.focusedChild;
-			}
-			if(this.options.length){
-				this.inherited(arguments);
-			}else{
-				// Drop down menu is blank but add one blank entry just so something appears on the screen
-				// to let users know that they are no choices (mimicing native select behavior)
-				dojo.forEach(this._getChildren(), function(child){ child.destroyRecursive(); });
-				var item = new dijit.MenuItem({label: "&nbsp;"});
-				this.dropDown.addChild(item);
-			}
-		}else{
-			this._updateSelection();
-		}
-
-		this._isLoaded = false;
-		this._childrenLoaded = true;
-
-		if(!this._loadingStore){
-			// Don't call this if we are loading - since we will handle it later
-			this._setValueAttr(this.value);
-		}
-	},
-
-	_setValueAttr: function(value){
-		this.inherited(arguments);
-		dojo.attr(this.valueNode, "value", this.get("value"));
-	},
-
-	_setDisplay: function(/*String*/ newDisplay){
-		// summary:
-		//		sets the display for the given value (or values)
-		var lbl = newDisplay || this.emptyLabel;
-		this.containerNode.innerHTML = '<span class="dijitReset dijitInline ' + this.baseClass + 'Label">' + lbl + '</span>';
-		this.focusNode.setAttribute("aria-valuetext", lbl);
-	},
-
-	validate: function(/*Boolean*/ isFocused){
-		// summary:
-		//		Called by oninit, onblur, and onkeypress.
-		// description:
-		//		Show missing or invalid messages if appropriate, and highlight textbox field.
-		//		Used when a select is initially set to no value and the user is required to
-		//		set the value.
-
-		var isValid = this.isValid(isFocused);
-		this._set("state", isValid ? "" : "Error");
-		this.focusNode.setAttribute("aria-invalid", isValid ? "false" : "true");
-		var message = isValid ? "" : this._missingMsg;
-		if(this.message !== message){
-			this._set("message", message);
-			dijit.hideTooltip(this.domNode);
-			if(message){
-				dijit.showTooltip(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
-			}
-		}
-		return isValid;
-	},
-
-	isValid: function(/*Boolean*/ isFocused){
-		// summary:
-		//		Whether or not this is a valid value.  The only way a Select
-		//		can be invalid is when it's required but nothing is selected.
-		return (!this.required || this.value === 0 || !(/^\s*$/.test(this.value || ""))); // handle value is null or undefined
-	},
-
-	reset: function(){
-		// summary:
-		//		Overridden so that the state will be cleared.
-		this.inherited(arguments);
-		dijit.hideTooltip(this.domNode);
-		this._set("state", "");
-		this._set("message", "")
-	},
-
-	postMixInProperties: function(){
-		// summary:
-		//		set the missing message
-		this.inherited(arguments);
-		this._missingMsg = dojo.i18n.getLocalization("dijit.form", "validate",
-									this.lang).missingMessage;
-	},
-
-	postCreate: function(){
-		// summary:
-		//		stop mousemove from selecting text on IE to be consistent with other browsers
-
-		this.inherited(arguments);
-
-		this.connect(this.domNode, "onmousemove", dojo.stopEvent);
-	},
-
-	_setStyleAttr: function(/*String||Object*/ value){
-		this.inherited(arguments);
-		dojo.toggleClass(this.domNode, this.baseClass + "FixedWidth", !!this.domNode.style.width);
-	},
-
-	isLoaded: function(){
-		return this._isLoaded;
-	},
-
-	loadDropDown: function(/*Function*/ loadCallback){
-		// summary:
-		//		populates the menu
-		this._loadChildren(true);
-		this._isLoaded = true;
-		loadCallback();
-	},
-
-	closeDropDown: function(){
-		// overriding _HasDropDown.closeDropDown()
-		this.inherited(arguments);
-
-		if(this.dropDown && this.dropDown.menuTableNode){
-			// Erase possible width: 100% setting from _SelectMenu.resize().
-			// Leaving it would interfere with the next openDropDown() call, which
-			// queries the natural size of the drop down.
-			this.dropDown.menuTableNode.style.width = "";
-		}
-	},
-
-	uninitialize: function(preserveDom){
-		if(this.dropDown && !this.dropDown._destroyed){
-			this.dropDown.destroyRecursive(preserveDom);
-			delete this.dropDown;
-		}
-		this.inherited(arguments);
-	}
-});
-
-
-return dijit.form.Select;
+var _a=new _2.MenuItem({label:"&nbsp;"});
+this.dropDown.addChild(_a);
+}
+}else{
+this._updateSelection();
+}
+this._isLoaded=false;
+this._childrenLoaded=true;
+if(!this._loadingStore){
+this._setValueAttr(this.value);
+}
+},_setValueAttr:function(_b){
+this.inherited(arguments);
+_1.attr(this.valueNode,"value",this.get("value"));
+},_setDisplay:function(_c){
+var _d=_c||this.emptyLabel;
+this.containerNode.innerHTML="<span class=\"dijitReset dijitInline "+this.baseClass+"Label\">"+_d+"</span>";
+this.focusNode.setAttribute("aria-valuetext",_d);
+},validate:function(_e){
+var _f=this.isValid(_e);
+this._set("state",_f?"":"Error");
+this.focusNode.setAttribute("aria-invalid",_f?"false":"true");
+var _10=_f?"":this._missingMsg;
+if(this.message!==_10){
+this._set("message",_10);
+_2.hideTooltip(this.domNode);
+if(_10){
+_2.showTooltip(_10,this.domNode,this.tooltipPosition,!this.isLeftToRight());
+}
+}
+return _f;
+},isValid:function(_11){
+return (!this.required||this.value===0||!(/^\s*$/.test(this.value||"")));
+},reset:function(){
+this.inherited(arguments);
+_2.hideTooltip(this.domNode);
+this._set("state","");
+this._set("message","");
+},postMixInProperties:function(){
+this.inherited(arguments);
+this._missingMsg=_1.i18n.getLocalization("dijit.form","validate",this.lang).missingMessage;
+},postCreate:function(){
+this.inherited(arguments);
+this.connect(this.domNode,"onmousemove",_1.stopEvent);
+},_setStyleAttr:function(_12){
+this.inherited(arguments);
+_1.toggleClass(this.domNode,this.baseClass+"FixedWidth",!!this.domNode.style.width);
+},isLoaded:function(){
+return this._isLoaded;
+},loadDropDown:function(_13){
+this._loadChildren(true);
+this._isLoaded=true;
+_13();
+},closeDropDown:function(){
+this.inherited(arguments);
+if(this.dropDown&&this.dropDown.menuTableNode){
+this.dropDown.menuTableNode.style.width="";
+}
+},uninitialize:function(_14){
+if(this.dropDown&&!this.dropDown._destroyed){
+this.dropDown.destroyRecursive(_14);
+delete this.dropDown;
+}
+this.inherited(arguments);
+}});
+return _2.form.Select;
 });

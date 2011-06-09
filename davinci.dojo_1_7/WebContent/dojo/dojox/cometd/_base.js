@@ -1,754 +1,399 @@
-dojo.provide("dojox.cometd._base");
-dojo.require("dojo.AdapterRegistry");
-
-
 /*
- * this file defines Comet protocol client. Actual message transport is
- * deferred to one of several connection type implementations. The default is a
- * long-polling implementation. A single global object named "dojox.cometd" is
- * used to mediate for these connection types in order to provide a stable
- * interface.
- *
- * extensions modules may be loaded (eg "dojox.cometd.timestamp", that use
- * the cometd._extendInList and cometd._extendOutList fields to provide functions
- * that extend and handling incoming and outgoing messages.
- *
- * By default the long-polling and callback-polling transports will be required.
- * If specific or alternative transports are required, then they can be directly
- * loaded. For example dojo.require('dojox.cometd.longPollTransportJsonEncoded')
- * will load cometd with only the json encoded variant of the long polling transport.
- */
-
-dojox.cometd = {
-	Connection: function(prefix){ // This constructor is stored as dojox.cometd.Connection
-		// summary
-		// This constructor is used to create new cometd connections. Generally, you should use
-		// one cometd connection for each server you connect to. A default connection instance is
-		// created at dojox.cometd.
-		// To connect to a new server you can create an instance like:
-		// var cometd = new dojox.cometd.Connection("/otherServer");
-		// cometd.init("http://otherServer.com/cometd");
-		//
-		// prefix is the prefix for all the events that are published in the Dojo pub/sub system.
-		// You must include this prefix, and it should start with a slash like "/myprefix".
-		
-		// cometd states:
-		// unconnected, handshaking, connecting, connected, disconnected
-		dojo.mixin(this, {
-		prefix: prefix,
-			_status: "unconnected",
-			_handshook: false,
-			_initialized: false,
-			_polling: false,
-		
-			expectedNetworkDelay: 10000, // expected max network delay
-			connectTimeout: 0,		 // If set, used as ms to wait for a connect response and sent as the advised timeout
-		
-			version:	"1.0",
-			minimumVersion: "0.9",
-			clientId: null,
-			messageId: 0,
-			batch: 0,
-		
-			_isXD: false,
-			handshakeReturn: null,
-			currentTransport: null,
-			url: null,
-			lastMessage: null,
-			_messageQ: [],
-			handleAs: "json",
-			_advice: {},
-			_backoffInterval: 0,
-			_backoffIncrement: 1000,
-			_backoffMax: 60000,
-			_deferredSubscribes: {},
-			_deferredUnsubscribes: {},
-			_subscriptions: [],
-			_extendInList: [],	// List of functions invoked before delivering messages
-			_extendOutList: []	// List of functions invoked before sending messages
-			
-		});
-	
-		this.state = function() {
-			 return this._status;
-		}
-	
-		this.init = function(	/*String*/	root,
-					/*Object?*/ props,
-					/*Object?*/ bargs){	// return: dojo.Deferred
-			//	summary:
-			//		Initialize the cometd implementation of the Bayeux protocol
-			//	description:
-			//		Initialize the cometd implementation of the Bayeux protocol by
-			//		sending a handshake message. The cometd state will be changed to CONNECTING
-			//		until a handshake response is received and the first successful connect message
-			//		has returned.
-			//		The protocol state changes may be monitored
-			//		by subscribing to the dojo topic "/prefix/meta" (typically "/cometd/meta") where
-			//		events are published in the form
-			//		   {cometd:this,action:"handshake",successful:true,state:this.state()}
-			//	root:
-			//		The URL of the cometd server. If the root is absolute, the host
-			//		is examined to determine if xd transport is needed. Otherwise the
-			//		same domain is assumed.
-			//	props:
-			//		An optional object that is used as the basis of the handshake message
-			//	bargs:
-			//		An optional object of bind args mixed in with the send of the handshake
-			//	example:
-			//	|	dojox.cometd.init("/cometd");
-			//	|	dojox.cometd.init("http://xdHost/cometd",{ext:{user:"fred",pwd:"secret"}});
-	
-			// FIXME: if the root isn't from the same host, we should automatically
-			// try to select an XD-capable transport
-			props = props || {};
-			// go ask the short bus server what we can support
-			props.version = this.version;
-			props.minimumVersion = this.minimumVersion;
-			props.channel = "/meta/handshake";
-			props.id = "" + this.messageId++;
-	
-			this.url = root || dojo.config["cometdRoot"];
-			if(!this.url){
-				throw "no cometd root";
-				return null;
-			}
-	
-			// Are we x-domain? borrowed from dojo.uri.Uri in lieu of fixed host and port properties
-			var regexp = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$";
-			var parts = ("" + window.location).match(new RegExp(regexp));
-			if(parts[4]){
-				var tmp = parts[4].split(":");
-				var thisHost = tmp[0];
-				var thisPort = tmp[1]||"80"; // FIXME: match 443
-	
-				parts = this.url.match(new RegExp(regexp));
-				if(parts[4]){
-					tmp = parts[4].split(":");
-					var urlHost = tmp[0];
-					var urlPort = tmp[1]||"80";
-					this._isXD = ((urlHost != thisHost)||(urlPort != thisPort));
-				}
-			}
-	
-			if(!this._isXD){
-				props.supportedConnectionTypes = dojo.map(dojox.cometd.connectionTypes.pairs, "return item[0]");
-			}
-	
-			props = this._extendOut(props);
-	
-			var bindArgs = {
-				url: this.url,
-				handleAs: this.handleAs,
-				content: { "message": dojo.toJson([props]) },
-				load: dojo.hitch(this,function(msg){
-					this._backon();
-					this._finishInit(msg);
-				}),
-				error: dojo.hitch(this,function(e){
-					this._backoff();
-					this._finishInit(e);
-				}),
-				timeout: this.expectedNetworkDelay
-			};
-	
-			if(bargs){
-				dojo.mixin(bindArgs, bargs);
-			}
-			this._props = props;
-			for(var tname in this._subscriptions){
-				for(var sub in this._subscriptions[tname]){
-					if(this._subscriptions[tname][sub].topic){
-						dojo.unsubscribe(this._subscriptions[tname][sub].topic);
-					}
-				}
-			}
-			this._messageQ = [];
-			this._subscriptions = [];
-			this._initialized = true;
-			this._status = "handshaking";
-			this.batch = 0;
-			this.startBatch();
-			
-			var r;
-			// if xdomain, then we assume jsonp for handshake
-			if(this._isXD){
-				bindArgs.callbackParamName = "jsonp";
-				r = dojo.io.script.get(bindArgs);
-			}else{
-				r = dojo.xhrPost(bindArgs);
-			}
-			return r;
-		}
-		
-		this.publish = function(/*String*/ channel, /*Object*/ data, /*Object?*/ props){
-			// summary:
-			//		publishes the passed message to the cometd server for delivery
-			//		on the specified topic
-			// channel:
-			//		the destination channel for the message
-			// data:
-			//		a JSON object containing the message "payload"
-			// properties:
-			//		Optional. Other meta-data to be mixed into the top-level of the
-			//		message
-			var message = {
-				data: data,
-				channel: channel
-			};
-			if(props){
-				dojo.mixin(message, props);
-			}
-			this._sendMessage(message);
-		}
-	
-		
-		this.subscribe = function(	/*String */	channel,
-						/*Object */	objOrFunc,
-						/*String */	funcName,
-						/*Object?*/ props){ // return: dojo.Deferred
-			//	summary:
-			//		inform the server of this client's interest in channel
-			//	description:
-			//		`dojox.cometd.subscribe()` handles all the hard work of telling
-			//		the server that we want to be notified when events are
-			//		published on a particular topic. `subscribe` accepts a function
-			//		to handle messages and returns a `dojo.Deferred` object which
-			//		has an extra property added to it which makes it suitable for
-			//		passing to `dojox.cometd.unsubscribe()` as a "subscription
-			//		handle" (much like the handle object that `dojo.connect()`
-			//		produces and which `dojo.disconnect()` expects).
-			//
-			//		Note that of a subscription is registered before a connection
-			//		with the server is established, events sent before the
-			//		connection is established will not be delivered to this client.
-			//		The deferred object which `subscribe` returns will callback
-			//		when the server successfuly acknolwedges receipt of our
-			//		"subscribe" request.
-			//	channel:
-			//		name of the cometd channel to subscribe to
-			//	objOrFunc:
-			//		an object scope for funcName or the name or reference to a
-			//		function to be called when messages are delivered to the
-			//		channel
-			//	funcName:
-			//		the second half of the objOrFunc/funcName pair for identifying
-			//		a callback function to notifiy upon channel message delivery
-			//	example:
-			//		Simple subscribe use-case
-			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
-			//	|	// log out all incoming messages on /foo/bar
-			//	|	dojox.cometd.subscribe("/foo/bar", console, "debug");
-			//	example:
-			//		Subscribe before connection is initialized
-			//	|	dojox.cometd.subscribe("/foo/bar", console, "debug");
-			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
-			//	example:
-			//		Subscribe an unsubscribe
-			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
-			//	|	var h = dojox.cometd.subscribe("/foo/bar", console, "debug");
-			//	|	dojox.cometd.unsubscribe(h);
-			//	example:
-			//		Listen for successful subscription:
-			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
-			//	|	var h = dojox.cometd.subscribe("/foo/bar", console, "debug");
-			//	|	h.addCallback(function(){
-			//	|		console.debug("subscription to /foo/bar established");
-			//	|	});
-	
-			props = props||{};
-			if(objOrFunc){
-				var tname = prefix + channel;
-				var subs = this._subscriptions[tname];
-				if(!subs || subs.length == 0){
-					subs = [];
-					props.channel = "/meta/subscribe";
-					props.subscription = channel;
-					this._sendMessage(props);
-					
-					var _ds = this._deferredSubscribes;
-					if(_ds[channel]){
-						_ds[channel].cancel();
-						delete _ds[channel];
-					}
-					_ds[channel] = new dojo.Deferred();
-				}
-				
-				for(var i in subs){
-					if(subs[i].objOrFunc === objOrFunc && (!subs[i].funcName&&!funcName||subs[i].funcName==funcName) ){
-						return null;
-					}
-				}
-				
-				var topic = dojo.subscribe(tname, objOrFunc, funcName);
-				subs.push({
-					topic: topic,
-					objOrFunc: objOrFunc,
-					funcName: funcName
-				});
-				this._subscriptions[tname] = subs;
-			}
-			var ret = this._deferredSubscribes[channel] || {};
-			ret.args = dojo._toArray(arguments);
-			return ret; // dojo.Deferred
-		}
-	
-		this.unsubscribe = function(	/*String*/	channel,
-						/*Object?*/ objOrFunc,
-						/*String?*/ funcName,
-						/*Object?*/ props){
-			// summary:
-			//		inform the server of this client's disinterest in channel
-			// channel:
-			//		name of the cometd channel to unsubscribe from
-			// objOrFunc:
-			//		an object scope for funcName or the name or reference to a
-			//		function to be called when messages are delivered to the
-			//		channel. If null then all subscribers to the channel are unsubscribed.
-			// funcName:
-			//		the second half of the objOrFunc/funcName pair for identifying
-			//		a callback function to notifiy upon channel message delivery
-	
-			if(
-				(arguments.length == 1) &&
-				(!dojo.isString(channel)) &&
-				(channel.args)
-			){
-				// it's a subscription handle, unroll
-				return this.unsubscribe.apply(this, channel.args);
-			}
-			
-			var tname = prefix + channel;
-			var subs = this._subscriptions[tname];
-			if(!subs || subs.length==0){
-				return null;
-			}
-	
-			var s=0;
-			for(var i in subs){
-				var sb = subs[i];
-				if((!objOrFunc) ||
-					(
-						sb.objOrFunc===objOrFunc &&
-						(!sb.funcName && !funcName || sb.funcName==funcName)
-					)
-				){
-					dojo.unsubscribe(subs[i].topic);
-					delete subs[i];
-				}else{
-					s++;
-				}
-			}
-			
-			if(s == 0){
-				props = props || {};
-				props.channel = "/meta/unsubscribe";
-				props.subscription = channel;
-				delete this._subscriptions[tname];
-				this._sendMessage(props);
-				this._deferredUnsubscribes[channel] = new dojo.Deferred();
-				if(this._deferredSubscribes[channel]){
-					this._deferredSubscribes[channel].cancel();
-					delete this._deferredSubscribes[channel];
-				}
-			}
-			return this._deferredUnsubscribes[channel]; // dojo.Deferred
-		}
-		
-		
-		this.disconnect = function(){
-			//	summary:
-			//		Disconnect from the server.
-			//	description:
-			//		Disconnect from the server by sending a disconnect message
-			//	example:
-			//	|	dojox.cometd.disconnect();
-	
-			for(var tname in this._subscriptions){
-				for(var sub in this._subscriptions[tname]){
-					if(this._subscriptions[tname][sub].topic){
-						dojo.unsubscribe(this._subscriptions[tname][sub].topic);
-					}
-				}
-			}
-			this._subscriptions = [];
-			this._messageQ = [];
-			if(this._initialized && this.currentTransport){
-				this._initialized=false;
-				this.currentTransport.disconnect();
-			}
-			if(!this._polling) {
-				this._publishMeta("connect",false);
-			}
-			this._initialized=false;
-			this._handshook=false;
-			this._status = "disconnected"; //should be disconnecting, but we ignore the reply to this message
-			this._publishMeta("disconnect",true);
-		}
-	
-		
-		// public extension points
-		
-		this.subscribed = function(	/*String*/channel, /*Object*/message){ }
-	
-		this.unsubscribed = function(/*String*/channel, /*Object*/message){ }
-	
-	
-		// private methods (TODO name all with leading _)
-	
-		this.tunnelInit = function(childLocation, childDomain){
-			// placeholder - replaced by _finishInit
-		}
-		
-		this.tunnelCollapse = function(){
-			// placeholder - replaced by _finishInit
-		}
-		
-		this._backoff = function(){
-			if(!this._advice){
-				this._advice={reconnect:"retry",interval:0};
-			}else if(!this._advice.interval){
-				this._advice.interval = 0;
-			}
-			
-			if(this._backoffInterval < this._backoffMax){
-				this._backoffInterval += this._backoffIncrement;
-			}
-		}
-		
-		this._backon = function(){
-			this._backoffInterval=0;
-		}
-	
-		this._interval = function(){
-			var i = this._backoffInterval + (this._advice ? (this._advice.interval ? this._advice.interval : 0) : 0);
-			if (i>0){
-				console.log("Retry in interval+backoff=" + this._advice.interval + "+" + this._backoffInterval+"="+i+"ms");
-			}
-			return i;
-		}
-		
-		this._publishMeta = function(action,successful,props){
-			try {
-				var meta = {cometd:this,action:action,successful:successful,state:this.state()};
-				if (props){
-					dojo.mixin(meta, props);
-				}
-				dojo.publish(this.prefix + "/meta", [meta]);
-			} catch(e) {
-				console.log(e);
-			}
-		}
-	
-		this._finishInit = function(data){
-			//	summary:
-			//		Handle the handshake return from the server and initialize
-			//		connection if all is OK
-
-			if(this._status!="handshaking") {return;}
-
-
-			var wasHandshook = this._handshook;
-			var successful = false;
-			var metaMsg = {};
-
-			if (data instanceof Error) {
-				dojo.mixin(metaMsg,{
-					reestablish:false,
-					failure: true,
-					error: data,
-					advice: this._advice
-				});
-			} else {
-				data = data[0];
-				data = this._extendIn(data);
-				this.handshakeReturn = data;
-				// remember any advice
-				if(data["advice"]){
-					this._advice = data.advice;
-				}
-
-				successful = data.successful ? data.successful : false;
-
-				// check version
-				if(data.version < this.minimumVersion){
-					if (console.log)
-						console.log("cometd protocol version mismatch. We wanted", this.minimumVersion, "but got", data.version);
-					successful=false;
-					this._advice.reconnect="none";
-				}
-				dojo.mixin(metaMsg,{reestablish: successful && wasHandshook, response:data});
-			}
-
-			this._publishMeta("handshake",successful,metaMsg);
-			//in the meta listeners, disconnect() may have been called, so recheck it now to
-			//prevent resends or continuing with initializing the protocol
-			if(this._status!="handshaking") {return;}
-
-			// If all OK
-			if(successful){
-				this._status = "connecting";
-				this._handshook = true;
-				// pick a transport
-				this.currentTransport = dojox.cometd.connectionTypes.match(
-					data.supportedConnectionTypes,
-					data.version,
-					this._isXD
-				);
-				var transport = this.currentTransport;
-				// initialize the transport
-				transport._cometd = this;
-				transport.version = data.version;
-				this.clientId = data.clientId;
-				this.tunnelInit = transport.tunnelInit && dojo.hitch(transport, "tunnelInit");
-				this.tunnelCollapse = transport.tunnelCollapse && dojo.hitch(transport, "tunnelCollapse");
-				transport.startup(data);
-			}else{
-				// If there is a problem follow advice
-				if(!this._advice || this._advice["reconnect"] != "none"){
-					setTimeout(dojo.hitch(this, "init", this.url, this._props), this._interval());
-				}
-			}
-		}
-	
-		// FIXME: lots of repeated code...why?
-		this._extendIn = function(message){
-			// summary: Handle extensions for inbound messages
-			dojo.forEach(dojox.cometd._extendInList, function(f){
-				message = f(message) || message;
-			});
-			return message;
-		}
-	
-		this._extendOut = function(message){
-			// summary: Handle extensions for inbound messages
-			dojo.forEach(dojox.cometd._extendOutList, function(f){
-				message = f(message) || message;
-			});
-			return message;
-		}
-	
-		this.deliver = function(messages){
-			dojo.forEach(messages, this._deliver, this);
-			return messages;
-		}
-	
-		this._deliver = function(message){
-			// dipatch events along the specified path
-			
-			message = this._extendIn(message);
-	
-			if(!message["channel"]){
-				if(message["success"] !== true){
-					return;
-				}
-			}
-			this.lastMessage = message;
-	
-			if(message.advice){
-				this._advice = message.advice; // TODO maybe merge?
-			}
-	
-			// check to see if we got a /meta channel message that we care about
-			var deferred=null;
-			if(	(message["channel"]) &&
-				(message.channel.length > 5) &&
-				(message.channel.substr(0, 5) == "/meta")){
-				// check for various meta topic actions that we need to respond to
-				switch(message.channel){
-					case "/meta/connect":
-						var metaMsg = {response: message};
-						if(message.successful) {
-							if (this._status != "connected"){
-								this._status = "connected";
-								this.endBatch();
-							}
-						}
- 
-						if(this._initialized){
-							this._publishMeta("connect",message.successful, metaMsg);
-						}
-						break;
-					case "/meta/subscribe":
-						deferred = this._deferredSubscribes[message.subscription];
-						try
-						{
-							if(!message.successful){
-								if(deferred){
-									deferred.errback(new Error(message.error));
-								}
-								this.currentTransport.cancelConnect();
-								return;
-							}
-							if(deferred){
-								deferred.callback(true);
-							}
-							this.subscribed(message.subscription, message);
-						} catch(e)	{
-							log.warn(e);
-						}
-						break;
-					case "/meta/unsubscribe":
-						deferred = this._deferredUnsubscribes[message.subscription];
-						try
-						{
-							if(!message.successful){
-								if(deferred){
-									deferred.errback(new Error(message.error));
-								}
-								this.currentTransport.cancelConnect();
-								return;
-							}
-							if(deferred){
-								deferred.callback(true);
-							}
-							this.unsubscribed(message.subscription, message);
-						} catch(e)	{
-							log.warn(e);
-						}
-						break;
-					default:
-						if(message.successful && !message.successful){
-							this.currentTransport.cancelConnect();
-							return;
-						}
-				}
-			}
-			
-			// send the message down for processing by the transport
-			this.currentTransport.deliver(message);
-	
-			if(message.data){
-				// dispatch the message to any locally subscribed listeners
-				try{
-					var messages = [message];
-	
-					// Determine target topic
-					var tname = prefix + message.channel;
-	
-					// Deliver to globs that apply to target topic
-					var tnameParts = message.channel.split("/");
-					var tnameGlob = prefix;
-					for (var i = 1; i < tnameParts.length - 1; i++){
-						dojo.publish(tnameGlob + "/**", messages);
-						tnameGlob += "/" + tnameParts[i];
-					}
-					dojo.publish(tnameGlob + "/**", messages);
-					dojo.publish(tnameGlob + "/*", messages);
-		
-					// deliver to target topic
-					dojo.publish(tname,messages);
-				}catch(e){
-					console.log(e);
-				}
-			}
-		}
-	
-		this._sendMessage = function(/* object */ message){
-			if(this.currentTransport && !this.batch){
-				return this.currentTransport.sendMessages([message]);
-			}else{
-				this._messageQ.push(message);
-				return null;
-			}
-		}
-	
-		this.startBatch = function(){
-			this.batch++;
-		}
-	
-		this.endBatch = function(){
-			if(--this.batch <= 0 && this.currentTransport && this._status == "connected"){
-				this.batch = 0;
-				var messages = this._messageQ;
-				this._messageQ = [];
-				if(messages.length > 0){
-					this.currentTransport.sendMessages(messages);
-				}
-			}
-		}
-		
-		this._onUnload = function(){
-			// make this the last of the onUnload method
-			dojo.addOnUnload(dojox.cometd, "disconnect");
-		}
-	
-		this._connectTimeout = function(){
-			// summary: Return the connect timeout in ms, calculated as the minimum of the advised timeout
-			// and the configured timeout. Else 0 to indicate no client side timeout
-			var advised=0;
-			if(this._advice && this._advice.timeout && this.expectedNetworkDelay > 0){
-				advised = this._advice.timeout + this.expectedNetworkDelay;
-			}
-			
-			if(this.connectTimeout > 0 && this.connectTimeout < advised){
-				return this.connectTimeout;
-			}
-			
-			return advised;
-		}
-	},
-	// connectionTypes are shared by all cometd Connection.
-	connectionTypes : new dojo.AdapterRegistry(true)
-}
-
-// create the default instance
-dojox.cometd.Connection.call(dojox.cometd,"/cometd");
-
-/*
-
-FIXME: TODOC: this info should be part of the relevant functions and/or overview so
-the parser can find it.
-
-transport objects MUST expose the following methods:
-	- check
-	- startup
-	- sendMessages
-	- deliver
-	- disconnect
-optional, standard but transport dependent methods are:
-	- tunnelCollapse
-	- tunnelInit
-
-Transports SHOULD be namespaced under the cometd object and transports MUST
-register themselves with cometd.connectionTypes
-
-here's a stub transport defintion:
-
-cometd.blahTransport = new function(){
-	this._connectionType="my-polling";
-	this._cometd=null;
-	this.lastTimestamp = null;
-
-	this.check = function(types, version, xdomain){
-		// summary:
-		//		determines whether or not this transport is suitable given a
-		//		list of transport types that the server supports
-		return dojo.inArray(types, "blah");
-	}
-
-	this.startup = function(){
-		if(dojox.cometd._polling){ return; }
-		// FIXME: fill in startup routine here
-		dojox.cometd._polling = true;
-	}
-
-	this.sendMessages = function(message){
-		// FIXME: fill in message array sending logic
-	}
-
-	this.deliver = function(message){
-	}
-
-	this.disconnect = function(){
-		// send orderly disconnect message
-	}
-
-	this.cancelConnect = function(){
-		// cancel the current connection
-	}
-}
-cometd.connectionTypes.register("blah", cometd.blahTransport.check, cometd.blahTransport);
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
 
-dojo.addOnUnload(dojox.cometd, "_onUnload");
+define(["dojo","dijit","dojox","dojo/AdapterRegistry"],function(_1,_2,_3){
+_1.getObject("dojox.cometd._base",1);
+_3.cometd={Connection:function(_4){
+_1.mixin(this,{prefix:_4,_status:"unconnected",_handshook:false,_initialized:false,_polling:false,expectedNetworkDelay:10000,connectTimeout:0,version:"1.0",minimumVersion:"0.9",clientId:null,messageId:0,batch:0,_isXD:false,handshakeReturn:null,currentTransport:null,url:null,lastMessage:null,_messageQ:[],handleAs:"json",_advice:{},_backoffInterval:0,_backoffIncrement:1000,_backoffMax:60000,_deferredSubscribes:{},_deferredUnsubscribes:{},_subscriptions:[],_extendInList:[],_extendOutList:[]});
+this.state=function(){
+return this._status;
+};
+this.init=function(_5,_6,_7){
+_6=_6||{};
+_6.version=this.version;
+_6.minimumVersion=this.minimumVersion;
+_6.channel="/meta/handshake";
+_6.id=""+this.messageId++;
+this.url=_5||_1.config["cometdRoot"];
+if(!this.url){
+throw "no cometd root";
+return null;
+}
+var _8="^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$";
+var _9=(""+window.location).match(new RegExp(_8));
+if(_9[4]){
+var _a=_9[4].split(":");
+var _b=_a[0];
+var _c=_a[1]||"80";
+_9=this.url.match(new RegExp(_8));
+if(_9[4]){
+_a=_9[4].split(":");
+var _d=_a[0];
+var _e=_a[1]||"80";
+this._isXD=((_d!=_b)||(_e!=_c));
+}
+}
+if(!this._isXD){
+_6.supportedConnectionTypes=_1.map(_3.cometd.connectionTypes.pairs,"return item[0]");
+}
+_6=this._extendOut(_6);
+var _f={url:this.url,handleAs:this.handleAs,content:{"message":_1.toJson([_6])},load:_1.hitch(this,function(msg){
+this._backon();
+this._finishInit(msg);
+}),error:_1.hitch(this,function(e){
+this._backoff();
+this._finishInit(e);
+}),timeout:this.expectedNetworkDelay};
+if(_7){
+_1.mixin(_f,_7);
+}
+this._props=_6;
+for(var _10 in this._subscriptions){
+for(var sub in this._subscriptions[_10]){
+if(this._subscriptions[_10][sub].topic){
+_1.unsubscribe(this._subscriptions[_10][sub].topic);
+}
+}
+}
+this._messageQ=[];
+this._subscriptions=[];
+this._initialized=true;
+this._status="handshaking";
+this.batch=0;
+this.startBatch();
+var r;
+if(this._isXD){
+_f.callbackParamName="jsonp";
+r=_1.io.script.get(_f);
+}else{
+r=_1.xhrPost(_f);
+}
+return r;
+};
+this.publish=function(_11,_12,_13){
+var _14={data:_12,channel:_11};
+if(_13){
+_1.mixin(_14,_13);
+}
+this._sendMessage(_14);
+};
+this.subscribe=function(_15,_16,_17,_18){
+_18=_18||{};
+if(_16){
+var _19=_4+_15;
+var _1a=this._subscriptions[_19];
+if(!_1a||_1a.length==0){
+_1a=[];
+_18.channel="/meta/subscribe";
+_18.subscription=_15;
+this._sendMessage(_18);
+var _1b=this._deferredSubscribes;
+if(_1b[_15]){
+_1b[_15].cancel();
+delete _1b[_15];
+}
+_1b[_15]=new _1.Deferred();
+}
+for(var i in _1a){
+if(_1a[i].objOrFunc===_16&&(!_1a[i].funcName&&!_17||_1a[i].funcName==_17)){
+return null;
+}
+}
+var _1c=_1.subscribe(_19,_16,_17);
+_1a.push({topic:_1c,objOrFunc:_16,funcName:_17});
+this._subscriptions[_19]=_1a;
+}
+var ret=this._deferredSubscribes[_15]||{};
+ret.args=_1._toArray(arguments);
+return ret;
+};
+this.unsubscribe=function(_1d,_1e,_1f,_20){
+if((arguments.length==1)&&(!_1.isString(_1d))&&(_1d.args)){
+return this.unsubscribe.apply(this,_1d.args);
+}
+var _21=_4+_1d;
+var _22=this._subscriptions[_21];
+if(!_22||_22.length==0){
+return null;
+}
+var s=0;
+for(var i in _22){
+var sb=_22[i];
+if((!_1e)||(sb.objOrFunc===_1e&&(!sb.funcName&&!_1f||sb.funcName==_1f))){
+_1.unsubscribe(_22[i].topic);
+delete _22[i];
+}else{
+s++;
+}
+}
+if(s==0){
+_20=_20||{};
+_20.channel="/meta/unsubscribe";
+_20.subscription=_1d;
+delete this._subscriptions[_21];
+this._sendMessage(_20);
+this._deferredUnsubscribes[_1d]=new _1.Deferred();
+if(this._deferredSubscribes[_1d]){
+this._deferredSubscribes[_1d].cancel();
+delete this._deferredSubscribes[_1d];
+}
+}
+return this._deferredUnsubscribes[_1d];
+};
+this.disconnect=function(){
+for(var _23 in this._subscriptions){
+for(var sub in this._subscriptions[_23]){
+if(this._subscriptions[_23][sub].topic){
+_1.unsubscribe(this._subscriptions[_23][sub].topic);
+}
+}
+}
+this._subscriptions=[];
+this._messageQ=[];
+if(this._initialized&&this.currentTransport){
+this._initialized=false;
+this.currentTransport.disconnect();
+}
+if(!this._polling){
+this._publishMeta("connect",false);
+}
+this._initialized=false;
+this._handshook=false;
+this._status="disconnected";
+this._publishMeta("disconnect",true);
+};
+this.subscribed=function(_24,_25){
+};
+this.unsubscribed=function(_26,_27){
+};
+this.tunnelInit=function(_28,_29){
+};
+this.tunnelCollapse=function(){
+};
+this._backoff=function(){
+if(!this._advice){
+this._advice={reconnect:"retry",interval:0};
+}else{
+if(!this._advice.interval){
+this._advice.interval=0;
+}
+}
+if(this._backoffInterval<this._backoffMax){
+this._backoffInterval+=this._backoffIncrement;
+}
+};
+this._backon=function(){
+this._backoffInterval=0;
+};
+this._interval=function(){
+var i=this._backoffInterval+(this._advice?(this._advice.interval?this._advice.interval:0):0);
+if(i>0){
+}
+return i;
+};
+this._publishMeta=function(_2a,_2b,_2c){
+try{
+var _2d={cometd:this,action:_2a,successful:_2b,state:this.state()};
+if(_2c){
+_1.mixin(_2d,_2c);
+}
+_1.publish(this.prefix+"/meta",[_2d]);
+}
+catch(e){
+}
+};
+this._finishInit=function(_2e){
+if(this._status!="handshaking"){
+return;
+}
+var _2f=this._handshook;
+var _30=false;
+var _31={};
+if(_2e instanceof Error){
+_1.mixin(_31,{reestablish:false,failure:true,error:_2e,advice:this._advice});
+}else{
+_2e=_2e[0];
+_2e=this._extendIn(_2e);
+this.handshakeReturn=_2e;
+if(_2e["advice"]){
+this._advice=_2e.advice;
+}
+_30=_2e.successful?_2e.successful:false;
+if(_2e.version<this.minimumVersion){
+if(console.log){
+}
+_30=false;
+this._advice.reconnect="none";
+}
+_1.mixin(_31,{reestablish:_30&&_2f,response:_2e});
+}
+this._publishMeta("handshake",_30,_31);
+if(this._status!="handshaking"){
+return;
+}
+if(_30){
+this._status="connecting";
+this._handshook=true;
+this.currentTransport=_3.cometd.connectionTypes.match(_2e.supportedConnectionTypes,_2e.version,this._isXD);
+var _32=this.currentTransport;
+_32._cometd=this;
+_32.version=_2e.version;
+this.clientId=_2e.clientId;
+this.tunnelInit=_32.tunnelInit&&_1.hitch(_32,"tunnelInit");
+this.tunnelCollapse=_32.tunnelCollapse&&_1.hitch(_32,"tunnelCollapse");
+_32.startup(_2e);
+}else{
+if(!this._advice||this._advice["reconnect"]!="none"){
+setTimeout(_1.hitch(this,"init",this.url,this._props),this._interval());
+}
+}
+};
+this._extendIn=function(_33){
+_1.forEach(_3.cometd._extendInList,function(f){
+_33=f(_33)||_33;
+});
+return _33;
+};
+this._extendOut=function(_34){
+_1.forEach(_3.cometd._extendOutList,function(f){
+_34=f(_34)||_34;
+});
+return _34;
+};
+this.deliver=function(_35){
+_1.forEach(_35,this._deliver,this);
+return _35;
+};
+this._deliver=function(_36){
+_36=this._extendIn(_36);
+if(!_36["channel"]){
+if(_36["success"]!==true){
+return;
+}
+}
+this.lastMessage=_36;
+if(_36.advice){
+this._advice=_36.advice;
+}
+var _37=null;
+if((_36["channel"])&&(_36.channel.length>5)&&(_36.channel.substr(0,5)=="/meta")){
+switch(_36.channel){
+case "/meta/connect":
+var _38={response:_36};
+if(_36.successful){
+if(this._status!="connected"){
+this._status="connected";
+this.endBatch();
+}
+}
+if(this._initialized){
+this._publishMeta("connect",_36.successful,_38);
+}
+break;
+case "/meta/subscribe":
+_37=this._deferredSubscribes[_36.subscription];
+try{
+if(!_36.successful){
+if(_37){
+_37.errback(new Error(_36.error));
+}
+this.currentTransport.cancelConnect();
+return;
+}
+if(_37){
+_37.callback(true);
+}
+this.subscribed(_36.subscription,_36);
+}
+catch(e){
+log.warn(e);
+}
+break;
+case "/meta/unsubscribe":
+_37=this._deferredUnsubscribes[_36.subscription];
+try{
+if(!_36.successful){
+if(_37){
+_37.errback(new Error(_36.error));
+}
+this.currentTransport.cancelConnect();
+return;
+}
+if(_37){
+_37.callback(true);
+}
+this.unsubscribed(_36.subscription,_36);
+}
+catch(e){
+log.warn(e);
+}
+break;
+default:
+if(_36.successful&&!_36.successful){
+this.currentTransport.cancelConnect();
+return;
+}
+}
+}
+this.currentTransport.deliver(_36);
+if(_36.data){
+try{
+var _39=[_36];
+var _3a=_4+_36.channel;
+var _3b=_36.channel.split("/");
+var _3c=_4;
+for(var i=1;i<_3b.length-1;i++){
+_1.publish(_3c+"/**",_39);
+_3c+="/"+_3b[i];
+}
+_1.publish(_3c+"/**",_39);
+_1.publish(_3c+"/*",_39);
+_1.publish(_3a,_39);
+}
+catch(e){
+}
+}
+};
+this._sendMessage=function(_3d){
+if(this.currentTransport&&!this.batch){
+return this.currentTransport.sendMessages([_3d]);
+}else{
+this._messageQ.push(_3d);
+return null;
+}
+};
+this.startBatch=function(){
+this.batch++;
+};
+this.endBatch=function(){
+if(--this.batch<=0&&this.currentTransport&&this._status=="connected"){
+this.batch=0;
+var _3e=this._messageQ;
+this._messageQ=[];
+if(_3e.length>0){
+this.currentTransport.sendMessages(_3e);
+}
+}
+};
+this._onUnload=function(){
+_1.addOnUnload(_3.cometd,"disconnect");
+};
+this._connectTimeout=function(){
+var _3f=0;
+if(this._advice&&this._advice.timeout&&this.expectedNetworkDelay>0){
+_3f=this._advice.timeout+this.expectedNetworkDelay;
+}
+if(this.connectTimeout>0&&this.connectTimeout<_3f){
+return this.connectTimeout;
+}
+return _3f;
+};
+},connectionTypes:new _1.AdapterRegistry(true)};
+_3.cometd.Connection.call(_3.cometd,"/cometd");
+_1.addOnUnload(_3.cometd,"_onUnload");
+return _1.getObject("dojox.cometd._base");
+});
+require(["dojox/cometd/_base"]);

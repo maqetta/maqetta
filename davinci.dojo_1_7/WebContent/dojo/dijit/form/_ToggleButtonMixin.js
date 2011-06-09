@@ -1,51 +1,24 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/_base/html" // dojo.attr
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/form/_ToggleButtonMixin
-// summary:
-//		A mixin to provide functionality to allow a button that can be in two states (checked or not).
-
-dojo.declare("dijit.form._ToggleButtonMixin", null, {
-	// summary:
-	//		A mixin to provide functionality to allow a button that can be in two states (checked or not).
-
-	// checked: Boolean
-	//		Corresponds to the native HTML <input> element's attribute.
-	//		In markup, specified as "checked='checked'" or just "checked".
-	//		True if the button is depressed, or the checkbox is checked,
-	//		or the radio button is selected, etc.
-	checked: false,
-
-	_onClick: function(/*Event*/ evt){
-		var original = this.checked;
-		this._set('checked', !original); // partially set the toggled value, assuming the toggle will work, so it can be overridden in the onclick handler
-		var ret = this.inherited(arguments); // the user could reset the value here
-		this.set('checked', ret ? this.checked : original); // officially set the toggled or user value, or reset it back
-		return ret;
-	},
-
-	_setCheckedAttr: function(/*Boolean*/ value, /*Boolean?*/ priorityChange){
-		this._set("checked", value);
-		dojo.attr(this.focusNode || this.domNode, "checked", value);
-		(this.focusNode || this.domNode).setAttribute("aria-pressed", value);
-		this._handleOnChange(value, priorityChange);
-	},
-
-	reset: function(){
-		// summary:
-		//		Reset the widget's value to what it was at initialization time
-
-		this._hasBeenBlurred = false;
-
-		// set checked state to original setting
-		this.set('checked', this.params.checked || false);
-	}
-});
-
-
-return dijit.form._ToggleButtonMixin;
+define("dijit/form/_ToggleButtonMixin",["dojo/_base/kernel","..","dojo/_base/html"],function(_1,_2){
+_1.declare("dijit.form._ToggleButtonMixin",null,{checked:false,_onClick:function(_3){
+var _4=this.checked;
+this._set("checked",!_4);
+var _5=this.inherited(arguments);
+this.set("checked",_5?this.checked:_4);
+return _5;
+},_setCheckedAttr:function(_6,_7){
+this._set("checked",_6);
+_1.attr(this.focusNode||this.domNode,"checked",_6);
+(this.focusNode||this.domNode).setAttribute("aria-pressed",_6);
+this._handleOnChange(_6,_7);
+},reset:function(){
+this._hasBeenBlurred=false;
+this.set("checked",this.params.checked||false);
+}});
+return _2.form._ToggleButtonMixin;
 });

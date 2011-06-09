@@ -1,100 +1,70 @@
-define(["dojo/_base/kernel", "dojo/_base/array"], function(dojo, darray){
-	dojo.getObject("collections", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojox.collections.DictionaryEntry=function(/* string */k, /* object */v){
-		//	summary
-		//	return an object of type dojox.collections.DictionaryEntry
-		this.key=k;
-		this.value=v;
-		this.valueOf=function(){
-			return this.value; 	//	object
-		};
-		this.toString=function(){
-			return String(this.value);	//	string
-		};
-	}
-
-	/*	Iterators
-	 *	The collections.Iterators (Iterator and DictionaryIterator) are built to
-	 *	work with the Collections included in this module.  However, they *can*
-	 *	be used with arrays and objects, respectively, should one choose to do so.
-	 */
-	dojox.collections.Iterator=function(/* array */arr){
-		//	summary
-		//	return an object of type dojox.collections.Iterator
-		var a=arr;
-		var position=0;
-		this.element=a[position]||null;
-		this.atEnd=function(){
-			//	summary
-			//	Test to see if the internal cursor has reached the end of the internal collection.
-			return (position>=a.length);	//	bool
-		};
-		this.get=function(){
-			//	summary
-			//	Get the next member in the collection.
-			if(this.atEnd()){
-				return null;		//	object
-			}
-			this.element=a[position++];
-			return this.element;	//	object
-		};
-		this.map=function(/* function */fn, /* object? */scope){
-			//	summary
-			//	Functional iteration with optional scope.
-			return dojo.map(a, fn, scope);
-		};
-		this.reset=function(){
-			//	summary
-			//	reset the internal cursor.
-			position=0;
-			this.element=a[position];
-		};
-	}
-
-	/*	Notes:
-	 *	The DictionaryIterator no longer supports a key and value property;
-	 *	the reality is that you can use this to iterate over a JS object
-	 *	being used as a hashtable.
-	 */
-	dojox.collections.DictionaryIterator=function(/* object */obj){
-		//	summary
-		//	return an object of type dojox.collections.DictionaryIterator
-		var a=[];	//	Create an indexing array
-		var testObject={};
-		for(var p in obj){
-			if(!testObject[p]){
-				a.push(obj[p]);	//	fill it up
-			}
-		}
-		var position=0;
-		this.element=a[position]||null;
-		this.atEnd=function(){
-			//	summary
-			//	Test to see if the internal cursor has reached the end of the internal collection.
-			return (position>=a.length);	//	bool
-		};
-		this.get=function(){
-			//	summary
-			//	Get the next member in the collection.
-			if(this.atEnd()){
-				return null;		//	object
-			}
-			this.element=a[position++];
-			return this.element;	//	object
-		};
-		this.map=function(/* function */fn, /* object? */scope){
-			//	summary
-			//	Functional iteration with optional scope.
-			return dojo.map(a, fn, scope);
-		};
-		this.reset=function() {
-			//	summary
-			//	reset the internal cursor.
-			position=0;
-			this.element=a[position];
-		};
-	};
-
-	return dojox.collections;
+define(["dojo/_base/kernel","dojo/_base/array"],function(_1,_2){
+_1.getObject("collections",true,dojox);
+dojox.collections.DictionaryEntry=function(k,v){
+this.key=k;
+this.value=v;
+this.valueOf=function(){
+return this.value;
+};
+this.toString=function(){
+return String(this.value);
+};
+};
+dojox.collections.Iterator=function(_3){
+var a=_3;
+var _4=0;
+this.element=a[_4]||null;
+this.atEnd=function(){
+return (_4>=a.length);
+};
+this.get=function(){
+if(this.atEnd()){
+return null;
+}
+this.element=a[_4++];
+return this.element;
+};
+this.map=function(fn,_5){
+return _1.map(a,fn,_5);
+};
+this.reset=function(){
+_4=0;
+this.element=a[_4];
+};
+};
+dojox.collections.DictionaryIterator=function(_6){
+var a=[];
+var _7={};
+for(var p in _6){
+if(!_7[p]){
+a.push(_6[p]);
+}
+}
+var _8=0;
+this.element=a[_8]||null;
+this.atEnd=function(){
+return (_8>=a.length);
+};
+this.get=function(){
+if(this.atEnd()){
+return null;
+}
+this.element=a[_8++];
+return this.element;
+};
+this.map=function(fn,_9){
+return _1.map(a,fn,_9);
+};
+this.reset=function(){
+_8=0;
+this.element=a[_8];
+};
+};
+return dojox.collections;
 });

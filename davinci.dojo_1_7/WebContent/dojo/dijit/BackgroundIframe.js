@@ -1,112 +1,68 @@
-define([
-	"dojo/_base/kernel", // dojo.config
-	".",
-	"dojo/_base/connect", // dojo.connect dojo.disconnect
-	"dojo/_base/html", // dojo.create dojo.style
-	"dojo/_base/lang", // dojo.extend
-	"dojo/_base/sniff", // dojo.isIE dojo.isMoz dojo.isQuirks
-	"dojo/_base/url", // dojo.moduleUrl
-	"dojo/_base/window" // dojo.doc.createElement
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/BackgroundIFrame
-	// summary:
-	//		new dijit.BackgroundIframe(node)
-	//		Makes a background iframe as a child of node, that fills
-	//		area (and position) of node
-
-	// TODO: remove _frames, it isn't being used much, since popups never release their
-	// iframes (see [22236])
-	var _frames = new function(){
-		// summary:
-		//		cache of iframes
-
-		var queue = [];
-
-		this.pop = function(){
-			var iframe;
-			if(queue.length){
-				iframe = queue.pop();
-				iframe.style.display="";
-			}else{
-				if(dojo.isIE < 9){
-					var burl = dojo.config["dojoBlankHtmlUrl"] || (dojo.moduleUrl("dojo", "resources/blank.html")+"") || "javascript:\"\"";
-					var html="<iframe src='" + burl + "' role='presentation'"
-						+ " style='position: absolute; left: 0px; top: 0px;"
-						+ "z-index: -1; filter:Alpha(Opacity=\"0\");'>";
-					iframe = dojo.doc.createElement(html);
-				}else{
-					iframe = dojo.create("iframe");
-					iframe.src = 'javascript:""';
-					iframe.className = "dijitBackgroundIframe";
-					iframe.setAttribute("role", "presentation");
-					dojo.style(iframe, "opacity", 0.1);
-				}
-				iframe.tabIndex = -1; // Magic to prevent iframe from getting focus on tab keypress - as style didn't work.
-			}
-			return iframe;
-		};
-
-		this.push = function(iframe){
-			iframe.style.display="none";
-			queue.push(iframe);
-		}
-	}();
-
-
-	dijit.BackgroundIframe = function(/*DomNode*/ node){
-		// summary:
-		//		For IE/FF z-index schenanigans. id attribute is required.
-		//
-		// description:
-		//		new dijit.BackgroundIframe(node)
-		//			Makes a background iframe as a child of node, that fills
-		//			area (and position) of node
-
-		if(!node.id){ throw new Error("no id"); }
-		if(dojo.isIE || dojo.isMoz){
-			var iframe = (this.iframe = _frames.pop());
-			node.appendChild(iframe);
-			if(dojo.isIE<7 || dojo.isQuirks){
-				this.resize(node);
-				this._conn = dojo.connect(node, 'onresize', this, function(){
-					this.resize(node);
-				});
-			}else{
-				dojo.style(iframe, {
-					width: '100%',
-					height: '100%'
-				});
-			}
-		}
-	};
-
-	dojo.extend(dijit.BackgroundIframe, {
-		resize: function(node){
-			// summary:
-			// 		Resize the iframe so it's the same size as node.
-			//		Needed on IE6 and IE/quirks because height:100% doesn't work right.
-			if(this.iframe){
-				dojo.style(this.iframe, {
-					width: node.offsetWidth + 'px',
-					height: node.offsetHeight + 'px'
-				});
-			}
-		},
-		destroy: function(){
-			// summary:
-			//		destroy the iframe
-			if(this._conn){
-				dojo.disconnect(this._conn);
-				this._conn = null;
-			}
-			if(this.iframe){
-				_frames.push(this.iframe);
-				delete this.iframe;
-			}
-		}
-	});
-
-	return dijit.BackgroundIframe;
+define("dijit/BackgroundIframe",["dojo/_base/kernel",".","dojo/_base/connect","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/url","dojo/_base/window"],function(_1,_2){
+var _3=new function(){
+var _4=[];
+this.pop=function(){
+var _5;
+if(_4.length){
+_5=_4.pop();
+_5.style.display="";
+}else{
+if(_1.isIE<9){
+var _6=_1.config["dojoBlankHtmlUrl"]||(_1.moduleUrl("dojo","resources/blank.html")+"")||"javascript:\"\"";
+var _7="<iframe src='"+_6+"' role='presentation'"+" style='position: absolute; left: 0px; top: 0px;"+"z-index: -1; filter:Alpha(Opacity=\"0\");'>";
+_5=_1.doc.createElement(_7);
+}else{
+_5=_1.create("iframe");
+_5.src="javascript:\"\"";
+_5.className="dijitBackgroundIframe";
+_5.setAttribute("role","presentation");
+_1.style(_5,"opacity",0.1);
+}
+_5.tabIndex=-1;
+}
+return _5;
+};
+this.push=function(_8){
+_8.style.display="none";
+_4.push(_8);
+};
+}();
+_2.BackgroundIframe=function(_9){
+if(!_9.id){
+throw new Error("no id");
+}
+if(_1.isIE||_1.isMoz){
+var _a=(this.iframe=_3.pop());
+_9.appendChild(_a);
+if(_1.isIE<7||_1.isQuirks){
+this.resize(_9);
+this._conn=_1.connect(_9,"onresize",this,function(){
+this.resize(_9);
+});
+}else{
+_1.style(_a,{width:"100%",height:"100%"});
+}
+}
+};
+_1.extend(_2.BackgroundIframe,{resize:function(_b){
+if(this.iframe){
+_1.style(this.iframe,{width:_b.offsetWidth+"px",height:_b.offsetHeight+"px"});
+}
+},destroy:function(){
+if(this._conn){
+_1.disconnect(this._conn);
+this._conn=null;
+}
+if(this.iframe){
+_3.push(this.iframe);
+delete this.iframe;
+}
+}});
+return _2.BackgroundIframe;
 });

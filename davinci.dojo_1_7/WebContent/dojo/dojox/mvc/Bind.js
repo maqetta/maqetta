@@ -1,62 +1,24 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/array"
-], function(dojo, lang, array){
-	var mvc = dojo.getObject("dojox.mvc", true);
-	/*=====
-		mvc = dojox.mvc;
-	=====*/
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.mixin(mvc, {
-		bind: function(/*dojo.Stateful*/ source, /*String*/ sourceProp,
-					/*dojo.Stateful*/ target, /*String*/ targetProp,
-					/*Function?*/ func, /*Boolean?*/ bindOnlyIfUnequal){
-			// summary:
-			//		Bind the specified property of the target to the specified
-			//		property of the source with the supplied transformation.
-			//	source:
-			//		The source dojo.Stateful object for the bind.
-			//	sourceProp:
-			//		The name of the source's property whose change triggers the bind.
-			//	target:
-			//		The target dojo.Stateful object for the bind whose
-			//		property will be updated with the result of the function.
-			//	targetProp:
-			//		The name of the target's property to be updated with the
-			//		result of the function.
-			//	func:
-			//		The optional calculation to be performed to obtain the target
-			//		property value.
-			//	bindOnlyIfUnequal:
-			//		Whether the bind notification should happen only if the old and
-			//		new values are unequal (optional, defaults to false).
-			var convertedValue;
-			return source.watch(sourceProp, function(prop, oldValue, newValue){
-				convertedValue = lang.isFunction(func) ? func(newValue) : newValue;
-				if(!bindOnlyIfUnequal || convertedValue != target.get(targetProp)){
-					target.set(targetProp, convertedValue);
-				}
-			});
-		},
-
-		bindInputs: function(/*dojo.Stateful[]*/ sourceBindArray, /*Function*/ func){
-			// summary:
-			//		Bind the values at the sources specified in the first argument
-			//		array such that a composing function in the second argument is
-			//		called when any of the values changes.
-			//	sourceBindArray:
-			//		The array of dojo.Stateful objects to watch values changes on.
-			//	func:
-			//		The composing function that is called when any of the source
-			//		values changes.
-			// tags:
-			//		protected
-			var watchHandles = [];
-			array.forEach(sourceBindArray, function(h){
-				watchHandles.push(h.watch("value", func));
-			});
-			return watchHandles;
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array"],function(_1,_2,_3){
+var _4=_1.getObject("dojox.mvc",true);
+return _1.mixin(_4,{bind:function(_5,_6,_7,_8,_9,_a){
+var _b;
+return _5.watch(_6,function(_c,_d,_e){
+_b=_2.isFunction(_9)?_9(_e):_e;
+if(!_a||_b!=_7.get(_8)){
+_7.set(_8,_b);
+}
+});
+},bindInputs:function(_f,_10){
+var _11=[];
+_3.forEach(_f,function(h){
+_11.push(h.watch("value",_10));
+});
+return _11;
+}});
 });

@@ -1,167 +1,108 @@
-dojo.provide("dojox.wire.ml.Invocation");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.wire.ml.Action");
-
-dojo.declare("dojox.wire.ml.Invocation", dojox.wire.ml.Action, {
-	//	summary:
-	//		A widget to invoke a method or publish a topic
-	//	description:
-	//		This widget represents a controller task to invoke a method or
-	//		publish a topic when an event (a function) or a topic is issued.
-	//	object:
-	//		A scope of a method to invoke
-	//	method:
-	//		A name of a method to invoke
-	//	topic:
-	//		A name of a topic to publish
-	//	parameters:
-	//		Arguments for the method or the topic
-	//	result:
-	//		A property to store a return value of the method call
-	//	error:
-	//		A property to store an error on the method call
-	object: "",
-	method: "",
-	topic: "",
-	parameters: "",
-	result: "",
-	error: "",
-
-	_run: function(){
-		//	summary:
-		//		Invoke a method or publish a topic
-		//	description:
-		//		If 'topic' is specified, the topic is published with arguments
-		//		specified to 'parameters'.
-		//		If 'method' and 'object' are specified, the method is invoked
-		//		with arguments specified to 'parameters' and set the return
-		//		value to a property specified to 'result'.
-		//		'object', 'parameters' and 'result' can specify properties of
-		//		a widget or an DOM element with the dotted notation.
-		//		If 'parameters' are omitted, the arguments to this method are
-		//		passed as is.
-		if(this.topic){
-			var args = this._getParameters(arguments);
-			try{
-				dojo.publish(this.topic, args);
-				this.onComplete();
-			}catch(e){
-				this.onError(e);
-			}
-		}else if(this.method){
-			var scope = (this.object ? dojox.wire.ml._getValue(this.object) : dojo.global);
-			if(!scope){
-				return; //undefined
-			}
-			var args = this._getParameters(arguments);
-			var func = scope[this.method];
-			if(!func){
-				func = scope.callMethod;
-				if(!func){
-					return; //undefined
-				}
-				args = [this.method, args];
-			}
-			try{
-				var connected = false;
-				if(scope.getFeatures){
-					var features = scope.getFeatures();
-					if((this.method == "fetch" && features["dojo.data.api.Read"]) ||
-						(this.method == "save" && features["dojo.data.api.Write"])){
-						var arg = args[0];
-						if(!arg.onComplete){
-							arg.onComplete = function(){};
-						}
-						//dojo.connect(arg, "onComplete", this, "onComplete");
-						this.connect(arg, "onComplete", "onComplete");
-						if(!arg.onError){
-							arg.onError = function(){};
-						}
-						//dojo.connect(arg, "onError", this, "onError");
-						this.connect(arg, "onError", "onError");
-						connected = true;
-					}
-				}
-				var r = func.apply(scope, args);
-				if(!connected){
-					if(r && (r instanceof dojo.Deferred)){
-						var self = this;
-						r.addCallbacks(
-							function(result){self.onComplete(result);},
-							function(error){self.onError(error);}
-						);
-					}else{
-						this.onComplete(r);
-					}
-				}
-			}catch(e){
-				this.onError(e);
-			}
-		}
-	},
-
-	onComplete: function(/*anything*/result){
-		//	summary:
-		//		A function called when the method or the topic publish
-		//		completed
-		//	description:
-		//		If 'result' attribute is specified, the result object also set
-		//		to the specified property.
-		//	result:
-		//		The return value of a method or undefined for a topic
-		if(this.result){
-			dojox.wire.ml._setValue(this.result, result);
-		}
-		if(this.error){ // clear error
-			dojox.wire.ml._setValue(this.error, "");
-		}
-	},
-
-	onError: function(/*anything*/error){
-		//	summary:
-		//		A function called on an error occurs
-		//	description:
-		//		If 'error' attribute is specified, the error object also set to
-		//		the specified property.
-		//	error:
-		//		The exception or error occurred
-		if(this.error){
-			if(error && error.message){
-				error = error.message;
-			}
-			dojox.wire.ml._setValue(this.error, error);
-		}
-	},
-
-	_getParameters: function(/*Array*/args){
-		//	summary:
-		//		Returns arguments to a method or topic to invoke
-		//	description:
-		//		This method retunrs an array of arguments specified by
-		//		'parameters' attribute, a comma-separated list of IDs and
-		//		their properties in a dotted notation.
-		//		If 'parameters' are omitted, the original arguments are
-		//		used.
-		//	args:
-		//		Arguments to a trigger event or topic
-		if(!this.parameters){
-		 	// use arguments as is
-			return args; //Array
-		}
-		var parameters = [];
-		var list = this.parameters.split(",");
-		if(list.length == 1){
-			var parameter = dojox.wire.ml._getValue(dojo.trim(list[0]), args);
-			if(dojo.isArray(parameter)){
-				parameters = parameter;
-			}else{
-				parameters.push(parameter);
-			}
-		}else{
-			for(var i in list){
-				parameters.push(dojox.wire.ml._getValue(dojo.trim(list[i]), args));
-			}
-		}
-		return parameters; //Array
-	}
+define(["dojo","dijit","dojox","dojox/wire/ml/Action"],function(_1,_2,_3){
+_1.getObject("dojox.wire.ml.Invocation",1);
+_1.declare("dojox.wire.ml.Invocation",_3.wire.ml.Action,{object:"",method:"",topic:"",parameters:"",result:"",error:"",_run:function(){
+if(this.topic){
+var _4=this._getParameters(arguments);
+try{
+_1.publish(this.topic,_4);
+this.onComplete();
+}
+catch(e){
+this.onError(e);
+}
+}else{
+if(this.method){
+var _5=(this.object?_3.wire.ml._getValue(this.object):_1.global);
+if(!_5){
+return;
+}
+var _4=this._getParameters(arguments);
+var _6=_5[this.method];
+if(!_6){
+_6=_5.callMethod;
+if(!_6){
+return;
+}
+_4=[this.method,_4];
+}
+try{
+var _7=false;
+if(_5.getFeatures){
+var _8=_5.getFeatures();
+if((this.method=="fetch"&&_8["dojo.data.api.Read"])||(this.method=="save"&&_8["dojo.data.api.Write"])){
+var _9=_4[0];
+if(!_9.onComplete){
+_9.onComplete=function(){
+};
+}
+this.connect(_9,"onComplete","onComplete");
+if(!_9.onError){
+_9.onError=function(){
+};
+}
+this.connect(_9,"onError","onError");
+_7=true;
+}
+}
+var r=_6.apply(_5,_4);
+if(!_7){
+if(r&&(r instanceof _1.Deferred)){
+var _a=this;
+r.addCallbacks(function(_b){
+_a.onComplete(_b);
+},function(_c){
+_a.onError(_c);
 });
+}else{
+this.onComplete(r);
+}
+}
+}
+catch(e){
+this.onError(e);
+}
+}
+}
+},onComplete:function(_d){
+if(this.result){
+_3.wire.ml._setValue(this.result,_d);
+}
+if(this.error){
+_3.wire.ml._setValue(this.error,"");
+}
+},onError:function(_e){
+if(this.error){
+if(_e&&_e.message){
+_e=_e.message;
+}
+_3.wire.ml._setValue(this.error,_e);
+}
+},_getParameters:function(_f){
+if(!this.parameters){
+return _f;
+}
+var _10=[];
+var _11=this.parameters.split(",");
+if(_11.length==1){
+var _12=_3.wire.ml._getValue(_1.trim(_11[0]),_f);
+if(_1.isArray(_12)){
+_10=_12;
+}else{
+_10.push(_12);
+}
+}else{
+for(var i in _11){
+_10.push(_3.wire.ml._getValue(_1.trim(_11[i]),_f));
+}
+}
+return _10;
+}});
+return _1.getObject("dojox.wire.ml.Invocation");
+});
+require(["dojox/wire/ml/Invocation"]);

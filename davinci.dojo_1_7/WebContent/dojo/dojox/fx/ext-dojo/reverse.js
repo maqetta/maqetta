@@ -1,96 +1,64 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
 define(["dojo/_base/lang","dojo/fx","dojo/fx/easing","dojox/fx"],function(){
-dojo.extend(dojo.Animation, {
-	// summary:
-	//		A dojo.Animation extension that enables an easy reversal.
-	//	description:
-	//		To use, simply require dojox.fx.ext-dojo.reverse and a reverse()
-	//		method will be added to all dojo.Animations.
-	//		It can be used at any time during the animation. It does not
-	//		need to be called when it ends. It also reverses the easing -
-	//		if dojo.fx.easing.quadIn is used, dojo.fx.easing.quadOut will
-	//		be used when animating backwards.
-	//
-	_reversed: false,
-	reverse: function(/*Boolean*/keepPaused, /*Function ? */reverseEase){
-		// summary:
-		// 		The key method added to an animation to enable reversal.
-		// 	keepPaused: Boolean
-		// 		By default, calling reverse() will play the animation if
-		// 		it was paused. Pass in true to keep it paused (will have
-		// 		no effect if reverse is called while animation is playing).
-		// 	reverseEase: Function
-		// 		A function to use for the reverse easing. This allows for
-		// 		the possibility of custom eases that are not in the dojo.fx
-		// 		library.
-		//
-		var playing = this.status() == "playing";
-		this.pause();
-		this._reversed = !this._reversed;
-		var d = this.duration,
-			sofar = d * this._percent,
-			togo = d - sofar,
-			curr = new Date().valueOf(),
-			cp = this.curve._properties,
-			p = this.properties,
-			nm
-		;
-		this._endTime = curr + sofar;
-		this._startTime = curr - togo;
-		
-		if(playing){
-			this.gotoPercent(togo / d)
-		}
-		for(nm in p){
-			var tmp = p[nm].start;
-			p[nm].start = cp[nm].start = p[nm].end;
-			p[nm].end = cp[nm].end = tmp;
-		}
-		
-		if(this._reversed){
-			if(!this.rEase){
-				this.fEase = this.easing;
-				if(reverseEase){
-					this.rEase = reverseEase;
-				}else{
-					// loop through dojo.fx.easing to find the matching ease
-					var de = dojo.fx.easing, found, eName;
-					for(nm in de){
-						if(this.easing == de[nm]){
-							// get ease's name
-							found = nm; break;
-						}
-					}
-					
-					if(found){
-						// find ease's opposite
-						if(/InOut/.test(nm) || !/In|Out/i.test(nm)){
-							this.rEase = this.easing;
-						}else if(/In/.test(nm)){
-							eName = nm.replace("In", "Out");
-						}else{
-							eName = nm.replace("Out", "In");
-						}
-						if(eName){
-							this.rEase = dojo.fx.easing[eName];
-						}
-					}else{
-						// default ease, and other's like linear do not have an opposite
-						console.info("ease function to reverse not found");
-						this.rEase = this.easing;
-					}
-				}
-				
-			}
-			this.easing = this.rEase;
-		}else{
-			this.easing = this.fEase;
-		}
-		if(!keepPaused && this.status() != "playing"){
-			this.play();
-		}
-		
-		return this;
-	}
-});
+dojo.extend(dojo.Animation,{_reversed:false,reverse:function(_1,_2){
+var _3=this.status()=="playing";
+this.pause();
+this._reversed=!this._reversed;
+var d=this.duration,_4=d*this._percent,_5=d-_4,_6=new Date().valueOf(),cp=this.curve._properties,p=this.properties,nm;
+this._endTime=_6+_4;
+this._startTime=_6-_5;
+if(_3){
+this.gotoPercent(_5/d);
+}
+for(nm in p){
+var _7=p[nm].start;
+p[nm].start=cp[nm].start=p[nm].end;
+p[nm].end=cp[nm].end=_7;
+}
+if(this._reversed){
+if(!this.rEase){
+this.fEase=this.easing;
+if(_2){
+this.rEase=_2;
+}else{
+var de=dojo.fx.easing,_8,_9;
+for(nm in de){
+if(this.easing==de[nm]){
+_8=nm;
+break;
+}
+}
+if(_8){
+if(/InOut/.test(nm)||!/In|Out/i.test(nm)){
+this.rEase=this.easing;
+}else{
+if(/In/.test(nm)){
+_9=nm.replace("In","Out");
+}else{
+_9=nm.replace("Out","In");
+}
+}
+if(_9){
+this.rEase=dojo.fx.easing[_9];
+}
+}else{
+this.rEase=this.easing;
+}
+}
+}
+this.easing=this.rEase;
+}else{
+this.easing=this.fEase;
+}
+if(!_1&&this.status()!="playing"){
+this.play();
+}
+return this;
+}});
 return dojo.Animation;
 });

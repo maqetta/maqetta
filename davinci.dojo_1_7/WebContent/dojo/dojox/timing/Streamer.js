@@ -1,90 +1,62 @@
-define(["./_base"], function(){
-	dojo.experimental("dojox.timing.Streamer");
-	dojox.timing.Streamer = function(
-		/* function */input,
-		/* function */output,
-		/* int */interval,
-		/* int */minimum,
-		/* array */initialData
-	){
-		//	summary
-		//	Streamer will take an input function that pushes N datapoints into a
-		//		queue, and will pass the next point in that queue out to an
-		//		output function at the passed interval; this way you can emulate
-		//		a constant buffered stream of data.
-		//	input: the function executed when the internal queue reaches minimumSize
-		//	output: the function executed on internal tick
-		//	interval: the interval in ms at which the output function is fired.
-		//	minimum: the minimum number of elements in the internal queue.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		var self = this;
-		var queue = [];
-
-		//	public properties
-		this.interval = interval || 1000;
-		this.minimumSize = minimum || 10;	//	latency usually == interval * minimumSize
-		this.inputFunction = input || function(q){ };
-		this.outputFunction = output || function(point){ };
-
-		//	more setup
-		var timer = new dojox.timing.Timer(this.interval);
-		var tick = function(){
-			self.onTick(self);
-
-			if(queue.length < self.minimumSize){
-				self.inputFunction(queue);
-			}
-
-			var obj = queue.shift();
-			while(typeof(obj) == "undefined" && queue.length > 0){
-				obj = queue.shift();
-			}
-			
-			//	check to see if the input function needs to be fired
-			//	stop before firing the output function
-			//	TODO: relegate this to the output function?
-			if(typeof(obj) == "undefined"){
-				self.stop();
-				return;
-			}
-
-			//	call the output function.
-			self.outputFunction(obj);
-		};
-
-		this.setInterval = function(/* int */ms){
-			//	summary
-			//	sets the interval in milliseconds of the internal timer
-			this.interval = ms;
-			timer.setInterval(ms);
-		};
-
-		this.onTick = function(/* dojox.timing.Streamer */obj){ };
-		// wrap the timer functions so that we can connect to them if needed.
-		this.start = function(){
-			//	summary
-			//	starts the Streamer
-			if(typeof(this.inputFunction) == "function" && typeof(this.outputFunction) == "function"){
-				timer.start();
-				return;
-			}
-			throw new Error("You cannot start a Streamer without an input and an output function.");
-		};
-		this.onStart = function(){ };
-		this.stop = function(){
-			//	summary
-			//	stops the Streamer
-			timer.stop();
-		};
-		this.onStop = function(){ };
-
-		//	finish initialization
-		timer.onTick = this.tick;
-		timer.onStart = this.onStart;
-		timer.onStop = this.onStop;
-		if(initialData){
-			queue.concat(initialData);
-		}
-	};
-	return dojox.timing.Streamer;
+define(["./_base"],function(){
+dojo.experimental("dojox.timing.Streamer");
+dojox.timing.Streamer=function(_1,_2,_3,_4,_5){
+var _6=this;
+var _7=[];
+this.interval=_3||1000;
+this.minimumSize=_4||10;
+this.inputFunction=_1||function(q){
+};
+this.outputFunction=_2||function(_8){
+};
+var _9=new dojox.timing.Timer(this.interval);
+var _a=function(){
+_6.onTick(_6);
+if(_7.length<_6.minimumSize){
+_6.inputFunction(_7);
+}
+var _b=_7.shift();
+while(typeof (_b)=="undefined"&&_7.length>0){
+_b=_7.shift();
+}
+if(typeof (_b)=="undefined"){
+_6.stop();
+return;
+}
+_6.outputFunction(_b);
+};
+this.setInterval=function(ms){
+this.interval=ms;
+_9.setInterval(ms);
+};
+this.onTick=function(_c){
+};
+this.start=function(){
+if(typeof (this.inputFunction)=="function"&&typeof (this.outputFunction)=="function"){
+_9.start();
+return;
+}
+throw new Error("You cannot start a Streamer without an input and an output function.");
+};
+this.onStart=function(){
+};
+this.stop=function(){
+_9.stop();
+};
+this.onStop=function(){
+};
+_9.onTick=this.tick;
+_9.onStart=this.onStart;
+_9.onStop=this.onStop;
+if(_5){
+_7.concat(_5);
+}
+};
+return dojox.timing.Streamer;
 });

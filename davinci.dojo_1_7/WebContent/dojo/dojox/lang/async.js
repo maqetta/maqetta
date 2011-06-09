@@ -1,199 +1,162 @@
-dojo.provide("dojox.lang.async");
-
-(function(){
-	var d = dojo, Deferred = d.Deferred, each = d.forEach, some = d.some,
-		async = dojox.lang.async, aps = Array.prototype.slice,
-		opts = Object.prototype.toString;
-
-	async.seq = function(x){
-		// summary:
-		//		Executes functions sequentially. Waits if any of them returns Deferred.
-		var fs = opts.call(x) == "[object Array]" ? x : arguments;
-		return function(init){
-			var x = new Deferred();
-			each(fs, function(f){ x.addCallback(f); });
-			x.callback(init);
-			return x;
-		};
-	};
-
-	async.par = function(x){
-		// summary:
-		//		Executes functions in parallel. Waits for all of them to finish.
-		var fs = opts.call(x) == "[object Array]" ? x : arguments;
-		return function(init){
-			var results = new Array(fs.length),
-				cancel = function(){
-					each(results, function(v){
-						if(v instanceof Deferred && v.fired < 0){
-							v.cancel();
-						}
-					});
-				},
-				x = new Deferred(cancel),
-				ready = fs.length;
-			each(fs, function(f, i){
-				var x;
-				try {
-					x = f(init);
-				}catch(e){
-					x = e;
-				}
-				results[i] = x;
-			});
-			var failed = some(results, function(v){
-				if(v instanceof Error){
-					cancel();
-					x.errback(v);
-					return true;
-				}
-				return false;
-			});
-			if(!failed){
-				each(results, function(v, i){
-					if(v instanceof Deferred){
-						v.addCallbacks(
-							function(v){
-								results[i] = v;
-								if(!--ready){
-									x.callback(results);
-								}
-							},
-							function(v){
-								cancel();
-								x.errback(v);
-							}
-						);
-					}else{
-						--ready;
-					}
-				});
-			}
-			if(!ready){
-				x.callback(results);
-			}
-			return x;
-		};
-	};
-
-	async.any = function(x){
-		// summary:
-		//		Executes functions in parallel. As soon as one of them finishes
-		//		cancels the rest.
-		var fs = opts.call(x) == "[object Array]" ? x : arguments;
-		return function(init){
-			var results = new Array(fs.length), noResult = true;
-				cancel = function(index){
-					each(results, function(v, i){
-						if(i != index && v instanceof Deferred && v.fired < 0){
-							v.cancel();
-						}
-					});
-				},
-				x = new Deferred(cancel);
-			each(fs, function(f, i){
-				var x;
-				try {
-					x = f(init);
-				}catch(e){
-					x = e;
-				}
-				results[i] = x;
-			});
-			var done = some(results, function(v, i){
-				if(!(v instanceof Deferred)){
-					cancel(i);
-					x.callback(v);
-					return true;
-				}
-				return false;
-			});
-			if(!done){
-				each(results, function(v, i){
-					v.addBoth(
-						function(v){
-							if(noResult){
-								noResult = false;
-								cancel(i);
-								x.callback(v);
-							}
-						}
-					);
-				});
-			}
-			return x;
-		};
-	};
-
-	async.select = function(cond, x){
-		// summary:
-		//		Executes a condition, waits for it if necessary, and executes
-		//		Nth function from list.
-		var fs = opts.call(x) == "[object Array]" ? x : aps.call(arguments, 1);
-		return function(init){
-			return new Deferred().addCallback(cond).addCallback(function(v){
-				if(typeof v == "number" && v >= 0 && v < fs.length){
-					return fs[v](init);
-				}else{
-					return new Error("async.select: out of range");
-				}
-			}).callback(init);
-		};
-	};
-
-	async.ifThen = function(cond, ifTrue, ifFalse){
-		// summary:
-		//		Executes a condition, waits for it if necessary, and executes
-		//		one of two functions.
-		return function(init){
-			return new Deferred().addCallback(cond).addCallback(function(v){
-				return (v ? ifTrue : ifFalse)(init);
-			}).callback(init);
-		};
-	};
-
-	async.loop = function(cond, body){
-		// summary:
-		//		Executes a condition, waits for it if necessary, and executes
-		//		the body, if truthy value was returned.
-		//		Then it repeats the cycle until the condition function returns
-		//		a falsy value.
-		return function(init){
-			var x, y = new Deferred(function(){ x.cancel(); });
-			function ifErr(v){ y.errback(v); }
-			function loop(v){
-				if(v){
-					x.addCallback(body).addCallback(setUp);
-				}else{
-					y.callback(v);
-				}
-				return v;
-			}
-			function setUp(init){
-				x = new Deferred().
-					addCallback(cond).
-					addCallback(loop).
-					addErrback(ifErr);
-				x.callback(init);
-			}
-			setUp(init);
-			return y;
-		};
-	};
-})();
-
 /*
-Design decisions:
-
-seq() - behaves like the normal Deferred callback chain.
-
-par() - if error, all pending Deferreds are cancelled and the error is signaled,
-otherwise return an array of all results.
-
-any() - just like par() but only one result is returned.
-
-select() - any error is returned, otherwise the selected result is returned.
-
-loop() - any error is returned, otherwise the last result is returned.
-
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
+
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.lang.async",1);
+(function(){
+var d=_1,_4=d.Deferred,_5=d.forEach,_6=d.some,_7=_3.lang.async,_8=Array.prototype.slice,_9=Object.prototype.toString;
+_7.seq=function(x){
+var fs=_9.call(x)=="[object Array]"?x:arguments;
+return function(_a){
+var x=new _4();
+_5(fs,function(f){
+x.addCallback(f);
+});
+x.callback(_a);
+return x;
+};
+};
+_7.par=function(x){
+var fs=_9.call(x)=="[object Array]"?x:arguments;
+return function(_b){
+var _c=new Array(fs.length),_d=function(){
+_5(_c,function(v){
+if(v instanceof _4&&v.fired<0){
+v.cancel();
+}
+});
+},x=new _4(_d),_e=fs.length;
+_5(fs,function(f,i){
+var x;
+try{
+x=f(_b);
+}
+catch(e){
+x=e;
+}
+_c[i]=x;
+});
+var _f=_6(_c,function(v){
+if(v instanceof Error){
+_d();
+x.errback(v);
+return true;
+}
+return false;
+});
+if(!_f){
+_5(_c,function(v,i){
+if(v instanceof _4){
+v.addCallbacks(function(v){
+_c[i]=v;
+if(!--_e){
+x.callback(_c);
+}
+},function(v){
+_d();
+x.errback(v);
+});
+}else{
+--_e;
+}
+});
+}
+if(!_e){
+x.callback(_c);
+}
+return x;
+};
+};
+_7.any=function(x){
+var fs=_9.call(x)=="[object Array]"?x:arguments;
+return function(_10){
+var _11=new Array(fs.length),_12=true;
+cancel=function(_13){
+_5(_11,function(v,i){
+if(i!=_13&&v instanceof _4&&v.fired<0){
+v.cancel();
+}
+});
+},x=new _4(cancel);
+_5(fs,function(f,i){
+var x;
+try{
+x=f(_10);
+}
+catch(e){
+x=e;
+}
+_11[i]=x;
+});
+var _14=_6(_11,function(v,i){
+if(!(v instanceof _4)){
+cancel(i);
+x.callback(v);
+return true;
+}
+return false;
+});
+if(!_14){
+_5(_11,function(v,i){
+v.addBoth(function(v){
+if(_12){
+_12=false;
+cancel(i);
+x.callback(v);
+}
+});
+});
+}
+return x;
+};
+};
+_7.select=function(_15,x){
+var fs=_9.call(x)=="[object Array]"?x:_8.call(arguments,1);
+return function(_16){
+return new _4().addCallback(_15).addCallback(function(v){
+if(typeof v=="number"&&v>=0&&v<fs.length){
+return fs[v](_16);
+}else{
+return new Error("async.select: out of range");
+}
+}).callback(_16);
+};
+};
+_7.ifThen=function(_17,_18,_19){
+return function(_1a){
+return new _4().addCallback(_17).addCallback(function(v){
+return (v?_18:_19)(_1a);
+}).callback(_1a);
+};
+};
+_7.loop=function(_1b,_1c){
+return function(_1d){
+var x,y=new _4(function(){
+x.cancel();
+});
+function _1e(v){
+y.errback(v);
+};
+function _1f(v){
+if(v){
+x.addCallback(_1c).addCallback(_20);
+}else{
+y.callback(v);
+}
+return v;
+};
+function _20(_21){
+x=new _4().addCallback(_1b).addCallback(_1f).addErrback(_1e);
+x.callback(_21);
+};
+_20(_1d);
+return y;
+};
+};
+})();
+return _1.getObject("dojox.lang.async");
+});
+require(["dojox/lang/async"]);

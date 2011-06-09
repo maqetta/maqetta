@@ -1,392 +1,324 @@
-define(['dojo/_base/array'], function(dojo){
-dojo.getObject("xml", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
+define(["dojo/_base/array"],function(_1){
+_1.getObject("xml",true,dojox);
 dojox.xml.DomParser=new (function(){
-	/**********************************************************
-	 *	The DomParser is a close-to (but not entirely)
-	 *	conforming XML parser based on regular
-	 *	expressions.  It will take any XML fragment
-	 *	and return a lightweight JS structure that is
-	 *	similar to (but not exactly) the DOM specification.
-	 *
-	 *	Getter and setter methods are NOT available; the goal
-	 *	was to keep the resulting object model entirely JS-like.
-	 *
-	 *	All node types but document fragments are supported;
-	 *	all nodes support getElementsByTagName and
-	 *	getElementsByTagNameNS (with short names byName and
-	 *	byNameNS).  The document node supports getElementById
-	 *	(byId), and all nodes support a supplimental
-	 *	childrenByName/childrenByNameNS method as well.
-	 *
-	 *	The object model is intended to be a READONLY format;
-	 *	mutation events are NOT supported, and though you
-	 *	can change properties on a node-by-node basis, certain
-	 *	operations are not supported (such as changing the ID
-	 *	of an element).
-	 **********************************************************/
-
-	//	internal use only.
-	var nodeTypes={ ELEMENT:1, ATTRIBUTE:2, TEXT:3, CDATA_SECTION:4, PROCESSING_INSTRUCTION:7, COMMENT:8, DOCUMENT:9 };
-
-	//	compile the regular expressions once.
-	var reTags=/<([^>\/\s+]*)([^>]*)>([^<]*)/g;
-	var reAttr=/([^=]*)=(("([^"]*)")|('([^']*)'))/g;	//	patch from tdedischew AT gmail, with additional grouping
-	var reEntity=/<!ENTITY\s+([^"]*)\s+"([^"]*)">/g;
-	var reCData=/<!\[CDATA\[([\u0001-\uFFFF]*?)\]\]>/g;
-	var reComments=/<!--([\u0001-\uFFFF]*?)-->/g;
-	var trim=/^\s+|\s+$/g;
-	var normalize=/\s+/g;
-	var egt=/\&gt;/g;
-	var elt=/\&lt;/g;
-	var equot=/\&quot;/g;
-	var eapos=/\&apos;/g;
-	var eamp=/\&amp;/g;
-	var dNs="_def_";
-
-	//	create a root node.
-	function _doc(){
-		return new (function(){
-			var all={};
-			this.nodeType=nodeTypes.DOCUMENT;
-			this.nodeName="#document";
-			this.namespaces={};
-			this._nsPaths={};
-			this.childNodes=[];
-			this.documentElement=null;
-
-			//	any element with an ID attribute will be added to the internal hashtable.
-			this._add=function(obj){
-				if(typeof(obj.id)!="undefined"){ all[obj.id]=obj; }
-			};
-			this._remove=function(id){
-				if(all[id]){ delete all[id]; }
-			};
-
-			this.byId=this.getElementById=function(id){ return all[id]; };
-			this.byName=this.getElementsByTagName=byName;
-			this.byNameNS=this.getElementsByTagNameNS=byNameNS;
-			this.childrenByName=childrenByName;
-			this.childrenByNameNS=childrenByNameNS;
-		})();
-	}
-
-	//	functions attached to element nodes
-	function byName(name){
-		//	return all descendants with name.  Fully qualified (i.e. svg:svg)
-		function __(node, name, arr){
-			dojo.forEach(node.childNodes, function(c){
-				if(c.nodeType==nodeTypes.ELEMENT){
-					if(name=="*"){ arr.push(c); }
-					else if(c.nodeName==name){ arr.push(c); }
-					__(c, name, arr);
-				}
-			});
-		}
-		var a=[];
-		__(this, name, a);
-		return a;
-	}
-	function byNameNS(name, ns){
-		//	return all descendants with name by namespace.  If no namespace passed, the default is used.
-		function __(node, name, ns, arr){
-			dojo.forEach(node.childNodes, function(c){
-				if(c.nodeType==nodeTypes.ELEMENT){
-					if(name=="*"&&c.ownerDocument._nsPaths[ns]==c.namespace){ arr.push(c); }
-					else if(c.localName==name&&c.ownerDocument._nsPaths[ns]==c.namespace){ arr.push(c); }
-					__(c, name, ns, arr);
-				}
-			});
-		}
-		if(!ns){ ns=dNs; }
-		var a=[];
-		__(this, name, ns, a);
-		return a;
-	}
-	//	Only child nodes with name.
-	function childrenByName(name){
-		var a=[];
-		dojo.forEach(this.childNodes, function(c){
-			if(c.nodeType==nodeTypes.ELEMENT){
-				if(name=="*"){ a.push(c); }
-				else if(c.nodeName==name){ a.push(c); }
-			}
-		});
-		return a;
-	}
-
-	function childrenByNameNS(name, ns){
-		var a=[];
-		dojo.forEach(this.childNodes, function(c){
-			if(c.nodeType==nodeTypes.ELEMENT){
-				if(name=="*"&&c.ownerDocument._nsPaths[ns]==c.namespace){ a.push(c); }
-				else if(c.localName==name&&c.ownerDocument._nsPaths[ns]==c.namespace){ a.push(c); }
-			}
-		});
-		return a;
-	}
-
-	function _createTextNode(v){
-		return {
-			nodeType:nodeTypes.TEXT,
-			nodeName:"#text",
-			nodeValue:v.replace(normalize," ").replace(egt,">").replace(elt,"<").replace(eapos,"'").replace(equot,'"').replace(eamp,"&")
-		};
-	}
-
-	//	attribute functions
-	function getAttr(name){
-		for(var i=0; i<this.attributes.length; i++){
-			if(this.attributes[i].nodeName==name){
-				return this.attributes[i].nodeValue;
-			}
-		}
-		return null;
-	}
-	function getAttrNS(name, ns){
-		for(var i=0; i<this.attributes.length; i++){
-			if(this.ownerDocument._nsPaths[ns]==this.attributes[i].namespace
-				&&this.attributes[i].localName==name
-			){
-				return this.attributes[i].nodeValue;
-			}
-		}
-		return null;
-	}
-	//	note that you can only swap IDs using setAttribute, NOT with setAttributeNS.
-	function setAttr(name, val){
-		var old=null;
-		for(var i=0; i<this.attributes.length; i++){
-			if(this.attributes[i].nodeName==name){
-				old=this.attributes[i].nodeValue;
-				this.attributes[i].nodeValue=val;
-				break;
-			}
-		}
-		if(name=="id"){
-			if(old!=null){ this.ownerDocument._remove(old); }
-			this.ownerDocument._add(this);
-		}
-	}
-	function setAttrNS(name, val, ns){
-		for(var i=0; i<this.attributes.length; i++){
-			if(this.ownerDocument._nsPaths[ns]==this.attributes[i].namespace
-				&&this.attributes[i].localName==name
-			){
-				this.attributes[i].nodeValue=val;
-				return;
-			}
-		}
-	}
-
-	//	navigation
-	function prev(){
-		var p=this.parentNode;
-		if(p){
-			for(var i=0;i<p.childNodes.length;i++){
-				if(p.childNodes[i]==this&&i>0){
-					return p.childNodes[i-1];
-				}
-			}
-		}
-		return null;
-	}
-	function next(){
-		var p=this.parentNode;
-		if(p){
-			for(var i=0;i<p.childNodes.length;i++){
-				if(p.childNodes[i]==this&&(i+1)<p.childNodes.length){
-					return p.childNodes[i+1];
-				}
-			}
-		}
-		return null;
-	}
-
-	//	the main method.
-	this.parse=function(/* String */str){
-		var root=_doc();
-		if(str==null){ return root; }
-		if(str.length==0){ return root; }
-
-		//	preprocess custom entities
-		if(str.indexOf("<!ENTITY")>0){
-			var entity, eRe=[];
-			if(reEntity.test(str)){
-				reEntity.lastIndex=0;
-				//	match entities
-				while((entity=reEntity.exec(str))!=null){
-					eRe.push({
-						entity:"&"+entity[1].replace(trim,"")+";",
-						expression:entity[2]
-					});
-				}
-				//	replace instances in the document.
-				for(var i=0; i<eRe.length; i++){
-					str=str.replace(new RegExp(eRe[i].entity, "g"), eRe[i].expression);
-				}
-			}
-		}
-
-		//	pre-parse for CData, and tokenize.
-		var cdSections=[], cdata;
-		while((cdata=reCData.exec(str))!=null){ cdSections.push(cdata[1]); }
-		for(var i=0; i<cdSections.length; i++){ str=str.replace(cdSections[i], i); }
-		
-		//	pre-parse for comments, and tokenize.
-		var comments=[], comment;
-		while((comment=reComments.exec(str))!=null){ comments.push(comment[1]); }
-		for(i=0; i<comments.length; i++){ str=str.replace(comments[i], i); }
-
-		//	parse the document
-		var res, obj=root;
-		while((res=reTags.exec(str))!=null){
-			//	closing tags.
-			if(res[2].charAt(0)=="/" && res[2].replace(trim, "").length>1){
-				if(obj.parentNode){
-					obj=obj.parentNode;
-				}
-				var text=(res[3]||"").replace(trim, "");
-				if(text.length>0) {
-					obj.childNodes.push(_createTextNode(text));
-				}
-			}
-
-			//	open tags.
-			else if(res[1].length>0){
-				//	figure out the type of node.
-				if(res[1].charAt(0)=="?"){
-					//	processing instruction
-					var name=res[1].substr(1);
-					var target=res[2].substr(0,res[2].length-2);
-					obj.childNodes.push({
-						nodeType:nodeTypes.PROCESSING_INSTRUCTION,
-						nodeName:name,
-						nodeValue:target
-					});
-				}
-				else if(res[1].charAt(0)=="!"){
-					//	CDATA; skip over any declaration elements.
-					if(res[1].indexOf("![CDATA[")==0){
-						var val=parseInt(res[1].replace("![CDATA[","").replace("]]",""));
-						obj.childNodes.push({
-							nodeType:nodeTypes.CDATA_SECTION,
-							nodeName:"#cdata-section",
-							nodeValue:cdSections[val]
-						});
-					}
-					//	Comments.
-					else if(res[1].substr(0,3)=="!--"){
-						var val=parseInt(res[1].replace("!--","").replace("--",""));
-						obj.childNodes.push({
-							nodeType:nodeTypes.COMMENT,
-							nodeName:"#comment",
-							nodeValue:comments[val]
-						});
-					}
-				}
-				else {
-					//	Elements (with attribute and text)
-					var name=res[1].replace(trim,"");
-					var o={
-						nodeType:nodeTypes.ELEMENT,
-						nodeName:name,
-						localName:name,
-						namespace:dNs,
-						ownerDocument:root,
-						attributes:[],
-						parentNode:null,
-						childNodes:[]
-					};
-
-					//	check to see if it's namespaced.
-					if(name.indexOf(":")>-1){
-						var t=name.split(":");
-						o.namespace=t[0];
-						o.localName=t[1];
-					}
-
-					//	set the function references.
-					o.byName=o.getElementsByTagName=byName;
-					o.byNameNS=o.getElementsByTagNameNS=byNameNS;
-					o.childrenByName=childrenByName;
-					o.childrenByNameNS=childrenByNameNS;
-					o.getAttribute=getAttr;
-					o.getAttributeNS=getAttrNS;
-					o.setAttribute=setAttr;
-					o.setAttributeNS=setAttrNS;
-					o.previous=o.previousSibling=prev;
-					o.next=o.nextSibling=next;
-
-					//	parse the attribute string.
-					var attr;
-					while((attr=reAttr.exec(res[2]))!=null){
-						if(attr.length>0){
-							var name=attr[1].replace(trim,"");
-							var val=(attr[4]||attr[6]||"").replace(normalize," ")
-								.replace(egt,">")
-								.replace(elt,"<")
-								.replace(eapos,"'")
-								.replace(equot,'"')
-								.replace(eamp,"&");
-							if(name.indexOf("xmlns")==0){
-								if(name.indexOf(":")>0){
-									var ns=name.split(":");
-									root.namespaces[ns[1]]=val;
-									root._nsPaths[val]=ns[1];
-								} else {
-									root.namespaces[dNs]=val;
-									root._nsPaths[val]=dNs;
-								}
-							} else {
-								var ln=name;
-								var ns=dNs;
-								if(name.indexOf(":")>0){
-									var t=name.split(":");
-									ln=t[1];
-									ns=t[0];
-								}
-								o.attributes.push({
-									nodeType:nodeTypes.ATTRIBUTE,
-									nodeName:name,
-									localName:ln,
-									namespace:ns,
-									nodeValue:val
-								});
-
-								//	only add id as a property.
-								if(ln=="id"){ o.id=val; }
-							}
-						}
-					}
-					root._add(o);
-
-					if(obj){
-						obj.childNodes.push(o);
-						o.parentNode=obj;
-						//	if it's not a self-closing node.
-						if(res[2].charAt(res[2].length-1)!="/"){
-							obj=o;
-						}
-					}
-					var text=res[3];
-					if(text.length>0){
-						obj.childNodes.push(_createTextNode(text));
-					}
-				}
-			}
-		}
-
-		//	set the document element
-		for(var i=0; i<root.childNodes.length; i++){
-			var e=root.childNodes[i];
-			if(e.nodeType==nodeTypes.ELEMENT){
-				root.documentElement=e;
-				break;
-			}
-		}
-		return root;
-	};
+var _2={ELEMENT:1,ATTRIBUTE:2,TEXT:3,CDATA_SECTION:4,PROCESSING_INSTRUCTION:7,COMMENT:8,DOCUMENT:9};
+var _3=/<([^>\/\s+]*)([^>]*)>([^<]*)/g;
+var _4=/([^=]*)=(("([^"]*)")|('([^']*)'))/g;
+var _5=/<!ENTITY\s+([^"]*)\s+"([^"]*)">/g;
+var _6=/<!\[CDATA\[([\u0001-\uFFFF]*?)\]\]>/g;
+var _7=/<!--([\u0001-\uFFFF]*?)-->/g;
+var _8=/^\s+|\s+$/g;
+var _9=/\s+/g;
+var _a=/\&gt;/g;
+var _b=/\&lt;/g;
+var _c=/\&quot;/g;
+var _d=/\&apos;/g;
+var _e=/\&amp;/g;
+var _f="_def_";
+function _10(){
+return new (function(){
+var all={};
+this.nodeType=_2.DOCUMENT;
+this.nodeName="#document";
+this.namespaces={};
+this._nsPaths={};
+this.childNodes=[];
+this.documentElement=null;
+this._add=function(obj){
+if(typeof (obj.id)!="undefined"){
+all[obj.id]=obj;
+}
+};
+this._remove=function(id){
+if(all[id]){
+delete all[id];
+}
+};
+this.byId=this.getElementById=function(id){
+return all[id];
+};
+this.byName=this.getElementsByTagName=_11;
+this.byNameNS=this.getElementsByTagNameNS=_12;
+this.childrenByName=_13;
+this.childrenByNameNS=_14;
+})();
+};
+function _11(_15){
+function _16(_17,_18,arr){
+_1.forEach(_17.childNodes,function(c){
+if(c.nodeType==_2.ELEMENT){
+if(_18=="*"){
+arr.push(c);
+}else{
+if(c.nodeName==_18){
+arr.push(c);
+}
+}
+_16(c,_18,arr);
+}
+});
+};
+var a=[];
+_16(this,_15,a);
+return a;
+};
+function _12(_19,ns){
+function _1a(_1b,_1c,ns,arr){
+_1.forEach(_1b.childNodes,function(c){
+if(c.nodeType==_2.ELEMENT){
+if(_1c=="*"&&c.ownerDocument._nsPaths[ns]==c.namespace){
+arr.push(c);
+}else{
+if(c.localName==_1c&&c.ownerDocument._nsPaths[ns]==c.namespace){
+arr.push(c);
+}
+}
+_1a(c,_1c,ns,arr);
+}
+});
+};
+if(!ns){
+ns=_f;
+}
+var a=[];
+_1a(this,_19,ns,a);
+return a;
+};
+function _13(_1d){
+var a=[];
+_1.forEach(this.childNodes,function(c){
+if(c.nodeType==_2.ELEMENT){
+if(_1d=="*"){
+a.push(c);
+}else{
+if(c.nodeName==_1d){
+a.push(c);
+}
+}
+}
+});
+return a;
+};
+function _14(_1e,ns){
+var a=[];
+_1.forEach(this.childNodes,function(c){
+if(c.nodeType==_2.ELEMENT){
+if(_1e=="*"&&c.ownerDocument._nsPaths[ns]==c.namespace){
+a.push(c);
+}else{
+if(c.localName==_1e&&c.ownerDocument._nsPaths[ns]==c.namespace){
+a.push(c);
+}
+}
+}
+});
+return a;
+};
+function _1f(v){
+return {nodeType:_2.TEXT,nodeName:"#text",nodeValue:v.replace(_9," ").replace(_a,">").replace(_b,"<").replace(_d,"'").replace(_c,"\"").replace(_e,"&")};
+};
+function _20(_21){
+for(var i=0;i<this.attributes.length;i++){
+if(this.attributes[i].nodeName==_21){
+return this.attributes[i].nodeValue;
+}
+}
+return null;
+};
+function _22(_23,ns){
+for(var i=0;i<this.attributes.length;i++){
+if(this.ownerDocument._nsPaths[ns]==this.attributes[i].namespace&&this.attributes[i].localName==_23){
+return this.attributes[i].nodeValue;
+}
+}
+return null;
+};
+function _24(_25,val){
+var old=null;
+for(var i=0;i<this.attributes.length;i++){
+if(this.attributes[i].nodeName==_25){
+old=this.attributes[i].nodeValue;
+this.attributes[i].nodeValue=val;
+break;
+}
+}
+if(_25=="id"){
+if(old!=null){
+this.ownerDocument._remove(old);
+}
+this.ownerDocument._add(this);
+}
+};
+function _26(_27,val,ns){
+for(var i=0;i<this.attributes.length;i++){
+if(this.ownerDocument._nsPaths[ns]==this.attributes[i].namespace&&this.attributes[i].localName==_27){
+this.attributes[i].nodeValue=val;
+return;
+}
+}
+};
+function _28(){
+var p=this.parentNode;
+if(p){
+for(var i=0;i<p.childNodes.length;i++){
+if(p.childNodes[i]==this&&i>0){
+return p.childNodes[i-1];
+}
+}
+}
+return null;
+};
+function _29(){
+var p=this.parentNode;
+if(p){
+for(var i=0;i<p.childNodes.length;i++){
+if(p.childNodes[i]==this&&(i+1)<p.childNodes.length){
+return p.childNodes[i+1];
+}
+}
+}
+return null;
+};
+this.parse=function(str){
+var _2a=_10();
+if(str==null){
+return _2a;
+}
+if(str.length==0){
+return _2a;
+}
+if(str.indexOf("<!ENTITY")>0){
+var _2b,eRe=[];
+if(_5.test(str)){
+_5.lastIndex=0;
+while((_2b=_5.exec(str))!=null){
+eRe.push({entity:"&"+_2b[1].replace(_8,"")+";",expression:_2b[2]});
+}
+for(var i=0;i<eRe.length;i++){
+str=str.replace(new RegExp(eRe[i].entity,"g"),eRe[i].expression);
+}
+}
+}
+var _2c=[],_2d;
+while((_2d=_6.exec(str))!=null){
+_2c.push(_2d[1]);
+}
+for(var i=0;i<_2c.length;i++){
+str=str.replace(_2c[i],i);
+}
+var _2e=[],_2f;
+while((_2f=_7.exec(str))!=null){
+_2e.push(_2f[1]);
+}
+for(i=0;i<_2e.length;i++){
+str=str.replace(_2e[i],i);
+}
+var res,obj=_2a;
+while((res=_3.exec(str))!=null){
+if(res[2].charAt(0)=="/"&&res[2].replace(_8,"").length>1){
+if(obj.parentNode){
+obj=obj.parentNode;
+}
+var _30=(res[3]||"").replace(_8,"");
+if(_30.length>0){
+obj.childNodes.push(_1f(_30));
+}
+}else{
+if(res[1].length>0){
+if(res[1].charAt(0)=="?"){
+var _31=res[1].substr(1);
+var _32=res[2].substr(0,res[2].length-2);
+obj.childNodes.push({nodeType:_2.PROCESSING_INSTRUCTION,nodeName:_31,nodeValue:_32});
+}else{
+if(res[1].charAt(0)=="!"){
+if(res[1].indexOf("![CDATA[")==0){
+var val=parseInt(res[1].replace("![CDATA[","").replace("]]",""));
+obj.childNodes.push({nodeType:_2.CDATA_SECTION,nodeName:"#cdata-section",nodeValue:_2c[val]});
+}else{
+if(res[1].substr(0,3)=="!--"){
+var val=parseInt(res[1].replace("!--","").replace("--",""));
+obj.childNodes.push({nodeType:_2.COMMENT,nodeName:"#comment",nodeValue:_2e[val]});
+}
+}
+}else{
+var _31=res[1].replace(_8,"");
+var o={nodeType:_2.ELEMENT,nodeName:_31,localName:_31,namespace:_f,ownerDocument:_2a,attributes:[],parentNode:null,childNodes:[]};
+if(_31.indexOf(":")>-1){
+var t=_31.split(":");
+o.namespace=t[0];
+o.localName=t[1];
+}
+o.byName=o.getElementsByTagName=_11;
+o.byNameNS=o.getElementsByTagNameNS=_12;
+o.childrenByName=_13;
+o.childrenByNameNS=_14;
+o.getAttribute=_20;
+o.getAttributeNS=_22;
+o.setAttribute=_24;
+o.setAttributeNS=_26;
+o.previous=o.previousSibling=_28;
+o.next=o.nextSibling=_29;
+var _33;
+while((_33=_4.exec(res[2]))!=null){
+if(_33.length>0){
+var _31=_33[1].replace(_8,"");
+var val=(_33[4]||_33[6]||"").replace(_9," ").replace(_a,">").replace(_b,"<").replace(_d,"'").replace(_c,"\"").replace(_e,"&");
+if(_31.indexOf("xmlns")==0){
+if(_31.indexOf(":")>0){
+var ns=_31.split(":");
+_2a.namespaces[ns[1]]=val;
+_2a._nsPaths[val]=ns[1];
+}else{
+_2a.namespaces[_f]=val;
+_2a._nsPaths[val]=_f;
+}
+}else{
+var ln=_31;
+var ns=_f;
+if(_31.indexOf(":")>0){
+var t=_31.split(":");
+ln=t[1];
+ns=t[0];
+}
+o.attributes.push({nodeType:_2.ATTRIBUTE,nodeName:_31,localName:ln,namespace:ns,nodeValue:val});
+if(ln=="id"){
+o.id=val;
+}
+}
+}
+}
+_2a._add(o);
+if(obj){
+obj.childNodes.push(o);
+o.parentNode=obj;
+if(res[2].charAt(res[2].length-1)!="/"){
+obj=o;
+}
+}
+var _30=res[3];
+if(_30.length>0){
+obj.childNodes.push(_1f(_30));
+}
+}
+}
+}
+}
+}
+for(var i=0;i<_2a.childNodes.length;i++){
+var e=_2a.childNodes[i];
+if(e.nodeType==_2.ELEMENT){
+_2a.documentElement=e;
+break;
+}
+}
+return _2a;
+};
 })();
 return dojox.xml.DomParser;
 });

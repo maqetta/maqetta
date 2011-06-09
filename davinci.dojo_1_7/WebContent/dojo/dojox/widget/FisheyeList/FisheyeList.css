@@ -8,21 +8,17 @@
 	display: none;
 	white-space:pre; 
 }
-
 .dojoxFisheyeListItemLabel.dojoxFishSelected {
 	display: block;
 }
-
 .dojoxFisheyeListItemImage {
 	border: 0px;
 	position: absolute;
 }
-
 .dojoxFisheyeListItem {
 	position: absolute;
 	z-index: 2;
 }
-
 .dojoxFisheyeListBar {
 	position: relative;
 }

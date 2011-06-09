@@ -1,71 +1,34 @@
-define([
-	"dojo/_base/kernel", // dojo.experimental
-	"../..",
-	"../_Plugin",
-	"../../form/ToggleButton",
-	"dojo/_base/connect", // dojo.subscribe
-	"dojo/_base/declare" // dojo.declare
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/_editor/plugins/TabIndent
-	// summary:
-	//		This plugin is used to allow the use of the tab and shift-tab keys
-	//		to indent/outdent list items.  This overrides the default behavior
-	//		of moving focus from/to the toolbar
-
-
-	dojo.experimental("dijit._editor.plugins.TabIndent");
-
-
-	dojo.declare("dijit._editor.plugins.TabIndent", dijit._editor._Plugin, {
-		// summary:
-		//		This plugin is used to allow the use of the tab and shift-tab keys
-		//		to indent/outdent list items.  This overrides the default behavior
-		//		of moving focus from/to the toolbar
-
-		// Override _Plugin.useDefaultCommand... processing is handled by this plugin, not by dijit.Editor.
-		useDefaultCommand: false,
-
-		// Override _Plugin.buttonClass to use a ToggleButton for this plugin rather than a vanilla Button
-		buttonClass: dijit.form.ToggleButton,
-
-		command: "tabIndent",
-
-		_initButton: function(){
-			// Override _Plugin._initButton() to setup listener on button click
-			this.inherited(arguments);
-
-			var e = this.editor;
-			this.connect(this.button, "onChange", function(val){
-				e.set("isTabIndent", val);
-			});
-
-			// Set initial checked state of button based on Editor.isTabIndent
-			this.updateState();
-		},
-
-		updateState: function(){
-			// Overrides _Plugin.updateState().
-			// Ctrl-m in the editor will switch tabIndent mode on/off, so we need to react to that.
-			var disabled = this.get("disabled");
-			this.button.set("disabled", disabled);
-			if(disabled){
-				return;
-			}
-			this.button.set('checked', this.editor.isTabIndent, false);
-		}
-	});
-
-	// Register this plugin.
-	dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-		if(o.plugin){ return; }
-		switch(o.args.name){
-		case "tabIndent":
-			o.plugin = new dijit._editor.plugins.TabIndent({command: o.args.name});
-		}
-	});
-
-
-	return dijit._editor.plugins.TabIndent;
+define("dijit/_editor/plugins/TabIndent",["dojo/_base/kernel","../..","../_Plugin","../../form/ToggleButton","dojo/_base/connect","dojo/_base/declare"],function(_1,_2){
+_1.experimental("dijit._editor.plugins.TabIndent");
+_1.declare("dijit._editor.plugins.TabIndent",_2._editor._Plugin,{useDefaultCommand:false,buttonClass:_2.form.ToggleButton,command:"tabIndent",_initButton:function(){
+this.inherited(arguments);
+var e=this.editor;
+this.connect(this.button,"onChange",function(_3){
+e.set("isTabIndent",_3);
+});
+this.updateState();
+},updateState:function(){
+var _4=this.get("disabled");
+this.button.set("disabled",_4);
+if(_4){
+return;
+}
+this.button.set("checked",this.editor.isTabIndent,false);
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+switch(o.args.name){
+case "tabIndent":
+o.plugin=new _2._editor.plugins.TabIndent({command:o.args.name});
+}
+});
+return _2._editor.plugins.TabIndent;
 });

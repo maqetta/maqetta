@@ -1,4 +1,4 @@
-/* dojox.mobile.TabBarButton */
+
 .dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
 	left: auto;
 }
@@ -11,7 +11,7 @@
 .mblTabContainer .mblTabButtonSelected {
 	background-image: url(compat/tab-sel-button-bg.png);
 }
-*html .mblTabButton { /* IE6 hack */
+*html .mblTabButton { 
 	behavior: expression(
 		(function(el){
 			if(!el.previousSibling)

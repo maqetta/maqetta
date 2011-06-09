@@ -1,47 +1,49 @@
-define(["dojo/_base/kernel","dojo/_base/lang","../_base"], function(dojo,dlang,dxa){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// window startup data
-	dxa.plugins.mouseClick = new (function(){
-		this.addData = dojo.hitch(dxa, "addData", "mouseClick");
-
-		this.onClick=function(e){
-			this.addData(this.trimEvent(e));
-		}
-		dojo.connect(dojo.doc, "onclick", this, "onClick");
-
-		this.trimEvent=function(e){
-			var t = {};
-			for (var i in e){
-				switch(i){
-					case "target":
-					case "originalTarget":
-					case "explicitOriginalTarget":
-						var props=["id","className","nodeName", "localName","href", "spellcheck", "lang"];
-						t[i]={};
-						for(var j=0;j<props.length;j++){
-							if(e[i][props[j]]){
-								if (props[j]=="text" || props[j]=="textContent"){
-									if ((e[i]["localName"]!="HTML")&&(e[i]["localName"]!="BODY")){
-										t[i][props[j]]=e[i][props[j]].substr(0,50);
-									}
-								}else{
-									t[i][props[j]]=e[i][props[j]];
-								}
-							}
-						}
-						break;
-					case "clientX":
-					case "clientY":
-					case "pageX":
-					case "pageY":
-					case "screenX":
-					case "screenY":
-						t[i]=e[i];
-						break;
-				}
-			}
-			return t;
-		}
-	})();
-	return dojox.analytics.plugins.mouseClick;
+define(["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
+_3.plugins.mouseClick=new (function(){
+this.addData=_1.hitch(_3,"addData","mouseClick");
+this.onClick=function(e){
+this.addData(this.trimEvent(e));
+};
+_1.connect(_1.doc,"onclick",this,"onClick");
+this.trimEvent=function(e){
+var t={};
+for(var i in e){
+switch(i){
+case "target":
+case "originalTarget":
+case "explicitOriginalTarget":
+var _4=["id","className","nodeName","localName","href","spellcheck","lang"];
+t[i]={};
+for(var j=0;j<_4.length;j++){
+if(e[i][_4[j]]){
+if(_4[j]=="text"||_4[j]=="textContent"){
+if((e[i]["localName"]!="HTML")&&(e[i]["localName"]!="BODY")){
+t[i][_4[j]]=e[i][_4[j]].substr(0,50);
+}
+}else{
+t[i][_4[j]]=e[i][_4[j]];
+}
+}
+}
+break;
+case "clientX":
+case "clientY":
+case "pageX":
+case "pageY":
+case "screenX":
+case "screenY":
+t[i]=e[i];
+break;
+}
+}
+return t;
+};
+})();
+return dojox.analytics.plugins.mouseClick;
 });

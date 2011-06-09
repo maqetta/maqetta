@@ -1,146 +1,81 @@
-define(["../main"], function(dojo) {
-	// module:
-	//		dojo/date/stamp
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("date.stamp", true, dojo);
-
-// Methods to convert dates to or from a wire (string) format using well-known conventions
-
-dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/defaultTime){
-	//	summary:
-	//		Returns a Date object given a string formatted according to a subset of the ISO-8601 standard.
-	//
-	//	description:
-	//		Accepts a string formatted according to a profile of ISO8601 as defined by
-	//		[RFC3339](http://www.ietf.org/rfc/rfc3339.txt), except that partial input is allowed.
-	//		Can also process dates as specified [by the W3C](http://www.w3.org/TR/NOTE-datetime)
-	//		The following combinations are valid:
-	//
-	//			* dates only
-	//			|	* yyyy
-	//			|	* yyyy-MM
-	//			|	* yyyy-MM-dd
-	// 			* times only, with an optional time zone appended
-	//			|	* THH:mm
-	//			|	* THH:mm:ss
-	//			|	* THH:mm:ss.SSS
-	// 			* and "datetimes" which could be any combination of the above
-	//
-	//		timezones may be specified as Z (for UTC) or +/- followed by a time expression HH:mm
-	//		Assumes the local time zone if not specified.  Does not validate.  Improperly formatted
-	//		input may return null.  Arguments which are out of bounds will be handled
-	// 		by the Date constructor (e.g. January 32nd typically gets resolved to February 1st)
-	//		Only years between 100 and 9999 are supported.
-	//
-  	//	formattedString:
-	//		A string such as 2005-06-30T08:05:00-07:00 or 2005-06-30 or T08:05:00
-	//
-	//	defaultTime:
-	//		Used for defaults for fields omitted in the formattedString.
-	//		Uses 1970-01-01T00:00:00.0Z by default.
-
-	if(!dojo.date.stamp._isoRegExp){
-		dojo.date.stamp._isoRegExp =
-//TODO: could be more restrictive and check for 00-59, etc.
-			/^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(.\d+)?)?((?:[+-](\d{2}):(\d{2}))|Z)?)?$/;
-	}
-
-	var match = dojo.date.stamp._isoRegExp.exec(formattedString),
-		result = null;
-
-	if(match){
-		match.shift();
-		if(match[1]){match[1]--;} // Javascript Date months are 0-based
-		if(match[6]){match[6] *= 1000;} // Javascript Date expects fractional seconds as milliseconds
-
-		if(defaultTime){
-			// mix in defaultTime.  Relatively expensive, so use || operators for the fast path of defaultTime === 0
-			defaultTime = new Date(defaultTime);
-			dojo.forEach(dojo.map(["FullYear", "Month", "Date", "Hours", "Minutes", "Seconds", "Milliseconds"], function(prop){
-				return defaultTime["get" + prop]();
-			}), function(value, index){
-				match[index] = match[index] || value;
-			});
-		}
-		result = new Date(match[0]||1970, match[1]||0, match[2]||1, match[3]||0, match[4]||0, match[5]||0, match[6]||0); //TODO: UTC defaults
-		if(match[0] < 100){
-			result.setFullYear(match[0] || 1970);
-		}
-
-		var offset = 0,
-			zoneSign = match[7] && match[7].charAt(0);
-		if(zoneSign != 'Z'){
-			offset = ((match[8] || 0) * 60) + (Number(match[9]) || 0);
-			if(zoneSign != '-'){ offset *= -1; }
-		}
-		if(zoneSign){
-			offset -= result.getTimezoneOffset();
-		}
-		if(offset){
-			result.setTime(result.getTime() + offset * 60000);
-		}
-	}
-
-	return result; // Date or null
+define("dojo/date/stamp",["../main"],function(_1){
+_1.getObject("date.stamp",true,_1);
+_1.date.stamp.fromISOString=function(_2,_3){
+if(!_1.date.stamp._isoRegExp){
+_1.date.stamp._isoRegExp=/^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(.\d+)?)?((?:[+-](\d{2}):(\d{2}))|Z)?)?$/;
+}
+var _4=_1.date.stamp._isoRegExp.exec(_2),_5=null;
+if(_4){
+_4.shift();
+if(_4[1]){
+_4[1]--;
+}
+if(_4[6]){
+_4[6]*=1000;
+}
+if(_3){
+_3=new Date(_3);
+_1.forEach(_1.map(["FullYear","Month","Date","Hours","Minutes","Seconds","Milliseconds"],function(_6){
+return _3["get"+_6]();
+}),function(_7,_8){
+_4[_8]=_4[_8]||_7;
+});
+}
+_5=new Date(_4[0]||1970,_4[1]||0,_4[2]||1,_4[3]||0,_4[4]||0,_4[5]||0,_4[6]||0);
+if(_4[0]<100){
+_5.setFullYear(_4[0]||1970);
+}
+var _9=0,_a=_4[7]&&_4[7].charAt(0);
+if(_a!="Z"){
+_9=((_4[8]||0)*60)+(Number(_4[9])||0);
+if(_a!="-"){
+_9*=-1;
+}
+}
+if(_a){
+_9-=_5.getTimezoneOffset();
+}
+if(_9){
+_5.setTime(_5.getTime()+_9*60000);
+}
+}
+return _5;
 };
-
-/*=====
-	dojo.date.stamp.__Options = function(){
-		//	selector: String
-		//		"date" or "time" for partial formatting of the Date object.
-		//		Both date and time will be formatted by default.
-		//	zulu: Boolean
-		//		if true, UTC/GMT is used for a timezone
-		//	milliseconds: Boolean
-		//		if true, output milliseconds
-		this.selector = selector;
-		this.zulu = zulu;
-		this.milliseconds = milliseconds;
-	}
-=====*/
-
-dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*dojo.date.stamp.__Options?*/options){
-	//	summary:
-	//		Format a Date object as a string according a subset of the ISO-8601 standard
-	//
-	//	description:
-	//		When options.selector is omitted, output follows [RFC3339](http://www.ietf.org/rfc/rfc3339.txt)
-	//		The local time zone is included as an offset from GMT, except when selector=='time' (time without a date)
-	//		Does not check bounds.  Only years between 100 and 9999 are supported.
-	//
-	//	dateObject:
-	//		A Date object
-
-	var _ = function(n){ return (n < 10) ? "0" + n : n; };
-	options = options || {};
-	var formattedDate = [],
-		getter = options.zulu ? "getUTC" : "get",
-		date = "";
-	if(options.selector != "time"){
-		var year = dateObject[getter+"FullYear"]();
-		date = ["0000".substr((year+"").length)+year, _(dateObject[getter+"Month"]()+1), _(dateObject[getter+"Date"]())].join('-');
-	}
-	formattedDate.push(date);
-	if(options.selector != "date"){
-		var time = [_(dateObject[getter+"Hours"]()), _(dateObject[getter+"Minutes"]()), _(dateObject[getter+"Seconds"]())].join(':');
-		var millis = dateObject[getter+"Milliseconds"]();
-		if(options.milliseconds){
-			time += "."+ (millis < 100 ? "0" : "") + _(millis);
-		}
-		if(options.zulu){
-			time += "Z";
-		}else if(options.selector != "time"){
-			var timezoneOffset = dateObject.getTimezoneOffset();
-			var absOffset = Math.abs(timezoneOffset);
-			time += (timezoneOffset > 0 ? "-" : "+") +
-				_(Math.floor(absOffset/60)) + ":" + _(absOffset%60);
-		}
-		formattedDate.push(time);
-	}
-	return formattedDate.join('T'); // String
+_1.date.stamp.toISOString=function(_b,_c){
+var _d=function(n){
+return (n<10)?"0"+n:n;
 };
-
-return dojo.date.stamp;
+_c=_c||{};
+var _e=[],_f=_c.zulu?"getUTC":"get",_10="";
+if(_c.selector!="time"){
+var _11=_b[_f+"FullYear"]();
+_10=["0000".substr((_11+"").length)+_11,_d(_b[_f+"Month"]()+1),_d(_b[_f+"Date"]())].join("-");
+}
+_e.push(_10);
+if(_c.selector!="date"){
+var _12=[_d(_b[_f+"Hours"]()),_d(_b[_f+"Minutes"]()),_d(_b[_f+"Seconds"]())].join(":");
+var _13=_b[_f+"Milliseconds"]();
+if(_c.milliseconds){
+_12+="."+(_13<100?"0":"")+_d(_13);
+}
+if(_c.zulu){
+_12+="Z";
+}else{
+if(_c.selector!="time"){
+var _14=_b.getTimezoneOffset();
+var _15=Math.abs(_14);
+_12+=(_14>0?"-":"+")+_d(Math.floor(_15/60))+":"+_d(_15%60);
+}
+}
+_e.push(_12);
+}
+return _e.join("T");
+};
+return _1.date.stamp;
 });

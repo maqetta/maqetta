@@ -1,386 +1,149 @@
-define([
-	"dojo/_base/kernel", // dojo.mixin
-	"..",
-	"dojo/_base/array", // dojo.filter dojo.forEach dojo.indexOf dojo.some
-	"dojo/_base/connect", // dojo.connect dojo.disconnect
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/json", // dojo.toJson
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/data/api/Identity", // dojo.data.api.Identity
-	"dojo/data/api/Notification" // dojo.data.api.Notification
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/tree/TreeStoreModel
-	// summary:
-	//		Implements dijit.Tree.model connecting to a dojo.data store with a single
-	//		root item.
-
-	dojo.declare("dijit.tree.TreeStoreModel", null, {
-		// summary:
-		//		Implements dijit.Tree.model connecting to a dojo.data store with a single
-		//		root item.  Any methods passed into the constructor will override
-		//		the ones defined here.
-
-		// store: dojo.data.Store
-		//		Underlying store
-		store: null,
-
-		// childrenAttrs: String[]
-		//		One or more attribute names (attributes in the dojo.data item) that specify that item's children
-		childrenAttrs: ["children"],
-
-		// newItemIdAttr: String
-		//		Name of attribute in the Object passed to newItem() that specifies the id.
-		//
-		//		If newItemIdAttr is set then it's used when newItem() is called to see if an
-		//		item with the same id already exists, and if so just links to the old item
-		//		(so that the old item ends up with two parents).
-		//
-		//		Setting this to null or "" will make every drop create a new item.
-		newItemIdAttr: "id",
-
-		// labelAttr: String
-		//		If specified, get label for tree node from this attribute, rather
-		//		than by calling store.getLabel()
-		labelAttr: "",
-
-	 	// root: [readonly] dojo.data.Item
-		//		Pointer to the root item (read only, not a parameter)
-		root: null,
-
-		// query: anything
-		//		Specifies datastore query to return the root item for the tree.
-		//		Must only return a single item.   Alternately can just pass in pointer
-		//		to root item.
-		// example:
-		//	|	{id:'ROOT'}
-		query: null,
-
-		// deferItemLoadingUntilExpand: Boolean
-		//		Setting this to true will cause the TreeStoreModel to defer calling loadItem on nodes
-		// 		until they are expanded. This allows for lazying loading where only one
-		//		loadItem (and generally one network call, consequently) per expansion
-		// 		(rather than one for each child).
-		// 		This relies on partial loading of the children items; each children item of a
-		// 		fully loaded item should contain the label and info about having children.
-		deferItemLoadingUntilExpand: false,
-
-		constructor: function(/* Object */ args){
-			// summary:
-			//		Passed the arguments listed above (store, etc)
-			// tags:
-			//		private
-
-			dojo.mixin(this, args);
-
-			this.connects = [];
-
-			var store = this.store;
-			if(!store.getFeatures()['dojo.data.api.Identity']){
-				throw new Error("dijit.Tree: store must support dojo.data.Identity");
-			}
-
-			// if the store supports Notification, subscribe to the notification events
-			if(store.getFeatures()['dojo.data.api.Notification']){
-				this.connects = this.connects.concat([
-					dojo.connect(store, "onNew", this, "onNewItem"),
-					dojo.connect(store, "onDelete", this, "onDeleteItem"),
-					dojo.connect(store, "onSet", this, "onSetItem")
-				]);
-			}
-		},
-
-		destroy: function(){
-			dojo.forEach(this.connects, dojo.disconnect);
-			// TODO: should cancel any in-progress processing of getRoot(), getChildren()
-		},
-
-		// =======================================================================
-		// Methods for traversing hierarchy
-
-		getRoot: function(onItem, onError){
-			// summary:
-			//		Calls onItem with the root item for the tree, possibly a fabricated item.
-			//		Calls onError on error.
-			if(this.root){
-				onItem(this.root);
-			}else{
-				this.store.fetch({
-					query: this.query,
-					onComplete: dojo.hitch(this, function(items){
-						if(items.length != 1){
-							throw new Error(this.declaredClass + ": query " + dojo.toJson(this.query) + " returned " + items.length +
-							 	" items, but must return exactly one item");
-						}
-						this.root = items[0];
-						onItem(this.root);
-					}),
-					onError: onError
-				});
-			}
-		},
-
-		mayHaveChildren: function(/*dojo.data.Item*/ item){
-			// summary:
-			//		Tells if an item has or may have children.  Implementing logic here
-			//		avoids showing +/- expando icon for nodes that we know don't have children.
-			//		(For efficiency reasons we may not want to check if an element actually
-			//		has children until user clicks the expando node)
-			return dojo.some(this.childrenAttrs, function(attr){
-				return this.store.hasAttribute(item, attr);
-			}, this);
-		},
-
-		getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete, /*function*/ onError){
-			// summary:
-			// 		Calls onComplete() with array of child items of given parent item, all loaded.
-
-			var store = this.store;
-			if(!store.isItemLoaded(parentItem)){
-				// The parent is not loaded yet, we must be in deferItemLoadingUntilExpand
-				// mode, so we will load it and just return the children (without loading each
-				// child item)
-				var getChildren = dojo.hitch(this, arguments.callee);
-				store.loadItem({
-					item: parentItem,
-					onItem: function(parentItem){
-						getChildren(parentItem, onComplete, onError);
-					},
-					onError: onError
-				});
-				return;
-			}
-			// get children of specified item
-			var childItems = [];
-			for(var i=0; i<this.childrenAttrs.length; i++){
-				var vals = store.getValues(parentItem, this.childrenAttrs[i]);
-				childItems = childItems.concat(vals);
-			}
-
-			// count how many items need to be loaded
-			var _waitCount = 0;
-			if(!this.deferItemLoadingUntilExpand){
-				dojo.forEach(childItems, function(item){ if(!store.isItemLoaded(item)){ _waitCount++; } });
-			}
-
-			if(_waitCount == 0){
-				// all items are already loaded (or we aren't loading them).  proceed...
-				onComplete(childItems);
-			}else{
-				// still waiting for some or all of the items to load
-				dojo.forEach(childItems, function(item, idx){
-					if(!store.isItemLoaded(item)){
-						store.loadItem({
-							item: item,
-							onItem: function(item){
-								childItems[idx] = item;
-								if(--_waitCount == 0){
-									// all nodes have been loaded, send them to the tree
-									onComplete(childItems);
-								}
-							},
-							onError: onError
-						});
-					}
-				});
-			}
-		},
-
-		// =======================================================================
-		// Inspecting items
-
-		isItem: function(/* anything */ something){
-			return this.store.isItem(something);	// Boolean
-		},
-
-		fetchItemByIdentity: function(/* object */ keywordArgs){
-			this.store.fetchItemByIdentity(keywordArgs);
-		},
-
-		getIdentity: function(/* item */ item){
-			return this.store.getIdentity(item);	// Object
-		},
-
-		getLabel: function(/*dojo.data.Item*/ item){
-			// summary:
-			//		Get the label for an item
-			if(this.labelAttr){
-				return this.store.getValue(item,this.labelAttr);	// String
-			}else{
-				return this.store.getLabel(item);	// String
-			}
-		},
-
-		// =======================================================================
-		// Write interface
-
-		newItem: function(/* dojo.dnd.Item */ args, /*Item*/ parent, /*int?*/ insertIndex){
-			// summary:
-			//		Creates a new item.   See `dojo.data.api.Write` for details on args.
-			//		Used in drag & drop when item from external source dropped onto tree.
-			// description:
-			//		Developers will need to override this method if new items get added
-			//		to parents with multiple children attributes, in order to define which
-			//		children attribute points to the new item.
-
-			var pInfo = {parent: parent, attribute: this.childrenAttrs[0]}, LnewItem;
-
-			if(this.newItemIdAttr && args[this.newItemIdAttr]){
-				// Maybe there's already a corresponding item in the store; if so, reuse it.
-				this.fetchItemByIdentity({identity: args[this.newItemIdAttr], scope: this, onItem: function(item){
-					if(item){
-						// There's already a matching item in store, use it
-						this.pasteItem(item, null, parent, true, insertIndex);
-					}else{
-						// Create new item in the tree, based on the drag source.
-						LnewItem=this.store.newItem(args, pInfo);
-						if(LnewItem && (insertIndex!=undefined)){
-							// Move new item to desired position
-							this.pasteItem(LnewItem, parent, parent, false, insertIndex);
-						}
-					}
-				}});
-			}else{
-				// [as far as we know] there is no id so we must assume this is a new item
-				LnewItem=this.store.newItem(args, pInfo);
-				if(LnewItem && (insertIndex!=undefined)){
-					// Move new item to desired position
-					this.pasteItem(LnewItem, parent, parent, false, insertIndex);
-				}
-			}
-		},
-
-		pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ bCopy, /*int?*/ insertIndex){
-			// summary:
-			//		Move or copy an item from one parent item to another.
-			//		Used in drag & drop
-			var store = this.store,
-				parentAttr = this.childrenAttrs[0];	// name of "children" attr in parent item
-
-			// remove child from source item, and record the attribute that child occurred in
-			if(oldParentItem){
-				dojo.forEach(this.childrenAttrs, function(attr){
-					if(store.containsValue(oldParentItem, attr, childItem)){
-						if(!bCopy){
-							var values = dojo.filter(store.getValues(oldParentItem, attr), function(x){
-								return x != childItem;
-							});
-							store.setValues(oldParentItem, attr, values);
-						}
-						parentAttr = attr;
-					}
-				});
-			}
-
-			// modify target item's children attribute to include this item
-			if(newParentItem){
-				if(typeof insertIndex == "number"){
-					// call slice() to avoid modifying the original array, confusing the data store
-					var childItems = store.getValues(newParentItem, parentAttr).slice();
-					childItems.splice(insertIndex, 0, childItem);
-					store.setValues(newParentItem, parentAttr, childItems);
-				}else{
-					store.setValues(newParentItem, parentAttr,
-						store.getValues(newParentItem, parentAttr).concat(childItem));
-				}
-			}
-		},
-
-		// =======================================================================
-		// Callbacks
-
-		onChange: function(/*dojo.data.Item*/ item){
-			// summary:
-			//		Callback whenever an item has changed, so that Tree
-			//		can update the label, icon, etc.   Note that changes
-			//		to an item's children or parent(s) will trigger an
-			//		onChildrenChange() so you can ignore those changes here.
-			// tags:
-			//		callback
-		},
-
-		onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
-			// summary:
-			//		Callback to do notifications about new, updated, or deleted items.
-			// tags:
-			//		callback
-		},
-
-		onDelete: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
-			// summary:
-			//		Callback when an item has been deleted.
-			// description:
-			//		Note that there will also be an onChildrenChange() callback for the parent
-			//		of this item.
-			// tags:
-			//		callback
-		},
-
-		// =======================================================================
-		// Events from data store
-
-		onNewItem: function(/* dojo.data.Item */ item, /* Object */ parentInfo){
-			// summary:
-			//		Handler for when new items appear in the store, either from a drop operation
-			//		or some other way.   Updates the tree view (if necessary).
-			// description:
-			//		If the new item is a child of an existing item,
-			//		calls onChildrenChange() with the new list of children
-			//		for that existing item.
-			//
-			// tags:
-			//		extension
-
-			// We only care about the new item if it has a parent that corresponds to a TreeNode
-			// we are currently displaying
-			if(!parentInfo){
-				return;
-			}
-
-			// Call onChildrenChange() on parent (ie, existing) item with new list of children
-			// In the common case, the new list of children is simply parentInfo.newValue or
-			// [ parentInfo.newValue ], although if items in the store has multiple
-			// child attributes (see `childrenAttr`), then it's a superset of parentInfo.newValue,
-			// so call getChildren() to be sure to get right answer.
-			this.getChildren(parentInfo.item, dojo.hitch(this, function(children){
-				this.onChildrenChange(parentInfo.item, children);
-			}));
-		},
-
-		onDeleteItem: function(/*Object*/ item){
-			// summary:
-			//		Handler for delete notifications from underlying store
-			this.onDelete(item);
-		},
-
-		onSetItem: function(/* item */ item,
-						/* attribute-name-string */ attribute,
-						/* object | array */ oldValue,
-						/* object | array */ newValue){
-			// summary:
-			//		Updates the tree view according to changes in the data store.
-			// description:
-			//		Handles updates to an item's children by calling onChildrenChange(), and
-			//		other updates to an item by calling onChange().
-			//
-			//		See `onNewItem` for more details on handling updates to an item's children.
-			// tags:
-			//		extension
-
-			if(dojo.indexOf(this.childrenAttrs, attribute) != -1){
-				// item's children list changed
-				this.getChildren(item, dojo.hitch(this, function(children){
-					// See comments in onNewItem() about calling getChildren()
-					this.onChildrenChange(item, children);
-				}));
-			}else{
-				// item's label/icon/etc. changed.
-				this.onChange(item);
-			}
-		}
-	});
-
-
-	return dijit.tree.TreeStoreModel;
+define("dijit/tree/TreeStoreModel",["dojo/_base/kernel","..","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/json","dojo/_base/lang","dojo/data/api/Identity","dojo/data/api/Notification"],function(_1,_2){
+_1.declare("dijit.tree.TreeStoreModel",null,{store:null,childrenAttrs:["children"],newItemIdAttr:"id",labelAttr:"",root:null,query:null,deferItemLoadingUntilExpand:false,constructor:function(_3){
+_1.mixin(this,_3);
+this.connects=[];
+var _4=this.store;
+if(!_4.getFeatures()["dojo.data.api.Identity"]){
+throw new Error("dijit.Tree: store must support dojo.data.Identity");
+}
+if(_4.getFeatures()["dojo.data.api.Notification"]){
+this.connects=this.connects.concat([_1.connect(_4,"onNew",this,"onNewItem"),_1.connect(_4,"onDelete",this,"onDeleteItem"),_1.connect(_4,"onSet",this,"onSetItem")]);
+}
+},destroy:function(){
+_1.forEach(this.connects,_1.disconnect);
+},getRoot:function(_5,_6){
+if(this.root){
+_5(this.root);
+}else{
+this.store.fetch({query:this.query,onComplete:_1.hitch(this,function(_7){
+if(_7.length!=1){
+throw new Error(this.declaredClass+": query "+_1.toJson(this.query)+" returned "+_7.length+" items, but must return exactly one item");
+}
+this.root=_7[0];
+_5(this.root);
+}),onError:_6});
+}
+},mayHaveChildren:function(_8){
+return _1.some(this.childrenAttrs,function(_9){
+return this.store.hasAttribute(_8,_9);
+},this);
+},getChildren:function(_a,_b,_c){
+var _d=this.store;
+if(!_d.isItemLoaded(_a)){
+var _e=_1.hitch(this,arguments.callee);
+_d.loadItem({item:_a,onItem:function(_f){
+_e(_f,_b,_c);
+},onError:_c});
+return;
+}
+var _10=[];
+for(var i=0;i<this.childrenAttrs.length;i++){
+var _11=_d.getValues(_a,this.childrenAttrs[i]);
+_10=_10.concat(_11);
+}
+var _12=0;
+if(!this.deferItemLoadingUntilExpand){
+_1.forEach(_10,function(_13){
+if(!_d.isItemLoaded(_13)){
+_12++;
+}
+});
+}
+if(_12==0){
+_b(_10);
+}else{
+_1.forEach(_10,function(_14,idx){
+if(!_d.isItemLoaded(_14)){
+_d.loadItem({item:_14,onItem:function(_15){
+_10[idx]=_15;
+if(--_12==0){
+_b(_10);
+}
+},onError:_c});
+}
+});
+}
+},isItem:function(_16){
+return this.store.isItem(_16);
+},fetchItemByIdentity:function(_17){
+this.store.fetchItemByIdentity(_17);
+},getIdentity:function(_18){
+return this.store.getIdentity(_18);
+},getLabel:function(_19){
+if(this.labelAttr){
+return this.store.getValue(_19,this.labelAttr);
+}else{
+return this.store.getLabel(_19);
+}
+},newItem:function(_1a,_1b,_1c){
+var _1d={parent:_1b,attribute:this.childrenAttrs[0]},_1e;
+if(this.newItemIdAttr&&_1a[this.newItemIdAttr]){
+this.fetchItemByIdentity({identity:_1a[this.newItemIdAttr],scope:this,onItem:function(_1f){
+if(_1f){
+this.pasteItem(_1f,null,_1b,true,_1c);
+}else{
+_1e=this.store.newItem(_1a,_1d);
+if(_1e&&(_1c!=undefined)){
+this.pasteItem(_1e,_1b,_1b,false,_1c);
+}
+}
+}});
+}else{
+_1e=this.store.newItem(_1a,_1d);
+if(_1e&&(_1c!=undefined)){
+this.pasteItem(_1e,_1b,_1b,false,_1c);
+}
+}
+},pasteItem:function(_20,_21,_22,_23,_24){
+var _25=this.store,_26=this.childrenAttrs[0];
+if(_21){
+_1.forEach(this.childrenAttrs,function(_27){
+if(_25.containsValue(_21,_27,_20)){
+if(!_23){
+var _28=_1.filter(_25.getValues(_21,_27),function(x){
+return x!=_20;
+});
+_25.setValues(_21,_27,_28);
+}
+_26=_27;
+}
+});
+}
+if(_22){
+if(typeof _24=="number"){
+var _29=_25.getValues(_22,_26).slice();
+_29.splice(_24,0,_20);
+_25.setValues(_22,_26,_29);
+}else{
+_25.setValues(_22,_26,_25.getValues(_22,_26).concat(_20));
+}
+}
+},onChange:function(_2a){
+},onChildrenChange:function(_2b,_2c){
+},onDelete:function(_2d,_2e){
+},onNewItem:function(_2f,_30){
+if(!_30){
+return;
+}
+this.getChildren(_30.item,_1.hitch(this,function(_31){
+this.onChildrenChange(_30.item,_31);
+}));
+},onDeleteItem:function(_32){
+this.onDelete(_32);
+},onSetItem:function(_33,_34,_35,_36){
+if(_1.indexOf(this.childrenAttrs,_34)!=-1){
+this.getChildren(_33,_1.hitch(this,function(_37){
+this.onChildrenChange(_33,_37);
+}));
+}else{
+this.onChange(_33);
+}
+}});
+return _2.tree.TreeStoreModel;
 });

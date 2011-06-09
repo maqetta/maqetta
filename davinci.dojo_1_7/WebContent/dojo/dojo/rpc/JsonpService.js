@@ -1,67 +1,28 @@
-define(["../main", "./RpcService", "../io/script"], function(dojo) {
-	// module:
-	//		dojo/rpc/JsonpService
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-
-dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
-	// summary:
-	//	Generic JSONP service.  Minimally extends RpcService to allow
-	//	easy definition of nearly any JSONP style service. Example
-	//	SMD files exist in dojox.data
-
-	constructor: function(args, requiredArgs){
-		if(this.required) {
-			if(requiredArgs){
-				dojo.mixin(this.required, requiredArgs);
-			}
-
-			dojo.forEach(this.required, function(req){
-				if(req=="" || req==undefined){
-					throw new Error("Required Service Argument not found: "+req);
-				}
-			});
-		}
-	},
-
-	strictArgChecks: false,
-
-	bind: function(method, parameters, deferredRequestHandler, url){
-		//summary:
-		//              JSONP bind method. Takes remote method, parameters,
-		//              deferred, and a url, calls createRequest to make a JSON-RPC
-		//              envelope and passes that off with bind.
-		//      method: string
-		//              The name of the method we are calling
-		//      parameters: array
-		//              The parameters we are passing off to the method
-		//      deferredRequestHandler: deferred
-		//              The Deferred object for this particular request
-
-		var def = dojo.io.script.get({
-			url: url||this.serviceUrl,
-			callbackParamName: this.callbackParamName||"callback",
-			content: this.createRequest(parameters),
-			timeout: this.timeout,
-			handleAs: "json",
-			preventCache: true
-		});
-		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
-	},
-
-	createRequest: function(parameters){
-		// summary:
-		//      create a JSONP req
-		//      params: array
-		//              The array of parameters for this request;
-
-		var params = (dojo.isArrayLike(parameters) && parameters.length==1) ?
-				parameters[0] : {};
-		dojo.mixin(params,this.required);
-		return params;
-	}
+define("dojo/rpc/JsonpService",["../main","./RpcService","../io/script"],function(_1){
+_1.declare("dojo.rpc.JsonpService",_1.rpc.RpcService,{constructor:function(_2,_3){
+if(this.required){
+if(_3){
+_1.mixin(this.required,_3);
+}
+_1.forEach(this.required,function(_4){
+if(_4==""||_4==undefined){
+throw new Error("Required Service Argument not found: "+_4);
+}
 });
-
-return dojo.rpc.JsonpService;
+}
+},strictArgChecks:false,bind:function(_5,_6,_7,_8){
+var _9=_1.io.script.get({url:_8||this.serviceUrl,callbackParamName:this.callbackParamName||"callback",content:this.createRequest(_6),timeout:this.timeout,handleAs:"json",preventCache:true});
+_9.addCallbacks(this.resultCallback(_7),this.errorCallback(_7));
+},createRequest:function(_a){
+var _b=(_1.isArrayLike(_a)&&_a.length==1)?_a[0]:{};
+_1.mixin(_b,this.required);
+return _b;
+}});
+return _1.rpc.JsonpService;
 });

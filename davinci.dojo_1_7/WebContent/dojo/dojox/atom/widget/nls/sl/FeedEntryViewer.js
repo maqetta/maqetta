@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[možnosti prikaza]",
 	title: "Naslov",
 	authors: "Avtorji",
@@ -10,3 +10,4 @@
 	content: "Vsebina"
 })
 
+);

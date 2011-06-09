@@ -1,254 +1,73 @@
-define(["./kernel", "./lang"], function(dojo){
-	// module:
-	//		dojo/_base/array
-	// summary:
-	//		This module defines the Javascript v1.6 array extensions.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var
-		getParts = function(arr, obj, cb){
-			return [
-				(typeof arr == "string") ? arr.split("") : arr,
-				obj || dojo.global,
-				// FIXME: cache the anonymous functions we create here?
-				(typeof cb == "string") ? new Function("item", "index", "array", cb) : cb
-			];
-		},
-
-		everyOrSome = function(/*Boolean*/every, /*Array|String*/arr, /*Function|String*/callback, /*Object?*/thisObject){
-			var _p = getParts(arr, thisObject, callback); arr = _p[0];
-			for(var i=0,l=arr.length; i<l; ++i){
-				var result = !!_p[2].call(_p[1], arr[i], i, arr);
-				if(every ^ result){
-					return result; // Boolean
-				}
-			}
-			return every; // Boolean
-		};
-
-	dojo.mixin(dojo, {
-		indexOf: function(	/*Array*/		array,
-							/*Object*/		value,
-							/*Integer?*/	fromIndex,
-							/*Boolean?*/	findLast){
-			// summary:
-			//		locates the first index of the provided value in the
-			//		passed array. If the value is not found, -1 is returned.
-			// description:
-			//		This method corresponds to the JavaScript 1.6 Array.indexOf method, with one difference: when
-			//		run over sparse arrays, the Dojo function invokes the callback for every index whereas JavaScript
-			//		1.6's indexOf skips the holes in the sparse array.
-			//		For details on this method, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/indexOf
-
-			var step = 1, end = array.length || 0, i = 0;
-			if(findLast){
-				i = end - 1;
-				step = end = -1;
-			}
-			if(fromIndex != undefined){ i = fromIndex; }
-			if((findLast && i > end) || i < end){
-				for(; i != end; i += step){
-					if(array[i] == value){ return i; }
-				}
-			}
-			return -1;	// Number
-		},
-
-		lastIndexOf: function(/*Array*/array, /*Object*/value, /*Integer?*/fromIndex){
-			// summary:
-			//		locates the last index of the provided value in the passed
-			//		array. If the value is not found, -1 is returned.
-			// description:
-			//		This method corresponds to the JavaScript 1.6 Array.lastIndexOf method, with one difference: when
-			//		run over sparse arrays, the Dojo function invokes the callback for every index whereas JavaScript
-			//		1.6's lastIndexOf skips the holes in the sparse array.
-			//		For details on this method, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/lastIndexOf
-			return dojo.indexOf(array, value, fromIndex, true); // Number
-		},
-
-		forEach: function(/*Array|String*/arr, /*Function|String*/callback, /*Object?*/thisObject){
-			//	summary:
-			//		for every item in arr, callback is invoked. Return values are ignored.
-			//		If you want to break out of the loop, consider using dojo.every() or dojo.some().
-			//		forEach does not allow breaking out of the loop over the items in arr.
-			//	arr:
-			//		the array to iterate over. If a string, operates on individual characters.
-			//	callback:
-			//		a function is invoked with three arguments: item, index, and array
-			//	thisObject:
-			//		may be used to scope the call to callback
-			//	description:
-			//		This function corresponds to the JavaScript 1.6 Array.forEach() method, with one difference: when
-			//		run over sparse arrays, this implemenation passes the "holes" in the sparse array to
-			//		the callback function with a value of undefined. JavaScript 1.6's forEach skips the holes in the sparse array.
-			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/forEach
-			//	example:
-			//	| // log out all members of the array:
-			//	| dojo.forEach(
-			//	|		[ "thinger", "blah", "howdy", 10 ],
-			//	|		function(item){
-			//	|			console.log(item);
-			//	|		}
-			//	| );
-			//	example:
-			//	| // log out the members and their indexes
-			//	| dojo.forEach(
-			//	|		[ "thinger", "blah", "howdy", 10 ],
-			//	|		function(item, idx, arr){
-			//	|			console.log(item, "at index:", idx);
-			//	|		}
-			//	| );
-			//	example:
-			//	| // use a scoped object member as the callback
-			//	|
-			//	| var obj = {
-			//	|		prefix: "logged via obj.callback:",
-			//	|		callback: function(item){
-			//	|			console.log(this.prefix, item);
-			//	|		}
-			//	| };
-			//	|
-			//	| // specifying the scope function executes the callback in that scope
-			//	| dojo.forEach(
-			//	|		[ "thinger", "blah", "howdy", 10 ],
-			//	|		obj.callback,
-			//	|		obj
-			//	| );
-			//	|
-			//	| // alternately, we can accomplish the same thing with dojo.hitch()
-			//	| dojo.forEach(
-			//	|		[ "thinger", "blah", "howdy", 10 ],
-			//	|		dojo.hitch(obj, "callback")
-			//	| );
-
-			// match the behavior of the built-in forEach WRT empty arrs
-			if(!arr || !arr.length){ return; }
-
-			// FIXME: there are several ways of handilng thisObject. Is
-			// dojo.global always the default context?
-			var _p = getParts(arr, thisObject, callback); arr = _p[0];
-			for(var i=0,l=arr.length; i<l; ++i){
-				_p[2].call(_p[1], arr[i], i, arr);
-			}
-		},
-
-		every: function(/*Array|String*/arr, /*Function|String*/callback, /*Object?*/thisObject){
-			// summary:
-			//		Determines whether or not every item in arr satisfies the
-			//		condition implemented by callback.
-			// arr:
-			//		the array to iterate on. If a string, operates on individual characters.
-			// callback:
-			//		a function is invoked with three arguments: item, index,
-			//		and array and returns true if the condition is met.
-			// thisObject:
-			//		may be used to scope the call to callback
-			// description:
-			//		This function corresponds to the JavaScript 1.6 Array.every() method, with one difference: when
-			//		run over sparse arrays, this implemenation passes the "holes" in the sparse array to
-			//		the callback function with a value of undefined. JavaScript 1.6's every skips the holes in the sparse array.
-			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/every
-			// example:
-			//	| // returns false
-			//	| dojo.every([1, 2, 3, 4], function(item){ return item>1; });
-			// example:
-			//	| // returns true
-			//	| dojo.every([1, 2, 3, 4], function(item){ return item>0; });
-			return everyOrSome(true, arr, callback, thisObject); // Boolean
-		},
-
-		some: function(/*Array|String*/arr, /*Function|String*/callback, /*Object?*/thisObject){
-			// summary:
-			//		Determines whether or not any item in arr satisfies the
-			//		condition implemented by callback.
-			// arr:
-			//		the array to iterate over. If a string, operates on individual characters.
-			// callback:
-			//		a function is invoked with three arguments: item, index,
-			//		and array and returns true if the condition is met.
-			// thisObject:
-			//		may be used to scope the call to callback
-			// description:
-			//		This function corresponds to the JavaScript 1.6 Array.some() method, with one difference: when
-			//		run over sparse arrays, this implemenation passes the "holes" in the sparse array to
-			//		the callback function with a value of undefined. JavaScript 1.6's some skips the holes in the sparse array.
-			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/some
-			// example:
-			//	| // is true
-			//	| dojo.some([1, 2, 3, 4], function(item){ return item>1; });
-			// example:
-			//	| // is false
-			//	| dojo.some([1, 2, 3, 4], function(item){ return item<1; });
-			return everyOrSome(false, arr, callback, thisObject); // Boolean
-		},
-
-		map: function(/*Array|String*/arr, /*Function|String*/callback, /*Function?*/thisObject){
-			// summary:
-			//		applies callback to each element of arr and returns
-			//		an Array with the results
-			// arr:
-			//		the array to iterate on. If a string, operates on
-			//		individual characters.
-			// callback:
-			//		a function is invoked with three arguments, (item, index,
-			//		array),	 and returns a value
-			// thisObject:
-			//		may be used to scope the call to callback
-			// description:
-			//		This function corresponds to the JavaScript 1.6 Array.map() method, with one difference: when
-			//		run over sparse arrays, this implemenation passes the "holes" in the sparse array to
-			//		the callback function with a value of undefined. JavaScript 1.6's map skips the holes in the sparse array.
-			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
-			// example:
-			//	| // returns [2, 3, 4, 5]
-			//	| dojo.map([1, 2, 3, 4], function(item){ return item+1 });
-
-			var _p = getParts(arr, thisObject, callback); arr = _p[0];
-			var outArr = (arguments[3] ? (new arguments[3]()) : []);
-			for(var i=0,l=arr.length; i<l; ++i){
-				outArr.push(_p[2].call(_p[1], arr[i], i, arr));
-			}
-			return outArr; // Array
-		},
-
-		filter: function(/*Array*/arr, /*Function|String*/callback, /*Object?*/thisObject){
-			// summary:
-			//		Returns a new Array with those items from arr that match the
-			//		condition implemented by callback.
-			// arr:
-			//		the array to iterate over.
-			// callback:
-			//		a function that is invoked with three arguments (item,
-			//		index, array). The return of this function is expected to
-			//		be a boolean which determines whether the passed-in item
-			//		will be included in the returned array.
-			// thisObject:
-			//		may be used to scope the call to callback
-			// description:
-			//		This function corresponds to the JavaScript 1.6 Array.filter() method, with one difference: when
-			//		run over sparse arrays, this implemenation passes the "holes" in the sparse array to
-			//		the callback function with a value of undefined. JavaScript 1.6's filter skips the holes in the sparse array.
-			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
-			// example:
-			//	| // returns [2, 3, 4]
-			//	| dojo.filter([1, 2, 3, 4], function(item){ return item>1; });
-
-			var _p = getParts(arr, thisObject, callback); arr = _p[0];
-			var outArr = [];
-			for(var i=0,l=arr.length; i<l; ++i){
-				if(_p[2].call(_p[1], arr[i], i, arr)){
-					outArr.push(arr[i]);
-				}
-			}
-			return outArr; // Array
-		}
-	});
-
-	return dojo;
+define("dojo/_base/array",["./kernel","./lang"],function(_1){
+var _2=function(_3,_4,cb){
+return [(typeof _3=="string")?_3.split(""):_3,_4||_1.global,(typeof cb=="string")?new Function("item","index","array",cb):cb];
+},_5=function(_6,_7,_8,_9){
+var _a=_2(_7,_9,_8);
+_7=_a[0];
+for(var i=0,l=_7.length;i<l;++i){
+var _b=!!_a[2].call(_a[1],_7[i],i,_7);
+if(_6^_b){
+return _b;
+}
+}
+return _6;
+};
+_1.mixin(_1,{indexOf:function(_c,_d,_e,_f){
+var _10=1,end=_c.length||0,i=0;
+if(_f){
+i=end-1;
+_10=end=-1;
+}
+if(_e!=undefined){
+i=_e;
+}
+if((_f&&i>end)||i<end){
+for(;i!=end;i+=_10){
+if(_c[i]==_d){
+return i;
+}
+}
+}
+return -1;
+},lastIndexOf:function(_11,_12,_13){
+return _1.indexOf(_11,_12,_13,true);
+},forEach:function(arr,_14,_15){
+if(!arr||!arr.length){
+return;
+}
+var _16=_2(arr,_15,_14);
+arr=_16[0];
+for(var i=0,l=arr.length;i<l;++i){
+_16[2].call(_16[1],arr[i],i,arr);
+}
+},every:function(arr,_17,_18){
+return _5(true,arr,_17,_18);
+},some:function(arr,_19,_1a){
+return _5(false,arr,_19,_1a);
+},map:function(arr,_1b,_1c){
+var _1d=_2(arr,_1c,_1b);
+arr=_1d[0];
+var _1e=(arguments[3]?(new arguments[3]()):[]);
+for(var i=0,l=arr.length;i<l;++i){
+_1e.push(_1d[2].call(_1d[1],arr[i],i,arr));
+}
+return _1e;
+},filter:function(arr,_1f,_20){
+var _21=_2(arr,_20,_1f);
+arr=_21[0];
+var _22=[];
+for(var i=0,l=arr.length;i<l;++i){
+if(_21[2].call(_21[1],arr[i],i,arr)){
+_22.push(arr[i]);
+}
+}
+return _22;
+}});
+return _1;
 });

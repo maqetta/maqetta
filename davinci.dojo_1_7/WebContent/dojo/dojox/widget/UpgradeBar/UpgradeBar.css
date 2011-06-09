@@ -13,7 +13,6 @@
 	-moz-box-shadow:0 1px 6px #444;
 	font-size:.8em;
 }
-
 .dj_ie .dojoxUpgradeBar {
 	border-bottom:#665F48 2px solid;
 }
@@ -28,16 +27,6 @@
 .dojoxUpgradeBarMessage a{
 	margin-left:10px;
 }
-/*
-.dojoxUpgradeBarControls {
-	position:absolute;
-	right:35px;
-	top:0;
-	bottom:0;
-	width:140px;
-	text-align:right;
-}
-*/
 .dojoxUpgradeBarReminderButton {
 	position:absolute;
 	top:25%;
@@ -51,7 +40,6 @@
 .dj_ie6 .dojoxUpgradeBarReminderButton {
 	margin-top:2px;
 }
-
 .dojoxUpgradeBarCloseIcon {
 	background: url("../../../dijit/themes/tundra/images/tabClose.png") no-repeat right top;
 	position: absolute;

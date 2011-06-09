@@ -1,142 +1,111 @@
-define(["./_base/kernel", "./dom", "./dom-geometry", "./dom-style", "./_base/sniff", "./_base/window"], function(dojo) {
-	// module:
-	//		dojo/window
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("window", true, dojo);
-
-dojo.window.getBox = function(){
-	// summary:
-	//		Returns the dimensions and scroll position of the viewable area of a browser window
-
-	var scrollRoot = (dojo.doc.compatMode == 'BackCompat') ? dojo.body() : dojo.doc.documentElement;
-
-	// get scroll position
-	var scroll = dojo._docScroll(); // scrollRoot.scrollTop/Left should work
-	// dojo.global.innerWidth||dojo.global.innerHeight is for mobile
-	return { w: dojo.global.innerWidth || scrollRoot.clientWidth, h: dojo.global.innerHeight || scrollRoot.clientHeight, l: scroll.x, t: scroll.y };
+define("dojo/window",["./_base/kernel","./dom","./dom-geometry","./dom-style","./_base/sniff","./_base/window"],function(_1){
+_1.getObject("window",true,_1);
+_1.window.getBox=function(){
+var _2=(_1.doc.compatMode=="BackCompat")?_1.body():_1.doc.documentElement;
+var _3=_1._docScroll();
+return {w:_1.global.innerWidth||_2.clientWidth,h:_1.global.innerHeight||_2.clientHeight,l:_3.x,t:_3.y};
 };
-
-dojo.window.get = function(doc){
-	// summary:
-	// 		Get window object associated with document doc
-
-	// In some IE versions (at least 6.0), document.parentWindow does not return a
-	// reference to the real window object (maybe a copy), so we must fix it as well
-	// We use IE specific execScript to attach the real window reference to
-	// document._parentWindow for later use
-	if(dojo.isIE && window !== document.parentWindow){
-		/*
-		In IE 6, only the variable "window" can be used to connect events (others
-		may be only copies).
-		*/
-		doc.parentWindow.execScript("document._parentWindow = window;", "Javascript");
-		//to prevent memory leak, unset it after use
-		//another possibility is to add an onUnload handler which seems overkill to me (liucougar)
-		var win = doc._parentWindow;
-		doc._parentWindow = null;
-		return win;	//	Window
-	}
-
-	return doc.parentWindow || doc.defaultView;	//	Window
+_1.window.get=function(_4){
+if(_1.isIE&&window!==document.parentWindow){
+_4.parentWindow.execScript("document._parentWindow = window;","Javascript");
+var _5=_4._parentWindow;
+_4._parentWindow=null;
+return _5;
+}
+return _4.parentWindow||_4.defaultView;
 };
-
-dojo.window.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
-	// summary:
-	//		Scroll the passed node into view, if it is not already.
-
-	// don't rely on node.scrollIntoView working just because the function is there
-
-	try{ // catch unexpected/unrecreatable errors (#7808) since we can recover using a semi-acceptable native method
-		node = dojo.byId(node);
-		var doc = node.ownerDocument || dojo.doc,
-			body = doc.body || dojo.body(),
-			html = doc.documentElement || body.parentNode,
-			isIE = dojo.isIE, isWK = dojo.isWebKit;
-		// if an untested browser, then use the native method
-		if((!(dojo.isMoz || isIE || isWK || dojo.isOpera) || node == body || node == html) && (typeof node.scrollIntoView != "undefined")){
-			node.scrollIntoView(false); // short-circuit to native if possible
-			return;
-		}
-		var backCompat = doc.compatMode == 'BackCompat',
-			clientAreaRoot = (isIE >= 9 && node.ownerDocument.parentWindow.frameElement)
-				? ((html.clientHeight > 0 && html.clientWidth > 0 && (body.clientHeight == 0 || body.clientWidth == 0 || body.clientHeight > html.clientHeight || body.clientWidth > html.clientWidth)) ? html : body)
-				: (backCompat ? body : html),
-			scrollRoot = isWK ? body : clientAreaRoot,
-			rootWidth = clientAreaRoot.clientWidth,
-			rootHeight = clientAreaRoot.clientHeight,
-			rtl = !dojo._isBodyLtr(),
-			nodePos = pos || dojo.position(node),
-			el = node.parentNode,
-			isFixed = function(el){
-				return ((isIE <= 6 || (isIE && backCompat))? false : (dojo.style(el, 'position').toLowerCase() == "fixed"));
-			};
-		if(isFixed(node)){ return; } // nothing to do
-
-		while(el){
-			if(el == body){ el = scrollRoot; }
-			var elPos = dojo.position(el),
-				fixedPos = isFixed(el);
-
-			if(el == scrollRoot){
-				elPos.w = rootWidth; elPos.h = rootHeight;
-				if(scrollRoot == html && isIE && rtl){ elPos.x += scrollRoot.offsetWidth-elPos.w; } // IE workaround where scrollbar causes negative x
-				if(elPos.x < 0 || !isIE){ elPos.x = 0; } // IE can have values > 0
-				if(elPos.y < 0 || !isIE){ elPos.y = 0; }
-			}else{
-				var pb = dojo._getPadBorderExtents(el);
-				elPos.w -= pb.w; elPos.h -= pb.h; elPos.x += pb.l; elPos.y += pb.t;
-				var clientSize = el.clientWidth,
-					scrollBarSize = elPos.w - clientSize;
-				if(clientSize > 0 && scrollBarSize > 0){
-					elPos.w = clientSize;
-					elPos.x += (rtl && (isIE || el.clientLeft > pb.l/*Chrome*/)) ? scrollBarSize : 0;
-				}
-				clientSize = el.clientHeight;
-				scrollBarSize = elPos.h - clientSize;
-				if(clientSize > 0 && scrollBarSize > 0){
-					elPos.h = clientSize;
-				}
-			}
-			if(fixedPos){ // bounded by viewport, not parents
-				if(elPos.y < 0){
-					elPos.h += elPos.y; elPos.y = 0;
-				}
-				if(elPos.x < 0){
-					elPos.w += elPos.x; elPos.x = 0;
-				}
-				if(elPos.y + elPos.h > rootHeight){
-					elPos.h = rootHeight - elPos.y;
-				}
-				if(elPos.x + elPos.w > rootWidth){
-					elPos.w = rootWidth - elPos.x;
-				}
-			}
-			// calculate overflow in all 4 directions
-			var l = nodePos.x - elPos.x, // beyond left: < 0
-				t = nodePos.y - Math.max(elPos.y, 0), // beyond top: < 0
-				r = l + nodePos.w - elPos.w, // beyond right: > 0
-				bot = t + nodePos.h - elPos.h; // beyond bottom: > 0
-			if(r * l > 0){
-				var s = Math[l < 0? "max" : "min"](l, r);
-				if(rtl && ((isIE == 8 && !backCompat) || isIE >= 9)){ s = -s; }
-				nodePos.x += el.scrollLeft;
-				el.scrollLeft += s;
-				nodePos.x -= el.scrollLeft;
-			}
-			if(bot * t > 0){
-				nodePos.y += el.scrollTop;
-				el.scrollTop += Math[t < 0? "max" : "min"](t, bot);
-				nodePos.y -= el.scrollTop;
-			}
-			el = (el != scrollRoot) && !fixedPos && el.parentNode;
-		}
-	}catch(error){
-		console.error('scrollIntoView: ' + error);
-		node.scrollIntoView(false);
-	}
+_1.window.scrollIntoView=function(_6,_7){
+try{
+_6=_1.byId(_6);
+var _8=_6.ownerDocument||_1.doc,_9=_8.body||_1.body(),_a=_8.documentElement||_9.parentNode,_b=_1.isIE,_c=_1.isWebKit;
+if((!(_1.isMoz||_b||_c||_1.isOpera)||_6==_9||_6==_a)&&(typeof _6.scrollIntoView!="undefined")){
+_6.scrollIntoView(false);
+return;
+}
+var _d=_8.compatMode=="BackCompat",_e=(_b>=9&&_6.ownerDocument.parentWindow.frameElement)?((_a.clientHeight>0&&_a.clientWidth>0&&(_9.clientHeight==0||_9.clientWidth==0||_9.clientHeight>_a.clientHeight||_9.clientWidth>_a.clientWidth))?_a:_9):(_d?_9:_a),_f=_c?_9:_e,_10=_e.clientWidth,_11=_e.clientHeight,rtl=!_1._isBodyLtr(),_12=_7||_1.position(_6),el=_6.parentNode,_13=function(el){
+return ((_b<=6||(_b&&_d))?false:(_1.style(el,"position").toLowerCase()=="fixed"));
 };
-
-return dojo.window;
+if(_13(_6)){
+return;
+}
+while(el){
+if(el==_9){
+el=_f;
+}
+var _14=_1.position(el),_15=_13(el);
+if(el==_f){
+_14.w=_10;
+_14.h=_11;
+if(_f==_a&&_b&&rtl){
+_14.x+=_f.offsetWidth-_14.w;
+}
+if(_14.x<0||!_b){
+_14.x=0;
+}
+if(_14.y<0||!_b){
+_14.y=0;
+}
+}else{
+var pb=_1._getPadBorderExtents(el);
+_14.w-=pb.w;
+_14.h-=pb.h;
+_14.x+=pb.l;
+_14.y+=pb.t;
+var _16=el.clientWidth,_17=_14.w-_16;
+if(_16>0&&_17>0){
+_14.w=_16;
+_14.x+=(rtl&&(_b||el.clientLeft>pb.l))?_17:0;
+}
+_16=el.clientHeight;
+_17=_14.h-_16;
+if(_16>0&&_17>0){
+_14.h=_16;
+}
+}
+if(_15){
+if(_14.y<0){
+_14.h+=_14.y;
+_14.y=0;
+}
+if(_14.x<0){
+_14.w+=_14.x;
+_14.x=0;
+}
+if(_14.y+_14.h>_11){
+_14.h=_11-_14.y;
+}
+if(_14.x+_14.w>_10){
+_14.w=_10-_14.x;
+}
+}
+var l=_12.x-_14.x,t=_12.y-Math.max(_14.y,0),r=l+_12.w-_14.w,bot=t+_12.h-_14.h;
+if(r*l>0){
+var s=Math[l<0?"max":"min"](l,r);
+if(rtl&&((_b==8&&!_d)||_b>=9)){
+s=-s;
+}
+_12.x+=el.scrollLeft;
+el.scrollLeft+=s;
+_12.x-=el.scrollLeft;
+}
+if(bot*t>0){
+_12.y+=el.scrollTop;
+el.scrollTop+=Math[t<0?"max":"min"](t,bot);
+_12.y-=el.scrollTop;
+}
+el=(el!=_f)&&!_15&&el.parentNode;
+}
+}
+catch(error){
+console.error("scrollIntoView: "+error);
+_6.scrollIntoView(false);
+}
+};
+return _1.window;
 });

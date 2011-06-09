@@ -1,52 +1,30 @@
-dojo.provide("dojox.form.Manager");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dijit._Widget");
-dojo.require("dijit._TemplatedMixin");
-
-dojo.require("dojox.form.manager._Mixin");
-dojo.require("dojox.form.manager._NodeMixin");
-dojo.require("dojox.form.manager._FormMixin");
-dojo.require("dojox.form.manager._ValueMixin");
-dojo.require("dojox.form.manager._EnableMixin");
-dojo.require("dojox.form.manager._DisplayMixin");
-dojo.require("dojox.form.manager._ClassMixin");
-
-dojo.declare("dojox.form.Manager", [
-		dijit._Widget,
-		dojox.form.manager._Mixin,
-		dojox.form.manager._NodeMixin,
-		dojox.form.manager._FormMixin,
-		dojox.form.manager._ValueMixin,
-		dojox.form.manager._EnableMixin,
-		dojox.form.manager._DisplayMixin,
-		dojox.form.manager._ClassMixin
-], {
-	// summary:
-	//		The widget to orchestrate dynamic forms.
-	// description:
-	//		This widget hosts dojox.form.manager mixins.
-	//		See dojox.form.manager._Mixin for more info.
-
-	buildRendering: function(){
-		var node = (this.domNode = this.srcNodeRef);
-		if(!this.containerNode){
-			// all widgets with descendants must set containerNode
-				this.containerNode = node;
-		}
-		this.inherited(arguments);
-		this._attachPoints = [];
-		this._attachEvents = [];
-		dijit._TemplatedMixin.prototype._attachTemplateNodes.call(this, node, function(n, p){ return n.getAttribute(p); });
-	},
-	
-	destroyRendering: function(preserveDom){
-		// ctm: calling _TemplatedMixin
-		if(!this.__ctm){
-			// avoid recursive call from _TemplatedMixin
-			this.__ctm = true;
-			dijit._TemplatedMixin.prototype.destroyRendering.apply(this, arguments);
-			delete this.__ctm;
-			this.inherited(arguments);
-		}
-	}
+define(["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dojox/form/manager/_Mixin","dojox/form/manager/_NodeMixin","dojox/form/manager/_FormMixin","dojox/form/manager/_ValueMixin","dojox/form/manager/_EnableMixin","dojox/form/manager/_DisplayMixin","dojox/form/manager/_ClassMixin"],function(_1,_2,_3){
+_1.getObject("dojox.form.Manager",1);
+_1.declare("dojox.form.Manager",[_2._Widget,_3.form.manager._Mixin,_3.form.manager._NodeMixin,_3.form.manager._FormMixin,_3.form.manager._ValueMixin,_3.form.manager._EnableMixin,_3.form.manager._DisplayMixin,_3.form.manager._ClassMixin],{buildRendering:function(){
+var _4=(this.domNode=this.srcNodeRef);
+if(!this.containerNode){
+this.containerNode=_4;
+}
+this.inherited(arguments);
+this._attachPoints=[];
+this._attachEvents=[];
+_2._TemplatedMixin.prototype._attachTemplateNodes.call(this,_4,function(n,p){
+return n.getAttribute(p);
 });
+},destroyRendering:function(_5){
+if(!this.__ctm){
+this.__ctm=true;
+_2._TemplatedMixin.prototype.destroyRendering.apply(this,arguments);
+delete this.__ctm;
+this.inherited(arguments);
+}
+}});
+return _1.getObject("dojox.form.Manager");
+});
+require(["dojox/form/Manager"]);

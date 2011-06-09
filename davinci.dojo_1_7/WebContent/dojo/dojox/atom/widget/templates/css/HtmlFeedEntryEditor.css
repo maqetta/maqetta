@@ -2,7 +2,6 @@
         color:#000000;
         background: #FFFFFF;
 }
-
 .feedEntryEditorMenuTable {
         background: #C0C0C0;      
         border:2px solid;
@@ -11,23 +10,19 @@
         border-right-color: darkgray;
         border-bottom-color: darkgray;
 }
-
 .feedEntryEditorMenu {
         cursor: pointer;
         color:#0000FF;
         text-align: left;
         font-size:  small;
 }
-
 .feedEntryEditorDisplayCheckbox {
         font-size:  small;
         text-align: left;
 }
-
 .feedEntryEditorMenu:hover {
         text-decoration: underline;
 }
-
 .feedEntryEditorTitle {
         color:#000000;
         background: #FFFFFF;
@@ -36,12 +31,10 @@
         font-size:  125%;
         font-weight: bold; 
 }
-
 .feedEntryEditorAuthor {
         color:#000000;
         background: #FFFFFF;
 }
-
 .feedEntryEditorAuthorNames {
         color:#000000;
         background: #FFFFFF;
@@ -51,17 +44,14 @@
         font-style: italic;
         font-weight: normal;
 }
-
 .feedEntryEditorSummary {
         color:#000000;
         background: #FFFFFF;
 }
-
 .feedEntryEditorUpdated {
         color:#000000;
         background: #FFFFFF;
 }
-
 .feedEntryEditorUpdatedText {
         color:#000000;
         background: #FFFFFF;
@@ -69,12 +59,10 @@
         font-style: italic;
         font-weight: normal;
 }
-
 .feedEntryEditorId {
         color:#000000;
         background: #FFFFFF;
 }
-
 .feedEntryEditorIdText {
         color:#000000;
         background: #FFFFFF;
@@ -82,12 +70,10 @@
         font-size:  110%;
         font-weight: normal;
 }
-
 .feedEntryEditorContent {
         color:#000000;
         background: #FFFFFF;
 }
-
 .feedEntryEditorContributorNames {
         color:#000000;
         text-align: left;

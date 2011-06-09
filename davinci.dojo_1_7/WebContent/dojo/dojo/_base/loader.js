@@ -1,126 +1,54 @@
-define(["./kernel", "../has", "require"], function(dojo, has, require) {
-	// module:
-	//		dojo/_base/lader
-	// summary:
-	//		This module defines the v1.x synchronous loader API.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// signal the loader in sync mode...
-	//>>pure-amd
-
-	if (!has("dojo-loader")){
-		console.error("cannot load the Dojo v1.x loader with a foreign loader");
-		return;
-	}
-
-	var dojoRequire = require.getDojoLoader(dojo);
-
-	has.add("config-publishRequireResult", 1, 0, 0);
-
-	dojo.require = function(moduleName, omitModuleCheck) {
-		var result = dojoRequire(moduleName);
-		if (!omitModuleCheck && !result) {
-			// TODO throw?
-		}
-		if(has("config-publishRequireResult") && !dojo.exists(moduleName) && result!==undefined){
-			dojo.setObject(moduleName, result);
-		}
-		return result;
-	};
-
-	dojo.loadInit = function(f) {
-		f();
-	};
-
-	dojo.registerModulePath = function(/*String*/moduleName, /*String*/prefix){
-		//	summary:
-		//		Maps a module name to a path
-		//	description:
-		//		An unregistered module is given the default path of ../[module],
-		//		relative to Dojo root. For example, module acme is mapped to
-		//		../acme.  If you want to use a different module name, use
-		//		dojo.registerModulePath.
-		//	example:
-		//		If your dojo.js is located at this location in the web root:
-		//	|	/myapp/js/dojo/dojo/dojo.js
-		//		and your modules are located at:
-		//	|	/myapp/js/foo/bar.js
-		//	|	/myapp/js/foo/baz.js
-		//	|	/myapp/js/foo/thud/xyzzy.js
-		//		Your application can tell Dojo to locate the "foo" namespace by calling:
-		//	|	dojo.registerModulePath("foo", "../../foo");
-		//		At which point you can then use dojo.require() to load the
-		//		modules (assuming they provide() the same things which are
-		//		required). The full code might be:
-		//	|	<script type="text/javascript"
-		//	|		src="/myapp/js/dojo/dojo/dojo.js"></script>
-		//	|	<script type="text/javascript">
-		//	|		dojo.registerModulePath("foo", "../../foo");
-		//	|		dojo.require("foo.bar");
-		//	|		dojo.require("foo.baz");
-		//	|		dojo.require("foo.thud.xyzzy");
-		//	|	</script>
-
-		var paths = {};
-		paths[moduleName.replace(/\./g, "/")] = prefix;
-		require({paths:paths});
-	};
-
-	dojo.platformRequire = function(/*Object*/modMap){
-		//	summary:
-		//		require one or more modules based on which host environment
-		//		Dojo is currently operating in
-		//	description:
-		//		This method takes a "map" of arrays which one can use to
-		//		optionally load dojo modules. The map is indexed by the
-		//		possible dojo.name_ values, with two additional values:
-		//		"default" and "common". The items in the "default" array will
-		//		be loaded if none of the other items have been choosen based on
-		//		dojo.name_, set by your host environment. The items in the
-		//		"common" array will *always* be loaded, regardless of which
-		//		list is chosen.
-		//	example:
-		//		|	dojo.platformRequire({
-		//		|		browser: [
-		//		|			"foo.sample", // simple module
-		//		|			"foo.test",
-		//		|			["foo.bar.baz", true] // skip object check in _loadModule (dojo.require)
-		//		|		],
-		//		|		default: [ "foo.sample._base" ],
-		//		|		common: [ "important.module.common" ]
-		//		|	});
-
-		var common = modMap.common || [];
-		var result = common.concat(modMap[dojo._name] || modMap["default"] || []);
-
-		for(var x=0; x<result.length; x++){
-			var curr = result[x];
-			if(curr.constructor == Array){
-				dojo.require.apply(dojo, curr);
-			}else{
-				dojo.require(curr);
-			}
-		}
-	};
-
-	dojo.requireIf = dojo.requireAfterIf = function(/*Boolean*/ condition, /*String*/ moduleName, /*Boolean?*/omitModuleCheck){
-		// summary:
-		//		If the condition is true then call `dojo.require()` for the specified
-		//		resource
-		//
-		// example:
-		//	|	dojo.requireIf(dojo.isBrowser, "my.special.Module");
-
-		if(condition){
-			dojo.require(moduleName, omitModuleCheck);
-		}
-	};
-
-	dojo.requireLocalization = function(/*String*/moduleName, /*String*/bundleName, /*String?*/locale){
-		require(["../i18n"], function(i18n){
-			i18n.getLocalization(moduleName, bundleName, locale);
-		});
-	};
-
-	// FIXME: this dependency needs to be removed from the demos
-	dojo._getText = require.getText;
+define("dojo/_base/loader",["./kernel","../has","require"],function(_1,_2,_3){
+if(!1){
+console.error("cannot load the Dojo v1.x loader with a foreign loader");
+return;
+}
+var _4=_3.getDojoLoader(_1);
+_2.add("config-publishRequireResult",1,0,0);
+_1.require=function(_5,_6){
+var _7=_4(_5);
+if(!_6&&!_7){
+}
+if(_2("config-publishRequireResult")&&!_1.exists(_5)&&_7!==undefined){
+_1.setObject(_5,_7);
+}
+return _7;
+};
+_1.loadInit=function(f){
+f();
+};
+_1.registerModulePath=function(_8,_9){
+var _a={};
+_a[_8.replace(/\./g,"/")]=_9;
+_3({paths:_a});
+};
+_1.platformRequire=function(_b){
+var _c=_b.common||[];
+var _d=_c.concat(_b[_1._name]||_b["default"]||[]);
+for(var x=0;x<_d.length;x++){
+var _e=_d[x];
+if(_e.constructor==Array){
+_1.require.apply(_1,_e);
+}else{
+_1.require(_e);
+}
+}
+};
+_1.requireIf=_1.requireAfterIf=function(_f,_10,_11){
+if(_f){
+_1.require(_10,_11);
+}
+};
+_1.requireLocalization=function(_12,_13,_14){
+_3(["../i18n"],function(_15){
+_15.getLocalization(_12,_13,_14);
+});
+};
+_1._getText=_3.getText;
 });

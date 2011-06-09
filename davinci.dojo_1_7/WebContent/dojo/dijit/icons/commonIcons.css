@@ -1,10 +1,3 @@
-/* Dijit widget common icons*/
-
-/*commonIcons.css is located in dijit/icons
-
-commonIconsRtl.css is TBD. This needs to be reviewed to determine in Rtl is reqd. 
-
-The 16 x 16px icons in these sprites are action and object type images which can be used in the following widgets: accordionContainer, menu, tab, titlepane, tree, and all button widgets and error validation contexts. */
 
 .dijitIconSave,
 .dijitIconPrint,
@@ -41,11 +34,10 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitFolderOpened,
 .dijitIconFolderOpen,
 .dijitIconError {
-	background-image: url('images/commonIconsObjActEnabled.png'); /* Contains both object and action icons in a sprite image for the enabled state.  */
+	background-image: url('images/commonIconsObjActEnabled.png'); 
 	width: 16px;
 	height: 16px;
 }
-
 .dj_ie6 .dijitIconSave,
 .dj_ie6 .dijitIconPrint,
 .dj_ie6 .dijitIconCut,
@@ -83,7 +75,6 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dj_ie6 .dijitIconError {
 	background-image: url('images/commonIconsObjActEnabled8bit.png');
 }
-
 .dijitDisabled .dijitIconSave,
 .dijitDisabled .dijitIconPrint,
 .dijitDisabled .dijitIconCut,
@@ -119,10 +110,8 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitDisabled .dijitFolderOpened,
 .dijitDisabled .dijitIconFolderOpen,
 .dijitDisabled .dijitIconError {
-	background-image: url('images/commonIconsObjActDisabled.png'); /* Contains both object and action icons as a sprite image for the disabled state. These would be used by buttons and menus.   */
+	background-image: url('images/commonIconsObjActDisabled.png'); 
 }
-
-/*Action icons*/
 .dijitIconSave { background-position: 0; }
 .dijitIconPrint { background-position: -16px; }
 .dijitIconCut { background-position: -32px; }
@@ -139,8 +128,6 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitIconConfigure { background-position: -208px; }
 .dijitIconSearch { background-position: -224px; }
 .dijitIconError { background-position: -496px; } 
-
-/*Object icons*/
 .dijitIconApplication { background-position: -240px; }
 .dijitIconBookmark { background-position: -256px; }
 .dijitIconChart { background-position: -272px; }
@@ -155,17 +142,10 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitIconSample { background-position: -416px; }
 .dijitIconTable { background-position: -432px; }
 .dijitIconUsers { background-position: -448px; }
-
-
-/*Tree folder icons*/
 .dijitIconFolderClosed, .dijitFolderClosed { background-position: -464px; }
 .dijitIconFolderOpen, .dijitFolderOpened { background-position: -480px; }
-
-/*Loading animation*/
 .dijitIconLoading {
 	background:url('images/loadingAnimation_rtl.gif') no-repeat;
 	height: 20px;
 	width: 20px;
 }
-
-

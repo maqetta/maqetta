@@ -1,307 +1,163 @@
-dojo.provide("dojox.xmpp.PresenceService");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojox.xmpp.presence = {
-	UPDATE: 201,
-	SUBSCRIPTION_REQUEST: 202,
-//	SUBSCRIPTION_REQUEST_PENDING: 203,
-	/* used when 'ask' attribute is absent on a roster item */
-	SUBSCRIPTION_SUBSTATUS_NONE: 204,
-
-	SUBSCRIPTION_NONE: 'none',
-	SUBSCRIPTION_FROM: 'from',
-	SUBSCRIPTION_TO: 'to',
-	SUBSCRIPTION_BOTH: 'both',
-	SUBSCRIPTION_REQUEST_PENDING: 'pending',
-
-	STATUS_ONLINE: 'online',
-	STATUS_AWAY: 'away',
-	STATUS_CHAT: 'chat',
-	STATUS_DND: 'dnd',
-	STATUS_EXTENDED_AWAY: 'xa',
-	STATUS_OFFLINE: 'offline',
-	
-	STATUS_INVISIBLE: 'invisible'
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.xmpp.PresenceService",1);
+_3.xmpp.presence={UPDATE:201,SUBSCRIPTION_REQUEST:202,SUBSCRIPTION_SUBSTATUS_NONE:204,SUBSCRIPTION_NONE:"none",SUBSCRIPTION_FROM:"from",SUBSCRIPTION_TO:"to",SUBSCRIPTION_BOTH:"both",SUBSCRIPTION_REQUEST_PENDING:"pending",STATUS_ONLINE:"online",STATUS_AWAY:"away",STATUS_CHAT:"chat",STATUS_DND:"dnd",STATUS_EXTENDED_AWAY:"xa",STATUS_OFFLINE:"offline",STATUS_INVISIBLE:"invisible"};
+_1.declare("dojox.xmpp.PresenceService",null,{constructor:function(_4){
+this.session=_4;
+this.isInvisible=false;
+this.avatarHash=null;
+this.presence=null;
+this.restrictedContactjids={};
+},publish:function(_5){
+this.presence=_5;
+this._setPresence();
+},sendAvatarHash:function(_6){
+this.avatarHash=_6;
+this._setPresence();
+},_setPresence:function(){
+var _7=this.presence;
+var p={xmlns:"jabber:client"};
+if(_7&&_7.to){
+p.to=_7.to;
 }
-
-dojo.declare("dojox.xmpp.PresenceService", null, {
-	constructor: function(xmppService){
-		this.session= xmppService;
-		this.isInvisible = false;
-		this.avatarHash = null;
-		this.presence = null;
-		this.restrictedContactjids = {};
-	},
-
-	publish: function(presence){
-		////console.log("Presence::publish() ", presence);
-		this.presence  = presence;
-		this._setPresence();
-	},
-	
-	/**
-	<presence from='juliet@capulet.com/balcony'>
-	  <x xmlns='vcard-temp:x:update'>
-	    <photo>sha1-hash-of-image</photo>
-	  </x>
-	</presence>
-	
-	
-	<presence>
-	  <x xmlns='vcard-temp:x:update'>
-	    <photo/>
-	  </x>
-	</presence>
-	
-	*/
-	
-	sendAvatarHash: function(avatarHash) {
-			this.avatarHash = avatarHash;
-			this._setPresence();
-	},
-	
-	
-	_setPresence: function() {
-			var presence = 	this.presence;
-			var p = {xmlns: 'jabber:client'};
-
-			if (presence && presence.to){
-				p.to = presence.to;
-			}
-
-			if (presence.show && presence.show==dojox.xmpp.presence.STATUS_OFFLINE){
-				p.type = 'unavailable';
-			}
-
-			if (presence.show && presence.show==dojox.xmpp.presence.STATUS_INVISIBLE) {
-				this._setInvisible();
-				this.isInvisible = true;
-				return;
-			};
-
-			if(this.isInvisible) {
-				//console.log("was invisible, making visible");
-				this._setVisible();
-			}
-
-			var req = new dojox.string.Builder(dojox.xmpp.util.createElement("presence",p, false));
-
-			if (presence.show && presence.show!=dojox.xmpp.presence.STATUS_OFFLINE  ) {
-				req.append(dojox.xmpp.util.createElement("show",{},false));
-				req.append(presence.show);
-				req.append("</show>");
-			}
-
-			if(presence.status) {
-				req.append(dojox.xmpp.util.createElement("status",{},false));
-				req.append(presence.status);
-				req.append("</status>");
-			}
-
-			if(this.avatarHash) {
-				req.append(dojox.xmpp.util.createElement("x",{xmlns: 'vcard-temp:x:update'},false));
-					req.append(dojox.xmpp.util.createElement("photo",{},false));
-					req.append(this.avatarHash);
-					req.append("</photo>");
-				req.append("</x>");
-			}
-
-
-			if (presence.priority && presence.show!=dojox.xmpp.presence.STATUS_OFFLINE){
-				if(presence.priority > 127 || presence.priority < -128){
-					presence.priority = 5;
-				}
-				req.append(dojox.xmpp.util.createElement("priority",{},false));
-				req.append(presence.priority);
-				req.append("</priority>");
-			}
-
-			req.append("</presence>");
-			this.session.dispatchPacket(req.toString());
-	},
-	
-	/*
-	
-	<iq from='bilbo@tolkien.lit/shire' type='set' id='inv1'>
-	  <query xmlns='jabber:iq:privacy'>
-	    <list name='invisible'>
-	      <item action='deny' order='1'>
-	        <presence-out/>
-	      </item>
-	    </list>
-	  </query>
-	</iq>
-	
-	<iq from='bilbo@tolkien.lit/shire' type='set' id='active1'>
-	  <query xmlns='jabber:iq:privacy'>
-	    <active name='invisible'/>
-	  </query>
-	</iq>
-	
-	Make visible:
-	<iq from='bilbo@tolkien.lit/shire' type='set' id='active6'>
-	  <query xmlns='jabber:iq:privacy'>
-	    <active/>
-	  </query>
-	</iq>
-	
-	*/
-	
-	toggleBlockContact: function(jid) {
-		if(!this.restrictedContactjids[jid]) {
-			this.restrictedContactjids[jid] = this._createRestrictedJid();
-		}
-		
-		this.restrictedContactjids[jid].blocked = !this.restrictedContactjids[jid].blocked;
-		//console.log("setting outbound block for ", jid, this.restrictedContactjids[jid]);
-		this._updateRestricted();
-		return this.restrictedContactjids;
-	},
-	
-	
-	toggleContactInvisiblity: function(jid) {
-		if(!this.restrictedContactjids[jid]) {
-			this.restrictedContactjids[jid] = this._createRestrictedJid();
-		}
-		
-		this.restrictedContactjids[jid].invisible = !this.restrictedContactjids[jid].invisible;
-		//console.log("setting outbound presence for ", jid, this.restrictedContactjids[jid]);
-		this._updateRestricted();
-		return this.restrictedContactjids;
-	},
-	
-	_createRestrictedJid: function() {
-		return {invisible: false, blocked:false};
-	},
-	
-	_updateRestricted: function() {
-		
-		var props={
-			id: this.session.getNextIqId(),
-			from: this.session.jid + "/" + this.session.resource,
-			type: "set"
-		};
-		
-		var req = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",props,false));
-		req.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:privacy"},false));
-		req.append(dojox.xmpp.util.createElement("list",{name: "iwcRestrictedContacts"},false))
-		var count = 1;
-		for(var jid in this.restrictedContactjids) {
-			var item = this.restrictedContactjids[jid];
-			//console.log("restricted ", jid, item);
-			if(item.blocked || item.invisible) {
-				req.append(dojox.xmpp.util.createElement("item",{value:  dojox.xmpp.util.encodeJid(jid), action: "deny", order: count++},false));
-				if(item.blocked) {
-					req.append(dojox.xmpp.util.createElement("message",{},true));
-				}
-				if(item.invisible) {
-					req.append(dojox.xmpp.util.createElement("presence-out",{},true));
-				}
-				req.append("</item>");
-			} else {
-				delete this.restrictedContactjids[jid];
-			}
-			
-		
-			
-		}
-				req.append("</list>");
-			req.append("</query>");
-		req.append("</iq>");
-		//console.log("Restricted list: ", req.toString());
-		
-			var req2 = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",props,false));
-				req2.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:privacy"},false));
-					req2.append(dojox.xmpp.util.createElement("active",{name:"iwcRestrictedContacts"},true));
-				req2.append("</query>");
-			req2.append("</iq>");
-		
-				//console.log("Activate list: ", req2.toString());
-		
-		
-		this.session.dispatchPacket(req.toString());
-		this.session.dispatchPacket(req2.toString());
-	},
-	
-	_setVisible: function() {
-			var props={
-				id: this.session.getNextIqId(),
-				from: this.session.jid + "/" + this.session.resource,
-				type: "set"
-			};
-			var req = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",props,false));
-				req.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:privacy"},false));
-					req.append(dojox.xmpp.util.createElement("active",{},true));
-				req.append("</query>");
-			req.append("</iq>");
-			//console.log(req.toString());
-			this.session.dispatchPacket(req.toString());
-	},
-	
-	_setInvisible: function() {
-		//console.log("Setting user as invisible");
-		var props={
-			id: this.session.getNextIqId(),
-			from: this.session.jid + "/" + this.session.resource,
-			type: "set"
-		};
-		var req = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",props,false));
-			req.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:privacy"},false));
-				req.append(dojox.xmpp.util.createElement("list",{name: "invisible"},false))
-					req.append(dojox.xmpp.util.createElement("item",{action: "deny", order: "1"},false))
-						req.append(dojox.xmpp.util.createElement("presence-out",{},true));
-					req.append("</item>");
-				req.append("</list>");
-			req.append("</query>");
-		req.append("</iq>");
-		
-		
-		props={
-			id: this.session.getNextIqId(),
-			from: this.session.jid + "/" + this.session.resource,
-			type: "set"
-		};
-
-		var req2 = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",props,false));
-			req2.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:privacy"},false));
-				req2.append(dojox.xmpp.util.createElement("active",{name:"invisible"},true));
-			req2.append("</query>");
-		req2.append("</iq>");
-		//console.log(req.toString());
-		//console.log(req2.toString());
-		this.session.dispatchPacket(req.toString());
-		this.session.dispatchPacket(req2.toString());
-	},
-
-	_manageSubscriptions: function(contact, type){
-		if (!contact){return;}
-		
-		if (contact.indexOf('@')==-1){
-			contact += '@' + this.session.domain;
-		}
-
-		var req = dojox.xmpp.util.createElement("presence",{to:contact,type:type},true);
-		this.session.dispatchPacket(req);
-
-	},
-
-	subscribe: function(contact){
-		this._manageSubscriptions(contact, "subscribe");
-	},
-
-	approveSubscription: function(contact){
-		this._manageSubscriptions(contact, "subscribed");
-	},
-
-	unsubscribe: function(contact){
-		this._manageSubscriptions(contact, "unsubscribe");
-	},
-
-	declineSubscription: function(contact){
-		this._manageSubscriptions(contact, "unsubscribed");
-	},
-	
-	cancelSubscription: function(contact){
-		this._manageSubscriptions(contact, "unsubscribed");
-	}
-
+if(_7.show&&_7.show==_3.xmpp.presence.STATUS_OFFLINE){
+p.type="unavailable";
+}
+if(_7.show&&_7.show==_3.xmpp.presence.STATUS_INVISIBLE){
+this._setInvisible();
+this.isInvisible=true;
+return;
+}
+if(this.isInvisible){
+this._setVisible();
+}
+var _8=new _3.string.Builder(_3.xmpp.util.createElement("presence",p,false));
+if(_7.show&&_7.show!=_3.xmpp.presence.STATUS_OFFLINE){
+_8.append(_3.xmpp.util.createElement("show",{},false));
+_8.append(_7.show);
+_8.append("</show>");
+}
+if(_7.status){
+_8.append(_3.xmpp.util.createElement("status",{},false));
+_8.append(_7.status);
+_8.append("</status>");
+}
+if(this.avatarHash){
+_8.append(_3.xmpp.util.createElement("x",{xmlns:"vcard-temp:x:update"},false));
+_8.append(_3.xmpp.util.createElement("photo",{},false));
+_8.append(this.avatarHash);
+_8.append("</photo>");
+_8.append("</x>");
+}
+if(_7.priority&&_7.show!=_3.xmpp.presence.STATUS_OFFLINE){
+if(_7.priority>127||_7.priority<-128){
+_7.priority=5;
+}
+_8.append(_3.xmpp.util.createElement("priority",{},false));
+_8.append(_7.priority);
+_8.append("</priority>");
+}
+_8.append("</presence>");
+this.session.dispatchPacket(_8.toString());
+},toggleBlockContact:function(_9){
+if(!this.restrictedContactjids[_9]){
+this.restrictedContactjids[_9]=this._createRestrictedJid();
+}
+this.restrictedContactjids[_9].blocked=!this.restrictedContactjids[_9].blocked;
+this._updateRestricted();
+return this.restrictedContactjids;
+},toggleContactInvisiblity:function(_a){
+if(!this.restrictedContactjids[_a]){
+this.restrictedContactjids[_a]=this._createRestrictedJid();
+}
+this.restrictedContactjids[_a].invisible=!this.restrictedContactjids[_a].invisible;
+this._updateRestricted();
+return this.restrictedContactjids;
+},_createRestrictedJid:function(){
+return {invisible:false,blocked:false};
+},_updateRestricted:function(){
+var _b={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,type:"set"};
+var _c=new _3.string.Builder(_3.xmpp.util.createElement("iq",_b,false));
+_c.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:privacy"},false));
+_c.append(_3.xmpp.util.createElement("list",{name:"iwcRestrictedContacts"},false));
+var _d=1;
+for(var _e in this.restrictedContactjids){
+var _f=this.restrictedContactjids[_e];
+if(_f.blocked||_f.invisible){
+_c.append(_3.xmpp.util.createElement("item",{value:_3.xmpp.util.encodeJid(_e),action:"deny",order:_d++},false));
+if(_f.blocked){
+_c.append(_3.xmpp.util.createElement("message",{},true));
+}
+if(_f.invisible){
+_c.append(_3.xmpp.util.createElement("presence-out",{},true));
+}
+_c.append("</item>");
+}else{
+delete this.restrictedContactjids[_e];
+}
+}
+_c.append("</list>");
+_c.append("</query>");
+_c.append("</iq>");
+var _10=new _3.string.Builder(_3.xmpp.util.createElement("iq",_b,false));
+_10.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:privacy"},false));
+_10.append(_3.xmpp.util.createElement("active",{name:"iwcRestrictedContacts"},true));
+_10.append("</query>");
+_10.append("</iq>");
+this.session.dispatchPacket(_c.toString());
+this.session.dispatchPacket(_10.toString());
+},_setVisible:function(){
+var _11={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,type:"set"};
+var req=new _3.string.Builder(_3.xmpp.util.createElement("iq",_11,false));
+req.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:privacy"},false));
+req.append(_3.xmpp.util.createElement("active",{},true));
+req.append("</query>");
+req.append("</iq>");
+this.session.dispatchPacket(req.toString());
+},_setInvisible:function(){
+var _12={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,type:"set"};
+var req=new _3.string.Builder(_3.xmpp.util.createElement("iq",_12,false));
+req.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:privacy"},false));
+req.append(_3.xmpp.util.createElement("list",{name:"invisible"},false));
+req.append(_3.xmpp.util.createElement("item",{action:"deny",order:"1"},false));
+req.append(_3.xmpp.util.createElement("presence-out",{},true));
+req.append("</item>");
+req.append("</list>");
+req.append("</query>");
+req.append("</iq>");
+_12={id:this.session.getNextIqId(),from:this.session.jid+"/"+this.session.resource,type:"set"};
+var _13=new _3.string.Builder(_3.xmpp.util.createElement("iq",_12,false));
+_13.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:privacy"},false));
+_13.append(_3.xmpp.util.createElement("active",{name:"invisible"},true));
+_13.append("</query>");
+_13.append("</iq>");
+this.session.dispatchPacket(req.toString());
+this.session.dispatchPacket(_13.toString());
+},_manageSubscriptions:function(_14,_15){
+if(!_14){
+return;
+}
+if(_14.indexOf("@")==-1){
+_14+="@"+this.session.domain;
+}
+var req=_3.xmpp.util.createElement("presence",{to:_14,type:_15},true);
+this.session.dispatchPacket(req);
+},subscribe:function(_16){
+this._manageSubscriptions(_16,"subscribe");
+},approveSubscription:function(_17){
+this._manageSubscriptions(_17,"subscribed");
+},unsubscribe:function(_18){
+this._manageSubscriptions(_18,"unsubscribe");
+},declineSubscription:function(_19){
+this._manageSubscriptions(_19,"unsubscribed");
+},cancelSubscription:function(_1a){
+this._manageSubscriptions(_1a,"unsubscribed");
+}});
+return _1.getObject("dojox.xmpp.PresenceService");
 });
+require(["dojox/xmpp/PresenceService"]);

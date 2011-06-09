@@ -1,193 +1,136 @@
-define(['dojo/_base/kernel', 'dojo/_base/lang', 'dojo/_base/array', 'dojo/_base/window', 'dojo/_base/sniff'], function(dojo){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("xml.parser", true, dojox);
-
-//DOM type to int value for reference.
-//Ints make for more compact code than full constant names.
-//ELEMENT_NODE                  = 1;
-//ATTRIBUTE_NODE                = 2;
-//TEXT_NODE                     = 3;
-//CDATA_SECTION_NODE            = 4;
-//ENTITY_REFERENCE_NODE         = 5;
-//ENTITY_NODE                   = 6;
-//PROCESSING_INSTRUCTION_NODE   = 7;
-//COMMENT_NODE                  = 8;
-//DOCUMENT_NODE                 = 9;
-//DOCUMENT_TYPE_NODE            = 10;
-//DOCUMENT_FRAGMENT_NODE        = 11;
-//NOTATION_NODE                 = 12;
-
-dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
-	//	summary:
-	//		cross-browser implementation of creating an XML document object from null, empty string, and XML text..
-	//
-	//	str:
-	//		Optional text to create the document from.  If not provided, an empty XML document will be created.
-	//		If str is empty string "", then a new empty document will be created.
-	//	mimetype:
-	//		Optional mimetype of the text.  Typically, this is text/xml.  Will be defaulted to text/xml if not provided.
-	var _document = dojo.doc;
-	var doc;
-
-	mimetype = mimetype || "text/xml";
-	if(str && dojo.trim(str) && "DOMParser" in dojo.global){
-		//Handle parsing the text on Mozilla based browsers etc..
-		var parser = new DOMParser();
-		doc = parser.parseFromString(str, mimetype);
-		var de = doc.documentElement;
-		var errorNS = "http://www.mozilla.org/newlayout/xml/parsererror.xml";
-		if(de.nodeName == "parsererror" && de.namespaceURI == errorNS){
-			var sourceText = de.getElementsByTagNameNS(errorNS, 'sourcetext')[0];
-			if(sourceText){
-				sourceText = sourceText.firstChild.data;
-			}
-        	throw new Error("Error parsing text " + de.firstChild.data + " \n" + sourceText);
-		}
-		return doc;
-
-	}else if("ActiveXObject" in dojo.global){
-		//Handle IE.
-		var ms = function(n){ return "MSXML" + n + ".DOMDocument"; };
-		var dp = ["Microsoft.XMLDOM", ms(6), ms(4), ms(3), ms(2)];
-		dojo.some(dp, function(p){
-			try{
-				doc = new ActiveXObject(p);
-			}catch(e){ return false; }
-			return true;
-		});
-		if(str && doc){
-			doc.async = false;
-			doc.loadXML(str);
-			var pe = doc.parseError;
-			if(pe.errorCode !== 0){
-				throw new Error("Line: " + pe.line + "\n" +
-					"Col: " + pe.linepos + "\n" +
-					"Reason: " + pe.reason + "\n" +
-					"Error Code: " + pe.errorCode + "\n" +
-					"Source: " + pe.srcText);
-			}
-		}
-		if(doc){
-			return doc; //DOMDocument
-		}
-	}else if(_document.implementation && _document.implementation.createDocument){
-		if(str && dojo.trim(str) && _document.createElement){
-			//Everyone else that we couldn't get to work.  Fallback case.
-			// FIXME: this may change all tags to uppercase!
-			var tmp = _document.createElement("xml");
-			tmp.innerHTML = str;
-			var xmlDoc = _document.implementation.createDocument("foo", "", null);
-			dojo.forEach(tmp.childNodes, function(child){
-				xmlDoc.importNode(child, true);
-			});
-			return xmlDoc;	//	DOMDocument
-		}else{
-			return _document.implementation.createDocument("", "", null); // DOMDocument
-		}
-	}
-	return null;	//	null
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/window","dojo/_base/sniff"],function(_1){
+_1.getObject("xml.parser",true,dojox);
+dojox.xml.parser.parse=function(_2,_3){
+var _4=_1.doc;
+var _5;
+_3=_3||"text/xml";
+if(_2&&_1.trim(_2)&&"DOMParser" in _1.global){
+var _6=new DOMParser();
+_5=_6.parseFromString(_2,_3);
+var de=_5.documentElement;
+var _7="http://www.mozilla.org/newlayout/xml/parsererror.xml";
+if(de.nodeName=="parsererror"&&de.namespaceURI==_7){
+var _8=de.getElementsByTagNameNS(_7,"sourcetext")[0];
+if(_8){
+_8=_8.firstChild.data;
+}
+throw new Error("Error parsing text "+de.firstChild.data+" \n"+_8);
+}
+return _5;
+}else{
+if("ActiveXObject" in _1.global){
+var ms=function(n){
+return "MSXML"+n+".DOMDocument";
 };
-
-dojox.xml.parser.textContent = function(/*Node*/node, /*String?*/text){
-	//	summary:
-	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//	description:
-	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//		This function can also update the text of a node by replacing all child
-	//		content of the node.
-	//	node:
-	//		The node to get the text off of or set the text on.
-	//	text:
-	//		Optional argument of the text to apply to the node.
-	if(arguments.length>1){
-		var _document = node.ownerDocument || dojo.doc;  //Preference is to get the node owning doc first or it may fail
-		dojox.xml.parser.replaceChildren(node, _document.createTextNode(text));
-		return text;	//	String
-	}else{
-		if(node.textContent !== undefined){ //FF 1.5 -- remove?
-			return node.textContent;	//	String
-		}
-		var _result = "";
-		if(node){
-			dojo.forEach(node.childNodes, function(child){
-				switch(child.nodeType){
-					case 1: // ELEMENT_NODE
-					case 5: // ENTITY_REFERENCE_NODE
-						_result += dojox.xml.parser.textContent(child);
-						break;
-					case 3: // TEXT_NODE
-					case 2: // ATTRIBUTE_NODE
-					case 4: // CDATA_SECTION_NODE
-						_result += child.nodeValue;
-				}
-			});
-		}
-		return _result;	//	String
-	}
+var dp=["Microsoft.XMLDOM",ms(6),ms(4),ms(3),ms(2)];
+_1.some(dp,function(p){
+try{
+_5=new ActiveXObject(p);
+}
+catch(e){
+return false;
+}
+return true;
+});
+if(_2&&_5){
+_5.async=false;
+_5.loadXML(_2);
+var pe=_5.parseError;
+if(pe.errorCode!==0){
+throw new Error("Line: "+pe.line+"\n"+"Col: "+pe.linepos+"\n"+"Reason: "+pe.reason+"\n"+"Error Code: "+pe.errorCode+"\n"+"Source: "+pe.srcText);
+}
+}
+if(_5){
+return _5;
+}
+}else{
+if(_4.implementation&&_4.implementation.createDocument){
+if(_2&&_1.trim(_2)&&_4.createElement){
+var _9=_4.createElement("xml");
+_9.innerHTML=_2;
+var _a=_4.implementation.createDocument("foo","",null);
+_1.forEach(_9.childNodes,function(_b){
+_a.importNode(_b,true);
+});
+return _a;
+}else{
+return _4.implementation.createDocument("","",null);
+}
+}
+}
+}
+return null;
 };
-
-dojox.xml.parser.replaceChildren = function(/*Element*/node, /*Node || Array*/ newChildren){
-	//	summary:
-	//		Removes all children of node and appends newChild. All the existing
-	//		children will be destroyed.
-	//	description:
-	//		Removes all children of node and appends newChild. All the existing
-	//		children will be destroyed.
-	// 	node:
-	//		The node to modify the children on
-	//	newChildren:
-	//		The children to add to the node.  It can either be a single Node or an
-	//		array of Nodes.
-	var nodes = [];
-
-	if(dojo.isIE){
-		dojo.forEach(node.childNodes, function(child){
-			nodes.push(child);
-		});
-	}
-
-	dojox.xml.parser.removeChildren(node);
-	dojo.forEach(nodes, dojo.destroy);
-
-	if(!dojo.isArray(newChildren)){
-		node.appendChild(newChildren);
-	}else{
-		dojo.forEach(newChildren, function(child){
-			node.appendChild(child);
-		});
-	}
+dojox.xml.parser.textContent=function(_c,_d){
+if(arguments.length>1){
+var _e=_c.ownerDocument||_1.doc;
+dojox.xml.parser.replaceChildren(_c,_e.createTextNode(_d));
+return _d;
+}else{
+if(_c.textContent!==undefined){
+return _c.textContent;
+}
+var _f="";
+if(_c){
+_1.forEach(_c.childNodes,function(_10){
+switch(_10.nodeType){
+case 1:
+case 5:
+_f+=dojox.xml.parser.textContent(_10);
+break;
+case 3:
+case 2:
+case 4:
+_f+=_10.nodeValue;
+}
+});
+}
+return _f;
+}
 };
-
-dojox.xml.parser.removeChildren = function(/*Element*/node){
-	//	summary:
-	//		removes all children from node and returns the count of children removed.
-	//		The children nodes are not destroyed. Be sure to call dojo.destroy on them
-	//		after they are not used anymore.
-	//	node:
-	//		The node to remove all the children from.
-	var count = node.childNodes.length;
-	while(node.hasChildNodes()){
-		node.removeChild(node.firstChild);
-	}
-	return count; // int
+dojox.xml.parser.replaceChildren=function(_11,_12){
+var _13=[];
+if(_1.isIE){
+_1.forEach(_11.childNodes,function(_14){
+_13.push(_14);
+});
+}
+dojox.xml.parser.removeChildren(_11);
+_1.forEach(_13,_1.destroy);
+if(!_1.isArray(_12)){
+_11.appendChild(_12);
+}else{
+_1.forEach(_12,function(_15){
+_11.appendChild(_15);
+});
+}
 };
-
-
-dojox.xml.parser.innerXML = function(/*Node*/node){
-	//	summary:
-	//		Implementation of MS's innerXML function.
-	//	node:
-	//		The node from which to generate the XML text representation.
-	if(node.innerXML){
-		return node.innerXML;	//	String
-	}else if(node.xml){
-		return node.xml;		//	String
-	}else if(typeof XMLSerializer != "undefined"){
-		return (new XMLSerializer()).serializeToString(node);	//	String
-	}
-	return null;
+dojox.xml.parser.removeChildren=function(_16){
+var _17=_16.childNodes.length;
+while(_16.hasChildNodes()){
+_16.removeChild(_16.firstChild);
+}
+return _17;
 };
-
+dojox.xml.parser.innerXML=function(_18){
+if(_18.innerXML){
+return _18.innerXML;
+}else{
+if(_18.xml){
+return _18.xml;
+}else{
+if(typeof XMLSerializer!="undefined"){
+return (new XMLSerializer()).serializeToString(_18);
+}
+}
+}
+return null;
+};
 return dojox.xml.parser;
-
 });

@@ -1,111 +1,87 @@
-define(["./kernel"], function(dojo) {
-	// module:
-	//		dojo/url
-	// summary:
-	//		This module contains dojo._Url
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var
-		ore = new RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$"),
-		ire = new RegExp("^((([^\\[:]+):)?([^@]+)@)?(\\[([^\\]]+)\\]|([^\\[:]*))(:([0-9]+))?$"),
-		_Url = function(){
-			var n = null,
-				_a = arguments,
-				uri = [_a[0]];
-			// resolve uri components relative to each other
-			for(var i = 1; i<_a.length; i++){
-				if(!_a[i]){ continue; }
-
-				// Safari doesn't support this.constructor so we have to be explicit
-				// FIXME: Tracked (and fixed) in Webkit bug 3537.
-				//		http://bugs.webkit.org/show_bug.cgi?id=3537
-				var relobj = new _Url(_a[i]+""),
-					uriobj = new _Url(uri[0]+"");
-
-				if(
-					relobj.path == "" &&
-					!relobj.scheme &&
-					!relobj.authority &&
-					!relobj.query
-				){
-					if(relobj.fragment != n){
-						uriobj.fragment = relobj.fragment;
-					}
-					relobj = uriobj;
-				}else if(!relobj.scheme){
-					relobj.scheme = uriobj.scheme;
-
-					if(!relobj.authority){
-						relobj.authority = uriobj.authority;
-
-						if(relobj.path.charAt(0) != "/"){
-							var path = uriobj.path.substring(0,
-								uriobj.path.lastIndexOf("/") + 1) + relobj.path;
-
-							var segs = path.split("/");
-							for(var j = 0; j < segs.length; j++){
-								if(segs[j] == "."){
-									// flatten "./" references
-									if(j == segs.length - 1){
-										segs[j] = "";
-									}else{
-										segs.splice(j, 1);
-										j--;
-									}
-								}else if(j > 0 && !(j == 1 && segs[0] == "") &&
-									segs[j] == ".." && segs[j-1] != ".."){
-									// flatten "../" references
-									if(j == (segs.length - 1)){
-										segs.splice(j, 1);
-										segs[j - 1] = "";
-									}else{
-										segs.splice(j - 1, 2);
-										j -= 2;
-									}
-								}
-							}
-							relobj.path = segs.join("/");
-						}
-					}
-				}
-
-				uri = [];
-				if(relobj.scheme){
-					uri.push(relobj.scheme, ":");
-				}
-				if(relobj.authority){
-					uri.push("//", relobj.authority);
-				}
-				uri.push(relobj.path);
-				if(relobj.query){
-					uri.push("?", relobj.query);
-				}
-				if(relobj.fragment){
-					uri.push("#", relobj.fragment);
-				}
-			}
-
-			this.uri = uri.join("");
-
-			// break the uri into its main components
-			var r = this.uri.match(ore);
-
-			this.scheme = r[2] || (r[1] ? "" : n);
-			this.authority = r[4] || (r[3] ? "" : n);
-			this.path = r[5]; // can never be undefined
-			this.query = r[7] || (r[6] ? "" : n);
-			this.fragment	 = r[9] || (r[8] ? "" : n);
-
-			if(this.authority != n){
-				// server based naming authority
-				r = this.authority.match(ire);
-
-				this.user = r[3] || n;
-				this.password = r[4] || n;
-				this.host = r[6] || r[7]; // ipv6 || ipv4
-				this.port = r[9] || n;
-			}
-		};
-	_Url.prototype.toString = function(){ return this.uri; };
-
-	return dojo._Url = _Url;
+define("dojo/_base/url",["./kernel"],function(_1){
+var _2=new RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$"),_3=new RegExp("^((([^\\[:]+):)?([^@]+)@)?(\\[([^\\]]+)\\]|([^\\[:]*))(:([0-9]+))?$"),_4=function(){
+var n=null,_5=arguments,_6=[_5[0]];
+for(var i=1;i<_5.length;i++){
+if(!_5[i]){
+continue;
+}
+var _7=new _4(_5[i]+""),_8=new _4(_6[0]+"");
+if(_7.path==""&&!_7.scheme&&!_7.authority&&!_7.query){
+if(_7.fragment!=n){
+_8.fragment=_7.fragment;
+}
+_7=_8;
+}else{
+if(!_7.scheme){
+_7.scheme=_8.scheme;
+if(!_7.authority){
+_7.authority=_8.authority;
+if(_7.path.charAt(0)!="/"){
+var _9=_8.path.substring(0,_8.path.lastIndexOf("/")+1)+_7.path;
+var _a=_9.split("/");
+for(var j=0;j<_a.length;j++){
+if(_a[j]=="."){
+if(j==_a.length-1){
+_a[j]="";
+}else{
+_a.splice(j,1);
+j--;
+}
+}else{
+if(j>0&&!(j==1&&_a[0]=="")&&_a[j]==".."&&_a[j-1]!=".."){
+if(j==(_a.length-1)){
+_a.splice(j,1);
+_a[j-1]="";
+}else{
+_a.splice(j-1,2);
+j-=2;
+}
+}
+}
+}
+_7.path=_a.join("/");
+}
+}
+}
+}
+_6=[];
+if(_7.scheme){
+_6.push(_7.scheme,":");
+}
+if(_7.authority){
+_6.push("//",_7.authority);
+}
+_6.push(_7.path);
+if(_7.query){
+_6.push("?",_7.query);
+}
+if(_7.fragment){
+_6.push("#",_7.fragment);
+}
+}
+this.uri=_6.join("");
+var r=this.uri.match(_2);
+this.scheme=r[2]||(r[1]?"":n);
+this.authority=r[4]||(r[3]?"":n);
+this.path=r[5];
+this.query=r[7]||(r[6]?"":n);
+this.fragment=r[9]||(r[8]?"":n);
+if(this.authority!=n){
+r=this.authority.match(_3);
+this.user=r[3]||n;
+this.password=r[4]||n;
+this.host=r[6]||r[7];
+this.port=r[9]||n;
+}
+};
+_4.prototype.toString=function(){
+return this.uri;
+};
+return _1._Url=_4;
 });

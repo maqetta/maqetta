@@ -1,4 +1,4 @@
-/* === Minus and Plus Buttons ==*/
+
 .mblDomButtonBlueMinus {
 	background-image: url(compat/mblDomButtonBlueMinus.png);
 	background-repeat: no-repeat;
@@ -6,7 +6,6 @@
 .mblDomButtonBlueMinus DIV {
 	display: none;
 }
-
 .mblDomButtonBluePlus {
 	background-image: url(compat/mblDomButtonBluePlus.png);
 	background-repeat: no-repeat;
@@ -14,7 +13,6 @@
 .mblDomButtonBluePlus DIV {
 	display: none;
 }
-
 .mblDomButtonDarkBlueMinus {
 	background-image: url(compat/mblDomButtonDarkBlueMinus.png);
 	background-repeat: no-repeat;
@@ -22,7 +20,6 @@
 .mblDomButtonDarkBlueMinus DIV {
 	display: none;
 }
-
 .mblDomButtonDarkBluePlus {
 	background-image: url(compat/mblDomButtonDarkBluePlus.png);
 	background-repeat: no-repeat;
@@ -30,7 +27,6 @@
 .mblDomButtonDarkBluePlus DIV {
 	display: none;
 }
-
 .mblDomButtonRedMinus {
 	background-image: url(compat/mblDomButtonRedMinus.png);
 	background-repeat: no-repeat;
@@ -38,7 +34,6 @@
 .mblDomButtonRedMinus DIV {
 	display: none;
 }
-
 .mblDomButtonRedPlus {
 	background-image: url(compat/mblDomButtonRedPlus.png);
 	background-repeat: no-repeat;

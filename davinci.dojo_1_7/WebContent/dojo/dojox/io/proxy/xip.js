@@ -1,439 +1,257 @@
-define(['dojo/_base/lang', 'dojo/io/iframe', 'dojox/data/dom', 'dojo/_base/xhr', 'dojo/_base/url'], function(dojo, iframe, dom){
-	dojo.getObject("io.proxy.xip", true, dojox);
-
-dojox.io.proxy.xip = {
-	//summary: Object that implements the iframe handling for XMLHttpRequest
-	//IFrame Proxying.
-	//description: Do not use this object directly. See the Dojo Book page
-	//on XMLHttpRequest IFrame Proxying:
-	//http://dojotoolkit.org/book/dojo-book-0-4/part-5-connecting-pieces/i-o/cross-domain-xmlhttprequest-using-iframe-proxy
-	//Usage of XHR IFrame Proxying does not work from local disk in Safari.
-
-	/*
-	This code is really focused on just sending one complete request to the server, and
-	receiving one complete response per iframe. The code does not expect to reuse iframes for multiple XHR request/response
-	sequences. This might be reworked later if performance indicates a need for it.
-	
-	xip fragment identifier/hash values have the form:
-	#id:cmd:realEncodedMessage
-
-	id: some ID that should be unique among message fragments. No inherent meaning,
-	        just something to make sure the hash value is unique so the message
-	        receiver knows a new message is available.
-	        
-	cmd: command to the receiver. Valid values are:
-	         - init: message used to init the frame. Sent as the first URL when loading
-	                 the page. Contains some config parameters.
-	         - loaded: the remote frame is loaded. Only sent from xip_client.html to this module.
-	         - ok: the message that this page sent was received OK. The next message may
-	               now be sent.
-	         - start: the start message of a block of messages (a complete message may
-	                  need to be segmented into many messages to get around the limitiations
-	                  of the size of an URL that a browser accepts.
-	         - part: indicates this is a part of a message.
-	         - end: the end message of a block of messages. The message can now be acted upon.
-	                If the message is small enough that it doesn't need to be segmented, then
-	                just one hash value message can be sent with "end" as the command.
-	
-	To reassemble a segmented message, the realEncodedMessage parts just have to be concatenated
-	together.
-	*/
-
-	xipClientUrl: ((dojo.config || djConfig)["xipClientUrl"]) || dojo.moduleUrl("dojox.io.proxy", "xip_client.html").toString(),
-
-
-	//MSIE has the lowest limit for URLs with fragment identifiers,
-	//at around 4K. Choosing a slightly smaller number for good measure.
-	urlLimit: 4000,
-
-	_callbackName: (dojox._scopeName || "dojox") + ".io.proxy.xip.fragmentReceived",
-	_state: {},
-	_stateIdCounter: 0,
-	_isWebKit: navigator.userAgent.indexOf("WebKit") != -1,
-
-
-	send: function(/*Object*/facade){
-		//summary: starts the xdomain request using the provided facade.
-		//This method first does some init work, then delegates to _realSend.
-
-		var url = this.xipClientUrl;
-		//Make sure we are not dealing with javascript urls, just to be safe.
-		if(url.split(":")[0].match(/javascript/i) || facade._ifpServerUrl.split(":")[0].match(/javascript/i)){
-			return;
-		}
-		
-		//Make xip_client a full URL.
-		var colonIndex = url.indexOf(":");
-		var slashIndex = url.indexOf("/");
-		if(colonIndex == -1 || slashIndex < colonIndex){
-			//No colon or we are starting with a / before a colon, so we need to make a full URL.
-			var loc = window.location.href;
-			if(slashIndex == 0){
-				//Have a full path, just need the domain.
-				url = loc.substring(0, loc.indexOf("/", 9)) + url; //Using 9 to get past http(s)://
-			}else{
-				url = loc.substring(0, (loc.lastIndexOf("/") + 1)) + url;
-			}
-		}
-		this.fullXipClientUrl = url;
-
-		//Set up an HTML5 messaging listener if postMessage exists.
-		//As of this writing, this is only useful to get Opera 9.25+ to work.
-		if(typeof document.postMessage != "undefined"){
-			document.addEventListener("message", dojo.hitch(this, this.fragmentReceivedEvent), false);
-		}
-
-		//Now that we did first time init, always use the realSend method.
-		this.send = this._realSend;
-		return this._realSend(facade); //Object
-	},
-
-	_realSend: function(facade){
-		//summary: starts the actual xdomain request using the provided facade.
-		var stateId = "XhrIframeProxy" + (this._stateIdCounter++);
-		facade._stateId = stateId;
-
-		var frameUrl = facade._ifpServerUrl + "#0:init:id=" + stateId + "&client="
-			+ encodeURIComponent(this.fullXipClientUrl) + "&callback=" + encodeURIComponent(this._callbackName);
-
-		this._state[stateId] = {
-			facade: facade,
-			stateId: stateId,
-			clientFrame: iframe.create(stateId, "", frameUrl),
-			isSending: false,
-			serverUrl: facade._ifpServerUrl,
-			requestData: null,
-			responseMessage: "",
-			requestParts: [],
-			idCounter: 1,
-			partIndex: 0,
-			serverWindow: null
-		};
-
-		return stateId; //Object
-	},
-
-	receive: function(/*String*/stateId, /*String*/urlEncodedData){
-		/* urlEncodedData should have the following params:
-				- responseHeaders
-				- status
-				- statusText
-				- responseText
-		*/
-		//Decode response data.
-		var response = {};
-		var nvPairs = urlEncodedData.split("&");
-		for(var i = 0; i < nvPairs.length; i++){
-			if(nvPairs[i]){
-				var nameValue = nvPairs[i].split("=");
-				response[decodeURIComponent(nameValue[0])] = decodeURIComponent(nameValue[1]);
-			}
-		}
-
-		//Set data on facade object.
-		var state = this._state[stateId];
-		var facade = state.facade;
-
-		facade._setResponseHeaders(response.responseHeaders);
-		if(response.status == 0 || response.status){
-			facade.status = parseInt(response.status, 10);
-		}
-		if(response.statusText){
-			facade.statusText = response.statusText;
-		}
-		if(response.responseText){
-			facade.responseText = response.responseText;
-			
-			//Fix responseXML.
-			var contentType = facade.getResponseHeader("Content-Type");
-			if(contentType){
-				var mimeType = contentType.split(";")[0];
-				if(mimeType.indexOf("application/xml") == 0 || mimeType.indexOf("text/xml") == 0){
-					facade.responseXML = dom.createDocument(response.responseText, contentType);
-				}
-			}
-		}
-		facade.readyState = 4;
-		
-		this.destroyState(stateId);
-	},
-
-	frameLoaded: function(/*String*/stateId){
-		var state = this._state[stateId];
-		var facade = state.facade;
-
-		var reqHeaders = [];
-		for(var param in facade._requestHeaders){
-			reqHeaders.push(param + ": " + facade._requestHeaders[param]);
-		}
-
-		var requestData = {
-			uri: facade._uri
-		};
-		if(reqHeaders.length > 0){
-			requestData.requestHeaders = reqHeaders.join("\r\n");
-		}
-		if(facade._method){
-			requestData.method = facade._method;
-		}
-		if(facade._bodyData){
-			requestData.data = facade._bodyData;
-		}
-
-		this.sendRequest(stateId, dojo.objectToQuery(requestData));
-	},
-	
-	destroyState: function(/*String*/stateId){
-		var state = this._state[stateId];
-		if(state){
-			delete this._state[stateId];
-			var parentNode = state.clientFrame.parentNode;
-			parentNode.removeChild(state.clientFrame);
-			state.clientFrame = null;
-			state = null;
-		}
-	},
-
-	createFacade: function(){
-		if(arguments && arguments[0] && arguments[0].iframeProxyUrl){
-			return new dojox.io.proxy.xip.XhrIframeFacade(arguments[0].iframeProxyUrl);
-		}else{
-			return dojox.io.proxy.xip._xhrObjOld.apply(dojo, arguments);
-		}
-	},
-	
-	//**** State-bound methods ****
-	sendRequest: function(stateId, encodedData){
-		var state = this._state[stateId];
-		if(!state.isSending){
-			state.isSending = true;
-
-			state.requestData = encodedData || "";
-
-			//Get a handle to the server iframe.
-			state.serverWindow = frames[state.stateId];
-			if (!state.serverWindow){
-				state.serverWindow = document.getElementById(state.stateId).contentWindow;
-			}
-
-			//Make sure we have contentWindow, but only do this for non-postMessage
-			//browsers (right now just opera is postMessage).
-			if(typeof document.postMessage == "undefined"){
-				if(state.serverWindow.contentWindow){
-					state.serverWindow = state.serverWindow.contentWindow;
-				}
-			}
-
-			this.sendRequestStart(stateId);
-		}
-	},
-
-	sendRequestStart: function(stateId){
-		//Break the message into parts, if necessary.
-		var state = this._state[stateId];
-		state.requestParts = [];
-		var reqData = state.requestData;
-		var urlLength = state.serverUrl.length;
-		var partLength = this.urlLimit - urlLength;
-		var reqIndex = 0;
-
-		while((reqData.length - reqIndex) + urlLength > this.urlLimit){
-			var part = reqData.substring(reqIndex, reqIndex + partLength);
-			//Safari will do some extra hex escaping unless we keep the original hex
-			//escaping complete.
-			var percentIndex = part.lastIndexOf("%");
-			if(percentIndex == part.length - 1 || percentIndex == part.length - 2){
-				part = part.substring(0, percentIndex);
-			}
-			state.requestParts.push(part);
-			reqIndex += part.length;
-		}
-		state.requestParts.push(reqData.substring(reqIndex, reqData.length));
-		
-		state.partIndex = 0;
-		this.sendRequestPart(stateId);
-
-	},
-	
-	sendRequestPart: function(stateId){
-		var state = this._state[stateId];
-
-		if(state.partIndex < state.requestParts.length){
-			//Get the message part.
-			var partData = state.requestParts[state.partIndex];
-
-			//Get the command.
-			var cmd = "part";
-			if(state.partIndex + 1 == state.requestParts.length){
-				cmd = "end";
-			}else if (state.partIndex == 0){
-				cmd = "start";
-			}
-			
-			this.setServerUrl(stateId, cmd, partData);
-			state.partIndex++;
-		}
-	},
-
-	setServerUrl: function(stateId, cmd, message){
-		var serverUrl = this.makeServerUrl(stateId, cmd, message);
-		var state = this._state[stateId];
-
-		//Safari won't let us replace across domains.
-		if(this._isWebKit){
-			state.serverWindow.location = serverUrl;
-		}else{
-			state.serverWindow.location.replace(serverUrl);
-		}
-	},
-
-	makeServerUrl: function(stateId, cmd, message){
-		var state = this._state[stateId];
-		var serverUrl = state.serverUrl + "#" + (state.idCounter++) + ":" + cmd;
-		if(message){
-			serverUrl += ":" + message;
-		}
-		return serverUrl;
-	},
-
-	fragmentReceivedEvent: function(evt){
-		//summary: HTML5 document messaging endpoint. Unpack the event to see
-		//if we want to use it.
-		if(evt.uri.split("#")[0] == this.fullXipClientUrl){
-			this.fragmentReceived(evt.data);
-		}
-	},
-
-	fragmentReceived: function(frag){
-		var index = frag.indexOf("#");
-		var stateId = frag.substring(0, index);
-		var encodedData = frag.substring(index + 1, frag.length);
-
-		var msg = this.unpackMessage(encodedData);
-		var state = this._state[stateId];
-
-		switch(msg.command){
-			case "loaded":
-				this.frameLoaded(stateId);
-				break;
-			case "ok":
-				this.sendRequestPart(stateId);
-				break;
-			case "start":
-				state.responseMessage = "" + msg.message;
-				this.setServerUrl(stateId, "ok");
-				break;
-			case "part":
-				state.responseMessage += msg.message;
-				this.setServerUrl(stateId, "ok");
-				break;
-			case "end":
-				this.setServerUrl(stateId, "ok");
-				state.responseMessage += msg.message;
-				this.receive(stateId, state.responseMessage);
-				break;
-		}
-	},
-	
-	unpackMessage: function(encodedMessage){
-		var parts = encodedMessage.split(":");
-		var command = parts[1];
-		encodedMessage = parts[2] || "";
-
-		var config = null;
-		if(command == "init"){
-			var configParts = encodedMessage.split("&");
-			config = {};
-			for(var i = 0; i < configParts.length; i++){
-				var nameValue = configParts[i].split("=");
-				config[decodeURIComponent(nameValue[0])] = decodeURIComponent(nameValue[1]);
-			}
-		}
-		return {command: command, message: encodedMessage, config: config};
-	}
-}
-
-//Replace the normal XHR factory with the proxy one.
-dojox.io.proxy.xip._xhrObjOld = dojo._xhrObj;
-dojo._xhrObj = dojox.io.proxy.xip.createFacade;
-
-/**
-	Using this a reference: http://www.w3.org/TR/XMLHttpRequest/
-
-	Does not implement the onreadystate callback since dojo.xhr* does
-	not use it.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
-dojox.io.proxy.xip.XhrIframeFacade = function(ifpServerUrl){
-	//summary: XMLHttpRequest facade object used by dojox.io.proxy.xip.
-	
-	//description: Do not use this object directly. See the Dojo Book page
-	//on XMLHttpRequest IFrame Proxying:
-	//http://dojotoolkit.org/book/dojo-book-0-4/part-5-connecting-pieces/i-o/cross-domain-xmlhttprequest-using-iframe-proxy
-	this._requestHeaders = {};
-	this._allResponseHeaders = null;
-	this._responseHeaders = {};
-	this._method = null;
-	this._uri = null;
-	this._bodyData = null;
-	this.responseText = null;
-	this.responseXML = null;
-	this.status = null;
-	this.statusText = null;
-	this.readyState = 0;
-	
-	this._ifpServerUrl = ifpServerUrl;
-	this._stateId = null;
+
+define(["dojo/_base/lang","dojo/io/iframe","dojox/data/dom","dojo/_base/xhr","dojo/_base/url"],function(_1,_2,_3){
+_1.getObject("io.proxy.xip",true,dojox);
+dojox.io.proxy.xip={xipClientUrl:((_1.config||djConfig)["xipClientUrl"])||_1.moduleUrl("dojox.io.proxy","xip_client.html").toString(),urlLimit:4000,_callbackName:(dojox._scopeName||"dojox")+".io.proxy.xip.fragmentReceived",_state:{},_stateIdCounter:0,_isWebKit:navigator.userAgent.indexOf("WebKit")!=-1,send:function(_4){
+var _5=this.xipClientUrl;
+if(_5.split(":")[0].match(/javascript/i)||_4._ifpServerUrl.split(":")[0].match(/javascript/i)){
+return;
 }
-
-dojo.extend(dojox.io.proxy.xip.XhrIframeFacade, {
-	//The open method does not properly reset since Dojo does not reuse XHR objects.
-	open: function(/*String*/method, /*String*/uri){
-		this._method = method;
-		this._uri = uri;
-
-		this.readyState = 1;
-	},
-	
-	setRequestHeader: function(/*String*/header, /*String*/value){
-		this._requestHeaders[header] = value;
-	},
-	
-	send: function(/*String*/stringData){
-		this._bodyData = stringData;
-		
-		this._stateId = dojox.io.proxy.xip.send(this);
-		
-		this.readyState = 2;
-	},
-	abort: function(){
-		dojox.io.proxy.xip.destroyState(this._stateId);
-	},
-	
-	getAllResponseHeaders: function(){
-		return this._allResponseHeaders; //String
-	},
-	
-	getResponseHeader: function(/*String*/header){
-		return this._responseHeaders[header]; //String
-	},
-	
-	_setResponseHeaders: function(/*String*/allHeaders){
-		if(allHeaders){
-			this._allResponseHeaders = allHeaders;
-			
-			//Make sure ther are now CR characters in the headers.
-			allHeaders = allHeaders.replace(/\r/g, "");
-			var nvPairs = allHeaders.split("\n");
-			for(var i = 0; i < nvPairs.length; i++){
-				if(nvPairs[i]){
-					var nameValue = nvPairs[i].split(": ");
-					this._responseHeaders[nameValue[0]] = nameValue[1];
-				}
-			}
-		}
-	}
-});
-
+var _6=_5.indexOf(":");
+var _7=_5.indexOf("/");
+if(_6==-1||_7<_6){
+var _8=window.location.href;
+if(_7==0){
+_5=_8.substring(0,_8.indexOf("/",9))+_5;
+}else{
+_5=_8.substring(0,(_8.lastIndexOf("/")+1))+_5;
+}
+}
+this.fullXipClientUrl=_5;
+if(typeof document.postMessage!="undefined"){
+document.addEventListener("message",_1.hitch(this,this.fragmentReceivedEvent),false);
+}
+this.send=this._realSend;
+return this._realSend(_4);
+},_realSend:function(_9){
+var _a="XhrIframeProxy"+(this._stateIdCounter++);
+_9._stateId=_a;
+var _b=_9._ifpServerUrl+"#0:init:id="+_a+"&client="+encodeURIComponent(this.fullXipClientUrl)+"&callback="+encodeURIComponent(this._callbackName);
+this._state[_a]={facade:_9,stateId:_a,clientFrame:_2.create(_a,"",_b),isSending:false,serverUrl:_9._ifpServerUrl,requestData:null,responseMessage:"",requestParts:[],idCounter:1,partIndex:0,serverWindow:null};
+return _a;
+},receive:function(_c,_d){
+var _e={};
+var _f=_d.split("&");
+for(var i=0;i<_f.length;i++){
+if(_f[i]){
+var _10=_f[i].split("=");
+_e[decodeURIComponent(_10[0])]=decodeURIComponent(_10[1]);
+}
+}
+var _11=this._state[_c];
+var _12=_11.facade;
+_12._setResponseHeaders(_e.responseHeaders);
+if(_e.status==0||_e.status){
+_12.status=parseInt(_e.status,10);
+}
+if(_e.statusText){
+_12.statusText=_e.statusText;
+}
+if(_e.responseText){
+_12.responseText=_e.responseText;
+var _13=_12.getResponseHeader("Content-Type");
+if(_13){
+var _14=_13.split(";")[0];
+if(_14.indexOf("application/xml")==0||_14.indexOf("text/xml")==0){
+_12.responseXML=_3.createDocument(_e.responseText,_13);
+}
+}
+}
+_12.readyState=4;
+this.destroyState(_c);
+},frameLoaded:function(_15){
+var _16=this._state[_15];
+var _17=_16.facade;
+var _18=[];
+for(var _19 in _17._requestHeaders){
+_18.push(_19+": "+_17._requestHeaders[_19]);
+}
+var _1a={uri:_17._uri};
+if(_18.length>0){
+_1a.requestHeaders=_18.join("\r\n");
+}
+if(_17._method){
+_1a.method=_17._method;
+}
+if(_17._bodyData){
+_1a.data=_17._bodyData;
+}
+this.sendRequest(_15,_1.objectToQuery(_1a));
+},destroyState:function(_1b){
+var _1c=this._state[_1b];
+if(_1c){
+delete this._state[_1b];
+var _1d=_1c.clientFrame.parentNode;
+_1d.removeChild(_1c.clientFrame);
+_1c.clientFrame=null;
+_1c=null;
+}
+},createFacade:function(){
+if(arguments&&arguments[0]&&arguments[0].iframeProxyUrl){
+return new dojox.io.proxy.xip.XhrIframeFacade(arguments[0].iframeProxyUrl);
+}else{
+return dojox.io.proxy.xip._xhrObjOld.apply(_1,arguments);
+}
+},sendRequest:function(_1e,_1f){
+var _20=this._state[_1e];
+if(!_20.isSending){
+_20.isSending=true;
+_20.requestData=_1f||"";
+_20.serverWindow=frames[_20.stateId];
+if(!_20.serverWindow){
+_20.serverWindow=document.getElementById(_20.stateId).contentWindow;
+}
+if(typeof document.postMessage=="undefined"){
+if(_20.serverWindow.contentWindow){
+_20.serverWindow=_20.serverWindow.contentWindow;
+}
+}
+this.sendRequestStart(_1e);
+}
+},sendRequestStart:function(_21){
+var _22=this._state[_21];
+_22.requestParts=[];
+var _23=_22.requestData;
+var _24=_22.serverUrl.length;
+var _25=this.urlLimit-_24;
+var _26=0;
+while((_23.length-_26)+_24>this.urlLimit){
+var _27=_23.substring(_26,_26+_25);
+var _28=_27.lastIndexOf("%");
+if(_28==_27.length-1||_28==_27.length-2){
+_27=_27.substring(0,_28);
+}
+_22.requestParts.push(_27);
+_26+=_27.length;
+}
+_22.requestParts.push(_23.substring(_26,_23.length));
+_22.partIndex=0;
+this.sendRequestPart(_21);
+},sendRequestPart:function(_29){
+var _2a=this._state[_29];
+if(_2a.partIndex<_2a.requestParts.length){
+var _2b=_2a.requestParts[_2a.partIndex];
+var cmd="part";
+if(_2a.partIndex+1==_2a.requestParts.length){
+cmd="end";
+}else{
+if(_2a.partIndex==0){
+cmd="start";
+}
+}
+this.setServerUrl(_29,cmd,_2b);
+_2a.partIndex++;
+}
+},setServerUrl:function(_2c,cmd,_2d){
+var _2e=this.makeServerUrl(_2c,cmd,_2d);
+var _2f=this._state[_2c];
+if(this._isWebKit){
+_2f.serverWindow.location=_2e;
+}else{
+_2f.serverWindow.location.replace(_2e);
+}
+},makeServerUrl:function(_30,cmd,_31){
+var _32=this._state[_30];
+var _33=_32.serverUrl+"#"+(_32.idCounter++)+":"+cmd;
+if(_31){
+_33+=":"+_31;
+}
+return _33;
+},fragmentReceivedEvent:function(evt){
+if(evt.uri.split("#")[0]==this.fullXipClientUrl){
+this.fragmentReceived(evt.data);
+}
+},fragmentReceived:function(_34){
+var _35=_34.indexOf("#");
+var _36=_34.substring(0,_35);
+var _37=_34.substring(_35+1,_34.length);
+var msg=this.unpackMessage(_37);
+var _38=this._state[_36];
+switch(msg.command){
+case "loaded":
+this.frameLoaded(_36);
+break;
+case "ok":
+this.sendRequestPart(_36);
+break;
+case "start":
+_38.responseMessage=""+msg.message;
+this.setServerUrl(_36,"ok");
+break;
+case "part":
+_38.responseMessage+=msg.message;
+this.setServerUrl(_36,"ok");
+break;
+case "end":
+this.setServerUrl(_36,"ok");
+_38.responseMessage+=msg.message;
+this.receive(_36,_38.responseMessage);
+break;
+}
+},unpackMessage:function(_39){
+var _3a=_39.split(":");
+var _3b=_3a[1];
+_39=_3a[2]||"";
+var _3c=null;
+if(_3b=="init"){
+var _3d=_39.split("&");
+_3c={};
+for(var i=0;i<_3d.length;i++){
+var _3e=_3d[i].split("=");
+_3c[decodeURIComponent(_3e[0])]=decodeURIComponent(_3e[1]);
+}
+}
+return {command:_3b,message:_39,config:_3c};
+}};
+dojox.io.proxy.xip._xhrObjOld=_1._xhrObj;
+_1._xhrObj=dojox.io.proxy.xip.createFacade;
+dojox.io.proxy.xip.XhrIframeFacade=function(_3f){
+this._requestHeaders={};
+this._allResponseHeaders=null;
+this._responseHeaders={};
+this._method=null;
+this._uri=null;
+this._bodyData=null;
+this.responseText=null;
+this.responseXML=null;
+this.status=null;
+this.statusText=null;
+this.readyState=0;
+this._ifpServerUrl=_3f;
+this._stateId=null;
+};
+_1.extend(dojox.io.proxy.xip.XhrIframeFacade,{open:function(_40,uri){
+this._method=_40;
+this._uri=uri;
+this.readyState=1;
+},setRequestHeader:function(_41,_42){
+this._requestHeaders[_41]=_42;
+},send:function(_43){
+this._bodyData=_43;
+this._stateId=dojox.io.proxy.xip.send(this);
+this.readyState=2;
+},abort:function(){
+dojox.io.proxy.xip.destroyState(this._stateId);
+},getAllResponseHeaders:function(){
+return this._allResponseHeaders;
+},getResponseHeader:function(_44){
+return this._responseHeaders[_44];
+},_setResponseHeaders:function(_45){
+if(_45){
+this._allResponseHeaders=_45;
+_45=_45.replace(/\r/g,"");
+var _46=_45.split("\n");
+for(var i=0;i<_46.length;i++){
+if(_46[i]){
+var _47=_46[i].split(": ");
+this._responseHeaders[_47[0]]=_47[1];
+}
+}
+}
+}});
 return dojox.io.proxy.xip;
-
 });

@@ -1,202 +1,116 @@
-dojo.provide("dojox.storage.CookieStorageProvider");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.storage.Provider");
-dojo.require("dojox.storage.manager");
-dojo.require("dojo.cookie");
-
-dojo.declare(
-	"dojox.storage.CookieStorageProvider",
-	[dojox.storage.Provider],
-	{
-		store: null,
-
-		cookieName: 'dojoxStorageCookie',
-
-		storageLife: 730, // in days
-
-		initialize: function(){
-
-			this.store = dojo.fromJson(dojo.cookie(this.cookieName)) || {};
-
-			this.initialized = true;
-			dojox.storage.manager.loaded();
-		},
-
-		isAvailable: function(){ /*Boolean*/
-			return dojo.cookie.isSupported();
-		},
-
-		put: function(	/*string*/ key,
-						/*object*/ value,
-						/*function*/ resultsHandler,
-						/*string?*/ namespace){
-
-			this._assertIsValidKey(key);
-
-			namespace = namespace||this.DEFAULT_NAMESPACE;
-			this._assertIsValidNamespace(namespace);
-
-			fullKey = this.getFullKey(key,namespace);
-
-			this.store[fullKey] = dojo.toJson(value);
-			this._save();
-
-			var success = dojo.toJson(this.store) === dojo.cookie(this.cookieName);
-
-			if(!success){
-				this.remove(key,namespace);
-			}
-
-			if(resultsHandler){
-				resultsHandler(success ? this.SUCCESS : this.FAILED, key, null, namespace);
-			}
-
-		},
-
-		get: function(/*string*/ key, /*string?*/ namespace){ /*Object*/
-			this._assertIsValidKey(key);
-
-			namespace = namespace||this.DEFAULT_NAMESPACE;
-			this._assertIsValidNamespace(namespace);
-
-			// get our full key name, which is namespace + key
-			key = this.getFullKey(key, namespace);
-
-			return this.store[key] ? dojo.fromJson(this.store[key]) : null;
-		},
-
-		getKeys: function(/*string?*/ namespace){ /*Array*/
-			namespace = namespace||this.DEFAULT_NAMESPACE;
-			this._assertIsValidNamespace(namespace);
-
-			namespace = '__'+namespace+'_';
-
-			var keys = [];
-			for(var currentKey in this.store){
-				if(this._beginsWith(currentKey,namespace)){
-					currentKey = currentKey.substring(namespace.length);
-					keys.push(currentKey);
-				}
-			}
-
-			return keys;
-		},
-
-		clear: function(/*string?*/ namespace){
-			namespace = namespace||this.DEFAULT_NAMESPACE;
-			this._assertIsValidNamespace(namespace);
-
-			namespace = '__'+namespace+'_';
-
-			for(var currentKey in this.store){
-				if(this._beginsWith(currentKey,namespace)){
-					delete(this.store[currentKey]);
-				}
-			}
-
-			this._save();
-		},
-
-		remove: function(/*string*/ key, /*string?*/ namespace){
-			namespace = namespace||this.DEFAULT_NAMESPACE;
-			this._assertIsValidNamespace(namespace);
-
-			this._assertIsValidKey(key);
-			key = this.getFullKey(key, namespace);
-
-			delete this.store[key];
-			this._save();
-		},
-
-		getNamespaces: function(){ /*string[]*/
-			// There must be a better way than
-			// to execute a regex on *every*
-			// item in the store.
-
-			var results = [this.DEFAULT_NAMESPACE];
-
-			var found = {};
-			found[this.DEFAULT_NAMESPACE] = true;
-			var tester = /^__([^_]*)_/;
-
-			for(var currentKey in this.store){
-				if(tester.test(currentKey) == true){
-					var currentNS = currentKey.match(tester)[1];
-					if(typeof found[currentNS] == "undefined"){
-						found[currentNS] = true;
-						results.push(currentNS);
-					}
-				}
-			}
-
-			return results;
-		},
-
-		isPermanent: function(){ /*Boolean*/
-			return true;
-		},
-
-		getMaximumSize: function(){ /* mixed */
-			return 4;
-		},
-
-		hasSettingsUI: function(){ /*Boolean*/
-			return false;
-		},
-
-		isValidKey: function(/*string*/ keyName){ /*Boolean*/
-			if(keyName === null || keyName === undefined){
-				return false;
-			}
-
-			return /^[0-9A-Za-z_-]*$/.test(keyName);
-		},
-
-		isValidNamespace: function(/*string*/ keyName){ /*Boolean*/
-			// we *must* prevent namespaces from having
-			// underscores - else lookup of namespaces
-			// via RegEx (e.g. in getNamespaces ) would
-			// return wrong results.
-			//
-			// The only way around this would be to
-			// disallow underscores in keys.
-
-			if(keyName === null || keyName === undefined){
-				return false;
-			}
-
-			return /^[0-9A-Za-z-]*$/.test(keyName);
-		},
-
-		getFullKey: function(key, namespace){
-			// checks for valid namespace and
-			// key are already performed.
-			return "__" + namespace + "_" + key;
-		},
-
-		_save: function(){
-			dojo.cookie(this.cookieName,dojo.toJson(this.store),{expires: this.storageLife});
-		},
-
-		_beginsWith: function(/* string */ haystack, /* string */ needle) {
-			if(needle.length > haystack.length) {
-				return false;
-			}
-			return haystack.substring(0,needle.length) === needle;
-		},
-
-		_assertIsValidNamespace: function(/* string */ namespace){
-			if(this.isValidNamespace(namespace) === false){
-				throw new Error("Invalid namespace given: " + namespace);
-			}
-		},
-
-		_assertIsValidKey: function(/* string */ key){
-			if(this.isValidKey(key) === false){
-				throw new Error("Invalid key given: " + key);
-			}
-		}
-	}
-);
-
-dojox.storage.manager.register("dojox.storage.CookieStorageProvider", new dojox.storage.CookieStorageProvider());
+define(["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager","dojo/cookie"],function(_1,_2,_3){
+_1.getObject("dojox.storage.CookieStorageProvider",1);
+_1.declare("dojox.storage.CookieStorageProvider",[_3.storage.Provider],{store:null,cookieName:"dojoxStorageCookie",storageLife:730,initialize:function(){
+this.store=_1.fromJson(_1.cookie(this.cookieName))||{};
+this.initialized=true;
+_3.storage.manager.loaded();
+},isAvailable:function(){
+return _1.cookie.isSupported();
+},put:function(_4,_5,_6,_7){
+this._assertIsValidKey(_4);
+_7=_7||this.DEFAULT_NAMESPACE;
+this._assertIsValidNamespace(_7);
+fullKey=this.getFullKey(_4,_7);
+this.store[fullKey]=_1.toJson(_5);
+this._save();
+var _8=_1.toJson(this.store)===_1.cookie(this.cookieName);
+if(!_8){
+this.remove(_4,_7);
+}
+if(_6){
+_6(_8?this.SUCCESS:this.FAILED,_4,null,_7);
+}
+},get:function(_9,_a){
+this._assertIsValidKey(_9);
+_a=_a||this.DEFAULT_NAMESPACE;
+this._assertIsValidNamespace(_a);
+_9=this.getFullKey(_9,_a);
+return this.store[_9]?_1.fromJson(this.store[_9]):null;
+},getKeys:function(_b){
+_b=_b||this.DEFAULT_NAMESPACE;
+this._assertIsValidNamespace(_b);
+_b="__"+_b+"_";
+var _c=[];
+for(var _d in this.store){
+if(this._beginsWith(_d,_b)){
+_d=_d.substring(_b.length);
+_c.push(_d);
+}
+}
+return _c;
+},clear:function(_e){
+_e=_e||this.DEFAULT_NAMESPACE;
+this._assertIsValidNamespace(_e);
+_e="__"+_e+"_";
+for(var _f in this.store){
+if(this._beginsWith(_f,_e)){
+delete (this.store[_f]);
+}
+}
+this._save();
+},remove:function(key,_10){
+_10=_10||this.DEFAULT_NAMESPACE;
+this._assertIsValidNamespace(_10);
+this._assertIsValidKey(key);
+key=this.getFullKey(key,_10);
+delete this.store[key];
+this._save();
+},getNamespaces:function(){
+var _11=[this.DEFAULT_NAMESPACE];
+var _12={};
+_12[this.DEFAULT_NAMESPACE]=true;
+var _13=/^__([^_]*)_/;
+for(var _14 in this.store){
+if(_13.test(_14)==true){
+var _15=_14.match(_13)[1];
+if(typeof _12[_15]=="undefined"){
+_12[_15]=true;
+_11.push(_15);
+}
+}
+}
+return _11;
+},isPermanent:function(){
+return true;
+},getMaximumSize:function(){
+return 4;
+},hasSettingsUI:function(){
+return false;
+},isValidKey:function(_16){
+if(_16===null||_16===undefined){
+return false;
+}
+return /^[0-9A-Za-z_-]*$/.test(_16);
+},isValidNamespace:function(_17){
+if(_17===null||_17===undefined){
+return false;
+}
+return /^[0-9A-Za-z-]*$/.test(_17);
+},getFullKey:function(key,_18){
+return "__"+_18+"_"+key;
+},_save:function(){
+_1.cookie(this.cookieName,_1.toJson(this.store),{expires:this.storageLife});
+},_beginsWith:function(_19,_1a){
+if(_1a.length>_19.length){
+return false;
+}
+return _19.substring(0,_1a.length)===_1a;
+},_assertIsValidNamespace:function(_1b){
+if(this.isValidNamespace(_1b)===false){
+throw new Error("Invalid namespace given: "+_1b);
+}
+},_assertIsValidKey:function(key){
+if(this.isValidKey(key)===false){
+throw new Error("Invalid key given: "+key);
+}
+}});
+_3.storage.manager.register("dojox.storage.CookieStorageProvider",new _3.storage.CookieStorageProvider());
+return _1.getObject("dojox.storage.CookieStorageProvider");
+});
+require(["dojox/storage/CookieStorageProvider"]);

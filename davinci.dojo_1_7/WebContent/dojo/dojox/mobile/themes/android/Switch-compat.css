@@ -1,4 +1,4 @@
-/* Switch - default */
+
 .mblSwitchBg {
 	border: none;
 }
@@ -20,7 +20,6 @@
 	background-repeat: no-repeat;
 	border: none;
 }
-/* Switch - Round Shape1 */
 .mblSwRoundShape1 .mblSwitchBgLeft {
 	background-image: url(compat/switch-round-l.gif);
 }
@@ -32,7 +31,6 @@
 	height: 26px;
 	background-image: url(compat/switch-round1-k.gif);
 }
-/* Switch - Round Shape2 */
 .mblSwRoundShape2 .mblSwitchBgLeft {
 	background-image: url(compat/switch-round-l.gif);
 }
@@ -44,7 +42,6 @@
 	height: 26px;
 	background-image: url(compat/switch-round2-k.gif);
 }
-/* Switch - Arc Shape1 */
 .mblSwArcShape1 .mblSwitchBgLeft {
 	background-image: url(compat/switch-arc-l.gif);
 }
@@ -56,7 +53,6 @@
 	height: 26px;
 	background-image: url(compat/switch-arc1-k.gif);
 }
-/* Switch - Arc Shape2 */
 .mblSwArcShape2 .mblSwitchBgLeft {
 	background-image: url(compat/switch-arc-l.gif);
 }

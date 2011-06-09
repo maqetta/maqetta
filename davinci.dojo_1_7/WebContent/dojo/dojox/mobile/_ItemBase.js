@@ -1,101 +1,75 @@
-define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./ProgressIndicator","./TransitionEvent"], function(mcommon,WidgetBase,Container,Contained,ProgressIndicator,TransitionEvent){
-	// module:
-	//		dojox/mobile/_ItemBase
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.declare("dojox.mobile._ItemBase", [dijit._WidgetBase,dijit._Container,dijit._Contained],{
-		icon: "",
-		iconPos: "", // top,left,width,height (ex. "0,0,29,29")
-		alt: "",
-		href: "",
-		hrefTarget: "",
-		moveTo: "",
-		scene: "",
-		clickable: false,
-		url: "",
-		urlTarget: "", // node id under which a new view is created
-		transition: "",
-		transitionDir: 1,
-		transitionOptions: null,
-		callback: null,
-		sync: true,
-		label: "",
-		toggle: false,
-		_duration: 800, // duration of selection, milliseconds
-	
-		inheritParams: function(){
-			var parent = this.getParent();
-			if(parent){
-				if(!this.transition){ this.transition = parent.transition; }
-				if(this.icon && parent.iconBase &&
-					parent.iconBase.charAt(parent.iconBase.length - 1) === '/'){
-					this.icon = parent.iconBase + this.icon;
-				}
-				if(!this.icon){ this.icon = parent.iconBase; }
-				if(!this.iconPos){ this.iconPos = parent.iconPos; }
-			}
-		},
-	
-		select: function(/*Boolean?*/deselect){
-			// subclass must implement
-		},
-	
-		defaultClickAction: function(e){
-			if(this.toggle){
-				this.select(this.selected);
-			}else if(!this.selected){
-				this.select();
-				if(!this.selectOne){
-					var _this = this;
-					setTimeout(function(){
-						_this.select(true);
-					}, this._duration);
-				}
-				var transOpts;
-				if (this.moveTo || this.href || this.url || this.scene){
-					transOpts = {moveTo: this.moveTo, href: this.href, url: this.url, scene: this.scene, transition: this.transition, transitionDir: this.transitionDir};
-				}else if (this.transitionOptions){
-					transOpts = this.transitionOptions;
-				}	
-				if (transOpts){
-					return new TransitionEvent(this.domNode,transOpts,e).dispatch();
-				}
-			}
-		},
-	
-		getParent: function(){
-			// almost equivalent to _Contained#getParent, but this method does not
-			// cause a script error even if this widget has no parent yet.
-			var ref = this.srcNodeRef || this.domNode;
-			return ref && ref.parentNode ? dijit.getEnclosingWidget(ref.parentNode) : null;
-		},
-
-		setTransitionPos: function(e){
-			var w = this;
-			while(true){
-				w = w.getParent();
-				if(!w || w instanceof dojox.mobile.View){ break; }
-			}
-			if(w){
-				w.clickedPosX = e.clientX;
-				w.clickedPosY = e.clientY;
-			}
-		},
-
-		transitionTo: function(moveTo,href,url,scene){
-			// deprecated
-			if(dojo.config.isDebug){
-				var alreadyCalledHash = arguments.callee._ach || (arguments.callee._ach = {}),
-					caller = (arguments.callee.caller || "unknown caller").toString();
-				if(!alreadyCalledHash[caller]){
-					dojo.deprecated(this.declaredClass + "::transitionTo() is deprecated." +
-					caller, "", "2.0");
-					alreadyCalledHash[caller] = true;
-				}
-			}
-			new TransitionEvent(this.domNode, {moveTo: moveTo, href: href, url: url, scene: scene,
-						transition: this.transition, transitionDir: this.transitionDir}).dispatch();
-		}
-	});
+define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./ProgressIndicator","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6){
+return dojo.declare("dojox.mobile._ItemBase",[dijit._WidgetBase,dijit._Container,dijit._Contained],{icon:"",iconPos:"",alt:"",href:"",hrefTarget:"",moveTo:"",scene:"",clickable:false,url:"",urlTarget:"",transition:"",transitionDir:1,transitionOptions:null,callback:null,sync:true,label:"",toggle:false,_duration:800,inheritParams:function(){
+var _7=this.getParent();
+if(_7){
+if(!this.transition){
+this.transition=_7.transition;
+}
+if(this.icon&&_7.iconBase&&_7.iconBase.charAt(_7.iconBase.length-1)==="/"){
+this.icon=_7.iconBase+this.icon;
+}
+if(!this.icon){
+this.icon=_7.iconBase;
+}
+if(!this.iconPos){
+this.iconPos=_7.iconPos;
+}
+}
+},select:function(_8){
+},defaultClickAction:function(e){
+if(this.toggle){
+this.select(this.selected);
+}else{
+if(!this.selected){
+this.select();
+if(!this.selectOne){
+var _9=this;
+setTimeout(function(){
+_9.select(true);
+},this._duration);
+}
+var _a;
+if(this.moveTo||this.href||this.url||this.scene){
+_a={moveTo:this.moveTo,href:this.href,url:this.url,scene:this.scene,transition:this.transition,transitionDir:this.transitionDir};
+}else{
+if(this.transitionOptions){
+_a=this.transitionOptions;
+}
+}
+if(_a){
+return new _6(this.domNode,_a,e).dispatch();
+}
+}
+}
+},getParent:function(){
+var _b=this.srcNodeRef||this.domNode;
+return _b&&_b.parentNode?dijit.getEnclosingWidget(_b.parentNode):null;
+},setTransitionPos:function(e){
+var w=this;
+while(true){
+w=w.getParent();
+if(!w||w instanceof dojox.mobile.View){
+break;
+}
+}
+if(w){
+w.clickedPosX=e.clientX;
+w.clickedPosY=e.clientY;
+}
+},transitionTo:function(_c,_d,_e,_f){
+if(dojo.config.isDebug){
+var _10=arguments.callee._ach||(arguments.callee._ach={}),_11=(arguments.callee.caller||"unknown caller").toString();
+if(!_10[_11]){
+dojo.deprecated(this.declaredClass+"::transitionTo() is deprecated."+_11,"","2.0");
+_10[_11]=true;
+}
+}
+new _6(this.domNode,{moveTo:_c,href:_d,url:_e,scene:_f,transition:this.transition,transitionDir:this.transitionDir}).dispatch();
+}});
 });

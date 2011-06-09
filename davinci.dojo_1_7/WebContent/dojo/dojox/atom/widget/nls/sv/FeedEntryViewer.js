@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[Visningsalternativ]",
 	title: "Rubrik",
 	authors: "Författare",
@@ -9,3 +9,4 @@
 	summary: "Sammanfattning",
 	content: "Innehåll"
 })
+);

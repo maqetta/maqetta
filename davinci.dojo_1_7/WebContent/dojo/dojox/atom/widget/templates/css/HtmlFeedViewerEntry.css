@@ -5,12 +5,10 @@
         overflow-y: auto;
         cursor: pointer;   
 }
-
 .feedViewerEntry:hover {
         background: #a6c2e7;
         padding: 2px;
 }
-
 .feedViewerEntrySelected {
         color: #000000;
         background: #C0C0C0;
@@ -19,13 +17,10 @@
         padding-bottom: 2px;
         padding: 2px;
 }
-
 .feedViewerEntrySelected:hover {
         background: #a6c2e7;
         padding: 2px;
 }
-
-
 .feedViewerEntryUpdated {
         text-align: left;
         vertical-align: top;
@@ -33,7 +28,6 @@
         padding-bottom: 2px;
         padding: 2px;
 }
-
 .feedViewerEntryUpdatedSelected {
         text-align: left;
         vertical-align: top;
@@ -41,8 +35,6 @@
         padding-bottom: 2px;
         padding: 2px;
 }
-
-
 .feedViewerEntryTitle {
         color:#000000;
         text-align: left;
@@ -57,14 +49,12 @@
         padding-left: 4px;
         padding-bottom: 2px;
 }
-
 .feedViewerDeleteButton {
         cursor: pointer;
         color:#0000FF;
         text-align: left;
         font-size:  small;
 }
-
 .feedViewerDeleteButton:hover {
         text-decoration: underline;
 }

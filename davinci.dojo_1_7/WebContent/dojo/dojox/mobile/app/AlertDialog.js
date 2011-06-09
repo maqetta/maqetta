@@ -1,182 +1,78 @@
-dojo.provide("dojox.mobile.app.AlertDialog");
-dojo.experimental("dojox.mobile.app.AlertDialog");
-dojo.require("dijit._WidgetBase");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.mobile.app.AlertDialog", dijit._WidgetBase, {
-
-	// title: String
-	//		The title of the AlertDialog
-	title: "",
-
-	// text: String
-	//		The text message displayed in the AlertDialog
-	text: "",
-
-	// controller: Object
-	//		The SceneController for the currently active scene
-	controller: null,
-
-	// buttons: Array
-	buttons: null,
-
-	defaultButtonLabel: "OK",
-
-	// onChoose: Function
-	//		The callback function that is invoked when a button is tapped.
-	//		If the dialog is cancelled, no parameter is passed to this function.
-	onChoose: null,
-
-	constructor: function(){
-		this.onClick = dojo.hitch(this, this.onClick);
-		this._handleSelect = dojo.hitch(this, this._handleSelect);
-	},
-
-	buildRendering: function(){
-		this.domNode = dojo.create("div",{
-			"class": "alertDialog"
-		});
-
-		// Create the outer dialog body
-		var dlgBody = dojo.create("div", {"class": "alertDialogBody"}, this.domNode);
-
-		// Create the title
-		dojo.create("div", {"class": "alertTitle", innerHTML: this.title || ""}, dlgBody);
-
-		// Create the text
-		dojo.create("div", {"class": "alertText", innerHTML: this.text || ""}, dlgBody);
-
-		// Create the node that encapsulates all the buttons
-		var btnContainer = dojo.create("div", {"class": "alertBtns"}, dlgBody);
-
-		// If no buttons have been defined, default to a single button saying OK
-		if(!this.buttons || this.buttons.length == 0){
-			this.buttons = [{
-				label: this.defaultButtonLabel,
-				value: "ok",
-				"class": "affirmative"
-			}];
-		}
-
-		var _this = this;
-
-		// Create each of the buttons
-		dojo.forEach(this.buttons, function(btnInfo){
-			var btn = new dojox.mobile.Button({
-				btnClass: btnInfo["class"] || "",
-				label: btnInfo.label
-			});
-			btn._dialogValue = btnInfo.value;
-			dojo.place(btn.domNode, btnContainer);
-			_this.connect(btn, "onClick", _this._handleSelect);
-		});
-
-		var viewportSize = this.controller.getWindowSize();
-
-		// Create the mask that blocks out the rest of the screen
-		this.mask = dojo.create("div", {"class": "dialogUnderlayWrapper",
-			innerHTML: "<div class=\"dialogUnderlay\"></div>",
-			style: {
-				width: viewportSize.w + "px",
-				height: viewportSize.h + "px"
-			}
-		}, this.controller.assistant.domNode);
-
-		this.connect(this.mask, "onclick", function(){
-			_this.onChoose && _this.onChoose();
-			_this.hide();
-		});
-	},
-
-	postCreate: function(){
-		this.subscribe("/dojox/mobile/app/goback", this._handleSelect);
-	},
-
-	_handleSelect: function(event){
-		// summary:
-		//		Handle the selection of a value
-		var node;
-		console.log("handleSelect");
-		if(event && event.target){
-			node = event.target;
-
-			// Find the widget that was tapped.
-			while(!dijit.byNode(node)){
-				node - node.parentNode;
-			}
-		}
-
-		// If an onChoose function was provided, tell it what button
-		// value was chosen
-		if(this.onChoose){
-			this.onChoose(node ? dijit.byNode(node)._dialogValue: undefined);
-		}
-		// Hide the dialog
-		this.hide();
-	},
-
-	show: function(){
-		// summary:
-		//		Show the dialog
-		this._doTransition(1);
-	},
-
-	hide: function(){
-		// summary:
-		//		Hide the dialog
-		this._doTransition(-1);
-	},
-
-	_doTransition: function(dir){
-		// summary:
-		//		Either shows or hides the dialog.
-		// dir:
-		//		An integer.  If positive, the dialog is shown. If negative,
-		//		the dialog is hidden.
-
-		// TODO: replace this with CSS transitions
-
-		var anim;
-		var h = dojo.marginBox(this.domNode.firstChild).h;
-
-
-		var bodyHeight = this.controller.getWindowSize().h;
-		console.log("dialog height = " + h, " body height = " + bodyHeight);
-
-		var high = bodyHeight - h;
-		var low = bodyHeight;
-
-		var anim1 = dojo.fx.slideTo({
-			node: this.domNode,
-			duration: 400,
-			top: {start: dir < 0 ? high : low, end: dir < 0 ? low: high}
-		});
-
-		var anim2 = dojo[dir < 0 ? "fadeOut" : "fadeIn"]({
-			node: this.mask,
-			duration: 400
-		});
-
-		var anim = dojo.fx.combine([anim1, anim2]);
-
-		var _this = this;
-
-		dojo.connect(anim, "onEnd", this, function(){
-			if(dir < 0){
-				_this.domNode.style.display = "none";
-				dojo.destroy(_this.domNode);
-				dojo.destroy(_this.mask);
-			}
-		});
-		anim.play();
-	},
-
-	destroy: function(){
-		this.inherited(arguments);
-		dojo.destroy(this.mask);
-	},
-
-
-	onClick: function(){
-
-	}
+define(["dojo","dijit","dojox","dijit/_WidgetBase"],function(_1,_2,_3){
+_1.getObject("dojox.mobile.app.AlertDialog",1);
+_1.experimental("dojox.mobile.app.AlertDialog");
+_1.declare("dojox.mobile.app.AlertDialog",_2._WidgetBase,{title:"",text:"",controller:null,buttons:null,defaultButtonLabel:"OK",onChoose:null,constructor:function(){
+this.onClick=_1.hitch(this,this.onClick);
+this._handleSelect=_1.hitch(this,this._handleSelect);
+},buildRendering:function(){
+this.domNode=_1.create("div",{"class":"alertDialog"});
+var _4=_1.create("div",{"class":"alertDialogBody"},this.domNode);
+_1.create("div",{"class":"alertTitle",innerHTML:this.title||""},_4);
+_1.create("div",{"class":"alertText",innerHTML:this.text||""},_4);
+var _5=_1.create("div",{"class":"alertBtns"},_4);
+if(!this.buttons||this.buttons.length==0){
+this.buttons=[{label:this.defaultButtonLabel,value:"ok","class":"affirmative"}];
+}
+var _6=this;
+_1.forEach(this.buttons,function(_7){
+var _8=new _3.mobile.Button({btnClass:_7["class"]||"",label:_7.label});
+_8._dialogValue=_7.value;
+_1.place(_8.domNode,_5);
+_6.connect(_8,"onClick",_6._handleSelect);
 });
+var _9=this.controller.getWindowSize();
+this.mask=_1.create("div",{"class":"dialogUnderlayWrapper",innerHTML:"<div class=\"dialogUnderlay\"></div>",style:{width:_9.w+"px",height:_9.h+"px"}},this.controller.assistant.domNode);
+this.connect(this.mask,"onclick",function(){
+_6.onChoose&&_6.onChoose();
+_6.hide();
+});
+},postCreate:function(){
+this.subscribe("/dojox/mobile/app/goback",this._handleSelect);
+},_handleSelect:function(_a){
+var _b;
+if(_a&&_a.target){
+_b=_a.target;
+while(!_2.byNode(_b)){
+_b-_b.parentNode;
+}
+}
+if(this.onChoose){
+this.onChoose(_b?_2.byNode(_b)._dialogValue:undefined);
+}
+this.hide();
+},show:function(){
+this._doTransition(1);
+},hide:function(){
+this._doTransition(-1);
+},_doTransition:function(_c){
+var _d;
+var h=_1.marginBox(this.domNode.firstChild).h;
+var _e=this.controller.getWindowSize().h;
+var _f=_e-h;
+var low=_e;
+var _10=_1.fx.slideTo({node:this.domNode,duration:400,top:{start:_c<0?_f:low,end:_c<0?low:_f}});
+var _11=_1[_c<0?"fadeOut":"fadeIn"]({node:this.mask,duration:400});
+var _d=_1.fx.combine([_10,_11]);
+var _12=this;
+_1.connect(_d,"onEnd",this,function(){
+if(_c<0){
+_12.domNode.style.display="none";
+_1.destroy(_12.domNode);
+_1.destroy(_12.mask);
+}
+});
+_d.play();
+},destroy:function(){
+this.inherited(arguments);
+_1.destroy(this.mask);
+},onClick:function(){
+}});
+return _1.getObject("dojox.mobile.app.AlertDialog");
+});
+require(["dojox/mobile/app/AlertDialog"]);

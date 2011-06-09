@@ -15,7 +15,6 @@
 	50% { -webkit-transform: rotateY(90deg) scale(.8); }
 	100% { -webkit-transform: rotateY(90deg) scale(.8); }
 }
-
 @-webkit-keyframes mblFlipIn {
 	0% { -webkit-transform: rotateY(90deg) scale(.8); }
 	50% { -webkit-transform: rotateY(90deg) scale(.8); }

@@ -1,123 +1,52 @@
-define(["./_base/kernel", "./on", "./has"], function(dojo, on, has){
-	// summary:
-	// 		This module provide mouse event handling utility functions and exports
-	// 		mouseenter and mouseleave event emulation.
-	// enter:
-	//		This is an extension event for the mouseenter that IE provides, emulating the
-	//		behavior on other browsers.
-	// leave:
-	//		This is an extension event for the mouseleave that IE provides, emulating the
-	//		behavior on other browsers.
-	// example:
-	//		To use these events, you register a mouseenter like this:
-	//		|	define(["dojo/on", dojo/mouse"], function(on, mouse){
-	//		|		on(targetNode, mouse.enter, function(event){
-	// 		|			dojo.addClass(targetNode, "highlighted");
-	//		|		});
-	//		|		on(targetNode, mouse.leave, function(event){
-	// 		|			dojo.removeClass(targetNode, "highlighted");
-	//		|		});
-	has.add("dom-quirks", document.compatMode == "BackCompat");
-	has.add("events-mouseenter", "onmouseenter" in document);
-	var mouseButtons;
-	if(has("dom-quirks") || !has("dom-addeventlistener")){
-		mouseButtons = {
-			LEFT:   1,
-			MIDDLE: 4,
-			RIGHT:  2,
-			// helper functions
-			isButton: function(e, button){ return e.button & button; },
-			isLeft:   function(e){ return e.button & 1; },
-			isMiddle: function(e){ return e.button & 4; },
-			isRight:  function(e){ return e.button & 2; }
-		};
-	}else{
-		mouseButtons = {
-			LEFT:   0,
-			MIDDLE: 1,
-			RIGHT:  2,
-			// helper functions
-			isButton: function(e, button){ return e.button == button; },
-			isLeft:   function(e){ return e.button == 0; },
-			isMiddle: function(e){ return e.button == 1; },
-			isRight:  function(e){ return e.button == 2; }
-		};
-	}
-	dojo.mouseButtons = mouseButtons;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-/*=====
-	dojo.mouseButtons = {
-		// LEFT: Number
-		//		Numeric value of the left mouse button for the platform.
-		LEFT:   0,
-		// MIDDLE: Number
-		//		Numeric value of the middle mouse button for the platform.
-		MIDDLE: 1,
-		// RIGHT: Number
-		//		Numeric value of the right mouse button for the platform.
-		RIGHT:  2,
-	
-		isButton: function(e, button){
-			// summary:
-			//		Checks an event object for a pressed button
-			// e: Event
-			//		Event object to examine
-			// button: Number
-			//		The button value (example: dojo.mouseButton.LEFT)
-			return e.button == button; // Boolean
-		},
-		isLeft: function(e){
-			// summary:
-			//		Checks an event object for the pressed left button
-			// e: Event
-			//		Event object to examine
-			return e.button == 0; // Boolean
-		},
-		isMiddle: function(e){
-			// summary:
-			//		Checks an event object for the pressed middle button
-			// e: Event
-			//		Event object to examine
-			return e.button == 1; // Boolean
-		},
-		isRight: function(e){
-			// summary:
-			//		Checks an event object for the pressed right button
-			// e: Event
-			//		Event object to examine
-			return e.button == 2; // Boolean
-		}
-	};
-=====*/
-
-	if(has("events-mouseenter")){
-		var eventHandler = function(type){
-			// essentially a pass through, the browser already has mouseenter/leave
-			return function(node, listener){
-				return on(node, type, listener);
-			};
-		};
-		return {
-			mouseButtons: mouseButtons,
-			enter: eventHandler("mouseenter"),
-			leave: eventHandler("mouseleave") 
-		};
-	}
-	else{
-		var eventHandler = function(type){
-			// emulation of mouseenter/leave with mouseover/out using descendant checking
-			return function(node, listener){
-				return on(node, type, function(evt){
-					if(!dojo.isDescendant(evt.relatedTarget, node)){
-						return listener.call(this, evt);
-					}					
-				});
-			};
-		};
-		return {
-			mouseButtons: mouseButtons,
-			enter: eventHandler("mouseover"),
-			leave: eventHandler("mouseout")
-		};
-	}
+define("dojo/mouse",["./_base/kernel","./on","./has"],function(_1,on,_2){
+_2.add("dom-quirks",document.compatMode=="BackCompat");
+_2.add("events-mouseenter","onmouseenter" in document);
+var _3;
+if(_2("dom-quirks")||!_2("dom-addeventlistener")){
+_3={LEFT:1,MIDDLE:4,RIGHT:2,isButton:function(e,_4){
+return e.button&_4;
+},isLeft:function(e){
+return e.button&1;
+},isMiddle:function(e){
+return e.button&4;
+},isRight:function(e){
+return e.button&2;
+}};
+}else{
+_3={LEFT:0,MIDDLE:1,RIGHT:2,isButton:function(e,_5){
+return e.button==_5;
+},isLeft:function(e){
+return e.button==0;
+},isMiddle:function(e){
+return e.button==1;
+},isRight:function(e){
+return e.button==2;
+}};
+}
+_1.mouseButtons=_3;
+if(_2("events-mouseenter")){
+var _6=function(_7){
+return function(_8,_9){
+return on(_8,_7,_9);
+};
+};
+return {mouseButtons:_3,enter:_6("mouseenter"),leave:_6("mouseleave")};
+}else{
+var _6=function(_a){
+return function(_b,_c){
+return on(_b,_a,function(_d){
+if(!_1.isDescendant(_d.relatedTarget,_b)){
+return _c.call(this,_d);
+}
+});
+};
+};
+return {mouseButtons:_3,enter:_6("mouseover"),leave:_6("mouseout")};
+}
 });

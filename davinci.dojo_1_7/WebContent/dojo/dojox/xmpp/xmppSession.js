@@ -1,849 +1,548 @@
-dojo.provide("dojox.xmpp.xmppSession");
-
-dojo.require("dojox.xmpp.TransportSession");
-dojo.require("dojox.xmpp.RosterService");
-dojo.require("dojox.xmpp.PresenceService");
-dojo.require("dojox.xmpp.UserService");
-dojo.require("dojox.xmpp.ChatService");
-dojo.require("dojox.xmpp.sasl");
-
-dojox.xmpp.xmpp = {
-	STREAM_NS:  'http://etherx.jabber.org/streams',
-	CLIENT_NS: 'jabber:client',
-	STANZA_NS: 'urn:ietf:params:xml:ns:xmpp-stanzas',
-	SASL_NS: 'urn:ietf:params:xml:ns:xmpp-sasl',
-	BIND_NS: 'urn:ietf:params:xml:ns:xmpp-bind',
-	SESSION_NS: 'urn:ietf:params:xml:ns:xmpp-session',
-	BODY_NS: "http://jabber.org/protocol/httpbind",
-	
-	XHTML_BODY_NS: "http://www.w3.org/1999/xhtml",
-	XHTML_IM_NS: "http://jabber.org/protocol/xhtml-im",
-
-	INACTIVE: "Inactive",
-	CONNECTED: "Connected",
-	ACTIVE: "Active",
-	TERMINATE: "Terminate",
-	LOGIN_FAILURE: "LoginFailure",
-
-	INVALID_ID: -1,
-	NO_ID: 0,
-
-	error:{
-		BAD_REQUEST: 'bad-request',
-		CONFLICT: 'conflict',
-		FEATURE_NOT_IMPLEMENTED: 'feature-not-implemented',
-		FORBIDDEN: 'forbidden',
-		GONE: 'gone',
-		INTERNAL_SERVER_ERROR: 'internal-server-error',
-		ITEM_NOT_FOUND: 'item-not-found',
-		ID_MALFORMED: 'jid-malformed',
-		NOT_ACCEPTABLE: 'not-acceptable',
-		NOT_ALLOWED: 'not-allowed',
-		NOT_AUTHORIZED: 'not-authorized',
-		SERVICE_UNAVAILABLE: 'service-unavailable',
-		SUBSCRIPTION_REQUIRED: 'subscription-required',
-		UNEXPECTED_REQUEST: 'unexpected-request'
-	}
-};
-
-dojox.xmpp.xmppSession = function(props){
-	this.roster = [];
-	this.chatRegister = [];
-	this._iqId = Math.round(Math.random() * 1000000000);
-
-	//mixin any options that we want to provide to this service
-	if (props && dojo.isObject(props)) {
-		dojo.mixin(this, props);
-	}
-
-	this.session = new dojox.xmpp.TransportSession(props);
-	dojo.connect(this.session, "onReady", this, "onTransportReady");
-	dojo.connect(this.session, "onTerminate", this, "onTransportTerminate");
-	dojo.connect(this.session, "onProcessProtocolResponse", this, "processProtocolResponse");
-};
-
-
-dojo.extend(dojox.xmpp.xmppSession, {
-
-		roster: [],
-		chatRegister: [],
-		_iqId: 0,
-	
-		open: function(user, password, resource){
-
-			if (!user) {
-				throw new Error("User id cannot be null");
-			} else {
-				this.jid = user;
-				if(user.indexOf('@') == -1) {
-					this.jid = this.jid + '@' + this.domain;
-				}
-        	}
-
-			//allow null password here as its not needed in the SSO case
-			if (password) {
-				this.password = password;
-			}
-
-			//normally you should NOT supply a resource and let the server send you one
-			//as part of your jid...see onBindResource()
-			if (resource) {
-				this.resource = resource;
-			}
-
-			this.session.open();
-		},
-
-		close: function(){
-			this.state = dojox.xmpp.xmpp.TERMINATE;
-			this.session.close(dojox.xmpp.util.createElement("presence",{type:"unavailable",xmlns:dojox.xmpp.xmpp.CLIENT_NS},true));
-		},
-
-		processProtocolResponse: function(msg){
-			//console.log("xmppSession::processProtocolResponse() ", msg, msg.nodeName);
-			var type = msg.nodeName;
-			var nsIndex =type.indexOf(":");
-			if(nsIndex > 0) {
-				type = type.substring(nsIndex+1);
-			}
-			switch(type){
-				case "iq":
-				case "presence":
-				case "message":
-				case "features":
-					this[type + "Handler"](msg);
-					break;
-				default:
-					//console.log("default action?", msg.getAttribute('xmlns'));
-					if(msg.getAttribute('xmlns')==dojox.xmpp.xmpp.SASL_NS){
-						this.saslHandler(msg);
-					}
-			}
-		},
-
-		//HANDLERS
-
-		messageHandler: function(msg){
-			//console.log("xmppSession::messageHandler() ",msg);
-			switch(msg.getAttribute('type')){
-				case "chat":
-					this.chatHandler(msg);
-					break;
-				case "normal":
-				default:
-					this.simpleMessageHandler(msg);
-			}
-			
-		},
-
-		iqHandler: function(msg){
-			//console.log("xmppSession::iqHandler()", msg);
-			if (msg.getAttribute('type')=="set"){
-				this.iqSetHandler(msg);
-				return;
-			} else if (msg.getAttribute('type')=='get'){
-			//	this.sendStanzaError('iq', this.domain, msg.getAttribute('from'), 'cancel', 'service-unavailable', 'service not implemented');
-				return;
-			}
-		},
-
-		presenceHandler: function(msg){
-			//console.log("xmppSession::presenceHandler()");
-			switch(msg.getAttribute('type')){
-				case 'subscribe':
-					//console.log("PresenceHandler: ", msg.getAttribute('from'));
-					this.presenceSubscriptionRequest(msg.getAttribute('from'));
-					break;
-				case 'subscribed':
-				case 'unsubscribed':
-					break;
-				case 'error':
-					this.processXmppError(msg);
-					//console.log("xmppService::presenceHandler() Error");
-					break;
-				default:
-					this.presenceUpdate(msg);
-					break;
-			}
-		},
-
-		featuresHandler: function(msg){
-			//console.log("xmppSession::featuresHandler() ",msg);
-			var authMechanisms = [];
-			var hasBindFeature = false;
-			var hasSessionFeature = false;
-
-			if(msg.hasChildNodes()){
-				for(var i=0; i<msg.childNodes.length;i++){
-					var n = msg.childNodes[i];
-					//console.log("featuresHandler::node", n);
-					switch(n.nodeName){
-						case 'mechanisms':
-							for (var x=0; x<n.childNodes.length; x++){
-								//console.log("featuresHandler::node::mechanisms", n.childNodes[x].firstChild.nodeValue);
-								authMechanisms.push(n.childNodes[x].firstChild.nodeValue);
-							}
-							break;
-						case 'bind':
-							//if (n.getAttribute('xmlns')==dojox.xmpp.xmpp.BIND_NS) {
-							hasBindFeature = true;
-						//	}
-							break;
-						case 'session':
-							hasSessionFeature = true;
-					}
-				}
-			}
-			//console.log("Has connected/bind?", this.state, hasBindFeature, authMechanisms);
-			if(this.state == dojox.xmpp.xmpp.CONNECTED){
-				if(!this.auth){
-					// start the login
-					for(var i=0; i<authMechanisms.length; i++){
-						try{
-							this.auth = dojox.xmpp.sasl.registry.match(authMechanisms[i], this);
-							break;
-						}catch(e){
-							console.warn("No suitable auth mechanism found for: ", authMechanisms[i]);
-						}
-					}
-				}else if(hasBindFeature){
-					this.bindResource(hasSessionFeature);
-				}
-			}
-		},
-
-		saslHandler: function(msg){
-			//console.log("xmppSession::saslHandler() ", msg);
-			if(msg.nodeName=="success"){
-				this.auth.onSuccess();
-				return;
-			}
-
-			if(msg.nodeName=="challenge"){
-				this.auth.onChallenge(msg);
-				return;
-			}
-
-			if(msg.hasChildNodes()){
-				this.onLoginFailure(msg.firstChild.nodeName);
-				this.session.setState('Terminate', msg.firstChild.nodeName);
-			}
-		},
-
-		sendRestart: function(){
-			this.session._sendRestart();
-		},
-
-
-		//SUB HANDLERS
-
-		chatHandler: function(msg){
-			//console.log("xmppSession::chatHandler() ", msg);
-			var message = {
-				from: msg.getAttribute('from'),
-				to: msg.getAttribute('to')
-			}
-
-			var chatState = null;
-				//console.log("chat child node ", msg.childNodes, msg.childNodes.length);
-			for (var i=0; i<msg.childNodes.length; i++){
-				var n = msg.childNodes[i];
-				if (n.hasChildNodes()){
-					//console.log("chat child node ", n);
-					switch(n.nodeName){
-						case 'thread':
-							message.chatid = n.firstChild.nodeValue;
-							break;
-						case 'body':
-							if (!n.getAttribute('xmlns') || (n.getAttribute('xmlns')=="")){
-								message.body = n.firstChild.nodeValue;
-							}
-							break;
-						case 'subject':
-							message.subject = n.firstChild.nodeValue;
-						case 'html':
-							if (n.getAttribute('xmlns')==dojox.xmpp.xmpp.XHTML_IM_NS){
-								message.xhtml = n.getElementsByTagName("body")[0];
-							}
-							break;
-						case 'x':
-							break;
-						default:
-							//console.log("xmppSession::chatHandler() Unknown node type: ",n.nodeName);
-					}
-				}
-				/*//console.log("Foo", n, n.nodeName);
-				if(n.getAttribute('xmlns')==dojox.xmpp.chat.CHAT_STATE_NS){
-					chatState = n.nodeName;
-				}*/
-			}
-
-			var found = -1;
-			if (message.chatid){
-				for (var i=0; i< this.chatRegister.length; i++){
-					var ci = this.chatRegister[i];
-					////console.log("ci.chatid: ", ci.chatid, message.chatid);
-					if (ci && ci.chatid == message.chatid) {
-						found = i;
-						break;
-					}
-				}
-			} else {
-				for (var i=0; i< this.chatRegister.length; i++){
-					var ci = this.chatRegister[i];
-					if(ci){
-						if (ci.uid==this.getBareJid(message.from)){
-							found = i;
-						}
-					}
-				}
-			}
-
-			if (found>-1 && chatState){
-				var chat = this.chatRegister[found];
-				chat.setState(chatState);
-
-				if (chat.firstMessage){
-					if (chatState == dojox.xmpp.chat.ACTIVE_STATE) {
-						chat.useChatState = (chatState != null) ? true : false;
-						chat.firstMessage = false;
-					}
-				}
-			}
-
-			if ((!message.body || message.body=="") && !message.xhtml) {return;}
-
-			if (found>-1){
-				var chat = this.chatRegister[found];
-				chat.recieveMessage(message);
-			}else{
-				var chatInstance = new dojox.xmpp.ChatService();
-				chatInstance.uid = this.getBareJid(message.from);
-				chatInstance.chatid = message.chatid;
-				chatInstance.firstMessage = true;
-				if(!chatState || chatState != dojox.xmpp.chat.ACTIVE_STATE){
-					this.useChatState = false;
-				}
-				this.registerChatInstance(chatInstance, message);
-			}
-		},
-
-		simpleMessageHandler: function(msg){
-			//console.log("xmppSession::simpleMessageHandler() ", msg);
-		},
-
-		registerChatInstance: function(chatInstance, message){
-			chatInstance.setSession(this);
-			this.chatRegister.push(chatInstance);
-			this.onRegisterChatInstance(chatInstance, message);
-			chatInstance.recieveMessage(message,true);
-		},
-		
-		iqSetHandler: function(msg){
-			if (msg.hasChildNodes()){
-				var fn = msg.firstChild;
-				switch(fn.nodeName){
-					case 'query':
-						if(fn.getAttribute('xmlns') == "jabber:iq:roster"){
-							this.rosterSetHandler(fn);
-							this.sendIqResult(msg.getAttribute('id'), msg.getAttribute('from'));
-						}
-						break;
-					default:
-					//	this.sendStanzaError('iq', this.domain, msg.getAttribute('id'), 'cancel', 'service-unavailable', 'service not implemented');
-						break;
-				}
-			}
-		},
-
-		sendIqResult: function(iqId, to){
-			var req = {
-				id: iqId,
-				to: to || this.domain,
-				type: 'result',
-				from: this.jid + "/" + this.resource
-			}
-			this.dispatchPacket(dojox.xmpp.util.createElement("iq",req,true));
-		},
-
-		rosterSetHandler: function(elem){
-			//console.log("xmppSession::rosterSetHandler()", arguments);
-			for (var i=0; i<elem.childNodes.length;i++){
-				var n = elem.childNodes[i];
-			
-				if (n.nodeName=="item"){
-					var found = false;
-					var state = -1;
-					var rosterItem = null;
-					var previousCopy = null;
-					for(var x=0; x<this.roster.length;x++){
-						var r = this.roster[x];
-						if(n.getAttribute('jid')==r.jid){
-							found = true;
-							if(n.getAttribute('subscription')=='remove'){
-								//remove the item
-								rosterItem = {
-									id: r.jid,
-									name: r.name,
-									groups:[]
-								}
-
-								for (var y=0;y<r.groups.length;y++){
-									rosterItem.groups.push(r.groups[y]);
-								}
-
-								this.roster.splice(x,1);
-								state = dojox.xmpp.roster.REMOVED;
-
-							} else { //update
-								previousCopy = dojo.clone(r);
-								var itemName = n.getAttribute('name');
-								if (itemName){
-									this.roster[x].name = itemName;
-								}
-
-								r.groups = [];
-
-								if (n.getAttribute('subscription')){
-									r.status = n.getAttribute('subscription');
-								}
-						
-								r.substatus = dojox.xmpp.presence.SUBSCRIPTION_SUBSTATUS_NONE;
-								if(n.getAttribute('ask')=='subscribe'){
-									r.substatus = dojox.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING;
-								}
-					
-								for(var y=0;y<n.childNodes.length;y++){
-									var groupNode = n.childNodes[y];
-									if ((groupNode.nodeName=='group')&&(groupNode.hasChildNodes())){
-										var gname = groupNode.firstChild.nodeValue;
-										r.groups.push(gname);
-									}
-								}
-								rosterItem = r;
-								state = dojox.xmpp.roster.CHANGED;
-							}
-							break;
-						}
-					}
-					if(!found && (n.getAttribute('subscription')!='remove')){
-						r = this.createRosterEntry(n);
-						rosterItem = r;
-						state = dojox.xmpp.roster.ADDED;
-					}
-				
-					switch(state){
-						case dojox.xmpp.roster.ADDED:
-							this.onRosterAdded(rosterItem);
-							break;
-						case dojox.xmpp.roster.REMOVED:
-							this.onRosterRemoved(rosterItem);
-							break;
-						case dojox.xmpp.roster.CHANGED:
-							this.onRosterChanged(rosterItem, previousCopy);
-							break;
-					}
-				}
-			}
-		},
-
-		presenceUpdate: function(msg){
-			if(msg.getAttribute('to')){
-				var jid = this.getBareJid(msg.getAttribute('to'));
-				if(jid != this.jid) {
-					//console.log("xmppService::presenceUpdate Update Recieved with wrong address - ",jid);
-					return;
-				}
-			}
-
-			var fromRes = this.getResourceFromJid(msg.getAttribute('from'));
-
-			var p = {
-				from: this.getBareJid(msg.getAttribute('from')),
-				resource: fromRes,
-				show: dojox.xmpp.presence.STATUS_ONLINE,
-				priority: 5,
-				hasAvatar: false
-			}
-
-			if(msg.getAttribute('type')=='unavailable'){
-				p.show=dojox.xmpp.presence.STATUS_OFFLINE
-			}
-
-			for (var i=0; i<msg.childNodes.length;i++){
-				var n=msg.childNodes[i];
-				if (n.hasChildNodes()){
-					switch(n.nodeName){
-						case 'status':
-						case 'show':
-							p[n.nodeName]=n.firstChild.nodeValue;
-							break;
-						case 'status':
-							p.priority=parseInt(n.firstChild.nodeValue);
-							break;
-						case 'x':
-							if(n.firstChild && n.firstChild.firstChild &&  n.firstChild.firstChild.nodeValue != "") {
-								p.avatarHash= n.firstChild.firstChild.nodeValue;
-								p.hasAvatar = true;
-							}
-							break;
-					}
-				}
-			}
-
-			this.onPresenceUpdate(p);
-		},
-
-		retrieveRoster: function(){
-			////console.log("xmppService::retrieveRoster()");
-			var props={
-				id: this.getNextIqId(),
-				from: this.jid + "/" + this.resource,
-				type: "get"
-			}
-			var req = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",props,false));
-			req.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:roster"},true));
-			req.append("</iq>");
-
-			var def = this.dispatchPacket(req,"iq", props.id);
-			def.addCallback(this, "onRetrieveRoster");
-			
-		},
-
-		getRosterIndex: function(jid){
-			if(jid.indexOf('@')==-1){
-				jid += '@' + this.domain;
-			}
-			for (var i=0; i<this.roster.length;i++){
-				if(jid == this.roster[i].jid) { return i; }
-			}
-			return -1;
-		},
-
-		createRosterEntry: function(elem){
-			////console.log("xmppService::createRosterEntry()");
-			var re = {
-				name: elem.getAttribute('name'),
-				jid: elem.getAttribute('jid'),
-				groups: [],
-				status: dojox.xmpp.presence.SUBSCRIPTION_NONE,
-				substatus: dojox.xmpp.presence.SUBSCRIPTION_SUBSTATUS_NONE
-			//	displayToUser: false
-			}
-
-			if (!re.name){
-				re.name = re.id;
-			}
-			
-			
-
-			for(var i=0; i<elem.childNodes.length;i++){
-				var n = elem.childNodes[i];
-				if (n.nodeName=='group' && n.hasChildNodes()){
-					re.groups.push(n.firstChild.nodeValue);
-				}
-			}
-
-			if (elem.getAttribute('subscription')){
-				re.status = elem.getAttribute('subscription');
-			}
-
-			if (elem.getAttribute('ask')=='subscribe'){
-				re.substatus = dojox.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING;
-			}
-			//Display contact rules from http://www.xmpp.org/extensions/xep-0162.html#contacts
-		/*	if(re.status == dojox.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING ||
-				re.status == dojox.xmpp.presence.SUBSCRIPTION_TO ||
-				re.status == dojox.xmpp.presence.SUBSCRIPTION_BOTH ||
-				re.groups.length > 0 ||
-				re.name
-				) {
-					re.displayToUser = true;
-				}
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
-			return re;
-		},
 
-		bindResource: function(hasSession){
-			var props = {
-				id: this.getNextIqId(),
-				type: "set"
-			}
-			var bindReq = new dojox.string.Builder(dojox.xmpp.util.createElement("iq", props, false));
-			bindReq.append(dojox.xmpp.util.createElement("bind", {xmlns: dojox.xmpp.xmpp.BIND_NS}, false));
-
-			if (this.resource){
-				bindReq.append(dojox.xmpp.util.createElement("resource"));
-				bindReq.append(this.resource);
-				bindReq.append("</resource>");
-			}
-
-			bindReq.append("</bind></iq>");
-
-			var def = this.dispatchPacket(bindReq, "iq", props.id);
-			def.addCallback(this, function(msg){
-				this.onBindResource(msg, hasSession);
-				return msg;
-			});
-		},
-
-		getNextIqId: function(){
-			return "im_" + this._iqId++;
-		},
-
-		presenceSubscriptionRequest: function(msg) {
-			this.onSubscriptionRequest(msg);
-			/*
-			this.onSubscriptionRequest({
-				from: msg,
-				resource:"",
-				show:"",
-				status:"",
-				priority: 5
-			});
-			*/
-		},
-
-		dispatchPacket: function(msg, type, matchId){
-			if (this.state != "Terminate") {
-				return this.session.dispatchPacket(msg,type,matchId);
-			}else{
-				//console.log("xmppSession::dispatchPacket - Session in Terminate state, dropping packet");
-			}
-		},
-
-		setState: function(state, message){
-			if (this.state != state){
-				if (this["on"+state]){
-					this["on"+state](state, this.state, message);
-				}
-				this.state=state;
-			}
-		},
-
-		search: function(searchString, service, searchAttribute){
-			var req={
-				id: this.getNextIqId(),
-				"xml:lang": this.lang,
-				type: 'set',
-				from: this.jid + '/' + this.resource,
-				to: service
-			}
-			var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",req,false));
-			request.append(dojox.xmpp.util.createElement('query',{xmlns:'jabber:iq:search'},false));
-			request.append(dojox.xmpp.util.createElement(searchAttribute,{},false));
-			request.append(searchString);
-			request.append("</").append(searchAttribute).append(">");
-			request.append("</query></iq>");
-
-			var def = this.dispatchPacket(request.toString,"iq",req.id);
-			def.addCallback(this, "_onSearchResults");
-		},
-
-		_onSearchResults: function(msg){
-			if ((msg.getAttribute('type')=='result')&&(msg.hasChildNodes())){
-				//console.log("xmppSession::_onSearchResults(): ", msg.firstChild);
-
-				//call the search results event with an array of results
-				this.onSearchResults([]);
-			}
-		},
-
-		// EVENTS
-
-		onLogin: function(){
-			////console.log("xmppSession::onLogin()");
-			this.retrieveRoster();
-		},
-
-		onLoginFailure: function(msg){
-			//console.log("xmppSession::onLoginFailure ", msg);
-		},
-
-		onBindResource: function(msg, hasSession){
-			//console.log("xmppSession::onBindResource() ", msg);
-		
-			if (msg.getAttribute('type')=='result'){
-				//console.log("xmppSession::onBindResource() Got Result Message");
-				if ((msg.hasChildNodes()) && (msg.firstChild.nodeName=="bind")){
-					var bindTag = msg.firstChild;
-					if ((bindTag.hasChildNodes()) && (bindTag.firstChild.nodeName=="jid")){
-						if (bindTag.firstChild.hasChildNodes()){
-							var fulljid = bindTag.firstChild.firstChild.nodeValue;
-							this.jid = this.getBareJid(fulljid);
-							this.resource = this.getResourceFromJid(fulljid);
-						}
-					}
-					if(hasSession){
-						var props = {
-							id: this.getNextIqId(),
-							type: "set"
-						}
-						var bindReq = new dojox.string.Builder(dojox.xmpp.util.createElement("iq", props, false));
-						bindReq.append(dojox.xmpp.util.createElement("session", {xmlns: dojox.xmpp.xmpp.SESSION_NS}, true));
-						bindReq.append("</iq>");
-
-						var def = this.dispatchPacket(bindReq, "iq", props.id);
-						def.addCallback(this, "onBindSession");
-						return;
-					}
-				}else{
-					//console.log("xmppService::onBindResource() No Bind Element Found");
-				}
-
-				this.onLogin();
-		
-			}else if(msg.getAttribute('type')=='error'){
-				//console.log("xmppSession::onBindResource() Bind Error ", msg);
-				var err = this.processXmppError(msg);
-				this.onLoginFailure(err);
-			}
-		},
-
-		onBindSession: function(msg){
-			if(msg.getAttribute('type')=='error'){
-				//console.log("xmppSession::onBindSession() Bind Error ", msg);
-				var err = this.processXmppError(msg);
-				this.onLoginFailure(err);
-			}else{
-				this.onLogin();
-			}
-		},
-
-		onSearchResults: function(results){
-			//console.log("xmppSession::onSearchResult() ", results);
-		},
-
-		onRetrieveRoster: function(msg){
-			////console.log("xmppService::onRetrieveRoster() ", arguments);
-
-			if ((msg.getAttribute('type')=='result') && msg.hasChildNodes()){
-				var query = msg.getElementsByTagName('query')[0];
-				if (query.getAttribute('xmlns')=="jabber:iq:roster"){
-					for (var i=0;i<query.childNodes.length;i++){
-						if (query.childNodes[i].nodeName=="item"){
-							this.roster[i] = this.createRosterEntry(query.childNodes[i]);
-						}
-					}
-				}
-			}else if(msg.getAttribute('type')=="error"){
-				//console.log("xmppService::storeRoster()  Error recieved on roster get");
-			}
-
-			////console.log("Roster: ", this.roster);
-			this.setState(dojox.xmpp.xmpp.ACTIVE);
-			this.onRosterUpdated();
-
-			return msg;
-		},
-		
-		onRosterUpdated: function() {},
-
-		onSubscriptionRequest: function(req){},
-
-		onPresenceUpdate: function(p){},
-
-		onTransportReady: function(){
-			this.setState(dojox.xmpp.xmpp.CONNECTED);
-			this.rosterService = new dojox.xmpp.RosterService(this);
-			this.presenceService= new dojox.xmpp.PresenceService(this);
-			this.userService = new dojox.xmpp.UserService(this);
-
-			////console.log("xmppSession::onTransportReady()");
-		},
-
-		onTransportTerminate: function(newState, oldState, message){
-			this.setState(dojox.xmpp.xmpp.TERMINATE, message);
-		},
-
-		onConnected: function(){
-			////console.log("xmppSession::onConnected()");
-		},
-
-		onTerminate: function(newState, oldState, message){
-			//console.log("xmppSession::onTerminate()", newState, oldState, message);
-		},
-
-		onActive: function(){
-			////console.log("xmppSession::onActive()");
-			//this.presenceService.publish({show: dojox.xmpp.presence.STATUS_ONLINE});
-		},
-
-		onRegisterChatInstance: function(chatInstance, message){
-			////console.log("xmppSession::onRegisterChatInstance()");
-		},
-
-		onRosterAdded: function(ri){},
-		onRosterRemoved: function(ri){},
-		onRosterChanged: function(ri, previousCopy){},
-
-		//Utilities
-
-		processXmppError: function(msg){
-			////console.log("xmppSession::processXmppError() ", msg);
-			var err = {
-				stanzaType: msg.nodeName,
-				id: msg.getAttribute('id')
-			}
-	
-			for (var i=0; i<msg.childNodes.length; i++){
-				var n = msg.childNodes[i];
-				switch(n.nodeName){
-					case 'error':
-						err.errorType = n.getAttribute('type');
-						for (var x=0; x< n.childNodes.length; x++){
-							var cn = n.childNodes[x];
-							if ((cn.nodeName=="text") && (cn.getAttribute('xmlns') == dojox.xmpp.xmpp.STANZA_NS) && cn.hasChildNodes()) {
-								err.message = cn.firstChild.nodeValue;
-							} else if ((cn.getAttribute('xmlns') == dojox.xmpp.xmpp.STANZA_NS) &&(!cn.hasChildNodes())){
-								err.condition = cn.nodeName;
-							}
-						}
-						break;
-					default:
-						break;
-				}
-			}
-			return err;
-		},
-
-		sendStanzaError: function(stanzaType,to,id,errorType,condition,text){
-			////console.log("xmppSession: sendStanzaError() ", arguments);
-			var req = {type:'error'};
-			if (to) { req.to=to; }
-			if (id) { req.id=id; }
-		
-			var request = new dojox.string.Builder(dojox.xmpp.util.createElement(stanzaType,req,false));
-			request.append(dojox.xmpp.util.createElement('error',{type:errorType},false));
-			request.append(dojox.xmpp.util.createElement('condition',{xmlns:dojox.xmpp.xmpp.STANZA_NS},true));
-
-			if(text){
-				var textAttr={
-					xmlns: dojox.xmpp.xmpp.STANZA_NS,
-					"xml:lang":this.lang
-				}
-				request.append(dojox.xmpp.util.createElement('text',textAttr,false));
-				request.append(text).append("</text>");
-			}
-			request.append("</error></").append(stanzaType).append(">");
-
-			this.dispatchPacket(request.toString());
-		},
-
-		getBareJid: function(jid){
-			var i = jid.indexOf('/');
-			if (i != -1){
-				return jid.substring(0, i);
-			}
-			return jid;
-		},
-
-		getResourceFromJid: function(jid){
-			var i = jid.indexOf('/');
-			if (i != -1){
-				return jid.substring((i + 1), jid.length);
-			}
-			return "";
-		}
-
+define(["dojo","dijit","dojox","dojox/xmpp/TransportSession","dojox/xmpp/RosterService","dojox/xmpp/PresenceService","dojox/xmpp/UserService","dojox/xmpp/ChatService","dojox/xmpp/sasl"],function(_1,_2,_3){
+_1.getObject("dojox.xmpp.xmppSession",1);
+_3.xmpp.xmpp={STREAM_NS:"http://etherx.jabber.org/streams",CLIENT_NS:"jabber:client",STANZA_NS:"urn:ietf:params:xml:ns:xmpp-stanzas",SASL_NS:"urn:ietf:params:xml:ns:xmpp-sasl",BIND_NS:"urn:ietf:params:xml:ns:xmpp-bind",SESSION_NS:"urn:ietf:params:xml:ns:xmpp-session",BODY_NS:"http://jabber.org/protocol/httpbind",XHTML_BODY_NS:"http://www.w3.org/1999/xhtml",XHTML_IM_NS:"http://jabber.org/protocol/xhtml-im",INACTIVE:"Inactive",CONNECTED:"Connected",ACTIVE:"Active",TERMINATE:"Terminate",LOGIN_FAILURE:"LoginFailure",INVALID_ID:-1,NO_ID:0,error:{BAD_REQUEST:"bad-request",CONFLICT:"conflict",FEATURE_NOT_IMPLEMENTED:"feature-not-implemented",FORBIDDEN:"forbidden",GONE:"gone",INTERNAL_SERVER_ERROR:"internal-server-error",ITEM_NOT_FOUND:"item-not-found",ID_MALFORMED:"jid-malformed",NOT_ACCEPTABLE:"not-acceptable",NOT_ALLOWED:"not-allowed",NOT_AUTHORIZED:"not-authorized",SERVICE_UNAVAILABLE:"service-unavailable",SUBSCRIPTION_REQUIRED:"subscription-required",UNEXPECTED_REQUEST:"unexpected-request"}};
+_3.xmpp.xmppSession=function(_4){
+this.roster=[];
+this.chatRegister=[];
+this._iqId=Math.round(Math.random()*1000000000);
+if(_4&&_1.isObject(_4)){
+_1.mixin(this,_4);
+}
+this.session=new _3.xmpp.TransportSession(_4);
+_1.connect(this.session,"onReady",this,"onTransportReady");
+_1.connect(this.session,"onTerminate",this,"onTransportTerminate");
+_1.connect(this.session,"onProcessProtocolResponse",this,"processProtocolResponse");
+};
+_1.extend(_3.xmpp.xmppSession,{roster:[],chatRegister:[],_iqId:0,open:function(_5,_6,_7){
+if(!_5){
+throw new Error("User id cannot be null");
+}else{
+this.jid=_5;
+if(_5.indexOf("@")==-1){
+this.jid=this.jid+"@"+this.domain;
+}
+}
+if(_6){
+this.password=_6;
+}
+if(_7){
+this.resource=_7;
+}
+this.session.open();
+},close:function(){
+this.state=_3.xmpp.xmpp.TERMINATE;
+this.session.close(_3.xmpp.util.createElement("presence",{type:"unavailable",xmlns:_3.xmpp.xmpp.CLIENT_NS},true));
+},processProtocolResponse:function(_8){
+var _9=_8.nodeName;
+var _a=_9.indexOf(":");
+if(_a>0){
+_9=_9.substring(_a+1);
+}
+switch(_9){
+case "iq":
+case "presence":
+case "message":
+case "features":
+this[_9+"Handler"](_8);
+break;
+default:
+if(_8.getAttribute("xmlns")==_3.xmpp.xmpp.SASL_NS){
+this.saslHandler(_8);
+}
+}
+},messageHandler:function(_b){
+switch(_b.getAttribute("type")){
+case "chat":
+this.chatHandler(_b);
+break;
+case "normal":
+default:
+this.simpleMessageHandler(_b);
+}
+},iqHandler:function(_c){
+if(_c.getAttribute("type")=="set"){
+this.iqSetHandler(_c);
+return;
+}else{
+if(_c.getAttribute("type")=="get"){
+return;
+}
+}
+},presenceHandler:function(_d){
+switch(_d.getAttribute("type")){
+case "subscribe":
+this.presenceSubscriptionRequest(_d.getAttribute("from"));
+break;
+case "subscribed":
+case "unsubscribed":
+break;
+case "error":
+this.processXmppError(_d);
+break;
+default:
+this.presenceUpdate(_d);
+break;
+}
+},featuresHandler:function(_e){
+var _f=[];
+var _10=false;
+var _11=false;
+if(_e.hasChildNodes()){
+for(var i=0;i<_e.childNodes.length;i++){
+var n=_e.childNodes[i];
+switch(n.nodeName){
+case "mechanisms":
+for(var x=0;x<n.childNodes.length;x++){
+_f.push(n.childNodes[x].firstChild.nodeValue);
+}
+break;
+case "bind":
+_10=true;
+break;
+case "session":
+_11=true;
+}
+}
+}
+if(this.state==_3.xmpp.xmpp.CONNECTED){
+if(!this.auth){
+for(var i=0;i<_f.length;i++){
+try{
+this.auth=_3.xmpp.sasl.registry.match(_f[i],this);
+break;
+}
+catch(e){
+console.warn("No suitable auth mechanism found for: ",_f[i]);
+}
+}
+}else{
+if(_10){
+this.bindResource(_11);
+}
+}
+}
+},saslHandler:function(msg){
+if(msg.nodeName=="success"){
+this.auth.onSuccess();
+return;
+}
+if(msg.nodeName=="challenge"){
+this.auth.onChallenge(msg);
+return;
+}
+if(msg.hasChildNodes()){
+this.onLoginFailure(msg.firstChild.nodeName);
+this.session.setState("Terminate",msg.firstChild.nodeName);
+}
+},sendRestart:function(){
+this.session._sendRestart();
+},chatHandler:function(msg){
+var _12={from:msg.getAttribute("from"),to:msg.getAttribute("to")};
+var _13=null;
+for(var i=0;i<msg.childNodes.length;i++){
+var n=msg.childNodes[i];
+if(n.hasChildNodes()){
+switch(n.nodeName){
+case "thread":
+_12.chatid=n.firstChild.nodeValue;
+break;
+case "body":
+if(!n.getAttribute("xmlns")||(n.getAttribute("xmlns")=="")){
+_12.body=n.firstChild.nodeValue;
+}
+break;
+case "subject":
+_12.subject=n.firstChild.nodeValue;
+case "html":
+if(n.getAttribute("xmlns")==_3.xmpp.xmpp.XHTML_IM_NS){
+_12.xhtml=n.getElementsByTagName("body")[0];
+}
+break;
+case "x":
+break;
+default:
+}
+}
+}
+var _14=-1;
+if(_12.chatid){
+for(var i=0;i<this.chatRegister.length;i++){
+var ci=this.chatRegister[i];
+if(ci&&ci.chatid==_12.chatid){
+_14=i;
+break;
+}
+}
+}else{
+for(var i=0;i<this.chatRegister.length;i++){
+var ci=this.chatRegister[i];
+if(ci){
+if(ci.uid==this.getBareJid(_12.from)){
+_14=i;
+}
+}
+}
+}
+if(_14>-1&&_13){
+var _15=this.chatRegister[_14];
+_15.setState(_13);
+if(_15.firstMessage){
+if(_13==_3.xmpp.chat.ACTIVE_STATE){
+_15.useChatState=(_13!=null)?true:false;
+_15.firstMessage=false;
+}
+}
+}
+if((!_12.body||_12.body=="")&&!_12.xhtml){
+return;
+}
+if(_14>-1){
+var _15=this.chatRegister[_14];
+_15.recieveMessage(_12);
+}else{
+var _16=new _3.xmpp.ChatService();
+_16.uid=this.getBareJid(_12.from);
+_16.chatid=_12.chatid;
+_16.firstMessage=true;
+if(!_13||_13!=_3.xmpp.chat.ACTIVE_STATE){
+this.useChatState=false;
+}
+this.registerChatInstance(_16,_12);
+}
+},simpleMessageHandler:function(msg){
+},registerChatInstance:function(_17,_18){
+_17.setSession(this);
+this.chatRegister.push(_17);
+this.onRegisterChatInstance(_17,_18);
+_17.recieveMessage(_18,true);
+},iqSetHandler:function(msg){
+if(msg.hasChildNodes()){
+var fn=msg.firstChild;
+switch(fn.nodeName){
+case "query":
+if(fn.getAttribute("xmlns")=="jabber:iq:roster"){
+this.rosterSetHandler(fn);
+this.sendIqResult(msg.getAttribute("id"),msg.getAttribute("from"));
+}
+break;
+default:
+break;
+}
+}
+},sendIqResult:function(_19,to){
+var req={id:_19,to:to||this.domain,type:"result",from:this.jid+"/"+this.resource};
+this.dispatchPacket(_3.xmpp.util.createElement("iq",req,true));
+},rosterSetHandler:function(_1a){
+for(var i=0;i<_1a.childNodes.length;i++){
+var n=_1a.childNodes[i];
+if(n.nodeName=="item"){
+var _1b=false;
+var _1c=-1;
+var _1d=null;
+var _1e=null;
+for(var x=0;x<this.roster.length;x++){
+var r=this.roster[x];
+if(n.getAttribute("jid")==r.jid){
+_1b=true;
+if(n.getAttribute("subscription")=="remove"){
+_1d={id:r.jid,name:r.name,groups:[]};
+for(var y=0;y<r.groups.length;y++){
+_1d.groups.push(r.groups[y]);
+}
+this.roster.splice(x,1);
+_1c=_3.xmpp.roster.REMOVED;
+}else{
+_1e=_1.clone(r);
+var _1f=n.getAttribute("name");
+if(_1f){
+this.roster[x].name=_1f;
+}
+r.groups=[];
+if(n.getAttribute("subscription")){
+r.status=n.getAttribute("subscription");
+}
+r.substatus=_3.xmpp.presence.SUBSCRIPTION_SUBSTATUS_NONE;
+if(n.getAttribute("ask")=="subscribe"){
+r.substatus=_3.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING;
+}
+for(var y=0;y<n.childNodes.length;y++){
+var _20=n.childNodes[y];
+if((_20.nodeName=="group")&&(_20.hasChildNodes())){
+var _21=_20.firstChild.nodeValue;
+r.groups.push(_21);
+}
+}
+_1d=r;
+_1c=_3.xmpp.roster.CHANGED;
+}
+break;
+}
+}
+if(!_1b&&(n.getAttribute("subscription")!="remove")){
+r=this.createRosterEntry(n);
+_1d=r;
+_1c=_3.xmpp.roster.ADDED;
+}
+switch(_1c){
+case _3.xmpp.roster.ADDED:
+this.onRosterAdded(_1d);
+break;
+case _3.xmpp.roster.REMOVED:
+this.onRosterRemoved(_1d);
+break;
+case _3.xmpp.roster.CHANGED:
+this.onRosterChanged(_1d,_1e);
+break;
+}
+}
+}
+},presenceUpdate:function(msg){
+if(msg.getAttribute("to")){
+var jid=this.getBareJid(msg.getAttribute("to"));
+if(jid!=this.jid){
+return;
+}
+}
+var _22=this.getResourceFromJid(msg.getAttribute("from"));
+var p={from:this.getBareJid(msg.getAttribute("from")),resource:_22,show:_3.xmpp.presence.STATUS_ONLINE,priority:5,hasAvatar:false};
+if(msg.getAttribute("type")=="unavailable"){
+p.show=_3.xmpp.presence.STATUS_OFFLINE;
+}
+for(var i=0;i<msg.childNodes.length;i++){
+var n=msg.childNodes[i];
+if(n.hasChildNodes()){
+switch(n.nodeName){
+case "status":
+case "show":
+p[n.nodeName]=n.firstChild.nodeValue;
+break;
+case "status":
+p.priority=parseInt(n.firstChild.nodeValue);
+break;
+case "x":
+if(n.firstChild&&n.firstChild.firstChild&&n.firstChild.firstChild.nodeValue!=""){
+p.avatarHash=n.firstChild.firstChild.nodeValue;
+p.hasAvatar=true;
+}
+break;
+}
+}
+}
+this.onPresenceUpdate(p);
+},retrieveRoster:function(){
+var _23={id:this.getNextIqId(),from:this.jid+"/"+this.resource,type:"get"};
+var req=new _3.string.Builder(_3.xmpp.util.createElement("iq",_23,false));
+req.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:roster"},true));
+req.append("</iq>");
+var def=this.dispatchPacket(req,"iq",_23.id);
+def.addCallback(this,"onRetrieveRoster");
+},getRosterIndex:function(jid){
+if(jid.indexOf("@")==-1){
+jid+="@"+this.domain;
+}
+for(var i=0;i<this.roster.length;i++){
+if(jid==this.roster[i].jid){
+return i;
+}
+}
+return -1;
+},createRosterEntry:function(_24){
+var re={name:_24.getAttribute("name"),jid:_24.getAttribute("jid"),groups:[],status:_3.xmpp.presence.SUBSCRIPTION_NONE,substatus:_3.xmpp.presence.SUBSCRIPTION_SUBSTATUS_NONE};
+if(!re.name){
+re.name=re.id;
+}
+for(var i=0;i<_24.childNodes.length;i++){
+var n=_24.childNodes[i];
+if(n.nodeName=="group"&&n.hasChildNodes()){
+re.groups.push(n.firstChild.nodeValue);
+}
+}
+if(_24.getAttribute("subscription")){
+re.status=_24.getAttribute("subscription");
+}
+if(_24.getAttribute("ask")=="subscribe"){
+re.substatus=_3.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING;
+}
+return re;
+},bindResource:function(_25){
+var _26={id:this.getNextIqId(),type:"set"};
+var _27=new _3.string.Builder(_3.xmpp.util.createElement("iq",_26,false));
+_27.append(_3.xmpp.util.createElement("bind",{xmlns:_3.xmpp.xmpp.BIND_NS},false));
+if(this.resource){
+_27.append(_3.xmpp.util.createElement("resource"));
+_27.append(this.resource);
+_27.append("</resource>");
+}
+_27.append("</bind></iq>");
+var def=this.dispatchPacket(_27,"iq",_26.id);
+def.addCallback(this,function(msg){
+this.onBindResource(msg,_25);
+return msg;
 });
+},getNextIqId:function(){
+return "im_"+this._iqId++;
+},presenceSubscriptionRequest:function(msg){
+this.onSubscriptionRequest(msg);
+},dispatchPacket:function(msg,_28,_29){
+if(this.state!="Terminate"){
+return this.session.dispatchPacket(msg,_28,_29);
+}else{
+}
+},setState:function(_2a,_2b){
+if(this.state!=_2a){
+if(this["on"+_2a]){
+this["on"+_2a](_2a,this.state,_2b);
+}
+this.state=_2a;
+}
+},search:function(_2c,_2d,_2e){
+var req={id:this.getNextIqId(),"xml:lang":this.lang,type:"set",from:this.jid+"/"+this.resource,to:_2d};
+var _2f=new _3.string.Builder(_3.xmpp.util.createElement("iq",req,false));
+_2f.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:search"},false));
+_2f.append(_3.xmpp.util.createElement(_2e,{},false));
+_2f.append(_2c);
+_2f.append("</").append(_2e).append(">");
+_2f.append("</query></iq>");
+var def=this.dispatchPacket(_2f.toString,"iq",req.id);
+def.addCallback(this,"_onSearchResults");
+},_onSearchResults:function(msg){
+if((msg.getAttribute("type")=="result")&&(msg.hasChildNodes())){
+this.onSearchResults([]);
+}
+},onLogin:function(){
+this.retrieveRoster();
+},onLoginFailure:function(msg){
+},onBindResource:function(msg,_30){
+if(msg.getAttribute("type")=="result"){
+if((msg.hasChildNodes())&&(msg.firstChild.nodeName=="bind")){
+var _31=msg.firstChild;
+if((_31.hasChildNodes())&&(_31.firstChild.nodeName=="jid")){
+if(_31.firstChild.hasChildNodes()){
+var _32=_31.firstChild.firstChild.nodeValue;
+this.jid=this.getBareJid(_32);
+this.resource=this.getResourceFromJid(_32);
+}
+}
+if(_30){
+var _33={id:this.getNextIqId(),type:"set"};
+var _34=new _3.string.Builder(_3.xmpp.util.createElement("iq",_33,false));
+_34.append(_3.xmpp.util.createElement("session",{xmlns:_3.xmpp.xmpp.SESSION_NS},true));
+_34.append("</iq>");
+var def=this.dispatchPacket(_34,"iq",_33.id);
+def.addCallback(this,"onBindSession");
+return;
+}
+}else{
+}
+this.onLogin();
+}else{
+if(msg.getAttribute("type")=="error"){
+var err=this.processXmppError(msg);
+this.onLoginFailure(err);
+}
+}
+},onBindSession:function(msg){
+if(msg.getAttribute("type")=="error"){
+var err=this.processXmppError(msg);
+this.onLoginFailure(err);
+}else{
+this.onLogin();
+}
+},onSearchResults:function(_35){
+},onRetrieveRoster:function(msg){
+if((msg.getAttribute("type")=="result")&&msg.hasChildNodes()){
+var _36=msg.getElementsByTagName("query")[0];
+if(_36.getAttribute("xmlns")=="jabber:iq:roster"){
+for(var i=0;i<_36.childNodes.length;i++){
+if(_36.childNodes[i].nodeName=="item"){
+this.roster[i]=this.createRosterEntry(_36.childNodes[i]);
+}
+}
+}
+}else{
+if(msg.getAttribute("type")=="error"){
+}
+}
+this.setState(_3.xmpp.xmpp.ACTIVE);
+this.onRosterUpdated();
+return msg;
+},onRosterUpdated:function(){
+},onSubscriptionRequest:function(req){
+},onPresenceUpdate:function(p){
+},onTransportReady:function(){
+this.setState(_3.xmpp.xmpp.CONNECTED);
+this.rosterService=new _3.xmpp.RosterService(this);
+this.presenceService=new _3.xmpp.PresenceService(this);
+this.userService=new _3.xmpp.UserService(this);
+},onTransportTerminate:function(_37,_38,_39){
+this.setState(_3.xmpp.xmpp.TERMINATE,_39);
+},onConnected:function(){
+},onTerminate:function(_3a,_3b,_3c){
+},onActive:function(){
+},onRegisterChatInstance:function(_3d,_3e){
+},onRosterAdded:function(ri){
+},onRosterRemoved:function(ri){
+},onRosterChanged:function(ri,_3f){
+},processXmppError:function(msg){
+var err={stanzaType:msg.nodeName,id:msg.getAttribute("id")};
+for(var i=0;i<msg.childNodes.length;i++){
+var n=msg.childNodes[i];
+switch(n.nodeName){
+case "error":
+err.errorType=n.getAttribute("type");
+for(var x=0;x<n.childNodes.length;x++){
+var cn=n.childNodes[x];
+if((cn.nodeName=="text")&&(cn.getAttribute("xmlns")==_3.xmpp.xmpp.STANZA_NS)&&cn.hasChildNodes()){
+err.message=cn.firstChild.nodeValue;
+}else{
+if((cn.getAttribute("xmlns")==_3.xmpp.xmpp.STANZA_NS)&&(!cn.hasChildNodes())){
+err.condition=cn.nodeName;
+}
+}
+}
+break;
+default:
+break;
+}
+}
+return err;
+},sendStanzaError:function(_40,to,id,_41,_42,_43){
+var req={type:"error"};
+if(to){
+req.to=to;
+}
+if(id){
+req.id=id;
+}
+var _44=new _3.string.Builder(_3.xmpp.util.createElement(_40,req,false));
+_44.append(_3.xmpp.util.createElement("error",{type:_41},false));
+_44.append(_3.xmpp.util.createElement("condition",{xmlns:_3.xmpp.xmpp.STANZA_NS},true));
+if(_43){
+var _45={xmlns:_3.xmpp.xmpp.STANZA_NS,"xml:lang":this.lang};
+_44.append(_3.xmpp.util.createElement("text",_45,false));
+_44.append(_43).append("</text>");
+}
+_44.append("</error></").append(_40).append(">");
+this.dispatchPacket(_44.toString());
+},getBareJid:function(jid){
+var i=jid.indexOf("/");
+if(i!=-1){
+return jid.substring(0,i);
+}
+return jid;
+},getResourceFromJid:function(jid){
+var i=jid.indexOf("/");
+if(i!=-1){
+return jid.substring((i+1),jid.length);
+}
+return "";
+}});
+return _1.getObject("dojox.xmpp.xmppSession");
+});
+require(["dojox/xmpp/xmppSession"]);

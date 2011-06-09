@@ -1,927 +1,257 @@
-define([
-	"dojo/_base/kernel", // dojo.config.blankGif
-	".",
-	"dojo/aspect",
-	"./_base/manager",
-	"dojo/Stateful", // dojo.Stateful
-	"dojo/_base/NodeList", // .map
-	"dojo/_base/array", // dojo.forEach dojo.map
-	"dojo/_base/connect", // dojo.connect dojo.disconnect dojo.subscribe dojo.unsubscribe
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/html", // dojo.addClass dojo.attr dojo.byId dojo.create dojo.destroy dojo.place dojo.removeAttr dojo.replaceClass dojo.style
-	"dojo/_base/lang", // dojo.hitch dojo.isArray dojo.isFunction dojo.isObject
-	"dojo/_base/url", // dojo.moduleUrl
-	"dojo/_base/window", // dojo.doc.createTextNode
-	"dojo/query" // dojo.query
-], function(dojo, dijit, aspect){
-
-// module:
-//		dijit/_WidgetBase
-// summary:
-//		Future base class for all Dijit widgets.
-
-
-dojo.declare("dijit._WidgetBase", dojo.Stateful, {
-	// summary:
-	//		Future base class for all Dijit widgets.
-	// description:
-	//		Future base class for all Dijit widgets.
-	//		_Widget extends this class adding support for various features needed by desktop.
-	//
-	//		Provides stubs for widget lifecycle methods for subclasses to extend, like postMixInProperties(), buildRendering(),
-	//		postCreate(), startup(), and destroy(), and also public API methods like set(), get(), and watch().
-	//
-	//		Widgets can provide custom setters/getters for widget attributes, which are called automatically by set(name, value).
-	//		For an attribute XXX, define methods _setXXXAttr() and/or _getXXXAttr().
-	//
-	//		_setXXXAttr can also be a string/hash/array mapping from a widget attribute XXX to the widget's DOMNodes:
-	//
-	//		- DOM node attribute
-	// |		_setFocusAttr: {node: "focusNode", type: "attribute"}
-	// |		_setFocusAttr: "focusNode"	(shorthand)
-	// |		_setFocusAttr: ""		(shorthand, maps to this.domNode)
-	// 		Maps this.focus to this.focusNode.focus, or (last example) this.domNode.focus
-	//
-	//		- DOM node innerHTML
-	//	|		_setTitleAttr: { node: "titleNode", type: "innerHTML" }
-	//		Maps this.title to this.titleNode.innerHTML
-	//
-	//		- DOM node innerText
-	//	|		_setTitleAttr: { node: "titleNode", type: "innerText" }
-	//		Maps this.title to this.titleNode.innerText
-	//
-	//		- DOM node CSS class
-	// |		_setMyClassAttr: { node: "domNode", type: "class" }
-	//		Maps this.myClass to this.domNode.className
-	//
-	//		If the value of _setXXXAttr is an array, then each element in the array matches one of the
-	//		formats of the above list.
-	//
-	//		If the custom setter is null, no action is performed other than saving the new value
-	//		in the widget (in this).
-	//
-	//		If no custom setter is defined for an attribute, then it will be copied
-	//		to this.focusNode (if the widget defines a focusNode), or this.domNode otherwise.
-	//		That's only done though for attributes that match DOMNode attributes (title,
-	//		alt, aria-labelledby, etc.)
-
-	// id: [const] String
-	//		A unique, opaque ID string that can be assigned by users or by the
-	//		system. If the developer passes an ID which is known not to be
-	//		unique, the specified ID is ignored and the system-generated ID is
-	//		used instead.
-	id: "",
-	_setIdAttr: "domNode",	// to copy to this.domNode even for auto-generated id's
-
-	// lang: [const] String
-	//		Rarely used.  Overrides the default Dojo locale used to render this widget,
-	//		as defined by the [HTML LANG](http://www.w3.org/TR/html401/struct/dirlang.html#adef-lang) attribute.
-	//		Value must be among the list of locales specified during by the Dojo bootstrap,
-	//		formatted according to [RFC 3066](http://www.ietf.org/rfc/rfc3066.txt) (like en-us).
-	lang: "",
-	_setLangAttr: "domNode",	// to set on domNode even when there's a focus node
-
-	// dir: [const] String
-	//		Bi-directional support, as defined by the [HTML DIR](http://www.w3.org/TR/html401/struct/dirlang.html#adef-dir)
-	//		attribute. Either left-to-right "ltr" or right-to-left "rtl".  If undefined, widgets renders in page's
-	//		default direction.
-	dir: "",
-	_setDirAttr: "domNode",	// to set on domNode even when there's a focus node
-
-	// textDir: String
-	//		Bi-directional support,	the main variable which is responsible for the direction of the text.
-	//		The text direction can be different than the GUI direction by using this parameter in creation
-	//		of a widget.
-	// 		Allowed values:
-	//			1. "ltr"
-	//			2. "rtl"
-	//			3. "auto" - contextual the direction of a text defined by first strong letter.
-	//		By default is as the page direction.
-	textDir: "",
-
-	// class: String
-	//		HTML class attribute
-	"class": "",
-	_setClassAttr: { node: "domNode", type: "class" },
-
-	// style: String||Object
-	//		HTML style attributes as cssText string or name/value hash
-	style: "",
-
-	// title: String
-	//		HTML title attribute.
-	//
-	//		For form widgets this specifies a tooltip to display when hovering over
-	//		the widget (just like the native HTML title attribute).
-	//
-	//		For TitlePane or for when this widget is a child of a TabContainer, AccordionContainer,
-	//		etc., it's used to specify the tab label, accordion pane title, etc.
-	title: "",
-
-	// tooltip: String
-	//		When this widget's title attribute is used to for a tab label, accordion pane title, etc.,
-	//		this specifies the tooltip to appear when the mouse is hovered over that text.
-	tooltip: "",
-
-	// baseClass: [protected] String
-	//		Root CSS class of the widget (ex: dijitTextBox), used to construct CSS classes to indicate
-	//		widget state.
-	baseClass: "",
-
-	// srcNodeRef: [readonly] DomNode
-	//		pointer to original DOM node
-	srcNodeRef: null,
-
-	// domNode: [readonly] DomNode
-	//		This is our visible representation of the widget! Other DOM
-	//		Nodes may by assigned to other properties, usually through the
-	//		template system's dojoAttachPoint syntax, but the domNode
-	//		property is the canonical "top level" node in widget UI.
-	domNode: null,
-
-	// containerNode: [readonly] DomNode
-	//		Designates where children of the source DOM node will be placed.
-	//		"Children" in this case refers to both DOM nodes and widgets.
-	//		For example, for myWidget:
-	//
-	//		|	<div dojoType=myWidget>
-	//		|		<b> here's a plain DOM node
-	//		|		<span dojoType=subWidget>and a widget</span>
-	//		|		<i> and another plain DOM node </i>
-	//		|	</div>
-	//
-	//		containerNode would point to:
-	//
-	//		|		<b> here's a plain DOM node
-	//		|		<span dojoType=subWidget>and a widget</span>
-	//		|		<i> and another plain DOM node </i>
-	//
-	//		In templated widgets, "containerNode" is set via a
-	//		dojoAttachPoint assignment.
-	//
-	//		containerNode must be defined for any widget that accepts innerHTML
-	//		(like ContentPane or BorderContainer or even Button), and conversely
-	//		is null for widgets that don't, like TextBox.
-	containerNode: null,
-
-/*=====
-	// _started: Boolean
-	//		startup() has completed.
-	_started: false,
-=====*/
-
-	// attributeMap: [protected] Object
-	//		Deprecated.   Instead of attributeMap, widget should have a _setXXXAttr attribute
-	//		for each XXX attribute to be mapped to the DOM.
-	//
-	//		attributeMap sets up a "binding" between attributes (aka properties)
-	//		of the widget and the widget's DOM.
-	//		Changes to widget attributes listed in attributeMap will be
-	//		reflected into the DOM.
-	//
-	//		For example, calling set('title', 'hello')
-	//		on a TitlePane will automatically cause the TitlePane's DOM to update
-	//		with the new title.
-	//
-	//		attributeMap is a hash where the key is an attribute of the widget,
-	//		and the value reflects a binding to a:
-	//
-	//		- DOM node attribute
-	// |		focus: {node: "focusNode", type: "attribute"}
-	// 		Maps this.focus to this.focusNode.focus
-	//
-	//		- DOM node innerHTML
-	//	|		title: { node: "titleNode", type: "innerHTML" }
-	//		Maps this.title to this.titleNode.innerHTML
-	//
-	//		- DOM node innerText
-	//	|		title: { node: "titleNode", type: "innerText" }
-	//		Maps this.title to this.titleNode.innerText
-	//
-	//		- DOM node CSS class
-	// |		myClass: { node: "domNode", type: "class" }
-	//		Maps this.myClass to this.domNode.className
-	//
-	//		If the value is an array, then each element in the array matches one of the
-	//		formats of the above list.
-	//
-	//		There are also some shorthands for backwards compatibility:
-	//		- string --> { node: string, type: "attribute" }, for example:
-	//	|	"focusNode" ---> { node: "focusNode", type: "attribute" }
-	//		- "" --> { node: "domNode", type: "attribute" }
-	attributeMap: {},
-
-	// _blankGif: [protected] String
-	//		Path to a blank 1x1 image.
-	//		Used by <img> nodes in templates that really get their image via CSS background-image.
-	_blankGif: (dojo.config.blankGif || dojo.moduleUrl("dojo", "resources/blank.gif")).toString(),
-
-	//////////// INITIALIZATION METHODS ///////////////////////////////////////
-
-	postscript: function(/*Object?*/params, /*DomNode|String*/srcNodeRef){
-		// summary:
-		//		Kicks off widget instantiation.  See create() for details.
-		// tags:
-		//		private
-		this.create(params, srcNodeRef);
-	},
-
-	create: function(/*Object?*/params, /*DomNode|String?*/srcNodeRef){
-		// summary:
-		//		Kick off the life-cycle of a widget
-		// params:
-		//		Hash of initialization parameters for widget, including
-		//		scalar values (like title, duration etc.) and functions,
-		//		typically callbacks like onClick.
-		// srcNodeRef:
-		//		If a srcNodeRef (DOM node) is specified:
-		//			- use srcNodeRef.innerHTML as my contents
-		//			- if this is a behavioral widget then apply behavior
-		//			  to that srcNodeRef
-		//			- otherwise, replace srcNodeRef with my generated DOM
-		//			  tree
-		// description:
-		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
-		//		etc.), some of which of you'll want to override. See http://docs.dojocampus.org/dijit/_Widget
-		//		for a discussion of the widget creation lifecycle.
-		//
-		//		Of course, adventurous developers could override create entirely, but this should
-		//		only be done as a last resort.
-		// tags:
-		//		private
-
-		// store pointer to original DOM tree
-		this.srcNodeRef = dojo.byId(srcNodeRef);
-
-		// For garbage collection.  An array of listener handles returned by this.connect() / this.subscribe()
-		this._connects = [];
-
-		// For widgets internal to this widget, invisible to calling code
-		this._supportingWidgets = [];
-
-		// this is here for back-compat, remove in 2.0 (but check NodeList-instantiate.html test)
-		if(this.srcNodeRef && (typeof this.srcNodeRef.id == "string")){ this.id = this.srcNodeRef.id; }
-
-		// mix in our passed parameters
-		if(params){
-			this.params = params;
-			dojo._mixin(this, params);
-		}
-		this.postMixInProperties();
-
-		// generate an id for the widget if one wasn't specified
-		// (be sure to do this before buildRendering() because that function might
-		// expect the id to be there.)
-		if(!this.id){
-			this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
-		}
-		dijit.registry.add(this);
-
-		this.buildRendering();
-
-		if(this.domNode){
-			// Copy attributes listed in attributeMap into the [newly created] DOM for the widget.
-			// Also calls custom setters for all attributes with custom setters.
-			this._applyAttributes();
-
-			// If srcNodeRef was specified, then swap out original srcNode for this widget's DOM tree.
-			// For 2.0, move this after postCreate().  postCreate() shouldn't depend on the
-			// widget being attached to the DOM since it isn't when a widget is created programmatically like
-			// new MyWidget({}).   See #11635.
-			var source = this.srcNodeRef;
-			if(source && source.parentNode && this.domNode !== source){
-				source.parentNode.replaceChild(this.domNode, source);
-			}
-		}
-
-		if(this.domNode){
-			// Note: for 2.0 may want to rename widgetId to dojo._scopeName + "_widgetId",
-			// assuming that dojo._scopeName even exists in 2.0
-			this.domNode.setAttribute("widgetId", this.id);
-		}
-		this.postCreate();
-
-		// If srcNodeRef has been processed and removed from the DOM (e.g. TemplatedWidget) then delete it to allow GC.
-		if(this.srcNodeRef && !this.srcNodeRef.parentNode){
-			delete this.srcNodeRef;
-		}
-
-		this._created = true;
-	},
-
-	_applyAttributes: function(){
-		// summary:
-		//		Step during widget creation to copy  widget attributes to the
-		//		DOM according to attributeMap and _setXXXAttr objects, and also to call
-		//		custom _setXXXAttr() methods.
-		//
-		//		Skips over blank/false attribute values, unless they were explicitly specified
-		//		as parameters to the widget, since those are the default anyway,
-		//		and setting tabIndex="" is different than not setting tabIndex at all.
-		//
-		//		For backwards-compatibility reasons attributeMap overrides _setXXXAttr when
-		//		_setXXXAttr is a hash/string/array, but _setXXXAttr as a functions override attributeMap.
-		// tags:
-		//		private
-
-		// Get list of attributes where this.set(name, value) will do something beyond
-		// setting this[name] = value.  Specifically, attributes that have:
-		//		- associated _setXXXAttr() method/hash/string/array
-		//		- entries in attributeMap.
-		var ctor = this.constructor,
-			list = ctor._setterAttrs;
-		if(!list){
-			list = (ctor._setterAttrs = []);
-			for(var attr in this.attributeMap){
-				list.push(attr);
-			}
-
-			var proto = ctor.prototype;
-			for(var fxName in proto){
-				if(fxName in this.attributeMap){ continue; }
-				var setterName = "_set" + fxName.replace(/^[a-z]|-[a-zA-Z]/g, function(c){ return c.charAt(c.length-1).toUpperCase(); }) + "Attr";
-				if(setterName in proto){
-					list.push(fxName);
-				}
-			}
-		}
-
-		// Call this.set() for each attribute that was either specified as parameter to constructor,
-		// or was found above and has a default non-null value.   For correlated attributes like value and displayedValue, the one
-		// specified as a parameter should take precedence, so apply attributes in this.params last.
-		// Particularly important for new DateTextBox({displayedValue: ...}) since DateTextBox's default value is
-		// NaN and thus is not ignored like a default value of "".
-		dojo.forEach(list, function(attr){
-			if(this.params && attr in this.params){
-				// skip this one, do it below
-			}else if(this[attr]){
-				this.set(attr, this[attr]);
-			}
-		}, this);
-		for(var param in this.params){
-			this.set(param, this[param]);
-		}
-	},
-
-	postMixInProperties: function(){
-		// summary:
-		//		Called after the parameters to the widget have been read-in,
-		//		but before the widget template is instantiated. Especially
-		//		useful to set properties that are referenced in the widget
-		//		template.
-		// tags:
-		//		protected
-	},
-
-	buildRendering: function(){
-		// summary:
-		//		Construct the UI for this widget, setting this.domNode.
-		//		Most widgets will mixin `dijit._TemplatedMixin`, which implements this method.
-		// tags:
-		//		protected
-
-		if(!this.domNode){
-			// Create root node if it wasn't created by _Templated
-			this.domNode = this.srcNodeRef || dojo.create('div');
-		}
-
-		// baseClass is a single class name or occasionally a space-separated list of names.
-		// Add those classes to the DOMNode.  If RTL mode then also add with Rtl suffix.
-		// TODO: make baseClass custom setter
-		if(this.baseClass){
-			var classes = this.baseClass.split(" ");
-			if(!this.isLeftToRight()){
-				classes = classes.concat( dojo.map(classes, function(name){ return name+"Rtl"; }));
-			}
-			dojo.addClass(this.domNode, classes);
-		}
-	},
-
-	postCreate: function(){
-		// summary:
-		//		Processing after the DOM fragment is created
-		// description:
-		//		Called after the DOM fragment has been created, but not necessarily
-		//		added to the document.  Do not include any operations which rely on
-		//		node dimensions or placement.
-		// tags:
-		//		protected
-	},
-
-	startup: function(){
-		// summary:
-		//		Processing after the DOM fragment is added to the document
-		// description:
-		//		Called after a widget and its children have been created and added to the page,
-		//		and all related widgets have finished their create() cycle, up through postCreate().
-		//		This is useful for composite widgets that need to control or layout sub-widgets.
-		//		Many layout widgets can use this as a wiring phase.
-		this._started = true;
-	},
-
-	//////////// DESTROY FUNCTIONS ////////////////////////////////
-
-	destroyRecursive: function(/*Boolean?*/ preserveDom){
-		// summary:
-		// 		Destroy this widget and its descendants
-		// description:
-		//		This is the generic "destructor" function that all widget users
-		// 		should call to cleanly discard with a widget. Once a widget is
-		// 		destroyed, it is removed from the manager object.
-		// preserveDom:
-		//		If true, this method will leave the original DOM structure
-		//		alone of descendant Widgets. Note: This will NOT work with
-		//		dijit._Templated widgets.
-
-		this._beingDestroyed = true;
-		this.destroyDescendants(preserveDom);
-		this.destroy(preserveDom);
-	},
-
-	destroy: function(/*Boolean*/ preserveDom){
-		// summary:
-		// 		Destroy this widget, but not its descendants.
-		//		This method will, however, destroy internal widgets such as those used within a template.
-		// preserveDom: Boolean
-		//		If true, this method will leave the original DOM structure alone.
-		//		Note: This will not yet work with _Templated widgets
-
-		this._beingDestroyed = true;
-		this.uninitialize();
-
-		// remove dojo.connect() and dojo.subscribe() listeners
-		var c;
-		while(c = this._connects.pop()){
-			c.remove();
-		}
-
-		// destroy widgets created as part of template, etc.
-		var w;
-		while(w = this._supportingWidgets.pop()){
-			if(w.destroyRecursive){
-				w.destroyRecursive();
-			}else if(w.destroy){
-				w.destroy();
-			}
-		}
-
-		this.destroyRendering(preserveDom);
-		dijit.registry.remove(this.id);
-		this._destroyed = true;
-	},
-
-	destroyRendering: function(/*Boolean?*/ preserveDom){
-		// summary:
-		//		Destroys the DOM nodes associated with this widget
-		// preserveDom:
-		//		If true, this method will leave the original DOM structure alone
-		//		during tear-down. Note: this will not work with _Templated
-		//		widgets yet.
-		// tags:
-		//		protected
-
-		if(this.bgIframe){
-			this.bgIframe.destroy(preserveDom);
-			delete this.bgIframe;
-		}
-
-		if(this.domNode){
-			if(preserveDom){
-				dojo.removeAttr(this.domNode, "widgetId");
-			}else{
-				dojo.destroy(this.domNode);
-			}
-			delete this.domNode;
-		}
-
-		if(this.srcNodeRef){
-			if(!preserveDom){
-				dojo.destroy(this.srcNodeRef);
-			}
-			delete this.srcNodeRef;
-		}
-	},
-
-	destroyDescendants: function(/*Boolean?*/ preserveDom){
-		// summary:
-		//		Recursively destroy the children of this widget and their
-		//		descendants.
-		// preserveDom:
-		//		If true, the preserveDom attribute is passed to all descendant
-		//		widget's .destroy() method. Not for use with _Templated
-		//		widgets.
-
-		// get all direct descendants and destroy them recursively
-		dojo.forEach(this.getChildren(), function(widget){
-			if(widget.destroyRecursive){
-				widget.destroyRecursive(preserveDom);
-			}
-		});
-	},
-
-	uninitialize: function(){
-		// summary:
-		//		Stub function. Override to implement custom widget tear-down
-		//		behavior.
-		// tags:
-		//		protected
-		return false;
-	},
-
-	////////////////// GET/SET, CUSTOM SETTERS, ETC. ///////////////////
-
-	_setStyleAttr: function(/*String||Object*/ value){
-		// summary:
-		//		Sets the style attribute of the widget according to value,
-		//		which is either a hash like {height: "5px", width: "3px"}
-		//		or a plain string
-		// description:
-		//		Determines which node to set the style on based on style setting
-		//		in attributeMap.
-		// tags:
-		//		protected
-
-		var mapNode = this.domNode;
-
-		// Note: technically we should revert any style setting made in a previous call
-		// to his method, but that's difficult to keep track of.
-
-		if(dojo.isObject(value)){
-			dojo.style(mapNode, value);
-		}else{
-			if(mapNode.style.cssText){
-				mapNode.style.cssText += "; " + value;
-			}else{
-				mapNode.style.cssText = value;
-			}
-		}
-
-		this._set("style", value);
-	},
-
-	_attrToDom: function(/*String*/ attr, /*String*/ value, /*Object?*/ commands){
-		// summary:
-		//		Reflect a widget attribute (title, tabIndex, duration etc.) to
-		//		the widget DOM, as specified by commands parameter.
-		//		If commands isn't specified then it's looked up from attributeMap.
-		//		Note some attributes like "type"
-		//		cannot be processed this way as they are not mutable.
-		//
-		// tags:
-		//		private
-
-		commands = arguments.length >= 3 ? commands : this.attributeMap[attr];
-
-		dojo.forEach(dojo.isArray(commands) ? commands : [commands], function(command){
-
-			// Get target node and what we are doing to that node
-			var mapNode = this[command.node || command || "domNode"];	// DOM node
-			var type = command.type || "attribute";	// class, innerHTML, innerText, or attribute
-
-			switch(type){
-				case "attribute":
-					if(dojo.isFunction(value)){ // functions execute in the context of the widget
-						value = dojo.hitch(this, value);
-					}
-
-					// Get the name of the DOM node attribute; usually it's the same
-					// as the name of the attribute in the widget (attr), but can be overridden.
-					// Also maps handler names to lowercase, like onSubmit --> onsubmit
-					var attrName = command.attribute ? command.attribute :
-						(/^on[A-Z][a-zA-Z]*$/.test(attr) ? attr.toLowerCase() : attr);
-
-					dojo.attr(mapNode, attrName, value);
-					break;
-				case "innerText":
-					mapNode.innerHTML = "";
-					mapNode.appendChild(dojo.doc.createTextNode(value));
-					break;
-				case "innerHTML":
-					mapNode.innerHTML = value;
-					break;
-				case "class":
-					dojo.replaceClass(mapNode, value, this[attr]);
-					break;
-			}
-		}, this);
-	},
-
-	get: function(name){
-		// summary:
-		//		Get a property from a widget.
-		//	name:
-		//		The property to get.
-		// description:
-		//		Get a named property from a widget. The property may
-		//		potentially be retrieved via a getter method. If no getter is defined, this
-		// 		just retrieves the object's property.
-		// 		For example, if the widget has a properties "foo"
-		//		and "bar" and a method named "_getFooAttr", calling:
-		//	|	myWidget.get("foo");
-		//		would be equivalent to writing:
-		//	|	widget._getFooAttr();
-		//		and:
-		//	|	myWidget.get("bar");
-		//		would be equivalent to writing:
-		//	|	widget.bar;
-		var names = this._getAttrNames(name);
-		return this[names.g] ? this[names.g]() : this[name];
-	},
-
-	set: function(name, value){
-		// summary:
-		//		Set a property on a widget
-		//	name:
-		//		The property to set.
-		//	value:
-		//		The value to set in the property.
-		// description:
-		//		Sets named properties on a widget which may potentially be handled by a
-		// 		setter in the widget.
-		// 		For example, if the widget has a properties "foo"
-		//		and "bar" and a method named "_setFooAttr", calling:
-		//	|	myWidget.set("foo", "Howdy!");
-		//		would be equivalent to writing:
-		//	|	widget._setFooAttr("Howdy!");
-		//		and:
-		//	|	myWidget.set("bar", 3);
-		//		would be equivalent to writing:
-		//	|	widget.bar = 3;
-		//
-		//	set() may also be called with a hash of name/value pairs, ex:
-		//	|	myWidget.set({
-		//	|		foo: "Howdy",
-		//	|		bar: 3
-		//	|	})
-		//	This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
-
-		if(typeof name === "object"){
-			for(var x in name){
-				this.set(x, name[x]);
-			}
-			return this;
-		}
-		var names = this._getAttrNames(name),
-			setter = this[names.s];
-		if(dojo.isFunction(setter)){
-			// use the explicit setter
-			var result = setter.apply(this, Array.prototype.slice.call(arguments, 1));
-		}else{
-			// Mapping from widget attribute to DOMNode attribute/value/etc.
-			// Map according to:
-			//		1. attributeMap setting, if one exists (TODO: attributeMap deprecated, remove in 2.0)
-			//		2. _setFooAttr: {...} type attribute in the widget (if one exists)
-			//		3. apply to focusNode or domNode if standard attribute name
-			var defaultNode = this.focusNode ? "focusNode" : "domNode",
-				map =	name in this.attributeMap ? this.attributeMap[name] :
-						names.s in this ? this[names.s] :
-						(name in this[defaultNode] || /^aria-|^role$/.test(name)) ? defaultNode : null;
-			if(map != null){
-				this._attrToDom(name, value, map);
-			}
-			this._set(name, value);
-		}
-		return result || this;
-	},
-
-	_attrPairNames: {},		// shared between all widgets
-	_getAttrNames: function(name){
-		// summary:
-		//		Helper function for get() and set().
-		//		Caches attribute name values so we don't do the string ops every time.
-		// tags:
-		//		private
-
-		var apn = this._attrPairNames;
-		if(apn[name]){ return apn[name]; }
-		var uc = name.replace(/^[a-z]|-[a-zA-Z]/g, function(c){ return c.charAt(c.length-1).toUpperCase(); });
-		return (apn[name] = {
-			n: name+"Node",
-			s: "_set"+uc+"Attr",
-			g: "_get"+uc+"Attr"
-		});
-	},
-
-	_set: function(/*String*/ name, /*anything*/ value){
-		// summary:
-		//		Helper function to set new value for specified attribute, and call handlers
-		//		registered with watch() if the value has changed.
-		var oldValue = this[name];
-		this[name] = value;
-		if(this._watchCallbacks && this._created && value !== oldValue){
-			this._watchCallbacks(name, oldValue, value);
-		}
-	},
-
-	on: function(/*String*/ type, /*Function*/ func){
-		// summary:
-		//		Call specified function when event "type" occurs, ex: myWidget.on("click", function(){ ... }).
-		// description:
-		//		Call specified function when event "type" occurs, ex: myWidget.on("click", function(){ ... }).
-		//		It's also implicitly called from dojo.connect(myWidget, "onClick", ...).
-		//		Note that the function is not run in any particular scope, so if (for example) you want it to run in the
-		//		widget's scope you must do myWidget.on("click", dojo.hitch(myWidget, func)).
-
-		type = type.replace(/^on/, "");
-		return aspect.after(this, "on" + type.charAt(0).toUpperCase() + type.substr(1), func, true);
-	},
-
-	toString: function(){
-		// summary:
-		//		Returns a string that represents the widget
-		// description:
-		//		When a widget is cast to a string, this method will be used to generate the
-		//		output. Currently, it does not implement any sort of reversible
-		//		serialization.
-		return '[Widget ' + this.declaredClass + ', ' + (this.id || 'NO ID') + ']'; // String
-	},
-
-	getDescendants: function(){
-		// summary:
-		//		Returns all the widgets contained by this, i.e., all widgets underneath this.containerNode.
-		//		This method should generally be avoided as it returns widgets declared in templates, which are
-		//		supposed to be internal/hidden, but it's left here for back-compat reasons.
-
-		return this.containerNode ? dojo.query('[widgetId]', this.containerNode).map(dijit.byNode) : []; // dijit._Widget[]
-	},
-
-	getChildren: function(){
-		// summary:
-		//		Returns all the widgets contained by this, i.e., all widgets underneath this.containerNode.
-		//		Does not return nested widgets, nor widgets that are part of this widget's template.
-		return this.containerNode ? dijit.findWidgets(this.containerNode) : []; // dijit._Widget[]
-	},
-
-	connect: function(
-			/*Object|null*/ obj,
-			/*String|Function*/ event,
-			/*String|Function*/ method){
-		// summary:
-		//		Connects specified obj/event to specified method of this object
-		//		and registers for disconnect() on widget destroy.
-		// description:
-		//		Provide widget-specific analog to dojo.connect, except with the
-		//		implicit use of this widget as the target object.
-		//		Events connected with `this.connect` are disconnected upon
-		//		destruction.
-		// returns:
-		//		A handle that can be passed to `disconnect` in order to disconnect before
-		//		the widget is destroyed.
-		// example:
-		//	|	var btn = new dijit.form.Button();
-		//	|	// when foo.bar() is called, call the listener we're going to
-		//	|	// provide in the scope of btn
-		//	|	btn.connect(foo, "bar", function(){
-		//	|		console.debug(this.toString());
-		//	|	});
-		// tags:
-		//		protected
-
-		var handle = dojo.connect(obj, event, this, method);
-		this._connects.push(handle);
-		return handle;		// _Widget.Handle
-	},
-
-	disconnect: function(handle){
-		// summary:
-		//		Disconnects handle created by `connect`.
-		//		Also removes handle from this widget's list of connects.
-		// tags:
-		//		protected
-
-		for(var i=0; i<this._connects.length; i++){
-			if(this._connects[i] == handle){
-				handle.remove();
-				this._connects.splice(i, 1);
-				return;
-			}
-		}
-	},
-
-	subscribe: function(
-			/*String*/ topic,
-			/*String|Function*/ method){
-		// summary:
-		//		Subscribes to the specified topic and calls the specified method
-		//		of this object and registers for unsubscribe() on widget destroy.
-		// description:
-		//		Provide widget-specific analog to dojo.subscribe, except with the
-		//		implicit use of this widget as the target object.
-		// example:
-		//	|	var btn = new dijit.form.Button();
-		//	|	// when /my/topic is published, this button changes its label to
-		//	|   // be the parameter of the topic.
-		//	|	btn.subscribe("/my/topic", function(v){
-		//	|		this.set("label", v);
-		//	|	});
-		// tags:
-		//		protected
-		var handle = dojo.subscribe(topic, this, method);
-		this._connects.push(handle);
-		return handle;		// _Widget.Handle
-	},
-
-	unsubscribe: function(/*Object*/ handle){
-		// summary:
-		//		Unsubscribes handle created by this.subscribe.
-		//		Also removes handle from this widget's list of subscriptions
-		// tags:
-		//		protected
-		this.disconnect(handle);
-	},
-
-	isLeftToRight: function(){
-		// summary:
-		//		Return this widget's explicit or implicit orientation (true for LTR, false for RTL)
-		// tags:
-		//		protected
-		return this.dir ? (this.dir == "ltr") : dojo._isBodyLtr(); //Boolean
-	},
-
-	isFocusable: function(){
-		// summary:
-		//		Return true if this widget can currently be focused
-		//		and false if not
-		return this.focus && (dojo.style(this.domNode, "display") != "none");
-	},
-
-	placeAt: function(/* String|DomNode|_Widget */reference, /* String?|Int? */position){
-		// summary:
-		//		Place this widget's domNode reference somewhere in the DOM based
-		//		on standard dojo.place conventions, or passing a Widget reference that
-		//		contains and addChild member.
-		//
-		// description:
-		//		A convenience function provided in all _Widgets, providing a simple
-		//		shorthand mechanism to put an existing (or newly created) Widget
-		//		somewhere in the dom, and allow chaining.
-		//
-		// reference:
-		//		The String id of a domNode, a domNode reference, or a reference to a Widget possessing
-		//		an addChild method.
-		//
-		// position:
-		//		If passed a string or domNode reference, the position argument
-		//		accepts a string just as dojo.place does, one of: "first", "last",
-		//		"before", or "after".
-		//
-		//		If passed a _Widget reference, and that widget reference has an ".addChild" method,
-		//		it will be called passing this widget instance into that method, supplying the optional
-		//		position index passed.
-		//
-		// returns:
-		//		dijit._Widget
-		//		Provides a useful return of the newly created dijit._Widget instance so you
-		//		can "chain" this function by instantiating, placing, then saving the return value
-		//		to a variable.
-		//
-		// example:
-		// | 	// create a Button with no srcNodeRef, and place it in the body:
-		// | 	var button = new dijit.form.Button({ label:"click" }).placeAt(dojo.body());
-		// | 	// now, 'button' is still the widget reference to the newly created button
-		// | 	dojo.connect(button, "onClick", function(e){ console.log('click'); });
-		//
-		// example:
-		// |	// create a button out of a node with id="src" and append it to id="wrapper":
-		// | 	var button = new dijit.form.Button({},"src").placeAt("wrapper");
-		//
-		// example:
-		// |	// place a new button as the first element of some div
-		// |	var button = new dijit.form.Button({ label:"click" }).placeAt("wrapper","first");
-		//
-		// example:
-		// |	// create a contentpane and add it to a TabContainer
-		// |	var tc = dijit.byId("myTabs");
-		// |	new dijit.layout.ContentPane({ href:"foo.html", title:"Wow!" }).placeAt(tc)
-
-		if(reference.declaredClass && reference.addChild){
-			reference.addChild(this, position);
-		}else{
-			dojo.place(this.domNode, reference, position);
-		}
-		return this;
-	},
-
-	getTextDir: function(/*String*/ text,/*String*/ originalDir){
-		// summary:
-		//		Return direction of the text.
-		//		The function overridden in the _BidiSupport module,
-		//		its main purpose is to calculate the direction of the
-		//		text, if was defined by the programmer through textDir.
-		//	tags:
-		//		protected.
-		return originalDir;
-	},
-
-	applyTextDir: function(/*Object*/ element, /*String*/ text){
-		// summary:
-		//		The function overridden in the _BidiSupport module,
-		//		originally used for setting element.dir according to this.textDir.
-		//		In this case does nothing.
-		//	tags:
-		//		protected.
-	}
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define("dijit/_WidgetBase",["dojo/_base/kernel",".","dojo/aspect","./_base/manager","dojo/Stateful","dojo/_base/NodeList","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/url","dojo/_base/window","dojo/query"],function(_1,_2,_3){
+_1.declare("dijit._WidgetBase",_1.Stateful,{id:"",_setIdAttr:"domNode",lang:"",_setLangAttr:"domNode",dir:"",_setDirAttr:"domNode",textDir:"","class":"",_setClassAttr:{node:"domNode",type:"class"},style:"",title:"",tooltip:"",baseClass:"",srcNodeRef:null,domNode:null,containerNode:null,attributeMap:{},_blankGif:(_1.config.blankGif||_1.moduleUrl("dojo","resources/blank.gif")).toString(),postscript:function(_4,_5){
+this.create(_4,_5);
+},create:function(_6,_7){
+this.srcNodeRef=_1.byId(_7);
+this._connects=[];
+this._supportingWidgets=[];
+if(this.srcNodeRef&&(typeof this.srcNodeRef.id=="string")){
+this.id=this.srcNodeRef.id;
+}
+if(_6){
+this.params=_6;
+_1._mixin(this,_6);
+}
+this.postMixInProperties();
+if(!this.id){
+this.id=_2.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+}
+_2.registry.add(this);
+this.buildRendering();
+if(this.domNode){
+this._applyAttributes();
+var _8=this.srcNodeRef;
+if(_8&&_8.parentNode&&this.domNode!==_8){
+_8.parentNode.replaceChild(this.domNode,_8);
+}
+}
+if(this.domNode){
+this.domNode.setAttribute("widgetId",this.id);
+}
+this.postCreate();
+if(this.srcNodeRef&&!this.srcNodeRef.parentNode){
+delete this.srcNodeRef;
+}
+this._created=true;
+},_applyAttributes:function(){
+var _9=this.constructor,_a=_9._setterAttrs;
+if(!_a){
+_a=(_9._setterAttrs=[]);
+for(var _b in this.attributeMap){
+_a.push(_b);
+}
+var _c=_9.prototype;
+for(var _d in _c){
+if(_d in this.attributeMap){
+continue;
+}
+var _e="_set"+_d.replace(/^[a-z]|-[a-zA-Z]/g,function(c){
+return c.charAt(c.length-1).toUpperCase();
+})+"Attr";
+if(_e in _c){
+_a.push(_d);
+}
+}
+}
+_1.forEach(_a,function(_f){
+if(this.params&&_f in this.params){
+}else{
+if(this[_f]){
+this.set(_f,this[_f]);
+}
+}
+},this);
+for(var _10 in this.params){
+this.set(_10,this[_10]);
+}
+},postMixInProperties:function(){
+},buildRendering:function(){
+if(!this.domNode){
+this.domNode=this.srcNodeRef||_1.create("div");
+}
+if(this.baseClass){
+var _11=this.baseClass.split(" ");
+if(!this.isLeftToRight()){
+_11=_11.concat(_1.map(_11,function(_12){
+return _12+"Rtl";
+}));
+}
+_1.addClass(this.domNode,_11);
+}
+},postCreate:function(){
+},startup:function(){
+this._started=true;
+},destroyRecursive:function(_13){
+this._beingDestroyed=true;
+this.destroyDescendants(_13);
+this.destroy(_13);
+},destroy:function(_14){
+this._beingDestroyed=true;
+this.uninitialize();
+var c;
+while(c=this._connects.pop()){
+c.remove();
+}
+var w;
+while(w=this._supportingWidgets.pop()){
+if(w.destroyRecursive){
+w.destroyRecursive();
+}else{
+if(w.destroy){
+w.destroy();
+}
+}
+}
+this.destroyRendering(_14);
+_2.registry.remove(this.id);
+this._destroyed=true;
+},destroyRendering:function(_15){
+if(this.bgIframe){
+this.bgIframe.destroy(_15);
+delete this.bgIframe;
+}
+if(this.domNode){
+if(_15){
+_1.removeAttr(this.domNode,"widgetId");
+}else{
+_1.destroy(this.domNode);
+}
+delete this.domNode;
+}
+if(this.srcNodeRef){
+if(!_15){
+_1.destroy(this.srcNodeRef);
+}
+delete this.srcNodeRef;
+}
+},destroyDescendants:function(_16){
+_1.forEach(this.getChildren(),function(_17){
+if(_17.destroyRecursive){
+_17.destroyRecursive(_16);
+}
 });
-
-return dijit._WidgetBase;
+},uninitialize:function(){
+return false;
+},_setStyleAttr:function(_18){
+var _19=this.domNode;
+if(_1.isObject(_18)){
+_1.style(_19,_18);
+}else{
+if(_19.style.cssText){
+_19.style.cssText+="; "+_18;
+}else{
+_19.style.cssText=_18;
+}
+}
+this._set("style",_18);
+},_attrToDom:function(_1a,_1b,_1c){
+_1c=arguments.length>=3?_1c:this.attributeMap[_1a];
+_1.forEach(_1.isArray(_1c)?_1c:[_1c],function(_1d){
+var _1e=this[_1d.node||_1d||"domNode"];
+var _1f=_1d.type||"attribute";
+switch(_1f){
+case "attribute":
+if(_1.isFunction(_1b)){
+_1b=_1.hitch(this,_1b);
+}
+var _20=_1d.attribute?_1d.attribute:(/^on[A-Z][a-zA-Z]*$/.test(_1a)?_1a.toLowerCase():_1a);
+_1.attr(_1e,_20,_1b);
+break;
+case "innerText":
+_1e.innerHTML="";
+_1e.appendChild(_1.doc.createTextNode(_1b));
+break;
+case "innerHTML":
+_1e.innerHTML=_1b;
+break;
+case "class":
+_1.replaceClass(_1e,_1b,this[_1a]);
+break;
+}
+},this);
+},get:function(_21){
+var _22=this._getAttrNames(_21);
+return this[_22.g]?this[_22.g]():this[_21];
+},set:function(_23,_24){
+if(typeof _23==="object"){
+for(var x in _23){
+this.set(x,_23[x]);
+}
+return this;
+}
+var _25=this._getAttrNames(_23),_26=this[_25.s];
+if(_1.isFunction(_26)){
+var _27=_26.apply(this,Array.prototype.slice.call(arguments,1));
+}else{
+var _28=this.focusNode?"focusNode":"domNode",map=_23 in this.attributeMap?this.attributeMap[_23]:_25.s in this?this[_25.s]:(_23 in this[_28]||/^aria-|^role$/.test(_23))?_28:null;
+if(map!=null){
+this._attrToDom(_23,_24,map);
+}
+this._set(_23,_24);
+}
+return _27||this;
+},_attrPairNames:{},_getAttrNames:function(_29){
+var apn=this._attrPairNames;
+if(apn[_29]){
+return apn[_29];
+}
+var uc=_29.replace(/^[a-z]|-[a-zA-Z]/g,function(c){
+return c.charAt(c.length-1).toUpperCase();
+});
+return (apn[_29]={n:_29+"Node",s:"_set"+uc+"Attr",g:"_get"+uc+"Attr"});
+},_set:function(_2a,_2b){
+var _2c=this[_2a];
+this[_2a]=_2b;
+if(this._watchCallbacks&&this._created&&_2b!==_2c){
+this._watchCallbacks(_2a,_2c,_2b);
+}
+},on:function(_2d,_2e){
+_2d=_2d.replace(/^on/,"");
+return _3.after(this,"on"+_2d.charAt(0).toUpperCase()+_2d.substr(1),_2e,true);
+},toString:function(){
+return "[Widget "+this.declaredClass+", "+(this.id||"NO ID")+"]";
+},getDescendants:function(){
+return this.containerNode?_1.query("[widgetId]",this.containerNode).map(_2.byNode):[];
+},getChildren:function(){
+return this.containerNode?_2.findWidgets(this.containerNode):[];
+},connect:function(obj,_2f,_30){
+var _31=_1.connect(obj,_2f,this,_30);
+this._connects.push(_31);
+return _31;
+},disconnect:function(_32){
+for(var i=0;i<this._connects.length;i++){
+if(this._connects[i]==_32){
+_32.remove();
+this._connects.splice(i,1);
+return;
+}
+}
+},subscribe:function(_33,_34){
+var _35=_1.subscribe(_33,this,_34);
+this._connects.push(_35);
+return _35;
+},unsubscribe:function(_36){
+this.disconnect(_36);
+},isLeftToRight:function(){
+return this.dir?(this.dir=="ltr"):_1._isBodyLtr();
+},isFocusable:function(){
+return this.focus&&(_1.style(this.domNode,"display")!="none");
+},placeAt:function(_37,_38){
+if(_37.declaredClass&&_37.addChild){
+_37.addChild(this,_38);
+}else{
+_1.place(this.domNode,_37,_38);
+}
+return this;
+},getTextDir:function(_39,_3a){
+return _3a;
+},applyTextDir:function(_3b,_3c){
+}});
+return _2._WidgetBase;
 });

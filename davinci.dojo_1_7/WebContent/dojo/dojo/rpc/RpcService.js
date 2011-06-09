@@ -1,175 +1,86 @@
-define(["../main", "../_base/url"], function(dojo) {
-	// module:
-	//		dojo/rpc/RpcService
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-
-dojo.declare("dojo.rpc.RpcService", null, {
-	constructor: function(args){
-		//summary:
-		//Take a string as a url to retrieve an smd or an object that is an smd or partial smd to use
-		//as a definition for the service
-		//
-		//	args: object
-		//		Takes a number of properties as kwArgs for defining the service.  It also
-		//		accepts a string.  When passed a string, it is treated as a url from
-		//		which it should synchronously retrieve an smd file.  Otherwise it is a kwArgs
-		//		object.  It accepts serviceUrl, to manually define a url for the rpc service
-		//		allowing the rpc system to be used without an smd definition. strictArgChecks
-		//		forces the system to verify that the # of arguments provided in a call
-		//		matches those defined in the smd.  smdString allows a developer to pass
-		//		a jsonString directly, which will be converted into an object or alternatively
-		//		smdObject is accepts an smdObject directly.
-		//
-		if(args){
-			//if the arg is a string, we assume it is a url to retrieve an smd definition from
-			if( (dojo.isString(args)) || (args instanceof dojo._Url)){
-				if (args instanceof dojo._Url){
-					var url = args + "";
-				}else{
-					url = args;
-				}
-				var def = dojo.xhrGet({
-					url: url,
-					handleAs: "json-comment-optional",
-					sync: true
-				});
-
-				def.addCallback(this, "processSmd");
-				def.addErrback(function() {
-					throw new Error("Unable to load SMD from " + args);
-				});
-
-			}else if(args.smdStr){
-				this.processSmd(dojo.eval("("+args.smdStr+")"));
-			}else{
-				// otherwise we assume it's an arguments object with the following
-				// (optional) properties:
-				//      - serviceUrl
-				//      - strictArgChecks
-				//      - smdStr
-				//      - smdObj
-
-				if(args.serviceUrl){
-					this.serviceUrl = args.serviceUrl;
-				}
-
-				this.timeout = args.timeout || 3000;
-
-				if("strictArgChecks" in args){
-					this.strictArgChecks = args.strictArgChecks;
-				}
-
-				this.processSmd(args);
-			}
-		}
-	},
-
-	strictArgChecks: true,
-	serviceUrl: "",
-
-	parseResults: function(obj){
-		// summary:
-		//		parse the results coming back from an rpc request.  this
-		//		base implementation, just returns the full object
-		//		subclasses should parse and only return the actual results
-		//	obj: Object
-		//		Object that is the return results from an rpc request
-		return obj;
-	},
-
-	errorCallback: function(/* dojo.Deferred */ deferredRequestHandler){
-		// summary:
-		//		create callback that calls the Deferres errback method
-		//	deferredRequestHandler: Deferred
-		//		The deferred object handling a request.
-		return function(data){
-			deferredRequestHandler.errback(data.message);
-		};
-	},
-
-	resultCallback: function(/* dojo.Deferred */ deferredRequestHandler){
-		// summary:
-		//		create callback that calls the Deferred's callback method
-		//	deferredRequestHandler: Deferred
-		//		The deferred object handling a request.
-
-		return dojo.hitch(this,
-			function(obj){
-				if(obj.error!=null){
-					var err;
-					if(typeof obj.error == 'object'){
-						err = new Error(obj.error.message);
-						err.code = obj.error.code;
-						err.error = obj.error.error;
-					}else{
-						err = new Error(obj.error);
-					}
-					err.id = obj.id;
-					err.errorObject = obj;
-					deferredRequestHandler.errback(err);
-				}else{
-					deferredRequestHandler.callback(this.parseResults(obj));
-				}
-			}
-		);
-	},
-
-	generateMethod: function(/*string*/ method, /*array*/ parameters, /*string*/ url){
-		// summary:
-		//		generate the local bind methods for the remote object
-		//	method: string
-		//		The name of the method we are generating
-		//	parameters: array
-		//		the array of parameters for this call.
-		//	url: string
-		//		the service url for this call
-
-		return dojo.hitch(this, function(){
-			var deferredRequestHandler = new dojo.Deferred();
-
-			// if params weren't specified, then we can assume it's varargs
-			if( (this.strictArgChecks) &&
-				(parameters != null) &&
-				(arguments.length != parameters.length)
-			){
-				// put error stuff here, no enough params
-				throw new Error("Invalid number of parameters for remote method.");
-			}else{
-				this.bind(method, dojo._toArray(arguments), deferredRequestHandler, url);
-			}
-
-			return deferredRequestHandler;
-		});
-	},
-
-	processSmd: function(object){
-		// summary:
-		//		callback method for reciept of a smd object.  Parse the smd
-		//		and generate functions based on the description
-		//	object:
-		//		smd object defining this service.
-
-		if(object.methods){
-			dojo.forEach(object.methods, function(m){
-				if(m && m.name){
-					this[m.name] = this.generateMethod(	m.name,
-										m.parameters,
-										m.url||m.serviceUrl||m.serviceURL);
-					if(!dojo.isFunction(this[m.name])){
-						throw new Error("RpcService: Failed to create" + m.name + "()");
-						/*console.log("RpcService: Failed to create", m.name, "()");*/
-					}
-				}
-			}, this);
-		}
-
-		this.serviceUrl = object.serviceUrl||object.serviceURL;
-		this.required = object.required;
-		this.smd = object;
-	}
+define("dojo/rpc/RpcService",["../main","../_base/url"],function(_1){
+_1.declare("dojo.rpc.RpcService",null,{constructor:function(_2){
+if(_2){
+if((_1.isString(_2))||(_2 instanceof _1._Url)){
+if(_2 instanceof _1._Url){
+var _3=_2+"";
+}else{
+_3=_2;
+}
+var _4=_1.xhrGet({url:_3,handleAs:"json-comment-optional",sync:true});
+_4.addCallback(this,"processSmd");
+_4.addErrback(function(){
+throw new Error("Unable to load SMD from "+_2);
 });
-
-return dojo.rpc.RpcService;
+}else{
+if(_2.smdStr){
+this.processSmd(_1.eval("("+_2.smdStr+")"));
+}else{
+if(_2.serviceUrl){
+this.serviceUrl=_2.serviceUrl;
+}
+this.timeout=_2.timeout||3000;
+if("strictArgChecks" in _2){
+this.strictArgChecks=_2.strictArgChecks;
+}
+this.processSmd(_2);
+}
+}
+}
+},strictArgChecks:true,serviceUrl:"",parseResults:function(_5){
+return _5;
+},errorCallback:function(_6){
+return function(_7){
+_6.errback(_7.message);
+};
+},resultCallback:function(_8){
+return _1.hitch(this,function(_9){
+if(_9.error!=null){
+var _a;
+if(typeof _9.error=="object"){
+_a=new Error(_9.error.message);
+_a.code=_9.error.code;
+_a.error=_9.error.error;
+}else{
+_a=new Error(_9.error);
+}
+_a.id=_9.id;
+_a.errorObject=_9;
+_8.errback(_a);
+}else{
+_8.callback(this.parseResults(_9));
+}
+});
+},generateMethod:function(_b,_c,_d){
+return _1.hitch(this,function(){
+var _e=new _1.Deferred();
+if((this.strictArgChecks)&&(_c!=null)&&(arguments.length!=_c.length)){
+throw new Error("Invalid number of parameters for remote method.");
+}else{
+this.bind(_b,_1._toArray(arguments),_e,_d);
+}
+return _e;
+});
+},processSmd:function(_f){
+if(_f.methods){
+_1.forEach(_f.methods,function(m){
+if(m&&m.name){
+this[m.name]=this.generateMethod(m.name,m.parameters,m.url||m.serviceUrl||m.serviceURL);
+if(!_1.isFunction(this[m.name])){
+throw new Error("RpcService: Failed to create"+m.name+"()");
+}
+}
+},this);
+}
+this.serviceUrl=_f.serviceUrl||_f.serviceURL;
+this.required=_f.required;
+this.smd=_f;
+}});
+return _1.rpc.RpcService;
 });

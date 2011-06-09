@@ -1,494 +1,195 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/text!./templates/ScrollingTabController.html",
-	"dojo/text!./templates/_ScrollingTabControllerButton.html",
-	"./TabController",
-	"../_WidgetsInTemplateMixin",
-	"../Menu",
-	"../form/Button",
-	"../_HasDropDown",
-	"dojo/_base/NodeList", // .filter
-	"dojo/_base/array", // dojo.forEach
-	"dojo/_base/html", // dojo.addClass dojo.contentBox dojo.hasClass dojo.style
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/_base/sniff", // dojo.isIE dojo.isQuirks dojo.isWebKit
-	"dojo/fx", // .play
-	"dojo/query" // dojo.query
-], function(dojo, dijit, tabControllerTemplate, buttonTemplate){
-
-// module:
-//		dijit/layout/ScrollingTabController
-// summary:
-//		Set of tabs with left/right arrow keys and a menu to switch between tabs not
-//		all fitting on a single row.
-
-
-dojo.declare("dijit.layout.ScrollingTabController", [dijit.layout.TabController, dijit._WidgetsInTemplateMixin], {
-	// summary:
-	//		Set of tabs with left/right arrow keys and a menu to switch between tabs not
-	//		all fitting on a single row.
-	//		Works only for horizontal tabs (either above or below the content, not to the left
-	//		or right).
-	// tags:
-	//		private
-
-	templateString: tabControllerTemplate,
-
-	// useMenu: [const] Boolean
-	//		True if a menu should be used to select tabs when they are too
-	//		wide to fit the TabContainer, false otherwise.
-	useMenu: true,
-
-	// useSlider: [const] Boolean
-	//		True if a slider should be used to select tabs when they are too
-	//		wide to fit the TabContainer, false otherwise.
-	useSlider: true,
-
-	// tabStripClass: [const] String
-	//		The css class to apply to the tab strip, if it is visible.
-	tabStripClass: "",
-
-	widgetsInTemplate: true,
-
-	// _minScroll: Number
-	//		The distance in pixels from the edge of the tab strip which,
-	//		if a scroll animation is less than, forces the scroll to
-	//		go all the way to the left/right.
-	_minScroll: 5,
-
-	// Override default behavior mapping class to DOMNode
-	_setClassAttr: { node: "containerNode", type: "class" },
-
-	buildRendering: function(){
-		this.inherited(arguments);
-		var n = this.domNode;
-
-		this.scrollNode = this.tablistWrapper;
-		this._initButtons();
-
-		if(!this.tabStripClass){
-			this.tabStripClass = "dijitTabContainer" +
-				this.tabPosition.charAt(0).toUpperCase() +
-				this.tabPosition.substr(1).replace(/-.*/, "") +
-				"None";
-			dojo.addClass(n, "tabStrip-disabled")
-		}
-
-		dojo.addClass(this.tablistWrapper, this.tabStripClass);
-	},
-
-	onStartup: function(){
-		this.inherited(arguments);
-
-		// Do not show the TabController until the related
-		// StackController has added it's children.  This gives
-		// a less visually jumpy instantiation.
-		dojo.style(this.domNode, "visibility", "visible");
-		this._postStartup = true;
-	},
-
-	onAddChild: function(page, insertIndex){
-		this.inherited(arguments);
-
-		// changes to the tab button label or iconClass will have changed the width of the
-		// buttons, so do a resize
-		dojo.forEach(["label", "iconClass"], function(attr){
-			this.pane2watches[page.id].push(
-				this.pane2button[page.id].watch(attr, dojo.hitch(this, function(name, oldValue, newValue){
-					if(this._postStartup && this._dim){
-						this.resize(this._dim);
-					}
-				}))
-			);
-		}, this);
-
-		// Increment the width of the wrapper when a tab is added
-		// This makes sure that the buttons never wrap.
-		// The value 200 is chosen as it should be bigger than most
-		// Tab button widths.
-		dojo.style(this.containerNode, "width",
-			(dojo.style(this.containerNode, "width") + 200) + "px");
-	},
-
-	onRemoveChild: function(page, insertIndex){
-		// null out _selectedTab because we are about to delete that dom node
-		var button = this.pane2button[page.id];
-		if(this._selectedTab === button.domNode){
-			this._selectedTab = null;
-		}
-
-		this.inherited(arguments);
-	},
-
-	_initButtons: function(){
-		// summary:
-		//		Creates the buttons used to scroll to view tabs that
-		//		may not be visible if the TabContainer is too narrow.
-
-		// Make a list of the buttons to display when the tab labels become
-		// wider than the TabContainer, and hide the other buttons.
-		// Also gets the total width of the displayed buttons.
-		this._btnWidth = 0;
-		this._buttons = dojo.query("> .tabStripButton", this.domNode).filter(function(btn){
-			if((this.useMenu && btn == this._menuBtn.domNode) ||
-				(this.useSlider && (btn == this._rightBtn.domNode || btn == this._leftBtn.domNode))){
-				this._btnWidth += dojo._getMarginSize(btn).w;
-				return true;
-			}else{
-				dojo.style(btn, "display", "none");
-				return false;
-			}
-		}, this);
-	},
-
-	_getTabsWidth: function(){
-		var children = this.getChildren();
-		if(children.length){
-			var leftTab = children[this.isLeftToRight() ? 0 : children.length - 1].domNode,
-				rightTab = children[this.isLeftToRight() ? children.length - 1 : 0].domNode;
-			return rightTab.offsetLeft + dojo.style(rightTab, "width") - leftTab.offsetLeft;
-		}else{
-			return 0;
-		}
-	},
-
-	_enableBtn: function(width){
-		// summary:
-		//		Determines if the tabs are wider than the width of the TabContainer, and
-		//		thus that we need to display left/right/menu navigation buttons.
-		var tabsWidth = this._getTabsWidth();
-		width = width || dojo.style(this.scrollNode, "width");
-		return tabsWidth > 0 && width < tabsWidth;
-	},
-
-	resize: function(dim){
-		// summary:
-		//		Hides or displays the buttons used to scroll the tab list and launch the menu
-		//		that selects tabs.
-
-		if(this.domNode.offsetWidth == 0){
-			return;
-		}
-
-		// Save the dimensions to be used when a child is renamed.
-		this._dim = dim;
-
-		// Set my height to be my natural height (tall enough for one row of tab labels),
-		// and my content-box width based on margin-box width specified in dim parameter.
-		// But first reset scrollNode.height in case it was set by layoutChildren() call
-		// in a previous run of this method.
-		this.scrollNode.style.height = "auto";
-		this._contentBox = dijit.layout.marginBox2contentBox(this.domNode, {h: 0, w: dim.w});
-		this._contentBox.h = this.scrollNode.offsetHeight;
-		dojo.contentBox(this.domNode, this._contentBox);
-
-		// Show/hide the left/right/menu navigation buttons depending on whether or not they
-		// are needed.
-		var enable = this._enableBtn(this._contentBox.w);
-		this._buttons.style("display", enable ? "" : "none");
-
-		// Position and size the navigation buttons and the tablist
-		this._leftBtn.layoutAlign = "left";
-		this._rightBtn.layoutAlign = "right";
-		this._menuBtn.layoutAlign = this.isLeftToRight() ? "right" : "left";
-		dijit.layout.layoutChildren(this.domNode, this._contentBox,
-			[this._menuBtn, this._leftBtn, this._rightBtn, {domNode: this.scrollNode, layoutAlign: "client"}]);
-
-		// set proper scroll so that selected tab is visible
-		if(this._selectedTab){
-			if(this._anim && this._anim.status() == "playing"){
-				this._anim.stop();
-			}
-			this.scrollNode.scrollLeft = this._convertToScrollLeft(this._getScrollForSelectedTab());
-		}
-
-		// Enable/disabled left right buttons depending on whether or not user can scroll to left or right
-		this._setButtonClass(this._getScroll());
-
-		this._postResize = true;
-
-		// Return my size so layoutChildren() can use it.
-		// Also avoids IE9 layout glitch on browser resize when scroll buttons present
-		return {h: this._contentBox.h, w: dim.w};
-	},
-
-	_getScroll: function(){
-		// summary:
-		//		Returns the current scroll of the tabs where 0 means
-		//		"scrolled all the way to the left" and some positive number, based on #
-		//		of pixels of possible scroll (ex: 1000) means "scrolled all the way to the right"
-		return (this.isLeftToRight() || dojo.isIE < 8 || (dojo.isIE && dojo.isQuirks) || dojo.isWebKit) ? this.scrollNode.scrollLeft :
-				dojo.style(this.containerNode, "width") - dojo.style(this.scrollNode, "width")
-					 + (dojo.isIE == 8 ? -1 : 1) * this.scrollNode.scrollLeft;
-	},
-
-	_convertToScrollLeft: function(val){
-		// summary:
-		//		Given a scroll value where 0 means "scrolled all the way to the left"
-		//		and some positive number, based on # of pixels of possible scroll (ex: 1000)
-		//		means "scrolled all the way to the right", return value to set this.scrollNode.scrollLeft
-		//		to achieve that scroll.
-		//
-		//		This method is to adjust for RTL funniness in various browsers and versions.
-		if(this.isLeftToRight() || dojo.isIE < 8 || (dojo.isIE && dojo.isQuirks) || dojo.isWebKit){
-			return val;
-		}else{
-			var maxScroll = dojo.style(this.containerNode, "width") - dojo.style(this.scrollNode, "width");
-			return (dojo.isIE == 8 ? -1 : 1) * (val - maxScroll);
-		}
-	},
-
-	onSelectChild: function(/*dijit._Widget*/ page){
-		// summary:
-		//		Smoothly scrolls to a tab when it is selected.
-
-		var tab = this.pane2button[page.id];
-		if(!tab || !page){return;}
-
-		var node = tab.domNode;
-
-		// Save the selection
-		if(node != this._selectedTab){
-			this._selectedTab = node;
-
-			// Scroll to the selected tab, except on startup, when scrolling is handled in resize()
-			if(this._postResize){
-				var sl = this._getScroll();
-
-				if(sl > node.offsetLeft ||
-						sl + dojo.style(this.scrollNode, "width") <
-						node.offsetLeft + dojo.style(node, "width")){
-					this.createSmoothScroll().play();
-				}
-			}
-		}
-
-		this.inherited(arguments);
-	},
-
-	_getScrollBounds: function(){
-		// summary:
-		//		Returns the minimum and maximum scroll setting to show the leftmost and rightmost
-		//		tabs (respectively)
-		var children = this.getChildren(),
-			scrollNodeWidth = dojo.style(this.scrollNode, "width"),		// about 500px
-			containerWidth = dojo.style(this.containerNode, "width"),	// 50,000px
-			maxPossibleScroll = containerWidth - scrollNodeWidth,	// scrolling until right edge of containerNode visible
-			tabsWidth = this._getTabsWidth();
-
-		if(children.length && tabsWidth > scrollNodeWidth){
-			// Scrolling should happen
-			return {
-				min: this.isLeftToRight() ? 0 : children[children.length-1].domNode.offsetLeft,
-				max: this.isLeftToRight() ?
-					(children[children.length-1].domNode.offsetLeft + dojo.style(children[children.length-1].domNode, "width")) - scrollNodeWidth :
-					maxPossibleScroll
-			};
-		}else{
-			// No scrolling needed, all tabs visible, we stay either scrolled to far left or far right (depending on dir)
-			var onlyScrollPosition = this.isLeftToRight() ? 0 : maxPossibleScroll;
-			return {
-				min: onlyScrollPosition,
-				max: onlyScrollPosition
-			};
-		}
-	},
-
-	_getScrollForSelectedTab: function(){
-		// summary:
-		//		Returns the scroll value setting so that the selected tab
-		//		will appear in the center
-		var w = this.scrollNode,
-			n = this._selectedTab,
-			scrollNodeWidth = dojo.style(this.scrollNode, "width"),
-			scrollBounds = this._getScrollBounds();
-
-		// TODO: scroll minimal amount (to either right or left) so that
-		// selected tab is fully visible, and just return if it's already visible?
-		var pos = (n.offsetLeft + dojo.style(n, "width")/2) - scrollNodeWidth/2;
-		pos = Math.min(Math.max(pos, scrollBounds.min), scrollBounds.max);
-
-		// TODO:
-		// If scrolling close to the left side or right side, scroll
-		// all the way to the left or right.  See this._minScroll.
-		// (But need to make sure that doesn't scroll the tab out of view...)
-		return pos;
-	},
-
-	createSmoothScroll: function(x){
-		// summary:
-		//		Creates a dojo._Animation object that smoothly scrolls the tab list
-		//		either to a fixed horizontal pixel value, or to the selected tab.
-		// description:
-		//		If an number argument is passed to the function, that horizontal
-		//		pixel position is scrolled to.  Otherwise the currently selected
-		//		tab is scrolled to.
-		// x: Integer?
-		//		An optional pixel value to scroll to, indicating distance from left.
-
-		// Calculate position to scroll to
-		if(arguments.length > 0){
-			// position specified by caller, just make sure it's within bounds
-			var scrollBounds = this._getScrollBounds();
-			x = Math.min(Math.max(x, scrollBounds.min), scrollBounds.max);
-		}else{
-			// scroll to center the current tab
-			x = this._getScrollForSelectedTab();
-		}
-
-		if(this._anim && this._anim.status() == "playing"){
-			this._anim.stop();
-		}
-
-		var self = this,
-			w = this.scrollNode,
-			anim = new dojo._Animation({
-				beforeBegin: function(){
-					if(this.curve){ delete this.curve; }
-					var oldS = w.scrollLeft,
-						newS = self._convertToScrollLeft(x);
-					anim.curve = new dojo._Line(oldS, newS);
-				},
-				onAnimate: function(val){
-					w.scrollLeft = val;
-				}
-			});
-		this._anim = anim;
-
-		// Disable/enable left/right buttons according to new scroll position
-		this._setButtonClass(x);
-
-		return anim; // dojo._Animation
-	},
-
-	_getBtnNode: function(/*Event*/ e){
-		// summary:
-		//		Gets a button DOM node from a mouse click event.
-		// e:
-		//		The mouse click event.
-		var n = e.target;
-		while(n && !dojo.hasClass(n, "tabStripButton")){
-			n = n.parentNode;
-		}
-		return n;
-	},
-
-	doSlideRight: function(/*Event*/ e){
-		// summary:
-		//		Scrolls the menu to the right.
-		// e:
-		//		The mouse click event.
-		this.doSlide(1, this._getBtnNode(e));
-	},
-
-	doSlideLeft: function(/*Event*/ e){
-		// summary:
-		//		Scrolls the menu to the left.
-		// e:
-		//		The mouse click event.
-		this.doSlide(-1,this._getBtnNode(e));
-	},
-
-	doSlide: function(/*Number*/ direction, /*DomNode*/ node){
-		// summary:
-		//		Scrolls the tab list to the left or right by 75% of the widget width.
-		// direction:
-		//		If the direction is 1, the widget scrolls to the right, if it is
-		//		-1, it scrolls to the left.
-
-		if(node && dojo.hasClass(node, "dijitTabDisabled")){return;}
-
-		var sWidth = dojo.style(this.scrollNode, "width");
-		var d = (sWidth * 0.75) * direction;
-
-		var to = this._getScroll() + d;
-
-		this._setButtonClass(to);
-
-		this.createSmoothScroll(to).play();
-	},
-
-	_setButtonClass: function(/*Number*/ scroll){
-		// summary:
-		//		Disables the left scroll button if the tabs are scrolled all the way to the left,
-		//		or the right scroll button in the opposite case.
-		// scroll: Integer
-		//		amount of horizontal scroll
-
-		var scrollBounds = this._getScrollBounds();
-		this._leftBtn.set("disabled", scroll <= scrollBounds.min);
-		this._rightBtn.set("disabled", scroll >= scrollBounds.max);
-	}
-});
-
-
-dojo.declare("dijit.layout._ScrollingTabControllerButtonMixin", null, {
-	baseClass: "dijitTab tabStripButton",
-
-	templateString: buttonTemplate,
-
-		// Override inherited tabIndex: 0 from dijit.form.Button, because user shouldn't be
-		// able to tab to the left/right/menu buttons
-	tabIndex: "",
-
-	// Similarly, override FormWidget.isFocusable() because clicking a button shouldn't focus it
-	// either (this override avoids focus() call in FormWidget.js)
-	isFocusable: function(){ return false; }
-});
-
-dojo.declare("dijit.layout._ScrollingTabControllerButton",
-	[dijit.form.Button, dijit.layout._ScrollingTabControllerButtonMixin]);
-
-dojo.declare(
-	"dijit.layout._ScrollingTabControllerMenuButton",
-	[dijit.form.Button, dijit._HasDropDown, dijit.layout._ScrollingTabControllerButtonMixin],
-{
-	// id of the TabContainer itself
-	containerId: "",
-
-	// -1 so user can't tab into the button, but so that button can still be focused programatically.
-	// Because need to move focus to the button (or somewhere) before the menu is hidden or IE6 will crash.
-	tabIndex: "-1",
-
-	isLoaded: function(){
-		// recreate menu every time, in case the TabContainer's list of children (or their icons/labels) have changed
-		return false;
-	},
-
-	loadDropDown: function(callback){
-		this.dropDown = new dijit.Menu({
-			id: this.containerId + "_menu",
-			dir: this.dir,
-			lang: this.lang,
-			textDir: this.textDir
-		});
-		var container = dijit.byId(this.containerId);
-		dojo.forEach(container.getChildren(), function(page){
-			var menuItem = new dijit.MenuItem({
-				id: page.id + "_stcMi",
-				label: page.title,
-				iconClass: page.iconClass,
-				dir: page.dir,
-				lang: page.lang,
-				textDir: page.textDir,
-				onClick: function(){
-					container.selectChild(page);
-				}
-			});
-			this.dropDown.addChild(menuItem);
-		}, this);
-		callback();
-	},
-
-	closeDropDown: function(/*Boolean*/ focus){
-		this.inherited(arguments);
-		if(this.dropDown){
-			this.dropDown.destroyRecursive();
-			delete this.dropDown;
-		}
-	}
-});
-
-return dijit.layout.ScrollingTabController;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+require.cache["dijit/layout/templates/ScrollingTabController.html"]="<div class=\"dijitTabListContainer-${tabPosition}\" style=\"visibility:hidden\">\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerMenuButton\"\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\n\t\t\tid=\"${id}_menuBtn\" containerId=\"${containerId}\" iconClass=\"dijitTabStripMenuIcon\"\n\t\t\tdropDownPosition=\"below-alt, above-alt\"\n\t\t\tdojoAttachPoint=\"_menuBtn\" showLabel=\"false\" title=\"\">&#9660;</div>\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\n\t\t\tid=\"${id}_leftBtn\" iconClass=\"dijitTabStripSlideLeftIcon\"\n\t\t\tdojoAttachPoint=\"_leftBtn\" dojoAttachEvent=\"onClick: doSlideLeft\" showLabel=\"false\" title=\"\">&#9664;</div>\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\n\t\t\tid=\"${id}_rightBtn\" iconClass=\"dijitTabStripSlideRightIcon\"\n\t\t\tdojoAttachPoint=\"_rightBtn\" dojoAttachEvent=\"onClick: doSlideRight\" showLabel=\"false\" title=\"\">&#9654;</div>\n\t<div class='dijitTabListWrapper' dojoAttachPoint='tablistWrapper'>\n\t\t<div role='tablist' dojoAttachEvent='onkeypress:onkeypress'\n\t\t\t\tdojoAttachPoint='containerNode' class='nowrapTabStrip'></div>\n\t</div>\n</div>";
+require.cache["dijit/layout/templates/_ScrollingTabControllerButton.html"]="<div dojoAttachEvent=\"onclick:_onClick\">\n\t<div role=\"presentation\" class=\"dijitTabInnerDiv\" dojoattachpoint=\"innerDiv,focusNode\">\n\t\t<div role=\"presentation\" class=\"dijitTabContent dijitButtonContents\" dojoattachpoint=\"tabContent\">\n\t\t\t<img role=\"presentation\" alt=\"\" src=\"${_blankGif}\" class=\"dijitTabStripIcon\" dojoAttachPoint=\"iconNode\"/>\n\t\t\t<span dojoAttachPoint=\"containerNode,titleNode\" class=\"dijitButtonText\"></span>\n\t\t</div>\n\t</div>\n</div>";
+define("dijit/layout/ScrollingTabController",["dojo/_base/kernel","..","dojo/text!./templates/ScrollingTabController.html","dojo/text!./templates/_ScrollingTabControllerButton.html","./TabController","../_WidgetsInTemplateMixin","../Menu","../form/Button","../_HasDropDown","dojo/_base/NodeList","dojo/_base/array","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/fx","dojo/query"],function(_1,_2,_3,_4){
+_1.declare("dijit.layout.ScrollingTabController",[_2.layout.TabController,_2._WidgetsInTemplateMixin],{templateString:_3,useMenu:true,useSlider:true,tabStripClass:"",widgetsInTemplate:true,_minScroll:5,_setClassAttr:{node:"containerNode",type:"class"},buildRendering:function(){
+this.inherited(arguments);
+var n=this.domNode;
+this.scrollNode=this.tablistWrapper;
+this._initButtons();
+if(!this.tabStripClass){
+this.tabStripClass="dijitTabContainer"+this.tabPosition.charAt(0).toUpperCase()+this.tabPosition.substr(1).replace(/-.*/,"")+"None";
+_1.addClass(n,"tabStrip-disabled");
+}
+_1.addClass(this.tablistWrapper,this.tabStripClass);
+},onStartup:function(){
+this.inherited(arguments);
+_1.style(this.domNode,"visibility","visible");
+this._postStartup=true;
+},onAddChild:function(_5,_6){
+this.inherited(arguments);
+_1.forEach(["label","iconClass"],function(_7){
+this.pane2watches[_5.id].push(this.pane2button[_5.id].watch(_7,_1.hitch(this,function(_8,_9,_a){
+if(this._postStartup&&this._dim){
+this.resize(this._dim);
+}
+})));
+},this);
+_1.style(this.containerNode,"width",(_1.style(this.containerNode,"width")+200)+"px");
+},onRemoveChild:function(_b,_c){
+var _d=this.pane2button[_b.id];
+if(this._selectedTab===_d.domNode){
+this._selectedTab=null;
+}
+this.inherited(arguments);
+},_initButtons:function(){
+this._btnWidth=0;
+this._buttons=_1.query("> .tabStripButton",this.domNode).filter(function(_e){
+if((this.useMenu&&_e==this._menuBtn.domNode)||(this.useSlider&&(_e==this._rightBtn.domNode||_e==this._leftBtn.domNode))){
+this._btnWidth+=_1._getMarginSize(_e).w;
+return true;
+}else{
+_1.style(_e,"display","none");
+return false;
+}
+},this);
+},_getTabsWidth:function(){
+var _f=this.getChildren();
+if(_f.length){
+var _10=_f[this.isLeftToRight()?0:_f.length-1].domNode,_11=_f[this.isLeftToRight()?_f.length-1:0].domNode;
+return _11.offsetLeft+_1.style(_11,"width")-_10.offsetLeft;
+}else{
+return 0;
+}
+},_enableBtn:function(_12){
+var _13=this._getTabsWidth();
+_12=_12||_1.style(this.scrollNode,"width");
+return _13>0&&_12<_13;
+},resize:function(dim){
+if(this.domNode.offsetWidth==0){
+return;
+}
+this._dim=dim;
+this.scrollNode.style.height="auto";
+this._contentBox=_2.layout.marginBox2contentBox(this.domNode,{h:0,w:dim.w});
+this._contentBox.h=this.scrollNode.offsetHeight;
+_1.contentBox(this.domNode,this._contentBox);
+var _14=this._enableBtn(this._contentBox.w);
+this._buttons.style("display",_14?"":"none");
+this._leftBtn.layoutAlign="left";
+this._rightBtn.layoutAlign="right";
+this._menuBtn.layoutAlign=this.isLeftToRight()?"right":"left";
+_2.layout.layoutChildren(this.domNode,this._contentBox,[this._menuBtn,this._leftBtn,this._rightBtn,{domNode:this.scrollNode,layoutAlign:"client"}]);
+if(this._selectedTab){
+if(this._anim&&this._anim.status()=="playing"){
+this._anim.stop();
+}
+this.scrollNode.scrollLeft=this._convertToScrollLeft(this._getScrollForSelectedTab());
+}
+this._setButtonClass(this._getScroll());
+this._postResize=true;
+return {h:this._contentBox.h,w:dim.w};
+},_getScroll:function(){
+return (this.isLeftToRight()||_1.isIE<8||(_1.isIE&&_1.isQuirks)||_1.isWebKit)?this.scrollNode.scrollLeft:_1.style(this.containerNode,"width")-_1.style(this.scrollNode,"width")+(_1.isIE==8?-1:1)*this.scrollNode.scrollLeft;
+},_convertToScrollLeft:function(val){
+if(this.isLeftToRight()||_1.isIE<8||(_1.isIE&&_1.isQuirks)||_1.isWebKit){
+return val;
+}else{
+var _15=_1.style(this.containerNode,"width")-_1.style(this.scrollNode,"width");
+return (_1.isIE==8?-1:1)*(val-_15);
+}
+},onSelectChild:function(_16){
+var tab=this.pane2button[_16.id];
+if(!tab||!_16){
+return;
+}
+var _17=tab.domNode;
+if(_17!=this._selectedTab){
+this._selectedTab=_17;
+if(this._postResize){
+var sl=this._getScroll();
+if(sl>_17.offsetLeft||sl+_1.style(this.scrollNode,"width")<_17.offsetLeft+_1.style(_17,"width")){
+this.createSmoothScroll().play();
+}
+}
+}
+this.inherited(arguments);
+},_getScrollBounds:function(){
+var _18=this.getChildren(),_19=_1.style(this.scrollNode,"width"),_1a=_1.style(this.containerNode,"width"),_1b=_1a-_19,_1c=this._getTabsWidth();
+if(_18.length&&_1c>_19){
+return {min:this.isLeftToRight()?0:_18[_18.length-1].domNode.offsetLeft,max:this.isLeftToRight()?(_18[_18.length-1].domNode.offsetLeft+_1.style(_18[_18.length-1].domNode,"width"))-_19:_1b};
+}else{
+var _1d=this.isLeftToRight()?0:_1b;
+return {min:_1d,max:_1d};
+}
+},_getScrollForSelectedTab:function(){
+var w=this.scrollNode,n=this._selectedTab,_1e=_1.style(this.scrollNode,"width"),_1f=this._getScrollBounds();
+var pos=(n.offsetLeft+_1.style(n,"width")/2)-_1e/2;
+pos=Math.min(Math.max(pos,_1f.min),_1f.max);
+return pos;
+},createSmoothScroll:function(x){
+if(arguments.length>0){
+var _20=this._getScrollBounds();
+x=Math.min(Math.max(x,_20.min),_20.max);
+}else{
+x=this._getScrollForSelectedTab();
+}
+if(this._anim&&this._anim.status()=="playing"){
+this._anim.stop();
+}
+var _21=this,w=this.scrollNode,_22=new _1._Animation({beforeBegin:function(){
+if(this.curve){
+delete this.curve;
+}
+var _23=w.scrollLeft,_24=_21._convertToScrollLeft(x);
+_22.curve=new _1._Line(_23,_24);
+},onAnimate:function(val){
+w.scrollLeft=val;
+}});
+this._anim=_22;
+this._setButtonClass(x);
+return _22;
+},_getBtnNode:function(e){
+var n=e.target;
+while(n&&!_1.hasClass(n,"tabStripButton")){
+n=n.parentNode;
+}
+return n;
+},doSlideRight:function(e){
+this.doSlide(1,this._getBtnNode(e));
+},doSlideLeft:function(e){
+this.doSlide(-1,this._getBtnNode(e));
+},doSlide:function(_25,_26){
+if(_26&&_1.hasClass(_26,"dijitTabDisabled")){
+return;
+}
+var _27=_1.style(this.scrollNode,"width");
+var d=(_27*0.75)*_25;
+var to=this._getScroll()+d;
+this._setButtonClass(to);
+this.createSmoothScroll(to).play();
+},_setButtonClass:function(_28){
+var _29=this._getScrollBounds();
+this._leftBtn.set("disabled",_28<=_29.min);
+this._rightBtn.set("disabled",_28>=_29.max);
+}});
+_1.declare("dijit.layout._ScrollingTabControllerButtonMixin",null,{baseClass:"dijitTab tabStripButton",templateString:_4,tabIndex:"",isFocusable:function(){
+return false;
+}});
+_1.declare("dijit.layout._ScrollingTabControllerButton",[_2.form.Button,_2.layout._ScrollingTabControllerButtonMixin]);
+_1.declare("dijit.layout._ScrollingTabControllerMenuButton",[_2.form.Button,_2._HasDropDown,_2.layout._ScrollingTabControllerButtonMixin],{containerId:"",tabIndex:"-1",isLoaded:function(){
+return false;
+},loadDropDown:function(_2a){
+this.dropDown=new _2.Menu({id:this.containerId+"_menu",dir:this.dir,lang:this.lang,textDir:this.textDir});
+var _2b=_2.byId(this.containerId);
+_1.forEach(_2b.getChildren(),function(_2c){
+var _2d=new _2.MenuItem({id:_2c.id+"_stcMi",label:_2c.title,iconClass:_2c.iconClass,dir:_2c.dir,lang:_2c.lang,textDir:_2c.textDir,onClick:function(){
+_2b.selectChild(_2c);
+}});
+this.dropDown.addChild(_2d);
+},this);
+_2a();
+},closeDropDown:function(_2e){
+this.inherited(arguments);
+if(this.dropDown){
+this.dropDown.destroyRecursive();
+delete this.dropDown;
+}
+}});
+return _2.layout.ScrollingTabController;
 });

@@ -1,461 +1,296 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-define(["./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
-// summary:
-//		The export of this module is a function that provides core event listening functionality. With this function
-//		you can provide a target, event type, and listener to be notified of 
-//		future matching events that are fired.
-//	target: Element|Object
-//		This is the target object or DOM element that to receive events from
-// type: String|Function
-// 		This is the name of the event to listen for or an extension event type.
-// listener: Function
-// 		This is the function that should be called when the event fires.
-// returns: Object
-// 		An object with a remove() method that can be used to stop listening for this
-// 		event.
-// description:
-// 		To listen for "click" events on a button node, we can do:
-// 		|	define(["dojo/on"], function(listen){
-// 		|		on(button, "click", clickHandler);
-//		|		...
-//  	Plain JavaScript objects can also have their own events.
-// 		|	var obj = {};
-//		|	on(obj, "foo", fooHandler);
-//		And then we could publish a "foo" event:
-//		|	on.emit(obj, "foo", {key: "value"});
-//		We can use extension events as well. For example, you could listen for a tap gesture:
-// 		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
-// 		|		on(button, tap, tapHandler);
-//		|		...
-//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
-//		|	obj.onfoo({key:"value"});
-//		If you use on.emit on a DOM node, it will use native event dispatching when possible.
-//		You can also use listen function itself as a pub/sub hub:
-//		| 	on("some/topic", function(event){
-//		|	... do something with event
-//		|	});
-//		|	on.publish("some/topic", {name:"some event", ...});
-// Evented: 
-// 		The "Evented" property of the export of this module can be used as a mixin or base class, to add on() and emit() methods to a class
-// 		for listening for events and emiting events:
-// 		|	var Evented = on.Evented;
-// 		|	var EventedWidget = dojo.declare([Evented, dijit._Widget], {...});
-//		|	widget = new EventedWidget();
-//		|	widget.on("open", function(event){
-//		|	... do something with event
-//		|	 });
-//		|
-//		|	widget.emit("open", {name:"some event", ...});
-//
-//
- 	"use strict";
-	var after = aspect.after;
-	if(typeof window != "undefined"){ // check to make sure we are in a browser, this module should work anywhere
-		var major = window.ScriptEngineMajorVersion;
-		has.add("jscript", major && (major() + ScriptEngineMinorVersion() / 10));
-		has.add("event-orientationchange", has("touch") && !dojo.isAndroid); // TODO: how do we detect this?
-	}
-	var on = function(target, type, listener, dontFix){
-		if(!listener){
-			// two args, do pub/sub
-			return on(on, target, type);
-		}
-		if(target.on){ 
-			// delegate to the target's on() method, so it can handle it's own listening if it wants
-			return target.on(type, listener);
-		}
-		// delegate to main listener code
-		return addListener(target, type, listener, dontFix, this);
-	};
-	on.pausable =  function(target, type, listener, dontFix){
-		var paused;
-		var signal = on(target, type, function(){
-			if(!paused){
-				return listener.apply(this, arguments);
-			}
-		}, dontFix);
-		signal.pause = function(){
-			paused = true;
-		};
-		signal.resume = function(){
-			paused = false;
-		};
-		return signal;
-	};
-	var prototype = (on.Evented = function(){}).prototype;
-	prototype.on = function(type, listener, dontFix){
-		return addListener(this, type, listener, dontFix, this);
-	};
-	var touchEvents = /^touch/;
-	function addListener(target, type, listener, dontFix, matchesTarget){
-		if(type.call){
-			// event handler function
-			// on(node, dojo.touch.press, touchListener);
-			return type.call(matchesTarget, target, listener);
-		}
-
-		if(type.indexOf(",") > -1){
-			// we allow comma delimited event names, so you can register for multiple events at once
-			var events = type.split(/\s*,\s*/);
-			var handles = [];
-			var i = 0;
-			var eventName;
-			while(eventName = events[i++]){
-				handles.push(addListener(target, eventName, listener, dontFix, matchesTarget));
-			}
-			handles.remove = function(){
-				for(var i = 0; i < handles.length; i++){
-					handles[i].remove();
-				}
-			};
-			return handles;
-		}
-		
-		// event delegation:
-		var selector = type.match(/(.*):(.*)/);
-		// if we have a selector:event, the last one is interpreted as an event, and we use event delegation
-		if(selector){
-			type = selector[2];
-			selector = selector[1];
-			// create the extension event for selectors and directly call it
-			return on.selector(selector, type).call(matchesTarget, target, listener);
-		}
-		// test to see if it a touch event right now, so we don't have to do it every time it fires
-		if(has("touch")){
-			if(touchEvents.test(type)){
-				// touch event, fix it
-				listener = fixTouchListener(listener);
-			}
-			if(!has("event-orientationchange") && (type == "orientationchange")){
-				//"orientationchange" not supported <= Android 2.1, 
-				//but works through "resize" on window
-				type = "resize"; 
-				target = window;
-				listener = fixTouchListener(listener);
-			} 
-		}
-		// normal path, the target is |this|
-		if(target.addEventListener){
-			// the target has addEventListener, which should be used if available (might or might not be a node, non-nodes can implement this method as well)
-			var signal = {
-				remove: function(){
-					target.removeEventListener(type, listener, false);
-				}
-			};
-			target.addEventListener(type, listener, false);
-			return signal;
-		}
-		type = "on" + type;
-		if(fixAttach && target.attachEvent){
-			return fixAttach(target, type, listener);
-		}
-	 // use aop
-		return after(target, type, listener, true);
-	}
-
-	on.selector = function(selector, eventType){
-		// summary:
-		//		Creates a new extension event with event delegation. This is based on
-		// 		the provided event type (can be extension event) that
-		// 		only calls the listener when the CSS selector matches the target of the event.
-		//	selector:
-		//		The CSS selector to use for filter events and determine the |this| of the event listener.
-		//	eventType:
-		//		The event to listen for
-		//	example:
-		//		define(["dojo/on", "dojo/mouse"], function(listen, mouse){
-		//			on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
-		return function(target, listener){
-			var matchesTarget = this;
-			return on(target, eventType, function(event){
-				var eventTarget = event.target;
-				// see if we have a valid matchesTarget or default to dojo.query
-				matchesTarget = matchesTarget && matchesTarget.matches ? matchesTarget : dojo.query;
-				// there is a selector, so make sure it matches
-				while(!matchesTarget.matches(eventTarget, selector, target)){
-					if(eventTarget == target || !eventTarget){
-						return;
-					}
-					eventTarget = eventTarget.parentNode;
-				}
-				return listener.call(eventTarget, event);
-			});
-		};
-	};
-
-	function syntheticPreventDefault(){
-		this.cancelable = false;
-	}
-	function syntheticStopPropagation(){
-		this.bubbles = false;
-	}
-	var syntheticDispatch = on.emit = function(target, type, event){
-		// summary:
-		//		Fires an event on the target object.
-		//	target:
-		//		The target object to fire the event on. This can be a DOM element or a plain 
-		// 		JS object. If the target is a DOM element, native event emiting mechanisms
-		//		are used when possible.
-		//	type:
-		//		The event type name. You can emulate standard native events like "click" and 
-		// 		"mouseover" or create custom events like "open" or "finish".
-		//	event:
-		//		An object that provides the properties for the event. See https://developer.mozilla.org/en/DOM/event.initEvent 
-		// 		for some of the properties. These properties are copied to the event object.
-		//		Of particular importance are the cancelable and bubbles properties. The
-		//		cancelable property indicates whether or not the event has a default action
-		// 		that can be cancelled. The event is cancelled by calling preventDefault() on
-		// 		the event object. The bubbles property indicates whether or not the
-		//		event will bubble up the DOM tree. If bubbles is true, the event will be called
-		//		on the target and then each parent successively until the top of the tree
-		//		is reached or stopPropagation() is called. Both bubbles and cancelable 
-		// 		default to false.
-		//	returns:
-		//		If the event is cancelable and the event is not cancelled,
-		// 		emit will return true. If the event is cancelable and the event is cancelled,
-		// 		emit will return false.
-		//	details:
-		//		Note that this is designed to emit events for listeners registered through
-		//		dojo/on. It should actually work with any event listener except those
-		// 		added through IE's attachEvent (IE8 and below's non-W3C event emiting
-		// 		doesn't support custom event types). It should work with all events registered
-		// 		through dojo/on. Also note that the emit method does do any default
-		// 		action, it only returns a value to indicate if the default action should take
-		// 		place. For example, emiting a keypress event would not cause a character
-		// 		to appear in a textbox.
-		//	example:
-		//		To fire our own click event
-		//	|	on.emit(dojo.byId("button"), "click", {
-		//	|		cancelable: true,
-		//	|		bubbles: true,
-		//	|		screenX: 33,
-		//	|		screenY: 44
-		//	|	});
-		//		We can also fire our own custom events:
-		//	|	on.emit(dojo.byId("slider"), "slide", {
-		//	|		cancelable: true,
-		//	|		bubbles: true,
-		//	|		direction: "left-to-right"
-		//	|	});
-		var method = "on" + type;
-		if("parentNode" in target){
-			// node (or node-like), create event controller methods
-			event.preventDefault = syntheticPreventDefault;
-			event.stopPropagation = syntheticStopPropagation;
-			event.target = target;
-			event.type = type;
-		}
-		do{
-			// call any node which has a handler (note that ideally we would try/catch to simulate normal event propagation but that causes too much pain for debugging)
-			target[method] && target[method].call(target, event);
-			// and then continue up the parent node chain if it is still bubbling (if started as bubbles and stopPropagation hasn't been called)
-		}while(event.bubbles && (target = target.parentNode));
-		return event.cancelable && event; // if it is still true (was cancelable and was cancelled), return the event to indicate default action should happen
-	};
-
-	if(has("dom-addeventlistener")){
-		// emiter that works with native event handling
-		on.emit = function(target, type, event){
-			if(target.dispatchEvent && document.createEvent){
-				// use the native event emiting mechanism if it is available on the target object
-				// create a generic event				
-				// we could create branch into the different types of event constructors, but 
-				// that would be a lot of extra code, with little benefit that I can see, seems 
-				// best to use the generic constructor and copy properties over, making it 
-				// easy to have events look like the ones created with specific initializers
-				var nativeEvent = document.createEvent("HTMLEvents");
-				nativeEvent.initEvent(type, !!event.bubbles, !!event.cancelable);
-				// and copy all our properties over
-				for(var i in event){
-					var value = event[i];
-					if(value !== nativeEvent[i]){
-						try{
-							nativeEvent[i] = event[i];
-						}catch(e){
-							// suppress failures, FF won't allow target properties to be set (which will be overriden by the emit anyway).
-						}
-					}
-				}
-				return target.dispatchEvent(nativeEvent) && nativeEvent;
-			}
-			return syntheticDispatch(target, type, event); // emit for a non-node
-		};
-	}else{
-		// no addEventListener, basically old IE event normalization
-		on._fixEvent = function(evt, sender){
-			// summary:
-			//		normalizes properties on the event object including event
-			//		bubbling methods, keystroke normalization, and x/y positions
-			// evt:
-			//		native event object
-			// sender:
-			//		node to treat as "currentTarget"
-			if(!evt){
-				var w = sender && (sender.ownerDocument || sender.document || sender).parentWindow || window;
-				evt = w.event;
-			}
-			if(!evt){return(evt);}
-			if(!evt.target){ // check to see if it has been fixed yet
-				evt.target = evt.srcElement;
-				evt.currentTarget = (sender || evt.srcElement);
-				evt.layerX = evt.offsetX;
-				evt.layerY = evt.offsetY;
-				if(evt.type == "mouseover"){
-					evt.relatedTarget = evt.fromElement;
-				}
-				if(evt.type == "mouseout"){
-					evt.relatedTarget = evt.toElement;
-				}
-				if(!evt.stopPropagation){
-					evt.stopPropagation = stopPropagation;
-					evt.preventDefault = preventDefault;
-				}
-				switch(evt.type){
-					case "keypress":
-						var c = ("charCode" in evt ? evt.charCode : evt.keyCode);
-						if (c==10){
-							// CTRL-ENTER is CTRL-ASCII(10) on IE, but CTRL-ENTER on Mozilla
-							c=0;
-							evt.keyCode = 13;
-						}else if(c==13||c==27){
-							c=0; // Mozilla considers ENTER and ESC non-printable
-						}else if(c==3){
-							c=99; // Mozilla maps CTRL-BREAK to CTRL-c
-						}
-						// Mozilla sets keyCode to 0 when there is a charCode
-						// but that stops the event on IE.
-						evt.charCode = c;
-						_setKeyChar(evt);
-						break;
-				}
-			}
-			return evt;
-		};
-		var IESignal = function(handle){
-			this.handle = handle;
-		};
-		IESignal.prototype.remove = function(){
-			delete _dojoIEListeners_[this.handle];
-		};
-		var fixListener = function(listener){
-			// this is a minimal function for closing on the previous listener with as few as variables as possible
-			return function(evt){
-				evt = on._fixEvent(evt, this);
-				return listener.call(this, evt);
-			}
-		}
-		var fixAttach = function(target, type, listener){
-			listener = fixListener(listener);
-			if(((target.ownerDocument ? target.ownerDocument.parentWindow : target.parentWindow || target.window || window) != top || 
-						has("jscript") < 5.8) && 
-					!has("config-_allow_leaks")){
-				// IE will leak memory on certain handlers in frames (IE8 and earlier) and in unattached DOM nodes for JScript 5.7 and below.
-				// Here we use global redirection to solve the memory leaks
-				if(typeof _dojoIEListeners_ == "undefined"){
-					_dojoIEListeners_ = [];
-				}
-				var emiter = target[type];
-				if(!emiter || !emiter.listeners){
-					var oldListener = emiter;
-					target[type] = emiter = Function('event', 'var callee = arguments.callee; for(var i = 0; i<callee.listeners.length; i++){var listener = _dojoIEListeners_[callee.listeners[i]]; if(listener){listener.call(this,event);}}');
-					emiter.listeners = [];
-					if(oldListener){
-						emiter.listeners.push(_dojoIEListeners_.push(oldListener) - 1);
-					}
-				}
-				var handle;
-				emiter.listeners.push(handle = (_dojoIEListeners_.push(listener) - 1));
-				return new IESignal(handle);
-			}
-			return after(target, type, listener, true);
-		};
-
-		var _setKeyChar = function(evt){
-			evt.keyChar = evt.charCode ? String.fromCharCode(evt.charCode) : '';
-			evt.charOrCode = evt.keyChar || evt.keyCode;
-		};
-		// Called in Event scope
-		var stopPropagation = function(){
-			this.cancelBubble = true;
-		};
-		var preventDefault = on._preventDefault = function(){
-			// Setting keyCode to 0 is the only way to prevent certain keypresses (namely
-			// ctrl-combinations that correspond to menu accelerator keys).
-			// Otoh, it prevents upstream listeners from getting this information
-			// Try to split the difference here by clobbering keyCode only for ctrl
-			// combinations. If you still need to access the key upstream, bubbledKeyCode is
-			// provided as a workaround.
-			this.bubbledKeyCode = this.keyCode;
-			if(this.ctrlKey){
-				try{
-					// squelch errors when keyCode is read-only
-					// (e.g. if keyCode is ctrl or shift)
-					this.keyCode = 0;
-				}catch(e){
-				}
-			}
-			this.returnValue = false;
-		};
-	}
-	if(has("touch")){ 
-		var windowOrientation = window.orientation; 
-		var Event = function (){};
-		var fixTouchListener = function(listener){ 
-			return function(originalEvent){ 
-				//Event normalization(for ontouchxxx and resize): 
-				//1.incorrect e.pageX|pageY in iOS 
-				//2.there are no "e.rotation", "e.scale" and "onorientationchange" in Andriod
-				//3.More TBD e.g. force | screenX | screenX | clientX | clientY | radiusX | radiusY
-
-				// see if it has already been corrected
-				var event = originalEvent.corrected;
-				if(!event){
-					var type = originalEvent.type;
-					delete originalEvent.type; // on some JS engines (android), deleting properties make them mutable 
-					if(originalEvent.type){
-						// deleting properites doesn't work (older iOS), have to use delegation
-						Event.prototype = originalEvent;
-						var event = new Event;
-						// have to delegate methods to make them work
-						event.preventDefault = function(){
-							originalEvent.preventDefault();
-						};
-						event.stopPropagation = function(){
-							originalEvent.stopPropagation();
-						};
-					}else{
-						// deletion worked, use property as is
-						event = originalEvent;
-						event.type = type;
-					}
-					originalEvent.corrected = event;
-					if(type == 'resize'){
-						if(windowOrientation == window.orientation){ 
-							return null;//double tap causes an unexpected 'resize' in Andriod 
-						} 
-						windowOrientation = window.orientation;
-						event.type = "orientationchange"; 
-						return listener.call(this, event);
-					}
-					// We use the original event and augment, rather than doing an expensive mixin operation
-					if(!("rotation" in event)){ // test to see if it has rotation
-						event.rotation = 0; 
-						event.scale = 1;
-					}
-					//use event.changedTouches[0].pageX|pageY|screenX|screenY|clientX|clientY|target
-					var firstChangeTouch = event.changedTouches[0];
-					for(var i in firstChangeTouch){ // use for-in, we don't need to have dependency on dojo/_base/lang here
-						delete event[i]; // delete it first to make it mutable
-						event[i] = firstChangeTouch[i];
-					}
-				}
-				return listener.call(this, event); 
-			}; 
-		}; 
-	}
-	on.publish = prototype.emit = function(type, event){
-		type = "on" + type;
-		this[type] && this[type](event);
-	};
-	return on;
+define("dojo/on",["./aspect","./_base/kernel","./has"],function(_1,_2,_3){
+"use strict";
+var _4=_1.after;
+if(typeof window!="undefined"){
+var _5=window.ScriptEngineMajorVersion;
+_3.add("jscript",_5&&(_5()+ScriptEngineMinorVersion()/10));
+_3.add("event-orientationchange",_3("touch")&&!_2.isAndroid);
+}
+var on=function(_6,_7,_8,_9){
+if(!_8){
+return on(on,_6,_7);
+}
+if(_6.on){
+return _6.on(_7,_8);
+}
+return _a(_6,_7,_8,_9,this);
+};
+on.pausable=function(_b,_c,_d,_e){
+var _f;
+var _10=on(_b,_c,function(){
+if(!_f){
+return _d.apply(this,arguments);
+}
+},_e);
+_10.pause=function(){
+_f=true;
+};
+_10.resume=function(){
+_f=false;
+};
+return _10;
+};
+var _11=(on.Evented=function(){
+}).prototype;
+_11.on=function(_12,_13,_14){
+return _a(this,_12,_13,_14,this);
+};
+var _15=/^touch/;
+function _a(_16,_17,_18,_19,_1a){
+if(_17.call){
+return _17.call(_1a,_16,_18);
+}
+if(_17.indexOf(",")>-1){
+var _1b=_17.split(/\s*,\s*/);
+var _1c=[];
+var i=0;
+var _1d;
+while(_1d=_1b[i++]){
+_1c.push(_a(_16,_1d,_18,_19,_1a));
+}
+_1c.remove=function(){
+for(var i=0;i<_1c.length;i++){
+_1c[i].remove();
+}
+};
+return _1c;
+}
+var _1e=_17.match(/(.*):(.*)/);
+if(_1e){
+_17=_1e[2];
+_1e=_1e[1];
+return on.selector(_1e,_17).call(_1a,_16,_18);
+}
+if(_3("touch")){
+if(_15.test(_17)){
+_18=_44(_18);
+}
+if(!_3("event-orientationchange")&&(_17=="orientationchange")){
+_17="resize";
+_16=window;
+_18=_44(_18);
+}
+}
+if(_16.addEventListener){
+var _1f={remove:function(){
+_16.removeEventListener(_17,_18,false);
+}};
+_16.addEventListener(_17,_18,false);
+return _1f;
+}
+_17="on"+_17;
+if(_20&&_16.attachEvent){
+return _20(_16,_17,_18);
+}
+return _4(_16,_17,_18,true);
+};
+on.selector=function(_21,_22){
+return function(_23,_24){
+var _25=this;
+return on(_23,_22,function(_26){
+var _27=_26.target;
+_25=_25&&_25.matches?_25:_2.query;
+while(!_25.matches(_27,_21,_23)){
+if(_27==_23||!_27){
+return;
+}
+_27=_27.parentNode;
+}
+return _24.call(_27,_26);
+});
+};
+};
+function _28(){
+this.cancelable=false;
+};
+function _29(){
+this.bubbles=false;
+};
+var _2a=on.emit=function(_2b,_2c,_2d){
+var _2e="on"+_2c;
+if("parentNode" in _2b){
+_2d.preventDefault=_28;
+_2d.stopPropagation=_29;
+_2d.target=_2b;
+_2d.type=_2c;
+}
+do{
+_2b[_2e]&&_2b[_2e].call(_2b,_2d);
+}while(_2d.bubbles&&(_2b=_2b.parentNode));
+return _2d.cancelable&&_2d;
+};
+if(_3("dom-addeventlistener")){
+on.emit=function(_2f,_30,_31){
+if(_2f.dispatchEvent&&document.createEvent){
+var _32=document.createEvent("HTMLEvents");
+_32.initEvent(_30,!!_31.bubbles,!!_31.cancelable);
+for(var i in _31){
+var _33=_31[i];
+if(_33!==_32[i]){
+try{
+_32[i]=_31[i];
+}
+catch(e){
+}
+}
+}
+return _2f.dispatchEvent(_32)&&_32;
+}
+return _2a(_2f,_30,_31);
+};
+}else{
+on._fixEvent=function(evt,_34){
+if(!evt){
+var w=_34&&(_34.ownerDocument||_34.document||_34).parentWindow||window;
+evt=w.event;
+}
+if(!evt){
+return (evt);
+}
+if(!evt.target){
+evt.target=evt.srcElement;
+evt.currentTarget=(_34||evt.srcElement);
+evt.layerX=evt.offsetX;
+evt.layerY=evt.offsetY;
+if(evt.type=="mouseover"){
+evt.relatedTarget=evt.fromElement;
+}
+if(evt.type=="mouseout"){
+evt.relatedTarget=evt.toElement;
+}
+if(!evt.stopPropagation){
+evt.stopPropagation=_35;
+evt.preventDefault=_36;
+}
+switch(evt.type){
+case "keypress":
+var c=("charCode" in evt?evt.charCode:evt.keyCode);
+if(c==10){
+c=0;
+evt.keyCode=13;
+}else{
+if(c==13||c==27){
+c=0;
+}else{
+if(c==3){
+c=99;
+}
+}
+}
+evt.charCode=c;
+_37(evt);
+break;
+}
+}
+return evt;
+};
+var _38=function(_39){
+this.handle=_39;
+};
+_38.prototype.remove=function(){
+delete _dojoIEListeners_[this.handle];
+};
+var _3a=function(_3b){
+return function(evt){
+evt=on._fixEvent(evt,this);
+return _3b.call(this,evt);
+};
+};
+var _20=function(_3c,_3d,_3e){
+_3e=_3a(_3e);
+if(((_3c.ownerDocument?_3c.ownerDocument.parentWindow:_3c.parentWindow||_3c.window||window)!=top||_3("jscript")<5.8)&&!_3("config-_allow_leaks")){
+if(typeof _dojoIEListeners_=="undefined"){
+_dojoIEListeners_=[];
+}
+var _3f=_3c[_3d];
+if(!_3f||!_3f.listeners){
+var _40=_3f;
+_3c[_3d]=_3f=Function("event","var callee = arguments.callee; for(var i = 0; i<callee.listeners.length; i++){var listener = _dojoIEListeners_[callee.listeners[i]]; if(listener){listener.call(this,event);}}");
+_3f.listeners=[];
+if(_40){
+_3f.listeners.push(_dojoIEListeners_.push(_40)-1);
+}
+}
+var _41;
+_3f.listeners.push(_41=(_dojoIEListeners_.push(_3e)-1));
+return new _38(_41);
+}
+return _4(_3c,_3d,_3e,true);
+};
+var _37=function(evt){
+evt.keyChar=evt.charCode?String.fromCharCode(evt.charCode):"";
+evt.charOrCode=evt.keyChar||evt.keyCode;
+};
+var _35=function(){
+this.cancelBubble=true;
+};
+var _36=on._preventDefault=function(){
+this.bubbledKeyCode=this.keyCode;
+if(this.ctrlKey){
+try{
+this.keyCode=0;
+}
+catch(e){
+}
+}
+this.returnValue=false;
+};
+}
+if(_3("touch")){
+var _42=window.orientation;
+var _43=function(){
+};
+var _44=function(_45){
+return function(_46){
+var _47=_46.corrected;
+if(!_47){
+var _48=_46.type;
+delete _46.type;
+if(_46.type){
+_43.prototype=_46;
+var _47=new _43;
+_47.preventDefault=function(){
+_46.preventDefault();
+};
+_47.stopPropagation=function(){
+_46.stopPropagation();
+};
+}else{
+_47=_46;
+_47.type=_48;
+}
+_46.corrected=_47;
+if(_48=="resize"){
+if(_42==window.orientation){
+return null;
+}
+_42=window.orientation;
+_47.type="orientationchange";
+return _45.call(this,_47);
+}
+if(!("rotation" in _47)){
+_47.rotation=0;
+_47.scale=1;
+}
+var _49=_47.changedTouches[0];
+for(var i in _49){
+delete _47[i];
+_47[i]=_49[i];
+}
+}
+return _45.call(this,_47);
+};
+};
+}
+on.publish=_11.emit=function(_4a,_4b){
+_4a="on"+_4a;
+this[_4a]&&this[_4a](_4b);
+};
+return on;
 });

@@ -8,8 +8,6 @@
 .tundra .dojoxGridCellSortFocus  .dojoxGridSortBtn {
 	background-color: #ccc;
 }
-
-/*Control the title node width*/
 .tundra .dojoxGridCellOver .dojoxGridSortNode,
 .tundra .dojoxGridCellSortFocus .dojoxGridSortNode,
 .tundra .dojoxGridSingleSorted .dojoxGridHeader .dojoxGridCellOver .dojoxGridSortNodeMain,
@@ -20,8 +18,6 @@
 .tundra .dojoxGridSorted .dojoxGridCellSortFocus .dojoxGridSortNode {
 	margin-right: 31px;
 }
-
-/*ie 6 doesn't need below*/
 .tundra .dojoxGridCellOver .dojoxGridSortNode .dojoxGridSortBtnSingle,
 .tundra .dojoxGridCellSortFocus .dojoxGridSortNode .dojoxGridSortBtnSingle,
 .tundra .dojoxGridSorted .dojoxGridCellOver .dojoxGridSortNodeMain .dojoxGridSortBtnSingle,
@@ -38,16 +34,12 @@
 .tundra .dojoxGridSorted .dojoxGridCellSortFocus .dojoxGridSortBtnNested {
 	right: -20px;
 }
-/*ie6 hack end*/
-
-/*Control background image*/
 .tundra .dojoxGridSortNodeAsc .dojoxGridSortBtnSingle {
 	background-position: -119px 8px;
 }
 .tundra .dojoxGridSortNodeDesc .dojoxGridSortBtnSingle {
 	background-position: -99px  8px;
 }
-/*hover single sort*/
 .tundra .dojoxGridCellOver .dojoxGridSortBtnSingle,
 .tundra .dojoxGridCellSortFocus .dojoxGridSortBtnSingle {
 	background-position: -159px 8px;
@@ -64,7 +56,6 @@
 .tundra .dojoxGrid .dojoxGridCellSortFocus .dojoxGridSortNode .dojoxGridSortBtnDesc {
 	background-position: -179px 8px;
 }
-/*hover nested sort*/
 .tundra .dojoxGridCellOver .dojoxGridSortBtnNested,
 .tundra .dojoxGridCellSortFocus .dojoxGridSortBtnNested {
 	background-position: -150px 8px;

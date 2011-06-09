@@ -1,358 +1,294 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common", "../axis2d/common", "dojox/gfx"], 
-	function(dojo, lang, declare, Element, dcpc, dcac, gfx){ 
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// all the code below should be removed when http://trac.dojotoolkit.org/ticket/11299 will be available
-	var getBoundingBox = function(shape){
-		return getTextBBox(shape, shape.getShape().text);
-	};
-	var getTextBBox = function(s, t){
-		var c = s.declaredClass;
-		if (c.indexOf("svg")!=-1){
-			// try/catch the FF native getBBox error. cheaper than walking up in the DOM
-			// hierarchy to check the conditions (bench show /10 )
-			try {
-				return s.rawNode.getBBox();
-			}catch (e){
-				return null;
-			}
-		}else if(c.indexOf("vml")!=-1){
-			var rawNode = s.rawNode, _display = rawNode.style.display;
-			rawNode.style.display = "inline";
-			var w = gfx.pt2px(parseFloat(rawNode.currentStyle.width));
-			var h = gfx.pt2px(parseFloat(rawNode.currentStyle.height));
-			var sz = {x: 0, y: 0, width: w, height: h};
-			// in VML, the width/height we get are in view coordinates
-			// in our case we don't zoom the view so that is ok
-			// It's impossible to get the x/y from the currentStyle.left/top,
-			// because all negative coordinates are 'clipped' to 0.
-			// (x:0 + translate(-100) -> x=0
-			computeLocation(s, sz);
-			rawNode.style.display = _display;
-			return sz;
-		}else if(c.indexOf("silverlight")!=-1){
-			var bb = {width: s.rawNode.actualWidth, height: s.rawNode.actualHeight};
-			return computeLocation(s, bb, 0.75	);			
-		}else if(s.getTextWidth){
-			// canvas
-			var w = s.getTextWidth();
-			var font = s.getFont();
-			var fz = font ? font.size : gfx.defaultFont.size;
-			var h = gfx.normalizedLength(fz);
-			sz = {width: w, height: h};
-			computeLocation(s, sz,0.75);
-			return sz;
-		}
-	};
-	var computeLocation =  function(s, sz, coef){
-		var width = sz.width, height = sz.height, sh = s.getShape(), align = sh.align;
-		switch (align) {
-		case "end":
-			sz.x = sh.x - width;
-			break;
-		case "middle":
-			sz.x = sh.x - width / 2;
-			break;
-		case "start":
-		default:
-			sz.x = sh.x;
-		break;
-		}
-		coef = coef || 1;
-		sz.y = sh.y - height*coef; // rough approximation of the ascent!...
-		return sz;
-	};
-
-	return dojo.declare(Element, {
-		//	summary:
-		//		Internal element used by indicator actions.
-		//	tags:
-		//		private
-		constructor: function(chart, kwArgs){
-			if(!kwArgs){ kwArgs = {}; }
-			this.inter = kwArgs.inter;
-		},
-		_updateVisibility: function(cp, limit, attr){
-			var axis = attr=="x"?this.inter.plot._hAxis:this.inter.plot._vAxis;
-			var scale = axis.getWindowScale();
-			this.chart.setAxisWindow(axis.name, scale, axis.getWindowOffset() + (cp[attr] - limit[attr]) / scale);
-			this._noDirty = true;
-			this.chart.render();
-			this._noDirty = false;
-			if(!this._tracker){
-				this.initTrack();
-			}
-		},
-		_trackMove: function(){
-			// let's update the selector
-			this._updateIndicator(this.pageCoord);            
-			// if we reached that point once, then we don't stop until mouse up
-			if(this._initTrackPhase){
-				this._initTrackPhase = false;
-				this._tracker = setInterval(dojo.hitch(this, this._trackMove), 100);
-			}
-		},
-		initTrack: function(){
-			this._initTrackPhase = true;
-			this._tracker = setTimeout(dojo.hitch(this, this._trackMove), 500);
-		},
-		stopTrack: function(){
-			if(this._tracker){
-				if(this._initTrackPhase){
-					clearTimeout(this._tracker);					
-				}else{
-					clearInterval(this._tracker);
-				}
-				this._tracker = null;
-			}
-		},
-		render: function(){
-			if(!this.isDirty()){
-				return;
-			}
-
-			this.cleanGroup();
-
-			if (!this.pageCoord){
-				return;
-			}
-			
-			this._updateIndicator(this.pageCoord, this.secondCoord);
-		},
-		_updateIndicator: function(cp1, cp2){
-			var inter = this.inter, plot = inter.plot, v = inter.opt.vertical;
-			var hAxis = this.chart.getAxis(plot.hAxis), vAxis = this.chart.getAxis(plot.vAxis);
-			var hn = hAxis.name, vn = vAxis.name, hb = hAxis.getScaler().bounds, vb = vAxis.getScaler().bounds;
-			var attr = v?"x":"y", n = v?hn:vn, bounds = v?hb:vb;
-			
-			// sort data point
-			if(cp2){
-				var tmp;
-				if(v){
-					if(cp1.x>cp2.x){
-						tmp = cp2;
-						cp2 = cp1;
-						cp1 = tmp;
-					}
-				}else{
-					if(cp1.y>cp2.y){
-						tmp = cp2;
-						cp2 = cp1;
-						cp1 = tmp;
-					}		
-				}
-			}
-
-			var cd1 = plot.toData(cp1), cd2;
-			if(cp2){
-				cd2 = plot.toData(cp2);
-			}
-			
-			var o = {};
-			o[hn] = hb.from;
-			o[vn] = vb.from;
-			var min = plot.toPage(o);
-			o[hn] = hb.to;
-			o[vn] = vb.to;
-			var max = plot.toPage(o);
-			
-			if(cd1[n] < bounds.from){
-				// do not autoscroll if dual indicator
-				if(!cd2 && inter.opt.autoScroll){
-					this._updateVisibility(cp1, min, attr);
-					return;
-				}else{
-					cp1[attr] = min[attr];
-				}
-				// cp1 might have changed, let's update cd1
-				cd1 = plot.toData(cp1);
-			}else if(cd1[n] > bounds.to){
-				if(!cd2 && inter.opt.autoScroll){
-					this._updateVisibility(cp1, max, attr);
-					return;
-				}else{
-					cp1[attr] = max[attr];
-				}
-				// cp1 might have changed, let's update cd1
-				cd1 = plot.toData(cp1);
-			}	
-			
-			var c1 = this._getData(cd1, attr, v), c2; 
-			
-			if(cp2){
-				if(cd2[n] < bounds.from){
-					cp2[attr] = min[attr];
-					cd2 = plot.toData(cp2);
-				}else if(cd2[n] > bounds.to){
-					cp2[attr] = max[attr];
-					cd2 = plot.toData(cp2);	
-				}
-				c2 = this._getData(cd2, attr, v);
-			}
-			
-			var t1 = this._renderIndicator(c1, cp2?1:0, hn, vn, min, max);
-			if(cp2){
-				var t2 = this._renderIndicator(c2, 2, hn, vn, min, max);
-				var delta = v?c2.y-c1.y:c2.x-c1.y;
-				var text = inter.opt.labelFunc?inter.opt.labelFunc(c1, c2, inter.opt.fixed, inter.opt.precision):
-					(dcpc.getLabel(delta, inter.opt.fixed, inter.opt.precision)+" ("+dcpc.getLabel(100*delta/(v?c1.y:c1.x), true, 2)+"%)");
-				this._renderText(text, inter, this.chart.theme, v?(t1.x+t2.x)/2:t1.x, v?t1.y:(t1.y+t2.y)/2, c1, c2);
-			};
-			
-		},
-		_renderIndicator: function(coord, index, hn, vn, min, max){
-			var t = this.chart.theme, c = this.chart.getCoords(), inter = this.inter, plot = inter.plot, v = inter.opt.vertical;
-			
-			var mark = {};
-			mark[hn] = coord.x;
-			mark[vn] = coord.y;
-			mark = plot.toPage(mark);
-
-			var cx = mark.x - c.x, cy = mark.y - c.y;
-			var x1 = v?cx:min.x - c.x, y1 = v?min.y - c.y:cy, x2 = v?x1:max.x - c.x, y2 = v?max.y - c.y:y1;
-			var sh = inter.opt.lineShadow?inter.opt.lineShadow:t.indicator.lineShadow,
-					ls = inter.opt.lineStroke?inter.opt.lineStroke:t.indicator.lineStroke,
-							ol = inter.opt.lineOutline?inter.opt.lineOutline:t.indicator.lineOutline;
-			if(sh){
-				this.group.createLine({x1: x1 + sh.dx, y1: y1 + sh.dy, x2: x2 + sh.dx, y2: y2 + sh.dy}).setStroke(sh);
-			}
-			if(ol){
-				ol = dcpc.makeStroke(ol);
-				ol.width = 2 * ol.width + ls.width;
-				this.group.createLine({x1: x1, y1: y1, x2: x2, y2: y2}).setStroke(ol);
-			}
-			this.group.createLine({x1: x1, y1: y1, x2: x2, y2: y2}).setStroke(ls);
-
-			var ms = inter.opt.markerSymbol?inter.opt.markerSymbol:t.indicator.markerSymbol,
-					path = "M" + cx + " " + cy + " " + ms;
-			sh = inter.opt.markerShadow?inter.opt.markerShadow:t.indicator.markerShadow;
-			ls = inter.opt.markerStroke?inter.opt.markerStroke:t.indicator.markerStroke;
-			ol = inter.opt.markerOutline?inter.opt.markerOutline:t.indicator.markerOutline;
-			if(sh){
-				var sp = "M" + (cx + sh.dx) + " " + (cy + sh.dy) + " " + ms;
-				this.group.createPath(sp).setFill(sh.color).setStroke(sh);
-			}
-			if(ol){
-				ol = dcpc.makeStroke(ol);
-				ol.width = 2 * ol.width + ls.width;
-				this.group.createPath(path).setStroke(ol);
-			}
-
-			var shape = this.group.createPath(path);
-			var sf = this._shapeFill(inter.opt.markerFill?inter.opt.markerFill:t.indicator.markerFill, shape.getBoundingBox());
-			shape.setFill(sf).setStroke(ls);
-
-			if(index==0){
-				var text = inter.opt.labelFunc?inter.opt.labelFunc(coord, null, inter.opt.fixed, inter.opt.precision):
-					dcpc.getLabel(v?coord.y:coord.x, inter.opt.fixed, inter.opt.precision);
-				this._renderText(text, inter, t, v?x1:x2+5, v?y2+5:y1, coord);
-			}else{
-				return v?{x: x1, y: y2+5}:{x: x2+5, y: y1};
-			}
-			
-		},
-		_renderText: function(text, inter, t, x, y, c1, c2){
-			var label = dcac.createText.gfx(
-					this.chart,
-					this.group,
-					x, y,
-					"middle",
-					text, inter.opt.font?inter.opt.font:t.indicator.font, inter.opt.fontColor?inter.opt.fontColor:t.indicator.fontColor);
-			var b = getBoundingBox(label);
-			b.x-=2; b.y-=1; b.width+=4; b.height+=2; b.r = inter.opt.radius?inter.opt.radius:t.indicator.radius;
-			sh = inter.opt.shadow?inter.opt.shadow:t.indicator.shadow;
-			ls = inter.opt.stroke?inter.opt.stroke:t.indicator.stroke;
-			ol = inter.opt.outline?inter.opt.outline:t.indicator.outline;
-			if(sh){
-				this.group.createRect(b).setFill(sh.color).setStroke(sh);
-			}
-			if(ol){
-				ol = dcpc.makeStroke(ol);
-				ol.width = 2 * ol.width + ls.width;
-				this.group.createRect(b).setStroke(ol);
-			}
-			var f = inter.opt.fillFunc?inter.opt.fillFunc(c1, c2):(inter.opt.fill?inter.opt.fill:t.indicator.fill);
-			this.group.createRect(b).setFill(this._shapeFill(f, b)).setStroke(ls);
-			label.moveToFront();
-		},
-		_getData: function(cd, attr, v){
-			// we need to find which actual data point is "close" to the data value
-			var data = this.chart.getSeries(this.inter.opt.series).data;
-			// let's consider data are sorted because anyway rendering will be "weird" with unsorted data
-			// i is an index in the array, which is different from a x-axis value even for index based data
-			var i, r, l = data.length;
-			for (i = 0; i < l; ++i){
-				r = data[i];
-				if(typeof r == "number"){
-					if(i + 1 > cd[attr]){
-						break;
-					}
-				}else if(r[attr] > cd[attr]){
-					break;
-				}
-			}
-			var x,y,px,py;
-			if(typeof r == "number"){
-				x = i+1;
-				y = r;
-				if(i>0){
-					px = i;
-					py = data[i-1];
-				}
-			}else{
-				x = r.x;
-				y = r.y;
-				if(i>0){
-					px = data[i-1].x;
-					py = data[i-1].y;
-				}
-			}
-			if(i>0){
-				var m = v?(x+px)/2:(y+py)/2;
-				if(cd[attr]<=m){
-					x = px;
-					y = py;
-				}
-			}
-			return {x: x, y: y};
-		},
-		cleanGroup: function(creator){
-			//	summary:
-			//		Clean any elements (HTML or GFX-based) out of our group, and create a new one.
-			//	creator: dojox.gfx.Surface?
-			//		An optional surface to work with.
-			//	returns: dojox.charting.Element
-			//		A reference to this object for functional chaining.
-			this.inherited(arguments);
-			// we always want to be above regular plots and not clipped
-			this.group.moveToFront();
-			return this;	//	dojox.charting.Element
-		},
-		clear: function(){
-			//	summary:
-			//		Clear out any parameters set on this plot.
-			//	returns: dojox.charting.action2d._IndicatorElement
-			//		The reference to this plot for functional chaining.
-			this.dirty = true;
-			return this;	//	dojox.charting.plot2d._IndicatorElement
-		},
-		getSeriesStats: function(){
-			//	summary:
-			//		Returns default stats (irrelevant for this type of plot).
-			//	returns: Object
-			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			return dojo.delegate(dcpc.defaultStats);
-		},
-		initializeScalers: function(){
-			//	summary:
-			//		Does nothing (irrelevant for this type of plot).
-			return this;
-		},
-		isDirty: function(){
-			//	summary:
-			//		Return whether or not this plot needs to be redrawn.
-			//	returns: Boolean
-			//		If this plot needs to be rendered, this will return true.
-			return !this._noDirty && (this.dirty || this.inter.plot.isDirty());
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../Element","../plot2d/common","../axis2d/common","dojox/gfx"],function(_1,_2,_3,_4,_5,_6,_7){
+var _8=function(_9){
+return _a(_9,_9.getShape().text);
+};
+var _a=function(s,t){
+var c=s.declaredClass;
+if(c.indexOf("svg")!=-1){
+try{
+return s.rawNode.getBBox();
+}
+catch(e){
+return null;
+}
+}else{
+if(c.indexOf("vml")!=-1){
+var _b=s.rawNode,_c=_b.style.display;
+_b.style.display="inline";
+var w=_7.pt2px(parseFloat(_b.currentStyle.width));
+var h=_7.pt2px(parseFloat(_b.currentStyle.height));
+var sz={x:0,y:0,width:w,height:h};
+_d(s,sz);
+_b.style.display=_c;
+return sz;
+}else{
+if(c.indexOf("silverlight")!=-1){
+var bb={width:s.rawNode.actualWidth,height:s.rawNode.actualHeight};
+return _d(s,bb,0.75);
+}else{
+if(s.getTextWidth){
+var w=s.getTextWidth();
+var _e=s.getFont();
+var fz=_e?_e.size:_7.defaultFont.size;
+var h=_7.normalizedLength(fz);
+sz={width:w,height:h};
+_d(s,sz,0.75);
+return sz;
+}
+}
+}
+}
+};
+var _d=function(s,sz,_f){
+var _10=sz.width,_11=sz.height,sh=s.getShape(),_12=sh.align;
+switch(_12){
+case "end":
+sz.x=sh.x-_10;
+break;
+case "middle":
+sz.x=sh.x-_10/2;
+break;
+case "start":
+default:
+sz.x=sh.x;
+break;
+}
+_f=_f||1;
+sz.y=sh.y-_11*_f;
+return sz;
+};
+return _1.declare(_4,{constructor:function(_13,_14){
+if(!_14){
+_14={};
+}
+this.inter=_14.inter;
+},_updateVisibility:function(cp,_15,_16){
+var _17=_16=="x"?this.inter.plot._hAxis:this.inter.plot._vAxis;
+var _18=_17.getWindowScale();
+this.chart.setAxisWindow(_17.name,_18,_17.getWindowOffset()+(cp[_16]-_15[_16])/_18);
+this._noDirty=true;
+this.chart.render();
+this._noDirty=false;
+if(!this._tracker){
+this.initTrack();
+}
+},_trackMove:function(){
+this._updateIndicator(this.pageCoord);
+if(this._initTrackPhase){
+this._initTrackPhase=false;
+this._tracker=setInterval(_1.hitch(this,this._trackMove),100);
+}
+},initTrack:function(){
+this._initTrackPhase=true;
+this._tracker=setTimeout(_1.hitch(this,this._trackMove),500);
+},stopTrack:function(){
+if(this._tracker){
+if(this._initTrackPhase){
+clearTimeout(this._tracker);
+}else{
+clearInterval(this._tracker);
+}
+this._tracker=null;
+}
+},render:function(){
+if(!this.isDirty()){
+return;
+}
+this.cleanGroup();
+if(!this.pageCoord){
+return;
+}
+this._updateIndicator(this.pageCoord,this.secondCoord);
+},_updateIndicator:function(cp1,cp2){
+var _19=this.inter,_1a=_19.plot,v=_19.opt.vertical;
+var _1b=this.chart.getAxis(_1a.hAxis),_1c=this.chart.getAxis(_1a.vAxis);
+var hn=_1b.name,vn=_1c.name,hb=_1b.getScaler().bounds,vb=_1c.getScaler().bounds;
+var _1d=v?"x":"y",n=v?hn:vn,_1e=v?hb:vb;
+if(cp2){
+var tmp;
+if(v){
+if(cp1.x>cp2.x){
+tmp=cp2;
+cp2=cp1;
+cp1=tmp;
+}
+}else{
+if(cp1.y>cp2.y){
+tmp=cp2;
+cp2=cp1;
+cp1=tmp;
+}
+}
+}
+var cd1=_1a.toData(cp1),cd2;
+if(cp2){
+cd2=_1a.toData(cp2);
+}
+var o={};
+o[hn]=hb.from;
+o[vn]=vb.from;
+var min=_1a.toPage(o);
+o[hn]=hb.to;
+o[vn]=vb.to;
+var max=_1a.toPage(o);
+if(cd1[n]<_1e.from){
+if(!cd2&&_19.opt.autoScroll){
+this._updateVisibility(cp1,min,_1d);
+return;
+}else{
+cp1[_1d]=min[_1d];
+}
+cd1=_1a.toData(cp1);
+}else{
+if(cd1[n]>_1e.to){
+if(!cd2&&_19.opt.autoScroll){
+this._updateVisibility(cp1,max,_1d);
+return;
+}else{
+cp1[_1d]=max[_1d];
+}
+cd1=_1a.toData(cp1);
+}
+}
+var c1=this._getData(cd1,_1d,v),c2;
+if(cp2){
+if(cd2[n]<_1e.from){
+cp2[_1d]=min[_1d];
+cd2=_1a.toData(cp2);
+}else{
+if(cd2[n]>_1e.to){
+cp2[_1d]=max[_1d];
+cd2=_1a.toData(cp2);
+}
+}
+c2=this._getData(cd2,_1d,v);
+}
+var t1=this._renderIndicator(c1,cp2?1:0,hn,vn,min,max);
+if(cp2){
+var t2=this._renderIndicator(c2,2,hn,vn,min,max);
+var _1f=v?c2.y-c1.y:c2.x-c1.y;
+var _20=_19.opt.labelFunc?_19.opt.labelFunc(c1,c2,_19.opt.fixed,_19.opt.precision):(_5.getLabel(_1f,_19.opt.fixed,_19.opt.precision)+" ("+_5.getLabel(100*_1f/(v?c1.y:c1.x),true,2)+"%)");
+this._renderText(_20,_19,this.chart.theme,v?(t1.x+t2.x)/2:t1.x,v?t1.y:(t1.y+t2.y)/2,c1,c2);
+}
+},_renderIndicator:function(_21,_22,hn,vn,min,max){
+var t=this.chart.theme,c=this.chart.getCoords(),_23=this.inter,_24=_23.plot,v=_23.opt.vertical;
+var _25={};
+_25[hn]=_21.x;
+_25[vn]=_21.y;
+_25=_24.toPage(_25);
+var cx=_25.x-c.x,cy=_25.y-c.y;
+var x1=v?cx:min.x-c.x,y1=v?min.y-c.y:cy,x2=v?x1:max.x-c.x,y2=v?max.y-c.y:y1;
+var sh=_23.opt.lineShadow?_23.opt.lineShadow:t.indicator.lineShadow,ls=_23.opt.lineStroke?_23.opt.lineStroke:t.indicator.lineStroke,ol=_23.opt.lineOutline?_23.opt.lineOutline:t.indicator.lineOutline;
+if(sh){
+this.group.createLine({x1:x1+sh.dx,y1:y1+sh.dy,x2:x2+sh.dx,y2:y2+sh.dy}).setStroke(sh);
+}
+if(ol){
+ol=_5.makeStroke(ol);
+ol.width=2*ol.width+ls.width;
+this.group.createLine({x1:x1,y1:y1,x2:x2,y2:y2}).setStroke(ol);
+}
+this.group.createLine({x1:x1,y1:y1,x2:x2,y2:y2}).setStroke(ls);
+var ms=_23.opt.markerSymbol?_23.opt.markerSymbol:t.indicator.markerSymbol,_26="M"+cx+" "+cy+" "+ms;
+sh=_23.opt.markerShadow?_23.opt.markerShadow:t.indicator.markerShadow;
+ls=_23.opt.markerStroke?_23.opt.markerStroke:t.indicator.markerStroke;
+ol=_23.opt.markerOutline?_23.opt.markerOutline:t.indicator.markerOutline;
+if(sh){
+var sp="M"+(cx+sh.dx)+" "+(cy+sh.dy)+" "+ms;
+this.group.createPath(sp).setFill(sh.color).setStroke(sh);
+}
+if(ol){
+ol=_5.makeStroke(ol);
+ol.width=2*ol.width+ls.width;
+this.group.createPath(_26).setStroke(ol);
+}
+var _27=this.group.createPath(_26);
+var sf=this._shapeFill(_23.opt.markerFill?_23.opt.markerFill:t.indicator.markerFill,_27.getBoundingBox());
+_27.setFill(sf).setStroke(ls);
+if(_22==0){
+var _28=_23.opt.labelFunc?_23.opt.labelFunc(_21,null,_23.opt.fixed,_23.opt.precision):_5.getLabel(v?_21.y:_21.x,_23.opt.fixed,_23.opt.precision);
+this._renderText(_28,_23,t,v?x1:x2+5,v?y2+5:y1,_21);
+}else{
+return v?{x:x1,y:y2+5}:{x:x2+5,y:y1};
+}
+},_renderText:function(_29,_2a,t,x,y,c1,c2){
+var _2b=_6.createText.gfx(this.chart,this.group,x,y,"middle",_29,_2a.opt.font?_2a.opt.font:t.indicator.font,_2a.opt.fontColor?_2a.opt.fontColor:t.indicator.fontColor);
+var b=_8(_2b);
+b.x-=2;
+b.y-=1;
+b.width+=4;
+b.height+=2;
+b.r=_2a.opt.radius?_2a.opt.radius:t.indicator.radius;
+sh=_2a.opt.shadow?_2a.opt.shadow:t.indicator.shadow;
+ls=_2a.opt.stroke?_2a.opt.stroke:t.indicator.stroke;
+ol=_2a.opt.outline?_2a.opt.outline:t.indicator.outline;
+if(sh){
+this.group.createRect(b).setFill(sh.color).setStroke(sh);
+}
+if(ol){
+ol=_5.makeStroke(ol);
+ol.width=2*ol.width+ls.width;
+this.group.createRect(b).setStroke(ol);
+}
+var f=_2a.opt.fillFunc?_2a.opt.fillFunc(c1,c2):(_2a.opt.fill?_2a.opt.fill:t.indicator.fill);
+this.group.createRect(b).setFill(this._shapeFill(f,b)).setStroke(ls);
+_2b.moveToFront();
+},_getData:function(cd,_2c,v){
+var _2d=this.chart.getSeries(this.inter.opt.series).data;
+var i,r,l=_2d.length;
+for(i=0;i<l;++i){
+r=_2d[i];
+if(typeof r=="number"){
+if(i+1>cd[_2c]){
+break;
+}
+}else{
+if(r[_2c]>cd[_2c]){
+break;
+}
+}
+}
+var x,y,px,py;
+if(typeof r=="number"){
+x=i+1;
+y=r;
+if(i>0){
+px=i;
+py=_2d[i-1];
+}
+}else{
+x=r.x;
+y=r.y;
+if(i>0){
+px=_2d[i-1].x;
+py=_2d[i-1].y;
+}
+}
+if(i>0){
+var m=v?(x+px)/2:(y+py)/2;
+if(cd[_2c]<=m){
+x=px;
+y=py;
+}
+}
+return {x:x,y:y};
+},cleanGroup:function(_2e){
+this.inherited(arguments);
+this.group.moveToFront();
+return this;
+},clear:function(){
+this.dirty=true;
+return this;
+},getSeriesStats:function(){
+return _1.delegate(_5.defaultStats);
+},initializeScalers:function(){
+return this;
+},isDirty:function(){
+return !this._noDirty&&(this.dirty||this.inter.plot.isDirty());
+}});
 });

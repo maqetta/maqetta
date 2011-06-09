@@ -1,373 +1,271 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/NodeList-manipulate", // .text
-	"dojo/_base/html", // dojo.byId
-	"dojo/_base/sniff", // dojo.isIE dojo.isOpera
-	"dojo/_base/window" // dojo.body dojo.doc dojo.doc.createElement dojo.doc.selection dojo.doc.selection.createRange dojo.doc.selection.type.toLowerCase dojo.global dojo.global.getSelection
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/_editor/selection
-// summary:
-//		Text selection API
-
-
-dojo.getObject("_editor.selection", true, dijit);
-
-// FIXME:
-//		all of these methods branch internally for IE. This is probably
-//		sub-optimal in terms of runtime performance. We should investigate the
-//		size difference for differentiating at definition time.
-
-dojo.mixin(dijit._editor.selection, {
-	getType: function(){
-		// summary:
-		//		Get the selection type (like dojo.doc.select.type in IE).
-		if(dojo.isIE < 9){
-			return dojo.doc.selection.type.toLowerCase();
-		}else{
-			var stype = "text";
-
-			// Check if the actual selection is a CONTROL (IMG, TABLE, HR, etc...).
-			var oSel;
-			try{
-				oSel = dojo.global.getSelection();
-			}catch(e){ /*squelch*/ }
-
-			if(oSel && oSel.rangeCount == 1){
-				var oRange = oSel.getRangeAt(0);
-				if(	(oRange.startContainer == oRange.endContainer) &&
-					((oRange.endOffset - oRange.startOffset) == 1) &&
-					(oRange.startContainer.nodeType != 3 /* text node*/)
-				){
-					stype = "control";
-				}
-			}
-			return stype; //String
-		}
-	},
-
-	getSelectedText: function(){
-		// summary:
-		//		Return the text (no html tags) included in the current selection or null if no text is selected
-		if(dojo.isIE < 9){
-			if(dijit._editor.selection.getType() == 'control'){
-				return null;
-			}
-			return dojo.doc.selection.createRange().text;
-		}else{
-			var selection = dojo.global.getSelection();
-			if(selection){
-				return selection.toString(); //String
-			}
-		}
-		return '';
-	},
-
-	getSelectedHtml: function(){
-		// summary:
-		//		Return the html text of the current selection or null if unavailable
-		if(dojo.isIE < 9){
-			if(dijit._editor.selection.getType() == 'control'){
-				return null;
-			}
-			return dojo.doc.selection.createRange().htmlText;
-		}else{
-			var selection = dojo.global.getSelection();
-			if(selection && selection.rangeCount){
-				var i;
-				var html = "";
-				for(i = 0; i < selection.rangeCount; i++){
-					//Handle selections spanning ranges, such as Opera
-					var frag = selection.getRangeAt(i).cloneContents();
-					var div = dojo.doc.createElement("div");
-					div.appendChild(frag);
-					html += div.innerHTML;
-				}
-				return html; //String
-			}
-			return null;
-		}
-	},
-
-	getSelectedElement: function(){
-		// summary:
-		//		Retrieves the selected element (if any), just in the case that
-		//		a single element (object like and image or a table) is
-		//		selected.
-		if(dijit._editor.selection.getType() == "control"){
-			if(dojo.isIE < 9){
-				var range = dojo.doc.selection.createRange();
-				if(range && range.item){
-					return dojo.doc.selection.createRange().item(0);
-				}
-			}else{
-				var selection = dojo.global.getSelection();
-				return selection.anchorNode.childNodes[ selection.anchorOffset ];
-			}
-		}
-		return null;
-	},
-
-	getParentElement: function(){
-		// summary:
-		//		Get the parent element of the current selection
-		if(dijit._editor.selection.getType() == "control"){
-			var p = this.getSelectedElement();
-			if(p){ return p.parentNode; }
-		}else{
-			if(dojo.isIE < 9){
-				var r = dojo.doc.selection.createRange();
-				r.collapse(true);
-				return r.parentElement();
-			}else{
-				var selection = dojo.global.getSelection();
-				if(selection){
-					var node = selection.anchorNode;
-					while(node && (node.nodeType != 1)){ // not an element
-						node = node.parentNode;
-					}
-					return node;
-				}
-			}
-		}
-		return null;
-	},
-
-	hasAncestorElement: function(/*String*/tagName /* ... */){
-		// summary:
-		// 		Check whether current selection has a  parent element which is
-		// 		of type tagName (or one of the other specified tagName)
-		// tagName: String
-		//		The tag name to determine if it has an ancestor of.
-		return this.getAncestorElement.apply(this, arguments) != null; //Boolean
-	},
-
-	getAncestorElement: function(/*String*/tagName /* ... */){
-		// summary:
-		//		Return the parent element of the current selection which is of
-		//		type tagName (or one of the other specified tagName)
-		// tagName: String
-		//		The tag name to determine if it has an ancestor of.
-		var node = this.getSelectedElement() || this.getParentElement();
-		return this.getParentOfType(node, arguments); //DOMNode
-	},
-
-	isTag: function(/*DomNode*/ node, /*String[]*/ tags){
-		// summary:
-		//		Function to determine if a node is one of an array of tags.
-		// node:
-		//		The node to inspect.
-		// tags:
-		//		An array of tag name strings to check to see if the node matches.
-		if(node && node.tagName){
-			var _nlc = node.tagName.toLowerCase();
-			for(var i=0; i<tags.length; i++){
-				var _tlc = String(tags[i]).toLowerCase();
-				if(_nlc == _tlc){
-					return _tlc; // String
-				}
-			}
-		}
-		return "";
-	},
-
-	getParentOfType: function(/*DomNode*/ node, /*String[]*/ tags){
-		// summary:
-		//		Function to locate a parent node that matches one of a set of tags
-		// node:
-		//		The node to inspect.
-		// tags:
-		//		An array of tag name strings to check to see if the node matches.
-		while(node){
-			if(this.isTag(node, tags).length){
-				return node; // DOMNode
-			}
-			node = node.parentNode;
-		}
-		return null;
-	},
-
-	collapse: function(/*Boolean*/beginning){
-		// summary:
-		//		Function to collapse (clear), the current selection
-		// beginning: Boolean
-		//		Boolean to indicate whether to collapse the cursor to the beginning of the selection or end.
-		if(window.getSelection){
-			var selection = dojo.global.getSelection();
-			if(selection.removeAllRanges){ // Mozilla
-				if(beginning){
-					selection.collapseToStart();
-				}else{
-					selection.collapseToEnd();
-				}
-			}else{ // Safari
-				// pulled from WebCore/ecma/kjs_window.cpp, line 2536
-				selection.collapse(beginning);
-			}
-		}else if(dojo.isIE){ // IE
-			var range = dojo.doc.selection.createRange();
-			range.collapse(beginning);
-			range.select();
-		}
-	},
-
-	remove: function(){
-		// summary:
-		//		Function to delete the currently selected content from the document.
-		var sel = dojo.doc.selection;
-		if(dojo.isIE < 9){
-			if(sel.type.toLowerCase() != "none"){
-				sel.clear();
-			}
-			return sel; //Selection
-		}else{
-			sel = dojo.global.getSelection();
-			sel.deleteFromDocument();
-			return sel; //Selection
-		}
-	},
-
-	selectElementChildren: function(/*DomNode*/element,/*Boolean?*/nochangefocus){
-		// summary:
-		//		clear previous selection and select the content of the node
-		//		(excluding the node itself)
-		// element: DOMNode
-		//		The element you wish to select the children content of.
-		// nochangefocus: Boolean
-		//		Boolean to indicate if the foxus should change or not.
-		var win = dojo.global;
-		var doc = dojo.doc;
-		var range;
-		element = dojo.byId(element);
-		if(doc.selection && dojo.isIE < 9 && dojo.body().createTextRange){ // IE
-			range = element.ownerDocument.body.createTextRange();
-			range.moveToElementText(element);
-			if(!nochangefocus){
-				try{
-					range.select(); // IE throws an exception here if the widget is hidden.  See #5439
-				}catch(e){ /* squelch */}
-			}
-		}else if(win.getSelection){
-			var selection = dojo.global.getSelection();
-			if(dojo.isOpera){
-				//Opera's selectAllChildren doesn't seem to work right
-				//against <body> nodes and possibly others ... so
-				//we use the W3C range API
-				if(selection.rangeCount){
-					range = selection.getRangeAt(0);
-				}else{
-					range = doc.createRange();
-				}
-				range.setStart(element, 0);
-				range.setEnd(element,(element.nodeType == 3)?element.length:element.childNodes.length);
-				selection.addRange(range);
-			}else{
-				selection.selectAllChildren(element);
-			}
-		}
-	},
-
-	selectElement: function(/*DomNode*/element,/*Boolean?*/nochangefocus){
-		// summary:
-		//		clear previous selection and select element (including all its children)
-		// element:  DOMNode
-		//		The element to select.
-		// nochangefocus: Boolean
-		//		Boolean indicating if the focus should be changed.  IE only.
-		var range;
-		var doc = dojo.doc;
-		var win = dojo.global;
-		element = dojo.byId(element);
-		if(dojo.isIE < 9 && dojo.body().createTextRange){
-			try{
-				var tg = element.tagName ? element.tagName.toLowerCase() : "";
-				if(tg === "img" || tg === "table"){
-					range = dojo.body().createControlRange();
-				}else{
-					range = dojo.body().createRange();
-				}
-				range.addElement(element);
-				if(!nochangefocus){
-					range.select();
-				}
-			}catch(e){
-				this.selectElementChildren(element,nochangefocus);
-			}
-		}else if(dojo.global.getSelection){
-			var selection = win.getSelection();
-			range = doc.createRange();
-			if(selection.removeAllRanges){ // Mozilla
-				// FIXME: does this work on Safari?
-				if(dojo.isOpera){
-					//Opera works if you use the current range on
-					//the selection if present.
-					if(selection.getRangeAt(0)){
-						range = selection.getRangeAt(0);
-					}
-				}
-				range.selectNode(element);
-				selection.removeAllRanges();
-				selection.addRange(range);
-			}
-		}
-	},
-
-	inSelection: function(node){
-		// summary:
-		//		This function determines if 'node' is
-		//		in the current selection.
-		// tags:
-		//		public
-		if(node){
-			var newRange;
-			var doc = dojo.doc;
-			var range;
-
-			if(dojo.global.getSelection){
-				//WC3
-				var sel = dojo.global.getSelection();
-				if(sel && sel.rangeCount > 0){
-					range = sel.getRangeAt(0);
-				}
-				if(range && range.compareBoundaryPoints && doc.createRange){
-					try{
-						newRange = doc.createRange();
-						newRange.setStart(node, 0);
-						if(range.compareBoundaryPoints(range.START_TO_END, newRange) === 1){
-							return true;
-						}
-					}catch(e){ /* squelch */}
-				}
-			}else if(doc.selection){
-				// Probably IE, so we can't use the range object as the pseudo
-				// range doesn't implement the boundry checking, we have to
-				// use IE specific crud.
-				range = doc.selection.createRange();
-				try{
-					newRange = node.ownerDocument.body.createControlRange();
-					if(newRange){
-						newRange.addElement(node);
-					}
-				}catch(e1){
-					try{
-						newRange = node.ownerDocument.body.createTextRange();
-						newRange.moveToElementText(node);
-					}catch(e2){/* squelch */}
-				}
-				if(range && newRange){
-					// We can finally compare similar to W3C
-					if(range.compareEndPoints("EndToStart", newRange) === 1){
-						return true;
-					}
-				}
-			}
-		}
-		return false; // boolean
-	}
-
-});
-
-return dijit._editor.selection;
+define("dijit/_editor/selection",["dojo/_base/kernel","..","dojo/NodeList-manipulate","dojo/_base/html","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
+_1.getObject("_editor.selection",true,_2);
+_1.mixin(_2._editor.selection,{getType:function(){
+if(_1.isIE<9){
+return _1.doc.selection.type.toLowerCase();
+}else{
+var _3="text";
+var _4;
+try{
+_4=_1.global.getSelection();
+}
+catch(e){
+}
+if(_4&&_4.rangeCount==1){
+var _5=_4.getRangeAt(0);
+if((_5.startContainer==_5.endContainer)&&((_5.endOffset-_5.startOffset)==1)&&(_5.startContainer.nodeType!=3)){
+_3="control";
+}
+}
+return _3;
+}
+},getSelectedText:function(){
+if(_1.isIE<9){
+if(_2._editor.selection.getType()=="control"){
+return null;
+}
+return _1.doc.selection.createRange().text;
+}else{
+var _6=_1.global.getSelection();
+if(_6){
+return _6.toString();
+}
+}
+return "";
+},getSelectedHtml:function(){
+if(_1.isIE<9){
+if(_2._editor.selection.getType()=="control"){
+return null;
+}
+return _1.doc.selection.createRange().htmlText;
+}else{
+var _7=_1.global.getSelection();
+if(_7&&_7.rangeCount){
+var i;
+var _8="";
+for(i=0;i<_7.rangeCount;i++){
+var _9=_7.getRangeAt(i).cloneContents();
+var _a=_1.doc.createElement("div");
+_a.appendChild(_9);
+_8+=_a.innerHTML;
+}
+return _8;
+}
+return null;
+}
+},getSelectedElement:function(){
+if(_2._editor.selection.getType()=="control"){
+if(_1.isIE<9){
+var _b=_1.doc.selection.createRange();
+if(_b&&_b.item){
+return _1.doc.selection.createRange().item(0);
+}
+}else{
+var _c=_1.global.getSelection();
+return _c.anchorNode.childNodes[_c.anchorOffset];
+}
+}
+return null;
+},getParentElement:function(){
+if(_2._editor.selection.getType()=="control"){
+var p=this.getSelectedElement();
+if(p){
+return p.parentNode;
+}
+}else{
+if(_1.isIE<9){
+var r=_1.doc.selection.createRange();
+r.collapse(true);
+return r.parentElement();
+}else{
+var _d=_1.global.getSelection();
+if(_d){
+var _e=_d.anchorNode;
+while(_e&&(_e.nodeType!=1)){
+_e=_e.parentNode;
+}
+return _e;
+}
+}
+}
+return null;
+},hasAncestorElement:function(_f){
+return this.getAncestorElement.apply(this,arguments)!=null;
+},getAncestorElement:function(_10){
+var _11=this.getSelectedElement()||this.getParentElement();
+return this.getParentOfType(_11,arguments);
+},isTag:function(_12,_13){
+if(_12&&_12.tagName){
+var _14=_12.tagName.toLowerCase();
+for(var i=0;i<_13.length;i++){
+var _15=String(_13[i]).toLowerCase();
+if(_14==_15){
+return _15;
+}
+}
+}
+return "";
+},getParentOfType:function(_16,_17){
+while(_16){
+if(this.isTag(_16,_17).length){
+return _16;
+}
+_16=_16.parentNode;
+}
+return null;
+},collapse:function(_18){
+if(window.getSelection){
+var _19=_1.global.getSelection();
+if(_19.removeAllRanges){
+if(_18){
+_19.collapseToStart();
+}else{
+_19.collapseToEnd();
+}
+}else{
+_19.collapse(_18);
+}
+}else{
+if(_1.isIE){
+var _1a=_1.doc.selection.createRange();
+_1a.collapse(_18);
+_1a.select();
+}
+}
+},remove:function(){
+var sel=_1.doc.selection;
+if(_1.isIE<9){
+if(sel.type.toLowerCase()!="none"){
+sel.clear();
+}
+return sel;
+}else{
+sel=_1.global.getSelection();
+sel.deleteFromDocument();
+return sel;
+}
+},selectElementChildren:function(_1b,_1c){
+var win=_1.global;
+var doc=_1.doc;
+var _1d;
+_1b=_1.byId(_1b);
+if(doc.selection&&_1.isIE<9&&_1.body().createTextRange){
+_1d=_1b.ownerDocument.body.createTextRange();
+_1d.moveToElementText(_1b);
+if(!_1c){
+try{
+_1d.select();
+}
+catch(e){
+}
+}
+}else{
+if(win.getSelection){
+var _1e=_1.global.getSelection();
+if(_1.isOpera){
+if(_1e.rangeCount){
+_1d=_1e.getRangeAt(0);
+}else{
+_1d=doc.createRange();
+}
+_1d.setStart(_1b,0);
+_1d.setEnd(_1b,(_1b.nodeType==3)?_1b.length:_1b.childNodes.length);
+_1e.addRange(_1d);
+}else{
+_1e.selectAllChildren(_1b);
+}
+}
+}
+},selectElement:function(_1f,_20){
+var _21;
+var doc=_1.doc;
+var win=_1.global;
+_1f=_1.byId(_1f);
+if(_1.isIE<9&&_1.body().createTextRange){
+try{
+var tg=_1f.tagName?_1f.tagName.toLowerCase():"";
+if(tg==="img"||tg==="table"){
+_21=_1.body().createControlRange();
+}else{
+_21=_1.body().createRange();
+}
+_21.addElement(_1f);
+if(!_20){
+_21.select();
+}
+}
+catch(e){
+this.selectElementChildren(_1f,_20);
+}
+}else{
+if(_1.global.getSelection){
+var _22=win.getSelection();
+_21=doc.createRange();
+if(_22.removeAllRanges){
+if(_1.isOpera){
+if(_22.getRangeAt(0)){
+_21=_22.getRangeAt(0);
+}
+}
+_21.selectNode(_1f);
+_22.removeAllRanges();
+_22.addRange(_21);
+}
+}
+}
+},inSelection:function(_23){
+if(_23){
+var _24;
+var doc=_1.doc;
+var _25;
+if(_1.global.getSelection){
+var sel=_1.global.getSelection();
+if(sel&&sel.rangeCount>0){
+_25=sel.getRangeAt(0);
+}
+if(_25&&_25.compareBoundaryPoints&&doc.createRange){
+try{
+_24=doc.createRange();
+_24.setStart(_23,0);
+if(_25.compareBoundaryPoints(_25.START_TO_END,_24)===1){
+return true;
+}
+}
+catch(e){
+}
+}
+}else{
+if(doc.selection){
+_25=doc.selection.createRange();
+try{
+_24=_23.ownerDocument.body.createControlRange();
+if(_24){
+_24.addElement(_23);
+}
+}
+catch(e1){
+try{
+_24=_23.ownerDocument.body.createTextRange();
+_24.moveToElementText(_23);
+}
+catch(e2){
+}
+}
+if(_25&&_24){
+if(_25.compareEndPoints("EndToStart",_24)===1){
+return true;
+}
+}
+}
+}
+}
+return false;
+}});
+return _2._editor.selection;
 });

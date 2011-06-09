@@ -1,36 +1,23 @@
-define(["dojo/_base/kernel","dojox","./matrix","./vector"],function(dojo,dojox) { 
-    dojo.getObject("gfx3d",true,dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var dist = function(a, b){ return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2)); };
-	var N = 32;
-
-	dojox.gfx3d.gradient = function(model, material, center, radius, from, to, matrix){
-		// summary: calculate a cylindrical gradient
-		// model: dojox.gfx3d.lighting.Model: color model
-		// material: Object: defines visual properties
-		// center: Object: center of the cylinder's bottom
-		// radius: Number: radius of the cylinder
-		// from: Number: from position in radians
-		// to: Number: from position in radians
-		// matrix: dojox.gfx3d.Matrix3D: the cumulative transformation matrix
-		// tolerance: Number: tolerable difference in colors between gradient steps
-
-		var m = dojox.gfx3d.matrix, v = dojox.gfx3d.vector, mx = m.normalize(matrix),
-			f = m.multiplyPoint(mx, radius * Math.cos(from) + center.x, radius * Math.sin(from) + center.y, center.z),
-			t = m.multiplyPoint(mx, radius * Math.cos(to)   + center.x, radius * Math.sin(to)   + center.y, center.z),
-			c = m.multiplyPoint(mx, center.x, center.y, center.z), step = (to - from) / N, r = dist(f, t) / 2,
-			mod = model[material.type], fin = material.finish, pmt = material.color,
-			colors = [{offset: 0, color: mod.call(model, v.substract(f, c), fin, pmt)}];
-
-		for(var a = from + step; a < to; a += step){
-			var p = m.multiplyPoint(mx, radius * Math.cos(a) + center.x, radius * Math.sin(a) + center.y, center.z),
-				df = dist(f, p), dt = dist(t, p);
-			colors.push({offset: df / (df + dt), color: mod.call(model, v.substract(p, c), fin, pmt)});
-		}
-		colors.push({offset: 1, color: mod.call(model, v.substract(t, c), fin, pmt)});
-
-		return {type: "linear", x1: 0, y1: -r, x2: 0, y2: r, colors: colors};
-	};
-
-	return dojox.gfx3d.gradient;
+define(["dojo/_base/kernel","dojox","./matrix","./vector"],function(_1,_2){
+_1.getObject("gfx3d",true,_2);
+var _3=function(a,b){
+return Math.sqrt(Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
+};
+var N=32;
+_2.gfx3d.gradient=function(_4,_5,_6,_7,_8,to,_9){
+var m=_2.gfx3d.matrix,v=_2.gfx3d.vector,mx=m.normalize(_9),f=m.multiplyPoint(mx,_7*Math.cos(_8)+_6.x,_7*Math.sin(_8)+_6.y,_6.z),t=m.multiplyPoint(mx,_7*Math.cos(to)+_6.x,_7*Math.sin(to)+_6.y,_6.z),c=m.multiplyPoint(mx,_6.x,_6.y,_6.z),_a=(to-_8)/N,r=_3(f,t)/2,_b=_4[_5.type],_c=_5.finish,_d=_5.color,_e=[{offset:0,color:_b.call(_4,v.substract(f,c),_c,_d)}];
+for(var a=_8+_a;a<to;a+=_a){
+var p=m.multiplyPoint(mx,_7*Math.cos(a)+_6.x,_7*Math.sin(a)+_6.y,_6.z),df=_3(f,p),dt=_3(t,p);
+_e.push({offset:df/(df+dt),color:_b.call(_4,v.substract(p,c),_c,_d)});
+}
+_e.push({offset:1,color:_b.call(_4,v.substract(t,c),_c,_d)});
+return {type:"linear",x1:0,y1:-r,x2:0,y2:r,colors:_e};
+};
+return _2.gfx3d.gradient;
 });

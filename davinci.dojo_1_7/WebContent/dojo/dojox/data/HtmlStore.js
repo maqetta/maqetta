@@ -1,562 +1,316 @@
-define("dojox/data/HtmlStore", ["dojo", "dojox", "dojo/data/util/simpleFetch", "dojo/data/util/filter", "dojox/xml/parser"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.data.HtmlStore", null, {
-	constructor: function(/*Object*/args){
-		//	summary:
-		//		Initializer for the HTML table store.
-		//	description:
-		//		The HtmlStore can be created in one of two ways: a) by parsing an existing
-		//		table or list DOM node on the current page or b) by referencing an external url and giving
-		//		the id of the table or list in that page.  The remote url will be parsed as an html page.
-		//
-		//		The HTML table or list should be of the following form:
-		//
-		//		|	<table id="myTable">
-		//		|		<thead>
-		//		|			<tr>
-		//		|				<th>Attribute1</th>
-		//		|				<th>Attribute2</th>
-		//		|			</tr>
-		//		|		</thead>
-		//		|		<tbody>
-		//		|			<tr>
-		//		|				<td>Value1.1</td>
-		//		|				<td>Value1.2</td>
-		//		|			</tr>
-		//		|			<tr>
-		//		|				<td>Value2.1</td>
-		//		|				<td>Value2.2</td>
-		//		|			</tr>
-		//		|		</tbody>
-		//		|	</table>
-		//
-		// -or-
-		//
-		//		|	<ul id="myUnorderedList">
-		//		|		<li>Value.1</li>
-		//		|		<li>Value.2</li>
-		//		|	</ul>
-		//
-		// -or-
-		//
-		//		|	<ol id="myOrderedList">
-		//		|		<li>Value.1</li>
-		//		|		<li>Value.2</li>
-		//		|	</ol>
-		//
-		//	args:
-		//		An anonymous object to initialize properties.  It expects the following values:
-		//		dataId:	The id of the HTML table to use.
-		//		OR
-		//		url:	The url of the remote page to load
-		//		dataId:	The id of the table element in the remote page
-		//		and the option:
-		//		trimWhitespace:  Trim off any surrounding whitespace from the headers (attribute
-		//			names) and text content of the items in question.  Default is false for
-		//			backwards compatibility.
-		if(args && "urlPreventCache" in args){
-			this.urlPreventCache = args.urlPreventCache?true:false;
-		}
-		if(args && "trimWhitespace" in args){
-			this.trimWhitespace = args.trimWhitespace?true:false;
-		}
-		if(args.url){
-			if(!args.dataId){
-				throw new Error("dojo.data.HtmlStore: Cannot instantiate using url without an id!");
-			}
-			this.url = args.url;
-			this.dataId = args.dataId;
-		}else{
-			if(args.dataId){
-				this.dataId = args.dataId;
-			}
-		}
-		if(args && "fetchOnCreate" in args){
-			this.fetchOnCreate = args.fetchOnCreate?true:false;
-		}
-		if(this.fetchOnCreate && this.dataId){
-			this.fetch();
-		}
-	},
-
-	// url: [public] string
-	//		The URL from which to load an HTML document for data loading
-	url: "",
-	
-	// dataId: [public] string
-	//		The id in the document for an element from which to get the data.
-	dataId: "",
-
-	// trimWhitepace: [public] boolean
-	//		Boolean flag to denote if the store should trim whitepace around
-	//		header and data content of a node.  This matters if reformatters
-	//		alter the white spacing around the tags.  The default is false for
-	//		backwards compat.
-	trimWhitespace: false,
-
-	// urlPreventCache: [public] boolean
-	//		Flag to denote if peventCache should be used on xhrGet calls.
-	urlPreventCache: false,
-	
-	// fetchOnCreate: [public] boolean
-	// 		Flag to denote if it should try to load from a data id (nested in the page)
-	//		The moment the store is created, instead of waiting for first
-	//		fetch call.
-	fetchOnCreate: false,
-	
-	_indexItems: function(){
-		// summary:
-		//		Function to index items found under the id.
-		// tags:
-		//		private
-		this._getHeadings();
-		if(this._rootNode.rows){//tables
-			if(this._rootNode.tBodies && this._rootNode.tBodies.length > 0){
-				this._rootNode = this._rootNode.tBodies[0];
-			}
-			var i;
-			for(i=0; i<this._rootNode.rows.length; i++){
-				this._rootNode.rows[i]._ident = i+1;
-			}
-		}else{//lists
-			var c=1;
-			for(i=0; i<this._rootNode.childNodes.length; i++){
-				if(this._rootNode.childNodes[i].nodeType === 1){
-					this._rootNode.childNodes[i]._ident = c;
-					c++;
-				}
-			}
-		}
-	},
-
-	_getHeadings: function(){
-		//	summary:
-		//		Function to load the attribute names from the table header so that the
-		//		attributes (cells in a row), can have a reasonable name.
-		//      For list items, returns single implicit heading, ["name"]
-		this._headings = [];
-		if(this._rootNode.tHead){
-			dojo.forEach(this._rootNode.tHead.rows[0].cells, dojo.hitch(this, function(th){
-				var text = dojox.xml.parser.textContent(th);
-				this._headings.push(this.trimWhitespace?dojo.trim(text):text);
-			}));
-		}else{
-			this._headings = ["name"];
-		}
-	},
-	
-	_getAllItems: function(){
-		//	summary:
-		//		Function to return all rows in the table as an array of items.
-		var items = [];
-		var i;
-		if(this._rootNode.rows){//table
-			for(i=0; i<this._rootNode.rows.length; i++){
-				items.push(this._rootNode.rows[i]);
-			}
-		}else{ //list
-			for(i=0; i<this._rootNode.childNodes.length; i++){
-				if(this._rootNode.childNodes[i].nodeType === 1){
-					items.push(this._rootNode.childNodes[i]);
-				}
-			}
-		}
-		return items; //array
-	},
-	
-	_assertIsItem: function(/* item */ item){
-		//	summary:
-		//      This function tests whether the item passed in is indeed an item in the store.
-		//	item:
-		//		The item to test for being contained by the store.
-		if(!this.isItem(item)){
-			throw new Error("dojo.data.HtmlStore: a function was passed an item argument that was not an item");
-		}
-	},
-
-	_assertIsAttribute: function(/* String */ attribute){
-		//	summary:
-		//      This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute:
-		//		The attribute to test for being contained by the store.
-		//
-		//	returns:
-		//		Returns the index (column) that the attribute resides in the row.
-		if(typeof attribute !== "string"){
-			throw new Error("dojo.data.HtmlStore: a function was passed an attribute argument that was not an attribute name string");
-			return -1;
-		}
-		return dojo.indexOf(this._headings, attribute); //int
-	},
-
-/***************************************
-	 dojo.data.api.Read API
-***************************************/
-	
-	getValue: function(	/* item */ item,
-						/* attribute-name-string */ attribute,
-						/* value? */ defaultValue){
-		//	summary:
-		//      See dojo.data.api.Read.getValue()
-		var values = this.getValues(item, attribute);
-		return (values.length > 0)?values[0]:defaultValue; //Object || int || Boolean
-	},
-
-	getValues: function(/* item */ item,
-						/* attribute-name-string */ attribute){
-		//	summary:
-		//		See dojo.data.api.Read.getValues()
-
-		this._assertIsItem(item);
-		var index = this._assertIsAttribute(attribute);
-		if(index>-1){
-			var text;
-			if(item.cells){
-				text = dojox.xml.parser.textContent(item.cells[index]);
-			}else{//return Value for lists
-				text = dojox.xml.parser.textContent(item);
-			}
-			return [this.trimWhitespace?dojo.trim(text):text];
-		}
-		return []; //Array
-	},
-
-	getAttributes: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Read.getAttributes()
-		this._assertIsItem(item);
-		var attributes = [];
-		for(var i=0; i<this._headings.length; i++){
-			if(this.hasAttribute(item, this._headings[i]))
-				attributes.push(this._headings[i]);
-		}
-		return attributes; //Array
-	},
-
-	hasAttribute: function(	/* item */ item,
-							/* attribute-name-string */ attribute){
-		//	summary:
-		//		See dojo.data.api.Read.hasAttribute()
-		return this.getValues(item, attribute).length > 0;
-	},
-
-	containsValue: function(/* item */ item,
-							/* attribute-name-string */ attribute,
-							/* anything */ value){
-		//	summary:
-		//		See dojo.data.api.Read.containsValue()
-		var regexp = undefined;
-		if(typeof value === "string"){
-			regexp = dojo.data.util.filter.patternToRegExp(value, false);
-		}
-		return this._containsValue(item, attribute, value, regexp); //boolean.
-	},
-
-	_containsValue: function(	/* item */ item,
-								/* attribute-name-string */ attribute,
-								/* anything */ value,
-								/* RegExp?*/ regexp){
-		//	summary:
-		//		Internal function for looking at the values contained by the item.
-		//	description:
-		//		Internal function for looking at the values contained by the item.  This
-		//		function allows for denoting if the comparison should be case sensitive for
-		//		strings or not (for handling filtering cases where string case should not matter)
-		//
-		//	item:
-		//		The data item to examine for attribute values.
-		//	attribute:
-		//		The attribute to inspect.
-		//	value:
-		//		The value to match.
-		//	regexp:
-		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
-		//		If present and attribute values are string, then it can be used for comparison instead of 'value'
-		var values = this.getValues(item, attribute);
-		for(var i = 0; i < values.length; ++i){
-			var possibleValue = values[i];
-			if(typeof possibleValue === "string" && regexp){
-				return (possibleValue.match(regexp) !== null);
-			}else{
-				//Non-string matching.
-				if(value === possibleValue){
-					return true; // Boolean
-				}
-			}
-		}
-		return false; // Boolean
-	},
-
-	isItem: function(/* anything */ something){
-		//	summary:
-		//		See dojo.data.api.Read.isItem()
-		return something && dojo.isDescendant(something, this._rootNode);
-	},
-
-	isItemLoaded: function(/* anything */ something){
-		//	summary:
-		//		See dojo.data.api.Read.isItemLoaded()
-		return this.isItem(something);
-	},
-
-	loadItem: function(/* Object */ keywordArgs){
-		//	summary:
-		//		See dojo.data.api.Read.loadItem()
-		this._assertIsItem(keywordArgs.item);
-	},
-	
-	_fetchItems: function(request, fetchHandler, errorHandler){
-		//	summary:
-		//		Fetch items (XML elements) that match to a query
-		//	description:
-		//		If '_fetchUrl' is specified, it is used to load an XML document
-		//		with a query string.
-		//		Otherwise and if 'url' is specified, the XML document is
-		//		loaded and list XML elements that match to a query (set of element
-		//		names and their text attribute values that the items to contain).
-		//		A wildcard, "*" can be used to query values to match all
-		//		occurrences.
-		//		If '_rootItem' is specified, it is used to fetch items.
-		//	request:
-		//		A request object
-		//	fetchHandler:
-		//		A function to call for fetched items
-		//	errorHandler:
-		//		A function to call on error
-		
-		if(this._rootNode){
-			this._finishFetchItems(request, fetchHandler, errorHandler);
-		}else{
-			if(!this.url){
-				this._rootNode = dojo.byId(this.dataId);
-				this._indexItems();
-				this._finishFetchItems(request, fetchHandler, errorHandler);
-			}else{
-				var getArgs = {
-						url: this.url,
-						handleAs: "text",
-						preventCache: this.urlPreventCache
-					};
-				var self = this;
-				var getHandler = dojo.xhrGet(getArgs);
-				getHandler.addCallback(function(data){
-					var findNode = function(node, id){
-						if(node.id == id){
-							return node; //object
-						}
-						if(node.childNodes){
-							for(var i=0; i<node.childNodes.length; i++){
-								var returnNode = findNode(node.childNodes[i], id);
-								if(returnNode){
-									return returnNode; //object
-								}
-							}
-						}
-						return null; //null
-					}
-
-					var d = document.createElement("div");
-					d.innerHTML = data;
-					self._rootNode = findNode(d, self.dataId);
-					self._indexItems();
-					self._finishFetchItems(request, fetchHandler, errorHandler);
-				});
-				getHandler.addErrback(function(error){
-					errorHandler(error, request);
-				});
-			}
-		}
-	},
-	
-	_finishFetchItems: function(request, fetchHandler, errorHandler){
-		//	summary:
-		//		Internal function for processing the passed in request and locating the requested items.
-		var items = [];
-		var arrayOfAllItems = this._getAllItems();
-		if(request.query){
-			var ignoreCase = request.queryOptions ? request.queryOptions.ignoreCase : false;
-			items = [];
-
-			//See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
-			//same value for each item examined.  Much more efficient.
-			var regexpList = {};
-			var key;
-						var value;
-			for(key in request.query){
-				value = request.query[key]+'';
-				if(typeof value === "string"){
-					regexpList[key] = dojo.data.util.filter.patternToRegExp(value, ignoreCase);
-				}
-			}
-
-			for(var i = 0; i < arrayOfAllItems.length; ++i){
-				var match = true;
-				var candidateItem = arrayOfAllItems[i];
-				for(key in request.query){
-					value = request.query[key]+'';
-					if(!this._containsValue(candidateItem, key, value, regexpList[key])){
-						match = false;
-					}
-				}
-				if(match){
-					items.push(candidateItem);
-				}
-			}
-			fetchHandler(items, request);
-		}else{
-			// We want a copy to pass back in case the parent wishes to sort the array.  We shouldn't allow resort
-			// of the internal list so that multiple callers can get listsand sort without affecting each other.
-			if(arrayOfAllItems.length> 0){
-				items = arrayOfAllItems.slice(0,arrayOfAllItems.length);
-			}
-			fetchHandler(items, request);
-		}
-	},
-
-	getFeatures: function(){
-		//	summary:
-		//		See dojo.data.api.Read.getFeatures()
-		return {
-			'dojo.data.api.Read': true,
-			'dojo.data.api.Identity': true
-		};
-	},
-	
-	close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
-		//	summary:
-		//		See dojo.data.api.Read.close()
-		// nothing to do here!
-	},
-
-	getLabel: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Read.getLabel()
-		if(this.isItem(item)){
-			if(item.cells){
-				return "Item #" + this.getIdentity(item);
-			}else{
-				return this.getValue(item,"name");
-			}
-		}
-		return undefined;
-	},
-
-	getLabelAttributes: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Read.getLabelAttributes()
-		if(item.cells){
-			return null;
-		}else{
-			return ["name"];
-		}
-	},
-
-/***************************************
-	 dojo.data.api.Identity API
-***************************************/
-
-	getIdentity: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Identity.getIdentity()
-		this._assertIsItem(item);
-		if(this.hasAttribute(item, "name")){
-		 	return this.getValue(item,"name");
-		}else{
-			return item._ident;
-		}
-	},
-
-	getIdentityAttributes: function(/* item */ item){
-		 //	summary:
-		 //		See dojo.data.api.Identity.getIdentityAttributes()
-		 //Identity isn't taken from a public attribute.
-		 return null;
-	},
-
-	fetchItemByIdentity: function(keywordArgs){
-		//	summary:
-		//		See dojo.data.api.Identity.fetchItemByIdentity()
-		var identity = keywordArgs.identity;
-		var self = this;
-		var item = null;
-		var scope = null;
-		if(!this._rootNode){
-			if(!this.url){
-				this._rootNode = dojo.byId(this.dataId);
-				this._indexItems();
-				if(self._rootNode.rows){ //Table
-					item = this._rootNode.rows[identity + 1];
-				}else{ //Lists
-					for(var i = 0; i < self._rootNode.childNodes.length; i++){
-						if(self._rootNode.childNodes[i].nodeType === 1 && identity === dojox.xml.parser.textContent(self._rootNode.childNodes[i])){
-							item = self._rootNode.childNodes[i];
-						}
-					}
-				}
-				if(keywordArgs.onItem){
-					scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
-					keywordArgs.onItem.call(scope, item);
-				}
-
-			}else{
-				var getArgs = {
-						url: this.url,
-						handleAs: "text"
-					};
-				var getHandler = dojo.xhrGet(getArgs);
-				getHandler.addCallback(function(data){
-					var findNode = function(node, id){
-						if(node.id == id){
-							return node; //object
-						}
-						if(node.childNodes){
-							for(var i=0; i<node.childNodes.length; i++){
-								var returnNode = findNode(node.childNodes[i], id);
-								if(returnNode){
-									return returnNode; //object
-								}
-							}
-						}
-						return null; //null
-					}
-					var d = document.createElement("div");
-					d.innerHTML = data;
-					self._rootNode = findNode(d, self.dataId);
-					self._indexItems();
-					if(self._rootNode.rows && identity <= self._rootNode.rows.length){ //Table
-						item = self._rootNode.rows[identity-1];
-					}else{ //List
-						for(var i = 0; i < self._rootNode.childNodes.length; i++){
-							if(self._rootNode.childNodes[i].nodeType === 1 && identity === dojox.xml.parser.textContent(self._rootNode.childNodes[i])){
-									item = self._rootNode.childNodes[i];
-									break;
-							}
-						}
-					}
-					if(keywordArgs.onItem){
-						scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
-						keywordArgs.onItem.call(scope, item);
-					}
-				});
-				getHandler.addErrback(function(error){
-					if(keywordArgs.onError){
-						scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
-						keywordArgs.onError.call(scope, error);
-
-					}
-				});
-			}
-		}else{
-			if(this._rootNode.rows[identity+1]){
-				item = this._rootNode.rows[identity+1];
-				if(keywordArgs.onItem){
-					scope = keywordArgs.scope?keywordArgs.scope:dojo.global;
-					keywordArgs.onItem.call(scope, item);
-				}
-			}
-		}
-	}
+define("dojox/data/HtmlStore",["dojo","dojox","dojo/data/util/simpleFetch","dojo/data/util/filter","dojox/xml/parser"],function(_1,_2){
+_1.declare("dojox.data.HtmlStore",null,{constructor:function(_3){
+if(_3&&"urlPreventCache" in _3){
+this.urlPreventCache=_3.urlPreventCache?true:false;
+}
+if(_3&&"trimWhitespace" in _3){
+this.trimWhitespace=_3.trimWhitespace?true:false;
+}
+if(_3.url){
+if(!_3.dataId){
+throw new Error("dojo.data.HtmlStore: Cannot instantiate using url without an id!");
+}
+this.url=_3.url;
+this.dataId=_3.dataId;
+}else{
+if(_3.dataId){
+this.dataId=_3.dataId;
+}
+}
+if(_3&&"fetchOnCreate" in _3){
+this.fetchOnCreate=_3.fetchOnCreate?true:false;
+}
+if(this.fetchOnCreate&&this.dataId){
+this.fetch();
+}
+},url:"",dataId:"",trimWhitespace:false,urlPreventCache:false,fetchOnCreate:false,_indexItems:function(){
+this._getHeadings();
+if(this._rootNode.rows){
+if(this._rootNode.tBodies&&this._rootNode.tBodies.length>0){
+this._rootNode=this._rootNode.tBodies[0];
+}
+var i;
+for(i=0;i<this._rootNode.rows.length;i++){
+this._rootNode.rows[i]._ident=i+1;
+}
+}else{
+var c=1;
+for(i=0;i<this._rootNode.childNodes.length;i++){
+if(this._rootNode.childNodes[i].nodeType===1){
+this._rootNode.childNodes[i]._ident=c;
+c++;
+}
+}
+}
+},_getHeadings:function(){
+this._headings=[];
+if(this._rootNode.tHead){
+_1.forEach(this._rootNode.tHead.rows[0].cells,_1.hitch(this,function(th){
+var _4=_2.xml.parser.textContent(th);
+this._headings.push(this.trimWhitespace?_1.trim(_4):_4);
+}));
+}else{
+this._headings=["name"];
+}
+},_getAllItems:function(){
+var _5=[];
+var i;
+if(this._rootNode.rows){
+for(i=0;i<this._rootNode.rows.length;i++){
+_5.push(this._rootNode.rows[i]);
+}
+}else{
+for(i=0;i<this._rootNode.childNodes.length;i++){
+if(this._rootNode.childNodes[i].nodeType===1){
+_5.push(this._rootNode.childNodes[i]);
+}
+}
+}
+return _5;
+},_assertIsItem:function(_6){
+if(!this.isItem(_6)){
+throw new Error("dojo.data.HtmlStore: a function was passed an item argument that was not an item");
+}
+},_assertIsAttribute:function(_7){
+if(typeof _7!=="string"){
+throw new Error("dojo.data.HtmlStore: a function was passed an attribute argument that was not an attribute name string");
+return -1;
+}
+return _1.indexOf(this._headings,_7);
+},getValue:function(_8,_9,_a){
+var _b=this.getValues(_8,_9);
+return (_b.length>0)?_b[0]:_a;
+},getValues:function(_c,_d){
+this._assertIsItem(_c);
+var _e=this._assertIsAttribute(_d);
+if(_e>-1){
+var _f;
+if(_c.cells){
+_f=_2.xml.parser.textContent(_c.cells[_e]);
+}else{
+_f=_2.xml.parser.textContent(_c);
+}
+return [this.trimWhitespace?_1.trim(_f):_f];
+}
+return [];
+},getAttributes:function(_10){
+this._assertIsItem(_10);
+var _11=[];
+for(var i=0;i<this._headings.length;i++){
+if(this.hasAttribute(_10,this._headings[i])){
+_11.push(this._headings[i]);
+}
+}
+return _11;
+},hasAttribute:function(_12,_13){
+return this.getValues(_12,_13).length>0;
+},containsValue:function(_14,_15,_16){
+var _17=undefined;
+if(typeof _16==="string"){
+_17=_1.data.util.filter.patternToRegExp(_16,false);
+}
+return this._containsValue(_14,_15,_16,_17);
+},_containsValue:function(_18,_19,_1a,_1b){
+var _1c=this.getValues(_18,_19);
+for(var i=0;i<_1c.length;++i){
+var _1d=_1c[i];
+if(typeof _1d==="string"&&_1b){
+return (_1d.match(_1b)!==null);
+}else{
+if(_1a===_1d){
+return true;
+}
+}
+}
+return false;
+},isItem:function(_1e){
+return _1e&&_1.isDescendant(_1e,this._rootNode);
+},isItemLoaded:function(_1f){
+return this.isItem(_1f);
+},loadItem:function(_20){
+this._assertIsItem(_20.item);
+},_fetchItems:function(_21,_22,_23){
+if(this._rootNode){
+this._finishFetchItems(_21,_22,_23);
+}else{
+if(!this.url){
+this._rootNode=_1.byId(this.dataId);
+this._indexItems();
+this._finishFetchItems(_21,_22,_23);
+}else{
+var _24={url:this.url,handleAs:"text",preventCache:this.urlPreventCache};
+var _25=this;
+var _26=_1.xhrGet(_24);
+_26.addCallback(function(_27){
+var _28=function(_29,id){
+if(_29.id==id){
+return _29;
+}
+if(_29.childNodes){
+for(var i=0;i<_29.childNodes.length;i++){
+var _2a=_28(_29.childNodes[i],id);
+if(_2a){
+return _2a;
+}
+}
+}
+return null;
+};
+var d=document.createElement("div");
+d.innerHTML=_27;
+_25._rootNode=_28(d,_25.dataId);
+_25._indexItems();
+_25._finishFetchItems(_21,_22,_23);
 });
-dojo.extend(dojox.data.HtmlStore,dojo.data.util.simpleFetch);
-return dojox.data.HtmlStore;
+_26.addErrback(function(_2b){
+_23(_2b,_21);
+});
+}
+}
+},_finishFetchItems:function(_2c,_2d,_2e){
+var _2f=[];
+var _30=this._getAllItems();
+if(_2c.query){
+var _31=_2c.queryOptions?_2c.queryOptions.ignoreCase:false;
+_2f=[];
+var _32={};
+var key;
+var _33;
+for(key in _2c.query){
+_33=_2c.query[key]+"";
+if(typeof _33==="string"){
+_32[key]=_1.data.util.filter.patternToRegExp(_33,_31);
+}
+}
+for(var i=0;i<_30.length;++i){
+var _34=true;
+var _35=_30[i];
+for(key in _2c.query){
+_33=_2c.query[key]+"";
+if(!this._containsValue(_35,key,_33,_32[key])){
+_34=false;
+}
+}
+if(_34){
+_2f.push(_35);
+}
+}
+_2d(_2f,_2c);
+}else{
+if(_30.length>0){
+_2f=_30.slice(0,_30.length);
+}
+_2d(_2f,_2c);
+}
+},getFeatures:function(){
+return {"dojo.data.api.Read":true,"dojo.data.api.Identity":true};
+},close:function(_36){
+},getLabel:function(_37){
+if(this.isItem(_37)){
+if(_37.cells){
+return "Item #"+this.getIdentity(_37);
+}else{
+return this.getValue(_37,"name");
+}
+}
+return undefined;
+},getLabelAttributes:function(_38){
+if(_38.cells){
+return null;
+}else{
+return ["name"];
+}
+},getIdentity:function(_39){
+this._assertIsItem(_39);
+if(this.hasAttribute(_39,"name")){
+return this.getValue(_39,"name");
+}else{
+return _39._ident;
+}
+},getIdentityAttributes:function(_3a){
+return null;
+},fetchItemByIdentity:function(_3b){
+var _3c=_3b.identity;
+var _3d=this;
+var _3e=null;
+var _3f=null;
+if(!this._rootNode){
+if(!this.url){
+this._rootNode=_1.byId(this.dataId);
+this._indexItems();
+if(_3d._rootNode.rows){
+_3e=this._rootNode.rows[_3c+1];
+}else{
+for(var i=0;i<_3d._rootNode.childNodes.length;i++){
+if(_3d._rootNode.childNodes[i].nodeType===1&&_3c===_2.xml.parser.textContent(_3d._rootNode.childNodes[i])){
+_3e=_3d._rootNode.childNodes[i];
+}
+}
+}
+if(_3b.onItem){
+_3f=_3b.scope?_3b.scope:_1.global;
+_3b.onItem.call(_3f,_3e);
+}
+}else{
+var _40={url:this.url,handleAs:"text"};
+var _41=_1.xhrGet(_40);
+_41.addCallback(function(_42){
+var _43=function(_44,id){
+if(_44.id==id){
+return _44;
+}
+if(_44.childNodes){
+for(var i=0;i<_44.childNodes.length;i++){
+var _45=_43(_44.childNodes[i],id);
+if(_45){
+return _45;
+}
+}
+}
+return null;
+};
+var d=document.createElement("div");
+d.innerHTML=_42;
+_3d._rootNode=_43(d,_3d.dataId);
+_3d._indexItems();
+if(_3d._rootNode.rows&&_3c<=_3d._rootNode.rows.length){
+_3e=_3d._rootNode.rows[_3c-1];
+}else{
+for(var i=0;i<_3d._rootNode.childNodes.length;i++){
+if(_3d._rootNode.childNodes[i].nodeType===1&&_3c===_2.xml.parser.textContent(_3d._rootNode.childNodes[i])){
+_3e=_3d._rootNode.childNodes[i];
+break;
+}
+}
+}
+if(_3b.onItem){
+_3f=_3b.scope?_3b.scope:_1.global;
+_3b.onItem.call(_3f,_3e);
+}
+});
+_41.addErrback(function(_46){
+if(_3b.onError){
+_3f=_3b.scope?_3b.scope:_1.global;
+_3b.onError.call(_3f,_46);
+}
+});
+}
+}else{
+if(this._rootNode.rows[_3c+1]){
+_3e=this._rootNode.rows[_3c+1];
+if(_3b.onItem){
+_3f=_3b.scope?_3b.scope:_1.global;
+_3b.onItem.call(_3f,_3e);
+}
+}
+}
+}});
+_1.extend(_2.data.HtmlStore,_1.data.util.simpleFetch);
+return _2.data.HtmlStore;
 });

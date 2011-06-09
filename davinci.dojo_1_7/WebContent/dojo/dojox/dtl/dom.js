@@ -1,1028 +1,860 @@
-define(["dojo/_base/kernel","dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_base/html"], function(dojo,lang,dd,dxst){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dd.BOOLS = {checked: 1, disabled: 1, readonly: 1};
-	dd.TOKEN_CHANGE = -11;
-	dd.TOKEN_ATTR = -12;
-	dd.TOKEN_CUSTOM = -13;
-	dd.TOKEN_NODE = 1;
-
-	var ddt = dd.text;
-	var ddh = dd.dom = {
-		_attributes: {},
-		_uppers: {},
-		_re4: /^function anonymous\(\)\s*{\s*(.*)\s*}$/,
-		_reTrim: /(?:^[\n\s]*(\{%)?\s*|\s*(%\})?[\n\s]*$)/g,
-		_reSplit: /\s*%\}[\n\s]*\{%\s*/g,
-		getTemplate: function(text){
-			if(typeof this._commentable == "undefined"){
-				// Check to see if the browser can handle comments
-				this._commentable = false;
-				var div = document.createElement("div"), comment = "Test comment handling, and long comments, using comments whenever possible.";
-				div.innerHTML = "<!--" + comment + "-->";
-				if(div.childNodes.length && div.firstChild.nodeType == 8 && div.firstChild.data == comment){
-					this._commentable = true;
-				}
-			}
-
-			if(!this._commentable){
-				// Strip comments
-				text = text.replace(/<!--({({|%).*?(%|})})-->/g, "$1");
-			}
-
-			if(dojo.isIE){
-				text = text.replace(/\b(checked|disabled|readonly|style)="/g, 't$1="');
-			}
-			text = text.replace(/\bstyle="/g, 'tstyle="');
-
-			var match;
-			var table = dojo.isWebKit;
-			var pairs = [ // Format: [enable, parent, allowed children (first for nesting), nestings]
-				[true, "select", "option"],
-				[table, "tr", "td|th"],
-				[table, "thead", "tr", "th"],
-				[table, "tbody", "tr", "td"],
-				[table, "table", "tbody|thead|tr", "tr", "td"]
-			];
-			var replacements = [];
-			// Some tags can't contain text. So we wrap the text in tags that they can have.
-			for(var i = 0, pair; pair = pairs[i]; i++){
-				if(!pair[0]){
-					continue;
-				}
-				if(text.indexOf("<" + pair[1]) != -1){
-					var selectRe = new RegExp("<" + pair[1] + "(?:.|\n)*?>((?:.|\n)+?)</" + pair[1] + ">", "ig");
-					tagLoop: while(match = selectRe.exec(text)){
-						// Do it like this to make sure we don't double-wrap
-						var inners = pair[2].split("|");
-						var innerRe = [];
-						for(var j = 0, inner; inner = inners[j]; j++){
-							innerRe.push("<" + inner + "(?:.|\n)*?>(?:.|\n)*?</" + inner + ">");
-						}
-						var tags = [];
-						var tokens = dxst(match[1], new RegExp("(" + innerRe.join("|") + ")", "ig"), function(data){
-							var tag = /<(\w+)/.exec(data)[1];
-							if(!tags[tag]){
-								tags[tag] = true;
-								tags.push(tag);
-							}
-							return {data: data};
-						});
-						if(tags.length){
-							var tag = (tags.length == 1) ? tags[0] : pair[2].split("|")[0];
-
-							var replace = [];
-							for(var j = 0, jl = tokens.length; j < jl; j++) {
-								var token = tokens[j];
-								if(dojo.isObject(token)){
-									replace.push(token.data);
-								}else{
-									var stripped = token.replace(this._reTrim, "");
-									if(!stripped){ continue; }
-									token = stripped.split(this._reSplit);
-									for(var k = 0, kl = token.length; k < kl; k++){
-										var replacement = "";
-										for(var p = 2, pl = pair.length; p < pl; p++){
-											if(p == 2){
-												replacement += "<" + tag + ' dtlinstruction="{% ' + token[k].replace('"', '\\"') + ' %}">';
-											}else if(tag == pair[p]) {
-												continue;
-											}else{
-												replacement += "<" + pair[p] + ">";
-											}
-										}
-										replacement += "DTL";
-										for(var p = pair.length - 1; p > 1; p--){
-											if(p == 2){
-												replacement += "</" + tag + ">";
-											}else if(tag == pair[p]) {
-												continue;
-											}else{
-												replacement += "</" + pair[p] + ">";
-											}
-										}
-										replace.push("\xFF" + replacements.length);
-										replacements.push(replacement);
-									}
-								}
-							}
-							text = text.replace(match[1], replace.join(""));
-						}
-					}
-				}
-			}
-
-			for(var i=replacements.length; i--;){
-				text = text.replace("\xFF" + i, replacements[i]);
-			}
-
-			var re = /\b([a-zA-Z_:][a-zA-Z0-9_\-\.:]*)=['"]/g;
-			while(match = re.exec(text)){
-				var lower = match[1].toLowerCase();
-				if(lower == "dtlinstruction"){ continue; }
-				if(lower != match[1]){
-					this._uppers[lower] = match[1];
-				}
-				this._attributes[lower] = true;
-			}
-			var div = document.createElement("div");
-			div.innerHTML = text;
-			var output = {nodes: []};
-			while(div.childNodes.length){
-				output.nodes.push(div.removeChild(div.childNodes[0]))
-			}
-
-			return output;
-		},
-		tokenize: function(/*Node*/ nodes){
-			var tokens = [];
-
-			for(var i = 0, node; node = nodes[i++];){
-				if(node.nodeType != 1){
-					this.__tokenize(node, tokens);
-				}else{
-					this._tokenize(node, tokens);
-				}
-			}
-
-			return tokens;
-		},
-		_swallowed: [],
-		_tokenize: function(/*Node*/ node, /*Array*/ tokens){
-			var first = false;
-			var swallowed = this._swallowed;
-			var i, j, tag, child;
-
-			if(!tokens.first){
-				// Try to efficiently associate tags that use an attribute to
-				// remove the node from DOM (eg dojoType) so that we can efficiently
-				// locate them later in the tokenizing.
-				first = tokens.first = true;
-				var tags = dd.register.getAttributeTags();
-				for(i = 0; tag = tags[i]; i++){
-					try{
-						(tag[2])({ swallowNode: function(){ throw 1; }}, new dd.Token(dd.TOKEN_ATTR, ""));
-					}catch(e){
-						swallowed.push(tag);
-					}
-				}
-			}
-
-			for(i = 0; tag = swallowed[i]; i++){
-				var text = node.getAttribute(tag[0]);
-				if(text){
-					var swallowed = false;
-					var custom = (tag[2])({ swallowNode: function(){ swallowed = true; return node; }}, new dd.Token(dd.TOKEN_ATTR, tag[0] + " " + text));
-					if(swallowed){
-						if(node.parentNode && node.parentNode.removeChild){
-							node.parentNode.removeChild(node);
-						}
-						tokens.push([dd.TOKEN_CUSTOM, custom]);
-						return;
-					}
-				}
-			}
-
-			var children = [];
-			if(dojo.isIE && node.tagName == "SCRIPT"){
-				children.push({
-					nodeType: 3,
-					data: node.text
-				});
-				node.text = "";
-			}else{
-				for(i = 0; child = node.childNodes[i]; i++){
-					children.push(child);
-				}
-			}
-
-			tokens.push([dd.TOKEN_NODE, node]);
-
-			var change = false;
-			if(children.length){
-				// Only do a change request if we need to
-				tokens.push([dd.TOKEN_CHANGE, node]);
-				change = true;
-			}
-
-			for(var key in this._attributes){
-				var clear = false;
-
-				var value = "";
-				if(key == "class"){
-					value = node.className || value;
-				}else if(key == "for"){
-					value = node.htmlFor || value;
-				}else if(key == "value" && node.value == node.innerHTML){
-					// Sometimes .value is set the same as the contents of the item (button)
-					continue;
-				}else if(node.getAttribute){
-					value = node.getAttribute(key, 2) || value;
-					if(key == "href" || key == "src"){
-						if(dojo.isIE){
-							var hash = location.href.lastIndexOf(location.hash);
-							var href = location.href.substring(0, hash).split("/");
-							href.pop();
-							href = href.join("/") + "/";
-							if(value.indexOf(href) == 0){
-								value = value.replace(href, "");
-							}
-							value = decodeURIComponent(value);
-						}
-					}else if(key == "tstyle"){
-						clear = key; // Placeholder because we can't use style
-						key = "style";
-					}else if(dd.BOOLS[key.slice(1)] && dojo.trim(value)){
-						key = key.slice(1);
-					}else if(this._uppers[key] && dojo.trim(value)){
-						clear = this._uppers[key]; // Replaced by lowercase
-					}
-				}
-
-				if(clear){
-					// Clear out values that are different than will
-					// be used in plugins
-					node.setAttribute(clear, "");
-					node.removeAttribute(clear);
-				}
-
-				if(typeof value == "function"){
-					value = value.toString().replace(this._re4, "$1");
-				}
-
-				if(!change){
-					// Only do a change request if we need to
-					tokens.push([dd.TOKEN_CHANGE, node]);
-					change = true;
-				}
-
-				// We'll have to resolve attributes during parsing (some ref plugins)
-
-				tokens.push([dd.TOKEN_ATTR, node, key, value]);
-			}
-
-			for(i = 0, child; child = children[i]; i++){
-				if(child.nodeType == 1){
-					var instruction = child.getAttribute("dtlinstruction");
-					if(instruction){
-						child.parentNode.removeChild(child);
-						child = {
-							nodeType: 8,
-							data: instruction
-						};
-					}
-				}
-				this.__tokenize(child, tokens);
-			}
-
-			if(!first && node.parentNode && node.parentNode.tagName){
-				if(change){
-					tokens.push([dd.TOKEN_CHANGE, node, true]);
-				}
-				tokens.push([dd.TOKEN_CHANGE, node.parentNode]);
-				node.parentNode.removeChild(node);
-			}else{
-				// If this node is parentless, it's a base node, so we have to "up" change to itself
-				// and note that it's a top-level to watch for errors
-				tokens.push([dd.TOKEN_CHANGE, node, true, true]);
-			}
-		},
-		__tokenize: function(child, tokens){
-			var data = child.data;
-			switch(child.nodeType){
-				case 1:
-					this._tokenize(child, tokens);
-					return;
-				case 3:
-					if(data.match(/[^\s\n]/) && (data.indexOf("{{") != -1 || data.indexOf("{%") != -1)){
-						var texts = ddt.tokenize(data);
-						for(var j = 0, text; text = texts[j]; j++){
-							if(typeof text == "string"){
-								tokens.push([dd.TOKEN_TEXT, text]);
-							}else{
-								tokens.push(text);
-							}
-						}
-					}else{
-						tokens.push([child.nodeType, child]);
-					}
-					if(child.parentNode) child.parentNode.removeChild(child);
-					return;
-				case 8:
-					if(data.indexOf("{%") == 0){
-						var text = dojo.trim(data.slice(2, -2));
-						if(text.substr(0, 5) == "load "){
-							var parts = dojo.trim(text).split(/\s+/g);
-							for(var i = 1, part; part = parts[i]; i++){
-								dojo["require"](part);
-							}
-						}
-						tokens.push([dd.TOKEN_BLOCK, text]);
-					}
-					if(data.indexOf("{{") == 0){
-						tokens.push([dd.TOKEN_VAR, dojo.trim(data.slice(2, -2))]);
-					}
-					if(child.parentNode) child.parentNode.removeChild(child);
-					return;
-			}
-		}
-	};
-
-	dd.DomTemplate = dojo.extend(function(/*String|DOMNode|dojo._Url*/ obj){
-		// summary: Use this object for DOM templating
-		if(!obj.nodes){
-			var node = dojo.byId(obj);
-			if(node && node.nodeType == 1){
-				dojo.forEach(["class", "src", "href", "name", "value"], function(item){
-					ddh._attributes[item] = true;
-				});
-				obj = {
-					nodes: [node]
-				};
-			}else{
-				if(typeof obj == "object"){
-					obj = ddt.getTemplateString(obj);
-				}
-				obj = ddh.getTemplate(obj);
-			}
-		}
-
-		var tokens = ddh.tokenize(obj.nodes);
-		if(dd.tests){
-			this.tokens = tokens.slice(0);
-		}
-
-		var parser = new dd._DomParser(tokens);
-		this.nodelist = parser.parse();
-	},
-	{
-		_count: 0,
-		_re: /\bdojo:([a-zA-Z0-9_]+)\b/g,
-		setClass: function(str){
-			this.getRootNode().className = str;
-		},
-		getRootNode: function(){
-			return this.buffer.rootNode;
-		},
-		getBuffer: function(){
-			return new dd.DomBuffer();
-		},
-		render: function(context, buffer){
-			buffer = this.buffer = buffer || this.getBuffer();
-			this.rootNode = null;
-			var output = this.nodelist.render(context || new dd.Context({}), buffer);
-			for(var i = 0, node; node = buffer._cache[i]; i++){
-				if(node._cache){
-					node._cache.length = 0;
-				}
-			}
-			return output;
-		},
-		unrender: function(context, buffer){
-			return this.nodelist.unrender(context, buffer);
-		}
-	});
-
-	dd.DomBuffer = dojo.extend(function(/*Node*/ parent){
-		// summary: Allows the manipulation of DOM
-		// description:
-		//		Use this to append a child, change the parent, or
-		//		change the attribute of the current node.
-		this._parent = parent;
-		this._cache = [];
-	},
-	{
-		concat: function(/*DOMNode*/ node){
-			var parent = this._parent;
-			if(parent && node.parentNode && node.parentNode === parent && !parent._dirty){
-				return this;
-			}
-
-			if(node.nodeType == 1 && !this.rootNode){
-				this.rootNode = node || true;
-				return this;
-			}
-
-			if(!parent){
-				if(node.nodeType == 3 && dojo.trim(node.data)){
-					throw new Error("Text should not exist outside of the root node in template");
-				}
-				return this;
-			}
-			if(this._closed){
-				if(node.nodeType == 3 && !dojo.trim(node.data)){
-					return this;
-				}else{
-					throw new Error("Content should not exist outside of the root node in template");
-				}
-			}
-			if(parent._dirty){
-				if(node._drawn && node.parentNode == parent){
-					var caches = parent._cache;
-					if(caches){
-						for(var i = 0, cache; cache = caches[i]; i++){
-							this.onAddNode && this.onAddNode(cache);
-							parent.insertBefore(cache, node);
-							this.onAddNodeComplete && this.onAddNodeComplete(cache);
-						}
-						caches.length = 0;
-					}
-				}
-				parent._dirty = false;
-			}
-			if(!parent._cache){
-				parent._cache = [];
-				this._cache.push(parent);
-			}
-			parent._dirty = true;
-			parent._cache.push(node);
-			return this;
-		},
-		remove: function(obj){
-			if(typeof obj == "string"){
-				if(this._parent){
-					this._parent.removeAttribute(obj);
-				}
-			}else{
-				if(obj.nodeType == 1 && !this.getRootNode() && !this._removed){
-					this._removed = true;
-					return this;
-				}
-				if(obj.parentNode){
-					this.onRemoveNode && this.onRemoveNode(obj);
-					if(obj.parentNode){
-						obj.parentNode.removeChild(obj);
-					}
-				}
-			}
-			return this;
-		},
-		setAttribute: function(key, value){
-			var old = dojo.attr(this._parent, key);
-			if(this.onChangeAttribute && old != value){
-				this.onChangeAttribute(this._parent, key, old, value);
-			}
-			if(key == "style"){
-				//console.log(value);
-				this._parent.style.cssText = value;
-			}else{
-				dojo.attr(this._parent, key, value);
-				//console.log(this._parent, key, value);
-				if (key == "value"){
-					this._parent.setAttribute(key, value);
-				}
-			}
-			return this;
-		},
-		addEvent: function(context, type, fn, /*Array|Function*/ args){
-			if(!context.getThis()){ throw new Error("You must use Context.setObject(instance)"); }
-			this.onAddEvent && this.onAddEvent(this.getParent(), type, fn);
-			var resolved = fn;
-			if(dojo.isArray(args)){
-				resolved = function(e){
-					this[fn].apply(this, [e].concat(args));
-				}
-			}
-			return dojo.connect(this.getParent(), type, context.getThis(), resolved);
-		},
-		setParent: function(node, /*Boolean?*/ up, /*Boolean?*/ root){
-			if(!this._parent) this._parent = this._first = node;
-
-			if(up && root && node === this._first){
-				this._closed = true;
-			}
-
-			if(up){
-				var parent = this._parent;
-				var script = "";
-				var ie = dojo.isIE && parent.tagName == "SCRIPT";
-				if(ie){
-					parent.text = "";
-				}
-				if(parent._dirty){
-					var caches = parent._cache;
-					var select = (parent.tagName == "SELECT" && !parent.options.length);
-					for(var i = 0, cache; cache = caches[i]; i++){
-						if(cache !== parent){
-							this.onAddNode && this.onAddNode(cache);
-							if(ie){
-								script += cache.data;
-							}else{
-								parent.appendChild(cache);
-								if(select && cache.defaultSelected && i){
-									select = i;
-								}
-							}
-							this.onAddNodeComplete && this.onAddNodeComplete(cache);
-						}
-					}
-					if(select){
-						parent.options.selectedIndex = (typeof select == "number") ? select : 0;
-					}
-					caches.length = 0;
-					parent._dirty = false;
-				}
-				if(ie){
-					parent.text = script;
-				}
-			}
-
-			this._parent = node;
-			this.onSetParent && this.onSetParent(node, up, root);
-			return this;
-		},
-		getParent: function(){
-			return this._parent;
-		},
-		getRootNode: function(){
-			return this.rootNode;
-		}
-		/*=====
-		,
-		onSetParent: function(node, up){
-			// summary: Stub called when setParent is used.
-		},
-		onAddNode: function(node){
-			// summary: Stub called before new nodes are added
-		},
-		onAddNodeComplete: function(node){
-			// summary: Stub called after new nodes are added
-		},
-		onRemoveNode: function(node){
-			// summary: Stub called when nodes are removed
-		},
-		onChangeAttribute: function(node, attribute, old, updated){
-			// summary: Stub called when an attribute is changed
-		},
-		onChangeData: function(node, old, updated){
-			// summary: Stub called when a data in a node is changed
-		},
-		onClone: function(from, to){
-			// summary: Stub called when a node is duplicated
-			// from: DOMNode
-			// to: DOMNode
-		},
-		onAddEvent: function(node, type, description){
-			// summary: Stub to call when you're adding an event
-			// node: DOMNode
-			// type: String
-			// description: String
-		}
-		=====*/
-	});
-
-	dd._DomNode = dojo.extend(function(node){
-		// summary: Places a node into DOM
-		this.contents = node;
-	},
-	{
-		render: function(context, buffer){
-			this._rendered = true;
-			return buffer.concat(this.contents);
-		},
-		unrender: function(context, buffer){
-			if(!this._rendered){
-				return buffer;
-			}
-			this._rendered = false;
-			return buffer.remove(this.contents);
-		},
-		clone: function(buffer){
-			return new this.constructor(this.contents);
-		}
-	});
-
-	dd._DomNodeList = dojo.extend(function(/*Node[]*/ nodes){
-		// summary: A list of any DOM-specific node objects
-		// description:
-		//		Any object that's used in the constructor or added
-		//		through the push function much implement the
-		//		render, unrender, and clone functions.
-		this.contents = nodes || [];
-	},
-	{
-		push: function(node){
-			this.contents.push(node);
-		},
-		unshift: function(node){
-			this.contents.unshift(node);
-		},
-		render: function(context, buffer, /*Node*/ instance){
-			buffer = buffer || dd.DomTemplate.prototype.getBuffer();
-
-			if(instance){
-				var parent = buffer.getParent();
-			}
-			for(var i = 0; i < this.contents.length; i++){
-				buffer = this.contents[i].render(context, buffer);
-				if(!buffer) throw new Error("Template node render functions must return their buffer");
-			}
-			if(parent){
-				buffer.setParent(parent);
-			}
-			return buffer;
-		},
-		dummyRender: function(context, buffer, asNode){
-			// summary: A really expensive way of checking to see how a rendering will look.
-			//		Used in the ifchanged tag
-			var div = document.createElement("div");
-
-			var parent = buffer.getParent();
-			var old = parent._clone;
-			// Tell the clone system to attach itself to our new div
-			parent._clone = div;
-			var nodelist = this.clone(buffer, div);
-			if(old){
-				// Restore state if there was a previous clone
-				parent._clone = old;
-			}else{
-				// Remove if there was no clone
-				parent._clone = null;
-			}
-
-			buffer = dd.DomTemplate.prototype.getBuffer();
-			nodelist.unshift(new dd.ChangeNode(div));
-			nodelist.unshift(new dd._DomNode(div));
-			nodelist.push(new dd.ChangeNode(div, true));
-			nodelist.render(context, buffer);
-
-			if(asNode){
-				return buffer.getRootNode();
-			}
-
-			var html = div.innerHTML;
-			return (dojo.isIE) ? html.replace(/\s*_(dirty|clone)="[^"]*"/g, "") : html;
-		},
-		unrender: function(context, buffer, instance){
-			if(instance){
-				var parent = buffer.getParent();
-			}
-			for(var i = 0; i < this.contents.length; i++){
-				buffer = this.contents[i].unrender(context, buffer);
-				if(!buffer) throw new Error("Template node render functions must return their buffer");
-			}
-			if(parent){
-				buffer.setParent(parent);
-			}
-			return buffer;
-		},
-		clone: function(buffer){
-			// summary:
-			//		Used to create an identical copy of a NodeList, useful for things like the for tag.
-			var parent = buffer.getParent();
-			var contents = this.contents;
-			var nodelist = new dd._DomNodeList();
-			var cloned = [];
-			for(var i = 0; i < contents.length; i++){
-				var clone = contents[i].clone(buffer);
-				if(clone instanceof dd.ChangeNode || clone instanceof dd._DomNode){
-					var item = clone.contents._clone;
-					if(item){
-						clone.contents = item;
-					}else if(parent != clone.contents && clone instanceof dd._DomNode){
-						var node = clone.contents;
-						clone.contents = clone.contents.cloneNode(false);
-						buffer.onClone && buffer.onClone(node, clone.contents);
-						cloned.push(node);
-						node._clone = clone.contents;
-					}
-				}
-				nodelist.push(clone);
-			}
-
-			for(var i = 0, clone; clone = cloned[i]; i++){
-				clone._clone = null;
-			}
-
-			return nodelist;
-		},
-		rtrim: function(){
-			while(1){
-				var i = this.contents.length - 1;
-				if(this.contents[i] instanceof dd._DomTextNode && this.contents[i].isEmpty()){
-					this.contents.pop();
-				}else{
-					break;
-				}
-			}
-
-			return this;
-		}
-	});
-
-	dd._DomVarNode = dojo.extend(function(str){
-		// summary: A node to be processed as a variable
-		// description:
-		//		Will render an object that supports the render function
-		// 		and the getRootNode function
-		this.contents = new dd._Filter(str);
-	},
-	{
-		render: function(context, buffer){
-			var str = this.contents.resolve(context);
-
-			// What type of rendering?
-			var type = "text";
-			if(str){
-				if(str.render && str.getRootNode){
-					type = "injection";
-				}else if(str.safe){
-					if(str.nodeType){
-						type = "node";
-					}else if(str.toString){
-						str = str.toString();
-						type = "html";
-					}
-				}
-			}
-
-			// Has the typed changed?
-			if(this._type && type != this._type){
-				this.unrender(context, buffer);
-			}
-			this._type = type;
-
-			// Now render
-			switch(type){
-			case "text":
-				this._rendered = true;
-				this._txt = this._txt || document.createTextNode(str);
-				if(this._txt.data != str){
-					var old = this._txt.data;
-					this._txt.data = str;
-					buffer.onChangeData && buffer.onChangeData(this._txt, old, this._txt.data);
-				}
-				return buffer.concat(this._txt);
-			case "injection":
-				var root = str.getRootNode();
-
-				if(this._rendered && root != this._root){
-					buffer = this.unrender(context, buffer);
-				}
-				this._root = root;
-
-				var injected = this._injected = new dd._DomNodeList();
-				injected.push(new dd.ChangeNode(buffer.getParent()));
-				injected.push(new dd._DomNode(root));
-				injected.push(str);
-				injected.push(new dd.ChangeNode(buffer.getParent()));
-				this._rendered = true;
-
-				return injected.render(context, buffer);
-			case "node":
-				this._rendered = true;
-				if(this._node && this._node != str && this._node.parentNode && this._node.parentNode === buffer.getParent()){
-					this._node.parentNode.removeChild(this._node);
-				}
-				this._node = str;
-				return buffer.concat(str);
-			case "html":
-				if(this._rendered && this._src != str){
-					buffer = this.unrender(context, buffer);
-				}
-				this._src = str;
-
-				// This can get reset in the above tag
-				if(!this._rendered){
-					this._rendered = true;
-					this._html = this._html || [];
-					var div = (this._div = this._div || document.createElement("div"));
-					div.innerHTML = str;
-					var children = div.childNodes;
-					while(children.length){
-						var removed = div.removeChild(children[0]);
-						this._html.push(removed);
-						buffer = buffer.concat(removed);
-					}
-				}
-
-				return buffer;
-			default:
-				return buffer;
-			}
-		},
-		unrender: function(context, buffer){
-			if(!this._rendered){
-				return buffer;
-			}
-			this._rendered = false;
-
-			// Unrender injected nodes
-			switch(this._type){
-			case "text":
-				return buffer.remove(this._txt);
-			case "injection":
-				return this._injection.unrender(context, buffer);
-			case "node":
-				if(this._node.parentNode === buffer.getParent()){
-					return buffer.remove(this._node);
-				}
-				return buffer;
-			case "html":
-				for(var i=0, l=this._html.length; i<l; i++){
-					buffer = buffer.remove(this._html[i]);
-				}
-				return buffer;
-			default:
-				return buffer;
-			}
-		},
-		clone: function(){
-			return new this.constructor(this.contents.getExpression());
-		}
-	});
-
-	dd.ChangeNode = dojo.extend(function(node, /*Boolean?*/ up, /*Bookean*/ root){
-		// summary: Changes the parent during render/unrender
-		this.contents = node;
-		this.up = up;
-		this.root = root;
-	},
-	{
-		render: function(context, buffer){
-			return buffer.setParent(this.contents, this.up, this.root);
-		},
-		unrender: function(context, buffer){
-			if(!buffer.getParent()){
-				return buffer;
-			}
-			return buffer.setParent(this.contents);
-		},
-		clone: function(){
-			return new this.constructor(this.contents, this.up, this.root);
-		}
-	});
-
-	dd.AttributeNode = dojo.extend(function(key, value){
-		// summary: Works on attributes
-		this.key = key;
-		this.value = value;
-		this.contents = value;
-		if(this._pool[value]){
-			this.nodelist = this._pool[value];
-		}else{
-			if(!(this.nodelist = dd.quickFilter(value))){
-				this.nodelist = (new dd.Template(value, true)).nodelist;
-			}
-			this._pool[value] = this.nodelist;
-		}
-
-		this.contents = "";
-	},
-	{
-		_pool: {},
-		render: function(context, buffer){
-			var key = this.key;
-			var value = this.nodelist.dummyRender(context);
-			if(dd.BOOLS[key]){
-				value = !(value == "false" || value == "undefined" || !value);
-			}
-			if(value !== this.contents){
-				this.contents = value;
-				return buffer.setAttribute(key, value);
-			}
-			return buffer;
-		},
-		unrender: function(context, buffer){
-			this.contents = "";
-			return buffer.remove(this.key);
-		},
-		clone: function(buffer){
-			return new this.constructor(this.key, this.value);
-		}
-	});
-
-	dd._DomTextNode = dojo.extend(function(str){
-		// summary: Adds a straight text node without any processing
-		this.contents = document.createTextNode(str);
-		this.upcoming = str;
-	},
-	{
-		set: function(data){
-			this.upcoming = data;
-			return this;
-		},
-		render: function(context, buffer){
-			if(this.contents.data != this.upcoming){
-				var old = this.contents.data;
-				this.contents.data = this.upcoming;
-				buffer.onChangeData && buffer.onChangeData(this.contents, old, this.upcoming);
-			}
-			return buffer.concat(this.contents);
-		},
-		unrender: function(context, buffer){
-			return buffer.remove(this.contents);
-		},
-		isEmpty: function(){
-			return !dojo.trim(this.contents.data);
-		},
-		clone: function(){
-			return new this.constructor(this.contents.data);
-		}
-	});
-
-	dd._DomParser = dojo.extend(function(tokens){
-		// summary: Turn a simple array into a set of objects
-		// description:
-		//	This is also used by all tags to move through
-		//	the list of nodes.
-		this.contents = tokens;
-	},
-	{
-		i: 0,
-		parse: function(/*Array?*/ stop_at){
-			var terminators = {};
-			var tokens = this.contents;
-			if(!stop_at){
-				stop_at = [];
-			}
-			for(var i = 0; i < stop_at.length; i++){
-				terminators[stop_at[i]] = true;
-			}
-			var nodelist = new dd._DomNodeList();
-			while(this.i < tokens.length){
-				var token = tokens[this.i++];
-				var type = token[0];
-				var value = token[1];
-				if(type == dd.TOKEN_CUSTOM){
-					nodelist.push(value);
-				}else if(type == dd.TOKEN_CHANGE){
-					var changeNode = new dd.ChangeNode(value, token[2], token[3]);
-					value[changeNode.attr] = changeNode;
-					nodelist.push(changeNode);
-				}else if(type == dd.TOKEN_ATTR){
-					var fn = ddt.getTag("attr:" + token[2], true);
-					if(fn && token[3]){
-						if (token[3].indexOf("{%") != -1 || token[3].indexOf("{{") != -1) {
-							value.setAttribute(token[2], "");
-						}
-						nodelist.push(fn(null, new dd.Token(type, token[2] + " " + token[3])));
-					}else if(dojo.isString(token[3])){
-						if(token[2] == "style" || token[3].indexOf("{%") != -1 || token[3].indexOf("{{") != -1){
-							nodelist.push(new dd.AttributeNode(token[2], token[3]));
-						}else if(dojo.trim(token[3])){
-							try{
-								dojo.attr(value, token[2], token[3]);
-							}catch(e){}
-						}
-					}
-				}else if(type == dd.TOKEN_NODE){
-					var fn = ddt.getTag("node:" + value.tagName.toLowerCase(), true);
-					if(fn){
-						// TODO: We need to move this to tokenization so that it's before the
-						// 				node and the parser can be passed here instead of null
-						nodelist.push(fn(null, new dd.Token(type, value), value.tagName.toLowerCase()));
-					}
-					nodelist.push(new dd._DomNode(value));
-				}else if(type == dd.TOKEN_VAR){
-					nodelist.push(new dd._DomVarNode(value));
-				}else if(type == dd.TOKEN_TEXT){
-					nodelist.push(new dd._DomTextNode(value.data || value));
-				}else if(type == dd.TOKEN_BLOCK){
-					if(terminators[value]){
-						--this.i;
-						return nodelist;
-					}
-					var cmd = value.split(/\s+/g);
-					if(cmd.length){
-						cmd = cmd[0];
-						var fn = ddt.getTag(cmd);
-						if(typeof fn != "function"){
-							throw new Error("Function not found for " + cmd);
-						}
-						var tpl = fn(this, new dd.Token(type, value));
-						if(tpl){
-							nodelist.push(tpl);
-						}
-					}
-				}
-			}
-
-			if(stop_at.length){
-				throw new Error("Could not find closing tag(s): " + stop_at.toString());
-			}
-
-			return nodelist;
-		},
-		next_token: function(){
-			// summary: Returns the next token in the list.
-			var token = this.contents[this.i++];
-			return new dd.Token(token[0], token[1]);
-		},
-		delete_first_token: function(){
-			this.i++;
-		},
-		skip_past: function(endtag){
-			return dd._Parser.prototype.skip_past.call(this, endtag);
-		},
-		create_variable_node: function(expr){
-			return new dd._DomVarNode(expr);
-		},
-		create_text_node: function(expr){
-			return new dd._DomTextNode(expr || "");
-		},
-		getTemplate: function(/*String*/ loc){
-			return new dd.DomTemplate(ddh.getTemplate(loc));
-		}
-	});
-	return dojox.dtl.dom;
+define(["dojo/_base/kernel","dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_base/html"],function(_1,_2,dd,_3){
+dd.BOOLS={checked:1,disabled:1,readonly:1};
+dd.TOKEN_CHANGE=-11;
+dd.TOKEN_ATTR=-12;
+dd.TOKEN_CUSTOM=-13;
+dd.TOKEN_NODE=1;
+var _4=dd.text;
+var _5=dd.dom={_attributes:{},_uppers:{},_re4:/^function anonymous\(\)\s*{\s*(.*)\s*}$/,_reTrim:/(?:^[\n\s]*(\{%)?\s*|\s*(%\})?[\n\s]*$)/g,_reSplit:/\s*%\}[\n\s]*\{%\s*/g,getTemplate:function(_6){
+if(typeof this._commentable=="undefined"){
+this._commentable=false;
+var _7=document.createElement("div"),_8="Test comment handling, and long comments, using comments whenever possible.";
+_7.innerHTML="<!--"+_8+"-->";
+if(_7.childNodes.length&&_7.firstChild.nodeType==8&&_7.firstChild.data==_8){
+this._commentable=true;
+}
+}
+if(!this._commentable){
+_6=_6.replace(/<!--({({|%).*?(%|})})-->/g,"$1");
+}
+if(_1.isIE){
+_6=_6.replace(/\b(checked|disabled|readonly|style)="/g,"t$1=\"");
+}
+_6=_6.replace(/\bstyle="/g,"tstyle=\"");
+var _9;
+var _a=_1.isWebKit;
+var _b=[[true,"select","option"],[_a,"tr","td|th"],[_a,"thead","tr","th"],[_a,"tbody","tr","td"],[_a,"table","tbody|thead|tr","tr","td"]];
+var _c=[];
+for(var i=0,_d;_d=_b[i];i++){
+if(!_d[0]){
+continue;
+}
+if(_6.indexOf("<"+_d[1])!=-1){
+var _e=new RegExp("<"+_d[1]+"(?:.|\n)*?>((?:.|\n)+?)</"+_d[1]+">","ig");
+tagLoop:
+while(_9=_e.exec(_6)){
+var _f=_d[2].split("|");
+var _10=[];
+for(var j=0,_11;_11=_f[j];j++){
+_10.push("<"+_11+"(?:.|\n)*?>(?:.|\n)*?</"+_11+">");
+}
+var _12=[];
+var _13=_3(_9[1],new RegExp("("+_10.join("|")+")","ig"),function(_14){
+var tag=/<(\w+)/.exec(_14)[1];
+if(!_12[tag]){
+_12[tag]=true;
+_12.push(tag);
+}
+return {data:_14};
+});
+if(_12.length){
+var tag=(_12.length==1)?_12[0]:_d[2].split("|")[0];
+var _15=[];
+for(var j=0,jl=_13.length;j<jl;j++){
+var _16=_13[j];
+if(_1.isObject(_16)){
+_15.push(_16.data);
+}else{
+var _17=_16.replace(this._reTrim,"");
+if(!_17){
+continue;
+}
+_16=_17.split(this._reSplit);
+for(var k=0,kl=_16.length;k<kl;k++){
+var _18="";
+for(var p=2,pl=_d.length;p<pl;p++){
+if(p==2){
+_18+="<"+tag+" dtlinstruction=\"{% "+_16[k].replace("\"","\\\"")+" %}\">";
+}else{
+if(tag==_d[p]){
+continue;
+}else{
+_18+="<"+_d[p]+">";
+}
+}
+}
+_18+="DTL";
+for(var p=_d.length-1;p>1;p--){
+if(p==2){
+_18+="</"+tag+">";
+}else{
+if(tag==_d[p]){
+continue;
+}else{
+_18+="</"+_d[p]+">";
+}
+}
+}
+_15.push("ÿ"+_c.length);
+_c.push(_18);
+}
+}
+}
+_6=_6.replace(_9[1],_15.join(""));
+}
+}
+}
+}
+for(var i=_c.length;i--;){
+_6=_6.replace("ÿ"+i,_c[i]);
+}
+var re=/\b([a-zA-Z_:][a-zA-Z0-9_\-\.:]*)=['"]/g;
+while(_9=re.exec(_6)){
+var _19=_9[1].toLowerCase();
+if(_19=="dtlinstruction"){
+continue;
+}
+if(_19!=_9[1]){
+this._uppers[_19]=_9[1];
+}
+this._attributes[_19]=true;
+}
+var _7=document.createElement("div");
+_7.innerHTML=_6;
+var _1a={nodes:[]};
+while(_7.childNodes.length){
+_1a.nodes.push(_7.removeChild(_7.childNodes[0]));
+}
+return _1a;
+},tokenize:function(_1b){
+var _1c=[];
+for(var i=0,_1d;_1d=_1b[i++];){
+if(_1d.nodeType!=1){
+this.__tokenize(_1d,_1c);
+}else{
+this._tokenize(_1d,_1c);
+}
+}
+return _1c;
+},_swallowed:[],_tokenize:function(_1e,_1f){
+var _20=false;
+var _21=this._swallowed;
+var i,j,tag,_22;
+if(!_1f.first){
+_20=_1f.first=true;
+var _23=dd.register.getAttributeTags();
+for(i=0;tag=_23[i];i++){
+try{
+(tag[2])({swallowNode:function(){
+throw 1;
+}},new dd.Token(dd.TOKEN_ATTR,""));
+}
+catch(e){
+_21.push(tag);
+}
+}
+}
+for(i=0;tag=_21[i];i++){
+var _24=_1e.getAttribute(tag[0]);
+if(_24){
+var _21=false;
+var _25=(tag[2])({swallowNode:function(){
+_21=true;
+return _1e;
+}},new dd.Token(dd.TOKEN_ATTR,tag[0]+" "+_24));
+if(_21){
+if(_1e.parentNode&&_1e.parentNode.removeChild){
+_1e.parentNode.removeChild(_1e);
+}
+_1f.push([dd.TOKEN_CUSTOM,_25]);
+return;
+}
+}
+}
+var _26=[];
+if(_1.isIE&&_1e.tagName=="SCRIPT"){
+_26.push({nodeType:3,data:_1e.text});
+_1e.text="";
+}else{
+for(i=0;_22=_1e.childNodes[i];i++){
+_26.push(_22);
+}
+}
+_1f.push([dd.TOKEN_NODE,_1e]);
+var _27=false;
+if(_26.length){
+_1f.push([dd.TOKEN_CHANGE,_1e]);
+_27=true;
+}
+for(var key in this._attributes){
+var _28=false;
+var _29="";
+if(key=="class"){
+_29=_1e.className||_29;
+}else{
+if(key=="for"){
+_29=_1e.htmlFor||_29;
+}else{
+if(key=="value"&&_1e.value==_1e.innerHTML){
+continue;
+}else{
+if(_1e.getAttribute){
+_29=_1e.getAttribute(key,2)||_29;
+if(key=="href"||key=="src"){
+if(_1.isIE){
+var _2a=location.href.lastIndexOf(location.hash);
+var _2b=location.href.substring(0,_2a).split("/");
+_2b.pop();
+_2b=_2b.join("/")+"/";
+if(_29.indexOf(_2b)==0){
+_29=_29.replace(_2b,"");
+}
+_29=decodeURIComponent(_29);
+}
+}else{
+if(key=="tstyle"){
+_28=key;
+key="style";
+}else{
+if(dd.BOOLS[key.slice(1)]&&_1.trim(_29)){
+key=key.slice(1);
+}else{
+if(this._uppers[key]&&_1.trim(_29)){
+_28=this._uppers[key];
+}
+}
+}
+}
+}
+}
+}
+}
+if(_28){
+_1e.setAttribute(_28,"");
+_1e.removeAttribute(_28);
+}
+if(typeof _29=="function"){
+_29=_29.toString().replace(this._re4,"$1");
+}
+if(!_27){
+_1f.push([dd.TOKEN_CHANGE,_1e]);
+_27=true;
+}
+_1f.push([dd.TOKEN_ATTR,_1e,key,_29]);
+}
+for(i=0,_22;_22=_26[i];i++){
+if(_22.nodeType==1){
+var _2c=_22.getAttribute("dtlinstruction");
+if(_2c){
+_22.parentNode.removeChild(_22);
+_22={nodeType:8,data:_2c};
+}
+}
+this.__tokenize(_22,_1f);
+}
+if(!_20&&_1e.parentNode&&_1e.parentNode.tagName){
+if(_27){
+_1f.push([dd.TOKEN_CHANGE,_1e,true]);
+}
+_1f.push([dd.TOKEN_CHANGE,_1e.parentNode]);
+_1e.parentNode.removeChild(_1e);
+}else{
+_1f.push([dd.TOKEN_CHANGE,_1e,true,true]);
+}
+},__tokenize:function(_2d,_2e){
+var _2f=_2d.data;
+switch(_2d.nodeType){
+case 1:
+this._tokenize(_2d,_2e);
+return;
+case 3:
+if(_2f.match(/[^\s\n]/)&&(_2f.indexOf("{{")!=-1||_2f.indexOf("{%")!=-1)){
+var _30=_4.tokenize(_2f);
+for(var j=0,_31;_31=_30[j];j++){
+if(typeof _31=="string"){
+_2e.push([dd.TOKEN_TEXT,_31]);
+}else{
+_2e.push(_31);
+}
+}
+}else{
+_2e.push([_2d.nodeType,_2d]);
+}
+if(_2d.parentNode){
+_2d.parentNode.removeChild(_2d);
+}
+return;
+case 8:
+if(_2f.indexOf("{%")==0){
+var _31=_1.trim(_2f.slice(2,-2));
+if(_31.substr(0,5)=="load "){
+var _32=_1.trim(_31).split(/\s+/g);
+for(var i=1,_33;_33=_32[i];i++){
+_1["require"](_33);
+}
+}
+_2e.push([dd.TOKEN_BLOCK,_31]);
+}
+if(_2f.indexOf("{{")==0){
+_2e.push([dd.TOKEN_VAR,_1.trim(_2f.slice(2,-2))]);
+}
+if(_2d.parentNode){
+_2d.parentNode.removeChild(_2d);
+}
+return;
+}
+}};
+dd.DomTemplate=_1.extend(function(obj){
+if(!obj.nodes){
+var _34=_1.byId(obj);
+if(_34&&_34.nodeType==1){
+_1.forEach(["class","src","href","name","value"],function(_35){
+_5._attributes[_35]=true;
+});
+obj={nodes:[_34]};
+}else{
+if(typeof obj=="object"){
+obj=_4.getTemplateString(obj);
+}
+obj=_5.getTemplate(obj);
+}
+}
+var _36=_5.tokenize(obj.nodes);
+if(dd.tests){
+this.tokens=_36.slice(0);
+}
+var _37=new dd._DomParser(_36);
+this.nodelist=_37.parse();
+},{_count:0,_re:/\bdojo:([a-zA-Z0-9_]+)\b/g,setClass:function(str){
+this.getRootNode().className=str;
+},getRootNode:function(){
+return this.buffer.rootNode;
+},getBuffer:function(){
+return new dd.DomBuffer();
+},render:function(_38,_39){
+_39=this.buffer=_39||this.getBuffer();
+this.rootNode=null;
+var _3a=this.nodelist.render(_38||new dd.Context({}),_39);
+for(var i=0,_3b;_3b=_39._cache[i];i++){
+if(_3b._cache){
+_3b._cache.length=0;
+}
+}
+return _3a;
+},unrender:function(_3c,_3d){
+return this.nodelist.unrender(_3c,_3d);
+}});
+dd.DomBuffer=_1.extend(function(_3e){
+this._parent=_3e;
+this._cache=[];
+},{concat:function(_3f){
+var _40=this._parent;
+if(_40&&_3f.parentNode&&_3f.parentNode===_40&&!_40._dirty){
+return this;
+}
+if(_3f.nodeType==1&&!this.rootNode){
+this.rootNode=_3f||true;
+return this;
+}
+if(!_40){
+if(_3f.nodeType==3&&_1.trim(_3f.data)){
+throw new Error("Text should not exist outside of the root node in template");
+}
+return this;
+}
+if(this._closed){
+if(_3f.nodeType==3&&!_1.trim(_3f.data)){
+return this;
+}else{
+throw new Error("Content should not exist outside of the root node in template");
+}
+}
+if(_40._dirty){
+if(_3f._drawn&&_3f.parentNode==_40){
+var _41=_40._cache;
+if(_41){
+for(var i=0,_42;_42=_41[i];i++){
+this.onAddNode&&this.onAddNode(_42);
+_40.insertBefore(_42,_3f);
+this.onAddNodeComplete&&this.onAddNodeComplete(_42);
+}
+_41.length=0;
+}
+}
+_40._dirty=false;
+}
+if(!_40._cache){
+_40._cache=[];
+this._cache.push(_40);
+}
+_40._dirty=true;
+_40._cache.push(_3f);
+return this;
+},remove:function(obj){
+if(typeof obj=="string"){
+if(this._parent){
+this._parent.removeAttribute(obj);
+}
+}else{
+if(obj.nodeType==1&&!this.getRootNode()&&!this._removed){
+this._removed=true;
+return this;
+}
+if(obj.parentNode){
+this.onRemoveNode&&this.onRemoveNode(obj);
+if(obj.parentNode){
+obj.parentNode.removeChild(obj);
+}
+}
+}
+return this;
+},setAttribute:function(key,_43){
+var old=_1.attr(this._parent,key);
+if(this.onChangeAttribute&&old!=_43){
+this.onChangeAttribute(this._parent,key,old,_43);
+}
+if(key=="style"){
+this._parent.style.cssText=_43;
+}else{
+_1.attr(this._parent,key,_43);
+if(key=="value"){
+this._parent.setAttribute(key,_43);
+}
+}
+return this;
+},addEvent:function(_44,_45,fn,_46){
+if(!_44.getThis()){
+throw new Error("You must use Context.setObject(instance)");
+}
+this.onAddEvent&&this.onAddEvent(this.getParent(),_45,fn);
+var _47=fn;
+if(_1.isArray(_46)){
+_47=function(e){
+this[fn].apply(this,[e].concat(_46));
+};
+}
+return _1.connect(this.getParent(),_45,_44.getThis(),_47);
+},setParent:function(_48,up,_49){
+if(!this._parent){
+this._parent=this._first=_48;
+}
+if(up&&_49&&_48===this._first){
+this._closed=true;
+}
+if(up){
+var _4a=this._parent;
+var _4b="";
+var ie=_1.isIE&&_4a.tagName=="SCRIPT";
+if(ie){
+_4a.text="";
+}
+if(_4a._dirty){
+var _4c=_4a._cache;
+var _4d=(_4a.tagName=="SELECT"&&!_4a.options.length);
+for(var i=0,_4e;_4e=_4c[i];i++){
+if(_4e!==_4a){
+this.onAddNode&&this.onAddNode(_4e);
+if(ie){
+_4b+=_4e.data;
+}else{
+_4a.appendChild(_4e);
+if(_4d&&_4e.defaultSelected&&i){
+_4d=i;
+}
+}
+this.onAddNodeComplete&&this.onAddNodeComplete(_4e);
+}
+}
+if(_4d){
+_4a.options.selectedIndex=(typeof _4d=="number")?_4d:0;
+}
+_4c.length=0;
+_4a._dirty=false;
+}
+if(ie){
+_4a.text=_4b;
+}
+}
+this._parent=_48;
+this.onSetParent&&this.onSetParent(_48,up,_49);
+return this;
+},getParent:function(){
+return this._parent;
+},getRootNode:function(){
+return this.rootNode;
+}});
+dd._DomNode=_1.extend(function(_4f){
+this.contents=_4f;
+},{render:function(_50,_51){
+this._rendered=true;
+return _51.concat(this.contents);
+},unrender:function(_52,_53){
+if(!this._rendered){
+return _53;
+}
+this._rendered=false;
+return _53.remove(this.contents);
+},clone:function(_54){
+return new this.constructor(this.contents);
+}});
+dd._DomNodeList=_1.extend(function(_55){
+this.contents=_55||[];
+},{push:function(_56){
+this.contents.push(_56);
+},unshift:function(_57){
+this.contents.unshift(_57);
+},render:function(_58,_59,_5a){
+_59=_59||dd.DomTemplate.prototype.getBuffer();
+if(_5a){
+var _5b=_59.getParent();
+}
+for(var i=0;i<this.contents.length;i++){
+_59=this.contents[i].render(_58,_59);
+if(!_59){
+throw new Error("Template node render functions must return their buffer");
+}
+}
+if(_5b){
+_59.setParent(_5b);
+}
+return _59;
+},dummyRender:function(_5c,_5d,_5e){
+var div=document.createElement("div");
+var _5f=_5d.getParent();
+var old=_5f._clone;
+_5f._clone=div;
+var _60=this.clone(_5d,div);
+if(old){
+_5f._clone=old;
+}else{
+_5f._clone=null;
+}
+_5d=dd.DomTemplate.prototype.getBuffer();
+_60.unshift(new dd.ChangeNode(div));
+_60.unshift(new dd._DomNode(div));
+_60.push(new dd.ChangeNode(div,true));
+_60.render(_5c,_5d);
+if(_5e){
+return _5d.getRootNode();
+}
+var _61=div.innerHTML;
+return (_1.isIE)?_61.replace(/\s*_(dirty|clone)="[^"]*"/g,""):_61;
+},unrender:function(_62,_63,_64){
+if(_64){
+var _65=_63.getParent();
+}
+for(var i=0;i<this.contents.length;i++){
+_63=this.contents[i].unrender(_62,_63);
+if(!_63){
+throw new Error("Template node render functions must return their buffer");
+}
+}
+if(_65){
+_63.setParent(_65);
+}
+return _63;
+},clone:function(_66){
+var _67=_66.getParent();
+var _68=this.contents;
+var _69=new dd._DomNodeList();
+var _6a=[];
+for(var i=0;i<_68.length;i++){
+var _6b=_68[i].clone(_66);
+if(_6b instanceof dd.ChangeNode||_6b instanceof dd._DomNode){
+var _6c=_6b.contents._clone;
+if(_6c){
+_6b.contents=_6c;
+}else{
+if(_67!=_6b.contents&&_6b instanceof dd._DomNode){
+var _6d=_6b.contents;
+_6b.contents=_6b.contents.cloneNode(false);
+_66.onClone&&_66.onClone(_6d,_6b.contents);
+_6a.push(_6d);
+_6d._clone=_6b.contents;
+}
+}
+}
+_69.push(_6b);
+}
+for(var i=0,_6b;_6b=_6a[i];i++){
+_6b._clone=null;
+}
+return _69;
+},rtrim:function(){
+while(1){
+var i=this.contents.length-1;
+if(this.contents[i] instanceof dd._DomTextNode&&this.contents[i].isEmpty()){
+this.contents.pop();
+}else{
+break;
+}
+}
+return this;
+}});
+dd._DomVarNode=_1.extend(function(str){
+this.contents=new dd._Filter(str);
+},{render:function(_6e,_6f){
+var str=this.contents.resolve(_6e);
+var _70="text";
+if(str){
+if(str.render&&str.getRootNode){
+_70="injection";
+}else{
+if(str.safe){
+if(str.nodeType){
+_70="node";
+}else{
+if(str.toString){
+str=str.toString();
+_70="html";
+}
+}
+}
+}
+}
+if(this._type&&_70!=this._type){
+this.unrender(_6e,_6f);
+}
+this._type=_70;
+switch(_70){
+case "text":
+this._rendered=true;
+this._txt=this._txt||document.createTextNode(str);
+if(this._txt.data!=str){
+var old=this._txt.data;
+this._txt.data=str;
+_6f.onChangeData&&_6f.onChangeData(this._txt,old,this._txt.data);
+}
+return _6f.concat(this._txt);
+case "injection":
+var _71=str.getRootNode();
+if(this._rendered&&_71!=this._root){
+_6f=this.unrender(_6e,_6f);
+}
+this._root=_71;
+var _72=this._injected=new dd._DomNodeList();
+_72.push(new dd.ChangeNode(_6f.getParent()));
+_72.push(new dd._DomNode(_71));
+_72.push(str);
+_72.push(new dd.ChangeNode(_6f.getParent()));
+this._rendered=true;
+return _72.render(_6e,_6f);
+case "node":
+this._rendered=true;
+if(this._node&&this._node!=str&&this._node.parentNode&&this._node.parentNode===_6f.getParent()){
+this._node.parentNode.removeChild(this._node);
+}
+this._node=str;
+return _6f.concat(str);
+case "html":
+if(this._rendered&&this._src!=str){
+_6f=this.unrender(_6e,_6f);
+}
+this._src=str;
+if(!this._rendered){
+this._rendered=true;
+this._html=this._html||[];
+var div=(this._div=this._div||document.createElement("div"));
+div.innerHTML=str;
+var _73=div.childNodes;
+while(_73.length){
+var _74=div.removeChild(_73[0]);
+this._html.push(_74);
+_6f=_6f.concat(_74);
+}
+}
+return _6f;
+default:
+return _6f;
+}
+},unrender:function(_75,_76){
+if(!this._rendered){
+return _76;
+}
+this._rendered=false;
+switch(this._type){
+case "text":
+return _76.remove(this._txt);
+case "injection":
+return this._injection.unrender(_75,_76);
+case "node":
+if(this._node.parentNode===_76.getParent()){
+return _76.remove(this._node);
+}
+return _76;
+case "html":
+for(var i=0,l=this._html.length;i<l;i++){
+_76=_76.remove(this._html[i]);
+}
+return _76;
+default:
+return _76;
+}
+},clone:function(){
+return new this.constructor(this.contents.getExpression());
+}});
+dd.ChangeNode=_1.extend(function(_77,up,_78){
+this.contents=_77;
+this.up=up;
+this.root=_78;
+},{render:function(_79,_7a){
+return _7a.setParent(this.contents,this.up,this.root);
+},unrender:function(_7b,_7c){
+if(!_7c.getParent()){
+return _7c;
+}
+return _7c.setParent(this.contents);
+},clone:function(){
+return new this.constructor(this.contents,this.up,this.root);
+}});
+dd.AttributeNode=_1.extend(function(key,_7d){
+this.key=key;
+this.value=_7d;
+this.contents=_7d;
+if(this._pool[_7d]){
+this.nodelist=this._pool[_7d];
+}else{
+if(!(this.nodelist=dd.quickFilter(_7d))){
+this.nodelist=(new dd.Template(_7d,true)).nodelist;
+}
+this._pool[_7d]=this.nodelist;
+}
+this.contents="";
+},{_pool:{},render:function(_7e,_7f){
+var key=this.key;
+var _80=this.nodelist.dummyRender(_7e);
+if(dd.BOOLS[key]){
+_80=!(_80=="false"||_80=="undefined"||!_80);
+}
+if(_80!==this.contents){
+this.contents=_80;
+return _7f.setAttribute(key,_80);
+}
+return _7f;
+},unrender:function(_81,_82){
+this.contents="";
+return _82.remove(this.key);
+},clone:function(_83){
+return new this.constructor(this.key,this.value);
+}});
+dd._DomTextNode=_1.extend(function(str){
+this.contents=document.createTextNode(str);
+this.upcoming=str;
+},{set:function(_84){
+this.upcoming=_84;
+return this;
+},render:function(_85,_86){
+if(this.contents.data!=this.upcoming){
+var old=this.contents.data;
+this.contents.data=this.upcoming;
+_86.onChangeData&&_86.onChangeData(this.contents,old,this.upcoming);
+}
+return _86.concat(this.contents);
+},unrender:function(_87,_88){
+return _88.remove(this.contents);
+},isEmpty:function(){
+return !_1.trim(this.contents.data);
+},clone:function(){
+return new this.constructor(this.contents.data);
+}});
+dd._DomParser=_1.extend(function(_89){
+this.contents=_89;
+},{i:0,parse:function(_8a){
+var _8b={};
+var _8c=this.contents;
+if(!_8a){
+_8a=[];
+}
+for(var i=0;i<_8a.length;i++){
+_8b[_8a[i]]=true;
+}
+var _8d=new dd._DomNodeList();
+while(this.i<_8c.length){
+var _8e=_8c[this.i++];
+var _8f=_8e[0];
+var _90=_8e[1];
+if(_8f==dd.TOKEN_CUSTOM){
+_8d.push(_90);
+}else{
+if(_8f==dd.TOKEN_CHANGE){
+var _91=new dd.ChangeNode(_90,_8e[2],_8e[3]);
+_90[_91.attr]=_91;
+_8d.push(_91);
+}else{
+if(_8f==dd.TOKEN_ATTR){
+var fn=_4.getTag("attr:"+_8e[2],true);
+if(fn&&_8e[3]){
+if(_8e[3].indexOf("{%")!=-1||_8e[3].indexOf("{{")!=-1){
+_90.setAttribute(_8e[2],"");
+}
+_8d.push(fn(null,new dd.Token(_8f,_8e[2]+" "+_8e[3])));
+}else{
+if(_1.isString(_8e[3])){
+if(_8e[2]=="style"||_8e[3].indexOf("{%")!=-1||_8e[3].indexOf("{{")!=-1){
+_8d.push(new dd.AttributeNode(_8e[2],_8e[3]));
+}else{
+if(_1.trim(_8e[3])){
+try{
+_1.attr(_90,_8e[2],_8e[3]);
+}
+catch(e){
+}
+}
+}
+}
+}
+}else{
+if(_8f==dd.TOKEN_NODE){
+var fn=_4.getTag("node:"+_90.tagName.toLowerCase(),true);
+if(fn){
+_8d.push(fn(null,new dd.Token(_8f,_90),_90.tagName.toLowerCase()));
+}
+_8d.push(new dd._DomNode(_90));
+}else{
+if(_8f==dd.TOKEN_VAR){
+_8d.push(new dd._DomVarNode(_90));
+}else{
+if(_8f==dd.TOKEN_TEXT){
+_8d.push(new dd._DomTextNode(_90.data||_90));
+}else{
+if(_8f==dd.TOKEN_BLOCK){
+if(_8b[_90]){
+--this.i;
+return _8d;
+}
+var cmd=_90.split(/\s+/g);
+if(cmd.length){
+cmd=cmd[0];
+var fn=_4.getTag(cmd);
+if(typeof fn!="function"){
+throw new Error("Function not found for "+cmd);
+}
+var tpl=fn(this,new dd.Token(_8f,_90));
+if(tpl){
+_8d.push(tpl);
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+if(_8a.length){
+throw new Error("Could not find closing tag(s): "+_8a.toString());
+}
+return _8d;
+},next_token:function(){
+var _92=this.contents[this.i++];
+return new dd.Token(_92[0],_92[1]);
+},delete_first_token:function(){
+this.i++;
+},skip_past:function(_93){
+return dd._Parser.prototype.skip_past.call(this,_93);
+},create_variable_node:function(_94){
+return new dd._DomVarNode(_94);
+},create_text_node:function(_95){
+return new dd._DomTextNode(_95||"");
+},getTemplate:function(loc){
+return new dd.DomTemplate(_5.getTemplate(loc));
+}});
+return dojox.dtl.dom;
 });

@@ -1,272 +1,167 @@
-define("dojox/data/PicasaStore", ["dojo", "dojox", "dojo/io/script", "dojo/data/util/simpleFetch", "dojo/date/stamp"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.data.PicasaStore", null, {
-	constructor: function(/*Object*/args){
-		//	summary:
-		//		Initializer for the PicasaStore store.
-		//	description:
-		//		The PicasaStore is a Datastore interface to one of the basic services
-		//		of the Picasa service, the public photo feed.  This does not provide
-		//		access to all the services of Picasa.
-		//		This store cannot do * and ? filtering as the picasa service
-		//		provides no interface for wildcards.
-		if(args && args.label){
-			this.label = args.label;
-		}
-		if(args && "urlPreventCache" in args){
-			this.urlPreventCache = args.urlPreventCache?true:false;
-		}
-		if(args && "maxResults" in args){
-			this.maxResults = parseInt(args.maxResults);
-			if(!this.maxResults){
-				this.maxResults = 20;
-			}
-		}
-	},
-
-	_picasaUrl: "http://picasaweb.google.com/data/feed/api/all",
-
-	_storeRef: "_S",
-
-	//label: string
-	//The attribute to use from the picasa item as its label.
-	label: "title",
-
-	//urlPreventCache: boolean
-	//Flag denoting if preventCache should be passed to dojo.io.script.
-	urlPreventCache: false,
-
-	//maxResults:  Define out how many results to return for a fetch.
-	maxResults: 20,
-
-	_assertIsItem: function(/* item */ item){
-		//	summary:
-		//      This function tests whether the item passed in is indeed an item in the store.
-		//	item:
-		//		The item to test for being contained by the store.
-		if(!this.isItem(item)){
-			throw new Error("dojox.data.PicasaStore: a function was passed an item argument that was not an item");
-		}
-	},
-
-	_assertIsAttribute: function(/* attribute-name-string */ attribute){
-		//	summary:
-		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute:
-		//		The attribute to test for being contained by the store.
-		if(typeof attribute !== "string"){
-			throw new Error("dojox.data.PicasaStore: a function was passed an attribute argument that was not an attribute name string");
-		}
-	},
-
-	getFeatures: function(){
-		//	summary:
-		//      See dojo.data.api.Read.getFeatures()
-		return {
-			'dojo.data.api.Read': true
-		};
-	},
-
-	getValue: function(item, attribute, defaultValue){
-		//	summary:
-		//      See dojo.data.api.Read.getValue()
-		var values = this.getValues(item, attribute);
-		if(values && values.length > 0){
-			return values[0];
-		}
-		return defaultValue;
-	},
-
-	getAttributes: function(item){
-		//	summary:
-		//      See dojo.data.api.Read.getAttributes()
-		 return ["id", "published", "updated", "category", "title$type", "title",
-			 "summary$type", "summary", "rights$type", "rights", "link", "author",
-			 "gphoto$id", "gphoto$name", "location", "imageUrlSmall", "imageUrlMedium",
-			 "imageUrl", "datePublished", "dateTaken","description"];
-	},
-
-	hasAttribute: function(item, attribute){
-		//	summary:
-		//      See dojo.data.api.Read.hasAttributes()
-		if(this.getValue(item,attribute)){
-			return true;
-		}
-		return false;
-	},
-
-	isItemLoaded: function(item){
-		 //	summary:
-		 //      See dojo.data.api.Read.isItemLoaded()
-		 return this.isItem(item);
-	},
-
-	loadItem: function(keywordArgs){
-		//	summary:
-		//      See dojo.data.api.Read.loadItem()
-	},
-
-	getLabel: function(item){
-		//	summary:
-		//      See dojo.data.api.Read.getLabel()
-		return this.getValue(item,this.label);
-	},
-	
-	getLabelAttributes: function(item){
-		//	summary:
-		//      See dojo.data.api.Read.getLabelAttributes()
-		return [this.label];
-	},
-
-	containsValue: function(item, attribute, value){
-		//	summary:
-		//      See dojo.data.api.Read.containsValue()
-		var values = this.getValues(item,attribute);
-		for(var i = 0; i < values.length; i++){
-			if(values[i] === value){
-				return true;
-			}
-		}
-		return false;
-	},
-
-	getValues: function(item, attribute){
-		//	summary:
-		//      See dojo.data.api.Read.getValue()
-
-		this._assertIsItem(item);
-		this._assertIsAttribute(attribute);
-		if(attribute === "title"){
-			return [this._unescapeHtml(item.title)];
-		}else if(attribute === "author"){
-			return [this._unescapeHtml(item.author[0].name)];
-		}else if(attribute === "datePublished"){
-			return [dojo.date.stamp.fromISOString(item.published)];
-		}else if(attribute === "dateTaken"){
-			return [dojo.date.stamp.fromISOString(item.published)];
-		}else if(attribute === "updated"){
-			return [dojo.date.stamp.fromISOString(item.updated)];
-		}else if(attribute === "imageUrlSmall"){
-			return [item.media.thumbnail[1].url];
-		}else if(attribute === "imageUrl"){
-			return [item.content$src];
-		}else if(attribute === "imageUrlMedium"){
-			return [item.media.thumbnail[2].url];
-		}else if(attribute === "link"){
-			return [item.link[1]];
-		}else if(attribute === "tags"){
-			return item.tags.split(" ");
-		}else if(attribute === "description"){
-			return [this._unescapeHtml(item.summary)];
-		}
-		return [];
-	},
-
-	isItem: function(item){
-		//	summary:
-		//      See dojo.data.api.Read.isItem()
-		if(item && item[this._storeRef] === this){
-			return true;
-		}
-		return false;
-	},
-	
-	close: function(request){
-		//	summary:
-		//      See dojo.data.api.Read.close()
-	},
-
-	_fetchItems: function(request, fetchHandler, errorHandler){
-		//	summary:
-		//		Fetch picasa items that match to a query
-		//	request:
-		//		A request object
-		//	fetchHandler:
-		//		A function to call for fetched items
-		//	errorHandler:
-		//		A function to call on error
-
-		if(!request.query){
-			request.query={};
-		}
-
-		//Build up the content to send the request for.
-		var content = {alt: "jsonm", pp: "1", psc: "G"};
-
-		content['start-index'] = "1";
-		if(request.query.start){
-			content['start-index'] = request.query.start;
-		}
-		if(request.query.tags){
-			content.q = request.query.tags;
-		}
-		if(request.query.userid){
-			content.uname = request.query.userid;
-		}
-		if(request.query.userids){
-			content.ids = request.query.userids;
-		}
-		if(request.query.lang){
-			content.hl = request.query.lang;
-		}
-		content['max-results'] = this.maxResults;
-
-		//Linking this up to Picasa is a JOY!
-		var self = this;
-		var handle = null;
-		var myHandler = function(data){
-			if(handle !== null){
-				dojo.disconnect(handle);
-			}
-
-			//Process the items...
-			fetchHandler(self._processPicasaData(data), request);
-		};
-		var getArgs = {
-			url: this._picasaUrl,
-			preventCache: this.urlPreventCache,
-			content: content,
-			callbackParamName: 'callback',
-			handle: myHandler
-		};
-		var deferred = dojo.io.script.get(getArgs);
-		
-		deferred.addErrback(function(error){
-			dojo.disconnect(handle);
-			errorHandler(error, request);
-		});
-	},
-
-	_processPicasaData: function(data){
-		var items = [];
-		if(data.feed){
-			items = data.feed.entry;
-			//Add on the store ref so that isItem can work.
-			for(var i = 0; i < items.length; i++){
-				var item = items[i];
-				item[this._storeRef] = this;
-			}
-		}
-		return items;
-	},
-
-	_unescapeHtml: function(str){
-		// summary: Utility function to un-escape XML special characters in an HTML string.
-		// description: Utility function to un-escape XML special characters in an HTML string.
-		// str: String.
-		//   The string to un-escape
-		// returns: HTML String converted back to the normal text (unescaped) characters (<,>,&, ", etc,).
-		//
-		//TODO: Check to see if theres already compatible escape() in dojo.string or dojo.html
-		if(str){
-			str = str.replace(/&amp;/gm, "&").replace(/&lt;/gm, "<").replace(/&gt;/gm, ">").replace(/&quot;/gm, "\"");
-			str = str.replace(/&#39;/gm, "'");
-		}
-		return str;
-	}
+define("dojox/data/PicasaStore",["dojo","dojox","dojo/io/script","dojo/data/util/simpleFetch","dojo/date/stamp"],function(_1,_2){
+_1.declare("dojox.data.PicasaStore",null,{constructor:function(_3){
+if(_3&&_3.label){
+this.label=_3.label;
+}
+if(_3&&"urlPreventCache" in _3){
+this.urlPreventCache=_3.urlPreventCache?true:false;
+}
+if(_3&&"maxResults" in _3){
+this.maxResults=parseInt(_3.maxResults);
+if(!this.maxResults){
+this.maxResults=20;
+}
+}
+},_picasaUrl:"http://picasaweb.google.com/data/feed/api/all",_storeRef:"_S",label:"title",urlPreventCache:false,maxResults:20,_assertIsItem:function(_4){
+if(!this.isItem(_4)){
+throw new Error("dojox.data.PicasaStore: a function was passed an item argument that was not an item");
+}
+},_assertIsAttribute:function(_5){
+if(typeof _5!=="string"){
+throw new Error("dojox.data.PicasaStore: a function was passed an attribute argument that was not an attribute name string");
+}
+},getFeatures:function(){
+return {"dojo.data.api.Read":true};
+},getValue:function(_6,_7,_8){
+var _9=this.getValues(_6,_7);
+if(_9&&_9.length>0){
+return _9[0];
+}
+return _8;
+},getAttributes:function(_a){
+return ["id","published","updated","category","title$type","title","summary$type","summary","rights$type","rights","link","author","gphoto$id","gphoto$name","location","imageUrlSmall","imageUrlMedium","imageUrl","datePublished","dateTaken","description"];
+},hasAttribute:function(_b,_c){
+if(this.getValue(_b,_c)){
+return true;
+}
+return false;
+},isItemLoaded:function(_d){
+return this.isItem(_d);
+},loadItem:function(_e){
+},getLabel:function(_f){
+return this.getValue(_f,this.label);
+},getLabelAttributes:function(_10){
+return [this.label];
+},containsValue:function(_11,_12,_13){
+var _14=this.getValues(_11,_12);
+for(var i=0;i<_14.length;i++){
+if(_14[i]===_13){
+return true;
+}
+}
+return false;
+},getValues:function(_15,_16){
+this._assertIsItem(_15);
+this._assertIsAttribute(_16);
+if(_16==="title"){
+return [this._unescapeHtml(_15.title)];
+}else{
+if(_16==="author"){
+return [this._unescapeHtml(_15.author[0].name)];
+}else{
+if(_16==="datePublished"){
+return [_1.date.stamp.fromISOString(_15.published)];
+}else{
+if(_16==="dateTaken"){
+return [_1.date.stamp.fromISOString(_15.published)];
+}else{
+if(_16==="updated"){
+return [_1.date.stamp.fromISOString(_15.updated)];
+}else{
+if(_16==="imageUrlSmall"){
+return [_15.media.thumbnail[1].url];
+}else{
+if(_16==="imageUrl"){
+return [_15.content$src];
+}else{
+if(_16==="imageUrlMedium"){
+return [_15.media.thumbnail[2].url];
+}else{
+if(_16==="link"){
+return [_15.link[1]];
+}else{
+if(_16==="tags"){
+return _15.tags.split(" ");
+}else{
+if(_16==="description"){
+return [this._unescapeHtml(_15.summary)];
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+return [];
+},isItem:function(_17){
+if(_17&&_17[this._storeRef]===this){
+return true;
+}
+return false;
+},close:function(_18){
+},_fetchItems:function(_19,_1a,_1b){
+if(!_19.query){
+_19.query={};
+}
+var _1c={alt:"jsonm",pp:"1",psc:"G"};
+_1c["start-index"]="1";
+if(_19.query.start){
+_1c["start-index"]=_19.query.start;
+}
+if(_19.query.tags){
+_1c.q=_19.query.tags;
+}
+if(_19.query.userid){
+_1c.uname=_19.query.userid;
+}
+if(_19.query.userids){
+_1c.ids=_19.query.userids;
+}
+if(_19.query.lang){
+_1c.hl=_19.query.lang;
+}
+_1c["max-results"]=this.maxResults;
+var _1d=this;
+var _1e=null;
+var _1f=function(_20){
+if(_1e!==null){
+_1.disconnect(_1e);
+}
+_1a(_1d._processPicasaData(_20),_19);
+};
+var _21={url:this._picasaUrl,preventCache:this.urlPreventCache,content:_1c,callbackParamName:"callback",handle:_1f};
+var _22=_1.io.script.get(_21);
+_22.addErrback(function(_23){
+_1.disconnect(_1e);
+_1b(_23,_19);
 });
-dojo.extend(dojox.data.PicasaStore,dojo.data.util.simpleFetch);
-
-return dojox.data.PicasaStore;
-
+},_processPicasaData:function(_24){
+var _25=[];
+if(_24.feed){
+_25=_24.feed.entry;
+for(var i=0;i<_25.length;i++){
+var _26=_25[i];
+_26[this._storeRef]=this;
+}
+}
+return _25;
+},_unescapeHtml:function(str){
+if(str){
+str=str.replace(/&amp;/gm,"&").replace(/&lt;/gm,"<").replace(/&gt;/gm,">").replace(/&quot;/gm,"\"");
+str=str.replace(/&#39;/gm,"'");
+}
+return str;
+}});
+_1.extend(_2.data.PicasaStore,_1.data.util.simpleFetch);
+return _2.data.PicasaStore;
 });

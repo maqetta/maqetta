@@ -1,266 +1,218 @@
-define(["dojo", "dojox", "./cells", "./_RowSelector" ], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.grid._Layout", null, {
-	// summary:
-	//	Controls grid cell layout. Owned by grid and used internally.
-	constructor: function(inGrid){
-		this.grid = inGrid;
-	},
-	// flat array of grid cells
-	cells: [],
-	// structured array of grid cells
-	structure: null,
-	// default cell width
-	defaultWidth: '6em',
-
-	// methods
-	moveColumn: function(sourceViewIndex, destViewIndex, cellIndex, targetIndex, before){
-		var source_cells = this.structure[sourceViewIndex].cells[0];
-		var dest_cells = this.structure[destViewIndex].cells[0];
-
-		var cell = null;
-		var cell_ri = 0;
-		var target_ri = 0;
-
-		for(var i=0, c; c=source_cells[i]; i++){
-			if(c.index == cellIndex){
-				cell_ri = i;
-				break;
-			}
-		}
-		cell = source_cells.splice(cell_ri, 1)[0];
-		cell.view = this.grid.views.views[destViewIndex];
-
-		for(i=0, c=null; c=dest_cells[i]; i++){
-			if(c.index == targetIndex){
-				target_ri = i;
-				break;
-			}
-		}
-		if(!before){
-			target_ri += 1;
-		}
-		dest_cells.splice(target_ri, 0, cell);
-
-		var sortedCell = this.grid.getCell(this.grid.getSortIndex());
-		if(sortedCell){
-			sortedCell._currentlySorted = this.grid.getSortAsc();
-		}
-
-		this.cells = [];
-		cellIndex = 0;
-		var v;
-		for(i=0; v=this.structure[i]; i++){
-			for(var j=0, cs; cs=v.cells[j]; j++){
-				for(var k=0; c=cs[k]; k++){
-					c.index = cellIndex;
-					this.cells.push(c);
-					if("_currentlySorted" in c){
-						var si = cellIndex + 1;
-						si *= c._currentlySorted ? 1 : -1;
-						this.grid.sortInfo = si;
-						delete c._currentlySorted;
-					}
-					cellIndex++;
-				}
-			}
-		}
-		
-		//Fix #9481 - reset idx in cell markup
-		dojo.forEach(this.cells, function(c){
-			var marks = c.markup[2].split(" ");
-			var oldIdx = parseInt(marks[1].substring(5));//get old "idx"
-			if(oldIdx != c.index){
-				marks[1] = "idx=\"" + c.index + "\"";
-				c.markup[2] = marks.join(" ");
-			}
-		});
-		
-		this.grid.setupHeaderMenu();
-		//this.grid.renderOnIdle();
-	},
-
-	setColumnVisibility: function(columnIndex, visible){
-		var cell = this.cells[columnIndex];
-		if(cell.hidden == visible){
-			cell.hidden = !visible;
-			var v = cell.view, w = v.viewWidth;
-			if(w && w != "auto"){
-				v._togglingColumn = dojo.marginBox(cell.getHeaderNode()).w || 0;
-			}
-			v.update();
-			return true;
-		}else{
-			return false;
-		}
-	},
-	
-	addCellDef: function(inRowIndex, inCellIndex, inDef){
-		var self = this;
-		var getCellWidth = function(inDef){
-			var w = 0;
-			if(inDef.colSpan > 1){
-				w = 0;
-			}else{
-				w = inDef.width || self._defaultCellProps.width || self.defaultWidth;
-
-				if(!isNaN(w)){
-					w = w + "em";
-				}
-			}
-			return w;
-		};
-
-		var props = {
-			grid: this.grid,
-			subrow: inRowIndex,
-			layoutIndex: inCellIndex,
-			index: this.cells.length
-		};
-
-		if(inDef && inDef instanceof dojox.grid.cells._Base){
-			var new_cell = dojo.clone(inDef);
-			props.unitWidth = getCellWidth(new_cell._props);
-			new_cell = dojo.mixin(new_cell, this._defaultCellProps, inDef._props, props);
-			return new_cell;
-		}
-
-		var cell_type = inDef.type || inDef.cellType || this._defaultCellProps.type || this._defaultCellProps.cellType || dojox.grid.cells.Cell;
-
-		props.unitWidth = getCellWidth(inDef);
-		return new cell_type(dojo.mixin({}, this._defaultCellProps, inDef, props));
-	},
-	
-	addRowDef: function(inRowIndex, inDef){
-		var result = [];
-		var relSum = 0, pctSum = 0, doRel = true;
-		for(var i=0, def, cell; (def=inDef[i]); i++){
-			cell = this.addCellDef(inRowIndex, i, def);
-			result.push(cell);
-			this.cells.push(cell);
-			// Check and calculate the sum of all relative widths
-			if(doRel && cell.relWidth){
-				relSum += cell.relWidth;
-			}else if(cell.width){
-				var w = cell.width;
-				if(typeof w == "string" && w.slice(-1) == "%"){
-					pctSum += window.parseInt(w, 10);
-				}else if(w == "auto"){
-					// relative widths doesn't play nice with auto - since we
-					// don't have a way of knowing how much space the auto is
-					// supposed to take up.
-					doRel = false;
-				}
-			}
-		}
-		if(relSum && doRel){
-			// We have some kind of relWidths specified - so change them to %
-			dojo.forEach(result, function(cell){
-				if(cell.relWidth){
-					cell.width = cell.unitWidth = ((cell.relWidth / relSum) * (100 - pctSum)) + "%";
-				}
-			});
-		}
-		return result;
-	
-	},
-
-	addRowsDef: function(inDef){
-		var result = [];
-		if(dojo.isArray(inDef)){
-			if(dojo.isArray(inDef[0])){
-				for(var i=0, row; inDef && (row=inDef[i]); i++){
-					result.push(this.addRowDef(i, row));
-				}
-			}else{
-				result.push(this.addRowDef(0, inDef));
-			}
-		}
-		return result;
-	},
-	
-	addViewDef: function(inDef){
-		this._defaultCellProps = inDef.defaultCell || {};
-		if(inDef.width && inDef.width == "auto"){
-			delete inDef.width;
-		}
-		return dojo.mixin({}, inDef, {cells: this.addRowsDef(inDef.rows || inDef.cells)});
-	},
-	
-	setStructure: function(inStructure){
-		this.fieldIndex = 0;
-		this.cells = [];
-		var s = this.structure = [];
-
-		if(this.grid.rowSelector){
-			var sel = { type: dojox._scopeName + ".grid._RowSelector" };
-
-			if(dojo.isString(this.grid.rowSelector)){
-				var width = this.grid.rowSelector;
-
-				if(width == "false"){
-					sel = null;
-				}else if(width != "true"){
-					sel['width'] = width;
-				}
-			}else{
-				if(!this.grid.rowSelector){
-					sel = null;
-				}
-			}
-
-			if(sel){
-				s.push(this.addViewDef(sel));
-			}
-		}
-
-		var isCell = function(def){
-			return ("name" in def || "field" in def || "get" in def);
-		};
-
-		var isRowDef = function(def){
-			if(dojo.isArray(def)){
-				if(dojo.isArray(def[0]) || isCell(def[0])){
-					return true;
-				}
-			}
-			return false;
-		};
-
-		var isView = function(def){
-			return (def !== null && dojo.isObject(def) &&
-					("cells" in def || "rows" in def || ("type" in def && !isCell(def))));
-		};
-
-		if(dojo.isArray(inStructure)){
-			var hasViews = false;
-			for(var i=0, st; (st=inStructure[i]); i++){
-				if(isView(st)){
-					hasViews = true;
-					break;
-				}
-			}
-			if(!hasViews){
-				s.push(this.addViewDef({ cells: inStructure }));
-			}else{
-				for(i=0; (st=inStructure[i]); i++){
-					if(isRowDef(st)){
-						s.push(this.addViewDef({ cells: st }));
-					}else if(isView(st)){
-						s.push(this.addViewDef(st));
-					}
-				}
-			}
-		}else if(isView(inStructure)){
-			// it's a view object
-			s.push(this.addViewDef(inStructure));
-		}
-
-		this.cellCount = this.cells.length;
-		this.grid.setupHeaderMenu();
-	}
+define(["dojo","dojox","./cells","./_RowSelector"],function(_1,_2){
+_1.declare("dojox.grid._Layout",null,{constructor:function(_3){
+this.grid=_3;
+},cells:[],structure:null,defaultWidth:"6em",moveColumn:function(_4,_5,_6,_7,_8){
+var _9=this.structure[_4].cells[0];
+var _a=this.structure[_5].cells[0];
+var _b=null;
+var _c=0;
+var _d=0;
+for(var i=0,c;c=_9[i];i++){
+if(c.index==_6){
+_c=i;
+break;
+}
+}
+_b=_9.splice(_c,1)[0];
+_b.view=this.grid.views.views[_5];
+for(i=0,c=null;c=_a[i];i++){
+if(c.index==_7){
+_d=i;
+break;
+}
+}
+if(!_8){
+_d+=1;
+}
+_a.splice(_d,0,_b);
+var _e=this.grid.getCell(this.grid.getSortIndex());
+if(_e){
+_e._currentlySorted=this.grid.getSortAsc();
+}
+this.cells=[];
+_6=0;
+var v;
+for(i=0;v=this.structure[i];i++){
+for(var j=0,cs;cs=v.cells[j];j++){
+for(var k=0;c=cs[k];k++){
+c.index=_6;
+this.cells.push(c);
+if("_currentlySorted" in c){
+var si=_6+1;
+si*=c._currentlySorted?1:-1;
+this.grid.sortInfo=si;
+delete c._currentlySorted;
+}
+_6++;
+}
+}
+}
+_1.forEach(this.cells,function(c){
+var _f=c.markup[2].split(" ");
+var _10=parseInt(_f[1].substring(5));
+if(_10!=c.index){
+_f[1]="idx=\""+c.index+"\"";
+c.markup[2]=_f.join(" ");
+}
 });
-
-return dojox.grid._Layout;
-
+this.grid.setupHeaderMenu();
+},setColumnVisibility:function(_11,_12){
+var _13=this.cells[_11];
+if(_13.hidden==_12){
+_13.hidden=!_12;
+var v=_13.view,w=v.viewWidth;
+if(w&&w!="auto"){
+v._togglingColumn=_1.marginBox(_13.getHeaderNode()).w||0;
+}
+v.update();
+return true;
+}else{
+return false;
+}
+},addCellDef:function(_14,_15,_16){
+var _17=this;
+var _18=function(_19){
+var w=0;
+if(_19.colSpan>1){
+w=0;
+}else{
+w=_19.width||_17._defaultCellProps.width||_17.defaultWidth;
+if(!isNaN(w)){
+w=w+"em";
+}
+}
+return w;
+};
+var _1a={grid:this.grid,subrow:_14,layoutIndex:_15,index:this.cells.length};
+if(_16&&_16 instanceof _2.grid.cells._Base){
+var _1b=_1.clone(_16);
+_1a.unitWidth=_18(_1b._props);
+_1b=_1.mixin(_1b,this._defaultCellProps,_16._props,_1a);
+return _1b;
+}
+var _1c=_16.type||_16.cellType||this._defaultCellProps.type||this._defaultCellProps.cellType||_2.grid.cells.Cell;
+_1a.unitWidth=_18(_16);
+return new _1c(_1.mixin({},this._defaultCellProps,_16,_1a));
+},addRowDef:function(_1d,_1e){
+var _1f=[];
+var _20=0,_21=0,_22=true;
+for(var i=0,def,_23;(def=_1e[i]);i++){
+_23=this.addCellDef(_1d,i,def);
+_1f.push(_23);
+this.cells.push(_23);
+if(_22&&_23.relWidth){
+_20+=_23.relWidth;
+}else{
+if(_23.width){
+var w=_23.width;
+if(typeof w=="string"&&w.slice(-1)=="%"){
+_21+=window.parseInt(w,10);
+}else{
+if(w=="auto"){
+_22=false;
+}
+}
+}
+}
+}
+if(_20&&_22){
+_1.forEach(_1f,function(_24){
+if(_24.relWidth){
+_24.width=_24.unitWidth=((_24.relWidth/_20)*(100-_21))+"%";
+}
+});
+}
+return _1f;
+},addRowsDef:function(_25){
+var _26=[];
+if(_1.isArray(_25)){
+if(_1.isArray(_25[0])){
+for(var i=0,row;_25&&(row=_25[i]);i++){
+_26.push(this.addRowDef(i,row));
+}
+}else{
+_26.push(this.addRowDef(0,_25));
+}
+}
+return _26;
+},addViewDef:function(_27){
+this._defaultCellProps=_27.defaultCell||{};
+if(_27.width&&_27.width=="auto"){
+delete _27.width;
+}
+return _1.mixin({},_27,{cells:this.addRowsDef(_27.rows||_27.cells)});
+},setStructure:function(_28){
+this.fieldIndex=0;
+this.cells=[];
+var s=this.structure=[];
+if(this.grid.rowSelector){
+var sel={type:_2._scopeName+".grid._RowSelector"};
+if(_1.isString(this.grid.rowSelector)){
+var _29=this.grid.rowSelector;
+if(_29=="false"){
+sel=null;
+}else{
+if(_29!="true"){
+sel["width"]=_29;
+}
+}
+}else{
+if(!this.grid.rowSelector){
+sel=null;
+}
+}
+if(sel){
+s.push(this.addViewDef(sel));
+}
+}
+var _2a=function(def){
+return ("name" in def||"field" in def||"get" in def);
+};
+var _2b=function(def){
+if(_1.isArray(def)){
+if(_1.isArray(def[0])||_2a(def[0])){
+return true;
+}
+}
+return false;
+};
+var _2c=function(def){
+return (def!==null&&_1.isObject(def)&&("cells" in def||"rows" in def||("type" in def&&!_2a(def))));
+};
+if(_1.isArray(_28)){
+var _2d=false;
+for(var i=0,st;(st=_28[i]);i++){
+if(_2c(st)){
+_2d=true;
+break;
+}
+}
+if(!_2d){
+s.push(this.addViewDef({cells:_28}));
+}else{
+for(i=0;(st=_28[i]);i++){
+if(_2b(st)){
+s.push(this.addViewDef({cells:st}));
+}else{
+if(_2c(st)){
+s.push(this.addViewDef(st));
+}
+}
+}
+}
+}else{
+if(_2c(_28)){
+s.push(this.addViewDef(_28));
+}
+}
+this.cellCount=this.cells.length;
+this.grid.setupHeaderMenu();
+}});
+return _2.grid._Layout;
 });

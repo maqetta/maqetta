@@ -1,93 +1,76 @@
-dojo.provide("dojox.xmpp.UserService");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.xmpp.UserService", null, {
-	constructor: function(xmppService){
-		this.session= xmppService;
-	},
-
-	getPersonalProfile: function(){
-		var req={
-			id: this.session.getNextIqId(),
-			type: 'get'
-		}
-		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",req,false));
-		request.append(dojox.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},false));
-		request.append(dojox.xmpp.util.createElement("sunmsgr",{xmlsns:'sun:xmpp:properties'},true));
-		request.append("</query></iq>");
-
-		var def = this.session.dispatchPacket(request.toString(),"iq",req.id);
-		def.addCallback(this, "_onGetPersonalProfile");
-	},
-
-	setPersonalProfile: function(props){
-		var req={
-			id: this.session.getNextIqId(),
-			type: 'set'
-		}
-		
-		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",req,false));
-		request.append(dojox.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},false));
-		request.append(dojox.xmpp.util.createElement("sunmsgr",{xmlsns:'sun:xmpp:properties'},false));
-
-		for (var key in props){
-			request.append(dojox.xmpp.util.createElement("property",{name: key},false));
-			request.append(dojox.xmpp.util.createElement("value",{},false));
-			request.append(props[key]);
-			request.append("</value></props>");
-		}
-		
-		request.append("</sunmsgr></query></iq>");
-
-		var def = this.session.dispatchPacket(request.toString(), "iq", req.id);
-		def.addCallback(this, "_onSetPersonalProfile");
-	},
-
-	_onSetPersonalProfile: function(response){
-		if(response.getAttribute('type')=='result'){
-			this.onSetPersonalProfile(response.getAttribute('id'));
-		}else if(response.getAttribute('type')=='error'){
-			var err = this.session.processXmppError(response);
-			this.onSetPersonalProfileFailure(err);
-		}
-	},
-
-	onSetPersonalProfile: function(id){},
-	onSetPersonalProfileFailure: function(err){},
-
-	_onGetPersonalProfile: function(profile){
-		if (profile.getAttribute('type')=='result'){
-			var props = {};
-
-			if (profile.hasChildNodes()){
-				var queryNode = profile.firstChild;
-				if ((queryNode.nodeName=="query")&&(queryNode.getAttribute('xmlns')=='jabber:iq:private')){
-					var sunNode = queryNode.firstChild;
-					if ((sunNode.nodeName=='query')&&(sunNode.getAttributes('xmlns')=='sun:xmpp:properties')){
-						for (var i=0; i<sunNode.childNodes.length;i++){
-							var n = sunNode.childNodes[i];
-							if(n.nodeName == 'property'){
-								var name = n.getAttribute('name');
-								var val = n.firstChild || "";
-								props[name]=val;
-							}
-						}
-					}
-				}
-				this.onGetPersonalProfile(props);
-			}
-		}else if (profile.getAttribute('type')=='error'){
-			var err = this.session.processXmppError(profile);
-			this.onGetPersonalProfileFailure(err);
-		}
-
-		return profile;
-	},
-
-	onGetPersonalProfile: function(profile){
-		//console.log("UserService::onGetPersonalProfile() ", profile);
-	},
-
-	onGetPersonalProfileFailure: function(err){
-		//console.log("UserService::onGetPersonalProfileFailure() ", err);
-	}
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.xmpp.UserService",1);
+_1.declare("dojox.xmpp.UserService",null,{constructor:function(_4){
+this.session=_4;
+},getPersonalProfile:function(){
+var _5={id:this.session.getNextIqId(),type:"get"};
+var _6=new _3.string.Builder(_3.xmpp.util.createElement("iq",_5,false));
+_6.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},false));
+_6.append(_3.xmpp.util.createElement("sunmsgr",{xmlsns:"sun:xmpp:properties"},true));
+_6.append("</query></iq>");
+var _7=this.session.dispatchPacket(_6.toString(),"iq",_5.id);
+_7.addCallback(this,"_onGetPersonalProfile");
+},setPersonalProfile:function(_8){
+var _9={id:this.session.getNextIqId(),type:"set"};
+var _a=new _3.string.Builder(_3.xmpp.util.createElement("iq",_9,false));
+_a.append(_3.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},false));
+_a.append(_3.xmpp.util.createElement("sunmsgr",{xmlsns:"sun:xmpp:properties"},false));
+for(var _b in _8){
+_a.append(_3.xmpp.util.createElement("property",{name:_b},false));
+_a.append(_3.xmpp.util.createElement("value",{},false));
+_a.append(_8[_b]);
+_a.append("</value></props>");
+}
+_a.append("</sunmsgr></query></iq>");
+var _c=this.session.dispatchPacket(_a.toString(),"iq",_9.id);
+_c.addCallback(this,"_onSetPersonalProfile");
+},_onSetPersonalProfile:function(_d){
+if(_d.getAttribute("type")=="result"){
+this.onSetPersonalProfile(_d.getAttribute("id"));
+}else{
+if(_d.getAttribute("type")=="error"){
+var _e=this.session.processXmppError(_d);
+this.onSetPersonalProfileFailure(_e);
+}
+}
+},onSetPersonalProfile:function(id){
+},onSetPersonalProfileFailure:function(_f){
+},_onGetPersonalProfile:function(_10){
+if(_10.getAttribute("type")=="result"){
+var _11={};
+if(_10.hasChildNodes()){
+var _12=_10.firstChild;
+if((_12.nodeName=="query")&&(_12.getAttribute("xmlns")=="jabber:iq:private")){
+var _13=_12.firstChild;
+if((_13.nodeName=="query")&&(_13.getAttributes("xmlns")=="sun:xmpp:properties")){
+for(var i=0;i<_13.childNodes.length;i++){
+var n=_13.childNodes[i];
+if(n.nodeName=="property"){
+var _14=n.getAttribute("name");
+var val=n.firstChild||"";
+_11[_14]=val;
+}
+}
+}
+}
+this.onGetPersonalProfile(_11);
+}
+}else{
+if(_10.getAttribute("type")=="error"){
+var err=this.session.processXmppError(_10);
+this.onGetPersonalProfileFailure(err);
+}
+}
+return _10;
+},onGetPersonalProfile:function(_15){
+},onGetPersonalProfileFailure:function(err){
+}});
+return _1.getObject("dojox.xmpp.UserService");
 });
+require(["dojox/xmpp/UserService"]);

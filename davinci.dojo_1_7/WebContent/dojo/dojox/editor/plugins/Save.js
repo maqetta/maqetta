@@ -1,134 +1,48 @@
-define("dojox/editor/plugins/Save", ["dojo", "dijit", "dojox", "dijit/form/Button", "dijit/_editor/_Plugin", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/Save"], function(dojo, dijit, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.editor.plugins.Save",dijit._editor._Plugin,{
-	// summary:
-	//		This plugin provides Save cabability to the editor.  When
-	//		clicked, the document in the editor frame will be osted to the URL
-	//		provided, or none, if none provided.  Users who desire a different save
-	//		function can extend this plugin (via dojo.extend) and over-ride the
-	//		save method	while save is in process, the save button is disabled.
-
-	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from `iconClassPrefix`
-	//		and `command`
-	iconClassPrefix: "dijitAdditionalEditorIcon",
-
-	// url [public]	String
-	//		The URL to POST the content back to.  Used by the save function.
-	url: "",
-
-	// logErrors [public] boolean
-	//		Boolean flag to indicate that the default action for save and
-	//		error handlers is to just log to console.  Default is true.
-	logResults: true,
-
-	_initButton: function(){
-		// summary:
-		//		Over-ride for creation of the save button.
-		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "Save");
-		this.button = new dijit.form.Button({
-			label: strings["save"],
-			showLabel: false,
-			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "Save",
-			tabIndex: "-1",
-			onClick: dojo.hitch(this, "_save")
-		});
-	},
-	
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
-	},
-
-	setEditor: function(editor){
-		// summary:
-		//		Over-ride for the setting of the editor.
-		// editor: Object
-		//		The editor to configure for this plugin to use.
-		this.editor = editor;
-		this._initButton();
-	},
-
-	_save: function(){
-		// summary:
-		//		Function to trigger saving of the editor document
-		// tags:
-		//		private
-		var content = this.editor.get("value");
-		this.save(content);
-	},
-
-	save: function(content){
-		// summary:
-		//		User over-ridable save function for the editor content.
-		//		Please note that the service URL provided should do content
-		//		filtering of the posted content to avoid XSS injection via
-		//		the data from the editor.
-		// tags:
-		//		public
-
-		// Set the default header to post as a body of text/html.
-		var headers = {
-			"Content-Type": "text/html"
-		};
-		if(this.url){
-			var postArgs = {
-				url: this.url,
-				postData: content,
-				headers: headers,
-				handleAs: "text"
-			};
-			this.button.set("disabled", true);
-			var deferred = dojo.xhrPost(postArgs);
-			deferred.addCallback(dojo.hitch(this, this.onSuccess));
-			deferred.addErrback(dojo.hitch(this, this.onError));
-		}else{
-			console.log("No URL provided, no post-back of content: " + content);
-		}
-	},
-
-	onSuccess: function(resp, ioargs){
-		// summary:
-		//		User over-ridable save success function for editor content.
-		//		Be sure to call this.inherited(arguments) if over-riding this method.
-		// resp:
-		//		The response from the server, if any, in text format.
-		// tags:
-		//		public
-		this.button.set("disabled", false);
-		if(this.logResults){
-			console.log(resp);
-		}
-	},
-
-	onError: function(error, ioargs){
-		// summary:
-		//		User over-ridable save success function for editor content.
-		//		Be sure to call this.inherited(arguments) if over-riding this method.
-		// resp:
-		//		The response from the server, if any, in text format.
-		// tags:
-		//		public
-		this.button.set("disabled", false);
-		if(this.logResults){
-			console.log(error);
-		}
-	}
+define("dojox/editor/plugins/Save",["dojo","dijit","dojox","dijit/form/Button","dijit/_editor/_Plugin","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Save"],function(_1,_2,_3){
+_1.declare("dojox.editor.plugins.Save",_2._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",url:"",logResults:true,_initButton:function(){
+var _4=_1.i18n.getLocalization("dojox.editor.plugins","Save");
+this.button=new _2.form.Button({label:_4["save"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Save",tabIndex:"-1",onClick:_1.hitch(this,"_save")});
+},updateState:function(){
+this.button.set("disabled",this.get("disabled"));
+},setEditor:function(_5){
+this.editor=_5;
+this._initButton();
+},_save:function(){
+var _6=this.editor.get("value");
+this.save(_6);
+},save:function(_7){
+var _8={"Content-Type":"text/html"};
+if(this.url){
+var _9={url:this.url,postData:_7,headers:_8,handleAs:"text"};
+this.button.set("disabled",true);
+var _a=_1.xhrPost(_9);
+_a.addCallback(_1.hitch(this,this.onSuccess));
+_a.addErrback(_1.hitch(this,this.onError));
+}else{
+}
+},onSuccess:function(_b,_c){
+this.button.set("disabled",false);
+if(this.logResults){
+}
+},onError:function(_d,_e){
+this.button.set("disabled",false);
+if(this.logResults){
+}
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _f=o.args.name.toLowerCase();
+if(_f==="save"){
+o.plugin=new _3.editor.plugins.Save({url:("url" in o.args)?o.args.url:"",logResults:("logResults" in o.args)?o.args.logResults:true});
+}
 });
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name === "save"){
-		o.plugin = new dojox.editor.plugins.Save({
-			url: ("url" in o.args)?o.args.url:"",
-			logResults: ("logResults" in o.args)?o.args.logResults:true
-		});
-	}
-});
-
-return dojox.editor.plugins.Save;
-
+return _3.editor.plugins.Save;
 });

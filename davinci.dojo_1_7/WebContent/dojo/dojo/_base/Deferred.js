@@ -1,339 +1,128 @@
-define(["./kernel", "./lang"], function(dojo){
-	// module:
-	//		dojo/_base/Deferred
-	// summary:
-	//		This module defines dojo.Deferred.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var mutator = function(){};
-	var freeze = Object.freeze || function(){};
-	// A deferred provides an API for creating and resolving a promise.
-	dojo.Deferred = function(/*Function?*/canceller){
-	// summary:
-	//		Deferreds provide a generic means for encapsulating an asynchronous
-	//		operation and notifying users of the completion and result of the operation.
-	// description:
-	//		The dojo.Deferred API is based on the concept of promises that provide a
-	//		generic interface into the eventual completion of an asynchronous action.
-	//		The motivation for promises fundamentally is about creating a
-	//		separation of concerns that allows one to achieve the same type of
-	//		call patterns and logical data flow in asynchronous code as can be
-	//		achieved in synchronous code. Promises allows one
-	//		to be able to call a function purely with arguments needed for
-	//		execution, without conflating the call with concerns of whether it is
-	//		sync or async. One shouldn't need to alter a call's arguments if the
-	//		implementation switches from sync to async (or vice versa). By having
-	//		async functions return promises, the concerns of making the call are
-	//		separated from the concerns of asynchronous interaction (which are
-	//		handled by the promise).
-	//
-	//		The dojo.Deferred is a type of promise that provides methods for fulfilling the
-	//		promise with a successful result or an error. The most important method for
-	//		working with Dojo's promises is the then() method, which follows the
-	//		CommonJS proposed promise API. An example of using a Dojo promise:
-	//
-	//		|	var resultingPromise = someAsyncOperation.then(function(result){
-	//		|		... handle result ...
-	//		|	},
-	//		|	function(error){
-	//		|		... handle error ...
-	//		|	});
-	//
-	//		The .then() call returns a new promise that represents the result of the
-	//		execution of the callback. The callbacks will never affect the original promises value.
-	//
-	//		The dojo.Deferred instances also provide the following functions for backwards compatibility:
-	//
-	//			* addCallback(handler)
-	//			* addErrback(handler)
-	//			* callback(result)
-	//			* errback(result)
-	//
-	//		Callbacks are allowed to return promises themselves, so
-	//		you can build complicated sequences of events with ease.
-	//
-	//		The creator of the Deferred may specify a canceller.  The canceller
-	//		is a function that will be called if Deferred.cancel is called
-	//		before the Deferred fires. You can use this to implement clean
-	//		aborting of an XMLHttpRequest, etc. Note that cancel will fire the
-	//		deferred with a CancelledError (unless your canceller returns
-	//		another kind of error), so the errbacks should be prepared to
-	//		handle that error for cancellable Deferreds.
-	// example:
-	//	|	var deferred = new dojo.Deferred();
-	//	|	setTimeout(function(){ deferred.callback({success: true}); }, 1000);
-	//	|	return deferred;
-	// example:
-	//		Deferred objects are often used when making code asynchronous. It
-	//		may be easiest to write functions in a synchronous manner and then
-	//		split code using a deferred to trigger a response to a long-lived
-	//		operation. For example, instead of register a callback function to
-	//		denote when a rendering operation completes, the function can
-	//		simply return a deferred:
-	//
-	//		|	// callback style:
-	//		|	function renderLotsOfData(data, callback){
-	//		|		var success = false
-	//		|		try{
-	//		|			for(var x in data){
-	//		|				renderDataitem(data[x]);
-	//		|			}
-	//		|			success = true;
-	//		|		}catch(e){ }
-	//		|		if(callback){
-	//		|			callback(success);
-	//		|		}
-	//		|	}
-	//
-	//		|	// using callback style
-	//		|	renderLotsOfData(someDataObj, function(success){
-	//		|		// handles success or failure
-	//		|		if(!success){
-	//		|			promptUserToRecover();
-	//		|		}
-	//		|	});
-	//		|	// NOTE: no way to add another callback here!!
-	// example:
-	//		Using a Deferred doesn't simplify the sending code any, but it
-	//		provides a standard interface for callers and senders alike,
-	//		providing both with a simple way to service multiple callbacks for
-	//		an operation and freeing both sides from worrying about details
-	//		such as "did this get called already?". With Deferreds, new
-	//		callbacks can be added at any time.
-	//
-	//		|	// Deferred style:
-	//		|	function renderLotsOfData(data){
-	//		|		var d = new dojo.Deferred();
-	//		|		try{
-	//		|			for(var x in data){
-	//		|				renderDataitem(data[x]);
-	//		|			}
-	//		|			d.callback(true);
-	//		|		}catch(e){
-	//		|			d.errback(new Error("rendering failed"));
-	//		|		}
-	//		|		return d;
-	//		|	}
-	//
-	//		|	// using Deferred style
-	//		|	renderLotsOfData(someDataObj).then(null, function(){
-	//		|		promptUserToRecover();
-	//		|	});
-	//		|	// NOTE: addErrback and addCallback both return the Deferred
-	//		|	// again, so we could chain adding callbacks or save the
-	//		|	// deferred for later should we need to be notified again.
-	// example:
-	//		In this example, renderLotsOfData is synchronous and so both
-	//		versions are pretty artificial. Putting the data display on a
-	//		timeout helps show why Deferreds rock:
-	//
-	//		|	// Deferred style and async func
-	//		|	function renderLotsOfData(data){
-	//		|		var d = new dojo.Deferred();
-	//		|		setTimeout(function(){
-	//		|			try{
-	//		|				for(var x in data){
-	//		|					renderDataitem(data[x]);
-	//		|				}
-	//		|				d.callback(true);
-	//		|			}catch(e){
-	//		|				d.errback(new Error("rendering failed"));
-	//		|			}
-	//		|		}, 100);
-	//		|		return d;
-	//		|	}
-	//
-	//		|	// using Deferred style
-	//		|	renderLotsOfData(someDataObj).then(null, function(){
-	//		|		promptUserToRecover();
-	//		|	});
-	//
-	//		Note that the caller doesn't have to change his code at all to
-	//		handle the asynchronous case.
-		var result, finished, isError, head, nextListener;
-		var promise = (this.promise = {});
-
-		function complete(value){
-			if(finished){
-				throw new Error("This deferred has already been resolved");
-			}
-			result = value;
-			finished = true;
-			notify();
-		}
-		function notify(){
-			var mutated;
-			while(!mutated && nextListener){
-				var listener = nextListener;
-				nextListener = nextListener.next;
-				if((mutated = (listener.progress == mutator))){ // assignment and check
-					finished = false;
-				}
-				var func = (isError ? listener.error : listener.resolved);
-				if (func) {
-					try {
-						var newResult = func(result);
-						if (newResult && typeof newResult.then === "function") {
-							newResult.then(dojo.hitch(listener.deferred, "resolve"), dojo.hitch(listener.deferred, "reject"));
-							continue;
-						}
-						var unchanged = mutated && newResult === undefined;
-						if(mutated && !unchanged){
-							isError = newResult instanceof Error;
-						}
-						listener.deferred[unchanged && isError ? "reject" : "resolve"](unchanged ? result : newResult);
-					}
-					catch (e) {
-						listener.deferred.reject(e);
-					}
-				}else {
-					if(isError){
-						listener.deferred.reject(result);
-					}else{
-						listener.deferred.resolve(result);
-					}
-				}
-			}
-		}
-		// calling resolve will resolve the promise
-		this.resolve = this.callback = function(value){
-			// summary:
-			//		Fulfills the Deferred instance successfully with the provide value
-			this.fired = 0;
-			this.results = [value, null];
-			complete(value);
-		};
-
-
-		// calling error will indicate that the promise failed
-		this.reject = this.errback = function(error){
-			// summary:
-			//		Fulfills the Deferred instance as an error with the provided error
-			isError = true;
-			this.fired = 1;
-			complete(error);
-			this.results = [null, error];
-			if(!error || error.log !== false){
-				(dojo.config.deferredOnError || function(x){ console.error(x); })(error);
-			}
-		};
-		// call progress to provide updates on the progress on the completion of the promise
-		this.progress = function(update){
-			// summary:
-			//		Send progress events to all listeners
-			var listener = nextListener;
-			while(listener){
-				var progress = listener.progress;
-				progress && progress(update);
-				listener = listener.next;
-			}
-		};
-		this.addCallbacks = function(/*Function?*/callback, /*Function?*/errback){
-			this.then(callback, errback, mutator);
-			return this;
-		};
-		// provide the implementation of the promise
-		this.then = promise.then = function(/*Function?*/resolvedCallback, /*Function?*/errorCallback, /*Function?*/progressCallback){
-			// summary:
-			//		Adds a fulfilledHandler, errorHandler, and progressHandler to be called for
-			//		completion of a promise. The fulfilledHandler is called when the promise
-			//		is fulfilled. The errorHandler is called when a promise fails. The
-			//		progressHandler is called for progress events. All arguments are optional
-			//		and non-function values are ignored. The progressHandler is not only an
-			//		optional argument, but progress events are purely optional. Promise
-			//		providers are not required to ever create progress events.
-			//
-			//		This function will return a new promise that is fulfilled when the given
-			//		fulfilledHandler or errorHandler callback is finished. This allows promise
-			//		operations to be chained together. The value returned from the callback
-			//		handler is the fulfillment value for the returned promise. If the callback
-			//		throws an error, the returned promise will be moved to failed state.
-			//
-			// example:
-			//		An example of using a CommonJS compliant promise:
-			//		|	asyncComputeTheAnswerToEverything().
-			//		|		then(addTwo).
-			//		|		then(printResult, onError);
-			//		|	>44
-			//
-			var returnDeferred = progressCallback == mutator ? this : new dojo.Deferred(promise.cancel);
-			var listener = {
-				resolved: resolvedCallback,
-				error: errorCallback,
-				progress: progressCallback,
-				deferred: returnDeferred
-			};
-			if(nextListener){
-				head = head.next = listener;
-			}
-			else{
-				nextListener = head = listener;
-			}
-			if(finished){
-				notify();
-			}
-			return returnDeferred.promise;
-		};
-		var deferred = this;
-		this.cancel = promise.cancel = function () {
-			// summary:
-			//		Cancels the asynchronous operation
-			if(!finished){
-				var error = canceller && canceller(deferred);
-				if(!finished){
-					if (!(error instanceof Error)) {
-						error = new Error(error);
-					}
-					error.log = false;
-					deferred.reject(error);
-				}
-			}
-		};
-		freeze(promise);
-	};
-	dojo.extend(dojo.Deferred, {
-		addCallback: function (/*Function*/callback) {
-			return this.addCallbacks(dojo.hitch.apply(dojo, arguments));
-		},
-
-		addErrback: function (/*Function*/errback) {
-			return this.addCallbacks(null, dojo.hitch.apply(dojo, arguments));
-		},
-
-		addBoth: function (/*Function*/callback) {
-			var enclosed = dojo.hitch.apply(dojo, arguments);
-			return this.addCallbacks(enclosed, enclosed);
-		},
-		fired: -1
-	});
-
-	dojo.Deferred.when = dojo.when = function(promiseOrValue, /*Function?*/callback, /*Function?*/errback, /*Function?*/progressHandler){
-		// summary:
-		//		This provides normalization between normal synchronous values and
-		//		asynchronous promises, so you can interact with them in a common way
-		// example:
-		//		|	function printFirstAndList(items){
-		//		|		dojo.when(findFirst(items), console.log);
-		//		|		dojo.when(findLast(items), console.log);
-		//		|	}
-		//		|	function findFirst(items){
-		//		|		return dojo.when(items, function(items){
-		//		|			return items[0];
-		//		|		});
-		//		|	}
-		//		|	function findLast(items){
-		//		|		return dojo.when(items, function(items){
-		//		|			return items[items.length];
-		//		|		});
-		//		|	}
-		//		And now all three of his functions can be used sync or async.
-		//		|	printFirstAndLast([1,2,3,4]) will work just as well as
-		//		|	printFirstAndLast(dojo.xhrGet(...));
-
-		if(promiseOrValue && typeof promiseOrValue.then === "function"){
-			return promiseOrValue.then(callback, errback, progressHandler);
-		}
-		return callback(promiseOrValue);
-	};
-
-	return dojo.Deferred;
+define("dojo/_base/Deferred",["./kernel","./lang"],function(_1){
+var _2=function(){
+};
+var _3=Object.freeze||function(){
+};
+_1.Deferred=function(_4){
+var _5,_6,_7,_8,_9;
+var _a=(this.promise={});
+function _b(_c){
+if(_6){
+throw new Error("This deferred has already been resolved");
+}
+_5=_c;
+_6=true;
+_d();
+};
+function _d(){
+var _e;
+while(!_e&&_9){
+var _f=_9;
+_9=_9.next;
+if((_e=(_f.progress==_2))){
+_6=false;
+}
+var _10=(_7?_f.error:_f.resolved);
+if(_10){
+try{
+var _11=_10(_5);
+if(_11&&typeof _11.then==="function"){
+_11.then(_1.hitch(_f.deferred,"resolve"),_1.hitch(_f.deferred,"reject"));
+continue;
+}
+var _12=_e&&_11===undefined;
+if(_e&&!_12){
+_7=_11 instanceof Error;
+}
+_f.deferred[_12&&_7?"reject":"resolve"](_12?_5:_11);
+}
+catch(e){
+_f.deferred.reject(e);
+}
+}else{
+if(_7){
+_f.deferred.reject(_5);
+}else{
+_f.deferred.resolve(_5);
+}
+}
+}
+};
+this.resolve=this.callback=function(_13){
+this.fired=0;
+this.results=[_13,null];
+_b(_13);
+};
+this.reject=this.errback=function(_14){
+_7=true;
+this.fired=1;
+_b(_14);
+this.results=[null,_14];
+if(!_14||_14.log!==false){
+(_1.config.deferredOnError||function(x){
+console.error(x);
+})(_14);
+}
+};
+this.progress=function(_15){
+var _16=_9;
+while(_16){
+var _17=_16.progress;
+_17&&_17(_15);
+_16=_16.next;
+}
+};
+this.addCallbacks=function(_18,_19){
+this.then(_18,_19,_2);
+return this;
+};
+this.then=_a.then=function(_1a,_1b,_1c){
+var _1d=_1c==_2?this:new _1.Deferred(_a.cancel);
+var _1e={resolved:_1a,error:_1b,progress:_1c,deferred:_1d};
+if(_9){
+_8=_8.next=_1e;
+}else{
+_9=_8=_1e;
+}
+if(_6){
+_d();
+}
+return _1d.promise;
+};
+var _1f=this;
+this.cancel=_a.cancel=function(){
+if(!_6){
+var _20=_4&&_4(_1f);
+if(!_6){
+if(!(_20 instanceof Error)){
+_20=new Error(_20);
+}
+_20.log=false;
+_1f.reject(_20);
+}
+}
+};
+_3(_a);
+};
+_1.extend(_1.Deferred,{addCallback:function(_21){
+return this.addCallbacks(_1.hitch.apply(_1,arguments));
+},addErrback:function(_22){
+return this.addCallbacks(null,_1.hitch.apply(_1,arguments));
+},addBoth:function(_23){
+var _24=_1.hitch.apply(_1,arguments);
+return this.addCallbacks(_24,_24);
+},fired:-1});
+_1.Deferred.when=_1.when=function(_25,_26,_27,_28){
+if(_25&&typeof _25.then==="function"){
+return _25.then(_26,_27,_28);
+}
+return _26(_25);
+};
+return _1.Deferred;
 });

@@ -1,6 +1,4 @@
-/* dojox.mobile.View */
 
-/* dojox.mobile.Heading */
 .dj_tablet .mblHeading {
 	background-color: #889BB3;
 	background: -webkit-gradient(linear, left top, left bottom, from(#F3F4F6), to(#A7ABB8));
@@ -9,8 +7,6 @@
 	color: #70777F;
 	text-shadow: rgba(256,256,256,0.6) 0px 1px 0px;
 }
-
-/*Headings and Button styles are overridden in Tooltips*/
 .dj_tablet .mblTooltip .mblHeading { 
 	position: relative;
 	margin: 0px;
@@ -54,8 +50,6 @@
 	-moz-border-radius: 5px;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#686F80), to(#000924), color-stop(0.5, #000B29));
 }
-
-/* Heading Arrow Button */
 .dj_tablet .mblArrowButtonHead {
 	border-color: #4D4E50;
 	background: -webkit-gradient(linear, left top, right bottom, from(#B1B5BB), to(#6A727D));
@@ -77,22 +71,15 @@
 .dj_tablet .mblArrowButtonSelected .mblArrowButtonBody, .dj_tablet .mblArrowButtonSelected .mblArrowButtonNeck {
 	background: -webkit-gradient(linear, left top, left bottom, from(#9DA0A3), to(#43484F));
 }
-
-/* dojox.mobile.RoundRect */
 .dj_tablet .mblRoundRect {
 	margin: 7px 30px 30px 30px;
 }
 .dj_tablet .mblHeading + .mblRoundRect {
 	margin-top: 30px;
 }
-
-/* dojox.mobile.EdgeToEdgeCategory */
-/* dojox.mobile.RoundRectCategory */
 .dj_tablet .mblRoundRectCategory {
 	margin: 18px 0px 0px 41px;
 }
-
-/* dojox.mobile.RoundRectList */
 .dj_tablet .mblRoundRectList {
 	margin: 7px 30px 30px 30px;
 }
@@ -102,12 +89,3 @@
 .dj_tablet .mblHeading + .mblRoundRectList {
 	margin-top: 30px;
 }
-
-/* dojox.mobile.EdgeToEdgeList */
-/* dojox.mobile.ListItem */
-/* Switch */
-/* Icon Container */
-/* Icon Content Heading */
-/* dojox.mobile.Button */
-/* Tab Container */
-/* Progress Indicator */

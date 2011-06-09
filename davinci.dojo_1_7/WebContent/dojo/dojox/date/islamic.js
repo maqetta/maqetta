@@ -1,248 +1,182 @@
-define(["dojo/_base/kernel", "dojo/date", "./islamic/Date"], function(d, dd, islamicDate){
-	dojo.getObject("date.islamic", true, dojox);
-	dojo.experimental("dojox.date.islamic");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// Utility methods to do arithmetic calculations with islamic.Dates
-
-	// added for compat to date
-dojox.date.islamic.getDaysInMonth = function(/*islamic.Date*/month){
-	return month.getDaysInIslamicMonth(month.getMonth(), month.getFullYear());
+define(["dojo/_base/kernel","dojo/date","./islamic/Date"],function(d,dd,_1){
+dojo.getObject("date.islamic",true,dojox);
+dojo.experimental("dojox.date.islamic");
+dojox.date.islamic.getDaysInMonth=function(_2){
+return _2.getDaysInIslamicMonth(_2.getMonth(),_2.getFullYear());
 };
-
-//TODO: define islamic.isLeapYear?  Or should it be invalid, since it has different meaning?
-
-dojox.date.islamic.compare = function(/*islamic.Date*/date1, /*islamic.Date*/date2, /*String?*/portion){
-	//	summary:
-	//		Compare two islamic date objects by date, time, or both.
-	//	description:
-	//  	Returns 0 if equal, positive if a > b, else negative.
-	//	date1:
-	//		islamic.Date object
-	//	date2:
-	//		islamic.Date object.  If not specified, the current islamic.Date is used.
-	//	portion:
-	//		A string indicating the "date" or "time" portion of a Date object.
-	//		Compares both "date" and "time" by default.  One of the following:
-	//		"date", "time", "datetime"
-
-	if(date1 instanceof islamicDate){
-		date1 = date1.toGregorian();
-	}
-	if(date2 instanceof islamicDate){
-		date2 = date2.toGregorian();
-	}
-	
-	return dd.compare.apply(null, arguments);
+dojox.date.islamic.compare=function(_3,_4,_5){
+if(_3 instanceof _1){
+_3=_3.toGregorian();
+}
+if(_4 instanceof _1){
+_4=_4.toGregorian();
+}
+return dd.compare.apply(null,arguments);
 };
-
-dojox.date.islamic.add = function(/*dojox.date.islamic.Date*/date, /*String*/interval, /*int*/amount){
-	//	based on and similar to dojo.date.add
-	//	summary:
-	//		Add to a Date in intervals of different size, from milliseconds to years
-	//	date: islamic.Date
-	//		Date object to start with
-	//	interval:
-	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "week", "weekday"
-	//	amount:
-	//		How much to add to the date.
-
-	var newIslamDate = new islamicDate(date);
-
-	switch(interval){
-		case "day":
-			newIslamDate.setDate(date.getDate() + amount);
-			break;
-		case "weekday":
-			var day = date.getDay();
-			if(((day + amount) < 5) && ((day + amount) > 0)){
-				 newIslamDate.setDate(date.getDate() + amount);
-			}else{
-				var adddays = 0, /*weekend */
-					remdays = 0;
-				if(day == 5){//friday
-					day = 4;
-					remdays = (amount > 0) ?  -1 : 1;
-				}else if(day == 6){ //shabat
-					day = 4;
-					remdays = (amount > 0) ? -2 : 2;
-				}
-				var add = (amount > 0) ? (5 - day - 1) : -day
-				var amountdif = amount - add;
-				var div = parseInt(amountdif / 5);
-				if(amountdif % 5 != 0){
-					adddays = (amount > 0)  ? 2 : -2;
-				}
-				adddays = adddays + div * 7 + amountdif % 5 + add;
-				newIslamDate.setDate(date.getDate() + adddays +  remdays);
-			}
-			break;
-		case "year":
-			newIslamDate.setFullYear(date.getFullYear() + amount);
-			break;
-		case "week":
-			amount *= 7;
-			newIslamDate.setDate(date.getDate() + amount);
-			break;
-		case "month":
-			var month = date.getMonth();
-			newIslamDate.setMonth(month + amount);
-			break;
-		case "hour":
-			newIslamDate.setHours(date.getHours() + amount);
-			break;
-		case "minute":
-			newIslamDate.setMinutes(date.getMinutes() + amount);
-			break;
-		case "second":
-			newIslamDate.setSeconds(date.getSeconds() + amount);
-			break;
-		case "millisecond":
-			newIslamDate.setMilliseconds(date.getMilliseconds() + amount);
-			break;
-	}
-
-	return newIslamDate; // dojox.date.islamic.Date
+dojox.date.islamic.add=function(_6,_7,_8){
+var _9=new _1(_6);
+switch(_7){
+case "day":
+_9.setDate(_6.getDate()+_8);
+break;
+case "weekday":
+var _a=_6.getDay();
+if(((_a+_8)<5)&&((_a+_8)>0)){
+_9.setDate(_6.getDate()+_8);
+}else{
+var _b=0,_c=0;
+if(_a==5){
+_a=4;
+_c=(_8>0)?-1:1;
+}else{
+if(_a==6){
+_a=4;
+_c=(_8>0)?-2:2;
+}
+}
+var _d=(_8>0)?(5-_a-1):-_a;
+var _e=_8-_d;
+var _f=parseInt(_e/5);
+if(_e%5!=0){
+_b=(_8>0)?2:-2;
+}
+_b=_b+_f*7+_e%5+_d;
+_9.setDate(_6.getDate()+_b+_c);
+}
+break;
+case "year":
+_9.setFullYear(_6.getFullYear()+_8);
+break;
+case "week":
+_8*=7;
+_9.setDate(_6.getDate()+_8);
+break;
+case "month":
+var _10=_6.getMonth();
+_9.setMonth(_10+_8);
+break;
+case "hour":
+_9.setHours(_6.getHours()+_8);
+break;
+case "minute":
+_9.setMinutes(_6.getMinutes()+_8);
+break;
+case "second":
+_9.setSeconds(_6.getSeconds()+_8);
+break;
+case "millisecond":
+_9.setMilliseconds(_6.getMilliseconds()+_8);
+break;
+}
+return _9;
 };
-
-dojox.date.islamic.difference = function(/*dojox.date.islamic.Date*/date1, /*dojox.date.islamic.Date?*/date2, /*String?*/interval){
-	//	based on and similar to dojo.date.difference
-	//	summary:
-	//        date1 - date2
-	//	 date2 is islamic.Date object.  If not specified, the current islamic.Date is used.
-	//	interval:
-	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond",  "week", "weekday"
-	//		Defaults to "day".
-
-	date2 = date2 || new islamicDate();
-	interval = interval || "day";
-	var yearDiff = date1.getFullYear() - date2.getFullYear();
-	var delta = 1; // Integer return value
-	switch(interval){
-		case "weekday":
-			var days = Math.round(dojox.date.islamic.difference(date1, date2, "day"));
-			var weeks = parseInt(dojox.date.islamic.difference(date1, date2, "week"));
-			var mod = days % 7;
-
-			// Even number of weeks
-			if(mod == 0){
-				days = weeks*5;
-			}else{
-				// Weeks plus spare change (< 7 days)
-				var adj = 0;
-				var aDay = date2.getDay();
-				var bDay = date1.getDay();
-	
-				weeks = parseInt(days/7);
-				mod = days % 7;
-				// Mark the date advanced by the number of
-				// round weeks (may be zero)
-				var dtMark = new islamicDate(date2);
-				dtMark.setDate(dtMark.getDate()+(weeks*7));
-				var dayMark = dtMark.getDay();
-	
-				// Spare change days -- 6 or less
-				if(days > 0){
-					switch(true){
-						// Range starts on Fri
-						case aDay == 5:
-							adj = -1;
-							break;
-						// Range starts on Sat
-						case aDay == 6:
-							adj = 0;
-							break;
-						// Range ends on Fri
-						case bDay == 5:
-							adj = -1;
-							break;
-						// Range ends on Sat
-						case bDay == 6:
-							adj = -2;
-							break;
-						// Range contains weekend
-						case (dayMark + mod) > 5:
-							adj = -2;
-					}
-				}else if(days < 0){
-					switch(true){
-						// Range starts on Fri
-						case aDay == 5:
-							adj = 0;
-							break;
-						// Range starts on Sat
-						case aDay == 6:
-							adj = 1;
-							break;
-						// Range ends on Fri
-						case bDay == 5:
-							adj = 2;
-							break;
-						// Range ends on Sat
-						case bDay == 6:
-							adj = 1;
-							break;
-						// Range contains weekend
-						case (dayMark + mod) < 0:
-							adj = 2;
-					}
-				}
-				days += adj;
-				days -= (weeks*2);
-			}
-			delta = days;
-			break;
-		case "year":
-			delta = yearDiff;
-			break;
-		case "month":
-			var startdate =  (date1.toGregorian() > date2.toGregorian()) ? date1 : date2; // more
-			var enddate = (date1.toGregorian() > date2.toGregorian()) ? date2 : date1;
-			
-			var month1 = startdate.getMonth();
-			var month2 = enddate.getMonth();
-			
-			if (yearDiff == 0){
-				delta = startdate.getMonth() - enddate.getMonth() ;
-			}else{
-				delta = 12-month2;
-				delta +=  month1;
-				var i = enddate.getFullYear()+1;
-				var e = startdate.getFullYear();
-				for (i;   i < e;  i++){
-					delta += 12;
-				}
-			}
-			if (date1.toGregorian() < date2.toGregorian()){
-				delta = -delta;
-			}
-			break;
-		case "week":
-			// Truncate instead of rounding
-			// Don't use Math.floor -- value may be negative
-			delta = parseInt(dojox.date.islamic.difference(date1, date2, "day")/7);
-			break;
-		case "day":
-			delta /= 24;
-			// fallthrough
-		case "hour":
-			delta /= 60;
-			// fallthrough
-		case "minute":
-			delta /= 60;
-			// fallthrough
-		case "second":
-			delta /= 1000;
-			// fallthrough
-		case "millisecond":
-			delta *= date1.toGregorian().getTime()- date2.toGregorian().getTime();
-	}
-
-	// Round for fractional values and DST leaps
-	return Math.round(delta); // Number (integer)
+dojox.date.islamic.difference=function(_11,_12,_13){
+_12=_12||new _1();
+_13=_13||"day";
+var _14=_11.getFullYear()-_12.getFullYear();
+var _15=1;
+switch(_13){
+case "weekday":
+var _16=Math.round(dojox.date.islamic.difference(_11,_12,"day"));
+var _17=parseInt(dojox.date.islamic.difference(_11,_12,"week"));
+var mod=_16%7;
+if(mod==0){
+_16=_17*5;
+}else{
+var adj=0;
+var _18=_12.getDay();
+var _19=_11.getDay();
+_17=parseInt(_16/7);
+mod=_16%7;
+var _1a=new _1(_12);
+_1a.setDate(_1a.getDate()+(_17*7));
+var _1b=_1a.getDay();
+if(_16>0){
+switch(true){
+case _18==5:
+adj=-1;
+break;
+case _18==6:
+adj=0;
+break;
+case _19==5:
+adj=-1;
+break;
+case _19==6:
+adj=-2;
+break;
+case (_1b+mod)>5:
+adj=-2;
+}
+}else{
+if(_16<0){
+switch(true){
+case _18==5:
+adj=0;
+break;
+case _18==6:
+adj=1;
+break;
+case _19==5:
+adj=2;
+break;
+case _19==6:
+adj=1;
+break;
+case (_1b+mod)<0:
+adj=2;
+}
+}
+}
+_16+=adj;
+_16-=(_17*2);
+}
+_15=_16;
+break;
+case "year":
+_15=_14;
+break;
+case "month":
+var _1c=(_11.toGregorian()>_12.toGregorian())?_11:_12;
+var _1d=(_11.toGregorian()>_12.toGregorian())?_12:_11;
+var _1e=_1c.getMonth();
+var _1f=_1d.getMonth();
+if(_14==0){
+_15=_1c.getMonth()-_1d.getMonth();
+}else{
+_15=12-_1f;
+_15+=_1e;
+var i=_1d.getFullYear()+1;
+var e=_1c.getFullYear();
+for(i;i<e;i++){
+_15+=12;
+}
+}
+if(_11.toGregorian()<_12.toGregorian()){
+_15=-_15;
+}
+break;
+case "week":
+_15=parseInt(dojox.date.islamic.difference(_11,_12,"day")/7);
+break;
+case "day":
+_15/=24;
+case "hour":
+_15/=60;
+case "minute":
+_15/=60;
+case "second":
+_15/=1000;
+case "millisecond":
+_15*=_11.toGregorian().getTime()-_12.toGregorian().getTime();
+}
+return Math.round(_15);
 };
 return dojox.date.islamic;
 });

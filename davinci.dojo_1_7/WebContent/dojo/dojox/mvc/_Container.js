@@ -1,84 +1,33 @@
-define([
-	"dojo/_base/declare",
-	"dojo/parser",
-	"dojo/_base/lang",
-	"dijit/_WidgetBase"
-], function(declare, parser, lang, _WidgetBase){
-	/*=====
-		declare = dojo.declare;
-		_WidgetBase = dijit._WidgetBase;
-	=====*/
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return declare("dojox.mvc._Container", [_WidgetBase], {
-	
-		// stopParser: [private] Boolean
-		//		Flag to parser to not try and parse widgets declared inside the container.
-		stopParser: true,
-	
-		// templateString: [private] String
-		//		The template or content for this container. It is usually obtained from the
-		//		body of the container and may be modified or repeated over a collection/array.
-		//		In this simple implementation, attach points, attach events and WAI
-		//		attributes are not supported in the template.
-		templateString : "",
-	
-		// _containedWidgets: [protected] dijit._Widget[]
-		//		The array of contained widgets at any given point in time within this container.
-		_containedWidgets : [],
-	
-		////////////////////// PROTECTED METHODS ////////////////////////
-	
-		_createBody: function(){
-			// summary:
-			//		Parse the body of this MVC container widget.
-			// description:
-			//		The bodies of MVC containers may be model-bound views generated dynamically.
-			//		Parse the body, start an contained widgets and attach template nodes for
-			//		contained widgets as necessary.
-			// tags:
-			//		protected
-			this._containedWidgets = parser.parse(this.srcNodeRef,{
-				template: true,
-				inherited: {dir: this.dir, lang: this.lang},
-				propsThis: this,
-				scope: "dojo"
-			});
-		},
-	
-		_destroyBody: function(){
-			// summary:
-			//		Destroy the body of this MVC container widget. Also destroys any
-			//		contained widgets.
-			// tags:
-			//		protected
-			if(this._containedWidgets && this._containedWidgets.length > 0){
-				for(var n = this._containedWidgets.length - 1; n > -1; n--){
-					var w = this._containedWidgets[n];
-					if(w && !w._destroyed && w.destroy){
-						w.destroy();
-					}
-				}
-			}
-		},
-	
-		////////////////////// PRIVATE METHODS ////////////////////////
-	
-		_exprRepl: function(tmpl){
-			// summary:
-			//		Does substitution of ${foo+bar} type expressions in template string.
-			// tags:
-			//		private
-			var pThis = this, transform = function(value, key){
-				if(!value){return "";}
-				var exp = value.substr(2);
-				exp = exp.substr(0, exp.length - 1);
-				return eval(exp, pThis);
-			};
-			transform = lang.hitch(this, transform);
-			return tmpl.replace(/\$\{.*?\}/g,
-				function(match, key, format){
-					return transform(match, key).toString();
-				});
-		}
-	});
+define(["dojo/_base/declare","dojo/parser","dojo/_base/lang","dijit/_WidgetBase"],function(_1,_2,_3,_4){
+return _1("dojox.mvc._Container",[_4],{stopParser:true,templateString:"",_containedWidgets:[],_createBody:function(){
+this._containedWidgets=_2.parse(this.srcNodeRef,{template:true,inherited:{dir:this.dir,lang:this.lang},propsThis:this,scope:"dojo"});
+},_destroyBody:function(){
+if(this._containedWidgets&&this._containedWidgets.length>0){
+for(var n=this._containedWidgets.length-1;n>-1;n--){
+var w=this._containedWidgets[n];
+if(w&&!w._destroyed&&w.destroy){
+w.destroy();
+}
+}
+}
+},_exprRepl:function(_5){
+var _6=this,_7=function(_8,_9){
+if(!_8){
+return "";
+}
+var _a=_8.substr(2);
+_a=_a.substr(0,_a.length-1);
+return eval(_a,_6);
+};
+_7=_3.hitch(this,_7);
+return _5.replace(/\$\{.*?\}/g,function(_b,_c,_d){
+return _7(_b,_c).toString();
+});
+}});
 });

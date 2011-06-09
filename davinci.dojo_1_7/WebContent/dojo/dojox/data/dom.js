@@ -1,103 +1,45 @@
-define("dojox/data/dom", ["dojo", "dojox", "dojox/xml/parser"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		
-		
-//DOM type to int value for reference.
-//Ints make for more compact code than full constant names.
-//ELEMENT_NODE                  = 1;
-//ATTRIBUTE_NODE                = 2;
-//TEXT_NODE                     = 3;
-//CDATA_SECTION_NODE            = 4;
-//ENTITY_REFERENCE_NODE         = 5;
-//ENTITY_NODE                   = 6;
-//PROCESSING_INSTRUCTION_NODE   = 7;
-//COMMENT_NODE                  = 8;
-//DOCUMENT_NODE                 = 9;
-//DOCUMENT_TYPE_NODE            = 10;
-//DOCUMENT_FRAGMENT_NODE        = 11;
-//NOTATION_NODE                 = 12;
-
-//This file contains internal/helper APIs as holders for people who used them.  They have been migrated to
-//a better project, dojox.xml and experimental has been removed there.  Please update usage to the new package.
-dojo.deprecated("dojox.data.dom", "Use dojox.xml.parser instead.", "2.0");
-
-if(!dojox.data) { dojox.data = {}; }
-if(!dojox.data.dom) { dojox.data.dom = {}; }
-
-dojox.data.dom.createDocument = function(/*string?*/ str, /*string?*/ mimetype){
-	//	summary:
-	//		cross-browser implementation of creating an XML document object.
-	//
-	//	str:
-	//		Optional text to create the document from.  If not provided, an empty XML document will be created.
-	//		If str is empty string "", then a new empty document will be created.
-	//	mimetype:
-	//		Optional mimetype of the text.  Typically, this is text/xml.  Will be defaulted to text/xml if not provided.
-	dojo.deprecated("dojox.data.dom.createDocument()", "Use dojox.xml.parser.parse() instead.", "2.0");
-	try{
-		return dojox.xml.parser.parse(str,mimetype); //DOMDocument.
-	}catch(e){
-		/*Squeltch errors like the old parser did.*/
-		return null;
-	}
+define("dojox/data/dom",["dojo","dojox","dojox/xml/parser"],function(_1,_2){
+_1.deprecated("dojox.data.dom","Use dojox.xml.parser instead.","2.0");
+if(!_2.data){
+_2.data={};
+}
+if(!_2.data.dom){
+_2.data.dom={};
+}
+_2.data.dom.createDocument=function(_3,_4){
+_1.deprecated("dojox.data.dom.createDocument()","Use dojox.xml.parser.parse() instead.","2.0");
+try{
+return _2.xml.parser.parse(_3,_4);
+}
+catch(e){
+return null;
+}
 };
-
-dojox.data.dom.textContent = function(/*Node*/node, /*string?*/text){
-	//	summary:
-	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//	description:
-	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//		This function can also update the text of a node by replacing all child
-	//		content of the node.
-	//	node:
-	//		The node to get the text off of or set the text on.
-	//	text:
-	//		Optional argument of the text to apply to the node.
-	dojo.deprecated("dojox.data.dom.textContent()", "Use dojox.xml.parser.textContent() instead.", "2.0");
-	if(arguments.length> 1){
-		return dojox.xml.parser.textContent(node, text); //string
-	}else{
-		return dojox.xml.parser.textContent(node); //string
-	}
+_2.data.dom.textContent=function(_5,_6){
+_1.deprecated("dojox.data.dom.textContent()","Use dojox.xml.parser.textContent() instead.","2.0");
+if(arguments.length>1){
+return _2.xml.parser.textContent(_5,_6);
+}else{
+return _2.xml.parser.textContent(_5);
+}
 };
-
-dojox.data.dom.replaceChildren = function(/*Element*/node, /*Node || array*/ newChildren){
-	//	summary:
-	//		Removes all children of node and appends newChild. All the existing
-	//		children will be destroyed.
-	//	description:
-	//		Removes all children of node and appends newChild. All the existing
-	//		children will be destroyed.
-	// 	node:
-	//		The node to modify the children on
-	//	newChildren:
-	//		The children to add to the node.  It can either be a single Node or an
-	//		array of Nodes.
-	dojo.deprecated("dojox.data.dom.replaceChildren()", "Use dojox.xml.parser.replaceChildren() instead.", "2.0");
-	dojox.xml.parser.replaceChildren(node, newChildren);
+_2.data.dom.replaceChildren=function(_7,_8){
+_1.deprecated("dojox.data.dom.replaceChildren()","Use dojox.xml.parser.replaceChildren() instead.","2.0");
+_2.xml.parser.replaceChildren(_7,_8);
 };
-
-dojox.data.dom.removeChildren = function(/*Element*/node){
-	//	summary:
-	//		removes all children from node and returns the count of children removed.
-	//		The children nodes are not destroyed. Be sure to call dojo._destroyElement on them
-	//		after they are not used anymore.
-	//	node:
-	//		The node to remove all the children from.
-	dojo.deprecated("dojox.data.dom.removeChildren()", "Use dojox.xml.parser.removeChildren() instead.", "2.0");
-	return dojox.xml.parser.removeChildren(node); //int
+_2.data.dom.removeChildren=function(_9){
+_1.deprecated("dojox.data.dom.removeChildren()","Use dojox.xml.parser.removeChildren() instead.","2.0");
+return _2.xml.parser.removeChildren(_9);
 };
-
-dojox.data.dom.innerXML = function(/*Node*/node){
-	//	summary:
-	//		Implementation of MS's innerXML function.
-	//	node:
-	//		The node from which to generate the XML text representation.
-	dojo.deprecated("dojox.data.dom.innerXML()", "Use dojox.xml.parser.innerXML() instead.", "2.0");
-	return dojox.xml.parser.innerXML(node); //string||null
+_2.data.dom.innerXML=function(_a){
+_1.deprecated("dojox.data.dom.innerXML()","Use dojox.xml.parser.innerXML() instead.","2.0");
+return _2.xml.parser.innerXML(_a);
 };
-
-return dojox.data.dom;
-
+return _2.data.dom;
 });
-

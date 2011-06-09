@@ -1,132 +1,31 @@
-define(["./_base/kernel", "./_base/array", "./number", "./i18n", "./i18n!./cldr/nls/currency", "./cldr/monetary"], function(dojo) {
-	// module:
-	//		dojo/currency
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("currency", true, dojo);
-
-/*=====
-dojo.currency = {
-	// summary: localized formatting and parsing routines for currencies
-	//
-	// description: extends dojo.number to provide culturally-appropriate formatting of values
-	//	in various world currencies, including use of a currency symbol.  The currencies are specified
-	//	by a three-letter international symbol in all uppercase, and support for the currencies is
-	//	provided by the data in `dojo.cldr`.  The scripts generating dojo.cldr specify which
-	//	currency support is included.  A fixed number of decimal places is determined based
-	//	on the currency type and is not determined by the 'pattern' argument.  The fractional
-	//	portion is optional, by default, and variable length decimals are not supported.
-}
-=====*/
-
-dojo.currency._mixInDefaults = function(options){
-	options = options || {};
-	options.type = "currency";
-
-	// Get locale-dependent currency data, like the symbol
-	var bundle = dojo.i18n.getLocalization("dojo.cldr", "currency", options.locale) || {};
-
-	// Mixin locale-independent currency data, like # of places
-	var iso = options.currency;
-	var data = dojo.cldr.monetary.getData(iso);
-
-	dojo.forEach(["displayName","symbol","group","decimal"], function(prop){
-		data[prop] = bundle[iso+"_"+prop];
-	});
-
-	data.fractional = [true, false];
-
-	// Mixin with provided options
-	return dojo.mixin(data, options);
-};
-
-/*=====
-dojo.declare("dojo.currency.__FormatOptions", [dojo.number.__FormatOptions], {
-	//	type: String?
-	//		Should not be set.  Value is assumed to be "currency".
-	//	symbol: String?
-	//		localized currency symbol. The default will be looked up in table of supported currencies in `dojo.cldr`
-	//		A [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code will be used if not found.
-	//	currency: String?
-	//		an [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD".
-	//		For use with dojo.currency only.
-	//	places: Number?
-	//		number of decimal places to show.  Default is defined based on which currency is used.
-	type: "",
-	symbol: "",
-	currency: "",
-	places: ""
+define("dojo/currency",["./_base/kernel","./_base/array","./number","./i18n","./i18n!./cldr/nls/currency","./cldr/monetary"],function(_1){
+_1.getObject("currency",true,_1);
+_1.currency._mixInDefaults=function(_2){
+_2=_2||{};
+_2.type="currency";
+var _3=_1.i18n.getLocalization("dojo.cldr","currency",_2.locale)||{};
+var _4=_2.currency;
+var _5=_1.cldr.monetary.getData(_4);
+_1.forEach(["displayName","symbol","group","decimal"],function(_6){
+_5[_6]=_3[_4+"_"+_6];
 });
-=====*/
-
-dojo.currency.format = function(/*Number*/value, /*dojo.currency.__FormatOptions?*/options){
-// summary:
-//		Format a Number as a currency, using locale-specific settings
-//
-// description:
-//		Create a string from a Number using a known, localized pattern.
-//		[Formatting patterns](http://www.unicode.org/reports/tr35/#Number_Elements)
-//		appropriate to the locale are chosen from the [CLDR](http://unicode.org/cldr)
-//		as well as the appropriate symbols and delimiters and number of decimal places.
-//
-// value:
-//		the number to be formatted.
-
-	return dojo.number.format(value, dojo.currency._mixInDefaults(options));
+_5.fractional=[true,false];
+return _1.mixin(_5,_2);
 };
-
-dojo.currency.regexp = function(/*dojo.number.__RegexpOptions?*/options){
-//
-// summary:
-//		Builds the regular needed to parse a currency value
-//
-// description:
-//		Returns regular expression with positive and negative match, group and decimal separators
-//		Note: the options.places default, the number of decimal places to accept, is defined by the currency type.
-	return dojo.number.regexp(dojo.currency._mixInDefaults(options)); // String
+_1.currency.format=function(_7,_8){
+return _1.number.format(_7,_1.currency._mixInDefaults(_8));
 };
-
-/*=====
-dojo.declare("dojo.currency.__ParseOptions", [dojo.number.__ParseOptions], {
-	//	type: String?
-	//		Should not be set.  Value is assumed to be currency.
-	//	currency: String?
-	//		an [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD".
-	//		For use with dojo.currency only.
-	//	symbol: String?
-	//		localized currency symbol. The default will be looked up in table of supported currencies in `dojo.cldr`
-	//		A [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code will be used if not found.
-	//	places: Number?
-	//		fixed number of decimal places to accept.  The default is determined based on which currency is used.
-	//	fractional: Boolean?|Array?
-	//		Whether to include the fractional portion, where the number of decimal places are implied by the currency
-	//		or explicit 'places' parameter.  The value [true,false] makes the fractional portion optional.
-	//		By default for currencies, it the fractional portion is optional.
-	type: "",
-	currency: "",
-	symbol: "",
-	places: "",
-	fractional: ""
-});
-=====*/
-
-dojo.currency.parse = function(/*String*/expression, /*dojo.currency.__ParseOptions?*/options){
-	//
-	// summary:
-	//		Convert a properly formatted currency string to a primitive Number,
-	//		using locale-specific settings.
-	//
-	// description:
-	//		Create a Number from a string using a known, localized pattern.
-	//		[Formatting patterns](http://www.unicode.org/reports/tr35/#Number_Format_Patterns)
-	//		are chosen appropriate to the locale, as well as the appropriate symbols and delimiters
-	//		and number of decimal places.
-	//
-	// expression: A string representation of a currency value
-
-	return dojo.number.parse(expression, dojo.currency._mixInDefaults(options));
+_1.currency.regexp=function(_9){
+return _1.number.regexp(_1.currency._mixInDefaults(_9));
 };
-
-return dojo.currency;
+_1.currency.parse=function(_a,_b){
+return _1.number.parse(_a,_1.currency._mixInDefaults(_b));
+};
+return _1.currency;
 });

@@ -1,95 +1,54 @@
-dojo.provide("dojox.form.Rating");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dijit.form._FormWidget");
-
-dojo.declare("dojox.form.Rating",
-	dijit.form._FormWidget,{
-	// summary:
-	//		A widget for rating using stars.
-	//
-	// required: Boolean
-	//		TODO: Can be true or false, default is false.
-	// required: false,
-
-	templateString: null,
-	
-	// numStars: Integer/Float
-	//		The number of stars to show, default is 3.
-	numStars: 3,
-	// value: Integer/Float
-	//		The current value of the Rating
-	value: 0,
-
-	constructor:function(/*Object*/params){
-		// Build the templateString. The number of stars is given by this.numStars,
-		// which is normally an attribute to the widget node.
-		dojo.mixin(this, params);
-		
-		// TODO actually "dijitInline" should be applied to the surrounding div, but FF2
-		// screws up when we dojo.query() for the star nodes, it orders them randomly, because of the use
-		// of display:--moz-inline-box ... very strange bug
-		// Since using ul and li in combintaion with dijitInline this problem doesnt exist anymore.
-		
-		// The focusNode is normally used to store the value, i dont know if that is right here, but seems standard for _FormWidgets
-		var tpl = '<div dojoAttachPoint="domNode" class="dojoxRating dijitInline">' +
-					'<input type="hidden" value="0" dojoAttachPoint="focusNode" /><ul>${stars}</ul>' +
-				'</div>';
-		// The value-attribute is used to "read" the value for processing in the widget class
-		var starTpl = '<li class="dojoxRatingStar dijitInline" dojoAttachEvent="onclick:onStarClick,onmouseover:_onMouse,onmouseout:_onMouse" value="${value}"></li>';
-		var rendered = "";
-		for(var i = 0; i < this.numStars; i++){
-			rendered += dojo.string.substitute(starTpl, {value:i+1});
-		}
-		this.templateString = dojo.string.substitute(tpl, {stars:rendered});
-	},
-
-	postCreate: function(){
-		this.inherited(arguments);
-		this._renderStars(this.value);
-	},
-
-	_onMouse: function(evt){
-		if(this.hovering){
-			var hoverValue = +dojo.attr(evt.target, "value");
-			this.onMouseOver(evt, hoverValue);
-			this._renderStars(hoverValue, true);
-		}else{
-			this._renderStars(this.value);
-		}
-	},
-
-	_renderStars: function(value, hover){
-		// summary: Render the stars depending on the value.
-		dojo.query(".dojoxRatingStar", this.domNode).forEach(function(star, i){
-			if(i + 1 > value){
-				dojo.removeClass(star, "dojoxRatingStarHover");
-				dojo.removeClass(star, "dojoxRatingStarChecked");
-			}else{
-				dojo.removeClass(star, "dojoxRatingStar" + (hover ? "Checked" : "Hover"));
-				dojo.addClass(star, "dojoxRatingStar" + (hover ? "Hover" : "Checked"));
-			}
-		});
-	},
-
-	onStarClick:function(/* Event */evt){
-		// summary: Connect on this method to get noticed when a star was clicked.
-		// example: dojo.connect(widget, "onStarClick", function(event){ ... })
-		var newVal = +dojo.attr(evt.target, "value");
-		this.setAttribute("value", newVal == this.value ? 0 : newVal);
-		this._renderStars(this.value);
-		this.onChange(this.value); // Do I have to call this by hand?
-	},
-	
-	onMouseOver: function(/*evt, value*/){
-		// summary: Connect here, the value is passed to this function as the second parameter!
-	},
-	
-	setAttribute: function(/*String*/key, /**/value){
-		// summary: When calling setAttribute("value", 4), set the value and render the stars accordingly.
-		this.inherited("setAttribute", arguments);
-		if (key=="value"){
-			this._renderStars(this.value);
-			this.onChange(this.value); // Do I really have to call this by hand? :-(
-		}
-	}
+define(["dojo","dijit","dojox","dijit/form/_FormWidget"],function(_1,_2,_3){
+_1.getObject("dojox.form.Rating",1);
+_1.declare("dojox.form.Rating",_2.form._FormWidget,{templateString:null,numStars:3,value:0,constructor:function(_4){
+_1.mixin(this,_4);
+var _5="<div dojoAttachPoint=\"domNode\" class=\"dojoxRating dijitInline\">"+"<input type=\"hidden\" value=\"0\" dojoAttachPoint=\"focusNode\" /><ul>${stars}</ul>"+"</div>";
+var _6="<li class=\"dojoxRatingStar dijitInline\" dojoAttachEvent=\"onclick:onStarClick,onmouseover:_onMouse,onmouseout:_onMouse\" value=\"${value}\"></li>";
+var _7="";
+for(var i=0;i<this.numStars;i++){
+_7+=_1.string.substitute(_6,{value:i+1});
+}
+this.templateString=_1.string.substitute(_5,{stars:_7});
+},postCreate:function(){
+this.inherited(arguments);
+this._renderStars(this.value);
+},_onMouse:function(_8){
+if(this.hovering){
+var _9=+_1.attr(_8.target,"value");
+this.onMouseOver(_8,_9);
+this._renderStars(_9,true);
+}else{
+this._renderStars(this.value);
+}
+},_renderStars:function(_a,_b){
+_1.query(".dojoxRatingStar",this.domNode).forEach(function(_c,i){
+if(i+1>_a){
+_1.removeClass(_c,"dojoxRatingStarHover");
+_1.removeClass(_c,"dojoxRatingStarChecked");
+}else{
+_1.removeClass(_c,"dojoxRatingStar"+(_b?"Checked":"Hover"));
+_1.addClass(_c,"dojoxRatingStar"+(_b?"Hover":"Checked"));
+}
 });
+},onStarClick:function(_d){
+var _e=+_1.attr(_d.target,"value");
+this.setAttribute("value",_e==this.value?0:_e);
+this._renderStars(this.value);
+this.onChange(this.value);
+},onMouseOver:function(){
+},setAttribute:function(_f,_10){
+this.inherited("setAttribute",arguments);
+if(_f=="value"){
+this._renderStars(this.value);
+this.onChange(this.value);
+}
+}});
+return _1.getObject("dojox.form.Rating");
+});
+require(["dojox/form/Rating"]);

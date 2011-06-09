@@ -1,194 +1,153 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Default", "./common", 
-	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/functional/sequence"], 
-	function(dojo, lang, declare, Default, dc, df, dfr, dfs){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var purgeGroup = df.lambda("item.purgeGroup()");
-
-	return dojo.declare("dojox.charting.plot2d.Stacked", dojox.charting.plot2d.Default, {
-		//	summary:
-		//		Like the default plot, Stacked sets up lines, areas and markers
-		//		in a stacked fashion (values on the y axis added to each other)
-		//		as opposed to a direct one.
-		getSeriesStats: function(){
-			//	summary:
-			//		Calculate the min/max on all attached series in both directions.
-			//	returns: Object
-			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			var stats = dc.collectStackedStats(this.series);
-			this._maxRunLength = stats.hmax;
-			return stats;
-		},
-		render: function(dim, offsets){
-			//	summary:
-			//		Run the calculations for any axes for this plot.
-			//	dim: Object
-			//		An object in the form of { width, height }
-			//	offsets: Object
-			//		An object of the form { l, r, t, b}.
-			//	returns: dojox.charting.plot2d.Stacked
-			//		A reference to this plot for functional chaining.
-			if(this._maxRunLength <= 0){
-				return this;
-			}
-
-			// stack all values
-			var acc = df.repeat(this._maxRunLength, "-> 0", 0);
-			for(var i = 0; i < this.series.length; ++i){
-				var run = this.series[i];
-				for(var j = 0; j < run.data.length; ++j){
-					var v = run.data[j];
-					if(v !== null){
-						if(isNaN(v)){ v = 0; }
-						acc[j] += v;
-					}
-				}
-			}
-			// draw runs in backwards
-			if(this.zoom && !this.isDataDirty()){
-				return this.performZoom(dim, offsets);
-			}
-			this.resetEvents();
-			this.dirty = this.isDirty();
-			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
-				this._eventSeries = {};
-				this.cleanGroup();
-				var s = this.group;
-				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
-			}
-
-			var t = this.chart.theme, events = this.events(),
-				ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
-				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler);
-
-			for(var i = this.series.length - 1; i >= 0; --i){
-				var run = this.series[i];
-				if(!this.dirty && !run.dirty){
-					t.skip();
-					this._reconnectEvents(run.name);
-					continue;
-				}
-				run.cleanGroup();
-				var theme = t.next(this.opt.areas ? "area" : "line", [this.opt, run], true),
-					s = run.group, outline,
-					lpoly = dojo.map(acc, function(v, i){
-						return {
-							x: ht(i + 1) + offsets.l,
-							y: dim.height - offsets.b - vt(v)
-						};
-					}, this);
-
-				var lpath = this.opt.tension ? dc.curve(lpoly, this.opt.tension) : "";
-
-				if(this.opt.areas){
-					var apoly = dojo.clone(lpoly);
-					if(this.opt.tension){
-						var p=dc.curve(apoly, this.opt.tension);
-						p += " L" + lpoly[lpoly.length - 1].x + "," + (dim.height - offsets.b) +
-							" L" + lpoly[0].x + "," + (dim.height - offsets.b) +
-							" L" + lpoly[0].x + "," + lpoly[0].y;
-						run.dyn.fill = s.createPath(p).setFill(theme.series.fill).getFill();
-					} else {
-						apoly.push({x: lpoly[lpoly.length - 1].x, y: dim.height - offsets.b});
-						apoly.push({x: lpoly[0].x, y: dim.height - offsets.b});
-						apoly.push(lpoly[0]);
-						run.dyn.fill = s.createPolyline(apoly).setFill(theme.series.fill).getFill();
-					}
-				}
-				if(this.opt.lines || this.opt.markers){
-					if(theme.series.outline){
-						outline = dc.makeStroke(theme.series.outline);
-						outline.width = 2 * outline.width + theme.series.stroke.width;
-					}
-				}
-				if(this.opt.markers){
-					run.dyn.marker = theme.symbol;
-				}
-				var frontMarkers, outlineMarkers, shadowMarkers;
-				if(theme.series.shadow && theme.series.stroke){
-					var shadow = theme.series.shadow,
-						spoly = dojo.map(lpoly, function(c){
-							return {x: c.x + shadow.dx, y: c.y + shadow.dy};
-						});
-					if(this.opt.lines){
-						if(this.opt.tension){
-							run.dyn.shadow = s.createPath(dc.curve(spoly, this.opt.tension)).setStroke(shadow).getStroke();
-						} else {
-							run.dyn.shadow = s.createPolyline(spoly).setStroke(shadow).getStroke();
-						}
-					}
-					if(this.opt.markers){
-						shadow = theme.marker.shadow;
-						shadowMarkers = dojo.map(spoly, function(c){
-							return s.createPath("M" + c.x + " " + c.y + " " + theme.symbol).
-								setStroke(shadow).setFill(shadow.color);
-						}, this);
-					}
-				}
-				if(this.opt.lines){
-					if(outline){
-						if(this.opt.tension){
-							run.dyn.outline = s.createPath(lpath).setStroke(outline).getStroke();
-						} else {
-							run.dyn.outline = s.createPolyline(lpoly).setStroke(outline).getStroke();
-						}
-					}
-					if(this.opt.tension){
-						run.dyn.stroke = s.createPath(lpath).setStroke(theme.series.stroke).getStroke();
-					} else {
-						run.dyn.stroke = s.createPolyline(lpoly).setStroke(theme.series.stroke).getStroke();
-					}
-				}
-				if(this.opt.markers){
-					frontMarkers = new Array(lpoly.length);
-					outlineMarkers = new Array(lpoly.length);
-					outline = null;
-					if(theme.marker.outline){
-						outline = dc.makeStroke(theme.marker.outline);
-						outline.width = 2 * outline.width + (theme.marker.stroke ? theme.marker.stroke.width : 0);
-					}
-					dojo.forEach(lpoly, function(c, i){
-						var path = "M" + c.x + " " + c.y + " " + theme.symbol;
-						if(outline){
-							outlineMarkers[i] = s.createPath(path).setStroke(outline);
-						}
-						frontMarkers[i] = s.createPath(path).setStroke(theme.marker.stroke).setFill(theme.marker.fill);
-					}, this);
-					if(events){
-						var eventSeries = new Array(frontMarkers.length);
-						dojo.forEach(frontMarkers, function(s, i){
-							var o = {
-								element: "marker",
-								index:   i,
-								run:     run,
-								shape:   s,
-								outline: outlineMarkers[i] || null,
-								shadow:  shadowMarkers && shadowMarkers[i] || null,
-								cx:      lpoly[i].x,
-								cy:      lpoly[i].y,
-								x:       i + 1,
-								y:       run.data[i]
-							};
-							this._connectEvents(o);
-							eventSeries[i] = o;
-						}, this);
-						this._eventSeries[run.name] = eventSeries;
-					}else{
-						delete this._eventSeries[run.name];
-					}
-				}
-				run.dirty = false;
-				// update the accumulator
-				for(var j = 0; j < run.data.length; ++j){
-					var v = run.data[j];
-					if(v !== null){
-						if(isNaN(v)){ v = 0; }
-						acc[j] -= v;
-					}
-				}
-			}
-			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.Stacked
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Default","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/functional/sequence"],function(_1,_2,_3,_4,dc,df,_5,_6){
+var _7=df.lambda("item.purgeGroup()");
+return _1.declare("dojox.charting.plot2d.Stacked",dojox.charting.plot2d.Default,{getSeriesStats:function(){
+var _8=dc.collectStackedStats(this.series);
+this._maxRunLength=_8.hmax;
+return _8;
+},render:function(_9,_a){
+if(this._maxRunLength<=0){
+return this;
+}
+var _b=df.repeat(this._maxRunLength,"-> 0",0);
+for(var i=0;i<this.series.length;++i){
+var _c=this.series[i];
+for(var j=0;j<_c.data.length;++j){
+var v=_c.data[j];
+if(v!==null){
+if(isNaN(v)){
+v=0;
+}
+_b[j]+=v;
+}
+}
+}
+if(this.zoom&&!this.isDataDirty()){
+return this.performZoom(_9,_a);
+}
+this.resetEvents();
+this.dirty=this.isDirty();
+if(this.dirty){
+_1.forEach(this.series,_7);
+this._eventSeries={};
+this.cleanGroup();
+var s=this.group;
+df.forEachRev(this.series,function(_d){
+_d.cleanGroup(s);
+});
+}
+var t=this.chart.theme,_e=this.events(),ht=this._hScaler.scaler.getTransformerFromModel(this._hScaler),vt=this._vScaler.scaler.getTransformerFromModel(this._vScaler);
+for(var i=this.series.length-1;i>=0;--i){
+var _c=this.series[i];
+if(!this.dirty&&!_c.dirty){
+t.skip();
+this._reconnectEvents(_c.name);
+continue;
+}
+_c.cleanGroup();
+var _f=t.next(this.opt.areas?"area":"line",[this.opt,_c],true),s=_c.group,_10,_11=_1.map(_b,function(v,i){
+return {x:ht(i+1)+_a.l,y:_9.height-_a.b-vt(v)};
+},this);
+var _12=this.opt.tension?dc.curve(_11,this.opt.tension):"";
+if(this.opt.areas){
+var _13=_1.clone(_11);
+if(this.opt.tension){
+var p=dc.curve(_13,this.opt.tension);
+p+=" L"+_11[_11.length-1].x+","+(_9.height-_a.b)+" L"+_11[0].x+","+(_9.height-_a.b)+" L"+_11[0].x+","+_11[0].y;
+_c.dyn.fill=s.createPath(p).setFill(_f.series.fill).getFill();
+}else{
+_13.push({x:_11[_11.length-1].x,y:_9.height-_a.b});
+_13.push({x:_11[0].x,y:_9.height-_a.b});
+_13.push(_11[0]);
+_c.dyn.fill=s.createPolyline(_13).setFill(_f.series.fill).getFill();
+}
+}
+if(this.opt.lines||this.opt.markers){
+if(_f.series.outline){
+_10=dc.makeStroke(_f.series.outline);
+_10.width=2*_10.width+_f.series.stroke.width;
+}
+}
+if(this.opt.markers){
+_c.dyn.marker=_f.symbol;
+}
+var _14,_15,_16;
+if(_f.series.shadow&&_f.series.stroke){
+var _17=_f.series.shadow,_18=_1.map(_11,function(c){
+return {x:c.x+_17.dx,y:c.y+_17.dy};
+});
+if(this.opt.lines){
+if(this.opt.tension){
+_c.dyn.shadow=s.createPath(dc.curve(_18,this.opt.tension)).setStroke(_17).getStroke();
+}else{
+_c.dyn.shadow=s.createPolyline(_18).setStroke(_17).getStroke();
+}
+}
+if(this.opt.markers){
+_17=_f.marker.shadow;
+_16=_1.map(_18,function(c){
+return s.createPath("M"+c.x+" "+c.y+" "+_f.symbol).setStroke(_17).setFill(_17.color);
+},this);
+}
+}
+if(this.opt.lines){
+if(_10){
+if(this.opt.tension){
+_c.dyn.outline=s.createPath(_12).setStroke(_10).getStroke();
+}else{
+_c.dyn.outline=s.createPolyline(_11).setStroke(_10).getStroke();
+}
+}
+if(this.opt.tension){
+_c.dyn.stroke=s.createPath(_12).setStroke(_f.series.stroke).getStroke();
+}else{
+_c.dyn.stroke=s.createPolyline(_11).setStroke(_f.series.stroke).getStroke();
+}
+}
+if(this.opt.markers){
+_14=new Array(_11.length);
+_15=new Array(_11.length);
+_10=null;
+if(_f.marker.outline){
+_10=dc.makeStroke(_f.marker.outline);
+_10.width=2*_10.width+(_f.marker.stroke?_f.marker.stroke.width:0);
+}
+_1.forEach(_11,function(c,i){
+var _19="M"+c.x+" "+c.y+" "+_f.symbol;
+if(_10){
+_15[i]=s.createPath(_19).setStroke(_10);
+}
+_14[i]=s.createPath(_19).setStroke(_f.marker.stroke).setFill(_f.marker.fill);
+},this);
+if(_e){
+var _1a=new Array(_14.length);
+_1.forEach(_14,function(s,i){
+var o={element:"marker",index:i,run:_c,shape:s,outline:_15[i]||null,shadow:_16&&_16[i]||null,cx:_11[i].x,cy:_11[i].y,x:i+1,y:_c.data[i]};
+this._connectEvents(o);
+_1a[i]=o;
+},this);
+this._eventSeries[_c.name]=_1a;
+}else{
+delete this._eventSeries[_c.name];
+}
+}
+_c.dirty=false;
+for(var j=0;j<_c.data.length;++j){
+var v=_c.data[j];
+if(v!==null){
+if(isNaN(v)){
+v=0;
+}
+_b[j]-=v;
+}
+}
+}
+this.dirty=false;
+return this;
+}});
 });

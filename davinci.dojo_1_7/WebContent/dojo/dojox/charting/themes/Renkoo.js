@@ -1,81 +1,32 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// created by Tom Trenka
-
-	var themes = dojox.charting.themes, g = Theme.generateGradient,
-		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 150};
-	
-	themes.Renkoo = new Theme({
-		chart: {
-			fill:      "#123666",
-			pageStyle: {backgroundColor: "#123666", backgroundImage: "none", color: "#95afdb"}
-		},
-		plotarea: {
-			fill: "#123666"
-		},
-		axis:{
-			stroke:	{ // the axis itself
-				color: "#95afdb",
-				width: 1
-			},
-			tick: {	// used as a foundation for all ticks
-				color:     "#95afdb",
-				position:  "center",
-				font:      "normal normal normal 7pt Lucida Grande, Helvetica, Arial, sans-serif",	// labels on axis
-				fontColor: "#95afdb"								// color of labels
-			}
-		},
-		series: {
-			stroke:  {width: 2.5, color: "#123666"},
-			outline: null,
-			font:      "normal normal normal 8pt Lucida Grande, Helvetica, Arial, sans-serif",	// labels on axis
-			fontColor: "#95afdb"
-		},
-		marker: {
-			stroke:  {width: 2.5, color: "#ccc"},
-			outline: null,
-			font:      "normal normal normal 8pt Lucida Grande, Helvetica, Arial, sans-serif",	// labels on axis
-			fontColor: "#95afdb"
-		},
-		seriesThemes: [
-			{fill: g(defaultFill, "#e7e391", "#f8f7de")},
-			{fill: g(defaultFill, "#ffb6b6", "#ffe8e8")},
-			{fill: g(defaultFill, "#bcda7d", "#eef7da")},
-			{fill: g(defaultFill, "#d5d5d5", "#f4f4f4")},
-			{fill: g(defaultFill, "#c1e3fd", "#e4f3ff")}
-		],
-		markerThemes: [
-			{fill: "#fcfcf3", stroke: {color: "#e7e391"}},
-			{fill: "#fff1f1", stroke: {color: "#ffb6b6"}},
-			{fill: "#fafdf4", stroke: {color: "#bcda7d"}},
-			{fill: "#fbfbfb", stroke: {color: "#d5d5d5"}},
-			{fill: "#f3faff", stroke: {color: "#c1e3fd"}}
-		]
-	});
-	
-	themes.Renkoo.next = function(elementType, mixin, doPost){
-		if("slice,column,bar".indexOf(elementType) == -1){
-			// custom processing to substitute colors
-			var s = this.seriesThemes[this._current % this.seriesThemes.length];
-			s.fill.space = "plot";
-			s.stroke  = { width: 2, color: s.fill.colors[0].color};
-			if(elementType == "line" || elementType == "area"){
-				s.stroke.width = 4;
-			}
-			var theme = Theme.prototype.next.apply(this, arguments);
-			// cleanup
-			delete s.stroke;
-			s.fill.space = "shape";
-			return theme;
-		}
-		return Theme.prototype.next.apply(this, arguments);
-	};
-	
-	themes.Renkoo.post = function(theme, elementType){
-		theme = Theme.prototype.post.apply(this, arguments);
-		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
-		}
-		return theme;
-	};
+define(["../Theme","dojox/gfx/gradutils","./common"],function(_1,_2){
+var _3=dojox.charting.themes,g=_1.generateGradient,_4={type:"linear",space:"shape",x1:0,y1:0,x2:0,y2:150};
+_3.Renkoo=new _1({chart:{fill:"#123666",pageStyle:{backgroundColor:"#123666",backgroundImage:"none",color:"#95afdb"}},plotarea:{fill:"#123666"},axis:{stroke:{color:"#95afdb",width:1},tick:{color:"#95afdb",position:"center",font:"normal normal normal 7pt Lucida Grande, Helvetica, Arial, sans-serif",fontColor:"#95afdb"}},series:{stroke:{width:2.5,color:"#123666"},outline:null,font:"normal normal normal 8pt Lucida Grande, Helvetica, Arial, sans-serif",fontColor:"#95afdb"},marker:{stroke:{width:2.5,color:"#ccc"},outline:null,font:"normal normal normal 8pt Lucida Grande, Helvetica, Arial, sans-serif",fontColor:"#95afdb"},seriesThemes:[{fill:g(_4,"#e7e391","#f8f7de")},{fill:g(_4,"#ffb6b6","#ffe8e8")},{fill:g(_4,"#bcda7d","#eef7da")},{fill:g(_4,"#d5d5d5","#f4f4f4")},{fill:g(_4,"#c1e3fd","#e4f3ff")}],markerThemes:[{fill:"#fcfcf3",stroke:{color:"#e7e391"}},{fill:"#fff1f1",stroke:{color:"#ffb6b6"}},{fill:"#fafdf4",stroke:{color:"#bcda7d"}},{fill:"#fbfbfb",stroke:{color:"#d5d5d5"}},{fill:"#f3faff",stroke:{color:"#c1e3fd"}}]});
+_3.Renkoo.next=function(_5,_6,_7){
+if("slice,column,bar".indexOf(_5)==-1){
+var s=this.seriesThemes[this._current%this.seriesThemes.length];
+s.fill.space="plot";
+s.stroke={width:2,color:s.fill.colors[0].color};
+if(_5=="line"||_5=="area"){
+s.stroke.width=4;
+}
+var _8=_1.prototype.next.apply(this,arguments);
+delete s.stroke;
+s.fill.space="shape";
+return _8;
+}
+return _1.prototype.next.apply(this,arguments);
+};
+_3.Renkoo.post=function(_9,_a){
+_9=_1.prototype.post.apply(this,arguments);
+if((_a=="slice"||_a=="circle")&&_9.series.fill&&_9.series.fill.type=="radial"){
+_9.series.fill=_2.reverse(_9.series.fill);
+}
+return _9;
+};
 });

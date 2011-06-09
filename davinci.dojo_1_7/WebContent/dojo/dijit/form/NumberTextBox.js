@@ -1,280 +1,120 @@
-define([
-	"dojo/_base/kernel", // dojo.mixin
-	"..",
-	"./RangeBoundTextBox",
-	"dojo/number", // dojo.number._realNumberRegexp dojo.number.format dojo.number.parse dojo.number.regexp
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/lang" // dojo.hitch
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/form/NumberTextBox
-	// summary:
-	//		A TextBox for entering numbers, with formatting and range checking
-
-
-	/*=====
-	dojo.declare(
-		"dijit.form.NumberTextBox.__Constraints",
-		[dijit.form.RangeBoundTextBox.__Constraints, dojo.number.__FormatOptions, dojo.number.__ParseOptions], {
-		// summary:
-		//		Specifies both the rules on valid/invalid values (minimum, maximum,
-		//		number of required decimal places), and also formatting options for
-		//		displaying the value when the field is not focused.
-		// example:
-		//		Minimum/maximum:
-		//		To specify a field between 0 and 120:
-		//	|		{min:0,max:120}
-		//		To specify a field that must be an integer:
-		//	|		{fractional:false}
-		//		To specify a field where 0 to 3 decimal places are allowed on input:
-		//	|		{places:'0,3'}
-	});
-	=====*/
-
-	dojo.declare("dijit.form.NumberTextBoxMixin", null, {
-		// summary:
-		//		A mixin for all number textboxes
-		// tags:
-		//		protected
-
-		// Override ValidationTextBox.regExpGen().... we use a reg-ex generating function rather
-		// than a straight regexp to deal with locale (plus formatting options too?)
-		regExpGen: dojo.number.regexp,
-
-		/*=====
-		// constraints: dijit.form.NumberTextBox.__Constraints
-		//		Despite the name, this parameter specifies both constraints on the input
-		//		(including minimum/maximum allowed values) as well as
-		//		formatting options like places (the number of digits to display after
-		//		the decimal point).  See `dijit.form.NumberTextBox.__Constraints` for details.
-		constraints: {},
-		======*/
-
-		// value: Number
-		//		The value of this NumberTextBox as a Javascript Number (i.e., not a String).
-		//		If the displayed value is blank, the value is NaN, and if the user types in
-		//		an gibberish value (like "hello world"), the value is undefined
-		//		(i.e. get('value') returns undefined).
-		//
-		//		Symmetrically, set('value', NaN) will clear the displayed value,
-		//		whereas set('value', undefined) will have no effect.
-		value: NaN,
-
-		// editOptions: [protected] Object
-		//		Properties to mix into constraints when the value is being edited.
-		//		This is here because we edit the number in the format "12345", which is
-		//		different than the display value (ex: "12,345")
-		editOptions: { pattern: '#.######' },
-
-		/*=====
-		_formatter: function(value, options){
-			// summary:
-			//		_formatter() is called by format().  It's the base routine for formatting a number,
-			//		as a string, for example converting 12345 into "12,345".
-			// value: Number
-			//		The number to be converted into a string.
-			// options: dojo.number.__FormatOptions?
-			//		Formatting options
-			// tags:
-			//		protected extension
-
-			return "12345";		// String
-		},
-		 =====*/
-		_formatter: dojo.number.format,
-
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			this._set("type", "text"); // in case type="number" was specified which messes up parse/format
-		},
-
-		_setConstraintsAttr: function(/*Object*/ constraints){
-			var places = typeof constraints.places == "number"? constraints.places : 0;
-			if(places){ places++; } // decimal rounding errors take away another digit of precision
-			if(typeof constraints.max != "number"){
-				constraints.max = 9 * Math.pow(10, 15-places);
-			}
-			if(typeof constraints.min != "number"){
-				constraints.min = -9 * Math.pow(10, 15-places);
-			}
-			this.inherited(arguments, [ constraints ]);
-			if(this.focusNode && this.focusNode.value && !isNaN(this.value)){
-				this.set('value', this.value);
-			}
-		},
-
-		_onFocus: function(){
-			if(this.disabled){ return; }
-			var val = this.get('value');
-			if(typeof val == "number" && !isNaN(val)){
-				var formattedValue = this.format(val, this.constraints);
-				if(formattedValue !== undefined){
-					this.textbox.value = formattedValue;
-				}
-			}
-			this.inherited(arguments);
-		},
-
-		format: function(/*Number*/ value, /*dojo.number.__FormatOptions*/ constraints){
-			// summary:
-			//		Formats the value as a Number, according to constraints.
-			// tags:
-			//		protected
-
-			var formattedValue = String(value);
-			if(typeof value != "number"){ return formattedValue; }
-			if(isNaN(value)){ return ""; }
-			// check for exponential notation that dojo.number.format chokes on
-			if(!("rangeCheck" in this && this.rangeCheck(value, constraints)) && constraints.exponent !== false && /\de[-+]?\d/i.test(formattedValue)){
-				return formattedValue;
-			}
-			if(this.editOptions && this.focused){
-				constraints = dojo.mixin({}, constraints, this.editOptions);
-			}
-			return this._formatter(value, constraints);
-		},
-
-		/*=====
-		_parser: function(value, constraints){
-			// summary:
-			//		Parses the string value as a Number, according to constraints.
-			// value: String
-			//		String representing a number
-			// constraints: dojo.number.__ParseOptions
-			//		Formatting options
-			// tags:
-			//		protected
-
-			return 123.45;		// Number
-		},
-		=====*/
-		_parser: dojo.number.parse,
-
-		parse: function(/*String*/ value, /*dojo.number.__FormatOptions*/ constraints){
-			// summary:
-			//		Replacable function to convert a formatted string to a number value
-			// tags:
-			//		protected extension
-
-			var v = this._parser(value, dojo.mixin({}, constraints, (this.editOptions && this.focused) ? this.editOptions : {}));
-			if(this.editOptions && this.focused && isNaN(v)){
-				v = this._parser(value, constraints); // parse w/o editOptions: not technically needed but is nice for the user
-			}
-			return v;
-		},
-
-		_getDisplayedValueAttr: function(){
-			var v = this.inherited(arguments);
-			return isNaN(v) ? this.textbox.value : v;
-		},
-
-		filter: function(/*Number*/ value){
-			// summary:
-			//		This is called with both the display value (string), and the actual value (a number).
-			//		When called with the actual value it does corrections so that '' etc. are represented as NaN.
-			//		Otherwise it dispatches to the superclass's filter() method.
-			//
-			//		See `dijit.form.TextBox.filter` for more details.
-			return (value === null || value === '' || value === undefined) ? NaN : this.inherited(arguments); // set('value', null||''||undefined) should fire onChange(NaN)
-		},
-
-		serialize: function(/*Number*/ value, /*Object?*/ options){
-			// summary:
-			//		Convert value (a Number) into a canonical string (ie, how the number literal is written in javascript/java/C/etc.)
-			// tags:
-			//		protected
-			return (typeof value != "number" || isNaN(value)) ? '' : this.inherited(arguments);
-		},
-
-		_setBlurValue: function(){
-			var val = dojo.hitch(dojo.mixin({}, this, { focused: true }), "get")('value'); // parse with editOptions
-			this._setValueAttr(val, true);
-		},
-
-		_setValueAttr: function(/*Number*/ value, /*Boolean?*/ priorityChange, /*String?*/ formattedValue){
-			// summary:
-			//		Hook so set('value', ...) works.
-			if(value !== undefined && formattedValue === undefined){
-				formattedValue = String(value);
-				if(typeof value == "number"){
-					if(isNaN(value)){ formattedValue = '' }
-					// check for exponential notation that dojo.number.format chokes on
-					else if(("rangeCheck" in this && this.rangeCheck(value, this.constraints)) || this.constraints.exponent === false || !/\de[-+]?\d/i.test(formattedValue)){
-						formattedValue = undefined; // lets format comnpute a real string value
-					}
-				}else if(!value){ // 0 processed in if branch above, ''|null|undefined flow thru here
-					formattedValue = '';
-					value = NaN;
-				}else{ // non-numeric values
-					value = undefined;
-				}
-			}
-			this.inherited(arguments, [value, priorityChange, formattedValue]);
-		},
-
-		_getValueAttr: function(){
-			// summary:
-			//		Hook so get('value') works.
-			//		Returns Number, NaN for '', or undefined for unparsable text
-			var v = this.inherited(arguments); // returns Number for all values accepted by parse() or NaN for all other displayed values
-
-			// If the displayed value of the textbox is gibberish (ex: "hello world"), this.inherited() above
-			// returns NaN; this if() branch converts the return value to undefined.
-			// Returning undefined prevents user text from being overwritten when doing _setValueAttr(_getValueAttr()).
-			// A blank displayed value is still returned as NaN.
-			if(isNaN(v) && this.textbox.value !== ''){
-				if(this.constraints.exponent !== false && /\de[-+]?\d/i.test(this.textbox.value) && (new RegExp("^"+dojo.number._realNumberRegexp(dojo.mixin({}, this.constraints))+"$").test(this.textbox.value))){	// check for exponential notation that parse() rejected (erroneously?)
-					var n = Number(this.textbox.value);
-					return isNaN(n) ? undefined : n; // return exponential Number or undefined for random text (may not be possible to do with the above RegExp check)
-				}else{
-					return undefined; // gibberish
-				}
-			}else{
-				return v; // Number or NaN for ''
-			}
-		},
-
-		isValid: function(/*Boolean*/ isFocused){
-			// Overrides dijit.form.RangeBoundTextBox.isValid to check that the editing-mode value is valid since
-			// it may not be formatted according to the regExp vaidation rules
-			if(!this.focused || this._isEmpty(this.textbox.value)){
-				return this.inherited(arguments);
-			}else{
-				var v = this.get('value');
-				if(!isNaN(v) && this.rangeCheck(v, this.constraints)){
-					if(this.constraints.exponent !== false && /\de[-+]?\d/i.test(this.textbox.value)){ // exponential, parse doesn't like it
-						return true; // valid exponential number in range
-					}else{
-						return this.inherited(arguments);
-					}
-				}else{
-					return false;
-				}
-			}
-		}
-	});
-
-	dojo.declare("dijit.form.NumberTextBox", [dijit.form.RangeBoundTextBox,dijit.form.NumberTextBoxMixin], {
-		// summary:
-		//		A TextBox for entering numbers, with formatting and range checking
-		// description:
-		//		NumberTextBox is a textbox for entering and displaying numbers, supporting
-		//		the following main features:
-		//
-		//			1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
-		//				a number rather than a random string)
-		//			2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
-		//				depending on locale).
-		//			3. Separate modes for editing the value and displaying it, specifically that
-		//				the thousands separator character (typically comma) disappears when editing
-		//				but reappears after the field is blurred.
-		//			4. Formatting and constraints regarding the number of places (digits after the decimal point)
-		//				allowed on input, and number of places displayed when blurred (see `constraints` parameter).
-
-		baseClass: "dijitTextBox dijitNumberTextBox"
-	});
-
-
-	return dijit.form.NumberTextBox;
+define("dijit/form/NumberTextBox",["dojo/_base/kernel","..","./RangeBoundTextBox","dojo/number","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
+_1.declare("dijit.form.NumberTextBoxMixin",null,{regExpGen:_1.number.regexp,value:NaN,editOptions:{pattern:"#.######"},_formatter:_1.number.format,postMixInProperties:function(){
+this.inherited(arguments);
+this._set("type","text");
+},_setConstraintsAttr:function(_3){
+var _4=typeof _3.places=="number"?_3.places:0;
+if(_4){
+_4++;
+}
+if(typeof _3.max!="number"){
+_3.max=9*Math.pow(10,15-_4);
+}
+if(typeof _3.min!="number"){
+_3.min=-9*Math.pow(10,15-_4);
+}
+this.inherited(arguments,[_3]);
+if(this.focusNode&&this.focusNode.value&&!isNaN(this.value)){
+this.set("value",this.value);
+}
+},_onFocus:function(){
+if(this.disabled){
+return;
+}
+var _5=this.get("value");
+if(typeof _5=="number"&&!isNaN(_5)){
+var _6=this.format(_5,this.constraints);
+if(_6!==undefined){
+this.textbox.value=_6;
+}
+}
+this.inherited(arguments);
+},format:function(_7,_8){
+var _9=String(_7);
+if(typeof _7!="number"){
+return _9;
+}
+if(isNaN(_7)){
+return "";
+}
+if(!("rangeCheck" in this&&this.rangeCheck(_7,_8))&&_8.exponent!==false&&/\de[-+]?\d/i.test(_9)){
+return _9;
+}
+if(this.editOptions&&this.focused){
+_8=_1.mixin({},_8,this.editOptions);
+}
+return this._formatter(_7,_8);
+},_parser:_1.number.parse,parse:function(_a,_b){
+var v=this._parser(_a,_1.mixin({},_b,(this.editOptions&&this.focused)?this.editOptions:{}));
+if(this.editOptions&&this.focused&&isNaN(v)){
+v=this._parser(_a,_b);
+}
+return v;
+},_getDisplayedValueAttr:function(){
+var v=this.inherited(arguments);
+return isNaN(v)?this.textbox.value:v;
+},filter:function(_c){
+return (_c===null||_c===""||_c===undefined)?NaN:this.inherited(arguments);
+},serialize:function(_d,_e){
+return (typeof _d!="number"||isNaN(_d))?"":this.inherited(arguments);
+},_setBlurValue:function(){
+var _f=_1.hitch(_1.mixin({},this,{focused:true}),"get")("value");
+this._setValueAttr(_f,true);
+},_setValueAttr:function(_10,_11,_12){
+if(_10!==undefined&&_12===undefined){
+_12=String(_10);
+if(typeof _10=="number"){
+if(isNaN(_10)){
+_12="";
+}else{
+if(("rangeCheck" in this&&this.rangeCheck(_10,this.constraints))||this.constraints.exponent===false||!/\de[-+]?\d/i.test(_12)){
+_12=undefined;
+}
+}
+}else{
+if(!_10){
+_12="";
+_10=NaN;
+}else{
+_10=undefined;
+}
+}
+}
+this.inherited(arguments,[_10,_11,_12]);
+},_getValueAttr:function(){
+var v=this.inherited(arguments);
+if(isNaN(v)&&this.textbox.value!==""){
+if(this.constraints.exponent!==false&&/\de[-+]?\d/i.test(this.textbox.value)&&(new RegExp("^"+_1.number._realNumberRegexp(_1.mixin({},this.constraints))+"$").test(this.textbox.value))){
+var n=Number(this.textbox.value);
+return isNaN(n)?undefined:n;
+}else{
+return undefined;
+}
+}else{
+return v;
+}
+},isValid:function(_13){
+if(!this.focused||this._isEmpty(this.textbox.value)){
+return this.inherited(arguments);
+}else{
+var v=this.get("value");
+if(!isNaN(v)&&this.rangeCheck(v,this.constraints)){
+if(this.constraints.exponent!==false&&/\de[-+]?\d/i.test(this.textbox.value)){
+return true;
+}else{
+return this.inherited(arguments);
+}
+}else{
+return false;
+}
+}
+}});
+_1.declare("dijit.form.NumberTextBox",[_2.form.RangeBoundTextBox,_2.form.NumberTextBoxMixin],{baseClass:"dijitTextBox dijitNumberTextBox"});
+return _2.form.NumberTextBox;
 });

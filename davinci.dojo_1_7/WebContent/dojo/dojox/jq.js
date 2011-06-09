@@ -1,1925 +1,1293 @@
-//For jQuery 1.3.2
-
-dojo.provide("dojox.jq");
-dojo.require("dojo.NodeList-traverse");
-dojo.require("dojo.NodeList-manipulate");
-dojo.require("dojo.io.script");
-
 /*
-To get jquery tests to pass:
-- add spaces between span>form selectors, other ones like one,two
-- .last() instead of :last
-- $("<div>").find("#foo") does not work unless the div is attached to the body.
-
-- trigger .test not work
-- No jquery.Event thing.
-
-- jQuery.ajax() modifies incoming arguments?
-- test framework not good for our io methods, async, poll.
-- Dojo ajax is async: we fire ajaxStop more than jquery.
-
-- jquery makes assumptions of a value to set for an element
-by inserting an element and checking display. Does not seem to
-account for nested styles, only captures generic tag name style off
-of body. Why can't we just set display to empty?
-
-
-
-
-
-OK for failures:
-- test("jQuery.ajax - beforeSend, cancel request (#2688)"
-  We cancel the deferred which triggers error and complete callbacks.
-
-
-Looked at jquery code for:
-- how it handled text(): did not use textContent/innerText, but use recursive look over childNodes and nodeValue,
-so it may have impact on how <br> is serialized, but it has uniform behavior across browsers.
-- Looked at trigger: how it triggered actions on dom nodes. This seemed unsafe.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
 */
 
-/*
-dojo.query differences that cause some tests to fail:
-- does not support XML queries
-- $("#sap>form") does not find a match but $("#sap > form") does. Similar issue with comma instead of > (see is() tests)
-- "$("form:last") should return the last form object, not if that particular form is that last related
-  to its siblings? Same issue with :first?
-- $("p").filter("#ap, #sndp"): filter does not work.
-- dojo.NodeList uses d.NodeList a few places in the code. Would be nice to use a ctor that can be configured.
-  That would make the filter function operate better.
-- filterQueryResult, cannot handle queries like "p, div"? See andSelf test with parents().
-- adjacent "p + p" not supported?
-= a:only-child not supported?
-- nth(1)
-- even/odd
-- eq/gt/lt
-- #form :radio:checked does not run the first :radio psuedo selector? Seems to be a general issue where only the last pseud
-  is run. For example, "#form :checked:radio" does only the radio pseudo.
-*/
-
+define(["dojo","dijit","dojox","dojo/NodeList-traverse","dojo/NodeList-manipulate","dojo/io/script"],function(_1,_2,_3){
+_1.getObject("dojox.jq",1);
 (function(){
-	//Enable io topic publishing
-	dojo.config.ioPublish = true;
-
-	//Support stuff for toDom
-	var selfClosedTags = "|img|meta|hr|br|input|";
-
-	function toDom(/*String*/html, /*Document?*/doc){
-		//summary converts HTML string into DOM nodes.
-		//Make sure html is a string.
-		html += "";
-
-		//Convert <tag/> into <tag></tag>
-		html = html.replace(/<\s*(\w+)([^\/\>]*)\/\s*>/g, function(tag, name, contents){
-			if(selfClosedTags.indexOf("|" + name + "|") == -1){
-				return "<" + name + contents + "></" + name + ">";
-			}else{
-				return tag;
-			}
-		});
-
-		return dojo._toDom(html, doc);
-	}
-
-	function cssNameToJs(name){
-		var index = name.indexOf("-");
-		if(index != -1){
-			//Strip off beginning dash
-			if(index == 0){
-				name = name.substring(1);
-			}
-			name = name.replace(/-(\w)/g, function(match, match1){
-				return match1.toUpperCase();
-			});
-		}
-		return name;
-	}
-
-	var _old$ = dojo.global.$;
-	var _oldJQuery = dojo.global.jQuery;
-
-	var $ = dojo.global.$ = dojo.global.jQuery = function(){
-		var arg = arguments[0];
-		if(!arg){
-			return $._wrap([], null, $);
-		}else if(dojo.isString(arg)){
-			if(arg.charAt(0) == "<"){
-				//String of html that needs nodes created.
-				arg = toDom(arg);
-				//If a DocumentFragment, convert to use its children
-				//since we want to treat all top level nodes as elements
-				//in the NodeList array.
-				if(arg.nodeType == 11){
-					arg = arg.childNodes;
-				}else{
-					return $._wrap([arg], null, $);
-				}
-				//Use end case of nodelist to finish work.
-			}else{
-				//Normal dojo.query selector.
-				//Switch out query's NodeList constructor to be our specialized
-				//NodeList constructor.
-				var listCtor = dojo._NodeListCtor;
-				dojo._NodeListCtor = $;
-
-				//If the second arg is one of our fake NodeLists then
-				//use the first parent for the call.
-				var arg2 = arguments[1];
-				if(arg2 && arg2._is$){
-					arg2 = arg2[0];
-				}else if(dojo.isString(arg2)){
-					arg2 = dojo.query(arg2)[0];
-				}
-
-				var nl = dojo.query.call(this, arg, arg2);
-				dojo._NodeListCtor = listCtor;
-				return nl;
-			}
-		}else if(dojo.isFunction(arg)){
-			//The addOnLoad case
-			$.ready(arg);
-			return $;
-		}else if(arg == document || arg == window){
-			//If the arg is the document or window,
-			//then just use it directly.
-			return $._wrap([arg], null, $);
-		}else if(dojo.isArray(arg)){
-			//Input is a plain array.
-			//Filter out duplicates.
-			var ary = [];
-			for(var i = 0; i < arg.length; i++){
-				if(dojo.indexOf(ary, arg[i]) == -1){
-					ary.push(arg[i]);
-				}
-			}
-			return $._wrap(arg, null, $);
-		}else if("nodeType" in arg){
-			//A DOM Node
-			return $._wrap([arg], null, $);
-		}
-
-		//A native NodeList that does not conform to dojo.isArray().
-		//Convert it to a workable array and create new NodeList.
-		return $._wrap(dojo._toArray(arg), null, $);
-
-	};
-
-	//Set up plugin extension point.
-	var nlProto = dojo.NodeList.prototype;
-
-	//Need a delegate, because at least one method conflicts with jquery
-	//API: attr(name) in jQuery only returns a single, first value, where
-	//dojo.attr will return an array.
-	var f = $.fn = $.prototype = dojo.delegate(nlProto);
-
-	//_wrap is required for proper use in dojo.query, but the _adaptAs* methods
-	//do not have to placed on $ -- they can be used directly off dojo.NodeList.
-	$._wrap = dojo.NodeList._wrap;
-
-	//Add in some pseudos selectors
-	var headerRegExp = /^H\d/i;
-	var pseudos = dojo.query.pseudos;
-	dojo.mixin(pseudos, {
-		has: function(name, condition){
-			return function(elem){
-				return $(condition, elem).length;
-			}
-		},
-		visible: function(name, condition){
-			return function(elem){
-				return dojo.style(elem, "visible") != "hidden" && dojo.style(elem, "display") != "none";
-			}
-		},
-		hidden: function(name, condition){
-			return function(elem){
-				return elem.type == "hidden" || dojo.style(elem, "visible") == "hidden" || dojo.style(elem, "display") == "none";
-			}
-		},
-		selected: function(name, condition){
-			return function(elem){
-				return elem.selected;
-			}
-		},
-		checked: function(name, condition){
-			return function(elem){
-				return elem.nodeName.toUpperCase() == "INPUT" && elem.checked;
-			}
-		},
-		disabled: function(name, condition){
-			return function(elem){
-				return elem.getAttribute("disabled");
-			}
-		},
-		enabled: function(name, condition){
-			return function(elem){
-				return !elem.getAttribute("disabled");
-			}
-		},
-		input: function(name, condition){
-			return function(elem){
-				var n = elem.nodeName.toUpperCase();
-				return n == "INPUT" || n == "SELECT" || n == "TEXTAREA" || n == "BUTTON";
-			}
-		},
-		button: function(name, condition){
-			return function(elem){
-				return (elem.nodeName.toUpperCase() == "INPUT" && elem.type == "button") || elem.nodeName.toUpperCase() == "BUTTON";
-			}
-		},
-		header: function(name, condition){
-			return function(elem){
-				return elem.nodeName.match(headerRegExp);
-			}
-		}
-		//TODO: implement :animated
-	});
-
-
-	//Add the input type selectors to pseudos
-	var inputPseudos = {};
-	dojo.forEach([
-		"text", "password", "radio", "checkbox", "submit", "image", "reset", "file"
-	], function(type) {
-		inputPseudos[type] = function(name, condition){
-			return function(elem){
-				return elem.nodeName.toUpperCase() == "INPUT" && elem.type == type;
-			}
-		};
-	});
-	dojo.mixin(pseudos, inputPseudos);
-
-	//Set up browser sniff.
-	$.browser = {
-		mozilla: dojo.isMoz,
-		msie: dojo.isIE,
-		opera: dojo.isOpera,
-		safari: dojo.isSafari
-	};
-	$.browser.version = dojo.isIE || dojo.isMoz || dojo.isOpera || dojo.isSafari || dojo.isWebKit;
-	
-	//Map back into dojo
-	//Hmm maybe this is not so good. Dojo
-	//modules may still be holding on to old
-	//dojo (example: the d._NodeListCtor in query.js)
-	//dojo = dojo.mixin($, dojo);
-
-	// Add $.ready
-	$.ready = $.fn.ready = function(callback){
-		dojo.addOnLoad(dojo.hitch(null, callback, $));
-		return this;
-	}
-
-	//START jquery Core API methods
-	//http://docs.jquery.com/Core
-	f._is$ = true;
-	f.size = function(){return this.length; };
-
-	$.prop = function(node, propCheck){
-		//TODO: not sure about this one, could not find the docs?
-		if(dojo.isFunction(propCheck)){
-			return propCheck.call(node);
-		}else{
-			return propCheck;
-		}
-	}
-
-	$.className = {
-		add: dojo.addClass,
-		remove: dojo.removeClass,
-		has: dojo.hasClass
-	};
-
-	$.makeArray = function(thing){
-		if(typeof thing == "undefined"){
-			return [];
-		}else if(thing.length && !dojo.isString(thing) && !("location" in thing)){
-			//Location check was for excluding window objects that have a length.
-			return dojo._toArray(thing);
-		}else{
-			return [thing];
-		}
-	}
-	
-	$.merge = function(ary1, ary2){
-		//Alters first array by adding in the element.
-		var args = [ary1.length, 0];
-		args = args.concat(ary2);
-		ary1.splice.apply(ary1, args);
-		return ary1;
-	}
-
-	$.each = function(/*Array||ArrayLike*/list, /*Function*/cb){
-		//each differs from dojo.NodeList.forEach in that
-		//"this" is the current cycled node. Breaking
-		//the loop is also possible. Also, index is first arg
-		//to the callback.
-		if(dojo.isArrayLike(list)){
-			for(var i = 0; i < list.length; i++){
-				if(cb.call(list[i], i, list[i]) === false){
-					break;
-				}
-			}
-		}else if(dojo.isObject(list)){
-			for(var param in list){
-				if(cb.call(list[param], param, list[param]) === false){
-					break;
-				}
-			}
-		}
-		return this;
-	};
-	f.each = function(/*Function*/cb){
-		return $.each.call(this, this, cb);
-	};
-	//f.length already implemented by NodeList
-	f.eq = function(){
-		//Direct copy of dojo.NodeList.at, but want
-		//to use our NodeList class.
-		var nl = $();
-		dojo.forEach(arguments, function(i) { if(this[i]) { nl.push(this[i]); } }, this);
-		return nl; // dojo.NodeList
-	};
-	f.get = function(/*Number*/index){
-		if(index || index == 0){
-			return this[index];
-		}
-		return this;
-	};
-	f.index = function(arg){
-		//Hmm, allows passing in a $ nodelist. Apparently in that
-		//case take the first item in that array and match
-		if(arg._is$){
-			arg = arg[0];
-		}
-		return this.indexOf(arg);
-	}
-
-	//.data implementation
-	var dataStore = [];
-	var dataId = 0;
-	var dataAttr = dojo._scopeName + "DataId";
-	
-	var getDataId = function(node){
-		var id = node.getAttribute(dataAttr);
-		if(!id){
-			id = dataId++;
-			node.setAttribute(dataAttr, id);
-		}
-	}
-	
-	var getData = function(node){
-		var data = {};
-		if(node.nodeType == 1){
-			var id = getDataId(node);
-			data = dataStore[id];
-			if(!data){
-				data = dataStore[id] = {};
-			}
-		}
-		return data;
-	}
-
-	$.data = function(/*DOMNode*/node, /*String*/name, /*String*/value){
-		var result = null;
-		if(name == "events"){
-			//Special case "events", since jquery tests seem to use it to
-			//get the event handler storage for jquery. So for jquery apps
-			//"events" is probably a reserved word anyway.
-			result = listeners[node.getAttribute(eventAttr)];
-			var isEmpty = true;
-			if(result){
-				for(var param in result){
-					isEmpty = false;
-					break;
-				}
-			}
-			return isEmpty ? null : result;
-		}
-
-		var data = getData(node);
-		if(typeof value != "undefined"){
-			data[name] = value;
-		}else{
-			result = data[name];
-		}
-		return value ? this : result;
-	}
-
-	$.removeData = function(/*DOMNode*/node, /*String*/name){
-		var data = getData(node);
-		delete data[name];
-		if(node.nodeType == 1){
-			var isEmpty = true;
-			for(var param in data){
-				isEmpty = false;
-				break;
-			}
-			if(isEmpty){
-				node.removeAttribute(dataAttr);
-			}
-		}
-		return this;
-	}
-
-	f.data = function(/*String*/name, /*String*/value){
-		var result = null;
-		this.forEach(function(node){
-			result = $.data(node, name, value);
-		});
-
-		return value ? this : result;
-	}
-
-	f.removeData = function(/*String*/name){
-		this.forEach(function(node){
-			$.removeData(node, name);
-		});
-		return this;
-	}
-	
-	function jqMix(obj, props){
-		//summary: an attempt at a mixin that follows
-		//jquery's .extend rules. Seems odd. Not sure how
-		//to resolve this with dojo.mixin and what the use
-		//cases are for the jquery version.
-		//Copying some code from dojo._mixin.
-		if(obj == props){
-			return obj;
-		}
-		var tobj = {};
-		for(var x in props){
-			// the "tobj" condition avoid copying properties in "props"
-			// inherited from Object.prototype.  For example, if obj has a custom
-			// toString() method, don't overwrite it with the toString() method
-			// that props inherited from Object.prototype
-			if((tobj[x] === undefined || tobj[x] != props[x]) && props[x] !== undefined && obj != props[x]){
-				if(dojo.isObject(obj[x]) && dojo.isObject(props[x])){
-					if(dojo.isArray(props[x])){
-						obj[x] = props[x];
-					}else{
-						obj[x] = jqMix(obj[x], props[x]);
-					}
-				}else{
-					obj[x] = props[x];
-				}
-			}
-		}
-		// IE doesn't recognize custom toStrings in for..in
-		if(dojo.isIE && props){
-			var p = props.toString;
-			if(typeof p == "function" && p != obj.toString && p != tobj.toString &&
-				p != "\nfunction toString() {\n    [native code]\n}\n"){
-					obj.toString = props.toString;
-			}
-		}
-		return obj; // Object
-	}
-
-	f.extend = function(){
-		var args = [this];
-		args = args.concat(arguments);
-		return $.extend.apply($, args);
-	}
-
-	$.extend = function(){
-		//Could have multiple args to mix in. Similar to dojo.mixin,
-		//but has some different rules, and the mixins all get applied
-		//to the first arg.
-		var args = arguments, finalObj;
-		for(var i = 0; i < args.length; i++){
-			var obj = args[i];
-			if(obj && dojo.isObject(obj)){
-				if(!finalObj){
-					finalObj = obj;
-				}else{
-					jqMix(finalObj, obj);
-				}
-			}
-		}
-		return finalObj;
-	}
-
-	$.noConflict = function(/*Boolean*/extreme){
-		var me = $;
-		dojo.global.$ = _old$;
-		if(extreme){
-			dojo.global.jQuery = _oldJQuery;
-		}
-		return me;
-	}
-	//END jquery Core API methods
-	
-	//START jquery Attribute API methods
-	//http://docs.jquery.com/Attributes
-	f.attr = function(name, value){
-		//The isObject tests below are to weed out where something
-		//like a form node has an input called "action" but we really
-		//want to get the attribute "action". But in general, favor
-		//a property value over a DOM attribute value.
-		if(arguments.length == 1 && dojo.isString(arguments[0])){
-			//The get case, return first match.
-			var first = this[0];
-			
-			//Weed out empty nodes
-			if(!first){
-				return null;
-			}
-
-			var arg = arguments[0];
-			//favor properties over attributes.
-			var attr = dojo.attr(first, arg);
-			var prop = first[arg];
-			if((arg in first) && !dojo.isObject(prop) && name != "href"){
-				return prop;
-			}else{
-				return attr || prop;
-			}
-		}else if(dojo.isObject(name)){
-			//A setter, using an object.
-			for(var param in name){
-				this.attr(param, name[param]);
-			}
-			return this;
-		}else{
-			//The setter case. Figure out if value is a function.
-			var isFunc = dojo.isFunction(value);
-			this.forEach(function(node, index){
-				var prop = node[name];
-				if((name in node) && !dojo.isObject(prop) && name != "href"){
-					node[name] = (isFunc ? value.call(node, index) : value);
-				}else if(node.nodeType == 1){
-					dojo.attr(node, name, (isFunc ? value.call(node, index) : value));
-				}
-			});
-			return this;
-		}
-	}
-
-	f.removeAttr = function(name){
-		this.forEach(function(node, index){
-			var prop = node[name];
-			if((name in node) && !dojo.isObject(prop) && name != "href"){
-				delete node[name];
-			}else if(node.nodeType == 1){
-				if(name == "class"){
-					//TODO: push this fix into dojo.removeAttr
-					node.removeAttribute(name);
-				}else{
-					dojo.removeAttr(node, name);
-				}
-			}
-		});
-		return this;
-	}
-
-	//addClass, removeClass exist in dojo.NodeList. toggleClass in jQuery case
-	//just means add/remove the classname if it missing/exists. So need custom override.
-	f.toggleClass = function(/*String*/name, /*Expression?*/condition){
-		var hasCondition = arguments.length > 1;
-		this.forEach(function(node){
-			dojo.toggleClass(node, name,  hasCondition ? condition : !dojo.hasClass(node, name));
-		});
-		return this;
-	}
-
-	//Action depends on arguments: if an array of functions do one thing,
-	//If no args, do a display toggle,
-	//If an expression, something that evaluates to true or false,
-	//then toggle display accordingly.
-	//If first arg is a String/Number, then do animation. Second arg
-	//is an optional callback.
-	f.toggle = function(){
-		//If more than two args and we have a function as first arg, then
-		//probably the onclick toggle variant: takes variable args that are
-		//functions and cycles through them on click actions.
-		var args = arguments;
-		if(arguments.length > 1 && dojo.isFunction(arguments[0])){
-			var index = 0;
-			var func = function(){
-				var result = args[index].apply(this, arguments);
-				index += 1;
-				if(index > args.length - 1){
-					index = 0;
-				}
-			};
-			return this.bind("click", func);
-		}else{
-			//The display/hide/show case.
-			var condition = arguments.length == 1 ? arguments[0] : undefined;
-			this.forEach(function(node){
-				var result = typeof condition == "undefined" ? dojo.style(node, "display") == "none" : condition;
-				var action = (result ? "show" : "hide");
-				var nl = $(node);
-				nl[action].apply(nl, args);
-			});
-			return this;
-		}
-	}
-
-	//hasClass just returns true if any of the nodes has the class.
-	f.hasClass = function(/*String*/name){
-		return this.some(function(node){
-			return dojo.hasClass(node, name);
-		});
-	}
-
-	//use the html method from dojo.NodeList-manipulate.
-	f.html = f.innerHTML;
-
-	//END jquery Attribute API methods
-
-	
-	//START jquery Traversing API methods
-	//http://docs.jquery.com/Traversing
-	dojo.forEach(["filter", "slice"], function(item){
-		f[item] = function(){
-			//Convert the "this" value for functions passed in:
-			var nl;
-			if(dojo.isFunction(arguments[0])){
-				var origFunc = arguments[0];
-				arguments[0] = function(item, index){
-					return origFunc.call(item, item, index);
-				}
-			}
-			
-			if(item == "filter" && dojo.isString(arguments[0])){
-				var nl = this._filterQueryResult(this, arguments[0]);
-			}else{
-				var oldCtor = dojo._NodeListCtor;
-				dojo._NodeListCtor = f;
-				//Need to wrap in a $() call since internally some
-				//dojo.NodeList functions reference dojo.NodeList directly.
-				//Need to get a configurable constructor for dojo.NodeList.
-				nl = $(nlProto[item].apply(this, arguments));
-				dojo._NodeListCtor = oldCtor;
-			}
-
-			return nl._stash(this);
-		}
-	});
-
-	f.map = function(/*Function*/callback){
-		//Hmm, this is not like array map/dojo.map where you get one item back for
-		//each input.
-		return this._buildArrayFromCallback(callback);
-	}
-	$.map = function(/*Array*/ary, /*Function*/callback){
-		//Hmm, this is not like array map/dojo.map where you get one item back for
-		//each input.
-		return f._buildArrayFromCallback.call(ary, callback);
-	}
-
-	$.inArray = function(value, /*Array*/ary){
-		return dojo.indexOf(ary, value);
-	}
-
-	f.is = function(query){
-		return (query ? !!this.filter(query).length : false);
-	}
-
-	//TODO: probably a better way to do this.
-	f.not = function(){
-		var notList = $.apply($, arguments);
-		//TODO: another place where if dojo.NodeList can configure a constructor,
-		//then we could avoid the $() wrapper below.
-		var nl = $(nlProto.filter.call(this, function(node){
-			return notList.indexOf(node) == -1;
-		}));
-		return nl._stash(this);
-	}
-
-	f.add = function(){
-		return this.concat.apply(this, arguments);
-	}
-
-	function iframeDoc(/*DOMNode*/iframeNode){
-		//summary: Returns the document object associated with the iframe DOM Node argument.
-		//Taken from dojo.io.iframe.doc(). Needed for contents() function below.
-		var doc = iframeNode.contentDocument || // W3
-			(
-				(
-					(iframeNode.name) && (iframeNode.document) &&
-					(document.getElementsByTagName("iframe")[iframeNode.name].contentWindow) &&
-					(document.getElementsByTagName("iframe")[iframeNode.name].contentWindow.document)
-				)
-			) ||  // IE
-			(
-				(iframeNode.name)&&(document.frames[iframeNode.name])&&
-				(document.frames[iframeNode.name].document)
-			) || null;
-		return doc;
-	}
-
-	f.contents = function(){
-		var ary = [];
-		this.forEach(function(node){
-			if(node.nodeName.toUpperCase() == "IFRAME"){
-				var doc = iframeDoc(node);
-				if(doc){
-					ary.push(doc);
-				}
-			}else{
-				//TODO: code similar to children() function. Refactor?
-				var children = node.childNodes;
-				//Using for loop for better speed.
-				for(var i = 0; i < children.length; i++){
-					ary.push(children[i]);
-				}
-			}
-		});
-		return this._wrap(ary)._stash(this);
-	}
-
-	f.find = function(/*String*/query){
-		var ary = [];
-		this.forEach(function(node){
-			if(node.nodeType == 1){
-				ary = ary.concat(dojo._toArray($(query, node)));
-			}
-		});
-		return this._getUniqueAsNodeList(ary)._stash(this);
-	}
-
-	f.andSelf = function(){
-		return this.add(this._parent);
-	}
-
-	//END jquery Traversing API methods
-
-	//START jquery Manipulation API methods
-	//http://docs.jquery.com/Manipulation
-
-	f.remove = function(/*String?*/query){
-		//Override NodeList-manipulate's remove so we can remove data.
-		var nl = (query ? this._filterQueryResult(this, query) : this);
-		
-		//Remove data
-		nl.removeData();
-		
-		//Remove event listeners.
-		//TODO! do this, once event stuff is built out.
-		
-		//Remove the items from the DOM, but keep them in this
-		//node list.
-		nl.forEach(function(node){
-			node.parentNode.removeChild(node);
-		});
-		
-		return this;
-	}
-
-	//START jquery CSS API methods
-	//http://docs.jquery.com/CSS
-	$.css = function(/*DOMNode*/node, /*String|Object*/name, /*String|Number?*/value){
-		name = cssNameToJs(name);
-		
-		//Hmm, dojo.style does an arguments. length check.
-		var result = (value ? dojo.style(node, name, value) : dojo.style(node, name));
-		return result;
-	}
-
-	f.css = function(/*String|Object*/name, /*String|Number?*/value){
-		if(dojo.isString(name)){
-			//Convert name to JS name if needed.
-			name = cssNameToJs(name);
-			if(arguments.length == 2){
-				//set the value. Cannot directly delegate to
-				//this.style, since non-element nodes may be in the mix?
-				//this.contents() in particular will return some funky stuff.
-				
-				//Need to be sure to add "px" if appropriate.
-				if(!dojo.isString(value) && name != "zIndex"){
-					value = value + "px";
-				}
-
-				this.forEach(function(node){
-					if(node.nodeType == 1){
-						dojo.style(node, name, value);
-					}
-				});
-				return this;
-			}else{
-				//return the value
-				value = dojo.style(this[0], name);
-				//Need to be sure to add "px" if appropriate.
-				if(!dojo.isString(value) && name != "zIndex"){
-					value = value + "px";
-				}
-				return value;
-			}
-		}else{
-			for(var param in name){
-				this.css(param, name[param]);
-			}
-			return this;
-		}
-	}
-	
-	function doBox(/*NodeList*/nl, /*String*/boxType, /*String*/prop, /*String||Number*/value){;
-		if(value){
-			//Set height for all elements.
-			var mod = {};
-			mod[prop] = value;
-			nl.forEach(function(node){
-				dojo[boxType](node, mod);
-			});
-			return nl;
-		}else{
-			//Just get first node's height.
-			//Hmm. width is negative when element is display none in FF3?
-			return Math.abs(Math.round(dojo[boxType](nl[0])[prop]));
-		}
-	}
-
-	f.height = function(value){
-		return doBox(this, "contentBox", "h", value);
-	}
-
-	f.width = function(value){
-		return doBox(this, "contentBox", "w", value);
-	}
-
-	function getDimensions(/*DOMNode*/node, /*String*/type, /*Boolean*/usePadding, /*Boolean*/useBorder, /*Boolean*/useMargin){
-		//summary: sums up the different parts of the width/height based on arguments.
-		//If hidden, temporarily show it, do measurements then close.
-		var rehide = false;
-		if((rehide = node.style.display == "none")){
-			node.style.display = "block";
-		}
-
-		var cs = dojo.getComputedStyle(node);
-		var content = Math.abs(Math.round(dojo._getContentBox(node, cs)[type]));
-		var pad = usePadding ? Math.abs(Math.round(dojo._getPadExtents(node, cs)[type])) : 0;
-		var border = useBorder ? Math.abs(Math.round(dojo._getBorderExtents(node, cs)[type])) : 0;
-		var margin = useMargin ? Math.abs(Math.round(dojo._getMarginExtents(node, cs)[type])) : 0;
-		
-		if(rehide){
-			node.style.display = "none";
-		}
-
-		return pad + content + border + margin;
-	}
-
-	f.innerHeight = function(){
-		return getDimensions(this[0], "h", true);
-	}
-
-	f.innerWidth = function(){
-		return getDimensions(this[0], "w", true);
-	}
-
-	f.outerHeight = function(useMargin){
-		return getDimensions(this[0], "h", true, true, useMargin);
-	}
-
-	f.outerWidth = function(useMargin){
-		return getDimensions(this[0], "w", true, true, useMargin);
-	}
-
-	//END jquery CSS API methods
-
-
-	//START jquery Events API methods
-	//http://docs.jquery.com/Events
-	
-	//ready() already defined above.
-
-	//Event plumbing.
-	var listeners = [];
-	var listenId = 1;
-	var eventAttr = dojo._scopeName + "eventid";
-	var currentEvtData;
-
-	function getNonNamespacedName(/*String*/evtName){
-		//summary: gets name of the event before the first ".".
-		//The $$ stuff is special ids used to create unique names
-		//for bound functions that did not have a unique namespace name.
-		evtName = evtName.split("$$")[0];
-		var dotIndex = evtName.indexOf(".");
-		if(dotIndex != -1){
-			evtName = evtName.substring(0, dotIndex);
-		}
-		return evtName;
-	}
-
-	function domConnect(/*DOMNode*/node, /*String*/evtName){
-		//summary: handles creating the connection with a real DOM event.
-		//This work should only be done one time per evName type.
-		//If the event if an ajax event, use dojo.subscribe instead.
-		if(evtName.indexOf("ajax") == 0){
-			return dojo.subscribe(topics[evtName], function(dfd, res){
-				var fakeEvt = new $.Event(evtName);
-				if("ajaxComplete|ajaxSend|ajaxSuccess".indexOf(evtName) != -1){
-					triggerHandlers(node, [fakeEvt, dfd.ioArgs.xhr, dfd.ioArgs.args]);
-				}else if(evtName == "ajaxError"){
-					triggerHandlers(node, [fakeEvt, dfd.ioArgs.xhr, dfd.ioArgs.args, res]);
-				}else{
-					//ajaxStart|ajaxStop
-					triggerHandlers(node, [fakeEvt]);
-				}
-			});
-		}else{
-			return dojo.connect(node, "on" + evtName, function(e){
-				triggerHandlers(node, arguments);
-			}); //Object
-		}
-	}
-
-	//Event object for compatibility for some tests.
-	$.Event = function(/*String*/type){
-		//Allow for calling function without "new"
-		if(this == $){
-			return new $.Event(type);
-		}
-		if(typeof type == "string"){
-			this.type = type.replace(/!/, "");
-		}else{
-			dojo.mixin(this, type);
-		}
-		this.timeStamp = (new Date()).getTime();
-		this._isFake = true;
-		this._isStrict = (this.type.indexOf("!") != -1);
-		
-	}
-	
-	var ep = $.Event.prototype = {
-		preventDefault: function(){
-			this.isDefaultPrevented = this._true;
-		},
-		stopPropagation: function(){
-			this.isPropagationStopped = this._true;
-		},
-		stopImmediatePropagation: function(){
-			this.isPropagationStopped = this._true;
-			this.isImmediatePropagationStopped = this._true;
-		},
-		_true: function(){ return true; },
-		_false: function(){ return false; }
-	}
-	dojo.mixin(ep, {
-		isPropagationStopped: ep._false,
-		isImmediatePropagationStopped: ep._false,
-		isDefaultPrevented: ep._false
-	});
-
-	function makeTriggerData(data, type){
-		//summary: makes sure that the data array is copied
-		//and has an event as the first arg. If this function generates
-		//a fake event (known by the data[0]._isFake property being true)
-		//then the data[0].target needs to be set by the consumer of this function.
-		
-		data = data || [];
-		data = [].concat(data);
-
-		//If first data item is not an event, make one up.
-		//Need to set up target: prop in the consumers of this
-		//function.
-		var evt = data[0];
-		if(!evt || !evt.preventDefault){
-			evt = type && type.preventDefault ? type : new $.Event(type);
-			data.unshift(evt);
-		}
-		return data;
-	}
-	
-	var triggerHandlersCalled = false;
-
-	function triggerHandlers(/*DOMNode*/node, /*Array*/data, /*Function?*/extraFunc){
-		//summary: handles the actual callbacks to the handlers.
-		
-		//Indicate triggerHandlers was called.
-		triggerHandlersCalled = true;
-		
-		//Uses currentEvtData if this is a simulated event.
-		data = data || currentEvtData;
-		extraFunc = extraFunc;
-
-		//Normalize on a real element if dealing with a document.
-		if(node.nodeType == 9){
-			node = node.documentElement;
-		}
-
-		var nodeId = node.getAttribute(eventAttr);
-		if(!nodeId){
-			return;
-		}
-
-		var evt = data[0];
-		var evtFullName = evt.type;
-		var evtName = getNonNamespacedName(evtFullName);
-
-		var cbs = listeners[nodeId][evtName];
-
-		var result;
-		//Apply the extra function. What is that about? Not mentioned in the
-		//public APIs?
-		if(extraFunc){
-			result = extraFunc.apply(node, data);
-		}
-
-		if (result !== false){
-			for(var param in cbs){
-				if(param != "_connectId" && (!evt._isStrict && (param.indexOf(evtFullName) == 0) || (evt._isStrict && param == evtFullName))){
-					//Store the callback ID in case unbind is called with this event
-					//so we can only unbind that one callback.
-					evt[dojo._scopeName + "callbackId"] = param;
-
-					var cb = cbs[param];
-					if(typeof cb.data != "undefined"){
-						evt.data = cb.data;
-					}else{
-						evt.data = null;
-					}
-	
-					//Do the actual callback.
-					if ((result = cb.fn.apply(evt.target, data)) === false && !evt._isFake){
-						dojo.stopEvent(evt);
-					}
-					evt.result = result;
-				}
-			}
-		}
-
-		return result;
-	}
-
-	f.triggerHandler = function(/*String*/type, /*Array?*/data, /*Function?*/extraFunc){
-		//Only triggers handlers on the first node. Huh.
-		var node = this[0];
-		if(node && node.nodeType != 3 && node.nodeType != 8){
-			data = makeTriggerData(data, type);
-			return triggerHandlers(node, data, extraFunc);
-		}else{
-			return undefined;
-		}
-	}
-
-	f.trigger = function(/*String*/type, /*Array?*/data, /*Function?*/extraFunc){
-		//Copy data since we may need to modify by adding a
-		data = makeTriggerData(data, type);
-		var evt = data[0];
-		var type = getNonNamespacedName(evt.type);
-		
-		//Store the current event data in case handlers need
-		//to reference it because of a simulated event.
-		currentEvtData = data;
-		currentExtraFunc = extraFunc;
-
-		var result = null;
-		var needTarget = !evt.target;
-		this.forEach(function(node){
-			//Only handle non text/comment nodes.
-			if(node.nodeType != 3 && node.nodeType != 8){
-
-				//Normalize on a real element if dealing with a document.
-				if(node.nodeType == 9){
-					node = node.documentElement;
-				}
-
-				//Set the node target appropriately for fake events.
-				if(evt._isFake){
-					evt.currentTarget = node;
-					if(needTarget){
-						evt.target = node;
-					}
-				}
-
-				//Bizarre extra function thing. Not really demonstrated in public
-				//API docs.
-				if(extraFunc){
-					var funcData = data.slice(1);
-					result = extraFunc.apply(node, (result = null ? funcData : funcData.concat(result)));
-				}
-
-				if(result !== false){
-					//Trigger DOM event. onclick is handled differently than
-					//others.
-					/*
-					if(type == 'click' && node.onclick && node.nodeName.toUpperCase() == "A"){
-						result = node.onclick.apply(node, data);
-					}
-					*/
-					
-					//Set the "global" flag that indicates if triggerHandlers was called.
-					//If the direct node.event/onevent does not trigger the handlers, do so
-					//manually at the end.
-					triggerHandlersCalled = false;
-					
-					//Trigger functions registered directly on the DOM node.
-					if(node[type]){
-						try{
-							result = node[type]();
-						}catch(e){
-							//Apparently IE throws on some hidden elements. Just eat it.
-						}
-					}else if(node["on" + type]){
-						try{
-							result = node["on" + type]();
-						}catch(e){
-							//Apparently IE throws on some hidden elements. Just eat it.
-						}
-					}
-					
-					if(!triggerHandlersCalled){
-						//Finally triggerHandlers directly if the above code did not trigger it yet.
-						result = triggerHandlers(node, data);
-					}
-
-					//Bubble the event up.
-					//TODO: optimize this path so we don't have to do forEach and NodeList work.
-					var parentNode = node.parentNode;
-					if(result !== false && !evt.isImmediatePropagationStopped() && !evt.isPropagationStopped() && parentNode && parentNode.nodeType == 1){
-						$(parentNode).trigger(type, data, extraFunc);
-					}
-				}
-			}
-		});
-
-		//Clear current event data.
-		currentEvtData = null;
-		currentExtraFunc = null;
-
-		return this;
-	}
-
-	var bindIdCounter = 0;
-
-	f.bind = function(/*String*/type, /*Array||Function?*/data, /*Function*/fn){
-		//Type can be space separated values.
-		type = type.split(" ");
-		
-		//May not have data argument.
-		if(!fn){
-			fn = data;
-			data = null;
-		}
-
-		this.forEach(function(node){
-			//Only handle non text/comment nodes.
-			if(node.nodeType != 3 && node.nodeType != 8){
-			
-				//If document, bind to documentElement
-				if(node.nodeType == 9){
-					node = node.documentElement;
-				}
-
-				//If no nodeId, then create one and attach it to the DOM node.
-				var nodeId = node.getAttribute(eventAttr);
-				if(!nodeId){
-					nodeId = listenId++;
-					node.setAttribute(eventAttr, nodeId);
-					listeners[nodeId] = {};
-				}
-	
-				//Process each event type.
-				for(var i = 0; i < type.length; i++){
-					//Get event name, if have a dot on it, it is namespaced,
-					//be sure to get the core event name.
-					var evtFullName = type[i];
-					var evtName = getNonNamespacedName(evtFullName);
-					if(evtName == evtFullName){
-						//Generate a unique ID for this function binding
-						evtFullName = evtName + "$$" + (bindIdCounter++);
-					}
-	
-					//Get the event listeners for the event name, the complete name.
-					var lls = listeners[nodeId];
-					if(!lls[evtName]){
-						lls[evtName] = {
-							_connectId: domConnect(node, evtName)
-						};
-					}
-	
-					//Add the callback to the list of listeners.
-					lls[evtName][evtFullName] = {
-						fn: fn,
-						data: data
-					};
-				}
-			}
-		});
-		
-		return this;
-	}
-
-	function copyEventHandlers(/*DOMNode*/ src, /*DOMNode*/ target){
-		// summary:
-		// 		copies the event handlers from onne src *element* node to
-		// 		another target *element* node. Assumes that target had
-		// 		no previous events on it, and is a clone of the src node.
-
-		//Get src listeners.
-		var srcNodeId = target.getAttribute(eventAttr);
-		var sls = listeners[srcNodeId];
-		if(!sls){
-			return;
-		}
-
-		//Generate listeners area for target.
-		var nodeId = nodeId = listenId++;
-		target.setAttribute(eventAttr, nodeId);
-		var tls = listeners[nodeId] = {};
-
-		//Loope through events in source. Protect against bad
-		//code modifying Object.prototype.
-		var empty = {};
-		for (var evtName in sls){
-			var tEvtData = tls[evtName] = {
-				_connectId: domConnect(target, evtName)
-			};
-			var sEvtData = sls[evtName];
-
-			for (var evtFullName in sEvtData){
-				tEvtData[evtFullName] = {
-					fn: sEvtData[evtFullName].fn,
-					data: sEvtData[evtFullName].data
-				};
-			}
-		}
-	}
-
-	function listenerUnbind(lls, evtName, evtFullName, callbackId, fn){
-		//Handles the real remove of an event and dojo.disconnects DOM handler if necessary.
-		//This has to be broken out of the main unbind function because we have to support
-		//things like unbind(".test") that go across major event names. Yuck.
-		var handles = lls[evtName];
-		if(handles){
-			var hasDot = evtFullName.indexOf(".") != -1;
-			var forceDelete = false;
-
-			if(callbackId){
-				//Only need to unbind that one callback
-				delete handles[callbackId];
-			}else if(!hasDot && !fn){
-				forceDelete = true;
-			}else if(hasDot){
-				//A namespaced event.
-				//Problem is the namespaced event could be something like
-				//".test" which means remove all that end in .test. Yuck.
-				if(evtFullName.charAt(0) == "."){
-					for(var param in handles){
-						if(param.indexOf(evtFullName) == param.length - evtFullName.length){
-							delete handles[param];
-						}
-					}
-				}else{
-					delete handles[evtFullName];
-				}
-			}else{
-				//Not a namespaced event. Cycle through the $$ names
-				//to find a function match.
-				for(var param in handles){
-					if(param.indexOf("$$") != -1 && handles[param].fn == fn){
-						delete handles[param];
-						break;
-					}
-				}
-			}
-
-			//Remove handles/disconnect dom if no other params.
-			var allDone = true;
-			for(var param in handles){
-				if(param != "_connectId"){
-					allDone = false;
-					break;
-				}
-			}
-			if(forceDelete || allDone){
-				if(evtName.indexOf("ajax") != -1){
-					dojo.unsubscribe(handles._connectId);
-				}else{
-					dojo.disconnect(handles._connectId);
-				}
-				delete lls[evtName];
-			}
-		}
-	}
-
-	f.unbind = function(/*String*/type, /*Function*/fn){
-		
-		//See if event has a callbackId, if so, then we only unbind
-		//that one callback.
-		var callbackId = type ? type[dojo._scopeName + "callbackId"] : null;
-
-		//Type can be space separated values.
-		type = type && type.type ? type.type : type;
-		type = type ? type.split(" ") : type;
-
-		this.forEach(function(node){
-			//Only handle non text/comment nodes.
-			if(node.nodeType != 3 && node.nodeType != 8){
-				//If document, bind to documentElement
-				if(node.nodeType == 9){
-					node = node.documentElement;
-				}
-
-				//If no nodeId, then create one and attach it to the DOM node.
-				var nodeId = node.getAttribute(eventAttr);
-				
-				if(nodeId){
-					//Get the event listeners for the event name, the complete name.
-					var lls = listeners[nodeId];
-					if(lls){
-						//If no type, then it means do all bound types. Make a list of them.
-						var etypes = type;
-						if(!etypes){
-							etypes = [];
-							for(var param in lls){
-								etypes.push(param);
-							}
-						}
-
-						//Process each event type.
-						for(var i = 0; i < etypes.length; i++){
-							//Get event name, if have a dot on it, it is namespaced,
-							//be sure to get the core event name.
-							var evtFullName = etypes[i];
-							var evtName = getNonNamespacedName(evtFullName);
-			
-							//Problem is the namespaced event could be something like
-							//".test" which means remove all that end in .test. Yuck.
-							if(evtFullName.charAt(0) == "."){
-								for(var param in lls) {
-									listenerUnbind(lls, param, evtFullName, callbackId, fn);
-								}
-							}else{
-								listenerUnbind(lls, evtName, evtFullName, callbackId, fn);
-							}
-						}
-					}
-				}
-			}
-		});
-
-		return this;
-	}
-
-	f.one = function(/*String*/evtName, /*Function*/func){
-		var oneFunc = function(){
-			$(this).unbind(evtName, arguments.callee);
-			return func.apply(this, arguments);
-		}
-
-		return this.bind(evtName, oneFunc);
-	};
-
-	f._cloneNode = function(/*DOMNode*/ src){
-		// summary:
-		// 		private utiltity to clone a node. Copies event handlers too.
-		var target = src.cloneNode(true);
-
-		if(src.nodeType == 1){
-			//Look for event handlers in target.
-			var evNodes = dojo.query("[" + eventAttr + "]", target);
-			for(var i = 0, newNode; newNode = evNodes[i]; i++){
-				var oldNode = dojo.query('[' + eventAttr + '="' + newNode.getAttribute(eventAttr) + '"]', src)[0];
-				if(oldNode){
-					copyEventHandlers(oldNode, newNode);
-				}
-			}
-		}
-		return target;
-	};
-
-	//Temporary testing shim to get past jquery test setup errors.
-	dojo.getObject("$.event.global", true);
-
-	//Set up event handlers
-	dojo.forEach([
-		"blur", "focus", "dblclick", "click", "error", "keydown", "keypress", "keyup", "load", "mousedown",
-		"mouseenter", "mouseleave", "mousemove", "mouseout", "mouseover", "mouseup", "submit",
-		"ajaxStart", "ajaxSend", "ajaxSuccess", "ajaxError", "ajaxComplete", "ajaxStop"
-		], function(evt){
-			f[evt] = function(callback){
-				if(callback){
-					this.bind(evt, callback);
-				}else{
-					this.trigger(evt);
-				}
-				return this;
-			}
-		}
-	);
-
-	//END jquery Events API methods
-
-
-	//START jquery Effects API methods
-	//http://docs.jquery.com/Effects
-	function speedInt(speed){
-		//Fix speed setting, translate string values to numbers.
-		if(dojo.isString(speed)){
-			if(speed == "slow"){
-				speed = 700;
-			}else if(speed = "fast"){
-				speed = 300;
-			}else{
-				//Everything else is considered normal speed.
-				speed = 500;
-			}
-		}
-		return speed;
-	}
-	
-	f.hide = function(/*String||Number*/speed, /*Function?*/callback){
-		//Fix speed setting, translate string values to numbers.
-		speed = speedInt(speed);
-
-		this.forEach(function(node){
-			var style = node.style;
-			
-			//Skip if already hidden
-			var cs = dojo.getComputedStyle(node);
-			if(cs.display == "none"){
-				return;
-			}
-
-			style.overflow = "hidden";
-			style.display = "block";
-			
-			if(speed){
-				//It is alive!
-				dojo.anim(
-					node,
-					{
-						width: 0,
-						height: 0,
-						opacity: 0
-					},
-					speed,
-					null,
-					function(){
-						style.width = "";
-						style.height = "";
-						style.display = "none";
-						return callback && callback.call(node);
-					}
-				);
-			}else{
-				//No need for animation, fast path it.
-				dojo.style(node, "display", "none");
-				if(callback){
-					callback.call(node);
-				}
-			}
-		});
-		return this;
-	}
-
-	f.show = function(/*String||Number*/speed, /*Function?*/callback){
-		//Fix speed setting, translate string values to numbers.
-		speed = speedInt(speed);
-
-		this.forEach(function(node){
-			var style = node.style;
-			//Skip if the node is already showing.
-			var cs = dojo.getComputedStyle(node);
-			if(cs.display != "none"){
-				return;
-			}
-
-			if(speed){
-				//Figure out size of element
-				//so we know when to stop animation.
-				//Try the easy path first.
-				var width = parseFloat(style.width);
-				var height = parseFloat(style.height);
-				if(!width || !height){
-					//temporarily show the element to get
-					//dimensions
-					style.display = "block";
-					var box = dojo.marginBox(node);
-					width = box.w;
-					height = box.h;
-				}
-
-				//Make sure values are set to hidden state.
-				style.width = 0;
-				style.height = 0;
-				style.overflow = "hidden";
-				dojo.attr(node, "opacity", 0);
-				style.display = "block";
-
-				//It is alive!
-				dojo.anim(
-					node,
-					{
-						width: width,
-						height: height,
-						opacity: 1
-					},
-					speed,
-					null,
-					callback ? dojo.hitch(node, callback) : undefined
-				);
-			}else{
-				dojo.style(node, "display", "block");
-				if(callback){
-					callback.call(node);
-				}
-			}
-		});
-		return this;
-	}
-
-
-	//END jquery Effects API methods
-
-
-	//START jquery Ajax API methods
-	//http://docs.jquery.com/Ajax
-	
-	$.ajaxSettings = {
-	};
-
-	$.ajaxSetup = function(/*Object*/args){
-		dojo.mixin($.ajaxSettings, args);
-	}
-
-	var topics = {
-		"ajaxStart": "/dojo/io/start",
-		"ajaxSend": "/dojo/io/send",
-		"ajaxSuccess": "/dojo/io/load",
-		"ajaxError": "/dojo/io/error",
-		"ajaxComplete": "/dojo/io/done",
-		"ajaxStop": "/dojo/io/stop"
-	};
-
-	for(var fnName in topics){
-		//Make sure we are dealing with properties
-		//we care about and not something another toolkit added.
-		if(fnName.indexOf("ajax") == 0){
-			;(function(fnName){
-				f[fnName] = function(callback){
-					this.forEach(function(node){
-						dojo.subscribe(topics[fnName], function(){
-							var fakeEvt = new $.Event(fnName);
-							var ioArgs = arguments[0] && arguments[0].ioArgs;
-							var xhr = ioArgs && ioArgs.xhr;
-							var args = ioArgs && ioArgs.args;
-							var res = arguments[1];
-							if("ajaxComplete|ajaxSend|ajaxSuccess".indexOf(fnName) != -1){
-								return callback.call(node, fakeEvt, xhr, args);
-							}else if(fnName == "ajaxError"){
-								return callback.call(node, fakeEvt, xhr, args, res);
-							}else{
-								//ajaxStart|ajaxStop
-								return callback.call(node, fakeEvt);
-							}
-						});
-					});
-					return this;
-				}
-			})(fnName);
-		}
-	};
-
-	//Override dojo._xhrObj(dfd.ioArgs.args) to support beforeSend
-	//Do not understand the reason for beforeSend, particularly
-	//returning false stops the request.
-	//WARNING: even with this code, the error and complete callbacks
-	//will be fired because the deferred is cancelled. I feel this is
-	//correct behavior for dojo, and not sure why beforeSend is needed.
-	var _oldXhrObj = dojo._xhrObj;
-	dojo._xhrObj = function(args){
-		var xhr = _oldXhrObj.apply(dojo, arguments);
-		if(args && args.beforeSend){
-			if(args.beforeSend(xhr) === false){
-				return false;
-			}
-		}
-		return xhr;
-	}
-
-	$.ajax = function(/*Object*/args){
-		//Not sure if the args are considered mutable.
-		//Copy them to be safe.
-		var temp = dojo.delegate($.ajaxSettings);
-		for(var param in args){
-			//For data objects merge the data do not overwrite.
-			if(param == "data" && dojo.isObject(args[param]) && dojo.isObject(temp.data)){
-				for(var prop in args[param]){
-					temp.data[prop] = args[param][prop];
-				}
-			}else{
-				temp[param] = args[param];
-			}
-		}
-		args = temp;
-		var url = args.url;
-
-		if("async" in args){
-			args.sync = !args.async;
-		}
-
-		//Turn off topic publications
-		if(args.global === false){
-			args.ioPublish = false;
-		}
-
-		if(args.data){
-			var data = args.data;
-			if(dojo.isString(data)){
-				//convert to an object.
-				args.content = dojo.queryToObject(data);
-			}else{
-				//data property values could be a function, be sure to call them if so.
-				//Hmm, this seems to be of dubious value.
-				for(var param in data){
-					if(dojo.isFunction(data[param])){
-						data[param] = data[param]();
-					}
-				}
-				args.content = data;
-			}
-		}
-
-		//dataType
-		var dataType = args.dataType;
-		if("dataType" in args){
-			if(dataType == "script"){
-				dataType = "javascript";
-			}else if(dataType == "html"){
-				dataType = "text";
-			}
-			args.handleAs = dataType;
-		}else{
-			//Make a guess based on the URL.
-			dataType = args.handleAs = "text";
-			args.guessedType = true;
-		}
-
-		//cache:
-		if("cache" in args){
-			args.preventCache = !args.cache;
-		}else{
-			if(args.dataType == "script" || args.dataType == "jsonp"){
-				args.preventCache = true;
-			}
-		}
-
-		//Hide error since dojo treats it different.
-		if(args.error){
-			args._jqueryError = args.error;
-			delete args.error;
-		}
-		
-		//TODO: dataFilter
-
-		//Set up callbacks.
-		args.handle = function(result, ioArgs){
-			var textStatus = "success";
-			if(result instanceof Error){
-				textStatus = (result.dojoType == "timeout" ? "timeout" : "error");
-				if(args._jqueryError){
-					args._jqueryError(ioArgs.xhr, textStatus, result);
-				}
-			}else{
-				//If we guessed the type, see if it should be XML.
-				var xml = (ioArgs.args.guessedType && ioArgs.xhr && ioArgs.xhr.responseXML);
-				if(xml){
-					result = xml;
-				}
-
-				if(args.success){
-					args.success(result, textStatus, ioArgs.xhr);
-				}
-			}
-			if(args.complete){
-				args.complete(result, textStatus, ioArgs.xhr);
-			}
-			
-			return result;
-		};
-		
-		//Use a script tag if the request is xdomain or a jsonp thing.
-		var useScript = (dataType == "jsonp");
-		if(dataType == "javascript"){
-			//Get protocol and domain.
-			var colonIndex = url.indexOf(":");
-			var slashIndex = url.indexOf("/");
-			if(colonIndex > 0 && colonIndex < slashIndex){
-				//Possibly xdomain. Peel off protocol and hostname to find out.
-				var lastSlash = url.indexOf("/", slashIndex + 2);
-				if(lastSlash == -1){
-					lastSlash = url.length;
-				}
-				if(location.protocol != url.substring(0, colonIndex + 1) ||
-					location.hostname != url.substring(slashIndex + 2, lastSlash)){
-					useScript = true;
-				}
-			}
-		}
-
-		if(useScript){
-			if(dataType == "jsonp"){
-				//Look for callback param
-				var cb = args.jsonp;
-				if(!cb){
-					//Look in the URL
-					var params = args.url.split("?")[1];
-					if(params && (params = dojo.queryToObject(params))){
-						cb = findJsonpCallback(params);
-						if(cb){
-							//Remove the cb from the url.
-							var regex = new RegExp("([&\\?])?" + cb + "=?");
-							args.url = args.url.replace(regex + "=?");
-						}
-					}
-					//Look in the content.
-					if(!cb){
-						cb = findJsonpCallback(args.content);
-						if(cb){
-							delete args.content[cb];
-						}
-					}
-				}
-				args.jsonp = cb || "callback";
-			}
-			var dfd = dojo.io.script.get(args);
-			return dfd;
-		}else{
-			var dfd = dojo.xhr(args.type || "GET", args);
-			//If the XHR object is false, it means beforeSend canceled the request.
-			return dfd.ioArgs.xhr === false ? false : dfd.ioArgs.xhr;
-		}
-	}
-
-	function findJsonpCallback(obj){
-		for(var prop in obj){
-			if(prop.indexOf("callback") == prop.length - 8){
-				return prop;
-			}
-		}
-		return null;
-	}
-	
-	$.getpost = function(httpType, url, data, callback, dataType){
-		var args = {
-			url: url,
-			type: httpType
-		};
-
-		//Normalize data, considering it may be the real
-		//callback.
-		if(data){
-			if(dojo.isFunction(data) && !callback){
-				args.complete = data;
-			}else{
-				args.data = data;
-			}
-		}
-
-		//Normalize callback, considering it may be
-		//the datatype.
-		if(callback){
-			if(dojo.isString(callback) && !dataType){
-				dataType = callback;
-			}else{
-				args.complete = callback;
-			}
-		}
-
-		if(dataType){
-			args.dataType = dataType;
-		}
-
-		return $.ajax(args);
-	};
-
-	$.get = dojo.hitch($, "getpost", "GET");
-	$.post = dojo.hitch($, "getpost", "POST");
-	$.getJSON = function(url, data, callback){
-		return $.getpost("GET", url, data, callback, "json");
-	}
-	$.getScript = function(url, callback){
-		return $.ajax({
-			url: url,
-			success: callback,
-			dataType: "script"
-		});
-	}
-
-	f.load = function(url, data, callback){
-		
-		//See if this is a window or document. If so, then want to
-		//register onload handler.
-		var node = this[0];
-		if(!node || !node.nodeType || node.nodeType == 9){
-			dojo.addOnLoad(url);
-			return this;
-		}
-
-		//The rest of this function is the ajax HTML load case.
-		//Pull off selector if it is on the url.
-		var parts = url.split(/\s+/);
-		url = parts[0];
-		var query = parts[1];
-		
-		var finalCb = callback || data;
-
-		var cb = dojo.hitch(this, function(result, textStatus, xhr){
-			//Try to find all the body content.
-			var match = result.match(/\<\s*body[^>]+>.*<\/body\s*>/i);
-			if(match){
-				result = match;
-			}
-
-			//Convert to DOM nodes.
-			var nodes = dojo._toDom(result);
-
-			//Apply query, using a temp div to do the filtering.
-			if(query){
-				var temp = $(dojo.create("div"));
-				temp.append(nodes);
-				nodes = temp.find(query);
-			}else{
-				nodes = $(nodes.nodeType == 11 ? nodes.childNodes : nodes);
-			}
-
-			//Add the HTML to all nodes in this node list.
-			this.html(nodes);
-
-			//Call the user's callback.
-			//Use a timeout to allow any embedded scripts that
-			//were just inserted to run.
-			if(finalCb){
-				setTimeout(dojo.hitch(this, function(){
-					this.forEach(function(node){
-						finalCb.call(node, result, textStatus, xhr);
-					});
-				}), 10);
-			}
-		});
-
-		//Adjust parameters since they are variable.
-		if(!callback){
-			data = cb;
-		}else{
-			callback = cb;
-		}
-
-		//Set HTTP method. If the data is a string, use get, if it is an object,
-		//use post.
-		var method = "GET";
-		if(data && dojo.isObject(data)){
-			method = "POST";
-		}
-
-		$.getpost(method, url, data, callback, "html");
-		return this;
-	}
-
-	var serializeExclude = "file|submit|image|reset|button|";
-	f.serialize = function(){
-		var ret = "";
-		var strs = this.map(function(node){
-			if(node.nodeName.toUpperCase() == "FORM"){
-				return dojo.formToQuery(node);
-			}else{
-				var type = (node.type||"").toLowerCase();
-				if(serializeExclude.indexOf(type) == -1){
-					var val = dojo.fieldToObject(node);
-					if(node.name && val != null){
-						var q = {};
-						q[node.name] = val;
-						return dojo.objectToQuery(q);
-					}
-				}
-			}
-		});
-		return ret + strs.join("&");
-	}
-
-	$.param = function(obj){
-		if(obj._is$ && obj.serialize){
-			return obj.serialize();
-		}else if(dojo.isArray(obj)){
-			return dojo.map(obj, function(item){
-				return $.param(item);
-			}).join("&");
-		}else{
-			return dojo.objectToQuery(obj);
-		}
-	}
-	
-	//END jquery Ajax API methods
-
-	//START jquery Utilities API methods
-	//http://docs.jquery.com/Utilities
-	//TODO:
-	
-	$.isFunction = function(){
-		var result = dojo.isFunction.apply(dojo, arguments);
-		//Make sure Object does not return true
-		if(result){
-			result = (typeof(arguments[0]) != "object");
-		}
-		return result;
-	}
-
-	//END jquery Utilities API methods
-
-	
+_1.config.ioPublish=true;
+var _4="|img|meta|hr|br|input|";
+function _5(_6,_7){
+_6+="";
+_6=_6.replace(/<\s*(\w+)([^\/\>]*)\/\s*>/g,function(_8,_9,_a){
+if(_4.indexOf("|"+_9+"|")==-1){
+return "<"+_9+_a+"></"+_9+">";
+}else{
+return _8;
+}
+});
+return _1._toDom(_6,_7);
+};
+function _b(_c){
+var _d=_c.indexOf("-");
+if(_d!=-1){
+if(_d==0){
+_c=_c.substring(1);
+}
+_c=_c.replace(/-(\w)/g,function(_e,_f){
+return _f.toUpperCase();
+});
+}
+return _c;
+};
+var _10=_1.global.$;
+var _11=_1.global.jQuery;
+var $=_1.global.$=_1.global.jQuery=function(){
+var arg=arguments[0];
+if(!arg){
+return $._wrap([],null,$);
+}else{
+if(_1.isString(arg)){
+if(arg.charAt(0)=="<"){
+arg=_5(arg);
+if(arg.nodeType==11){
+arg=arg.childNodes;
+}else{
+return $._wrap([arg],null,$);
+}
+}else{
+var _12=_1._NodeListCtor;
+_1._NodeListCtor=$;
+var _13=arguments[1];
+if(_13&&_13._is$){
+_13=_13[0];
+}else{
+if(_1.isString(_13)){
+_13=_1.query(_13)[0];
+}
+}
+var nl=_1.query.call(this,arg,_13);
+_1._NodeListCtor=_12;
+return nl;
+}
+}else{
+if(_1.isFunction(arg)){
+$.ready(arg);
+return $;
+}else{
+if(arg==document||arg==window){
+return $._wrap([arg],null,$);
+}else{
+if(_1.isArray(arg)){
+var ary=[];
+for(var i=0;i<arg.length;i++){
+if(_1.indexOf(ary,arg[i])==-1){
+ary.push(arg[i]);
+}
+}
+return $._wrap(arg,null,$);
+}else{
+if("nodeType" in arg){
+return $._wrap([arg],null,$);
+}
+}
+}
+}
+}
+}
+return $._wrap(_1._toArray(arg),null,$);
+};
+var _14=_1.NodeList.prototype;
+var f=$.fn=$.prototype=_1.delegate(_14);
+$._wrap=_1.NodeList._wrap;
+var _15=/^H\d/i;
+var _16=_1.query.pseudos;
+_1.mixin(_16,{has:function(_17,_18){
+return function(_19){
+return $(_18,_19).length;
+};
+},visible:function(_1a,_1b){
+return function(_1c){
+return _1.style(_1c,"visible")!="hidden"&&_1.style(_1c,"display")!="none";
+};
+},hidden:function(_1d,_1e){
+return function(_1f){
+return _1f.type=="hidden"||_1.style(_1f,"visible")=="hidden"||_1.style(_1f,"display")=="none";
+};
+},selected:function(_20,_21){
+return function(_22){
+return _22.selected;
+};
+},checked:function(_23,_24){
+return function(_25){
+return _25.nodeName.toUpperCase()=="INPUT"&&_25.checked;
+};
+},disabled:function(_26,_27){
+return function(_28){
+return _28.getAttribute("disabled");
+};
+},enabled:function(_29,_2a){
+return function(_2b){
+return !_2b.getAttribute("disabled");
+};
+},input:function(_2c,_2d){
+return function(_2e){
+var n=_2e.nodeName.toUpperCase();
+return n=="INPUT"||n=="SELECT"||n=="TEXTAREA"||n=="BUTTON";
+};
+},button:function(_2f,_30){
+return function(_31){
+return (_31.nodeName.toUpperCase()=="INPUT"&&_31.type=="button")||_31.nodeName.toUpperCase()=="BUTTON";
+};
+},header:function(_32,_33){
+return function(_34){
+return _34.nodeName.match(_15);
+};
+}});
+var _35={};
+_1.forEach(["text","password","radio","checkbox","submit","image","reset","file"],function(_36){
+_35[_36]=function(_37,_38){
+return function(_39){
+return _39.nodeName.toUpperCase()=="INPUT"&&_39.type==_36;
+};
+};
+});
+_1.mixin(_16,_35);
+$.browser={mozilla:_1.isMoz,msie:_1.isIE,opera:_1.isOpera,safari:_1.isSafari};
+$.browser.version=_1.isIE||_1.isMoz||_1.isOpera||_1.isSafari||_1.isWebKit;
+$.ready=$.fn.ready=function(_3a){
+_1.addOnLoad(_1.hitch(null,_3a,$));
+return this;
+};
+f._is$=true;
+f.size=function(){
+return this.length;
+};
+$.prop=function(_3b,_3c){
+if(_1.isFunction(_3c)){
+return _3c.call(_3b);
+}else{
+return _3c;
+}
+};
+$.className={add:_1.addClass,remove:_1.removeClass,has:_1.hasClass};
+$.makeArray=function(_3d){
+if(typeof _3d=="undefined"){
+return [];
+}else{
+if(_3d.length&&!_1.isString(_3d)&&!("location" in _3d)){
+return _1._toArray(_3d);
+}else{
+return [_3d];
+}
+}
+};
+$.merge=function(_3e,_3f){
+var _40=[_3e.length,0];
+_40=_40.concat(_3f);
+_3e.splice.apply(_3e,_40);
+return _3e;
+};
+$.each=function(_41,cb){
+if(_1.isArrayLike(_41)){
+for(var i=0;i<_41.length;i++){
+if(cb.call(_41[i],i,_41[i])===false){
+break;
+}
+}
+}else{
+if(_1.isObject(_41)){
+for(var _42 in _41){
+if(cb.call(_41[_42],_42,_41[_42])===false){
+break;
+}
+}
+}
+}
+return this;
+};
+f.each=function(cb){
+return $.each.call(this,this,cb);
+};
+f.eq=function(){
+var nl=$();
+_1.forEach(arguments,function(i){
+if(this[i]){
+nl.push(this[i]);
+}
+},this);
+return nl;
+};
+f.get=function(_43){
+if(_43||_43==0){
+return this[_43];
+}
+return this;
+};
+f.index=function(arg){
+if(arg._is$){
+arg=arg[0];
+}
+return this.indexOf(arg);
+};
+var _44=[];
+var _45=0;
+var _46=_1._scopeName+"DataId";
+var _47=function(_48){
+var id=_48.getAttribute(_46);
+if(!id){
+id=_45++;
+_48.setAttribute(_46,id);
+}
+};
+var _49=function(_4a){
+var _4b={};
+if(_4a.nodeType==1){
+var id=_47(_4a);
+_4b=_44[id];
+if(!_4b){
+_4b=_44[id]={};
+}
+}
+return _4b;
+};
+$.data=function(_4c,_4d,_4e){
+var _4f=null;
+if(_4d=="events"){
+_4f=_50[_4c.getAttribute(_51)];
+var _52=true;
+if(_4f){
+for(var _53 in _4f){
+_52=false;
+break;
+}
+}
+return _52?null:_4f;
+}
+var _54=_49(_4c);
+if(typeof _4e!="undefined"){
+_54[_4d]=_4e;
+}else{
+_4f=_54[_4d];
+}
+return _4e?this:_4f;
+};
+$.removeData=function(_55,_56){
+var _57=_49(_55);
+delete _57[_56];
+if(_55.nodeType==1){
+var _58=true;
+for(var _59 in _57){
+_58=false;
+break;
+}
+if(_58){
+_55.removeAttribute(_46);
+}
+}
+return this;
+};
+f.data=function(_5a,_5b){
+var _5c=null;
+this.forEach(function(_5d){
+_5c=$.data(_5d,_5a,_5b);
+});
+return _5b?this:_5c;
+};
+f.removeData=function(_5e){
+this.forEach(function(_5f){
+$.removeData(_5f,_5e);
+});
+return this;
+};
+function _60(obj,_61){
+if(obj==_61){
+return obj;
+}
+var _62={};
+for(var x in _61){
+if((_62[x]===undefined||_62[x]!=_61[x])&&_61[x]!==undefined&&obj!=_61[x]){
+if(_1.isObject(obj[x])&&_1.isObject(_61[x])){
+if(_1.isArray(_61[x])){
+obj[x]=_61[x];
+}else{
+obj[x]=_60(obj[x],_61[x]);
+}
+}else{
+obj[x]=_61[x];
+}
+}
+}
+if(_1.isIE&&_61){
+var p=_61.toString;
+if(typeof p=="function"&&p!=obj.toString&&p!=_62.toString&&p!="\nfunction toString() {\n    [native code]\n}\n"){
+obj.toString=_61.toString;
+}
+}
+return obj;
+};
+f.extend=function(){
+var _63=[this];
+_63=_63.concat(arguments);
+return $.extend.apply($,_63);
+};
+$.extend=function(){
+var _64=arguments,_65;
+for(var i=0;i<_64.length;i++){
+var obj=_64[i];
+if(obj&&_1.isObject(obj)){
+if(!_65){
+_65=obj;
+}else{
+_60(_65,obj);
+}
+}
+}
+return _65;
+};
+$.noConflict=function(_66){
+var me=$;
+_1.global.$=_10;
+if(_66){
+_1.global.jQuery=_11;
+}
+return me;
+};
+f.attr=function(_67,_68){
+if(arguments.length==1&&_1.isString(arguments[0])){
+var _69=this[0];
+if(!_69){
+return null;
+}
+var arg=arguments[0];
+var _6a=_1.attr(_69,arg);
+var _6b=_69[arg];
+if((arg in _69)&&!_1.isObject(_6b)&&_67!="href"){
+return _6b;
+}else{
+return _6a||_6b;
+}
+}else{
+if(_1.isObject(_67)){
+for(var _6c in _67){
+this.attr(_6c,_67[_6c]);
+}
+return this;
+}else{
+var _6d=_1.isFunction(_68);
+this.forEach(function(_6e,_6f){
+var _70=_6e[_67];
+if((_67 in _6e)&&!_1.isObject(_70)&&_67!="href"){
+_6e[_67]=(_6d?_68.call(_6e,_6f):_68);
+}else{
+if(_6e.nodeType==1){
+_1.attr(_6e,_67,(_6d?_68.call(_6e,_6f):_68));
+}
+}
+});
+return this;
+}
+}
+};
+f.removeAttr=function(_71){
+this.forEach(function(_72,_73){
+var _74=_72[_71];
+if((_71 in _72)&&!_1.isObject(_74)&&_71!="href"){
+delete _72[_71];
+}else{
+if(_72.nodeType==1){
+if(_71=="class"){
+_72.removeAttribute(_71);
+}else{
+_1.removeAttr(_72,_71);
+}
+}
+}
+});
+return this;
+};
+f.toggleClass=function(_75,_76){
+var _77=arguments.length>1;
+this.forEach(function(_78){
+_1.toggleClass(_78,_75,_77?_76:!_1.hasClass(_78,_75));
+});
+return this;
+};
+f.toggle=function(){
+var _79=arguments;
+if(arguments.length>1&&_1.isFunction(arguments[0])){
+var _7a=0;
+var _7b=function(){
+var _7c=_79[_7a].apply(this,arguments);
+_7a+=1;
+if(_7a>_79.length-1){
+_7a=0;
+}
+};
+return this.bind("click",_7b);
+}else{
+var _7d=arguments.length==1?arguments[0]:undefined;
+this.forEach(function(_7e){
+var _7f=typeof _7d=="undefined"?_1.style(_7e,"display")=="none":_7d;
+var _80=(_7f?"show":"hide");
+var nl=$(_7e);
+nl[_80].apply(nl,_79);
+});
+return this;
+}
+};
+f.hasClass=function(_81){
+return this.some(function(_82){
+return _1.hasClass(_82,_81);
+});
+};
+f.html=f.innerHTML;
+_1.forEach(["filter","slice"],function(_83){
+f[_83]=function(){
+var nl;
+if(_1.isFunction(arguments[0])){
+var _84=arguments[0];
+arguments[0]=function(_85,_86){
+return _84.call(_85,_85,_86);
+};
+}
+if(_83=="filter"&&_1.isString(arguments[0])){
+var nl=this._filterQueryResult(this,arguments[0]);
+}else{
+var _87=_1._NodeListCtor;
+_1._NodeListCtor=f;
+nl=$(_14[_83].apply(this,arguments));
+_1._NodeListCtor=_87;
+}
+return nl._stash(this);
+};
+});
+f.map=function(_88){
+return this._buildArrayFromCallback(_88);
+};
+$.map=function(ary,_89){
+return f._buildArrayFromCallback.call(ary,_89);
+};
+$.inArray=function(_8a,ary){
+return _1.indexOf(ary,_8a);
+};
+f.is=function(_8b){
+return (_8b?!!this.filter(_8b).length:false);
+};
+f.not=function(){
+var _8c=$.apply($,arguments);
+var nl=$(_14.filter.call(this,function(_8d){
+return _8c.indexOf(_8d)==-1;
+}));
+return nl._stash(this);
+};
+f.add=function(){
+return this.concat.apply(this,arguments);
+};
+function _8e(_8f){
+var doc=_8f.contentDocument||(((_8f.name)&&(_8f.document)&&(document.getElementsByTagName("iframe")[_8f.name].contentWindow)&&(document.getElementsByTagName("iframe")[_8f.name].contentWindow.document)))||((_8f.name)&&(document.frames[_8f.name])&&(document.frames[_8f.name].document))||null;
+return doc;
+};
+f.contents=function(){
+var ary=[];
+this.forEach(function(_90){
+if(_90.nodeName.toUpperCase()=="IFRAME"){
+var doc=_8e(_90);
+if(doc){
+ary.push(doc);
+}
+}else{
+var _91=_90.childNodes;
+for(var i=0;i<_91.length;i++){
+ary.push(_91[i]);
+}
+}
+});
+return this._wrap(ary)._stash(this);
+};
+f.find=function(_92){
+var ary=[];
+this.forEach(function(_93){
+if(_93.nodeType==1){
+ary=ary.concat(_1._toArray($(_92,_93)));
+}
+});
+return this._getUniqueAsNodeList(ary)._stash(this);
+};
+f.andSelf=function(){
+return this.add(this._parent);
+};
+f.remove=function(_94){
+var nl=(_94?this._filterQueryResult(this,_94):this);
+nl.removeData();
+nl.forEach(function(_95){
+_95.parentNode.removeChild(_95);
+});
+return this;
+};
+$.css=function(_96,_97,_98){
+_97=_b(_97);
+var _99=(_98?_1.style(_96,_97,_98):_1.style(_96,_97));
+return _99;
+};
+f.css=function(_9a,_9b){
+if(_1.isString(_9a)){
+_9a=_b(_9a);
+if(arguments.length==2){
+if(!_1.isString(_9b)&&_9a!="zIndex"){
+_9b=_9b+"px";
+}
+this.forEach(function(_9c){
+if(_9c.nodeType==1){
+_1.style(_9c,_9a,_9b);
+}
+});
+return this;
+}else{
+_9b=_1.style(this[0],_9a);
+if(!_1.isString(_9b)&&_9a!="zIndex"){
+_9b=_9b+"px";
+}
+return _9b;
+}
+}else{
+for(var _9d in _9a){
+this.css(_9d,_9a[_9d]);
+}
+return this;
+}
+};
+function _9e(nl,_9f,_a0,_a1){
+if(_a1){
+var mod={};
+mod[_a0]=_a1;
+nl.forEach(function(_a2){
+_1[_9f](_a2,mod);
+});
+return nl;
+}else{
+return Math.abs(Math.round(_1[_9f](nl[0])[_a0]));
+}
+};
+f.height=function(_a3){
+return _9e(this,"contentBox","h",_a3);
+};
+f.width=function(_a4){
+return _9e(this,"contentBox","w",_a4);
+};
+function _a5(_a6,_a7,_a8,_a9,_aa){
+var _ab=false;
+if((_ab=_a6.style.display=="none")){
+_a6.style.display="block";
+}
+var cs=_1.getComputedStyle(_a6);
+var _ac=Math.abs(Math.round(_1._getContentBox(_a6,cs)[_a7]));
+var pad=_a8?Math.abs(Math.round(_1._getPadExtents(_a6,cs)[_a7])):0;
+var _ad=_a9?Math.abs(Math.round(_1._getBorderExtents(_a6,cs)[_a7])):0;
+var _ae=_aa?Math.abs(Math.round(_1._getMarginExtents(_a6,cs)[_a7])):0;
+if(_ab){
+_a6.style.display="none";
+}
+return pad+_ac+_ad+_ae;
+};
+f.innerHeight=function(){
+return _a5(this[0],"h",true);
+};
+f.innerWidth=function(){
+return _a5(this[0],"w",true);
+};
+f.outerHeight=function(_af){
+return _a5(this[0],"h",true,true,_af);
+};
+f.outerWidth=function(_b0){
+return _a5(this[0],"w",true,true,_b0);
+};
+var _50=[];
+var _b1=1;
+var _51=_1._scopeName+"eventid";
+var _b2;
+function _b3(_b4){
+_b4=_b4.split("$$")[0];
+var _b5=_b4.indexOf(".");
+if(_b5!=-1){
+_b4=_b4.substring(0,_b5);
+}
+return _b4;
+};
+function _b6(_b7,_b8){
+if(_b8.indexOf("ajax")==0){
+return _1.subscribe(_b9[_b8],function(dfd,res){
+var _ba=new $.Event(_b8);
+if("ajaxComplete|ajaxSend|ajaxSuccess".indexOf(_b8)!=-1){
+_bb(_b7,[_ba,dfd.ioArgs.xhr,dfd.ioArgs.args]);
+}else{
+if(_b8=="ajaxError"){
+_bb(_b7,[_ba,dfd.ioArgs.xhr,dfd.ioArgs.args,res]);
+}else{
+_bb(_b7,[_ba]);
+}
+}
+});
+}else{
+return _1.connect(_b7,"on"+_b8,function(e){
+_bb(_b7,arguments);
+});
+}
+};
+$.Event=function(_bc){
+if(this==$){
+return new $.Event(_bc);
+}
+if(typeof _bc=="string"){
+this.type=_bc.replace(/!/,"");
+}else{
+_1.mixin(this,_bc);
+}
+this.timeStamp=(new Date()).getTime();
+this._isFake=true;
+this._isStrict=(this.type.indexOf("!")!=-1);
+};
+var ep=$.Event.prototype={preventDefault:function(){
+this.isDefaultPrevented=this._true;
+},stopPropagation:function(){
+this.isPropagationStopped=this._true;
+},stopImmediatePropagation:function(){
+this.isPropagationStopped=this._true;
+this.isImmediatePropagationStopped=this._true;
+},_true:function(){
+return true;
+},_false:function(){
+return false;
+}};
+_1.mixin(ep,{isPropagationStopped:ep._false,isImmediatePropagationStopped:ep._false,isDefaultPrevented:ep._false});
+function _bd(_be,_bf){
+_be=_be||[];
+_be=[].concat(_be);
+var evt=_be[0];
+if(!evt||!evt.preventDefault){
+evt=_bf&&_bf.preventDefault?_bf:new $.Event(_bf);
+_be.unshift(evt);
+}
+return _be;
+};
+var _c0=false;
+function _bb(_c1,_c2,_c3){
+_c0=true;
+_c2=_c2||_b2;
+_c3=_c3;
+if(_c1.nodeType==9){
+_c1=_c1.documentElement;
+}
+var _c4=_c1.getAttribute(_51);
+if(!_c4){
+return;
+}
+var evt=_c2[0];
+var _c5=evt.type;
+var _c6=_b3(_c5);
+var cbs=_50[_c4][_c6];
+var _c7;
+if(_c3){
+_c7=_c3.apply(_c1,_c2);
+}
+if(_c7!==false){
+for(var _c8 in cbs){
+if(_c8!="_connectId"&&(!evt._isStrict&&(_c8.indexOf(_c5)==0)||(evt._isStrict&&_c8==_c5))){
+evt[_1._scopeName+"callbackId"]=_c8;
+var cb=cbs[_c8];
+if(typeof cb.data!="undefined"){
+evt.data=cb.data;
+}else{
+evt.data=null;
+}
+if((_c7=cb.fn.apply(evt.target,_c2))===false&&!evt._isFake){
+_1.stopEvent(evt);
+}
+evt.result=_c7;
+}
+}
+}
+return _c7;
+};
+f.triggerHandler=function(_c9,_ca,_cb){
+var _cc=this[0];
+if(_cc&&_cc.nodeType!=3&&_cc.nodeType!=8){
+_ca=_bd(_ca,_c9);
+return _bb(_cc,_ca,_cb);
+}else{
+return undefined;
+}
+};
+f.trigger=function(_cd,_ce,_cf){
+_ce=_bd(_ce,_cd);
+var evt=_ce[0];
+var _cd=_b3(evt.type);
+_b2=_ce;
+currentExtraFunc=_cf;
+var _d0=null;
+var _d1=!evt.target;
+this.forEach(function(_d2){
+if(_d2.nodeType!=3&&_d2.nodeType!=8){
+if(_d2.nodeType==9){
+_d2=_d2.documentElement;
+}
+if(evt._isFake){
+evt.currentTarget=_d2;
+if(_d1){
+evt.target=_d2;
+}
+}
+if(_cf){
+var _d3=_ce.slice(1);
+_d0=_cf.apply(_d2,(_d0=null?_d3:_d3.concat(_d0)));
+}
+if(_d0!==false){
+_c0=false;
+if(_d2[_cd]){
+try{
+_d0=_d2[_cd]();
+}
+catch(e){
+}
+}else{
+if(_d2["on"+_cd]){
+try{
+_d0=_d2["on"+_cd]();
+}
+catch(e){
+}
+}
+}
+if(!_c0){
+_d0=_bb(_d2,_ce);
+}
+var _d4=_d2.parentNode;
+if(_d0!==false&&!evt.isImmediatePropagationStopped()&&!evt.isPropagationStopped()&&_d4&&_d4.nodeType==1){
+$(_d4).trigger(_cd,_ce,_cf);
+}
+}
+}
+});
+_b2=null;
+currentExtraFunc=null;
+return this;
+};
+var _d5=0;
+f.bind=function(_d6,_d7,fn){
+_d6=_d6.split(" ");
+if(!fn){
+fn=_d7;
+_d7=null;
+}
+this.forEach(function(_d8){
+if(_d8.nodeType!=3&&_d8.nodeType!=8){
+if(_d8.nodeType==9){
+_d8=_d8.documentElement;
+}
+var _d9=_d8.getAttribute(_51);
+if(!_d9){
+_d9=_b1++;
+_d8.setAttribute(_51,_d9);
+_50[_d9]={};
+}
+for(var i=0;i<_d6.length;i++){
+var _da=_d6[i];
+var _db=_b3(_da);
+if(_db==_da){
+_da=_db+"$$"+(_d5++);
+}
+var lls=_50[_d9];
+if(!lls[_db]){
+lls[_db]={_connectId:_b6(_d8,_db)};
+}
+lls[_db][_da]={fn:fn,data:_d7};
+}
+}
+});
+return this;
+};
+function _dc(src,_dd){
+var _de=_dd.getAttribute(_51);
+var sls=_50[_de];
+if(!sls){
+return;
+}
+var _df=_df=_b1++;
+_dd.setAttribute(_51,_df);
+var tls=_50[_df]={};
+var _e0={};
+for(var _e1 in sls){
+var _e2=tls[_e1]={_connectId:_b6(_dd,_e1)};
+var _e3=sls[_e1];
+for(var _e4 in _e3){
+_e2[_e4]={fn:_e3[_e4].fn,data:_e3[_e4].data};
+}
+}
+};
+function _e5(lls,_e6,_e7,_e8,fn){
+var _e9=lls[_e6];
+if(_e9){
+var _ea=_e7.indexOf(".")!=-1;
+var _eb=false;
+if(_e8){
+delete _e9[_e8];
+}else{
+if(!_ea&&!fn){
+_eb=true;
+}else{
+if(_ea){
+if(_e7.charAt(0)=="."){
+for(var _ec in _e9){
+if(_ec.indexOf(_e7)==_ec.length-_e7.length){
+delete _e9[_ec];
+}
+}
+}else{
+delete _e9[_e7];
+}
+}else{
+for(var _ec in _e9){
+if(_ec.indexOf("$$")!=-1&&_e9[_ec].fn==fn){
+delete _e9[_ec];
+break;
+}
+}
+}
+}
+}
+var _ed=true;
+for(var _ec in _e9){
+if(_ec!="_connectId"){
+_ed=false;
+break;
+}
+}
+if(_eb||_ed){
+if(_e6.indexOf("ajax")!=-1){
+_1.unsubscribe(_e9._connectId);
+}else{
+_1.disconnect(_e9._connectId);
+}
+delete lls[_e6];
+}
+}
+};
+f.unbind=function(_ee,fn){
+var _ef=_ee?_ee[_1._scopeName+"callbackId"]:null;
+_ee=_ee&&_ee.type?_ee.type:_ee;
+_ee=_ee?_ee.split(" "):_ee;
+this.forEach(function(_f0){
+if(_f0.nodeType!=3&&_f0.nodeType!=8){
+if(_f0.nodeType==9){
+_f0=_f0.documentElement;
+}
+var _f1=_f0.getAttribute(_51);
+if(_f1){
+var lls=_50[_f1];
+if(lls){
+var _f2=_ee;
+if(!_f2){
+_f2=[];
+for(var _f3 in lls){
+_f2.push(_f3);
+}
+}
+for(var i=0;i<_f2.length;i++){
+var _f4=_f2[i];
+var _f5=_b3(_f4);
+if(_f4.charAt(0)=="."){
+for(var _f3 in lls){
+_e5(lls,_f3,_f4,_ef,fn);
+}
+}else{
+_e5(lls,_f5,_f4,_ef,fn);
+}
+}
+}
+}
+}
+});
+return this;
+};
+f.one=function(_f6,_f7){
+var _f8=function(){
+$(this).unbind(_f6,arguments.callee);
+return _f7.apply(this,arguments);
+};
+return this.bind(_f6,_f8);
+};
+f._cloneNode=function(src){
+var _f9=src.cloneNode(true);
+if(src.nodeType==1){
+var _fa=_1.query("["+_51+"]",_f9);
+for(var i=0,_fb;_fb=_fa[i];i++){
+var _fc=_1.query("["+_51+"=\""+_fb.getAttribute(_51)+"\"]",src)[0];
+if(_fc){
+_dc(_fc,_fb);
+}
+}
+}
+return _f9;
+};
+_1.getObject("$.event.global",true);
+_1.forEach(["blur","focus","dblclick","click","error","keydown","keypress","keyup","load","mousedown","mouseenter","mouseleave","mousemove","mouseout","mouseover","mouseup","submit","ajaxStart","ajaxSend","ajaxSuccess","ajaxError","ajaxComplete","ajaxStop"],function(evt){
+f[evt]=function(_fd){
+if(_fd){
+this.bind(evt,_fd);
+}else{
+this.trigger(evt);
+}
+return this;
+};
+});
+function _fe(_ff){
+if(_1.isString(_ff)){
+if(_ff=="slow"){
+_ff=700;
+}else{
+if(_ff="fast"){
+_ff=300;
+}else{
+_ff=500;
+}
+}
+}
+return _ff;
+};
+f.hide=function(_100,_101){
+_100=_fe(_100);
+this.forEach(function(node){
+var _102=node.style;
+var cs=_1.getComputedStyle(node);
+if(cs.display=="none"){
+return;
+}
+_102.overflow="hidden";
+_102.display="block";
+if(_100){
+_1.anim(node,{width:0,height:0,opacity:0},_100,null,function(){
+_102.width="";
+_102.height="";
+_102.display="none";
+return _101&&_101.call(node);
+});
+}else{
+_1.style(node,"display","none");
+if(_101){
+_101.call(node);
+}
+}
+});
+return this;
+};
+f.show=function(_103,_104){
+_103=_fe(_103);
+this.forEach(function(node){
+var _105=node.style;
+var cs=_1.getComputedStyle(node);
+if(cs.display!="none"){
+return;
+}
+if(_103){
+var _106=parseFloat(_105.width);
+var _107=parseFloat(_105.height);
+if(!_106||!_107){
+_105.display="block";
+var box=_1.marginBox(node);
+_106=box.w;
+_107=box.h;
+}
+_105.width=0;
+_105.height=0;
+_105.overflow="hidden";
+_1.attr(node,"opacity",0);
+_105.display="block";
+_1.anim(node,{width:_106,height:_107,opacity:1},_103,null,_104?_1.hitch(node,_104):undefined);
+}else{
+_1.style(node,"display","block");
+if(_104){
+_104.call(node);
+}
+}
+});
+return this;
+};
+$.ajaxSettings={};
+$.ajaxSetup=function(args){
+_1.mixin($.ajaxSettings,args);
+};
+var _b9={"ajaxStart":"/dojo/io/start","ajaxSend":"/dojo/io/send","ajaxSuccess":"/dojo/io/load","ajaxError":"/dojo/io/error","ajaxComplete":"/dojo/io/done","ajaxStop":"/dojo/io/stop"};
+for(var _108 in _b9){
+if(_108.indexOf("ajax")==0){
+(function(_109){
+f[_109]=function(_10a){
+this.forEach(function(node){
+_1.subscribe(_b9[_109],function(){
+var _10b=new $.Event(_109);
+var _10c=arguments[0]&&arguments[0].ioArgs;
+var xhr=_10c&&_10c.xhr;
+var args=_10c&&_10c.args;
+var res=arguments[1];
+if("ajaxComplete|ajaxSend|ajaxSuccess".indexOf(_109)!=-1){
+return _10a.call(node,_10b,xhr,args);
+}else{
+if(_109=="ajaxError"){
+return _10a.call(node,_10b,xhr,args,res);
+}else{
+return _10a.call(node,_10b);
+}
+}
+});
+});
+return this;
+};
+})(_108);
+}
+}
+var _10d=_1._xhrObj;
+_1._xhrObj=function(args){
+var xhr=_10d.apply(_1,arguments);
+if(args&&args.beforeSend){
+if(args.beforeSend(xhr)===false){
+return false;
+}
+}
+return xhr;
+};
+$.ajax=function(args){
+var temp=_1.delegate($.ajaxSettings);
+for(var _10e in args){
+if(_10e=="data"&&_1.isObject(args[_10e])&&_1.isObject(temp.data)){
+for(var prop in args[_10e]){
+temp.data[prop]=args[_10e][prop];
+}
+}else{
+temp[_10e]=args[_10e];
+}
+}
+args=temp;
+var url=args.url;
+if("async" in args){
+args.sync=!args.async;
+}
+if(args.global===false){
+args.ioPublish=false;
+}
+if(args.data){
+var data=args.data;
+if(_1.isString(data)){
+args.content=_1.queryToObject(data);
+}else{
+for(var _10e in data){
+if(_1.isFunction(data[_10e])){
+data[_10e]=data[_10e]();
+}
+}
+args.content=data;
+}
+}
+var _10f=args.dataType;
+if("dataType" in args){
+if(_10f=="script"){
+_10f="javascript";
+}else{
+if(_10f=="html"){
+_10f="text";
+}
+}
+args.handleAs=_10f;
+}else{
+_10f=args.handleAs="text";
+args.guessedType=true;
+}
+if("cache" in args){
+args.preventCache=!args.cache;
+}else{
+if(args.dataType=="script"||args.dataType=="jsonp"){
+args.preventCache=true;
+}
+}
+if(args.error){
+args._jqueryError=args.error;
+delete args.error;
+}
+args.handle=function(_110,_111){
+var _112="success";
+if(_110 instanceof Error){
+_112=(_110.dojoType=="timeout"?"timeout":"error");
+if(args._jqueryError){
+args._jqueryError(_111.xhr,_112,_110);
+}
+}else{
+var xml=(_111.args.guessedType&&_111.xhr&&_111.xhr.responseXML);
+if(xml){
+_110=xml;
+}
+if(args.success){
+args.success(_110,_112,_111.xhr);
+}
+}
+if(args.complete){
+args.complete(_110,_112,_111.xhr);
+}
+return _110;
+};
+var _113=(_10f=="jsonp");
+if(_10f=="javascript"){
+var _114=url.indexOf(":");
+var _115=url.indexOf("/");
+if(_114>0&&_114<_115){
+var _116=url.indexOf("/",_115+2);
+if(_116==-1){
+_116=url.length;
+}
+if(location.protocol!=url.substring(0,_114+1)||location.hostname!=url.substring(_115+2,_116)){
+_113=true;
+}
+}
+}
+if(_113){
+if(_10f=="jsonp"){
+var cb=args.jsonp;
+if(!cb){
+var _117=args.url.split("?")[1];
+if(_117&&(_117=_1.queryToObject(_117))){
+cb=_118(_117);
+if(cb){
+var _119=new RegExp("([&\\?])?"+cb+"=?");
+args.url=args.url.replace(_119+"=?");
+}
+}
+if(!cb){
+cb=_118(args.content);
+if(cb){
+delete args.content[cb];
+}
+}
+}
+args.jsonp=cb||"callback";
+}
+var dfd=_1.io.script.get(args);
+return dfd;
+}else{
+var dfd=_1.xhr(args.type||"GET",args);
+return dfd.ioArgs.xhr===false?false:dfd.ioArgs.xhr;
+}
+};
+function _118(obj){
+for(var prop in obj){
+if(prop.indexOf("callback")==prop.length-8){
+return prop;
+}
+}
+return null;
+};
+$.getpost=function(_11a,url,data,_11b,_11c){
+var args={url:url,type:_11a};
+if(data){
+if(_1.isFunction(data)&&!_11b){
+args.complete=data;
+}else{
+args.data=data;
+}
+}
+if(_11b){
+if(_1.isString(_11b)&&!_11c){
+_11c=_11b;
+}else{
+args.complete=_11b;
+}
+}
+if(_11c){
+args.dataType=_11c;
+}
+return $.ajax(args);
+};
+$.get=_1.hitch($,"getpost","GET");
+$.post=_1.hitch($,"getpost","POST");
+$.getJSON=function(url,data,_11d){
+return $.getpost("GET",url,data,_11d,"json");
+};
+$.getScript=function(url,_11e){
+return $.ajax({url:url,success:_11e,dataType:"script"});
+};
+f.load=function(url,data,_11f){
+var node=this[0];
+if(!node||!node.nodeType||node.nodeType==9){
+_1.addOnLoad(url);
+return this;
+}
+var _120=url.split(/\s+/);
+url=_120[0];
+var _121=_120[1];
+var _122=_11f||data;
+var cb=_1.hitch(this,function(_123,_124,xhr){
+var _125=_123.match(/\<\s*body[^>]+>.*<\/body\s*>/i);
+if(_125){
+_123=_125;
+}
+var _126=_1._toDom(_123);
+if(_121){
+var temp=$(_1.create("div"));
+temp.append(_126);
+_126=temp.find(_121);
+}else{
+_126=$(_126.nodeType==11?_126.childNodes:_126);
+}
+this.html(_126);
+if(_122){
+setTimeout(_1.hitch(this,function(){
+this.forEach(function(node){
+_122.call(node,_123,_124,xhr);
+});
+}),10);
+}
+});
+if(!_11f){
+data=cb;
+}else{
+_11f=cb;
+}
+var _127="GET";
+if(data&&_1.isObject(data)){
+_127="POST";
+}
+$.getpost(_127,url,data,_11f,"html");
+return this;
+};
+var _128="file|submit|image|reset|button|";
+f.serialize=function(){
+var ret="";
+var strs=this.map(function(node){
+if(node.nodeName.toUpperCase()=="FORM"){
+return _1.formToQuery(node);
+}else{
+var type=(node.type||"").toLowerCase();
+if(_128.indexOf(type)==-1){
+var val=_1.fieldToObject(node);
+if(node.name&&val!=null){
+var q={};
+q[node.name]=val;
+return _1.objectToQuery(q);
+}
+}
+}
+});
+return ret+strs.join("&");
+};
+$.param=function(obj){
+if(obj._is$&&obj.serialize){
+return obj.serialize();
+}else{
+if(_1.isArray(obj)){
+return _1.map(obj,function(item){
+return $.param(item);
+}).join("&");
+}else{
+return _1.objectToQuery(obj);
+}
+}
+};
+$.isFunction=function(){
+var _129=_1.isFunction.apply(_1,arguments);
+if(_129){
+_129=(typeof (arguments[0])!="object");
+}
+return _129;
+};
 })();
-
+return _1.getObject("dojox.jq");
+});
+require(["dojox/jq"]);

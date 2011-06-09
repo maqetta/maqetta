@@ -1,50 +1,26 @@
-define([
-	"dojo/_base/kernel", // dojo.config.blankGif
-	"dojo/_base/html", // dojo.addClass dojo.create dojo.getComputedStyle
-	"dojo/ready", // dojo.ready
-	"dojo/_base/sniff", // dojo.isIE dojo.isMoz
-	"dojo/_base/url", // dojo.moduleUrl
-	"dojo/_base/window" // dojo.body
-], function(dojo){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/hccss
-	// summary:
-	//		Test if computer is in high contrast mode, and sets dijit_a11y flag on <body> if it is.
-
-	if(dojo.isIE || dojo.isMoz){	// NOTE: checking in Safari messes things up
-		// priority is 90 to run ahead of parser priority of 100
-		dojo.ready(90, function(){
-			// summary:
-			//		Detects if we are in high-contrast mode or not
-
-			// create div for testing if high contrast mode is on or images are turned off
-			var div = dojo.create("div",{
-				id: "a11yTestNode",
-				style:{
-					cssText:'border: 1px solid;'
-						+ 'border-color:red green;'
-						+ 'position: absolute;'
-						+ 'height: 5px;'
-						+ 'top: -999px;'
-						+ 'background-image: url("' + (dojo.config.blankGif || dojo.moduleUrl("dojo", "resources/blank.gif")) + '");'
-				}
-			}, dojo.body());
-
-			// test it
-			var cs = dojo.getComputedStyle(div);
-			if(cs){
-				var bkImg = cs.backgroundImage;
-				var needsA11y = (cs.borderTopColor == cs.borderRightColor) || (bkImg != null && (bkImg == "none" || bkImg == "url(invalid-url:)" ));
-				if(needsA11y){
-					dojo.addClass(dojo.body(), "dijit_a11y");
-				}
-				if(dojo.isIE){
-					div.outerHTML = "";		// prevent mixed-content warning, see http://support.microsoft.com/kb/925014
-				}else{
-					dojo.body().removeChild(div);
-				}
-			}
-		});
-	}
+define("dijit/hccss",["dojo/_base/kernel","dojo/_base/html","dojo/ready","dojo/_base/sniff","dojo/_base/url","dojo/_base/window"],function(_1){
+if(_1.isIE||_1.isMoz){
+_1.ready(90,function(){
+var _2=_1.create("div",{id:"a11yTestNode",style:{cssText:"border: 1px solid;"+"border-color:red green;"+"position: absolute;"+"height: 5px;"+"top: -999px;"+"background-image: url(\""+(_1.config.blankGif||_1.moduleUrl("dojo","resources/blank.gif"))+"\");"}},_1.body());
+var cs=_1.getComputedStyle(_2);
+if(cs){
+var _3=cs.backgroundImage;
+var _4=(cs.borderTopColor==cs.borderRightColor)||(_3!=null&&(_3=="none"||_3=="url(invalid-url:)"));
+if(_4){
+_1.addClass(_1.body(),"dijit_a11y");
+}
+if(_1.isIE){
+_2.outerHTML="";
+}else{
+_1.body().removeChild(_2);
+}
+}
+});
+}
 });

@@ -1,94 +1,62 @@
-define(["../..", "./sorter"], function(dojo) {
-	// module:
-	//		dojo/data/util/simpleFetch
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("data.util.simpleFetch", true, dojo);
-
-dojo.data.util.simpleFetch.fetch = function(/* Object? */ request){
-	//	summary:
-	//		The simpleFetch mixin is designed to serve as a set of function(s) that can
-	//		be mixed into other datastore implementations to accelerate their development.
-	//		The simpleFetch mixin should work well for any datastore that can respond to a _fetchItems()
-	//		call by returning an array of all the found items that matched the query.  The simpleFetch mixin
-	//		is not designed to work for datastores that respond to a fetch() call by incrementally
-	//		loading items, or sequentially loading partial batches of the result
-	//		set.  For datastores that mixin simpleFetch, simpleFetch
-	//		implements a fetch method that automatically handles eight of the fetch()
-	//		arguments -- onBegin, onItem, onComplete, onError, start, count, sort and scope
-	//		The class mixing in simpleFetch should not implement fetch(),
-	//		but should instead implement a _fetchItems() method.  The _fetchItems()
-	//		method takes three arguments, the keywordArgs object that was passed
-	//		to fetch(), a callback function to be called when the result array is
-	//		available, and an error callback to be called if something goes wrong.
-	//		The _fetchItems() method should ignore any keywordArgs parameters for
-	//		start, count, onBegin, onItem, onComplete, onError, sort, and scope.
-	//		The _fetchItems() method needs to correctly handle any other keywordArgs
-	//		parameters, including the query parameter and any optional parameters
-	//		(such as includeChildren).  The _fetchItems() method should create an array of
-	//		result items and pass it to the fetchHandler along with the original request object
-	//		-- or, the _fetchItems() method may, if it wants to, create an new request object
-	//		with other specifics about the request that are specific to the datastore and pass
-	//		that as the request object to the handler.
-	//
-	//		For more information on this specific function, see dojo.data.api.Read.fetch()
-	request = request || {};
-	if(!request.store){
-		request.store = this;
-	}
-	var self = this;
-
-	var _errorHandler = function(errorData, requestObject){
-		if(requestObject.onError){
-			var scope = requestObject.scope || dojo.global;
-			requestObject.onError.call(scope, errorData, requestObject);
-		}
-	};
-
-	var _fetchHandler = function(items, requestObject){
-		var oldAbortFunction = requestObject.abort || null;
-		var aborted = false;
-
-		var startIndex = requestObject.start?requestObject.start:0;
-		var endIndex = (requestObject.count && (requestObject.count !== Infinity))?(startIndex + requestObject.count):items.length;
-
-		requestObject.abort = function(){
-			aborted = true;
-			if(oldAbortFunction){
-				oldAbortFunction.call(requestObject);
-			}
-		};
-
-		var scope = requestObject.scope || dojo.global;
-		if(!requestObject.store){
-			requestObject.store = self;
-		}
-		if(requestObject.onBegin){
-			requestObject.onBegin.call(scope, items.length, requestObject);
-		}
-		if(requestObject.sort){
-			items.sort(dojo.data.util.sorter.createSortFunction(requestObject.sort, self));
-		}
-		if(requestObject.onItem){
-			for(var i = startIndex; (i < items.length) && (i < endIndex); ++i){
-				var item = items[i];
-				if(!aborted){
-					requestObject.onItem.call(scope, item, requestObject);
-				}
-			}
-		}
-		if(requestObject.onComplete && !aborted){
-			var subset = null;
-			if(!requestObject.onItem){
-				subset = items.slice(startIndex, endIndex);
-			}
-			requestObject.onComplete.call(scope, subset, requestObject);
-		}
-	};
-	this._fetchItems(request, _fetchHandler, _errorHandler);
-	return request;	// Object
+define("dojo/data/util/simpleFetch",["../..","./sorter"],function(_1){
+_1.getObject("data.util.simpleFetch",true,_1);
+_1.data.util.simpleFetch.fetch=function(_2){
+_2=_2||{};
+if(!_2.store){
+_2.store=this;
+}
+var _3=this;
+var _4=function(_5,_6){
+if(_6.onError){
+var _7=_6.scope||_1.global;
+_6.onError.call(_7,_5,_6);
+}
 };
-
-return dojo.data.util.simpleFetch;
+var _8=function(_9,_a){
+var _b=_a.abort||null;
+var _c=false;
+var _d=_a.start?_a.start:0;
+var _e=(_a.count&&(_a.count!==Infinity))?(_d+_a.count):_9.length;
+_a.abort=function(){
+_c=true;
+if(_b){
+_b.call(_a);
+}
+};
+var _f=_a.scope||_1.global;
+if(!_a.store){
+_a.store=_3;
+}
+if(_a.onBegin){
+_a.onBegin.call(_f,_9.length,_a);
+}
+if(_a.sort){
+_9.sort(_1.data.util.sorter.createSortFunction(_a.sort,_3));
+}
+if(_a.onItem){
+for(var i=_d;(i<_9.length)&&(i<_e);++i){
+var _10=_9[i];
+if(!_c){
+_a.onItem.call(_f,_10,_a);
+}
+}
+}
+if(_a.onComplete&&!_c){
+var _11=null;
+if(!_a.onItem){
+_11=_9.slice(_d,_e);
+}
+_a.onComplete.call(_f,_11,_a);
+}
+};
+this._fetchItems(_2,_8,_4);
+return _2;
+};
+return _1.data.util.simpleFetch;
 });

@@ -1,207 +1,73 @@
-define(["./_base/kernel", "./_base/lang", "./dom"], function(dojo, lang, dom){
-	// module:
-	//		dojo/dom-class
-	// summary:
-	//		This module defines the core dojo DOM class API.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	//TODO: use HTML5 class list methods, example: http://github.com/uxebu/embedjs/blob/master/src/html/classList.js
-
-	// =============================
-	// (CSS) Class Functions
-	// =============================
-	var _className = "className";
-
-	dojo.hasClass = function(/*DomNode|String*/node, /*String*/classStr){
-		// summary:
-		//		Returns whether or not the specified classes are a portion of the
-		//		class list currently applied to the node.
-		//
-		// node:
-		//		String ID or DomNode reference to check the class for.
-		//
-		// classStr:
-		//		A string class name to look for.
-		//
-		// example:
-		//		Do something if a node with id="someNode" has class="aSillyClassName" present
-		//	|	if(dojo.hasClass("someNode","aSillyClassName")){ ... }
-
-		return ((" " + dom.byId(node)[_className] + " ").indexOf(" " + classStr + " ") >= 0); // Boolean
-	};
-
-	var spaces = /\s+/, a1 = [""],
-		fakeNode = {},
-		str2array = function(s){
-			if(typeof s == "string" || s instanceof String){
-				if(s.indexOf(" ") < 0){
-					a1[0] = s;
-					return a1;
-				}else{
-					return s.split(spaces);
-				}
-			}
-			// assumed to be an array
-			return s || "";
-		};
-
-	dojo.addClass = function(/*DomNode|String*/node, /*String|Array*/classStr){
-		// summary:
-		//		Adds the specified classes to the end of the class list on the
-		//		passed node. Will not re-apply duplicate classes.
-		//
-		// node:
-		//		String ID or DomNode reference to add a class string too
-		//
-		// classStr:
-		//		A String class name to add, or several space-separated class names,
-		//		or an array of class names.
-		//
-		// example:
-		//		Add a class to some node:
-		//	|	dojo.addClass("someNode", "anewClass");
-		//
-		// example:
-		//		Add two classes at once:
-		//	|	dojo.addClass("someNode", "firstClass secondClass");
-		//
-		// example:
-		//		Add two classes at once (using array):
-		//	|	dojo.addClass("someNode", ["firstClass", "secondClass"]);
-		//
-		// example:
-		//		Available in `dojo.NodeList` for multiple additions
-		//	|	dojo.query("ul > li").addClass("firstLevel");
-
-		node = dom.byId(node);
-		classStr = str2array(classStr);
-		var cls = node[_className], oldLen;
-		cls = cls ? " " + cls + " " : " ";
-		oldLen = cls.length;
-		for(var i = 0, len = classStr.length, c; i < len; ++i){
-			c = classStr[i];
-			if(c && cls.indexOf(" " + c + " ") < 0){
-				cls += c + " ";
-			}
-		}
-		if(oldLen < cls.length){
-			node[_className] = cls.substr(1, cls.length - 2);
-		}
-	};
-
-	dojo.removeClass = function(/*DomNode|String*/node, /*String|Array?*/classStr){
-		// summary:
-		//		Removes the specified classes from node. No `dojo.hasClass`
-		//		check is required.
-		//
-		// node:
-		//		String ID or DomNode reference to remove the class from.
-		//
-		// classStr:
-		//		An optional String class name to remove, or several space-separated
-		//		class names, or an array of class names. If omitted, all class names
-		//		will be deleted.
-		//
-		// example:
-		//		Remove a class from some node:
-		//	|	dojo.removeClass("someNode", "firstClass");
-		//
-		// example:
-		//		Remove two classes from some node:
-		//	|	dojo.removeClass("someNode", "firstClass secondClass");
-		//
-		// example:
-		//		Remove two classes from some node (using array):
-		//	|	dojo.removeClass("someNode", ["firstClass", "secondClass"]);
-		//
-		// example:
-		//		Remove all classes from some node:
-		//	|	dojo.removeClass("someNode");
-		//
-		// example:
-		//		Available in `dojo.NodeList()` for multiple removal
-		//	|	dojo.query(".foo").removeClass("foo");
-
-		node = dom.byId(node);
-		var cls;
-		if(classStr !== undefined){
-			classStr = str2array(classStr);
-			cls = " " + node[_className] + " ";
-			for(var i = 0, len = classStr.length; i < len; ++i){
-				cls = cls.replace(" " + classStr[i] + " ", " ");
-			}
-			cls = lang.trim(cls);
-		}else{
-			cls = "";
-		}
-		if(node[_className] != cls){ node[_className] = cls; }
-	};
-
-	dojo.replaceClass = function(/*DomNode|String*/node, /*String|Array*/addClassStr, /*String|Array?*/removeClassStr){
-		// summary:
-		//		Replaces one or more classes on a node if not present.
-		//		Operates more quickly than calling dojo.removeClass and dojo.addClass
-		// node:
-		//		String ID or DomNode reference to remove the class from.
-		// addClassStr:
-		//		A String class name to add, or several space-separated class names,
-		//		or an array of class names.
-		// removeClassStr:
-		//		A String class name to remove, or several space-separated class names,
-		//		or an array of class names.
-		//
-		// example:
-		//	|	dojo.replaceClass("someNode", "add1 add2", "remove1 remove2");
-		//
-		// example:
-		//	Replace all classes with addMe
-		//	|	dojo.replaceClass("someNode", "addMe");
-		//
-		// example:
-		//	Available in `dojo.NodeList()` for multiple toggles
-		//	|	dojo.query(".findMe").replaceClass("addMe", "removeMe");
-
-		node = dom.byId(node);
-		fakeNode[_className] = node[_className];
-
-		dojo.removeClass(fakeNode, removeClassStr);
-		dojo.addClass(fakeNode, addClassStr);
-
-		if(node[_className] !== fakeNode[_className]){
-			node[_className] = fakeNode[_className];
-		}
-	};
-
-	dojo.toggleClass = function (/*DomNode|String*/node, /*String|Array*/classStr, /*Boolean?*/condition){
-		// summary:
-		//		Adds a class to node if not present, or removes if present.
-		//		Pass a boolean condition if you want to explicitly add or remove.
-		//      Returns the condition that was specified directly or indirectly.
-		// condition:
-		//		If passed, true means to add the class, false means to remove.
-		//
-		// example:
-		//	|	dojo.toggleClass("someNode", "hovered");
-		//
-		// example:
-		//		Forcefully add a class
-		//	|	dojo.toggleClass("someNode", "hovered", true);
-		//
-		// example:
-		//		Available in `dojo.NodeList()` for multiple toggles
-		//	|	dojo.query(".toggleMe").toggleClass("toggleMe");
-
-		if(condition === undefined){
-			condition = !dojo.hasClass(node, classStr);
-		}
-		dojo[condition ? "addClass" : "removeClass"](node, classStr);
-		return condition;   // Boolean
-	};
-
-	return {
-		has:     dojo.hasClass,
-		add:     dojo.addClass,
-		remove:  dojo.removeClass,
-		replace: dojo.replaceClass,
-		toggle:  dojo.toggleClass
-	};
+define("dojo/dom-class",["./_base/kernel","./_base/lang","./dom"],function(_1,_2,_3){
+var _4="className";
+_1.hasClass=function(_5,_6){
+return ((" "+_3.byId(_5)[_4]+" ").indexOf(" "+_6+" ")>=0);
+};
+var _7=/\s+/,a1=[""],_8={},_9=function(s){
+if(typeof s=="string"||s instanceof String){
+if(s.indexOf(" ")<0){
+a1[0]=s;
+return a1;
+}else{
+return s.split(_7);
+}
+}
+return s||"";
+};
+_1.addClass=function(_a,_b){
+_a=_3.byId(_a);
+_b=_9(_b);
+var _c=_a[_4],_d;
+_c=_c?" "+_c+" ":" ";
+_d=_c.length;
+for(var i=0,_e=_b.length,c;i<_e;++i){
+c=_b[i];
+if(c&&_c.indexOf(" "+c+" ")<0){
+_c+=c+" ";
+}
+}
+if(_d<_c.length){
+_a[_4]=_c.substr(1,_c.length-2);
+}
+};
+_1.removeClass=function(_f,_10){
+_f=_3.byId(_f);
+var cls;
+if(_10!==undefined){
+_10=_9(_10);
+cls=" "+_f[_4]+" ";
+for(var i=0,len=_10.length;i<len;++i){
+cls=cls.replace(" "+_10[i]+" "," ");
+}
+cls=_2.trim(cls);
+}else{
+cls="";
+}
+if(_f[_4]!=cls){
+_f[_4]=cls;
+}
+};
+_1.replaceClass=function(_11,_12,_13){
+_11=_3.byId(_11);
+_8[_4]=_11[_4];
+_1.removeClass(_8,_13);
+_1.addClass(_8,_12);
+if(_11[_4]!==_8[_4]){
+_11[_4]=_8[_4];
+}
+};
+_1.toggleClass=function(_14,_15,_16){
+if(_16===undefined){
+_16=!_1.hasClass(_14,_15);
+}
+_1[_16?"addClass":"removeClass"](_14,_15);
+return _16;
+};
+return {has:_1.hasClass,add:_1.addClass,remove:_1.removeClass,replace:_1.replaceClass,toggle:_1.toggleClass};
 });

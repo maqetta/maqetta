@@ -1,214 +1,192 @@
-dojo.provide("dojox.lang.docs");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// Extracts information from the API docs to apply a schema representation to dojo classes.
-// This can be utilized for runtime metadata retrieval and type checking
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.lang.docs",1);
 (function(){
-	function error(error){
-		console.log("Warning, the API docs must be available at ../util/docscripts/api.json "+
-		"or ../util/docscripts/api/*.json "+
-		"in order for dojox.lang.docs to supply schema information, but it could not be loaded: " + error);
-	}
-
-	var declaredClasses = {};
-	var requiredModules = [];
-	var _docs = dojox.lang.docs._loadedDocs = {};
-
-	var schemifyClass = function(clazz, name){
-		// initial implementation records classes until they are ready
-		declaredClasses[name] = clazz;
-	};
-	var getType = function(typeDef){
-		var type = typeDef.type || '';
-		var typeObj, optional = false, array = false, dontModify;
-		type = type.replace(/\?/, function(){
-			optional = true;
-			return '';
-		});
-		type = type.replace(/\[\]/, function(){
-			array = true;
-			return '';
-		});
-		if(type.match(/HTML/)){
-			// HTML String and other "types" of strings are really just strings
-			type = "string";
-		}else if(type == 'String' || type == 'Number' ||
-				type == 'Boolean' || type == 'Object' ||
-				type == 'Array' || type == 'Integer' || type == "Function"){
-			type = type.toLowerCase();
-		}else if(type == "bool"){
-			type = "boolean";
-		}else if(type){
-			typeObj = dojo.getObject(type) || {};
-			dontModify = true;
-		}else{
-			typeObj = {};
-		}
-		typeObj = typeObj || {type:type};
-		if(array){
-			typeObj = {items:typeObj, type:"array"};
-			dontModify = false;
-		}
-		if(!dontModify){
-			if(optional){
-				typeObj.optional = true;
-			}
-			if(/const/.test(typeDef.tags)){
-				typeObj.readonly = true;
-			}
-		}
-		return typeObj;
-	};
-	var actualSchemifyClass = function(clazz, name){
-		var docForClass = _docs[name];
-		if(docForClass){
-			clazz.description = docForClass.description;
-			clazz.properties = {};
-			clazz.methods = {};
-
-			if(docForClass.properties){
-				var props = docForClass.properties;
-				for(var i=0, l=props.length; i<l; i++){
-					if(props[i].scope == "prototype"){
-						var propDef = clazz.properties[props[i].name] = getType(props[i]);
-						propDef.description = props[i].summary;
-					}
-				}
-			}
-
-			// translate the methods to JSON Schema
-			if(docForClass.methods){
-				var methods = docForClass.methods;
-				for(i=0, l=methods.length; i<l; i++){
-					name = methods[i].name;
-					if(name && methods[i].scope == "prototype"){
-						var methodDef = clazz.methods[name] = {};
-						methodDef.description = methods[i].summary;
-						var parameters = methods[i].parameters;
-						if(parameters){
-							methodDef.parameters = [];
-							for(var j=0, k=parameters.length; j<k; j++){
-								var param = parameters[j];
-								var paramDef = methodDef.parameters[j] = getType(param);
-								paramDef.name = param.name;
-								paramDef.optional = "optional" == param.usage;
-							}
-						}
-						var ret = methods[i]['return-types'];
-						if(ret && ret[0]){
-							var returns = getType(ret[0]);
-							if(returns.type){
-								methodDef.returns = returns;
-							}
-						}
-					}
-				}
-			}
-
-			var superclass = docForClass.superclass;
-			if(superclass){
-				clazz["extends"] = dojo.getObject(superclass);
-			}
-		}
-	};
-	var requireDocs = function(moduleName){
-		requiredModules.push(moduleName);
-	};
-
-	// hook into all declared classes
-	var defaultDeclare = dojo.declare;
-	dojo.declare = function(name){
-		var clazz = defaultDeclare.apply(this, arguments);
-		schemifyClass(clazz, name);
-		return clazz;
-	};
-	dojo.mixin(dojo.declare, defaultDeclare);
-	var initialized;
-
-	// hook into dojo.require
-	var defaultRequire = dojo.require;
-	dojo.require = function(moduleName){
-		requireDocs(moduleName);
-		var module = defaultRequire.apply(this, arguments);
-		return module;
-	};
-
-	dojox.lang.docs.init = function(/*Boolean*/async){
-		// summary:
-		//		Loads the documentation and applies it to the previously defined classes
-		// 		and any future defined classes
-		//
-		// async:
-		// 		 If true, the documentation will be loaded asynchronously
-		function loadFullDocs(){
-			dojo.require = defaultRequire;
-			requiredModules = null;
-			try{
-				dojo.xhrGet({
-					sync:!async,
-					url: dojo.baseUrl + '../util/docscripts/api.json',
-					handleAs: 'text'
-				}).addCallbacks(function(obj){
-					_docs = (new Function("return " + obj))();
-					obj = null;
-					schemifyClass = actualSchemifyClass;
-
-					for(var i in declaredClasses){
-						schemifyClass(declaredClasses[i], i);
-					}
-					declaredClasses = null;
-				}, error);
-			}catch(e){
-				error(e);
-			}
-		}
-		
-		if(initialized){
-			return null;
-		}
-		initialized = true;
-
-		var getSplitDocs = function(moduleName, sync){
-			return dojo.xhrGet({
-				sync: sync||!async,
-				url: dojo.baseUrl + '../util/docscripts/api/' + moduleName + '.json',
-				handleAs: 'text'
-			}).addCallback(function(obj){
-				obj = (new Function("return " + obj))();
-				for(var clazz in obj){
-					if(!_docs[clazz]){
-						_docs[clazz] = obj[clazz];
-					}
-				}
-			});
-		};
-		try{
-			var firstMod = requiredModules.shift();
-			getSplitDocs(firstMod, true).addCallbacks(function(){
-				requireDocs = function(moduleName){
-					if(!_docs[moduleName]){
-						try{
-							getSplitDocs(moduleName);
-						}catch(e){
-							_docs[moduleName] = {};
-						}
-					}
-				};
-				//console.log(requiredModules);
-				dojo.forEach(requiredModules, function(mod){
-					requireDocs(mod);
-				});
-				requiredModules = null;
-
-				schemifyClass = actualSchemifyClass;
-
-				for(i in declaredClasses){
-					schemifyClass(declaredClasses[i], i);
-				}
-				declaredClasses = null;
-			},loadFullDocs);
-		}catch(e){
-			loadFullDocs();
-		}
-		return null;
-	}
+function _4(_5){
+};
+var _6={};
+var _7=[];
+var _8=_3.lang.docs._loadedDocs={};
+var _9=function(_a,_b){
+_6[_b]=_a;
+};
+var _c=function(_d){
+var _e=_d.type||"";
+var _f,_10=false,_11=false,_12;
+_e=_e.replace(/\?/,function(){
+_10=true;
+return "";
+});
+_e=_e.replace(/\[\]/,function(){
+_11=true;
+return "";
+});
+if(_e.match(/HTML/)){
+_e="string";
+}else{
+if(_e=="String"||_e=="Number"||_e=="Boolean"||_e=="Object"||_e=="Array"||_e=="Integer"||_e=="Function"){
+_e=_e.toLowerCase();
+}else{
+if(_e=="bool"){
+_e="boolean";
+}else{
+if(_e){
+_f=_1.getObject(_e)||{};
+_12=true;
+}else{
+_f={};
+}
+}
+}
+}
+_f=_f||{type:_e};
+if(_11){
+_f={items:_f,type:"array"};
+_12=false;
+}
+if(!_12){
+if(_10){
+_f.optional=true;
+}
+if(/const/.test(_d.tags)){
+_f.readonly=true;
+}
+}
+return _f;
+};
+var _13=function(_14,_15){
+var _16=_8[_15];
+if(_16){
+_14.description=_16.description;
+_14.properties={};
+_14.methods={};
+if(_16.properties){
+var _17=_16.properties;
+for(var i=0,l=_17.length;i<l;i++){
+if(_17[i].scope=="prototype"){
+var _18=_14.properties[_17[i].name]=_c(_17[i]);
+_18.description=_17[i].summary;
+}
+}
+}
+if(_16.methods){
+var _19=_16.methods;
+for(i=0,l=_19.length;i<l;i++){
+_15=_19[i].name;
+if(_15&&_19[i].scope=="prototype"){
+var _1a=_14.methods[_15]={};
+_1a.description=_19[i].summary;
+var _1b=_19[i].parameters;
+if(_1b){
+_1a.parameters=[];
+for(var j=0,k=_1b.length;j<k;j++){
+var _1c=_1b[j];
+var _1d=_1a.parameters[j]=_c(_1c);
+_1d.name=_1c.name;
+_1d.optional="optional"==_1c.usage;
+}
+}
+var ret=_19[i]["return-types"];
+if(ret&&ret[0]){
+var _1e=_c(ret[0]);
+if(_1e.type){
+_1a.returns=_1e;
+}
+}
+}
+}
+}
+var _1f=_16.superclass;
+if(_1f){
+_14["extends"]=_1.getObject(_1f);
+}
+}
+};
+var _20=function(_21){
+_7.push(_21);
+};
+var _22=_1.declare;
+_1.declare=function(_23){
+var _24=_22.apply(this,arguments);
+_9(_24,_23);
+return _24;
+};
+_1.mixin(_1.declare,_22);
+var _25;
+var _26=_1.require;
+_1.require=function(_27){
+_20(_27);
+var _28=_26.apply(this,arguments);
+return _28;
+};
+_3.lang.docs.init=function(_29){
+function _2a(){
+_1.require=_26;
+_7=null;
+try{
+_1.xhrGet({sync:!_29,url:_1.baseUrl+"../util/docscripts/api.json",handleAs:"text"}).addCallbacks(function(obj){
+_8=(new Function("return "+obj))();
+obj=null;
+_9=_13;
+for(var i in _6){
+_9(_6[i],i);
+}
+_6=null;
+},_4);
+}
+catch(e){
+_4(e);
+}
+};
+if(_25){
+return null;
+}
+_25=true;
+var _2b=function(_2c,_2d){
+return _1.xhrGet({sync:_2d||!_29,url:_1.baseUrl+"../util/docscripts/api/"+_2c+".json",handleAs:"text"}).addCallback(function(obj){
+obj=(new Function("return "+obj))();
+for(var _2e in obj){
+if(!_8[_2e]){
+_8[_2e]=obj[_2e];
+}
+}
+});
+};
+try{
+var _2f=_7.shift();
+_2b(_2f,true).addCallbacks(function(){
+_20=function(_30){
+if(!_8[_30]){
+try{
+_2b(_30);
+}
+catch(e){
+_8[_30]={};
+}
+}
+};
+_1.forEach(_7,function(mod){
+_20(mod);
+});
+_7=null;
+_9=_13;
+for(i in _6){
+_9(_6[i],i);
+}
+_6=null;
+},_2a);
+}
+catch(e){
+_2a();
+}
+return null;
+};
 })();
+return _1.getObject("dojox.lang.docs");
+});
+require(["dojox/lang/docs"]);

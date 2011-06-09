@@ -1,56 +1,31 @@
-dojo.provide("dojox.mobile.app.SceneAssistant");
-dojo.experimental("dojox.mobile.app.SceneAssistant");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.mobile.app.SceneAssistant", null, {
-	// summary:
-	//    The base class for all scene assistants.
-
-	constructor: function(){
-
-	},
-
-	setup: function(){
-		// summary:
-		//    Called to set up the widget.  The UI is not visible at this time
-
-	},
-
-	activate: function(params){
-		// summary:
-		//    Called each time the scene becomes visible.  This can be as a result
-		//    of a new scene being created, or a subsequent scene being destroyed
-		//    and control transferring back to this scene assistant.
-		// params:
-		//    Optional paramters, only passed when a subsequent scene pops itself
-		//    off the stack and passes back data.
-	},
-
-	deactivate: function(){
-		// summary:
-		//    Called each time the scene becomes invisible.  This can be as a result
-		//    of it being popped off the stack and destroyed,
-		//    or another scene being created and pushed on top of it on the stack
-	},
-
-	destroy: function(){
-	
-		var children =
-			dojo.query("> [widgetId]", this.containerNode).map(dijit.byNode);
-		dojo.forEach(children, function(child){ child.destroyRecursive(); });
-	
-		this.disconnect();
-	},
-
-	connect: function(obj, method, callback){
-		if(!this._connects){
-			this._connects = [];
-		}
-		this._connects.push(dojo.connect(obj, method, callback));
-	},
-
-	disconnect: function(){
-		dojo.forEach(this._connects, dojo.disconnect);
-		this._connects = [];
-	}
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.mobile.app.SceneAssistant",1);
+_1.experimental("dojox.mobile.app.SceneAssistant");
+_1.declare("dojox.mobile.app.SceneAssistant",null,{constructor:function(){
+},setup:function(){
+},activate:function(_4){
+},deactivate:function(){
+},destroy:function(){
+var _5=_1.query("> [widgetId]",this.containerNode).map(_2.byNode);
+_1.forEach(_5,function(_6){
+_6.destroyRecursive();
 });
-
+this.disconnect();
+},connect:function(_7,_8,_9){
+if(!this._connects){
+this._connects=[];
+}
+this._connects.push(_1.connect(_7,_8,_9));
+},disconnect:function(){
+_1.forEach(this._connects,_1.disconnect);
+this._connects=[];
+}});
+return _1.getObject("dojox.mobile.app.SceneAssistant");
+});
+require(["dojox/mobile/app/SceneAssistant"]);

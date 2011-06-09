@@ -4,15 +4,12 @@
 	margin: 0px;
 	border-style: none;
 }
-
 .dojoxCollapsibleToolbarCollapse {
 	cursor: pointer;
 }
-
 .dojoxCollapsibleToolbarExpand {
 	cursor: pointer;
 }
-
 .claro .dojoxCollapsibleToolbarCollapse {
 	background-image: url(../images/claro/collapse.gif);
 	background-repeat: no-repeat;
@@ -20,7 +17,6 @@
 	width: 12px;
 	height: 12px;
 }
-
 .claro .dojoxCollapsibleToolbarExpand {
 	background-image: url(../images/claro/expand.gif);
 	background-repeat: no-repeat;
@@ -28,11 +24,9 @@
 	width: 12px;
 	height: 12px;
 }
-
 .claro .dojoxCollapsibleToolbarContainer {
 	background-color: #F1F1F1;
 }
-
 .claro .dojoxCollapsibleToolbarControl {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
@@ -40,8 +34,6 @@
 	border-right: 1px solid #ccc;
         margin-bottom: 1px;
 }
-
-
 .tundra .dojoxCollapsibleToolbarCollapse {
 	background-image: url(../images/tundra/collapse.gif);
 	background-repeat: no-repeat;
@@ -49,7 +41,6 @@
 	width: 12px;
 	height: 12px;
 }
-
 .tundra .dojoxCollapsibleToolbarExpand {
 	background-image: url(../images/tundra/expand.gif);
 	background-repeat: no-repeat;
@@ -57,21 +48,18 @@
 	width: 12px;
 	height: 12px;
 }
-
 .tundra .dojoxCollapsibleToolbarContainer {
 	background-image: url(../images/tundra/sidebar.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
 	background-color: #CCCCCC;
 }
-
 .tundra .dojoxCollapsibleToolbarControl {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #ccc;
 	border-right: 1px solid #ccc;
 }
-
 .soria .dojoxCollapsibleToolbarCollapse {
 	background-image: url(../images/soria/collapse.gif);
 	background-repeat: no-repeat;
@@ -79,7 +67,6 @@
 	width: 12px;
 	height: 12px;
 }
-
 .soria .dojoxCollapsibleToolbarExpand {
 	background-image: url(../images/soria/expand.gif);
 	background-repeat: no-repeat;
@@ -87,21 +74,18 @@
 	width: 12px;
 	height: 12px;
 }
-
 .soria .dojoxCollapsibleToolbarContainer {
 	background-image: url(../images/soria/sidebar.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
 	background-color: #CCCCCC;
 }
-
 .soria .dojoxCollapsibleToolbarControl {
 	vertical-align: top;    
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #ccc;
 	border-right: 1px solid #ccc;
 }
-
 .nihilo .dojoxCollapsibleToolbarCollapse {
 	background-image: url(../images/nihilo/collapse.gif);
 	background-repeat: no-repeat;
@@ -109,7 +93,6 @@
 	width: 12px;
 	height: 12px;
 }
-
 .nihilo .dojoxCollapsibleToolbarExpand {
 	background-image: url(../images/nihilo/expand.gif);
 	background-repeat: no-repeat;
@@ -117,21 +100,18 @@
 	width: 12px;
 	height: 12px;
 }
-
 .nihilo .dojoxCollapsibleToolbarContainer {
 	background-image: url(../images/nihilo/sidebar.gif);
 	background-repeat: repeat-x;
 	background-position: top left;
 	background-color: #CCCCCC;
 }
-
 .nihilo .dojoxCollapsibleToolbarControl {
 	vertical-align: top;
 	border-bottom: 1px solid #ccc;
 	border-left: 1px solid #ccc;
 	border-right: 1px solid #ccc;
 }
-
 .dijit_a11y .dojoxCollapsibleToolbarCollapse {
 	border-style: outset;
 	border-width: 3px;
@@ -141,7 +121,6 @@
 	text-align: center;
 	vertical-align: middle;
 }
-
 .dijit_a11y .dojoxCollapsibleToolbarExpand {
 	border-style: outset;
 	border-width: 3px;
@@ -151,21 +130,17 @@
 	text-align: center;
 	vertical-align: middle;
 }
-
 .dojoxCollapsibleToolbarCollapseText {
 	display: none;
 }
-
 .dojoxCollapsibleToolbarExpandText {
 	display: none;
 }
-
 .dijit_a11y .dojoxCollapsibleToolbarCollapseText {
 	display: inline;
 	padding: 3px;
 	font-weight: bold;
 }
-
 .dijit_a11y .dojoxCollapsibleToolbarExpandText {
 	display: inline;
 	padding: 3px;

@@ -1,228 +1,172 @@
-dojo.provide("dojox.storage.AirFileStorageProvider");
-dojo.require("dojox.storage.manager");
-dojo.require("dojox.storage.Provider");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-if (dojo.isAIR) {
-	(function(){
-
-		if (!air) {
-			var air = {};
-		}
-		air.File = window.runtime.flash.filesystem.File;
-		air.FileStream = window.runtime.flash.filesystem.FileStream;
-		air.FileMode = window.runtime.flash.filesystem.FileMode;
-		
-		// summary:
-		//		Storage provider that uses features in the Adobe AIR runtime to achieve
-		//		permanent storage
-		dojo.declare("dojox.storage.AirFileStorageProvider", [ dojox.storage.Provider ], {
-			initialized: false,
-			
-			_storagePath: "__DOJO_STORAGE/",
-	
-			initialize: function(){
-				this.initialized = false;
-
-				// need to initialize our storage directory
-				try{
-					var dir = air.File.applicationStorageDirectory.resolvePath(this._storagePath);
-					if (!dir.exists){
-						dir.createDirectory();
-					}
-					this.initialized = true;
-				}catch(e){
-					console.debug("dojox.storage.AirFileStorageProvider.initialize:", e);
-				}
-				
-				// indicate that this storage provider is now loaded
-				dojox.storage.manager.loaded();
-			},
-	
-			isAvailable: function(){
-				return true;
-			},
-			
-			put: function(key, value, resultsHandler, namespace){
-				if(this.isValidKey(key) == false){
-					throw new Error("Invalid key given: " + key);
-				}
-				namespace = namespace||this.DEFAULT_NAMESPACE;
-				if(this.isValidKey(namespace) == false){
-					throw new Error("Invalid namespace given: " + namespace);
-				}
-				
-				// try to store the value
-				try{
-					this.remove(key, namespace);
-					
-					var dir = air.File.applicationStorageDirectory.resolvePath(this._storagePath + namespace);
-					if (!dir.exists){
-						dir.createDirectory();
-					}
-					
-					var file = dir.resolvePath(key);
-					var stream = new air.FileStream();
-					stream.open(file, air.FileMode.WRITE);
-					stream.writeObject(value);
-					stream.close();
-				}catch(e){
-					// indicate we failed
-					console.debug("dojox.storage.AirFileStorageProvider.put:", e);
-					resultsHandler(this.FAILED, key, e.toString(), namespace);
-					return;
-				}
-				
-				if(resultsHandler){
-					resultsHandler(this.SUCCESS, key, null, namespace);
-				}
-			},
-			
-			get: function(key, namespace){
-				if(this.isValidKey(key) == false){
-					throw new Error("Invalid key given: " + key);
-				}
-				namespace = namespace||this.DEFAULT_NAMESPACE;
-				
-				var results = null;
-				
-				var file = air.File.applicationStorageDirectory.resolvePath(this._storagePath + namespace + '/' + key);
-				if (file.exists && !file.isDirectory){
-					var stream = new air.FileStream();
-					stream.open(file, air.FileMode.READ);
-					results = stream.readObject();
-					stream.close();
-				}
-				
-				return results;
-			},
-			
-			getNamespaces: function(){
-				var results = [ this.DEFAULT_NAMESPACE ];
-				var dir = air.File.applicationStorageDirectory.resolvePath(this._storagePath);
-				var files = dir.getDirectoryListing(), i;
-				for (i = 0; i < files.length; i++) {
-					if(files[i].isDirectory && files[i].name != this.DEFAULT_NAMESPACE){
-						results.push(files[i].name);
-					}
-				}
-				return results;
-			},
-
-			getKeys: function(namespace){
-				namespace = namespace||this.DEFAULT_NAMESPACE;
-				if(this.isValidKey(namespace) == false){
-					throw new Error("Invalid namespace given: " + namespace);
-				}
-
-				var results = [];
-				var dir = air.File.applicationStorageDirectory.resolvePath(this._storagePath + namespace);
-				if (dir.exists && dir.isDirectory){
-					var files = dir.getDirectoryListing(), i;
-					for (i = 0; i < files.length; i++) {
-						results.push(files[i].name);
-					}
-				}
-				return results;
-			},
-			
-			clear: function(namespace){
-				if(this.isValidKey(namespace) == false){
-					throw new Error("Invalid namespace given: " + namespace);
-				}
-				var dir = air.File.applicationStorageDirectory.resolvePath(this._storagePath + namespace);
-				if (dir.exists && dir.isDirectory){
-					dir.deleteDirectory(true);
-				}
-			},
-			
-			remove: function(key, namespace){
-				namespace = namespace||this.DEFAULT_NAMESPACE;
-				var file = air.File.applicationStorageDirectory.resolvePath(this._storagePath + namespace + '/' + key);
-				if (file.exists && !file.isDirectory){
-					file.deleteFile();
-				}
-			},
-			
-			putMultiple: function(keys, values, resultsHandler, namespace) {
- 				if(this.isValidKeyArray(keys) === false
-						|| ! values instanceof Array
-						|| keys.length != values.length){
-					throw new Error("Invalid arguments: keys = [" + keys + "], values = [" + values + "]");
-				}
-				
-				if(namespace == null || typeof namespace == "undefined"){
-					namespace = this.DEFAULT_NAMESPACE;
-				}
-	
-				if(this.isValidKey(namespace) == false){
-					throw new Error("Invalid namespace given: " + namespace);
-				}
-	
-				this._statusHandler = resultsHandler;
-
-				// try to store the value
-				try{
-					for(var i=0;i<keys.length;i++) {
-						this.put(keys[i], values[i], null, namespace);
-					}
-				}catch(e){
-					// indicate we failed
-					console.debug("dojox.storage.AirFileStorageProvider.putMultiple:", e);
-					if(resultsHandler){
-						resultsHandler(this.FAILED, keys, e.toString(), namespace);
-					}
-					return;
-				}
-				
-				if(resultsHandler){
-					resultsHandler(this.SUCCESS, keys, null, namespace);
-				}
-			},
-
-			getMultiple: function(keys, namespace){
-				if(this.isValidKeyArray(keys) === false){
-					throw new Error("Invalid key array given: " + keys);
-				}
-				
-				if(namespace == null || typeof namespace == "undefined"){
-					namespace = this.DEFAULT_NAMESPACE;
-				}
-				
-				if(this.isValidKey(namespace) == false){
-					throw new Error("Invalid namespace given: " + namespace);
-				}
-		
-				var results = [];
-				for(var i=0;i<keys.length;i++){
-					results[i] = this.get(keys[i], namespace);
-				}
-				return results;
-			},
-			
-			removeMultiple: function(keys, namespace){
-				namespace = namespace||this.DEFAULT_NAMESPACE;
-				
-				for(var i=0;i<keys.length;i++){
-					this.remove(keys[i], namespace);
-				}
-			},
-			
-			isPermanent: function(){ return true; },
-
-			getMaximumSize: function(){ return this.SIZE_NO_LIMIT; },
-
-			hasSettingsUI: function(){ return false; },
-			
-			showSettingsUI: function(){
-				throw new Error(this.declaredClass + " does not support a storage settings user-interface");
-			},
-			
-			hideSettingsUI: function(){
-				throw new Error(this.declaredClass + " does not support a storage settings user-interface");
-			}
-		});
-
-		dojox.storage.manager.register("dojox.storage.AirFileStorageProvider", new dojox.storage.AirFileStorageProvider());
-		dojox.storage.manager.initialize();
-	})();
+define(["dojo","dijit","dojox","dojox/storage/manager","dojox/storage/Provider"],function(_1,_2,_3){
+_1.getObject("dojox.storage.AirFileStorageProvider",1);
+if(_1.isAIR){
+(function(){
+if(!_4){
+var _4={};
 }
+_4.File=window.runtime.flash.filesystem.File;
+_4.FileStream=window.runtime.flash.filesystem.FileStream;
+_4.FileMode=window.runtime.flash.filesystem.FileMode;
+_1.declare("dojox.storage.AirFileStorageProvider",[_3.storage.Provider],{initialized:false,_storagePath:"__DOJO_STORAGE/",initialize:function(){
+this.initialized=false;
+try{
+var _5=_4.File.applicationStorageDirectory.resolvePath(this._storagePath);
+if(!_5.exists){
+_5.createDirectory();
+}
+this.initialized=true;
+}
+catch(e){
+}
+_3.storage.manager.loaded();
+},isAvailable:function(){
+return true;
+},put:function(_6,_7,_8,_9){
+if(this.isValidKey(_6)==false){
+throw new Error("Invalid key given: "+_6);
+}
+_9=_9||this.DEFAULT_NAMESPACE;
+if(this.isValidKey(_9)==false){
+throw new Error("Invalid namespace given: "+_9);
+}
+try{
+this.remove(_6,_9);
+var _a=_4.File.applicationStorageDirectory.resolvePath(this._storagePath+_9);
+if(!_a.exists){
+_a.createDirectory();
+}
+var _b=_a.resolvePath(_6);
+var _c=new _4.FileStream();
+_c.open(_b,_4.FileMode.WRITE);
+_c.writeObject(_7);
+_c.close();
+}
+catch(e){
+_8(this.FAILED,_6,e.toString(),_9);
+return;
+}
+if(_8){
+_8(this.SUCCESS,_6,null,_9);
+}
+},get:function(_d,_e){
+if(this.isValidKey(_d)==false){
+throw new Error("Invalid key given: "+_d);
+}
+_e=_e||this.DEFAULT_NAMESPACE;
+var _f=null;
+var _10=_4.File.applicationStorageDirectory.resolvePath(this._storagePath+_e+"/"+_d);
+if(_10.exists&&!_10.isDirectory){
+var _11=new _4.FileStream();
+_11.open(_10,_4.FileMode.READ);
+_f=_11.readObject();
+_11.close();
+}
+return _f;
+},getNamespaces:function(){
+var _12=[this.DEFAULT_NAMESPACE];
+var dir=_4.File.applicationStorageDirectory.resolvePath(this._storagePath);
+var _13=dir.getDirectoryListing(),i;
+for(i=0;i<_13.length;i++){
+if(_13[i].isDirectory&&_13[i].name!=this.DEFAULT_NAMESPACE){
+_12.push(_13[i].name);
+}
+}
+return _12;
+},getKeys:function(_14){
+_14=_14||this.DEFAULT_NAMESPACE;
+if(this.isValidKey(_14)==false){
+throw new Error("Invalid namespace given: "+_14);
+}
+var _15=[];
+var dir=_4.File.applicationStorageDirectory.resolvePath(this._storagePath+_14);
+if(dir.exists&&dir.isDirectory){
+var _16=dir.getDirectoryListing(),i;
+for(i=0;i<_16.length;i++){
+_15.push(_16[i].name);
+}
+}
+return _15;
+},clear:function(_17){
+if(this.isValidKey(_17)==false){
+throw new Error("Invalid namespace given: "+_17);
+}
+var dir=_4.File.applicationStorageDirectory.resolvePath(this._storagePath+_17);
+if(dir.exists&&dir.isDirectory){
+dir.deleteDirectory(true);
+}
+},remove:function(key,_18){
+_18=_18||this.DEFAULT_NAMESPACE;
+var _19=_4.File.applicationStorageDirectory.resolvePath(this._storagePath+_18+"/"+key);
+if(_19.exists&&!_19.isDirectory){
+_19.deleteFile();
+}
+},putMultiple:function(_1a,_1b,_1c,_1d){
+if(this.isValidKeyArray(_1a)===false||!_1b instanceof Array||_1a.length!=_1b.length){
+throw new Error("Invalid arguments: keys = ["+_1a+"], values = ["+_1b+"]");
+}
+if(_1d==null||typeof _1d=="undefined"){
+_1d=this.DEFAULT_NAMESPACE;
+}
+if(this.isValidKey(_1d)==false){
+throw new Error("Invalid namespace given: "+_1d);
+}
+this._statusHandler=_1c;
+try{
+for(var i=0;i<_1a.length;i++){
+this.put(_1a[i],_1b[i],null,_1d);
+}
+}
+catch(e){
+if(_1c){
+_1c(this.FAILED,_1a,e.toString(),_1d);
+}
+return;
+}
+if(_1c){
+_1c(this.SUCCESS,_1a,null,_1d);
+}
+},getMultiple:function(_1e,_1f){
+if(this.isValidKeyArray(_1e)===false){
+throw new Error("Invalid key array given: "+_1e);
+}
+if(_1f==null||typeof _1f=="undefined"){
+_1f=this.DEFAULT_NAMESPACE;
+}
+if(this.isValidKey(_1f)==false){
+throw new Error("Invalid namespace given: "+_1f);
+}
+var _20=[];
+for(var i=0;i<_1e.length;i++){
+_20[i]=this.get(_1e[i],_1f);
+}
+return _20;
+},removeMultiple:function(_21,_22){
+_22=_22||this.DEFAULT_NAMESPACE;
+for(var i=0;i<_21.length;i++){
+this.remove(_21[i],_22);
+}
+},isPermanent:function(){
+return true;
+},getMaximumSize:function(){
+return this.SIZE_NO_LIMIT;
+},hasSettingsUI:function(){
+return false;
+},showSettingsUI:function(){
+throw new Error(this.declaredClass+" does not support a storage settings user-interface");
+},hideSettingsUI:function(){
+throw new Error(this.declaredClass+" does not support a storage settings user-interface");
+}});
+_3.storage.manager.register("dojox.storage.AirFileStorageProvider",new _3.storage.AirFileStorageProvider());
+_3.storage.manager.initialize();
+})();
+}
+return _1.getObject("dojox.storage.AirFileStorageProvider");
+});
+require(["dojox/storage/AirFileStorageProvider"]);

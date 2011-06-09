@@ -1,72 +1,34 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"./_Spinner",
-	"./NumberTextBox",
-	"dojo/_base/connect", // dojo.keys.END dojo.keys.HOME
-	"dojo/_base/event" // dojo.stopEvent
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/form/NumberSpinner
-// summary:
-//		Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value
-
-
-dojo.declare("dijit.form.NumberSpinner", [dijit.form._Spinner, dijit.form.NumberTextBoxMixin], {
-	// summary:
-	//		Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value
-	//
-	// description:
-	//		A `dijit.form.NumberTextBox` extension to provide keyboard accessible value selection
-	//		as well as icons for spinning direction. When using the keyboard, the typematic rules
-	//		apply, meaning holding the key will gradually increase or decrease the value and
-	// 		accelerate.
-	//
-	// example:
-	//	| new dijit.form.NumberSpinner({ constraints:{ max:300, min:100 }}, "someInput");
-
-	adjust: function(/*Object*/ val, /*Number*/ delta){
-		// summary:
-		//		Change Number val by the given amount
-		// tags:
-		//		protected
-
-		var tc = this.constraints,
-			v = isNaN(val),
-			gotMax = !isNaN(tc.max),
-			gotMin = !isNaN(tc.min)
-		;
-		if(v && delta != 0){ // blank or invalid value and they want to spin, so create defaults
-			val = (delta > 0) ?
-				gotMin ? tc.min : gotMax ? tc.max : 0 :
-				gotMax ? this.constraints.max : gotMin ? tc.min : 0
-			;
-		}
-		var newval = val + delta;
-		if(v || isNaN(newval)){ return val; }
-		if(gotMax && (newval > tc.max)){
-			newval = tc.max;
-		}
-		if(gotMin && (newval < tc.min)){
-			newval = tc.min;
-		}
-		return newval;
-	},
-
-	_onKeyPress: function(e){
-		if((e.charOrCode == dojo.keys.HOME || e.charOrCode == dojo.keys.END) && !(e.ctrlKey || e.altKey || e.metaKey)
-		&& typeof this.get('value') != 'undefined' /* gibberish, so HOME and END are default editing keys*/){
-			var value = this.constraints[(e.charOrCode == dojo.keys.HOME ? "min" : "max")];
-			if(typeof value == "number"){
-				this._setValueAttr(value, false);
-			}
-			// eat home or end key whether we change the value or not
-			dojo.stopEvent(e);
-		}
-	}
-});
-
-
-return dijit.form.NumberSpinner;
+define("dijit/form/NumberSpinner",["dojo/_base/kernel","..","./_Spinner","./NumberTextBox","dojo/_base/connect","dojo/_base/event"],function(_1,_2){
+_1.declare("dijit.form.NumberSpinner",[_2.form._Spinner,_2.form.NumberTextBoxMixin],{adjust:function(_3,_4){
+var tc=this.constraints,v=isNaN(_3),_5=!isNaN(tc.max),_6=!isNaN(tc.min);
+if(v&&_4!=0){
+_3=(_4>0)?_6?tc.min:_5?tc.max:0:_5?this.constraints.max:_6?tc.min:0;
+}
+var _7=_3+_4;
+if(v||isNaN(_7)){
+return _3;
+}
+if(_5&&(_7>tc.max)){
+_7=tc.max;
+}
+if(_6&&(_7<tc.min)){
+_7=tc.min;
+}
+return _7;
+},_onKeyPress:function(e){
+if((e.charOrCode==_1.keys.HOME||e.charOrCode==_1.keys.END)&&!(e.ctrlKey||e.altKey||e.metaKey)&&typeof this.get("value")!="undefined"){
+var _8=this.constraints[(e.charOrCode==_1.keys.HOME?"min":"max")];
+if(typeof _8=="number"){
+this._setValueAttr(_8,false);
+}
+_1.stopEvent(e);
+}
+}});
+return _2.form.NumberSpinner;
 });

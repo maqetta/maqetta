@@ -1,159 +1,101 @@
-define("dojox/data/CssClassStore", ["dojo", "dojox", "dojox/data/CssRuleStore"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
-	//	summary:
-	//		Basic store to display CSS information.
-	//	description:
-	//		The CssClassStore allows users to get information about active Css classes in the page running the CssClassStore.
-	//		It can also filter out classes from specific stylesheets.  The attributes it exposes on classes are as follows:
-	//			class:		The classname, including the '.'.
-	//			classSans:	The classname without the '.'.
-
-	_labelAttribute: 'class', // text representation of the Item [label and identifier may need to stay due to method names]
-	_idAttribute: 'class',
-	_cName: "dojox.data.CssClassStore",
-
-	getFeatures: function(){
-		//	summary:
-		//		See dojo.data.api.Read.getFeatures()
-		return {
-			"dojo.data.api.Read" : true,
-			"dojo.data.api.Identity" : true
-		};
-	},
-
-	getAttributes: function(item){
-		//	summary:
-		//		See dojo.data.api.Read.getAttributes()
-		this._assertIsItem(item);
-		return ['class', 'classSans'];
-	},
-
-	getValue: function(item, attribute, defaultValue){
-		//	summary:
-		//		See dojo.data.api.Read.getValue()
-		var values = this.getValues(item, attribute);
-		if(values && values.length > 0){
-			return values[0];
-		}
-		return defaultValue;
-	},
-
-	getValues: function(item, attribute){
-		//	summary:
-		//		See dojo.data.api.Read.getValues()
-		this._assertIsItem(item);
-		this._assertIsAttribute(attribute);
-		var value = [];
-		if(attribute === "class"){
-			value = [item.className];
-		}else if(attribute === "classSans"){
-			value = [item.className.replace(/\./g,'')];
-		}
-		return value;
-	},
-
-	_handleRule: function(rule, styleSheet, href){
-		//	summary:
-		//		Handles the creation of an item based on the passed rule.  In this store, this implies
-		//		parsing out all available class names.
-		var obj = {};
-		var s = rule['selectorText'].split(" ");
-		for(var j=0; j<s.length; j++){
-			var tmp = s[j];
-			var first = tmp.indexOf('.');
-			if(tmp && tmp.length > 0 && first !== -1){
-				var last = tmp.indexOf(',') || tmp.indexOf('[');
-				tmp = tmp.substring(first, ((last !== -1 && last > first)?last:tmp.length));
-				obj[tmp] = true;
-			}
-		}
-		for(var key in obj){
-			if(!this._allItems[key]){
-				var item = {};
-				item.className = key;
-				item[this._storeRef] = this;
-				this._allItems[key] = item;
-			}
-		}
-	},
-
-	_handleReturn: function(){
-		//	summary:
-		//		Handles the return from a fetching action.  Delegates requests to act on the resulting
-		//		item set to eitehr the _handleFetchReturn or _handleFetchByIdentityReturn depending on
-		//		where the request originated.
-		var _inProgress = [];
-		
-		var items = {};
-		for(var i in this._allItems){
-			items[i] = this._allItems[i];
-		}
-		var requestInfo;
-		// One-level deep clone (can't use dojo.clone, since we don't want to clone all those store refs!)
-		while(this._pending.length){
-			requestInfo = this._pending.pop();
-			requestInfo.request._items = items;
-			_inProgress.push(requestInfo);
-		}
-
-		while(_inProgress.length){
-			requestInfo = _inProgress.pop();
-			if(requestInfo.fetch){
-				this._handleFetchReturn(requestInfo.request);
-			}else{
-				this._handleFetchByIdentityReturn(requestInfo.request);
-			}
-		}
-	},
-
-	_handleFetchByIdentityReturn: function(request){
-		//	summary:
-		//		Handles a fetchByIdentity request by finding the correct item.
-		var items = request._items;
-		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText
-		// of a rule in full lowercase.
-		var item = items[(dojo.isWebKit?request.identity.toLowerCase():request.identity)];
-		if(!this.isItem(item)){
-			item = null;
-		}
-		if(request.onItem){
-			var scope = request.scope || dojo.global;
-			request.onItem.call(scope, item);
-		}
-	},
-
-	/* Identity API */
-	getIdentity: function(/* item */ item){
-		//	summary:
-		//		See dojo.data.api.Identity.getIdentity()
-		this._assertIsItem(item);
-		return this.getValue(item, this._idAttribute);
-	},
-
-	getIdentityAttributes: function(/* item */ item){
-		 //	summary:
-		 //		See dojo.data.api.Identity.getIdentityAttributes()
-		this._assertIsItem(item);
-		return [this._idAttribute];
-	},
-
-	fetchItemByIdentity: function(/* request */ request){
-		//	summary:
-		//		See dojo.data.api.Identity.fetchItemByIdentity()
-		request = request || {};
-		if(!request.store){
-			request.store = this;
-		}
-		if(this._pending && this._pending.length > 0){
-			this._pending.push({request: request});
-		}else{
-			this._pending = [{request: request}];
-			this._fetch(request);
-		}
-		return request;
-	}
-});
-
-return dojox.data.CssClassStore;
+define("dojox/data/CssClassStore",["dojo","dojox","dojox/data/CssRuleStore"],function(_1,_2){
+_1.declare("dojox.data.CssClassStore",_2.data.CssRuleStore,{_labelAttribute:"class",_idAttribute:"class",_cName:"dojox.data.CssClassStore",getFeatures:function(){
+return {"dojo.data.api.Read":true,"dojo.data.api.Identity":true};
+},getAttributes:function(_3){
+this._assertIsItem(_3);
+return ["class","classSans"];
+},getValue:function(_4,_5,_6){
+var _7=this.getValues(_4,_5);
+if(_7&&_7.length>0){
+return _7[0];
+}
+return _6;
+},getValues:function(_8,_9){
+this._assertIsItem(_8);
+this._assertIsAttribute(_9);
+var _a=[];
+if(_9==="class"){
+_a=[_8.className];
+}else{
+if(_9==="classSans"){
+_a=[_8.className.replace(/\./g,"")];
+}
+}
+return _a;
+},_handleRule:function(_b,_c,_d){
+var _e={};
+var s=_b["selectorText"].split(" ");
+for(var j=0;j<s.length;j++){
+var _f=s[j];
+var _10=_f.indexOf(".");
+if(_f&&_f.length>0&&_10!==-1){
+var _11=_f.indexOf(",")||_f.indexOf("[");
+_f=_f.substring(_10,((_11!==-1&&_11>_10)?_11:_f.length));
+_e[_f]=true;
+}
+}
+for(var key in _e){
+if(!this._allItems[key]){
+var _12={};
+_12.className=key;
+_12[this._storeRef]=this;
+this._allItems[key]=_12;
+}
+}
+},_handleReturn:function(){
+var _13=[];
+var _14={};
+for(var i in this._allItems){
+_14[i]=this._allItems[i];
+}
+var _15;
+while(this._pending.length){
+_15=this._pending.pop();
+_15.request._items=_14;
+_13.push(_15);
+}
+while(_13.length){
+_15=_13.pop();
+if(_15.fetch){
+this._handleFetchReturn(_15.request);
+}else{
+this._handleFetchByIdentityReturn(_15.request);
+}
+}
+},_handleFetchByIdentityReturn:function(_16){
+var _17=_16._items;
+var _18=_17[(_1.isWebKit?_16.identity.toLowerCase():_16.identity)];
+if(!this.isItem(_18)){
+_18=null;
+}
+if(_16.onItem){
+var _19=_16.scope||_1.global;
+_16.onItem.call(_19,_18);
+}
+},getIdentity:function(_1a){
+this._assertIsItem(_1a);
+return this.getValue(_1a,this._idAttribute);
+},getIdentityAttributes:function(_1b){
+this._assertIsItem(_1b);
+return [this._idAttribute];
+},fetchItemByIdentity:function(_1c){
+_1c=_1c||{};
+if(!_1c.store){
+_1c.store=this;
+}
+if(this._pending&&this._pending.length>0){
+this._pending.push({request:_1c});
+}else{
+this._pending=[{request:_1c}];
+this._fetch(_1c);
+}
+return _1c;
+}});
+return _2.data.CssClassStore;
 });

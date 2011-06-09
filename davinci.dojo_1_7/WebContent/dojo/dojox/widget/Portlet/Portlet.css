@@ -1,7 +1,6 @@
 .dojoxPortlet {
 	margin-bottom: 5px;
 }
-
 .dojoxPortlet .dijitTitlePaneTitle .dojoxPortletIcon {
 	width: 15px;
 	height: 15px;
@@ -18,7 +17,6 @@
 	font-weight: bold;
 	font-size: 0.9em;
 }
-
 .soria .dojoxPortlet .dijitTitlePaneTitle {
 	color: #243C5F;
 }
@@ -29,7 +27,6 @@
 .dojoxPortlet-nonmovable .dijitTitlePaneTitle {
 	cursor: default;
 }
-
 .tundra .dojoxPortlet .dojoxPortletIcon {
 	background-image: url("../../../dijit/themes/tundra/images/spriteRoundedIconsSmall.gif");
 }
@@ -48,7 +45,6 @@
 .dojoxPortlet .dojoxCloseNodeHover {
 	background-position: right -15px;
 }
-
 .tundra .dojoxPortlet .dijitOpen .dojoxArrowDown,
 .soria .dojoxPortlet .dijitOpen .dojoxArrowDown,
 .nihilo .dojoxPortlet .dijitOpen .dojoxArrowDown,
@@ -61,7 +57,6 @@
 .claro .dojoxPortlet .dijitClosed .dojoxArrowDown {
 	background-position: 0 top;
 }
-
 .tundra .dojoxPortlet .dojoxPortletSettingsIcon,
 .soria .dojoxPortlet .dojoxPortletSettingsIcon,
 .nihilo .dojoxPortlet .dojoxPortletSettingsIcon,
@@ -82,14 +77,11 @@
 .claro .dijitDialogPaneContent .dojoxPortletSettingsContainer {
 	border-bottom: none;
 }
-
 .tundra .dijitDialogPaneContent .dojoxPortletSettingsContainer,
 .soria .dijitDialogPaneContent .dojoxPortletSettingsContainer,
 .nihilo .dijitDialogPaneContent .dojoxPortletSettingsContainer {
 	border-bottom: none;
 }
-
-
 .soria .dojoDndItemOver .dojoxPortletTitle {
 	border-top: 1px solid #8D8D8D;
 	border-left: 1px solid #8D8D8D;
@@ -100,11 +92,9 @@
 	border-left: 1px solid #9D9D9D;
 	border-right: 1px solid #9D9D9D;
 }
-
 .dojoxPortlet div.dojoxPortletContentOuter {
 	background: #fff url(../../../dijit/themes/tundra/images/validationInputBg.gif) repeat-x top left;
 }
-
 .dojoxFeedPortletList {
 	padding-left: 25px;
 	margin: 0px;
@@ -158,4 +148,3 @@
 .dojoxPortletItemOpen .dojoxPortletItemSummary {
   display: block;
 }
-

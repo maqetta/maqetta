@@ -1,618 +1,481 @@
-define(["dojo", "dojox", "./util"], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// focus management
-dojo.declare("dojox.grid._FocusManager", null, {
-	// summary:
-	//	Controls grid cell focus. Owned by grid and used internally for focusing.
-	//	Note: grid cell actually receives keyboard input only when cell is being edited.
-	constructor: function(inGrid){
-		this.grid = inGrid;
-		this.cell = null;
-		this.rowIndex = -1;
-		this._connects = [];
-		this._headerConnects = [];
-		this.headerMenu = this.grid.headerMenu;
-		this._connects.push(dojo.connect(this.grid.domNode, "onfocus", this, "doFocus"));
-		this._connects.push(dojo.connect(this.grid.domNode, "onblur", this, "doBlur"));
-		this._connects.push(dojo.connect(this.grid.domNode, "oncontextmenu", this, "doContextMenu"));
-		this._connects.push(dojo.connect(this.grid.lastFocusNode, "onfocus", this, "doLastNodeFocus"));
-		this._connects.push(dojo.connect(this.grid.lastFocusNode, "onblur", this, "doLastNodeBlur"));
-		this._connects.push(dojo.connect(this.grid,"_onFetchComplete", this, "_delayedCellFocus"));
-		this._connects.push(dojo.connect(this.grid,"postrender", this, "_delayedHeaderFocus"));
-	},
-	destroy: function(){
-		dojo.forEach(this._connects, dojo.disconnect);
-		dojo.forEach(this._headerConnects, dojo.disconnect);
-		delete this.grid;
-		delete this.cell;
-	},
-	_colHeadNode: null,
-	_colHeadFocusIdx: null,
-	_contextMenuBindNode: null,
-	tabbingOut: false,
-	focusClass: "dojoxGridCellFocus",
-	focusView: null,
-	initFocusView: function(){
-		this.focusView = this.grid.views.getFirstScrollingView() || this.focusView || this.grid.views.views[0];
-		this._initColumnHeaders();
-	},
-	isFocusCell: function(inCell, inRowIndex){
-		// summary:
-		//	states if the given cell is focused
-		// inCell: object
-		//	grid cell object
-		// inRowIndex: int
-		//	grid row index
-		// returns:
-		//	true of the given grid cell is focused
-		return (this.cell == inCell) && (this.rowIndex == inRowIndex);
-	},
-	isLastFocusCell: function(){
-		if(this.cell){
-			return (this.rowIndex == this.grid.rowCount-1) && (this.cell.index == this.grid.layout.cellCount-1);
-		}
-		return false;
-	},
-	isFirstFocusCell: function(){
-		if(this.cell){
-			return (this.rowIndex === 0) && (this.cell.index === 0);
-		}
-		return false;
-	},
-	isNoFocusCell: function(){
-		return (this.rowIndex < 0) || !this.cell;
-	},
-	isNavHeader: function(){
-		// summary:
-		//	states whether currently navigating among column headers.
-		// returns:
-		//	true if focus is on a column header; false otherwise.
-		return (!!this._colHeadNode);
-	},
-	getHeaderIndex: function(){
-		// summary:
-		//	if one of the column headers currently has focus, return its index.
-		// returns:
-		//	index of the focused column header, or -1 if none have focus.
-		if(this._colHeadNode){
-			return dojo.indexOf(this._findHeaderCells(), this._colHeadNode);
-		}else{
-			return -1;
-		}
-	},
-	_focusifyCellNode: function(inBork){
-		var n = this.cell && this.cell.getNode(this.rowIndex);
-		if(n){
-			dojo.toggleClass(n, this.focusClass, inBork);
-			if(inBork){
-				var sl = this.scrollIntoView();
-				try{
-					if(!this.grid.edit.isEditing()){
-						dojox.grid.util.fire(n, "focus");
-						if(sl){ this.cell.view.scrollboxNode.scrollLeft = sl; }
-					}
-				}catch(e){}
-			}
-		}
-	},
-	_delayedCellFocus: function(){
-		if(this.isNavHeader()||!this.grid.focused){
-				return;
-		}
-		var n = this.cell && this.cell.getNode(this.rowIndex);
-		if(n){
-			try{
-				if(!this.grid.edit.isEditing()){
-					dojo.toggleClass(n, this.focusClass, true);
-					if(this._colHeadNode){
-						this.blurHeader();
-					}
-					dojox.grid.util.fire(n, "focus");
-				}
-			}
-			catch(e){}
-		}
-	},
-	_delayedHeaderFocus: function(){
-		if(this.isNavHeader()){
-			this.focusHeader();
-			this.grid.domNode.focus();
-		}
-	},
-	_initColumnHeaders: function(){
-		dojo.forEach(this._headerConnects, dojo.disconnect);
-		this._headerConnects = [];
-		var headers = this._findHeaderCells();
-		for(var i = 0; i < headers.length; i++){
-			this._headerConnects.push(dojo.connect(headers[i], "onfocus", this, "doColHeaderFocus"));
-			this._headerConnects.push(dojo.connect(headers[i], "onblur", this, "doColHeaderBlur"));
-		}
-	},
-	_findHeaderCells: function(){
-		// This should be a one liner:
-		//	dojo.query("th[tabindex=-1]", this.grid.viewsHeaderNode);
-		// But there is a bug in dojo.query() for IE -- see trac #7037.
-		var allHeads = dojo.query("th", this.grid.viewsHeaderNode);
-		var headers = [];
-		for (var i = 0; i < allHeads.length; i++){
-			var aHead = allHeads[i];
-			var hasTabIdx = dojo.hasAttr(aHead, "tabIndex");
-			var tabindex = dojo.attr(aHead, "tabIndex");
-			if (hasTabIdx && tabindex < 0) {
-				headers.push(aHead);
-			}
-		}
-		return headers;
-	},
-	_setActiveColHeader: function(/*Node*/colHeaderNode, /*Integer*/colFocusIdx, /*Integer*/ prevColFocusIdx){
-		//console.log("setActiveColHeader() - colHeaderNode:colFocusIdx:prevColFocusIdx = " + colHeaderNode + ":" + colFocusIdx + ":" + prevColFocusIdx);
-		this.grid.domNode.setAttribute("aria-activedescendant",colHeaderNode.id);
-		if (prevColFocusIdx != null && prevColFocusIdx >= 0 && prevColFocusIdx != colFocusIdx){
-			dojo.toggleClass(this._findHeaderCells()[prevColFocusIdx],this.focusClass,false);
-		}
-		dojo.toggleClass(colHeaderNode,this.focusClass, true);
-		this._colHeadNode = colHeaderNode;
-		this._colHeadFocusIdx = colFocusIdx;
-		this._scrollHeader(this._colHeadFocusIdx);
-	},
-	scrollIntoView: function(){
-		var info = (this.cell ? this._scrollInfo(this.cell) : null);
-		if(!info || !info.s){
-			return null;
-		}
-		var rt = this.grid.scroller.findScrollTop(this.rowIndex);
-		// place cell within horizontal view
-		if(info.n && info.sr){
-			if(info.n.offsetLeft + info.n.offsetWidth > info.sr.l + info.sr.w){
-				info.s.scrollLeft = info.n.offsetLeft + info.n.offsetWidth - info.sr.w;
-			}else if(info.n.offsetLeft < info.sr.l){
-				info.s.scrollLeft = info.n.offsetLeft;
-			}
-		}
-		// place cell within vertical view
-		if(info.r && info.sr){
-			if(rt + info.r.offsetHeight > info.sr.t + info.sr.h){
-				this.grid.setScrollTop(rt + info.r.offsetHeight - info.sr.h);
-			}else if(rt < info.sr.t){
-				this.grid.setScrollTop(rt);
-			}
-		}
-
-		return info.s.scrollLeft;
-	},
-	_scrollInfo: function(cell, domNode){
-		if(cell){
-			var cl = cell,
-				sbn = cl.view.scrollboxNode,
-				sbnr = {
-					w: sbn.clientWidth,
-					l: sbn.scrollLeft,
-					t: sbn.scrollTop,
-					h: sbn.clientHeight
-				},
-				rn = cl.view.getRowNode(this.rowIndex);
-			return {
-				c: cl,
-				s: sbn,
-				sr: sbnr,
-				n: (domNode ? domNode : cell.getNode(this.rowIndex)),
-				r: rn
-			};
-		}
-		return null;
-	},
-	_scrollHeader: function(currentIdx){
-		var info = null;
-		if(this._colHeadNode){
-			var cell = this.grid.getCell(currentIdx);
-			info = this._scrollInfo(cell, cell.getNode(0));
-		}
-		if(info && info.s && info.sr && info.n){
-			// scroll horizontally as needed.
-			var scroll = info.sr.l + info.sr.w;
-			if(info.n.offsetLeft + info.n.offsetWidth > scroll){
-				info.s.scrollLeft = info.n.offsetLeft + info.n.offsetWidth - info.sr.w;
-			}else if(info.n.offsetLeft < info.sr.l){
-				info.s.scrollLeft = info.n.offsetLeft;
-			}else if(dojo.isIE <= 7 && cell && cell.view.headerNode){
-				// Trac 7158: scroll dojoxGridHeader for IE7 and lower
-				cell.view.headerNode.scrollLeft = info.s.scrollLeft;
-			}
-		}
-	},
-	_isHeaderHidden: function(){
-		// summary:
-		//		determine if the grid headers are hidden
-		//		relies on documented technique of setting .dojoxGridHeader { display:none; }
-		// returns: Boolean
-		//		true if headers are hidden
-		//		false if headers are not hidden
-		
-		var curView = this.focusView;
-		if (!curView){
-			// find one so we can determine if headers are hidden
-			// there is no focusView after adding items to empty grid (test_data_grid_empty.html)
-			for (var i = 0, cView; (cView = this.grid.views.views[i]); i++) {
-				if(cView.headerNode ){
-					curView=cView;
-					break;
-				}
-			}
-		}
-		return (curView && dojo.getComputedStyle(curView.headerNode).display == "none");
-	},
-	colSizeAdjust: function (e, colIdx, delta){ // adjust the column specified by colIdx by the specified delta px
-		var headers = this._findHeaderCells();
-		var view = this.focusView;
-		if (!view) {
-			for (var i = 0, cView; (cView = this.grid.views.views[i]); i++) {
-				// find first view with a tableMap in order to work with empty grid
-				if(cView.header.tableMap.map ){
-					view=cView;
-					break;
-				}
-			}
-		}
-		var curHeader = headers[colIdx];
-		if (!view || (colIdx == headers.length-1 && colIdx === 0)){
-			return; // can't adjust single col. grid
-		}
-		view.content.baseDecorateEvent(e);
-		// need to adjust event with header cell info since focus is no longer on header cell
-		e.cellNode = curHeader; //this.findCellTarget(e.target, e.rowNode);
-		e.cellIndex = view.content.getCellNodeIndex(e.cellNode);
-		e.cell = (e.cellIndex >= 0 ? this.grid.getCell(e.cellIndex) : null);
-		if (view.header.canResize(e)){
-			var deltaObj = {
-				l: delta
-			};
-			var drag = view.header.colResizeSetup(e,false);
-			view.header.doResizeColumn(drag, null, deltaObj);
-			view.update();
-		}
-	},
-	styleRow: function(inRow){
-		return;
-	},
-	setFocusIndex: function(inRowIndex, inCellIndex){
-		// summary:
-		//	focuses the given grid cell
-		// inRowIndex: int
-		//	grid row index
-		// inCellIndex: int
-		//	grid cell index
-		this.setFocusCell(this.grid.getCell(inCellIndex), inRowIndex);
-	},
-	setFocusCell: function(inCell, inRowIndex){
-		// summary:
-		//	focuses the given grid cell
-		// inCell: object
-		//	grid cell object
-		// inRowIndex: int
-		//	grid row index
-		if(inCell && !this.isFocusCell(inCell, inRowIndex)){
-			this.tabbingOut = false;
-			if (this._colHeadNode){
-				this.blurHeader();
-			}
-			this._colHeadNode = this._colHeadFocusIdx = null;
-			this.focusGridView();
-			this._focusifyCellNode(false);
-			this.cell = inCell;
-			this.rowIndex = inRowIndex;
-			this._focusifyCellNode(true);
-		}
-		// even if this cell isFocusCell, the document focus may need to be rejiggered
-		// call opera on delay to prevent keypress from altering focus
-		if(dojo.isOpera){
-			setTimeout(dojo.hitch(this.grid, 'onCellFocus', this.cell, this.rowIndex), 1);
-		}else{
-			this.grid.onCellFocus(this.cell, this.rowIndex);
-		}
-	},
-	next: function(){
-		// summary:
-		//	focus next grid cell
-		if(this.cell){
-			var row=this.rowIndex, col=this.cell.index+1, cc=this.grid.layout.cellCount-1, rc=this.grid.rowCount-1;
-			if(col > cc){
-				col = 0;
-				row++;
-			}
-			if(row > rc){
-				col = cc;
-				row = rc;
-			}
-			if(this.grid.edit.isEditing()){ //when editing, only navigate to editable cells
-				var nextCell = this.grid.getCell(col);
-				if (!this.isLastFocusCell() && (!nextCell.editable ||
-					this.grid.canEdit && !this.grid.canEdit(nextCell, row))){
-					this.cell=nextCell;
-					this.rowIndex=row;
-					this.next();
-					return;
-				}
-			}
-			this.setFocusIndex(row, col);
-		}
-	},
-	previous: function(){
-		// summary:
-		//	focus previous grid cell
-		if(this.cell){
-			var row=(this.rowIndex || 0), col=(this.cell.index || 0) - 1;
-			if(col < 0){
-				col = this.grid.layout.cellCount-1;
-				row--;
-			}
-			if(row < 0){
-				row = 0;
-				col = 0;
-			}
-			if(this.grid.edit.isEditing()){ //when editing, only navigate to editable cells
-				var prevCell = this.grid.getCell(col);
-				if (!this.isFirstFocusCell() && !prevCell.editable){
-					this.cell=prevCell;
-					this.rowIndex=row;
-					this.previous();
-					return;
-				}
-			}
-			this.setFocusIndex(row, col);
-		}
-	},
-	move: function(inRowDelta, inColDelta) {
-		// summary:
-		//	focus grid cell or  simulate focus to column header based on position relative to current focus
-		// inRowDelta: int
-		// vertical distance from current focus
-		// inColDelta: int
-		// horizontal distance from current focus
-
-		var colDir = inColDelta < 0 ? -1 : 1;
-		// Handle column headers.
-		if(this.isNavHeader()){
-			var headers = this._findHeaderCells();
-			var savedIdx = currentIdx = dojo.indexOf(headers, this._colHeadNode);
-			currentIdx += inColDelta;
-			while(currentIdx >=0 && currentIdx < headers.length && headers[currentIdx].style.display == "none"){
-				// skip over hidden column headers
-				currentIdx += colDir;
-			}
-			if((currentIdx >= 0) && (currentIdx < headers.length)){
-				this._setActiveColHeader(headers[currentIdx],currentIdx, savedIdx);
-			}
-		}else{
-			if(this.cell){
-				// Handle grid proper.
-				var sc = this.grid.scroller,
-					r = this.rowIndex,
-					rc = this.grid.rowCount-1,
-					row = Math.min(rc, Math.max(0, r+inRowDelta));
-				if(inRowDelta){
-					if(inRowDelta>0){
-						if(row > sc.getLastPageRow(sc.page)){
-							//need to load additional data, let scroller do that
-							this.grid.setScrollTop(this.grid.scrollTop+sc.findScrollTop(row)-sc.findScrollTop(r));
-						}
-					}else if(inRowDelta<0){
-						if(row <= sc.getPageRow(sc.page)){
-							//need to load additional data, let scroller do that
-							this.grid.setScrollTop(this.grid.scrollTop-sc.findScrollTop(r)-sc.findScrollTop(row));
-						}
-					}
-				}
-				var cc = this.grid.layout.cellCount-1,
-				i = this.cell.index,
-				col = Math.min(cc, Math.max(0, i+inColDelta));
-				var cell = this.grid.getCell(col);
-				while(col>=0 && col < cc && cell && cell.hidden === true){
-					// skip hidden cells
-					col += colDir;
-					cell = this.grid.getCell(col);
-				}
-				if (!cell || cell.hidden === true){
-					// don't change col if would move to hidden
-					col = i;
-				}
-				//skip hidden row|cell
-				var n = cell.getNode(row);
-				if(!n && inRowDelta){
-					if((row + inRowDelta) >= 0 && (row + inRowDelta) <= rc){
-						this.move(inRowDelta > 0 ? ++inRowDelta : --inRowDelta, inColDelta);
-					}
-					return;
-				}else if((!n || dojo.style(n, "display") === "none") && inColDelta){
-					if((col + inRowDelta) >= 0 && (col + inRowDelta) <= cc){
-						this.move(inRowDelta, inColDelta > 0 ? ++inColDelta : --inColDelta);
-					}
-					return;
-				}
-				this.setFocusIndex(row, col);
-				if(inRowDelta){
-					this.grid.updateRow(r);
-				}
-			}
-		}
-	},
-	previousKey: function(e){
-		if(this.grid.edit.isEditing()){
-			dojo.stopEvent(e);
-			this.previous();
-		}else if(!this.isNavHeader() && !this._isHeaderHidden()) {
-			this.grid.domNode.focus(); // will call doFocus and set focus into header.
-			dojo.stopEvent(e);
-		}else{
-			this.tabOut(this.grid.domNode);
-			if (this._colHeadFocusIdx != null) { // clear grid header focus
-				dojo.toggleClass(this._findHeaderCells()[this._colHeadFocusIdx], this.focusClass, false);
-				this._colHeadFocusIdx = null;
-			}
-			this._focusifyCellNode(false);
-		}
-	},
-	nextKey: function(e) {
-		var isEmpty = (this.grid.rowCount === 0);
-		if(e.target === this.grid.domNode && this._colHeadFocusIdx == null){
-			this.focusHeader();
-			dojo.stopEvent(e);
-		}else if(this.isNavHeader()){
-			// if tabbing from col header, then go to grid proper.
-			this.blurHeader();
-			if(!this.findAndFocusGridCell()){
-				this.tabOut(this.grid.lastFocusNode);
-			}
-			this._colHeadNode = this._colHeadFocusIdx= null;
-		}else if(this.grid.edit.isEditing()){
-			dojo.stopEvent(e);
-			this.next();
-		}else{
-			this.tabOut(this.grid.lastFocusNode);
-		}
-	},
-	tabOut: function(inFocusNode){
-		this.tabbingOut = true;
-		inFocusNode.focus();
-	},
-	focusGridView: function(){
-		dojox.grid.util.fire(this.focusView, "focus");
-	},
-	focusGrid: function(inSkipFocusCell){
-		this.focusGridView();
-		this._focusifyCellNode(true);
-	},
-	findAndFocusGridCell: function(){
-		// summary:
-		//		find the first focusable grid cell
-		// returns: Boolean
-		//		true if focus was set to a cell
-		//		false if no cell found to set focus onto
-		
-		var didFocus = true;
-		var isEmpty = (this.grid.rowCount === 0); // If grid is empty this.grid.rowCount == 0
-		if (this.isNoFocusCell() && !isEmpty){
-			var cellIdx = 0;
-			var cell = this.grid.getCell(cellIdx);
-			if (cell.hidden) {
-				// if first cell isn't visible, use _colHeadFocusIdx
-				// could also use a while loop to find first visible cell - not sure that is worth it
-				cellIdx = this.isNavHeader() ? this._colHeadFocusIdx : 0;
-			}
-			this.setFocusIndex(0, cellIdx);
-		}
-		else if (this.cell && !isEmpty){
-			if (this.focusView && !this.focusView.rowNodes[this.rowIndex]){
-				// if rowNode for current index is undefined (likely as a result of a sort and because of #7304)
-				// scroll to that row
-				this.grid.scrollToRow(this.rowIndex);
-			}
-			this.focusGrid();
-		}else {
-			didFocus = false;
-		}
-		this._colHeadNode = this._colHeadFocusIdx= null;
-		return didFocus;
-	},
-	focusHeader: function(){
-		var headerNodes = this._findHeaderCells();
-		var saveColHeadFocusIdx = this._colHeadFocusIdx;
-		if (this._isHeaderHidden()){
-			// grid header is hidden, focus a cell
-			this.findAndFocusGridCell();
-		}
-		else if (!this._colHeadFocusIdx) {
-			if (this.isNoFocusCell()) {
-				this._colHeadFocusIdx = 0;
-			}
-			else {
-				this._colHeadFocusIdx = this.cell.index;
-			}
-		}
-		this._colHeadNode = headerNodes[this._colHeadFocusIdx];
-		while(this._colHeadNode && this._colHeadFocusIdx >=0 && this._colHeadFocusIdx < headerNodes.length &&
-				this._colHeadNode.style.display == "none"){
-			// skip over hidden column headers
-			this._colHeadFocusIdx++;
-			this._colHeadNode = headerNodes[this._colHeadFocusIdx];
-		}
-		if(this._colHeadNode && this._colHeadNode.style.display != "none"){
-			// Column header cells know longer receive actual focus.  So, for keyboard invocation of
-			// contextMenu to work, the contextMenu must be bound to the grid.domNode rather than the viewsHeaderNode.
-			// unbind the contextmenu from the viewsHeaderNode and to the grid when header cells are active.  Reset
-			// the binding back to the viewsHeaderNode when header cells are no longer acive (in blurHeader) #10483
-			if (this.headerMenu && this._contextMenuBindNode != this.grid.domNode){
-				this.headerMenu.unBindDomNode(this.grid.viewsHeaderNode);
-				this.headerMenu.bindDomNode(this.grid.domNode);
-				this._contextMenuBindNode = this.grid.domNode;
-			}
-			this._setActiveColHeader(this._colHeadNode, this._colHeadFocusIdx, saveColHeadFocusIdx);
-			this._scrollHeader(this._colHeadFocusIdx);
-			this._focusifyCellNode(false);
-		}else {
-			// all col head nodes are hidden - focus the grid
-			this.findAndFocusGridCell();
-		}
-	},
-	blurHeader: function(){
-		dojo.removeClass(this._colHeadNode, this.focusClass);
-		dojo.removeAttr(this.grid.domNode,"aria-activedescendant");
-		// reset contextMenu onto viewsHeaderNode so right mouse on header will invoke (see focusHeader)
-		if (this.headerMenu && this._contextMenuBindNode == this.grid.domNode) {
-			var viewsHeader = this.grid.viewsHeaderNode;
-			this.headerMenu.unBindDomNode(this.grid.domNode);
-			this.headerMenu.bindDomNode(viewsHeader);
-			this._contextMenuBindNode = viewsHeader;
-		}
-	},
-	doFocus: function(e){
-		// trap focus only for grid dom node
-		if(e && e.target != e.currentTarget){
-			dojo.stopEvent(e);
-			return;
-		}
-		// do not focus for scrolling if grid is about to blur
-		if(!this.tabbingOut){
-			this.focusHeader();
-		}
-		this.tabbingOut = false;
-		dojo.stopEvent(e);
-	},
-	doBlur: function(e){
-		dojo.stopEvent(e);	// FF2
-	},
-	doContextMenu: function(e){
-	//stop contextMenu event if no header Menu to prevent default/browser contextMenu
-		if (!this.headerMenu){
-			dojo.stopEvent(e);
-		}
-	},
-	doLastNodeFocus: function(e){
-		if (this.tabbingOut){
-			this._focusifyCellNode(false);
-		}else if(this.grid.rowCount >0){
-			if (this.isNoFocusCell()){
-				this.setFocusIndex(0,0);
-			}
-			this._focusifyCellNode(true);
-		}else {
-			this.focusHeader();
-		}
-		this.tabbingOut = false;
-		dojo.stopEvent(e);	 // FF2
-	},
-	doLastNodeBlur: function(e){
-		dojo.stopEvent(e);	 // FF2
-	},
-	doColHeaderFocus: function(e){
-		this._setActiveColHeader(e.target,dojo.attr(e.target, "idx"),this._colHeadFocusIdx);
-		this._scrollHeader(this.getHeaderIndex());
-		dojo.stopEvent(e);
-	},
-	doColHeaderBlur: function(e){
-		dojo.toggleClass(e.target, this.focusClass, false);
-	}
-});
-
-return dojox.grid._FocusManager;
-
+define(["dojo","dojox","./util"],function(_1,_2){
+_1.declare("dojox.grid._FocusManager",null,{constructor:function(_3){
+this.grid=_3;
+this.cell=null;
+this.rowIndex=-1;
+this._connects=[];
+this._headerConnects=[];
+this.headerMenu=this.grid.headerMenu;
+this._connects.push(_1.connect(this.grid.domNode,"onfocus",this,"doFocus"));
+this._connects.push(_1.connect(this.grid.domNode,"onblur",this,"doBlur"));
+this._connects.push(_1.connect(this.grid.domNode,"oncontextmenu",this,"doContextMenu"));
+this._connects.push(_1.connect(this.grid.lastFocusNode,"onfocus",this,"doLastNodeFocus"));
+this._connects.push(_1.connect(this.grid.lastFocusNode,"onblur",this,"doLastNodeBlur"));
+this._connects.push(_1.connect(this.grid,"_onFetchComplete",this,"_delayedCellFocus"));
+this._connects.push(_1.connect(this.grid,"postrender",this,"_delayedHeaderFocus"));
+},destroy:function(){
+_1.forEach(this._connects,_1.disconnect);
+_1.forEach(this._headerConnects,_1.disconnect);
+delete this.grid;
+delete this.cell;
+},_colHeadNode:null,_colHeadFocusIdx:null,_contextMenuBindNode:null,tabbingOut:false,focusClass:"dojoxGridCellFocus",focusView:null,initFocusView:function(){
+this.focusView=this.grid.views.getFirstScrollingView()||this.focusView||this.grid.views.views[0];
+this._initColumnHeaders();
+},isFocusCell:function(_4,_5){
+return (this.cell==_4)&&(this.rowIndex==_5);
+},isLastFocusCell:function(){
+if(this.cell){
+return (this.rowIndex==this.grid.rowCount-1)&&(this.cell.index==this.grid.layout.cellCount-1);
+}
+return false;
+},isFirstFocusCell:function(){
+if(this.cell){
+return (this.rowIndex===0)&&(this.cell.index===0);
+}
+return false;
+},isNoFocusCell:function(){
+return (this.rowIndex<0)||!this.cell;
+},isNavHeader:function(){
+return (!!this._colHeadNode);
+},getHeaderIndex:function(){
+if(this._colHeadNode){
+return _1.indexOf(this._findHeaderCells(),this._colHeadNode);
+}else{
+return -1;
+}
+},_focusifyCellNode:function(_6){
+var n=this.cell&&this.cell.getNode(this.rowIndex);
+if(n){
+_1.toggleClass(n,this.focusClass,_6);
+if(_6){
+var sl=this.scrollIntoView();
+try{
+if(!this.grid.edit.isEditing()){
+_2.grid.util.fire(n,"focus");
+if(sl){
+this.cell.view.scrollboxNode.scrollLeft=sl;
+}
+}
+}
+catch(e){
+}
+}
+}
+},_delayedCellFocus:function(){
+if(this.isNavHeader()||!this.grid.focused){
+return;
+}
+var n=this.cell&&this.cell.getNode(this.rowIndex);
+if(n){
+try{
+if(!this.grid.edit.isEditing()){
+_1.toggleClass(n,this.focusClass,true);
+if(this._colHeadNode){
+this.blurHeader();
+}
+_2.grid.util.fire(n,"focus");
+}
+}
+catch(e){
+}
+}
+},_delayedHeaderFocus:function(){
+if(this.isNavHeader()){
+this.focusHeader();
+this.grid.domNode.focus();
+}
+},_initColumnHeaders:function(){
+_1.forEach(this._headerConnects,_1.disconnect);
+this._headerConnects=[];
+var _7=this._findHeaderCells();
+for(var i=0;i<_7.length;i++){
+this._headerConnects.push(_1.connect(_7[i],"onfocus",this,"doColHeaderFocus"));
+this._headerConnects.push(_1.connect(_7[i],"onblur",this,"doColHeaderBlur"));
+}
+},_findHeaderCells:function(){
+var _8=_1.query("th",this.grid.viewsHeaderNode);
+var _9=[];
+for(var i=0;i<_8.length;i++){
+var _a=_8[i];
+var _b=_1.hasAttr(_a,"tabIndex");
+var _c=_1.attr(_a,"tabIndex");
+if(_b&&_c<0){
+_9.push(_a);
+}
+}
+return _9;
+},_setActiveColHeader:function(_d,_e,_f){
+this.grid.domNode.setAttribute("aria-activedescendant",_d.id);
+if(_f!=null&&_f>=0&&_f!=_e){
+_1.toggleClass(this._findHeaderCells()[_f],this.focusClass,false);
+}
+_1.toggleClass(_d,this.focusClass,true);
+this._colHeadNode=_d;
+this._colHeadFocusIdx=_e;
+this._scrollHeader(this._colHeadFocusIdx);
+},scrollIntoView:function(){
+var _10=(this.cell?this._scrollInfo(this.cell):null);
+if(!_10||!_10.s){
+return null;
+}
+var rt=this.grid.scroller.findScrollTop(this.rowIndex);
+if(_10.n&&_10.sr){
+if(_10.n.offsetLeft+_10.n.offsetWidth>_10.sr.l+_10.sr.w){
+_10.s.scrollLeft=_10.n.offsetLeft+_10.n.offsetWidth-_10.sr.w;
+}else{
+if(_10.n.offsetLeft<_10.sr.l){
+_10.s.scrollLeft=_10.n.offsetLeft;
+}
+}
+}
+if(_10.r&&_10.sr){
+if(rt+_10.r.offsetHeight>_10.sr.t+_10.sr.h){
+this.grid.setScrollTop(rt+_10.r.offsetHeight-_10.sr.h);
+}else{
+if(rt<_10.sr.t){
+this.grid.setScrollTop(rt);
+}
+}
+}
+return _10.s.scrollLeft;
+},_scrollInfo:function(_11,_12){
+if(_11){
+var cl=_11,sbn=cl.view.scrollboxNode,_13={w:sbn.clientWidth,l:sbn.scrollLeft,t:sbn.scrollTop,h:sbn.clientHeight},rn=cl.view.getRowNode(this.rowIndex);
+return {c:cl,s:sbn,sr:_13,n:(_12?_12:_11.getNode(this.rowIndex)),r:rn};
+}
+return null;
+},_scrollHeader:function(_14){
+var _15=null;
+if(this._colHeadNode){
+var _16=this.grid.getCell(_14);
+_15=this._scrollInfo(_16,_16.getNode(0));
+}
+if(_15&&_15.s&&_15.sr&&_15.n){
+var _17=_15.sr.l+_15.sr.w;
+if(_15.n.offsetLeft+_15.n.offsetWidth>_17){
+_15.s.scrollLeft=_15.n.offsetLeft+_15.n.offsetWidth-_15.sr.w;
+}else{
+if(_15.n.offsetLeft<_15.sr.l){
+_15.s.scrollLeft=_15.n.offsetLeft;
+}else{
+if(_1.isIE<=7&&_16&&_16.view.headerNode){
+_16.view.headerNode.scrollLeft=_15.s.scrollLeft;
+}
+}
+}
+}
+},_isHeaderHidden:function(){
+var _18=this.focusView;
+if(!_18){
+for(var i=0,_19;(_19=this.grid.views.views[i]);i++){
+if(_19.headerNode){
+_18=_19;
+break;
+}
+}
+}
+return (_18&&_1.getComputedStyle(_18.headerNode).display=="none");
+},colSizeAdjust:function(e,_1a,_1b){
+var _1c=this._findHeaderCells();
+var _1d=this.focusView;
+if(!_1d){
+for(var i=0,_1e;(_1e=this.grid.views.views[i]);i++){
+if(_1e.header.tableMap.map){
+_1d=_1e;
+break;
+}
+}
+}
+var _1f=_1c[_1a];
+if(!_1d||(_1a==_1c.length-1&&_1a===0)){
+return;
+}
+_1d.content.baseDecorateEvent(e);
+e.cellNode=_1f;
+e.cellIndex=_1d.content.getCellNodeIndex(e.cellNode);
+e.cell=(e.cellIndex>=0?this.grid.getCell(e.cellIndex):null);
+if(_1d.header.canResize(e)){
+var _20={l:_1b};
+var _21=_1d.header.colResizeSetup(e,false);
+_1d.header.doResizeColumn(_21,null,_20);
+_1d.update();
+}
+},styleRow:function(_22){
+return;
+},setFocusIndex:function(_23,_24){
+this.setFocusCell(this.grid.getCell(_24),_23);
+},setFocusCell:function(_25,_26){
+if(_25&&!this.isFocusCell(_25,_26)){
+this.tabbingOut=false;
+if(this._colHeadNode){
+this.blurHeader();
+}
+this._colHeadNode=this._colHeadFocusIdx=null;
+this.focusGridView();
+this._focusifyCellNode(false);
+this.cell=_25;
+this.rowIndex=_26;
+this._focusifyCellNode(true);
+}
+if(_1.isOpera){
+setTimeout(_1.hitch(this.grid,"onCellFocus",this.cell,this.rowIndex),1);
+}else{
+this.grid.onCellFocus(this.cell,this.rowIndex);
+}
+},next:function(){
+if(this.cell){
+var row=this.rowIndex,col=this.cell.index+1,cc=this.grid.layout.cellCount-1,rc=this.grid.rowCount-1;
+if(col>cc){
+col=0;
+row++;
+}
+if(row>rc){
+col=cc;
+row=rc;
+}
+if(this.grid.edit.isEditing()){
+var _27=this.grid.getCell(col);
+if(!this.isLastFocusCell()&&(!_27.editable||this.grid.canEdit&&!this.grid.canEdit(_27,row))){
+this.cell=_27;
+this.rowIndex=row;
+this.next();
+return;
+}
+}
+this.setFocusIndex(row,col);
+}
+},previous:function(){
+if(this.cell){
+var row=(this.rowIndex||0),col=(this.cell.index||0)-1;
+if(col<0){
+col=this.grid.layout.cellCount-1;
+row--;
+}
+if(row<0){
+row=0;
+col=0;
+}
+if(this.grid.edit.isEditing()){
+var _28=this.grid.getCell(col);
+if(!this.isFirstFocusCell()&&!_28.editable){
+this.cell=_28;
+this.rowIndex=row;
+this.previous();
+return;
+}
+}
+this.setFocusIndex(row,col);
+}
+},move:function(_29,_2a){
+var _2b=_2a<0?-1:1;
+if(this.isNavHeader()){
+var _2c=this._findHeaderCells();
+var _2d=currentIdx=_1.indexOf(_2c,this._colHeadNode);
+currentIdx+=_2a;
+while(currentIdx>=0&&currentIdx<_2c.length&&_2c[currentIdx].style.display=="none"){
+currentIdx+=_2b;
+}
+if((currentIdx>=0)&&(currentIdx<_2c.length)){
+this._setActiveColHeader(_2c[currentIdx],currentIdx,_2d);
+}
+}else{
+if(this.cell){
+var sc=this.grid.scroller,r=this.rowIndex,rc=this.grid.rowCount-1,row=Math.min(rc,Math.max(0,r+_29));
+if(_29){
+if(_29>0){
+if(row>sc.getLastPageRow(sc.page)){
+this.grid.setScrollTop(this.grid.scrollTop+sc.findScrollTop(row)-sc.findScrollTop(r));
+}
+}else{
+if(_29<0){
+if(row<=sc.getPageRow(sc.page)){
+this.grid.setScrollTop(this.grid.scrollTop-sc.findScrollTop(r)-sc.findScrollTop(row));
+}
+}
+}
+}
+var cc=this.grid.layout.cellCount-1,i=this.cell.index,col=Math.min(cc,Math.max(0,i+_2a));
+var _2e=this.grid.getCell(col);
+while(col>=0&&col<cc&&_2e&&_2e.hidden===true){
+col+=_2b;
+_2e=this.grid.getCell(col);
+}
+if(!_2e||_2e.hidden===true){
+col=i;
+}
+var n=_2e.getNode(row);
+if(!n&&_29){
+if((row+_29)>=0&&(row+_29)<=rc){
+this.move(_29>0?++_29:--_29,_2a);
+}
+return;
+}else{
+if((!n||_1.style(n,"display")==="none")&&_2a){
+if((col+_29)>=0&&(col+_29)<=cc){
+this.move(_29,_2a>0?++_2a:--_2a);
+}
+return;
+}
+}
+this.setFocusIndex(row,col);
+if(_29){
+this.grid.updateRow(r);
+}
+}
+}
+},previousKey:function(e){
+if(this.grid.edit.isEditing()){
+_1.stopEvent(e);
+this.previous();
+}else{
+if(!this.isNavHeader()&&!this._isHeaderHidden()){
+this.grid.domNode.focus();
+_1.stopEvent(e);
+}else{
+this.tabOut(this.grid.domNode);
+if(this._colHeadFocusIdx!=null){
+_1.toggleClass(this._findHeaderCells()[this._colHeadFocusIdx],this.focusClass,false);
+this._colHeadFocusIdx=null;
+}
+this._focusifyCellNode(false);
+}
+}
+},nextKey:function(e){
+var _2f=(this.grid.rowCount===0);
+if(e.target===this.grid.domNode&&this._colHeadFocusIdx==null){
+this.focusHeader();
+_1.stopEvent(e);
+}else{
+if(this.isNavHeader()){
+this.blurHeader();
+if(!this.findAndFocusGridCell()){
+this.tabOut(this.grid.lastFocusNode);
+}
+this._colHeadNode=this._colHeadFocusIdx=null;
+}else{
+if(this.grid.edit.isEditing()){
+_1.stopEvent(e);
+this.next();
+}else{
+this.tabOut(this.grid.lastFocusNode);
+}
+}
+}
+},tabOut:function(_30){
+this.tabbingOut=true;
+_30.focus();
+},focusGridView:function(){
+_2.grid.util.fire(this.focusView,"focus");
+},focusGrid:function(_31){
+this.focusGridView();
+this._focusifyCellNode(true);
+},findAndFocusGridCell:function(){
+var _32=true;
+var _33=(this.grid.rowCount===0);
+if(this.isNoFocusCell()&&!_33){
+var _34=0;
+var _35=this.grid.getCell(_34);
+if(_35.hidden){
+_34=this.isNavHeader()?this._colHeadFocusIdx:0;
+}
+this.setFocusIndex(0,_34);
+}else{
+if(this.cell&&!_33){
+if(this.focusView&&!this.focusView.rowNodes[this.rowIndex]){
+this.grid.scrollToRow(this.rowIndex);
+}
+this.focusGrid();
+}else{
+_32=false;
+}
+}
+this._colHeadNode=this._colHeadFocusIdx=null;
+return _32;
+},focusHeader:function(){
+var _36=this._findHeaderCells();
+var _37=this._colHeadFocusIdx;
+if(this._isHeaderHidden()){
+this.findAndFocusGridCell();
+}else{
+if(!this._colHeadFocusIdx){
+if(this.isNoFocusCell()){
+this._colHeadFocusIdx=0;
+}else{
+this._colHeadFocusIdx=this.cell.index;
+}
+}
+}
+this._colHeadNode=_36[this._colHeadFocusIdx];
+while(this._colHeadNode&&this._colHeadFocusIdx>=0&&this._colHeadFocusIdx<_36.length&&this._colHeadNode.style.display=="none"){
+this._colHeadFocusIdx++;
+this._colHeadNode=_36[this._colHeadFocusIdx];
+}
+if(this._colHeadNode&&this._colHeadNode.style.display!="none"){
+if(this.headerMenu&&this._contextMenuBindNode!=this.grid.domNode){
+this.headerMenu.unBindDomNode(this.grid.viewsHeaderNode);
+this.headerMenu.bindDomNode(this.grid.domNode);
+this._contextMenuBindNode=this.grid.domNode;
+}
+this._setActiveColHeader(this._colHeadNode,this._colHeadFocusIdx,_37);
+this._scrollHeader(this._colHeadFocusIdx);
+this._focusifyCellNode(false);
+}else{
+this.findAndFocusGridCell();
+}
+},blurHeader:function(){
+_1.removeClass(this._colHeadNode,this.focusClass);
+_1.removeAttr(this.grid.domNode,"aria-activedescendant");
+if(this.headerMenu&&this._contextMenuBindNode==this.grid.domNode){
+var _38=this.grid.viewsHeaderNode;
+this.headerMenu.unBindDomNode(this.grid.domNode);
+this.headerMenu.bindDomNode(_38);
+this._contextMenuBindNode=_38;
+}
+},doFocus:function(e){
+if(e&&e.target!=e.currentTarget){
+_1.stopEvent(e);
+return;
+}
+if(!this.tabbingOut){
+this.focusHeader();
+}
+this.tabbingOut=false;
+_1.stopEvent(e);
+},doBlur:function(e){
+_1.stopEvent(e);
+},doContextMenu:function(e){
+if(!this.headerMenu){
+_1.stopEvent(e);
+}
+},doLastNodeFocus:function(e){
+if(this.tabbingOut){
+this._focusifyCellNode(false);
+}else{
+if(this.grid.rowCount>0){
+if(this.isNoFocusCell()){
+this.setFocusIndex(0,0);
+}
+this._focusifyCellNode(true);
+}else{
+this.focusHeader();
+}
+}
+this.tabbingOut=false;
+_1.stopEvent(e);
+},doLastNodeBlur:function(e){
+_1.stopEvent(e);
+},doColHeaderFocus:function(e){
+this._setActiveColHeader(e.target,_1.attr(e.target,"idx"),this._colHeadFocusIdx);
+this._scrollHeader(this.getHeaderIndex());
+_1.stopEvent(e);
+},doColHeaderBlur:function(e){
+_1.toggleClass(e.target,this.focusClass,false);
+}});
+return _2.grid._FocusManager;
 });

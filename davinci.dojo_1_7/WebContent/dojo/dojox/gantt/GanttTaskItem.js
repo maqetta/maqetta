@@ -1,1358 +1,1100 @@
-dojo.provide("dojox.gantt.GanttTaskItem");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojo.date.locale");
-dojo.require("dijit.focus");		// dijit.focus()
-
-dojo.declare("dojox.gantt.GanttTaskControl", null, {
-	constructor: function(taskInfo, project, chart){
-		this.ganttChart = chart;
-		this.project = project;
-		this.taskItem = taskInfo;
-		//control variables
-		this.checkMove = false;
-		this.checkResize = false;
-		this.moveChild = false;
-		this.maxPosXMove = -1;
-		this.minPosXMove = -1;
-		this.maxWidthResize = -1;
-		this.minWidthResize = -1;
-		this.posX = 0;
-		this.posY = 0;
-		this.mouseX = 0;
-		this.taskItemWidth = 0;
-		this.isHide = false;
-		this.hideTasksHeight = 0;
-		this.isExpanded = true;
-		this.descrTask = null;
-		this.cTaskItem = null;
-		this.cTaskNameItem = null;
-		this.parentTask = null;
-		this.predTask = null;
-		this.childTask = [];
-		this.childPredTask = [];
-		this.nextChildTask = null;
-		this.previousChildTask = null;
-		this.nextParentTask = null;
-		this.previousParentTask = null;
-	},
-	createConnectingLinesPN: function(){
-		var arrConnectingLinesNames = [];
-		var lineVerticalLeft = dojo.create("div", {
-			innerHTML: "&nbsp;",
-			className: "ganttTaskLineVerticalLeft"
-		}, this.ganttChart.panelNames.firstChild);
-		var cTaskName = this.cTaskNameItem[0], pcTaskName = this.parentTask.cTaskNameItem[0];
-		dojo.style(lineVerticalLeft, {
-			height: (cTaskName.offsetTop - pcTaskName.offsetTop) + "px",
-			top: (pcTaskName.offsetTop + 5) + "px",
-			left: (pcTaskName.offsetLeft - 9) + "px"
-		});
-		var LineHorizontalLeft = dojo.create("div", {
-			noShade: true,
-			color: "#000000",
-			className: "ganttTaskLineHorizontalLeft"
-		}, this.ganttChart.panelNames.firstChild);
-		dojo.style(LineHorizontalLeft, {
-			left: (pcTaskName.offsetLeft - 9) + "px",
-			top: (cTaskName.offsetTop + 5) + "px",
-			height: "1px",
-			width: (cTaskName.offsetLeft - pcTaskName.offsetLeft + 4) + "px"
-		});
-		arrConnectingLinesNames.push(lineVerticalLeft);
-		arrConnectingLinesNames.push(LineHorizontalLeft);
-		return arrConnectingLinesNames;
-	},
-	createConnectingLinesDS: function(){
-		var contentData = this.ganttChart.contentData.firstChild;
-		var arrLines = [];
-		var arrowImg = new Image();
-		var arrowImg = dojo.create("div", {
-			className: "ganttImageArrow"
-		});
-		//vertical line
-		var lineVerticalRight = document.createElement("div");
-		//horizontal line
-		var lineHorizontal = document.createElement("div");
-		var posXPreviousTask = dojo.style(this.predTask.cTaskItem[0], "left");
-		var posYPreviousTask = dojo.style(this.predTask.cTaskItem[0], "top");
-		var posXChildTask = dojo.style(this.cTaskItem[0], "left");
-		var posYChildTask = this.posY + 2;
-		//width task item
-		var widthChildTask = parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
-		var widthPreviousTask = parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
-		if(posYPreviousTask < posYChildTask){
-			dojo.addClass(lineVerticalRight, "ganttTaskLineVerticalRight");
-			dojo.style(lineVerticalRight, {
-				height: (posYChildTask - this.ganttChart.heightTaskItem / 2 - posYPreviousTask - 3) + "px",
-				width: "1px",
-				left: (posXPreviousTask + widthPreviousTask - 20) + "px",
-				top: (posYPreviousTask + this.ganttChart.heightTaskItem) + "px"
-			});
-			dojo.addClass(lineHorizontal, "ganttTaskLineHorizontal");
-			dojo.style(lineHorizontal, {
-				width: (15 + (posXChildTask - (widthPreviousTask + posXPreviousTask))) + "px",
-				left: (posXPreviousTask + widthPreviousTask - 20) + "px",
-				top: (posYChildTask + 2) + "px"
-			});
-			dojo.addClass(arrowImg, "ganttTaskArrowImg");
-			dojo.style(arrowImg, {
-				left: (posXChildTask - 7) + "px",
-				top: (posYChildTask - 1) + "px"
-			});
-		}else{
-			dojo.addClass(lineVerticalRight, "ganttTaskLineVerticalRightPlus");
-			dojo.style(lineVerticalRight, {
-				height: (posYPreviousTask + 2 - posYChildTask) + "px",
-				width: "1px",
-				left: (posXPreviousTask + widthPreviousTask - 20) + "px",
-				top: (posYChildTask + 2) + "px"
-			});
-			dojo.addClass(lineHorizontal, "ganttTaskLineHorizontalPlus");
-			dojo.style(lineHorizontal, {
-				width: (15 + (posXChildTask - (widthPreviousTask + posXPreviousTask))) + "px",
-				left: (posXPreviousTask + widthPreviousTask - 20) + "px",
-				top: (posYChildTask + 2) + "px"
-			});
-			dojo.addClass(arrowImg, "ganttTaskArrowImgPlus");
-			dojo.style(arrowImg, {
-				left: (posXChildTask - 7) + "px",
-				top: (posYChildTask - 1) + "px"
-			});
-		}
-		contentData.appendChild(lineVerticalRight);
-		contentData.appendChild(lineHorizontal);
-		contentData.appendChild(arrowImg);
-		arrLines.push(lineVerticalRight);
-		arrLines.push(arrowImg);
-		arrLines.push(lineHorizontal);
-		return arrLines;
-	},
-	showChildTasks: function(task, isOpen){
-		if(isOpen){
-			for(var i = 0; i < task.childTask.length; i++){
-				var cTask = task.childTask[i],
-					cTaskItem0 = cTask.cTaskItem[0], cTaskName0 = cTask.cTaskNameItem[0],
-					cTaskItem1 = cTask.cTaskItem[1], cTaskName1 = cTask.cTaskNameItem[1],
-					cTaskItem2 = cTask.cTaskItem[2], cTaskName2 = cTask.cTaskNameItem[2];
-				if(cTaskItem0.style.display == "none"){
-					cTaskItem0.style.display = "inline";
-					cTaskName0.style.display = "inline";
-					cTask.showDescTask();
-					task.isHide = false;
-					if(cTaskName2){
-						cTaskName2.style.display = "inline";
-						isOpen = cTask.isExpanded;
-					}
-					for(var k = 0; k < cTaskItem1.length; k++){
-						cTaskItem1[k].style.display = "inline";
-					}
-					for(var k = 0; k < cTaskName1.length; k++){
-						cTaskName1[k].style.display = "inline";
-					}
-					(cTask.taskIdentifier) && (cTask.taskIdentifier.style.display = "inline");
-					this.hideTasksHeight += this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
-					if(cTask.childTask.length > 0){
-						this.showChildTasks(cTask, isOpen);
-					}
-				}
-			}
-		}
-	},
-	hideChildTasks: function(task){
-		for(var i = 0; i < task.childTask.length; i++){
-			var cTask = task.childTask[i],
-				cTaskItem0 = cTask.cTaskItem[0], cTaskName0 = cTask.cTaskNameItem[0],
-				cTaskItem1 = cTask.cTaskItem[1], cTaskName1 = cTask.cTaskNameItem[1],
-				cTaskItem2 = cTask.cTaskItem[2], cTaskName2 = cTask.cTaskNameItem[2];
-			if(cTaskItem0.style.display != "none"){
-				cTaskItem0.style.display = "none";
-				cTaskName0.style.display = "none";
-				cTask.hideDescTask();
-				task.isHide = true;
-				if(cTaskName2){
-					cTaskName2.style.display = "none";
-				}
-				for(var k = 0; k < cTaskItem1.length; k++){
-					cTaskItem1[k].style.display = "none";
-				}
-				for(var k = 0; k < cTaskName1.length; k++){
-					cTaskName1[k].style.display = "none";
-				}
-				(cTask.taskIdentifier) && (cTask.taskIdentifier.style.display = "none");
-				this.hideTasksHeight += (this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra);
-				if(cTask.childTask.length > 0){
-					this.hideChildTasks(cTask);
-				}
-			}
-		}
-	},
-	shiftCurrentTasks: function(task, height){
-		this.shiftNextTask(this, height);
-		task.project.shiftNextProject(task.project, height);
-	},
-	shiftTask: function(task, height){
-		task.posY = task.posY + height;
-		var taskItem0 = task.cTaskItem[0], taskName0 = task.cTaskNameItem[0],
-			taskItem1 = task.cTaskItem[1], taskName1 = task.cTaskNameItem[1],
-			taskItem2 = task.cTaskItem[2], taskName2 = task.cTaskNameItem[2];
-		taskName0.style.top = parseInt(taskName0.style.top) + height + "px";
-		if(taskName2){
-			taskName2.style.top = parseInt(taskName2.style.top) + height + "px";
-		}
-		if(task.parentTask){
-			if(parseInt(this.cTaskNameItem[0].style.top) > parseInt(task.parentTask.cTaskNameItem[0].style.top) &&
-			(taskName1[0].style.display != "none")){
-				taskName1[0].style.height = parseInt(taskName1[0].style.height) + height + "px";
-			}else{
-				taskName1[0].style.top = parseInt(taskName1[0].style.top) + height + "px";
-			}
-			taskName1[1].style.top = parseInt(taskName1[1].style.top) + height + "px";
-		}
-		taskItem0.style.top = parseInt(taskItem0.style.top) + height + "px";
-		task.descrTask.style.top = parseInt(task.descrTask.style.top) + height + "px";
-		if(task.predTask){
-			if(((parseInt(this.cTaskItem[0].style.top) > parseInt(task.predTask.cTaskItem[0].style.top)) ||
-			(this.cTaskItem[0].id == task.predTask.taskItem.id)) &&
-			taskItem1[0].style.display != "none"){
-				taskItem1[0].style.height = parseInt(taskItem1[0].style.height) + height + "px";
-			}else{
-				taskItem1[0].style.top = parseInt(taskItem1[0].style.top) + height + "px";
-			}
-			taskItem1[1].style.top = parseInt(taskItem1[1].style.top) + height + "px";
-			taskItem1[2].style.top = parseInt(taskItem1[2].style.top) + height + "px";
-		}
-	},
-	shiftNextTask: function(task, height){
-		if(task.nextChildTask){
-			this.shiftTask(task.nextChildTask, height);
-			this.shiftChildTask(task.nextChildTask, height);
-			this.shiftNextTask(task.nextChildTask, height);
-		}else if(task.parentTask){
-			this.shiftNextTask(task.parentTask, height);
-		}else if(task.nextParentTask){
-			this.shiftTask(task.nextParentTask, height);
-			this.shiftChildTask(task.nextParentTask, height);
-			this.shiftNextTask(task.nextParentTask, height);
-		}
-	},
-	shiftChildTask: function(task, height){
-		dojo.forEach(task.childTask, function(cTask){
-			this.shiftTask(cTask, height);
-			if(cTask.childTask.length > 0){
-				this.shiftChildTask(cTask, height);
-			}
-		}, this);
-	},
-	endMove: function(){
-		var cTask0 = this.cTaskItem[0];
-		var width = dojo.style(cTask0, "left") - this.posX;
-		var startTime = this.getDateOnPosition(dojo.style(cTask0, "left"));
-		startTime = this.checkPos(startTime);
-		if(this.checkMove){
-			width = this.ganttChart.getPosOnDate(startTime) - this.posX;
-			this.moveCurrentTaskItem(width, this.moveChild);
-			this.project.shiftProjectItem();
-		}
-		this.checkMove = false;
-		this.posX = 0;
-		this.maxPosXMove = -1;
-		this.minPosXMove = -1;
-		cTask0.childNodes[1].firstChild.rows[0].cells[0].innerHTML = "";
-		this.adjustPanelTime();
-		if(this.ganttChart.resource){
-			this.ganttChart.resource.refresh();
-		}
-	},
-	checkPos: function(startTime){
-		var cTask0 = this.cTaskItem[0];
-		var h = startTime.getHours();
-		if(h >= 12){
-			startTime.setDate(startTime.getDate() + 1);
-			startTime.setHours(0);
-			if((parseInt(cTask0.firstChild.firstChild.width) + this.ganttChart.getPosOnDate(startTime) > this.maxPosXMove) && (this.maxPosXMove != -1)){
-				startTime.setDate(startTime.getDate() - 1);
-				startTime.setHours(0);
-			}
-		}else if((h < 12) && (h != 0)){
-			startTime.setHours(0);
-			if((this.ganttChart.getPosOnDate(startTime) < this.minPosXMove)){
-				startTime.setDate(startTime.getDate() + 1);
-			}
-		}
-		cTask0.style.left = this.ganttChart.getPosOnDate(startTime) + "px";
-		return startTime;
-	},
-	getMaxPosPredChildTaskItem: function(){
-		var posPredChildTaskItem = 0;
-		var nextPosPredChildTaskItem = 0;
-		for(var i = 0; i < this.childPredTask.length; i++){
-			nextPosPredChildTaskItem = this.getMaxPosPredChildTaskItemInTree(this.childPredTask[i]);
-			if(nextPosPredChildTaskItem > posPredChildTaskItem){
-				posPredChildTaskItem = nextPosPredChildTaskItem;
-			}
-		}
-		return posPredChildTaskItem;
-	},
-	getMaxPosPredChildTaskItemInTree: function(task){
-		var cTask0 = task.cTaskItem[0];
-		var currentPos = parseInt(cTask0.firstChild.firstChild.width) + dojo.style(cTask0, "left");
-		var posPredChildTaskItem = 0;
-		var nextPosPredChildTaskItem = 0;
-		dojo.forEach(task.childPredTask, function(cpTask){
-			nextPosPredChildTaskItem = this.getMaxPosPredChildTaskItemInTree(cpTask);
-			if(nextPosPredChildTaskItem > posPredChildTaskItem){
-				posPredChildTaskItem = nextPosPredChildTaskItem;
-			}
-		}, this);
-		return posPredChildTaskItem > currentPos ? posPredChildTaskItem : currentPos;
-	},
-	moveCurrentTaskItem: function(width, moveChild){
-		var taskItem = this.cTaskItem[0];
-		this.taskItem.startTime = new Date(this.ganttChart.startDate);
-		this.taskItem.startTime.setHours(this.taskItem.startTime.getHours() + (parseInt(taskItem.style.left) / this.ganttChart.pixelsPerHour));
-		this.showDescTask();
-		var cTask1 = this.cTaskItem[1];
-		if(cTask1.length > 0){
-			cTask1[2].style.width = parseInt(cTask1[2].style.width) + width + "px";
-			cTask1[1].style.left = parseInt(cTask1[1].style.left) + width + "px";
-		}
-		dojo.forEach(this.childTask, function(cTask){
-			if(!cTask.predTask){
-				this.moveChildTaskItems(cTask, width, moveChild);
-			}
-		}, this);
-		dojo.forEach(this.childPredTask, function(cpTask){
-			this.moveChildTaskItems(cpTask, width, moveChild);
-		}, this);
-	},
-	moveChildTaskItems: function(task, width, moveChild){
-		var taskItem = task.cTaskItem[0];
-		if(moveChild){
-			taskItem.style.left = parseInt(taskItem.style.left) + width + "px";
-			task.adjustPanelTime();
-			task.taskItem.startTime = new Date(this.ganttChart.startDate);
-			task.taskItem.startTime.setHours(task.taskItem.startTime.getHours() + (parseInt(taskItem.style.left) / this.ganttChart.pixelsPerHour));
-			var ctItem = task.cTaskItem[1];
-			dojo.forEach(ctItem, function(item){
-				item.style.left = parseInt(item.style.left) + width + "px";
-			}, this);
-			dojo.forEach(task.childTask, function(cTask){
-				if(!cTask.predTask){
-					this.moveChildTaskItems(cTask, width, moveChild);
-				}
-			}, this);
-			dojo.forEach(task.childPredTask, function(cpTask){
-				this.moveChildTaskItems(cpTask, width, moveChild);
-			}, this);
-		}else{
-			var ctItem = task.cTaskItem[1];
-			if(ctItem.length > 0){
-				var item0 = ctItem[0], item2 = ctItem[2];
-				item2.style.left = parseInt(item2.style.left) + width + "px";
-				item2.style.width = parseInt(item2.style.width) - width + "px";
-				item0.style.left = parseInt(item0.style.left) + width + "px";
-			}
-		}
-		task.moveDescTask();
-	},
-	adjustPanelTime: function(){
-		var taskItem = this.cTaskItem[0];
-		var width = parseInt(taskItem.style.left) + parseInt(taskItem.firstChild.firstChild.width) + this.ganttChart.panelTimeExpandDelta;
-		width += this.descrTask.offsetWidth;
-		this.ganttChart.adjustPanelTime(width);
-	},
-	getDateOnPosition: function(position){
-		var date = new Date(this.ganttChart.startDate);
-		date.setHours(date.getHours() + (position / this.ganttChart.pixelsPerHour));
-		return date;
-	},
-	moveItem: function(event){
-		var pageX = event.screenX;
-		var posTaskItem = (this.posX + (pageX - this.mouseX));
-		var widthTaskItem = parseInt(this.cTaskItem[0].childNodes[0].firstChild.width);
-		var posTaskItemR = posTaskItem + widthTaskItem;
-		if(this.checkMove){
-			if(((this.minPosXMove <= posTaskItem)) &&
-			((posTaskItemR <= this.maxPosXMove) || (this.maxPosXMove == -1))){
-				this.moveTaskItem(posTaskItem);
-			}
-		}
-	},
-	moveTaskItem: function(posX){
-		var cTask = this.cTaskItem[0];
-		cTask.style.left = posX + "px";
-		cTask.childNodes[1].firstChild.rows[0].cells[0].innerHTML = this.getDateOnPosition(posX).getDate() + '.' + (this.getDateOnPosition(posX).getMonth() + 1) + '.' + this.getDateOnPosition(posX).getUTCFullYear();
-	},
-	resizeItem: function(event){
-		if(this.checkResize){
-			var taskItem = this.cTaskItem[0];
-			var mouseX = event.screenX;
-			var width = (mouseX - this.mouseX);
-			var widthTaskItem = this.taskItemWidth + (mouseX - this.mouseX);
-			if(widthTaskItem >= this.taskItemWidth){
-				if((widthTaskItem <= this.maxWidthResize) || (this.maxWidthResize == -1)){
-					this.resizeTaskItem(widthTaskItem);
-				}else if((this.maxWidthResize != -1) && (widthTaskItem > this.maxWidthResize)){
-					this.resizeTaskItem(this.maxWidthResize);
-				}
-			}else if(widthTaskItem <= this.taskItemWidth){
-				if(widthTaskItem >= this.minWidthResize){
-					this.resizeTaskItem(widthTaskItem);
-				}else if(widthTaskItem < this.minWidthResize){
-					this.resizeTaskItem(this.minWidthResize);
-				}
-			}
-		}
-	},
-	resizeTaskItem: function(width){
-		var taskItem = this.cTaskItem[0];
-		var countHours = Math.round(width / this.ganttChart.pixelsPerWorkHour);
-		var trow = taskItem.childNodes[0].firstChild.rows[0],
-			rc0 = trow.cells[0], rc1 = trow.cells[1];
-		rc0 && (rc0.firstChild.style.width = parseInt(rc0.width) * width / 100 + "px");
-		rc1 && (rc1.firstChild.style.width = parseInt(rc1.width) * width / 100 + "px");
-		taskItem.childNodes[0].firstChild.width = width + "px";
-		taskItem.childNodes[1].firstChild.width = width + "px";
-		//resize info
-		this.cTaskItem[0].childNodes[1].firstChild.rows[0].cells[0].innerHTML = countHours;
-		var tcNode2 = taskItem.childNodes[2];
-		tcNode2.childNodes[0].style.width = width + "px";
-		tcNode2.childNodes[1].style.left = width - 10 + "px";
-	},
-	endResizeItem: function(){
-		var taskItem = this.cTaskItem[0];
-		if((this.taskItemWidth != parseInt(taskItem.childNodes[0].firstChild.width))){
-			var posXL = taskItem.offsetLeft;
-			var posXR = taskItem.offsetLeft + parseInt(taskItem.childNodes[0].firstChild.width);
-			var countHours = Math.round((posXR - posXL) / this.ganttChart.pixelsPerWorkHour);
-			this.taskItem.duration = countHours;
-			if(this.childPredTask.length > 0){
-				for(var j = 0; j < this.childPredTask.length; j++){
-					var cpctItem = this.childPredTask[j].cTaskItem[1],
-						item0 = cpctItem[0], item2 = cpctItem[2], tcNode0 = taskItem.childNodes[0];
-					item2.style.width = parseInt(item2.style.width) - (parseInt(tcNode0.firstChild.width) - this.taskItemWidth) + "px";
-					item2.style.left = parseInt(item2.style.left) + (parseInt(tcNode0.firstChild.width) - this.taskItemWidth) + "px";
-					item0.style.left = parseInt(item0.style.left) + (parseInt(tcNode0.firstChild.width) - this.taskItemWidth) + "px";
-				}
-			}
-		}
-		this.cTaskItem[0].childNodes[1].firstChild.rows[0].cells[0].innerHTML = "";
-		this.checkResize = false;
-		this.taskItemWidth = 0;
-		this.mouseX = 0;
-		this.showDescTask();
-		this.project.shiftProjectItem();
-		this.adjustPanelTime();
-		if(this.ganttChart.resource){
-			this.ganttChart.resource.refresh();
-		}
-	},
-	startMove: function(event){
-		this.moveChild = event.ctrlKey;
-		this.mouseX = event.screenX;
-		this.getMoveInfo();
-		this.checkMove = true;
-		this.hideDescTask();
-	},
-	showDescTask: function(){
-		var posX = (parseInt(this.cTaskItem[0].style.left) + this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + 10);
-		this.descrTask.style.left = posX + "px";
-		this.descrTask.innerHTML = this.objKeyToStr(this.getTaskOwner());
-		this.descrTask.style.visibility = 'visible';
-	},
-	hideDescTask: function(){
-		dojo.style(this.descrTask, "visibility", "hidden");
-	},
-	buildResourceInfo: function(resourceInfo){
-		if(this.childTask && this.childTask.length > 0){
-			for(var i = 0; i < this.childTask.length; i++){
-				var cTask = this.childTask[i];
-				cTask.buildResourceInfo(resourceInfo);
-			}
-		}
-		if(dojo.trim(this.taskItem.taskOwner).length > 0){
-			var owners = this.taskItem.taskOwner.split(";");
-			for(var i = 0; i < owners.length; i++){
-				var o = owners[i];
-				if(dojo.trim(o).length <= 0){
-					continue;
-				}
-				resourceInfo[o] ? (resourceInfo[o].push(this)) : (resourceInfo[o] = [this]);
-			}
-		}
-	},
-	objKeyToStr: function(obj, delm){
-		var returnStr = "";
-		delm = delm || " ";
-		if(obj){
-			for(var key in obj){
-				returnStr += delm + key;
-			}
-		}
-		return returnStr;
-	},
-	getTaskOwner: function(){
-		var tOwner = {};
-		if(dojo.trim(this.taskItem.taskOwner).length > 0){
-			var owners = this.taskItem.taskOwner.split(";");
-			for(var i = 0; i < owners.length; i++){
-				var o = owners[i];
-				tOwner[o] = 1;
-			}
-		}
-		dojo.forEach(this.childTask, function(ctask){
-			dojo.mixin(tOwner, ctask.getTaskOwner());
-		}, this);
-		return tOwner;
-	},
-	moveDescTask: function(){
-		var posX = (parseInt(this.cTaskItem[0].style.left) + this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + 10);
-		this.descrTask.style.left = posX + "px";
-	},
-	getMoveInfo: function(){
-		this.posX = parseInt(this.cTaskItem[0].style.left);
-		var widthTaskItem = parseInt(this.cTaskItem[0].childNodes[0].firstChild.width);
-		var posParentTaskItem = !this.parentTask ? 0 : parseInt(this.parentTask.cTaskItem[0].style.left);
-		var posPredTaskItem = !this.predTask ? 0 : parseInt(this.predTask.cTaskItem[0].style.left) + parseInt(this.predTask.cTaskItem[0].childNodes[0].firstChild.width);
-		var widthParentTaskItem = !this.parentTask ? 0 : parseInt(this.parentTask.cTaskItem[0].childNodes[0].firstChild.width);
-		
-		var childPredPosX = 0;
-		var childParentPosX = 0;
-		var childParentPosXR = 0;
-		if(this.childPredTask.length > 0){
-			var posChildTaskItem = null;
-			dojo.forEach(this.childPredTask, function(cpTask){
-				if((!posChildTaskItem) || ((posChildTaskItem) && (posChildTaskItem > parseInt(cpTask.cTaskItem[0].style.left)))){
-					posChildTaskItem = parseInt(cpTask.cTaskItem[0].style.left);
-				}
-			}, this);
-			childPredPosX = posChildTaskItem;
-		}
-		if(this.childTask.length > 0){
-			var posChildTaskItemR = null;
-			dojo.forEach(this.childTask, function(cTask){
-				if((!posChildTaskItemR) || ((posChildTaskItemR) && (posChildTaskItemR > (parseInt(cTask.cTaskItem[0].style.left))))){
-					posChildTaskItemR = parseInt(cTask.cTaskItem[0].style.left);
-				}
-			}, this);
-			childParentPosXR = posChildTaskItemR;
-			var posChildTaskItem = null;
-			dojo.forEach(this.childTask, function(cTask){
-				if((!posChildTaskItem) || ((posChildTaskItem)
-				&& (posChildTaskItem < (parseInt(cTask.cTaskItem[0].style.left) + parseInt(cTask.cTaskItem[0].firstChild.firstChild.width))))){
-					posChildTaskItem = parseInt(cTask.cTaskItem[0].style.left) + parseInt(cTask.cTaskItem[0].firstChild.firstChild.width);
-				}
-			}, this);
-			childParentPosX = posChildTaskItem;
-		}
-		if(!this.moveChild){
-			if(this.childPredTask.length > 0){
-				if(this.maxPosXMove < childPredPosX) this.maxPosXMove = childPredPosX;
-			}
-			if(this.childTask.length > 0){
-				if((this.childPredTask.length > 0) && (this.maxPosXMove - widthTaskItem) > childParentPosXR){
-					this.maxPosXMove = this.maxPosXMove - ((this.maxPosXMove - widthTaskItem) - childParentPosXR);
-				}
-				if(!(this.childPredTask.length > 0)){
-					this.maxPosXMove = childParentPosXR + widthTaskItem;
-				}
-				this.minPosXMove = (childParentPosX - widthTaskItem);
-			}
-			if(posParentTaskItem > 0){
-				if((!(this.childPredTask.length > 0)) && (this.childTask.length > 0)){
-					if(this.maxPosXMove > posParentTaskItem + widthParentTaskItem){
-						this.maxPosXMove = posParentTaskItem + widthParentTaskItem;
-					}
-				}
-				if(this.minPosXMove <= posParentTaskItem){
-					this.minPosXMove = posParentTaskItem;
-				}
-				if((!(this.childTask.length > 0)) && (!(this.childPredTask.length > 0))){
-					this.maxPosXMove = posParentTaskItem + widthParentTaskItem;
-				}else if((!(this.childTask.length > 0)) && (this.childPredTask.length > 0)){
-					if((posParentTaskItem + widthParentTaskItem) > posPredTaskItem){
-						this.maxPosXMove = childPredPosX;
-					}
-				}
-			}
-			if(posPredTaskItem > 0){
-				if(this.minPosXMove <= posPredTaskItem){
-					this.minPosXMove = posPredTaskItem;
-				}
-			}
-			if((posPredTaskItem == 0) && (posParentTaskItem == 0)){
-				if(this.minPosXMove <= this.ganttChart.initialPos){
-					this.minPosXMove = this.ganttChart.initialPos;
-				}
-			}
-		}else{
-			if((posParentTaskItem > 0) && (posPredTaskItem == 0)){
-				this.minPosXMove = posParentTaskItem;
-				this.maxPosXMove = posParentTaskItem + widthParentTaskItem;
-			}else if((posParentTaskItem == 0) && (posPredTaskItem == 0)){
-				this.minPosXMove = this.ganttChart.initialPos;
-				this.maxPosXMove = -1;
-			}else if((posParentTaskItem > 0) && (posPredTaskItem > 0)){
-				this.minPosXMove = posPredTaskItem;
-				this.maxPosXMove = posParentTaskItem + widthParentTaskItem;
-			}else if((posParentTaskItem == 0) && (posPredTaskItem > 0)){
-				this.minPosXMove = posPredTaskItem;
-				this.maxPosXMove = -1;
-			}
-			if((this.parentTask) && (this.childPredTask.length > 0)){
-				var posChildTaskItem = this.getMaxPosPredChildTaskItem(this);
-				var posParentTaskItem = parseInt(this.parentTask.cTaskItem[0].style.left) + parseInt(this.parentTask.cTaskItem[0].firstChild.firstChild.width);
-				this.maxPosXMove = this.posX + widthTaskItem + posParentTaskItem - posChildTaskItem;
-			}
-		}
-	},
-	startResize: function(event){
-		this.mouseX = event.screenX;
-		this.getResizeInfo();
-		this.hideDescTask();
-		this.checkResize = true;
-		this.taskItemWidth = parseInt(this.cTaskItem[0].firstChild.firstChild.width);
-	},
-	getResizeInfo: function(){
-		var cTask = this.cTaskItem[0];
-		var posParentTaskItem = !this.parentTask ? 0 : parseInt(this.parentTask.cTaskItem[0].style.left);
-		var widthParentTaskItem = !this.parentTask ? 0 : parseInt(this.parentTask.cTaskItem[0].childNodes[0].firstChild.width);
-		var posTaskItem = parseInt(cTask.style.left);
-		var childPredPosX = 0;
-		var childParentPosX = 0;
-		if(this.childPredTask.length > 0){
-			var posChildTaskItem = null;
-			dojo.forEach(this.childPredTask, function(cpTask){
-				if((!posChildTaskItem) || ((posChildTaskItem) && (posChildTaskItem > parseInt(cpTask.cTaskItem[0].style.left)))){
-					posChildTaskItem = parseInt(cpTask.cTaskItem[0].style.left);
-				}
-			}, this);
-			childPredPosX = posChildTaskItem;
-		}
-		if(this.childTask.length > 0){
-			var posChildTaskItem = null;
-			dojo.forEach(this.childTask, function(cTask){
-				if((!posChildTaskItem) || ((posChildTaskItem) && (posChildTaskItem < (parseInt(cTask.cTaskItem[0].style.left) + parseInt(cTask.cTaskItem[0].firstChild.firstChild.width))))){
-					posChildTaskItem = parseInt(cTask.cTaskItem[0].style.left) + parseInt(cTask.cTaskItem[0].firstChild.firstChild.width);
-				}
-			}, this);
-			childParentPosX = posChildTaskItem;
-		}
-		this.minWidthResize = this.ganttChart.pixelsPerDay;
-		if(this.childTask.length > 0){
-			this.minWidthResize = childParentPosX - posTaskItem;
-		}
-		if((this.childPredTask.length > 0) && (!this.parentTask)){
-			this.maxWidthResize = childPredPosX - posTaskItem;
-		}else if((this.childPredTask.length > 0) && (this.parentTask)){
-			var w1 = posParentTaskItem + widthParentTaskItem - posTaskItem;
-			var w2 = childPredPosX - posTaskItem;
-			this.maxWidthResize = Math.min(w1, w2);
-		}else if((this.childPredTask.length == 0) && (this.parentTask)){
-			this.maxWidthResize = posParentTaskItem + widthParentTaskItem - posTaskItem;
-		}
-	},
-	createTaskItem: function(){
-		this.posX = this.ganttChart.getPosOnDate(this.taskItem.startTime);
-		var itemControl = dojo.create("div", {
-			id: this.taskItem.id,
-			className: "ganttTaskItemControl"
-		});
-		dojo.style(itemControl, {
-			left: this.posX + "px",
-			top: this.posY + "px"
-		});
-		var divTaskItem = dojo.create("div", {className: "ganttTaskDivTaskItem"}, itemControl);
-		var tblTaskItem = dojo.create("table", {
-			cellPadding: "0",
-			cellSpacing: "0",
-			width: this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px",
-			className: "ganttTaskTblTaskItem"
-		}, divTaskItem);
-		var rowTblTask = tblTaskItem.insertRow(tblTaskItem.rows.length);
-		if(this.taskItem.percentage != 0){
-			var cellTblTask = dojo.create("td", {
-				height: this.ganttChart.heightTaskItem + "px",
-				width: this.taskItem.percentage + "%"
-			}, rowTblTask);
-			cellTblTask.style.lineHeight = "1px";
-			var imageProgress = dojo.create("div", {
-				className: "ganttImageTaskProgressFilled"
-			}, cellTblTask);
-			dojo.style(imageProgress, {
-				width: (this.taskItem.percentage * this.taskItem.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
-				height: this.ganttChart.heightTaskItem + "px"
-			});
-		}
-		if(this.taskItem.percentage != 100){
-			var cellTblTask = dojo.create("td", {
-				height: this.ganttChart.heightTaskItem + "px",
-				width: (100 - this.taskItem.percentage) + "%"
-			}, rowTblTask);
-			cellTblTask.style.lineHeight = "1px";
-			var imageProgressFill = dojo.create("div", {
-				className: "ganttImageTaskProgressBg"
-			}, cellTblTask);
-			dojo.style(imageProgressFill, {
-				width: ((100 - this.taskItem.percentage) * this.taskItem.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
-				height: this.ganttChart.heightTaskItem + "px"
-			});
-		}
-		if(this.ganttChart.isContentEditable){
-			var divTaskInfo = dojo.create("div", {className: "ganttTaskDivTaskInfo"}, itemControl);
-			var tblTaskInfo = dojo.create("table", {
-				cellPadding: "0",
-				cellSpacing: "0",
-				height: this.ganttChart.heightTaskItem + "px",
-				width: this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px"
-			}, divTaskInfo);
-			var rowTaskInfo = tblTaskInfo.insertRow(0);
-			var cellTaskInfo = dojo.create("td", {
-				align: "center",
-				vAlign: "top",
-				height: this.ganttChart.heightTaskItem + "px",
-				className: "ganttMoveInfo"
-			}, rowTaskInfo);
-			var divTaskName = dojo.create("div", {className: "ganttTaskDivTaskName"}, itemControl);
-			var divMove = dojo.create("div", {}, divTaskName);
-			dojo.create("input", {
-				className: "ganttTaskDivMoveInput",
-				type: "text"
-			}, divMove);
-			dojo.isIE && dojo.style(divMove, {
-				background: "#000000",
-				filter: "alpha(opacity=0)"
-			});
-			dojo.style(divMove, {
-				height: this.ganttChart.heightTaskItem + "px",
-				width: this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px"
-			});
-			//Creation resize area
-			var divResize = dojo.create("div", {className: "ganttTaskDivResize"}, divTaskName);
-			dojo.create("input", {
-				className: "ganttTaskDivResizeInput",
-				type: "text"
-			}, divResize);
-			dojo.style(divResize, {
-				left: (this.taskItem.duration * this.ganttChart.pixelsPerWorkHour - 10) + "px",
-				height: this.ganttChart.heightTaskItem + "px",
-				width: "10px"
-			});
-			this.ganttChart._events.push(
-				dojo.connect(divMove, "onmousedown", this, function(event){
-					//start move
-					this.moveMoveConn = dojo.connect(document, "onmousemove", this, function(e){
-						this.checkMove && this.moveItem(e);
-					});
-					this.moveUpConn = dojo.connect(document, "onmouseup", this, function(e){
-						if(this.checkMove){
-							this.endMove();
-							this.ganttChart.isMoving = false;
-							document.body.releaseCapture && document.body.releaseCapture();
-							dojo.disconnect(this.moveMoveConn);
-							dojo.disconnect(this.moveUpConn);
-						}
-					});
-					this.startMove(event);
-					this.ganttChart.isMoving = true;
-					document.body.setCapture && document.body.setCapture(false);
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divMove, "onmouseover", this, function(event){
-					event.target && (event.target.style.cursor = "move");
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divMove, "onmouseout", this, function(event){
-					event.target.style.cursor = "";
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divResize, "onmousedown", this, function(event){
-					//start resize
-					this.resizeMoveConn = dojo.connect(document, "onmousemove", this, function(e){
-						this.checkResize && this.resizeItem(e);
-					});
-					this.resizeUpConn = dojo.connect(document, "onmouseup", this, function(e){
-						if(this.checkResize){
-							this.endResizeItem();
-							this.ganttChart.isResizing = false;
-							document.body.releaseCapture && document.body.releaseCapture();
-							dojo.disconnect(this.resizeMoveConn);
-							dojo.disconnect(this.resizeUpConn);
-						}
-					});
-					this.startResize(event);
-					this.ganttChart.isResizing = true;
-					document.body.setCapture && document.body.setCapture(false);
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divResize, "onmouseover", this, function(event){
-					(!this.ganttChart.isMoving) && (!this.ganttChart.isResizing) && event.target && (event.target.style.cursor = "e-resize");
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divResize, "onmouseout", this, function(event){
-					!this.checkResize && event.target && (event.target.style.cursor = "");
-				})
-			);
-		}
-		return itemControl;
-	},
-	createTaskNameItem: function(){
-		var divName = dojo.create("div", {
-			id: this.taskItem.id,
-			className: "ganttTaskTaskNameItem",
-			title: this.taskItem.name + ", id: " + this.taskItem.id + " ",
-			innerHTML: this.taskItem.name
-		});
-		dojo.style(divName, "top", this.posY + "px");
-		dojo.attr(divName, "tabIndex", 0);
-		if(this.ganttChart.isShowConMenu){
-			this.ganttChart._events.push(
-				dojo.connect(divName, "onmouseover", this, function(event){
-					dojo.addClass(divName, "ganttTaskTaskNameItemHover");
-					clearTimeout(this.ganttChart.menuTimer);
-					this.ganttChart.tabMenu.clear();
-					this.ganttChart.tabMenu.show(event.target, this);
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divName, "onkeydown", this, function(event){
-					if(event.keyCode == dojo.keys.ENTER){
-						this.ganttChart.tabMenu.clear();
-						this.ganttChart.tabMenu.show(event.target, this);
-					}
-					if(this.ganttChart.tabMenu.isShow && (event.keyCode == dojo.keys.LEFT_ARROW || event.keyCode == dojo.keys.RIGHT_ARROW)){
-						dijit.focus(this.ganttChart.tabMenu.menuPanel.firstChild.rows[0].cells[0]);
-					}
-					if(this.ganttChart.tabMenu.isShow && event.keyCode == dojo.keys.ESCAPE){
-						this.ganttChart.tabMenu.hide();
-					}
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(divName, "onmouseout", this, function(){
-					dojo.removeClass(divName, "ganttTaskTaskNameItemHover");
-					clearTimeout(this.ganttChart.menuTimer);
-					this.ganttChart.menuTimer = setTimeout(dojo.hitch(this, function(){
-						this.ganttChart.tabMenu.hide();
-					}), 200);
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(this.ganttChart.tabMenu.menuPanel, "onmouseover", this, function(){
-					clearTimeout(this.ganttChart.menuTimer);
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(this.ganttChart.tabMenu.menuPanel, "onkeydown", this, function(event){
-					if(this.ganttChart.tabMenu.isShow && event.keyCode == dojo.keys.ESCAPE){
-						this.ganttChart.tabMenu.hide();
-					}
-				})
-			);
-			this.ganttChart._events.push(
-				dojo.connect(this.ganttChart.tabMenu.menuPanel, "onmouseout", this, function(){
-					clearTimeout(this.ganttChart.menuTimer);
-					this.ganttChart.menuTimer = setTimeout(dojo.hitch(this, function(){
-						this.ganttChart.tabMenu.hide();
-					}), 200);
-				})
-			);
-		}
-		return divName;
-	},
-	createTaskDescItem: function(){
-		var posX = (this.posX + this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + 10);
-		var divDesc = dojo.create("div", {
-			innerHTML: this.objKeyToStr(this.getTaskOwner()),
-			className: "ganttTaskDescTask"
-		});
-		dojo.style(divDesc, {
-			left: posX + "px",
-			top: this.posY + "px"
-		});
-		return this.descrTask = divDesc;
-	},
-	checkWidthTaskNameItem: function(){
-		if(this.cTaskNameItem[0].offsetWidth + this.cTaskNameItem[0].offsetLeft > this.ganttChart.maxWidthTaskNames){
-			var width = this.cTaskNameItem[0].offsetWidth + this.cTaskNameItem[0].offsetLeft - this.ganttChart.maxWidthTaskNames;
-			var countChar = Math.round(width / (this.cTaskNameItem[0].offsetWidth / this.cTaskNameItem[0].firstChild.length));
-			var tName = this.taskItem.name.substring(0, this.cTaskNameItem[0].firstChild.length - countChar - 3);
-			tName += "...";
-			this.cTaskNameItem[0].innerHTML = tName;
-		}
-	},
-	refreshTaskItem: function(itemControl){
-		this.posX = this.ganttChart.getPosOnDate(this.taskItem.startTime);
-		dojo.style(itemControl, {
-			"left": this.posX + "px"
-		});
-		var divTaskItem = itemControl.childNodes[0];
-		var tblTaskItem = divTaskItem.firstChild;
-		tblTaskItem.width = (!this.taskItem.duration ? 1 : this.taskItem.duration * this.ganttChart.pixelsPerWorkHour) + "px";
-		var rowTblTask = tblTaskItem.rows[0];
-		if(this.taskItem.percentage != 0){
-			var cellTblTask = rowTblTask.firstChild;
-			cellTblTask.height = this.ganttChart.heightTaskItem + "px";
-			cellTblTask.width = this.taskItem.percentage + "%";
-			cellTblTask.style.lineHeight = "1px";
-			var imageProgress = cellTblTask.firstChild;
-			dojo.style(imageProgress, {
-				width: (!this.taskItem.duration ? 1 : (this.taskItem.percentage * this.taskItem.duration * this.ganttChart.pixelsPerWorkHour / 100)) + "px",
-				height: this.ganttChart.heightTaskItem + "px"
-			});
-		}
-		if(this.taskItem.percentage != 100){
-			var cellTblTask = rowTblTask.lastChild;
-			cellTblTask.height = this.ganttChart.heightTaskItem + "px";
-			cellTblTask.width = (100 - this.taskItem.percentage) + "%";
-			cellTblTask.style.lineHeight = "1px";
-			var imageProgressFill = cellTblTask.firstChild;
-			dojo.style(imageProgressFill, {
-				width: (!this.taskItem.duration ? 1 : ((100 - this.taskItem.percentage) * this.taskItem.duration * this.ganttChart.pixelsPerWorkHour / 100)) + "px",
-				height: this.ganttChart.heightTaskItem + "px"
-			});
-		}
-		if(this.ganttChart.isContentEditable){
-			var divTaskInfo = itemControl.childNodes[1];
-			var tblTaskInfo = divTaskInfo.firstChild;
-			tblTaskInfo.height = this.ganttChart.heightTaskItem + "px";
-			tblTaskInfo.width = (!this.taskItem.duration ? 1 : (this.taskItem.duration * this.ganttChart.pixelsPerWorkHour)) + "px";
-			var rowTaskInfo = tblTaskInfo.rows[0];
-			var cellTaskInfo = rowTaskInfo.firstChild;
-			cellTaskInfo.height = this.ganttChart.heightTaskItem + "px";
-			var divTaskName = itemControl.childNodes[2];
-			var divMove = divTaskName.firstChild;
-			divMove.style.height = this.ganttChart.heightTaskItem + "px";
-			divMove.style.width = (!this.taskItem.duration ? 1 : (this.taskItem.duration * this.ganttChart.pixelsPerWorkHour)) + "px";
-			//Creation resize area
-			var divResize = divTaskName.lastChild;
-			dojo.style(divResize, {
-				"left": (this.taskItem.duration * this.ganttChart.pixelsPerWorkHour - 10) + "px"
-			});
-			divResize.style.height = this.ganttChart.heightTaskItem + "px";
-			divResize.style.width = "10px";
-		}
-		return itemControl;
-	},
-	refreshTaskDesc: function(divDesc){
-		var posX = (this.posX + this.taskItem.duration * this.ganttChart.pixelsPerWorkHour + 10);
-		dojo.style(divDesc, {
-			"left": posX + "px"
-		});
-		return divDesc;
-	},
-	refreshConnectingLinesDS: function(arrLines){
-		var arrowImg = arrLines[1];
-		var lineVerticalRight = arrLines[0];
-		//horizontal line
-		var lineHorizontal = arrLines[2];
-		var posXPreviousTask = dojo.style(this.predTask.cTaskItem[0], "left");
-		var posYPreviousTask = dojo.style(this.predTask.cTaskItem[0], "top");
-		var posXChildTask = dojo.style(this.cTaskItem[0], "left");
-		var posYChildTask = this.posY + 2;
-		//width task item
-		var widthChildTask = parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
-		var widthPreviousTask = parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
-		if(posYPreviousTask < posYChildTask){
-			dojo.style(lineVerticalRight, {
-				"height": (posYChildTask - this.ganttChart.heightTaskItem / 2 - posYPreviousTask - 3) + "px",
-				"left": (posXPreviousTask + widthPreviousTask - 20) + "px"
-			});
-			dojo.style(lineHorizontal, {
-				"width": (15 + (posXChildTask - (widthPreviousTask + posXPreviousTask))) + "px",
-				"left": (posXPreviousTask + widthPreviousTask - 20) + "px"
-			});
-			
-			dojo.style(arrowImg, {
-				"left": (posXChildTask - 7) + "px"
-			});
-		}else{
-			dojo.style(lineVerticalRight, {
-				"height": (posYPreviousTask + 2 - posYChildTask) + "px",
-				"left": (posXPreviousTask + widthPreviousTask - 20) + "px"
-			});
-			dojo.style(lineHorizontal, {
-				"width": (15 + (posXChildTask - (widthPreviousTask + posXPreviousTask))) + "px",
-				"left": (posXPreviousTask + widthPreviousTask - 20) + "px"
-			});
-			dojo.style(arrowImg, {
-				"left": (posXChildTask - 7) + "px"
-			});
-		}
-		return arrLines;
-	},
-	postLoadData: function(){
-		//TODO e.g. task relative info...
-	},
-	refresh: function(){
-		if(this.childTask && this.childTask.length > 0){
-			dojo.forEach(this.childTask, function(cTask){
-				cTask.refresh();
-			}, this);
-		}
-		//creation task item
-		this.refreshTaskItem(this.cTaskItem[0]);
-		this.refreshTaskDesc(this.cTaskItem[0].nextSibling);
-		//Create Connecting Lines
-		var arrConnectingLines = [];
-		if(this.taskItem.previousTask && this.predTask){
-			this.refreshConnectingLinesDS(this.cTaskItem[1]);
-		}
-		return this;
-	},
-	create: function(){
-		var containerTasks = this.ganttChart.contentData.firstChild;
-		var containerNames = this.ganttChart.panelNames.firstChild;
-		var previousTask = this.taskItem.previousTask;
-		var parentTask = this.taskItem.parentTask;
-		var isCParentTask = (this.taskItem.cldTasks.length > 0) ? true : false;
-		this.cTaskItem = [];
-		this.cTaskNameItem = [];
-		//creation arrTasks
-		if(!parentTask){
-			if(this.taskItem.previousParentTask){
-				this.previousParentTask = this.project.getTaskById(this.taskItem.previousParentTask.id);
-				var lastChildTask = this.ganttChart.getLastChildTask(this.previousParentTask);
-				this.posY = parseInt(lastChildTask.cTaskItem[0].style.top)
-					+ this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
-				this.previousParentTask.nextParentTask = this;
-			}else{
-				this.posY = parseInt(this.project.projectItem[0].style.top)
-					+ this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
-			}
-		}
-		if(parentTask){
-			var task = this.project.getTaskById(this.taskItem.parentTask.id);
-			this.parentTask = task;
-			
-			if(this.taskItem.previousChildTask){
-				this.previousChildTask = this.project.getTaskById(this.taskItem.previousChildTask.id);
-				var lastChildTask = this.ganttChart.getLastChildTask(this.previousChildTask);
-				this.posY = dojo.style(lastChildTask.cTaskItem[0], "top")
-					+ this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
-				this.previousChildTask.nextChildTask = this;
-			}else{
-				this.posY = dojo.style(task.cTaskItem[0], "top")
-					+ this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
-			}
-			task.childTask.push(this);
-		}
-		if(previousTask){
-			var task = this.project.getTaskById(previousTask.id);
-			this.predTask = task;
-			task.childPredTask.push(this);
-		}
-		//creation task item
-		this.cTaskItem.push(this.createTaskItem());
-		containerTasks.appendChild(this.cTaskItem[0]);
-		if(this.ganttChart.panelNames){
-			this.cTaskNameItem.push(this.createTaskNameItem());
-			this.ganttChart.panelNames.firstChild.appendChild(this.cTaskNameItem[0]);
-		}
-		containerTasks.appendChild(this.createTaskDescItem());
-		//Create Connecting Lines
-		var arrConnectingLines = [];
-		if(previousTask){
-			arrConnectingLines = this.createConnectingLinesDS();
-		}
-		this.cTaskItem.push(arrConnectingLines);
-		if(this.ganttChart.panelNames){
-			//Create Connecting Lines
-			var arrConnectingLinesNames = [];
-			if(parentTask){
-				this.cTaskNameItem[0].style.left = dojo.style(this.parentTask.cTaskNameItem[0], "left") + 15 + "px";
-				arrConnectingLinesNames = this.createConnectingLinesPN();
-			}
-			this.checkWidthTaskNameItem();
-			//Identifier
-			this.checkPosition();
-			var treeImg = null;
-			if(isCParentTask){
-				treeImg = this.createTreeImg();
-			}
-			this.cTaskNameItem.push(arrConnectingLinesNames);
-			this.cTaskNameItem.push(treeImg);
-		}
-		this.adjustPanelTime();
-		return this;
-	},
-	checkPosition: function(){
-		//task name position: check Task Identifier
-		if(!this.ganttChart.withTaskId){
-			return;
-		}
-		var pos = dojo.coords(this.cTaskNameItem[0], true);
-		if(this.taskIdentifier){
-			if(this.childTask && this.childTask.length > 0){
-				dojo.forEach(this.childTask, function(cTask){
-					cTask.checkPosition();
-				}, this);
-			}
-			dojo.style(this.taskIdentifier, {
-				"left": (pos.l + pos.w + 4) + "px",
-				"top": (pos.t - 1) + "px"
-			});
-		}else{
-			this.taskIdentifier = dojo.create("div", {
-				id: "TaskId_" + this.taskItem.id,
-				className: "ganttTaskIdentifier",
-				title: this.taskItem.id,
-				innerHTML: this.taskItem.id
-			}, this.cTaskNameItem[0].parentNode);
-			dojo.style(this.taskIdentifier, {
-				left: (pos.l + pos.w + 4) + "px",
-				top: (pos.t - 1) + "px"
-			});
-		}
-	},
-	createTreeImg: function(){
-		var treeImg = dojo.create("div", {
-			id: this.taskItem.id,
-			className: "ganttImageTreeCollapse"
-		});
-		dojo.attr(treeImg, "tabIndex", 0);
-		dojo.forEach(["onclick", "onkeydown"], function(e){
-			this.ganttChart._events.push(
-				dojo.connect(treeImg, e, this, function(evt){
-					if(e == "onkeydown" && evt.keyCode != dojo.keys.ENTER){ return; }
-					if(this.isExpanded){
-						dojo.removeClass(treeImg, "ganttImageTreeCollapse");
-						dojo.addClass(treeImg, "ganttImageTreeExpand");
-						this.isExpanded = false;
-						this.hideChildTasks(this);
-						this.shiftCurrentTasks(this, -this.hideTasksHeight);
-						this.ganttChart.checkPosition();
-					}else{
-						dojo.removeClass(treeImg, "ganttImageTreeExpand");
-						dojo.addClass(treeImg, "ganttImageTreeCollapse");
-						this.isExpanded = true;
-						this.shiftCurrentTasks(this, this.hideTasksHeight);
-						this.showChildTasks(this, true);
-						this.hideTasksHeight = 0;
-						this.ganttChart.checkPosition();
-					}
-				})
-			);
-		}, this);
-		this.ganttChart.panelNames.firstChild.appendChild(treeImg);
-		dojo.addClass(treeImg, "ganttTaskTreeImage");
-		dojo.style(treeImg, {
-			left: (dojo.style(this.cTaskNameItem[0], "left") - 12) + "px",
-			top: (dojo.style(this.cTaskNameItem[0], "top") + 3) + "px"
-		});
-		return treeImg;
-	},
-	setPreviousTask: function(previousTaskId){
-		if(previousTaskId == ""){
-			this.clearPredTask();
-		}else{
-			var task = this.taskItem;
-			if(task.id == previousTaskId){
-				return false;
-			}
-			var predTaskObj = this.project.getTaskById(previousTaskId);
-			if(!predTaskObj){
-				return false;
-			}
-			var predTask = predTaskObj.taskItem;
-			var a1 = predTask.parentTask == null, a2 = task.parentTask == null;
-			if(a1 && !a2 || !a1 && a2 || !a1 && !a2 && (predTask.parentTask.id != task.parentTask.id)){
-				return false;
-			}
-			//check time
-			var startTime = task.startTime.getTime(),
-				pest = predTask.startTime.getTime(),
-				pdur = predTask.duration * 24 * 60 * 60 * 1000 / predTaskObj.ganttChart.hsPerDay;
-			if((pest+pdur) > startTime){
-				return false;
-			}
-			// remove current connection
-			this.clearPredTask();
-			if(!this.ganttChart.checkPosPreviousTask(predTask, task)){
-				this.ganttChart.correctPosPreviousTask(predTask, task, this);
-			}
-			task.previousTaskId = previousTaskId;
-			task.previousTask = predTask;
-			this.predTask = predTaskObj;
-			predTaskObj.childPredTask.push(this);
-			this.cTaskItem[1] = this.createConnectingLinesDS();
-		}
-		return true;
-	},
-	clearPredTask: function(){
-		if(this.predTask){
-			var ch = this.predTask.childPredTask;
-			for(var i = 0; i < ch.length; i++){
-				if(ch[i] == this){
-					ch.splice(i, 1);
-					break;
-				}
-			}
-			for(var i = 0; i < this.cTaskItem[1].length; i++){
-				this.cTaskItem[1][i].parentNode.removeChild(this.cTaskItem[1][i]);
-			}
-			this.cTaskItem[1] = [];
-			this.taskItem.previousTaskId = null;
-			this.taskItem.previousTask = null;
-			this.predTask = null;
-		}
-	},
-	setStartTime: function(startTime, shiftChild){
-		this.moveChild = shiftChild;
-		this.getMoveInfo();
-		var pos = this.ganttChart.getPosOnDate(startTime);
-		if((parseInt(this.cTaskItem[0].firstChild.firstChild.width) + pos > this.maxPosXMove) && (this.maxPosXMove != -1)){
-			this.maxPosXMove = -1;
-			this.minPosXMove = -1;
-			return false;
-		}
-		if(pos < this.minPosXMove){
-			this.maxPosXMove = -1;
-			this.minPosXMove = -1;
-			return false;
-		}
-		this.cTaskItem[0].style.left = pos;
-		var width = pos - this.posX;
-		this.moveCurrentTaskItem(width, shiftChild);
-		this.project.shiftProjectItem();
-		this.descrTask.innerHTML = this.objKeyToStr(this.getTaskOwner());
-		this.adjustPanelTime();
-		this.posX = 0;
-		this.maxPosXMove = -1;
-		this.minPosXMove = -1;
-		return true;
-	},
-	setDuration: function(duration){
-		this.getResizeInfo();
-		var width = this.ganttChart.getWidthOnDuration(duration);
-		if((width > this.maxWidthResize) && (this.maxWidthResize != -1)){
-			return false;
-		}else if(width < this.minWidthResize){
-			return false;
-		}else{
-			this.taskItemWidth = parseInt(this.cTaskItem[0].firstChild.firstChild.width);
-			this.resizeTaskItem(width);
-			this.endResizeItem();
-			this.descrTask.innerHTML = this.objKeyToStr(this.getTaskOwner());
-			return true;
-		}
-	},
-	setTaskOwner: function(owner){
-		owner = (owner == null || owner == undefined) ? "" : owner;
-		this.taskItem.taskOwner = owner;
-		this.descrTask.innerHTML = this.objKeyToStr(this.getTaskOwner());
-		return true;
-	},
-	setPercentCompleted: function(percentage){
-		percentage = parseInt(percentage);
-		if(isNaN(percentage) || percentage > 100 || percentage < 0){
-			return false;
-		}
-		var trow = this.cTaskItem[0].childNodes[0].firstChild.rows[0],
-			rc0 = trow.cells[0], rc1 = trow.cells[1];
-		if((percentage != 0) && (percentage != 100)){
-			if((this.taskItem.percentage != 0) && (this.taskItem.percentage != 100)){
-				rc0.width = percentage + "%";
-				rc1.width = 100 - percentage + "%";
-			}else if((this.taskItem.percentage == 0) || (this.taskItem.percentage == 100)){
-				rc0.parentNode.removeChild(rc0);
-				var cellTblTask = dojo.create("td", {
-					height: this.ganttChart.heightTaskItem + "px",
-					width: percentage + "%"
-				}, trow);
-				cellTblTask.style.lineHeight = "1px";
-				var imageProgressFill = dojo.create("div", {
-					className: "ganttImageTaskProgressFilled"
-				}, cellTblTask);
-				dojo.style(imageProgressFill, {
-					width: (percentage * this.taskItem.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
-					height: this.ganttChart.heightTaskItem + "px"
-				});
-				
-				cellTblTask = dojo.create("td", {
-					height: this.ganttChart.heightTaskItem + "px",
-					width: (100 - percentage) + "%"
-				}, trow);
-				cellTblTask.style.lineHeight = "1px";
-				imageProgressFill = dojo.create("div", {
-					className: "ganttImageTaskProgressBg"
-				}, cellTblTask);
-				dojo.style(imageProgressFill, {
-					width: ((100 - percentage) * this.taskItem.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
-					height: this.ganttChart.heightTaskItem + "px"
-				});
-			}
-		}else if(percentage == 0){
-			if((this.taskItem.percentage != 0) && (this.taskItem.percentage != 100)){
-				rc0.parentNode.removeChild(rc0);
-				rc1.width = 100 + "%";
-			}else{
-				dojo.removeClass(rc0.firstChild, "ganttImageTaskProgressFilled");
-				dojo.addClass(rc0.firstChild, "ganttImageTaskProgressBg");
-			}
-		}else if(percentage == 100){
-			if((this.taskItem.percentage != 0) && (this.taskItem.percentage != 100)){
-				rc1.parentNode.removeChild(rc1);
-				rc0.width = 100 + "%";
-			}else{
-				dojo.removeClass(rc0.firstChild, "ganttImageTaskProgressBg");
-				dojo.addClass(rc0.firstChild, "ganttImageTaskProgressFilled");
-			}
-		}
-		this.taskItem.percentage = percentage;
-		this.taskItemWidth = parseInt(this.cTaskItem[0].firstChild.firstChild.width);
-		this.resizeTaskItem(this.taskItemWidth);
-		this.endResizeItem();
-		this.descrTask.innerHTML = this.objKeyToStr(this.getTaskOwner());
-		return true;
-	},
-	setName: function(name){
-		if(name){
-			this.taskItem.name = name;
-			this.cTaskNameItem[0].innerHTML = name;
-			this.cTaskNameItem[0].title = name;
-			this.checkWidthTaskNameItem();
-			this.checkPosition();
-			this.descrTask.innerHTML = this.objKeyToStr(this.getTaskOwner());
-			this.adjustPanelTime();
-		}
-	}
+define(["dojo","dijit","dojox","dojo/date/locale","dijit/focus"],function(_1,_2,_3){
+_1.getObject("dojox.gantt.GanttTaskItem",1);
+_1.declare("dojox.gantt.GanttTaskControl",null,{constructor:function(_4,_5,_6){
+this.ganttChart=_6;
+this.project=_5;
+this.taskItem=_4;
+this.checkMove=false;
+this.checkResize=false;
+this.moveChild=false;
+this.maxPosXMove=-1;
+this.minPosXMove=-1;
+this.maxWidthResize=-1;
+this.minWidthResize=-1;
+this.posX=0;
+this.posY=0;
+this.mouseX=0;
+this.taskItemWidth=0;
+this.isHide=false;
+this.hideTasksHeight=0;
+this.isExpanded=true;
+this.descrTask=null;
+this.cTaskItem=null;
+this.cTaskNameItem=null;
+this.parentTask=null;
+this.predTask=null;
+this.childTask=[];
+this.childPredTask=[];
+this.nextChildTask=null;
+this.previousChildTask=null;
+this.nextParentTask=null;
+this.previousParentTask=null;
+},createConnectingLinesPN:function(){
+var _7=[];
+var _8=_1.create("div",{innerHTML:"&nbsp;",className:"ganttTaskLineVerticalLeft"},this.ganttChart.panelNames.firstChild);
+var _9=this.cTaskNameItem[0],_a=this.parentTask.cTaskNameItem[0];
+_1.style(_8,{height:(_9.offsetTop-_a.offsetTop)+"px",top:(_a.offsetTop+5)+"px",left:(_a.offsetLeft-9)+"px"});
+var _b=_1.create("div",{noShade:true,color:"#000000",className:"ganttTaskLineHorizontalLeft"},this.ganttChart.panelNames.firstChild);
+_1.style(_b,{left:(_a.offsetLeft-9)+"px",top:(_9.offsetTop+5)+"px",height:"1px",width:(_9.offsetLeft-_a.offsetLeft+4)+"px"});
+_7.push(_8);
+_7.push(_b);
+return _7;
+},createConnectingLinesDS:function(){
+var _c=this.ganttChart.contentData.firstChild;
+var _d=[];
+var _e=new Image();
+var _e=_1.create("div",{className:"ganttImageArrow"});
+var _f=document.createElement("div");
+var _10=document.createElement("div");
+var _11=_1.style(this.predTask.cTaskItem[0],"left");
+var _12=_1.style(this.predTask.cTaskItem[0],"top");
+var _13=_1.style(this.cTaskItem[0],"left");
+var _14=this.posY+2;
+var _15=parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
+var _16=parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
+if(_12<_14){
+_1.addClass(_f,"ganttTaskLineVerticalRight");
+_1.style(_f,{height:(_14-this.ganttChart.heightTaskItem/2-_12-3)+"px",width:"1px",left:(_11+_16-20)+"px",top:(_12+this.ganttChart.heightTaskItem)+"px"});
+_1.addClass(_10,"ganttTaskLineHorizontal");
+_1.style(_10,{width:(15+(_13-(_16+_11)))+"px",left:(_11+_16-20)+"px",top:(_14+2)+"px"});
+_1.addClass(_e,"ganttTaskArrowImg");
+_1.style(_e,{left:(_13-7)+"px",top:(_14-1)+"px"});
+}else{
+_1.addClass(_f,"ganttTaskLineVerticalRightPlus");
+_1.style(_f,{height:(_12+2-_14)+"px",width:"1px",left:(_11+_16-20)+"px",top:(_14+2)+"px"});
+_1.addClass(_10,"ganttTaskLineHorizontalPlus");
+_1.style(_10,{width:(15+(_13-(_16+_11)))+"px",left:(_11+_16-20)+"px",top:(_14+2)+"px"});
+_1.addClass(_e,"ganttTaskArrowImgPlus");
+_1.style(_e,{left:(_13-7)+"px",top:(_14-1)+"px"});
+}
+_c.appendChild(_f);
+_c.appendChild(_10);
+_c.appendChild(_e);
+_d.push(_f);
+_d.push(_e);
+_d.push(_10);
+return _d;
+},showChildTasks:function(_17,_18){
+if(_18){
+for(var i=0;i<_17.childTask.length;i++){
+var _19=_17.childTask[i],_1a=_19.cTaskItem[0],_1b=_19.cTaskNameItem[0],_1c=_19.cTaskItem[1],_1d=_19.cTaskNameItem[1],_1e=_19.cTaskItem[2],_1f=_19.cTaskNameItem[2];
+if(_1a.style.display=="none"){
+_1a.style.display="inline";
+_1b.style.display="inline";
+_19.showDescTask();
+_17.isHide=false;
+if(_1f){
+_1f.style.display="inline";
+_18=_19.isExpanded;
+}
+for(var k=0;k<_1c.length;k++){
+_1c[k].style.display="inline";
+}
+for(var k=0;k<_1d.length;k++){
+_1d[k].style.display="inline";
+}
+(_19.taskIdentifier)&&(_19.taskIdentifier.style.display="inline");
+this.hideTasksHeight+=this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;
+if(_19.childTask.length>0){
+this.showChildTasks(_19,_18);
+}
+}
+}
+}
+},hideChildTasks:function(_20){
+for(var i=0;i<_20.childTask.length;i++){
+var _21=_20.childTask[i],_22=_21.cTaskItem[0],_23=_21.cTaskNameItem[0],_24=_21.cTaskItem[1],_25=_21.cTaskNameItem[1],_26=_21.cTaskItem[2],_27=_21.cTaskNameItem[2];
+if(_22.style.display!="none"){
+_22.style.display="none";
+_23.style.display="none";
+_21.hideDescTask();
+_20.isHide=true;
+if(_27){
+_27.style.display="none";
+}
+for(var k=0;k<_24.length;k++){
+_24[k].style.display="none";
+}
+for(var k=0;k<_25.length;k++){
+_25[k].style.display="none";
+}
+(_21.taskIdentifier)&&(_21.taskIdentifier.style.display="none");
+this.hideTasksHeight+=(this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra);
+if(_21.childTask.length>0){
+this.hideChildTasks(_21);
+}
+}
+}
+},shiftCurrentTasks:function(_28,_29){
+this.shiftNextTask(this,_29);
+_28.project.shiftNextProject(_28.project,_29);
+},shiftTask:function(_2a,_2b){
+_2a.posY=_2a.posY+_2b;
+var _2c=_2a.cTaskItem[0],_2d=_2a.cTaskNameItem[0],_2e=_2a.cTaskItem[1],_2f=_2a.cTaskNameItem[1],_30=_2a.cTaskItem[2],_31=_2a.cTaskNameItem[2];
+_2d.style.top=parseInt(_2d.style.top)+_2b+"px";
+if(_31){
+_31.style.top=parseInt(_31.style.top)+_2b+"px";
+}
+if(_2a.parentTask){
+if(parseInt(this.cTaskNameItem[0].style.top)>parseInt(_2a.parentTask.cTaskNameItem[0].style.top)&&(_2f[0].style.display!="none")){
+_2f[0].style.height=parseInt(_2f[0].style.height)+_2b+"px";
+}else{
+_2f[0].style.top=parseInt(_2f[0].style.top)+_2b+"px";
+}
+_2f[1].style.top=parseInt(_2f[1].style.top)+_2b+"px";
+}
+_2c.style.top=parseInt(_2c.style.top)+_2b+"px";
+_2a.descrTask.style.top=parseInt(_2a.descrTask.style.top)+_2b+"px";
+if(_2a.predTask){
+if(((parseInt(this.cTaskItem[0].style.top)>parseInt(_2a.predTask.cTaskItem[0].style.top))||(this.cTaskItem[0].id==_2a.predTask.taskItem.id))&&_2e[0].style.display!="none"){
+_2e[0].style.height=parseInt(_2e[0].style.height)+_2b+"px";
+}else{
+_2e[0].style.top=parseInt(_2e[0].style.top)+_2b+"px";
+}
+_2e[1].style.top=parseInt(_2e[1].style.top)+_2b+"px";
+_2e[2].style.top=parseInt(_2e[2].style.top)+_2b+"px";
+}
+},shiftNextTask:function(_32,_33){
+if(_32.nextChildTask){
+this.shiftTask(_32.nextChildTask,_33);
+this.shiftChildTask(_32.nextChildTask,_33);
+this.shiftNextTask(_32.nextChildTask,_33);
+}else{
+if(_32.parentTask){
+this.shiftNextTask(_32.parentTask,_33);
+}else{
+if(_32.nextParentTask){
+this.shiftTask(_32.nextParentTask,_33);
+this.shiftChildTask(_32.nextParentTask,_33);
+this.shiftNextTask(_32.nextParentTask,_33);
+}
+}
+}
+},shiftChildTask:function(_34,_35){
+_1.forEach(_34.childTask,function(_36){
+this.shiftTask(_36,_35);
+if(_36.childTask.length>0){
+this.shiftChildTask(_36,_35);
+}
+},this);
+},endMove:function(){
+var _37=this.cTaskItem[0];
+var _38=_1.style(_37,"left")-this.posX;
+var _39=this.getDateOnPosition(_1.style(_37,"left"));
+_39=this.checkPos(_39);
+if(this.checkMove){
+_38=this.ganttChart.getPosOnDate(_39)-this.posX;
+this.moveCurrentTaskItem(_38,this.moveChild);
+this.project.shiftProjectItem();
+}
+this.checkMove=false;
+this.posX=0;
+this.maxPosXMove=-1;
+this.minPosXMove=-1;
+_37.childNodes[1].firstChild.rows[0].cells[0].innerHTML="";
+this.adjustPanelTime();
+if(this.ganttChart.resource){
+this.ganttChart.resource.refresh();
+}
+},checkPos:function(_3a){
+var _3b=this.cTaskItem[0];
+var h=_3a.getHours();
+if(h>=12){
+_3a.setDate(_3a.getDate()+1);
+_3a.setHours(0);
+if((parseInt(_3b.firstChild.firstChild.width)+this.ganttChart.getPosOnDate(_3a)>this.maxPosXMove)&&(this.maxPosXMove!=-1)){
+_3a.setDate(_3a.getDate()-1);
+_3a.setHours(0);
+}
+}else{
+if((h<12)&&(h!=0)){
+_3a.setHours(0);
+if((this.ganttChart.getPosOnDate(_3a)<this.minPosXMove)){
+_3a.setDate(_3a.getDate()+1);
+}
+}
+}
+_3b.style.left=this.ganttChart.getPosOnDate(_3a)+"px";
+return _3a;
+},getMaxPosPredChildTaskItem:function(){
+var _3c=0;
+var _3d=0;
+for(var i=0;i<this.childPredTask.length;i++){
+_3d=this.getMaxPosPredChildTaskItemInTree(this.childPredTask[i]);
+if(_3d>_3c){
+_3c=_3d;
+}
+}
+return _3c;
+},getMaxPosPredChildTaskItemInTree:function(_3e){
+var _3f=_3e.cTaskItem[0];
+var _40=parseInt(_3f.firstChild.firstChild.width)+_1.style(_3f,"left");
+var _41=0;
+var _42=0;
+_1.forEach(_3e.childPredTask,function(_43){
+_42=this.getMaxPosPredChildTaskItemInTree(_43);
+if(_42>_41){
+_41=_42;
+}
+},this);
+return _41>_40?_41:_40;
+},moveCurrentTaskItem:function(_44,_45){
+var _46=this.cTaskItem[0];
+this.taskItem.startTime=new Date(this.ganttChart.startDate);
+this.taskItem.startTime.setHours(this.taskItem.startTime.getHours()+(parseInt(_46.style.left)/this.ganttChart.pixelsPerHour));
+this.showDescTask();
+var _47=this.cTaskItem[1];
+if(_47.length>0){
+_47[2].style.width=parseInt(_47[2].style.width)+_44+"px";
+_47[1].style.left=parseInt(_47[1].style.left)+_44+"px";
+}
+_1.forEach(this.childTask,function(_48){
+if(!_48.predTask){
+this.moveChildTaskItems(_48,_44,_45);
+}
+},this);
+_1.forEach(this.childPredTask,function(_49){
+this.moveChildTaskItems(_49,_44,_45);
+},this);
+},moveChildTaskItems:function(_4a,_4b,_4c){
+var _4d=_4a.cTaskItem[0];
+if(_4c){
+_4d.style.left=parseInt(_4d.style.left)+_4b+"px";
+_4a.adjustPanelTime();
+_4a.taskItem.startTime=new Date(this.ganttChart.startDate);
+_4a.taskItem.startTime.setHours(_4a.taskItem.startTime.getHours()+(parseInt(_4d.style.left)/this.ganttChart.pixelsPerHour));
+var _4e=_4a.cTaskItem[1];
+_1.forEach(_4e,function(_4f){
+_4f.style.left=parseInt(_4f.style.left)+_4b+"px";
+},this);
+_1.forEach(_4a.childTask,function(_50){
+if(!_50.predTask){
+this.moveChildTaskItems(_50,_4b,_4c);
+}
+},this);
+_1.forEach(_4a.childPredTask,function(_51){
+this.moveChildTaskItems(_51,_4b,_4c);
+},this);
+}else{
+var _4e=_4a.cTaskItem[1];
+if(_4e.length>0){
+var _52=_4e[0],_53=_4e[2];
+_53.style.left=parseInt(_53.style.left)+_4b+"px";
+_53.style.width=parseInt(_53.style.width)-_4b+"px";
+_52.style.left=parseInt(_52.style.left)+_4b+"px";
+}
+}
+_4a.moveDescTask();
+},adjustPanelTime:function(){
+var _54=this.cTaskItem[0];
+var _55=parseInt(_54.style.left)+parseInt(_54.firstChild.firstChild.width)+this.ganttChart.panelTimeExpandDelta;
+_55+=this.descrTask.offsetWidth;
+this.ganttChart.adjustPanelTime(_55);
+},getDateOnPosition:function(_56){
+var _57=new Date(this.ganttChart.startDate);
+_57.setHours(_57.getHours()+(_56/this.ganttChart.pixelsPerHour));
+return _57;
+},moveItem:function(_58){
+var _59=_58.screenX;
+var _5a=(this.posX+(_59-this.mouseX));
+var _5b=parseInt(this.cTaskItem[0].childNodes[0].firstChild.width);
+var _5c=_5a+_5b;
+if(this.checkMove){
+if(((this.minPosXMove<=_5a))&&((_5c<=this.maxPosXMove)||(this.maxPosXMove==-1))){
+this.moveTaskItem(_5a);
+}
+}
+},moveTaskItem:function(_5d){
+var _5e=this.cTaskItem[0];
+_5e.style.left=_5d+"px";
+_5e.childNodes[1].firstChild.rows[0].cells[0].innerHTML=this.getDateOnPosition(_5d).getDate()+"."+(this.getDateOnPosition(_5d).getMonth()+1)+"."+this.getDateOnPosition(_5d).getUTCFullYear();
+},resizeItem:function(_5f){
+if(this.checkResize){
+var _60=this.cTaskItem[0];
+var _61=_5f.screenX;
+var _62=(_61-this.mouseX);
+var _63=this.taskItemWidth+(_61-this.mouseX);
+if(_63>=this.taskItemWidth){
+if((_63<=this.maxWidthResize)||(this.maxWidthResize==-1)){
+this.resizeTaskItem(_63);
+}else{
+if((this.maxWidthResize!=-1)&&(_63>this.maxWidthResize)){
+this.resizeTaskItem(this.maxWidthResize);
+}
+}
+}else{
+if(_63<=this.taskItemWidth){
+if(_63>=this.minWidthResize){
+this.resizeTaskItem(_63);
+}else{
+if(_63<this.minWidthResize){
+this.resizeTaskItem(this.minWidthResize);
+}
+}
+}
+}
+}
+},resizeTaskItem:function(_64){
+var _65=this.cTaskItem[0];
+var _66=Math.round(_64/this.ganttChart.pixelsPerWorkHour);
+var _67=_65.childNodes[0].firstChild.rows[0],rc0=_67.cells[0],rc1=_67.cells[1];
+rc0&&(rc0.firstChild.style.width=parseInt(rc0.width)*_64/100+"px");
+rc1&&(rc1.firstChild.style.width=parseInt(rc1.width)*_64/100+"px");
+_65.childNodes[0].firstChild.width=_64+"px";
+_65.childNodes[1].firstChild.width=_64+"px";
+this.cTaskItem[0].childNodes[1].firstChild.rows[0].cells[0].innerHTML=_66;
+var _68=_65.childNodes[2];
+_68.childNodes[0].style.width=_64+"px";
+_68.childNodes[1].style.left=_64-10+"px";
+},endResizeItem:function(){
+var _69=this.cTaskItem[0];
+if((this.taskItemWidth!=parseInt(_69.childNodes[0].firstChild.width))){
+var _6a=_69.offsetLeft;
+var _6b=_69.offsetLeft+parseInt(_69.childNodes[0].firstChild.width);
+var _6c=Math.round((_6b-_6a)/this.ganttChart.pixelsPerWorkHour);
+this.taskItem.duration=_6c;
+if(this.childPredTask.length>0){
+for(var j=0;j<this.childPredTask.length;j++){
+var _6d=this.childPredTask[j].cTaskItem[1],_6e=_6d[0],_6f=_6d[2],_70=_69.childNodes[0];
+_6f.style.width=parseInt(_6f.style.width)-(parseInt(_70.firstChild.width)-this.taskItemWidth)+"px";
+_6f.style.left=parseInt(_6f.style.left)+(parseInt(_70.firstChild.width)-this.taskItemWidth)+"px";
+_6e.style.left=parseInt(_6e.style.left)+(parseInt(_70.firstChild.width)-this.taskItemWidth)+"px";
+}
+}
+}
+this.cTaskItem[0].childNodes[1].firstChild.rows[0].cells[0].innerHTML="";
+this.checkResize=false;
+this.taskItemWidth=0;
+this.mouseX=0;
+this.showDescTask();
+this.project.shiftProjectItem();
+this.adjustPanelTime();
+if(this.ganttChart.resource){
+this.ganttChart.resource.refresh();
+}
+},startMove:function(_71){
+this.moveChild=_71.ctrlKey;
+this.mouseX=_71.screenX;
+this.getMoveInfo();
+this.checkMove=true;
+this.hideDescTask();
+},showDescTask:function(){
+var _72=(parseInt(this.cTaskItem[0].style.left)+this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+10);
+this.descrTask.style.left=_72+"px";
+this.descrTask.innerHTML=this.objKeyToStr(this.getTaskOwner());
+this.descrTask.style.visibility="visible";
+},hideDescTask:function(){
+_1.style(this.descrTask,"visibility","hidden");
+},buildResourceInfo:function(_73){
+if(this.childTask&&this.childTask.length>0){
+for(var i=0;i<this.childTask.length;i++){
+var _74=this.childTask[i];
+_74.buildResourceInfo(_73);
+}
+}
+if(_1.trim(this.taskItem.taskOwner).length>0){
+var _75=this.taskItem.taskOwner.split(";");
+for(var i=0;i<_75.length;i++){
+var o=_75[i];
+if(_1.trim(o).length<=0){
+continue;
+}
+_73[o]?(_73[o].push(this)):(_73[o]=[this]);
+}
+}
+},objKeyToStr:function(obj,_76){
+var _77="";
+_76=_76||" ";
+if(obj){
+for(var key in obj){
+_77+=_76+key;
+}
+}
+return _77;
+},getTaskOwner:function(){
+var _78={};
+if(_1.trim(this.taskItem.taskOwner).length>0){
+var _79=this.taskItem.taskOwner.split(";");
+for(var i=0;i<_79.length;i++){
+var o=_79[i];
+_78[o]=1;
+}
+}
+_1.forEach(this.childTask,function(_7a){
+_1.mixin(_78,_7a.getTaskOwner());
+},this);
+return _78;
+},moveDescTask:function(){
+var _7b=(parseInt(this.cTaskItem[0].style.left)+this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+10);
+this.descrTask.style.left=_7b+"px";
+},getMoveInfo:function(){
+this.posX=parseInt(this.cTaskItem[0].style.left);
+var _7c=parseInt(this.cTaskItem[0].childNodes[0].firstChild.width);
+var _7d=!this.parentTask?0:parseInt(this.parentTask.cTaskItem[0].style.left);
+var _7e=!this.predTask?0:parseInt(this.predTask.cTaskItem[0].style.left)+parseInt(this.predTask.cTaskItem[0].childNodes[0].firstChild.width);
+var _7f=!this.parentTask?0:parseInt(this.parentTask.cTaskItem[0].childNodes[0].firstChild.width);
+var _80=0;
+var _81=0;
+var _82=0;
+if(this.childPredTask.length>0){
+var _83=null;
+_1.forEach(this.childPredTask,function(_84){
+if((!_83)||((_83)&&(_83>parseInt(_84.cTaskItem[0].style.left)))){
+_83=parseInt(_84.cTaskItem[0].style.left);
+}
+},this);
+_80=_83;
+}
+if(this.childTask.length>0){
+var _85=null;
+_1.forEach(this.childTask,function(_86){
+if((!_85)||((_85)&&(_85>(parseInt(_86.cTaskItem[0].style.left))))){
+_85=parseInt(_86.cTaskItem[0].style.left);
+}
+},this);
+_82=_85;
+var _83=null;
+_1.forEach(this.childTask,function(_87){
+if((!_83)||((_83)&&(_83<(parseInt(_87.cTaskItem[0].style.left)+parseInt(_87.cTaskItem[0].firstChild.firstChild.width))))){
+_83=parseInt(_87.cTaskItem[0].style.left)+parseInt(_87.cTaskItem[0].firstChild.firstChild.width);
+}
+},this);
+_81=_83;
+}
+if(!this.moveChild){
+if(this.childPredTask.length>0){
+if(this.maxPosXMove<_80){
+this.maxPosXMove=_80;
+}
+}
+if(this.childTask.length>0){
+if((this.childPredTask.length>0)&&(this.maxPosXMove-_7c)>_82){
+this.maxPosXMove=this.maxPosXMove-((this.maxPosXMove-_7c)-_82);
+}
+if(!(this.childPredTask.length>0)){
+this.maxPosXMove=_82+_7c;
+}
+this.minPosXMove=(_81-_7c);
+}
+if(_7d>0){
+if((!(this.childPredTask.length>0))&&(this.childTask.length>0)){
+if(this.maxPosXMove>_7d+_7f){
+this.maxPosXMove=_7d+_7f;
+}
+}
+if(this.minPosXMove<=_7d){
+this.minPosXMove=_7d;
+}
+if((!(this.childTask.length>0))&&(!(this.childPredTask.length>0))){
+this.maxPosXMove=_7d+_7f;
+}else{
+if((!(this.childTask.length>0))&&(this.childPredTask.length>0)){
+if((_7d+_7f)>_7e){
+this.maxPosXMove=_80;
+}
+}
+}
+}
+if(_7e>0){
+if(this.minPosXMove<=_7e){
+this.minPosXMove=_7e;
+}
+}
+if((_7e==0)&&(_7d==0)){
+if(this.minPosXMove<=this.ganttChart.initialPos){
+this.minPosXMove=this.ganttChart.initialPos;
+}
+}
+}else{
+if((_7d>0)&&(_7e==0)){
+this.minPosXMove=_7d;
+this.maxPosXMove=_7d+_7f;
+}else{
+if((_7d==0)&&(_7e==0)){
+this.minPosXMove=this.ganttChart.initialPos;
+this.maxPosXMove=-1;
+}else{
+if((_7d>0)&&(_7e>0)){
+this.minPosXMove=_7e;
+this.maxPosXMove=_7d+_7f;
+}else{
+if((_7d==0)&&(_7e>0)){
+this.minPosXMove=_7e;
+this.maxPosXMove=-1;
+}
+}
+}
+}
+if((this.parentTask)&&(this.childPredTask.length>0)){
+var _83=this.getMaxPosPredChildTaskItem(this);
+var _7d=parseInt(this.parentTask.cTaskItem[0].style.left)+parseInt(this.parentTask.cTaskItem[0].firstChild.firstChild.width);
+this.maxPosXMove=this.posX+_7c+_7d-_83;
+}
+}
+},startResize:function(_88){
+this.mouseX=_88.screenX;
+this.getResizeInfo();
+this.hideDescTask();
+this.checkResize=true;
+this.taskItemWidth=parseInt(this.cTaskItem[0].firstChild.firstChild.width);
+},getResizeInfo:function(){
+var _89=this.cTaskItem[0];
+var _8a=!this.parentTask?0:parseInt(this.parentTask.cTaskItem[0].style.left);
+var _8b=!this.parentTask?0:parseInt(this.parentTask.cTaskItem[0].childNodes[0].firstChild.width);
+var _8c=parseInt(_89.style.left);
+var _8d=0;
+var _8e=0;
+if(this.childPredTask.length>0){
+var _8f=null;
+_1.forEach(this.childPredTask,function(_90){
+if((!_8f)||((_8f)&&(_8f>parseInt(_90.cTaskItem[0].style.left)))){
+_8f=parseInt(_90.cTaskItem[0].style.left);
+}
+},this);
+_8d=_8f;
+}
+if(this.childTask.length>0){
+var _8f=null;
+_1.forEach(this.childTask,function(_91){
+if((!_8f)||((_8f)&&(_8f<(parseInt(_91.cTaskItem[0].style.left)+parseInt(_91.cTaskItem[0].firstChild.firstChild.width))))){
+_8f=parseInt(_91.cTaskItem[0].style.left)+parseInt(_91.cTaskItem[0].firstChild.firstChild.width);
+}
+},this);
+_8e=_8f;
+}
+this.minWidthResize=this.ganttChart.pixelsPerDay;
+if(this.childTask.length>0){
+this.minWidthResize=_8e-_8c;
+}
+if((this.childPredTask.length>0)&&(!this.parentTask)){
+this.maxWidthResize=_8d-_8c;
+}else{
+if((this.childPredTask.length>0)&&(this.parentTask)){
+var w1=_8a+_8b-_8c;
+var w2=_8d-_8c;
+this.maxWidthResize=Math.min(w1,w2);
+}else{
+if((this.childPredTask.length==0)&&(this.parentTask)){
+this.maxWidthResize=_8a+_8b-_8c;
+}
+}
+}
+},createTaskItem:function(){
+this.posX=this.ganttChart.getPosOnDate(this.taskItem.startTime);
+var _92=_1.create("div",{id:this.taskItem.id,className:"ganttTaskItemControl"});
+_1.style(_92,{left:this.posX+"px",top:this.posY+"px"});
+var _93=_1.create("div",{className:"ganttTaskDivTaskItem"},_92);
+var _94=_1.create("table",{cellPadding:"0",cellSpacing:"0",width:this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px",className:"ganttTaskTblTaskItem"},_93);
+var _95=_94.insertRow(_94.rows.length);
+if(this.taskItem.percentage!=0){
+var _96=_1.create("td",{height:this.ganttChart.heightTaskItem+"px",width:this.taskItem.percentage+"%"},_95);
+_96.style.lineHeight="1px";
+var _97=_1.create("div",{className:"ganttImageTaskProgressFilled"},_96);
+_1.style(_97,{width:(this.taskItem.percentage*this.taskItem.duration*this.ganttChart.pixelsPerWorkHour)/100+"px",height:this.ganttChart.heightTaskItem+"px"});
+}
+if(this.taskItem.percentage!=100){
+var _96=_1.create("td",{height:this.ganttChart.heightTaskItem+"px",width:(100-this.taskItem.percentage)+"%"},_95);
+_96.style.lineHeight="1px";
+var _98=_1.create("div",{className:"ganttImageTaskProgressBg"},_96);
+_1.style(_98,{width:((100-this.taskItem.percentage)*this.taskItem.duration*this.ganttChart.pixelsPerWorkHour)/100+"px",height:this.ganttChart.heightTaskItem+"px"});
+}
+if(this.ganttChart.isContentEditable){
+var _99=_1.create("div",{className:"ganttTaskDivTaskInfo"},_92);
+var _9a=_1.create("table",{cellPadding:"0",cellSpacing:"0",height:this.ganttChart.heightTaskItem+"px",width:this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px"},_99);
+var _9b=_9a.insertRow(0);
+var _9c=_1.create("td",{align:"center",vAlign:"top",height:this.ganttChart.heightTaskItem+"px",className:"ganttMoveInfo"},_9b);
+var _9d=_1.create("div",{className:"ganttTaskDivTaskName"},_92);
+var _9e=_1.create("div",{},_9d);
+_1.create("input",{className:"ganttTaskDivMoveInput",type:"text"},_9e);
+_1.isIE&&_1.style(_9e,{background:"#000000",filter:"alpha(opacity=0)"});
+_1.style(_9e,{height:this.ganttChart.heightTaskItem+"px",width:this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px"});
+var _9f=_1.create("div",{className:"ganttTaskDivResize"},_9d);
+_1.create("input",{className:"ganttTaskDivResizeInput",type:"text"},_9f);
+_1.style(_9f,{left:(this.taskItem.duration*this.ganttChart.pixelsPerWorkHour-10)+"px",height:this.ganttChart.heightTaskItem+"px",width:"10px"});
+this.ganttChart._events.push(_1.connect(_9e,"onmousedown",this,function(_a0){
+this.moveMoveConn=_1.connect(document,"onmousemove",this,function(e){
+this.checkMove&&this.moveItem(e);
 });
-
-dojo.declare("dojox.gantt.GanttTaskItem", null, {
-	constructor: function(configuration){
-		//id is required
-		this.id = configuration.id;
-		this.name = configuration.name || this.id;
-		this.startTime = configuration.startTime || new Date();
-		this.duration = configuration.duration || 8;
-		this.percentage = configuration.percentage || 0;
-		this.previousTaskId = configuration.previousTaskId || "";
-		this.taskOwner = configuration.taskOwner || "";
-		this.cldTasks = [];
-		this.cldPreTasks = [];
-		this.parentTask = null;
-		this.previousTask = null;
-		this.project = null;
-		this.nextChildTask = null;
-		this.previousChildTask = null;
-		this.nextParentTask = null;
-		this.previousParentTask = null;
-	},
-	addChildTask: function(task){
-		this.cldTasks.push(task);
-		task.parentTask = this;
-	},
-	setProject: function(project){
-		this.project = project;
-		for(var j = 0; j < this.cldTasks.length; j++){
-			this.cldTasks[j].setProject(project);
-		}
-	}
+this.moveUpConn=_1.connect(document,"onmouseup",this,function(e){
+if(this.checkMove){
+this.endMove();
+this.ganttChart.isMoving=false;
+document.body.releaseCapture&&document.body.releaseCapture();
+_1.disconnect(this.moveMoveConn);
+_1.disconnect(this.moveUpConn);
+}
 });
-
+this.startMove(_a0);
+this.ganttChart.isMoving=true;
+document.body.setCapture&&document.body.setCapture(false);
+}));
+this.ganttChart._events.push(_1.connect(_9e,"onmouseover",this,function(_a1){
+_a1.target&&(_a1.target.style.cursor="move");
+}));
+this.ganttChart._events.push(_1.connect(_9e,"onmouseout",this,function(_a2){
+_a2.target.style.cursor="";
+}));
+this.ganttChart._events.push(_1.connect(_9f,"onmousedown",this,function(_a3){
+this.resizeMoveConn=_1.connect(document,"onmousemove",this,function(e){
+this.checkResize&&this.resizeItem(e);
+});
+this.resizeUpConn=_1.connect(document,"onmouseup",this,function(e){
+if(this.checkResize){
+this.endResizeItem();
+this.ganttChart.isResizing=false;
+document.body.releaseCapture&&document.body.releaseCapture();
+_1.disconnect(this.resizeMoveConn);
+_1.disconnect(this.resizeUpConn);
+}
+});
+this.startResize(_a3);
+this.ganttChart.isResizing=true;
+document.body.setCapture&&document.body.setCapture(false);
+}));
+this.ganttChart._events.push(_1.connect(_9f,"onmouseover",this,function(_a4){
+(!this.ganttChart.isMoving)&&(!this.ganttChart.isResizing)&&_a4.target&&(_a4.target.style.cursor="e-resize");
+}));
+this.ganttChart._events.push(_1.connect(_9f,"onmouseout",this,function(_a5){
+!this.checkResize&&_a5.target&&(_a5.target.style.cursor="");
+}));
+}
+return _92;
+},createTaskNameItem:function(){
+var _a6=_1.create("div",{id:this.taskItem.id,className:"ganttTaskTaskNameItem",title:this.taskItem.name+", id: "+this.taskItem.id+" ",innerHTML:this.taskItem.name});
+_1.style(_a6,"top",this.posY+"px");
+_1.attr(_a6,"tabIndex",0);
+if(this.ganttChart.isShowConMenu){
+this.ganttChart._events.push(_1.connect(_a6,"onmouseover",this,function(_a7){
+_1.addClass(_a6,"ganttTaskTaskNameItemHover");
+clearTimeout(this.ganttChart.menuTimer);
+this.ganttChart.tabMenu.clear();
+this.ganttChart.tabMenu.show(_a7.target,this);
+}));
+this.ganttChart._events.push(_1.connect(_a6,"onkeydown",this,function(_a8){
+if(_a8.keyCode==_1.keys.ENTER){
+this.ganttChart.tabMenu.clear();
+this.ganttChart.tabMenu.show(_a8.target,this);
+}
+if(this.ganttChart.tabMenu.isShow&&(_a8.keyCode==_1.keys.LEFT_ARROW||_a8.keyCode==_1.keys.RIGHT_ARROW)){
+_2.focus(this.ganttChart.tabMenu.menuPanel.firstChild.rows[0].cells[0]);
+}
+if(this.ganttChart.tabMenu.isShow&&_a8.keyCode==_1.keys.ESCAPE){
+this.ganttChart.tabMenu.hide();
+}
+}));
+this.ganttChart._events.push(_1.connect(_a6,"onmouseout",this,function(){
+_1.removeClass(_a6,"ganttTaskTaskNameItemHover");
+clearTimeout(this.ganttChart.menuTimer);
+this.ganttChart.menuTimer=setTimeout(_1.hitch(this,function(){
+this.ganttChart.tabMenu.hide();
+}),200);
+}));
+this.ganttChart._events.push(_1.connect(this.ganttChart.tabMenu.menuPanel,"onmouseover",this,function(){
+clearTimeout(this.ganttChart.menuTimer);
+}));
+this.ganttChart._events.push(_1.connect(this.ganttChart.tabMenu.menuPanel,"onkeydown",this,function(_a9){
+if(this.ganttChart.tabMenu.isShow&&_a9.keyCode==_1.keys.ESCAPE){
+this.ganttChart.tabMenu.hide();
+}
+}));
+this.ganttChart._events.push(_1.connect(this.ganttChart.tabMenu.menuPanel,"onmouseout",this,function(){
+clearTimeout(this.ganttChart.menuTimer);
+this.ganttChart.menuTimer=setTimeout(_1.hitch(this,function(){
+this.ganttChart.tabMenu.hide();
+}),200);
+}));
+}
+return _a6;
+},createTaskDescItem:function(){
+var _aa=(this.posX+this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+10);
+var _ab=_1.create("div",{innerHTML:this.objKeyToStr(this.getTaskOwner()),className:"ganttTaskDescTask"});
+_1.style(_ab,{left:_aa+"px",top:this.posY+"px"});
+return this.descrTask=_ab;
+},checkWidthTaskNameItem:function(){
+if(this.cTaskNameItem[0].offsetWidth+this.cTaskNameItem[0].offsetLeft>this.ganttChart.maxWidthTaskNames){
+var _ac=this.cTaskNameItem[0].offsetWidth+this.cTaskNameItem[0].offsetLeft-this.ganttChart.maxWidthTaskNames;
+var _ad=Math.round(_ac/(this.cTaskNameItem[0].offsetWidth/this.cTaskNameItem[0].firstChild.length));
+var _ae=this.taskItem.name.substring(0,this.cTaskNameItem[0].firstChild.length-_ad-3);
+_ae+="...";
+this.cTaskNameItem[0].innerHTML=_ae;
+}
+},refreshTaskItem:function(_af){
+this.posX=this.ganttChart.getPosOnDate(this.taskItem.startTime);
+_1.style(_af,{"left":this.posX+"px"});
+var _b0=_af.childNodes[0];
+var _b1=_b0.firstChild;
+_b1.width=(!this.taskItem.duration?1:this.taskItem.duration*this.ganttChart.pixelsPerWorkHour)+"px";
+var _b2=_b1.rows[0];
+if(this.taskItem.percentage!=0){
+var _b3=_b2.firstChild;
+_b3.height=this.ganttChart.heightTaskItem+"px";
+_b3.width=this.taskItem.percentage+"%";
+_b3.style.lineHeight="1px";
+var _b4=_b3.firstChild;
+_1.style(_b4,{width:(!this.taskItem.duration?1:(this.taskItem.percentage*this.taskItem.duration*this.ganttChart.pixelsPerWorkHour/100))+"px",height:this.ganttChart.heightTaskItem+"px"});
+}
+if(this.taskItem.percentage!=100){
+var _b3=_b2.lastChild;
+_b3.height=this.ganttChart.heightTaskItem+"px";
+_b3.width=(100-this.taskItem.percentage)+"%";
+_b3.style.lineHeight="1px";
+var _b5=_b3.firstChild;
+_1.style(_b5,{width:(!this.taskItem.duration?1:((100-this.taskItem.percentage)*this.taskItem.duration*this.ganttChart.pixelsPerWorkHour/100))+"px",height:this.ganttChart.heightTaskItem+"px"});
+}
+if(this.ganttChart.isContentEditable){
+var _b6=_af.childNodes[1];
+var _b7=_b6.firstChild;
+_b7.height=this.ganttChart.heightTaskItem+"px";
+_b7.width=(!this.taskItem.duration?1:(this.taskItem.duration*this.ganttChart.pixelsPerWorkHour))+"px";
+var _b8=_b7.rows[0];
+var _b9=_b8.firstChild;
+_b9.height=this.ganttChart.heightTaskItem+"px";
+var _ba=_af.childNodes[2];
+var _bb=_ba.firstChild;
+_bb.style.height=this.ganttChart.heightTaskItem+"px";
+_bb.style.width=(!this.taskItem.duration?1:(this.taskItem.duration*this.ganttChart.pixelsPerWorkHour))+"px";
+var _bc=_ba.lastChild;
+_1.style(_bc,{"left":(this.taskItem.duration*this.ganttChart.pixelsPerWorkHour-10)+"px"});
+_bc.style.height=this.ganttChart.heightTaskItem+"px";
+_bc.style.width="10px";
+}
+return _af;
+},refreshTaskDesc:function(_bd){
+var _be=(this.posX+this.taskItem.duration*this.ganttChart.pixelsPerWorkHour+10);
+_1.style(_bd,{"left":_be+"px"});
+return _bd;
+},refreshConnectingLinesDS:function(_bf){
+var _c0=_bf[1];
+var _c1=_bf[0];
+var _c2=_bf[2];
+var _c3=_1.style(this.predTask.cTaskItem[0],"left");
+var _c4=_1.style(this.predTask.cTaskItem[0],"top");
+var _c5=_1.style(this.cTaskItem[0],"left");
+var _c6=this.posY+2;
+var _c7=parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
+var _c8=parseInt(this.predTask.cTaskItem[0].firstChild.firstChild.width);
+if(_c4<_c6){
+_1.style(_c1,{"height":(_c6-this.ganttChart.heightTaskItem/2-_c4-3)+"px","left":(_c3+_c8-20)+"px"});
+_1.style(_c2,{"width":(15+(_c5-(_c8+_c3)))+"px","left":(_c3+_c8-20)+"px"});
+_1.style(_c0,{"left":(_c5-7)+"px"});
+}else{
+_1.style(_c1,{"height":(_c4+2-_c6)+"px","left":(_c3+_c8-20)+"px"});
+_1.style(_c2,{"width":(15+(_c5-(_c8+_c3)))+"px","left":(_c3+_c8-20)+"px"});
+_1.style(_c0,{"left":(_c5-7)+"px"});
+}
+return _bf;
+},postLoadData:function(){
+},refresh:function(){
+if(this.childTask&&this.childTask.length>0){
+_1.forEach(this.childTask,function(_c9){
+_c9.refresh();
+},this);
+}
+this.refreshTaskItem(this.cTaskItem[0]);
+this.refreshTaskDesc(this.cTaskItem[0].nextSibling);
+var _ca=[];
+if(this.taskItem.previousTask&&this.predTask){
+this.refreshConnectingLinesDS(this.cTaskItem[1]);
+}
+return this;
+},create:function(){
+var _cb=this.ganttChart.contentData.firstChild;
+var _cc=this.ganttChart.panelNames.firstChild;
+var _cd=this.taskItem.previousTask;
+var _ce=this.taskItem.parentTask;
+var _cf=(this.taskItem.cldTasks.length>0)?true:false;
+this.cTaskItem=[];
+this.cTaskNameItem=[];
+if(!_ce){
+if(this.taskItem.previousParentTask){
+this.previousParentTask=this.project.getTaskById(this.taskItem.previousParentTask.id);
+var _d0=this.ganttChart.getLastChildTask(this.previousParentTask);
+this.posY=parseInt(_d0.cTaskItem[0].style.top)+this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;
+this.previousParentTask.nextParentTask=this;
+}else{
+this.posY=parseInt(this.project.projectItem[0].style.top)+this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;
+}
+}
+if(_ce){
+var _d1=this.project.getTaskById(this.taskItem.parentTask.id);
+this.parentTask=_d1;
+if(this.taskItem.previousChildTask){
+this.previousChildTask=this.project.getTaskById(this.taskItem.previousChildTask.id);
+var _d0=this.ganttChart.getLastChildTask(this.previousChildTask);
+this.posY=_1.style(_d0.cTaskItem[0],"top")+this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;
+this.previousChildTask.nextChildTask=this;
+}else{
+this.posY=_1.style(_d1.cTaskItem[0],"top")+this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;
+}
+_d1.childTask.push(this);
+}
+if(_cd){
+var _d1=this.project.getTaskById(_cd.id);
+this.predTask=_d1;
+_d1.childPredTask.push(this);
+}
+this.cTaskItem.push(this.createTaskItem());
+_cb.appendChild(this.cTaskItem[0]);
+if(this.ganttChart.panelNames){
+this.cTaskNameItem.push(this.createTaskNameItem());
+this.ganttChart.panelNames.firstChild.appendChild(this.cTaskNameItem[0]);
+}
+_cb.appendChild(this.createTaskDescItem());
+var _d2=[];
+if(_cd){
+_d2=this.createConnectingLinesDS();
+}
+this.cTaskItem.push(_d2);
+if(this.ganttChart.panelNames){
+var _d3=[];
+if(_ce){
+this.cTaskNameItem[0].style.left=_1.style(this.parentTask.cTaskNameItem[0],"left")+15+"px";
+_d3=this.createConnectingLinesPN();
+}
+this.checkWidthTaskNameItem();
+this.checkPosition();
+var _d4=null;
+if(_cf){
+_d4=this.createTreeImg();
+}
+this.cTaskNameItem.push(_d3);
+this.cTaskNameItem.push(_d4);
+}
+this.adjustPanelTime();
+return this;
+},checkPosition:function(){
+if(!this.ganttChart.withTaskId){
+return;
+}
+var pos=_1.coords(this.cTaskNameItem[0],true);
+if(this.taskIdentifier){
+if(this.childTask&&this.childTask.length>0){
+_1.forEach(this.childTask,function(_d5){
+_d5.checkPosition();
+},this);
+}
+_1.style(this.taskIdentifier,{"left":(pos.l+pos.w+4)+"px","top":(pos.t-1)+"px"});
+}else{
+this.taskIdentifier=_1.create("div",{id:"TaskId_"+this.taskItem.id,className:"ganttTaskIdentifier",title:this.taskItem.id,innerHTML:this.taskItem.id},this.cTaskNameItem[0].parentNode);
+_1.style(this.taskIdentifier,{left:(pos.l+pos.w+4)+"px",top:(pos.t-1)+"px"});
+}
+},createTreeImg:function(){
+var _d6=_1.create("div",{id:this.taskItem.id,className:"ganttImageTreeCollapse"});
+_1.attr(_d6,"tabIndex",0);
+_1.forEach(["onclick","onkeydown"],function(e){
+this.ganttChart._events.push(_1.connect(_d6,e,this,function(evt){
+if(e=="onkeydown"&&evt.keyCode!=_1.keys.ENTER){
+return;
+}
+if(this.isExpanded){
+_1.removeClass(_d6,"ganttImageTreeCollapse");
+_1.addClass(_d6,"ganttImageTreeExpand");
+this.isExpanded=false;
+this.hideChildTasks(this);
+this.shiftCurrentTasks(this,-this.hideTasksHeight);
+this.ganttChart.checkPosition();
+}else{
+_1.removeClass(_d6,"ganttImageTreeExpand");
+_1.addClass(_d6,"ganttImageTreeCollapse");
+this.isExpanded=true;
+this.shiftCurrentTasks(this,this.hideTasksHeight);
+this.showChildTasks(this,true);
+this.hideTasksHeight=0;
+this.ganttChart.checkPosition();
+}
+}));
+},this);
+this.ganttChart.panelNames.firstChild.appendChild(_d6);
+_1.addClass(_d6,"ganttTaskTreeImage");
+_1.style(_d6,{left:(_1.style(this.cTaskNameItem[0],"left")-12)+"px",top:(_1.style(this.cTaskNameItem[0],"top")+3)+"px"});
+return _d6;
+},setPreviousTask:function(_d7){
+if(_d7==""){
+this.clearPredTask();
+}else{
+var _d8=this.taskItem;
+if(_d8.id==_d7){
+return false;
+}
+var _d9=this.project.getTaskById(_d7);
+if(!_d9){
+return false;
+}
+var _da=_d9.taskItem;
+var a1=_da.parentTask==null,a2=_d8.parentTask==null;
+if(a1&&!a2||!a1&&a2||!a1&&!a2&&(_da.parentTask.id!=_d8.parentTask.id)){
+return false;
+}
+var _db=_d8.startTime.getTime(),_dc=_da.startTime.getTime(),_dd=_da.duration*24*60*60*1000/_d9.ganttChart.hsPerDay;
+if((_dc+_dd)>_db){
+return false;
+}
+this.clearPredTask();
+if(!this.ganttChart.checkPosPreviousTask(_da,_d8)){
+this.ganttChart.correctPosPreviousTask(_da,_d8,this);
+}
+_d8.previousTaskId=_d7;
+_d8.previousTask=_da;
+this.predTask=_d9;
+_d9.childPredTask.push(this);
+this.cTaskItem[1]=this.createConnectingLinesDS();
+}
+return true;
+},clearPredTask:function(){
+if(this.predTask){
+var ch=this.predTask.childPredTask;
+for(var i=0;i<ch.length;i++){
+if(ch[i]==this){
+ch.splice(i,1);
+break;
+}
+}
+for(var i=0;i<this.cTaskItem[1].length;i++){
+this.cTaskItem[1][i].parentNode.removeChild(this.cTaskItem[1][i]);
+}
+this.cTaskItem[1]=[];
+this.taskItem.previousTaskId=null;
+this.taskItem.previousTask=null;
+this.predTask=null;
+}
+},setStartTime:function(_de,_df){
+this.moveChild=_df;
+this.getMoveInfo();
+var pos=this.ganttChart.getPosOnDate(_de);
+if((parseInt(this.cTaskItem[0].firstChild.firstChild.width)+pos>this.maxPosXMove)&&(this.maxPosXMove!=-1)){
+this.maxPosXMove=-1;
+this.minPosXMove=-1;
+return false;
+}
+if(pos<this.minPosXMove){
+this.maxPosXMove=-1;
+this.minPosXMove=-1;
+return false;
+}
+this.cTaskItem[0].style.left=pos;
+var _e0=pos-this.posX;
+this.moveCurrentTaskItem(_e0,_df);
+this.project.shiftProjectItem();
+this.descrTask.innerHTML=this.objKeyToStr(this.getTaskOwner());
+this.adjustPanelTime();
+this.posX=0;
+this.maxPosXMove=-1;
+this.minPosXMove=-1;
+return true;
+},setDuration:function(_e1){
+this.getResizeInfo();
+var _e2=this.ganttChart.getWidthOnDuration(_e1);
+if((_e2>this.maxWidthResize)&&(this.maxWidthResize!=-1)){
+return false;
+}else{
+if(_e2<this.minWidthResize){
+return false;
+}else{
+this.taskItemWidth=parseInt(this.cTaskItem[0].firstChild.firstChild.width);
+this.resizeTaskItem(_e2);
+this.endResizeItem();
+this.descrTask.innerHTML=this.objKeyToStr(this.getTaskOwner());
+return true;
+}
+}
+},setTaskOwner:function(_e3){
+_e3=(_e3==null||_e3==undefined)?"":_e3;
+this.taskItem.taskOwner=_e3;
+this.descrTask.innerHTML=this.objKeyToStr(this.getTaskOwner());
+return true;
+},setPercentCompleted:function(_e4){
+_e4=parseInt(_e4);
+if(isNaN(_e4)||_e4>100||_e4<0){
+return false;
+}
+var _e5=this.cTaskItem[0].childNodes[0].firstChild.rows[0],rc0=_e5.cells[0],rc1=_e5.cells[1];
+if((_e4!=0)&&(_e4!=100)){
+if((this.taskItem.percentage!=0)&&(this.taskItem.percentage!=100)){
+rc0.width=_e4+"%";
+rc1.width=100-_e4+"%";
+}else{
+if((this.taskItem.percentage==0)||(this.taskItem.percentage==100)){
+rc0.parentNode.removeChild(rc0);
+var _e6=_1.create("td",{height:this.ganttChart.heightTaskItem+"px",width:_e4+"%"},_e5);
+_e6.style.lineHeight="1px";
+var _e7=_1.create("div",{className:"ganttImageTaskProgressFilled"},_e6);
+_1.style(_e7,{width:(_e4*this.taskItem.duration*this.ganttChart.pixelsPerWorkHour)/100+"px",height:this.ganttChart.heightTaskItem+"px"});
+_e6=_1.create("td",{height:this.ganttChart.heightTaskItem+"px",width:(100-_e4)+"%"},_e5);
+_e6.style.lineHeight="1px";
+_e7=_1.create("div",{className:"ganttImageTaskProgressBg"},_e6);
+_1.style(_e7,{width:((100-_e4)*this.taskItem.duration*this.ganttChart.pixelsPerWorkHour)/100+"px",height:this.ganttChart.heightTaskItem+"px"});
+}
+}
+}else{
+if(_e4==0){
+if((this.taskItem.percentage!=0)&&(this.taskItem.percentage!=100)){
+rc0.parentNode.removeChild(rc0);
+rc1.width=100+"%";
+}else{
+_1.removeClass(rc0.firstChild,"ganttImageTaskProgressFilled");
+_1.addClass(rc0.firstChild,"ganttImageTaskProgressBg");
+}
+}else{
+if(_e4==100){
+if((this.taskItem.percentage!=0)&&(this.taskItem.percentage!=100)){
+rc1.parentNode.removeChild(rc1);
+rc0.width=100+"%";
+}else{
+_1.removeClass(rc0.firstChild,"ganttImageTaskProgressBg");
+_1.addClass(rc0.firstChild,"ganttImageTaskProgressFilled");
+}
+}
+}
+}
+this.taskItem.percentage=_e4;
+this.taskItemWidth=parseInt(this.cTaskItem[0].firstChild.firstChild.width);
+this.resizeTaskItem(this.taskItemWidth);
+this.endResizeItem();
+this.descrTask.innerHTML=this.objKeyToStr(this.getTaskOwner());
+return true;
+},setName:function(_e8){
+if(_e8){
+this.taskItem.name=_e8;
+this.cTaskNameItem[0].innerHTML=_e8;
+this.cTaskNameItem[0].title=_e8;
+this.checkWidthTaskNameItem();
+this.checkPosition();
+this.descrTask.innerHTML=this.objKeyToStr(this.getTaskOwner());
+this.adjustPanelTime();
+}
+}});
+_1.declare("dojox.gantt.GanttTaskItem",null,{constructor:function(_e9){
+this.id=_e9.id;
+this.name=_e9.name||this.id;
+this.startTime=_e9.startTime||new Date();
+this.duration=_e9.duration||8;
+this.percentage=_e9.percentage||0;
+this.previousTaskId=_e9.previousTaskId||"";
+this.taskOwner=_e9.taskOwner||"";
+this.cldTasks=[];
+this.cldPreTasks=[];
+this.parentTask=null;
+this.previousTask=null;
+this.project=null;
+this.nextChildTask=null;
+this.previousChildTask=null;
+this.nextParentTask=null;
+this.previousParentTask=null;
+},addChildTask:function(_ea){
+this.cldTasks.push(_ea);
+_ea.parentTask=this;
+},setProject:function(_eb){
+this.project=_eb;
+for(var j=0;j<this.cldTasks.length;j++){
+this.cldTasks[j].setProject(_eb);
+}
+}});
+return _1.getObject("dojox.gantt.GanttTaskItem");
+});
+require(["dojox/gantt/GanttTaskItem"]);

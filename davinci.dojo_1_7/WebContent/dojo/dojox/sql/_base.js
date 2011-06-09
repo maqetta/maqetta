@@ -1,547 +1,329 @@
-dojo.provide("dojox.sql._base");
-dojo.require("dojox.sql._crypto");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.mixin(dojox.sql, {
-	// summary:
-	//	Executes a SQL expression.
-	// description:
-	// 	There are four ways to call this:
-	// 	1) Straight SQL: dojox.sql("SELECT * FROM FOOBAR");
-	// 	2) SQL with parameters: dojox.sql("INSERT INTO FOOBAR VALUES (?)", someParam)
-	// 	3) Encrypting particular values:
-	//			dojox.sql("INSERT INTO FOOBAR VALUES (ENCRYPT(?))", someParam, "somePassword", callback)
-	// 	4) Decrypting particular values:
-	//			dojox.sql("SELECT DECRYPT(SOMECOL1), DECRYPT(SOMECOL2) FROM
-	//					FOOBAR WHERE SOMECOL3 = ?", someParam,
-	//					"somePassword", callback)
-	//
-	// 	For encryption and decryption the last two values should be the the password for
-	// 	encryption/decryption, and the callback function that gets the result set.
-	//
-	// 	Note: We only support ENCRYPT(?) statements, and
-	// 	and DECRYPT(*) statements for now -- you can not have a literal string
-	// 	inside of these, such as ENCRYPT('foobar')
-	//
-	// 	Note: If you have multiple columns to encrypt and decrypt, you can use the following
-	// 	convenience form to not have to type ENCRYPT(?)/DECRYPT(*) many times:
-	//
-	// 	dojox.sql("INSERT INTO FOOBAR VALUES (ENCRYPT(?, ?, ?))",
-	//					someParam1, someParam2, someParam3,
-	//					"somePassword", callback)
-	//
-	// 	dojox.sql("SELECT DECRYPT(SOMECOL1, SOMECOL2) FROM
-	//					FOOBAR WHERE SOMECOL3 = ?", someParam,
-	//					"somePassword", callback)
-
-	dbName: null,
-	
-	// summary:
-	//	If true, then we print out any SQL that is executed
-	//	to the debug window
-	debug: (dojo.exists("dojox.sql.debug") ? dojox.sql.debug:false),
-
-	open: function(dbName){
-		if(this._dbOpen && (!dbName || dbName == this.dbName)){
-			return;
-		}
-		
-		if(!this.dbName){
-			this.dbName = "dot_store_"
-				+ window.location.href.replace(/[^0-9A-Za-z_]/g, "_");
-			// database names in Gears are limited to 64 characters long
-			if(this.dbName.length > 63){
-			  this.dbName = this.dbName.substring(0, 63);
-			}
-		}
-		
-		if(!dbName){
-			dbName = this.dbName;
-		}
-		
-		try{
-			this._initDb();
-			this.db.open(dbName);
-			this._dbOpen = true;
-		}catch(exp){
-			throw exp.message||exp;
-		}
-	},
-
-	close: function(dbName){
-		// on Internet Explorer, Google Gears throws an exception
-		// "Object not a collection", when we try to close the
-		// database -- just don't close it on this platform
-		// since we are running into a Gears bug; the Gears team
-		// said it's ok to not close a database connection
-		if(dojo.isIE){ return; }
-		
-		if(!this._dbOpen && (!dbName || dbName == this.dbName)){
-			return;
-		}
-		
-		if(!dbName){
-			dbName = this.dbName;
-		}
-		
-		try{
-			this.db.close(dbName);
-			this._dbOpen = false;
-		}catch(exp){
-			throw exp.message||exp;
-		}
-	},
-	
-	_exec: function(params){
-		try{
-			// get the Gears Database object
-			this._initDb();
-		
-			// see if we need to open the db; if programmer
-			// manually called dojox.sql.open() let them handle
-			// it; otherwise we open and close automatically on
-			// each SQL execution
-			if(!this._dbOpen){
-				this.open();
-				this._autoClose = true;
-			}
-		
-			// determine our parameters
-			var sql = null;
-			var callback = null;
-			var password = null;
-
-			var args = dojo._toArray(params);
-
-			sql = args.splice(0, 1)[0];
-
-			// does this SQL statement use the ENCRYPT or DECRYPT
-			// keywords? if so, extract our callback and crypto
-			// password
-			if(this._needsEncrypt(sql) || this._needsDecrypt(sql)){
-				callback = args.splice(args.length - 1, 1)[0];
-				password = args.splice(args.length - 1, 1)[0];
-			}
-
-			// 'args' now just has the SQL parameters
-
-			// print out debug SQL output if the developer wants that
-			if(this.debug){
-				this._printDebugSQL(sql, args);
-			}
-
-			// handle SQL that needs encryption/decryption differently
-			// do we have an ENCRYPT SQL statement? if so, handle that first
-			var crypto;
-			if(this._needsEncrypt(sql)){
-				crypto = new dojox.sql._SQLCrypto("encrypt", sql,
-													password, args,
-													callback);
-				return null; // encrypted results will arrive asynchronously
-			}else if(this._needsDecrypt(sql)){ // otherwise we have a DECRYPT statement
-				crypto = new dojox.sql._SQLCrypto("decrypt", sql,
-													password, args,
-													callback);
-				return null; // decrypted results will arrive asynchronously
-			}
-
-			// execute the SQL and get the results
-			var rs = this.db.execute(sql, args);
-			
-			// Gears ResultSet object's are ugly -- normalize
-			// these into something JavaScript programmers know
-			// how to work with, basically an array of
-			// JavaScript objects where each property name is
-			// simply the field name for a column of data
-			rs = this._normalizeResults(rs);
-		
-			if(this._autoClose){
-				this.close();
-			}
-		
-			return rs;
-		}catch(exp){
-			exp = exp.message||exp;
-			
-			console.debug("SQL Exception: " + exp);
-			
-			if(this._autoClose){
-				try{
-					this.close();
-				}catch(e){
-					console.debug("Error closing database: "
-									+ e.message||e);
-				}
-			}
-		
-			throw exp;
-		}
-		
-		return null;
-	},
-
-	_initDb: function(){
-		if(!this.db){
-			try{
-				this.db = google.gears.factory.create('beta.database', '1.0');
-			}catch(exp){
-				dojo.setObject("google.gears.denied", true);
-				if(dojox.off){
-				  dojox.off.onFrameworkEvent("coreOperationFailed");
-				}
-				throw "Google Gears must be allowed to run";
-			}
-		}
-	},
-
-	_printDebugSQL: function(sql, args){
-		var msg = "dojox.sql(\"" + sql + "\"";
-		for(var i = 0; i < args.length; i++){
-			if(typeof args[i] == "string"){
-				msg += ", \"" + args[i] + "\"";
-			}else{
-				msg += ", " + args[i];
-			}
-		}
-		msg += ")";
-	
-		console.debug(msg);
-	},
-
-	_normalizeResults: function(rs){
-		var results = [];
-		if(!rs){ return []; }
-	
-		while(rs.isValidRow()){
-			var row = {};
-		
-			for(var i = 0; i < rs.fieldCount(); i++){
-				var fieldName = rs.fieldName(i);
-				var fieldValue = rs.field(i);
-				row[fieldName] = fieldValue;
-			}
-		
-			results.push(row);
-		
-			rs.next();
-		}
-	
-		rs.close();
-		
-		return results;
-	},
-
-	_needsEncrypt: function(sql){
-		return /encrypt\([^\)]*\)/i.test(sql);
-	},
-
-	_needsDecrypt: function(sql){
-		return /decrypt\([^\)]*\)/i.test(sql);
-	}
+define(["dojo","dijit","dojox","dojox/sql/_crypto"],function(_1,_2,_3){
+_1.getObject("dojox.sql._base",1);
+_1.mixin(_3.sql,{dbName:null,debug:(_1.exists("dojox.sql.debug")?_3.sql.debug:false),open:function(_4){
+if(this._dbOpen&&(!_4||_4==this.dbName)){
+return;
+}
+if(!this.dbName){
+this.dbName="dot_store_"+window.location.href.replace(/[^0-9A-Za-z_]/g,"_");
+if(this.dbName.length>63){
+this.dbName=this.dbName.substring(0,63);
+}
+}
+if(!_4){
+_4=this.dbName;
+}
+try{
+this._initDb();
+this.db.open(_4);
+this._dbOpen=true;
+}
+catch(exp){
+throw exp.message||exp;
+}
+},close:function(_5){
+if(_1.isIE){
+return;
+}
+if(!this._dbOpen&&(!_5||_5==this.dbName)){
+return;
+}
+if(!_5){
+_5=this.dbName;
+}
+try{
+this.db.close(_5);
+this._dbOpen=false;
+}
+catch(exp){
+throw exp.message||exp;
+}
+},_exec:function(_6){
+try{
+this._initDb();
+if(!this._dbOpen){
+this.open();
+this._autoClose=true;
+}
+var _7=null;
+var _8=null;
+var _9=null;
+var _a=_1._toArray(_6);
+_7=_a.splice(0,1)[0];
+if(this._needsEncrypt(_7)||this._needsDecrypt(_7)){
+_8=_a.splice(_a.length-1,1)[0];
+_9=_a.splice(_a.length-1,1)[0];
+}
+if(this.debug){
+this._printDebugSQL(_7,_a);
+}
+var _b;
+if(this._needsEncrypt(_7)){
+_b=new _3.sql._SQLCrypto("encrypt",_7,_9,_a,_8);
+return null;
+}else{
+if(this._needsDecrypt(_7)){
+_b=new _3.sql._SQLCrypto("decrypt",_7,_9,_a,_8);
+return null;
+}
+}
+var rs=this.db.execute(_7,_a);
+rs=this._normalizeResults(rs);
+if(this._autoClose){
+this.close();
+}
+return rs;
+}
+catch(exp){
+exp=exp.message||exp;
+if(this._autoClose){
+try{
+this.close();
+}
+catch(e){
+}
+}
+throw exp;
+}
+return null;
+},_initDb:function(){
+if(!this.db){
+try{
+this.db=google.gears.factory.create("beta.database","1.0");
+}
+catch(exp){
+_1.setObject("google.gears.denied",true);
+if(_3.off){
+_3.off.onFrameworkEvent("coreOperationFailed");
+}
+throw "Google Gears must be allowed to run";
+}
+}
+},_printDebugSQL:function(_c,_d){
+var _e="dojox.sql(\""+_c+"\"";
+for(var i=0;i<_d.length;i++){
+if(typeof _d[i]=="string"){
+_e+=", \""+_d[i]+"\"";
+}else{
+_e+=", "+_d[i];
+}
+}
+_e+=")";
+},_normalizeResults:function(rs){
+var _f=[];
+if(!rs){
+return [];
+}
+while(rs.isValidRow()){
+var row={};
+for(var i=0;i<rs.fieldCount();i++){
+var _10=rs.fieldName(i);
+var _11=rs.field(i);
+row[_10]=_11;
+}
+_f.push(row);
+rs.next();
+}
+rs.close();
+return _f;
+},_needsEncrypt:function(sql){
+return /encrypt\([^\)]*\)/i.test(sql);
+},_needsDecrypt:function(sql){
+return /decrypt\([^\)]*\)/i.test(sql);
+}});
+_1.declare("dojox.sql._SQLCrypto",null,{constructor:function(_12,sql,_13,_14,_15){
+if(_12=="encrypt"){
+this._execEncryptSQL(sql,_13,_14,_15);
+}else{
+this._execDecryptSQL(sql,_13,_14,_15);
+}
+},_execEncryptSQL:function(sql,_16,_17,_18){
+var _19=this._stripCryptoSQL(sql);
+var _1a=this._flagEncryptedArgs(sql,_17);
+var _1b=this;
+this._encrypt(_19,_16,_17,_1a,function(_1c){
+var _1d=false;
+var _1e=[];
+var exp=null;
+try{
+_1e=_3.sql.db.execute(_19,_1c);
+}
+catch(execError){
+_1d=true;
+exp=execError.message||execError;
+}
+if(exp!=null){
+if(_3.sql._autoClose){
+try{
+_3.sql.close();
+}
+catch(e){
+}
+}
+_18(null,true,exp.toString());
+return;
+}
+_1e=_3.sql._normalizeResults(_1e);
+if(_3.sql._autoClose){
+_3.sql.close();
+}
+if(_3.sql._needsDecrypt(sql)){
+var _1f=_1b._determineDecryptedColumns(sql);
+_1b._decrypt(_1e,_1f,_16,function(_20){
+_18(_20,false,null);
 });
-
-dojo.declare("dojox.sql._SQLCrypto", null, {
-	// summary:
-	//	A private class encapsulating any cryptography that must be done
-	// 	on a SQL statement. We instantiate this class and have it hold
-	//	it's state so that we can potentially have several encryption
-	//	operations happening at the same time by different SQL statements.
-	constructor: function(action, sql, password, args, callback){
-		if(action == "encrypt"){
-			this._execEncryptSQL(sql, password, args, callback);
-		}else{
-			this._execDecryptSQL(sql, password, args, callback);
-		}
-	},
-	
-	_execEncryptSQL: function(sql, password, args, callback){
-		// strip the ENCRYPT/DECRYPT keywords from the SQL
-		var strippedSQL = this._stripCryptoSQL(sql);
-	
-		// determine what arguments need encryption
-		var encryptColumns = this._flagEncryptedArgs(sql, args);
-	
-		// asynchronously encrypt each argument that needs it
-		var self = this;
-		this._encrypt(strippedSQL, password, args, encryptColumns, function(finalArgs){
-			// execute the SQL
-			var error = false;
-			var resultSet = [];
-			var exp = null;
-			try{
-				resultSet = dojox.sql.db.execute(strippedSQL, finalArgs);
-			}catch(execError){
-				error = true;
-				exp = execError.message||execError;
-			}
-		
-			// was there an error during SQL execution?
-			if(exp != null){
-				if(dojox.sql._autoClose){
-					try{ dojox.sql.close(); }catch(e){}
-				}
-			
-				callback(null, true, exp.toString());
-				return;
-			}
-		
-			// normalize SQL results into a JavaScript object
-			// we can work with
-			resultSet = dojox.sql._normalizeResults(resultSet);
-		
-			if(dojox.sql._autoClose){
-				dojox.sql.close();
-			}
-				
-			// are any decryptions necessary on the result set?
-			if(dojox.sql._needsDecrypt(sql)){
-				// determine which of the result set columns needs decryption
-	 			var needsDecrypt = self._determineDecryptedColumns(sql);
-
-				// now decrypt columns asynchronously
-				// decrypt columns that need it
-				self._decrypt(resultSet, needsDecrypt, password, function(finalResultSet){
-					callback(finalResultSet, false, null);
-				});
-			}else{
-				callback(resultSet, false, null);
-			}
-		});
-	},
-
-	_execDecryptSQL: function(sql, password, args, callback){
-		// strip the ENCRYPT/DECRYPT keywords from the SQL
-		var strippedSQL = this._stripCryptoSQL(sql);
-	
-		// determine which columns needs decryption; this either
-		// returns the value *, which means all result set columns will
-		// be decrypted, or it will return the column names that need
-		// decryption set on a hashtable so we can quickly test a given
-		// column name; the key is the column name that needs
-		// decryption and the value is 'true' (i.e. needsDecrypt["someColumn"]
-		// would return 'true' if it needs decryption, and would be 'undefined'
-		// or false otherwise)
-		var needsDecrypt = this._determineDecryptedColumns(sql);
-	
-		// execute the SQL
-		var error = false;
-		var resultSet = [];
-		var exp = null;
-		try{
-			resultSet = dojox.sql.db.execute(strippedSQL, args);
-		}catch(execError){
-			error = true;
-			exp = execError.message||execError;
-		}
-	
-		// was there an error during SQL execution?
-		if(exp != null){
-			if(dojox.sql._autoClose){
-				try{ dojox.sql.close(); }catch(e){}
-			}
-		
-			callback(resultSet, true, exp.toString());
-			return;
-		}
-	
-		// normalize SQL results into a JavaScript object
-		// we can work with
-		resultSet = dojox.sql._normalizeResults(resultSet);
-	
-		if(dojox.sql._autoClose){
-			dojox.sql.close();
-		}
-	
-		// decrypt columns that need it
-		this._decrypt(resultSet, needsDecrypt, password, function(finalResultSet){
-			callback(finalResultSet, false, null);
-		});
-	},
-
-	_encrypt: function(sql, password, args, encryptColumns, callback){
-		//console.debug("_encrypt, sql="+sql+", password="+password+", encryptColumns="+encryptColumns+", args="+args);
-	
-		this._totalCrypto = 0;
-		this._finishedCrypto = 0;
-		this._finishedSpawningCrypto = false;
-		this._finalArgs = args;
-	
-		for(var i = 0; i < args.length; i++){
-			if(encryptColumns[i]){
-				// we have an encrypt() keyword -- get just the value inside
-				// the encrypt() parantheses -- for now this must be a ?
-				var sqlParam = args[i];
-				var paramIndex = i;
-			
-				// update the total number of encryptions we know must be done asynchronously
-				this._totalCrypto++;
-			
-				// FIXME: This currently uses DES as a proof-of-concept since the
-				// DES code used is quite fast and was easy to work with. Modify dojox.sql
-				// to be able to specify a different encryption provider through a
-				// a SQL-like syntax, such as dojox.sql("SET ENCRYPTION BLOWFISH"),
-				// and modify the dojox.crypto.Blowfish code to be able to work using
-				// a Google Gears Worker Pool
-			
-				// do the actual encryption now, asychronously on a Gears worker thread
-				dojox.sql._crypto.encrypt(sqlParam, password, dojo.hitch(this, function(results){
-					// set the new encrypted value
-					this._finalArgs[paramIndex] = results;
-					this._finishedCrypto++;
-					// are we done with all encryption?
-					if(this._finishedCrypto >= this._totalCrypto
-						&& this._finishedSpawningCrypto){
-						callback(this._finalArgs);
-					}
-				}));
-			}
-		}
-	
-		this._finishedSpawningCrypto = true;
-	},
-
-	_decrypt: function(resultSet, needsDecrypt, password, callback){
-		//console.debug("decrypt, resultSet="+resultSet+", needsDecrypt="+needsDecrypt+", password="+password);
-		
-		this._totalCrypto = 0;
-		this._finishedCrypto = 0;
-		this._finishedSpawningCrypto = false;
-		this._finalResultSet = resultSet;
-	
-		for(var i = 0; i < resultSet.length; i++){
-			var row = resultSet[i];
-		
-			// go through each of the column names in row,
-			// seeing if they need decryption
-			for(var columnName in row){
-				if(needsDecrypt == "*" || needsDecrypt[columnName]){
-					this._totalCrypto++;
-					var columnValue = row[columnName];
-				
-					// forming a closure here can cause issues, with values not cleanly
-					// saved on Firefox/Mac OS X for some of the values above that
-					// are needed in the callback below; call a subroutine that will form
-					// a closure inside of itself instead
-					this._decryptSingleColumn(columnName, columnValue, password, i,
-												function(finalResultSet){
-						callback(finalResultSet);
-					});
-				}
-			}
-		}
-	
-		this._finishedSpawningCrypto = true;
-	},
-
-	_stripCryptoSQL: function(sql){
-		// replace all DECRYPT(*) occurrences with a *
-		sql = sql.replace(/DECRYPT\(\*\)/ig, "*");
-	
-		// match any ENCRYPT(?, ?, ?, etc) occurrences,
-		// then replace with just the question marks in the
-		// middle
-		var matches = sql.match(/ENCRYPT\([^\)]*\)/ig);
-		if(matches != null){
-			for(var i = 0; i < matches.length; i++){
-				var encryptStatement = matches[i];
-				var encryptValue = encryptStatement.match(/ENCRYPT\(([^\)]*)\)/i)[1];
-				sql = sql.replace(encryptStatement, encryptValue);
-			}
-		}
-	
-		// match any DECRYPT(COL1, COL2, etc) occurrences,
-		// then replace with just the column names
-		// in the middle
-		matches = sql.match(/DECRYPT\([^\)]*\)/ig);
-		if(matches != null){
-			for(i = 0; i < matches.length; i++){
-				var decryptStatement = matches[i];
-				var decryptValue = decryptStatement.match(/DECRYPT\(([^\)]*)\)/i)[1];
-				sql = sql.replace(decryptStatement, decryptValue);
-			}
-		}
-	
-		return sql;
-	},
-
-	_flagEncryptedArgs: function(sql, args){
-		// capture literal strings that have question marks in them,
-		// and also capture question marks that stand alone
-		var tester = new RegExp(/([\"][^\"]*\?[^\"]*[\"])|([\'][^\']*\?[^\']*[\'])|(\?)/ig);
-		var matches;
-		var currentParam = 0;
-		var results = [];
-		while((matches = tester.exec(sql)) != null){
-			var currentMatch = RegExp.lastMatch+"";
-
-			// are we a literal string? then ignore it
-			if(/^[\"\']/.test(currentMatch)){
-				continue;
-			}
-
-			// do we have an encrypt keyword to our left?
-			var needsEncrypt = false;
-			if(/ENCRYPT\([^\)]*$/i.test(RegExp.leftContext)){
-				needsEncrypt = true;
-			}
-
-			// set the encrypted flag
-			results[currentParam] = needsEncrypt;
-
-			currentParam++;
-		}
-	
-		return results;
-	},
-
-	_determineDecryptedColumns: function(sql){
-		var results = {};
-
-		if(/DECRYPT\(\*\)/i.test(sql)){
-			results = "*";
-		}else{
-			var tester = /DECRYPT\((?:\s*\w*\s*\,?)*\)/ig;
-			var matches = tester.exec(sql);
-			while(matches){
-				var lastMatch = new String(RegExp.lastMatch);
-				var columnNames = lastMatch.replace(/DECRYPT\(/i, "");
-				columnNames = columnNames.replace(/\)/, "");
-				columnNames = columnNames.split(/\s*,\s*/);
-				dojo.forEach(columnNames, function(column){
-					if(/\s*\w* AS (\w*)/i.test(column)){
-						column = column.match(/\s*\w* AS (\w*)/i)[1];
-					}
-					results[column] = true;
-				});
-				
-				matches = tester.exec(sql)
-			}
-		}
-
-		return results;
-	},
-
-	_decryptSingleColumn: function(columnName, columnValue, password, currentRowIndex,
-											callback){
-		//console.debug("decryptSingleColumn, columnName="+columnName+", columnValue="+columnValue+", currentRowIndex="+currentRowIndex)
-		dojox.sql._crypto.decrypt(columnValue, password, dojo.hitch(this, function(results){
-			// set the new decrypted value
-			this._finalResultSet[currentRowIndex][columnName] = results;
-			this._finishedCrypto++;
-			
-			// are we done with all encryption?
-			if(this._finishedCrypto >= this._totalCrypto
-				&& this._finishedSpawningCrypto){
-				//console.debug("done with all decrypts");
-				callback(this._finalResultSet);
-			}
-		}));
-	}
+}else{
+_18(_1e,false,null);
+}
 });
-
+},_execDecryptSQL:function(sql,_21,_22,_23){
+var _24=this._stripCryptoSQL(sql);
+var _25=this._determineDecryptedColumns(sql);
+var _26=false;
+var _27=[];
+var exp=null;
+try{
+_27=_3.sql.db.execute(_24,_22);
+}
+catch(execError){
+_26=true;
+exp=execError.message||execError;
+}
+if(exp!=null){
+if(_3.sql._autoClose){
+try{
+_3.sql.close();
+}
+catch(e){
+}
+}
+_23(_27,true,exp.toString());
+return;
+}
+_27=_3.sql._normalizeResults(_27);
+if(_3.sql._autoClose){
+_3.sql.close();
+}
+this._decrypt(_27,_25,_21,function(_28){
+_23(_28,false,null);
+});
+},_encrypt:function(sql,_29,_2a,_2b,_2c){
+this._totalCrypto=0;
+this._finishedCrypto=0;
+this._finishedSpawningCrypto=false;
+this._finalArgs=_2a;
+for(var i=0;i<_2a.length;i++){
+if(_2b[i]){
+var _2d=_2a[i];
+var _2e=i;
+this._totalCrypto++;
+_3.sql._crypto.encrypt(_2d,_29,_1.hitch(this,function(_2f){
+this._finalArgs[_2e]=_2f;
+this._finishedCrypto++;
+if(this._finishedCrypto>=this._totalCrypto&&this._finishedSpawningCrypto){
+_2c(this._finalArgs);
+}
+}));
+}
+}
+this._finishedSpawningCrypto=true;
+},_decrypt:function(_30,_31,_32,_33){
+this._totalCrypto=0;
+this._finishedCrypto=0;
+this._finishedSpawningCrypto=false;
+this._finalResultSet=_30;
+for(var i=0;i<_30.length;i++){
+var row=_30[i];
+for(var _34 in row){
+if(_31=="*"||_31[_34]){
+this._totalCrypto++;
+var _35=row[_34];
+this._decryptSingleColumn(_34,_35,_32,i,function(_36){
+_33(_36);
+});
+}
+}
+}
+this._finishedSpawningCrypto=true;
+},_stripCryptoSQL:function(sql){
+sql=sql.replace(/DECRYPT\(\*\)/ig,"*");
+var _37=sql.match(/ENCRYPT\([^\)]*\)/ig);
+if(_37!=null){
+for(var i=0;i<_37.length;i++){
+var _38=_37[i];
+var _39=_38.match(/ENCRYPT\(([^\)]*)\)/i)[1];
+sql=sql.replace(_38,_39);
+}
+}
+_37=sql.match(/DECRYPT\([^\)]*\)/ig);
+if(_37!=null){
+for(i=0;i<_37.length;i++){
+var _3a=_37[i];
+var _3b=_3a.match(/DECRYPT\(([^\)]*)\)/i)[1];
+sql=sql.replace(_3a,_3b);
+}
+}
+return sql;
+},_flagEncryptedArgs:function(sql,_3c){
+var _3d=new RegExp(/([\"][^\"]*\?[^\"]*[\"])|([\'][^\']*\?[^\']*[\'])|(\?)/ig);
+var _3e;
+var _3f=0;
+var _40=[];
+while((_3e=_3d.exec(sql))!=null){
+var _41=RegExp.lastMatch+"";
+if(/^[\"\']/.test(_41)){
+continue;
+}
+var _42=false;
+if(/ENCRYPT\([^\)]*$/i.test(RegExp.leftContext)){
+_42=true;
+}
+_40[_3f]=_42;
+_3f++;
+}
+return _40;
+},_determineDecryptedColumns:function(sql){
+var _43={};
+if(/DECRYPT\(\*\)/i.test(sql)){
+_43="*";
+}else{
+var _44=/DECRYPT\((?:\s*\w*\s*\,?)*\)/ig;
+var _45=_44.exec(sql);
+while(_45){
+var _46=new String(RegExp.lastMatch);
+var _47=_46.replace(/DECRYPT\(/i,"");
+_47=_47.replace(/\)/,"");
+_47=_47.split(/\s*,\s*/);
+_1.forEach(_47,function(_48){
+if(/\s*\w* AS (\w*)/i.test(_48)){
+_48=_48.match(/\s*\w* AS (\w*)/i)[1];
+}
+_43[_48]=true;
+});
+_45=_44.exec(sql);
+}
+}
+return _43;
+},_decryptSingleColumn:function(_49,_4a,_4b,_4c,_4d){
+_3.sql._crypto.decrypt(_4a,_4b,_1.hitch(this,function(_4e){
+this._finalResultSet[_4c][_49]=_4e;
+this._finishedCrypto++;
+if(this._finishedCrypto>=this._totalCrypto&&this._finishedSpawningCrypto){
+_4d(this._finalResultSet);
+}
+}));
+}});
 (function(){
-
-	var orig_sql = dojox.sql;
-	dojox.sql = new Function("return dojox.sql._exec(arguments);");
-	dojo.mixin(dojox.sql, orig_sql);
-	
+var _4f=_3.sql;
+_3.sql=new Function("return dojox.sql._exec(arguments);");
+_1.mixin(_3.sql,_4f);
 })();
+return _1.getObject("dojox.sql._base");
+});
+require(["dojox/sql/_base"]);

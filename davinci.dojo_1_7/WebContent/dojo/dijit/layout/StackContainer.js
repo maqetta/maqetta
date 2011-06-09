@@ -1,341 +1,147 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/cookie", // dojo.cookie
-	"dojo/i18n!../nls/common",
-	"../_WidgetBase",
-	"./_LayoutWidget",
-	"./StackController",
-	"dojo/_base/array", // dojo.forEach dojo.indexOf dojo.some
-	"dojo/_base/connect", // dojo.publish
-	"dojo/_base/html" // dojo.addClass dojo.replaceClass
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/layout/StackContainer
-// summary:
-//		A container that has multiple children, but shows only one child at a time.
-
-dojo.declare("dijit.layout.StackContainer", dijit.layout._LayoutWidget, {
-	// summary:
-	//		A container that has multiple children, but shows only
-	//		one child at a time
-	//
-	// description:
-	//		A container for widgets (ContentPanes, for example) That displays
-	//		only one Widget at a time.
-	//
-	//		Publishes topics [widgetId]-addChild, [widgetId]-removeChild, and [widgetId]-selectChild
-	//
-	//		Can be base class for container, Wizard, Show, etc.
-
-	// doLayout: Boolean
-	//		If true, change the size of my currently displayed child to match my size
-	doLayout: true,
-
-	// persist: Boolean
-	//		Remembers the selected child across sessions
-	persist: false,
-
-	baseClass: "dijitStackContainer",
-
-/*=====
-	// selectedChildWidget: [readonly] dijit._Widget
-	//		References the currently selected child widget, if any.
-	//		Adjust selected child with selectChild() method.
-	selectedChildWidget: null,
-=====*/
-
-	buildRendering: function(){
-		this.inherited(arguments);
-		dojo.addClass(this.domNode, "dijitLayoutContainer");
-		this.containerNode.setAttribute("role", "tabpanel");
-	},
-
-	postCreate: function(){
-		this.inherited(arguments);
-		this.connect(this.domNode, "onkeypress", this._onKeyPress);
-	},
-
-	startup: function(){
-		if(this._started){ return; }
-
-		var children = this.getChildren();
-
-		// Setup each page panel to be initially hidden
-		dojo.forEach(children, this._setupChild, this);
-
-		// Figure out which child to initially display, defaulting to first one
-		if(this.persist){
-			this.selectedChildWidget = dijit.byId(dojo.cookie(this.id + "_selectedChild"));
-		}else{
-			dojo.some(children, function(child){
-				if(child.selected){
-					this.selectedChildWidget = child;
-				}
-				return child.selected;
-			}, this);
-		}
-		var selected = this.selectedChildWidget;
-		if(!selected && children[0]){
-			selected = this.selectedChildWidget = children[0];
-			selected.selected = true;
-		}
-
-		// Publish information about myself so any StackControllers can initialize.
-		// This needs to happen before this.inherited(arguments) so that for
-		// TabContainer, this._contentBox doesn't include the space for the tab labels.
-		dojo.publish(this.id+"-startup", [{children: children, selected: selected}]);
-
-		// Startup each child widget, and do initial layout like setting this._contentBox,
-		// then calls this.resize() which does the initial sizing on the selected child.
-		this.inherited(arguments);
-	},
-
-	resize: function(){
-		// Resize is called when we are first made visible (it's called from startup()
-		// if we are initially visible).  If this is the first time we've been made
-		// visible then show our first child.
-		var selected = this.selectedChildWidget;
-		if(selected && !this._hasBeenShown){
-			this._hasBeenShown = true;
-			this._showChild(selected);
-		}
-		this.inherited(arguments);
-	},
-
-	_setupChild: function(/*dijit._Widget*/ child){
-		// Overrides _LayoutWidget._setupChild()
-
-		this.inherited(arguments);
-
-		dojo.replaceClass(child.domNode, "dijitHidden", "dijitVisible");
-
-		// remove the title attribute so it doesn't show up when i hover
-		// over a node
-		child.domNode.title = "";
-	},
-
-	addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
-		// Overrides _Container.addChild() to do layout and publish events
-
-		this.inherited(arguments);
-
-		if(this._started){
-			dojo.publish(this.id+"-addChild", [child, insertIndex]);
-
-			// in case the tab titles have overflowed from one line to two lines
-			// (or, if this if first child, from zero lines to one line)
-			// TODO: w/ScrollingTabController this is no longer necessary, although
-			// ScrollTabController.resize() does need to get called to show/hide
-			// the navigation buttons as appropriate, but that's handled in ScrollingTabController.onAddChild()
-			this.layout();
-
-			// if this is the first child, then select it
-			if(!this.selectedChildWidget){
-				this.selectChild(child);
-			}
-		}
-	},
-
-	removeChild: function(/*dijit._Widget*/ page){
-		// Overrides _Container.removeChild() to do layout and publish events
-
-		this.inherited(arguments);
-
-		if(this._started){
-			// this will notify any tablists to remove a button; do this first because it may affect sizing
-			dojo.publish(this.id + "-removeChild", [page]);
-		}
-
-		// If we are being destroyed than don't run the code below (to select another page), because we are deleting
-		// every page one by one
-		if(this._beingDestroyed){ return; }
-
-		// Select new page to display, also updating TabController to show the respective tab.
-		// Do this before layout call because it can affect the height of the TabController.
-		if(this.selectedChildWidget === page){
-			this.selectedChildWidget = undefined;
-			if(this._started){
-				var children = this.getChildren();
-				if(children.length){
-					this.selectChild(children[0]);
-				}
-			}
-		}
-
-		if(this._started){
-			// In case the tab titles now take up one line instead of two lines
-			// (note though that ScrollingTabController never overflows to multiple lines),
-			// or the height has changed slightly because of addition/removal of tab which close icon
-			this.layout();
-		}
-	},
-
-	selectChild: function(/*dijit._Widget|String*/ page, /*Boolean*/ animate){
-		// summary:
-		//		Show the given widget (which must be one of my children)
-		// page:
-		//		Reference to child widget or id of child widget
-
-		page = dijit.byId(page);
-
-		if(this.selectedChildWidget != page){
-			// Deselect old page and select new one
-			var d = this._transition(page, this.selectedChildWidget, animate);
-			this._set("selectedChildWidget", page);
-			dojo.publish(this.id+"-selectChild", [page]);
-
-			if(this.persist){
-				dojo.cookie(this.id + "_selectedChild", this.selectedChildWidget.id);
-			}
-		}
-
-		return d;		// If child has an href, promise that fires when the child's href finishes loading
-	},
-
-	_transition: function(/*dijit._Widget*/ newWidget, /*dijit._Widget*/ oldWidget, /*Boolean*/ animate){
-		// summary:
-		//		Hide the old widget and display the new widget.
-		//		Subclasses should override this.
-		// tags:
-		//		protected extension
-		if(oldWidget){
-			this._hideChild(oldWidget);
-		}
-		var d = this._showChild(newWidget);
-
-		// Size the new widget, in case this is the first time it's being shown,
-		// or I have been resized since the last time it was shown.
-		// Note that page must be visible for resizing to work.
-		if(newWidget.resize){
-			if(this.doLayout){
-				newWidget.resize(this._containerContentBox || this._contentBox);
-			}else{
-				// the child should pick it's own size but we still need to call resize()
-				// (with no arguments) to let the widget lay itself out
-				newWidget.resize();
-			}
-		}
-
-		return d;	// If child has an href, promise that fires when the child's href finishes loading
-	},
-
-	_adjacent: function(/*Boolean*/ forward){
-		// summary:
-		//		Gets the next/previous child widget in this container from the current selection.
-		var children = this.getChildren();
-		var index = dojo.indexOf(children, this.selectedChildWidget);
-		index += forward ? 1 : children.length - 1;
-		return children[ index % children.length ]; // dijit._Widget
-	},
-
-	forward: function(){
-		// summary:
-		//		Advance to next page.
-		return this.selectChild(this._adjacent(true), true);
-	},
-
-	back: function(){
-		// summary:
-		//		Go back to previous page.
-		return this.selectChild(this._adjacent(false), true);
-	},
-
-	_onKeyPress: function(e){
-		dojo.publish(this.id+"-containerKeyPress", [{ e: e, page: this}]);
-	},
-
-	layout: function(){
-		// Implement _LayoutWidget.layout() virtual method.
-		var child = this.selectedChildWidget;
-		if(child && child.resize){
-			if(this.doLayout){
-				child.resize(this._containerContentBox || this._contentBox);
-			}else{
-				child.resize();
-			}
-		}
-	},
-
-	_showChild: function(/*dijit._Widget*/ page){
-		// summary:
-		//		Show the specified child by changing it's CSS, and call _onShow()/onShow() so
-		//		it can do any updates it needs regarding loading href's etc.
-		// returns:
-		//		Promise that fires when page has finished showing, or true if there's no href
-		var children = this.getChildren();
-		page.isFirstChild = (page == children[0]);
-		page.isLastChild = (page == children[children.length-1]);
-		page._set("selected", true);
-
-		dojo.replaceClass(page.domNode, "dijitVisible", "dijitHidden");
-
-		return (page._onShow && page._onShow()) || true;
-	},
-
-	_hideChild: function(/*dijit._Widget*/ page){
-		// summary:
-		//		Hide the specified child by changing it's CSS, and call _onHide() so
-		//		it's notified.
-		page._set("selected", false);
-		dojo.replaceClass(page.domNode, "dijitHidden", "dijitVisible");
-
-		page.onHide && page.onHide();
-	},
-
-	closeChild: function(/*dijit._Widget*/ page){
-		// summary:
-		//		Callback when user clicks the [X] to remove a page.
-		//		If onClose() returns true then remove and destroy the child.
-		// tags:
-		//		private
-		var remove = page.onClose(this, page);
-		if(remove){
-			this.removeChild(page);
-			// makes sure we can clean up executeScripts in ContentPane onUnLoad
-			page.destroyRecursive();
-		}
-	},
-
-	destroyDescendants: function(/*Boolean*/ preserveDom){
-		dojo.forEach(this.getChildren(), function(child){
-			this.removeChild(child);
-			child.destroyRecursive(preserveDom);
-		}, this);
-	}
-});
-
-// For back-compat, remove for 2.0
-
-
-// These arguments can be specified for the children of a StackContainer.
-// Since any widget can be specified as a StackContainer child, mix them
-// into the base widget class.  (This is a hack, but it's effective.)
-dojo.extend(dijit._WidgetBase, {
-	// selected: Boolean
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
-	//		Specifies that this widget should be the initially displayed pane.
-	//		Note: to change the selected child use `dijit.layout.StackContainer.selectChild`
-	selected: false,
-
-	// closable: Boolean
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
-	//		True if user can close (destroy) this child, such as (for example) clicking the X on the tab.
-	closable: false,
-
-	// iconClass: String
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
-	//		CSS Class specifying icon to use in label associated with this pane.
-	iconClass: "dijitNoIcon",
-
-	// showTitle: Boolean
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
-	//		When true, display title of this widget as tab label etc., rather than just using
-	//		icon specified in iconClass
-	showTitle: true
-});
-
-
-return dijit.layout.StackContainer;
+define("dijit/layout/StackContainer",["dojo/_base/kernel","..","dojo/cookie","dojo/i18n!../nls/common","../_WidgetBase","./_LayoutWidget","./StackController","dojo/_base/array","dojo/_base/connect","dojo/_base/html"],function(_1,_2){
+_1.declare("dijit.layout.StackContainer",_2.layout._LayoutWidget,{doLayout:true,persist:false,baseClass:"dijitStackContainer",buildRendering:function(){
+this.inherited(arguments);
+_1.addClass(this.domNode,"dijitLayoutContainer");
+this.containerNode.setAttribute("role","tabpanel");
+},postCreate:function(){
+this.inherited(arguments);
+this.connect(this.domNode,"onkeypress",this._onKeyPress);
+},startup:function(){
+if(this._started){
+return;
+}
+var _3=this.getChildren();
+_1.forEach(_3,this._setupChild,this);
+if(this.persist){
+this.selectedChildWidget=_2.byId(_1.cookie(this.id+"_selectedChild"));
+}else{
+_1.some(_3,function(_4){
+if(_4.selected){
+this.selectedChildWidget=_4;
+}
+return _4.selected;
+},this);
+}
+var _5=this.selectedChildWidget;
+if(!_5&&_3[0]){
+_5=this.selectedChildWidget=_3[0];
+_5.selected=true;
+}
+_1.publish(this.id+"-startup",[{children:_3,selected:_5}]);
+this.inherited(arguments);
+},resize:function(){
+var _6=this.selectedChildWidget;
+if(_6&&!this._hasBeenShown){
+this._hasBeenShown=true;
+this._showChild(_6);
+}
+this.inherited(arguments);
+},_setupChild:function(_7){
+this.inherited(arguments);
+_1.replaceClass(_7.domNode,"dijitHidden","dijitVisible");
+_7.domNode.title="";
+},addChild:function(_8,_9){
+this.inherited(arguments);
+if(this._started){
+_1.publish(this.id+"-addChild",[_8,_9]);
+this.layout();
+if(!this.selectedChildWidget){
+this.selectChild(_8);
+}
+}
+},removeChild:function(_a){
+this.inherited(arguments);
+if(this._started){
+_1.publish(this.id+"-removeChild",[_a]);
+}
+if(this._beingDestroyed){
+return;
+}
+if(this.selectedChildWidget===_a){
+this.selectedChildWidget=undefined;
+if(this._started){
+var _b=this.getChildren();
+if(_b.length){
+this.selectChild(_b[0]);
+}
+}
+}
+if(this._started){
+this.layout();
+}
+},selectChild:function(_c,_d){
+_c=_2.byId(_c);
+if(this.selectedChildWidget!=_c){
+var d=this._transition(_c,this.selectedChildWidget,_d);
+this._set("selectedChildWidget",_c);
+_1.publish(this.id+"-selectChild",[_c]);
+if(this.persist){
+_1.cookie(this.id+"_selectedChild",this.selectedChildWidget.id);
+}
+}
+return d;
+},_transition:function(_e,_f,_10){
+if(_f){
+this._hideChild(_f);
+}
+var d=this._showChild(_e);
+if(_e.resize){
+if(this.doLayout){
+_e.resize(this._containerContentBox||this._contentBox);
+}else{
+_e.resize();
+}
+}
+return d;
+},_adjacent:function(_11){
+var _12=this.getChildren();
+var _13=_1.indexOf(_12,this.selectedChildWidget);
+_13+=_11?1:_12.length-1;
+return _12[_13%_12.length];
+},forward:function(){
+return this.selectChild(this._adjacent(true),true);
+},back:function(){
+return this.selectChild(this._adjacent(false),true);
+},_onKeyPress:function(e){
+_1.publish(this.id+"-containerKeyPress",[{e:e,page:this}]);
+},layout:function(){
+var _14=this.selectedChildWidget;
+if(_14&&_14.resize){
+if(this.doLayout){
+_14.resize(this._containerContentBox||this._contentBox);
+}else{
+_14.resize();
+}
+}
+},_showChild:function(_15){
+var _16=this.getChildren();
+_15.isFirstChild=(_15==_16[0]);
+_15.isLastChild=(_15==_16[_16.length-1]);
+_15._set("selected",true);
+_1.replaceClass(_15.domNode,"dijitVisible","dijitHidden");
+return (_15._onShow&&_15._onShow())||true;
+},_hideChild:function(_17){
+_17._set("selected",false);
+_1.replaceClass(_17.domNode,"dijitHidden","dijitVisible");
+_17.onHide&&_17.onHide();
+},closeChild:function(_18){
+var _19=_18.onClose(this,_18);
+if(_19){
+this.removeChild(_18);
+_18.destroyRecursive();
+}
+},destroyDescendants:function(_1a){
+_1.forEach(this.getChildren(),function(_1b){
+this.removeChild(_1b);
+_1b.destroyRecursive(_1a);
+},this);
+}});
+_1.extend(_2._WidgetBase,{selected:false,closable:false,iconClass:"dijitNoIcon",showTitle:true});
+return _2.layout.StackContainer;
 });

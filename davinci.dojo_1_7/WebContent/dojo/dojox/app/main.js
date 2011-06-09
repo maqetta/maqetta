@@ -1,91 +1,67 @@
-define(["dojo","dijit","dojox", "dojo/cache","dojo/fx","dojox/json/ref","dojo/parser","./scene","dojox/mobile/transition","dojo/on"],function(dojo,dijit,dijox,cache,fx,jsonRef,parser,sceneCtor,transition,listen){
-	var Application = dojo.declare([sceneCtor], {
-		constructor: function(params){
-			this.scenes={};
-			if(params.stores){
-			    //create stores in the configuration.
-			    for (var item in params.stores){
-			        if(item.charAt(0)!=="_"){//skip the private properties
-			            var type = params.stores[item].type? params.stores[item].type : "dojo.store.Memory";
-			            var config = {};
-			            if(params.stores[item].params){
-			                dojo.mixin(config, params.stores[item].params);
-			            }
-			            var storeCtor = dojo.getObject(type);
-			            if(config.data && dojo.isString(config.data)){
-			                //get the object specified by string value of data property
-			                //cannot assign object literal or reference to data property
-			                //because json.ref will generate __parent to point to its parent
-			                //and will cause infinitive loop when creating StatefulModel.
-			                config.data = dojo.getObject(config.data);
-			            }
-			            params.stores[item].store = new storeCtor(config);
-			        }
-			    }
-			}
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		},
-		templateString: "<div></div>",
-		selectedChild: null,
-		baseClass: "application mblView",
-		defaultViewType: sceneCtor,
-		buildRendering: function(){
-			if (this.srcNodeRef===dojo.body()){
-				this.srcNodeRef = dojo.create("DIV",{},dojo.body());
-			}
-			this.inherited(arguments);
-		}
-	});
-	
-	function generateApp(config,node,appSchema,validate){
-
-		//console.log("config.modules: ", config.modules);
-		var modules = config.modules.concat(config.dependencies);
-
-		if (config.template){
-			//console.log("config.template: ", config.template);
-			modules.push("dojo/text!" + "app/" + config.template);
-		}
-		//console.log("modules: ", modules);	
-
-		require(modules, function(){
-			var modules=[Application];
-			for(var i=0;i<config.modules.length;i++){
-				modules.push(arguments[i]);
-			}
-
-			if (config.template){
-				var ext = {
-					templateString: arguments[arguments.length-1] 
-				}	
-			}
-			App = dojo.declare(modules,ext);
-
-			dojo.ready(function(){
-				app = App(config,node || dojo.body());
-				app.startup();
-			});
-		});
-	}
-
-
-	return function(config,node){
-		if (!config){
-			throw Error("App Config Missing");
-		}
-
-		
-		if (config.validate){
-			require(["dojox/json/schema","dojox/json/ref","dojo/text!dojox/application/schema/application.json"],function(schema,appSchema){
-				schema = dojox.json.ref.resolveJson(schema);	
-				if (schema.validate(config,appSchema)){
-					generateApp(config,node);
-				}	
-			});
-		
-
-		}else{
-			generateApp(config,node);
-		}
-	}
+define(["dojo","dijit","dojox","dojo/cache","dojo/fx","dojox/json/ref","dojo/parser","./scene","dojox/mobile/transition","dojo/on"],function(_1,_2,_3,_4,fx,_5,_6,_7,_8,_9){
+var _a=_1.declare([_7],{constructor:function(_b){
+this.scenes={};
+if(_b.stores){
+for(var _c in _b.stores){
+if(_c.charAt(0)!=="_"){
+var _d=_b.stores[_c].type?_b.stores[_c].type:"dojo.store.Memory";
+var _e={};
+if(_b.stores[_c].params){
+_1.mixin(_e,_b.stores[_c].params);
+}
+var _f=_1.getObject(_d);
+if(_e.data&&_1.isString(_e.data)){
+_e.data=_1.getObject(_e.data);
+}
+_b.stores[_c].store=new _f(_e);
+}
+}
+}
+},templateString:"<div></div>",selectedChild:null,baseClass:"application mblView",defaultViewType:_7,buildRendering:function(){
+if(this.srcNodeRef===_1.body()){
+this.srcNodeRef=_1.create("DIV",{},_1.body());
+}
+this.inherited(arguments);
+}});
+function _10(_11,_12,_13,_14){
+var _15=_11.modules.concat(_11.dependencies);
+if(_11.template){
+_15.push("dojo/text!"+"app/"+_11.template);
+}
+require(_15,function(){
+var _16=[_a];
+for(var i=0;i<_11.modules.length;i++){
+_16.push(arguments[i]);
+}
+if(_11.template){
+var ext={templateString:arguments[arguments.length-1]};
+}
+App=_1.declare(_16,ext);
+_1.ready(function(){
+app=App(_11,_12||_1.body());
+app.startup();
+});
+});
+};
+return function(_17,_18){
+if(!_17){
+throw Error("App Config Missing");
+}
+if(_17.validate){
+require(["dojox/json/schema","dojox/json/ref","dojo/text!dojox/application/schema/application.json"],function(_19,_1a){
+_19=dojox.json.ref.resolveJson(_19);
+if(_19.validate(_17,_1a)){
+_10(_17,_18);
+}
+});
+}else{
+_10(_17,_18);
+}
+};
 });

@@ -1,716 +1,374 @@
-dojo.provide("dojox.mobile.app.ImageView");
-dojo.experimental("dojox.mobile.app.ImageView");
-dojo.require("dojox.mobile.app._Widget");
-
-dojo.require("dojo.fx.easing");
-
-dojo.declare("dojox.mobile.app.ImageView", dojox.mobile.app._Widget, {
-
-	// zoom: Number
-	//		The current level of zoom.  This should not be set manually.
-	zoom: 1,
-
-	// zoomCenterX: Number
-	//		The X coordinate in the image where the zoom is focused
-	zoomCenterX: 0,
-
-	// zoomCenterY: Number
-	//		The Y coordinate in the image where the zoom is focused
-	zoomCenterY: 0,
-
-	// maxZoom: Number
-	//		The highest degree to which an image can be zoomed.  For example,
-	//		a maxZoom of 5 means that the image will be 5 times larger than normal
-	maxZoom: 5,
-
-	// autoZoomLevel: Number
-	//		The degree to which the image is zoomed when auto zoom is invoked.
-	//		The higher the number, the more the image is zoomed in.
-	autoZoomLevel: 3,
-
-	// disableAutoZoom: Boolean
-	//		Disables auto zoom
-	disableAutoZoom: false,
-
-	// disableSwipe: Boolean
-	//		Disables the users ability to swipe from one image to the next.
-	disableSwipe: false,
-
-	// autoZoomEvent: String
-	//		Overrides the default event listened to which invokes auto zoom
-	autoZoomEvent: null,
-
-	// _leftImg: Node
-	//		The full sized image to the left
-	_leftImg: null,
-
-	// _centerImg: Node
-	//		The full sized image in the center
-	_centerImg: null,
-
-	// _rightImg: Node
-	//		The full sized image to the right
-	_rightImg: null,
-
-	// _leftImg: Node
-	//		The small sized image to the left
-	_leftSmallImg: null,
-
-	// _centerImg: Node
-	//		The small sized image in the center
-	_centerSmallImg: null,
-
-	// _rightImg: Node
-	//		The small sized image to the right
-	_rightSmallImg: null,
-
-	constructor: function(){
-
-		this.panX = 0;
-		this.panY = 0;
-
-		this.handleLoad = dojo.hitch(this, this.handleLoad);
-		this._updateAnimatedZoom = dojo.hitch(this, this._updateAnimatedZoom);
-		this._updateAnimatedPan = dojo.hitch(this, this._updateAnimatedPan);
-		this._onAnimPanEnd = dojo.hitch(this, this._onAnimPanEnd);
-	},
-
-	buildRendering: function(){
-		this.inherited(arguments);
-
-		this.canvas = dojo.create("canvas", {}, this.domNode);
-
-		dojo.addClass(this.domNode, "mblImageView");
-	},
-
-	postCreate: function(){
-		this.inherited(arguments);
-
-		this.size = dojo.marginBox(this.domNode);
-
-		dojo.style(this.canvas, {
-			width: this.size.w + "px",
-			height: this.size.h + "px"
-		});
-		this.canvas.height = this.size.h;
-		this.canvas.width = this.size.w;
-
-		var _this = this;
-
-		// Listen to the mousedown/touchstart event.  Record the position
-		// so we can use it to pan the image.
-		this.connect(this.domNode, "onmousedown", function(event){
-			if(_this.isAnimating()){
-				return;
-			}
-			if(_this.panX){
-				_this.handleDragEnd();
-			}
-
-			_this.downX = event.targetTouches ? event.targetTouches[0].clientX : event.clientX;
-			_this.downY = event.targetTouches ? event.targetTouches[0].clientY : event.clientY;
-		});
-
-		// record the movement of the mouse.
-		this.connect(this.domNode, "onmousemove", function(event){
-			if(_this.isAnimating()){
-				return;
-			}
-			if((!_this.downX && _this.downX !== 0) || (!_this.downY && _this.downY !== 0)){
-				// If the touch didn't begin on this widget, ignore the movement
-				return;
-			}
-
-			if((!_this.disableSwipe && _this.zoom == 1)
-				|| (!_this.disableAutoZoom && _this.zoom != 1)){
-				var x = event.targetTouches ?
-							event.targetTouches[0].clientX : event.pageX;
-				var y = event.targetTouches ?
-							event.targetTouches[0].clientY : event.pageY;
-
-				_this.panX = x - _this.downX;
-				_this.panY = y - _this.downY;
-
-				if(_this.zoom == 1){
-					// If not zoomed in, then try to move to the next or prev image
-					// but only if the mouse has moved more than 10 pixels
-					// in the X direction
-					if(Math.abs(_this.panX) > 10){
-						_this.render();
-					}
-				}else{
-					// If zoomed in, pan the image if the mouse has moved more
-					// than 10 pixels in either direction.
-					if(Math.abs(_this.panX) > 10 || Math.abs(_this.panY) > 10){
-						_this.render();
-					}
-				}
-			}
-		});
-
-		this.connect(this.domNode, "onmouseout", function(event){
-			if(!_this.isAnimating() && _this.panX){
-				_this.handleDragEnd();
-			}
-		});
-
-		this.connect(this.domNode, "onmouseover", function(event){
-			_this.downX = _this.downY = null;
-		});
-
-		// Set up AutoZoom, which zooms in a fixed amount when the user taps
-		// a part of the canvas
-		this.connect(this.domNode, "onclick", function(event){
-			if(_this.isAnimating()){
-				return;
-			}
-			if(_this.downX == null || _this.downY == null){
-				return;
-			}
-
-			var x = (event.targetTouches ?
-						event.targetTouches[0].clientX : event.pageX);
-			var y = (event.targetTouches ?
-						event.targetTouches[0].clientY : event.pageY);
-
-			// If the mouse/finger has moved more than 14 pixels from where it
-			// started, do not treat it as a click.  It is a drag.
-			if(Math.abs(_this.panX) > 14 || Math.abs(_this.panY) > 14){
-				_this.downX = _this.downY = null;
-				_this.handleDragEnd();
-				return;
-			}
-			_this.downX = _this.downY = null;
-
-			if(!_this.disableAutoZoom){
-
-				if(!_this._centerImg || !_this._centerImg._loaded){
-					// Do nothing until the image is loaded
-					return;
-				}
-				if(_this.zoom != 1){
-					_this.set("animatedZoom", 1);
-					return;
-				}
-
-				var pos = dojo._abs(_this.domNode);
-
-				// Translate the clicked point to a point on the source image
-				var xRatio = _this.size.w / _this._centerImg.width;
-				var yRatio = _this.size.h / _this._centerImg.height;
-
-				// Do an animated zoom to the point which was clicked.
-				_this.zoomTo(
-					((x - pos.x) / xRatio) - _this.panX,
-					((y - pos.y) / yRatio) - _this.panY,
-					_this.autoZoomLevel);
-			}
-		});
-
-		// Listen for Flick events
-		dojo.connect(this.domNode, "flick", this, "handleFlick");
-	},
-
-	isAnimating: function(){
-		// summary:
-		//		Returns true if an animation is in progress, false otherwise.
-		return this._anim && this._anim.status() == "playing";
-	},
-
-	handleDragEnd: function(){
-		// summary:
-		//		Handles the end of a dragging event. If not zoomed in, it
-		//		determines if the next or previous image should be transitioned
-		//		to.
-		this.downX = this.downY = null;
-		console.log("handleDragEnd");
-
-		if(this.zoom == 1){
-			if(!this.panX){
-				return;
-			}
-
-			var leftLoaded = (this._leftImg && this._leftImg._loaded)
-							|| (this._leftSmallImg && this._leftSmallImg._loaded);
-			var rightLoaded = (this._rightImg && this._rightImg._loaded)
-							|| (this._rightSmallImg && this._rightSmallImg._loaded);
-
-			// Check if the drag has moved the image more than half its length.
-			// If so, move to either the previous or next image.
-			var doMove =
-				!(Math.abs(this.panX) < this._centerImg._baseWidth / 2) &&
-				(
-					(this.panX > 0 && leftLoaded ? 1 : 0) ||
-					(this.panX < 0 && rightLoaded ? 1 : 0)
-				);
-
-
-			if(!doMove){
-				// If not moving to another image, animate the sliding of the
-				// image back into place.
-				this._animPanTo(0, dojo.fx.easing.expoOut, 700);
-			}else{
-				// Move to another image.
-				this.moveTo(this.panX);
-			}
-		}else{
-			if(!this.panX && !this.panY){
-				return;
-			}
-			// Recenter the zoomed image based on where it was panned to
-			// previously
-			this.zoomCenterX -= (this.panX / this.zoom);
-			this.zoomCenterY -= (this.panY / this.zoom);
-
-			this.panX = this.panY = 0;
-		}
-
-	},
-
-	handleFlick: function(event){
-		// summary:
-		//		Handle a flick event.
-		if(this.zoom == 1 && event.duration < 500){
-			// Only handle quick flicks here, less than 0.5 seconds
-
-			// If not zoomed in, then check if we should move to the next photo
-			// or not
-			if(event.direction == "ltr"){
-				this.moveTo(1);
-			}else if(event.direction == "rtl"){
-				this.moveTo(-1);
-			}
-			// If an up or down flick occurs, it means nothing so ignore it
-			this.downX = this.downY = null;
-		}
-	},
-
-	moveTo: function(direction){
-		direction = direction > 0 ? 1 : -1;
-		var toImg;
-
-		if(direction < 1){
-			if(this._rightImg && this._rightImg._loaded){
-				toImg = this._rightImg;
-			}else if(this._rightSmallImg && this._rightSmallImg._loaded){
-				toImg = this._rightSmallImg;
-			}
-		}else{
-			if(this._leftImg && this._leftImg._loaded){
-				toImg = this._leftImg;
-			}else if(this._leftSmallImg && this._leftSmallImg._loaded){
-				toImg = this._leftSmallImg;
-			}
-		}
-
-		this._moveDir = direction;
-		var _this = this;
-
-		if(toImg && toImg._loaded){
-			// If the image is loaded, make a linear animation to show it
-			this._animPanTo(this.size.w * direction, null, 500, function(){
-				_this.panX = 0;
-				_this.panY = 0;
-
-				if(direction < 0){
-					// Moving to show the right image
-					_this._switchImage("left", "right");
-				}else{
-					// Moving to show the left image
-					_this._switchImage("right", "left");
-				}
-
-				_this.render();
-				_this.onChange(direction * -1);
-			});
-
-		}else{
-			// If the next image is not loaded, make an animation to
-			// move the center image to half the width of the widget and back
-			// again
-
-			console.log("moveTo image not loaded!", toImg);
-
-			this._animPanTo(0, dojo.fx.easing.expoOut, 700);
-		}
-	},
-
-	_switchImage: function(toImg, fromImg){
-		var toSmallImgName = "_" + toImg + "SmallImg";
-		var toImgName = "_" + toImg + "Img";
-
-		var fromSmallImgName = "_" + fromImg + "SmallImg";
-		var fromImgName = "_" + fromImg + "Img";
-
-		this[toImgName] = this._centerImg;
-		this[toSmallImgName] = this._centerSmallImg;
-
-		this[toImgName]._type = toImg;
-
-		if(this[toSmallImgName]){
-			this[toSmallImgName]._type = toImg;
-		}
-
-		this._centerImg = this[fromImgName];
-		this._centerSmallImg = this[fromSmallImgName];
-		this._centerImg._type = "center";
-
-		if(this._centerSmallImg){
-			this._centerSmallImg._type = "center";
-		}
-		this[fromImgName] = this[fromSmallImgName] = null;
-	},
-
-	_animPanTo: function(to, easing, duration, callback){
-		this._animCallback = callback;
-		this._anim = new dojo.Animation({
-			curve: [this.panX, to],
-			onAnimate: this._updateAnimatedPan,
-			duration: duration || 500,
-			easing: easing,
-			onEnd: this._onAnimPanEnd
-		});
-
-		this._anim.play();
-		return this._anim;
-	},
-
-	onChange: function(direction){
-		// summary:
-		//		Stub function that can be listened to in order to provide
-		//		new images when the displayed image changes
-	},
-
-	_updateAnimatedPan: function(amount){
-		this.panX = amount;
-		this.render();
-	},
-
-	_onAnimPanEnd: function(){
-		this.panX = this.panY = 0;
-
-		if(this._animCallback){
-			this._animCallback();
-		}
-	},
-
-	zoomTo: function(centerX, centerY, zoom){
-		this.set("zoomCenterX", centerX);
-		this.set("zoomCenterY", centerY);
-
-		this.set("animatedZoom", zoom);
-	},
-
-	render: function(){
-		var cxt = this.canvas.getContext('2d');
-
-		cxt.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-		// Render the center image
-		this._renderImg(
-			this._centerSmallImg,
-			this._centerImg,
-			this.zoom == 1 ? (this.panX < 0 ? 1 : this.panX > 0 ? -1 : 0) : 0);
-
-		if(this.zoom == 1 && this.panX != 0){
-			if(this.panX > 0){
-				// Render the left image, showing the right side of it
-				this._renderImg(this._leftSmallImg, this._leftImg, 1);
-			}else{
-				// Render the right image, showing the left side of it
-				this._renderImg(this._rightSmallImg, this._rightImg, -1);
-			}
-		}
-	},
-
-	_renderImg: function(smallImg, largeImg, panDir){
-		// summary:
-		//		Renders a single image
-
-
-		// If zoomed, we just display the center img
-		var img = (largeImg && largeImg._loaded) ? largeImg : smallImg;
-
-		if(!img || !img._loaded){
-			// If neither the large or small image is loaded, display nothing
-			return;
-		}
-		var cxt = this.canvas.getContext('2d');
-
-		var baseWidth = img._baseWidth;
-		var baseHeight = img._baseHeight;
-
-		// Calculate the size the image would be if there were no bounds
-		var desiredWidth = baseWidth * this.zoom;
-		var desiredHeight = baseHeight * this.zoom;
-
-		// Calculate the actual size of the viewable image
-		var destWidth = Math.min(this.size.w, desiredWidth);
-		var destHeight = Math.min(this.size.h, desiredHeight);
-
-
-		// Calculate the size of the window on the original image to use
-		var sourceWidth = this.dispWidth = img.width * (destWidth / desiredWidth);
-		var sourceHeight = this.dispHeight = img.height * (destHeight / desiredHeight);
-
-		var zoomCenterX = this.zoomCenterX - (this.panX / this.zoom);
-		var zoomCenterY = this.zoomCenterY - (this.panY / this.zoom);
-
-		// Calculate where the center of the view should be
-		var centerX = Math.floor(Math.max(sourceWidth / 2,
-				Math.min(img.width - sourceWidth / 2, zoomCenterX)));
-		var centerY = Math.floor(Math.max(sourceHeight / 2,
-				Math.min(img.height - sourceHeight / 2, zoomCenterY)));
-
-
-		var sourceX = Math.max(0,
-			Math.round((img.width - sourceWidth)/2 + (centerX - img._centerX)) );
-		var sourceY = Math.max(0,
-			Math.round((img.height - sourceHeight) / 2 + (centerY - img._centerY))
-						);
-
-		var destX = Math.round(Math.max(0, this.canvas.width - destWidth)/2);
-		var destY = Math.round(Math.max(0, this.canvas.height - destHeight)/2);
-
-		var oldDestWidth = destWidth;
-		var oldSourceWidth = sourceWidth;
-
-		if(this.zoom == 1 && panDir && this.panX){
-
-			if(this.panX < 0){
-				if(panDir > 0){
-					// If the touch is moving left, and the right side of the
-					// image should be shown, then reduce the destination width
-					// by the absolute value of panX
-					destWidth -= Math.abs(this.panX);
-					destX = 0;
-				}else if(panDir < 0){
-					// If the touch is moving left, and the left side of the
-					// image should be shown, then set the displayed width
-					// to the absolute value of panX, less some pixels for
-					// a padding between images
-					destWidth = Math.max(1, Math.abs(this.panX) - 5);
-					destX = this.size.w - destWidth;
-				}
-			}else{
-				if(panDir > 0){
-					// If the touch is moving right, and the right side of the
-					// image should be shown, then set the destination width
-					// to the absolute value of the pan, less some pixels for
-					// padding
-					destWidth = Math.max(1, Math.abs(this.panX) - 5);
-					destX = 0;
-				}else if(panDir < 0){
-					// If the touch is moving right, and the left side of the
-					// image should be shown, then reduce the destination width
-					// by the widget width minus the absolute value of panX
-					destWidth -= Math.abs(this.panX);
-					destX = this.size.w - destWidth;
-				}
-			}
-
-			sourceWidth = Math.max(1,
-						Math.floor(sourceWidth * (destWidth / oldDestWidth)));
-
-			if(panDir > 0){
-				// If the right side of the image should be displayed, move
-				// the sourceX to be the width of the image minus the difference
-				// between the original sourceWidth and the new sourceWidth
-				sourceX = (sourceX + oldSourceWidth) - (sourceWidth);
-			}
-			sourceX = Math.floor(sourceX);
-		}
-
-		try{
-
-			// See https://developer.mozilla.org/en/Canvas_tutorial/Using_images
-			cxt.drawImage(
-				img,
-				Math.max(0, sourceX),
-				sourceY,
-				Math.min(oldSourceWidth, sourceWidth),
-				sourceHeight,
-				destX, 	// Xpos
-				destY, // Ypos
-				Math.min(oldDestWidth, destWidth),
-				destHeight
-			);
-		}catch(e){
-			console.log("Caught Error",e,
-
-					"type=", img._type,
-					"oldDestWidth = ", oldDestWidth,
-					"destWidth", destWidth,
-					"destX", destX
-					, "oldSourceWidth=",oldSourceWidth,
-					"sourceWidth=", sourceWidth,
-					"sourceX = " + sourceX
-			);
-		}
-	},
-
-	_setZoomAttr: function(amount){
-		this.zoom = Math.min(this.maxZoom, Math.max(1, amount));
-
-		if(this.zoom == 1
-				&& this._centerImg
-				&& this._centerImg._loaded){
-
-			if(!this.isAnimating()){
-				this.zoomCenterX = this._centerImg.width / 2;
-				this.zoomCenterY = this._centerImg.height / 2;
-			}
-			this.panX = this.panY = 0;
-		}
-
-		this.render();
-	},
-
-	_setZoomCenterXAttr: function(value){
-		if(value != this.zoomCenterX){
-			if(this._centerImg && this._centerImg._loaded){
-				value = Math.min(this._centerImg.width, value);
-			}
-			this.zoomCenterX = Math.max(0, Math.round(value));
-		}
-	},
-
-	_setZoomCenterYAttr: function(value){
-		if(value != this.zoomCenterY){
-			if(this._centerImg && this._centerImg._loaded){
-				value = Math.min(this._centerImg.height, value);
-			}
-			this.zoomCenterY = Math.max(0, Math.round(value));
-		}
-	},
-
-	_setZoomCenterAttr: function(value){
-		if(value.x != this.zoomCenterX || value.y != this.zoomCenterY){
-			this.set("zoomCenterX", value.x);
-			this.set("zoomCenterY", value.y);
-			this.render();
-		}
-	},
-
-	_setAnimatedZoomAttr: function(amount){
-		if(this._anim && this._anim.status() == "playing"){
-			return;
-		}
-
-		this._anim = new dojo.Animation({
-			curve: [this.zoom, amount],
-			onAnimate: this._updateAnimatedZoom,
-			onEnd: this._onAnimEnd
-		});
-
-		this._anim.play();
-	},
-
-	_updateAnimatedZoom: function(amount){
-		this._setZoomAttr(amount);
-	},
-
-	_setCenterUrlAttr: function(urlOrObj){
-		this._setImage("center", urlOrObj);
-	},
-	_setLeftUrlAttr: function(urlOrObj){
-		this._setImage("left", urlOrObj);
-	},
-	_setRightUrlAttr: function(urlOrObj){
-		this._setImage("right", urlOrObj);
-	},
-
-	_setImage: function(name, urlOrObj){
-		var smallUrl = null;
-
-		var largeUrl = null;
-
-		if(dojo.isString(urlOrObj)){
-			// If the argument is a string, then just load the large url
-			largeUrl = urlOrObj;
-		}else{
-			largeUrl = urlOrObj.large;
-			smallUrl = urlOrObj.small;
-		}
-
-		if(this["_" + name + "Img"] && this["_" + name + "Img"]._src == largeUrl){
-			// Identical URL, ignore it
-			return;
-		}
-
-		// Just do the large image for now
-		var largeImg = this["_" + name + "Img"] = new Image();
-		largeImg._type = name;
-		largeImg._loaded = false;
-		largeImg._src = largeUrl;
-		largeImg._conn = dojo.connect(largeImg, "onload", this.handleLoad);
-
-		if(smallUrl){
-			// If a url to a small version of the image has been provided,
-			// load that image first.
-			var smallImg = this["_" + name + "SmallImg"] = new Image();
-			smallImg._type = name;
-			smallImg._loaded = false;
-			smallImg._conn = dojo.connect(smallImg, "onload", this.handleLoad);
-			smallImg._isSmall = true;
-			smallImg._src = smallUrl;
-			smallImg.src = smallUrl;
-		}
-
-		// It's important that the large url's src is set after the small image
-		// to ensure it's loaded second.
-		largeImg.src = largeUrl;
-	},
-
-	handleLoad: function(evt){
-		// summary:
-		//		Handles the loading of an image, both the large and small
-		//		versions.  A render is triggered as a result of each image load.
-
-		var img = evt.target;
-		img._loaded = true;
-
-		dojo.disconnect(img._conn);
-
-		var type = img._type;
-
-		switch(type){
-			case "center":
-				this.zoomCenterX = img.width / 2;
-				this.zoomCenterY = img.height / 2;
-				break;
-		}
-
-		var height = img.height;
-		var width = img.width;
-
-		if(width / this.size.w < height / this.size.h){
-			// Fit the height to the height of the canvas
-			img._baseHeight = this.canvas.height;
-			img._baseWidth = width / (height / this.size.h);
-		}else{
-			// Fix the width to the width of the canvas
-			img._baseWidth = this.canvas.width;
-			img._baseHeight = height / (width / this.size.w);
-		}
-		img._centerX = width / 2;
-		img._centerY = height / 2;
-
-		this.render();
-
-		this.onLoad(img._type, img._src, img._isSmall);
-	},
-
-	onLoad: function(type, url, isSmall){
-		// summary:
-		//		Dummy function that is called whenever an image loads.
-		// type: String
-		//		The position of the image that has loaded, either
-		//		"center", "left" or "right"
-		// url: String
-		//		The src of the image
-		// isSmall: Boolean
-		//		True if it is a small version of the image that has loaded,
-		//		false otherwise.
-	}
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["dojo","dijit","dojox","dojox/mobile/app/_Widget","dojo/fx/easing"],function(_1,_2,_3){
+_1.getObject("dojox.mobile.app.ImageView",1);
+_1.experimental("dojox.mobile.app.ImageView");
+_1.declare("dojox.mobile.app.ImageView",_3.mobile.app._Widget,{zoom:1,zoomCenterX:0,zoomCenterY:0,maxZoom:5,autoZoomLevel:3,disableAutoZoom:false,disableSwipe:false,autoZoomEvent:null,_leftImg:null,_centerImg:null,_rightImg:null,_leftSmallImg:null,_centerSmallImg:null,_rightSmallImg:null,constructor:function(){
+this.panX=0;
+this.panY=0;
+this.handleLoad=_1.hitch(this,this.handleLoad);
+this._updateAnimatedZoom=_1.hitch(this,this._updateAnimatedZoom);
+this._updateAnimatedPan=_1.hitch(this,this._updateAnimatedPan);
+this._onAnimPanEnd=_1.hitch(this,this._onAnimPanEnd);
+},buildRendering:function(){
+this.inherited(arguments);
+this.canvas=_1.create("canvas",{},this.domNode);
+_1.addClass(this.domNode,"mblImageView");
+},postCreate:function(){
+this.inherited(arguments);
+this.size=_1.marginBox(this.domNode);
+_1.style(this.canvas,{width:this.size.w+"px",height:this.size.h+"px"});
+this.canvas.height=this.size.h;
+this.canvas.width=this.size.w;
+var _4=this;
+this.connect(this.domNode,"onmousedown",function(_5){
+if(_4.isAnimating()){
+return;
+}
+if(_4.panX){
+_4.handleDragEnd();
+}
+_4.downX=_5.targetTouches?_5.targetTouches[0].clientX:_5.clientX;
+_4.downY=_5.targetTouches?_5.targetTouches[0].clientY:_5.clientY;
 });
+this.connect(this.domNode,"onmousemove",function(_6){
+if(_4.isAnimating()){
+return;
+}
+if((!_4.downX&&_4.downX!==0)||(!_4.downY&&_4.downY!==0)){
+return;
+}
+if((!_4.disableSwipe&&_4.zoom==1)||(!_4.disableAutoZoom&&_4.zoom!=1)){
+var x=_6.targetTouches?_6.targetTouches[0].clientX:_6.pageX;
+var y=_6.targetTouches?_6.targetTouches[0].clientY:_6.pageY;
+_4.panX=x-_4.downX;
+_4.panY=y-_4.downY;
+if(_4.zoom==1){
+if(Math.abs(_4.panX)>10){
+_4.render();
+}
+}else{
+if(Math.abs(_4.panX)>10||Math.abs(_4.panY)>10){
+_4.render();
+}
+}
+}
+});
+this.connect(this.domNode,"onmouseout",function(_7){
+if(!_4.isAnimating()&&_4.panX){
+_4.handleDragEnd();
+}
+});
+this.connect(this.domNode,"onmouseover",function(_8){
+_4.downX=_4.downY=null;
+});
+this.connect(this.domNode,"onclick",function(_9){
+if(_4.isAnimating()){
+return;
+}
+if(_4.downX==null||_4.downY==null){
+return;
+}
+var x=(_9.targetTouches?_9.targetTouches[0].clientX:_9.pageX);
+var y=(_9.targetTouches?_9.targetTouches[0].clientY:_9.pageY);
+if(Math.abs(_4.panX)>14||Math.abs(_4.panY)>14){
+_4.downX=_4.downY=null;
+_4.handleDragEnd();
+return;
+}
+_4.downX=_4.downY=null;
+if(!_4.disableAutoZoom){
+if(!_4._centerImg||!_4._centerImg._loaded){
+return;
+}
+if(_4.zoom!=1){
+_4.set("animatedZoom",1);
+return;
+}
+var _a=_1._abs(_4.domNode);
+var _b=_4.size.w/_4._centerImg.width;
+var _c=_4.size.h/_4._centerImg.height;
+_4.zoomTo(((x-_a.x)/_b)-_4.panX,((y-_a.y)/_c)-_4.panY,_4.autoZoomLevel);
+}
+});
+_1.connect(this.domNode,"flick",this,"handleFlick");
+},isAnimating:function(){
+return this._anim&&this._anim.status()=="playing";
+},handleDragEnd:function(){
+this.downX=this.downY=null;
+if(this.zoom==1){
+if(!this.panX){
+return;
+}
+var _d=(this._leftImg&&this._leftImg._loaded)||(this._leftSmallImg&&this._leftSmallImg._loaded);
+var _e=(this._rightImg&&this._rightImg._loaded)||(this._rightSmallImg&&this._rightSmallImg._loaded);
+var _f=!(Math.abs(this.panX)<this._centerImg._baseWidth/2)&&((this.panX>0&&_d?1:0)||(this.panX<0&&_e?1:0));
+if(!_f){
+this._animPanTo(0,_1.fx.easing.expoOut,700);
+}else{
+this.moveTo(this.panX);
+}
+}else{
+if(!this.panX&&!this.panY){
+return;
+}
+this.zoomCenterX-=(this.panX/this.zoom);
+this.zoomCenterY-=(this.panY/this.zoom);
+this.panX=this.panY=0;
+}
+},handleFlick:function(_10){
+if(this.zoom==1&&_10.duration<500){
+if(_10.direction=="ltr"){
+this.moveTo(1);
+}else{
+if(_10.direction=="rtl"){
+this.moveTo(-1);
+}
+}
+this.downX=this.downY=null;
+}
+},moveTo:function(_11){
+_11=_11>0?1:-1;
+var _12;
+if(_11<1){
+if(this._rightImg&&this._rightImg._loaded){
+_12=this._rightImg;
+}else{
+if(this._rightSmallImg&&this._rightSmallImg._loaded){
+_12=this._rightSmallImg;
+}
+}
+}else{
+if(this._leftImg&&this._leftImg._loaded){
+_12=this._leftImg;
+}else{
+if(this._leftSmallImg&&this._leftSmallImg._loaded){
+_12=this._leftSmallImg;
+}
+}
+}
+this._moveDir=_11;
+var _13=this;
+if(_12&&_12._loaded){
+this._animPanTo(this.size.w*_11,null,500,function(){
+_13.panX=0;
+_13.panY=0;
+if(_11<0){
+_13._switchImage("left","right");
+}else{
+_13._switchImage("right","left");
+}
+_13.render();
+_13.onChange(_11*-1);
+});
+}else{
+this._animPanTo(0,_1.fx.easing.expoOut,700);
+}
+},_switchImage:function(_14,_15){
+var _16="_"+_14+"SmallImg";
+var _17="_"+_14+"Img";
+var _18="_"+_15+"SmallImg";
+var _19="_"+_15+"Img";
+this[_17]=this._centerImg;
+this[_16]=this._centerSmallImg;
+this[_17]._type=_14;
+if(this[_16]){
+this[_16]._type=_14;
+}
+this._centerImg=this[_19];
+this._centerSmallImg=this[_18];
+this._centerImg._type="center";
+if(this._centerSmallImg){
+this._centerSmallImg._type="center";
+}
+this[_19]=this[_18]=null;
+},_animPanTo:function(to,_1a,_1b,_1c){
+this._animCallback=_1c;
+this._anim=new _1.Animation({curve:[this.panX,to],onAnimate:this._updateAnimatedPan,duration:_1b||500,easing:_1a,onEnd:this._onAnimPanEnd});
+this._anim.play();
+return this._anim;
+},onChange:function(_1d){
+},_updateAnimatedPan:function(_1e){
+this.panX=_1e;
+this.render();
+},_onAnimPanEnd:function(){
+this.panX=this.panY=0;
+if(this._animCallback){
+this._animCallback();
+}
+},zoomTo:function(_1f,_20,_21){
+this.set("zoomCenterX",_1f);
+this.set("zoomCenterY",_20);
+this.set("animatedZoom",_21);
+},render:function(){
+var cxt=this.canvas.getContext("2d");
+cxt.clearRect(0,0,this.canvas.width,this.canvas.height);
+this._renderImg(this._centerSmallImg,this._centerImg,this.zoom==1?(this.panX<0?1:this.panX>0?-1:0):0);
+if(this.zoom==1&&this.panX!=0){
+if(this.panX>0){
+this._renderImg(this._leftSmallImg,this._leftImg,1);
+}else{
+this._renderImg(this._rightSmallImg,this._rightImg,-1);
+}
+}
+},_renderImg:function(_22,_23,_24){
+var img=(_23&&_23._loaded)?_23:_22;
+if(!img||!img._loaded){
+return;
+}
+var cxt=this.canvas.getContext("2d");
+var _25=img._baseWidth;
+var _26=img._baseHeight;
+var _27=_25*this.zoom;
+var _28=_26*this.zoom;
+var _29=Math.min(this.size.w,_27);
+var _2a=Math.min(this.size.h,_28);
+var _2b=this.dispWidth=img.width*(_29/_27);
+var _2c=this.dispHeight=img.height*(_2a/_28);
+var _2d=this.zoomCenterX-(this.panX/this.zoom);
+var _2e=this.zoomCenterY-(this.panY/this.zoom);
+var _2f=Math.floor(Math.max(_2b/2,Math.min(img.width-_2b/2,_2d)));
+var _30=Math.floor(Math.max(_2c/2,Math.min(img.height-_2c/2,_2e)));
+var _31=Math.max(0,Math.round((img.width-_2b)/2+(_2f-img._centerX)));
+var _32=Math.max(0,Math.round((img.height-_2c)/2+(_30-img._centerY)));
+var _33=Math.round(Math.max(0,this.canvas.width-_29)/2);
+var _34=Math.round(Math.max(0,this.canvas.height-_2a)/2);
+var _35=_29;
+var _36=_2b;
+if(this.zoom==1&&_24&&this.panX){
+if(this.panX<0){
+if(_24>0){
+_29-=Math.abs(this.panX);
+_33=0;
+}else{
+if(_24<0){
+_29=Math.max(1,Math.abs(this.panX)-5);
+_33=this.size.w-_29;
+}
+}
+}else{
+if(_24>0){
+_29=Math.max(1,Math.abs(this.panX)-5);
+_33=0;
+}else{
+if(_24<0){
+_29-=Math.abs(this.panX);
+_33=this.size.w-_29;
+}
+}
+}
+_2b=Math.max(1,Math.floor(_2b*(_29/_35)));
+if(_24>0){
+_31=(_31+_36)-(_2b);
+}
+_31=Math.floor(_31);
+}
+try{
+cxt.drawImage(img,Math.max(0,_31),_32,Math.min(_36,_2b),_2c,_33,_34,Math.min(_35,_29),_2a);
+}
+catch(e){
+}
+},_setZoomAttr:function(_37){
+this.zoom=Math.min(this.maxZoom,Math.max(1,_37));
+if(this.zoom==1&&this._centerImg&&this._centerImg._loaded){
+if(!this.isAnimating()){
+this.zoomCenterX=this._centerImg.width/2;
+this.zoomCenterY=this._centerImg.height/2;
+}
+this.panX=this.panY=0;
+}
+this.render();
+},_setZoomCenterXAttr:function(_38){
+if(_38!=this.zoomCenterX){
+if(this._centerImg&&this._centerImg._loaded){
+_38=Math.min(this._centerImg.width,_38);
+}
+this.zoomCenterX=Math.max(0,Math.round(_38));
+}
+},_setZoomCenterYAttr:function(_39){
+if(_39!=this.zoomCenterY){
+if(this._centerImg&&this._centerImg._loaded){
+_39=Math.min(this._centerImg.height,_39);
+}
+this.zoomCenterY=Math.max(0,Math.round(_39));
+}
+},_setZoomCenterAttr:function(_3a){
+if(_3a.x!=this.zoomCenterX||_3a.y!=this.zoomCenterY){
+this.set("zoomCenterX",_3a.x);
+this.set("zoomCenterY",_3a.y);
+this.render();
+}
+},_setAnimatedZoomAttr:function(_3b){
+if(this._anim&&this._anim.status()=="playing"){
+return;
+}
+this._anim=new _1.Animation({curve:[this.zoom,_3b],onAnimate:this._updateAnimatedZoom,onEnd:this._onAnimEnd});
+this._anim.play();
+},_updateAnimatedZoom:function(_3c){
+this._setZoomAttr(_3c);
+},_setCenterUrlAttr:function(_3d){
+this._setImage("center",_3d);
+},_setLeftUrlAttr:function(_3e){
+this._setImage("left",_3e);
+},_setRightUrlAttr:function(_3f){
+this._setImage("right",_3f);
+},_setImage:function(_40,_41){
+var _42=null;
+var _43=null;
+if(_1.isString(_41)){
+_43=_41;
+}else{
+_43=_41.large;
+_42=_41.small;
+}
+if(this["_"+_40+"Img"]&&this["_"+_40+"Img"]._src==_43){
+return;
+}
+var _44=this["_"+_40+"Img"]=new Image();
+_44._type=_40;
+_44._loaded=false;
+_44._src=_43;
+_44._conn=_1.connect(_44,"onload",this.handleLoad);
+if(_42){
+var _45=this["_"+_40+"SmallImg"]=new Image();
+_45._type=_40;
+_45._loaded=false;
+_45._conn=_1.connect(_45,"onload",this.handleLoad);
+_45._isSmall=true;
+_45._src=_42;
+_45.src=_42;
+}
+_44.src=_43;
+},handleLoad:function(evt){
+var img=evt.target;
+img._loaded=true;
+_1.disconnect(img._conn);
+var _46=img._type;
+switch(_46){
+case "center":
+this.zoomCenterX=img.width/2;
+this.zoomCenterY=img.height/2;
+break;
+}
+var _47=img.height;
+var _48=img.width;
+if(_48/this.size.w<_47/this.size.h){
+img._baseHeight=this.canvas.height;
+img._baseWidth=_48/(_47/this.size.h);
+}else{
+img._baseWidth=this.canvas.width;
+img._baseHeight=_47/(_48/this.size.w);
+}
+img._centerX=_48/2;
+img._centerY=_47/2;
+this.render();
+this.onLoad(img._type,img._src,img._isSmall);
+},onLoad:function(_49,url,_4a){
+}});
+return _1.getObject("dojox.mobile.app.ImageView");
+});
+require(["dojox/mobile/app/ImageView"]);

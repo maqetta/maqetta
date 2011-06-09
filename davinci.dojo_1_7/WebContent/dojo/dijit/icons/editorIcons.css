@@ -1,24 +1,14 @@
-/* Dijit Editor icons*/
-
-/*editorIcons.css  is located in dijit/images 
-
-editorIcons.css contains references to the dijit editor widget icons. There are 46 icons used to map to the related editor funtionality in the editor's toolbar.
-
-*/
-
 
 .dijitEditorIcon {
-	background-image: url('images/editorIconsEnabled.png'); /* editor icons sprite image for the enabled state */
+	background-image: url('images/editorIconsEnabled.png'); 
 	background-repeat: no-repeat;
 	width: 18px;
 	height: 18px;
 	text-align: center;
 }
 .dijitDisabled .dijitEditorIcon {
-	background-image: url('images/editorIconsDisabled.png'); /* editor icons sprite image for the disabled state */
+	background-image: url('images/editorIconsDisabled.png'); 
 }
-
-
 .dijitEditorIconSep { background-position: 0; }
 .dijitEditorIconSave { background-position: -18px; }
 .dijitEditorIconPrint { background-position: -36px; }
@@ -65,14 +55,3 @@ editorIcons.css contains references to the dijit editor widget icons. There are 
 .dijitEditorIconRemoveFormat { background-position: -774px; }
 .dijitEditorIconFullScreen { background-position: -792px; }
 .dijitEditorIconWikiword { background-position: -810px; }
-/* .dijitEditorIconToggleDir { background-position: -540px; ;} - 03172010: This icon was not in dijit.editor but is in dojox.editor. */
-
-/* no longer in the editor toolbar:  .dijitEditorIconToggleDir { background-position: -540px;  padding: 0; margin: 0; color:#555555;
-									font-family:verdana,arial,sans-serif; font-weight: 800; font-size: 70%; */
-
-
-
-
-
-
-

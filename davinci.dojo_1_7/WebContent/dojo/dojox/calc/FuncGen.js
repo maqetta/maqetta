@@ -1,139 +1,70 @@
-define(["dojo", "dijit/_Templated", "dojox/math/_base", "dijit/dijit", "dijit/form/ComboBox", "dijit/form/SimpleTextarea", "dijit/form/Button", "dojo/data/ItemFileWriteStore"], function(dojo) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.experimental("dojox.calc.FuncGen");
-
-dojo.declare(
-	"dojox.calc.FuncGen",
-	[dijit._Widget, dijit._Templated],
-{
-	// summary:
-	//		The dialog layout for making functions
-	//
-	templateString: dojo.cache("dojox.calc", "templates/FuncGen.html"),
-
-	widgetsInTemplate:true,
-
-	onSelect: function(){
-		// summary
-		//	if they select something in the name combobox, then change the body and arguments to correspond to the function they selected
-		this.reset();
-	},
-	onClear: function(){
-		// summary
-		//	the clear button in the template calls this
-		//	clear the name, arguments, and body if the user says yes
-		var answer = confirm("Do you want to clear the name, argument, and body text?");
-		if(answer){
-			this.clear();
-		}
-	},
-	saveFunction: function(name, args, body){
-		// override me
-	},
-	onSaved: function(){
-		// this on save needs to be overriden if you want Executor parsing support
-		//console.log("Save was pressed");
-	},
-	clear: function(){
-		// summary
-		//	clear the name, arguments, and body
-		this.textarea.set("value", "");
-		this.args.set("value", "");
-		this.combo.set("value", "");
-	},
-	reset: function(){
-		// summary
-		//	set the arguments and body to match a function selected if it exists in the function list
-		if(this.combo.get("value") in this.functions){
-			this.textarea.set("value", this.functions[this.combo.get("value")].body);
-			this.args.set("value", this.functions[this.combo.get("value")].args);
-		}
-	},
-	onReset: function(){
-		// summary
-		//	(Reset button on click event) reset the arguments and body to their previously saved state if the user says yes
-		//console.log("Reset was pressed");
-		if(this.combo.get("value") in this.functions){
-			var answer = confirm("Do you want to reset this function?");
-			if(answer){
-				this.reset();
-				this.status.set("value", "The function has been reset to its last save point.");
-			}
-		}
-	},
-	deleteThing: function(item){
-		// summary
-		//	delete an item in the writestore
-		if (this.writeStore.isItem(item)){
-			// delete it
-			//console.log("Found item "+item);
-			this.writeStore.deleteItem(item);
-			this.writeStore.save();
-		}else{
-			//console.log("Unable to locate the item");
-		}
-	},
-	deleteFunction: function(name){
-		// override me
-	},
-	onDelete: function(){
-		// summary
-		//	(Delete button on click event) delete a function if the user clicks yes
-
-		//console.log("Delete was pressed");
-
-		var name;
-		if((name = this.combo.get("value")) in this.functions){
-			var answer = confirm("Do you want to delete this function?");
-			if(answer){
-				var item = this.combo.item;
-
-				//this.writeStore.fetchItemByIdentity({identity:name, onItem: this.deleteThing, onError:null});
-
-				this.writeStore.deleteItem(item);
-				this.writeStore.save();
-
-				this.deleteFunction(name);
-				delete this.functions[name];
-				this.clear();
-			}
-		}else{
-			this.status.set("value", "Function cannot be deleted, it isn't saved.");
-		}
-	},
-	readyStatus: function(){
-		// summary
-		//	set the status in the template to ready
-		this.status.set("value", "Ready");
-	},
-	writeStore:null, //the user can save functions to the writestore
-	readStore:null, // users cannot edit the read store contents, but they can use them
-	functions:null, // use the names to get to the function
-
-	/*postCreate: function(){
-		this.functions = []; // use the names to get to the function
-		this.writeStore = new dojo.data.ItemFileWriteStore({data: {identifier: 'name', items:[]}});
-
-		this.combo.set("store", this.writeStore);
-	},*/
-
-	startup: function(){
-		// summary
-		//	make sure the parent has a close button if it needs to be able to close
-		//	link the write store too
-		this.combo.set("store", this.writeStore);
-
-		this.inherited(arguments);// this is super class startup
-		// close is only valid if the parent is a widget with a close function
-		var parent = dijit.getEnclosingWidget(this.domNode.parentNode);
-		if(parent && typeof parent.close == "function"){
-			this.closeButton.set("onClick", dojo.hitch(parent, 'close'));
-		}else{
-			dojo.style(this.closeButton.domNode, "display", "none"); // hide the button
-		}
-	}
-});
-
-
+define(["dojo","dijit/_Templated","dojox/math/_base","dijit/dijit","dijit/form/ComboBox","dijit/form/SimpleTextarea","dijit/form/Button","dojo/data/ItemFileWriteStore"],function(_1){
+_1.experimental("dojox.calc.FuncGen");
+_1.declare("dojox.calc.FuncGen",[dijit._Widget,dijit._Templated],{templateString:_1.cache("dojox.calc","templates/FuncGen.html"),widgetsInTemplate:true,onSelect:function(){
+this.reset();
+},onClear:function(){
+var _2=confirm("Do you want to clear the name, argument, and body text?");
+if(_2){
+this.clear();
+}
+},saveFunction:function(_3,_4,_5){
+},onSaved:function(){
+},clear:function(){
+this.textarea.set("value","");
+this.args.set("value","");
+this.combo.set("value","");
+},reset:function(){
+if(this.combo.get("value") in this.functions){
+this.textarea.set("value",this.functions[this.combo.get("value")].body);
+this.args.set("value",this.functions[this.combo.get("value")].args);
+}
+},onReset:function(){
+if(this.combo.get("value") in this.functions){
+var _6=confirm("Do you want to reset this function?");
+if(_6){
+this.reset();
+this.status.set("value","The function has been reset to its last save point.");
+}
+}
+},deleteThing:function(_7){
+if(this.writeStore.isItem(_7)){
+this.writeStore.deleteItem(_7);
+this.writeStore.save();
+}else{
+}
+},deleteFunction:function(_8){
+},onDelete:function(){
+var _9;
+if((_9=this.combo.get("value")) in this.functions){
+var _a=confirm("Do you want to delete this function?");
+if(_a){
+var _b=this.combo.item;
+this.writeStore.deleteItem(_b);
+this.writeStore.save();
+this.deleteFunction(_9);
+delete this.functions[_9];
+this.clear();
+}
+}else{
+this.status.set("value","Function cannot be deleted, it isn't saved.");
+}
+},readyStatus:function(){
+this.status.set("value","Ready");
+},writeStore:null,readStore:null,functions:null,startup:function(){
+this.combo.set("store",this.writeStore);
+this.inherited(arguments);
+var _c=dijit.getEnclosingWidget(this.domNode.parentNode);
+if(_c&&typeof _c.close=="function"){
+this.closeButton.set("onClick",_1.hitch(_c,"close"));
+}else{
+_1.style(this.closeButton.domNode,"display","none");
+}
+}});
 return dojox.calc.FuncGen;
 });

@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[visningsalternativer]",
 	title: "Tittel",
 	authors: "Forfattere",
@@ -9,3 +9,4 @@
 	summary: "Sammendrag",
 	content: "Innhold"
 })
+);

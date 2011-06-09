@@ -1,79 +1,31 @@
-define([ "dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Map" ], function(dojo,
-		declare, mapArg){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.declare("dojox.geo.openlayers.Feature", null, {
-		//	summary:
-		//		A Feature encapsulates an item so that it can be added to a Layer.
-		//		This class is not attended to be used as it, but serve as a base class
-		//		for specific features such as GeometryFeature which can display georeferenced 
-		//		geometries and WidgetFeature which can display georeferenced widgets. 
-		constructor : function(){
-			//	summary:
-			//		Construct a new Feature
-			this._layer = null;
-			this._coordSys = dojox.geo.openlayers.EPSG4326;
-		},
-
-		getCoordinateSystem : function(){
-			//	summary:
-			//		Returns the coordinate system in which coordinates of this feature are expressed.
-			//	returns: OpenLayers.Projection
-			//		The coordinate system in which coordinates of this feature are expressed.
-			return this._coordSys;
-		},
-
-		setCoordinateSystem : function(/* OpenLayers.Projection */cs){
-			//	summary:
-			//		Set the coordinate system in which coordinates of this feature are expressed.
-			//	cs: OpenLayers.Projection
-			//		The coordinate system in which coordinates of this feature are expressed.
-			this._coordSys = cs;
-		},
-
-		getLayer : function(){
-			//	summary:
-			//		Returns the Layer to which this feature belongs.
-			//	returns: dojox.geo.openlayers.Layer
-			//		The layer to which this feature belongs.
-			return this._layer;
-		},
-
-		_setLayer : function(/* dojox.geo.openlayers.Layer */l){
-			//	summary:
-			//		Sets the layer to which this Feature belongs
-			//	description:
-			//		Called when the feature is added to the Layer.
-			//	tags:
-			//		private
-			this._layer = l;
-		},
-
-		render : function(){
-		//	summary:
-		//		subclasses implements drawing specific behavior.
-		},
-
-		remove : function(){
-		//	summary:
-		//		Subclasses implements specific behavior.
-		//		Called when removed from the layer.
-		},
-
-		_getLocalXY : function(p){
-			//	summary:
-			//		From projected coordinates to screen coordinates
-			//	p: Object 
-			//		Object with x and y fields
-			//	tags:
-			//		private
-			var x = p.x;
-			var y = p.y;
-			var layer = this.getLayer();
-			var resolution = layer.olLayer.map.getResolution();
-			var extent = layer.olLayer.getExtent();
-			var rx = (x / resolution + (-extent.left / resolution));
-			var ry = ((extent.top / resolution) - y / resolution);
-			return [ rx, ry ];
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/declare","dojox/geo/openlayers/Map"],function(_1,_2,_3){
+return _1.declare("dojox.geo.openlayers.Feature",null,{constructor:function(){
+this._layer=null;
+this._coordSys=dojox.geo.openlayers.EPSG4326;
+},getCoordinateSystem:function(){
+return this._coordSys;
+},setCoordinateSystem:function(cs){
+this._coordSys=cs;
+},getLayer:function(){
+return this._layer;
+},_setLayer:function(l){
+this._layer=l;
+},render:function(){
+},remove:function(){
+},_getLocalXY:function(p){
+var x=p.x;
+var y=p.y;
+var _4=this.getLayer();
+var _5=_4.olLayer.map.getResolution();
+var _6=_4.olLayer.getExtent();
+var rx=(x/_5+(-_6.left/_5));
+var ry=((_6.top/_5)-y/_5);
+return [rx,ry];
+}});
 });

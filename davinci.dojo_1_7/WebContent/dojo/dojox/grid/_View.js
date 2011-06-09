@@ -1,837 +1,607 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dojo/text!./resources/View.html",
-	"dojo/dnd/Source",
-	"dojo/dnd/Manager",	
-	"dijit/_TemplatedMixin",
-	"dijit/_Widget",
-	"dojox/html/metrics",
-	"./_Builder",
-	"./util"], function(dojo, dijit, dojox, template){
-
-	// a private function
-	var getStyleText = function(inNode, inStyleText){
-		return inNode.style.cssText == undefined ? inNode.getAttribute("style") : inNode.style.cssText;
-	};
-
-	// some public functions
-	dojo.declare('dojox.grid._View', [dijit._Widget, dijit._TemplatedMixin], {
-		// summary:
-		//		A collection of grid columns. A grid is comprised of a set of views that stack horizontally.
-		//		Grid creates views automatically based on grid's layout structure.
-		//		Users should typically not need to access individual views directly.
-		//
-		// defaultWidth: String
-		//		Default width of the view
-		defaultWidth: "18em",
-
-		// viewWidth: String
-		// 		Width for the view, in valid css unit
-		viewWidth: "",
-
-		templateString: template,
-		
-		themeable: false,
-		classTag: 'dojoxGrid',
-		marginBottom: 0,
-		rowPad: 2,
-
-		// _togglingColumn: int
-		//		Width of the column being toggled (-1 for none)
-		_togglingColumn: -1,
-		
-		// _headerBuilderClass: Object
-		//		The class to use for our header builder
-		_headerBuilderClass: dojox.grid._HeaderBuilder,
-		
-		// _contentBuilderClass: Object
-		//		The class to use for our content builder
-		_contentBuilderClass: dojox.grid._ContentBuilder,
-		
-		postMixInProperties: function(){
-			this.rowNodes = {};
-		},
-
-		postCreate: function(){
-			this.connect(this.scrollboxNode,"onscroll","doscroll");
-			dojox.grid.util.funnelEvents(this.contentNode, this, "doContentEvent", [ 'mouseover', 'mouseout', 'click', 'dblclick', 'contextmenu', 'mousedown' ]);
-			dojox.grid.util.funnelEvents(this.headerNode, this, "doHeaderEvent", [ 'dblclick', 'mouseover', 'mouseout', 'mousemove', 'mousedown', 'click', 'contextmenu' ]);
-			this.content = new this._contentBuilderClass(this);
-			this.header = new this._headerBuilderClass(this);
-			//BiDi: in RTL case, style width='9000em' causes scrolling problem in head node
-			if(!dojo._isBodyLtr()){
-				this.headerNodeContainer.style.width = "";
-			}
-		},
-
-		destroy: function(){
-			dojo.destroy(this.headerNode);
-			delete this.headerNode;
-			for(var i in this.rowNodes){
-				dojo.destroy(this.rowNodes[i]);
-			}
-			this.rowNodes = {};
-			if(this.source){
-				this.source.destroy();
-			}
-			this.inherited(arguments);
-		},
-
-		// focus
-		focus: function(){
-			if(dojo.isIE || dojo.isWebKit || dojo.isOpera){
-				this.hiddenFocusNode.focus();
-			}else{
-				this.scrollboxNode.focus();
-			}
-		},
-
-		setStructure: function(inStructure){
-			var vs = (this.structure = inStructure);
-			// FIXME: similar logic is duplicated in layout
-			if(vs.width && !isNaN(vs.width)){
-				this.viewWidth = vs.width + 'em';
-			}else{
-				this.viewWidth = vs.width || (vs.noscroll ? 'auto' : this.viewWidth); //|| this.defaultWidth;
-			}
-			this._onBeforeRow = vs.onBeforeRow||function(){};
-			this._onAfterRow = vs.onAfterRow||function(){};
-			this.noscroll = vs.noscroll;
-			if(this.noscroll){
-				this.scrollboxNode.style.overflow = "hidden";
-			}
-			this.simpleStructure = Boolean(vs.cells.length == 1);
-			// bookkeeping
-			this.testFlexCells();
-			// accomodate new structure
-			this.updateStructure();
-		},
-		
-		_cleanupRowWidgets: function(inRowNode){
-			// Summary:
-			//		Cleans up the widgets for the given row node so that
-			//		we can reattach them if needed
-			if(inRowNode){
-				dojo.forEach(dojo.query("[widgetId]", inRowNode).map(dijit.byNode), function(w){
-					if(w._destroyOnRemove){
-						w.destroy();
-						delete w;
-					}else if(w.domNode && w.domNode.parentNode){
-						w.domNode.parentNode.removeChild(w.domNode);
-					}
-				});
-			}
-		},
-		
-		onBeforeRow: function(inRowIndex, cells){
-			this._onBeforeRow(inRowIndex, cells);
-			if(inRowIndex >= 0){
-				this._cleanupRowWidgets(this.getRowNode(inRowIndex));
-			}
-		},
-		
-		onAfterRow: function(inRowIndex, cells, inRowNode){
-			this._onAfterRow(inRowIndex, cells, inRowNode);
-			var g = this.grid;
-			dojo.forEach(dojo.query(".dojoxGridStubNode", inRowNode), function(n){
-				if(n && n.parentNode){
-					var lw = n.getAttribute("linkWidget");
-					var cellIdx = window.parseInt(dojo.attr(n, "cellIdx"), 10);
-					var cellDef = g.getCell(cellIdx);
-					var w = dijit.byId(lw);
-					if(w){
-						n.parentNode.replaceChild(w.domNode, n);
-						if(!w._started){
-							w.startup();
-						}
-					}else{
-						n.innerHTML = "";
-					}
-				}
-			}, this);
-		},
-
-		testFlexCells: function(){
-			// FIXME: cheater, this function does double duty as initializer and tester
-			this.flexCells = false;
-			for(var j=0, row; (row=this.structure.cells[j]); j++){
-				for(var i=0, cell; (cell=row[i]); i++){
-					cell.view = this;
-					this.flexCells = this.flexCells || cell.isFlex();
-				}
-			}
-			return this.flexCells;
-		},
-
-		updateStructure: function(){
-			// header builder needs to update table map
-			this.header.update();
-			// content builder needs to update markup cache
-			this.content.update();
-		},
-
-		getScrollbarWidth: function(){
-			var hasScrollSpace = this.hasVScrollbar();
-			var overflow = dojo.style(this.scrollboxNode, "overflow");
-			if(this.noscroll || !overflow || overflow == "hidden"){
-				hasScrollSpace = false;
-			}else if(overflow == "scroll"){
-				hasScrollSpace = true;
-			}
-			return (hasScrollSpace ? dojox.html.metrics.getScrollbar().w : 0); // Integer
-		},
-
-		getColumnsWidth: function(){
-			var h = this.headerContentNode;
-			return h && h.firstChild ? h.firstChild.offsetWidth : 0; // Integer
-		},
-
-		setColumnsWidth: function(width){
-			this.headerContentNode.firstChild.style.width = width + 'px';
-			if(this.viewWidth){
-				this.viewWidth = width + 'px';
-			}
-		},
-
-		getWidth: function(){
-			return this.viewWidth || (this.getColumnsWidth()+this.getScrollbarWidth()) +'px'; // String
-		},
-
-		getContentWidth: function(){
-			return Math.max(0, dojo._getContentBox(this.domNode).w - this.getScrollbarWidth()) + 'px'; // String
-		},
-
-		render: function(){
-			this.scrollboxNode.style.height = '';
-			this.renderHeader();
-			if(this._togglingColumn >= 0){
-				this.setColumnsWidth(this.getColumnsWidth() - this._togglingColumn);
-				this._togglingColumn = -1;
-			}
-			var cells = this.grid.layout.cells;
-			var getSibling = dojo.hitch(this, function(node, before){
-				!dojo._isBodyLtr() && (before = !before);
-				var inc = before?-1:1;
-				var idx = this.header.getCellNodeIndex(node) + inc;
-				var cell = cells[idx];
-				while(cell && cell.getHeaderNode() && cell.getHeaderNode().style.display == "none"){
-					idx += inc;
-					cell = cells[idx];
-				}
-				if(cell){
-					return cell.getHeaderNode();
-				}
-				return null;
-			});
-			if(this.grid.columnReordering && this.simpleStructure){
-				if(this.source){
-					this.source.destroy();
-				}
-				
-				// Create the top and bottom markers
-				var bottomMarkerId = "dojoxGrid_bottomMarker";
-				var topMarkerId = "dojoxGrid_topMarker";
-				if(this.bottomMarker){
-					dojo.destroy(this.bottomMarker);
-				}
-				this.bottomMarker = dojo.byId(bottomMarkerId);
-				if(this.topMarker){
-					dojo.destroy(this.topMarker);
-				}
-				this.topMarker = dojo.byId(topMarkerId);
-				if (!this.bottomMarker) {
-					this.bottomMarker = dojo.create("div", {
-						"id": bottomMarkerId,
-						"class": "dojoxGridColPlaceBottom"
-					}, dojo.body());
-					this._hide(this.bottomMarker);
-
-					
-					this.topMarker = dojo.create("div", {
-						"id": topMarkerId,
-						"class": "dojoxGridColPlaceTop"
-					}, dojo.body());
-					this._hide(this.topMarker);
-				}
-				this.arrowDim = dojo.contentBox(this.bottomMarker);
-
-				var headerHeight = dojo.contentBox(this.headerContentNode.firstChild.rows[0]).h;
-				
-				this.source = new dojo.dnd.Source(this.headerContentNode.firstChild.rows[0], {
-					horizontal: true,
-					accept: [ "gridColumn_" + this.grid.id ],
-					viewIndex: this.index,
-					generateText: false,
-					onMouseDown: dojo.hitch(this, function(e){
-						this.header.decorateEvent(e);
-						if((this.header.overRightResizeArea(e) || this.header.overLeftResizeArea(e)) &&
-							this.header.canResize(e) && !this.header.moveable){
-							this.header.beginColumnResize(e);
-						}else{
-							if(this.grid.headerMenu){
-								this.grid.headerMenu.onCancel(true);
-							}
-							// IE reports a left click as 1, where everything else reports 0
-							if(e.button === (dojo.isIE ? 1 : 0)){
-								dojo.dnd.Source.prototype.onMouseDown.call(this.source, e);
-							}
-						}
-					}),
-					onMouseOver: dojo.hitch(this, function(e){
-						var src = this.source;
-						if(src._getChildByEvent(e)){
-							dojo.dnd.Source.prototype.onMouseOver.apply(src, arguments);
-						}
-					}),
-					_markTargetAnchor: dojo.hitch(this, function(before){
-						var src = this.source;
-						if(src.current == src.targetAnchor && src.before == before){ return; }
-						if(src.targetAnchor && getSibling(src.targetAnchor, src.before)){
-							src._removeItemClass(getSibling(src.targetAnchor, src.before), src.before ? "After" : "Before");
-						}
-						dojo.dnd.Source.prototype._markTargetAnchor.call(src, before);
-						
-						var target = before ? src.targetAnchor : getSibling(src.targetAnchor, src.before);
-						var endAdd = 0;
-
-						if (!target) {
-							target = src.targetAnchor;
-							endAdd = dojo.contentBox(target).w + this.arrowDim.w/2 + 2;
-						}
-
-						// NOTE: this is for backwards compatibility with Dojo 1.3
-						var pos = (dojo.position||dojo._abs)(target, true);
-						var left = Math.floor(pos.x - this.arrowDim.w/2 + endAdd);
-
-						dojo.style(this.bottomMarker, "visibility", "visible");
-						dojo.style(this.topMarker, "visibility", "visible");
-						dojo.style(this.bottomMarker, {
-							"left": left + "px",
-							"top" : (headerHeight + pos.y) + "px"
-						});
-
-						dojo.style(this.topMarker, {
-							"left": left + "px",
-							"top" : (pos.y - this.arrowDim.h) + "px"
-						});
-
-						if(src.targetAnchor && getSibling(src.targetAnchor, src.before)){
-							src._addItemClass(getSibling(src.targetAnchor, src.before), src.before ? "After" : "Before");
-						}
-					}),
-					_unmarkTargetAnchor: dojo.hitch(this, function(){
-						var src = this.source;
-						if(!src.targetAnchor){ return; }
-						if(src.targetAnchor && getSibling(src.targetAnchor, src.before)){
-							src._removeItemClass(getSibling(src.targetAnchor, src.before), src.before ? "After" : "Before");
-						}
-						this._hide(this.bottomMarker);
-						this._hide(this.topMarker);
-						dojo.dnd.Source.prototype._unmarkTargetAnchor.call(src);
-					}),
-					destroy: dojo.hitch(this, function(){
-						dojo.disconnect(this._source_conn);
-						dojo.unsubscribe(this._source_sub);
-						dojo.dnd.Source.prototype.destroy.call(this.source);
-						if(this.bottomMarker){
-							dojo.destroy(this.bottomMarker);
-							delete this.bottomMarker;
-						}
-						if(this.topMarker){
-							dojo.destroy(this.topMarker);
-							delete this.topMarker;
-						}
-					}),
-					onDndCancel: dojo.hitch(this, function(){
-						dojo.dnd.Source.prototype.onDndCancel.call(this.source);
-						this._hide(this.bottomMarker);
-						this._hide(this.topMarker);
-					})
-				});
-
-				this._source_conn = dojo.connect(this.source, "onDndDrop", this, "_onDndDrop");
-				this._source_sub = dojo.subscribe("/dnd/drop/before", this, "_onDndDropBefore");
-				this.source.startup();
-			}
-		},
-		
-		_hide: function(node){
-			dojo.style(node, {
-				left: "-10000px",
-				top: "-10000px",
-				"visibility": "hidden"
-			});
-		},
-
-		_onDndDropBefore: function(source, nodes, copy){
-			if(dojo.dnd.manager().target !== this.source){
-				return;
-			}
-			this.source._targetNode = this.source.targetAnchor;
-			this.source._beforeTarget = this.source.before;
-			var views = this.grid.views.views;
-			var srcView = views[source.viewIndex];
-			var tgtView = views[this.index];
-			if(tgtView != srcView){
-				srcView.convertColPctToFixed();
-				tgtView.convertColPctToFixed();
-			}
-		},
-
-		_onDndDrop: function(source, nodes, copy){
-			if(dojo.dnd.manager().target !== this.source){
-				if(dojo.dnd.manager().source === this.source){
-					this._removingColumn = true;
-				}
-				return;
-			}
-			this._hide(this.bottomMarker);
-			this._hide(this.topMarker);
-
-			var getIdx = function(n){
-				return n ? dojo.attr(n, "idx") : null;
-			};
-			var w = dojo.marginBox(nodes[0]).w;
-			if(source.viewIndex !== this.index){
-				var views = this.grid.views.views;
-				var srcView = views[source.viewIndex];
-				var tgtView = views[this.index];
-				if(srcView.viewWidth && srcView.viewWidth != "auto"){
-					srcView.setColumnsWidth(srcView.getColumnsWidth() - w);
-				}
-				if(tgtView.viewWidth && tgtView.viewWidth != "auto"){
-					tgtView.setColumnsWidth(tgtView.getColumnsWidth());
-				}
-			}
-			var stn = this.source._targetNode;
-			var stb = this.source._beforeTarget;
-			!dojo._isBodyLtr() && (stb = !stb);
-			var layout = this.grid.layout;
-			var idx = this.index;
-			delete this.source._targetNode;
-			delete this.source._beforeTarget;
-			
-			layout.moveColumn(
-				source.viewIndex,
-				idx,
-				getIdx(nodes[0]),
-				getIdx(stn),
-				stb);
-		},
-
-		renderHeader: function(){
-			this.headerContentNode.innerHTML = this.header.generateHtml(this._getHeaderContent);
-			if(this.flexCells){
-				this.contentWidth = this.getContentWidth();
-				this.headerContentNode.firstChild.style.width = this.contentWidth;
-			}
-			dojox.grid.util.fire(this, "onAfterRow", [-1, this.structure.cells, this.headerContentNode]);
-		},
-
-		// note: not called in 'view' context
-		_getHeaderContent: function(inCell){
-			var n = inCell.name || inCell.grid.getCellName(inCell);
-			var ret = [ '<div class="dojoxGridSortNode' ];
-			
-			if(inCell.index != inCell.grid.getSortIndex()){
-				ret.push('">');
-			}else{
-				ret = ret.concat([ ' ',
-							inCell.grid.sortInfo > 0 ? 'dojoxGridSortUp' : 'dojoxGridSortDown',
-							'"><div class="dojoxGridArrowButtonChar">',
-							inCell.grid.sortInfo > 0 ? '&#9650;' : '&#9660;',
-							'</div><div class="dojoxGridArrowButtonNode" role="presentation"></div>',
-							'<div class="dojoxGridColCaption">']);
-			}
-			ret = ret.concat([n, '</div></div>']);
-			return ret.join('');
-		},
-
-		resize: function(){
-			this.adaptHeight();
-			this.adaptWidth();
-		},
-
-		hasHScrollbar: function(reset){
-			var hadScroll = this._hasHScroll||false;
-			if(this._hasHScroll == undefined || reset){
-				if(this.noscroll){
-					this._hasHScroll = false;
-				}else{
-					var style = dojo.style(this.scrollboxNode, "overflow");
-					if(style == "hidden"){
-						this._hasHScroll = false;
-					}else if(style == "scroll"){
-						this._hasHScroll = true;
-					}else{
-						this._hasHScroll = (this.scrollboxNode.offsetWidth - this.getScrollbarWidth() < this.contentNode.offsetWidth );
-					}
-				}
-			}
-			if(hadScroll !== this._hasHScroll){
-				this.grid.update();
-			}
-			return this._hasHScroll; // Boolean
-		},
-
-		hasVScrollbar: function(reset){
-			var hadScroll = this._hasVScroll||false;
-			if(this._hasVScroll == undefined || reset){
-				if(this.noscroll){
-					this._hasVScroll = false;
-				}else{
-					var style = dojo.style(this.scrollboxNode, "overflow");
-					if(style == "hidden"){
-						this._hasVScroll = false;
-					}else if(style == "scroll"){
-						this._hasVScroll = true;
-					}else{
-						this._hasVScroll = (this.scrollboxNode.scrollHeight > this.scrollboxNode.clientHeight);
-					}
-				}
-			}
-			if(hadScroll !== this._hasVScroll){
-				this.grid.update();
-			}
-			return this._hasVScroll; // Boolean
-		},
-		
-		convertColPctToFixed: function(){
-			// Fix any percentage widths to be pixel values
-			var hasPct = false;
-			this.grid.initialWidth = "";
-			var cellNodes = dojo.query("th", this.headerContentNode);
-			var fixedWidths = dojo.map(cellNodes, function(c, vIdx){
-				var w = c.style.width;
-				dojo.attr(c, "vIdx", vIdx);
-				if(w && w.slice(-1) == "%"){
-					hasPct = true;
-				}else if(w && w.slice(-2) == "px"){
-					return window.parseInt(w, 10);
-				}
-				return dojo.contentBox(c).w;
-			});
-			if(hasPct){
-				dojo.forEach(this.grid.layout.cells, function(cell, idx){
-					if(cell.view == this){
-						var cellNode = cell.view.getHeaderCellNode(cell.index);
-						if(cellNode && dojo.hasAttr(cellNode, "vIdx")){
-							var vIdx = window.parseInt(dojo.attr(cellNode, "vIdx"));
-							this.setColWidth(idx, fixedWidths[vIdx]);
-							dojo.removeAttr(cellNode, "vIdx");
-						}
-					}
-				}, this);
-				return true;
-			}
-			return false;
-		},
-
-		adaptHeight: function(minusScroll){
-			if(!this.grid._autoHeight){
-				var h = (this.domNode.style.height && parseInt(this.domNode.style.height.replace(/px/,''), 10)) || this.domNode.clientHeight;
-				var self = this;
-				var checkOtherViewScrollers = function(){
-					var v;
-					for(var i in self.grid.views.views){
-						v = self.grid.views.views[i];
-						if(v !== self && v.hasHScrollbar()){
-							return true;
-						}
-					}
-					return false;
-				};
-				if(minusScroll || (this.noscroll && checkOtherViewScrollers())){
-					h -= dojox.html.metrics.getScrollbar().h;
-				}
-				dojox.grid.util.setStyleHeightPx(this.scrollboxNode, h);
-			}
-			this.hasVScrollbar(true);
-		},
-
-		adaptWidth: function(){
-			if(this.flexCells){
-				// the view content width
-				this.contentWidth = this.getContentWidth();
-				this.headerContentNode.firstChild.style.width = this.contentWidth;
-			}
-			// FIXME: it should be easier to get w from this.scrollboxNode.clientWidth,
-			// but clientWidth seemingly does not include scrollbar width in some cases
-			var w = this.scrollboxNode.offsetWidth - this.getScrollbarWidth();
-			if(!this._removingColumn){
-				w = Math.max(w, this.getColumnsWidth()) + 'px';
-			}else{
-				w = Math.min(w, this.getColumnsWidth()) + 'px';
-				this._removingColumn = false;
-			}
-			var cn = this.contentNode;
-			cn.style.width = w;
-			this.hasHScrollbar(true);
-		},
-
-		setSize: function(w, h){
-			var ds = this.domNode.style;
-			var hs = this.headerNode.style;
-
-			if(w){
-				ds.width = w;
-				hs.width = w;
-			}
-			ds.height = (h >= 0 ? h + 'px' : '');
-		},
-
-		renderRow: function(inRowIndex){
-			var rowNode = this.createRowNode(inRowIndex);
-			this.buildRow(inRowIndex, rowNode);
-			//this.grid.edit.restore(this, inRowIndex);
-			return rowNode;
-		},
-
-		createRowNode: function(inRowIndex){
-			var node = document.createElement("div");
-			node.className = this.classTag + 'Row';
-			if (this instanceof dojox.grid._RowSelector){
-				dojo.attr(node,"role","presentation");
-			}else{
-				dojo.attr(node,"role","row");
-				if (this.grid.selectionMode != "none") {
-					node.setAttribute("aria-selected", "false"); //rows can be selected so add aria-selected prop
-				}
-			}
-			node[dojox.grid.util.gridViewTag] = this.id;
-			node[dojox.grid.util.rowIndexTag] = inRowIndex;
-			this.rowNodes[inRowIndex] = node;
-			return node;
-		},
-
-		buildRow: function(inRowIndex, inRowNode){
-			
-			this.buildRowContent(inRowIndex, inRowNode);
-		  	
-			this.styleRow(inRowIndex, inRowNode);
-		  
-		 
-		},
-
-		buildRowContent: function(inRowIndex, inRowNode){
-			inRowNode.innerHTML = this.content.generateHtml(inRowIndex, inRowIndex);
-			if(this.flexCells && this.contentWidth){
-				// FIXME: accessing firstChild here breaks encapsulation
-				inRowNode.firstChild.style.width = this.contentWidth;
-			}
-			dojox.grid.util.fire(this, "onAfterRow", [inRowIndex, this.structure.cells, inRowNode]);
-		},
-
-		rowRemoved:function(inRowIndex){
-			if(inRowIndex >= 0){
-				this._cleanupRowWidgets(this.getRowNode(inRowIndex));
-			}
-			this.grid.edit.save(this, inRowIndex);
-			delete this.rowNodes[inRowIndex];
-		},
-
-		getRowNode: function(inRowIndex){
-			return this.rowNodes[inRowIndex];
-		},
-
-		getCellNode: function(inRowIndex, inCellIndex){
-			var row = this.getRowNode(inRowIndex);
-			if(row){
-				return this.content.getCellNode(row, inCellIndex);
-			}
-		},
-
-		getHeaderCellNode: function(inCellIndex){
-			if(this.headerContentNode){
-				return this.header.getCellNode(this.headerContentNode, inCellIndex);
-			}
-		},
-
-		// styling
-		styleRow: function(inRowIndex, inRowNode){
-			inRowNode._style = getStyleText(inRowNode);
-			this.styleRowNode(inRowIndex, inRowNode);
-		},
-
-		styleRowNode: function(inRowIndex, inRowNode){
-			if(inRowNode){
-				this.doStyleRowNode(inRowIndex, inRowNode);
-			}
-		},
-
-		doStyleRowNode: function(inRowIndex, inRowNode){
-			this.grid.styleRowNode(inRowIndex, inRowNode);
-		},
-
-		// updating
-		updateRow: function(inRowIndex){
-			var rowNode = this.getRowNode(inRowIndex);
-			if(rowNode){
-				rowNode.style.height = '';
-				this.buildRow(inRowIndex, rowNode);
-			}
-			return rowNode;
-		},
-
-		updateRowStyles: function(inRowIndex){
-			this.styleRowNode(inRowIndex, this.getRowNode(inRowIndex));
-		},
-
-		// scrolling
-		lastTop: 0,
-		firstScroll:0,
-
-		doscroll: function(inEvent){
-			//var s = dojo.marginBox(this.headerContentNode.firstChild);
-			var isLtr = dojo._isBodyLtr();
-			if(this.firstScroll < 2){
-				if((!isLtr && this.firstScroll == 1) || (isLtr && this.firstScroll === 0)){
-					var s = dojo.marginBox(this.headerNodeContainer);
-					if(dojo.isIE){
-						this.headerNodeContainer.style.width = s.w + this.getScrollbarWidth() + 'px';
-					}else if(dojo.isMoz){
-						//TODO currently only for FF, not sure for safari and opera
-						this.headerNodeContainer.style.width = s.w - this.getScrollbarWidth() + 'px';
-						//this.headerNodeContainer.style.width = s.w + 'px';
-						//set scroll to right in FF
-						this.scrollboxNode.scrollLeft = isLtr ?
-							this.scrollboxNode.clientWidth - this.scrollboxNode.scrollWidth :
-							this.scrollboxNode.scrollWidth - this.scrollboxNode.clientWidth;
-					}
-				}
-				this.firstScroll++;
-			}
-			this.headerNode.scrollLeft = this.scrollboxNode.scrollLeft;
-			// 'lastTop' is a semaphore to prevent feedback-loop with setScrollTop below
-			var top = this.scrollboxNode.scrollTop;
-			if(top !== this.lastTop){
-				this.grid.scrollTo(top);
-			}
-		},
-
-		setScrollTop: function(inTop){
-			// 'lastTop' is a semaphore to prevent feedback-loop with doScroll above
-			this.lastTop = inTop;
-			this.scrollboxNode.scrollTop = inTop;
-			return this.scrollboxNode.scrollTop;
-		},
-
-		// event handlers (direct from DOM)
-		doContentEvent: function(e){
-			if(this.content.decorateEvent(e)){
-				this.grid.onContentEvent(e);
-			}
-		},
-
-		doHeaderEvent: function(e){
-			if(this.header.decorateEvent(e)){
-				this.grid.onHeaderEvent(e);
-			}
-		},
-
-		// event dispatch(from Grid)
-		dispatchContentEvent: function(e){
-			return this.content.dispatchEvent(e);
-		},
-
-		dispatchHeaderEvent: function(e){
-			return this.header.dispatchEvent(e);
-		},
-
-		// column resizing
-		setColWidth: function(inIndex, inWidth){
-			this.grid.setCellWidth(inIndex, inWidth + 'px');
-		},
-
-		update: function(){
-			if(!this.domNode){
-				return;
-			}
-			this.content.update();
-			this.grid.update();
-			//get scroll after update or scroll left setting goes wrong on IE.
-			//See trac: #8040
-			var left = this.scrollboxNode.scrollLeft;
-			this.scrollboxNode.scrollLeft = left;
-			this.headerNode.scrollLeft = left;
-		}
-	});
-
-	dojo.declare("dojox.grid._GridAvatar", dojo.dnd.Avatar, {
-		construct: function(){
-			var dd = dojo.doc;
-
-			var a = dd.createElement("table");
-			a.cellPadding = a.cellSpacing = "0";
-			a.className = "dojoxGridDndAvatar";
-			a.style.position = "absolute";
-			a.style.zIndex = 1999;
-			a.style.margin = "0px"; // to avoid dojo.marginBox() problems with table's margins
-			var b = dd.createElement("tbody");
-			var tr = dd.createElement("tr");
-			var td = dd.createElement("td");
-			var img = dd.createElement("td");
-			tr.className = "dojoxGridDndAvatarItem";
-			img.className = "dojoxGridDndAvatarItemImage";
-			img.style.width = "16px";
-			var source = this.manager.source, node;
-			if(source.creator){
-				// create an avatar representation of the node
-				node = source._normalizedCreator(source.getItem(this.manager.nodes[0].id).data, "avatar").node;
-			}else{
-				// or just clone the node and hope it works
-				node = this.manager.nodes[0].cloneNode(true);
-				var table, tbody;
-				if(node.tagName.toLowerCase() == "tr"){
-					// insert extra table nodes
-					table = dd.createElement("table");
-					tbody = dd.createElement("tbody");
-					tbody.appendChild(node);
-					table.appendChild(tbody);
-					node = table;
-				}else if(node.tagName.toLowerCase() == "th"){
-					// insert extra table nodes
-					table = dd.createElement("table");
-					tbody = dd.createElement("tbody");
-					var r = dd.createElement("tr");
-					table.cellPadding = table.cellSpacing = "0";
-					r.appendChild(node);
-					tbody.appendChild(r);
-					table.appendChild(tbody);
-					node = table;
-				}
-			}
-			node.id = "";
-			td.appendChild(node);
-			tr.appendChild(img);
-			tr.appendChild(td);
-			dojo.style(tr, "opacity", 0.9);
-			b.appendChild(tr);
-
-			a.appendChild(b);
-			this.node = a;
-
-			var m = dojo.dnd.manager();
-			this.oldOffsetY = m.OFFSET_Y;
-			m.OFFSET_Y = 1;
-		},
-		destroy: function(){
-			dojo.dnd.manager().OFFSET_Y = this.oldOffsetY;
-			this.inherited(arguments);
-		}
-	});
-
-	var oldMakeAvatar = dojo.dnd.manager().makeAvatar;
-	dojo.dnd.manager().makeAvatar = function(){
-		var src = this.source;
-		if(src.viewIndex !== undefined && !dojo.hasClass(dojo.body(),"dijit_a11y")){
-			return new dojox.grid._GridAvatar(this);
-		}
-		return oldMakeAvatar.call(dojo.dnd.manager());
-	};
-
-	return dojox.grid._View;
-
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+require.cache["dojox/grid/resources/View.html"]="<div class=\"dojoxGridView\" role=\"presentation\">\n\t<div class=\"dojoxGridHeader\" dojoAttachPoint=\"headerNode\" role=\"presentation\">\n\t\t<div dojoAttachPoint=\"headerNodeContainer\" style=\"width:9000em\" role=\"presentation\">\n\t\t\t<div dojoAttachPoint=\"headerContentNode\" role=\"row\"></div>\n\t\t</div>\n\t</div>\n\t<input type=\"checkbox\" class=\"dojoxGridHiddenFocus\" dojoAttachPoint=\"hiddenFocusNode\" role=\"presentation\" />\n\t<input type=\"checkbox\" class=\"dojoxGridHiddenFocus\" role=\"presentation\" />\n\t<div class=\"dojoxGridScrollbox\" dojoAttachPoint=\"scrollboxNode\" role=\"presentation\">\n\t\t<div class=\"dojoxGridContent\" dojoAttachPoint=\"contentNode\" hidefocus=\"hidefocus\" role=\"presentation\"></div>\n\t</div>\n</div>\n";
+define(["dojo","dijit","dojox","dojo/text!./resources/View.html","dojo/dnd/Source","dojo/dnd/Manager","dijit/_TemplatedMixin","dijit/_Widget","dojox/html/metrics","./_Builder","./util"],function(_1,_2,_3,_4){
+var _5=function(_6,_7){
+return _6.style.cssText==undefined?_6.getAttribute("style"):_6.style.cssText;
+};
+_1.declare("dojox.grid._View",[_2._Widget,_2._TemplatedMixin],{defaultWidth:"18em",viewWidth:"",templateString:_4,themeable:false,classTag:"dojoxGrid",marginBottom:0,rowPad:2,_togglingColumn:-1,_headerBuilderClass:_3.grid._HeaderBuilder,_contentBuilderClass:_3.grid._ContentBuilder,postMixInProperties:function(){
+this.rowNodes={};
+},postCreate:function(){
+this.connect(this.scrollboxNode,"onscroll","doscroll");
+_3.grid.util.funnelEvents(this.contentNode,this,"doContentEvent",["mouseover","mouseout","click","dblclick","contextmenu","mousedown"]);
+_3.grid.util.funnelEvents(this.headerNode,this,"doHeaderEvent",["dblclick","mouseover","mouseout","mousemove","mousedown","click","contextmenu"]);
+this.content=new this._contentBuilderClass(this);
+this.header=new this._headerBuilderClass(this);
+if(!_1._isBodyLtr()){
+this.headerNodeContainer.style.width="";
+}
+},destroy:function(){
+_1.destroy(this.headerNode);
+delete this.headerNode;
+for(var i in this.rowNodes){
+_1.destroy(this.rowNodes[i]);
+}
+this.rowNodes={};
+if(this.source){
+this.source.destroy();
+}
+this.inherited(arguments);
+},focus:function(){
+if(_1.isIE||_1.isWebKit||_1.isOpera){
+this.hiddenFocusNode.focus();
+}else{
+this.scrollboxNode.focus();
+}
+},setStructure:function(_8){
+var vs=(this.structure=_8);
+if(vs.width&&!isNaN(vs.width)){
+this.viewWidth=vs.width+"em";
+}else{
+this.viewWidth=vs.width||(vs.noscroll?"auto":this.viewWidth);
+}
+this._onBeforeRow=vs.onBeforeRow||function(){
+};
+this._onAfterRow=vs.onAfterRow||function(){
+};
+this.noscroll=vs.noscroll;
+if(this.noscroll){
+this.scrollboxNode.style.overflow="hidden";
+}
+this.simpleStructure=Boolean(vs.cells.length==1);
+this.testFlexCells();
+this.updateStructure();
+},_cleanupRowWidgets:function(_9){
+if(_9){
+_1.forEach(_1.query("[widgetId]",_9).map(_2.byNode),function(w){
+if(w._destroyOnRemove){
+w.destroy();
+delete w;
+}else{
+if(w.domNode&&w.domNode.parentNode){
+w.domNode.parentNode.removeChild(w.domNode);
+}
+}
+});
+}
+},onBeforeRow:function(_a,_b){
+this._onBeforeRow(_a,_b);
+if(_a>=0){
+this._cleanupRowWidgets(this.getRowNode(_a));
+}
+},onAfterRow:function(_c,_d,_e){
+this._onAfterRow(_c,_d,_e);
+var g=this.grid;
+_1.forEach(_1.query(".dojoxGridStubNode",_e),function(n){
+if(n&&n.parentNode){
+var lw=n.getAttribute("linkWidget");
+var _f=window.parseInt(_1.attr(n,"cellIdx"),10);
+var _10=g.getCell(_f);
+var w=_2.byId(lw);
+if(w){
+n.parentNode.replaceChild(w.domNode,n);
+if(!w._started){
+w.startup();
+}
+}else{
+n.innerHTML="";
+}
+}
+},this);
+},testFlexCells:function(){
+this.flexCells=false;
+for(var j=0,row;(row=this.structure.cells[j]);j++){
+for(var i=0,_11;(_11=row[i]);i++){
+_11.view=this;
+this.flexCells=this.flexCells||_11.isFlex();
+}
+}
+return this.flexCells;
+},updateStructure:function(){
+this.header.update();
+this.content.update();
+},getScrollbarWidth:function(){
+var _12=this.hasVScrollbar();
+var _13=_1.style(this.scrollboxNode,"overflow");
+if(this.noscroll||!_13||_13=="hidden"){
+_12=false;
+}else{
+if(_13=="scroll"){
+_12=true;
+}
+}
+return (_12?_3.html.metrics.getScrollbar().w:0);
+},getColumnsWidth:function(){
+var h=this.headerContentNode;
+return h&&h.firstChild?h.firstChild.offsetWidth:0;
+},setColumnsWidth:function(_14){
+this.headerContentNode.firstChild.style.width=_14+"px";
+if(this.viewWidth){
+this.viewWidth=_14+"px";
+}
+},getWidth:function(){
+return this.viewWidth||(this.getColumnsWidth()+this.getScrollbarWidth())+"px";
+},getContentWidth:function(){
+return Math.max(0,_1._getContentBox(this.domNode).w-this.getScrollbarWidth())+"px";
+},render:function(){
+this.scrollboxNode.style.height="";
+this.renderHeader();
+if(this._togglingColumn>=0){
+this.setColumnsWidth(this.getColumnsWidth()-this._togglingColumn);
+this._togglingColumn=-1;
+}
+var _15=this.grid.layout.cells;
+var _16=_1.hitch(this,function(_17,_18){
+!_1._isBodyLtr()&&(_18=!_18);
+var inc=_18?-1:1;
+var idx=this.header.getCellNodeIndex(_17)+inc;
+var _19=_15[idx];
+while(_19&&_19.getHeaderNode()&&_19.getHeaderNode().style.display=="none"){
+idx+=inc;
+_19=_15[idx];
+}
+if(_19){
+return _19.getHeaderNode();
+}
+return null;
+});
+if(this.grid.columnReordering&&this.simpleStructure){
+if(this.source){
+this.source.destroy();
+}
+var _1a="dojoxGrid_bottomMarker";
+var _1b="dojoxGrid_topMarker";
+if(this.bottomMarker){
+_1.destroy(this.bottomMarker);
+}
+this.bottomMarker=_1.byId(_1a);
+if(this.topMarker){
+_1.destroy(this.topMarker);
+}
+this.topMarker=_1.byId(_1b);
+if(!this.bottomMarker){
+this.bottomMarker=_1.create("div",{"id":_1a,"class":"dojoxGridColPlaceBottom"},_1.body());
+this._hide(this.bottomMarker);
+this.topMarker=_1.create("div",{"id":_1b,"class":"dojoxGridColPlaceTop"},_1.body());
+this._hide(this.topMarker);
+}
+this.arrowDim=_1.contentBox(this.bottomMarker);
+var _1c=_1.contentBox(this.headerContentNode.firstChild.rows[0]).h;
+this.source=new _1.dnd.Source(this.headerContentNode.firstChild.rows[0],{horizontal:true,accept:["gridColumn_"+this.grid.id],viewIndex:this.index,generateText:false,onMouseDown:_1.hitch(this,function(e){
+this.header.decorateEvent(e);
+if((this.header.overRightResizeArea(e)||this.header.overLeftResizeArea(e))&&this.header.canResize(e)&&!this.header.moveable){
+this.header.beginColumnResize(e);
+}else{
+if(this.grid.headerMenu){
+this.grid.headerMenu.onCancel(true);
+}
+if(e.button===(_1.isIE?1:0)){
+_1.dnd.Source.prototype.onMouseDown.call(this.source,e);
+}
+}
+}),onMouseOver:_1.hitch(this,function(e){
+var src=this.source;
+if(src._getChildByEvent(e)){
+_1.dnd.Source.prototype.onMouseOver.apply(src,arguments);
+}
+}),_markTargetAnchor:_1.hitch(this,function(_1d){
+var src=this.source;
+if(src.current==src.targetAnchor&&src.before==_1d){
+return;
+}
+if(src.targetAnchor&&_16(src.targetAnchor,src.before)){
+src._removeItemClass(_16(src.targetAnchor,src.before),src.before?"After":"Before");
+}
+_1.dnd.Source.prototype._markTargetAnchor.call(src,_1d);
+var _1e=_1d?src.targetAnchor:_16(src.targetAnchor,src.before);
+var _1f=0;
+if(!_1e){
+_1e=src.targetAnchor;
+_1f=_1.contentBox(_1e).w+this.arrowDim.w/2+2;
+}
+var pos=(_1.position||_1._abs)(_1e,true);
+var _20=Math.floor(pos.x-this.arrowDim.w/2+_1f);
+_1.style(this.bottomMarker,"visibility","visible");
+_1.style(this.topMarker,"visibility","visible");
+_1.style(this.bottomMarker,{"left":_20+"px","top":(_1c+pos.y)+"px"});
+_1.style(this.topMarker,{"left":_20+"px","top":(pos.y-this.arrowDim.h)+"px"});
+if(src.targetAnchor&&_16(src.targetAnchor,src.before)){
+src._addItemClass(_16(src.targetAnchor,src.before),src.before?"After":"Before");
+}
+}),_unmarkTargetAnchor:_1.hitch(this,function(){
+var src=this.source;
+if(!src.targetAnchor){
+return;
+}
+if(src.targetAnchor&&_16(src.targetAnchor,src.before)){
+src._removeItemClass(_16(src.targetAnchor,src.before),src.before?"After":"Before");
+}
+this._hide(this.bottomMarker);
+this._hide(this.topMarker);
+_1.dnd.Source.prototype._unmarkTargetAnchor.call(src);
+}),destroy:_1.hitch(this,function(){
+_1.disconnect(this._source_conn);
+_1.unsubscribe(this._source_sub);
+_1.dnd.Source.prototype.destroy.call(this.source);
+if(this.bottomMarker){
+_1.destroy(this.bottomMarker);
+delete this.bottomMarker;
+}
+if(this.topMarker){
+_1.destroy(this.topMarker);
+delete this.topMarker;
+}
+}),onDndCancel:_1.hitch(this,function(){
+_1.dnd.Source.prototype.onDndCancel.call(this.source);
+this._hide(this.bottomMarker);
+this._hide(this.topMarker);
+})});
+this._source_conn=_1.connect(this.source,"onDndDrop",this,"_onDndDrop");
+this._source_sub=_1.subscribe("/dnd/drop/before",this,"_onDndDropBefore");
+this.source.startup();
+}
+},_hide:function(_21){
+_1.style(_21,{left:"-10000px",top:"-10000px","visibility":"hidden"});
+},_onDndDropBefore:function(_22,_23,_24){
+if(_1.dnd.manager().target!==this.source){
+return;
+}
+this.source._targetNode=this.source.targetAnchor;
+this.source._beforeTarget=this.source.before;
+var _25=this.grid.views.views;
+var _26=_25[_22.viewIndex];
+var _27=_25[this.index];
+if(_27!=_26){
+_26.convertColPctToFixed();
+_27.convertColPctToFixed();
+}
+},_onDndDrop:function(_28,_29,_2a){
+if(_1.dnd.manager().target!==this.source){
+if(_1.dnd.manager().source===this.source){
+this._removingColumn=true;
+}
+return;
+}
+this._hide(this.bottomMarker);
+this._hide(this.topMarker);
+var _2b=function(n){
+return n?_1.attr(n,"idx"):null;
+};
+var w=_1.marginBox(_29[0]).w;
+if(_28.viewIndex!==this.index){
+var _2c=this.grid.views.views;
+var _2d=_2c[_28.viewIndex];
+var _2e=_2c[this.index];
+if(_2d.viewWidth&&_2d.viewWidth!="auto"){
+_2d.setColumnsWidth(_2d.getColumnsWidth()-w);
+}
+if(_2e.viewWidth&&_2e.viewWidth!="auto"){
+_2e.setColumnsWidth(_2e.getColumnsWidth());
+}
+}
+var stn=this.source._targetNode;
+var stb=this.source._beforeTarget;
+!_1._isBodyLtr()&&(stb=!stb);
+var _2f=this.grid.layout;
+var idx=this.index;
+delete this.source._targetNode;
+delete this.source._beforeTarget;
+_2f.moveColumn(_28.viewIndex,idx,_2b(_29[0]),_2b(stn),stb);
+},renderHeader:function(){
+this.headerContentNode.innerHTML=this.header.generateHtml(this._getHeaderContent);
+if(this.flexCells){
+this.contentWidth=this.getContentWidth();
+this.headerContentNode.firstChild.style.width=this.contentWidth;
+}
+_3.grid.util.fire(this,"onAfterRow",[-1,this.structure.cells,this.headerContentNode]);
+},_getHeaderContent:function(_30){
+var n=_30.name||_30.grid.getCellName(_30);
+var ret=["<div class=\"dojoxGridSortNode"];
+if(_30.index!=_30.grid.getSortIndex()){
+ret.push("\">");
+}else{
+ret=ret.concat([" ",_30.grid.sortInfo>0?"dojoxGridSortUp":"dojoxGridSortDown","\"><div class=\"dojoxGridArrowButtonChar\">",_30.grid.sortInfo>0?"&#9650;":"&#9660;","</div><div class=\"dojoxGridArrowButtonNode\" role=\"presentation\"></div>","<div class=\"dojoxGridColCaption\">"]);
+}
+ret=ret.concat([n,"</div></div>"]);
+return ret.join("");
+},resize:function(){
+this.adaptHeight();
+this.adaptWidth();
+},hasHScrollbar:function(_31){
+var _32=this._hasHScroll||false;
+if(this._hasHScroll==undefined||_31){
+if(this.noscroll){
+this._hasHScroll=false;
+}else{
+var _33=_1.style(this.scrollboxNode,"overflow");
+if(_33=="hidden"){
+this._hasHScroll=false;
+}else{
+if(_33=="scroll"){
+this._hasHScroll=true;
+}else{
+this._hasHScroll=(this.scrollboxNode.offsetWidth-this.getScrollbarWidth()<this.contentNode.offsetWidth);
+}
+}
+}
+}
+if(_32!==this._hasHScroll){
+this.grid.update();
+}
+return this._hasHScroll;
+},hasVScrollbar:function(_34){
+var _35=this._hasVScroll||false;
+if(this._hasVScroll==undefined||_34){
+if(this.noscroll){
+this._hasVScroll=false;
+}else{
+var _36=_1.style(this.scrollboxNode,"overflow");
+if(_36=="hidden"){
+this._hasVScroll=false;
+}else{
+if(_36=="scroll"){
+this._hasVScroll=true;
+}else{
+this._hasVScroll=(this.scrollboxNode.scrollHeight>this.scrollboxNode.clientHeight);
+}
+}
+}
+}
+if(_35!==this._hasVScroll){
+this.grid.update();
+}
+return this._hasVScroll;
+},convertColPctToFixed:function(){
+var _37=false;
+this.grid.initialWidth="";
+var _38=_1.query("th",this.headerContentNode);
+var _39=_1.map(_38,function(c,_3a){
+var w=c.style.width;
+_1.attr(c,"vIdx",_3a);
+if(w&&w.slice(-1)=="%"){
+_37=true;
+}else{
+if(w&&w.slice(-2)=="px"){
+return window.parseInt(w,10);
+}
+}
+return _1.contentBox(c).w;
+});
+if(_37){
+_1.forEach(this.grid.layout.cells,function(_3b,idx){
+if(_3b.view==this){
+var _3c=_3b.view.getHeaderCellNode(_3b.index);
+if(_3c&&_1.hasAttr(_3c,"vIdx")){
+var _3d=window.parseInt(_1.attr(_3c,"vIdx"));
+this.setColWidth(idx,_39[_3d]);
+_1.removeAttr(_3c,"vIdx");
+}
+}
+},this);
+return true;
+}
+return false;
+},adaptHeight:function(_3e){
+if(!this.grid._autoHeight){
+var h=(this.domNode.style.height&&parseInt(this.domNode.style.height.replace(/px/,""),10))||this.domNode.clientHeight;
+var _3f=this;
+var _40=function(){
+var v;
+for(var i in _3f.grid.views.views){
+v=_3f.grid.views.views[i];
+if(v!==_3f&&v.hasHScrollbar()){
+return true;
+}
+}
+return false;
+};
+if(_3e||(this.noscroll&&_40())){
+h-=_3.html.metrics.getScrollbar().h;
+}
+_3.grid.util.setStyleHeightPx(this.scrollboxNode,h);
+}
+this.hasVScrollbar(true);
+},adaptWidth:function(){
+if(this.flexCells){
+this.contentWidth=this.getContentWidth();
+this.headerContentNode.firstChild.style.width=this.contentWidth;
+}
+var w=this.scrollboxNode.offsetWidth-this.getScrollbarWidth();
+if(!this._removingColumn){
+w=Math.max(w,this.getColumnsWidth())+"px";
+}else{
+w=Math.min(w,this.getColumnsWidth())+"px";
+this._removingColumn=false;
+}
+var cn=this.contentNode;
+cn.style.width=w;
+this.hasHScrollbar(true);
+},setSize:function(w,h){
+var ds=this.domNode.style;
+var hs=this.headerNode.style;
+if(w){
+ds.width=w;
+hs.width=w;
+}
+ds.height=(h>=0?h+"px":"");
+},renderRow:function(_41){
+var _42=this.createRowNode(_41);
+this.buildRow(_41,_42);
+return _42;
+},createRowNode:function(_43){
+var _44=document.createElement("div");
+_44.className=this.classTag+"Row";
+if(this instanceof _3.grid._RowSelector){
+_1.attr(_44,"role","presentation");
+}else{
+_1.attr(_44,"role","row");
+if(this.grid.selectionMode!="none"){
+_44.setAttribute("aria-selected","false");
+}
+}
+_44[_3.grid.util.gridViewTag]=this.id;
+_44[_3.grid.util.rowIndexTag]=_43;
+this.rowNodes[_43]=_44;
+return _44;
+},buildRow:function(_45,_46){
+this.buildRowContent(_45,_46);
+this.styleRow(_45,_46);
+},buildRowContent:function(_47,_48){
+_48.innerHTML=this.content.generateHtml(_47,_47);
+if(this.flexCells&&this.contentWidth){
+_48.firstChild.style.width=this.contentWidth;
+}
+_3.grid.util.fire(this,"onAfterRow",[_47,this.structure.cells,_48]);
+},rowRemoved:function(_49){
+if(_49>=0){
+this._cleanupRowWidgets(this.getRowNode(_49));
+}
+this.grid.edit.save(this,_49);
+delete this.rowNodes[_49];
+},getRowNode:function(_4a){
+return this.rowNodes[_4a];
+},getCellNode:function(_4b,_4c){
+var row=this.getRowNode(_4b);
+if(row){
+return this.content.getCellNode(row,_4c);
+}
+},getHeaderCellNode:function(_4d){
+if(this.headerContentNode){
+return this.header.getCellNode(this.headerContentNode,_4d);
+}
+},styleRow:function(_4e,_4f){
+_4f._style=_5(_4f);
+this.styleRowNode(_4e,_4f);
+},styleRowNode:function(_50,_51){
+if(_51){
+this.doStyleRowNode(_50,_51);
+}
+},doStyleRowNode:function(_52,_53){
+this.grid.styleRowNode(_52,_53);
+},updateRow:function(_54){
+var _55=this.getRowNode(_54);
+if(_55){
+_55.style.height="";
+this.buildRow(_54,_55);
+}
+return _55;
+},updateRowStyles:function(_56){
+this.styleRowNode(_56,this.getRowNode(_56));
+},lastTop:0,firstScroll:0,doscroll:function(_57){
+var _58=_1._isBodyLtr();
+if(this.firstScroll<2){
+if((!_58&&this.firstScroll==1)||(_58&&this.firstScroll===0)){
+var s=_1.marginBox(this.headerNodeContainer);
+if(_1.isIE){
+this.headerNodeContainer.style.width=s.w+this.getScrollbarWidth()+"px";
+}else{
+if(_1.isMoz){
+this.headerNodeContainer.style.width=s.w-this.getScrollbarWidth()+"px";
+this.scrollboxNode.scrollLeft=_58?this.scrollboxNode.clientWidth-this.scrollboxNode.scrollWidth:this.scrollboxNode.scrollWidth-this.scrollboxNode.clientWidth;
+}
+}
+}
+this.firstScroll++;
+}
+this.headerNode.scrollLeft=this.scrollboxNode.scrollLeft;
+var top=this.scrollboxNode.scrollTop;
+if(top!==this.lastTop){
+this.grid.scrollTo(top);
+}
+},setScrollTop:function(_59){
+this.lastTop=_59;
+this.scrollboxNode.scrollTop=_59;
+return this.scrollboxNode.scrollTop;
+},doContentEvent:function(e){
+if(this.content.decorateEvent(e)){
+this.grid.onContentEvent(e);
+}
+},doHeaderEvent:function(e){
+if(this.header.decorateEvent(e)){
+this.grid.onHeaderEvent(e);
+}
+},dispatchContentEvent:function(e){
+return this.content.dispatchEvent(e);
+},dispatchHeaderEvent:function(e){
+return this.header.dispatchEvent(e);
+},setColWidth:function(_5a,_5b){
+this.grid.setCellWidth(_5a,_5b+"px");
+},update:function(){
+if(!this.domNode){
+return;
+}
+this.content.update();
+this.grid.update();
+var _5c=this.scrollboxNode.scrollLeft;
+this.scrollboxNode.scrollLeft=_5c;
+this.headerNode.scrollLeft=_5c;
+}});
+_1.declare("dojox.grid._GridAvatar",_1.dnd.Avatar,{construct:function(){
+var dd=_1.doc;
+var a=dd.createElement("table");
+a.cellPadding=a.cellSpacing="0";
+a.className="dojoxGridDndAvatar";
+a.style.position="absolute";
+a.style.zIndex=1999;
+a.style.margin="0px";
+var b=dd.createElement("tbody");
+var tr=dd.createElement("tr");
+var td=dd.createElement("td");
+var img=dd.createElement("td");
+tr.className="dojoxGridDndAvatarItem";
+img.className="dojoxGridDndAvatarItemImage";
+img.style.width="16px";
+var _5d=this.manager.source,_5e;
+if(_5d.creator){
+_5e=_5d._normalizedCreator(_5d.getItem(this.manager.nodes[0].id).data,"avatar").node;
+}else{
+_5e=this.manager.nodes[0].cloneNode(true);
+var _5f,_60;
+if(_5e.tagName.toLowerCase()=="tr"){
+_5f=dd.createElement("table");
+_60=dd.createElement("tbody");
+_60.appendChild(_5e);
+_5f.appendChild(_60);
+_5e=_5f;
+}else{
+if(_5e.tagName.toLowerCase()=="th"){
+_5f=dd.createElement("table");
+_60=dd.createElement("tbody");
+var r=dd.createElement("tr");
+_5f.cellPadding=_5f.cellSpacing="0";
+r.appendChild(_5e);
+_60.appendChild(r);
+_5f.appendChild(_60);
+_5e=_5f;
+}
+}
+}
+_5e.id="";
+td.appendChild(_5e);
+tr.appendChild(img);
+tr.appendChild(td);
+_1.style(tr,"opacity",0.9);
+b.appendChild(tr);
+a.appendChild(b);
+this.node=a;
+var m=_1.dnd.manager();
+this.oldOffsetY=m.OFFSET_Y;
+m.OFFSET_Y=1;
+},destroy:function(){
+_1.dnd.manager().OFFSET_Y=this.oldOffsetY;
+this.inherited(arguments);
+}});
+var _61=_1.dnd.manager().makeAvatar;
+_1.dnd.manager().makeAvatar=function(){
+var src=this.source;
+if(src.viewIndex!==undefined&&!_1.hasClass(_1.body(),"dijit_a11y")){
+return new _3.grid._GridAvatar(this);
+}
+return _61.call(_1.dnd.manager());
+};
+return _3.grid._View;
 });

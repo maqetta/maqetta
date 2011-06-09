@@ -1,176 +1,90 @@
-define("dojox/editor/plugins/ShowBlockNodes", ["dojo", "dijit", "dojox", "dijit/_editor/_Plugin", "dijit/form/Button", "dijit/form/ToggleButton", "dojo/i18n", "dojo/i18n!dojox/editor/plugins/nls/ShowBlockNodes"], function(dojo, dijit, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
-	// summary:
-	//		This plugin provides ShowBlockNodes cabability to the editor.  When
-	//		clicked, the document in the editor will apply a class to specific
-	//		block nodes to make them visible in the layout.  This info is not
-	//		exposed/extracted when the editor value is obtained, it is purely for help
-	//		while working on the page.
-
-	// useDefaultCommand [protected] boolean
-	//		Over-ride indicating that the command processing is done all by this plugin.
-	useDefaultCommand: false,
-
-	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`
-	iconClassPrefix: "dijitAdditionalEditorIcon",
-
-	// _styled [private] boolean
-	//		Flag indicating the document has had the style updates applied.
-	_styled: false,
-
-	_initButton: function(){
-		//	summary:
-		//		Over-ride for creation of the preview button.
-		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "ShowBlockNodes");
-		this.button = new dijit.form.ToggleButton({
-			label: strings["showBlockNodes"],
-			showLabel: false,
-			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "ShowBlockNodes",
-			tabIndex: "-1",
-			onChange: dojo.hitch(this, "_showBlocks")
-		});
-		this.editor.addKeyHandler(dojo.keys.F9, true, true, dojo.hitch(this, this.toggle));
-	},
-	
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
-	},
-
-	setEditor: function(editor){
-		// summary:
-		//		Over-ride for the setting of the editor.
-		// editor: Object
-		//		The editor to configure for this plugin to use.
-		this.editor = editor;
-		this._initButton();
-	},
-
-	toggle: function(){
-		// summary:
-		//		Function to allow programmatic toggling of the view.
-		this.button.set("checked", !this.button.get("checked"));
-	},
-
-	_showBlocks: function(show){
-		// summary:
-		//		Function to trigger printing of the editor document
-		// tags:
-		//		private
-		var doc = this.editor.document;
-		if(!this._styled){
-			try{
-				//Attempt to inject our specialized style rules for doing this.
-				this._styled = true;
-
-				var style = "";
-				var blocks = ["div", "p", "ul", "ol", "table", "h1",
-					"h2", "h3", "h4", "h5", "h6", "pre", "dir", "center",
-					"blockquote", "form", "fieldset", "address", "object",
-					"pre", "hr", "ins", "noscript", "li", "map", "button",
-					"dd", "dt"];
-
-				var template = "@media screen {\n" +
-						"\t.editorShowBlocks {TAG} {\n" +
-						"\t\tbackground-image: url({MODURL}/images/blockelems/{TAG}.gif);\n" +
-						"\t\tbackground-repeat: no-repeat;\n"	+
-						"\t\tbackground-position: top left;\n" +
-						"\t\tborder-width: 1px;\n" +
-						"\t\tborder-style: dashed;\n" +
-						"\t\tborder-color: #D0D0D0;\n" +
-						"\t\tpadding-top: 15px;\n" +
-						"\t\tpadding-left: 15px;\n" +
-					"\t}\n" +
-				"}\n";
-
-				dojo.forEach(blocks, function(tag){
-					style += template.replace(/\{TAG\}/gi, tag);
-				});
-
-				//Finally associate in the image locations based off the module url.
-				var modurl = dojo.moduleUrl(dojox._scopeName, "editor/plugins/resources").toString();
-				if(!(modurl.match(/^https?:\/\//i)) &&
-					!(modurl.match(/^file:\/\//i))){
-					// We have to root it to the page location on webkit for some nutball reason.
-					// Probably has to do with how iframe was loaded.
-					var bUrl;
-					if(modurl.charAt(0) === "/"){
-						//Absolute path on the server, so lets handle...
-						var proto = dojo.doc.location.protocol;
-						var hostn = dojo.doc.location.host;
-						bUrl = 	proto + "//" + hostn;
-					}else{
-						bUrl = this._calcBaseUrl(dojo.global.location.href);
-					}
-					if(bUrl[bUrl.length - 1] !== "/" && modurl.charAt(0) !== "/"){
-						bUrl += "/";
-					}
-					modurl = bUrl + modurl;
-				}
-				// Update all the urls.
-				style = style.replace(/\{MODURL\}/gi, modurl);
-				if(!dojo.isIE){
-					var sNode = doc.createElement("style");
-					sNode.appendChild(doc.createTextNode(style));
-					doc.getElementsByTagName("head")[0].appendChild(sNode);
-				}else{
-					var ss = doc.createStyleSheet("");
-					ss.cssText = style;
-				}
-			}catch(e){
-				console.warn(e);
-			}
-		}
-
-		// Apply/remove the classes based on state.
-		if(show){
-			dojo.addClass(this.editor.editNode, "editorShowBlocks");
-		}else{
-			dojo.removeClass(this.editor.editNode, "editorShowBlocks");
-		}
-	},
-
-	_calcBaseUrl: function(fullUrl) {
-		// summary:
-		//		Internal function used to figure out the full root url (no relatives)
-		//		for loading images in the styles in the iframe.
-		// fullUrl: String
-		//		The full url to tear down to the base.
-		// tags:
-		//		private
-		var baseUrl = null;
-		if (fullUrl !== null) {
-			// Check to see if we need to strip off any query parameters from the Url.
-			var index = fullUrl.indexOf("?");
-			if (index != -1) {
-				fullUrl = fullUrl.substring(0,index);
-			}
-
-			// Now we need to trim if necessary.  If it ends in /, then we don't
-			// have a filename to trim off so we can return.
-			index = fullUrl.lastIndexOf("/");
-			if (index > 0 && index < fullUrl.length) {
-				baseUrl = fullUrl.substring(0,index);
-			}else{
-				baseUrl = fullUrl;
-			}
-		}
-		return baseUrl; //String
-	}
+define("dojox/editor/plugins/ShowBlockNodes",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/ToggleButton","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/ShowBlockNodes"],function(_1,_2,_3){
+_1.declare("dojox.editor.plugins.ShowBlockNodes",_2._editor._Plugin,{useDefaultCommand:false,iconClassPrefix:"dijitAdditionalEditorIcon",_styled:false,_initButton:function(){
+var _4=_1.i18n.getLocalization("dojox.editor.plugins","ShowBlockNodes");
+this.button=new _2.form.ToggleButton({label:_4["showBlockNodes"],showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"ShowBlockNodes",tabIndex:"-1",onChange:_1.hitch(this,"_showBlocks")});
+this.editor.addKeyHandler(_1.keys.F9,true,true,_1.hitch(this,this.toggle));
+},updateState:function(){
+this.button.set("disabled",this.get("disabled"));
+},setEditor:function(_5){
+this.editor=_5;
+this._initButton();
+},toggle:function(){
+this.button.set("checked",!this.button.get("checked"));
+},_showBlocks:function(_6){
+var _7=this.editor.document;
+if(!this._styled){
+try{
+this._styled=true;
+var _8="";
+var _9=["div","p","ul","ol","table","h1","h2","h3","h4","h5","h6","pre","dir","center","blockquote","form","fieldset","address","object","pre","hr","ins","noscript","li","map","button","dd","dt"];
+var _a="@media screen {\n"+"\t.editorShowBlocks {TAG} {\n"+"\t\tbackground-image: url({MODURL}/images/blockelems/{TAG}.gif);\n"+"\t\tbackground-repeat: no-repeat;\n"+"\t\tbackground-position: top left;\n"+"\t\tborder-width: 1px;\n"+"\t\tborder-style: dashed;\n"+"\t\tborder-color: #D0D0D0;\n"+"\t\tpadding-top: 15px;\n"+"\t\tpadding-left: 15px;\n"+"\t}\n"+"}\n";
+_1.forEach(_9,function(_b){
+_8+=_a.replace(/\{TAG\}/gi,_b);
 });
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name ===  "showblocknodes"){
-		o.plugin = new dojox.editor.plugins.ShowBlockNodes();
-	}
+var _c=_1.moduleUrl(_3._scopeName,"editor/plugins/resources").toString();
+if(!(_c.match(/^https?:\/\//i))&&!(_c.match(/^file:\/\//i))){
+var _d;
+if(_c.charAt(0)==="/"){
+var _e=_1.doc.location.protocol;
+var _f=_1.doc.location.host;
+_d=_e+"//"+_f;
+}else{
+_d=this._calcBaseUrl(_1.global.location.href);
+}
+if(_d[_d.length-1]!=="/"&&_c.charAt(0)!=="/"){
+_d+="/";
+}
+_c=_d+_c;
+}
+_8=_8.replace(/\{MODURL\}/gi,_c);
+if(!_1.isIE){
+var _10=_7.createElement("style");
+_10.appendChild(_7.createTextNode(_8));
+_7.getElementsByTagName("head")[0].appendChild(_10);
+}else{
+var ss=_7.createStyleSheet("");
+ss.cssText=_8;
+}
+}
+catch(e){
+console.warn(e);
+}
+}
+if(_6){
+_1.addClass(this.editor.editNode,"editorShowBlocks");
+}else{
+_1.removeClass(this.editor.editNode,"editorShowBlocks");
+}
+},_calcBaseUrl:function(_11){
+var _12=null;
+if(_11!==null){
+var _13=_11.indexOf("?");
+if(_13!=-1){
+_11=_11.substring(0,_13);
+}
+_13=_11.lastIndexOf("/");
+if(_13>0&&_13<_11.length){
+_12=_11.substring(0,_13);
+}else{
+_12=_11;
+}
+}
+return _12;
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _14=o.args.name.toLowerCase();
+if(_14==="showblocknodes"){
+o.plugin=new _3.editor.plugins.ShowBlockNodes();
+}
 });
-
-return dojox.editor.plugins.ShowBlockNodes;
-
+return _3.editor.plugins.ShowBlockNodes;
 });

@@ -1,242 +1,122 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/event", 
-	"./ChartAction", "../Element", "dojo/gesture/tap", "../plot2d/common"], 
-	function(dojo, lang, declare, devent, ChartAction, Element, tap, common){
-	
-	var GlassView = dojo.declare(Element, {
-		//	tags:
-		//		private
-		constructor: function(chart){
-		},
-		render: function(){
-			if(!this.isDirty()){
-				return;
-			}
-			this.cleanGroup();
-			this.group.createRect({width: this.chart.dim.width, height: this.chart.dim.height}).setFill("rgba(0,0,0,0)");
-		},
-		cleanGroup: function(creator){
-			//	summary:
-			//		Clean any elements (HTML or GFX-based) out of our group, and create a new one.
-			//	creator: dojox.gfx.Surface?
-			//		An optional surface to work with.
-			//	returns: dojox.charting.Element
-			//		A reference to this object for functional chaining.
-			this.inherited(arguments);
-			return this;	//	dojox.charting.Element
-		},
-		clear: function(){
-			//	summary:
-			//		Clear out any parameters set on this plot.
-			//	returns: dojox.charting.action2d._IndicatorElement
-			//		The reference to this plot for functional chaining.
-			this.dirty = true;
-			// glass view needs to be above
-			if(this.chart.stack[0] != this){
-				this.chart.movePlotToFront(this.name);
-			}
-			return this;	//	dojox.charting.plot2d._IndicatorElement
-		},
-		getSeriesStats: function(){
-			//	summary:
-			//		Returns default stats (irrelevant for this type of plot).
-			//	returns: Object
-			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			return dojo.delegate(common.defaultStats);
-		},
-		initializeScalers: function(){
-			//	summary:
-			//		Does nothing (irrelevant for this type of plot).
-			return this;
-		},
-		isDirty: function(){
-			//	summary:
-			//		Return whether or not this plot needs to be redrawn.
-			//	returns: Boolean
-			//		If this plot needs to be rendered, this will return true.
-			return this.dirty;
-		}
-	});
-	
-	/*=====
-	dojo.declare("dojox.charting.action2d.__TouchZoomAndPanCtorArgs", null, {
-		//	summary:
-		//		Additional arguments for mouse zoom and pan actions.
-		
-		//	axis: String?
-		//		Target axis name for this action.  Default is "x".
-		//	scaleFactor: Number?
-		//		The scale factor applied on double tap.  Default is 1.2.
-		//	maxScale: Number?
-		//		The max scale factor accepted by this action.  Default is 100.
-		//	enableScroll: Boolean?
-		//		Whether touch drag gesture should scroll the chart.  Default is true.
-		//	enableZoom: Boolean?
-		//		Whether touch pinch and spread gesture should zoom out or in the chart.  Default is true.
-	});
-	=====*/
-	
-	return dojo.declare("dojox.charting.action2d.TouchZoomAndPan", dojox.charting.action2d.ChartAction, {
-		//	summary:
-		//		Create a touch zoom and pan action. 
-		//		You can zoom out or in the data window with pinch and spread gestures. You can scroll using drag gesture. 
-		//		Finally this is possible to navigate between a fit window and a zoom one using double tap gesture.
-	
-		// the data description block for the widget parser
-		defaultParams: {
-			axis: "x",
-			scaleFactor: 1.2,	
-			maxScale: 100,
-			enableScroll: true,
-			enableZoom: true
-		},
-		optionalParams: {},	// no optional parameters
-	
-		constructor: function(chart, plot, kwArgs){
-			//	summary:
-			//		Create a new touch zoom and pan action and connect it.
-			//	chart: dojox.charting.Chart
-			//		The chart this action applies to.
-			//	kwArgs: dojox.charting.action2d.__TouchZoomAndPanCtorArgs?
-			//		Optional arguments for the action.
-			this._listeners = [{eventName: "ontouchstart", methodName: "onTouchStart"},
-			                   {eventName: "ontouchmove", methodName: "onTouchMove"},
-			                   {eventName: "ontouchend", methodName: "onTouchEnd"},
-							   {eventName: tap.doubletap, methodName: "onDoubleTap"}];
-			if(!kwArgs){ kwArgs = {}; }
-			this.axis = kwArgs.axis ? kwArgs.axis : "x";
-			this.scaleFactor = kwArgs.scaleFactor ? kwArgs.scaleFactor : 1.2;
-			this.maxScale = kwArgs.maxScale ? kwArgs.maxScale : 100;
-			this.enableScroll = kwArgs.enableScroll != undefined ? kwArgs.enableScroll : true;
-			this.enableZoom = kwArgs.enableScroll != undefined ? kwArgs.enableZoom : true;
-			this.uName = "touchZoomPan"+this.axis;
-			this.connect();
-		},
-		
-		connect: function(){
-			//	summary:
-			//		Connect this action to the chart. On Safari this adds a new glass view plot
-			//		to the chart that's why Chart.render() must be called after connect.
-			this.inherited(arguments);
-			// this is needed to workaround issue on Safari + SVG, because a touch start action
-			// started above a item that is removed during the touch action will stop
-			// dispatching touch events!
-			if(dojo.isSafari && this.chart.surface.declaredClass.indexOf("svg")!=-1){
-				this.chart.addPlot(this.uName, {type: GlassView});
-			}
-		},
-		
-		disconnect: function(){
-			//	summary:
-			//		Disconnect this action from the chart. 
-			if(dojo.isSafari && this.chart.surface.declaredClass.indexOf("svg")!=-1){
-				this.chart.removePlot(this.uName);
-			}
-			this.inherited(arguments);
-		},
-	
-		onTouchStart: function(event){
-			//	summary:
-			//		Called when touch is started on the chart.
-			// we always want to be above regular plots and not clipped
-			var chart = this.chart, axis = chart.getAxis(this.axis);
-			var length = event.touches.length;
-			this._startPageCoord = {x: event.touches[0].pageX, y: event.touches[0].pageY};
-			if((this.enableZoom || this.enableScroll) && chart._delayedRenderHandle){
-				// we have pending rendering from a scroll, let's sync
-				clearTimeout(chart._delayedRenderHandle);
-				chart._delayedRenderHandle = null;
-				chart.render();
-			}
-			if(this.enableZoom && length >= 2){
-				this._endPageCoord =  {x: event.touches[1].pageX, y: event.touches[1].pageY};
-				var middlePageCoord = {x: (this._startPageCoord.x + this._endPageCoord.x) / 2,
-										y: (this._startPageCoord.y + this._endPageCoord.y) / 2};
-				var scaler = axis.getScaler();
-				this._initScale = axis.getWindowScale();
-				var t = this._initData =  this.plot.toData();
-				this._middleCoord = t(middlePageCoord)[this.axis];
-				this._startCoord = scaler.bounds.from;
-				this._endCoord = scaler.bounds.to;
-			}else if(this.enableScroll){
-				this._startScroll(axis);
-				// needed for Android, otherwise will get a touch cancel while swiping
-				dojo.stopEvent(event);
-			}
-		},
-	
-		onTouchMove: function(event){
-			//	summary:
-			//		Called when touch is moved on the chart.
-			var chart = this.chart, axis = chart.getAxis(this.axis);
-			var length = event.touches.length;
-			var pAttr = axis.vertical?"pageY":"pageX", 
-					attr = axis.vertical?"y":"x";
-			if(this.enableZoom && length >= 2){
-				var newMiddlePageCoord = {x: (event.touches[1].pageX + event.touches[0].pageX) / 2,
-											y: (event.touches[1].pageY + event.touches[0].pageY) / 2};		
-				var scale = (this._endPageCoord[attr] - this._startPageCoord[attr]) /
-					(event.touches[1][pAttr] - event.touches[0][pAttr]);
-	
-				if(this._initScale / scale > this.maxScale){
-					return;
-				}
-	
-				var newMiddleCoord = this._initData(newMiddlePageCoord)[this.axis];
-	
-				var newStart = scale * (this._startCoord - newMiddleCoord)  + this._middleCoord,
-				newEnd = scale * (this._endCoord - newMiddleCoord) + this._middleCoord;
-				chart.zoomIn(this.axis, [newStart, newEnd]);
-				// avoid browser pan
-				dojo.stopEvent(event);
-			}else if(this.enableScroll){
-				var delta = axis.vertical?(this._startPageCoord[attr] - event.touches[0][pAttr]):
-					(event.touches[0][pAttr] - this._startPageCoord[attr]);
-				chart.setAxisWindow(this.axis, this._lastScale, this._initOffset - delta / this._lastFactor / this._lastScale);
-				chart.delayedRender();
-				// avoid browser pan
-				dojo.stopEvent(event);
-			}		
-		},
-	
-		onTouchEnd: function(event){
-			//	summary:
-			//		Called when touch is ended on the chart.
-			var chart = this.chart, axis = chart.getAxis(this.axis);
-			if(event.touches.length == 1 && this.enableScroll){
-				// still one touch available, let's start back from here for
-				// potential pan
-				this._startPageCoord = {x: event.touches[0].pageX, y: event.touches[0].pageY};
-				this._startScroll(axis);
-			}
-		},
-		
-		_startScroll: function(axis){
-			var bounds = axis.getScaler().bounds;
-			this._initOffset = axis.getWindowOffset();
-			// we keep it because of delay rendering we might now always have access to the
-			// information to compute it
-			this._lastScale = axis.getWindowScale();
-			this._lastFactor = bounds.span / (bounds.upper - bounds.lower); 
-		},
-	
-		onDoubleTap: function(event){
-			//	summary:
-			//		Called when double tap is performed on the chart.
-			var chart = this.chart, axis = chart.getAxis(this.axis);
-			var scale = 1 / this.scaleFactor;
-			// are we fit?
-			if(axis.getWindowScale()==1){
-				// fit => zoom
-				var scaler = axis.getScaler(), start = scaler.bounds.from, end = scaler.bounds.to, 
-				oldMiddle = (start + end) / 2, newMiddle = this.plot.toData(this._startPageCoord)[this.axis], 
-				newStart = scale * (start - oldMiddle) + newMiddle, newEnd = scale * (end - oldMiddle) + newMiddle;
-				chart.zoomIn(this.axis, [newStart, newEnd]);
-			}else{
-				// non fit => fit
-				chart.setAxisWindow(this.axis, 1, 0);
-				chart.render();
-			}
-			dojo.stopEvent(event);
-		}
-	});
-});		
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/event","./ChartAction","../Element","dojo/gesture/tap","../plot2d/common"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+var _9=_1.declare(_6,{constructor:function(_a){
+},render:function(){
+if(!this.isDirty()){
+return;
+}
+this.cleanGroup();
+this.group.createRect({width:this.chart.dim.width,height:this.chart.dim.height}).setFill("rgba(0,0,0,0)");
+},cleanGroup:function(_b){
+this.inherited(arguments);
+return this;
+},clear:function(){
+this.dirty=true;
+if(this.chart.stack[0]!=this){
+this.chart.movePlotToFront(this.name);
+}
+return this;
+},getSeriesStats:function(){
+return _1.delegate(_8.defaultStats);
+},initializeScalers:function(){
+return this;
+},isDirty:function(){
+return this.dirty;
+}});
+return _1.declare("dojox.charting.action2d.TouchZoomAndPan",dojox.charting.action2d.ChartAction,{defaultParams:{axis:"x",scaleFactor:1.2,maxScale:100,enableScroll:true,enableZoom:true},optionalParams:{},constructor:function(_c,_d,_e){
+this._listeners=[{eventName:"ontouchstart",methodName:"onTouchStart"},{eventName:"ontouchmove",methodName:"onTouchMove"},{eventName:"ontouchend",methodName:"onTouchEnd"},{eventName:_7.doubletap,methodName:"onDoubleTap"}];
+if(!_e){
+_e={};
+}
+this.axis=_e.axis?_e.axis:"x";
+this.scaleFactor=_e.scaleFactor?_e.scaleFactor:1.2;
+this.maxScale=_e.maxScale?_e.maxScale:100;
+this.enableScroll=_e.enableScroll!=undefined?_e.enableScroll:true;
+this.enableZoom=_e.enableScroll!=undefined?_e.enableZoom:true;
+this.uName="touchZoomPan"+this.axis;
+this.connect();
+},connect:function(){
+this.inherited(arguments);
+if(_1.isSafari&&this.chart.surface.declaredClass.indexOf("svg")!=-1){
+this.chart.addPlot(this.uName,{type:_9});
+}
+},disconnect:function(){
+if(_1.isSafari&&this.chart.surface.declaredClass.indexOf("svg")!=-1){
+this.chart.removePlot(this.uName);
+}
+this.inherited(arguments);
+},onTouchStart:function(_f){
+var _10=this.chart,_11=_10.getAxis(this.axis);
+var _12=_f.touches.length;
+this._startPageCoord={x:_f.touches[0].pageX,y:_f.touches[0].pageY};
+if((this.enableZoom||this.enableScroll)&&_10._delayedRenderHandle){
+clearTimeout(_10._delayedRenderHandle);
+_10._delayedRenderHandle=null;
+_10.render();
+}
+if(this.enableZoom&&_12>=2){
+this._endPageCoord={x:_f.touches[1].pageX,y:_f.touches[1].pageY};
+var _13={x:(this._startPageCoord.x+this._endPageCoord.x)/2,y:(this._startPageCoord.y+this._endPageCoord.y)/2};
+var _14=_11.getScaler();
+this._initScale=_11.getWindowScale();
+var t=this._initData=this.plot.toData();
+this._middleCoord=t(_13)[this.axis];
+this._startCoord=_14.bounds.from;
+this._endCoord=_14.bounds.to;
+}else{
+if(this.enableScroll){
+this._startScroll(_11);
+_1.stopEvent(_f);
+}
+}
+},onTouchMove:function(_15){
+var _16=this.chart,_17=_16.getAxis(this.axis);
+var _18=_15.touches.length;
+var _19=_17.vertical?"pageY":"pageX",_1a=_17.vertical?"y":"x";
+if(this.enableZoom&&_18>=2){
+var _1b={x:(_15.touches[1].pageX+_15.touches[0].pageX)/2,y:(_15.touches[1].pageY+_15.touches[0].pageY)/2};
+var _1c=(this._endPageCoord[_1a]-this._startPageCoord[_1a])/(_15.touches[1][_19]-_15.touches[0][_19]);
+if(this._initScale/_1c>this.maxScale){
+return;
+}
+var _1d=this._initData(_1b)[this.axis];
+var _1e=_1c*(this._startCoord-_1d)+this._middleCoord,_1f=_1c*(this._endCoord-_1d)+this._middleCoord;
+_16.zoomIn(this.axis,[_1e,_1f]);
+_1.stopEvent(_15);
+}else{
+if(this.enableScroll){
+var _20=_17.vertical?(this._startPageCoord[_1a]-_15.touches[0][_19]):(_15.touches[0][_19]-this._startPageCoord[_1a]);
+_16.setAxisWindow(this.axis,this._lastScale,this._initOffset-_20/this._lastFactor/this._lastScale);
+_16.delayedRender();
+_1.stopEvent(_15);
+}
+}
+},onTouchEnd:function(_21){
+var _22=this.chart,_23=_22.getAxis(this.axis);
+if(_21.touches.length==1&&this.enableScroll){
+this._startPageCoord={x:_21.touches[0].pageX,y:_21.touches[0].pageY};
+this._startScroll(_23);
+}
+},_startScroll:function(_24){
+var _25=_24.getScaler().bounds;
+this._initOffset=_24.getWindowOffset();
+this._lastScale=_24.getWindowScale();
+this._lastFactor=_25.span/(_25.upper-_25.lower);
+},onDoubleTap:function(_26){
+var _27=this.chart,_28=_27.getAxis(this.axis);
+var _29=1/this.scaleFactor;
+if(_28.getWindowScale()==1){
+var _2a=_28.getScaler(),_2b=_2a.bounds.from,end=_2a.bounds.to,_2c=(_2b+end)/2,_2d=this.plot.toData(this._startPageCoord)[this.axis],_2e=_29*(_2b-_2c)+_2d,_2f=_29*(end-_2c)+_2d;
+_27.zoomIn(this.axis,[_2e,_2f]);
+}else{
+_27.setAxisWindow(this.axis,1,0);
+_27.render();
+}
+_1.stopEvent(_26);
+}});
+});

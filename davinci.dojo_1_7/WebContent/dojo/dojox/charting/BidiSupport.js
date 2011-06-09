@@ -1,263 +1,123 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", 
-	"dojox/gfx", "dojox/gfx/_gfxBidiSupport", "./Chart", "./axis2d/common", "dojox/string/BidiEngine", "dojox/lang/functional"], 
-	function(dojo, lang, html, array, g, gBidi, Chart, da, BidiEngine, df){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var bidiEngine = new dojox.string.BidiEngine();
-	
-	dojo.extend(dojox.charting.Chart, {
-		// summary:
-		//		Add support for bidi scripts.
-		// description:
-		//		Bidi stands for support for languages with a bidirectional script. 
-		//		There's a special need for displaying BIDI text in rtl direction 
-		//		in ltr GUI, sometimes needed auto support.
-		//		dojox.charting does not support control over base text direction provided in Dojo.
-
-		// textDir: String
-		//		Bi-directional support,	the main variable which is responsible for the direction of the text.
-		//		The text direction can be different than the GUI direction by using this parameter.
-		// 		Allowed values:
-		//			1. "ltr"
-		//			2. "rtl"
-		//			3. "auto" - contextual the direction of a text defined by first strong letter.
-		//		By default is as the page direction.		
-		textDir:"",
-		
-		getTextDir: function(/*String*/text){
-			// summary:
-			//		Return direction of the text. 
-			// description:
-			// 		If textDir is ltr or rtl returns the value.
-			//		If it's auto, calls to another function that responsible 
-			//		for checking the value, and defining the direction.			
-			// text:
-			//		Used in case textDir is "auto", this case the direction is according to the first
-			//		strong (directionally - which direction is strong defined) letter.
-			//	tags:
-			//		protected.
-			var textDir = this.textDir == "auto" ? bidiEngine.checkContextual(text) : this.textDir;
-			// providing default value
-			if(!textDir){
-				textDir = dojo.style(this.node,"direction");
-			}
-			return textDir;
-		},
-
-		postscript: function(node,args){
-			// summary:
-			//		Kicks off chart instantiation.
-			// description:
-			//		Used for setting the textDir of the chart. 
-			// tags:
-			//		private
-
-			// validate textDir
-			var textDir = args ? (args["textDir"] ? validateTextDir(args["textDir"]) : "") : "";
-			// if textDir wasn't defined or was defined wrong, apply default value
-			textDir = textDir ? textDir : dojo.style(this.node,"direction");
-			this.textDir = textDir;
-
-			this.surface.textDir = textDir;
-			
-			// two data structures, used for storing data for further enablement to change
-			// textDir dynamically
-			this.htmlElementsRegistry = [];
-			this.truncatedLabelsRegistry = [];
-		},
-
-		setTextDir: function(/*String*/ newTextDir, obj){
-			// summary:
-			//		Setter for the textDir attribute.
-			// description:
-			//		Allows dynamically set the textDir, goes over all the text-children and  
-			//		updates their base text direction.
-			// tags:
-			//		public
-		
-			if(newTextDir == this.textDir){
-				return this;
-			}
-			if(validateTextDir(newTextDir) != null){
-				this.textDir = newTextDir;
-				
-				// set automatically all the gfx objects that were created by this surface
-				// (groups, text objects)
-				this.surface.setTextDir(newTextDir);
-			
-				// truncated labels that were created with gfx creator need to recalculate dir
-				// for case like: "111111A" (A stands for bidi character) and the truncation
-				// is "111..." If the textDir is auto, the display should be: "...111" but in gfx
-				// case we will get "111...". Because this.surface.setTextDir will calculate the dir of truncated
-				// label, which value is "111..." but th real is "111111A".
-				// each time we created a gfx truncated label we stored it in the truncatedLabelsRegistry, so update now 
-				// the registry.
-				if(this.truncatedLabelsRegistry && newTextDir == "auto"){
-					dojo.forEach(this.truncatedLabelsRegistry, function(elem){
-						var tDir = this.getTextDir(elem["label"]);
-						if(elem["element"].textDir != tDir){
-							elem["element"].setShape({textDir: tDir});
-						}
-					}, this);
-				}
-				
-				// re-render axes with html labels. for recalculation of the labels
-				// positions etc.
-				// create array of keys for all the axis in chart 
-				var axesKeyArr = df.keys(this.axes);
-				if(axesKeyArr.length > 0){
-					// iterate over the axes, and for each that have html labels render it.
-					dojo.forEach(axesKeyArr, function(key, index, arr){
-						// get the axis 
-						var axis = this.axes[key];
-						// if the axis has html labels 
-						if(axis.htmlElements[0]){
-							axis.dirty = true;
-							axis.render(this.dim, this.offsets);
-						}
-					},this);
-					
-					// recreate title
-					if(this.title){
-						var forceHtmlLabels = (g.renderer == "canvas"),
-							labelType = forceHtmlLabels || !dojo.isIE && !dojo.isOpera ? "html" : "gfx",
-							tsize = g.normalizedLength(g.splitFontString(this.titleFont).size);
-						// remove the title
-						dojo.destroy(this.chartTitle);
-						this.chartTitle =null;
-						// create the new title
-						this.chartTitle = da.createText[labelType](
-							this,
-							this.surface,
-							this.dim.width/2,
-							this.titlePos=="top" ? tsize + this.margins.t : this.dim.height - this.margins.b,
-							"middle",
-							this.title,
-							this.titleFont,
-							this.titleFontColor
-						);
-					}				
-				}else{
-				// case of pies, spiders etc.
-					dojo.forEach(this.htmlElementsRegistry, function(elem, index, arr){
-						var tDir = newTextDir == "auto" ? this.getTextDir(elem[4]) : newTextDir;
-						if(elem[0].children[0] && elem[0].children[0].dir != tDir){
-							dojo.destroy(elem[0].children[0]);
-							elem[0].children[0] = da.createText["html"]
-									(this, this.surface, elem[1], elem[2], elem[3], elem[4], elem[5], elem[6]).children[0];
-						}
-					},this);
-				}
-			}
-		},
-
-		truncateBidi: function(elem, label, labelType){
-			// summary:
-			//		Enables bidi support for truncated labels.
-			// description:
-			//		Can be two types of labels: html or gfx.
-			//		gfx labels: 
-			//			Need to be stored in registry to be used when the textDir will be set dynamically.
-			//			Additional work on truncated labels is needed for case as 111111A (A stands for "bidi" character rtl directioned).
-			//			let say in this case the truncation is "111..." If the textDir is auto, the display should be: "...111" but in gfx
-			//			case we will get "111...". Because this.surface.setTextDir will calculate the dir of truncated
-			//			label, which value is "111..." but th real is "111111A".
-			//			each time we created a gfx truncated label we store it in the truncatedLabelsRegistry.
-			//		html labels:
-			//			no need for repository (stored in another place). Here we only need to update the current dir according to textDir.
-			// tags:
-			//		private
-		
-			if(labelType == "gfx"){
-				// store truncated gfx labels in the data structure.
-				this.truncatedLabelsRegistry.push({element: elem, label: label});
-				if(this.textDir == "auto"){
-					elem.setShape({textDir: this.getTextDir(label)});
-				}
-			}
-			if(labelType == "html" && this.textDir == "auto"){
-				elem.children[0].dir = this.getTextDir(label);
-			}
-		}
-	});
-
-	var extendMethod = function(obj, method, bundleByPrototype, before, after){
-		// Some helper function. Used for extending method of obj.
-		// obj: Object
-		//		The obj we overriding it's method.
-		// method: String
-		//		The method that is extended, the original method is called before or after
-		//		functions that passed to extendMethod.
-		// bundleByPrototype: boolean
-		//		There's two methods to extend, using prototype or not.
-		// before: function
-		//		If defined this function will be executed before the original method.
-		// after: function
-		//		If defined this function will be executed after the original method.
-		if(bundleByPrototype){
-			var old = obj.prototype[method];
-			obj.prototype[method] = 
-				function(){
-					var rBefore;
-					if (before){
-						rBefore = before.apply(this, arguments);
-					}
-					var r = old.apply(this, rBefore);
-					if (after){
-						r = after.call(this, r, arguments);
-					}
-					return r;
-				};
-		}else{
-			var old = dojo.clone(obj[method]);
-			obj[method] = 
-				function(){
-					var rBefore;
-					if (before){
-						rBefore = before.apply(this, arguments);
-					}
-					var r = old.apply(this, arguments);
-					if (after){
-						after(r, arguments);
-					}
-					return r;
-				};		
-		}
-	};
-
-	var labelPreprocess = function(elem, chart, label, truncatedLabel, font, elemType){
-		// aditional preprocessing of the labels, needed for rtl base text direction in LTR 
-		// GUI, or for ltr base text direction for RTL GUI.
-
-		var isChartDirectionRtl = (dojo.style(chart.node,"direction") == "rtl");
-		var isBaseTextDirRtl = (chart.getTextDir(label) == "rtl");
-
-		if(isBaseTextDirRtl && !isChartDirectionRtl){
-			label = "<span dir='rtl'>" + label +"</span>";
-		}
-		if(!isBaseTextDirRtl && isChartDirectionRtl){
-			label = "<span dir='ltr'>" + label +"</span>";
-		}
-
-		return arguments;
-	};
-
-	// connect labelPreprocess to run before labelTooltip.
-	// patch it only is available
-	if(dojox.charting.axis2d && dojox.charting.axis2d.Default){
-		extendMethod(dojox.charting.axis2d.Default,"labelTooltip",true, labelPreprocess, null);
-		//extendMethod(dijit,"showTooltip",false, labelPreprocess, null);
-	}
-
-	function htmlCreateText(r, agumentsArr){
-		// function to register HTML elements that created by html.createText, this array
-		// needed for allowing to change textDir dynamically.
-		agumentsArr[0].htmlElementsRegistry.push([r, agumentsArr[2], agumentsArr[3], agumentsArr[4], agumentsArr[5], agumentsArr[6], agumentsArr[7]]);
-	}
-
-	extendMethod(da.createText,"html", false, null, htmlCreateText);
-
-	function validateTextDir(textDir){
-		return /^(ltr|rtl|auto)$/.test(textDir) ? textDir : null;
-	}
-		
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojox/gfx","dojox/gfx/_gfxBidiSupport","./Chart","./axis2d/common","dojox/string/BidiEngine","dojox/lang/functional"],function(_1,_2,_3,_4,g,_5,_6,da,_7,df){
+var _8=new dojox.string.BidiEngine();
+_1.extend(dojox.charting.Chart,{textDir:"",getTextDir:function(_9){
+var _a=this.textDir=="auto"?_8.checkContextual(_9):this.textDir;
+if(!_a){
+_a=_1.style(this.node,"direction");
+}
+return _a;
+},postscript:function(_b,_c){
+var _d=_c?(_c["textDir"]?_e(_c["textDir"]):""):"";
+_d=_d?_d:_1.style(this.node,"direction");
+this.textDir=_d;
+this.surface.textDir=_d;
+this.htmlElementsRegistry=[];
+this.truncatedLabelsRegistry=[];
+},setTextDir:function(_f,obj){
+if(_f==this.textDir){
+return this;
+}
+if(_e(_f)!=null){
+this.textDir=_f;
+this.surface.setTextDir(_f);
+if(this.truncatedLabelsRegistry&&_f=="auto"){
+_1.forEach(this.truncatedLabelsRegistry,function(_10){
+var _11=this.getTextDir(_10["label"]);
+if(_10["element"].textDir!=_11){
+_10["element"].setShape({textDir:_11});
+}
+},this);
+}
+var _12=df.keys(this.axes);
+if(_12.length>0){
+_1.forEach(_12,function(key,_13,arr){
+var _14=this.axes[key];
+if(_14.htmlElements[0]){
+_14.dirty=true;
+_14.render(this.dim,this.offsets);
+}
+},this);
+if(this.title){
+var _15=(g.renderer=="canvas"),_16=_15||!_1.isIE&&!_1.isOpera?"html":"gfx",_17=g.normalizedLength(g.splitFontString(this.titleFont).size);
+_1.destroy(this.chartTitle);
+this.chartTitle=null;
+this.chartTitle=da.createText[_16](this,this.surface,this.dim.width/2,this.titlePos=="top"?_17+this.margins.t:this.dim.height-this.margins.b,"middle",this.title,this.titleFont,this.titleFontColor);
+}
+}else{
+_1.forEach(this.htmlElementsRegistry,function(_18,_19,arr){
+var _1a=_f=="auto"?this.getTextDir(_18[4]):_f;
+if(_18[0].children[0]&&_18[0].children[0].dir!=_1a){
+_1.destroy(_18[0].children[0]);
+_18[0].children[0]=da.createText["html"](this,this.surface,_18[1],_18[2],_18[3],_18[4],_18[5],_18[6]).children[0];
+}
+},this);
+}
+}
+},truncateBidi:function(_1b,_1c,_1d){
+if(_1d=="gfx"){
+this.truncatedLabelsRegistry.push({element:_1b,label:_1c});
+if(this.textDir=="auto"){
+_1b.setShape({textDir:this.getTextDir(_1c)});
+}
+}
+if(_1d=="html"&&this.textDir=="auto"){
+_1b.children[0].dir=this.getTextDir(_1c);
+}
+}});
+var _1e=function(obj,_1f,_20,_21,_22){
+if(_20){
+var old=obj.prototype[_1f];
+obj.prototype[_1f]=function(){
+var _23;
+if(_21){
+_23=_21.apply(this,arguments);
+}
+var r=old.apply(this,_23);
+if(_22){
+r=_22.call(this,r,arguments);
+}
+return r;
+};
+}else{
+var old=_1.clone(obj[_1f]);
+obj[_1f]=function(){
+var _24;
+if(_21){
+_24=_21.apply(this,arguments);
+}
+var r=old.apply(this,arguments);
+if(_22){
+_22(r,arguments);
+}
+return r;
+};
+}
+};
+var _25=function(_26,_27,_28,_29,_2a,_2b){
+var _2c=(_1.style(_27.node,"direction")=="rtl");
+var _2d=(_27.getTextDir(_28)=="rtl");
+if(_2d&&!_2c){
+_28="<span dir='rtl'>"+_28+"</span>";
+}
+if(!_2d&&_2c){
+_28="<span dir='ltr'>"+_28+"</span>";
+}
+return arguments;
+};
+if(dojox.charting.axis2d&&dojox.charting.axis2d.Default){
+_1e(dojox.charting.axis2d.Default,"labelTooltip",true,_25,null);
+}
+function _2e(r,_2f){
+_2f[0].htmlElementsRegistry.push([r,_2f[2],_2f[3],_2f[4],_2f[5],_2f[6],_2f[7]]);
+};
+_1e(da.createText,"html",false,null,_2e);
+function _e(_30){
+return /^(ltr|rtl|auto)$/.test(_30)?_30:null;
+};
 });

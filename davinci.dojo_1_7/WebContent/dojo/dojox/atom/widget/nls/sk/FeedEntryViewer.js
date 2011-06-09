@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[zobraziť voľby]",
 	title: "Nadpis",
 	authors: "Autori",
@@ -10,3 +10,4 @@
 	content: "Obsah"
 })
 
+);

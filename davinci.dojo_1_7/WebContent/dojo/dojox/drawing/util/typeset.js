@@ -1,64 +1,49 @@
-define(["../library/greek","./common"],function(greeks){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojox.drawing.util.typeset = {
-		// Summary:
-		//		Singleton used for converting characters and typsetting.  Required by _base.
-		//
-		// Description:
-		//		Eventually, this is supposed to turn input strings of mathematical
-		//		expressions into typeset expressions that can be displayed on the
-		//		canvas.  For now, we just generate Greek letters based on LaTeX style
-		//		entity codes.
-
-		
-		convertHTML: function(inText){
-			if(inText){
-				return inText.replace(/&([^;]+);/g,function(match,code){
-					if(code.charAt(0)=='#'){
-						//coerce remainder of string to int
-						var number=+code.substr(1);
-						if(!isNaN(number)){
-							return String.fromCharCode(number);
-						}
-					}else if(greeks[code]){
-						return String.fromCharCode(greeks[code]);
-					}
-					// This is generally for server code, so there
-					// is no point bothering the user in the case of an error.
-					console.warn("no HTML conversion for ",match);
-					return match;
-				});
-			}
-			return inText;
-		},
-
-		convertLaTeX: function(inText){
-			// console.log("***** convertLaTeX for ",inText);
-			if(inText){
-				return inText.replace(/\\([a-zA-Z]+)/g,function(match,word){
-					if(greeks[word]){
-						return String.fromCharCode(greeks[word]);
-					}else if(word.substr(0,2)=="mu"){
-						// special handling for \mu since it is
-						// a unit prefix for micro.
-						return String.fromCharCode(greeks["mu"])+word.substr(2);
-					}else if(word.substr(0,5)=="theta"){
-						// special handling for \theta since it is
-						// a standard prefix for angle associated with a vector.
-						return String.fromCharCode(greeks["theta"])+word.substr(5);
-					}else if(word.substr(0,3)=="phi"){
-						// special handling for \phi since it is
-						// a standard prefix for angle associated with a z-axis vector.
-						return String.fromCharCode(greeks["phi"])+word.substr(3);
-					}
-					console.log("no match for ",match," in ",inText);
-					console.log("Need user-friendly error handling here!");
-				}).replace(/\\\\/g,'\\');
-			}
-			return inText;
-		}
-
-	};
-
-	return dojox.drawing.util.typeset;
+define(["../library/greek","./common"],function(_1){
+dojox.drawing.util.typeset={convertHTML:function(_2){
+if(_2){
+return _2.replace(/&([^;]+);/g,function(_3,_4){
+if(_4.charAt(0)=="#"){
+var _5=+_4.substr(1);
+if(!isNaN(_5)){
+return String.fromCharCode(_5);
+}
+}else{
+if(_1[_4]){
+return String.fromCharCode(_1[_4]);
+}
+}
+console.warn("no HTML conversion for ",_3);
+return _3;
+});
+}
+return _2;
+},convertLaTeX:function(_6){
+if(_6){
+return _6.replace(/\\([a-zA-Z]+)/g,function(_7,_8){
+if(_1[_8]){
+return String.fromCharCode(_1[_8]);
+}else{
+if(_8.substr(0,2)=="mu"){
+return String.fromCharCode(_1["mu"])+_8.substr(2);
+}else{
+if(_8.substr(0,5)=="theta"){
+return String.fromCharCode(_1["theta"])+_8.substr(5);
+}else{
+if(_8.substr(0,3)=="phi"){
+return String.fromCharCode(_1["phi"])+_8.substr(3);
+}
+}
+}
+}
+}).replace(/\\\\/g,"\\");
+}
+return _6;
+}};
+return dojox.drawing.util.typeset;
 });

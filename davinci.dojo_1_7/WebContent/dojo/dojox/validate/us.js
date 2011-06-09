@@ -1,66 +1,26 @@
-define(["dojo/_base/kernel", "./_base", "./regexp"], function(dojo, validate, xregexp){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-var us = dojo.getObject("us", true, validate);
-us.isState = function(/*String*/value, /*Object?*/flags){
-	// summary: Validates US state and territory abbreviations.
-	//
-	// value: A two character string
-	// flags: An object
-	//    flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
-	//    flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
-
-	var re = new RegExp("^" + xregexp.us.state(flags) + "$", "i");
-	return re.test(value); // Boolean
+define(["dojo/_base/kernel","./_base","./regexp"],function(_1,_2,_3){
+var us=_1.getObject("us",true,_2);
+us.isState=function(_4,_5){
+var re=new RegExp("^"+_3.us.state(_5)+"$","i");
+return re.test(_4);
 };
-
-us.isPhoneNumber = function(/*String*/value){
-	// summary: Validates 10 US digit phone number for several common formats
-	// value: The telephone number string
-
-	var flags = {
-		format: [
-			"###-###-####",
-			"(###) ###-####",
-			"(###) ### ####",
-			"###.###.####",
-			"###/###-####",
-			"### ### ####",
-			"###-###-#### x#???",
-			"(###) ###-#### x#???",
-			"(###) ### #### x#???",
-			"###.###.#### x#???",
-			"###/###-#### x#???",
-			"### ### #### x#???",
-			"##########"
-		]
-	};
-	return validate.isNumberFormat(value, flags); // Boolean
+us.isPhoneNumber=function(_6){
+var _7={format:["###-###-####","(###) ###-####","(###) ### ####","###.###.####","###/###-####","### ### ####","###-###-#### x#???","(###) ###-#### x#???","(###) ### #### x#???","###.###.#### x#???","###/###-#### x#???","### ### #### x#???","##########"]};
+return _2.isNumberFormat(_6,_7);
 };
-
-us.isSocialSecurityNumber = function(/*String*/value){
-	// summary: Validates social security number
-	var flags = {
-		format: [
-			"###-##-####",
-			"### ## ####",
-			"#########"
-		]
-	};
-	return validate.isNumberFormat(value, flags); // Boolean
+us.isSocialSecurityNumber=function(_8){
+var _9={format:["###-##-####","### ## ####","#########"]};
+return _2.isNumberFormat(_8,_9);
 };
-
-us.isZipCode = function(/*String*/value){
-	// summary: Validates U.S. zip-code
-	var flags = {
-		format: [
-			"#####-####",
-			"##### ####",
-			"#########",
-			"#####"
-		]
-	};
-	return validate.isNumberFormat(value, flags); // Boolean
+us.isZipCode=function(_a){
+var _b={format:["#####-####","##### ####","#########","#####"]};
+return _2.isNumberFormat(_a,_b);
 };
-
 return us;
 });

@@ -1,151 +1,137 @@
-define(["./_base"], function(){
-	dojo.experimental("dojox.timing.ThreadPool");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-//	dojox.timing.Timer is included as part of _base
-/********************************************************************
-	This is a port of the original System.Threading.ThreadPool from
-	the f(m) class library.
-	
-	Donated to the Dojo toolkit by the author :)
-*********************************************************************/
-	var t=dojox.timing;
-	t.threadStates={
-		UNSTARTED:"unstarted",
-		STOPPED:"stopped",
-		PENDING:"pending",
-		RUNNING:"running",
-		SUSPENDED:"suspended",
-		WAITING:"waiting",
-		COMPLETE:"complete",
-		ERROR:"error"
-	};
-
-	//	Before rar says a word, we actually *use* these numbers for a purpose :)
-	t.threadPriorities={
-		LOWEST:1,
-		BELOWNORMAL:2,
-		NORMAL:3,
-		ABOVENORMAL:4,
-		HIGHEST:5
-	};
-	
-	t.Thread=function(/* Function */fn, /* dojox.timing.threadPriorities? */priority){
-		var self=this;
-		this.state=t.threadStates.UNSTARTED;
-		this.priority=priority||t.threadPriorities.NORMAL;
-		this.lastError=null;
-		this.func=fn;	//	for lookup purposes.
-		this.invoke=function(){
-			self.state=t.threadStates.RUNNING;
-			try{
-				fn(this);
-				self.state=t.threadStates.COMPLETE;
-			}catch(e){
-				self.lastError=e;
-				self.state=t.threadStates.ERROR;
-			}
-		};
-	};
-
-	//	TODO: allow for changing of maxThreads and tick interval
-	t.ThreadPool=new (function(/* Number */mxthrs, /* Number */intvl){
-		var self=this;
-		var maxThreads=mxthrs;
-		var availableThreads=maxThreads;
-		var interval=intvl;
-		var fireInterval=Math.floor((interval/2)/maxThreads);
-		var queue=[];
-		var timers=new Array(maxThreads+1);
-		var timer=new dojox.timing.Timer();
-		var invoke=function(){
-			var tracker=timers[0]={};
-			for(var i=0; i<timers.length; i++){
-				window.clearTimeout(timers[i]);
-				var thread=queue.shift();
-				if(typeof(thread)=="undefined"){ break; }
-				tracker["thread-"+i]=thread;
-				timers[i]=window.setTimeout(thread.invoke,(fireInterval*i));
-			}
-			availableThreads=maxThreads-(i-1);
-		};
-
-		//	public methods
-		this.getMaxThreads=function(){ return maxThreads; };
-		this.getAvailableThreads=function(){ return availableThreads; };
-		this.getTickInterval=function(){ return interval; };
-		this.queueUserWorkItem=function(/* Function || dojox.timing.Thread */fn){
-			var item=fn;
-			if(item instanceof Function){
-				item=new t.Thread(item);
-			}
-			var idx=queue.length;
-			for(var i=0; i<queue.length; i++){
-				if(queue[i].priority<item.priority){
-					idx=i;
-					break;
-				}
-			}
-			if(idx<queue.length){
-				queue.splice(idx, 0, item);
-			} else {
-				queue.push(item);
-			}
-			return true;
-		};
-		this.removeQueuedUserWorkItem=function(/* Function || dojox.timing.Thread */item){
-			if(item instanceof Function){
-				var idx=-1;
-				for(var i=0; i<queue.length; i++){
-					if(queue[i].func==item){
-						idx=i;
-						break;
-					}
-				}
-				if(idx>-1){
-					queue.splice(idx,1);
-					return true;
-				}
-				return false;
-			}
-
-			var idx=-1;
-			for(var i=0; i<queue.length; i++){
-				if(queue[i]==item){
-					idx=i;
-					break;
-				}
-			}
-			if(idx>-1){
-				queue.splice(idx,1);
-				return true;
-			}
-			return false;
-		};
-		this.start=function(){ timer.start(); };
-		this.stop=function(){ timer.stop(); };
-		this.abort=function(){
-			this.stop();
-			for(var i=1; i<timers.length; i++){
-				if(timers[i]){
-					window.clearTimeout(timers[i]);
-				}
-			}
-			for(var thread in timers[0]){
-				this.queueUserWorkItem(thread);
-			}
-			timers[0]={};
-		};
-		this.reset=function(){
-			this.abort();
-			queue=[];
-		};
-		this.sleep=function(/* Number */nSleep){
-			timer.stop();
-			window.setTimeout(timer.start, nSleep);
-		};
-
-		//	dedicate the timer to us.
-		timer.onTick=self.invoke;
-	})(16, 5000);
-	return dojox.timing.ThreadPool;
+define(["./_base"],function(){
+dojo.experimental("dojox.timing.ThreadPool");
+var t=dojox.timing;
+t.threadStates={UNSTARTED:"unstarted",STOPPED:"stopped",PENDING:"pending",RUNNING:"running",SUSPENDED:"suspended",WAITING:"waiting",COMPLETE:"complete",ERROR:"error"};
+t.threadPriorities={LOWEST:1,BELOWNORMAL:2,NORMAL:3,ABOVENORMAL:4,HIGHEST:5};
+t.Thread=function(fn,_1){
+var _2=this;
+this.state=t.threadStates.UNSTARTED;
+this.priority=_1||t.threadPriorities.NORMAL;
+this.lastError=null;
+this.func=fn;
+this.invoke=function(){
+_2.state=t.threadStates.RUNNING;
+try{
+fn(this);
+_2.state=t.threadStates.COMPLETE;
+}
+catch(e){
+_2.lastError=e;
+_2.state=t.threadStates.ERROR;
+}
+};
+};
+t.ThreadPool=new (function(_3,_4){
+var _5=this;
+var _6=_3;
+var _7=_6;
+var _8=_4;
+var _9=Math.floor((_8/2)/_6);
+var _a=[];
+var _b=new Array(_6+1);
+var _c=new dojox.timing.Timer();
+var _d=function(){
+var _e=_b[0]={};
+for(var i=0;i<_b.length;i++){
+window.clearTimeout(_b[i]);
+var _f=_a.shift();
+if(typeof (_f)=="undefined"){
+break;
+}
+_e["thread-"+i]=_f;
+_b[i]=window.setTimeout(_f.invoke,(_9*i));
+}
+_7=_6-(i-1);
+};
+this.getMaxThreads=function(){
+return _6;
+};
+this.getAvailableThreads=function(){
+return _7;
+};
+this.getTickInterval=function(){
+return _8;
+};
+this.queueUserWorkItem=function(fn){
+var _10=fn;
+if(_10 instanceof Function){
+_10=new t.Thread(_10);
+}
+var idx=_a.length;
+for(var i=0;i<_a.length;i++){
+if(_a[i].priority<_10.priority){
+idx=i;
+break;
+}
+}
+if(idx<_a.length){
+_a.splice(idx,0,_10);
+}else{
+_a.push(_10);
+}
+return true;
+};
+this.removeQueuedUserWorkItem=function(_11){
+if(_11 instanceof Function){
+var idx=-1;
+for(var i=0;i<_a.length;i++){
+if(_a[i].func==_11){
+idx=i;
+break;
+}
+}
+if(idx>-1){
+_a.splice(idx,1);
+return true;
+}
+return false;
+}
+var idx=-1;
+for(var i=0;i<_a.length;i++){
+if(_a[i]==_11){
+idx=i;
+break;
+}
+}
+if(idx>-1){
+_a.splice(idx,1);
+return true;
+}
+return false;
+};
+this.start=function(){
+_c.start();
+};
+this.stop=function(){
+_c.stop();
+};
+this.abort=function(){
+this.stop();
+for(var i=1;i<_b.length;i++){
+if(_b[i]){
+window.clearTimeout(_b[i]);
+}
+}
+for(var _12 in _b[0]){
+this.queueUserWorkItem(_12);
+}
+_b[0]={};
+};
+this.reset=function(){
+this.abort();
+_a=[];
+};
+this.sleep=function(_13){
+_c.stop();
+window.setTimeout(_c.start,_13);
+};
+_c.onTick=_5.invoke;
+})(16,5000);
+return dojox.timing.ThreadPool;
 });

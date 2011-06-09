@@ -1,192 +1,97 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/_base/array", // dojo.forEach
-	"dojo/_base/html", // dojo.attr
-	"dojo/_base/window", // dojo.doc.createTextNode
-	"dojo/i18n" // dojo.i18n.getLocalization
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/form/_ComboBoxMenuMixin
-// summary:
-//		Focus-less menu for internal use in `dijit.form.ComboBox`
-
-dojo.declare( "dijit.form._ComboBoxMenuMixin", null, {
-	// summary:
-	//		Focus-less menu for internal use in `dijit.form.ComboBox`
-	// tags:
-	//		private
-
-	// _messages: Object
-	//		Holds "next" and "previous" text for paging buttons on drop down
-	_messages: null,
-
-	postMixInProperties: function(){
-		this.inherited(arguments);
-		this._messages = dojo.i18n.getLocalization("dijit.form", "ComboBox", this.lang);
-	},
-
-	buildRendering: function(){
-		this.inherited(arguments);
-
-		// fill in template with i18n messages
-		this.previousButton.innerHTML = this._messages["previousMessage"];
-		this.nextButton.innerHTML = this._messages["nextMessage"];
-	},
-
-	_setValueAttr: function(/*Object*/ value){
-		this.value = value;
-		this.onChange(value);
-	},
-
-	onClick: function(/*DomNode*/ node){
-		if(node == this.previousButton){
-			this._setSelectedAttr(null);
-			this.onPage(-1);
-		}else if(node == this.nextButton){
-			this._setSelectedAttr(null);
-			this.onPage(1);
-		}else{
-			this.onChange(node);
-		}
-	},
-
-	// stubs
-	onChange: function(/*Number*/ direction){
-		// summary:
-		//		Notifies ComboBox/FilteringSelect that user selected an option.
-		// tags:
-		//		callback
-	},
-
-	onPage: function(/*Number*/ direction){
-		// summary:
-		//		Notifies ComboBox/FilteringSelect that user clicked to advance to next/previous page.
-		// tags:
-		//		callback
-	},
-
-	onClose: function(){
-		// summary:
-		//		Callback from dijit.popup code to this widget, notifying it that it closed
-		// tags:
-		//		private
-		this._setSelectedAttr(null);
-	},
-
-	_createOption: function(/*Object*/ item, labelFunc){
-		// summary:
-		//		Creates an option to appear on the popup menu subclassed by
-		//		`dijit.form.FilteringSelect`.
-
-		var menuitem = this._createMenuItem();
-		var labelObject = labelFunc(item);
-		if(labelObject.html){
-			menuitem.innerHTML = labelObject.label;
-		}else{
-			menuitem.appendChild(
-				dojo.doc.createTextNode(labelObject.label)
-			);
-		}
-		// #3250: in blank options, assign a normal height
-		if(menuitem.innerHTML == ""){
-			menuitem.innerHTML = "&nbsp;";
-		}
-
-		// update menuitem.dir if BidiSupport was required
-		this.applyTextDir(menuitem, (menuitem.innerText || menuitem.textContent || ""));
-
-		menuitem.item=item;
-		return menuitem;
-	},
-
-	createOptions: function(results, options, labelFunc){
-		// summary:
-		//		Fills in the items in the drop down list
-		// results:
-		//		Array of items
-		// options:
-		//		The options to the query function of the store
-		//
-		// labelFunc:
-		//		Function to produce a label in the drop down list from a dojo.data item
-
-		// display "Previous . . ." button
-		this.previousButton.style.display = (options.start == 0) ? "none" : "";
-		dojo.attr(this.previousButton, "id", this.id + "_prev");
-		// create options using _createOption function defined by parent
-		// ComboBox (or FilteringSelect) class
-		// #2309:
-		//		iterate over cache nondestructively
-		dojo.forEach(results, function(item, i){
-			var menuitem = this._createOption(item, labelFunc);
-			dojo.attr(menuitem, "id", this.id + i);
-			this.nextButton.parentNode.insertBefore(menuitem, this.nextButton);
-		}, this);
-		// display "Next . . ." button
-		var displayMore = false;
-		// Try to determine if we should show 'more'...
-		if(results.total && !results.total.then && results.total != -1){
-			if((options.start + options.count) < results.total){
-				displayMore = true;
-			}else if((options.start + options.count) > results.total && options.count == results.length){
-				//Weird return from a datastore, where a start + count > maxOptions
-				// implies maxOptions isn't really valid and we have to go into faking it.
-				//And more or less assume more if count == results.length
-				displayMore = true;
-			}
-		}else if(options.count == results.length){
-			//Don't know the size, so we do the best we can based off count alone.
-			//So, if we have an exact match to count, assume more.
-			displayMore = true;
-		}
-
-		this.nextButton.style.display = displayMore ? "" : "none";
-		dojo.attr(this.nextButton,"id", this.id + "_next");
-		return this.containerNode.childNodes;
-	},
-
-	clearResultList: function(){
-		// summary:
-		//		Clears the entries in the drop down list, but of course keeps the previous and next buttons.
-		var container = this.containerNode;
-		while(container.childNodes.length > 2){
-			container.removeChild(container.childNodes[container.childNodes.length-2]);
-		}
-		this._setSelectedAttr(null);
-	},
-
-	highlightFirstOption: function(){
-		// summary:
-		//		Highlight the first real item in the list (not Previous Choices).
-		this.selectFirstNode();
-	},
-
-	highlightLastOption: function(){
-		// summary:
-		//		Highlight the last real item in the list (not More Choices).
-		this.selectLastNode();
-	},
-
-	selectFirstNode: function(){
-		this.inherited(arguments);
-		if(this.getHighlightedOption() == this.previousButton){
-			this.selectNextNode();
-		}
-	},
-
-	selectLastNode: function(){
-		this.inherited(arguments);
-		if(this.getHighlightedOption() == this.nextButton){
-			this.selectPreviousNode();
-		}
-	},
-
-	getHighlightedOption: function(){
-		return this._getSelectedAttr();
-	}
-});
-
-return dijit.form._ComboBoxMenuMixin;
+define("dijit/form/_ComboBoxMenuMixin",["dojo/_base/kernel","..","dojo/_base/array","dojo/_base/html","dojo/_base/window","dojo/i18n"],function(_1,_2){
+_1.declare("dijit.form._ComboBoxMenuMixin",null,{_messages:null,postMixInProperties:function(){
+this.inherited(arguments);
+this._messages=_1.i18n.getLocalization("dijit.form","ComboBox",this.lang);
+},buildRendering:function(){
+this.inherited(arguments);
+this.previousButton.innerHTML=this._messages["previousMessage"];
+this.nextButton.innerHTML=this._messages["nextMessage"];
+},_setValueAttr:function(_3){
+this.value=_3;
+this.onChange(_3);
+},onClick:function(_4){
+if(_4==this.previousButton){
+this._setSelectedAttr(null);
+this.onPage(-1);
+}else{
+if(_4==this.nextButton){
+this._setSelectedAttr(null);
+this.onPage(1);
+}else{
+this.onChange(_4);
+}
+}
+},onChange:function(_5){
+},onPage:function(_6){
+},onClose:function(){
+this._setSelectedAttr(null);
+},_createOption:function(_7,_8){
+var _9=this._createMenuItem();
+var _a=_8(_7);
+if(_a.html){
+_9.innerHTML=_a.label;
+}else{
+_9.appendChild(_1.doc.createTextNode(_a.label));
+}
+if(_9.innerHTML==""){
+_9.innerHTML="&nbsp;";
+}
+this.applyTextDir(_9,(_9.innerText||_9.textContent||""));
+_9.item=_7;
+return _9;
+},createOptions:function(_b,_c,_d){
+this.previousButton.style.display=(_c.start==0)?"none":"";
+_1.attr(this.previousButton,"id",this.id+"_prev");
+_1.forEach(_b,function(_e,i){
+var _f=this._createOption(_e,_d);
+_1.attr(_f,"id",this.id+i);
+this.nextButton.parentNode.insertBefore(_f,this.nextButton);
+},this);
+var _10=false;
+if(_b.total&&!_b.total.then&&_b.total!=-1){
+if((_c.start+_c.count)<_b.total){
+_10=true;
+}else{
+if((_c.start+_c.count)>_b.total&&_c.count==_b.length){
+_10=true;
+}
+}
+}else{
+if(_c.count==_b.length){
+_10=true;
+}
+}
+this.nextButton.style.display=_10?"":"none";
+_1.attr(this.nextButton,"id",this.id+"_next");
+return this.containerNode.childNodes;
+},clearResultList:function(){
+var _11=this.containerNode;
+while(_11.childNodes.length>2){
+_11.removeChild(_11.childNodes[_11.childNodes.length-2]);
+}
+this._setSelectedAttr(null);
+},highlightFirstOption:function(){
+this.selectFirstNode();
+},highlightLastOption:function(){
+this.selectLastNode();
+},selectFirstNode:function(){
+this.inherited(arguments);
+if(this.getHighlightedOption()==this.previousButton){
+this.selectNextNode();
+}
+},selectLastNode:function(){
+this.inherited(arguments);
+if(this.getHighlightedOption()==this.nextButton){
+this.selectPreviousNode();
+}
+},getHighlightedOption:function(){
+return this._getSelectedAttr();
+}});
+return _2.form._ComboBoxMenuMixin;
 });

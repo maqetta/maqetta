@@ -1,45 +1,39 @@
-define(["../has", "require"],
-		function(has, require){
-// summary:
-//		This module handles loading the appropriate selector engine for the given browser
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define("dojo/selector/_loader",["../has","require"],function(_1,_2){
 "use strict";
-var testDiv = document.createElement("div");
-has.add("dom-qsa2.1", !!testDiv.querySelectorAll);
-has.add("dom-qsa3", function(){
-			// test to see if we have a reasonable native selector engine available
-			try{
-				testDiv.innerHTML = "<p class='TEST'></p>"; // test kind of from sizzle
-				// Safari can't handle uppercase or unicode characters when
-				// in quirks mode, IE8 can't handle pseudos like :empty
-				return testDiv.querySelectorAll(".TEST:empty").length == 1;
-			}catch(e){}
-		});
-var fullEngine;
-var acme = "./acme", lite = "./lite";
-return {
-	load: function(id, parentRequire, loaded, config){
-		var req = require;
-		// here we implement the default logic for choosing a selector engine
-		id = id == "default" ? has("config-selectorEngine") || "css3" : id;
-		id = id == "css2" || id == "lite" ? lite :
-				id == "css2.1" ? has("dom-qsa2.1") ? lite : acme :
-				id == "css3" ? has("dom-qsa3") ? lite : acme :
-				id == "acme" ? acme : (req = parentRequire) && id;
-		if(id.charAt(id.length-1) == '?'){
-			id = id.substring(0,id.length - 1);
-			var optionalLoad = true;
-		}
-		// the query engine is optional, only load it if a native one is not available or existing one has not been loaded
-		if(optionalLoad && (has("dom-compliant-qsa") || fullEngine)){
-			return loaded(fullEngine);
-		}
-		// load the referenced selector engine
-		req([id], function(engine){
-			if(id != "./lite"){
-				fullEngine = engine;
-			}
-			loaded(engine);
-		});
-	}
-};
+var _3=document.createElement("div");
+_1.add("dom-qsa2.1",!!_3.querySelectorAll);
+_1.add("dom-qsa3",function(){
+try{
+_3.innerHTML="<p class='TEST'></p>";
+return _3.querySelectorAll(".TEST:empty").length==1;
+}
+catch(e){
+}
+});
+var _4;
+var _5="./acme",_6="./lite";
+return {load:function(id,_7,_8,_9){
+var _a=_2;
+id=id=="default"?_1("config-selectorEngine")||"css3":id;
+id=id=="css2"||id=="lite"?_6:id=="css2.1"?_1("dom-qsa2.1")?_6:_5:id=="css3"?_1("dom-qsa3")?_6:_5:id=="acme"?_5:(_a=_7)&&id;
+if(id.charAt(id.length-1)=="?"){
+id=id.substring(0,id.length-1);
+var _b=true;
+}
+if(_b&&(_1("dom-compliant-qsa")||_4)){
+return _8(_4);
+}
+_a([id],function(_c){
+if(id!="./lite"){
+_4=_c;
+}
+_8(_c);
+});
+}};
 });

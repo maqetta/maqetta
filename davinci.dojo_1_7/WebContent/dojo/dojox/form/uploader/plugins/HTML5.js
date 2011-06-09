@@ -1,220 +1,142 @@
-define(['dojo'],function(dojo){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.form.uploader.plugins.HTML5", [], {
-	//
-	// Version: 1.6
-	//
-	// summary:
-	//		A plugin for dojox.form.Uploader that adds HTML5 multiple-file upload capabilities and
-	//		progress events.
-	//
-	//	description:
-	//		Add this plugin to have HTML5 capabilities in the Uploader. Note that it does not add
-	//		these capabilities to browsers that don't support them. For IE or older browsers, add
-	//		additional plugins: IFrame or Flash.
-	//
-	errMsg:"Error uploading files. Try checking permissions",
-
-	// Overwrites "form" and could possibly be overwritten again by iframe or flash plugin.
-	uploadType:"html5",
-
-	postCreate: function(){
-		this.connectForm();
-		this.inherited(arguments);
-		if(this.uploadOnSelect){
-			this.connect(this, "onChange", "upload");
-		}
-	},
-
-	/*************************
-	 *	   Public Methods	 *
-	 *************************/
-
-	upload: function(/*Object ? */formData){
-		// summary:
-		// 		See: dojox.form.Uploader.upload
-		//
-		console.log("upload html5")
-		this.onBegin(this.getFileList());
-		if(this.supports("FormData")){
-			this.uploadWithFormData(formData);
-		}else if(this.supports("sendAsBinary")){
-			this.sendAsBinary(formData);
-		}
-	},
-
-	submit: function(/* form Node ? */form){
-		// summary:
-		//		See: dojox.form.Uploader.submit
-		//
-		form = !!form ? form.tagName ? form : this.getForm() : this.getForm();
-		var data = dojo.formToObject(form);
-		console.log("form data:", data);
-		this.upload(data);
-	},
-
-	sendAsBinary: function(/* Object */data){
-		// summary:
-		// 		Used primarily in FF < 4.0. Sends files and form object as binary data, written to
-		// 		still enable use of $_FILES in PHP (or equivalent).
-		// tags:
-		// 		private
-		//
-		if(!this.getUrl()){
-			console.error("No upload url found.", this); return;
-		}
-
-		// The date/number doesn't matter but amount of dashes do. The actual boundary
-		// will have two more dashes than this one which is used in the header.
-		var boundary = "---------------------------" + (new Date).getTime();
-		var xhr = this.createXhr();
-
-		xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-
-		// finally send the request as binary data
-		// still accessed as $_FILES
-		var msg = this._buildRequestBody(data, boundary);
-		if(!msg){
-			this.onError(this.errMsg);
-		}else{
-			xhr.sendAsBinary(msg);
-		}
-	},
-	uploadWithFormData: function(/* Object */data){
-		// summary
-		// 		Used with WebKit and Firefox 4+
-		// 		Upload files using the much friendlier FormData browser object.
-		// tags:
-		// 		private
-		//
-		if(!this.getUrl()){
-			console.error("No upload url found.", this); return;
-		}
-
-		var fd = new FormData();
-		dojo.forEach(this.inputNode.files, function(f, i){
-			fd.append(this.name+"s[]", f);
-		}, this);
-
-		if(data){
-			for(var nm in data){
-				fd.append(nm, data[nm]);
-			}
-		}
-
-		var xhr = this.createXhr();
-		xhr.send(fd);
-	},
-
-	_xhrProgress: function(evt){
-		if(evt.lengthComputable){
-			var o = {
-				bytesLoaded:evt.loaded,
-				bytesTotal:evt.total,
-				type:evt.type,
-				timeStamp:evt.timeStamp
-			};
-			if(evt.type == "load"){
-				// 100%
-				o.percent = "100%",
-				o.decimal = 1;
-			}else{
-				o.decimal = evt.loaded / evt.total;
-				o.percent = Math.ceil((evt.loaded / evt.total)*100)+"%";
-			}
-			this.onProgress(o);
-		}
-	},
-
-	createXhr: function(){
-		var xhr = new XMLHttpRequest();
-		var timer;
-        xhr.upload.addEventListener("progress", dojo.hitch(this, "_xhrProgress"), false);
-        xhr.addEventListener("load", dojo.hitch(this, "_xhrProgress"), false);
-        xhr.addEventListener("error", dojo.hitch(this, function(evt){
-			this.onError(evt);
-			clearInterval(timer);
-		}), false);
-        xhr.addEventListener("abort", dojo.hitch(this, function(evt){
-			this.onAbort(evt);
-			clearInterval(timer);
-		}), false);
-        xhr.onreadystatechange = dojo.hitch(this, function() {
-			if (xhr.readyState === 4) {
-				console.info("COMPLETE")
-				clearInterval(timer);
-				this.onComplete(dojo.eval(xhr.responseText));
-			}
-		});
-        xhr.open("POST", this.getUrl());
-
-		timer = setInterval(dojo.hitch(this, function(){
-			try{
-				if(typeof(xhr.statusText)){} // accessing this error throws an error. Awesomeness.
-			}catch(e){
-				//this.onError("Error uploading file."); // not always an error.
-				clearInterval(timer);
-			}
-		}),250);
-
-		return xhr;
-	},
-
-	_buildRequestBody : function(data, boundary) {
-		var EOL  = "\r\n";
-		var part = "";
-		boundary = "--" + boundary;
-
-		var filesInError = [];
-		dojo.forEach(this.inputNode.files, function(f, i){
-			var fieldName = this.name+"s[]";//+i;
-			var fileName  = this.inputNode.files[i].fileName;
-			var binary;
-
-			try{
-				binary = this.inputNode.files[i].getAsBinary() + EOL;
-				part += boundary + EOL;
-				part += 'Content-Disposition: form-data; ';
-				part += 'name="' + fieldName + '"; ';
-				part += 'filename="'+ fileName + '"' + EOL;
-				part += "Content-Type: " + this.getMimeType() + EOL + EOL;
-				part += binary;
-			}catch(e){
-				filesInError.push({index:i, name:fileName});
-			}
-		}, this);
-
-		if(filesInError.length){
-			if(filesInError.length >= this.inputNode.files.length){
-				// all files were bad. Nothing to upload.
-				this.onError({
-					message:this.errMsg,
-					filesInError:filesInError
-				});
-				part = false;
-			}
-		}
-
-		if(!part) return false;
-
-		if(data){
-			for(var nm in data){
-				part += boundary + EOL;
-				part += 'Content-Disposition: form-data; ';
-				part += 'name="' + nm + '"' + EOL + EOL;
-				part += data[nm] + EOL;
-			}
-		}
-
-
-		part += boundary + "--" + EOL;
-		return part;
-	}
-
+define(["dojo"],function(_1){
+_1.declare("dojox.form.uploader.plugins.HTML5",[],{errMsg:"Error uploading files. Try checking permissions",uploadType:"html5",postCreate:function(){
+this.connectForm();
+this.inherited(arguments);
+if(this.uploadOnSelect){
+this.connect(this,"onChange","upload");
+}
+},upload:function(_2){
+this.onBegin(this.getFileList());
+if(this.supports("FormData")){
+this.uploadWithFormData(_2);
+}else{
+if(this.supports("sendAsBinary")){
+this.sendAsBinary(_2);
+}
+}
+},submit:function(_3){
+_3=!!_3?_3.tagName?_3:this.getForm():this.getForm();
+var _4=_1.formToObject(_3);
+this.upload(_4);
+},sendAsBinary:function(_5){
+if(!this.getUrl()){
+console.error("No upload url found.",this);
+return;
+}
+var _6="---------------------------"+(new Date).getTime();
+var _7=this.createXhr();
+_7.setRequestHeader("Content-Type","multipart/form-data; boundary="+_6);
+var _8=this._buildRequestBody(_5,_6);
+if(!_8){
+this.onError(this.errMsg);
+}else{
+_7.sendAsBinary(_8);
+}
+},uploadWithFormData:function(_9){
+if(!this.getUrl()){
+console.error("No upload url found.",this);
+return;
+}
+var fd=new FormData();
+_1.forEach(this.inputNode.files,function(f,i){
+fd.append(this.name+"s[]",f);
+},this);
+if(_9){
+for(var nm in _9){
+fd.append(nm,_9[nm]);
+}
+}
+var _a=this.createXhr();
+_a.send(fd);
+},_xhrProgress:function(_b){
+if(_b.lengthComputable){
+var o={bytesLoaded:_b.loaded,bytesTotal:_b.total,type:_b.type,timeStamp:_b.timeStamp};
+if(_b.type=="load"){
+o.percent="100%",o.decimal=1;
+}else{
+o.decimal=_b.loaded/_b.total;
+o.percent=Math.ceil((_b.loaded/_b.total)*100)+"%";
+}
+this.onProgress(o);
+}
+},createXhr:function(){
+var _c=new XMLHttpRequest();
+var _d;
+_c.upload.addEventListener("progress",_1.hitch(this,"_xhrProgress"),false);
+_c.addEventListener("load",_1.hitch(this,"_xhrProgress"),false);
+_c.addEventListener("error",_1.hitch(this,function(_e){
+this.onError(_e);
+clearInterval(_d);
+}),false);
+_c.addEventListener("abort",_1.hitch(this,function(_f){
+this.onAbort(_f);
+clearInterval(_d);
+}),false);
+_c.onreadystatechange=_1.hitch(this,function(){
+if(_c.readyState===4){
+clearInterval(_d);
+this.onComplete(_1.eval(_c.responseText));
+}
 });
+_c.open("POST",this.getUrl());
+_d=setInterval(_1.hitch(this,function(){
+try{
+if(typeof (_c.statusText)){
+}
+}
+catch(e){
+clearInterval(_d);
+}
+}),250);
+return _c;
+},_buildRequestBody:function(_10,_11){
+var EOL="\r\n";
+var _12="";
+_11="--"+_11;
+var _13=[];
+_1.forEach(this.inputNode.files,function(f,i){
+var _14=this.name+"s[]";
+var _15=this.inputNode.files[i].fileName;
+var _16;
+try{
+_16=this.inputNode.files[i].getAsBinary()+EOL;
+_12+=_11+EOL;
+_12+="Content-Disposition: form-data; ";
+_12+="name=\""+_14+"\"; ";
+_12+="filename=\""+_15+"\""+EOL;
+_12+="Content-Type: "+this.getMimeType()+EOL+EOL;
+_12+=_16;
+}
+catch(e){
+_13.push({index:i,name:_15});
+}
+},this);
+if(_13.length){
+if(_13.length>=this.inputNode.files.length){
+this.onError({message:this.errMsg,filesInError:_13});
+_12=false;
+}
+}
+if(!_12){
+return false;
+}
+if(_10){
+for(var nm in _10){
+_12+=_11+EOL;
+_12+="Content-Disposition: form-data; ";
+_12+="name=\""+nm+"\""+EOL+EOL;
+_12+=_10[nm]+EOL;
+}
+}
+_12+=_11+"--"+EOL;
+return _12;
+}});
 dojox.form.addUploaderPlugin(dojox.form.uploader.plugins.HTML5);
-
-
-
 return dojox.form.uploader.plugins.HTML5;
 });

@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[اختيارات العرض]",
 	title: "العنوان",
 	authors: "المؤلفين",
@@ -9,3 +9,4 @@
 	summary: "الملخص",
 	content: "المحتويات"
 })
+);

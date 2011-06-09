@@ -1,306 +1,156 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html",
-	"dojo/_base/array","dojox/mdnd/AreaManager"],function(dojo){
-	var odm = dojo.declare(
-		"dojox.mdnd.dropMode.OverDropMode",
-		null,
-	{
-		// summary:
-		//		Default class to find the nearest target only if the mouse is over an area.
-	
-		// _oldXPoint: Integer
-		//		used to save a X position
-		_oldXPoint: null,
-	
-		// _oldYPoint: Integer
-		//		used to save a Y position
-		_oldYPoint: null,
-	
-		// _oldBehaviour: Integer
-		//		see getDragpoint()
-		_oldBehaviour: "up",
-	
-		constructor: function(){
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: constructor");
-			this._dragHandler = [
-				dojo.connect(dojox.mdnd.areaManager(), "onDragEnter", function(coords, size){
-					var m = dojox.mdnd.areaManager();
-					if(m._oldIndexArea == -1){
-						m._oldIndexArea = m._lastValidIndexArea;
-					}
-				})
-			];
-	
-		},
-	
-		addArea: function(/*Array*/areas, /*Object*/object){
-			// summary:
-			//		Add a D&D Area into an array sorting by the x position.
-			// areas:
-			//		array of areas
-			// object:
-			//		data type of a DndArea
-			// returns:
-			//		a sorted area
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: addArea");
-			var length = areas.length,
-				position = dojo.position(object.node, true);
-			object.coords = {'x':position.x, 'y':position.y};
-			if(length == 0){
-				areas.push(object);
-			}
-			else{
-				var x = object.coords.x;
-				for(var i = 0; i < length; i++){
-					if(x < areas[i].coords.x){
-						for(var j = length-1; j >= i; j--)
-							areas[j + 1] = areas[j];
-						areas[i] = object;
-						break;
-					}
-				}
-				if(i == length){
-					areas.push(object);
-				}
-			}
-			return areas;	// Array
-		},
-	
-		updateAreas: function(/*Array*/areaList){
-			// summary:
-			//		refresh areas position and size to determinate the nearest area to drop an item
-			// description:
-			//		the area position (and size) is equal to the postion of the domNode associated.
-			// areaList:
-			//		array of areas
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: updateAreas");
-			var length = areaList.length;
-			for(var i = 0; i < length; i++){
-				this._updateArea(areaList[i]);
-			}
-		},
-	
-		_updateArea : function(/*Object*/area){
-			// summary:
-			//		update the D&D area object (i.e. update coordinates of its DOM node)
-			// area:
-			// 		the D&D area.
-			// tags:
-			//		protected
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: addArea");
-			var position = dojo.position(area.node, true);
-			area.coords.x = position.x;
-			area.coords.x2 = position.x + position.w;
-			area.coords.y = position.y;
-		},
-	
-		initItems: function(/*Object*/area){
-			// summary:
-			//		initialize the horizontal line in order to determinate the drop zone.
-			// area:
-			//		the D&D area.
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: initItems");
-			dojo.forEach(area.items, function(obj){
-				//get the vertical middle of the item
-				var node = obj.item.node;
-				var position = dojo.position(node, true);
-				var y = position.y + position.h/2;
-				obj.y = y;
-			});
-			area.initItems = true;
-		},
-	
-		refreshItems: function(/*Object*/area, /*Integer*/indexItem, /*Object*/size, /*Boolean*/added){
-			// summary:
-			//		take into account the drop indicator DOM element in order to compute horizontal lines
-			// area:
-			//		a D&D area object
-			// indexItem:
-			//		index of a draggable item
-			// size:
-			//		dropIndicator size
-			// added:
-			//		boolean to know if a dropIndicator has been added or deleted
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: refreshItems", area, indexItem, size, added);
-			if(indexItem == -1){
-				return;
-			}
-			else if(area && size && size.h){
-				var height = size.h;
-				if(area.margin){
-					height += area.margin.t;
-				}
-				var length = area.items.length;
-				for(var i = indexItem; i < length; i++){
-					var item = area.items[i];
-					if(added){
-						item.y += height;
-					}
-					else{
-						item.y -= height;
-					}
-				}
-			}
-		},
-	
-		getDragPoint: function(/*Object*/coords, /*Object*/size, /*Object*/mousePosition){
-			// summary:
-			//		return coordinates of the draggable item.
-			//		- For X point : the x position of mouse
-			//		- For Y point : the y position of mouse
-			// returns:
-			//		an object of coordinates
-			// 		examples:{'x':10,'y':10}
-			// coords:
-			//		an object encapsulating X and Y position
-			// size:
-			// 		an object encapsulating width and height values
-			// mousePosition:
-			// 		coordinates of mouse
-	
-			//console.log("dojox.mdnd.OverDropMode ::: getDragPoint");
-			return {			// Object
-				'x': mousePosition.x,
-				'y': mousePosition.y
-				}
-		},
-	
-	
-		getTargetArea: function(/*Array*/areaList, /*Object*/ coords, /*integer*/currentIndexArea ){
-			// summary:
-			//		get the nearest D&D area.
-			// areaList:
-			// 		a list of D&D areas objects
-			// coords:
-			//		coordinates [x,y] of the dragItem (see getDragPoint())
-			// currentIndexArea:
-			//		an index representing the active D&D area
-			//returns:
-			//		the index of the D&D area
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: getTargetArea");
-			var index = 0;
-			var x = coords.x;
-			var y = coords.y;
-			var end = areaList.length;
-			var start = 0, direction = "right", compute = false;
-			if(currentIndexArea == -1 || arguments.length < 3){
-				// first time : Need to search the nearest area in all areas.
-				compute = true;
-			}
-			else{
-				// check if it's always the same area
-				if(this._checkInterval(areaList, currentIndexArea, x, y)){
-					index = currentIndexArea;
-				}
-				else{
-					if(this._oldXPoint < x){
-						start = currentIndexArea + 1;
-					}
-					else{
-						start = currentIndexArea - 1;
-						end = 0;
-						direction = "left";
-					}
-					compute = true;
-				}
-			}
-			if(compute){
-				if(direction === "right"){
-					for(var i = start; i < end; i++){
-						if(this._checkInterval(areaList, i, x, y)){
-							index = i;
-							break;
-						}
-					}
-					if(i == end){
-						index = -1;
-					}
-				}
-				else{
-					for(var i = start; i >= end; i--){
-						if(this._checkInterval(areaList, i, x, y)){
-							index = i;
-							break;
-						}
-					}
-					if(i == end-1){
-						index = -1;
-					}
-				}
-			}
-			this._oldXPoint = x;
-			return index; // Integer
-		},
-	
-		_checkInterval: function(/*Array*/areaList, /*Integer*/index, /*Coord*/x, /*Coord*/y){
-			// summary:
-			//		check if the dragNode is in the interval.
-			// returns:
-			//		true if the dragNode is in intervall
-			// areaList:
-			//		a list of D&D areas objects
-			// index:
-			//		index of a D&D area (to get the interval)
-			// x:
-			//		coordinate x, of the dragNode (see getDragPoint())
-			// tags:
-			//		protected
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: _checkInterval");
-			var area = areaList[index];
-			var node = area.node;
-			var coords = area.coords;
-			var startX = coords.x;
-			var endX = coords.x2;
-			var startY = coords.y;
-			var endY = startY + node.offsetHeight;
-			if(startX <= x && x <= endX && startY <= y && y <= endY){
-				return true;
-			}
-			return false; // Boolean
-		},
-	
-		getDropIndex: function(/*Object*/ targetArea, /*Object*/ coords){
-			// summary:
-			//		Return the index where the drop has to be placed.
-			// targetArea:
-			//		a D&D area object.
-			// coords:
-			//		coordinates [x,y] of the draggable item.
-			// returns:
-			//		a number or -1 if the area has no children or the drop index represents the last position in to the area
-	
-			//console.log("dojox.mdnd.dropMode.OverDropMode ::: getDropIndex");
-			var length = targetArea.items.length;
-			var coordinates = targetArea.coords;
-			var y = coords.y;
-			if(length > 0){
-				// course all children in the target area.
-				for(var i = 0; i < length; i++){
-					// compare y value with y value of children
-					if(y < targetArea.items[i].y){
-						return i;	// integer
-					}
-					else{
-						if(i == length-1){
-							return -1; // integer
-						}
-					}
-				}
-			}
-			return -1;	//integer
-		},
-	
-		destroy: function(){
-			dojo.forEach(this._dragHandler, dojo.disconnect);
-		}
-	});
-	
-	dojox.mdnd.areaManager()._dropMode = new dojox.mdnd.dropMode.OverDropMode();
-	return odm;
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojo/_base/array","dojox/mdnd/AreaManager"],function(_1){
+var _2=_1.declare("dojox.mdnd.dropMode.OverDropMode",null,{_oldXPoint:null,_oldYPoint:null,_oldBehaviour:"up",constructor:function(){
+this._dragHandler=[_1.connect(dojox.mdnd.areaManager(),"onDragEnter",function(_3,_4){
+var m=dojox.mdnd.areaManager();
+if(m._oldIndexArea==-1){
+m._oldIndexArea=m._lastValidIndexArea;
+}
+})];
+},addArea:function(_5,_6){
+var _7=_5.length,_8=_1.position(_6.node,true);
+_6.coords={"x":_8.x,"y":_8.y};
+if(_7==0){
+_5.push(_6);
+}else{
+var x=_6.coords.x;
+for(var i=0;i<_7;i++){
+if(x<_5[i].coords.x){
+for(var j=_7-1;j>=i;j--){
+_5[j+1]=_5[j];
+}
+_5[i]=_6;
+break;
+}
+}
+if(i==_7){
+_5.push(_6);
+}
+}
+return _5;
+},updateAreas:function(_9){
+var _a=_9.length;
+for(var i=0;i<_a;i++){
+this._updateArea(_9[i]);
+}
+},_updateArea:function(_b){
+var _c=_1.position(_b.node,true);
+_b.coords.x=_c.x;
+_b.coords.x2=_c.x+_c.w;
+_b.coords.y=_c.y;
+},initItems:function(_d){
+_1.forEach(_d.items,function(_e){
+var _f=_e.item.node;
+var _10=_1.position(_f,true);
+var y=_10.y+_10.h/2;
+_e.y=y;
+});
+_d.initItems=true;
+},refreshItems:function(_11,_12,_13,_14){
+if(_12==-1){
+return;
+}else{
+if(_11&&_13&&_13.h){
+var _15=_13.h;
+if(_11.margin){
+_15+=_11.margin.t;
+}
+var _16=_11.items.length;
+for(var i=_12;i<_16;i++){
+var _17=_11.items[i];
+if(_14){
+_17.y+=_15;
+}else{
+_17.y-=_15;
+}
+}
+}
+}
+},getDragPoint:function(_18,_19,_1a){
+return {"x":_1a.x,"y":_1a.y};
+},getTargetArea:function(_1b,_1c,_1d){
+var _1e=0;
+var x=_1c.x;
+var y=_1c.y;
+var end=_1b.length;
+var _1f=0,_20="right",_21=false;
+if(_1d==-1||arguments.length<3){
+_21=true;
+}else{
+if(this._checkInterval(_1b,_1d,x,y)){
+_1e=_1d;
+}else{
+if(this._oldXPoint<x){
+_1f=_1d+1;
+}else{
+_1f=_1d-1;
+end=0;
+_20="left";
+}
+_21=true;
+}
+}
+if(_21){
+if(_20==="right"){
+for(var i=_1f;i<end;i++){
+if(this._checkInterval(_1b,i,x,y)){
+_1e=i;
+break;
+}
+}
+if(i==end){
+_1e=-1;
+}
+}else{
+for(var i=_1f;i>=end;i--){
+if(this._checkInterval(_1b,i,x,y)){
+_1e=i;
+break;
+}
+}
+if(i==end-1){
+_1e=-1;
+}
+}
+}
+this._oldXPoint=x;
+return _1e;
+},_checkInterval:function(_22,_23,x,y){
+var _24=_22[_23];
+var _25=_24.node;
+var _26=_24.coords;
+var _27=_26.x;
+var _28=_26.x2;
+var _29=_26.y;
+var _2a=_29+_25.offsetHeight;
+if(_27<=x&&x<=_28&&_29<=y&&y<=_2a){
+return true;
+}
+return false;
+},getDropIndex:function(_2b,_2c){
+var _2d=_2b.items.length;
+var _2e=_2b.coords;
+var y=_2c.y;
+if(_2d>0){
+for(var i=0;i<_2d;i++){
+if(y<_2b.items[i].y){
+return i;
+}else{
+if(i==_2d-1){
+return -1;
+}
+}
+}
+}
+return -1;
+},destroy:function(){
+_1.forEach(this._dragHandler,_1.disconnect);
+}});
+dojox.mdnd.areaManager()._dropMode=new dojox.mdnd.dropMode.OverDropMode();
+return _2;
 });

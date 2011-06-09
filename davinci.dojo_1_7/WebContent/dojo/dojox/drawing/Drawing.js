@@ -1,589 +1,246 @@
-define([
-	"dojo",
-	"../",
-	"./manager/_registry",
-	"../gfx",
-	"./util/oo",
-	"./util/common",
-	"./util/typeset",
-	"./defaults",
-	"./manager/Anchors",
-	"./manager/Canvas",
-	"./manager/keys",
-	"./manager/Mouse",
-	"./manager/Stencil",
-	"./manager/StencilUI",
-	"./manager/Undo",
-	"./stencil/_Base",
-	"./stencil/Ellipse",
-	"./stencil/Image",
-	"./stencil/Line",
-	"./stencil/Path",
-	"./stencil/Rect",
-	"./stencil/Text",
-	"./annotations/Angle",
-	"./annotations/Arrow",
-	"./annotations/BoxShadow",
-	"./annotations/Label"], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.experimental("dojox.drawing");
-
-	var _plugsInitialized = false;
-	
-	dojo.declare("dojox.drawing.Drawing", [], {
-		// summary:
-		//		Drawing is a project that sits on top of DojoX GFX and uses SVG and
-		//		VML vector graphics to draw and display.
-		// description:
-		//		Drawing is similar to DojoX Sketch, but is designed to be more versatile
-		//		extendable and customizable.
-		//		Drawing currently only initiates from HTML although it's technically not
-		//		a Dijit to keep the file size light. But if Dijit is available, Drawing
-		//		will register itself with it and can be accessed dijit.byId('myDrawing')
-		//
-		//	NOTES:
-		//		Although not Drawing and Toolbar, all other objects are created with a custom
-		//		declare. See dojox.drawing.util.oo
-		//
-		//The files are laid out as such:
-		//		- Drawing
-		//			The master class. More than one instance of a Drawing can be placed
-		//			on a page at one time (although this has not yet been tested). Plugins
-		//			can be added in markup.
-		// 	- Toolbar
-		//			Like Drawing, Toolbar is a psudeo Dijit that does not need Dijit. It is
-		//			optional. It can be oriented horizontal or vertical by placing one of
-		//			those params in the class (at least one is required).  Plugins
-		//			can be added in markup. A drawingId is required to point toolbar to
-		//			the drawing.
-		//		- defaults
-		//			Contains the default styles and dimensions for Stencils. An individual
-		//			Stencil can be changed by calling stencil.att({color obj}); To change
-		//			all styles, a custom defaults file should be used.
-		//		-Stencils
-		//			Drawing uses a concept of 'Stencils' to avoid confusion between a
-		//			Dojox Shape and a Drawing Shape. The classes in the 'stencils' package
-		//			are display only, they are not used for actually drawing (see 'tools').
-		//			This package contains _Base from which stencils inherit most of their
-		//			methods.(Path and Image are display only and not found in Tools)
-		//		- Tools
-		//			The Tools package contains Stencils that are attached to mouse events
-		//			and can be used for drawing. Items in this package can also be selected
-		//			and modified.
-		//		- Tools / Custom
-		//			Holds tools that do not directly extend Stencil base classes and often
-		//			have very custom code.
-		//		- Library (not implemented)
-		//			The Library package, which is not yet implemented, will be the place to
-		//			hold stencils that have very specific data points that result in a picture.
-		//			Flag-like-banners, fancy borders, or other complex shapes would go here.
-		//		- Annotations
-		//			Annotations 'decorate' and attach to other Stencils, such as a 'Label'
-		//			that can show text on a stencil, or an 'Angle' that shows while dragging
-		//			or modifying a Vector, or an Arrow head that is attached to the beginning
-		//			or end of a line.
-		//		- Manager
-		//			Contains classes that control functionality of a Drawing.
-		//		- Plugins
-		//			Contains optional classes that are 'plugged into' a Drawing. There are two
-		//			types: 'drawing' plugins that modify the canvas, and 'tools' which would
-		//			show in the toolbar.
-		//		- Util
-		//			A collection of common tasks.
-		//
-		// example:
-		//		|	<div dojoType="dojox.drawing.Drawing" id="drawing" defaults="myCustom.defaults"
-		//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:100}}]">
-		//		|   </div>
-		//
-		//	example:
-		//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawing" class="drawingToolbar vertical">
-		//		|		<div tool="dojox.drawing.tools.Line" selected="false">Line</div>
-		//		|		<div tool="dojox.drawing.tools.Rect" selected="false">Rect</div>
-		//		|		<div tool="dojox.drawing.tools.Ellipse" selected="false">Ellipse</div>
-		//		|		<div tool="dojox.drawing.tools.TextBlock" selected="false">Statement</div>
-		//		|		<div tool="dojox.drawing.tools.custom.Equation" selected="false">Equation</div>
-		//		|		<div plugin="dojox.drawing.plugins.tools.Pan" options="{}">Pan</div>
-		//		|		<div plugin="dojox.drawing.plugins.tools.Zoom" options="{zoomInc:.1,minZoom:.5,maxZoom:2}">Zoom</div>
-		//		|	</div>
-		//
-		//
-		// ready: Boolean
-		//	Whether or not the canvas has been created and Stencils can be added
-		ready:false,
-		// mode: [optional] String
-		//		Changes the functionality of the drawing
-		mode: "",
-		// width: Number
-		//		Width of the canvas
-		width:0,
-		//
-		// height: Number
-		//		Height of the canvas
-		height:0,
-		//
-		// defaults : Object
-		//		Optional replacements for native defaults.
-		// plugins: Object
-		//		Key values of plugins that apply to canvas.
-		//
-		constructor: function(/* Object */props, /* HTMLNode */node){
-			// summary:
-			//		Drawing is not a Dijit. This is the master method.
-			//		NOTE:
-			// 			props is always null since this is not a real widget
-			//			Will change when Drawing can be created programmatically.
-			//
-			var def = dojo.attr(node, "defaults");
-			if(def){
-				dojox.drawing.defaults =  dojo.getObject(def);
-			}
-			this.defaults =  dojox.drawing.defaults;
-			
-			this.id = node.id;
-			dojox.drawing.register(this, "drawing");
-			this.mode = (props.mode || dojo.attr(node, "mode") || "").toLowerCase();
-			var box = dojo.contentBox(node);
-			this.width = box.w;
-			this.height = box.h;
-			this.util = dojox.drawing.util.common;
-			this.util.register(this); // So Toolbar can find this Drawing DEPRECATED
-			this.keys = dojox.drawing.manager.keys;
-			this.mouse = new dojox.drawing.manager.Mouse({util:this.util, keys:this.keys, id:this.mode=="ui"?"MUI":"mse"});
-			this.mouse.setEventMode(this.mode);
-			
-			this.tools = {};
-			this.stencilTypes = {};
-			this.stencilTypeMap = {};
-			this.srcRefNode = node; // need this?
-			this.domNode = node;
-			if(props.plugins){
-				this.plugins = eval(props.plugins);
-			}else{
-				this.plugins = [];
-			}
-			
-			this.widgetId = this.id;
-			dojo.attr(this.domNode, "widgetId", this.widgetId);
-			// If Dijit is available in the page, register with it
-			if(dijit && dijit.registry){
-				dijit.registry.add(this);
-				console.log("using dijit")
-			}else{
-				// else fake dijit.byId
-				// FIXME: This seems pretty hacky.
-				// Maybe should just encourage jsId
-				dijit.registry = {
-					objs:{},
-					add:function(obj){
-						this.objs[obj.id] = obj;
-					}
-				};
-				dijit.byId = function(id){
-					return dijit.registry.objs[id];
-				};
-				dijit.registry.add(this);
-			}
-			
-			var stencils = dojox.drawing.getRegistered("stencil");
-			for(var nm in stencils){
-				this.registerTool(stencils[nm].name);
-			}
-			var tools = dojox.drawing.getRegistered("tool");
-			for(nm in tools){
-				this.registerTool(tools[nm].name);
-			}
-			var plugs = dojox.drawing.getRegistered("plugin");
-			for(nm in plugs){
-				this.registerTool(plugs[nm].name);
-			}
-			this._createCanvas();
-			
-		},
-		
-		_createCanvas: function(){
-			console.info("drawing create canvas...");
-			this.canvas = new dojox.drawing.manager.Canvas({
-				srcRefNode:this.domNode,
-				util:this.util,
-				mouse:this.mouse,
-				callback: dojo.hitch(this, "onSurfaceReady")
-			});
-			this.initPlugins();
-		},
-		
-		resize: function(/* Object */box){
-			// summary:
-			//		Resizes the canvas.
-			//		If within a ContentPane this will get called automatically.
-			//		Can also be called directly.
-			//
-			box && dojo.style(this.domNode, {
-				width:box.w+"px",
-				height:box.h+"px"
-			});
-			if(!this.canvas){
-				this._createCanvas();
-			}else if(box){
-				this.canvas.resize(box.w, box.h);
-			}
-		},
-		
-		startup: function(){
-			//console.info("drawing startup")
-		},
-		
-		getShapeProps: function(/* Object */data, mode){
-			// summary:
-			// 		The common objects that are mixed into
-			//		a new Stencil. Mostly internal, but could be used.
-			//
-			var surface = data.stencilType;
-			var ui = this.mode=="ui" || mode=="ui";
-			return dojo.mixin({
-				container: ui && !surface ? this.canvas.overlay.createGroup() : this.canvas.surface.createGroup(),
-				util:this.util,
-				keys:this.keys,
-				mouse:this.mouse,
-				drawing:this,
-				drawingType: ui && !surface ? "ui" : "stencil",
-				style:this.defaults.copy()
-			}, data || {});
-		},
-		
-		addPlugin: function(/* Object */plugin){
-			// summary:
-			//		Add a toolbar plugin object to plugins array
-			//		to be parsed
-			this.plugins.push(plugin);
-			if(this.canvas.surfaceReady){
-				this.initPlugins();
-			}
-		},
-		
-		initPlugins: function(){
-			// summary:
-			// 		Called from Toolbar after a plugin has been loaded
-			// 		The call to this coming from toobar is a bit funky as the timing
-			//		of IE for canvas load is different than other browsers
-			if(!this.canvas || !this.canvas.surfaceReady){
-				var c = dojo.connect(this, "onSurfaceReady", this, function(){
-					dojo.disconnect(c);
-					this.initPlugins();
-				});
-				return;
-			}
-			dojo.forEach(this.plugins, function(p, i){
-				var props = dojo.mixin({
-					util:this.util,
-					keys:this.keys,
-					mouse:this.mouse,
-					drawing:this,
-					stencils:this.stencils,
-					anchors:this.anchors,
-					canvas:this.canvas
-				}, p.options || {});
-				//console.log('drawing.plugin:::', p.name, props)
-				this.registerTool(p.name, dojo.getObject(p.name));
-				try{
-					this.plugins[i] = new this.tools[p.name](props);
-				}catch(e){
-					console.error("Failed to initilaize plugin:	" +p.name + ". Did you require it?");
-				}
-			}, this);
-			
-			_plugsInitialized = true;
-			// In IE, because the timing is different we have to get the
-			// canvas position after everything has drawn. *sigh*
-			this.mouse.setCanvas();
-		},
-		
-		onSurfaceReady: function(){
-			// summary:
-			//		Event that to which can be connected.
-			//		Fired when the canvas is ready and can be drawn to.
-			//
-			this.ready = true;
-			//console.info("Surface ready")
-			this.mouse.init(this.canvas.domNode);
-			this.undo = new dojox.drawing.manager.Undo({keys:this.keys});
-			this.anchors = new dojox.drawing.manager.Anchors({drawing:this, mouse:this.mouse, undo:this.undo, util:this.util});
-			if(this.mode == "ui"){
-				this.uiStencils = new dojox.drawing.manager.StencilUI({canvas:this.canvas, surface:this.canvas.surface, mouse:this.mouse, keys:this.keys});
-			}else{
-				this.stencils = new dojox.drawing.manager.Stencil({canvas:this.canvas, surface:this.canvas.surface, mouse:this.mouse, undo:this.undo, keys:this.keys, anchors:this.anchors});
-				this.uiStencils = new dojox.drawing.manager.StencilUI({canvas:this.canvas, surface:this.canvas.surface, mouse:this.mouse, keys:this.keys});
-			}
-			if(dojox.gfx.renderer=="silverlight"){
-				try{
-				new dojox.drawing.plugins.drawing.Silverlight({util:this.util, mouse:this.mouse, stencils:this.stencils, anchors:this.anchors, canvas:this.canvas});
-				}catch(e){
-					throw new Error("Attempted to install the Silverlight plugin, but it was not found.");
-				}
-			}
-			dojo.forEach(this.plugins, function(p){
-				p.onSurfaceReady && p.onSurfaceReady();
-			});
-		
-		},
-		
-		addUI: function(/* String */type, /* Object */options){
-			// summary:
-			//		Use this method to programmatically add Stencils that display on
-			//		the canvas.
-			//		FIXME: Currently only supports Stencils that have been registered,
-			//			which is items in the toolbar, and the additional Stencils at the
-			//			end of onSurfaceReady. This covers all Stencils, but you can't
-			//			use 'display only' Stencils for Line, Rect, and Ellipse.
-			//		arguments:
-			//			type: String
-			//				The final name of the tool, lower case: 'image', 'line', 'textBlock'
-			//		options:
-			//			type: Object
-			//				The parameters used to draw the object. See stencil._Base and each
-			//				tool for specific parameters of teh data or points objects.
-			//
-			if(!this.ready){
-				var c = dojo.connect(this, "onSurfaceReady", this, function(){
-					dojo.disconnect(c);
-					this.addUI(type, options);
-				});
-				return false;
-			}
-			if(options && !options.data && !options.points){
-				options = {data:options}
-			}
-			if(!this.stencilTypes[type]){
-				if(type != "tooltip"){
-					console.warn("Not registered:", type);
-				}
-				return null;
-			}
-			var s = this.uiStencils.register( new this.stencilTypes[type](this.getShapeProps(options, "ui")));
-			return s;
-		},
-		
-		
-		addStencil: function(/* String */type, /* Object */options){
-			// summary:
-			//		Use this method to programmatically add Stencils that display on
-			//		the canvas.
-			//		FIXME: Currently only supports Stencils that have been registered,
-			//			which is items in the toolbar, and the additional Stencils at the
-			//			end of onSurfaceReady. This covers all Stencils, but you can't
-			//			use 'display only' Stencils for Line, Rect, and Ellipse.
-			//		arguments:
-			//			type: String
-			//				The final name of the tool, lower case: 'image', 'line', 'textBlock'
-			//		options:
-			//			type: Object
-			//				The parameters used to draw the object. See stencil._Base and each
-			//				tool for specific parameters of teh data or points objects.
-			//
-			if(!this.ready){
-				var c = dojo.connect(this, "onSurfaceReady", this, function(){
-					dojo.disconnect(c);
-					this.addStencil(type, options);
-				});
-				return false;
-			}
-			if(options && !options.data && !options.points){
-				options = {data:options}
-			}
-			var s = this.stencils.register( new this.stencilTypes[type](this.getShapeProps(options)));
-			// need this or not?
-			//s.connect(s, "destroy", this, "onDeleteStencil");
-			this.currentStencil && this.currentStencil.moveToFront();
-			return s;
-		},
-		
-		removeStencil: function(/* Object */stencil){
-			// summary:
-			//		Use this method to programmatically remove Stencils from the canvas.
-			// 	arguments:
-			//		Stencil: Object
-			//			The Stencil to be removed
-			//
-			this.stencils.unregister(stencil);
-			stencil.destroy();
-		},
-		
-		removeAll: function(){
-			// summary:
-			//		Deletes all Stencils on the canvas.
-			this.stencils.removeAll();
-		},
-		
-		selectAll: function(){
-			// summary:
-			//		Selects all stencils
-			this.stencils.selectAll();
-		},
-		
-		toSelected: function(/*String*/func /*[args, ...]*/){
-			// summary:
-			//		Call a function within all selected Stencils
-			//		like attr()
-			// example:
-			//		|	myDrawing.toSelected('attr', {x:10})
-			//
-			this.stencils.toSelected.apply(this.stencils, arguments);
-		},
-		
-		exporter: function(){
-			// summary:
-			//		Collects all Stencil data and returns an
-			//		Array of objects.
-			console.log("this.stencils", this.stencils);
-			return this.stencils.exporter();  //Array
-		},
-		
-		importer: function(/* Array */objects){
-			// summary:
-			//		Handles an Array of stencil data and imports the objects
-			//		to the drawing.
-			dojo.forEach(objects, function(m){
-				this.addStencil(m.type, m);
-			}, this);
-		},
-		
-		changeDefaults: function(/*Object*/newStyle,/*boolean*/value){
-			// summary:
-			//		Change the defaults so that all Stencils from this
-			// 		point on will use the newly changed style.
-			// arguments:
-			//		newStyle: Object
-			//			An object that represents one of the objects in
-			//			drawing.style that will be mixed in. Not all
-			//			properties are necessary. Only one object may
-			//			be changed at a time. The object boolean parameter
-			//			is not required and if not set objects will automatically
-			//			be changed.
-			//			Changing non-objects like angleSnap requires value
-			//			to be true.
-			// example:
-			//		|	myDrawing.changeDefaults({
-			//		|		norm:{
-			//		|			fill:"#0000ff",
-			//		|			width:5,
-			//		|			color:"#ffff00"
-			//		|		}
-			//		|	});
-			//
-			//console.log("----->>> changeDefault: ",newStyle, " value?: ",value);
-			if(value!=undefined && value){
-				for(var nm in newStyle){
-					this.defaults[nm] = newStyle[nm];
-				}
-			}else{
-				for(var nm in newStyle){
-					for(var n in newStyle[nm]){
-						//console.log("  copy", nm, n, " to: ", newStyle[nm][n]);
-						this.defaults[nm][n] = newStyle[nm][n];
-					}
-				}
-			}
-			
-			if(this.currentStencil!=undefined && (!this.currentStencil.created || this.defaults.clickMode)){
-				this.unSetTool();
-				this.setTool(this.currentType);
-			}
-		},
-		
-		onRenderStencil: function(/* Object */stencil){
-			// summary:
-			//		Event that fires when a stencil is drawn. Does not fire from
-			//		'addStencil'.
-			//
-			//console.info("--------------------------------------dojox.drawing.onRenderStencil:", stencil.id);
-			
-			this.stencils.register(stencil);
-			this.unSetTool();
-			if(!this.defaults.clickMode){
-				this.setTool(this.currentType);
-			}else{
-				this.defaults.clickable = true;
-			}
-		},
-		
-		onDeleteStencil: function(/* Object */stencil){
-			// summary:
-			//		Event fired from a stencil that has destroyed itself
-			//	 	will also be called when it is removed by "removeStencil"
-			//	 	or stencils.onDelete.
-			//
-			this.stencils.unregister(stencil);
-		},
-		
-		registerTool: function(/* String */type){
-			// summary:
-			//		 Registers a tool that can be accessed. Internal.
-			if(this.tools[type]){ return; }
-			var constr = dojo.getObject(type);
-			//console.log("constr:", type)
-			this.tools[type] = constr;
-			var abbr = this.util.abbr(type);
-			this.stencilTypes[abbr] = constr;
-			this.stencilTypeMap[abbr] = type;
-		},
-		
-		getConstructor: function(/*String*/abbr){
-			// summary:
-			//		Returns a Stencil constructor base on
-			//		abbreviation
-			return this.stencilTypes[abbr];
-		},
-		
-		setTool: function(/* String */type){
-			// summary:
-			//		Sets up a new class to be used to draw. Called from Toolbar,
-			//		and this class... after a tool is used a new one of the same
-			//		type is initialized. Could be called externally.
-			//
-			if(this.mode=="ui"){ return; }
-			if(!this.canvas || !this.canvas.surface){
-				var c = dojo.connect(this, "onSurfaceReady", this, function(){
-					dojo.disconnect(c);
-					this.setTool(type);
-				});
-				return;
-			}
-			if(this.currentStencil){
-				this.unSetTool();
-			}
-			
-			this.currentType = this.tools[type] ? type : this.stencilTypeMap[type];
-			//console.log("new tool arg:", type, "curr:", this.currentType, "mode:", this.mode, "tools:", this.tools)
-			
-			try{
-				this.currentStencil = new this.tools[this.currentType]({container:this.canvas.surface.createGroup(), util:this.util, mouse:this.mouse, keys:this.keys});
-				console.log("new tool is:", this.currentStencil.id, this.currentStencil);
-				if(this.defaults.clickMode){ this.defaults.clickable = false; }
-				this.currentStencil.connect(this.currentStencil, "onRender", this, "onRenderStencil");
-				this.currentStencil.connect(this.currentStencil, "destroy", this, "onDeleteStencil");
-			}catch(e){
-				console.error("dojox.drawing.setTool Error:", e);
-				console.error(this.currentType + " is not a constructor: ", this.tools[this.currentType]);
-				//console.trace();
-			}
-		},
-		
-		set: function(name, value){
-			// summary:
-			//		Drawing registers as a widget and needs to support
-			//		widget's api.
-			console.info("Attempting to set ",name," to: ",value,". Set currently not fully supported in Drawing");
-		},
-		
-		unSetTool: function(){
-			// summary:
-			//		Destroys current tool
-			if(!this.currentStencil.created){
-				this.currentStencil.destroy();
-			}
-			
-		}
-	});
-	
-	return dojox.drawing.Drawing;
+define(["dojo","../","./manager/_registry","../gfx","./util/oo","./util/common","./util/typeset","./defaults","./manager/Anchors","./manager/Canvas","./manager/keys","./manager/Mouse","./manager/Stencil","./manager/StencilUI","./manager/Undo","./stencil/_Base","./stencil/Ellipse","./stencil/Image","./stencil/Line","./stencil/Path","./stencil/Rect","./stencil/Text","./annotations/Angle","./annotations/Arrow","./annotations/BoxShadow","./annotations/Label"],function(_1,_2){
+_1.experimental("dojox.drawing");
+var _3=false;
+_1.declare("dojox.drawing.Drawing",[],{ready:false,mode:"",width:0,height:0,constructor:function(_4,_5){
+var _6=_1.attr(_5,"defaults");
+if(_6){
+_2.drawing.defaults=_1.getObject(_6);
+}
+this.defaults=_2.drawing.defaults;
+this.id=_5.id;
+_2.drawing.register(this,"drawing");
+this.mode=(_4.mode||_1.attr(_5,"mode")||"").toLowerCase();
+var _7=_1.contentBox(_5);
+this.width=_7.w;
+this.height=_7.h;
+this.util=_2.drawing.util.common;
+this.util.register(this);
+this.keys=_2.drawing.manager.keys;
+this.mouse=new _2.drawing.manager.Mouse({util:this.util,keys:this.keys,id:this.mode=="ui"?"MUI":"mse"});
+this.mouse.setEventMode(this.mode);
+this.tools={};
+this.stencilTypes={};
+this.stencilTypeMap={};
+this.srcRefNode=_5;
+this.domNode=_5;
+if(_4.plugins){
+this.plugins=eval(_4.plugins);
+}else{
+this.plugins=[];
+}
+this.widgetId=this.id;
+_1.attr(this.domNode,"widgetId",this.widgetId);
+if(dijit&&dijit.registry){
+dijit.registry.add(this);
+}else{
+dijit.registry={objs:{},add:function(_8){
+this.objs[_8.id]=_8;
+}};
+dijit.byId=function(id){
+return dijit.registry.objs[id];
+};
+dijit.registry.add(this);
+}
+var _9=_2.drawing.getRegistered("stencil");
+for(var nm in _9){
+this.registerTool(_9[nm].name);
+}
+var _a=_2.drawing.getRegistered("tool");
+for(nm in _a){
+this.registerTool(_a[nm].name);
+}
+var _b=_2.drawing.getRegistered("plugin");
+for(nm in _b){
+this.registerTool(_b[nm].name);
+}
+this._createCanvas();
+},_createCanvas:function(){
+this.canvas=new _2.drawing.manager.Canvas({srcRefNode:this.domNode,util:this.util,mouse:this.mouse,callback:_1.hitch(this,"onSurfaceReady")});
+this.initPlugins();
+},resize:function(_c){
+_c&&_1.style(this.domNode,{width:_c.w+"px",height:_c.h+"px"});
+if(!this.canvas){
+this._createCanvas();
+}else{
+if(_c){
+this.canvas.resize(_c.w,_c.h);
+}
+}
+},startup:function(){
+},getShapeProps:function(_d,_e){
+var _f=_d.stencilType;
+var ui=this.mode=="ui"||_e=="ui";
+return _1.mixin({container:ui&&!_f?this.canvas.overlay.createGroup():this.canvas.surface.createGroup(),util:this.util,keys:this.keys,mouse:this.mouse,drawing:this,drawingType:ui&&!_f?"ui":"stencil",style:this.defaults.copy()},_d||{});
+},addPlugin:function(_10){
+this.plugins.push(_10);
+if(this.canvas.surfaceReady){
+this.initPlugins();
+}
+},initPlugins:function(){
+if(!this.canvas||!this.canvas.surfaceReady){
+var c=_1.connect(this,"onSurfaceReady",this,function(){
+_1.disconnect(c);
+this.initPlugins();
+});
+return;
+}
+_1.forEach(this.plugins,function(p,i){
+var _11=_1.mixin({util:this.util,keys:this.keys,mouse:this.mouse,drawing:this,stencils:this.stencils,anchors:this.anchors,canvas:this.canvas},p.options||{});
+this.registerTool(p.name,_1.getObject(p.name));
+try{
+this.plugins[i]=new this.tools[p.name](_11);
+}
+catch(e){
+console.error("Failed to initilaize plugin:\t"+p.name+". Did you require it?");
+}
+},this);
+_3=true;
+this.mouse.setCanvas();
+},onSurfaceReady:function(){
+this.ready=true;
+this.mouse.init(this.canvas.domNode);
+this.undo=new _2.drawing.manager.Undo({keys:this.keys});
+this.anchors=new _2.drawing.manager.Anchors({drawing:this,mouse:this.mouse,undo:this.undo,util:this.util});
+if(this.mode=="ui"){
+this.uiStencils=new _2.drawing.manager.StencilUI({canvas:this.canvas,surface:this.canvas.surface,mouse:this.mouse,keys:this.keys});
+}else{
+this.stencils=new _2.drawing.manager.Stencil({canvas:this.canvas,surface:this.canvas.surface,mouse:this.mouse,undo:this.undo,keys:this.keys,anchors:this.anchors});
+this.uiStencils=new _2.drawing.manager.StencilUI({canvas:this.canvas,surface:this.canvas.surface,mouse:this.mouse,keys:this.keys});
+}
+if(_2.gfx.renderer=="silverlight"){
+try{
+new _2.drawing.plugins.drawing.Silverlight({util:this.util,mouse:this.mouse,stencils:this.stencils,anchors:this.anchors,canvas:this.canvas});
+}
+catch(e){
+throw new Error("Attempted to install the Silverlight plugin, but it was not found.");
+}
+}
+_1.forEach(this.plugins,function(p){
+p.onSurfaceReady&&p.onSurfaceReady();
+});
+},addUI:function(_12,_13){
+if(!this.ready){
+var c=_1.connect(this,"onSurfaceReady",this,function(){
+_1.disconnect(c);
+this.addUI(_12,_13);
+});
+return false;
+}
+if(_13&&!_13.data&&!_13.points){
+_13={data:_13};
+}
+if(!this.stencilTypes[_12]){
+if(_12!="tooltip"){
+console.warn("Not registered:",_12);
+}
+return null;
+}
+var s=this.uiStencils.register(new this.stencilTypes[_12](this.getShapeProps(_13,"ui")));
+return s;
+},addStencil:function(_14,_15){
+if(!this.ready){
+var c=_1.connect(this,"onSurfaceReady",this,function(){
+_1.disconnect(c);
+this.addStencil(_14,_15);
+});
+return false;
+}
+if(_15&&!_15.data&&!_15.points){
+_15={data:_15};
+}
+var s=this.stencils.register(new this.stencilTypes[_14](this.getShapeProps(_15)));
+this.currentStencil&&this.currentStencil.moveToFront();
+return s;
+},removeStencil:function(_16){
+this.stencils.unregister(_16);
+_16.destroy();
+},removeAll:function(){
+this.stencils.removeAll();
+},selectAll:function(){
+this.stencils.selectAll();
+},toSelected:function(_17){
+this.stencils.toSelected.apply(this.stencils,arguments);
+},exporter:function(){
+return this.stencils.exporter();
+},importer:function(_18){
+_1.forEach(_18,function(m){
+this.addStencil(m.type,m);
+},this);
+},changeDefaults:function(_19,_1a){
+if(_1a!=undefined&&_1a){
+for(var nm in _19){
+this.defaults[nm]=_19[nm];
+}
+}else{
+for(var nm in _19){
+for(var n in _19[nm]){
+this.defaults[nm][n]=_19[nm][n];
+}
+}
+}
+if(this.currentStencil!=undefined&&(!this.currentStencil.created||this.defaults.clickMode)){
+this.unSetTool();
+this.setTool(this.currentType);
+}
+},onRenderStencil:function(_1b){
+this.stencils.register(_1b);
+this.unSetTool();
+if(!this.defaults.clickMode){
+this.setTool(this.currentType);
+}else{
+this.defaults.clickable=true;
+}
+},onDeleteStencil:function(_1c){
+this.stencils.unregister(_1c);
+},registerTool:function(_1d){
+if(this.tools[_1d]){
+return;
+}
+var _1e=_1.getObject(_1d);
+this.tools[_1d]=_1e;
+var _1f=this.util.abbr(_1d);
+this.stencilTypes[_1f]=_1e;
+this.stencilTypeMap[_1f]=_1d;
+},getConstructor:function(_20){
+return this.stencilTypes[_20];
+},setTool:function(_21){
+if(this.mode=="ui"){
+return;
+}
+if(!this.canvas||!this.canvas.surface){
+var c=_1.connect(this,"onSurfaceReady",this,function(){
+_1.disconnect(c);
+this.setTool(_21);
+});
+return;
+}
+if(this.currentStencil){
+this.unSetTool();
+}
+this.currentType=this.tools[_21]?_21:this.stencilTypeMap[_21];
+try{
+this.currentStencil=new this.tools[this.currentType]({container:this.canvas.surface.createGroup(),util:this.util,mouse:this.mouse,keys:this.keys});
+if(this.defaults.clickMode){
+this.defaults.clickable=false;
+}
+this.currentStencil.connect(this.currentStencil,"onRender",this,"onRenderStencil");
+this.currentStencil.connect(this.currentStencil,"destroy",this,"onDeleteStencil");
+}
+catch(e){
+console.error("dojox.drawing.setTool Error:",e);
+console.error(this.currentType+" is not a constructor: ",this.tools[this.currentType]);
+}
+},set:function(_22,_23){
+},unSetTool:function(){
+if(!this.currentStencil.created){
+this.currentStencil.destroy();
+}
+}});
+return _2.drawing.Drawing;
 });

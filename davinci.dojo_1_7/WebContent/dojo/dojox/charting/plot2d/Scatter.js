@@ -1,186 +1,116 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "./Base", "./common", 
-	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx", "dojox/gfx/gradutils"],
-	function(dojo, lang, declare, Base, dc, df, dfr, du, fx, gradutils){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var purgeGroup = df.lambda("item.purgeGroup()");
-
-	return dojo.declare("dojox.charting.plot2d.Scatter", dojox.charting.plot2d.Base, {
-		//	summary:
-		//		A plot object representing a typical scatter chart.
-		defaultParams: {
-			hAxis: "x",		// use a horizontal axis named "x"
-			vAxis: "y",		// use a vertical axis named "y"
-			shadows: null,	// draw shadows
-			animate: null	// animate chart to place
-		},
-		optionalParams: {
-			// theme component
-			markerStroke:		{},
-			markerOutline:		{},
-			markerShadow:		{},
-			markerFill:			{},
-			markerFont:			"",
-			markerFontColor:	""
-		},
-
-		constructor: function(chart, kwArgs){
-			//	summary:
-			//		Create the scatter plot.
-			//	chart: dojox.charting.Chart
-			//		The chart this plot belongs to.
-			//	kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
-			//		An optional keyword arguments object to help define this plot's parameters.
-			this.opt = dojo.clone(this.defaultParams);
-            du.updateWithObject(this.opt, kwArgs);
-            du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
-			this.series = [];
-			this.hAxis = this.opt.hAxis;
-			this.vAxis = this.opt.vAxis;
-			this.animate = this.opt.animate;
-		},
-
-		render: function(dim, offsets){
-			//	summary:
-			//		Run the calculations for any axes for this plot.
-			//	dim: Object
-			//		An object in the form of { width, height }
-			//	offsets: Object
-			//		An object of the form { l, r, t, b}.
-			//	returns: dojox.charting.plot2d.Scatter
-			//		A reference to this plot for functional chaining.
-			if(this.zoom && !this.isDataDirty()){
-				return this.performZoom(dim, offsets);
-			}
-			this.resetEvents();
-			this.dirty = this.isDirty();
-			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
-				this._eventSeries = {};
-				this.cleanGroup();
-				var s = this.group;
-				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
-			}
-			var t = this.chart.theme, events = this.events();
-			for(var i = this.series.length - 1; i >= 0; --i){
-				var run = this.series[i];
-				if(!this.dirty && !run.dirty){
-					t.skip();
-					this._reconnectEvents(run.name);
-					continue;
-				}
-				run.cleanGroup();
-				if(!run.data.length){
-					run.dirty = false;
-					t.skip();
-					continue;
-				}
-
-				var theme = t.next("marker", [this.opt, run]), s = run.group, lpoly,
-					ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
-					vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler);
-				if(typeof run.data[0] == "number"){
-					lpoly = dojo.map(run.data, function(v, i){
-						return {
-							x: ht(i + 1) + offsets.l,
-							y: dim.height - offsets.b - vt(v)
-						};
-					}, this);
-				}else{
-					lpoly = dojo.map(run.data, function(v, i){
-						return {
-							x: ht(v.x) + offsets.l,
-							y: dim.height - offsets.b - vt(v.y)
-						};
-					}, this);
-				}
-
-				var shadowMarkers  = new Array(lpoly.length),
-					frontMarkers   = new Array(lpoly.length),
-					outlineMarkers = new Array(lpoly.length);
-
-				dojo.forEach(lpoly, function(c, i){
-					var finalTheme = typeof run.data[i] == "number" ?
-							t.post(theme, "marker") :
-							t.addMixin(theme, "marker", run.data[i], true),
-						path = "M" + c.x + " " + c.y + " " + finalTheme.symbol;
-					if(finalTheme.marker.shadow){
-						shadowMarkers[i] = s.createPath("M" + (c.x + finalTheme.marker.shadow.dx) + " " +
-							(c.y + finalTheme.marker.shadow.dy) + " " + finalTheme.symbol).
-							setStroke(finalTheme.marker.shadow).setFill(finalTheme.marker.shadow.color);
-						if(this.animate){
-							this._animateScatter(shadowMarkers[i], dim.height - offsets.b);
-						}
-					}
-					if(finalTheme.marker.outline){
-						var outline = dc.makeStroke(finalTheme.marker.outline);
-						outline.width = 2 * outline.width + finalTheme.marker.stroke.width;
-						outlineMarkers[i] = s.createPath(path).setStroke(outline);
-						if(this.animate){
-							this._animateScatter(outlineMarkers[i], dim.height - offsets.b);
-						}
-					}
-					var stroke = dc.makeStroke(finalTheme.marker.stroke),
-						fill = this._plotFill(finalTheme.marker.fill, dim, offsets);
-					if(fill && (fill.type === "linear" || fill.type == "radial")){
-						var color = gradutils.getColor(fill, {x: c.x, y: c.y});
-						if(stroke){
-							stroke.color = color;
-						}
-						frontMarkers[i] = s.createPath(path).setStroke(stroke).setFill(color);
-					}else{
-						frontMarkers[i] = s.createPath(path).setStroke(stroke).setFill(fill);
-					}
-					if(this.animate){
-						this._animateScatter(frontMarkers[i], dim.height - offsets.b);
-					}
-				}, this);
-				if(frontMarkers.length){
-					run.dyn.stroke = frontMarkers[frontMarkers.length - 1].getStroke();
-					run.dyn.fill   = frontMarkers[frontMarkers.length - 1].getFill();
-				}
-
-				if(events){
-					var eventSeries = new Array(frontMarkers.length);
-					dojo.forEach(frontMarkers, function(s, i){
-						var o = {
-							element: "marker",
-							index:   i,
-							run:     run,
-							shape:   s,
-							outline: outlineMarkers && outlineMarkers[i] || null,
-							shadow:  shadowMarkers && shadowMarkers[i] || null,
-							cx:      lpoly[i].x,
-							cy:      lpoly[i].y
-						};
-						if(typeof run.data[0] == "number"){
-							o.x = i + 1;
-							o.y = run.data[i];
-						}else{
-							o.x = run.data[i].x;
-							o.y = run.data[i].y;
-						}
-						this._connectEvents(o);
-						eventSeries[i] = o;
-					}, this);
-					this._eventSeries[run.name] = eventSeries;
-				}else{
-					delete this._eventSeries[run.name];
-				}
-				run.dirty = false;
-			}
-			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.Scatter
-		},
-		_animateScatter: function(shape, offset){
-			fx.animateTransform(dojo.delegate({
-				shape: shape,
-				duration: 1200,
-				transform: [
-					{name: "translate", start: [0, offset], end: [0, 0]},
-					{name: "scale", start: [0, 0], end: [1, 1]},
-					{name: "original"}
-				]
-			}, this.animate)).play();
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils","dojox/gfx/fx","dojox/gfx/gradutils"],function(_1,_2,_3,_4,dc,df,_5,du,fx,_6){
+var _7=df.lambda("item.purgeGroup()");
+return _1.declare("dojox.charting.plot2d.Scatter",dojox.charting.plot2d.Base,{defaultParams:{hAxis:"x",vAxis:"y",shadows:null,animate:null},optionalParams:{markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerFont:"",markerFontColor:""},constructor:function(_8,_9){
+this.opt=_1.clone(this.defaultParams);
+du.updateWithObject(this.opt,_9);
+du.updateWithPattern(this.opt,_9,this.optionalParams);
+this.series=[];
+this.hAxis=this.opt.hAxis;
+this.vAxis=this.opt.vAxis;
+this.animate=this.opt.animate;
+},render:function(_a,_b){
+if(this.zoom&&!this.isDataDirty()){
+return this.performZoom(_a,_b);
+}
+this.resetEvents();
+this.dirty=this.isDirty();
+if(this.dirty){
+_1.forEach(this.series,_7);
+this._eventSeries={};
+this.cleanGroup();
+var s=this.group;
+df.forEachRev(this.series,function(_c){
+_c.cleanGroup(s);
+});
+}
+var t=this.chart.theme,_d=this.events();
+for(var i=this.series.length-1;i>=0;--i){
+var _e=this.series[i];
+if(!this.dirty&&!_e.dirty){
+t.skip();
+this._reconnectEvents(_e.name);
+continue;
+}
+_e.cleanGroup();
+if(!_e.data.length){
+_e.dirty=false;
+t.skip();
+continue;
+}
+var _f=t.next("marker",[this.opt,_e]),s=_e.group,_10,ht=this._hScaler.scaler.getTransformerFromModel(this._hScaler),vt=this._vScaler.scaler.getTransformerFromModel(this._vScaler);
+if(typeof _e.data[0]=="number"){
+_10=_1.map(_e.data,function(v,i){
+return {x:ht(i+1)+_b.l,y:_a.height-_b.b-vt(v)};
+},this);
+}else{
+_10=_1.map(_e.data,function(v,i){
+return {x:ht(v.x)+_b.l,y:_a.height-_b.b-vt(v.y)};
+},this);
+}
+var _11=new Array(_10.length),_12=new Array(_10.length),_13=new Array(_10.length);
+_1.forEach(_10,function(c,i){
+var _14=typeof _e.data[i]=="number"?t.post(_f,"marker"):t.addMixin(_f,"marker",_e.data[i],true),_15="M"+c.x+" "+c.y+" "+_14.symbol;
+if(_14.marker.shadow){
+_11[i]=s.createPath("M"+(c.x+_14.marker.shadow.dx)+" "+(c.y+_14.marker.shadow.dy)+" "+_14.symbol).setStroke(_14.marker.shadow).setFill(_14.marker.shadow.color);
+if(this.animate){
+this._animateScatter(_11[i],_a.height-_b.b);
+}
+}
+if(_14.marker.outline){
+var _16=dc.makeStroke(_14.marker.outline);
+_16.width=2*_16.width+_14.marker.stroke.width;
+_13[i]=s.createPath(_15).setStroke(_16);
+if(this.animate){
+this._animateScatter(_13[i],_a.height-_b.b);
+}
+}
+var _17=dc.makeStroke(_14.marker.stroke),_18=this._plotFill(_14.marker.fill,_a,_b);
+if(_18&&(_18.type==="linear"||_18.type=="radial")){
+var _19=_6.getColor(_18,{x:c.x,y:c.y});
+if(_17){
+_17.color=_19;
+}
+_12[i]=s.createPath(_15).setStroke(_17).setFill(_19);
+}else{
+_12[i]=s.createPath(_15).setStroke(_17).setFill(_18);
+}
+if(this.animate){
+this._animateScatter(_12[i],_a.height-_b.b);
+}
+},this);
+if(_12.length){
+_e.dyn.stroke=_12[_12.length-1].getStroke();
+_e.dyn.fill=_12[_12.length-1].getFill();
+}
+if(_d){
+var _1a=new Array(_12.length);
+_1.forEach(_12,function(s,i){
+var o={element:"marker",index:i,run:_e,shape:s,outline:_13&&_13[i]||null,shadow:_11&&_11[i]||null,cx:_10[i].x,cy:_10[i].y};
+if(typeof _e.data[0]=="number"){
+o.x=i+1;
+o.y=_e.data[i];
+}else{
+o.x=_e.data[i].x;
+o.y=_e.data[i].y;
+}
+this._connectEvents(o);
+_1a[i]=o;
+},this);
+this._eventSeries[_e.name]=_1a;
+}else{
+delete this._eventSeries[_e.name];
+}
+_e.dirty=false;
+}
+this.dirty=false;
+return this;
+},_animateScatter:function(_1b,_1c){
+fx.animateTransform(_1.delegate({shape:_1b,duration:1200,transform:[{name:"translate",start:[0,_1c],end:[0,0]},{name:"scale",start:[0,0],end:[1,1]},{name:"original"}]},this.animate)).play();
+}});
 });

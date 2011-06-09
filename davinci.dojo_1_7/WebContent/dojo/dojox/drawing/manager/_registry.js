@@ -1,31 +1,34 @@
-define(["dojo","../../drawing"],function(dojo){
-	
-	// TODOC: pubilc APIs
-	
-	dojo.getObject("drawing.stencil", true, dojox);
-	var _registered = {
-		tool:{},
-		stencil:{},
-		drawing:{},
-		plugin:{},
-		button:{}
-	};
-	dojox.drawing.register = function(item, type){
-		if(type=="drawing"){
-			_registered.drawing[item.id] = item;
-		}else if(type=="tool"){
-			_registered.tool[item.name] = item;
-		}else if(type=="stencil"){
-			_registered.stencil[item.name] = item;
-		}else if(type=="plugin"){
-			_registered.plugin[item.name] = item;
-		}else if(type=="button"){
-			_registered.button[item.toolType] = item;
-		}
-	};
-	
-	dojox.drawing.getRegistered = function(type, id){
-		return id ? _registered[type][id] : _registered[type];
-	}
-	
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(["dojo","../../drawing"],function(_1){
+_1.getObject("drawing.stencil",true,dojox);
+var _2={tool:{},stencil:{},drawing:{},plugin:{},button:{}};
+dojox.drawing.register=function(_3,_4){
+if(_4=="drawing"){
+_2.drawing[_3.id]=_3;
+}else{
+if(_4=="tool"){
+_2.tool[_3.name]=_3;
+}else{
+if(_4=="stencil"){
+_2.stencil[_3.name]=_3;
+}else{
+if(_4=="plugin"){
+_2.plugin[_3.name]=_3;
+}else{
+if(_4=="button"){
+_2.button[_3.toolType]=_3;
+}
+}
+}
+}
+}
+};
+dojox.drawing.getRegistered=function(_5,id){
+return id?_2[_5][id]:_2[_5];
+};
 });

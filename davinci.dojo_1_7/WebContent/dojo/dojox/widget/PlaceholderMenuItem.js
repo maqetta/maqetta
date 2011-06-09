@@ -1,107 +1,75 @@
-dojo.provide("dojox.widget.PlaceholderMenuItem");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.experimental("dojox.widget.PlaceholderMenuItem");
-
-dojo.require("dijit.Menu");
-
-dojo.declare("dojox.widget.PlaceholderMenuItem", dijit.MenuItem, {
-	// summary:
-	//		A menu item that can be used as a placeholder.  Set the label
-	//		of this item to a unique key and you can then use it to add new
-	//		items at that location.  This item is not displayed.
-	
-	_replaced: false,
-	_replacedWith: null,
-	_isPlaceholder: true,
-
-	postCreate: function(){
-		this.domNode.style.display = "none";
-		this._replacedWith = [];
-		if(!this.label){
-			this.label = this.containerNode.innerHTML;
-		}
-		this.inherited(arguments);
-	},
-	
-	replace: function(/*dijit.MenuItem[]*/ menuItems){
-		// summary:
-		//		replaces this menu item with the given menuItems.  The original
-		//		menu item is not actually removed from the menu - so if you want
-		//		it removed, you must do that explicitly.
-		// returns:
-		//		true if the replace happened, false if not
-		if(this._replaced){ return false; }
-
-		var index = this.getIndexInParent();
-		if(index < 0){ return false; }
-
-		var p = this.getParent();
-
-		dojo.forEach(menuItems, function(item){
-			p.addChild(item, index++);
-		});
-		this._replacedWith = menuItems;
-
-		this._replaced = true;
-		return true;
-	},
-	
-	unReplace: function(/*Boolean?*/ destroy){
-		// summary:
-		//		Removes menu items added by calling replace().  It returns the
-		//		array of items that were actually removed (in case you want to
-		//		clean them up later)
-		// destroy:
-		//		Also call destroy on any removed items.
-		// returns:
-		//		The array of items that were actually removed
-		
-		if(!this._replaced){ return []; }
-
-		var p = this.getParent();
-		if(!p){ return []; }
-
-		var r = this._replacedWith;
-		dojo.forEach(this._replacedWith, function(item){
-			p.removeChild(item);
-			if(destroy){
-				item.destroyRecursive();
-			}
-		});
-		this._replacedWith = [];
-		this._replaced = false;
-
-		return r; // dijit.MenuItem[]
-	}
+define(["dojo","dijit","dojox","dijit/Menu"],function(_1,_2,_3){
+_1.getObject("dojox.widget.PlaceholderMenuItem",1);
+_1.experimental("dojox.widget.PlaceholderMenuItem");
+_1.declare("dojox.widget.PlaceholderMenuItem",_2.MenuItem,{_replaced:false,_replacedWith:null,_isPlaceholder:true,postCreate:function(){
+this.domNode.style.display="none";
+this._replacedWith=[];
+if(!this.label){
+this.label=this.containerNode.innerHTML;
+}
+this.inherited(arguments);
+},replace:function(_4){
+if(this._replaced){
+return false;
+}
+var _5=this.getIndexInParent();
+if(_5<0){
+return false;
+}
+var p=this.getParent();
+_1.forEach(_4,function(_6){
+p.addChild(_6,_5++);
 });
-
-// Se need to extend dijit.Menu so that we have a getPlaceholders function.
-dojo.extend(dijit.Menu, {
-	getPlaceholders: function(/*String?*/ label){
-		// summary:
-		//		Returns an array of placeholders with the given label.  There
-		//		can be multiples.
-		// label:
-		//		Label to search for - if not specified, then all placeholders
-		//		are returned
-		// returns:
-		//		An array of placeholders that match the given label
-		var r = [];
-
-		var children = this.getChildren();
-		dojo.forEach(children, function(child){
-			if(child._isPlaceholder && (!label || child.label == label)){
-				r.push(child);
-			}else if(child._started && child.popup && child.popup.getPlaceholders){
-				r = r.concat(child.popup.getPlaceholders(label));
-			}else if(!child._started && child.dropDownContainer){
-				var node = dojo.query("[widgetId]", child.dropDownContainer)[0];
-				var menu = dijit.byNode(node);
-				if(menu.getPlaceholders){
-					r = r.concat(menu.getPlaceholders(label));
-				}
-			}
-		}, this);
-		return r; // dojox.widget.PlaceholderMenuItem[]
-	}
-}); 
+this._replacedWith=_4;
+this._replaced=true;
+return true;
+},unReplace:function(_7){
+if(!this._replaced){
+return [];
+}
+var p=this.getParent();
+if(!p){
+return [];
+}
+var r=this._replacedWith;
+_1.forEach(this._replacedWith,function(_8){
+p.removeChild(_8);
+if(_7){
+_8.destroyRecursive();
+}
+});
+this._replacedWith=[];
+this._replaced=false;
+return r;
+}});
+_1.extend(_2.Menu,{getPlaceholders:function(_9){
+var r=[];
+var _a=this.getChildren();
+_1.forEach(_a,function(_b){
+if(_b._isPlaceholder&&(!_9||_b.label==_9)){
+r.push(_b);
+}else{
+if(_b._started&&_b.popup&&_b.popup.getPlaceholders){
+r=r.concat(_b.popup.getPlaceholders(_9));
+}else{
+if(!_b._started&&_b.dropDownContainer){
+var _c=_1.query("[widgetId]",_b.dropDownContainer)[0];
+var _d=_2.byNode(_c);
+if(_d.getPlaceholders){
+r=r.concat(_d.getPlaceholders(_9));
+}
+}
+}
+}
+},this);
+return r;
+}});
+return _1.getObject("dojox.widget.PlaceholderMenuItem");
+});
+require(["dojox/widget/PlaceholderMenuItem"]);

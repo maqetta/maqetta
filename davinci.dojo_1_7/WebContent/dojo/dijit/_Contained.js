@@ -1,74 +1,29 @@
-define([
-	"dojo/_base/kernel",
-	".",
-	"dojo/_base/declare" // dojo.declare
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/_Contained
-	// summary:
-	//		Mixin for widgets that are children of a container widget
-
-	dojo.declare("dijit._Contained", null, {
-		// summary:
-		//		Mixin for widgets that are children of a container widget
-		//
-		// example:
-		// | 	// make a basic custom widget that knows about it's parents
-		// |	dojo.declare("my.customClass",[dijit._Widget,dijit._Contained],{});
-
-		getParent: function(){
-			// summary:
-			//		Returns the parent widget of this widget, assuming the parent
-			//		specifies isContainer
-			var parent = dijit.getEnclosingWidget(this.domNode.parentNode);
-			return parent && parent.isContainer ? parent : null;
-		},
-
-		_getSibling: function(/*String*/ which){
-			// summary:
-			//      Returns next or previous sibling
-			// which:
-			//      Either "next" or "previous"
-			// tags:
-			//      private
-			var node = this.domNode;
-			do{
-				node = node[which+"Sibling"];
-			}while(node && node.nodeType != 1);
-			return node && dijit.byNode(node);	// dijit._Widget
-		},
-
-		getPreviousSibling: function(){
-			// summary:
-			//		Returns null if this is the first child of the parent,
-			//		otherwise returns the next element sibling to the "left".
-
-			return this._getSibling("previous"); // dijit._Widget
-		},
-
-		getNextSibling: function(){
-			// summary:
-			//		Returns null if this is the last child of the parent,
-			//		otherwise returns the next element sibling to the "right".
-
-			return this._getSibling("next"); // dijit._Widget
-		},
-
-		getIndexInParent: function(){
-			// summary:
-			//		Returns the index of this widget within its container parent.
-			//		It returns -1 if the parent does not exist, or if the parent
-			//		is not a dijit._Container
-
-			var p = this.getParent();
-			if(!p || !p.getIndexOfChild){
-				return -1; // int
-			}
-			return p.getIndexOfChild(this); // int
-		}
-	});
-
-
-	return dijit._Contained;
+define("dijit/_Contained",["dojo/_base/kernel",".","dojo/_base/declare"],function(_1,_2){
+_1.declare("dijit._Contained",null,{getParent:function(){
+var _3=_2.getEnclosingWidget(this.domNode.parentNode);
+return _3&&_3.isContainer?_3:null;
+},_getSibling:function(_4){
+var _5=this.domNode;
+do{
+_5=_5[_4+"Sibling"];
+}while(_5&&_5.nodeType!=1);
+return _5&&_2.byNode(_5);
+},getPreviousSibling:function(){
+return this._getSibling("previous");
+},getNextSibling:function(){
+return this._getSibling("next");
+},getIndexInParent:function(){
+var p=this.getParent();
+if(!p||!p.getIndexOfChild){
+return -1;
+}
+return p.getIndexOfChild(this);
+}});
+return _2._Contained;
 });

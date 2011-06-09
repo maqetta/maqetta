@@ -1,58 +1,40 @@
-define(["./kernel", "../on", "../has"], function(dojo, on, has){
-  //  module:
-  //    dojo/_base/event
-  //  summary:
-  //    This module defines dojo DOM event API.
-	has.add("dom-addeventlistener", !!document.addEventListener); 
-	if(on._fixEvent){
-		var fixEvent = on._fixEvent;
-		on._fixEvent = function(evt, se){
-			// add some additional normalization for back-compat, this isn't in on.js because it is somewhat more expensive
-			evt = fixEvent(evt, se);
-			if(evt){
-				// FIXME: scroll position query is duped from dojo.html to
-				// avoid dependency on that entire module. Now that HTML is in
-				// Base, we should convert back to something similar there.
-				var doc = (se && se.ownerDocument) || document;
-				// DO NOT replace the following to use dojo.body(), in IE, document.documentElement should be used
-				// here rather than document.body
-				var docBody = ((dojo.isIE < 6) || (doc["compatMode"] == "BackCompat")) ? doc.body : doc.documentElement;
-				var offset = dojo._getIeDocumentElementOffset();
-				evt.pageX = evt.clientX + dojo._fixIeBiDiScrollLeft(docBody.scrollLeft || 0) - offset.x;
-				evt.pageY = evt.clientY + (docBody.scrollTop || 0) - offset.y;
-			}
-			return evt;
-		};		
-	}
-	dojo.fixEvent = function(/*Event*/ evt, /*DOMNode*/ sender){
-		// summary:
-		//		normalizes properties on the event object including event
-		//		bubbling methods, keystroke normalization, and x/y positions
-		// evt: Event
-		//		native event object
-		// sender: DOMNode
-		//		node to treat as "currentTarget"
-		if(on._fixEvent){
-			return on._fixEvent(evt, sender);
-		}
-		return evt;
-	};
-	
-	dojo.stopEvent = function(/*Event*/ evt){
-		// summary:
-		//		prevents propagation and clobbers the default action of the
-		//		passed event
-		// evt: Event
-		//		The event object. If omitted, window.event is used on IE.
-		if(has("dom-addeventlistener") || (evt && evt.preventDefault)){
-			evt.preventDefault();
-			evt.stopPropagation();
-		}else{
-			evt = evt || window.event;
-			evt.cancelBubble = true;
-			on._preventDefault.call(evt);
-		}
-	};
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-return dojo.connect;
+define("dojo/_base/event",["./kernel","../on","../has"],function(_1,on,_2){
+_2.add("dom-addeventlistener",!!document.addEventListener);
+if(on._fixEvent){
+var _3=on._fixEvent;
+on._fixEvent=function(_4,se){
+_4=_3(_4,se);
+if(_4){
+var _5=(se&&se.ownerDocument)||document;
+var _6=((_1.isIE<6)||(_5["compatMode"]=="BackCompat"))?_5.body:_5.documentElement;
+var _7=_1._getIeDocumentElementOffset();
+_4.pageX=_4.clientX+_1._fixIeBiDiScrollLeft(_6.scrollLeft||0)-_7.x;
+_4.pageY=_4.clientY+(_6.scrollTop||0)-_7.y;
+}
+return _4;
+};
+}
+_1.fixEvent=function(_8,_9){
+if(on._fixEvent){
+return on._fixEvent(_8,_9);
+}
+return _8;
+};
+_1.stopEvent=function(_a){
+if(_2("dom-addeventlistener")||(_a&&_a.preventDefault)){
+_a.preventDefault();
+_a.stopPropagation();
+}else{
+_a=_a||window.event;
+_a.cancelBubble=true;
+on._preventDefault.call(_a);
+}
+};
+return _1.connect;
 });

@@ -1,148 +1,84 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-define(["dojo/_base/kernel",  "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/sniff"], 
-		function(dojo, declare, langArg, arrayArg){
-
-	return dojo.declare("dojox.geo.openlayers.Layer", null, {
-		//	summary: 
-		//		Base layer class for dojox.geo.openlayers.Map specific layers extending OpenLayers.Layer class.
-		//		This layer class accepts Features which encapsulates graphic objects to be added to the map.
-		//		This layer class encapsulates an OpenLayers.Layer.
-		//		This class provides Feature management such as add, remove and feature access.
-		constructor : function(name, options){
-			//	summary:
-			//		Constructs a new Layer.
-			//	name: String
-			//		The name of the layer.
-			//	options: Object
-			//		Options passed to the underlying OpenLayers.Layer object.
-
-			var ol = options ? options.olLayer : null;
-
-			if (!ol)
-				ol = dojo.delegate(new OpenLayers.Layer(name, options));
-
-			this.olLayer = ol;
-			this._features = null;
-			this.olLayer.events.register("moveend", this, dojo.hitch(this, this.moveTo));
-		},
-
-		renderFeature : function(/* Feature */f){
-			//	summary:
-			//		Called when rendering a feature is necessary.
-			//	f : Feature
-			//		The feature to draw.
-			f.render();
-		},
-
-		getDojoMap : function(){
-			return this.dojoMap;
-		},
-
-		addFeature : function(/* Feature | Array */f){
-			//	summary:
-			//		Add a feature or an array of features to the layer.
-			//	f : Feature or Array
-			//		The Feature or array of features to add.
-			if (dojo.isArray(f)) {
-				dojo.forEach(f, function(item){
-					this.addFeature(item);
-				}, this);
-				return;
-			}
-			if (this._features == null)
-				this._features = [];
-			this._features.push(f);
-			f._setLayer(this);
-		},
-
-		removeFeature : function(/* Feature | Array */f){
-			//	summary :
-			//		Removes a feature or an array of features from the layer.
-			//	f : Feature or Array
-			//		The Feature or array of features to remove.
-			var ft = this._features;
-			if (ft == null)
-				return;
-			if (f instanceof Array) {
-				f = f.slice(0);
-				dojo.forEach(f, function(item){
-					this.removeFeature(item);
-				}, this);
-				return;
-			}
-			var i = dojo.indexOf(ft, f); // ft.indexOf(f); No indexOf in IE
-			if (i != -1)
-				ft.splice(i, 1);
-			f._setLayer(null);
-			f.remove();
-		},
-
-		getFeatures : function(){
-			//	summary:
-			//		Retrieves the feature hold by this layer.
-			//	returns: Array
-			//		The untouched array of features hold by this layer.
-			return this._features;
-		},
-
-		getFeatureAt : function(i){
-			//	summary:
-			//		Returns the i-th feature of this layer.
-			//	i : int
-			//		The index of the feature to return.
-			//	returns : ibm_maps.maps.Layer
-			//		The i-th feature of this layer.
-			if (this._features == null)
-				return undefined;
-			return this._features[i];
-		},
-
-		getFeatureCount : function(){
-			//	summary:
-			//		Returns the number of the features contained by this layer.
-			//	returns: int
-			//		The number of the features contained by this layer.
-			if (this._features == null)
-				return 0;
-			return this._features.length;
-		},
-
-		clear : function(){
-			//	summary:
-			//		Removes all the features from this layer.
-			var fa = this.getFeatures();
-			this.removeFeature(fa);
-		},
-
-		moveTo : function(event){
-			//	summary:
-			//		Called when the layer is panned or zoomed.
-			//	event: Object
-			//		The event
-			if (event.zoomChanged) {
-				if (this._features == null)
-					return;
-				dojo.forEach(this._features, function(f){
-					this.renderFeature(f);
-				}, this);
-			}
-		},
-
-		redraw : function(){
-			//	summary:
-			//		Redraws this layer			
-			if (dojo.isIE)
-				setTimeout(dojo.hitch(this, function(){
-					this.olLayer.redraw();
-				}, 0));
-			else
-				this.olLayer.redraw();
-		},
-
-		added : function(){
-		//	summary:
-		//		Called when the layer is added to the map
-		}
-
-	});
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/sniff"],function(_1,_2,_3,_4){
+return _1.declare("dojox.geo.openlayers.Layer",null,{constructor:function(_5,_6){
+var ol=_6?_6.olLayer:null;
+if(!ol){
+ol=_1.delegate(new OpenLayers.Layer(_5,_6));
+}
+this.olLayer=ol;
+this._features=null;
+this.olLayer.events.register("moveend",this,_1.hitch(this,this.moveTo));
+},renderFeature:function(f){
+f.render();
+},getDojoMap:function(){
+return this.dojoMap;
+},addFeature:function(f){
+if(_1.isArray(f)){
+_1.forEach(f,function(_7){
+this.addFeature(_7);
+},this);
+return;
+}
+if(this._features==null){
+this._features=[];
+}
+this._features.push(f);
+f._setLayer(this);
+},removeFeature:function(f){
+var ft=this._features;
+if(ft==null){
+return;
+}
+if(f instanceof Array){
+f=f.slice(0);
+_1.forEach(f,function(_8){
+this.removeFeature(_8);
+},this);
+return;
+}
+var i=_1.indexOf(ft,f);
+if(i!=-1){
+ft.splice(i,1);
+}
+f._setLayer(null);
+f.remove();
+},getFeatures:function(){
+return this._features;
+},getFeatureAt:function(i){
+if(this._features==null){
+return undefined;
+}
+return this._features[i];
+},getFeatureCount:function(){
+if(this._features==null){
+return 0;
+}
+return this._features.length;
+},clear:function(){
+var fa=this.getFeatures();
+this.removeFeature(fa);
+},moveTo:function(_9){
+if(_9.zoomChanged){
+if(this._features==null){
+return;
+}
+_1.forEach(this._features,function(f){
+this.renderFeature(f);
+},this);
+}
+},redraw:function(){
+if(_1.isIE){
+setTimeout(_1.hitch(this,function(){
+this.olLayer.redraw();
+},0));
+}else{
+this.olLayer.redraw();
+}
+},added:function(){
+}});
 });

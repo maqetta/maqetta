@@ -1,60 +1,43 @@
-define(["./main"], function(dojo) {
-	// module:
-	//		dojo/gears
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("gears", true, dojo);
-
-dojo.gears._gearsObject = function(){
-	// summary:
-	//		factory method to get a Google Gears plugin instance to
-	//		expose in the browser runtime environment, if present
-	var factory;
-
-	var gearsObj = dojo.getObject("google.gears");
-	if(gearsObj){ return gearsObj; } // already defined elsewhere
-
-	if(typeof GearsFactory != "undefined"){ // Firefox
-		factory = new GearsFactory();
-	}else{
-		if(dojo.isIE){
-			// IE
-			try{
-				factory = new ActiveXObject("Gears.Factory");
-			}catch(e){
-				// ok to squelch; there's no gears factory.  move on.
-			}
-		}else if(navigator.mimeTypes["application/x-googlegears"]){
-			// Safari?
-			factory = document.createElement("object");
-			factory.setAttribute("type", "application/x-googlegears");
-			factory.setAttribute("width", 0);
-			factory.setAttribute("height", 0);
-			factory.style.display = "none";
-			document.documentElement.appendChild(factory);
-		}
-	}
-
-	// still nothing?
-	if(!factory){ return null; }
-
-	// define the global objects now; don't overwrite them though if they
-	// were somehow set internally by the Gears plugin, which is on their
-	// dev roadmap for the future
-	dojo.setObject("google.gears.factory", factory);
-	return dojo.getObject("google.gears");
+define("dojo/gears",["./main"],function(_1){
+_1.getObject("gears",true,_1);
+_1.gears._gearsObject=function(){
+var _2;
+var _3=_1.getObject("google.gears");
+if(_3){
+return _3;
+}
+if(typeof GearsFactory!="undefined"){
+_2=new GearsFactory();
+}else{
+if(_1.isIE){
+try{
+_2=new ActiveXObject("Gears.Factory");
+}
+catch(e){
+}
+}else{
+if(navigator.mimeTypes["application/x-googlegears"]){
+_2=document.createElement("object");
+_2.setAttribute("type","application/x-googlegears");
+_2.setAttribute("width",0);
+_2.setAttribute("height",0);
+_2.style.display="none";
+document.documentElement.appendChild(_2);
+}
+}
+}
+if(!_2){
+return null;
+}
+_1.setObject("google.gears.factory",_2);
+return _1.getObject("google.gears");
 };
-
-/*=====
-dojo.gears.available = {
-	// summary: True if client is using Google Gears
-};
-=====*/
-// see if we have Google Gears installed, and if
-// so, make it available in the runtime environment
-// and in the Google standard 'google.gears' global object
-dojo.gears.available = (!!dojo.gears._gearsObject())||0;
-
-return dojo.gears;
+_1.gears.available=(!!_1.gears._gearsObject())||0;
+return _1.gears;
 });

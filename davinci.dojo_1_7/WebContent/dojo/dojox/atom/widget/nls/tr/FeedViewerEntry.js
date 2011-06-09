@@ -1,3 +1,4 @@
-({
+define(({
 	deleteButton: "[Sil]"
 })
+);

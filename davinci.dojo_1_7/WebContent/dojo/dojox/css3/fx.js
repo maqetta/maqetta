@@ -1,180 +1,50 @@
-define(["dojo/_base/kernel", "dojo/fx", "dojox/html/ext-dojo/style", "dojox/fx/ext-dojo/complex"], function(dojo){
-	var css3fx = dojo.getObject("css3.fx", true, dojox);
-	return dojo.mixin(css3fx, {
-		puff: function(args){
-			// summary:
-			//		Returns an animation that will do a "puff" effect on the given node
-			//
-			// description:
-			//		Fades out an element and scales it to args.endScale
-			//
-			return dojo.fx.combine([dojo.fadeOut(args),
-				this.expand({
-					node: args.node,
-					endScale: args.endScale || 2
-				})
-			]);
-		},
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-		expand: function(args){
-			// summary:
-			//		Returns an animation that expands args.node
-			//
-			// description:
-			//		Scales an element to args.endScale
-			//
-			return dojo.animateProperty({
-				node: args.node,
-				properties: {
-					transform: { start: "scale(1)", end: "scale(" + [args.endScale || 3] + ")" }
-				}
-			});
-		},
-
-		shrink: function(args){
-			// summary:
-			//		Returns an animation that shrinks args.node
-			//
-			// description:
-			//		Shrinks an element, same as expand({ node: node, endScale: .01 });
-			//
-			return this.expand({
-				node: args.node,
-				endScale: .01
-			});
-		},
-
-		rotate: function(args){
-			// summary:
-			//		Returns an animation that rotates an element
-			//
-			// description:
-			//		Rotates an element from args.startAngle to args.endAngle
-			//
-			return dojo.animateProperty({
-				node: args.node,
-				duration: args.duration || 1000,
-				properties: {
-					transform: { start: "rotate(" + (args.startAngle || "0deg") + ")", end: "rotate(" + (args.endAngle || "360deg") + ")" }
-				}
-			});
-		},
-
-		flip: function(args){
-			// summary:
-			//		Returns an animation that flips an element around his y axis
-			//
-			// description:
-			//		Flips an element around his y axis. The default is a 360deg flip
-			//		but it's possible to run a partial flip using args.whichAnims
-			//
-			// example:
-			//	|	// half flip
-			//	|	dojox.css3.fx.flip({
-			//	|		node: domNode,
-			//	|		whichAnim: [0, 1]
-			//	|	}).play();
-			//
-			var anims = [],
-				whichAnims = args.whichAnims || [0, 1, 2, 3],
-					direction = args.direction || 1,
-				transforms = [
-					{ start: "scale(1, 1) skew(0deg,0deg)", end: "scale(0, 1) skew(0," + (direction * 30) + "deg)" },
-					{ start: "scale(0, 1) skew(0deg," + (direction * 30) + "deg)", end: "scale(-1, 1) skew(0deg,0deg)" },
-					{ start: "scale(-1, 1) skew(0deg,0deg)", end: "scale(0, 1) skew(0deg," + (-direction * 30) + "deg)" },
-					{ start: "scale(0, 1) skew(0deg," + (-direction * 30) + "deg)", end: "scale(1, 1) skew(0deg,0deg)" }
-			];
-			for(var i = 0; i < whichAnims.length; i++){
-				anims.push(dojo.animateProperty(
-					dojo.mixin({
-					node: args.node,
-					duration: args.duration || 600,
-					properties: {
-						transform: transforms[whichAnims[i]]
-					}}, args)
-				));
-			}
-			return dojo.fx.chain(anims);
-		},
-
-		bounce: function(args){
-			// summary:
-			//		Returns an animation that do a "bounce" effect on args.node
-			//
-			// description:
-			//		Vertical bounce animation, the scaleX, scaleY deformation and the
-			//		jump height (args.jumpHeight) can be specified
-			//
-			var anims = [],
-				n = args.node,
-				duration = args.duration || 1000,
-				scaleX = args.scaleX || 1.2,
-				scaleY = args.scaleY || .6,
-				ds = dojo.style,
-				oldPos = ds(n, "position"),
-				newPos = "absolute",
-				oldTop = ds(n, "top"),
-				combinedAnims = [],
-				bTime = 0,
-				round = Math.round,
-				jumpHeight = args.jumpHeight || 70
-			;
-			if(oldPos !== "absolute"){
-				newPos = "relative";
-			}
-			var a1 = dojo.animateProperty({
-				node: n,
-				duration: duration / 6,
-				properties: {
-					transform: { start: "scale(1, 1)", end: "scale(" + scaleX + ", " + scaleY + ")" }
-				}
-			});
-			dojo.connect(a1, "onBegin", function(){
-				ds(n, {
-					transformOrigin: "50% 100%",
-					position: newPos
-				});
-			});
-			anims.push(a1);
-			var a2 = dojo.animateProperty({
-				node: n,
-				duration: duration / 6,
-				properties: {
-					transform: { end: "scale(1, 1)", start: "scale(" + scaleX + ", " + scaleY + ")" }
-				}
-			});
-			combinedAnims.push(a2);
-			combinedAnims.push(new dojo.Animation(dojo.mixin({
-				curve: [],
-				duration: duration / 3,
-				delay: duration / 12,
-				onBegin: function(){
-					bTime = (new Date).getTime();
-				},
-				onAnimate: function(){
-					var cTime = (new Date).getTime();
-					ds(n, {
-						top: parseInt(ds(n, "top")) - round(jumpHeight*((cTime-bTime)/this.duration)) + "px"
-					});
-					bTime = cTime;
-				}
-			}, args)));
-			anims.push(dojo.fx.combine(combinedAnims));
-			anims.push(dojo.animateProperty(dojo.mixin({
-				duration: duration / 3,
-				onEnd: function(){
-					ds(n, {
-						position: oldPos
-					});
-				},
-				properties:{
-					top: oldTop
-				}
-			}, args)));
-			anims.push(a1);
-			anims.push(a2);
-
-			return dojo.fx.chain(anims);
-		}
-	});
+define(["dojo/_base/kernel","dojo/fx","dojox/html/ext-dojo/style","dojox/fx/ext-dojo/complex"],function(_1){
+var _2=_1.getObject("css3.fx",true,dojox);
+return _1.mixin(_2,{puff:function(_3){
+return _1.fx.combine([_1.fadeOut(_3),this.expand({node:_3.node,endScale:_3.endScale||2})]);
+},expand:function(_4){
+return _1.animateProperty({node:_4.node,properties:{transform:{start:"scale(1)",end:"scale("+[_4.endScale||3]+")"}}});
+},shrink:function(_5){
+return this.expand({node:_5.node,endScale:0.01});
+},rotate:function(_6){
+return _1.animateProperty({node:_6.node,duration:_6.duration||1000,properties:{transform:{start:"rotate("+(_6.startAngle||"0deg")+")",end:"rotate("+(_6.endAngle||"360deg")+")"}}});
+},flip:function(_7){
+var _8=[],_9=_7.whichAnims||[0,1,2,3],_a=_7.direction||1,_b=[{start:"scale(1, 1) skew(0deg,0deg)",end:"scale(0, 1) skew(0,"+(_a*30)+"deg)"},{start:"scale(0, 1) skew(0deg,"+(_a*30)+"deg)",end:"scale(-1, 1) skew(0deg,0deg)"},{start:"scale(-1, 1) skew(0deg,0deg)",end:"scale(0, 1) skew(0deg,"+(-_a*30)+"deg)"},{start:"scale(0, 1) skew(0deg,"+(-_a*30)+"deg)",end:"scale(1, 1) skew(0deg,0deg)"}];
+for(var i=0;i<_9.length;i++){
+_8.push(_1.animateProperty(_1.mixin({node:_7.node,duration:_7.duration||600,properties:{transform:_b[_9[i]]}},_7)));
+}
+return _1.fx.chain(_8);
+},bounce:function(_c){
+var _d=[],n=_c.node,_e=_c.duration||1000,_f=_c.scaleX||1.2,_10=_c.scaleY||0.6,ds=_1.style,_11=ds(n,"position"),_12="absolute",_13=ds(n,"top"),_14=[],_15=0,_16=Math.round,_17=_c.jumpHeight||70;
+if(_11!=="absolute"){
+_12="relative";
+}
+var a1=_1.animateProperty({node:n,duration:_e/6,properties:{transform:{start:"scale(1, 1)",end:"scale("+_f+", "+_10+")"}}});
+_1.connect(a1,"onBegin",function(){
+ds(n,{transformOrigin:"50% 100%",position:_12});
+});
+_d.push(a1);
+var a2=_1.animateProperty({node:n,duration:_e/6,properties:{transform:{end:"scale(1, 1)",start:"scale("+_f+", "+_10+")"}}});
+_14.push(a2);
+_14.push(new _1.Animation(_1.mixin({curve:[],duration:_e/3,delay:_e/12,onBegin:function(){
+_15=(new Date).getTime();
+},onAnimate:function(){
+var _18=(new Date).getTime();
+ds(n,{top:parseInt(ds(n,"top"))-_16(_17*((_18-_15)/this.duration))+"px"});
+_15=_18;
+}},_c)));
+_d.push(_1.fx.combine(_14));
+_d.push(_1.animateProperty(_1.mixin({duration:_e/3,onEnd:function(){
+ds(n,{position:_11});
+},properties:{top:_13}},_c)));
+_d.push(a1);
+_d.push(a2);
+return _1.fx.chain(_d);
+}});
 });

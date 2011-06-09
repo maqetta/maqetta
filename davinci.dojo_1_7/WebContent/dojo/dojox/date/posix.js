@@ -1,290 +1,211 @@
-define(["dojo/_base/kernel", "dojo/date", "dojo/date/locale", "dojo/string", "dojo/cldr/supplemental"],
-       function(dojo, dojoDate, dojoDateLocale, dojoString, dojoCldrSupplemental){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.getObject("date.posix", true, dojox);
-
-dojox.date.posix.strftime = function(/*Date*/dateObject, /*String*/format, /*String?*/locale){
-//
-// summary:
-//		Formats the date object using the specifications of the POSIX strftime function
-//
-// description:
-//		see http://www.opengroup.org/onlinepubs/007908799/xsh/strftime.html
-
-	// zero pad
-	var padChar = null;
-	var _ = function(s, n){
-		return dojoString.pad(s, n || 2, padChar || "0");
-	};
-
-	var bundle = dojoDateLocale._getGregorianBundle(locale);
-
-	var $ = function(property){
-		switch(property){
-			case "a": // abbreviated weekday name according to the current locale
-				return dojoDateLocale.getNames('days', 'abbr', 'format', locale)[dateObject.getDay()];
-
-			case "A": // full weekday name according to the current locale
-				return dojoDateLocale.getNames('days', 'wide', 'format', locale)[dateObject.getDay()];
-
-			case "b":
-			case "h": // abbreviated month name according to the current locale
-				return dojoDateLocale.getNames('months', 'abbr', 'format', locale)[dateObject.getMonth()];
-				
-			case "B": // full month name according to the current locale
-				return dojoDateLocale.getNames('months', 'wide', 'format', locale)[dateObject.getMonth()];
-				
-			case "c": // preferred date and time representation for the current
-				      // locale
-				return dojoDateLocale.format(dateObject, {formatLength: 'full', locale: locale});
-
-			case "C": // century number (the year divided by 100 and truncated
-				      // to an integer, range 00 to 99)
-				return _(Math.floor(dateObject.getFullYear()/100));
-				
-			case "d": // day of the month as a decimal number (range 01 to 31)
-				return _(dateObject.getDate());
-				
-			case "D": // same as %m/%d/%y
-				return $("m") + "/" + $("d") + "/" + $("y");
-					
-			case "e": // day of the month as a decimal number, a single digit is
-				      // preceded by a space (range ' 1' to '31')
-				if(padChar == null){ padChar = " "; }
-				return _(dateObject.getDate());
-			
-			case "f": // month as a decimal number, a single digit is
-							// preceded by a space (range ' 1' to '12')
-				if(padChar == null){ padChar = " "; }
-				return _(dateObject.getMonth()+1);
-			
-			case "g": // like %G, but without the century.
-				break;
-			
-			case "G": // The 4-digit year corresponding to the ISO week number
-				      // (see %V).  This has the same format and value as %Y,
-				      // except that if the ISO week number belongs to the
-				      // previous or next year, that year is used instead.
-				console.warn("unimplemented modifier 'G'");
-				break;
-			
-			case "F": // same as %Y-%m-%d
-				return $("Y") + "-" + $("m") + "-" + $("d");
-				
-			case "H": // hour as a decimal number using a 24-hour clock (range
-				      // 00 to 23)
-				return _(dateObject.getHours());
-				
-			case "I": // hour as a decimal number using a 12-hour clock (range
-				      // 01 to 12)
-				return _(dateObject.getHours() % 12 || 12);
-
-			case "j": // day of the year as a decimal number (range 001 to 366)
-				return _(dojoDateLocale._getDayOfYear(dateObject), 3);
-
-			case "k": // Hour as a decimal number using a 24-hour clock (range
-					  // 0 to 23 (space-padded))
-				if(padChar == null){ padChar = " "; }
-				return _(dateObject.getHours());
-
-			case "l": // Hour as a decimal number using a 12-hour clock (range
-					  // 1 to 12 (space-padded))
-				if(padChar == null){ padChar = " "; }
-				return _(dateObject.getHours() % 12 || 12);
-
-			case "m": // month as a decimal number (range 01 to 12)
-				return _(dateObject.getMonth() + 1);
-
-			case "M": // minute as a decimal number
-				return _(dateObject.getMinutes());
-
-			case "n":
-				return "\n";
-
-			case "p": // either `am' or `pm' according to the given time value,
-				      // or the corresponding strings for the current locale
-				return bundle['dayPeriods-format-wide-' + (dateObject.getHours() < 12 ? "am" : "pm")];
-				
-			case "r": // time in a.m. and p.m. notation
-				return $("I") + ":" + $("M") + ":" + $("S") + " " + $("p");
-				
-			case "R": // time in 24 hour notation
-				return $("H") + ":" + $("M");
-				
-			case "S": // second as a decimal number
-				return _(dateObject.getSeconds());
-
-			case "t":
-				return "\t";
-
-			case "T": // current time, equal to %H:%M:%S
-				return $("H") + ":" + $("M") + ":" + $("S");
-				
-			case "u": // weekday as a decimal number [1,7], with 1 representing
-				      // Monday
-				return String(dateObject.getDay() || 7);
-				
-			case "U": // week number of the current year as a decimal number,
-				      // starting with the first Sunday as the first day of the
-				      // first week
-				return _(dojoDateLocale._getWeekOfYear(dateObject));
-
-			case "V": // week number of the year (Monday as the first day of the
-				      // week) as a decimal number [01,53]. If the week containing
-				      // 1 January has four or more days in the new year, then it
-				      // is considered week 1. Otherwise, it is the last week of
-				      // the previous year, and the next week is week 1.
-				return _(dojox.date.posix.getIsoWeekOfYear(dateObject));
-				
-			case "W": // week number of the current year as a decimal number,
-				      // starting with the first Monday as the first day of the
-				      // first week
-				return _(dojoDateLocale._getWeekOfYear(dateObject, 1));
-				
-			case "w": // day of the week as a decimal, Sunday being 0
-				return String(dateObject.getDay());
-
-			case "x": // preferred date representation for the current locale
-				      // without the time
-				return dojoDateLocale.format(dateObject, {selector:'date', formatLength: 'full', locale:locale});
-
-			case "X": // preferred time representation for the current locale
-				      // without the date
-				return dojoDateLocale.format(dateObject, {selector:'time', formatLength: 'full', locale:locale});
-
-			case "y": // year as a decimal number without a century (range 00 to
-				      // 99)
-				return _(dateObject.getFullYear()%100);
-				
-			case "Y": // year as a decimal number including the century
-				return String(dateObject.getFullYear());
-			
-			case "z": // time zone or name or abbreviation
-				var timezoneOffset = dateObject.getTimezoneOffset();
-				return (timezoneOffset > 0 ? "-" : "+") +
-					_(Math.floor(Math.abs(timezoneOffset)/60)) + ":" +
-					_(Math.abs(timezoneOffset)%60);
-
-			case "Z": // time zone or name or abbreviation
-				return dojoDate.getTimezoneName(dateObject);
-			
-			case "%":
-				return "%";
-		}
-	};
-
-	// parse the formatting string and construct the resulting string
-	var string = "",
-		i = 0,
-		index = 0,
-		switchCase = null;
-	while ((index = format.indexOf("%", i)) != -1){
-		string += format.substring(i, index++);
-		
-		// inspect modifier flag
-		switch (format.charAt(index++)) {
-			case "_": // Pad a numeric result string with spaces.
-				padChar = " "; break;
-			case "-": // Do not pad a numeric result string.
-				padChar = ""; break;
-			case "0": // Pad a numeric result string with zeros.
-				padChar = "0"; break;
-			case "^": // Convert characters in result string to uppercase.
-				switchCase = "upper"; break;
-			case "*": // Convert characters in result string to lowercase
-				switchCase = "lower"; break;
-			case "#": // Swap the case of the result string.
-				switchCase = "swap"; break;
-			default: // no modifier flag so decrement the index
-				padChar = null; index--; break;
-		}
-
-		// toggle case if a flag is set
-		var property = $(format.charAt(index++));
-		switch (switchCase){
-			case "upper":
-				property = property.toUpperCase();
-				break;
-			case "lower":
-				property = property.toLowerCase();
-				break;
-			case "swap": // Upper to lower, and versey-vicea
-				var compareString = property.toLowerCase();
-				var swapString = '';
-				var ch = '';
-				for (var j = 0; j < property.length; j++){
-					ch = property.charAt(j);
-					swapString += (ch == compareString.charAt(j)) ?
-						ch.toUpperCase() : ch.toLowerCase();
-				}
-				property = swapString;
-				break;
-			default:
-				break;
-		}
-		switchCase = null;
-		
-		string += property;
-		i = index;
-	}
-	string += format.substring(i);
-	
-	return string; // String
+define(["dojo/_base/kernel","dojo/date","dojo/date/locale","dojo/string","dojo/cldr/supplemental"],function(_1,_2,_3,_4,_5){
+_1.getObject("date.posix",true,dojox);
+dojox.date.posix.strftime=function(_6,_7,_8){
+var _9=null;
+var _a=function(s,n){
+return _4.pad(s,n||2,_9||"0");
 };
-
-dojox.date.posix.getStartOfWeek = function(/*Date*/dateObject, /*Number*/firstDay){
-	// summary: Return a date object representing the first day of the given
-	//   date's week.
-	if(isNaN(firstDay)){
-		firstDay = dojoCldrSupplemental.getFirstDayOfWeek ? dojoCldrSupplemental.getFirstDayOfWeek() : 0;
-	}
-	var offset = firstDay;
-	if(dateObject.getDay() >= firstDay){
-		offset -= dateObject.getDay();
-	}else{
-		offset -= (7 - dateObject.getDay());
-	}
-	var date = new Date(dateObject);
-	date.setHours(0, 0, 0, 0);
-	return dojoDate.add(date, "day", offset); // Date
+var _b=_3._getGregorianBundle(_8);
+var $=function(_c){
+switch(_c){
+case "a":
+return _3.getNames("days","abbr","format",_8)[_6.getDay()];
+case "A":
+return _3.getNames("days","wide","format",_8)[_6.getDay()];
+case "b":
+case "h":
+return _3.getNames("months","abbr","format",_8)[_6.getMonth()];
+case "B":
+return _3.getNames("months","wide","format",_8)[_6.getMonth()];
+case "c":
+return _3.format(_6,{formatLength:"full",locale:_8});
+case "C":
+return _a(Math.floor(_6.getFullYear()/100));
+case "d":
+return _a(_6.getDate());
+case "D":
+return $("m")+"/"+$("d")+"/"+$("y");
+case "e":
+if(_9==null){
+_9=" ";
 }
-
-dojox.date.posix.setIsoWeekOfYear = function(/*Date*/dateObject, /*Number*/week){
-	// summary: Set the ISO8601 week number of the given date.
-	//   The week containing January 4th is the first week of the year.
-	// week:
-	//   can be positive or negative: -1 is the year's last week.
-	if(!week){ return dateObject; }
-	var currentWeek = dojox.date.posix.getIsoWeekOfYear(dateObject);
-	var offset = week - currentWeek;
-	if(week < 0){
-		var weeks = dojox.date.posix.getIsoWeeksInYear(dateObject);
-		offset = (weeks + week + 1) - currentWeek;
-	}
-	return dojoDate.add(dateObject, "week", offset); // Date
+return _a(_6.getDate());
+case "f":
+if(_9==null){
+_9=" ";
 }
-
-dojox.date.posix.getIsoWeekOfYear = function(/*Date*/dateObject){
-	// summary: Get the ISO8601 week number of the given date.
-	//   The week containing January 4th is the first week of the year.
-	//   See http://en.wikipedia.org/wiki/ISO_week_date
-	var weekStart = dojox.date.posix.getStartOfWeek(dateObject, 1);
-	var yearStart = new Date(dateObject.getFullYear(), 0, 4); // January 4th
-	yearStart = dojox.date.posix.getStartOfWeek(yearStart, 1);
-	var diff = weekStart.getTime() - yearStart.getTime();
-	if(diff < 0){ return dojox.date.posix.getIsoWeeksInYear(weekStart); } // Integer
-	return Math.ceil(diff / 604800000) + 1; // Integer
+return _a(_6.getMonth()+1);
+case "g":
+break;
+case "G":
+console.warn("unimplemented modifier 'G'");
+break;
+case "F":
+return $("Y")+"-"+$("m")+"-"+$("d");
+case "H":
+return _a(_6.getHours());
+case "I":
+return _a(_6.getHours()%12||12);
+case "j":
+return _a(_3._getDayOfYear(_6),3);
+case "k":
+if(_9==null){
+_9=" ";
 }
-
-dojox.date.posix.getIsoWeeksInYear = function(/*Date*/dateObject) {
-	// summary: Determine the number of ISO8601 weeks in the year of the given
-	//   date. Most years have 52 but some have 53.
-	//   See http://www.phys.uu.nl/~vgent/calendar/isocalendar_text3.htm
-	function p(y) {
-		return y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400);
-	}
-	var y = dateObject.getFullYear();
-	return ( p(y) % 7 == 4 || p(y-1) % 7 == 3 ) ? 53 : 52;	//	Integer
+return _a(_6.getHours());
+case "l":
+if(_9==null){
+_9=" ";
 }
-	return dojox.date.posix;
+return _a(_6.getHours()%12||12);
+case "m":
+return _a(_6.getMonth()+1);
+case "M":
+return _a(_6.getMinutes());
+case "n":
+return "\n";
+case "p":
+return _b["dayPeriods-format-wide-"+(_6.getHours()<12?"am":"pm")];
+case "r":
+return $("I")+":"+$("M")+":"+$("S")+" "+$("p");
+case "R":
+return $("H")+":"+$("M");
+case "S":
+return _a(_6.getSeconds());
+case "t":
+return "\t";
+case "T":
+return $("H")+":"+$("M")+":"+$("S");
+case "u":
+return String(_6.getDay()||7);
+case "U":
+return _a(_3._getWeekOfYear(_6));
+case "V":
+return _a(dojox.date.posix.getIsoWeekOfYear(_6));
+case "W":
+return _a(_3._getWeekOfYear(_6,1));
+case "w":
+return String(_6.getDay());
+case "x":
+return _3.format(_6,{selector:"date",formatLength:"full",locale:_8});
+case "X":
+return _3.format(_6,{selector:"time",formatLength:"full",locale:_8});
+case "y":
+return _a(_6.getFullYear()%100);
+case "Y":
+return String(_6.getFullYear());
+case "z":
+var _d=_6.getTimezoneOffset();
+return (_d>0?"-":"+")+_a(Math.floor(Math.abs(_d)/60))+":"+_a(Math.abs(_d)%60);
+case "Z":
+return _2.getTimezoneName(_6);
+case "%":
+return "%";
+}
+};
+var _e="",i=0,_f=0,_10=null;
+while((_f=_7.indexOf("%",i))!=-1){
+_e+=_7.substring(i,_f++);
+switch(_7.charAt(_f++)){
+case "_":
+_9=" ";
+break;
+case "-":
+_9="";
+break;
+case "0":
+_9="0";
+break;
+case "^":
+_10="upper";
+break;
+case "*":
+_10="lower";
+break;
+case "#":
+_10="swap";
+break;
+default:
+_9=null;
+_f--;
+break;
+}
+var _11=$(_7.charAt(_f++));
+switch(_10){
+case "upper":
+_11=_11.toUpperCase();
+break;
+case "lower":
+_11=_11.toLowerCase();
+break;
+case "swap":
+var _12=_11.toLowerCase();
+var _13="";
+var ch="";
+for(var j=0;j<_11.length;j++){
+ch=_11.charAt(j);
+_13+=(ch==_12.charAt(j))?ch.toUpperCase():ch.toLowerCase();
+}
+_11=_13;
+break;
+default:
+break;
+}
+_10=null;
+_e+=_11;
+i=_f;
+}
+_e+=_7.substring(i);
+return _e;
+};
+dojox.date.posix.getStartOfWeek=function(_14,_15){
+if(isNaN(_15)){
+_15=_5.getFirstDayOfWeek?_5.getFirstDayOfWeek():0;
+}
+var _16=_15;
+if(_14.getDay()>=_15){
+_16-=_14.getDay();
+}else{
+_16-=(7-_14.getDay());
+}
+var _17=new Date(_14);
+_17.setHours(0,0,0,0);
+return _2.add(_17,"day",_16);
+};
+dojox.date.posix.setIsoWeekOfYear=function(_18,_19){
+if(!_19){
+return _18;
+}
+var _1a=dojox.date.posix.getIsoWeekOfYear(_18);
+var _1b=_19-_1a;
+if(_19<0){
+var _1c=dojox.date.posix.getIsoWeeksInYear(_18);
+_1b=(_1c+_19+1)-_1a;
+}
+return _2.add(_18,"week",_1b);
+};
+dojox.date.posix.getIsoWeekOfYear=function(_1d){
+var _1e=dojox.date.posix.getStartOfWeek(_1d,1);
+var _1f=new Date(_1d.getFullYear(),0,4);
+_1f=dojox.date.posix.getStartOfWeek(_1f,1);
+var _20=_1e.getTime()-_1f.getTime();
+if(_20<0){
+return dojox.date.posix.getIsoWeeksInYear(_1e);
+}
+return Math.ceil(_20/604800000)+1;
+};
+dojox.date.posix.getIsoWeeksInYear=function(_21){
+function p(y){
+return y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400);
+};
+var y=_21.getFullYear();
+return (p(y)%7==4||p(y-1)%7==3)?53:52;
+};
+return dojox.date.posix;
 });

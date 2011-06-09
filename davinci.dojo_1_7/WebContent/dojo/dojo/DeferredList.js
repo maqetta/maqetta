@@ -1,81 +1,56 @@
-define(["./_base/kernel", "./_base/Deferred", "./_base/array"], function(dojo) {
-	// module:
-	//		dojo/DeferredList
-	// summary:
-	//		TODOC
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-
-dojo.DeferredList = function(/*Array*/ list, /*Boolean?*/ fireOnOneCallback, /*Boolean?*/ fireOnOneErrback, /*Boolean?*/ consumeErrors, /*Function?*/ canceller){
-	// summary:
-	//		Provides event handling for a group of Deferred objects.
-	// description:
-	//		DeferredList takes an array of existing deferreds and returns a new deferred of its own
-	//		this new deferred will typically have its callback fired when all of the deferreds in
-	//		the given list have fired their own deferreds.  The parameters `fireOnOneCallback` and
-	//		fireOnOneErrback, will fire before all the deferreds as appropriate
-	//
-	//	list:
-	//		The list of deferreds to be synchronizied with this DeferredList
-	//	fireOnOneCallback:
-	//		Will cause the DeferredLists callback to be fired as soon as any
-	//		of the deferreds in its list have been fired instead of waiting until
-	//		the entire list has finished
-	//	fireonOneErrback:
-	//		Will cause the errback to fire upon any of the deferreds errback
-	//	canceller:
-	//		A deferred canceller function, see dojo.Deferred
-	var resultList = [];
-	dojo.Deferred.call(this);
-	var self = this;
-	if(list.length === 0 && !fireOnOneCallback){
-		this.resolve([0, []]);
-	}
-	var finished = 0;
-	dojo.forEach(list, function(item, i){
-		item.then(function(result){
-			if(fireOnOneCallback){
-				self.resolve([i, result]);
-			}else{
-				addResult(true, result);
-			}
-		},function(error){
-			if(fireOnOneErrback){
-				self.reject(error);
-			}else{
-				addResult(false, error);
-			}
-			if(consumeErrors){
-				return null;
-			}
-			throw error;
-		});
-		function addResult(succeeded, result){
-			resultList[i] = [succeeded, result];
-			finished++;
-			if(finished === list.length){
-				self.resolve(resultList);
-			}
-
-		}
-	});
+define("dojo/DeferredList",["./_base/kernel","./_base/Deferred","./_base/array"],function(_1){
+_1.DeferredList=function(_2,_3,_4,_5,_6){
+var _7=[];
+_1.Deferred.call(this);
+var _8=this;
+if(_2.length===0&&!_3){
+this.resolve([0,[]]);
+}
+var _9=0;
+_1.forEach(_2,function(_a,i){
+_a.then(function(_b){
+if(_3){
+_8.resolve([i,_b]);
+}else{
+_c(true,_b);
+}
+},function(_d){
+if(_4){
+_8.reject(_d);
+}else{
+_c(false,_d);
+}
+if(_5){
+return null;
+}
+throw _d;
+});
+function _c(_e,_f){
+_7[i]=[_e,_f];
+_9++;
+if(_9===_2.length){
+_8.resolve(_7);
+}
 };
-dojo.DeferredList.prototype = new dojo.Deferred();
-
-dojo.DeferredList.prototype.gatherResults= function(deferredList){
-	// summary:
-	//	Gathers the results of the deferreds for packaging
-	//	as the parameters to the Deferred Lists' callback
-
-	var d = new dojo.DeferredList(deferredList, false, true, false);
-	d.addCallback(function(results){
-		var ret = [];
-		dojo.forEach(results, function(result){
-			ret.push(result[1]);
-		});
-		return ret;
-	});
-	return d;
+});
 };
-
-return dojo.DeferredList;
+_1.DeferredList.prototype=new _1.Deferred();
+_1.DeferredList.prototype.gatherResults=function(_10){
+var d=new _1.DeferredList(_10,false,true,false);
+d.addCallback(function(_11){
+var ret=[];
+_1.forEach(_11,function(_12){
+ret.push(_12[1]);
+});
+return ret;
+});
+return d;
+};
+return _1.DeferredList;
 });

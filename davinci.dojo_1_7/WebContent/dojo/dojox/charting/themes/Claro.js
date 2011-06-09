@@ -1,106 +1,43 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils){
-	// created by Tom Trenka
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var themes = dojox.charting.themes, g = Theme.generateGradient,
-		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
-	
-	themes.Claro = new Theme({
-		chart: {
-			fill:	   {
-				type: "linear",
-				x1: 0, x2: 0, y1: 0, y2: 100,
-				colors: [
-					{ offset: 0, color: "#dbdbdb" },
-					{ offset: 1, color: "#efefef" }
-				]
-			},
-			stroke:    {color: "#b5bcc7"}
-		},
-		plotarea: {
-			fill:	   {
-				type: "linear",
-				x1: 0, x2: 0, y1: 0, y2: 100,
-				colors: [
-					{ offset: 0, color: "#dbdbdb" },
-					{ offset: 1, color: "#efefef" }
-				]
-			}
-		},
-		axis:{
-			stroke:	{ // the axis itself
-				color: "#888c76",
-				width: 1
-			},
-			tick: {	// used as a foundation for all ticks
-				color:     "#888c76",
-				position:  "center",
-				font:      "normal normal normal 7pt Verdana, Arial, sans-serif",	// labels on axis
-				fontColor: "#888c76"								// color of labels
-			}
-		},
-		series: {
-			stroke:  {width: 2.5, color: "#fff"},
-			outline: null,
-			font: "normal normal normal 7pt Verdana, Arial, sans-serif",
-			fontColor: "#131313"
-		},
-		marker: {
-			stroke:  {width: 1.25, color: "#131313"},
-			outline: {width: 1.25, color: "#131313"},
-			font: "normal normal normal 8pt Verdana, Arial, sans-serif",
-			fontColor: "#131313"
-		},
-		seriesThemes: [
-			{fill: g(defaultFill, "#2a6ead", "#3a99f2")},
-			{fill: g(defaultFill, "#613e04", "#996106")},
-			{fill: g(defaultFill, "#0e3961", "#155896")},
-			{fill: g(defaultFill, "#55aafa", "#3f7fba")},
-			{fill: g(defaultFill, "#ad7b2a", "#db9b35")}
-		],
-		markerThemes: [
-			{fill: "#2a6ead", stroke: {color: "#fff"}},
-			{fill: "#613e04", stroke: {color: "#fff"}},
-			{fill: "#0e3961", stroke: {color: "#fff"}},
-			{fill: "#55aafa", stroke: {color: "#fff"}},
-			{fill: "#ad7b2a", stroke: {color: "#fff"}}
-		]
-	});
-	
-	themes.Claro.next = function(elementType, mixin, doPost){
-		var isLine = elementType == "line";
-		if(isLine || elementType == "area"){
-			// custom processing for lines: substitute colors
-			var s = this.seriesThemes[this._current % this.seriesThemes.length],
-				m = this.markerThemes[this._current % this.markerThemes.length];
-			s.fill.space = "plot";
-			if(isLine){
-				s.stroke  = { width: 4, color: s.fill.colors[0].color};
-			}
-			m.outline = { width: 1.25, color: m.fill };
-			var theme = Theme.prototype.next.apply(this, arguments);
-			// cleanup
-			delete s.outline;
-			delete s.stroke;
-			s.fill.space = "shape";
-			return theme;
-		}
-		else if(elementType == "candlestick"){
-			var s = this.seriesThemes[this._current % this.seriesThemes.length];
-			s.fill.space = "plot";
-			s.stroke  = { width: 1, color: s.fill.colors[0].color};
-			var theme = Theme.prototype.next.apply(this, arguments);
-			return theme;
-		}
-		return Theme.prototype.next.apply(this, arguments);
-	};
-	
-	themes.Claro.post = function(theme, elementType){
-		theme = Theme.prototype.post.apply(this, arguments);
-		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
-		}
-		return theme;
-	};
-	
-	return themes.Claro;
+define(["../Theme","dojox/gfx/gradutils","./common"],function(_1,_2){
+var _3=dojox.charting.themes,g=_1.generateGradient,_4={type:"linear",space:"shape",x1:0,y1:0,x2:0,y2:100};
+_3.Claro=new _1({chart:{fill:{type:"linear",x1:0,x2:0,y1:0,y2:100,colors:[{offset:0,color:"#dbdbdb"},{offset:1,color:"#efefef"}]},stroke:{color:"#b5bcc7"}},plotarea:{fill:{type:"linear",x1:0,x2:0,y1:0,y2:100,colors:[{offset:0,color:"#dbdbdb"},{offset:1,color:"#efefef"}]}},axis:{stroke:{color:"#888c76",width:1},tick:{color:"#888c76",position:"center",font:"normal normal normal 7pt Verdana, Arial, sans-serif",fontColor:"#888c76"}},series:{stroke:{width:2.5,color:"#fff"},outline:null,font:"normal normal normal 7pt Verdana, Arial, sans-serif",fontColor:"#131313"},marker:{stroke:{width:1.25,color:"#131313"},outline:{width:1.25,color:"#131313"},font:"normal normal normal 8pt Verdana, Arial, sans-serif",fontColor:"#131313"},seriesThemes:[{fill:g(_4,"#2a6ead","#3a99f2")},{fill:g(_4,"#613e04","#996106")},{fill:g(_4,"#0e3961","#155896")},{fill:g(_4,"#55aafa","#3f7fba")},{fill:g(_4,"#ad7b2a","#db9b35")}],markerThemes:[{fill:"#2a6ead",stroke:{color:"#fff"}},{fill:"#613e04",stroke:{color:"#fff"}},{fill:"#0e3961",stroke:{color:"#fff"}},{fill:"#55aafa",stroke:{color:"#fff"}},{fill:"#ad7b2a",stroke:{color:"#fff"}}]});
+_3.Claro.next=function(_5,_6,_7){
+var _8=_5=="line";
+if(_8||_5=="area"){
+var s=this.seriesThemes[this._current%this.seriesThemes.length],m=this.markerThemes[this._current%this.markerThemes.length];
+s.fill.space="plot";
+if(_8){
+s.stroke={width:4,color:s.fill.colors[0].color};
+}
+m.outline={width:1.25,color:m.fill};
+var _9=_1.prototype.next.apply(this,arguments);
+delete s.outline;
+delete s.stroke;
+s.fill.space="shape";
+return _9;
+}else{
+if(_5=="candlestick"){
+var s=this.seriesThemes[this._current%this.seriesThemes.length];
+s.fill.space="plot";
+s.stroke={width:1,color:s.fill.colors[0].color};
+var _9=_1.prototype.next.apply(this,arguments);
+return _9;
+}
+}
+return _1.prototype.next.apply(this,arguments);
+};
+_3.Claro.post=function(_a,_b){
+_a=_1.prototype.post.apply(this,arguments);
+if((_b=="slice"||_b=="circle")&&_a.series.fill&&_a.series.fill.type=="radial"){
+_a.series.fill=_2.reverse(_a.series.fill);
+}
+return _a;
+};
+return _3.Claro;
 });

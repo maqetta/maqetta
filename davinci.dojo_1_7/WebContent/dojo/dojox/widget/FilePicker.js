@@ -1,223 +1,158 @@
-dojo.provide("dojox.widget.FilePicker");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojox.widget.RollingList");
-
-dojo.require("dojo.i18n");
-dojo.requireLocalization("dojox.widget", "FilePicker");
-
-dojo.declare("dojox.widget._FileInfoPane",
-	[dojox.widget._RollingListPane], {
-	// summary: a pane to display the information for the currently-selected
-	//	file
-	
-	// templateString: string
-	//	delete our template string
-	templateString: "",
-	
-	// templateString: String
-	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "FilePicker/_FileInfoPane.html"),
-	
-	postMixInProperties: function(){
-		this._messages = dojo.i18n.getLocalization("dojox.widget", "FilePicker", this.lang);
-		this.inherited(arguments);
-	},
-
-	onItems: function(){
-		// summary:
-		//	called after a fetch or load - at this point, this.items should be
-		//  set and loaded.
-		var store = this.store, item = this.items[0];
-		if(!item){
-			this._onError("Load", new Error("No item defined"));
-		}else{
-			this.nameNode.innerHTML = store.getLabel(item);
-			this.pathNode.innerHTML = store.getIdentity(item);
-			this.sizeNode.innerHTML = store.getValue(item, "size");
-			this.parentWidget.scrollIntoView(this);
-			this.inherited(arguments);
-		}
-	}
+define(["dojo","dijit","dojox","dojox/widget/RollingList","dojo/i18n","dojo/i18n","dojox/widget/nls/FilePicker"],function(_1,_2,_3){
+_1.getObject("dojox.widget.FilePicker",1);
+_1.requireLocalization("dojox.widget","FilePicker");
+_1.declare("dojox.widget._FileInfoPane",[_3.widget._RollingListPane],{templateString:"",templateString:_1.cache("dojox.widget","FilePicker/_FileInfoPane.html","<div class=\"dojoxFileInfoPane\">\n\t<table>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoNameLabel\">${_messages.name}</td>\n\t\t\t\t<td class=\"dojoxFileInfoName\" dojoAttachPoint=\"nameNode\"></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoPathLabel\">${_messages.path}</td>\n\t\t\t\t<td class=\"dojoxFileInfoPath\" dojoAttachPoint=\"pathNode\"></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoSizeLabel\">${_messages.size}</td>\n\t\t\t\t<td class=\"dojoxFileInfoSize\" dojoAttachPoint=\"sizeNode\"></td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t<div dojoAttachPoint=\"containerNode\" style=\"display:none;\"></div>\n</div>"),postMixInProperties:function(){
+this._messages=_1.i18n.getLocalization("dojox.widget","FilePicker",this.lang);
+this.inherited(arguments);
+},onItems:function(){
+var _4=this.store,_5=this.items[0];
+if(!_5){
+this._onError("Load",new Error("No item defined"));
+}else{
+this.nameNode.innerHTML=_4.getLabel(_5);
+this.pathNode.innerHTML=_4.getIdentity(_5);
+this.sizeNode.innerHTML=_4.getValue(_5,"size");
+this.parentWidget.scrollIntoView(this);
+this.inherited(arguments);
+}
+}});
+_1.declare("dojox.widget.FilePicker",_3.widget.RollingList,{className:"dojoxFilePicker",pathSeparator:"",topDir:"",parentAttr:"parentDir",pathAttr:"path",preloadItems:50,selectDirectories:true,selectFiles:true,_itemsMatch:function(_6,_7){
+if(!_6&&!_7){
+return true;
+}else{
+if(!_6||!_7){
+return false;
+}else{
+if(_6==_7){
+return true;
+}else{
+if(this._isIdentity){
+var _8=[this.store.getIdentity(_6),this.store.getIdentity(_7)];
+_1.forEach(_8,function(i,_9){
+if(i.lastIndexOf(this.pathSeparator)==(i.length-1)){
+_8[_9]=i.substring(0,i.length-1);
+}else{
+}
+},this);
+return (_8[0]==_8[1]);
+}
+}
+}
+}
+return false;
+},startup:function(){
+if(this._started){
+return;
+}
+this.inherited(arguments);
+var _a,_b=this.getChildren()[0];
+var _c=_1.hitch(this,function(){
+if(_a){
+this.disconnect(_a);
+}
+delete _a;
+var _d=_b.items[0];
+if(_d){
+var _e=this.store;
+var _f=_e.getValue(_d,this.parentAttr);
+var _10=_e.getValue(_d,this.pathAttr);
+this.pathSeparator=this.pathSeparator||_e.pathSeparator;
+if(!this.pathSeparator){
+this.pathSeparator=_10.substring(_f.length,_f.length+1);
+}
+if(!this.topDir){
+this.topDir=_f;
+if(this.topDir.lastIndexOf(this.pathSeparator)!=(this.topDir.length-1)){
+this.topDir+=this.pathSeparator;
+}
+}
+}
 });
-
-dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
-	// summary: a specialized version of RollingList that handles file information
-	//  in a store
-	
-	className: "dojoxFilePicker",
-	
-	// pathSeparator: string
-	//  Our file separator - it will be guessed if not set
-	pathSeparator: "",
-	
-	// topDir: string
-	//	The top directory string - it will be guessed if not set
-	topDir: "",
-		
-	// parentAttr: string
-	//	the attribute to read for finding our parent directory
-	parentAttr: "parentDir",
-	
-	// pathAttr: string
-	//  the attribute to read for getting the full path of our file
-	pathAttr: "path",
-	
-	// preloadItems: boolean or int
-	//  Set this to a sane number - since we expect to mostly be using the
-	//	dojox.data.FileStore - which doesn't like loading lots of items
-	//	all at once.
-	preloadItems: 50,
-
-	// selectDirectories: boolean
-	//  whether or not we allow selection of directories - that is, whether or
-	//  our value can be set to a directory.
-	selectDirectories: true,
-
-	// selectFiles: boolean
-	//  whether or not we allow selection of files - that is, we will disable
-	//  the file entries.
-	selectFiles: true,
-
-	_itemsMatch: function(/*item*/ item1, /*item*/ item2){
-		// Summary: returns whether or not the two items match - checks ID if
-		//  they aren't the exact same object - ignoring trailing slashes
-		if(!item1 && !item2){
-			return true;
-		}else if(!item1 || !item2){
-			return false;
-		}else if(item1 == item2){
-			return true;
-		}else if (this._isIdentity){
-			var iArr = [ this.store.getIdentity(item1), this.store.getIdentity(item2) ];
-			dojo.forEach(iArr, function(i, idx){
-				if(i.lastIndexOf(this.pathSeparator) == (i.length - 1)){
-					iArr[idx] = i.substring(0, i.length - 1);
-				}else{
-				}
-			}, this);
-			return (iArr[0] == iArr[1]);
-		}
-		return false;
-	},
-	
-	startup: function(){
-		if(this._started){ return; }
-		this.inherited(arguments);
-		// Figure out our file separator if we don't have it yet
-		var conn, child = this.getChildren()[0];
-		var setSeparator = dojo.hitch(this, function(){
-			if(conn){
-				this.disconnect(conn);
-			}
-			delete conn;
-			var item = child.items[0];
-			if(item){
-				var store = this.store;
-				var parent = store.getValue(item, this.parentAttr);
-				var path = store.getValue(item, this.pathAttr);
-				this.pathSeparator = this.pathSeparator || store.pathSeparator;
-				if(!this.pathSeparator){
-					this.pathSeparator = path.substring(parent.length, parent.length + 1);
-				}
-				if(!this.topDir){
-					this.topDir = parent;
-					if(this.topDir.lastIndexOf(this.pathSeparator) != (this.topDir.length - 1)){
-						this.topDir += this.pathSeparator;
-					}
-				}
-			}
-		});
-		if(!this.pathSeparator || !this.topDir){
-			if(!child.items){
-				conn = this.connect(child, "onItems", setSeparator);
-			}else{
-				setSeparator();
-			}
-		}
-	},
-	
-	getChildItems: function(item){
-		var ret = this.inherited(arguments);
-		if(!ret && this.store.getValue(item, "directory")){
-			// It's an empty directory - so pass through an empty array
-			ret = [];
-		}
-		return ret;
-	},
-	
-	getMenuItemForItem: function(/*item*/ item, /* dijit._Contained */ parentPane, /* item[]? */ children){
-		var menuOptions = {iconClass: "dojoxDirectoryItemIcon"};
-		if(!this.store.getValue(item, "directory")){
-			menuOptions.iconClass = "dojoxFileItemIcon";
-			var l = this.store.getLabel(item), idx = l.lastIndexOf(".");
-			if(idx >= 0){
-				menuOptions.iconClass += " dojoxFileItemIcon_" + l.substring(idx + 1);
-			}
-			if(!this.selectFiles){
-				menuOptions.disabled = true;
-			}
-		}
-		var ret = new dijit.MenuItem(menuOptions);
-		return ret;
-	},
-	
-	getPaneForItem: function(/*item*/ item, /* dijit._Contained */ parentPane, /* item[]? */ children){
-		var ret = null;
-		if(!item || (this.store.isItem(item) && this.store.getValue(item, "directory"))){
-			ret = new dojox.widget._RollingListGroupPane({});
-		}else if(this.store.isItem(item) && !this.store.getValue(item, "directory")){
-			ret = new dojox.widget._FileInfoPane({});
-		}
-		return ret;
-	},
-	
-	_setPathValueAttr: function(/*string*/ path, /*boolean?*/ resetLastExec, /*function?*/ onSet){
-		// Summary: sets the value of this widget based off the given path
-		if(!path){
-			this.set("value", null);
-			return;
-		}
-		if(path.lastIndexOf(this.pathSeparator) == (path.length - 1)){
-			path = path.substring(0, path.length - 1);
-		}
-		this.store.fetchItemByIdentity({identity: path,
-										onItem: function(v){
-											if(resetLastExec){
-												this._lastExecutedValue = v;
-											}
-											this.set("value", v);
-											if(onSet){ onSet(); }
-										},
-										scope: this});
-	},
-	
-	_getPathValueAttr: function(/*item?*/val){
-		// summary: returns the path value of the given value (or current value
-		//  if not passed a value)
-		if(!val){
-			val = this.value;
-		}
-		if(val && this.store.isItem(val)){
-			return this.store.getValue(val, this.pathAttr);
-		}else{
-			return "";
-		}
-	},
-	
-	_setValue: function(/* item */ value){
-		// summary: internally sets the value and fires onchange
-		delete this._setInProgress;
-		var store = this.store;
-		if(value && store.isItem(value)){
-			var isDirectory = this.store.getValue(value, "directory");
-			if((isDirectory && !this.selectDirectories) ||
-				(!isDirectory && !this.selectFiles)){ return; }
-		}else{
-			value = null;
-		}
-		if(!this._itemsMatch(this.value, value)){
-			this.value = value;
-			this._onChange(value);
-		}
-	}
+if(!this.pathSeparator||!this.topDir){
+if(!_b.items){
+_a=this.connect(_b,"onItems",_c);
+}else{
+_c();
+}
+}
+},getChildItems:function(_11){
+var ret=this.inherited(arguments);
+if(!ret&&this.store.getValue(_11,"directory")){
+ret=[];
+}
+return ret;
+},getMenuItemForItem:function(_12,_13,_14){
+var _15={iconClass:"dojoxDirectoryItemIcon"};
+if(!this.store.getValue(_12,"directory")){
+_15.iconClass="dojoxFileItemIcon";
+var l=this.store.getLabel(_12),idx=l.lastIndexOf(".");
+if(idx>=0){
+_15.iconClass+=" dojoxFileItemIcon_"+l.substring(idx+1);
+}
+if(!this.selectFiles){
+_15.disabled=true;
+}
+}
+var ret=new _2.MenuItem(_15);
+return ret;
+},getPaneForItem:function(_16,_17,_18){
+var ret=null;
+if(!_16||(this.store.isItem(_16)&&this.store.getValue(_16,"directory"))){
+ret=new _3.widget._RollingListGroupPane({});
+}else{
+if(this.store.isItem(_16)&&!this.store.getValue(_16,"directory")){
+ret=new _3.widget._FileInfoPane({});
+}
+}
+return ret;
+},_setPathValueAttr:function(_19,_1a,_1b){
+if(!_19){
+this.set("value",null);
+return;
+}
+if(_19.lastIndexOf(this.pathSeparator)==(_19.length-1)){
+_19=_19.substring(0,_19.length-1);
+}
+this.store.fetchItemByIdentity({identity:_19,onItem:function(v){
+if(_1a){
+this._lastExecutedValue=v;
+}
+this.set("value",v);
+if(_1b){
+_1b();
+}
+},scope:this});
+},_getPathValueAttr:function(val){
+if(!val){
+val=this.value;
+}
+if(val&&this.store.isItem(val)){
+return this.store.getValue(val,this.pathAttr);
+}else{
+return "";
+}
+},_setValue:function(_1c){
+delete this._setInProgress;
+var _1d=this.store;
+if(_1c&&_1d.isItem(_1c)){
+var _1e=this.store.getValue(_1c,"directory");
+if((_1e&&!this.selectDirectories)||(!_1e&&!this.selectFiles)){
+return;
+}
+}else{
+_1c=null;
+}
+if(!this._itemsMatch(this.value,_1c)){
+this.value=_1c;
+this._onChange(_1c);
+}
+}});
+return _1.getObject("dojox.widget.FilePicker");
 });
+require(["dojox/widget/FilePicker"]);

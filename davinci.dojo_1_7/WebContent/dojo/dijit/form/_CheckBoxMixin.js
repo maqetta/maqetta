@@ -1,77 +1,29 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/event", // dojo.stopEvent
-	"dojo/_base/html" // dojo.attr
-], function(dojo, dijit){
-	// module:
-	//		dijit/form/_CheckBoxMixin
-	// summary:
-	// 		Mixin to provide widget functionality corresponding to an HTML checkbox
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojo.declare("dijit.form._CheckBoxMixin", null, {
-		// summary:
-		// 		Mixin to provide widget functionality corresponding to an HTML checkbox
-		//
-		// description:
-		//		User interacts with real html inputs.
-		//		On onclick (which occurs by mouse click, space-bar, or
-		//		using the arrow keys to switch the selected radio button),
-		//		we update the state of the checkbox/radio.
-		//
-
-		// type: [private] String
-		//		type attribute on <input> node.
-		//		Overrides `dijit.form.Button.type`.  Users should not change this value.
-		type: "checkbox",
-
-		// value: String
-		//		As an initialization parameter, equivalent to value field on normal checkbox
-		//		(if checked, the value is passed as the value when form is submitted).
-		value: "on",
-
-		// readOnly: Boolean
-		//		Should this widget respond to user input?
-		//		In markup, this is specified as "readOnly".
-		//		Similar to disabled except readOnly form values are submitted.
-		readOnly: false,
-
-		_setReadOnlyAttr: function(/*Boolean*/ value){
-			this._set("readOnly", value);
-			dojo.attr(this.focusNode, 'readOnly', value);
-			this.focusNode.setAttribute("aria-readonly", value);
-		},
-
-		// Override dijit.form.Button._setLabelAttr() since we don't even have a containerNode.
-		// Normally users won't try to set label, except when CheckBox or RadioButton is the child of a dojox.layout.TabContainer
-		_setLabelAttr: undefined,
-
-		postMixInProperties: function(){
-			if(this.value == ""){
-				this.value = "on";
-			}
-			this.inherited(arguments);
-		},
-
-		reset: function(){
-			this.inherited(arguments);
-			// Handle unlikely event that the <input type=checkbox> value attribute has changed
-			this._set("value", this.params.value || "on");
-			dojo.attr(this.focusNode, 'value', this.value);
-		},
-
-		_onClick: function(/*Event*/ e){
-			// summary:
-			//		Internal function to handle click actions - need to check
-			//		readOnly, since button no longer does that check.
-			if(this.readOnly){
-				dojo.stopEvent(e);
-				return false;
-			}
-			return this.inherited(arguments);
-		}
-	});
-
-	return dijit.form._CheckBoxMixin;
+define("dijit/form/_CheckBoxMixin",["dojo/_base/kernel","..","dojo/_base/declare","dojo/_base/event","dojo/_base/html"],function(_1,_2){
+_1.declare("dijit.form._CheckBoxMixin",null,{type:"checkbox",value:"on",readOnly:false,_setReadOnlyAttr:function(_3){
+this._set("readOnly",_3);
+_1.attr(this.focusNode,"readOnly",_3);
+this.focusNode.setAttribute("aria-readonly",_3);
+},_setLabelAttr:undefined,postMixInProperties:function(){
+if(this.value==""){
+this.value="on";
+}
+this.inherited(arguments);
+},reset:function(){
+this.inherited(arguments);
+this._set("value",this.params.value||"on");
+_1.attr(this.focusNode,"value",this.value);
+},_onClick:function(e){
+if(this.readOnly){
+_1.stopEvent(e);
+return false;
+}
+return this.inherited(arguments);
+}});
+return _2.form._CheckBoxMixin;
 });

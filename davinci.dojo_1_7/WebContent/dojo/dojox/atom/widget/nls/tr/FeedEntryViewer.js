@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[görüntüleme seçenekleri]",
 	title: "Başlık",
 	authors: "Yazarlar",
@@ -9,3 +9,4 @@
 	summary: "Özet",
 	content: "İçerik"
 })
+);

@@ -7,7 +7,6 @@
 	-o-text-overflow: ellipsis;
 	-webkit-text-overflow: ellipsis;
 }
-
 .dojoxEllipsis window {
     width:100%;
     -moz-user-focus:normal;

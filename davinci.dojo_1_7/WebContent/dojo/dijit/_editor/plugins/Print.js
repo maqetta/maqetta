@@ -1,130 +1,65 @@
-define([
-	"dojo/_base/kernel",
-	"../..",
-	"../../focus",		// dijit.focus()
-	"../_Plugin",
-	"../../form/Button",
-	"dojo/i18n", // dojo.i18n.getLocalization
-	"dojo/i18n!../nls/commands",
-	"dojo/_base/lang", // dojo.hitch
-	"dojo/_base/sniff" // dojo.isChrome dojo.isOpera
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/_editor/plugins/Print
-// summary:
-//		This plugin provides Print cabability to the editor.  When
-//		clicked, the document in the editor frame will be printed.
-
-
-dojo.declare("dijit._editor.plugins.Print",dijit._editor._Plugin,{
-	// summary:
-	//		This plugin provides Print cabability to the editor.  When
-	//		clicked, the document in the editor frame will be printed.
-
-	_initButton: function(){
-		// summary:
-		//		Over-ride for creation of the Print button.
-		var strings = dojo.i18n.getLocalization("dijit._editor", "commands"),
-			editor = this.editor;
-		this.button = new dijit.form.Button({
-			label: strings["print"],
-			dir: editor.dir,
-			lang: editor.lang,
-			showLabel: false,
-			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "Print",
-			tabIndex: "-1",
-			onClick: dojo.hitch(this, "_print")
-		});
-	},
-
-	setEditor: function(/*dijit.Editor*/ editor){
-		// summary:
-		//		Tell the plugin which Editor it is associated with.
-		// editor: Object
-		//		The editor object to attach the print capability to.
-		this.editor = editor;
-		this._initButton();
-
-		// Set up a check that we have a print function
-		// and disable button if we do not.
-		this.editor.onLoadDeferred.addCallback(
-			dojo.hitch(this, function(){
-				if(!this.editor.iframe.contentWindow["print"]){
-					this.button.set("disabled", true);
-				}
-			})
-		);
-	},
-
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		var disabled = this.get("disabled");
-		if(!this.editor.iframe.contentWindow["print"]){
-			disabled = true;
-		}
-		this.button.set("disabled", disabled);
-	},
-
-	_print: function(){
-		// summary:
-		//		Function to trigger printing of the editor document
-		// tags:
-		//		private
-		var edFrame = this.editor.iframe;
-		if(edFrame.contentWindow["print"]){
-			// IE requires the frame to be focused for
-			// print to work, but since this is okay for all
-			// no special casing.
-			if(!dojo.isOpera && !dojo.isChrome){
-				dijit.focus(edFrame);
-				edFrame.contentWindow.print();
-			}else{
-				// Neither Opera nor Chrome 3 et you print single frames.
-				// So, open a new 'window', print it, and close it.
-				// Also, can't use size 0x0, have to use 1x1
-				var edDoc = this.editor.document;
-				var content = this.editor.get("value");
-				content = "<html><head><meta http-equiv='Content-Type' " +
-					"content='text/html; charset='UTF-8'></head><body>" +
-					content + "</body></html>";
-				var win = window.open("javascript: ''",
-					"",
-					"status=0,menubar=0,location=0,toolbar=0," +
-					"width=1,height=1,resizable=0,scrollbars=0");
-				win.document.open();
-				win.document.write(content);
-				win.document.close();
-				var styles = [];
-				var styleNodes = edDoc.getElementsByTagName("style");
-				if(styleNodes){
-					// Clone over any editor view styles, since we can't print the iframe
-					// directly.
-					var i;
-					for(i = 0; i < styleNodes.length; i++){
-						var style = styleNodes[i].innerHTML;
-						var sNode = win.document.createElement("style");
-						sNode.appendChild(win.document.createTextNode(style));
-						win.document.getElementsByTagName("head")[0].appendChild(sNode);
-					}
-				}
-				win.print();
-				win.close();
-			}
-		}
-	}
+define("dijit/_editor/plugins/Print",["dojo/_base/kernel","../..","../../focus","../_Plugin","../../form/Button","dojo/i18n","dojo/i18n!../nls/commands","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
+_1.declare("dijit._editor.plugins.Print",_2._editor._Plugin,{_initButton:function(){
+var _3=_1.i18n.getLocalization("dijit._editor","commands"),_4=this.editor;
+this.button=new _2.form.Button({label:_3["print"],dir:_4.dir,lang:_4.lang,showLabel:false,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Print",tabIndex:"-1",onClick:_1.hitch(this,"_print")});
+},setEditor:function(_5){
+this.editor=_5;
+this._initButton();
+this.editor.onLoadDeferred.addCallback(_1.hitch(this,function(){
+if(!this.editor.iframe.contentWindow["print"]){
+this.button.set("disabled",true);
+}
+}));
+},updateState:function(){
+var _6=this.get("disabled");
+if(!this.editor.iframe.contentWindow["print"]){
+_6=true;
+}
+this.button.set("disabled",_6);
+},_print:function(){
+var _7=this.editor.iframe;
+if(_7.contentWindow["print"]){
+if(!_1.isOpera&&!_1.isChrome){
+_2.focus(_7);
+_7.contentWindow.print();
+}else{
+var _8=this.editor.document;
+var _9=this.editor.get("value");
+_9="<html><head><meta http-equiv='Content-Type' "+"content='text/html; charset='UTF-8'></head><body>"+_9+"</body></html>";
+var _a=window.open("javascript: ''","","status=0,menubar=0,location=0,toolbar=0,"+"width=1,height=1,resizable=0,scrollbars=0");
+_a.document.open();
+_a.document.write(_9);
+_a.document.close();
+var _b=[];
+var _c=_8.getElementsByTagName("style");
+if(_c){
+var i;
+for(i=0;i<_c.length;i++){
+var _d=_c[i].innerHTML;
+var _e=_a.document.createElement("style");
+_e.appendChild(_a.document.createTextNode(_d));
+_a.document.getElementsByTagName("head")[0].appendChild(_e);
+}
+}
+_a.print();
+_a.close();
+}
+}
+}});
+_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
+if(o.plugin){
+return;
+}
+var _f=o.args.name.toLowerCase();
+if(_f==="print"){
+o.plugin=new _2._editor.plugins.Print({command:"print"});
+}
 });
-
-// Register this plugin.
-dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
-	if(o.plugin){ return; }
-	var name = o.args.name.toLowerCase();
-	if(name === "print"){
-		o.plugin = new dijit._editor.plugins.Print({command: "print"});
-	}
-});
-
-
-return dijit._editor.plugins.Print;
+return _2._editor.plugins.Print;
 });

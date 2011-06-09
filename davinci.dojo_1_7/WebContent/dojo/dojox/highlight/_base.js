@@ -1,464 +1,324 @@
-define(["dojo", "dojox/main"], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	/*=====
-		dojox.highlight = {
-			//	summary:
-			//		Syntax highlighting with language auto-detection package
-			//
-			//	description:
-			//
-			//		Syntax highlighting with language auto-detection package.
-			//		Released under CLA by the Dojo Toolkit, original BSD release
-			//		available from: http://softwaremaniacs.org/soft/highlight/
-			//
-			//
-		};
-	=====*/
-	var dh = dojo.getObject("highlight", true, dojox),
-		C_NUMBER_RE = '\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)'
-	;
-	dh.languages = dh.languages || {};
-	// constants
-
-	dh.constants = {
-		IDENT_RE: '[a-zA-Z][a-zA-Z0-9_]*',
-		UNDERSCORE_IDENT_RE: '[a-zA-Z_][a-zA-Z0-9_]*',
-		NUMBER_RE: '\\b\\d+(\\.\\d+)?',
-		C_NUMBER_RE: C_NUMBER_RE,
-		// Common modes
-		APOS_STRING_MODE: {
-			className: 'string',
-			begin: '\'', end: '\'',
-			illegal: '\\n',
-			contains: ['escape'],
-			relevance: 0
-		},
-		QUOTE_STRING_MODE: {
-			className: 'string',
-			begin: '"',
-			end: '"',
-			illegal: '\\n',
-			contains: ['escape'],
-			relevance: 0
-		},
-		BACKSLASH_ESCAPE: {
-			className: 'escape',
-			begin: '\\\\.', end: '^',
-			relevance: 0
-		},
-		C_LINE_COMMENT_MODE: {
-			className: 'comment',
-			begin: '//', end: '$',
-			relevance: 0
-		},
-		C_BLOCK_COMMENT_MODE: {
-			className: 'comment',
-			begin: '/\\*', end: '\\*/'
-		},
-		HASH_COMMENT_MODE: {
-			className: 'comment',
-			begin: '#', end: '$'
-		},
-		C_NUMBER_MODE: {
-			className: 'number',
-			begin: C_NUMBER_RE, end: '^',
-			relevance: 0
-		}
-	};
-
-	// utilities
-	
-	function esc(value){
-		return value.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;');
-	}
-	
-	function verifyText(block){
-		return dojo.every(block.childNodes, function(node){
-			return node.nodeType == 3 || String(node.nodeName).toLowerCase() == 'br';
-		});
-	}
-
-	function blockText(block){
-		var result = [];
-		dojo.forEach(block.childNodes, function(node){
-			if(node.nodeType == 3){
-				result.push(node.nodeValue);
-			}else if(String(node.nodeName).toLowerCase() == 'br'){
-				result.push("\n");
-			}else{
-				throw 'Complex markup';
-			}
-		});
-		return result.join("");
-	}
-
-	function buildKeywordGroups(mode){
-		if(!mode.keywordGroups){
-			for(var key in mode.keywords){
-				var kw = mode.keywords[key];
-    			if(kw instanceof Object){  // dojo.isObject?
-					mode.keywordGroups = mode.keywords;
-				}else{
-					mode.keywordGroups = {keyword: mode.keywords};
-				}
-				break;
-			}
-		}
-	}
-	
-	function buildKeywords(lang){
-		if(lang.defaultMode && lang.modes){
-			buildKeywordGroups(lang.defaultMode);
-			dojo.forEach(lang.modes, buildKeywordGroups);
-		}
-	}
-	
-	// main object
-
-	var Highlighter = function(langName, textBlock){
-		// initialize the state
-		this.langName = langName;
-		this.lang = dh.languages[langName];
-		this.modes = [this.lang.defaultMode];
-		this.relevance = 0;
-		this.keywordCount = 0;
-		this.result = [];
-		
-		// build resources lazily
-		if(!this.lang.defaultMode.illegalRe){
-			this.buildRes();
-			buildKeywords(this.lang);
-		}
-		
-		// run the algorithm
-		try{
-			this.highlight(textBlock);
-			this.result = this.result.join("");
-		}catch(e){
-			if(e == 'Illegal'){
-				this.relevance = 0;
-				this.keywordCount = 0;
-				this.partialResult = this.result.join("");
-				this.result = esc(textBlock);
-			}else{
-				throw e;
-			}
-		}
-	};
-
-	dojo.extend(Highlighter, {
-		buildRes: function(){
-			dojo.forEach(this.lang.modes, function(mode){
-				if(mode.begin){
-					mode.beginRe = this.langRe('^' + mode.begin);
-				}
-				if(mode.end){
-					mode.endRe = this.langRe('^' + mode.end);
-				}
-				if(mode.illegal){
-					mode.illegalRe = this.langRe('^(?:' + mode.illegal + ')');
-				}
-			}, this);
-			this.lang.defaultMode.illegalRe = this.langRe('^(?:' + this.lang.defaultMode.illegal + ')');
-		},
-		
-		subMode: function(lexeme){
-			var classes = this.modes[this.modes.length - 1].contains;
-			if(classes){
-				var modes = this.lang.modes;
-				for(var i = 0; i < classes.length; ++i){
-					var className = classes[i];
-					for(var j = 0; j < modes.length; ++j){
-						var mode = modes[j];
-						if(mode.className == className && mode.beginRe.test(lexeme)){ return mode; }
-					}
-				}
-			}
-			return null;
-		},
-
-		endOfMode: function(lexeme){
-			for(var i = this.modes.length - 1; i >= 0; --i){
-				var mode = this.modes[i];
-				if(mode.end && mode.endRe.test(lexeme)){ return this.modes.length - i; }
-				if(!mode.endsWithParent){ break; }
-			}
-			return 0;
-		},
-
-		isIllegal: function(lexeme){
-			var illegalRe = this.modes[this.modes.length - 1].illegalRe;
-			return illegalRe && illegalRe.test(lexeme);
-		},
-
-
-		langRe: function(value, global){
-			var mode =  'm' + (this.lang.case_insensitive ? 'i' : '') + (global ? 'g' : '');
-			return new RegExp(value, mode);
-		},
-	
-		buildTerminators: function(){
-			var mode = this.modes[this.modes.length - 1],
-				terminators = {};
-			if(mode.contains){
-				dojo.forEach(this.lang.modes, function(lmode){
-					if(dojo.indexOf(mode.contains, lmode.className) >= 0){
-						terminators[lmode.begin] = 1;
-					}
-				});
-			}
-			for(var i = this.modes.length - 1; i >= 0; --i){
-				var m = this.modes[i];
-				if(m.end){ terminators[m.end] = 1; }
-				if(!m.endsWithParent){ break; }
-			}
-			if(mode.illegal){ terminators[mode.illegal] = 1; }
-			var t = [];
-			for(i in terminators){ t.push(i); }
-			mode.terminatorsRe = this.langRe("(" + t.join("|") + ")");
-		},
-
-		eatModeChunk: function(value, index){
-			var mode = this.modes[this.modes.length - 1];
-			
-			// create terminators lazily
-			if(!mode.terminatorsRe){
-				this.buildTerminators();
-			}
-	
-			value = value.substr(index);
-			var match = mode.terminatorsRe.exec(value);
-			if(!match){
-				return {
-					buffer: value,
-					lexeme: "",
-					end:    true
-				};
-			}
-			return {
-				buffer: match.index ? value.substr(0, match.index) : "",
-				lexeme: match[0],
-				end:    false
-			};
-		},
-	
-		keywordMatch: function(mode, match){
-			var matchStr = match[0];
-			if(this.lang.case_insensitive){ matchStr = matchStr.toLowerCase(); }
-			for(var className in mode.keywordGroups){
-				if(matchStr in mode.keywordGroups[className]){ return className; }
-			}
-			return "";
-		},
-		
-		buildLexemes: function(mode){
-			var lexemes = {};
-			dojo.forEach(mode.lexems, function(lexeme){
-				lexemes[lexeme] = 1;
-			});
-			var t = [];
-			for(var i in lexemes){ t.push(i); }
-			mode.lexemsRe = this.langRe("(" + t.join("|") + ")", true);
-		},
-	
-		processKeywords: function(buffer){
-			var mode = this.modes[this.modes.length - 1];
-			if(!mode.keywords || !mode.lexems){
-				return esc(buffer);
-			}
-			
-			// create lexemes lazily
-			if(!mode.lexemsRe){
-				this.buildLexemes(mode);
-			}
-			
-			mode.lexemsRe.lastIndex = 0;
-			var result = [], lastIndex = 0,
-				match = mode.lexemsRe.exec(buffer);
-			while(match){
-				result.push(esc(buffer.substr(lastIndex, match.index - lastIndex)));
-				var keywordM = this.keywordMatch(mode, match);
-				if(keywordM){
-					++this.keywordCount;
-					result.push('<span class="'+ keywordM +'">' + esc(match[0]) + '</span>');
-				}else{
-					result.push(esc(match[0]));
-				}
-				lastIndex = mode.lexemsRe.lastIndex;
-				match = mode.lexemsRe.exec(buffer);
-			}
-			result.push(esc(buffer.substr(lastIndex, buffer.length - lastIndex)));
-			return result.join("");
-		},
-	
-		processModeInfo: function(buffer, lexeme, end) {
-			var mode = this.modes[this.modes.length - 1];
-			if(end){
-				this.result.push(this.processKeywords(mode.buffer + buffer));
-				return;
-			}
-			if(this.isIllegal(lexeme)){ throw 'Illegal'; }
-			var newMode = this.subMode(lexeme);
-			if(newMode){
-				mode.buffer += buffer;
-				this.result.push(this.processKeywords(mode.buffer));
-				if(newMode.excludeBegin){
-					this.result.push(lexeme + '<span class="' + newMode.className + '">');
-					newMode.buffer = '';
-				}else{
-					this.result.push('<span class="' + newMode.className + '">');
-					newMode.buffer = lexeme;
-				}
-				this.modes.push(newMode);
-				this.relevance += typeof newMode.relevance == "number" ? newMode.relevance : 1;
-				return;
-			}
-			var endLevel = this.endOfMode(lexeme);
-			if(endLevel){
-				mode.buffer += buffer;
-				if(mode.excludeEnd){
-					this.result.push(this.processKeywords(mode.buffer) + '</span>' + lexeme);
-				}else{
-					this.result.push(this.processKeywords(mode.buffer + lexeme) + '</span>');
-				}
-				while(endLevel > 1){
-					this.result.push('</span>');
-					--endLevel;
-					this.modes.pop();
-				}
-				this.modes.pop();
-				this.modes[this.modes.length - 1].buffer = '';
-				return;
-			}
-		},
-	
-		highlight: function(value){
-			var index = 0;
-			this.lang.defaultMode.buffer = '';
-			do{
-				var modeInfo = this.eatModeChunk(value, index);
-				this.processModeInfo(modeInfo.buffer, modeInfo.lexeme, modeInfo.end);
-				index += modeInfo.buffer.length + modeInfo.lexeme.length;
-			}while(!modeInfo.end);
-			if(this.modes.length > 1){
-				throw 'Illegal';
-			}
-		}
-	});
-	
-	// more utilities
-	
-	function replaceText(node, className, text){
-		if(String(node.tagName).toLowerCase() == "code" && String(node.parentNode.tagName).toLowerCase() == "pre"){
-			// See these 4 lines? This is IE's notion of "node.innerHTML = text". Love this browser :-/
-			var container = document.createElement('div'),
-				environment = node.parentNode.parentNode;
-			container.innerHTML = '<pre><code class="' + className + '">' + text + '</code></pre>';
-			environment.replaceChild(container.firstChild, node.parentNode);
-		}else{
-			node.className = className;
-			node.innerHTML = text;
-		}
-	}
-	function highlightStringLanguage(lang, str){
-		var highlight = new Highlighter(lang, str);
-		return {result:highlight.result, langName:lang, partialResult:highlight.partialResult};
-	}
-
-	function highlightLanguage(block, lang){
-		var result = highlightStringLanguage(lang, blockText(block));
-		replaceText(block, block.className, result.result);
-	}
-
-	function highlightStringAuto(str){
-		var result = "", langName = "", bestRelevance = 2,
-			textBlock = str;
-		for(var key in dh.languages){
-			if(!dh.languages[key].defaultMode){ continue; }	// skip internal members
-			var highlight = new Highlighter(key, textBlock),
-				relevance = highlight.keywordCount + highlight.relevance, relevanceMax = 0;
-			if(!result || relevance > relevanceMax){
-				relevanceMax = relevance;
-				result = highlight.result;
-				langName = highlight.langName;
-			}
-		}
-		return {result:result, langName:langName};
-	}
-	
-	function highlightAuto(block){
-		var result = highlightStringAuto(blockText(block));
-		if(result.result){
-			replaceText(block, result.langName, result.result);
-		}
-	}
-	
-	// the public API
-
-	dojox.highlight.processString = function(/* String */ str, /* String? */lang){
-		// summary: highlight a string of text
-		// returns: Object containing:
-		//         result - string of html with spans to apply formatting
-		//         partialResult - if the formating failed: string of html
-		//                 up to the point of the failure, otherwise: undefined
-		//         langName - the language used to do the formatting
-		return lang ? highlightStringLanguage(lang, str) : highlightStringAuto(str);
-	};
-
-	dojox.highlight.init = function(/* String|DomNode */ node){
-		//	summary: Highlight a passed node
-		//
-		//	description:
-		//
-		//		Syntax highlight a passed DomNode or String ID of a DomNode
-		//
-		//
-		//	example:
-		//	|	dojox.highlight.init("someId");
-		//
-		node = dojo.byId(node);
-		if(dojo.hasClass(node, "no-highlight")){ return; }
-		if(!verifyText(node)){ return; }
-	
-		var classes = node.className.split(/\s+/),
-			flag = dojo.some(classes, function(className){
-				if(className.charAt(0) != "_" && dh.languages[className]){
-					highlightLanguage(node, className);
-					return true;	// stop iterations
-				}
-				return false;	// continue iterations
-			});
-		if(!flag){
-			highlightAuto(node);
-		}
-	};
-
-/*=====
-	dojox.highlight.Code = function(props, node){
-		//	summary: A Class object to allow for dojoType usage with the highlight engine. This is
-		//		NOT a Widget in the conventional sense, and does not have any member functions for
-		//		the instance. This is provided as a convenience. You likely should be calling
-		//		`dojox.highlight.init` directly.
-		//
-		//	props: Object?
-		//		Unused. Pass 'null' or {}. Positional usage to allow `dojo.parser` to instantiate
-		//		this class as other Widgets would be.
-		//
-		//	node: String|DomNode
-		//		A String ID or DomNode reference to use as the root node of this instance.
-		//
-		//	example:
-		//	|	<pre><code dojoType="dojox.highlight.Code">for(var i in obj){ ... }</code></pre>
-		//
-		//	example:
-		//	|	var inst = new dojox.highlight.Code({}, "someId");
-		//
-		this.node = dojo.byId(node);
-	};
-=====*/
-
-	dh.Code = function(props, node){ dh.init(node); };
-
-	return dh;
-
+define(["dojo","dojox/main"],function(_1,_2){
+var dh=_1.getObject("highlight",true,_2),_3="\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)";
+dh.languages=dh.languages||{};
+dh.constants={IDENT_RE:"[a-zA-Z][a-zA-Z0-9_]*",UNDERSCORE_IDENT_RE:"[a-zA-Z_][a-zA-Z0-9_]*",NUMBER_RE:"\\b\\d+(\\.\\d+)?",C_NUMBER_RE:_3,APOS_STRING_MODE:{className:"string",begin:"'",end:"'",illegal:"\\n",contains:["escape"],relevance:0},QUOTE_STRING_MODE:{className:"string",begin:"\"",end:"\"",illegal:"\\n",contains:["escape"],relevance:0},BACKSLASH_ESCAPE:{className:"escape",begin:"\\\\.",end:"^",relevance:0},C_LINE_COMMENT_MODE:{className:"comment",begin:"//",end:"$",relevance:0},C_BLOCK_COMMENT_MODE:{className:"comment",begin:"/\\*",end:"\\*/"},HASH_COMMENT_MODE:{className:"comment",begin:"#",end:"$"},C_NUMBER_MODE:{className:"number",begin:_3,end:"^",relevance:0}};
+function _4(_5){
+return _5.replace(/&/gm,"&amp;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;");
+};
+function _6(_7){
+return _1.every(_7.childNodes,function(_8){
+return _8.nodeType==3||String(_8.nodeName).toLowerCase()=="br";
+});
+};
+function _9(_a){
+var _b=[];
+_1.forEach(_a.childNodes,function(_c){
+if(_c.nodeType==3){
+_b.push(_c.nodeValue);
+}else{
+if(String(_c.nodeName).toLowerCase()=="br"){
+_b.push("\n");
+}else{
+throw "Complex markup";
+}
+}
+});
+return _b.join("");
+};
+function _d(_e){
+if(!_e.keywordGroups){
+for(var _f in _e.keywords){
+var kw=_e.keywords[_f];
+if(kw instanceof Object){
+_e.keywordGroups=_e.keywords;
+}else{
+_e.keywordGroups={keyword:_e.keywords};
+}
+break;
+}
+}
+};
+function _10(_11){
+if(_11.defaultMode&&_11.modes){
+_d(_11.defaultMode);
+_1.forEach(_11.modes,_d);
+}
+};
+var _12=function(_13,_14){
+this.langName=_13;
+this.lang=dh.languages[_13];
+this.modes=[this.lang.defaultMode];
+this.relevance=0;
+this.keywordCount=0;
+this.result=[];
+if(!this.lang.defaultMode.illegalRe){
+this.buildRes();
+_10(this.lang);
+}
+try{
+this.highlight(_14);
+this.result=this.result.join("");
+}
+catch(e){
+if(e=="Illegal"){
+this.relevance=0;
+this.keywordCount=0;
+this.partialResult=this.result.join("");
+this.result=_4(_14);
+}else{
+throw e;
+}
+}
+};
+_1.extend(_12,{buildRes:function(){
+_1.forEach(this.lang.modes,function(_15){
+if(_15.begin){
+_15.beginRe=this.langRe("^"+_15.begin);
+}
+if(_15.end){
+_15.endRe=this.langRe("^"+_15.end);
+}
+if(_15.illegal){
+_15.illegalRe=this.langRe("^(?:"+_15.illegal+")");
+}
+},this);
+this.lang.defaultMode.illegalRe=this.langRe("^(?:"+this.lang.defaultMode.illegal+")");
+},subMode:function(_16){
+var _17=this.modes[this.modes.length-1].contains;
+if(_17){
+var _18=this.lang.modes;
+for(var i=0;i<_17.length;++i){
+var _19=_17[i];
+for(var j=0;j<_18.length;++j){
+var _1a=_18[j];
+if(_1a.className==_19&&_1a.beginRe.test(_16)){
+return _1a;
+}
+}
+}
+}
+return null;
+},endOfMode:function(_1b){
+for(var i=this.modes.length-1;i>=0;--i){
+var _1c=this.modes[i];
+if(_1c.end&&_1c.endRe.test(_1b)){
+return this.modes.length-i;
+}
+if(!_1c.endsWithParent){
+break;
+}
+}
+return 0;
+},isIllegal:function(_1d){
+var _1e=this.modes[this.modes.length-1].illegalRe;
+return _1e&&_1e.test(_1d);
+},langRe:function(_1f,_20){
+var _21="m"+(this.lang.case_insensitive?"i":"")+(_20?"g":"");
+return new RegExp(_1f,_21);
+},buildTerminators:function(){
+var _22=this.modes[this.modes.length-1],_23={};
+if(_22.contains){
+_1.forEach(this.lang.modes,function(_24){
+if(_1.indexOf(_22.contains,_24.className)>=0){
+_23[_24.begin]=1;
+}
+});
+}
+for(var i=this.modes.length-1;i>=0;--i){
+var m=this.modes[i];
+if(m.end){
+_23[m.end]=1;
+}
+if(!m.endsWithParent){
+break;
+}
+}
+if(_22.illegal){
+_23[_22.illegal]=1;
+}
+var t=[];
+for(i in _23){
+t.push(i);
+}
+_22.terminatorsRe=this.langRe("("+t.join("|")+")");
+},eatModeChunk:function(_25,_26){
+var _27=this.modes[this.modes.length-1];
+if(!_27.terminatorsRe){
+this.buildTerminators();
+}
+_25=_25.substr(_26);
+var _28=_27.terminatorsRe.exec(_25);
+if(!_28){
+return {buffer:_25,lexeme:"",end:true};
+}
+return {buffer:_28.index?_25.substr(0,_28.index):"",lexeme:_28[0],end:false};
+},keywordMatch:function(_29,_2a){
+var _2b=_2a[0];
+if(this.lang.case_insensitive){
+_2b=_2b.toLowerCase();
+}
+for(var _2c in _29.keywordGroups){
+if(_2b in _29.keywordGroups[_2c]){
+return _2c;
+}
+}
+return "";
+},buildLexemes:function(_2d){
+var _2e={};
+_1.forEach(_2d.lexems,function(_2f){
+_2e[_2f]=1;
+});
+var t=[];
+for(var i in _2e){
+t.push(i);
+}
+_2d.lexemsRe=this.langRe("("+t.join("|")+")",true);
+},processKeywords:function(_30){
+var _31=this.modes[this.modes.length-1];
+if(!_31.keywords||!_31.lexems){
+return _4(_30);
+}
+if(!_31.lexemsRe){
+this.buildLexemes(_31);
+}
+_31.lexemsRe.lastIndex=0;
+var _32=[],_33=0,_34=_31.lexemsRe.exec(_30);
+while(_34){
+_32.push(_4(_30.substr(_33,_34.index-_33)));
+var _35=this.keywordMatch(_31,_34);
+if(_35){
+++this.keywordCount;
+_32.push("<span class=\""+_35+"\">"+_4(_34[0])+"</span>");
+}else{
+_32.push(_4(_34[0]));
+}
+_33=_31.lexemsRe.lastIndex;
+_34=_31.lexemsRe.exec(_30);
+}
+_32.push(_4(_30.substr(_33,_30.length-_33)));
+return _32.join("");
+},processModeInfo:function(_36,_37,end){
+var _38=this.modes[this.modes.length-1];
+if(end){
+this.result.push(this.processKeywords(_38.buffer+_36));
+return;
+}
+if(this.isIllegal(_37)){
+throw "Illegal";
+}
+var _39=this.subMode(_37);
+if(_39){
+_38.buffer+=_36;
+this.result.push(this.processKeywords(_38.buffer));
+if(_39.excludeBegin){
+this.result.push(_37+"<span class=\""+_39.className+"\">");
+_39.buffer="";
+}else{
+this.result.push("<span class=\""+_39.className+"\">");
+_39.buffer=_37;
+}
+this.modes.push(_39);
+this.relevance+=typeof _39.relevance=="number"?_39.relevance:1;
+return;
+}
+var _3a=this.endOfMode(_37);
+if(_3a){
+_38.buffer+=_36;
+if(_38.excludeEnd){
+this.result.push(this.processKeywords(_38.buffer)+"</span>"+_37);
+}else{
+this.result.push(this.processKeywords(_38.buffer+_37)+"</span>");
+}
+while(_3a>1){
+this.result.push("</span>");
+--_3a;
+this.modes.pop();
+}
+this.modes.pop();
+this.modes[this.modes.length-1].buffer="";
+return;
+}
+},highlight:function(_3b){
+var _3c=0;
+this.lang.defaultMode.buffer="";
+do{
+var _3d=this.eatModeChunk(_3b,_3c);
+this.processModeInfo(_3d.buffer,_3d.lexeme,_3d.end);
+_3c+=_3d.buffer.length+_3d.lexeme.length;
+}while(!_3d.end);
+if(this.modes.length>1){
+throw "Illegal";
+}
+}});
+function _3e(_3f,_40,_41){
+if(String(_3f.tagName).toLowerCase()=="code"&&String(_3f.parentNode.tagName).toLowerCase()=="pre"){
+var _42=document.createElement("div"),_43=_3f.parentNode.parentNode;
+_42.innerHTML="<pre><code class=\""+_40+"\">"+_41+"</code></pre>";
+_43.replaceChild(_42.firstChild,_3f.parentNode);
+}else{
+_3f.className=_40;
+_3f.innerHTML=_41;
+}
+};
+function _44(_45,str){
+var _46=new _12(_45,str);
+return {result:_46.result,langName:_45,partialResult:_46.partialResult};
+};
+function _47(_48,_49){
+var _4a=_44(_49,_9(_48));
+_3e(_48,_48.className,_4a.result);
+};
+function _4b(str){
+var _4c="",_4d="",_4e=2,_4f=str;
+for(var key in dh.languages){
+if(!dh.languages[key].defaultMode){
+continue;
+}
+var _50=new _12(key,_4f),_51=_50.keywordCount+_50.relevance,_52=0;
+if(!_4c||_51>_52){
+_52=_51;
+_4c=_50.result;
+_4d=_50.langName;
+}
+}
+return {result:_4c,langName:_4d};
+};
+function _53(_54){
+var _55=_4b(_9(_54));
+if(_55.result){
+_3e(_54,_55.langName,_55.result);
+}
+};
+_2.highlight.processString=function(str,_56){
+return _56?_44(_56,str):_4b(str);
+};
+_2.highlight.init=function(_57){
+_57=_1.byId(_57);
+if(_1.hasClass(_57,"no-highlight")){
+return;
+}
+if(!_6(_57)){
+return;
+}
+var _58=_57.className.split(/\s+/),_59=_1.some(_58,function(_5a){
+if(_5a.charAt(0)!="_"&&dh.languages[_5a]){
+_47(_57,_5a);
+return true;
+}
+return false;
+});
+if(!_59){
+_53(_57);
+}
+};
+dh.Code=function(_5b,_5c){
+dh.init(_5c);
+};
+return dh;
 });

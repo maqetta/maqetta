@@ -2,7 +2,6 @@
 	padding:0;
 	margin:0;
 }
-
 .dojoxRatingStar {
 	display:inline-block;
 	background-image:url(images/rating_empty.gif);
@@ -12,13 +11,10 @@
 	width:15px;
 	float:left;
 }
-
 .dojoxRatingStarChecked {
 	background-image:url(images/rating_full.gif);
 }
-
 .dojoxRatingStarHover {
 	background-image:url(images/rating_full.gif);
 	opacity:.5;
 }
-

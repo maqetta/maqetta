@@ -1,4 +1,4 @@
-({
+define(({
 	displayOptions: "[Anzeigeoptionen]",
 	title: "Titel",
 	authors: "Autoren",
@@ -8,4 +8,4 @@
 	updated: "Aktualisiert",
 	summary: "Zusammenfassung",
 	content: "Inhalt"
-})
+}));

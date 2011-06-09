@@ -1,41 +1,35 @@
-define([".","dojox/fx/_core"],function (){
-	dojo.experimental("dojox.fx.scroll");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	dojox.fx.smoothScroll = function(/* Object */args){
-		// summary: Returns an animation that will smooth-scroll to a node
-		// description: This implementation support either horizontal or vertical scroll, as well as
-		// both. In addition, element in iframe can be scrolled to correctly.
-		// offset: {x: int, y: int} this will be added to the target position
-		// duration: Duration of the animation in milliseconds.
-		// win: a node or window object to scroll
-	
-		if(!args.target){ args.target = dojo.position(args.node); }
-	
-		var isWindow = dojo[(dojo.isIE ? "isObject" : "isFunction")](args["win"].scrollTo),
-			delta = { x: args.target.x, y: args.target.y }
-		;
-		if(!isWindow){
-			var winPos = dojo.position(args.win);
-			delta.x -= winPos.x;
-			delta.y -= winPos.y;
-		}
-		var _anim = (isWindow) ?
-			(function(val){
-				args.win.scrollTo(val[0],val[1]);
-			}) :
-			(function(val){
-				args.win.scrollLeft = val[0];
-				args.win.scrollTop = val[1];
-			});
-		var anim = new dojo.Animation(dojo.mixin({
-			beforeBegin: function(){
-				if(this.curve){ delete this.curve; }
-				var current = isWindow ? dojo._docScroll() : {x: args.win.scrollLeft, y: args.win.scrollTop};
-				anim.curve = new dojox.fx._Line([current.x,current.y],[current.x + delta.x, current.y + delta.y]);
-			},
-			onAnimate: _anim
-		},args));
-		return anim; // dojo.Animation
-	};
-	return dojox.fx.smoothScroll;
+define([".","dojox/fx/_core"],function(){
+dojo.experimental("dojox.fx.scroll");
+dojox.fx.smoothScroll=function(_1){
+if(!_1.target){
+_1.target=dojo.position(_1.node);
+}
+var _2=dojo[(dojo.isIE?"isObject":"isFunction")](_1["win"].scrollTo),_3={x:_1.target.x,y:_1.target.y};
+if(!_2){
+var _4=dojo.position(_1.win);
+_3.x-=_4.x;
+_3.y-=_4.y;
+}
+var _5=(_2)?(function(_6){
+_1.win.scrollTo(_6[0],_6[1]);
+}):(function(_7){
+_1.win.scrollLeft=_7[0];
+_1.win.scrollTop=_7[1];
+});
+var _8=new dojo.Animation(dojo.mixin({beforeBegin:function(){
+if(this.curve){
+delete this.curve;
+}
+var _9=_2?dojo._docScroll():{x:_1.win.scrollLeft,y:_1.win.scrollTop};
+_8.curve=new dojox.fx._Line([_9.x,_9.y],[_9.x+_3.x,_9.y+_3.y]);
+},onAnimate:_5},_1));
+return _8;
+};
+return dojox.fx.smoothScroll;
 });

@@ -1,8 +1,9 @@
-define(["dojo/_base/kernel"], function(dojo) {
-	// module:
-	//		dojox/main
-	// summary:
-	//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.dojox;
+define(["dojo/_base/kernel"],function(_1){
+return _1.dojox;
 });

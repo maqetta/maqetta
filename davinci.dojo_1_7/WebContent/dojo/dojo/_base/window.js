@@ -1,103 +1,47 @@
-define(["./kernel"], function(dojo){
-	// module:
-	//		dojo/window
-	// summary:
-	//		This module provides an API to save/set/restore the global/document scope.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-/*=====
-dojo.doc = {
-	// summary:
-	//		Alias for the current document. 'dojo.doc' can be modified
-	//		for temporary context shifting. Also see dojo.withDoc().
-	// description:
-	//		Refer to dojo.doc rather
-	//		than referring to 'window.document' to ensure your code runs
-	//		correctly in managed contexts.
-	// example:
-	//	|	n.appendChild(dojo.doc.createElement('div'));
+define("dojo/_base/window",["./kernel"],function(_1){
+_1.doc=window["document"]||null;
+_1.body=function(){
+return _1.doc.body||_1.doc.getElementsByTagName("body")[0];
+};
+_1.setContext=function(_2,_3){
+_1.global=_2;
+_1.doc=_3;
+};
+_1.withGlobal=function(_4,_5,_6,_7){
+var _8=_1.global;
+try{
+_1.global=_4;
+return _1.withDoc.call(null,_4.document,_5,_6,_7);
 }
-=====*/
-dojo.doc = window["document"] || null;
-
-dojo.body = function(){
-	// summary:
-	//		Return the body element of the document
-	//		return the body object associated with dojo.doc
-	// example:
-	//	|	dojo.body().appendChild(dojo.doc.createElement('div'));
-
-	// Note: document.body is not defined for a strict xhtml document
-	// Would like to memoize this, but dojo.doc can change vi dojo.withDoc().
-	return dojo.doc.body || dojo.doc.getElementsByTagName("body")[0]; // Node
+finally{
+_1.global=_8;
+}
 };
-
-dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocument){
-	// summary:
-	//		changes the behavior of many core Dojo functions that deal with
-	//		namespace and DOM lookup, changing them to work in a new global
-	//		context (e.g., an iframe). The varibles dojo.global and dojo.doc
-	//		are modified as a result of calling this function and the result of
-	//		`dojo.body()` likewise differs.
-	dojo.global = globalObject;
-	dojo.doc = globalDocument;
+_1.withDoc=function(_9,_a,_b,_c){
+var _d=_1.doc,_e=_1._bodyLtr,_f=_1.isQuirks;
+try{
+_1.doc=_9;
+delete _1._bodyLtr;
+_1.isQuirks=_1.doc.compatMode=="BackCompat";
+if(_b&&typeof _a=="string"){
+_a=_b[_a];
+}
+return _a.apply(_b,_c||[]);
+}
+finally{
+_1.doc=_d;
+delete _1._bodyLtr;
+if(_e!==undefined){
+_1._bodyLtr=_e;
+}
+_1.isQuirks=_f;
+}
 };
-
-dojo.withGlobal = function(	/*Object*/globalObject,
-							/*Function*/callback,
-							/*Object?*/thisObject,
-							/*Array?*/cbArguments){
-	// summary:
-	//		Invoke callback with globalObject as dojo.global and
-	//		globalObject.document as dojo.doc.
-	// description:
-	//		Invoke callback with globalObject as dojo.global and
-	//		globalObject.document as dojo.doc. If provided, globalObject
-	//		will be executed in the context of object thisObject
-	//		When callback() returns or throws an error, the dojo.global
-	//		and dojo.doc will be restored to its previous state.
-
-	var oldGlob = dojo.global;
-	try{
-		dojo.global = globalObject;
-		return dojo.withDoc.call(null, globalObject.document, callback, thisObject, cbArguments);
-	}finally{
-		dojo.global = oldGlob;
-	}
-};
-
-dojo.withDoc = function(	/*DocumentElement*/documentObject,
-							/*Function*/callback,
-							/*Object?*/thisObject,
-							/*Array?*/cbArguments){
-	// summary:
-	//		Invoke callback with documentObject as dojo.doc.
-	// description:
-	//		Invoke callback with documentObject as dojo.doc. If provided,
-	//		callback will be executed in the context of object thisObject
-	//		When callback() returns or throws an error, the dojo.doc will
-	//		be restored to its previous state.
-
-	var oldDoc = dojo.doc,
-		oldLtr = dojo._bodyLtr,
-		oldQ = dojo.isQuirks;
-
-	try{
-		dojo.doc = documentObject;
-		delete dojo._bodyLtr; // uncache
-		dojo.isQuirks = dojo.doc.compatMode == "BackCompat"; // no need to check for QuirksMode which was Opera 7 only
-
-		if(thisObject && typeof callback == "string"){
-			callback = thisObject[callback];
-		}
-
-		return callback.apply(thisObject, cbArguments || []);
-	}finally{
-		dojo.doc = oldDoc;
-		delete dojo._bodyLtr; // in case it was undefined originally, and set to true/false by the alternate document
-		if(oldLtr !== undefined){ dojo._bodyLtr = oldLtr; }
-		dojo.isQuirks = oldQ;
-	}
-};
-
-return dojo;
+return _1;
 });

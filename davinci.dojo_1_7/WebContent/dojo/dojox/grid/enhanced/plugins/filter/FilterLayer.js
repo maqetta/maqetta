@@ -1,406 +1,223 @@
-define(["dojo", "dojox", "./_FilterExpr", "../_StoreLayer"], function(dojo, dojox){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var ns = dojo.getObject("grid.enhanced.plugins", true, dojox),
-		cmdSetFilter = "filter",
-		cmdClearFilter = "clear",
-		hitchIfCan = function(scope, func){
-			return func ? dojo.hitch(scope || dojo.global, func) : function(){};
-		},
-		
-		shallowClone = function(obj){
-			var res = {};
-			if(obj && dojo.isObject(obj)){
-				for(var name in obj){
-					res[name] = obj[name];
-				}
-			}
-			return res;
-		}
-	;
-
-	dojo.declare("dojox.grid.enhanced.plugins.filter._FilterLayerMixin", null, {
-/*=====
-		// _filter: _ConditionExpr
-		//		The filter definition
-		_filter: null,
-		
-		filterDef: function(filter){
-			// summary:
-			//		Get/set/clear the filter definition
-			// tags:
-			//		public
-			// filter: (_ConditionExpr|null)?
-			//		null: clear filter definition
-			//		undefined: it's getter
-			// returns:
-			//		A filter definition if it's getter.
-		},
-=====*/
-		tags: ["sizeChange"],
-		name: function(){
-			// summary:
-			//		override from _StoreLayer.name
-			return "filter";	//string
-		},
-		onFilterDefined: function(filter){},
-		
-		onFiltered: function(filteredSize, totalSize){
-			// summary:
-			//		Called when store data is filtered. This event is before *onComplete*, after *onBegin*.
-			// tags:
-			//		callback extension
-			// filteredSize: Integer
-			//		The number of remaining fetched items after filtering.
-			// totalSize: Integer
-			//		The number of original fetched items.
-		}
-	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.ServerSideFilterLayer", [ns._ServerSideLayer, ns.filter._FilterLayerMixin], {
-		constructor: function(args){
-			this._onUserCommandLoad = args.setupFilterQuery || this._onUserCommandLoad;
-			this.filterDef(null);
-		},
-		filterDef: function(/* (_ConditionExpr|null)? */filter){
-			// summary:
-			//		See _FilterLayerMixin.filterDef
-			if(filter){
-				this._filter = filter;
-				var obj = filter.toObject();
-				//Stateless implementation will need to parse the filter object.
-				this.command(cmdSetFilter, this._isStateful ? dojo.toJson(obj) : obj);
-				this.command(cmdClearFilter, null);
-				this.useCommands(true);
-				this.onFilterDefined(filter);
-			}else if(filter === null){
-				this._filter = null;
-				this.command(cmdSetFilter, null);
-				this.command(cmdClearFilter, true);
-				this.useCommands(true);
-				this.onFilterDefined(null);
-			}
-			return this._filter;	//_ConditionExpr
-		},
-		onCommandLoad: function(/* (in)string */responce, /* (in|out)keywordArgs */ userRequest){
-			// summary:
-			//		override from _ServerSideLayer.onCommandLoad
-			this.inherited(arguments);
-			var oldOnBegin = userRequest.onBegin;
-			if(this._isStateful){
-				var filteredSize;
-				if(responce){
-					this.command(cmdSetFilter, null);
-					this.command(cmdClearFilter, null);
-					this.useCommands(false);
-					var sizes = responce.split(',');
-					if(sizes.length >= 2){
-						filteredSize = this._filteredSize = parseInt(sizes[0], 10);
-						this.onFiltered(filteredSize, parseInt(sizes[1], 10));
-					}else{
-						//Error here.
-						return;
-					}
-				}else{
-					filteredSize = this._filteredSize;
-				}
-				if(this.enabled()){
-					userRequest.onBegin = function(size, req){
-						hitchIfCan(userRequest.scope, oldOnBegin)(filteredSize, req);
-					};
-				}
-			}else{
-				var _this = this;
-				userRequest.onBegin = function(size, req){
-					if(!_this._filter){
-						_this._storeSize = size;
-					}
-					_this.onFiltered(size, _this._storeSize || size);
-					req.onBegin = oldOnBegin;
-					hitchIfCan(userRequest.scope, oldOnBegin)(size, req);
-				};
-			}
-		}
-	});
-	dojo.declare("dojox.grid.enhanced.plugins.filter.ClientSideFilterLayer", [ns._StoreLayer, ns.filter._FilterLayerMixin], {
-		// summary:
-		//		Add a client side filter layer on top of the data store,
-		//		so any filter expression can be applied to the store.
-/*=====
-		//_items: Array,
-		//		Cached items (may contain holes)
-		_items: [],
-		
-		//_result: Array,
-		//		Current fetch result
-		_result: [],
-		
-		//_resultStartIdx: Integer,
-		//		The index in cache of the first result item
-		_resultStartIdx: 0,
-		
-		//_indexMap: Array,
-		//		A map from the row index of this._items to the row index of the original store.
-		_indexMap: null,
-		
-		//_getter: function(datarow, colArg, rowIndex, store);
-		//		A user defined way to get data from store
-		_getter: null,
-		
-		// _nextUnfetchedIdx: Integer
-		//		The index of the next item in the store that is never fetched.
-		_nextUnfetchedIdx: 0,
-=====*/
-		// _storeSize: Integer
-		//		The actual size of the original store
-		_storeSize: -1,
-		
-		// _fetchAll
-		//		If the store is small or store size must be correct when onBegin is called,
-		//		we should fetch and filter all the items on the first query.
-		_fetchAll: true,
-		
-		constructor: function(args){
-			this.filterDef(null);
-			args = dojo.isObject(args) ? args : {};
-			this.fetchAllOnFirstFilter(args.fetchAll);
-			this._getter = dojo.isFunction(args.getter) ? args.getter : this._defaultGetter;
-		},
-		_defaultGetter: function(datarow, colName, rowIndex, store){
-			return store.getValue(datarow, colName);
-		},
-		filterDef: function(/* (_ConditionExpr|null)? */filter){
-			// summary:
-			//		See _FilterLayerMixin.filterDef
-			if(filter !== undefined){
-				this._filter = filter;
-				this.invalidate();
-				this.onFilterDefined(filter);
-			}
-			return this._filter;	//_ConditionExpr
-		},
-		setGetter: function(/* function */getter){
-			// summary:
-			//		Set the user defined way to retrieve data from store.
-			// tags:
-			//		public
-			// getter: function(datarow, colArg, rowIndex, store);
-			if(dojo.isFunction(getter)){
-				this._getter = getter;
-			}
-		},
-		fetchAllOnFirstFilter: function(/* bool? */toFetchAll){
-			// summary:
-			//		The get/set function for fetchAll.
-			// tags:
-			//		public
-			// toFetchAll: boolean?
-			//		If provided, it's a set function, otherwise it's a get function.
-			// returns:
-			//		Whether fetch all on first filter if this is a getter
-			if(toFetchAll !== undefined){
-				this._fetchAll = !!toFetchAll;
-			}
-			return this._fetchAll;	//Boolean
-		},
-		invalidate: function(){
-			// summary:
-			//		Clear all the status information of this layer
-			// tags:
-			//		private
-			this._items = [];
-			this._nextUnfetchedIdx = 0;
-			this._result = [];
-			this._indexMap = [];
-			this._resultStartIdx = 0;
-		},
-		//----------------Private Functions-----------------------------
-		_fetch: function(userRequest,filterRequest){
-			// summary:
-			//		Implement _StoreLayer._fetch
-			// tags:
-			//		private callback
-			// filterRequest: dojo.data.api.Request
-			//		The actual request used in store.fetch.
-			//		This function is called recursively to fill the result store items
-			//		until the user specified item count is reached. Only in recursive calls,
-			//		this parameter is valid.
-			if(!this._filter){
-				//If we don't have any filter, use the original request and fetch.
-				var old_onbegin = userRequest.onBegin, _this = this;
-				userRequest.onBegin = function(size, r){
-					hitchIfCan(userRequest.scope, old_onbegin)(size, r);
-					_this.onFiltered(size, size);
-				};
-				this.originFetch(userRequest);
-				return userRequest;
-			}
-			try{
-				//If the fetch is at the beginning, user's start position is used;
-				//If we are in a recursion, our own request is used.
-				var start = filterRequest ? filterRequest._nextResultItemIdx : userRequest.start;
-				start = start || 0;
-				if(!filterRequest){
-					//Initially, we have no results.
-					this._result = [];
-					this._resultStartIdx = start;
-					var sortStr;
-					if(dojo.isArray(userRequest.sort) && userRequest.sort.length > 0 &&
-						//Sort info will stay here in every re-fetch, so remember it!
-						(sortStr = dojo.toJson(userRequest.sort)) != this._lastSortInfo){
-						//If we should sort data, all the old caches are no longer valid.
-						this.invalidate();
-						this._lastSortInfo = sortStr;
-					}
-				}
-				//this._result contains the current fetch result (of every recursion).
-				var end = typeof userRequest.count == "number" ?
-					start + userRequest.count - this._result.length : this._items.length;
-				//Try to retrieve all the items from our cache.
-				//Only need items after userRequest.start, test it in case start is smaller.
-				if(this._result.length){
-					this._result = this._result.concat(this._items.slice(start, end));
-				}else{
-					this._result = this._items.slice(userRequest.start, typeof userRequest.count == "number" ?
-						userRequest.start + userRequest.count : this._items.length);
-				}
-				if(this._result.length >= userRequest.count || this._hasReachedStoreEnd()){
-					//We already have had enough items, or we have to stop fetching because there's nothing more to fetch.
-					this._completeQuery(userRequest);
-				}else{
-					//User's request hasn't been finished yet. Fetch more.
-					if(!filterRequest){
-						//Initially, we've got to create a new request object.
-						filterRequest = shallowClone(userRequest);
-						//Use our own onBegin function to remember the total size of the original store.
-						filterRequest.onBegin = dojo.hitch(this, this._onFetchBegin);
-						filterRequest.onComplete = dojo.hitch(this, function(items, req){
-							//We've fetched some more, so march ahead!
-							this._nextUnfetchedIdx += items.length;
-							//Actual filtering work goes here. Survived items are added to our cache.
-							//req is our own request object.
-							this._doFilter(items, req.start, userRequest);
-							//Recursively call this function. Let's do this again!
-							this._fetch(userRequest, req);
-						});
-					}
-					//Fetch starts from the next unfetched item.
-					filterRequest.start = this._nextUnfetchedIdx;
-					//If store is small, we should only fetch once.
-					if(this._fetchAll){
-						delete filterRequest.count;
-					}
-					//Remember we've (maybe) already added something to our result array, so next time we should not start over again.
-					filterRequest._nextResultItemIdx = end < this._items.length ? end : this._items.length;
-					//Actual fetch work goes here.
-					this.originFetch(filterRequest);
-				}
-			}catch(e){
-				if(userRequest.onError){
-					hitchIfCan(userRequest.scope, userRequest.onError)(e, userRequest);
-				}else{
-					throw e;
-				}
-			}
-			return userRequest;
-		},
-		_hasReachedStoreEnd: function(){
-			// summary:
-			//		Check whether all the items in the original store have been fetched.
-			// tags:
-			//		private
-			return this._storeSize >= 0 && this._nextUnfetchedIdx >= this._storeSize;	//Boolean
-		},
-		_applyFilter: function(/* data item */datarow,/* Integer */rowIndex){
-			// summary:
-			//		Apply the filter to a row of data
-			// tags:
-			//		private
-			// returns:
-			//		whether this row survived the filter.
-			var g = this._getter, s = this._store;
-			try{
-				return !!(this._filter.applyRow(datarow, function(item, arg){
-					return g(item, arg, rowIndex, s);
-				}).getValue());
-			}catch(e){
-				console.warn("FilterLayer._applyFilter() error: ", e);
-				return false;
-			}
-		},
-		_doFilter: function(/* Array */items,/* Integer */startIdx,/* object */userRequest){
-			// summary:
-			//		Use the filter expression to filter items. Survived items are stored in this._items.
-			//		The given items start from "startIdx" in the original store.
-			// tags:
-			//		private
-			for(var i = 0, cnt = 0; i < items.length; ++i){
-				if(this._applyFilter(items[i], startIdx + i)){
-					hitchIfCan(userRequest.scope, userRequest.onItem)(items[i], userRequest);
-					cnt += this._addCachedItems(items[i], this._items.length);
-					this._indexMap.push(startIdx + i);
-				}
-			}
-		},
-		_onFetchBegin: function(/* Integer */size,/* request object */req){
-			// summary:
-			//		This function is used to replace the user's onFetchBegin in store.fetch
-			// tags:
-			//		private
-			this._storeSize = size;
-		},
-		_completeQuery: function(/* request object */userRequest){
-			// summary:
-			//		Logically, the user's query is completed here, i.e., all the filtered results are ready.
-			//		(or their index mappings are ready)
-			// tags:
-			//		private
-			var size = this._items.length;
-			if(this._nextUnfetchedIdx < this._storeSize){
-				//FIXME: There's still some items in the original store that are not fetched & filtered.
-				//So we have to estimate a little bigger size to allow scrolling to these unfetched items.
-				//However, this behavior is ONLY correct in Grid! Any better way to do this?
-				size++;
-			}
-			hitchIfCan(userRequest.scope, userRequest.onBegin)(size,userRequest);
-			this.onFiltered(this._items.length, this._storeSize);
-			hitchIfCan(userRequest.scope, userRequest.onComplete)(this._result, userRequest);
-		},
-		_addCachedItems: function(/* Array */items,/* Integer */filterStartIdx){
-			// summary:
-			//		Add data items to the cache. The insert point is at *filterStartIdx*
-			// tags:
-			//		private
-			// items: Array
-			//		Data items to add.
-			// filterStartIdx: Integer
-			//		The start point to insert in the cache.
-			if(!dojo.isArray(items)){
-				items = [items];
-			}
-			for(var k = 0; k < items.length; ++k){
-				this._items[filterStartIdx + k] = items[k];
-			}
-			return items.length;
-		},
-		onRowMappingChange: function(mapping){
-			//This function runs in FilterLayer scope!
-			if(this._filter){
-				var m = dojo.clone(mapping),
-					alreadyUpdated = {};
-				for(var r in m){
-					r = parseInt(r, 10);
-					mapping[this._indexMap[r]] = this._indexMap[m[r]];
-					if(!alreadyUpdated[this._indexMap[r]]){
-						alreadyUpdated[this._indexMap[r]] = true;
-					}
-					if(!alreadyUpdated[r]){
-						alreadyUpdated[r] = true;
-						delete mapping[r];
-					}
-				}
-			}
-		}
-	});
-
-	return dojox.grid.enhanced.plugins.filter.FilterLayer;
-
+define(["dojo","dojox","./_FilterExpr","../_StoreLayer"],function(_1,_2){
+var ns=_1.getObject("grid.enhanced.plugins",true,_2),_3="filter",_4="clear",_5=function(_6,_7){
+return _7?_1.hitch(_6||_1.global,_7):function(){
+};
+},_8=function(_9){
+var _a={};
+if(_9&&_1.isObject(_9)){
+for(var _b in _9){
+_a[_b]=_9[_b];
+}
+}
+return _a;
+};
+_1.declare("dojox.grid.enhanced.plugins.filter._FilterLayerMixin",null,{tags:["sizeChange"],name:function(){
+return "filter";
+},onFilterDefined:function(_c){
+},onFiltered:function(_d,_e){
+}});
+_1.declare("dojox.grid.enhanced.plugins.filter.ServerSideFilterLayer",[ns._ServerSideLayer,ns.filter._FilterLayerMixin],{constructor:function(_f){
+this._onUserCommandLoad=_f.setupFilterQuery||this._onUserCommandLoad;
+this.filterDef(null);
+},filterDef:function(_10){
+if(_10){
+this._filter=_10;
+var obj=_10.toObject();
+this.command(_3,this._isStateful?_1.toJson(obj):obj);
+this.command(_4,null);
+this.useCommands(true);
+this.onFilterDefined(_10);
+}else{
+if(_10===null){
+this._filter=null;
+this.command(_3,null);
+this.command(_4,true);
+this.useCommands(true);
+this.onFilterDefined(null);
+}
+}
+return this._filter;
+},onCommandLoad:function(_11,_12){
+this.inherited(arguments);
+var _13=_12.onBegin;
+if(this._isStateful){
+var _14;
+if(_11){
+this.command(_3,null);
+this.command(_4,null);
+this.useCommands(false);
+var _15=_11.split(",");
+if(_15.length>=2){
+_14=this._filteredSize=parseInt(_15[0],10);
+this.onFiltered(_14,parseInt(_15[1],10));
+}else{
+return;
+}
+}else{
+_14=this._filteredSize;
+}
+if(this.enabled()){
+_12.onBegin=function(_16,req){
+_5(_12.scope,_13)(_14,req);
+};
+}
+}else{
+var _17=this;
+_12.onBegin=function(_18,req){
+if(!_17._filter){
+_17._storeSize=_18;
+}
+_17.onFiltered(_18,_17._storeSize||_18);
+req.onBegin=_13;
+_5(_12.scope,_13)(_18,req);
+};
+}
+}});
+_1.declare("dojox.grid.enhanced.plugins.filter.ClientSideFilterLayer",[ns._StoreLayer,ns.filter._FilterLayerMixin],{_storeSize:-1,_fetchAll:true,constructor:function(_19){
+this.filterDef(null);
+_19=_1.isObject(_19)?_19:{};
+this.fetchAllOnFirstFilter(_19.fetchAll);
+this._getter=_1.isFunction(_19.getter)?_19.getter:this._defaultGetter;
+},_defaultGetter:function(_1a,_1b,_1c,_1d){
+return _1d.getValue(_1a,_1b);
+},filterDef:function(_1e){
+if(_1e!==undefined){
+this._filter=_1e;
+this.invalidate();
+this.onFilterDefined(_1e);
+}
+return this._filter;
+},setGetter:function(_1f){
+if(_1.isFunction(_1f)){
+this._getter=_1f;
+}
+},fetchAllOnFirstFilter:function(_20){
+if(_20!==undefined){
+this._fetchAll=!!_20;
+}
+return this._fetchAll;
+},invalidate:function(){
+this._items=[];
+this._nextUnfetchedIdx=0;
+this._result=[];
+this._indexMap=[];
+this._resultStartIdx=0;
+},_fetch:function(_21,_22){
+if(!this._filter){
+var _23=_21.onBegin,_24=this;
+_21.onBegin=function(_25,r){
+_5(_21.scope,_23)(_25,r);
+_24.onFiltered(_25,_25);
+};
+this.originFetch(_21);
+return _21;
+}
+try{
+var _26=_22?_22._nextResultItemIdx:_21.start;
+_26=_26||0;
+if(!_22){
+this._result=[];
+this._resultStartIdx=_26;
+var _27;
+if(_1.isArray(_21.sort)&&_21.sort.length>0&&(_27=_1.toJson(_21.sort))!=this._lastSortInfo){
+this.invalidate();
+this._lastSortInfo=_27;
+}
+}
+var end=typeof _21.count=="number"?_26+_21.count-this._result.length:this._items.length;
+if(this._result.length){
+this._result=this._result.concat(this._items.slice(_26,end));
+}else{
+this._result=this._items.slice(_21.start,typeof _21.count=="number"?_21.start+_21.count:this._items.length);
+}
+if(this._result.length>=_21.count||this._hasReachedStoreEnd()){
+this._completeQuery(_21);
+}else{
+if(!_22){
+_22=_8(_21);
+_22.onBegin=_1.hitch(this,this._onFetchBegin);
+_22.onComplete=_1.hitch(this,function(_28,req){
+this._nextUnfetchedIdx+=_28.length;
+this._doFilter(_28,req.start,_21);
+this._fetch(_21,req);
+});
+}
+_22.start=this._nextUnfetchedIdx;
+if(this._fetchAll){
+delete _22.count;
+}
+_22._nextResultItemIdx=end<this._items.length?end:this._items.length;
+this.originFetch(_22);
+}
+}
+catch(e){
+if(_21.onError){
+_5(_21.scope,_21.onError)(e,_21);
+}else{
+throw e;
+}
+}
+return _21;
+},_hasReachedStoreEnd:function(){
+return this._storeSize>=0&&this._nextUnfetchedIdx>=this._storeSize;
+},_applyFilter:function(_29,_2a){
+var g=this._getter,s=this._store;
+try{
+return !!(this._filter.applyRow(_29,function(_2b,arg){
+return g(_2b,arg,_2a,s);
+}).getValue());
+}
+catch(e){
+console.warn("FilterLayer._applyFilter() error: ",e);
+return false;
+}
+},_doFilter:function(_2c,_2d,_2e){
+for(var i=0,cnt=0;i<_2c.length;++i){
+if(this._applyFilter(_2c[i],_2d+i)){
+_5(_2e.scope,_2e.onItem)(_2c[i],_2e);
+cnt+=this._addCachedItems(_2c[i],this._items.length);
+this._indexMap.push(_2d+i);
+}
+}
+},_onFetchBegin:function(_2f,req){
+this._storeSize=_2f;
+},_completeQuery:function(_30){
+var _31=this._items.length;
+if(this._nextUnfetchedIdx<this._storeSize){
+_31++;
+}
+_5(_30.scope,_30.onBegin)(_31,_30);
+this.onFiltered(this._items.length,this._storeSize);
+_5(_30.scope,_30.onComplete)(this._result,_30);
+},_addCachedItems:function(_32,_33){
+if(!_1.isArray(_32)){
+_32=[_32];
+}
+for(var k=0;k<_32.length;++k){
+this._items[_33+k]=_32[k];
+}
+return _32.length;
+},onRowMappingChange:function(_34){
+if(this._filter){
+var m=_1.clone(_34),_35={};
+for(var r in m){
+r=parseInt(r,10);
+_34[this._indexMap[r]]=this._indexMap[m[r]];
+if(!_35[this._indexMap[r]]){
+_35[this._indexMap[r]]=true;
+}
+if(!_35[r]){
+_35[r]=true;
+delete _34[r];
+}
+}
+}
+}});
+return _2.grid.enhanced.plugins.filter.FilterLayer;
 });

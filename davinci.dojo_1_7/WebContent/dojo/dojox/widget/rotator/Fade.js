@@ -1,40 +1,24 @@
-dojo.provide("dojox.widget.rotator.Fade");
-dojo.require("dojo.fx");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
+define(["dojo","dijit","dojox","dojo/fx"],function(_1,_2,_3){
+_1.getObject("dojox.widget.rotator.Fade",1);
 (function(d){
-
-	function _fade(/*Object*/args, /*string*/action){
-		//	summary:
-		//		Returns an animation of a fade out and fade in of the current and next
-		//		panes.  It will either chain (fade) or combine (crossFade) the fade
-		//		animations.
-		var n = args.next.node;
-		d.style(n, {
-			display: "",
-			opacity: 0
-		});
-
-		args.node = args.current.node;
-
-		return d.fx[action]([ /*dojo.Animation*/
-			d.fadeOut(args),
-			d.fadeIn(d.mixin(args, { node: n }))
-		]);
-	}
-
-	d.mixin(dojox.widget.rotator, {
-		fade: function(/*Object*/args){
-			//	summary:
-			//		Returns a dojo.Animation that fades out the current pane, then fades in
-			//		the next pane.
-			return _fade(args, "chain"); /*dojo.Animation*/
-		},
-
-		crossFade: function(/*Object*/args){
-			//	summary:
-			//		Returns a dojo.Animation that cross fades two rotator panes.
-			return _fade(args, "combine"); /*dojo.Animation*/
-		}
-	});
-
-})(dojo);
+function _4(_5,_6){
+var n=_5.next.node;
+d.style(n,{display:"",opacity:0});
+_5.node=_5.current.node;
+return d.fx[_6]([d.fadeOut(_5),d.fadeIn(d.mixin(_5,{node:n}))]);
+};
+d.mixin(_3.widget.rotator,{fade:function(_7){
+return _4(_7,"chain");
+},crossFade:function(_8){
+return _4(_8,"combine");
+}});
+})(_1);
+return _1.getObject("dojox.widget.rotator.Fade");
+});
+require(["dojox/widget/rotator/Fade"]);

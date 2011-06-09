@@ -1,50 +1,33 @@
-dojo.provide("dojox.lang.functional.listcomp");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// This module adds high-level functions and related constructs:
-//	- list comprehensions similar to JavaScript 1.7
-
-// Notes:
-//	- listcomp() produces functions, which after the compilation step are
-//		as fast as regular JS functions (at least theoretically).
-
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.lang.functional.listcomp",1);
 (function(){
-	var g_re = /\bfor\b|\bif\b/gm;
-
-	var listcomp = function(/*String*/ s){
-		var frag = s.split(g_re), act = s.match(g_re),
-			head = ["var r = [];"], tail = [], i = 0, l = act.length;
-		while(i < l){
-			var a = act[i], f = frag[++i];
-			if(a == "for" && !/^\s*\(\s*(;|var)/.test(f)){
-				f = f.replace(/^\s*\(/, "(var ");
-			}
-			head.push(a, f, "{");
-			tail.push("}");
-		}
-		return head.join("") + "r.push(" + frag[0] + ");" + tail.join("") + "return r;";	// String
-	};
-
-	dojo.mixin(dojox.lang.functional, {
-		buildListcomp: function(/*String*/ s){
-			// summary: builds a function from a text snippet, which represents a valid
-			//	JS 1.7 list comprehension, returns a string, which represents the function.
-			// description: This method returns a textual representation of a function
-			//	built from the list comprehension text snippet (conformant to JS 1.7).
-			//	It is meant to be evaled in the proper context, so local variable can be
-			//	pulled from the environment.
-			return "function(){" + listcomp(s) + "}";	// String
-		},
-		compileListcomp: function(/*String*/ s){
-			// summary: builds a function from a text snippet, which represents a valid
-			//	JS 1.7 list comprehension, returns a function object.
-			// description: This method returns a function built from the list
-			//	comprehension text snippet (conformant to JS 1.7). It is meant to be
-			//	reused several times.
-			return new Function([], listcomp(s));	// Function
-		},
-		listcomp: function(/*String*/ s){
-			// summary: executes the list comprehension building an array.
-			return (new Function([], listcomp(s)))();	// Array
-		}
-	});
+var _4=/\bfor\b|\bif\b/gm;
+var _5=function(s){
+var _6=s.split(_4),_7=s.match(_4),_8=["var r = [];"],_9=[],i=0,l=_7.length;
+while(i<l){
+var a=_7[i],f=_6[++i];
+if(a=="for"&&!/^\s*\(\s*(;|var)/.test(f)){
+f=f.replace(/^\s*\(/,"(var ");
+}
+_8.push(a,f,"{");
+_9.push("}");
+}
+return _8.join("")+"r.push("+_6[0]+");"+_9.join("")+"return r;";
+};
+_1.mixin(_3.lang.functional,{buildListcomp:function(s){
+return "function(){"+_5(s)+"}";
+},compileListcomp:function(s){
+return new Function([],_5(s));
+},listcomp:function(s){
+return (new Function([],_5(s)))();
+}});
 })();
+return _1.getObject("dojox.lang.functional.listcomp");
+});
+require(["dojox/lang/functional/listcomp"]);

@@ -1,102 +1,61 @@
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array", "./ListItem"],
-	function(dojo, declare, darray, ListItem){
-	// module:
-	//		dojox/mobile/_DataListMixin
-	// summary:
-	//		Mixin for widgets to generate the list items corresponding to the data
-	//		provider object.
-	// description:
-	//		By mixing this class into the widgets, the list item nodes are generated
-	//		as the child nodes of the widget and automatically re-generated
-	//		whenever the corresponding data items are modified.
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.declare("dojox.mobile._DataListMixin", null,{
-		// store: Object
-		//		Reference to data provider object
-		store: null,
-
-		// query: Object
-		//		A query that can be passed to 'store' to initially filter the items.
-		query: null,
-
-		queryOptions: null,
-
-		buildRendering: function(){
-			this.inherited(arguments);
-			if(!this.store){ return; }
-			var store = this.store;
-			this.store = null;
-			this.setStore(store, this.query, this.queryOptions);
-		},
-
-		setStore: function(store, query, queryOptions){
-			if(store === this.store){ return; }
-			this.store = store;
-			this.query = query;
-			this.queryOptions = queryOptions;
-			if(store && store.getFeatures()["dojo.data.api.Notification"]){
-				dojo.forEach(this._conn || [], dojo.disconnect);
-				this._conn = [
-					dojo.connect(store, "onSet", this, "onSet"),
-					dojo.connect(store, "onNew", this, "onNew"),
-					dojo.connect(store, "onDelete", this, "onDelete")
-				];
-			}
-			this.refresh();
-		},
-
-		refresh: function() {
-			// summary:
-			//		Generate the list items.
-			if(!this.store){ return; }
-			this.store.fetch({
-				query: this.query,
-				queryOptions: this.queryOptions,
-				onComplete: dojo.hitch(this, "generateList"),
-				onError: dojo.hitch(this, "onError")
-			});
-		},
-
-		createListItem: function(item) {
-			var attr = {};
-			var arr = this.store.getLabelAttributes(item);
-			var labelAttr = arr ? arr[0] : null;
-			dojo.forEach(this.store.getAttributes(item), function(name){
-				if(name === labelAttr){
-					attr["label"] = this.store.getLabel(item);
-				}else{
-					attr[name] = this.store.getValue(item, name);
-				}
-			}, this);
-			var w = new ListItem(attr);
-			item._widgetId = w.id;
-			return w;
-		},
-
-		generateList: function(/*Array*/items, /*Object*/ dataObject) {
-			dojo.forEach(this.getChildren(), function(child){
-				child.destroyRecursive();
-			});
-			dojo.forEach(items, function(item, index){
-				this.addChild(this.createListItem(item));
-			}, this);
-		}, 
-
-		onError: function(errText){
-		},
-
-		onSet: function(/* item */ item,
-			/* attribute-name-string */ attribute,
-			/* object | array */ oldValue,
-			/* object | array */ newValue){
-		},
-
-		onNew: function(/* item */ newItem, /*object?*/ parentInfo){
-			this.addChild(this.createListItem(newItem));
-		},
-
-		onDelete: function(/* item */ deletedItem){
-			dijit.byId(deletedItem._widgetId).destroyRecursive();
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","./ListItem"],function(_1,_2,_3,_4){
+return _1.declare("dojox.mobile._DataListMixin",null,{store:null,query:null,queryOptions:null,buildRendering:function(){
+this.inherited(arguments);
+if(!this.store){
+return;
+}
+var _5=this.store;
+this.store=null;
+this.setStore(_5,this.query,this.queryOptions);
+},setStore:function(_6,_7,_8){
+if(_6===this.store){
+return;
+}
+this.store=_6;
+this.query=_7;
+this.queryOptions=_8;
+if(_6&&_6.getFeatures()["dojo.data.api.Notification"]){
+_1.forEach(this._conn||[],_1.disconnect);
+this._conn=[_1.connect(_6,"onSet",this,"onSet"),_1.connect(_6,"onNew",this,"onNew"),_1.connect(_6,"onDelete",this,"onDelete")];
+}
+this.refresh();
+},refresh:function(){
+if(!this.store){
+return;
+}
+this.store.fetch({query:this.query,queryOptions:this.queryOptions,onComplete:_1.hitch(this,"generateList"),onError:_1.hitch(this,"onError")});
+},createListItem:function(_9){
+var _a={};
+var _b=this.store.getLabelAttributes(_9);
+var _c=_b?_b[0]:null;
+_1.forEach(this.store.getAttributes(_9),function(_d){
+if(_d===_c){
+_a["label"]=this.store.getLabel(_9);
+}else{
+_a[_d]=this.store.getValue(_9,_d);
+}
+},this);
+var w=new _4(_a);
+_9._widgetId=w.id;
+return w;
+},generateList:function(_e,_f){
+_1.forEach(this.getChildren(),function(_10){
+_10.destroyRecursive();
+});
+_1.forEach(_e,function(_11,_12){
+this.addChild(this.createListItem(_11));
+},this);
+},onError:function(_13){
+},onSet:function(_14,_15,_16,_17){
+},onNew:function(_18,_19){
+this.addChild(this.createListItem(_18));
+},onDelete:function(_1a){
+dijit.byId(_1a._widgetId).destroyRecursive();
+}});
 });

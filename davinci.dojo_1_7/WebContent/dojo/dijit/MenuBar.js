@@ -1,80 +1,36 @@
-define([
-	"dojo/_base/kernel",
-	".",
-	"dojo/text!./templates/MenuBar.html",
-	"./Menu",
-	"dojo/_base/connect", // dojo.keys dojo.keys.DOWN_ARROW
-	"dojo/_base/event" // dojo.stopEvent
-], function(dojo, dijit, template){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/MenuBar
-// summary:
-//		A menu bar, listing menu choices horizontally, like the "File" menu in most desktop applications
-
-dojo.declare("dijit.MenuBar", dijit._MenuBase, {
-	// summary:
-	//		A menu bar, listing menu choices horizontally, like the "File" menu in most desktop applications
-
-	templateString: template,
-
-	baseClass: "dijitMenuBar",
-
-	// _isMenuBar: [protected] Boolean
-	//		This is a MenuBar widget, not a (vertical) Menu widget.
-	_isMenuBar: true,
-
-	postCreate: function(){
-		var k = dojo.keys, l = this.isLeftToRight();
-		this.connectKeyNavHandlers(
-			l ? [k.LEFT_ARROW] : [k.RIGHT_ARROW],
-			l ? [k.RIGHT_ARROW] : [k.LEFT_ARROW]
-		);
-
-		// parameter to dijit.popup.open() about where to put popup (relative to this.domNode)
-		this._orient = ["below"];
-	},
-
-	focusChild: function(item){
-		// overload focusChild so that whenever the focus is moved to a new item,
-		// check the previous focused whether it has its popup open, if so, after
-		// focusing the new item, open its submenu immediately
-		var prev_item = this.focusedChild,
-			showpopup = prev_item && prev_item.popup && prev_item.popup.isShowingNow;
-		this.inherited(arguments);
-		if(showpopup && item.popup && !item.disabled){
-			this._openPopup();		// TODO: on down arrow, _openPopup() is called here and in onItemClick()
-		}
-	},
-
-	_onKeyPress: function(/*Event*/ evt){
-		// summary:
-		//		Handle keyboard based menu navigation.
-		// tags:
-		//		protected
-
-		if(evt.ctrlKey || evt.altKey){ return; }
-
-		switch(evt.charOrCode){
-			case dojo.keys.DOWN_ARROW:
-				this._moveToPopup(evt);
-				dojo.stopEvent(evt);
-		}
-	},
-
-	onItemClick: function(/*dijit._Widget*/ item, /*Event*/ evt){
-		// summary:
-		//		Handle clicks on an item. Cancels a dropdown if already open.
-		// tags:
-		//		private
-		if(item.popup && item.popup.isShowingNow){
-			item.popup.onCancel();
-		}else{
-			this.inherited(arguments);
-		}
-	}
-});
-
-
-return dijit.MenuBar;
+require.cache["dijit/templates/MenuBar.html"]="<div class=\"dijitMenuBar dijitMenuPassive\" dojoAttachPoint=\"containerNode\"  role=\"menubar\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress: _onKeyPress\"></div>\n";
+define("dijit/MenuBar",["dojo/_base/kernel",".","dojo/text!./templates/MenuBar.html","./Menu","dojo/_base/connect","dojo/_base/event"],function(_1,_2,_3){
+_1.declare("dijit.MenuBar",_2._MenuBase,{templateString:_3,baseClass:"dijitMenuBar",_isMenuBar:true,postCreate:function(){
+var k=_1.keys,l=this.isLeftToRight();
+this.connectKeyNavHandlers(l?[k.LEFT_ARROW]:[k.RIGHT_ARROW],l?[k.RIGHT_ARROW]:[k.LEFT_ARROW]);
+this._orient=["below"];
+},focusChild:function(_4){
+var _5=this.focusedChild,_6=_5&&_5.popup&&_5.popup.isShowingNow;
+this.inherited(arguments);
+if(_6&&_4.popup&&!_4.disabled){
+this._openPopup();
+}
+},_onKeyPress:function(_7){
+if(_7.ctrlKey||_7.altKey){
+return;
+}
+switch(_7.charOrCode){
+case _1.keys.DOWN_ARROW:
+this._moveToPopup(_7);
+_1.stopEvent(_7);
+}
+},onItemClick:function(_8,_9){
+if(_8.popup&&_8.popup.isShowingNow){
+_8.popup.onCancel();
+}else{
+this.inherited(arguments);
+}
+}});
+return _2.MenuBar;
 });

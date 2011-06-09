@@ -1,86 +1,65 @@
-dojo.provide("dojox.widget.DocTester");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.require("dojo.string");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dojox.form.BusyButton");
-dojo.require("dojox.testing.DocTest");
-
-dojo.declare('dojox.widget.DocTester',
-	[dijit._Widget, dijit._Templated],
-	{
-		// summary: A widget to run DocTests inside an HTML page.
-		//
-		templateString: dojo.cache('dojox.widget','DocTester/DocTester.html'),
-		widgetsInTemplate: true,
-	
-		_fillContent:function(/*DomNode*/source){
-			// summary: Overridden from _Templates.js, which actually just takes care of filling the containerNode.
-			var src = source.innerHTML;
-			this.doctests = new dojox.testing.DocTest();
-			this.tests = this.doctests.getTestsFromString(this._unescapeHtml(src));
-			var lineNumbers = dojo.map(this.tests, 'return item.line-1');
-			var lines = src.split("\n");
-			var actualResultHtml = '<div class="actualResult">FAILED, actual result was: <span class="result"></span></div>';
-			var content = '<pre class="testCase testNum0 odd">';
-			for (var i=0; i<lines.length; i++){
-				var index = dojo.indexOf(lineNumbers, i);
-				if (index>0 && index!=-1){
-					var evenOdd = index%2 ? "even" : "odd";
-					content += actualResultHtml;
- 					content += '</pre><pre class="testCase testNum'+ index +' '+evenOdd+'">';
-				}
-				content += lines[i].replace(/^\s+/, "")+"\n";
-			}
-			content += actualResultHtml + '</pre>';
-			this.containerNode.innerHTML = content;
-		},
-	
-		postCreate:function(){
-			this.inherited("postCreate", arguments);
-			dojo.connect(this.runButtonNode, "onClick", dojo.hitch(this, "runTests"));
-			dojo.connect(this.resetButtonNode, "onClick", dojo.hitch(this, "reset"));
-			this.numTestsNode.innerHTML = this.tests.length;
-		},
-		
-		runTests:function(){
-			var results = {ok:0, nok:0};
-			for (var i=0; i<this.tests.length; i++){
-				var ret = this.doctests.runTest(this.tests[i].commands, this.tests[i].expectedResult);
-				dojo.query(".testNum"+i, this.domNode).addClass(ret.success ? "resultOk" : "resultNok");
-				if (!ret.success){
-					results.nok++;
-					this.numTestsNokNode.innerHTML = results.nok;
-					var act = dojo.query(".testNum"+i+" .actualResult", this.domNode)[0];
-					dojo.style(act, "display", "inline");
-					dojo.query(".result", act)[0].innerHTML = dojo.toJson(ret.actualResult);
-				} else {
-					results.ok++;
-					this.numTestsOkNode.innerHTML = results.ok;
-				}
-			}
-			this.runButtonNode.cancel();
-			dojo.style(this.runButtonNode.domNode, "display", "none");
-			dojo.style(this.resetButtonNode.domNode, "display", "");
-		},
-		
-		reset:function(){
-			// summary: Reset the DocTester visuals and enable the "Run tests" button again.
-			dojo.style(this.runButtonNode.domNode, "display", "");
-			dojo.style(this.resetButtonNode.domNode, "display", "none");
-			this.numTestsOkNode.innerHTML = "0";
-			this.numTestsNokNode.innerHTML = "0";
-			dojo.query(".actualResult", this.domNode).style("display", "none");
-			dojo.query(".testCase", this.domNode).removeClass("resultOk").removeClass("resultNok");
-		},
-		
-		_unescapeHtml:function(/*string*/str){
-			// TODO Should become dojo.html.unentities() or so, when exists use instead
-			// summary:
-			//		Adds escape sequences for special characters in XML: &<>"'
-			str = String(str).replace(/&amp;/gm, "&").replace(/&lt;/gm, "<")
-				.replace(/&gt;/gm, ">").replace(/&quot;/gm, '"');
-			return str; // string
-		}
-	}
-);
+define(["dojo","dijit","dojox","dojo/string","dijit/_Widget","dijit/_Templated","dojox/form/BusyButton","dojox/testing/DocTest"],function(_1,_2,_3){
+_1.getObject("dojox.widget.DocTester",1);
+_1.declare("dojox.widget.DocTester",[_2._Widget,_2._Templated],{templateString:_1.cache("dojox.widget","DocTester/DocTester.html","<div dojoAttachPoint=\"domNode\" class=\"dojoxDocTester\">\n\t<div dojoAttachPoint=\"containerNode\"></div>\n\t<button dojoType=\"dojox.form.BusyButton\" busyLabel=\"Testing...\" dojoAttachPoint=\"runButtonNode\">Run tests</button>\n\t<button dojoType=\"dijit.form.Button\" dojoAttachPoint=\"resetButtonNode\" style=\"display:none;\">Reset</button>\n\t<span>\n\t\t<span dojoAttachPoint=\"numTestsNode\">0</span> tests,\n\t\t<span dojoAttachPoint=\"numTestsOkNode\">0</span> passed,\n\t\t<span dojoAttachPoint=\"numTestsNokNode\">0</span> failed\n\t</span>\n</div>"),widgetsInTemplate:true,_fillContent:function(_4){
+var _5=_4.innerHTML;
+this.doctests=new _3.testing.DocTest();
+this.tests=this.doctests.getTestsFromString(this._unescapeHtml(_5));
+var _6=_1.map(this.tests,"return item.line-1");
+var _7=_5.split("\n");
+var _8="<div class=\"actualResult\">FAILED, actual result was: <span class=\"result\"></span></div>";
+var _9="<pre class=\"testCase testNum0 odd\">";
+for(var i=0;i<_7.length;i++){
+var _a=_1.indexOf(_6,i);
+if(_a>0&&_a!=-1){
+var _b=_a%2?"even":"odd";
+_9+=_8;
+_9+="</pre><pre class=\"testCase testNum"+_a+" "+_b+"\">";
+}
+_9+=_7[i].replace(/^\s+/,"")+"\n";
+}
+_9+=_8+"</pre>";
+this.containerNode.innerHTML=_9;
+},postCreate:function(){
+this.inherited("postCreate",arguments);
+_1.connect(this.runButtonNode,"onClick",_1.hitch(this,"runTests"));
+_1.connect(this.resetButtonNode,"onClick",_1.hitch(this,"reset"));
+this.numTestsNode.innerHTML=this.tests.length;
+},runTests:function(){
+var _c={ok:0,nok:0};
+for(var i=0;i<this.tests.length;i++){
+var _d=this.doctests.runTest(this.tests[i].commands,this.tests[i].expectedResult);
+_1.query(".testNum"+i,this.domNode).addClass(_d.success?"resultOk":"resultNok");
+if(!_d.success){
+_c.nok++;
+this.numTestsNokNode.innerHTML=_c.nok;
+var _e=_1.query(".testNum"+i+" .actualResult",this.domNode)[0];
+_1.style(_e,"display","inline");
+_1.query(".result",_e)[0].innerHTML=_1.toJson(_d.actualResult);
+}else{
+_c.ok++;
+this.numTestsOkNode.innerHTML=_c.ok;
+}
+}
+this.runButtonNode.cancel();
+_1.style(this.runButtonNode.domNode,"display","none");
+_1.style(this.resetButtonNode.domNode,"display","");
+},reset:function(){
+_1.style(this.runButtonNode.domNode,"display","");
+_1.style(this.resetButtonNode.domNode,"display","none");
+this.numTestsOkNode.innerHTML="0";
+this.numTestsNokNode.innerHTML="0";
+_1.query(".actualResult",this.domNode).style("display","none");
+_1.query(".testCase",this.domNode).removeClass("resultOk").removeClass("resultNok");
+},_unescapeHtml:function(_f){
+_f=String(_f).replace(/&amp;/gm,"&").replace(/&lt;/gm,"<").replace(/&gt;/gm,">").replace(/&quot;/gm,"\"");
+return _f;
+}});
+return _1.getObject("dojox.widget.DocTester");
+});
+require(["dojox/widget/DocTester"]);

@@ -1,154 +1,66 @@
-define(["dojo/_base/array", "dojo/query", "dojox/uuid/generateRandomUuid", "dojo/_base/xhr"], function(dojo, query, generateRandomUuid){
-	dojo.getObject("io.xhrMultiPart", true, dojox);
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	/*=====
-	dojox.io.__xhrContentArgs = function(){
-		//	name: String
-		//		Name of the form value.
-		//	content: String
-		//		The contents of the value.
-		//	filename: String?
-		//		An optional filename to pass to the server, as defined by the boundary.
-		//	contentType: String?
-		//		An optional content-type (MIME) to pass to the server, if value is being
-		//		treated as a file.
-		//	charset: String?
-		//		Optional charset to pass, for the server to interpret the file correctly.
-		//	contentTransferEncoding: String?
-		//		Optional transfer encoding header value.
-		this.name = name;
-		this.content = content;
-		this.filename = filename;
-		this.contentType = contentType;
-		this.charset = charset;
-		this.contentTransferEncoding = contentTransferEncoding;
-	}
-	=====*/
-	function _createPart(/* dojox.io.__xhrContentArgs */args, /* String */boundary){
-		//	summary
-		//		Assemble an array of boundary parts based on the passed values in args.
-		if(!args["name"] && !args["content"]){
-			throw new Error("Each part of a multi-part request requires 'name' and 'content'.");
-		}
-
-		var tmp = [];
-		tmp.push(
-			"--" + boundary,
-			 "Content-Disposition: form-data; name=\"" + args.name + "\"" + (args["filename"] ? "; filename=\"" + args.filename + "\"" : "")
-		);
-
-		if(args["contentType"]){
-			var ct = "Content-Type: " + args.contentType;
-			if(args["charset"]){
-				ct += "; Charset=" + args.charset;
-			}
-			tmp.push(ct);
-		}
-
-		if(args["contentTransferEncoding"]){
-			tmp.push("Content-Transfer-Encoding: " + args.contentTransferEncoding);
-		}
-		tmp.push("", args.content);
-		return tmp;		//	Array
-	}
-
-	function _partsFromNode(/* DOMNode */node, /* String */boundary){
-		//	summary
-		//		Assemble an array of boundary parts based on the passed FORM node.
-		var o=dojo.formToObject(node), parts=[];
-		for(var p in o){
-			if(dojo.isArray(o[p])){
-				dojo.forEach(o[p], function(item){
-					parts = parts.concat(_createPart({ name: p, content: item }, boundary));
-				});
-			} else {
-				parts = parts.concat(_createPart({ name: p, content: o[p] }, boundary));
-			}
-		}
-		return parts;	//	Array
-	}
-
-	/*=====
-	dojox.io.__xhrMultiArgs = function(){
-		//	url: String
-		//		URL to server endpoint.
-		//	content: Object?
-		//		Contains properties with string values. These
-		//		properties will be serialized using multi-part
-		//		boundaries.
-		//	file: Object?
-		//		Alias for "content".  Provided for backwards compatibility.
-		//	timeout: Integer?
-		//		Milliseconds to wait for the response. If this time
-		//		passes, the then error callbacks are called.
-		//	form: DOMNode?
-		//		DOM node for a form. Used to extract the form values
-		//		and send to the server; each form value will be serialized
-		//		using multi-part boundaries.
-		//	preventCache: Boolean?
-		//		Default is false. If true, then a
-		//		"dojo.preventCache" parameter is sent in the request
-		//		with a value that changes with each request
-		//		(timestamp). Useful only with GET-type requests.
-		//	handleAs: String?
-		//		Acceptable values depend on the type of IO
-		//		transport (see specific IO calls for more information).
-		//	load: Function?
-		//		function(response, ioArgs){}. response is an Object, ioArgs
-		//		is of type dojo.__IoCallbackArgs. The load function will be
-		//		called on a successful response.
-		//	error: Function?
-		//		function(response, ioArgs){}. response is an Object, ioArgs
-		//		is of type dojo.__IoCallbackArgs. The error function will
-		//		be called in an error case.
-		//	handle: Function?
-		//		function(response, ioArgs){}. response is an Object, ioArgs
-		//		is of type dojo.__IoCallbackArgs. The handle function will
-		//		be called in either the successful or error case.
-		this.url = url;
-		this.content = content;
-		this.file = file;
-		this.timeout = timeout;
-		this.form = form;
-		this.preventCache = preventCache;
-		this.handleAs = handleAs;
-		this.load = load;
-		this.error = error;
-		this.handle = handle;
-	}
-	=====*/
-	dojox.io.xhrMultiPart = function(/* dojox.io.__xhrMultiArgs */args){
-		if(!args["file"] && !args["content"] && !args["form"]){
-			throw new Error("content, file or form must be provided to dojox.io.xhrMultiPart's arguments");
-		}
-
-		// unique guid as a boundary value for multipart posts
-		var boundary=generateRandomUuid(), tmp=[], out="";
-		if(args["file"] || args["content"]){
-			var v = args["file"] || args["content"];
-			dojo.forEach((dojo.isArray(v) ? v : [v]), function(item){
-				tmp = tmp.concat(_createPart(item, boundary));
-			});
-		}
-		else if(args["form"]){
-			if(query("input[type=file]", args["form"]).length){
-				throw new Error("dojox.io.xhrMultiPart cannot post files that are values of an INPUT TYPE=FILE.  Use dojo.io.iframe.send() instead.");
-			}
-			tmp = _partsFromNode(args["form"], boundary);
-		}
-
-		if(tmp.length){
-			tmp.push("--"+boundary+"--", "");
-			out = tmp.join("\r\n");
-		}
-
-		console.log(out);
-
-		return dojo.rawXhrPost(dojo.mixin(args, {
-			contentType: "multipart/form-data; boundary=" + boundary,
-			postData: out
-		}));	//	dojo.Deferred
-	};
-
-	return dojox.io.xhrMultiPart;
+define(["dojo/_base/array","dojo/query","dojox/uuid/generateRandomUuid","dojo/_base/xhr"],function(_1,_2,_3){
+_1.getObject("io.xhrMultiPart",true,dojox);
+function _4(_5,_6){
+if(!_5["name"]&&!_5["content"]){
+throw new Error("Each part of a multi-part request requires 'name' and 'content'.");
+}
+var _7=[];
+_7.push("--"+_6,"Content-Disposition: form-data; name=\""+_5.name+"\""+(_5["filename"]?"; filename=\""+_5.filename+"\"":""));
+if(_5["contentType"]){
+var ct="Content-Type: "+_5.contentType;
+if(_5["charset"]){
+ct+="; Charset="+_5.charset;
+}
+_7.push(ct);
+}
+if(_5["contentTransferEncoding"]){
+_7.push("Content-Transfer-Encoding: "+_5.contentTransferEncoding);
+}
+_7.push("",_5.content);
+return _7;
+};
+function _8(_9,_a){
+var o=_1.formToObject(_9),_b=[];
+for(var p in o){
+if(_1.isArray(o[p])){
+_1.forEach(o[p],function(_c){
+_b=_b.concat(_4({name:p,content:_c},_a));
+});
+}else{
+_b=_b.concat(_4({name:p,content:o[p]},_a));
+}
+}
+return _b;
+};
+dojox.io.xhrMultiPart=function(_d){
+if(!_d["file"]&&!_d["content"]&&!_d["form"]){
+throw new Error("content, file or form must be provided to dojox.io.xhrMultiPart's arguments");
+}
+var _e=_3(),_f=[],out="";
+if(_d["file"]||_d["content"]){
+var v=_d["file"]||_d["content"];
+_1.forEach((_1.isArray(v)?v:[v]),function(_10){
+_f=_f.concat(_4(_10,_e));
+});
+}else{
+if(_d["form"]){
+if(_2("input[type=file]",_d["form"]).length){
+throw new Error("dojox.io.xhrMultiPart cannot post files that are values of an INPUT TYPE=FILE.  Use dojo.io.iframe.send() instead.");
+}
+_f=_8(_d["form"],_e);
+}
+}
+if(_f.length){
+_f.push("--"+_e+"--","");
+out=_f.join("\r\n");
+}
+return _1.rawXhrPost(_1.mixin(_d,{contentType:"multipart/form-data; boundary="+_e,postData:out}));
+};
+return dojox.io.xhrMultiPart;
 });

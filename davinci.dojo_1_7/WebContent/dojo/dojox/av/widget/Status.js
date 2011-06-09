@@ -1,114 +1,84 @@
-define(['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._TemplatedMixin], {
-	// summary:
-	//		A Status widget to use with dojox.av.widget.Player
-	//
-	//	description:
-	//		Displays the name of the media file, and it's current status
-	//		(playing, paused, buffering, etc.) in the middle. Displays
-	//		the playhead time on the left and the duration on the right.
-	//
-	templateString: dojo.cache("dojox.av.widget","resources/Status.html"),
-
-	setMedia: function(/* Object */med){
-		// summary:
-		//		A common method to set the media in all Player widgets.
-		//		May do connections and initializations.
-		//
-		this.media = med;
-		dojo.connect(this.media, "onMetaData", this, function(data){
-			this.duration = data.duration;
-			this.durNode.innerHTML = this.toSeconds(this.duration);
-		});
-		dojo.connect(this.media, "onPosition", this, function(time){
-			this.timeNode.innerHTML = this.toSeconds(time);
-		});
-
-		var cons = ["onMetaData", "onPosition", "onStart", "onBuffer", "onPlay", "onPaused", "onStop", "onEnd", "onError", "onLoad"];
-		dojo.forEach(cons, function(c){
-			dojo.connect(this.media, c, this, c);
-		}, this);
-
-	},
-	onMetaData: function(data){
-		this.duration = data.duration;
-		this.durNode.innerHTML = this.toSeconds(this.duration);
-		if(this.media.title){
-			this.title = this.media.title;
-		}else{
-			var a = this.media.mediaUrl.split("/");
-			var b = a[a.length-1].split(".")[0];
-			this.title = b;
-		}
-	},
-	onBuffer: function(isBuffering){
-		this.isBuffering = isBuffering;
-		console.warn("status onBuffer", this.isBuffering);
-		if(this.isBuffering){
-			this.setStatus("buffering...");
-		}else{
-			this.setStatus("Playing");
-		}
-	},
-	onPosition:function(time){
-		//console.log("onPosition:", time)
-		//	this.timeNode.innerHTML = this.toSeconds(time);
-	},
-	onStart: function(){
-		this.setStatus("Starting");
-	},
-	onPlay: function(){
-		this.setStatus("Playing");
-	},
-	onPaused: function(){
-		this.setStatus("Paused");
-	},
-	onStop: function(){
-		this.setStatus("Stopped");
-	},
-	onEnd: function(){
-		this.setStatus("Stopped");
-	},
-	onError: function(evt){
-		console.log("status error:", evt)
-		var msg = evt.info.code;
-		if(msg == "NetStream.Play.StreamNotFound"){
-			msg = "Stream Not Found"
-		}
-		this.setStatus("ERROR: "+ msg, true);
-	},
-	onLoad: function(){
-		this.setStatus("Loading...");
-	},
-
-	setStatus: function(str, isError){
-		if(isError){
-			dojo.addClass(this.titleNode, "statusError");
-		}else{
-			dojo.removeClass(this.titleNode, "statusError");
-			if(this.isBuffering){
-				str = "buffering...";
-			}
-		}
-		//console.log(this.titleNode, "title:",this.title, "str:",str)
-		this.titleNode.innerHTML = '<span class="statusTitle">'+this.title+'</span> <span class="statusInfo">'+str+'</span>';
-	},
-
-	toSeconds: function(time){
-		var ts = time.toString()
-
-		if(ts.indexOf(".")<0){
-			ts += ".00"
-		}else if(ts.length - ts.indexOf(".")==2){
-			ts+="0"
-		}else if(ts.length - ts.indexOf(".")>2){
-			ts = ts.substring(0, ts.indexOf(".")+3)
-		}
-		return ts;
-	}
-
+define(["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
+_1.declare("dojox.av.widget.Status",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.av.widget","resources/Status.html"),setMedia:function(_3){
+this.media=_3;
+_1.connect(this.media,"onMetaData",this,function(_4){
+this.duration=_4.duration;
+this.durNode.innerHTML=this.toSeconds(this.duration);
 });
-
+_1.connect(this.media,"onPosition",this,function(_5){
+this.timeNode.innerHTML=this.toSeconds(_5);
+});
+var _6=["onMetaData","onPosition","onStart","onBuffer","onPlay","onPaused","onStop","onEnd","onError","onLoad"];
+_1.forEach(_6,function(c){
+_1.connect(this.media,c,this,c);
+},this);
+},onMetaData:function(_7){
+this.duration=_7.duration;
+this.durNode.innerHTML=this.toSeconds(this.duration);
+if(this.media.title){
+this.title=this.media.title;
+}else{
+var a=this.media.mediaUrl.split("/");
+var b=a[a.length-1].split(".")[0];
+this.title=b;
+}
+},onBuffer:function(_8){
+this.isBuffering=_8;
+console.warn("status onBuffer",this.isBuffering);
+if(this.isBuffering){
+this.setStatus("buffering...");
+}else{
+this.setStatus("Playing");
+}
+},onPosition:function(_9){
+},onStart:function(){
+this.setStatus("Starting");
+},onPlay:function(){
+this.setStatus("Playing");
+},onPaused:function(){
+this.setStatus("Paused");
+},onStop:function(){
+this.setStatus("Stopped");
+},onEnd:function(){
+this.setStatus("Stopped");
+},onError:function(_a){
+var _b=_a.info.code;
+if(_b=="NetStream.Play.StreamNotFound"){
+_b="Stream Not Found";
+}
+this.setStatus("ERROR: "+_b,true);
+},onLoad:function(){
+this.setStatus("Loading...");
+},setStatus:function(_c,_d){
+if(_d){
+_1.addClass(this.titleNode,"statusError");
+}else{
+_1.removeClass(this.titleNode,"statusError");
+if(this.isBuffering){
+_c="buffering...";
+}
+}
+this.titleNode.innerHTML="<span class=\"statusTitle\">"+this.title+"</span> <span class=\"statusInfo\">"+_c+"</span>";
+},toSeconds:function(_e){
+var ts=_e.toString();
+if(ts.indexOf(".")<0){
+ts+=".00";
+}else{
+if(ts.length-ts.indexOf(".")==2){
+ts+="0";
+}else{
+if(ts.length-ts.indexOf(".")>2){
+ts=ts.substring(0,ts.indexOf(".")+3);
+}
+}
+}
+return ts;
+}});
 return dojox.av.widget.Status;
 });

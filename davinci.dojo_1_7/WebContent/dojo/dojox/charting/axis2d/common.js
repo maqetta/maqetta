@@ -1,161 +1,93 @@
-define(["dojo/_base/kernel", "../../main", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/window", "dojox/gfx"], 
-	function(dojo, dojox, lang, html, window, g){
-	
-	var common = dojo.getObject("charting.axis2d.common", true, dojox);
-	
-	var clearNode = function(s){
-		s.marginLeft   = "0px";
-		s.marginTop    = "0px";
-		s.marginRight  = "0px";
-		s.marginBottom = "0px";
-		s.paddingLeft   = "0px";
-		s.paddingTop    = "0px";
-		s.paddingRight  = "0px";
-		s.paddingBottom = "0px";
-		s.borderLeftWidth   = "0px";
-		s.borderTopWidth    = "0px";
-		s.borderRightWidth  = "0px";
-		s.borderBottomWidth = "0px";
-	};
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var getBoxWidth = function(n){
-		// marginBox is incredibly slow, so avoid it if we can
-		if(n["getBoundingClientRect"]){
-			var bcr = n.getBoundingClientRect();
-			return bcr.width || (bcr.right - bcr.left);
-		}else{
-			return dojo.marginBox(n).w;
-		}
-	};
-
-	return dojo.mixin(common, {
-		//	summary:
-		//		Common methods to be used by any axis.  This is considered "static".
-		createText: {
-			gfx: function(chart, creator, x, y, align, text, font, fontColor){
-				//	summary:
-				//		Use dojox.gfx to create any text.
-				//	chart: dojox.charting.Chart
-				//		The chart to create the text into.
-				//	creator: dojox.gfx.Surface
-				//		The graphics surface to use for creating the text.
-				//	x: Number
-				//		Where to create the text along the x axis (CSS left).
-				//	y: Number
-				//		Where to create the text along the y axis (CSS top).
-				//	align: String
-				//		How to align the text.  Can be "left", "right", "center".
-				//	text: String
-				//		The text to render.
-				//	font: String
-				//		The font definition, a la CSS "font".
-				//	fontColor: String|dojo.Color
-				//		The color of the resultant text.
-				//	returns: dojox.gfx.Text
-				//		The resultant GFX object.
-				return creator.createText({
-					x: x, y: y, text: text, align: align
-				}).setFont(font).setFill(fontColor);	//	dojox.gfx.Text
-			},
-			html: function(chart, creator, x, y, align, text, font, fontColor, labelWidth){
-				//	summary:
-				//		Use the HTML DOM to create any text.
-				//	chart: dojox.charting.Chart
-				//		The chart to create the text into.
-				//	creator: dojox.gfx.Surface
-				//		The graphics surface to use for creating the text.
-				//	x: Number
-				//		Where to create the text along the x axis (CSS left).
-				//	y: Number
-				//		Where to create the text along the y axis (CSS top).
-				//	align: String
-				//		How to align the text.  Can be "left", "right", "center".
-				//	text: String
-				//		The text to render.
-				//	font: String
-				//		The font definition, a la CSS "font".
-				//	fontColor: String|dojo.Color
-				//		The color of the resultant text.
-				//	labelWidth: Number?
-				//		The maximum width of the resultant DOM node.
-				//	returns: DOMNode
-				//		The resultant DOMNode (a "div" element).
-
-				// setup the text node
-				var p = dojo.doc.createElement("div"), s = p.style, boxWidth;
-				// bidi support, if this function exists the module was loaded 
-				if(chart.getTextDir){
-					p.dir = chart.getTextDir(text);
-				}
-				clearNode(s);
-				s.font = font;
-				p.innerHTML = String(text).replace(/\s/g, "&nbsp;");
-				s.color = fontColor;
-				// measure the size
-				s.position = "absolute";
-				s.left = "-10000px";
-				dojo.body().appendChild(p);
-				var size = g.normalizedLength(g.splitFontString(font).size);
-
-				// do we need to calculate the label width?
-				if(!labelWidth){
-					boxWidth = getBoxWidth(p);
-				}
-				// when the textDir is rtl, but the UI ltr needs
-				// to recalculate the starting point
-				if(p.dir == "rtl"){
-					x += labelWidth ? labelWidth : boxWidth;
-				}
-
-				// new settings for the text node
-				dojo.body().removeChild(p);
-
-				s.position = "relative";
-				if(labelWidth){
-					s.width = labelWidth + "px";
-					// s.border = "1px dotted grey";
-					switch(align){
-						case "middle":
-							s.textAlign = "center";
-							s.left = (x - labelWidth / 2) + "px";
-							break;
-						case "end":
-							s.textAlign = "right";
-							s.left = (x - labelWidth) + "px";
-							break;
-						default:
-							s.left = x + "px";
-							s.textAlign = "left";
-							break;
-					}
-				}else{
-					switch(align){
-						case "middle":
-							s.left = Math.floor(x - boxWidth / 2) + "px";
-							// s.left = Math.floor(x - p.offsetWidth / 2) + "px";
-							break;
-						case "end":
-							s.left = Math.floor(x - boxWidth) + "px";
-							// s.left = Math.floor(x - p.offsetWidth) + "px";
-							break;
-						//case "start":
-						default:
-							s.left = Math.floor(x) + "px";
-							break;
-					}
-				}
-				s.top = Math.floor(y - size) + "px";
-				s.whiteSpace = "nowrap";	// hack for WebKit
-				// setup the wrapper node
-				var wrap = dojo.doc.createElement("div"), w = wrap.style;
-				clearNode(w);
-				w.width = "0px";
-				w.height = "0px";
-				// insert nodes
-				wrap.appendChild(p)
-				chart.node.insertBefore(wrap, chart.node.firstChild);
-				return wrap;	//	DOMNode
-			}
-		}
-	});
+define(["dojo/_base/kernel","../../main","dojo/_base/lang","dojo/_base/html","dojo/_base/window","dojox/gfx"],function(_1,_2,_3,_4,_5,g){
+var _6=_1.getObject("charting.axis2d.common",true,_2);
+var _7=function(s){
+s.marginLeft="0px";
+s.marginTop="0px";
+s.marginRight="0px";
+s.marginBottom="0px";
+s.paddingLeft="0px";
+s.paddingTop="0px";
+s.paddingRight="0px";
+s.paddingBottom="0px";
+s.borderLeftWidth="0px";
+s.borderTopWidth="0px";
+s.borderRightWidth="0px";
+s.borderBottomWidth="0px";
+};
+var _8=function(n){
+if(n["getBoundingClientRect"]){
+var _9=n.getBoundingClientRect();
+return _9.width||(_9.right-_9.left);
+}else{
+return _1.marginBox(n).w;
+}
+};
+return _1.mixin(_6,{createText:{gfx:function(_a,_b,x,y,_c,_d,_e,_f){
+return _b.createText({x:x,y:y,text:_d,align:_c}).setFont(_e).setFill(_f);
+},html:function(_10,_11,x,y,_12,_13,_14,_15,_16){
+var p=_1.doc.createElement("div"),s=p.style,_17;
+if(_10.getTextDir){
+p.dir=_10.getTextDir(_13);
+}
+_7(s);
+s.font=_14;
+p.innerHTML=String(_13).replace(/\s/g,"&nbsp;");
+s.color=_15;
+s.position="absolute";
+s.left="-10000px";
+_1.body().appendChild(p);
+var _18=g.normalizedLength(g.splitFontString(_14).size);
+if(!_16){
+_17=_8(p);
+}
+if(p.dir=="rtl"){
+x+=_16?_16:_17;
+}
+_1.body().removeChild(p);
+s.position="relative";
+if(_16){
+s.width=_16+"px";
+switch(_12){
+case "middle":
+s.textAlign="center";
+s.left=(x-_16/2)+"px";
+break;
+case "end":
+s.textAlign="right";
+s.left=(x-_16)+"px";
+break;
+default:
+s.left=x+"px";
+s.textAlign="left";
+break;
+}
+}else{
+switch(_12){
+case "middle":
+s.left=Math.floor(x-_17/2)+"px";
+break;
+case "end":
+s.left=Math.floor(x-_17)+"px";
+break;
+default:
+s.left=Math.floor(x)+"px";
+break;
+}
+}
+s.top=Math.floor(y-_18)+"px";
+s.whiteSpace="nowrap";
+var _19=_1.doc.createElement("div"),w=_19.style;
+_7(w);
+w.width="0px";
+w.height="0px";
+_19.appendChild(p);
+_10.node.insertBefore(_19,_10.node.firstChild);
+return _19;
+}}});
 });

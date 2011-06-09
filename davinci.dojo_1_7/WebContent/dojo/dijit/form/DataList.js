@@ -1,67 +1,26 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/store/Memory", // dojo.store.Memory
-	"dojo/_base/NodeList", // .map
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/html", // dojo.byId
-	"dojo/_base/lang", // dojo.trim
-	"dojo/query" // dojo.query
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/form/DataList
-	// summary:
-	//		Inefficient but small data store specialized for inlined data via OPTION tags
-
-	function toItem(/*DOMNode*/ option){
-		// summary:
-		//		Convert <option> node to hash
-		return {
-			id: option.value,
-			value: option.value,
-			name: dojo.trim(option.innerText || option.textContent || '')
-		};
-	}
-
-	dojo.declare("dijit.form.DataList", dojo.store.Memory, {
-		// summary:
-		//		Inefficient but small data store specialized for inlined data via OPTION tags
-		//
-		// description:
-		//		Provides a store for inlined data like:
-		//
-		//	|	<datalist>
-		//	|		<option value="AL">Alabama</option>
-		//	|		...
-
-		constructor: function(/*Object?*/ params, /*DomNode|String*/ srcNodeRef){
-			// store pointer to original DOM tree
-			this.domNode = dojo.byId(srcNodeRef);
-
-			dojo._mixin(this, params);
-			if(this.id){
-				dijit.registry.add(this); // add to registry so it can be easily found by id
-			}
-			this.domNode.style.display = "none";
-
-			this.inherited(arguments, [{
-				data: dojo.query("option", this.domNode).map(toItem)
-			}]);
-		},
-
-		destroy: function(){
-			dijit.registry.remove(this.id);
-		},
-
-		fetchSelectedItem: function(){
-			// summary:
-			//		Get the option marked as selected, like `<option selected>`.
-			//		Not part of dojo.data API.
-			var option = dojo.query("> option[selected]", this.domNode)[0] || dojo.query("> option", this.domNode)[0];
-			return option && toItem(option);
-		}
-	});
-
-	return dijit.form.DataList;
+define("dijit/form/DataList",["dojo/_base/kernel","..","dojo/store/Memory","dojo/_base/NodeList","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/query"],function(_1,_2){
+function _3(_4){
+return {id:_4.value,value:_4.value,name:_1.trim(_4.innerText||_4.textContent||"")};
+};
+_1.declare("dijit.form.DataList",_1.store.Memory,{constructor:function(_5,_6){
+this.domNode=_1.byId(_6);
+_1._mixin(this,_5);
+if(this.id){
+_2.registry.add(this);
+}
+this.domNode.style.display="none";
+this.inherited(arguments,[{data:_1.query("option",this.domNode).map(_3)}]);
+},destroy:function(){
+_2.registry.remove(this.id);
+},fetchSelectedItem:function(){
+var _7=_1.query("> option[selected]",this.domNode)[0]||_1.query("> option",this.domNode)[0];
+return _7&&_3(_7);
+}});
+return _2.form.DataList;
 });

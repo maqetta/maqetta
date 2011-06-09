@@ -1,35 +1,25 @@
-define("dojox/data/S3Store", ["dojo", "dojox", "dojox/data/JsonRestStore", "dojox/rpc/ProxiedPath"], function(dojo, dojox) {
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// S3JsonRestStore is an extension of JsonRestStore to handle
-// Amazon's S3 service using JSON data
-
-dojo.declare("dojox.data.S3Store",
-	dojox.data.JsonRestStore,
-	{
-		_processResults : function(results){
-			// unfortunately, S3 returns query results in XML form
-			var keyElements = results.getElementsByTagName("Key");
-			var jsResults = [];
-			var self = this;
-			for(var i=0; i <keyElements.length;i++){
-				var keyElement = keyElements[i];
-				// manually create lazy loaded Deferred items for each item in the result array
-				var val = {
-					_loadObject: (function(key,val){
-						return function(callback){
-							// when a callback is added we will fetch it
-							delete this._loadObject;
-							self.service(key).addCallback(callback);
-						};
-					})(keyElement.firstChild.nodeValue,val)
-				};
-				jsResults.push(val);
-			}
-			
-			return {totalCount:jsResults.length, items: jsResults};
-		}
-	}
-);
-
-return dojox.data.S3Store;
+define("dojox/data/S3Store",["dojo","dojox","dojox/data/JsonRestStore","dojox/rpc/ProxiedPath"],function(_1,_2){
+_1.declare("dojox.data.S3Store",_2.data.JsonRestStore,{_processResults:function(_3){
+var _4=_3.getElementsByTagName("Key");
+var _5=[];
+var _6=this;
+for(var i=0;i<_4.length;i++){
+var _7=_4[i];
+var _8={_loadObject:(function(_9,_a){
+return function(_b){
+delete this._loadObject;
+_6.service(_9).addCallback(_b);
+};
+})(_7.firstChild.nodeValue,_8)};
+_5.push(_8);
+}
+return {totalCount:_5.length,items:_5};
+}});
+return _2.data.S3Store;
 });

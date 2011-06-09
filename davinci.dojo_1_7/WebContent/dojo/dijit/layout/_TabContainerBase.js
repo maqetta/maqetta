@@ -1,147 +1,69 @@
-define([
-	"dojo/_base/kernel",
-	"..",
-	"dojo/text!./templates/TabContainer.html",
-	"./StackContainer",
-	"../_TemplatedMixin",
-	"dojo/_base/html" // dojo.addClass dojo.contentBox dojo.style
-], function(dojo, dijit, template){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-// module:
-//		dijit/layout/_TabContainerBase
-// summary:
-//		Abstract base class for TabContainer.   Must define _makeController() to instantiate
-//		and return the widget that displays the tab labels
-
-
-dojo.declare("dijit.layout._TabContainerBase",[dijit.layout.StackContainer, dijit._TemplatedMixin], {
-	// summary:
-	//		Abstract base class for TabContainer.   Must define _makeController() to instantiate
-	//		and return the widget that displays the tab labels
-	// description:
-	//		A TabContainer is a container that has multiple panes, but shows only
-	//		one pane at a time.  There are a set of tabs corresponding to each pane,
-	//		where each tab has the name (aka title) of the pane, and optionally a close button.
-
-	// tabPosition: String
-	//		Defines where tabs go relative to tab content.
-	//		"top", "bottom", "left-h", "right-h"
-	tabPosition: "top",
-
-	baseClass: "dijitTabContainer",
-
-	// tabStrip: [const] Boolean
-	//		Defines whether the tablist gets an extra class for layouting, putting a border/shading
-	//		around the set of tabs.   Not supported by claro theme.
-	tabStrip: false,
-
-	// nested: [const] Boolean
-	//		If true, use styling for a TabContainer nested inside another TabContainer.
-	//		For tundra etc., makes tabs look like links, and hides the outer
-	//		border since the outer TabContainer already has a border.
-	nested: false,
-
-	templateString: template,
-
-	postMixInProperties: function(){
-		// set class name according to tab position, ex: dijitTabContainerTop
-		this.baseClass += this.tabPosition.charAt(0).toUpperCase() + this.tabPosition.substr(1).replace(/-.*/, "");
-
-		this.srcNodeRef && dojo.style(this.srcNodeRef, "visibility", "hidden");
-
-		this.inherited(arguments);
-	},
-
-	buildRendering: function(){
-		this.inherited(arguments);
-
-		// Create the tab list that will have a tab (a.k.a. tab button) for each tab panel
-		this.tablist = this._makeController(this.tablistNode);
-
-		if(!this.doLayout){ dojo.addClass(this.domNode, "dijitTabContainerNoLayout"); }
-
-		if(this.nested){
-			/* workaround IE's lack of support for "a > b" selectors by
-			 * tagging each node in the template.
-			 */
-			dojo.addClass(this.domNode, "dijitTabContainerNested");
-			dojo.addClass(this.tablist.containerNode, "dijitTabContainerTabListNested");
-			dojo.addClass(this.tablistSpacer, "dijitTabContainerSpacerNested");
-			dojo.addClass(this.containerNode, "dijitTabPaneWrapperNested");
-		}else{
-			dojo.addClass(this.domNode, "tabStrip-" + (this.tabStrip ? "enabled" : "disabled"));
-		}
-	},
-
-	_setupChild: function(/*dijit._Widget*/ tab){
-		// Overrides StackContainer._setupChild().
-		dojo.addClass(tab.domNode, "dijitTabPane");
-		this.inherited(arguments);
-	},
-
-	startup: function(){
-		if(this._started){ return; }
-
-		// wire up the tablist and its tabs
-		this.tablist.startup();
-
-		this.inherited(arguments);
-	},
-
-	layout: function(){
-		// Overrides StackContainer.layout().
-		// Configure the content pane to take up all the space except for where the tabs are
-
-		if(!this._contentBox || typeof(this._contentBox.l) == "undefined"){return;}
-
-		var sc = this.selectedChildWidget;
-
-		if(this.doLayout){
-			// position and size the titles and the container node
-			var titleAlign = this.tabPosition.replace(/-h/, "");
-			this.tablist.layoutAlign = titleAlign;
-			var children = [this.tablist, {
-				domNode: this.tablistSpacer,
-				layoutAlign: titleAlign
-			}, {
-				domNode: this.containerNode,
-				layoutAlign: "client"
-			}];
-			dijit.layout.layoutChildren(this.domNode, this._contentBox, children);
-
-			// Compute size to make each of my children.
-			// children[2] is the margin-box size of this.containerNode, set by layoutChildren() call above
-			this._containerContentBox = dijit.layout.marginBox2contentBox(this.containerNode, children[2]);
-
-			if(sc && sc.resize){
-				sc.resize(this._containerContentBox);
-			}
-		}else{
-			// just layout the tab controller, so it can position left/right buttons etc.
-			if(this.tablist.resize){
-				//make the tabs zero width so that they don't interfere with width calc, then reset
-				var s = this.tablist.domNode.style;
-				s.width="0";
-				var width = dojo.contentBox(this.domNode).w;
-				s.width="";
-				this.tablist.resize({w: width});
-			}
-
-			// and call resize() on the selected pane just to tell it that it's been made visible
-			if(sc && sc.resize){
-				sc.resize();
-			}
-		}
-	},
-
-	destroy: function(){
-		if(this.tablist){
-			this.tablist.destroy();
-		}
-		this.inherited(arguments);
-	}
-});
-
-
-return dijit.layout._TabContainerBase;
+require.cache["dijit/layout/templates/TabContainer.html"]="<div class=\"dijitTabContainer\">\n\t<div class=\"dijitTabListWrapper\" dojoAttachPoint=\"tablistNode\"></div>\n\t<div dojoAttachPoint=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" dojoAttachPoint=\"containerNode\"></div>\n</div>\n";
+define("dijit/layout/_TabContainerBase",["dojo/_base/kernel","..","dojo/text!./templates/TabContainer.html","./StackContainer","../_TemplatedMixin","dojo/_base/html"],function(_1,_2,_3){
+_1.declare("dijit.layout._TabContainerBase",[_2.layout.StackContainer,_2._TemplatedMixin],{tabPosition:"top",baseClass:"dijitTabContainer",tabStrip:false,nested:false,templateString:_3,postMixInProperties:function(){
+this.baseClass+=this.tabPosition.charAt(0).toUpperCase()+this.tabPosition.substr(1).replace(/-.*/,"");
+this.srcNodeRef&&_1.style(this.srcNodeRef,"visibility","hidden");
+this.inherited(arguments);
+},buildRendering:function(){
+this.inherited(arguments);
+this.tablist=this._makeController(this.tablistNode);
+if(!this.doLayout){
+_1.addClass(this.domNode,"dijitTabContainerNoLayout");
+}
+if(this.nested){
+_1.addClass(this.domNode,"dijitTabContainerNested");
+_1.addClass(this.tablist.containerNode,"dijitTabContainerTabListNested");
+_1.addClass(this.tablistSpacer,"dijitTabContainerSpacerNested");
+_1.addClass(this.containerNode,"dijitTabPaneWrapperNested");
+}else{
+_1.addClass(this.domNode,"tabStrip-"+(this.tabStrip?"enabled":"disabled"));
+}
+},_setupChild:function(_4){
+_1.addClass(_4.domNode,"dijitTabPane");
+this.inherited(arguments);
+},startup:function(){
+if(this._started){
+return;
+}
+this.tablist.startup();
+this.inherited(arguments);
+},layout:function(){
+if(!this._contentBox||typeof (this._contentBox.l)=="undefined"){
+return;
+}
+var sc=this.selectedChildWidget;
+if(this.doLayout){
+var _5=this.tabPosition.replace(/-h/,"");
+this.tablist.layoutAlign=_5;
+var _6=[this.tablist,{domNode:this.tablistSpacer,layoutAlign:_5},{domNode:this.containerNode,layoutAlign:"client"}];
+_2.layout.layoutChildren(this.domNode,this._contentBox,_6);
+this._containerContentBox=_2.layout.marginBox2contentBox(this.containerNode,_6[2]);
+if(sc&&sc.resize){
+sc.resize(this._containerContentBox);
+}
+}else{
+if(this.tablist.resize){
+var s=this.tablist.domNode.style;
+s.width="0";
+var _7=_1.contentBox(this.domNode).w;
+s.width="";
+this.tablist.resize({w:_7});
+}
+if(sc&&sc.resize){
+sc.resize();
+}
+}
+},destroy:function(){
+if(this.tablist){
+this.tablist.destroy();
+}
+this.inherited(arguments);
+}});
+return _2.layout._TabContainerBase;
 });

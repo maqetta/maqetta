@@ -1,175 +1,123 @@
-define(["dojo/_base/kernel", "dojo/_base/html", "dojo/_base/declare", "dijit/_Widget", "dojox/gfx", "dojox/lang/functional", "dojox/lang/functional/array", "dojox/lang/functional/fold"], 
-		function(dojo, html, declare, Widget, gfx, df){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var REVERSED_SERIES = /\.(StackedColumns|StackedAreas|ClusteredBars)$/;
-
-	return dojo.declare("dojox.charting.widget.Legend", dijit._Widget, {
-		// summary: A legend for a chart. A legend contains summary labels for
-		// each series of data contained in the chart.
-		//
-		// Set the horizontal attribute to boolean false to layout legend labels vertically.
-		// Set the horizontal attribute to a number to layout legend labels in horizontal
-		// rows each containing that number of labels (except possibly the last row).
-		//
-		// (Line or Scatter charts (colored lines with shape symbols) )
-		// -o- Series1		-X- Series2		-v- Series3
-		//
-		// (Area/Bar/Pie charts (letters represent colors))
-		// [a] Series1		[b] Series2		[c] Series3
-
-		chartRef:   "",
-		horizontal: true,
-		swatchSize: 18,
-
-		legendBody: null,
-
-		postCreate: function(){
-			if(!this.chart){
-				if(!this.chartRef){ return; }
-				this.chart = dijit.byId(this.chartRef);
-				if(!this.chart){
-					var node = dojo.byId(this.chartRef);
-					if(node){
-						this.chart = dijit.byNode(node);
-					}else{
-						console.log("Could not find chart instance with id: " + this.chartRef);
-						return;
-					}
-				}
-				this.series = this.chart.chart.series;
-			}else{
-				this.series = this.chart.series;
-			}
-
-			this.refresh();
-		},
-		buildRendering: function(){
-			this.domNode = dojo.create("table",
-					{role: "group", "aria-label": "chart legend", "class": "dojoxLegendNode"});
-			this.legendBody = dojo.create("tbody", null, this.domNode);
-			this.inherited(arguments);
-		},
-		refresh: function(){
-			// summary: regenerates the legend to reflect changes to the chart
-
-			// cleanup
-			if(this._surfaces){
-				dojo.forEach(this._surfaces, function(surface){
-					surface.destroy();
-				});
-			}
-			this._surfaces = [];
-			while(this.legendBody.lastChild){
-				dojo.destroy(this.legendBody.lastChild);
-			}
-
-			if(this.horizontal){
-				dojo.addClass(this.domNode, "dojoxLegendHorizontal");
-				// make a container <tr>
-				this._tr = dojo.create("tr", null, this.legendBody);
-				this._inrow = 0;
-			}
-
-			var s = this.series;
-			if(s.length == 0){
-				return;
-			}
-			if(s[0].chart.stack[0].declaredClass == "dojox.charting.plot2d.Pie"){
-				var t = s[0].chart.stack[0];
-				if(typeof t.run.data[0] == "number"){
-					var filteredRun = df.map(t.run.data, "Math.max(x, 0)");
-					if(df.every(filteredRun, "<= 0")){
-						return;
-					}
-					var slices = df.map(filteredRun, "/this", df.foldl(filteredRun, "+", 0));
-					dojo.forEach(slices, function(x, i){
-						this._addLabel(t.dyn[i], t._getLabel(x * 100) + "%");
-					}, this);
-				}else{
-					dojo.forEach(t.run.data, function(x, i){
-						this._addLabel(t.dyn[i], x.legend || x.text || x.y);
-					}, this);
-				}
-			}else{
-				if(this._isReversal()){
-					s = s.reverse();
-				}
-				dojo.forEach(s, function(x){
-					this._addLabel(x.dyn, x.legend || x.name);
-				}, this);
-			}
-		},
-		_addLabel: function(dyn, label){
-			// create necessary elements
-			var wrapper = dojo.create("td"),
-				icon = dojo.create("div", null, wrapper),
-				text = dojo.create("label", null, wrapper),
-				div  = dojo.create("div", {
-					style: {
-						"width": this.swatchSize + "px",
-						"height":this.swatchSize + "px",
-						"float": "left"
-					}
-				}, icon);
-			dojo.addClass(icon, "dojoxLegendIcon dijitInline");
-			dojo.addClass(text, "dojoxLegendText");
-			// create a skeleton
-			if(this._tr){
-				// horizontal
-				this._tr.appendChild(wrapper);
-				if(++this._inrow === this.horizontal){
-					// make a fresh container <tr>
-					this._tr = dojo.create("tr", null, this.legendBody);
-					this._inrow = 0;
-				}
-			}else{
-				// vertical
-				var tr = dojo.create("tr", null, this.legendBody);
-				tr.appendChild(wrapper);
-			}
-
-			// populate the skeleton
-			this._makeIcon(div, dyn);
-			text.innerHTML = String(label);
-			text.dir = this.getTextDir(label, text.dir);
-		},
-		_makeIcon: function(div, dyn){
-			var mb = { h: this.swatchSize, w: this.swatchSize };
-			var surface = gfx.createSurface(div, mb.w, mb.h);
-			this._surfaces.push(surface);
-			if(dyn.fill){
-				// regions
-				surface.createRect({x: 2, y: 2, width: mb.w - 4, height: mb.h - 4}).
-					setFill(dyn.fill).setStroke(dyn.stroke);
-			}else if(dyn.stroke || dyn.marker){
-				// draw line
-				var line = {x1: 0, y1: mb.h / 2, x2: mb.w, y2: mb.h / 2};
-				if(dyn.stroke){
-					surface.createLine(line).setStroke(dyn.stroke);
-				}
-				if(dyn.marker){
-					// draw marker on top
-					var c = {x: mb.w / 2, y: mb.h / 2};
-					if(dyn.stroke){
-						surface.createPath({path: "M" + c.x + " " + c.y + " " + dyn.marker}).
-							setFill(dyn.stroke.color).setStroke(dyn.stroke);
-					}else{
-						surface.createPath({path: "M" + c.x + " " + c.y + " " + dyn.marker}).
-							setFill(dyn.color).setStroke(dyn.color);
-					}
-				}
-			}else{
-				// nothing
-				surface.createRect({x: 2, y: 2, width: mb.w - 4, height: mb.h - 4}).
-					setStroke("black");
-				surface.createLine({x1: 2, y1: 2, x2: mb.w - 2, y2: mb.h - 2}).setStroke("black");
-				surface.createLine({x1: 2, y1: mb.h - 2, x2: mb.w - 2, y2: 2}).setStroke("black");
-			}
-		},
-		_isReversal: function(){
-			return (!this.horizontal) && dojo.some(this.chart.stack, function(item){
-				return REVERSED_SERIES.test(item.declaredClass);
-			});
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/html","dojo/_base/declare","dijit/_Widget","dojox/gfx","dojox/lang/functional","dojox/lang/functional/array","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,df){
+var _6=/\.(StackedColumns|StackedAreas|ClusteredBars)$/;
+return _1.declare("dojox.charting.widget.Legend",dijit._Widget,{chartRef:"",horizontal:true,swatchSize:18,legendBody:null,postCreate:function(){
+if(!this.chart){
+if(!this.chartRef){
+return;
+}
+this.chart=dijit.byId(this.chartRef);
+if(!this.chart){
+var _7=_1.byId(this.chartRef);
+if(_7){
+this.chart=dijit.byNode(_7);
+}else{
+return;
+}
+}
+this.series=this.chart.chart.series;
+}else{
+this.series=this.chart.series;
+}
+this.refresh();
+},buildRendering:function(){
+this.domNode=_1.create("table",{role:"group","aria-label":"chart legend","class":"dojoxLegendNode"});
+this.legendBody=_1.create("tbody",null,this.domNode);
+this.inherited(arguments);
+},refresh:function(){
+if(this._surfaces){
+_1.forEach(this._surfaces,function(_8){
+_8.destroy();
+});
+}
+this._surfaces=[];
+while(this.legendBody.lastChild){
+_1.destroy(this.legendBody.lastChild);
+}
+if(this.horizontal){
+_1.addClass(this.domNode,"dojoxLegendHorizontal");
+this._tr=_1.create("tr",null,this.legendBody);
+this._inrow=0;
+}
+var s=this.series;
+if(s.length==0){
+return;
+}
+if(s[0].chart.stack[0].declaredClass=="dojox.charting.plot2d.Pie"){
+var t=s[0].chart.stack[0];
+if(typeof t.run.data[0]=="number"){
+var _9=df.map(t.run.data,"Math.max(x, 0)");
+if(df.every(_9,"<= 0")){
+return;
+}
+var _a=df.map(_9,"/this",df.foldl(_9,"+",0));
+_1.forEach(_a,function(x,i){
+this._addLabel(t.dyn[i],t._getLabel(x*100)+"%");
+},this);
+}else{
+_1.forEach(t.run.data,function(x,i){
+this._addLabel(t.dyn[i],x.legend||x.text||x.y);
+},this);
+}
+}else{
+if(this._isReversal()){
+s=s.reverse();
+}
+_1.forEach(s,function(x){
+this._addLabel(x.dyn,x.legend||x.name);
+},this);
+}
+},_addLabel:function(_b,_c){
+var _d=_1.create("td"),_e=_1.create("div",null,_d),_f=_1.create("label",null,_d),div=_1.create("div",{style:{"width":this.swatchSize+"px","height":this.swatchSize+"px","float":"left"}},_e);
+_1.addClass(_e,"dojoxLegendIcon dijitInline");
+_1.addClass(_f,"dojoxLegendText");
+if(this._tr){
+this._tr.appendChild(_d);
+if(++this._inrow===this.horizontal){
+this._tr=_1.create("tr",null,this.legendBody);
+this._inrow=0;
+}
+}else{
+var tr=_1.create("tr",null,this.legendBody);
+tr.appendChild(_d);
+}
+this._makeIcon(div,_b);
+_f.innerHTML=String(_c);
+_f.dir=this.getTextDir(_c,_f.dir);
+},_makeIcon:function(div,dyn){
+var mb={h:this.swatchSize,w:this.swatchSize};
+var _10=_5.createSurface(div,mb.w,mb.h);
+this._surfaces.push(_10);
+if(dyn.fill){
+_10.createRect({x:2,y:2,width:mb.w-4,height:mb.h-4}).setFill(dyn.fill).setStroke(dyn.stroke);
+}else{
+if(dyn.stroke||dyn.marker){
+var _11={x1:0,y1:mb.h/2,x2:mb.w,y2:mb.h/2};
+if(dyn.stroke){
+_10.createLine(_11).setStroke(dyn.stroke);
+}
+if(dyn.marker){
+var c={x:mb.w/2,y:mb.h/2};
+if(dyn.stroke){
+_10.createPath({path:"M"+c.x+" "+c.y+" "+dyn.marker}).setFill(dyn.stroke.color).setStroke(dyn.stroke);
+}else{
+_10.createPath({path:"M"+c.x+" "+c.y+" "+dyn.marker}).setFill(dyn.color).setStroke(dyn.color);
+}
+}
+}else{
+_10.createRect({x:2,y:2,width:mb.w-4,height:mb.h-4}).setStroke("black");
+_10.createLine({x1:2,y1:2,x2:mb.w-2,y2:mb.h-2}).setStroke("black");
+_10.createLine({x1:2,y1:mb.h-2,x2:mb.w-2,y2:2}).setStroke("black");
+}
+}
+},_isReversal:function(){
+return (!this.horizontal)&&_1.some(this.chart.stack,function(_12){
+return _6.test(_12.declaredClass);
+});
+}});
 });

@@ -1,20 +1,11 @@
-define([
-	"dojo/_base/kernel", // dojo.deprecated
-	".",
-	"./Calendar"
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/_Calendar
-	// summary:
-	//		Deprecated widget, used dijit/Calendar instead
-
-	dojo.deprecated("dijit._Calendar is deprecated", "dijit._Calendar moved to dijit.Calendar", 1.5);
-
-	// dijit._Calendar had an underscore all this time merely because it did
-	// not satisfy dijit's a11y policy.
-	dijit._Calendar = dijit.Calendar;
-
-
-	return dijit._Calendar;
+define("dijit/_Calendar",["dojo/_base/kernel",".","./Calendar"],function(_1,_2){
+_1.deprecated("dijit._Calendar is deprecated","dijit._Calendar moved to dijit.Calendar",1.5);
+_2._Calendar=_2.Calendar;
+return _2._Calendar;
 });

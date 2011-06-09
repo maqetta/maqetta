@@ -1,231 +1,100 @@
-define([
-	"dojo/_base/kernel", // dojo.mixin
-	"..",
-	"./MappedTextBox",
-	"./ComboBoxMixin",
-	"dojo/_base/Deferred", // dojo.when
-	"dojo/_base/declare", // dojo.declare
-	"dojo/_base/lang", // dojo.clone dojo.isString
-	"dojo/data/util/filter" // dojo.data.util.filter.patternToRegExp
-], function(dojo, dijit){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	// module:
-	//		dijit/form/FilteringSelect
-	// summary:
-	//		An enhanced version of the HTML SELECT tag, populated dynamically
-
-
-	dojo.declare("dijit.form.FilteringSelect", [dijit.form.MappedTextBox, dijit.form.ComboBoxMixin], {
-		// summary:
-		//		An enhanced version of the HTML SELECT tag, populated dynamically
-		//
-		// description:
-		//		An enhanced version of the HTML SELECT tag, populated dynamically. It works
-		//		very nicely with very large data sets because it can load and page data as needed.
-		//		It also resembles ComboBox, but does not allow values outside of the provided ones.
-		//		If OPTION tags are used as the data provider via markup, then the
-		//		OPTION tag's child text node is used as the displayed value when selected
-		//		while the OPTION tag's value attribute is used as the widget value on form submit.
-		//		To set the default value when using OPTION tags, specify the selected
-		//		attribute on 1 of the child OPTION tags.
-		//
-		//		Similar features:
-		//			- There is a drop down list of possible values.
-		//			- You can only enter a value from the drop down list.  (You can't
-		//				enter an arbitrary value.)
-		//			- The value submitted with the form is the hidden value (ex: CA),
-		//				not the displayed value a.k.a. label (ex: California)
-		//
-		//		Enhancements over plain HTML version:
-		//			- If you type in some text then it will filter down the list of
-		//				possible values in the drop down list.
-		//			- List can be specified either as a static list or via a javascript
-		//				function (that can get the list from a server)
-
-		// required: Boolean
-		//		True (default) if user is required to enter a value into this field.
-		required: true,
-
-		_lastDisplayedValue: "",
-
-		_isValidSubset: function(){
-			return this._opened;
-		},
-
-		isValid: function(){
-			// Overrides ValidationTextBox.isValid()
-			return this.item || (!this.required && this.get('displayedValue') == ""); // #5974
-		},
-
-		_refreshState: function(){
-			if(!this.searchTimer){ // state will be refreshed after results are returned
-				this.inherited(arguments);
-			}
-		},
-
-		_callbackSetLabel: function(
-						/*Array*/ result,
-						/*Object*/ query,
-						/*Object*/ options,
-						/*Boolean?*/ priorityChange){
-			// summary:
-			//		Callback from dojo.store after lookup of user entered value finishes
-
-			// setValue does a synchronous lookup,
-			// so it calls _callbackSetLabel directly,
-			// and so does not pass dataObject
-			// still need to test against _lastQuery in case it came too late
-			if((query && query[this.searchAttr] !== this._lastQuery) || (!query && result.length && this.store.getIdentity(result[0]) != this._lastQuery)){
-				return;
-			}
-			if(!result.length){
-				//#3268: don't modify display value on bad input
-				//#3285: change CSS to indicate error
-				this.set("value", '', priorityChange || (priorityChange === undefined && !this.focused), this.textbox.value, null);
-			}else{
-				this.set('item', result[0], priorityChange);
-			}
-		},
-
-		_openResultList: function(/*Object*/ results, /*Object*/ query, /*Object*/ options){
-			// Callback when a data store query completes.
-			// Overrides ComboBox._openResultList()
-
-			// #3285: tap into search callback to see if user's query resembles a match
-			if(query[this.searchAttr] !== this._lastQuery){
-				return;
-			}
-			this.inherited(arguments);
-
-			if(this.item === undefined){ // item == undefined for keyboard search
-				// If the search returned no items that means that the user typed
-				// in something invalid (and they can't make it valid by typing more characters),
-				// so flag the FilteringSelect as being in an invalid state
-				this.validate(true);
-			}
-		},
-
-		_getValueAttr: function(){
-			// summary:
-			//		Hook for get('value') to work.
-
-			// don't get the textbox value but rather the previously set hidden value.
-			// Use this.valueNode.value which isn't always set for other MappedTextBox widgets until blur
-			return this.valueNode.value;
-		},
-
-		_getValueField: function(){
-			// Overrides ComboBox._getValueField()
-			return "value";
-		},
-
-		_setValueAttr: function(/*String*/ value, /*Boolean?*/ priorityChange, /*String?*/ displayedValue, /*item?*/ item){
-			// summary:
-			//		Hook so set('value', value) works.
-			// description:
-			//		Sets the value of the select.
-			//		Also sets the label to the corresponding value by reverse lookup.
-			if(!this._onChangeActive){ priorityChange = null; }
-
-			if(item === undefined){
-				if(value === null || value === ''){
-					value = '';
-					if(!dojo.isString(displayedValue)){
-						this._setDisplayedValueAttr(displayedValue||'', priorityChange);
-						return;
-					}
-				}
-
-				var self = this;
-				this._lastQuery = value;
-				dojo.when(this.store.get(value), function(item){
-					self._callbackSetLabel(item? [item] : [], undefined, undefined, priorityChange);
-				});
-			}else{
-				this.valueNode.value = value;
-				this.inherited(arguments);
-			}
-		},
-
-		_setItemAttr: function(/*item*/ item, /*Boolean?*/ priorityChange, /*String?*/ displayedValue){
-			// summary:
-			//		Set the displayed valued in the input box, and the hidden value
-			//		that gets submitted, based on a dojo.data store item.
-			// description:
-			//		Users shouldn't call this function; they should be calling
-			//		set('item', value)
-			// tags:
-			//		private
-			this.inherited(arguments);
-			this._lastDisplayedValue = this.textbox.value;
-		},
-
-		_getDisplayQueryString: function(/*String*/ text){
-			return text.replace(/([\\\*\?])/g, "\\$1");
-		},
-
-		_setDisplayedValueAttr: function(/*String*/ label, /*Boolean?*/ priorityChange){
-			// summary:
-			//		Hook so set('displayedValue', label) works.
-			// description:
-			//		Sets textbox to display label. Also performs reverse lookup
-			//		to set the hidden value.  label should corresponding to item.searchAttr.
-
-			if(label == null){ label = ''; }
-
-			// This is called at initialization along with every custom setter.
-			// Usually (or always?) the call can be ignored.   If it needs to be
-			// processed then at least make sure that the XHR request doesn't trigger an onChange()
-			// event, even if it returns after creation has finished
-			if(!this._created){
-				if(!("displayedValue" in this.params)){
-					return;
-				}
-				priorityChange = false;
-			}
-
-			// Do a reverse lookup to map the specified displayedValue to the hidden value.
-			// Note that if there's a custom labelFunc() this code
-			if(this.store){
-				this.closeDropDown();
-				var query = dojo.clone(this.query); // #6196: populate query with user-specifics
-
-				// Query on searchAttr is a regex (for benefit of dojo.store.MemoryStore),
-				// but with a toString() method to help JsonStore
-				// Escape meta characters of dojo.data.util.filter.patternToRegExp().
-				var qs = this._getDisplayQueryString(label),
-					q = dojo.data.util.filter.patternToRegExp(qs, this.ignoreCase);	// "Co*" --> /^Co.*$/i
-				q.toString = function(){ return qs; };
-				this._lastQuery = query[this.searchAttr] = q;
-
-				// If the label is not valid, the callback will never set it,
-				// so the last valid value will get the warning textbox.   Set the
-				// textbox value now so that the impending warning will make
-				// sense to the user
-				this.textbox.value = label;
-				this._lastDisplayedValue = label;
-				this._set("displayedValue", label);	// for watch("displayedValue") notification
-				var _this = this;
-				var options = {
-					ignoreCase: this.ignoreCase,
-					deep: true
-				};
-				dojo.mixin(options, this.fetchProperties);
-				this._fetchHandle = this.store.query(query, options);
-				dojo.when(this._fetchHandle, function(result, err){
-					_this._fetchHandle = null;
-					if(err){
-						console.error('dijit.form.FilteringSelect: ' + err.toString());
-					}
-					_this._callbackSetLabel(result || [], query, options, priorityChange);
-				});
-			}
-		},
-
-		undo: function(){
-			this.set('displayedValue', this._lastDisplayedValue);
-		}
-	});
-
-	return dijit.form.FilteringSelect;
+define("dijit/form/FilteringSelect",["dojo/_base/kernel","..","./MappedTextBox","./ComboBoxMixin","dojo/_base/Deferred","dojo/_base/declare","dojo/_base/lang","dojo/data/util/filter"],function(_1,_2){
+_1.declare("dijit.form.FilteringSelect",[_2.form.MappedTextBox,_2.form.ComboBoxMixin],{required:true,_lastDisplayedValue:"",_isValidSubset:function(){
+return this._opened;
+},isValid:function(){
+return this.item||(!this.required&&this.get("displayedValue")=="");
+},_refreshState:function(){
+if(!this.searchTimer){
+this.inherited(arguments);
+}
+},_callbackSetLabel:function(_3,_4,_5,_6){
+if((_4&&_4[this.searchAttr]!==this._lastQuery)||(!_4&&_3.length&&this.store.getIdentity(_3[0])!=this._lastQuery)){
+return;
+}
+if(!_3.length){
+this.set("value","",_6||(_6===undefined&&!this.focused),this.textbox.value,null);
+}else{
+this.set("item",_3[0],_6);
+}
+},_openResultList:function(_7,_8,_9){
+if(_8[this.searchAttr]!==this._lastQuery){
+return;
+}
+this.inherited(arguments);
+if(this.item===undefined){
+this.validate(true);
+}
+},_getValueAttr:function(){
+return this.valueNode.value;
+},_getValueField:function(){
+return "value";
+},_setValueAttr:function(_a,_b,_c,_d){
+if(!this._onChangeActive){
+_b=null;
+}
+if(_d===undefined){
+if(_a===null||_a===""){
+_a="";
+if(!_1.isString(_c)){
+this._setDisplayedValueAttr(_c||"",_b);
+return;
+}
+}
+var _e=this;
+this._lastQuery=_a;
+_1.when(this.store.get(_a),function(_f){
+_e._callbackSetLabel(_f?[_f]:[],undefined,undefined,_b);
+});
+}else{
+this.valueNode.value=_a;
+this.inherited(arguments);
+}
+},_setItemAttr:function(_10,_11,_12){
+this.inherited(arguments);
+this._lastDisplayedValue=this.textbox.value;
+},_getDisplayQueryString:function(_13){
+return _13.replace(/([\\\*\?])/g,"\\$1");
+},_setDisplayedValueAttr:function(_14,_15){
+if(_14==null){
+_14="";
+}
+if(!this._created){
+if(!("displayedValue" in this.params)){
+return;
+}
+_15=false;
+}
+if(this.store){
+this.closeDropDown();
+var _16=_1.clone(this.query);
+var qs=this._getDisplayQueryString(_14),q=_1.data.util.filter.patternToRegExp(qs,this.ignoreCase);
+q.toString=function(){
+return qs;
+};
+this._lastQuery=_16[this.searchAttr]=q;
+this.textbox.value=_14;
+this._lastDisplayedValue=_14;
+this._set("displayedValue",_14);
+var _17=this;
+var _18={ignoreCase:this.ignoreCase,deep:true};
+_1.mixin(_18,this.fetchProperties);
+this._fetchHandle=this.store.query(_16,_18);
+_1.when(this._fetchHandle,function(_19,err){
+_17._fetchHandle=null;
+if(err){
+console.error("dijit.form.FilteringSelect: "+err.toString());
+}
+_17._callbackSetLabel(_19||[],_16,_18,_15);
+});
+}
+},undo:function(){
+this.set("displayedValue",this._lastDisplayedValue);
+}});
+return _2.form.FilteringSelect;
 });

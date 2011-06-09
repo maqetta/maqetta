@@ -1,95 +1,65 @@
-define(["dojo/_base/kernel", "dojo/_base/array", "dojo/_base/declare", "./Bars", "./common", "dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils"], 
-	function(dojo, array, declare, Bars, dc, df, dfr, du){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	var purgeGroup = df.lambda("item.purgeGroup()");
-
-	return dojo.declare("dojox.charting.plot2d.ClusteredBars", dojox.charting.plot2d.Bars, {
-		//	summary:
-		//		A plot representing grouped or clustered bars (horizontal bars)
-		render: function(dim, offsets){
-			//	summary:
-			//		Run the calculations for any axes for this plot.
-			//	dim: Object
-			//		An object in the form of { width, height }
-			//	offsets: Object
-			//		An object of the form { l, r, t, b}.
-			//	returns: dojox.charting.plot2d.ClusteredBars
-			//		A reference to this plot for functional chaining.
-			if(this.zoom && !this.isDataDirty()){
-				return this.performZoom(dim, offsets);
-			}
-			this.resetEvents();
-			this.dirty = this.isDirty();
-			if(this.dirty){
-				dojo.forEach(this.series, purgeGroup);
-				this._eventSeries = {};
-				this.cleanGroup();
-				var s = this.group;
-				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
-			}
-			var t = this.chart.theme, f, gap, height, thickness,
-				ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
-				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
-				baseline = Math.max(0, this._hScaler.bounds.lower),
-				baselineWidth = ht(baseline),
-				events = this.events();
-			f = dc.calculateBarSize(this._vScaler.bounds.scale, this.opt, this.series.length);
-			gap = f.gap;
-			height = thickness = f.size;
-			for(var i = this.series.length - 1; i >= 0; --i){
-				var run = this.series[i], shift = thickness * (this.series.length - i - 1);
-				if(!this.dirty && !run.dirty){
-					t.skip();
-					this._reconnectEvents(run.name);
-					continue;
-				}
-				run.cleanGroup();
-				var theme = t.next("bar", [this.opt, run]), s = run.group,
-					eventSeries = new Array(run.data.length);
-				for(var j = 0; j < run.data.length; ++j){
-					var value = run.data[j];
-					if(value !== null){
-						var v = typeof value == "number" ? value : value.y,
-							hv = ht(v),
-							width = hv - baselineWidth,
-							w = Math.abs(width),
-							finalTheme = typeof value != "number" ?
-								t.addMixin(theme, "bar", value, true) :
-								t.post(theme, "bar");
-						if(w >= 1 && height >= 1){
-							var rect = {
-								x: offsets.l + (v < baseline ? hv : baselineWidth),
-								y: dim.height - offsets.b - vt(j + 1.5) + gap + shift,
-								width: w, height: height
-							};
-							var specialFill = this._plotFill(finalTheme.series.fill, dim, offsets);
-							specialFill = this._shapeFill(specialFill, rect);
-							var shape = s.createRect(rect).setFill(specialFill).setStroke(finalTheme.series.stroke);
-							run.dyn.fill   = shape.getFill();
-							run.dyn.stroke = shape.getStroke();
-							if(events){
-								var o = {
-									element: "bar",
-									index:   j,
-									run:     run,
-									shape:   shape,
-									x:       v,
-									y:       j + 1.5
-								};
-								this._connectEvents(o);
-								eventSeries[j] = o;
-							}
-							if(this.animate){
-								this._animateBar(shape, offsets.l + baselineWidth, -width);
-							}
-						}
-					}
-				}
-				this._eventSeries[run.name] = eventSeries;
-				run.dirty = false;
-			}
-			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.ClusteredBars
-		}
-	});
+define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","./Bars","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils"],function(_1,_2,_3,_4,dc,df,_5,du){
+var _6=df.lambda("item.purgeGroup()");
+return _1.declare("dojox.charting.plot2d.ClusteredBars",dojox.charting.plot2d.Bars,{render:function(_7,_8){
+if(this.zoom&&!this.isDataDirty()){
+return this.performZoom(_7,_8);
+}
+this.resetEvents();
+this.dirty=this.isDirty();
+if(this.dirty){
+_1.forEach(this.series,_6);
+this._eventSeries={};
+this.cleanGroup();
+var s=this.group;
+df.forEachRev(this.series,function(_9){
+_9.cleanGroup(s);
+});
+}
+var t=this.chart.theme,f,_a,_b,_c,ht=this._hScaler.scaler.getTransformerFromModel(this._hScaler),vt=this._vScaler.scaler.getTransformerFromModel(this._vScaler),_d=Math.max(0,this._hScaler.bounds.lower),_e=ht(_d),_f=this.events();
+f=dc.calculateBarSize(this._vScaler.bounds.scale,this.opt,this.series.length);
+_a=f.gap;
+_b=_c=f.size;
+for(var i=this.series.length-1;i>=0;--i){
+var run=this.series[i],_10=_c*(this.series.length-i-1);
+if(!this.dirty&&!run.dirty){
+t.skip();
+this._reconnectEvents(run.name);
+continue;
+}
+run.cleanGroup();
+var _11=t.next("bar",[this.opt,run]),s=run.group,_12=new Array(run.data.length);
+for(var j=0;j<run.data.length;++j){
+var _13=run.data[j];
+if(_13!==null){
+var v=typeof _13=="number"?_13:_13.y,hv=ht(v),_14=hv-_e,w=Math.abs(_14),_15=typeof _13!="number"?t.addMixin(_11,"bar",_13,true):t.post(_11,"bar");
+if(w>=1&&_b>=1){
+var _16={x:_8.l+(v<_d?hv:_e),y:_7.height-_8.b-vt(j+1.5)+_a+_10,width:w,height:_b};
+var _17=this._plotFill(_15.series.fill,_7,_8);
+_17=this._shapeFill(_17,_16);
+var _18=s.createRect(_16).setFill(_17).setStroke(_15.series.stroke);
+run.dyn.fill=_18.getFill();
+run.dyn.stroke=_18.getStroke();
+if(_f){
+var o={element:"bar",index:j,run:run,shape:_18,x:v,y:j+1.5};
+this._connectEvents(o);
+_12[j]=o;
+}
+if(this.animate){
+this._animateBar(_18,_8.l+_e,-_14);
+}
+}
+}
+}
+this._eventSeries[run.name]=_12;
+run.dirty=false;
+}
+this.dirty=false;
+return this;
+}});
 });

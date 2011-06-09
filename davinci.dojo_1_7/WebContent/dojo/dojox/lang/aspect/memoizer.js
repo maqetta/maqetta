@@ -1,45 +1,47 @@
-dojo.provide("dojox.lang.aspect.memoizer");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.lang.aspect.memoizer",1);
 (function(){
-	var aop = dojox.lang.aspect;
-
-	var memoize1 = {
-		around: function(key){
-			var ctx = aop.getContext(), self = ctx.joinPoint, that = ctx.instance, t, u, ret;
-			if((t = that.__memoizerCache) && (t = t[self.targetName]) && (key in t)){
-				return t[key];
-			}
-			var ret = aop.proceed.apply(null, arguments);
-			if(!(t = that.__memoizerCache)){ t = that.__memoizerCache = {}; }
-			if(!(u = t[self.targetName])){ u = t[self.targetName] = {}; }
-			return u[key] = ret;
-		}
-	};
-
-	var memoizeN = function(/*Function*/keyMaker){
-		return {
-			around: function(/*arguments*/){
-				var ctx = aop.getContext(), self = ctx.joinPoint, that = ctx.instance, t, u, ret,
-					key  = keyMaker.apply(that, arguments);
-				if((t = that.__memoizerCache) && (t = t[self.targetName]) && (key in t)){
-					return t[key];
-				}
-				var ret = aop.proceed.apply(null, arguments);
-				if(!(t = that.__memoizerCache)){ t = that.__memoizerCache = {}; }
-				if(!(u = t[self.targetName])){ u = t[self.targetName] = {}; }
-				return u[key] = ret;
-			}
-		};
-	};
-
-	aop.memoizer = function(/*Function?*/ keyMaker){
-		// summary:
-		//		Returns an object, which can be used to count calls to methods.
-		//
-		// keyMaker:
-		//		the function, which takes method's arguments and returns a key,
-		//		which can be used to index the result.
-
-		return arguments.length == 0 ? memoize1 : memoizeN(keyMaker);	// Object
-	};
+var _4=_3.lang.aspect;
+var _5={around:function(_6){
+var _7=_4.getContext(),_8=_7.joinPoint,_9=_7.instance,t,u,_a;
+if((t=_9.__memoizerCache)&&(t=t[_8.targetName])&&(_6 in t)){
+return t[_6];
+}
+var _a=_4.proceed.apply(null,arguments);
+if(!(t=_9.__memoizerCache)){
+t=_9.__memoizerCache={};
+}
+if(!(u=t[_8.targetName])){
+u=t[_8.targetName]={};
+}
+return u[_6]=_a;
+}};
+var _b=function(_c){
+return {around:function(){
+var _d=_4.getContext(),_e=_d.joinPoint,_f=_d.instance,t,u,ret,key=_c.apply(_f,arguments);
+if((t=_f.__memoizerCache)&&(t=t[_e.targetName])&&(key in t)){
+return t[key];
+}
+var ret=_4.proceed.apply(null,arguments);
+if(!(t=_f.__memoizerCache)){
+t=_f.__memoizerCache={};
+}
+if(!(u=t[_e.targetName])){
+u=t[_e.targetName]={};
+}
+return u[key]=ret;
+}};
+};
+_4.memoizer=function(_10){
+return arguments.length==0?_5:_b(_10);
+};
 })();
+return _1.getObject("dojox.lang.aspect.memoizer");
+});
+require(["dojox/lang/aspect/memoizer"]);

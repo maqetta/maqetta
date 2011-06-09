@@ -1,49 +1,32 @@
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/array", "dojo/_base/html","dijit/_WidgetBase", "dijit/form/_FormWidgetMixin", "dijit/form/_ButtonMixin"],
-	function(dojo, declare, darray, html, WidgetBase, FormWidgetMixin, ButtonMixin){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-	return dojo.declare("dojox.mobile.Button", [dijit._WidgetBase, dijit.form._FormWidgetMixin, dijit.form._ButtonMixin], {
-		// summary:
-		//	Non-templated BUTTON widget with a thin API wrapper for click events and setting the label
-		//
-		// description:
-		//              Buttons can display a label, an icon, or both.
-		//              A label should always be specified (through innerHTML) or the label
-		//              attribute.  It can be hidden via showLabel=false.
-		// example:
-		// |    <button dojoType="dijit.form.Button" onClick="...">Hello world</button>
-
-		baseClass: "mblButton",
-
-		// duration: Number
-		//	duration of selection, milliseconds or -1 for no post-click CSS styling
-		duration: 1000,
-
-		_onClick: function(e){
-			var ret = this.inherited(arguments);
-			if(ret && this.duration >= 0){ // if its not a button with a state, then emulate press styles
-				var button = this.focusNode || this.domNode;
-				var newStateClasses = (this.baseClass+' '+this["class"]).split(" ");
-				newStateClasses = dojo.map(newStateClasses, function(c){ return c+"Selected"; });
-				dojo.addClass(button, newStateClasses);
-				setTimeout(function(){
-					dojo.removeClass(button, newStateClasses);
-				}, this.duration);
-			}
-			return ret;
-		},
-
-		buildRendering: function(){
-			if(!this.srcNodeRef){
-				this.srcNodeRef = dojo.create("button", {"type": this.type});
-			}
-			this.inherited(arguments);
-			this.focusNode = this.domNode;
-		},
-
-		postCreate: function(){
-			this.inherited(arguments);
-			this.connect(this.domNode, "onclick", "_onClick");
-		}
-	});
-
+define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/form/_FormWidgetMixin","dijit/form/_ButtonMixin"],function(_1,_2,_3,_4,_5,_6,_7){
+return _1.declare("dojox.mobile.Button",[dijit._WidgetBase,dijit.form._FormWidgetMixin,dijit.form._ButtonMixin],{baseClass:"mblButton",duration:1000,_onClick:function(e){
+var _8=this.inherited(arguments);
+if(_8&&this.duration>=0){
+var _9=this.focusNode||this.domNode;
+var _a=(this.baseClass+" "+this["class"]).split(" ");
+_a=_1.map(_a,function(c){
+return c+"Selected";
+});
+_1.addClass(_9,_a);
+setTimeout(function(){
+_1.removeClass(_9,_a);
+},this.duration);
+}
+return _8;
+},buildRendering:function(){
+if(!this.srcNodeRef){
+this.srcNodeRef=_1.create("button",{"type":this.type});
+}
+this.inherited(arguments);
+this.focusNode=this.domNode;
+},postCreate:function(){
+this.inherited(arguments);
+this.connect(this.domNode,"onclick","_onClick");
+}});
 });

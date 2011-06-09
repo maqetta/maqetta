@@ -1,214 +1,151 @@
-dojo.provide("dojox.form._SelectStackMixin");
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojo.declare("dojox.form._SelectStackMixin", null, {
-	// summary:
-	//		Mix this class in to a dijit.form._FormSelectWidget in order to
-	//		provide support for "selectable" multiforms.  The widget is pointed
-	//		to a dijit.layout.StackContainer and will handle displaying and
-	//		submitting the values of only the appropriate pane.
-	//
-	//		The options for this widget will be automatically set - based on
-	//		the panes that are in the stack container.  The "title" attribute of
-	//		the pane will be used for the display of the option.  The "id" attribute
-	//		of the pane will be used as the value of the option.  In order to
-	//		avoid running into unique ID constraint issues, a stackPrefix mechanism
-	//		is provided.
-
-	// stackId: string
-	//		The id of the stack that this widget is supposed to control
-	stackId: "",
-	
-	// stackPrefix: string
-	//		A prefix to remove from our stack pane ids when setting our options.
-	//		This exists so that we won't run into unique ID constraints.  For
-	//		example, if stackPrefix is set to "foo_", and there are three panes
-	//		in our stack with ids of "foo_a", "foo_b", and "foo_c", then the values
-	//		of the options created for the stack controller widget will be "a",
-	//		"b", and "c".  This allows you to have multiple select stack widgets
-	//		with the same values - without having to have the panes require the
-	//		same ids.
-	stackPrefix: "",
-	
-	_paneIdFromOption: function(/*String*/ oVal){
-		// summary: Gets the pane ID given an option value
-		return (this.stackPrefix || "") + oVal; // String
-	},
-	
-	_optionValFromPane: function(/*String*/ id){
-		// summary: Gets the option value given a pane ID
-		var sp = this.stackPrefix;
-		if(sp && id.indexOf(sp) === 0){
-			return id.substring(sp.length); // String
-		}
-		return id; // String
-	},
-	
-	_togglePane: function(/*dijit._Widget*/ pane, /*Boolean*/ shown){
-		// summary: called when a pane is either shown or hidden (so that
-		//  we can toggle the widgets on it)
-		
-		if(pane._shown != undefined && pane._shown == shown){ return; }
-		var widgets = dojo.filter(pane.getDescendants(), "return item.name;");
-		if(!shown){
-			// We are hiding - save the current state and then disable them
-			savedStates = {};
-			dojo.forEach(widgets, function(w){
-				savedStates[w.id] = w.disabled;
-				w.set("disabled", true);
-			});
-			pane._savedStates = savedStates;
-		}else{
-			// We are showing - restore our saved states
-			var savedStates = pane._savedStates||{};
-			dojo.forEach(widgets, function(w){
-				var state = savedStates[w.id];
-				if(state == undefined){
-					state = false;
-				}
-				w.set("disabled", state);
-			});
-			delete pane._savedStates;
-		}
-		pane._shown = shown;
-	},
-	
-	_connectTitle: function(/*dijit._Widget*/ pane, /*String*/ value){
-		var fx = dojo.hitch(this, function(title){
-			this.updateOption({value: value, label: title});
-		});
-		if(pane._setTitleAttr){
-			this.connect(pane, "_setTitleAttr", fx);
-		}else{
-			this.connect(pane, "attr", function(attr, val){
-				if(attr == "title" && arguments.length > 1){
-					fx(val);
-				}
-			});
-		}
-	},
-
-	onAddChild: function(/*dijit._Widget*/ pane, /*Integer?*/ insertIndex){
-		// summary: Called when the stack container adds a new pane
-		if(!this._panes[pane.id]){
-			this._panes[pane.id] = pane;
-			var v = this._optionValFromPane(pane.id);
-			this.addOption({value: v, label: pane.title});
-			this._connectTitle(pane, v);
-		}
-		if(!pane.onShow || !pane.onHide || pane._shown == undefined){
-			pane.onShow = dojo.hitch(this, "_togglePane", pane, true);
-			pane.onHide = dojo.hitch(this, "_togglePane", pane, false);
-			pane.onHide();
-		}
-	},
-	
-	_setValueAttr: function(v){
-		if("_savedValue" in this){
-			return;
-		}
-		this.inherited(arguments);
-	},
-	attr: function(/*String|Object*/name, /*Object?*/value){
-		if(name == "value" && arguments.length == 2 && "_savedValue" in this){
-			this._savedValue = value;
-		}
-		return this.inherited(arguments);
-	},
-
-	onRemoveChild: function(/*dijit._Widget*/ pane){
-		// summary: Called when the stack container removes a pane
-		if(this._panes[pane.id]){
-			delete this._panes[pane.id];
-			this.removeOption(this._optionValFromPane(pane.id));
-		}
-	},
-	
-	onSelectChild: function(/*dijit._Widget*/ pane){
-		// summary: Called when the stack container selects a new pane
-		this._setValueAttr(this._optionValFromPane(pane.id));
-	},
-	
-	onStartup: function(/*Object*/ info){
-		// summary: Called when the stack container is started up
-		var selPane = info.selected;
-		this.addOption(dojo.filter(dojo.map(info.children, function(c){
-			var v = this._optionValFromPane(c.id);
-			this._connectTitle(c, v);
-			var toAdd = null;
-			if(!this._panes[c.id]){
-				this._panes[c.id] = c;
-				toAdd = {value: v, label: c.title};
-			}
-			if(!c.onShow || !c.onHide || c._shown == undefined){
-				c.onShow = dojo.hitch(this, "_togglePane", c, true);
-				c.onHide = dojo.hitch(this, "_togglePane", c, false);
-				c.onHide();
-			}
-			if("_savedValue" in this && v === this._savedValue){
-				selPane = c;
-			}
-			return toAdd;
-		}, this), function(i){ return i;}));
-		var _this = this;
-		var fx = function(){
-			// This stuff needs to be run after we show our child, if
-			// the stack is going to show a different child than is
-			// selected - see trac #9396
-			delete _this._savedValue;
-			_this.onSelectChild(selPane);
-			if(!selPane._shown){
-				_this._togglePane(selPane, true);
-			}
-		};
-		if(selPane !== info.selected){
-			var stack = dijit.byId(this.stackId);
-			var c = this.connect(stack, "_showChild", function(sel){
-				this.disconnect(c);
-				fx();
-			});
-		}else{
-			fx();
-		}
-	},
-	
-	postMixInProperties: function(){
-		this._savedValue = this.value;
-		this.inherited(arguments);
-		this.connect(this, "onChange", "_handleSelfOnChange");
-	},
-	
-	postCreate: function(){
-		this.inherited(arguments);
-		this._panes = {};
-		this._subscriptions = [
-			dojo.subscribe(this.stackId + "-startup", this, "onStartup"),
-			dojo.subscribe(this.stackId + "-addChild", this, "onAddChild"),
-			dojo.subscribe(this.stackId + "-removeChild", this, "onRemoveChild"),
-			dojo.subscribe(this.stackId + "-selectChild", this, "onSelectChild")
-		];
-		var stack = dijit.byId(this.stackId);
-		if(stack && stack._started){
-			// If we have a stack, and it's already started, call our onStartup now
-			this.onStartup({children: stack.getChildren(), selected: stack.selectedChildWidget});
-		}
-	},
-	
-	destroy: function(){
-		dojo.forEach(this._subscriptions, dojo.unsubscribe);
-		delete this._panes; // Fixes memory leak in IE
-		this.inherited("destroy", arguments);
-	},
-	
-	_handleSelfOnChange: function(/*String*/ val){
-		// summary: Called when form select widget's value has changed
-		var pane = this._panes[this._paneIdFromOption(val)];
-		if (pane){
-			var s = dijit.byId(this.stackId);
-			if(pane == s.selectedChildWidget){
-				s._transition(pane);
-			}else{
-				s.selectChild(pane);
-			}
-		}
-	}
+define(["dojo","dijit","dojox"],function(_1,_2,_3){
+_1.getObject("dojox.form._SelectStackMixin",1);
+_1.declare("dojox.form._SelectStackMixin",null,{stackId:"",stackPrefix:"",_paneIdFromOption:function(_4){
+return (this.stackPrefix||"")+_4;
+},_optionValFromPane:function(id){
+var sp=this.stackPrefix;
+if(sp&&id.indexOf(sp)===0){
+return id.substring(sp.length);
+}
+return id;
+},_togglePane:function(_5,_6){
+if(_5._shown!=undefined&&_5._shown==_6){
+return;
+}
+var _7=_1.filter(_5.getDescendants(),"return item.name;");
+if(!_6){
+_8={};
+_1.forEach(_7,function(w){
+_8[w.id]=w.disabled;
+w.set("disabled",true);
 });
+_5._savedStates=_8;
+}else{
+var _8=_5._savedStates||{};
+_1.forEach(_7,function(w){
+var _9=_8[w.id];
+if(_9==undefined){
+_9=false;
+}
+w.set("disabled",_9);
+});
+delete _5._savedStates;
+}
+_5._shown=_6;
+},_connectTitle:function(_a,_b){
+var fx=_1.hitch(this,function(_c){
+this.updateOption({value:_b,label:_c});
+});
+if(_a._setTitleAttr){
+this.connect(_a,"_setTitleAttr",fx);
+}else{
+this.connect(_a,"attr",function(_d,_e){
+if(_d=="title"&&arguments.length>1){
+fx(_e);
+}
+});
+}
+},onAddChild:function(_f,_10){
+if(!this._panes[_f.id]){
+this._panes[_f.id]=_f;
+var v=this._optionValFromPane(_f.id);
+this.addOption({value:v,label:_f.title});
+this._connectTitle(_f,v);
+}
+if(!_f.onShow||!_f.onHide||_f._shown==undefined){
+_f.onShow=_1.hitch(this,"_togglePane",_f,true);
+_f.onHide=_1.hitch(this,"_togglePane",_f,false);
+_f.onHide();
+}
+},_setValueAttr:function(v){
+if("_savedValue" in this){
+return;
+}
+this.inherited(arguments);
+},attr:function(_11,_12){
+if(_11=="value"&&arguments.length==2&&"_savedValue" in this){
+this._savedValue=_12;
+}
+return this.inherited(arguments);
+},onRemoveChild:function(_13){
+if(this._panes[_13.id]){
+delete this._panes[_13.id];
+this.removeOption(this._optionValFromPane(_13.id));
+}
+},onSelectChild:function(_14){
+this._setValueAttr(this._optionValFromPane(_14.id));
+},onStartup:function(_15){
+var _16=_15.selected;
+this.addOption(_1.filter(_1.map(_15.children,function(c){
+var v=this._optionValFromPane(c.id);
+this._connectTitle(c,v);
+var _17=null;
+if(!this._panes[c.id]){
+this._panes[c.id]=c;
+_17={value:v,label:c.title};
+}
+if(!c.onShow||!c.onHide||c._shown==undefined){
+c.onShow=_1.hitch(this,"_togglePane",c,true);
+c.onHide=_1.hitch(this,"_togglePane",c,false);
+c.onHide();
+}
+if("_savedValue" in this&&v===this._savedValue){
+_16=c;
+}
+return _17;
+},this),function(i){
+return i;
+}));
+var _18=this;
+var fx=function(){
+delete _18._savedValue;
+_18.onSelectChild(_16);
+if(!_16._shown){
+_18._togglePane(_16,true);
+}
+};
+if(_16!==_15.selected){
+var _19=_2.byId(this.stackId);
+var c=this.connect(_19,"_showChild",function(sel){
+this.disconnect(c);
+fx();
+});
+}else{
+fx();
+}
+},postMixInProperties:function(){
+this._savedValue=this.value;
+this.inherited(arguments);
+this.connect(this,"onChange","_handleSelfOnChange");
+},postCreate:function(){
+this.inherited(arguments);
+this._panes={};
+this._subscriptions=[_1.subscribe(this.stackId+"-startup",this,"onStartup"),_1.subscribe(this.stackId+"-addChild",this,"onAddChild"),_1.subscribe(this.stackId+"-removeChild",this,"onRemoveChild"),_1.subscribe(this.stackId+"-selectChild",this,"onSelectChild")];
+var _1a=_2.byId(this.stackId);
+if(_1a&&_1a._started){
+this.onStartup({children:_1a.getChildren(),selected:_1a.selectedChildWidget});
+}
+},destroy:function(){
+_1.forEach(this._subscriptions,_1.unsubscribe);
+delete this._panes;
+this.inherited("destroy",arguments);
+},_handleSelfOnChange:function(val){
+var _1b=this._panes[this._paneIdFromOption(val)];
+if(_1b){
+var s=_2.byId(this.stackId);
+if(_1b==s.selectedChildWidget){
+s._transition(_1b);
+}else{
+s.selectChild(_1b);
+}
+}
+}});
+return _1.getObject("dojox.form._SelectStackMixin");
+});
+require(["dojox/form/_SelectStackMixin"]);

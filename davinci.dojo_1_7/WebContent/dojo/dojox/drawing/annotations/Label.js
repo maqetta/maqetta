@@ -1,117 +1,62 @@
-define([
-	"dojo",
-	"../stencil/Text",
-	"./Angle"], function(dojo){
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
 
-dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
-	// summary:
-	// 	An annotation called internally to label an Stencil.
-	// description:
-	//	Annotation is positioned with dojox.drawing.util.positioning.label
-	//	That method should be overwritten for custom placement. Or,
-	//	add a 'setLabelCustom' method to the Stencil and it will be used.
-	//
-	dojox.drawing.stencil.Text,
-	function(/*Object*/options){
-		// arguments:
-		//	options: Object
-		//		One key value: the stencil that called this.
-		//
-		this.master = options.stencil;
-		this.labelPosition = options.labelPosition || "BR"; // TL, TR, BR, BL, or function
-		if(dojo.isFunction(this.labelPosition)){
-			this.setLabel = this.setLabelCustom;
-		}
-		this.setLabel(options.text || "");
-		this.connect(this.master, "onTransform", this, "setLabel");
-		this.connect(this.master, "destroy", this, "destroy");
-		
-		if(this.style.labelSameColor){
-			this.connect(this.master, "attr", this, "beforeAttr");
-		}
-	},{
-		_align:"start",
-		drawingType:"label",
-		
-		setLabelCustom: function(/* ? String */text){
-			// summary:
-			//	Attaches to custom positioning within a Stencil
-			//
-			var d = dojo.hitch(this.master, this.labelPosition)();
-			this.setData({
-				x:d.x,
-				y:d.y,
-				width:d.w || this.style.text.minWidth,
-				height:d.h || this._lineHeight
-			});
-			
-			// is an event, not text, so keep the old label:
-			if(text && !text.split){ text = this.getText(); }
-			
-			this.render(this.typesetter(text));
-		},
-		
-		setLabel: function(/* String */text){
-			// summary:
-			//	Sets the text of the label. Not called directly. Should
-			//	be called within Stencil. See stencil._Base
-			//
-			// onTransform will pass an object here
-			var x, y, box = this.master.getBounds();
-			
-			if(/B/.test(this.labelPosition)){
-				y = box.y2 - this._lineHeight;
-			}else{
-				y = box.y1;
-			}
-			
-			if(/R/.test(this.labelPosition)){
-				x = box.x2;
-			}else{
-				y = box.y1;
-				this._align = "end";
-			}
-			
-			if(!this.labelWidth || (text && text.split && text != this.getText())){
-				this.setData({
-					x:x,
-					y:y,
-					height:this._lineHeight,
-					width:this.style.text.minWidth
-				});
-				
-				this.labelWidth = this.style.text.minWidth;
-				this.render(this.typesetter(text));
-				
-			}else{
-				
-				this.setData({
-					x:x,
-					y:y,
-					height:this.data.height,
-					width:this.data.width
-				});
-				
-				this.render();
-			}
-			
-		},
-		beforeAttr: function(key, value){
-			if(value!==undefined){
-				// make it an object
-				var k = key; key = {}; key[k] = value;
-			}
-			delete key.x;
-			delete key.y;
-			delete key.width;
-			delete key.height;
-			this.attr(key);
-			 // FIXME: this.created should already be set, shouldn't it?
-			!this.created && this.render();
-		}
-	}
-
-);
-
+define(["dojo","../stencil/Text","./Angle"],function(_1){
+dojox.drawing.annotations.Label=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Text,function(_2){
+this.master=_2.stencil;
+this.labelPosition=_2.labelPosition||"BR";
+if(_1.isFunction(this.labelPosition)){
+this.setLabel=this.setLabelCustom;
+}
+this.setLabel(_2.text||"");
+this.connect(this.master,"onTransform",this,"setLabel");
+this.connect(this.master,"destroy",this,"destroy");
+if(this.style.labelSameColor){
+this.connect(this.master,"attr",this,"beforeAttr");
+}
+},{_align:"start",drawingType:"label",setLabelCustom:function(_3){
+var d=_1.hitch(this.master,this.labelPosition)();
+this.setData({x:d.x,y:d.y,width:d.w||this.style.text.minWidth,height:d.h||this._lineHeight});
+if(_3&&!_3.split){
+_3=this.getText();
+}
+this.render(this.typesetter(_3));
+},setLabel:function(_4){
+var x,y,_5=this.master.getBounds();
+if(/B/.test(this.labelPosition)){
+y=_5.y2-this._lineHeight;
+}else{
+y=_5.y1;
+}
+if(/R/.test(this.labelPosition)){
+x=_5.x2;
+}else{
+y=_5.y1;
+this._align="end";
+}
+if(!this.labelWidth||(_4&&_4.split&&_4!=this.getText())){
+this.setData({x:x,y:y,height:this._lineHeight,width:this.style.text.minWidth});
+this.labelWidth=this.style.text.minWidth;
+this.render(this.typesetter(_4));
+}else{
+this.setData({x:x,y:y,height:this.data.height,width:this.data.width});
+this.render();
+}
+},beforeAttr:function(_6,_7){
+if(_7!==undefined){
+var k=_6;
+_6={};
+_6[k]=_7;
+}
+delete _6.x;
+delete _6.y;
+delete _6.width;
+delete _6.height;
+this.attr(_6);
+!this.created&&this.render();
+}});
 return dojox.drawing.annotations.Label;
 });

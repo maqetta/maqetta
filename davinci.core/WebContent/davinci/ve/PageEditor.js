@@ -121,6 +121,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 		this._displayMode=newMode;
 		this._bc.resize(); // kludge: forces primary tab to display	
+		dijit.byId("mainBody")._layoutChildren(); // kludge: force a layout on the BorderContainer by triggering a layout from the top.  Necessary because we're not playing by the BC rules, above, moving regions around, etc.
 	},
 	_modelSelectionChange	 : function (selection){
 		

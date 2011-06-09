@@ -2,9 +2,8 @@
 <html manifest="app/davinci/davinci.manifest">
 <head>
     <title>Welcome to Maqetta</title>
-	 <style type="text/css">
-			@import url("app/dojo/resources/dojo.css");
-			@import url("app/davinci/davinci.css");
+    <style type="text/css">
+			@import url("app/davinci/davinci.css?@revision@");
 	
 			html, body {
 				width: 100%;
@@ -27,12 +26,12 @@
 				font-size: 200%;
 				padding: 2em;
 			}
-	    </style>
+    </style>
     
-    <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-    <script type="text/javascript" src="app/dijit/dijit.js"></script>
-    <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
-    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
+    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, cacheBust: '@revision@'"></script>
+    <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js?@revision@"></script>
     <script type="text/javascript" >
 	davinci.useAppCache = true; // needed to provide FF "allow" warning
 

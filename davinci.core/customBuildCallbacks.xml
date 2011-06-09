@@ -63,6 +63,21 @@
         <fail message="ERROR - YOU NEED TO INSTALL A GIT COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
     </target>
 
+	<!--    Write "git describe" results to WebContent/pagedesigner.html, welcome.html...   -->
+	<target name="update.revisions" depends="check.command.line.git">
+		<exec executable="git" outputproperty="git.describe" dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
+		</exec>
+<echo>git.describe variable: '${git.describe}'</echo> 
+		<filter token="revision" value="${git.describe}"/>
+		<copy file="${target.folder}/WebContent/pagedesigner.html" tofile="${target.folder}/WebContent/pagedesigner.html.tmp" filtering="true"/>
+		<copy file="${target.folder}/WebContent/welcome.html" tofile="${target.folder}/WebContent/welcome.html.tmp" filtering="true"/>
+		<delete file="${target.folder}/WebContent/pagedesigner.html"/>
+		<delete file="${target.folder}/WebContent/welcome.html"/>
+		<move file="${target.folder}/WebContent/pagedesigner.html.tmp" tofile="${target.folder}/WebContent/pagedesigner.html"/>
+		<move file="${target.folder}/WebContent/welcome.html.tmp" tofile="${target.folder}/WebContent/welcome.html"/>
+	</target>
+
 	<!--    Write "git describe" results to WebContent/davinci/repositoryinfo.js   -->
 	<target name="update.repositoryinfo.js" depends="check.command.line.git">
 		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.file}"/>
@@ -213,6 +228,7 @@
 	<target name="post.gather.bin.parts">
 
 		<echo message="Inserting git describe information"/>
+		<antcall target="update.revisions"/>
 		<antcall target="update.repositoryinfo.js"/>
 		<antcall target="update.repositoryinfoLive.js"/>
 		<antcall target="update.manifest"/>

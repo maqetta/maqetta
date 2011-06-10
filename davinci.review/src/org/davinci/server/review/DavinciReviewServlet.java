@@ -25,7 +25,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 	private static String LOGIN_URL = "http://maqetta.org/index.php?option=com_user&view=login";
 
-	public  DavinciReviewServlet() {
+	public void initialize() {
 		serverManager = ServerManager.createServerManger(getServletConfig());
 		userManager = serverManager.getUserManager();
 		libraryManager = serverManager.getLibraryManager();
@@ -47,6 +47,10 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
+	    
+	    if(serverManager==null)
+	        initialize();
+	    
 		String contextString = req.getContextPath();
 
 		String pathInfo = req.getPathInfo();

@@ -42,13 +42,16 @@ public class DavinciPageServlet extends HttpServlet {
     protected ServerManager     serverManager;
     protected LibraryManager    libraryManager;
 
-    public DavinciPageServlet() {
+    public void initialize() {
         serverManager = ServerManager.createServerManger(getServletConfig());
         userManager = serverManager.getUserManager();
         libraryManager = serverManager.getLibraryManager();
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if(serverManager==null)
+            initialize();
+        
         User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String pathInfo = req.getPathInfo();
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {

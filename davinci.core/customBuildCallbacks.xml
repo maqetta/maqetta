@@ -239,6 +239,7 @@
 		<delete dir="${target.folder}/WebContent/dojox"/>
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
+        <delete dir="${target.folder}/WebContent/preview"/>
 		<delete dir="${target.folder}/WebContent/workspace"/>
 		<move todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="move Dojo build">
 			<fileset dir="${target.folder}/WebContent/release/dojo">
@@ -247,6 +248,7 @@
 				<include name="dijit/"/>
 				<include name="dojox/"/>
 				<include name="eclipse/"/>
+                <include name="preview/"/>
 				<include name="workspace/"/>
 			</fileset>
 		</move>

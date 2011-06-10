@@ -3,7 +3,6 @@
 		"selectDirectory":"Select Directory to link to",
 		
 		//DownloadAction.js
-		"download":"download",
 		"downloadResources":"Download Resources",
 		"downloadFileName":"Download File Name: ",
 		"downloadNow":"Download now",

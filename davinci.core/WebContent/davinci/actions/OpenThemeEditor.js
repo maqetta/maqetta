@@ -14,8 +14,8 @@ dojo.declare("davinci.actions.OpenThemeEditor", null, {
 		this._themeChooser = new davinci.ui.widgets.ThemeSelection({value:"                "});
 		
 		//this._themeChooser.set('value', theme);
-		davinci.Workbench.showModal(this._themeChooser, langObj.editTheme, "width:110px");
-		dojo.connect(this._themeChooser, "onChange", this, "_onChange");
+		davinci.Workbench.showModal(this._themeChooser, langObj.editTheme);//width needs to be adjusted to fit language
+		dojo.connect(this._themeChooser, "onChange", this, "_onChange");   //I'm still thinking on where it would be best to make that change
 		
 	},
 

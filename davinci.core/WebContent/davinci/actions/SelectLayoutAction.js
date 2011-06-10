@@ -62,7 +62,7 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 			
 
 		formHtml = formHtml + '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse, style: "width: 200px",
+		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dialog._selectLayout = this;
 		dojo.connect(dialog, 'onLoad', function(){

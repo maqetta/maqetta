@@ -15,7 +15,7 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 	for (var i=0;i<files.length;i++)
 		filesDiv+="<div>"+files[i].getPath()+"</div>";
 		
-	var proposedFileName=langObj.download;
+	var proposedFileName="download";
 	var formHtml = 
     "<div >" +
     '<div>'+ langObj.downloadResources +'</div>'

@@ -1,0 +1,22 @@
+
+.mblToolbarButton {
+  float: left;
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  margin: 6px;
+  padding: 0px 10px;
+  height: 29px;
+  border: 1px inset #9CACC0;
+  font-family: Helvetica;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  line-height: 29px;
+  text-align: center;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+div.mblToolbarButtonDomButton {
+  width: 11px;
+}

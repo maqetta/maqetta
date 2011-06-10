@@ -1,0 +1,107 @@
+/** dijit.form.Select **/
+
+.sketch .dijitSelect .dijitButtonText {
+	padding: 0px 5px 2px 5px;
+}
+
+/* normal status */
+.sketch .dijitSelect {
+	border: 1px solid #b5bcc7;
+	background-color: #f7fcff;
+	border-collapse: separate;
+}
+.dj_ie6 .sketch .dijitSelect,
+.dj_ie6 .sketch .dijitSelect .dijitButtonNode {
+	background-image:none;
+}
+
+.sketch .dijitSelect .dijitButtonContents {
+	border: 0px solid #b5bcc7;
+	border-right-width: 1px;
+}
+
+.sketch .dijitSelect .dijitArrowButton {
+	padding: 0;
+	border: 1px solid #fff;	/* inner white border on button node */
+	border-top:none;
+	background-color:#ebeef4;
+	background-image: url("images/formHighlight.png");
+	background-repeat:repeat-x;
+}
+
+.sketch .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+	background-image: url("images/commonFormArrows.png");
+	background-position:-35px 70%;
+	background-repeat: no-repeat;
+	width:16px;
+	height:100%;
+	display:block;
+}
+
+/* hover status */
+.sketch .dijitSelectHover {
+	border: 1px solid #769dc0;
+	background-color: #e9f4fe;
+	background-image: url('images/textBox_back.png');
+	background-repeat: repeat-x;
+}
+
+.sketch .dijitSelectHover .dijitButtonContents {
+	border-color:#81a5c6;
+}
+
+.sketch .dijitSelectHover .dijitArrowButton {
+	background-color:#abd6ff;
+}
+.sketch .dijitSelectHover .dijitArrowButton .dijitArrowButtonInner {
+	background-position:-70px 70%;
+}
+
+/* focused status */
+.sketch .dijitSelectFocused {
+	border: 1px solid #769dc0;
+}
+.sketch .dijitSelectFocused .dijitButtonContents {
+	border-color:#81a5c6;
+}
+.sketch .dijitSelectFocused .dijitArrowButton {
+	background-color:#7dbefa;
+	background-position:0px -177px;
+	border: none;
+	padding: 0px 1px;
+}
+.sketch .dijitSelectFocused .dijitArrowButton .dijitArrowButtonInner {
+	background-position:-70px 70%;
+	margin-bottom: 1px;
+}
+
+/* disable status */
+.sketch .dijitSelectDisabled {
+	border: 1px solid #d3d3d3;
+	background-color: #efefef;
+	background-image: none;
+	color: #818181;
+}
+.sketch .dijitSelectDisabled .dijitArrowButton { 
+	background-color: #efefef;
+}
+.sketch .dijitSelectDisabled .dijitArrowButton .dijitArrowButtonInner {
+	background-position:0px 70%
+}
+
+/* Dropdown menu style for select */
+
+.sketch .dijitSelectMenu td.dijitMenuItemIconCell,
+.sketch .dijitSelectMenu td.dijitMenuArrowCell { 
+	/* so that arrow and icon cells from MenuItem are not displayed */
+	display: none;  
+}
+.sketch .dijitSelectMenu td.dijitMenuItemLabel {
+	/* line up menu text with text in select box (in LTR and RTL modes) */
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.sketch .dijitSelectMenu .dijitMenuSeparatorTop {
+	border-bottom:1px solid #769dc0;
+}

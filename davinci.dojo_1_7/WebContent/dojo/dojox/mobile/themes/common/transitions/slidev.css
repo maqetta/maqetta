@@ -1,0 +1,36 @@
+.mblSlidev.mblOut {
+	-webkit-animation-duration: .6s;
+	-webkit-animation-name: mblSlideVOut;
+	-webkit-animation-timing-function: ease-out;
+	-webkit-transform: translateY(-100%);
+}
+.mblSlidev.mblIn {
+	-webkit-animation-duration: .6s;
+	-webkit-animation-name: mblSlideVIn;
+	-webkit-animation-timing-function: ease-out;
+	-webkit-transform: translateY(0px);
+}
+.mblSlidev.mblOut.mblReverse {
+	-webkit-animation-name: mblSlideVOutReverse;
+	-webkit-animation-timing-function: ease-in;
+}
+.mblSlidev.mblIn.mblReverse {
+	-webkit-animation-name: mblSlideVInReverse;
+	-webkit-animation-timing-function: ease-in;
+}
+@-webkit-keyframes mblSlideVOut {
+	from { -webkit-transform: translateY(0px); }
+	to { -webkit-transform: translateY(-100%); }
+}
+@-webkit-keyframes mblSlideVIn {
+	from { -webkit-transform: translateY(100%); }
+	to { -webkit-transform: translateY(0px); }
+}
+@-webkit-keyframes mblSlideVOutReverse {
+	from { -webkit-transform: translateY(0px); }
+	to { -webkit-transform: translateY(100%); }
+}
+@-webkit-keyframes mblSlideVInReverse {
+	from { -webkit-transform: translateY(-100%); }
+	to { -webkit-transform: translateY(0px); }
+}

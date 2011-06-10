@@ -1,0 +1,8 @@
+
+.mblDomButtonGreenBall {
+	background-image: url(compat/mblDomButtonGreenBall.png);
+	background-repeat: no-repeat;
+}
+.mblDomButtonGreenBall > DIV {
+	display: none;
+}

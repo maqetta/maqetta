@@ -1,0 +1,4 @@
+define(({
+	deleteButton: "[Sil]"
+})
+);

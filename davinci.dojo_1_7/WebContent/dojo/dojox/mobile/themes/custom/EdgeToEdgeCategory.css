@@ -1,0 +1,19 @@
+
+.mblEdgeToEdgeCategory {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 0 8px;
+  height: 30px;
+  border-bottom: 1px solid #b5bcc7;
+  background-color: #abd6ff;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)));
+  font-size: 14px;
+  font-family: Helvetica;
+  font-weight: bold;
+  text-shadow: none;
+  color: #000000;
+  line-height: 30px;
+}

@@ -1,0 +1,298 @@
+
+  /* Calendar
+ * 
+ * Styling Calendar mainly includes:
+ * 
+ * 1. Calendar container
+ *     .dijitCalendar - main container
+ *     .dijitCalendarHover / .dijitCalendarActive - states e.g. hover,active
+ * 
+ * 2. Month
+ *     .dijitCalendarMonthContainer
+ *     .dijitCalendarMonthLabel
+ *      .dijitCalendarDecrease / .dijitCalendarDecrease - icons for switching to previous/next month
+ *      .dijitCalendarArrowActive .dijitCalendarDecrease - states e.g. hover,active
+ * 
+ * 3. Date
+ *     .dijitCalendarDayLabelTemplate - week day column header e.g. S M T w T F S
+ *     .dijitCalendarDateTemplate - date label wrapper
+ *     .dijitCalendarPreviousMonth .dijitCalendarDateLabel - special labels for previous or next month
+ *      .dijitCalendarSelectedDate .dijitCalendarDateLabel - styles for selected date
+ *     .dijitCalendarDisabledDate .dijitCalendarDateLabel - styles for disabled date
+ *     .dijitCalendarActiveDate .dijitCalendarDateLabel - states e.g. hover,active
+ * 
+ * 4. Year
+ *     .dijitCalendarYearContainer
+ *     .dijitCalendarYearLabel
+ *     .dijitCalendarPreviousYear /.dijitCalendarNextYear
+ *      .dijitCalendarNextYearHover / .dijitCalendarPreviousYearHover - states e.g. hover,active
+ *      
+ * 5. Dropdown Month Menu
+ *     .dijitCalendarMonthContainer .dijitMenu - menu container     
+ *     .dijitCalendarMonthContainer .dijitMenu .dijitCalendarMonthLabel - month label in menu item
+ *     .dijitCalendarMonthContainer .dijitMenu .dijitMenuItemHover - menu item hover state
+ */
+ .sketch .dijitCalendar {
+    
+  /* border:solid 1px #b5bcc7; wdr hack for daVinci 0.5 */
+border-color : #000000;
+    border-style : solid;
+    border-width : 3px;
+    background-color : #ffffff;
+    background-image : url('../.././themes/claro/images/calendarContainerImages.png');
+    background-position : 0px -448px;
+    background-repeat : repeat-x;
+    text-align : center;
+    padding : 6px 5px 3px 5px;
+    -moz-border-radius : 8px;
+    -webkit-border-radius : 8px;
+}
+ .dj_ie6 .sketch .dijitCalendar {
+    background-image : none;
+}
+ .sketch .dijitCalendar img {
+    border : none;
+}
+ .sketch .dijitCalendarHover, .sketch .dijitCalendarActive {
+    background-color : #ffffff;
+    border : solid 1px #769dc0;
+    background-position :  ;
+    border-color : #000000;
+    border-width : 3px;
+}
+ .sketch .dijitCalendarMonthContainer th {
+    text-align : center;
+    padding-bottom : 4px;
+    vertical-align : middle;
+}
+ .sketch .dijitCalendarMonthLabelSpacer {
+    display : none;
+}
+ .sketch .dijitCalendarMonthLabel {
+    color : #000000;
+    font-size : 1.091em;
+    display : block;
+}
+
+  /* next/previous month arrows */
+ .sketch .dijitCalendarIncrementControl {
+    width : 18px;
+    height : 16px;
+    background-image : url("images/calendarArrows.png");
+    background-repeat : no-repeat;
+}
+ .dj_ie6 .sketch .dijitCalendarIncrementControl {
+    background-image : url("images/calendarArrows8bit.png");
+}
+.sketch .dijitCalendarIncrease {
+	background-position:-18px 0px;
+}
+.sketch .dijitCalendarArrowHover .dijitCalendarDecrease {
+	background-position:-36px 0px;
+}
+.sketch .dijitCalendarArrowHover .dijitCalendarIncrease {
+	background-position:-55px 0px;
+}
+.sketch .dijitCalendarArrowActive .dijitCalendarDecrease {
+	background-position:-72px 0px;
+}
+.sketch .dijitCalendarArrowActive .dijitCalendarIncrease {
+	background-position:-91px 0px;
+}
+ .sketch .dijitA11ySideArrow {
+    
+  /* text +/- labels instead of arrow icons, for high contrast mode */
+display : none;
+}
+ .sketch .dijitDayLabels th {
+    padding : 0px 4px 0px 4px;/* border-bottom:solid 1px #99b5cd; wdr hack for daVinci 0.5 */
+
+    border-color : #99b5cd;
+    border-style : solid;
+    border-width : 0 0 1px;
+    font-weight : bold;
+    text-align : center;
+}
+ .sketch .dijitCalendarDayLabelTemplate {
+    padding-bottom : 0em;
+    text-align : center;/* border-bottom:1px solid #99B5CD; wdr hack for daVinci 0.5 */
+
+    border-color : #000000;
+    border-style : solid;
+    border-width : 0 0 3px;
+    font-size : 0.909em;
+    padding : 0 3px 2px;
+}
+ .sketch .dijitCalendarDateTemplate {
+    text-align : center;
+    background-color : #fff;
+    background-image : url("images/calendarContainerImages.png");
+    background-position : 0px 0px;
+    background-repeat : repeat-x;/* border-bottom: 1px solid #dadde1; wdr hack for daVinci 0.5 */
+
+    border-color : #000000;
+    border-style : solid;
+    border-width : 0 0 2px;
+    padding-top : 0px;
+    font-size : 0.909em;
+    font-family : Arial;
+    font-weight : bold;
+    letter-spacing : .05em;
+    text-align : center;
+}
+ .dj_ie6 .sketch .dijitCalendarDateTemplate {
+    background-image : none;
+}
+ .sketch .dijitCalendarPreviousMonth, .sketch .dijitCalendarNextMonth {
+    background-color : #ebf3f9;
+    background-image : none;/* border-bottom:solid 1px #d2dae8; wdr hack for daVinci 0.5 */
+
+    border-color : #d2dae8;
+    border-style : solid;
+    border-width : 0 0 1px;
+    color : #547da1;
+}
+ .sketch .dijitCalendarDateTemplate .dijitCalendarDateLabel {
+    text-decoration : none;
+    display : block;
+    padding : 3px 5px 3px 4px;/* border:solid 1px #fff; wdr hack for daVinci 0.5 */
+
+    border-color : #fff;
+    border-style : solid;
+    border-width : 1px;
+    color : #1e1e1e;
+    background-color : rgba(171,212,251,0);/* transparent causes black-flash animation problem on webkit */
+
+    -webkit-transition-property : background-color, border;
+    -webkit-transition-duration : .35s;
+}
+ .sketch .dijitCalendarPreviousMonth .dijitCalendarDateLabel, .sketch .dijitCalendarNextMonth .dijitCalendarDateLabel {
+    color : #000000;
+    border-color : #000000;
+    background-color : #d5d0d0;
+    background-position :  ;
+    border-width : 0px 0px 2px 0px;
+}
+ .sketch .dijitCalendarYearContainer {
+    vertical-align : middle;
+}
+ .sketch .dijitCalendarYearControl {
+    padding : 1px 2px 2px 2px;
+}
+ .sketch .dijitCalendarYearLabel {
+    padding : 2px 0px 0px 0px;
+    margin : 0;
+}
+ .sketch .dijitCalendarYearLabel span {
+    
+  /* trying to center next/current/previous year vertically, doesn't work on IE6/7 though */
+vertical-align : middle;
+}
+ .sketch .dijitCalendarSelectedYear {
+    padding : 0px 3px;
+}
+ .sketch .dijitCalendarNextYear, .sketch .dijitCalendarPreviousYear {
+    padding : 1px 6px 1px 6px;
+    font-size : 0.909em;
+}
+ .sketch .dijitCalendarSelectedYear {
+    font-size : 1.091em;
+    color : #000;
+}
+
+  /* End Normal Calendar Style */
+/* Hovered Calendar Style */
+ .sketch .dijitCalendarHoveredDate .dijitCalendarDateLabel {
+    background-color : #ffffff;/* border:solid 1px #729dc2; wdr hack for daVinci 0.5 */
+
+    border-color : #000000;
+    border-style : solid;
+    border-width : 2px;
+    color : #000;
+    -webkit-transition-duration : .2s;
+    background-position :  ;
+}
+ .sketch .dijitCalendarNextYearHover, .sketch .dijitCalendarPreviousYearHover {
+    color : #000;/* border:solid 1px #fefefe; wdr hack for daVinci 0.5 */
+
+    border-color : #fefefe;
+    border-style : solid;
+    border-width : 1px;
+    padding : 0px 5px 0px 5px;/* reduced by 1 to make room for border */
+
+    background-color : #eaf4fe;
+}
+
+  /* End Hovered Calendar Style */
+/* Active Calendar Style */
+ .sketch .dijitCalendarNextYearActive, .sketch .dijitCalendarPreviousYearActive {
+    
+  /* border: solid 1px #87b3d9; wdr hack for daVinci 0.5 */
+border-color : #87b3d9;
+    border-style : solid;
+    border-width : 1px;
+    padding : 0px 5px 0px 5px;/* reduced by 1 to make room for border */
+
+    background-color : #90bde6;
+}
+ .sketch .dijitCalendarActiveDate .dijitCalendarDateLabel {
+    background-image : url("images/calendarContainerImages.png");
+    background-position : 0px -300px;
+    background-color : #75b5f0;/* border:solid 1px #fff; wdr hack for daVinci 0.5 */
+
+    border-color : #fff;
+    border-style : solid;
+    border-width : 1px;
+    -webkit-transition-duration : .1s;
+}
+ .dj_ie6 .sketch .dijitCalendarActiveDate .dijitCalendarDateLabel {
+    background-image : none;
+}
+
+  /* End Active Calendar Style */
+/* Selected Calendar Style */
+ .sketch .dijitCalendarSelectedDate .dijitCalendarDateLabel {
+    color : #000;
+    background-color : #ffffff;
+    border-color : #000000;
+    background-position :  ;
+}
+
+  /* End Selected Calendar Style */
+/* Disabled Calendar Style*/
+ .sketch .dijitCalendarDisabledDate .dijitCalendarDateLabel {
+    text-decoration : line-through;/* override hover effects above, hover and click on disabled date should have no effect */
+
+    background-color : transparent;
+    border-width : 0px;
+    padding : 4px 6px 4px 5px;
+    color : #547DA1;
+}
+
+  /* End Disabled Calendar Style */
+/* Styling for month drop down list */
+ .sketch .dijitCalendarMonthContainer .dijitMenu {
+    
+  /* top: 20px !important modifying date drop down so it appears below, instead of over, the current date */
+top : 20px  !important;
+    left : 0px;
+    border-color : #769dc0;
+    background-color : #fff;
+    text-align : center;
+    background-image : none;
+}
+ .sketch .dijitCalendarMonthContainer .dijitMenu .dijitCalendarMonthLabel {
+    border-top : solid 1px #fff;/* border-bottom: solid 1px #fff; wdr hack for daVinci 0.5 */
+
+    border-color : #fff;
+    border-style : solid;
+    border-width : 0 0 1px;
+    padding : 2px 20px;
+}
+ .sketch .dijitCalendarMonthContainer .dijitMenu .dijitMenuItemHover {
+    background-color : #abd6ff;
+    border-color : #769dc0;
+    border-width : 1px 0px;
+    background-image : url("images/commonHighlight.png");
+    background-repeat : repeat-x;
+}

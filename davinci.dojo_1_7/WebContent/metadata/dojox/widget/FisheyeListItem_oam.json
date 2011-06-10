@@ -1,0 +1,44 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/FisheyeListItem",
+    "name": "dojox.widget.FisheyeListItem",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/widget/FisheyeList/FisheyeList.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.widget.FisheyeList');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "iconSrc": {
+            "datatype": "string",
+            "format": "url",
+            "title": "Icon Source"
+        },
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        }
+    },
+    "content": "<span></span>"
+}

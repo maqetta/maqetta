@@ -1,0 +1,26 @@
+
+.mblButton {
+	background-image: url(compat/button-bg.png);
+	-moz-border-radius: 6px;
+	-o-border-radius: 6px;
+	-ms-border-radius: 6px;
+	border-radius: 6px;
+}
+.mblButtonSelected {
+	background-image: url(compat/button-sel-bg.png);
+}
+.mblButtonDisabled {
+	background-image: none;
+}
+.mblBlueButton {
+	background-image: url(compat/blue-button-bg.png);
+}
+.mblBlueButtonSelected {
+	background-image: url(compat/button-sel-bg.png);
+}
+.mblRedButton {
+	background-image: url(compat/red-button-bg.png);
+}
+.mblRedButtonSelected {
+	background-image: url(compat/button-sel-bg.png);
+}

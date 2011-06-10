@@ -1,0 +1,93 @@
+.mblSlide.mblOut {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblSlideOut;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform: translateX(-100%);
+}
+.mblSlide.mblIn {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblSlideIn;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform: translateX(0px);
+}
+.mblSlide.mblOut.mblReverse {
+	-webkit-animation-name: mblSlideOutReverse;
+}
+.mblSlide.mblIn.mblReverse {
+	-webkit-animation-name: mblSlideInReverse;
+}
+@-webkit-keyframes mblSlideOut {
+	from { -webkit-transform: translateX(0px); }
+	to { -webkit-transform: translateX(-100%); }
+}
+@-webkit-keyframes mblSlideIn {
+	from { -webkit-transform: translateX(100%); }
+	to { -webkit-transform: translateX(0px); }
+}
+@-webkit-keyframes mblSlideOutReverse {
+	from { -webkit-transform: translateX(0px); }
+	to { -webkit-transform: translateX(100%); }
+}
+@-webkit-keyframes mblSlideInReverse {
+	from { -webkit-transform: translateX(-100%); }
+	to { -webkit-transform: translateX(0px); }
+}
+.mblFlip.mblOut {
+	-webkit-animation-duration: .6s;
+	-webkit-animation-name: mblFlipOut;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-transform: rotateY(90deg) scale(.8);
+}
+.mblFlip.mblIn {
+	-webkit-animation-duration: .6s;
+	-webkit-animation-name: mblFlipIn;
+	-webkit-animation-timing-function: ease-out;
+	-webkit-transform: rotateY(0deg) scale(1);
+}
+@-webkit-keyframes mblFlipOut {
+	0% { -webkit-transform: rotateY(0deg) scale(1); }
+	50% { -webkit-transform: rotateY(90deg) scale(.8); }
+	100% { -webkit-transform: rotateY(90deg) scale(.8); }
+}
+@-webkit-keyframes mblFlipIn {
+	0% { -webkit-transform: rotateY(90deg) scale(.8); }
+	50% { -webkit-transform: rotateY(90deg) scale(.8); }
+	100% { -webkit-transform: rotateY(0deg) scale(1); }
+}
+.mblFade.mblOut {
+	z-index: -100;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-name: mblFadeOut;
+	-webkit-animation-timing-function: ease-in;
+}
+.mblFade.mblOut.mblFast {
+	-webkit-animation-duration: 0.3s;
+}
+.mblFade.mblIn {
+	z-index: 0;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-name: mblFadeIn;
+	-webkit-animation-timing-function: ease-out;
+}
+@-webkit-keyframes mblFadeOut {
+	from {}
+	to {}
+}
+@-webkit-keyframes mblFadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+.mblView {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  color: white;
+}
+.mblView.mblIn {
+  position: absolute;
+}
+.mblFixedBottomBar {
+  position: absolute !important;
+  width: 100%;
+}

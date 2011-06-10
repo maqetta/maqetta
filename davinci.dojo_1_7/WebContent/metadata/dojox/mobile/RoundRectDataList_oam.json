@@ -1,0 +1,61 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/RoundRectDataList",
+    "name": "dojox.mobile.RoundRectDataList",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.RoundRectDataList');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "transition": {
+            "datatype": "string",
+            "defaultValue": "slide"
+        },
+        "iconBase": {
+            "datatype": "string"
+        },
+        "iconPos": {
+            "datatype": "string"
+        },
+        "store": {
+            "datatype": "string"
+        },
+        "query": {
+            "datatype": "string"
+        },
+        "queryOptions": {
+            "datatype": "string"
+        }
+    },
+    "content": "<ul></ul>"
+}

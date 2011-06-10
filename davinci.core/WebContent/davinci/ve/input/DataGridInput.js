@@ -435,7 +435,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
       			onOK : function ()
       			{
       				if(data.file){
-      					debugger;
       					var path=new davinci.model.Path(data.file.getPath());
       					var value=path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
       					var textArea = dijit.byId("davinciIleb");
@@ -456,7 +455,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	
 	onCancelFileSelection: function(e)
 	{
-		debugger;
 		delete this._fileSelectionDialog;
 	},
 	
@@ -489,7 +487,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	},
 	
 	changeDataStoreType: function (e){
-		debugger;
+
 		this._dataStoreType = e;
 	    var textArea = dijit.byId("davinciIleb");
 	    var tagetObj = dojo.byId("iedResizeDiv");
@@ -556,8 +554,8 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 					'<td>' +
 						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
 							'<option value="dummyData">Comma seperated data</option> ' +
-							'<option value="file">Data from file</option> ' +
-							'<option value="url">URL (JSONP)</option> ' +
+							'<option value="file">Data file from workspace</option> ' +
+// hide for M2							'<option value="url">URL (JSONP)</option> ' +
 						'</select>' +
 					'<td>' +
 					'<td></td>' + 

@@ -480,8 +480,8 @@ dojo.declare("davinci.ve.Context", null, {
             head += "</head><body>";
             if (dojoUrl) {
                 // Since this document was created from script, DOMContentLoaded and window.onload never fire.
-                // Call dojo._loadInit manually to trigger the Dojo onLoad events.
-                head += "<script>dojo._loadInit();</script>";
+                // Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
+                head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
             }
             head += "</body></html>";
 

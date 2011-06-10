@@ -15,6 +15,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 	orientation:'portrait',
 	scalefactor:1,
 	showZoom:true,
+	margin:0,
 	pathToPreviewerFolder:'preview/',
 	silhouetteiframe:null,
 	_cnncts:[],
@@ -164,7 +165,8 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 				rootNode:silhouette_div_container,
 				svgfilename:spw.devicelist[spw.currentDevice].file,
 				orientation:orientation,
-				scalefactor:scalefactor
+				scalefactor:scalefactor,
+				margin:spw.margin
 			});
 		});
 		this._cnncts.push(conn);

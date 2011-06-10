@@ -145,7 +145,7 @@ dojo.declare("preview.silhouetteiframe", null, {
 	},
 
 	updateObjectElement: function(){
-		var silhouetteiframe_object_containers = document.querySelectorAll(".silhouetteiframe_object_container",this.rootNode);
+		var silhouetteiframe_object_containers = this.rootNode.querySelectorAll(".silhouetteiframe_object_container",this.rootNode);
 		if(silhouetteiframe_object_containers.length==0){
 			return;
 		}
@@ -168,7 +168,7 @@ dojo.declare("preview.silhouetteiframe", null, {
 		}else{
 			// Restore element.style on the rootNode and iframe node
 			this._restoreStyle(this.rootNode.style, this._silhouette_div_container_orig_style);			
-			var silhouetteiframe_iframes = document.querySelectorAll(".silhouetteiframe_iframe",this.rootNode);
+			var silhouetteiframe_iframes = this.rootNode.querySelectorAll(".silhouetteiframe_iframe",this.rootNode);
 			if(silhouetteiframe_iframes.length>0){
 				var silhouetteiframe_iframe = silhouetteiframe_iframes[0];
 				this._restoreStyle(silhouetteiframe_iframe.style, this._silhouetteiframe_iframe_orig_style);
@@ -217,7 +217,7 @@ dojo.declare("preview.silhouetteiframe", null, {
 			return;
 		var svg_elem = svg_doc.documentElement;
 		// Note: in future, maybe multiple silhouettes at once
-		var iframe_elems = document.querySelectorAll(".silhouetteiframe_iframe");
+		var iframe_elems = this.rootNode.querySelectorAll(".silhouetteiframe_iframe");
 		if(iframe_elems.length<=0)
 			return;
 		var iframe_elem = iframe_elems[0];

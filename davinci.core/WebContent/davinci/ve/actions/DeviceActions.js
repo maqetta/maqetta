@@ -31,7 +31,9 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 			var cb = dijit.byId('devices');
 			dojo.connect(cb, "onChange", function(newDevice){
 				dialog.destroyRecursive(false);
-				c.visualEditor.setDevice(newDevice);
+				var e = davinci.Workbench.getOpenEditor();
+				var context = e.getContext();
+				context.visualEditor.setDevice(newDevice);
 				e._visualChanged();
 			});
 		}, this);

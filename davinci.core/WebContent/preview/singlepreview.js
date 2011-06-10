@@ -61,8 +61,10 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 		// Only add style declarations if not already there
 		var style_elems = dojo.query('style.singlepreview_styles');
 		if(style_elems.length==0){
-			if(!document.head){
-				dojo.create('head',null,document,'first');
+			var head_elem = document.querySelectorAll('head')[0];
+			if(!head_elem){
+				console.log('ERROR: silhouetteiframe.js addStyleDeclarations(): no HEAD element');
+				return;
 			}
 			dojo.create('style',{
 				type:'text/css',
@@ -78,7 +80,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 					'.control_angle_cw { background-image:url('+this.pathToPreviewerFolder+'images/rotate_cw.png); }\n'+
 					'.control_angle_ccw { background-image:url('+this.pathToPreviewerFolder+'images/rotate_ccw.png); }\n'+
 					'.controlbar .controlbar_container.controlbar_container_angle .dijitButtonNode { padding: 0px; }'
-			},document.head);
+			},head_elem);
 		}
 	},
 

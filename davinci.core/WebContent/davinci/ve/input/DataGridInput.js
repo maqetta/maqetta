@@ -3,6 +3,7 @@ dojo.require("davinci.ve.input.SmartInput");
 //dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
+dojo.require("dojox.form.DropDownSelect");
 
 dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 
@@ -148,14 +149,15 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			// file selection dialog is active so don't close inline edit
 			return;
 		}
-		var dummyDataRadioButton = dijit.byId("davinci.ve.input.DataGridInput.dummyData");
-	    if (dummyDataRadioButton.checked){
-	    	this.updateWidget();
-	    }else{
-	    	this._format = this.getFormat();
+		if (this._dataStoreType === 'dummyData'){
+			this.updateWidget();
+		} else if (this._dataStoreType === 'file'){
+			this._format = this.getFormat();
 	    	this.updateWidgetForUrlStore();
-	    	 
-	    }
+		} else if (this._dataStoreType === 'url'){
+			this._format = this.getFormat();
+	    	this.updateWidgetForUrlStore(); 
+		}
 	    this.hide(true); // we already updated the widget so just do a hide like cancel
 	},
 	
@@ -239,7 +241,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = davinci.ve.widget.byId(storeId);
-		//this._attr(storeWidget, "data", data);
 		var properties = {};
 		properties['data'] = data;
 		storeWidget._srcElement.setAttribute('url', ''); //wdr 3-11
@@ -265,34 +266,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		} else {
 			this._getContext().getCommandStack().execute(this.command || command);
 		}	
-	},
-	
-	toggleInputBoxes: function(e){
-		
-		var dummyDataRadioButton = dijit.byId("davinci.ve.input.DataGridInput.dummyData");
-	    var textArea = dijit.byId("davinciIleb");
-	    var tagetObj = dojo.byId("iedResizeDiv");
-	    //var urlTextBox = dijit.byId("davinci.ve.input.DataGridInput.url");
-	    if (dummyDataRadioButton.checked){
-	    	//dojo.style(textArea.domNode, 'display', '');
-	    	//dojo.style(urlTextBox.domNode, 'display', 'none');
-	    	//this._inline.eb = textArea;
-	    	
-	    	textArea.setValue( this._data);
-	    	//this.multiLine = 'true';
-	    	//tagetObj.style.height = '145px';
-	    	tagetObj.style.height = '85px';
-	    }else{
-//	    	dojo.style(textArea.domNode, 'display', 'none');
-//	    	dojo.style(urlTextBox.domNode, 'display', '');
-//	    	this._inline.eb = urlTextBox;
-	    	textArea.setValue( this._url);
-	    	//this.multiLine = 'false';
-	    	tagetObj.style.height = '40px';
-
-	    }
-    	this.resize(null);
-
 	},
 	
 	updateWidgetForUrlStore: function(){
@@ -344,16 +317,15 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			var item = items[i];
 			console.warn("i=", i, "item=", item);
 		}
-		//return this.replaceDataGridStoreData(data);
 		var store = this._widget.dijitWidget.store;
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = davinci.ve.widget.byId(storeId);
 		var properties = {};
 		var context = this._getContext();
         var widget = this._widget;
-		properties['url'] = this._url; //this._urlDataStore.url;
-		storeWidget._srcElement.setAttribute('data', ''); //wdr 3-11
-		properties.data = ''; // to prevent ModifyCommand mixin from putting it back//delete properties.data; //3-11
+		properties['url'] = this._url; 
+		storeWidget._srcElement.setAttribute('data', ''); 
+		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
 		var escapeHTML = (this._format === 'text');
         var command = new davinci.ve.commands.ModifyCommand(widget, {structure: structure, escapeHTMLInData:escapeHTML}, null, context);
@@ -368,19 +340,14 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	
 	show: function(widgetId) {
         this._widget = davinci.ve.widget.byId(widgetId);
-//	    this._inline = new dijit.Dialog({
-//            title: this._widget.type+" Dialog",
-//            style: "width: 670px; height:450px"
-//        });
 	    
 	    var width = 200;
 		var height = 155;
 		this._loading(height, width);
 	    
-  
+		dojo.style('ieb', 'background-color', '#F7FDFF');
         var content = this._getTemplate();
         this._inline.attr("content", content);
-       // this._inline.onCancel = dojo.hitch(this, "cancel");
         this._inline.eb = dijit.byId("davinciIleb");
         this._inline.callBackObj = this;
  
@@ -388,43 +355,31 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
 		var folder = dojo.byId('davinci.ve.input.DataGridInput_img_folder');
 		this._connection.push(dojo.connect(folder, "onclick", this, "fileSelection"));
-		//this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent")); 
-		//this._connection.push(dojo.connect(this._inline.eb, "onClick", this, "updateSimStyle"));
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();
-		//this.updateFormats();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-		//dojo.style(this._inline.domNode, 'backgroundColor', 'red');
-		//this._inline.eb.focus();
 		this.resize(null);
-
-        var dataRadioButton = dijit.byId("davinci.ve.input.DataGridInput.dummyData");
-        dataRadioButton.onClick = dojo.hitch(this, "toggleInputBoxes");
-        var urlRadioButton = dijit.byId("davinci.ve.input.DataGridInput.urlData");
-        urlRadioButton.onClick = dojo.hitch(this, "toggleInputBoxes");
-        
+        var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
+        this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
         var storeId = this._widget._srcElement.getAttribute("store"); 
    		var storeWidget = davinci.ve.widget.byId(storeId);
         this._data = storeWidget._srcElement.getAttribute('data'); 
         this._url = storeWidget._srcElement.getAttribute('url'); 
-       
-        
         this._inline.eb = dijit.byId("davinciIleb");
         this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
         if(this._data){ 
-        	dataRadioButton.setChecked(true);
-        	urlRadioButton.setChecked(false);
+        	dataStoreType.setValue('dummyData');
+        	this._dataStoreType = 'dummyData';
         	this._url = ' ';
         	this.refreshStoreView();
         }else{
-        	urlRadioButton.setChecked(true);
-        	dataRadioButton.setChecked(false);
-        	//var urlTextBox = dijit.byId("davinci.ve.input.DataGridInput.url");
-        	this._inline.eb.setValue(/* this._widget.dijitWidget.store.url*/ this._url); 
+        	dataStoreType.setValue('file');
+        	this._dataStoreType = 'file';
+        	this._inline.eb.setValue( this._url); 
         	this._data = ' ';
         }
-        //this.updateFormats();
+        dojo.style('iedResizeDiv', 'background-color', 'white');
         var html = this._widget.getPropertyValue('escapeHTMLInData');
         var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
@@ -436,8 +391,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			textRadio.setChecked(false);        	
         }
         this.updateFormats();
-        this.toggleInputBoxes(null);
-        
+
 	},
 	
 	handleEvent: function(event){
@@ -462,11 +416,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
       	      style: "height:10em;overflow:auto",
       	      model: "davinci.ui.widgets.ResourceTreeModel",
       	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
-//      	      link : { target: "textValue",
-//              targetFunction : function (input){
-//      			  var path=new davinci.model.Path(input.getPath());
-//      			  return path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
-//              }}
+
       	    }
       	  ];
       	  
@@ -485,20 +435,14 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
       			onOK : function ()
       			{
       				if(data.file){
-      					debugger;
       					var path=new davinci.model.Path(data.file.getPath());
       					var value=path.relativeTo(new davinci.model.Path(this._widget._edit_context._srcDocument.fileName), true).toString(); // ignore the filename to get the correct path to the image
-      					var dataRadioButton = dijit.byId("davinci.ve.input.DataGridInput.dummyData");
-      			        var urlRadioButton = dijit.byId("davinci.ve.input.DataGridInput.urlData");
-   			        	dataRadioButton.setChecked(false);
-   			        	urlRadioButton.setChecked(true);
       					var textArea = dijit.byId("davinciIleb");
       			    	textArea.setValue(value); 
       			    	textArea.focus();
       			    	this._url = data.file;
       			    	delete this._fileSelectionDialog;
       			    	this.updateFormats();
-      					//this.updateWidget(data.textValue,data.altText);
       				}
       			
       			}
@@ -511,15 +455,13 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	
 	onCancelFileSelection: function(e)
 	{
-		debugger;
 		delete this._fileSelectionDialog;
 	},
 	
 	updateFormats: function(){
 			
 		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
-		var urlRadioButton = dijit.byId("davinci.ve.input.DataGridInput.urlData");
-		if (urlRadioButton.checked){
+		if (this._dataStoreType === 'file' ){
 			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
@@ -537,72 +479,99 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			dojo.style(htmlObj, 'display', '');
 			dojo.style(textObj, 'display', '');
 			dojo.style(table, 'display', '');
+			
 		} else {
-			this.inherited(arguments);	
+			this.inherited(arguments);
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
+		}
+	},
+	
+	changeDataStoreType: function (e){
+
+		this._dataStoreType = e;
+	    var textArea = dijit.byId("davinciIleb");
+	    var tagetObj = dojo.byId("iedResizeDiv");
+	    var resizeWidth = dojo.style('iedResizeDiv', 'width');
+		if (e === 'dummyData'){
+			textArea.setValue( this._data);
+	    	tagetObj.style.height = '85px';
+	    	dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
+			dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
+			
+		}else if ( e=== 'file'){
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
+			textArea.setValue( this._url);
+	    	tagetObj.style.height = '40px'
+			
+		}else if (e === 'url'){
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
+			textArea.setValue( this._url);
+	    	tagetObj.style.height = '40px'
+	    	dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
+			
+		} else {
+			// we should not ever get here.
+			console.error('DataGridInput:changeDataStoreType error');
+		}
+    	this.resize(null);
+	},
+	
+	resize: function(e){
+		
+		this.inherited(arguments);	
+		var tagetObj = dojo.byId("iedResizeDiv");
+		var targetEditBoxDijit = dijit.byId("davinciIleb");
+		var boxWidth = tagetObj.clientWidth  - 5;
+		var boxheight = tagetObj.clientHeight -6;
+		boxWidth = tagetObj.clientWidth  /*+2*/ -8;
+		boxheight = tagetObj.clientHeight  -20; // new for text area
+		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
+		
+	
+		if (targetEditBoxDijit)
+			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
+		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
+				
+		if (this._dataStoreType === 'file') {
+			var ieb = dojo.byId("ieb");
+			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
+			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
+		} else {
+			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
 		}
 	},
 	
 	_getTemplate: function(){
 		
-		var editBox = ''+
-		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" > ' +
+		var template = ''+
+		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" style="background-color: #F7FCFF;	margin: 0 0 0 -1px;"> ' +
 		'<table id="davinci.ve.input.DataGridInput_table" > ' +
 			'<tbody>' + 
-				'<tr> '+
-					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" />  </td> '+
-					'<td class="smartInputTd2">'+
-						'<div  class="smartInputRadioTextDiv">'+
-							'Create data grid from CSV data:'+
-						'</div>'+
-	 				'</td> '+
-	 				'<td></td>' +
-				'</tr> '+
-				'<tr> '+
-					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" />  </td> '+
-					'<td class="smartInputTd2">'+
-						'<div id="davinci.ve.input.DataGridInput.urlData_width_div" class="smartInputRadioTextDiv">'+
-							'Create data grid from URL data:'+
-						'</div>'+
-					'</td>' +
+				'<tr>' +
+					'<td></td>' + 
 					'<td>' +
-						'<span id="davinci.ve.input.DataGridInput_img_folder"  title="Folder" class="inlineEditFolder" > </span>'+
-					'</td> '+
-				'</tr> '+
+						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
+							'<option value="dummyData">Comma seperated data</option> ' +
+							'<option value="file">Data file from workspace</option> ' +
+// hide for M2							'<option value="url">URL (JSONP)</option> ' +
+						'</select>' +
+					'<td>' +
+					'<td></td>' + 
+				'</tr>' +	
+	
 			'</tbody>'+ 
 		'</table> '+
 		'</div>' +
-		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 240px; height: 60px;" >' + 
-//	    '    <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" /><label for="davinci.ve.input.DataGridInput.dummyData">Create data grid from CSV data:</label><br /> ' +
-//        '    <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" /><label for="davinci.ve.input.DataGridInput.urlData">Create data grid from URL data:</label><br /> ' +
+		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 240px; height: 60px; border: 1px solid #769DC0; margin: 0 5px 0 5px;" >' + 
         '	<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" style="width:240px; height:60px;" class="smartInputTextArea" ></textarea>' +
-//        '   <input type="text" name="davinci.ve.input.DataGridInput.url" value="" placeHolder="Enter url" dojoType="dijit.form.TextBox"    trim="true" id="davinci.ve.input.DataGridInput.url" /> ' +
-			'<div id="smartInputSim" class="smartInputSim" ></div>'+
+			'<div id="smartInputSim" class="smartInputSim" style="display:none;" ></div>'+
+			'<span id="davinci.ve.input.DataGridInput_img_folder"  title="Folder" class="inlineEditFolder" > </span>'+
 			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="240" minHeight="40"  activeResize="true" intermediateChanges="true" ></div>' +
-		'</div>';
-
-		var template = ''+ editBox +
+		'</div>'+
 		'<div  id="davinci.ve.input.SmartInput_div"  class="davinciVeInputSmartInputDiv" >' + 
 			'<div id="davinci.ve.input.SmartInput_radio_div" class="smartInputRadioDiv" >' + 
-//				'<table id="davinci.ve.input.DataGridInput_table" style="display:none;"> ' +
-//					'<tbody>' + 
-//						'<tr> '+
-//		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.dummyData" value="dummyData" />  </td> '+
-//		 					'<td class="smartInputTd2">'+
-//		 						'<div  class="smartInputRadioTextDiv">'+
-//		 							'Create data grid from CSV data:'+
-//		 						'</div>'+
-//		     				'</td> '+
-//							'</tr> '+
-//							'<tr> '+
-//		 					'<td class="smartInputTd1"> <input type="radio" dojoType="dijit.form.RadioButton" name="dataGridData" id="davinci.ve.input.DataGridInput.urlData" value="urlData" />  </td> '+
-//		 					'<td class="smartInputTd2">'+
-//		 						'<div id="davinci.ve.input.DataGridInput.urlData_width_div" class="smartInputRadioTextDiv">'+
-//		 							'Create data grid from URL data:'+
-//		 						'</div>'+
-//		     				'</td> '+
-//						'</tr> '+
-//					'</tbody>'+ 
-//				'</table> '+
 				'<table id="davinci.ve.input.SmartInput_table"> ' +
 					'<tbody>' + 
 						'<tr> ' +

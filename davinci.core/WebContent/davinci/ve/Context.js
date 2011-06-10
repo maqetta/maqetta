@@ -429,7 +429,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
 
-			var frame = dojo.create("iframe", null, containerNode);
+			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
 			var realUrl = dojo.global.location.href + "/" ;

@@ -1,0 +1,24 @@
+
+.mblHeading {
+	background-image: url(compat/heading-bg.png);
+}
+.mblHeadingSpanTitle {
+	white-space: normal;
+}
+.mblArrowButtonHead {
+	position: absolute;
+	top: 6px;
+	left: 7px;
+	width: 19px;
+	height: 29px;
+	border-style: none;
+	background-image: url(compat/arrow-button-head.png);
+}
+.mblArrowButtonBody {
+	padding: 0px 10px 0px 10px;
+	background-image: url(compat/arrow-button-bg.png);
+}
+.mblArrowButtonNeck {
+	background-image: url(compat/arrow-button-bg.png);
+	border-width: 1px 0px 1px 0px;
+}

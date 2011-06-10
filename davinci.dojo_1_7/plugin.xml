@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension id="dojoMetaData" point="org.eclipse.equinox.http.registry.resources">
+	        <resource alias="/app/metadata/dojo/1.7" base-name="/WebContent/metadata" />
+	</extension>
+	
+      <extension point="davinci.core.ajaxLibrary">
+         <ajaxLibrary name="dojo" id="dojo" version="1.7">
+            <libraryPath location="WebContent/dojo" name="/lib/dojo"></libraryPath>
+            <metadata location="app/metadata/dojo/1.7" />
+   	
+         </ajaxLibrary>
+        <ajaxLibrary name="dojo based themes" id="DojoThemes" version="1.7">
+	         <libraryPath location="WebContent/maqetta/themes" name="/themes"></libraryPath>
+	    </ajaxLibrary>
+      </extension>
+      
+</plugin>

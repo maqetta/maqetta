@@ -67,7 +67,6 @@
 		<exec executable="git" outputproperty="git.describe" dir="${user.dir}/repository/maqetta">
 			<arg value="describe"/>
 		</exec>
-<echo>git.describe variable: '${git.describe}'</echo> 
 		<filter token="revision" value="${git.describe}"/>
 		<copy file="${target.folder}/WebContent/pagedesigner.html" tofile="${target.folder}/WebContent/pagedesigner.html.tmp" filtering="true"/>
 		<copy file="${target.folder}/WebContent/welcome.html" tofile="${target.folder}/WebContent/welcome.html.tmp" filtering="true"/>

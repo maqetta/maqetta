@@ -1,0 +1,68 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/RadioButton",
+    "name": "dojox.mobile.RadioButton",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.RadioButton');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string"
+        },
+        "baseClass": {
+            "datatype": "string",
+            "defaultValue": "mblRadioBox"
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 1000
+        },
+        "label": {
+            "datatype": "string"
+        },
+        "checked": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "value": {
+            "datatype": "string",
+            "defaultValue": "on"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "defaultValue": false
+        }
+    },
+    "content": "<input type='radio'>"
+}

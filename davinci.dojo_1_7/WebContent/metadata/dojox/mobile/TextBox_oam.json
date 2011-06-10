@@ -1,0 +1,101 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/TextBox",
+    "name": "dojox.mobile.TextBox",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.TextBox');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string"
+        },
+        "alt": {
+            "datatype": "string"
+        },
+        "value": {
+            "datatype": "string"
+        },
+        "tabIndex": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "defaultValue": true
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "trim": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "maxLength": {
+            "datatype": "string"
+        },
+        "selectOnClick": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "placeHolder": {
+            "datatype": "string"
+        },
+        "baseClass": {
+            "datatype": "string",
+            "defaultValue": "mblTextBox"
+        }
+    },
+    "content": "<input type='text'>"
+}

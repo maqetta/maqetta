@@ -116,17 +116,17 @@ dojo.declare("preview.silhouetteiframe", null, {
 		// Only add style declarations if not already there
 		var style_elems = document.querySelectorAll('style.silhouetteiframe_styles');
 		if(style_elems.length==0){
-			if(!document.head){
-				var head_elem = document.createElement('head');
-				var html_elem = document.documentElement;
-				html_elem.insertBefore(head_elem, html_elem.firstChild);
+			var head_elem = document.querySelectorAll('head')[0];
+			if(!head_elem){
+				console.log('ERROR: silhouetteiframe.js addStyleDeclarations(): no HEAD element');
+				return;
 			}
 			var style_elem = document.createElement('style');
 			style_elem.setAttribute('type','text/css');
 			style_elem.setAttribute('class','silhouetteiframe_styles');
 			style_elem.innerHTML = '.silhouetteiframe_div_container { display:inline-block; text-align:left; }\n'+
 					'.silhouetteiframe_iframe { position:absolute; top:0px; left:0px; border:none; }';
-			document.head.appendChild(style_elem);
+			head_elem.appendChild(style_elem);
 		}
 	},
 	
@@ -299,7 +299,7 @@ dojo.declare("preview.silhouetteiframe", null, {
 			g2_elem=svg_doc.getElementById(g2_id);
 			a1_elem=svg_doc.getElementById(a1_id);
 			a2_elem=svg_doc.getElementById(a2_id);
-			if(!g2_elem || !a1_elem || !a2_elem)
+			if(!g2_elem /* || !a1_elem || !a2_elem */)	//FF3.6 bug - getElementById fails on anim elements even though they are there!
 				return;
 		}else{
 			// Move all children of <svg> to be descendants of 2 nested <g> elements
@@ -337,13 +337,15 @@ dojo.declare("preview.silhouetteiframe", null, {
 				return at_elem;
 			}
 			// First <animateTransform> is a translate with additive='replace' to set a new 'transform' value
-			a1_elem = setupAnimateTransform(a1_id);
-			a1_elem.setAttribute('type','translate');
-			a1_elem.setAttribute('additive','replace');
-			// Second <animateTransform> is a rotate with additive='sum' to append a second transform
-			a2_elem = setupAnimateTransform(a2_id);
-			a2_elem.setAttribute('type','rotate');
-			a2_elem.setAttribute('additive','sum');
+			if(a1_elem && a2_elem){	//FF3.6 bug - getElementById fails on anim elements even though they are there!
+				a1_elem = setupAnimateTransform(a1_id);
+				a1_elem.setAttribute('type','translate');
+				a1_elem.setAttribute('additive','replace');
+				// Second <animateTransform> is a rotate with additive='sum' to append a second transform
+				a2_elem = setupAnimateTransform(a2_id);
+				a2_elem.setAttribute('type','rotate');
+				a2_elem.setAttribute('additive','sum');
+			}
 		}
 		
 		var div_style = silhouetteiframe_div_container.style;
@@ -384,15 +386,17 @@ dojo.declare("preview.silhouetteiframe", null, {
 			// Firefox mysteriously crashes if you change animation values
 			// but don't actually run animations, so we will run animations always
 			// but if doAnimations if false, set 'from' value to be same as 'to' value
-			if(doAnimations){
-				a1_elem.setAttribute('from',scaled_device_height+',0');
-				a2_elem.setAttribute('from','90');
-			}else{
-				a1_elem.setAttribute('from','0,0');
-				a2_elem.setAttribute('from','0');
+			if(a1_elem && a2_elem){	//FF3.6 bug - getElementById fails on anim elements even though they are there!
+				if(doAnimations){
+					a1_elem.setAttribute('from',scaled_device_height+',0');
+					a2_elem.setAttribute('from','90');
+				}else{
+					a1_elem.setAttribute('from','0,0');
+					a2_elem.setAttribute('from','0');
+				}
+				a1_elem.setAttribute('to','0,0');
+				a2_elem.setAttribute('to','0');
 			}
-			a1_elem.setAttribute('to','0,0');
-			a2_elem.setAttribute('to','0');
 			obj_style.width = adj_scaled_device_width+"px";
 			obj_style.height = adj_scaled_device_height+"px";
 			div_style.width=adj_scaled_device_width+"px";
@@ -414,21 +418,23 @@ dojo.declare("preview.silhouetteiframe", null, {
 			// Firefox mysteriously crashes if you change animation values
 			// but don't actually run animations, so we will run animations always
 			// but if doAnimations if false, set 'from' value to be same as 'to' value
-			if(doAnimations){
-				a1_elem.setAttribute('from','0,0');
-				a2_elem.setAttribute('from','0');
-			}else{
-				a1_elem.setAttribute('from',scaled_device_height+',0');
-				a2_elem.setAttribute('from','90');
+			if(a1_elem && a2_elem){	//FF3.6 bug - getElementById fails on anim elements even though they are there!
+				if(doAnimations){
+					a1_elem.setAttribute('from','0,0');
+					a2_elem.setAttribute('from','0');
+				}else{
+					a1_elem.setAttribute('from',scaled_device_height+',0');
+					a2_elem.setAttribute('from','90');
+				}
+				a1_elem.setAttribute('to',scaled_device_height+',0');
+				a2_elem.setAttribute('to','90');
 			}
-			a1_elem.setAttribute('to',scaled_device_height+',0');
-			a2_elem.setAttribute('to','90');
 			obj_style.width = adj_scaled_device_height+"px";
 			obj_style.height = adj_scaled_device_width+"px";
 			div_style.width=adj_scaled_device_height+"px";
 			div_style.height=adj_scaled_device_width+"px";
 		}
-		if(a1_elem.beginElement){
+		if(a1_elem && a2_elem && a1_elem.beginElement){
 			a1_elem.beginElement();
 			a2_elem.beginElement();
 		}

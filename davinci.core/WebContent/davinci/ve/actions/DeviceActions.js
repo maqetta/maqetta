@@ -1,6 +1,9 @@
 dojo.provide("davinci.ve.actions.DeviceActions");
 dojo.require("davinci.actions.Action");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");  
+
 dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 	
 	run: function(selection){
@@ -15,6 +18,7 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 
 	showDevices: function(){
 
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
 		var e = davinci.Workbench.getOpenEditor(),
 			c = e.getContext(),
 			device = c.visualEditor.deviceName,
@@ -25,7 +29,7 @@ dojo.declare("davinci.ve.actions.ChooseDeviceAction", davinci.actions.Action, {
 			return '<option' + (name == device ? ' selected' : '') + '>' + name+ '</option>';			
 		}).join("")
 			+ '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectDevices", title:"Choose a device silhouette: ", style: "width: 200px",
+		var	dialog = new dijit.Dialog({id: "selectDevices", title:langObj.chooseDeviceSilhouette, style: "width: 200px",
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dojo.connect(dialog, 'onLoad', function(){
 			var cb = dijit.byId('devices');

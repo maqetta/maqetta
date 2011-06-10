@@ -10,6 +10,10 @@ dojo.require("davinci.ve.widgets.Background");
 dojo.require('davinci.ve.widgets.Border');
 dojo.require("davinci.ve.widgets.Cascade");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");  
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, {
 
 	_paddingMenu:['', '0px', '1em'],
@@ -19,19 +23,19 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 	          
 	        
 	         
-	          {title:"Common", 
+	          {title:langObj.common, 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
-	          {title:"Widget-specific",
+	          {title:langObj.widgetSpecific,
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
-	          {title:"Events", 
+	          {title:langObj.events, 
 		          pageTemplate:{html: "<div dojoType='davinci.ve.widgets.EventSelection'></div>"}},
-	          {title:"Layout",
+	          {title:langObj.layout,
 		       	  /* startsNewGroup:true, // This flag causes a few extra pixels between this and previous button */
 	           	  pageTemplate:[{display:"width", type:"multi", target:"width", values:['', 'auto','100%','200px','10em']},
 	            	                
     	                {display:"height", type:"multi", target:"height", values:['','auto','100%','200px','10em']},
     	                {html:"&nbsp;"},
-    	                {display:"&nbsp;&nbsp;&nbsp;show min/max", type:"toggleSection",
+    	                {display:"&nbsp;&nbsp;&nbsp;"+langObj.showMinMax, type:"toggleSection",
     	                	pageTemplate:[{display:"min-height", type:"multi", target:"min-height", rowClass:"propertiesSectionHidden"},
                                 {display:"max-height", type:"multi", target:"max-height", rowClass:"propertiesSectionHidden"},
                                 {display:"min-width", type:"multi", target:"min-width", rowClass:"propertiesSectionHidden"},
@@ -51,10 +55,10 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 	            	                
 	            	                
 	            	                ]},
-	           {title:"Padding/Margins", 
+	           {title:langObj.paddingMargins, 
 	           	  pageTemplate:[
     	                {display:"<b>(padding)</b>", type:"multi", target:"padding", values:this._paddingMenu},
-		                 {display:"&nbsp;&nbsp;&nbsp;show t/r/b/l", type:"toggleSection",
+		                 {display:"&nbsp;&nbsp;&nbsp;"+langObj.showtrbl, type:"toggleSection",
     	                	pageTemplate:[
     		 			       {display:"padding-top", type:"multi", target:"padding-top", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
     		 			       {display:"padding-right", type:"multi", target:"padding-right", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
@@ -62,7 +66,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     		 			       {display:"padding-left", type:"multi", target:"padding-left", values:this._paddingMenu, rowClass:"propertiesSectionHidden"}
     	                	]},
     	                {display:"<b>(margin)</b>", type:"multi", target:"margin", values:this._paddingMenu},
-		                 {display:"&nbsp;&nbsp;&nbsp;show t/r/b/l", type:"toggleSection",
+		                 {display:"&nbsp;&nbsp;&nbsp;"+langObj.showtrbl, type:"toggleSection",
     	                	pageTemplate:[
     		 			       {display:"margin-top", type:"multi", target:"margin-top", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
     		 			       {display:"margin-right", type:"multi", target:"margin-right", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
@@ -70,7 +74,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     		 			       {display:"margin-left", type:"multi", target:"margin-left", values:this._paddingMenu, rowClass:"propertiesSectionHidden"}
     	                	]}
     	                ]},
-	           {title:"Background", 
+	           {title:langObj.background, 
 	       		  pageTemplate : [{display:"background-color", type:"color", target:'background-color'},
 /* FIXME: Gradients not working yet. Comment out switch for now 
     	                {display:"image/gradient", type:"combo", values:['image', 'gradient']},
@@ -96,7 +100,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     			 	    {display:"size", target:"none", type:"multi"}
 */                			 	    
     		       	   ]},
-	           {title:"Border", 
+	           {title:langObj.border, 
 		       		pageTemplate : [
    		                {display:"<b>(border)</b>", type:"multi", target:'border', values:['','none','1px solid black']}, 
    		                {display:"show", type:"combo", values:['none','sides','props','all'],
@@ -161,7 +165,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
    		                {display:"border-left-color", type:"color", target:'border-left-color',rowClass:'propertiesSectionHidden'},
       		         {display:"border-collapse", type:"combo", target:'border-collapse',  values:['', 'separate', 'collapse']},
    		             {display:"<b>(border-radius)</b>", type:"multi", target:['border-radius','-moz-border-radius'],  values:this._radiusMenu},
-	                 {display:"show details", type:"toggleSection",
+	                 {display:langObj.showDetails, type:"toggleSection",
  	                	pageTemplate:[
 		                     {display:"border-top-left-radius", type:"multi", target:["border-top-left-radius",'-moz-border-radius-topleft'], values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
 		                     {display:"border-top-right-radius", type:"multi", target:['border-top-right-radius','-moz-border-radius-topright'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
@@ -169,7 +173,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		                     {display:"border-bottom-left-radius", type:"multi", target:['border-bottom-left-radius','-moz-border-radius-bottomleft'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"}
 	    	                ]}
 		            	  ]},
-	           {title:"Fonts and Text",
+	           {title:langObj.fontsAndText,
 	                  pageTemplate:[{display:"font", type:"text", target:"font"},
                         {display:"font-family", type:"font", target:"font-family"},
     	                {display:"size", type:"multi", target:"font-size", values:['','100%','1em','10px','10pt']},

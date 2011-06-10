@@ -2,6 +2,10 @@ dojo.provide("davinci.actions.DownloadAction");
 dojo.require("davinci.actions.Action");
 dojo.require("davinci.model.Resource");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actionsLang");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actionsLang");
+
 dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 	
 	run: function(){
@@ -11,18 +15,18 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 	for (var i=0;i<files.length;i++)
 		filesDiv+="<div>"+files[i].getPath()+"</div>";
 		
-	var proposedFileName="download";
+	var proposedFileName=langObj.download;
 	var formHtml = 
     "<div >" +
-    '<div>Download Resources</div>'
+    '<div>'+ langObj.downloadResources +'</div>'
     +filesDiv+
     '	<div class="fileNameRow">'+
-    '		<label for="zipFileName"> Downloaded File Name: </label>'+
+    '		<label for="zipFileName"> '+ langObj.downloadFileName +' </label>'+
     '		<input dojoType="dijit.form.TextBox" type="text" name="zipFileName" id="zipFileName" value="'+proposedFileName+'"></input><span>.zip</span>'+
     '	</div>'+
-    '<div><button dojoType="dijit.form.Button" type="submit" >Download now</button></div>' +
+    '<div><button dojoType="dijit.form.Button" type="submit" >'+ langObj.downloadNow +'</button></div>' +
     "</div>" ;
-	this.dialog = new dijit.Dialog({id: "downloadDialog", title:"Download",
+	this.dialog = new dijit.Dialog({id: "downloadDialog", title:langObj.titleDownload,
 		onCancel:function(){this.destroyRecursive(false);},
 	    execute:  dojo.hitch(this,"download")});	
 	

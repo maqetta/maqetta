@@ -3,6 +3,10 @@ dojo.require("davinci.actions.Action");
 dojo.require("davinci.ui.widgets.Tree");
 dojo.require("dojox.data.FileStore");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actionsLang");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actionsLang");
+
 dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 	
 	run: function(selectedResource){
@@ -23,7 +27,7 @@ dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
     "<div><label for='localName'>Local Name</label><input dojoType='dijit.form.TextBox' type='text' name='localName' id='localName'></div>" +
     "<button dojoType='dijit.form.Button' type='submit' >Link</button>" +
     "</div>" ;
-	this.dialog = new dijit.Dialog({id: "newDialog", title:"Select Directory to link to",
+	this.dialog = new dijit.Dialog({id: "newDialog", title:langObj.selectDirectory,
 		onCancel:function(){this.destroyRecursive(false);},
 	    execute:  dojo.hitch(this,"createLink")});	
 	

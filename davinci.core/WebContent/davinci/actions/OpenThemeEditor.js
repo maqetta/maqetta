@@ -3,6 +3,9 @@ dojo.require("davinci.actions.Action");
 dojo.require("davinci.model.Resource");
 dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actionsLang");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actionsLang");
 
 dojo.declare("davinci.actions.OpenThemeEditor", null, {
 	
@@ -11,7 +14,7 @@ dojo.declare("davinci.actions.OpenThemeEditor", null, {
 		this._themeChooser = new davinci.ui.widgets.ThemeSelection({value:"                "});
 		
 		//this._themeChooser.set('value', theme);
-		davinci.Workbench.showModal(this._themeChooser, "Edit Theme", "width:110px");
+		davinci.Workbench.showModal(this._themeChooser, langObj.editTheme, "width:110px");
 		dojo.connect(this._themeChooser, "onChange", this, "_onChange");
 		
 	},

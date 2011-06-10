@@ -3,7 +3,9 @@ dojo.require("davinci.actions.Action");
 dojo.require("davinci.model.Resource");
 //dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
-
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actionsLang");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actionsLang");
 
 dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 	
@@ -60,7 +62,7 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 			
 
 		formHtml = formHtml + '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectLayout", title:"New widgets should use: ", style: "width: 200px",
+		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse, style: "width: 200px",
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dialog._selectLayout = this;
 		dojo.connect(dialog, 'onLoad', function(){

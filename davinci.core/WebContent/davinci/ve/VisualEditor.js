@@ -11,29 +11,27 @@ dojo.require("davinci.html.HTMLModel"); //FIXME: not referenced
 dojo.require("davinci.ve.commands.ModifyRuleCommand");
 
 dojo.require("davinci.ve.actions.DeviceActions");
+dojo.require("preview.silhouetteiframe");
 
 dojo.declare("davinci.ve.VisualEditor", null, {
-	
-	deviceList: [
-		{label: "none"},
-		{file: "android_340x480"},
-		{file: "android_480x800"},
-		{file: "blackberry"},
-		{file: "bbplaybook"},
-		{file: "ipad"},
-		{file: "iphone"}
-	],
 
+	deviceName: 'none',
+	_orientation: 'portrait',
+	
 	constructor : function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
 		this.contentPane = dijit.getEnclosingWidget(element);
 		dojo.addClass(this.contentPane.domNode, "fullPane");
-		var silhouettes = dojo.map(this.deviceList, function(device){
-			return device.file ? '<object data="'+'app/davinci/ve/resources/images/'+device.file+'.svg" type="image/svg+xml" class="device" id="device-'+device.file+'"></object>' : '';
-		}).join("");
-		this.contentPane.attr('content', silhouettes);
+		var content = '<div class="silhouette_div_container">'+
+			'<span class="silhouetteiframe_object_container"></span>'+
+			'</div>';
+		this.contentPane.attr('content', content);
+		var silhouette_div_container=dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
+		this.silhouetteiframe = new preview.silhouetteiframe({
+			rootNode:silhouette_div_container,
+			margin:20
+		});
 		this._subscriptions = [];
-
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(containerWidget, newState, oldState) { 
 			if ((top.davinci && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass) == "davinci.ve.VisualEditor") {
 				return; // ignore updates in theme editor
@@ -45,12 +43,24 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	setDevice : function(deviceName) {
-	    if(this.deviceName){
-	    	dojo.removeClass(this.contentPane.domNode, this.deviceName);
-	    }
 	    this.deviceName = deviceName;
-	    dojo.addClass(this.contentPane.domNode, this.deviceName);
-	    //dojo.query(".device", this.contentPane.domNode).attr("data", "app/davinci/ve/resources/images/" + deviceName + ".svg");
+	    var svgfilename;
+	    if(deviceName=='none'){
+	    	svgfilename=null;
+	    }else{
+			//FIXME: Path shouldn't be hard-coded
+	    	svgfilename = "app/preview/images/"+deviceName+".svg";
+	    }
+		this.silhouetteiframe.setSVGFilename(svgfilename);
+	},
+	
+	toggleOrientation : function() {
+		if(this._orientation == 'landscape'){
+			this._orientation = 'portrait';
+		}else{
+			this._orientation = 'landscape';			
+		}
+		this.silhouetteiframe.setOrientation(this._orientation)	;
 	},
 
 	_objectPropertiesChange : function (event){
@@ -204,14 +214,16 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			var baseUrl=loc+'/user/'+davinci.Runtime.userName+'/ws/workspace/'+filename;
 
 			this._handles=[];
+			var containerNode = dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
 			this.context = new davinci.ve.Context({
 				editor: this._pageEditor,
 				visualEditor: this,
-				containerNode: this.contentPane.domNode,
+				containerNode: containerNode,
 				immediatePropertyUpdates: true,
 				model: content,
 				baseURL: baseUrl,
-				relativePrefix: relativePrefix
+				relativePrefix: relativePrefix,
+				iframeattrs:{'class':'silhouetteiframe_iframe'}
 			});
 
 			this.context._commandStack=this._commandStack;
@@ -312,6 +324,23 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	
 	getDefaultContent : function (){
 		return this.getTemplate();
+	},
+	
+	previewInBrowser : function(){
+		var deviceName = this.deviceName;
+		var editor = davinci.Workbench.getOpenEditor();
+		var fileURL = editor.resourceFile.getURL();
+		// FIXME. Phil, is there a URL to the working copy of the current file that we can use
+		// Right now I am doing an auto-save which is not right.
+		// Either we should prompt user "You must save before you can preview in browser. OK to save?"
+		// or we should preview the working copy instead of the permanent file.
+		editor.save();
+		if(deviceName && deviceName.length>0 && deviceName!='none'){
+			var url = window.location.href+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL);
+			window.open(url);
+		}else{
+			window.open(fileURL);
+		}
 	}
 });
 

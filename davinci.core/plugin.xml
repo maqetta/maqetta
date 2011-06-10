@@ -62,6 +62,10 @@
               base-name="/WebContent/eclipse"
               />
         <resource
+              alias="/app/preview"
+              base-name="/WebContent/preview"
+              />
+        <resource
               alias="/app/OpenAjax"
               base-name="/WebContent/OpenAjax"
               />

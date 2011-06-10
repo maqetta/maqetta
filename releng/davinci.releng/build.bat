@@ -8,26 +8,26 @@ rem Path to parent directory of the eclipse application directory.
 rem That is, if eclipse is installed in '/usr/local/eclipse', this property
 rem would be set as 'base="/usr/local"'. No trailing backslash.
 rem
-set base=C:\path\to\parent\of\eclipse
+set base=C:\eclipse
 
 rem
 rem Path to eclipse directory inclusive. The application directory is
 rem usually, but not always, named 'eclipse'. It has sub-directories
 rem \configuration, \features, \plugins, etc. No trailing backslash.
 rem
-set baseLocation=%base%\eclipse
+set baseLocation=%base%\eclipse-3.51-64bit
 
 rem
 rem Version number of the launcher jar file. See %baseLocation%\plugins\org.eclipse.equinox.launcher_*.jar.
 rem The launcher version is the set of alphanumeric characters between 'launcher_' and the '.' character
 rem before the 'jar' file name suffix.
 rem
-set launcherVersion=1.0.200.v20090520
+set launcherVersion=1.0.201.R35x_v20090715
 
 rem
 rem Directory in which to do the build. No trailing backslash.
 rem
-set buildDirectory=c:\directory\to\build\in
+set buildDirectory=c:\build-out
 
 rem
 rem Directory containing build.xml (this should not have to be changed in most cases).

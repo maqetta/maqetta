@@ -381,14 +381,13 @@ preview.silhouetteiframe.prototype = {
 		// so have to set width/height to reciprocal
 		iby_style.width=(100/scalefactor)+"%";
 		iby_style.height=(100/scalefactor)+"%";
-		
-		var ffadjust=1;	//FIXME: Pretty sure we can delete this variable, but need further FF testing first
+
 		if(orientation!=="landscape"){   // "portrait"
 			// Note that these following 3 attributes SHOULDN'T BE NECESSARY
 			// but Safari implements these 3 attributes on outermost <svg> INCORRECTLY	
 			svg_elem.setAttribute("width",scaled_device_width+"px");
 			svg_elem.setAttribute("height",scaled_device_height+"px");
-			svg_elem.setAttribute("viewBox",0+" "+0+" "+(scaled_device_width*ffadjust)+" "+(scaled_device_height*ffadjust));
+			svg_elem.setAttribute("viewBox",0+" "+0+" "+scaled_device_width+" "+scaled_device_height);
 			
 			var scaled_screen_offset_y = screen_offset_y * scale_adjust_y;
 			ifr_style.marginLeft = scaled_screen_offset_x+"px";
@@ -411,10 +410,18 @@ preview.silhouetteiframe.prototype = {
 				a1_elem.setAttribute('to','0,0');
 				a2_elem.setAttribute('to','0');
 			}
-			obj_style.width = adj_scaled_device_width+"px";
-			obj_style.height = adj_scaled_device_height+"px";
-			div_style.width=adj_scaled_device_width+"px";
-			div_style.height=adj_scaled_device_height+"px";
+			if(this._isWebKit){	
+				// Overcome WebKit bug where scrollbars appear when they shouldn't	
+				obj_style.width = adj_scaled_device_width+"px";
+				obj_style.height = adj_scaled_device_height+"px";
+				div_style.width = adj_scaled_device_width+"px";
+				div_style.height = adj_scaled_device_height+"px";
+			}else{
+				obj_style.width = scaled_device_width+"px";
+				obj_style.height = scaled_device_height+"px";
+				div_style.width = scaled_device_width+"px";
+				div_style.height = scaled_device_height+"px";
+			}
 			
 		}else{		// "landscape"
 			// Note that these following 3 attributes SHOULDN'T BE NECESSARY
@@ -443,10 +450,18 @@ preview.silhouetteiframe.prototype = {
 				a1_elem.setAttribute('to',scaled_device_height+',0');
 				a2_elem.setAttribute('to','90');
 			}
-			obj_style.width = adj_scaled_device_height+"px";
-			obj_style.height = adj_scaled_device_width+"px";
-			div_style.width=adj_scaled_device_height+"px";
-			div_style.height=adj_scaled_device_width+"px";
+			if(this._isWebKit){		
+				// Overcome WebKit bug where scrollbars appear when they shouldn't	
+				obj_style.width = adj_scaled_device_height+"px";
+				obj_style.height = adj_scaled_device_width+"px";
+				div_style.width = adj_scaled_device_height+"px";
+				div_style.height = adj_scaled_device_width+"px";
+			}else{
+				obj_style.width = scaled_device_height+"px";
+				obj_style.height = scaled_device_width+"px";
+				div_style.width = scaled_device_height+"px";
+				div_style.height = scaled_device_width+"px";
+			}
 		}
 		if(a1_elem && a2_elem && a1_elem.beginElement){
 			a1_elem.beginElement();

@@ -225,25 +225,19 @@ preview.silhouetteiframe.prototype = {
 			return;
 		var svg_elem = svg_doc.documentElement;
 		// Note: in future, maybe multiple silhouettes at once
-		var iframe_elems = this.rootNode.querySelectorAll(".silhouetteiframe_iframe");
-		if(iframe_elems.length<=0)
+		var iframe_elem = this.rootNode.querySelector(".silhouetteiframe_iframe");
+		if(!iframe_elem)
 			return;
-		var iframe_elem = iframe_elems[0];
-		var device_elems = svg_doc.querySelectorAll("#DeviceRect");
-		if(device_elems.length<=0)
+		var device_elem = svg_doc.querySelector("#DeviceRect");
+		if(!device_elem)
 			return;
-		var device_elem = device_elems[0];
-		var screen_elems = svg_doc.querySelectorAll("#ScreenRect");
-		if(screen_elems.length<=0)
+		var screen_elem = svg_doc.querySelector("#ScreenRect");
+		if(!screen_elem)
 			return;
-		var screen_elem = screen_elems[0];
-		// HundredPixelRect really should be there, but don't die if it isn't
-		var hundredpixel_elems = svg_doc.querySelectorAll("#HundredPixelRect");
-		var hundredpixel_elem;
-		if(hundredpixel_elems.length>0){
-			hundredpixel_elem = hundredpixel_elems[0];
-		}else{
-			console.log('WARNING: Missing #HundredPixelRect');
+		// ResolutionRect really should be there, but don't die if it isn't
+		var resolution_elem = svg_doc.querySelector("#ResolutionRect");
+		if(!resolution_elem){
+			console.log('WARNING: Missing #resolutionRect');
 		}
 		if(scalefactor<=0)
 			return;
@@ -262,15 +256,15 @@ preview.silhouetteiframe.prototype = {
 		var screen_offset_y = screen_y - device_y;
 
 		var scale_adjust_x, scale_adjust_y;
-		if(hundredpixel_elem){
-			var hundredpixel_width = hundredpixel_elem.getAttribute("width")-0;	
-			var hundredpixel_height = hundredpixel_elem.getAttribute("height")-0;
-			if(hundredpixel_width>0 && hundredpixel_height>0){
-				scale_adjust_x = (100/hundredpixel_width)*scalefactor;
-				scale_adjust_y = (100/hundredpixel_height)*scalefactor;
+		if(resolution_elem){
+			var resolution_width = resolution_elem.getAttribute("width")-0;	
+			var resolution_height = resolution_elem.getAttribute("height")-0;
+			if(resolution_width>0 && resolution_height>0 && screen_width>0 && screen_height>0){
+				scale_adjust_x = (resolution_width/screen_width)*scalefactor;
+				scale_adjust_y = (resolution_height/screen_height)*scalefactor;
 			}
 		}
-		// If #HundredPixelWidth rect not there, or hundredpixel_width<=0
+		// If #ResolutionWidth rect not there, or resolution_width<=0
 		if(!scale_adjust_x){
 			// Overcome Illustrator bug where it generates SVG files that
 			// assume 72px/in versus browsers assuming 96px/in
@@ -345,15 +339,13 @@ preview.silhouetteiframe.prototype = {
 				return at_elem;
 			}
 			// First <animateTransform> is a translate with additive='replace' to set a new 'transform' value
-			if(a1_elem && a2_elem){	//FF3.6 bug - getElementById fails on anim elements even though they are there!
-				a1_elem = setupAnimateTransform(a1_id);
-				a1_elem.setAttribute('type','translate');
-				a1_elem.setAttribute('additive','replace');
-				// Second <animateTransform> is a rotate with additive='sum' to append a second transform
-				a2_elem = setupAnimateTransform(a2_id);
-				a2_elem.setAttribute('type','rotate');
-				a2_elem.setAttribute('additive','sum');
-			}
+			a1_elem = setupAnimateTransform(a1_id);
+			a1_elem.setAttribute('type','translate');
+			a1_elem.setAttribute('additive','replace');
+			// Second <animateTransform> is a rotate with additive='sum' to append a second transform
+			a2_elem = setupAnimateTransform(a2_id);
+			a2_elem.setAttribute('type','rotate');
+			a2_elem.setAttribute('additive','sum');
 		}
 		
 		var div_style = silhouetteiframe_div_container.style;

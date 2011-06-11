@@ -70,7 +70,7 @@
 </g>
 <rect id="ScreenRect" x="181.657" y="152.237" fill="#FFFFFF" width="411.988" height="549.316"/>
 <rect id="DeviceRect" x="117.536" y="82.937" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="537.84" height="688.32"/>
-<rect id="HundredPixelRect" x="293.495" y="300.051" width="53.644270833333333" height="53.644140625" fill="none"/>
+<rect id="ResolutionRect" x="117.536" y="82.937"  fill="none" width="768" height="1024"/>
 <radialGradient id="SVGID_3_" cx="424.1675" cy="672.1641" r="58.5326" gradientTransform="matrix(-0.9659 -0.2588 0.2588 -0.9659 595.4922 1490.7408)" gradientUnits="userSpaceOnUse">
 	<stop  offset="0.0313" style="stop-color:#000000"/>
 	<stop  offset="0.3093" style="stop-color:#030303"/>

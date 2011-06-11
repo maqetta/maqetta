@@ -26,13 +26,9 @@
 			}
 		</style>
 
-		<!-- *** IMPORTANT NOTE: modulePaths needs to be changed before going final *** -->
-
-		<script src="../../dojo/dojo.js" djConfig="modulePaths:{'preview':'../preview'}"></script>
-		<link rel="stylesheet" type="text/css" href="../../dijit/themes/claro/claro.css"/>
+		<script src="../silhouetteiframe.js" type="text/javascript"></script>
 		<script>
 			var iframefilename = '../test/pages/page1.html';
-			dojo.require('preview.silhouetteiframe');
 			var basepath="preview/";
 			function getOrientation(){
 				var orientationlist_elem = document.getElementById("orientationlist");
@@ -68,7 +64,7 @@
 					scalefactor:scalefactor
 				});
 			}
-			dojo.addOnLoad(function() {
+			function loadHandler() {
 				var devicelist_elem = document.getElementById("devicelist");
 				devicelist_elem.selectedIndex = 0;
 				var orientationlist_elem = document.getElementById("orientationlist");
@@ -76,11 +72,11 @@
 				var scalefactor_elem = document.getElementById("scalefactor");
 				scalefactor_elem.value = "1.0";
 				replaceSVG();
-			});
+			};
 		</script>
 	</head>
     
-	<body class="claro">
+	<body class="claro" onload="loadHandler()">
 		<table class="silhouette_table_container">
 			<tr>
 				<td style="width:1px;height:1px;">

@@ -18,15 +18,63 @@
 	* Call updateObjectElement(), setScaleFactor() or setOrientation() when
 		svgfilename isn't null
 		
-	Note that there are no Dojo dependencies in this code except for the
-	dojo.provide() and dojo.declare() wrappers. 
-	Everything inside is library-independent.
+	Note that there are no Dojo dependencies in this code. The dojo.provide()
+	allows integration with a Dojo-based system but the code will work even if Dojo
+	isn't loaded.
 
 */
 
-dojo.provide('preview.silhouetteiframe');
+if(this.dojo){
+    dojo.provide('preview.silhouetteiframe');
+}
+if (!this.preview) {
+    preview = {};
+}
 
-dojo.declare("preview.silhouetteiframe", null, {
+// Class constructor
+preview.silhouetteiframe = function(args){
+	var rootNode = this.rootNode = args.rootNode;
+	if(!rootNode){
+		console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
+		return;
+	}
+	if(!this.verifyDOMTree(false)){
+		return;
+	}
+	this._isWebKit = navigator.userAgent.indexOf("WebKit") != -1;
+	if(args.svgfilename){
+		this.svgfilename = args.svgfilename;
+	}
+	if(args.orientation){
+		this.orientation = args.orientation;
+	}
+	if(args.scalefactor){
+		this.scalefactor = args.scalefactor;
+	}
+	if(args.margin){
+		this.margin = args.margin;
+	}
+	
+	// Save old 'style' attribute values so we can restore later if device==none
+	this._silhouette_div_container_orig_style={};
+	var style=rootNode.style;
+	for(var i=0; i<style.length; i++){
+		this._silhouette_div_container_orig_style[style.item(i)] = style[style.item(i)];
+	}
+	var silhouetteiframe_iframes = rootNode.querySelectorAll(".silhouetteiframe_iframe");
+	if(silhouetteiframe_iframes.length>0){
+		this._init_silhouetteiframe_iframe_orig_style();
+	}else{
+		this._silhouetteiframe_iframe_orig_style=null; // if no iframe yet, can't grab initial style properties
+	}
+	
+	rootNode._silhouetteiframe = this; // Attach "this" object to rootNode
+	this.addStyleDeclarations();
+	this.updateObjectElement();
+}
+
+// Class prototype
+preview.silhouetteiframe.prototype = {
 
 	rootNode:null,
 	svgfilename:undefined,
@@ -37,46 +85,6 @@ dojo.declare("preview.silhouetteiframe", null, {
 	_silhouette_div_container_orig_style:{},
 	_silhouetteiframe_iframe_orig_style:{},
 	
-	constructor: function(args){
-		var rootNode = this.rootNode = args.rootNode;
-		if(!rootNode){
-			console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
-			return;
-		}
-		if(!this.verifyDOMTree(false)){
-			return;
-		}
-		this._isWebKit = navigator.userAgent.indexOf("WebKit") != -1;
-		if(args.svgfilename){
-			this.svgfilename = args.svgfilename;
-		}
-		if(args.orientation){
-			this.orientation = args.orientation;
-		}
-		if(args.scalefactor){
-			this.scalefactor = args.scalefactor;
-		}
-		if(args.margin){
-			this.margin = args.margin;
-		}
-		
-		// Save old 'style' attribute values so we can restore later if device==none
-		this._silhouette_div_container_orig_style={};
-		var style=rootNode.style;
-		for(var i=0; i<style.length; i++){
-			this._silhouette_div_container_orig_style[style.item(i)] = style[style.item(i)];
-		}
-		var silhouetteiframe_iframes = rootNode.querySelectorAll(".silhouetteiframe_iframe");
-		if(silhouetteiframe_iframes.length>0){
-			this._init_silhouetteiframe_iframe_orig_style();
-		}else{
-			this._silhouetteiframe_iframe_orig_style=null; // if no iframe yet, can't grab initial style properties
-		}
-		
-		rootNode._silhouetteiframe = this; // Attach "this" object to rootNode
-		this.addStyleDeclarations();
-		this.updateObjectElement();
-    },
     
 	_init_silhouetteiframe_iframe_orig_style: function(){
 		this._silhouetteiframe_iframe_orig_style={};
@@ -440,4 +448,4 @@ dojo.declare("preview.silhouetteiframe", null, {
 		}
 	}
 
-});
+}

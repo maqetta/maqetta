@@ -448,7 +448,7 @@ dojo.mixin(davinci.model.Resource,	{
 				// Doesn't work if called directly.
 				// Undoubtedly fragile. Didn't work with 1ms timeout.
 				setTimeout(function(){
-					newEditor.setContent(fullName,oldContent);
+					newEditor.saveAs(oldFileName, fullName,oldContent);
 					newEditor.save();
 				},1000);
 			}
@@ -553,6 +553,7 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 			found=doFind();
 		if (!found && (serverFind || isWildcard))
 		{
+			
 			 var response = davinci.Runtime.serverJSONRequest({
 				   url:"./cmd/findResource", 
 			          content:{'path': name, 'ignoreCase' : ignoreCase, 'workspaceOnly' : workspaceOnly, 'inFolder':inFolder!=null?inFolder.getPath():null},sync:true  });
@@ -747,7 +748,7 @@ davinci.model.Resource.Resource= function(){
 		 file = this;
 		 isFolder = this.elementType=="Folder";
 	 }
-			 
+	 
 	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/createResource", handleAs:"text",
 	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";

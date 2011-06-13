@@ -99,7 +99,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 			dojo.publish("/davinci/ui/libraryChanged");
 		}
 		
-		var pages = davinci.model.Resource.findResource("*.html");
+		var pages = davinci.model.Resource.findResource("*.html", true, null, true);
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		for(var i=0;i<pages.length;i++){

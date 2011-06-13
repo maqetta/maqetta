@@ -23,7 +23,9 @@ import org.osgi.framework.Bundle;
 public class DavinciReviewServlet extends DavinciPageServlet {
 	private ReviewManager reviewManager;
 
-	private void initialize() {
+	private static String LOGIN_URL = "http://maqetta.org/index.php?option=com_user&view=login";
+
+	public void initialize() {
 		serverManager = ServerManager.createServerManger(getServletConfig());
 		userManager = serverManager.getUserManager();
 		libraryManager = serverManager.getLibraryManager();
@@ -37,19 +39,38 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			ReviewCacheManager.$.start();
 	}
 
+	public String getLoginUrl(HttpServletRequest req){
+		//	return req.getContextPath() + "/welcome";
+		return serverManager.getDavinciProperty("loginUrl");
+		//return "http://maqetta.org/index.php?option=com_user&view=login";
+	}
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
+	    
+	    if(serverManager==null)
+	        initialize();
+	    
 		String contextString = req.getContextPath();
-		if (serverManager == null)
-			initialize();
+
 		String pathInfo = req.getPathInfo();
+
+		User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+		if(user==null){
+			resp.sendRedirect(this.getLoginUrl(req));
+			return;
+		}
+
+
 		if (pathInfo == null || pathInfo.equals("")) {
 			ReviewObject reviewObject = (ReviewObject) req.getSession().getAttribute(
 					Constants.REVIEW_INFO);
 			if (reviewObject == null) {
 				// Because the requested URL is /review so the empty review object means we
 				// can not have a designer name. Error.
-				resp.sendRedirect(contextString + "/welcome");
+			//	resp.setHeader("referrer", contextString +"review.html" );
+				resp.sendRedirect(this.getLoginUrl(req));
+
 				return;
 			} else {
 				resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_DESIGNER,
@@ -86,7 +107,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 				// Else, error.
 				User designer = userManager.getUser(prefix);
 				if (designer == null) {
-					resp.sendRedirect(contextString + "/welcome");
+					resp.sendRedirect(this.getLoginUrl(req));
 					return;
 				} else {
 					ReviewObject reviewObject = new ReviewObject(prefix);
@@ -108,11 +129,11 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			}
 		}
 	}
-	
+
 	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
 		if (welcomeExtension==null)
-			writePage(req, resp, "welcome.html");
+			writeInternalPage(req, resp, "welcome.html");
 		else{
 			String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
 			Bundle bundle=Activator.getActivator().getOtherBundle(name);
@@ -125,17 +146,17 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 		}
 	}
-	
+
 	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp,IPath path) throws ServletException, IOException {
 		// Remove the follow URL prefix
 		// /user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
 		// to
 		// /folder1/sample1.html
-		
+
 		String version = null;
 		String ownerId = null;
 		String designerName = path.segment(1);
-		
+
 		if(designerName==null) return false;
 		User user = userManager.getUser(designerName);
 		if(user==null)
@@ -148,12 +169,12 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			ownerId = path.segment(1);
 			version = path.segment(6);
 			path = path.removeFirstSegments(7);
-			
+
 		}
-		else 
+		else
 			return false;
-		
-		path = adjustPath(path, ownerId, version); // So that each snapshot can be mapped to its virtual lib path correctly.		
+
+		path = adjustPath(path, ownerId, version); // So that each snapshot can be mapped to its virtual lib path correctly.
 		return super.handleLibraryRequest(req, resp, path,user);
 	}
 
@@ -161,13 +182,13 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		ReviewCacheManager.$.markStop();
 		ReviewCacheManager.$.destroyAllReview();
 	}
-	
+
 	protected void writeReviewPage(HttpServletRequest req, HttpServletResponse resp, String path) throws ServletException, IOException {
 		URL resourceURL =Activator.getActivator().getBundle().getEntry("/WebContent/"+path);
 		VURL v = new VURL(resourceURL);
 		writePage(req, resp, v, false);
 	}
-	
+
 	protected IPath adjustPath(IPath path, String ownerId, String version){
 		// Map the request lib path stored in the snapshot to the actual system lib path
 		ReviewManager reviewManager = ReviewManager.getReviewManager();
@@ -175,9 +196,9 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		project.setOwnerId(ownerId);
 		LibInfo[] sysLibs = reviewManager.getSystemLibs(project);
 		LibInfo[] versionLibs = reviewManager.getVersionLib(project, version);
-		
+
 		if(versionLibs == null) return path;
-		
+
 		for(LibInfo info : versionLibs){
 			IPath versionVirtualRoot = new Path(info.getVirtualRoot());
 			if(path.matchingFirstSegments(versionVirtualRoot) == versionVirtualRoot.segmentCount()){

@@ -1,8 +1,12 @@
 ({
-	singleSort: "Sortowanie pojedyncze",
-	nestedSort: "Sortowanie zagnieżdżone",
+	singleSort: "Pojedyncze sortowanie",
+	nestedSort: "Zagnieżdżone sortowanie",
 	ascending: "Rosnąco",
 	descending: "Malejąco",
-	unsorted: "Nie sortuj tej kolumny"
+	sortingState: "${0} - ${1}",
+	unsorted: "Nie sortuj tej kolumny",
+	indirectSelectionRadio: "Wiersz ${0}, pojedynczy wybór, zestaw przełączników",
+	indirectSelectionCheckBox: "Wiersz ${0}, wybór wielokrotny, pole wyboru",
+	selectAll: "Wybierz wszystko"
 })
 

@@ -14,7 +14,12 @@
 dojo.require("dojox.gfx");
 dojo.require("dojo.colors"); // pull in CSS3 color names
 
-makeShapes = function(){
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("grad", 300, 300);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var SIDE = 10;
 	var fillObj = {
 		colors: [
@@ -23,7 +28,6 @@ makeShapes = function(){
 			{ offset: 1,   color: [255, 255, 0, 0] }
 		]
 	};
-	var surface = dojox.gfx.createSurface(dojo.byId("grad"), 300, 300);
 	// create a background
 	for(var i = 0; i < 300; i += SIDE){
 		for(var j = 0; j < 300; j += SIDE){
@@ -53,7 +57,7 @@ makeShapes = function(){
 		cy: 200
 	}, fillObj));
 };
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 </script>
 <style type="text/css">
 #grad { width: 300px; height: 300px; }

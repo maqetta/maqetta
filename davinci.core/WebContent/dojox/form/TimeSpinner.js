@@ -25,7 +25,7 @@ dojo.declare(
 
 	largeDelta: 30,
 
-	timeoutChangeRate: 0.50,	
+	timeoutChangeRate: 0.50,
 
 	parse: function(time, locale){
 		return dojo.date.locale.parse(time, {selector:"time", formatLength:"short"});

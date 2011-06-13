@@ -6,11 +6,11 @@ dojo.require("dijit._Templated");
 dojo.require("dojox.form.BusyButton");
 dojo.require("dojox.testing.DocTest");
 
-dojo.declare('dojox.widget.DocTester', 
+dojo.declare('dojox.widget.DocTester',
 	[dijit._Widget, dijit._Templated],
 	{
 		// summary: A widget to run DocTests inside an HTML page.
-		// 
+		//
 		templateString: dojo.cache('dojox.widget','DocTester/DocTester.html'),
 		widgetsInTemplate: true,
 	

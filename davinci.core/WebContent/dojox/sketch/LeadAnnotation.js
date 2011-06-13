@@ -36,10 +36,10 @@ dojo.require("dojox.sketch.Anchor");
 		this.textAlign="middle";
 		if(Math.abs(slope)>=1){
 			x=this.end.x+this.calculate.dx(this.control, this.end, offset);
-			if(this.control.y>this.end.y){ 
-				y=this.end.y-offset; 
-			} else { 
-				y=this.end.y+offset+this.textYOffset; 
+			if(this.control.y>this.end.y){
+				y=this.end.y-offset;
+			} else {
+				y=this.end.y+offset+this.textYOffset;
 			}
 		} else if(slope==0){
 			x=this.end.x+offset;
@@ -54,7 +54,7 @@ dojo.require("dojox.sketch.Anchor");
 			}
 			if(this.start.y<this.end.y){
 				y=this.end.y+this.calculate.dy(this.control, this.end, offset)+this.textYOffset;
-			} else { 
+			} else {
 				y=this.end.y+this.calculate.dy(this.control, this.end, -offset);
 			}
 		}
@@ -67,7 +67,7 @@ dojo.require("dojox.sketch.Anchor");
 		
 		for(var i=0; i<obj.childNodes.length; i++){
 			var c=obj.childNodes[i];
-			if(c.localName=="text"){ 
+			if(c.localName=="text"){
 				this.property('label',c.childNodes.length?c.childNodes[0].nodeValue:'');
 			}
 			else if(c.localName=="path"){
@@ -107,9 +107,9 @@ dojo.require("dojox.sketch.Anchor");
 		this.shape.getEventSource().setAttribute("id", this.id);
 		this.pathShape=this.shape.createPath("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0");
 		this.labelShape=this.shape.createText({
-				x:this.textPosition.x, 
-				y:this.textPosition.y, 
-				text:this.property('label'), 
+				x:this.textPosition.x,
+				y:this.textPosition.y,
+				text:this.property('label'),
 				align:this.textAlign
 			});
 		this.labelShape.getEventSource().setAttribute('id',this.id+"-labelShape");
@@ -134,10 +134,10 @@ dojo.require("dojox.sketch.Anchor");
 		this._pos();
 		this.shape.setTransform(this.transform);
 		this.pathShape.setShape("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0");
-		this.labelShape.setShape({ 
-				x:this.textPosition.x, 
-				y:this.textPosition.y, 
-				text:this.property('label') 
+		this.labelShape.setShape({
+				x:this.textPosition.x,
+				y:this.textPosition.y,
+				text:this.property('label')
 			})
 			.setFill(this.property('fill'));
 		this.zoom();

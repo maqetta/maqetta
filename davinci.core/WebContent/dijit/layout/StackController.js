@@ -1,10 +1,4 @@
-dojo.provide("dijit.layout.StackController");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Container");
-dojo.require("dijit.form.ToggleButton");
-dojo.requireLocalization("dijit", "common");
+define("dijit/layout/StackController", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dijit/_Container", "dijit/form/ToggleButton", "i18n!dijit/nls/common"], function(dojo, dijit) {
 
 dojo.declare(
 		"dijit.layout.StackController",
@@ -16,7 +10,7 @@ dojo.declare(
 			//		Monitors the specified StackContainer, and whenever a page is
 			//		added, deleted, or selected, updates itself accordingly.
 
-			templateString: "<span wairole='tablist' dojoAttachEvent='onkeypress' class='dijitStackController'></span>",
+			templateString: "<span role='tablist' dojoAttachEvent='onkeypress' class='dijitStackController'></span>",
 
 			// containerId: [const] String
 			//		The id of the page container that I point to
@@ -26,11 +20,19 @@ dojo.declare(
 			//		The name of the button widget to create to correspond to each page
 			buttonWidget: "dijit.layout._StackButton",
 
-			postCreate: function(){
-				dijit.setWaiRole(this.domNode, "tablist");
-
+			constructor: function(){
 				this.pane2button = {};		// mapping from pane id to buttons
-				this.pane2handles = {};		// mapping from pane id to this.connect() handles
+				this.pane2connects = {};	// mapping from pane id to this.connect() handles
+				this.pane2watches = {};		// mapping from pane id to watch() handles
+			},
+
+			buildRendering: function(){
+				this.inherited(arguments);
+				dijit.setWaiRole(this.domNode, "tablist");	// TODO: unneeded?   it's in template above.
+			},
+
+			postCreate: function(){
+				this.inherited(arguments);
 
 				// Listen to notifications from StackContainer
 				this.subscribe(this.containerId+"-startup", "onStartup");
@@ -80,22 +82,25 @@ dojo.declare(
 					title: page.tooltip
 				});
 				dijit.setWaiState(button.focusNode,"selected", "false");
-				this.pane2handles[page.id] = [
-					this.connect(page, 'set', function(name, value){
-						var buttonAttr = {
-							title: 'label',
-							showTitle: 'showLabel',
-							iconClass: 'iconClass',
-							closable: 'closeButton',
-							tooltip: 'title'
-						}[name];
-						if(buttonAttr){
-							button.set(buttonAttr, value);
-						}
-					}),
+
+
+				// map from page attribute to corresponding tab button attribute
+				var pageAttrList = ["title", "showTitle", "iconClass", "closable", "tooltip"],
+					buttonAttrList = ["label", "showLabel", "iconClass", "closeButton", "title"];
+
+				// watch() so events like page title changes are reflected in tab button
+				this.pane2watches[page.id] = dojo.map(pageAttrList, function(pageAttr, idx){
+					return page.watch(pageAttr, function(name, oldVal, newVal){
+						button.set(buttonAttrList[idx], newVal);
+					});
+				});
+					
+				// connections so that clicking a tab button selects the corresponding page
+				this.pane2connects[page.id] = [
 					this.connect(button, 'onClick', dojo.hitch(this,"onButtonClick", page)),
 					this.connect(button, 'onClickCloseButton', dojo.hitch(this,"onCloseButtonClick", page))
 				];
+
 				this.addChild(button, insertIndex);
 				this.pane2button[page.id] = button;
 				page.controlButton = button;	// this value might be overwritten if two tabs point to same container
@@ -118,8 +123,13 @@ dojo.declare(
 				//		private
 
 				if(this._currentChild === page){ this._currentChild = null; }
-				dojo.forEach(this.pane2handles[page.id], this.disconnect, this);
-				delete this.pane2handles[page.id];
+
+				// disconnect/unwatch connections/watches related to page being removed
+				dojo.forEach(this.pane2connects[page.id], dojo.hitch(this, "disconnect"));
+				delete this.pane2connects[page.id];
+				dojo.forEach(this.pane2watches[page.id], function(w){ w.unwatch(); });
+				delete this.pane2watches[page.id];
+
 				var button = this.pane2button[page.id];
 				if(button){
 					this.removeChild(button);
@@ -221,6 +231,14 @@ dojo.declare(
 						case k.PAGE_DOWN:
 							if(e.ctrlKey){ forward = true; }
 							break;
+						case k.HOME:
+						case k.END:
+							var children = this.getChildren();
+							if(children && children.length){
+								children[e.charOrCode == k.HOME ? 0 : children.length-1].onClick();
+							}
+							dojo.stopEvent(e);
+							break;
 						case k.DELETE:
 							if(this._currentChild.closable){
 								this.onCloseButtonClick(this._currentChild);
@@ -240,7 +258,7 @@ dojo.declare(
 								}
 							}
 					}
-					// handle page navigation
+					// handle next/previous page navigation (left/right arrow, etc.)
 					if(forward !== null){
 						this.adjacent(forward).onClick();
 						dojo.stopEvent(e);
@@ -274,9 +292,9 @@ dojo.declare("dijit.layout._StackButton",
 		// Probably we should be calling this.startupKeyNavChildren() instead.
 		tabIndex: "-1",
 
-		postCreate: function(/*Event*/ evt){
-			dijit.setWaiRole((this.focusNode || this.domNode), "tab");
+		buildRendering: function(/*Event*/ evt){
 			this.inherited(arguments);
+			dijit.setWaiRole((this.focusNode || this.domNode), "tab");
 		},
 
 		onClick: function(/*Event*/ evt){
@@ -298,3 +316,6 @@ dojo.declare("dijit.layout._StackButton",
 		}
 	});
 
+
+return dijit.layout.StackController;
+});

@@ -1,7 +1,4 @@
-dojo.provide("dijit._editor.plugins.TextColor");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.ColorPalette");
+define("dijit/_editor/plugins/TextColor", ["dojo", "dijit", "dijit/_editor/_Plugin", "dijit/ColorPalette"], function(dojo, dijit) {
 
 dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
 	// summary:
@@ -41,6 +38,10 @@ dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
 		}
 		
 		if(this.button){
+			var disabled = this.get("disabled");
+			this.button.set("disabled", disabled);
+			if(disabled){ return; }
+			
 			var value;
 			try{
 				value = _e.queryCommandValue(_c)|| "";
@@ -58,7 +59,7 @@ dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
 		}
 
 		if(typeof value == "string"){
-			//if RGB value, convert to hex value	
+			//if RGB value, convert to hex value
 			if(value.indexOf("rgb")> -1){
 				value = dojo.colorFromRgb(value).toHex();
 			}
@@ -87,4 +88,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
 				command: o.args.name
 			});
 	}
+});
+
+
+return dijit._editor.plugins.TextColor;
 });

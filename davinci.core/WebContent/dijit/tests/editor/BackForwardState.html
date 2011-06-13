@@ -1,20 +1,20 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Editor Back/Forward Button Test</title>
 
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<!-- not needed, for testing alternate themes -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -40,7 +40,7 @@
 	</ol>
 	<p><a href="BackForwardStateHelper.html" id="away">Navigate to another page</a></p>
 
-	<div dojoType="dijit.Editor" id="editor0" name="editor0" name="editor0" height="100" plugins="[]">editor0 original contents</div>
-	<div dojoType="dijit.Editor" id="editor1" name="editor1" name="editor1" height="100" plugins="[]">editor1 original contents</div>
+	<div id="editor0" data-dojo-type="dijit.Editor" data-dojo-props='name:"editor0", height:"100", plugins:[]'>editor0 original contents</div>
+	<div id="editor1" data-dojo-type="dijit.Editor" data-dojo-props='name:"editor1", height:"100", plugins:[]'>editor1 original contents</div>
 </body>
 </html>

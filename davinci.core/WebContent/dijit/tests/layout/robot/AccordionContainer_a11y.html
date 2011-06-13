@@ -20,7 +20,7 @@
 
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot('../test_AccordionContainer.html');
-				doh.register("Accordion A11Y tests",[
+				doh.register("Accordion A11Y tests", [
 					{
 						name: "basic operation",
 						timeout: 10000,
@@ -43,6 +43,13 @@
 								doh.t(/Lazy Load Pane/.test(innerText(dojo.global.dijit._curFocus)), "moved to second pane's title");
 								doh.is("lazyLoadPane", dojo.global.dijit.byId("markupAccordion").get("selectedChildWidget").id, "second pane is now selected");
 							}), 500);
+
+							// Workaround FF4 bug where overflow:auto panes get focus even when
+							// they don't have a scrollbar, remove when
+							// https://bugzilla.mozilla.org/show_bug.cgi?id=616594 fixed
+							if(dojo.isFF == 4){
+								dojo.query("#lazyLoadPane").style("overflow", "hidden");
+							}
 
 							// Tab into second pane's content area, landing on link inside pane
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});

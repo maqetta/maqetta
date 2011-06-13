@@ -1,5 +1,4 @@
-dojo.provide("dojo._base.connect");
-dojo.require("dojo._base.lang");
+define("dojo/_base/connect", ["dojo/lib/kernel", "dojo/_base/lang"], function(dojo){
 
 // this file courtesy of the TurboAjax Group, licensed under a Dojo CLA
 
@@ -7,37 +6,20 @@ dojo.require("dojo._base.lang");
 dojo._listener = {
 	// create a dispatcher function
 	getDispatcher: function(){
-		// following comments pulled out-of-line to prevent cloning them 
+		// following comments pulled out-of-line to prevent cloning them
 		// in the returned function.
-		// - indices (i) that are really in the array of listeners (ls) will 
+		// - indices (i) that are really in the array of listeners (ls) will
 		//   not be in Array.prototype. This is the 'sparse array' trick
-		//   that keeps us safe from libs that take liberties with built-in 
+		//   that keeps us safe from libs that take liberties with built-in
 		//   objects
 		// - listener is invoked with current scope (this)
 		return function(){
-			var ap=Array.prototype, c=arguments.callee, ls=c._listeners, t=c.target;
+			var ap = Array.prototype, c = arguments.callee, ls = c._listeners, t = c.target,
 			// return value comes from original target function
-			var r = t && t.apply(this, arguments);
+				r = t && t.apply(this, arguments),
 			// make local copy of listener array so it is immutable during processing
-			var i, lls;
-			//>>includeStart("connectRhino", kwArgs.profileProperties.hostenvType == "rhino");
-			if(!dojo.isRhino){
-			//>>includeEnd("connectRhino");
-				//>>includeStart("connectBrowser", kwArgs.profileProperties.hostenvType != "rhino");
-				lls = [].concat(ls);
-				//>>includeEnd("connectBrowser");
-			//>>includeStart("connectRhino", kwArgs.profileProperties.hostenvType == "rhino");
-			}else{
-				// FIXME: in Rhino, using concat on a sparse Array results in a dense Array.
-				// IOW, if an array A has elements [0, 2, 4], then under Rhino, "concat [].A"
-				// results in [0, 1, 2, 3, 4], where element 1 and 3 have value 'undefined'
-				// "A.slice(0)" has the same behavior.
-				lls = [];
-				for(i in ls){
-					lls[i] = ls[i];
-				}
-			}
-			//>>includeEnd("connectRhino");
+				i, lls = [].concat(ls)
+			;
 
 			// invoke listeners after target function
 			for(i in lls){
@@ -52,12 +34,12 @@ dojo._listener = {
 	// add a listener to an object
 	add: function(/*Object*/ source, /*String*/ method, /*Function*/ listener){
 		// Whenever 'method' is invoked, 'listener' will have the same scope.
-		// Trying to supporting a context object for the listener led to 
-		// complexity. 
+		// Trying to supporting a context object for the listener led to
+		// complexity.
 		// Non trivial to provide 'once' functionality here
 		// because listener could be the result of a dojo.hitch call,
 		// in which case two references to the same hitch target would not
-		// be equivalent. 
+		// be equivalent.
 		source = source || dojo.global;
 		// The source method is either null, a dispatcher, or some other function
 		var f = source[method];
@@ -67,15 +49,15 @@ dojo._listener = {
 			// original target function is special
 			d.target = f;
 			// dispatcher holds a list of listeners
-			d._listeners = []; 
+			d._listeners = [];
 			// redirect source to dispatcher
 			f = source[method] = d;
 		}
-		// The contract is that a handle is returned that can 
-		// identify this listener for disconnect. 
+		// The contract is that a handle is returned that can
+		// identify this listener for disconnect.
 		//
-		// The type of the handle is private. Here is it implemented as Integer. 
-		// DOM event code has this same contract but handle is Function 
+		// The type of the handle is private. Here is it implemented as Integer.
+		// DOM event code has this same contract but handle is Function
 		// in non-IE browsers.
 		//
 		// We could have separate lists of before and after listeners.
@@ -97,9 +79,9 @@ dojo._listener = {
 // and dontFix argument here to help the autodocs. Actual DOM aware code is in
 // event.js.
 
-dojo.connect = function(/*Object|null*/ obj, 
-						/*String*/ event, 
-						/*Object|null*/ context, 
+dojo.connect = function(/*Object|null*/ obj,
+						/*String*/ event,
+						/*Object|null*/ context,
 						/*String|Function*/ method,
 						/*Boolean?*/ dontFix){
 	// summary:
@@ -134,37 +116,37 @@ dojo.connect = function(/*Object|null*/ obj,
 	//		arguments may simply be omitted such that fewer than 4 arguments
 	//		may be required to set up a connection See the examples for details.
 	//
-	//		The return value is a handle that is needed to 
+	//		The return value is a handle that is needed to
 	//		remove this connection with `dojo.disconnect`.
 	//
-	// obj: 
-	//		The source object for the event function. 
+	// obj:
+	//		The source object for the event function.
 	//		Defaults to `dojo.global` if null.
-	//		If obj is a DOM node, the connection is delegated 
+	//		If obj is a DOM node, the connection is delegated
 	//		to the DOM event manager (unless dontFix is true).
 	//
 	// event:
-	//		String name of the event function in obj. 
+	//		String name of the event function in obj.
 	//		I.e. identifies a property `obj[event]`.
 	//
-	// context: 
+	// context:
 	//		The object that method will receive as "this".
 	//
 	//		If context is null and method is a function, then method
 	//		inherits the context of event.
-	//	
-	//		If method is a string then context must be the source 
+	//
+	//		If method is a string then context must be the source
 	//		object object for method (context[method]). If context is null,
 	//		dojo.global is used.
 	//
 	// method:
-	//		A function reference, or name of a function in context. 
-	//		The function identified by method fires after event does. 
+	//		A function reference, or name of a function in context.
+	//		The function identified by method fires after event does.
 	//		method receives the same arguments as the event.
 	//		See context argument comments for information on method's scope.
 	//
 	// dontFix:
-	//		If obj is a DOM node, set dontFix to true to prevent delegation 
+	//		If obj is a DOM node, set dontFix to true to prevent delegation
 	//		of this connection to the DOM event manager.
 	//
 	// example:
@@ -214,9 +196,9 @@ dojo.connect = function(/*Object|null*/ obj,
 
 // used by non-browser hostenvs. always overriden by event.js
 dojo._connect = function(obj, event, context, method){
-	var l=dojo._listener, h=l.add(obj, event, dojo.hitch(context, method)); 
+	var l=dojo._listener, h=l.add(obj, event, dojo.hitch(context, method));
 	return [obj, event, h, l]; // Handle
-}
+};
 
 dojo.disconnect = function(/*Handle*/ handle){
 	// summary:
@@ -230,11 +212,11 @@ dojo.disconnect = function(/*Handle*/ handle){
 		// let's not keep this reference
 		delete handle[0];
 	}
-}
+};
 
 dojo._disconnect = function(obj, event, handle, listener){
 	listener.remove(obj, event, handle);
-}
+};
 
 // topic publish/subscribe
 
@@ -252,15 +234,15 @@ dojo.subscribe = function(/*String*/ topic, /*Object|null*/ context, /*String|Fu
 	//		is invoked when topic is published.
 	//	example:
 	//	|	dojo.subscribe("alerts", null, function(caption, message){ alert(caption + "\n" + message); });
-	//	|	dojo.publish("alerts", [ "read this", "hello world" ]);																	
+	//	|	dojo.publish("alerts", [ "read this", "hello world" ]);
 
 	// support for 2 argument invocation (omitting context) depends on hitch
 	return [topic, dojo._listener.add(dojo._topics, topic, dojo.hitch(context, method))]; /*Handle*/
-}
+};
 
 dojo.unsubscribe = function(/*Handle*/ handle){
 	//	summary:
-	//	 	Remove a topic listener. 
+	//	 	Remove a topic listener.
 	//	handle:
 	//	 	The handle returned from a call to subscribe.
 	//	example:
@@ -270,7 +252,7 @@ dojo.unsubscribe = function(/*Handle*/ handle){
 	if(handle){
 		dojo._listener.remove(dojo._topics, handle[0], handle[1]);
 	}
-}
+};
 
 dojo.publish = function(/*String*/ topic, /*Array*/ args){
 	//	summary:
@@ -278,11 +260,11 @@ dojo.publish = function(/*String*/ topic, /*Array*/ args){
 	//	topic:
 	//	 	The name of the topic to publish.
 	//	args:
-	//	 	An array of arguments. The arguments will be applied 
+	//	 	An array of arguments. The arguments will be applied
 	//	 	to each topic subscriber (as first class parameters, via apply).
 	//	example:
 	//	|	dojo.subscribe("alerts", null, function(caption, message){ alert(caption + "\n" + message); };
-	//	|	dojo.publish("alerts", [ "read this", "hello world" ]);	
+	//	|	dojo.publish("alerts", [ "read this", "hello world" ]);
 
 	// Note that args is an array, which is more efficient vs variable length
 	// argument list.  Ideally, var args would be implemented via Array
@@ -291,10 +273,10 @@ dojo.publish = function(/*String*/ topic, /*Array*/ args){
 	if(f){
 		f.apply(this, args||[]);
 	}
-}
+};
 
-dojo.connectPublisher = function(	/*String*/ topic, 
-									/*Object|null*/ obj, 
+dojo.connectPublisher = function(	/*String*/ topic,
+									/*Object|null*/ obj,
 									/*String*/ event){
 	//	summary:
 	//	 	Ensure that every time obj.event() is called, a message is published
@@ -303,14 +285,17 @@ dojo.connectPublisher = function(	/*String*/ topic,
 	//	 	the topic.
 	//	topic:
 	//	 	The name of the topic to publish.
-	//	obj: 
+	//	obj:
 	//	 	The source object for the event function. Defaults to dojo.global
 	//	 	if null.
 	//	event:
-	//	 	The name of the event function in obj. 
+	//	 	The name of the event function in obj.
 	//	 	I.e. identifies a property obj[event].
 	//	example:
 	//	|	dojo.connectPublisher("/ajax/start", dojo, "xhrGet");
 	var pf = function(){ dojo.publish(topic, arguments); }
 	return event ? dojo.connect(obj, event, pf) : dojo.connect(obj, pf); //Handle
 };
+
+return dojo.connect;
+});

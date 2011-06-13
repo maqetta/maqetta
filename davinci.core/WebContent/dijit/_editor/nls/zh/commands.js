@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': '粗体',
 	'copy': '复制',
@@ -46,3 +48,5 @@
 	'systemShortcut': '只能在浏览器中通过键盘快捷方式执行“${0}”操作。使用 ${1}。'
 })
 
+//end v1.x content
+);

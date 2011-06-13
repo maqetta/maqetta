@@ -5,8 +5,8 @@
 	emoticonWink: "occhiolino",
 	emoticonGrin: "ghigno",
 	emoticonCool: "figo",
-	emoticonAngry: "arrabbiato",  
-	emoticonHalf: "metà", 
+	emoticonAngry: "arrabbiato",
+	emoticonHalf: "metà",
 	emoticonEyebrow: "sopracciglia",
 	emoticonFrown: "triste",
 	emoticonShy: "timido",
@@ -15,7 +15,7 @@
 	emoticonTongue: "linguaccia",
 	emoticonIdea: "idea",
 	emoticonYes: "yes",
-	emoticonNo: "no",	
+	emoticonNo: "no",
 	emoticonAngel: "angelo",
 	emoticonCrying: "in lacrime"
 })

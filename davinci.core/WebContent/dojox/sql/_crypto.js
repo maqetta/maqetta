@@ -1,7 +1,7 @@
 dojo.provide("dojox.sql._crypto");
 dojo.mixin(dojox.sql._crypto, {
 	// summary: dojox.sql cryptography code
-	// description: 
+	// description:
 	//	Taken from http://www.movable-type.co.uk/scripts/aes.html by
 	// 	Chris Veness (CLA signed); adapted for Dojo and Google Gears Worker Pool
 	// 	by Brad Neuberg, bkn3@columbia.edu
@@ -14,7 +14,7 @@ dojo.mixin(dojox.sql._crypto, {
 		// summary:
 		//	Use Corrected Block TEA to encrypt plaintext using password
 		//	(note plaintext & password must be strings not string objects).
-		//	Results will be returned to the 'callback' asychronously.	
+		//	Results will be returned to the 'callback' asychronously.
 		this._initWorkerPool();
 
 		var msg ={plaintext: plaintext, password: password};
@@ -51,10 +51,10 @@ dojo.mixin(dojox.sql._crypto, {
 		// and put them to work, storing them in an 'employed' hashtable,
 		// keyed by their Worker ID with the value being the callback function
 		// that wants the result. when an employed worker is done, we get
-		// a message in our 'manager' which adds this worker back to the 
+		// a message in our 'manager' which adds this worker back to the
 		// unemployed stack and routes the result to the callback that
 		// wanted it. if all the workers were employed in the past but
-		// more work needed to be done (i.e. it's a tight labor pool ;) 
+		// more work needed to be done (i.e. it's a tight labor pool ;)
 		// then the work messages are pushed onto
 		// a 'handleMessage' queue as an object tuple{msg: msg, callback: callback}
 
@@ -155,7 +155,7 @@ dojo.mixin(dojox.sql._crypto, {
 					 [0x40, 0x00, 0x00, 0x00],
 					 [0x80, 0x00, 0x00, 0x00],
 					 [0x1b, 0x00, 0x00, 0x00],
-					 [0x36, 0x00, 0x00, 0x00] ]; 
+					 [0x36, 0x00, 0x00, 0x00] ];
 
 		/*
 		 * AES Cipher function: encrypt 'input' with Rijndael algorithm
@@ -207,7 +207,7 @@ dojo.mixin(dojox.sql._crypto, {
 			for (var c=0; c<4; c++) t[c] = s[r][(c+r)%Nb];	// shift into temp copy
 			for (var c=0; c<4; c++) s[r][c] = t[c];			// and copy back
 		  }			 // note that this will work for Nb=4,5,6, but not 7,8 (always 4 for AES):
-		  return s;	 // see fp.gladman.plus.com/cryptography_technology/rijndael/aes.spec.311.pdf 
+		  return s;	 // see fp.gladman.plus.com/cryptography_technology/rijndael/aes.spec.311.pdf
 		}
 
 
@@ -278,7 +278,7 @@ dojo.mixin(dojox.sql._crypto, {
 
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-		/* 
+		/*
 		 * Use AES to encrypt 'plaintext' with 'password' using 'nBits' key, in 'Counter' mode of operation
 		 *							 - see http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
 		 *	 for each block
@@ -288,7 +288,7 @@ dojo.mixin(dojox.sql._crypto, {
 		function AESEncryptCtr(plaintext, password, nBits) {
 		  if (!(nBits==128 || nBits==192 || nBits==256)) return '';	 // standard allows 128/192/256 bit keys
 
-		  // for this example script, generate the key by applying Cipher to 1st 16/24/32 chars of password; 
+		  // for this example script, generate the key by applying Cipher to 1st 16/24/32 chars of password;
 		  // for real-world applications, a more secure approach would be to hash the password e.g. with SHA-1
 		  var nBytes = nBits/8;	 // no bytes in key
 		  var pwBytes = new Array(nBytes);
@@ -306,7 +306,7 @@ dojo.mixin(dojox.sql._crypto, {
 
 		  // encode nonce in two stages to cater for JavaScript 32-bit limit on bitwise ops
 		  for (var i=0; i<4; i++) counterBlock[i] = (nonce >>> i*8) & 0xff;
-		  for (var i=0; i<4; i++) counterBlock[i+4] = (nonce/0x100000000 >>> i*8) & 0xff; 
+		  for (var i=0; i<4; i++) counterBlock[i+4] = (nonce/0x100000000 >>> i*8) & 0xff;
 
 		  // generate key schedule - an expansion of the key into distinct Key Rounds for each round
 		  var keySchedule = KeyExpansion(key);
@@ -346,7 +346,7 @@ dojo.mixin(dojox.sql._crypto, {
 		}
 
 
-		/* 
+		/*
 		 * Use AES to decrypt 'ciphertext' with 'password' using 'nBits' key, in Counter mode of operation
 		 *
 		 *	 for each block
@@ -365,7 +365,7 @@ dojo.mixin(dojox.sql._crypto, {
 
 		  var keySchedule = KeyExpansion(key);
 
-		  ciphertext = ciphertext.split('-');  // split ciphertext into array of block-length strings 
+		  ciphertext = ciphertext.split('-');  // split ciphertext into array of block-length strings
 
 		  // recover nonce from 1st element of ciphertext
 		  var blockSize = 16;  // block size fixed at 16 bytes / 128 bits (Nb=4) for AES
@@ -415,7 +415,7 @@ dojo.mixin(dojox.sql._crypto, {
 			return AESEncryptCtr(plaintext, password, 256);
 		}
 
-		function decrypt(ciphertext, password){	
+		function decrypt(ciphertext, password){
 			return AESDecryptCtr(ciphertext, password, 256);
 		}
 	

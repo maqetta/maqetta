@@ -25,7 +25,7 @@ dojo.require("dojox.form.manager._Mixin");
 			//		If it is omitted, all known form elements are to be processed.
 
 			var result = this.inspectFormWidgets(ia(function(name, widget){
-				return !widget.attr("disabled");
+				return !widget.get("disabled");
 			}), names);
 
 			if(this.inspectFormNodes){
@@ -53,7 +53,7 @@ dojo.require("dojox.form.manager._Mixin");
 			}
 
 			this.inspectFormWidgets(aa(function(name, widget, value){
-				widget.attr("disabled", !value);
+				widget.set("disabled", !value);
 			}), state, defaultState);
 
 			if(this.inspectFormNodes){

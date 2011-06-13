@@ -18,6 +18,7 @@
 	right: "rechts",
 	buttonSet: "Instellen", // translated elsewhere?
 	buttonInsert: "invoegen",
+	buttonCancel: "Annuleren",
 
 	selectTableLabel: "Tabel selecteren",
 	insertTableRowBeforeLabel: "Rij boven toevoegen",

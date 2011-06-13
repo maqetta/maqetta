@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Wielkość",
 	fontName: "Czcionka",
@@ -9,6 +11,7 @@
 	cursive: "kursywa",
 	fantasy: "fantazyjna",
 
+	noFormat: "Brak",
 	p: "Akapit",
 	h1: "Nagłówek",
 	h2: "Nagłówek 2-go poziomu",
@@ -23,3 +26,5 @@
 	6: "większa",
 	7: "największa"
 })
+//end v1.x content
+);

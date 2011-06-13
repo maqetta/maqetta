@@ -18,6 +18,7 @@
 	right: "δεξιά",
 	buttonSet: "Ορισμός", // translated elsewhere?
 	buttonInsert: "Εισαγωγή",
+	buttonCancel: "Ακύρωση",
 
 	selectTableLabel: "Επιλογή πίνακα",
 	insertTableRowBeforeLabel: "Προσθήκη γραμμής πριν",

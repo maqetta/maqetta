@@ -15,7 +15,7 @@ dojox.analytics.plugins.consoleMessages = new (function(){
 		if(console[lvls[i]]){
 			dojo.connect(console, lvls[i], dojo.hitch(this, "addData", lvls[i]));
 		}else{
-			console[lvls[i]] = dojo.hitch(this, "addData", lvls[i]);	
+			console[lvls[i]] = dojo.hitch(this, "addData", lvls[i]);
 		}
 	}
 })();

@@ -1,0 +1,28 @@
+.mblRevealv.mblOut {
+	z-index: 0;
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblRevealVOut;
+	-webkit-animation-timing-function: linear;
+}
+.mblRevealv.mblIn {
+	z-index: -100;
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblRevealVIn;
+	-webkit-animation-timing-function: linear;
+}
+.mblRevealv.mblOut.mblReverse {
+	-webkit-animation-name: mblRevealVOutReverse;
+	-webkit-animation-fill-mode: forwards;
+}
+@-webkit-keyframes mblRevealVOut {
+	from { -webkit-transform: translateY(0px); }
+	to { -webkit-transform: translateY(-100%); }
+}
+@-webkit-keyframes mblRevealVIn {
+	from {}
+	to {}
+}
+@-webkit-keyframes mblRevealVOutReverse {
+	from { -webkit-transform: translateY(0px); }
+	to { -webkit-transform: translateY(100%); }
+}

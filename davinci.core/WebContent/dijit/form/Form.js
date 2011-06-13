@@ -1,12 +1,8 @@
-dojo.provide("dijit.form.Form");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit.form._FormMixin");
+define("dijit/form/Form", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dijit/form/_FormMixin", "dijit/layout/_ContentPaneResizeMixin"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.form.Form",
-	[dijit._Widget, dijit._Templated, dijit.form._FormMixin],
+	[dijit._Widget, dijit._Templated, dijit.form._FormMixin, dijit.layout._ContentPaneResizeMixin],
 	{
 		// summary:
 		//		Widget corresponding to HTML form tag, for validation and serialization
@@ -90,7 +86,7 @@ dojo.declare(
 
 		postCreate: function(){
 			// IE tries to hide encType
-			// TODO: this code should be in parser, not here.
+			// TODO: remove in 2.0, no longer necessary with data-dojo-params
 			if(dojo.isIE && this.srcNodeRef && this.srcNodeRef.attributes){
 				var item = this.srcNodeRef.attributes.getNamedItem('encType');
 				if(item && !item.specified && (typeof item.value == "string")){
@@ -111,8 +107,8 @@ dojo.declare(
 				preventDefault: function(){ // not IE
 							this.returnValue = false;
 						},
-				stopPropagation: function(){}, 
-				currentTarget: e ? e.target : this.domNode, 
+				stopPropagation: function(){},
+				currentTarget: e ? e.target : this.domNode,
 				target: e ? e.target : this.domNode
 			};
 			// if return value is not exactly false, and haven't called preventDefault(), then reset
@@ -151,7 +147,7 @@ dojo.declare(
 			}
 		},
 
-		onSubmit: function(/*Event?*/e){
+		onSubmit: function(/*Event?*/ e){
 			// summary:
 			//		Callback when user submits the form.
 			// description:
@@ -175,3 +171,7 @@ dojo.declare(
 		}
 	}
 );
+
+
+return dijit.form.Form;
+});

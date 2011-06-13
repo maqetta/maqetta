@@ -1,0 +1,3 @@
+define(({
+	deleteButton: "[Törlés]"
+}));

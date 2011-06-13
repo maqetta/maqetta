@@ -16,7 +16,7 @@ dojox.analytics.plugins.idle = new (function(){
 	dojo.addOnLoad(dojo.hitch(this, function(){
 		var idleResets=["onmousemove","onkeydown","onclick","onscroll"];
 		for (var i=0;i<idleResets.length;i++){
-			dojo.connect(dojo.doc,idleResets[i],this, function(e){ 
+			dojo.connect(dojo.doc,idleResets[i],this, function(e){
 				if (this.idle){
 					this.idle=false;
 					this.addData("isActive");

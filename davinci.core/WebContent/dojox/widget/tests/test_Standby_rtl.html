@@ -148,8 +148,8 @@
 			var overlay18= dijit.byId("standby18");
 			connects.push(dojo.connect(button35, "onClick", function(){
 				showCount++;
-				console.log(overlay18.attr("text"));
-				overlay18.attr("text", "Shown: " + showCount);
+				console.log(overlay18.get("text"));
+				overlay18.set("text", "Shown: " + showCount);
 				overlay18.show()}));
 			connects.push(dojo.connect(button36, "onClick", function(){overlay18.hide()}));
 
@@ -159,8 +159,8 @@
 			var button38 = dijit.byId("overlay19Button2");
 			var overlay19= dijit.byId("standby19");
 			connects.push(dojo.connect(button37, "onClick", function(){
-				console.log(overlay19.attr("color"));
-				overlay19.attr("color", colors[cPos]);
+				console.log(overlay19.get("color"));
+				overlay19.set("color", colors[cPos]);
 				cPos++;
 				if(cPos === colors.length - 1){
 					cPos = 0;

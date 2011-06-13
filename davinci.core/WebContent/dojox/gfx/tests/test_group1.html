@@ -22,8 +22,12 @@ var g1 = null;
 var g2 = null;
 var r1 = null;
 
-makeShapes = function(){
-	surface = dojox.gfx.createSurface(document.getElementById("test"), 500, 500);
+createSurface = function(){
+	surface = dojox.gfx.createSurface("test", 500, 500);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	// make a checkerboard
 	for(var i = 0; i < 500; i += 100){
 		for(var j = 0; j < 500; j += 100){
@@ -52,7 +56,7 @@ switchRect = function(){
 	}
 };
 
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 
 </script>
 </head>

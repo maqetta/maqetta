@@ -232,6 +232,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}
 		this._context.getCommandStack().execute(command);
 		this._select(widget);
+		return widget;
 	},
 	
 	_select: function(widget) {

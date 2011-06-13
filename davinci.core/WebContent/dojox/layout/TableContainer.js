@@ -5,7 +5,7 @@ dojo.require("dijit.layout._LayoutWidget");
 dojo.declare("dojox.layout.TableContainer",
 	dijit.layout._LayoutWidget,
 	{
-	// summary: 
+	// summary:
 	//		A container that lays out its child widgets in a table layout.
 	//
 	// description:
@@ -29,7 +29,7 @@ dojo.declare("dojox.layout.TableContainer",
 	
 	// labelWidth: Number|String
 	//		Defines the width of a label.  If the value is a number, it is
-	//		treated as a pixel value.  The other valid value is a percentage, 
+	//		treated as a pixel value.  The other valid value is a percentage,
 	//		e.g. "50%"
 	labelWidth: "100",
 
@@ -38,8 +38,8 @@ dojo.declare("dojox.layout.TableContainer",
 	showLabels: true,
 
 	// orientation: String
-	//		Either "horiz" or "vert" for label orientation. 
-	orientation: "horiz", 
+	//		Either "horiz" or "vert" for label orientation.
+	orientation: "horiz",
 	
 	// spacing: Number
 	//		The cell spacing to apply to the table.
@@ -48,7 +48,7 @@ dojo.declare("dojox.layout.TableContainer",
 	// customClass: String
 	//		A CSS class that will be applied to child elements.  For example, if
 	//		the class is "myClass", the table will have "myClass-table" applied to it,
-	//		each label TD will have "myClass-labelCell" applied, and each 
+	//		each label TD will have "myClass-labelCell" applied, and each
 	//		widget TD will have "myClass-valueCell" applied.
 	customClass: "",
 
@@ -56,13 +56,13 @@ dojo.declare("dojox.layout.TableContainer",
 		this.inherited(arguments);
 		this._children = [];
 		
-		// If the orientation, customClass or cols attributes are changed, 
+		// If the orientation, customClass or cols attributes are changed,
 		// layout the widgets again.
-		dojo.connect(this, "attr", dojo.hitch(this, function(name, value){
+		this.connect(this, "set", function(name, value){
 			if(value && (name == "orientation" || name == "customClass" || name == "cols")) {
 				this.layout();
 			}
-		}))
+		})
 	},
 
 	startup: function() {
@@ -92,7 +92,7 @@ dojo.declare("dojox.layout.TableContainer",
 	},
 
 	resize: function(){
-		// summary: 
+		// summary:
 		//		Resizes all children.  This widget itself
 		//		does not resize, as it takes up 100% of the
 		//		available width.
@@ -104,7 +104,7 @@ dojo.declare("dojox.layout.TableContainer",
 	},
 
 	layout: function(){
-		// summary: 
+		// summary:
 		//		Lays out the child widgets.
 		if(!this._initialized){
 			return;
@@ -165,7 +165,7 @@ dojo.declare("dojox.layout.TableContainer",
 			var colspan = child.colspan || 1;
 			
 			if(colspan > 1) {
-				colspan = this.showLabels ? 
+				colspan = this.showLabels ?
 					Math.min(maxCols - 1, colspan * 2 -1): Math.min(maxCols, colspan);
 			}
 
@@ -189,19 +189,19 @@ dojo.declare("dojox.layout.TableContainer",
 				else {
 					// Add the custom label class to the label cell
 					addCustomClass(labelCell, "labelCell");
-					var labelProps = {"for": child.attr("id")};
+					var labelProps = {"for": child.get("id")};
 					var label = dojo.create("label", labelProps, labelCell);
 
 					if(Number(this.labelWidth) > -1 ||
 						String(this.labelWidth).indexOf("%") > -1) {
 							
 						// Set the width of the label cell with either a pixel or percentage value
-						dojo.style(labelCell, "width", 
-							String(this.labelWidth).indexOf("%") < 0 
+						dojo.style(labelCell, "width",
+							String(this.labelWidth).indexOf("%") < 0
 								? this.labelWidth + "px" : this.labelWidth);
 					}
 
-					label.innerHTML = child.attr("label") || child.attr("title");
+					label.innerHTML = child.get("label") || child.get("title");
 				}
 			}
 			var childCell;
@@ -246,7 +246,7 @@ dojo.declare("dojox.layout.TableContainer",
 	},
 	
 	_setSpacingAttr: function(value) {
-		// summary: 
+		// summary:
 		//		Sets the spacing attribute.
 		this.spacing = value;
 		if(this.table) {

@@ -1,7 +1,4 @@
-dojo.provide("dijit.form.CurrencyTextBox");
-
-dojo.require("dojo.currency");
-dojo.require("dijit.form.NumberTextBox");
+define("dijit/form/CurrencyTextBox", ["dojo", "dijit", "dojo/currency", "dijit/form/NumberTextBox"], function(dojo, dijit) {
 
 /*=====
 dojo.declare(
@@ -40,11 +37,11 @@ dojo.declare(
 		//		the [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD"
 		currency: "",
 
+		/*=====
 		// constraints: dijit.form.CurrencyTextBox.__Constraints
 		//		Despite the name, this parameter specifies both constraints on the input
 		//		(including minimum/maximum allowed values) as well as
-		//		formatting options.   See `dijit.form.CurrencyTextBox.__Constraints` for details.
-		/*=====
+		//		formatting options.  See `dijit.form.CurrencyTextBox.__Constraints` for details.
 		constraints: {},
 		======*/
 		
@@ -61,19 +58,21 @@ dojo.declare(
 		// Override NumberTextBox._formatter to deal with currencies, ex: converts "123.45" to "$123.45"
 		_formatter: dojo.currency.format,
 
-		parse: function(/* String */ value, /* Object */ constraints){
+		_parser: dojo.currency.parse,
+
+		parse: function(/*String*/ value, /*Object*/ constraints){
 			// summary:
 			// 		Parses string value as a Currency, according to the constraints object
 			// tags:
 			// 		protected extension
-			var v = dojo.currency.parse(value, constraints);
+			var v = this.inherited(arguments);
 			if(isNaN(v) && /\d+/.test(value)){ // currency parse failed, but it could be because they are using NumberTextBox format so try its parse
-				return this.inherited(arguments, [ value, dojo.mixin({}, constraints, this.editOptions) ]);
+				v = dojo.hitch(dojo.mixin({}, this, { _parser: dijit.form.NumberTextBox.prototype._parser }), "inherited")(arguments);
 			}
 			return v;
 		},
 
-		_setConstraintsAttr: function(/* Object */ constraints){
+		_setConstraintsAttr: function(/*Object*/ constraints){
 			if(!constraints.currency && this.currency){
 				constraints.currency = this.currency;
 			}
@@ -81,3 +80,7 @@ dojo.declare(
 		}
 	}
 );
+
+
+return dijit.form.CurrencyTextBox;
+});

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Button List</title>
 		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
@@ -30,6 +30,9 @@
 				}else if(dojo.hasClass(btnDiv, "mblRedMinusButton")){
 					dojo.removeClass(btnDiv, "mblRedMinusButton");
 					dojo.addClass(btnDiv, "mblBluePlusButton");
+				}
+				if(dojo.isBB){
+					btnDiv.parentNode.appendChild(btnDiv.parentNode.removeChild(btnDiv));
 				}
 			}
 		</script>

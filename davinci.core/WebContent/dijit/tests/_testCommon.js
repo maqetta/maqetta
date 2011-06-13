@@ -17,9 +17,11 @@
 
 (function(){
 	var d = dojo,
+		dir = "",
 		theme = false,
 		testMode = null,
-		defTheme = "claro";
+		defTheme = "claro",
+		vars={};
 
 	if(window.location.href.indexOf("?") > -1){
 		var str = window.location.href.substr(window.location.href.indexOf("?")+1).split(/#/);
@@ -27,7 +29,7 @@
 		for(var i=0; i<ary.length; i++){
 			var split = ary[i].split("="),
 				key = split[0],
-				value = split[1].replace(/[^\w]/g, "");	// replace() to prevent XSS attack
+				value = (split[1]||'').replace(/[^\w]/g, "");	// replace() to prevent XSS attack
 			switch(key){
 				case "locale":
 					// locale string | null
@@ -36,6 +38,7 @@
 				case "dir":
 					// rtl | null
 					document.getElementsByTagName("html")[0].dir = value;
+					dir = value;
 					break;
 				case "theme":
 					// tundra | soria | nihilo | claro | null
@@ -44,7 +47,11 @@
 				case "a11y":
 					if(value){ testMode = "dijit_a11y"; }
 			}
+			vars[key] = value;
 		}
+	}
+	d._getVar = function(k, def){
+		return vars[k] || def;
 	}
 
 	// If URL specifies a non-claro theme then pull in those theme CSS files and modify
@@ -52,13 +59,13 @@
 	//
 	// Also defer parsing and any dojo.addOnLoad() calls that the test file makes
 	// until the CSS has finished loading.
-	if(theme || testMode){
+	if(theme || testMode || dir){
 
 		if(theme){
 			var themeCss = d.moduleUrl("dijit.themes",theme+"/"+theme+".css");
 			var themeCssRtl = d.moduleUrl("dijit.themes",theme+"/"+theme+"_rtl.css");
-			document.write('<link rel="stylesheet" type="text/css" href="'+themeCss+'">');
-			document.write('<link rel="stylesheet" type="text/css" href="'+themeCssRtl+'">');
+			document.write('<link rel="stylesheet" type="text/css" href="'+themeCss+'"/>');
+			document.write('<link rel="stylesheet" type="text/css" href="'+themeCssRtl+'"/>');
 		}
 
 		if(dojo.config.parseOnLoad){
@@ -83,6 +90,25 @@
 					if(n){ d.destroy(n); }
 			}
 			if(testMode){ d.addClass(b, testMode); }
+
+			// Claro has it's own reset css but for other themes using dojo/resources/dojo.css
+			if(theme){
+				dojo.query("style").forEach(function(node){
+					if(/claro\/document.css/.test(node.innerHTML)){
+						try{
+							node.innerHTML = node.innerHTML.replace("themes/claro/document.css",
+								"../dojo/resources/dojo.css");
+						}catch(e){
+							// fails on IE6-8 for some reason, works on IE9 and other browsers
+						}
+					}
+				});
+			}
+			if(dir == "rtl"){
+				// pretend all the labels are in an RTL language, because
+				// that affects how they lay out relative to inline form widgets
+				dojo.query("label").attr("dir", "rtl");
+			}
 
 			// Defer parsing and addOnLoad() execution until the specified CSS loads.
 			if(dojo.config._deferParsing){

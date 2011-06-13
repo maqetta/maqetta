@@ -15,7 +15,7 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 		this.listWidget = dijit.byId("searchList");
 		this.textWidget = dijit.byId("searchTextInput");
 		
-		this.listWidget.attr("items", []);
+		this.listWidget.set("items", []);
 		
 		var _this = this;
 		
@@ -29,7 +29,7 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 		//		console.log("search value = ", value);
 			
 			if(!value || value.length == 0){
-				_this.listWidget.attr("items", []);
+				_this.listWidget.set("items", []);
 				return;
 			}
 			
@@ -42,7 +42,7 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 			console.log("select", arguments);
 			
 			_this.controller.stageController.pushScene("flickr-image-view",
-				dojo.mixin({type: "group"}, item));	
+				dojo.mixin({type: "group"}, item));
 		});
 	},
   
@@ -68,7 +68,7 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 		// Focus in the search text input
 		this.textWidget.focus();
 		
-		if(this.textWidget.attr("value")){
+		if(this.textWidget.set("value")){
 			this.search();
 		}
 	},
@@ -82,10 +82,10 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 			this.timer = null;
 		}
 		
-		var searchText = this.textWidget.attr("value");
+		var searchText = this.textWidget.set("value");
 		
 		if(!searchText || dojo.trim(searchText).length < 1){
-			this.listWidget.attr("items", []);
+			this.listWidget.set("items", []);
 			
 			console.log("NOT SEARCHING");
 			return;
@@ -95,7 +95,7 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 		
 		var deferred = dojo.io.script.get({
 			url: url,
-			content: { 
+			content: {
 				api_key: this.apiKey,
 				format: "json",
 				text: searchText,
@@ -117,7 +117,7 @@ dojo.declare("FlickrSearchGroupAssistant", dojox.mobile.app.SceneAssistant, {
 		}else{
 			groups = [];
 		}
-		this.listWidget.attr("items", groups);
+		this.listWidget.set("items", groups);
 	}
   
 });

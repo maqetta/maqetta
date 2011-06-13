@@ -2,7 +2,7 @@ dojo.provide("dojox.charting.themes.Harmony");
 dojo.require("dojox.charting.Theme");
 (function(){
 	var dxc=dojox.charting;
-		dxc.themes.Harmony=new dxc.Theme({ 
+		dxc.themes.Harmony=new dxc.Theme({
 		colors: [
 			"#497c91",
 			"#59a0bd",

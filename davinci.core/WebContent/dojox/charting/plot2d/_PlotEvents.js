@@ -83,14 +83,16 @@ dojo.declare("dojox.charting.plot2d._PlotEvents", null, {
 		});
 	},
 	_connectEvents: function(o){
-		o.chart = this.chart;
-		o.plot  = this;
-		o.hAxis = this.hAxis || null;
-		o.vAxis = this.vAxis || null;
-		o.eventMask = o.eventMask || o.shape;
-		this._connectSingleEvent(o, "onmouseover");
-		this._connectSingleEvent(o, "onmouseout");
-		this._connectSingleEvent(o, "onclick");
+        if(o){
+            o.chart = this.chart;
+            o.plot  = this;
+            o.hAxis = this.hAxis || null;
+            o.vAxis = this.vAxis || null;
+            o.eventMask = o.eventMask || o.shape;
+            this._connectSingleEvent(o, "onmouseover");
+            this._connectSingleEvent(o, "onmouseout");
+            this._connectSingleEvent(o, "onclick");
+        }
 	},
 	_reconnectEvents: function(seriesName){
 		var a = this._eventSeries[seriesName];

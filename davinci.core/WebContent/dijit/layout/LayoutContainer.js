@@ -1,6 +1,4 @@
-dojo.provide("dijit.layout.LayoutContainer");
-
-dojo.require("dijit.layout._LayoutWidget");
+define("dijit/layout/LayoutContainer", ["dojo", "dijit", "dijit/layout/_LayoutWidget"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.LayoutContainer",
 	dijit.layout._LayoutWidget,
@@ -72,4 +70,8 @@ dojo.extend(dijit._Widget, {
 	//		"none", "left", "right", "bottom", "top", and "client".
 	//		See the LayoutContainer description for details on this parameter.
 	layoutAlign: 'none'
+});
+
+
+return dijit.layout.LayoutContainer;
 });

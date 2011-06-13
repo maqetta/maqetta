@@ -67,9 +67,9 @@ dojox.date.islamic.add = function(/*dojox.date.islamic.Date*/date, /*String*/int
 					remdays = (amount > 0) ?  -1 : 1;
 				}else if(day == 6){ //shabat
 					day = 4;
-					remdays = (amount > 0) ? -2 : 2;		
+					remdays = (amount > 0) ? -2 : 2;
 				}
-				var add = (amount > 0) ? (5 - day - 1) : -day 
+				var add = (amount > 0) ? (5 - day - 1) : -day
 				var amountdif = amount - add;
 				var div = parseInt(amountdif / 5);
 				if(amountdif % 5 != 0){
@@ -87,25 +87,25 @@ dojox.date.islamic.add = function(/*dojox.date.islamic.Date*/date, /*String*/int
 			newIslamDate.setDate(date.getDate() + amount);
 			break;
 		case "month":
-			var month = date.getMonth(); 
+			var month = date.getMonth();
 			newIslamDate.setMonth(month + amount);
 			break;
 		case "hour":
 			newIslamDate.setHours(date.getHours() + amount);
-			break;	
+			break;
 		case "minute":
 			newIslamDate.setMinutes(date.getMinutes() + amount);
-			break;	
+			break;
 		case "second":
 			newIslamDate.setSeconds(date.getSeconds() + amount);
-			break;	
+			break;
 		case "millisecond":
 			newIslamDate.setMilliseconds(date.getMilliseconds() + amount);
 			break;
 	}
 
 	return newIslamDate; // dojox.date.islamic.Date
-}; 
+};
 
 dojox.date.islamic.difference = function(/*dojox.date.islamic.Date*/date1, /*dojox.date.islamic.Date?*/date2, /*String?*/interval){
 	//	based on and similar to dojo.date.difference
@@ -214,7 +214,7 @@ dojox.date.islamic.difference = function(/*dojox.date.islamic.Date*/date1, /*doj
 				var i = enddate.getFullYear()+1;
 				var e = startdate.getFullYear();
 				for (i;   i < e;  i++){
-					delta += 12; 
+					delta += 12;
 				}
 			}
 			if (date1.toGregorian() < date2.toGregorian()){
@@ -243,5 +243,5 @@ dojox.date.islamic.difference = function(/*dojox.date.islamic.Date*/date1, /*doj
 	}
 
 	// Round for fractional values and DST leaps
-	return Math.round(delta); // Number (integer) 
+	return Math.round(delta); // Number (integer)
 };

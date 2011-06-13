@@ -18,6 +18,7 @@
 	right: "오른쪽",
 	buttonSet: "설정", // translated elsewhere?
 	buttonInsert: "삽입",
+	buttonCancel: "취소",
 
 	selectTableLabel: "테이블 선택",
 	insertTableRowBeforeLabel: "사전 행 추가",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "행 삭제",
 	deleteTableColumnLabel: "열 삭제"
 })
-

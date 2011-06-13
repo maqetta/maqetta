@@ -1,12 +1,22 @@
 ({
 	"findLabel": "Localizar:",
+	"findTooltip": "Inserir texto a ser localizado",
 	"replaceLabel": "Substituir por:",
-	"findReplace": "Comutar Localizar/Substituir",
-	"matchCase": "Caso de Correspondência", 
+	"replaceTooltip": "Inserir texto a ser substituído por",
+	"findReplace": "Localizar e Substituir",
+	"matchCase": "Coincidir maiúscula/minúscula",
+	"matchCaseTooltip": "Coincidir maiúscula/minúscula",
 	"backwards": "Retroceder",
-	"replaceAll": "Todas as Ocorrências", 
+	"backwardsTooltip": "Procurar texto para trás",
+	"replaceAll": "Todas as Ocorrências",
+	"replaceAllButton": "Substituir Todos",
+	"replaceAllButtonTooltip": "Substituir todo o texto",
 	"findButton": "Localizar",
+	"findButtonTooltip": "Localizar o texto",
 	"replaceButton": "Substituir",
-	"replaceDialogText": "${0} ocorrências substituídas."
+	"replaceButtonTooltip": "Substituir o texto",
+	"replaceDialogText": "${0} ocorrências substituídas.",
+	"eofDialogText": "Última ocorrência ${0}",
+	"eofDialogTextFind": "localizado",
+	"eofDialogTextReplace": "substituído"
 })
-

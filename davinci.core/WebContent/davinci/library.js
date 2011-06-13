@@ -47,18 +47,32 @@ davinci.library.getMetaData=function(theme){
 	
 }
 
+//FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
 	return (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
 }
 davinci.library.getlibMetaData=function(id, version){
-	return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true  }));
+	
+	var path = davinci.library.getMetaRoot(id, version);
+	
+    var data = dojo.xhrGet({
+        url : path + "/widgets.json",
+        sync : true, // XXX should be async
+        handleAs: "text"
+    });
+   
+    var result = {'data':data['results'][0], 'metaPath':path};
+   
+    return result;
+	//return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true  }));
 }
 
-davinci.library.getUserLibs=function(){
+davinci.library.getUserLibs=function(base){
 	// not sure if we want to only allow the logged in user to view his/her installed libs, or to include user name in request of targe user.
+
+	return davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{'base':base },sync:true  })[0]['userLibs'];
 	
-	return davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{},sync:true  })[0]['userLibs'];
-	
+
 }
 
 // Cache library roots so we don't make multiple server calls for the same 'id' and 'version'.  But
@@ -68,7 +82,7 @@ dojo.subscribe("/davinci/ui/libraryChanged", this, function() {
     davinci.library._libRootCache = {};
 });
 
-davinci.library.getLibRoot = function(id, version) {
+davinci.library.getLibRoot = function(id, version, base) {
     // check cache
     var cache = davinci.library._libRootCache;
     if (cache[id] && cache[id][version]) {
@@ -80,7 +94,8 @@ davinci.library.getLibRoot = function(id, version) {
         handleAs : "json",
         content : {
             'libId' : id,
-            'version' : version
+            'version' : version,
+            'base':base
         },
         sync : true
     });

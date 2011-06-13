@@ -18,6 +18,7 @@
 	right: "högerjustera",
 	buttonSet: "Ange", // translated elsewhere?
 	buttonInsert: "Infoga",
+	buttonCancel: "Avbryt",
 
 	selectTableLabel: "Välj tabell",
 	insertTableRowBeforeLabel: "Lägg till rad före",

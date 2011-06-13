@@ -1,8 +1,8 @@
-dojo.provide("dojox.encoding.crypto.RSAKey-ext");
+// AMD-ID "dojox/encoding/crypto/RSAKey-ext"
+define(["dojo", "dojox", "dojox/encoding/crypto/RSAKey", "dojox/math/BigInteger-ext"], function(dojo, dojox) {
+
 dojo.experimental("dojox.encoding.crypto.RSAKey-ext");
 
-dojo.require("dojox.encoding.crypto.RSAKey");
-dojo.require("dojox.math.BigInteger-ext");
 
 (function(){
 	var BigInteger = dojox.math.BigInteger;
@@ -118,3 +118,7 @@ dojo.require("dojox.math.BigInteger-ext");
 		}
 	});
 })();
+
+
+return dojox.encoding.crypto.RSAKey;
+});

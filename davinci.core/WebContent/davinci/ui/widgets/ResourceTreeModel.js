@@ -67,7 +67,7 @@ dojo.declare("davinci.ui.widgets.ResourceTreeModel",null, {
 	},
 	
 	getLabel: function(/*dojo.data.Item*/ item){
-
+		
 		var label=item.getName();
 		if (item.link)
 			label=label+'  ['+item.link+']';

@@ -1,16 +1,13 @@
-dojo.provide("dojo._base.declare");
-
-dojo.require("dojo._base.lang");
-dojo.require("dojo._base.array");
+define("dojo/_base/declare", ["dojo/lib/kernel", "dojo/_base/lang", "dojo/_base/array"], function(dojo){
 
 (function(){
 	var d = dojo, mix = d._mixin, op = Object.prototype, opts = op.toString,
 		xtor = new Function, counter = 0, cname = "constructor";
 
-	function err(msg){ throw new Error("declare: " + msg); }
+	function err(msg, cls){ throw new Error("declare" + (cls ? " " + cls : "") + ": " + msg); }
 
 	// C3 Method Resolution Order (see http://www.python.org/download/releases/2.3/mro/)
-	function c3mro(bases){
+	function c3mro(bases, className){
 		var result = [], roots = [{cls: 0, refs: []}], nameMap = {}, clsCount = 1,
 			l = bases.length, i = 0, j, lin, base, top, proto, rec, name, refs;
 
@@ -18,9 +15,9 @@ dojo.require("dojo._base.array");
 		for(; i < l; ++i){
 			base = bases[i];
 			if(!base){
-				err("mixin #" + i + " is unknown. Did you use dojo.require to pull it in?");
+				err("mixin #" + i + " is unknown. Did you use dojo.require to pull it in?", className);
 			}else if(opts.call(base) != "[object Function]"){
-				err("mixin #" + i + " is not a callable constructor.");
+				err("mixin #" + i + " is not a callable constructor.", className);
 			}
 			lin = base._meta ? base._meta.bases : [base];
 			top = 0;
@@ -73,7 +70,7 @@ dojo.require("dojo._base.array");
 			}
 		}
 		if(clsCount){
-			err("can't build consistent linearization");
+			err("can't build consistent linearization", className);
 		}
 
 		// calculate the superclass offset
@@ -100,7 +97,7 @@ dojo.require("dojo._base.array");
 		caller = args.callee;
 		name = name || caller.nom;
 		if(!name){
-			err("can't deduce a name to call inherited()");
+			err("can't deduce a name to call inherited()", this.declaredClass);
 		}
 
 		meta = this.constructor._meta;
@@ -118,7 +115,7 @@ dojo.require("dojo._base.array");
 					// error detection
 					chains = meta.chains;
 					if(chains && typeof chains[name] == "string"){
-						err("calling chained method with inherited: " + name);
+						err("calling chained method with inherited: " + name, this.declaredClass);
 					}
 					// find caller
 					do{
@@ -159,7 +156,7 @@ dojo.require("dojo._base.array");
 					// error detection
 					chains = meta.chains;
 					if(!chains || chains.constructor !== "manual"){
-						err("calling chained constructor with inherited");
+						err("calling chained constructor with inherited", this.declaredClass);
 					}
 					// find caller
 					while(base = bases[++pos]){ // intentional assignment
@@ -455,7 +452,7 @@ dojo.require("dojo._base.array");
 		// build a prototype
 		if(opts.call(superclass) == "[object Array]"){
 			// C3 MRO
-			bases = c3mro(superclass);
+			bases = c3mro(superclass, className);
 			t = bases[0];
 			mixins = bases.length - t;
 			superclass = bases[mixins];
@@ -466,10 +463,10 @@ dojo.require("dojo._base.array");
 					t = superclass._meta;
 					bases = bases.concat(t ? t.bases : superclass);
 				}else{
-					err("base class is not a callable constructor.");
+					err("base class is not a callable constructor.", className);
 				}
 			}else if(superclass !== null){
-				err("unknown base class. Did you use dojo.require to pull it in?")
+				err("unknown base class. Did you use dojo.require to pull it in?", className);
 			}
 		}
 		if(superclass){
@@ -1035,3 +1032,6 @@ dojo.require("dojo._base.array");
 	};
 	=====*/
 })();
+
+return dojo.declare;
+});

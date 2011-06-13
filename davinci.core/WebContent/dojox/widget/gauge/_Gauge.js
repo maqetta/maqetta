@@ -16,7 +16,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 	//
 	// description:
 	//		using dojo.gfx (and thus either SVG or VML based on what is supported), this widget
-	//		builds a gauge component, used to display numerical data in a familiar format 
+	//		builds a gauge component, used to display numerical data in a familiar format
 	//
 	// usage:
 	//		this widget is not to be used alone. it is meant to be subclassed, such as
@@ -53,7 +53,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 	// useRangeStyles: Number
 	// indicates whether to use given css classes (dojoxGaugeRangeXX)
 	// to determine the color (and other style attributes?) of the ranges
-	// this value should be the number of dojoxGaugeRange classes that are 
+	// this value should be the number of dojoxGaugeRange classes that are
 	// defined, starting at dojoxGaugeRange1 (0 indicates falling to default
 	// hardcoded colors)
 	useRangeStyles: 0,
@@ -81,7 +81,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 
 	// _defaultIndicator: Objection
 	// Should be overridden by any extending classes and used to indicate what the 'default' indicator is.
-	// This object is used as the indicator when creating tick marks or when an anonmyous object is passed into 
+	// This object is used as the indicator when creating tick marks or when an anonmyous object is passed into
 	// addIndicator.
 	_defaultIndicator: null,
 
@@ -110,7 +110,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 	surface: null,
 
 	// hideValues: Boolean
-	// indicates whether the text boxes showing the value of the indicator (as text 
+	// indicates whether the text boxes showing the value of the indicator (as text
 	// content) should be hidden or shown.  Default is not hidden, aka shown.
 	hideValues: false,
 
@@ -176,7 +176,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 	},
 
 	_setTicks: function(/*Object*/ oldTicks, /*Object*/ newTicks, /*Boolean*/ label){
-		// summary: 
+		// summary:
 		//		internal method used to clear existing tick marks, then add new ones
 		var i;
 		if(oldTicks && dojo.isArray(oldTicks._ticks)){
@@ -184,7 +184,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 				this.removeIndicator(oldTicks._ticks[i]);
 			}
 		}
-		var t = {length: newTicks.length, 
+		var t = {length: newTicks.length,
 					offset: newTicks.offset,
 					noChange: true};
 		if(newTicks.color){ t.color = newTicks.color; }
@@ -250,7 +250,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 		// summary:
 		//		This method is used to set the background of the gauge after it is created.
 		// description:
-		//		Sets the background using the given object.  Must be the same 'type' of object 
+		//		Sets the background using the given object.  Must be the same 'type' of object
 		//		as the original background argument.
 		// background:
 		//		An object in one of the two forms:
@@ -280,12 +280,12 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 		// summary:
 		//		This method is used to add ranges to the gauge.
 		// description:
-		//		Creates a range (colored area on the background of the gauge) 
+		//		Creates a range (colored area on the background of the gauge)
 		//		based on the given arguments.
 		// range:
-		//		A range is either a dojox.widget.gauge.Range object, or a object 
+		//		A range is either a dojox.widget.gauge.Range object, or a object
 		//		with similar parameters (low, high, hover, etc.).
-		if(!this._rangeData){ 
+		if(!this._rangeData){
 			this._rangeData = [];
 		}
 		var range;
@@ -335,7 +335,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 
 	removeIndicator: function(/*Object*/indicator){
 		// summary:
-		//		Removes the given indicator from the gauge by calling it's remove function 
+		//		Removes the given indicator from the gauge by calling it's remove function
 		//		and removing it from the local cache.
 		for(var i=0; i<this._indicatorData.length; i++){
 			if(this._indicatorData[i] === indicator){
@@ -403,7 +403,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 		// txt:		String
 		//			The text to put in the tooltip.
 		if(this._lastHover != txt){
-			if(txt !== ''){ 
+			if(txt !== ''){
 				dijit.hideTooltip(this.mouseNode);
 				dijit.showTooltip(txt,this.mouseNode, !this.isLeftToRight());
 			}else{
@@ -415,7 +415,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 
 	handleMouseOver: function(/*Object*/event){
 		// summary:
-		//		This is an internal handler used by the gauge to support 
+		//		This is an internal handler used by the gauge to support
 		//		hover text
 		// event:	Object
 		//			The event object
@@ -438,7 +438,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 
 	handleMouseOut: function(/*Object*/event){
 		// summary:
-		//		This is an internal handler used by the gauge to support 
+		//		This is an internal handler used by the gauge to support
 		//		hover text
 		// event:	Object
 		//			The event object
@@ -545,7 +545,7 @@ dojo.declare("dojox.widget.gauge.Range",[dijit._Widget, dijit._Contained],{
 	//		</div>
 	
 	// low: Number
-	// the low value of the range 
+	// the low value of the range
 	low: 0,
 	
 	// high: Numbe
@@ -565,7 +565,7 @@ dojo.declare("dojox.widget.gauge.Range",[dijit._Widget, dijit._Contained],{
 	color: null,
 	
 	// size: Number
-	// for a circular gauge (such as an AnalogGauge), this dictates the size of the arc 
+	// for a circular gauge (such as an AnalogGauge), this dictates the size of the arc
 	size: 0,
 
 	startup: function(){
@@ -578,7 +578,7 @@ dojo.declare("dojox.widget.gauge._Indicator",[dijit._Widget, dijit._Contained, d
 	//		a indicator to be used in a gauge
 	//
 	// description:
-	//		an indicator widget, which has given properties.  drawn by a gauge. 
+	//		an indicator widget, which has given properties.  drawn by a gauge.
 	//
 	// usage:
 	//		<script type="text/javascript">
@@ -666,12 +666,12 @@ dojo.declare("dojox.widget.gauge._Indicator",[dijit._Widget, dijit._Contained, d
 	duration: 1000,
 
 	// hideValues: Boolean
-	// indicates whether the text boxes showing the value of the indicator (as text 
+	// indicates whether the text boxes showing the value of the indicator (as text
 	// content) should be hidden or shown.  Default is not hidden, aka shown.
 	hideValue: false,
 
 	// noChange: Boolean
-	// indicates whether the indicator's value can be changed.  Useful for 
+	// indicates whether the indicator's value can be changed.  Useful for
 	// a static target indicator.  Default is false (that the value can be changed).
 	noChange: false,
 
@@ -720,7 +720,7 @@ dojo.declare("dojox.widget.gauge._Indicator",[dijit._Widget, dijit._Contained, d
 
 	update: function(value){
 		// summary:
-		//		Updates the value of the indicator, including moving/re-drawing at it's new location and 
+		//		Updates the value of the indicator, including moving/re-drawing at it's new location and
 		//		updating the text box
 		if(!this.noChange){
 			this.valueNode.value = value;

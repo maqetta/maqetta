@@ -17,7 +17,7 @@
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
-
+			
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot('../test_AccordionContainer.html');
 				doh.register("Accordion Mouse tests",[
@@ -28,18 +28,18 @@
 							var d = new doh.Deferred();
 
 							// Click open second pane
-							doh.robot.mouseMoveAt("lazyLoadPane_button_title", 500);
+							doh.robot.mouseMoveAt("lazyLoadPane_button_title", 500, 1);
 							doh.robot.mouseClick({left: true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								doh.is("lazyLoadPane", dojo.global.dijit.byId("markupAccordion").get("selectedChildWidget").id, "second pane is now selected");
 							}), 500);
 
 							// Click open fourth pane
-							doh.robot.mouseMoveAt("embeddedLayoutPane_button_title", 500);
-							doh.robot.mouseClick({left: true}, 2000);
+							doh.robot.mouseMoveAt("embeddedLayoutPane_button_title", 500, 1);
+							doh.robot.mouseClick({left: true}, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is("embeddedLayoutPane", dojo.global.dijit.byId("markupAccordion").get("selectedChildWidget").id, "fourth pane is now selected");
-							}), 500);
+							}), 2000);
 
 							return d;
 						}

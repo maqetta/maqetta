@@ -15,12 +15,12 @@ dojox.drawing.tools.Line = dojox.drawing.util.oo.declare(
 			//	Overwrites _Base.onTransformEnd
 			//
 			this._toggleSelected();
-			if(this.getRadius()<this.minimumSize){ 
-				var p = this.points; 
-				this.setPoints([ 
-					{x:p[0].x, y:p[0].y}, 
-					{x:p[0].x, y:p[0].y} 
-				]); 
+			if(this.getRadius()<this.minimumSize){
+				var p = this.points;
+				this.setPoints([
+					{x:p[0].x, y:p[0].y},
+					{x:p[0].x, y:p[0].y}
+				]);
 			}else{
 				var d = this.data;
 				var obj = {start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};

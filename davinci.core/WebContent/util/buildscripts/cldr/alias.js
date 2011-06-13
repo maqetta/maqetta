@@ -1,11 +1,11 @@
 /**
  * There are basically two kinds of alias in CLDR:
- * 1. locale alias e.g. 
- *    in xml, <alias source="locale" path="......"/>, 
+ * 1. locale alias e.g.
+ *    in xml, <alias source="locale" path="......"/>,
  *    in gernated JSON bunle, xxxx@localeAlias:{'target':'xxx', 'bundle':'xxxx'}
  * 2. other locale alias e.g.
  *    in xml, currently only like <alias source="fr" path="//ldml"/>
- * #1 is supported by this 'alias.js', 
+ * #1 is supported by this 'alias.js',
  * #2 is covered by 'specialLocale.js' and may need enhancement for future CLDR versions.
  */
 
@@ -22,7 +22,7 @@ var dir/*String*/ = arguments[0];// ${dojo}/dojo/cldr/nls
 var logDir = arguments[1];
 var logStr = "";
 
-//Add new bundles to the list so that they will be aliased according to the ldml spec. 
+//Add new bundles to the list so that they will be aliased according to the ldml spec.
 var BUNDLES = ['gregorian','hebrew','islamic','islamic-civil','buddhist'];
 
 var LOCALE_ALIAS_MARK = '@localeAlias';
@@ -45,7 +45,7 @@ for(var i = 0; i < BUNDLES.length; i++){
 		var locale = jsFilePath[jsFilePath.length-2];
 		if(locale=="nls"){continue;} // no need for root bundle
 		try{
-			dojo.i18n._requireLocalization('dojo.cldr', BUNDLES[i], locale); //declare bundle						
+			dojo.i18n._requireLocalization('dojo.cldr', BUNDLES[i], locale); //declare bundle
 			var bundle = dojo.i18n.getLocalization('dojo.cldr', BUNDLES[i], locale); //get bundle
 			var nativeSrcBundle = getNativeBundle(jsFileName);//bundle not flattened
 		}catch(e){print(e);/* simply ignore if no bundle found*/}
@@ -80,7 +80,7 @@ function _calculateAliasPath(bundle){
 			if(records[localeAliasSource]/*calculated*/){
 				//logStr += p + " has been calculated, ignored\n"
 				continue;
-			} 
+			}
 			
 			var path = [];
 			var aliasIndex = new Number(p.substring(index + LOCALE_ALIAS_MARK.length));
@@ -125,18 +125,18 @@ function _processLocaleAlias(localeAliasPaths/*Array*/, bundle/*JSON Obj*/, nati
 					//logStr += "!" + mapping[LOCALE_ALIAS_SOURCE_PROPERTY] +" has been processed for alias, escaped\n";
 					continue;
 				}
-				_updateLocaleAlias(bundle, mapping[LOCALE_ALIAS_SOURCE_PROPERTY], bundle, 
-								   mapping[LOCALE_ALIAS_TARGET_PROPERTY], nativeSrcBundle);	
+				_updateLocaleAlias(bundle, mapping[LOCALE_ALIAS_SOURCE_PROPERTY], bundle,
+								   mapping[LOCALE_ALIAS_TARGET_PROPERTY], nativeSrcBundle);
 				processed[mapping[LOCALE_ALIAS_SOURCE_PROPERTY]] =  true;
 			}else{
 				//For other non-gregorian calendars. e.g. "hebrew" etc.
 				//Get the bundle according to the locale.
-				var targetBundle = dojo.i18n.getLocalization('dojo.cldr', mapping[LOCALE_ALIAS_TARGET_BUNDLE], locale); 
+				var targetBundle = dojo.i18n.getLocalization('dojo.cldr', mapping[LOCALE_ALIAS_TARGET_BUNDLE], locale);
 				if(processed[mapping[LOCALE_ALIAS_SOURCE_PROPERTY]]){//If being processed, continue;
 					continue;
 				}
-				_updateNoneGregAlias(bundle, mapping[LOCALE_ALIAS_SOURCE_PROPERTY], targetBundle, 
-								   mapping[LOCALE_ALIAS_TARGET_PROPERTY], nativeSrcBundle);	
+				_updateNoneGregAlias(bundle, mapping[LOCALE_ALIAS_SOURCE_PROPERTY], targetBundle,
+								   mapping[LOCALE_ALIAS_TARGET_PROPERTY], nativeSrcBundle);
 				processed[mapping[LOCALE_ALIAS_SOURCE_PROPERTY]] =  true;
 			}
 		}
@@ -157,27 +157,31 @@ function _processLocaleAlias(localeAliasPaths/*Array*/, bundle/*JSON Obj*/, nati
 */
 function _updateNoneGregAlias(sourceBundle/*JSON Obj*/, aliasSource/*String*/, targetBundle/*JSON Obj*/, aliasTarget/*String*/, nativeSrcBundle/*JSON Obj*/){
     for (var sKey in sourceBundle) {
-        if (sKey.indexOf(aliasSource) == 0 && !nativeSrcBundle[sKey] && targetBundle[sKey]&&!compare(sourceBundle[sKey],targetBundle[sKey])) {
-            nativeSrcBundle[sKey] = targetBundle[sKey];
-            sourceBundle[sKey] = targetBundle[sKey];
+        var target = targetBundle[sKey],
+	    source = sourceBundle[sKey],
+	    nativeSrc = nativeSrcBundle[sKey];
+
+	if (sKey.indexOf(aliasSource) == 0 && !nativeSrc && target && !compare(source, target)) {
+            nativeSrcBundle[sKey] = target;
+            sourceBundle[sKey] = target;
             updated = true;
-        }
-        else 
-            if (sKey.indexOf(aliasSource) == 0 && nativeSrcBundle[sKey] && dojo.isArray(sourceBundle[sKey]) && dojo.isArray(targetBundle[sKey])) {
-                for (var i = 0; i < sourceBundle[sKey].length; i++) {
-                    if (sourceBundle[sKey][i] == undefined) {
-                        sourceBundle[sKey][i] = targetBundle[sKey][i];
+        } else {
+            if (sKey.indexOf(aliasSource) == 0 && nativeSrc && dojo.isArray(source) && dojo.isArray(target)) {
+                for (var i = 0; i < source.length; i++) {
+                    if (source[i] === undefined) {
+                        source[i] = target[i];
                         updated = true;
                     }
                 }
-                if (sourceBundle[sKey].length < targetBundle[sKey].length) {
-                    sourceBundle[sKey] = sourceBundle[sKey].concat(targetBundle[sKey].slice(sourceBundle[sKey].length));
+                if (source.length < target.length) {
+                    source = sourceBundle[sKey] = source.concat(target.slice(source.length));
                     updated = true;
                 }
                 if (updated) {
-                    nativeSrcBundle[sKey] = sourceBundle[sKey];
+                    nativeSrcBundle[sKey] = source;
                 }
             }
+        }
     }
 }
 function _updateLocaleAlias(sourceBundle/*JSON Obj*/,aliasSource/*String*/, targetBundle/*JSON Obj*/,
@@ -190,8 +194,8 @@ function _updateLocaleAlias(sourceBundle/*JSON Obj*/,aliasSource/*String*/, targ
 			//sourceBundle[aliasSource] =  targetBundle[aliasTarget];
 			nativeSrcBundle[aliasSource] =  targetBundle[aliasTarget];
 			sourceBundle[aliasSource] = nativeSrcBundle[aliasSource];
-			updated = true;	
-		}else if(nativeSrcBundle[aliasSource] && dojo.isArray(sourceBundle[aliasSource]) 
+			updated = true;
+		}else if(nativeSrcBundle[aliasSource] && dojo.isArray(sourceBundle[aliasSource])
 		         && dojo.isArray(targetBundle[aliasTarget])){
 			if(sourceBundle[aliasSource].length > targetBundle[aliasTarget].length){
 				//logStr +="Error:" + aliasSource + ".length > " +  aliasTarget + ".length \n";
@@ -201,16 +205,16 @@ function _updateLocaleAlias(sourceBundle/*JSON Obj*/,aliasSource/*String*/, targ
 				if(sourceBundle[aliasSource][i] == undefined){//need inherit
 					//logStr += '2 ' + aliasSource + "["+i+"]=" +sourceBundle[aliasSource][i]+" is replaced with " + aliasTarget+"["+i+"]="+targetBundle[aliasTarget][i]+'\n';
 					sourceBundle[aliasSource][i] =  targetBundle[aliasTarget][i];
-					updated = true;	
+					updated = true;
 				}// otherwise no change and use current value
 			}
 			if(sourceBundle[aliasSource].length < targetBundle[aliasTarget].length){
-				//logStr +='3 ' + aliasSource +' from ' + sourceBundle[aliasSource].length +' to ' 
-				//		  + (targetBundle[aliasTarget].length-1) + ' are copied from ' 
+				//logStr +='3 ' + aliasSource +' from ' + sourceBundle[aliasSource].length +' to '
+				//		  + (targetBundle[aliasTarget].length-1) + ' are copied from '
 				//		  +aliasTarget + '='+ targetBundle[aliasTarget] +'\n';
 				sourceBundle[aliasSource] = sourceBundle[aliasSource].concat(
 											targetBundle[aliasTarget].slice(sourceBundle[aliasSource].length));
-				updated = true;	
+				updated = true;
 			}
 			if(updated){
 				nativeSrcBundle[aliasSource] = sourceBundle[aliasSource];
@@ -237,6 +241,6 @@ function cleanLocaleAlias(fileList/*Array*/){
 		if(needUpdate){
 			fileUtil.saveUtf8File(fileName, "(" + dojo.toJson(newBundle, true) + ")");
 			//logStr += "cleaned @localAlias for " + fileName + "\n";
-		} 
+		}
 	}
 }

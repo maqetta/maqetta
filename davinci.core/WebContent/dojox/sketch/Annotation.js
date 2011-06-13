@@ -12,7 +12,7 @@ dojo.require("dojox.sketch._Plugin");
 			if(!this._omd){
 				return;
 			}
-			if(this._cshape){ 
+			if(this._cshape){
 				this._cshape.setShape(rect);
 			} else {
 				this._cshape=this.figure.surface.createRect(rect)
@@ -27,7 +27,7 @@ dojo.require("dojox.sketch._Plugin");
 			}
 			this._omd=false;
 			var f=this.figure;
-			if(this._cshape){ 
+			if(this._cshape){
 				f.surface.remove(this._cshape);
 				delete this._cshape;
 			}
@@ -36,8 +36,8 @@ dojo.require("dojox.sketch._Plugin");
 				//		gets drawn.
 				var limit=10;
 				if(Math.max(
-					limit, 
-					Math.abs(f._absEnd.x-f._start.x), 
+					limit,
+					Math.abs(f._absEnd.x-f._start.x),
 					Math.abs(f._absEnd.y-f._start.y)
 				)>limit){
 					this._create(f._start, f._end);
@@ -51,17 +51,17 @@ dojo.require("dojox.sketch._Plugin");
 			var _=f.nextKey();
 			var a=new (this.annotation)(f, _);
 			a.transform={
-				dx:f._calCol(start.x/f.zoomFactor), 
+				dx:f._calCol(start.x/f.zoomFactor),
 				dy:f._calCol(start.y/f.zoomFactor)
 			};
-			a.end={ 
-				x:f._calCol(end.x/f.zoomFactor), 
-				y:f._calCol(end.y/f.zoomFactor) 
+			a.end={
+				x:f._calCol(end.x/f.zoomFactor),
+				y:f._calCol(end.y/f.zoomFactor)
 			};
 			if(a.control){
-				a.control={ 
+				a.control={
 					x:f._calCol((end.x/2)/f.zoomFactor),
-					y:f._calCol((end.y/2)/f.zoomFactor) 
+					y:f._calCol((end.y/2)/f.zoomFactor)
 				};
 			}
 			f.onBeforeCreateShape(a);
@@ -88,8 +88,8 @@ dojo.require("dojox.sketch._Plugin");
 			'label': ""
 		};
 
-		if(this.figure){ 
-			this.figure.add(this); 
+		if(this.figure){
+			this.figure.add(this);
 		}
 	};
 
@@ -154,10 +154,10 @@ dojo.require("dojox.sketch._Plugin");
 		dx:function(p1, p2, dy){
 			var s=this.slope(p1,p2);
 			if(s==0){ return s; }
-			return dy/s; 
+			return dy/s;
 		},
-		dy:function(p1, p2, dx){ 
-			return this.slope(p1,p2)*dx; 
+		dy:function(p1, p2, dx){
+			return this.slope(p1,p2)*dx;
 		}
 	};
 	p.drawBBox=function(){
@@ -170,8 +170,8 @@ dojo.require("dojox.sketch._Plugin");
 			this.boundingBox.getEventSource().setAttribute("id",this.id+"-boundingBox");
 			this.boundingBox.getEventSource().setAttribute("shape-rendering","crispEdges");
 			this.figure._add(this);
-		} else { 
-			this.boundingBox.setShape(r); 
+		} else {
+			this.boundingBox.setShape(r);
 		}
 	};
 	p.setBinding=function(pt){
@@ -204,8 +204,8 @@ dojo.require("dojox.sketch._Plugin");
 				this.boundingBox=null;
 			}
 		}
-		for(var p in this.anchors){ 
-			this.anchors[p][method](); 
+		for(var p in this.anchors){
+			this.anchors[p][method]();
 		}
 	};
 	p.zoom=function(pct){

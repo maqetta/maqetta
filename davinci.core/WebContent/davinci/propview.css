@@ -1,4 +1,16 @@
-
+.colorPicker {
+}
+.colorPicker .colorPickerSelected{
+	float:right;	
+	height:14px;
+	width:26px;
+	margin:0 2px;
+	padding:0;
+	border:1px solid black;
+}
+.colorPickerComboContainer{
+	margin:0 38px 0 0;
+}
 .propRootDetailsContainer {
 	width:100%;
 	border-spacing:0px; 

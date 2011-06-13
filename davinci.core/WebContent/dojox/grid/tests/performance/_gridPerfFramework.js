@@ -3,7 +3,7 @@ dojo.provide("dojox.grid.tests.performance._gridPerfFramework");
 
 (function(){
 	// some sample data
-	var data_list = [ 
+	var data_list = [
 		{ col1: "normal", col2: false, col3: "new", col4: 'But are not followed by two hexadecimal', col5: 29.91, col6: 10, col7: false },
 		{ col1: "important", col2: false, col3: "new", col4: 'Because a % sign always indicates', col5: 9.33, col6: -5, col7: false },
 		{ col1: "important", col2: true, col3: "read", col4: 'Signs can be selectively', col5: 19.34, col6: 0, col7: true },
@@ -107,7 +107,7 @@ dojo.provide("dojox.grid.tests.performance._gridPerfFramework");
 	// not.
 	dojo.setObject("getRLSTests", function(getRunFunction, getSetUpFunction, getTearDownFunction){
 		var isTop = (window.top == window);
-		var obj = searchParamsAsObj(default_obj);		
+		var obj = searchParamsAsObj(default_obj);
 		var rows = parseInt(obj.rows, 10);
 		var layout = obj.layout;
 		var rowSelector = (obj.rowSelector.toLowerCase() == "true");
@@ -135,8 +135,8 @@ dojo.provide("dojox.grid.tests.performance._gridPerfFramework");
 				onchange: function(){
 					v = parseInt(this.value, 10);
 					if(v && !isNaN(v)){
-						window.location.search="?rows=" + v + 
-								"&layout=" + layout + 
+						window.location.search="?rows=" + v +
+								"&layout=" + layout +
 								"&rowSelector=" + (rowSelector ? "true" : "false") +
 								"&doProfiling=" + (doProfiling ? "true" : "false");
 					}
@@ -144,23 +144,23 @@ dojo.provide("dojox.grid.tests.performance._gridPerfFramework");
 			}, n, "after");
 			n = dojo.create("button", {
 				innerHTML: layout == "single" ? "Dual Layout" : "Single Layout",
-				onclick: function(){window.location.search="?rows=" + rows + 
-								"&layout=" + (layout == "single" ? "dual" : "single") + 
+				onclick: function(){window.location.search="?rows=" + rows +
+								"&layout=" + (layout == "single" ? "dual" : "single") +
 								"&rowSelector=" + (rowSelector ? "true" : "false") +
 								"&doProfiling=" + (doProfiling ? "true" : "false")}
 			}, n, "after");
 			n = dojo.create("button", {
 				innerHTML: rowSelector ? "Remove Row Selector" : "Add Row Selector",
-				onclick: function(){window.location.search="?rows=" + rows + 
-								"&layout=" + layout + 
+				onclick: function(){window.location.search="?rows=" + rows +
+								"&layout=" + layout +
 								"&rowSelector=" + (!rowSelector ? "true" : "false") +
 								"&doProfiling=" + (doProfiling ? "true" : "false")}
 			}, n, "after");
 			if(dojo.isMoz){
 				n = dojo.create("button", {
 					innerHTML: doProfiling ? "No Profiling" : "Do Profiling",
-					onclick: function(){window.location.search="?rows=" + rows + 
-									"&layout=" + layout + 
+					onclick: function(){window.location.search="?rows=" + rows +
+									"&layout=" + layout +
 									"&rowSelector=" + (rowSelector ? "true" : "false") +
 									"&doProfiling=" + (!doProfiling ? "true" : "false")}
 				}, n, "after");

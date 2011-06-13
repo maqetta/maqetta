@@ -1,6 +1,4 @@
-dojo.provide("dijit._base.scroll");
-
-dojo.require("dojo.window");
+define("dijit/_base/scroll", ["dojo", "dijit", "dojo/window"], function(dojo, dijit) {
 
 dijit.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	// summary:
@@ -9,3 +7,7 @@ dijit.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 	
 	dojo.window.scrollIntoView(node, pos);
 };
+
+
+return dijit.scrollIntoView;
+});

@@ -17,7 +17,7 @@ function init(){
 			case "dijit.layout.TabContainer" :
 				var tabButton = dijit.byNode(target.node);
 				var panes = tabContainer.getChildren();
-				for (var i = 0, l = panes.length; i < l; i++) {	
+				for (var i = 0, l = panes.length; i < l; i++) {
 					var gc = panes[i];
 					if (gc.controlButton == tabButton) {
 						for (var j=0; j < gc.acceptTypes.length; j++){
@@ -50,7 +50,7 @@ function init(){
 		});
 	});
 	
-	dojo.subscribe(tabContainer.domNode.id+"-removeChild", null, "refresh");	
+	dojo.subscribe(tabContainer.domNode.id+"-removeChild", null, "refresh");
 };
 
 /**
@@ -59,7 +59,7 @@ function init(){
  */
 
 /*Function: createNode
- * 	Create a widget with a dojo draggedNode and drop this into a D&D OAF Area. 
+ * 	Create a widget with a dojo draggedNode and drop this into a D&D OAF Area.
  */
 function createNode(source, nodes, copy, target, dropIndex){
 	//console.log("createNode ::: ", source, nodes, copy, target, dropIndex);

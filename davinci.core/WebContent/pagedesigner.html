@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html manifest="app/davinci/davinci.manifest">
+<html>
   <head>
     <title>Maqetta Designer</title>
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
     <style type="text/css">
-		@import url("app/davinci/workbench.css");
+		@import url("app/davinci/workbench.css?@revision@");
 		html, body {
 			width: 100%;
 			height: 100%;
@@ -14,12 +14,12 @@
     </style>
     <!-- propvieweffects.css needs to be separate and not built -->
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
-    <link href="app/davinci/propvieweffects.css" rel="stylesheet" type="text/css"></link> 
-    <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-    <script type="text/javascript" src="app/dijit/dijit.js"></script>
-    <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
-    <script type="text/javascript" src="app/davinci/davinci.js"></script>
-    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
+    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link> 
+    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
+    <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js?@revision@"></script>
 
     <script type="text/javascript">
     	davinci.useAppCache = true; // needed to provide FF "allow" warning

@@ -13,10 +13,10 @@ dojo.require("dojox.encoding.digests.SHA1");
 			t.assertEqual(base64, ded.SHA1(message));
 		},
 		function testHexCompute(t){
-			t.assertEqual(hex, ded.SHA1(message, ded.outputTypes.Hex)); 
+			t.assertEqual(hex, ded.SHA1(message, ded.outputTypes.Hex));
 		},
 		function testStringCompute(t){
-			t.assertEqual(s, ded.SHA1(message, ded.outputTypes.String)); 
+			t.assertEqual(s, ded.SHA1(message, ded.outputTypes.String));
 		}
 	]);
 })();

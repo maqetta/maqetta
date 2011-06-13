@@ -8,7 +8,7 @@ dojo.declare("dojox.data.demos.widgets.FileView", [dijit._Widget, dijit._Templat
 	templateString: dojo.cache("dojox", "data/demos/widgets/templates/FileView.html"),
 
 	//Attach points for reference.
-	titleNode: null, 
+	titleNode: null,
 	descriptionNode: null,
 	imageNode: null,
 	authorNode: null,

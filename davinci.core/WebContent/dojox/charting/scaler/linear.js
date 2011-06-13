@@ -56,7 +56,7 @@ dojo.require("dojox.charting.scaler.common");
 			microPerMinor  = microTick ? Math.round(minorTick / microTick) : 0,
 			majorPrecision = majorTick ? Math.floor(Math.log(majorTick) / Math.LN10) : 0,
 			minorPrecision = minorTick ? Math.floor(Math.log(minorTick) / Math.LN10) : 0,
-			scale = span / (max - min);	
+			scale = span / (max - min);
 		if(!isFinite(scale)){ scale = 1; }
 		
 		return {
@@ -128,7 +128,7 @@ dojo.require("dojox.charting.scaler.common");
 			}
 			
 			var mag = Math.floor(Math.log(max - min) / Math.LN10),
-				major = kwArgs && ("majorTickStep" in kwArgs) ? kwArgs.majorTickStep : Math.pow(10, mag), 
+				major = kwArgs && ("majorTickStep" in kwArgs) ? kwArgs.majorTickStep : Math.pow(10, mag),
 				minor = 0, micro = 0, ticks;
 				
 			// calculate minor ticks
@@ -184,8 +184,8 @@ dojo.require("dojox.charting.scaler.common");
 		},
 		buildTicks: function(/*Object*/ scaler, /*Object*/ kwArgs){
 			var step, next, tick,
-				nextMajor = scaler.major.start, 
-				nextMinor = scaler.minor.start, 
+				nextMajor = scaler.major.start,
+				nextMinor = scaler.minor.start,
 				nextMicro = scaler.micro.start;
 			if(kwArgs.microTicks && scaler.micro.tick){
 				step = scaler.micro.tick, next = nextMicro;

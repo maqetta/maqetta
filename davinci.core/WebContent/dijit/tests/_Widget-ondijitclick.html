@@ -1,30 +1,35 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
 	<title>Test Dijit Internal Event: "ondijitclick"</title>
 
-	<script type="text/javascript" src="../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="isDebug: true"></script>
 	<script type="text/javascript">
 		dojo.require("dijit._Widget");
 		dojo.require("dojo.parser");
 
-		dojo.declare("dijit.WidgetWithOndijitclick",
-			dijit._Widget,
-			{
-				clickCount: 0,
-				onClick: function(){
-				},
-				_onClick: function() {
-					console.log(this.id + ": ondijitclick");
-					this.onClick();
-				},
-				postCreate: function() {
-					this.connect(this.domNode, "ondijitclick", "_onClick");
+		dojo.addOnLoad(function(){
+			dojo.declare("dijit.WidgetWithOndijitclick",
+				dijit._Widget,
+				{
+					clickCount: 0,
+					onClick: function(){
+					},
+					_onClick: function() {
+						console.log(this.id + ": ondijitclick");
+						this.onClick();
+					},
+					postCreate: function() {
+						this.connect(this.domNode, "ondijitclick", "_onClick");
+					}
 				}
-			}
-		);
+			);
+
+			dojo.parser.parse();
+		});
 	</script>
 	<style>
 		div {
@@ -46,14 +51,14 @@
 		whether catch clicks on key-down or key-up so this tests to make sure we are doing
 		the right one.)
 	</p>
-	<div id="first" dojoType="dijit.WidgetWithOndijitclick" tabIndex=0
-			onClick="dojo.byId('plainbutton').focus();">
+	<div id="first" tabIndex="0" data-dojo-type="dijit.WidgetWithOndijitclick" data-dojo-props='
+			onClick:function(){ dojo.byId("plainbutton").focus(); }'>
 		click me using space or enter, to focus button below
 	</div>
 	<button id="plainbutton" onclick="console.log('plain button clicked'); window.clicked = true;" type="button" >plain button</button>
 
-	<div id="second" dojoType="dijit.WidgetWithOndijitclick" tabIndex=0
-			onClick="dojo.byId('textarea').focus();">
+	<div id="second" tabIndex="0" data-dojo-type="dijit.WidgetWithOndijitclick" data-dojo-props='
+			onClick:function(){ dojo.byId("textarea").focus(); }'>
 		click me using space or enter, to focus textarea below
 	</div>
 	<textarea id="textarea">hello world</textarea>
@@ -63,14 +68,14 @@
 			onClick="dojo.byId('third').focus();">
 		click me using space or enter, to focus ondijitclick widget below
 	</button>
-	<div id="third" dojoType="dijit.WidgetWithOndijitclick" tabIndex=0 style="margin-top: 0px;"
-			onfocus="console.log('onfocus on third'); window.onDijitClickFocus = true;"
-			onClick="console.log('onclick on third'); window.spuriousOnDijitClick = true;">
+	<div id="third" tabIndex="0" data-dojo-type="dijit.WidgetWithOndijitclick" data-dojo-props='style:"margin-top: 0px;",
+			onFocus:function(){ console.log("onfocus on third"); window.onDijitClickFocus = true; },
+			onClick:function(){ console.log("onclick on third"); window.spuriousOnDijitClick = true; }'>
 		clicking the button above shouldn't cause my ondijitclick handler to fire
 	</div>
 	<br>
-	<div id="fourth" dojoType="dijit.WidgetWithOndijitclick" tabIndex=0 style="margin-top: 0px;"
-			onClick='alert("make sure can close this alert via keyboard");'>
+	<div id="fourth" tabIndex="0" data-dojo-type="dijit.WidgetWithOndijitclick" data-dojo-props='style:"margin-top: 0px;",
+			onClick:function(){ alert("make sure can close this alert via keyboard"); }'>
 		Manual Test: Click me using space or enter to launch a JavaScript alert() from element using ondijitclick
 	</div>
 </body>

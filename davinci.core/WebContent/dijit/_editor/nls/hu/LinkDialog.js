@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Hivatkozás tulajdonságai",
 	insertImageTitle: "Kép tulajdonságai",
@@ -11,3 +13,5 @@
 	newWindow: "Új ablak"
 })
 
+//end v1.x content
+);

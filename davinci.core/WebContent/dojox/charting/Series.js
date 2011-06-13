@@ -8,7 +8,7 @@ dojox.charting.__SeriesCtorArgs = function(plot){
 	//	plot: String?
 	//		The plot (by name) that this series belongs to.
 	this.plot = plot;
-} 
+}
 =====*/
 dojo.declare("dojox.charting.Series", dojox.charting.Element, {
 	//	summary:

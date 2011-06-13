@@ -12,7 +12,6 @@ else
 		echo !!!!!!!!!!!!!!
 		echo CANNOT LAUNCH MAQETTA SERVER - Maqetta requires Java 1.5.
 		echo	
-		echo You can download JRE 1.6 at http://w3.hursley.ibm.com/java/jim/ibmsdks/latest/index.html
 		echo !!!!!!!!!!!!!!
 		echo
 		exit
@@ -42,4 +41,4 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta -Dmaqetta.localInstall=true "-Dmaqetta.baseDirectory=$absusersdir" -jar "$jarFilePath" -console -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta -Dmaqetta.localInstall=true "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -jar "$jarFilePath" -console -noExit

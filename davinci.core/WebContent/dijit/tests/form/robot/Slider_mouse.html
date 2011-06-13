@@ -118,9 +118,9 @@
 					var slider = dijit.byId(arrowSliders[0]);
 					slider.set('value', 50);
 					var d = new doh.Deferred();
-					doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
+					doh.robot.sequence(d.getTestCallback(function(){
 						doh.is(50, parseFloat(dojo.byId(onChange[slider.id]).value));
-					})), 500);
+					}), 500);
 					return d;
 				},
 				function setToNull(){
@@ -128,9 +128,9 @@
 					var slider = dijit.byId(arrowSliders[0]);
 					slider.set('value', null);
 					var d = new doh.Deferred();
-					doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
+					doh.robot.sequence(d.getTestCallback(function(){
 						doh.is(0, parseFloat(dojo.byId(onChange[slider.id]).value));
-					})), 500);
+					}), 500);
 					return d;
 				}
 			]);
@@ -248,85 +248,66 @@
 			doh.register("general tests", [
 				{
 					name: "slider1",
-					setUp: function(){
-						dijit.byId("slider1").set('value',10);
-					},
-					timeout: 4000, // this is the animated slider so there is a 500ms delay
+					timeout: 5000, // this is the animated slider so there is a 500ms delay
 					runTest: function(){
 						var d = new doh.Deferred();
 						var slider = dijit.byId("slider1");
+						slider.set('value', 10);
 						dojo.window.scrollIntoView(slider.domNode);
-						doh.robot.mouseMoveAt(slider.focusNode, 500);
+						doh.robot.mouseMoveAt(slider.focusNode, 1, 0);
 						doh.robot.mousePress({left: true}, 500);
 						// drag to 20% marker
-						doh.robot.mouseMoveAt(dojo.query("div[style*='20%']", dojo.byId('dijit_form_HorizontalRule_0'))[0], 500);
+						var marker = dojo.query("div[style*='20%']", dojo.byId('dijit_form_HorizontalRule_0'))[0];
+						doh.robot.mouseMoveAt(marker, 500, 0);
 						doh.robot.mouseRelease({left: true}, 500);
-						doh.robot.sequence(function(){
+						doh.robot.sequence(d.getTestCallback(function(){
 							var value = slider.get('value');
-							if(value >= 19 && value <= 21){
-								d.callback(true);
-							}else{
-								d.errback("slider1 failed. Expected ~20, got " + value);
-							}
-						}, 1400);
+							doh.t(value >= 19 && value <= 21, "Expected 20-ish, got "+value);
+						}), 1000);
 						return d;
-					},
-					tearDown: function(){
-						dijit.byId("slider1").set('value',20);
 					}
 				},
 
 				{
 					name: "slider2",
-					timeout: 3500,
-					setUp: function(){
-						dijit.byId("slider2").set('value',10);
-					},
+					timeout: 5000,
 					runTest: function(){
 						var d = new doh.Deferred();
 						var slider = dijit.byId("slider2");
+						slider.set('value', 10);
 						dojo.window.scrollIntoView(slider.domNode);
-						doh.robot.mouseMoveAt(slider.focusNode, 500);
+						doh.robot.mouseMoveAt(slider.focusNode, 1, 0);
 						doh.robot.mousePress({left: true}, 500);
 						// drag to 20% marker (Slider is in descending order so it's 100-20=80%)
 						var marker = dojo.query("div[style*='80%']", dojo.byId('dijit_form_VerticalRule_1'))[0];
-						doh.robot.mouseMoveAt(marker, 500, 100, 0, 0);
+						doh.robot.mouseMoveAt(marker, 500, 0);
 						doh.robot.mouseRelease({left: true}, 500);
-						doh.robot.sequence(function(){
+						doh.robot.sequence(d.getTestCallback(function(){
 							var value = slider.get('value');
-							if(value == 20){
-								d.callback(true);
-							}else{
-								d.errback("slider2 failed. Expected 20, got "+value);
-							}
-						}, 900);
+							doh.is(20, value);
+						}), 1000);
 						return d;
 					}
 				},
 
 				{
 					name: "slider3",
-					timeout: 3500,
-					setUp: function(){
-						dijit.byId("programaticSlider").set('value',1000);
-					},
+					timeout: 5000,
 					runTest: function(){
 						var d = new doh.Deferred();
 						var slider = dijit.byId("programaticSlider");
+						slider.set('value', 1000);
 						dojo.window.scrollIntoView(slider.domNode);
-						doh.robot.mouseMoveAt(slider.focusNode, 500);
+						doh.robot.mouseMoveAt(slider.focusNode, 1, 0);
 						doh.robot.mousePress({left: true}, 500);
 						// drag to the top
-						doh.robot.mouseMoveAt(dojo.query("div[style*='0%']", dojo.byId('dijit_form_VerticalRule_2'))[0], 500, 100, 0, 0);
+						var marker = dojo.query("div[style*='0%']", dojo.byId('dijit_form_VerticalRule_2'))[0];
+						doh.robot.mouseMoveAt(marker, 500, 0);
 						doh.robot.mouseRelease({left: true}, 500);
-						doh.robot.sequence(function(){
+						doh.robot.sequence(d.getTestCallback(function(){
 							var value = slider.get('value');
-							if(value == 3000){
-								d.callback(true);
-							}else{
-								d.errback("slider3 failed. Expected 3000, got "+value);
-							}
-						}, 900);
+							doh.is(3000, value);
+						}), 1000);
 						return d;
 					}
 				}

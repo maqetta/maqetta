@@ -1,16 +1,4 @@
-dojo.provide("dojox.editor.plugins.FindReplace");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.Toolbar");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit.form.CheckBox");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dojox.editor.plugins.ToolbarLineBreak");
-dojo.require("dojo.i18n");
-dojo.require("dojo.string");
-
-dojo.requireLocalization("dojox.editor.plugins", "FindReplace");
+define("dojox/editor/plugins/FindReplace", ["dojo", "dijit", "dojox", "dojo/string", "dijit/TooltipDialog", "dijit/Toolbar", "dijit/form/CheckBox", "dijit/form/TextBox", "dijit/_editor/_Plugin", "dijit/form/Button", "dojox/editor/plugins/ToolbarLineBreak",  "dojo/i18n", "i18n!dojox/editor/plugins/nls/FindReplace"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.FindReplace");
 
@@ -31,7 +19,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [dijit._Widget, dijit.
 	
 	postMixInProperties: function(){
 		// Set some substitution variables used in the template
-		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));		
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 		this.btnId = this.id + "_close";
 		this.inherited(arguments);
 	},
@@ -55,7 +43,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 	textId: "",
 	
 	// label: [public] String
-	//		The label of the enhanced textbox 
+	//		The label of the enhanced textbox
 	label: "",
 	
 	// tooltip: [public] String
@@ -74,7 +62,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 
 	postMixInProperties: function(){
 		// Set some substitution variables used in the template
-		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));		
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 		this.textId = this.id + "_text";
 		
 		this.inherited(arguments);
@@ -98,12 +86,12 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 
 	_setDisabledAttr: function(/*Boolean*/ value){
 		// summary:
-		//		Over-ride for the textbox's 'disabled' attribute so that it can be 
+		//		Over-ride for the textbox's 'disabled' attribute so that it can be
 		//		disabled programmatically.
 		// value:
 		//		The boolean value to indicate if the textbox should be disabled or not
 		// tags:
-		//		private 
+		//		private
 		this.disabled = value;
 		this.textBox.set("disabled", value);
 	},
@@ -180,7 +168,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
 
 	postMixInProperties: function(){
 		// Set some substitution variables used in the template
-		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));		
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
 		this.checkId = this.id + "_check";
 		this.inherited(arguments);
 	},
@@ -217,7 +205,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
 
 	_setDisabledAttr: function(/*Boolean*/ value){
 		// summary:
-		//		Over-ride for the button's 'disabled' attribute so that it can be 
+		//		Over-ride for the button's 'disabled' attribute so that it can be
 		//		disabled programmatically.
 		// value:
 		//		The flag that indicates if the checkbox is disabled or not.
@@ -392,7 +380,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 				this._displayed = false;
 			}
 			
-			// If the toggle button is disabled, it is most likely that 
+			// If the toggle button is disabled, it is most likely that
 			// another plugin such as ViewSource disables it.
 			// So we do not need to focus the text area of the editor to
 			// prevent the editor from an invalid status.
@@ -409,7 +397,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 	_populateFindField: function(){
 		// summary:
 		//		Populate the Find field with selected text when dialog initially displayed.
-		//		Auto-select text in Find field after it’s populated.
+		//		Auto-select text in Find field after it is populated.
 		//		If nothing selected, restore previous entry from the same session.
 		// tags:
 		//		private
@@ -455,9 +443,9 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 			_tb.addChild(this._replaceField);
 
 			// Define the Find/Replace/ReplaceAll buttons.
-			_tb.addChild(new dojox.editor.plugins._ToolbarLineBreak());
+			_tb.addChild(new dojox.editor.plugins.ToolbarLineBreak());
 			
-			this._findButton = new dijit.form.Button({label: this._strings["findButton"], showLabel: true, 
+			this._findButton = new dijit.form.Button({label: this._strings["findButton"], showLabel: true,
 				iconClass: this.iconClassPrefix + " dijitEditorIconFind"});
 			this._findButton.titleNode.title = this._strings["findButtonTooltip"];
 			_tb.addChild(this._findButton);
@@ -481,7 +469,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 				{label: this._strings["backwards"], tooltip: this._strings["backwardsTooltip"]});
 			_tb.addChild(this._backwards);
 
-			// Set initial states, buttons should be disabled unless content is 
+			// Set initial states, buttons should be disabled unless content is
 			// present in the fields.
 			this._findButton.set("disabled", true);
 			this._replaceButton.set("disabled", true);
@@ -551,7 +539,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		//		private.
 		// returns:
 		//		Boolean indicating if the content was found or not.
-		var txt = this._findField.get("value") || ""; 
+		var txt = this._findField.get("value") || "";
 		if(txt){
 			var caseSensitive = this._caseSensitive.get("value");
 			var backwards = this._backwards.get("value");
@@ -616,7 +604,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 					// to avoid the infinite recursive replace
 					this._findText(repTxt, caseSensitive, backwards);
 					dojo.withGlobal(ed.window, "collapse", dijit._editor.selection, [true]);
-				}	
+				}
 			}
 			
 			if(!this._find(false) && showMessage){	// Find the next
@@ -634,6 +622,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 			}
 			return isReplaced;
 		 }
+		 return null;
 	},
 	
 	_replaceAll: function(/*Boolean?*/ showMessage){
@@ -654,7 +643,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		}
 		
 		// The _replace will return false if the current selection deos not match
-		// the searched text. So try the first attempt so that the selection 
+		// the searched text. So try the first attempt so that the selection
 		// is always the searched text if there is one that matches
 		if(this._replace(false)) { replaced++; }
 		// Do the replace via timeouts to avoid locking the browser up for a lot of replaces.
@@ -708,7 +697,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 				var doc = ed.document;
 				if(doc.selection){
 					/* IE */
-					// Focus to restore position/selection, 
+					// Focus to restore position/selection,
 					// then shift to search from current position.
 					this.editor.focus();
 					var txtRg = doc.body.createTextRange();
@@ -736,11 +725,11 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 	},
 
 	_filterRegexp: function(/*String*/ pattern, /*Boolean*/ ignoreCase){
-		// summary:  
+		// summary:
 		//		Helper function to convert a simple pattern to a regular expression for matching.
 		// description:
 		//		Returns a regular expression object that conforms to the defined conversion rules.
-		//		For example:  
+		//		For example:
 		//			ca*   -> /^ca.*$/
 		//			*ca*  -> /^.*ca.*$/
 		//			*c\*a*  -> /^.*c\*a.*$/
@@ -752,7 +741,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		//			* Means match anything, so ca* means match anything starting with ca
 		//			? Means match single character.  So, b?b will match to bob and bab, and so on.
 		//			\ is an escape character.  So for example, \* means do not treat * as a match, but literal character *.
-		//				To use a \ as a character in the string, it must be escaped.  So in the pattern it should be 
+		//				To use a \ as a character in the string, it must be escaped.  So in the pattern it should be
 		//				represented by \\ to be treated as an ordinary \ character instead of an escape.
 		//
 		//	ignoreCase:
@@ -795,6 +784,12 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		}
 		
 	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
 
 	destroy: function(){
 		// summary:
@@ -803,7 +798,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		if(this._promDialogTimeout){
 			clearTimeout(this._promDialogTimeout);
 			this._promDialogTimeout = null;
-			dijit.popup.close(this._promDialog);	
+			dijit.popup.close(this._promDialog);
 		}
 		if(this._frToolbar){
 			this._frToolbar.destroyRecursive();
@@ -824,4 +819,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(name ===  "findreplace"){
 		o.plugin = new dojox.editor.plugins.FindReplace({});
 	}
+});
+
+return dojox.editor.plugins.FindReplace;
+
 });

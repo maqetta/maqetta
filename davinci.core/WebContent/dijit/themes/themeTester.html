@@ -1,22 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
 	<title>Dijit Theme Tester</title>
 
+	<script>
+		var startTime = new Date();
+	</script>
+
 	<!-- required: a default theme -->
-	<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+	<link rel="stylesheet" href="../themes/claro/document.css"/>
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
+	<link rel="stylesheet" href="../tests/css/dijitTests.css"/>
 
 	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
-		@import "../tests/css/dijitTests.css";
-
 		html, body { height: 100%; width: 100%; padding: 0; border: 0; }
 		#main { height: 100%; width: 100%; border: 0; }
-		#header { margin: 0px; }
+		#header { margin: 0; }
 		#leftAccordion { width: 25%; }
 		#bottomTabs { height: 40%; }
-
+		#hs-1width {
+			width:400px;
+			height:40px;
+		}
 		/* pre-loader specific stuff to prevent unsightly flash of unstyled content */
 		#loader {
 			padding:0;
@@ -38,6 +46,11 @@
 			color:#fff;
 		}
 
+		#indTestBar,
+		#setTestBar {
+			width:400px;
+		}
+		
 		hr.spacer { border:0; background-color:#ededed; width:80%; height:1px; }
 
 		/* rules used to test custom setting of TextBox padding */
@@ -51,7 +64,7 @@
 
 	<!-- a check for stray globals: not needed! -->
 	<script type="text/javascript">
-		window.__globalList = {dojo: true, dijit: true, dojox: true, djConfig: true};
+		window.__globalList = { dojo: true, dijit: true, dojox: true, dojoConfig:true };
 		for(var i in window){
 			window.__globalList[i] = true;
 		}
@@ -59,18 +72,16 @@
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../dojo/dojo.js"
-		djConfig="parseOnLoad: false, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: false, isDebug: true"></script>
 
 	<!-- do not use: only for debugging / testing themes -->
 	<script type="text/javascript" src="../tests/_testCommon.js"></script>
-	<!--
-	<script type="text/javascript" src="http://prototypejs.org/assets/2007/10/16/prototype.js"></script>
-	-->
+
+	<!-- in nightly (or standard-profile builds), these files are layers -->
 	<script type="text/javascript" src="../dijit.js"></script>
 	<script type="text/javascript" src="../dijit-all.js" charset="utf-8"></script>
 
-
-	<script type="text/javascript"> // dojo.requires()
+	<script type="text/javascript"> // dojo.requires(), explicitly. 
 
 		dojo.require("dijit.Menu");
 		dojo.require("dijit.MenuItem");
@@ -81,7 +92,9 @@
 		dojo.require("dijit.ProgressBar");
 		dojo.require("dijit.TitlePane");
 		dojo.require("dijit.Tooltip");
+
 		dojo.require("dijit.Tree");
+		dojo.require("dijit.tree.ForestStoreModel");
 
 		dojo.require("dijit.MenuBar");
 		dojo.require("dijit.MenuBarItem");
@@ -123,73 +136,79 @@
 		dojo.require("dijit.layout.LinkPane");
 		dojo.require("dijit.Dialog");
 
-		// scan page for widgets and instantiate them
 		dojo.require("dojo.parser");
 
-		// humm?
 		dojo.require("dojo.date.locale");
 
-		// for the Tree
 		dojo.require("dojo.data.ItemFileReadStore");
 
-		// for the colorpalette
-		function setColor(color){
-			var theSpan = dojo.byId("outputSpan");
-			dojo.style(theSpan,"color",color);
-			theSpan.innerHTML = color;
+		// various function ripped out of inline script type=dojo/* blocks
+		function showDialog(){
+			var dlg = dijit.byId('dialog1');
+			dlg.show();
+			// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
+			dlg._savedFocus = dojo.byId("header");
+		}
+		
+		function showDialogAb(){
+			var dlg = dijit.byId('dialogAB');
+			dlg.show();
+			// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
+			dlg._savedFocus = dojo.byId("header");
 		}
 
-		// for the calendar
-		function myHandler(id,newValue){
-			console.debug("onChange for id = " + id + ", value: " + newValue);
-		}
-
-		// current setting (if there is one) to override theme default padding on TextBox based widgets
-		currentInputPadding = "";
-
-		function setTextBoxPadding(){
-			// summary:
-			//		Handler for when a MenuItem is clicked to set non-default padding for
-			//		TextBox widgets
-
-			// Effectively ignore clicks on the  currently checked MenuItem
-			if(!this.get("checked")){
-				this.set("checked", true);
-			}
-
-			// val will be "theme default", "0px", "1px", ..., "5px"
-			var val = this.get("label");
+		var setTextBoxPadding;
+		(function(){
+			// current setting (if there is one) to override theme default padding on TextBox based widgets
+			var currentInputPadding = "";
 			
-			// Set class on body to get requested padding, and remove any previously set class
-			if(currentInputPadding){
-				dojo.removeClass(dojo.body(), currentInputPadding);
-				currentInputPadding = "";
-			}
-			if(val != "theme default"){
-				currentInputPadding = "inputPadding" + val.replace("px", "");
-				dojo.addClass(dojo.body(), currentInputPadding);
-			}
-
-			// Clear previously checked MenuItem (radio-button effect).
-			dojo.forEach(this.getParent().getChildren(), function(mi){
-				if(mi != this){
-					mi.set("checked", false);
+			setTextBoxPadding = function(){
+				// summary:
+				//		Handler for when a MenuItem is clicked to set non-default padding for
+				//		TextBox widgets
+	
+				// Effectively ignore clicks on the	 currently checked MenuItem
+				if(!this.get("checked")){
+					this.set("checked", true);
 				}
-			}, this);
-		}
+	
+				// val will be "theme default", "0px", "1px", ..., "5px"
+				var val = this.get("label");
+				
+				// Set class on body to get requested padding, and remove any previously set class
+				if(currentInputPadding){
+					dojo.removeClass(dojo.body(), currentInputPadding);
+					currentInputPadding = "";
+				}
+				if(val != "theme default"){
+					currentInputPadding = "inputPadding" + val.replace("px", "");
+					dojo.addClass(dojo.body(), currentInputPadding);
+				}
+	
+				// Clear previously checked MenuItem (radio-button effect).
+				dojo.forEach(this.getParent().getChildren(), function(mi){
+					if(mi != this){
+						mi.set("checked", false);
+					}
+				}, this);
+			}
+		})();
 
 		dojo.addOnLoad(function() {
 
-			var start = new Date().getTime();
+			var loadCompleteTime = +new Date();
+			console.log("Total load time: " + (loadCompleteTime - startTime) + "ms");
+
 			dojo.parser.parse(dojo.byId('container'));
-			console.info("Total parse time: " + (new Date().getTime() - start) + "ms");
+			console.info("Total parse time: " + (+new Date() - loadCompleteTime) + "ms");
 
 			dojo.byId('loaderInner').innerHTML += " done.";
 			setTimeout(function hideLoader(){
-				var loader = dojo.byId('loader');
-				dojo.fadeOut({ node: loader, duration:500,
-					onEnd: function(){
-						loader.style.display = "none";
+				dojo.fadeOut({ 
+					node: 'loader', 
+					duration:500,
+					onEnd: function(n){
+						n.style.display = "none";
 					}
 				}).play();
 			}, 250);
@@ -282,168 +301,155 @@
 	<div id="loader"><div id="loaderInner" style="direction:ltr;">Loading themeTester ... </div></div>
 
 	<!-- data for tree and combobox -->
-	<div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore"
-		url="../tests/_data/countries.json"></div>
-	<div dojoType="dojo.data.ItemFileReadStore" jsId="stateStore"
-		url="../tests/_data/states.json"></div>
-	<!-- contentMenu popup -->
-	<div dojoType="dijit.Menu" id="submenu1" contextMenuForWindow="true" style="display: none;">
-		<div dojoType="dijit.MenuItem" onClick="alert('Hello world');">Enabled Item</div>
-		<div dojoType="dijit.MenuItem" disabled="true">Disabled Item</div>
-		<div dojoType="dijit.MenuSeparator"></div>
-		<div dojoType="dijit.MenuItem" iconClass="dijitIconCut"
-			onClick="alert('not actually cutting anything, just a test!')">Cut</div>
-		<div dojoType="dijit.MenuItem" iconClass="dijitIconCopy"
-			onClick="alert('not actually copying anything, just a test!')">Copy</div>
-		<div dojoType="dijit.MenuItem" iconClass="dijitIconPaste"
-			onClick="alert('not actually pasting anything, just a test!')">Paste</div>
-		<div dojoType="dijit.MenuSeparator"></div>
-		<div dojoType="dijit.PopupMenuItem">
+	<div data-dojo-type="dojo.data.ItemFileReadStore" data-dojo-id="continentStore"
+		data-dojo-props="url:'../tests/_data/countries.json'"></div>
+	<div data-dojo-id="continentModel" data-dojo-type="dijit.tree.ForestStoreModel" data-dojo-props='store:continentStore, query:{type:"continent"},
+		rootId:"continentRoot", rootLabel:"Continents", childrenAttrs:["children"]'></div>
+	<div data-dojo-type="dojo.data.ItemFileReadStore" data-dojo-id="stateStore"
+		data-dojo-props="url:'../tests/_data/states.json'"></div>
+	<!-- contentMenu popup -->												<!-- redundant display:none required here? -->
+	<div data-dojo-type="dijit.Menu" id="submenu1" data-dojo-props='contextMenuForWindow:true, style:"display:none"' style="display: none;">
+		<div data-dojo-type="dijit.MenuItem" 
+			data-dojo-props="onClick:function(){ alert('Hello world'); }">Enabled Item</div>
+		<div data-dojo-type="dijit.MenuItem" data-dojo-props="disabled:true">Disabled Item</div>
+		<div data-dojo-type="dijit.MenuSeparator"></div>
+		<div data-dojo-type="dijit.MenuItem" data-dojo-props="iconClass:'dijitIconCut', onClick: function(){ alert('not actually cutting anything. Just a test!'); }">Cut</div>
+		<div data-dojo-type="dijit.MenuItem" data-dojo-props="iconClass:'dijitIconCopy', onClick:function(){ alert('not actually copying anything, just a test!'); }">Copy</div>
+		<div data-dojo-type="dijit.MenuItem" data-dojo-props="iconClass:'dijitIconPaste', onClick: function(){ alert('not actually pasting anything, just a test!'); }">Paste</div>
+		<div data-dojo-type="dijit.MenuSeparator"></div>
+		<div data-dojo-type="dijit.PopupMenuItem">
 			<span>Enabled Submenu</span>
-			<div dojoType="dijit.Menu" id="submenu2">
-				<div dojoType="dijit.MenuItem" onClick="alert('Submenu 1!')">Submenu Item One</div>
-				<div dojoType="dijit.MenuItem" onClick="alert('Submenu 2!')">Submenu Item Two</div>
-				<div dojoType="dijit.PopupMenuItem">
+			<div data-dojo-type="dijit.Menu" id="submenu2">
+				<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick: function(){ alert('Submenu 1!') }">Submenu Item One</div>
+				<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick: function(){ alert('Submenu 2!') }">Submenu Item Two</div>
+				<div data-dojo-type="dijit.PopupMenuItem">
 					<span>Deeper Submenu</span>
-					<div dojoType="dijit.Menu" id="submenu4">
-						<div dojoType="dijit.MenuItem" onClick="alert('Sub-submenu 1!')">Sub-sub-menu Item One</div>
-						<div dojoType="dijit.MenuItem" onClick="alert('Sub-submenu 2!')">Sub-sub-menu Item Two</div>
+					<div data-dojo-type="dijit.Menu" id="submenu4">
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('Sub-submenu 1!')}">Sub-sub-menu Item One</div>
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('Sub-submenu 2!')}">Sub-sub-menu Item Two</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div dojoType="dijit.PopupMenuItem" disabled="true">
+		<div data-dojo-type="dijit.PopupMenuItem" data-dojo-props="disabled:true">
 			<span>Disabled Submenu</span>
-			<div dojoType="dijit.Menu" id="submenu3" style="display: none;">
-				<div dojoType="dijit.MenuItem" onClick="alert('Submenu 1!')">Submenu Item One</div>
-				<div dojoType="dijit.MenuItem" onClick="alert('Submenu 2!')">Submenu Item Two</div>
+			<div data-dojo-type="dijit.Menu" id="submenu3" style="display: none;">
+				<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('Submenu 1!')}">Submenu Item One</div>
+				<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('Submenu 2!')}">Submenu Item Two</div>
 			</div>
 		</div>
-		<div dojoType="dijit.PopupMenuItem">
+		<div data-dojo-type="dijit.PopupMenuItem">
 			<span>Different popup</span>
-			<div dojoType="dijit.ColorPalette"></div>
+			<div data-dojo-type="dijit.ColorPalette"></div>
 		</div>
-		<div dojoType="dijit.PopupMenuItem">
+		<div data-dojo-type="dijit.PopupMenuItem">
 			<span>Different popup</span>
-			<div dojoType="dijit.Calendar"></div>
+			<div data-dojo-type="dijit.Calendar"></div>
 		</div>
 	</div>
 	<!-- end contextMenu -->
 
-	<div id="main" dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar">
+	<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters:false, design:'sidebar'">
 
-		<div id="header" dojoType="dijit.MenuBar" region="top">
-			<div dojoType="dijit.PopupMenuBarItem" id="file">
+		<div id="header" data-dojo-type="dijit.MenuBar" data-dojo-props="region:'top'">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="file">
 				<span>File</span>
-				<div dojoType="dijit.Menu" id="fileMenu">
-					<div dojoType="dijit.MenuItem" id="globals" onClick="logStrayGlobals();">Log globals</div>
-					<div dojoType="dijit.MenuItem" id="widgets" onClick="logWidgets();">Log widgets</div>
-					<div dojoType="dijit.MenuItem" id="destroy" iconClass="dijitIconDelete" onClick="tearDown();">Destroy All</div>
+				<div data-dojo-type="dijit.Menu" id="fileMenu">
+					<div data-dojo-type="dijit.MenuItem" id="globals" data-dojo-props="onClick: logStrayGlobals">Log globals</div>
+					<div data-dojo-type="dijit.MenuItem" id="widgets" data-dojo-props="onClick: logWidgets">Log widgets</div>
+					<div data-dojo-type="dijit.MenuItem" id="destroy" data-dojo-props="iconClass:'dijitIconDelete', onClick:tearDown">Destroy All</div>
 				</div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" id="edit">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="edit">
 				<span>Edit</span>
-				<div dojoType="dijit.Menu" id="editMenu">
-					<div dojoType="dijit.MenuItem" id="cut" iconClass="dijitIconCut"
-						onClick="console.log('not actually cutting anything, just a test!')">Cut</div>
-					<div dojoType="dijit.MenuItem" id="copy" iconClass="dijitIconCopy"
-						onClick="console.log('not actually copying anything, just a test!')">Copy</div>
-					<div dojoType="dijit.MenuItem" id="paste" iconClass="dijitIconPaste"
-						onClick="console.log('not actually pasting anything, just a test!')">Paste</div>
-					<div dojoType="dijit.MenuSeparator" id="separator"></div>
-					<div dojoType="dijit.MenuItem" id="undo" iconClass="dijitIconUndo">Undo</div>
+				<div data-dojo-type="dijit.Menu" id="editMenu">
+					<div data-dojo-type="dijit.MenuItem" id="cut" data-dojo-props="
+						iconClass:'dijitIconCut',
+						onClick:function(){ console.log('not actually cutting anything, just a test!') }
+					">Cut</div>
+					<div data-dojo-type="dijit.MenuItem" id="copy" data-dojo-props="
+						iconClass:'dijitIconCopy',
+						onClick: function(){ console.log('not actually copying anything, just a test!') }
+					">Copy</div>
+					<div data-dojo-type="dijit.MenuItem" id="paste" data-dojo-props="iconClass:'dijitIconPaste',
+						onClick: function(){ console.log('not actually pasting anything, just a test!') }">Paste</div>
+					<div data-dojo-type="dijit.MenuSeparator" id="separator"></div>
+					<div data-dojo-type="dijit.MenuItem" id="undo" data-dojo-props="iconClass:'dijitIconUndo'">Undo</div>
 				</div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" id="view">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="view">
 				<span>View</span>
-				<div dojoType="dijit.Menu" id="viewMenu">
-					<div dojoType="dijit.MenuItem">Normal</div>
-					<div dojoType="dijit.MenuItem">Outline</div>
-					<div dojoType="dijit.PopupMenuItem">
+				<div data-dojo-type="dijit.Menu" id="viewMenu">
+					<div data-dojo-type="dijit.MenuItem">Normal</div>
+					<div data-dojo-type="dijit.MenuItem">Outline</div>
+					<div data-dojo-type="dijit.PopupMenuItem">
 						<span>Zoom</span>
-						<div dojoType="dijit.Menu" id="zoomMenu">
-							<div dojoType="dijit.MenuItem">50%</div>
-							<div dojoType="dijit.MenuItem">75%</div>
-							<div dojoType="dijit.MenuItem">100%</div>
-							<div dojoType="dijit.MenuItem">150%</div>
-							<div dojoType="dijit.MenuItem">200%</div>
+						<div data-dojo-type="dijit.Menu" id="zoomMenu">
+							<div data-dojo-type="dijit.MenuItem">50%</div>
+							<div data-dojo-type="dijit.MenuItem">75%</div>
+							<div data-dojo-type="dijit.MenuItem">100%</div>
+							<div data-dojo-type="dijit.MenuItem">150%</div>
+							<div data-dojo-type="dijit.MenuItem">200%</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" id="themes">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="themes">
 				<span>Themes</span>
-				<div dojoType="dijit.Menu" id="themeMenu">
-				</div>
+				<div data-dojo-type="dijit.Menu" id="themeMenu"></div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" id="dialogs">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="dialogs">
 				<span>Dialogs</span>
-				<div dojoType="dijit.Menu" id="dialogMenu">
-					<div dojoType="dijit.MenuItem">
-						<script type="dojo/method" event="onClick">
-							var dlg = dijit.byId('dialog1');
-							dlg.show();
-							// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
-							dlg._savedFocus = dojo.byId("header");
-						</script>
-						slow loading
-					</div>
-					<div dojoType="dijit.MenuItem">
-						<script type="dojo/method" event="onClick">
-							var dlg = dijit.byId('dialogAB');
-							dlg.show();
-							// avoid (trying to) restore focus to a closed menu, go to MenuBar instead
-							dlg._savedFocus = dojo.byId("header");
-						</script>
-						action bar
-					</div>
+				<div data-dojo-type="dijit.Menu" id="dialogMenu">
+					<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick: showDialog">slow loading</div>
+					<div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick: showDialogAb">action bar</div>
 				</div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" id="inputPadding">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="inputPadding">
 				<span>TextBox Padding</span>
-				<div dojoType="dijit.Menu" id="inputPaddingMenu">
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding" checked>theme default</div>
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding">0px</div>
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding">1px</div>
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding">2px</div>
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding">3px</div>
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding">4px</div>
-					<div dojoType="dijit.CheckedMenuItem" onClick="setTextBoxPadding">5px</div>
+				<div data-dojo-type="dijit.Menu" id="inputPaddingMenu">
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding, checked:true">theme default</div>
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding">0px</div>
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding">1px</div>
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding">2px</div>
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding">3px</div>
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding">4px</div>
+					<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props="onClick:setTextBoxPadding">5px</div>
 				</div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" id="help">
+			<div data-dojo-type="dijit.PopupMenuBarItem" id="help">
 				<span>Help</span>
-				<div dojoType="dijit.Menu" id="helpMenu">
-					<div dojoType="dijit.MenuItem">Help Topics</div>
-					<div dojoType="dijit.MenuItem">About Dijit</div>
+				<div data-dojo-type="dijit.Menu" id="helpMenu">
+					<div data-dojo-type="dijit.MenuItem">Help Topics</div>
+					<div data-dojo-type="dijit.MenuItem">About Dijit</div>
 				</div>
 			</div>
-			<div dojoType="dijit.PopupMenuBarItem" disabled="true">
+			<div data-dojo-type="dijit.PopupMenuBarItem" data-dojo-props="disabled:true">
 				<span>Disabled</span>
-				<div dojoType="dijit.Menu">
-					<div dojoType="dijit.MenuItem">You should not see this</div>
+				<div data-dojo-type="dijit.Menu">
+					<div data-dojo-type="dijit.MenuItem">You should not see this</div>
 				</div>
 			</div>
-			<div dojoType="dijit.MenuBarItem" onclick="alert('no submenu, just a clickable MenuItem');">
+			<div data-dojo-type="dijit.MenuBarItem" data-dojo-props="onclick: function(){ alert('no submenu, just a clickable MenuItem'); }">
 				Click me!
 			</div>
 		</div>
 
-		<div dojoType="dijit.layout.AccordionContainer"
-			minSize="20" style="width: 300px;" id="leftAccordion" region="leading" splitter="true">
+		<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region:'leading', splitter:true, minSize:20"
+			style="width: 300px;" id="leftAccordion">
 
-			<div dojoType="dijit.layout.ContentPane" title="Popups and Alerts"><div style="padding:8px">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Popups and Alerts"'><div style="padding:8px">
 				<h2>Tooltips</h2>
 				<ul>
 					<li>
 					<span id="ttRich"><b>rich</b> <i>text</i> tooltip</span>
-					<span dojoType="dijit.Tooltip" connectId="ttRich" style="display:none;">
+					<span data-dojo-type="dijit.Tooltip" data-dojo-props="connectId:'ttRich'" style="display:none;">
 						Embedded <b>bold</b> <i>RICH</i> text <span style="color:#309; font-size:x-large;">weirdness!</span>
 					</span>
 					</li>
 
-					<li><a id="ttOne" href="#bogus">anchor tooltip</a>
-					<span dojoType="dijit.Tooltip" connectId="ttOne" style="display:none;">tooltip on anchor</span>
+					<li><a id="ttOne" href='#bogus'>anchor tooltip</a>
+					<span data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:"ttOne"' style="display:none;">tooltip on anchor</span>
 					</li>
 				</ul>
 
@@ -451,27 +457,27 @@
 					<tr>
 						<td></td>
 						<td>
-							<div id="ttBelow" href="#bogus">tooltip below</div>
-							<div dojoType="dijit.Tooltip" connectId="ttBelow" style="display:none; width: 100px;" position="below" >I'm <i>below</i>!</div>
+							<div id="ttBelow">tooltip below</div>
+							<div data-dojo-type="dijit.Tooltip" data-dojo-props="connectId:'ttBelow', position:['below']" style="display:none; width: 100px;">I'm <i>below</i>!</div>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td>
-							<div id="ttRight" href="#bogus">tooltip after</div>
-							<div dojoType="dijit.Tooltip" connectId="ttRight" style="display:none;" position="after" >I'm on the <i>right</i>!<br>(or left on RTL systems)</div>
+							<div id="ttRight">tooltip after</div>
+							<div data-dojo-type="dijit.Tooltip" data-dojo-props="connectId:'ttRight', position:['after']" style="display:none;">I'm on the <i>right</i>!<br>(or left on RTL systems)</div>
 						</td>
 						<td></td>
 						<td>
-							<div id="ttLeft" href="#bogus">tooltip before</div>
-							<div dojoType="dijit.Tooltip" connectId="ttLeft" style="display:none;" position="before,after" >I'm on the <i>left</i>!<br>(or right on RTL systems)</div>
+							<div id="ttLeft">tooltip before</div>
+							<div data-dojo-type="dijit.Tooltip" data-dojo-props="connectId:'ttLeft', position:['before','after']" style="display:none;">I'm on the <i>left</i>!<br>(or right on RTL systems)</div>
 						</td>
 					</tr>
 					<tr>
 						<td></td>
 						<td>
-							<div id="ttAbove" href="#bogus">tooltip above</div>
-							<div dojoType="dijit.Tooltip" connectId="ttAbove" style="display:none;" position="above" >I'm <i>above</i>!</div>
+							<div id="ttAbove">tooltip above</div>
+							<div data-dojo-type="dijit.Tooltip" data-dojo-props="connectId:'ttAbove', position:['above']" style="display:none;">I'm <i>above</i>!</div>
 						</td>
 						<td></td>
 					</tr>
@@ -485,22 +491,24 @@
 					<li><a href="#" onclick="dijit.byId('dialogAB').show()">modal dialog w/action bar</a></li>
 				</ul>
 
-				<div dojoType="dijit.form.DropDownButton">
+				<div data-dojo-type="dijit.form.DropDownButton">
 					<span>Show Tooltip Dialog</span>
-					<div dojoType="dijit.TooltipDialog" id="tooltipDlg" title="Enter Login information"
-						execute="alert('submitted w/args:\n' + dojo.toJson(arguments[0], true));">
+					<div data-dojo-type="dijit.TooltipDialog" id="tooltipDlg" data-dojo-props='
+						title:"Enter Login information",
+						execute: function(){ alert("submitted w/args:\n" + dojo.toJson(arguments[0], true)); }
+					'>
 						<table>
 							<tr>
 								<td><label for="user">User:</label></td>
-								<td><input dojoType=dijit.form.TextBox type="text" id="user" name="user" ></td>
+								<td><input data-dojo-type="dijit.form.TextBox" type="text" id="user" name="user" ></td>
 							</tr>
 							<tr>
 								<td><label for="pwd">Password:</label></td>
-								<td><input dojoType=dijit.form.TextBox type="password" id="pwd" name="pwd"></td>
+								<td><input data-dojo-type="dijit.form.TextBox" type="password" id="pwd" name="pwd"></td>
 							</tr>
 							<tr>
-								<td colspan="2" align="center">
-									<button dojoType=dijit.form.Button type="submit" name="submit">Login</button>
+								<td colspan="2">
+									<button data-dojo-type="dijit.form.Button" type="submit" name="submit">Login</button>
 							</tr>
 						</table>
 					</div>
@@ -508,19 +516,28 @@
 			</div>
 			</div>
 
-			<div dojoType="dijit.layout.ContentPane" title="Dojo Tree from Store">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tree"'>
 				<!-- tree widget -->
-				<div dojoType="dijit.Tree" store="continentStore" query="{type:'continent'}"
-					label="Continents" openOnClick="true">
-				</div>
+				<div data-dojo-type="dijit.Tree" 
+					data-dojo-props="model: continentModel, query:{ type:'continent'}, label:'Continents', openOnClick:true"
+				></div>
 			</div>
 
-			<div dojoType="dijit.layout.ContentPane" title="Calendar" selected="true">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Rootless Tree'">
+				<div id="rootlessTree" data-dojo-type="dijit.Tree" data-dojo-props="
+					model:continentModel,
+					query:{ type:'continent' },
+					showRoot: false,
+					openOnClick:true
+				"></div>
+			</div>
+
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true, title:"Calendar"'>
 				<!-- calendar widget pane -->
-				<input id="calendar1" dojoType="dijit.Calendar" onChange="myHandler(this.id,arguments[0])">
+				<input id="calendar1" data-dojo-type="dijit.Calendar">
 			</div>
 
-			<div dojoType="dijit.layout.ContentPane" title="Color Picker">
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Color Picker"'>
 				<p>
 					Selecting a color will change the background color of the page.
 					Use this to test how tooltips and drop downs appear with different backgrounds.
@@ -532,208 +549,107 @@
 						dojo.query('.dijitTabPaneWrapper').style('background', color);
 					}
 				</script>
-				<div dojoType="dijit.ColorPalette"  palette="3x4" onChange="setBackground(arguments[0]);"></div>
+				<div data-dojo-type="dijit.ColorPalette" data-dojo-props="palette:'3x4', onChange:setBackground"></div>
 				<h2 class="testHeader">7x10</h2>
-				<div dojoType="dijit.ColorPalette" onChange="setBackground(arguments[0]);"></div>
+				<div data-dojo-type="dijit.ColorPalette" data-dojo-props="onChange:setBackground"></div>
 			</div>
-			<div dojoType="dijit.layout.TabContainer" useMenu="false" title="Sliding TabContainer"
-						id="slidingTab">
-				<div dojoType="dijit.layout.ContentPane" title="Information">
-					This tab container uses slide controls when the tabs are too wide to fit beside each other.
-					If you make the left column narrow enough, the slide controls should appear.
-				</div>
-				<div dojoType="dijit.layout.ContentPane" title="Rootless Tree" closable="true">
-					<div
-						dojoType="dijit.Tree"
-						id="rootlessTree"
-						store="continentStore"
-						query="{type:'continent'}"
-						openOnClick="true">
-					</div>
-
-				</div>
-				<div dojoType="dijit.layout.TabContainer"
-						id="inlined" closable="true"
-						title="Nested TabContainer" nested="true">
-					<a dojoType="dijit.layout.LinkPane" id="tab1href" href="../tests/layout/tab1.html" onLoad="console.log('load of SubTab 1');">SubTab 1</a>
-					<a dojoType="dijit.layout.LinkPane" id="tab2href" href="../tests/layout/tab2.html"  onLoad="console.log('load of SubTab 2');" selected="true">SubTab 2</a>
-					<div dojoType="dijit.layout.ContentPane" id="subtab3" title="SubTab 3">
-						<h1>I am tab 3, inlined.</h1>
-					</div>
-					<div dojoType="dijit.layout.ContentPane" id="subtab4" title="SubTab 4">
-						<h1>I am tab 4, inlined.</h1>
-					</div>
-				</div>
-				<div dojoType="dijit.layout.ContentPane" title="Menu Bar" closable="true">
-					<div id="menubar" dojoType="dijit.MenuBar">
-					<div dojoType="dijit.PopupMenuBarItem" >
-						<span>File</span>
-						<div dojoType="dijit.Menu">
-							<div dojoType="dijit.MenuItem" iconClass="dijitIconNewTask">New</div>
-							<div dojoType="dijit.MenuItem">Open</div>
-							<div dojoType="dijit.MenuSeparator"></div>
-							<div dojoType="dijit.MenuItem" iconClass="dijitIconSave">Save</div>
-							<div dojoType="dijit.MenuItem">Save As...</div>
-						</div>
-					</div>
-					<div dojoType="dijit.PopupMenuBarItem">
-						<span>Edit</span>
-						<div dojoType="dijit.Menu" >
-							<div dojoType="dijit.MenuItem"  iconClass="dijitIconCut"
-								onClick="console.log('not actually cutting anything, just a test!')">Cut</div>
-							<div dojoType="dijit.MenuItem"  iconClass="dijitIconCopy"
-								onClick="console.log('not actually copying anything, just a test!')">Copy</div>
-							<div dojoType="dijit.MenuItem"  iconClass="dijitIconPaste"
-								onClick="console.log('not actually pasting anything, just a test!')">Paste</div>
-						</div>
-					</div>
-					<div dojoType="dijit.PopupMenuBarItem">
-						<span>View</span>
-						<div dojoType="dijit.Menu">
-							<div dojoType="dijit.MenuItem">Normal</div>
-							<div dojoType="dijit.MenuItem">Outline</div>
-							<div dojoType="dijit.PopupMenuItem">
-								<span>Zoom</span>
-								<div dojoType="dijit.Menu">
-									<div dojoType="dijit.MenuItem">50%</div>
-									<div dojoType="dijit.MenuItem">75%</div>
-									<div dojoType="dijit.MenuItem">100%</div>
-									<div dojoType="dijit.MenuItem">150%</div>
-									<div dojoType="dijit.MenuItem">200%</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div dojoType="dijit.PopupMenuBarItem">
-						<span>Help</span>
-						<div dojoType="dijit.Menu">
-							<div dojoType="dijit.MenuItem">Help Topics</div>
-							<div dojoType="dijit.MenuItem">About Dijit</div>
-						</div>
-					</div>
-					<div dojoType="dijit.PopupMenuBarItem" disabled="true">
-						<span>Disabled</span>
-						<div dojoType="dijit.Menu">
-							<div dojoType="dijit.MenuItem">You should not see this</div>
-						</div>
-					</div>
-					<div dojoType="dijit.MenuBarItem" onclick="alert('no submenu, just a clickable MenuItem');">
-						Click me!
-					</div>
-				</div>
-				</div>
-			</div>
-
-
 		</div><!-- end AccordionContainer -->
 
 		<!-- top tabs (marked as "center" to take up the main part of the BorderContainer) -->
-		<div dojoType="dijit.layout.TabContainer" region="center" id="topTabs" tabStrip="true">
+		<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region:'center', tabStrip:true" id="topTabs">
 
-			<div id="basicFormTab" dojoType="dijit.layout.ContentPane" title="Basic Form Widgets" style="padding:10px;display:none;">
+			<div id="basicFormTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Basic Form Widgets', style:'padding:10px;display:none;'">
 
 				<h2>Buttons</h2>
 				<p>Buttons can do an action, display a menu, or both:</p>
 
 				Enabled:
 
-				<button dojoType="dijit.form.Button" iconClass="dijitIconTask" onClick='console.debug("clicked simple")'>
+				<button data-dojo-type="dijit.form.Button" data-dojo-props="iconClass:'dijitIconTask', onClick:function(){ console.debug('clicked simple') }">
 					Simple
 				</button>
 
-				<button dojoType="dijit.form.DropDownButton" iconClass="dijitIconEdit">
+				<div data-dojo-type="dijit.form.DropDownButton" data-dojo-props="iconClass:'dijitIconEdit'">
 					<span>Drop Down</span>
-					<div dojoType="dijit.Menu" id="editMenu1" style="display: none;">
-						<div dojoType="dijit.MenuItem"
-							iconClass="dijitIconCut"
-							onClick="console.debug('not actually cutting anything, just a test!')">
-							Cut
-						</div>
+					<div data-dojo-type="dijit.Menu" id="editMenu1" style="display: none;">
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconCut',
+							onClick:function(){ console.debug('not actually cutting anything, just a test!') }
+						">Cut</div>
 
-						<div dojoType="dijit.MenuItem"
-							 iconClass="dijitIconCopy"
-							onClick="console.debug('not actually copying anything, just a test!')">
-							Copy
-						</div>
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconCopy',
+							onClick:function(){ console.debug('not actually copying anyything, just a test!'); }
+						">Copy</div>
 
-						<div dojoType="dijit.MenuItem"
-							 iconClass="dijitIconPaste"
-							onClick="console.debug('not actually pasting anything, just a test!')">
-							Paste
-						</div>
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconPaste',
+							onClick:function(){ console.debug('not actually pasting anyything, just a test!'); }
+						">Paste</div>
 					</div>
-				</button>
+				</div>
 
-				<button dojoType="dijit.form.ComboButton" iconClass="dijitIconSave"
-					optionsTitle='save options'
-					onClick='console.debug("clicked combo save")'>
+				<div data-dojo-type="dijit.form.ComboButton" data-dojo-props='iconClass:"dijitIconSave", optionsTitle:"save options", onClick:function(){ console.log("clicked combo save"); }'>
 					<span>Combo</span>
-					<div dojoType="dijit.Menu" id="saveMenu1" style="display: none;">
-						<div dojoType="dijit.MenuItem"
-							 iconClass="dijitIconSave"
-							onClick="console.debug('not actually saving anything, just a test!')">
-							Save
-						</div>
-						<div dojoType="dijit.MenuItem"
-							onClick="console.debug('not actually saving anything, just a test!')">
-							Save As
-						</div>
+					<div data-dojo-type="dijit.Menu" id="saveMenu1" style="display: none;">
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconSave',
+							onClick: function(){ console.debug('not actually saving anything, just a test!') }
+						">Save</div>
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="
+							onClick: function(){ console.debug('not actually saving anything, just a test!') }
+						">Save As</div>
 					</div>
-				</button>
+				</div>
 
-				<button dojoType="dijit.form.ToggleButton" checked onChange="console.log('toggled button checked='+arguments[0]);" iconClass="dijitCheckBoxIcon">
-					Toggle
-				</button>
+				<div data-dojo-type="dijit.form.ToggleButton" data-dojo-props="
+					checked:true, 
+					onChange: function(a){ console.log('toggle button checked=' + a); }, iconClass:'dijitCheckBoxIcon'
+				"> Toggle </div>
 
 				<hr class="spacer">
 
 				Disabled:
 
-				<button dojoType="dijit.form.Button" iconClass="dijitIconTask" disabled>
+				<button data-dojo-type="dijit.form.Button" data-dojo-props='iconClass:"dijitIconTask", disabled:true' disabled>
 					Simple
 				</button>
 
-				<button dojoType="dijit.form.DropDownButton" iconClass="dijitIconEdit" disabled>
+				<div data-dojo-type="dijit.form.DropDownButton" data-dojo-props='iconClass:"dijitIconEdit", disabled:true'>
 					<span>Drop Down</span>
-					<div dojoType="dijit.Menu" id="editMenu2" style="display: none;">
-						<div dojoType="dijit.MenuItem"
-							iconClass="dijitIconCut"
-							onClick="console.debug('not actually cutting anything, just a test!')">
-							Cut
-						</div>
+					<ul data-dojo-type="dijit.Menu" id="editMenu2" style="display: none;">
+						<li data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconCut',
+							onClick: function(){ console.debug('not actually cutting anything, just a test!') }
+						">Cut</li>
 
-						<div dojoType="dijit.MenuItem"
-							 iconClass="dijitIconCopy"
-							onClick="console.debug('not actually copying anything, just a test!')">
-							Copy
-						</div>
+						<li data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconCopy',
+							onClick: function(){ console.debug('not actually copying anything, just a test!') }
+						">Copy</li>
 
-						<div dojoType="dijit.MenuItem"
-							 iconClass="dijitIconPaste"
-							onClick="console.debug('not actually pasting anything, just a test!')">
-							Paste
-						</div>
-					</div>
-				</button>
+						<li data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconClass:'dijitIconPaste',
+							onClick: function(){ console.debug('not actually pasting anything, just a test!') }
+						">Paste</li>
+					</ul>
+				</div>
 
-				<button dojoType="dijit.form.ComboButton" iconClass="dijitIconSave"
-					optionsTitle='save options'
-					disabled>
+				<div data-dojo-type="dijit.form.ComboButton" data-dojo-props="iconClass:'dijitIconSave', optionsTitle:'save options', disabled:true">
 					<span>Combo</span>
-					<div dojoType="dijit.Menu" id="saveMenu2" style="display: none;">
-						<div dojoType="dijit.MenuItem"
-							 iconClass="dijitIconSave"
-							onClick="console.debug('not actually saving anything, just a test!')">
-							Save
-						</div>
-						<div dojoType="dijit.MenuItem"
+					<div data-dojo-type="dijit.Menu" id="saveMenu2" style="display: none;">
+						<div data-dojo-type="dijit.MenuItem" data-dojo-props="
+							iconCLass:'dijitIconSave',
+							onClick:function(){ console.log('not actually saving anything, just a test!' ); }
+						">Save</div>
+						<div data-dojo-type="dijit.MenuItem"
 							onClick="console.debug('not actually saving anything, just a test!')">
 							Save As
 						</div>
 					</div>
-				</button>
+				</div>
 
-				<button dojoType="dijit.form.ToggleButton" checked disabled iconClass="dijitCheckBoxIcon">
+				<button data-dojo-type="dijit.form.ToggleButton" data-dojo-props="checked:true, disabled:true, iconClass:'dijitCheckBoxIcon'">
 					Toggle
 				</button>
 
@@ -741,135 +657,125 @@
 
 				<h2>CheckBox</h2>
 				<fieldset>
-					<input id="check1" type="checkBox" dojoType="dijit.form.CheckBox">
+					<input id="check1" type="checkBox" data-dojo-type="dijit.form.CheckBox">
 					<label for="check1">unchecked</label>
 
-					<input id="check2" type="checkBox" dojoType="dijit.form.CheckBox" checked="checked">
+					<input id="check2" type="checkBox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked:true" checked="checked">
 					<label for="check2">checked</label>
 
-					<input id="check3" type="checkBox" dojoType="dijit.form.CheckBox" disabled>
+					<input id="check3" type="checkBox" data-dojo-type="dijit.form.CheckBox" data-dojo-props='disabled:true' disabled>
 					<label for="check3">disabled</label>
 
-					<input id="check4" type="checkBox" dojoType="dijit.form.CheckBox" checked="checked" disabled>
+					<input id="check4" type="checkBox" data-dojo-type="dijit.form.CheckBox"	 data-dojo-props='disabled:true, checked:true' checked="checked" disabled>
 					<label for="check4">disabled and checked</label>
 				</fieldset>
 
 				<h2>Radio Buttons</h2>
 				<fieldset>
-					<input type="radio" name="g1" id="g1rb1" value="news" dojoType="dijit.form.RadioButton">
+					<input type="radio" name="g1" id="g1rb1" value="news" data-dojo-type="dijit.form.RadioButton">
 					<label for="g1rb1">news</label>
-					<input type="radio" name="g1" id="g1rb2" value="talk" dojoType="dijit.form.RadioButton" checked>
+					<input type="radio" name="g1" id="g1rb2" value="talk" data-dojo-type="dijit.form.RadioButton"  data-dojo-props='checked:true' checked>
 					<label for="g1rb2">talk</label>
-					<input type="radio" name="g1" id="g1rb3" value="weather" dojoType="dijit.form.RadioButton" disabled>
+					<input type="radio" name="g1" id="g1rb3" value="weather" data-dojo-type="dijit.form.RadioButton"  data-dojo-props='disabled:true' disabled>
 					<label for="g1rb3">weather (disabled)</label>
 				</fieldset>
 			</div> <!-- end of basic form widgets -->
 
-			<div id="textboxTab" dojoType="dijit.layout.ContentPane" title="Text Input Widgets" style="padding:10px;display:none;">
+			<div id="textboxTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Text Input Widgets", style:"padding:10px;display:none;"'>
 
 				<h2>dijit.form.DateTextBox</h2>
 				<label for="date1">Enabled w/placeHolder:</label>
-				<input id="date1" name="date1" type="text" dojoType="dijit.form.DateTextBox" placeHolder="Birthday">
+				<input id="date1" name="date1" type="text" data-dojo-type="dijit.form.DateTextBox" data-dojo-props="placeHolder:'Birthday'">
 				<label for="date2">Disabled w/placeHolder:</label>
-				<input id="date2" name="date2" type="text" dojoType="dijit.form.DateTextBox" placeHolder="Birthday" disabled="disabled">
+				<input id="date2" name="date2" type="text" data-dojo-type="dijit.form.DateTextBox" data-dojo-props='placeHolder:"Birthday", disabled:true'>
 				<label for="date2">Disabled w/value:</label>
-				<input id="date3" name="date3" type="text" dojoType="dijit.form.DateTextBox" value="2008-12-25" disabled="disabled">
+				<input id="date3" name="date3" type="text" data-dojo-type="dijit.form.DateTextBox" data-dojo-props='value:"2008-12-25", disabled:true'>
 
 				<h2>dijit.form.TimeTextBox</h2>
 				<label for="time1">Enabled:</label>
-				<input id="time1" name="time1" type="text" dojoType="dijit.form.TimeTextBox" value="T17:45:00">
+				<input id="time1" name="time1" type="text" data-dojo-type="dijit.form.TimeTextBox" value="T17:45:00">
 				<label for="time2">Disabled:</label>
-				<input id="time2" name="time2" type="text" dojoType="dijit.form.TimeTextBox" value="T17:45:00" disabled>
+				<input id="time2" name="time2" type="text" data-dojo-type="dijit.form.TimeTextBox" value="T17:45:00"  data-dojo-props='disabled:true' disabled>
 
 				<h2>dijit.form.CurrencyTextBox</h2>
 				<label for="currency1">Enabled:</label>
-				<input id="currency1" type="text" name="income1" value="54775.53"
-					dojoType="dijit.form.CurrencyTextBox"
-					required="true"
-					constraints="{fractional:true}"
-					currency="USD"
-					invalidMessage="Invalid amount.  Include dollar sign, commas, and cents.  Cents are mandatory.">
+				<input id="currency1" type="text" name="income1" value="54775.53" data-dojo-type="dijit.form.CurrencyTextBox"
+					data-dojo-props="
+						required:true, constraints:{ fractional:true }, currency:'USD',
+						value:54775.53,
+						invalidMessage:'Invalid amount.	 Include dollar sign, commas, and cents.  Cents are mandatory.'
+				">
 				<label for="currency2">Disabled:</label>
 				<input id="currency2" type="text" name="income1" value="54775.53"
-					dojoType="dijit.form.CurrencyTextBox"
-					required="true"
-					constraints="{fractional:true}"
-					currency="USD"
-					invalidMessage="Invalid amount.  Include dollar sign, commas, and cents.  Cents are mandatory." disabled>
-
+					data-dojo-type="dijit.form.CurrencyTextBox" data-dojo-props="required:true, constraints:{ fractional:true },
+						currency:'USD', invalidMessage:'Invalid amount.	 Include dollar sign, commas, and cents.  Cents are mandatory.',
+						disabled:true
+				">
+				
 				<hr class="spacer">
 
 				<h2>dijit.form.NumberSpinner max=100</h2>
 				<label for="spinner1">Enabled: </label>
-				<input dojoType="dijit.form.NumberSpinner" constraints="{max:100,places:0}" id="spinner1" value="10">
+				<input data-dojo-type="dijit.form.NumberSpinner" data-dojo-props='constraints:{max:100,places:0}, value:10' id="spinner1">
 				<label for="spinner2">Disabled: </label>
-				<input dojoType="dijit.form.NumberSpinner" constraints="{max:100,places:0}" id="spinner2" value="10" disabled>
+				<input data-dojo-type="dijit.form.NumberSpinner" data-dojo-props='constraints:{max:100,places:0}, value:10, disabled:true' id="spinner2">
 
 			</div>
 
-			<div id="selectTab" dojoType="dijit.layout.ContentPane" title="Select Widgets" style="padding:10px;display:none;">
+			<div id="selectTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Select Widgets', style:'padding:10px;display:none;'">
 
 				<h2>dijit.form.Select</h2>
-				<label for="selectEnabled">Enabled: </label>
-				<div id="selectEnabled" value="AK" dojoType="dijit.form.Select">
-					<span value="AL"><b>Alabama</b></span>
-					<span value="AK"><font color="red">A</font><font color="orange">l</font><font color="yellow">a</font><font color="green">s</font><font color="blue">k</font><font color="purple">a</font></span>
-					<span value="AZ"><i>Arizona</i></span>
-					<span value="AR"><span class="ark">Arkansas</span></span>
-					<span value="CA"><span style="font-size:25%">C</span><span style="font-size:50%">a</span><span style="font-size:75%">l</span><span style="font-size:90%">i</span><span style="font-size:100%">f</span><span style="font-size:125%">o</span><span style="font-size:133%">r</span><span style="font-size:150%">n</span><span style="font-size:175%">i</span><span style="font-size:200%">a</span></span>
-					<span value="NM" disabled="disabled">New<br>&nbsp;&nbsp;Mexico</span>
+				<!-- fixme: <label for=""> but target a form element like input select etc -->
+				<label>Enabled:</label>
+				<div id="selectEnabled" data-dojo-type="dijit.form.Select" data-dojo-props="value:'AK'">
+					<span data-dojo-value="AL"><b>Alabama</b></span>
+					<span data-dojo-value="AK"><span style="color:red">A</span><span style="color:orange">l</span><span style="color:yellow">a</span><span style="color:green">s</span><span style="color:blue">k</span><span style="color:purple">a</span></span>
+					<span data-dojo-value="AZ"><i>Arizona</i></span>
+					<span data-dojo-value="AR"><span class="ark">Arkansas</span></span>
+					<span data-dojo-value="CA"><span style="font-size:25%">C</span><span style="font-size:50%">a</span><span style="font-size:75%">l</span><span style="font-size:90%">i</span><span style="font-size:100%">f</span><span style="font-size:125%">o</span><span style="font-size:133%">r</span><span style="font-size:150%">n</span><span style="font-size:175%">i</span><span style="font-size:200%">a</span></span>
+					<span data-dojo-value="NM">New<br>&nbsp;&nbsp;Mexico</span>
 				</div>
 	
-				<label for="selectDisabled">Disabled: </label>
-				<div id="selectDisabled" value="AK" dojoType="dijit.form.Select" disabled>
-					<span value="AL"><b>Alabama</b></span>
-					<span value="AK"><font color="red">A</font><font color="orange">l</font><font color="yellow">a</font><font color="green">s</font><font color="blue">k</font><font color="purple">a</font></span>
-					<span value="AZ"><i>Arizona</i></span>
-					<span value="AR"><span class="ark">Arkansas</span></span>
-					<span value="CA"><span style="font-size:25%">C</span><span style="font-size:50%">a</span><span style="font-size:75%">l</span><span style="font-size:90%">i</span><span style="font-size:100%">f</span><span style="font-size:125%">o</span><span style="font-size:133%">r</span><span style="font-size:150%">n</span><span style="font-size:175%">i</span><span style="font-size:200%">a</span></span>
-					<span value="NM" disabled="disabled">New<br>&nbsp;&nbsp;Mexico</span>
+				<label>Disabled: </label>
+				<div id="selectDisabled" data-dojo-props="value:'AK', disabled:true" data-dojo-type="dijit.form.Select">
+					<span data-dojo-value="AL"><b>Alabama</b></span>
+					<span data-dojo-value="AK"><span style="color:red">A</span><span style="color:orange">l</span><span style="color:yellow">a</span><span style="color:green">s</span><span style="color:blue">k</span><span style="color:purple">a</span></span>
+					<span data-dojo-value="AZ"><i>Arizona</i></span>
+					<span data-dojo-value="AR"><span class="ark">Arkansas</span></span>
+					<span data-dojo-value="CA"><span style="font-size:25%">C</span><span style="font-size:50%">a</span><span style="font-size:75%">l</span><span style="font-size:90%">i</span><span style="font-size:100%">f</span><span style="font-size:125%">o</span><span style="font-size:133%">r</span><span style="font-size:150%">n</span><span style="font-size:175%">i</span><span style="font-size:200%">a</span></span>
+					<span data-dojo-value="NM">New<br>&nbsp;&nbsp;Mexico</span>
 				</div>
 
 				<hr class="spacer">
 
 				<h2>dijit.form.FilteringSelect</h2>
 				<label for="filteringSelect">Enabled w/placeHolder: </label>
-				<input dojoType="dijit.form.FilteringSelect"
-					placeHolder="State"
-					store="stateStore"
-					searchAttr="name"
-					name="state2"
-					id="filteringSelect"
-				>
-				<label for="filteringSelect2">Disabled w/placeHolder: </label>
-				<input dojoType="dijit.form.FilteringSelect"
-					placeHolder="State"
-					store="stateStore"
-					searchAttr="name"
-					name="state2"
-					id="filteringSelect2"
-					disabled
-				>
-				<label for="filteringSelect3">Disabled w/value: </label>
-				<input dojoType="dijit.form.FilteringSelect"
-					value="California"
-					store="stateStore"
-					searchAttr="name"
-					name="state3"
-					id="filteringSelect3"
-					disabled
-				>
+				<input id="filteringSelect" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props="
+					placeHolder:'State',
+					store:stateStore,
+					searchAttr:'name',
+					name:'state2'
+				">
 
+				<label for="filteringSelect2">Disabled w/placeHolder: </label>
+				<input id="filteringSelect2" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props="
+					disabled:true, store:stateStore, name:'state2', searchAttr:'name'
+				">
+				
+				<label for="filteringSelect3">Disabled w/value: </label>
+				<input id="filteringSelect3" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props="
+					store: stateStore, searchAttr:'name', disabled:true, value:'CA'
+				">
 
 			</div>
 
-			<div id="textareaTab" dojoType="dijit.layout.ContentPane" title="Textarea" style="padding:10px;">
+			<div id="textareaTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Textarea", style:"padding:10px;"'>
 
 				<!--	&#8234; and &#8236; are inserted solely for testing purposes to mark the beginning and end of left-to-right text so that
 					cogniscent browsers don't render garbled punctuation nor exhibit strange home/end key behavior while in right-to-left mode -->
 				<h2>dijit.form.Textarea</h2>
 				<p>Enabled:</p>
-				<textarea dojoType="dijit.form.Textarea" name="areText">This text area will expand and contract as you type &#8234;text.&#8236;
+				<textarea data-dojo-type="dijit.form.Textarea" data-dojo-props='name:"areText"' name="areText">This text area will expand and contract as you type &#8234;text.&#8236;
 
 Lorem ipsum dolor sit &#8234;amet,&#8236;
 consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
@@ -879,7 +785,7 @@ tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo &#8234;conseq
 
 				<br>
 				<p>Disabled:</p>
-				<textarea dojoType="dijit.form.Textarea" name="areText2" disabled>This text
+				<textarea data-dojo-type="dijit.form.Textarea" data-dojo-props="disabled: true">This text
 				area is disabled and you shouldn't be able to type in &#8234;it.&#8236;
 				</textarea>
 
@@ -887,7 +793,7 @@ tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo &#8234;conseq
 				<h2>dijit.form.SimpleTextarea</h2>
 				<p></p>
 				<p>Enabled:</p>
-				<textarea dojoType="dijit.form.SimpleTextarea" name="areText">This text area has a constant height and displays a scrollbar when &#8234;necessary.&#8236;
+				<textarea data-dojo-type="dijit.form.SimpleTextarea">This text area has a constant height and displays a scrollbar when &#8234;necessary.&#8236;
 
 Lorem ipsum dolor sit &#8234;amet,&#8236;
 consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
@@ -900,7 +806,7 @@ nulla &#8234;facilisi.&#8236;
 				</textarea>
 
 				<p>Disabled:</p>
-				<textarea dojoType="dijit.form.SimpleTextarea" name="areText2" disabled>Lorem ipsum dolor sit &#8234;amet,&#8236;
+				<textarea data-dojo-type="dijit.form.SimpleTextarea" data-dojo-props="disabled: true">Lorem ipsum dolor sit &#8234;amet,&#8236;
 				consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
 				dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci
 				tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
@@ -911,7 +817,7 @@ nulla &#8234;facilisi.&#8236;
 				</textarea>
 			</div><!-- end of Textarea tab -->
 
-			<div id="editorTab" dojoType="dijit.layout.ContentPane" title="Editor" style="padding:10px;">
+			<div id="editorTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Editor", style:"padding:10px;"'>
 				<p>Enabled:</p>
 				<!-- FIXME:
 					set height on this node to size the whole editor, but causes the tab to not scroll
@@ -919,14 +825,14 @@ nulla &#8234;facilisi.&#8236;
 					causes editor to become VERY tall, and size to a normal height when selected (like the
 					dijit.form.TextArea in "Form Feel" Tab), but in reverse. refs #3980 and is maybe new bug?
 				-->
-				<div height="175" dojoType="dijit.Editor" extraPlugins="['|', 'createLink', 'fontName']" styleSheets="../../dojo/resources/dojo.css">
+				<div data-dojo-type="dijit.Editor" data-dojo-props="height:175, extraPlugins:['|', 'createLink', 'fontName'], styleSheets:'../themes/claro/document.css'">
 					<ul>
 						<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
 						<li>This is the Editor with a Toolbar attached.</li>
 					</ul>
 				</div>
 				<p>Disabled:</p>
-				<div height="175" dojoType="dijit.Editor" extraPlugins="['|', 'createLink', 'fontName']" styleSheets="../../dojo/resources/dojo.css" disabled="true">
+				<div data-dojo-type="dijit.Editor" data-dojo-props="height:175, extraPlugins:['|', 'createLink', 'fontName'], styleSheets:'../themes/claro/document.css', disabled:true">
 					<ul>
 						<li>Lorem <a href="http://dojotoolkit.org">and a link</a>, what do you think?</li>
 						<li>This is the Editor with a Toolbar attached.</li>
@@ -935,134 +841,102 @@ nulla &#8234;facilisi.&#8236;
 			</div><!-- end of Editor tab -->
 
 
-			<div dojoType="dijit.layout.ContentPane" title="Sliders" style="padding:10px;display:none;">
-
-
+			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Sliders', style:'padding:10px;display:none;'">
+				
 				<!-- Sliders: -->
-
+				
 				<h2>Enabled</h2>
 				<div style="float:right;">
-				<div dojoType="dijit.form.VerticalSlider"
-					onChange="dojo.byId('slider2input').value=arguments[0];"
-					value="10"
-					maximum="100"
-					minimum="0"
-					discreteValues="11"
-					style="height:176px; clear:both;"
-					id="slider2">
-						<ol dojoType="dijit.form.VerticalRuleLabels" container="leftDecoration"style="width:2em;" labelStyle="right:0px;">
+					<div id='slider2' data-dojo-type="dijit.form.VerticalSlider" data-dojo-props="
+						onChange: function(a){ dojo.byId('slider2input').value = a; },
+						value:10, maximum:100, minimum:0, discreetValues:11, style:'height:176px; clear:both'
+					">
+						<ol data-dojo-type="dijit.form.VerticalRuleLabels" data-dojo-props="container:'leftDecoration', style:'width:2em;', labelStyle:'right:0px;'">
 							<li>0
 							<li>100
 						</ol>
 
-						<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;"></div>
-						<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;"></div>
-						<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;" maximum="100" count="6" numericMargin="1" constraints="{pattern:'#'}"></ol>
-				</div>
-				<br> Slider2 Value:<input disabled id="slider2input" size="3" value="10" autocomplete="off">
+						<div data-dojo-type="dijit.form.VerticalRule" data-dojo-props="container:'leftDecoration', style:'width:5px;', count:11"></div>
+						<div data-dojo-type="dijit.form.VerticalRule" data-dojo-props="container:'rightDecoration', style:'width:5px;', count:11"></div>
+						<ol data-dojo-type="dijit.form.VerticalRuleLabels" data-dojo-props="container:'rightDecoration', style:'width:2em;', maximum:100, count:6, numericMargin:1, constraints:{ pattern:'#' }"></ol>
+					</div>
+					<br> Slider2 Value:<input disabled id="slider2input" size="3" value="10" autocomplete="off">
 				</div>
 
-				<div dojoType="dijit.form.HorizontalSlider"
-					onChange="dojo.byId('slider1input').value=dojo.number.format(arguments[0]/100,{places:1,pattern:'#%'});"
-					value="10"
-					maximum="100"
-					minimum="0"
-					showButtons="false"
-					intermediateChanges="true"
-					style="width:50%; height: 20px;"
-					id="horizontal1">
-						<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;" numericMargin="1" count="6"></ol>
-						<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=11 style="height:5px;"></div>
-						<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
-						<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
-							<li>lowest
-							<li>normal
-							<li>highest
-						</ol>
-
+				<div id="horizontal1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props="
+					value:10, maximum:100, minimum:0, showButtons:false, intermediateChanges:true, style:'width:50%; height:20px',
+					onChange: function(a){ dojo.byId('slider1input').value = dojo.number.format(a / 100, { places:1, pattern:'#%' }) }
+				">
+					<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:"height:1.2em;font-size:75%;", numericMargin:1, count:6'></ol>
+					<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"topDecoration", count:11, style:"height:5px;"'></div>
+					<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:5, style:"height:5px;"'></div>
+					<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:"height:1em;font-size:75%;"'>
+						<li>lowest
+						<li>normal
+						<li>highest
+					</ol>
 				</div>
 				<br>Value: <input disabled id="slider1input" size="5" value="10.0%" autocomplete="off">
 
-				<div dojoType="dijit.form.HorizontalSlider"
-					minimum="1"
-					value="2"
-					maximum="3"
-					discreteValues="3"
-					showButtons="false"
-					intermediateChanges="true"
-					style="width:300px; height: 40px;"
-					id="horizontal2">
-						<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=3 style="height:5px;"></div>
-						<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration"style="height:1em;font-size:75%;">
-							<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
-							<li><img width=15 height=15 src="../tests/images/note.gif"><br><span style="font-size: medium">medium</span>
-
-							<li><img width=20 height=20 src="../tests/images/note.gif"><br><span style="font-size: large">large</span>
-						</ol>
+				<div id="horizontal2" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props="
+					minimum:1, value:2, maximum:3, discreteValues:3, showButtons:false, intermediateChanges:true,
+					style:'width:300px; height:40px'
+				">
+					<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:3, style:"height:5px;"'></div>
+					<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:"height:1em;font-size:75%;"'>
+						<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
+						<li><img width=15 height=15 src="../tests/images/note.gif"><br><span style="font-size: medium">medium</span>
+						<li><img width=20 height=20 src="../tests/images/note.gif"><br><span style="font-size: large">large</span>
+					</ol>
 				</div>
 
 				<h2 style="clear:both">Disabled</h2>
 				<div style="float:right;">
-				<div dojoType="dijit.form.VerticalSlider"
-					value="10"
-					maximum="100"
-					minimum="0"
-					discreteValues="11"
-					style="height:175px; clear:both"
-					disabled>
-						<ol dojoType="dijit.form.VerticalRuleLabels" container="leftDecoration"style="width:2em;" labelStyle="right:0px;">
+					<div data-dojo-type="dijit.form.VerticalSlider" data-dojo-props="
+						value:10, maximum:100, minimum:0, discreteValues:11, 
+						style:'height:175px; clear:both', disabled:true
+					">
+						<ol data-dojo-type="dijit.form.VerticalRuleLabels" data-dojo-props='container:"leftDecoration", style:"width:2em;", labelStyle:"right:0px;"'>
 							<li>0
 							<li>100
 						</ol>
 
-						<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;"></div>
-						<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;"></div>
-						<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration"style="width:2em;" maximum="100" count="6" numericMargin="1" constraints="{pattern:'#'}"></ol>
+						<div data-dojo-type="dijit.form.VerticalRule" data-dojo-props='container:"leftDecoration", count:11, style:"width:5px;"'></div>
+						<div data-dojo-type="dijit.form.VerticalRule" data-dojo-props='container:"rightDecoration", count:11, style:"width:5px;"'></div>
+						<ol data-dojo-type="dijit.form.VerticalRuleLabels" data-dojo-props='container:"rightDecoration", style:"width:2em;", maximum:100, count:6, numericMargin:1, constraints:{ pattern:"#"}'></ol>
+					</div>
 				</div>
-				</div>
-				<div dojoType="dijit.form.HorizontalSlider"
-					value="10"
-					maximum="100"
-					minimum="0"
-					showButtons="false"
-					intermediateChanges="true"
-					style="width:50%; height: 20px;"
-					disabled>
-						<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;" numericMargin="1" count="6"></ol>
-						<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=11 style="height:5px;"></div>
-						<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
-						<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
-							<li>lowest
-							<li>normal
-							<li>highest
-						</ol>
-
+				
+				<div data-dojo-type="dijit.form.HorizontalSlider" id="hs-1width" data-dojo-props="
+					value:10, maximum:100, minimum:0, showButtons:false, intermediateChanges:true, disabled:true
+				">
+					<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:"height:1.2em;font-size:75%;", numericMargin:1, count:6'></ol>
+					<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"topDecoration", count:11, style:"height:5px;"'></div>
+					<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:5, style:"height:5px;"'></div>
+					<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:"height:1em;font-size:75%;"'>
+						<li>lowest
+						<li>normal
+						<li>highest
+					</ol>
 				</div>
 
-				<div dojoType="dijit.form.HorizontalSlider"
-					minimum="1"
-					value="2"
-					maximum="3"
-					discreteValues="3"
-					showButtons="false"
-					intermediateChanges="true"
-					style="width:300px; height: 40px;"
-					disabled>
-						<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=3 style="height:5px;"></div>
-						<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration"style="height:1em;font-size:75%;">
-							<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
-							<li><img width=15 height=15 src="../tests/images/note.gif"><br><span style="font-size: medium">medium</span>
-							<li><img width=20 height=20 src="../tests/images/note.gif"><br><span style="font-size: large">large</span>
-						</ol>
+				<div data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props="
+					minimum:1, value:2, maximum:3, discreteValues:3, showButtons:false, intermediateChanges:true,
+					style:'width:300px; height:40px', disabled:true
+				">
+					<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:3, style:"height:5px;"'></div>
+					<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:"height:1em;font-size:75%;"'>
+						<li><img width=10 height=10 src="../tests/images/note.gif"><br><span style="font-size: small">small</span>
+						<li><img width=15 height=15 src="../tests/images/note.gif"><br><span style="font-size: medium">medium</span>
+						<li><img width=20 height=20 src="../tests/images/note.gif"><br><span style="font-size: large">large</span>
+					</ol>
 				</div>
 			</div>
 
-			<div id="variousTab" dojoType="dijit.layout.ContentPane" title="Various Dijits"
-				style="padding:10px; display:none;">
-
+			<div id="variousTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Various Dijits", style:"padding:10px; display:none;"'>
 
 				<h2>TitlePane</h2>
-				<div dojoType="dijit.TitlePane" title="my pane" width="275">
+				<div data-dojo-type="dijit.TitlePane" data-dojo-props="title:'my pane', width:275">
 					<p>This is a title pane.  It can be expanded and collapsed.</p>
 
 					<p>Sed sollicitudin suscipit risus. Nam
@@ -1075,21 +949,19 @@ nulla &#8234;facilisi.&#8236;
 				<hr class="spacer">
 
 				<h2>ProgressBar</h2>
-				<div style="width:400px;" maximum="200" id="setTestBar"
-					progress="20" dojoType="dijit.ProgressBar"></div>
+				<div data-dojo-props="maximum:200, value:20" id="setTestBar" data-dojo-type="dijit.ProgressBar"></div>
 
 				Indeterminate:
-				<div style="width:400px;" indeterminate="true" dojoType="dijit.ProgressBar"></div>
+				<div id="indTestBar" data-dojo-props="indeterminate:true" data-dojo-type="dijit.ProgressBar"></div>
 
 			</div><!-- end:various dijits upper tab -->
 
-			<div id="InlineEditBoxTab" dojoType="dijit.layout.ContentPane" title="InlineEditBox"
-				style="padding:10px; display:none;">
+			<div id="InlineEditBoxTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"InlineEditBox", style:"padding:10px;"'>
 
 				<h2 class="testTitle">dijit.InlineEditBox + dijit.form.TextBox on &lt;h3&gt;</h2>
 
 				(HTML before)
-				<h3 id="editable" style="font-size:larger;" dojoType="dijit.InlineEditBox" onChange="myHandler(this.id,arguments[0])">
+				<h3 id="editable" style="font-size:larger;" data-dojo-type="dijit.InlineEditBox">
 					Edit me - I trigger the onChange callback
 				</h3>
 				(HTML after)
@@ -1099,16 +971,16 @@ nulla &#8234;facilisi.&#8236;
 				<h2>dijit.InlineEditBox + dijit.form.Textarea</h2>
 
 				(HTML before)
-				<p id="areaEditable" dojoType="dijit.InlineEditBox" editor="dijit.form.Textarea" autoSave="false">
+				<p id="areaEditable" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor: dijit.form.Textarea, autoSave:false'>
 					I'm one big &#8234;paragraph.&#8236;  Go ahead and edit &#8234;me.&#8236;  I dare &#8234;you.&#8236;
-					The quick brown fox jumped over the lazy &#8234;dog.&#8236;  Blah blah blah blah blah blah &#8234;blah ...&#8236;
+					The quick brown fox jumped over the lazy &#8234;dog.&#8236;	 Blah blah blah blah blah blah &#8234;blah ...&#8236;
 				</p>
 				(HTML after)
 
 				<p>
 					These links will
-					<a href="#" onClick="dijit.byId('areaEditable').set('disabled', true)">disable</a> /
-					<a href="#" onClick="dijit.byId('areaEditable').set('disabled', false)">enable</a>
+					<a href="#" onclick="dijit.byId('areaEditable').set('disabled', true)">disable</a> /
+					<a href="#" onclick="dijit.byId('areaEditable').set('disabled', false)">enable</a>
 					the text area above.
 				</p>
 
@@ -1118,7 +990,7 @@ nulla &#8234;facilisi.&#8236;
 
 				(HTML inline before)
 				<!-- set programmatically to match locale; a server might generate this content also. -->
-				<span id="backgroundArea" dojoType="dijit.InlineEditBox" editor="dijit.form.DateTextBox" width="170px"></span>
+				<span id="backgroundArea" data-dojo-type="dijit.InlineEditBox" data-dojo-props="editor: dijit.form.DateTextBox, width:'170px'"></span>
 				(HTML after)
 				<hr class="spacer">
 
@@ -1126,7 +998,7 @@ nulla &#8234;facilisi.&#8236;
 
 				(HTML inline before)
 				<!-- set programmatically to match locale; a server might generate this content also. -->
-				<span id="timePicker" dojoType="dijit.InlineEditBox" editor="dijit.form.TimeTextBox" width="150px"></span>
+				<span id="timePicker" data-dojo-type="dijit.InlineEditBox" data-dojo-props='editor:dijit.form.TimeTextBox, width:"150px"'></span>
 				(HTML after)
 
 				<hr class="spacer">
@@ -1134,20 +1006,19 @@ nulla &#8234;facilisi.&#8236;
 
 				<h2>dijit.form.FilteringSelect + Inline + remote data store</h2>
 				(HTML inline before)
-				<span id="backgroundArea2" dojoType="dijit.InlineEditBox" editor="dijit.form.FilteringSelect"
-					editorParams="{store: stateStore, autoComplete: true, promptMessage: 'Please enter a state'}"
-					width="300px">
-					Indiana
-				</span>
+				<span id="backgroundArea2" data-dojo-type="dijit.InlineEditBox" data-dojo-props='
+					editor: dijit.form.FilteringSelect,
+					editorParams:{ store: stateStore, autoComplete: true, promptMessage: "Please enter a state"},
+					width:"300px"
+				'>Indiana</span>
 				(HTML after)
 
 			</div><!-- end InlineEditBox tab -->
 
-			<div id="dndTab" dojoType="dijit.layout.ContentPane" title="DnD"
-				style="padding:10px; display:none;">
+			<div id="dndTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"DnD", style:"padding:10px; display:none;"'>
 				<div style="float:left; margin:5px;">
 					<h3>Source 1</h3>
-					<div dojoType="dojo.dnd.Source" style="border:3px solid #ccc; padding: 1em 3em; ">
+					<div data-dojo-type="dojo.dnd.Source" style="border:3px solid #ccc; padding: 1em 3em; ">
 						<div class="dojoDndItem">Item <strong>X</strong></div>
 						<div class="dojoDndItem">Item <strong>Y</strong></div>
 						<div class="dojoDndItem">Item <strong>Z</strong></div>
@@ -1155,7 +1026,7 @@ nulla &#8234;facilisi.&#8236;
 				</div>
 				<div style="float:left; margin:5px; ">
 					<h3>Source 2</h3>
-					<div dojoType="dojo.dnd.Source" style="border:3px solid #ccc; padding: 1em 3em; ">
+					<div data-dojo-type="dojo.dnd.Source" style="border:3px solid #ccc; padding: 1em 3em; ">
 						<div class="dojoDndItem">Item <strong>1</strong></div>
 						<div class="dojoDndItem">Item <strong>2</strong></div>
 						<div class="dojoDndItem">Item <strong>3</strong></div>
@@ -1163,18 +1034,31 @@ nulla &#8234;facilisi.&#8236;
 				</div>
 			</div><!-- end DnD tab -->
 
-			<div id="closableTab" dojoType="dijit.layout.ContentPane" title="Closable"
-				style="display:none; padding:10px; " closable="true">
+			<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="closable:true, title:'Nested TabContainer', nested:true" id="inlined">
+				<a data-dojo-type="dijit.layout.LinkPane" id="tab1href" data-dojo-props="href:'../tests/layout/tab1.html', onLoad:function(){ console.log('load of SubTab 1'); }">SubTab 1</a>
+				<a data-dojo-type="dijit.layout.LinkPane" id="tab2href" data-dojo-props="href:'../tests/layout/tab2.html', onLoad:function(){ console.log('load of SubTab 2'); }, selected:true">SubTab 2</a>
+				<div data-dojo-type="dijit.layout.ContentPane" id="subtab3" data-dojo-props='title:"SubTab 3"'>
+					<h1>I am tab 3, inlined.</h1>
+				</div>
+				<div data-dojo-type="dijit.layout.ContentPane" id="subtab4" data-dojo-props='title:"SubTab 4"'>
+					<h1>I am tab 4, inlined.</h1>
+				</div>
+			</div>
+
+			<div id="closableTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Closable", 
+				style:"display:none; padding:10px;", closable:true'>
 				This pane is closable, just for the icon ...
 			</div>
 		</div><!-- end of region="center" TabContainer -->
 
 		<!-- bottom right tabs -->
-		<div dojoType="dijit.layout.TabContainer" id="bottomTabs"
-			tabPosition="bottom" selectedChild="btab1" region="bottom" splitter="true" tabStrip="true">
-
+		<div data-dojo-type="dijit.layout.TabContainer" id="bottomTabs"
+			data-dojo-props="
+				tabPosition:'bottom', selectedchild:'btab1', region:'bottom',
+				splitter:true, tabStrip:true
+			">
 			<!-- btab 1 -->
-			<div id="btab1" dojoType="dijit.layout.ContentPane" title="Info" style=" padding:10px; ">
+			<div id="btab1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Info", style:" padding:10px; "'>
 				<p>You can explore this single page after applying a Theme
 				for use in creation of your own theme.</p>
 
@@ -1184,13 +1068,13 @@ nulla &#8234;facilisi.&#8236;
 				<p>There is a right-click [context] pop-up menu here, as well.</p>
 			</div><!-- end:info btab1 -->
 
-			<div id="btab2" dojoType="dijit.layout.ContentPane" title="Alternate Themes" style="padding:20px;">
+			<div id="btab2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Alternate Themes", style:"padding:20px;"'>
 				<span id="themeData"></span>
 			</div><!-- btab2 -->
 
-			<div id="btab3" dojoType="dijit.layout.ContentPane" title="Bottom 3" closable="true">
+			<div id="btab3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Bottom 3", closable:true'>
 				<p>I am the last Tab</p>
-				<div id="dialog2" dojoType="dijit.Dialog" title="Encased Dialog" style="display:none;">
+				<div id="dialog2" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Encased Dialog", style:"display:none;"'>
 				I am the second dialog. I am
 				parented by the Low Tab Pane #3
 				</div>
@@ -1201,32 +1085,33 @@ nulla &#8234;facilisi.&#8236;
 	</div><!-- end of BorderContainer -->
 
 	<!-- dialog in body -->
-	<div id="dialog1" dojoType="dijit.Dialog"
-		title="Floating Modal Dialog from href" style="display:none; width: 400px;"
-		href="../tests/layout/getResponse.php?delay=3000&messId=3" refreshOnShow="true"></div>
-	<div id="dialogAB" dojoType="dijit.Dialog"
-		title="Floating Modal Dialog" style="display:none;">
+	<div id="dialog1" data-dojo-type="dijit.Dialog" style="display:none;" data-dojo-props="
+		title:'Floating Modal Dialog from href',
+		href:'../tests/layout/getResponse.php?delay=3000&amp;messId=3',
+		style: 'width: 400px;',
+		refreshOnShow:true
+	"></div>
+	<div id="dialogAB" data-dojo-type="dijit.Dialog" data-dojo-props="title:'Floating Modal Dialog'" style="display:none;">
 		<div class="dijitDialogPaneContentArea">
 			<table>
 				<tr>
 					<td><label for="name">Name: </label></td>
-					<td><input dojoType=dijit.form.TextBox type="text" name="name" id="name"></td>
+					<td><input data-dojo-type="dijit.form.TextBox" type="text" name="name" id="name"></td>
 				</tr>
 				<tr>
 					<td><label for="loc">Location: </label></td>
-					<td><input dojoType=dijit.form.TextBox type="text" name="loc" id="loc"></td>
+					<td><input data-dojo-type="dijit.form.TextBox" type="text" name="loc" id="loc"></td>
 				</tr>
 				<tr>
 					<td><label for="date">Date: </label></td>
-					<td><input dojoType=dijit.form.DateTextBox type="text" name="date" id="date"></td>
+					<td><input data-dojo-type="dijit.form.DateTextBox" type="text" name="date" id="date"></td>
 				</tr>
 			</table>
 		</div>
 		
-		
 		<div class="dijitDialogPaneActionBar">
-			<button dojoType="dijit.form.Button" type="submit" id="ABdialog1button1">OK</button>
-			<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('dialogAB').onCancel();" 
+			<button data-dojo-type="dijit.form.Button" type="submit" id="ABdialog1button1">OK</button>
+			<button data-dojo-type="dijit.form.Button" type="button" data-dojo-props="onClick:function(){ dijit.byId('dialogAB').onCancel(); }" 
 					id="ABdialog1button2">Cancel</button>
 		</div>
 	</div>

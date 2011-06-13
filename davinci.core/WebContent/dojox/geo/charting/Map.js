@@ -9,7 +9,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 	//	summary:
 	//		Map widget interacted with charting.
 	//	description:
-	//		Support rendering Americas, AsiaPacific, ContinentalEurope, EuropeMiddleEastAfrica, 
+	//		Support rendering Americas, AsiaPacific, ContinentalEurope, EuropeMiddleEastAfrica,
 	//		USStates, WorldCountries, and WorldCountriesMercator by default.
 	//	example:
 	//	|	var usaMap = new dojox.geo.charting.Map(srcNode, "dojotoolkit/dojox/geo/charting/resources/data/USStates.json");
@@ -29,7 +29,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 		//		map container html node/id
 		//	shapeFile:
 		//		map shape data url, handled as json style
-		//		data format: 
+		//		data format:
 		
 		// get map container coords
 		dojo.style(container, "display", "block");
@@ -56,7 +56,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 	},
 	setMarkerData: function(/*String*/ markerFile){
 		//	summary:
-		//		import markers from outside file, associate with map feature by feature id 
+		//		import markers from outside file, associate with map feature by feature id
 		//		which identified in map shape file, e.g: "NY":"New York"
 		//	markerFile:
 		//		outside marker data url, handled as json style.
@@ -100,7 +100,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 			y:shapeData.layerExtent[1]
 		};
 		this.mapObj.setTransform([
-			dojox.gfx.matrix.scale(this.mapObj.scale), 
+			dojox.gfx.matrix.scale(this.mapObj.scale),
 			dojox.gfx.matrix.translate(-shapeData.layerExtent[0], -shapeData.layerExtent[1])
 		]);
 

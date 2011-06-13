@@ -31,14 +31,7 @@
          unpack="false"/>
 
    <plugin
-         id="davinci.dojo_1_5"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="davinci.yui_2_6_0"
+         id="davinci.dojo_1_6"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -72,19 +65,7 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="javax.activation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
-   <plugin
-         id="javax.mail"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
          
    <plugin
          id="org.eclipse.core.runtime"

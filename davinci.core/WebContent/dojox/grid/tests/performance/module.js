@@ -10,12 +10,12 @@ try{
 		dojo.forEach(layouts, function(l){
 			dojo.forEach(selectors, function(s){
 				// 5-minute timeout on each of these - since they can take quite a while...
-				doh.registerUrl("Grid Creation - " + r + " Rows, " + l + " Layout" + (s ? "w/ selector" : ""), 
-					dojo.moduleUrl("dojox.grid.tests.performance", "creation.html") + 
+				doh.registerUrl("Grid Creation - " + r + " Rows, " + l + " Layout" + (s ? "w/ selector" : ""),
+					dojo.moduleUrl("dojox.grid.tests.performance", "creation.html") +
 									"?rows=" + r + "&layout=" + l.toLowerCase() + "&rowSelector=" + s,
 					300000);
-				doh.registerUrl("Grid dojo.data Notification - " + r + " Rows, " + l + " Layout" + (s ? "w/ selector" : ""), 
-					dojo.moduleUrl("dojox.grid.tests.performance", "dataNotification.html") + 
+				doh.registerUrl("Grid dojo.data Notification - " + r + " Rows, " + l + " Layout" + (s ? "w/ selector" : ""),
+					dojo.moduleUrl("dojox.grid.tests.performance", "dataNotification.html") +
 									"?rows=" + r + "&layout=" + l.toLowerCase() + "&rowSelector=" + s,
 					300000);
 			});

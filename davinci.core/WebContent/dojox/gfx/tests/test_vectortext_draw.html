@@ -6,20 +6,19 @@
 			@import "../../../dojo/resources/dojo.css";
 			@import "../../../dijit/tests/css/dijitTests.css";
 		</style>
-		<script type="text/javascript" src="../../../dojo/dojo.js" 
-			djConfig="isDebug: true, gfxRenderer: 'svg,vml,silverlight,canvas'"></script>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
 		<script type="text/javascript">
 			dojo.require("dojox.gfx");
 			dojo.require("dojox.gfx.fx");
 			dojo.require("dojox.gfx.VectorText");
 
 			var bg="#181818", fill="#a36e2c";
-			dojo.addOnLoad(function(){
+			
+			function makeShapes(surface){
 				var url = dojo.moduleUrl("dojox", "gfx/resources/Gillius.svg");
 				var f = new dojox.gfx.VectorFont(url);
 
 				//	draw out the glyphs for testing.
-				var surface = dojox.gfx.createSurface("test", 600, 400);
 				var rect = surface.createRect({ x: 0, y: 0, width: 600, height: 400 })
 					.setFill(bg);
 
@@ -46,7 +45,14 @@
 						{ name: "scale", start: [0.1, 0.1], end:[1, 1 ] } 
 					]
 				}).play();
-			});
+			}
+			
+			function createSurface(){
+				var surface = dojox.gfx.createSurface("test", 600, 400);
+				surface.whenLoaded(makeShapes);
+			}
+
+			dojo.ready(createSurface);
 		</script>
 	</head>
 	<body>

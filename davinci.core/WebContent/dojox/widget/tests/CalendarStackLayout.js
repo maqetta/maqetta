@@ -38,8 +38,8 @@ dojo.declare("dojox.widget.tests.CalendarStackLayout", [dijit._Widget, dijit._Co
 
 		function getChildByDate(date){
 			return _this.dateToPane[
-				date.getFullYear() 
-				+  "-" + dojo.string.pad(String(date.getMonth() + 1), 2) 
+				date.getFullYear()
+				+  "-" + dojo.string.pad(String(date.getMonth() + 1), 2)
 				+ "-" + dojo.string.pad(String(date.getDate()))];
 		}
 

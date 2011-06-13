@@ -28,7 +28,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 		//Initialize the params to calculate offset
   		this.isOffset = (params.isOffset)?true:false;
   		this.offsetDrag = (params.offsetDrag) ? params.offsetDrag : {x:0,y:0};
-		this.hideSource = params.hideSource ? params.hideSource : true;  
+		this.hideSource = params.hideSource ? params.hideSource : true;
 		this._drop = this.dropIndicator.create();
 		
 	},
@@ -54,20 +54,20 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 		if(!this.withHandles){ return true; }
 		for(var node = (e.target); node && node != this.node; node = node.parentNode){
 			if(dojo.hasClass(node, this.defaultHandleClass)){
-				return true;	
+				return true;
 			}
 		}
 		return false;	// Boolean
 	},
 	
 	setDndItemSelectable: function(/*Node*/node, /*Boolean*/isSelectable) {
-		// summary: set an item as selectable	
+		// summary: set an item as selectable
 		for(var _node = node; _node && node != this.node; _node = _node.parentNode) {
 			if (dojo.hasClass(_node,"dojoDndItem")) {
 				dojo.setSelectable(_node, isSelectable);
 				return;
 			}
-		}	
+		}
 	},
 	
 	getDraggedWidget: function(/*Node*/node) {
@@ -80,7 +80,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 	
 	isAccepted: function(/*Node*/ node) {
-		// summary: test if this node can be accepted	
+		// summary: test if this node can be accepted
 		var _dndType = (node) ? node.getAttribute("dndtype") : null;
 		return (_dndType && _dndType in this.accept);
 	},
@@ -109,7 +109,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 
 	onDndCancel:function(){
-		// summary: Called to cancel the DnD operation.	
+		// summary: Called to cancel the DnD operation.
 		var m = dojo.dnd.manager();
 		if(m.source == this && this.hideSource){
 			var nodes = this.getSelectedNodes();
@@ -122,12 +122,12 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 	
 	onDndDrop: function(source,nodes,copy,target) {
-		// summary: Called to finish the DnD operation	
+		// summary: Called to finish the DnD operation
 		try{
-			if(!this.isAccepted(nodes[0])){ 
+			if(!this.isAccepted(nodes[0])){
 				this.onDndCancel();
 			}else{
-				if(source == this && this._over && this.dropObject){ 
+				if(source == this && this._over && this.dropObject){
 					this.current = this.dropObject.c;
 				}
 				dojox.layout.dnd.PlottedDnd.superclass.onDndDrop.call(this, source, nodes, copy, target);
@@ -139,7 +139,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 			
 	onMouseDown: function(/*Event*/e) {
-		// summary: Event processor for onmousedown.	
+		// summary: Event processor for onmousedown.
 		if(this.current == null){
 			this.selection = {};
 		}else{
@@ -165,7 +165,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 					this.offsetDrag.x = coords.x - e.pageX;
 					this.offsetDrag.y = coords.y - e.clientY;
 				}
-				if(this.offsetDrag.y < 16 && this.current != null){ 
+				if(this.offsetDrag.y < 16 && this.current != null){
 					this.offsetDrag.y = this.GC_OFFSET_Y;
 				}
 
@@ -179,13 +179,13 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 			}
 		}
 		
-		if(dojo.dnd.isFormElement(e)){ 
+		if(dojo.dnd.isFormElement(e)){
 			this.setDndItemSelectable(e.target,true);
 		}else{
 			this.containerSource = true;
 			var _draggedWidget = this.getDraggedWidget(e.target);
 			if(_draggedWidget && _draggedWidget.dragRestriction){
-			// FIXME: not clear what this was supposed to mean ... this code needs more cleanups. 
+			// FIXME: not clear what this was supposed to mean ... this code needs more cleanups.
 			//	dragRestriction = true;
 			}else{
 				dojox.layout.dnd.PlottedDnd.superclass.onMouseDown.call(this,e);
@@ -194,7 +194,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 
 	onMouseUp: function(/*Event*/e) {
-		// summary: Event processor for onmouseup.	
+		// summary: Event processor for onmouseup.
 		dojox.layout.dnd.PlottedDnd.superclass.onMouseUp.call(this,e);
 		this.containerSource = false;
 		if (!dojo.isIE && this.mouseDown){
@@ -206,7 +206,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 	
 	onMouseMove: function(e) {
-		// summary: Event processor for onmousemove	
+		// summary: Event processor for onmousemove
 		var m = dojo.dnd.manager();
 		if(this.isDragging) {
 			var before = false;
@@ -231,14 +231,14 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 				}
 			}
 
-			if(this.allowAutoScroll){ 
+			if(this.allowAutoScroll){
 				this._stopAutoScroll();
 			}
-		}		
+		}
 	},
 	
 	_markTargetAnchor: function(/*Boolean*/before){
-		// summary: Assigns a class to the current target anchor based on "before" status	
+		// summary: Assigns a class to the current target anchor based on "before" status
 		if(this.current == this.targetAnchor && this.before == before){ return; }
 		this.targetAnchor = this.current;
 		this.targetBox = null;
@@ -246,7 +246,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 	
 	_unmarkTargetAnchor: function(){
-		// summary: Removes a class of the current target anchor based on "before" status.	
+		// summary: Removes a class of the current target anchor based on "before" status.
 		if(!this.targetAnchor){ return; }
 		this.targetAnchor = null;
 		this.targetBox = null;
@@ -264,10 +264,10 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 					h: this.current.offsetHeight / 2
 				};
 			}
-			before = this.horizontal ? 
+			before = this.horizontal ?
 				(e.pageX - this.current.coords.xy.x) < this.current.coords.w :
 				(e.pageY - this.current.coords.xy.y) < this.current.coords.h
-			this.insertDashedZone(before);	
+			this.insertDashedZone(before);
 		}else{
 			if(!this.dropObject /*|| dojo.isIE*/){ this.insertDashedZone(false); }
 		}
@@ -304,10 +304,10 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 	
 	insertDashedZone: function(/*Boolean*/before) {
-		// summary: Insert the dashed zone at the right place 
+		// summary: Insert the dashed zone at the right place
 		if(this.dropObject){
-			if( before == this.dropObject.b && 
-				((this.current && this.dropObject.c == this.current.id) || 
+			if( before == this.dropObject.b &&
+				((this.current && this.dropObject.c == this.current.id) ||
 				(!this.current && !this.dropObject.c))
 			){
 				return;
@@ -327,14 +327,14 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 			}else{
 				this.firstIndicator = false;
 			}
-		}else{ 
+		}else{
 			this.node.appendChild(this._drop);
 		}
 		this._drop.style.display = "";
 	},
 	
 	insertNodes: function(/*Boolean*/addSelected, /*Array*/data, /*Boolean*/before, /*Node*/anchor){
-		// summary: Inserts new data items (see Dojo Container's insertNodes method for details).	
+		// summary: Inserts new data items (see Dojo Container's insertNodes method for details).
 		if(this.dropObject){
 			dojo.style(this.dropObject.n,"display","none");
 			dojox.layout.dnd.PlottedDnd.superclass.insertNodes.call(this,true,data,true,this.dropObject.n);
@@ -355,7 +355,7 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 			clearTimeout(this._timer);
 		}
 		this._stopAutoScroll();
-		var node = this.dom, 
+		var node = this.dom,
 			y = this._sumAncestorProperties(node,"offsetTop")
 		;
 		//Down
@@ -422,16 +422,16 @@ dojox.layout.dnd._setGcDndHandle = function(service,withHandles,handleClasses, f
 				_hasHandle = true;
 				if(handleClasses[i] != cls){
 					var _gripNode = dojo.query("." + cls, service.domNode);
-					if(_gripNode.length == 0){ 
+					if(_gripNode.length == 0){
 						dojo.removeClass(service.domNode, cls);
-					}else{				
+					}else{
 						_gripNode.removeClass(cls);
 					}
 					dojo.addClass(_node, cls);
 				}
 			}
 		}
-		if(!_hasHandle){ 
+		if(!_hasHandle){
 			dojo.addClass(service.domNode, cls);
 		}
 	}

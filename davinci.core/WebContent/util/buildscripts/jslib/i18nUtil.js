@@ -64,7 +64,7 @@ i18nUtil.flattenLayerFileBundles = function(/*String*/fileName, /*String*/fileCo
 	};
 	
 	var requireStatements = fileContents.match(/dojo\.requireLocalization\(.*\)\;/g);
-	if(requireStatements){	
+	if(requireStatements){
 		eval(requireStatements.join(";"));
 
 		//print("loaded bundles: "+djLoadedBundles.length);
@@ -170,7 +170,7 @@ i18nUtil.flattenDirBundles = function(/*String*/prefixName, /*String*/prefixDir,
 		
 		//Files in nls directories, except for layer bundles that already have been processed.
 		if(jsFileName.match(/\/nls\//) && !jsFileName.match(nlsIgnoreRegExp)){
-			fileContents = "(" + i18nUtil.makeFlatBundleContents(prefixName, prefixDir, jsFileName) + ")";			
+			fileContents = "(" + i18nUtil.makeFlatBundleContents(prefixName, prefixDir, jsFileName) + ")";
 		}else{
 			fileContents = i18nUtil.modifyRequireLocalization(readText(jsFileName), prefixes);
 		}
@@ -217,9 +217,9 @@ i18nUtil.modifyRequireLocalization = function(/*String*/fileContents, /*Array*/p
 					replacement = "dojo." + depCall + "(" + depArgs + ")";
 				}
 			}
-			return replacement;		
+			return replacement;
 		});
-	}	
+	}
 	return modifiedContents;
 }
 
@@ -320,7 +320,7 @@ i18nUtil.getBundlePartsFromFileName = function(prefix, prefixPath, srcFileName){
 		var bundleName = parts[i+1];
 	}else{
 		var localeName = parts[i+1];
-		var bundleName = parts[i+2];	
+		var bundleName = parts[i+2];
 	}
 
 	if(!bundleName || bundleName.indexOf(".js") == -1){

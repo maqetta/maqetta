@@ -1,6 +1,4 @@
-dojo.provide("dijit.layout.AccordionPane");
-
-dojo.require("dijit.layout.ContentPane");
+define("dijit/layout/AccordionPane", ["dojo", "dijit", "dijit/layout/ContentPane"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.AccordionPane", dijit.layout.ContentPane, {
 	// summary:
@@ -16,4 +14,8 @@ dojo.declare("dijit.layout.AccordionPane", dijit.layout.ContentPane, {
 		// summary:
 		//		called when this pane is selected
 	}
+});
+
+
+return dijit.layout.AccordionPane;
 });

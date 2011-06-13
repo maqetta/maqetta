@@ -1,12 +1,12 @@
 dojo.provide("dojox.html.tests.entities");
 dojo.require("dojox.html.entities");
 
-doh.register("dojox.html.tests.entities", 
+doh.register("dojox.html.tests.entities",
 	[
 		{
 			name: "Encode:  Basic HTML Entities",
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of basic encoding of characters considered HTML entities
 				//	description:
 				//		Simple test of basic encoding of characters considered HTML entities
@@ -19,7 +19,7 @@ doh.register("dojox.html.tests.entities",
 		{
 			name: "Decode:  Basic HTML Entities",
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of basic encoding of characters considered HTML entities
 				//	description:
 				//		Simple test of basic encoding of characters considered HTML entities
@@ -32,7 +32,7 @@ doh.register("dojox.html.tests.entities",
 		{
 			name: "Encode:  Basic Latin Entities",
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of basic encoding of characters considered Latin type entities
 				//	description:
 				//		Simple test of basic encoding of characters considered Latin type entities
@@ -51,7 +51,7 @@ doh.register("dojox.html.tests.entities",
 		{
 			name: "Decode:  Basic Latin Entities",
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of basic decoding of characters considered Latin type entities
 				//	description:
 				//		Simple test of basic decoding of characters considered Latin type entities
@@ -70,7 +70,7 @@ doh.register("dojox.html.tests.entities",
 		{
 			name: "Encode:  Custom entity map",
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of basic encoding using a custom map instead of the default ones.
 				//	description:
 				//		Simple test of basic encoding using a custom map instead of the default ones.
@@ -83,7 +83,7 @@ doh.register("dojox.html.tests.entities",
 		{
 			name: "Decode:  Custom entity map",
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of basic decoding using a custom map instead of the default ones.
 				//	description:
 				//		Simple test of basic decoding using a custom map instead of the default ones.

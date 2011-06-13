@@ -5,14 +5,22 @@ dojo.provide("davinci.theme.ThemeUtils");
 davinci.theme.CloneTheme = function(name, version, selector, directory, originalTheme, renameFiles){
 	
 	var fileBase = originalTheme.file.parent;
+	var themeRootPath = new davinci.model.Path(directory).removeLastSegments(0);
+	var resource = davinci.model.Resource.findResource(themeRootPath.toString());
+	if(resource.libraryId)
+		resource.createResource();
 	davinci.model.Resource.copy(fileBase, directory, true);
+	var themeRoot = davinci.model.Resource.findResource(directory);
 	var fileName = originalTheme.file.getName();
 	/* remove the copied theme */
+	
 	
 	var badTheme = davinci.model.Resource.findResource(directory + "/" + fileName);
 	badTheme.deleteResource();
 	
-	var themeRoot = davinci.model.Resource.findResource(directory);
+	
+	
+	
 	var directoryPath = new davinci.model.Path(themeRoot.getPath());
 	var lastSeg = directoryPath.lastSegment();
 	/* create the .theme file */

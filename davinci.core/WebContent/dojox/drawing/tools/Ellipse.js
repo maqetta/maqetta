@@ -70,7 +70,7 @@ dojox.drawing.tools.Ellipse = dojox.drawing.util.oo.declare(
 
 dojox.drawing.tools.Ellipse.setup = {
 	// summary: See stencil._Base ToolsSetup
-	//	
+	//
 	name:"dojox.drawing.tools.Ellipse",
 	tooltip:"Ellipse Tool",
 	iconClass:"iconEllipse"

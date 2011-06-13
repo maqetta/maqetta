@@ -9,135 +9,139 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 
-import javax.naming.InsufficientResourcesException;
-
 public class VEmptyFile implements IVResource {
 
-	String virtualPath;
-	boolean directory; 
-	
-	
-	public VEmptyFile(String path, boolean directory){
-		this.virtualPath = path;
-		this.directory = directory;
-	}
-	
-	public void createNewInstance() throws IOException {
-		// TODO Auto-generated method stub
+    String  virtualPath;
+    boolean directory;
 
-	}
+    public VEmptyFile(String path, boolean directory) {
+        this.virtualPath = path;
+        this.directory = directory;
+    }
 
-	public boolean delete() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public void createNewInstance() throws IOException {
+        // TODO Auto-generated method stub
 
-	public boolean exists() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-	public IVResource find(String path) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public boolean delete() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public void flushWorkingCopy() {
-		// TODO Auto-generated method stub
+    public boolean exists() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	}
+    public IVResource[] find(String path) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
+    public void flushWorkingCopy() {
+        // TODO Auto-generated method stub
 
-	public InputStream getInputStreem() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
 
-	public String getName() {
-		// TODO Auto-generated method stub
-		return virtualPath;
-	}
+    public InputStream getInputStreem() throws IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public OutputStream getOutputStreem() throws FileNotFoundException,
-			IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getName() {
+        // TODO Auto-generated method stub
+        return virtualPath;
+    }
 
-	public IVResource getParent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public OutputStream getOutputStreem() throws FileNotFoundException, IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public IVResource[] getParents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public IVResource getParent() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public String getPath() {
-		// TODO Auto-generated method stub
-		return virtualPath;
-	}
+    public IVResource[] getParents() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public URI getURI() throws URISyntaxException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getPath() {
+        // TODO Auto-generated method stub
+        return virtualPath;
+    }
 
-	public boolean isDirectory() {
-		// TODO Auto-generated method stub
-		return this.directory;
-	}
+    public URI getURI() throws URISyntaxException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean isDirectory() {
+        // TODO Auto-generated method stub
+        return this.directory;
+    }
 
-	public boolean isFile() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean isDirty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public IVResource[] listFiles() {
-		// TODO Auto-generated method stub
-		return new IVResource[0];
-	}
+    public boolean isFile() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public boolean mkdir() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public IVResource[] listFiles() {
+        // TODO Auto-generated method stub
+        return new IVResource[0];
+    }
 
-	public URLConnection openConnection() throws MalformedURLException,
-			IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public boolean mkdir() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public void removeWorkingCopy() {
-		// TODO Auto-generated method stub
+    public URLConnection openConnection() throws MalformedURLException, IOException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	}
+    public void removeWorkingCopy() {
+        // TODO Auto-generated method stub
 
-	public IVResource create(String path) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
 
-	public void add(IVResource v) {
-		// TODO Auto-generated method stub
-		
-	}
+    public IVResource create(String path) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public IVResource get(String childName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void add(IVResource v) {
+        // TODO Auto-generated method stub
 
-	public boolean committed() {
-		
-		return true;
-	}
+    }
+
+    public IVResource get(String childName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public boolean committed() {
+
+        return true;
+    }
+
+    public boolean readOnly() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    public IVResource[] findChildren(String childName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

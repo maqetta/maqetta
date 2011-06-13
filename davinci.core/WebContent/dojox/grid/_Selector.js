@@ -37,8 +37,8 @@ dojo.require("dojox.grid._Builder");
 	},dojox.grid._ContentBuilder.prototype,{
 		generateHtml: function(inDataIndex, inRowIndex){
 			var w = this.view.contentWidth || 0;
-			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' + 
-				'cellspacing="0" cellpadding="0" role="presentation"><tr>' + 
+			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' +
+				'cellspacing="0" cellpadding="0" role="presentation"><tr>' +
 				'<td  style="text-align: center;" class="dojoxGridRowbarInner">' + this.getCellContent(inRowIndex) + '</td></tr></table>';
 		},
 		getCellContent: function(inRowIndex){
@@ -110,7 +110,7 @@ dojo.require("dojox.grid._Builder");
 		buildRendering: function(){
 			this.inherited(arguments);
 			this.scrollboxNode.style.overflow = "hidden";
-		},	
+		},
 		getWidth: function(){
 			return this.viewWidth || this.defaultWidth;
 		},
@@ -201,7 +201,7 @@ dojo.require("dojox.grid._Builder");
 			this._updateVisibility(this.grid.rowCount);
 		},
 		_updateVisibility: function(rowCount){
-			this.headerNode.style.visibility = rowCount ? "" : "hidden";		
+			this.headerNode.style.visibility = rowCount ? "" : "hidden";
 		},
 		onSelectionChanged: function(){
 			if(this._selectionChanging){ return; }

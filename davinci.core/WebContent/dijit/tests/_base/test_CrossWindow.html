@@ -29,27 +29,24 @@
 			onPopClose = function(){
 				console.log("setting context back to main window...");
 				dojo.setContext(dojo.global, globalDocument);
-				console.log("Now building the wdiget in the main window...");
+				if(dijit.byId('simple3')){ dijit.byId('simple3').destroy(); }
+				console.log("Now building the widget in the main window...");
 				var div = dojo.doc.createElement("div");
 				dojo.byId("main").appendChild(div);
-				new widgetClass({}, div);
+				new widgetClass({id:"simple3"}, div);
 				console.log("There should now be two widgets at the top of the page.");
 			}
 
 			onPopLoad = function(){
-				popwin.onunload = onPopClose;
-
-				console.log("popwin:", popwin);
-				console.log("popwin.onunload :", popwin.onunload );
-
 				globalDocument = dojo.doc;
 				dojo.setContext(dojo.global, popwin.document);
 
+				if(dijit.byId('simple2')){ dijit.byId('simple2').destroy(); }
 				console.log("rendering one widget in popup...");
 
 				var div = dojo.doc.createElement("div");
 				dojo.byId("main").appendChild(div);
-				new widgetClass({}, div);
+				new widgetClass({id:"simple2"}, div);
 
 				console.log("The widget should have appeared in the popup window.");
 
@@ -64,7 +61,7 @@
 				var newfcolor = '$FF0000';
 				var word = "";
 				var HTMLstring=	'<HTML><HEAD><TITLE>IE Cross Window</TITLE></HEAD>\n' +
-								'<BODY id="popup" bgColor="'+newbcolor+'" onload = function(){popup.opener.onPopLoad();}>\n'+
+								'<BODY id="popup" bgColor="'+newbcolor+'">\n'+
 								'<div><div id="main"></div></div>\n'+
 								'</BODY></HTML>';
 
@@ -76,10 +73,10 @@
 				// The onload event for IE is written into the above body tag.
 				// This is the onload for Firefox
 				if(dojo.isMoz){
-					popup.onload = onPopLoad
+					popup.onload = onPopLoad;
 				}else{
 					setTimeout(function(){
-						onPopLoad()
+						onPopLoad();
 					}, 200);
 				}
 
@@ -95,8 +92,8 @@
 				var div = dojo.doc.createElement("div");
 				dojo.byId("main").appendChild(div);
 
-				for(var i =0; i<amt; i++){
-					new widgetClass({}, div);
+				for(var i = 0; i < amt; i++){
+					new widgetClass({id:"simple_"+i}, div);
 				}
 				console.log("Time to render ", amt, " widgets:",  (new Date() - start) );
 			}
@@ -105,16 +102,11 @@
 				widgetClass = dojo.declare(
 					"Simple",
 					[dijit._Widget, dijit._Templated], {
-						templateString: '<div> - Widget created -</div>'
+						templateString: '<div> Widget created: ${id} </div>'
 					}
 				);
 
 				speedTest();
-
-				console.log("Opening popup window...");
-				setTimeout(function(){
-					popwin = openPopup();
-				}, 0);
 			});
 		</script>
 	</head>
@@ -126,9 +118,12 @@
 			<a href="http://trac.dojotoolkit.org/ticket/6791">#6791</a>.
 		</p>
 		<p>
-			You must allow popup before running this test.
+			You must allow popups before running this test.
 			Check console for results.
 		</p>
 		<div id="main"></div>
+		<iframe name="mywin" src="about:blank"></iframe>
+		
+		<a id="popupLink" href="nowhere.html" onclick="popwin = openPopup();return false;">run popup test</a>
 	</body>
 </html>

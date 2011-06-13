@@ -218,6 +218,14 @@
 	width: 16px;
 	height: 16px;
 }
+img.readOnlyResource + img.treeReadOnlyLabelNode{
+	background-image: url(./img/readonly.png); /* FIXME: add logic for remove-disabled.gif? */
+	
+	background-repeat: no-repeat;
+	width: 6px;
+	height: 6px;
+}
+
 .jsFileIcon {
 	background-image: url(./img/sprite.png);
 	background-position: 0 -1580px;

@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,112 +24,104 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public abstract class XMLFile extends XMLElement {
-	
 
-	protected abstract String getRootTag();
-	
+    protected abstract String getRootTag();
 
-	public ArrayList load(File file)
-	{
-		ArrayList objects = null;
-		String rootTag=this.getRootTag();
-		InputStream input=null;
-		if (file.exists()) {
-			try {
-				DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-						.newDocumentBuilder();
-				input = new FileInputStream(file);
-				Document document = parser.parse(input);
-				Element rootElement = document.getDocumentElement();
-				objects=this.load(rootElement);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				try {
-					if (input != null)
-						input.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		if (objects==null)
-			objects=new ArrayList();
-		return objects;
-	}
-	
-	public void save(File file, Collection  values)
-	{
-		OutputStream out= null;
-		try {
-			if (!file.exists()){
-				file.mkdirs();
-				file.delete();
-				file.createNewFile();
+    public ArrayList load(File file) {
+        ArrayList objects = null;
+        InputStream input = null;
+        if (file.exists()) {
+            try {
+                DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                input = new FileInputStream(file);
+                Document document = parser.parse(input);
+                Element rootElement = document.getDocumentElement();
+                objects = this.load(rootElement);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SAXException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (input != null) {
+                        input.close();
+                    }
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (objects == null) {
+            objects = new ArrayList();
+        }
+        return objects;
+    }
 
-			}
-			String rootName=this.getRootTag();
-			String elementTag=this.getElementTag();
-			String[] attributeNames = this.getAttributeNames();
-			out= new FileOutputStream(file); 
-			DocumentBuilderFactory factory= DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder= factory.newDocumentBuilder();		
-			Document document= builder.newDocument();
-			
-			Element rootElement = document.createElement(rootName);
-			document.appendChild(rootElement);
+    public void save(File file, Collection values) {
+        OutputStream out = null;
+        try {
+            if (!file.exists()) {
+                file.mkdirs();
+                file.delete();
+                file.createNewFile();
 
-			this.save(rootElement, values);
-			
-			Transformer transformer=TransformerFactory.newInstance().newTransformer();
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			DOMSource source = new DOMSource(document);
-			StreamResult result = new StreamResult(out);
+            }
+            String rootName = this.getRootTag();
+            out = new FileOutputStream(file);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.newDocument();
 
-			transformer.transform(source, result);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+            Element rootElement = document.createElement(rootName);
+            document.appendChild(rootElement);
 
+            this.save(rootElement, values);
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(out);
+
+            transformer.transform(source, result);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (TransformerFactoryConfigurationError e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (TransformerConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

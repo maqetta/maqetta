@@ -8,16 +8,14 @@ dojo.experimental("dojox.widget.AnalogGauge");
 dojo.declare("dojox.widget.gauge.AnalogLineIndicator",[dojox.widget.gauge._Indicator],{
 	_getShapes: function(){
 		// summary:
-		//		Private function for generating the shapes for this indicator. An indicator that behaves the 
+		//		Private function for generating the shapes for this indicator. An indicator that behaves the
 		//		same might override this one and simply replace the shapes (such as ArrowIndicator).
-		var shapes = [];
-		shapes[0] = this._gauge.surface.createLine({x1: 0, y1: -this.offset, 
+		return [this._gauge.surface.createLine({x1: 0, y1: -this.offset,
 													x2: 0, y2: -this.length-this.offset})
-					.setStroke({color: this.color, width: this.width});
-		return shapes;
+					.setStroke({color: this.color, width: this.width})];
 	},
 	draw: function(/*Boolean?*/ dontAnimate){
-		// summary: 
+		// summary:
 		//		Override of dojox.widget.gauge._Indicator.draw
 		// dontAnimate: Boolean
 		//		Indicates if the drawing should not be animated (vs. the default of doing an animation)
@@ -28,11 +26,7 @@ dojo.declare("dojox.widget.gauge.AnalogLineIndicator",[dojox.widget.gauge._Indic
 				this._gauge.surface.rawNode.removeChild(this.text);
 				this.text = null;
 			}
-
-			var v = this.value;
-			if(v < this._gauge.min){v = this._gauge.min;}
-			if(v > this._gauge.max){v = this._gauge.max;}
-			var a = this._gauge._getAngle(v);
+			var a = this._gauge._getAngle(Math.min(Math.max(this.value, this._gauge.min), this._gauge.max));
 
 			this.color = this.color || '#000000';
 			this.length = this.length || this._gauge.radius;
@@ -57,28 +51,30 @@ dojo.declare("dojox.widget.gauge.AnalogLineIndicator",[dojox.widget.gauge._Indic
 			}
 	
 			if(this.label){
-				var len=this.length+this.offset;
-				var x=this._gauge.cx+(len+5)*Math.sin(this._gauge._getRadians(a));
-				var y=this._gauge.cy-(len+5)*Math.cos(this._gauge._getRadians(a));
-				var align = 'start';
+				var len=this.length+this.offset,
+					rad=this._gauge._getRadians(a),
+					x=this._gauge.cx+(len+5)*Math.sin(rad),
+					y=this._gauge.cy-(len+5)*Math.cos(rad),
+					align = 'start',
+					aa = Math.abs(a)
+				;
 				if(a <= -10){align = 'end';}
-				if(a > -10 && a < 10){align='middle';}
+				if(aa < 10){align='middle';}
 				var vAlign = 'bottom';
-				if((a < -90) || (a > 90)){vAlign = 'top';}
+				if(aa > 90){vAlign = 'top';}
 				this.text = this._gauge.drawText(''+this.label, x, y, align, vAlign, this.color, this.font);
 			}
 			this.currentValue = this.value;
 		}
 	},
 	_move: function(/*Boolean?*/ dontAnimate){
-		// summary: 
+		// summary:
 		//		Moves this indicator (since it's already been drawn once)
 		// dontAnimate: Boolean
 		//		Indicates if the drawing should not be animated (vs. the default of doing an animation)
-		var v = this.value;
-		if(v < this._gauge.min){v = this._gauge.min;}
-		if(v > this._gauge.max){v = this._gauge.max;}
-		var c = this.currentValue;
+		var v = Math.min(Math.max(this.value, this._gauge.min), this._gauge.max),
+			c = this.currentValue
+		;
 		if(dontAnimate){
 			var angle = this._gauge._getAngle(v);
 			for(var i in this.shapes){
@@ -110,7 +106,7 @@ dojo.declare("dojox.widget.AnalogGauge",dojox.widget.gauge._Gauge,{
 	//
 	// description:
 	//		using dojo.gfx (and thus either SVG or VML based on what is supported), this widget
-	//		builds a gauge component, used to display numerical data in a familiar format 
+	//		builds a gauge component, used to display numerical data in a familiar format
 	//
 	// usage:
 	//		<script type="text/javascript">
@@ -240,7 +236,7 @@ dojo.declare("dojox.widget.AnalogGauge",dojox.widget.gauge._Gauge,{
 		// summary:
 		//		This function is used to draw (or redraw) a range
 		// description:
-		//		Draws a range (colored area on the background of the gauge) 
+		//		Draws a range (colored area on the background of the gauge)
 		//		based on the given arguments.
 		// range:
 		//		A range is a dojox.widget.gauge.Range or an object
@@ -250,18 +246,18 @@ dojo.declare("dojox.widget.AnalogGauge",dojox.widget.gauge._Gauge,{
 			this.surface.remove(range.shape);
 			range.shape = null;
 		}
-		var a1;
-		var a2;
+		var a1, a2;
 		if((range.low == this.min) && (range.high == this.max) && ((this.endAngle - this.startAngle) == 360)){
 			path = this.surface.createCircle({cx: this.cx, cy: this.cy, r: this.radius});
 		}else{
 			a1 = this._getRadians(this._getAngle(range.low));
 			a2 = this._getRadians(this._getAngle(range.high));
-			var x1=this.cx+this.radius*Math.sin(a1);
-			var y1=this.cy-this.radius*Math.cos(a1);
-			var x2=this.cx+this.radius*Math.sin(a2);
-			var y2=this.cy-this.radius*Math.cos(a2);
-			var big=0;
+			var x1=this.cx+this.radius*Math.sin(a1),
+				y1=this.cy-this.radius*Math.cos(a1),
+				x2=this.cx+this.radius*Math.sin(a2),
+				y2=this.cy-this.radius*Math.cos(a2),
+				big=0
+			;
 			if((a2-a1)>Math.PI){big=1;}
 
 			path = this.surface.createPath();
@@ -313,15 +309,17 @@ dojo.declare("dojox.widget.AnalogGauge",dojox.widget.gauge._Gauge,{
 		//		Determines which range the mouse is currently over
 		// event:	Object
 		//			The event object as received by the mouse handling functions below.
-		var range = null;
-		var pos = dojo.coords(this.gaugeContent);
-		var x = event.clientX - pos.x;
-		var y = event.clientY - pos.y;
-		var r = Math.sqrt((y - this.cy)*(y - this.cy) + (x - this.cx)*(x - this.cx));
+		var range = null,
+			pos = dojo.coords(this.gaugeContent),
+			x = event.clientX - pos.x,
+			y = event.clientY - pos.y,
+			r = Math.sqrt((y - this.cy)*(y - this.cy) + (x - this.cx)*(x - this.cx))
+		;
 		if(r < this.radius){
-			var angle = this._getDegrees(Math.atan2(y - this.cy, x - this.cx) + Math.PI/2);
+			var angle = this._getDegrees(Math.atan2(y - this.cy, x - this.cx) + Math.PI/2),
 			//if(angle > this.endAngle){angle = angle - 360;}
-			var value = this._getValueForAngle(angle);
+				value = this._getValueForAngle(angle)
+			;
 			if(this._rangeData){
 				for(var i=0; (i<this._rangeData.length) && !range; i++){
 					if((Number(this._rangeData[i].low) <= value) && (Number(this._rangeData[i].high) >= value)){
@@ -337,18 +335,17 @@ dojo.declare("dojox.widget.AnalogGauge",dojox.widget.gauge._Gauge,{
 		// summary:
 		//		Handles the dragging of an indicator, including moving/re-drawing
 		// get angle for mouse position
-		var pos = dojo.coords(widget.gaugeContent);
-		var x = event.clientX - pos.x;
-		var y = event.clientY - pos.y;
-		var angle = widget._getDegrees(Math.atan2(y - widget.cy, x - widget.cx) + Math.PI/2);
+		var pos = dojo.coords(widget.gaugeContent),
+			x = event.clientX - pos.x,
+			y = event.clientY - pos.y,
+			angle = widget._getDegrees(Math.atan2(y - widget.cy, x - widget.cx) + Math.PI/2),
 		//if(angle > widget.endAngle){angle = angle - 360;}
 		// get value and restrict to our min/max
-		var value = widget._getValueForAngle(angle);
-		if(value < widget.min){value = widget.min;}
-		if(value > widget.max){value = widget.max;}
+			value = widget._getValueForAngle(angle)
+		;
+		value = Math.min(Math.max(value, widget.min), widget.max);
 		// update the indicator
-		widget._drag.value = value;
-		widget._drag.currentValue = value;
+		widget._drag.value = widget._drag.currentValue = value;
 		// callback
 		widget._drag.onDragMove(widget._drag);
 		// rotate indicator

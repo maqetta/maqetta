@@ -9,19 +9,7 @@
 	@import "../../../dijit/themes/tundra/tundra.css";
 	@import "../../../dijit/tests/css/dijitTests.css";
 </style>
-<!--
-The next line should include Microsoft's Silverligth.js, if you plan to use the silverlight backend
-<script type="text/javascript" src="Silverlight.js"></script>
--->
 <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
-<script type="text/javascript" src="../Theme.js"></script>
-<script type="text/javascript" src="../scaler/linear.js"></script>
-<script type="text/javascript" src="../axis2d/Default.js"></script>
-<script type="text/javascript" src="../plot2d/Default.js"></script>
-<script type="text/javascript" src="../plot2d/Grid.js"></script>
-<script type="text/javascript" src="../Chart2D.js"></script>
-<script type="text/javascript" src="../../lang/functional/object.js"></script>
-
 <script type="text/javascript">
 
 dojo.require("dijit.form.HorizontalSlider");
@@ -29,7 +17,10 @@ dojo.require("dijit.form.HorizontalRule");
 dojo.require("dijit.form.HorizontalRuleLabels");
 dojo.require("dojo.parser"); // scan page for widgets
 
-dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.Chart");
+dojo.require("dojox.charting.axis2d.Default");
+dojo.require("dojox.charting.plot2d.Areas");
+dojo.require("dojox.charting.plot2d.Grid");
 dojo.require("dojox.charting.themes.PlotKit.orange");
 
 dojo.require("dojox.lang.functional.object");
@@ -112,7 +103,7 @@ var onMouseMove = function(e){
 };
 
 makeObjects = function(){
-	chart = new dojox.charting.Chart2D("test");
+	chart = new dojox.charting.Chart("test");
 	chart.setTheme(dojox.charting.themes.PlotKit.orange);
 	chart.addAxis("x", {fixLower: "minor", natural: true, stroke: "grey",
 		majorTick: {stroke: "black", length: 4}, minorTick: {stroke: "gray", length: 2}});

@@ -3,10 +3,10 @@ dojo.require("dojox.date.hebrew");
 dojo.require("dojox.date.hebrew.Date");
 dojo.require("dojox.date.hebrew.locale");
 
-dojo.requireLocalization("dojo.cldr", "gregorian"); 
+dojo.requireLocalization("dojo.cldr", "gregorian");
 dojo.requireLocalization("dojo.cldr", "hebrew");
 
-tests.register("dojox.date.tests.hebrew.Date", 
+tests.register("dojox.date.tests.hebrew.Date",
 	[
 		{
 			// see tests for dojo.date.locale for setup info
@@ -36,14 +36,14 @@ tests.register("dojox.date.tests.hebrew.Date",
 				var dateHebrew1 = new dojox.date.hebrew.Date(5758,  10,  25);
 				t.is(1, dojo.date.compare(dateHebrew.toGregorian(), dateHebrew1.toGregorian()));
 				t.is(-1, dojo.date.compare(dateHebrew1.toGregorian(), dateHebrew.toGregorian()));
-			}	
-		},	
+			}
+		},
 		{
 			name: "toGregorian_fromGregorian",
 			runTest: function(t){
 			
 			//Hebrew month names
-			var TISHRI = 0 , HESHVAN = 1, KISLEV = 2, TEVET = 3, SHVAT = 4 , ADARI = 5, ADAR = 6, NISAN= 7 , IYAR= 8 , SIVAN= 9 , TAMMUZ = 10, AV = 11 , ELUL = 12;   	
+			var TISHRI = 0 , HESHVAN = 1, KISLEV = 2, TEVET = 3, SHVAT = 4 , ADARI = 5, ADAR = 6, NISAN= 7 , IYAR= 8 , SIVAN= 9 , TAMMUZ = 10, AV = 11 , ELUL = 12;
 				//hebrew.Date month names
 				//Gregorian Date month 1-12 -  for readability
 				var dateTable = [
@@ -60,14 +60,14 @@ tests.register("dojox.date.tests.hebrew.Date",
 					[1943, 5, 19, 5703, IYAR, 14],
 					[1943, 11, 6, 5704, HESHVAN, 8],
 					[1992, 4, 15, 5752, NISAN, 12],
-					[1996, 3, 25, 5756, NISAN, 5],					
+					[1996, 3, 25, 5756, NISAN, 5],
 					[2005, 4, 18, 5765, NISAN, 9],
-					[2007, 7, 12, 5767, TAMMUZ, 26],					
+					[2007, 7, 12, 5767, TAMMUZ, 26],
 					[2007, 10, 13, 5768, HESHVAN, 1],
 					[2007, 11, 11, 5768, KISLEV, 1],
 					[2007, 12, 10, 5768, TEVET, 1],
 					[2008, 1, 8, 5768, SHVAT, 1],
-					[2008, 2, 7, 5768, ADARI, 1], 
+					[2008, 2, 7, 5768, ADARI, 1],
 					[2008, 3, 8, 5768, ADAR, 1],
 					[2008, 4, 6, 5768, NISAN, 1],
 					[2008, 5, 6, 5768, IYAR, 1],
@@ -78,7 +78,7 @@ tests.register("dojox.date.tests.hebrew.Date",
 					[2008, 9, 5, 5768, ELUL, 5],
 					[2008, 8, 5, 5768, AV, 4],
 					[2008, 9, 11, 5768, ELUL, 11],
-					[2008, 12, 19,  5769, KISLEV, 22],							
+					[2008, 12, 19,  5769, KISLEV, 22],
 					[2009, 1, 26, 5769, SHVAT, 1],
 					[2009, 2, 25, 5769, ADARI, 1], //incorrect, not leap year , the month is set to ADAR
 					[2009, 2, 25, 5769, ADAR, 1],
@@ -87,23 +87,23 @@ tests.register("dojox.date.tests.hebrew.Date",
 					[2009, 7, 22, 5769, AV, 1],
 					[2009, 8, 21, 5769, ELUL, 1],
 					[2010, 7, 2, 5770,  TAMMUZ, 20],
-					[2011, 10, 1, 5772, TISHRI, 3],	
+					[2011, 10, 1, 5772, TISHRI, 3],
 					[2038, 12, 9, 5799, KISLEV, 12],
-					[2094, 8, 17, 5854, ELUL, 5]													
+					[2094, 8, 17, 5854, ELUL, 5]
 				];
 
 					
 
-				var dateHebrew, dateGregorian; 
+				var dateHebrew, dateGregorian;
 				//toGregorian
-				dojo.forEach(dateTable, function(d, i){	
-					dateHebrew = new dojox.date.hebrew.Date(d[3], d[4], d[5]); 
+				dojo.forEach(dateTable, function(d, i){
+					dateHebrew = new dojox.date.hebrew.Date(d[3], d[4], d[5]);
 					dateGregorian = dateHebrew.toGregorian();
 					t.is(0, dojo.date.compare(new Date(d[0], d[1]-1, d[2]), dateGregorian, "date"));
 				});
 				
 				//fromGregorian
-				dojo.forEach(dateTable, function(d, i){	
+				dojo.forEach(dateTable, function(d, i){
 					dateGregorian = new  Date(d[0], d[1]-1, d[2]);
 					dateHebrew = new dojox.date.hebrew.Date(dateGregorian);
 					testHebrew = new dojox.date.hebrew.Date(d[3], d[4], d[5]);
@@ -115,15 +115,15 @@ tests.register("dojox.date.tests.hebrew.Date",
 			name: "getDay",
 			runTest: function(t){
 				 var dateTable = [
-					[5769, 0, 11, 5], 
+					[5769, 0, 11, 5],
 					[5769, 1, 3, 6],
 					[5769, 2, 10, 0],
-					[5769, 3, 23, 1], 
-					[5769, 6, 21, 2], 
+					[5769, 3, 23, 1],
+					[5769, 6, 21, 2],
 					[5769, 6, 22, 3],
 					[5769, 7, 15, 4]
 				];
-					dojo.forEach(dateTable, function(d, i){	
+					dojo.forEach(dateTable, function(d, i){
 					var date = new  dojox.date.hebrew.Date(d[0], d[1], d[2]);
 					t.is(d[3], 	date.getDay());
 				});
@@ -143,20 +143,20 @@ tests.register("dojox.date.tests.hebrew.Date",
 					[5769, 2, 30] //KISLEV,
 				];
 				
-				dojo.forEach(dateTable, function(d, i){	
+				dojo.forEach(dateTable, function(d, i){
 					var date = new  dojox.date.hebrew.Date(d[0], d[1], 1);
 					t.is(d[2], 	dojox.date.hebrew.getDaysInMonth(date));
 				});
-			}	
+			}
 		},
-		{	
+		{
 			name: "add_difference",
 			runTest: function(t){
 		//	5766, 5767, 5769, 5770, 5772, 5772, 5773, 5775 - non leap
 		//      5765, 5768, 5771, 5774 - leap
 		
 		//Hebrew month names
-				var TISHRI = 0 , HESHVAN = 1, KISLEV = 2, TEVET = 3, SHVAT = 4 , ADARI = 5, ADAR = 6, NISAN= 7 , IYAR= 8 , SIVAN= 9 , TAMMUZ = 10, AV = 11 , ELUL = 12;   	
+				var TISHRI = 0 , HESHVAN = 1, KISLEV = 2, TEVET = 3, SHVAT = 4 , ADARI = 5, ADAR = 6, NISAN= 7 , IYAR= 8 , SIVAN= 9 , TAMMUZ = 10, AV = 11 , ELUL = 12;
 				var start = [
 						[5767, TAMMUZ, 5769, SIVAN],
 						[5767, TAMMUZ, 5772, IYAR],
@@ -186,7 +186,7 @@ tests.register("dojox.date.tests.hebrew.Date",
 						dateHebRes = new dojox.date.hebrew.Date( s[2], s[3], 1);
 						dateHebStart =  new dojox.date.hebrew.Date( s[0], s[1], 1);
 						t.is(add[i], dojox.date.hebrew.difference(dateHebRes,  dateHebStart , "month"));
-					});	
+					});
 					
 					//different fields
 					var fields =  [
@@ -194,17 +194,17 @@ tests.register("dojox.date.tests.hebrew.Date",
 								[   5758, KISLEV,   30,      "year",   -1,     5757, KISLEV,   29 ],
 								[   5769, NISAN,   30,      "year",   -1,     5768, NISAN,  30 ],
 								[   5768, ADARI,  30,      "year",   1,     5769, ADAR,  29 ],
-								[   5757, TISHRI,   30,     "month",   1,     5757, HESHVAN,  29 ],								
-								[   5762, AV,       30,      "day",    1,     5762, ELUL,  1 ],   
-								[   5762, ELUL,      1,     "day",   -1,     5762, AV, 30 ],  
+								[   5757, TISHRI,   30,     "month",   1,     5757, HESHVAN,  29 ],
+								[   5762, AV,       30,      "day",    1,     5762, ELUL,  1 ],
+								[   5762, ELUL,      1,     "day",   -1,     5762, AV, 30 ],
 								[   5769,  TAMMUZ,  27,  "day",  10,  5769, AV, 8],
 								[   5757, KISLEV,    1,    "day",   30,     5757, TEVET,    2 ],   // 29-day month
-								[   5758, KISLEV,    1,     "day",   31,     5758, TEVET,    2 ],   // 30-day month								
+								[   5758, KISLEV,    1,     "day",   31,     5758, TEVET,    2 ],   // 30-day month
 								[   5769,  AV,   27,  "day",  10,  5769, ELUL, 7],
 								[   5769,  ELUL,   27,  "day",  10,  5770, TISHRI, 8],
 							        [   5769,  TAMMUZ,  27,  "day",  -30, 5769, SIVAN, 27],
-								[   5769,  AV,   1,  "day",  -60,  5769,	IYAR, 29],	
-								[   5769,  SHVAT, 	30, "day", 1, 	5769, ADAR, 1],															
+								[   5769,  AV,   1,  "day",  -60,  5769,	IYAR, 29],
+								[   5769,  SHVAT, 	30, "day", 1, 	5769, ADAR, 1],
 								[   5769,  TAMMUZ,  27,  "weekday", 10,  5769, AV, 12],
 								[   5769,  KISLEV,   1,  "weekday", 1, 5769, KISLEV, 3],
 								[   5769,  NISAN,  1,  "weekday",  -5,  5769, ADAR, 23],
@@ -215,15 +215,15 @@ tests.register("dojox.date.tests.hebrew.Date",
 								[   5769,  AV,   11,  "weekday", 6, 5769, AV, 19],
 								[   5769,  AV,   10,  "weekday", 6, 5769, AV, 19],
 								[   5769,  AV,   11,  "weekday", 12, 5769, AV, 27],
-								[   5769,  AV,   10,  "weekday", 12, 5769, AV, 27],	
-								[   5769,  AV,  9,  "weekday", 12, 5769, AV, 27],								
-								[   5769,  NISAN, 	29, "week", 1, 5769, IYAR, 6],	
-								[   5771,  NISAN, 	1, "week", -4, 5771, ADAR, 2],	
-								[   5771,  NISAN, 	1, "week", -8, 5771, ADARI, 4],	
-								[   5769,  AV, 	17, "week", 2, 5769, ELUL, 1],	
+								[   5769,  AV,   10,  "weekday", 12, 5769, AV, 27],
+								[   5769,  AV,  9,  "weekday", 12, 5769, AV, 27],
+								[   5769,  NISAN, 	29, "week", 1, 5769, IYAR, 6],
+								[   5771,  NISAN, 	1, "week", -4, 5771, ADAR, 2],
+								[   5771,  NISAN, 	1, "week", -8, 5771, ADARI, 4],
+								[   5769,  AV, 	17, "week", 2, 5769, ELUL, 1],
 								[   5769,  AV, 	18, "week", -1, 5769, AV, 11]						];
 						
-					//test add	
+					//test add
 					dojo.forEach( fields, function(f, i){
 						dateHebStart =  new dojox.date.hebrew.Date( f[0], f[1], f[2]);
 						dateHebEnd = dojox.date.hebrew.add(dateHebStart, f[3], f[4]);
@@ -249,14 +249,14 @@ tests.register("dojox.date.tests.hebrew.Date",
 					t.assertFalse(dateHebStart.getMonth() == dateHebAdd.getMonth());
 				
 				}
-		},	
+		},
 		{
 			name: "consistency_of_add_and_difference",
 			runTest: function(t){
 				var dateHebrew = new dojox.date.hebrew.Date(5769, 4, 16);
 				var dateHebrewLeap = new dojox.date.hebrew.Date(5768, 5, 16);
 				
-			//	var m =  ["TISHRI " , "HESHVAN", "KISLEV", "TEVET", "SHVAT" , "ADARI", "ADAR", "NISAN" , "IYAR" , "SIVAN" , "TAMMUZ", "AV" , "ELUL"];   	
+			//	var m =  ["TISHRI " , "HESHVAN", "KISLEV", "TEVET", "SHVAT" , "ADARI", "ADAR", "NISAN" , "IYAR" , "SIVAN" , "TAMMUZ", "AV" , "ELUL"];
 				
 				var amouts = [2, 5, 6, 7, 8,12, 18,20, 24, 50, -3, -4,  -5, -6, -7, -8, -9, -10, -50, 200, -200];
 				var dateHebrewAdd, dateHebrewAddLeap;
@@ -276,28 +276,28 @@ tests.register("dojox.date.tests.hebrew.Date",
 					t.is(amount,  dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "week", amount), dateHebrewLeap,"week"));
 									
 					dateHebrewAdd= dojox.date.hebrew.add(dateHebrew, "weekday", amount);
-					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "weekday")); 
+					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "weekday"));
 					dateHebrewAddLeap = dojox.date.hebrew.add(dateHebrewLeap, "weekday", amount);
 					t.is(amount,  dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "weekday", amount), dateHebrewLeap,"weekday"));
 					
 					dateHebrewAdd= dojox.date.hebrew.add(dateHebrew, "day", amount)
-					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "day")); 
+					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "day"));
 					t.is(amount, dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "day", amount), dateHebrewLeap,"day"));
 												
 					dateHebrewAdd= dojox.date.hebrew.add(dateHebrew, "hour", amount);
-					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "hour"));  
+					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "hour"));
 					t.is(amount,  dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "hour", amount), dateHebrewLeap,"hour"));
 					
 					dateHebrewAdd= dojox.date.hebrew.add(dateHebrew, "minute", amount);
-					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "minute")); 
+					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "minute"));
 					t.is(amount,  dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "minute", amount), dateHebrewLeap,"minute"));
 					
 					dateHebrewAdd= dojox.date.hebrew.add(dateHebrew, "second", amount);
-					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "second")); 
+					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "second"));
 					t.is(amount,  dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "second", amount), dateHebrewLeap,"second"));
 					
 					dateHebrewAdd= dojox.date.hebrew.add(dateHebrew, "millisecond", amount);
-					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "millisecond")); 
+					t.is(amount,  dojox.date.hebrew.difference(dateHebrewAdd, dateHebrew, "millisecond"));
 					t.is(amount,  dojox.date.hebrew.difference(dojox.date.hebrew.add(dateHebrewLeap, "millisecond", amount), dateHebrewLeap,"millisecond"));
 				 });
 				 
@@ -309,7 +309,7 @@ tests.register("dojox.date.tests.hebrew.Date",
 			name: "getMonth_setMonth",
 			runTest: function(t){
 			var nonLeap = "5766, 5767, 5769, 5770, 5772, 5772, 5773, 5775";
-		        var leap = "5765, 5768, 5771, 5774";	
+		        var leap = "5765, 5768, 5771, 5774";
 		// ELUL - 12,  ADAR -6, ADARI -5
 				var dateHebrew = new dojox.date.hebrew.Date(5765, 1, 1);
 				for (var year = 5766; year < 5866; year++){
@@ -321,14 +321,14 @@ tests.register("dojox.date.tests.hebrew.Date",
 					t.is(6,dateHebrew.getMonth());
 					if (leap.match(year)){
 						dateHebrew.setMonth(5);
-						t.is(5,dateHebrew.getMonth());						
+						t.is(5,dateHebrew.getMonth());
 					}
 					if (nonLeap.match(year)){
 						dateHebrew.setMonth(5); // non leap year does not have  ADARI, set month to ADAR
-						t.is(6,dateHebrew.getMonth());						
+						t.is(6,dateHebrew.getMonth());
 					}
-				} 
-			}	
+				}
+			}
 		},
 		{
 			name: "hebrew_numerals",
@@ -351,14 +351,14 @@ tests.register("dojox.date.tests.hebrew.Date",
 				t.assertFalse (dojox.date.hebrew.numerals.parseYearHebrewLetters(dojox.date.hebrew.numerals.getYearHebrewLetters(2345)) == 2345);
 				t.assertFalse (dojox.date.hebrew.numerals.parseYearHebrewLetters(dojox.date.hebrew.numerals.getYearHebrewLetters(6789)) == 6789);
 			}
-		},		
+		},
 		{
 			name: "parse_and_format",
 			runTest: function(t){
 	
 				//test Hebrew and English locale
 												
-				var dates = [	
+				var dates = [
 							[5768, 5, 1],
 							[5768, 1, 29],
 							[5769, 6, 16], // "absolute" index of month, non-leap year
@@ -366,18 +366,18 @@ tests.register("dojox.date.tests.hebrew.Date",
 							[5770, 0, 2]
 						];
 						
-				var dateHebrew, dateHebrew1;		
+				var dateHebrew, dateHebrew1;
 				dojo.forEach(dates, function(date, i){
 					dateHebrew = new dojox.date.hebrew.Date(date[0], date[1], date[2]);
 					
 					var options = [{formatLength:'full', locale:'he'},{formatLength:'long', locale:'he'},{formatLength:'medium', locale:'he'},{formatLength:'short', locale:'he'},
-						{formatLength:'full', locale:'en'},{formatLength:'long', locale:'en'},{formatLength:'medium', locale:'en'},{formatLength:'short', locale:'en'}];					
+						{formatLength:'full', locale:'en'},{formatLength:'long', locale:'en'},{formatLength:'medium', locale:'en'},{formatLength:'short', locale:'en'}];
 					dojo.forEach(options, function(opt, i){
 						str= dojox.date.hebrew.locale.format(dateHebrew, opt);
 						var option = "{" +opt+", locale:'he'}";
 						dateHebrew1 = dojox.date.hebrew.locale.parse(str, opt);
 						t.is(0, dojo.date.compare(dateHebrew.toGregorian(), dateHebrew1.toGregorian(), 'date'));
-					}); 
+					});
 					
 					var pattern = ['d M yy', 'dd/MM/yy h:m:s',  'dd#MM#yy HH$mm$ss', 'dd MMMM yyyy'];
 					dojo.forEach( pattern, function(pat, i){
@@ -386,7 +386,7 @@ tests.register("dojox.date.tests.hebrew.Date",
 						dateHebrew1 = dojox.date.hebrew.locale.parse(str, options);
 						t.is(0, dojo.date.compare(dateHebrew.toGregorian(), dateHebrew1.toGregorian(), 'date'));
 					});
-				}); 
+				});
 						
 				dateHebrew = new dojox.date.hebrew.Date(5769, 6, 3, 15, 3, 59);
 				pattern = 'HH$mm$ss';
@@ -394,13 +394,13 @@ tests.register("dojox.date.tests.hebrew.Date",
 				str= dojox.date.hebrew.locale.format(dateHebrew, options);
 				dateHebrew1 = dojox.date.hebrew.locale.parse(str, options);
 				var gregDate = dojo.date.locale.parse(str, options);
-				t.is(0, dojo.date.compare(gregDate, dateHebrew1.toGregorian(), 'time'));	 
+				t.is(0, dojo.date.compare(gregDate, dateHebrew1.toGregorian(), 'time'));
 				
 				pattern = "h:m:s";
 				options = {timePattern:pattern, selector:'time'};
 				str= dojox.date.hebrew.locale.format(dateHebrew, options);
-				t.is(str, "3:3:59");	 				
-			}		
-		}	
+				t.is(str, "3:3:59");
+			}
+		}
 	]
 );

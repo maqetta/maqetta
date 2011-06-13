@@ -68,22 +68,25 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	},
 	
 	_getIconClass: function(item, opened){
-
+		
+		var readOnly = "";
+		if(item.readOnly)
+			readOnly = " readOnlyResource";
+		
 		if (item.elementType=="Folder")
-			return  opened ? "dijitFolderOpened" : "dijitFolderClosed";
-		if (item.elementType=="File")
-		{
+			return  (opened ? "dijitFolderOpened"  : "dijitFolderClosed") + readOnly;
+		if (item.elementType=="File"){
 			var icon;
 			var fileType=item.getExtension();
 			var extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
 				return extension.extension==fileType;
 			});
 			if (extension)
-				icon=extension.iconClass;
-			return icon ||	"dijitLeaf";
+				icon=extension.iconClass + readOnly;
+			return icon ||	("dijitLeaf" + readOnly);
 
 		}
-		return "dijitLeaf";
+		return "dijitLeaf" + readOnly;
 	}
 
 });

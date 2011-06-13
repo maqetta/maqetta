@@ -1,17 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Editor Test: FullScreen Plugin</title>
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
@@ -34,8 +34,8 @@
 	<div>Content before the editor.</div>
 	<br>
 	<br>
-	<div dojoType="dijit.Editor"
-		extraPlugins="['fullscreen']" style="background-color: white; width: 800px; height: 400px;" id="editor0">
+	<div id="editor0" data-dojo-type="dijit.Editor"
+		data-dojo-props='extraPlugins:["fullscreen"], style:"background-color: white; width: 800px; height: 400px;" '>
 		<h1>Full Screen Plugin details</h1>
 		<ol>
 			<li>The Fullscreen plugin provides an extra button on the toolbar to allow switching the
@@ -64,13 +64,13 @@
 	<div>Content after the editor.</div>
 	<br>
 	<h1>BorderContainer with center region containing editor.</h1>
-	<div dojoType="dijit.layout.BorderContainer" id="bc" style="width: 600px; height: 500px;">
-		<div dojoType="dijit.layout.ContentPane" region="left" style="width: 50px;">left</div>
-		<div dojoType="dijit.layout.ContentPane" region="top" style="height: 50px;">top</div>
-		<div dojoType="dijit.layout.ContentPane" region="right" style="width: 50px;">right</div>
-		<div dojoType="dijit.layout.ContentPane" region="bottom" style="height: 50px;">bottom</div>
-		<div dojoType="dijit.layout.ContentPane" region="center">
-			<div dojoType="dijit.Editor" extraPlugins="['fullscreen','viewsource']" id="editor1" height="100%">
+	<div id="bc" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='style:"width: 600px; height: 500px;"'>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"left", style:"width: 50px;"'>left</div>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"top", style:"height: 50px;"'>top</div>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"right", style:"width: 50px;"'>right</div>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"bottom", style:"height: 50px;"'>bottom</div>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+			<div id="editor1" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["fullscreen","viewsource"], height:"100%"'>
 				<h1>Full Screen Plugin details</h1>
 				<ol>
 					<li>The Fullscreen plugin provides an extra button on the toolbar to allow switching the
@@ -98,9 +98,9 @@
 	</div>
 	<br>
 	<h1>TabContainer with tab containing editor.</h1>
-	<div dojoType="dijit.layout.TabContainer" id="tc" style="width: 600px; height: 500px; border-style: solid; border-width: 1px; padding: 0px; margin: 0px;">
-		<div dojoType="dijit.layout.ContentPane" title="Editor Tab">
-			<div dojoType="dijit.Editor" extraPlugins="['fullscreen','viewsource']" id="editor2" height="100%">
+	<div id="tc" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"width: 600px; height: 500px; border-style: solid; border-width: 1px; padding: 0px; margin: 0px;"'>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Editor Tab"'>
+			<div id="editor2" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["fullscreen","viewsource"], height:"100%"'>
 				<h1>Full Screen Plugin details</h1>
 				<ol>
 					<li>The Fullscreen plugin provides an extra button on the toolbar to allow switching the
@@ -125,18 +125,18 @@
 				</ol>
 			</div>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Tab 1">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Tab 1"'>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Tab 2">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Tab 2"'>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Tab 3">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Tab 3"'>
 		</div>
 	</div>
 	<br>
 	<h1>AccordionContainer with pane containing editor.</h1>
-	<div dojoType="dijit.layout.AccordionContainer" id="ac" style="width: 600px; height: 500px; border-style: solid; border-width: 1px; padding: 0px; margin: 0px;">
-		<div dojoType="dijit.layout.ContentPane" title="Editor Pane">
-			<div dojoType="dijit.Editor" extraPlugins="['fullscreen','viewsource']" id="editor3" height="100%">
+	<div id="ac" data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props='style:"width: 600px; height: 500px; border-style: solid; border-width: 1px; padding: 0px; margin: 0px;"'>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Editor Pane"'>
+			<div id="editor3" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["fullscreen","viewsource"], height:"100%"'>
 				<h1>Full Screen Plugin details</h1>
 				<ol>
 					<li>The Fullscreen plugin provides an extra button on the toolbar to allow switching the
@@ -161,18 +161,18 @@
 				</ol>
 			</div>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Pane 1">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Pane 1"'>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Pane 2">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Pane 2"'>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Pane 3">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Pane 3"'>
 		</div>
 	</div>
 	<br>
 	<h1>StackContainer with pane containing editor.</h1>
-	<div dojoType="dijit.layout.StackContainer" id="sc" style="width: 600px; height: 500px; border-style: solid; border-width: 1px; padding: 0px; margin: 0px;">
-		<div dojoType="dijit.layout.ContentPane" title="Editor Pane">
-			<div dojoType="dijit.Editor" extraPlugins="['fullscreen','viewsource']" id="editor4" height="100%">
+	<div id="sc" data-dojo-type="dijit.layout.StackContainer" data-dojo-props='style:"width: 600px; height: 500px; border-style: solid; border-width: 1px; padding: 0px; margin: 0px;"'>
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Editor Pane"'>
+			<div id="editor4" data-dojo-type="dijit.Editor" data-dojo-props='extraPlugins:["fullscreen","viewsource"], height:"100%"'>
 				<h1>Full Screen Plugin details</h1>
 				<ol>
 					<li>The Fullscreen plugin provides an extra button on the toolbar to allow switching the
@@ -197,11 +197,11 @@
 				</ol>
 			</div>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Pane 1">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Pane 1"'>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Pane 2">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Pane 2"'>
 		</div>
-		<div dojoType="dijit.layout.ContentPane" title="Blank Pane 3">
+		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Blank Pane 3"'>
 		</div>
 	</div>
 </body>

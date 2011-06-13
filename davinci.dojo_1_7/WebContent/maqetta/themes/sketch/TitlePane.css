@@ -1,0 +1,58 @@
+
+  /* TitlePane */
+ .sketch .dijitTitlePaneTitle {
+    background-color : #ffffff;
+    background-repeat : repeat-x;
+    border : 1px solid #b5bcc7;
+    padding : 0px 7px 3px 7px;
+    min-height : 17px;
+    color : #131313;
+    border-color : #000000;
+    border-width : 3px;
+}
+ .dj_ie6 .sketch .dijitTitlePaneTitle {
+    background-image : none;
+}
+ .sketch .dijitTitlePaneTitleHover {
+    background-color : #ffffff;
+    border-color : #000000;
+}
+ .sketch .dijitTitlePaneTitleActive {
+    background-color : #ffffff;
+    border-color : #000000;
+   /* background-position : 0px -136px;*/
+}
+ .sketch .dijitTitlePaneTitleFocus {
+    margin-top : 3px;
+    padding-bottom : 2px;
+}
+ .sketch .dijitTitlePane .dijitArrowNode {
+    background-image : url('images/spriteArrows.png');
+    background-repeat : no-repeat;
+    height : 8px;
+    width : 7px;
+}
+.sketch .dijitTitlePane .dijitOpen .dijitArrowNode {
+	background-position: 0px 0px;
+}
+.sketch .dijitTitlePane .dijitClosed .dijitArrowNode {
+	background-position: -14px 0px;
+}
+ .sketch .dijitTitlePaneFocused .dijitTitlePaneTextNode {
+    color : #000;
+}
+ .sketch .dijitTitlePaneContentOuter {
+    background : #ffffff;
+    border : 1px solid #b5bcc7;
+    border-top : none;
+    border-color : #000000;
+    border-width : 3px;
+}
+ .sketch .dijitTitlePaneContentInner {
+    padding : 10px;
+}
+ .sketch .dijitTitlePaneTextNode {
+    margin-left : 4px;
+    margin-right : 4px;
+    vertical-align : text-top;
+}

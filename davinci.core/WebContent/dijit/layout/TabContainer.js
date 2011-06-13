@@ -1,8 +1,4 @@
-dojo.provide("dijit.layout.TabContainer");
-
-dojo.require("dijit.layout._TabContainerBase");
-dojo.require("dijit.layout.TabController");
-dojo.require("dijit.layout.ScrollingTabController");
+define("dijit/layout/TabContainer", ["dojo", "dijit", "dijit/layout/_TabContainerBase", "dijit/layout/TabController", "dijit/layout/ScrollingTabController"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.TabContainer",
 	dijit.layout._TabContainerBase,
@@ -64,3 +60,6 @@ dojo.declare("dijit.layout.TabContainer",
 		}
 });
 
+
+return dijit.layout.TabContainer;
+});

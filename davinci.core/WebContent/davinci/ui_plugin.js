@@ -232,7 +232,7 @@
 					{
 						id: "showHelp",
 						run: "window.open('app/docs/index.html')",  
-						label: "Help",
+						label: "Documentation",
 						menubarPath: "davinci.help/help"	  
 					},					
 					{

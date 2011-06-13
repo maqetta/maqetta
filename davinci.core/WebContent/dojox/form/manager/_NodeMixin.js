@@ -92,7 +92,7 @@ dojo.require("dojox.form.manager._Mixin");
 				var eventName = ce(n);
 				dojo.forEach(observers, function(o){
 					c.push(dojo.connect(n, eventName, this, function(evt){
-						if(this.watch){
+						if(this.watching){
 							this[o](this.formNodeValue(name), name, n, evt);
 						}
 					}));

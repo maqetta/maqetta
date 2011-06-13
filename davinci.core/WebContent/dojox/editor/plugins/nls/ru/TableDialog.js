@@ -18,6 +18,7 @@
 	right: "по правому краю",
 	buttonSet: "Задать", // translated elsewhere?
 	buttonInsert: "Вставить",
+	buttonCancel: "Отмена",
 
 	selectTableLabel: "Выбрать таблицу",
 	insertTableRowBeforeLabel: "Добавить строку перед",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "Удалить строку",
 	deleteTableColumnLabel: "Удалить столбец"
 })
-

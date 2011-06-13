@@ -1,0 +1,23 @@
+.mblFade.mblOut {
+	z-index: -100;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-name: mblFadeOut;
+	-webkit-animation-timing-function: ease-in;
+}
+.mblFade.mblOut.mblFast {
+	-webkit-animation-duration: 0.3s;
+}
+.mblFade.mblIn {
+	z-index: 0;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-name: mblFadeIn;
+	-webkit-animation-timing-function: ease-out;
+}
+@-webkit-keyframes mblFadeOut {
+	from {}
+	to {}
+}
+@-webkit-keyframes mblFadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}

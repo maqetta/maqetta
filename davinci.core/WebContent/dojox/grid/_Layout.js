@@ -67,6 +67,17 @@ dojo.declare("dojox.grid._Layout", null, {
 				}
 			}
 		}
+		
+		//Fix #9481 - reset idx in cell markup
+		dojo.forEach(this.cells, function(c){
+			var marks = c.markup[2].split(" ");
+			var oldIdx = parseInt(marks[1].substring(5));//get old "idx"
+			if(oldIdx != c.index){
+				marks[1] = "idx=\"" + c.index + "\"";
+				c.markup[2] = marks.join(" ");
+			}
+		});
+		
 		this.grid.setupHeaderMenu();
 		//this.grid.renderOnIdle();
 	},
@@ -116,10 +127,10 @@ dojo.declare("dojox.grid._Layout", null, {
 			return new_cell;
 		}
 
-		var cell_type = inDef.type || this._defaultCellProps.type || dojox.grid.cells.Cell;
+		var cell_type = inDef.type || inDef.cellType || this._defaultCellProps.type || this._defaultCellProps.cellType || dojox.grid.cells.Cell;
 
 		props.unitWidth = getCellWidth(inDef);
-		return new cell_type(dojo.mixin({}, this._defaultCellProps, inDef, props));	
+		return new cell_type(dojo.mixin({}, this._defaultCellProps, inDef, props));
 	},
 	
 	addRowDef: function(inRowIndex, inDef){
@@ -138,7 +149,7 @@ dojo.declare("dojox.grid._Layout", null, {
 					pctSum += window.parseInt(w, 10);
 				}else if(w == "auto"){
 					// relative widths doesn't play nice with auto - since we
-					// don't have a way of knowing how much space the auto is 
+					// don't have a way of knowing how much space the auto is
 					// supposed to take up.
 					doRel = false;
 				}
@@ -167,7 +178,7 @@ dojo.declare("dojox.grid._Layout", null, {
 				result.push(this.addRowDef(0, inDef));
 			}
 		}
-		return result;	
+		return result;
 	},
 	
 	addViewDef: function(inDef){

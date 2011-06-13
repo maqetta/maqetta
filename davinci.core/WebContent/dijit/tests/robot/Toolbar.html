@@ -149,6 +149,37 @@
 							return d;
 						}
 					},
+	
+					{
+						name: "home/end keys",
+						timeout: 40000,
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Initial focus (upon tabbing into toolbar) should go to first enabled button,
+							// which is "italic", since "cut" and "copy" are disabled
+							toolbar1Before.focus();
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
+								doh.is("toolbar1.italic", dojo.global.dijit._curFocus.id, "first button");
+							})), 1000);
+
+							// End key should go to last button
+							doh.robot.keyPress(dojo.keys.END, 500, {});
+							doh.robot.sequence(d.getTestErrback(dojo.hitch(this, function(){
+								doh.is("toolbar1.insertorderedlist", dojo.global.dijit._curFocus.id, "last button");
+							})), 1000);
+
+							// Home key should go to first enabled button again
+							// which is "italic", since "cut" and "copy" are disabled
+							doh.robot.keyPress(dojo.keys.HOME, 500, {});
+							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
+								doh.is("toolbar1.italic", dojo.global.dijit._curFocus.id, "first button again");
+							})), 1000);
+
+							return d;
+						}
+					},
 
 					// Test drop down ability.   These tests are probably redundant with the Button tests themselves,
 					// so they aren't strictly necessary.

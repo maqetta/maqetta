@@ -1,12 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-	"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Calendar Widget Test</title>
 
 		<!-- for tests -->
 		<style type="text/css">
-			@import "../../dojo/resources/dojo.css";
+			@import "../themes/claro/document.css";
 			@import "css/dijitTests.css";
 		</style>
 
@@ -20,11 +20,11 @@
 		</style>
 
 		<!-- required: a default dijit theme: -->
-		<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+		<link id="themeStyles" rel="stylesheet" href="../../dijit/themes/claro/claro.css"/>
 
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../dojo/dojo.js"
-			djConfig="parseOnLoad: true, isDebug: true"></script>
+			data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 		<!-- not needed, for testing alternate themes -->
 		<script type="text/javascript" src="_testCommon.js"></script>
@@ -50,7 +50,7 @@
 				});
 
 				var bigCalendar = dojo.byId("calendar5");
-				bigCalendar.setAttribute("dojoType", "BigCalendar");
+				bigCalendar.setAttribute("data-dojo-type", "BigCalendar");
 				dojo.parser.parse(bigCalendar.parentNode);
 			});
 
@@ -63,9 +63,9 @@
 
 		<h1 class="testTitle">Dijit Calendar Test</h1>
 
-		<input value="input before" id="before">
-		<input id="calendar1" dojoType="dijit.Calendar" onChange="myHandler(this.id,arguments[0])">
-		<input value="input after" id="after">
+		<input value="input before" id="before"/>
+		<input id="calendar1" data-dojo-type="dijit.Calendar" data-dojo-props='onChange:function(v){ myHandler(this.id, v) }'/>
+		<input value="input after" id="after"/>
 		<p>
 			<a href="#"
 			   onClick="dijit.registry.forEach(function(c){
@@ -78,7 +78,7 @@
 		<div>
 			<!-- Parent div used so we have a handle to use for dojo.parser.parse after BigCalendar gets defined. -->
 			<!-- The input below will be replaced by BigCalendar which is defined in a dojo.addOnLoad block. -->
-			<input id="calendar5" dayWidth="abbr" value="2008-03-14">
+			<input id="calendar5" data-dojo-props='dayWidth:"abbr", value:"2008-03-14"'/>
 		</div>
 	</body>
 </html>

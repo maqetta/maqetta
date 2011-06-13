@@ -1,7 +1,7 @@
 dojo.provide("dojox.math.tests.round");
 dojo.require("dojox.math.round");
 
-tests.register("dojox.math.tests.round", 
+tests.register("dojox.math.tests.round",
 	[
 		{
 			name: "round",

@@ -9,14 +9,13 @@
             dojo.require("dojox.gfx");
             dojo.require("dojo.fx");
             dojo.require("dojo.fx.easing");
-            dojo.require("dojox.fx.easing");
             
             var WIDTH = 600, HEIGHT = 400,
                 BAR_GAP = 20, BAR_WIDTH = 76,
                 BAR_FILL = "red", BAR_STROKE = "black",
                 CHAIN_DURATION = 250, COMBINE_DURATION = 1000;
             
-            var surface, rects = [];
+            var rects = [];
             
             var enable = function(enabled){
                 // enable/disable controls on the page
@@ -79,10 +78,7 @@
                 masterAnimation.play();
             }
             
-            var init = function(){
-                // create surface
-                surface = dojox.gfx.createSurface(dojo.byId("surface"), 600, 400);
-                
+            var init = function(surface){
                 // create rectangles
                 for(var w = BAR_GAP; w < WIDTH - BAR_WIDTH; w += BAR_WIDTH + BAR_GAP){
                     rects.push(surface.createRect({
@@ -93,15 +89,17 @@
                 
                 // prepare and enable controls
                 populateSelect("dojo.fx.easing", "easing");
-                if(dojox.fx.easing !== dojo.fx.easing){
-                    populateSelect("dojox.fx.easing", "easing");
-                }
                 dojo.attr("chain", "checked", false);
                 dojo.connect(dojo.byId("animate"), "onclick", animate);
                 enable(true);
             };
             
-            dojo.addOnLoad(init);
+			function createSurface(){
+                var surface = dojox.gfx.createSurface(dojo.byId("surface"), 600, 400);
+				surface.whenLoaded(init);
+			};
+
+            dojo.addOnLoad(createSurface);
         </script>
     </head>
     <body>

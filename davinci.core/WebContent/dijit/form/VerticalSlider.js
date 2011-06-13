@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.VerticalSlider");
-
-dojo.require("dijit.form.HorizontalSlider");
+define("dijit/form/VerticalSlider", ["dojo", "dijit", "text!dijit/form/templates/VerticalSlider.html", "dijit/form/HorizontalSlider"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.form.VerticalSlider",
@@ -18,8 +16,8 @@ dojo.declare(
 	_progressPixelSize: "height",
 
 	// _descending: Boolean
-	//	   Specifies if the slider values go from high-on-top (true), or low-on-top (false)
-	//	TODO: expose this in 1.2 - the css progress/remaining bar classes need to be reversed
+	//		Specifies if the slider values go from high-on-top (true), or low-on-top (false)
+	//		TODO: expose this in 1.2 - the css progress/remaining bar classes need to be reversed
 	_descending: true,
 
 	_isReversed: function(){
@@ -30,3 +28,6 @@ dojo.declare(
 	}
 });
 
+
+return dijit.form.VerticalSlider;
+});

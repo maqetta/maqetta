@@ -1,4 +1,5 @@
-dojo.provide("dojo.colors");
+define("dojo/colors", ["dojo"], function(dojo) {
+dojo.getObject("colors", true, dojo);
 
 //TODO: this module appears to break naming conventions
 
@@ -46,9 +47,9 @@ dojo.colors = {
 				var H = ((parseFloat(c[0]) % 360) + 360) % 360 / 360,
 					S = parseFloat(c[1]) / 100,
 					L = parseFloat(c[2]) / 100,
-					// calculate rgb according to the algorithm 
-					// recommended by the CSS3 Color Module 
-					m2 = L <= 0.5 ? L * (S + 1) : L + S - L * S, 
+					// calculate rgb according to the algorithm
+					// recommended by the CSS3 Color Module
+					m2 = L <= 0.5 ? L * (S + 1) : L + S - L * S,
 					m1 = 2 * L - m2;
 				a = [
 					hue2rgb(m1, m2, H + 1 / 3) * 256,
@@ -222,4 +223,7 @@ dojo.mixin(dojo.Color.named, {
 	wheat:	[245,222,179],
 	whitesmoke:	[245,245,245],
 	yellowgreen:	[154,205,50]
+});
+
+return dojo.colors;
 });

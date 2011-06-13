@@ -1,8 +1,4 @@
-dojo.provide("dojox.data.WikipediaStore");
-
-dojo.require("dojo.io.script");
-dojo.require("dojox.rpc.Service");
-dojo.require("dojox.data.ServiceStore");
+define("dojox/data/WikipediaStore", ["dojo", "dojox", "dojo/io/script", "dojox/rpc/Service", "dojox/data/ServiceStore"], function(dojo, dojox) {
 
 dojo.experimental("dojox.data.WikipediaStore");
 
@@ -111,5 +107,9 @@ dojo.declare("dojox.data.WikipediaStore", dojox.data.ServiceStore,{
 		}
 		return this.inherited(arguments);
 	}
+});
+
+return dojox.data.WikipediaStore;
+
 });
 

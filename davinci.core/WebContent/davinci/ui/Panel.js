@@ -60,7 +60,6 @@ dojo.declare("davinci.ui.Panel",dijit.layout.ContentPane, {
 	 
 	 _buildPanel : function(definitions, parentNode)
 	{
-//			debugger;
     	  
     	  var dataObject=this.data;
 		for (var i=0; i<definitions.length;i++)
@@ -332,13 +331,15 @@ davinci.ui.Panel.openDialog = function(params)
    };
    
    var okLabel=params.buttonLabel || 'ok';
-   var okBtn=new dijit.form.Button({label:okLabel,/* type:"submit",*/
+   var okStyle=params.buttonStyle || '';
+   var okBtn=new dijit.form.Button({label:okLabel, style:okStyle, /* type:"submit",*/
 	   onClick : okClicked });
    dialog.containerNode.appendChild(okBtn.domNode);
    
    dialog.show();
+   return dialog;
    
-}
+},
 
 
 
@@ -399,7 +400,7 @@ davinci.ui.Panel.metadata['radioButton']=
 			form.innerHTML=s;
 			node.appendChild(form);
 
-			field.widgets=[]
+			field.widgets=[];
 			for (var i=0;i<values.length;i++)
 			{
 				var id=field.id+'.'+i;
@@ -565,12 +566,12 @@ davinci.ui.Panel.metadata['button']=
 								data:item,
 								title:"new",
 								onOK: function (){listField.widget.store.newItem(item);}
-						}
+						};
 						davinci.ui.Panel.openDialog(params);
 						
 
 				}
-				}
+				};
 			else if (field.arrayEdit)
 				clickFunc=function()
 				{
@@ -587,13 +588,13 @@ davinci.ui.Panel.metadata['button']=
 									definition:listField.itemEditor,
 									data:item,
 									title:"edit"
-							}
+							};
 							davinci.ui.Panel.openDialog(params);
 							
 						}
 
 					}
-				}		
+				};		
 			else if (field.arrayDelete)
 				clickFunc=function()
 				{
@@ -609,7 +610,7 @@ davinci.ui.Panel.metadata['button']=
 						}
 
 					}
-				}		
+				};		
 			if (clickFunc)
 				parms.onClick=clickFunc;
 			parms.label=field.label;
@@ -880,7 +881,7 @@ davinci.ui.Panel.metadata['layout']=
 	        }
 			
 	}
-}
+};
 
 davinci.ui.Panel.metadata['colorChooser']=
 {
@@ -889,14 +890,6 @@ davinci.ui.Panel.metadata['colorChooser']=
 	{
 		dojo.require("dijit.ColorPalette");
 			
-//		var div = dojo.doc.createElement("span");
-//		div.innerHTML="test";
-//		
-//		div.style={
-//			width: "100px",
-//			height: "30px",
-//			border : "4px solid black"
-//		};
 		
         var div = dojo.create("img", {
 			src: dojo.config.blankGif || dojo.moduleUrl("dojo", "resources/blank.gif"), 
@@ -950,7 +943,7 @@ davinci.ui.Panel.metadata['colorChooser']=
 			   setColor(div.style.color);
 			   
 			   dialog.show();
-		}
+		};
 		
 		
 		node.appendChild(div);

@@ -1,0 +1,307 @@
+.sketch .dijitSliderBar {
+	border-style: solid;
+	outline: 1px;
+}
+.sketch .dijitSliderFocused .dijitSliderBar {
+	border-color: #769dc0;
+}
+.sketch .dijitSliderHover .dijitSliderBar {
+	border-color: #769dc0;
+}
+.sketch .dijitSliderDisabled .dijitSliderBar {
+	background-image: none;
+	border-color: #d3d3d3;
+}
+
+/* Horizontal Slider */
+
+.sketch .dijitRuleLabelsContainerH {
+	padding: 2px 0px;
+}
+.sketch .dijitSlider .dijitSliderProgressBarH,
+.sketch .dijitSlider .dijitSliderLeftBumper{
+	background-image: url("images/sliderHorizontal.png");
+	background-repeat:repeat-x;
+	background-position:0 -20px;
+	border-color: #b5bcc7;
+	background-color: #cfe5fa;
+}
+.sketch .dijitSlider .dijitSliderRemainingBarH,
+.sketch .dijitSlider .dijitSliderRightBumper{
+	background-image: url("images/sliderHorizontal.png");
+	background-repeat:repeat-x;
+	background-position:0 -11px;
+	border-color: #b5bcc7;
+	background-color: #fff;
+}
+.sketch .dijitSliderRightBumper {
+	border-right: solid 1px #b5bcc7;
+}
+.sketch .dijitSliderLeftBumper {
+	border-left: solid 1px #b5bcc7;
+}
+.sketch .dijitSliderHover .dijitSliderProgressBarH,
+.sketch .dijitSliderHover .dijitSliderLeftBumper{
+	background-position:0 -20px;
+	background-color: #abd6ff;
+	border-color: #769dc0;
+}
+.sketch .dijitSliderHover .dijitSliderRemainingBarH,
+.sketch .dijitSliderHover .dijitSliderRightBumper{
+	background-position:0 0px;
+	background-color: #fff;
+	border-color: #769dc0;
+}
+.sketch .dijitSliderFocused .dijitSliderProgressBarH,
+.sketch .dijitSliderFocused .dijitSliderLeftBumper{
+	background-position:0 -30px;
+	background-color: #abd6ff;
+	border-color: #769dc0;
+}
+.sketch .dijitSliderFocused .dijitSliderRemainingBarH,
+.sketch .dijitSliderFocused .dijitSliderRightBumper{
+	background-position:0 -9px;
+	background-color: #fff;
+	border-color: #769dc0;
+}
+.sketch .dijitSliderDisabled .dijitSliderProgressBarH,
+.sketch .dijitSliderDisabled .dijitSliderLeftBumper{
+	background-color: #cdcdcd;
+	background-image:none;
+}
+.sketch .dijitSliderDisabled .dijitSliderRemainingBarH,
+.sketch .dijitSliderDisabled .dijitSliderRightBumper{
+	background-color: #efefef;
+}
+
+/* Vertical Slider */
+
+.sketch .dijitRuleLabelsContainerV {
+	padding: 0px 2px;
+}
+.sketch .dijitSlider .dijitSliderProgressBarV,
+.sketch .dijitSlider .dijitSliderBottomBumper{
+	background-image: url("images/sliderVertical.png");
+	background-repeat:repeat-y;
+	background-position:-36px 0;
+	border-color: #b5bcc7;
+	background-color: #cfe5fa;
+}
+.sketch .dijitSlider .dijitSliderRemainingBarV,
+.sketch .dijitSlider .dijitSliderTopBumper{
+	background-image: url("images/sliderVertical.png");
+	background-repeat:repeat-y;
+	background-position:-3px 0;
+	border-color: #b5bcc7;
+	background-color: #fff;
+}
+.sketch .dijitSliderBottomBumper {
+	border-bottom: solid 1px #b5bcc7;
+}
+.sketch .dijitSliderTopBumper {
+	border-top: solid 1px #b5bcc7;
+}
+.sketch .dijitSliderHover .dijitSliderProgressBarV,
+.sketch .dijitSliderHover .dijitSliderBottomBumper{
+	background-position:-36px 0;
+	background-color: #abd6ff;
+}
+.sketch .dijitSliderHover .dijitSliderRemainingBarV,
+.sketch .dijitSliderHover .dijitSliderTopBumper{
+	background-position:0 0;
+	background-color: #fff;
+}
+.sketch .dijitSliderFocused .dijitSliderProgressBarV,
+.sketch .dijitSliderFocused .dijitSliderBottomBumper{
+	background-position:-56px 0;
+	background-color: #abd6ff;
+}
+.sketch .dijitSliderFocused .dijitSliderRemainingBarV,
+.sketch .dijitSliderFocused .dijitSliderTopBumper{
+	background-position:-18px 0;
+	background-color: #fff;
+}
+.sketch .dijitSliderDisabled .dijitSliderProgressBarV,
+.sketch .dijitSliderDisabled .dijitSliderBottomBumper{
+	background-color: #cdcdcd;
+}
+.sketch .dijitSliderDisabled .dijitSliderRemainingBarV,
+.sketch .dijitSliderDisabled .dijitSliderTopBumper{
+	background-color: #efefef;
+}
+
+
+/* ------- Thumbs ------- */
+
+.sketch .dijitSliderImageHandleH {
+	border: 0px;
+	width: 18px;
+	height: 16px;
+	background-image: url("images/SliderThumbs.png");
+	background-repeat:no-repeat;
+	background-position:0 0;
+}
+.sketch .dijitSliderHover .dijitSliderImageHandleH {
+	background-position:-18px 0;
+}
+.sketch .dijitSliderFocused .dijitSliderImageHandleH {
+	background-position:-36px 0;
+}
+.sketch .dijitSliderProgressBarH .dijitSliderThumbHover{
+	background-position:-36px 0;
+}
+.sketch .dijitSliderProgressBarH .dijitSliderThumbActive{
+	background-position:-36px 0;
+}
+.sketch .dijitSliderReadOnly .dijitSliderImageHandleH,
+.sketch .dijitSliderDisabled .dijitSliderImageHandleH {
+	background-position:-54px 0;
+}
+.sketch .dijitSliderImageHandleV {
+	border: 0px;
+	width: 18px;
+	height: 16px;
+	background-image: url("images/sliderThumbs.png");
+	background-repeat:no-repeat;
+	background-position:-289px 0;
+}
+.sketch .dijitSliderHover .dijitSliderImageHandleV {
+	background-position:-307px 0;
+}
+.sketch .dijitSliderFocused .dijitSliderImageHandleV {
+	background-position:-325px 0;
+}
+.sketch .dijitSliderProgressBarV .dijitSliderThumbHover{
+	background-position:-325px 0;
+}
+.sketch .dijitSliderProgressBarV .dijitSliderThumbActive{
+	background-position:-325px 0;
+}
+.sketch .dijitSliderReadOnly .dijitSliderImageHandleV,
+.sketch .dijitSliderDisabled .dijitSliderImageHandleV {
+	background-position:-343px 0;
+}
+
+/* ---- Increment/Decrement Buttons ---- */
+
+.sketch .dijitSliderButtonContainerH{
+	padding: 1px 3px 1px 2px;
+}
+.sketch .dijitSliderButtonContainerV{
+	padding: 3px 1px 2px 1px;
+}
+.sketch .dijitSliderDecrementIconH,
+.sketch .dijitSliderIncrementIconH,
+.sketch .dijitSliderDecrementIconV,
+.sketch .dijitSliderIncrementIconV {
+	background-image: url('images/commonFormArrows.png');
+	background-repeat:no-repeat;
+	background-color: #e9ecf2;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border: solid 1px #b5bcc7;
+	font-size: 1px;
+}
+.sketch .dijitSliderDecrementIconH,
+.sketch .dijitSliderIncrementIconH {
+	height: 12px;
+	width: 9px;
+}
+.sketch .dijitSliderDecrementIconV,
+.sketch .dijitSliderIncrementIconV {
+	height: 9px;
+	width: 12px;
+}
+.sketch .dijitSliderActive .dijitSliderDecrementIconH,
+.sketch .dijitSliderActive .dijitSliderIncrementIconH,
+.sketch .dijitSliderActive .dijitSliderDecrementIconV,
+.sketch .dijitSliderActive .dijitSliderIncrementIconV,
+.sketch .dijitSliderHover .dijitSliderDecrementIconH,
+.sketch .dijitSliderHover .dijitSliderIncrementIconH,
+.sketch .dijitSliderHover .dijitSliderDecrementIconV,
+.sketch .dijitSliderHover .dijitSliderIncrementIconV {
+	border: solid 1px #769dc0;
+	background-color:#fff;
+}
+.sketch .dijitSliderDecrementIconH {
+	background-position:-357px 50%;
+}
+.sketch .dijitSliderActive .dijitSliderDecrementIconH
+.sketch .dijitSliderHover .dijitSliderDecrementIconH {
+	background-position:-393px 50%;
+}
+.sketch .dijitSliderIncrementIconH {
+	background-position:-251px 50%;
+}
+.sketch .dijitSliderActive .dijitSliderIncrementIconH
+.sketch .dijitSliderHover .dijitSliderIncrementIconH {
+	background-position:-283px 50%;
+}
+.sketch .dijitSliderDecrementIconV {
+	background-position:-38px 50%;
+}
+.sketch .dijitSliderActive .dijitSliderDecrementIconV
+.sketch .dijitSliderHover .dijitSliderDecrementIconV {
+	background-position:-73px 50%;
+}
+.sketch .dijitSliderIncrementIconV {
+	background-position:-143px 49%;
+}
+.sketch .dijitSliderActive .dijitSliderIncrementIconV
+.sketch .dijitSliderHover .dijitSliderIncrementIconV {
+	background-position:-178px 49%;
+}
+.sketch .dijitSliderButtonContainerV .dijitSliderDecrementButtonHover,
+.sketch .dijitSliderButtonContainerH .dijitSliderDecrementButtonHover,
+.sketch .dijitSliderButtonContainerV .dijitSliderIncrementButtonHover,
+.sketch .dijitSliderButtonContainerH .dijitSliderIncrementButtonHover {
+	background-color: #cce3fc;
+}
+.sketch .dijitSliderButtonContainerV .dijitSliderDecrementButtonActive,
+.sketch .dijitSliderButtonContainerH .dijitSliderDecrementButtonActive,
+.sketch .dijitSliderButtonContainerV .dijitSliderIncrementButtonActive,
+.sketch .dijitSliderButtonContainerH .dijitSliderIncrementButtonActive {
+	background-color: #a5d0fc;
+	border-color:#6591b9;
+}
+.sketch .dijitSliderButtonInner {
+	visibility: hidden;
+}
+.sketch .dijitSliderDisabled .dijitSliderBar{
+	border-color: #d3d3d3;
+}
+.sketch .dijitSliderReadOnly *,.sketch .dijitSliderDisabled * {
+	border-color: #d3d3d3;
+	color: #bdbdbd;
+}
+.sketch .dijitSliderReadOnly .dijitSliderDecrementIconH,
+.sketch .dijitSliderDisabled .dijitSliderDecrementIconH {
+	background-position:-321px 50%;
+	background-color:#e9e9e9;
+}
+.sketch .dijitSliderReadOnly .dijitSliderIncrementIconH,
+.sketch .dijitSliderDisabled .dijitSliderIncrementIconH {
+	background-position:-215px 50%;
+	background-color:#e9e9e9;
+}
+.sketch .dijitSliderReadOnly .dijitSliderDecrementIconV,
+.sketch .dijitSliderDisabled .dijitSliderDecrementIconV {
+	background-position:-3px 49%;
+	background-color:#e9e9e9;
+}
+.sketch .dijitSliderReadOnly .dijitSliderIncrementIconV,
+.sketch .dijitSliderDisabled .dijitSliderIncrementIconV {
+	background-position:-107px 49%;
+	background-color:#e9e9e9;
+}
+
+.dj_ie6 .sketch .dijitSlider .dijitSliderProgressBarH,
+.dj_ie6 .sketch .dijitSlider .dijitSliderLeftBumper,
+.dj_ie6 .sketch .dijitSlider .dijitSliderRemainingBarH,
+.dj_ie6 .sketch .dijitSlider .dijitSliderRightBumper,
+.dj_ie6 .sketch .dijitSlider .dijitSliderProgressBarV,
+.dj_ie6 .sketch .dijitSlider .dijitSliderTopBumper,
+.dj_ie6 .sketch .dijitSlider .dijitSliderRemainingBarV,
+.dj_ie6 .sketch .dijitSlider .dijitSliderBottomBumper {
+	background-image:none;
+}

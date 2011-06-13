@@ -5,7 +5,9 @@
     <title>Gradient: Scatter #2</title>
 	<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug: true"></script>
     <script>
-		dojo.require("dojox.charting.Chart2D");
+		dojo.require("dojox.charting.Chart");
+        dojo.require("dojox.charting.axis2d.Default");
+        dojo.require("dojox.charting.plot2d.Scatter");
         
         run = function(){
             dojo.attr("start", "disabled", true);
@@ -31,7 +33,7 @@
 				}
 			}
 
-            var chart1 = new dojox.charting.Chart2D("c1").
+            var chart1 = new dojox.charting.Chart("c1").
                 setTheme(theme1).
                 addAxis("x", {includeZero: true,  minorLabels: false}).
                 addAxis("y", {vertical: true, includeZero: true,  minorLabels: false}).

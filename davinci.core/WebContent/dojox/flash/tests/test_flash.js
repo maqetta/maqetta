@@ -21,7 +21,7 @@ function flashReady(){
 
 function pageReady(){
 	console.debug("pageReady");
-	if (pageLoaded) { 
+	if (pageLoaded) {
 	  return; // prevent double loads
 	}
 	
@@ -54,7 +54,7 @@ function loadResources(){
 		}
 	});
 
-	d.addErrback(function(error){ 
+	d.addErrback(function(error){
 		console.debug("Unable to load testXML.xml: " + error);
 	});
 	
@@ -71,7 +71,7 @@ function loadResources(){
 		}
 	});
 
-	d.addErrback(function(error){ 
+	d.addErrback(function(error){
 		console.debug("Unable to load testXML.xml: " + error);
 	});
 }
@@ -93,10 +93,10 @@ function run(){
 		// slashes; do a trick so that they can be compared easier
 		var doubleSlash = "\\";
 		doubleSlash = doubleSlash.charAt(0);
-		correct = "hello world\n\n\nasdfasdf!@#$@#%^[]{}&amp;<xml>" + doubleSlash 
-						+ "<div>$%^&%^&*^&()<><><>,./;\0\r\f\'][`~=\"+-]\\0MORE!\n\rLESS"; 
-		var putSize = dojox.flash.comm.setMessage(correct); 
-		assert(putSize, correct.length, "Failed putting. Correct length = " 
+		correct = "hello world\n\n\nasdfasdf!@#$@#%^[]{}&amp;<xml>" + doubleSlash
+						+ "<div>$%^&%^&*^&()<><><>,./;\0\r\f\'][`~=\"+-]\\0MORE!\n\rLESS";
+		var putSize = dojox.flash.comm.setMessage(correct);
+		assert(putSize, correct.length, "Failed putting. Correct length = "
 						+ correct.length + ", Flash length = " + putSize);
 		dojox.flash.comm.setMessage(correct);
 		actual = dojox.flash.comm.getMessage();
@@ -147,26 +147,26 @@ function run(){
 	}
 }
 
-function chop(testString){ 
-	console.debug("chopping '" + testString + "'"); 
-	for(var i = 0; i < Math.min(testString.length, 100); i++){ 
-		//console.debug("index = " + i); 
-		testSlice(testString, 0, i+1); 
-	} 
-} 
+function chop(testString){
+	console.debug("chopping '" + testString + "'");
+	for(var i = 0; i < Math.min(testString.length, 100); i++){
+		//console.debug("index = " + i);
+		testSlice(testString, 0, i+1);
+	}
+}
  
-function testSlice( testString, from, to){ 
-	var putSize = dojox.flash.comm.setMessageSlice( testString, from, to); 
-	var actual = dojox.flash.comm.getMessage(); 
+function testSlice( testString, from, to){
+	var putSize = dojox.flash.comm.setMessageSlice( testString, from, to);
+	var actual = dojox.flash.comm.getMessage();
 	var correct = testString.slice(from, to);
 	
-	var msg = "Put a string with " + testString.length 
+	var msg = "Put a string with " + testString.length
 					+ " chars, but it got with " + putSize + " chars in the Flash layer";
 	assert(putSize, testString.length, msg);
 	
 	msg = "I got '" + actual + "' instead of '" + correct +"'";
-	assert(correct, actual, msg); 
-} 
+	assert(correct, actual, msg);
+}
 
 function assert(correct, actual, msg){
 	//alert("correct="+correct+",\n\nactual="+actual);

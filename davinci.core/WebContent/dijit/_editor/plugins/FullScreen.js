@@ -1,12 +1,4 @@
-dojo.provide("dijit._editor.plugins.FullScreen");
-
-dojo.require("dojo.window");
-dojo.require("dojo.i18n");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.Button");
-
-dojo.requireLocalization("dijit._editor", "commands");
+define("dijit/_editor/plugins/FullScreen", ["dojo", "dijit", "dojo/window", "dojo/i18n", "dijit/_editor/_Plugin", "dijit/form/Button", "i18n!dijit/_editor/nls/commands"], function(dojo, dijit) {
 
 dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 	// summary:
@@ -175,7 +167,7 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 		this.isFullscreen = full;
 
 		if(full){
-			//Parent classes can royally screw up this plugin, so we 
+			//Parent classes can royally screw up this plugin, so we
 			//have to set eveything to position static.
 			while(editorParent && editorParent !== dojo.body()){
 				dojo.addClass(editorParent, "dijitForceStatic");
@@ -384,12 +376,18 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 						// Resize if the original size wasn't set
 						// or wasn't in percent.  Timeout is to avoid
 						// an IE crash in unit testing.
-						setTimeout(dojo.hitch(this, function(){ed.resize({h: mb.h});}), 0);		
+						setTimeout(dojo.hitch(this, function(){ed.resize({h: mb.h});}), 0);
 					}
 				}
 				dojo.window.scrollIntoView(self.editor.toolbar.domNode);
 			}, 100);
 		}
+	},
+
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	destroy: function(){
@@ -423,4 +421,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 			zIndex: ("zIndex" in o.args)?o.args.zIndex:500
 		});
 	}
+});
+
+
+return dijit._editor.plugins.FullScreen;
 });

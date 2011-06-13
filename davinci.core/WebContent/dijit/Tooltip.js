@@ -1,7 +1,4 @@
-dojo.provide("dijit.Tooltip");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define("dijit/Tooltip", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit._MasterTooltip",
@@ -29,7 +26,6 @@ dojo.declare(
 			// Setup fade-in and fade-out functions.
 			this.fadeIn = dojo.fadeIn({ node: this.domNode, duration: this.duration, onEnd: dojo.hitch(this, "_onShow") });
 			this.fadeOut = dojo.fadeOut({ node: this.domNode, duration: this.duration, onEnd: dojo.hitch(this, "_onHide") });
-
 		},
 
 		show: function(/*String*/ innerHTML, /*DomNode*/ aroundNode, /*String[]?*/ position, /*Boolean*/ rtl){
@@ -40,6 +36,9 @@ dojo.declare(
 			if(this.aroundNode && this.aroundNode === aroundNode){
 				return;
 			}
+
+			// reset width; it may have been set by orient() on a previous tooltip show()
+			this.domNode.width = "auto";
 
 			if(this.fadeOut.status() == "playing"){
 				// previous tooltip is being hidden; wait until the hide completes then show new one
@@ -57,12 +56,17 @@ dojo.declare(
 			this.aroundNode = aroundNode;
 		},
 
-		orient: function(/* DomNode */ node, /* String */ aroundCorner, /* String */ tooltipCorner){
+		orient: function(/*DomNode*/ node, /*String*/ aroundCorner, /*String*/ tooltipCorner, /*Object*/ spaceAvailable, /*Object*/ aroundNodeCoords){
 			// summary:
 			//		Private function to set CSS for tooltip node based on which position it's in.
-			//		This is called by the dijit popup code.
+			//		This is called by the dijit popup code.   It will also reduce the tooltip's
+			//		width to whatever width is available
 			// tags:
 			//		protected
+			this.connectorNode.style.top = ""; //reset to default
+			
+			//Adjust the spaceAvailable width, without changing the spaceAvailable object
+			var tooltipSpaceAvaliableWidth = spaceAvailable.w - this.connectorNode.offsetWidth;
 
 			node.className = "dijitTooltip " +
 				{
@@ -73,6 +77,52 @@ dojo.declare(
 					"BR-BL": "dijitTooltipRight",
 					"BL-BR": "dijitTooltipLeft"
 				}[aroundCorner + "-" + tooltipCorner];
+				
+			// reduce tooltip's width to the amount of width available, so that it doesn't overflow screen
+			this.domNode.style.width = "auto";
+			var size = dojo.contentBox(this.domNode);
+			
+			var width = Math.min((Math.max(tooltipSpaceAvaliableWidth,1)), size.w);
+			var widthWasReduced = width < size.w;
+			
+			this.domNode.style.width = width+"px";
+						
+			//Adjust width for tooltips that have a really long word or a nowrap setting
+			if(widthWasReduced){
+				this.containerNode.style.overflow = "auto"; //temp change to overflow to detect if our tooltip needs to be wider to support the content
+				var scrollWidth = this.containerNode.scrollWidth;
+				this.containerNode.style.overflow = "visible"; //change it back
+				if(scrollWidth > width){
+					scrollWidth = scrollWidth + dojo.style(this.domNode,"paddingLeft") + dojo.style(this.domNode,"paddingRight");
+					this.domNode.style.width = scrollWidth + "px";
+				}
+			}
+			
+			// Reposition the tooltip connector.
+			if(tooltipCorner.charAt(0) == 'B' && aroundCorner.charAt(0) == 'B'){
+				var mb = dojo.marginBox(node);
+				var tooltipConnectorHeight = this.connectorNode.offsetHeight;
+				if(mb.h > spaceAvailable.h){
+					// The tooltip starts at the top of the page and will extend past the aroundNode
+					var aroundNodePlacement = spaceAvailable.h - (aroundNodeCoords.h / 2) - (tooltipConnectorHeight / 2);
+					this.connectorNode.style.top = aroundNodePlacement + "px";
+					this.connectorNode.style.bottom = "";
+				}else{
+					// Align center of connector with center of aroundNode, except don't let bottom
+					// of connector extend below bottom of tooltip content, or top of connector
+					// extend past top of tooltip content
+					this.connectorNode.style.bottom = Math.min(
+						Math.max(aroundNodeCoords.h/2 - tooltipConnectorHeight/2, 0),
+						mb.h - tooltipConnectorHeight) + "px";
+					this.connectorNode.style.top = "";
+				}
+			}else{
+				// reset the tooltip back to the defaults
+				this.connectorNode.style.top = "";
+				this.connectorNode.style.bottom = "";
+			}
+			
+			return Math.max(0, size.w - tooltipSpaceAvaliableWidth);
 		},
 
 		_onShow: function(){
@@ -89,6 +139,7 @@ dojo.declare(
 		hide: function(aroundNode){
 			// summary:
 			//		Hide the tooltip
+
 			if(this._onDeck && this._onDeck[1] == aroundNode){
 				// this hide request is for a show() that hasn't even started yet;
 				// just cancel the pending show()
@@ -155,69 +206,70 @@ dojo.declare(
 		//		the tooltip is displayed.
 		showDelay: 400,
 
-		// connectId: [const] String[]
-		//		Id's of domNodes to attach the tooltip to.
-		//		When user hovers over any of the specified dom nodes, the tooltip will appear.
-		//
-		//		Note: Currently connectId can only be specified on initialization, it cannot
-		//		be changed via attr('connectId', ...)
-		//
-		//		Note: in 2.0 this will be renamed to connectIds for less confusion.
+		// connectId: String|String[]
+		//		Id of domNode(s) to attach the tooltip to.
+		//		When user hovers over specified dom node, the tooltip will appear.
 		connectId: [],
 
 		// position: String[]
 		//		See description of `dijit.Tooltip.defaultPosition` for details on position parameter.
 		position: [],
 
-		constructor: function(){
-			// Map id's of nodes I'm connected to to a list of the this.connect() handles
-			this._nodeConnectionsById = {};
-		},
-
-		_setConnectIdAttr: function(newIds){
-			for(var oldId in this._nodeConnectionsById){
-				this.removeTarget(oldId);
-			}
-			dojo.forEach(dojo.isArrayLike(newIds) ? newIds : [newIds], this.addTarget, this);
-		},
-
-		_getConnectIdAttr: function(){
-			var ary = [];
-			for(var id in this._nodeConnectionsById){
-				ary.push(id);
-			}
-			return ary;
-		},
-
-		addTarget: function(/*DOMNODE || String*/ id){
+		_setConnectIdAttr: function(/*String*/ newId){
 			// summary:
-			//		Attach tooltip to specified node, if it's not already connected
-			var node = dojo.byId(id);
-			if(!node){ return; }
-			if(node.id in this._nodeConnectionsById){ return; }//Already connected
+			//		Connect to node(s) (specified by id)
 
-			this._nodeConnectionsById[node.id] = [
-				this.connect(node, "onmouseenter", "_onTargetMouseEnter"),
-				this.connect(node, "onmouseleave", "_onTargetMouseLeave"),
-				this.connect(node, "onfocus", "_onTargetFocus"),
-				this.connect(node, "onblur", "_onTargetBlur")
-			];
+			// Remove connections to old nodes (if there are any)
+			dojo.forEach(this._connections || [], function(nested){
+				dojo.forEach(nested, dojo.hitch(this, "disconnect"));
+			}, this);
+
+			// Make connections to nodes in newIds.
+			var ary = dojo.isArrayLike(newId) ? newId : (newId ? [newId] : []);
+			this._connections = dojo.map(ary, function(id){
+				var node = dojo.byId(id);
+				return node ? [
+					this.connect(node, "onmouseenter", "_onTargetMouseEnter"),
+					this.connect(node, "onmouseleave", "_onTargetMouseLeave"),
+					this.connect(node, "onfocus", "_onTargetFocus"),
+					this.connect(node, "onblur", "_onTargetBlur")
+				] : [];
+			}, this);
+	
+			this._set("connectId", newId);
+
+			this._connectIds = ary;	// save as array
+		},
+
+		addTarget: function(/*DOMNODE || String*/ node){
+			// summary:
+			//		Attach tooltip to specified node if it's not already connected
+
+			// TODO: remove in 2.0 and just use set("connectId", ...) interface
+
+			var id = node.id || node;
+			if(dojo.indexOf(this._connectIds, id) == -1){
+				this.set("connectId", this._connectIds.concat(id));
+			}
 		},
 
 		removeTarget: function(/*DOMNODE || String*/ node){
 			// summary:
 			//		Detach tooltip from specified node
 
-			// map from DOMNode back to plain id string
-			var id = node.id || node;
-
-			if(id in this._nodeConnectionsById){
-				dojo.forEach(this._nodeConnectionsById[id], this.disconnect, this);
-				delete this._nodeConnectionsById[id];
+			// TODO: remove in 2.0 and just use set("connectId", ...) interface
+			
+			var id = node.id || node,	// map from DOMNode back to plain id string
+				idx = dojo.indexOf(this._connectIds, id);
+			if(idx >= 0){
+				// remove id (modifies original this._connectIds but that's OK in this case)
+				this._connectIds.splice(idx, 1);
+				this.set("connectId", this._connectIds);
 			}
 		},
 
-		postCreate: function(){
+		buildRendering: function(){
+			this.inherited(arguments);
 			dojo.addClass(this.domNode,"dijitTooltipData");
 		},
 
@@ -372,3 +424,7 @@ dojo.declare(
 //		that the drop down and tooltip don't overlap, even when the viewport is scrolled so that there
 //		is only room below (or above) the target node, but not both.
 dijit.Tooltip.defaultPosition = ["after", "before"];
+
+
+return dijit.Tooltip;
+});

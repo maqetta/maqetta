@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,22 +8,11 @@
 	@import "../../../dojo/resources/dojo.css";
 	@import "../../../dijit/tests/css/dijitTests.css";
 </style>
-<!--
-The next line should include Microsoft's Silverligth.js, if you plan to use the silverlight backend
-<script type="text/javascript" src="Silverlight.js"></script>
--->
 <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
-<script type="text/javascript" src="../../lang/functional.js"></script>
-<script type="text/javascript" src="../../lang/functional/fold.js"></script>
-<script type="text/javascript" src="../../lang/utils.js"></script>
-<script type="text/javascript" src="../Theme.js"></script>
-<script type="text/javascript" src="../scaler/linear.js"></script>
-<script type="text/javascript" src="../Element.js"></script>
-<script type="text/javascript" src="../plot2d/Pie.js"></script>
-<script type="text/javascript" src="../Chart2D.js"></script>
 <script type="text/javascript">
 
-dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.Chart");
+dojo.require("dojox.charting.plot2d.Pie");
 dojo.require("dojox.charting.themes.PlotKit.blue");
 dojo.require("dojox.charting.themes.PlotKit.green");
 dojo.require("dojox.charting.themes.PlotKit.red");
@@ -31,7 +20,7 @@ dojo.require("dojox.charting.themes.Adobebricks");
 dojo.require("dojox.charting.themes.Algae");
 
 makeObjects = function(){
-	var chart1 = new dojox.charting.Chart2D("test1");
+	var chart1 = new dojox.charting.Chart("test1");
 	chart1.setTheme(dojox.charting.themes.PlotKit.blue);
 	chart1.addPlot("default", {
 		type: "Pie",
@@ -42,7 +31,7 @@ makeObjects = function(){
 	chart1.addSeries("Series A", [4, 2, 1, 1]);
 	chart1.render();
 
-	var chart2 = new dojox.charting.Chart2D("test2");
+	var chart2 = new dojox.charting.Chart("test2");
 	chart2.setTheme(dojox.charting.themes.PlotKit.blue);
 	chart2.addPlot("default", {
 		type: "Pie",
@@ -54,7 +43,7 @@ makeObjects = function(){
 	chart2.addSeries("Series A", [4, 2, 1, 1]);
 	chart2.render();
 
-	var chart3 = new dojox.charting.Chart2D("test3");
+	var chart3 = new dojox.charting.Chart("test3");
 	chart3.setTheme(dojox.charting.themes.PlotKit.green);
 	chart3.addPlot("default", {
 		type: "Pie",
@@ -66,7 +55,7 @@ makeObjects = function(){
 	chart3.addSeries("Series A", [4, 2, 1, 1]);
 	chart3.render();
 
-	var chart4 = new dojox.charting.Chart2D("test4");
+	var chart4 = new dojox.charting.Chart("test4");
 	chart4.setTheme(dojox.charting.themes.PlotKit.green);
 	chart4.addPlot("default", {
 		type: "Pie",
@@ -78,7 +67,7 @@ makeObjects = function(){
 	chart4.addSeries("Series A", [4, 2, 1, 1]);
 	chart4.render();
 
-	var chart5 = new dojox.charting.Chart2D("test5");
+	var chart5 = new dojox.charting.Chart("test5");
 	chart5.setTheme(dojox.charting.themes.PlotKit.red);
 	chart5.addPlot("default", {
 		type: "Pie",
@@ -89,7 +78,7 @@ makeObjects = function(){
 	chart5.addSeries("Series A", [{y: 4, text: "Red"}, {y: 2, text: "Green"}, {y: 1, text: "Blue"}, {y: 1, text: "Other"}]);
 	chart5.render();
 
-	var chart6 = new dojox.charting.Chart2D("test6");
+	var chart6 = new dojox.charting.Chart("test6");
 	chart6.setTheme(dojox.charting.themes.PlotKit.red);
 	chart6.addPlot("default", {
 		type: "Pie",
@@ -106,7 +95,7 @@ makeObjects = function(){
 	]);
 	chart6.render();
 
-	var chart7 = new dojox.charting.Chart2D("test7");
+	var chart7 = new dojox.charting.Chart("test7");
 	chart7.setTheme(dojox.charting.themes.Adobebricks);
 	chart7.addPlot("default", {
 		type: "Pie",
@@ -117,7 +106,7 @@ makeObjects = function(){
 	chart7.addSeries("Series A", [4]);
 	chart7.render();
 
-	var chart8 = new dojox.charting.Chart2D("test8");
+	var chart8 = new dojox.charting.Chart("test8");
 	chart8.setTheme(dojox.charting.themes.Algae);
 	chart8.addPlot("default", {
 		type: "Pie",

@@ -1,5 +1,5 @@
 dojo.provide("dojox.form.MultiComboBox");
-dojo.experimental("dojox.form.MultiComboBox"); 
+dojo.experimental("dojox.form.MultiComboBox");
 dojo.require("dijit.form.ComboBox");
 dojo.require("dijit.form.ValidationTextBox");
 
@@ -53,5 +53,5 @@ dojo.declare("dojox.form.MultiComboBox",
 			arguments[0] = text.replace(re, "");
 		}
 		this.inherited(arguments);
-	}		
+	}
 });

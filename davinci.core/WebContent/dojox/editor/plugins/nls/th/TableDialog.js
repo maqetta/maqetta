@@ -1,6 +1,6 @@
 ({
 	insertTableTitle: "แทรกตาราง",
-	modifyTableTitle: "ปรับเปลี่ยนตาราง",
+	modifyTableTitle: "ปรับเปลี่ยนไขตาราง",
 	rows: "แถว:",
 	columns: "คอลัมน์:",
 	align: "จัดตำแหน่ง:",
@@ -18,6 +18,7 @@
 	right: "ขวา",
 	buttonSet: "ตั้งค่า", // translated elsewhere?
 	buttonInsert: "แทรก",
+	buttonCancel: "ยกเลิก",
 
 	selectTableLabel: "เลือกตาราง",
 	insertTableRowBeforeLabel: "เพิ่มแถวก่อน",
@@ -27,4 +28,3 @@
 	deleteTableRowLabel: "ลบแถว",
 	deleteTableColumnLabel: "ลบคอลัมน์"
 })
-

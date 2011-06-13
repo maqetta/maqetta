@@ -104,7 +104,7 @@
 						var d = new doh.Deferred();
 						var _this=this;
 						doh.robot.sequence(d.getTestCallback(function(){
-							_this.grid.attr("sortFields",[{attribute:"col3",descending:true},{attribute:"id",descending:true}]);
+							_this.grid.set("sortFields",[{attribute:"col3",descending:true},{attribute:"id",descending:true}]);
 							dojo.global.structure1_store1.setValue(dojo.global.structure1_store1._getItemByIdentity(1),"col3","read");
 							// must force refresh to resort
 							_this.grid.render();
@@ -118,7 +118,7 @@
 						return d;
 					},
 					tearDown: function(){
-						this.grid.attr("sortFields",[{attribute:"id",descending:false}]);
+						this.grid.set("sortFields",[{attribute:"id",descending:false}]);
 						dojo.global.structure1_store1.setValue(dojo.global.structure1_store1._getItemByIdentity(1),"col3","new");
 						this.grid.render();
 						this.grid = null;

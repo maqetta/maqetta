@@ -26,7 +26,7 @@ dojox.rpc.tests.yahooService._testMethod = function(method){
 	}
 };
 
-doh.register("dojox.rpc.tests.yahoo", 
+doh.register("dojox.rpc.tests.yahoo",
 	[
 		{
 			name: "#1, Yahoo Answers::questionSearch",

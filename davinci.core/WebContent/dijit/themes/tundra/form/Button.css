@@ -79,10 +79,10 @@
 }
 
 .tundra .dijitArrowButtonInner {
-	background:url("../images/spriteArrows.png") no-repeat scroll 0px center;
+	background:url("../images/spriteArrows.png") no-repeat scroll 0 center;
 	width: 7px;
 	height: 7px;
-	margin: 0px 4px 0px 4px;
+	margin: 0 4px 0 4px;
 }
 .tundra .dijitTextBox .dijitArrowButtonInner {
 	background-position: 0 center;

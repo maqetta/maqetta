@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Mida",
 	fontName: "Tipus de lletra",
@@ -9,6 +11,7 @@
 	cursive: "Cursiva",
 	fantasy: "Fantasia",
 
+	noFormat: "Cap",
 	p: "Paràgraf",
 	h1: "Títol",
 	h2: "Subtítol",
@@ -23,4 +26,5 @@
 	6: "x-gran",
 	7: "xx-gran"
 })
-
+//end v1.x content
+);

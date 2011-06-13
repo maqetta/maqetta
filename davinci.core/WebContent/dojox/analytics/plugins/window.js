@@ -17,9 +17,9 @@ dojox.analytics.plugins.window = new (function(){
 				switch(i){
 					case "location":
 					case "console":
-						data[i]=window[i];	
+						data[i]=window[i];
 						break;
-					default:	
+					default:
 						break;
 				}
 			}else{

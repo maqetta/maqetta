@@ -54,7 +54,7 @@ dojo.declare(
 	// 	|	});
 	
 	//	autoRefresh: Boolean
-	//		Enable the refresh of registered areas on drag start. 
+	//		Enable the refresh of registered areas on drag start.
 	autoRefresh: true,
 
 
@@ -174,6 +174,10 @@ dojo.declare(
 			if(widget.resize && dojo.isFunction(widget.resize)){
 				widget.resize();
 			}
+
+			// Update the column of the widget
+			widget.set("column", node.parentNode.cellIndex);
+			
 			if(this.doLayout){
 				var domNodeHeight = this._contentBox.h,
 					divHeight = dojo.contentBox(this.gridContainerDiv).h;
@@ -321,7 +325,7 @@ dojo.declare(
 		i = 0;
 		while(i < this.nbZones){
 			// Add the parameter accept in each zone used by AreaManager
-			// (see method dojox.mdnd.AreaManager:registerByNode)			
+			// (see method dojox.mdnd.AreaManager:registerByNode)
 			this._grid.push({
 				'node': dojo.create("td", {
 					'class': "gridContainerZone",
@@ -334,6 +338,12 @@ dojo.declare(
 			});
 			i++;
 		}
+	},
+	
+	_getZonesAttr: function(){
+		// summary:
+		//   return array of zone (domNode)
+		return dojo.query(".gridContainerZone",  this.containerNode);
 	},
 
 	enableDnd: function(){
@@ -442,6 +452,7 @@ dojo.declare(
 				dojo.attr(child.domNode, "tabIndex", "0");
 			}
 		}
+		child.set("column", column);
 		return child; // Widget
 	},
 
@@ -490,7 +501,7 @@ dojo.declare(
 	_setColWidthsAttr: function(value){
 		this.colWidths = dojo.isString(value) ? value.split(",") : (dojo.isArray(value) ? value : [value]);
 		
-		if(this._started){ 
+		if(this._started){
 			this._updateColumnsWidth();
 		}
 	},

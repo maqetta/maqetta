@@ -1,4 +1,6 @@
-dojo.provide("dojox.encoding.bits");
+// AMD-ID "dojox/encoding/bits"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("encoding.bits", true, dojox);
 
 dojox.encoding.bits.OutputStream = function(){
 	this.reset();
@@ -61,4 +63,8 @@ dojo.extend(dojox.encoding.bits.InputStream, {
 	getWidth: function(){
 		return this.width - this.bbyte * 8 - this.bit;
 	}
+});
+
+
+return dojox.encoding.bits;
 });

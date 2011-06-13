@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "大小",
 	fontName: "字体",
@@ -9,6 +11,7 @@
 	cursive: "草书",
 	fantasy: "虚线",
 
+	noFormat: "无",
 	p: "段落",
 	h1: "标题",
 	h2: "子标题",
@@ -23,3 +26,5 @@
 	6: "XL 号",
 	7: "XXL 号"
 })
+//end v1.x content
+);

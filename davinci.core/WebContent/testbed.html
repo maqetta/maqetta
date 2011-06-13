@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>daVinci Page Designer</title>
+ 	<style type="text/css">
+		@import url("./davinci/workbench.css");
+		@import url("./davinci/propview.css");
+		html, body {
+			width: 100%;
+			height: 100%;
+		}
+    </style>
+   
+     <script type="text/javascript" src="./dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script type="text/javascript" src="./dijit/dijit.js"></script>
+    <script>
+    	
+    	
+    	dojo.require("davinci.ve.widgets.ColorPicker");
+
+		function run(){
+			/*
+			var widget = new davinci.ve.widgets.ColorPicker({});
+			var attach = dojo.byId('mainAttach');
+			attach.appendChild(widget.domNode);
+			*/
+		}
+    	
+    	dojo.addOnLoad(run);
+    </script>
+  </head>
+  <body class="claro">
+  <br><br><br><br>
+ 
+  <div id="mainAttach"></div>
+  <div dojoType="davinci.ve.widgets.ColorPicker"></div>
+  
+  </body>
+
+</html>

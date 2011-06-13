@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Lihavointi',
 	'copy': 'Kopioi',
@@ -46,3 +48,5 @@
 	'systemShortcut': 'Toiminto "${0}" on käytettävissä selaimessa vain näppäimistön pikatoiminnolla. Käytä seuraavaa: ${1}.'
 })
 
+//end v1.x content
+);

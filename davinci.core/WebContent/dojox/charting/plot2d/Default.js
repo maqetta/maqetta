@@ -134,7 +134,8 @@ dojo.declare("dojox.charting.plot2d.__DefaultCtorArgs", dojox.charting.plot2d.__
 			//	kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		An optional arguments object to help define this plot.
 			this.opt = dojo.clone(this.defaultParams);
-			du.updateWithObject(this.opt, kwArgs);
+            du.updateWithObject(this.opt, kwArgs);
+            du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 			this.series = [];
 			this.hAxis = this.opt.hAxis;
 			this.vAxis = this.opt.vAxis;
@@ -299,6 +300,8 @@ dojo.declare("dojox.charting.plot2d.__DefaultCtorArgs", dojox.charting.plot2d.__
 							}
 							frontMarkers[i] = s.createPath(path).setStroke(theme.marker.stroke).setFill(theme.marker.fill);
 						}, this);
+						run.dyn.markerFill = theme.marker.fill;
+						run.dyn.markerStroke = theme.marker.stroke;
 						if(events){
 							dojo.forEach(frontMarkers, function(s, i){
 								var o = {

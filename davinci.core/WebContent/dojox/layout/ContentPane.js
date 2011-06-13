@@ -1,7 +1,7 @@
 dojo.provide("dojox.layout.ContentPane");
 
 dojo.require("dijit.layout.ContentPane");
-dojo.require("dojox.html._base"); 
+dojo.require("dojox.html._base");
 
 dojo.declare("dojox.layout.ContentPane", dijit.layout.ContentPane, {
 	// summary:
@@ -24,7 +24,7 @@ dojo.declare("dojox.layout.ContentPane", dijit.layout.ContentPane, {
 	//		cleans content to make it less likely to generate DOM/JS errors.
 	//	description:
 	//		useful if you send ContentPane a complete page, instead of a html fragment
-	//		scans for 
+	//		scans for
 	//
 	//			* title Node, remove
 	//			* DOCTYPE tag, remove
@@ -62,14 +62,14 @@ dojo.declare("dojox.layout.ContentPane", dijit.layout.ContentPane, {
 	onExecError: function(e){
 		// summary:
 		//		event callback, called on script error or on java handler error
-		//		overide and return your own html string if you want a some text 
+		//		overide and return your own html string if you want a some text
 		//		displayed within the ContentPane
 	},
 
 	_setContent: function(cont){
 		// override dijit.layout.ContentPane._setContent, to enable path adjustments
 		
-		var setter = this._contentSetter; 
+		var setter = this._contentSetter;
 		if(! (setter && setter instanceof dojox.html._ContentSetter)) {
 			setter = this._contentSetter = new dojox.html._ContentSetter({
 				node: this.containerNode,

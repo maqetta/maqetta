@@ -406,7 +406,22 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 
 		this._radio = [];
 	
+		function isReadOnly(value){
+			
+			if(value && value.rule && value.rule.getCSSFile){
+				var file = value.rule.getCSSFile();
+				var resource = file.getResource();
+				return resource.readOnly;
+			}else{
+				return false;
+			}
+			
+		}
+		
 		for(var i = 0;i<this._values.length;i++){
+			
+			var readOnly = isReadOnly(this._values[i]);
+			
 			var valueString = this._formatRuleString(this._values[i]);
 			this._radio.push( dojo.create("input", {type:'radio', name:this._radioGroupName}) );
 			row = dojo.doc.createElement("tr");
@@ -446,6 +461,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			dojo.addClass(column, "cascadRemove");
 			
 			var button = dojo.doc.createElement("button");
+			dojo.attr(button, "disabled", isReadOnly);
 			dojo.addClass(button,"cascadeRemoveButton");
 			column.appendChild(button);
 			this._handles.push(dojo.connect(button, "onclick", this, makeRemoveOnChange(i)));
@@ -533,6 +549,17 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 	},
 	_updateFieldValue : function(){
+		
+		function isReadOnly(value){	
+			if(value && value.rule && value.rule.getCSSFile){
+				var file = value.rule.getCSSFile();
+				var resource = file.getResource();
+				return resource.readOnly;
+			}else{
+				return false;
+			}
+		}
+		
 		if(this._widget==null)
 			this._setFieldValue("",this._getBaseLocation());
 	

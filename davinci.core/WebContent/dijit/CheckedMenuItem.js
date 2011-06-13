@@ -1,6 +1,4 @@
-dojo.provide("dijit.CheckedMenuItem");
-
-dojo.require("dijit.MenuItem");
+define("dijit/CheckedMenuItem", ["dojo", "dijit", "text!dijit/templates/CheckedMenuItem.html", "dijit/MenuItem"], function(dojo, dijit) {
 
 dojo.declare("dijit.CheckedMenuItem",
 		dijit.MenuItem,
@@ -19,7 +17,7 @@ dojo.declare("dijit.CheckedMenuItem",
 			//		Sets the class and state for the check box.
 			dojo.toggleClass(this.domNode, "dijitCheckedMenuItemChecked", checked);
 			dijit.setWaiState(this.domNode, "checked", checked);
-			this.checked = checked;
+			this._set("checked", checked);
 		},
 
 		onChange: function(/*Boolean*/ checked){
@@ -41,3 +39,7 @@ dojo.declare("dijit.CheckedMenuItem",
 			this.inherited(arguments);
 		}
 	});
+
+
+return dijit.CheckedMenuItem;
+});

@@ -25,6 +25,8 @@
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dojox.widget.DynamicTooltip");
 		dojo.require("dijit.ColorPalette");
+		dojo.require("dojo.parser");
+		
 		dojo.addOnLoad(function(){
 			console.log("on load func");
 			var tt = new dojox.widget.DynamicTooltip({
@@ -84,8 +86,8 @@
 			</b>
 		</span>
 		<span style="color: blue;">
-			<button onclick="dijit.byId('dyn_two_tooltip').attr('href', 'honey.php');">Set URL honey.php, delayed</button>
-			<button onclick="dijit.byId('dyn_two_tooltip').attr('href', 'get_time.php');">Set URL get_time.php</button>
+			<button onclick="dijit.byId('dyn_two_tooltip').set('href', 'honey.php');">Set URL honey.php, delayed</button>
+			<button onclick="dijit.byId('dyn_two_tooltip').set('href', 'get_time.php');">Set URL get_time.php</button>
 		</span>
 	</div>
 	<span id="programmaticTestDynamic">this text has a programmatically created dynamic tooltip</span>
@@ -170,7 +172,7 @@
 	<span dojoType="dojox.widget.DynamicTooltip" connectId="s5" id="s5_tooltip">s5 tooltip</span>
 
 	<h3>One Tooltip for multiple connect nodes</h3>
-	<span dojoType="dojox.widget.DynamicTooltip" connectId="multi1,multi2" id="multi1,multi2_tooltip" style="display:none;">multi tooltip</span>
+	<span dojoType="dojox.widget.DynamicTooltip" connectId="multi1,multi2" id="multiboth" style="display:none;">multi tooltip</span>
 	<a id="multi1" href="#bogus">multi1</a><br><a id="multi2" href="#bogus">multi2</a>
 
 </body>

@@ -1,12 +1,22 @@
 ({
-	"findLabel": "Hledaný řetězec:",
+	"findLabel": "Najít:",
+	"findTooltip": "Zadejte hledaný text.",
 	"replaceLabel": "Nahrazující řetězec:",
-	"findReplace": "Přepnout hledání/nahrazování",
-	"matchCase": "S rozlišením velkých a malých písmen", 
+	"replaceTooltip": "Zadejte text pro nahrazení.",
+	"findReplace": "Najít a nahradit",
+	"matchCase": "S rozlišením velkých a malých písmen",
+	"matchCaseTooltip": "S rozlišením velkých a malých písmen",
 	"backwards": "V opačném směru",
-	"replaceAll": "Všechny výskyty", 
+	"backwardsTooltip": "Hledat text v opačném směru",
+	"replaceAll": "Všechny výskyty",
+	"replaceAllButton": "Nahradit vše",
+	"replaceAllButtonTooltip": "Nahradit všechen text",
 	"findButton": "Najít",
+	"findButtonTooltip": "Najít text",
 	"replaceButton": "Nahradit",
-	"replaceDialogText": "Počet nahrazených výskytů: ${0}. "
+	"replaceButtonTooltip": "Nahradit text",
+	"replaceDialogText": "Počet nahrazených výskytů: ${0}.",
+	"eofDialogText": "Poslední výskyt ${0}",
+	"eofDialogTextFind": "byl nalezen",
+	"eofDialogTextReplace": "byl nahrazen"
 })
-

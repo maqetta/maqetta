@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Koko",
 	fontName: "Fontti",
@@ -9,6 +11,7 @@
 	cursive: "cursive",
 	fantasy: "fantasy",
 
+	noFormat: "Ei mitään",
 	p: "Kappale",
 	h1: "Otsikko",
 	h2: "Alatason otsikko",
@@ -23,3 +26,5 @@
 	6: "x-large",
 	7: "xx-large"
 })
+//end v1.x content
+);

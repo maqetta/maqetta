@@ -17,7 +17,7 @@
 }
 
 .nihilo .dijitTabContainerBottom .nowrapTabStrip .dijitTab {
-	top: 0px;
+	top: 0;
 }
 
 /* Tabs, shared classes */
@@ -29,7 +29,7 @@
 }
 
 .nihilo .dijitTabInnerDiv {
-	padding:0px 3px 0px 0px;
+	padding:0 3px 0 0;
 	margin: 0 0 0 4px;
 	background: url("../images/tabContainerSprite.gif") no-repeat;
 	background-position: right -400px;
@@ -38,7 +38,7 @@
 .nihilo .dijitTab {
 	line-height:normal;
 	margin:0 2px 0 0;	/* space between one tab and the next in top/bottom mode */
-	padding:0px;
+	padding:0;
 	background: url("../images/tabContainerSprite.gif") no-repeat 0 -300px;
 	color: #6d6d6d;
 	border-bottom: 1px #ccc solid;
@@ -53,7 +53,7 @@
 /* hovered tab */
 .nihilo .dijitTabHover {
 	color: #243C5F;
-	background: url("../images/tabContainerSprite.gif") no-repeat 0px -150px;
+	background: url("../images/tabContainerSprite.gif") no-repeat 0 -150px;
 }
 
 .nihilo .dijitTabHover .dijitTabInnerDiv {
@@ -68,7 +68,7 @@
 .nihilo .dijitTabChecked
 {
 	/* the selected tab (with or without hover) */
-	background: url("../images/tabContainerSprite.gif") no-repeat 0px -0px;
+	background: url("../images/tabContainerSprite.gif") no-repeat 0 -0;
 }
 
 .nihilo .dijitTabChecked .dijitTabInnerDiv {
@@ -88,12 +88,12 @@
 .nihilo .dijitTabContainerTabListNested {
 	background: #FDFDFD;
 	border: none;
-	margin-bottom: 0px;		/* override margin: -1px; */
+	margin-bottom: 0;		/* override margin: -1px; */
 }
 .nihilo .dijitTabContainerTabListNested .dijitTab {
 	background: none;
 	border: none;
-	top: 0px;	/* override top:1px setting of top-level tabs */
+	top: 0;	/* override top:1px setting of top-level tabs */
 }
 .nihilo .dijitTabContainerTabListNested .dijitTab .dijitTabInnerDiv,
 .nihilo .dijitTabContainerTabListNested .dijitTab .dijitTabContent {
@@ -108,8 +108,8 @@
 }
 .nihilo .dijitTabContainerSpacerNested {
 	/* thinner line between tab (labels) and content */
-	height: 0px;
-	border-bottom: 0px;
+	height: 0;
+	border-bottom: 0;
 }
 .nihilo .dijitTabPaneWrapperNested {
 	border: none;	/* prevent double border */
@@ -134,17 +134,6 @@
 	background: url("../images/spriteRoundedIconsSmall.gif") no-repeat -60px -15px;
 }
 
-.nihilo .dijitTab .tabLabel {
-	/* make sure tabs w/close button and w/out close button are same height, even w/small (<15px) font */
-	min-height: 15px;
-	display: inline-block;
-}
-.dj_ie6 .nihilo .dijitTabButtonIcon {
-	/* because min-height doesn't work on IE6 */
-	height: 18px;
-	width: 1px;
-}
-
 /* ================================ */
 /* top tabs */
 .nihilo .dijitTabContainerTop-tabs {
@@ -162,7 +151,7 @@
 .dj_ie6 .nihilo .dijitTabContainerTop-tabs,
 .dj_ie7 .nihilo .dijitTabContainerTop-tabs {
 	border-bottom: 1px solid #ccc;
-	padding-bottom: 0px;
+	padding-bottom: 0;
 }
 
 .nihilo .dijitTabContainerTopNoStrip {
@@ -432,18 +421,18 @@
 
 /* this resets the tabcontainer stripe when within a contentpane */
 .nihilo .dijitTabContainerTop-dijitContentPane .dijitTabContainerTop-tabs {
-	border-left: 0px solid #ccc;
-	border-top: 0px solid #ccc;
-	border-right: 0px solid #ccc;
-	padding-top: 0px;
-	padding-left: 0px;
+	border-left: 0 solid #ccc;
+	border-top: 0 solid #ccc;
+	border-right: 0 solid #ccc;
+	padding-top: 0;
+	padding-left: 0;
 }
 
 /* ================================ */
 
 /* Menu and slider control styles */
 .nihilo .dijitTabContainer .tabStripButton {
-	margin-right: 0px;
+	margin-right: 0;
 }
 
 .nihilo .tabStripButton .dijitTabInnerDiv .dijitTabContent {
@@ -485,7 +474,7 @@
 }
 
 .nihilo .dijitTabContainerTopNone {
-	padding-top: 0px;
+	padding-top: 0;
 }
 
 .nihilo .dijitTabContainer .tabStripButton-top {

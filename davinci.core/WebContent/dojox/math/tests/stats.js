@@ -98,5 +98,5 @@ dojo.require("dojox.math.stats");
 			eq(t, s.p90, 18);
 			eq(t, s.max, 20);
 		}
-	]); 
+	]);
 })();

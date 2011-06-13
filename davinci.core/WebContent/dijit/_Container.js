@@ -1,4 +1,4 @@
-dojo.provide("dijit._Container");
+define("dijit/_Container", ["dojo", "dijit"], function(dojo, dijit) {
 
 dojo.declare("dijit._Container",
 	null,
@@ -62,7 +62,7 @@ dojo.declare("dijit._Container",
 			//		not destroy it.  You can also pass in an integer indicating
 			//		the index within the container to remove
 
-			if(typeof widget == "number" && widget > 0){
+			if(typeof widget == "number"){
 				widget = this.getChildren()[widget];
 			}
 
@@ -130,3 +130,7 @@ dojo.declare("dijit._Container",
 		}
 	}
 );
+
+
+return dijit._Container;
+});

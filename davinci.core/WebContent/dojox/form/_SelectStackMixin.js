@@ -2,15 +2,15 @@ dojo.provide("dojox.form._SelectStackMixin");
 
 dojo.declare("dojox.form._SelectStackMixin", null, {
 	// summary:
-	//		Mix this class in to a dijit.form._FormSelectWidget in order to 
+	//		Mix this class in to a dijit.form._FormSelectWidget in order to
 	//		provide support for "selectable" multiforms.  The widget is pointed
-	//		to a dijit.layout.StackContainer and will handle displaying and 
+	//		to a dijit.layout.StackContainer and will handle displaying and
 	//		submitting the values of only the appropriate pane.
 	//
-	//		The options for this widget will be automatically set - based on 
+	//		The options for this widget will be automatically set - based on
 	//		the panes that are in the stack container.  The "title" attribute of
 	//		the pane will be used for the display of the option.  The "id" attribute
-	//		of the pane will be used as the value of the option.  In order to 
+	//		of the pane will be used as the value of the option.  In order to
 	//		avoid running into unique ID constraint issues, a stackPrefix mechanism
 	//		is provided.
 
@@ -20,7 +20,7 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 	
 	// stackPrefix: string
 	//		A prefix to remove from our stack pane ids when setting our options.
-	//		This exists so that we won't run into unique ID constraints.  For 
+	//		This exists so that we won't run into unique ID constraints.  For
 	//		example, if stackPrefix is set to "foo_", and there are three panes
 	//		in our stack with ids of "foo_a", "foo_b", and "foo_c", then the values
 	//		of the options created for the stack controller widget will be "a",
@@ -54,7 +54,7 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 			savedStates = {};
 			dojo.forEach(widgets, function(w){
 				savedStates[w.id] = w.disabled;
-				w.attr("disabled", true);
+				w.set("disabled", true);
 			});
 			pane._savedStates = savedStates;
 		}else{
@@ -65,7 +65,7 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 				if(state == undefined){
 					state = false;
 				}
-				w.attr("disabled", state);
+				w.set("disabled", state);
 			});
 			delete pane._savedStates;
 		}
@@ -152,13 +152,13 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 		var _this = this;
 		var fx = function(){
 			// This stuff needs to be run after we show our child, if
-			// the stack is going to show a different child than is 
+			// the stack is going to show a different child than is
 			// selected - see trac #9396
 			delete _this._savedValue;
 			_this.onSelectChild(selPane);
 			if(!selPane._shown){
 				_this._togglePane(selPane, true);
-			}			
+			}
 		};
 		if(selPane !== info.selected){
 			var stack = dijit.byId(this.stackId);

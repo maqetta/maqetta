@@ -1,8 +1,6 @@
-dojo.provide("dijit.Toolbar");
+define("dijit/Toolbar", ["dojo", "dijit", "dijit/_Widget", "dijit/_KeyNavContainer", "dijit/_Templated", "dijit/ToolbarSeparator"], function(dojo, dijit) {
 
-dojo.require("dijit._Widget");
-dojo.require("dijit._KeyNavContainer");
-dojo.require("dijit._Templated");
+// Note: require of ToolbarSeparator is for back-compat, remove for 2.0
 
 dojo.declare("dijit.Toolbar",
 	[dijit._Widget, dijit._Templated, dijit._KeyNavContainer],
@@ -11,7 +9,7 @@ dojo.declare("dijit.Toolbar",
 	//		A Toolbar widget, used to hold things like `dijit.Editor` buttons
 
 	templateString:
-		'<div class="dijit" waiRole="toolbar" tabIndex="${tabIndex}" dojoAttachPoint="containerNode">' +
+		'<div class="dijit" role="toolbar" tabIndex="${tabIndex}" dojoAttachPoint="containerNode">' +
 		//	'<table style="table-layout: fixed" class="dijitReset dijitToolbarTable">' + // factor out style
 		//		'<tr class="dijitReset" dojoAttachPoint="containerNode"></tr>'+
 		//	'</table>' +
@@ -20,11 +18,12 @@ dojo.declare("dijit.Toolbar",
 	baseClass: "dijitToolbar",
 
 	postCreate: function(){
+		this.inherited(arguments);
+
 		this.connectKeyNavHandlers(
 			this.isLeftToRight() ? [dojo.keys.LEFT_ARROW] : [dojo.keys.RIGHT_ARROW],
 			this.isLeftToRight() ? [dojo.keys.RIGHT_ARROW] : [dojo.keys.LEFT_ARROW]
 		);
-		this.inherited(arguments);
 	},
 
 	startup: function(){
@@ -37,5 +36,5 @@ dojo.declare("dijit.Toolbar",
 }
 );
 
-// For back-compat, remove for 2.0
-dojo.require("dijit.ToolbarSeparator");
+return dijit.Toolbar;
+});

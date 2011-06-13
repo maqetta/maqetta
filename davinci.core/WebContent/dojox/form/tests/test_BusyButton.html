@@ -27,10 +27,10 @@
 					dijit.byId("button_noTimeout").cancel();
 				});
 				dojo.connect(dijit.byId("buttonCancel2"), "onClick", function(){
-					dijit.byId("button_noTimeout2").attr("label", "Chargeback failed...", 1000);
+					dijit.byId("button_noTimeout2").set("label", "Chargeback failed...", 1000);
 				});
 				dojo.connect(dijit.byId("button_noTimeout3"), "_onClick", function(){
-					dijit.byId("button_noTimeout3").attr("label", "Creating account...");
+					dijit.byId("button_noTimeout3").set("label", "Creating account...");
 					dijit.byId("button_noTimeout3").resetTimeout();
 				});
 			});

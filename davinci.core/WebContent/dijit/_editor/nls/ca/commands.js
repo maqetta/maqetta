@@ -1,16 +1,18 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Negreta',
 	'copy': 'Copia',
 	'cut': 'Retalla',
 	'delete': 'Suprimeix',
 	'indent': 'Sagnat',
-	'insertHorizontalRule': 'Regle horitzontal',
+	'insertHorizontalRule': 'Regla horitzontal',
 	'insertOrderedList': 'Llista numerada',
 	'insertUnorderedList': 'Llista de vinyetes',
 	'italic': 'Cursiva',
 	'justifyCenter': 'Centra',
 	'justifyFull': 'Justifica',
-	'justifyLeft': 'Alinea a la esquerra',
+	'justifyLeft': 'Alinea a l\'esquerra',
 	'justifyRight': 'Alinea a la dreta',
 	'outdent': 'Sagna a l\'esquerra',
 	'paste': 'Enganxa',
@@ -46,4 +48,5 @@
 	'systemShortcut': 'L\'acció "${0}" és l\'única disponible al navegador utilitzant una drecera del teclat. Utilitzeu ${1}.',
 	'ctrlKey':'control+${0}'
 })
-
+//end v1.x content
+);

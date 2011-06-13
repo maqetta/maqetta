@@ -1,42 +1,76 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Editor Test</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2"/>
 
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 	</style>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="isDebug: true"></script>
 
+	<script type="text/javascript" src="../_testCommon.js"></script>
+		
 	<script type="text/javascript">
+		dojo.require("doh.runner");
 		dojo.require("dijit.dijit");
 		dojo.require("dijit.Editor");
 		dojo.require("dojo.parser");
+		
+		dojo.addOnLoad(function(){
+
+			doh.register("parse", function(){
+				dojo.parser.parse();
+			});
+
+
+			 doh.register("test value", [
+				{
+					name: "test value",
+					timeout: 10000,
+					runTest: function(){
+						var d = new doh.Deferred();
+
+						
+						setTimeout(d.getTestCallback(function(){
+							var value = dijit.byId('editor').get('value');
+							doh.is("ęóąśłżźćńĘÓŁĄŚŁŻŹĆŃ", value );
+							
+							dijit.byId('editor').set('value', '\u65e5\u672c\u8a9e');
+							value = dijit.byId('editor').get('value');
+							doh.is("\u65e5\u672c\u8a9e", value );
+
+							dijit.byId('editor').set('value', 'ęóąśłżźćńĘÓŁĄŚŁŻŹĆŃ');
+						}), 2000);
+
+						return d;
+					}
+				}
+			]);
+
+			doh.run();
+		});
 	</script>
 </head>
 <body class="claro">
 <form method="post">
 <p>
-Plain text: ďż˝óąśłďż˝ďż˝ďż˝ďż˝ďż˝ÓŁďż˝ďż˝ďż˝ďż˝ďż˝ďż˝ďż˝
+Plain text: ęóąśłżźćńĘÓŁĄŚŁŻŹĆŃ
 </p>
 
 <p>
 Same text should show up in the Editor:
 </p>
-<div name="field" id="editor" dojoType="dijit.Editor">
-ďż˝óąśłďż˝ďż˝ďż˝ďż˝ďż˝ÓŁďż˝ďż˝ďż˝ďż˝ďż˝ďż˝ďż˝
-</div>
+<div id="editor" data-dojo-type="dijit.Editor" data-dojo-props='name:"field"'>ęóąśłżźćńĘÓŁĄŚŁŻŹĆŃ</div>
 <input type="submit" value="Save" />
-<button type=button onclick="console.log(dijit.byId('editor').attr('value'))">getValue</button>
-<button type=button onclick="dijit.byId('editor').attr('value', '\u65e5\u672c\u8a9e')">set value to &#x65e5;&#x672c;&#x8a9e;</button>
+<button type=button onclick="console.log(dijit.byId('editor').get('value'))">getValue</button>
+<button type=button onclick="dijit.byId('editor').set('value', '\u65e5\u672c\u8a9e')">set value to &#x65e5;&#x672c;&#x8a9e;</button>
 
 </form>
 </body>

@@ -3,8 +3,8 @@
 .nihilo .dijitMenu,
 .nihilo .dijitMenuBar {
 	border: 1px solid #d3d3d3;
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	background-color: #fff;
 }
 
@@ -14,7 +14,7 @@
 
 .nihilo .dijitMenuItem {
 	font-family: sans-serif;
-	margin: 0px;
+	margin: 0;
 	color: #243C5F;
 }
 .nihilo .dijitMenuBar .dijitMenuItem {
@@ -53,7 +53,7 @@
 	height: 1px;
 }
 
-/* separator can be two pixels -- set border of either one to 0px to have only one */
+/* separator can be two pixels -- set border of either one to 0 to have only one */
 .nihilo .dijitMenuSeparatorTop {
 	border-bottom: 1px solid #fff; /*97adcb; */
 }

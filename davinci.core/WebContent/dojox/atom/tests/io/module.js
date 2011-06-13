@@ -54,8 +54,8 @@ doh.register("dojox.atom.tests.io.module", [
 	},
 
 	// Feed parsing, feed attributes (title, id, etc.) and functions, including all generic AtomItem methods
-	// Incidently, also tests AtomIO.getFeed success, as well as all members of the Category, Content, Link, 
-	// and Person classes.  
+	// Incidently, also tests AtomIO.getFeed success, as well as all members of the Category, Content, Link,
+	// and Person classes.
 	{
 		name: "checkFeed",
 		runTest: function(t){

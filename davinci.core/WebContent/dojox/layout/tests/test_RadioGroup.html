@@ -5,7 +5,7 @@
 	<title>RadioGroup (Animated StackContainer) Widget Test</title>
 
 	<!-- required: a default theme file -->
-	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/tundra/tundra.css">
+	<link rel="stylesheet" id="themeStyles" href="../../../dijit/themes/claro/claro.css">
 	<link rel="stylesheet" href="../resources/RadioGroup.css">	
 
 	<!-- required: dojo.js -->
@@ -21,6 +21,7 @@
 		dojo.require("dojox.layout.RadioGroup");
 		dojo.require("dojo.parser"); 
 		dojo.require("dijit.layout.ContentPane"); 
+		dojo.require("dijit.form.ComboBox");
 		dojo.require("dijit.form.Button");
 	</script>
 
@@ -50,7 +51,7 @@
 	</style>
 
 </head>
-<body class="tundra">
+<body class="claro">
 
 	<h1 class="testTitle">dojox.layout.RadioGroup test</h1>
 
@@ -73,9 +74,9 @@
 			<div dojoType="dijit.layout.ContentPane" title="Dojox" class="dojoxPane" style="width:300px; height:300px; "></div>
 		</div>
 	</div>
+	
+	<br style="margin-top:30px; clear:both">
 
-	<br style="clear:both">
-	<br style="clear:both">
 	<div>
 		<button dojoType="dijit.form.Button">add children
 			<script type="dojo/method" event="onClick">
@@ -141,10 +142,47 @@
 			// testing addchild after startup
 			new dijit.layout.ContentPane({ title:"after", content:lorem() }).placeAt(g);
 			
-		})
+		});
+	</script>
+
+	<br style="margin-top:30px; clear:both">
+	
+	<h2>Has no buttons (auto rotating via code)</h2>
+
+	<div id="hasnobuttons" style="width:915px; margin:0 auto; height:300px;">
+		<div id="bfirstGroup" dojoType="dojox.layout.RadioGroup" style="width:300px; height:300px; float:left;">
+			<div dojoType="dijit.layout.ContentPane" href="doc0.html" title="Dojo" class="dojoPane" style="width:300px; height:300px;"></div>
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dijit" class="dijitPane" style="width:300px; height:300px;"></div>
+			<div dojoType="dijit.layout.ContentPane" href="doc0.html" title="Dojox" class="dojoxPane" style="width:300px; height:300px;"></div>
+		</div>
+	
+		<div id="bfirstFade" dojoType="dojox.layout.RadioGroupFade" style="width:300px; height:300px; float:left">
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dojo" class="dojoPane" style="width:300px; height:300px;"></div>
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dijit" class="dijitPane" style="width:300px; height:300px;"></div>
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dojox" class="dojoxPane" style="width:300px; height:300px;"></div>
+		</div>
+	
+		<div id="bfirstSlide" dojoType="dojox.layout.RadioGroupSlide" style="width:300px; height:300px;">
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dojo" class="dojoPane" style="width:300px; height:300px;"></div>
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dijit" class="dijitPane" style="width:300px; height:300px;"></div>
+			<div dojoType="dijit.layout.ContentPane" href="_lorem.html" title="Dojox" class="dojoxPane" style="width:300px; height:300px;"></div>
+		</div>
+	</div>
+	<script>
+		// make all the 3 RadioGroups above loop through their children.
+		dojo.ready(function(){
+			var rnd = 500; 
+			dojo.query("#hasnobuttons > div").forEach(function(n){
+				var widget = dijit.byNode(n);
+				setTimeout(function(){
+					setInterval(function(){
+						widget.forward();
+					}, 3000);
+				}, rnd);
+				rnd += 500;
+			});
+		});
 	</script>
 	
-
-
 </body>
 </html>

@@ -43,7 +43,7 @@
 }
 
 .nihilo .dijitSliderImageHandleH {
-	border:0px;
+	border:0;
 	width:15px;
 	height:18px;
 	background:url("../images/preciseSliderThumb.png") no-repeat center top;
@@ -67,7 +67,7 @@
 }
 
 .nihilo .dijitSliderImageHandleV {
-	border:0px;
+	border:0;
 	width:20px;
 	height:15px;
 	background:url("../images/sliderThumb.png") no-repeat center center;
@@ -110,8 +110,8 @@
 	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat -15px top;
 }
 .nihilo .dijitSliderDecrementIconH {
-	background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0px top;
-	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat 0px top;
+	background:url('../images/spriteRoundedIconsSmall.png') no-repeat 0 top;
+	#background:url('../images/spriteRoundedIconsSmall.gif') no-repeat 0 top;
 }
 
 .nihilo .dijitSliderButtonInner {
@@ -125,7 +125,7 @@
 }
 .nihilo .dijitSliderReadOnly .dijitSliderDecrementIconH,
 .nihilo .dijitSliderDisabled .dijitSliderDecrementIconH {
-	background-position: 0px -15px;
+	background-position: 0 -15px;
 }
 .nihilo .dijitSliderReadOnly .dijitSliderIncrementIconH,
 .nihilo .dijitSliderDisabled .dijitSliderIncrementIconH {

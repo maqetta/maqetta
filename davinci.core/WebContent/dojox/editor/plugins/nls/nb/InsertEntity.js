@@ -1,0 +1,3 @@
+({
+	insertEntity: "Sett inn symbol"
+})

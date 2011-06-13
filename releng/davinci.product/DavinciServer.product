@@ -27,13 +27,11 @@
 
    <plugins>
       <plugin id="davinci.core"/>
-      <plugin id="davinci.dojo_1_5"/>
+      <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
       <plugin id="davinci.jqueryui_1_8"/>
       <plugin id="davinci.review"/>
       <plugin id="davinci.yui_2_6_0"/>
-      <plugin id="javax.activation"/>
-      <plugin id="javax.mail"/>
       <plugin id="javax.servlet"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>

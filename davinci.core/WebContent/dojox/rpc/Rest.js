@@ -1,5 +1,5 @@
-dojo.provide("dojox.rpc.Rest"); 
-// Note: This doesn't require dojox.rpc.Service, and if you want it you must require it 
+define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
+// Note: This doesn't require dojox.rpc.Service, and if you want it you must require it
 // yourself, and you must load it prior to dojox.rpc.Rest.
 
 // summary:
@@ -19,7 +19,6 @@ dojo.provide("dojox.rpc.Rest");
 //  	| services.myRestService.put("parameters","data to put in resource");
 //  	| services.myRestService.post("parameters","data to post to the resource");
 //  	| services.myRestService['delete']("parameters");
-(function(){
 	if(dojox.rpc && dojox.rpc.transportRegistry){
 		// register it as an RPC service if the registry is available
 		dojox.rpc.transportRegistry.register(
@@ -34,6 +33,12 @@ dojo.provide("dojox.rpc.Rest");
 						function(id, args){
 							var request = svc._getRequest(method,[id]);
 							request.url= request.target + (request.data ? '?'+  request.data : '');
+							if(args && (args.start >= 0 || args.count >= 0)){
+								request.headers = request.headers || {};
+								request.headers.Range = "items=" + (args.start || '0') + '-' +
+									(("count" in args && args.count != Infinity) ?
+										(args.count + (args.start || 0) - 1) : '');
+							}
 							return request;
 						}
 					);
@@ -83,13 +88,13 @@ dojo.provide("dojox.rpc.Rest");
 				id += (id ? "&" : "?") + "sort("
 				for(var i = 0; i<args.sort.length; i++){
 					var sort = args.sort[i];
-					id += (i > 0 ? "," : "") + (sort.descending ? '-' : '+') + encodeURIComponent(sort.attribute); 
+					id += (i > 0 ? "," : "") + (sort.descending ? '-' : '+') + encodeURIComponent(sort.attribute);
 				}
 				id += ")";
 			}
 			var request = {
 				url: path + (id == null ? "" : id),
-				handleAs: isJson ? 'json' : 'text', 
+				handleAs: isJson ? 'json' : 'text',
 				contentType: isJson ? 'application/json' : 'text/plain',
 				sync: dojox.rpc._sync,
 				headers: {
@@ -97,7 +102,9 @@ dojo.provide("dojox.rpc.Rest");
 				}
 			};
 			if(args && (args.start >= 0 || args.count >= 0)){
-				request.headers.Range = "items=" + (args.start || '0') + '-' + ((args.count && args.count != Infinity && (args.count + (args.start || 0) - 1)) || '');
+				request.headers.Range = "items=" + (args.start || '0') + '-' +
+					(("count" in args && args.count != Infinity) ?
+						(args.count + (args.start || 0) - 1) : '');
 			}
 			dojox.rpc._sync = false;
 			return request;
@@ -131,4 +138,6 @@ dojo.provide("dojox.rpc.Rest");
 		// this is called to actually do the get
 		return index(dojo.xhrGet(service._getRequest(id, args)), service, (args.start >= 0 || args.count >= 0), id);
 	};
-})();
+
+	return dojox.rpc.Rest;
+});

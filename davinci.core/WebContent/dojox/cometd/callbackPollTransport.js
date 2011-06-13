@@ -20,7 +20,7 @@ dojox.cometd.callbackPollTransport = new function(){
 			connectionType: this._connectionType,
 			id:	"" + this._cometd.messageId++
 		};
-		message = this._cometd._extendOut(message);		
+		message = this._cometd._extendOut(message);
 		this.openTunnelWith([message]);
 	}
 
@@ -80,14 +80,14 @@ dojox.cometd.callbackPollTransport = new function(){
 	}
 
 	// FIXME: what is this supposed to do? ;)
-	this.disconnect = dojox.cometd.longPollTransport.disconnect;	
+	this.disconnect = dojox.cometd.longPollTransport.disconnect;
 	this.disconnect = function(){
 		var message = {
 			channel: "/meta/disconnect",
 			clientId: this._cometd.clientId,
 			id: "" + this._cometd.messageId++
 		};
-		message = this._cometd._extendOut(message);		
+		message = this._cometd._extendOut(message);
 		dojo.io.script.get({
 			url: this._cometd.url || dojo.config["cometdRoot"],
 			callbackParamName: "jsonp",

@@ -1,17 +1,23 @@
-dojo.provide("dijit.tree.ForestStoreModel");
-
-dojo.require("dijit.tree.TreeStoreModel");
+define("dijit/tree/ForestStoreModel", ["dojo", "dijit", "dijit/tree/TreeStoreModel"], function(dojo, dijit) {
 
 dojo.declare("dijit.tree.ForestStoreModel", dijit.tree.TreeStoreModel, {
 	// summary:
-	//		Interface between Tree and a dojo.store that doesn't have a root item,
-	//		i.e. has multiple "top level" items.
+	//		Interface between a dijit.Tree and a dojo.data store that doesn't have a root item,
+	//		a.k.a. a store that has multiple "top level" items.
 	//
 	// description
-	//		Use this class to wrap a dojo.store, making all the items matching the specified query
+	//		Use this class to wrap a dojo.data store, making all the items matching the specified query
 	//		appear as children of a fabricated "root item".  If no query is specified then all the
 	//		items returned by fetch() on the underlying store become children of the root item.
-	//		It allows dijit.Tree to assume a single root item, even if the store doesn't have one.
+	//		This class allows dijit.Tree to assume a single root item, even if the store doesn't have one.
+	//
+	//		When using this class the developer must override a number of methods according to their app and
+	//		data, including:
+	//			- onNewRootItem
+	//			- onAddToRoot
+	//			- onLeaveRoot
+	//			- onNewItem
+	//			- onSetItem
 
 	// Parameters to constructor
 
@@ -211,9 +217,9 @@ dojo.declare("dijit.tree.ForestStoreModel", dijit.tree.TreeStoreModel, {
 		//		a new item is created, since any new item could be a top level item (even in
 		//		addition to being a child of another item, since items can have multiple parents).
 		//
-		//		Developers can override this function to do something more efficient if they can
-		//		detect which items are possible top level items (based on the item and the
-		//		parentInfo parameters).  Often all top level items have parentInfo==null, but
+		//		If developers can detect which items are possible top level items (based on the item and the
+		//		parentInfo parameters), they should override this method to only call _requeryTop() for top
+		//		level items.  Often all top level items have parentInfo==null, but
 		//		that will depend on which store you use and what your data is like.
 		// tags:
 		//		extension
@@ -233,7 +239,33 @@ dojo.declare("dijit.tree.ForestStoreModel", dijit.tree.TreeStoreModel, {
 		}
 
 		this.inherited(arguments);
+	},
+
+	onSetItem: function(/* item */ item,
+					/* attribute-name-string */ attribute,
+					/* object | array */ oldValue,
+					/* object | array */ newValue){
+		// summary:
+		//		Updates the tree view according to changes to an item in the data store.
+		//		Developers should override this method to be more efficient based on their app/data.
+		// description:
+		//		Handles updates to an item's children by calling onChildrenChange(), and
+		//		other updates to an item by calling onChange().
+		//
+		//		Also, any change to any item re-executes the query for the tree's top-level items,
+		//		since this modified item may have started/stopped matching the query for top level items.
+		//
+		//		If possible, developers should override this function to only call _requeryTop() when
+		//		the change to the item has caused it to stop/start being a top level item in the tree.
+		// tags:
+		//		extension
+
+		this._requeryTop();
+		this.inherited(arguments);
 	}
+
 });
 
 
+return dijit.tree.ForestStoreModel;
+});

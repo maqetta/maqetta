@@ -1,11 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html dir="ltr">
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>dijit.form.TextBox size tests</title>
 
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../../themes/dijit.css";
 		@import "../../themes/dijit_rtl.css";
 		@import "../../themes/tundra/Common.css";
@@ -36,9 +36,10 @@
 		@import "../../themes/nihilo/form/Common_rtl.css";
 
 		#table TD {
-			padding: 1px;
 			background-color: pink;
 			font-size: 100%;
+			padding: 0px;
+			margin: 0px;
 		}
 		TABLE#table, #table TD, #table .dijit {
 			border-color: black !important;
@@ -56,16 +57,26 @@
 		.unPadded .dijitInputField {
 			padding: 0px !important;
 		}
+		#table {
+			padding: 0px;
+			border:1px solid black;
+			background-color: pink;
+		}
+		#table .layout {
+			padding: 1px;
+			border: 1px solid black;
+		}
 	</style>
 
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="parseOnLoad: true, isDebug: true"></script>
 
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.form.TextBox");
 		dojo.require("dijit.form.NumberTextBox");
+		dojo.require("dijit.form.ComboBox");
 		dojo.require("dijit.form.FilteringSelect");
 		dojo.require("dijit.form.NumberSpinner");
 		dojo.require("dijit.form.Button");
@@ -134,35 +145,32 @@
 			var validation = dijit.byId("validation");
 			var combobox = dijit.byId("combobox");
 			var spinner = dijit.byId("spinner");
-			var table = dojo.byId("table");
 
-			var compareToTextBox = function(attr){
+			var compareToTextBox = function(attr, isParent){
 				try{
-					var textboxPos = dojo.position(textbox.domNode);
-					var validationPos = dojo.position(validation.domNode);
-					var comboboxPos = dojo.position(combobox.domNode);
-					var spinnerPos = dojo.position(spinner.domNode);
-					doh.t(Math.round(textboxPos[attr]) == Math.round(validationPos[attr]) &&
-						Math.round(textboxPos[attr]) == Math.round(comboboxPos[attr]) &&
-						Math.round(textboxPos[attr]) == Math.round(spinnerPos[attr]),
-						"Expected same " + attr + ":" + textboxPos[attr] + '/' + validationPos[attr] + '/' + comboboxPos[attr] + '/' + spinnerPos[attr]
-					);
-				}catch(e){
-					throw e; // prevent consoles from including entire function text in output
-				}
-			};
-
-			var compareToTextBoxParent = function(attr){
-				try{
-					var textboxPos = dojo.position(textbox.domNode.parentNode);
-					var validationPos = dojo.position(validation.domNode.parentNode);
-					var comboboxPos = dojo.position(combobox.domNode.parentNode);
-					var spinnerPos = dojo.position(spinner.domNode.parentNode);
-					doh.t(Math.round(textboxPos[attr]) == Math.round(validationPos[attr]) &&
-						Math.round(textboxPos[attr]) == Math.round(comboboxPos[attr]) &&
-						Math.round(textboxPos[attr]) == Math.round(spinnerPos[attr]),
-						"Expected same parent " + attr + ":" + textboxPos[attr] + '/' + validationPos[attr] + '/' + comboboxPos[attr] + '/' + spinnerPos[attr]
-					);
+				var
+					attrMap = {
+						h: 'offsetHeight',
+						w: 'offsetWidth'
+					},
+					textboxNode = isParent ? textbox.domNode.parentNode : textbox.domNode,
+					validationNode = isParent ? validation.domNode.parentNode : validation.domNode,
+					comboboxNode = isParent ? combobox.domNode.parentNode : combobox.domNode,
+					spinnerNode = isParent ? spinner.domNode.parentNode : spinner.domNode,
+					textboxPos = dojo.position(textboxNode),
+					validationPos = dojo.position(validationNode),
+					comboboxPos = dojo.position(comboboxNode),
+					spinnerPos = dojo.position(spinnerNode);
+					// IE9 sometimes reports getBoundingClientRect.bottom incorrectly for TD so also check offset*
+					doh.t(Math.round(textboxPos[attr]) == Math.round(validationPos[attr])
+						|| (attrMap[attr] && textboxNode[attrMap[attr]] > 0 && textboxNode[attrMap[attr]] == validationNode[attrMap[attr]]),
+						"validationPos " + attr + " " + textboxPos[attr] + " vs " + validationPos[attr]);
+					doh.t(Math.round(textboxPos[attr]) == Math.round(comboboxPos[attr])
+						|| (attrMap[attr] && textboxNode[attrMap[attr]] > 0 && textboxNode[attrMap[attr]] == comboboxNode[attrMap[attr]]),
+						"comboboxPos " + attr + " " + textboxPos[attr] + " vs " + comboboxPos[attr]);
+					doh.t(Math.round(textboxPos[attr]) == Math.round(spinnerPos[attr])
+						|| (attrMap[attr] && textboxNode[attrMap[attr]] > 0 && textboxNode[attrMap[attr]] == spinnerNode[attrMap[attr]]),
+						"spinnerPos " + attr + " " + textboxPos[attr] + " vs " + spinnerPos[attr]);
 				}catch(e){
 					throw e; // prevent consoles from including entire function text in output
 				}
@@ -175,7 +183,7 @@
 				},
 				{
 						name: "y",
-						runTest: function(){ compareToTextBoxParent("h"); }
+						runTest: function(){ compareToTextBox("h", true); }
 				},
 				{
 						name: "h",
@@ -229,9 +237,9 @@
 							var paddingTop = Math.abs(inputPos.y - paddedBoxPos.y);
 							var paddingBottom = Math.abs(inputPos.h - paddedBoxPos.h) - paddingTop;
 							var pad = undefined;
-							if(dojo.hasClass(table, "padded")){
+							if(dojo.hasClass(testtable, "padded")){
 								pad = 10;
-							}else if(dojo.hasClass(table, "unPadded")){
+							}else if(dojo.hasClass(testtable, "unPadded")){
 								pad = 0;
 							}else{
 								return;
@@ -260,7 +268,8 @@
 						name: "button: " + widgetName,
 						timeout: 1000,
 						runTest: function(){
-							if(widgetName == "dijitTextBox" || widgetName == "dijitValidationTextBox"){ return; }
+							if(widgetName == "dijitTextBox" || widgetName == "dijitValidationTextBox" ||
+								widgetName == "dijitNumberTextBox" || widgetName == "dijitCurrencyTextBox"){ return; }
 							var paddedBoxPos = dojo.position(widget.focusNode.parentNode);
 							var buttonNode = dojo.query(".dijitValidationContainer", widget.domNode)[0].previousSibling;
 							var buttonPos = dojo.position(buttonNode);
@@ -297,7 +306,7 @@
 					timeout: 1000,
 					runTest: function(){
 						var inputPos = dojo.position(combobox.focusNode.parentNode);
-						var arrowPos = dojo.position(combobox.downArrowNode);
+						var arrowPos = dojo.position(combobox._buttonNode);
 						doh.t(Math.abs(inputPos.h-arrowPos.h) <= 1, "ComboBox button height (" + arrowPos.h + ") is same as input height (" + inputPos.h + ")");
 					}
 				},
@@ -329,9 +338,9 @@
 							var paddingTop = Math.abs(inputPos.y - paddedBoxPos.y);
 							var paddingBottom = Math.abs(inputPos.h - paddedBoxPos.h) - paddingTop;
 							var pad = undefined;
-							if(dojo.hasClass(table, "padded")){
+							if(dojo.hasClass(testtable, "padded")){
 								pad = 10;
-							}else if(dojo.hasClass(table, "unPadded")){
+							}else if(dojo.hasClass(testtable, "unPadded")){
 								pad = 0;
 							}else{
 								return;
@@ -367,7 +376,7 @@
 							var offset = Math.min(Math.abs(paddedBoxPos.x + paddedBoxPos.w - validationPos.x), Math.abs(validationPos.x + validationPos.w - paddedBoxPos.x));
 
 							// IE 6 float bug(s) causes a known 3px margin between input field & validation icon 
-							// Fix could be .dj_ie .dijitInputField { float:right; /* get rid of 3px margin */ }
+							// Fix could be .dj_ie .dijitInputField { float:right; }
 							// But this breaks even more the tests, dojo.position() bug?
 							if(dojo.isIE < 7 || dojo.isQuirks)
 								doh.t(offset <= 3, "padded textbox horizontally just left or right (" + offset + ") of validation node: valiation node x/w = " + validationPos.x+"/"+validationPos.w + ", pad box x/w = " + paddedBoxPos.x+"/"+paddedBoxPos.w);
@@ -379,7 +388,8 @@
 						name: "button: " + widgetName,
 						timeout: 1000,
 						runTest: function(){
-							if(widget.state != "Error" || widgetName == "dijitValidationTextBox"){ return; }
+							if(widget.state != "Error" || widgetName == "dijitValidationTextBox" ||
+								widgetName == "dijitNumberTextBox" || widgetName == "dijitCurrencyTextBox"){ return; }
 							var validationNode = dojo.query(".dijitValidationContainer", widget.domNode)[0];
 							var buttonNode = dojo.query(".dijitValidationContainer", widget.domNode)[0].previousSibling;
 							var validationPos = dojo.position(validationNode);
@@ -399,99 +409,59 @@
 
 	<h1 class="testTitle">dijit.form.TextBox size tests</h1>
 
-	<table class="padded" id="table" rules="all" cellpadding="0" cellspacing="0" border="2" frame="border" style="font-family:monospace;font-size:12pt;">
+	<table class="padded" id="table" style="font-family:monospace;font-size:12pt;">
 		<tr>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
-			<td></td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
-			<td>TextBox</td>
-			<td></td>
-			<td><input dojoType="dijit.form.TextBox" type="text" id="textbox" value="text"></td>
-			<td></td>
+			<td class="layout">TextBox</td>
+			<td class="layout"><input id="textbox" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", value:"text"'/></td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
-			<td>NumberTextBox</td>
-			<td></td>
-			<td><input dojoType="dijit.form.NumberTextBox" type="text" id="validation" value="54" required="true"></td>
-			<td></td>
+			<td class="layout">NumberTextBox</td>
+			<td class="layout"><input id="validation" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='type:"text", value:54, required:true'/></td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
-			<td>FilteringSelect</td>
-			<td></td>
-			<td><select dojoType="dijit.form.FilteringSelect" id="combobox" required="true">
+			<td class="layout">FilteringSelect</td>
+			<td class="layout"><select id="combobox" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='required:true'>
 				<option value="KY">Kentucky</option>
 			</select></td>
-			<td></td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
-			<td>NumberSpinner</td>
-			<td></td>
-			<td><div dojoType="dijit.form.NumberSpinner" type="text" id="spinner" value="45" required="true"></div></td>
-			<td></td>
+			<td class="layout">NumberSpinner</td>
+			<td class="layout"><div id="spinner" data-dojo-type="dijit.form.NumberSpinner" data-dojo-props='type:"text", value:45, required:true'></div></td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
-			<td>INPUT type=file</td>
-			<td></td>
-			<td><input dojoType="dijit.form.TextBox" type="file" id="file"></td>
-			<td></td>
+			<td class="layout">INPUT type=file</td>
+			<td class="layout"><input id="file" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"file" '/></td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
+			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 	</table><br>
-	<table style="display:block;">
-	<tr><td style="text-align:right;">Font family:
-	<select dojoType="dijit.form.ComboBox" id="fontFamily" style="font-size:14pt;" value="">
-		<script type="dojo/method" event="onChange" args="fontFamily">
-			var table = dojo.byId('table');
-			table.style.fontFamily = fontFamily;
+	<script type="text/javascript">
+		testtable = dojo.byId('table');
+
+		function fontFamilyOnChange(fontFamily){
+			testtable.style.fontFamily = fontFamily;
 			if(dojo.isIE){
-				dojo.query('INPUT', table).forEach(function(node){
+				dojo.query('INPUT', testtable).forEach(function(node){
 					node.style.fontFamily = fontFamily;
 				});
 			}
-		</script>
-		<option>monospace</option>
-		<option selected>Courier</option>
-		<option>Helvetica</option>
-		<option>Times</option>
-		<option>system,fixed</option>
-	</select></td></tr>
-	<tr><td style="text-align:right;">Font size:
-	<select dojoType="dijit.form.ComboBox" id="fontSize" style="font-size:14pt;" value="">
-		<script type="dojo/method" event="onChange" args="fontSize">
-			var table = dojo.byId('table');
-			table.style.fontSize = fontSize;
-		</script>
-		<option>small</option>
-		<option>medium</option>
-		<option>xx-large</option>
-		<option>8pt</option>
-		<option>21px</option>
-		<option>1cm</option>
-		<option>1em</option>
-		<option>200%</option>
-	</select></td></tr>
-	<tr><td style="text-align:right;">Padding:
-	<select dojoType="dijit.form.FilteringSelect" id="padding" style="font-size:14pt;" required="false" value="">
-		<script type="dojo/method" event="onChange" args="padding">
-			dojo.byId('table').className = padding;
-		</script>
-		<option value="default">default</option>
-		<option value="padded">padded</option>
-		<option value="unPadded">unPadded</option>
-	</select></td></tr>
-	<tr><td style="text-align:right;">Direction:
-	<select dojoType="dijit.form.FilteringSelect" id="direction" style="font-size:14pt;" required="false" value="">
-		<script type="dojo/method" event="onChange" args="direction">
-			var table = dojo.byId('table');
-			dojo.query('.dijitTextBox', table).forEach(function(node){
+		}
+
+		function directionOnChange(direction){
+			dojo.query('.dijitTextBox', testtable).forEach(function(node){
 				node.style.direction = direction;
 				node.parentNode.style.direction = direction;
 				dojo.forEach(node.className.split(' '), function(cls){
@@ -510,16 +480,48 @@
 					});
 				}
 			});
-		</script>
+		}
+
+		function themeOnChange(theme){
+			if(theme == "a11y"){
+				theme="dijit_a11y";
+			}
+			dojo.body().className = theme + ((this.isRealA11y && theme != "dijit_a11y") ? " dijit_a11y" : "");
+		}
+	</script>
+	<table style="display:block;">
+	<tr><td class="layout" style="text-align:right;">Font family:
+	<select id="fontFamily" data-dojo-type="dijit.form.ComboBox" data-dojo-props='style:{fontSize:"14pt"}, value:"", onChange:fontFamilyOnChange'>
+		<option>monospace</option>
+		<option selected>Courier</option>
+		<option>Helvetica</option>
+		<option>Times</option>
+		<option>system,fixed</option>
+	</select></td></tr>
+	<tr><td class="layout" style="text-align:right;">Font size:
+	<select id="fontSize" data-dojo-type="dijit.form.ComboBox" data-dojo-props='style:{fontSize:"14pt"}, value:"", onChange:function(val){ testtable.style.fontSize = val; }'>
+		<option>small</option>
+		<option>medium</option>
+		<option>xx-large</option>
+		<option>8pt</option>
+		<option>21px</option>
+		<option>1cm</option>
+		<option>1em</option>
+		<option>200%</option>
+	</select></td></tr>
+	<tr><td class="layout" style="text-align:right;">Padding:
+	<select id="padding" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:function(val){ testtable.className = val; }'>
+		<option value="default">default</option>
+		<option value="padded">padded</option>
+		<option value="unPadded">unPadded</option>
+	</select></td></tr>
+	<tr><td class="layout" style="text-align:right;">Direction:
+	<select id="direction" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:directionOnChange'>
 		<option value="ltr">left-to-right</option>
 		<option value="rtl">right-to-left</option>
 	</select></td></tr>
-	<tr><td style="text-align:right;">Theme:
-	<select dojoType="dijit.form.FilteringSelect" id="theme" style="font-size:14pt;" required="false" value="">
-		<script type="dojo/method" event="onChange" args="theme">
-			if(theme == "a11y"){ theme="dijit_a11y"; }
-			dojo.body().className = theme + ((this.isRealA11y && theme != "dijit_a11y") ? " dijit_a11y" : "");
-		</script>
+	<tr><td class="layout" style="text-align:right;">Theme:
+	<select id="theme" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:themeOnChange'>
 		<option value="tundra">tundra</option>
 		<option value="soria">soria</option>
 		<option value="nihilo">nihilo</option>
@@ -527,6 +529,6 @@
 		<option value="a11y">a11y</option>
 	</select></td></tr>
 	</table>
-	<button dojoType="dijit.form.Button" onclick="doh.run()">Run tests</button>
+	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ doh.run(); }'>Run tests</button>
 </body>
 </html>

@@ -1,6 +1,4 @@
-dojo.provide("dojo._base.Color");
-dojo.require("dojo._base.array");
-dojo.require("dojo._base.lang");
+define("dojo/_base/Color", ["dojo/lib/kernel", "dojo/_base/array", "dojo/_base/lang"], function(dojo){
 
 (function(){
 
@@ -190,7 +188,7 @@ dojo.require("dojo._base.lang");
 		//		Builds a `dojo.Color` from a 3 or 4 element array, mapping each
 		//		element in sequence to the rgb(a) values of the color.
 		// example:
-		//		| var myColor = dojo.colorFromArray([237,237,237,0.5]); // grey, 50% alpha 
+		//		| var myColor = dojo.colorFromArray([237,237,237,0.5]); // grey, 50% alpha
 		// returns:
 		//		A dojo.Color object. If obj is passed, it will be the return value.
 		var t = obj || new d.Color();
@@ -214,3 +212,6 @@ dojo.require("dojo._base.lang");
 		return a && d.colorFromArray(a, obj) || d.colorFromRgb(str, obj) || d.colorFromHex(str, obj);
 	};
 })();
+
+return dojo.Color;
+});

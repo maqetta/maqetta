@@ -2,14 +2,14 @@
  *  The CLDR represents some lists, like month names, as separate entries, and our JSON uses arrays to express them.
  *  For some variants, the best our XSLT can do is translate this to a sparse array with 'undefined' entries.
  *  These entries need to be picked up from the parent locale(s) and copied into the array as necessary(only when the item
- *  is not the source of a locale alias mapping, like 'months-format-abbr' should be ignored if it is the source of 
+ *  is not the source of a locale alias mapping, like 'months-format-abbr' should be ignored if it is the source of
  *  locale alias mapping like 'months-format-abbr@localeAlias' :{'target':"months-format-wide",'bundle':"gregorian"}).
  *  So, this script is responsible for taking all the generated JSON files, and for values which are of type
- *  array and not the source of locale alias mapping, mixing in the parent values with the undefined ones, recursing 
- *  all the way to the 'root' locale,and replacing the contents of the file.  
+ *  array and not the source of locale alias mapping, mixing in the parent values with the undefined ones, recursing
+ *  all the way to the 'root' locale,and replacing the contents of the file.
  *
  *  this script traverses all locales dir in the given root dir
- *  
+ *
  *   E.g.(Just for example, the contents are not applicable)
  *   parent locale - "en":
  *    // generated from ldml/main/ *.xml, xpath: ldml/calendars/calendar-ethiopic
@@ -65,7 +65,7 @@ for(var i= 0; i < fileList.length; i++){
 	var hasChanged = false;
 	
 	try{
-		dojo.i18n._requireLocalization('dojo.cldr', 'gregorian', locale);						
+		dojo.i18n._requireLocalization('dojo.cldr', 'gregorian', locale);
 		var bundle = dojo.i18n.getLocalization('dojo.cldr', 'gregorian', locale); //flattened bundle
 	}catch(e){print(e);/* simply ignore if no bundle found*/}
 	
@@ -93,11 +93,11 @@ for(var i= 0; i < fileList.length; i++){
 			//logStr += locale + "===============================================\n";
 			for(prop in data){
 				if(dojo.isArray(data[prop])){
-					//ignore if the property is an alias source, for alias.js and specialLocale.js 
+					//ignore if the property is an alias source, for alias.js and specialLocale.js
 					if(isLocaleAliasSrc(prop, bundle)){
 						//logStr += prop + " is alias, ignored\n";
 						continue;
-					}			
+					}
 
 					var variantArray = variantData[prop];
 					dojo.forEach(data[prop], function(element, index, list){

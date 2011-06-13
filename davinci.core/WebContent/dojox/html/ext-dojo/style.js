@@ -100,7 +100,7 @@ dojo.mixin(dojox.html["ext-dojo"].style, {
 		});
 	},
 	_notSupported: function(){
-		console.warn("Sorry, this browser doesn't support transform and transform-origin");	
+		console.warn("Sorry, this browser doesn't support transform and transform-origin");
 	},
 	_setTransformOriginFilter: function(/*DomNode*/ node, /*String*/ transformOrigin){
 		var to = dojo.trim(transformOrigin)

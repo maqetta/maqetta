@@ -1,21 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
 	<title>Test Dijit Internal Event: "ondijitclick"</title>
 
-	<script type="text/javascript" src="../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="isDebug: true"></script>
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dijit._Widget");
 		dojo.require("dojo.parser");
 
-		dojo.declare("dijit.MyWidget", dijit._Widget, {
-			_eventHandler: function(){}
-		});
-
 		dojo.addOnLoad(function(){
+			dojo.declare("dijit.MyWidget", dijit._Widget, {
+				_eventHandler: function(){}
+			});
+
+			doh.register("parse", function(){
+				dojo.parser.parse();
+			});
+
 			var connects = [];
 			doh.register("_widgetConnect",
 				[
@@ -65,6 +70,6 @@
 </head>
 <body class="claro">
 	<div id="externalNode"></div>
-	<div id="widget1" dojoType="dijit.MyWidget"></div>
+	<div id="widget1" data-dojo-type="dijit.MyWidget"></div>
 </body>
 </html>

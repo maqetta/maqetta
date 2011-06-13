@@ -1,4 +1,5 @@
-dojo.provide("dijit._editor.html");
+define("dijit/_editor/html", ["dojo", "dijit"], function(dojo, dijit) {
+dojo.getObject("_editor", true, dijit);
 
 dijit._editor.escapeXml=function(/*String*/str, /*Boolean?*/noSingleQuotes){
 	// summary:
@@ -178,3 +179,6 @@ dijit._editor.getChildrenHtml = function(/* DomNode */dom){
 	}
 	return out; // String
 };
+
+return dijit._editor;
+});

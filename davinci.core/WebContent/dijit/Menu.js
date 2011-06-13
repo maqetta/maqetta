@@ -1,10 +1,6 @@
-dojo.provide("dijit.Menu");
+define("dijit/Menu", ["dojo", "dijit", "text!dijit/templates/Menu.html", "dojo/window", "dijit/_Widget", "dijit/_KeyNavContainer", "dijit/_Templated", "dijit/MenuItem", "dijit/PopupMenuItem", "dijit/CheckedMenuItem", "dijit/MenuSeparator"], function(dojo, dijit) {
 
-dojo.require("dojo.window");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._KeyNavContainer");
-dojo.require("dijit._Templated");
+// "dijit/MenuItem", "dijit/PopupMenuItem", "dijit/CheckedMenuItem", "dijit/MenuSeparator" for Back-compat (TODO: remove in 2.0)
 
 dojo.declare("dijit._MenuBase",
 	[dijit._Widget, dijit._Templated, dijit._KeyNavContainer],
@@ -282,8 +278,7 @@ dojo.declare("dijit._MenuBase",
 		//		menus (similar to TAB navigation) but the menu is not active
 		//		(ie no dropdown) until an item is clicked.
 		this.isActive = true;
-		dojo.addClass(this.domNode, "dijitMenuActive");
-		dojo.removeClass(this.domNode, "dijitMenuPassive");
+		dojo.replaceClass(this.domNode, "dijitMenuActive", "dijitMenuPassive");
 	},
 
 	onOpen: function(/*Event*/ e){
@@ -302,8 +297,7 @@ dojo.declare("dijit._MenuBase",
 		// summary:
 		//		Mark this menu's state as inactive.
 		this.isActive = false; // don't do this in _onBlur since the state is pending-close until we get here
-		dojo.removeClass(this.domNode, "dijitMenuActive");
-		dojo.addClass(this.domNode, "dijitMenuPassive");
+		dojo.replaceClass(this.domNode, "dijitMenuPassive", "dijitMenuActive");
 	},
 
 	onClose: function(){
@@ -326,15 +320,24 @@ dojo.declare("dijit._MenuBase",
 		// tags:
 		//		private
 		this._stopPopupTimer();
+
+		var fromItem = this.focusedChild && this.focusedChild.from_item;
+
+		if(this.currentPopup){
+			// If focus is on my child menu then move focus to me,
+			// because IE doesn't like it when you display:none a node with focus
+			if(dijit._curFocus && dojo.isDescendant(dijit._curFocus, this.currentPopup.domNode)){
+				this.focusedChild.focusNode.focus();
+			}
+			// Close all popups that are open and descendants of this menu
+			dijit.popup.close(this.currentPopup);
+			this.currentPopup = null;
+		}
+
 		if(this.focusedChild){ // unhighlight the focused item
 			this.focusedChild._setSelected(false);
 			this.focusedChild._onUnhover();
 			this.focusedChild = null;
-		}
-		if(this.currentPopup){
-			// Close all popups that are open and descendants of this menu
-			dijit.popup.close(this.currentPopup);
-			this.currentPopup = null;
 		}
 	},
 
@@ -413,7 +416,7 @@ dojo.declare("dijit.Menu",
 			this.bindDomNode(dojo.body());
 		}else{
 			// TODO: should have _setTargetNodeIds() method to handle initialization and a possible
-			// later attr('targetNodeIds', ...) call.   There's also a problem that targetNodeIds[]
+			// later set('targetNodeIds', ...) call.   There's also a problem that targetNodeIds[]
 			// gets stale after calls to bindDomNode()/unBindDomNode() as it still is just the original list (see #9610)
 			dojo.forEach(this.targetNodeIds, this.bindDomNode, this);
 		}
@@ -526,7 +529,7 @@ dojo.declare("dijit.Menu",
 						this._scheduleOpen(evt.target, iframe);	// no coords - open near target node
 					}
 				})
-			];	
+			];
 		});
 		binding.connects = cn ? doConnects(cn) : [];
 
@@ -692,9 +695,5 @@ dojo.declare("dijit.Menu",
 }
 );
 
-// Back-compat (TODO: remove in 2.0)
-dojo.require("dijit.MenuItem");
-dojo.require("dijit.PopupMenuItem");
-dojo.require("dijit.CheckedMenuItem");
-dojo.require("dijit.MenuSeparator");
-
+return dijit.Menu;
+});

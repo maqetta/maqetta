@@ -21,7 +21,12 @@
 dojo.require("dojox.gfx");
 dojo.require("dojo.colors");
 
-makeShapes = function(){
+createSurface = function(){
+	var surface = dojox.gfx.createSurface("grad", 300, 300);
+	surface.whenLoaded(makeShapes);
+};
+
+makeShapes = function(surface){
 	var lg1 = {
 		type: "linear",
 		x1: 0, y1: 0,
@@ -47,7 +52,6 @@ makeShapes = function(){
 			{ offset: 0.3, color: "yellow" }
 		]
 	};
-	var surface = dojox.gfx.createSurface(dojo.byId("grad"), 300, 300);
 	var group = surface.createGroup();
 	var rect1 = surface.createRect({ 
 		width:  300,
@@ -63,7 +67,7 @@ makeShapes = function(){
 	group.add(rect1);
 	group.add(rect2);
 };
-dojo.addOnLoad(makeShapes);
+dojo.addOnLoad(createSurface);
 </script>
 <style>
 v:group { text-align: left; }

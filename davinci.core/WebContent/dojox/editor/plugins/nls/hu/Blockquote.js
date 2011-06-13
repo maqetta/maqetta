@@ -1,0 +1,4 @@
+({
+	"blockquote": "Idézet"
+})
+

@@ -108,11 +108,11 @@ StencilPoints: [
 			this.renderHit && this._create("hit", this.data, this.style.currentHit);
 			this._create("shape", this.data, this.style.current);
 			
-		}		
+		}
 		
 	}
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Line"	
+	name:"dojox.drawing.stencil.Line"
 }, "stencil");

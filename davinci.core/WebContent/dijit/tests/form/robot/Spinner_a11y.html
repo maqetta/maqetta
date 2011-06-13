@@ -102,10 +102,8 @@
 					// END
 					if(inSpinner.constraints.max){
 						inSpinner.set('value', inSpinner.constraints.max);
-						newVal = inSpinner.get('value');
-					}else{
-						newVal = inSpinner.get('value');
 					}
+					newVal = inSpinner.get('value');
 					eVals.push({stroke: "END", expected: newVal});
 
 					// reset <inSpinner> back to its initial value, and return
@@ -113,29 +111,53 @@
 					return eVals;
 				}
 
+				// execute some test as soon as the widget gets focus
+				var focusThenRun = function(widget, fcn){
+					if(!widget._focused){
+						var handler = widget.connect(widget, '_onFocus', function(){
+							widget.disconnect(handler);
+							setTimeout(fcn, 1);
+						});
+						widget.focus();
+					}else{
+						fcn();
+					}
+				};
+
 				// common robot TAB-focus test function.
 				var a11yTabFocus = function(inSpinnerId){
 					var d = new doh.Deferred();
 					var spinner = dijit.byId(inSpinnerId);
-					// insure a known focus starting point within document before key presses.
-					spinner.focus();
-					// Shift-tab away, tab to, tab away, shift-tab back.
-					doh.robot.keyPress(dojo.keys.TAB, 1000, {shift:true});
-					doh.robot.keyPress(dojo.keys.TAB, 1000);
-					doh.robot.keyPress(dojo.keys.TAB, 1000);
-					doh.robot.keyPress(dojo.keys.TAB, 1000, {shift:true});
-
-					// TODO: this doesn't seem thorough... after TAB or shift TAB
-					// should be checking that we ended up at the right place, i.e.
-					// make sure that we don't have extra tab stops within the Spinner itself.
-
-					var checkGotFocus = function(){
-						spinner.disconnect(focusConnect);
-						spinner.disconnect(blurConnect);
-						doh.assertEqual(3, focusCountZ, "# of times focused (" + spinner.id + ")");
-						doh.assertEqual(2, blurCountZ, "# of times lost focus (" + spinner.id + ")");
-					};
-					doh.robot.sequence(d.getTestCallback(checkGotFocus), 1000, 1000);
+					focusThenRun(spinner, function(){
+						var handler = spinner.connect(spinner, '_onBlur', function(){
+							spinner.disconnect(handler);
+							setTimeout(function(){
+								handler = spinner.connect(spinner, '_onFocus', function(){
+									spinner.disconnect(handler);
+									setTimeout(function(){
+										handler = spinner.connect(spinner, '_onBlur', function(){
+											spinner.disconnect(handler);
+											setTimeout(function(){
+												handler = spinner.connect(spinner, '_onFocus', function(){
+													spinner.disconnect(handler);
+													setTimeout(d.getTestCallback(function(){
+														spinner.disconnect(focusConnect);
+														spinner.disconnect(blurConnect);
+														doh.is(3, focusCountZ, "# of times focused (" + spinner.id + ")");
+														doh.is(2, blurCountZ, "# of times lost focus (" + spinner.id + ")");
+													}), 1);
+												});
+												doh.robot.keyPress(dojo.keys.TAB, 1, {shift:true}); // refocus
+											}, 1);
+										});
+										doh.robot.keyPress(dojo.keys.TAB, 1); // reblur
+									}, 1);
+								});
+								doh.robot.keyPress(dojo.keys.TAB, 1); // refocus
+							}, 1);
+						});
+						doh.robot.keyPress(dojo.keys.TAB, 1, {shift:true}); // blur
+					});
 					return d;
 				}
 
@@ -145,36 +167,36 @@
 					var spinner = dijit.byId(inSpinnerId);
 					var initVal = spinner.get('value');
 
-					spinner.focus();
-
-					doh.robot.keyPress(dojo.keys.HOME, 1000);
-					doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
-					doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
-					doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
-					doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
-					doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
-					doh.robot.keyPress(dojo.keys.PAGE_UP, 200);
-					doh.robot.keyPress(dojo.keys.PAGE_UP, 200);
-					doh.robot.keyPress(dojo.keys.PAGE_DOWN, 200);
-					doh.robot.keyPress(dojo.keys.DOWN_ARROW, 200);
-					doh.robot.keyPress(dojo.keys.END, 200);
-					var testPresses = function(){
-						spinner.disconnect(noteConnect);
-						spinner.set('value', initVal);
-						for(var i = 0; i < results.length; i++){
-							var aResult = results[i];
-							if(!(isNaN(aResult.expected) && isNaN(aResult.actual))) {
-								doh.is(aResult.expected, aResult.actual, aResult.stroke);
+					focusThenRun(spinner, function(){
+						doh.robot.keyPress(dojo.keys.HOME, 1);
+						doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
+						doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
+						doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
+						doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
+						doh.robot.keyPress(dojo.keys.UP_ARROW, 200);
+						doh.robot.keyPress(dojo.keys.PAGE_UP, 200);
+						doh.robot.keyPress(dojo.keys.PAGE_UP, 200);
+						doh.robot.keyPress(dojo.keys.PAGE_DOWN, 200);
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 200);
+						doh.robot.keyPress(dojo.keys.END, 200);
+						var testPresses = function(){
+							spinner.disconnect(noteConnect);
+							spinner.set('value', initVal);
+							for(var i = 0; i < results.length; i++){
+								var aResult = results[i];
+								if(!(isNaN(aResult.expected) && isNaN(aResult.actual))) {
+									doh.is(aResult.expected, aResult.actual, aResult.stroke);
+								}
 							}
-						}
-					};
-					doh.robot.sequence(d.getTestCallback(testPresses), 1000, 1000);
+						};
+						doh.robot.sequence(d.getTestCallback(testPresses), 1000, 1000);
+					});
 					return d;
 				}
 
 				doh.register("setUp",{
 					name: "setUp",
-					timeout: 15000,
+					timeout: 5000,
 					setUp:function(){
 						spin1 = dijit.byId('integerspinner1');
 						spin2 = dijit.byId('integerspinner2');
@@ -184,7 +206,7 @@
 					},
 					runTest: function(){
 						// assert onChange not fired
-						doh.is("not fired yet!", dojo.byId('oc1').value);
+						doh.is("not fired yet!", dojo.byId('oc1').value, "onChange should not have fired");
 
 						// make sure initial values are what we expect
 						doh.is(1, spin1.smallDelta);
@@ -214,99 +236,90 @@
 				doh.register("a11y", [
 					{
 						name: "spinner2_typematic",
-						timeout: 15000,
-						setUp:function(){
-							spin2.set('value', 900);
-							spin2.focus();
-						},
+						timeout: 9000,
 						runTest: function(){
 							// test typematic
 							var d=new doh.Deferred();
-							doh.robot.keyDown(dojo.keys.DOWN_ARROW, 1000);
-							doh.robot.keyUp(dojo.keys.DOWN_ARROW, 5000);
-							doh.robot.sequence(function(){
-								if(spin2.get('value')<=800){
-									d.callback(true);
-								}else{
-									d.errback(new Error('Error in typematic test. Expected <=800, got '+spin2.get('value')));
-								}
-							}, 1000);
+							spin2.set('value', 900);
+							focusThenRun(spin2, function(){
+								doh.robot.keyDown(dojo.keys.DOWN_ARROW, 1);
+								doh.robot.keyUp(dojo.keys.DOWN_ARROW, 5000);
+								doh.robot.sequence(d.getTestCallback(function(){
+									var v = spin2.get('value');
+									doh.t(v <= 800, 'Error in typematic test. Expected <=800, got '+v);
+								}), 1000);
+							});
 							return d;
 						}
 					},
 
 					{
 						name: "spinner2_max",
-						timeout: 15000,
-						setUp:function(){
-							spin2.set('value', 1549);
-							spin2.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							// test max with arrow key
 							var d=new doh.Deferred();
-							// press once: should move up
-							doh.robot.keyPress(dojo.keys.UP_ARROW, 1000);
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is(1550, spin2.get('value'));
-								doh.is("1550", spin2.focusNode.value);
-								doh.is(true, spin2.isValid());
-								// press again: shouldn't move
-								doh.robot.keyPress(dojo.keys.UP_ARROW, 500);
-								doh.robot.sequence(d.getTestCallback(function(){
-									doh.is(1550, spin2.get('value'));
-									doh.is("1550", spin2.focusNode.value);
-									doh.is(true, spin2.isValid());
+							spin2.set('value', 1549);
+							focusThenRun(spin2, function(){
+								// press once: should move up
+								doh.robot.keyPress(dojo.keys.UP_ARROW, 1);
+								doh.robot.sequence(d.getTestErrback(function(){
+									doh.is(1550, spin2.get('value'), "value 1: " + spin2.get('value'));
+									doh.is("1550", spin2.focusNode.value, "displayed value 1: " + spin2.focusNode.value);
+									doh.t(spin2.isValid(), "invalid 1");
+									// press again: shouldn't move
+									doh.robot.keyPress(dojo.keys.UP_ARROW, 500);
+									doh.robot.sequence(d.getTestCallback(function(){
+										doh.is(1550, spin2.get('value'), "value 2: " + spin2.get('value'));
+										doh.is("1550", spin2.focusNode.value, "displayed value 2: " + spin2.focusNode.value);
+										doh.t(spin2.isValid(), "invalid 2");
+									}), 500);
 								}), 500);
-							}), 500);
-
+							});
 							return d;
 						}
 					},
 
 					{
 						name: "spinner2_min",
-						timeout: 15000,
-						setUp:function(){
-							spin2.set('value', 10);
-							spin2.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							// test min with arrow key
 							var d=new doh.Deferred();
-							// press once: should move up
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000);
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.is(9, spin2.get('value'));
-								doh.is("9", spin2.focusNode.value);
-								doh.is(true, spin2.isValid());
-								// press again: shouldn't move
-								doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
-								doh.robot.sequence(d.getTestCallback(function(){
-									doh.is(9, spin2.get('value'));
-									doh.is("9", spin2.focusNode.value);
-									doh.is(true, spin2.isValid());
+							spin2.set('value', 10);
+							focusThenRun(spin2, function(){
+								// press once: should move up
+								doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1);
+								doh.robot.sequence(d.getTestErrback(function(){
+									doh.is(9, spin2.get('value'), "value 1: " + spin2.get('value'));
+									doh.is("9", spin2.focusNode.value, "displayed value 1: " + spin2.focusNode.value);
+									doh.t(spin2.isValid(), "invalid 1");
+									// press again: shouldn't move
+									doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
+									doh.robot.sequence(d.getTestCallback(function(){
+										doh.is(9, spin2.get('value'), "value 2: " + spin2.get('value'));
+										doh.is("9", spin2.focusNode.value, "displayed value 2: " + spin2.focusNode.value);
+										doh.t(spin2.isValid(), "invalid 2");
+									}), 500);
 								}), 500);
-							}), 500);
-
+							});
 							return d;
 						}
 					},
 
 					{
 						name: "spinner2_invalid",
-						timeout: 15000,
-						setUp:function(){
-							spin2.focusNode.value="";
-							spin2.focus();
-						},
+						timeout: 3000,
 						runTest: function(){
 							// assert invalid works
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("0.5", 1000, 600);
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(false, spin2.isValid());
-							}), 500);
+							spin2.focusNode.value="";
+							focusThenRun(spin2, function(){
+								doh.robot.typeKeys("0.5", 1, 600);
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.f(spin2.isValid(), "valid");
+								}), 500);
+							});
 							return d;
 						}
 					}
@@ -420,7 +433,7 @@
 					// don't test integerspinner1 since shift-tab from there goes to address bar and the robot doesn't like that at all
 					{
 						name:"integertextbox3TabFocus",
-						timeout:9000,
+						timeout:3000,
 						setUp:function(){
 							tabFocusSetup("integertextbox3");
 						},
@@ -430,7 +443,7 @@
 					},
 					{ // test integerspinner2 second since the previous test group already had it focused
 						name:"integerspinner2TabFocus",
-						timeout:9000,
+						timeout:3000,
 						setUp:function(){
 							tabFocusSetup("integerspinner2");
 						},
@@ -440,7 +453,7 @@
 					},
 					{
 						name:"realspinner1TabFocus",
-						timeout:9000,
+						timeout:3000,
 						setUp:function(){
 							tabFocusSetup("realspinner1");
 						},
@@ -500,64 +513,73 @@
 				[
 					{
 						name: "spinnerMinOnly large exp",
-						timeout: 15000,
-						setUp:function(){
-							spin4.focusNode.value="";
-							spin4.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("0.5e99", 1000, 1200);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.f(spin4.isValid(false), "large exponential is invalid");
-								doh.f(spin4.isInRange(false), "large exponential is out of range");
-								doh.is(spin4.getErrorMessage(true), spin4.rangeMessage, "large exponential showing out of range message");
-								doh.is("5e+98", spin4.get('displayedValue'), "large exponential reformatted to standard form");
-							}), 1000);
+							spin4.focusNode.value="";
+							focusThenRun(spin4, function(){
+								var handler = spin4.connect(spin4, '_onBlur',
+									function(){
+										spin4.disconnect(handler);
+										setTimeout(d.getTestCallback(function(){
+											doh.f(spin4.isValid(false), "large exponential is invalid");
+											doh.f(spin4.isInRange(false), "large exponential is out of range");
+											doh.is(spin4.getErrorMessage(true), spin4.rangeMessage, "large exponential showing out of range message");
+											doh.is("5e+98", spin4.get('displayedValue'), "large exponential reformatted to standard form");
+										}), 150);
+									});
+								doh.robot.typeKeys("0.5e99", 1, 1200);
+								doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
+							});
 							return d;
 						}
 					},
 					{
 						name: "spinnerMinOnly adjust small exp",
-						timeout: 15000,
-						setUp:function(){
-							spin4.focusNode.value="";
-							spin4.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("0.5e9", 1000, 1000);
-							doh.robot.keyPress(dojo.keys.UP_ARROW, 500);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(spin4.isValid(false), "small exponential is valid");
-								doh.t(spin4.isInRange(false), "small exponential is in range");
-								doh.is(500000000.1, spin4.get('value'), "small exponential converted to whole number");
-								doh.is("500,000,000.1", spin4.get('displayedValue'), "small exponential converted to whole number with formatting");
-							}), 1000);
+							spin4.focusNode.value="";
+							focusThenRun(spin4, function(){
+								var handler = spin4.connect(spin4, '_onBlur',
+									function(){
+										spin4.disconnect(handler);
+										setTimeout(d.getTestCallback(function(){
+											doh.t(spin4.isValid(false), "small exponential is valid");
+											doh.t(spin4.isInRange(false), "small exponential is in range");
+											doh.is(500000000.1, spin4.get('value'), "small exponential converted to whole number");
+											doh.is("500,000,000.1", spin4.get('displayedValue'), "small exponential converted to whole number with formatting");
+										}), 150);
+									});
+								doh.robot.typeKeys("0.5e9", 1, 1000);
+								doh.robot.keyPress(dojo.keys.UP_ARROW, 500);
+								doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
+							});
 							return d;
 						}
 					},
 					{
 						name: "spinnerMinOnly adjust max exp",
-						timeout: 15000,
-						setUp:function(){
-							spin4.focusNode.value="";
-							spin4.focus();
-						},
+						timeout: 9000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("0.5e99", 1000, 1200);
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500); // convert to max
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(spin4.isValid(false), "large exponential converted to max is valid");
-								doh.t(spin4.isInRange(false), "max value is in range");
-								doh.is(89999999999999.9, spin4.get('value'), "max value (-.1)");
-								doh.is("89,999,999,999,999.9", spin4.get('displayedValue'), "max value (-.1) with formatting");
-							}), 1000);
+							spin4.focusNode.value="";
+							focusThenRun(spin4, function(){
+								var handler = spin4.connect(spin4, '_onBlur',
+									function(){
+										spin4.disconnect(handler);
+										setTimeout(d.getTestCallback(function(){
+											doh.t(spin4.isValid(false), "large exponential converted to max is valid");
+											doh.t(spin4.isInRange(false), "max value is in range");
+											doh.is(89999999999999.9, spin4.get('value'), "max value (-.1)");
+											doh.is("89,999,999,999,999.9", spin4.get('displayedValue'), "max value (-.1) with formatting");
+										}), 150);
+									});
+								doh.robot.typeKeys("0.5e99", 1, 1200);
+								doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500); // convert to max
+								doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
+								doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
+							});
 							return d;
 						}
 					}
@@ -568,86 +590,90 @@
 				[
 					{
 						name: "HOME key, out of range",
-						timeout: 15000,
-						setUp:function(){
-							spin4.focusNode.value="";
-							spin4.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("0.5e99", 1000, 1200);
-							doh.robot.keyPress(dojo.keys.HOME, 500);
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(spin4.isValid(true), "HOME changed large exponential to valid min, value is instead: "+spin4.focusNode.value);
-								doh.t(spin4.isInRange(true), "HOME changed large exponential to in range");
-								doh.is(-10.9, spin4.get('value'), "HOME changed large exponential to min value");
-								doh.is("-10.9", spin4.get('displayedValue'), "HOME changed large exponential to min display");
-							}), 500);
+							spin4.focusNode.value="";
+							focusThenRun(spin4, function(){
+								doh.robot.typeKeys("0.5e99", 1, 1200);
+								doh.robot.keyPress(dojo.keys.HOME, 500);
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.t(spin4.isValid(true), "HOME changed large exponential to valid min, value is instead: "+spin4.focusNode.value);
+									doh.t(spin4.isInRange(true), "HOME changed large exponential to in range");
+									doh.is(-10.9, spin4.get('value'), "HOME changed large exponential to min value");
+									doh.is("-10.9", spin4.get('displayedValue'), "HOME changed large exponential to min display");
+								}), 500);
+							});
 							return d;
 						}
 					},
 					{
 						name: "HOME key, invalid",
-						timeout: 15000,
-						setUp:function(){
-							spin4.focusNode.value="";
-							spin4.focus();
-						},
+						timeout: 9000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys(".5e9a", 1000, 1000);
-							doh.robot.keyPress(dojo.keys.HOME, 500);
-							if(dojo.isMac){
-								doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {meta:true});
-							}
-							doh.robot.typeKeys("1", 500, 200);
-							doh.robot.keyPress(dojo.keys.END, 500);
-							if(dojo.isMac){
-								doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {meta:true});
-							}
-							doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(spin4.isValid(true), "edited exponential is now valid");
-								doh.is(1.5e+9, spin4.get('value'), "edited exponential");
-							}), 500);
+							spin4.focusNode.value="";
+							focusThenRun(spin4, function(){
+								doh.robot.typeKeys(".5e9a", 1, 1000);
+								doh.robot.keyPress(dojo.keys.HOME, 500);
+								if(dojo.isMac){
+									doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {meta:true});
+								}
+								doh.robot.typeKeys("1", 500, 200);
+								doh.robot.keyPress(dojo.keys.END, 500);
+								if(dojo.isMac){
+									doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {meta:true});
+								}
+								doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.t(spin4.isValid(true), "edited exponential is now valid");
+									doh.is(1.5e+9, spin4.get('value'), "edited exponential");
+								}), 500);
+							});
 							return d;
 						}
 					},
 					{
 						name: "out-of-range formatting",
-						timeout: 15000,
-						setUp:function(){
-							spin3.focusNode.value="";
-							spin3.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("156.0", 1000, 1000);
-							doh.robot.keyPress(dojo.keys.TAB, 500);
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.f(spin3.isValid(), "out-of-range is invalid");
-								doh.is('156.0', spin3.get('displayedValue'), "fraction not removed from out-of-range");
-								doh.is(156, spin3.get('value'), "out-of-range number returns number");
-							}), 1000);
+							spin3.focusNode.value="";
+							focusThenRun(spin3, function(){
+								var handler = spin3.connect(spin3, '_onBlur',
+									function(){
+										spin3.disconnect(handler);
+										setTimeout(d.getTestCallback(function(){
+											doh.f(spin3.isValid(), "out-of-range is invalid");
+											doh.is('156.0', spin3.get('displayedValue'), "fraction not removed from out-of-range");
+											doh.is(156, spin3.get('value'), "out-of-range number returns number");
+										}), 150);
+									});
+								doh.robot.typeKeys("156.0", 1, 1000);
+								doh.robot.keyPress(dojo.keys.TAB, 500);
+							});
 							return d;
 						}
 					},
 					{
 						name: "improper fraction",
-						timeout: 15000,
-						setUp:function(){
-							spin4.focusNode.value="";
-							spin4.focus();
-						},
+						timeout: 5000,
 						runTest: function(){
 							var d=new doh.Deferred();
-							doh.robot.typeKeys("99", 1000, 400);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.f(spin4.isValid(), "missing fraction is invalid");
-								doh.is('99', spin4.get('displayedValue'), "fraction not added to unparsable number");
-								doh.t(isNaN(spin4.get('value')), "unparsable number causes no value");
-							}), 1000);
+							spin4.focusNode.value="";
+							focusThenRun(spin4, function(){
+								var handler = spin4.connect(spin4, '_onBlur',
+									function(){
+										spin4.disconnect(handler);
+										setTimeout(d.getTestCallback(function(){
+											doh.f(spin4.isValid(), "missing fraction is invalid");
+											doh.is('99', spin4.get('displayedValue'), "fraction not added to unparsable number");
+											doh.t(isNaN(spin4.get('value')), "unparsable number causes no value");
+										}), 150);
+									});
+								doh.robot.typeKeys("99", 1, 400);
+								doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true});
+							});
 							return d;
 						}
 					}
@@ -657,19 +683,24 @@
 				[
 					{
 						name: "simple",
-						timeout: 15000,
+						timeout: 5000,
 						runTest: function(){
 							var d=new doh.Deferred();
 							var spinner = dijit.byId("integertextbox3");
 							spinner.set('value', '');
-							spinner.focus();
-							doh.robot.typeKeys("1.2339", 1000, 1200);
-							doh.robot.keyPress(dojo.keys.TAB, 500);
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(spinner.isValid(false), "no error when rounding");
-								doh.is(1.234, spinner.get('value'), "value is rounded");
-								doh.is("1.234", spinner.get('displayedValue'), "rounded value correctly displayed");
-							}), 1000);
+							focusThenRun(spinner, function(){
+								var handler = spinner.connect(spinner, '_onBlur',
+									function(){
+										spinner.disconnect(handler);
+										setTimeout(d.getTestCallback(function(){
+											doh.t(spinner.isValid(false), "no error when rounding");
+											doh.is(1.234, spinner.get('value'), "value is rounded");
+											doh.is("1.234", spinner.get('displayedValue'), "rounded value correctly displayed");
+										}), 150);
+									});
+								doh.robot.typeKeys("1.2339", 1, 1200);
+								doh.robot.keyPress(dojo.keys.TAB, 500);
+							});
 							return d;
 						}
 					}

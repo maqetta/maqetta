@@ -20,70 +20,56 @@ import org.davinci.server.user.User;
 
 public class AddFiles extends Command {
 
-	@Override
-	public void handleCommand(HttpServletRequest request, HttpServletResponse resp,
-			User user) throws IOException {
-		String path=request.getParameter("path");
+    @Override
+    public void handleCommand(HttpServletRequest request, HttpServletResponse resp, User user) throws IOException {
+        String path = request.getParameter("path");
 
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		// Create a factory for disk-based file items
-		FileItemFactory factory = new DiskFileItemFactory();
+        // Create a factory for disk-based file items
+        FileItemFactory factory = new DiskFileItemFactory();
 
-		// Create a new file upload handler
-		ServletFileUpload upload = new ServletFileUpload(factory);
+        // Create a new file upload handler
+        ServletFileUpload upload = new ServletFileUpload(factory);
 
-		ArrayList fileNames=new ArrayList();
-		try {
-			// Parse the request
-			List  /* FileItem */ items = upload.parseRequest(request);
-			Iterator  iter = items.iterator();
-			IVResource userDirectory = user.getResource(path);
-			while (iter.hasNext()) {
-			    FileItem item = (FileItem) iter.next();
+        ArrayList fileNames = new ArrayList();
+        try {
+            // Parse the request
+            List /* FileItem */items = upload.parseRequest(request);
+            Iterator iter = items.iterator();
+            IVResource userDirectory = user.getResource(path);
+            while (iter.hasNext()) {
+                FileItem item = (FileItem) iter.next();
 
-			    if (!item.isFormField()) {
-			        String fieldName = item.getFieldName();
-			        String fileName = item.getName();
-			        String contentType = item.getContentType();
-			        boolean isInMemory = item.isInMemory();
-			        long sizeInBytes = item.getSize();
-			        
-			        File f1 = new File(userDirectory.getURI());
-			        
-			        File uploadedFile = new File(f1,fileName);
-			        fileNames.add(fileName);
-			        item.write(uploadedFile);
-			    }
-			}
-			
-			StringBuffer nms=new StringBuffer();
-			boolean first=true;
-			for (Iterator iterator = fileNames.iterator(); iterator.hasNext();) {
-				if (!first)
-					nms.append(",");
-				first=false;
-				String name = (String) iterator.next();
-				nms.append("{ file:'").append(name).append("'}");
-			}
-			responseString="<html>\n"+
-			  "<body>\n"+
-			  "  <textarea>\n"+
-			  "     ["+nms.toString()+"]"
-			  
-			  +"\n"+
-			  "  </textarea>\n"+
-			  "</body>\n"+
-			"</html>\n";
+                if (!item.isFormField()) {
+                    String fileName = item.getName();
+                    File f1 = new File(userDirectory.getURI());
 
-		} catch (FileUploadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+                    File uploadedFile = new File(f1, fileName);
+                    fileNames.add(fileName);
+                    item.write(uploadedFile);
+                }
+            }
 
+            StringBuffer nms = new StringBuffer();
+            boolean first = true;
+            for (Iterator iterator = fileNames.iterator(); iterator.hasNext();) {
+                if (!first) {
+                    nms.append(",");
+                }
+                first = false;
+                String name = (String) iterator.next();
+                nms.append("{ file:'").append(name).append("'}");
+            }
+            responseString = "<html>\n" + "<body>\n" + "  <textarea>\n" + "     [" + nms.toString() + "]"
 
+            + "\n" + "  </textarea>\n" + "</body>\n" + "</html>\n";
+
+        } catch (FileUploadException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
 }

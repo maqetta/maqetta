@@ -1,11 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-                "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>Dojo Slider Widget Demo</title>
 
 		<style type="text/css">
-			@import "../../../dojo/resources/dojo.css";
+			@import "../../themes/claro/document.css";
 			@import "../css/dijitTests.css";
 			@import "../../../util/doh/robot/robot.css";
 			#slider2 .dijitButtonNode {
@@ -18,11 +18,11 @@
 		</style>
 
 		<!-- required: the default dijit theme: -->
-		<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+		<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../dojo/dojo.js"
-			djConfig="isDebug: true, parseOnLoad: true"></script>
+			data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 
 		<!-- only needed for alternate theme testing: -->
 		<script type="text/javascript" src="../_testCommon.js"></script>
@@ -53,7 +53,7 @@
 					// setup the rules
 					var sliderRules = new dijit.form.VerticalRule({
 						count:11,
-						style:"width:5px"
+						style:{width:"5px"}
 					},rulesNode);
 
 					// and setup the slider
@@ -65,7 +65,7 @@
 						name:"programaticSlider",
 						slideDuration:0,
 						onChange:function(val){ dojo.byId('sliderProgInput').value=val; },
-						style:"height:165px",
+						style:{height:"165px"},
 						minimum:1000,
 						maximum:3000,
 						discreteValues:11,
@@ -90,80 +90,80 @@
 			http://www.utexas.edu/teamweb/cgi-bin/generic.cgi -->
 		<form id="form1" action="" name="example" method="post">
 		<br>initial value=10, min=0, max=100, pageIncrement=100, onChange event triggers input box value change immediately<br>
-		<label for="slider1"><strong>Horizontal Slider Example</strong></label>
-		<div dojoType="dijit.form.HorizontalSlider" name="horizontal1"
-			onChange="dojo.byId('slider1input').value=dojo.number.format(arguments[0]/100,{places:1,pattern:'#%'});"
-			value="10"
-			maximum="100"
-			minimum="0"
-			pageIncrement="100"
-			showButtons="true"
-			intermediateChanges="true"
-			slideDuration="500"
-			style="width:500px; height: 20px;"
-			id="slider1">
-				<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;" count="6" numericMargin="1"></ol>
-				<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=6 style="height:5px;"></div>
-				<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
-				<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
+		<strong>Horizontal Slider Example</strong>
+		<div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1",
+			onChange:function(val){ dojo.byId("slider1input").value=dojo.number.format(val/100,{places:1,pattern:"#%"}); },
+			value:10,
+			maximum:100,
+			minimum:0,
+			pageIncrement:100,
+			showButtons:true,
+			intermediateChanges:true,
+			slideDuration:500,
+			style:{width:"500px", height:"20px"}
+			'>
+				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:{height:"1.2em",fontSize:"75%"}, count:6, numericMargin:1'></ol>
+				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"topDecoration", count:6, style:{height:"5px"}'></div>
+				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:5, style:{height:"5px"}'></div>
+				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:{height:"1em",fontSize:"75%"}'>
 					<li>lowest</li>
 					<li>normal</li>
 					<li>highest</li>
 				</ol>
 		</div>
 
-		Slider1 Value:<input readonly id="slider1input" size="4" value="10.0%">
+		Slider1 Value:<input readonly id="slider1input" size="4" value="10.0%"/>
 		<br>
-		<button id="disableButton" dojoType="dijit.form.Button" onClick="dijit.byId('slider1').set('disabled', true);dijit.byId('disableButton').set('disabled',true);dijit.byId('enableButton').set('disabled',false);">Disable previous slider</button>
-		<button id="enableButton"  dojoType="dijit.form.Button" onClick="dijit.byId('slider1').set('disabled',false);dijit.byId('disableButton').set('disabled',false);dijit.byId('enableButton').set('disabled', true);" disabled>Enable previous slider</button>
+		<button id="disableButton" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("slider1").set("disabled", true);dijit.byId("disableButton").set("disabled",true);dijit.byId("enableButton").set("disabled",false); }'>Disable previous slider</button>
+		<button id="enableButton" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("slider1").set("disabled",false);dijit.byId("disableButton").set("disabled",false);dijit.byId("enableButton").set("disabled", true); }, disabled:true'>Enable previous slider</button>
 		<br>
 		<br>initial value=10, min=0, max=100, onChange event triggers input box value change when you mouse up or tab away<br>
-		<label for="slider2"><strong>Vertical Slider Example</strong></label>
-		<div dojoType="dijit.form.VerticalSlider" name="vertical1"
-			onChange="dojo.byId('slider2input').value=arguments[0];"
-			value="10"
-			maximum="100"
-			minimum="0"
-			discreteValues="11"
-			style="height:300px;"
-			id="slider2">
-				<ol dojoType="dijit.form.VerticalRuleLabels" container="leftDecoration" style="width:2em;" labelStyle="right:0px;">
+		<strong>Vertical Slider Example</strong>
+		<div id="slider2" data-dojo-type="dijit.form.VerticalSlider" data-dojo-props='name:"vertical1",
+			onChange:function(val){ dojo.byId("slider2input").value = val; },
+			value:10,
+			maximum:100,
+			minimum:0,
+			discreteValues:11,
+			style:{height:"300px"}
+			'>
+				<ol data-dojo-type="dijit.form.VerticalRuleLabels" data-dojo-props='container:"leftDecoration", style:{width:"2em"}, labelStyle:"right:0px;"'>
 					<li>0</li>
 					<li>100</li>
 				</ol>
-				<div dojoType="dijit.form.VerticalRule" container="leftDecoration" count=11 style="width:5px;" ruleStyle="border-color: #888"></div>
-				<div dojoType="dijit.form.VerticalRule" container="rightDecoration" count=11 style="width:5px;" ruleStyle="border-color: #888"></div>
-				<ol dojoType="dijit.form.VerticalRuleLabels" container="rightDecoration" style="width:2em;" count="6" numericMargin="1" maximum="100" constraints="{pattern:'#'}"></ol>
+				<div data-dojo-type="dijit.form.VerticalRule" data-dojo-props='container:"leftDecoration", count:11, style:{width:"5px"}, ruleStyle:"border-color: #888"'></div>
+				<div data-dojo-type="dijit.form.VerticalRule" data-dojo-props='container:"rightDecoration", count:11, style:{width:"5px"}, ruleStyle:"border-color: #888"'></div>
+				<ol data-dojo-type="dijit.form.VerticalRuleLabels" data-dojo-props='container:"rightDecoration", style:{width:"2em"}, count:6, numericMargin:1, maximum:100, constraints:{pattern:"#"}'></ol>
 		</div>
-		Slider2 Value:<input readonly id="slider2input" size="3" value="10">
+		Slider2 Value:<input readonly id="slider2input" size="3" value="10"/>
 		<h1>Fancy HTML labels (no slide animation):</h1>
-		<div dojoType="dijit.form.HorizontalSlider" name="horizontal2"
-			title="Fancy HTML Labels"
-			minimum="1"
-			value="2"
-			maximum="3"
-			discreteValues="3"
-			showButtons="false"
-			intermediateChanges="true"
-			slideDuration="0"
-			style="width:300px; height: 40px;"
-			id="slider3">
-				<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=3 style="height:5px;"></div>
-				<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
-					<li><img width=10 height=10 src="../images/note.gif"><br><span style="font-size: small">small</span></li>
-					<li><img width=15 height=15 src="../images/note.gif"><br><span style="font-size: medium">medium</span></li>
-					<li><img width=20 height=20 src="../images/note.gif"><br><span style="font-size: large">large</span></li>
+		<div id="slider3" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal2",
+			title:"Fancy HTML Labels",
+			minimum:1,
+			value:2,
+			maximum:3,
+			discreteValues:3,
+			showButtons:false,
+			intermediateChanges:true,
+			slideDuration:0,
+			style:"width:300px; height: 40px;"
+			'>
+				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:3, style:{height:"5px"}'></div>
+				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:{height:"1em", fontSize:"75%"}'>
+					<li><img width=10 height=10 src="../images/note.gif"/><br><span style="font-size: small">small</span></li>
+					<li><img width=15 height=15 src="../images/note.gif"/><br><span style="font-size: medium">medium</span></li>
+					<li><img width=20 height=20 src="../images/note.gif"/><br><span style="font-size: large">large</span></li>
 				</ol>
 		</div>
 
 		<p></p><h1>Standalone ruler example:</h1><p></p>
 
 		<div style="width:2in;border-top:1px solid black;">
-			<div dojoType="dijit.form.HorizontalRule" count=17 style="height:.4em;"></div>
-			<div dojoType="dijit.form.HorizontalRule" count=9 style="height:.4em;"></div>
-			<div dojoType="dijit.form.HorizontalRule" count=5 style="height:.4em;"></div>
-			<div dojoType="dijit.form.HorizontalRule" count=3 style="height:.4em;"></div>
-			<ol dojoType="dijit.form.HorizontalRuleLabels" labelStyle="font-style:monospace;font-size:.7em;margin:-1em 0px 0px -.35em;">
+			<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='count:17, style:{height:".4em"}'></div>
+			<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='count:9, style:{height:".4em"}'></div>
+			<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='count:5, style:{height:".4em"}'></div>
+			<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='count:3, style:{height:".4em"}'></div>
+			<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='labelStyle:"font-style:monospace;fontSize:.7em;margin:-1em 0px 0px -.35em;"'>
 				<li></li>
 				<li>1</li>
 				<li>2</li>
@@ -172,20 +172,20 @@
 
 		<h1>horizontal, with buttons, disabled (to show styling):</h1>
 
-		<div dojoType="dijit.form.HorizontalSlider" name="horizontalH2"
-			onChange="dojo.byId('slider1input').value=arguments[0];"
-			value="10"
-			maximum="100"
-			minimum="0"
-			disabled="true"
-			showButtons="true"
-			intermediateChanges="true"
-			style="width:50%; height: 20px;"
-			id="sliderH2">
-				<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration" style="height:1.2em;font-size:75%;" count="7" constraints="{pattern:'#.00%'}"></ol>
-				<div dojoType="dijit.form.HorizontalRule" container="topDecoration" count=7 style="height:5px;"></div>
-				<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration" count=5 style="height:5px;"></div>
-				<ol dojoType="dijit.form.HorizontalRuleLabels" container="bottomDecoration" style="height:1em;font-size:75%;">
+		<div id="sliderH2" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontalH2",
+			onChange:function(val){ dojo.byId("slider1input").value = val; },
+			value:10,
+			maximum:100,
+			minimum:0,
+			disabled:true,
+			showButtons:true,
+			intermediateChanges:true,
+			style:{width:"50%", height:"20px"}
+			'>
+				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:{height:"1.2em", fontSize:"75%"}, count:7, constraints:{pattern:"#.00%"}'></ol>
+				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"topDecoration", count:7, style:"height:5px;"'></div>
+				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:5, style:"height:5px;"'></div>
+				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:{height:"1em", fontSize:"75%"}'>
 					<li>lowest</li>
 					<li>normal</li>
 					<li>highest</li>
@@ -197,7 +197,7 @@
 		<h3>min:1000, max:3000, 11 discrete values, no animation</h3>
 
 		<div id="programaticSlider"></div>
-		Programmatic Value:<input readonly id="sliderProgInput" size="5" value="1400">
+		Programmatic Value:<input readonly id="sliderProgInput" size="5" value="1400"/>
 
 		        <script>
 				// so robot can get to it easily

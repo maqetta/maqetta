@@ -5,9 +5,9 @@ dojo.require("dojo.string");
 dojo.require("dojo.date.stamp");
 
 dojox.atom.io.model._Constants = {
-	//	summary: 
+	//	summary:
 	//		Container for general constants.
-	//	description: 
+	//	description:
 	//		Container for general constants.
 	"ATOM_URI": "http://www.w3.org/2005/Atom",
 	"ATOM_NS": "http://www.w3.org/2005/Atom",
@@ -16,9 +16,9 @@ dojox.atom.io.model._Constants = {
 };
 
 dojox.atom.io.model._actions = {
-	//	summary: 
+	//	summary:
 	//		Container for tag handling functions.
-	//	description: 
+	//	description:
 	//		Container for tag handling functions.  Each child of this container is
 	//		a handler function for the given type of node. Each accepts two parameters:
 	//	obj:  Object.
@@ -80,25 +80,25 @@ dojox.atom.io.model._actions = {
 		obj.modified = dojox.atom.io.model.util.createDate(node);
 	},
 	"published": function(obj,node){
-		obj.published = dojox.atom.io.model.util.createDate(node);	  
+		obj.published = dojox.atom.io.model.util.createDate(node);
 	},
 	"entry": function(obj,node){
 		if(obj.entries === null){obj.entries = [];}
 		//The object passed in should be a Feed object, since only feeds can contain Entries
 		var entry = obj.createEntry ? obj.createEntry() : new dojox.atom.io.model.Entry();
 		entry.buildFromDom(node);
-		obj.entries.push(entry);	
-	}, 
+		obj.entries.push(entry);
+	},
 	"content": function(obj, node){
 		var cnt = new dojox.atom.io.model.Content("content");
 		cnt.buildFromDom(node);
 		obj.content = cnt;
-	}, 
+	},
 	"summary": function(obj, node){
 		var summary = new dojox.atom.io.model.Content("summary");
 		summary.buildFromDom(node);
 		obj.summary = summary;
-	}, 
+	},
 
 	"name": function(obj,node){
 		obj.name = dojox.xml.parser.textContent(node);
@@ -117,14 +117,14 @@ dojox.atom.io.model._actions = {
 
 dojox.atom.io.model.util = {
 	createDate: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Utility function to create a date from a DOM node's text content.
-		//	description: 
+		//	description:
 		//		Utility function to create a date from a DOM node's text content.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to inspect.
-		//	returns: 
+		//	returns:
 		//		Date object from a DOM Node containing a ISO-8610 string.
 		var textContent = dojox.xml.parser.textContent(node);
 		if(textContent){
@@ -133,42 +133,42 @@ dojox.atom.io.model.util = {
 		return null;
 	},
 	escapeHtml: function(/*String*/str){
-		//	summary: 
+		//	summary:
 		//		Utility function to escape XML special characters in an HTML string.
-		//	description: 
+		//	description:
 		//		Utility function to escape XML special characters in an HTML string.
 		//
-		//	str: 
+		//	str:
 		//		The string to escape
-		//	returns: 
+		//	returns:
 		//		HTML String with special characters (<,>,&, ", etc,) escaped.
 		return str.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;")
 			.replace(/'/gm, "&#39;"); // String
 	},
 	unEscapeHtml: function(/*String*/str){
-		//	summary: 
+		//	summary:
 		//		Utility function to un-escape XML special characters in an HTML string.
-		//	description: 
+		//	description:
 		//		Utility function to un-escape XML special characters in an HTML string.
 		//
-		//	str: 
+		//	str:
 		//		The string to un-escape.
-		//	returns: 
+		//	returns:
 		//		HTML String converted back to the normal text (unescaped) characters (<,>,&, ", etc,).
 		return str.replace(/&lt;/gm, "<").replace(/&gt;/gm, ">").replace(/&quot;/gm, "\"")
 			.replace(/&#39;/gm, "'").replace(/&amp;/gm, "&"); // String
 	},
 	getNodename: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Utility function to get a node name and deal with IE's bad handling of namespaces
 		//		on tag names.
-		//	description: 
+		//	description:
 		//		Utility function to get a node name and deal with IE's bad handling of namespaces
 		//		on tag names.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node whose name to retrieve.
-		//	returns: 
+		//	returns:
 		//		String
 		//	The name without namespace prefixes.
 		var name = null;
@@ -259,7 +259,7 @@ dojo.declare('dojox.atom.io.model.Node', null, {
 		var x;
 		var name = (this.shortNs?this.shortNs+":":'')+this.name;
 		var cdata = (this.name == "#cdata-section");
-		if(cdata){ 
+		if(cdata){
 			xml.push("<![CDATA[");
 			xml.push(this.textContent);
 			xml.push("]]>");
@@ -276,7 +276,7 @@ dojo.declare('dojox.atom.io.model.Node', null, {
 			}
 			if(this.content){
 				xml.push(">");
-				for(x in this.content){ 
+				for(x in this.content){
 					xml.push(this.content[x]);
 				}
 				xml.push("</" + name + ">\n");
@@ -298,7 +298,7 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		this.links = null;						//Array of Link
 		this.authors = null;					//Array of Person
 		this.categories = null;					//Array of Category
-		this.contributors = null;				//Array of Person   
+		this.contributors = null;				//Array of Person
 		this.icon = this.id = this.logo = this.xmlBase = this.rights = null; //String
 		this.subtitle = this.title = null;		//Content
 		this.updated = this.published = null;	//Date
@@ -345,7 +345,7 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 				}
 			}
 		}
-		this._saveAttributes(node); 
+		this._saveAttributes(node);
 		if(this._postBuild){this._postBuild();}
 	},
 	addNamespace: function(fullName, shortName){
@@ -354,63 +354,63 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		}
 	},
 	addAuthor: function(/*String*/name, /*String*/email, /*String*/uri){
-		//	summary: 
+		//	summary:
 		//		Function to add in an author to the list of authors.
-		//	description: 
+		//	description:
 		//		Function to add in an author to the list of authors.
 		//
-		//	name: 
+		//	name:
 		//		The author's name.
-		//	email: 
+		//	email:
 		//		The author's e-mail address.
-		//	uri: 
+		//	uri:
 		//		A URI associated with the author.
 		if(!this.authors){this.authors = [];}
 		this.authors.push(new dojox.atom.io.model.Person("author",name,email,uri));
 	},
 	addContributor: function(/*String*/name, /*String*/email, /*String*/uri){
-		//	summary: 
+		//	summary:
 		//		Function to add in an author to the list of authors.
-		//	description: 
+		//	description:
 		//		Function to add in an author to the list of authors.
 		//
-		//	name: 
+		//	name:
 		//		The author's name.
-		//	email: 
+		//	email:
 		//		The author's e-mail address.
-		//	uri: 
+		//	uri:
 		//		A URI associated with the author.
 		if(!this.contributors){this.contributors = [];}
 		this.contributors.push(new dojox.atom.io.model.Person("contributor",name,email,uri));
 	},
 	addLink: function(/*String*/href,/*String*/rel,/*String*/hrefLang,/*String*/title,/*String*/type){
-		//	summary: 
+		//	summary:
 		//		Function to add in a link to the list of links.
-		//	description: 
+		//	description:
 		//		Function to add in a link to the list of links.
 		//
-		//	href: 
+		//	href:
 		//		The href.
-		//	rel: 
+		//	rel:
 		//		String
-		//	hrefLang: 
+		//	hrefLang:
 		//		String
-		//	title: 
+		//	title:
 		//		A title to associate with the link.
-		//	type: 
+		//	type:
 		//		The type of link is is.
 		if(!this.links){this.links=[];}
 		this.links.push(new dojox.atom.io.model.Link(href,rel,hrefLang,title,type));
 	},
 	removeLink: function(/*String*/href, /*String*/rel){
-		//	summary: 
+		//	summary:
 		//		Function to remove a link from the list of links.
-		//	description: 
+		//	description:
 		//		Function to remove a link from the list of links.
 		//
-		//	href: 
+		//	href:
 		//		The href.
-		//	rel: 
+		//	rel:
 		//		String
 		if(!this.links || !dojo.isArray(this.links)){return;}
 		var count = 0;
@@ -422,9 +422,9 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		return count;
 	},
 	removeBasicLinks: function(){
-		//	summary: 
+		//	summary:
 		//		Function to remove all basic links from the list of links.
-		//	description: 
+		//	description:
 		//		Function to remove all basic link from the list of links.
 		if(!this.links){return;}
 		var count = 0;
@@ -434,27 +434,27 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		return count;
 	},
 	addCategory: function(/*String*/scheme, /*String*/term, /*String*/label){
-		//	summary: 
+		//	summary:
 		//		Function to add in a category to the list of categories.
-		//	description: 
+		//	description:
 		//		Function to add in a category to the list of categories.
 		//
-		//	scheme: 
+		//	scheme:
 		//		String
-		//	term: 
+		//	term:
 		//		String
-		//	label: 
+		//	label:
 		//		String
 		if(!this.categories){this.categories = [];}
 		this.categories.push(new dojox.atom.io.model.Category(scheme,term,label));
 	},
 	getCategories: function(/*String*/scheme){
-		//	summary: 
+		//	summary:
 		//		Function to get all categories that match a particular scheme.
-		//	description: 
+		//	description:
 		//		Function to get all categories that match a particular scheme.
 		//
-		//	scheme: 
+		//	scheme:
 		//		String
 		//		The scheme to filter on.
 		if(!scheme){return this.categories;}
@@ -466,14 +466,14 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		return arr;
 	},
 	removeCategories: function(/*String*/scheme, /*String*/term){
-		//	summary: 
+		//	summary:
 		//		Function to remove all categories that match a particular scheme and term.
-		//	description: 
+		//	description:
 		//		Function to remove all categories that match a particular scheme and term.
 		//
-		//	scheme: 
+		//	scheme:
 		//		The scheme to filter on.
-		//	term: 
+		//	term:
 		//		The term to filter on.
 		if(!this.categories){return;}
 		var count = 0;
@@ -485,14 +485,14 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		return count;
 	},
 	setTitle: function(/*String*/str, /*String*/type){
-		//	summary: 
+		//	summary:
 		//		Function to set the title of the item.
-		//	description: 
+		//	description:
 		//		Function to set the title of the item.
 		//
-		//	str: 
+		//	str:
 		//		The title to set.
-		//	type: 
+		//	type:
 		//		The type of title format, text, xml, xhtml, etc.
 		if(!str){return;}
 		this.title = new dojox.atom.io.model.Content("title");
@@ -500,31 +500,31 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		if(type){this.title.type = type;}
 	},
 	addExtension: function(/*String*/name_space,/*String*/name, /*Array*/attributes, /*String*/content, /*String*/shortNS){
-		//	summary: 
+		//	summary:
 		//		Function to add in an extension namespace into the item.
-		//	description: 
+		//	description:
 		//		Function to add in an extension namespace into the item.
 		//
-		//	name_space: 
+		//	name_space:
 		//		The namespace of the extension.
-		//	name: 
+		//	name:
 		//		The name of the extension
-		//	attributes: 
+		//	attributes:
 		//		The attributes associated with the extension.
-		//	content: 
+		//	content:
 		//		The content of the extension.
 		if(!this.extensions){this.extensions=[];}
 		this.extensions.push(new dojox.atom.io.model.Node(name_space,name,attributes,content, shortNS || "ns"+this.extensions.length));
 	},
 	getExtensions: function(/*String*/name_space, /*String*/name){
-		//	summary: 
+		//	summary:
 		//		Function to get extensions that match a namespace and name.
-		//	description: 
+		//	description:
 		//		Function to get extensions that match a namespace and name.
 		//
-		//	name_space: 
+		//	name_space:
 		//		The namespace of the extension.
-		//	name: 
+		//	name:
 		//		The name of the extension
 		var arr = [];
 		if(!this.extensions){return arr;}
@@ -536,14 +536,14 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 		return arr;
 	},
 	removeExtensions: function(/*String*/name_space, /*String*/name){
-		//	summary: 
+		//	summary:
 		//		Function to remove extensions that match a namespace and name.
-		//	description: 
+		//	description:
 		//		Function to remove extensions that match a namespace and name.
 		//
-		//	name_space: 
+		//	name_space:
 		//		The namespace of the extension.
-		//	name: 
+		//	name:
 		//		The name of the extension
 		if(!this.extensions){return;}
 		for(var i=0; i< this.extensions.length; i++){
@@ -570,9 +570,9 @@ dojo.declare("dojox.atom.io.model.AtomItem",dojox.atom.io.model.Node,{
 });
 
 dojo.declare("dojox.atom.io.model.Category",dojox.atom.io.model.Node,{
-	//	summary: 
-	//		Class container for 'Category' types. 
-	//	description: 
+	//	summary:
+	//		Class container for 'Category' types.
+	//	description:
 	//		Class container for 'Category' types.
 	constructor: function(/*String*/scheme, /*String*/term, /*String*/label){
 		this.scheme = scheme; this.term = term; this.label = label;
@@ -583,9 +583,9 @@ dojo.declare("dojox.atom.io.model.Category",dojox.atom.io.model.Node,{
 		return ["label","scheme","term"];
 	},
 	toString: function(){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the category tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the category tag, which is an XML structure.
 		var s = [];
 		s.push('<category ');
@@ -596,12 +596,12 @@ dojo.declare("dojox.atom.io.model.Category",dojox.atom.io.model.Node,{
 		return s.join('');
 	},
 	buildFromDom: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the Category data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the Category data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for content.
 		this._saveAttributes(node);//just get the attributes from the node
 		this.label = this.attributes.label;
@@ -612,9 +612,9 @@ dojo.declare("dojox.atom.io.model.Category",dojox.atom.io.model.Node,{
 });
 
 dojo.declare("dojox.atom.io.model.Content",dojox.atom.io.model.Node,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Content' types. Such as summary, content, username, and so on types of data.
-	//	description: 
+	//	description:
 	//		Class container for 'Content' types. Such as summary, content, username, and so on types of data.
 	constructor: function(tagName, value, src, type,xmlLang){
 		this.tagName = tagName; this.value = value; this.src = src; this.type=type; this.xmlLang = xmlLang;
@@ -624,12 +624,12 @@ dojo.declare("dojox.atom.io.model.Content",dojox.atom.io.model.Node,{
 	_getAttributeNames: function(){return ["type","src"];},
 	_postBuild: function(){},
 	buildFromDom: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the Content data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the Content data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for content.
 		//Handle checking for XML content as the content type
 		var type = node.getAttribute("type");
@@ -676,9 +676,9 @@ dojo.declare("dojox.atom.io.model.Content",dojox.atom.io.model.Node,{
 		if(this._postBuild){this._postBuild();}
 	},
 	toString: function(){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the content tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the content tag, which is an XML structure.
 		var s = [];
 		s.push('<'+this.tagName+' ');
@@ -699,9 +699,9 @@ dojo.declare("dojox.atom.io.model.Content",dojox.atom.io.model.Node,{
 });
 
 dojo.declare("dojox.atom.io.model.Link",dojox.atom.io.model.Node,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'link' types.
-	//	description: 
+	//	description:
 	//		Class container for 'link' types.
 	constructor: function(href,rel,hrefLang,title,type){
 		this.href = href; this.hrefLang = hrefLang; this.rel = rel; this.title = title;this.type = type;
@@ -709,12 +709,12 @@ dojo.declare("dojox.atom.io.model.Link",dojox.atom.io.model.Node,{
 	_getAttributeNames: function(){return ["href","jrefLang","rel","title","type"];},
 	_postBuild: function(){},
 	buildFromDom: function(node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the link data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the link data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for link data.
 		this._saveAttributes(node);//just get the attributes from the node
 		this.href = this.attributes.href;
@@ -725,11 +725,11 @@ dojo.declare("dojox.atom.io.model.Link",dojox.atom.io.model.Node,{
 		if(this._postBuild){this._postBuild();}
 	},
 	toString: function(){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the link tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the link tag, which is an XML structure.
-		var s = []; 
+		var s = [];
 		s.push('<link ');
 		if(this.href){s.push(' href="'+this.href+'" ');}
 		if(this.hrefLang){s.push(' hrefLang="'+this.hrefLang+'" ');}
@@ -742,9 +742,9 @@ dojo.declare("dojox.atom.io.model.Link",dojox.atom.io.model.Node,{
 });
 
 dojo.declare("dojox.atom.io.model.Person",dojox.atom.io.model.Node,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'person' types, such as Author, controbutors, and so on.
-	//	description: 
+	//	description:
 	//		Class container for 'person' types, such as Author, controbutors, and so on.
 	constructor: function(personType, name, email, uri){
 		this.author = "author";
@@ -762,12 +762,12 @@ dojo.declare("dojox.atom.io.model.Person",dojox.atom.io.model.Node,{
 	_postBuild: function(){},
 	accept: function(tag){return Boolean(this._accepts[tag]);},
 	buildFromDom: function(node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the person data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the person data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for person data.
 		var c = node.childNodes;
 		for(var i = 0; i< c.length; i++){
@@ -789,7 +789,7 @@ dojo.declare("dojox.atom.io.model.Person",dojox.atom.io.model.Node,{
 				fn(this,c[i]);
 			}
 		}
-		this._saveAttributes(node); 
+		this._saveAttributes(node);
 		if(this._postBuild){this._postBuild();}
 	},
 	_accepts: {
@@ -798,9 +798,9 @@ dojo.declare("dojox.atom.io.model.Person",dojox.atom.io.model.Node,{
 		'email': true
 	},
 	toString: function(){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the Person tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the Person tag, which is an XML structure.
 		var s = [];
 		s.push('<'+this.personType+'>\n');
@@ -813,9 +813,9 @@ dojo.declare("dojox.atom.io.model.Person",dojox.atom.io.model.Node,{
 });
 
 dojo.declare("dojox.atom.io.model.Generator",dojox.atom.io.model.Node,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Generator' types.
-	//	description: 
+	//	description:
 	//		Class container for 'Generator' types.
 	constructor: function(/*String*/uri, /*String*/version, /*String*/value){
 		this.uri = uri;
@@ -824,26 +824,26 @@ dojo.declare("dojox.atom.io.model.Generator",dojox.atom.io.model.Node,{
 	},
 	_postBuild: function(){},
 	buildFromDom: function(node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the generator data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the generator data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for link data.
 
 		this.value = dojox.xml.parser.textContent(node);
 		this._saveAttributes(node);
 
-		this.uri = this.attributes.uri; 
+		this.uri = this.attributes.uri;
 		this.version = this.attributes.version;
 
 		if(this._postBuild){this._postBuild();}
 	},
 	toString: function(){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the Generator tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the Generator tag, which is an XML structure.
 		var s = [];
 		s.push('<generator ');
@@ -856,9 +856,9 @@ dojo.declare("dojox.atom.io.model.Generator",dojox.atom.io.model.Node,{
 });
 
 dojo.declare("dojox.atom.io.model.Entry",dojox.atom.io.model.AtomItem,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Entry' types.
-	//	description: 
+	//	description:
 	//		Class container for 'Entry' types.
 	constructor: function(/*String*/id){
 		this.id = id; this._objName = "Entry"; this.feedUrl = null;
@@ -882,9 +882,9 @@ dojo.declare("dojox.atom.io.model.Entry",dojox.atom.io.model.AtomItem,{
 		'modified': true
 	},
 	toString: function(amPrimary){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the entry tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the entry tag, which is an XML structure.
 		var s = [];
 		var i;
@@ -895,7 +895,7 @@ dojo.declare("dojox.atom.io.model.Entry",dojox.atom.io.model.AtomItem,{
 		if(this.xmlBase){s.push(' xml:base="'+this.xmlBase+'" ');}
 		for(i in this.name_spaces){s.push(' xmlns:'+i+'="'+this.name_spaces[i]+'"');}
 		s.push('>\n');
-		s.push('<id>' + (this.id ? this.id: '') + '</id>\n'); 
+		s.push('<id>' + (this.id ? this.id: '') + '</id>\n');
 		if(this.issued && !this.published){this.published = this.issued;}
 		if(this.published){s.push('<published>'+dojo.date.stamp.toISOString(this.published)+'</published>\n');}
 		if(this.created){s.push('<created>'+dojo.date.stamp.toISOString(this.created)+'</created>\n');}
@@ -923,12 +923,12 @@ dojo.declare("dojox.atom.io.model.Entry",dojox.atom.io.model.AtomItem,{
 		return s.join(''); //string
 	},
 	getEditHref: function(){
-		//	summary: 
+		//	summary:
 		//		Function to get the href that allows editing of this feed entry.
-		//	description: 
+		//	description:
 		//		Function to get the href that allows editing of this feed entry.
 		//
-		//	returns: 
+		//	returns:
 		//		The href that specifies edit capability.
 		if(this.links === null || this.links.length === 0){
 			return null;
@@ -955,9 +955,9 @@ dojo.declare("dojox.atom.io.model.Entry",dojox.atom.io.model.AtomItem,{
 });
 
 dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Feed' types.
-	//	description: 
+	//	description:
 	//		Class container for 'Feed' types.
 	_accepts: {
 		'author': true,
@@ -981,11 +981,11 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 		'subtitle': true
 	},
 	addEntry: function(/*object*/entry){
-		//	summary: 
+		//	summary:
 		//		Function to add an entry to this feed.
-		//	description: 
+		//	description:
 		//		Function to add an entry to this feed.
-		//	entry: 
+		//	entry:
 		//		The entry object to add.
 		if(!entry.id){
 			throw new Error("The entry object must be assigned an ID attribute.");
@@ -995,23 +995,23 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 		this.entries.push(entry);
 	},
 	getFirstEntry: function(){
-		//	summary: 
+		//	summary:
 		//		Function to get the first entry of the feed.
-		//	description: 
+		//	description:
 		//		Function to get the first entry of the feed.
 		//
-		//	returns: 
+		//	returns:
 		//		The first entry in the feed.
 		if(!this.entries || this.entries.length === 0){return null;}
 		return this.entries[0]; //object
 	},
 	getEntry: function(/*String*/entryId){
-		//	summary: 
+		//	summary:
 		//		Function to get an entry by its id.
-		//	description: 
+		//	description:
 		//		Function to get an entry by its id.
 		//
-		//	returns: 
+		//	returns:
 		//		The entry desired, or null if none.
 		if(!this.entries){return null;}
 		for(var x in this.entries){
@@ -1022,12 +1022,12 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 		return null;
 	},
 	removeEntry: function(/*object*/entry){
-		//	summary: 
+		//	summary:
 		//		Function to remove an entry from the list of links.
-		//	description: 
+		//	description:
 		//		Function to remove an entry from the list of links.
 		//
-		//	entry: 
+		//	entry:
 		//		The entry.
 		if(!this.entries){return;}
 		var count = 0;
@@ -1040,21 +1040,21 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 		return count;
 	},
 	setEntries: function(/*array*/arrayOfEntry){
-		//	summary: 
+		//	summary:
 		//		Function to add a set of entries to the feed.
-		//	description: 
+		//	description:
 		//		Function to get an entry by its id.
 		//
-		//	arrayOfEntry: 
+		//	arrayOfEntry:
 		//		An array of entry objects to add to the feed.
 		for(var x in arrayOfEntry){
 			this.addEntry(arrayOfEntry[x]);
 		}
 	},
 	toString: function(){
-		//	summary: 
+		//	summary:
 		//		Function to construct string form of the feed tag, which is an XML structure.
-		//	description: 
+		//	description:
 		//		Function to construct string form of the feed tag, which is an XML structure.
 		var s = [];
 		var i;
@@ -1063,7 +1063,7 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 		if(this.xmlBase){s.push(' xml:base="'+this.xmlBase+'"');}
 		for(i in this.name_spaces){s.push(' xmlns:'+i+'="'+this.name_spaces[i]+'"');}
 		s.push('>\n');
-		s.push('<id>' + (this.id ? this.id: '') + '</id>\n'); 
+		s.push('<id>' + (this.id ? this.id: '') + '</id>\n');
 		if(this.title){s.push(this.title);}
 		if(this.copyright && !this.rights){this.rights = this.copyright;}
 		if(this.rights){s.push('<rights>' + this.rights + '</rights>\n');}
@@ -1093,22 +1093,22 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 		return s.join('');
 	},
 	createEntry: function(){
-		//	summary: 
+		//	summary:
 		//		Function to Create a new entry object in the feed.
-		//	description: 
+		//	description:
 		//		Function to Create a new entry object in the feed.
-		//	returns: 
+		//	returns:
 		//		An empty entry object in the feed.
 		var entry = new dojox.atom.io.model.Entry();
 		entry.feedUrl = this.getSelfHref();
 		return entry; //object
 	},
 	getSelfHref: function(){
-		//	summary: 
+		//	summary:
 		//		Function to get the href that refers to this feed.
-		//	description: 
+		//	description:
 		//		Function to get the href that refers to this feed.
-		//	returns: 
+		//	returns:
 		//		The href that refers to this feed or null if none.
 		if(this.links === null || this.links.length === 0){
 			return null;
@@ -1123,23 +1123,23 @@ dojo.declare("dojox.atom.io.model.Feed",dojox.atom.io.model.AtomItem,{
 });
 
 dojo.declare("dojox.atom.io.model.Service",dojox.atom.io.model.AtomItem,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Feed' types.
-	//	description: 
+	//	description:
 	//		Class container for 'Feed' types.
 	constructor: function(href){
 		this.href = href;
 	},
-	//builds a Service document.  each element of this, except for the namespace, is the href of 
+	//builds a Service document.  each element of this, except for the namespace, is the href of
 	//a service that the server supports.  Some of the common services are:
 	//"create-entry" , "user-prefs" , "search-entries" , "edit-template" , "categories"
 	buildFromDom: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the Service data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the Service data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for content.
 		var i;
 		this.workspaces = [];
@@ -1178,12 +1178,12 @@ dojo.declare("dojox.atom.io.model.Service",dojox.atom.io.model.AtomItem,{
 		}
 	},
 	getCollection: function(/*String*/url){
-		//	summary: 
+		//	summary:
 		//		Function to collections that match a specific url.
-		//	description: 
+		//	description:
 		//		Function to collections that match a specific url.
 		//
-		//	url: 
+		//	url:
 		//		e URL to match collections against.
 		for(var i=0;i<this.workspaces.length;i++){
 			var coll=this.workspaces[i].collections;
@@ -1198,9 +1198,9 @@ dojo.declare("dojox.atom.io.model.Service",dojox.atom.io.model.AtomItem,{
 });
 
 dojo.declare("dojox.atom.io.model.Workspace",dojox.atom.io.model.AtomItem,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Workspace' types.
-	//	description: 
+	//	description:
 	//		Class container for 'Workspace' types.
 	constructor: function(title){
 		this.title = title;
@@ -1208,12 +1208,12 @@ dojo.declare("dojox.atom.io.model.Workspace",dojox.atom.io.model.AtomItem,{
 	},
 
 	buildFromDom: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the Workspace data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the Workspace data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for content.
 		var name = dojox.atom.io.model.util.getNodename(node);
 		if(name != "workspace"){return;}
@@ -1242,9 +1242,9 @@ dojo.declare("dojox.atom.io.model.Workspace",dojox.atom.io.model.AtomItem,{
 });
 
 dojo.declare("dojox.atom.io.model.Collection",dojox.atom.io.model.AtomItem,{
-	//	summary: 
+	//	summary:
 	//		Class container for 'Collection' types.
-	//	description: 
+	//	description:
 	//		Class container for 'Collection' types.
 	constructor: function(href, title){
 		this.href = href;
@@ -1257,12 +1257,12 @@ dojo.declare("dojox.atom.io.model.Collection",dojox.atom.io.model.AtomItem,{
 	},
 
 	buildFromDom: function(/*DOM node*/node){
-		//	summary: 
+		//	summary:
 		//		Function to do construction of the Collection data from the DOM node containing it.
-		//	description: 
+		//	description:
 		//		Function to do construction of the Collection data from the DOM node containing it.
 		//
-		//	node: 
+		//	node:
 		//		The DOM node to process for content.
 		this.href = node.getAttribute("href");
 		var c = node.childNodes;

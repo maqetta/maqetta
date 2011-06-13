@@ -1,5 +1,5 @@
 dojo.provide("dojox.highlight.tests.module");
-//This file loads in all the test definitions.  
+//This file loads in all the test definitions.
 
 try{
 	//Load in the highlight module test.

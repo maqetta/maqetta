@@ -86,19 +86,19 @@ dojox.date.buddhist.add = function(/*dojox.date.buddhist.Date*/date, /*String*/i
 			break;
 		case "hour":
 			newBuddDate.setHours(date.getHours() + amount );
-			break;	
+			break;
 		case "minute":
 			newBuddDate.setMinutes(date.getMinutes() + amount );
-			break;	
+			break;
 		case "second":
 			newBuddDate.setSeconds(date.getSeconds() + amount );
-			break;	
+			break;
 		case "millisecond":
 			newBuddDate.setMilliseconds(date.getMilliseconds() + amount );
 			break;
 	}
 	return newBuddDate; // dojox.date.buddhist.Date
-}; 
+};
 
 dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*dojox.date.buddhist.Date?*/date2, /*String?*/interval){
 	//	based on and similar to dojo.date.difference
@@ -207,7 +207,7 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 				var i = enddate.getFullYear()+1;
 				var e = startdate.getFullYear();
 				for (i;   i < e;  i++){
-					delta += 12; 
+					delta += 12;
 				}
 			}
 			if (date1.toGregorian() < date2.toGregorian()){
@@ -236,5 +236,5 @@ dojox.date.buddhist.difference = function(/*dojox.date.buddhist.Date*/date1, /*d
 	}
 	
 	// Round for fractional values and DST leaps
-	return Math.round(delta); // Number (integer) 
+	return Math.round(delta); // Number (integer)
 };

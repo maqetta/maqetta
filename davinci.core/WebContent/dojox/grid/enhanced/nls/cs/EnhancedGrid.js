@@ -1,8 +1,12 @@
 ({
-	singleSort: "Jednoduché řazení",
+	singleSort: "Jednotlivé řazení",
 	nestedSort: "Vnořené řazení",
 	ascending: "Vzestupně",
 	descending: "Sestupně",
-	unsorted: "Tento sloupec neřadit"
+	sortingState: "${0} - ${1}",
+	unsorted: "Neřadit tento sloupec",
+	indirectSelectionRadio: "Řádek ${0}, jednotlivý výběr, přepínač",
+	indirectSelectionCheckBox: "Řádek ${0}, vícenásobný výběr, zaškrtávací políčko",
+	selectAll: "Vybrat vše"
 })
 

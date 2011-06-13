@@ -234,7 +234,7 @@ dojo.extend(dojox.string.sprintf.Formatter, {
 					if(token.period != '.'){
 						token.precision = 6;
 					}
-					this.formatDouble(token); 
+					this.formatDouble(token);
 				}
 				this.fitField(token);
 
@@ -261,7 +261,7 @@ dojo.extend(dojox.string.sprintf.Formatter, {
 		// otherwise, (-10).toString(16) is '-a' instead of 'fffffff6'
 		if(i < 0 && (token.isUnsigned || token.base != 10)){
 			i = 0xffffffff + i + 1;
-		} 
+		}
 
 		if(i < 0){
 			token.arg = (- i).toString(token.base);
@@ -308,11 +308,11 @@ dojo.extend(dojox.string.sprintf.Formatter, {
 
 		switch(token.doubleNotation) {
 			case 'e': {
-				token.arg = f.toExponential(token.precision); 
+				token.arg = f.toExponential(token.precision);
 				break;
 			}
 			case 'f': {
-				token.arg = f.toFixed(token.precision); 
+				token.arg = f.toFixed(token.precision);
 				break;
 			}
 			case 'g': {
@@ -323,12 +323,12 @@ dojo.extend(dojox.string.sprintf.Formatter, {
 					//print("forcing exponential notation for f=" + f);
 					token.arg = f.toExponential(token.precision > 0 ? token.precision - 1 : token.precision);
 				}else{
-					token.arg = f.toPrecision(token.precision); 
+					token.arg = f.toPrecision(token.precision);
 				}
 
 				// In C, unlike 'f', 'gG' removes trailing 0s from fractional part, unless alternative format flag ("#").
 				// But ECMAScript formats toPrecision as 0.00100000. So remove trailing 0s.
-				if(!token.alternative){ 
+				if(!token.alternative){
 					//print("replacing trailing 0 in '" + s + "'");
 					token.arg = token.arg.replace(/(\..*[^0])0*/, "$1");
 					// if fractional part is entirely 0, remove it and decimal point

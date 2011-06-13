@@ -11,7 +11,7 @@ dojo.declare('dojox.grid._RowSelector', dojox.grid._View, {
 		this.inherited('buildRendering', arguments);
 		this.scrollboxNode.style.overflow = "hidden";
 		this.headerNode.style.visibility = "hidden";
-	},	
+	},
 	getWidth: function(){
 		return this.viewWidth || this.defaultWidth;
 	},

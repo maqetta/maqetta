@@ -1,4 +1,6 @@
-dojo.provide("dojox.math.matrix");
+// AMD-ID "dojox/math/matrix"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.matrix", true, dojox);
 
 dojo.mixin(dojox.math.matrix, {
 	iDF:0,
@@ -287,4 +289,7 @@ dojo.mixin(dojox.math.matrix, {
 		}
 		return a;
 	}
+});
+
+return dojox.math.matrix;
 });

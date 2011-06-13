@@ -248,7 +248,10 @@ dojo.declare("davinci.ve.Context", null, {
                     // Since the metadata files are 'relocatable', we don't use the metadata's
                     //  value for $library.src.  Instead, we find the base URL for the user's
                     //  currently selected library.
-                    var libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
+                    var libVer = davinci.ve.metadata.getLibrary(r.$library).version;
+                    if (!libVer) {
+                    	libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
+                    }
                     var libRoot = davinci.library.getLibRoot(r.$library, libVer);
                     if (!libRoot) {
                         console.warn("No library found for name = '" + r.$library +
@@ -426,7 +429,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
 
-			var frame = dojo.create("iframe", null, containerNode);
+			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
 			var realUrl = dojo.global.location.href + "/" ;
@@ -477,8 +480,8 @@ dojo.declare("davinci.ve.Context", null, {
             head += "</head><body>";
             if (dojoUrl) {
                 // Since this document was created from script, DOMContentLoaded and window.onload never fire.
-                // Call dojo._loadInit manually to trigger the Dojo onLoad events.
-                head += "<script>dojo._loadInit();</script>";
+                // Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
+                head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
             }
             head += "</body></html>";
 
@@ -512,7 +515,7 @@ dojo.declare("davinci.ve.Context", null, {
     				win.dojo.isArray=function(it){
     					return it && Object.prototype.toString.call(it)=="[object Array]";
     				};
-
+console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
 				} catch(e) {
 					// recreate the Error since we crossed frames
@@ -710,11 +713,34 @@ dojo.declare("davinci.ve.Context", null, {
 		if(attachWidgets){
 			this._attachAll();
 		}
+
+		// bind overlay widgets to corresponding davinci states
+		davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(args){
+			if(this.getDojo().doc.body != args.widget.containerNode){
+				// ignore event coming from another window
+				return;
+			}
+			var prefix = "_show:", widget, dvWidget, helper;
+			if(args.newState && !args.newState.indexOf(prefix)){
+				widget = this.getDijit().byId(args.newState.substring(6));
+//				widget && widget.show();
+				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				helper = dvWidget.getHelper();
+				helper && helper.popup && helper.popup(dvWidget);
+			}
+			if(args.oldState && !args.oldState.indexOf(prefix)){
+				widget = this.getDijit().byId(args.oldState.substring(6));
+//				widget && widget.hide();
+				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				helper = dvWidget.getHelper();
+				helper && helper.tearDown && helper.tearDown(dvWidget);
+			}
+		}));
 	},
 	
 	_editorSelectionChange: function(event){
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
-		// Now the editor tab container should have focus becouse the usre selected it. So the dojo.processing should work this time
+		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
 		if (event.editor.fileName === this._editor.fileName){
 			dojo.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;

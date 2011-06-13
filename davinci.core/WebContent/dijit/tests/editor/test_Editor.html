@@ -1,20 +1,20 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	<title>Editor Test</title>
 
 	<style type="text/css">
-		@import "../../../dojo/resources/dojo.css";
+		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
 	</style>
 
 	<!-- required: a default dijit theme: -->
-	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css">
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/claro/claro.css"/>
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="parseOnLoad: true, isDebug: true"></script>
+		data-dojo-config="isDebug: true"></script>
 
 	<!-- not needed, for testing alternate themes -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -30,33 +30,38 @@
 		dojo.require("dijit._editor.plugins.LinkDialog");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 
-		// Dummy simple plugin for testing that filters registered this way work
-		// properly with content setting on load.
-		dojo.declare("dijit.tests.editor.TestFilter", [dijit._editor._Plugin], {
-			setEditor: function(editor){
-				this.editor = editor;
-				this.editor.contentPreFilters.push(function(val){
-					if(val){
-						val = val.replace("notdojo", "DOJO");
-					}
-					return val;
-				});
-			}
-		});
-
 		dojo.addOnLoad(function(){
+			// Dummy simple plugin for testing that filters registered this way work
+			// properly with content setting on load.
+			dojo.declare("dijit.tests.editor.TestFilter", [dijit._editor._Plugin], {
+				setEditor: function(editor){
+					this.editor = editor;
+					this.editor.contentPreFilters.push(function(val){
+						if(val){
+							val = val.replace("notdojo", "DOJO");
+						}
+						return val;
+					});
+				}
+			});
+
+			dojo.parser.parse();
+
 			var progEditor = new dijit.Editor({
 				value: "Custom Initial Content."
 			}, "programmatic3");
 
+			var progEditor = new dijit.Editor({
+				contentPreFilters: [function(txt) { return txt; }]		
+			}, "programmatic4");
 		});
 
 	</script>
 </head>
 
 <body class="claro">
-	<div dojoType="dijit.Editor" id="automated" height="1.5em" plugins="[]" focusOnLoad="true" style="border:0px;"
-	>Automated Test - all check boxes should be checked<script type='dojo/method' event='onFocus'>
+	<div data-dojo-type="dijit.Editor" data-dojo-props="plugins:[], focusOnLoad:true, height:'1.5em', style:'border:0px;'" id="automated"
+	>Automated Test - all check boxes should be checked<script type='dojo/method' data-dojo-event='onFocus'>
 			if(!document.getElementById('onFocusFired').checked){
 				document.getElementById('onFocusFired').checked=true;
 				document.getElementById('initialValueOK').checked = (dijit.byId('automated').getValue() == 'Automated Test - all check boxes should be checked');
@@ -66,7 +71,7 @@
 				setTimeout(dojo.hitch(dijit.byId('editor0'),"focus",0));
 			}
 		</script
-		><script type='dojo/method' event='onBlur'>
+		><script type='dojo/method' data-dojo-event='onBlur'>
 			if(!document.getElementById('onBlurFired').checked){
 				document.getElementById('onBlurFired').checked=true;
 				dijit.byId('automated').set('disabled', true);
@@ -76,45 +81,45 @@
 				} catch(e) { document.getElementById('disabledOK').checked = true; }}, 0);
 			}
 		</script
-		><script type='dojo/method' event='onChange'>
+		><script type='dojo/method' data-dojo-event='onChange'>
 			if(document.getElementById('onChangeOKnow').checked && !document.getElementById('onChangeFired').checked){
 				document.getElementById('onChangeFired').checked=true;
 			}
 		</script
 	></div>
-	Focus:<input type="checkbox" id="onFocusFired" disabled autoComplete="off">
-	Value:<input type="checkbox" id="initialValueOK" disabled autoComplete="off">
-	<input type="checkbox" id="onChangeOKnow" disabled autoComplete="off" style="display:none;">
-	Change:<input type="checkbox" id="onChangeFired" disabled autoComplete="off">
-	Blur:<input type="checkbox" id="onBlurFired" disabled autoComplete="off">
-	Disabled:<input type="checkbox" id="disabledOK" disabled autoComplete="off">
+	Focus:<input type="checkbox" id="onFocusFired" disabled />
+	Value:<input type="checkbox" id="initialValueOK" disabled />
+	<input type="checkbox" id="onChangeOKnow" disabled style="display:none;"/>
+	Change:<input type="checkbox" id="onChangeFired" disabled />
+	Blur:<input type="checkbox" id="onBlurFired" disabled />
+	Disabled:<input type="checkbox" id="disabledOK" disabled />
 	<br>
 	<br>
 
-	<h1 class="testTitle"><label for="editor1">Editor + Plugins Test</label></h1>
+	<h1 class="testTitle">Editor + Plugins Test</h1>
 
 	<h2>No plugins, initially empty</h2>
-	<div dojoType="dijit.Editor" id="editor0" height="100" plugins="[]"></div>
+	<div data-dojo-type="dijit.Editor" data-dojo-props="plugins:[], height:'100'" id="editor0"></div>
 
 	<h2>Created from div</h2>
-	<input id="focusBefore" value="input before editor1">
-	<div dojoType="dijit.Editor" id="editor1" disableSpellCheck="true"
-		onChange="console.log('editor1 onChange handler: ' + arguments[0])"
+	<input id="focusBefore" value="input before editor1"/>
+	<div data-dojo-type="dijit.Editor" data-dojo-props="onChange:function(v){console.log('editor1 onChange handler: ' + v)}, disableSpellCheck:true" id="editor1"
 	><p>This instance is created from a div directly with default toolbar and plugins</p>
 	The following HTML should appear as source: &lt;INPUT TYPE="IMAGE" SRC="javascript:alert('no scripting attacks')"&gt;
 	</div>
-	<input id="focusAfter" value="input after editor1">
+	<input id="focusAfter" value="input after editor1"/>
 	<button onClick="dijit.byId('editor1').destroy()">destroy</button>
 	<button onClick="dijit.byId('editor1').set('disableSpellCheck', !dijit.byId('editor1').get('disableSpellCheck'))">toggle spell check</button>
 	<button onclick="console.log(dijit.byId('editor1').get('value'))">getValue</button>
+	<button id="addStyleSheet" onclick="dijit.byId('editor1').addStyleSheet('test_editor.css')">add stylesheet</button>
+	<button id="removeStyleSheet" onclick="dijit.byId('editor1').removeStyleSheet('test_editor.css')">remove stylesheet</button>
 	<hr/>
 
 	<h2>Created from div, auto-expanding</h2>
-	<h3><label for="thud">label for editor:</label></h3>
-	<div dojoType="dijit.Editor" height="" minHeight="75px"
-		onChange="console.log('thud onChange handler: ' + arguments[0])"
-		extraPlugins="['dijit._editor.plugins.AlwaysShowToolbar']"
-		styleSheets="../../../dojo/resources/dojo.css" id="thud">
+	<h3><label>label for editor:</label></h3>
+	<div data-dojo-type="dijit.Editor" 
+		data-dojo-props="onChange:function(v){console.log('thud onChange handler: ' + v)}, extraPlugins:['dijit._editor.plugins.AlwaysShowToolbar'], styleSheets:'../../themes/claro/document.css', minHeight:'75px', height:''"
+		id="thud">
 		Extra text
 		<p>
 			This editor is created from a div with AlwaysShowToolbar plugin (do not forget to set height="").
@@ -133,10 +138,10 @@
 	<hr/>
 
 	<h2>Optional toolbar buttons</h2>
-	<h3><label for="blah">blah entry</label></h3>
-	<div dojoType="dijit.Editor"
-		plugins="['bold','italic','|','createLink','foreColor','hiliteColor',{name:'dijit._editor.plugins.FontChoice', command:'fontName', generic:true},'fontSize','formatBlock','insertImage','insertHorizontalRule']"
-		styleSheets="../../../dojo/resources/dojo.css" id="blah">
+	<h3><label>blah entry</label></h3>
+	<div data-dojo-type="dijit.Editor"
+		data-dojo-props="plugins:['bold','italic','|','createLink','foreColor','hiliteColor',{name:'dijit._editor.plugins.FontChoice', command:'fontName', generic:true},'fontSize','formatBlock','insertImage','insertHorizontalRule'], styleSheets:'../../themes/claro/document.css'"
+		id="blah">
 		This instance includes optional toolbar buttons which pull in additional ui (dijit) code.
 		Note the dojo.require() statements required to pull in the associated editor plugins to make
 		this work.
@@ -157,10 +162,10 @@
 	<hr/>
 
 	<h2>Plugins specified</h2>
-	<h3><label for="blah2">Another blah entry</label></h3>
-	<div dojoType="dijit.Editor"
-		plugins="['bold','italic','|',{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond','Apple Chancery','Hiragino Mincho Pro']}, {name:'dijit._editor.plugins.FontChoice', command:'fontSize', custom:[3,4,5]}, {name:'dijit._editor.plugins.EnterKeyHandling', blockNodeForEnter:'DIV'}]"
-		styleSheets="../../../dojo/resources/dojo.css" id="blah2">
+	<h3><label>Another blah entry</label></h3>
+	<div data-dojo-type="dijit.Editor"
+		data-dojo-props="plugins:['bold','italic','|',{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond','Apple Chancery','Hiragino Mincho Pro']}, {name:'dijit._editor.plugins.FontChoice', command:'fontSize', custom:[3,4,5]}, {name:'dijit._editor.plugins.EnterKeyHandling', blockNodeForEnter:'DIV'}], styleSheets:'../../themes/claro/document.css'"
+		id="blah2">
 		This instance demos how to:
 		<ol>
 			<li>specify which plugins to load (see the plugins property): this instance loads FontChoice plugin, among others;</li>
@@ -171,17 +176,17 @@
 	<hr/>
 
 	<h2>Font sizing via style</h2> 
-	<div dojoType="dijit.Editor" style="text-align:left; font-size:30pt" id="fontSizedEditor"> 
+	<div data-dojo-type="dijit.Editor" data-dojo-props="style:'text-align:left; font-size:30pt'" id="fontSizedEditor"> 
 		Hello World! 
 	</div> 
 
 	<h2>Checking pre-filter application</h2> 
-	<div dojoType="dijit.Editor" id="filteredEditor" extraPlugins="[{name: 'dijit.tests.editor.TestFilter'}]"> 
+	<div data-dojo-type="dijit.Editor" data-dojo-props="extraPlugins:[{name: 'dijit.tests.editor.TestFilter'}]" id="filteredEditor"> 
 		notdojo 
 	</div> 
 
 	<h2>Checking editor starting with br</h2> 
-	<div dojoType="dijit.Editor" id="brEditor"> 
+	<div data-dojo-type="dijit.Editor" id="brEditor"> 
 		<br>
 		some stuff
 		<br>
@@ -204,5 +209,8 @@
 
 	<br><br>    
 	<div id="programmatic3">This div will become a programmatic editor in addOnLoad with creation-defined default content.</div>
+	<br><br>
+	<div id="programmatic4">This div will become a programmatic editor in addOnLoad with creation-defined and custom filters.</div>
+
 </body>
 </html>

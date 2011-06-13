@@ -67,7 +67,7 @@ buildUtilXd.xdgen = function(
 			//bundles flattened (therefore have a dojo.provide call),
 			//need to have special xd contents.
 			if(jsFileName.match(/\/nls\//) && fileContents.indexOf("dojo.provide(") == -1){
-				var xdContents = buildUtilXd.makeXdBundleContents(prefixName, prefixPath, jsFileName, fileContents, prefixes, kwArgs);			
+				var xdContents = buildUtilXd.makeXdBundleContents(prefixName, prefixPath, jsFileName, fileContents, prefixes, kwArgs);
 			}else{
 				xdContents = buildUtilXd.makeXdContents(fileContents, prefixes, kwArgs);
 			}

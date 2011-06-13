@@ -4,7 +4,7 @@ dojo.require("dojo.dnd.Selector");
 dojo.require("dojo.dnd.Manager");
 
 dojo.declare(
-	"dojox.mdnd.PureSource", 
+	"dojox.mdnd.PureSource",
 	dojo.dnd.Selector,
 {
 	// summary:
@@ -16,7 +16,7 @@ dojo.declare(
 	copyOnly: true,
 	skipForm: false,
 	withHandles: false,
-	isSource: true,	
+	isSource: true,
 	targetState: "Disabled",
 	generateText: true,
 	
@@ -105,17 +105,17 @@ dojo.declare(
 		// summary:
 		//		Event processor for onmousemove.
 		// e:
-		//		Mouse event.	
+		//		Mouse event.
 
 		//console.log('dojox.mdnd.PureSource ::: onMouseMove');
 		if(this.isDragging){
 			return;
 		}
 		dojox.mdnd.PureSource.superclass.onMouseMove.call(this, e);
-		var m = dojo.dnd.manager();		
+		var m = dojo.dnd.manager();
 		if(this.mouseDown && !this.isDragging && this.isSource){
-			var nodes = this.getSelectedNodes();			
-			if(nodes.length){				
+			var nodes = this.getSelectedNodes();
+			if(nodes.length){
 				m.startDrag(this, nodes, this.copyState(dojo.isCopyKey(e)));
 				this.isDragging = true;
 			}

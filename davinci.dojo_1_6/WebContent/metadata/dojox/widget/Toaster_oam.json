@@ -1,0 +1,104 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/Toaster",
+    "name": "dojox.widget.Toaster",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/widget/Toaster/Toaster.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.widget.Toaster');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "messageTopic": {
+            "datatype": "string",
+            "title": "Message Topic"
+        },
+        "defaultType": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "message"
+                },
+                {
+                    "value": "warning"
+                },
+                {
+                    "value": "error"
+                },
+                {
+                    "value": "fatal"
+                }
+            ],
+            "defaultValue": "message",
+            "title": "Default Message Type"
+        },
+        "positionDirection": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "br-up"
+                },
+                {
+                    "value": "br-left"
+                },
+                {
+                    "value": "bl-up"
+                },
+                {
+                    "value": "bl-right"
+                },
+                {
+                    "value": "tr-down"
+                },
+                {
+                    "value": "tr-left"
+                },
+                {
+                    "value": "tl-down"
+                },
+                {
+                    "value": "tl-right"
+                }
+            ],
+            "defaultValue": "br-up",
+            "title": "Position Direction"
+        },
+        "duration": {
+            "datatype": "string",
+            "defaultValue": "2000",
+            "title": "Duration"
+        },
+        "separator": {
+            "datatype": "string",
+            "defaultValue": "<hr></hr>",
+            "title": "Separator"
+        },
+        "slideDuration": {
+            "datatype": "number",
+            "description": "Number of milliseconds for the slide animation, increasing will cause the Toaster\nto slide in more slowly.",
+            "hidden": true
+        }
+    },
+    "content": "<span></span>"
+}

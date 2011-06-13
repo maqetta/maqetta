@@ -1,5 +1,5 @@
 /*[
-	// Properties of December 1, 2007 
+	// Properties of December 1, 2007
 	{ "year": "2007" },
 	{ "nmonth": "12" },
 	{ "month": "December" },

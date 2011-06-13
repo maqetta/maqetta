@@ -11,7 +11,10 @@
 <script src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
 <script>
 
-dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.Chart");
+dojo.require("dojox.charting.axis2d.Invisible");
+dojo.require("dojox.charting.axis2d.Default");
+dojo.require("dojox.charting.plot2d.Markers");
 dojo.require("dojox.charting.themes.ThreeD");
 
 makeObjects = function(){
@@ -20,7 +23,7 @@ makeObjects = function(){
     var customTheme = dojox.charting.themes.ThreeD.clone();
     customTheme.plotarea.fill = "#fed";
 
-	var chart1 = new dojox.charting.Chart2D("test1").
+	var chart1 = new dojox.charting.Chart("test1").
             setTheme(customTheme).
             addAxis("x", {fixLower: "major", fixUpper: "major", natural: true, includeZero: true}).
             addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true, includeZero: true}).
@@ -30,7 +33,7 @@ makeObjects = function(){
             addSeries("Series C", [{x: 5, y: 3}, {x: 6, y: 4}, {x: 7, y: 3}]).
             render();
 
-	var chart2 = new dojox.charting.Chart2D("test2").
+	var chart2 = new dojox.charting.Chart("test2").
             setTheme(customTheme).
             addAxis("x", {fixLower: "major", fixUpper: "major", natural: true, includeZero: true}).
             addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true, includeZero: true}).
@@ -42,7 +45,7 @@ makeObjects = function(){
             addSeries("Series C", [{x: 5, y: 3}, {x: 6, y: 4}, {x: 7, y: 3}], {plot: "p3"}).
             render();
 
-	var chart3 = new dojox.charting.Chart2D("test3").
+	var chart3 = new dojox.charting.Chart("test3").
             setTheme(customTheme).
             addAxis("x", {type: "Invisible", fixLower: "major", fixUpper: "major", natural: true, includeZero: true}).
             addAxis("y", {type: "Invisible",vertical: true, fixLower: "major", fixUpper: "major", natural: true, includeZero: true}).
@@ -52,7 +55,7 @@ makeObjects = function(){
             addSeries("Series C", [{x: 5, y: 3}, {x: 6, y: 4}, {x: 7, y: 3}]).
             render();
 
-	var chart4 = new dojox.charting.Chart2D("test4").
+	var chart4 = new dojox.charting.Chart("test4").
             setTheme(customTheme).
             addPlot("default", {type: "Markers"}).
             addSeries("Series A", [{x: 1, y: 1}, {x: 2, y: 2}, {x: 3, y: 1}]).

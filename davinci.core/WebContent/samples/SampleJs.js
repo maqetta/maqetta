@@ -2,7 +2,7 @@ exampleJS = {};
 
 exampleJS.textAtPosition = function(text, positionStart, positionEnd){
 	/*
-	 * position end is optional, if ommited, then act like "charAt" function
+	 * position end is optional, if omitted, then act like "charAt" function
 	 */
 	
 	var end = positionEnd ? positionEnd : {row:positionStart.row, col:positionStart.col+1};

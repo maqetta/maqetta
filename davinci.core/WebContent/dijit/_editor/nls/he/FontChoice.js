@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "גודל",
 	fontName: "גופן",
@@ -9,6 +11,7 @@
 	cursive: "cursive",
 	fantasy: "fantasy",
 
+	noFormat: "ללא ",
 	p: "פיסקה",
 	h1: "כותרת",
 	h2: "תת-כותרת",
@@ -23,3 +26,5 @@
 	6: "גדול מאוד",
 	7: "גדול ביותר"
 })
+//end v1.x content
+);

@@ -6,7 +6,7 @@
 	<title>Dojo Toolkit - Every Dijit Test + Theme</title>
 
 	<style type="text/css">
-		@import "../../dojo/resources/dojo.css";
+		@import "../themes/claro/document.css";
 		@import "css/dijitTests.css";
 	</style>
 

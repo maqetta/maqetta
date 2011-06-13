@@ -85,7 +85,7 @@
 .soria .dijitArrowButtonInner {
 	background-image: url("../images/spriteArrows.png");
 	background-repeat: no-repeat;
-	background-position: 0px center;
+	background-position: 0 center;
 	width: 11px;
 	height: 11px;
 }

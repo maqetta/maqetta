@@ -1,5 +1,4 @@
-dojo.provide("dojo.rpc.JsonService");
-dojo.require("dojo.rpc.RpcService");
+define("dojo/rpc/JsonService", ["dojo", "dojo/rpc/RpcService"], function(dojo) {
 
 dojo.declare("dojo.rpc.JsonService", dojo.rpc.RpcService, {
 		bustCache: false,
@@ -36,7 +35,7 @@ dojo.declare("dojo.rpc.JsonService", dojo.rpc.RpcService, {
 				url: url||this.serviceUrl,
 				postData: this.createRequest(method, parameters),
 				contentType: this.contentType,
-				timeout: this.timeout, 
+				timeout: this.timeout,
 				handleAs: "json-comment-optional"
 			});
 			def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
@@ -77,3 +76,6 @@ dojo.declare("dojo.rpc.JsonService", dojo.rpc.RpcService, {
 		}
 	}
 );
+
+return dojo.rpc.JsonService;
+});

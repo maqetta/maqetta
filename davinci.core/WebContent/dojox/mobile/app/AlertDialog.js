@@ -1,8 +1,8 @@
 dojo.provide("dojox.mobile.app.AlertDialog");
 dojo.experimental("dojox.mobile.app.AlertDialog");
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
 
-dojo.declare("dojox.mobile.app.AlertDialog", dijit._Widget, {
+dojo.declare("dojox.mobile.app.AlertDialog", dijit._WidgetBase, {
 
 	// title: String
 	//		The title of the AlertDialog

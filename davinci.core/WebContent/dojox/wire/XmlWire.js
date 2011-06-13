@@ -202,7 +202,7 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 		//	node:
 		//		A parent node
 		//	name:
-		//		A tag name	
+		//		A tag name
 		//	returns:
 		//		A child node
 		var index = 1;

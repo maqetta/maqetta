@@ -5,7 +5,7 @@ dojo.require("dojox.charting.Theme");
 	var dxc=dojox.charting;
 	dxc.themes.SageToLime=new dxc.Theme({
 		colors: [
-			"#abdbcb", 
+			"#abdbcb",
 			"#435a51",
 			"#70998b",
 			"#5f8074",

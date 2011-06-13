@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Icon Container (Single App)</title>
 		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
@@ -13,6 +13,7 @@
 			//dojo.require("dojo.parser"); // Use the lightweight parser.
 			dojo.require("dojox.mobile.parser");
 			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile.IconContainer");
 			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 		</script>
 	</head>
@@ -20,13 +21,13 @@
 		<div id="foo" dojoType="dojox.mobile.View" selected="true">
 			<h1 dojoType="dojox.mobile.Heading">Icon Container (Single App)</h1>
 			<ul dojoType="dojox.mobile.IconContainer" transition="below" single="true">
-				<li dojoType="dojox.mobile.IconItem" label="Calendar" icon="images/icon-1.png" lazy="true">
+				<li dojoType="dojox.mobile.IconItem" label="Calendar" icon="images/icon-1.png" lazy="true" requires="dijit._base.wai,dijit._base.typematic,dojo._base.query">
 					<div dojoType='dijit._Calendar'></div>
 				</li>
-				<li dojoType="dojox.mobile.IconItem" label="Color Palette" icon="images/icon-1.png" lazy="true">
+				<li dojoType="dojox.mobile.IconItem" label="Color Palette" icon="images/icon-1.png" lazy="true" requires="dijit._base.wai,dijit._base.typematic,dojo._base.Color">
 					<div dojoType='dijit.ColorPalette'></div>
 				</li>
-				<li dojoType="dojox.mobile.IconItem" label="Progress Bar" icon="images/icon-1.png" lazy="true">
+				<li dojoType="dojox.mobile.IconItem" label="Progress Bar" icon="images/icon-1.png" lazy="true" requires="dijit._base.wai">
 					<div dojoType='dijit.ProgressBar'></div>
 				</li>
 			</ul>

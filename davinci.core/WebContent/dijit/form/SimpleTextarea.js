@@ -1,6 +1,4 @@
-dojo.provide("dijit.form.SimpleTextarea");
-
-dojo.require("dijit.form.TextBox");
+define("dijit/form/SimpleTextarea", ["dojo", "dijit", "dijit/form/TextBox"], function(dojo, dijit) {
 
 dojo.declare("dijit.form.SimpleTextarea",
 	dijit.form.TextBox,
@@ -34,10 +32,18 @@ dojo.declare("dijit.form.SimpleTextarea",
 
 	postMixInProperties: function(){
 		// Copy value from srcNodeRef, unless user specified a value explicitly (or there is no srcNodeRef)
+		// TODO: parser will handle this in 2.0
 		if(!this.value && this.srcNodeRef){
 			this.value = this.srcNodeRef.value;
 		}
 		this.inherited(arguments);
+	},
+
+	buildRendering: function(){
+		this.inherited(arguments);
+		if(dojo.isIE && this.cols){ // attribute selectors is not supported in IE6
+			dojo.addClass(this.textbox, "dijitTextAreaCols");
+		}
 	},
 
 	filter: function(/*String*/ value){
@@ -47,13 +53,6 @@ dojo.declare("dijit.form.SimpleTextarea",
 			value = value.replace(/\r/g,"");
 		}
 		return this.inherited(arguments);
-	},
-
-	postCreate: function(){
-		this.inherited(arguments);
-		if(dojo.isIE && this.cols){ // attribute selectors is not supported in IE6
-			dojo.addClass(this.textbox, "dijitTextAreaCols");
-		}
 	},
 
 	_previousValue: "",
@@ -88,4 +87,8 @@ dojo.declare("dijit.form.SimpleTextarea",
 		}
 		this.inherited(arguments);
 	}
+});
+
+
+return dijit.form.SimpleTextarea;
 });

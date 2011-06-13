@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,50 +8,15 @@
 	@import "../../../dojo/resources/dojo.css";
 	@import "../../../dijit/tests/css/dijitTests.css";
 </style>
-<!--
-The next line should include Microsoft's Silverligth.js, if you plan to use the silverlight backend
-<script type="text/javascript" src="Silverlight.js"></script>
--->
 <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
-<script type="text/javascript" src="../../lang/functional.js"></script>
-<script type="text/javascript" src="../../lang/utils.js"></script>
-<script type="text/javascript" src="../Theme.js"></script>
-<script type="text/javascript" src="../scaler/linear.js"></script>
-<script type="text/javascript" src="../Element.js"></script>
-<script type="text/javascript" src="../axis2d/common.js"></script>
-<script type="text/javascript" src="../axis2d/Base.js"></script>
-<script type="text/javascript" src="../axis2d/Default.js"></script>
-<script type="text/javascript" src="../plot2d/common.js"></script>
-<script type="text/javascript" src="../plot2d/Base.js"></script>
-<script type="text/javascript" src="../plot2d/Default.js"></script>
-<script type="text/javascript" src="../plot2d/Lines.js"></script>
-<script type="text/javascript" src="../plot2d/Areas.js"></script>
-<script type="text/javascript" src="../plot2d/Markers.js"></script>
-<script type="text/javascript" src="../plot2d/MarkersOnly.js"></script>
-<script type="text/javascript" src="../plot2d/Stacked.js"></script>
-<script type="text/javascript" src="../plot2d/StackedLines.js"></script>
-<script type="text/javascript" src="../plot2d/StackedAreas.js"></script>
-<script type="text/javascript" src="../plot2d/Columns.js"></script>
-<script type="text/javascript" src="../plot2d/StackedColumns.js"></script>
-<script type="text/javascript" src="../plot2d/ClusteredColumns.js"></script>
-<script type="text/javascript" src="../plot2d/Bars.js"></script>
-<script type="text/javascript" src="../plot2d/StackedBars.js"></script>
-<script type="text/javascript" src="../plot2d/ClusteredBars.js"></script>
-<script type="text/javascript" src="../plot2d/Grid.js"></script>
-<script type="text/javascript" src="../plot2d/Pie.js"></script>
-<script type="text/javascript" src="../Chart2D.js"></script>
 <script type="text/javascript">
 
-dojo.require("dojox.charting.Chart2D");
-dojo.require("dojox.charting.themes.PlotKit.blue");
-dojo.require("dojox.charting.themes.PlotKit.cyan");
-dojo.require("dojox.charting.themes.PlotKit.green");
-dojo.require("dojox.charting.themes.PlotKit.orange");
-dojo.require("dojox.charting.themes.PlotKit.purple");
-dojo.require("dojox.charting.themes.PlotKit.red");
+dojo.require("dojox.charting.Chart");
+dojo.require("dojox.charting.axis2d.Default");
+dojo.require("dojox.charting.plot2d.Bars");
 
 makeObjects = function(){
-	var chart1 = new dojox.charting.Chart2D("test1");
+	var chart1 = new dojox.charting.Chart("test1");
 	chart1.addAxis("x", {fixLower: "major", fixUpper: "major", includeZero: true});
 	chart1.addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", natural: true});
 	chart1.addPlot("default", {type: "Bars"});
@@ -59,7 +24,7 @@ makeObjects = function(){
 	chart1.addSeries("Series B", [5, 4, 3, 2, 1], {stroke: {color: "blue"}, fill: "lightblue"});
 	chart1.render();
 	
-	var chart2 = new dojox.charting.Chart2D("test2");
+	var chart2 = new dojox.charting.Chart("test2");
 	chart2.addAxis("x", {
 		fixLower: "major", fixUpper: "major", includeZero: true, 
 		labels: [
@@ -81,7 +46,7 @@ makeObjects = function(){
 	chart2.render();
 
 	
-	var chart3 = new dojox.charting.Chart2D("test3");
+	var chart3 = new dojox.charting.Chart("test3");
 	chart3.addAxis("x", {
 		fixLower: "major", fixUpper: "major", includeZero: true, 
 		labels: [{value: 0, text: "z e r o"}, {value: 2, text: "t w o"}, {value: 4, text: "f o u r"}]
@@ -98,7 +63,7 @@ makeObjects = function(){
 	chart3.addSeries("Series B", [5, 4, 3, 2, 1], {stroke: {color: "blue"}, fill: "lightblue"});
 	chart3.render();
 	
-	var chart4 = new dojox.charting.Chart2D("test4");
+	var chart4 = new dojox.charting.Chart("test4");
 	chart4.addAxis("x", {
 		majorLabels: false,
 		includeZero: true, 
@@ -141,7 +106,7 @@ makeObjects = function(){
 	);
 	chart4.render();
 
-	var chart5 = new dojox.charting.Chart2D("test5").
+	var chart5 = new dojox.charting.Chart("test5").
 			addAxis("x", {
 				fixLower: "major", fixUpper: "major", includeZero: true, 
 				labels: [
@@ -165,7 +130,7 @@ makeObjects = function(){
 			addSeries("Series B", [5, 4, 3, 2, 1], {stroke: {color: "blue"}, fill: "lightblue"}).
 			render();
 
-	var chart6 = new dojox.charting.Chart2D("test6").
+	var chart6 = new dojox.charting.Chart("test6").
 			addAxis("x", {
 				fixLower: "major", fixUpper: "major", includeZero: true, 
 				labels: [

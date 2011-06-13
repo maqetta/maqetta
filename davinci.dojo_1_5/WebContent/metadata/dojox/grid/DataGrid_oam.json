@@ -194,6 +194,12 @@
             "description": "css class to apply to grid cells over which the cursor is placed.",
             "hidden": false,
             "defaultValue": "dojoxGridCellOver"
+        },
+        "escapeHTMLInData": {
+            "datatype": "boolean",
+            "description": "This will escape HTML brackets from the data to prevent HTML from user-inputted data being rendered with may contain JavaScript and result in XSS attacks.",
+            "hidden": false,
+            "defaultValue": true
         }
     },
     "content": "<span></span>"

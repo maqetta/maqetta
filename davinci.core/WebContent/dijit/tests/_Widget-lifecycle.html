@@ -5,33 +5,33 @@
 
 	<title>_Widget.destroy() unit test</title>
 
-	<script type="text/javascript" src="../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" djConfig="isDebug: true"></script>
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dijit._Widget");
 
-		var obj = {
-			foo: function(){
-				// summary: empty function that we connect to
-			}
-		};
-
-		// Number of times foo was called while TestWidget existed
-		var calls = 0;
-
-		dojo.declare("dijit.TestWidget", dijit._Widget, {
-			postCreate: function(){
-				// Rather odd call to this.connect() For testing the connections are dropped on destroy()
-				this.connect(obj, "foo", function(){
-					calls++;
-				});
-			}
-		});
-
-		var w;
-
 		dojo.addOnLoad(function(){
-			doh.register("dijit._Widget",
+			var obj = {
+				foo: function(){
+					// summary: empty function that we connect to
+				}
+			};
+	
+			// Number of times foo was called while TestWidget existed
+			var calls = 0;
+	
+			dojo.declare("dijit.TestWidget", dijit._Widget, {
+				postCreate: function(){
+					// Rather odd call to this.connect() For testing the connections are dropped on destroy()
+					this.connect(obj, "foo", function(){
+						calls++;
+					});
+				}
+			});
+	
+			var w;
+
+			doh.register("dijit._Widget-lifecycle",
 				[
 					{
 						name: "create",
@@ -82,6 +82,26 @@
 
 				]
 			);
+
+			doh.register("setter calls on creation", function(){
+				// Make sure setters are called even for anonymous classes (#12122),
+				// and even when there's no value explicitly specified in the parameters
+				var fooSetterCalled,
+					Widget1 = dojo.declare([dijit._Widget], {}),
+				    Widget2 = dojo.declare([dijit._Widget], {
+						foo: 345,
+				        _setFooAttr: function(val){
+							fooSetterCalled = val;
+				            this.foo = val;
+				        }
+				    });
+				
+				new Widget1();
+				new Widget2();
+				
+				doh.is(345, fooSetterCalled, "fooSetterCalled");
+			});
+	
 			doh.run();
 		});
 

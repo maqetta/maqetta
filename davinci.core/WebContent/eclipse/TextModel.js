@@ -1,11 +1,11 @@
 dojo.provide("eclipse.TextModel");
 
 /*******************************************************************************
-
- * Copyright (c) 2010 IBM Corporation and others All rights reserved. This
- * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials are made 
+ * available under the terms of the Eclipse Public License v1.0 
+ * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
  *		Felipe Heidrich (IBM Corporation) - initial API and implementation
@@ -31,8 +31,8 @@ dojo.provide("eclipse.TextModel");
  * editor interacts with its text model in order to access and update the text that is being
  * displayed and edited in the editor. This is the default implementation.
  * <p>
- * <b>See:</b><br>
- * {@link eclipse.Editor}<br>
+ * <b>See:</b><br/>
+ * {@link eclipse.Editor}<br/>
  * {@link eclipse.Editor#setModel}
  * </p>
  */
@@ -218,7 +218,7 @@ eclipse.TextModel = (function() {
 				if (includeDelimiter) {
 					return end;
 				}
-				var text = this.getText(Math.max(0, end - 2), end);
+				var text = this.getText(Math.max(this._lineOffsets[lineIndex], end - 2), end);
 				var i = text.length, c;
 				while (((c = text.charCodeAt(i - 1)) === 10) || (c === 13)) {
 					i--;

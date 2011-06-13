@@ -12,12 +12,12 @@ dojox.data.tests.stores.KeyValueStore.getDatasource = function(type){
 	var dataSource = {};
 	var filepath = "stores/properties.js";
 	if(dojo.isBrowser){
-		dataSource.url = dojo.moduleUrl("dojox.data.tests", filepath).toString();            
+		dataSource.url = dojo.moduleUrl("dojox.data.tests", filepath).toString();
 	}else{
 		// When running tests in Rhino, xhrGet is not available,
 		// so we have the file data in the code below.
 		var keyData = "/*[";
-		// Properties of December 1, 2007 
+		// Properties of December 1, 2007
 		keyData += '{ "year": "2007" },';
 		keyData += '{ "nmonth": "12" },';
 		keyData += '{ "month": "December" },';
@@ -50,13 +50,13 @@ dojox.data.tests.stores.KeyValueStore.error = function(t, d, errData){
 	for (i in errData) {
 		console.log(errData[i]);
 	}
-	d.errback(errData);	
+	d.errback(errData);
 }
 
-doh.register("dojox.data.tests.stores.KeyValueStore", 
+doh.register("dojox.data.tests.stores.KeyValueStore",
 	[
 		function testReadAPI_fetch_all(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on KeyValueStore.
 			//	description:
 			//		Simple test of a basic fetch on KeyValueStore.
@@ -75,7 +75,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_withEmptyStringField(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on KeyValueStore.
 			//	description:
 			//		Simple test of a basic fetch on KeyValueStore.
@@ -94,7 +94,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
@@ -107,14 +107,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.is(1, items.length);
 				d.callback(true);
 			}
-			keyStore.fetch({ 	query: {key: "year"}, 
-								onComplete: onComplete, 
+			keyStore.fetch({ 	query: {key: "year"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 							});
 			return d; //Object
 		},
 		function testReadAPI_fetch_Multiple(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
@@ -144,12 +144,12 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			
 			try
 			{
-				keyStore.fetch({ 	query: {key: "year"}, 
-									onComplete: onCompleteOne, 
+				keyStore.fetch({ 	query: {key: "year"},
+									onComplete: onCompleteOne,
 									onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 								});
-				keyStore.fetch({ 	query: {key: "month"}, 
-									onComplete: onCompleteTwo, 
+				keyStore.fetch({ 	query: {key: "month"},
+									onComplete: onCompleteTwo,
 									onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 								});
 			}
@@ -163,7 +163,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_MultipleMixed(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
 			//	description:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
@@ -193,8 +193,8 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				}
 			}
 
-			keyStore.fetch({ 	query: {key: "day"}, 
-								onComplete: onComplete, 
+			keyStore.fetch({ 	query: {key: "day"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 							});
 			
@@ -202,7 +202,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_streaming(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of a basic fetch on KeyValueStore.
 			//	description:
 			//		Simple test of a basic fetch on KeyValueStore.
@@ -228,14 +228,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 
 			//Get everything...
 			keyStore.fetch({	onBegin: onBegin,
-								onItem: onItem, 
+								onItem: onItem,
 								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 							});
 			return d; //Object
 		},
 		function testReadAPI_fetch_paging(t){
-			 //	summary: 
+			 //	summary:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
 			 //	description:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
@@ -302,7 +302,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		},
 		
 		function testReadAPI_getLabel(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 			//	description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
@@ -318,14 +318,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.assertEqual("year", label);
 				d.callback(true);
 			}
-			keyStore.fetch({ 	query: {key: "year"}, 
-								onComplete: onComplete, 
+			keyStore.fetch({ 	query: {key: "year"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 							});
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 			//	description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
@@ -341,14 +341,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.assertEqual("key", labelList[0]);
 				d.callback(true);
 			}
-			keyStore.fetch({ 	query: {key: "year"}, 
-								onComplete: onComplete, 
+			keyStore.fetch({ 	query: {key: "year"},
+								onComplete: onComplete,
 								onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)
 							});
 			return d;
 		},
 		function testReadAPI_getValue(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -362,13 +362,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.is("nday", keyStore.getValue(item,"key"));
 				t.is(1, keyStore.getValue(item,"value"));
 				t.is(1, keyStore.getValue(item,"nday"));
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "nday", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
-		},	
+		},
 		function testReadAPI_getValue_2(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -382,13 +382,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.is("day", keyStore.getValue(item,"key"));
 				t.is("Saturday", keyStore.getValue(item,"value"));
 				t.is("Saturday", keyStore.getValue(item,"day"));
-				d.callback(true);	
+				d.callback(true);
 			}
             keyStore.fetchItemByIdentity({identity: "day", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
-		},	
+		},
 		function testReadAPI_getValue_3(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -402,13 +402,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.is("dayOfYear", keyStore.getValue(item,"key"));
 				t.is(335, keyStore.getValue(item,"value"));
 				t.is(335, keyStore.getValue(item,"dayOfYear"));
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "dayOfYear", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
-		},	
+		},
 		function testReadAPI_getValue_4(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValue function of the store.
 			//	description:
 			//		Simple test of the getValue function of the store.
@@ -422,13 +422,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.is("weekOfYear", keyStore.getValue(item,"key"));
 				t.is(48, keyStore.getValue(item,"value"));
 				t.is(48, keyStore.getValue(item,"weekOfYear"));
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "weekOfYear", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
 		},
 		function testReadAPI_getValues(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getValues function of the store.
 			//	description:
 			//		Simple test of the getValues function of the store.
@@ -443,13 +443,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.assertTrue(dojo.isArray(names));
 				t.is(1, names.length);
 				t.is(2007, names[0]);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -460,14 +460,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item !== null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_bad1(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -478,13 +478,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "y3ar", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad2(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -494,13 +494,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "-1", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad3(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -510,13 +510,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(item === null);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "999999", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 			return d;
 		},
 		function testIdentityAPI_getIdentity(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -542,7 +542,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testIdentityAPI_getIdentityAttributes(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getIdentityAttributes
 			//	description:
 			//		Simple test of the fetchItemByIdentity function of the store.
@@ -553,14 +553,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var d = new doh.Deferred();
 			function onItem(item){
 				t.assertTrue(keyStore.isItem(item));
-				t.assertEqual("key", keyStore.getIdentityAttributes(item)); 
-				d.callback(true);	
+				t.assertEqual("key", keyStore.getIdentityAttributes(item));
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_isItem(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the isItem function of the store
 			//	description:
 			//		Simple test of the isItem function of the store
@@ -575,13 +575,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.assertTrue(!keyStore.isItem({ item: "not an item" }));
 				t.assertTrue(!keyStore.isItem("not an item"));
 				t.assertTrue(!keyStore.isItem(["not an item"]));
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the hasAttribute function of the store
 			//	description:
 			//		Simple test of the hasAttribute function of the store
@@ -607,13 +607,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 					passed = true;
 				}
 				t.assertTrue(passed);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_containsValue(t){
-			//	summary:  
+			//	summary:
 			//		Simple test of the containsValue function of the store
 			//	description:
 			//		Simple test of the containsValue function of the store
@@ -639,13 +639,13 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 					passed = true;
 				}
 				t.assertTrue(passed);
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 		   	return d;
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getAttributes function of the store
 			//	description:
 			//		Simple test of the getAttributes function of the store
@@ -663,14 +663,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				for(var i = 0; i < attributes.length; i++){
 					t.assertTrue((attributes[i] === "year" || attributes[i] === "value" || attributes[i] === "key"));
 				}
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "year", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 		   	return d;
 		},
 
 		function testReadAPI_getAttributes_onlyTwo(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getAttributes function of the store
 			//	description:
 			//		Simple test of the getAttributes function of the store
@@ -689,14 +689,14 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 				t.assertTrue(attributes[0] === "key");
 				t.assertTrue(attributes[1] === "value");
 				t.assertTrue(attributes[2] === "nmonth");
-				d.callback(true);	
+				d.callback(true);
 			}
 			keyStore.fetchItemByIdentity({identity: "nmonth", onItem: onItem, onError: dojo.partial(dojox.data.tests.stores.KeyValueStore.error, t, d)});
 		   	return d;
 		},
 
 		function testReadAPI_getFeatures(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getFeatures function of the store
 			//	description:
 			//		Simple test of the getFeatures function of the store
@@ -704,7 +704,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
 			var keyStore = new dojox.data.KeyValueStore(args);
 
-			var features = keyStore.getFeatures(); 
+			var features = keyStore.getFeatures();
 			var count = 0;
 			for(i in features){
 				t.assertTrue((i === "dojo.data.api.Read" || i === "dojo.data.api.Identity"));
@@ -713,7 +713,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			t.assertTrue(count === 2);
 		},
 		function testReadAPI_fetch_patternMatch0(t){
-			//	summary: 
+			//	summary:
 			//		Function to test pattern matching of everything starting with lowercase e
 			//	description:
 			//		Function to test pattern matching of everything starting with lowercase e
@@ -733,7 +733,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch1(t){
-			//	summary: 
+			//	summary:
 			//		Function to test pattern matching of everything with $ in it.
 			//	description:
 			//		Function to test pattern matching of everything with $ in it.
@@ -753,7 +753,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch2(t){
-			//	summary: 
+			//	summary:
 			//		Function to test exact pattern match
 			//	description:
 			//		Function to test exact pattern match
@@ -775,7 +775,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseInsensitive(t){
-			//	summary: 
+			//	summary:
 			//		Function to test exact pattern match with case insensitivity set.
 			//	description:
 			//		Function to test exact pattern match with case insensitivity set.
@@ -794,7 +794,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseSensitive(t){
-			//	summary: 
+			//	summary:
 			//		Function to test exact pattern match with case insensitivity set.
 			//	description:
 			//		Function to test exact pattern match with case insensitivity set.
@@ -812,7 +812,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabetic(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting alphabetic ordering.
 			//	description:
 			//		Function to test sorting alphabetic ordering.
@@ -834,7 +834,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabeticDescending(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting alphabetic ordering in descending mode.
 			//	description:
 			//		Function to test sorting alphabetic ordering in descending mode.
@@ -856,7 +856,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortMultiple(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting on multiple attributes.
 			//	description:
 			//		Function to test sorting on multiple attributes.
@@ -890,7 +890,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortMultipleSpecialComparator(t){
-			//	summary: 
+			//	summary:
 			//		Function to test sorting on multiple attributes with a custom comparator.
 			//	description:
 			//		Function to test sorting on multiple attributes with a custom comparator.
@@ -899,7 +899,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			var keyStore = new dojox.data.KeyValueStore(args);
 			
 			keyStore.comparatorMap = {};
-			keyStore.comparatorMap["key"] = function(a,b){ 
+			keyStore.comparatorMap["key"] = function(a,b){
 				var ret = 0;
 				// We want to sort keys alphabetical by the last character in the string
 				function lastChar(name){
@@ -939,7 +939,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary: 
+			//	summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 			//	description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
@@ -967,7 +967,7 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			t.assertTrue(passed);
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary: 
+			//	summary:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 			//	description:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.

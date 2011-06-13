@@ -7,7 +7,7 @@ dojo.require("dojox.date.php");
 dojo.require("dojox.string.sprintf");
 
 // If you update something here, update it in the HTML tests
-doh.register("dojox.dtl.text.filter", 
+doh.register("dojox.dtl.text.filter",
 	[
 		function test_filter_add(t){
 			var dd = dojox.dtl;
@@ -569,7 +569,7 @@ doh.register("dojox.dtl.text.filter",
 			context.then = new Date(2007, 0, 17);
 			t.is("2 weeks", tpl.render(context));
 			context.then = new Date(2008, 1, 1);
-			t.is("1 year", tpl.render(context));	
+			t.is("1 year", tpl.render(context));
 		},
 		function test_filter_title(t){
 			var dd = dojox.dtl;

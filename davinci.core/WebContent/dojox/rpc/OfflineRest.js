@@ -1,13 +1,7 @@
-dojo.provide("dojox.rpc.OfflineRest");
-
-dojo.require("dojox.data.ClientFilter");
-dojo.require("dojox.rpc.Rest");
-dojo.require("dojox.storage");
-
+define("dojox/rpc/OfflineRest", ["dojo", "dojox", "dojox/data/ClientFilter", "dojox/rpc/Rest", "dojox/storage"], function(dojo, dojox) {
 // summary:
 // 		Makes the REST service be able to store changes in local
 // 		storage so it can be used offline automatically.
-(function(){
 	var Rest = dojox.rpc.Rest;
 	var namespace = "dojox_rpc_OfflineRest";
 	var loaded;
@@ -55,7 +49,7 @@ dojo.require("dojox.storage");
 	function sync(){
 		OfflineRest.sendChanges();
 		OfflineRest.downloadChanges();
-	} 
+	}
 	var syncId = setInterval(sync,15000);
 	dojo.connect(document, "ononline", sync);
 	OfflineRest = dojox.rpc.OfflineRest = {
@@ -104,11 +98,11 @@ dojo.require("dojox.storage");
 		}catch(e){
 			dfd = new dojo.Deferred();
 			dfd.errback(e);
-		} 
+		}
 		var sync = dojox.rpc._sync;
 		dfd.addCallback(function(result){
 			saveObject(result, service._getRequest(id).url);
-			return result;			
+			return result;
 		});
 		dfd.addErrback(function(error){
 			if(loaded){
@@ -176,7 +170,7 @@ dojo.require("dojox.storage");
 	function changeOccurred(method, absoluteId, contentId, serializedContent, service){
 		if(method=='delete'){
 			dojox.storage.remove(getStorageKey(absoluteId),namespace);
-		}		
+		}
 		else{
 			// both put and post should store the actual object
 			dojox.storage.put(getStorageKey(contentId), serializedContent, function(){
@@ -198,7 +192,7 @@ dojo.require("dojox.storage");
 			var method = message.event.toLowerCase();
 			var service = dojox.rpc.JsonRest && dojox.rpc.JsonRest.getServiceAndId(channel).service;
 			changeOccurred(
-				method, 
+				method,
 				channel,
 				method == "post" ? channel + message.result.id : channel,
 				dojo.toJson(message.result),
@@ -208,7 +202,7 @@ dojo.require("dojox.storage");
 		});
 	});
 	//FIXME: Should we make changes after a commit to see if the server rejected the change
-	// or should we come up with a revert mechanism? 
+	// or should we come up with a revert mechanism?
 	var defaultChange = Rest._change;
 	Rest._change = function(method,service,id,serializedContent){
 		if(!loaded){
@@ -237,16 +231,16 @@ dojo.require("dojox.storage");
 		var dirtyItem = dirty[dirtyId];
 		var serviceAndId = dojox.rpc.JsonRest.getServiceAndId(dirtyItem.id);
 		var deferred = defaultChange(dirtyItem.method,serviceAndId.service,serviceAndId.id,dirtyItem.content);
-		// add it to our list of dirty objects		
+		// add it to our list of dirty objects
 		dirty[dirtyId] = dirtyItem;
 		dojox.storage.put("dirty",dirty,function(){},namespace);
 		deferred.addBoth(function(result){
 			if (isNetworkError(result)){
-				// if a network error (offlineness) was the problem, we leave it 
+				// if a network error (offlineness) was the problem, we leave it
 				// dirty, and return to indicate successfulness
 				return null;
 			}
-			// it was successful or the server rejected it, we remove it from the dirty list 
+			// it was successful or the server rejected it, we remove it from the dirty list
 			var dirty = dojox.storage.get("dirty",namespace) || {};
 			delete dirty[dirtyId];
 			dojox.storage.put("dirty",dirty,function(){},namespace);
@@ -257,5 +251,6 @@ dojo.require("dojox.storage");
 		
 	dojo.connect(index,"onLoad",saveObject);
 	dojo.connect(index,"onUpdate",saveObject);
-	
-})();
+
+	return dojox.rpc.OfflineRest;
+});

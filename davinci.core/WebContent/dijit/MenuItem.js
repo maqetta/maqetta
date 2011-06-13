@@ -1,9 +1,4 @@
-dojo.provide("dijit.MenuItem");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._Contained");
-dojo.require("dijit._CssStateMixin");
+define("dijit/MenuItem", ["dojo", "dijit", "text!dijit/templates/MenuItem.html", "dijit/_Widget", "dijit/_Templated", "dijit/_Contained", "dijit/_CssStateMixin"], function(dojo, dijit) {
 
 dojo.declare("dijit.MenuItem",
 		[dijit._Widget, dijit._Templated, dijit._Contained, dijit._CssStateMixin],
@@ -50,9 +45,8 @@ dojo.declare("dijit.MenuItem",
 			}
 		},
 
-		postCreate: function(){
+		buildRendering: function(){
 			this.inherited(arguments);
-			dojo.setSelectable(this.domNode, false);
 			var label = this.id+"_text";
 			dojo.attr(this.containerNode, "id", label);
 			if(this.accelKeyNode){
@@ -60,6 +54,7 @@ dojo.declare("dijit.MenuItem",
 				label += " " + this.id + "_accel";
 			}
 			dijit.setWaiState(this.domNode, "labelledby", label);
+			dojo.setSelectable(this.domNode, false);
 		},
 
 		_onHover: function(){
@@ -82,11 +77,10 @@ dojo.declare("dijit.MenuItem",
 			// then unselect it
 			this.getParent().onItemUnhover(this);
 
-			// _onUnhover() is called when the menu is hidden (collapsed), due to clicking
-			// a MenuItem and having it execut.  When that happens, FF and IE don't generate
-			// an onmouseout event for the MenuItem, so give _CssStateMixin some help
-			this._hovering = false;
-			this._setStateClass();
+			// When menu is hidden (collapsed) due to clicking a MenuItem and having it execute,
+			// FF and IE don't generate an onmouseout event for the MenuItem.
+			// So, help out _CssStateMixin in this case.
+			this._set("hovering", false);
 		},
 
 		_onClick: function(evt){
@@ -171,18 +165,24 @@ dojo.declare("dijit.MenuItem",
 			// summary:
 			//		Hook for attr('disabled', ...) to work.
 			//		Enable or disable this menu item.
-			this.disabled = value;
+
 			dijit.setWaiState(this.focusNode, 'disabled', value ? 'true' : 'false');
+			this._set("disabled", value);
 		},
 		_setAccelKeyAttr: function(/*String*/ value){
 			// summary:
 			//		Hook for attr('accelKey', ...) to work.
 			//		Set accelKey on this menu item.
-			this.accelKey=value;
 
 			this.accelKeyNode.style.display=value?"":"none";
 			this.accelKeyNode.innerHTML=value;
 			//have to use colSpan to make it work in IE
 			dojo.attr(this.containerNode,'colSpan',value?"1":"2");
+			
+			this._set("accelKey", value);
 		}
 	});
+
+
+return dijit.MenuItem;
+});

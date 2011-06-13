@@ -8,41 +8,12 @@
 		@import "../../../dijit/tests/css/dijitTests.css";
 	</style>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
-	<!--
-	<script type="text/javascript" src="../../lang/functional.js"></script>
-	<script type="text/javascript" src="../../lang/utils.js"></script>
-	<script type="text/javascript" src="../Theme.js"></script>
-	<script type="text/javascript" src="../scaler/primitive.js"></script>
-	<script type="text/javascript" src="../scaler/linear.js"></script>
-	<script type="text/javascript" src="../Element.js"></script>
-	<script type="text/javascript" src="../axis2d/common.js"></script>
-	<script type="text/javascript" src="../axis2d/Base.js"></script>
-	<script type="text/javascript" src="../axis2d/Default.js"></script>
-	<script type="text/javascript" src="../plot2d/common.js"></script>
-	<script type="text/javascript" src="../plot2d/Base.js"></script>
-	<script type="text/javascript" src="../plot2d/Default.js"></script>
-	<script type="text/javascript" src="../plot2d/Lines.js"></script>
-	<script type="text/javascript" src="../plot2d/Areas.js"></script>
-	<script type="text/javascript" src="../plot2d/Markers.js"></script>
-	<script type="text/javascript" src="../plot2d/MarkersOnly.js"></script>
-	<script type="text/javascript" src="../plot2d/Scatter.js"></script>
-	<script type="text/javascript" src="../plot2d/Stacked.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedLines.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedAreas.js"></script>
-	<script type="text/javascript" src="../plot2d/Columns.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedColumns.js"></script>
-	<script type="text/javascript" src="../plot2d/ClusteredColumns.js"></script>
-	<script type="text/javascript" src="../plot2d/Bars.js"></script>
-	<script type="text/javascript" src="../plot2d/StackedBars.js"></script>
-	<script type="text/javascript" src="../plot2d/ClusteredBars.js"></script>
-	<script type="text/javascript" src="../plot2d/Bubble.js"></script>
-	<script type="text/javascript" src="../plot2d/Grid.js"></script>
-	<script type="text/javascript" src="../plot2d/Pie.js"></script>
-	<script type="text/javascript" src="../Chart2D.js"></script>
-	-->
 	<script type="text/javascript">
 
-		dojo.require("dojox.charting.Chart2D");
+        dojo.require("dojox.charting.Chart");
+        dojo.require("dojox.charting.axis2d.Default");
+        dojo.require("dojox.charting.plot2d.ClusteredColumns");
+
 		dojo.require("dojox.charting.themes.Shrooms");
 		dojo.require("dojox.charting.themes.PlotKit.blue");
 		dojo.require("dojox.charting.themes.PlotKit.cyan");
@@ -58,7 +29,7 @@
 			{
 				description: "Clustered columns with positive and negative values, readable theme, 1-second animate-in.",
 				makeChart: function(node){
-					(new dojox.charting.Chart2D(node)).
+					(new dojox.charting.Chart(node)).
 						setTheme(dojox.charting.themes.Tufte).
 						addAxis("x", { fixLower: "minor", fixUpper: "minor", natural: true }).
 						addAxis("y", { vertical: true, fixLower: "major", fixUpper: "major", includeZero: true }).

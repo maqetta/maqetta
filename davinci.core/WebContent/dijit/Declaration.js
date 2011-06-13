@@ -1,6 +1,4 @@
-dojo.provide("dijit.Declaration");
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define("dijit/Declaration", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.Declaration",
@@ -14,35 +12,44 @@ dojo.declare(
 		//		Flag to parser to leave alone the script tags contained inside of me
 		_noScript: true,
 
-		// widgetClass: String
+		// stopParser: [private] Boolean
+		//		Flag to parser to not try and parse widgets declared inside of me
+		stopParser: true,
+
+		// widgetClass: [const] String
 		//		Name of class being declared, ex: "acme.myWidget"
 		widgetClass: "",
 
-		// propList: Object
+		// propList: [const] Object
 		//		Set of attributes for this widget along with default values, ex:
 		//		{delay: 100, title: "hello world"}
 		defaults: null,
 
-		// mixins: String[]
+		// mixins: [const] String[]
 		//		List containing the prototype for this widget, and also any mixins,
 		//		ex: ["dijit._Widget", "dijit._Container"]
 		mixins: [],
 
 		buildRendering: function(){
 			var src = this.srcNodeRef.parentNode.removeChild(this.srcNodeRef),
-				methods = dojo.query("> script[type^='dojo/method'][event]", src).orphan(),
-				postscriptConnects = dojo.query("> script[type^='dojo/method']", src).orphan(),
-				regularConnects = dojo.query("> script[type^='dojo/connect']", src).orphan(),
+				methods = dojo.query("> script[type^='dojo/method']", src).orphan(),
+				connects = dojo.query("> script[type^='dojo/connect']", src).orphan(),
 				srcType = src.nodeName;
 
 			var propList = this.defaults || {};
 
-			// For all methods defined like <script type="dojo/method" event="foo">,
-			// add that method to prototype
+			// For all methods defined like <script type="dojo/method" data-dojo-event="foo">,
+			// add that method to prototype.
+			// If there's no "event" specified then it's code to run on instantiation,
+			// so it becomes a connection to "postscript" (handled below).
 			dojo.forEach(methods, function(s){
-				var evt = s.getAttribute("event"),
+				var evt = s.getAttribute("event") || s.getAttribute("data-dojo-event"),
 					func = dojo.parser._functionFromScript(s);
-				propList[evt] = func;
+				if(evt){
+					propList[evt] = func;
+				}else{
+					connects.push(s);
+				}
 			});
 
 			// map array of strings like [ "dijit.form.Button" ] to array of mixin objects
@@ -69,18 +76,21 @@ dojo.declare(
 			);
 
 			// Handle <script> blocks of form:
-			//		<script type="dojo/connect" event="foo">
+			//		<script type="dojo/connect" data-dojo-event="foo">
 			// and
 			//		<script type="dojo/method">
 			// (Note that the second one is just shorthand for a dojo/connect to postscript)
 			// Since this is a connect in the declaration, we are actually connection to the method
 			// in the _prototype_.
-			var connects = regularConnects.concat(postscriptConnects);
 			dojo.forEach(connects, function(s){
-				var evt = s.getAttribute("event") || "postscript",
+				var evt = s.getAttribute("event") || s.getAttribute("data-dojo-event") || "postscript",
 					func = dojo.parser._functionFromScript(s);
 				dojo.connect(wc.prototype, evt, func);
 			});
 		}
 	}
 );
+
+
+return dijit.Declaration;
+});

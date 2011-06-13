@@ -9,9 +9,10 @@ dojo.declare("dojox.grid._EditManager", null, {
 		// inGrid: dojox.Grid
 		//		The dojox.Grid this editor should be attached to
 		this.grid = inGrid;
-		this.connections = [];
 		if(dojo.isIE){
-			this.connections.push(dojo.connect(document.body, "onfocus", dojo.hitch(this, "_boomerangFocus")));
+			this.connections = [dojo.connect(document.body, "onfocus", dojo.hitch(this, "_boomerangFocus"))];
+		}else{
+			this.connections = [dojo.connect(this.grid, 'onBlur', this, 'apply')];
 		}
 	},
 	
@@ -143,7 +144,7 @@ dojo.declare("dojox.grid._EditManager", null, {
 		}
 		if(inEditing){
 			this.info = { cell: inCell, rowIndex: inRowIndex };
-			this.grid.doStartEdit(inCell, inRowIndex); 
+			this.grid.doStartEdit(inCell, inRowIndex);
 			this.grid.updateRow(inRowIndex);
 		}else{
 			this.info = {};

@@ -6,8 +6,8 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 	// summary:
 	//		A custom slider widget to use with dojox.av.widget.Player.
 	//	description:
-	//		Displays the current playhead position of the media. Has two 
-	//		progress bars: one for playhead position, and one for download 
+	//		Displays the current playhead position of the media. Has two
+	//		progress bars: one for playhead position, and one for download
 	//		progress.
 	//
 	templateString: dojo.cache("dojox.av.widget","resources/ProgressSlider.html"),
@@ -42,12 +42,12 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 			this.setHandle(this.duration);
 		});
 		dojo.connect(this.media, "onStart", this, function(){
-			this.posCon = dojo.connect(this.media, "onPosition", this, "setHandle");												
+			this.posCon = dojo.connect(this.media, "onPosition", this, "setHandle");
 		});
 		
 		dojo.connect(this.media, "onDownloaded", this, function(percent){
 			this.setLoadedPosition(percent*.01);
-			this.width = this.finalWidth * .01 * percent;													
+			this.width = this.finalWidth * .01 * percent;
 		});
 		
 	},
@@ -107,7 +107,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 	
 	handleOver: function(){
 		// summary:
-		//		Highlights the slider handle on mouseover, and 
+		//		Highlights the slider handle on mouseover, and
 		//		stays highlighted during drag.
 		//
 		dojo.addClass(this.handle, "over");
@@ -117,7 +117,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		//		Unhighlights handle onmouseover, or on endDrag.
 		//
 		if(!this.seeking){
-			dojo.removeClass(this.handle, "over");	
+			dojo.removeClass(this.handle, "over");
 		}
 	},
 	onResize: function(playerDimensions){
@@ -125,7 +125,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._Templated]
 		//		Handles player resize. Need to recalculate the width of
 		//		position an download bars.
 		var dim = dojo.coords(this.domNode);
-		this.finalWidth = dim.w;	
+		this.finalWidth = dim.w;
 		
 	}
 	

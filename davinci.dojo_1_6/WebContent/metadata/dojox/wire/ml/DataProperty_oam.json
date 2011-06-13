@@ -1,0 +1,63 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/DataProperty",
+    "name": "dojox.wire.ml.DataProperty",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.wire.ml.Data');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "type": {
+            "datatype": "string",
+            "defaultValue": "string",
+            "option": [
+                {
+                    "value": "string"
+                },
+                {
+                    "value": "number"
+                },
+                {
+                    "value": "boolean"
+                },
+                {
+                    "value": "array"
+                },
+                {
+                    "value": "object"
+                },
+                {
+                    "value": "element"
+                }
+            ],
+            "title": "Type"
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        }
+    },
+    "content": "<span></span>"
+}

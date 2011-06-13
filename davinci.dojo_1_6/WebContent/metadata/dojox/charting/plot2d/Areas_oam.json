@@ -1,0 +1,36 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/plot2d/Areas",
+    "name": "dojox.charting.plot2d/Areas",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.charting.plot2d/Areas');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../"
+        }
+    },
+    "property": {
+        "hAxis": {
+            "datatype": "string"
+        },
+        "vAxis": {
+            "datatype": "string"
+        }
+    },
+    "content": "<span></span>"
+}

@@ -90,7 +90,7 @@
 			var web = dojo.byId('webRb').checked;
 			store.service = (web ? service.webSearch : service.imageSearch);
 			if(lastLayoutType != (web ? webLayout : imageLayout)){
-				grid.attr('structure', web ? webLayout : imageLayout);
+				grid.set('structure', web ? webLayout : imageLayout);
 			}
 			grid.filter({ query: value }, true);
 		}

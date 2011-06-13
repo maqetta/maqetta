@@ -1,8 +1,10 @@
+define(
+//begin v1.x content
 ({
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
 
-//Note: due to the SVG 1.0 spec additions, some of these are alternate spellings for the same color e.g. gray vs. gray. 
+//Note: due to the SVG 1.0 spec additions, some of these are alternate spellings for the same color e.g. gray vs. gray.
 //TODO: should we be using unique rgb values as keys instead and avoid these duplicates, or rely on the caller to do the reverse mapping?
 aliceblue: "azul alice",
 antiquewhite: "branco antigo",
@@ -41,13 +43,13 @@ darksalmon: "salmão escuro",
 darkseagreen: "verde marinho escuro",
 darkslateblue: "azul ardósia escuro",
 darkslategray: "cinzento ardósia escuro",
-darkslategrey: "cinzento ardósia escuro",// same as darkslategray
+darkslategrey: "cinzento ardósia escuro", // same as darkslategray
 darkturquoise: "turquesa escuro",
 darkviolet: "violeta escuro",
 deeppink: "rosa profundo",
 deepskyblue: "azul céu profundo",
-dimgray: "cinzento escuro",
-dimgrey: "cinzento escuro", // same as dimgray
+dimgray: "cinzento esbatido",
+dimgrey: "cinzento esbatido", // same as dimgray
 dodgerblue: "azul furtivo",
 firebrick: "tijolo fogo",
 floralwhite: "branco floral",
@@ -151,4 +153,6 @@ white: "branco",
 whitesmoke: "fumo branco",
 yellow: "amarelo",
 yellowgreen: "verde amarelado"
-}) 
+})
+//end v1.x content
+);

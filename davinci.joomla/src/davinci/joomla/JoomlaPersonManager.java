@@ -33,7 +33,7 @@ public class JoomlaPersonManager implements PersonManager {
 
 	public Person addPerson(String userName, String password, String email)
 			throws UserException {
-		return new PersonImpl(userName); 
+		return new PersonImpl(userName, email); 
 	}
 
 	public Person getPerson(String userName) {

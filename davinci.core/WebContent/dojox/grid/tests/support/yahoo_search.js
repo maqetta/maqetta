@@ -1,7 +1,7 @@
 // model that works with Yahoo Search API
 (function(){
 var nop = function(){};
-dojo.declare("dojox.grid._data.yahooSearch", dojox.grid._data.dynamic, 
+dojo.declare("dojox.grid._data.yahooSearch", dojox.grid._data.dynamic,
 	function(inFields, inData) {
 		this.rowsPerPage = 20;
 		this.fieldNames = [];
@@ -37,7 +37,7 @@ dojo.declare("dojox.grid._data.yahooSearch", dojox.grid._data.dynamic,
 			mimetype: 'text/json',
 			sync: !inAsync,
 			load: turbo.bindArgs(this, "receive", inOnReceive, inOnError),
-			error: turbo.bindArgs(this, "error", inOnError) 
+			error: turbo.bindArgs(this, "error", inOnError)
 		});
 		this.onSend(inParams);
 	},
@@ -45,7 +45,7 @@ dojo.declare("dojox.grid._data.yahooSearch", dojox.grid._data.dynamic,
 		try {
 			inData = inData.ResultSet;
 			inOnReceive(inData);
-			this.onReceive(inData);					
+			this.onReceive(inData);
 		} catch(e) {
 			if (inOnError)
 				inOnError(inData);
@@ -60,10 +60,10 @@ dojo.declare("dojox.grid._data.yahooSearch", dojox.grid._data.dynamic,
 	fetchRowCount: function(inCallback) {
 		this.send(true, inCallback );
 	},
-	// request data 
+	// request data
 	requestRows: function(inRowIndex, inCount)	{
 		inRowIndex = (inRowIndex == undefined ? 0 : inRowIndex);
-		var params = { 
+		var params = {
 			start: inRowIndex + 1
 		}
 		this.send(true, params, turbo.bindArgs(this, this.processRows));
@@ -111,11 +111,11 @@ formatImage = function(inData, inRowIndex) {
 	if (!inData[0] || !inData[1])
 		return '&nbsp;';
 	var o = {
-		href: inData[0], 
+		href: inData[0],
 		src: inData[1].Url,
 		width: inData[1].Width,
 		height: inData[1].Height
-	}	
+	}
 	return turbo.supplant('<a href="{href}" target="_blank"><img border=0 src="{src}" width="{width}" height="{height}"></a>', o);
 };
 

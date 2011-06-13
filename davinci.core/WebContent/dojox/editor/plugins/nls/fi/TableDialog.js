@@ -18,6 +18,7 @@
 	right: "oikea",
 	buttonSet: "Aseta", // translated elsewhere?
 	buttonInsert: "Lisää",
+	buttonCancel: "Peruuta",
 
 	selectTableLabel: "Valitse taulukko",
 	insertTableRowBeforeLabel: "Lisää rivi ennen",

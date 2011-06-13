@@ -1,6 +1,7 @@
 dojo.provide("dojox.mobile._base");
 
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
+dojo.isBB = (navigator.userAgent.indexOf("BlackBerry") != -1) && !dojo.isWebKit;
 
 // summary:
 //		Mobile Widgets
@@ -24,7 +25,7 @@ dojo.require("dijit._Widget");
 
 dojo.declare(
 	"dojox.mobile.View",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	// summary:
 	//		A widget that represents a view that occupies the full screen
@@ -52,7 +53,6 @@ dojo.declare(
 	buildRendering: function(){
 		this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("DIV");
 		this.domNode.className = "mblView";
-//		dojox.mobile.View._pillar = dojo.create("DIV", {className:"mblPillar"});
 		this.connect(this.domNode, "webkitAnimationEnd", "onAnimationEnd");
 		this.connect(this.domNode, "webkitAnimationStart", "onAnimationStart");
 		var id = location.href.match(/#(\w+)([^\w=]|$)/) ? RegExp.$1 : null;
@@ -71,7 +71,7 @@ dojo.declare(
 			if(!_this._visible){
 				_this.domNode.style.display = "none";
 			}else{
-				dojox.mobile._currentView = _this;
+				dojox.mobile.currentView = _this;
 				_this.onStartView();
 			}
 			_this.domNode.style.visibility = "visible";
@@ -159,7 +159,9 @@ dojo.declare(
 		var toNode;
 		if(moveTo){
 			if(typeof(moveTo) == "string"){
-				moveTo.match(/(\w+)/);
+				// removes a leading hash mark (#) and params if exists
+				// ex. "#bar&myParam=0003" -> "bar"
+				moveTo.match(/^#?([^&]+)/);
 				toNode = RegExp.$1;
 			}else{
 				toNode = moveTo;
@@ -178,17 +180,17 @@ dojo.declare(
 		toNode.style.display = "";
 		this.onBeforeTransitionOut.apply(this, arguments);
 		var toWidget = dijit.byNode(toNode);
-		if(toWidget && toWidget.onBeforeTransitionIn){
+		if(toWidget){
 			// perform view transition keeping the scroll position
 			if(this.keepScrollPos && !dijit.getEnclosingWidget(this.domNode.parentNode)){
-				var scrollTop = dojo.body().scrollTop || dojo.doc.documentElement.scrollTop || window.pageYOffset || 0;
+				var scrollTop = dojo.body().scrollTop || dojo.doc.documentElement.scrollTop || dojo.global.pageYOffset || 0;
 				if(dir == 1){
 					toNode.style.top = "0px";
 					if(scrollTop > 1){
 						fromNode.style.top = -scrollTop + "px";
 						if(dojo.config["mblHideAddressBar"] !== false){
 							setTimeout(function(){ // iPhone needs setTimeout
-								window.scrollTo(0, 1);
+								dojo.global.scrollTo(0, 1);
 							}, 0);
 						}
 					}
@@ -199,7 +201,7 @@ dojo.declare(
 						fromNode.style.top = toTop - scrollTop + "px";
 						if(dojo.config["mblHideAddressBar"] !== false && toTop > 0){
 							setTimeout(function(){ // iPhone needs setTimeout
-								window.scrollTo(0, toTop + 1);
+								dojo.global.scrollTo(0, toTop + 1);
 							}, 0);
 						}
 					}
@@ -207,7 +209,7 @@ dojo.declare(
 			}else{
 				toNode.style.top = "0px";
 			}
-			toWidget.onBeforeTransitionIn.apply(this, arguments);
+			toWidget.onBeforeTransitionIn.apply(toWidget, arguments);
 		}
 		toNode.style.display = "none";
 		toNode.style.visibility = "visible";
@@ -217,15 +219,12 @@ dojo.declare(
 	_doTransition: function(fromNode, toNode, transition, dir){
 		var rev = (dir == -1) ? " reverse" : "";
 		toNode.style.display = "";
-		if(transition){
-//			var pillar = dojox.mobile.View._pillar;
-//			pillar.style.height = fromNode.offsetHeight+"px";
-//			fromNode.parentNode.appendChild(pillar);
-			dojo.addClass(fromNode, transition + " out" + rev);
-			dojo.addClass(toNode, transition + " in" + rev);
-		}else{
+		if(!transition || transition == "none"){
 			this.domNode.style.display = "none";
 			this.invokeCallback();
+		}else{
+			dojo.addClass(fromNode, transition + " out" + rev);
+			dojo.addClass(toNode, transition + " in" + rev);
 		}
 	},
 
@@ -247,7 +246,6 @@ dojo.declare(
 			dojo.removeClass(li, "mblCloseContent");
 		}
 		if(isOut){
-//			dojox.mobile.View._pillar.parentNode.removeChild(dojox.mobile.View._pillar);
 			this.invokeCallback();
 		}
 		// this.domNode may be destroyed as a result of invoking the callback,
@@ -258,13 +256,11 @@ dojo.declare(
 	invokeCallback: function(){
 		this.onAfterTransitionOut.apply(this, this._arguments);
 		var toWidget = dijit.byNode(this.toNode);
-		if(toWidget && toWidget.onAfterTransitionIn){
-			toWidget.onAfterTransitionIn.apply(this, this._arguments);
+		if(toWidget){
+			toWidget.onAfterTransitionIn.apply(toWidget, this._arguments);
 		}
 
-		if(dojo.hash){
-			dojox.mobile._currentView = toWidget;
-		}
+		dojox.mobile.currentView = toWidget;
 
 		var c = this._context, m = this._method;
 		if(!c && !m){ return; }
@@ -280,6 +276,30 @@ dojo.declare(
 		}
 	},
 
+	getShowingView: function(){
+		// summary:
+		//		Find the currently showing view from my sibling views.
+		// description:
+		//		Note that dojox.mobile.currentView is the last shown view.
+		//		If the page consists of a splitter, there are multiple showing views.
+		var nodes = this.domNode.parentNode.childNodes;
+		for(var i = 0; i < nodes.length; i++){
+			if(dojo.hasClass(nodes[i], "mblView") && dojo.style(nodes[i], "display") != "none"){
+				return dijit.byNode(nodes[i]);
+			}
+		}
+	},
+
+	show: function(){
+		// summary:
+		//		Shows this view without a transition animation.
+		var fs = this.getShowingView().domNode.style; // from-style
+		var ts = this.domNode.style; // to-style
+		fs.display = "none";
+		ts.display = "";
+		dojox.mobile.currentView = this;
+	},
+
 	addChild: function(widget){
 		this.containerNode.appendChild(widget.domNode);
 	}
@@ -287,38 +307,47 @@ dojo.declare(
 
 dojo.declare(
 	"dojox.mobile.Heading",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	back: "",
 	href: "",
 	moveTo: "",
 	transition: "slide",
 	label: "",
+	iconBase: "",
 
 	buildRendering: function(){
 		this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("H1");
 		this.domNode.className = "mblHeading";
-		this._view = this.domNode.parentNode && dijit.byNode(this.domNode.parentNode); // parentNode is null if created programmatically
+		this._view = dijit.getEnclosingWidget(this.domNode.parentNode); // parentNode is null if created programmatically
 		if(this.label){
-			this.domNode.innerHTML = this.label;
+			this.domNode.appendChild(document.createTextNode(this.label));
 		}else{
-			this.label = this.domNode.innerHTML;
+			this.label = "";
+			dojo.forEach(this.domNode.childNodes, function(n){
+				if(n.nodeType == 3){ this.label += n.nodeValue; }
+			}, this);
+			this.label = dojo.trim(this.label);
 		}
 		if(this.back){
-			var head = dojo.doc.createElement("DIV");
-			head.className = "mblArrowButtonHead";
-			var body = this._body = dojo.doc.createElement("DIV");
-			body.className = "mblArrowButtonBody mblArrowButtonText";
+			var btn = dojo.create("DIV", {className:"mblArrowButton"}, this.domNode, "first");
+			var head = dojo.create("DIV", {className:"mblArrowButtonHead"}, btn);
+			var body = dojo.create("DIV", {className:"mblArrowButtonBody mblArrowButtonText"}, btn);
+
+			this._body = body;
+			this._head = head;
+			this._btn = btn;
 			body.innerHTML = this.back;
 			this.connect(body, "onclick", "onClick");
-			var neck = dojo.doc.createElement("DIV");
-			neck.className = "mblArrowButtonNeck";
-
-			this.domNode.appendChild(head);
-			this.domNode.appendChild(body);
-			this.domNode.appendChild(neck);
-
+			var neck = dojo.create("DIV", {className:"mblArrowButtonNeck"}, btn);
+			btn.style.width = body.offsetWidth + head.offsetWidth + "px";
 			this.setLabel(this.label);
+		}
+	},
+
+	startup: function(){
+		if(this._btn){
+			this._btn.style.width = this._body.offsetWidth + this._head.offsetWidth + "px";
 		}
 	},
 
@@ -336,32 +365,17 @@ dojo.declare(
 			this.label = label;
 			this.domNode.firstChild.nodeValue = label;
 		}
-		var s = this.domNode.style;
-		if(this.label.length > 12){
-			// create a clone to calculate the arrow button width correctly
-			// even when the heading is in the invisible state.
-			var h = this.domNode.cloneNode(true);
-			h.style.visibility = "hidden";
-			dojo.body().appendChild(h);
-			var b = h.childNodes[2];
-			s.paddingLeft = b.offsetWidth + 30 + "px";
-			s.textAlign = "left";
-			dojo.body().removeChild(h);
-			h = null;
-		}else{
-			s.paddingLeft = "";
-			s.textAlign = "";
-		}
 	},
 
 	goTo: function(moveTo, href){
 		if(!this._view){
 			this._view = dijit.byNode(this.domNode.parentNode);
 		}
+		if(!this._view){ return; }
 		if(href){
 			this._view.performTransition(null, -1, this.transition, this, function(){location.href = href;});
 		}else{
-			if(dojox.mobile.app){
+			if(dojox.mobile.app && dojox.mobile.app.STAGE_CONTROLLER_ACTIVE){
 				// If in a full mobile app, then use its mechanisms to move back a scene
 				dojo.publish("/dojox/mobile/app/goback");
 			}
@@ -375,7 +389,7 @@ dojo.declare(
 
 dojo.declare(
 	"dojox.mobile.RoundRect",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	shadow: false,
 
@@ -387,7 +401,7 @@ dojo.declare(
 
 dojo.declare(
 	"dojox.mobile.RoundRectCategory",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	label: "",
 
@@ -414,7 +428,7 @@ dojo.declare(
 
 dojo.declare(
 	"dojox.mobile.RoundRectList",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	transition: "slide",
 	iconBase: "",
@@ -436,6 +450,7 @@ dojo.declare(
 	"dojox.mobile.EdgeToEdgeList",
 	dojox.mobile.RoundRectList,
 {
+	stateful: false, // keep the selection state or not
 	buildRendering: function(){
 		this.inherited(arguments);
 		this.domNode.className = "mblEdgeToEdgeList";
@@ -444,18 +459,24 @@ dojo.declare(
 
 dojo.declare(
 	"dojox.mobile.AbstractItem",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	icon: "",
 	iconPos: "", // top,left,width,height (ex. "0,0,29,29")
 	href: "",
+	hrefTarget: "",
 	moveTo: "",
+	scene: "",
 	clickable: false,
 	url: "",
+	urlTarget: "", // node id under which a new view is created
 	transition: "",
+	transitionDir: 1,
 	callback: null,
 	sync: true,
 	label: "",
+	toggle: false,
+	_duration: 800, // duration of selection, milliseconds
 
 	inheritParams: function(){
 		var parent = this.getParentWidget();
@@ -466,17 +487,34 @@ dojo.declare(
 		}
 	},
 
-	transitionTo: function(moveTo, href, url){
+	findCurrentView: function(moveTo){
+		var w;
+		if(moveTo){
+			w = dijit.byId(moveTo);
+			if(w){ return w.getShowingView(); }
+		}
 		var n = this.domNode.parentNode;
-		var w; // the current view widget
 		while(true){
 			w = dijit.getEnclosingWidget(n);
-			if(!w){ return; }
+			if(!w){ return null; }
 			if(w.performTransition){ break; }
 			n = w.domNode.parentNode;
 		}
+		return w;
+	},
+
+	transitionTo: function(moveTo, href, url, scene){
+		var w = this.findCurrentView(moveTo); // the current view widget
+		if(!w || moveTo && w === dijit.byId(moveTo)){ return; }
 		if(href){
-			w.performTransition(null, 1, this.transition, this, function(){location.href = href;});
+			if(this.hrefTarget){
+				dojox.mobile.openWindow(this.href, this.hrefTarget);
+			}else{
+				w.performTransition(null, this.transitionDir, this.transition, this, function(){location.href = href;});
+			}
+			return;
+		} else if(scene){
+			dojo.publish("/dojox/mobile/app/pushScene", [scene]);
 			return;
 		}
 		if(url){
@@ -491,6 +529,7 @@ dojo.declare(
 					if(this.sync){
 						text = dojo.trim(dojo._getText(url));
 					}else{
+						dojo["require"]("dojo._base.xhr");
 						var prog = dojox.mobile.ProgressIndicator.getInstance();
 						dojo.body().appendChild(prog.domNode);
 						prog.start();
@@ -502,7 +541,7 @@ dojo.declare(
 							prog.stop();
 							if(response){
 								this._text = response;
-								this.transitionTo(moveTo, href, url);
+								this.transitionTo(moveTo, href, url, scene);
 							}
 						}));
 						xhr.addErrback(function(error){
@@ -520,13 +559,19 @@ dojo.declare(
 				dojox.mobile._viewMap[url] = id;
 			}
 			moveTo = id;
+			w = this.findCurrentView(moveTo) || w; // the current view widget
 		}
-		w.performTransition(moveTo, 1, this.transition, this.callback && this, this.callback);
+		w.performTransition(moveTo, this.transitionDir, this.transition, this.callback && this, this.callback);
 	},
 
 	_parse: function(text){
 		var container = dojo.create("DIV");
 		var view;
+		var id = this.urlTarget;
+		var target = dijit.byId(id) && dijit.byId(id).containerNode ||
+			dojo.byId(id) ||
+			dojox.mobile.currentView && dojox.mobile.currentView.domNode.parentNode ||
+			dojo.body();
 		if(text.charAt(0) == "<"){ // html markup
 			container.innerHTML = text;
 			view = container.firstChild; // <div dojoType="dojox.mobile.View">
@@ -536,10 +581,11 @@ dojo.declare(
 			}
 			view.setAttribute("_started", "true"); // to avoid startup() is called
 			view.style.visibility = "hidden";
-			dojo.body().appendChild(container);
+			target.appendChild(container);
 			(dojox.mobile.parser || dojo.parser).parse(container);
+			target.appendChild(target.removeChild(container).firstChild); // reparent
 		}else if(text.charAt(0) == "{"){ // json
-			dojo.body().appendChild(container);
+			target.appendChild(container);
 			this._ws = [];
 			view = this._instantiate(eval('('+text+')'), container);
 			for(var i = 0; i < this._ws.length; i++){
@@ -592,6 +638,37 @@ dojo.declare(
 		return widget && widget.domNode;
 	},
 
+	createDomButton: function(/*DomNode*/refNode, /*DomNode?*/toNode){
+		var s = refNode.className;
+		if(s.match(/mblDomButton\w+_(\d+)/)){
+			var nDiv = RegExp.$1 - 0;
+			for(var i = 0, p = (toNode||refNode); i < nDiv; i++){
+				p = dojo.create("DIV", null, p);
+			}
+		}
+	},
+
+	select: function(/*Boolean?*/deselect){
+		// subclass must implement
+	},
+
+	defaultClickAction: function(){
+		if(this.toggle){
+			this.select(this.selected);
+		}else if(!this.selected){
+			this.select();
+			if(!this.selectOne){
+				var _this = this;
+				setTimeout(function(){
+					_this.select(true);
+				}, this._duration);
+			}
+			if(this.moveTo || this.href || this.url || this.scene){
+				this.transitionTo(this.moveTo, this.href, this.url, this.scene);
+			}
+		}
+	},
+
 	getParentWidget: function(){
 		var ref = this.srcNodeRef || this.domNode;
 		return ref && ref.parentNode ? dijit.getEnclosingWidget(ref.parentNode) : null;
@@ -605,6 +682,8 @@ dojo.declare(
 	rightText: "",
 	btnClass: "",
 	anchorLabel: false,
+	noArrow: false,
+	selected: false,
 
 	buildRendering: function(){
 		this.inheritParams();
@@ -626,16 +705,16 @@ dojo.declare(
 		}
 		a.appendChild(box);
 		if(this.rightText){
-			var txt = dojo.create("DIV");
-			txt.className = "mblRightText";
-			txt.innerHTML = this.rightText;
-			a.appendChild(txt);
+			this._setRightTextAttr(this.rightText);
 		}
 
 		if(this.moveTo || this.href || this.url || this.clickable){
-			var arrow = dojo.create("DIV");
-			arrow.className = "mblArrow";
-			a.appendChild(arrow);
+			var parent = this.getParentWidget();
+			if(!this.noArrow && !(parent && parent.stateful)){
+				var arrow = dojo.create("DIV");
+				arrow.className = "mblArrow";
+				a.appendChild(arrow);
+			}
 			this.connect(a, "onclick", "onClick");
 		}else if(this.btnClass){
 			var div = this.btnNode = dojo.create("DIV");
@@ -655,13 +734,13 @@ dojo.declare(
 					// IE seems to ignore the height of LI without this..
 					a.parentNode.style.height = a.parentNode.offsetHeight + "px";
 				}
-			});
+			}, 0);
 		}
 		if(this.anchorLabel){
 			box.style.display = "inline"; // to narrow the text region
 		}
 		var li = this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("LI");
-		li.className = "mblListItem";
+		li.className = "mblListItem" + (this.selected ? " mblItemSelected" : "");
 		li.appendChild(a);
 		this.setIcon();
 	},
@@ -682,6 +761,9 @@ dojo.declare(
 	},
 
 	onClick: function(e){
+		var a = e.currentTarget;
+		var li = a.parentNode;
+		if(dojo.hasClass(li, "mblItemSelected")){ return; } // already selected
 		if(this.anchorLabel){
 			for(var p = e.target; p.tagName != "LI"; p = p.parentNode){
 				if(p.className == "mblListItemTextBox"){
@@ -694,22 +776,34 @@ dojo.declare(
 				}
 			}
 		}
-		var a = e.currentTarget;
-		var li = a.parentNode;
+		if(this.getParentWidget().stateful){
+			for(var i = 0, c = li.parentNode.childNodes; i < c.length; i++){
+				dojo.removeClass(c[i], "mblItemSelected");
+			}
+		}else{
+			setTimeout(function(){
+				dojo.removeClass(li, "mblItemSelected");
+			}, 1000);
+		}
 		dojo.addClass(li, "mblItemSelected");
-		setTimeout(function(){
-			dojo.removeClass(li, "mblItemSelected");
-		}, 1000);
-		this.transitionTo(this.moveTo, this.href, this.url);
+		this.transitionTo(this.moveTo, this.href, this.url, this.scene);
 	},
 
 	onAnchorLabelClicked: function(e){
+	},
+
+	_setRightTextAttr: function(/*String*/text){
+		this.rightText = text;
+		if(!this._rightTextNode){
+			this._rightTextNode = dojo.create("DIV", {className:"mblRightText"}, this.anchorNode);
+		}
+		this._rightTextNode.innerHTML = text;
 	}
 });
 
 dojo.declare(
 	"dojox.mobile.Switch",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	value: "on",
 	leftLabel: "ON",
@@ -774,7 +868,7 @@ dojo.declare(
 		}
 		this.left.style.display = "block";
 		this.right.style.display = "block";
-		return false;
+		dojo.stopEvent(e);
 	},
 
 	onTouchMove: function(e){
@@ -792,13 +886,19 @@ dojo.declare(
 		if(pos >= -d){ pos = 0; }
 		this.inner.style.left = pos + "px";
 		this._moved = true;
-		return true;
 	},
 
 	onTouchEnd: function(e){
 		dojo.disconnect(this._conn1);
 		dojo.disconnect(this._conn2);
-		if(this.innerStartX == this.inner.offsetLeft){ return; }
+		if(this.innerStartX == this.inner.offsetLeft){
+			if(dojo.isWebKit){
+				var ev = dojo.doc.createEvent("MouseEvents");
+				ev.initEvent("click", true, true);
+				this.knob.dispatchEvent(ev);
+			}
+			return;
+		}
 		var newState = (this.inner.offsetLeft < -(this._width/2)) ? "off" : "on";
 		this._changeState(newState);
 		if(newState != this.value){
@@ -812,311 +912,8 @@ dojo.declare(
 });
 
 dojo.declare(
-	"dojox.mobile.IconContainer",
-	dijit._Widget,
-{
-	defaultIcon: "",
-	transition: "below", // slide, flip, or below
-	pressedIconOpacity: 0.4,
-	iconBase: "",
-	iconPos: "",
-	back: "Home",
-	label: "My Application",
-	single: false,
-
-	buildRendering: function(){
-		this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("UL");
-		this.domNode.className = "mblIconContainer";
-		var t = this._terminator = dojo.create("LI");
-		t.className = "mblIconItemTerminator";
-		t.innerHTML = "&nbsp;";
-		this.domNode.appendChild(t);
-	},
-
-	_setupSubNodes: function(ul){
-		var len = this.domNode.childNodes.length - 1; // -1 for terminator
-		for(i = 0; i < len; i++){
-			child = this.domNode.childNodes[i];
-			if(child.nodeType != 1){ continue; }
-			w = dijit.byNode(child);
-			if(this.single){
-				w.subNode.firstChild.style.display = "none";
-			}
-			ul.appendChild(w.subNode);
-		}
-	},
-
-	startup: function(){
-		var ul, i, len, child, w;
-		if(this.transition == "below"){
-			this._setupSubNodes(this.domNode);
-		}else{
-			var view = new dojox.mobile.View({id:this.id+"_mblApplView"});
-			var _this = this;
-			view.onAfterTransitionIn = function(moveTo, dir, transition, context, method){
-				_this._opening._open_1();
-			};
-			view.domNode.style.visibility = "hidden";
-			var heading = view._heading = new dojox.mobile.Heading({back:this.back, label:this.label, moveTo:this.domNode.parentNode.id, transition:this.transition});
-			view.addChild(heading);
-			ul = dojo.doc.createElement("UL");
-			ul.className = "mblIconContainer";
-			ul.style.marginTop = "0px";
-			this._setupSubNodes(ul);
-			view.domNode.appendChild(ul);
-			dojo.doc.body.appendChild(view.domNode);
-		}
-	},
-
-	closeAll: function(){
-		var len = this.domNode.childNodes.length;
-		for(var i = 0; i < len; i++){
-			child = this.domNode.childNodes[i];
-			if(child.nodeType != 1){ continue; }
-			if(child == this._terminator){ break; }
-			w = dijit.byNode(child);
-			w.containerNode.parentNode.style.display = "none";
-			w.setOpacity(w.iconNode, 1);
-		}
-	},
-
-	addChild: function(widget){
-		this.domNode.insertBefore(widget.domNode, this._terminator);
-		widget.transition = this.transition;
-		if(this.transition == "below"){
-			this.domNode.appendChild(widget.subNode);
-		}
-		widget.inheritParams();
-		widget.setIcon();
-	}
-});
-
-dojo.declare(
-	"dojox.mobile.IconItem",
-	dojox.mobile.AbstractItem,
-{
-	// description:
-	//		Dynamic creation is not supported.
-	lazy: false,
-	requires: "",
-	timeout: 10,
-
-	templateString: '<li class="mblIconItem">'+
-						'<div class="mblIconArea" dojoAttachPoint="iconDivNode">'+
-							'<div><img src="${icon}" dojoAttachPoint="iconNode"></div>${label}'+
-						'</div>'+
-					'</li>',
-	templateStringSub: '<li class="mblIconItemSub" lazy="${lazy}" style="display:none;" dojoAttachPoint="contentNode">'+
-						'<h2 class="mblIconContentHeading" dojoAttachPoint="closeNode">'+
-							'<div class="mblBlueMinusButton" style="position:absolute;left:4px;top:2px;" dojoAttachPoint="closeIconNode"><div></div></div>${label}'+
-						'</h2>'+
-						'<div class="mblContent" dojoAttachPoint="containerNode"></div>'+
-					'</li>',
-
-	createTemplate: function(s){
-		dojo.forEach(["lazy","icon","label"], function(v){
-			while(s.indexOf("${"+v+"}") != -1){
-				s = s.replace("${"+v+"}", this[v]);
-			}
-		}, this);
-		var div = dojo.doc.createElement("DIV");
-		div.innerHTML = s;
-
-		/*
-		dojo.forEach(dojo.query("[dojoAttachPoint]", domNode), function(node){
-			this[node.getAttribute("dojoAttachPoint")] = node;
-		}, this);
-		*/
-
-		var nodes = div.getElementsByTagName("*");
-		var i, len, s1;
-		len = nodes.length;
-		for(i = 0; i < len; i++){
-			s1 = nodes[i].getAttribute("dojoAttachPoint");
-			if(s1){
-				this[s1] = nodes[i];
-			}
-		}
-		var domNode = div.removeChild(div.firstChild);
-		div = null;
-		return domNode;
-	},
-
-	buildRendering: function(){
-		this.inheritParams();
-		this.domNode = this.createTemplate(this.templateString);
-		this.subNode = this.createTemplate(this.templateStringSub);
-		this.subNode._parentNode = this.domNode; // [custom property]
-
-		if(this.srcNodeRef){
-			// reparent
-			for(var i = 0, len = this.srcNodeRef.childNodes.length; i < len; i++){
-				this.containerNode.appendChild(this.srcNodeRef.removeChild(this.srcNodeRef.firstChild));
-			}
-			this.srcNodeRef.parentNode.replaceChild(this.domNode, this.srcNodeRef);
-			this.srcNodeRef = null;
-		}
-		this.setIcon();
-	},
-
-	setIcon: function(){
-		this.iconNode.src = this.icon;
-		dojox.mobile.setupIcon(this.iconNode, this.iconPos);
-	},
-
-	postCreate: function(){
-		this.connect(this.iconNode, "onmousedown", "onMouseDownIcon");
-		this.connect(this.iconNode, "onclick", "iconClicked");
-		this.connect(this.closeIconNode, "onclick", "closeIconClicked");
-		this.connect(this.iconNode, "onerror", "onError");
-	},
-
-	highlight: function(){
-		dojo.addClass(this.iconDivNode, "mblVibrate");
-		if(this.timeout > 0){
-			var _this = this;
-			setTimeout(function(){
-				_this.unhighlight();
-			}, this.timeout*1000);
-		}
-	},
-
-	unhighlight: function(){
-		dojo.removeClass(this.iconDivNode, "mblVibrate");
-	},
-
-	setOpacity: function(node, val){
-		node.style.opacity = val;
-		node.style.mozOpacity = val;
-		node.style.khtmlOpacity = val;
-		node.style.webkitOpacity = val;
-	},
-
-	instantiateWidget: function(e){
-		// avoid use of dojo.query
-		/*
-		var list = dojo.query('[dojoType]', this.containerNode);
-		for(var i = 0, len = list.length; i < len; i++){
-			dojo["require"](list[i].getAttribute("dojoType"));
-		}
-		*/
-
-		var nodes = this.containerNode.getElementsByTagName("*");
-		var len = nodes.length;
-		var s;
-		for(var i = 0; i < len; i++){
-			s = nodes[i].getAttribute("dojoType");
-			if(s){
-				dojo["require"](s);
-			}
-		}
-
-		if(len > 0){
-			(dojox.mobile.parser || dojo.parser).parse(this.containerNode);
-		}
-		this.lazy = false;
-	},
-
-	isOpen: function(e){
-		return this.containerNode.style.display != "none";
-	},
-
-	onMouseDownIcon: function (e){
-		this.setOpacity(this.iconNode, this.getParentWidget().pressedIconOpacity);
-	},
-
-	iconClicked: function(e){
-		if(e){
-			setTimeout(dojo.hitch(this, function(d){ this.iconClicked(); }), 0);
-			return;
-		}
-		if(this.moveTo || this.href || this.url){
-			this.transitionTo(this.moveTo, this.href, this.url);
-			setTimeout(dojo.hitch(this, function(d){
-				this.setOpacity(this.iconNode, 1);
-			}), 1500);
-		}else{
-			this.open();
-		}
-	},
-
-	closeIconClicked: function(e){
-		if(e){
-			setTimeout(dojo.hitch(this, function(d){ this.closeIconClicked(); }), 0);
-			return;
-		}
-		this.close();
-	},
-
-	open: function(){
-		var parent = this.getParentWidget(); // IconContainer
-		if(this.transition == "below"){
-			if(parent.single){
-				parent.closeAll();
-				this.setOpacity(this.iconNode, this.getParentWidget().pressedIconOpacity);
-			}
-			this._open_1();
-		}else{
-			parent._opening = this;
-			if(parent.single){
-				parent.closeAll();
-				var view = dijit.byId(parent.id+"_mblApplView");
-				view._heading.setLabel(this.label);
-			}
-			this.transitionTo(parent.id+"_mblApplView");
-		}
-	},
-
-	_open_1: function(){
-		this.contentNode.style.display = "";
-		this.unhighlight();
-		if(this.lazy){
-			if(this.requires){
-				dojo.forEach(this.requires.split(/,/), function(c){
-					dojo["require"](c);
-				});
-			}
-			this.instantiateWidget();
-		}
-		this.contentNode.scrollIntoView();
-		this.onOpen();
-	},
-
-	close: function(){
-		if(dojo.isWebKit){
-			var t = this.domNode.parentNode.offsetWidth/8;
-			var y = this.iconNode.offsetLeft;
-			var pos = 0;
-			for(var i = 1; i <= 3; i++){
-				if(t*(2*i-1) < y && y <= t*(2*(i+1)-1)){
-					pos = i;
-					break;
-				}
-			}
-			dojo.addClass(this.containerNode.parentNode, "mblCloseContent mblShrink"+pos);
-		}else{
-			this.containerNode.parentNode.style.display = "none";
-		}
-		this.setOpacity(this.iconNode, 1);
-		this.onClose();
-	},
-
-	onOpen: function(){
-		// stub method to allow the application to connect to.
-	},
-
-	onClose: function(){
-		// stub method to allow the application to connect to.
-	},
-
-	onError: function(){
-		this.iconNode.src = this.getParentWidget().defaultIcon;
-	}
-});
-
-dojo.declare(
 	"dojox.mobile.Button",
-	dijit._Widget,
+	dijit._WidgetBase,
 {
 	btnClass: "mblBlueButton",
 	duration: 1000, // duration of selection, milliseconds
@@ -1145,115 +942,61 @@ dojo.declare(
 });
 
 dojo.declare(
-	"dojox.mobile.TabContainer",
-	dijit._Widget,
+	"dojox.mobile.ToolBarButton",
+	dojox.mobile.AbstractItem,
 {
-	iconBase: "",
-	iconPos: "",
-
-	buildRendering: function(){
-		var node = this.domNode = this.srcNodeRef;
-		node.className = "mblTabContainer";
-		var headerNode = this.tabHeaderNode = dojo.doc.createElement("DIV");
-		var paneNode = this.containerNode = dojo.doc.createElement("DIV");
-
-		// reparent
-		for(var i = 0, len = node.childNodes.length; i < len; i++){
-			paneNode.appendChild(node.removeChild(node.firstChild));
-		}
-
-		headerNode.className = "mblTabPanelHeader";
-		headerNode.align = "center";
-		node.appendChild(headerNode);
-		paneNode.className = "mblTabPanelPane";
-		node.appendChild(paneNode);
-	},
-
-	startup: function(){
-		this.createTabButtons();
-		this.inherited(arguments);
-	},
-
-	createTabButtons: function(){
-		var div = dojo.doc.createElement("DIV");
-		div.align = "center";
-		var tbl = dojo.doc.createElement("TABLE");
-		var cell = tbl.insertRow(-1).insertCell(-1);
-		var children = this.containerNode.childNodes;
-		for(var i = 0; i < children.length; i++){
-			var pane = children[i];
-			if(pane.nodeType != 1){ continue; }
-			var widget = dijit.byNode(pane);
-			if(widget.selected || !this._selectedPane){
-				this._selectedPane = widget;
-			}
-			pane.style.display = "none";
-			var tab = dojo.doc.createElement("DIV");
-			tab.className = "mblTabButton";
-			if(widget.icon){
-				var imgDiv = dojo.create("DIV");
-				var img = dojo.create("IMG");
-				imgDiv.className = "mblTabButtonImgDiv";
-				img.src = widget.icon;
-				dojox.mobile.setupIcon(img, widget.iconPos);
-				imgDiv.appendChild(img);
-				tab.appendChild(imgDiv);
-			}
-			tab.appendChild(dojo.doc.createTextNode(widget.label));
-			tab.pane = widget;
-			widget.tab = tab;
-			this.connect(tab, "onclick", "onTabClick");
-			cell.appendChild(tab);
-		}
-		div.appendChild(tbl);
-		this.tabHeaderNode.appendChild(div);
-		this.selectTab(this._selectedPane.tab);
-	},
-
-	selectTab: function(/*DomNode*/tab){
-		this._selectedPane.domNode.style.display = "none";
-		dojo.removeClass(this._selectedPane.tab, "mblTabButtonSelected");
-		this._selectedPane = tab.pane;
-		this._selectedPane.domNode.style.display = "";
-		dojo.addClass(tab, "mblTabButtonSelected");
-	},
-
-	onTabClick: function(e){
-		var tab = e.currentTarget;
-		dojo.addClass(tab, "mblTabButtonHighlighted");
-		setTimeout(function(){
-			dojo.removeClass(tab, "mblTabButtonHighlighted");
-		}, 200);
-		this.selectTab(tab);
-	}
-});
-
-dojo.declare(
-	"dojox.mobile.TabPane",
-	dijit._Widget,
-{
-	label: "",
-	icon: "",
-	iconPos: "",
 	selected: false,
-
-	inheritParams: function(){
-		var parent = this.getParentWidget();
-		if(parent){
-			if(!this.icon){ this.icon = parent.iconBase; }
-			if(!this.iconPos){ this.iconPos = parent.iconPos; }
-		}
-	},
+	_defaultColor: "mblColorDefault",
+	_selColor: "mblColorDefaultSel",
 
 	buildRendering: function(){
 		this.inheritParams();
-		this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("DIV");
-		this.domNode.className = "mblTabPane";
+		this.domNode = this.containerNode = this.srcNodeRef || dojo.doc.createElement("div");
+		dojo.addClass(this.domNode, "mblToolbarButton mblArrowButtonText");
+		var color;
+		if(this.selected){
+			color = this._selColor;
+		}else if(this.domNode.className.indexOf("mblColor") == -1){
+			color = this._defaultColor;
+		}
+		dojo.addClass(this.domNode, color);
+
+		if(this.label){
+			this.domNode.innerHTML = this.label;
+		}else{
+			this.label = this.domNode.innerHTML;
+		}
+
+		if(this.icon && this.icon != "none"){
+			var img;
+			if(this.iconPos){
+				var iconDiv = dojo.create("DIV", null, this.domNode);
+				img = dojo.create("IMG", null, iconDiv);
+				img.style.position = "absolute";
+				var arr = this.iconPos.split(/[ ,]/);
+				dojo.style(iconDiv, {
+					position: "relative",
+					width: arr[2] + "px",
+					height: arr[3] + "px"
+				});
+			}else{
+				img = dojo.create("IMG", null, this.domNode);
+			}
+			img.src = this.icon;
+			dojox.mobile.setupIcon(img, this.iconPos);
+			this.iconNode = img;
+		}
+		this.createDomButton(this.domNode);
+		this.connect(this.domNode, "onclick", "onClick");
 	},
 
-	getParentWidget: function(){
-		var ref = this.srcNodeRef || this.domNode;
-		return ref && ref.parentNode ? dijit.getEnclosingWidget(ref.parentNode) : null;
+	select: function(/*Boolean?*/deselect){
+		dojo.toggleClass(this.domNode, this._selColor, !deselect);
+		this.selected = !deselect;
+	},
+
+	onClick: function(e){
+		this.defaultClickAction();
 	}
 });
 
@@ -1338,9 +1081,24 @@ dojox.mobile.setupIcon = function(/*DomNode*/iconNode, /*String*/iconPos){
 		var b = arr[0] + arr[3]; // bottom
 		var l = arr[1]; // left
 		iconNode.style.clip = "rect("+t+"px "+r+"px "+b+"px "+l+"px)";
-		iconNode.style.top = -t + "px";
-		iconNode.style.left = -l + "px";
+		iconNode.style.top = dojo.style(iconNode, "top") - t + "px";
+		iconNode.style.left = dojo.style(iconNode.parentNode, "paddingLeft") - l + "px";
 	}
+};
+
+dojox.mobile.hideAddressBar = function(){
+	dojo.body().style.minHeight = "1000px"; // to ensure enough height for scrollTo to work
+	setTimeout(function(){ scrollTo(0, 1); }, 100);
+	setTimeout(function(){ scrollTo(0, 1); }, 400);
+	setTimeout(function(){
+		scrollTo(0, 1);
+		// re-define the min-height with the actual height
+		dojo.body().style.minHeight = (dojo.global.innerHeight||dojo.doc.documentElement.clientHeight) + "px";
+	}, 1000);
+};
+
+dojox.mobile.openWindow = function(url, target){
+	dojo.global.open(url, target || "_blank");
 };
 
 dojo._loaders.unshift(function(){
@@ -1376,11 +1134,14 @@ dojo.addOnLoad(function(){
 	//	You can disable hiding the address bar with the following djConfig.
 	//	var djConfig = { mblHideAddressBar: false };
 	if(dojo.config["mblHideAddressBar"] !== false){
-		var hideAddressBar = function(){
-			setTimeout(function(){ scrollTo(0, 1); }, 100);
-		};
-		hideAddressBar();
-		//dojo.connect(dojo.body(), "onorientationchange", hideAddressBar);
+		dojox.mobile.hideAddressBar();
+		if(dojo.config["mblAlwaysHideAddressBar"] == true){
+			if(dojo.global.onorientationchange !== undefined){
+				dojo.connect(dojo.global, "onorientationchange", dojox.mobile.hideAddressBar);
+			}else{
+				dojo.connect(dojo.global, "onresize", dojox.mobile.hideAddressBar);
+			}
+		}
 	}
 
 	// avoid use of dojo.query
@@ -1414,7 +1175,7 @@ dojo.addOnLoad(function(){
 			return arr;
 		};
 		dojo.subscribe("/dojo/hashchange", null, function(value){
-			var view = dojox.mobile._currentView;
+			var view = dojox.mobile.currentView;
 			if(!view){ return; }
 			var params = dojox.mobile._params;
 			if(!params){ // browser back/forward button was pressed

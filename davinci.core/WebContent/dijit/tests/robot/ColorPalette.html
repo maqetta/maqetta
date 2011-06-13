@@ -77,7 +77,8 @@
 						name: "arrow navigation",
 						timeout: 10000,
 						runTest: function(){
-							var d = new doh.Deferred();
+							var d = new doh.Deferred(),
+								enterPressed = false;
 
 							// Move around some
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
@@ -96,20 +97,34 @@
                                 var dye = big._getDye(focus);
 								doh.is("#ffc0cb", dye.getValue(), "focused on right color");
 							})), 1000);
-							
-							// Select the current value
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
-							doh.robot.sequence(d.getTestCallback(dojo.hitch(this, function(){
-								doh.is("#ffc0cb", big.get("value"), "selected value");
-								
-								doh.is(1, changes.length, 'one onchange event');
-								doh.is("#ffc0cb", changes[0], "correct value");
+
+							// Setup handler to catch onChange event from ENTER keypress below
+							handle = dojo.connect(big, "onChange", d.getTestCallback(dojo.hitch(this, function(val){
+								dojo.disconnect(handle);
+								handle = null;
+
+								doh.is("#ffc0cb", val, "onChange() argument");
+								doh.is("#ffc0cb", big.get("value"), "get('value')");
+
+								doh.is(1, changes.length, 'just one onchange event');
+								doh.t(enterPressed, "onChange event didn't come until enter key was pressed");
 								
 								big.set('value', null);
 								doh.is(big.get('value'), null, "value has been cleared");
-							})), 1000);
+							})));
+
+							// Select the current value
+							doh.robot.sequence(function(){
+								enterPressed = true;
+							}, 0);
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
 
 							return d;
+						},
+						tearDown: function(){
+							if(handle){
+								dojo.disconnect(handle);
+							}
 						}
 					},
 
@@ -186,7 +201,7 @@
 								doh.robot.mouseClick({left: true}, 500);
 							}
 							
-								var green = dojo.query("[title=verde]", small.domNode);
+							var green = dojo.query("[title=verde]", small.domNode);
 							doh.is(1, green.length, "found verde (green)");
 
 							doh.robot.mouseMoveAt(green[0], 500);
@@ -211,8 +226,9 @@
 								
 								//test that selected style was removed from previously selected cell and added to new selection
 								doh.f(dojo.hasClass(red[0], "dijitPaletteCellSelected"),
-								"Red swatch should not have selected class, actual class is: " + red[0].className);
-								doh.t(dojo.hasClass(green[0], "dijitPaletteCellSelected"), "Green swatch should have selected class, actual class is: " + green[0].className);
+									"Red swatch should not have selected class, actual class is: " + red[0].className);
+								doh.t(dojo.hasClass(green[0], "dijitPaletteCellSelected"),
+									"Green swatch should have selected class, actual class is: " + green[0].className);
 							}), 1000);
 							
 							

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>Transition on Orientation Change</title>
+		<link href="../themes/iphone/iphone.css" rel="stylesheet"></link>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, mblAlwaysHideAddressBar: true"></script>
+
+		<script language="JavaScript" type="text/javascript">
+			//dojo.require("dojo.parser"); // Use the lightweight parser.
+			dojo.require("dojox.mobile.parser");
+			dojo.require("dojox.mobile");
+			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
+
+			dojo.addOnLoad(function(){
+				var portrait = dijit.byId("portrait");
+				var landscape = dijit.byId("landscape");
+				var onChange = function(){
+					if(window.orientation == 0 && dojox.mobile.currentView != portrait){
+						landscape.performTransition("portrait", 1, "fade");
+					}else if (window.orientation != 0 && dojox.mobile.currentView != landscape){
+						portrait.performTransition("landscape", 1, "fade");
+					}
+				};
+				if(window.orientation != 0){
+					setTimeout(function(){
+						landscape.show();
+					}, 0);
+				}
+				if(window.onorientationchange !== undefined){
+					dojo.connect(dojo.global, "onorientationchange", onChange);
+				}else{
+					dojo.connect(dojo.global, "onresize", onChange);
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<div id="portrait" dojoType="dojox.mobile.View" selected="true">
+			<h1 dojoType="dojox.mobile.Heading">Portrait</h1>
+			<div style="text-align:center;padding-top:20px;">
+				<img src="images/a-icon-2-41x41.png">
+				<h2>View<br>for<br>portrait</h2>
+			</div>
+		</div>
+
+		<div id="landscape" dojoType="dojox.mobile.View">
+			<h1 dojoType="dojox.mobile.Heading">Landscape</h1>
+			<div dojoType="dojox.mobile.RoundRect" shadow="true" style="text-align:center;">
+				<h2>View for landscape</h2>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-	Copyright (c) 2004-2010 The Dojo Foundation, Licensed under the Academic
+	Copyright (c) 2004-2011 The Dojo Foundation, Licensed under the Academic
 	Free License version 2.1 or BSD licenses
 -->
 <project name="dojo" default="cldr" basedir=".">
@@ -15,7 +15,7 @@
 	<property name="json" location="${root}/dojo/cldr/nls"/>
 
 	<!-- Arbitrary defaults. locales and currencies properties can be altered or eliminated to build the entire set -->
-	<!--property name="locales" value="ar,hi,he,hu,ru,en-au,en-ca,en-gb,en-us,de-de,es-es,fr-fr,it-it,pt-br,ko-kr,zh-hant,zh-tw,zh-hans,zh-cn,ja-jp"/-->
+	<property name="locales" value="ar,ca,cs,da,de-de,el,en-au,en-ca,en-gb,en-us,es-es,fi,fr-ch,fr-fr,he-il,hu,it-it,ja-jp,ko-kr,nb,nl,pl,pt-br,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-cn,zh-hant,zh-hans,zh-hk,zh-tw" />
 	<property name="currencies" value="GBP,USD,CAD,AUD,EUR,CHF,HKD,JPY,CNY" />
 
 	<target name="-check-config"
@@ -258,6 +258,12 @@
 		</java>
 		<java jar="../../shrinksafe/js.jar" failonerror="true" fork="true" logError="true" >
 			<arg value="alias.js" />
+			<arg value="${json}" />
+			<arg value="${logDir}"/>
+			<sysproperty key="DOJO_LOADER" value="${dojoLoader}" />
+		</java>
+		<java jar="../../shrinksafe/js.jar" failonerror="true" fork="true" logError="true" >
+			<arg value="wrap.js" />
 			<arg value="${json}" />
 			<arg value="${logDir}"/>
 			<sysproperty key="DOJO_LOADER" value="${dojoLoader}" />

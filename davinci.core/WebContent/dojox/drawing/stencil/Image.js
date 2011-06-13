@@ -151,5 +151,5 @@ StencilPoints: [
 
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Image"	
+	name:"dojox.drawing.stencil.Image"
 }, "stencil");

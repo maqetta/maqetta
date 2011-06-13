@@ -2,7 +2,7 @@ dojo.provide("dojox.cometd.longPollTransportFormEncoded");
 dojo.require("dojox.cometd._base");
 
 dojox.cometd.longPollTransportFormEncoded = new function(){
-	// This is an alternative implementation to that provided in logPollTransport.js that 
+	// This is an alternative implementation to that provided in logPollTransport.js that
 	// form encodes all messages instead of sending them as text/json
 	
 	this._connectionType = "long-polling";
@@ -56,7 +56,7 @@ dojox.cometd.longPollTransportFormEncoded = new function(){
 				id:	"" + this._cometd.messageId++
 			};
 			if(this._cometd.connectTimeout>=this._cometd.expectedNetworkDelay){
-				message.advice = { 
+				message.advice = {
 					timeout: this._cometd.connectTimeout - this._cometd.expectedNetworkDelay
 				};
 			}

@@ -1,7 +1,9 @@
 dojo.provide("dojox.charting.widget.Sparkline");
 
 dojo.require("dojox.charting.widget.Chart2D");
-dojo.require("dojox.charting.themes.ET.greys");
+dojo.require("dojox.charting.themes.GreySkies");
+
+dojo.require("dojox.charting.plot2d.Lines");
 
 (function(){
 
@@ -10,7 +12,7 @@ dojo.require("dojox.charting.themes.ET.greys");
 	dojo.declare("dojox.charting.widget.Sparkline",
 		dojox.charting.widget.Chart2D,
 		{
-			theme: dojox.charting.themes.ET.greys,
+			theme: dojox.charting.themes.GreySkies,
 			margins: { l: 0, r: 0, t: 0, b: 0 },
 			type: "Lines",
 			valueFn: "Number(x)",

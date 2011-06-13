@@ -1,6 +1,4 @@
-dojo.provide("dojox.data.PersevereStore");
-dojo.require("dojox.data.JsonQueryRestStore");
-dojo.require("dojox.rpc.Client"); // Persevere supports this and it improves reliability
+define("dojox/data/PersevereStore", ["dojo", "dojox", "dojox/data/JsonQueryRestStore", "dojox/rpc/Client"], function(dojo, dojox) {
 
 // PersevereStore is an extension of JsonRestStore to handle Persevere's special features
 
@@ -8,7 +6,7 @@ dojox.json.ref.serializeFunctions = true; // Persevere supports persisted functi
 
 dojo.declare("dojox.data.PersevereStore",dojox.data.JsonQueryRestStore,{
 	useFullIdInQueries: true, // in JSONQuerys use the full id
-	jsonQueryPagination: false // use the Range headers instead	
+	jsonQueryPagination: false // use the Range headers instead
 });
 	
 dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync){
@@ -59,7 +57,7 @@ dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync)
 			if(methodsDefinitions && methodsTarget){
 				for(var j in methodsDefinitions){
 					var methodDef = methodsDefinitions[j];
-					// if any method definitions indicate that the method should run on the server, than add 
+					// if any method definitions indicate that the method should run on the server, than add
 					// it to the prototype as a JSON-RPC method
 					if(methodDef.runAt != "client" && !methodsTarget[j]){
 						methodsTarget[j] = (function(methodName){
@@ -68,7 +66,7 @@ dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync)
 								var deferred = dojo.rawXhrPost({
 									url: this.__id,
 									// the JSON-RPC call
-									postData: dojo.toJson({
+									postData: dojox.json.ref.toJson({
 										method: methodName,
 										id: callId++,
 										params: dojo._toArray(arguments)
@@ -83,7 +81,7 @@ dojox.data.PersevereStore.getStores = function(/*String?*/path,/*Boolean?*/sync)
 								});
 								return deferred;
 							}
-						})(j);	
+						})(j);
 					}
 				}
 			}
@@ -108,3 +106,7 @@ dojox.data.PersevereStore.addProxy = function(){
 	dojo.require("dojox.io.xhrPlugins"); // also not necessary, but we can register that Persevere supports proxying
 	dojox.io.xhrPlugins.addProxy("/proxy/");
 };
+
+return dojox.data.PersevereStore;
+
+});

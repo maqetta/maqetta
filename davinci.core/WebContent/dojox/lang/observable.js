@@ -1,9 +1,9 @@
 dojo.provide("dojox.lang.observable");
 // Used to create a wrapper object with monitored reads and writes
-// 
+//
 dojo.experimental("dojox.lang.observable");
-// IMPORTANT DISCLAIMER: 
-// This is experimental and based on hideous hacks. 
+// IMPORTANT DISCLAIMER:
+// This is experimental and based on hideous hacks.
 // There are severe limitations on the ability of wrapper objects:
 // Only properties that have vbscript-legal names are accessible (similar to JavaScript, but they can't start with an underscore).
 // The wrapper objects are not expando in IE, because they are built
@@ -13,14 +13,14 @@ dojo.experimental("dojox.lang.observable");
 // This has performance implications as well.
 dojox.lang.observable = function(/*Object*/wrapped,/*function*/onRead,/*function*/onWrite,/*function*/onInvoke){
 	// 	summary:
-	// 		Creates a wrapper object, which can be observed. The wrapper object 
+	// 		Creates a wrapper object, which can be observed. The wrapper object
 	// 		is a proxy to the wrapped object. If you will be making multiple wrapper
 	// 		objects with the same set of listeners, it is recommended that you
-	// 		use makeObservable, as it is more memory efficient.	
-	// 
+	// 		use makeObservable, as it is more memory efficient.
+	//
 	// 	wrapped:
 	// 		The object to be wrapped and monitored for property access and modification
-	//	
+	//
 	// onRead:
 	//		See dojox.lang.makeObservable.onRead
 	// onWrite:
@@ -33,36 +33,36 @@ dojox.lang.observable = function(/*Object*/wrapped,/*function*/onRead,/*function
 dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*function*/onInvoke,/*Object*/hiddenFunctions){
 		
 	// 	summary:
-	// 		Creates and returns an observable creator function. All the objects that 
+	// 		Creates and returns an observable creator function. All the objects that
 	// 		are created with the returned constructor will use the provided onRead and
 	// 		onWrite listeners.
 	// 		The created constructor should be called with a single argument,
-	// 		the object that will be wrapped to be observed. The constructor will 
+	// 		the object that will be wrapped to be observed. The constructor will
 	// 		return the wrapper object.
 	//
 	// onRead:
-	// 		This is called whenever one of the wrapper objects created 
+	// 		This is called whenever one of the wrapper objects created
 	// 		from the constructor has a property that is accessed. onRead
 	// 		will be called with two arguments, the first being the wrapped object,
 	// 		and the second is the name of property that is being accessed.
-	// 		The value that onRead returns will be used as the value returned 
+	// 		The value that onRead returns will be used as the value returned
 	// 		by the property access
-	//  
+	//
 	// onWrite:
-	// 		This is called whenever one of the wrapper objects created 
+	// 		This is called whenever one of the wrapper objects created
 	// 		from the constructor has a property that is modified. onWrite
 	// 		will be called with three arguments, the first being the wrapped object,
 	// 		the second is the name of property that is being modified, and the
 	// 		third is the value that is being set on the property.
-	// 
-	// 	onInvoke: 
-	// 		This is called when a method on the object is invoked. The first 
-	// 		argument is the wrapper object, the second is the original wrapped object, 
+	//
+	// 	onInvoke:
+	// 		This is called when a method on the object is invoked. The first
+	// 		argument is the wrapper object, the second is the original wrapped object,
 	// 		the third is the method name, and the fourth is the arguments.
 	//
-	// hiddenFunctions: 
-	// 		allows you to define functions that should be delegated 
-	// 		but may not be enumerable on the wrapped objects, so they must be 
+	// hiddenFunctions:
+	// 		allows you to define functions that should be delegated
+	// 		but may not be enumerable on the wrapped objects, so they must be
 	// 		explicitly included
 	//
 	// example:
@@ -70,7 +70,7 @@ dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*fu
 	// 		prevent functions from being accessed on an object:
 	// 	|	function onRead(obj,prop){
 	//	|		return typeof obj[prop] == 'function' ? null : obj[prop];
-	//	|	} 
+	//	|	}
 	//	|	var observable = dojox.lang.makeObservable(onRead,onWrite);
 	//	|	var obj = {foo:1,bar:function(){}};
 	//	|	obj = observable(obj);
@@ -104,7 +104,7 @@ dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*fu
 			}
 			if(wrapped.data__){
 				throw new Error("Can wrap an object that is already wrapped");
-			}			
+			}
 			// create the class
 			var props = [], i, l;
 			for(i in hiddenFunctions){
@@ -112,14 +112,14 @@ dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*fu
 			}
 			var vbReservedWords = {type:1,event:1};
 			// find the unique signature for the class so we can reuse it if possible
-			for(i in wrapped){ 
+			for(i in wrapped){
 				if(i.match(/^[a-zA-Z][\w\$_]*$/) && !(i in hiddenFunctions) && !(i in vbReservedWords)){ //can only do properties with valid vb names/tokens and primitive values
 					props.push(i);
 				}
 			}
 			var signature = props.join(",");
-			var prop,clazz = cache[signature]; 
-			if(!clazz){ 
+			var prop,clazz = cache[signature];
+			if(!clazz){
 				var tname = "dj_lettable_"+(factory.inc++);
 				var gtname = tname+"_dj_getter";
 				var cParts = [
@@ -227,16 +227,16 @@ if(!{}.__defineGetter__){
 		frame.style.display="none";
 		var doc = frame.contentWindow.document;
 		dojox.lang.lettableWin = frame.contentWindow;
-		doc.write('<html><head><script language="VBScript" type="text/VBScript">' + 
+		doc.write('<html><head><script language="VBScript" type="text/VBScript">' +
 			'Function vb_global_eval(code)' +
 				'ExecuteGlobal(code)' +
 			'End Function' +
 			'</script>' +
-			'<script type="text/javascript">' + 
+			'<script type="text/javascript">' +
 			'function vbEval(code){ \n' + // this has to be here to call it from another frame
 				'return vb_global_eval(code);' +
 			'}' +
-			'function construct(name){ \n' + // and this too 
+			'function construct(name){ \n' + // and this too
 				'return window[name]();' +
 			'}' +
 			'</script>' +
@@ -248,15 +248,15 @@ if(!{}.__defineGetter__){
 }
 
 dojox.lang.ReadOnlyProxy =
-// summary: 
-// 		Provides a read only proxy to another object, this can be 
+// summary:
+// 		Provides a read only proxy to another object, this can be
 // 		very useful in object-capability systems
 // example:
 // 	|	var obj = {foo:"bar"};
 // 	|	var readonlyObj = dojox.lang.ReadOnlyProxy(obj);
 // 	|	readonlyObj.foo = "test" // throws an error
 // 	|	obj.foo = "new bar";
-// 	|	readonlyObj.foo -> returns "new bar", always reflects the current value of the original (it is not just a copy) 
+// 	|	readonlyObj.foo -> returns "new bar", always reflects the current value of the original (it is not just a copy)
 dojox.lang.makeObservable(function(obj,i){
 		return obj[i];
 	},function(obj,i,value){

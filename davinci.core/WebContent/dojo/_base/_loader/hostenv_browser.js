@@ -1,3 +1,14 @@
+//>>includeStart("amdLoader", kwArgs.asynchLoader);
+define(["dojo/lib/backCompat"], function(dojo){
+// Note: if this resource is being loaded *without* an AMD loader, then
+// it is loaded by dojo.js which injects it into the doc with a script element. The simulated
+// AMD define function in _loader.js will cause the factory to be executed.
+//
+// The build util with v1.6 strips all AMD artifacts from this resource and reverts it
+// to look like v1.5. This ensures the built version, with either the sync or xdomain loader, work
+// *exactly* as in v1.5.
+
+//>>includeEnd("amdLoader");
 /*=====
 dojo.isBrowser = {
 	//	example:
@@ -19,9 +30,9 @@ dojo.isIE = {
 dojo.isSafari = {
 	//	example:
 	//	|	if(dojo.isSafari){ ... }
-	//	example: 
+	//	example:
 	//		Detect iPhone:
-	//	|	if(dojo.isSafari && navigator.userAgent.indexOf("iPhone") != -1){ 
+	//	|	if(dojo.isSafari && navigator.userAgent.indexOf("iPhone") != -1){
 	//	|		// we are iPhone. Note, iPod touch reports "iPod" above and fails this test.
 	//	|	}
 };
@@ -64,7 +75,6 @@ dojo = {
 	//		True if the client runs on Mac
 }
 =====*/
-
 //>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 if(typeof window != 'undefined'){
 //>>excludeEnd("webkitMobile");
@@ -95,7 +105,7 @@ if(typeof window != 'undefined'){
 						d.config.baseUrl = src.substring(0, m.index);
 					}
 					// and find out if we need to modify our behavior
-					var cfg = scripts[i].getAttribute("djConfig");
+					var cfg = (scripts[i].getAttribute("djConfig") || scripts[i].getAttribute("data-dojo-config"));
 					if(cfg){
 						var cfgo = eval("({ "+cfg+" })");
 						for(var x in cfgo){
@@ -173,7 +183,7 @@ if(typeof window != 'undefined'){
 		//>>excludeEnd("webkitMobile");
 
 		d._xhrObj = function(){
-			// summary: 
+			// summary:
 			//		does the work of portably generating a new XMLHTTPRequest object.
 			var http, last_e;
 			//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
@@ -210,10 +220,11 @@ if(typeof window != 'undefined'){
 			var stat = http.status || 0,
 				lp = location.protocol;
 			return (stat >= 200 && stat < 300) || 	// Boolean
-				stat == 304 || 						// allow any 2XX response code
-				stat == 1223 || 						// get it out of the cache
-				// Internet Explorer mangled the status code OR we're Titanium/browser chrome/chrome extension requesting a local file or Safari fetching from the appcache
-				!stat;
+				stat == 304 ||			// allow any 2XX response code
+				stat == 1223 ||			// get it out of the cache
+								// Internet Explorer mangled the status code
+				// Internet Explorer mangled the status code OR we're Titanium/browser chrome/chrome extension requesting a local file
+				(!stat && (lp == "file:" || lp == "chrome:" || lp == "chrome-extension:" || lp == "app:"));
 		}
 
 		//See if base tag is in use.
@@ -308,7 +319,7 @@ if(typeof window != 'undefined'){
 		d.addOnWindowUnload = function(/*Object?|Function?*/obj, /*String|Function?*/functionName){
 			// summary:
 			//		registers a function to be triggered when window.onunload
-			//		fires. 
+			//		fires.
 			//	description:
 			//		The first time that addOnWindowUnload is called Dojo
 			//		will register a page listener to trigger your unload
@@ -339,7 +350,7 @@ if(typeof window != 'undefined'){
 			//	description:
 			//		The first time that addOnUnload is called Dojo will
 			//		register a page listener to trigger your unload handler
-			//		with. 
+			//		with.
 			//
 			//		In a browser enviroment, the functions will be triggered
 			//		during the window.onbeforeunload event. Be careful of doing
@@ -352,7 +363,7 @@ if(typeof window != 'undefined'){
 			//
 			//		Further note that calling dojo.addOnUnload will prevent
 			//		browsers from using a "fast back" cache to make page
-			//		loading via back button instantaneous. 
+			//		loading via back button instantaneous.
 			// example:
 			//	|	dojo.addOnUnload(functionPointer)
 			//	|	dojo.addOnUnload(object, "functionName")
@@ -391,7 +402,7 @@ if(typeof window != 'undefined'){
 		}
 	}
 
-	if(!dojo.config.afterOnLoad){		
+	if(!dojo.config.afterOnLoad){
 		if(document.addEventListener){
 			//Standards. Hooray! Assumption here that if standards based,
 			//it knows about DOMContentLoaded. It is OK if it does not, the fall through
@@ -408,10 +419,10 @@ if(typeof window != 'undefined'){
 			if(!dojo.config.skipIeDomLoaded && self === self.top){
 				dojo._scrollIntervalId = setInterval(function (){
 					try{
-						//When dojo is loaded into an iframe in an IE HTML Application 
+						//When dojo is loaded into an iframe in an IE HTML Application
 						//(HTA), such as in a selenium test, javascript in the iframe
 						//can't see anything outside of it, so self===self.top is true,
-						//but the iframe is not the top window and doScroll will be 
+						//but the iframe is not the top window and doScroll will be
 						//available before document.body is set. Test document.body
 						//before trying the doScroll trick
 						if(document.body){
@@ -480,8 +491,15 @@ if(dojo.config.isDebug){
 }
 
 if(dojo.config.debugAtAllCosts){
-	dojo.config.useXDomain = true;
-	dojo.require("dojo._base._loader.loader_xd");
+	// this breaks the new AMD based module loader. The XDomain won't be necessary
+	// anyway if you switch to the asynchronous loader
+	//dojo.config.useXDomain = true;
+	//dojo.require("dojo._base._loader.loader_xd");
 	dojo.require("dojo._base._loader.loader_debug");
 	dojo.require("dojo.i18n");
 }
+
+//>>includeStart("amdLoader", kwArgs.asynchLoader);
+return dojo;
+});
+//>>includeEnd("amdLoader");

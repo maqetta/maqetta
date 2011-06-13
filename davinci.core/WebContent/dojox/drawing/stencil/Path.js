@@ -53,7 +53,7 @@ StencilPoints: [
 							if(o.x===undefined){// Z + undefined works here, but checking anyway
 								strAr.push(cmd);
 							}else{
-								strAr.push(cmd + o.x +" "+ o.y); 
+								strAr.push(cmd + o.x +" "+ o.y);
 							}
 						}
 					}
@@ -165,5 +165,5 @@ StencilPoints: [
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Path"	
+	name:"dojox.drawing.stencil.Path"
 }, "stencil");

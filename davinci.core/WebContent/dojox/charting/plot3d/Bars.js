@@ -6,7 +6,7 @@ dojo.require("dojox.charting.plot3d.Base");
 
 	// reduce function borrowed from dojox.fun
 	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-		// summary: repeatedly applies a binary function to an array from left 
+		// summary: repeatedly applies a binary function to an array from left
 		//	to right; returns the final value.
 		a = typeof a == "string" ? a.split("") : a; o = o || dojo.global;
 		var z = a[0];
@@ -52,7 +52,7 @@ dojo.require("dojox.charting.plot3d.Base");
 			for(var i = 0; i < this.data.length; ++i, org += step){
 				creator
 					.createCube({
-						bottom: {x: org + this.gap, y: 0, z: 0}, 
+						bottom: {x: org + this.gap, y: 0, z: 0},
 						top:    {x: org + step - this.gap, y: this.data[i] * scale, z: depth}
 					})
 					.setFill(this.material);

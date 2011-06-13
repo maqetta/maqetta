@@ -8,7 +8,7 @@
 	cellSpacing: "Hücre Aralığı:",
 	tableWidth: "Tablo Genişliği",
 	backgroundColor: "Arka Plan Rengi:",
-	borderColor: "Kenarlık Rengi: ",
+	borderColor: "Kenarlık Rengi:",
 	borderThickness: "Kenarlık Kalınlığı",
 	percent: "yüzde",
 	pixels: "piksel",
@@ -18,6 +18,7 @@
 	right: "sağ",
 	buttonSet: "Ayarla", // translated elsewhere?
 	buttonInsert: "Ekle",
+	buttonCancel: "İptal",
 
 	selectTableLabel: "Tablo Seç",
 	insertTableRowBeforeLabel: "Satırı Önüne Ekle",

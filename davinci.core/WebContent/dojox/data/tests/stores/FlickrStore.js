@@ -6,16 +6,16 @@ dojo.require("dojo.data.api.Read");
 dojox.data.tests.stores.FlickrStore.error = function(t, d, errData){
 	//  summary:
 	//		The error callback function to be used for all of the tests.
-	d.errback(errData);	
+	d.errback(errData);
 }
 
-doh.register("dojox.data.tests.stores.FlickrStore", 
+doh.register("dojox.data.tests.stores.FlickrStore",
 	[
 		{
 			name: "ReadAPI:  Fetch_One",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on FlickrStore of a single item.
 				//	description:
 				//		Simple test of a basic fetch on FlickrStore of a single item.
@@ -29,7 +29,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 				}
 				flickrStore.fetch({ 	query: {tags: "animals"},
 									count: 1,
-									onComplete: onComplete, 
+									onComplete: onComplete,
 									onError: dojo.partial(dojox.data.tests.stores.FlickrStore.error, doh, d)
 								});
 				return d; //Object
@@ -39,7 +39,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  Fetch_20_Streaming",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of a basic fetch on FlickrStore.
 				//	description:
 				//		Simple test of a basic fetch on FlickrStore.
@@ -75,7 +75,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  Fetch_Paging",
 			timeout:	30000, //30 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
 				//	description:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
@@ -143,7 +143,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  getLabel",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the getLabel function against a store set that has a label defined.
 				//	description:
 				//		Simple test of the getLabel function against a store set that has a label defined.
@@ -157,9 +157,9 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 					t.assertTrue(label !== null);
 					d.callback(true);
 				}
-				flickrStore.fetch({ 	query: {tags: "animals"}, 
+				flickrStore.fetch({ 	query: {tags: "animals"},
 									count: 1,
-									onComplete: onComplete, 
+									onComplete: onComplete,
 									onError: dojo.partial(dojox.data.tests.stores.FlickrStore.error, t, d)
 								});
 				return d;
@@ -169,7 +169,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  getLabelAttributes",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 				//	description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
@@ -186,7 +186,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 				}
 				flickrStore.fetch({ 	query: {tags: "animals"},
 									count: 1,
-									onComplete: onComplete, 
+									onComplete: onComplete,
 									onError: dojo.partial(dojox.data.tests.stores.FlickrStore.error, t, d)
 								});
 				return d;
@@ -196,7 +196,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  getValue",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the getValue function of the store.
 				//	description:
 				//		Simple test of the getValue function of the store.
@@ -221,7 +221,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  getValues",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the getValue function of the store.
 				//	description:
 				//		Simple test of the getValue function of the store.
@@ -246,7 +246,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  isItem",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the isItem function of the store
 				//	description:
 				//		Simple test of the isItem function of the store
@@ -270,7 +270,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  hasAttribute",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the hasAttribute function of the store
 				//	description:
 				//		Simple test of the hasAttribute function of the store
@@ -299,9 +299,9 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 				}
 
 				//Get one item...
-				flickrStore.fetch({ 	query: {tags: "animals"}, 
+				flickrStore.fetch({ 	query: {tags: "animals"},
 									count: 1,
-									onComplete: onComplete, 
+									onComplete: onComplete,
 									onError: dojo.partial(dojox.data.tests.stores.FlickrStore.error, t, d)
 								});
 				return d; //Object
@@ -311,7 +311,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  containsValue",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the containsValue function of the store
 				//	description:
 				//		Simple test of the containsValue function of the store
@@ -325,9 +325,9 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 				}
 
 				//Get one item...
-				flickrStore.fetch({ 	query: {tags: "animals"}, 
+				flickrStore.fetch({ 	query: {tags: "animals"},
 									count: 1,
-									onComplete: onComplete, 
+									onComplete: onComplete,
 									onError: dojo.partial(dojox.data.tests.stores.FlickrStore.error, t, d)
 								});
 				return d; //Object
@@ -337,7 +337,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			name: "ReadAPI:  getAttributes",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary: 
+				//	summary:
 				//		Simple test of the getAttributes function of the store
 				//	description:
 				//		Simple test of the getAttributes function of the store
@@ -360,14 +360,14 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			}
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary: 
+			//	summary:
 			//		Simple test of the getFeatures function of the store
 			//	description:
 			//		Simple test of the getFeatures function of the store
 
 			var flickrStore = new dojox.data.FlickrStore();
 
-			var features = flickrStore.getFeatures(); 
+			var features = flickrStore.getFeatures();
 			var count = 0;
 			for(i in features){
 				t.assertTrue((i === "dojo.data.api.Read"));
@@ -376,7 +376,7 @@ doh.register("dojox.data.tests.stores.FlickrStore",
 			t.assertTrue(count === 1);
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary: 
+			//	summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 			//	description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.

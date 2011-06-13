@@ -57,7 +57,7 @@ dojox.date.posix.strftime = function(/*Date*/dateObject, /*String*/format, /*Str
 			case "f": // month as a decimal number, a single digit is
 							// preceded by a space (range ' 1' to '12')
 				if(padChar == null){ padChar = " "; }
-				return _(dateObject.getMonth()+1);				
+				return _(dateObject.getMonth()+1);
 			
 			case "g": // like %G, but without the century.
 				break;
@@ -132,8 +132,8 @@ dojox.date.posix.strftime = function(/*Date*/dateObject, /*String*/format, /*Str
 
 			case "V": // week number of the year (Monday as the first day of the
 				      // week) as a decimal number [01,53]. If the week containing
-				      // 1 January has four or more days in the new year, then it 
-				      // is considered week 1. Otherwise, it is the last week of 
+				      // 1 January has four or more days in the new year, then it
+				      // is considered week 1. Otherwise, it is the last week of
 				      // the previous year, and the next week is week 1.
 				return _(dojox.date.posix.getIsoWeekOfYear(dateObject));
 				
@@ -162,7 +162,7 @@ dojox.date.posix.strftime = function(/*Date*/dateObject, /*String*/format, /*Str
 			
 			case "z": // time zone or name or abbreviation
 				var timezoneOffset = dateObject.getTimezoneOffset();
-				return (timezoneOffset > 0 ? "-" : "+") + 
+				return (timezoneOffset > 0 ? "-" : "+") +
 					_(Math.floor(Math.abs(timezoneOffset)/60)) + ":" +
 					_(Math.abs(timezoneOffset)%60);
 
@@ -278,9 +278,9 @@ dojox.date.posix.getIsoWeekOfYear = function(/*Date*/dateObject){
 }
 
 dojox.date.posix.getIsoWeeksInYear = function(/*Date*/dateObject) {
-	// summary: Determine the number of ISO8601 weeks in the year of the given 
+	// summary: Determine the number of ISO8601 weeks in the year of the given
 	//   date. Most years have 52 but some have 53.
-	//   See http://www.phys.uu.nl/~vgent/calendar/isocalendar_text3.htm	
+	//   See http://www.phys.uu.nl/~vgent/calendar/isocalendar_text3.htm
 	function p(y) {
 		return y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400);
 	}

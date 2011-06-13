@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Krepko',
 	'copy': 'Prekopiraj',
@@ -9,13 +11,13 @@
 	'insertUnorderedList': 'Naštevni seznam',
 	'italic': 'Ležeče',
 	'justifyCenter': 'Poravnaj na sredino',
-	'justifyFull': 'Obojestranska poravnava',
+	'justifyFull': 'Poravnaj obojestransko',
 	'justifyLeft': 'Poravnaj levo',
 	'justifyRight': 'Poravnaj desno',
-	'outdent': 'Viseč odstavek',
+	'outdent': 'Primakni',
 	'paste': 'Prilepi',
 	'redo': 'Znova uveljavi',
-	'removeFormat': 'Odstrani obliko zapisa',
+	'removeFormat': 'Odstrani oblikovanje',
 	'selectAll': 'Izberi vse',
 	'strikethrough': 'Prečrtano',
 	'subscript': 'Podpisano',
@@ -24,7 +26,7 @@
 	'undo': 'Razveljavi',
 	'unlink': 'Odstrani povezavo',
 	'createLink': 'Ustvari povezavo',
-	'toggleDir': 'Preklopi na usmeritev',
+	'toggleDir': 'Preklopi smer',
 	'insertImage': 'Vstavi sliko',
 	'insertTable': 'Vstavi/uredi tabelo',
 	'toggleTableBorder': 'Preklopi na rob tabele',
@@ -45,4 +47,5 @@
 	/* Error messages */
 	'systemShortcut': 'Dejanje "${0}" lahko v vašem brskalniku uporabite samo z bližnjico na tipkovnici. Uporabite ${1}.'
 })
-
+//end v1.x content
+);

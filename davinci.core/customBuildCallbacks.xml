@@ -19,7 +19,6 @@
 	<property environment="env"/>
 	<property name="manifest.file" value="${target.folder}/WebContent/davinci/davinci.manifest"/>
 	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
-	<property name="rep.info.live.file" value="${target.folder}/WebContent/davinci/repositoryinfoLive.js"/>
 
 	<!-- +++++++++++ Verify that "svn" or "svn.exe" is on the PATH +++++++++++ -->
 	<target name="verify.command.line.svn">
@@ -42,17 +41,51 @@
 		<fail message="ERROR - YOU NEED TO INSTALL AN SVN COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
 	</target>
 
-	<!--    Write "svn info" results to WebContent/davinci/repositoryinfo.js   -->
-	<target name="update.repositoryinfo.js" depends="check.command.line.svn">
+    <!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
+    <target name="verify.command.line.git">
+        <!--
+        <echo message="filepath=${env.PATH}"/>
+        <echo message="filepath=${env.Path}"/>
+        -->
+        <condition property="command.line.git.ok">
+            <or>
+                <available file="git" filepath="${env.PATH}"/>
+                <available file="git" filepath="${env.Path}"/>
+                <available file="git.exe" filepath="${env.PATH}"/>
+                <available file="git.exe" filepath="${env.Path}"/>
+            </or>
+        </condition>
+    </target>
+
+    <!-- ++++++++++ Crash and burn if can't find command-line git ++++++++++++ -->
+    <target name="check.command.line.git" depends="verify.command.line.git" unless="command.line.git.ok">
+        <fail message="ERROR - YOU NEED TO INSTALL A GIT COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
+    </target>
+
+	<!--    Write "git describe" results to WebContent/pagedesigner.html, welcome.html...   -->
+	<target name="update.revisions" depends="check.command.line.git">
+		<exec executable="git" outputproperty="git.describe" dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
+		</exec>
+		<filter token="revision" value="${git.describe}"/>
+		<copy file="${target.folder}/WebContent/pagedesigner.html" tofile="${target.folder}/WebContent/pagedesigner.html.tmp" filtering="true"/>
+		<copy file="${target.folder}/WebContent/welcome.html" tofile="${target.folder}/WebContent/welcome.html.tmp" filtering="true"/>
+		<delete file="${target.folder}/WebContent/pagedesigner.html"/>
+		<delete file="${target.folder}/WebContent/welcome.html"/>
+		<move file="${target.folder}/WebContent/pagedesigner.html.tmp" tofile="${target.folder}/WebContent/pagedesigner.html"/>
+		<move file="${target.folder}/WebContent/welcome.html.tmp" tofile="${target.folder}/WebContent/welcome.html"/>
+	</target>
+
+	<!--    Write "git describe" results to WebContent/davinci/repositoryinfo.js   -->
+	<target name="update.repositoryinfo.js" depends="check.command.line.git">
 		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.file}"/>
-		<echo message="/* Holds output from 'svn info /path/to/davinci.core' */${line.separator}" file="${rep.info.file}" append="true"/>
+		<echo message="/* Holds output from 'git describe' */${line.separator}" file="${rep.info.file}" append="true"/>
 		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
 		<echo message="dojo.provide('davinci.repositoryinfo');${line.separator}" file="${rep.info.file}" append="true"/>
 		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
 
-		<exec executable="svn" output="${rep.info.file}.temp" append="true"  dir ="${basedir}">
-			<arg value="info"/>
-			<arg value="."/>
+		<exec executable="git" output="${rep.info.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
 		</exec>
 		<replace file="${rep.info.file}.temp" token="${line.separator}" value="|"/>
 		<replaceregexp file="${rep.info.file}.temp" match="^" replace="davinci.repositoryinfo='"/>
@@ -63,34 +96,12 @@
 		<delete file="${rep.info.file}.temp"/>
 	</target>
 
-	<!--    Write "svn info" results to WebContent/davinci/repositoryinfoLive.js   -->
-	<target name="update.repositoryinfoLive.js" depends="check.command.line.svn">
-		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.live.file}"/>
-		<echo message="/* Holds output from 'svn info /path/to/davinci.core' */${line.separator}" file="${rep.info.live.file}" append="true"/>
-		<echo message="${line.separator}" file="${rep.info.live.file}" append="true"/>
-		<echo message="dojo.provide('davinci.repositoryinfoLive');${line.separator}" file="${rep.info.live.file}" append="true"/>
-		<echo message="${line.separator}" file="${rep.info.live.file}" append="true"/>
-
-		<exec executable="svn" output="${rep.info.live.file}.temp" append="true"  dir ="${basedir}">
-			<arg value="info"/>
-			<arg value="."/>
-		</exec>
-		<replace file="${rep.info.live.file}.temp" token="${line.separator}" value="|"/>
-		<replaceregexp file="${rep.info.live.file}.temp" match="^" replace="davinci.repositoryinfoLive='"/>
-		<replaceregexp file="${rep.info.live.file}.temp" match="$" replace="';"/>
-		<concat destfile="${rep.info.live.file}" append="true">
-			<filelist files="${rep.info.live.file}.temp"/>
-		</concat>
-		<delete file="${rep.info.live.file}.temp"/>
-	</target>
-
-	<!--    Write "svn info" results to WebContent/davinci/davinci.manifest   -->
-	<target name="update.manifest" depends="check.command.line.svn">
+	<!--    Write "git describe" results to WebContent/davinci/davinci.manifest   -->
+	<target name="update.manifest" depends="check.command.line.git">
 		<echo message="# svninfo: " file="${manifest.file}.temp" />
 
-		<exec executable="svn" output="${manifest.file}.temp" append="true"  dir ="${basedir}">
-			<arg value="info"/>
-			<arg value="."/>
+		<exec executable="git" output="${manifest.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
+			<arg value="describe"/>
 		</exec>
 		<replace file="${manifest.file}.temp" token="${line.separator}" value="|"/>
 		<concat destfile="${manifest.file}" append="true">
@@ -115,7 +126,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.build.jars">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target build.sources                           -->
 	<!-- Available parameters :                                                -->
@@ -162,7 +173,7 @@
 
 	<target name="post.compile.@dot">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the compilation target <name>                       -->
 	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
@@ -176,7 +187,7 @@
 
 	<target name="post.@dot">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target gather.bin.parts                         -->
 	<!-- Available parameters :                                                -->
@@ -185,7 +196,7 @@
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
 	</target>
-		
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the target gather.bin.parts                         -->
 	<!-- Available parameters :                                                -->
@@ -194,9 +205,9 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 
-		<echo message="Inserting svn info"/>
+		<echo message="Inserting git describe information"/>
+		<antcall target="update.revisions"/>
 		<antcall target="update.repositoryinfo.js"/>
-		<antcall target="update.repositoryinfoLive.js"/>
 		<antcall target="update.manifest"/>
 
 		<echo message="Doing dojo build" />
@@ -209,6 +220,7 @@
 			</fileset>
 		</copy>
 		<java fork="true" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
+		    maxmemory="1024m"
 			classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
 			classname="org.mozilla.javascript.tools.shell.Main"
 			description="Run Dojo build script"
@@ -227,6 +239,7 @@
 		<delete dir="${target.folder}/WebContent/dojox"/>
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
+        <delete dir="${target.folder}/WebContent/preview"/>
 		<delete dir="${target.folder}/WebContent/workspace"/>
 		<move todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="move Dojo build">
 			<fileset dir="${target.folder}/WebContent/release/dojo">
@@ -235,6 +248,7 @@
 				<include name="dijit/"/>
 				<include name="dojox/"/>
 				<include name="eclipse/"/>
+                <include name="preview/"/>
 				<include name="workspace/"/>
 			</fileset>
 		</move>
@@ -261,7 +275,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.gather.logs">        
+	<target name="pre.gather.logs">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -269,7 +283,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="post.gather.logs">       
+	<target name="post.gather.logs">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -277,7 +291,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.clean">              
+	<target name="pre.clean">
 	</target>
 
 	<!-- ===================================================================== -->
@@ -287,6 +301,6 @@
 	<!--   build.result.folder - results of the compilation                    -->
 	<!--   temp.folder - temporary folder                                      -->
 	<!-- ===================================================================== -->
-	<target name="post.clean">             
+	<target name="post.clean">
 	</target>
 </project>

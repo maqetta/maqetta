@@ -91,7 +91,7 @@ dojo.require("dojox.gfx");
 
 		toSvg: function(/*GFX object*/surface){
 			// summary:
-			//		Function to serialize a GFX surface to SVG text.  
+			//		Function to serialize a GFX surface to SVG text.
 			// description:
 			//		Function to serialize a GFX surface to SVG text.  The value of this output
 			//		is that there are numerous serverside parser libraries that can render
@@ -140,7 +140,7 @@ dojo.require("dojox.gfx");
 						//Create temp surface to render object to and render.
 						var ts = gu._gfxSvgProxy[dojox._scopeName].gfx.createSurface(node, width, height);
 
-						//It's apparently possible that a suface creation is async, so we need to use 
+						//It's apparently possible that a suface creation is async, so we need to use
 						//the whenLoaded function.  Probably not needed for SVG, but making it common
 						var draw = function(surface) {
 							try{
@@ -166,7 +166,7 @@ dojo.require("dojox.gfx");
 				if(gu._initSvgSerializerDeferred.fired > 0){
 					serializer();
 				}else{
-					gu._initSvgSerializerDeferred.addCallback(serializer);		
+					gu._initSvgSerializerDeferred.addCallback(serializer);
 				}
 			}
 			return deferred; //dojo.Deferred that will be called when serialization finishes.
@@ -180,7 +180,7 @@ dojo.require("dojox.gfx");
 
 		_svgSerializerInitialized: function() {
 			// summary:
-			//		Internal function to call when the serializer init completed.	
+			//		Internal function to call when the serializer init completed.
 			// tags:
 			//		private
 			gu._initSvgSerializerDeferred.callback(true);
@@ -208,7 +208,7 @@ dojo.require("dojox.gfx");
 						if(f.contentWindow.document.readyState == "complete"){
 							f.onreadystatechange = function() {};
 							intv = setInterval(function() {
-								if(f.contentWindow[dojo._scopeName] && 
+								if(f.contentWindow[dojo._scopeName] &&
 								   f.contentWindow[dojox._scopeName].gfx &&
 								   f.contentWindow[dojox._scopeName].gfx.utils){
 									clearInterval(intv);
@@ -222,7 +222,7 @@ dojo.require("dojox.gfx");
 					f.onload = function(){
 						f.onload = function() {};
 						intv = setInterval(function() {
-							if(f.contentWindow[dojo._scopeName] && 
+							if(f.contentWindow[dojo._scopeName] &&
 							   f.contentWindow[dojox._scopeName].gfx &&
 							   f.contentWindow[dojox._scopeName].gfx.utils){
 								clearInterval(intv);
@@ -267,7 +267,7 @@ dojo.require("dojox.gfx");
 					svg = svg.substring(4, svg.length);
 					svg = "<svg xmlns=\"http://www.w3.org/2000/svg\"" + svg;
 				}
-				//Do some other cleanup, like stripping out the 
+				//Do some other cleanup, like stripping out the
 				//dojoGfx attributes.
 				svg = svg.replace(/\bdojoGfx\w*\s*=\s*(['"])\w*\1/g, "");
 			}

@@ -9,7 +9,7 @@ try{
 			dojo.moduleUrl("dojox.mdnd","tests/robot/test_dnd_overDropMode.html"),60000);
 	doh.registerUrl("dojox.mdnd.tests.robot.DndToDojo",
 			dojo.moduleUrl("dojox.mdnd","tests/robot/test_dnd_dndToDojo.html"),60000);
-	doh.registerUrl("dojox.mdnd.tests.robot.DndFromDojo", 
+	doh.registerUrl("dojox.mdnd.tests.robot.DndFromDojo",
 			dojo.moduleUrl("dojox.mdnd","tests/robot/test_dnd_dndFromDojo.html"),60000);
 }catch(e){
 	doh.debug(e);

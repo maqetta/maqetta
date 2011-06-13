@@ -1,6 +1,6 @@
 ({
 	add: "Dodaj",
 	addAuthor: "Dodaj avtorja",
-	addContributor: "Dodaj kontributorja,"
+	addContributor: "Dodaj kontributorja"
 })
 

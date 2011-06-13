@@ -1,19 +1,19 @@
-dojo.provide("dojox.highlight.languages.python"); 
+dojo.provide("dojox.highlight.languages.python");
 
 dojo.require("dojox.highlight._base");
 
 (function(){
 	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.python = {
-	    // summary: Python highlight definitions 
+	    // summary: Python highlight definitions
         defaultMode: {
           lexems: [dhc.UNDERSCORE_IDENT_RE],
           illegal: '(</|->)',
           contains: ['comment', 'string', 'function', 'class', 'number', 'decorator'],
-          keywords: {'and': 1, 'elif': 1, 'is': 1, 'global': 1, 'as': 1, 'in': 1, 'if': 1, 
-		  	'from': 1, 'raise': 1, 'for': 1, 'except': 1, 'finally': 1, 'print': 1, 
-			'import': 1, 'pass': 1, 'None': 1, 'return': 1, 'exec': 1, 'else': 1, 
-			'break': 1, 'not': 1, 'with': 1, 'class': 1, 'assert': 1, 'yield': 1, 
+          keywords: {'and': 1, 'elif': 1, 'is': 1, 'global': 1, 'as': 1, 'in': 1, 'if': 1,
+		  	'from': 1, 'raise': 1, 'for': 1, 'except': 1, 'finally': 1, 'print': 1,
+			'import': 1, 'pass': 1, 'None': 1, 'return': 1, 'exec': 1, 'else': 1,
+			'break': 1, 'not': 1, 'with': 1, 'class': 1, 'assert': 1, 'yield': 1,
 			'try': 1, 'while': 1, 'continue': 1, 'del': 1, 'or': 1, 'def': 1, 'lambda': 1}
         },
         modes: [
@@ -25,7 +25,7 @@ dojo.require("dojox.highlight._base");
             keywords: {'def': 1},
             contains: ['title', 'params'],
             relevance: 10
-          }, 
+          },
           {
             className: 'class',
             lexems: [dhc.UNDERSCORE_IDENT_RE],

@@ -13,7 +13,9 @@
 <script src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
 <script>
 
-dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.Chart");
+dojo.require("dojox.charting.axis2d.Default");
+dojo.require("dojox.charting.plot2d.Bubble");
 dojo.require("dojox.charting.themes.ThreeD");
 dojo.require("dojox.charting.widget.Legend");
 
@@ -22,7 +24,7 @@ dojo.require("dojo.dnd.Source");
 makeObjects = function(){
     dojo.query("button").style("disabled", true);
     
-	var chart1 = new dojox.charting.Chart2D("chart1").
+	var chart1 = new dojox.charting.Chart("chart1").
             setTheme(dojox.charting.themes.ThreeD).
             addAxis("x", {min: 0, max: 10}).
             addAxis("y", {vertical: true, min: 0, max: 10}).

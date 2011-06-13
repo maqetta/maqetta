@@ -6,7 +6,7 @@
         @import "../../../dojo/resources/dojo.css";
         @import "../../../dijit/themes/tundra/tundra.css";
     </style>
-    <script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
+    <script src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
     <script>
         dojo.require("dojox.gfx");
         dojo.require("dojo.colors");
@@ -79,9 +79,7 @@
             updatePoints();
         }
 
-        run = function(){
-            dojo.attr("start", "disabled", true);
-            surface = dojox.gfx.createSurface("surf", W, H);
+        run = function(surface){
             makeGrid(surface, W, 50);
             shape = surface.createLine(line).setStroke("black");
             dojo.connect(dijit.byId("shifter"), "onChange", shiftVector);
@@ -89,12 +87,16 @@
             shiftVector(0);
         };
         
-        dojo.addOnLoad(run);
+		createSurface = function(){
+			surface = dojox.gfx.createSurface("surf", W, H);
+			surface.whenLoaded(run);
+		};
+
+        dojo.addOnLoad(createSurface);
     </script>
 </head>
 <body class="tundra">
     <h1>Test Reflection and Projection matrices</h1>
-    <p><button id="start" onclick="run();">Start!</button></p>
     <div id="shifter" dojoType="dijit.form.HorizontalSlider" 
             value="0" minimum="-100" maximum="100" value="0" discreteValues="21" showButtons="false" intermediateChanges="true" style="width: 500px;">
         <div dojoType="dijit.form.HorizontalRule" container="topDecoration" count="21" style="height: 5px;"></div>

@@ -333,7 +333,7 @@ dojo.declare(
 		var d = e.pageX - this._initX;
 		if(d == 0){ return; }
 
-		if(!(this._currentColumnWidth + d < this._currentMinCol || 
+		if(!(this._currentColumnWidth + d < this._currentMinCol ||
 				this._nextColumnWidth - d < this._nextMinCol)){
 
 			this._currentColumnWidth += d;
@@ -519,7 +519,7 @@ dojo.declare(
 				if(this.isRightFixed){
 					index = length - 1;
 					grid.splice(index, 0, {
-						'node': grid[index].node.parentNode.insertBefore(node, grid[index].node) 
+						'node': grid[index].node.parentNode.insertBefore(node, grid[index].node)
 					});
 				}
 				else{

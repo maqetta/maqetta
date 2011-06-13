@@ -5,9 +5,9 @@ dojo.require("dojox.mobile.app._Widget");
 dojo.require("dojox.mobile.app._FormWidget");
 
 dojo.declare(
-	"dojox.mobile.app.TextBox", 
+	"dojox.mobile.app.TextBox",
 	dojox.mobile.app._FormValueWidget, {
-	
+
 		// summary:
 		//		A base class for textbox form inputs
 
@@ -39,27 +39,27 @@ dojo.declare(
 		//		Defines a hint to help users fill out the input field (as defined in HTML 5).
 		//		This should only contain plain text (no html markup).
 		placeHolder: "",
-		
+
 		baseClass: "mblTextBox",
 
 		attributeMap: dojo.delegate(dojox.mobile.app._FormValueWidget.prototype.attributeMap, {
 			maxLength: "focusNode"
 		}),
-		
+
 		buildRendering: function(){
 			var node = this.srcNodeRef;
-	
+
 			// If an input is used as the source node, wrap it in a div
 			if(!node || node.tagName != "INPUT"){
 				node = dojo.create("input", {});
 			}
-			
+
 			dojo.attr(node, {
 				type: "text",
-				value: dojo.attr(this.srcNodeRef, "value") || "",
+				value: dojo.attr(node, "value") || "",
 				placeholder: this.placeHolder || null
 			});
-			
+
 			this.domNode = this.textbox = this.focusNode = node;
 		},
 
@@ -69,7 +69,7 @@ dojo.declare(
 				dojo.attr(this.textbox, "placeholder", v);
 			}
 		},
-		
+
 
 		_getValueAttr: function(){
 			// summary:
@@ -110,14 +110,14 @@ dojo.declare(
 				// I added a comment to the filter() definition about this, but it should be changed.
 				filteredValue = this.filter(value);
 				if(typeof formattedValue != "string"){
-					if(filteredValue !== null 
+					if(filteredValue !== null
 							&& ((typeof filteredValue != "number") || !isNaN(filteredValue))){
 						formattedValue = this.filter(this.format(filteredValue, this.constraints));
 					}else{ formattedValue = ''; }
 				}
 			}
-			if(formattedValue != null && formattedValue != undefined 
-					&& ((typeof formattedValue) != "number" || !isNaN(formattedValue)) 
+			if(formattedValue != null && formattedValue != undefined
+					&& ((typeof formattedValue) != "number" || !isNaN(formattedValue))
 					&& this.textbox.value != formattedValue){
 				this.textbox.value = formattedValue;
 			}
@@ -215,8 +215,6 @@ dojo.declare(
 			// setting the value here is needed since value="" in the template causes "undefined"
 			// and setting in the DOM (instead of the JS object) helps with form reset actions
 
-			console.log("postCreate of textinput");
-
 			this.textbox.setAttribute("value", this.textbox.value); // DOM and JS values shuld be the same
 			this.inherited(arguments);
 			if(dojo.isMoz || dojo.isOpera){
@@ -282,7 +280,7 @@ dojo.declare(
 			if(this.selectOnClick && dojo.isMoz){
 				this.textbox.selectionStart = this.textbox.selectionEnd = undefined; // clear selection so that the next mouse click doesn't reselect
 			}
-			
+
 		},
 
 		_onFocus: function(/*String*/ by){
@@ -306,7 +304,7 @@ dojo.declare(
 					}
 				});
 			}
-			
+
 			this._refreshState();
 			this.inherited(arguments);
 		},

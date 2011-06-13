@@ -1,7 +1,4 @@
-dojo.provide("dijit.layout.ScrollingTabController");
-
-dojo.require("dijit.layout.TabController");
-dojo.require("dijit.Menu");
+define("dijit/layout/ScrollingTabController", ["dojo", "dijit", "text!dijit/layout/templates/ScrollingTabController.html", "text!dijit/layout/templates/_ScrollingTabControllerButton.html", "dijit/layout/TabController", "dijit/Menu", "dijit/form/Button", "dijit/_HasDropDown"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.ScrollingTabController",
 	dijit.layout.TabController,
@@ -16,7 +13,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 
 	templateString: dojo.cache("dijit.layout", "templates/ScrollingTabController.html"),
 
-	// useMenu:[const] Boolean
+	// useMenu: [const] Boolean
 	//		True if a menu should be used to select tabs when they are too
 	//		wide to fit the TabContainer, false otherwise.
 	useMenu: true,
@@ -26,7 +23,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 	//		wide to fit the TabContainer, false otherwise.
 	useSlider: true,
 
-	// tabStripClass: String
+	// tabStripClass: [const] String
 	//		The css class to apply to the tab strip, if it is visible.
 	tabStripClass: "",
 
@@ -42,7 +39,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		"class": "containerNode"
 	}),
 
-	postCreate: function(){
+	buildRendering: function(){
 		this.inherited(arguments);
 		var n = this.domNode;
 
@@ -72,41 +69,18 @@ dojo.declare("dijit.layout.ScrollingTabController",
 
 	onAddChild: function(page, insertIndex){
 		this.inherited(arguments);
-		var menuItem;
-		if(this.useMenu){
-			var containerId = this.containerId;
-			menuItem = new dijit.MenuItem({
-				id: page.id + "_stcMi",
-				label: page.title,
-				dir: page.dir,
-				lang: page.lang,
-				onClick: dojo.hitch(this, function(){
-					var container = dijit.byId(containerId);
-					container.selectChild(page);
-				})
-			});
-			this._menuChildren[page.id] = menuItem;
-			this._menu.addChild(menuItem, insertIndex);
-		}
 
-		// update the menuItem label when the button label is updated
-		this.pane2handles[page.id].push(
-			this.connect(this.pane2button[page.id], "set", function(name, value){
-				if(this._postStartup){
-					if(name == "label"){
-						if(menuItem){
-							menuItem.set(name, value);
-						}
-	
-						// The changed label will have changed the width of the
-						// buttons, so do a resize
-						if(this._dim){
-							this.resize(this._dim);
-						}
+		// changes to the tab button label or iconClass will have changed the width of the
+		// buttons, so do a resize
+		dojo.forEach(["label", "iconClass"], function(attr){
+			this.pane2watches[page.id].push(
+				this.pane2button[page.id].watch(attr, dojo.hitch(this, function(name, oldValue, newValue){
+					if(this._postStartup && this._dim){
+						this.resize(this._dim);
 					}
-				}
-			})
-		);
+				}))
+			);
+		}, this);
 
 		// Increment the width of the wrapper when a tab is added
 		// This makes sure that the buttons never wrap.
@@ -123,13 +97,6 @@ dojo.declare("dijit.layout.ScrollingTabController",
 			this._selectedTab = null;
 		}
 
-		// delete menu entry corresponding to pane that was removed from TabContainer
-		if(this.useMenu && page && page.id && this._menuChildren[page.id]){
-			this._menu.removeChild(this._menuChildren[page.id]);
-			this._menuChildren[page.id].destroy();
-			delete this._menuChildren[page.id];
-		}
-
 		this.inherited(arguments);
 	},
 
@@ -137,7 +104,6 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		// summary:
 		//		Creates the buttons used to scroll to view tabs that
 		//		may not be visible if the TabContainer is too narrow.
-		this._menuChildren = {};
 
 		// Make a list of the buttons to display when the tab labels become
 		// wider than the TabContainer, and hide the other buttons.
@@ -146,26 +112,13 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		this._buttons = dojo.query("> .tabStripButton", this.domNode).filter(function(btn){
 			if((this.useMenu && btn == this._menuBtn.domNode) ||
 				(this.useSlider && (btn == this._rightBtn.domNode || btn == this._leftBtn.domNode))){
-				this._btnWidth += dojo.marginBox(btn).w;
+				this._btnWidth += dojo._getMarginSize(btn).w;
 				return true;
 			}else{
 				dojo.style(btn, "display", "none");
 				return false;
 			}
 		}, this);
-
-		if(this.useMenu){
-			// Create the menu that is used to select tabs.
-			this._menu = new dijit.Menu({
-				id: this.id + "_menu",
-				dir: this.dir,
-				lang: this.lang,
-				targetNodeIds: [this._menuBtn.domNode],
-				leftClickToOpen: true,
-				refocus: false	// selecting a menu item sets focus to a TabButton
-			});
-			this._supportingWidgets.push(this._menu);
-		}
 	},
 
 	_getTabsWidth: function(){
@@ -235,6 +188,10 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		this._setButtonClass(this._getScroll());
 		
 		this._postResize = true;
+
+		// Return my size so layoutChildren() can use it.
+		// Also avoids IE9 layout glitch on browser resize when scroll buttons present
+		return {h: this._contentBox.h, w: dim.w};
 	},
 
 	_getScroll: function(){
@@ -337,7 +294,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		return pos;
 	},
 
-	createSmoothScroll : function(x){
+	createSmoothScroll: function(x){
 		// summary:
 		//		Creates a dojo._Animation object that smoothly scrolls the tab list
 		//		either to a fixed horizontal pixel value, or to the selected tab.
@@ -383,7 +340,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		return anim; // dojo._Animation
 	},
 
-	_getBtnNode: function(e){
+	_getBtnNode: function(/*Event*/ e){
 		// summary:
 		//		Gets a button DOM node from a mouse click event.
 		// e:
@@ -395,7 +352,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		return n;
 	},
 
-	doSlideRight: function(e){
+	doSlideRight: function(/*Event*/ e){
 		// summary:
 		//		Scrolls the menu to the right.
 		// e:
@@ -403,7 +360,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		this.doSlide(1, this._getBtnNode(e));
 	},
 
-	doSlideLeft: function(e){
+	doSlideLeft: function(/*Event*/ e){
 		// summary:
 		//		Scrolls the menu to the left.
 		// e:
@@ -411,7 +368,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		this.doSlide(-1,this._getBtnNode(e));
 	},
 
-	doSlide: function(direction, node){
+	doSlide: function(/*Number*/ direction, /*DomNode*/ node){
 		// summary:
 		//		Scrolls the tab list to the left or right by 75% of the widget width.
 		// direction:
@@ -430,7 +387,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 		this.createSmoothScroll(to).play();
 	},
 
-	_setButtonClass: function(scroll){
+	_setButtonClass: function(/*Number*/ scroll){
 		// summary:
 		//		Disables the left scroll button if the tabs are scrolled all the way to the left,
 		//		or the right scroll button in the opposite case.
@@ -443,15 +400,71 @@ dojo.declare("dijit.layout.ScrollingTabController",
 	}
 });
 
-dojo.declare("dijit.layout._ScrollingTabControllerButton",
-	dijit.form.Button,
-	{
-		baseClass: "dijitTab tabStripButton",
 
-		templateString: dojo.cache("dijit.layout","templates/_ScrollingTabControllerButton.html"),
+dojo.declare("dijit.layout._ScrollingTabControllerButtonMixin", null, {
+	baseClass: "dijitTab tabStripButton",
+
+	templateString: dojo.cache("dijit.layout","templates/_ScrollingTabControllerButton.html"),
 
 		// Override inherited tabIndex: 0 from dijit.form.Button, because user shouldn't be
 		// able to tab to the left/right/menu buttons
-		tabIndex: "-1"
+	tabIndex: "",
+
+	// Similarly, override FormWidget.isFocusable() because clicking a button shouldn't focus it
+	// either (this override avoids focus() call in FormWidget.js)
+	isFocusable: function(){ return false; }
+});
+
+dojo.declare("dijit.layout._ScrollingTabControllerButton",
+	[dijit.form.Button, dijit.layout._ScrollingTabControllerButtonMixin]);
+
+dojo.declare(
+	"dijit.layout._ScrollingTabControllerMenuButton",
+	[dijit.form.Button, dijit._HasDropDown, dijit.layout._ScrollingTabControllerButtonMixin],
+{
+	// id of the TabContainer itself
+	containerId: "",
+
+	// -1 so user can't tab into the button, but so that button can still be focused programatically.
+	// Because need to move focus to the button (or somewhere) before the menu is hidden or IE6 will crash.
+	tabIndex: "-1",
+
+	isLoaded: function(){
+		// recreate menu every time, in case the TabContainer's list of children (or their icons/labels) have changed
+		return false;
+	},
+
+	loadDropDown: function(callback){
+		this.dropDown = new dijit.Menu({
+			id: this.containerId + "_menu",
+			dir: this.dir,
+			lang: this.lang
+		});
+		var container = dijit.byId(this.containerId);
+		dojo.forEach(container.getChildren(), function(page){
+			var menuItem = new dijit.MenuItem({
+				id: page.id + "_stcMi",
+				label: page.title,
+				iconClass: page.iconClass,
+				dir: page.dir,
+				lang: page.lang,
+				onClick: function(){
+					container.selectChild(page);
+				}
+			});
+			this.dropDown.addChild(menuItem);
+		}, this);
+		callback();
+	},
+
+	closeDropDown: function(/*Boolean*/ focus){
+		this.inherited(arguments);
+		if(this.dropDown){
+			this.dropDown.destroyRecursive();
+			delete this.dropDown;
+		}
 	}
-);
+});
+
+return dijit.layout.ScrollingTabController;
+});

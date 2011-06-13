@@ -1,0 +1,44 @@
+
+.mblTooltip {
+	-moz-border-radius: 8px;
+	-o-border-radius: 8px;
+	-ms-border-radius: 8px;
+	border-radius: 8px;
+	background-image: none;
+}
+.mblTooltipBefore .mblTooltipArrow {
+	*right: 0; 
+}
+.mblTooltipAbove .mblTooltipArrow {
+	*bottom: 0px; 
+}
+.mblTooltipBefore .mblTooltipInnerArrow {
+	*right: -1px; 
+}
+.mblTooltipAbove .mblTooltipInnerArrow {
+	*bottom: -1px;  
+}
+.mblTooltipBefore .mblTooltipInnerArrow {
+	border-right-color: #abd6ff;
+}
+.mblTooltipAfter .mblTooltipInnerArrow {
+	border-left-color: #abd6ff;
+}
+.mblTooltipAbove .mblTooltipInnerArrow {
+	border-bottom-color: #abd6ff;
+}
+.mblTooltipBelow .mblTooltipInnerArrow {
+	border-top-color: #abd6ff;
+}
+.mblTooltip .mblHeading {
+	*padding: 0 9px 15px;
+	*border-top: 1px solid #abd6ff;
+	*border-bottom: 1px solid #abd6ff;
+	*width: auto;
+	*height: auto;
+	*overflow: visible;
+	*line-height: normal;
+}
+.mblTooltip .mblHeading .mblToolbarButton {
+	*margin: auto 6px;
+}

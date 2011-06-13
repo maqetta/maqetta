@@ -1,0 +1,4 @@
+({
+	"preview": "Visualització prèvia"
+})
+

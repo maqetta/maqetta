@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Pogrubienie',
 	'copy': 'Kopiuj',
@@ -30,7 +32,7 @@
 	'toggleTableBorder': 'Przełącz ramkę tabeli',
 	'deleteTable': 'Usuń tabelę',
 	'tableProp': 'Właściwość tabeli',
-	'htmlToggle': 'Źródło HTML',
+	'htmlToggle': 'Kod źródłowy HTML',
 	'foreColor': 'Kolor pierwszego planu',
 	'hiliteColor': 'Kolor tła',
 	'plainFormatBlock': 'Styl akapitu',
@@ -47,3 +49,5 @@
 	'ctrlKey':'Ctrl+${0}'
 })
 
+//end v1.x content
+);

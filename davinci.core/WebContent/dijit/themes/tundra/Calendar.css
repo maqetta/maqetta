@@ -48,7 +48,7 @@
 	background:white url("images/calendarDayLabel.png") repeat-x bottom;
 	font-weight:normal;
 	padding-top:.15em;
-	padding-bottom:0em;
+	padding-bottom:0;
 	border-top: 1px solid #eeeeee;
 	color:#293a4b;
 	text-align:center;
@@ -61,6 +61,7 @@
 .tundra .dijitCalendarMonthLabel {
 	color:#293a4b;
 	font-weight: bold;
+	padding: 0 4px;
 }
 
 .tundra .dijitCalendarDateTemplate {
@@ -134,4 +135,25 @@
 	/* label for next/prev years */
 	color:black !important;
 	font-weight:normal;
+}
+
+/* Styling for month DropDownButton */
+
+.tundra .dijitCalendar .dijitDropDownButton {
+	margin: 0;
+}
+.tundra .dijitCalendar .dijitButtonText {
+	padding: 0;
+}
+.tundra .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+	background-color: transparent;
+	background-image: none;
+	padding: 0;
+}
+
+/* Styling for month drop down list */
+
+.tundra .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+	background-color: #3559ac;
+	color:#fff;
 }

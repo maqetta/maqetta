@@ -117,6 +117,7 @@
 						name: "Test select text, clear, and restore",
 						timeout: 8000,
 						runTest: function(){
+							if(!dojo.isIE){ // IE only supports selecting form elements and the whole body from a plain non-Editor page, see the MSDN article on createTextRange
 							var d = new doh.Deferred();
 
 							//Select the text in the p tag.
@@ -153,6 +154,7 @@
 								d.errback(e);
 							}
 							return d;
+							}
 						}
 					}
 				]);

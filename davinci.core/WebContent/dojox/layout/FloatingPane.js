@@ -1,16 +1,16 @@
 dojo.provide("dojox.layout.FloatingPane");
-dojo.experimental("dojox.layout.FloatingPane"); 
+dojo.experimental("dojox.layout.FloatingPane");
 
 dojo.require("dojo.window");
 
-dojo.require("dijit._Templated"); 
-dojo.require("dijit._Widget"); 
+dojo.require("dijit._Templated");
+dojo.require("dijit._Widget");
 dojo.require("dojo.dnd.Moveable");
 
 dojo.require("dojox.layout.ContentPane");
-dojo.require("dojox.layout.ResizeHandle"); 
+dojo.require("dojox.layout.ResizeHandle");
 
-dojo.declare("dojox.layout.FloatingPane", 
+dojo.declare("dojox.layout.FloatingPane",
 	[ dojox.layout.ContentPane, dijit._Templated ],
 	{
 	// summary:
@@ -19,7 +19,7 @@ dojo.declare("dojox.layout.FloatingPane",
 	// description:
 	// 		Makes a `dojox.layout.ContentPane` float and draggable by it's title [similar to TitlePane]
 	// 		and over-rides onClick to onDblClick for wipeIn/Out of containerNode
-	// 		provides minimize(dock) / show() and hide() methods, and resize [almost] 
+	// 		provides minimize(dock) / show() and hide() methods, and resize [almost]
 	//
 	// closable: Boolean
 	//		Allow closure of this Node
@@ -47,7 +47,7 @@ dojo.declare("dojox.layout.FloatingPane",
 
 	// dockTo: DomNode?
 	//		if empty, will create private layout.Dock that scrolls with viewport
-	//		on bottom span of viewport.	
+	//		on bottom span of viewport.
 	dockTo: "",
 
 	// duration: Integer
@@ -68,7 +68,7 @@ dojo.declare("dojox.layout.FloatingPane",
 
 	// animation holders for toggle
 	_showAnim: null,
-	_hideAnim: null, 
+	_hideAnim: null,
 	// node in the dock (if docked)
 	_dockNode: null,
 
@@ -86,18 +86,18 @@ dojo.declare("dojox.layout.FloatingPane",
 	postCreate: function(){
 		this.inherited(arguments);
 		new dojo.dnd.Moveable(this.domNode,{ handle: this.focusNode });
-		//this._listener = dojo.subscribe("/dnd/move/start",this,"bringToTop"); 
+		//this._listener = dojo.subscribe("/dnd/move/start",this,"bringToTop");
 
-		if(!this.dockable){ this.dockNode.style.display = "none"; } 
-		if(!this.closable){ this.closeNode.style.display = "none"; } 
+		if(!this.dockable){ this.dockNode.style.display = "none"; }
+		if(!this.closable){ this.closeNode.style.display = "none"; }
 		if(!this.maxable){
 			this.maxNode.style.display = "none";
 			this.restoreNode.style.display = "none";
 		}
 		if(!this.resizable){
-			this.resizeHandle.style.display = "none"; 	
+			this.resizeHandle.style.display = "none";
 		}else{
-			this.domNode.style.width = dojo.marginBox(this.domNode).w + "px"; 
+			this.domNode.style.width = dojo.marginBox(this.domNode).w + "px";
 		}
 		this._allFPs.push(this);
 		this.domNode.style.position = "absolute";
@@ -118,19 +118,19 @@ dojo.declare("dojox.layout.FloatingPane",
 				this.containerNode.style.overflow = "auto";
 			}
 			
-			this._resizeHandle = new dojox.layout.ResizeHandle({ 
-				targetId: this.id, 
-				resizeAxis: this.resizeAxis 
+			this._resizeHandle = new dojox.layout.ResizeHandle({
+				targetId: this.id,
+				resizeAxis: this.resizeAxis
 			},this.resizeHandle);
 
 		}
 
-		if(this.dockable){ 
+		if(this.dockable){
 			// FIXME: argh.
-			var tmpName = this.dockTo; 
+			var tmpName = this.dockTo;
 
 			if(this.dockTo){
-				this.dockTo = dijit.byId(this.dockTo); 
+				this.dockTo = dijit.byId(this.dockTo);
 			}else{
 				this.dockTo = dijit.byId('dojoxGlobalFloatingDock');
 			}
@@ -141,23 +141,23 @@ dojo.declare("dojox.layout.FloatingPane",
 				// .dojoxDockDefault .. this is a lot. either dockto="node"
 				// and fail if node doesn't exist or make the global one
 				// once, and use it on empty OR invalid dockTo="" node?
-				if(tmpName){ 
+				if(tmpName){
 					tmpId = tmpName;
-					tmpNode = dojo.byId(tmpName); 
+					tmpNode = dojo.byId(tmpName);
 				}else{
 					tmpNode = dojo.create('div', null, dojo.body());
 					dojo.addClass(tmpNode,"dojoxFloatingDockDefault");
 					tmpId = 'dojoxGlobalFloatingDock';
 				}
 				this.dockTo = new dojox.layout.Dock({ id: tmpId, autoPosition: "south" }, tmpNode);
-				this.dockTo.startup(); 
+				this.dockTo.startup();
 			}
 			
 			if((this.domNode.style.display == "none")||(this.domNode.style.visibility == "hidden")){
 				// If the FP is created dockable and non-visible, start up docked.
 				this.minimize();
-			} 
-		} 		
+			}
+		}
 		this.connect(this.focusNode,"onmousedown","bringToTop");
 		this.connect(this.domNode,	"onmousedown","bringToTop");
 
@@ -169,9 +169,9 @@ dojo.declare("dojox.layout.FloatingPane",
 
 	setTitle: function(/* String */ title){
 		// summary: Update the Title bar with a new string
-		dojo.deprecated("pane.setTitle", "Use pane.attr('title', someTitle)", "2.0");
+		dojo.deprecated("pane.setTitle", "Use pane.set('title', someTitle)", "2.0");
 		this.set("title", title);
-		// this.setTitle = dojo.hitch(this, "setTitle") ?? 
+		// this.setTitle = dojo.hitch(this, "setTitle") ??
 	},
 		
 	close: function(){
@@ -180,7 +180,7 @@ dojo.declare("dojox.layout.FloatingPane",
 		dojo.unsubscribe(this._listener);
 		this.hide(dojo.hitch(this,function(){
 			this.destroyRecursive();
-		})); 
+		}));
 	},
 
 	hide: function(/* Function? */ callback){
@@ -188,9 +188,9 @@ dojo.declare("dojox.layout.FloatingPane",
 		dojo.fadeOut({
 			node:this.domNode,
 			duration:this.duration,
-			onEnd: dojo.hitch(this,function() { 
+			onEnd: dojo.hitch(this,function() {
 				this.domNode.style.display = "none";
-				this.domNode.style.visibility = "hidden"; 
+				this.domNode.style.visibility = "hidden";
 				if(this.dockTo && this.dockable){
 					this.dockTo._positionDock(null);
 				}
@@ -205,27 +205,28 @@ dojo.declare("dojox.layout.FloatingPane",
 		// summary: Show the FloatingPane
 		var anim = dojo.fadeIn({node:this.domNode, duration:this.duration,
 			beforeBegin: dojo.hitch(this,function(){
-				this.domNode.style.display = ""; 
+				this.domNode.style.display = "";
 				this.domNode.style.visibility = "visible";
 				if (this.dockTo && this.dockable) { this.dockTo._positionDock(null); }
 				if (typeof callback == "function") { callback(); }
 				this._isDocked = false;
-				if (this._dockNode) { 
+				if (this._dockNode) {
 					this._dockNode.destroy();
 					this._dockNode = null;
 				}
 			})
 		}).play();
 		this.resize(dojo.coords(this.domNode));
+		this._onShow(); // lazy load trigger
 	},
 
 	minimize: function(){
 		// summary: Hide and dock the FloatingPane
-		if(!this._isDocked){ this.hide(dojo.hitch(this,"_dock")); } 
+		if(!this._isDocked){ this.hide(dojo.hitch(this,"_dock")); }
 	},
 
 	maximize: function(){
-		// summary: Make this FloatingPane full-screen (viewport)	
+		// summary: Make this FloatingPane full-screen (viewport)
 		if(this._maximized){ return; }
 		this._naturalState = dojo.position(this.domNode);
 		if(this._isDocked){
@@ -242,7 +243,7 @@ dojo.declare("dojox.layout.FloatingPane",
 			this.resize(this._naturalState);
 			dojo.removeClass(this.focusNode,"floatingPaneMaximized");
 			this._maximized = false;
-		}	
+		}
 	},
 
 	_dock: function(){
@@ -261,7 +262,7 @@ dojo.declare("dojox.layout.FloatingPane",
 		var dns = this.domNode.style;
 		if("t" in dim){ dns.top = dim.t + "px"; }
 		if("l" in dim){ dns.left = dim.l + "px"; }
-		dns.width = dim.w + "px"; 
+		dns.width = dim.w + "px";
 		dns.height = dim.h + "px";
 
 		// Now resize canvas
@@ -282,7 +283,7 @@ dojo.declare("dojox.layout.FloatingPane",
 			this._allFPs,
 			function(i){
 				return i !== this;
-			}, 
+			},
 		this);
 		windows.sort(function(a, b){
 			return a.domNode.style.zIndex - b.domNode.style.zIndex;
@@ -327,9 +328,9 @@ dojo.declare("dojox.layout.Dock",
 		// summary: Instert a dockNode refernce into the dock
 		
 		var div = dojo.create('li', null, this.containerNode),
-			node = new dojox.layout._DockNode({ 
+			node = new dojox.layout._DockNode({
 				title: refNode.title,
-				paneRef: refNode 
+				paneRef: refNode
 			}, div)
 		;
 		node.startup();
@@ -352,7 +353,7 @@ dojo.declare("dojox.layout.Dock",
 	},
 	
 	_positionDock: function(/* Event? */e){
-		if(!this._inPositioning){	
+		if(!this._inPositioning){
 			if(this.autoPosition == "south"){
 				// Give some time for scrollbars to appear/disappear
 				setTimeout(dojo.hitch(this, function() {
@@ -379,7 +380,7 @@ dojo.declare("dojox.layout._DockNode",
 	//		which pane is docked.
 	//
 	// title: String
-	// 		Shown in dock icon. should read parent iconSrc?	
+	// 		Shown in dock icon. should read parent iconSrc?
 	title: "",
 
 	// paneRef: Widget
@@ -396,7 +397,6 @@ dojo.declare("dojox.layout._DockNode",
 		// summary: remove this dock item from parent dock, and call show() on reffed floatingpane
 		this.paneRef.show();
 		this.paneRef.bringToTop();
-		if(!this.paneRef.isLoaded){ this.paneRef.refresh(); }
 		this.destroy();
 	}
 

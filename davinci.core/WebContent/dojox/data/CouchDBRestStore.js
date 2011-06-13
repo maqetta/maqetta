@@ -1,5 +1,4 @@
-dojo.provide("dojox.data.CouchDBRestStore");
-dojo.require("dojox.data.JsonRestStore");
+define("dojox/data/CouchDBRestStore", ["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
 
 // A CouchDBRestStore is an extension of JsonRestStore to handle CouchDB's idiosyncrasies, special features,
 // and deviations from standard HTTP Rest.
@@ -77,3 +76,7 @@ dojox.data.CouchDBRestStore.getStores = function(couchServerUrl){
 	});
 	return stores;
 };
+
+return dojox.data.CouchDBRestStore;
+
+});

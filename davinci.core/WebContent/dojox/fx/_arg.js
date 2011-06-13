@@ -12,12 +12,12 @@ dojox.fx._arg.StyleArgs = function(/*Object*/ args){
 }
 
 dojox.fx._arg.ShadowResizeArgs = function(/*Object*/ args){
-	// summary: 
+	// summary:
 	//	The odd way to document object parameters.
 	// x: Integer
 	//	the width to set
 	// y: Integer
-	//	the height to set	
+	//	the height to set
 	this.x = args.x;
 	this.y = args.y;
 }

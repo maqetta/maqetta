@@ -1,7 +1,7 @@
 dojo.provide("dojox.secure.tests.secure");
 dojo.require("dojox.secure.secure");
 
-doh.register("dojox.secure.tests.secure.good", 
+doh.register("dojox.secure.tests.secure.good",
 	[
 		function setup(){
 			var div = document.createElement("div");
@@ -15,7 +15,7 @@ doh.register("dojox.secure.tests.secure.good",
 			container = document.createElement("div");
 			container.style.backgroundColor = "cyan";
 			container.style.color = "black";
-			div.appendChild(container);			
+			div.appendChild(container);
 		},
 		function innerHTML(t){
 			dojox.secure.evaluate("element.innerHTML = 'Hi there';",container);
@@ -40,7 +40,7 @@ function violater(func) {
 		t.f(insecure);
 	}};
 }
-doh.register("dojox.secure.tests.secure.bad", 
+doh.register("dojox.secure.tests.secure.bad",
 	[
 		function parentNode(t){
 			t.f(dojox.secure.evaluate("document.body",container));
@@ -111,10 +111,10 @@ doh.register("dojox.secure.tests.secure.bad",
 			}
 		},
 		violater(function addStyleTag(t) {
-			securedElement.innerHTML = "<style>div {color:expression(alert(\"hello\")}</style><div>test</div>";		
+			securedElement.innerHTML = "<style>div {color:expression(alert(\"hello\")}</style><div>test</div>";
 		}),
 		violater(function addStyleTag2(t) {
-			securedElement.innerHTML = "<style>@import 'unsafe.css'</style><div>unsafe css</div>";		
+			securedElement.innerHTML = "<style>@import 'unsafe.css'</style><div>unsafe css</div>";
 		})*/
 	]);
 	

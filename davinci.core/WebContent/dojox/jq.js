@@ -6,7 +6,7 @@ dojo.require("dojo.NodeList-manipulate");
 dojo.require("dojo.io.script");
 
 /*
-To get jquery tests to pass: 
+To get jquery tests to pass:
 - add spaces between span>form selectors, other ones like one,two
 - .last() instead of :last
 - $("<div>").find("#foo") does not work unless the div is attached to the body.
@@ -140,7 +140,7 @@ dojo.query differences that cause some tests to fail:
 			$.ready(arg);
 			return $;
 		}else if(arg == document || arg == window){
-			//If the arg is the document or window, 
+			//If the arg is the document or window,
 			//then just use it directly.
 			return $._wrap([arg], null, $);
 		}else if(dojo.isArray(arg)){
@@ -324,7 +324,7 @@ dojo.query differences that cause some tests to fail:
 				if(cb.call(list[param], param, list[param]) === false){
 					break;
 				}
-			}		
+			}
 		}
 		return this;
 	};
@@ -496,7 +496,7 @@ dojo.query differences that cause some tests to fail:
 				}
 			}
 		}
-		return finalObj;		
+		return finalObj;
 	}
 
 	$.noConflict = function(/*Boolean*/extreme){
@@ -666,7 +666,7 @@ dojo.query differences that cause some tests to fail:
 	$.map = function(/*Array*/ary, /*Function*/callback){
 		//Hmm, this is not like array map/dojo.map where you get one item back for
 		//each input.
-		return f._buildArrayFromCallback.call(ary, callback);		
+		return f._buildArrayFromCallback.call(ary, callback);
 	}
 
 	$.inArray = function(value, /*Array*/ary){
@@ -698,7 +698,7 @@ dojo.query differences that cause some tests to fail:
 		var doc = iframeNode.contentDocument || // W3
 			(
 				(
-					(iframeNode.name) && (iframeNode.document) && 
+					(iframeNode.name) && (iframeNode.document) &&
 					(document.getElementsByTagName("iframe")[iframeNode.name].contentWindow) &&
 					(document.getElementsByTagName("iframe")[iframeNode.name].contentWindow.document)
 				)
@@ -769,7 +769,7 @@ dojo.query differences that cause some tests to fail:
 	}
 
 	//START jquery CSS API methods
-	//http://docs.jquery.com/CSS	
+	//http://docs.jquery.com/CSS
 	$.css = function(/*DOMNode*/node, /*String|Object*/name, /*String|Number?*/value){
 		name = cssNameToJs(name);
 		
@@ -828,7 +828,7 @@ dojo.query differences that cause some tests to fail:
 			//Just get first node's height.
 			//Hmm. width is negative when element is display none in FF3?
 			return Math.abs(Math.round(dojo[boxType](nl[0])[prop]));
-		}	
+		}
 	}
 
 	f.height = function(value){
@@ -1001,7 +1001,7 @@ dojo.query differences that cause some tests to fail:
 
 		var nodeId = node.getAttribute(eventAttr);
 		if(!nodeId){
-			return;		
+			return;
 		}
 
 		var evt = data[0];
@@ -1055,7 +1055,7 @@ dojo.query differences that cause some tests to fail:
 	}
 
 	f.trigger = function(/*String*/type, /*Array?*/data, /*Function?*/extraFunc){
-		//Copy data since we may need to modify by adding a 
+		//Copy data since we may need to modify by adding a
 		data = makeTriggerData(data, type);
 		var evt = data[0];
 		var type = getNonNamespacedName(evt.type);
@@ -1183,7 +1183,7 @@ dojo.query differences that cause some tests to fail:
 					}
 	
 					//Get the event listeners for the event name, the complete name.
-					var lls = listeners[nodeId];		
+					var lls = listeners[nodeId];
 					if(!lls[evtName]){
 						lls[evtName] = {
 							_connectId: domConnect(node, evtName)
@@ -1261,7 +1261,7 @@ dojo.query differences that cause some tests to fail:
 						if(param.indexOf(evtFullName) == param.length - evtFullName.length){
 							delete handles[param];
 						}
-					}				
+					}
 				}else{
 					delete handles[evtFullName];
 				}
@@ -1511,7 +1511,7 @@ dojo.query differences that cause some tests to fail:
 					speed,
 					null,
 					callback ? dojo.hitch(node, callback) : undefined
-				);				
+				);
 			}else{
 				dojo.style(node, "display", "block");
 				if(callback){
@@ -1630,7 +1630,7 @@ dojo.query differences that cause some tests to fail:
 						data[param] = data[param]();
 					}
 				}
-				args.content = data;	
+				args.content = data;
 			}
 		}
 
@@ -1706,7 +1706,7 @@ dojo.query differences that cause some tests to fail:
 				}
 				if(location.protocol != url.substring(0, colonIndex + 1) ||
 					location.hostname != url.substring(slashIndex + 2, lastSlash)){
-					useScript = true;	
+					useScript = true;
 				}
 			}
 		}

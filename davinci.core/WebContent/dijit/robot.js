@@ -1,2 +1,6 @@
-dojo.provide("dijit.robot");
-dojo.require("dojo.robot");
+define("dijit/robot", ["dojo", "dijit", "dojo/robot"], function(dojo, dijit) {
+
+
+
+return dijit;
+});

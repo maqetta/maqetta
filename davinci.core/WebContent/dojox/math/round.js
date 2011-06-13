@@ -1,4 +1,6 @@
-dojo.provide("dojox.math.round");
+// AMD-ID "dojox/math/round"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.round", true, dojox);
 dojo.experimental("dojox.math.round");
 
 dojox.math.round = function(/*Number*/value, /*Number?*/places, /*Number?*/increment){
@@ -59,3 +61,6 @@ if((0.9).toFixed() == 0){
 		}
 	})();
 }
+
+return dojox.math.round;
+});

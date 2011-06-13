@@ -1,5 +1,4 @@
-dojo.provide("dijit._KeyNavContainer");
-dojo.require("dijit._Container");
+define("dijit/_KeyNavContainer", ["dojo", "dijit", "dijit/_Container"], function(dojo, dijit) {
 
 dojo.declare("dijit._KeyNavContainer",
 	dijit._Container,
@@ -42,6 +41,8 @@ dojo.declare("dijit._KeyNavContainer",
 			var next = dojo.hitch(this, this.focusNext);
 			dojo.forEach(prevKeyCodes, function(code){ keyCodes[code] = prev; });
 			dojo.forEach(nextKeyCodes, function(code){ keyCodes[code] = next; });
+			keyCodes[dojo.keys.HOME] = dojo.hitch(this, "focusFirstChild");
+			keyCodes[dojo.keys.END] = dojo.hitch(this, "focusLastChild");
 			this.connect(this.domNode, "onkeypress", "_onContainerKeypress");
 			this.connect(this.domNode, "onfocus", "_onContainerFocus");
 		},
@@ -73,6 +74,17 @@ dojo.declare("dijit._KeyNavContainer",
 			// tags:
 			//		protected
 			var child = this._getFirstFocusableChild();
+			if(child){ // edge case: Menu could be empty or hidden
+				this.focusChild(child);
+			}
+		},
+
+		focusLastChild: function(){
+			// summary:
+			//		Focus the last focusable child in the container.
+			// tags:
+			//		protected
+			var child = this._getLastFocusableChild();
 			if(child){ // edge case: Menu could be empty or hidden
 				this.focusChild(child);
 			}
@@ -111,15 +123,16 @@ dojo.declare("dijit._KeyNavContainer",
 			if(this.focusedChild && widget !== this.focusedChild){
 				this._onChildBlur(this.focusedChild);
 			}
+			widget.set("tabIndex", this.tabIndex);	// for IE focus outline to appear, must set tabIndex before focs
 			widget.focus(last ? "end" : "start");
-			this.focusedChild = widget;
+			this._set("focusedChild", widget);
 		},
 
 		_startupChild: function(/*dijit._Widget*/ widget){
 			// summary:
 			//		Setup for each child widget
 			// description:
-			//		Sets tabIndex=-1 on each child, so that the tab key will 
+			//		Sets tabIndex=-1 on each child, so that the tab key will
 			//		leave the container rather than visiting each child.
 			// tags:
 			//		private
@@ -200,6 +213,12 @@ dojo.declare("dijit._KeyNavContainer",
 			return this._getNextFocusableChild(null, 1);	// dijit._Widget
 		},
 
+		_getLastFocusableChild: function(){
+			// summary:
+			//		Returns last child that can be focused
+			return this._getNextFocusableChild(null, -1);	// dijit._Widget
+		},
+
 		_getNextFocusableChild: function(child, dir){
 			// summary:
 			//		Returns the next or previous focusable child, compared
@@ -227,3 +246,7 @@ dojo.declare("dijit._KeyNavContainer",
 		}
 	}
 );
+
+
+return dijit._KeyNavContainer;
+});

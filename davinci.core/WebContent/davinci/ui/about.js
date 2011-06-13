@@ -3,11 +3,16 @@ dojo.require("davinci.version");
 dojo.require("davinci.repositoryinfo");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Button");
+
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "uiLang");
+
 // Shows "About daVinci" dialog
 davinci.ui.about=function(){
+	var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
 	var	dialog = new dijit.Dialog({
 		id: "aboutMaqetta",
-		title:"About Maqetta",
+		title:langObj.aboutMaqetta,
 		style: "width: 200px", //TODO: move to stylesheet
 		onCancel:function(){
 			this.destroyRecursive(false);
@@ -15,7 +20,7 @@ davinci.ui.about=function(){
 	});
 	var formHTML="<div class='about_container'>"
 		+ "<div class='about_title'>Maqetta</div>"
-		+ "<div class='about_version'>Version: "+davinci.version+"</div>";
+		+ "<div class='about_version'>"+langObj.version+davinci.version+"</div>";
 	var ri = davinci.repositoryinfo;
 	if(ri){
 		var revindex = ri.indexOf('Revision:'); //TODO: a regexp might be nice here
@@ -23,7 +28,7 @@ davinci.ui.about=function(){
 			var s = ri.substr(revindex+9);
 			var barindex = s.indexOf('|');
 			var revnum = barindex>=0 ? s.substr(0, barindex) : s;
-			formHTML += "<div class='about_build'>Build: "+revnum+"</div>";
+			formHTML += "<div class='about_build'>"+langObj.build+revnum+"</div>";
 		}
 	}
 	formHTML += "</div>";

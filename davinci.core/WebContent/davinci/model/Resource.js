@@ -11,6 +11,9 @@ dojo.require("dojox.widget.Standby");
 
 dojo.require("davinci.model.Model");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.model", "modelLang");
+//var langObj = dojo.i18n.getLocalization("davinci.model", "modelLang");
    
 dojo.mixin(davinci.model.Resource,	{
 
@@ -75,8 +78,9 @@ dojo.mixin(davinci.model.Resource,	{
 	 */
 	fileDialog : function(action){
 		this.action=action;
+		var langObj = dojo.i18n.getLocalization("davinci.model", "modelLang");
 		var dialogTitle;
-		var fileNameLabel = "File name";
+		var fileNameLabel = langObj.fileName;
 		var doItLabel = "Create";
 		var doItAction = "davinci.model.Resource.createFile({checkForExtension:true})";
 		var proposedFileName;
@@ -87,30 +91,30 @@ dojo.mixin(davinci.model.Resource,	{
 			folder=(resource.elementType=='Folder'?resource:resource.parent);
 		}
 		if(action==='newfile'){
-			dialogTitle="Create New File";
+			dialogTitle=langObj.createNewFile;
 			proposedFileName = "";
 		}else if(action==='newhtml'){
-			dialogTitle="Create New HTML File";
+			dialogTitle=langObj.createNewHTMLFile;
 			proposedFileName = this.getNewFileName(action,folder,'.html');
 		}else if(action==='newcss'){
-			dialogTitle="Create New CSS File";
+			dialogTitle=langObj.createNewCSSFile;
 			proposedFileName = this.getNewFileName(action,folder,'.css');
 		}else if(action==='newjs'){
-			dialogTitle="Create New JavaScript File";
+			dialogTitle=langObj.createNewJSFile;
 			proposedFileName = this.getNewFileName(action,folder,'.js');
 		}else if(action==='openfile'){
-			dialogTitle="Open File";
+			dialogTitle=langObj.openFile;
 			proposedFileName = "";
 			doItLabel = "Open";
 			doItAction = "davinci.model.Resource.openFile()";
 			hideFileNameInput = true;
 		}else if(action==='newfolder'){
-			dialogTitle="Create New Folder";
-			fileNameLabel = "Folder name";
+			dialogTitle=langObj.createNewFolder;
+			fileNameLabel = langObj.folderName;
 			proposedFileName = this.getNewFileName(action,folder);
 			doItAction = "davinci.model.Resource.createFile({checkForExtension:false})";
 		}else if(action==='saveas'){
-			dialogTitle="Save File As";
+			dialogTitle=langObj.saveFileAs;
 			doItLabel = "Save";
 			doItAction = "davinci.model.Resource.saveAs({checkForExtension:true})";
 			var editor = davinci.Workbench.getOpenEditor();
@@ -131,7 +135,7 @@ dojo.mixin(davinci.model.Resource,	{
 '		<input dojoType="dijit.form.TextBox" type="text" name="fileDialogFileName" id="fileDialogFileName" value="'+proposedFileName+'"></input>'+
 '	</div>'+
 '	<div>'+
-'		<label for="fileDialogParentFolder">Parent Folder: </label>'+
+'		<label for="fileDialogParentFolder">'+ langObj.parentFolder +' </label>'+
 '	</div>'+
 '	<div class="parentFolderInputRow"><input dojoType="dijit.form.TextBox" type="text" name="fileDialogParentFolder" id="fileDialogParentFolder"></input></div>'+
 '	<div class="folderContainer">'+
@@ -238,13 +242,14 @@ dojo.mixin(davinci.model.Resource,	{
 //		},
 
 	addFiles : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.model", "modelLang");
 		var formHtml = 
-		'<label for=\"fileDialogParentFolder\">Parent Folder: </label><div id="fileDialogParentFolder" ></div>'+
-        '<div id="btn0" class="browse">Select Files...</div><br/>'+
+		'<label for=\"fileDialogParentFolder\">'+ langObj.parentFolder +' </label><div id="fileDialogParentFolder" ></div>'+
+        '<div id="btn0" class="browse">'+ langObj.selectFiles +'</div><br/>'+
         '<textarea cols="50" rows="6" id="fileToUpload"></textarea><br/>'+
-        '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">Upload</div><br/>';
+        '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">'+ langObj.upload +'</div><br/>';
 
-		var	dialog = new dijit.Dialog({id: "addFiles", title:"Add Files",
+		var	dialog = new dijit.Dialog({id: "addFiles", title:langObj.addFiles,
 			onCancel:function(){this.destroyRecursive(false);}});	
 		
 		dojo.connect(dialog, 'onLoad', function(){
@@ -272,7 +277,7 @@ dojo.mixin(davinci.model.Resource,	{
 //				postData:{sessionid:"TestStuff won't be sent", userId:"DojoMan"}
 			}, "btn0");
 			dojo.connect(dijit.byId("uploadBtn"),"onClick",function(){
-				dojo.byId("fileToUpload").value = "uploading...";
+				dojo.byId("fileToUpload").value = langObj.uploading;
 				f0.upload();
 			});
 			
@@ -293,7 +298,7 @@ dojo.mixin(davinci.model.Resource,	{
 					dataArray=dataArray[0];
 				totalFiles = dataArray.length;
 				dojo.forEach(dataArray, function(d){
-					dojo.byId("fileToUpload").value += "completed: "+d.file+" \n";
+					dojo.byId("fileToUpload").value += langObj.completed + d.file+" \n";
 					folder.createResource(d.file,false,true);
 				});
 			});
@@ -312,6 +317,7 @@ dojo.mixin(davinci.model.Resource,	{
 	},
 	
 	_checkFileName : function(args){
+		var langObj = dojo.i18n.getLocalization("davinci.model", "modelLang");
 		var dialog = dijit.byId("fileDialog");
 		var resources=dijit.byId('fileDialogFolderTree').getSelectedItems();
 		var resource = resources[0];
@@ -320,34 +326,34 @@ dojo.mixin(davinci.model.Resource,	{
 		var folder=(resource.elementType=='Folder'?resource:resource.parent);
 		var fullName=folder.getPath()+'/'+fileName;
 		if(!fileName || fileName===""){
-			alert("You must enter a file name.");
+			alert(langObj.mustEnterFileName);
 			return false;
 		}
 		var existing=this.findResource(fullName);
 		if(existing){
 			// Check if existing file is a folder
 			if(existing.elementType=='Folder' && !args.selectFolderOK){
-				alert("Cannot select "+fileName+". It is a folder.");
+				alert(langObj.cannotSelect +fileName+ langObj.itIsAFolder);
 				return false;
 			}
 			if(args && args.existingFileOK){
 				if(args.existingFileOK=="prompt"){
-					if(!confirm("File "+fileName+" already exists. OK to overwrite?")){
+					if(!confirm(langObj.file +fileName+ langObj.alreadyExistsOverwrite)){
 						return false;
 					}
 				}
 			}else{
-				alert("Cannot create "+fileName+". Already exists.");
+				alert(langObj.cannotCreate +fileName+ langObj.alreadyExists);
 				return false;
 			}
 		}
 		if(fileName.indexOf('/')>=0){
-			alert("File names cannot contain a slash character (/). Your file name is: "+fileName);
+			alert(langObj.fileNameSlashCharacter +fileName);
 			return false;
 		}
 		var newSplitName = fileName.split('.');
 		if(args && args.checkForExtension && newSplitName.length<2){ // No extension, prompt user if OK
-			if(!confirm("The name "+fileName+" does not have an extension (e.g., .html, .css or .js) and will be treated as a plain text file. OK to proceed?")){
+			if(!confirm(langObj.theName +fileName+langObj.doesNotHaveExtension)){
 				return false;
 			}
 		}
@@ -457,15 +463,16 @@ dojo.mixin(davinci.model.Resource,	{
 
 	deleteAction : function()
 	{ 
+		var langObj = dojo.i18n.getLocalization("davinci.model", "modelLang");
 		var resource=this.getSelectedResource();
 		if (resource)
 		{
-		     var ok=confirm("Are you sure you want to delete "+resource.getPath()+"?");
+		     var ok=confirm(langObj.areYouSureDelete+resource.getPath()+langObj.questionMark);
 		     if (!ok)
 		    	 return;
 			resource.deleteResource();
 		}else{
-			alert("No resources are currently selected.");
+			alert(langObj.noResourcesSelected);
 		}
 	},
 	

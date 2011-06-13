@@ -9,6 +9,9 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "uiLang");
+
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebaseDownload");
 dojo.require("dojox.widget.Standby");
@@ -29,13 +32,14 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	_tableDiv : null,
 
 	buildRendering : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
 		this.inherited(arguments);
 		
 		this._handles = [];
 		this._userLibs = davinci.library.getUserLibs();
 		var uiArray = [];
 		
-		uiArray.push("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>Library</td><td class='header'>Version</td><td class='header'>Include<br>Source</td><td class='header'>Base Location</td></tr>");
+		uiArray.push("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>"+langObj.library+"</td><td class='header'>"+langObj.version+"</td><td class='header'>"+langObj.include+"<br>"+langObj.source+"</td><td class='header'>"+langObj.baseLocation+"</td></tr>");
 		uiArray.push("<tr><td colspan='4'><hr></hr></td></tr>");
 		this.libraries = {};
 		/* build UI table */

@@ -9,6 +9,9 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "uiLang");
+
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebaseDownload");
 dojo.require("dojox.widget.Standby");
@@ -65,6 +68,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_createTheme : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
 		var oldTheme = this._themeSelection.attr('value');
 	//	var targetFolder = this._themeLocation.attr('value');
 		var selector = dojo.attr(this._selector, 'value');
@@ -75,7 +79,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		var newBase = this._getThemeLocation();
 		var r1=  davinci.model.Resource.findResource(base);
 		if(r1)
-			alert("Theme already Exists!");
+			alert(langObj.themeAlreadyExists);
 		else
 			davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 	},

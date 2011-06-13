@@ -27,7 +27,7 @@
 
    <plugins>
       <plugin id="davinci.core"/>
-      <plugin id="davinci.dojo_1_6"/>
+      <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
       <plugin id="davinci.jqueryui_1_8"/>
       <plugin id="davinci.review"/>

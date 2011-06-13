@@ -1,0 +1,27 @@
+.mblCover.mblOut {
+	z-index: -100;
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblCoverOut;
+	-webkit-animation-timing-function: linear;
+}
+.mblCover.mblIn {
+	z-index: 0;
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblCoverIn;
+	-webkit-animation-timing-function: linear;
+}
+.mblCover.mblIn.mblReverse {
+	-webkit-animation-name: mblCoverInReverse;
+}
+@-webkit-keyframes mblCoverOut {
+	from {}
+	to {}
+}
+@-webkit-keyframes mblCoverIn {
+	from { -webkit-transform: translateX(100%); }
+	to { -webkit-transform: translateX(0px); }
+}
+@-webkit-keyframes mblCoverInReverse {
+	from { -webkit-transform: translateX(-100%); }
+	to { -webkit-transform: translateX(0px); }
+}

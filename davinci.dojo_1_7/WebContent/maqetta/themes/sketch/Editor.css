@@ -1,0 +1,39 @@
+.sketch .dijitEditorIFrameContainer{
+	padding:3px 3px 1px 10px;
+}
+.sketch .dijitEditorIFrame {
+	background-color: #fff;
+}
+.sketch .dijitEditor {
+	border: 1px solid #b5bcc7;
+}
+.sketch .dijitEditor .dijitEditorIFrameContainer{
+	background-color: #fff;
+	background-image: url('form/images/textBox_back.png');
+	background-repeat:repeat-x;
+}
+.dj_ie6 .sketch .dijitEditor .dijitEditorIFrameContainer{
+	background-image: none;
+}
+.sketch .dijitEditorHover .dijitEditorIFrameContainer,
+.sketch .dijitEditorHover .dijitEditorIFrameContainer .dijitEditorIFrame{
+	background-color: #eef7ff;
+}
+.sketch .dijitEditorFocused .dijitEditorIFrameContainer,
+.sketch .dijitEditorFocused .dijitEditorIFrameContainer .dijitEditorIFrame{
+	/* TODO: contradicts rule above, which background-color do you want? */
+	background-color: #fff;
+}
+
+
+/* Disabled */
+.sketch .dijitEditorDisabled {
+	border: 1px solid #d3d3d3;
+	color: #818181;
+}
+
+.sketch .dijitDisabled .dijitEditorIFrame,
+.sketch .dijitDisabled .dijitEditorIFrameContainer {
+	background-color: #efefef;
+	background-image: none;
+}

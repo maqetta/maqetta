@@ -1,0 +1,135 @@
+
+  /* Accordion
+ * 
+ * Styling AccordionContainer basically means styling the accordion pane (dijitAccordionInnerContainer)
+ * and the title inside of it (dijitAccordionTitle).   There are 4 basic states to style:
+ * 
+ * 1. closed pane (and default styling): 
+ *     .dijitAccordionInnerContainer - for background-color, border
+ *     .dijitAccordionTitle - for text color
+ *
+ * 2. active closed pane (ie, mouse down on a title bar)
+ *     .dijitAccordionInnerContainerActive - for background-color, border
+ *     .dijitAccordionTitleActive - for text color
+ * 
+ * 3. open pane
+ *     These rules need to override the closed pane active:
+ *
+ *     .dijitAccordionInnerContainerSelected - for background-color, border
+ *     .dijitAccordionInnerContainerSelected .dijitAccordionTitle - for text color
+ * 
+ * 4. hovered pane, open or closed
+ *     The selectors below affect hovering over both a closed pane (ie, hovering a title bar),
+ *     and hovering over an open pane.   Also, treat mouse down on an open pane as a hover:
+ *
+ *     .dijitAccordionInnerContainerHover, .dijitAccordionInnerContainerSelectedActive - for background-color, border
+ *     .dijitAccordionTitleHover - for text color
+ */
+ .sketch .dijitAccordionContainer {
+    border : none;
+}
+ .sketch .dijitAccordionInnerContainer {
+    background-color : transparent;/* gray, for closed pane */
+/* border:solid 1px #b5bcc7; wdr hack for daVinci 0.5 */
+
+    margin-bottom : 1px;
+    -webkit-transition-property : background-color,border;
+    -webkit-transition-duration : .3s;
+    -webkit-transition-timing-function : linear;
+    border-color : #131212;
+    border-width : 3px;
+    border-style : solid;
+}
+ .sketch .dijitAccordionTitle {
+    background-color : transparent;/* pick up color from dijitAccordionInnerContainer */
+
+    background-position : 0px 0px;
+    background-repeat : repeat-x;/* padding: 5px 7px 2px 7px; daVinci 0.5 does not support shorthand */
+
+    padding-top : 5px;
+    padding-right : 7px;
+    padding-bottom : 2px;
+    padding-left : 7px;
+    min-height : 17px;
+    color : #4a4a4a;
+}
+ .dj_ie6 .sketch .dijitAccordionTitle {
+    background-image : none;
+}
+ .sketch .dijitAccordionContainer .dijitAccordionContainer-child {
+    background-color : #fff;/*
+   * border style need to be !important to override the style "border:medium none !important"
+   * in class ".dijitTabPane, .dijitStackContainer-child, .dijitAccordionContainer-child"
+   */
+/* border:1px solid #92bce1 !important; wdr hack for daVinci 0.5 */
+
+    border-color : #000000  !important;
+    border-style : solid    !important;
+    border-width : 3px  !important;
+    margin-top : 0px;
+    margin-right : 2px;
+    margin-bottom : 2px;
+    margin-left : 2px;/* margin: 0px 2px 2px; daVinci 0.5 not supporting shorthand */
+/* padding: 9px; daVinci 0.5 not supporting */
+
+    padding-top : 9px;
+    padding-right : 9px;
+    padding-bottom : 9px;
+    padding-left : 9px;
+}
+
+  /* Active state for closed pane */
+ .sketch .dijitAccordionInnerContainerActive {
+    
+  /* border:1px solid #769DC0; wdr hack for daVinci 0.5 */
+border-color : #000000;
+    border-style : solid;
+    border-width : 3px;
+    background-color : #ffffff;
+    -webkit-transition-duration : .1s;
+}
+ .sketch .dijitAccordionInnerContainerActive .dijitAccordionTitle {
+    
+  /* wdr add */
+/*.sketch .dijitAccordionTitleActive { */
+background-position : 0px -136px;
+    color : #000;
+}
+
+  /* Open pane */
+ .sketch .dijitAccordionInnerContainerSelected {
+    border-color : #000000;
+    background-color : #ffffff;
+}
+ .sketch .dijitAccordionInnerContainerSelected .dijitAccordionTitle {
+    color : #000;
+    background-position : 0 0;/* avoid effect when clicking the title of the open pane */
+
+}
+
+  /* Hovering open or closed pane */
+ .sketch .dijitAccordionInnerContainerHover .dijitAccordionTitle {
+    
+  /*wdr wdd */
+/*.sketch .dijitAccordionTitleHover { */
+/* both open and closed */
+color : #000;
+}
+ .sketch .dijitAccordionInnerContainerHover, .sketch .dijitAccordionInnerContainerSelectedActive {
+    
+  /* border:1px solid #769DC0;  wdr hack for daVinci 0.5 */
+border-color : #000000;
+    border-style : solid;
+    border-width : 3px;
+    background-color : #ffffff;
+    -webkit-transition-duration : .2s;
+}
+ .sketch .dijitAccordionInnerContainerSelectedHover .dijitAccordionContainer-child, .sketch .dijitAccordionInnerContainerSelectedActive .dijitAccordionContainer-child {
+    background-color : #ffffff;/* border:1px solid #769DC0 !important;  wdr hack for daVinci 0.5 */
+
+    border-color : #000000  !important;
+    border-style : solid    !important;
+    border-width : 3px  !important;
+    -webkit-box-shadow : inset 0px 0px 3px rgba(0, 0, 0, .25);
+    -moz-box-shadow : inset 0px 0px 3px rgba(0, 0, 0, .25);
+}

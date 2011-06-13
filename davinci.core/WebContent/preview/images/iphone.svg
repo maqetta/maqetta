@@ -89,5 +89,5 @@
 </g>
 <rect id="ScreenRect" x="293.495" y="300.051" fill="#FFFFFF" width="138.636" height="207.955"/>
 <rect id="DeviceRect" x="280.04" y="242.205" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="167.041" height="324"/>
-<rect id="HundredPixelRect" x="293.495" y="300.051" width="43.32375" height="43.32375" fill="none"/>
+<rect id="ResolutionRect" x="293.495" y="300.051" width="320" height="480" fill="none"/>
 </svg>

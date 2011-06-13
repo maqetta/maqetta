@@ -1,0 +1,1875 @@
+{
+    "html": {
+        "label": {
+            "displayName": "Global" ,
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".claro": [
+                            "$std_10" 
+                        ] 
+                    },
+                    "query": "" 
+                } 
+            } 
+        } 
+    },
+    "dijit": {
+        "$all":{
+			"displayName": "All widgets", 
+			"states": {
+				"Normal": {
+					"selectors": {
+						".claro .globalWidget .dijitTabContainerDefault": [
+							"border-color",
+							"background-color"
+						],
+						".claro .dijitCalendar" : [
+							"border-color",
+							"background-color"
+                        ],
+						".claro .dijitTabContent": [
+							"border-color"
+						],
+						".claro .dijitTabPaneWrapper": [
+							"border-color"
+						],
+						".claro .globalWidget .dijitTabContent": [
+							"border-color"
+						],
+						".claro .globalWidget .dijitTabPaneWrapper": [
+							"border-color"
+						],
+						".claro .dijitButton .dijitButtonNode" : [
+							"background-color",
+							"border-color"
+						],
+						".claro .dijitAccordionInnerContainer": [
+							"border-color"
+						],
+						".claro .dijitAccordionContainer .dijitAccordionContainer-child": [
+							"border-color" 
+						], 
+						".claro .dijitTitlePane": [
+							"border-color"
+						],
+						".claro .dijitTitlePaneTitle": [
+							"border-color"
+						],
+						".claro .dijitTitlePaneContentOuter": [
+							"border-color"
+						],
+						".claro .dijitBorderContainer": [
+							"border-color"
+						],
+						".claro .dijitBorderContainer-child": [
+							"border-color"
+						],
+						".claro .dijitMenu": [
+							"border-color"
+						],
+						".claro .dijitMenuSeparatorTop": [
+							"border-bottom-color"
+						],
+						".claro .dijitTooltipContainer": [
+							"border-color"
+						],
+						".claro .dijitDialog": [
+							"border-color"
+						],
+						".claro .dijitDialogTitleBar": [
+							"background-color"
+						],
+						".claro .dijitDialogPaneContent": [
+                            "border-top-color"
+						]
+					
+					},
+					"query": "div.dijitTabContainerTop-tabs > div",
+					"simulate": "dijitChecked dijitTabChecked",
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#D4EBFF",
+							"border-color":  "#b5bcc7"
+						}
+					}
+			
+				},
+				"Active": {
+					"selectors": {
+						".claro .globalWidget .dijitTabActive .dijitTabInnerDiv": [
+							"background-color"
+						],
+						".claro .dijitTabActive .dijitTabInnerDiv": [
+							"background-color"
+						],
+						".claro .dijitAccordionInnerContainerActive": [
+                    		"border-color",
+							"background-color"
+                    	],
+                    	".claro .dijitSplitterVActive": [
+							"background-color"
+						],
+						".claro .dijitSplitterHActive": [
+							"background-color"
+						],
+						".claro .dijitButtonActive .dijitButtonNode" : [
+							"border-color",
+							"background-color"
+						],
+						".claro .dijitTitlePaneTitleActive": [
+							"background-color",
+							"border-color"
+						],
+						".claro .dijitToolbar .dijitButtonActive .dijitButtonNode": [
+							"background-color",
+							"border-color"
+						] 
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#8bc4f9",
+							"border-color":  "#769dc0"
+						}
+					}
+				},
+				"Checked": {
+					"selectors": {
+						".claro .globalWidget .dijitTabChecked .dijitTabInnerDiv" : [
+							"background-color" 
+						],
+						".claro .globalWidget .dijitTabChecked .dijitTabContent": [
+							"border-color"
+						],
+						".claro .dijitTabChecked .dijitTabInnerDiv" : [
+							"background-color" 
+						],
+						".claro .dijitTabChecked .dijitTabContent": [
+							"border-color"
+						]
+						
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#b2d4f3",
+							"border-color":  "#769dc0"
+						}
+					}
+				},
+				"Hover": {
+					"selectors": {
+						".claro .dijitCalendarHover" : [
+                            "background-color",
+							"border-color"
+                        ],
+						".claro .globalWidget .dijitTabHover .dijitTabInnerDiv" : [
+							"background-color"
+						],
+						".claro .globalWidget .dijitTabHover .dijitTabContent": [ 
+							"border-color"
+						],
+						".claro .dijitTabHover .dijitTabInnerDiv" : [
+							"background-color"
+						],
+						".claro .dijitTabHover .dijitTabContent": [ 
+							"border-color"
+						],
+						".claro .dijitButtonHover .dijitButtonNode" : [
+							"background-color",
+							"border-color"
+						],
+						".claro .dijitAccordionInnerContainerHover": [
+						    "border-color",
+							"background-color"
+						],
+						".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionContainer-child":[
+							"border-color"
+						],
+						".claro .dijitTitlePaneTitleHover" : [
+                            "background-color",
+							"border-color"
+                        ],
+						".claro .dijitToolbar .dijitButtonHover .dijitButtonNode" : [
+                            "background-color",
+							"border-color"
+                        ],
+						".claro .dijitSplitterVHover .dijitSplitterThumb": [
+							"background-color"
+						],
+						".claro .dijitSplitterHHover .dijitSplitterThumb": [
+							"background-color"
+						],
+						".claro .dijitComboBoxHover .dijitButtonNode" : [
+							"background-color",
+							"border-color"
+						],
+						".claro .dijitMenuPassive .dijitMenuItemHover": [
+							"background-color",
+							"border-color"
+						],
+						".claro .dijitMenuActive .dijitMenuItemHover": [
+							"background-color",
+							"border-color"
+						]
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#B7DCFF",
+							"border-color":  "#769dc0"
+						}
+					}
+				},
+				"Selected": {
+					"selectors": {
+						".claro .dijitAccordionInnerContainerSelected": [
+							"background-color",
+							"border-color" 
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#cde8ff",
+							"border-color":  "#92bce1"
+						}
+					}
+				},
+				"TextBoxNormal": {
+					"selectors": {
+						".claro .dijitTextBox" : [
+							"background-color"
+						],
+						".claro .dijitTextBox .dijitButtonNode": [ 
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#f7fcff",
+							"border-color":  "#b5bcc7"
+						}
+					}
+				},
+				"TextBoxFocus": {
+					"selectors": {
+						".claro .dijitTextBoxFocused" : [
+							"background-color",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#ffffff",
+							"border-color":  "#769dc0"
+						}
+					}
+				},
+				"TextBoxHover": {
+					"selectors": {
+						".claro .dijitTextBoxHover" : [
+							"background-color",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#e9f4fe",
+							"border-color":  "#769dc0"
+						}
+					}
+				},
+				"CalendarPreviousMonth": {
+					"selectors": {
+						".claro .dijitCalendarPreviousMonth" : [
+							"background-color",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#ebf3f9",
+							"border-color":  "#d2dae8"
+						}
+					}
+				},
+				"CalendarSelectedDate": {
+					"selectors": {
+						".claro .dijitCalendarSelectedDate .dijitCalendarDateLabel" : [
+							"background-color",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#e7f4ff",
+							"border-color":  "#accfed"
+						}
+					}
+				},
+				"CalendarHoverDate": {
+					"selectors": {
+						".claro .dijitCalendarHoveredDate .dijitCalendarDateLabel" : [
+							"background-color",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#abd4fb",
+							"border-color":  "#729dc2"
+						}
+					}
+				},
+				"CalendarDayLabelTemplate": {
+					"selectors": {
+						".claro .dijitCalendarDayLabelTemplate" : [
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"border-color":  "#99b5cd"
+						}
+					}
+				},
+				"CalendarDateTemplate": {
+					"selectors": {
+						".claro .dijitCalendarDateTemplate" : [
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"border-color":  "#dadde1"
+						}
+					}
+				}
+			}
+		},
+		        
+        "AccordionContainer": {
+            "displayName": "AccordionContainer" ,
+			"startState": "Selected",
+            "states": {
+                "Normal": {
+					"selectors": {
+						".claro .dijitAccordionContainer": [
+							"background-color",
+							"border-width",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"margin-top",
+							"margin-right",
+							"margin-left",
+							"margin-bottom",
+							"max-height",
+							"max-width",
+							"min-height",
+							"min-width"
+							
+						]								
+					},
+					"query": "" 
+				} 
+            },
+            "subwidgets": {
+				"AccordionContentPane": {
+            		"states": {
+                        "Normal": {
+                        	"selectors": {
+                        		".claro .dijitAccordionContainer .dijitAccordionContainer-child": [
+                            		"background-color",
+									"border-color",
+									"border-style",
+									"border-width",
+									"margin-top",
+									"margin-right",
+									"margin-bottom",
+									"margin-left",
+									"margin",
+									"padding",
+									"padding-top",
+									"padding-right",
+									"padding-bottom",
+									"padding-left" 
+                            	] 
+							},
+                            "query": ".dijitAccordionContainer-child"
+                        },
+                         "Active": {
+                            "selectors": {
+                            	".claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionContainer-child":[
+                            		"background-color",
+									"border-color",
+									"border-style",
+									"border-width",
+									"-webkit-box-shadow:",
+									"-moz-box-shadow" 
+                            	] 
+							},
+                            "query": ".dijitAccordionInnerContainer",
+							"simulate": "dijitSelectedActive dijitAccordionInnerContainerSelectedActive"
+                        },						
+                         "Hover": {
+                            "selectors": {
+                            	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionContainer-child":[
+                            		"background-color",
+									"border-color",
+									"border-style",
+									"border-width",
+									"-webkit-box-shadow:",
+									"-moz-box-shadow" 
+                            	] 
+							},
+                            "query": ".dijitAccordionInnerContainer",
+							"simulate": "dijitSelectedHover dijitAccordionInnerContainerSelectedHover"
+                        }
+					}
+            	},
+            	"AccordionTitle": {
+            		"states": {
+                        "Normal": {
+                            "selectors": {
+								".claro .dijitAccordionInnerContainer": [
+									"background-color",
+									"border-width",
+									"border-style",
+									"border-color",
+									"margin-top",
+									"margin-right",
+									"margin-left",
+									"margin-bottom",
+									"-webkit-transition-property",
+									"-webkit-transition-duration",
+									"-webkit-transition-timing-function",
+									"border-radius", 
+									"-moz-border-radius",
+									"-webkit-border-radius"
+								],
+								".claro .dijitAccordionTitle": [
+									"background-image",
+									"background-position",
+									"background-repeat",
+									"padding-top",
+									"padding-right",
+									"padding-bottom",
+									"padding-left",
+									"min-height",
+									"color",
+									"font-weight",
+									"font-style"
+                            	]								
+							},
+                            "query": " ",
+							"simulate": " "  
+                        },
+                        "Active": {
+                        	"selectors": {
+                        		".claro .dijitAccordionInnerContainerActive": [
+                            		"border-color",
+									"border-style",
+									"border-width",
+									"background-color",
+									"-webkit-transition-duration"
+                            	],
+								".claro .dijitAccordionInnerContainerActive .dijitAccordionTitle": [
+                            		"background-position",
+									"color"
+                            	] 								
+							},
+                            "query": ".dijitAccordionInnerContainer",
+							"simulate": "dijitActive dijitAccordionInnerContainerActive" 
+                        },
+						"Hover": {
+                            "selectors": {
+                            	".claro .dijitAccordionInnerContainerHover": [
+                            		"border-color",
+									"border-style",
+									"border-width",
+									"background-color",
+									"-webkit-transition-duration"
+                            	],
+								".claro .dijitAccordionInnerContainerHover .dijitAccordionTitle": [
+									"color"
+								]								
+							},
+                            "query": ".dijitAccordionInnerContainer",
+							"simulate": "dijitHover dijitAccordionInnerContainerHover" 
+                        },
+                         "Selected": {
+                            "selectors": {
+                            	".claro .dijitAccordionInnerContainerSelected":[
+                            		"background-color",
+									"border-color" 
+                            	],
+								".claro .dijitAccordionInnerContainerSelected .dijitAccordionTitle": [
+                            		"color",
+									"background-position"
+                            	]								
+							},
+                            "query": ".dijitAccordionInnerContainer",
+							"simulate": "dijitSelected dijitAccordionInnerContainerSelected" 
+                        }
+					}
+            	}			
+            } 
+        },
+		"BorderContainer": {
+            "displayName": "BorderContainer",
+            "states": {
+                "Normal": {
+					"selectors": {
+						".claro .dijitBorderContainer": [
+							"border-width",
+							"border-color",
+							"borer-style",
+							"padding-top",
+							"pagging-right",
+							"padding-bottom",
+							"padding-left",
+							"background-color",
+							"margin-bottom",
+							"margin-left",
+							"margin-right",
+							"margin-top",
+							"max-height",
+							"max-width",
+							"min-height",
+							"min-width"
+						],
+						".claro .dijitBorderContainer-child": [
+							"border-width",
+							"border-color",
+							"borer-style"
+						],
+						".claro .dijitSplitterV": [
+							"width"
+						],
+						".claro .dijitSplitterH": [
+							"height"
+						]
+					},
+					"query": " "				
+				},
+				"Hover":{
+					"selectors": {
+						".claro .dijitSplitterVHover": [
+							"background-color"
+						],
+						".claro .dijitSplitterHHover": [
+							"background-color"
+						]
+					},
+					"query": ".dijitSplitterH",
+					"simulate": "dijitHover dijitSplitterHHover" 
+				},
+				"Active":{
+					"selectors": {
+						".claro .dijitSplitterVActive": [
+							"background-color"
+						],
+						".claro .dijitSplitterHActive": [
+							"background-color"
+						]
+					},
+					"query": ".dijitSplitterH",
+					"simulate": "dijitActive dijitSplitterHActive" 
+				}
+            },
+            "subwidgets": {
+                "ContentPane": {
+                    "states": {
+                        "Normal": { 
+							"selectors": {
+                        		".claro .dijitBorderContainer-child": [
+                            		"$std_10" 
+                            	] 
+							},
+                            "query": ""
+                        }
+                        
+                    } 
+                }
+			}
+        },
+        "Button": {
+            "displayName": "Button",
+            "states": {
+                "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+                     		"color",
+							"font-family",
+							"font-size",
+							"font-weight" 
+                 		]
+                    },
+					"selectors": {
+						".claro .dijitButton .dijitButtonNode" : [
+							"border-width",
+							"border",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"background-image",
+							"background-position",
+							"background-repeat",
+							"background-color",
+							"border-radius",
+							"-moz-border-radius",
+							"-webkit-border-radius",
+							"box-shadow:",
+							"-webkit-box-shadow",
+							"-moz-box-shadow",
+							"color",
+							"font-family",
+							"font-size",
+							"font-weight",
+							"width",
+							"height",
+							"max-height",
+							"max-width",
+							"min-height",
+							"min-width"
+						],
+						".claro .dijitButtonText": [
+							"padding-top",
+							"padding-bottom",
+							"padding-left",
+							"padding-right",
+							"text-align",
+							"text-decoration"
+						]
+                    },
+                    "query": ".dijitButton",
+					"simulate": "dijitButton"
+                },
+                "Active": {
+                	"selectors": {
+						".claro .dijitButtonActive .dijitButtonNode" : [
+							"border-width",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"background-image",
+							"background-position",
+							"background-repeat",
+							"background-color",
+							"border-radius",
+							"-moz-border-radius",
+							"-webkit-border-radius",
+							"box-shadow:",
+							"-webkit-box-shadow",
+							"-moz-box-shadow",
+							"color",
+							"font-family",
+							"font-size",
+							"font-weight",
+							"-webkit-transition-duration" 
+						] 
+                    },
+                    "query": ".dijitButton",
+                    "simulate": "dijitActive dijitButtonActive"
+                },
+                "Hover": {
+                	"selectors": {
+						".claro .dijitButtonHover .dijitButtonNode" : [
+							"border-width",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"background-image",
+							"background-position",
+							"background-repeat",
+							"background-color",
+							"border-radius",
+							"-moz-border-radius",
+							"-webkit-border-radius",
+							"box-shadow:",
+							"-webkit-box-shadow",
+							"-moz-box-shadow",
+							"color",
+							"font-family",
+							"font-size",
+							"font-weight",
+							"-webkit-transition-duration" 
+						] 
+                     },
+                     "query": ".dijitButton",
+                     "simulate": "dijitHover dijitButtonHover"
+                },
+                "Disabled": {
+					"selectors": {
+						".claro .dijitButtonDisabled .dijitButtonNode" : [
+							"border-width",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"background-position",
+							"background-repeat",
+							"background-color",
+							"border-radius",
+							"-moz-border-radius",
+							"-webkit-border-radius",
+							"box-shadow:",
+							"-webkit-box-shadow",
+							"-moz-box-shadow",
+							"-webkit-transition-duration"  
+						],
+						".claro .dijitDisabled .dijitButtonText": [
+							"color",
+							"font-family",
+							"font-size",
+							"font-weight"
+						],
+						".claro .dijitButtonDisabled": [
+							"background-image",
+							"outline"
+						]
+                    },
+                    "query": ".dijitButton",
+                    "simulate": "dijitDisabled dijitButtonDisabled"
+                    
+                },
+
+				"Selected": {
+				/* Button does not have a Selected state, we duplicated the Normal state here to provide 
+				 * consistancey and facilate Global widget style changing
+				 */
+					"selectors": {
+						".claro .dijitButton .dijitButtonNode" : [
+							"border-width",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"background-image",
+							"background-position",
+							"background-repeat",
+							"background-color",
+							"border-radius",
+							"-moz-border-radius",
+							"-webkit-border-radius",
+							"box-shadow:",
+							"-webkit-box-shadow",
+							"-moz-box-shadow",
+							"color",
+							"font-family",
+							"font-size",
+							"font-weight"
+						],
+						".claro .dijitButtonText": [
+							"padding-top",
+							"padding-bottom",
+							"padding-left",
+							"padding-right",
+							"text-align",
+							"text-decoration"
+						]
+                    },
+                    "query": ".dijitButton",
+					"simulate": " " /* this blank prevents the removal of the base css class from the dom node */
+                }
+            }
+        },
+        
+        "Calendar": {
+            "displayName": "Calendar" ,
+            "states": {
+                "Normal": { 
+                	"elements":{ 
+                     	"$root": [ 
+                     		"height",
+							"width"							
+                 		]
+                    },
+                	"selectors": {
+                                ".claro .dijitCalendar" : [
+                                    "$std_10" 
+                                ] 
+                    }
+                },
+				"Hover": {
+				}
+            },
+            "subwidgets": {
+                "CalendarMonthContainer": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarMonthLabel" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": "" 
+                        } 
+                    } 
+                },
+                "PreviousMonthControl": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarIncrementControl" : [
+                                	"width",
+									"height",
+									"background-image",
+									"background-repeat",
+									"background-position"
+                                ] 
+                            },
+                            "query": ".dijitCalendarDecrease" 
+                        },
+						"Active": {
+                            "selectors": {
+                               ".claro .dijitCalendarArrowActive .dijitCalendarDecrease": [
+									"background-position",
+									"width",
+									"height",
+									"background-image",
+									"background-repeat",
+									"background-position"
+								]
+							},
+                            "query": ".dijitCalendarArrow:first-child",
+							"simulate": "dijitCalendarArrowActive"
+                        },
+						"Hover": {
+                            "selectors": {
+                               ".claro .dijitCalendarArrowHover .dijitCalendarDecrease": [
+									"background-position",
+									"width",
+									"height",
+									"background-image",
+									"background-repeat",
+									"background-position"
+								]
+							},
+                            "query": ".dijitCalendarArrow:first-child",
+							"simulate": "dijitCalendarArrowHover"
+                        }						
+                    } 
+                },
+                "NextMonthControl": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarIncrease" : [
+                                	"width",
+									"height",
+									"background-image",
+									"background-repeat",
+									"background-position"
+                                ] 
+                            },
+                            "query": ".dijitCalendarIncrease" 
+                        },
+						"Active": {
+                            "selectors": {
+                               ".claro .dijitCalendarArrowActive .dijitCalendarIncrease": [
+									"background-position",
+									"width",
+									"height",
+									"background-image",
+									"background-repeat",
+									"background-position"
+								]
+							},
+                            "query": ".dijitCalendarArrow:last-child",
+							"simulate": "dijitCalendarArrowActive"
+                        },
+						"Hover": {
+                            "selectors": {
+                               ".claro .dijitCalendarArrowHover .dijitCalendarIncrease": [
+									"background-position",
+									"width",
+									"height",
+									"background-image",
+									"background-repeat",
+									"background-position"
+								]
+							},
+                            "query": ".dijitCalendarArrow:last-child",
+							"simulate": "dijitCalendarArrowHover"
+                        }						
+                    } 
+                },
+                "CalendarDayLabel": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarDayLabelTemplate" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": "" 
+                        } 
+                    } 
+                },
+				"CalendarDateTemplate": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarDateTemplate" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": "" 
+                        } 
+                    } 
+                },
+				"CalendarContainer": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarDateTemplate .dijitCalendarDateLabel" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": ".dijitCalendarCurrentMonth.dijitCalendarDateTemplate" 
+                        },
+                        "Hover": {
+                            "selectors": {
+                                ".claro .dijitCalendarHoveredDate .dijitCalendarDateLabel" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": ".dijitCalendarCurrentMonth.dijitCalendarDateTemplate" 
+                        } 
+                    } 
+                },
+                "SelectedDate": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarSelectedDate .dijitCalendarDateLabel" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": ".dijitCalendarSelectedDate" 
+                        } 
+                    } 
+                },
+                "Previous/NextMonth": {
+                    "displayName": "Previous/NextMonth" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendarPreviousMonth" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": ".dijitCalendarPreviousMonth, .dijitCalendarNextMonth"  
+                        } 
+                    } 
+                },
+                "CalendarYearContainer": {
+                    "states": {
+                        "Normal": {
+                        } 
+                    } 
+                },
+                "CalendarPreviousYear": {
+                    "displayName": "PreviousYear/NextYear",
+                    "states": {
+                        "Normal": {
+                        } 
+                    } 
+                },
+                "CalendarSelectedYear": {
+                    "states": {
+                        "Normal": {
+                        } 
+                    } 
+                } 
+            } 
+        },
+        
+        "CheckBox": {
+            "displayName": "CheckBox" ,
+            "states": {
+                "Normal": {  },
+                "Disabled": {},
+                "Hover": {},
+				"Selected": {
+					"selectors": {
+						".claro .dijitCheckBoxChecked" : [
+							"$std_10" 
+						] 
+					},
+					"query": ".dijitCheckBox",
+					"simulate": "dijitCheckBoxChecked"
+				},
+                "SelectedDisabled": {
+					"selectors": {
+						".claro .dijitCheckBoxCheckedDisabled" : [
+							"$std_10" 
+						] 
+					},
+					"query": ".dijitCheckBox",
+					"simulate": "dijitCheckBoxCheckedDisabled"
+				},
+                "SelectedHover": {
+					"selectors": {
+						".claro .dijitCheckBoxCheckedHover" : [
+							"$std_10" 
+						] 
+					},
+					"query": ".dijitCheckBox",
+					"simulate": "dijitCheckBoxCheckedHover"
+				}
+             } 
+        },
+         
+        "ComboBox": {
+            "displayName": "ComboBox" ,
+            "states": {
+                "Normal": {
+                 	"selectors": {
+                                ".claro .dijitComboBox .dijitButtonNode" : [
+                                    "$std_10" 
+                                ] 
+                     },
+                     "query": "",
+                     "simulate": "dijitComboBox"
+                },
+                "Hover": {
+                	"selectors": {
+                                ".claro .dijitComboBoxHover .dijitButtonNode" : [
+                                    "$std_10" 
+                                ] 
+                     },
+                     "query": "$auto",
+                     "simulate": "dijitComboBox dijitHover dijitTextBoxHover dijitComboBoxHover"
+                }
+             },
+             "subwidgets": {
+             	"ArrowButton": {
+					"displayName": "ArrowButton" ,
+					"states": {
+						"Normal": {
+							"selectors": {
+										".claro .dijitArrowButtonInner" : [
+											"$std_10" 
+										] 
+							 },
+							 "query": ""
+						},
+						"Hover": {
+							"selectors": {
+										".claro .dijitComboBoxHover .dijitArrowButtonInner" : [
+											"background-position" 
+										] 
+							 },
+							 "query": ""
+						}
+					 }	
+				}
+			}
+        },
+        
+        "ContentPane": {
+            "displayName": "ContentPane" ,
+            "states": {
+                "Normal": {  }
+             } 
+        },
+		
+		"Menu": {
+            "displayName": "Menu" ,
+            "states": {
+                "Normal": {
+					"selectors": {
+						".claro .dijitMenuTable": [
+							"border-collapse",
+							"border-spacing",
+							"padding"
+						],
+						".claro .dijitMenu": [
+							"background-color",
+							"background-repeat",
+							"border",
+							"border-color",
+							"border-style",
+							"border-width",
+							"margin"
+						]
+					},
+					"query": "$auto"
+				},
+				"Selected": {
+					/* this is here to active the correct select look during simulation */
+					"selectors": {
+						
+					},
+					"query": ".dijitMenu",
+					"simulate": "dijitMenuActive"
+				}
+            },
+			"subwidgets": {
+                "MenuItem": {
+                    "states": {
+                       "Normal": {
+							"selectors": {
+								".claro .dijitMenuItem": [
+									"background-image",
+									"background-position",
+									"background-repeat",
+									"background-color",
+									"color",
+									"font-style",
+									"font-family",
+									"font-size",
+									"font-weight",
+									"border",
+									"border-style",
+									"border-width",
+									"border-color" 
+								],
+								".claro .dijitMenuItem td": [
+									"padding"
+								],
+								".claro td.dijitMenuItemLabel": [
+									"padding-top",
+									"padding-bottom"
+								]								
+							},
+							"query": "$auto" 
+						},
+						"Selected": {
+							"selectors": {
+								".claro .dijitMenuActive .dijitMenuItemSelected": [
+									"border",
+									"border-style",
+									"border-width",
+									"border-color",
+									"padding",
+									"background-color",
+									"background-position",
+									"color" 
+								] 
+							},
+							"query": "$auto",
+							"simulate": "dijitMenuItemSelected"
+						},
+						"Disabled": {
+							"selectors": {
+								".dijitMenuItemDisabled *": [
+									"opacity",
+									"cursor"
+								]
+							},
+							"query": "$auto",
+                     		"simulate": "dijitDisabled dijitMenuItemDisabled"
+						
+						},
+						"Hover": {
+							"selectors": {
+								".claro .dijitMenuPassive .dijitMenuItemHover": [
+									"background-color",
+									"background-position",
+									"border",
+									"border-style",
+									"border-width",
+									"border-color",
+									"color",
+									"padding" 
+								]
+							},
+							"query": "$auto",
+                     		"simulate": "dijitHover dijitMenuItemHover"
+						
+						}								
+					} 
+				},
+				"CheckedMenuItemIcon": {
+                    "states": {
+                       "Normal": {
+							"selectors": {
+								".claro .dijitCheckedMenuItemIcon": [
+									"background-image",
+									"background-position",
+									"background-repeat",
+									"background-color",
+									"width",
+									"height"
+								]								
+							},
+							"query": ".dijitCheckedMenuItemIcon" 
+						},
+						"Selected": {
+							"selectors": {
+								".claro .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon": [
+									"background-image",
+									"background-position",
+									"background-repeat",
+									"background-color",
+									"width",
+									"height"
+	 
+								]
+							},
+							"query": ".CheckedMenuItemLocator" ,
+                     		"simulate": "dijitCheckedMenuItemChecked"
+						
+						}								
+					} 
+				},
+				"PopUpMenuItemIcon": {
+                    "states": {
+                       "Normal": {
+							"selectors": {
+								".claro .dijitMenuExpand": [
+									"width",
+									"height",
+									"background-image",
+									"background-position",
+									"margin-right"
+								] 
+							},
+							"query": ".themeEditorLocator .dijitMenuExpand" 
+						}								
+					} 
+				},
+				"MenuSeparator": {
+                    "states": {
+                       "Normal": {
+							"selectors": {
+								".claro .dijitMenuSeparatorTop": [
+									"border-bottom",
+									"border-bottom-color",
+									"border-bottom-style",
+									"border-bottom-width",
+									"height",
+									"margin-top"
+								],
+								" .claro .dijitMenuSeparatorBottom": [
+									"height",
+									"margin-bottom"
+								]
+							},
+							"query": ".dijitMenuSeparator" 
+						}								
+					} 
+				}
+			} 
+        },
+        
+        /* This only applies to Tab Container with tab at top of container. */
+        "TabContainer": { 
+            "displayName": "TabContainer" ,
+            "states": {
+                "Normal": {
+                            "selectors": {
+                            	".claro .dijitTabContainer": [
+									"background-color",
+									"border-width",
+									"border-style",
+                                    "border-color",
+									"padding-top",
+									"padding-right",
+									"padding-bottom",
+									"padding-left",
+									"margin-top",
+									"margin-right",
+									"margin-left",
+									"margin-bottom",
+									"max-height",
+									"max-width",
+									"min-height",
+									"min-width"
+									
+                                ]								
+                            },
+                            "query": "" 
+                        }  
+            },
+            "subwidgets": {
+                "Tab": {
+                	"startState": "Selected",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitTabInnerDiv" : [
+									"background-color",
+									"-webkit-transition-property",
+									"-webkit-transition-duration",
+									"color",
+									"font-style",
+									"font-family",
+									"font-size",
+									"font-weigth"
+                                ],
+								".claro .dijitTabContainerTop-tabs .dijitTabContent": [
+									"padding",
+									"padding-top",
+									"padding-right",
+									"padding-bottom",
+									"padding-left",
+									"border-bottom",
+									"border-radius",
+									"-moz-border-radius",
+									"-webkit-border-top-left-radius",
+									"-webkit-border-top-right-radius",
+									"min-width",
+									"text-align",
+									"background-image",
+									"background-position",
+									"background-repeat"
+                                ],
+								".claro .dijitTabContainerTop-tabs .dijitTabInnerDiv": [
+									"background-image",
+									"background-position",
+									"background-repeat",
+									"box-shadow", 
+									"-webkit-box-shadow", 
+									"-moz-box-shadow", 
+									"border-radius", 
+									"-moz-border-radius", 
+									"-webkit-border-top-left-radius",
+									"-webkit-border-top-right-radius"
+								],
+								".claro .dijitTabContent": [
+									"border-style", 
+									"border-width",
+									"border-color"
+								],
+								".claro .dijitTabPaneWrapper": [
+									"border-width",
+									"border-style",
+                                    "border-color"
+								]
+                            },
+                            "query": "div.dijitTabContainerTop-tabs > div",
+							"simulate": " "
+                        },
+						"Active": {
+                            "selectors": {
+                                ".claro .dijitTabActive .dijitTabInnerDiv": [
+                                    "background-color",
+									"color",
+									"font-style",
+									"font-family",
+									"font-size",
+									"font-weight",
+									"-webkit-transition-duration"
+								],
+								".claro .dijitTabActive .dijitTabContent": [
+									"border-color"
+								]
+							},
+                            "query": "div.dijitTabContainerTop-tabs > div",
+							"simulate": "dijitActive dijitTabActive"
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".claro .dijitTabChecked .dijitTabInnerDiv": [
+                                    "background-color",
+									"color",
+									"font-style",
+									"font-family",
+									"font-size",
+									"font-weight"
+                                ],
+								".claro .dijitTabChecked .dijitTabContent": [
+									"color",
+									"border-color"
+								],
+								".claro .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabContent": [
+									"padding-bottom",
+									"padding-top",
+									"background-image",
+									"background-position",
+									"background-repeat"
+								],
+								".claro .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabInnerDiv": [
+									"box-shadow",
+									"-webkit-box-shadow",
+									"-moz-box-shadow"
+								]
+							},
+                            "query": "div.dijitTabContainerTop-tabs > div",
+							"simulate": "dijitChecked dijitTabChecked"							
+                        },
+                        "Hover": {
+                            "selectors": {
+                                ".claro .dijitTabHover .dijitTabInnerDiv" : [
+                                    "background-color",
+									"-webkit-transition-duration",
+									"color",
+									"font-style",
+									"font-family",
+									"font-size",
+									"font-weight"
+                                ] 
+                            },
+                            "query": "div.dijitTabContainerTop-tabs > div",
+							"simulate": "dijitHover dijitTabHover"							
+                        }
+                    } 
+                },
+                "TabStrip": {
+					"states": {
+						"Normal": {
+							"selectors": {
+								".claro .dijitTabContainerTop-tabs .dijitTab": [
+									"top",
+									"margin-right",
+									"margin-bottom",
+									"padding-top"
+									
+								]
+							},
+							"query": ".dijitTabContainerTop-tabs" 
+						}  
+					}
+				},
+				"TabContentPane": {
+					"states": {
+						"Normal": {
+							"selectors": {
+								".claro .dijitTabPaneWrapper": [
+									/*"display",*/
+									"overflow",
+									"position",
+									/*"background-color",*/
+									"border-width",
+									"border-style",
+                                    "border-color"
+									/*"padding",*/
+									/*"margin"*/
+								],
+								".claro .dijitTabContent": [
+									"border-style", 
+									"border-width",
+									"border-color"
+								],
+								".claro .dijitTabContainerTop-dijitContentPane": [
+									"background-color", 
+									"padding",
+									"font-family",
+									"color",
+									"font-style",
+									"font-family",
+									"font-size",
+									"font-weight"
+								]
+								
+							},
+							"query": ".dijitTabPaneWrapper" 
+						}  
+					}
+				}
+            } 
+        },
+        
+        "TextBox": {
+            "displayName": "TextBox" ,
+            "states": {
+                "Normal": {
+                    "selectors": {
+						".claro .dijitTextBox": [
+							"$std_10" 
+						],
+						".claro .dijitTextBox .dijitInputInner": [
+							"text-align"
+						]
+					},
+                    "query": "$auto" 
+                },
+                "Selected": {
+                    "selectors": {
+						".claro .dijitTextBoxFocused": [
+							"$std_10" 
+						],
+						".claro .dijitTextBoxFocused .dijitInputContainer": [
+							"background",
+							"background-color"
+						]
+					},
+                    "query": ".dijit.dijitReset.dijitLeft.dijitTextBox",
+					"simulate": "dijitTextBoxFocused"
+                },
+                "Hover": {
+                },
+                "Disabled":{},
+                "ReadOnly":{}
+                
+            } 
+        },
+         
+        "TitlePane": {
+            "displayName": "TitlePane" ,
+            "states": {
+                "Normal": {
+					"selectors": {
+						".claro .dijitTitlePane": [
+							"background-color",
+							"border-width",
+							"border-style",
+							"border-color",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"margin-top",
+							"margin-right",
+							"margin-left",
+							"margin-bottom",
+							"max-height",
+							"max-width",
+							"min-height",
+							"min-width"
+							
+						]								
+					},
+					"query": "" 
+				}
+            },
+			"subwidgets": {
+                "TitlePaneTitle": {
+                    "states": {
+						"Normal": {
+							"selectors": {
+								".claro .dijitTitlePaneTitle": [
+									"background-color",
+									"background-image",
+									"background-repeat",
+									"border-width",
+									"border-style",
+									"border-color",
+									"padding-top",
+									"padding-right",
+									"padding-bottom",
+									"padding-left",
+									"min-height",
+									"color",
+									"margin-top",
+									"margin-right",
+									"margin-left",
+									"margin-bottom",
+									"text-decoration",
+									"font-family",
+									"font-size",
+									"font-style",
+									"font-weight",
+									"border-radius", 
+									"-moz-border-radius",
+									"-webkit-border-radius"
+									
+								],
+								".claro .dijitTitlePaneTextNode": [
+									"margin-left",
+									"margin-right",
+									"vertical-align"
+								]
+							},
+							"query": ".dijitTitlePaneTitle",
+							"simulate": " "
+						},                        
+                        "Active":{
+							"selectors": {
+								".claro .dijitTitlePaneTitleActive": [
+									"background-color",
+									"border-color",
+									"background-position",
+									"color",
+									"text-decoration",
+									"font-family",
+									"font-size",
+									"font-style",
+									"font-weight"
+								]
+							},
+							"query": ".dijitTitlePaneTitle",
+							"simulate": "dijitActive dijitTitlePaneTitleActive"
+						},
+						"Hover":{
+							"selectors": {
+								".claro .dijitTitlePaneTitleHover": [
+									"background-color",
+									"border-color",
+									"color",
+									"text-decoration",
+									"font-family",
+									"font-size",
+									"font-style",
+									"font-weight"									
+								]
+							},
+							"query": ".dijitTitlePaneTitle",
+							"simulate": "dijitHover dijitTitlePaneTitleHover"
+						},
+						"Open":{
+							"selectors": {
+								".claro .dijitTitlePane .dijitArrowNode": [
+									"background-image",
+									"background-repeat",
+									"height",
+									"width"								
+								],
+								".claro .dijitTitlePane .dijitOpen .dijitArrowNode":[
+									"background-position"
+								]
+							},
+							"query": ".dijitTitlePaneTitle",
+							"simulate": "dijitOpen"
+						},
+						"Close":{
+							"selectors": {
+								".claro .dijitTitlePane .dijitClosed .dijitArrowNode": [
+									"background-position",
+									"background-image",
+									"background-repeat",
+									"height",
+									"width"									
+								]
+							},
+							"query": ".dijitTitlePaneTitle",
+							"simulate": "dijitClosed"
+						}
+                    } 
+                },
+
+                "TitlePaneContent": {
+                    "states": {
+                        "Normal": {
+							"selectors": {
+								".claro .dijitTitlePaneContentOuter": [
+									"background-color",
+									"border-width",
+									"border-style",
+									"border-color",
+									"border-top",
+									"border-radius", 
+									"-moz-border-radius",
+									"-webkit-border-radius"
+								],
+								".claro .dijitTitlePaneContentInner": [
+									"padding",
+									"text-decoration",
+									"color",
+									"font-family",
+									"font-size",
+									"font-style",
+									"font-weight"
+								]
+							},
+							"query": ".dijitTitlePaneContentInner",
+							"simulate": " "
+						}
+                    } 
+                }
+            } 
+        },
+		
+        "Toolbar": {
+            "displayName": "Toolbar",
+            "states": {
+                "Normal": {
+                }
+                
+            },
+            "subwidgets": {
+                "Button": {
+                    "states": {
+                       "Normal": {
+							"selectors": {
+								".claro .dijitToolbar .dijitButtonNode": [
+									"$std_10" 
+								] 
+							},
+							"query": "$auto" 
+						},
+						"Active": {
+							"selectors": {
+								".claro .dijitToolbar .dijitButtonActive .dijitButtonNode": [
+									"$std_10" 
+								] 
+							},
+							"query": "$auto",
+							"simulate": "dijitActive dijitButtonActive"
+						},
+						"Hover": {
+							"selectors": {
+								".claro .dijitToolbar .dijitButtonHover .dijitButtonNode": [
+									"$std_10" 
+								]
+							},
+							"query": "$auto",
+                     		"simulate": "dijitHover dijitButtonHover"
+						
+						}								
+					} 
+				}
+			}
+        },
+        "Dialog": {
+            "displayName": "Dialog",
+            "states": {
+                "Normal": {
+                }
+            },
+            "subwidgets": {
+                "DialogTitle": {
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitDialogTitleBar": [
+                                    "background-color",
+                                    "border-top-width",
+                                    "border-top-style",
+                                    "border-top-color",
+                                    "border-radius", 
+                                    "-moz-border-radius",
+                                    "-webkit-border-radius",
+                                    "padding",
+                                    "text-decoration",
+                                    "color",
+                                    "font-family",
+                                    "font-size",
+                                    "font-style",
+                                    "font-weight"
+                                ]
+                            },
+                            "query": ".dijitDialogTitleBar",
+                            "simulate": " "
+                        }
+                    }
+                },
+                "DialogPaneContent": {
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitDialogPaneContent": [
+                                    "background-color",
+                                    "border-width",
+                                    "border-style",
+                                    "border-color",
+                                    "border-top",
+                                    "border-radius", 
+                                    "-moz-border-radius",
+                                    "-webkit-border-radius",
+                                    "padding",
+                                    "text-decoration",
+                                    "color",
+                                    "font-family",
+                                    "font-size",
+                                    "font-style",
+                                    "font-weight"
+                                ]
+                            },
+                            "query": ".dijitDialogPaneContent",
+                            "simulate": " "
+                        }
+                    }
+                },
+                "DialogPaneActionBar": {
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitDialogPaneActionBar": [
+                                    "background-color",
+                                    "border-width",
+                                    "border-style",
+                                    "border-color",
+                                    "border-top",
+                                    "border-radius", 
+                                    "-moz-border-radius",
+                                    "-webkit-border-radius",
+                                    "padding",
+                                    "text-decoration",
+                                    "color",
+                                    "font-family",
+                                    "font-size",
+                                    "font-style",
+                                    "font-weight"
+                                ]
+                            },
+                            "query": ".dijitDialogPaneActionBar",
+                            "simulate": " "
+                        }
+                    }
+                }
+            }
+        },
+        "Tooltip": {
+            "displayName": "Tooltip",
+            "states": {
+                "Normal": {
+					"selectors": {
+						".claro .dijitTooltipContainer": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-repeat",
+							"border-width",
+							"border-style",
+							"border-color",
+							"border",
+							"border-radius", 
+							"-moz-border-radius",
+							"-webkit-border-radius",
+							"-moz-box-shadow",
+							"-webkit-box-shadow",
+							"box-shadow",
+							"padding",
+							"text-decoration",
+							"color",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight"
+						]
+					}
+                }
+            },
+            "subwidgets": {
+                "TooltipConnector": {
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitTooltipConnector": [
+                                    "background-color",
+									"background-image",
+									"background-repeat",
+									"height",
+									"width",
+									"z-index",
+                                    "border-width",
+                                    "border-style",
+                                    "border-color"
+                                ]
+                            },
+                            "query": ".dijitTooltipConnector",
+                            "simulate": " "
+                        }
+                    }
+                }
+			}
+		}
+    }
+}

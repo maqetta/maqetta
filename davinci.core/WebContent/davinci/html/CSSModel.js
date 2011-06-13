@@ -564,18 +564,25 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 
  
 	 davinci.html.CSSSelector.prototype.matches = function(domNode, index){
+		 //FIXME: Will produce incorrect results if more than 9 class matches
+		 //Should use a very higher "base", not just base 10
 		 var inx=index || 0;
 		 var node=domNode[inx];
 		 var specific=0;
+		 var anymatches=false;
 		 if (this.id)
 		 {
 			if (this.id!=node.id)
 				return -1;
 			specific+=100;
+			anymatches=true;
 		 }
 		 if (this.element)
 		 {
-			if (this.element!='*')
+			if (this.element=='*'){
+				anymatches=true;
+			}
+			else
 			{
 				if (this.element!=node.tagName)
 	            {
@@ -583,6 +590,7 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 						return -1;
 	            }  				
 				specific+=1;
+				anymatches=true;
 			}
 		 }
 		 if (this.cls && node.classes)
@@ -601,6 +609,8 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 						  return -1;
 					  
 				  }
+				  specific+=(matchClasses.length*10);
+				  anymatches=true;
 			 }
 			  else
 			{
@@ -609,13 +619,17 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 					  if (found=(classes[i]==this.cls))
 						  break;
 				  if (!found)
-					  return -1;
-				  
+					  return -1;	  
+				  specific+=10;
+				  anymatches=true;
 			}
 				  
-			  specific+=10;
  		 }
-		 return specific;
+		 if(!anymatches){
+			 return -1;
+		 }else{
+		 	return specific;
+		 }
 		 
 	 }
 	

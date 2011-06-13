@@ -13,24 +13,25 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 	
 	/* change increment for spinners */
 	numberDelta : 1,
-	insertPosition : 1,
+	insertPosition : 9,
 	data : null,
 	
 	postCreate : function(){
 		
 		this.inherited(arguments);
 		
-		var statics = ["", davinci.ve.widgets.ColorPicker.divider, "Choose....", "Remove Value"];
+		var statics = ["", davinci.ve.widgets.ColorPicker.divider, "Color picker....", "Remove Value"];
 		this._run = {};
 		if(!this.data ){
 			this.data=[{value:statics[0]}];
-			
 			this.data.push({value:statics[2],run:this._chooseColorValue});
 			this.data.push({value:statics[3],run:function(){this.attr('value','')}});
 			this.data.push({value:statics[1]});   
-			for(var name in dojo.Color.named){
-				this.data.push({value:name});
-			}
+			this.data.push({value:'black'});
+			this.data.push({value:'white'});
+			this.data.push({value:'red'});
+			this.data.push({value:'green'});
+			this.data.push({value:'blue'});
 			
 		              
 		}else{
@@ -46,19 +47,22 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		}
 		
 		this._store = new davinci.ve.widgets.ColorStore({values:displayValues, noncolors:statics});
-		this._dropDown = new dijit.form.ComboBox({store:this._store, required: false, labelType:'html', labelAttr:'label'});
+		this._dropDown = new dijit.form.ComboBox({store:this._store, required: false, labelType:'html', labelAttr:'label', style:'width:100%'});
 		dojo.connect(this._dropDown, "onChange", this, "_onChange");
 		var top = dojo.doc.createElement("div");
 		dojo.addClass(top, 'colorPicker');
 		this._selectedColor = dojo.doc.createElement("div");
 		this._selectedColor.innerHTML = "&nbsp;"
-			dojo.addClass(this._selectedColor, 'colorPickerSelected');
-		top.appendChild(this._dropDown.domNode);
+		dojo.addClass(this._selectedColor, 'colorPickerSelected');
+		dojo.connect(this._selectedColor,'onclick',dojo.hitch(this,function(event){
+			this._chooseColorValue();
+		}));
 		top.appendChild(this._selectedColor);
+		var combo_container = dojo.doc.createElement("div");
+		dojo.addClass(combo_container, 'colorPickerComboContainer');
+		combo_container.appendChild(this._dropDown.domNode);
+		top.appendChild(combo_container);
 		this.domNode.appendChild(top);
-		
-	
-		
 	},
 	_chooseColorValue : function(){
 		/* make the color value its original */
@@ -125,7 +129,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 			
 			var value = dojo.colorFromString(this._value)
 			content.attr('value', value.toHex());
-		}else if(this._value!=null){
+		}else if(this._value!=null && this._value!=''){
 			content.attr('value', this._value);
 		}
 		popup(this)();

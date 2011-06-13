@@ -67,7 +67,6 @@
 		<exec executable="git" outputproperty="git.describe" dir="${user.dir}/repository/maqetta">
 			<arg value="describe"/>
 		</exec>
-<echo>git.describe variable: '${git.describe}'</echo> 
 		<filter token="revision" value="${git.describe}"/>
 		<copy file="${target.folder}/WebContent/pagedesigner.html" tofile="${target.folder}/WebContent/pagedesigner.html.tmp" filtering="true"/>
 		<copy file="${target.folder}/WebContent/welcome.html" tofile="${target.folder}/WebContent/welcome.html.tmp" filtering="true"/>
@@ -240,6 +239,7 @@
 		<delete dir="${target.folder}/WebContent/dojox"/>
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
+        <delete dir="${target.folder}/WebContent/preview"/>
 		<delete dir="${target.folder}/WebContent/workspace"/>
 		<move todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="move Dojo build">
 			<fileset dir="${target.folder}/WebContent/release/dojo">
@@ -248,6 +248,7 @@
 				<include name="dijit/"/>
 				<include name="dojox/"/>
 				<include name="eclipse/"/>
+                <include name="preview/"/>
 				<include name="workspace/"/>
 			</fileset>
 		</move>

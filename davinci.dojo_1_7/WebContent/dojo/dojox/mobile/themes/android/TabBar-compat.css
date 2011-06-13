@@ -1,0 +1,24 @@
+
+.dj_ie6 .mblTabBarButtonDiv, .dj_ie7 .mblTabBarButtonDiv {
+	left: auto;
+}
+.mblTabPanelHeader {
+}
+.mblTabButton {
+	background-image: url(compat/tab-button-bg.png);
+}
+.mblTabButtonSelected {
+	background-image: url(compat/tab-sel-button-bg.png);
+}
+*html .mblTabButton { 
+	behavior: expression(
+		(function(el){
+			if(!el.previousSibling)
+				el.style.borderWidth = "1px";
+			el.style.behavior = "none";
+		})(this)
+	);
+}
+.dj_ie6 .mblTabPanelHeader .mblDomButton {
+	left: 0px;
+}

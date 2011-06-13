@@ -33,11 +33,11 @@
 </g>
 <rect id="ScreenRect" x="177.071" y="257.373" fill="#FFFFFF" width="144" height="216"/>
 <rect id="DeviceRect" x="164.26" y="210.272" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="171.36" height="337.681"/>
+<rect id="ResolutionRect" x="177.071" y="257.373" fill="none" width="340" height="480"/>
 <path fill="none" stroke="#BCBEC0" stroke-width="0.7556" stroke-miterlimit="10" d="M181.998,546.851
 	c-9.102,0-16.505-7.384-16.505-16.458V228.19c0-9.075,7.404-16.458,16.505-16.458h135.869c9.102,0,16.506,7.383,16.506,16.458
 	v302.203c0,9.074-7.405,16.458-16.506,16.458H181.998z"/>
 <path fill="none" stroke="#BCBEC0" stroke-width="0.7556" stroke-miterlimit="10" d="M181.998,546.128
 	c-8.702,0-15.779-7.061-15.779-15.735V228.19c0-8.676,7.078-15.734,15.779-15.734h135.869c8.702,0,15.78,7.058,15.78,15.734v302.203
 	c0,8.675-7.079,15.735-15.78,15.735H181.998z"/>
-<rect id="HundredPixelRect" x="293.495" y="300.051" width="42.352941176470588" height="45" fill="none"/>
 </svg>

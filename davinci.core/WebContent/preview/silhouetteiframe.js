@@ -18,15 +18,63 @@
 	* Call updateObjectElement(), setScaleFactor() or setOrientation() when
 		svgfilename isn't null
 		
-	Note that there are no Dojo dependencies in this code except for the
-	dojo.provide() and dojo.declare() wrappers. 
-	Everything inside is library-independent.
+	Note that there are no Dojo dependencies in this code. The dojo.provide()
+	allows integration with a Dojo-based system but the code will work even if Dojo
+	isn't loaded.
 
 */
 
-dojo.provide('preview.silhouetteiframe');
+if(window.dojo){
+    dojo.provide('preview.silhouetteiframe');
+}
+if (!window.preview) {
+    preview = {};
+}
 
-dojo.declare("preview.silhouetteiframe", null, {
+// Class constructor
+preview.silhouetteiframe = function(args){
+	var rootNode = this.rootNode = args.rootNode;
+	if(!rootNode){
+		console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
+		return;
+	}
+	if(!this.verifyDOMTree(false)){
+		return;
+	}
+	this._isWebKit = navigator.userAgent.indexOf("WebKit") != -1;
+	if(args.svgfilename){
+		this.svgfilename = args.svgfilename;
+	}
+	if(args.orientation){
+		this.orientation = args.orientation;
+	}
+	if(args.scalefactor){
+		this.scalefactor = args.scalefactor;
+	}
+	if(args.margin){
+		this.margin = args.margin;
+	}
+	
+	// Save old 'style' attribute values so we can restore later if device==none
+	this._silhouette_div_container_orig_style={};
+	var style=rootNode.style;
+	for(var i=0; i<style.length; i++){
+		this._silhouette_div_container_orig_style[style.item(i)] = style[style.item(i)];
+	}
+	var silhouetteiframe_iframes = rootNode.querySelectorAll(".silhouetteiframe_iframe");
+	if(silhouetteiframe_iframes.length>0){
+		this._init_silhouetteiframe_iframe_orig_style();
+	}else{
+		this._silhouetteiframe_iframe_orig_style=null; // if no iframe yet, can't grab initial style properties
+	}
+	
+	rootNode._silhouetteiframe = this; // Attach "this" object to rootNode
+	this.addStyleDeclarations();
+	this.updateObjectElement();
+}
+
+// Class prototype
+preview.silhouetteiframe.prototype = {
 
 	rootNode:null,
 	svgfilename:undefined,
@@ -37,46 +85,6 @@ dojo.declare("preview.silhouetteiframe", null, {
 	_silhouette_div_container_orig_style:{},
 	_silhouetteiframe_iframe_orig_style:{},
 	
-	constructor: function(args){
-		var rootNode = this.rootNode = args.rootNode;
-		if(!rootNode){
-			console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
-			return;
-		}
-		if(!this.verifyDOMTree(false)){
-			return;
-		}
-		this._isWebKit = navigator.userAgent.indexOf("WebKit") != -1;
-		if(args.svgfilename){
-			this.svgfilename = args.svgfilename;
-		}
-		if(args.orientation){
-			this.orientation = args.orientation;
-		}
-		if(args.scalefactor){
-			this.scalefactor = args.scalefactor;
-		}
-		if(args.margin){
-			this.margin = args.margin;
-		}
-		
-		// Save old 'style' attribute values so we can restore later if device==none
-		this._silhouette_div_container_orig_style={};
-		var style=rootNode.style;
-		for(var i=0; i<style.length; i++){
-			this._silhouette_div_container_orig_style[style.item(i)] = style[style.item(i)];
-		}
-		var silhouetteiframe_iframes = rootNode.querySelectorAll(".silhouetteiframe_iframe");
-		if(silhouetteiframe_iframes.length>0){
-			this._init_silhouetteiframe_iframe_orig_style();
-		}else{
-			this._silhouetteiframe_iframe_orig_style=null; // if no iframe yet, can't grab initial style properties
-		}
-		
-		rootNode._silhouetteiframe = this; // Attach "this" object to rootNode
-		this.addStyleDeclarations();
-		this.updateObjectElement();
-    },
     
 	_init_silhouetteiframe_iframe_orig_style: function(){
 		this._silhouetteiframe_iframe_orig_style={};
@@ -116,17 +124,17 @@ dojo.declare("preview.silhouetteiframe", null, {
 		// Only add style declarations if not already there
 		var style_elems = document.querySelectorAll('style.silhouetteiframe_styles');
 		if(style_elems.length==0){
-			if(!document.head){
-				var head_elem = document.createElement('head');
-				var html_elem = document.documentElement;
-				html_elem.insertBefore(head_elem, html_elem.firstChild);
+			var head_elem = document.querySelectorAll('head')[0];
+			if(!head_elem){
+				console.log('ERROR: silhouetteiframe.js addStyleDeclarations(): no HEAD element');
+				return;
 			}
 			var style_elem = document.createElement('style');
 			style_elem.setAttribute('type','text/css');
 			style_elem.setAttribute('class','silhouetteiframe_styles');
 			style_elem.innerHTML = '.silhouetteiframe_div_container { display:inline-block; text-align:left; }\n'+
 					'.silhouetteiframe_iframe { position:absolute; top:0px; left:0px; border:none; }';
-			document.head.appendChild(style_elem);
+			head_elem.appendChild(style_elem);
 		}
 	},
 	
@@ -178,7 +186,21 @@ dojo.declare("preview.silhouetteiframe", null, {
 
 	svgloadhandler: function(object_elem){
 		this._object_elem = object_elem;
-		this._silhouette_reset_size_position(false);
+		var svg_doc = object_elem.getSVGDocument();
+		if(svg_doc.documentURI == object_elem.data){
+			this._silhouette_reset_size_position(false);
+		}else{
+			//Chrome bug (WebKit?) where sometimes the older object_elem for the
+			//previous SVG file is passed upon loading the new SVG file.
+			//So, if SVG doc's URI doesn't match object element's URI, force a
+			//reload within a timeout by messing with 'display' property on outer DIV
+			this.rootNode.style.display='none';
+			var that = this;
+			setTimeout(function(){
+				that.rootNode.style.display='block';
+				that._silhouette_reset_size_position(false);
+			},1);
+		}
 	},
 
 	setSVGFilename: function(svgfilename){
@@ -217,25 +239,19 @@ dojo.declare("preview.silhouetteiframe", null, {
 			return;
 		var svg_elem = svg_doc.documentElement;
 		// Note: in future, maybe multiple silhouettes at once
-		var iframe_elems = this.rootNode.querySelectorAll(".silhouetteiframe_iframe");
-		if(iframe_elems.length<=0)
+		var iframe_elem = this.rootNode.querySelector(".silhouetteiframe_iframe");
+		if(!iframe_elem)
 			return;
-		var iframe_elem = iframe_elems[0];
-		var device_elems = svg_doc.querySelectorAll("#DeviceRect");
-		if(device_elems.length<=0)
+		var device_elem = svg_doc.querySelector("#DeviceRect");
+		if(!device_elem)
 			return;
-		var device_elem = device_elems[0];
-		var screen_elems = svg_doc.querySelectorAll("#ScreenRect");
-		if(screen_elems.length<=0)
+		var screen_elem = svg_doc.querySelector("#ScreenRect");
+		if(!screen_elem)
 			return;
-		var screen_elem = screen_elems[0];
-		// HundredPixelRect really should be there, but don't die if it isn't
-		var hundredpixel_elems = svg_doc.querySelectorAll("#HundredPixelRect");
-		var hundredpixel_elem;
-		if(hundredpixel_elems.length>0){
-			hundredpixel_elem = hundredpixel_elems[0];
-		}else{
-			console.log('WARNING: Missing #HundredPixelRect');
+		// ResolutionRect really should be there, but don't die if it isn't
+		var resolution_elem = svg_doc.querySelector("#ResolutionRect");
+		if(!resolution_elem){
+			console.log('WARNING: Missing #resolutionRect');
 		}
 		if(scalefactor<=0)
 			return;
@@ -254,15 +270,15 @@ dojo.declare("preview.silhouetteiframe", null, {
 		var screen_offset_y = screen_y - device_y;
 
 		var scale_adjust_x, scale_adjust_y;
-		if(hundredpixel_elem){
-			var hundredpixel_width = hundredpixel_elem.getAttribute("width")-0;	
-			var hundredpixel_height = hundredpixel_elem.getAttribute("height")-0;
-			if(hundredpixel_width>0 && hundredpixel_height>0){
-				scale_adjust_x = (100/hundredpixel_width)*scalefactor;
-				scale_adjust_y = (100/hundredpixel_height)*scalefactor;
+		if(resolution_elem){
+			var resolution_width = resolution_elem.getAttribute("width")-0;	
+			var resolution_height = resolution_elem.getAttribute("height")-0;
+			if(resolution_width>0 && resolution_height>0 && screen_width>0 && screen_height>0){
+				scale_adjust_x = (resolution_width/screen_width)*scalefactor;
+				scale_adjust_y = (resolution_height/screen_height)*scalefactor;
 			}
 		}
-		// If #HundredPixelWidth rect not there, or hundredpixel_width<=0
+		// If #ResolutionWidth rect not there, or resolution_width<=0
 		if(!scale_adjust_x){
 			// Overcome Illustrator bug where it generates SVG files that
 			// assume 72px/in versus browsers assuming 96px/in
@@ -299,7 +315,7 @@ dojo.declare("preview.silhouetteiframe", null, {
 			g2_elem=svg_doc.getElementById(g2_id);
 			a1_elem=svg_doc.getElementById(a1_id);
 			a2_elem=svg_doc.getElementById(a2_id);
-			if(!g2_elem || !a1_elem || !a2_elem)
+			if(!g2_elem /* || !a1_elem || !a2_elem */)	//FF3.6 bug - getElementById fails on anim elements even though they are there!
 				return;
 		}else{
 			// Move all children of <svg> to be descendants of 2 nested <g> elements
@@ -365,14 +381,13 @@ dojo.declare("preview.silhouetteiframe", null, {
 		// so have to set width/height to reciprocal
 		iby_style.width=(100/scalefactor)+"%";
 		iby_style.height=(100/scalefactor)+"%";
-		
-		var ffadjust=1;	//FIXME: Pretty sure we can delete this variable, but need further FF testing first
+
 		if(orientation!=="landscape"){   // "portrait"
 			// Note that these following 3 attributes SHOULDN'T BE NECESSARY
 			// but Safari implements these 3 attributes on outermost <svg> INCORRECTLY	
 			svg_elem.setAttribute("width",scaled_device_width+"px");
 			svg_elem.setAttribute("height",scaled_device_height+"px");
-			svg_elem.setAttribute("viewBox",0+" "+0+" "+(scaled_device_width*ffadjust)+" "+(scaled_device_height*ffadjust));
+			svg_elem.setAttribute("viewBox",0+" "+0+" "+scaled_device_width+" "+scaled_device_height);
 			
 			var scaled_screen_offset_y = screen_offset_y * scale_adjust_y;
 			ifr_style.marginLeft = scaled_screen_offset_x+"px";
@@ -384,19 +399,29 @@ dojo.declare("preview.silhouetteiframe", null, {
 			// Firefox mysteriously crashes if you change animation values
 			// but don't actually run animations, so we will run animations always
 			// but if doAnimations if false, set 'from' value to be same as 'to' value
-			if(doAnimations){
-				a1_elem.setAttribute('from',scaled_device_height+',0');
-				a2_elem.setAttribute('from','90');
-			}else{
-				a1_elem.setAttribute('from','0,0');
-				a2_elem.setAttribute('from','0');
+			if(a1_elem && a2_elem){	//FF3.6 bug - getElementById fails on anim elements even though they are there!
+				if(doAnimations){
+					a1_elem.setAttribute('from',scaled_device_height+',0');
+					a2_elem.setAttribute('from','90');
+				}else{
+					a1_elem.setAttribute('from','0,0');
+					a2_elem.setAttribute('from','0');
+				}
+				a1_elem.setAttribute('to','0,0');
+				a2_elem.setAttribute('to','0');
 			}
-			a1_elem.setAttribute('to','0,0');
-			a2_elem.setAttribute('to','0');
-			obj_style.width = adj_scaled_device_width+"px";
-			obj_style.height = adj_scaled_device_height+"px";
-			div_style.width=adj_scaled_device_width+"px";
-			div_style.height=adj_scaled_device_height+"px";
+			if(this._isWebKit){	
+				// Overcome WebKit bug where scrollbars appear when they shouldn't	
+				obj_style.width = adj_scaled_device_width+"px";
+				obj_style.height = adj_scaled_device_height+"px";
+				div_style.width = adj_scaled_device_width+"px";
+				div_style.height = adj_scaled_device_height+"px";
+			}else{
+				obj_style.width = scaled_device_width+"px";
+				obj_style.height = scaled_device_height+"px";
+				div_style.width = scaled_device_width+"px";
+				div_style.height = scaled_device_height+"px";
+			}
 			
 		}else{		// "landscape"
 			// Note that these following 3 attributes SHOULDN'T BE NECESSARY
@@ -414,24 +439,34 @@ dojo.declare("preview.silhouetteiframe", null, {
 			// Firefox mysteriously crashes if you change animation values
 			// but don't actually run animations, so we will run animations always
 			// but if doAnimations if false, set 'from' value to be same as 'to' value
-			if(doAnimations){
-				a1_elem.setAttribute('from','0,0');
-				a2_elem.setAttribute('from','0');
-			}else{
-				a1_elem.setAttribute('from',scaled_device_height+',0');
-				a2_elem.setAttribute('from','90');
+			if(a1_elem && a2_elem){	//FF3.6 bug - getElementById fails on anim elements even though they are there!
+				if(doAnimations){
+					a1_elem.setAttribute('from','0,0');
+					a2_elem.setAttribute('from','0');
+				}else{
+					a1_elem.setAttribute('from',scaled_device_height+',0');
+					a2_elem.setAttribute('from','90');
+				}
+				a1_elem.setAttribute('to',scaled_device_height+',0');
+				a2_elem.setAttribute('to','90');
 			}
-			a1_elem.setAttribute('to',scaled_device_height+',0');
-			a2_elem.setAttribute('to','90');
-			obj_style.width = adj_scaled_device_height+"px";
-			obj_style.height = adj_scaled_device_width+"px";
-			div_style.width=adj_scaled_device_height+"px";
-			div_style.height=adj_scaled_device_width+"px";
+			if(this._isWebKit){		
+				// Overcome WebKit bug where scrollbars appear when they shouldn't	
+				obj_style.width = adj_scaled_device_height+"px";
+				obj_style.height = adj_scaled_device_width+"px";
+				div_style.width = adj_scaled_device_height+"px";
+				div_style.height = adj_scaled_device_width+"px";
+			}else{
+				obj_style.width = scaled_device_height+"px";
+				obj_style.height = scaled_device_width+"px";
+				div_style.width = scaled_device_height+"px";
+				div_style.height = scaled_device_width+"px";
+			}
 		}
-		if(a1_elem.beginElement){
+		if(a1_elem && a2_elem && a1_elem.beginElement){
 			a1_elem.beginElement();
 			a2_elem.beginElement();
 		}
 	}
 
-});
+}

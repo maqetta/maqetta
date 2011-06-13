@@ -1,13 +1,8 @@
 package org.davinci.server;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
-import org.davinci.server.internal.Links;
-import org.davinci.server.internal.Links.Link;
 import org.davinci.server.user.User;
 import org.davinci.server.util.JSONWriter;
 
@@ -86,9 +81,9 @@ public class Resource {
                 }
                 jsonWriter.startObject().addField("name", ((IVResource) parents.get(j)).getName());
                 jsonWriter.addFieldName("members").startArray();
-                
+
                 String parentPath = ((IVResource) parents.get(j)).getPath();
-                
+
                 IVResource[] members = user.listFiles(parentPath);
                 for (int k = 0; k < members.length; k++) {
                     if (Resource.isHidden(members[k])) {

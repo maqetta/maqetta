@@ -391,7 +391,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		var loading = doc.createElement("div");
 		var contentPaneAncestor = this._findContentPaneAncestor(iframeNode);
 		if(!contentPaneAncestor){
-			console.log('ERROR. SmartInput.js _loading(). No ancestor ContentPane');
+		loading.innerHTML='<table><tr><td>Loading...</td></tr></table>';
 			return;
 		}
 		contentPaneAncestor.appendChild(loading);

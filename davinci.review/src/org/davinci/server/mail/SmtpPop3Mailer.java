@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
  * This is an helper that send mail via smtp protocol. It is intended to be used by a single thread,
  * so do not share an instance among more than one thread.
  * 
- * @author young
  */
 public class SmtpPop3Mailer {
 

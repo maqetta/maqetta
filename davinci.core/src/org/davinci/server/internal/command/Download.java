@@ -1,10 +1,7 @@
 package org.davinci.server.internal.command;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -33,7 +30,7 @@ public class Download extends Command {
         for (int i = 0; i < files.length; i++) {
             files[i] = user.getResource(resources[i]);
         }
-        
+
         try {
             resp.setContentType("application/x-download");
             resp.setHeader("Content-Disposition", "attachment; filename=" + path);
@@ -65,7 +62,7 @@ public class Download extends Command {
                 zipDir(files[i], zos);
                 continue;
             }
-          
+
                 InputStream fis = files[i].getInputStreem();
                 ZipEntry anEntry = new ZipEntry(files[i].getPath().toString());
                 // place the zip entry in the ZipOutputStream object

@@ -1,0 +1,421 @@
+
+  /**
+ * TabContainer
+ */
+/* wdr below was added to enable adding borders, background and margins to the container*/
+ .sketch .dijitTabContainer {
+}
+
+  /*** some common features ***/
+ .sketch .dijitTabPaneWrapper {
+    background : #fff;
+}
+ .sketch .dijitTabPaneWrapper, .sketch .dijitTabContainerTop-tabs, .sketch .dijitTabContainerBottom-tabs, .sketch .dijitTabContainerLeft-tabs, .sketch .dijitTabContainerRight-tabs {
+    
+  /* todo: add common class name for this div */
+border-color : #000000;
+    border-width : 3px;
+}
+ .sketch .dijitTabCloseButton {
+    margin-left : 0;
+}
+ .sketch .dijitTabCloseIcon {
+    background : url("images/tabClose.png") no-repeat;
+    width : 14px;
+    height : 14px;
+    margin-left : 5px;
+    margin-top : -1px;
+    margin-right : -3px;
+}
+ .sketch .dijitTabCloseButtonHover .dijitTabCloseIcon {
+    background-position : -14px;
+}
+ .sketch .dijitTabCloseButtonActive .dijitTabCloseIcon {
+    background-position : -28px;
+}
+ .sketch .dijitTabSpacer {
+    
+  /* set the spacer invisible.  note that height:0 doesn't work on IE/quirks, it's still 10px. */
+display : none;
+}
+ .sketch .dijitTabInnerDiv {
+    background-color : #ffffff;
+    -webkit-transition-property : background-color, border;
+    -webkit-transition-duration : .35s;
+    color : #4a4a4a;
+}
+ .sketch .dijitTabHover .dijitTabInnerDiv {
+    background-color : #ffffff;
+    -webkit-transition-duration : .25s;
+    color : #000;
+}
+ .sketch .dijitTabActive .dijitTabInnerDiv {
+    background-color : #ffffff;
+    color : #000;
+    -webkit-transition-duration : .1s;
+}
+ .sketch .dijitTabChecked .dijitTabInnerDiv {
+    background-color : #ffffff;
+    color : #000;
+}
+ .sketch .dijitTabContent {
+    border : 1px solid #b5bcc7;
+    border-color : #000000;
+    border-width : 3px;
+}
+ .sketch .dijitTabHover .dijitTabContent, .sketch .dijitTabActive .dijitTabContent {
+    border-color : #000000;
+}
+ .sketch .dijitTabChecked .dijitTabContent {
+    color : #000;
+    border-color : #000000;
+}
+ .sketch .tabStripButton .dijitTabInnerDiv {
+    background-color : transparent;
+}
+ .sketch .tabStripButton .dijitTabContent {
+    border : none;
+}
+
+  /*** end common ***/
+/*************** top tab ***************/
+ .sketch .dijitTabContainerTop-tabs .dijitTab {
+    top : 1px;/* used for overlap */
+
+    margin-right : 1px;
+    padding-top : 3px;
+    margin-bottom : -3px;
+}
+ .dj_ie7 .sketch .dijitTabContainerTop-tabs .dijitTab {
+    top : 3px;
+}
+
+  /* for top tab padding. change height when status changes */
+ .sketch .dijitTabContainerTop-tabs .dijitTabContent {
+    
+  /* padding:3px 8px 3px 4px; wdr davanici 0.5 */
+padding-top : 3px;
+    padding-right : 8px;
+    padding-bottom : 1px;
+    padding-left : 4px;
+    border-bottom : 1px;/* round the corners wdr */
+
+    border-radius : 2px 2px 0px 0px;
+    -moz-border-radius : 6px 6px 0px 0px;
+    -webkit-border-top-left-radius : 2px;
+    -webkit-border-top-right-radius : 2px;
+    background-position : 0px 0px;
+    background-repeat : repeat-x;
+    min-width : 60px;
+    text-align : center;
+}
+ .sketch .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabContent {
+    padding-bottom : 4px;
+    padding-top : 6px;
+}
+ .dj_ie .sketch .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabContent {
+    border-bottom : none;
+}
+
+  /* normal status */
+ .sketch .dijitTabContainerTop-tabs .dijitTabInnerDiv {
+    background-image : url("images/tabTop.png");
+    background-position : 0px -248px;
+    background-position : bottom;
+    background-repeat : repeat-x;
+    box-shadow : 0px -1px 1px rgba(0, 0, 0, 0.04);
+    -webkit-box-shadow : 0px -1px 1px rgba(0, 0, 0, 0.04);
+    -moz-box-shadow : 0px -1px 1px rgba(0, 0, 0, 0.04);
+}
+
+  /* checked status */
+ .sketch .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabInnerDiv {
+    box-shadow : 0px -1px 2px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow : 0px -1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow : 0px -1px 2px rgba(0, 0, 0, 0.05);
+}
+ .sketch .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabContent {
+    background-position : 0px -102px;
+    background-repeat : repeat-x;
+}
+
+  /** end top tab **/
+/*************** bottom tab ***************/
+ .sketch .dijitTabContainerBottom-tabs .dijitTab {
+    top : -1px;/* used for overlap */
+
+    margin-right : 1px;
+}
+
+  /* calculate the position and size */
+ .sketch .dijitTabContainerBottom-tabs .dijitTabContent {
+    padding : 3px 8px 4px 4px;
+    border-top : none;
+    background-image : url("images/tabBottom.png");
+    background-position : 0px -249px;
+    background-repeat : repeat-x;
+    background-position : bottom;
+    min-width : 60px;
+    text-align : center;
+}
+ .sketch .dijitTabContainerBottom-tabs .dijitTab {
+    padding-bottom : 3px;
+}
+
+  /* normal status */
+ .sketch .dijitTabContainerBottom-tabs .dijitTabInnerDiv {
+    background-image : url("images/tabBottom.png");
+    background-position : top;
+    background-repeat : repeat-x;
+    box-shadow : 0px 1px 1px rgba(0, 0, 0, 0.04);
+    -webkit-box-shadow : 0px 1px 1px rgba(0, 0, 0, 0.04);
+    -moz-box-shadow : 0px 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+  /* checked status */
+ .sketch .dijitTabContainerBottom-tabs .dijitTabChecked .dijitTabContent {
+    padding-bottom : 7px;
+    padding-top : 4px;
+    background-position : 0px -119px;
+}
+ .sketch .dijitTabContainerBottom-tabs .dijitTabChecked {
+    padding-bottom : 0;
+}
+ .sketch .dijitTabContainerBottom-tabs .dijitTabChecked .dijitTabInnerDiv {
+    background-image : none;
+    box-shadow : 0px 1px 2px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow : 0px 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow : 0px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+  /** end bottom tab **/
+/*************** left tab ***************/
+ .sketch .dijitTabContainerLeft-tabs .dijitTab {
+    left : 1px;/* used for overlap */
+
+    margin-bottom : 1px;
+}
+
+  /* normal status */
+ .sketch .dijitTabContainerLeft-tabs .dijitTabInnerDiv {
+    background-image : url("images/tabLeft.png");
+    background-position : -347px -340px;
+    background-repeat : repeat-y;
+}
+ .sketch .dijitTabContainerLeft-tabs .dijitTabContent {
+    padding : 3px 8px 4px 4px;
+    background-image : url("images/tabLeft.png");
+    background-repeat : repeat-y;
+    background-position : 0px 0px;
+}
+
+  /* checked status */
+ .sketch .dijitTabContainerLeft-tabs .dijitTabChecked .dijitTabContent {
+    padding-right : 9px;
+    border-right : none;
+    background-image : none;
+}
+ .sketch .dijitTabContainerLeft-tabs .dijitTabChecked .dijitTabInnerDiv {
+    background-position : 0px -179px;
+    background-repeat : repeat-y;
+    box-shadow : -1px 0px 2px rgba(0, 0, 0, .05);
+    -webkit-box-shadow : -1px 0px 2px rgba(0, 0, 0, .05);
+    -moz-box-shadow : -1px 0px 2px rgba(0, 0, 0, 0.05);
+}
+
+  /** end left tab **/
+/*************** right tab ***************/
+ .sketch .dijitTabContainerRight-tabs .dijitTab {
+    left : -1px;/* used for overlap */
+
+    margin-bottom : 1px;
+}
+
+  /* normal status */
+ .sketch .dijitTabContainerRight-tabs .dijitTabInnerDiv {
+    background-image : url("images/tabRight.png");
+    background-repeat : repeat-y;
+    background-position : -1px -347px;
+}
+ .sketch .dijitTabContainerRight-tabs .dijitTabContent {
+    padding : 3px 8px 4px 4px;
+    background-image : url("images/tabRight.png");
+    background-position : right top;
+    background-repeat : repeat-y;
+}
+
+  /* checked status */
+ .sketch .dijitTabContainerRight-tabs .dijitTabChecked .dijitTabContent {
+    padding-left : 5px;
+    border-left : none;
+    background-image : none;
+}
+ .sketch .dijitTabContainerRight-tabs .dijitTabChecked .dijitTabInnerDiv {
+    background-position : -348px -179px;
+    box-shadow : 1px 0px 2px rgba(0, 0, 0, 0.07);
+    -webkit-box-shadow : 1px 0px 2px rgba(0, 0, 0, 0.07);
+    -moz-box-shadow : 1px 0px 2px rgba(0, 0, 0, 0.07);
+}
+
+  /** end right tab **/
+/** round corner **/
+/* wdr .sketch .dijitTabContainerTop-tabs .dijitTabInnerDiv,
+.sketch .dijitTabContainerTop-tabs .dijitTabContent 
+*/
+ .sketch .dijitTabContainerTop-tabs .dijitTabInnerDiv {
+    border-radius : 2px 2px 0px 0px;
+    -moz-border-radius : 6px 6px 0px 0px;
+    -webkit-border-top-left-radius : 2px;
+    -webkit-border-top-right-radius : 2px;
+    background-repeat : repeat-x;
+    background-position : 0px 0px;
+}
+ .sketch .dijitTabContainerBottom-tabs .dijitTabInnerDiv, .sketch .dijitTabContainerBottom-tabs .dijitTabContent {
+    border-radius : 0px 0px 2px 2px;
+    -moz-border-radius : 0px 0px 2px 2px;
+    -webkit-border-bottom-right-radius : 2px;
+    -webkit-border-bottom-left-radius : 2px;
+}
+ .sketch .dijitTabContainerLeft-tabs .dijitTabInnerDiv, .sketch .dijitTabContainerLeft-tabs .dijitTabContent {
+    border-radius : 2px 0px 0px 2px;
+    -moz-border-radius : 2px 0px 0px 2px;
+    -webkit-border-top-left-radius : 2px;
+    -webkit-border-bottom-left-radius : 2px;
+}
+ .sketch .dijitTabContainerRight-tabs .dijitTabInnerDiv, .sketch .dijitTabContainerRight-tabs .dijitTabContent {
+    border-radius : 0px 2px 2px 0px;
+    -moz-border-radius : 0px 2px 2px 0px;
+    -webkit-border-top-right-radius : 2px;
+    -webkit-border-bottom-right-radius : 2px;
+}
+
+  /************ left/right scroll buttons + menu button ************/
+ .sketch .tabStripButton {
+    background-color : #deecf9;
+    border : 1px solid #b5bcc7;
+}
+ .sketch .dijitTabListContainer-top .tabStripButton {
+    padding : 4px 3px;
+    margin-top : 7px;
+    background-image : url("images/tabTop.png");
+    background-position : 0px 0px;
+}
+ .sketch .dijitTabListContainer-bottom .tabStripButton {
+    padding : 5px 3px;
+    margin-bottom : 4px;
+    background-image : url("images/tabTop.png");
+    background-position : 0px -248px;
+    background-position : bottom;
+}
+ .sketch .tabStripButtonHover {
+    background-color : #a6d2fb;
+}
+ .sketch .tabStripButtonActive {
+    background-color : #7dbefa;
+}
+ .sketch .dijitTabStripIcon {
+    height : 15px;
+    width : 15px;
+    margin : 0 auto;
+    background : url("../form/images/arrows.gif") no-repeat 0px 0px;
+    background-color : transparent;
+}
+ .sketch .dijitTabStripSlideRightIcon {
+    background-position : 0px -30px;
+}
+ .sketch .dijitTabStripMenuIcon {
+    background-position : 0px -15px;
+}
+
+  /*disabled styles for tab strip buttons*/
+ .sketch .dijitTabListContainer-top .tabStripButtonDisabled, .sketch .dijitTabListContainer-bottom .tabStripButtonDisabled {
+    
+  /* 3 element selector so background-image: ... rule doesn't need !important */
+background-color : #DDDDDD;
+    background-image : url(../form/images/button_grad_d.png);
+    border : 1px solid #C9C9C9;
+}
+ .sketch .tabStripButtonDisabled .dijitTabInnerDiv {
+    background : none;
+}
+ .sketch .tabStripButtonDisabled .dijitTabStripSlideLeftIcon {
+    background-position : 0px -60px;
+}
+ .sketch .tabStripButtonDisabled .dijitTabStripSlideRightIcon {
+    background-position : 0px -90px;
+}
+ .sketch .tabStripButtonDisabled .dijitTabStripMenuIcon {
+    background-position : 0px -75px;
+}
+
+  /* Nested Tabs */
+ .sketch .dijitTabContainerNested .dijitTabListWrapper {
+    height : auto;
+}
+ .sketch .dijitTabContainerNested .dijitTabContainerTop-tabs {
+    border-bottom : solid 1px #b5bcc7;
+    padding : 1px 2px 4px;
+    margin-top : -2px;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTabContent {
+    background : rgba(255, 255, 255, 0) none repeat scroll 0 0;
+    border : none;
+    padding : 4px;
+    border-color : rgba(118,157,192,0);
+    -webkit-transition-property : background-color, border-color;
+    -webkit-transition-duration : .3s;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTab .dijitTabInnerDiv {
+    
+  /* 4 element selector to override box-shadow setting from above rule:
+   *    .sketch .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabInnerDiv { ... }
+   */
+background : none;
+    border : none;
+    top : 0px;/* to override top: 1px/-1px for normal tabs */
+
+    box-shadow : none;
+    -webkit-box-shadow : none;
+    -moz-box-shadow : none;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTabHover .dijitTabContent {
+    background-color : #eaf4fc;
+    border-radius : 2px 2px 2px 2px;
+    -moz-border-radius : 2px 2px 2px 2px;
+    -webkit-border-radius : 2px;
+    border : solid 1px #c8dff3;
+    padding : 3px;
+    webkit-transition-duration : .2s;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTabHover .tabLabel {
+    text-decoration : none;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTabActive .dijitTabContent {
+    border-radius : 2px 2px 2px 2px;
+    -moz-border-radius : 2px 2px 2px 2px;
+    -webkit-border-radius : 2px;
+    border : solid 1px #a8c7e2;
+    padding : 3px;
+    background : #b9d9f5 url("images/tabNested.png") repeat-x;
+    -webkit-transition-duration : .1s;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTabChecked .dijitTabContent {
+    border-radius : 2px 2px 2px 2px;
+    -moz-border-radius : 2px 2px 2px 2px;
+    -webkit-border-radius : 2px;
+    padding : 3px;
+    border : solid 1px #a8c7e2;
+    background-position : 0px 105px;
+    background-color : #d4e8f9;
+}
+ .sketch .dijitTabContainerTabListNested .dijitTabChecked .tabLabel {
+    text-decoration : none;
+    background-image : none;
+}
+ .sketch .dijitTabPaneWrapperNested {
+    border : none;/* prevent double border */
+
+}
+ .dj_ie6 .sketch .dijitTabContent, .dj_ie6 .sketch .dijitTabInnerDiv, .dj_ie6 .dijitTabListContainer-top .tabStripButton, .dj_ie6 .dijitTabListContainer-bottom .tabStripButton {
+    background-image : none;
+}

@@ -1,0 +1,73 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/HorizontalRuleLabels",
+    "name": "dijit.form.HorizontalRuleLabels",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojo/resources/dojo.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.form.Slider');"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "count": {
+            "datatype": "number",
+            "defaultValue": 3,
+            "title": "Count"
+        },
+        "ruleStyle": {
+            "datatype": "string",
+            "title": "Rule Style"
+        },
+        "labelStyle": {
+            "datatype": "string",
+            "title": "Label Style"
+        },
+        "labels": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Labels"
+        },
+        "numericMargin": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Numeric Margin"
+        },
+        "minimum": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Minimum Value"
+        },
+        "maximum": {
+            "datatype": "number",
+            "defaultValue": 1,
+            "title": "Maximum Value"
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"pattern\\\":\\\"#%\\\"}\"",
+            "hidden": true
+        },
+        "container": {
+            "datatype": "string",
+            "description": "For HorizontalSlider, this is either \"topDecoration\" or \"bottomDecoration\",\nand indicates whether this rule goes above or below the slider.",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>"
+}

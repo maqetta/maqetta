@@ -15,7 +15,7 @@
     <!-- propvieweffects.css needs to be separate and not built -->
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
     <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link> 
-    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, cacheBust: '@revision@'"></script>
+    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
     <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
@@ -88,7 +88,7 @@
   </head>
 
 	<body class="claro">
-		<div class="loading"></div>
+		<div class="loading"><table><tr><td>Loading Maqetta...</td></tr></table></div>
 		<div id="davinci_app">
 			<div id="davinci_top_bar">
 					<div id="davinci_user_container">

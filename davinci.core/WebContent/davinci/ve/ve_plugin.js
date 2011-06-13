@@ -431,22 +431,10 @@
 				{
 					id: "openBrowser",
 					iconClass: 'openBrowserIcon',
-					run: function (){
-					
+					run: function (){					
 						var editor = davinci.Workbench.getOpenEditor();
-						
 						if (editor && editor.resourceFile) {
-							// FIXME: userName should be stashed some place and not require a server request
-							
-								// FIXME. Phil, is there a URL to the working copy of the current file that we can use
-								// Right now I am doing an auto-save which is not right.
-								// Either we should prompt user "You must save before you can preview in browser. OK to save?"
-								// or we should preview the working copy instead of the permanent file.
-								davinci.Workbench.getOpenEditor().save();
-								
-								window.open(editor.resourceFile.getURL());
-							
-							
+							editor.previewInBrowser();
 						}else{
 							console.log("ERROR. Cannot launch browser window. No editor info.");
 						}

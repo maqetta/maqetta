@@ -42,13 +42,16 @@ public class DavinciPageServlet extends HttpServlet {
     protected ServerManager     serverManager;
     protected LibraryManager    libraryManager;
 
-    public DavinciPageServlet() {
+    public void initialize() {
         serverManager = ServerManager.createServerManger(getServletConfig());
         userManager = serverManager.getUserManager();
         libraryManager = serverManager.getLibraryManager();
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if(serverManager==null)
+            initialize();
+        
         User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String pathInfo = req.getPathInfo();
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
@@ -66,7 +69,11 @@ public class DavinciPageServlet extends HttpServlet {
                 /* local install, set user to single user */
                 user = this.userManager.getSingleUser();
                 req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-                writeInternalPage(req, resp, "pagedesigner.html");
+                if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
+                	handlePreview(req,resp);
+                }else{
+                	writeInternalPage(req, resp, "pagedesigner.html");
+                }
             }
         } else if (pathInfo.equals("/welcome")) {
             /* write the welcome page (may come from extension point) */

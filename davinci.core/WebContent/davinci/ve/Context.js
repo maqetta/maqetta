@@ -429,7 +429,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
 
-			var frame = dojo.create("iframe", null, containerNode);
+			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
 			var realUrl = dojo.global.location.href + "/" ;
@@ -480,8 +480,8 @@ dojo.declare("davinci.ve.Context", null, {
             head += "</head><body>";
             if (dojoUrl) {
                 // Since this document was created from script, DOMContentLoaded and window.onload never fire.
-                // Call dojo._loadInit manually to trigger the Dojo onLoad events.
-                head += "<script>dojo._loadInit();</script>";
+                // Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
+                head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
             }
             head += "</body></html>";
 

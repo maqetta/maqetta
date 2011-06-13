@@ -57,7 +57,8 @@ dependencies = {
 	],
 
 	prefixes: [
-	   	[ "workspace", "../workspace" ],
+		[ "preview", "../preview" ],
+		[ "workspace", "../workspace" ],
 		[ "eclipse", "../eclipse" ],
 		[ "davinci", "../davinci" ],
 		[ "dijit", "../dijit" ],

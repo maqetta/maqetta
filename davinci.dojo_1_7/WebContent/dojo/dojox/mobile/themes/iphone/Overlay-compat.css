@@ -1,0 +1,7 @@
+
+.mblOverlay {
+	*position: absolute;
+	background-color: #CECECE;
+	background-image: none;
+	text-align: center;
+}

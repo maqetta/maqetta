@@ -1,0 +1,14 @@
+
+.mblRoundRectCategory {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
+  padding: 8px 8px 0;
+  font-size: 14px;
+  font-family: Helvetica;
+  font-weight: bold;
+  text-shadow: none;
+  color: #000000;
+  line-height: 30px;
+}

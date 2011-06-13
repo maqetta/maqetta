@@ -25,7 +25,7 @@ dojo.declare("davinci.ui.widgets._TreeNode", dijit._TreeNode, {
 	},
 
 	shouldShowElement: function(elementId, item) {
-		return (this.tree.model.shouldShowElement && this.tree.model.shouldShowElement(elementId, item));
+		return this.tree.model.shouldShowElement && this.tree.model.shouldShowElement(elementId, item);
 	}, 
 	
 	setChildItems: function(/* Object[] */ items){
@@ -55,8 +55,9 @@ dojo.declare("davinci.ui.widgets._TreeNode", dijit._TreeNode, {
 		if(items && items.length > 0){
 			this.isExpandable = true;
 	
-			if (this == this.tree.rootNode && !this.tree.showRoot)
+			if (this == this.tree.rootNode && !this.tree.showRoot){
 				this.expand();
+			}
 			// Create _TreeNode widget for each specified tree node, unless one already
 			// exists and isn't being used (presumably it's from a DnD move and was recently
 			// released
@@ -171,6 +172,7 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		this._orgModelGetChildren=model.getChildren;
 		model.getChildren=dojo.hitch(this, this._getChildrenIntercept);
 		this.selectedNodes = [];
+		this.watch("selectedItem",this._selectNode);
 	},
 
 	getNode: function(nodeItem) {
@@ -181,24 +183,24 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		}
 		return node;
 	},
-	
+
+	//FIXME: unused?
 	selectNode: function (nodeItems, add) 
 	{
 	
 		this.isSelecting=true;
-		if (add)
+		if (add) {
 			this.ctrlKeyPressed = add;
-		else 
+		} else {
 			this.ctrlKeyPressed = false;
+		}
 		for (var i=0; i < nodeItems.length; i++){
 			var node = this.getNode(nodeItems[i]);
 			
 			this._selectNode(node);
 			//this.ctrlKeyPressed = false; 
-			
 		}
 		this.isSelecting=false;
-		
 	},
 
 	postCreate: function(){
@@ -210,21 +212,18 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		this.allFocusedNodes = [];  
 		this.lastFocusedNode = null;  
 		this.connect(this.model, "onRefresh", "_load");
-		dojo.forEach(this.filters,function (filter){
-			if (filter.onFilterChange)
+		dojo.forEach(this.filters, function (filter){
+			if (filter.onFilterChange){
 				this.connect(filter,"onFilterChange",filterChanged);
-		},this);
+			}
+		}, this);
 	},
 	onClickDummy: function(item, node) {
 	},
 	_onClick: function(item, event){
 		dojo.stopEvent(event);
-		var ctrlKey = navigator.appVersion.indexOf("Macintosh") < 0? event.ctrlKey: event.metaKey;
-		if(this._isMultiSelect && event && ctrlKey) {
-			this.ctrlKeyPressed = true;
-		} else {
-			this.ctrlKeyPressed = false;
-		}
+		var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;
+		this.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
 		this.inherited(arguments); 
 		//this.ctrlKeyPressed = false;
 		//dojo.stopEvent(event);
@@ -250,20 +249,21 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 	
 	_filterItems : function(items)
 	{
-				if (items.length==0)
+				if (items.length==0){
 					return items;
+				}
 				for (var i=0;i<this.filters.length;i++)
 				{
 					var filter=this.filters[i];
-					if (filter.filterList)
+					if (filter.filterList){
 						items=filter.filterList(items);
-					else if (filter.filterItem)
-					{
+					} else if (filter.filterItem){
 						var filteredItems=[];
 						for (var j=0;j<items.length;j++)
 						{
-							if (!filter.filterItem(items[j]))
+							if (!filter.filterItem(items[j])){
 								filteredItems.push(items[j]);
+							}
 						}
 						items=filteredItems;
 					}
@@ -298,25 +298,27 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 			// Ctrl key was not pressed, blur the previously selected nodes except the clicked node.
 			for(i=0; i < this.allFocusedNodes.length; i++) {
 				var temp = this.allFocusedNodes[i];
-				if(temp != node)
+				if(temp != node){
 					this._customBlurNode(this.allFocusedNodes[i]);
+				}
 			}
 			this.allFocusedNodes = [];
 		}
 		var isExists = false; // Flag to find out if this node already been selected
 		for(i=0;i < this.allFocusedNodes.length; i++) {
 			var temp = this.allFocusedNodes[i];
-			if(this.model.getIdentity(temp.item) == id) isExists = true;
+			if(this.model.getIdentity(temp.item) == id){ isExists = true; }
 		}
-		if( ! isExists)
+		if(!isExists){
 			this.allFocusedNodes.push(node);
+		}
 	},
 	_selectNode: function(/*_tree.Node*/ node){
 		// summary:
 		//		Mark specified node as select, and unmark currently selected node.
 		// tags:
 		//		protected
-
+/*
 		if(!this.ctrlKeyPressed && this.selectedNodes && !this.selectedNodes._destroyed){
 			this.deselectAll();
 		}
@@ -325,9 +327,10 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 			this.selectedNodes.push(node); 
 		}
 		this.selectedNode = node;
+*/
 		if (!this.isSelecting && this.notifySelect)
 		{
-			this.notifySelect(node.item, this.ctrlKeyPressed); 
+			this.notifySelect(this.selectedItem, this.ctrlKeyPressed); 
 		}
 		
 	},
@@ -373,9 +376,7 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
                     this.connect(ds, "initDrag", function(e){if (ds.dragHandler.initDrag) ds.dragHandler.initDrag(e);}); // move start
  					this.connect(ds, "onDragStart", function(e){ds.dragHandler.dragStart(e);}); // move start
  					this.connect(ds, "onDragEnd", function(e){ds.dragHandler.dragEnd(e);}); // move end
-
  				}
- 
  		}
  		return treeNode;
 	},
@@ -410,21 +411,15 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 	
 	_menuOpenCallback : function (event)
 	{
-		var ctrlKey = navigator.appVersion.indexOf("Macintosh") < 0? event.ctrlKey: event.metaKey;
-		if(this._isMultiSelect && event && ctrlKey) {
-			this.ctrlKeyPressed = true;
-		} else {
-			this.ctrlKeyPressed = false;
-		}
-		
+		var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
+		this.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
 		var w = dijit.getEnclosingWidget(event.target);
 		if(!w || !w.item){
 //			dojo.style(this._menu.domNode, "display", "none");
 			return;
 		}
-		if (dojo.indexOf(this.selectedNodes,w)>=0)
-			return;;
+		if (dojo.indexOf(this.selectedNodes,w) >= 0)
+			return;
 		this._selectNode(w);
  	}
-	
 });

@@ -28,16 +28,16 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer, IRe
     private ArrayList          registryChangeListeners = new ArrayList();
 
     public static Activator getActivator() {
-        return Activator.theActivator;
+        return theActivator;
     }
 
     public Activator() {
-        Activator.theActivator = this;
+        theActivator = this;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
      * )
@@ -54,7 +54,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer, IRe
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */

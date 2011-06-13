@@ -1,0 +1,41 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+define(
+//begin v1.x content
+({
+	insertTableTitle: "Insérer une table",
+	modifyTableTitle: "Modifier une table",
+	rows: "Lignes :",
+	columns: "Colonnes :",
+	align: "Aligner :",
+	cellPadding: "Remplissage des cellules :",
+	cellSpacing: "Espacement des cellules :",
+	tableWidth: "Largeur de table :",
+	backgroundColor: "Couleur d'arrière-plan :",
+	borderColor: "Couleur des bordures :",
+	borderThickness: "Epaisseur des bordures",
+	percent: "pourcentage",
+	pixels: "pixels",
+	"default": "par défaut",
+	left: "aligné à gauche",
+	center: "centré",
+	right: "aligné à droite",
+	buttonSet: "Définir", // translated elsewhere?
+	buttonInsert: "Insérer",
+	buttonCancel: "Annuler",
+
+	selectTableLabel: "Sélectionner une table",
+	insertTableRowBeforeLabel: "Ajouter une ligne avant",
+	insertTableRowAfterLabel: "Ajouter une ligne après",
+	insertTableColumnBeforeLabel: "Ajouter une colonne avant",
+	insertTableColumnAfterLabel: "Ajouter une colonne après",
+	deleteTableRowLabel: "Supprimer la ligne",
+	deleteTableColumnLabel: "Supprimer la colonne"
+})
+	
+//end v1.x content
+);

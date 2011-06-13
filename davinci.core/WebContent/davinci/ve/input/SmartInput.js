@@ -382,6 +382,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		var loading = doc.createElement("div");
 		var parent = this._widget._edit_context._frameNode.parentNode;
 		parent.appendChild(loading);
+		loading.innerHTML='<table><tr><td>Loading...</td></tr></table>';
 		this._loadingDiv = loading;
 		dojo.addClass(loading,'loading');
 		var inline= doc.createElement("div");

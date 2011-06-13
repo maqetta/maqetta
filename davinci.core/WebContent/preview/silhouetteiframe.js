@@ -24,10 +24,10 @@
 
 */
 
-if(this.dojo){
+if(window.dojo){
     dojo.provide('preview.silhouetteiframe');
 }
-if (!this.preview) {
+if (!window.preview) {
     preview = {};
 }
 

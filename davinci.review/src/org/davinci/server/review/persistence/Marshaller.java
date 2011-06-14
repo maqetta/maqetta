@@ -1,15 +1,12 @@
 package org.davinci.server.review.persistence;
 
 import java.io.ByteArrayOutputStream;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,7 +29,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.davinci.server.review.Comment;
-import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.DavinciProject;
 import org.w3c.dom.Document;
@@ -42,9 +38,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * 
+ *
  * Transform a JAVA object into a XML document.
- * 
+ *
  */
 public class Marshaller extends DefaultHandler {
 	private DavinciProject project;
@@ -301,7 +297,7 @@ public class Marshaller extends DefaultHandler {
 
 	/**
 	 * Unit Test Driver
-	 * 
+	 *
 	 * @param args
 	 * @throws ParserConfigurationException
 	 * @throws SAXException

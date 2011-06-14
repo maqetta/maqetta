@@ -742,7 +742,7 @@ dojo.mixin(davinci.Workbench, {
 			view = davinci.Runtime.getExtension("davinci.view", viewId),
 			mainBody = dojo.byId('mainBody'),
 			perspectiveId = this.getActivePerspective(),
-			perspective = davinci.Runtime.getExtension("davinci.perspective",	perspectiveId),
+			perspective = davinci.Runtime.getExtension("davinci.perspective", perspectiveId),
 			position = 'left',
 			cp1 = null,
 			created = false,
@@ -816,7 +816,7 @@ dojo.mixin(davinci.Workbench, {
 					viewClass = dojo.getObject(view.viewClass);
 				}
 				else
-					viewClass =   davinci.workbench.ViewPart;
+					viewClass = davinci.workbench.ViewPart;
 				var tab = new viewClass( {
 					position: positionSplit[1] || positionSplit[0],
 					title: view.title,
@@ -833,7 +833,7 @@ dojo.mixin(davinci.Workbench, {
 //		
 //		}
 		if(shouldFocus) cp1.selectChild(tab);
-	  } catch (ex) {console.log("error loading view "+view.id);console.log(ex);}
+	  } catch (ex) {console.error("Error loading view: "+view.id);console.error(ex); debugger;}
 	},
 	
 	hideView: function(viewId){

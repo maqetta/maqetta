@@ -3,7 +3,7 @@ dojo.provide("davinci.ve.views.DataStoresView");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ve.widget");
 
-dojo.require("davinci.ui.widgets.Tree");
+dojo.require("dijit.Tree");
 dojo.require("dijit.tree.dndSource");
 
 dojo.require("dijit.layout.BorderContainer");
@@ -22,8 +22,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
 
         this.container = new dijit.layout.BorderContainer({
             style: "height: 300px"
-        },
-        "DataStoresContainer");
+        }, "DataStoresContainer");
         
         this.container.startup();
 
@@ -152,7 +151,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
         };
 
 
-        var tree = new davinci.ui.widgets.Tree({model: treeModel,
+        var tree = new dijit.Tree({model: treeModel,
                                                 getIconClass: getIconClass,
                                                 dragSources: dragSources
                                                }

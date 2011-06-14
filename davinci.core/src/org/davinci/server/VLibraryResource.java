@@ -130,7 +130,7 @@ public class VLibraryResource implements IVResource {
 
             item = new VLibraryResource(this.library, files[i], this, newPath.removeTrailingSeparator().toString(), new Path(this.bundleRoot).append(newPath).toString());
             found.add(item);
-           
+
         }
         return (IVResource[]) found.toArray(new IVResource[found.size()]);
     }
@@ -193,6 +193,7 @@ public class VLibraryResource implements IVResource {
 
     }
 
+    @SuppressWarnings("unused")
     public IVResource get(String childName) {
         IPath p1 = new Path(this.bundleRoot);
         // p1 = p1.removeFirstSegments(new

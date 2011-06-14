@@ -1,11 +1,11 @@
 package org.davinci.server.internal.user;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
@@ -149,19 +149,10 @@ public class UserManagerImpl implements UserManager {
         /*
          * would call this.personManager.removePerson(userName) here
          */
-        File userDir = null;
-        try {
-            userDir = new File(this.baseDirectory, userName);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        File userDir = new File(this.baseDirectory, userName);
         deleteDir(userDir);
-
         users.remove(userName);
         this.usersCount--;
-
     }
 
     protected void deleteDir(File directory) {
@@ -174,10 +165,8 @@ public class UserManagerImpl implements UserManager {
         for (int i = 0; i < theFiles.length; i++) {
             if (theFiles[i].isDirectory()) {
                 deleteContents(theFiles[i]);
-                theFiles[i].delete();
-            } else {
-                theFiles[i].delete();
             }
+            theFiles[i].delete();
         }
     }
 
@@ -218,16 +207,20 @@ public class UserManagerImpl implements UserManager {
                     continue;
                 }
                 destination.getParentFile().mkdirs();
-                InputStream in = connection.getInputStream();
-                OutputStream out = new FileOutputStream(destination);
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
+                InputStream in = null;
+                OutputStream out = null;
+                try {
+	                in = connection.getInputStream();
+	                out = new BufferedOutputStream(new FileOutputStream(destination));
+	                byte[] buf = new byte[1024];
+	                int len;
+	                while ((len = in.read(buf)) > 0) {
+	                    out.write(buf, 0, len);
+	                }
+                } finally {
+                	if (in != null) in.close();
+                	if (out != null) out.close();
                 }
-                in.close();
-                out.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
                 // throw new

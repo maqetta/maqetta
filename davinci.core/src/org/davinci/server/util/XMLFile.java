@@ -1,8 +1,9 @@
 package org.davinci.server.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,19 +31,16 @@ public abstract class XMLFile extends XMLElement {
 
     protected abstract String getRootTag();
 
-    public ArrayList load(File file) {
+    public ArrayList load(File file) { //FIXME should throw?
         ArrayList objects = null;
         InputStream input = null;
         if (file.exists()) {
             try {
                 DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                input = new FileInputStream(file);
+                input = new BufferedInputStream(new FileInputStream(file));
                 Document document = parser.parse(input);
                 Element rootElement = document.getDocumentElement();
                 objects = this.load(rootElement);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             } catch (ParserConfigurationException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -69,7 +67,7 @@ public abstract class XMLFile extends XMLElement {
         return objects;
     }
 
-    public void save(File file, Collection values) {
+    public void save(File file, Collection values) { //FIXME should throw?
         OutputStream out = null;
         try {
             if (!file.exists()) {
@@ -79,7 +77,7 @@ public abstract class XMLFile extends XMLElement {
 
             }
             String rootName = this.getRootTag();
-            out = new FileOutputStream(file);
+            out = new BufferedOutputStream(new FileOutputStream(file));
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();

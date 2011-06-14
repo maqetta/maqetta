@@ -23,12 +23,12 @@ import org.eclipse.core.runtime.Path;
 
 public class VLibraryResource implements IVResource {
     // abstracted file/resource class
-    URL            resourcePointer = null;
-    boolean        isWorkingCopy;
+    private URL            resourcePointer = null;
+    private boolean        isWorkingCopy;
 
-    Library        library;
-    IVResource     parent;
-    String         name;
+    private Library        library;
+    private IVResource     parent;
+    private String         name;
     private String bundleRoot;
 
     public VLibraryResource(Library b, URL file, IVResource parent, String name, String bundleRoot) {

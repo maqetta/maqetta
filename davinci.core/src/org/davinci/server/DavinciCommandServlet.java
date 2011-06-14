@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 @SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
-    HashMap commands    = new HashMap();
-    boolean initialized = false;
+    private HashMap commands    = new HashMap();
+    private boolean initialized = false;
 
     public DavinciCommandServlet() {
     }

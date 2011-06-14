@@ -299,11 +299,7 @@ public class DavinciPageServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN);
             } finally {
                 if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
+                    is.close();
                 }
             }
         }

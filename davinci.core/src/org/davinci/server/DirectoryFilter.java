@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.Path;
 
 public class DirectoryFilter implements IVResourceFilter {
 
-    String[] filterDirs;
+    private String[] filterDirs;
 
     public DirectoryFilter(String directoryName) {
         this.filterDirs = new String[] { directoryName };

@@ -40,20 +40,13 @@ public abstract class Command {
     protected static final void transferStreams(InputStream source, OutputStream destination, boolean closeInput) throws IOException {
         byte[] buffer = new byte[8192];
         try {
-            /*
-             * Note: although synchronizing on the buffer is thread-safe, it may
-             * result in slower performance in the future if we want to allow
-             * concurrent writes.
-             */
-            synchronized (buffer) {
-                while (true) {
-                    int bytesRead = -1;
-                    bytesRead = source.read(buffer);
-                    if (bytesRead == -1) {
-                        break;
-                    }
-                    destination.write(buffer, 0, bytesRead);
+            while (true) {
+                int bytesRead = -1;
+                bytesRead = source.read(buffer);
+                if (bytesRead == -1) {
+                    break;
                 }
+                destination.write(buffer, 0, bytesRead);
             }
         } finally {
             if (closeInput) {

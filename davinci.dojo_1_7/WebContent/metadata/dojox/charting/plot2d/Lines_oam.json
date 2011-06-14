@@ -46,7 +46,7 @@
         "shadows": {
             "datatype": "array",
             "title": "Shadow",
-            "description": "Draws shadow. Provide dx, dy, dw seperated by commas."
+            "description": "Draws shadow. Provide dx, dy, dw separated by commas."
         }
     },
     "content": "<span></span>"

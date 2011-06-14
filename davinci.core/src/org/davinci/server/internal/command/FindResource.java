@@ -17,8 +17,8 @@ public class FindResource extends Command {
         String pathStr = req.getParameter("path");
         String inFolder = req.getParameter("inFolder");
         boolean ignoreCase = "true".equals(req.getParameter("ignoreCase"));
-        boolean workspaceOnly = "true".equals(req.getParameter("workspaceOnly"));
-        workspaceOnly = false;
+        boolean workspaceOnly = Boolean.parseBoolean(req.getParameter("workspaceOnly"));
+      
         IVResource[] foundFiles = null;
         if (inFolder != null) {
             foundFiles = user.findFiles(pathStr, inFolder, ignoreCase, workspaceOnly);

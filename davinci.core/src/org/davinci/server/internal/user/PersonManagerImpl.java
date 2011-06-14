@@ -78,7 +78,7 @@ public class PersonManagerImpl implements PersonManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.davinci.server.user.impl.UserManager#hasPermisions(org.davinci.server
      * .user.User, org.davinci.server.user.User, java.lang.String)
@@ -92,7 +92,7 @@ public class PersonManagerImpl implements PersonManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.davinci.server.user.impl.UserManager#addUser(java.lang.String,
      * java.lang.String, java.lang.String)
      */
@@ -110,7 +110,7 @@ public class PersonManagerImpl implements PersonManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.davinci.server.user.impl.UserManager#login(java.lang.String,
      * java.lang.String)
      */
@@ -130,14 +130,14 @@ public class PersonManagerImpl implements PersonManager {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.davinci.server.user.impl.UserManager#isValidPassword(java.lang.String
      * , java.lang.String)
      */
     public boolean isValidPassword(String userName, String password) {
         PersonImpl person = (PersonImpl) persons.get(userName);
-        if (person != null) {
+        if (person == null) {
             return false;
         }
         return password.equals(person.password);

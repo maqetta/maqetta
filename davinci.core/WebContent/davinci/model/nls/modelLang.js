@@ -20,23 +20,18 @@
 		"upload":"Upload",
 		"addFiles":"Add Files",
 		"uploading":"Uploading...",
-		"completed":"completed: ",
+		"completed":"completed: ${0} \n",
 		
 		//checkFileName
 		"mustEnterFileName":"You must enter a file name.",
-		"cannotSelect":"Cannot select ",
-		"itIsAFolder":". It is a folder.",
-		"file":"File ",
-		"alreadyExistsOverwrite":" already exists. OK to overwrite?",
-		"cannotCreate":"Cannot create ",
-		"alreadyExists":". Already exists.",
-		"fileNameSlashCharacter":"File names cannot contain a slash character (/). Your file name is: ",
-		"theName":"The name ",
-		"doesNotHaveExtension":" does not have an extension (e.g., .html, .css or .js) and will be treated as a plain text file. OK to proceed?",
+		"cannotSelect":"Cannot select ${0}. It is a folder.",
+		"fileAlreadyExistsOverwrite":"File ${0} already exists. OK to overwrite?",
+		"cannotCreate":"Cannot create ${0}. It already Exists.",
+		"fileNameSlashCharacter":"File names cannot contain a slash character (/). Your file name is: ${0}",
+		"doesNotHaveExtension":"The name ${0} does not have an extension (e.g., .html, .css or .js) and will be treated as a plain text file. OK to proceed?",
 		
 		//deleteAction
-		"areYouSureDelete":"Are you sure you want to delete ",
-		"questionMark":"?",
+		"areYouSureDelete":"Are you sure you want to delete ${0}?",
 		"noResourcesSelected":"No resources are currently selected."
 		
 

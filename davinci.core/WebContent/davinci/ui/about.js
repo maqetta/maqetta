@@ -20,7 +20,7 @@ davinci.ui.about=function(){
 	});
 	var formHTML="<div class='about_container'>"
 		+ "<div class='about_title'>Maqetta</div>"
-		+ "<div class='about_version'>"+langObj.version+davinci.version+"</div>";
+		+ "<div class='about_version'>"+dojo.string.substitute(langObj.productVersion,[davinci.version])+"</div>";
 	var ri = davinci.repositoryinfo;
 	if(ri){
 		var revindex = ri.indexOf('Revision:'); //TODO: a regexp might be nice here
@@ -28,7 +28,7 @@ davinci.ui.about=function(){
 			var s = ri.substr(revindex+9);
 			var barindex = s.indexOf('|');
 			var revnum = barindex>=0 ? s.substr(0, barindex) : s;
-			formHTML += "<div class='about_build'>"+langObj.build+revnum+"</div>";
+			formHTML += "<div class='about_build'>"+dojo.string.substitute(langObj.build,[revnum])+"</div>";
 		}
 	}
 	formHTML += "</div>";

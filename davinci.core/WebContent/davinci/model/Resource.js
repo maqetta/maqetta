@@ -13,7 +13,6 @@ dojo.require("davinci.model.Model");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.model", "modelLang");
-//var langObj = dojo.i18n.getLocalization("davinci.model", "modelLang");
    
 dojo.mixin(davinci.model.Resource,	{
 
@@ -298,7 +297,7 @@ dojo.mixin(davinci.model.Resource,	{
 					dataArray=dataArray[0];
 				totalFiles = dataArray.length;
 				dojo.forEach(dataArray, function(d){
-					dojo.byId("fileToUpload").value += langObj.completed + d.file+" \n";
+					dojo.byId("fileToUpload").value += dojo.string.substitute(langObj.completed,[d.file]);
 					folder.createResource(d.file,false,true);
 				});
 			});
@@ -333,27 +332,27 @@ dojo.mixin(davinci.model.Resource,	{
 		if(existing){
 			// Check if existing file is a folder
 			if(existing.elementType=='Folder' && !args.selectFolderOK){
-				alert(langObj.cannotSelect +fileName+ langObj.itIsAFolder);
+				alert(dojo.string.substitute(langObj.cannotSelect, [fileName]));
 				return false;
 			}
 			if(args && args.existingFileOK){
 				if(args.existingFileOK=="prompt"){
-					if(!confirm(langObj.file +fileName+ langObj.alreadyExistsOverwrite)){
+					if(!confirm(dojo.string.substitute(langObj.fileAlreadyExistsOverwrite, [fileName]))){
 						return false;
 					}
 				}
 			}else{
-				alert(langObj.cannotCreate +fileName+ langObj.alreadyExists);
+				alert(dojo.string.substitute(langObj.cannotCreate, [fileName]));
 				return false;
 			}
 		}
 		if(fileName.indexOf('/')>=0){
-			alert(langObj.fileNameSlashCharacter +fileName);
+			alert(dojo.string.substitute(langObj.fileNameSlashCharacter, [fileName]));
 			return false;
 		}
 		var newSplitName = fileName.split('.');
 		if(args && args.checkForExtension && newSplitName.length<2){ // No extension, prompt user if OK
-			if(!confirm(langObj.theName +fileName+langObj.doesNotHaveExtension)){
+			if(!confirm(dojo.string.substitute(langObj.doesNotHaveExtension,[fileName]))){
 				return false;
 			}
 		}
@@ -467,7 +466,7 @@ dojo.mixin(davinci.model.Resource,	{
 		var resource=this.getSelectedResource();
 		if (resource)
 		{
-		     var ok=confirm(langObj.areYouSureDelete+resource.getPath()+langObj.questionMark);
+		     var ok=confirm(dojo.string.substitute(langObj.areYouSureDelete,[resource.getPath()]));
 		     if (!ok)
 		    	 return;
 			resource.deleteResource();

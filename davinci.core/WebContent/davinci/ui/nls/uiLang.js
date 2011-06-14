@@ -7,8 +7,8 @@
 		
 		//about.js
 		"aboutMaqetta":"About Maqetta",
-		"version":"Version: ",
-		"build":"Build: ",
+		"productVersion":"Version: ${0}",
+		"build":"Build: ${0}",
 		
 		//Download.js
 		"library":"Library",

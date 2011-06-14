@@ -35,6 +35,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	
 	_setSourceData: function(data){
+		
+		var frame = this.getFrameNode();
+		var loading = dojo.create("div",null, frame.parentNode, "first");
+		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
+		dojo.addClass(loading, 'loading');
+		
 		// Hard-code widget replacements for styling.  Need to factor creation out somehow to be data-driven.
 		this.getDojo().declare("dijit.davinci.themeEditor.Dialog", [this.getDijit()._Widget, this.getDijit()._Templated], {
 			buttonCancel: "cancel", //TODO: i18n
@@ -135,6 +141,8 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
     		// set the style on all widgets and subsidgets that support the state
     		//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
 		}
+		
+		loading.parentNode.removeChild(loading);
 	},
 	
 	attach: function(widget){

@@ -1,22 +1,15 @@
 package org.davinci.server.review.command;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
-import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.ServerManager;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.PersonManager;
 import org.davinci.server.user.User;
-import org.eclipse.core.runtime.IConfigurationElement;
 
 public class GetBluePageInfo extends Command {
 
@@ -31,9 +24,9 @@ public class GetBluePageInfo extends Command {
 			String count = req.getParameter("count");
 			String startString = req.getParameter("start");
 			String type = req.getParameter("type");
-			
+
 			PersonManager personManager = ServerManager.getServerManger().getUserManager().getPersonManager();
-			
+
 			if("photo".equals(type)){
 				responseString = personManager.getPhotoRepositoryPath();
 			}else{
@@ -47,7 +40,7 @@ public class GetBluePageInfo extends Command {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String arrayToJson(Person[] persons) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(IDENTIFIER_AND_LABEL);

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 
+@SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
     HashMap commands    = new HashMap();
@@ -37,9 +38,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
         CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
         if (commandDescriptor == null || commandDescriptor.isPut()) {
-            // NULL Pointer into debugger;
-            Object obj = null;
-            obj.hashCode();
+            throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Get processing"));
         }
         User user = checkLogin(req, resp, commandDescriptor);
         if (user == null && !commandDescriptor.isNoLogin()) {
@@ -89,9 +88,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
         CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
         if (commandDescriptor == null || !commandDescriptor.isPut()) {
-            // NULL Pointer into debugger;
-            Object obj = null;
-            obj.hashCode();
+            throw new java.lang.AssertionError(new String("commandDescriptor is null or is not Put in Put processing"));
         }
 
         User user = checkLogin(req, resp, commandDescriptor);
@@ -124,9 +121,7 @@ public class DavinciCommandServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
         if (commandDescriptor == null || commandDescriptor.isPut()) {
-            // NULL Pointer into debugger;
-            Object obj = null;
-            obj.hashCode();
+            throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Post processing"));
         }
         if (user == null) {
             if (!commandDescriptor.isNoLogin()) {

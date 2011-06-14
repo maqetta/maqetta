@@ -18,13 +18,9 @@ davinci.ui.about=function(){
 		+ "<div class='about_version'>Version: "+davinci.version+"</div>";
 	var ri = davinci.repositoryinfo;
 	if(ri){
-		var revindex = ri.indexOf('Revision:'); //TODO: a regexp might be nice here
-		if(revindex>=0){
-			var s = ri.substr(revindex+9);
-			var barindex = s.indexOf('|');
-			var revnum = barindex>=0 ? s.substr(0, barindex) : s;
-			formHTML += "<div class='about_build'>Build: "+revnum+"</div>";
-		}
+		var barindex = ri.indexOf('|');
+		var revnum = barindex>=0 ? ri.substr(0, barindex) : ri;
+		formHTML += "<div class='about_build'>Build: "+revnum+"</div>";
 	}
 	formHTML += "</div>";
 	dialog.setContent(formHTML);

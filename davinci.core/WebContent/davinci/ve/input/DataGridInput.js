@@ -553,7 +553,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 					'<td></td>' + 
 					'<td>' +
 						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
-							'<option value="dummyData">Comma seperated data</option> ' +
+							'<option value="dummyData">Comma separated data</option> ' +
 							'<option value="file">Data file from workspace</option> ' +
 // hide for M2							'<option value="url">URL (JSONP)</option> ' +
 						'</select>' +

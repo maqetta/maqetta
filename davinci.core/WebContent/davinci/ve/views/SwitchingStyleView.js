@@ -12,12 +12,13 @@ dojo.require("davinci.ve.widgets.Cascade");
 
 dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, {
 
+	/* FIXME: These won't expand into pageTemplate. Not sure if that's a JS issue or dojo.declare issue.
+	 * Temporary copied into each property below but would be better if could get reusable values working somehow.
 	_paddingMenu:['', '0px', '1em'],
-	_radiusMenu:['', '0px', '1em'],
+	_radiusMenu:['', '0px', '6px'],
+	 */
 
 	pageTemplate : [
-	          
-	        
 	         
 	          {title:"Common", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
@@ -53,21 +54,21 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 	            	                ]},
 	           {title:"Padding/Margins", 
 	           	  pageTemplate:[
-    	                {display:"<b>(padding)</b>", type:"multi", target:"padding", values:this._paddingMenu},
+    	                {display:"<b>(padding)</b>", type:"multi", target:"padding", values:['', '0px', '1em']},
 		                 {display:"&nbsp;&nbsp;&nbsp;show t/r/b/l", type:"toggleSection",
     	                	pageTemplate:[
-    		 			       {display:"padding-top", type:"multi", target:"padding-top", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
-    		 			       {display:"padding-right", type:"multi", target:"padding-right", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
-    		 			       {display:"padding-bottom", type:"multi", target:"padding-bottom", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
-    		 			       {display:"padding-left", type:"multi", target:"padding-left", values:this._paddingMenu, rowClass:"propertiesSectionHidden"}
+    		 			       {display:"padding-top", type:"multi", target:"padding-top", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+    		 			       {display:"padding-right", type:"multi", target:"padding-right", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+    		 			       {display:"padding-bottom", type:"multi", target:"padding-bottom", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+    		 			       {display:"padding-left", type:"multi", target:"padding-left", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
     	                	]},
-    	                {display:"<b>(margin)</b>", type:"multi", target:"margin", values:this._paddingMenu},
+    	                {display:"<b>(margin)</b>", type:"multi", target:"margin", values:['', '0px', '1em']},
 		                 {display:"&nbsp;&nbsp;&nbsp;show t/r/b/l", type:"toggleSection",
     	                	pageTemplate:[
-    		 			       {display:"margin-top", type:"multi", target:"margin-top", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
-    		 			       {display:"margin-right", type:"multi", target:"margin-right", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
-    		 			       {display:"margin-bottom", type:"multi", target:"margin-bottom", values:this._paddingMenu, rowClass:"propertiesSectionHidden"},
-    		 			       {display:"margin-left", type:"multi", target:"margin-left", values:this._paddingMenu, rowClass:"propertiesSectionHidden"}
+    		 			       {display:"margin-top", type:"multi", target:"margin-top", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+    		 			       {display:"margin-right", type:"multi", target:"margin-right", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+    		 			       {display:"margin-bottom", type:"multi", target:"margin-bottom", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+    		 			       {display:"margin-left", type:"multi", target:"margin-left", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
     	                	]}
     	                ]},
 	           {title:"Background", 
@@ -160,13 +161,13 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
    		                {display:"border-left-style", type:"multi", target:'border-left-style', values:['', 'none', 'solid', 'dotted', 'dashed'],rowClass:'propertiesSectionHidden'},
    		                {display:"border-left-color", type:"color", target:'border-left-color',rowClass:'propertiesSectionHidden'},
       		         {display:"border-collapse", type:"combo", target:'border-collapse',  values:['', 'separate', 'collapse']},
-   		             {display:"<b>(border-radius)</b>", type:"multi", target:['border-radius','-moz-border-radius'],  values:this._radiusMenu},
+   		             {display:"<b>(border-radius)</b>", type:"multi", target:['border-radius','-moz-border-radius'],  values:['', '0px', '6px']},
 	                 {display:"show details", type:"toggleSection",
  	                	pageTemplate:[
-		                     {display:"border-top-left-radius", type:"multi", target:["border-top-left-radius",'-moz-border-radius-topleft'], values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
-		                     {display:"border-top-right-radius", type:"multi", target:['border-top-right-radius','-moz-border-radius-topright'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
-		                     {display:"border-bottom-right-radius", type:"multi", target:['border-bottom-right-radius','-moz-border-radius-bottomright'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"},
-		                     {display:"border-bottom-left-radius", type:"multi", target:['border-bottom-left-radius','-moz-border-radius-bottomleft'] , values:this._radiusMenu, rowClass:"propertiesSectionHidden"}
+		                     {display:"border-top-left-radius", type:"multi", target:["border-top-left-radius",'-moz-border-radius-topleft'], values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"},
+		                     {display:"border-top-right-radius", type:"multi", target:['border-top-right-radius','-moz-border-radius-topright'] , values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"},
+		                     {display:"border-bottom-right-radius", type:"multi", target:['border-bottom-right-radius','-moz-border-radius-bottomright'] , values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"},
+		                     {display:"border-bottom-left-radius", type:"multi", target:['border-bottom-left-radius','-moz-border-radius-bottomleft'] , values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"}
 	    	                ]}
 		            	  ]},
 	           {title:"Fonts and Text",

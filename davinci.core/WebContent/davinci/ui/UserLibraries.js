@@ -95,7 +95,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		
 		if(values.length){
 			var isOk = davinci.library.modifyLib(values);
-			davinci.resource.workspaceChanged();
+			davinci.resource.resourceChanged("updated", davinci.resource.getRoot());
 			dojo.publish("/davinci/ui/libraryChanged");
 		}
 		

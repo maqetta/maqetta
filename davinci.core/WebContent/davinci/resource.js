@@ -3,6 +3,8 @@ dojo.provide("davinci.resource.FileTypeFilter");
 dojo.provide("davinci.resource.alphabeticalSortFilter");
 dojo.provide("davinci.resource.foldersFilter");
 dojo.require("davinci.model.Resource");
+dojo.require("davinci.model.Path");
+
 
 davinci.resource.subscriptions = [];
 
@@ -11,20 +13,43 @@ dojo.mixin(davinci.resource, {
 	root:null,
 	
 	__CASE_SENSITIVE:false,
+	root : null,
+	
 	
 	resourceChanged : function(type,changedResource){
-		if (type=='created'||type=='deleted'||type=='renamed')
-		{
-			var parent=changedResource.parent;
-			var newChildren;
-			parent.getChildren(function(children){newChildren=children});
-			this.onChildrenChange(parent,newChildren);
+		
+		if(changedResource == davinci.resource.getRoot()){
+			davinci.resource.getRoot().getChildren(dojo.hitch(davinci.resource,function(children){
+				davinci.resource.onChildrenChange(davinci.resource.getRoot(),children);
+			   }));
+			return davinci.resource.getRoot();
+		}else if (type=='created'||type=='deleted'||type=='renamed'||type=='updated'){
+			var parent=null;
+			var resourcePath = null;
+			
+			if(changedResource.parent){
+				/* already created model object */
+				parent = changedResource.parent;
+				resourcePath = changedResource.getPath();
+			}else{
+				/* find the resource parent */
+				var p1 = (new davinci.model.Path(changedResource)).removeLastSegments();
+				parent = davinci.resource.findResource(p1.toString()) || davinci.resource.getRoot();
+				resourcePath = changedResource;
+			}
+			
+			if(parent.elementType=="Folder")
+				parent.reload();
+			/* force the resource parent to update its children */
+			
+			
+			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);});
 		}
 	},
 	
-	subscriptions : [dojo.subscribe("/davinci/resource/resourceChanged",this, function(){return davinci.resource.resourceChanged}())],
+	
 
-	root : null,
+	
 	
 	/* Resource tree model methods */
 	newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -38,6 +63,7 @@ dojo.mixin(davinci.resource, {
 	},
 	
 	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
+		console.log("parent:" + parent + " children :" + newChildrenList);
 	},
 	
 	getLabel: function(/*dojo.data.Item*/ item){
@@ -52,19 +78,9 @@ dojo.mixin(davinci.resource, {
 		return item.getPath();
 	},
 	
-	
-		
-	workspaceChanged : function(){
-		delete this.root;
-		this.root=davinci.resource.getRoot();
-		this.root.getChildren(dojo.hitch(this,function(children){
-								this.onChildrenChange(this.root,children)
-							   }));
-	},
-		
 	destroy: function(){
-		for(var i=0;i<this.subscriptions.length;i++)
-			dojo.unsubscribe(this.subscription[i]);
+		for(var i=0;i<davinci.resource.subscriptions.length;i++)
+			dojo.unsubscribe(davinci.resource.subscription[i]);
 	},
 		
 		
@@ -73,30 +89,21 @@ dojo.mixin(davinci.resource, {
 	},
 	getRoot : function(onComplete){
 		
-		if (!this.root){
-			this.root=new davinci.model.Resource.Folder(".",null);
+		if (!davinci.resource.root){
+			davinci.resource.root=new davinci.model.Resource.Folder(".",null);
 		}
 		
 		if(onComplete)
-			onComplete(this.root);
+			onComplete(davinci.resource.root);
 		else
-			return this.root;
+			return davinci.resource.root;
 	},
 	
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
 		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async
 	},
 	
-	_createResource : function(path){
-		var path = new davinci.model.Path(path).removeLastSegment();
-		
-		var folder = davinci.resource.findResource(path) || this.root;
-		
-		folder.getChildren(dojo.hitch(this,function(children){
-			this.onChildrenChange(folder,children);
-		}));
-			
-	},
+
 	
 	copy : function(sourceFile, destFile, recurse){
 		var path = sourceFile.getPath? sourceFile.getPath() : sourceFile;
@@ -106,9 +113,8 @@ dojo.mixin(davinci.resource, {
 			handleAs:"text", 
 			sync:true,
 			content:{'source':path, 'dest' : destPath, 'recurse': new String(recurse)}  });
-	
-		this.resourceChanged(destFile, "created");
 		
+		davinci.resource.resourceChanged( "created",destFile);
 	},
 
 	download : function(files,archiveName){
@@ -130,12 +136,12 @@ dojo.mixin(davinci.resource, {
 	 * @returns  Resource
 	 */
 	findResource : function(name, ignoreCase, inFolder, workspaceOnly){
-		ignoreCase=ignoreCase || !this.__CASE_SENSITIVE;
+		ignoreCase=ignoreCase || !davinci.resource.__CASE_SENSITIVE;
 		var seg1=0,segments;
-		var resource=this.root;
+		var resource=davinci.resource.root;
 		if (inFolder) {
 		    if (typeof inFolder == 'string') {
-		        inFolder = this.findResource(inFolder, ignoreCase);
+		        inFolder = davinci.resource.findResource(inFolder, ignoreCase);
 		    }
 		    resource = inFolder;
 		}
@@ -193,7 +199,7 @@ dojo.mixin(davinci.resource, {
 				for (var i=0;i<response.length;i++)
 				{
 					var foundFile=response[i];
-					var loadResource=this.root;
+					var loadResource=davinci.resource.getRoot();
 
 					for (var j=0;j<foundFile.parents.length;j++)
 					{
@@ -211,7 +217,7 @@ dojo.mixin(davinci.resource, {
 						}
 						
 					}
-					var resource=this.root;
+					var resource=davinci.resource.getRoot();
 					seg1=0;
 					segments=foundFile.file.split('/');
 					if (segments[0]=='.')
@@ -232,7 +238,7 @@ dojo.mixin(davinci.resource, {
 dojo.declare("davinci.resource.alphabeticalSortFilter",null,{
     filterList : function(list)
    {
-    	debugger;
+    	
 	    return list.sort(function (file1,file2)
 	    	{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0});
    }
@@ -249,7 +255,7 @@ dojo.declare("davinci.resource.foldersFilter",null,{
 dojo.declare("davinci.resource.FileTypeFilter",null,{
 	constructor : function(types)
 	{
-		this.types=types.split(",");
+		davinci.resource.types=types.split(",");
 	},
     filterList : function(list)
     {
@@ -261,9 +267,9 @@ dojo.declare("davinci.resource.FileTypeFilter",null,{
 				newList.push(resource);
 			else
 			{
-				for (var j=0;j<this.types.length;j++)
+				for (var j=0;j<davinci.resource.types.length;j++)
 				{
-					if (resource.getExtension()==this.types[j] || this.types[j]=="*")
+					if (resource.getExtension()==davinci.resource.types[j] || davinci.resource.types[j]=="*")
 					{
 						newList.push(resource);
 						break;
@@ -274,3 +280,4 @@ dojo.declare("davinci.resource.FileTypeFilter",null,{
 		return newList;
     }
 });
+davinci.resource.subscriptions.push(dojo.subscribe("/davinci/resource/resourceChanged",davinci.resource, function(){return davinci.resource.resourceChanged}()));

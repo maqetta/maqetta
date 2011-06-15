@@ -64,9 +64,6 @@
 
 	<!--    Write git revision SHA1 to WebContent/pagedesigner.html, welcome.html...   -->
 	<target name="update.revisions" depends="check.command.line.git">
-        <tstamp>
-            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
-        </tstamp>
 		<exec executable="git" output="${env.buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
 			<arg value="log"/>
             <arg value="-1"/>
@@ -90,9 +87,6 @@
 
 	<!--    Write git revision SHA1 to WebContent/davinci/repositoryinfo.js   -->
 	<target name="update.repositoryinfo.js" depends="check.command.line.git">
-        <tstamp>
-            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
-        </tstamp>
         <exec executable="git" output="${env.buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
             <arg value="log"/>
             <arg value="-1"/>
@@ -108,20 +102,20 @@
 		<filter token="revision" value="${git.log}"/>
         <copy file="${rep.info.file}" tofile="${rep.info.file}.tmp" filtering="true"/>
         <delete file="${rep.info.file}"/>
+        <tstamp>
+            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
+        </tstamp>
         <filter token="buildtime" value="${maqBuildTime}"/>
         <move file="${rep.info.file}.tmp" tofile="${rep.info.file}" filtering="true"/>
 	</target>
 
 	<!--    Write git revision SHA1 to WebContent/davinci/davinci.manifest   -->
 	<target name="update.manifest" depends="check.command.line.git">
-        <tstamp>
-            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
-        </tstamp>
-        <exec executable="git" output="${buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
+        <exec executable="git" output="${env.buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
             <arg value="log"/>
             <arg value="-1"/>
         </exec>
-        <loadfile srcfile="${buildDirectory}/git-log.out" property="git.log">
+        <loadfile srcfile="${env.buildDirectory}/git-log.out" property="git.log">
             <filterchain>
                 <headfilter lines="1"/>
                 <tokenfilter>

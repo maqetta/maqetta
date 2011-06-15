@@ -582,16 +582,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		var frame = this.getFrameNode();
 		var loading = dojo.create("div",null, frame.parentNode, "first");
-//		dojo.style(loading, 'backgroundColor','red');
-/*		dojo.style(loading, 'position','absolute');
-		dojo.style(loading, 'left',containerNode.parentNode.clientLeft);
-		dojo.style(loading, 'top',containerNode.parentNode.clientTop);
-		dojo.style(loading, 'height',containerNode.parentNode.clientHeight);
-		dojo.style(loading, 'width',containerNode.parentNode.clientWidth);
-		dojo.style(loading, 'zIndex','110');*/
+
 		
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
 		dojo.addClass(loading, 'loading');
+
 		
 		this.setHeader({
 			title: data.title,

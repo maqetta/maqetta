@@ -25,7 +25,6 @@ dojo.provide("davinci.Workbench");
 dojo.mixin(davinci.Workbench, {
 	activePerspective: "",
 	actionScope: [],
-	_currentLoadingDiv: [],
 
 	run: function() {
 		this._initKeys();
@@ -948,17 +947,7 @@ dojo.mixin(davinci.Workbench, {
 		if (loading[0]){
 			loading[0].parentNode.removeChild(loading[0]);
 		}
-	//	var length = 0;
-		/*for (var i in this._currentLoadingDiv) {
-			length++;
-		}
-		
-		if (length < 1){
-			var loading = dojo.create("div",null, dojo.body(), "first");
-			loading.innerHTML='<table><tr><td>Loading ' + nodeName + '...</td></tr></table>';
-			dojo.addClass(loading, 'loading');
-		}
-		this._currentLoadingDiv[fileName] = true;*/
+
 		var editorsStackContainer = dijit.byId('editorsStackContainer'),
 			editors_tabcontainer = dijit.byId('editors_tabcontainer');
 		if (editorsStackContainer && editors_tabcontainer){
@@ -1032,23 +1021,6 @@ dojo.mixin(davinci.Workbench, {
 			var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
 			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
 			dojo.addClass(loadIcon[0],'dijitNoIcon');
-			/*var nodeNameArray = new String(tab.editor.fileName).split('/'); // unnecessary conversion to String?
-			var nodeName = nodeNameArray[nodeNameArray.length-1];
-			delete self._currentLoadingDiv[tab.editor.fileName];
-			var length = 0;
-			var replacementNames = [];
-			for (var i in self._currentLoadingDiv) {
-				length++;
-				replacementNames.push(i);
-			}
-			if(length > 0) {
-				var loading = dojo.query('.loading');
-				var displayFileName = replacementNames.shift();
-				loading[0].innerHTML='<table><tr><td>Loading ' + nodeName + '...</td></tr></table>';
-			}else{
-				var loading = dojo.query('.loading');
-				loading[0].parentNode.removeChild(loading[0]);
-			}*/
 			tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 		}, 1000);
 //}), 10);

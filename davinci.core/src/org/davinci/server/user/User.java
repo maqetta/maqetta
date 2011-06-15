@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
@@ -31,12 +30,12 @@ import org.eclipse.core.runtime.Path;
 
 public class User {
 
-	File userDirectory;
-	File settingsDirectory;
-	Links links;
-	Person person;
-	IVResource workspace;
-	LibrarySettings libSettings;
+	private File userDirectory;
+	private File settingsDirectory;
+	private Links links;
+	private Person person;
+	private IVResource workspace;
+	private LibrarySettings libSettings;
 
 	public User(Person person, IVResource userDirectory) {
 		this.person = person;

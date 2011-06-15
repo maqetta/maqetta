@@ -1,13 +1,11 @@
 package org.davinci.server;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
@@ -19,7 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.davinci.ajaxLibrary.LibraryManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.user.User;
@@ -51,7 +48,7 @@ public class DavinciPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(serverManager==null)
             initialize();
-        
+
         User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String pathInfo = req.getPathInfo();
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
@@ -80,7 +77,7 @@ public class DavinciPageServlet extends HttpServlet {
             writeWelcomePage(req, resp);
         } else if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
             handlePreview(req,resp);
-        }else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {    
+        }else if (pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {
             handleWSRequest(req, resp, user);
         }else {
             /* resource not found */
@@ -112,7 +109,7 @@ public class DavinciPageServlet extends HttpServlet {
         resp.addCookie(k);
         writeInternalPage(req, resp, "preview.html");
     }
-    
+
     private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException, ServletException {
 
         // System.out.println("enter ws request");
@@ -302,11 +299,7 @@ public class DavinciPageServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN);
             } finally {
                 if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
+                    is.close();
                 }
             }
         }

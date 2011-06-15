@@ -43,7 +43,7 @@
 		}).then(function(result){
 			if (result=="OK"){
 				var loading = dojo.create("div",null, dojo.body(), "first");
-				loading.innerHTML='<table><tr><td>Loading Maqetta...</td></tr></table>';
+				loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table>';
 				dojo.addClass(loading, 'loading');
 		   		showMainPage(".");
 			}else 

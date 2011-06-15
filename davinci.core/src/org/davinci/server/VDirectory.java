@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.Path;
 
 public class VDirectory implements IVResource {
 
-    Vector     children;
-    IVResource parent;
-    String     name;
+    private Vector     children;
+    private IVResource parent;
+    private String     name;
 
     public VDirectory(IVResource parent, String name) {
         this.parent = parent;

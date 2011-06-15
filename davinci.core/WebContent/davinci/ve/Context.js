@@ -221,7 +221,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getBaseResource: function(options){
-		return davinci.model.Resource.findResource(this.getDocumentLocation());
+		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires) {
@@ -579,6 +579,15 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	},
 
 	_setSourceData: function(data){
+		
+		var frame = this.getFrameNode();
+		var loading = dojo.create("div",null, frame.parentNode, "first");
+
+		
+		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
+		dojo.addClass(loading, 'loading');
+
+		
 		this.setHeader({
 			title: data.title,
 			scripts: data.scripts,
@@ -600,6 +609,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		this.getThemeMeta();
 		
 		var containerNode = this.getContainerNode();
+	
+		
 		var active = this.isActive();
 		if(active){
 			this.select(null);
@@ -652,6 +663,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		collapse(containerNode);
 
 		this._processWidgets(containerNode, active, states);
+
+		loading.parentNode.removeChild(loading);
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 

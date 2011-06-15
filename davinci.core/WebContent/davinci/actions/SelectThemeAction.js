@@ -1,6 +1,6 @@
 dojo.provide("davinci.actions.SelectThemeAction");
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("davinci.ui.widgets.ThemeSelection");
 dojo.require("davinci.ve.commands.ChangeThemeCommand");
 

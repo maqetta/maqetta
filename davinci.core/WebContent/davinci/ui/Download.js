@@ -73,7 +73,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	
 	_getResources : function(){
 		
-		var folder=davinci.model.Resource.getRoot();
+		var folder=davinci.resource.getRoot();
 		/* get all sub files */
 		var list = [];
 		for(var i = 0;i<folder.children.length;i++){
@@ -112,7 +112,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 			return;
 		}
 		
-		this._pages = davinci.model.Resource.findResource("*.html");
+		this._pages = davinci.resource.findResource("*.html");
 		
 		var pageBuilder = new davinci.ve.RebaseDownload(libs);
 		for(var i=0;i<this._pages.length;i++){
@@ -133,7 +133,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 				var files = downloadFiles;
 				var fn = fileName
 				var pgs = pages;
-				davinci.model.Resource.download(files, fn);		
+				davinci.resource.download(files, fn);		
 				/*
 				for(var i=0;i<pgs.length;i++){
 					pgs[i].removeWorkingCopy();

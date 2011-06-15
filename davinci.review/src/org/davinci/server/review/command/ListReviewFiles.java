@@ -1,17 +1,14 @@
 package org.davinci.server.review.command;
 
 import java.io.IOException;
-
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
-import org.davinci.server.ServerManager;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.DesignerUser;
+import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.user.User;
 import org.davinci.server.util.JSONWriter;

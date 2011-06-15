@@ -395,12 +395,12 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		var loading = doc.createElement("div");
 		var contentPaneAncestor = this._findContentPaneAncestor(iframeNode);
 		if(!contentPaneAncestor){
-		loading.innerHTML='<table><tr><td>'+langObj.loading+'</td></tr></table>';
+		//loading.innerHTML='<table><tr><td>'+langObj.loading+'</td></tr></table>';
 			return;
 		}
 		contentPaneAncestor.appendChild(loading);
 		this._loadingDiv = loading;
-		dojo.addClass(loading,'loading');
+		dojo.addClass(loading,'smartInputLoading');
 		var inline= doc.createElement("div");
 		inline.id = 'ieb';
 		dojo.addClass(inline,'inlineEdit dijitTooltipContainer');

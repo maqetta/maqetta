@@ -19,7 +19,7 @@ dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 	buildRendering : function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
 		this.inherited(arguments);
-		this._files=davinci.model.Resource.getSelectedResources();
+		this._files=davinci.ui.Resource.getSelectedResources();
 		var uiArray = ["<div class='downloadSelectedHeader'>"+langObj.selectedFiles+"</div>"];
 		uiArray.push("<div class='downloadSelectedList'>");
 		if(!this._files){

@@ -617,6 +617,7 @@ davinci.ui.Panel.metadata['button']=
 		}	
 };
 
+/*
 davinci.ui.Panel.metadata['layout']=
 {
 		createWidget : function (field,parms,fieldData,node,panel)
@@ -638,6 +639,7 @@ davinci.ui.Panel.metadata['layout']=
 		}
 		
 };
+*/
 
 davinci.ui.Panel.metadata['sortedList']=
 {
@@ -983,8 +985,7 @@ davinci.ui.Panel.metadata['tree']=
 		noAppend : true,
 		createWidget : function (field,parms,fieldData,parentNode,panel)
 		{
-			dojo.require("dijit.layout.ContentPane");
-			dojo.require("davinci.ui.widgets.Tree");
+			dojo.require("dijit.Tree");
 			var contentPane=new dijit.layout.ContentPane({});
 			parentNode.appendChild(contentPane.domNode);
 			
@@ -993,20 +994,20 @@ davinci.ui.Panel.metadata['tree']=
 			{
 //				dojo.require(modelName);
 				var modelParm= field.modelParms ||{};
-				parms.model=new (eval(modelName))(modelParm);
+				parms.model=new (dojo.getObject(modelName))(modelParm);
 			}
 			parms.filters=[];
 			if (field.filters)
 			{
 				dojo.forEach(field.filters.split(','),function(each){
-					var filter=eval(each);
+					var filter=dojo.getObject(each);
 					if (filter && filter.filterList)
 						parms.filters.push(filter);
 				});
 			}
 			parms.style=parms.style ||  "height:10em;overflow:auto";
 			
-			field.tree = new davinci.ui.widgets.Tree(parms);
+			field.tree = new dijit.Tree(parms);
 			
 			function ccf(field, parent){
 				
@@ -1036,8 +1037,5 @@ davinci.ui.Panel.metadata['tree']=
 		{
 			    return field._selected;
 		}	
-
-
-		
 };
 

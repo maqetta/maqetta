@@ -4,9 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.ServerManager;
-import org.davinci.server.util.JSONWriter;
 
 public class DesignerUser {
 	private String name;
@@ -48,7 +46,7 @@ public class DesignerUser {
 	public List<Version> getVersions() {
 		return versions;
 	}
-	
+
 	public void deleteVersion(String versionTime){
 		Version version = this.getVersion(versionTime);
 		versions.remove(version);
@@ -57,7 +55,7 @@ public class DesignerUser {
 			deleteDir(versionDir);
 		}
 	}
-	
+
 	private static boolean deleteDir(File dir) {
 	    if (dir.isDirectory()) {
 	        String[] children = dir.list();

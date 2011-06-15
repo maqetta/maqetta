@@ -14,7 +14,7 @@ dojo.require("dijit.layout.TabContainer");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.Panel");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("davinci.ui.Dialogs");
 
 
@@ -25,7 +25,6 @@ dojo.provide("davinci.Workbench");
 dojo.mixin(davinci.Workbench, {
 	activePerspective: "",
 	actionScope: [],
-	_currentLoadingDiv: [],
 
 	run: function() {
 		this._initKeys();
@@ -46,7 +45,7 @@ dojo.mixin(davinci.Workbench, {
 		top.startup();
 */
 		this._initializeWorkbenchState();
-		debugger;
+	
 		var loading = dojo.query('.loading');
 		if (loading[0]){ // remove the loading div
 			loading[0].parentNode.removeChild(loading[0]);
@@ -743,7 +742,7 @@ dojo.mixin(davinci.Workbench, {
 			view = davinci.Runtime.getExtension("davinci.view", viewId),
 			mainBody = dojo.byId('mainBody'),
 			perspectiveId = this.getActivePerspective(),
-			perspective = davinci.Runtime.getExtension("davinci.perspective",	perspectiveId),
+			perspective = davinci.Runtime.getExtension("davinci.perspective", perspectiveId),
 			position = 'left',
 			cp1 = null,
 			created = false,
@@ -817,7 +816,7 @@ dojo.mixin(davinci.Workbench, {
 					viewClass = dojo.getObject(view.viewClass);
 				}
 				else
-					viewClass =   davinci.workbench.ViewPart;
+					viewClass = davinci.workbench.ViewPart;
 				var tab = new viewClass( {
 					position: positionSplit[1] || positionSplit[0],
 					title: view.title,
@@ -834,31 +833,31 @@ dojo.mixin(davinci.Workbench, {
 //		
 //		}
 		if(shouldFocus) cp1.selectChild(tab);
-	  } catch (ex) {console.log("error loading view "+view.id);console.log(ex);}
+	  } catch (ex) {console.error("Error loading view: "+view.id);console.error(ex);}
 	},
 	
 	hideView: function(viewId){
-		for(position in mainBody.tabs['perspective']){
-			if(position=='left' || position == 'right') position+='-top'
-			if(! mainBody.tabs['perspective'][position]) continue;
-			var children = mainBody.tabs['perspective'][position].getChildren();
+		for(position in mainBody.tabs.perspective){
+			if(position=='left' || position == 'right'){ position+='-top'; }
+			if(! mainBody.tabs.perspective[position]){ continue; }
+			var children = mainBody.tabs.perspective[position].getChildren();
 			var found = false;
 			for ( var i = 0; i < children.length && !found; i++) {
 				if (children[i].id == viewId) {
-					 mainBody.tabs['perspective'][position].removeChild(children[i]);
+					mainBody.tabs.perspective[position].removeChild(children[i]);
 					children[i].destroyRecursive(false);
 				}
 			}									
-			
 		}
 	},
 
 	toggleView: function(viewId) {
 		var found = dojo.byId(viewId);
-		if(found) 
+		if(found) {
 			this.hideView(viewId);
-		else
-			this.showView(viewId, true)
+		} else{
+			this.showView(viewId, true);
+		}
 	},
 
 	openEditor: function (keywordArgs) {
@@ -886,8 +885,9 @@ dojo.mixin(davinci.Workbench, {
 			// already open
 			tabContainer.selectChild(tab);
 			var editor=tab.editor;
-			if (keywordArgs["startOffset"])
+			if (keywordArgs["startOffset"]) {
 				editor.select(keywordArgs);
+			}
 			return;
 		}
 		var editorCreateCallback=keywordArgs.editorCreateCallback;
@@ -942,17 +942,12 @@ dojo.mixin(davinci.Workbench, {
 	_createEditor: function(editorExtension, fileName, keywordArgs){
 		var nodeNameArray = new String(fileName).split('/'); // unnecessary conversion to String?
 		var nodeName = nodeNameArray[nodeNameArray.length-1];
-		var length = 0;
-		for (var i in this._currentLoadingDiv) {
-			length++;
+
+		var loading = dojo.query('.loading');
+		if (loading[0]){
+			loading[0].parentNode.removeChild(loading[0]);
 		}
-		debugger;
-		if (length < 1){
-			var loading = dojo.create("div",null, dojo.body(), "first");
-			loading.innerHTML='<table><tr><td>Loading ' + nodeName + '...</td></tr></table>';
-			dojo.addClass(loading, 'loading');
-		}
-		this._currentLoadingDiv[fileName] = true;
+
 		var editorsStackContainer = dijit.byId('editorsStackContainer'),
 			editors_tabcontainer = dijit.byId('editors_tabcontainer');
 		if (editorsStackContainer && editors_tabcontainer){
@@ -1026,23 +1021,6 @@ dojo.mixin(davinci.Workbench, {
 			var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
 			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
 			dojo.addClass(loadIcon[0],'dijitNoIcon');
-			var nodeNameArray = new String(tab.editor.fileName).split('/'); // unnecessary conversion to String?
-			var nodeName = nodeNameArray[nodeNameArray.length-1];
-			delete self._currentLoadingDiv[tab.editor.fileName];
-			var length = 0;
-			var replacementNames = [];
-			for (var i in self._currentLoadingDiv) {
-				length++;
-				replacementNames.push(i);
-			}
-			if(length > 0) {
-				var loading = dojo.query('.loading');
-				var displayFileName = replacementNames.shift();
-				loading[0].innerHTML='<table><tr><td>Loading ' + nodeName + '...</td></tr></table>';
-			}else{
-				var loading = dojo.query('.loading');
-				loading[0].parentNode.removeChild(loading[0]);
-			}
 			tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 		}, 1000);
 //}), 10);
@@ -1117,8 +1095,9 @@ dojo.mixin(davinci.Workbench, {
 			   var menuTree=this._createMenuTree(actionSets,true);
 			   this._initActionsKeys(actionSets, args);
 			   var popup=this._createMenu(menuTree,context);
-			   if (popup && domNode)
+			   if (popup && domNode) {
 				   popup.bindDomNode(domNode);
+			   }
 			   popup._widgetCallback=widgetCallback;
 			   return popup;
 		   }
@@ -1147,10 +1126,12 @@ dojo.mixin(davinci.Workbench, {
         	  var actionItem=keys[seq];
         	  if (actionItem)
         	  {
-					if (actionItem.action.shouldShow && !actionItem.action.shouldShow(context))
+					if (actionItem.action.shouldShow && !actionItem.action.shouldShow(context)) {
 						return;
-					if ( actionItem.action.isEnabled(context))
+					}
+					if ( actionItem.action.isEnabled(context)) {
 						davinci.Workbench._runAction(actionItem,context);
+					}
         	  }
           });
 
@@ -1163,8 +1144,9 @@ dojo.mixin(davinci.Workbench, {
 		dojo.forEach(keyExtensions, function(keyExt){
 			var contextID= keyExt.contextID || "all";
 			var keyContext=keys[contextID];
-			if (!keyContext)
+			if (!keyContext) {
 			  keyContext=keys[contextID]=[];
+			}
 			
 			keyContext[keyExt.sequence]=keyExt.commandID;
 		});
@@ -1179,16 +1161,18 @@ dojo.mixin(davinci.Workbench, {
 	},
 	handleKey: function (e)
 	{
-		if (!this.keyBindings)
+		if (!this.keyBindings) {
 			return;
+		}
 		var seq=this._keySequence(e);
 		var cmd;
 		if (this.currentContext && this.keyBindings[this.currentContext])
 		{
 			cmd=this.keyBindings[this.currentContext][seq];
 		}
-		if (!cmd)
+		if (!cmd) {
 			cmd=this.keyBindings['all'][seq];
+		}
 		if (cmd)
 		{
 			davinci.Runtime.executeCommand(cmd);
@@ -1202,19 +1186,24 @@ dojo.mixin(davinci.Workbench, {
 		var seq=[];
 		if (window.event) 
 		{
-			if (window.event.ctrlKey)
+			if (window.event.ctrlKey) {
 				seq.push("M1");
-			if (window.event.shiftKey)
+			}
+			if (window.event.shiftKey) {
 				seq.push("M2");
-			if (window.event.altKey)
+			}
+			if (window.event.altKey) {
 				seq.push("M3");
+			}
 		}
 		else 
 		{
-			if (e.ctrlKey || (e.modifiers==2) || (e.modifiers==3) || (e.modifiers>5))
+			if (e.ctrlKey || (e.modifiers==2) || (e.modifiers==3) || (e.modifiers>5)) {
 				seq.push("M1");
-			if (e.shiftKey || (e.modifiers>3))
+			}
+			if (e.shiftKey || (e.modifiers>3)) {
 				seq.push("M2");
+			}
 			if(e.modifiers)
 			{
 				if (e.altKey || (e.modifiers % 2))
@@ -1236,9 +1225,10 @@ dojo.mixin(davinci.Workbench, {
 		{
 			letter=this._keyTable[e.keyCode]||"xxxxxxxxxx";
 		}
-		 letter=letter.toUpperCase();
-		if (letter==' ')
+		letter=letter.toUpperCase();
+		if (letter==' ') {
 			letter="' '";
+		}
 				
 		seq.push(letter);
 		seq=seq.join("+");
@@ -1254,8 +1244,9 @@ dojo.mixin(davinci.Workbench, {
 	findView: function (viewID)
 	{
 		var domNode=dijit.byId(viewID);
-		if (domNode)
+		if (domNode) {
 			return domNode;
+		}
 	},
 
 	toggleFullScreen: function()
@@ -1322,8 +1313,9 @@ dojo.mixin(davinci.Workbench, {
 	
 		if(newEditor && newEditor.focus) newEditor.focus();
 		
-		if(!startup)
+		if(!startup) {
 			davinci.Workbench._updateWorkbenchState();
+		}
 	},
 
 	_updateTitle: function(currentEditor)
@@ -1332,8 +1324,9 @@ dojo.mixin(davinci.Workbench, {
 		if (currentEditor)
 		{
 			newTitle=newTitle+" - "
-			if (currentEditor.isDirty)
+			if (currentEditor.isDirty) {
 				newTitle=newTitle+"*";
+			}
 			newTitle=newTitle+currentEditor.fileName;
 		}
 		dojo.doc.title=newTitle;
@@ -1371,7 +1364,7 @@ dojo.mixin(davinci.Workbench, {
 			state.version = davinci.version;
 			for (var i=0;i<state.editors.length;i++)
 			{
-				var resource=davinci.model.Resource.findResource(state.editors[i]);
+				var resource=davinci.resource.findResource(state.editors[i]);
 				var noSelect=state.editors[i]!=state.activeEditor;
 				if (resource)
 				{
@@ -1405,21 +1398,22 @@ dojo.mixin(davinci.Workbench, {
 		
 		var lastSave=this._lastAutoSave;
 		function saveDirty(editor){
-			if (editor.isReadOnly || !editor.isDirty)
+			if (editor.isReadOnly || !editor.isDirty) {
 				return;
+			}
 			
 			var modified=editor.lastModifiedTime;
 			if (modified && modified>lastSave){
 				try {
 					editor.save(true);
 				}catch(ex){
-					console.log("Error while autosaving file:" + ex);
+					console.error("Error while autosaving file:" + ex);
 				}
 			}
 		}
 		
 		dojo.forEach(this.editorTabs.getChildren(),	function(editor){
-				  saveDirty(editor);
+			saveDirty(editor);
 		});
 				
 		this._lastAutoSave=new Date().getTime();

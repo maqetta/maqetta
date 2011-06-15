@@ -26,7 +26,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.davinci.ajaxLibrary.LibInfo;
-import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.ServerManager;
 import org.davinci.server.user.LibrarySettings;
@@ -41,14 +40,14 @@ public class ReviewManager {
 	HashMap<DavinciProject, HashMap<String, LibInfo[]>> snapshotLibs;
 	File baseDirectory;
 
-	
+
 	public static ReviewManager getReviewManager()
 	{
 		if (theReviewManager==null)
 			theReviewManager=new ReviewManager();
 		return theReviewManager;
 	}
-	
+
 	Map<String, DesignerUser> users = Collections.synchronizedMap(new HashMap<String, DesignerUser>());
 	public ReviewManager() {
 		String basePath = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
@@ -61,7 +60,7 @@ public class ReviewManager {
 		if (ServerManager.DEBUG_IO_TO_CONSOLE)
 			System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
 	}
-	
+
 	public void saveDraft(String name,Version version) {
 		DesignerUser user = getDesignerUser(name);
 		File commentingDir = user.getCommentingDirectory();
@@ -84,7 +83,7 @@ public class ReviewManager {
 
 		initVersionDir(user, version.getTime());
 		saveVersionFile(user);
-		
+
 	}
 
 	public void saveVersionFile(DesignerUser user) {
@@ -250,7 +249,7 @@ public class ReviewManager {
 						Element reviewerElement = document.createElement("reviewer");
 						reviewerElement.setAttribute("name", reviewer.getUserName());
 						reviewerElement.setAttribute("email", reviewer.getEmail());
-						
+
 						element.appendChild(reviewerElement);
 					}
 					for (String resource : version.resources) {
@@ -384,7 +383,7 @@ public class ReviewManager {
 	public File getBaseDirectory() {
 		return baseDirectory;
 	}
-	
+
 	public LibInfo[] getSystemLibs(DavinciProject project){
 		StringBuilder path = new StringBuilder();
 		path.append(baseDirectory.getAbsolutePath());
@@ -394,7 +393,7 @@ public class ReviewManager {
 		path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		return new LibrarySettings(new File(path.toString())).allLibs();
 	}
-	
+
 	public LibInfo[] getVersionLib(DavinciProject project, String version){
 		if(snapshotLibs == null){
 			snapshotLibs = new HashMap<DavinciProject, HashMap<String, LibInfo[]>>();
@@ -416,7 +415,7 @@ public class ReviewManager {
 			path.append(version);
 			path.append("/");
 			path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-			
+
 			libInfos = new LibrarySettings(new File(path.toString())).allLibs();
 			if(libInfos != null)
 				versions.put(version, libInfos);

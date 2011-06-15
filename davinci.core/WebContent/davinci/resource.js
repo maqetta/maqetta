@@ -6,9 +6,6 @@ dojo.require("davinci.model.Resource");
 dojo.require("davinci.model.Path");
 
 
-davinci.resource.subscriptions = [];
-
-
 dojo.mixin(davinci.resource, {
 	root:null,
 	

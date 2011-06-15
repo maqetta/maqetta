@@ -27,9 +27,6 @@ public class VResourceUtils {
 						VResourceUtils.copyFile(list[i], r);
 						r.flushWorkingCopy();
 					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -61,17 +58,22 @@ public class VResourceUtils {
 	
 	public static void copyFile(IVResource src, IVResource dest)
 			throws IOException {
-		InputStream in = src.getInputStreem();
-		OutputStream out = dest.getOutputStreem();
+		InputStream in = null;
+		OutputStream out = null;
+		try{
+			in = src.getInputStreem();
+			out = dest.getOutputStreem();
 
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			dest.flushWorkingCopy();
+		}finally{
+			if(in != null) in.close();
+			if(out != null) out.close();
 		}
-		in.close();
-		out.close();
-		dest.flushWorkingCopy();
 	}
 
 }

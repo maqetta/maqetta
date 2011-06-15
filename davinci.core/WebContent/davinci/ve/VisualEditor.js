@@ -191,19 +191,28 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this._setContent(fileName, content);
 	},
 	
+	saveAs : function (newFileName, oldFileName, content){
+		
+		this._setContent(newFileName, content);
+	},
+	
 	_setContent : function(filename,content){
+		var relativePrefix="";
+		var folderDepth=new davinci.model.Path(filename).getSegments().length-1;
+		if (folderDepth){
+			for (var i=0;i<folderDepth;i++){
+				relativePrefix+="../";
+			}
+		}
+		this._setContentRaw(filename, relativePrefix, content);
+	},
+	
+	_setContentRaw : function(filename,relativePrefix, content){
 		this.fileName=filename;
 		this.basePath=new davinci.model.Path(filename);
 	   
 		if (!this.initialSet){
-			var relativePrefix="";
-			var folderDepth=new davinci.model.Path(filename).getSegments().length-1;
-			if (folderDepth)
-			{
-				for (var i=0;i<folderDepth;i++){
-					relativePrefix+="../";
-				}
-			}
+			
 			var loc=location.href;
 			if (loc.charAt(loc.length-1)=='/'){
 				loc=loc.substring(0,loc.length-1);

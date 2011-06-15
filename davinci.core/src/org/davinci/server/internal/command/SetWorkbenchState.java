@@ -1,5 +1,6 @@
 package org.davinci.server.internal.command;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class SetWorkbenchState extends Command {
         if (!settingsFile.exists()) {
             settingsFile.createNewFile();
         }
-        OutputStream os = new FileOutputStream(settingsFile);
+        OutputStream os = new BufferedOutputStream(new FileOutputStream(settingsFile));
         Command.transferStreams(req.getInputStream(), os, false);
     }
 

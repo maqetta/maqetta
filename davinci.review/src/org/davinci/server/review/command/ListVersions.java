@@ -1,24 +1,17 @@
 package org.davinci.server.review.command;
 
-import java.io.File;
-
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
-import org.davinci.server.ServerManager;
-import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.DesignerUser;
+import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Reviewer;
 import org.davinci.server.review.Version;
 import org.davinci.server.user.User;
 import org.davinci.server.util.JSONWriter;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 
 public class ListVersions extends Command {
 
@@ -80,14 +73,14 @@ public class ListVersions extends Command {
 					buf.append("}");
 					buf.append(",");
 				}
-				
+
 				if(!version.getReviewers().isEmpty())
 				buf=buf.delete(buf.length()-1, buf.length());
 				buf.append("]");
-				
+
 				writer.addFieldName("reviewers");
 				writer.startArray();
-				
+
 				for(Reviewer reviewer:version.getReviewers()){
 					writer.startObject();
 					writer.addField("name", reviewer.getUserName());

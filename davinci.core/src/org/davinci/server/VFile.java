@@ -1,5 +1,7 @@
 package org.davinci.server;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,10 +22,10 @@ import org.eclipse.core.runtime.Path;
 public class VFile implements IVResource {
     // abstracted file/resource class
     File       file = null;
-    boolean    isWorkingCopy;
-    String     virtualPath;
-    File       workingCopy;
-    IVResource parent;
+    private boolean    isWorkingCopy;
+    private String     virtualPath;
+    private File       workingCopy;
+    private IVResource parent;
 
     public VFile(File file, IVResource parent, String virtualPath) {
 
@@ -174,11 +176,11 @@ public class VFile implements IVResource {
             this.workingCopy.createNewFile();
         }
 
-        return new FileOutputStream(this.workingCopy);
+        return new BufferedOutputStream(new FileOutputStream(this.workingCopy));
     }
 
     public InputStream getInputStreem() throws IOException {
-        return new FileInputStream(this.getFile());
+        return new BufferedInputStream(new FileInputStream(this.getFile()));
     }
 
     public IVResource[] listFiles() {

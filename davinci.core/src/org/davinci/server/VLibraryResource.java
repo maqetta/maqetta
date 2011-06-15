@@ -23,12 +23,12 @@ import org.eclipse.core.runtime.Path;
 
 public class VLibraryResource implements IVResource {
     // abstracted file/resource class
-    URL            resourcePointer = null;
-    boolean        isWorkingCopy;
+    private URL            resourcePointer = null;
+    private boolean        isWorkingCopy;
 
-    Library        library;
-    IVResource     parent;
-    String         name;
+    private Library        library;
+    private IVResource     parent;
+    private String         name;
     private String bundleRoot;
 
     public VLibraryResource(Library b, URL file, IVResource parent, String name, String bundleRoot) {
@@ -130,7 +130,7 @@ public class VLibraryResource implements IVResource {
 
             item = new VLibraryResource(this.library, files[i], this, newPath.removeTrailingSeparator().toString(), new Path(this.bundleRoot).append(newPath).toString());
             found.add(item);
-           
+
         }
         return (IVResource[]) found.toArray(new IVResource[found.size()]);
     }
@@ -193,6 +193,7 @@ public class VLibraryResource implements IVResource {
 
     }
 
+    @SuppressWarnings("unused")
     public IVResource get(String childName) {
         IPath p1 = new Path(this.bundleRoot);
         // p1 = p1.removeFirstSegments(new

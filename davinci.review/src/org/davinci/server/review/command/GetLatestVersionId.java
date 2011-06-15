@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
-import org.davinci.server.ServerManager;
 import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
@@ -32,8 +31,8 @@ public class GetLatestVersionId extends Command{
 					}
 				}
 			}
-			
+
 			this.responseString = new Integer(latestVersionID).toString();
-	
+
 	}
 }

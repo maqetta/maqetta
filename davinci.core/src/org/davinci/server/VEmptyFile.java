@@ -11,8 +11,8 @@ import java.net.URLConnection;
 
 public class VEmptyFile implements IVResource {
 
-    String  virtualPath;
-    boolean directory;
+    private String  virtualPath;
+    private boolean directory;
 
     public VEmptyFile(String path, boolean directory) {
         this.virtualPath = path;

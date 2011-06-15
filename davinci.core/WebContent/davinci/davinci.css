@@ -812,7 +812,7 @@ davinci_top_bar .dijitButtonNode {
 	height: 16px;
 }
 
-.claro .loading{
+.claro .smartInputLoading{
 	background-color: #eee;
 	position: absolute;
 	top: 0;
@@ -826,6 +826,43 @@ davinci_top_bar .dijitButtonNode {
 	background-repeat: no-repeat;
 	background-position: center;
 }
+
+.claro .loading{
+	/*background-color: #eee;*/
+	background-color: white;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 110;
+	display: block;
+	opacity: 1.0;
+	/*background-image: url('../dojox/image/resources/images/loading.gif');
+	background-repeat: no-repeat;
+	background-position: center;*/
+}
+
+.claro .loading table {
+	width: 100%;
+	height: 100%;
+}
+.claro .loading td {
+	text-align: center;
+	font-size:200%;
+	font-color: #666666;
+	/*background-image: url('../dojox/image/resources/images/loading.gif');
+	background-repeat: no-repeat;
+	background-position: left;*/
+}
+.claro .loading td span {
+	width: 200px;
+	height: 200px;
+	background-image: url('../dojox/image/resources/images/loading.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
 
 .inlineEdit{
 	position: absolute;

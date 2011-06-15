@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.DavinciProject;
@@ -44,13 +44,13 @@ public class ReviewCacheManager extends Thread {
 			project = comment.getProject();
 			synchronized(project){
 				reviewHash = loadReviewFile(project);
-	
+
 				if (null == reviewHash) {
 					System.out.println("Can't find project " + project.getProjectName()
 							+ " review file for comment " + comment.getId());
 					continue;
 				}
-	
+
 				boolean isFatherClosed = false;
 				if (!Utils.isBlank(comment.getReplyTo()) && !"0".equals(comment.getReplyTo())){
 					fatherComment = getTopParent(comment);
@@ -63,14 +63,14 @@ public class ReviewCacheManager extends Thread {
 									+ " can't be added because this review thread is closed by others, please reload the review data.");
 				}
 				reviewHash.put(comment.getId(), comment);
-	
+
 				// Update the last access time
 				updateLastAccessTime(project);
 			}
 		}
 		return true;
 	}
-	
+
 	private Comment getTopParent(Comment comment){
 		while(!Utils.isBlank(comment.getReplyTo())&&!"0".equals(comment.getReplyTo())){
 			comment = getComment(comment.getProject(), comment.getReplyTo());
@@ -110,7 +110,7 @@ public class ReviewCacheManager extends Thread {
 		Hashtable<String, Comment> reviewHash = loadReviewFile(project);
 		if (null == reviewHash)
 			return null;
-		
+
 		// Update the last access time
 		updateLastAccessTime(project);
 //		return (Comment) (Utils.deepClone(reviewHash.get(commentId)));
@@ -124,7 +124,7 @@ public class ReviewCacheManager extends Thread {
 			Hashtable<String, Comment> reviewHash = reviewFilePool.get(project);
 			if (null == reviewHash)
 				return true;
-	
+
 			Comment lastAccessTime = new Comment();
 			lastAccessTime.setCreated(new Date(System.currentTimeMillis()));
 			reviewHash.put(LAST_ACCESS_TIME, lastAccessTime);
@@ -133,7 +133,7 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param project
 	 * @return
 	 */
@@ -168,7 +168,7 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param project
 	 * @return
 	 */
@@ -219,7 +219,7 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param project
 	 * @return
 	 */
@@ -244,7 +244,7 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param project
 	 * @return
 	 */
@@ -285,7 +285,7 @@ public class ReviewCacheManager extends Thread {
 			Hashtable<String, Comment> reviewHash = loadReviewFile(project);
 			if (null == reviewHash)
 				return false;
-	
+
 			Set<Entry<String, Comment>> entries = reviewHash.entrySet();
 			Comment newOne, oldOne;
 			String str;
@@ -294,11 +294,11 @@ public class ReviewCacheManager extends Thread {
 			for (Entry<String, Comment> entry : entries) {
 				if (LAST_ACCESS_TIME.equals(entry.getKey()))
 					continue;
-	
+
 				oldOne = entry.getValue();
 				if (!Comment.STATUS_CLOSED.equalsIgnoreCase(oldOne.getStatus())&&parentVersion.equals(oldOne.getPageVersion())) {
 					newOne = (Comment) Utils.deepClone(oldOne);
-	
+
 					// Re-calculate the comment id
 					str = newOne.getId();
 					String drawingJson = newOne.getDrawingJson();
@@ -311,8 +311,8 @@ public class ReviewCacheManager extends Thread {
 					drawingJson = drawingJson.replace(newOne.getId(), str);
 					newOne.setDrawingJson(drawingJson);
 					newOne.setId(str);
-	
-					
+
+
 					// Re-calculate the comment replyTo id
 					str = newOne.getReplyTo();
 					if (!"0".equals(str)) {
@@ -324,7 +324,7 @@ public class ReviewCacheManager extends Thread {
 						}
 					}
 					newOne.setReplyTo(str);
-	
+
 					// Re-calculate the comment page name
 					str = newOne.getPageName();
 					if (null != str) {
@@ -341,18 +341,18 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	/*
-	 * 
+	 *
 	 */
 	/*
 	 * private synchronized boolean clearUnconsistentComments(Hashtable<String, Comment> reviewHash)
 	 * { if (null == reviewHash) return false; else if (reviewHash.isEmpty()) return true;
-	 * 
+	 *
 	 * Set<Entry<String, Comment>> entries = reviewHash.entrySet(); Comment comment; Comment
 	 * fatherComment; for (Entry<String, Comment> entry : entries) { comment = entry.getValue(); if
 	 * (!Util.isBlank(comment.getReplyTo()) && !"0".equals(comment.getReplyTo())) { fatherComment =
 	 * reviewHash.get(comment.getReplyTo()); if (null != fatherComment)
 	 * comment.setStatus(fatherComment.getStatus()); } }
-	 * 
+	 *
 	 * return true; }
 	 */
 }

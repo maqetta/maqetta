@@ -172,6 +172,7 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		this._orgModelGetChildren=model.getChildren;
 		model.getChildren=dojo.hitch(this, this._getChildrenIntercept);
 		this.selectedNodes = [];
+		this.watch("selectedItem",this._selectNode);
 	},
 
 	getNode: function(nodeItem) {
@@ -317,7 +318,7 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		//		Mark specified node as select, and unmark currently selected node.
 		// tags:
 		//		protected
-
+/*
 		if(!this.ctrlKeyPressed && this.selectedNodes && !this.selectedNodes._destroyed){
 			this.deselectAll();
 		}
@@ -326,9 +327,10 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 			this.selectedNodes.push(node); 
 		}
 		this.selectedNode = node;
+*/
 		if (!this.isSelecting && this.notifySelect)
 		{
-			this.notifySelect(node.item, this.ctrlKeyPressed); 
+			this.notifySelect(this.selectedItem, this.ctrlKeyPressed); 
 		}
 		
 	},

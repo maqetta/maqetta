@@ -2,13 +2,10 @@ dojo.provide("davinci.model.Resource");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.Dialog");
+dojo.require("dijit.Tree");
 dojo.require("dijit.form.TextBox");
-dojo.require("davinci.Runtime");
 dojo.require("dojox.form.FileUploader");
-//dojo.require("dijit.Editor");
-//dojo.require("dojo.io.script");
-dojo.require("dojox.widget.Standby");
-
+dojo.require("davinci.Runtime");
 dojo.require("davinci.model.Model");
 
    
@@ -23,31 +20,25 @@ dojo.mixin(davinci.model.Resource,	{
 		delete this.root;
 		this.getRoot();
 		dojo.publish("/davinci/resource/workspaceChanged");
-		
 	},
 	
 	copy : function(sourceFile, destFile, recurse){
 		var path = sourceFile.getPath? sourceFile.getPath() : sourceFile;
 		var destPath = destFile.getPath? destFile.getPath() : destFile;
-		var response = davinci.Runtime.serverJSONRequest({url:"./cmd/copy", 
-														  handleAs:"text", 
-														  sync:true,
-														  content:{'source':path, 'dest' : destPath, 'recurse': new String(recurse)}  });
+		var response = davinci.Runtime.serverJSONRequest({
+			url:"./cmd/copy", 
+			handleAs:"text", 
+			sync:true,
+			content:{'source':path, 'dest' : destPath, 'recurse': new String(recurse)}  });
 		this.workspaceChanged();
 	},
-	
-	
-	
+
 	download : function(files,archiveName){
 		
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
 		*/
 		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files));
-	 
-	
-	  
-	
 	},
 	
 	getNewFileName : function (fileOrFolder, fileDialogParentFolder, extension){
@@ -137,7 +128,7 @@ dojo.mixin(davinci.model.Resource,	{
 '	<div class="folderContainer">'+
 '		<div dojoType="davinci.ui.widgets.ResourceTreeModel" foldersOnly="false" jsId="fileDialogFolderModel"></div>'+
 '		<div dojoType="dijit.layout.ContentPane">'+
-'			<div class="fileDialogTreeWidget" dojoType="davinci.ui.widgets.Tree" id="fileDialogFolderTree" model="fileDialogFolderModel"></div>'+
+'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="fileDialogFolderModel"></div>'+
 '		</div>'+
 '	</div>'+
 '	<div class="buttonRow">'+
@@ -149,14 +140,14 @@ dojo.mixin(davinci.model.Resource,	{
 			onCancel:function(){this.destroyRecursive(false);}});	
 		
 		dialog.setContent(formHtml);	
-		dijit.byId('fileDialogFolderTree').selectNode([folder]);
-		dijit.byId('fileDialogParentFolder').attr('value',folder.getPath());
+		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
+		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 		dijit.byId('fileDialogFolderTree').notifySelect=function(item){
 			if(item.elementType==='Folder'){
-				dijit.byId('fileDialogParentFolder').attr('value',item.getPath());
+				dijit.byId('fileDialogParentFolder').set('value',item.getPath());
 			}else{
-				dijit.byId('fileDialogParentFolder').attr('value',item.parent.getPath());
-				dijit.byId('fileDialogFileName').attr('value',item.name);
+				dijit.byId('fileDialogParentFolder').set('value',item.parent.getPath());
+				dijit.byId('fileDialogFileName').set('value',item.name);
 			}
 		};		
 		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){
@@ -257,7 +248,7 @@ dojo.mixin(davinci.model.Resource,	{
 			{
 				folder=(resource.elementType=='Folder'?resource:resource.parent);
 			}
-//			dijit.byId('fileDialogParentFolder').attr('value',folder.getPath());
+//			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 			dojo.byId('fileDialogParentFolder').innerHTML=folder.getPath();
 
 			var f0 = new dojox.form.FileUploader({
@@ -313,7 +304,7 @@ dojo.mixin(davinci.model.Resource,	{
 	
 	_checkFileName : function(args){
 		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').getSelectedItems();
+		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
 		var resource = resources[0];
 		var data = dialog.getValues();
 		var fileName = data.fileDialogFileName;
@@ -364,7 +355,7 @@ dojo.mixin(davinci.model.Resource,	{
 	_createFile : function(args){
 		var newEditorCallback=(args&&args.newEditorCallback)?args.newEditorCallback:null;
 		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').getSelectedItems();
+		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
 		var resource = resources[0];
 		var folder=(resource.elementType=='Folder'?resource:resource.parent);
 		var data = dialog.getValues();
@@ -393,7 +384,7 @@ dojo.mixin(davinci.model.Resource,	{
 			return;
 		}
 		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').getSelectedItems();
+		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
 		var resource = resources[0];
 		dialog.hide();
 		dialog.destroyRecursive(false);
@@ -416,7 +407,7 @@ dojo.mixin(davinci.model.Resource,	{
 			return;
 		}
 		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').getSelectedItems();
+		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
 		var resource = resources[0];
 		var data = dialog.getValues();
 		var fileName = data.fileDialogFileName;
@@ -448,7 +439,7 @@ dojo.mixin(davinci.model.Resource,	{
 				// Doesn't work if called directly.
 				// Undoubtedly fragile. Didn't work with 1ms timeout.
 				setTimeout(function(){
-					newEditor.setContent(fullName,oldContent);
+					newEditor.saveAs(oldFileName, fullName,oldContent);
 					newEditor.save();
 				},1000);
 			}
@@ -460,9 +451,9 @@ dojo.mixin(davinci.model.Resource,	{
 		var resource=this.getSelectedResource();
 		if (resource)
 		{
-		     var ok=confirm("Are you sure you want to delete "+resource.getPath()+"?");
-		     if (!ok)
-		    	 return;
+		    if(confirm("Are you sure you want to delete "+resource.getPath()+"?")){
+		    	return;
+		    }
 			resource.deleteResource();
 		}else{
 			alert("No resources are currently selected.");
@@ -497,7 +488,7 @@ dojo.mixin(davinci.model.Resource,	{
 	 * @param inFolder  String or Resource object in which to start search.
 	 * @returns  Resource
 	 */
-findResource : function(name, ignoreCase, inFolder, workspaceOnly)
+	findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 	{
 		ignoreCase=ignoreCase || !this.__CASE_SENSITIVE;
 		var seg1=0,segments;
@@ -544,15 +535,15 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 				if (!found)
 				  return;
 			}
-			return found;
-			
+			return found;			
 		}
 		
 		var found;
-		if (!isWildcard)
+		if (!isWildcard){
 			found=doFind();
+		}
 		if (!found && (serverFind || isWildcard))
-		{
+		{			
 			 var response = davinci.Runtime.serverJSONRequest({
 				   url:"./cmd/findResource", 
 			          content:{'path': name, 'ignoreCase' : ignoreCase, 'workspaceOnly' : workspaceOnly, 'inFolder':inFolder!=null?inFolder.getPath():null},sync:true  });
@@ -589,11 +580,11 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 					foundResources[i]=doFind();
 				}
 			}
-				
 		}
-		else
+		else {
 			foundResources[0]=found;
-		return (isWildcard) ? foundResources : foundResources[0];
+		}
+		return isWildcard ? foundResources : foundResources[0];
 	},
 	alphabeticalSortFilter : {
 	     filterList : function(list)
@@ -610,8 +601,6 @@ findResource : function(name, ignoreCase, inFolder, workspaceOnly)
 		    	return true;
 	    }
 	}
-	
-	
 });
 
 
@@ -704,10 +693,11 @@ davinci.model.Resource.Resource= function(){
  {
 	 
 	 var response="OK";
-	 if (!localOnly)
+	 if (!localOnly) {
 		 response = davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/deleteResource", handleAs:"text",
 	          content:{'path':this.getPath()},sync:true  });
+	 }
 	  if (response=="OK")
 	  {
 		  var list=this.parent.children;
@@ -747,7 +737,7 @@ davinci.model.Resource.Resource= function(){
 		 file = this;
 		 isFolder = this.elementType=="Folder";
 	 }
-			 
+	 
 	 var response= (!localOnly) ? davinci.Runtime.serverJSONRequest({
 		   url:"./cmd/createResource", handleAs:"text",
 	       content:{'path':file.getPath(), 'isFolder': isFolder},sync:true  }): "OK";
@@ -835,18 +825,19 @@ davinci.model.Resource.Resource= function(){
 	  }},true);
 	  return result;
   }
+
   davinci.model.Resource.Folder.prototype._getChild= function(name)
   {
-	  if (!this.__CASE_SENSITIVE)
+	  if (!this.__CASE_SENSITIVE){
 		  name=name.toLowerCase();
-		for (var j=0;j<this.children.length;j++)
+	  }
+		for (var j=0;j<this.children.length;j++){
 			if ( (this.__CASE_SENSITIVE && this.children[j].getName()==name) ||
 				  (!this.__CASE_SENSITIVE && this.children[j].getName().toLowerCase()==name)  ){
 			  return this.children[j];
 		  }
-
+		}
   }
-
 
   
   /**  
@@ -906,8 +897,9 @@ davinci.model.Resource.Resource= function(){
    davinci.model.Resource.File.prototype.setContents = function(content, isWorkingCopy)
    {
 	   var workingCopy=isWorkingCopy ? "true":"false";
-	   if (this.isNew && !isWorkingCopy)
+	   if (this.isNew && !isWorkingCopy){
 		   this.isNew=false;
+	   }
 		var path=encodeURIComponent(this.getPath());
 		davinci.Runtime.serverPut(
 				{
@@ -917,8 +909,6 @@ davinci.model.Resource.Resource= function(){
 					contentType:"text/html"
 				});	
 		dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
-
-
    }
 
    davinci.model.Resource.File.prototype.getContents= function()
@@ -960,7 +950,6 @@ davinci.model.Resource.Resource= function(){
    	this.type=type;
    	this.line=line;
    	this.text=text;
-
    }
    
 
@@ -969,7 +958,7 @@ davinci.model.Resource.root=new davinci.model.Resource.Folder(".",null);
 dojo.declare("davinci.model.resource.FileTypeFilter",null,{
 	constructor : function(types)
 	{
-	this.types=types.split(",");
+		this.types=types.split(",");
 	},
     filterList : function(list)
     {

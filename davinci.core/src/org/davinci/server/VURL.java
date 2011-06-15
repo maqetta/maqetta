@@ -15,9 +15,9 @@ import org.eclipse.core.runtime.Path;
 
 public class VURL implements IVResource {
     // abstracted file/resource class
-    URL     file = null;
-    boolean isWorkingCopy;
-    String  virtualPath;
+	private URL     file = null;
+    private boolean isWorkingCopy;
+    private String  virtualPath;
 
     public VURL(URL file) {
         this.file = file;

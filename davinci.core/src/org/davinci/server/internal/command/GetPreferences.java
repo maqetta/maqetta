@@ -1,5 +1,6 @@
 package org.davinci.server.internal.command;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +23,7 @@ public class GetPreferences extends Command {
         File settingsFile = new File(userSettings, path + IDavinciServerConstants.SETTINGS_EXTENSION);
         InputStream inputStream;
         if (settingsFile.exists()) {
-            inputStream = new FileInputStream(settingsFile);
+            inputStream = new BufferedInputStream(new FileInputStream(settingsFile));
 
         } else {
             inputStream = new ByteArrayInputStream("".getBytes());

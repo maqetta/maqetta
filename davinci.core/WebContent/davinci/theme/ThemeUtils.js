@@ -6,16 +6,16 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	
 	var fileBase = originalTheme.file.parent;
 	var themeRootPath = new davinci.model.Path(directory).removeLastSegments(0);
-	var resource = davinci.model.Resource.findResource(themeRootPath.toString());
+	var resource = davinci.resource.findResource(themeRootPath.toString());
 	if(resource.libraryId)
 		resource.createResource();
-	davinci.model.Resource.copy(fileBase, directory, true);
-	var themeRoot = davinci.model.Resource.findResource(directory);
+	davinci.resource.copy(fileBase, directory, true);
+	var themeRoot = davinci.resource.findResource(directory);
 	var fileName = originalTheme.file.getName();
 	/* remove the copied theme */
 	
 	
-	var badTheme = davinci.model.Resource.findResource(directory + "/" + fileName);
+	var badTheme = davinci.resource.findResource(directory + "/" + fileName);
 	badTheme.deleteResource();
 	
 	
@@ -43,7 +43,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	for(var i=0;i<themeJson['files'].length;i++){
 		var fileUrl = directoryPath.append(themeJson['files'][i]);
 		
-		var resource = davinci.model.Resource.findResource(fileUrl);
+		var resource = davinci.resource.findResource(fileUrl);
 		if(renameFiles && resource.getName().indexOf(oldClass) > -1){
 			var newName = resource.getName().replace(oldClass, selector);
 			resource.rename(newName);
@@ -54,7 +54,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		    		   includeImports : true,
 					   loader:function(url){
 						
-							var r1=  davinci.model.Resource.findResource(url);
+							var r1=  davinci.resource.findResource(url);
 							return r1.getContents();
 						}
 		});
@@ -77,7 +77,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	
 	for(var i=0;i<themeJson['meta'].length;i++){
 		var fileUrl = directoryPath.append(themeJson['meta'][i]);
-		var file = davinci.model.Resource.findResource(fileUrl.toString());
+		var file = davinci.resource.findResource(fileUrl.toString());
 		var contents = file.getContents();
 		var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
 		file.setContents(newContents);
@@ -86,7 +86,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	/* rewrite theme editor HTML */
 	for(var i=0;i<themeJson['themeEditorHtmls'].length;i++){
 		var fileUrl = directoryPath.append(themeJson['themeEditorHtmls'][i]);
-		var file = davinci.model.Resource.findResource(fileUrl.toString());
+		var file = davinci.resource.findResource(fileUrl.toString());
 		var contents = file.getContents();
 		var htmlFile = new davinci.html.HTMLFile(fileUrl);
 		htmlFile.setText(contents,true);

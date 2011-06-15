@@ -113,7 +113,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect : true,
 			onDblClick: dojo.hitch(this,doubleClick),
-			filters:[davinci.model.Resource.alphabeticalSortFilter]
+			filters:[davinci.resource.alphabeticalSortFilter]
 		});
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();
@@ -451,7 +451,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 				item.index = this.fileIndex++;
 				reviewFiles.push(item);
 				
-				var file = new davinci.model.Resource.File(item.name,targetTreeModel.root);
+				var file = new davinci.resource.File(item.name,targetTreeModel.root);
 				file.index = item.index;
 				targetTreeModel.root.children.push(file);
 			}

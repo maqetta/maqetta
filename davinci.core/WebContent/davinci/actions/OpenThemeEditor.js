@@ -1,6 +1,6 @@
 dojo.provide("davinci.actions.OpenThemeEditor");
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
 

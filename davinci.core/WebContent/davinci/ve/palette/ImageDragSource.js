@@ -55,7 +55,7 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 			    createData.fileDragCreate = true; 
 		        if (metadata && metadata.tool) {
 //		            dojo["require"](data.tool);
-		            dojo._loadUri(davinci.model.Resource.findResource(
+		            dojo._loadUri(davinci.resource.findResource(
 		                    './' + metadata.tool.replace(/\./g, "/") + ".js").getURL());
 		            var ctor = dojo.getObject(metadata.tool);
 		            tool = new ctor(createData);

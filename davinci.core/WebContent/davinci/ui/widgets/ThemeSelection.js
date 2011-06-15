@@ -8,10 +8,12 @@ dojo.require("davinci.ui.widgets.ThemeStore");
 
 dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	
-	constructor : function(){
+	searchWorkspace : null,
+	
+	constructor : function(args){
 		this._themeData = [];
 		
-		var themes = davinci.model.Resource.findResource("*.theme",true,"./themes",true);
+		var themes = davinci.resource.findResource("*.theme",true,"./themes",this.searchWorkspace);
 	
 		this._select = dojo.doc.createElement("select");
 		for (var i = 0; i < themes.length; i++){
@@ -26,6 +28,11 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 			
 		}
 	},
+	
+	_setSearchWorkspaceAttr : function(value){
+		this.searchWorkspace = value;
+	},
+	
 	
 	buildRendering: function(){
 		this.domNode = this._select;

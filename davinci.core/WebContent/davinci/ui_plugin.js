@@ -168,7 +168,7 @@
 					{
 						id: "newHTML",
 //						icon: './davinci/img/add.gif',
-						run: "davinci.model.Resource.fileDialog('newhtml')",
+						run: "davinci.ui.Resource.fileDialog('newhtml')",
 						label: "HTML File...",
 //						toolbarPath: "davinci.toolbar.main/edit",
 						menubarPath: "davinci.new/new"	  
@@ -176,35 +176,35 @@
 					
 					{
 						id: "newCSS",
-						run: "davinci.model.Resource.fileDialog('newcss')",
+						run: "davinci.ui.Resource.fileDialog('newcss')",
 						label: "CSS File...",
 						menubarPath: "davinci.new/new"	  
 					},
 					
 					{
 						id: "newJS",
-						run: "davinci.model.Resource.fileDialog('newjs')",
+						run: "davinci.ui.Resource.fileDialog('newjs')",
 						label: "JavaScript File...",
 						menubarPath: "davinci.new/new"	  
 					},
 					
 					{
 						id: "newFile",
-						run: "davinci.model.Resource.fileDialog('newfile')",
+						run: "davinci.ui.Resource.fileDialog('newfile')",
 						label: "File...",
 						menubarPath: "davinci.new/new"	  
 					},
 					
 					{
 						id: "newFolder",
-						run: "davinci.model.Resource.fileDialog('newfolder')",
+						run: "davinci.ui.Resource.fileDialog('newfolder')",
 						label: "Folder...",
 						menubarPath: "davinci.new/new2"	  
 					},
 					
 					{
 						id: "openFile",
-						run: "davinci.model.Resource.fileDialog('openfile')",  
+						run: "davinci.ui.Resource.fileDialog('openfile')",  
 						label: "File...",
 						toolbarPath: "davinci.toolbar.main/edit",
 						menubarPath: "davinci.open/open"	  
@@ -257,28 +257,28 @@
 					 {
 						    id: "davinci.ui.newfile",
 						    label: "New file...",
-							run: "davinci.model.Resource.fileDialog('newfile')",
+							run: "davinci.ui.Resource.fileDialog('newfile')",
 								menubarPath: "newfile"
 									
 					 },
 					 {
 						    id: "davinci.ui.newfile",
 						    label: "New folder...",
-							run: "davinci.model.Resource.fileDialog('newfolder')",
+							run: "davinci.ui.Resource.fileDialog('newfolder')",
 								menubarPath: "newfolder"
 									
 					 },
 					 {
 						    id: "davinci.ui.addFiles",
 						    label: "Upload file",
-							run: "davinci.model.Resource.addFiles()",
+							run: "davinci.ui.Resource.addFiles()",
 								menubarPath: "addFiles"
 									
 					 },
 				 {
 					    id: "davinci.ui.delete",
 					    label: "Delete resource",
-						run: "davinci.model.Resource.deleteAction()",
+						run: "davinci.ui.Resource.deleteAction()",
 							menubarPath: "delete"		
 								
 				 },

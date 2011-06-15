@@ -4,7 +4,7 @@ dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
 dojo.require("dijit.Tree");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
@@ -22,14 +22,14 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		var dragSources=davinci.Runtime.getExtensions("davinci.dnd", function (extension){
 			 return dojo.some(extension.parts,function(item){ return item=="davinci.ui.navigator"; }) && extension.dragSource;
 		});
-
-		var model= new davinci.ui.widgets.ResourceTreeModel();
+		
+		var model= davinci.resource;
 		var tree = this.tree = new dijit.Tree({
 			showRoot:false,
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
-			filters: [davinci.model.Resource.alphabeticalSortFilter],
+			filters: [davinci.resource.alphabeticalSortFilter],
 			isMultiSelect: true,
 			dragSources:dragSources});
 

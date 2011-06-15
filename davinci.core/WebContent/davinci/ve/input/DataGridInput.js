@@ -279,7 +279,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     	if (tempURL.indexOf('http://') === 0){ // absolute url
     		url = this._url;
     	} else {
-    		var file = davinci.model.Resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
+    		var file = davinci.resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
     		url = file.getURL();
     	}
     	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html

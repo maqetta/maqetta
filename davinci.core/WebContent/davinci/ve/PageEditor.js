@@ -207,7 +207,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	setContent : function (filename, content) {
 		this.fileName=filename;
 		this.htmlEditor.setContent(filename,content);
-		if (this._isNewFile && this.resourceFile.parent!=davinci.model.Resource.getRoot())
+		if (this._isNewFile && this.resourceFile.parent!=davinci.resource.getRoot())
 		{
 			var rootPath=new davinci.model.Path([]);
 			var newPath=new davinci.model.Path(this.resourceFile.getPath()).getParentPath();

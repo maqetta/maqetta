@@ -1,11 +1,11 @@
 dojo.provide("davinci.actions.DownloadAction");
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 
 dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 	
 	run: function(){
-		var files=davinci.model.Resource.getSelectedResources();
+		var files=davinci.ui.Resource.getSelectedResources();
 		this._files=files;
 		var filesDiv="";
 		for (var i=0;i<files.length;i++)
@@ -31,7 +31,7 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 		
 	},
 	isEnabled: function(selection){
-		var files=davinci.model.Resource.getSelectedResources();
+		var files=davinci.ui.Resource.getSelectedResources();
 		return files && files.length>0;
 	},
 	download : function(value){
@@ -39,7 +39,7 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 		this.dialog.destroyRecursive(false);
 		var path=value.zipFileName;
 		
-		davinci.model.Resource.download(resources, path + ".zip");	
+		davinci.resource.download(resources, path + ".zip");	
 	
 	
 	}

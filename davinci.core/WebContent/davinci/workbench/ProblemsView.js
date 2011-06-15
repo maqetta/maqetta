@@ -58,7 +58,7 @@ dojo.declare("davinci.workbench.ProblemsView", davinci.workbench.ViewPart, {
 	_getProblems: function()
 	{
 		this._currentProblems=[];
-		var markers=davinci.model.Resource.root.getMarkers(['problem','warning'],true);
+		var markers=davinci.resource.root.getMarkers(['problem','warning'],true);
 		dojo.forEach(markers,function (marker){
 			this._currentProblems.push(this._createProblem(marker));
 		}, this);

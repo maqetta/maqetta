@@ -14,7 +14,7 @@ dojo.require("dijit.layout.TabContainer");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.Panel");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("davinci.ui.Dialogs");
 
 
@@ -1376,7 +1376,7 @@ dojo.mixin(davinci.Workbench, {
 			state.version = davinci.version;
 			for (var i=0;i<state.editors.length;i++)
 			{
-				var resource=davinci.model.Resource.findResource(state.editors[i]);
+				var resource=davinci.resource.findResource(state.editors[i]);
 				var noSelect=state.editors[i]!=state.activeEditor;
 				if (resource)
 				{

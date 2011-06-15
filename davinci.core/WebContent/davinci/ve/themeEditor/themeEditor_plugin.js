@@ -90,7 +90,7 @@
 					{
 						id: "saveas",
 						iconClass: 'saveAsIcon',
-						run: "davinci.model.Resource.fileDialog('saveas')",
+						run: "davinci.ui.Resource.fileDialog('saveas')",
 				 		isEnabled : function(context){
 				 			var isEnabled =  davinci.Workbench.getOpenEditor();
 				 			return isEnabled;

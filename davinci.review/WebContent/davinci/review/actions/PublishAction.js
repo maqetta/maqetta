@@ -1,7 +1,7 @@
 dojo.provide("davinci.review.actions.PublishAction");
 
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojox.data.QueryReadStore");

@@ -74,6 +74,7 @@
                 <tokenfilter>
                     <replaceregex pattern="commit " replace=""/>
                 </tokenfilter>
+                <striplinebreaks/>
             </filterchain>
         </loadfile>
 		<filter token="revision" value="${git.log}"/>
@@ -97,6 +98,7 @@
                 <tokenfilter>
                     <replaceregex pattern="commit " replace=""/>
                 </tokenfilter>
+                <striplinebreaks/>
             </filterchain>
         </loadfile>
 		<filter token="revision" value="${git.log}"/>
@@ -121,6 +123,7 @@
                 <tokenfilter>
                     <replaceregex pattern="commit " replace=""/>
                 </tokenfilter>
+                <striplinebreaks/>
             </filterchain>
         </loadfile>
 		<echo message="# gitlog: ${git.log}" file="${manifest.file}.temp" />

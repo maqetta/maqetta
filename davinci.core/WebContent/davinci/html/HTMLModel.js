@@ -105,7 +105,7 @@ davinci.html.HTMLItem.prototype._addWS = function(lines,indent)
  davinci.Inherits(davinci.html.HTMLFile,davinci.html.HTMLItem);
 
  davinci.html.HTMLFile.prototype.save = function (isWorkingCopy) {
-	 var file = davinci.model.Resource.findResource(this.fileName);
+	 var file = davinci.resource.findResource(this.fileName);
 	 if(file){
 		var text = this.getText();
 		file.setContents(text,isWorkingCopy);
@@ -114,7 +114,7 @@ davinci.html.HTMLItem.prototype._addWS = function(lines,indent)
  
 // WHOEVER Added this should rename so it doesnt conflict with the real getText 
 // davinci.html.HTMLFile.prototype.getText = function(context){
-//	 var file = davinci.model.Resource.findResource(this.url);
+//	 var file = davinci.resource.findResource(this.url);
 //	 if(file){
 //		var text = this.getText();
 //		file.setContents(text);

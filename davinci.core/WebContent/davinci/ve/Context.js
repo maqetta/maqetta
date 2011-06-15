@@ -221,7 +221,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getBaseResource: function(options){
-		return davinci.model.Resource.findResource(this.getDocumentLocation());
+		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires) {

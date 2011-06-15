@@ -6,7 +6,7 @@ dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
 dojo.require("davinci.ui.widgets.Tree");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("dojo.date.locale");
 dojo.require("davinci.review.actions.OpenVersionAction");
 dojo.require("dijit.layout.ContentPane");

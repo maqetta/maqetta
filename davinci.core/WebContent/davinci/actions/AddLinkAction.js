@@ -30,7 +30,7 @@ dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 		this.dialog.setContent(formHtml);
 	 	dijit.byId('localFileTree').notifySelect=dojo.hitch(this,function(item){this.selectedItem=item; });
 		this._input=dijit.byId('localName');
-		this.parentFolder=davinci.model.Resource.getSelectedResource()  || davinci.model.Resource.root;
+		this.parentFolder=davinci.ui.Resource.getSelectedResource()  || davinci.resource.root;
 		this.parentFolder=this.parentFolder.getParentFolder();
 		dojo.byId('parentFolder').innerHTML=this.parentFolder.getPath();
 	

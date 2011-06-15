@@ -11,7 +11,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	constructor : function(){
 		this._themeData = [];
 		
-		var themes = davinci.model.Resource.findResource("*.theme",true,"./themes",true);
+		var themes = davinci.resource.findResource("*.theme",true,"./themes",true);
 	
 		this._select = dojo.doc.createElement("select");
 		for (var i = 0; i < themes.length; i++){

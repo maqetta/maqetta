@@ -20,7 +20,7 @@ dojo.mixin(davinci.resource, {
 		if(changedResource == davinci.resource.getRoot()){
 			davinci.resource.getRoot().getChildren(dojo.hitch(davinci.resource,function(children){
 				davinci.resource.onChildrenChange(davinci.resource.getRoot(),children);
-			   }));
+			}));
 			return davinci.resource.getRoot();
 		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated'){
 			var parent, resourcePath;
@@ -45,7 +45,6 @@ dojo.mixin(davinci.resource, {
 			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);});
 		}
 	},
-	
 	
 	/* Resource tree model methods */
 	newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -80,7 +79,7 @@ dojo.mixin(davinci.resource, {
 			dojo.unsubscribe(davinci.resource.subscription[i]);
 		}
 	},
-
+		
 	mayHaveChildren: function(/*dojo.data.Item*/ item){
 	    return item.elementType=="Folder";
 	},
@@ -108,9 +107,9 @@ dojo.mixin(davinci.resource, {
 			url:"./cmd/copy", 
 			handleAs:"text", 
 			sync:true,
-			content:{'source':path, 'dest' : destPath, 'recurse': new String(recurse)}  });
+			content:{source:path, dest: destPath, recurse: String(recurse)}  });
 		
-		davinci.resource.resourceChanged( "created",destFile);
+		davinci.resource.resourceChanged("created", destFile);
 	},
 
 	download: function(files,archiveName){
@@ -144,8 +143,9 @@ dojo.mixin(davinci.resource, {
 		var foundResources=[];
 		if (typeof name=='string') {
 			segments=name.split('/');
-			if (segments[0]=='.')
+			if (segments[0]=='.'){
 				seg1=1;
+			}
 		} else if (name.getSegments) {
 			segments=name.getSegments();
 			name=name.toString();
@@ -186,7 +186,7 @@ dojo.mixin(davinci.resource, {
 		{			
 			var response = davinci.Runtime.serverJSONRequest({
 				  url:"./cmd/findResource", 
-			          content:{'path': name, 'ignoreCase' : ignoreCase, 'workspaceOnly' : workspaceOnly, 'inFolder':inFolder!=null?inFolder.getPath():null},sync:true  });
+			          content:{path: name, ignoreCase: ignoreCase, workspaceOnly: workspaceOnly, inFolder: inFolder!=null?inFolder.getPath():null}, sync:true  });
 			
 			if (response && response.length>0)
 			{
@@ -234,8 +234,8 @@ dojo.mixin(davinci.resource, {
 dojo.declare("davinci.resource.alphabeticalSortFilter",null,{
    filterList: function(list)
    {
-	    return list.sort(function (file1,file2)
-	    	{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0});
+	return list.sort(function (file1,file2)
+		{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0;});
    }
 
 });
@@ -277,4 +277,5 @@ dojo.declare("davinci.resource.FileTypeFilter",null,{
 		return newList;
     }
 });
-davinci.resource.subscriptions.push(dojo.subscribe("/davinci/resource/resourceChanged",davinci.resource, function(){return davinci.resource.resourceChanged}()));
+
+davinci.resource.subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged",davinci.resource, function(){return davinci.resource.resourceChanged;}())];

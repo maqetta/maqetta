@@ -43,7 +43,7 @@ davinci.model.Resource.Resource= function(){
 //	 return path;
 //	 
 // }
- davinci.model.Resource.Resource.prototype.getURL = function(){
+davinci.model.Resource.Resource.prototype.getURL = function(){
 	 var path = this.getPath();
 	 while(path.indexOf(".")==0 || path.indexOf("/")==0){
 		 path = path.substring(1,path.length);
@@ -54,9 +54,9 @@ davinci.model.Resource.Resource= function(){
 
 	 return loc+'/user/'+davinci.Runtime.userName+'/ws/workspace/'+ path;
 	 
- }
- 
- davinci.model.Resource.Resource.prototype.rename = function(newName, recurse){
+}
+
+davinci.model.Resource.Resource.prototype.rename = function(newName, recurse){
 		
 		var path = new davinci.model.Path(this.getPath()).removeLastSegments();
 		var newPath = path.append(newName);
@@ -122,16 +122,20 @@ davinci.model.Resource.Resource= function(){
     * @constructor 
     * @extends davinci.model.Resource.Resource
   */
- davinci.model.Resource.Folder= function(name,parent)
- {
+davinci.model.Resource.Folder= function(name,parent){
  	this.inherits( davinci.model.Resource.Resource);  
  	this.elementType="Folder";
  	this.name=name;
  	this.parent=parent;
- }
-  davinci.Inherits(davinci.model.Resource.Folder,davinci.model.Resource.Resource);
+}
+davinci.Inherits(davinci.model.Resource.Folder,davinci.model.Resource.Resource);
 
-  davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder, localOnly){
+davinci.model.Resource.Folder.prototype.reload= function(){
+	// mark this folder as dirty and reload it next time
+	this._isLoaded = false;
+}
+
+davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder, localOnly){
 	 var file;
 	 
 	 if(name!=null){

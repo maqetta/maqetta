@@ -21,6 +21,9 @@ dojo.declare("davinci.ve.Context", null, {
 	_bootstrapModules: "dijit.dijit",
 
 	constructor: function(args){
+		if(!args)
+			args ={};
+		
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -40,17 +43,7 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 
 		this.relativePrefix = this.relativePrefix || "";
-		
-//		this._subscriptions.push(dojo.subscribe("/davinci/ui/widget/replaced",
-//				dojo.hitch(this,function(newWidget, widget){
-//					if (this._selection)
-//					{
-//						var index=dojo.indexOf(this._selection,widget);
-//						if(index >= 0){
-//							this._selection[index]=newWidget;
-//						}
-//					}
-//				})));
+
 	},
 	
 
@@ -225,6 +218,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires) {
+		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
 		if (!type) {
 			return false;
 		}

@@ -2,7 +2,7 @@
 
     <target name="nightly" depends="init">
         <tstamp>
-            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyyMMddHHmm"/>
+            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
 
         <!--

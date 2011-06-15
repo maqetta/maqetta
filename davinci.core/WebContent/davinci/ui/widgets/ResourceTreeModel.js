@@ -10,7 +10,7 @@ dojo.declare("davinci.ui.widgets.ResourceTreeModel",null, {
 			this.root=davinci.resource.getRoot();
 			this.subscription=[];
 			this.subscription.push(dojo.subscribe("/davinci/resource/resourceChanged",this,this.resourceChanged));
-			this.subscription.push(dojo.subscribe("/davinci/resource/workspaceChanged",this,this.workspaceChanged));
+		//	this.subscription.push(dojo.subscribe("/davinci/resource/workspaceChanged",this,this.workspaceChanged));
 			this.foldersOnly=args && args.foldersOnly;
 	},
 	

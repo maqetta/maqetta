@@ -11,7 +11,7 @@
 	<target name="allElements">
 		<antcall target="allElementsDelegator" />
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- ===================================================================== -->
 	<target name="getBaseComponents" depends="checkLocalBase" unless="skipBase">
@@ -96,7 +96,7 @@
 	<!-- ===================================================================== -->
 	<target name="postProcessRepos">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before generating the build scripts. -->
 	<!-- ===================================================================== -->
@@ -148,20 +148,20 @@
 <!-- MAQETTA ADDITION		-->
 <!-- rebuild zip file to just what is needed for maqetta		-->
 <!-- ===================================================================== -->
-		
+
 		<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveNamePrefix}-${myOS}.${myWS}.${myArch}.zip"/>
 		<property name="assemblyTempDir" value="${buildDirectory}/tmp"/>
 		<property name="davinciZipPath" value="${buildDirectory}/${buildLabel}/${maqettaArchiveName}.zip"/>
 		<mkdir dir ="${assemblyTempDir}"/>
 		<unzip dest="${assemblyTempDir}" src="${archiveFullPath}" />
 		<zip destfile="${davinciZipPath}" filesonly="false" >
-			<zipfileset dir="${assemblyTempDir}/eclipse" includes="**/**" excludes="" 		/>
+			<zipfileset dir="${assemblyTempDir}/eclipse" includes="**/**" excludes="*.command,*.sh"/>
 		    <zipfileset dir="${assemblyTempDir}/eclipse" includes="*.command" filemode="755" />
 		    <zipfileset dir="${assemblyTempDir}/eclipse" includes="*.sh" filemode="755" />
 		</zip>
 		<delete dir ="${assemblyTempDir}"/>
 		<delete file="${archiveFullPath}" />
-		
+
 	</target>
 
 	<!-- ===================================================================== -->

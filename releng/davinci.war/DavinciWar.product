@@ -30,7 +30,7 @@
 
    <configurations>
       <plugin id="davinci.core" autoStart="true" startLevel="4" />
-      <plugin id="davinci.dojo_1_6" autoStart="true" startLevel="5" />
+      <plugin id="davinci.dojo_1_7" autoStart="true" startLevel="5" />
       <plugin id="davinci.html" autoStart="true" startLevel="5" />
       <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="5" />
       <plugin id="davinci.jqueryui_1_8" autoStart="true" startLevel="5" />

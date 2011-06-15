@@ -2,19 +2,24 @@ dojo.provide("davinci.ve.actions.StateActions");
 dojo.require("davinci.actions.Action");
 dojo.require("davinci.ve.States");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+
+
 dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
 
 	run: function(context){
 		// TODO: Replace dialog with UI to add nodes inline to list
 		// FIXME: Localize state action messages
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
 		var state,
 		widget = this.getWidget(),
 		dialogId = "createStateDialog",
 		inputId = "createStateInput",
-		title = "Create New State",
+		title = langObj.createNewState,
 		content = dojo.string.substitute('${StateLabel}: <input id="${id}" type="text"></input> ' + 
 			'<button dojoType="dijit.form.Button" type="submit" onClick="return dijit.byId(\'${dialogId}\').isValid();">${CreateLabel}</button>', 
-			{ id: inputId, dialogId: dialogId, CreateLabel: "Create", StateLabel: "State" }
+			{ id: inputId, dialogId: dialogId, CreateLabel: langObj.createLabel, StateLabel: langObj.stateLabel }
 		);
 		var dialog = new dijit.Dialog({
 			id: dialogId,
@@ -27,10 +32,10 @@ dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
 				state = dojo.byId(inputId).value;
 				// TODO: Replace alerts with inline error messages
 				if (!state) {
-					alert("Please enter a state name.");
+					alert(langObj.enterStateName);
 					return false;
 				} else if (davinci.ve.states.hasState(widget, state)) {
-					alert(dojo.string.substitute('State name "${name}" already exists. Please enter a different state name.', { name: state }));
+					alert(dojo.string.substitute(langObj.stateNameExists, { name: state }));
 					return false;
 				}
 				return true;

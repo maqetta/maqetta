@@ -1,6 +1,10 @@
 dojo.provide("davinci.ve.input.ItemFileReadStoreInput");
 dojo.require("davinci.ve.input.SmartInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
 
 	propertyName: null,
@@ -66,33 +70,33 @@ dojo.declare("davinci.ve.input.ItemFileReadStoreInput", davinci.ve.input.SmartIn
 	show: function(widgetId) {
 	    this._widget = davinci.ve.widget.byId(widgetId);
 	    this._inline = new dijit.Dialog({
-            title: "DataStore Details",
+            title: langObj.dataStoreDetails,
             style: "width: 500px; height:350px"
         });
 	    
         var s = '<div dojotype="dijit.layout.BorderContainer" design="headline" livesplitters="true" iscontainer="true" style="height: 300px; width: 480px; padding: 0px;">';
         s    += '    <div dojotype="dijit.layout.ContentPane" parseonload="true" iscontainer="true" region="bottom" style="height: 50px; bottom: 5px; left: 78px; right: 78px;" splitter="true">';
-        s    += '        <input id="okButton" type="button" dojotype="dijit.form.Button" label="Ok" showlabel="true" scrollonfocus="true" style="top: 20px; left: 95px; position: absolute;">';
-        s    += '        <input id="cancelButton" type="button" dojotype="dijit.form.Button" label="Cancel" showlabel="true" scrollonfocus="true" style="left: 145px; top: 20px; position: absolute;">';
+        s    += '        <input id="okButton" type="button" dojotype="dijit.form.Button" label="'+langObj.ok+'" showlabel="true" scrollonfocus="true" style="top: 20px; left: 95px; position: absolute;">';
+        s    += '        <input id="cancelButton" type="button" dojotype="dijit.form.Button" label="'+langObj.cancel+'" showlabel="true" scrollonfocus="true" style="left: 145px; top: 20px; position: absolute;">';
         s    += '    </div>';
         s    += '    <div dojotype="dijit.layout.ContentPane" parseonload="true" iscontainer="true" region="center" style="top: 78px; left: 78px; right: 78px; bottom: 78px;">';
         s    += '        <div style="width: 282px; height: 37px;">';
         s    += '            <label id="LABEL_T" style="left: 15px; position: absolute; top: 20px;">Type</label>';
         s    += '            <select id="typeInput" type="text" dojotype="dijit.form.Select" style="position: absolute; left: 100px; top: 18px; width: 350px;">';
-        s    += '                <option value="dojo.data.ItemFileReadStore">ItemFileReadStore</option>';
-        s    += '                <option value="dojo.data.ItemFileWriteStore">ItemFileWriteStore</option>';
+        s    += '                <option value="dojo.data.ItemFileReadStore">'+langObj.itemFileReadStore+'</option>';
+        s    += '                <option value="dojo.data.ItemFileWriteStore">'+langObj.itemFileWriteStore+'</option>';
         s    += '            </select>';
         s    += '        </div>';
         s    += '        <div style="width: 282px; height: 37px;">';
-        s    += '            <label id="LABEL_0" style="left: 15px; position: absolute; top: 55px;">DataStore ID:</label>';
+        s    += '            <label id="LABEL_0" style="left: 15px; position: absolute; top: 55px;">'+langObj.dataStoreId+'</label>';
         s    += '            <input id="jsIdInput" type="text" dojotype="dijit.form.TextBox" style="position: absolute; left: 100px; top: 55px; width: 350px;">';
         s    += '        </div>';
         s    += '        <div style="width: 282px; height: 37px;">';
-        s    += '            <label id="LABEL_1" style="left: 15px; position: absolute; top: 90px;">URL:</label>';
+        s    += '            <label id="LABEL_1" style="left: 15px; position: absolute; top: 90px;">'+langObj.url+'</label>';
         s    += '            <input id="urlInput" type="text" dojotype="dijit.form.TextBox" style="top: 90px; left: 100px; position: absolute; width: 350px;">';
         s    += '        </div>';
         s    += '        <div style="width: 282px; height: 37px;">';
-        s    += '            <label id="LABEL_2" style="left: 15px; position: absolute; top: 125px;">Script:</label>';
+        s    += '            <label id="LABEL_2" style="left: 15px; position: absolute; top: 125px;">'+langObj.scriptLabel+'</label>';
         s    += '            <input id="scriptInput" type="text" dojotype="dijit.form.Textarea" style="top: 125px; left: 100px; position: absolute; width: 350px;">';
         s    += '        </div>';
         s    += '    </div>';

@@ -1,6 +1,10 @@
 dojo.provide("davinci.ve.input.MenuBarInput");
 dojo.require("davinci.ve.input.ContainerInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.MenuBarInput", davinci.ve.input.ContainerInput, {
 
 	propertyName: "label",
@@ -14,7 +18,7 @@ dojo.declare("davinci.ve.input.MenuBarInput", davinci.ve.input.ContainerInput, {
 	supportsHTML: "true",
 	//supportsHTML: "false",
 	
-	helpText: 'Enter multiple lines of data, one for each menu option. <br /> Iindicate nesting levels by putting one or more ">" characters at the start of a line.',
+	helpText: langObj.menuBarInputHelp,
 
 	
 	serialize: function(widget, callback, value) {

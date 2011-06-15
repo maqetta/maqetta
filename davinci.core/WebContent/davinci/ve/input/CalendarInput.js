@@ -1,12 +1,16 @@
 dojo.provide("davinci.ve.input.CalendarInput");
 dojo.require("davinci.ve.input.SmartInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.CalendarInput", davinci.ve.input.SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",
 	displayOnCreate: "false",
-	helpText: 'Enter a date string for the date you want the widget to display as the current day. For example: "October 13, 1975" or and empty string for the current date "".',
+	helpText: langObj.calendarInputHelp,
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 		// TODO: Add code to simplify the initial text

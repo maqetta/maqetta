@@ -1,6 +1,10 @@
 dojo.provide("davinci.ve.input.TreeInput");
 dojo.require("davinci.ve.input.SmartInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.TreeInput", davinci.ve.input.SmartInput, {
 
 	property: null, 
@@ -10,8 +14,7 @@ dojo.declare("davinci.ve.input.TreeInput", davinci.ve.input.SmartInput, {
 	multiLine: "true",
 	
 	supportsHTML: "false",
-	helpText: 'Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more ">" characters at the start of a line.'+
-	          '<br /> <i>Example:</i> <br/>1<br /> &gt;1.1<br />&gt;1.2<br />2',
+	helpText: langObj.treeInputHelp,
 	
 	serialize: function(widget, callback, value) {
 		var store = widget.dijitWidget.model.store;

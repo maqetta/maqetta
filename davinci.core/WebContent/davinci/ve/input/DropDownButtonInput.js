@@ -1,6 +1,10 @@
 dojo.provide("davinci.ve.input.DropDownButtonInput");
 dojo.require("davinci.ve.input.ContainerInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.DropDownButtonInput", davinci.ve.input.ContainerInput, {
 
 	propertyName: "label",
@@ -11,7 +15,7 @@ dojo.declare("davinci.ve.input.DropDownButtonInput", davinci.ve.input.ContainerI
 	
 	supportsHTML: "true",
 	
-	helpText: 'Enter multiple lines of data, the first line is the button text each addtional line is drop down option. <br /> Optionally indicate option items by putting one ">" character at the start of a line.',
+	helpText: langObj.dropDownButtonInputHelp,
 	
 	serialize: function(widget, callback, value) {
 		var result = [];

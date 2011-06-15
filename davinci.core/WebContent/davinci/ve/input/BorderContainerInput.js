@@ -5,31 +5,36 @@ dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.LayoutContainer");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+
+
 dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.ContainerInput, {
 	
 	show: function(widgetId){
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
 	//debugger;
 	this._widget = davinci.ve.widget.byId(widgetId);
 		if (!this._inline) {
 			this._inline = new dijit.Dialog({
-                title: "Border Container Dialog",
+                title: langObj.borderContainerDialog,
                 style: "width: 350px; height:350px"
             });
 			this._inline.onCancel = dojo.hitch(this, "cancel");
 			this._inline.callBackObj = this;
 			var s = '<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" style="width: 325px; height:285px" liveSplitters="true" id="borderContainer">';
 			s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 3em;" region="top">';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px">Design</div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><input type="radio" dojoType="dijit.form.RadioButton" name="headline" id="headlineRadio" value="headline" /> <label for="headlineRadio"> Headline  </label></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><input type="radio" dojoType="dijit.form.RadioButton" name="sidebar" id="sidebarRadio" value="sidebar" /> <label for="sidebarRadio"> Sidebar  </label></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px">'+langObj.borderDesign+'</div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><input type="radio" dojoType="dijit.form.RadioButton" name="headline" id="headlineRadio" value="headline" /> <label for="headlineRadio"> '+langObj.borderHeadline+'  </label></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><input type="radio" dojoType="dijit.form.RadioButton" name="sidebar" id="sidebarRadio" value="sidebar" /> <label for="sidebarRadio"> '+langObj.borderSidebar+'  </label></div>';
 			s += '	</div>';
 			s += '	<div dojoType="dijit.layout.ContentPane" style="width: 7em;" region="leading">';
 			s += '		<table>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="left" id="leftCheckBox" value="left" /> <label for="leftCheckBox"> Left  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="right" id="rightCheckBox" value="right" /> <label for="rightCheckBox"> Right  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="top" id="topCheckBox" value="top" /> <label for="topCheckBox"> Top  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="bottom" id="bottomCheckBox" value="bottom" /> <label for="bottomCheckBox"> Bottom  </label></td></tr>';
-	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="center" id="centerCheckBox" value="center" /> <label for="centerCheckBox"> Center  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="left" id="leftCheckBox" value="left" /> <label for="leftCheckBox"> '+langObj.borderLeft+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="right" id="rightCheckBox" value="right" /> <label for="rightCheckBox"> '+langObj.borderRight+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="top" id="topCheckBox" value="top" /> <label for="topCheckBox"> '+langObj.borderTop+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="bottom" id="bottomCheckBox" value="bottom" /> <label for="bottomCheckBox"> '+langObj.borderBottom+'  </label></td></tr>';
+	        s += '			<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="center" id="centerCheckBox" value="center" /> <label for="centerCheckBox"> '+langObj.borderCenter+'  </label></td></tr>';
 	        s += '		</table>';
 			s += '	</div>';
 			s += '	<div dojoType="dijit.layout.ContentPane"  region="center" id="centerWorkspace">';
@@ -43,8 +48,8 @@ dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.Container
 	        s += '	</div>';
 	        s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 4em;" region="bottom">';
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px"></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > Ok </button></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> Cancel </button></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > '+langObj.ok+' </button></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+langObj.cancel+' </button></div>';
 			s += '	</div>';
 			s += '</div>'
 			
@@ -85,6 +90,7 @@ dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.Container
 		
 	onChange: function(event){
 		//debugger;
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
 		var checked = 0;
 		var obj = dijit.byId('leftCheckBox');
 		checked += obj.checked ? 1 : 0;
@@ -99,7 +105,7 @@ dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.Container
 		if (checked < 1){
 			obj = dijit.byId(event.currentTarget.id);
 			obj.setChecked(true);
-			alert('At least one region must be selected.');
+			alert(langObj.regionMustBeSelected);
 		}
 
 		if (event.target.id === 'headlineRadio'){

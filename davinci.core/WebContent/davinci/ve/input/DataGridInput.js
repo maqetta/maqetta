@@ -5,6 +5,10 @@ dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 
 	propertyName: "structure",
@@ -21,8 +25,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	supportsHTML: "true", 
 	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
 
-	helpText:  'If the CSV data format button is selected enter text in the format: first line is column headers separated by commons all following lines are data for those columns.'+
-    		   ' If the URL button is selected enter the location of the json item file.',
+	helpText:  langObj.dataGridInputHelp,
 
 
 
@@ -42,13 +45,13 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	parse: function(input) {
 		var values = this.parseGrid(input);
         if (values.length < 2) {
-            alert('invalid input (1)');
+            alert(langObj.invalidInput1);
             return input;
         }
         var fields = values[0];
         var names = values[1];
         if (fields.length < names.length) {
-            alert('invalid input (2)');
+            alert(langObj.invalidInput2);
             return input;
         }
         var structure = [];
@@ -298,7 +301,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	
 	_urlDataStoreLoaded : function(items){
 		if (items.length < 1){
-			console.error('Data store empty');
+			console.error(langObj.dataStoreEmpty);
 			return;
 		}
 		var structure = [],
@@ -429,7 +432,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
       			definition: definition,
       			data: data,
       			style: "width:275px;height:225px;padding:0px;background-color:white;",
-      			title:"Select a source",
+      			title:langObj.selectSource,
       			contextObject: this,
       			buttonStyle: 'padding:8px;',
       			onOK : function ()
@@ -468,8 +471,8 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var table = dojo.byId('davinci.ve.input.SmartInput_table');
 			
-			textObj.innerHTML = '<div class="dojoxEllipsis">Plain text  </div>';
-			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">HTML markup</div>';
+			textObj.innerHTML = '<div class="dojoxEllipsis">'+langObj.plainText+'  </div>';
+			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+langObj.htmlMarkup+'</div>';
 			htmlRadio.setDisabled(false);
 			textRadio.setDisabled(false);
 			dojo.removeClass(textObj,'inlineEditDisabled');
@@ -553,8 +556,8 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 					'<td></td>' + 
 					'<td>' +
 						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
-							'<option value="dummyData">Comma seperated data</option> ' +
-							'<option value="file">Data file from workspace</option> ' +
+							'<option value="dummyData">'+langObj.commaSeparatedData+'</option> ' +
+							'<option value="file">'+langObj.dataFromWorkspace+'</option> ' +
 // hide for M2							'<option value="url">URL (JSONP)</option> ' +
 						'</select>' +
 					'<td>' +
@@ -595,7 +598,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 				'<div class="smartInputHelpDiv" > '+
 	        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
 		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >OK</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> Cancel</button>  '+
+		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+langObj.ok+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+langObj.cancel+'</button>  '+
 		        	'</span>   '+
 		        '</div> '+
 		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+

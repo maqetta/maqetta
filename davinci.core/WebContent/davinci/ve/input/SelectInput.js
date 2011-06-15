@@ -1,10 +1,14 @@
 dojo.provide("davinci.ve.input.SelectInput");
 dojo.require("davinci.ve.input.OptionsInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.SelectInput", davinci.ve.input.OptionsInput, {
 	
 	supportsHTML: "false",
-	helpText: 'Enter multiple lines of text each line will correspond to a option item in the list. <br /> Indicate the default option to be selected with the "+" at the start of the line. ',
+	helpText: langObj.selectInputHelp,
 	
 	getProperties: function(widget, options) {
 		var oldValue = widget.attr("value");

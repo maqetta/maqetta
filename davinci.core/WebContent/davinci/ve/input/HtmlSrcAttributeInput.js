@@ -5,6 +5,10 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.LayoutContainer");
 dojo.require("davinci.ui.widgets.OpenFileDialog");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+
 dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInput, {
 	
 	show: function(widgetId){
@@ -25,12 +29,12 @@ dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInp
 	    {
 		      id: "textValue",
 	          type: "textBox",
-	          label: "type file url",
+	          label: langObj.typeFileUrl,
 	          data: "textValue"	    	
         },
 	    {
 	          type: "textBox",
-	          label: "type alternate text",
+	          label: langObj.typeAltText,
 	          data: "altText"	    	
 	        }
 	  ];
@@ -44,7 +48,7 @@ dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInp
 		davinci.ui.Panel.openDialog( {
 			definition: definition,
 			data: data,
-			title:"Select a source",
+			title:langObj.selectSource,
 			contextObject: this,
 			onOK : function ()
 			{

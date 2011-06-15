@@ -143,7 +143,7 @@ public class Publish extends Command {
 				String url = getUrl(user, timeVersion, requestUrl, mail);
 				String htmlContent = getHtmlContent(user, message, url);
 				notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
-						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT), htmlContent);
+						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
 			}
 		}
 		if(this.responseString==null)
@@ -171,6 +171,7 @@ public class Publish extends Command {
 		props.put("username", user.getUserName());
 		props.put("message", message);
 		props.put("url", url);
+		props.put("email", user.getPerson().getEmail());
 		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 

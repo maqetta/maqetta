@@ -10,7 +10,7 @@ dojo.mixin(davinci.ui.Resource, {
 		var dialogTitle;
 		var fileNameLabel = "File name";
 		var doItLabel = "Create";
-		var doItAction = "davinci.ui.Resource.createFile({checkForExtension:true})";
+		var doItAction = function(){davinci.ui.Resource.createFile({checkForExtension:true});}
 		var proposedFileName;
 		var hideFileNameInput;
 		var folder=davinci.resource.getRoot();
@@ -34,17 +34,17 @@ dojo.mixin(davinci.ui.Resource, {
 			dialogTitle="Open File";
 			proposedFileName = "";
 			doItLabel = "Open";
-			doItAction = "davinci.ui.Resource.openFile()";
+			doItAction = function(){davinci.ui.Resource.openFile();}
 			hideFileNameInput = true;
 		}else if(action==='newfolder'){
 			dialogTitle="Create New Folder";
 			fileNameLabel = "Folder name";
 			proposedFileName = this.getNewFileName(action,folder);
-			doItAction = "davinci.ui.Resource.createFile({checkForExtension:false})";
+			doItAction = function(){davinci.ui.Resource.createFile({checkForExtension:false});}
 		}else if(action==='saveas'){
 			dialogTitle="Save File As";
 			doItLabel = "Save";
-			doItAction = "davinci.ui.Resource.saveAs({checkForExtension:true})";
+			doItAction = function(){davinci.ui.Resource.saveAs({checkForExtension:true});}
 			var editor = davinci.Workbench.getOpenEditor();
 			var file= editor.resourceFile || davinci.resource.findResource( editor.fileName);
 			folder=file.getParentFolder();
@@ -83,7 +83,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.setContent(formHtml);	
 		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
 		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-		dijit.byId('fileDialogFolderTree').notifySelect=function(item){
+		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(item){
 			if(item.elementType==='Folder'){
 				dijit.byId('fileDialogParentFolder').set('value',item.getPath());
 			}else{
@@ -93,7 +93,7 @@ dojo.mixin(davinci.ui.Resource, {
 		};		
 		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
-				eval(doItAction); 
+				doItAction.apply();
 				dojo.stopEvent(e);
 			}
 			dojo.disconnect(connectHandle);

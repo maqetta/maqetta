@@ -33,13 +33,14 @@ dojo.mixin(davinci.resource, {
 				resourcePath = changedResource;
 			}
 			if(parent.elementType=="Folder" && type!='renamed')
-
 				parent.reload();
-			}
 			/* force the resource parent to update its children */
+			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)});	
+		}
 			
 			
-			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)});
+			
+			
 	},
 	
 	

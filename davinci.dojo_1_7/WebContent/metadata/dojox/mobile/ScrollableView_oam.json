@@ -22,6 +22,10 @@
             "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
         },
         {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.ScrollableView');"
+        },
+        {
             "type": "css",
             "src": "dojox/mobile/themes/iphone/iphone.css",
             "$library": "dojo"

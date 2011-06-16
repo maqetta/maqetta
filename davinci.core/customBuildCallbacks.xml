@@ -17,7 +17,6 @@
 	<!-- "About daVinci" dialog.                                               -->
 	<!-- ===================================================================== -->
 	<property environment="env"/>
-	<property name="manifest.file" value="${target.folder}/WebContent/davinci/davinci.manifest"/>
 	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
 
 	<!-- +++++++++++ Verify that "svn" or "svn.exe" is on the PATH +++++++++++ -->
@@ -110,30 +109,6 @@
         <filter token="buildtime" value="${maqBuildTime}"/>
         <move file="${rep.info.file}.tmp" tofile="${rep.info.file}" filtering="true"/>
 	</target>
-
-	<!--    Write git revision SHA1 to WebContent/davinci/davinci.manifest   -->
-	<target name="update.manifest" depends="check.command.line.git">
-        <exec executable="git" output="${env.buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
-            <arg value="log"/>
-            <arg value="-1"/>
-        </exec>
-        <loadfile srcfile="${env.buildDirectory}/git-log.out" property="git.log">
-            <filterchain>
-                <headfilter lines="1"/>
-                <tokenfilter>
-                    <replaceregex pattern="commit " replace=""/>
-                </tokenfilter>
-                <striplinebreaks/>
-            </filterchain>
-        </loadfile>
-		<echo message="# gitlog: ${git.log}" file="${manifest.file}.temp" />
-
-		<concat destfile="${manifest.file}" append="true">
-			<filelist files="${manifest.file}.temp"/>
-		</concat>
-		<delete file="${manifest.file}.temp"/>
-	</target>
-
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target build.jars                              -->
@@ -232,7 +207,6 @@
 		<echo message="Inserting git describe information"/>
 		<antcall target="update.revisions"/>
 		<antcall target="update.repositoryinfo.js"/>
-		<antcall target="update.manifest"/>
 
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>

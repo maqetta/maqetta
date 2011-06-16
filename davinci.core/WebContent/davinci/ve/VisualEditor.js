@@ -345,7 +345,8 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		// or we should preview the working copy instead of the permanent file.
 		editor.save();
 		if(deviceName && deviceName.length>0 && deviceName!='none'){
-			var url = window.location.href+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL);
+			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
+			var url = window.location.href+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 			window.open(url);
 		}else{
 			window.open(fileURL);

@@ -84,7 +84,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
 		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(prop, oldValue, newValue){
-			if(item.elementType==='Folder'){
+			if(newValue.elementType==='Folder'){
 				dijit.byId('fileDialogParentFolder').set('value',newValue.getPath());
 			}else{
 				dijit.byId('fileDialogParentFolder').set('value',newValue.parent.getPath());

@@ -2,8 +2,5 @@
 
 dojo.provide('davinci.repositoryinfo');
 
-davinci.repositoryinfo='@revision@';
-
-dojo.provide('davinci.build.date');
-
-davinci.build.date='@buildtime@';
+davinci.repositoryinfo.revision='@revision@';
+davinci.repositoryinfo.buildtime='@buildtime@';

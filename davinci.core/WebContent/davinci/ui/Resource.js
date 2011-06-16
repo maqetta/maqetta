@@ -83,12 +83,12 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.setContent(formHtml);	
 		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
 		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(item){
+		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(prop, oldValue, newValue){
 			if(item.elementType==='Folder'){
-				dijit.byId('fileDialogParentFolder').set('value',item.getPath());
+				dijit.byId('fileDialogParentFolder').set('value',newValue.getPath());
 			}else{
-				dijit.byId('fileDialogParentFolder').set('value',item.parent.getPath());
-				dijit.byId('fileDialogFileName').set('value',item.name);
+				dijit.byId('fileDialogParentFolder').set('value',newValue.parent.getPath());
+				dijit.byId('fileDialogFileName').set('value',newValue.name);
 			}
 		});
 		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){

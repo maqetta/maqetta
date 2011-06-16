@@ -21,6 +21,8 @@ davinci.ui.about=function(){
 		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+ri+"'>"+ri+"</a></div>";
 	}
 	var bd = davinci.build.date;
+	var lidx = bd.lastIndexOf('-');
+	bd = bd.slice(0,lixd-1) + 'T' + bd.slice(lidx+1);
     if(bd){
         formHTML += "<div class='about_build'>Built: "+bd+"</div>";
     }

@@ -38,7 +38,7 @@ dojo.mixin(davinci.resource, {
 				resourcePath = changedResource;
 			}
 			
-			if(parent.elementType=="Folder")
+			if(parent.elementType=="Folder" && type!='renamed')
 				parent.reload();
 			/* force the resource parent to update its children */
 			

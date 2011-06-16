@@ -255,7 +255,8 @@ dojo.mixin(davinci.ui.Resource, {
 		var oldFileName = oldEditor.fileName;
 		var oldResource = davinci.resource.findResource(oldFileName);
 		var oldContent = oldEditor.model.getText();
-
+		//dialog.close();
+		dialog.destroyRecursive();
 		// If resource exists, delete it because we will soon make a new version of that resource
 		var existing=davinci.resource.findResource(fullName);
 		if(existing){
@@ -269,19 +270,13 @@ dojo.mixin(davinci.ui.Resource, {
 		oldEditor.editorContainer.forceClose(oldEditor);
 		
 		// Create a new editor for the new filename
-		this._createFile({
-			newEditorCallback:function(newEditor){
-				// Because of async aspect to new file creation,
-				// have to pass a callback function.
-				// FIXME: The setTimeout here is a temporary kludge.
-				// Doesn't work if called directly.
-				// Undoubtedly fragile. Didn't work with 1ms timeout.
-				setTimeout(function(){
-					newEditor.saveAs(oldFileName, fullName,oldContent);
-					newEditor.save();
-				},1000);
-			}
-		});
+		var file = folder.createResource(fileName);
+		var pageBuilder = davinci.ve.RebuildPage();
+		var newText = pageBuilder.rebuildSource(oldContent, file);
+		file.setContents(newText);
+		
+		davinci.Workbench.openEditor( {		'fileName' : file, 'content': newText		});
+		
 	},
 	deleteAction : function()
 	{ 

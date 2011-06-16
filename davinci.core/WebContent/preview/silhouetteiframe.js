@@ -187,13 +187,23 @@ preview.silhouetteiframe.prototype = {
 	svgloadhandler: function(object_elem){
 		this._object_elem = object_elem;
 		var svg_doc = object_elem.getSVGDocument();
-		if(svg_doc.documentURI == object_elem.data){
+		if(svg_doc && svg_doc.documentURI == object_elem.data){
+			this._loadcounter = null;
 			this._silhouette_reset_size_position(false);
 		}else{
 			//Chrome bug (WebKit?) where sometimes the older object_elem for the
 			//previous SVG file is passed upon loading the new SVG file.
 			//So, if SVG doc's URI doesn't match object element's URI, force a
 			//reload within a timeout by messing with 'display' property on outer DIV
+			if(!this._loadcounter){
+				this._loadcounter = 1;
+			}else{
+				if(this._loadcounter>=5){
+					console.log("ERROR: svgloadhandler failed after 5 tries");
+					return;
+				}
+				this._loadcounter++;
+			}
 			this.rootNode.style.display='none';
 			var that = this;
 			setTimeout(function(){

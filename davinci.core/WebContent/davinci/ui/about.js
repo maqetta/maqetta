@@ -8,7 +8,7 @@ davinci.ui.about=function(){
 	var	dialog = new dijit.Dialog({
 		id: "aboutMaqetta",
 		title:"About Maqetta",
-		style: "width: 225px;", //TODO: move to stylesheet
+//		style: "width: 225px;", //TODO: move to stylesheet
 		onCancel:function(){
 			this.destroyRecursive(false);
 		}

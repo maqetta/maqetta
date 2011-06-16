@@ -10,7 +10,7 @@ dojo.mixin(davinci.ui.Resource, {
 		var dialogTitle;
 		var fileNameLabel = "File name";
 		var doItLabel = "Create";
-		var doItAction = function(){davinci.ui.Resource.createFile({checkForExtension:true});}
+		var doItAction = "davinci.ui.Resource.createFile({checkForExtension:true})";
 		var proposedFileName;
 		var hideFileNameInput;
 		var folder=davinci.resource.getRoot();
@@ -34,17 +34,17 @@ dojo.mixin(davinci.ui.Resource, {
 			dialogTitle="Open File";
 			proposedFileName = "";
 			doItLabel = "Open";
-			doItAction = function(){davinci.ui.Resource.openFile();}
+			doItAction = "davinci.ui.Resource.openFile()";
 			hideFileNameInput = true;
 		}else if(action==='newfolder'){
 			dialogTitle="Create New Folder";
 			fileNameLabel = "Folder name";
 			proposedFileName = this.getNewFileName(action,folder);
-			doItAction = function(){davinci.ui.Resource.createFile({checkForExtension:false});}
+			doItAction = "davinci.ui.Resource.createFile({checkForExtension:false})";
 		}else if(action==='saveas'){
 			dialogTitle="Save File As";
 			doItLabel = "Save";
-			doItAction = function(){davinci.ui.Resource.saveAs({checkForExtension:true});}
+			doItAction = "davinci.ui.Resource.saveAs({checkForExtension:true})";
 			var editor = davinci.Workbench.getOpenEditor();
 			var file= editor.resourceFile || davinci.resource.findResource( editor.fileName);
 			folder=file.getParentFolder();
@@ -93,7 +93,7 @@ dojo.mixin(davinci.ui.Resource, {
 		});
 		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
-				doItAction.apply();
+				eval(doItAction);
 				dojo.stopEvent(e);
 			}
 			dojo.disconnect(connectHandle);

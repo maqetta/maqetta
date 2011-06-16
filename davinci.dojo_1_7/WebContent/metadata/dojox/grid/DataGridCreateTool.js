@@ -20,7 +20,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		}
 		
 		var storeData = this._data[0]
-		//var modelData = this._data[1];
 		var dataGridData = this._data[1];
 		
 		if(!this._context.loadRequires(storeData.type,true) /*|| !this._context.loadRequires(modelData.type,true)*/ ||
@@ -57,14 +56,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		});
 		data.items = copyUsingFrameObject(items);
 		
-	//	var modelId = davinci.ve.widget.getUniqueObjectId(modelData.type, this._context.getDocument());
-	//	if(!modelData.properties){
-	//		modelData.properties = {};
-	//	}
-	//	modelData.properties.jsId = modelId;
-	//	modelData.properties.id = modelId;
-	//	modelData.context = this._context;
-		
 		var dataGridId = davinci.ve.widget.getUniqueObjectId(dataGridData.type, this._context.getDocument());
 		if(!dataGridData.properties){
 			dataGridData.properties = { };
@@ -76,14 +67,11 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		// </hack>
 	
 		var store = undefined;
-		//var model = undefined;
 		var dataGrid = undefined;
 		
 		var dj = this._context.getDojo();
 		dojo.withDoc(this._context.getDocument(), function(){
 			store = davinci.ve.widget.createWidget(storeData);
-	//		modelData.properties.store = dj.getObject(storeId);
-	//		model = davinci.ve.widget.createWidget(modelData);
 			dataGridData.properties.store = dj.getObject(storeId);
 			dataGrid = davinci.ve.widget.createWidget(dataGridData);
 		});
@@ -97,8 +85,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		
 		command.add(new davinci.ve.commands.AddCommand(store, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-	//	command.add(new davinci.ve.commands.AddCommand(model, args.parent, index));
-	//	index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(dataGrid, args.parent, index));
 		
 		if(args.position){
@@ -109,74 +95,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		}
 		
 		this._context.getCommandStack().execute(command);
-	//	this._context._editor.visualEditor._pageEditor._srcChanged();
-	//	this._srcChanged(storeId); // wdr 3-11
-	//	var pageEditor = this._context._editor.visualEditor._pageEditor;
-	//	pageEditor.setContent(pageEditor.fileName,pageEditor.htmlEditor.model);
-	//	var containerNode = widget.getContainerNode();
-	//	dataGrid._edit_context.containerNode
-	//	var containerNode = dataGrid._edit_context.containerNode;
-		//containerNode.addText(' ');
-	//	var p = widget.getParent();
-	//    dj["require"]("dojo.parser");
-	//       dj.parser.parse(containerNode);
-	//    this._context.attach(widget);
-	//    widget.startup();
-	//    widget.renderWidget();
-		//this._context._attachChildren(containerNode);
-		
-	//	var doc = this._context.getDocument();
-	//	var nodes;
-	//	dojo.withDoc(doc,  function() {
-	//		nodes = dojo.query('.dojoxGrid');
-	//	  }, this);
-	//	debugger;
-	//	dataGrid = null;
-	//	for (var n = 0; n < nodes.length; n++){
-	//		var w = davinci.ve.widget.byId(nodes[n]);
-	//		var sId = w._srcElement.getAttribute("store");
-	//		if (sId === storeId){
-	//			dataGrid = w;
-	//			n= nodes.length; // bail out
-	//		}
-	//		debugger;
-	//	}
 		this._select(dataGrid);
 		
 	}
 	
-//	_srcChanged : function(storeId){
-//		return;
-//		if (!this._updateDesignTimer)
-//		{
-//			var self = this;
-//			this._updateDesignTimer=setTimeout(function (){
-//				var pageEditor = self._context._editor.visualEditor._pageEditor;
-//				pageEditor.visualEditor.setContent(pageEditor.fileName,pageEditor.htmlEditor.model);
-//				var doc = self._context.getDocument();
-//				var nodes;
-//				dojo.withDoc(doc,  function() {
-//					nodes = dojo.query('.dojoxGrid');
-//				  }, this);
-//		
-//				var dataGrid = null;
-//				for (var n = 0; n < nodes.length; n++){
-//					var w = davinci.ve.widget.byId(nodes[n]);
-//					var sId = w._srcElement.getAttribute("store");
-//					if (sId === storeId){
-//						dataGrid = w;
-//						n= nodes.length; // bail out
-//					}
-//					
-//				}
-//				self._select(dataGrid);
-//				delete this._updateDesignTimer;
-//			},100); //700
-//		}
-//		//this.isDirty=true;
-//		//this.lastModifiedTime=new Date().getTime();
-//		
-//		
-//	}
 
 });

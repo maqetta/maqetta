@@ -55,7 +55,7 @@ dojo.mixin(davinci.resource, {
 	},
 	
 	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
-		console.log("parent:" + parent + " children :" + newChildrenList);
+//		console.log("parent:" + parent + " children :" + newChildrenList);
 	},
 	
 	getLabel: function(/*dojo.data.Item*/ item){

@@ -7,12 +7,14 @@ dojo.require("dijit.layout.LayoutContainer");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ve", "veLang");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("dijit", "common");
+var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 
 dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.ContainerInput, {
 	
 	show: function(widgetId){
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
 	//debugger;
 	this._widget = davinci.ve.widget.byId(widgetId);
 		if (!this._inline) {
@@ -48,8 +50,8 @@ dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.Container
 	        s += '	</div>';
 	        s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 4em;" region="bottom">';
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px"></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > '+langObj.ok+' </button></div>';
-			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+langObj.cancel+' </button></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > '+dijitLangObj.buttonOk+' </button></div>';
+			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+dijitLangObj.buttonCancel+' </button></div>';
 			s += '	</div>';
 			s += '</div>'
 			

@@ -8,6 +8,8 @@ dojo.require("dojox.form.DropDownSelect");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ve", "veLang");
 var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("dijit", "common");
+var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 
@@ -301,7 +303,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	
 	_urlDataStoreLoaded : function(items){
 		if (items.length < 1){
-			console.error(langObj.dataStoreEmpty);
+			console.error("Data store empty");
 			return;
 		}
 		var structure = [],
@@ -598,7 +600,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 				'<div class="smartInputHelpDiv" > '+
 	        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
 		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+langObj.ok+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+langObj.cancel+'</button>  '+
+		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
 		        	'</span>   '+
 		        '</div> '+
 		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+

@@ -22,10 +22,6 @@
 		"enterStateName":"Please enter a state name.",
 		"stateNameExists":"State name '${name}' already exists. Please enter a different state name.",
 		
-		//mutltiple files
-		"ok":"OK",
-		"cancel":"Cancel",
-		
 		//input/AccordionContainerInput.js
 		"accordionContainerInputHelp":"If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
 		
@@ -48,7 +44,6 @@
 		"dataGridInputHelp":"If the CSV data format button is selected, enter text in the format: first line is column headers separated by commas and all following lines are data for those columns. If the URL button is selected, enter the location of the json item file.",
 		"invalidInput1":"invalid input (1)",
 		"invalidInput2":"invalid input (2)",
-		"dataStoreEmpty":"Data store empty",
 		"selectSource":"Select a source",//also used in HtmlSrcAttributeInput.js
 		"htmlMarkup":"HTML markup",//also used in SmartInput.js
 		"plainText":"Plain text",

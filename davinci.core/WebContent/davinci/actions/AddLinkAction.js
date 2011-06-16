@@ -12,7 +12,7 @@ dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 	run: function(selectedResource){
 		var formHtml = 
 		    "<div class='fileDialog' style='position:relative'>" +
-		    "<div><label for=\"parentFolder\">Parent Folder: </label><div id='parentFolder' ></div></div>" +
+		    "<div><label for=\"parentFolder\">"+langObj.parentFolder+" </label><div id='parentFolder' ></div></div>" +
 	    '	<div class="folderContainer">'+
 	    "       <div dojoType='dojox.data.FileStore' url='./cmd/systemFileList'" +
 	    "             pathAsQueryParam='true' jsId='systemFiles'>" +
@@ -24,8 +24,8 @@ dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 	    '			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="localFileTree" model="fileModel"></div>'+
 	    '		</div>'+
 	    '	</div>'+
-	    "<div><label for='localName'>Local Name</label><input dojoType='dijit.form.TextBox' type='text' name='localName' id='localName'></div>" +
-	    "<button dojoType='dijit.form.Button' type='submit' >Link</button>" +
+	    "<div><label for='localName'>"+langObj.localName+"</label><input dojoType='dijit.form.TextBox' type='text' name='localName' id='localName'></div>" +
+	    "<button dojoType='dijit.form.Button' type='submit' >"+langObj.link+"</button>" +
 	    "</div>" ;
 		this.dialog = new dijit.Dialog({id: "newDialog", title:langObj.selectDirectory,
 			onCancel:function(){this.destroyRecursive(false);},

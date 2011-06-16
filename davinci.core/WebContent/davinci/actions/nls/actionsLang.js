@@ -1,6 +1,9 @@
 ({
 		//AddLinkAction.js
 		"selectDirectory":"Select Directory to link to",
+		"parentFolder":"Parent Folder:",
+		"localName":"Local Name:",
+		"link":"Link",
 		
 		//DownloadAction.js
 		"downloadResources":"Download Resources",

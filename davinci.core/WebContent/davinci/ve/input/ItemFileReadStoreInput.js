@@ -4,6 +4,8 @@ dojo.require("davinci.ve.input.SmartInput");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ve", "veLang");
 var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("dijit", "common");
+var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.ve.input.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
 
@@ -76,8 +78,8 @@ dojo.declare("davinci.ve.input.ItemFileReadStoreInput", davinci.ve.input.SmartIn
 	    
         var s = '<div dojotype="dijit.layout.BorderContainer" design="headline" livesplitters="true" iscontainer="true" style="height: 300px; width: 480px; padding: 0px;">';
         s    += '    <div dojotype="dijit.layout.ContentPane" parseonload="true" iscontainer="true" region="bottom" style="height: 50px; bottom: 5px; left: 78px; right: 78px;" splitter="true">';
-        s    += '        <input id="okButton" type="button" dojotype="dijit.form.Button" label="'+langObj.ok+'" showlabel="true" scrollonfocus="true" style="top: 20px; left: 95px; position: absolute;">';
-        s    += '        <input id="cancelButton" type="button" dojotype="dijit.form.Button" label="'+langObj.cancel+'" showlabel="true" scrollonfocus="true" style="left: 145px; top: 20px; position: absolute;">';
+        s    += '        <input id="okButton" type="button" dojotype="dijit.form.Button" label="'+dijitLangObj.buttonOk+'" showlabel="true" scrollonfocus="true" style="top: 20px; left: 95px; position: absolute;">';
+        s    += '        <input id="cancelButton" type="button" dojotype="dijit.form.Button" label="'+dijitLangObj.buttonCancel+'" showlabel="true" scrollonfocus="true" style="left: 145px; top: 20px; position: absolute;">';
         s    += '    </div>';
         s    += '    <div dojotype="dijit.layout.ContentPane" parseonload="true" iscontainer="true" region="center" style="top: 78px; left: 78px; right: 78px; bottom: 78px;">';
         s    += '        <div style="width: 282px; height: 37px;">';

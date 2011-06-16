@@ -18,10 +18,12 @@ davinci.ui.about=function(){
 		+ "<div class='about_version'>Version: "+davinci.version+"</div>";
 	var ri = davinci.repositoryinfo;
 	if(ri){
-		var barindex = ri.indexOf('|');
-		var revnum = barindex>=0 ? ri.substr(0, barindex) : ri;
-		formHTML += "<div class='about_build'>Build: "+revnum+"</div>";
+		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+ri+"'>"+ri+"</a></div>";
 	}
+	var bd = davinci.build.date;
+    if(bd){
+        formHTML += "<div class='about_build'>Built: "+bd+"</div>";
+    }
 	formHTML += "</div>";
 	dialog.setContent(formHTML);
 	dialog.show();

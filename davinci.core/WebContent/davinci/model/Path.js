@@ -60,13 +60,12 @@ davinci.model.Path.prototype.isAbsolute = function(  ){
 }
 
 davinci.model.Path.prototype.getParentPath = function(  ){
-	if (!this._parentPath)
-	{
+	if (!this._parentPath){
 		var parentSegments=dojo.clone(this.segments);
 		parentSegments.pop();
 		this._parentPath= new davinci.model.Path(parentSegments,this.hasLeading);
 	}
-	return this._parentPath;
+	return dojo.clone(this._parentPath);
 }
 
 

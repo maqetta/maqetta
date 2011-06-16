@@ -24,11 +24,11 @@ dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 	    "<button dojoType='dijit.form.Button' type='submit' >Link</button>" +
 	    "</div>" ;
 		this.dialog = new dijit.Dialog({id: "newDialog", title:"Select Directory to link to",
-			onCancel:function(){this.destroyRecursive(false);},
-		    execute:  dojo.hitch(this,"createLink")});	
+			onCancel: function(){this.destroyRecursive(false);},
+		    execute: dojo.hitch(this,"createLink")
+		});	
 		
 		this.dialog.setContent(formHtml);
-	 	dijit.byId('localFileTree').notifySelect=dojo.hitch(this,function(item){this.selectedItem=item; });
 		this._input=dijit.byId('localName');
 		this.parentFolder=davinci.ui.Resource.getSelectedResource()  || davinci.resource.root;
 		this.parentFolder=this.parentFolder.getParentFolder();
@@ -39,21 +39,22 @@ dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 	
 	createLink: function(value)
 	{
-		
+		var selectedItem = dijit.byId('localFileTree').get("selectedItem");
 		this.dialog.destroyRecursive(false);
 		var path=this.parentFolder.getPath()+'/'+value.localName;
 		response = davinci.Runtime.serverJSONRequest({
 			   url:"./cmd/createLink", handleAs:"text",
-		          content:{'path': path, 'localPath': this.selectedItem.path}, sync:true  });
+			   content:{'path': path, 'localPath': selectedItem.path}, sync:true
+		});
 		if (response=="OK")
 		{
 			var linkFile=new davinci.model.Resource.Folder(value.localName, this.parentFolder)
 			this.parentFolder.children.push(linkFile);
-			linkFile.link=this.selectedItem.path;
+			linkFile.link=selectedItem.path;
 			dojo.publish("/davinci/resource/resourceChanged", ["created", linkFile]);
 		}
 		else if (response) {
-			alert(response);
+			alert(response); //FIXME
 		}
 	},
 	

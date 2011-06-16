@@ -100,12 +100,12 @@ preview.silhouetteiframe.prototype = {
 		if(rootNode && rootNode.children && rootNode.children.length){
 			var spanNode=rootNode.children[0];
 		}else{
-			console.log('ERROR. preview.silhouetteiframe.verifyDOMTree(): no children on rootNode');
+			console.error('preview.silhouetteiframe.verifyDOMTree(): no children on rootNode');
 			return false;
 		}
 		if(iframeElementMustBePresent){
 			if(rootNode.children.length<2){
-				console.log('ERROR. preview.silhouetteiframe.verifyDOMTree(): iframe child not present');
+				console.error('preview.silhouetteiframe.verifyDOMTree(): iframe child not present');
 				return false;
 			}
 			var iframeNode=rootNode.children[1];
@@ -114,7 +114,7 @@ preview.silhouetteiframe.prototype = {
 				!spanNode || spanNode.nodeName != 'SPAN' || spanNode.className.indexOf('silhouetteiframe_object_container')==-1 ||
 				(iframeElementMustBePresent &&
 					(!iframeNode || iframeNode.nodeName != 'IFRAME' || iframeNode.className.indexOf('silhouetteiframe_iframe')==-1))){
-			console.log('ERROR. preview.silhouetteiframe.preview.silhouetteiframe.verifyDOMTree(): incorrect DOM tree on rootNode');
+			console.error('preview.silhouetteiframe.preview.silhouetteiframe.verifyDOMTree(): incorrect DOM tree on rootNode');
 			return false;
 		}
 		return true;
@@ -126,7 +126,7 @@ preview.silhouetteiframe.prototype = {
 		if(style_elems.length==0){
 			var head_elem = document.querySelectorAll('head')[0];
 			if(!head_elem){
-				console.log('ERROR: silhouetteiframe.js addStyleDeclarations(): no HEAD element');
+				console.error('silhouetteiframe.js addStyleDeclarations(): no HEAD element');
 				return;
 			}
 			var style_elem = document.createElement('style');
@@ -187,13 +187,23 @@ preview.silhouetteiframe.prototype = {
 	svgloadhandler: function(object_elem){
 		this._object_elem = object_elem;
 		var svg_doc = object_elem.getSVGDocument();
-		if(svg_doc.documentURI == object_elem.data){
+		if(svg_doc && svg_doc.documentURI == object_elem.data){
+			this._loadcounter = null;
 			this._silhouette_reset_size_position(false);
 		}else{
 			//Chrome bug (WebKit?) where sometimes the older object_elem for the
 			//previous SVG file is passed upon loading the new SVG file.
 			//So, if SVG doc's URI doesn't match object element's URI, force a
 			//reload within a timeout by messing with 'display' property on outer DIV
+			if(!this._loadcounter){
+				this._loadcounter = 1;
+			}else{
+				if(this._loadcounter>=5){
+					console.error("svgloadhandler failed after 5 tries");
+					return;
+				}
+				this._loadcounter++;
+			}
 			this.rootNode.style.display='none';
 			var that = this;
 			setTimeout(function(){

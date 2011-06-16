@@ -63,7 +63,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 		if(style_elems.length==0){
 			var head_elem = document.querySelectorAll('head')[0];
 			if(!head_elem){
-				console.log('ERROR: silhouetteiframe.js addStyleDeclarations(): no HEAD element');
+				console.error('silhouetteiframe.js addStyleDeclarations(): no HEAD element');
 				return;
 			}
 			dojo.create('style',{

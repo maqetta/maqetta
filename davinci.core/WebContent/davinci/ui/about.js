@@ -13,7 +13,7 @@ davinci.ui.about=function(){
 	var	dialog = new dijit.Dialog({
 		id: "aboutMaqetta",
 		title:langObj.aboutMaqetta,
-		style: "width: 200px", //TODO: move to stylesheet
+		style: "width: 365px", //TODO: move to stylesheet
 		onCancel:function(){
 			this.destroyRecursive(false);
 		}
@@ -26,6 +26,8 @@ davinci.ui.about=function(){
 		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+ri+"'>"+ri+"</a></div>";
 	}
 	var bd = davinci.build.date;
+	var lidx = bd.lastIndexOf('-');
+	bd = bd.slice(0,lidx-1) + 'T' + bd.slice(lidx+1);
     if(bd){
         formHTML += "<div class='about_build'>Built: "+bd+"</div>";
     }

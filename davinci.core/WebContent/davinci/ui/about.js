@@ -22,7 +22,7 @@ davinci.ui.about=function(){
 	}
 	var bd = davinci.build.date;
 	var lidx = bd.lastIndexOf('-');
-	bd = bd.slice(0,lidx-1) + 'T' + bd.slice(lidx+1);
+	bd = bd.slice(0,lidx) + 'T' + bd.slice(lidx+1);
     if(bd){
         formHTML += "<div class='about_build'>Built: "+bd+"</div>";
     }

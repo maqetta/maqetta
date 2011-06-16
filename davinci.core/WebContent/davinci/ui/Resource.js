@@ -90,7 +90,7 @@ dojo.mixin(davinci.ui.Resource, {
 				dijit.byId('fileDialogParentFolder').set('value',item.parent.getPath());
 				dijit.byId('fileDialogFileName').set('value',item.name);
 			}
-		};		
+		});
 		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
 				doItAction.apply();

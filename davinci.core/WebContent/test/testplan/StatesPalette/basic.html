@@ -27,9 +27,8 @@
 		<li>Drag an HTML label, Calendar, TextBox, a DIV, and three buttons inside of DIV onto the canvas.</li>
 		<li>In the States palette, click on the + icon to define two states "aaa" and "bbb"</li>
 		<li>In the States palette, select the "bbb" state and click on the - icon to delete that state</li>
-		<li>In the States palette, use the dropdown menu (top right) to define two states "ccc" and "ddd"</li>
-		<li>In the States palette, select the "ccc" state and use the dropdown menu (top right) to remove that state.
-			<span style="color:red; font-style:italic;">Note: Dropdown isn't there for 0.6. Use "-" icon instead.</span></li>
+		<li>In the States palette, click on the + icon to define two states "ccc" and "ddd"</li>
+		<li>In the States palette, select the "ccc" state and click on the - icon to delete that state.</li>
 		<li>In the States palette, select the "aaa" state. Go to Outline palette and 
 				click on the eyeball icon for the Label to make it invisible for the "aaa" state.
 				(The Label should become invisible on the canvas).</li>
@@ -52,11 +51,11 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>(continuing on the same file created in the previous test)</li>
-		<li>Select the first button widget. On the Object palette, go to the onclick property
+		<li>Select the first button widget. On the Properties palette, go to the onclick property
 				and use the dropdown menu to choose the option to switch to the "Normal" state</li>
-		<li>Select the second button widget. On the Object palette, go to the onclick property
+		<li>Select the second button widget. On the Properties palette, go to the onclick property
 				and use the dropdown menu to choose the option to switch to the "aaa" state</li>
-		<li>Select the first button widget. On the Object palette, go to the onclick property
+		<li>Select the third button widget. On the Properties palette, go to the onclick property
 				and use the dropdown menu to choose the option to switch to the "ddd" state</li>
 		<li>Save and close the file.</li>
 		<li>In the Files palette, double-click on the file you just closed to re-open the file.</li>
@@ -89,13 +88,44 @@
 			and can set width on the root for calendar.)</li>
 		<li>On the States palette, go into the Normal state. 
 				Select the first button widget. On the Styling palette, set font color to a reddish color and font size to 20.
-				Select the calendar widget. On the Object palette, set the width to 200px.</li>
-		<li>On the States palette, go into the "aaa" state. 
-				Select the second button widget. On the Styling palette, set font color to a greenish color and font size to 30.
-				Select the calendar widget. On the Object palette, set the width to 300px.</li>
-		<li>On the States palette, go into the "ddd" state. 
-				Select the third button widget. On the Styling palette, set font color to a bluish color and font size to 40.
-				Select the calendar widget. On the Object palette, set the width to 400px.</li>
+				Select the calendar widget. On the Properties palette, set the width to 200px.</li>
+		<li>On the States palette, go into the "aaa" state. </li>
+		<li>Select the second button widget. </li>
+		<li>In Properties palette, open up the CSS Cascade view for the 'color' property
+				by clicking on "&gt;" symbol to right of 'color' property.
+				Make sure radio button to left of 'element.style' is selected.
+				Scroll to very bottom of CSS cascade and turn on check box that says
+				'Only apply to current style (aaa)'.
+				Set font color to a greenish color.</li>
+		<li>Open up the CSS Cascade view for the 'font-size' property
+				by clicking on "&gt;" symbol to right of 'font-size' property.
+				Make sure radio button to left of 'element.style' is selected.
+				Scroll to very bottom of CSS cascade and turn on check box that says
+				'Only apply to current style (aaa)'. Set font size to 30.</li>
+		<li>Select the calendar widget.</li>
+		<li>Open up the CSS Cascade view for the 'width' property
+				by clicking on "&gt;" symbol to right of 'width' property.
+				Make sure radio button to left of 'element.style' is selected.
+				Scroll to very bottom of CSS cascade and turn on check box that says
+				'Only apply to current style (aaa)'. Set the width to 300px.</li>
+		<li>On the States palette, go into the "ddd" state. </li>
+		<li>Select the third button widget.</li>
+		<li>Open up the CSS Cascade view for the 'color' property
+				by clicking on "&gt;" symbol to right of 'color' property.
+				Make sure radio button to left of 'element.style' is selected.
+				Scroll to very bottom of CSS cascade and turn on check box that says
+				'Only apply to current style (ddd)'. Set font color to a bluish color.</li>
+		<li>Open up the CSS Cascade view for the 'font-size' property
+				by clicking on "&gt;" symbol to right of 'font-size' property.
+				Make sure radio button to left of 'element.style' is selected.
+				Scroll to very bottom of CSS cascade and turn on check box that says
+				'Only apply to current style (ddd)'. Set font size to 40px.</li>
+		<li>Select the calendar widget.</li>
+		<li>Open up the CSS Cascade view for the 'width' property
+				by clicking on "&gt;" symbol to right of 'width' property.
+				Make sure radio button to left of 'element.style' is selected.
+				Scroll to very bottom of CSS cascade and turn on check box that says
+				'Only apply to current style (aaa)'. Set the width to 400px.</li>
 		<li>Save and close the file.</li>
 		<li>In the Files palette, double-click on the file you just closed to re-open the file.</li>
 		<li>Click on the Preview in Browser button on the main toolbar. A new browser tab or window should appear

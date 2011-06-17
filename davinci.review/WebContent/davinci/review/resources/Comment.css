@@ -302,7 +302,8 @@
 }
 
 .reviewFileIcon {
-	background-image: url(img/review.gif);
+	background-image: url(img/review.gif); no-repeat;
+    background-repeat: no-repeat;
 }
 
 .disabledReviewFileIcon {
@@ -445,20 +446,20 @@
 }
 
 #detail_role {
-	background: url('img/user_obj.gif') no-repeat;
+	/*background: url('img/user_obj.gif') no-repeat;*/
 	margin: 0 60px 0 10px;
 	padding: 0 0 0 16px;
 }
 
 .notClosed{
-	background: url('img/time_warning_obj.gif') no-repeat;
+	/*background: url('img/time_warning_obj.gif') no-repeat;*/
 	color: green !important;
 	margin: 0 0 0 10px;
 	padding: 0 0 0 16px;
 }
 
 .closed{
-	background: url('img/time_warning_obj.gif') no-repeat;
+	/*background: url('img/time_warning_obj.gif') no-repeat;*/
 	color: red;
 	margin: 0 0 0 10px;
 	padding: 0 0 0 16px;

@@ -4,7 +4,9 @@ dojo.require("dijit.form.Button");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.Tree");
 dojo.require("dijit.form.TextBox");
-dojo.require("dojox.form.FileUploader");
+dojo.require("dojox.form.Uploader");
+dojo.require("dojox.form.uploader.FileList");
+dojo.require("dojox.form.uploader.plugins.HTML5");
 
 dojo.mixin(davinci.ui.Resource, {
 	/*
@@ -112,17 +114,14 @@ dojo.mixin(davinci.ui.Resource, {
 	addFiles : function(){
 		var formHtml = 
 		'<label for=\"fileDialogParentFolder\">Parent Folder: </label><div id="fileDialogParentFolder" ></div>'+
-        '<div id="btn0" class="browse">Select Files...</div><br/>'+
-        '<textarea cols="50" rows="6" id="fileToUpload"></textarea><br/>'+
+        '<div id="btn0"></div><br/>'+
+        '<div id="filelist">'+
         '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">Upload</div><br/>';
 
 		var	dialog = new dijit.Dialog({id: "addFiles", title:"Add Files",
 			onCancel:function(){this.destroyRecursive(false);}});	
 		
 		dojo.connect(dialog, 'onLoad', function(){
-			
-			dojo.byId("fileToUpload").value = "";
-
 			var folder=davinci.resource.getRoot();
 			var resource=davinci.ui.Resource.getSelectedResource();
 			if (resource)
@@ -132,44 +131,22 @@ dojo.mixin(davinci.ui.Resource, {
 //			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 			dojo.byId('fileDialogParentFolder').innerHTML=folder.getPath();
 
-			var f0 = new dojox.form.FileUploader({
-				degradable:true,
-				uploadUrl:'./cmd/addFiles?path='+folder.getPath(), 
-				uploadOnChange:false, 
-				force:"html",
-				selectMultipleFiles:true,
-//				fileMask:fileMask,
-				isDebug:true
-//				,
-//				postData:{sessionid:"TestStuff won't be sent", userId:"DojoMan"}
-			}, "btn0");
-			dojo.connect(dijit.byId("uploadBtn"),"onClick",function(){
-				dojo.byId("fileToUpload").value = "uploading...";
-				f0.upload();
+			var f0 = new dojox.form.Uploader({
+				label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
+				url:'./cmd/addFiles?path='+folder.getPath(), 
+				multiple:true
 			});
-			
-			dojo.connect(f0, "onChange", function(dataArray){
-				dojo.forEach(dataArray, function(d){
-					//file.type no workie from flash selection (Mac?)
-						dojo.byId("fileToUpload").value += d.name+" "+Math.ceil(d.size*.001)+"kb \n";
-				});
-			});
-			dojo.connect(f0, "onProgress", function(dataArray){
-				dojo.forEach(dataArray, function(d){
-					dojo.byId("fileToUpload").value += "onProgress: ("+d.percent+"%) "+d.name+" \n";
-					
-				});
-			});
+			dojo.byId("btn0").appendChild(f0.domNode); // tried passing this into the constructor, but there's a bug that sizes the button wrong
+
+			var list = new dojox.form.uploader.FileList({uploader:f0}, "filelist");
+
+			dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ f0.upload(); });
+
 			dojo.connect(f0, "onComplete", function(dataArray){
-				if (dataArray.length==1 && dataArray[0].length)
-					dataArray=dataArray[0];
-				totalFiles = dataArray.length;
-				dojo.forEach(dataArray, function(d){
-					dojo.byId("fileToUpload").value += "completed: "+d.file+" \n";
-					folder.createResource(d.file,false,true);
+				dojo.forEach(dataArray, function(data){
+					folder.createResource(data.file, false, true);
 				});
 			});
-			
 		});
 		dialog.setContent(formHtml);
 		

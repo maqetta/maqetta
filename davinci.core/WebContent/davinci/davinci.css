@@ -3,6 +3,7 @@
 @import url("../dojox/widget/Toaster/Toaster.css");
 @import url("../dojox/layout/resources/ResizeHandle.css");
 @import url("../dojox/html/resources/ellipsis.css");
+@import url("../dojox/form/resources/UploaderFileList.css");
 
 @import url("syntaxColors.css");
 @import url("propview.css");

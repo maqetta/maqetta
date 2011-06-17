@@ -1,5 +1,11 @@
 dojo.provide("davinci.ui.Resource");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.Dialog");
+dojo.require("dijit.Tree");
+dojo.require("dijit.form.TextBox");
+dojo.require("dojox.form.FileUploader");
+
 dojo.mixin(davinci.ui.Resource, {
 	/*
 	 * Present new file or new folder dialog.

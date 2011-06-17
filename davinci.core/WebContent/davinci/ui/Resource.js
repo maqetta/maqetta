@@ -289,7 +289,7 @@ dojo.mixin(davinci.ui.Resource, {
 		var resource=this.getSelectedResource();
 		if (resource)
 		{
-		    if(confirm("Are you sure you want to delete "+resource.getPath()+"?")){
+		    if(!confirm("Are you sure you want to delete "+resource.getPath()+"?")){
 		    	return;
 		    }
 			resource.deleteResource();

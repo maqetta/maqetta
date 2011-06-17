@@ -13,7 +13,6 @@ davinci.ui.about=function(){
 	var	dialog = new dijit.Dialog({
 		id: "aboutMaqetta",
 		title:langObj.aboutMaqetta,
-		style: "width: 365px", //TODO: move to stylesheet
 		onCancel:function(){
 			this.destroyRecursive(false);
 		}
@@ -21,15 +20,14 @@ davinci.ui.about=function(){
 	var formHTML="<div class='about_container'>"
 		+ "<div class='about_title'>Maqetta</div>"
 		+ "<div class='about_version'>"+dojo.string.substitute(langObj.productVersion,[davinci.version])+"</div>";
-	var ri = davinci.repositoryinfo;
-	if(ri){
-		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+ri+"'>"+ri+"</a></div>";
+	var ri = davinci.repositoryinfo,
+		revision = ri.revision;
+	if(revision){
+		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+revision+"'>"+revision.substr(0,15)+"...</a></div>";
 	}
-	var bd = davinci.build.date;
-	var lidx = bd.lastIndexOf('-');
-	bd = bd.slice(0,lidx-1) + 'T' + bd.slice(lidx+1);
+	var bd = ri.buildtime;
     if(bd){
-        formHTML += "<div class='about_build'>Built: "+bd+"</div>";
+        formHTML += "<div class='about_build'>Date: "+bd+"</div>";
     }
 	formHTML += "</div>";
 	dialog.setContent(formHTML);

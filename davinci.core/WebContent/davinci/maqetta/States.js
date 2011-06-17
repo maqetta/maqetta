@@ -1,6 +1,8 @@
-// Runtime version, used by preview-in-browser
+// Duplicate of workspace/maqetta/maqetta.js for use by page editor.
+// Created this cloned version to overcome loader/build conflicts 
+// if page editor and runtime (possibly) using different versions of Dojo
 
-// Various functions extracted from dojo for use in non-dojo environments
+//Various functions extracted from dojo for use in non-dojo environments
 (function(){
 
 	if (typeof davinci == "undefined") {
@@ -1049,11 +1051,11 @@ davinci.states = {
 };
 
 if (typeof dojo != "undefined") {
-	dojo.provide("workspace.maqetta.States");
+	dojo.provide("davinci.maqetta.States");
 	dojo.require("dojo.parser");
-	dojo.declare("workspace.maqetta.States", null, davinci.states);
+	dojo.declare("davinci.maqetta.States", null, davinci.states);
 	
-	davinci.states = new workspace.maqetta.States();
+	davinci.states = new davinci.maqetta.States();
 }
 
 (function(){

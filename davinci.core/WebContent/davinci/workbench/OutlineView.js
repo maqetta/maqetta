@@ -161,8 +161,9 @@ dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 	},
 	selectionChanged : function(selection)
 	{
-		if (this.publishing["/davinci/ui/selectionChanged"])
+		if (this.publishing["/davinci/ui/selectionChanged"]){
 			return;
+		}
 		if (selection.length>0)
 		{
 			if (selection[0].model && this.outlineTree)

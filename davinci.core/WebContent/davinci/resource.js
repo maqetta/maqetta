@@ -32,16 +32,17 @@ dojo.mixin(davinci.resource, {
 				parent = davinci.resource.findResource(p1.toString()) || davinci.resource.getRoot();
 				resourcePath = changedResource;
 			}
-			
-			if(parent.elementType=="Folder"){
+			if(parent.elementType=="Folder" && type!='renamed')
 				parent.reload();
-			}
 			/* force the resource parent to update its children */
-			
-			
-			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);});
+			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)});	
 		}
+			
+			
+			
+			
 	},
+	
 	
 	/* Resource tree model methods */
 	newItem: function(/* Object? */ args, /*Item?*/ parent){

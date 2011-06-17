@@ -1,10 +1,5 @@
 dojo.provide("davinci.model.Resource");
 
-dojo.require("dijit.form.Button");
-dojo.require("dijit.Dialog");
-dojo.require("dijit.Tree");
-dojo.require("dijit.form.TextBox");
-dojo.require("dojox.form.FileUploader");
 dojo.require("davinci.Runtime");
 dojo.require("davinci.model.Model");
 

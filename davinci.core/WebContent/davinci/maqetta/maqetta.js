@@ -1,4 +1,6 @@
-// Runtime version, used by preview-in-browser
+// Duplicate of workspace/maqetta/maqetta.js for use by page editor.
+// Created this cloned version to overcome loader/build conflicts 
+// if page editor and runtime (possibly) using different versions of Dojo
 (function() {
 	/**
 	 * Collapses all text nodes that only contain white space characters into empty string.

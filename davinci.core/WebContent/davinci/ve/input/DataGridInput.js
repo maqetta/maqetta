@@ -364,7 +364,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		this._connectResizeHandle();
 		this._connectSimDiv();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-		this.resize(null);
         var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
         this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
         var storeId = this._widget._srcElement.getAttribute("store"); 
@@ -384,6 +383,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	this._inline.eb.setValue( this._url); 
         	this._data = ' ';
         }
+        this.changeDataStoreType(this._dataStoreType);
         dojo.style('iedResizeDiv', 'background-color', 'white');
         var html = this._widget.getPropertyValue('escapeHTMLInData');
         var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');

@@ -1,7 +1,15 @@
 dojo.provide("davinci.ui.Resource");
 
+
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "uiLang");
+
+dojo.require("dijit.form.Button");
+dojo.require("dijit.Dialog");
+dojo.require("dijit.Tree");
+dojo.require("dijit.form.TextBox");
+dojo.require("dojox.form.FileUploader");
+
 
 dojo.mixin(davinci.ui.Resource, {
 	/*
@@ -87,17 +95,17 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.setContent(formHtml);	
 		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
 		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-		dijit.byId('fileDialogFolderTree').notifySelect=function(item){
-			if(item.elementType==='Folder'){
-				dijit.byId('fileDialogParentFolder').set('value',item.getPath());
+		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(prop, oldValue, newValue){
+			if(newValue.elementType==='Folder'){
+				dijit.byId('fileDialogParentFolder').set('value',newValue.getPath());
 			}else{
-				dijit.byId('fileDialogParentFolder').set('value',item.parent.getPath());
-				dijit.byId('fileDialogFileName').set('value',item.name);
+				dijit.byId('fileDialogParentFolder').set('value',newValue.parent.getPath());
+				dijit.byId('fileDialogFileName').set('value',newValue.name);
 			}
-		};		
+		});
 		var connectHandle = dojo.connect(dojo.byId("fileDialog"), "onkeypress", function(e){
 			if(e.charOrCode===dojo.keys.ENTER){
-				eval(doItAction); 
+				eval(doItAction);
 				dojo.stopEvent(e);
 			}
 			dojo.disconnect(connectHandle);

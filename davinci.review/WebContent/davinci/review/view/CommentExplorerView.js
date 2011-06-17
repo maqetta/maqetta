@@ -80,9 +80,9 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 				
 				'</div>'+
 				'<div><strong>Artifacts In Review<strong></div>'+
-				'<div id="detail_files"></div>'+
-				'<div><strong>Reviewers</strong></div>'+
-				'<div id="detail_reviewers"></div>',
+				'<div id="detail_files"></div>',//+
+				//'<div><strong>Reviewers</strong></div>'+
+				//'<div id="detail_reviewers"></div>',
 			onMouseEnter: dojo.hitch(this,function(){
 				if(this._deleteTime){
 					clearTimeout(this._deleteTime);
@@ -295,8 +295,8 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		dojo.byId("detail_dueDate").innerHTML = item.dueDate=="infinite"?"infinite":dojo.date.locale.format( 
 				item.dueDate, {selector:'date',
 						formatLength:'long',
-	                datePattern:'MMM dd, yyyy', 
-	                timePattern:'HH:mm:ss'}).toLowerCase();
+	                datePattern:'MMM d, yyyy', 
+	                timePattern:'HH:mm:ss'}).toUpperCase();
 		dojo.byId("detail_creator").innerHTML = davinci.review.Runtime.getDesigner();
 		
 		var files="<ul>";
@@ -307,14 +307,15 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		});
 		files+="</ul>";
 		dojo.byId("detail_files").innerHTML = files;
+		dojo.addClass("detail_files","reviewFileIcon")
 		
-		
-		var reviewer="<ul>";
+		/*var reviewer="<ul>";
 		dojo.forEach(item.reviewers,function(i){
 			reviewer+="<li>"+i.name+"</li>";
 		});
 		reviewer+="</ul>";
 		dojo.byId("detail_reviewers").innerHTML = reviewer;
+		*/
 		dojo.removeClass("detail_dueDate","closed");
 		dojo.removeClass("detail_dueDate","notClosed");
 		if(item.closed){

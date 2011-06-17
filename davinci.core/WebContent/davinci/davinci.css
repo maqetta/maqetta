@@ -630,8 +630,8 @@ davinci_top_bar .dijitButtonNode {
     border-width: 1px;
     border-style: solid;
     border-color: #D1D1D1 #989898 #989898 white;
+    border-top-color: transparent;
     font-family: tahoma, helvetica, arial, sans-serif;
-/*    font-size: 9pt;*/
     cursor: pointer;
     padding: 1px;
 }

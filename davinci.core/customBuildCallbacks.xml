@@ -231,6 +231,10 @@
 		</java>
 		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
 		<copy toFile="${target.folder}/WebContent/release/dojo/workspace/app.css" file="${target.folder}/WebContent/workspace/app.css" overwrite="true" />
+		<!-- Copy over original workspace/maqetta folder -->
+		<copy todir="${target.folder}/WebContent/release/dojo/workspace/maqetta">
+			<fileset dir="${target.folder}/WebContent/workspace/maqetta"/>
+		</copy>
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>

@@ -16,21 +16,20 @@ davinci.ui.about=function(){
 		}
 	});
 	var formHTML="<div class='about_container'>"
-		+ "<div class='about_title'>Maqetta</div>"
 		+ "<div class='about_version'>Version: "+davinci.version+"</div>";
 	var ri = davinci.repositoryinfo,
 		revision = ri.revision;
-	if(revision){
-		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+revision+"'>"+revision.substr(0,15)+"...</a></div>";
-	}
 	var bd = ri.buildtime;
 	var date = dojo.date.stamp.fromISOString(bd);
 	if(date){
 		bd = dojo.date.locale.format(date, {formatLength: 'medium'});
 	}
     if(bd){
-        formHTML += "<div class='about_build'>Date: "+bd+"</div>";
+        formHTML += "<div class='about_date'>Date: "+bd+"</div>";
     }
+	if(revision){
+		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+revision+"'>"+revision.substr(0,15)+"...</a></div>";
+	}
 	formHTML += "</div>";
 	dialog.setContent(formHTML);
 	dialog.show();

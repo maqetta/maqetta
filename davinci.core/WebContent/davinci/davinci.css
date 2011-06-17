@@ -1195,3 +1195,10 @@ davinci_top_bar .dijitButtonNode {
 #unsupportedBrowserDialog .maqButtonArea {
     text-align: right;
 }
+
+.about_container {
+	padding:0px 10px 3px 6px;
+}
+.about_container DIV {
+	line-height: 1.5em;
+}

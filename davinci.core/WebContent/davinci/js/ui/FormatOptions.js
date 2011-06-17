@@ -6,8 +6,8 @@ dojo.require("davinci.js.Format");
 dojo.require("davinci.workbench.PreferencePane");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.js", "jsLang");
-var langObj = dojo.i18n.getLocalization("davinci.js", "jsLang");
+dojo.requireLocalization("davinci.js", "js");
+var langObj = dojo.i18n.getLocalization("davinci.js", "js");
 
 dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane, {
 	getPanel : function (){

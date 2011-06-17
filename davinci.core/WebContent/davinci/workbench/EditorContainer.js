@@ -1,5 +1,9 @@
 dojo.provide("davinci.workbench.EditorContainer");
 dojo.require("davinci.workbench._ToolbaredContainer");
+
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.workbench", "workbench");  
+
 dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredContainer, {
 
 	constructor:function(args){
@@ -87,9 +91,10 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 	},
 	_close : function(editor, dirtycheck){
 		dojo.publish("/davinci/ui/EditorClosing", [editor]);
+		var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
-		     okToClose=confirm("This file has unsaved changes. Are you sure you want to close WITHOUT saving?");
+		     okToClose=confirm(langObj.fileHasUnsavedChanges);
 		}
 		if (okToClose ){
 	    	

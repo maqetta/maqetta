@@ -7,6 +7,9 @@ dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.Tree");
 dojo.require("davinci.workbench.OutlineProvider");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.workbench", "workbench"); 
+
 dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 	
 	outlineProvider:null,
@@ -20,6 +23,7 @@ dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 	editorChanged : function(changeEvent){
 	
 		try {
+			var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
 			var editor=changeEvent.editor;
 		
 			if (this.currentEditor)
@@ -58,7 +62,7 @@ dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 			}
 			else
 			{
-				this.containerNode.innerHTML="An outline is not available";
+				this.containerNode.innerHTML=langObj.outlineNotAvailable;
 				return;
 			}
 			

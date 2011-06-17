@@ -2,7 +2,7 @@ dojo.provide("davinci.ui.Resource");
 
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "uiLang");
+dojo.requireLocalization("davinci.ui", "ui");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.Dialog");
@@ -17,7 +17,7 @@ dojo.mixin(davinci.ui.Resource, {
 	 * @param action {string} newfile|newhtml|newcss|newjs|newfolder|openfile|saveas
 	 */
 	fileDialog : function(action){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.action=action;
 		var dialogTitle;
 		var fileNameLabel = langObj.fileName;
@@ -116,7 +116,7 @@ dojo.mixin(davinci.ui.Resource, {
 		}
 	},
 	addFiles : function(){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var formHtml = 
 		'<label for=\"fileDialogParentFolder\">'+ langObj.parentFolder +' </label><div id="fileDialogParentFolder" ></div>'+
         '<div id="btn0" class="browse">'+ langObj.selectFiles +'</div><br/>'+
@@ -208,7 +208,7 @@ dojo.mixin(davinci.ui.Resource, {
 		return proposedName;
 	},
 	_checkFileName : function(args){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var dialog = dijit.byId("fileDialog");
 		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
 		var resource = resources[0];
@@ -294,7 +294,7 @@ dojo.mixin(davinci.ui.Resource, {
 	},
 	deleteAction : function()
 	{ 
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var resource=this.getSelectedResource();
 		if (resource)
 		{

@@ -5,8 +5,8 @@ dojo.require("davinci.ui.widgets.ThemeSelection");
 dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.actions", "actionsLang");
-var langObj = dojo.i18n.getLocalization("davinci.actions", "actionsLang");
+dojo.requireLocalization("davinci.actions", "actions");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 
 dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 	

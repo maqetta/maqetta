@@ -4,8 +4,8 @@ dojo.require("dijit.Tree");
 dojo.require("dojox.data.FileStore");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.actions", "actionsLang");
-var langObj = dojo.i18n.getLocalization("davinci.actions", "actionsLang");
+dojo.requireLocalization("davinci.actions", "actions");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 
 dojo.declare("davinci.actions.AddLinkAction", davinci.actions.Action, {
 	

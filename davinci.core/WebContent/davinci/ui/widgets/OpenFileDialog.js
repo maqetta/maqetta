@@ -4,7 +4,7 @@ dojo.require("davinci.ui.Panel");
 dojo.require("davinci.resource");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "uiLang");
+dojo.requireLocalization("davinci.ui", "ui");
 
 //
 //  usage:
@@ -24,7 +24,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 	
 	show : function(){
 	
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 			var data={
 					file  : null
 					

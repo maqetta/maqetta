@@ -12,12 +12,12 @@ dojo.require("dijit.form.ComboBox");
 dojo.require("davinci.ui.Download");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "uiLang");
+dojo.requireLocalization("davinci.ui", "ui");
 
 dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 	
 	buildRendering : function(){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.inherited(arguments);
 		this._files=davinci.ui.Resource.getSelectedResources();
 		var uiArray = ["<div class='downloadSelectedHeader'>"+langObj.selectedFiles+"</div>"];

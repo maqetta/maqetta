@@ -6,8 +6,8 @@ dojo.require("dijit.layout.LayoutContainer");
 dojo.require("davinci.ui.widgets.OpenFileDialog");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "veLang");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 
 dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInput, {
 	

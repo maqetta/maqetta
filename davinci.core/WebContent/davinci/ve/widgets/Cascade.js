@@ -7,6 +7,9 @@ dojo.require("davinci.workbench.Preferences");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.ve.widget");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");  
+
 dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 
 	target : null,
@@ -114,11 +117,12 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var askUser = false;
 		// New logic: prompt user only if theme CSS files are going to change
 		var content = null;
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(this._values[this._targetValueIndex].type=="theme" &&
 				   editorPrefs['cssOverrideWarn'] &&
 					this._editor.supports("MultiPropTarget")){
 			askUser = true;
-            content = "This change will modify one of the CSS style rules defined within a 'CSS theme' and therefore probably impact other widgets on a global basis.<br><br>Instead of changing the theme CSS files, it is usually better to add a class to this widget (at top of Properties palette) and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br><br>OK to proceed with this change?";
+            content = langObj.changeWillModify;
         }
 		// Old prompt if changing app.css or other non-theme CSS file:
 		// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";
@@ -201,7 +205,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_onChangeOverride : function(){
-		alert("This value is overriden and can not be changed.");
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		alert(langObj.valueIsOverriden);
 		return false;
 	},
 	
@@ -386,6 +391,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			dojo.addClass(this.container,"dijitHidden");
 			return;
 		}
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		dojo.removeClass(this.container,"dijitHidden");
 		this._buildCssRuleset();
 		function makeOnChange(target){return function(){return this._onChange({target:target});};}
@@ -399,7 +405,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		row.className = "propApplyToLabelRow";
 		column = dojo.doc.createElement("td");
 		column.colSpan = '3';
-		column.innerHTML = "Apply to which style rule:";
+		column.innerHTML = langObj.applyToWhich;
 		column.className = "propApplyToLabelCell";
 		row.appendChild(column);
 		table.appendChild(row);

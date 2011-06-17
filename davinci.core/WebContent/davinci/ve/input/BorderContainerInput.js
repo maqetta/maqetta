@@ -6,8 +6,8 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.LayoutContainer");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "veLang");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 dojo.requireLocalization("dijit", "common");
 var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
@@ -92,7 +92,7 @@ dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.Container
 		
 	onChange: function(event){
 		//debugger;
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var checked = 0;
 		var obj = dijit.byId('leftCheckBox');
 		checked += obj.checked ? 1 : 0;

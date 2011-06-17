@@ -8,7 +8,8 @@
 		//about.js
 		"aboutMaqetta":"About Maqetta",
 		"productVersion":"Version: ${0}",
-		"build":"Build: ${0}",
+		//"build":"Build: ${0}",
+		"build":"Build: <a href='https://github.com/maqetta/maqetta/commit/${0}'> ${1}...</a> ",
 		
 		//Download.js
 		"library":"Library",//used in UserLibraries.js as well

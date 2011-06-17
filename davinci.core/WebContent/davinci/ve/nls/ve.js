@@ -83,6 +83,11 @@
 		"stackContainerInputHelp":"Enter a comma-separated list of values, each value is used as the label.<br /> If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
 		
 		//input/TreeInput.js
-		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line. <br /> <i>Example:</i> <br/>1<br /> &gt;1.1<br />&gt;1.2<br />2"
+		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line. <br /> <i>Example:</i> <br/>1<br /> &gt;1.1<br />&gt;1.2<br />2",
+		
+		//widgets/Cascade.js
+		"changeWillModify":"This change will modify one of the CSS style rules defined within a 'CSS theme' and therefore probably impact other widgets on a global basis.<br><br>Instead of changing the theme CSS files, it is usually better to add a class to this widget (at top of Properties palette) and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br><br>OK to proceed with this change?",
+		"valueIsOverriden":"This value is overriden and can not be changed.",
+		"applyToWhich":"Apply to which style rule:"
 
 })

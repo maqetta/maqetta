@@ -3,7 +3,7 @@ dojo.require("davinci.actions.Action");
 dojo.require("davinci.ve.States");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("davinci.ve", "ve");
 
 
 dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
@@ -11,7 +11,7 @@ dojo.declare("davinci.ve.AddState", davinci.actions.Action, {
 	run: function(context){
 		// TODO: Replace dialog with UI to add nodes inline to list
 		// FIXME: Localize state action messages
-		var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var state,
 		widget = this.getWidget(),
 		dialogId = "createStateDialog",

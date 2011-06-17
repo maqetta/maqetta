@@ -5,11 +5,11 @@ dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Button");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "uiLang");
+dojo.requireLocalization("davinci.ui", "ui");
 
 // Shows "About daVinci" dialog
 davinci.ui.about=function(){
-	var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+	var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 	var	dialog = new dijit.Dialog({
 		id: "aboutMaqetta",
 		title:langObj.aboutMaqetta,
@@ -23,7 +23,7 @@ davinci.ui.about=function(){
 	var ri = davinci.repositoryinfo,
 		revision = ri.revision;
 	if(revision){
-		formHTML += "<div class='about_build'>Build: <a href='https://github.com/maqetta/maqetta/commit/"+revision+"'>"+revision.substr(0,15)+"...</a></div>";
+		formHTML += "<div class='about_build'>"+dojo.string.substitute(langObj.build, [revision, revision.substr(0,15)])+"</div>";
 	}
 	var bd = ri.buildtime;
     if(bd){

@@ -10,7 +10,7 @@ dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ui", "uiLang");
+dojo.requireLocalization("davinci.ui", "ui");
 
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebaseDownload");
@@ -32,7 +32,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	_tableDiv : null,
 
 	buildRendering : function(){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "uiLang");
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.inherited(arguments);
 		
 		this._handles = [];

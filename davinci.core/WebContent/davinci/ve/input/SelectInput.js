@@ -2,8 +2,8 @@ dojo.provide("davinci.ve.input.SelectInput");
 dojo.require("davinci.ve.input.OptionsInput");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "veLang");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "veLang");
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 
 dojo.declare("davinci.ve.input.SelectInput", davinci.ve.input.OptionsInput, {
 	

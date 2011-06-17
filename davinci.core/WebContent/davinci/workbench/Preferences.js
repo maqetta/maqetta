@@ -1,6 +1,10 @@
 dojo.provide("davinci.workbench.Preferences");
 dojo.require("davinci.ui.Panel");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.workbench", "workbench");
+dojo.requireLocalization("dijit", "common");
+
 dojo.mixin(davinci.workbench.Preferences,	{
 	
 	_allPrefs: {},
@@ -23,24 +27,26 @@ dojo.mixin(davinci.workbench.Preferences,	{
 	
 	showPreferencePage: function(){
 		this._loadExtensions();
+		var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 	    var prefJson = davinci.workbench.Preferences.getPrefJson();
  	    if(!prefJson || prefJson.length < 1) {
  	    	
- 	    	alert("no user preferences...")
+ 	    	alert(langObj.noUserPref)
  	    	return;
  	    	
  	    }
     	var html_template = "<div dojoType='dijit.layout.BorderContainer' style='width: 700px; height: 500px;' gutters='false' liveSplitters='true' id='preferencesContainer'>"+
 		    "<div dojoType='dijit.layout.ContentPane' id='pref.TreePane' splitter='true' region='leading' style='width: 200px;' minSize='100' maxSize='300'></div>"+
 		    "<div dojoType='dijit.layout.ContentPane' region='bottom' style='height: 25px'>"+
-			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.save();\">Save</button></td>"+
-			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.restoreDefaults();\">Restore Defaults</button></td>"+
-				"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.finish();\">Cancel</button></td>"+
+			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.save();\">"+dijitLangObj.buttonSave+"</button></td>"+
+			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.restoreDefaults();\">"+langObj.restoreDefaults+"</button></td>"+
+				"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.finish();\">"+dijitLangObj.buttonCancel+"</button></td>"+
 			"</div>"+
 		    "<div dojoType='dijit.layout.ContentPane' region='center' id='pref.RightPane'></div>"+
 		 "</div>";
 
-		var	dialog = new dijit.Dialog({id: "preference.main.dialog", title: "Preferences", "content": html_template, onCancel:function(){this.destroyRecursive(false);}});	
+		var	dialog = new dijit.Dialog({id: "preference.main.dialog", title: langObj.preferences, "content": html_template, onCancel:function(){this.destroyRecursive(false);}});	
 
 		var itemStore = new dojo.data.ItemFileReadStore({data:prefJson, jsId: "prefTreeDataStore"});	
 		var forestModel = new dijit.tree.ForestStoreModel({jsId:"fileModel",labelAttr: "name", store:itemStore}) ;

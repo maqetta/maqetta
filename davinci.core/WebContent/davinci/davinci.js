@@ -32,7 +32,6 @@ dojo.require("davinci.actions.UndoAction");
 dojo.require("davinci.actions.SelectThemeAction");
 dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.actions.RedoAction");
-dojo.require("davinci.actions.AddLinkAction");
 dojo.require("davinci.actions.DownloadAction");
 dojo.require("davinci.actions.StickyNoteAction");
 dojo.require("davinci.actions.SaveAsWidget");

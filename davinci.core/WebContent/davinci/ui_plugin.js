@@ -283,13 +283,6 @@
 								
 				 },
 				 {
-					    id: "davinci.ui.addLink",
-					    action: "davinci.actions.AddLinkAction",
-					    label: "Add link",
-							menubarPath: "delete"		
-								
-				 },
-				 {
 					    id: "davinci.ui.download",
 					    action: "davinci.actions.DownloadAction",
 					    label: "Download",

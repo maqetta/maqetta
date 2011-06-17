@@ -1,7 +1,5 @@
 dojo.provide("davinci.ve.States");
-console.log('before dojo.require davinci.maqetta.States');
 dojo.require("davinci.maqetta.States");
-console.log('after dojo.require davinci.maqetta.States');
 //dojo.require("davinci.ve.commands.EventCommand");
 dojo.require("davinci.ve.commands.StyleCommand");
 

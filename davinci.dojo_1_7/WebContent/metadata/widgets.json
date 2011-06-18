@@ -730,6 +730,11 @@
                 "style": "width: 200px;"
             },
             "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
             "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
         },
         {
@@ -743,6 +748,11 @@
                 "style": "width: 200px;"
             },
             "resizable": "width",
+             "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
             "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
         },
         {
@@ -1663,7 +1673,11 @@
         {
             "name": "ExpandingTextArea",
             "type": "dojox.mobile.ExpandingTextArea",
-            "category": "mobile"
+            "category": "mobile",
+            "inlineEdit": {
+                "displayOnCreate": false,
+                "multiLine": false
+            },
         },
         {
             "name": "FixedSplitter",
@@ -1709,12 +1723,21 @@
         {
             "name": "TextArea",
             "type": "dojox.mobile.TextArea",
-            "category": "mobile"
+            "category": "mobile",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
         },
         {
             "name": "TextBox",
             "type": "dojox.mobile.TextBox",
-            "category": "mobile"
+            "category": "mobile",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false
+            }
         },
         {
             "name": "ToggleButton",

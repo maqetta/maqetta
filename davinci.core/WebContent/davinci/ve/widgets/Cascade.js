@@ -486,6 +486,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		// of interactive states, not just "Normal" or the current state
 		// FIXME: The default value of this checkbox should be true if there
 		// is a custom value for the property for the current state, else false.
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var state=davinci.ve.states.getState();
 		var isNormalState = davinci.ve.states.isNormalState(state);
 		if(!isNormalState){
@@ -497,7 +498,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			this._whichStateInputElement = whichStateInputElement;
 			column.appendChild(whichStateInputElement);
 			var whichStateLabelElement = dojo.create("label", {className:'propWhichStateLabel'});
-			whichStateLabelElement.innerHTML = " Only apply to current state ("+state+")";
+			whichStateLabelElement.innerHTML = dojo.string.substitute(langObj.onlyApplyToState,[state]);
 			column.appendChild(whichStateLabelElement);
 			column.className = "propWhichStateCell";
 			row.appendChild(column);
@@ -708,18 +709,21 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		}
 	},
 	_formatRuleString : function(r){
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(r.type=="element.style"){
 			return "element.style";
 		}
 		var s = "";
 		if(r.type=="proposal"){
-			s+="[class:" + r.className + " - New rule in " + this.targetFile + "] ";
+			//s+="[class:" + r.className + " - New rule in " + this.targetFile + "] ";
+			s+=dojo.string.substitute(langObj.newRule, [r.className,this.targetFile]);
 			s+=r.ruleString;
 		}else{
 			var rule = r.rule;
 			
 			if(r.className){
-				s+="[class:" + r.className + " - Existing rule in " + this.targetFile + "] ";
+				//s+="[class:" + r.className + " - Existing rule in " + this.targetFile + "] ";
+				s+=dojo.string.substitute(langObj.existingRule, [r.className,this.targetFile]);
 			}else if(r.type=="theme"){
 				s+="[" + r.type + "] ";
 			}
@@ -735,10 +739,14 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			if(file)
 				s += "  (" + file.url || file.relativeURL;
 			
-			if(r.property)
-				s += " line:" + r.property.startLine+ ")";
-			else
-				s += " line:" + rule.startLine+ ")";
+			if(r.property){
+				//s += " line:" + r.property.startLine+ ")";
+				s += dojo.string.substitute(langObj.line,[r.property.startLine]);
+			}
+			else{
+				//s += " line:" + rule.startLine+ ")";
+				s += dojo.string.substitute(langObj.line,[rule.startLine || langObj.propUndefined]);
+			}
 		}
 		
 		return s;

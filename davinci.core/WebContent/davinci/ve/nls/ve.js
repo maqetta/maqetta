@@ -88,6 +88,15 @@
 		//widgets/Cascade.js
 		"changeWillModify":"This change will modify one of the CSS style rules defined within a 'CSS theme' and therefore probably impact other widgets on a global basis.<br><br>Instead of changing the theme CSS files, it is usually better to add a class to this widget (at top of Properties palette) and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br><br>OK to proceed with this change?",
 		"valueIsOverriden":"This value is overriden and can not be changed.",
-		"applyToWhich":"Apply to which style rule:"
+		"applyToWhich":"Apply to which style rule:",
+		"onlyApplyToState":" Only apply to current state (${0})",
+		"newRule":"[class: ${0} - New rule in ${1}] ",
+		"existingRule":"[class: ${0} - Existing rule in ${1}] ",
+		"line":" line: ${0})",
+		"propUndefined":"undefined",
+		
+		//widgets/WidgetToolBar.js
+		"toolBarFor":"for: ",
+		"toolBarClass":"class: "
 
 })

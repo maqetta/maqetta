@@ -8,6 +8,7 @@ dojo.require("davinci.ui.widgets.OpenFileDialog");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite], {
 	buildRendering: function(){
@@ -47,9 +48,10 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 			var okButton =   dojo.doc.createElement("button");
 			
 			var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+			var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 			var div =  dojo.doc.createElement("div", {style:"height:100%"});
 			div.appendChild(fileDialog.domNode);
-			okButton.innerHTML = "OK";
+			okButton.innerHTML = dijitLangObj.buttonOk;
 			var container =  new dijit.layout.ContentPane({style :'width: 100%; height: 250px;'});
 			container.domNode.appendChild(div);
 			var topDiv =  dojo.doc.createElement("div");

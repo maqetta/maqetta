@@ -16,7 +16,7 @@ dojo.declare("davinci.actions.OpenThemeEditor", null, {
 		if(this._themeChooser.get('numberOfThemes') > 0)
 			diag = this._themeChooser;
 		else
-			diag = "No editable themes found in your workspace.  Please create a new theme from one of the Read Only themes";
+			diag = langObj.noEditableThemes;
 		//this._themeChooser.set('value', theme);
 		davinci.Workbench.showModal(diag, langObj.editTheme, "width:110px");
 		dojo.connect(this._themeChooser, "onChange", this, "_onChange");

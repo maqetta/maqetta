@@ -1,6 +1,8 @@
 dojo.provide("davinci.ui.widgets.DocileDialog");
 
 dojo.require("dijit.Dialog");
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
 
 davinci.ui.widgets.DocileDialog.instance = 0;
 
@@ -39,7 +41,8 @@ dojo.declare("davinci.ui.widgets.DocileDialog", null, {
 		check.type="checkbox";
 		dojo.connect(check, "onchange", this, makeOnChangeAlways(check));	
 		
-		text.innerHTML = "&nbsp;&nbsp;&nbsp;" + (args.disableText || "Don't show again") + "<br><br>";
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		text.innerHTML = "&nbsp;&nbsp;&nbsp;" + (args.disableText || langObj.dontShowAgain) + "<br><br>";
 		shouldShowAgain.appendChild(check);
 		shouldShowAgain.appendChild(text);
 		topDiv.appendChild(contentDiv);

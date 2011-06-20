@@ -1,6 +1,8 @@
 dojo.provide("davinci.ui.OpenThemeDialog");
 dojo.require("davinci.ui.widgets.ThemeSelection");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
 
 dojo.declare("davinci.ui.OpenThemeDialog",   [dijit._Widget, dijit._Templated], {
 	
@@ -10,11 +12,11 @@ dojo.declare("davinci.ui.OpenThemeDialog",   [dijit._Widget, dijit._Templated], 
 	_themeChooser : null,
 	
 	startup : function(){
-		
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.inherited(arguments);
 		var value = this._themeChooser.get('numberOfThemes') ;
 		if(value<1){
-			alert( "No user themes found in workspace.  Please create a new theme before editing.");
+			alert(langObj.noUserThemes);
 			setTimeout(dojo.hitch(this,function(){
 					 				
 								    this.destroyRecursive();

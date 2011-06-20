@@ -30,7 +30,7 @@ davinci.ui.about=function(){
 		bd = dojo.date.locale.format(date, {formatLength: 'medium'});
 	}
     if(bd){
-        formHTML += "<div class='about_date'>Date: "+bd+"</div>";
+        formHTML += "<div class='about_date'>"+dojo.string.substitute(langObj.productDate,[bd])+"</div>";
     }
 	if(revision){
 		formHTML += "<div class='about_build'>"+dojo.string.substitute(langObj.build, [revision, revision.substr(0,15)])+"...</a></div>";

@@ -1,4 +1,7 @@
 ({
+		//DocileDialog.js
+		"dontShowAgain":"Don't show again",
+	
 		//FileFieldDialog.js
 		"selectFile":"Select a file",
 		
@@ -9,6 +12,7 @@
 		"aboutMaqetta":"About Maqetta",
 		"productVersion":"Version: ${0}",
 		//"build":"Build: ${0}",
+		"productDate":"Date: ${0}",
 		"build":"Build: <a href='https://github.com/maqetta/maqetta/commit/${0}'> ${1}...</a> ",
 		
 		//Download.js
@@ -24,6 +28,9 @@
 		
 		//NewTheme.js
 		"themeAlreadyExists":"Theme already Exists!",
+		
+		//OpenThemeDialog.js
+		"noUserThemes":"No user themes found in workspace. Please create a new theme before editing.",
 		
 		//SaveAsWidgetForm.js
 		//right now it has its own nls file called "common." 

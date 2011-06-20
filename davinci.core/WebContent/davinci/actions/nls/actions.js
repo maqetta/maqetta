@@ -13,6 +13,7 @@
 		
 		//OpenThemEditor.js
 		"editTheme":"Edit Theme",//It looks like it gets overridden, so we may not need this
+		"noEditableThemes":"No editable themes found in your workspace. Please create a new theme from one of the Read Only themes.",
 		
 		//SaveAsWidget.js
 		//Javier recommends we globalize this one later once he's done with it.

@@ -472,6 +472,11 @@ davinci.ve.widget.createWidget = function(data){
 		widget.setProperties(data.properties);
 	}
 
+	if(data.states){
+		widget.states = data.states;
+		widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, JSON.stringify(widget.states));
+	}
+
 	return widget;
 };
 

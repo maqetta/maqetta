@@ -15,6 +15,9 @@ dojo.require("dojox.data.QueryReadStore");
 dojo.require("dojox.widget.Toaster");
 dojo.require("dojo.string");
 dojo.require("dijit.Dialog");
+dojo.require("dijit.Tree");
+dojo.require("davinci.resource");
+dojo.require("davinci.model.Resource");
 
 dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templated],{
 	templateString: dojo.cache("davinci", "review/widgets/templates/PublishWizard.html"),
@@ -104,7 +107,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var doubleClick = function(item){
 			this.addFiles([item]);
 		};
-		var sourceTree= this.sourceTree = new davinci.ui.widgets.Tree({
+		var sourceTree= this.sourceTree = new dijit.Tree({
 			showRoot:false,
 			model: sourceTreeModel, 
 			
@@ -451,7 +454,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 				item.index = this.fileIndex++;
 				reviewFiles.push(item);
 				
-				var file = new davinci.resource.File(item.name,targetTreeModel.root);
+				var file = new davinci.model.Resource.File(item.name,targetTreeModel.root);
 				file.index = item.index;
 				targetTreeModel.root.children.push(file);
 			}
@@ -469,12 +472,12 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		}
 	},
 	addSelectFiles: function(){
-		var selections = this.sourceTree.getSelectedItems();
+		var selections = this.sourceTree.get("selectedItems");
 		this.addFiles(selections);
 	},
 	addFiles: function(files){
 		
-		var selections = this.sourceTree.getSelectedItems();
+		var selections = this.sourceTree.get("selectedItems");
 		if(files)
 			selections = files;
 		dojo.forEach(selections, dojo.hitch(this,function(item){

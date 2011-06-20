@@ -11,6 +11,7 @@ public class Constants {
 
 	public static final String REVIEW_INFO = "DAVINCI.REVIEW";
 	public static final String REVIEW_COOKIE_DESIGNER = "davinci_designer";
+	public static final String REVIEW_COOKIE_DESIGNER_EMAIL = "davinci_designer_email";
 	public static final String REVIEW_COOKIE_VERSION = "davinci_version";
 	public static final String REVIEW_COOKIE_FILE = "davinci_file";
 	public static final String REVIEW_COOKIE_CMTID = "davinci_commentId";
@@ -27,7 +28,7 @@ public class Constants {
 	public static final String EP_ATTR_MAIL_CONFIG_PASSWORD = "smtp.password";
 	
 	public static final String TEMPLATE_PROPERTY_FILE = "review.properties";
-	public static final String TEMPLATE_INVITATION_SUBJECT = "maqetta.review.invitationSubject";
+	public static final String TEMPLATE_INVITATION_SUBJECT_PREFIX = "maqetta.review.invitationSubject";
 	public static final String TEMPLATE_INVITATION = "maqetta.review.invitationTemplate";
 	public static final String TEMPLATE_COMMENT_NOTIFICATION_SUBJECT = "maqetta.review.commentNotificationSubject";
 	public static final String TEMPLATE_COMMENT = "maqetta.review.commentTemplate";

@@ -60,6 +60,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 				properties: dojo.mixin({}, this._oldData.properties, this._properties),
 				children: (this._children==null?this._oldData.children:this._children),
 				scripts: this._oldData.scripts,
+				states: this._oldData.states,
 				context:this._context
 				};
 		//}

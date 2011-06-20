@@ -435,7 +435,7 @@
     height:14px;
 }
 
-#detail_title {
+.detail_title {
 	background: url('img/review.gif') no-repeat 0% 50%;
 	margin: 0 0 10px 0;
 	padding: 0 0 0 20px;
@@ -444,10 +444,16 @@
 	color:	#4b7c9c;
 }
 
-#detail_role {
+.detail_role {
 	background: url('img/user_obj.gif') no-repeat;
-	margin: 0 60px 0 10px;
+	margin: 0 20px 0 10px;
 	padding: 0 0 0 16px;
+}
+
+.detail_file {
+	display: inline-block;
+	margin: 0 0 0 2px;
+	vertical-align: middle;
 }
 
 .notClosed{
@@ -464,13 +470,13 @@
 	padding: 0 0 0 16px;
 }
 
-#detail_creator {
+.detail_creator {
 	color: #4b7c9c;
 	margin: 0 0 0 10px;
 }
 
 .detail_div {
-	margin: 10px;
+	margin: 10px 0 10px 0;
 }
 
 .davinciAnnotationIcon{
@@ -609,4 +615,9 @@
 .review-tips {
 	color: silver;
 	font-style: italic;
+}
+
+.claro .dijitTreeIcon{
+	width: 16px;
+	height: 16px;
 }

@@ -25,7 +25,7 @@ dojo.declare("davinci.review.actions.ViewFileAction",davinci.actions.Action,{
 	
 	isEnabled: function(context){
 		var selection = davinci.Runtime.getSelection();
-		if(!selection) return false;
+		if(!selection || selection.length == 0) return false;
 		var item = selection[0].resource;
 		return item.elementType=="ReviewFile";
 	

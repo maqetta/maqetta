@@ -3,6 +3,7 @@
 @import url("../dojox/widget/Toaster/Toaster.css");
 @import url("../dojox/layout/resources/ResizeHandle.css");
 @import url("../dojox/html/resources/ellipsis.css");
+@import url("../dojox/form/resources/UploaderFileList.css");
 
 @import url("syntaxColors.css");
 @import url("propview.css");
@@ -629,8 +630,8 @@ davinci_top_bar .dijitButtonNode {
     border-width: 1px;
     border-style: solid;
     border-color: #D1D1D1 #989898 #989898 white;
+    border-top-color: transparent;
     font-family: tahoma, helvetica, arial, sans-serif;
-/*    font-size: 9pt;*/
     cursor: pointer;
     padding: 1px;
 }
@@ -1193,4 +1194,11 @@ davinci_top_bar .dijitButtonNode {
 
 #unsupportedBrowserDialog .maqButtonArea {
     text-align: right;
+}
+
+.about_container {
+	padding:0px 10px 3px 6px;
+}
+.about_container DIV {
+	line-height: 1.5em;
 }

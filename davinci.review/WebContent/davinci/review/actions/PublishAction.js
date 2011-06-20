@@ -1,7 +1,6 @@
 dojo.provide("davinci.review.actions.PublishAction");
 
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.resource");
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojox.data.QueryReadStore");
@@ -16,7 +15,6 @@ dojo.require("dojo.date.locale");
 dojo.require("dijit.form.MultiSelect");
 dojo.require("davinci.review.actions.ReviewFileTreeModel");
 dojo.require("davinci.review.widgets.Tree");
-dojo.require("davinci.review.model.Resource");
 dojo.require("dojox.validate.regexp");
 dojo.require("davinci.review.widgets.PublishWizard");
 dojo.require("dijit.Dialog");

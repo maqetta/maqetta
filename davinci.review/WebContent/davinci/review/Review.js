@@ -5,7 +5,6 @@ dojo.require("davinci.Workbench");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("davinci.Runtime");
 dojo.require("dojox.widget.Standby");
-dojo.require("davinci.resource");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.TabContainer");

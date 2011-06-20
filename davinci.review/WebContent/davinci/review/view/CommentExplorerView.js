@@ -6,7 +6,6 @@ dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
 dojo.require("davinci.ui.widgets.Tree");
-dojo.require("davinci.resource");
 dojo.require("dojo.date.locale");
 dojo.require("davinci.review.actions.OpenVersionAction");
 dojo.require("dijit.layout.ContentPane");
@@ -41,7 +40,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		dojo.connect(this.tree, 'onClick',dojo.hitch(this,this._click));
 		dojo.connect(this.tree,'_onNodeMouseEnter',dojo.hitch(this,this._over));
 		dojo.connect(this.tree,'_onNodeMouseLeave',dojo.hitch(this,this._leave));
-		this.tree.notifySelect=dojo.hitch(this, function (item){
+		this.tree.notifySelect=dojo.hitch(this, function (item){ //FIXME: use watch instead of notifySelect
 			var items = dojo.map(this.tree.getSelectedItems(),function(item){ return {resource:item};});
 			this.publish("/davinci/ui/selectionChanged",[items,this]);
 	    });
@@ -295,7 +294,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		dojo.byId("detail_dueDate").innerHTML = item.dueDate=="infinite"?"infinite":dojo.date.locale.format( 
 				item.dueDate, {selector:'date',
 						formatLength:'long',
-	                datePattern:'MMM dd, yyyy', 
+	                datePattern:'MMM dd, yyyy', //FIXME: hard-coded formats violate cultural conventions
 	                timePattern:'HH:mm:ss'}).toLowerCase();
 		dojo.byId("detail_creator").innerHTML = davinci.review.Runtime.getDesigner();
 		

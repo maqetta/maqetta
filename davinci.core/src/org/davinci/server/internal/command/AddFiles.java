@@ -23,6 +23,7 @@ public class AddFiles extends Command {
     @Override
     public void handleCommand(HttpServletRequest request, HttpServletResponse resp, User user) throws IOException {
         String path = request.getParameter("path");
+        resp.setContentType("application/json");
 
         // Create a factory for disk-based file items
         FileItemFactory factory = new DiskFileItemFactory();
@@ -57,11 +58,9 @@ public class AddFiles extends Command {
                 }
                 first = false;
                 String name = (String) iterator.next();
-                nms.append("{ file:'").append(name).append("'}");
+                nms.append("{ \"file\":\"").append(name).append("\"}");
             }
-            responseString = "<html>\n" + "<body>\n" + "  <textarea>\n" + "     [" + nms.toString() + "]"
-
-            + "\n" + "  </textarea>\n" + "</body>\n" + "</html>\n";
+            responseString = "[" + nms.toString() + "]";
 
         } catch (FileUploadException e) {
             // TODO Auto-generated catch block

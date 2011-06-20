@@ -1,6 +1,6 @@
-/* Contents will be replaced by our build script. */
-/* Holds output from 'svn info /path/to/davinci.core' */
+/*  build properties for about.js*/
 
 dojo.provide('davinci.repositoryinfo');
 
-davinci.repositoryinfo='Revision: unknown|';
+davinci.repositoryinfo.revision='@revision@';
+davinci.repositoryinfo.buildtime='@buildtime@';

@@ -15,7 +15,7 @@ dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 	
 	buildRendering : function(){
 		this.inherited(arguments);
-		this._files=davinci.model.Resource.getSelectedResources();
+		this._files=davinci.ui.Resource.getSelectedResources();
 		var uiArray = ["<div class='downloadSelectedHeader'>Selected Files</div>"];
 		uiArray.push("<div class='downloadSelectedList'>");
 		if(!this._files){

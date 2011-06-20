@@ -48,9 +48,6 @@
             "datatype": "number",
             "defaultValue": 1000
         },
-        "label": {
-            "datatype": "string"
-        },
         "checked": {
             "datatype": "boolean",
             "defaultValue": false

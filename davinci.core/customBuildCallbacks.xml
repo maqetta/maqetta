@@ -17,7 +17,6 @@
 	<!-- "About daVinci" dialog.                                               -->
 	<!-- ===================================================================== -->
 	<property environment="env"/>
-	<property name="manifest.file" value="${target.folder}/WebContent/davinci/davinci.manifest"/>
 	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
 
 	<!-- +++++++++++ Verify that "svn" or "svn.exe" is on the PATH +++++++++++ -->
@@ -62,12 +61,22 @@
         <fail message="ERROR - YOU NEED TO INSTALL A GIT COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
     </target>
 
-	<!--    Write "git describe" results to WebContent/pagedesigner.html, welcome.html...   -->
+	<!--    Write git revision SHA1 to WebContent/pagedesigner.html, welcome.html...   -->
 	<target name="update.revisions" depends="check.command.line.git">
-		<exec executable="git" outputproperty="git.describe" dir="${user.dir}/repository/maqetta">
-			<arg value="describe"/>
+		<exec executable="git" output="${env.buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
+			<arg value="log"/>
+            <arg value="-1"/>
 		</exec>
-		<filter token="revision" value="${git.describe}"/>
+        <loadfile srcfile="${env.buildDirectory}/git-log.out" property="git.log">
+            <filterchain>
+                <headfilter lines="1"/>
+                <tokenfilter>
+                    <replaceregex pattern="commit " replace=""/>
+                </tokenfilter>
+                <striplinebreaks/>
+            </filterchain>
+        </loadfile>
+		<filter token="revision" value="${git.log}"/>
 		<copy file="${target.folder}/WebContent/pagedesigner.html" tofile="${target.folder}/WebContent/pagedesigner.html.tmp" filtering="true"/>
 		<copy file="${target.folder}/WebContent/welcome.html" tofile="${target.folder}/WebContent/welcome.html.tmp" filtering="true"/>
 		<delete file="${target.folder}/WebContent/pagedesigner.html"/>
@@ -76,40 +85,30 @@
 		<move file="${target.folder}/WebContent/welcome.html.tmp" tofile="${target.folder}/WebContent/welcome.html"/>
 	</target>
 
-	<!--    Write "git describe" results to WebContent/davinci/repositoryinfo.js   -->
+	<!--    Write git revision SHA1 to WebContent/davinci/repositoryinfo.js   -->
 	<target name="update.repositoryinfo.js" depends="check.command.line.git">
-		<echo message="/* Contents will be replaced by our build script. */${line.separator}" file="${rep.info.file}"/>
-		<echo message="/* Holds output from 'git describe' */${line.separator}" file="${rep.info.file}" append="true"/>
-		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
-		<echo message="dojo.provide('davinci.repositoryinfo');${line.separator}" file="${rep.info.file}" append="true"/>
-		<echo message="${line.separator}" file="${rep.info.file}" append="true"/>
-
-		<exec executable="git" output="${rep.info.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
-			<arg value="describe"/>
-		</exec>
-		<replace file="${rep.info.file}.temp" token="${line.separator}" value="|"/>
-		<replaceregexp file="${rep.info.file}.temp" match="^" replace="davinci.repositoryinfo='"/>
-		<replaceregexp file="${rep.info.file}.temp" match="$" replace="';"/>
-		<concat destfile="${rep.info.file}" append="true">
-			<filelist files="${rep.info.file}.temp"/>
-		</concat>
-		<delete file="${rep.info.file}.temp"/>
+        <exec executable="git" output="${env.buildDirectory}/git-log.out" dir="${user.dir}/repository/maqetta">
+            <arg value="log"/>
+            <arg value="-1"/>
+        </exec>
+        <loadfile srcfile="${env.buildDirectory}/git-log.out" property="git.log">
+            <filterchain>
+                <headfilter lines="1"/>
+                <tokenfilter>
+                    <replaceregex pattern="commit " replace=""/>
+                </tokenfilter>
+                <striplinebreaks/>
+            </filterchain>
+        </loadfile>
+		<filter token="revision" value="${git.log}"/>
+        <copy file="${rep.info.file}" tofile="${rep.info.file}.tmp" filtering="true"/>
+        <delete file="${rep.info.file}"/>
+        <tstamp>
+            <format property="maqBuildTime" timezone="GMT" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
+        </tstamp>
+        <filter token="buildtime" value="${maqBuildTime}"/>
+        <move file="${rep.info.file}.tmp" tofile="${rep.info.file}" filtering="true"/>
 	</target>
-
-	<!--    Write "git describe" results to WebContent/davinci/davinci.manifest   -->
-	<target name="update.manifest" depends="check.command.line.git">
-		<echo message="# svninfo: " file="${manifest.file}.temp" />
-
-		<exec executable="git" output="${manifest.file}.temp" append="true"  dir="${user.dir}/repository/maqetta">
-			<arg value="describe"/>
-		</exec>
-		<replace file="${manifest.file}.temp" token="${line.separator}" value="|"/>
-		<concat destfile="${manifest.file}" append="true">
-			<filelist files="${manifest.file}.temp"/>
-		</concat>
-		<delete file="${manifest.file}.temp"/>
-	</target>
-
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do before the target build.jars                              -->
@@ -208,7 +207,6 @@
 		<echo message="Inserting git describe information"/>
 		<antcall target="update.revisions"/>
 		<antcall target="update.repositoryinfo.js"/>
-		<antcall target="update.manifest"/>
 
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
@@ -233,6 +231,10 @@
 		</java>
 		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
 		<copy toFile="${target.folder}/WebContent/release/dojo/workspace/app.css" file="${target.folder}/WebContent/workspace/app.css" overwrite="true" />
+		<!-- Copy over original workspace/maqetta folder -->
+		<copy todir="${target.folder}/WebContent/release/dojo/workspace/maqetta">
+			<fileset dir="${target.folder}/WebContent/workspace/maqetta"/>
+		</copy>
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>

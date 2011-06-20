@@ -21,6 +21,9 @@ dojo.declare("davinci.ve.Context", null, {
 	_bootstrapModules: "dijit.dijit",
 
 	constructor: function(args){
+		if(!args)
+			args ={};
+		
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -40,17 +43,7 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 
 		this.relativePrefix = this.relativePrefix || "";
-		
-//		this._subscriptions.push(dojo.subscribe("/davinci/ui/widget/replaced",
-//				dojo.hitch(this,function(newWidget, widget){
-//					if (this._selection)
-//					{
-//						var index=dojo.indexOf(this._selection,widget);
-//						if(index >= 0){
-//							this._selection[index]=newWidget;
-//						}
-//					}
-//				})));
+
 	},
 	
 
@@ -221,10 +214,11 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getBaseResource: function(options){
-		return davinci.model.Resource.findResource(this.getDocumentLocation());
+		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires) {
+		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
 		if (!type) {
 			return false;
 		}
@@ -582,16 +576,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		var frame = this.getFrameNode();
 		var loading = dojo.create("div",null, frame.parentNode, "first");
-//		dojo.style(loading, 'backgroundColor','red');
-/*		dojo.style(loading, 'position','absolute');
-		dojo.style(loading, 'left',containerNode.parentNode.clientLeft);
-		dojo.style(loading, 'top',containerNode.parentNode.clientTop);
-		dojo.style(loading, 'height',containerNode.parentNode.clientHeight);
-		dojo.style(loading, 'width',containerNode.parentNode.clientWidth);
-		dojo.style(loading, 'zIndex','110');*/
+
 		
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
 		dojo.addClass(loading, 'loading');
+
 		
 		this.setHeader({
 			title: data.title,

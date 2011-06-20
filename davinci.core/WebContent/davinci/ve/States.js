@@ -1,9 +1,9 @@
 dojo.provide("davinci.ve.States");
-dojo.require("workspace.maqetta.States");
+dojo.require("davinci.maqetta.States");
 //dojo.require("davinci.ve.commands.EventCommand");
 dojo.require("davinci.ve.commands.StyleCommand");
 
-dojo.declare("davinci.ve.States", workspace.maqetta.States, {
+dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 	
 	_update: function(widget, newState, oldState) {
 		this.inherited(arguments);

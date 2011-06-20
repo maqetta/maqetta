@@ -279,7 +279,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     	if (tempURL.indexOf('http://') === 0){ // absolute url
     		url = this._url;
     	} else {
-    		var file = davinci.model.Resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
+    		var file = davinci.resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
     		url = file.getURL();
     	}
     	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
@@ -359,7 +359,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		this._connectResizeHandle();
 		this._connectSimDiv();
 		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
-		this.resize(null);
         var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
         this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
         var storeId = this._widget._srcElement.getAttribute("store"); 
@@ -379,6 +378,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         	this._inline.eb.setValue( this._url); 
         	this._data = ' ';
         }
+        this.changeDataStoreType(this._dataStoreType);
         dojo.style('iedResizeDiv', 'background-color', 'white');
         var html = this._widget.getPropertyValue('escapeHTMLInData');
         var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');

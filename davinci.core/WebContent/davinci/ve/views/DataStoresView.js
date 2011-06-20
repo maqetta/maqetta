@@ -159,10 +159,10 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
         var popup = davinci.Workbench.createPopup({ partID: 'davinci.ve.datastores',
             domNode: tree.domNode, openCallback: tree.getMenuOpenCallback()});
         
-        tree.notifySelect = dojo.hitch(this, function (item)
-                {
-                    this.publish("/davinci/ui/selectionChanged",[item,this]);
-                }); 
+        var that = this;
+        tree.watch("selectedItem", function(prop, oldValue, newValue) {
+        	that.publish("/davinci/ui/selectionChanged",[newValue, that]);
+        }); 
 
         tree.startup();
         this.container.addChild(tree);        

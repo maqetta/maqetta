@@ -95,11 +95,11 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		
 		if(values.length){
 			var isOk = davinci.library.modifyLib(values);
-			davinci.model.Resource.workspaceChanged();
+			davinci.resource.resourceChanged("updated", davinci.resource.getRoot());
 			dojo.publish("/davinci/ui/libraryChanged");
 		}
 		
-		var pages = davinci.model.Resource.findResource("*.html", true, null, true);
+		var pages = davinci.resource.findResource("*.html", true, null, true);
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		for(var i=0;i<pages.length;i++){

@@ -2,6 +2,7 @@ package org.davinci.server.review;
 
 public class ReviewObject {
 	private String designerName;
+	private String designerEmail;
 	private String file;
 	private String commentId;
 	
@@ -36,6 +37,14 @@ public class ReviewObject {
 	}
 	public void setCommentId(String commentId) {
 		this.commentId = commentId;
+	}
+
+	public void setDesignerEmail(String designerEmail) {
+		this.designerEmail = designerEmail;
+	}
+
+	public String getDesignerEmail() {
+		return designerEmail;
 	}
 	
 	

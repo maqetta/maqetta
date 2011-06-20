@@ -73,8 +73,8 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 				return;
 			} else {
-				resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_DESIGNER,
-						reviewObject.getDesignerName()));
+				resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_DESIGNER,	reviewObject.getDesignerName()));
+				resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_DESIGNER_EMAIL, reviewObject.getDesignerEmail()));
 
 				if (reviewObject.getCommentId() != null)
 					resp.addCookie(new Cookie(Constants.REVIEW_COOKIE_CMTID,
@@ -119,6 +119,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 						reviewObject.setFile(fileName);
 						reviewObject.setCommentId(commentId);
+						reviewObject.setDesignerEmail(designer.getPerson().getEmail());
 
 					}
 					req.getSession()

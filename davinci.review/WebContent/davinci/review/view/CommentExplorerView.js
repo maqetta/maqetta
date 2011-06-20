@@ -6,7 +6,7 @@ dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
 dojo.require("davinci.ui.widgets.Tree");
-dojo.require("davinci.resource");
+dojo.require("davinci.model.Resource");
 dojo.require("dojo.date.locale");
 dojo.require("davinci.review.actions.OpenVersionAction");
 dojo.require("dijit.layout.ContentPane");
@@ -61,84 +61,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		var popup=davinci.Workbench.createPopup({ partID: 'davinci.review.reviewNavigator',
 				domNode: this.tree.domNode, openCallback:this.tree.getMenuOpenCallback()});
 
-		this.detailPopup = new dijit.TooltipDialog({
-			orient: function(/*DomNode*/ node, /*String*/ aroundCorner, /*String*/ corner){
-				var c = this._currentOrientClass;
-				if(c){
-					dojo.removeClass(this.domNode, c);
-				}
-				c = "dijitTooltipAB"+(corner.charAt(1) == 'L'?"Left":"Right")+" dijitTooltipRight reviewTooltipRight";
-					dojo.addClass(this.domNode, c);
-					this._currentOrientClass = c;
-			},
-			closable:true,
-			autofocus: false,
-            content: '<div id="detail_title"></div>'+
-				'<div>'+
-				'<div class="detail_div"><span>Your Role:</span><span id="detail_role"></span><span>Due by:</span><span id="detail_dueDate"></span></div>'+
-				'<div class="detail_div"><span>Created by:</span><span id="detail_creator"></div>'+
-				
-				'</div>'+
-				'<div><strong>Artifacts In Review<strong></div>'+
-				'<div id="detail_files"></div>'+
-				'<div><strong>Reviewers</strong></div>'+
-				'<div id="detail_reviewers"></div>',
-			onMouseEnter: dojo.hitch(this,function(){
-				if(this._deleteTime){
-					clearTimeout(this._deleteTime);
-					delete this._deleteTime;
-				}
-				if(this._showTime){
-					clearTimeout(this._showTime);
-					delete this._showTime;
-				}
-			}),
-			onMouseLeave: dojo.hitch(this,function(){
-				if(this._showTimer){
-					clearTimeout(this._showTimer);
-					delete this._showTimer;
-				}
-				var popup = this.detailPopup,
-					stack = dijit.popup._stack,
-					temp = [];
-				
-				
-				
-				while(dojo.some(stack, function(elem){return elem.widget == popup;})){
-					var top = stack.pop(),
-						wrapper = top.wrapper,
-						iframe = top.iframe,
-						widget = top.widget,
-						onClose = top.onClose;
-					if(top.widget != popup){
-						temp.push(top);
-						continue;
-					}
-
-					if(widget.onClose){
-						// TODO: in 2.0 standardize onHide() (used by StackContainer) and onClose() (used here)
-						widget.onClose();
-					}
-					dojo.forEach(top.handlers, dojo.disconnect);
-
-					// Move the widget plus it's wrapper off screen, unless it has already been destroyed in above onClose() etc.
-					if(widget && widget.domNode){
-						dijit.popup.moveOffScreen(widget.domNode);
-					}else{
-						dojo.destroy(wrapper);
-					}
-		                        
-					if(onClose){
-						onClose();
-					}
-				}
-				
-				dojo.forEach(temp,function(item){
-					stack.push(item);
-				});
-				
-			})
-        });
+		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
 		if(davinci.review.Runtime.getRole()!="Designer")
 		dojo.style(this.toolbarDiv, "display", "none");
 	},
@@ -286,57 +209,39 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 	_click: function(node){
 		this.select = node;
 	},
-	_insertInfo: function(node){
-		var item = node.item.elementType =="ReviewFile"?node.item.parent:node.item;
-		dojo.byId("detail_role").innerHTML = davinci.review.Runtime.getRole();
-		dojo.byId("detail_title").innerHTML = item.name;
-		
-		
-		dojo.byId("detail_dueDate").innerHTML = item.dueDate=="infinite"?"infinite":dojo.date.locale.format( 
-				item.dueDate, {selector:'date',
-						formatLength:'long',
-	                datePattern:'MMM dd, yyyy', 
-	                timePattern:'HH:mm:ss'}).toLowerCase();
-		dojo.byId("detail_creator").innerHTML = davinci.review.Runtime.getDesigner();
-		
-		var files="<ul>";
-		var c;
-		item.getChildren(function(children){c=children;},true);
-		dojo.forEach(c,function(i){
-			files+="<li>"+i.getLabel()+"</li>";
-		});
-		files+="</ul>";
-		dojo.byId("detail_files").innerHTML = files;
-		
-		
-		var reviewer="<ul>";
-		dojo.forEach(item.reviewers,function(i){
-			reviewer+="<li>"+i.name+"</li>";
-		});
-		reviewer+="</ul>";
-		dojo.byId("detail_reviewers").innerHTML = reviewer;
-		dojo.removeClass("detail_dueDate","closed");
-		dojo.removeClass("detail_dueDate","notClosed");
-		if(item.closed){
-			dojo.addClass("detail_dueDate","closed");
-		}
-		else{
-			dojo.addClass("detail_dueDate","notClosed");
-		}
-		
-	},
 	
-	_over: function(node,item){
-		
+	_over: function(node){
+		if(node.item.elementType != "ReviewVersion"){ return; }
 		if(!this._showTimer){
+			// Build the tooltip
+			var item = node.item, template = {}, c;
+			
+			template.detail_title = item.name;
+			template.detail_role = davinci.review.Runtime.getRole();
+			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : dojo.date.locale.format(item.dueDate, {
+				selector:'date',
+				formatLength:'long',
+                datePattern:'MMM dd, yyyy', 
+                timePattern:'HH:mm:ss'
+			});
+			template.detail_creator = davinci.review.Runtime.getDesigner()
+						+ "&nbsp;(" + davinci.review.Runtime.getDesignerEmail() + ")";
+			template.detail_files = "";
+			item.getChildren(function(children){ c = children; },true);
+			dojo.forEach(c, function(i){
+				var label = i.getLabel();
+				template.detail_files += "<div><span>"
+						+ label.substr(0, label.length - 4)
+						+ "</span><span class='dijitTreeIcon reviewFileIcon detail_file'></span></div>";
+			});
+			template.detail_reviewers = "";
+			dojo.forEach(item.reviewers, function(i){
+				template.detail_reviewers += "<div>" + i.name + "</div>";
+			});
+			item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
 			
 			this._showTimer = setTimeout(dojo.hitch(this, function(){
-				dijit.popup.open({popup: this.detailPopup,
-				around: node.domNode,orient:
-				{
-					'TR':'TL'
-				}});
-				this._insertInfo(node);
+				dijit.showTooltip(dojo.string.substitute(this.infoCardContent, template), node.rowNode);
 			}), 1000);
 		}
 		
@@ -347,49 +252,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			clearTimeout(this._showTimer);
 			delete this._showTimer;
 		}
-		if(this._deleteTime){
-			clearTimeout(this._deleteTime);
-			delete this._deleteTime;
-		}
-		var popup = this.detailPopup,
-			stack = dijit.popup._stack,
-			temp = [];
-		
-		this._deleteTime = setTimeout(dojo.hitch(this, function(){
-		
-		while(dojo.some(stack, function(elem){return elem.widget == popup;})){
-			var top = stack.pop(),
-				wrapper = top.wrapper,
-				iframe = top.iframe,
-				widget = top.widget,
-				onClose = top.onClose;
-			if(top.widget != popup){
-				temp.push(top);
-				continue;
-			}
-
-			if(widget.onClose){
-				// TODO: in 2.0 standardize onHide() (used by StackContainer) and onClose() (used here)
-				widget.onClose();
-			}
-			dojo.forEach(top.handlers, dojo.disconnect);
-
-			// Move the widget plus it's wrapper off screen, unless it has already been destroyed in above onClose() etc.
-			if(widget && widget.domNode){
-				dijit.popup.moveOffScreen(widget.domNode);
-			}else{
-				dojo.destroy(wrapper);
-			}
-                        
-			if(onClose){
-				onClose();
-			}
-		}
-		
-		dojo.forEach(temp,function(item){
-			stack.push(item);
-		});
-		}),1000);
+		dijit.hideTooltip(node.rowNode);
 	},
 	
 	
@@ -400,8 +263,9 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 	},
 	
 	_getIconClass: function(item, opened){
-
-		if (item.elementType=="ReviewVersion"){
+		// summary:
+		//		Return the icon class of the tree nodes
+		if (item.elementType == "ReviewVersion"){
 			if(item.isDraft) return "draft-open";
 			if(item.closed)return opened ? "reviewFolder-open-disabled":"reviewFolder-closed-disabled";
 			if(!item.closed) return opened ? "reviewFolder-open":"reviewFolder-closed";

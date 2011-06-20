@@ -121,7 +121,7 @@ dojo.mixin(davinci.ui.Resource, {
 		var	dialog = new dijit.Dialog({id: "addFiles", title:"Add Files",
 			onCancel:function(){this.destroyRecursive(false);}});	
 		
-		dojo.connect(dialog, 'onLoad', function(){
+		dialog.connect(dialog, 'onLoad', function(){
 			var folder=davinci.resource.getRoot();
 			var resource=davinci.ui.Resource.getSelectedResource();
 			if (resource)
@@ -129,7 +129,7 @@ dojo.mixin(davinci.ui.Resource, {
 				folder=(resource.elementType=='Folder'?resource:resource.parent);
 			}
 //			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-			dojo.byId('fileDialogParentFolder').innerHTML=folder.getPath();
+			dojo.byId('fileDialogParentFolder').innerText=folder.getPath();
 
 			var f0 = new dojox.form.Uploader({
 				label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
@@ -140,12 +140,15 @@ dojo.mixin(davinci.ui.Resource, {
 
 			var list = new dojox.form.uploader.FileList({uploader:f0}, "filelist");
 
-			dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ f0.upload(); });
+			var upload = dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ f0.upload(); });
 
 			dojo.connect(f0, "onComplete", function(dataArray){
 				dojo.forEach(dataArray, function(data){
 					folder.createResource(data.file, false, true);
 				});
+				dojo.disconnect(upload);
+				dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ dialog.destroyRecursive(false); });
+				dojo.byId("uploadBtn").innerText="Done"; //TODO: i18n
 			});
 		});
 		dialog.setContent(formHtml);

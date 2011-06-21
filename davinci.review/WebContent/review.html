@@ -35,6 +35,28 @@
     		davinci.Runtime.addPlugin("app/davinci/ve/themeEditor/themeEditor" );
                   
             davinci.Runtime.initialPerspective = "davinci.review.comment";
+            
+            <!-- Globalization -->
+    	    dojo.requireLocalization("davinci", "webContent");
+    	    function globalize()
+    	    {
+    	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
+    	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+    	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+    	      
+    	      //testing
+    	      //alert(dojo.byId("davinci_user_welcome").innerHTML);
+    	      //alert(dojo.byId("drop_down").containerNode);//do something with attachpoints-I'm still looking into this
+    	      //dojo.byId("drop_down_help").innerHTML = langObj.help;
+    	      //dojo.byId("drop_down").containerNode.innerHTML = langObj.help;
+    	      dojo.byId("drop_down_label").innerHTML = langObj.help;//temporary fix
+    	      
+    	      
+    	      dojo.byId("menu_help").innerHTML = langObj.help;
+    	      dojo.byId("menu_tutorials").innerHTML = langObj.tutorials;
+    	      dojo.byId("menu_about_maqetta").innerHTML = langObj.aboutMaqetta;
+    	    }
+    	    dojo.addOnLoad(globalize);
            
             function run(){
             	davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
@@ -102,12 +124,12 @@
 					<div id="davinci_user_container">
 						<span id="davinci_user_welcome">Welcome</span>
 						<span id="davinci_user"></span>
-						<div dojoType="dijit.form.DropDownButton">
-							<span>Help</span>
+						<div dojoType="dijit.form.DropDownButton" id="drop_down">
+							<span id="drop_down_help">Help</span>
 							<div dojoType="dijit.Menu">
-								<div dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html')">Help</div>
-								<div dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html#tutorials/tutorials')">Tutorials</div>
-								<div dojoType="dijit.MenuItem" onClick="davinci.ui.about()">About Maqetta</div>
+								<div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html')">Help</div>
+								<div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html#tutorials/tutorials')">Tutorials</div>
+								<div id="menu_about_maqetta" dojoType="dijit.MenuItem" onClick="davinci.ui.about()">About Maqetta</div>
 							</div>
 						</div>
 						<a id="davinci_logoff" href='javascript:davinci.review.Runtime.logoff()'>  Log Out</a>

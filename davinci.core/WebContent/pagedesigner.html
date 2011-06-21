@@ -19,8 +19,24 @@
     <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
+    
+    
+    <script type="text/javascript" src="app/dojo/dojo.js"></script>
 
     <script type="text/javascript">
+    <!-- Globalization -->
+	    dojo.requireLocalization("davinci", "webContent");
+	    //dojo.requireLocalization("", "webContent");//to test "Loading..."
+	    function globalize()
+	    {
+	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+	      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
+	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+	      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
+	    }
+	    dojo.addOnLoad(globalize);
+	    
     	davinci.useAppCache = true; // needed to provide FF "allow" warning
 
 //		davinci.Runtime.addPlugin( "app/davinci/ui" );	
@@ -37,15 +53,14 @@
 		{
 		    // Display a warning dialog for unsupported browsers
 			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)) {
+				var langObj = dojo.i18n.getLocalization("davinci","webContent");
                 var unsupportedDialog = new dijit.Dialog({
                     id: "unsupportedBrowserDialog",
-                    title: "Unsupported Browser",
-                    content: ["<p> Maqetta supports Firefox 4, Chrome and Safari 5.",
-                              "Please upgrade your browser to one of these versions. </p>",
-                              "<p> If you wish to continue with an unsupported browser, click \"Continue.\" </p>",
+                    title: langObj.unsupportedBrowser,
+                    content: [langObj.unsupportedNote,
                               "<div class='maqButtonArea'>",
                               "   <button dojoType='dijit.form.Button' type='submit'>",
-                              "      Continue",
+                              langObj.buttonContinue,
                               "   </button>",
                               "</div>"
                              ].join(" "),
@@ -87,7 +102,7 @@
   </head>
 
 	<body class="claro">
-		<div class="loading"><table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table></div>
+		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table></div>
 		<div id="davinci_app">
 			<div id="davinci_top_bar">
 					<div id="davinci_user_container">

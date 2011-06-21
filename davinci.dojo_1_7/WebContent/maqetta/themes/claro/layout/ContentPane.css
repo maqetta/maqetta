@@ -1,4 +1,5 @@
-/* ContentPane 
+
+  /* ContentPane 
  *	
  * .dijitContentPane
  * 	set padding for basic content pane
@@ -10,29 +11,28 @@
  * .dijitTabContainerBottom-dijitContentPane,
  * .dijitTabContainerRight-dijitContentPane
  * 	set background-color and padding of ContentPanes nested within TabContainer (can do top, left, bottom, or right) or Accordion Container
- *
+ 
  * .dijitAccordionContainer-dijitContentPane
  * 	set background-color and padding of ContentPane nested within Accordion
- *
+ 
  * .dijitSplitContainer-dijitContentPane, 
  *	set background-color and padding of ContentPane nested within a SplitContainer 
- *
+ 
  * .dijitBorderContainer-dijitContentPane
  *	set background-color and padding of ContentPane nested within a BorderContainer 
- */
+ 
+*/
 .claro .dijitContentPane {
-  padding: 8px;
+    padding : 8px;
 }
-/* nested layouts */
-.claro .dijitTabContainerTop-dijitContentPane,
-.claro .dijitTabContainerLeft-dijitContentPane,
-.claro .dijitTabContainerBottom-dijitContentPane,
-.claro .dijitTabContainerRight-dijitContentPane,
-.claro .dijitAccordionContainer-dijitContentPane {
-  background-color: #ffffff;
-  padding: 8px;
+
+  /* nested layouts 
+*/
+.claro .dijitTabContainerTop-dijitContentPane, .claro .dijitTabContainerLeft-dijitContentPane, .claro .dijitTabContainerBottom-dijitContentPane, .claro .dijitTabContainerRight-dijitContentPane, .claro .dijitAccordionContainer-dijitContentPane {
+    background-color : #fff;
+    padding : 8px;
 }
 .claro .dijitSplitContainer-dijitContentPane, .claro .dijitBorderContainer-dijitContentPane {
-  background-color: #ffffff;
-  padding: 8px;
+    background-color : #fff;
+    padding : 8px;
 }

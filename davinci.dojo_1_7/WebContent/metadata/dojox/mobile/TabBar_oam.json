@@ -44,5 +44,5 @@
             "datatype": "string"
         }
     },
-    "content": "<div></div>"
+    "content": "<ul></ul>"
 }

@@ -1618,7 +1618,24 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--tab-container.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
-            "isContainer": true
+            "isContainer": true,
+            "properties": {
+                "barType": "segmentedControl"
+            },
+            "children": [
+                {
+                    "type": "dojox.mobile.TabBarButton",
+                    "properties": {
+                        "selected": true
+                    }
+                },
+                {
+                    "type": "dojox.mobile.TabBarButton"
+                },
+                {
+                    "type": "dojox.mobile.TabBarButton"
+                }
+            ]
         },
         {
             "name": "TabBarButton",
@@ -1631,12 +1648,29 @@
             "name": "SpinWheel",
             "type": "dojox.mobile.SpinWheel",
             "category": "mobile",
-            "isContainer": true
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.SpinWheelSlot",
+                    "properties": {
+                        "labels": "['A','B','C','D','E']"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.SpinWheelSlot",
+                    "properties": {
+                        "labels": "['A','B','C','D','E']"
+                    }
+                }
+            ]
         },
         {
             "name": "SpinWheelSlot",
             "type": "dojox.mobile.SpinWheelSlot",
-            "category": "mobile"
+            "category": "mobile",
+            "properties": {
+                "labels": "['A','B','C','D','E']"
+            }
         },
         {
             "name": "SpinWheelDatePicker",

@@ -496,8 +496,14 @@ dojo.declare("davinci.ve.Context", null, {
             head += "</body></html>";
 
             var context = this;
-			window["loading" + this._id] = function() {
-				delete window["loading" + this._id];
+			window["loading" + context._id] = function() {
+				debugger;
+				if (!window["loading" + context._id]){
+					// For some reason we are getting calld twice
+					// but we only want to run this code once onLoad.
+					return;
+				}
+				delete window["loading" + context._id];
 				var callbackData = context;
 				try {
     				var win = dijit.getDocumentWindow(doc);

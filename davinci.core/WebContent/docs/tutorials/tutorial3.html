@@ -169,14 +169,22 @@ Maqetta also allows widget property values to have different values for differen
 For example, in one state a widget might have a blue background, red text, and a width of 300px, 
 but in another state that same widget might have a green background, yellow text and a width of 200px.</p>
 
+<p>To change the values of CSS properties such as size, position or color for a particular state, follow these steps:</p>
+<ul>
+<li>Set widget properties for the "Normal" state.</li>
+<li>In the States palette, create whatever states you need.</li>
+<li>For each widget that needs different CSS properties for states other than normal:
+<ul>
+<li>In the States palette, switch to the appropriate state.</li>
+<li>On the canvas or in the Outline palette, click on the appropriate widget to select it.</li>
+<li>In the Properties palette, go to the appropriate property and click on the "&gt;" arrow to the right of the widget to 
+show the CSS Details for that widget.</li>
+<li>In the CSS Details section, scroll down to the bottom and turn on the checkbox that says "Apply only to current state".</li>
+<li>Scroll back to the top of the CSS Details section and assign a new value for the given CSS property.</li>
+</ul>
+</li>
+</ul>
 <a name="future"><h2>Future directions</h2></a>
-
-<h3>Save as widget/gadget (and why the default state is named "Normal")</h3>
-
-<p>One of the longer-term goals with Maqetta is that users can create a user interface and then save as a widget 
-or gadget (e.g., Dojo widget, iWidget or OpenSocial Gadget). Because of this future goal, the "application state" feature 
-is designed to allow smooth migration into common widget states (e.g., Normal, Hover, Selected, Disabled). 
-This is the primary reason why the default state in the States palette is named "Normal".</p>
 
 <h3>Simple animated transition effects</h3></a>
 

@@ -20,46 +20,42 @@
 	<h2 class="test_section">CSS cascade features</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>Create a virgin user environment navigating away from daVinci, clearing browser cache,
+		<li>Create a virgin user environment navigating away from Maqetta, clearing browser cache,
 			killing the server, removing users/ folder, restarting the server, and navigating browser
-			back to daVinci. (For server-hosted, create a new user)</li>
+			back to Maqetta. (For server-hosted, create a new user)</li>
+		<li>Clone the "claro" theme into a new theme using the "New Theme" command. For example, create theme "mytheme".</li>
+		<li>Drag a Button onto canvas.</li>
 		<li>Issue a "New HTML File" command.</li>
-		<li><span style="color:red"><b><i>NOTE: For much of this test,
-			you will get prompts warning you that you
-			might be changing a global CSS style sheet. Say OK to these warnings,
-			but note that this will changes your theme CSS files. After running this
-			test, you'll want to make sure you recreate your user so that the
-			theme CSS files are restored to their original state.</i></b></span></li>		
 		<li>Drag a Button onto canvas.</li>
 		<li>Go to Properties palette and go to 'width' property.
 			Click on the right-pointing icon at the right side of the 'width'
 			property to show the CSS cascade.
-			<blockquote>You should see two entries, element.style and an entry that lists
-			various CSS selectors that includes within it ".claro .dijitButton .dijitButtonNode".
+			<blockquote>You should see a list of entries, element.style and then
+			various CSS selectors, at least one of which should include within it ".claro .dijitButtonNode".
 			</blockquote>
-			Up above in the type-in area of the 'width' property, type "200px".
-			Click OK for the CSS global warning. (And similarly for other warnings you
-			see later.)
-			<blockquote>button width should change to 200px.
-			</blockquote></li>
-		<li>Click on the show all rules checkbox.
-			<blockquote>You should see additional entries in the CSS cascade list,
-			including one whose selector is ".dijitButton".
+			Up above in the type-in area of the 'width' property, type "200px", then press Enter to try to commit the value.
+			<blockquote>This operation if completed would modify one of the CSS rules in the (read-only) Claro theme.
+			Any rules that would modify a read-only theme should be disabled. 
+			<b><i>This isn't working completely yet. Here is a pending bug: https://github.com/maqetta/maqetta/issues/258  </i></b>
 			</blockquote>
-			Click on the red "x" by the ".claro .dijitButton .dijitButtonNode" to remove
-			the 'width' property declaration from that style rule.
-			<blockquote>The button's width should no longer be 200px.
+			If you see the "about to change a global CSS rule, are you sure", click "Cancel".<br /><br /></li>
+		<li>Click on the Switch themes icon on the toolbar, and change to your new theme ("mytheme").</li>
+		<li>Go again to Properties palette and go to 'width' property and the CSS cascade view for that property.
+			Up above in the type-in area of the 'width' property, type "200px", then press Enter to try to commit the value.
+			You should see an "about to change a global CSS rule, are you sure". 
+			<blockquote>This operation attempts to change one of the style rules within one of the CSS files
+			for your new "mytheme" theme.
 			</blockquote>
-			Click on the radio button by the ".dijitButton" rule. 
-			Up above in the type-in area of the 'width' property, type "300px".
-			<blockquote>The button's width should now be 300px, although
-			this doesn't affect the actual button content, only the space it takes
-			up in browser layout.
+			Click "OK" to make
+			a global change such that all Buttons will have width 200px. The currently selected button
+			should now be 200px wide.<br /><br /></li>
+		<li>Drag another Button onto the canvas. It should be 200px wide also.</li>
+		<li>Click on the Switch themes icon on the toolbar, and change back to ("claro").
+			<blockquote>The buttons should revert back to their default size.
 			</blockquote>
-			Click on the radio button by the ".claro .dijitButton .dijitButtonNode" rule. 
-			Up above in the type-in area of the 'width' property, type "200px".
-			<blockquote>The overall button width should still be 300px, but the
-			button content area should now be 200px.
+		</li>
+		<li>Click on the Switch themes icon on the toolbar, and change back to ("mytheme").
+			<blockquote>The buttons should be 200px wide again.
 			</blockquote>
 		</li>
 		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
@@ -74,13 +70,13 @@
 	<h2 class="test_section">app.css files</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>Create a virgin user environment navigating away from daVinci, clearing browser cache,
+		<li>Create a virgin user environment navigating away from Maqetta, clearing browser cache,
 			killing the server, removing users/ folder, restarting the server, and navigating browser
-			back to daVinci. (For server-hosted, create a new user)</li>
+			back to Maqetta. (For server-hosted, create a new user)</li>
 		<li>Double-click on the app.css file in the Files palette.</li>
 		<li>Add the following lines to the bottom of the file:
 			<pre>
-.myapp.claro .class1.dijitButton .dijitButtonNode {
+#myapp.claro .class1.dijitButton .dijitButtonNode {
 	width:200px;
 }
 #label1 {

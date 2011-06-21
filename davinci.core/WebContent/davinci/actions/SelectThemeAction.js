@@ -16,8 +16,8 @@ dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 		
 		var theme = e.getContext().getTheme();
 			
-
-		this._themeChooser = new davinci.ui.widgets.ThemeSelection({value:theme});
+	
+		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false});
 		
 		//this._themeChooser.set('value', theme);
 		davinci.Workbench.showModal(this._themeChooser, langObj.selectTheme);//width needs to be adjusted to fit language

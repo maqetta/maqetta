@@ -85,5 +85,5 @@
             "defaultValue": false
         }
     },
-    "content": "<div label='TabBarButton'></div>"
+    "content": "<li label='TabBarButton'></li>"
 }

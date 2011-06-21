@@ -18,8 +18,9 @@
 				text-align:left;
 				vertical-align:top;
 			}
-			/* Need to override some override CSS style rules
-				due to injecting an extra app/ folder in URL */
+			/* The original CSS rules in singlepreviewer.js assume images are
+				located at preview/images but Maqetta server injects an extra
+				app/ folder in URL so we need to override background-image URLs. */
 			#preview_app_body .control_angle_cw {
 				background-image: url(app/preview/images/rotate_cw.png);
 			}

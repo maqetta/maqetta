@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Maqetta Preview 1 Documentation" topic="home.html">
+<toc label="Maqetta Documentation" topic="home.html">
     <topic label="User Guide" href="userguide/userguide.html">
     	<link toc="tocuserguide.xml" />
     </topic>

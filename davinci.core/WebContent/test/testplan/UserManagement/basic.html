@@ -21,9 +21,9 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Clear your browser cache.</li>
-		<li>Launch the daVinci server such that the server requires a user login (i.e., do not run server with localInstall=true option).</li>
-		<li>Browse to the daVinci root URL <em>without the user name</em> 
-				(e.g., <a href="http://localhost:8080/davinci">http://localhost:8080/davinci</a>, not http://localhost:8080/davinci/JohnSmith).</li>
+		<li>Launch the Maqetta server such that the server requires a user login (i.e., do not run server with localInstall=true option).</li>
+		<li>Browse to the Maqetta root URL <em>without the user name</em> 
+				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/JohnSmith).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
@@ -44,7 +44,7 @@
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>The daVinci application should appear with its various palettes at left, right and bottom and a toolbar across the top.</li>
+		<li>The Maqetta application should appear with its various palettes at left, right and bottom and a toolbar across the top.</li>
 		<li>The right side of the toolbar should have your login name followed by a logout hyperlink.</li>
 	</ol>
 
@@ -62,30 +62,30 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Clear your browser cache.</li>
-		<li>If you are current logged into the daVinci server as a user, click the logout hyperlink at the top right of the toolbar. 
-				Else, launch the daVinci server with user management activated (i.e., do not run server with localInstall=true option)
-				and browse to the daVinci root URL <em>without the user name</em> 
-				(e.g., <a href="http://localhost:8080/davinci">http://localhost:8080/davinci</a>, not http://localhost:8080/davinci/JohnSmith).</li>
+		<li>If you are current logged into the Maqetta server as a user, click the logout hyperlink at the top right of the toolbar. 
+				Else, launch the Maqetta server with user management activated (i.e., do not run server with localInstall=true option)
+				and browse to the Maqetta root URL <em>without the user name</em> 
+				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/JohnSmith).</li>
 		<li>Type in the user name and password for a user account that created previously and click on the Login button.</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>The daVinci application should appear with its various palettes at left, right and bottom and a toolbar across the top.</li>
+		<li>The Maqetta application should appear with its various palettes at left, right and bottom and a toolbar across the top.</li>
 		<li>The right side of the toolbar should have your login name and, further to the right, by a logout hyperlink.</li>
 	</ol>
 
-	<h2 class="test_section">Local install, single-version of daVinci (localInstall=true)</h2>
-	<p>This section verifies that there are no user login if the server is running on localhost with the "-Ddavinci.localInstall=true" option.
+	<h2 class="test_section">Local install, single-version of Maqetta (localInstall=true)</h2>
+	<p>This section verifies that there are no user login if the server is running on localhost with the "-Dmaqetta.localInstall=true" option.
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Clear your browser cache.</li>
-		<li>Launch the daVinci server on localhost with option "-Ddavinci.localInstall=true".</li>
-		<li>Browse to the daVinci root URL <em>without the user name</em> 
-				(e.g., <a href="http://localhost:8080/davinci">http://localhost:8080/davinci</a>, not http://localhost:8080/davinci/JohnSmith).</li>
+		<li>Launch the Maqetta server on localhost with option "-Dmaqetta.localInstall=true".</li>
+		<li>Browse to the Maqetta root URL <em>without the user name</em> 
+				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/JohnSmith).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>No login screen. Instead, you should immediately jump to to daVinci application,
+		<li>No login screen. Instead, you should immediately jump to to Maqetta application,
 				 with its various palettes at left, right and bottom and a toolbar across the top.</li>
 		<li>The right side of the toolbar should say "localhost user".</li>
 	</ol>

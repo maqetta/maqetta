@@ -217,7 +217,13 @@ dojo.declare("davinci.ve.Context", null, {
 		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
-	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires) {
+	
+
+	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
+		
+		if(!relativePrefix)
+			relativePrefix = this.relativePrefix;
+		
 		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
 		if (!type) {
 			return false;
@@ -234,7 +240,7 @@ dojo.declare("davinci.ve.Context", null, {
 		    return true;
 		}
 		
-		var relativePath = new davinci.model.Path(this.relativePrefix);
+		var relativePath = new davinci.model.Path(relativePrefix);
 		return dojo.every(requires, function(r) {
 		    var src = r.src;
 		    if (src) {    // resource with URL
@@ -257,13 +263,13 @@ dojo.declare("davinci.ve.Context", null, {
                     console.warn("metadata resource does not specify 'library'");
                 }
                 src = src.toString();
-                
+              
                 switch (r.type) {
                     case "javascript":
-                        this.addJavaScript(src, null, updateSrc);
+                        this.addJavaScript(src, null, updateSrc, false, r.src);
                         break;
                     case "css":
-                        updateSrc ? this.addModeledStyleSheet(src) : this.loadStyleSheet(src);
+                        updateSrc ? this.addModeledStyleSheet(src, r.src) : this.loadStyleSheet(src);
                         break;
                     default:
                         console.warn("Unhandled metadata resource type '" + r.type +
@@ -308,17 +314,25 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	getTheme : function(){
 		
-		if(this._theme==null)
-			this.getThemeMeta();
+		if(this._theme==null){
+			var theme = this.loadThemeMeta(this._srcDocument);
+			this._themeUrl = theme['url'];
+			this._themeMetaCache = theme['themeMetaCache'];
+			this._theme = theme['theme']
+			
+		}
 		return this._theme;
 	}, 
-	
-	getThemeMeta: function(){
-		// try to find the theme using path magic
-		if(this._themeMetaCache)
-			return this._themeMetaCache;
+	getThemeMeta : function(){
+		if(!this._themeMetaCache ){
+			this.getTheme();
+		}
+			return this._themeMetaCach;
 		
-		var model = this.getModel();
+	},
+	
+	loadThemeMeta: function(model){
+		// try to find the theme using path magic
 		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
 		var imports = [];
 		for(var z=0;z<style.length;z++){
@@ -340,14 +354,16 @@ dojo.declare("davinci.ve.Context", null, {
 		for(var i=0;i<imports.length;i++){
 			var url = imports[i].url;
 			/* trim off any relative prefix */
-			while(url.substring(0)=='.' || url.substring(0)=='/')
-				url = url.substring(1);
-			if(themeHash[url]){
-				this._themeUrl = url;
-				this._themeMetaCache =  davinci.library.getMetaData(themeHash[url]);
-				this._theme = themeHash[url];
-				return this._themeMetaCache;
+			for(var themeUrl in themeHash){
+				if(url.indexOf(themeUrl > -1)){
+					var returnObject = {};
+					returnObject['themeUrl'] = url;
+					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[url]);
+					returnObject['theme'] =  themeHash[url];;
+					return returnObject;	
+				}
 			}
+			
 		}
 	},
 	
@@ -919,7 +935,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		this._links.push(link);
 	},
 
-	addModeledStyleSheet : function(url) {
+	addModeledStyleSheet : function(url, libBasePath) {
 		this.loadStyleSheet(url);
 		if (!this.model.hasStyleSheet(url)) {
 			this.model.addStyleSheet(url);
@@ -1804,7 +1820,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
     // XXX see addJavaScript() and addHeaderScript()
     _reDojoJS: new RegExp(".*/dojo.js$"),
     
-    addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires) {
+    addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
         if (url) {
             var isDojoJS = this._reDojoJS.test(url);
             // XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
@@ -1829,12 +1845,24 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
                         'djConfig' : "parseOnLoad: true"
                     });
                 }
+                
+        		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
+        		
+        		for(var i=0;i<elements.length;i++){
+        			var n = elements[i];
+        			var elementUrl = n.getAttribute("src");
+        			if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
+        				n.setAttribute("src", url);
+        				return;
+        			}
+        		}
+                
                 this.addHeaderScript(url);
             }
         } else if (text) {
             this.getGlobal()['eval'](text);
             if (doUpdateModel || doUpdateModelDojoRequires) {
-                this.addHeaderScriptSrc(text);
+            	this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
             }
         }
     },
@@ -1842,12 +1870,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	// add script URL to HEAD
 	addHeaderScript: function(url, attributes) {
 	    // look for duplicates
+		/*
 		var found = dojo.some(this.getHeader().scripts, function(val) {
 			return val === url;
 		});
 		if (found) {
 			return;
 		}
+		*/
 		
 		var script = new davinci.html.HTMLElement('script');
 		script.addAttribute('type', 'text/javascript');
@@ -1859,7 +1889,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 		
-        var head = this.getDocumentElement().getChildElement('head');
+        var head =  this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
 		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
 		//    "dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
 		//    the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
@@ -1873,36 +1903,39 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		    head.addChild(script);
 		}
 		
-		this.getHeader().scripts.push(url);
+		//this.getHeader().scripts.push(url);
 	},
 
+
 	// add JS to HEAD
-	addHeaderScriptSrc: function(text){
+	addHeaderScriptSrc: function(text, scriptAdditions, head, statesJsScriptTag){
+		
 		var oldText = '';
-		if (this._scriptAdditions){
-			var scriptText = this._scriptAdditions.find({'elementType':'HTMLText'}, true);
+		
+		if (scriptAdditions){
+			var scriptText = scriptAdditions.find({'elementType':'HTMLText'}, true);
 			oldText = scriptText.getText();
 			if (oldText.indexOf(text)>0){
-				return;  // already in the header
+				return scriptAdditions;  // already in the header
 			}
-			this._scriptAdditions.parent.removeChild(this._scriptAdditions);
-			this._scriptAdditions = null;
+			scriptAdditions.parent.removeChild(scriptAdditions);
+			scriptAdditions = null;
 		}
 		// create a new script element
 		var script = new davinci.html.HTMLElement('script');
 		script.addAttribute('type', 'text/javascript');
 		script.script = "";
-		var head = this.getDocumentElement().getChildElement('head');
+	
 		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-		if (this._statesJsScriptTag) {
-		    head.insertBefore(script, this._statesJsScriptTag);
+		if (statesJsScriptTag) {
+		    head.insertBefore(script, statesJsScriptTag);
 		} else {
 		    head.addChild(script);
 		}
 		var newScriptText = new davinci.html.HTMLText();
 		newScriptText.setText(oldText + "\n" + text); //wdr
 		script.addChild(newScriptText); //wdr
-		this._scriptAdditions = script;
+		return script;
 
 
 	}

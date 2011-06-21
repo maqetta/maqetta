@@ -360,7 +360,7 @@ dojo.declare("davinci.ve.Context", null, {
 				if(url.indexOf(themeUrl)  > -1){
 					var returnObject = {};
 					returnObject['themeUrl'] = url;
-					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[url]);
+					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
 					returnObject['theme'] =  themeHash[url];;
 					return returnObject;	
 				}

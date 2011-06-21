@@ -73,6 +73,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 				children: this._newText,
 				//scripts: this._oldData.scripts,
 				//scripts: this._oldData.scripts,
+				states: this._oldData.states,
 				context:this._context
 				};
 			this._oldData = {type: this._oldData.type,
@@ -80,6 +81,7 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 					//properties: {id: this._oldId },
 					children: this._oldText,
 					//scripts: this._oldData.scripts,
+					states: this._oldData.states,
 					context:this._context
 					};
 		}

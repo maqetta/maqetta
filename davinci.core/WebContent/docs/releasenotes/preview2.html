@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta User Guide: Introduction and Overview</title>
+</head>
+
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="releasenotes/releasenotes.html">Release notes</a>
+    </td>
+    <td class="prevnext">
+    <a href="releasenotes/releasenotes.html">Previous</a> / <a href="releasenotes/preview1.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Maqetta Preview 2</h1>
+
+<h2>Goals with the Preview 2 release</h2>
+
+<p>The Preview 2 release includes the following updates:</p>
+
+<ul style="margin-top: 0pt;" type="disc">
+	<li><strong>Mobile authoring updates</strong>. 
+		The most significant new capabilities with the Preview 2 release are in the area of
+		mobile user interface authoring. In the previous release (Preview 1), the mobile authoring
+		features were barely there and mostly showed a vision for future mobile authoring features.
+		With the Preview 2 release, significant mobile authoring capability is now available.
+		In particular:
+		<ul>
+			<li><strong>Nearly complete support for the new Dojo 1.7 mobile widget library</strong>
+				With Dojo 1.7, there is now a complete collection of mobile widgets that provide
+				native look&amp;feel - mobile web widgets that look and act like native device
+				controls. Maqetta Preview 2 supports nearly all of the Dojo 1.7 mobile widgets
+				so that designers can drag/drop assemble a mobile user interface.</li>
+			<li><strong>Device silhouettes are now pixel-perfect</strong>
+				There have been numerous fixes and improvements to the Maqetta feature that allows
+				authoring inside of an actual-size image of a mobile device (a "device silhouette"). 
+				With the preview release (Preview 1), the screen areas for the silhouettes were incorrectly sized.
+				With Preview 2, the screen areas now have exactly correct sizes (e.g., iPhone interior is exactly
+				480x360 pixels).</li>
+			<li><strong>Preview-in-browser now uses device silhouettes, with zoom control</strong>
+				With the preview release, device silhouettes appeared in the page editor but
+				did not appear if you clicked on the preview-in-browser icon. 
+				With Preview 2, preview-in-browser will render inside of the current device silhouette
+				used by the Maqetta page editor. The previewer user interface provides a zoom control
+				(using CSS3 transforms) so that grow or shrink the preview in order to: (a) zoom in/out so that
+				the preview will be the same size as the target device, (b) zoom in to look more closely
+				at certain UI components, (c) zoom out in case the whole user interface is too large for your display .</li>
+		</ul>
+	</li>
+	<li><strong>User workspaces now use Dojo 1.7</strong>. 
+		Maqetta Preview 2 has updated all user workspaces that use Dojo to use Dojo 1.7. (Preview 1 used Dojo 1.5.)
+		This update to Dojo 1.7 was mostly necessary to support the updated dojox.mobile widget set that 
+		is included in Dojo 1.7, but it also keeps Maqetta up to date with latest features in Dojo.
+	</li>
+	<li><strong>Usability improvements to Web-based review and commenting</strong>. 
+		We had a major usability issue with review and commenting with the Preview 1 release
+		that we have addressed with the Preview 2 release. On Maqetta.org, when reviewers
+		received an email invitation to participate in a review session, they would 
+		almost always have to login to Maqetta.org and often have to register as a new user.
+		These login and register processes confused the application, which ultimately
+		would take a reviewer into the page editor user interface instead of the review user interface.
+		With Preview 2, reviewers will be taken to the review user interface even if they
+		have to login and/or register.<br />
+		There are other various minor UI improvements around review and commenting, including
+		an improved email invitation.
+	</li>
+	<li><strong>Built-in themes (claro and sketch) are now read-only</strong>.
+		With Preview 2, the two built-in themes (claro and sketch) are now
+		read-only. If a user wants to make theme changes, they have to first
+		clone one of the built-in themes into a custom theme.
+		This enhancement prevents a user from damaging these built-in themes
+		using the page editor or theme editor, and therefore a user can always
+		recover back to the built-in themes. 
+	</li>
+	<li><strong>DataGrid can now read in data from a file (URL) in user workspace</strong>. 
+		With Preview 1, DataGrid accepted user-entered dummy data in the form
+		of multiple rows of comma-separated information. With Preview 2,
+		DataGrid can now pull its data from a JSON file from the user's workspace.
+		(In a future release, we will add support for reading JSON from an arbitrary
+		URL, but this requires cross-domain data access, which didn't make it into Preview 2.)</em>
+	</li>
+	<li><strong>No longer need to clear cache with new releases</strong>. 
+		Preview 2 includes "cache busting" logic that ensure that new releases of Maqetta
+		will pull new versions of Maqetta JavaScript files automatically instead of possibly using
+		the JavaScript files from earlier releases.
+	</li>
+	<li><strong>Many bug fixes</strong>. 
+		Preview 2 includes many miscellaneous bug fixes. Some of those fixes
+		can be seen by going to <a href="https://github.com/maqetta/maqetta/issues?sort=created&direction=desc&state=closed&page=1&milestone=13">this URL which lists bugs closed against the Preview 2 release</a>.
+	</li>
+</ul>
+
+<p> </p>
+
+<p class="prevnext"><a href="releasenotes/releasenotes.html">Previous</a> / <a href="releasenotes/preview1.html">Next</a></p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+
+</body>
+</html>

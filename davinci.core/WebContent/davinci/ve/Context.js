@@ -498,12 +498,17 @@ dojo.declare("davinci.ve.Context", null, {
             head += "</body></html>";
 
             var context = this;
-			window["loading" + this._id] = function() {
-				delete window["loading" + this._id];
+			window["loading" + context._id] = function() {
+				if (!window["loading" + context._id]){
+					// For some reason we are getting called twice from Dojo 1.7.0b1
+					// but we only want to run this code once onLoad.
+					return;
+				}
+				delete window["loading" + context._id];
 				var callbackData = context;
 				try {
-    				var win = dijit.getDocumentWindow(doc);
-                    var body = (context.rootNode = doc.body);
+				var win = dijit.getDocumentWindow(doc);
+				var body = (context.rootNode = doc.body);
     				body.id = "myapp";
 
     				// Kludge to enable full-screen layout widgets, like BorderContainer.

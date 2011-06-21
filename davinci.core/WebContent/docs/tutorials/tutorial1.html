@@ -65,6 +65,20 @@ shows how the application looks after opening up one of the sample files:</p>
 <div>Click on the image to enlarge it.</div>
 </div>
 
+<a name="flow_vs_absolute"><h2>Flow layout versus absolute layout</h2></a>
+
+<p>Maqetta defaults to <em>flow layout</em>. With flow layout, in most cases the page content 
+begins at the top/left and then flows left-to-right and then top-to-bottom.
+This is the "natural" layout approach used by HTML and CSS, whose original
+designs were centered on flowable documents.
+If you start adding simple UI controls such as buttons and textboxes to the page, you'll see that
+the first widget snaps to the top/left of the page and the second widget will be placed either just to the right
+of the first widget or just below the first widget.</p>
+
+<p>Maqetta also supports <em>absolute layout</em>. With absolute layout, widgets and HTML elements
+are placed at particular (x,y) locations on the page. Other sections of the documentation provide more
+information about how to switch into absolute layout mode.</p>
+
 <a name="dojo"><h2>Add Dojo controls to the page</h2></a>
 
 <ol>
@@ -129,10 +143,18 @@ can immediately define the text for the button's label.</li>
 <p class="note">Some widgets such as Button do not have resize handles because their size depends on their interior content.</p>
 
 <ul>
-<li>You can move widgets in two ways:
+<li>In <em>flow layout</em>, you can move widgets in two ways:
 <ul>
 <li>On the canvas, select the widget, then place the mouse on the selection border and then drag it to a different location.</li>
 <li>On the <a href="peOutlinePalette.html">Outline palette</a>, drag the widget to a new location within the Outline palette. (The Outline palette allows widgets to be moved into any position in the widget hierarchy.)</li>
+</ul></li>
+<li>In <em>absolute layout</em>, you can also drag widgets to different locations. However, the effect or rearranging absolutely positioned widgets
+within the Outline palette is more complex:
+<ul>
+<li>Widgets may or not not move to different physical locations on the canvas if they are moved to a different location
+in the Outline palette.</li>
+<li>Moving widgets in the Outline palette will alter drawing order, and 
+therefore might cause one widget to draw behind or in front of other widgets.</li>
 </ul></li>
 </ul>
 
@@ -141,6 +163,9 @@ can immediately define the text for the button's label.</li>
 <li>You can nest widgets by dragging and dropping a widget onto another widget (the target must be a container widget).</li>
 <li>Nested widgets can be moved into a different container widget, or outside of any widgets to become a top-level widget on the page.</li>
 </ul>
+
+<p class="note">In certain scenarios, nesting widgets might
+affect how some CSS properties are inherited, and therefore might affect the visual styling of a particular widget.</p>
 
 <h3>Styling widgets</h3>
 <ul>

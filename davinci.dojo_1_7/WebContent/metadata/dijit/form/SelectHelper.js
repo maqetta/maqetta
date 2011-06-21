@@ -18,21 +18,15 @@ dojo.declare("davinci.libraries.dojo.dijit.form.SelectHelper", null, {
 		if(store){
 			// If the passed ComboBox uses the _ComboBoxDataStore, fetch all of its items and return them as option tags (ComboBox constructs the store internally from them).
 			if(!veWidget.getObjectId(store) &&
-				store.declaredClass == "dijit.form._ComboBoxDataStore"){ // internal store
-				store.fetch({ // return all items
-					query: {name: "*"},
-					queryOptions: {ignoreCase: true, deep: true},
-					onComplete: function(items, request){
-						dojo.forEach(items, function(i){
-							var name = store.getValue(i, "name");
-							var value = store.getValue(i, "value");
-							children.push({type: "html.option", properties: {value: value}, children: name});
-						});
-					},
-					onError: function(error, request){
-						console.log("Error retrieving combo items: ", error);
-					}
-				});
+				store.declaredClass == "dijit.form.DataList" ){ // internal store
+				var items = store.query(function(){return true;},{ignoreCase: true} );
+				for (var i=0; i < items.length; i++){
+					var name = store.getValue(items[i], "name");
+					var value = store.getValue(items[i], "value");
+					children.push({type: "html.option", properties: {value: value}, children: name});
+					
+				}
+
 			}
 			// If the passed ComboBox uses a store other than the internal store _ComboBoxDataStore, return [].
 		}else{

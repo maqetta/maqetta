@@ -108,11 +108,11 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 			return;
 		}
 		
-		this._pages = davinci.resource.findResource("*.html");
+		this._pages = davinci.resource.findResource("*.html", true, null, true);
 		
 		var pageBuilder = new davinci.ve.RebaseDownload(libs);
 		for(var i=0;i<this._pages.length;i++){
-			var newSource = pageBuilder.rebuildSource(this._pages[i].getContents());
+			var newSource = pageBuilder.rebuildSource(this._pages[i].getContents(), this._pages[i]);
 			/* set the contents and save it as a working copy.. AFTER the zip we need to remove the working copies */
 			this._pages[i].setContents(newSource, true);
 		}

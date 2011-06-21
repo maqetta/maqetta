@@ -217,7 +217,9 @@ dojo.declare("davinci.ve.Context", null, {
 		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
-	
+	getLibraryBase : function(id, version){
+		return davinci.library.getLibRoot(id,version) || "";
+	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
 		
@@ -252,7 +254,7 @@ dojo.declare("davinci.ve.Context", null, {
                     if (!libVer) {
                     	libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
                     }
-                    var libRoot = davinci.library.getLibRoot(r.$library, libVer);
+                    var libRoot = this.getLibraryBase(r.$library, libVer);
                     if (!libRoot) {
                         console.warn("No library found for name = '" + r.$library +
                                 "' version = '" + libVer + "'");

@@ -361,7 +361,7 @@ dojo.declare("davinci.ve.Context", null, {
 					var returnObject = {};
 					returnObject['themeUrl'] = url;
 					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-					returnObject['theme'] =  themeHash[url];;
+					returnObject['theme'] =  themeHash[themeUrl];;
 					return returnObject;	
 				}
 			}

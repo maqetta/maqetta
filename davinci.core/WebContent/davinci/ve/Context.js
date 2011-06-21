@@ -357,7 +357,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var url = imports[i].url;
 			/* trim off any relative prefix */
 			for(var themeUrl in themeHash){
-				if(url.indexOf(themeUrl > -1)){
+				if(url.indexOf(themeUrl)  > -1){
 					var returnObject = {};
 					returnObject['themeUrl'] = url;
 					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[url]);

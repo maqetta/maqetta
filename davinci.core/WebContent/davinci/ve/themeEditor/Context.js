@@ -31,18 +31,22 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		this._objectIds = [];
 		this._widgets=[];
 		this._selectionCssRules = [];
-
 	},
 	
 	_setSourceData: function(data){
 		
 		var frame = this.getFrameNode();
-		var loading = dojo.create("div",null, frame.parentNode, "first");
+		var loading = dojo.create("div", null, frame.parentNode, "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
 		dojo.addClass(loading, 'loading');
-		
+
+		// Create phony Dialog and Tooltip widgets with the appearance (template) of the Dijit widgets, but without the behavior.
+		//.We need to do this because the stock widgets don't appear when placed on the page without user interaction, and they have
+		// side effects which would interfere with operation of the Theme Editor.
+
 		// Hard-code widget replacements for styling.  Need to factor creation out somehow to be data-driven.
-		this.getDojo().declare("dijit.davinci.themeEditor.Dialog", [this.getDijit()._Widget, this.getDijit()._Templated], {
+		var mixins = [this.getDijit()._Widget, this.getDijit()._TemplatedMixin || this.getDijit()._Templated]; // Dojo 1.7+ uses _TemplatedMixin
+		this.getDojo().declare("dijit.davinci.themeEditor.Dialog", mixins, {
 			buttonCancel: "cancel", //TODO: i18n
 			onCancel: function(){},
 			title: "title",
@@ -55,17 +59,15 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				],
 				"aria-describedby":""
 			})
-/* For Dojo 1.6+
 ,			_setTitleAttr: [
 	                        { node: "titleNode", type: "innerHTML" },
 	                        { node: "titleBar", type: "attribute" }
 			]
-*/
-		});
-		this.getDojo().declare("dijit.davinci.themeEditor.Tooltip", [this.getDijit()._Widget, this.getDijit()._Templated], {
-			templateString: dojo.cache("dijit", "templates/Tooltip.html")
 		});
 
+		this.getDojo().declare("dijit.davinci.themeEditor.Tooltip", mixins, {
+			templateString: dojo.cache("dijit", "templates/Tooltip.html")
+		});
 		this.setHeader({
 			title: data.title,
 			metas: data.metas,
@@ -125,7 +127,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				// remove all registered widgets, some may be partly constructed.
 				var localDijit = this.getDijit();
 				localDijit.registry.forEach(function(w){
-	                  w.destroy();             
+	                  w.destroy();
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
 			}

@@ -45,13 +45,13 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		// side effects which would interfere with operation of the Theme Editor.
 
 		// Hard-code widget replacements for styling.  Need to factor creation out somehow to be data-driven.
-		var mixins = [this.getDijit()._Widget, this.getDijit()._TemplatedMixin || this.getDijit()._Templated]; // Dojo 1.7+ uses _TemplatedMixin
+		var mixins = [this.getDijit()._WidgetBase || this.getDijit()._Widget, this.getDijit()._TemplatedMixin || this.getDijit()._Templated]; // Dojo 1.7+ uses _WidgetBase, _TemplatedMixin
 		this.getDojo().declare("dijit.davinci.themeEditor.Dialog", mixins, {
 			buttonCancel: "cancel", //TODO: i18n
 			onCancel: function(){},
 			title: "title",
 			templateString: dojo.cache("dijit", "templates/Dialog.html"),
-	        // Map widget attributes to DOMNode attributes.
+			// Map widget attributes to DOMNode attributes.
 			attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
 				title: [
 					{ node: "titleNode", type: "innerHTML" },
@@ -60,8 +60,8 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				"aria-describedby":""
 			})
 ,			_setTitleAttr: [
-	                        { node: "titleNode", type: "innerHTML" },
-	                        { node: "titleBar", type: "attribute" }
+							{ node: "titleNode", type: "innerHTML" },
+							{ node: "titleBar", type: "attribute" }
 			]
 		});
 
@@ -127,7 +127,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 				// remove all registered widgets, some may be partly constructed.
 				var localDijit = this.getDijit();
 				localDijit.registry.forEach(function(w){
-	                  w.destroy();
+					  w.destroy();
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
 			}
@@ -138,10 +138,10 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 		var widgets = dojo.query('.dvThemeWidget');
 		//debugger;
 		for (var i=0; i<widgets.length; i++){
-    		// remove the styles from all widgets and subwidgets that supported the state
-    		this._theme.removeWidgetStyleValues(widgets[i]);
-    		// set the style on all widgets and subsidgets that support the state
-    		//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
+			// remove the styles from all widgets and subwidgets that supported the state
+			this._theme.removeWidgetStyleValues(widgets[i]);
+			// set the style on all widgets and subwidgets that support the state
+			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
 		}
 		
 		loading.parentNode.removeChild(loading);
@@ -161,18 +161,17 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 
 		widget.dvAttributes = {
 				isThemeWidget: isThemeWidget
-			};
-		if (isThemeWidget)
+		};
+		if (isThemeWidget) {
 			davinci.Runtime.arrayAddOnce(this._widgets,widget);
-		
+		}
 	},
 	getThemeMeta: function(){
-		if(!this._themeMetaCache)
-			this._themeMetaCache =  davinci.library.getMetaData(this._theme);
-		
+		if(!this._themeMetaCache) {
+			this._themeMetaCache = davinci.library.getMetaData(this._theme);
+		}
+
 		return this._themeMetaCache;
-			
-		
 	},
 
 	select: function(widget, add){
@@ -208,17 +207,12 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			box.l = box.x;
 			box.t = box.y;
 
-
 			op = {move: false};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
 			
-			
-			
 			op.resizeWidth = false;
 			op.resizeHeight = false;
-				
-			
 		}
 		this.focus({box: box, op: op}, index);
 		this._focuses[0].showContext(this, widget);
@@ -229,19 +223,15 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			this.onSelectionChange(this.getSelection());
 		}
 	},
-	setTheme : function(themeMeta){
+	setTheme: function(themeMeta){
 		this._theme = themeMeta;
-		
-		
 	},
 	onSelectionChange: function(selection){
 		//dojo.publish("/davinci/ui/widgetSelected",[selection]);
 	},
-	getStyleAttributeValues : function(widget){
+	getStyleAttributeValues: function(widget){
 		/* no style attributes for theme editor */
 		return {};
 	}
-	
-	
 });
 

@@ -39,7 +39,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 					                  filters: "davinci.ui.widgets.OpenFileDialog.filter"
 					                }						],
 					data:data,
-					buttonLabel : 'Open',
+					buttonLabel : langObj.open,
 					onOK:	dojo.hitch(this,function ()
 					{
 						debugger;

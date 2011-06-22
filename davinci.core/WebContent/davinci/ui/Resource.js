@@ -156,7 +156,7 @@ dojo.mixin(davinci.ui.Resource, {
 				});
 				dojo.disconnect(upload);
 				dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ dialog.destroyRecursive(false); });
-				dojo.byId("uploadBtn").innerText="Done"; //TODO: i18n
+				dojo.byId("uploadBtn").innerText=langObj.done;
 			});
 		});
 		dialog.setContent(formHtml);

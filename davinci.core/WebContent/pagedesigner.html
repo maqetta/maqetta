@@ -21,7 +21,7 @@
     <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
     
     
-    <script type="text/javascript" src="app/dojo/dojo.js"></script>
+    
 
     <script type="text/javascript">
     <!-- Globalization -->
@@ -57,7 +57,7 @@
                 var unsupportedDialog = new dijit.Dialog({
                     id: "unsupportedBrowserDialog",
                     title: langObj.unsupportedBrowser,
-                    content: [langObj.unsupportedNote,
+                    content: ["<p>"+ langObj.unsupportedNote +"</p>",
                               "<div class='maqButtonArea'>",
                               "   <button dojoType='dijit.form.Button' type='submit'>",
                               langObj.buttonContinue,

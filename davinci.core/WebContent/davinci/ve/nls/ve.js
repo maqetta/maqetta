@@ -51,7 +51,7 @@
 		"dataFromWorkspace":"Data file from workspace",
 		
 		//input/DropDownButtonInput.js
-		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. <br /> Optionally indicate option items by putting one \">\" character at the start of a line.",
+		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. Optionally indicate option items by putting one \">\" character at the start of a line.",
 		
 		//input/HtmlSrcAttributeInput.js
 		"typeFileUrl":"type file url",
@@ -66,13 +66,13 @@
 		"scriptLabel":"Script:",
 		
 		//input/MenuBarInput.js
-		"menuBarInputHelp":"Enter multiple lines of data, one for each menu option. <br /> Indicate nesting levels by putting one or more \">\" characters at the start of a line.",
+		"menuBarInputHelp":"Enter multiple lines of data, one for each menu option. Indicate nesting levels by putting one or more \">\" characters at the start of a line.",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",
 		
 		//input/SelectInput.js
-		"selectInputHelp":"Enter multiple lines of text. Each line will correspond to an option item in the list. <br /> Indicate the default option to be selected with the \"+\" at the start of the line. ",
+		"selectInputHelp":"Enter multiple lines of text. Each line will correspond to an option item in the list.  Indicate the default option to be selected with the \"+\" at the start of the line. ",
 		
 		//input/SmartInput.js
 		"smartInputHelp1":"If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
@@ -80,10 +80,10 @@
 		"loading":"Loading...",
 		
 		//input/StackContainerInput.js -- untested
-		"stackContainerInputHelp":"Enter a comma-separated list of values, each value is used as the label.<br /> If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
+		"stackContainerInputHelp":"Enter a comma-separated list of values, each value is used as the label. If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
 		
 		//input/TreeInput.js
-		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line. <br /> <i>Example:</i> <br/>1<br /> &gt;1.1<br />&gt;1.2<br />2",
+		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line.",
 		
 		//widgets/Cascade.js
 		"changeWillModify":"This change will modify one of the CSS style rules defined within a 'CSS theme' and therefore probably impact other widgets on a global basis.<br><br>Instead of changing the theme CSS files, it is usually better to add a class to this widget (at top of Properties palette) and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br><br>OK to proceed with this change?",
@@ -94,6 +94,11 @@
 		"existingRule":"[class: ${0} - Existing rule in ${1}] ",
 		"line":" line: ${0})",
 		"propUndefined":"undefined",
+		
+		//widgets/ColorPicker.js
+		"colorPicker":"Color picker....",
+		"removeValue":"Remove Value",
+		"selectColor":"select a color",
 		
 		//widgets/WidgetToolBar.js
 		"toolBarFor":"for: ",

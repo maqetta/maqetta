@@ -564,7 +564,7 @@ davinci.ui.Panel.metadata['button']=
 						var params={
 								definition:listField.itemEditor,
 								data:item,
-								title:"new",
+								title:"new",//doesn't appear to be used anymore
 								onOK: function (){listField.widget.store.newItem(item);}
 						};
 						davinci.ui.Panel.openDialog(params);
@@ -587,7 +587,7 @@ davinci.ui.Panel.metadata['button']=
 							var params={
 									definition:listField.itemEditor,
 									data:item,
-									title:"edit"
+									title:"edit"//doesn't appear to be used anymore
 							};
 							davinci.ui.Panel.openDialog(params);
 							
@@ -907,12 +907,12 @@ davinci.ui.Panel.metadata['colorChooser']=
 			dojo.require("dijit.Dialog");
 			
 			   var dialog = new dijit.Dialog({
-			        title: "Choose Color"
+			        title: "Choose Color"//doesn't appear to be used anymore
 			    });
 
 			   
 			   var div2=dojo.create("div",{
-				   innerHTML:"Selected color is: "
+				   innerHTML:"Selected color is: "//doesn't appear to be used anymore
 			   });
 			   var theSpan=dojo.create("span");
 			   div2.appendChild(theSpan);

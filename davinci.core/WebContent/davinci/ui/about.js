@@ -33,7 +33,7 @@ davinci.ui.about=function(){
         formHTML += "<div class='about_date'>"+dojo.string.substitute(langObj.productDate,[bd])+"</div>";
     }
 	if(revision){
-		formHTML += "<div class='about_build'>"+dojo.string.substitute(langObj.build, [revision, revision.substr(0,15)])+"...</a></div>";
+		formHTML += "<div class='about_build'>"+langObj.build+"<a href='https://github.com/maqetta/maqetta/commit/"+revision+"'>"+ revision.substr(0,15) +"...</a></div>";
 	}
 	formHTML += "</div>";
 	dialog.setContent(formHTML);

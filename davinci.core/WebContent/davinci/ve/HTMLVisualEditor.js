@@ -24,7 +24,7 @@ dojo.declare("davinci.ve.HTMLVisualEditor", davinci.ui.ModelEditor, {
 				this.domNode = tabs.domNode;
 						
 				var tab = new davinci.workbench._ToolbaredContainer( {
-					title: "Design",
+					//title: "Design",//no longer visible in UI since we use split views now
 					closable: false
 				});
 		    
@@ -38,7 +38,7 @@ dojo.declare("davinci.ve.HTMLVisualEditor", davinci.ui.ModelEditor, {
 				this.currentEditor._commandStack=this._commandStack;
 				
 				tab = new dijit.layout.ContentPane( {
-					title : "Source",
+					//title : "Source",
 					closable : false,
 					"class": "dvHTMLVisualEditorSourcePane"
 				});

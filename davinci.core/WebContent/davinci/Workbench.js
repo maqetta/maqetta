@@ -901,11 +901,12 @@ dojo.mixin(davinci.Workbench, {
 		});
 
 		var editorExtension = editorExtensions[0];
-		if (editorExtensions.length>1 && !dojo.some(editorExtensions, function(extension){
+		if (editorExtensions.length>1){
+			dojo.some(editorExtensions, function(extension){
 			editorExtension = extension;
 			return extension.isDefault;
-		}))
-		{
+		})}
+		/*{
 			var data={
 					listData:editorExtensions
 			};
@@ -928,7 +929,7 @@ dojo.mixin(davinci.Workbench, {
 					title:"Select Editor"
 			});
 			return;
-		}
+		}*/
 		var ee = this._createEditor(editorExtension,fileName,keywordArgs);
 		if(editorCreateCallback){
 			editorCreateCallback.call(window, ee);

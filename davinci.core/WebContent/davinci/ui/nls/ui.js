@@ -11,9 +11,9 @@
 		//about.js
 		"aboutMaqetta":"About Maqetta",
 		"productVersion":"Version: ${0}",
-		//"build":"Build: ${0}",
 		"productDate":"Date: ${0}",
-		"build":"Build: <a href='https://github.com/maqetta/maqetta/commit/${0}'> ${1}...</a> ",
+		//"build":"Build: <a href='https://github.com/maqetta/maqetta/commit/${0}'> ${1}...</a> ",
+		"build":"Build: ",
 		
 		//Download.js
 		"library":"Library",//used in UserLibraries.js as well
@@ -67,6 +67,7 @@
 		"addFiles":"Add Files",
 		"uploading":"Uploading...",
 		"completed":"completed: ${0} \n",
+		"done":"Done",
 		
 		//checkFileName
 		"mustEnterFileName":"You must enter a file name.",

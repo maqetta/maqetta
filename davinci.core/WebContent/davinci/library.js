@@ -55,6 +55,9 @@ davinci.library.getlibMetaData=function(id, version){
 	
 	var path = davinci.library.getMetaRoot(id, version);
 	
+	if(path==null)
+		return null
+	
     var data = dojo.xhrGet({
         url : path + "/widgets.json",
         sync : true, // XXX should be async
@@ -111,6 +114,7 @@ davinci.library.getLibRoot = function(id, version, base) {
 davinci.library.getMetaRoot=function(id,version){
 	
 	var response = davinci.Runtime.serverJSONRequest({url:"./cmd/getMetaRoot", handleAs:"text", content:{'id':id, 'version':version},sync:true  });
+
 	return response;
 }
 

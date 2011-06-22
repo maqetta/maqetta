@@ -61,7 +61,8 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 			if(type!=null)
 				this.loadRequires(type, true, true, relativePrefix);
 		}
-		this.changeThemeBase(themeMetaobject['theme'], relativePrefix);
+		if(themeMetaobject)
+			this.changeThemeBase(themeMetaobject['theme'], relativePrefix);
 		
 		var cssChanges = this.getPageCss();
 		var jsChanges = this.getPageJs();

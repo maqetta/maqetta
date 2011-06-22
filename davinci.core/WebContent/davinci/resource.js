@@ -15,6 +15,7 @@ dojo.mixin(davinci.resource, {
 	resourceChanged: function(type,changedResource){
 		
 		if(changedResource == davinci.resource.getRoot()){
+			changedResource.reload();
 			davinci.resource.getRoot().getChildren(dojo.hitch(davinci.resource,function(children){
 				davinci.resource.onChildrenChange(davinci.resource.getRoot(),children);
 			}));

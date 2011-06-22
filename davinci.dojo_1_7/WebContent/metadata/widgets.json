@@ -309,6 +309,44 @@
             }
         },
         {
+            "name": "SimpleTextarea",
+            "description": "Text Area (Basic)",
+            "type": "dijit.form.SimpleTextarea",
+            "category": "controls",
+            "icon": "resources/images/simpletextarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkJusyPP2+zpeljpflvL2/OTt+Obu+E1+sfn7/VKHulOIuVaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVEICSOZGmeaGoCDKCS7sswDdDMeC4qzgM8jqAwuBAhHAVAwcBsHg4I0cCRACQE2KygQBABAAHwd0wuxV4Q1hnNbrvfkBAAOw==",
+            "properties": {
+                "rows": "10",
+                "cols": "10",
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "Textarea",
+            "description": "Text Area (Resizing)",
+            "type": "dijit.form.Textarea",
+            "category": "controls",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+             "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
             "name": "ComboBox",
             "description": "Combo Box",
             "type": "dijit.form.ComboBox",
@@ -716,44 +754,6 @@
             "icon": "resources/images/currency-text-box.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAALrD1y5KhZelwjJSjDNSjDdYkDpel/P2+zpelvL2/EJsouTt+Obu+Ep6rkt6rvn7/fz9/lGGuFaOv6vH38fa6s/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVr4CWOZEkWUmGul8qOkjQVU0zFeHxJlVVYlUohSKxILpFKopBYFJ7OAoMRuTgqj0L2UDh4uYnGRYHVcp9eZkJxQVQgBUg6nagbLoNy9tnlJwh4enNfB38XAQECBQKIAIiPiCcvJSguk5eYKyEAOw==",
             "resizable": "width"
-        },
-        {
-            "name": "SimpleTextarea",
-            "description": "Text Area (Basic)",
-            "type": "dijit.form.SimpleTextarea",
-            "category": "untested",
-            "icon": "resources/images/simpletextarea.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkJusyPP2+zpeljpflvL2/OTt+Obu+E1+sfn7/VKHulOIuVaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVEICSOZGmeaGoCDKCS7sswDdDMeC4qzgM8jqAwuBAhHAVAwcBsHg4I0cCRACQE2KygQBABAAHwd0wuxV4Q1hnNbrvfkBAAOw==",
-            "properties": {
-                "rows": "10",
-                "cols": "10",
-                "style": "width: 200px;"
-            },
-            "resizable": "width",
-            "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false,
-                "multiLine": false
-            },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
-        },
-        {
-            "name": "Textarea",
-            "description": "Text Area (Resizing)",
-            "type": "dijit.form.Textarea",
-            "category": "untested",
-            "icon": "resources/images/textarea.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-            "properties": {
-                "style": "width: 200px;"
-            },
-            "resizable": "width",
-             "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false,
-                "multiLine": false
-            },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
         },
         {
             "name": "HorizontalSlider",
@@ -1709,6 +1709,7 @@
             "type": "dojox.mobile.ExpandingTextArea",
             "category": "mobile",
             "inlineEdit": {
+            	"property": "value",
                 "displayOnCreate": false,
                 "multiLine": false
             },

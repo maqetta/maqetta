@@ -1,4 +1,6 @@
-@import url("../dijit.css");
+
+@import url("dijit.css");
+@import url("document.css");	/* rules on the document itself (rather than widgets), overriding dojo.css */
 @import url("icons/commonIcons.css");/*sprite containing common icons to be used by all themes*/
 @import url("Common.css");
 @import url("form/Common.css");
@@ -24,5 +26,5 @@
 @import url("icons/editorIcons.css"); /*sprite for editor icons to be used by all themes*/
 @import url("TitlePane.css");
 @import url("form/NumberSpinner.css");
-
+@import url("layout/GlobalTabContainer.css");
 @import url("claro_rtl.css");

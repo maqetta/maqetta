@@ -21,9 +21,10 @@ dojo.declare("davinci.ve.Context", null, {
 	_bootstrapModules: "dijit.dijit",
 
 	constructor: function(args){
-		if(!args)
+		if(!args) {
 			args ={};
-		
+		}
+
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -142,7 +143,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		}
 
-        widget.metadata = widget.metadata || davinci.ve.metadata.query(widget.type);
+		widget.metadata = widget.metadata || davinci.ve.metadata.query(widget.type);
 		var isContainer = davinci.ve.metadata.queryDescriptor(widget.type, "isContainer");
 		
 		widget.attach();
@@ -223,9 +224,10 @@ dojo.declare("davinci.ve.Context", null, {
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
 		
-		if(!relativePrefix)
+		if(!relativePrefix){
 			relativePrefix = this.relativePrefix;
-		
+		}
+
 		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
 		if (!type) {
 			return false;
@@ -239,55 +241,55 @@ dojo.declare("davinci.ve.Context", null, {
 		
 		var requires = davinci.ve.metadata.query(type, "require");
 		if (!requires) {
-		    return true;
+			return true;
 		}
 		
 		var relativePath = new davinci.model.Path(relativePrefix);
 		return dojo.every(requires, function(r) {
-		    var src = r.src;
-		    if (src) {    // resource with URL
-                if (r.$library) {
-                    // Since the metadata files are 'relocatable', we don't use the metadata's
-                    //  value for $library.src.  Instead, we find the base URL for the user's
-                    //  currently selected library.
-                    var libVer = davinci.ve.metadata.getLibrary(r.$library).version;
-                    if (!libVer) {
-                    	libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
-                    }
-                    var libRoot = this.getLibraryBase(r.$library, libVer);
-                    if (!libRoot) {
-                        console.warn("No library found for name = '" + r.$library +
-                                "' version = '" + libVer + "'");
-                        return false;   // kill dojo.every loop
-                    }
-                    src = relativePath.append(libRoot).append(src);
-                } else {
-                    console.warn("metadata resource does not specify 'library'");
-                }
-                src = src.toString();
-              
-                switch (r.type) {
-                    case "javascript":
-                        this.addJavaScript(src, null, updateSrc, false, r.src);
-                        break;
-                    case "css":
-                        updateSrc ? this.addModeledStyleSheet(src, r.src) : this.loadStyleSheet(src);
-                        break;
-                    default:
-                        console.warn("Unhandled metadata resource type '" + r.type +
-                                "' for widget '" + type + "'");
-                }
-		    } else {  // resource with text content
-		        switch (r.type) {
-		            case "javascript":
-		                this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires);
-		                break;
-		            default:
-                        console.warn("Unhandled metadata resource type '" + r.type +
-                                "' for widget '" + type + "'");
-		        }
-		    }
-		    return true;
+			var src = r.src;
+			if (src) {	// resource with URL
+				if (r.$library) {
+					// Since the metadata files are 'relocatable', we don't use the metadata's
+					//  value for $library.src.  Instead, we find the base URL for the user's
+					//  currently selected library.
+					var libVer = davinci.ve.metadata.getLibrary(r.$library).version;
+					if (!libVer) {
+						libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
+					}
+					var libRoot = this.getLibraryBase(r.$library, libVer);
+					if (!libRoot) {
+						console.warn("No library found for name = '" + r.$library +
+								"' version = '" + libVer + "'");
+						return false;   // kill dojo.every loop
+					}
+					src = relativePath.append(libRoot).append(src);
+				} else {
+					console.warn("metadata resource does not specify 'library'");
+				}
+				src = src.toString();
+			  
+				switch (r.type) {
+					case "javascript":
+						this.addJavaScript(src, null, updateSrc, false, r.src);
+						break;
+					case "css":
+						updateSrc ? this.addModeledStyleSheet(src, r.src) : this.loadStyleSheet(src);
+						break;
+					default:
+						console.warn("Unhandled metadata resource type '" + r.type +
+								"' for widget '" + type + "'");
+				}
+			} else {  // resource with text content
+				switch (r.type) {
+					case "javascript":
+						this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires);
+						break;
+					default:
+						console.warn("Unhandled metadata resource type '" + r.type +
+								"' for widget '" + type + "'");
+				}
+			}
+			return true;
 		}, this);
 	},
 
@@ -422,20 +424,20 @@ dojo.declare("davinci.ve.Context", null, {
 			});
 			
 			if (!dojoUrl) {
-			    // pull Dojo path from installed libs, if available
-			    dojo.some(davinci.library.getUserLibs(), function(lib) {
-			        if (lib.id === "dojo") {
-			            dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root)
-			                    .append("dojo/dojo.js").toString();
-			            return true;
-			        }
-			        return false;
-			    }, this);
-			    // if still not defined, use app's Dojo (which may cause other issues!)
-			    if (!dojoUrl) {
-			        dojoUrl = this.getDojoUrl();
-			        console.warn("WARNING: Falling back to use workbench's Dojo in the editor iframe");
-			    }
+				// pull Dojo path from installed libs, if available
+				dojo.some(davinci.library.getUserLibs(), function(lib) {
+					if (lib.id === "dojo") {
+						dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root)
+								.append("dojo/dojo.js").toString();
+						return true;
+					}
+					return false;
+				}, this);
+				// if still not defined, use app's Dojo (which may cause other issues!)
+				if (!dojoUrl) {
+					dojoUrl = this.getDojoUrl();
+					console.warn("WARNING: Falling back to use workbench's Dojo in the editor iframe");
+				}
 			}
 			
 			var containerNode = this.containerNode;
@@ -489,15 +491,15 @@ dojo.declare("davinci.ve.Context", null, {
 				head += '</style>';
 			}
 			//head += '<style type="text/css">@import "claro.css";</style>';
-            head += "</head><body>";
-            if (dojoUrl) {
-                // Since this document was created from script, DOMContentLoaded and window.onload never fire.
-                // Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
-                head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
-            }
-            head += "</body></html>";
+			head += "</head><body>";
+			if (dojoUrl) {
+				// Since this document was created from script, DOMContentLoaded and window.onload never fire.
+				// Call dojo._loadInit manually to trigger the Dojo onLoad events for Dojo < 1.7
+				head += "<script>if(dojo._loadInit)dojo._loadInit();</script>";
+			}
+			head += "</body></html>";
 
-            var context = this;
+			var context = this;
 			window["loading" + context._id] = function() {
 				if (!window["loading" + context._id]){
 					// For some reason we are getting called twice from Dojo 1.7.0b1
@@ -507,53 +509,51 @@ dojo.declare("davinci.ve.Context", null, {
 				delete window["loading" + context._id];
 				var callbackData = context;
 				try {
-				var win = dijit.getDocumentWindow(doc);
-				var body = (context.rootNode = doc.body);
-    				body.id = "myapp";
+					var win = dijit.getDocumentWindow(doc),
+					 	body = (context.rootNode = doc.body);
+					body.id = "myapp";
 
-    				// Kludge to enable full-screen layout widgets, like BorderContainer.
-    				// What possible side-effects could there be setting 100%x100% on every document?
-    				// See note above about margin:0 temporary hack
-    				body.style.width = "100%";
-    				body.style.height = "100%";
-    				body.style.margin = "0";
+					// Kludge to enable full-screen layout widgets, like BorderContainer.
+					// What possible side-effects could there be setting 100%x100% on every document?
+					// See note above about margin:0 temporary hack
+					body.style.width = "100%";
+					body.style.height = "100%";
+					body.style.margin = "0";
 
-    				body._edit_context = context; // TODO: find a better place to stash the root context
-    				context._bootstrapModules.split(",").forEach(function(module){
-    																if (module === 'dijit.dijit-all')
-    																	win.dojo._postLoad=true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
-    																win.dojo["require"](module);
-    															}); // to bootstrap references to base dijit methods in container
-    				context._frameNode = frame;
-    				// see Dojo ticket #5334
-    				// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
-    				// Also, any array value will be converted to {0: val0, 1: val1, ...}
-    				// after swapping back and forth between the design and code views twice. This is not an array!
-    				win.dojo.isArray=function(it){
-    					return it && Object.prototype.toString.call(it)=="[object Array]";
-    				};
+					body._edit_context = context; // TODO: find a better place to stash the root context
+					context._bootstrapModules.split(",").forEach(
+							function(module){
+								if (module === 'dijit.dijit-all')
+									win.dojo._postLoad = true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
+								win.dojo["require"](module);
+							}); // to bootstrap references to base dijit methods in container
+					context._frameNode = frame;
+					// see Dojo ticket #5334
+					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
+					// Also, any array value will be converted to {0: val0, 1: val1, ...}
+					// after swapping back and forth between the design and code views twice. This is not an array!
+					win.dojo.isArray=function(it){
+						return it && Object.prototype.toString.call(it)=="[object Array]";
+					};
 console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
 				} catch(e) {
+					console.error(e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
-                    // XXX setSource() currently called without callback; log error to console
-                    if (!callback) {
-                        console.error(e);
-                    }
 				}
 
 				if(callback){
-					callback.call((scope || context), callbackData);
+					callback.call((scope || context), callbackData); //FIXME: caller does not use callbackData nor error information?
 				}
 			};
 
 			doc.open();
 			doc.write(head);
-            doc.close();
+			doc.close();
 
-            // intercept BS key - prompt user before navigating backwards
+			// intercept BS key - prompt user before navigating backwards
 			dojo.connect(doc.documentElement, "onkeypress", function(e){
 				if(e.charOrCode==8){
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = new Date().getTime();
@@ -734,7 +734,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			// remove all registered widgets, some may be partly constructed.
 			var localDijit = this.getDijit();
 			localDijit.registry.forEach(function(w){
-                  w.destroy();             
+				  w.destroy();			 
 			});
 			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
 		}
@@ -1519,13 +1519,13 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				data.scriptAdditions=scriptTag;
 			}
 			
-	        // XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-            if (/.*(\/)*maqetta\/States.js$/.test(value)) {
-                this._statesJsScriptTag = scriptTag;
-            }
+			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
+			if (/.*(\/)*maqetta\/States.js$/.test(value)) {
+				this._statesJsScriptTag = scriptTag;
+			}
 		}, this);
 		if (!this._statesJsScriptTag) {   // XXX Bug 7499
-		    console.warn("Failed to find States.js script tag.  States and dojox.mobile widgets may not work properly");
+			console.warn("Failed to find States.js script tag.  States and dojox.mobile widgets may not work properly");
 		}
 		var styleTags=head.getChildElements("style");
 		dojo.forEach(styleTags, function (styleTag){
@@ -1824,59 +1824,59 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		 return id;
 	},
 
-    // XXX see addJavaScript() and addHeaderScript()
-    _reDojoJS: new RegExp(".*/dojo.js$"),
-    
-    addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
-        if (url) {
-            var isDojoJS = this._reDojoJS.test(url);
-            // XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
-            //      Adding it again will overwrite the existing Dojo, breaking some things.
-            //      See bug 7585.
-            if (!isDojoJS) {
-                var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
-                dojo.withGlobal(this.getGlobal(),
-                        function() {
-                            dojo.xhrGet({
-                                url: absoluteUrl,
-                                sync: true,
-                                handleAs: "javascript"
-                            });
-                        });
-            }
-            if (doUpdateModel) {
-                if (isDojoJS) {
-                    // XXX Nasty nasty nasty special case for dojo attribute thats
-                    // required. Need to generalize in the metadata somehow.
-                    this.addHeaderScript(url, {
-                        'djConfig' : "parseOnLoad: true"
-                    });
-                }
-                
-        		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
-        		
-        		for(var i=0;i<elements.length;i++){
-        			var n = elements[i];
-        			var elementUrl = n.getAttribute("src");
-        			if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
-        				n.setAttribute("src", url);
-        				return;
-        			}
-        		}
-                
-                this.addHeaderScript(url);
-            }
-        } else if (text) {
-            this.getGlobal()['eval'](text);
-            if (doUpdateModel || doUpdateModelDojoRequires) {
-            	this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
-            }
-        }
-    },
+	// XXX see addJavaScript() and addHeaderScript()
+	_reDojoJS: new RegExp(".*/dojo.js$"),
+	
+	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
+		if (url) {
+			var isDojoJS = this._reDojoJS.test(url);
+			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
+			//	  Adding it again will overwrite the existing Dojo, breaking some things.
+			//	  See bug 7585.
+			if (!isDojoJS) {
+				var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+				dojo.withGlobal(this.getGlobal(),
+						function() {
+							dojo.xhrGet({
+								url: absoluteUrl,
+								sync: true,
+								handleAs: "javascript"
+							});
+						});
+			}
+			if (doUpdateModel) {
+				if (isDojoJS) {
+					// XXX Nasty nasty nasty special case for dojo attribute thats
+					// required. Need to generalize in the metadata somehow.
+					this.addHeaderScript(url, {
+						'djConfig' : "parseOnLoad: true"
+					});
+				}
+				
+				var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
+				
+				for(var i=0;i<elements.length;i++){
+					var n = elements[i];
+					var elementUrl = n.getAttribute("src");
+					if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
+						n.setAttribute("src", url);
+						return;
+					}
+				}
+				
+				this.addHeaderScript(url);
+			}
+		} else if (text) {
+			this.getGlobal()['eval'](text);
+			if (doUpdateModel || doUpdateModelDojoRequires) {
+				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
+			}
+		}
+	},
 
 	// add script URL to HEAD
 	addHeaderScript: function(url, attributes) {
-	    // look for duplicates
+		// look for duplicates
 		/*
 		var found = dojo.some(this.getHeader().scripts, function(val) {
 			return val === url;
@@ -1896,18 +1896,18 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 		
-        var head =  this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
+		var head =  this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
 		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
-		//    "dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
-		//    the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
-		//    inserts all scripts before States.js.
-		//    First, make sure that we've properly saved the location of States.js.  If, for
-		//    whatever reason, this is not the case, then fall back to the original code of
-		//    appending script to <head>.
+		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
+		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
+		//	inserts all scripts before States.js.
+		//	First, make sure that we've properly saved the location of States.js.  If, for
+		//	whatever reason, this is not the case, then fall back to the original code of
+		//	appending script to <head>.
 		if (this._statesJsScriptTag) {
-		    head.insertBefore(script, this._statesJsScriptTag);
+			head.insertBefore(script, this._statesJsScriptTag);
 		} else {
-		    head.addChild(script);
+			head.addChild(script);
 		}
 		
 		//this.getHeader().scripts.push(url);
@@ -1935,16 +1935,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	
 		// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
 		if (statesJsScriptTag) {
-		    head.insertBefore(script, statesJsScriptTag);
+			head.insertBefore(script, statesJsScriptTag);
 		} else {
-		    head.addChild(script);
+			head.addChild(script);
 		}
 		var newScriptText = new davinci.html.HTMLText();
 		newScriptText.setText(oldText + "\n" + text); //wdr
 		script.addChild(newScriptText); //wdr
 		return script;
-
-
 	}
 });
 

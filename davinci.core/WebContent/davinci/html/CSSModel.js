@@ -92,6 +92,9 @@ davinci.html.CSSElement.prototype._convertNode = function(domNode){
 		return this.parent.getID()+":"+this.startOffset+":"+this.getLabel();
 	}
 
+ 
+
+ 
  /**  
   * @class davinci.html.CSSFile
     * @constructor 
@@ -319,7 +322,32 @@ davinci.html.CSSFile.prototype.getStyleValue = function(propertyNames, domElemen
 		 
 }
 	
+/**  
+ * @class davinci.html.CSSFile
+   * @constructor 
+   * @extends davinci.html.CSSElement
+ */
+davinci.html.CSSFragment= function(args){
 	
+	this.inherits(davinci.html.CSSElement);  
+	this.elementType="CSSFile";
+	dojo.mixin(this, args);
+	if(!this.options)
+		this.options =  {xmode:'style', css:true, expandShorthand:false};
+	var txt = null;
+	
+	if (this.url && this.loader){
+		txt=this.loader(this.url);
+	}else if(this.url){
+		 var file = this.getResource();
+		 if(file)
+			 txt = file.getContents();
+	}
+	if (txt)
+		  this.setText(txt);
+	
+}
+davinci.Inherits(davinci.html.CSSFragment, davinci.html.CSSFile);	
 	
  /**  
   * @class davinci.html.CSSRule

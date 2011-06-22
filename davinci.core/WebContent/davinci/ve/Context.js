@@ -509,8 +509,8 @@ dojo.declare("davinci.ve.Context", null, {
 				delete window["loading" + context._id];
 				var callbackData = context;
 				try {
-				var win = dijit.getDocumentWindow(doc);
-				var body = (context.rootNode = doc.body);
+					var win = dijit.getDocumentWindow(doc),
+					 	body = (context.rootNode = doc.body);
 					body.id = "myapp";
 
 					// Kludge to enable full-screen layout widgets, like BorderContainer.
@@ -521,11 +521,12 @@ dojo.declare("davinci.ve.Context", null, {
 					body.style.margin = "0";
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
-					context._bootstrapModules.split(",").forEach(function(module){
-																	if (module === 'dijit.dijit-all')
-																		win.dojo._postLoad=true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
-																	win.dojo["require"](module);
-																}); // to bootstrap references to base dijit methods in container
+					context._bootstrapModules.split(",").forEach(
+							function(module){
+								if (module === 'dijit.dijit-all')
+									win.dojo._postLoad = true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
+								win.dojo["require"](module);
+							}); // to bootstrap references to base dijit methods in container
 					context._frameNode = frame;
 					// see Dojo ticket #5334
 					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
@@ -537,17 +538,14 @@ dojo.declare("davinci.ve.Context", null, {
 console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
 				} catch(e) {
+					console.error(e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					dojo.mixin(callbackData, e);
-					// XXX setSource() currently called without callback; log error to console
-					if (!callback) {
-						console.error(e);
-					}
 				}
 
 				if(callback){
-					callback.call((scope || context), callbackData);
+					callback.call((scope || context), callbackData); //FIXME: caller does not use callbackData nor error information?
 				}
 			};
 

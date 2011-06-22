@@ -255,6 +255,8 @@ davinci.ve.metadata = function() {
             //	var path = davinci.library.getMetaRoot(lib.id, lib.version);
              
                 var data = davinci.library.getlibMetaData(lib.id, lib.version);
+                if(data==null)
+                	return;
                 parseLibraryDescriptor(data)
                 /*
                 dojo.xhrGet({

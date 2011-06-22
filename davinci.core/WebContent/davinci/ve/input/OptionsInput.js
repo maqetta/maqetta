@@ -157,18 +157,18 @@ dojo.declare("davinci.ve.input.OptionsInput", davinci.ve.input.SmartInput, {
 	},
 	
 
-	_addChildOfTypeWithProperty: function(widget, type, propertyName, value) {
-		var data = {type: type, properties: {innerHTML:value}, context: this._getContext()};
-		data.properties[propertyName] = value;
-		
-		var child = undefined;
-		dojo.withDoc(this._getContext().getDocument(), function(){
-			child = davinci.ve.widget.createWidget(data);
-		}, this);
-		
-		var command = new davinci.ve.commands.AddCommand(child, widget);
-		this._addOrExecCommand(command);
-	},
+//	_addChildOfTypeWithProperty: function(widget, type, propertyName, value) {
+//		var data = {type: type, properties: {innerHTML:value}, context: this._getContext()};
+//		data.properties[propertyName] = value;
+//		
+//		var child = undefined;
+//		dojo.withDoc(this._getContext().getDocument(), function(){
+//			child = davinci.ve.widget.createWidget(data);
+//		}, this);
+//		
+//		var command = new davinci.ve.commands.AddCommand(child, widget);
+//		this._addOrExecCommand(command);
+//	},
 	
 	_addOrExecCommand: function(command) {
 		if (this.command && command) {

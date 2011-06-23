@@ -33,7 +33,10 @@ fs.readFile(descriptorPath, "utf8", function(err, data) {
             // put 'iconBase64' after 'icon'
             var newWidget = {};
             for (var p in widget) if (widget.hasOwnProperty(p)) {
-                newWidget[p] = widget[p];
+                // copy props to 'newWidget', skipping 'iconBase64', which is handled next
+                if (p !== "iconBase64") {
+                    newWidget[p] = widget[p];
+                }
                 if (p === "icon") {
                     newWidget.iconBase64 = iconBase64;
                 }

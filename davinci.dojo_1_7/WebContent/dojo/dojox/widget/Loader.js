@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/widget/Loader",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Loader",1);
 _1.deprecated("dojox.widget.Loader","","2.0");
 _1.declare("dojox.widget.Loader",[_2._Widget,_2._Templated],{loadIcon:_1.moduleUrl("dojox.widget.Loader","icons/loading.gif"),loadMessage:"Loading ...",hasVisuals:true,attachToPointer:true,duration:125,_offset:16,_pointerConnect:null,_xhrStart:null,_xhrEnd:null,templateString:"<div dojoAttachPoint=\"loadNode\" class=\"dojoxLoader\">"+"<img src=\"${loadIcon}\" class=\"dojoxLoaderIcon\"> <span dojoAttachPoint=\"loadMessageNode\" class=\"dojoxLoaderMessage\"></span>"+"</div>",postCreate:function(){

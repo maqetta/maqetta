@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./fx/_base"],function(){
+define("dojox/fx",["dojo/_base/kernel","./fx/_base"],function(){
 return dojo.getObject("fx",true,dojox);
 });

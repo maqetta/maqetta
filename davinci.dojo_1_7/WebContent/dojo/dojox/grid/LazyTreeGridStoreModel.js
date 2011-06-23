@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/tree/ForestStoreModel"],function(_1,_2,_3){
+define("dojox/grid/LazyTreeGridStoreModel",["dojo","dijit","dojox","dijit/tree/ForestStoreModel"],function(_1,_2,_3){
 _1.declare("dojox.grid.LazyTreeGridStoreModel",_2.tree.ForestStoreModel,{serverStore:false,constructor:function(_4){
 this.serverStore=_4.serverStore===true?true:false;
 },mayHaveChildren:function(_5){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./_ItemBase","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/mobile/ListItem",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./_ItemBase","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.mobile.ListItem",dojox.mobile._ItemBase,{rightText:"",rightIcon2:"",rightIcon:"",anchorLabel:false,noArrow:false,selected:false,checked:false,arrowClass:"mblDomButtonArrow",checkClass:"mblDomButtonCheck",variableHeight:false,rightIconTitle:"",rightIcon2Title:"",btnClass:"",btnClass2:"",postMixInProperties:function(){
 if(this.btnClass){
 this.rightIcon=this.btnClass;
@@ -82,7 +82,7 @@ if(p.className=="mblListItemTextBox"){
 _1.addClass(p,"mblListItemTextBoxSelected");
 setTimeout(function(){
 _1.removeClass(p,"mblListItemTextBoxSelected");
-},1000);
+},_1.isAndroid?300:1000);
 this.onAnchorLabelClicked(e);
 return;
 }
@@ -123,7 +123,7 @@ _c.deselectAll();
 var _d=this;
 setTimeout(function(){
 _d.deselect();
-},1000);
+},_1.isAndroid?300:1000);
 }
 _1.addClass(this.domNode,"mblItemSelected");
 },onAnchorLabelClicked:function(e){

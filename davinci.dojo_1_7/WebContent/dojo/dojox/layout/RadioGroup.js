@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/_Contained","dijit/layout/StackContainer","dojo/fx/easing"],function(_1,_2,_3){
+define("dojox/layout/RadioGroup",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/_Contained","dijit/layout/StackContainer","dojo/fx/easing"],function(_1,_2,_3){
 _1.getObject("dojox.layout.RadioGroup",1);
 _1.experimental("dojox.layout.RadioGroup");
 _1.declare("dojox.layout.RadioGroup",[_2.layout.StackContainer,_2._Templated],{duration:750,hasButtons:false,buttonClass:"dojox.layout._RadioButton",templateString:"<div class=\"dojoxRadioGroup\">"+" \t<div dojoAttachPoint=\"buttonHolder\" style=\"display:none;\">"+"\t\t<table class=\"dojoxRadioButtons\"><tbody><tr class=\"dojoxRadioButtonRow\" dojoAttachPoint=\"buttonNode\"></tr></tbody></table>"+"\t</div>"+"\t<div class=\"dojoxRadioView\" dojoAttachPoint=\"containerNode\"></div>"+"</div>",startup:function(){

@@ -6,6 +6,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  z-index: 1;
   padding: 0px;
   height: 38px;
   background-color: #424142;
@@ -18,14 +19,16 @@
   font-weight: normal;
   text-align: center;
   line-height: 40px;
-  z-index: 1;
+}
+.mblHeading * {
+  z-index: 2;
 }
 .mblHeadingDivTitle {
   position: absolute;
   width: 100%;
   display: none;
-  z-index: -1;
   left: 0px;
+  z-index: 1;
 }
 .mblHeadingCenterTitle .mblHeadingDivTitle {
   display: block;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager","dojo/cookie"],function(_1,_2,_3){
+define("dojox/storage/CookieStorageProvider",["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager","dojo/cookie"],function(_1,_2,_3){
 _1.getObject("dojox.storage.CookieStorageProvider",1);
 _1.declare("dojox.storage.CookieStorageProvider",[_3.storage.Provider],{store:null,cookieName:"dojoxStorageCookie",storageLife:730,initialize:function(){
 this.store=_1.fromJson(_1.cookie(this.cookieName))||{};

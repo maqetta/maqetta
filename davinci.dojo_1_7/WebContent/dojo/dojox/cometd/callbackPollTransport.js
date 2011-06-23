@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/cometd/_base","dojox/cometd/longPollTransport","dojo/io/script"],function(_1,_2,_3){
+define("dojox/cometd/callbackPollTransport",["dojo","dijit","dojox","dojox/cometd/_base","dojox/cometd/longPollTransport","dojo/io/script"],function(_1,_2,_3){
 _1.getObject("dojox.cometd.callbackPollTransport",1);
 _3.cometd.callbackPollTransport=new function(){
 this._connectionType="callback-polling";

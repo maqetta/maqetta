@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../../util/oo","../_Plugin","../../manager/_registry"],function(_1){
+define("dojox/drawing/plugins/tools/Pan",["dojo","../../util/oo","../_Plugin","../../manager/_registry"],function(_1){
 dojox.drawing.plugins.tools.Pan=dojox.drawing.util.oo.declare(dojox.drawing.plugins._Plugin,function(_2){
 this.domNode=_2.node;
 var _3;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/sql/_crypto",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.sql._crypto",1);
 _1.mixin(_3.sql._crypto,{_POOL_SIZE:100,encrypt:function(_4,_5,_6){
 this._initWorkerPool();

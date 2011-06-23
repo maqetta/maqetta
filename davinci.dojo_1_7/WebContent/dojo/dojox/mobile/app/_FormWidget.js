@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/window","dijit/_WidgetBase","dijit/focus"],function(_1,_2,_3){
+define("dojox/mobile/app/_FormWidget",["dojo","dijit","dojox","dojo/window","dijit/_WidgetBase","dijit/focus"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app._FormWidget",1);
 _1.experimental("dojox.mobile.app._FormWidget");
 _1.declare("dojox.mobile.app._FormWidget",_2._WidgetBase,{name:"",alt:"",value:"",type:"text",disabled:false,intermediateChanges:false,scrollOnFocus:false,attributeMap:_1.delegate(_2._WidgetBase.prototype.attributeMap,{value:"focusNode",id:"focusNode",alt:"focusNode",title:"focusNode"}),postMixInProperties:function(){

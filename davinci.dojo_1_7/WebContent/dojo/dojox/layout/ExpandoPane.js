@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/ContentPane","dijit/_Templated","dijit/_Contained"],function(_1,_2,_3){
+define("dojox/layout/ExpandoPane",["dojo","dijit","dojox","dijit/layout/ContentPane","dijit/_Templated","dijit/_Contained"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ExpandoPane",1);
 _1.experimental("dojox.layout.ExpandoPane");
 _1.declare("dojox.layout.ExpandoPane",[_2.layout.ContentPane,_2._TemplatedMixin,_2._Contained,_2._Container],{attributeMap:_1.delegate(_2.layout.ContentPane.prototype.attributeMap,{title:{node:"titleNode",type:"innerHTML"}}),templateString:_1.cache("dojox.layout","resources/ExpandoPane.html","<div class=\"dojoxExpandoPane\">\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"onclick:toggle\"><span class=\"a11yNode\">X</span></div>\t\t\t\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\n\t</div>\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\n\t</div>\n</div>\n"),easeOut:"dojo._DefaultEasing",easeIn:"dojo._DefaultEasing",duration:420,startExpanded:true,previewOpacity:0.75,previewOnDblClick:false,baseClass:"dijitExpandoPane",postCreate:function(){

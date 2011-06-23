@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox/main","dijit/_Widget"],function(_1,_2,_3){
+define("dojox/image/MagnifierLite",["dojo","dijit","dojox/main","dijit/_Widget"],function(_1,_2,_3){
 _1.experimental("dojox.image.MagnifierLite");
 _1.getObject("image",true,_3);
 return _1.declare("dojox.image.MagnifierLite",_2._Widget,{glassSize:125,scale:6,postCreate:function(){

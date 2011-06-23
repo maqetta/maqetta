@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/Button","dijit/form/DropDownButton","dijit/form/ComboButton","dojo/i18n","dijit/nls/loading"],function(_1,_2,_3){
+define("dojox/form/BusyButton",["dojo","dijit","dojox","dijit/form/Button","dijit/form/DropDownButton","dijit/form/ComboButton","dojo/i18n","dijit/nls/loading"],function(_1,_2,_3){
 _1.getObject("dojox.form.BusyButton",1);
 _1.requireLocalization("dijit","loading");
 _1.declare("dojox.form._BusyButtonMixin",null,{isBusy:false,busyLabel:"",timeout:null,useIcon:true,postMixInProperties:function(){

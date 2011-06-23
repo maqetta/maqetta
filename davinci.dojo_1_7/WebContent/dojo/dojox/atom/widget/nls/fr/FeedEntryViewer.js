@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[options d'affichage]",
 	title: "Titre",

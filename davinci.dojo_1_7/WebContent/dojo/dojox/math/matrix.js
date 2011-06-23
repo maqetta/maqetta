@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/math/matrix",["dojo","dojox"],function(_1,_2){
 _1.getObject("math.matrix",true,_2);
 _1.mixin(_2.math.matrix,{iDF:0,ALMOST_ZERO:1e-10,multiply:function(a,b){
 var ay=a.length,ax=a[0].length,by=b.length,bx=b[0].length;

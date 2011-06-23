@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","./GlossyCircularGaugeBase"],function(_1,_2,_3,_4){
+define("dojox/gauges/GlossyCircularGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","./GlossyCircularGaugeBase"],function(_1,_2,_3,_4){
 return _1.declare("dojox.gauges.GlossyCircularGauge",[_4],{_designWidth:376.25,_designHeight:382.5,_designCx:187.19173,_designCy:187.81589,_designTextIndicatorX:187.19173,_designTextIndicatorY:267.81589,constructor:function(){
 this.startAngle=-135;
 this.endAngle=135;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","../Exporter"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/exporter/_ExportWriter",["dojo","dojox","../Exporter"],function(_1,_2){
 _1.declare("dojox.grid.enhanced.plugins.exporter._ExportWriter",null,{constructor:function(_3){
 },_getExportDataForCell:function(_4,_5,_6,_7){
 var _8=(_6.get||_7.get).call(_6,_4,_5);

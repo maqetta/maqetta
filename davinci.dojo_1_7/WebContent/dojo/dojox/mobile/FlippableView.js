@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox/mobile/SwapView"],function(_1){
+define("dojox/mobile/FlippableView",["dojox/mobile/SwapView"],function(_1){
 dojo.deprecated("dojox.mobile.FlippableView is deprecated","dojox.mobile.FlippableView moved to dojox.mobile.SwapView",1.7);
 dojox.mobile.FlippableView=_1;
 return _1;

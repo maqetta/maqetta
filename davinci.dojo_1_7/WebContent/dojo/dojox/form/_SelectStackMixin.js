@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/form/_SelectStackMixin",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.form._SelectStackMixin",1);
 _1.declare("dojox.form._SelectStackMixin",null,{stackId:"",stackPrefix:"",_paneIdFromOption:function(_4){
 return (this.stackPrefix||"")+_4;

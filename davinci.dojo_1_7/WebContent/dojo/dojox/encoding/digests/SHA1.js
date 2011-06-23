@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojox/encoding/digests/_base"],function(_1,_2){
+define("dojox/encoding/digests/SHA1",["dojo/_base/kernel","dojox/encoding/digests/_base"],function(_1,_2){
 _1.getObject("encoding.digests.SHA1",true,dojox);
 var _3=8,_4=(1<<_3)-1;
 function R(n,c){

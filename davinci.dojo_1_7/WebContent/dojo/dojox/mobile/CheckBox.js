@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./ToggleButton","dijit/form/_CheckBoxMixin"],function(_1,_2,_3,_4,_5){
+define("dojox/mobile/CheckBox",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./ToggleButton","dijit/form/_CheckBoxMixin"],function(_1,_2,_3,_4,_5){
 return _1.declare("dojox.mobile.CheckBox",[dojox.mobile.ToggleButton,dijit.form._CheckBoxMixin],{baseClass:"mblCheckBox",_setTypeAttr:function(){
 },buildRendering:function(){
 if(!this.srcNodeRef){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","./ListItem"],function(_1,_2,_3,_4){
+define("dojox/mobile/_DataListMixin",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","./ListItem"],function(_1,_2,_3,_4){
 return _1.declare("dojox.mobile._DataListMixin",null,{store:null,query:null,queryOptions:null,buildRendering:function(){
 this.inherited(arguments);
 if(!this.store){

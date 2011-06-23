@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/lang","dojo/_base/Color","dojox/gfx","./BarGauge","./BarCircleIndicator","./GlossyHorizontalGaugeMarker"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+define("dojox/gauges/GlossyHorizontalGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/lang","dojo/_base/Color","dojox/gfx","./BarGauge","./BarCircleIndicator","./GlossyHorizontalGaugeMarker"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 return _1.declare("dojox.gauges.GlossyHorizontalGauge",[_7],{_defaultIndicator:_8,color:"black",markerColor:"black",majorTicksInterval:10,_majorTicksLength:10,majorTicksColor:"#c4c4c4",minorTicksInterval:5,_minorTicksLength:6,minorTicksColor:"#c4c4c4",value:0,noChange:false,title:"",font:"normal normal normal 10pt serif",scalePrecision:0,_font:null,_margin:2,_minBorderWidth:2,_maxBorderWidth:6,_tickLabelOffset:5,_designHeight:100,constructor:function(){
 this.min=0;
 this.max=100;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../stencil/Path","../util/oo","../manager/_registry"],function(){
+define("dojox/drawing/tools/Path",["../stencil/Path","../util/oo","../manager/_registry"],function(){
 dojox.drawing.tools.Path=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Path,function(){
 this.pathMode="";
 this.currentPathMode="";

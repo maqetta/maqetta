@@ -37,7 +37,9 @@ this.searchTimer=null;
 }
 if(this._fetchHandle){
 if(this._fetchHandle.cancel){
+this._cancelingQuery=true;
 this._fetchHandle.cancel();
+this._cancelingQuery=false;
 }
 this._fetchHandle=null;
 }
@@ -204,7 +206,7 @@ this._refreshState();
 var _1c="";
 if(_19){
 if(!_1b){
-_1b=_19[this.searchAttr];
+_1b=this.store._oldAPI?this.store.getValue(_19,this.searchAttr):_19[this.searchAttr];
 }
 _1c=this._getValueField()!=this.searchAttr?this.store.getIdentity(_19):_1b;
 }
@@ -219,7 +221,7 @@ _1e=_1d.innerHTML;
 this.item=undefined;
 this.value="";
 }else{
-_1e=_1d.item[this.searchAttr].toString();
+_1e=(this.store._oldAPI?this.store.getValue(_1d.item,this.searchAttr):_1d.item[this.searchAttr]).toString();
 this.set("item",_1d.item,false,_1e);
 }
 this.focusNode.value=this.focusNode.value.substring(0,this._lastInput.length);
@@ -256,14 +258,15 @@ return qs;
 this._lastQuery=_23[this.searchAttr]=q;
 var _25=this,_26=function(){
 var _27=_25._fetchHandle=_25.store.query(_23,_24);
-_1.when(_27,function(res,err){
-if(err){
+_1.when(_27,function(res){
 _25._fetchHandle=null;
-console.error(_25.declaredClass+" "+err.toString());
-_25.closeDropDown();
-}else{
 res.total=_27.total;
 _25._openResultList(res,_23,_24);
+},function(err){
+_25._fetchHandle=null;
+if(!_25._cancelingQuery){
+console.error(_25.declaredClass+" "+err.toString());
+_25.closeDropDown();
 }
 });
 };
@@ -295,7 +298,7 @@ if(!("value" in this.params)){
 var _2d=(this.item=this.store.fetchSelectedItem());
 if(_2d){
 var _2e=this._getValueField();
-this.value=_2d[_2e];
+this.value=this.store._oldAPI?this.store.getValue(_2d,_2e):_2d[_2e];
 }
 }
 }
@@ -325,7 +328,7 @@ return str;
 this.item=null;
 this.inherited(arguments);
 },labelFunc:function(_36,_37){
-return _36[this.labelAttr||this.searchAttr].toString();
+return (_37._oldAPI?_37.getValue(_36,this.labelAttr||this.searchAttr):_36[this.labelAttr||this.searchAttr]).toString();
 },_setValueAttr:function(_38,_39,_3a,_3b){
 this._set("item",_3b||null);
 if(!_38){

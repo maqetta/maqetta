@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/i18n","dojo/cldr/nls/hebrew"],function(_1,_2,_3){
+define("dojox/date/hebrew/locale",["dojo","dijit","dojox","dojo/i18n","dojo/cldr/nls/hebrew"],function(_1,_2,_3){
 _1.getObject("dojox.date.hebrew.locale",1);
 define(["dojo/_base/kernel","dojo/date","dojo/i18n","dojo/regexp","dojo/string","./Date","./numerals","dojo/i18n!dojo/cldr/nls/hebrew"],function(d,dd,_4,_5,_6,_7,_8){
 _1.getObject("date.hebrew.locale",true,_3);

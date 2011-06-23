@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/secure/fromJson",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.secure.fromJson",1);
 _3.secure.fromJson=typeof JSON!="undefined"?JSON.parse:(function(){
 var _4="(?:-?\\b(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\\b)";

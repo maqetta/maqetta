@@ -6,14 +6,18 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	z-index: 1;
 	.mblHeading-styles;
+}
+.mblHeading * {
+	z-index: 2;
 }
 .mblHeadingDivTitle {
 	position: absolute;
 	width: 100%;
 	display: none;
-	z-index: -1;
 	left: 0px;
+	z-index: 1;
 }
 .mblHeadingCenterTitle .mblHeadingDivTitle {
 	display: block;

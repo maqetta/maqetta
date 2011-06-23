@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","./_Base","../util/oo","../manager/_registry"],function(_1){
+define("dojox/drawing/stencil/Rect",["dojo","./_Base","../util/oo","../manager/_registry"],function(_1){
 dojox.drawing.stencil.Rect=dojox.drawing.util.oo.declare(dojox.drawing.stencil._Base,function(_2){
 if(this.points.length){
 }

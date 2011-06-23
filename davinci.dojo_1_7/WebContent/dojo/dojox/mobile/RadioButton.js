@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./CheckBox","dijit/form/_RadioButtonMixin"],function(_1,_2){
+define("dojox/mobile/RadioButton",["./CheckBox","dijit/form/_RadioButtonMixin"],function(_1,_2){
 return dojo.declare("dojox.mobile.RadioButton",[dojox.mobile.CheckBox,dijit.form._RadioButtonMixin],{baseClass:"mblRadioButton"});
 });

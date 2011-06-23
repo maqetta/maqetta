@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define("dojo/main",["./_base/kernel","./has","require","./_base/loader","./_base/lang","./_base/array","./_base/declare","./_base/Deferred","./_base/json","./_base/Color","require","./_base/browser"],function(_1,_2,_3){
+define("dojo/main",["./_base/kernel","./has","require","./_base/sniff","./_base/lang","./_base/array","./_base/declare","./_base/Deferred","./_base/json","./_base/Color","require","./_base/browser","./_base/loader"],function(_1,_2,_3){
 if(_1.config.isDebug){
 _3(["./_firebug/firebug"]);
 }
@@ -29,13 +29,6 @@ _1.ready(1,function(){
 _3(_4);
 });
 }
-}
-}
-true||_2.add("dojo-config-addOnLoad",1);
-if(1){
-var _6=_1.config.addOnLoad;
-if(_6){
-_1.ready(_1.isArray(_6)?_1.hitch.apply(_1,_6):_6);
 }
 }
 return _1;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./matrix"],function(m){
+define("dojox/gfx/gradutils",["./matrix"],function(m){
 dojo.getObject("dojox.gfx.gradutils",true);
 var d=dojo,C=d.Color;
 function _1(o,c){

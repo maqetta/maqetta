@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/html","dojox/mdnd/AreaManager"],function(_1){
+define("dojox/mdnd/dropMode/DefaultDropMode",["dojo/_base/kernel","dojo/_base/html","dojox/mdnd/AreaManager"],function(_1){
 var _2=_1.declare("dojox.mdnd.dropMode.DefaultDropMode",null,{_oldXPoint:null,_oldYPoint:null,_oldBehaviour:"up",addArea:function(_3,_4){
 var _5=_3.length;
 var _6=_1.position(_4.node,true);

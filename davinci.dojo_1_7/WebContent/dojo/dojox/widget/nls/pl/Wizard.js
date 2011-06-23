@@ -1,3 +1,4 @@
+require.built();
 define(({
 next: "Dalej",
 previous: "Wstecz",

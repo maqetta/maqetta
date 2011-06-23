@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/_FormWidget","dijit/form/ValidationTextBox","dojo/i18n","dojox/form/nls/PasswordValidator"],function(_1,_2,_3){
+define("dojox/form/PasswordValidator",["dojo","dijit","dojox","dijit/form/_FormWidget","dijit/form/ValidationTextBox","dojo/i18n","dojox/form/nls/PasswordValidator"],function(_1,_2,_3){
 _1.getObject("dojox.form.PasswordValidator",1);
 _1.requireLocalization("dojox.form","PasswordValidator");
 _1.declare("dojox.form._ChildTextBox",_2.form.ValidationTextBox,{containerWidget:null,type:"password",reset:function(){

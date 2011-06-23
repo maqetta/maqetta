@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./_FilterExpr","../_StoreLayer"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/filter/FilterLayer",["dojo","dojox","./_FilterExpr","../_StoreLayer"],function(_1,_2){
 var ns=_1.getObject("grid.enhanced.plugins",true,_2),_3="filter",_4="clear",_5=function(_6,_7){
 return _7?_1.hitch(_6||_1.global,_7):function(){
 };

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/window","./ChartAction","./_IndicatorElement","dojox/lang/utils"],function(_1,_2,_3,_4,_5,_6,_7,du){
+define("dojox/charting/action2d/MouseIndicator",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/window","./ChartAction","./_IndicatorElement","dojox/lang/utils"],function(_1,_2,_3,_4,_5,_6,_7,du){
 return _1.declare("dojox.charting.action2d.MouseIndicator",dojox.charting.action2d.ChartAction,{defaultParams:{series:null,vertical:true,autoScroll:true,fixed:true,precision:0},optionalParams:{lineStroke:{},outlineStroke:{},shadowStroke:{},stroke:{},outline:{},shadow:{},fill:{},fillFunc:null,labelFunc:null,font:"",fontColor:"",markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerSymbol:""},constructor:function(_8,_9,_a){
 this._listeners=[{eventName:"onmousedown",methodName:"onMouseDown"}];
 this.opt=_1.clone(this.defaultParams);

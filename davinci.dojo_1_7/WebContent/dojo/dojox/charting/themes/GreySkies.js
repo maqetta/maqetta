@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../Theme","./common"],function(_1){
+define("dojox/charting/themes/GreySkies",["../Theme","./common"],function(_1){
 dojox.charting.themes.GreySkies=new _1(_1._def);
 return dojox.charting.themes.GreySkies;
 });

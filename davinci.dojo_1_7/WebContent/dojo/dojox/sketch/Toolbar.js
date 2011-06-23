@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","dojo/_base/declare","./Annotation","dijit/Toolbar","dijit/form/Button"],function(_1){
+define("dojox/sketch/Toolbar",["dojo/_base/lang","dojo/_base/declare","./Annotation","dijit/Toolbar","dijit/form/Button"],function(_1){
 _1.getObject("sketch",true,dojox);
 _1.declare("dojox.sketch.ButtonGroup",null,{constructor:function(){
 this._childMaps={};

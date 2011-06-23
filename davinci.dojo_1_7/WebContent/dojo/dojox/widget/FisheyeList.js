@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/_Container","dijit/_Contained"],function(_1,_2,_3){
+define("dojox/widget/FisheyeList",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/_Container","dijit/_Contained"],function(_1,_2,_3){
 _1.getObject("dojox.widget.FisheyeList",1);
 _1.declare("dojox.widget.FisheyeList",[_2._Widget,_2._Templated,_2._Container],{constructor:function(){
 this.pos={"x":-1,"y":-1};

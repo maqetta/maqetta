@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
+define("dojox/cometd/timestamp",["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
 _1.getObject("dojox.cometd.timestamp",1);
 _3.cometd._extendOutList.push(function(_4){
 _4.timestamp=new Date().toUTCString();

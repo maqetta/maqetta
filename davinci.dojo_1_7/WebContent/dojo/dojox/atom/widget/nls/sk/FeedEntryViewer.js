@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[zobraziť voľby]",
 	title: "Nadpis",

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/wire/_base"],function(_1,_2,_3){
+define("dojox/wire/Wire",["dojo","dijit","dojox","dojox/wire/_base"],function(_1,_2,_3){
 _1.getObject("dojox.wire.Wire",1);
 _1.declare("dojox.wire.Wire",null,{_wireClass:"dojox.wire.Wire",constructor:function(_4){
 _1.mixin(this,_4);

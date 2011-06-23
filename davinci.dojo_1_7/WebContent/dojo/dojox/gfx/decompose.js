@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./matrix"],function(m){
+define("dojox/gfx/decompose",["./matrix"],function(m){
 function eq(a,b){
 return Math.abs(a-b)<=0.000001*(Math.abs(a)+Math.abs(b));
 };

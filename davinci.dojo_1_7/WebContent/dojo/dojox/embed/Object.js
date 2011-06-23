@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dojox/embed/Flash","dojox/embed/Quicktime"],function(_1,_2,_3){
+define("dojox/embed/Object",["dojo","dijit","dojox","dijit/_Widget","dojox/embed/Flash","dojox/embed/Quicktime"],function(_1,_2,_3){
 _1.getObject("dojox.embed.Object",1);
 _1.experimental("dojox.embed.Object");
 _1.declare("dojox.embed.Object",_2._Widget,{width:0,height:0,src:"",movie:null,params:null,reFlash:/\.swf|\.flv/gi,reQtMovie:/\.3gp|\.avi|\.m4v|\.mov|\.mp4|\.mpg|\.mpeg|\.qt/gi,reQtAudio:/\.aiff|\.aif|\.m4a|\.m4b|\.m4p|\.midi|\.mid|\.mp3|\.mpa|\.wav/gi,postCreate:function(){

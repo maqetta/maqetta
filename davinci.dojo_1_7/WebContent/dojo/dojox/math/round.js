@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/math/round",["dojo","dojox"],function(_1,_2){
 _1.getObject("math.round",true,_2);
 _1.experimental("dojox.math.round");
 _2.math.round=function(_3,_4,_5){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/form/_FormWidget","dijit/form/ValidationTextBox","dijit/InlineEditBox","dojo/i18n","dijit/nls/common"],function(_1,_2,_3){
+define("dojox/form/ListInput",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/form/_FormWidget","dijit/form/ValidationTextBox","dijit/InlineEditBox","dojo/i18n","dijit/nls/common"],function(_1,_2,_3){
 _1.getObject("dojox.form.ListInput",1);
 _1.experimental("dojox.form.ListInput");
 _1.requireLocalization("dijit","common");

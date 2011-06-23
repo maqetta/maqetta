@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget"],function(_1,_2,_3){
+define("dojox/layout/DragPane",["dojo","dijit","dojox","dijit/_Widget"],function(_1,_2,_3){
 _1.getObject("dojox.layout.DragPane",1);
 _1.declare("dojox.layout.DragPane",_2._Widget,{invert:true,postCreate:function(){
 this.connect(this.domNode,"onmousedown","_down");

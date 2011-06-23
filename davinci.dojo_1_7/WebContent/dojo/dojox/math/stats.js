@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../main"],function(_1,_2){
+define("dojox/math/stats",["dojo","../main"],function(_1,_2){
 _1.getObject("math.stats",true,_2);
 var st=_2.math.stats;
 _1.mixin(st,{sd:function(a){

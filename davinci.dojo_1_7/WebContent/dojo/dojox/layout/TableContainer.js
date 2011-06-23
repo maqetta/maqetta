@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/_LayoutWidget"],function(_1,_2,_3){
+define("dojox/layout/TableContainer",["dojo","dijit","dojox","dijit/layout/_LayoutWidget"],function(_1,_2,_3){
 _1.getObject("dojox.layout.TableContainer",1);
 _1.experimental("dojox.layout.TableContainer");
 _1.declare("dojox.layout.TableContainer",_2.layout._LayoutWidget,{cols:1,labelWidth:"100",showLabels:true,orientation:"horiz",spacing:1,customClass:"",postCreate:function(){

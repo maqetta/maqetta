@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","../main","dojo/_base/lang","./_base"],function(_1,_2,_3,_4){
+define("dojox/color/Palette",["dojo/_base/kernel","../main","dojo/_base/lang","./_base"],function(_1,_2,_3,_4){
 _2.color.Palette=function(_5){
 this.colors=[];
 if(_5 instanceof _4.Palette){

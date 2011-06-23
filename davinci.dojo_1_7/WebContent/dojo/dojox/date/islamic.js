@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/date","./islamic/Date"],function(d,dd,_1){
+define("dojox/date/islamic",["dojo/_base/kernel","dojo/date","./islamic/Date"],function(d,dd,_1){
 dojo.getObject("date.islamic",true,dojox);
 dojo.experimental("dojox.date.islamic");
 dojox.date.islamic.getDaysInMonth=function(_2){

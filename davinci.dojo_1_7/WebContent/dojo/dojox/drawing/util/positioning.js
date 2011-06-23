@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","./common"],function(_1){
+define("dojox/drawing/util/positioning",["dojo","./common"],function(_1){
 var _2=4;
 var _3=20;
 dojox.drawing.util.positioning={};

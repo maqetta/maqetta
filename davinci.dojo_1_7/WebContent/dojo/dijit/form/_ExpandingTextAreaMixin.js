@@ -64,7 +64,7 @@ _9=_6();
 _8.rows=1;
 _8.style.height=_9+"px";
 }
-var _a=parseInt(_9)+_6()-_8.clientHeight;
+var _a=Math.max(parseInt(_9)-_8.clientHeight,0)+_6();
 var _b=_a+"px";
 if(_b!=_8.style.height){
 _8.rows=1;

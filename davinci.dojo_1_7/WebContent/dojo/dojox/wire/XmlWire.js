@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/xml/parser","dojox/wire/Wire"],function(_1,_2,_3){
+define("dojox/wire/XmlWire",["dojo","dijit","dojox","dojox/xml/parser","dojox/wire/Wire"],function(_1,_2,_3){
 _1.getObject("dojox.wire.XmlWire",1);
 _1.declare("dojox.wire.XmlWire",_3.wire.Wire,{_wireClass:"dojox.wire.XmlWire",constructor:function(_4){
 },_getValue:function(_5){

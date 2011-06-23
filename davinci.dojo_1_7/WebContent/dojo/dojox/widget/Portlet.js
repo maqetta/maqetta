@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/TitlePane","dojo/fx"],function(_1,_2,_3){
+define("dojox/widget/Portlet",["dojo","dijit","dojox","dijit/TitlePane","dojo/fx"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Portlet",1);
 _1.experimental("dojox.widget.Portlet");
 _1.declare("dojox.widget.Portlet",[_2.TitlePane,_2._Container],{resizeChildren:true,closable:true,_parents:null,_size:null,dragRestriction:false,buildRendering:function(){

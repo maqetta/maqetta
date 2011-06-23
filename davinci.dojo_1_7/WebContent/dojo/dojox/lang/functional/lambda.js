@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../..","dojo/_base/kernel","dojo/_base/array"],function(_1,_2){
+define("dojox/lang/functional/lambda",["../..","dojo/_base/kernel","dojo/_base/array"],function(_1,_2){
 var df=_2.getObject("lang.functional",true,_1);
 var _3={};
 var _4="ab".split(/a*/).length>1?String.prototype.split:function(_5){

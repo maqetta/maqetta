@@ -214,6 +214,9 @@ this.removeAllRanges();
 var r=_2d();
 if(r){
 this.addRange(r,true);
+this.isCollapsed=r.collapsed;
+}else{
+this.isCollapsed=true;
 }
 };
 },decomposeControlRange:function(_2f){

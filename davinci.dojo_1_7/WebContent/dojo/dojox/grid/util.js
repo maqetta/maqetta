@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/grid/util",["dojo","dojox"],function(_1,_2){
 var _3=_1.getObject("grid.util",true,_2);
 _3.na="...";
 _3.rowIndexTag="gridRowIndex";

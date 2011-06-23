@@ -1,3 +1,4 @@
+require.built();
 define(({
 	doNew: "[สร้าง]",
 	edit: "[แก้ไข]",

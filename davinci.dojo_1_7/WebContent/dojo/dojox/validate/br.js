@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","./_base"],function(_1,_2){
+define("dojox/validate/br",["dojo/_base/lang","./_base"],function(_1,_2){
 var br=_1.getObject("br",true,dojox.validate);
 br.isValidCnpj=function(_3){
 if(!_1.isString(_3)){

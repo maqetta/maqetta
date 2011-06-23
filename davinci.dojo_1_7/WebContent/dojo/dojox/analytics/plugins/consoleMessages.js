@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,da){
+define("dojox/analytics/plugins/consoleMessages",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,da){
 this.addData=_1.hitch(da,"addData","consoleMessages");
 var _3=_1.config["consoleLogFuncs"]||["error","warn","info","rlog"];
 if(!console){

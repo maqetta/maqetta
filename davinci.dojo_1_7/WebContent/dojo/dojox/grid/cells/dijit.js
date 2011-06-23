@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","../cells","dojo/data/ItemFileReadStore","dijit/form/DateTextBox","dijit/form/TimeTextBox","dijit/form/ComboBox","dijit/form/CheckBox","dijit/form/TextBox","dijit/form/NumberSpinner","dijit/form/NumberTextBox","dijit/form/CurrencyTextBox","dijit/form/HorizontalSlider","dijit/Editor"],function(_1,_2,_3){
+define("dojox/grid/cells/dijit",["dojo","dijit","dojox","../cells","dojo/data/ItemFileReadStore","dijit/form/DateTextBox","dijit/form/TimeTextBox","dijit/form/ComboBox","dijit/form/CheckBox","dijit/form/TextBox","dijit/form/NumberSpinner","dijit/form/NumberTextBox","dijit/form/CurrencyTextBox","dijit/form/HorizontalSlider","dijit/Editor"],function(_1,_2,_3){
 var _4=_3.grid.cells;
 _1.declare("dojox.grid.cells._Widget",_4._Base,{widgetClass:_2.form.TextBox,constructor:function(_5){
 this.widget=null;

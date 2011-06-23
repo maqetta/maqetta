@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/ready","dojo/_base/lang","dojo/_base/html","dojo/_base/window","dojo/_base/connect","dojo/_base/array","dojox/layout/GridContainerLite"],function(){
+define("dojox/layout/GridContainer",["dojo/_base/kernel","dojo/ready","dojo/_base/lang","dojo/_base/html","dojo/_base/window","dojo/_base/connect","dojo/_base/array","dojox/layout/GridContainerLite"],function(){
 return dojo.declare("dojox.layout.GridContainer",dojox.layout.GridContainerLite,{hasResizableColumns:true,liveResizeColumns:false,minColWidth:20,minChildWidth:150,mode:"right",isRightFixed:false,isLeftFixed:false,startup:function(){
 this.inherited(arguments);
 if(this.hasResizableColumns){

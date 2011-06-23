@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/lang","dojo/_base/fx","dojo/fx"],function(){
+define("dojox/fx/_base",["dojo/_base/kernel","dojo/_base/array","dojo/_base/lang","dojo/_base/fx","dojo/fx"],function(){
 dojo.getObject("fx",true,dojox);
 dojo.mixin(dojox.fx,{anim:dojo.anim,animateProperty:dojo.animateProperty,fadeTo:dojo._fade,fadeIn:dojo.fadeIn,fadeOut:dojo.fadeOut,combine:dojo.fx.combine,chain:dojo.fx.chain,slideTo:dojo.fx.slideTo,wipeIn:dojo.fx.wipeIn,wipeOut:dojo.fx.wipeOut});
 dojox.fx.sizeTo=function(_1){

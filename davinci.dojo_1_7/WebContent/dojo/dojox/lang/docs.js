@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/docs",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.docs",1);
 (function(){
 function _4(_5){

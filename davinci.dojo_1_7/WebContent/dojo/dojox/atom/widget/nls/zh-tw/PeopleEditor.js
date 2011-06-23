@@ -1,3 +1,4 @@
+require.built();
 define(({
 	add: "新增",
 	addAuthor: "新增作者",

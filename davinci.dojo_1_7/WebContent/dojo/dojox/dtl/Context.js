@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","./_base"],function(_1,_2,dd){
+define("dojox/dtl/Context",["dojo/_base/kernel","dojo/_base/lang","./_base"],function(_1,_2,dd){
 dojox.dtl.Context=_1.extend(function(_3){
 this._this={};
 dd._Context.call(this,_3);

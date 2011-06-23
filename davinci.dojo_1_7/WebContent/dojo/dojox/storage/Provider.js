@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/storage/Provider",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.storage.Provider",1);
 _1.declare("dojox.storage.Provider",null,{constructor:function(){
 },SUCCESS:"success",FAILED:"failed",PENDING:"pending",SIZE_NOT_AVAILABLE:"Size not available",SIZE_NO_LIMIT:"No size limit",DEFAULT_NAMESPACE:"default",onHideSettingsUI:null,initialize:function(){

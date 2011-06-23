@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[表示オプション]",
 	title: "タイトル",

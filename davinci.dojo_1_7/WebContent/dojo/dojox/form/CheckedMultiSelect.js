@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojo/i18n","dijit/_Templated","dijit/_Widget","dijit/Menu","dijit/MenuItem","dijit/Tooltip","dijit/form/_FormSelectWidget","dijit/form/CheckBox","dijit/form/ComboButton","dojo/i18n!dojox/form/nls/CheckedMultiSelect"],function(_1,_2){
+define("dojox/form/CheckedMultiSelect",["dojo","dijit","dojo/i18n","dijit/_Templated","dijit/_Widget","dijit/Menu","dijit/MenuItem","dijit/Tooltip","dijit/form/_FormSelectWidget","dijit/form/CheckBox","dijit/form/ComboButton","dojo/i18n!dojox/form/nls/CheckedMultiSelect"],function(_1,_2){
 _1.declare("dojox.form._CheckedMultiSelectItem",[_2._Widget,_2._Templated],{widgetsInTemplate:true,templateString:_1.cache("dojox.form","resources/_CheckedMultiSelectItem.html"),baseClass:"dojoxMultiSelectItem",option:null,parent:null,disabled:false,readOnly:false,postMixInProperties:function(){
 this._type=this.parent.multiple?{type:"checkbox",baseClass:"dijitCheckBox"}:{type:"radio",baseClass:"dijitRadio"};
 this.disabled=this.option.disabled=this.option.disabled||false;

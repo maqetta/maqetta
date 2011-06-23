@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/async/topic",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.async.topic",1);
 (function(){
 var d=_1,_4=_3.lang.async.topic;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/widget/rotator/ThumbnailController",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.widget.rotator.ThumbnailController",1);
 (function(d){
 var _4="dojoxRotatorThumb",_5=_4+"Selected";

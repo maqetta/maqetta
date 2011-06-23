@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget","dijit/TitlePane"],function(_1,_2,_3,_4){
+define("dojox/widget/TitleGroup",["dojo","dijit","dijit/_Widget","dijit/TitlePane"],function(_1,_2,_3,_4){
 var d=_1,tp=_4.prototype,_5=function(){
 var _6=this._dxfindParent&&this._dxfindParent();
 _6&&_6.selectChild(this);

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/atom/io/model"],function(_1,_2,_3){
+define("dojox/atom/io/Connection",["dojo","dijit","dojox","dojox/atom/io/model"],function(_1,_2,_3){
 _1.getObject("dojox.atom.io.Connection",1);
 _1.declare("dojox.atom.io.Connection",null,{constructor:function(_4,_5){
 this.sync=_4;

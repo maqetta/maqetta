@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojox","dojo/_base/lang"],function(_1,_2,_3){
+define("dojox/gfx3d/matrix",["dojo/_base/kernel","dojox","dojo/_base/lang"],function(_1,_2,_3){
 _1.getObject("gfx3d",true,_2);
 _2.gfx3d.matrix={_degToRad:function(_4){
 return Math.PI*_4/180;

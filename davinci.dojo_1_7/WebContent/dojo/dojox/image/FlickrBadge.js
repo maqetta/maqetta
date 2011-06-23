@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox/main","dojox/image/Badge","dojox/data/FlickrRestStore"],function(_1,_2){
+define("dojox/image/FlickrBadge",["dojo","dojox/main","dojox/image/Badge","dojox/data/FlickrRestStore"],function(_1,_2){
 _1.getObject("image",true,_2);
 return _1.declare("dojox.image.FlickrBadge",_2.image.Badge,{children:"a.flickrImage",userid:"",username:"",setid:"",tags:"",searchText:"",target:"",apikey:"8c6803164dbc395fb7131c9d54843627",_store:null,postCreate:function(){
 if(this.username&&!this.userid){

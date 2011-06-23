@@ -1,3 +1,4 @@
+require.built();
 define(({
 next: "Келесі",
 previous: "Алдыңғы",

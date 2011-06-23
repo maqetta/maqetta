@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/Menu"],function(_1,_2,_3){
+define("dojox/widget/PlaceholderMenuItem",["dojo","dijit","dojox","dijit/Menu"],function(_1,_2,_3){
 _1.getObject("dojox.widget.PlaceholderMenuItem",1);
 _1.experimental("dojox.widget.PlaceholderMenuItem");
 _1.declare("dojox.widget.PlaceholderMenuItem",_2.MenuItem,{_replaced:false,_replacedWith:null,_isPlaceholder:true,postCreate:function(){

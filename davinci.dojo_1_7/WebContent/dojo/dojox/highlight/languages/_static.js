@@ -4,5 +4,5 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./cpp","./java","./delphi"],function(){
+define("dojox/highlight/languages/_static",["./cpp","./java","./delphi"],function(){
 });

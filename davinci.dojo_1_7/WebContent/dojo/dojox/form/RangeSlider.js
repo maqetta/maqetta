@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/HorizontalSlider","dijit/form/VerticalSlider","dijit/focus","dojox/fx"],function(_1,_2,_3){
+define("dojox/form/RangeSlider",["dojo","dijit","dojox","dijit/form/HorizontalSlider","dijit/form/VerticalSlider","dijit/focus","dojox/fx"],function(_1,_2,_3){
 _1.getObject("dojox.form.RangeSlider",1);
 (function(){
 var _4=function(a,b){

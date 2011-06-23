@@ -1,3 +1,4 @@
+require.built();
 define(({
 	add: "הוספה",
 	addAuthor: "הוספת מחבר",

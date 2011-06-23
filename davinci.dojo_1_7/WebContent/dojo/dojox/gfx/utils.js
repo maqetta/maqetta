@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox/gfx"],function(){
+define("dojox/gfx/utils",["dojox/gfx"],function(){
 var gu=dojo.getObject("dojox.gfx.utils",true);
 var d=dojo,g=dojox.gfx;
 dojo.mixin(gu,{forEach:function(_1,f,o){
@@ -187,6 +187,7 @@ svg=svg.substring(4,svg.length);
 svg="<svg xmlns=\"http://www.w3.org/2000/svg\""+svg;
 }
 svg=svg.replace(/\bdojoGfx\w*\s*=\s*(['"])\w*\1/g,"");
+svg=svg.replace(/[=]([^"']+?)(\s|>)/g,"=\"$1\"$2");
 }
 return svg;
 }});

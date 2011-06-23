@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/fx","dijit/_Widget","dijit/_Templated","dijit/_Container","dijit/layout/ContentPane","dojox/atom/io/Connection","dojo/i18n","dojox/atom/widget/nls/FeedEntryViewer"],function(_1,_2,_3){
+define("dojox/atom/widget/FeedEntryViewer",["dojo","dijit","dojox","dojo/fx","dijit/_Widget","dijit/_Templated","dijit/_Container","dijit/layout/ContentPane","dojox/atom/io/Connection","dojo/i18n","dojox/atom/widget/nls/FeedEntryViewer"],function(_1,_2,_3){
 _1.getObject("dojox.atom.widget.FeedEntryViewer",1);
 _1.requireLocalization("dojox.atom.widget","FeedEntryViewer");
 _1.experimental("dojox.atom.widget.FeedEntryViewer");

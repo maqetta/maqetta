@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./_base","dojo/fx","dojo/fx/easing"],function(){
+define("dojox/fx/text",["./_base","dojo/fx","dojo/fx/easing"],function(){
 dojo.getObject("fx.text",true,dojox);
 dojox.fx.text._split=function(_1){
 var _2=_1.node=dojo.byId(_1.node),s=_2.style,cs=dojo.getComputedStyle(_2),_3=dojo.coords(_2,true);

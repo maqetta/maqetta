@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/declare","dijit/_WidgetBase"],function(_1,_2){
+define("dojox/mvc/Group",["dojo/_base/declare","dijit/_WidgetBase"],function(_1,_2){
 return _1("dojox.mvc.Group",[_2],{});
 });

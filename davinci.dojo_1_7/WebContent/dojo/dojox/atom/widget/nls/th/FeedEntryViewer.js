@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[อ็อพชันการแสดงผล]",
 	title: "ชื่อเรื่อง",

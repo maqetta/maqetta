@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojox/gfx"],function(_1,_2,_3,_4){
+define("dojox/charting/Element",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojox/gfx"],function(_1,_2,_3,_4){
 return _1.declare("dojox.charting.Element",null,{chart:null,group:null,htmlElements:null,dirty:true,constructor:function(_5){
 this.chart=_5;
 this.group=null;

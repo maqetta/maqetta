@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/window","dojo/_base/xhr","dojo/_base/sniff","dojo/_base/url","domReady!"],function(_1){
+define("dojox/io/windowName",["dojo/_base/window","dojo/_base/xhr","dojo/_base/sniff","dojo/_base/url","domReady!"],function(_1){
 _1.getObject("io.windowName",true,dojox);
 dojox.io.windowName={send:function(_2,_3){
 _3.url+=(_3.url.match(/\?/)?"&":"?")+"windowname="+(_3.authElement?"auth":true);

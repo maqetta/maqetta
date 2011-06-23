@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo"],function(_1){
+define("dojox/embed/flashVars",["dojo"],function(_1){
 _1.getObject("dojox.embed",true);
 _1.deprecated("dojox.embed.flashVars","Will be removed in 2.0","2.0");
 dojox.embed.flashVars={serialize:function(n,o){

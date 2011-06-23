@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojox/geo/openlayers/Point","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+define("dojox/geo/openlayers/GeometryFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojox/geo/openlayers/Point","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 return _1.declare("dojox.geo.openlayers.GeometryFeature",dojox.geo.openlayers.Feature,{constructor:function(_9){
 this._geometry=_9;
 this._shapeProperties={};
@@ -214,7 +214,9 @@ return this._fill;
 var g=this._geometry;
 var shp=g.shape;
 g.shape=null;
+if(shp){
 shp.removeShape();
+}
 if(g instanceof dojox.geo.openlayers.Collection){
 _1.forEach(g.coordinates,function(i){
 this.remove(i);

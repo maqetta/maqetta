@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/_LayoutWidget","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/widget/SortList",["dojo","dijit","dojox","dijit/layout/_LayoutWidget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.widget.SortList",1);
 _1.experimental("dojox.widget.SortList");
 _1.declare("dojox.widget.SortList",[_2.layout._LayoutWidget,_2._Templated],{title:"",heading:"",descending:true,selected:null,sortable:true,store:"",key:"name",baseClass:"dojoxSortList",templateString:_1.cache("dojox.widget","SortList/SortList.html","<div class=\"sortList\" id=\"${id}\">\n\t\t<div class=\"sortListTitle\" dojoAttachPoint=\"titleNode\">\n\t\t<div class=\"dijitInline sortListIcon\">&thinsp;</div>\n\t\t<span dojoAttachPoint=\"focusNode\">${title}</span>\n\t\t</div>\n\t\t<div class=\"sortListBodyWrapper\" dojoAttachEvent=\"onmouseover: _set, onmouseout: _unset, onclick:_handleClick\" dojoAttachPoint=\"bodyWrapper\">\n\t\t<ul dojoAttachPoint=\"containerNode\" class=\"sortListBody\"></ul>\n\t</div>\n</div>"),_addItem:function(_4){

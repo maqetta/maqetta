@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./PlotAction","dijit/Tooltip","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/functional/scan","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,m,df){
+define("dojox/charting/action2d/Tooltip",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./PlotAction","dijit/Tooltip","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/functional/scan","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,m,df){
 var _6=function(o){
 var t=o.run&&o.run.data&&o.run.data[o.index];
 if(t&&typeof t!="number"&&(t.tooltip||t.text)){

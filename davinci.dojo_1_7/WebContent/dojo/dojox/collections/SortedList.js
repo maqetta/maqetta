@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","./_base"],function(_1,_2,_3){
+define("dojox/collections/SortedList",["dojo/_base/kernel","dojo/_base/array","./_base"],function(_1,_2,_3){
 _3.SortedList=function(_4){
 var _5=this;
 var _6={};

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/query","dijit/_Widget","../Chart","dojox/lang/utils","dojox/lang/functional"],function(_1,_2,_3,_4,_5,_6,du,df){
+define("dojox/charting/widget/Chart",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/query","dijit/_Widget","../Chart","dojox/lang/utils","dojox/lang/functional"],function(_1,_2,_3,_4,_5,_6,du,df){
 var _7,_8,_9,_a,_b,_c=function(o){
 return o;
 },dc=dojox.charting,d=_1;

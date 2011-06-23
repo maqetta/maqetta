@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","dojo/_base/declare","dijit/form/HorizontalSlider","./_Plugin"],function(_1){
+define("dojox/sketch/Slider",["dojo/_base/lang","dojo/_base/declare","dijit/form/HorizontalSlider","./_Plugin"],function(_1){
 _1.getObject("sketch",true,dojox);
 _1.declare("dojox.sketch.Slider",dojox.sketch._Plugin,{_initButton:function(){
 this.slider=new dijit.form.HorizontalSlider({minimum:5,maximum:100,style:"width:100px;",baseClass:"dijitInline dijitSlider"});

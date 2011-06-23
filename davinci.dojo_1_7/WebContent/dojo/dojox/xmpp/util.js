@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/string/Builder","dojox/encoding/base64"],function(_1,_2,_3){
+define("dojox/xmpp/util",["dojo","dijit","dojox","dojox/string/Builder","dojox/encoding/base64"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.util",1);
 _3.xmpp.util.xmlEncode=function(_4){
 if(_4){

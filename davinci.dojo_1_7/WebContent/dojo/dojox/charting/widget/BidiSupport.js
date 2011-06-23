@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojo/_base/connect","dojo/query","dijit/_BidiSupport","../BidiSupport"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+define("dojox/charting/widget/BidiSupport",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojo/_base/connect","dojo/query","dijit/_BidiSupport","../BidiSupport"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 if(dojox.charting.widget.Legend){
 _1.extend(dojox.charting.widget.Legend,{postMixInProperties:function(){
 if(!this.chart){

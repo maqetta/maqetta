@@ -1,3 +1,4 @@
+require.built();
 define(({
 name: "Nom",
 path: "Camí d'accés",

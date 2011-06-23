@@ -122,7 +122,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				   editorPrefs['cssOverrideWarn'] &&
 					this._editor.supports("MultiPropTarget")){
 			askUser = true;
-            content = langObj.changeWillModify;
+			var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>";
+            content = langObj.changeWillModify+"<br><br>"+dojo.string.substitute(langObj.insteadOfChanging,[helpLink])+"<br><br>"+langObj.okToProceed;
         }
 		// Old prompt if changing app.css or other non-theme CSS file:
 		// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";

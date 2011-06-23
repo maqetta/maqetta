@@ -3,6 +3,7 @@ dojo.provide("davinci.ui.widgets.DocileDialog");
 dojo.require("dijit.Dialog");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 davinci.ui.widgets.DocileDialog.instance = 0;
 
@@ -15,7 +16,8 @@ dojo.declare("davinci.ui.widgets.DocileDialog", null, {
 		contentDiv.innerHTML = args.content || this.content;
 		contentDiv.innerHTML+="<br><br>";
 		var buttonDiv =  dojo.create("div", {style:"text-align:center"});
-		var buttons = ["ok", "cancel"];
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		var buttons = [dijitLangObj.buttonOk, dijitLangObj.buttonCancel];
 		this.callBack = args.callBack;
 		
 		function makeOnChange(target){

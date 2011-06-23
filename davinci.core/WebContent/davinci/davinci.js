@@ -54,3 +54,4 @@ dojo.require("dojox.data.QueryReadStore");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.MultiSelect");
 
+dojo.requireLocalization("davinci", "webContent");

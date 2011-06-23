@@ -11,6 +11,7 @@ dojo.require("dijit.form.ComboBox");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebaseDownload");
@@ -36,6 +37,14 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_error3 : null,
 	_error4 : null,
 	_errorMsg : null,
+	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		dojo.mixin(this, langObj);
+		dojo.mixin(this, dijitLangObj);
+		this.inherited(arguments);
+	},
 
 	postCreate : function(){
 		this.inherited(arguments);

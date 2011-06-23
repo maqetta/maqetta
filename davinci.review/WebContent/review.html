@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Maqetta Review Board</title>
+        <title id="title_id"></title>
         
         <meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
         <meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0",  FALSE">
@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="app/OpenAjax/hub20/OpenAjaxManagedHub-core.js"></script>
         <script type="text/javascript" src="app/OpenAjax/widget/openajax_metadata.js"></script>
 		-->
-        <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+        <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: false"></script>
         <script type="text/javascript">
 	        dojo.require("dijit.dijit");
 		    dojo.require("davinci.davinci-common");
@@ -37,26 +37,23 @@
             davinci.Runtime.initialPerspective = "davinci.review.comment";
             
             <!-- Globalization -->
-    	   //  dojo.requireLocalization("davinci", "webContent");
-    	    //function globalize()
-    	   // {
-    	    //  var langObj = dojo.i18n.getLocalization("davinci","webContent");
-    	   //   dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
-    	   //   dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
-    	      
-    	      //testing
-    	      //alert(dojo.byId("davinci_user_welcome").innerHTML);
-    	      //alert(dojo.byId("drop_down").containerNode);//do something with attachpoints-I'm still looking into this
-    	      //dojo.byId("drop_down_help").innerHTML = langObj.help;
-    	      //dojo.byId("drop_down").containerNode.innerHTML = langObj.help;
-    	   //   dojo.byId("drop_down_label").innerHTML = langObj.help;//temporary fix
-    	      
-    	      
-    	  //    dojo.byId("menu_help").innerHTML = langObj.help;
-    	  //    dojo.byId("menu_tutorials").innerHTML = langObj.tutorials;
-    	  //    dojo.byId("menu_about_maqetta").innerHTML = langObj.aboutMaqetta;
-    	  //  }
-    	  //  dojo.addOnLoad(globalize); 
+    	    dojo.requireLocalization("davinci", "webContent");
+    	    function globalize()
+    	    {
+    	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
+    	      var version = 2;
+    	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+    	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+    	      dojo.byId("maqetta_review").innerHTML = langObj.review;
+    	      dojo.byId("maqetta_version").innerHTML = dojo.string.substitute(langObj.version,[version]);
+    	      dojo.byId("help_drop_down").innerHTML = langObj.help;
+    	      dojo.byId("menu_help").innerHTML = langObj.help;
+    	      dojo.byId("menu_tutorials").innerHTML = langObj.tutorials;
+    	      dojo.byId("menu_about").innerHTML = langObj.aboutMaqetta;
+    	      dojo.byId("title_id").innerHTML = langObj.reviewPageTitle;
+    	      dojo.parser.parse();
+    	    }
+    	    dojo.addOnLoad(globalize); 
            
             function run(){
             	davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
@@ -122,22 +119,22 @@
 		<div id="davinci_app">
 			<div id="davinci_top_bar">
 					<div id="davinci_user_container">
-						<span id="davinci_user_welcome">Welcome</span>
+						<span id="davinci_user_welcome"></span>
 						<span id="davinci_user"></span>
 						<div dojoType="dijit.form.DropDownButton">
-							<span>Help</span>
+							<span id="help_drop_down"></span>
 							<div dojoType="dijit.Menu">
-								<div dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html')">Help</div>
-								<div dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html#tutorials/tutorials')">Tutorials</div>
-								<div dojoType="dijit.MenuItem" onClick="davinci.ui.about()">About Maqetta</div>
+								<div id="menu_help" dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html')"></div>
+								<div id="menu_tutorials" dojoType="dijit.MenuItem" onClick="window.open('app/docs/index.html#tutorials/tutorials')"></div>
+								<div id="menu_about" dojoType="dijit.MenuItem" onClick="davinci.ui.about()"></div>
 							</div>
 						</div>
-						<a id="davinci_logoff" href='javascript:davinci.review.Runtime.logoff()'>  Log Out</a>
+						<a id="davinci_logoff" href='javascript:davinci.review.Runtime.logoff()'> </a>
 					</div>				
 					<span class="maq_banner_name_box">
 						<span class="maq_banner_name">Maqetta</span>
-						<span class="maq_banner_component">Review and Commenting,</span>
-						<span class="maq_banner_version">Preview 1</span>
+						<span id="maqetta_review" class="maq_banner_component"></span>
+						<span id="maqetta_version" class="maq_banner_version"></span>
 					</span>
 <!--
 					<div id="davinci_review_title"></div>

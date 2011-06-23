@@ -11,6 +11,7 @@ dojo.require("dijit.form.ComboBox");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
 
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebaseDownload");
@@ -21,6 +22,13 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	templateString: dojo.cache("davinci.ui", "templates/download.html"),
 	widgetsInTemplate: true,
 	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		dojo.mixin(this, langObj);
+		dojo.mixin(this, dijitLangObj);
+		this.inherited(arguments);
+	},
 	/* templated attach points, custom input section */
 	
 	/* check box for rewrite dojo */

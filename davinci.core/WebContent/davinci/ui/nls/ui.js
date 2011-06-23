@@ -13,7 +13,7 @@
 		"productVersion":"Version: ${0}",
 		"productDate":"Date: ${0}",
 		//"build":"Build: <a href='https://github.com/maqetta/maqetta/commit/${0}'> ${1}...</a> ",
-		"build":"Build: ",
+		"build":"Build: ${0}",
 		
 		//Download.js
 		"library":"Library",//used in UserLibraries.js as well
@@ -48,7 +48,7 @@
 		"open":"Open",
 		"save":"Save",
 		//fileDialog
-		"fileName":"File name",
+		"fileName":"File Name",//used in templates/download.html
 		"folderName":"Folder name",
 		"parentFolder":"Parent Folder: ",//used in add files as well
 		
@@ -79,7 +79,18 @@
 		
 		//deleteAction
 		"areYouSureDelete":"Are you sure you want to delete ${0}?",
-		"noResourcesSelected":"No resources are currently selected."
+		"noResourcesSelected":"No resources are currently selected.",
+		
+		/*Templates*/
+		//download.html -- see above for file name
+		
+		//newtheme.html
+		"themeToClone":"Theme to clone",
+		"newName":"New Name",
+		
+		//OpenThemeDialog.html
+		"selectTheme":"Select a Theme"
+		
 		
 
 })

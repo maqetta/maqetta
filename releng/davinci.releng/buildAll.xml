@@ -250,8 +250,9 @@
 
         <!-- make the new zip file -->
         <zip destfile="${buildDirectory}/${buildLabel}/${newZipName}" filesonly="false">
-            <zipfileset dir="${tempDir}" includes="**/**" excludes=""/>
+            <zipfileset dir="${tempDir}" includes="**/**" excludes="*.command, *.sh"/>
             <zipfileset dir="${tempDir}" includes="*.command" filemode="755"/>
+            <zipfileset dir="${tempDir}" includes="*.sh" filemode="755" />
         </zip>
         <delete dir="${tempDir}"/>
     </target>

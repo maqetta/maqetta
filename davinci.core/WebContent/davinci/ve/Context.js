@@ -331,7 +331,7 @@ dojo.declare("davinci.ve.Context", null, {
 		if(!this._themeMetaCache ){
 			this.getTheme();
 		}
-			return this._themeMetaCach;
+			return this._themeMetaCache;
 		
 	},
 	

@@ -41,7 +41,7 @@
 		"calendarInputHelp":"Enter a date string for the date you want the widget to display as the current day. For example: \"October 13, 1975\" or an empty string for the current date \"\".",
 		
 		//input/DataGridInput.js
-		"dataGridInputHelp":"If the CSV data format button is selected, enter text in the format: first line is column headers separated by commas and all following lines are data for those columns. If the URL button is selected, enter the location of the json item file.",
+		"dataGridInputHelp":"If the CSV data format button is selected, enter text in the format: first line is column headers separated by commas and all following lines are data for those columns. If data file from workspace is selected, choose a json item file using the file explore folder.",
 		"invalidInput1":"invalid input (1)",
 		"invalidInput2":"invalid input (2)",
 		"selectSource":"Select a source",//also used in HtmlSrcAttributeInput.js

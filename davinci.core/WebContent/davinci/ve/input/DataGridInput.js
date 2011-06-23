@@ -30,7 +30,6 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 	helpText:  langObj.dataGridInputHelp,
 
 
-
 	serialize: function(widget, callback, value) {
         var structure = value || widget.attr('structure');
         var names = [];
@@ -150,6 +149,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     
 	
 	onOk: function(e){
+		
 		if (this._fileSelectionDialog){
 			// file selection dialog is active so don't close inline edit
 			return;
@@ -279,12 +279,16 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     	//var textBox = dijit.byId("davinci.ve.input.DataGridInput.url"); 
     	var textArea = dijit.byId("davinciIleb");
     	this._url = textArea.value;
-    	var tempURL = this._url.toLowerCase();
     	var url;
-    	if (tempURL.indexOf('http://') === 0){ // absolute url
+    	var patt=/http:\/\//i;
+    	if (patt.test(this._url)){ // absolute url
     		url = this._url;
     	} else {
     		var file = davinci.resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
+    		if (!file){
+    			alert('File: ' + this._url + ' does not exsist.');
+    			return;
+    		}
     		url = file.getURL();
     	}
     	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
@@ -293,7 +297,8 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
     	store.fetch({
     		query: this.query,
     		queryOptions:{deep:true}, 
-    		onComplete: dojo.hitch(this, this._urlDataStoreLoaded)
+    		onComplete: dojo.hitch(this, this._urlDataStoreLoaded),
+    		onError: function(e){ alert('File ' + e  );}
     	});
     	this._urlDataStore = store;
     	
@@ -328,7 +333,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 		var properties = {};
 		var context = this._getContext();
         var widget = this._widget;
-		properties['url'] = this._url; 
+		properties.url = this._url; 
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
@@ -389,11 +394,11 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
         var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
         if(html){
-        	htmlRadio.setChecked(false);
-			textRadio.setChecked(true);
+        	htmlRadio.set("checked", false);
+			textRadio.set("checked", true);
         }else{
-        	htmlRadio.setChecked(true);
-			textRadio.setChecked(false);        	
+        	htmlRadio.set("checked", true);
+			textRadio.set("checked", false);        	
         }
         this.updateFormats();
 
@@ -518,6 +523,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
 			// we should not ever get here.
 			console.error('DataGridInput:changeDataStoreType error');
 		}
+		this.updateFormats();
     	this.resize(null);
 	},
 	

@@ -43,23 +43,7 @@ dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 			list.push(this._files[i].getPath());
 			
 		}
-		var nodeList = dojo.query("[libItemCheck]", this.domNode );
-		for(var i =0;i<nodeList.length;i++){
-			var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
-			var value = dojo.attr(nodeList[i], "checked");
-			if(value){
-				var lib = this._userLibs[element];
-				var root = this._getLibRoot(lib['id'], lib['version']);
-				for(var k=0;k<list.length;k++){
-					// ensure we dont add duplicate if the user selected a library
-					if(list[k]==root) continue;
-					
-				}
-				list.push(root);
-			}
-		}
-		
-		return list;
+		return {'userFiles':list, 'userLibs': this._getLibs()};
 	}
 	
 

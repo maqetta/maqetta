@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget","dojox/embed/Flash","dojox/av/_Media"],function(_1,_2){
+define("dojox/av/FLVideo",["dojo","dijit","dijit/_Widget","dojox/embed/Flash","dojox/av/_Media"],function(_1,_2){
 _1.experimental("dojox.av.FLVideo");
 _1.declare("dojox.av.FLVideo",[_2._Widget,dojox.av._Media],{_swfPath:_1.moduleUrl("dojox.av","resources/video.swf"),constructor:function(_3){
 _1.global.swfIsInHTML=function(){

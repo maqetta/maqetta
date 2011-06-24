@@ -4,14 +4,9 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/grid/enhanced/_Events",["dojo","dojox"],function(_1,_2){
 _1.declare("dojox.grid.enhanced._Events",null,{_events:null,headerCellActiveClass:"dojoxGridHeaderActive",cellActiveClass:"dojoxGridCellActive",rowActiveClass:"dojoxGridRowActive",constructor:function(_3){
 this._events=new _2.grid._Events();
-for(var p in this._events){
-if(!this[p]){
-this.p=this._events.p;
-}
-}
 _3.mixin(_3,this);
 },dokeyup:function(e){
 this.focus.currentArea().keyup(e);

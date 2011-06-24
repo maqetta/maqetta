@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/Button","dijit/_WidgetsInTemplateMixin"],function(_1,_2,_3){
+define("dojox/grid/enhanced/plugins/filter/ClearFilterConfirm",["dojo","dijit","dojox","dijit/form/Button","dijit/_WidgetsInTemplateMixin"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced.plugins.filter.ClearFilterConfirm",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{templateString:_1.cache("dojox.grid","enhanced/templates/ClearFilterConfirmPane.html"),widgetsInTemplate:true,plugin:null,postMixInProperties:function(){
 var _4=this.plugin.nls;
 this._clearBtnLabel=_4["clearButton"];

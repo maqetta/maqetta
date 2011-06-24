@@ -204,7 +204,8 @@ this.focusNode.setAttribute("tabIndex",_32?"0":"-1");
 }});
 if(!_1.isAsync){
 _1.ready(0,function(){
-_4(["dijit/layout/AccordionPane"]);
+var _33=["dijit/layout/AccordionPane"];
+_4(_33);
 });
 }
 return _2.layout.AccordionContainer;

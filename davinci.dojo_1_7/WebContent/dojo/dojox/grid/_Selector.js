@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./Selection","./_View","./_Builder"],function(_1,_2){
+define("dojox/grid/_Selector",["dojo","dojox","./Selection","./_View","./_Builder"],function(_1,_2){
 _2.grid._InputSelectorHeaderBuilder=_1.extend(function(_3){
 _2.grid._HeaderBuilder.call(this,_3);
 },_2.grid._HeaderBuilder.prototype,{generateHtml:function(){

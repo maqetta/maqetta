@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/wire/CompositeWire"],function(_1,_2,_3){
+define("dojox/wire/TextAdapter",["dojo","dijit","dojox","dojox/wire/CompositeWire"],function(_1,_2,_3){
 _1.getObject("dojox.wire.TextAdapter",1);
 _1.declare("dojox.wire.TextAdapter",_3.wire.CompositeWire,{_wireClass:"dojox.wire.TextAdapter",constructor:function(_4){
 this._initializeChildren(this.segments);

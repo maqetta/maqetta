@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array"],function(_1,_2){
+define("dojox/collections/_base",["dojo/_base/kernel","dojo/_base/array"],function(_1,_2){
 _1.getObject("collections",true,dojox);
 dojox.collections.DictionaryEntry=function(k,v){
 this.key=k;

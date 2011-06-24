@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel"],function(_1){
+define("dojox/dtl/filter/integers",["dojo/_base/kernel"],function(_1){
 _1.getObject("dtl.filter.integers",true,dojox);
 _1.mixin(dojox.dtl.filter.integers,{add:function(_2,_3){
 _2=parseInt(_2,10);

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","../_Plugin"],function(_1,_2,_3){
+define("dojox/grid/enhanced/plugins/Menu",["dojo","dijit","dojox","../_Plugin"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced.plugins.Menu",_3.grid.enhanced._Plugin,{name:"menus",types:["headerMenu","rowMenu","cellMenu","selectedRegionMenu"],constructor:function(){
 var g=this.grid;
 g.showMenu=_1.hitch(g,this.showMenu);

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["..","dojo/_base/kernel","dojo/_base/lang"],function(_1,_2){
+define("dojox/lang/utils",["..","dojo/_base/kernel","dojo/_base/lang"],function(_1,_2){
 var du=_2.getObject("lang.utils",true,_1);
 var _3={},_4=Object.prototype.toString;
 var _5=function(o){

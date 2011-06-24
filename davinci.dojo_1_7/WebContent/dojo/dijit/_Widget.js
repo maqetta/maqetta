@@ -57,7 +57,8 @@ return true;
 }});
 if(!_1.isAsync){
 _1.ready(0,function(){
-require(["dijit/_base/focus","dijit/_base/place","dijit/_base/popup","dijit/_base/scroll","dijit/_base/typematic","dijit/_base/wai","dijit/_base/window"]);
+var _11=["dijit/_base/focus","dijit/_base/place","dijit/_base/popup","dijit/_base/scroll","dijit/_base/typematic","dijit/_base/wai","dijit/_base/window"];
+require(_11);
 });
 }
 return _2._Widget;

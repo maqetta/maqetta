@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox/mvc/StatefulModel"],function(_1){
+define("dojox/app/model",["dojo","dojox/mvc/StatefulModel"],function(_1){
 return function(_2,_3){
 var _4={};
 if(_3){

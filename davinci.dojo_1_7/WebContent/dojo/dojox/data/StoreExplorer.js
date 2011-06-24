@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/grid/DataGrid","dojox/data/ItemExplorer","dijit/layout/BorderContainer","dijit/layout/ContentPane"],function(_1,_2,_3){
+define("dojox/data/StoreExplorer",["dojo","dijit","dojox","dojox/grid/DataGrid","dojox/data/ItemExplorer","dijit/layout/BorderContainer","dijit/layout/ContentPane"],function(_1,_2,_3){
 _1.getObject("dojox.data.StoreExplorer",1);
 _1.declare("dojox.data.StoreExplorer",_2.layout.BorderContainer,{constructor:function(_4){
 _1.mixin(this,_4);

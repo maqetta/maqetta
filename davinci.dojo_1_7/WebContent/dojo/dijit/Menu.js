@@ -123,7 +123,8 @@ this.inherited(arguments);
 }});
 if(!_1.isAsync){
 _1.ready(0,function(){
-_3(["dijit/MenuItem","dijit/PopupMenuItem","dijit/CheckedMenuItem","dijit/MenuSeparator"]);
+var _20=["dijit/MenuItem","dijit/PopupMenuItem","dijit/CheckedMenuItem","dijit/MenuSeparator"];
+_3(_20);
 });
 }
 return _2.Menu;

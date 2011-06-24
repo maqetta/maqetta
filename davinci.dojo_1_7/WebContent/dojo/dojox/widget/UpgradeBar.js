@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/window","dojo/fx","dojo/cookie","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/widget/UpgradeBar",["dojo","dijit","dojox","dojo/window","dojo/fx","dojo/cookie","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.widget.UpgradeBar",1);
 _1.experimental("dojox.widget.UpgradeBar");
 _1.declare("dojox.widget.UpgradeBar",[_2._Widget,_2._Templated],{notifications:[],buttonCancel:"Close for now",noRemindButton:"Don't Remind Me Again",templateString:_1.cache("dojox.widget","UpgradeBar/UpgradeBar.html","<div class=\"dojoxUpgradeBar\">\n\t<div class=\"dojoxUpgradeBarMessage\" dojoAttachPoint=\"messageNode\">message</div>\n\t<div class=\"dojoxUpgradeBarReminderButton\" dojoAttachPoint=\"dontRemindButtonNode\" dojoAttachEvent=\"onclick:_onDontRemindClick\">${noRemindButton}</div>\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dojoxUpgradeBarCloseIcon\" dojoAttachEvent=\"onclick: hide, onmouseenter: _onCloseEnter, onmouseleave: _onCloseLeave\" title=\"${buttonCancel}\"></span>\n</div>"),constructor:function(_4,_5){

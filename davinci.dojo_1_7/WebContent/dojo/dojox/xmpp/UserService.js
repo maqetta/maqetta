@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/xmpp/UserService",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.UserService",1);
 _1.declare("dojox.xmpp.UserService",null,{constructor:function(_4){
 this.session=_4;

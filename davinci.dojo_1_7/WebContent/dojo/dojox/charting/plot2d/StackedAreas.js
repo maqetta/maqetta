@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","./Stacked"],function(_1,_2,_3){
+define("dojox/charting/plot2d/StackedAreas",["dojo/_base/kernel","dojo/_base/declare","./Stacked"],function(_1,_2,_3){
 return _1.declare("dojox.charting.plot2d.StackedAreas",dojox.charting.plot2d.Stacked,{constructor:function(){
 this.opt.lines=true;
 this.opt.areas=true;

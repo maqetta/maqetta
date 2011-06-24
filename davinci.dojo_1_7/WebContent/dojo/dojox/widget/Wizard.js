@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/StackContainer","dijit/layout/ContentPane","dijit/form/Button","dojo/i18n","dojo/i18n","dijit/nls/common","dojo/i18n","dojox/widget/nls/Wizard"],function(_1,_2,_3){
+define("dojox/widget/Wizard",["dojo","dijit","dojox","dijit/layout/StackContainer","dijit/layout/ContentPane","dijit/form/Button","dojo/i18n","dojo/i18n","dijit/nls/common","dojo/i18n","dojox/widget/nls/Wizard"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Wizard",1);
 _1.requireLocalization("dijit","common");
 _1.requireLocalization("dojox.widget","Wizard");

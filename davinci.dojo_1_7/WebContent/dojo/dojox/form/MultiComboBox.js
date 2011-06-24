@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/ComboBox","dijit/form/ValidationTextBox"],function(_1,_2,_3){
+define("dojox/form/MultiComboBox",["dojo","dijit","dojox","dijit/form/ComboBox","dijit/form/ValidationTextBox"],function(_1,_2,_3){
 _1.getObject("dojox.form.MultiComboBox",1);
 _1.experimental("dojox.form.MultiComboBox");
 _1.declare("dojox.form.MultiComboBox",[_2.form.ValidationTextBox,_2.form.ComboBoxMixin],{delimiter:",",_previousMatches:false,_setValueAttr:function(_4){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./dom"],function(_1,_2){
+define("dojox/dtl/html",["dojo/_base/kernel","./dom"],function(_1,_2){
 _1.getObject("dtl.html",true,dojox);
 _1.deprecated("dojox.dtl.html","All packages and classes in dojox.dtl that start with Html or html have been renamed to Dom or dom");
 dojox.dtl.HtmlTemplate=_2.DomTemplate;

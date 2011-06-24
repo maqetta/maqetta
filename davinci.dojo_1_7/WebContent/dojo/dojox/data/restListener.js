@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/data/restListener",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.data.restListener",1);
 _3.data.restListener=function(_4){
 var _5=_4.channel;

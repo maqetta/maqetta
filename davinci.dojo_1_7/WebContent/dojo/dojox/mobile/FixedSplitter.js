@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/array","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./FixedSplitterPane"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+define("dojox/mobile/FixedSplitter",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/array","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./FixedSplitterPane"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 return _1.declare("dojox.mobile.FixedSplitter",[dijit._WidgetBase,dijit._Container,dijit._Contained],{orientation:"H",isContainer:true,buildRendering:function(){
 this.domNode=this.containerNode=this.srcNodeRef?this.srcNodeRef:_1.doc.createElement("DIV");
 _1.addClass(this.domNode,"mblFixedSpliter");

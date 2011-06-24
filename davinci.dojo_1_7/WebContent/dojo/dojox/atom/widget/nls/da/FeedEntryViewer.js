@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[fremvisningsvalg]",
 	title: "Titel",

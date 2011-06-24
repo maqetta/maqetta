@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/dnd/Selector"],function(_1,_2,_3){
+define("dojox/dnd/Selector",["dojo","dijit","dojox","dojo/dnd/Selector"],function(_1,_2,_3){
 _1.getObject("dojox.dnd.Selector",1);
 _1.declare("dojox.dnd.Selector",_1.dnd.Selector,{isSelected:function(_4){
 var id=_1.isString(_4)?_4:_4.id,_5=this.getItem(id);

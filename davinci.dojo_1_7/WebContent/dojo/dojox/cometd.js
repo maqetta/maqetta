@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/cometd/_base","dojox/cometd/longPollTransport","dojox/cometd/callbackPollTransport"],function(_1,_2,_3){
+define("dojox/cometd",["dojo","dijit","dojox","dojox/cometd/_base","dojox/cometd/longPollTransport","dojox/cometd/callbackPollTransport"],function(_1,_2,_3){
 _1.getObject("dojox.cometd",1);
 return _1.getObject("dojox.cometd");
 });

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/oo/Filter",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.oo.Filter",1);
 (function(){
 var oo=_3.lang.oo,F=oo.Filter=function(_4,_5){

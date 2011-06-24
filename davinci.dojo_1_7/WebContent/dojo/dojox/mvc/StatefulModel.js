@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/Stateful"],function(_1,_2,_3,_4,_5){
+define("dojox/mvc/StatefulModel",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/Stateful"],function(_1,_2,_3,_4,_5){
 var _6=_4("dojox.mvc.StatefulModel",[_5],{data:null,store:null,valid:true,value:"",reset:function(){
 if(_2.isObject(this.data)){
 for(var x in this){

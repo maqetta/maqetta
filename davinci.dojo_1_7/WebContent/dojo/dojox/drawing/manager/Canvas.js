@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo","./Stencil"],function(_1){
+define("dojox/drawing/manager/Canvas",["dojo","../util/oo","./Stencil"],function(_1){
 dojox.drawing.manager.Canvas=dojox.drawing.util.oo.declare(function(_2){
 _1.mixin(this,_2);
 var _3=_1.contentBox(this.srcRefNode);

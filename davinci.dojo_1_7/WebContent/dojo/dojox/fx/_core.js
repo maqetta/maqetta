@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define([".","dojo/_base/array"],function(_1,_2){
+define("dojox/fx/_core",[".","dojo/_base/array"],function(_1,_2){
 dojox.fx._Line=function(_3,_4){
 this.start=_3;
 this.end=_4;

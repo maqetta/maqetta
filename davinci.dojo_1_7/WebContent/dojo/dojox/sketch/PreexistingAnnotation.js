@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","./Annotation","./Anchor"],function(_1){
+define("dojox/sketch/PreexistingAnnotation",["dojo/_base/lang","./Annotation","./Anchor"],function(_1){
 _1.getObject("sketch",true,dojox);
 var ta=dojox.sketch;
 ta.PreexistingAnnotation=function(_2,id){

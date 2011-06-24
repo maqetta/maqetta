@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/html","dojo/_base/connect","dojo/_base/Color","dojo/fx","./_base"],function(){
+define("dojox/fx/flip",["dojo/_base/html","dojo/_base/connect","dojo/_base/Color","dojo/fx","./_base"],function(){
 dojo.getObject("fx.flip",true,dojox);
 dojo.experimental("dojox.fx.flip");
 var _1="border",_2="Width",_3="Height",_4="Top",_5="Right",_6="Left",_7="Bottom";

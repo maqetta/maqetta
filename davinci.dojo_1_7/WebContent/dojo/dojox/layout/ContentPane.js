@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/ContentPane","dojox/html/_base"],function(_1,_2,_3){
+define("dojox/layout/ContentPane",["dojo","dijit","dojox","dijit/layout/ContentPane","dojox/html/_base"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ContentPane",1);
 _1.declare("dojox.layout.ContentPane",_2.layout.ContentPane,{adjustPaths:false,cleanContent:false,renderStyles:false,executeScripts:true,scriptHasHooks:false,constructor:function(){
 this.ioArgs={};

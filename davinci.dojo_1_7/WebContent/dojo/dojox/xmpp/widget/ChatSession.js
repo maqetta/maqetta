@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/LayoutContainer","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/xmpp/widget/ChatSession",["dojo","dijit","dojox","dijit/layout/LayoutContainer","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.widget.ChatSession",1);
 _1.declare("dojox.xmpp.widget.ChatSession",[_2.layout.LayoutContainer,_2._Templated],{templateString:_1.cache("dojox.xmpp.widget","templates/ChatSession.html","<div>\n<div dojoAttachPoint=\"messages\" dojoType=\"dijit.layout.ContentPane\" layoutAlign=\"client\" style=\"overflow:auto\">\n</div>\n<div dojoType=\"dijit.layout.ContentPane\" layoutAlign=\"bottom\" style=\"border-top: 2px solid #333333; height: 35px;\"><input dojoAttachPoint=\"chatInput\" dojoAttachEvent=\"onkeypress: onKeyPress\" style=\"width: 100%;height: 35px;\" /></div>\n</div>"),enableSubWidgets:true,widgetsInTemplate:true,widgetType:"ChatSession",chatWith:null,instance:null,postCreate:function(){
 },displayMessage:function(_4,_5){

@@ -1,3 +1,4 @@
+require.built();
 define(({
 name: "名稱",
 path: "路徑",

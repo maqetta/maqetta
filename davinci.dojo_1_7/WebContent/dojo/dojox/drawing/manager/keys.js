@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/common","./Stencil"],function(_1){
+define("dojox/drawing/manager/keys",["dojo","../util/common","./Stencil"],function(_1){
 var _2=false;
 var _3=true;
 var _4="abcdefghijklmnopqrstuvwxyz";

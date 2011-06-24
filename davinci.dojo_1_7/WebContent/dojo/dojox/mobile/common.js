@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/ready","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/mobile/common",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/ready","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
 _1.getObject("mobile",true,dojox);
 var ua=navigator.userAgent;
 _1.isBB=ua.indexOf("BlackBerry")>=0&&parseFloat(ua.split("Version/")[1])||undefined;
@@ -59,24 +59,48 @@ var _10=_c.parentNode?_1.style(_c.parentNode,"paddingLeft"):8;
 _1.style(_c,{clip:"rect("+t+"px "+r+"px "+b+"px "+l+"px)",top:(_c.parentNode?_1.style(_c,"top"):0)-t+"px",left:_10-l+"px"});
 }
 };
-dm.hideAddressBarWait=typeof (_1.config["mblHideAddressBarWait"])==="number"?_1.config["mblHideAddressBarWait"]:2000;
-dm.hideAddressBar=function(evt,_11){
-_1.body().style.minHeight="1000px";
-setTimeout(function(){
+dm.hideAddressBarWait=typeof (_1.config["mblHideAddressBarWait"])==="number"?_1.config["mblHideAddressBarWait"]:1500;
+dm.hide_1=function(_11){
 scrollTo(0,1);
-},200);
-setTimeout(function(){
-scrollTo(0,1);
-},800);
-setTimeout(function(){
-scrollTo(0,1);
-_1.body().style.minHeight=dm.getScreenSize().h+"px";
-if(_11!==false){
+var h=dm.getScreenSize().h+"px";
+if(_1.isAndroid){
+if(_11){
+_1.body().style.minHeight=h;
+}
+dm.resizeAll();
+}else{
+if(_11||dm._h===h&&h!==_1.body().style.minHeight){
+_1.body().style.minHeight=h;
 dm.resizeAll();
 }
-},dm.hideAddressBarWait);
+}
+dm._h=h;
+};
+dm.hide_fs=function(){
+var t=_1.body().style.minHeight;
+_1.body().style.minHeight=(dm.getScreenSize().h*2)+"px";
+scrollTo(0,1);
+setTimeout(function(){
+dm.hide_1(1);
+dm._hiding=false;
+},1000);
+};
+dm.hideAddressBar=function(evt){
+if(dm.disableHideAddressBar||dm._hiding){
+return;
+}
+dm._hiding=true;
+dm._h=0;
+_1.body().style.minHeight=(dm.getScreenSize().h*2)+"px";
+setTimeout(dm.hide_1,0);
+setTimeout(dm.hide_1,200);
+setTimeout(dm.hide_1,800);
+setTimeout(dm.hide_fs,dm.hideAddressBarWait);
 };
 dm.resizeAll=function(evt,_12){
+if(dm.disableResizeAll){
+return;
+}
 _1.publish("/dojox/mobile/resizeAll",[evt,_12]);
 dm.updateOrient();
 dm.detectScreenSize();

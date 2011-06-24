@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojox","dojo/_base/array"],function(_1,_2){
+define("dojox/json/schema",["dojo/_base/kernel","dojox","dojo/_base/array"],function(_1,_2){
 _1.getObject("json.schema",true,_2);
 _2.json.schema.validate=function(_3,_4){
 return this._validate(_3,_4,false);

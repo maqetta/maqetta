@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/parser"],function(_1,_2,_3){
+define("dojox/widget/Rotator",["dojo","dijit","dojox","dojo/parser"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Rotator",1);
 (function(d){
 var _4="dojox.widget.rotator.swap",_5=500,_6="display",_7="none",_8="zIndex";

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,dd){
+define("dojox/dtl/ext-dojo/NodeList",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,dd){
 _1.getObject("dtl.ext-dojo.NodeList",true,dojox);
 _1.extend(_1.NodeList,{dtl:function(_3,_4){
 var d=dd;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dojo/fx","dojo/window"],function(_1,_2,_3){
+define("dojox/layout/ResizeHandle",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dojo/fx","dojo/window"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ResizeHandle",1);
 _1.experimental("dojox.layout.ResizeHandle");
 _1.declare("dojox.layout.ResizeHandle",[_2._Widget,_2._Templated],{targetId:"",targetContainer:null,resizeAxis:"xy",activeResize:false,activeResizeClass:"dojoxResizeHandleClone",animateSizing:true,animateMethod:"chain",animateDuration:225,minHeight:100,minWidth:100,constrainMax:false,maxHeight:0,maxWidth:0,fixedAspect:false,intermediateChanges:false,startTopic:"/dojo/resize/start",endTopic:"/dojo/resize/stop",templateString:"<div dojoAttachPoint=\"resizeHandle\" class=\"dojoxResizeHandle\"><div></div></div>",postCreate:function(){

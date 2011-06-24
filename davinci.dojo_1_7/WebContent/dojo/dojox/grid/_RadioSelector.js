@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox","./_Selector"],function(_1){
+define("dojox/grid/_RadioSelector",["dojox","./_Selector"],function(_1){
 return _1.grid._RadioSelector;
 });

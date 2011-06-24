@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/date","./buddhist/Date"],function(d,dd,_1){
+define("dojox/date/buddhist",["dojo/_base/kernel","dojo/date","./buddhist/Date"],function(d,dd,_1){
 dojo.getObject("date.buddhist",true,dojox);
 dojo.experimental("dojox.date.buddhist");
 dojox.date.buddhist.getDaysInMonth=function(_2){

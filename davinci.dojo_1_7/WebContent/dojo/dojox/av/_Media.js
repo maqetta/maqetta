@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo"],function(_1){
+define("dojox/av/_Media",["dojo"],function(_1){
 _1.getObject("dojox.av",true);
 _1.experimental("dojox.av.FLVideo");
 _1.declare("dojox.av._Media",null,{mediaUrl:"",initialVolume:1,autoPlay:false,bufferTime:2000,minBufferTime:300,updateTime:100,id:"",isDebug:false,percentDownloaded:0,_flashObject:null,flashMedia:null,allowScriptAccess:"always",allowNetworking:"all",wmode:"transparent",allowFullScreen:true,_initStatus:function(){

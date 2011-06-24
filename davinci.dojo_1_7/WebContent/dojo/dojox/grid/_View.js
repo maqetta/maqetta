@@ -5,7 +5,7 @@
 */
 
 require.cache["dojox/grid/resources/View.html"]="<div class=\"dojoxGridView\" role=\"presentation\">\n\t<div class=\"dojoxGridHeader\" dojoAttachPoint=\"headerNode\" role=\"presentation\">\n\t\t<div dojoAttachPoint=\"headerNodeContainer\" style=\"width:9000em\" role=\"presentation\">\n\t\t\t<div dojoAttachPoint=\"headerContentNode\" role=\"row\"></div>\n\t\t</div>\n\t</div>\n\t<input type=\"checkbox\" class=\"dojoxGridHiddenFocus\" dojoAttachPoint=\"hiddenFocusNode\" role=\"presentation\" />\n\t<input type=\"checkbox\" class=\"dojoxGridHiddenFocus\" role=\"presentation\" />\n\t<div class=\"dojoxGridScrollbox\" dojoAttachPoint=\"scrollboxNode\" role=\"presentation\">\n\t\t<div class=\"dojoxGridContent\" dojoAttachPoint=\"contentNode\" hidefocus=\"hidefocus\" role=\"presentation\"></div>\n\t</div>\n</div>\n";
-define(["dojo","dijit","dojox","dojo/text!./resources/View.html","dojo/dnd/Source","dojo/dnd/Manager","dijit/_TemplatedMixin","dijit/_Widget","dojox/html/metrics","./_Builder","./util"],function(_1,_2,_3,_4){
+define("dojox/grid/_View",["dojo","dijit","dojox","dojo/text!./resources/View.html","dojo/dnd/Source","dojo/dnd/Manager","dijit/_TemplatedMixin","dijit/_Widget","dojox/html/metrics","./_Builder","./util"],function(_1,_2,_3,_4){
 var _5=function(_6,_7){
 return _6.style.cssText==undefined?_6.getAttribute("style"):_6.style.cssText;
 };
@@ -300,6 +300,9 @@ this.headerContentNode.firstChild.style.width=this.contentWidth;
 _3.grid.util.fire(this,"onAfterRow",[-1,this.structure.cells,this.headerContentNode]);
 },_getHeaderContent:function(_30){
 var n=_30.name||_30.grid.getCellName(_30);
+if(/^\s+$/.test(n)){
+n="&nbsp;";
+}
 var ret=["<div class=\"dojoxGridSortNode"];
 if(_30.index!=_30.grid.getSortIndex()){
 ret.push("\">");

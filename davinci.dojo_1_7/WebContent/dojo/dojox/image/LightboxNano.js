@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojo/fx"],function(_1,fx){
+define("dojox/image/LightboxNano",["dojo","dojo/fx"],function(_1,fx){
 var _2="absolute",_3="visibility",_4=function(){
 var _5=(_1.doc.compatMode=="BackCompat")?_1.body():_1.doc.documentElement,_6=_1._docScroll();
 return {w:_5.clientWidth,h:_5.clientHeight,l:_6.x,t:_6.y};

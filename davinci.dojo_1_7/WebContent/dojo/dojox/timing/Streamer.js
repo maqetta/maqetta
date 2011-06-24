@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./_base"],function(){
+define("dojox/timing/Streamer",["./_base"],function(){
 dojo.experimental("dojox.timing.Streamer");
 dojox.timing.Streamer=function(_1,_2,_3,_4,_5){
 var _6=this;

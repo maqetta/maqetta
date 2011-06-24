@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/gauges/AnalogArcIndicator"],function(_1,_2,_3){
+define("dojox/widget/gauge/AnalogArcIndicator",["dojo","dijit","dojox","dojox/gauges/AnalogArcIndicator"],function(_1,_2,_3){
 _1.getObject("dojox.widget.gauge.AnalogArcIndicator",1);
 _3.widget.gauge.AnalogArcIndicator=_3.gauges.AnalogArcIndicator;
 return _1.getObject("dojox.widget.gauge.AnalogArcIndicator");

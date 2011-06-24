@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/html","dojo/_base/connect","dojo/_base/sniff","dojo/_base/array","dojo/_base/window","dojo/_base/event"],function(_1){
+define("dojox/mdnd/Moveable",["dojo/_base/kernel","dojo/_base/html","dojo/_base/connect","dojo/_base/sniff","dojo/_base/array","dojo/_base/window","dojo/_base/event"],function(_1){
 return _1.declare("dojox.mdnd.Moveable",null,{handle:null,skip:true,dragDistance:3,constructor:function(_2,_3){
 this.node=_1.byId(_3);
 this.d=this.node.ownerDocument;

@@ -6,7 +6,7 @@
 
 define("dojo/_base/xhr",["./kernel","../has","require","../on","./sniff","./Deferred","./json","./lang"],function(_1,_2,_3,on){
 _2.add("native-xhr",function(){
-return !!XMLHttpRequest;
+return typeof XMLHttpRequest!=="undefined";
 });
 if(1){
 _1._xhrObj=_3.getXhr;
@@ -467,5 +467,6 @@ return _6.xhr("PUT",_50,true);
 _1.xhrDelete=function(_51){
 return _6.xhr("DELETE",_51);
 };
+_1.mixin(_1.xhr,{_xhrObj:_1._xhrObj,fieldToObject:_1.fieldToObject,formToObject:_1.formToObject,objectToQuery:_1.objectToQuery,formToQuery:_1.formToQuery,formToJson:_1.formToJson,queryToObject:_1.queryToObject,contentHandlers:_23,_ioSetArgs:_1._ioSetArgs,_ioCancelAll:_1._ioCancelAll,_ioNotifyStart:_1._ioNotifyStart,_ioWatch:_1._ioWatch,_ioAddQueryToUrl:_1._ioAddQueryToUrl,get:_1.xhrGet,post:_1.xhrPost,put:_1.xhrPut,del:_1.xhrDelete});
 return _1.xhr;
 });

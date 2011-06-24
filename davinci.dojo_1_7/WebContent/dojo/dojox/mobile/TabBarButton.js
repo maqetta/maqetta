@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./common","./_ItemBase"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/mobile/TabBarButton",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./common","./_ItemBase"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.mobile.TabBarButton",[dojox.mobile._ItemBase],{icon1:"",icon2:"",iconPos1:"",iconPos2:"",selected:false,transition:"none",tag:"LI",selectOne:true,inheritParams:function(){
 var _7=this.getParent();
 if(_7){

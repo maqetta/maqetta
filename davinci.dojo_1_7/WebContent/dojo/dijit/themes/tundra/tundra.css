@@ -555,7 +555,7 @@ DIV.dijitArrowButton {
 	right:0;
 	margin:0;
 	padding:0;
-	width:auto;
+	width: 100%;    
 	height:auto;
 	background-color:#aaa;
 	background-attachment: fixed;
@@ -3300,7 +3300,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	margin-right: 0;
 	margin-left: 9px;
 }
-.dijitRtl .nowrapTabStrip {
+.dijitTabControllerRtl .nowrapTabStrip {
     text-align: right;  
 }
 .dijitTabRtl .dijitTabCloseButton {

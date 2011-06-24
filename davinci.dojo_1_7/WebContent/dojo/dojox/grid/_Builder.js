@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","dojo/dnd/Moveable","./util"],function(_1,_2){
+define("dojox/grid/_Builder",["dojo","dojox","dojo/dnd/Moveable","./util"],function(_1,_2){
 var dg=_2.grid;
 var _3=function(td){
 return td.cellIndex>=0?td.cellIndex:_1.indexOf(td.parentNode.cells,td);

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../../util/oo","../../plugins/_Plugin"],function(_1){
+define("dojox/drawing/ui/dom/Pan",["dojo","../../util/oo","../../plugins/_Plugin"],function(_1){
 _1.deprecated("dojox.drawing.ui.dom.Pan","It may not even make it to the 1.4 release.",1.4);
 dojox.drawing.ui.dom.Pan=dojox.drawing.util.oo.declare(dojox.drawing.plugins._Plugin,function(_2){
 this.domNode=_2.node;

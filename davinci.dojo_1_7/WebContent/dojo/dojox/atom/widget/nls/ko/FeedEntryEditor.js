@@ -1,3 +1,4 @@
+require.built();
 define(({
 	doNew: "[새로 작성]",
 	edit: "[편집]",

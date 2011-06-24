@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare"],function(_1){
+define("dojox/string/BidiEngine",["dojo/_base/kernel","dojo/_base/declare"],function(_1){
 _1.getObject("string",true,dojox);
 _1.declare("dojox.string.BidiEngine",null,{bidiTransform:function(_2,_3,_4){
 if(!_2){

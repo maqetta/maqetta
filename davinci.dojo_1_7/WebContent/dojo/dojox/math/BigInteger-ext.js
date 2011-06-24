@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","dojox/math/BigInteger"],function(_1,_2){
+define("dojox/math/BigInteger-ext",["dojo","dojox","dojox/math/BigInteger"],function(_1,_2){
 _1.experimental("dojox.math.BigInteger-ext");
 var _3=_2.math.BigInteger,_4=_3._nbi,_5=_3._nbv,_6=_3._nbits,_7=_3._Montgomery;
 function _8(){

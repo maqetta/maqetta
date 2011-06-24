@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/embed/Quicktime",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.embed.Quicktime",1);
 (function(d){
 var _4,_5={major:0,minor:0,rev:0},_6,_7={width:320,height:240,redirect:null},_8="dojox-embed-quicktime-",_9=0,_a="This content requires the <a href=\"http://www.apple.com/quicktime/download/\" title=\"Download and install QuickTime.\">QuickTime plugin</a>.";

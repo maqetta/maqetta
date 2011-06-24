@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/Tooltip","dojox/gantt/GanttProjectItem","dojox/gantt/GanttResourceItem","dojox/gantt/TabMenu","dojo/date/locale"],function(_1,_2,_3){
+define("dojox/gantt/GanttChart",["dojo","dijit","dojox","dijit/Tooltip","dojox/gantt/GanttProjectItem","dojox/gantt/GanttResourceItem","dojox/gantt/TabMenu","dojo/date/locale"],function(_1,_2,_3){
 _1.getObject("dojox.gantt.GanttChart",1);
 (function(){
 _1.declare("dojox.gantt.GanttChart",null,{constructor:function(_4,_5){

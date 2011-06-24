@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/Color","../Theme","dojox/color/_base","./common"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/charting/themes/gradientGenerator",["dojo/_base/kernel","dojo/_base/array","dojo/_base/Color","../Theme","dojox/color/_base","./common"],function(_1,_2,_3,_4,_5,_6){
 var gg=_1.getObject("gradientGenerator",true,_6);
 gg.generateFills=function(_7,_8,_9,_a){
 return _1.map(_7,function(c){

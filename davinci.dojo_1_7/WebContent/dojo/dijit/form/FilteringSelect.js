@@ -85,12 +85,14 @@ var _17=this;
 var _18={ignoreCase:this.ignoreCase,deep:true};
 _1.mixin(_18,this.fetchProperties);
 this._fetchHandle=this.store.query(_16,_18);
-_1.when(this._fetchHandle,function(_19,err){
+_1.when(this._fetchHandle,function(_19){
 _17._fetchHandle=null;
-if(err){
+_17._callbackSetLabel(_19||[],_16,_18,_15);
+},function(err){
+_17._fetchHandle=null;
+if(!_17._cancelingQuery){
 console.error("dijit.form.FilteringSelect: "+err.toString());
 }
-_17._callbackSetLabel(_19||[],_16,_18,_15);
 });
 }
 },undo:function(){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/widget/RollingList","dojo/i18n","dojo/i18n","dojox/widget/nls/FilePicker"],function(_1,_2,_3){
+define("dojox/widget/FilePicker",["dojo","dijit","dojox","dojox/widget/RollingList","dojo/i18n","dojo/i18n","dojox/widget/nls/FilePicker"],function(_1,_2,_3){
 _1.getObject("dojox.widget.FilePicker",1);
 _1.requireLocalization("dojox.widget","FilePicker");
 _1.declare("dojox.widget._FileInfoPane",[_3.widget._RollingListPane],{templateString:"",templateString:_1.cache("dojox.widget","FilePicker/_FileInfoPane.html","<div class=\"dojoxFileInfoPane\">\n\t<table>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoNameLabel\">${_messages.name}</td>\n\t\t\t\t<td class=\"dojoxFileInfoName\" dojoAttachPoint=\"nameNode\"></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoPathLabel\">${_messages.path}</td>\n\t\t\t\t<td class=\"dojoxFileInfoPath\" dojoAttachPoint=\"pathNode\"></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoSizeLabel\">${_messages.size}</td>\n\t\t\t\t<td class=\"dojoxFileInfoSize\" dojoAttachPoint=\"sizeNode\"></td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t<div dojoAttachPoint=\"containerNode\" style=\"display:none;\"></div>\n</div>"),postMixInProperties:function(){

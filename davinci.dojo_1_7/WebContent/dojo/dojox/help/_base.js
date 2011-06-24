@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/rpc/Service","dojo/io/script"],function(_1,_2,_3){
+define("dojox/help/_base",["dojo","dijit","dojox","dojox/rpc/Service","dojo/io/script"],function(_1,_2,_3){
 _1.getObject("dojox.help._base",1);
 _1.experimental("dojox.help");
 console.warn("Script causes side effects (on numbers, strings, and booleans). Call dojox.help.noConflict() if you plan on executing code.");

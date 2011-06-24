@@ -2,13 +2,13 @@
 <html>
     <head>
         <title>Maqetta Review Board</title>
-        
+
         <meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
         <meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0",  FALSE">
         <meta http-equiv="Pragma" CONTENT="no-cache">
         <style type="text/css">
             @import url("app/davinci/workbench.css");
-            
+
             html, body {
                 width: 100%;
                 height: 100%;
@@ -24,18 +24,18 @@
 		    dojo.require("davinci.davinci-common");
 		    dojo.require("davinci.davinci");
 		    dojo.require("davinci.review.Review");
-			
+
             davinci.Runtime.addPlugin("app/davinci/ui");
             davinci.Runtime.addPlugin("app/davinci/js/js");
-            
+
             davinci.Runtime.addPlugin("app/davinci/html/html");
             davinci.Runtime.addPlugin("app/davinci/review/review");
             davinci.Runtime.addPlugin("app/davinci/ve/ve");
             davinci.Runtime.addPlugin("app/davinci/html/html" );
     		davinci.Runtime.addPlugin("app/davinci/ve/themeEditor/themeEditor" );
-                  
+
             davinci.Runtime.initialPerspective = "davinci.review.comment";
-           
+
             function run(){
             	davinci.Runtime.commenting_designerName = dojo.cookie("davinci_designer");
 				davinci.Runtime.commenting_designerEmail = dojo.cookie("davinci_designer_email");
@@ -43,14 +43,14 @@
 				davinci.Runtime.commenting_commentId = dojo.cookie("davinci_commentId");
 				dojo.cookie("davinci_file", null, {expires: -1});
 				dojo.cookie("davinci_commentId", null, {expires: -1});
-				
+
 //				dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
                 var userInfo;
                 var result = davinci.Runtime.serverJSONRequest({
                     url: "./cmd/getReviewUserInfo",
                     sync: true
                 });
-				
+
                 if(!result) return;
                 if (result && result.userName) {
                     dojo.byId('davinci_user').innerHTML = result.userName;
@@ -64,7 +64,7 @@
                     //dojo.style(dojo.byId('davinci_user_container'), "visibility", "hidden");
                     davinci.Runtime.isLocalInstall = true;
                 }
-				
+
 //				Did not see any usage
 //				davinci.ve.metadata.initMetadataProviders();
 				davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
@@ -78,7 +78,7 @@
 					}
 				});
 
-               
+
 				if(davinci.Runtime.commenting_openFile){
 					var page = davinci.Runtime.commenting_openFile;
 					var path = new davinci.model.Path(page);
@@ -92,7 +92,7 @@
 							content: node.getContents()
 		               });
 				}
-                
+
             }
         </script>
     </head>
@@ -111,11 +111,11 @@
 							</div>
 						</div>
 						<a id="davinci_logoff" href='javascript:davinci.review.Runtime.logoff()'>  Log Out</a>
-					</div>				
+					</div>
 					<span class="maq_banner_name_box">
 						<span class="maq_banner_name">Maqetta</span>
 						<span class="maq_banner_component">Review and Commenting,</span>
-						<span class="maq_banner_version">Preview 1</span>
+						<span class="maq_banner_version">Preview 2</span>
 					</span>
 <!--
 					<div id="davinci_review_title"></div>
@@ -124,7 +124,7 @@
 					</div>
 -->
 			</div>
-			<div id="mainBody"></div>	
+			<div id="mainBody"></div>
 		</div>
 	</body>
 </html>

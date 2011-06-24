@@ -1,3 +1,4 @@
+require.built();
 define(({
 name: "Název",
 path: "Cesta",

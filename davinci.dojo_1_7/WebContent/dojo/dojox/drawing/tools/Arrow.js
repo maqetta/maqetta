@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./Line","../annotations/Arrow","../manager/_registry"],function(){
+define("dojox/drawing/tools/Arrow",["./Line","../annotations/Arrow","../manager/_registry"],function(){
 dojox.drawing.tools.Arrow=dojox.drawing.util.oo.declare(dojox.drawing.tools.Line,function(_1){
 if(this.arrowStart){
 this.begArrow=new dojox.drawing.annotations.Arrow({stencil:this,idx1:0,idx2:1});

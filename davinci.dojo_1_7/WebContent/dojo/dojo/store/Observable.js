@@ -4,115 +4,115 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define("dojo/store/Observable",["../main"],function(_1){
+define("dojo/store/Observable",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/Deferred","dojo/_base/array"],function(_1){
 _1.getObject("store",true,_1);
 return _1.store.Observable=function(_2){
-var _3=[],_4=0;
-_2.notify=function(_5,_6){
-_4++;
-var _7=_3.slice();
-for(var i=0,l=_7.length;i<l;i++){
-_7[i](_5,_6);
+var _3,_4=[],_5=0;
+_2.notify=function(_6,_7){
+_5++;
+var _8=_4.slice();
+for(var i=0,l=_8.length;i<l;i++){
+_8[i](_6,_7);
 }
 };
-var _8=_2.query;
-_2.query=function(_9,_a){
-_a=_a||{};
-var _b=_8.apply(this,arguments);
-if(_b&&_b.forEach){
-var _c=_1.mixin({},_a);
-delete _c.start;
-delete _c.count;
-var _d=_2.queryEngine&&_2.queryEngine(_9,_c);
-var _e=_4;
-var _f=[],_10;
-_b.observe=function(_11,_12){
-if(_f.push(_11)==1){
-_3.push(_10=function(_13,_14){
-_1.when(_b,function(_15){
-var _16=_15.length!=_a.count;
+var _9=_2.query;
+_2.query=function(_a,_b){
+_b=_b||{};
+var _c=_9.apply(this,arguments);
+if(_c&&_c.forEach){
+var _d=_1.mixin({},_b);
+delete _d.start;
+delete _d.count;
+var _e=_2.queryEngine&&_2.queryEngine(_a,_d);
+var _f=_5;
+var _10=[],_11;
+_c.observe=function(_12,_13){
+if(_10.push(_12)==1){
+_4.push(_11=function(_14,_15){
+_1.when(_c,function(_16){
+var _17=_16.length!=_b.count;
 var i,l;
-if(++_e!=_4){
+if(++_f!=_5){
 throw new Error("Query is out of date, you must observe() the query prior to any data modifications");
 }
-var _17,_18=-1,_19=-1;
-if(_14){
-for(i=0,l=_15.length;i<l;i++){
-var _1a=_15[i];
-if(_2.getIdentity(_1a)==_14){
-_17=_1a;
-_18=i;
-if(_d||!_13){
-_15.splice(i,1);
+var _18,_19=-1,_1a=-1;
+if(_15!==_3){
+for(i=0,l=_16.length;i<l;i++){
+var _1b=_16[i];
+if(_2.getIdentity(_1b)==_15){
+_18=_1b;
+_19=i;
+if(_e||!_14){
+_16.splice(i,1);
 }
 break;
 }
 }
 }
-if(_d){
-if(_13&&(_d.matches?_d.matches(_13):_d([_13]).length)){
-if(_18>-1){
-_15.splice(_18,0,_13);
+if(_e){
+if(_14&&(_e.matches?_e.matches(_14):_e([_14]).length)){
+if(_19>-1){
+_16.splice(_19,0,_14);
 }else{
-_15.push(_13);
+_16.push(_14);
 }
-_19=_1.indexOf(_d(_15),_13);
-if((_a.start&&_19==0)||(!_16&&_19==_15.length-1)){
-_19=-1;
+_1a=_1.indexOf(_e(_16),_14);
+if((_b.start&&_1a==0)||(!_17&&_1a==_16.length-1)){
+_1a=-1;
 }
 }
 }else{
-if(_13){
-_19=_18>=0?_18:(_2.defaultIndex||0);
+if(_14){
+_1a=_19>=0?_19:(_2.defaultIndex||0);
 }
 }
-if((_18>-1||_19>-1)&&(_12||!_d||(_18!=_19))){
-var _1b=_f.slice();
-for(i=0;_11=_1b[i];i++){
-_11(_13||_17,_18,_19);
+if((_19>-1||_1a>-1)&&(_13||!_e||(_19!=_1a))){
+var _1c=_10.slice();
+for(i=0;_12=_1c[i];i++){
+_12(_14||_18,_19,_1a);
 }
 }
 });
 });
 }
 return {cancel:function(){
-_f.splice(_1.indexOf(_f,_11),1);
-if(!_f.length){
-_3.splice(_1.indexOf(_3,_10),1);
+_10.splice(_1.indexOf(_10,_12),1);
+if(!_10.length){
+_4.splice(_1.indexOf(_4,_11),1);
 }
 }};
 };
 }
-return _b;
+return _c;
 };
-var _1c;
-function _1d(_1e,_1f){
-var _20=_2[_1e];
-if(_20){
-_2[_1e]=function(_21){
-if(_1c){
-return _20.apply(this,arguments);
+var _1d;
+function _1e(_1f,_20){
+var _21=_2[_1f];
+if(_21){
+_2[_1f]=function(_22){
+if(_1d){
+return _21.apply(this,arguments);
 }
-_1c=true;
+_1d=true;
 try{
-return _1.when(_20.apply(this,arguments),function(_22){
-_1f((typeof _22=="object"&&_22)||_21);
-return _22;
+return _1.when(_21.apply(this,arguments),function(_23){
+_20((typeof _23=="object"&&_23)||_22);
+return _23;
 });
 }
 finally{
-_1c=false;
+_1d=false;
 }
 };
 }
 };
-_1d("put",function(_23){
-_2.notify(_23,_2.getIdentity(_23));
+_1e("put",function(_24){
+_2.notify(_24,_2.getIdentity(_24));
 });
-_1d("add",function(_24){
-_2.notify(_24);
+_1e("add",function(_25){
+_2.notify(_25);
 });
-_1d("remove",function(id){
+_1e("remove",function(id){
 _2.notify(undefined,id);
 });
 return _2;

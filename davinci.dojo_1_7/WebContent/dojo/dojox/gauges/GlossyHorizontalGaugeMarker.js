@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","./BarLineIndicator"],function(_1,_2,_3,_4){
+define("dojox/gauges/GlossyHorizontalGaugeMarker",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","./BarLineIndicator"],function(_1,_2,_3,_4){
 return _1.declare("dojox.gauges.GlossyHorizontalGaugeMarker",[_4],{interactionMode:"gauge",color:"black",_getShapes:function(_5){
 if(!this._gauge){
 return null;

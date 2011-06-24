@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/Select"],function(_1,_2,_3){
+define("dojox/form/DropDownSelect",["dojo","dijit","dojox","dijit/form/Select"],function(_1,_2,_3){
 _1.getObject("dojox.form.DropDownSelect",1);
 _1.deprecated("dojox.form.DropDownSelect","Use dijit.form.Select instead","2.0");
 _1.setObject("dojox.form.DropDownSelect",_2.form.Select);

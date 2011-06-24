@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit"],function(_1,_2){
+define("dojox/app/bind",["dojo","dijit"],function(_1,_2){
 return function(_3,_4){
 _1.forEach(_3,function(_5){
 var _6=_1.query("div[dojoType^=\"dojox.mvc\"],div[data-dojo-type^=\"dojox.mvc\"]",_5.domNode);

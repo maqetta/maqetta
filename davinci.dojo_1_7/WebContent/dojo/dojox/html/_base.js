@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/html","dojo/_base/url"],function(_1,_2,_3){
+define("dojox/html/_base",["dojo","dijit","dojox","dojo/html","dojo/_base/url"],function(_1,_2,_3){
 _1.getObject("dojox.html._base",1);
 (function(){
 if(_1.isIE){

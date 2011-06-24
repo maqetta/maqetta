@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager"],function(_1,_2,_3){
+define("dojox/storage/BehaviorStorageProvider",["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager"],function(_1,_2,_3){
 _1.getObject("dojox.storage.BehaviorStorageProvider",1);
 _1.declare("dojox.storage.BehaviorStorageProvider",[_3.storage.Provider],{store:null,storeName:"__dojox_BehaviorStorage",keys:[],initialize:function(){
 try{

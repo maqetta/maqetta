@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dijit/_WidgetBase","dijit/form/_FormValueMixin","dijit/form/_TextBoxMixin"],function(_1,_2,_3){
+define("dojox/mobile/TextBox",["dijit/_WidgetBase","dijit/form/_FormValueMixin","dijit/form/_TextBoxMixin"],function(_1,_2,_3){
 return dojo.declare("dojox.mobile.TextBox",[dijit._WidgetBase,dijit.form._FormValueMixin,dijit.form._TextBoxMixin],{baseClass:"mblTextBox",_setPlaceHolderAttr:"textbox",buildRendering:function(){
 if(!this.srcNodeRef){
 this.srcNodeRef=dojo.create("input",{});

@@ -86,6 +86,6 @@ _17[bid]=_16.length;
 });
 };
 };
-_1.addOnLoad(_1.behavior,"apply");
+_1.ready(_1.behavior,"apply");
 return _1.behavior;
 });

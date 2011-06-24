@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","../EnhancedGrid"],function(_1,_2){
+define("dojox/grid/enhanced/_Plugin",["dojo","dojox","../EnhancedGrid"],function(_1,_2){
 _1.declare("dojox.grid.enhanced._Plugin",null,{name:"plugin",grid:null,option:{},_connects:[],_subscribes:[],privates:{},constructor:function(_3,_4){
 this.grid=_3;
 this.option=_4;

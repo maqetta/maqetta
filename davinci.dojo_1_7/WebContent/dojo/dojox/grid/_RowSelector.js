@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./_View"],function(_1,_2){
+define("dojox/grid/_RowSelector",["dojo","dojox","./_View"],function(_1,_2){
 _1.declare("dojox.grid._RowSelector",_2.grid._View,{defaultWidth:"2em",noscroll:true,padBorderWidth:2,buildRendering:function(){
 this.inherited("buildRendering",arguments);
 this.scrollboxNode.style.overflow="hidden";

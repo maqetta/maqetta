@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/jsonPath/query",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.jsonPath.query",1);
 _3.jsonPath.query=function(_4,_5,_6){
 var re=_3.jsonPath._regularExpressions;

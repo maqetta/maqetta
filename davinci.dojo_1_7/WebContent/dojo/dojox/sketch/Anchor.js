@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","../gfx"],function(_1){
+define("dojox/sketch/Anchor",["dojo/_base/lang","../gfx"],function(_1){
 _1.getObject("sketch",true,dojox);
 dojox.sketch.Anchor=function(an,id,_2){
 var _3=this;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/gantt/GanttTaskItem","dojo/date/locale","dijit/focus"],function(_1,_2,_3){
+define("dojox/gantt/GanttProjectItem",["dojo","dijit","dojox","dojox/gantt/GanttTaskItem","dojo/date/locale","dijit/focus"],function(_1,_2,_3){
 _1.getObject("dojox.gantt.GanttProjectItem",1);
 _1.declare("dojox.gantt.GanttProjectControl",null,{constructor:function(_4,_5){
 this.project=_5;

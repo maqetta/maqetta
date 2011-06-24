@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/form/_FormWidget","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/form/FileInput",["dojo","dijit","dojox","dijit/form/_FormWidget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.form.FileInput",1);
 _1.experimental("dojox.form.FileInput");
 _1.declare("dojox.form.FileInput",_2.form._FormWidget,{label:"Browse ...",cancelText:"Cancel",name:"uploadFile",templateString:_1.cache("dojox.form","resources/FileInput.html","<div class=\"dijitFileInput\">\n\t<input id=\"${id}\" class=\"dijitFileInputReal\" type=\"file\" dojoAttachPoint=\"fileInput\" name=\"${name}\" />\n\t<div class=\"dijitFakeInput\">\n\t\t<input class=\"dijitFileInputVisible\" type=\"text\" dojoAttachPoint=\"focusNode, inputNode\" />\n\t\t<div class=\"dijitInline dijitFileInputText\" dojoAttachPoint=\"titleNode\">${label}</div>\n\t\t<div class=\"dijitInline dijitFileInputButton\" dojoAttachPoint=\"cancelNode\" \n\t\t\tdojoAttachEvent=\"onclick:reset\">${cancelText}</div>\n\t</div>\n</div>\n"),startup:function(){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./common","dojo/uacss","dojo/_base/fx","dojo/fx","dojo/fx/easing","dojox/fx","dojox/fx/flip"],function(_1,_2,_3,_4,fx,_5,_6,_7){
+define("dojox/mobile/_compat",["dojo/_base/kernel","./common","dojo/uacss","dojo/_base/fx","dojo/fx","dojo/fx/easing","dojox/fx","dojox/fx/flip"],function(_1,_2,_3,_4,fx,_5,_6,_7){
 if(!_1.isWebKit){
 if(dojox.mobile.View){
 _1.extend(dojox.mobile.View,{_doTransition:function(_8,_9,_a,_b){
@@ -147,6 +147,9 @@ if(dojox.mobile.applyPngFilter){
 dojox.mobile.applyPngFilter(_14.domNode);
 }
 },redrawBorders:function(){
+if(this instanceof dojox.mobile.EdgeToEdgeList){
+return;
+}
 var _15=false;
 for(var i=this.containerNode.childNodes.length-1;i>=0;i--){
 var c=this.containerNode.childNodes[i];

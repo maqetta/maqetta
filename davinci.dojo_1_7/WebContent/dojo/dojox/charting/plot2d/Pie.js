@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../Element","./_PlotEvents","./common","../axis2d/common","dojox/gfx","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/utils"],function(_1,_2,_3,_4,_5,dc,da,g,m,df,du){
+define("dojox/charting/plot2d/Pie",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../Element","./_PlotEvents","./common","../axis2d/common","dojox/gfx","dojox/gfx/matrix","dojox/lang/functional","dojox/lang/utils"],function(_1,_2,_3,_4,_5,dc,da,g,m,df,du){
 var _6=0.2;
 return _1.declare("dojox.charting.plot2d.Pie",[dojox.charting.Element,dojox.charting.plot2d._PlotEvents],{defaultParams:{labels:true,ticks:false,fixed:true,precision:1,labelOffset:20,labelStyle:"default",htmlLabels:true,radGrad:"native",fanSize:5,startAngle:0},optionalParams:{radius:0,stroke:{},outline:{},shadow:{},fill:{},font:"",fontColor:"",labelWiring:{}},constructor:function(_7,_8){
 this.opt=_1.clone(this.defaultParams);

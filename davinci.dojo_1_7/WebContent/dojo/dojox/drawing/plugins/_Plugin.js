@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo"],function(_1){
+define("dojox/drawing/plugins/_Plugin",["dojo","../util/oo"],function(_1){
 _1.getObject("drawing.plugins.tools",true,dojox);
 dojox.drawing.plugins._Plugin=dojox.drawing.util.oo.declare(function(_2){
 this._cons=[];

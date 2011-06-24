@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/array"],function(_1){
+define("dojox/xml/DomParser",["dojo/_base/kernel","dojo/_base/array"],function(_1){
 _1.getObject("xml",true,dojox);
 dojox.xml.DomParser=new (function(){
 var _2={ELEMENT:1,ATTRIBUTE:2,TEXT:3,CDATA_SECTION:4,PROCESSING_INSTRUCTION:7,COMMENT:8,DOCUMENT:9};

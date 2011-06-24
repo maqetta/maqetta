@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./lambda"],function(_1,df){
+define("dojox/lang/functional/reversed",["dojo/_base/kernel","./lambda"],function(_1,df){
 var d=_1,df;
 d.mixin(df,{filterRev:function(a,f,o){
 if(typeof a=="string"){

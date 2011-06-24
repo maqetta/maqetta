@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojox/gfx","dojox/gfx/_gfxBidiSupport","./Chart","./axis2d/common","dojox/string/BidiEngine","dojox/lang/functional"],function(_1,_2,_3,_4,g,_5,_6,da,_7,df){
+define("dojox/charting/BidiSupport",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojox/gfx","dojox/gfx/_gfxBidiSupport","./Chart","./axis2d/common","dojox/string/BidiEngine","dojox/lang/functional"],function(_1,_2,_3,_4,g,_5,_6,da,_7,df){
 var _8=new dojox.string.BidiEngine();
 _1.extend(dojox.charting.Chart,{textDir:"",getTextDir:function(_9){
 var _a=this.textDir=="auto"?_8.checkContextual(_9):this.textDir;

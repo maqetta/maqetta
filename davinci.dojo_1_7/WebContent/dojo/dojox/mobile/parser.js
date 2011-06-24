@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/ready"],function(_1){
+define("dojox/mobile/parser",["dojo/ready"],function(_1){
 dojo.getObject("mobile",true,dojox);
 dojox.mobile.parser=new function(){
 this.instantiate=function(_2,_3,_4){

@@ -5,7 +5,7 @@
 */
 
 define("dojo/domReady",["./has"],function(_1){
-var _2=this,_3=document,_4={"loaded":1,"complete":1},_5=typeof _3.readyState!="string",_6=require.pageLoaded||!!_4[_3.readyState];
+var _2=this,_3=document,_4={"loaded":1,"complete":1},_5=typeof _3.readyState!="string",_6=!!_4[_3.readyState];
 if(_5){
 _3.readyState="loading";
 }

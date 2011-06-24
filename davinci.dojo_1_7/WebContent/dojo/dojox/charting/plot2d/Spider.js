@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","../Element","./_PlotEvents","dojo/_base/Color","dojox/color/_base","./common","../axis2d/common","../scaler/primitive","dojox/gfx","dojox/gfx/matrix","dojox/gfx/fx","dojox/lang/functional","dojox/lang/utils","dojo/fx","dojo/fx/easing"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,dc,da,_a,g,m,_b,df,du,fx,_c){
+define("dojox/charting/plot2d/Spider",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","../Element","./_PlotEvents","dojo/_base/Color","dojox/color/_base","./common","../axis2d/common","../scaler/primitive","dojox/gfx","dojox/gfx/matrix","dojox/gfx/fx","dojox/lang/functional","dojox/lang/utils","dojo/fx","dojo/fx/easing"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,dc,da,_a,g,m,_b,df,du,fx,_c){
 var _d=0.2;
 _1.declare("dojox.charting.plot2d.Spider",[dojox.charting.Element,dojox.charting.plot2d._PlotEvents],{defaultParams:{labels:true,ticks:false,fixed:true,precision:1,labelOffset:-10,labelStyle:"default",htmlLabels:true,startAngle:-90,divisions:3,axisColor:"",axisWidth:0,spiderColor:"",spiderWidth:0,seriesWidth:0,seriesFillAlpha:0.2,spiderOrigin:0.16,markerSize:3,spiderType:"polygon",animationType:_c.backOut,axisTickFont:"",axisTickFontColor:"",axisFont:"",axisFontColor:""},optionalParams:{radius:0,font:"",fontColor:""},constructor:function(_e,_f){
 this.opt=_1.clone(this.defaultParams);

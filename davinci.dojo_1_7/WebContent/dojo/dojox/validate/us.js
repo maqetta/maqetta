@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./_base","./regexp"],function(_1,_2,_3){
+define("dojox/validate/us",["dojo/_base/kernel","./_base","./regexp"],function(_1,_2,_3){
 var us=_1.getObject("us",true,_2);
 us.isState=function(_4,_5){
 var re=new RegExp("^"+_3.us.state(_5)+"$","i");

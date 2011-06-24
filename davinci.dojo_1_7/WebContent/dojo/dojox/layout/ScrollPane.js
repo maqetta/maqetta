@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/ContentPane","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/layout/ScrollPane",["dojo","dijit","dojox","dijit/layout/ContentPane","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ScrollPane",1);
 _1.experimental("dojox.layout.ScrollPane");
 _1.declare("dojox.layout.ScrollPane",[_2.layout.ContentPane,_2._Templated],{_line:null,_lo:null,_offset:15,orientation:"vertical",autoHide:true,templateString:_1.cache("dojox.layout","resources/ScrollPane.html","<div class=\"dojoxScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, onmouseleave: _leave\">\n    <div class=\"dojoxScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" dojoAttachEvent=\"onmousemove: _calc\">\n\t<div class=\"dojoxScrollPane\" dojoAttachPoint=\"containerNode\"></div>\n    </div>\n    <div dojoAttachPoint=\"helper\" class=\"dojoxScrollHelper\"><span class=\"helperInner\">|</span></div>\n</div>"),resize:function(_4){

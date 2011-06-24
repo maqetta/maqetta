@@ -289,5 +289,5 @@ return _2a;
 _1.anim=function(_2f,_30,_31,_32,_33,_34){
 return _1.animateProperty({node:_2f,duration:_31||_1.Animation.prototype.duration,properties:_30,easing:_32,onEnd:_33}).play(_34||0);
 };
-return _1.animateProperty;
+return {_Line:_1._Line,Animation:_1.Animation,_fade:_1._fade,fadeIn:_1.fadeIn,fadeOut:_1.fadeOut,_defaultEasing:_1._defaultEasing,animateProperty:_1.animateProperty,anim:_1.anim};
 });

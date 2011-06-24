@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4){
+define("dojox/geo/openlayers/WidgetFeature",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojox/geo/openlayers/Feature"],function(_1,_2,_3,_4){
 return _1.declare("dojox.geo.openlayers.WidgetFeature",dojox.geo.openlayers.Feature,{_widget:null,_bbox:null,constructor:function(_5){
 this._params=_5;
 },setParameters:function(_6){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojo/io/iframe","dijit/_Widget","dijit/_TemplatedMixin","dijit/_Contained","dojox/embed/Flash","dojox/embed/flashVars","dojox/html/styles"],function(_1,_2){
+define("dojox/form/FileUploader",["dojo","dijit","dojo/io/iframe","dijit/_Widget","dijit/_TemplatedMixin","dijit/_Contained","dojox/embed/Flash","dojox/embed/flashVars","dojox/html/styles"],function(_1,_2){
 _1.deprecated("dojox.form.FileUploader","Use dojox.form.Uploader","2.0");
 _1.declare("dojox.form.FileUploader",[_2._Widget,_2._TemplatedMixin,_2._Contained],{swfPath:_1.config.uploaderPath||_1.moduleUrl("dojox.form","resources/fileuploader.swf"),templateString:"<div><div dojoAttachPoint=\"progNode\"><div dojoAttachPoint=\"progTextNode\"></div></div><div dojoAttachPoint=\"insideNode\" class=\"uploaderInsideNode\"></div></div>",uploadUrl:"",isDebug:false,devMode:false,baseClass:"dojoxUploaderNorm",hoverClass:"dojoxUploaderHover",activeClass:"dojoxUploaderActive",disabledClass:"dojoxUploaderDisabled",force:"",uploaderType:"",flashObject:null,flashMovie:null,insideNode:null,deferredUploading:1,fileListId:"",uploadOnChange:false,selectMultipleFiles:true,htmlFieldName:"uploadedfile",flashFieldName:"flashUploadFiles",fileMask:null,minFlashVersion:9,tabIndex:-1,showProgress:false,progressMessage:"Loading",progressBackgroundUrl:_1.moduleUrl("dijit","themes/tundra/images/buttonActive.png"),progressBackgroundColor:"#ededed",progressWidgetId:"",skipServerCheck:false,serverTimeout:5000,log:function(){
 if(this.isDebug){

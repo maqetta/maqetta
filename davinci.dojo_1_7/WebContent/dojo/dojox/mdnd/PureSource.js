@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/connect","dojo/_base/array","dojo/dnd/Selector","dojo/dnd/Manager"],function(_1){
+define("dojox/mdnd/PureSource",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/connect","dojo/_base/array","dojo/dnd/Selector","dojo/dnd/Manager"],function(_1){
 return _1.declare("dojox.mdnd.PureSource",_1.dnd.Selector,{horizontal:false,copyOnly:true,skipForm:false,withHandles:false,isSource:true,targetState:"Disabled",generateText:true,constructor:function(_2,_3){
 _1.mixin(this,_1.mixin({},_3));
 var _4=this.accept;

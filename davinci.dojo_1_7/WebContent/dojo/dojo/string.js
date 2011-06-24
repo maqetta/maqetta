@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define("dojo/string",["./_base/kernel","./_base/lang","./_base/window"],function(_1){
+define("dojo/string",["./_base/kernel","./_base/lang"],function(_1){
 _1.getObject("string",true,_1);
 _1.string.rep=function(_2,_3){
 if(_3<=0||!_2){

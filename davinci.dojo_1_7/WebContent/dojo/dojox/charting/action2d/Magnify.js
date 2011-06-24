@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./PlotAction","dojox/gfx/matrix","dojox/gfx/fx","dojo/fx","dojo/fx/easing"],function(_1,_2,_3,_4,m,gf,df,_5){
+define("dojox/charting/action2d/Magnify",["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./PlotAction","dojox/gfx/matrix","dojox/gfx/fx","dojo/fx","dojo/fx/easing"],function(_1,_2,_3,_4,m,gf,df,_5){
 var _6=2;
 return _1.declare("dojox.charting.action2d.Magnify",dojox.charting.action2d.PlotAction,{defaultParams:{duration:400,easing:_5.backOut,scale:_6},optionalParams:{},constructor:function(_7,_8,_9){
 this.scale=_9&&typeof _9.scale=="number"?_9.scale:_6;

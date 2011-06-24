@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../Theme","./common"],function(_1){
+define("dojox/charting/themes/SageToLime",["../Theme","./common"],function(_1){
 dojox.charting.themes.SageToLime=new _1({colors:["#abdbcb","#435a51","#70998b","#5f8074","#80ccbb","#539e8b","#78a596","#335f54","#8dd1c2","#68c5ad"]});
 return dojox.charting.themes.SageToLime;
 });

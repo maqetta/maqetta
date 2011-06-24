@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[επιλογές παρουσίασης]",
 	title: "Τίτλος",

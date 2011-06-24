@@ -4,5 +4,5 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./python","./xquery","./groovy"],function(){
+define("dojox/highlight/languages/_dynamic",["./python","./xquery","./groovy"],function(){
 });

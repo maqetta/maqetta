@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojox/gfx","./BarLineIndicator"],function(_1,_2,_3,_4){
+define("dojox/gauges/BarCircleIndicator",["dojo/_base/kernel","dojo/_base/declare","dojox/gfx","./BarLineIndicator"],function(_1,_2,_3,_4){
 _1.experimental("dojox.gauges.BarCircleIndicator");
 return _1.declare("dojox.gauges.BarCircleIndicator",[_4],{_getShapes:function(_5){
 var _6=this.color?this.color:"black";

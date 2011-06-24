@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/xmpp/RosterService",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.RosterService",1);
 _3.xmpp.roster={ADDED:101,CHANGED:102,REMOVED:103};
 _1.declare("dojox.xmpp.RosterService",null,{constructor:function(_4){

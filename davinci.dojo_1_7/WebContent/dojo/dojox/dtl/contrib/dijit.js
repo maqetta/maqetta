@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base","../dom","dojo/parser"],function(_1,_2,dd){
+define("dojox/dtl/contrib/dijit",["dojo/_base/kernel","dojo/_base/lang","../_base","../dom","dojo/parser"],function(_1,_2,dd){
 _1.getObject("dtl.contrib.dijit",true,dojox);
 var _3=dd.contrib.dijit;
 _3.AttachNode=_1.extend(function(_4,_5){

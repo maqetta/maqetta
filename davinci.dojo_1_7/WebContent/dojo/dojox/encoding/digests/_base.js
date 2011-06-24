@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/digests/_base",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.digests",true,dojox);
 var d=dojox.encoding.digests;
 d.outputTypes={Base64:0,Hex:1,String:2,Raw:3};

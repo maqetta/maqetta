@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
+define("dojox/av/widget/PlayButton",["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
 _1.declare("dojox.av.widget.PlayButton",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.av.widget","resources/PlayButton.html"),postCreate:function(){
 this.showPlay();
 },setMedia:function(_3){

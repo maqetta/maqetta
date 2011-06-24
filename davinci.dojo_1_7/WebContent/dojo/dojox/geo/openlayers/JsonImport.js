@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/xhr","dojo/_base/lang","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojo/data/ItemFileReadStore","dojox/geo/openlayers/GeometryFeature"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+define("dojox/geo/openlayers/JsonImport",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/xhr","dojo/_base/lang","dojox/geo/openlayers/LineString","dojox/geo/openlayers/Collection","dojo/data/ItemFileReadStore","dojox/geo/openlayers/GeometryFeature"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 return _1.declare("dojox.geo.openlayers.JsonImport",null,{constructor:function(_9){
 this._params=_9;
 },loadData:function(){

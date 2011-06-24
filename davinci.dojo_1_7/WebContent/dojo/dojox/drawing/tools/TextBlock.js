@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../stencil/Text","../util/oo","../manager/_registry"],function(_1){
+define("dojox/drawing/tools/TextBlock",["dojo","../stencil/Text","../util/oo","../manager/_registry"],function(_1){
 var _2;
 _1.addOnLoad(function(){
 _2=_1.byId("conEdit");

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/html"],function(_1){
+define("dojox/html/ext-dojo/style",["dojo/_base/kernel","dojo/_base/html"],function(_1){
 _1.experimental("dojox.html.ext-dojo.style");
 var st=_1.getObject("html.ext-dojo.style",true,dojox);
 _1.mixin(dojox.html["ext-dojo"].style,{supportsTransform:true,_toPx:function(_2){
@@ -23,6 +23,20 @@ return ds(_3,"margin");
 var ds=_1.style,_4=_1.doc.documentElement.style,_5=dojox.html["ext-dojo"].style;
 _1.style=function(_6,_7,_8){
 var n=_1.byId(_6),tr=(_7=="transform"),to=(_7=="transformOrigin"),_9=arguments.length;
+if(_9==1){
+return ds(_6);
+}else{
+if(_9==2){
+if(tr){
+return _5.getTransform(_6);
+}else{
+if(to){
+return _5.getTransformOrigin(_6);
+}else{
+return ds(_6,_7);
+}
+}
+}else{
 if(_9==3){
 if(tr){
 _5.setTransform(n,_8,true);
@@ -33,15 +47,6 @@ _5.setTransformOrigin(n,_8);
 ds(_6,_7,_8);
 }
 }
-}
-if(_9==2){
-if(tr){
-return _5.getTransform(_6);
-}else{
-if(to){
-return _5.getTransformOrigin(_6);
-}else{
-return ds(_6,_7);
 }
 }
 }

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
+define("dojox/analytics/plugins/mouseClick",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
 _3.plugins.mouseClick=new (function(){
 this.addData=_1.hitch(_3,"addData","mouseClick");
 this.onClick=function(e){

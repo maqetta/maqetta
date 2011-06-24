@@ -51,7 +51,7 @@ return (_5?"rgba("+_6+", "+t.a:"rgb("+_6)+")";
 },toString:function(){
 return this.toCss(true);
 }});
-_1.blendColors=function(_7,_8,_9,_a){
+_1.Color.blendColors=_1.blendColors=function(_7,_8,_9,_a){
 var t=_a||new _1.Color();
 _1.forEach(["r","g","b","a"],function(x){
 t[x]=_7[x]+(_8[x]-_7[x])*_9;
@@ -61,11 +61,11 @@ t[x]=Math.round(t[x]);
 });
 return t.sanitize();
 };
-_1.colorFromRgb=function(_b,_c){
+_1.Color.fromRgb=_1.colorFromRgb=function(_b,_c){
 var m=_b.toLowerCase().match(/^rgba?\(([\s\.,0-9]+)\)/);
 return m&&_1.colorFromArray(m[1].split(/\s*,\s*/),_c);
 };
-_1.colorFromHex=function(_d,_e){
+_1.Color.fromHex=_1.colorFromHex=function(_d,_e){
 var t=_e||new _1.Color(),_f=(_d.length==4)?4:8,_10=(1<<_f)-1;
 _d=Number("0x"+_d.substr(1));
 if(isNaN(_d)){
@@ -79,7 +79,7 @@ t[x]=_f==4?17*c:c;
 t.a=1;
 return t;
 };
-_1.colorFromArray=function(a,obj){
+_1.Color.fromArray=_1.colorFromArray=function(a,obj){
 var t=obj||new _1.Color();
 t._set(Number(a[0]),Number(a[1]),Number(a[2]),Number(a[3]));
 if(isNaN(t.a)){
@@ -87,7 +87,7 @@ t.a=1;
 }
 return t.sanitize();
 };
-_1.colorFromString=function(str,obj){
+_1.Color.fromString=_1.colorFromString=function(str,obj){
 var a=_1.Color.named[str];
 return a&&_1.colorFromArray(a,obj)||_1.colorFromRgb(str,obj)||_1.colorFromHex(str,obj);
 };

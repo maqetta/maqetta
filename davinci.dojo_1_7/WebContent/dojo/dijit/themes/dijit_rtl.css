@@ -64,7 +64,7 @@
 	margin-right: 0;
 	margin-left: 9px;
 }
-.dijitRtl .nowrapTabStrip {
+.dijitTabControllerRtl .nowrapTabStrip {
     text-align: right;  
 }
 .dijitTabRtl .dijitTabCloseButton {

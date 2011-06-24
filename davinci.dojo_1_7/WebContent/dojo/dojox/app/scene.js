@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_WidgetBase","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dojox/mobile/transition","./model","./view","./bind"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+define("dojox/app/scene",["dojo","dijit","dojox","dijit/_WidgetBase","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dojox/mobile/transition","./model","./view","./bind"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
 var _b=function(_c,mb){
 var cs=_1.getComputedStyle(_c);
 var me=_1._getMarginExtents(_c,cs);

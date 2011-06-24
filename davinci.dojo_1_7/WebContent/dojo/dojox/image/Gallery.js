@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/fx","dijit/_Widget","dijit/_Templated","dojox/image/ThumbnailPicker","dojox/image/SlideShow"],function(_1,_2,_3){
+define("dojox/image/Gallery",["dojo","dijit","dojox","dojo/fx","dijit/_Widget","dijit/_Templated","dojox/image/ThumbnailPicker","dojox/image/SlideShow"],function(_1,_2,_3){
 _1.getObject("dojox.image.Gallery",1);
 _1.experimental("dojox.image.Gallery");
 _1.declare("dojox.image.Gallery",[_2._Widget,_2._Templated],{imageHeight:375,imageWidth:500,pageSize:_3.image.SlideShow.prototype.pageSize,autoLoad:true,linkAttr:"link",imageThumbAttr:"imageUrlThumb",imageLargeAttr:"imageUrl",titleAttr:"title",slideshowInterval:3,templateString:_1.cache("dojox.image","resources/Gallery.html","<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\n</div>"),postCreate:function(){

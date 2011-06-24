@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/dom-construct","dojo/_base/window","./_base"],function(_1,_2,_3,_4,_5){
+define("dojox/mobile/deviceTheme",["dojo/_base/kernel","dojo/_base/array","dojo/dom-construct","dojo/_base/window","./_base"],function(_1,_2,_3,_4,_5){
 dojox.mobile.loadCssFile=function(_6){
 _1.create("LINK",{href:_6,type:"text/css",rel:"stylesheet"},_1.doc.getElementsByTagName("head")[0]);
 };

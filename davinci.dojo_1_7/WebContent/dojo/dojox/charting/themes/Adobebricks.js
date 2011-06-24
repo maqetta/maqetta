@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../Theme","./common"],function(_1){
+define("dojox/charting/themes/Adobebricks",["../Theme","./common"],function(_1){
 dojox.charting.themes.Adobebricks=new _1({colors:["#7f2518","#3e170c","#cc3927","#651f0e","#8c271c"]});
 return dojox.charting.themes.Adobebricks;
 });

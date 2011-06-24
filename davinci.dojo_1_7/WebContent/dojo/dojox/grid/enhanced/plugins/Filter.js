@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","../_Plugin","./Dialog","./filter/FilterLayer","./filter/FilterBar","./filter/FilterDefDialog","./filter/FilterStatusTip","./filter/ClearFilterConfirm","dojo/i18n!../nls/Filter"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/Filter",["dojo","dojox","../_Plugin","./Dialog","./filter/FilterLayer","./filter/FilterBar","./filter/FilterDefDialog","./filter/FilterStatusTip","./filter/ClearFilterConfirm","dojo/i18n!../nls/Filter"],function(_1,_2){
 var ns=_1.getObject("grid.enhanced.plugins",true,_2),_3=_1.getObject("grid.enhanced.plugins.filter",true,_2);
 _1.declare("dojox.grid.enhanced.plugins.Filter",_2.grid.enhanced._Plugin,{name:"filter",constructor:function(_4,_5){
 this.grid=_4;

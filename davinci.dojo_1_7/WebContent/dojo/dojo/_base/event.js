@@ -36,5 +36,5 @@ _a.cancelBubble=true;
 on._preventDefault.call(_a);
 }
 };
-return _1.connect;
+return {fixEvent:_1.fixEvent,stopEvent:_1.stopEvent};
 });

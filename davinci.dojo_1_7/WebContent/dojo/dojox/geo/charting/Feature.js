@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/event","dojox/gfx/fx","dojox/color"],function(_1,_2,_3,_4,_5,fx,_6){
+define("dojox/geo/charting/Feature",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/event","dojox/gfx/fx","dojox/color"],function(_1,_2,_3,_4,_5,fx,_6){
 return _1.declare("dojox.geo.charting.Feature",null,{_isZoomIn:false,isSelected:false,markerText:null,constructor:function(_7,_8,_9){
 this.id=_8;
 this.shape=_7.mapObj.createGroup();

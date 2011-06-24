@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[اختيارات العرض]",
 	title: "العنوان",

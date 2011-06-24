@@ -17,17 +17,20 @@ e.preventDefault();
 return ok;
 },_fillContent:function(_5){
 if(_5&&(!this.params||!("label" in this.params))){
-this.set("label",_5.innerHTML);
+var _6=_1.trim(_5.innerHTML);
+if(_6){
+this.label=_6;
 }
-},_setShowLabelAttr:function(_6){
+}
+},_setShowLabelAttr:function(_7){
 if(this.containerNode){
-_1.toggleClass(this.containerNode,"dijitDisplayNone",!_6);
+_1.toggleClass(this.containerNode,"dijitDisplayNone",!_7);
 }
-this._set("showLabel",_6);
-},setLabel:function(_7){
+this._set("showLabel",_7);
+},setLabel:function(_8){
 _1.deprecated("dijit.form.Button.setLabel() is deprecated.  Use set('label', ...) instead.","","2.0");
-this.set("label",_7);
-},_setLabelAttr:function(_8){
+this.set("label",_8);
+},_setLabelAttr:function(_9){
 this.inherited(arguments);
 if(!this.showLabel&&!("title" in this.params)){
 this.titleNode.title=_1.trim(this.containerNode.innerText||this.containerNode.textContent||"");
@@ -35,7 +38,8 @@ this.titleNode.title=_1.trim(this.containerNode.innerText||this.containerNode.te
 }});
 if(!_1.isAsync){
 _1.ready(0,function(){
-_4(["dijit/form/DropDownButton","dijit/form/ComboButton","dijit/form/ToggleButton"]);
+var _a=["dijit/form/DropDownButton","dijit/form/ComboButton","dijit/form/ToggleButton"];
+_4(_a);
 });
 }
 return _2.form.Button;

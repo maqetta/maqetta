@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/date","dojo/date/locale","dojo/string","dojo/cldr/supplemental"],function(_1,_2,_3,_4,_5){
+define("dojox/date/posix",["dojo/_base/kernel","dojo/date","dojo/date/locale","dojo/string","dojo/cldr/supplemental"],function(_1,_2,_3,_4,_5){
 _1.getObject("date.posix",true,dojox);
 dojox.date.posix.strftime=function(_6,_7,_8){
 var _9=null;

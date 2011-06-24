@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./_ItemBase"],function(_1,_2,_3,_4,_5){
+define("dojox/mobile/ToolBarButton",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./_ItemBase"],function(_1,_2,_3,_4,_5){
 return _1.declare("dojox.mobile.ToolBarButton",dojox.mobile._ItemBase,{selected:false,btnClass:"",_defaultColor:"mblColorDefault",_selColor:"mblColorDefaultSel",buildRendering:function(){
 this.domNode=this.containerNode=this.srcNodeRef||_1.doc.createElement("div");
 this.inheritParams();

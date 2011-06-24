@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/window"],function(_1,_2,_3){
+define("dojox/flash/_base",["dojo","dijit","dojox","dojo/window"],function(_1,_2,_3){
 _1.getObject("dojox.flash._base",1);
 _1.experimental("dojox.flash");
 _3.flash=function(){

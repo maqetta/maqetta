@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./_base"],function(){
+define("dojox/timing/ThreadPool",["./_base"],function(){
 dojo.experimental("dojox.timing.ThreadPool");
 var t=dojox.timing;
 t.threadStates={UNSTARTED:"unstarted",STOPPED:"stopped",PENDING:"pending",RUNNING:"running",SUSPENDED:"suspended",WAITING:"waiting",COMPLETE:"complete",ERROR:"error"};

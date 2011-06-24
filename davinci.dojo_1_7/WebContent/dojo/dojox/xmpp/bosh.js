@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/io/script","dojo/io/iframe","dojox/xml/parser"],function(_1,_2,_3){
+define("dojox/xmpp/bosh",["dojo","dijit","dojox","dojo/io/script","dojo/io/iframe","dojox/xml/parser"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.bosh",1);
 _3.xmpp.bosh={transportIframes:[],initialize:function(_4){
 this.transportIframes=[];

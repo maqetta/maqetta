@@ -10,7 +10,7 @@ _1.declare("dijit.CheckedMenuItem",_2.MenuItem,{templateString:_3,checked:false,
 _1.toggleClass(this.domNode,"dijitCheckedMenuItemChecked",_4);
 this.domNode.setAttribute("aria-checked",_4);
 this._set("checked",_4);
-},onChange:function(_5){
+},iconClass:"",onChange:function(_5){
 },_onClick:function(e){
 if(!this.disabled){
 this.set("checked",!this.checked);

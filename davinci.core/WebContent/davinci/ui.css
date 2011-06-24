@@ -71,6 +71,10 @@
 	width:1px;
 }
 
+.templateInput {
+	width:100%;
+}
+
 .downloadAllIcon {
 	background-image: url(./img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: 0 -1060px;

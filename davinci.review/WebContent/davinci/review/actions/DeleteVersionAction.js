@@ -3,12 +3,16 @@ dojo.provide("davinci.review.actions.DeleteVersionAction");
 dojo.require("davinci.actions.Action");
 dojo.require("dojox.widget.Toaster");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.actions", "actions");
+
 dojo.declare("davinci.review.actions.DeleteVersionAction",davinci.actions.Action,{
 	run: function(context){
 	var selection = davinci.Runtime.getSelection();
 	if(!selection) return;
+	var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
 	
-	okToClose=confirm("Are you sure you want to delete this version");
+	okToClose=confirm(langObj.areYouSureDelete);
 	if(!okToClose)
 		return;
 	var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
@@ -27,7 +31,7 @@ dojo.declare("davinci.review.actions.DeleteVersionAction",davinci.actions.Action
 	            	});
 	            	hasToaster = true;
             	}
-            	dojo.publish("/davinci/review/resourceChanged", [{message:"Delete the version successfully!", type:"message"},"delete",item]);
+            	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.deleteSuccessful, type:"message"},"delete",item]);
             	for(var i=0;i<item.children.length;i++){
             			dojo.publish("/davinci/resource/resourceChanged",["deleted",item.children[i]]);
             	}

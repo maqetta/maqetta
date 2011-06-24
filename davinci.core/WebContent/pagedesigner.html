@@ -29,12 +29,11 @@
 	    function globalize()
 	    {
 	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
-	      var version = 2;
 	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
 	      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
 	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
 	      dojo.byId("maqetta_designer").innerHTML = langObj.designer;
-	      dojo.byId("maqetta_version").innerHTML = dojo.string.substitute(langObj.version,[version]);
+	      dojo.byId("maqetta_version").innerHTML = davinci.version;
 	      dojo.byId("title_id").innerHTML = langObj.pageDesignerTitle;
 	      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
 	    }

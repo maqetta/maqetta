@@ -19,9 +19,21 @@ dojo.require("dijit.Tree");
 dojo.require("davinci.resource");
 dojo.require("davinci.model.Resource");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.widgets", "widgets");
+dojo.requireLocalization("dijit", "common");
+
 dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templated],{
 	templateString: dojo.cache("davinci", "review/widgets/templates/PublishWizard.html"),
 	warningString: dojo.cache("davinci", "review/widgets/templates/MailFailureDialogContent.html"),
+	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		dojo.mixin(this, langObj);
+		dojo.mixin(this, dijitLangObj);
+		this.inherited(arguments);
+	},
 	
 	postCreate: function(){
 	
@@ -157,21 +169,21 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var formatHref = function(result){
 			return '<a href="javascript:dojo.publish(\'/davinci/review/deleteReviewer\',[])"><img class="delImg" src="app/davinci/review/resources/img/del.gif"/></a>';
 		};
-		
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		var layoutCountries = [ {
 
 			cells : [ {
-				name : "User",
+				name : langObj.user,
 				field : 'email',
 				formatter: formatPic,
 				width : "70px",
 				styles: "text-align: center;"
 			}, {
-				name : "Email",
+				name : langObj.email,
 				field : 'displayName',
 				width : "320px"
 			}, {
-				name:"Action",
+				name: langObj.action,
 				field:"action",
 				formatter: formatHref,
 				width: "70px",
@@ -230,7 +242,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 				return this.inherited("fetch", arguments);
 			}
 		});
-		
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		this.addReviewerCombox = new dijit.form.ComboBox({
 			regExpGen: dojo.hitch(this, this._emailAddress),
 			required: true,
@@ -245,7 +257,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			onKeyUp: dojo.hitch(this,this._updateAddButton),
 			pageSize: 10,
 			searchDelay: 500,
-			placeHolder: "Enter a name or email address"
+			placeHolder: langObj.enterNameOrEmail
 		},this.addReviewerCombox);
 	},
 	
@@ -391,6 +403,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 	
 
 	updateSubmit : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		var valid=this.versionTitle.isValid()&& this.dueDate.isValid();
 		var valid2 = this.reviewFiles&&this.reviewFiles.length>0;
 		var valid3 = this.userData.length>0;
@@ -402,10 +415,10 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		dojo.addClass(this.navPage3,valid3?"done":"todo");
 		this.invite.set("disabled",!(valid&&valid2&&valid3));
 		var errMsg="";
-		if(!valid3) errMsg = "No reviewers selected yet";
-		if(!valid2) errMsg = "No files selected yet";
-		if(!this.dueDate.isValid()) errMsg = "Due Date incorrect";
-		if(!this.versionTitle.isValid()) errMsg = "Title required";
+		if(!valid3) errMsg = langObj.noReviewersSelected;
+		if(!valid2) errMsg = langObj.noFilesSelected;
+		if(!this.dueDate.isValid()) errMsg = langObj.dueDateIncorrect;
+		if(!this.versionTitle.isValid()) errMsg = langObj.titleRequired;
 		this.reviewMsg.innerHTML = errMsg;
 	},
 	
@@ -627,6 +640,8 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var receiveEmail = this.receiveEmail.get("value")=="on"?"true":"false";
 		var warningString = this.warningString;
 		
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		
 		dojo.xhrPost({url:"./cmd/publish",sync:false,handleAs:"text",
 			content:{
 			'isUpdate':this.node&&!this.isRestart?true:false,
@@ -661,16 +676,16 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
         	}
             if (result=="OK"){
             	if(!value){
-            		dojo.publish("/davinci/review/resourceChanged", [{message:"You have successfully invited the reviewers!", type:"message"},"create"]);
+            		dojo.publish("/davinci/review/resourceChanged", [{message:langObj.inviteSucessful, type:"message"},"create"]);
             	}else{
-            		dojo.publish("/davinci/review/resourceChanged", [{message:"Saved as draft successfully!", type:"message"},"create"]);
+            		dojo.publish("/davinci/review/resourceChanged", [{message:langObj.draftSaved, type:"message"},"create"]);
             	}
             }else{
             	var dialogContent = dojo.string.substitute(warningString, {htmlContent: result});
-            	dojo.publish("/davinci/review/resourceChanged", [{message:"Failed to send out the invitation", type:"warning"},"create"]);
+            	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.inviteFailed, type:"warning"},"create"]);
             	if(!this.invitationDialog){
             		this.invitationDialog = new dijit.Dialog({
-            			title: "Warning",
+            			title: langObj.warning,
             			content: dialogContent
             		});
             		this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function(){

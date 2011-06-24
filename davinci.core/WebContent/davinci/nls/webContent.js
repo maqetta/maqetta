@@ -2,7 +2,6 @@
 		/*Currently this file is also used for davinci.review/WebContent/review.html*/
 		//pagedesigner.html
 		"designer":"Designer,",
-		"version":"Preview ${0}",//also in review.html
 		"welcome":"Welcome",//also in review.html
 		"loadingMaqetta":"&nbsp;Loading Maqetta...",
 		"logOff":"Log Out",//also in review.html

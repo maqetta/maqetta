@@ -373,6 +373,7 @@
 	float:left;
 	height:20px;
 	line-height:20px;
+	display:inline;
 }
 .current{
 	color:black;
@@ -610,6 +611,59 @@
 	display: inline-block;
 	float:left;
 	padding: 10px 0 0 10px;
+}
+
+.publishWizard {
+	width:600px;
+	height:310px;
+}
+
+.publishWizard .steps {
+	height:25px;
+}
+
+.publishWizard .mainSection {
+	height:235px;
+	width:600px;
+}
+
+.publishWizard .emailLabel {
+	position:relative;
+	left:4px;
+	top:3px;
+}
+
+.publishWizard .sourceTree {
+	width:245px;
+	height:170px;
+	border:1px solid #DBDBDB;
+}
+
+.publishWizard .reviewers {
+	height:30px;
+}
+
+.publishWizard .reviewerList {
+	width:480px;
+	height:160px;
+}
+
+.publishWizard .reviewerBox {
+	width:220px;
+}
+
+.publishWizard .space {
+	margin:10px 0 0 0;
+}
+
+.publishWizard .cancelButton {
+	float:right;
+	margin:7px 0px 0 5px; 
+	text-decoration:none;
+}
+
+.publishWizard .bottomButton {
+	float:right;
 }
 
 .review-tips {

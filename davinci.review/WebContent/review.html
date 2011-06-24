@@ -37,15 +37,13 @@
             davinci.Runtime.initialPerspective = "davinci.review.comment";
             
             <!-- Globalization -->
-    	    dojo.requireLocalization("davinci", "webContent");
     	    function globalize()
     	    {
     	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
-    	      var version = 2;
     	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
     	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
     	      dojo.byId("maqetta_review").innerHTML = langObj.review;
-    	      dojo.byId("maqetta_version").innerHTML = dojo.string.substitute(langObj.version,[version]);
+    	      dojo.byId("maqetta_version").innerHTML = davinci.version;
     	      dojo.byId("help_drop_down").innerHTML = langObj.help;
     	      dojo.byId("menu_help").innerHTML = langObj.help;
     	      dojo.byId("menu_tutorials").innerHTML = langObj.tutorials;

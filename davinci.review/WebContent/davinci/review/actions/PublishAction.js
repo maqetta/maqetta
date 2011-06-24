@@ -19,6 +19,9 @@ dojo.require("dojox.validate.regexp");
 dojo.require("davinci.review.widgets.PublishWizard");
 dojo.require("dijit.Dialog");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.actions", "actions");
+
 dojo.declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
 	constructor: function(node,isRestart){
 		this.node =  node;
@@ -28,8 +31,9 @@ dojo.declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
 	},
 	run : function() {
 		var publishWizard = this.publishWizard = new davinci.review.widgets.PublishWizard();
+		var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
 		this.dialog = new dijit.Dialog( {
-			title : "New Review",
+			title : langObj.newReview,
 			onCancle: dojo.hitch(this,this.close)
 		});
 		this.dialog.setContent(publishWizard);

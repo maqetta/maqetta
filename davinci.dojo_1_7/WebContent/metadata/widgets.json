@@ -1403,7 +1403,7 @@
         {
             "name": "ForestStoreModel",
             "type": "dijit.tree.ForestStoreModel",
-            "category": "untested-obj",
+            "category": "untested",
             "hidden": true,
             "invisible": true,
             "helper": "davinci.libraries.dojo.dijit.tree.ForestStoreModelHelper"
@@ -1445,7 +1445,7 @@
                     "content": "<option></option>"
                 }
             ],
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+            "helper": "davinci.libraries.dojo.dijit.form.DataListHelper"
             /*"helper": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper",*/
             /*"inlineEdit": "davinci.ve.input.ItemFileReadStoreInput" */
         },
@@ -1753,13 +1753,49 @@
             "category": "mobile",
             "icon": "resources/images/combo-box.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC",
-            
-             "properties": {
-                "data-dojo-props": "value:\"Item 1\", list:\"items\""
-           	},
-            
+             "data": [
+                {
+                    "type": "dijit.form.DataList",
+                     "properties": {
+               			 "data-dojo-props": "id:\"items\""
+           			  },
+		            "children": [
+		                {
+		                    "type": "html.option",
+		                    "properties": {
+		                        "value": "Item 1"
+		                    },
+		                    "children": "Item 1",
+		                    "content": "<option></option>"
+		                },
+		                {
+		                    "type": "html.option",
+		                    "properties": {
+		                        "value": "Item 2"
+		                    },
+		                    "children": "Item 2",
+		                    "content": "<option></option>"
+		                },
+		                {
+		                    "type": "html.option",
+		                    "properties": {
+		                        "value": "Item 3"
+		                    },
+		                    "children": "Item 3",
+		                    "content": "<option></option>"
+		                }
+		            ]
+                  
+                },
+                {
+                    "type": "dojox.mobile.ComboBox",
+                     "properties": {
+                		"data-dojo-props": "value:\"Item 1\", list:\"items\""
+           		    }
+                }
+            ],
          /*   "resizable": "width",*/
-          /*  "tool": "davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool"*/
+            "tool": "davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool",
             "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
           /*  "inlineEdit": "davinci.ve.input.SelectInput"*/
         },

@@ -4,5 +4,5 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./highlight/_base"],function(){
+define("dojox/highlight",["./highlight/_base"],function(){
 });

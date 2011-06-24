@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/widget/Calendar","dojox/widget/CalendarViews","dijit/form/_DateTimeTextBox"],function(_1,_2,_3){
+define("dojox/form/DateTextBox",["dojo","dijit","dojox","dojox/widget/Calendar","dojox/widget/CalendarViews","dijit/form/_DateTimeTextBox"],function(_1,_2,_3){
 _1.getObject("dojox.form.DateTextBox",1);
 _1.experimental("dojox.form.DateTextBox");
 _1.declare("dojox.form.DateTextBox",_2.form._DateTimeTextBox,{popupClass:"dojox.widget.Calendar",_selector:"date",openDropDown:function(){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./svg"],function(){
+define("dojox/gfx/svg_attach",["./svg"],function(){
 dojo.getObject("dojox.gfx.svg_attach",true);
 dojo.experimental("dojox.gfx.svg_attach");
 var g=dojox.gfx,_1=g.svg;

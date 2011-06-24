@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/lang/oo/Filter","dojox/lang/oo/Decorator"],function(_1,_2,_3){
+define("dojox/lang/oo/mixin",["dojo","dijit","dojox","dojox/lang/oo/Filter","dojox/lang/oo/Decorator"],function(_1,_2,_3){
 _1.getObject("dojox.lang.oo.mixin",1);
 _1.experimental("dojox.lang.oo.mixin");
 (function(){

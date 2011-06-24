@@ -49,9 +49,10 @@ _c=this.getPromptMessage(_b);
 this.set("message",_c);
 return _d;
 },displayMessage:function(_10){
-_2.hideTooltip(this.domNode);
 if(_10&&this.focused){
 _2.showTooltip(_10,this.domNode,this.tooltipPosition,!this.isLeftToRight());
+}else{
+_2.hideTooltip(this.domNode);
 }
 },_refreshState:function(){
 this.validate(this.focused);

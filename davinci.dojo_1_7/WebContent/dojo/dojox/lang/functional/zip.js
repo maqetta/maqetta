@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/functional/zip",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.functional.zip",1);
 (function(){
 var df=_3.lang.functional;

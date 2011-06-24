@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./_ExportWriter"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/exporter/CSVWriter",["dojo","dojox","./_ExportWriter"],function(_1,_2){
 _2.grid.enhanced.plugins.Exporter.registerWriter("csv","dojox.grid.enhanced.plugins.exporter.CSVWriter");
 _1.declare("dojox.grid.enhanced.plugins.exporter.CSVWriter",_2.grid.enhanced.plugins.exporter._ExportWriter,{_separator:",",_newline:"\r\n",constructor:function(_3){
 if(_3){

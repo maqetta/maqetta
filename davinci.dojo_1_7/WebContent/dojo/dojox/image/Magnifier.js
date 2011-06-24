@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","dojox/gfx","./MagnifierLite"],function(_1,_2){
+define("dojox/image/Magnifier",["dojo","dojox","dojox/gfx","./MagnifierLite"],function(_1,_2){
 _1.getObject("image",true,_2);
 return _1.declare("dojox.image.Magnifier",_2.image.MagnifierLite,{_createGlass:function(){
 this.glassNode=_1.create("div",{style:{height:this.glassSize+"px",width:this.glassSize+"px"},"className":"glassNode"},_1.body());

@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[opţiuni afişare]",
 	title: "Titlu",

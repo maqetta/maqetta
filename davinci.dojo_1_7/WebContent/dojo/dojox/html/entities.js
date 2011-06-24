@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/html/entities",["dojo","dojox"],function(_1,_2){
 var _3=function(_4,_5){
 var _6,_7;
 if(_5._encCache&&_5._encCache.regexp&&_5._encCache.mapper&&_5.length==_5._encCache.length){

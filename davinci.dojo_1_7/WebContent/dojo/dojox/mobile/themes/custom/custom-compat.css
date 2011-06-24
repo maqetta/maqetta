@@ -678,14 +678,6 @@
 .mblDomButtonRedPlus DIV {
 	display: none;
 }
-.mblIconArea DIV {
-	line-height: 88px;
-}
-.mblIconArea IMG {
-	position: relative;
-	top: 0;
-	left: 0;
-}
 .mblIconContentHeading {
 	background-image: url(compat/heading-bg.png);
 }

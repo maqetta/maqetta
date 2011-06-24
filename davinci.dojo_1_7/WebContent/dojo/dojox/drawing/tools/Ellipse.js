@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../stencil/Ellipse","../util/oo","../manager/_registry"],function(){
+define("dojox/drawing/tools/Ellipse",["../stencil/Ellipse","../util/oo","../manager/_registry"],function(){
 dojox.drawing.tools.Ellipse=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Ellipse,function(){
 },{draws:true,onDrag:function(_1){
 var s=_1.start,e=_1;

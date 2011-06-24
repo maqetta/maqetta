@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/form/manager/_Mixin"],function(_1,_2,_3){
+define("dojox/form/manager/_ClassMixin",["dojo","dijit","dojox","dojox/form/manager/_Mixin"],function(_1,_2,_3){
 _1.getObject("dojox.form.manager._ClassMixin",1);
 (function(){
 var fm=_3.form.manager,aa=fm.actionAdapter,ia=fm.inspectorAdapter;

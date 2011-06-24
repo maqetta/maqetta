@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","./Annotation","./Anchor"],function(_1){
+define("dojox/sketch/SingleArrowAnnotation",["dojo/_base/lang","./Annotation","./Anchor"],function(_1){
 _1.getObject("sketch",true,dojox);
 var ta=dojox.sketch;
 ta.SingleArrowAnnotation=function(_2,id){

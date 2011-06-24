@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/rpc/Client","dojo/_base/url"],function(_1,_2,_3){
+define("dojox/cometd/RestChannels",["dojo","dijit","dojox","dojox/rpc/Client","dojo/_base/url"],function(_1,_2,_3){
 _1.getObject("dojox.cometd.RestChannels",1);
 _1.requireIf(_3.data&&!!_3.data.JsonRestStore,"dojox.data.restListener");
 (function(){

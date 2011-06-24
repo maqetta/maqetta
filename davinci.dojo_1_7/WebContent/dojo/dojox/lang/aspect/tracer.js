@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/aspect/tracer",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.aspect.tracer",1);
 (function(){
 var _4=_3.lang.aspect;

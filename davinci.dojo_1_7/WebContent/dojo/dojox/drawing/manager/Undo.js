@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo","./Stencil"],function(_1){
+define("dojox/drawing/manager/Undo",["dojo","../util/oo","./Stencil"],function(_1){
 dojox.drawing.manager.Undo=dojox.drawing.util.oo.declare(function(_2){
 this.keys=_2.keys;
 this.undostack=[];

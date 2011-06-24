@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/fx/easing","dojox/fx"],function(){
+define("dojox/fx/Timeline",["dojo/fx/easing","dojox/fx"],function(){
 dojox.fx.animateTimeline=function(_1,_2){
 var _3=new dojox.fx._Timeline(_1.keys);
 var _4=dojo.animateProperty({node:dojo.byId(_2||_1.node),duration:_1.duration||1000,properties:_3._properties,easing:dojo.fx.easing.linear,onAnimate:function(v){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/window","dojo/query","dojox/xml/parser","dojo/parser","dojo/_base/sniff"],function(_1,_2,_3,_4){
+define("dojox/xml/widgetParser",["dojo/_base/window","dojo/query","dojox/xml/parser","dojo/parser","dojo/_base/sniff"],function(_1,_2,_3,_4){
 _1.getObject("xml.widgetParser",true,dojox);
 dojox.xml.widgetParser=new function(){
 var d=_1;

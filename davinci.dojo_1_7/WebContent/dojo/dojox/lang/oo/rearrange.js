@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/oo/rearrange",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.oo.rearrange",1);
 (function(){
 var _4=_1._extraNames,_5=_4.length,_6=Object.prototype.toString,_7={};

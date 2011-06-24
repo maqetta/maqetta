@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./_base","dojo/fx","dojo/fx/easing"],function(_1,_2){
+define("dojox/fx/split",["./_base","dojo/fx","dojo/fx/easing"],function(_1,_2){
 dojo.mixin(dojox.fx,{_split:function(_3){
 _3.rows=_3.rows||3;
 _3.columns=_3.columns||3;

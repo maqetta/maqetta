@@ -501,11 +501,6 @@ dojo.declare("davinci.ve.Context", null, {
 
 			var context = this;
 			window["loading" + context._id] = function() {
-				if (!window["loading" + context._id]){
-					// For some reason we are getting called twice from Dojo 1.7.0b1
-					// but we only want to run this code once onLoad.
-					return;
-				}
 				delete window["loading" + context._id];
 				var callbackData = context;
 				try {

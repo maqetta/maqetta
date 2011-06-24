@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./vml"],function(){
+define("dojox/gfx/vml_attach",["./vml"],function(){
 dojo.getObject("dojox.gfx.vml_attach",true);
 dojo.experimental("dojox.gfx.vml_attach");
 var g=dojox.gfx,m=g.matrix,_1=g.vml;

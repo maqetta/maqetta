@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/socket/Reconnect",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.socket.Reconnect",1);
 _3.socket.Reconnect=function(_4,_5){
 _5=_5||{};

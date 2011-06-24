@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/NodeList-traverse"],function(_1,_2,_3){
+define("dojox/rails",["dojo","dijit","dojox","dojo/NodeList-traverse"],function(_1,_2,_3){
 _1.getObject("dojox.rails",1);
 _3.rails.live=function(_4,_5,fn){
 if(_1.isIE&&_5.match(/^(on)?submit$/i)){

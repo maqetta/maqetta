@@ -16,4 +16,5 @@ _1.connect(_2,"unload",_3,_4);
 _1.addOnUnload=function(_5,_6){
 _1.connect(_2,"beforeunload",_5,_6);
 };
+return {addOnWindowUnload:_1.addOnWindowUnload,addOnUnload:_1.addOnUnload};
 });

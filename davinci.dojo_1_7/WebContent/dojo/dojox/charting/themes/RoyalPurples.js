@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../Theme","./common"],function(_1){
+define("dojox/charting/themes/RoyalPurples",["../Theme","./common"],function(_1){
 dojox.charting.themes.RoyalPurples=new _1({colors:["#473980","#685aa7","#7970b3","#231c3f","#7267ae"]});
 return dojox.charting.themes.RoyalPurples;
 });

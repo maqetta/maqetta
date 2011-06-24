@@ -144,5 +144,5 @@ return _1b.replace(_1c||_1a,_1.isFunction(map)?map:function(_1d,k){
 return _1.getObject(k,false,map);
 });
 };
-return _1;
+return {isString:_1.isString,isArray:_1.isArray,isFunction:_1.isFunction,isObject:_1.isObject,isArrayLike:_1.isArrayLike,isAlien:_1.isAlien,extend:_1.extend,_hitchArgs:_1._hitchArgs,hitch:_1.hitch,delegate:_1.delegate,_toArray:_1._toArray,partial:_1.partial,clone:_1.clone,trim:_1.trim,replace:_1.replace};
 });

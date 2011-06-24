@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/sql/_base"],function(_1,_2,_3){
+define("dojox/sql",["dojo","dijit","dojox","dojox/sql/_base"],function(_1,_2,_3){
 _1.getObject("dojox.sql",1);
 return _1.getObject("dojox.sql");
 });

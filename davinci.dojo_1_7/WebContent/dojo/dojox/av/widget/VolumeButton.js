@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin","dijit/form/Button"],function(_1,_2){
+define("dojox/av/widget/VolumeButton",["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin","dijit/form/Button"],function(_1,_2){
 _1.declare("dojox.av.widget.VolumeButton",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.av.widget","resources/VolumeButton.html"),postCreate:function(){
 this.handleWidth=_1.marginBox(this.handle).w;
 this.width=_1.marginBox(this.volumeSlider).w;

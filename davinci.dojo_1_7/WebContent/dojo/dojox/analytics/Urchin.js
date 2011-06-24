@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/window"],function(_1){
+define("dojox/analytics/Urchin",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/window"],function(_1){
 return _1.declare("dojox.analytics.Urchin",null,{acct:"",constructor:function(_2){
 this.tracker=null;
 _1.mixin(this,_2);

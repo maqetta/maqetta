@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/math/_base",["dojo","dojox"],function(_1,_2){
 _1.getObject("math",true,_2);
 var m=_2.math;
 _1.mixin(_2.math,{toRadians:function(n){

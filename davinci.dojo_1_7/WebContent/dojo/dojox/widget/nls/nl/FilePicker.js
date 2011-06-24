@@ -1,3 +1,4 @@
+require.built();
 define(({
 name: "Naam",
 path: "Pad",

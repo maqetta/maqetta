@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./util"],function(_1,_2){
+define("dojox/grid/_EditManager",["dojo","dojox","./util"],function(_1,_2){
 _1.declare("dojox.grid._EditManager",null,{constructor:function(_3){
 this.grid=_3;
 if(_1.isIE){

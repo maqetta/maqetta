@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./Mover"],function(){
+define("dojox/gfx/Moveable",["./Mover"],function(){
 return dojo.declare("dojox.gfx.Moveable",null,{constructor:function(_1,_2){
 this.shape=_1;
 this.delay=(_2&&_2.delay>0)?_2.delay:0;

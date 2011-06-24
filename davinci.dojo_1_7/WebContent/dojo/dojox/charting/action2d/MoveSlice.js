@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./PlotAction","dojo/fx/easing","dojox/gfx/matrix","dojox/gfx/fx","dojox/lang/functional","dojox/lang/functional/scan","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,m,gf,df){
+define("dojox/charting/action2d/MoveSlice",["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./PlotAction","dojo/fx/easing","dojox/gfx/matrix","dojox/gfx/fx","dojox/lang/functional","dojox/lang/functional/scan","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,m,gf,df){
 var _6=1.05,_7=7;
 return _1.declare("dojox.charting.action2d.MoveSlice",dojox.charting.action2d.PlotAction,{defaultParams:{duration:400,easing:_5.backOut,scale:_6,shift:_7},optionalParams:{},constructor:function(_8,_9,_a){
 if(!_a){

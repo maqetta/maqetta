@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","dojo/regexp","dojo/number","./regexp"],function(_1,_2,_3,_4){
+define("dojox/validate/_base",["dojo/_base/lang","dojo/regexp","dojo/number","./regexp"],function(_1,_2,_3,_4){
 _1.getObject("validate",true,dojox);
 dojox.validate.isText=function(_5,_6){
 _6=(typeof _6=="object")?_6:{};

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo"],function(_1){
+define("dojox/drawing/manager/Stencil",["dojo","../util/oo"],function(_1){
 _1.getObject("drawing.manager",true,dojox);
 var _2,_3;
 dojox.drawing.manager.Stencil=dojox.drawing.util.oo.declare(function(_4){

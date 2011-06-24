@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","../../main"],function(_1,_2){
+define("dojox/charting/scaler/primitive",["dojo/_base/kernel","../../main"],function(_1,_2){
 var _3=_1.getObject("charting.scaler.primitive",true,_2);
 return _1.mixin(_3,{buildScaler:function(_4,_5,_6,_7){
 if(_4==_5){

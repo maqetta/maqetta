@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./common","dojo/i18n"],function(_1,_2){
+define("dojox/mobile/i18n",["./common","dojo/i18n"],function(_1,_2){
 dojo.getObject("mobile.i18n",true,dojox);
 dojox.mobile.i18n.load=function(_3,_4,_5){
 return dojox.mobile.i18n.registerBundle(dojo.i18n.getLocalization(_3,_4,_5));

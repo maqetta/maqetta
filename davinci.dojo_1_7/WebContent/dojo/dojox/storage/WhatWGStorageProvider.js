@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager"],function(_1,_2,_3){
+define("dojox/storage/WhatWGStorageProvider",["dojo","dijit","dojox","dojox/storage/Provider","dojox/storage/manager"],function(_1,_2,_3){
 _1.getObject("dojox.storage.WhatWGStorageProvider",1);
 _1.declare("dojox.storage.WhatWGStorageProvider",[_3.storage.Provider],{initialized:false,_domain:null,_available:null,_statusHandler:null,_allNamespaces:null,_storageEventListener:null,initialize:function(){
 if(_1.config["disableWhatWGStorage"]==true){

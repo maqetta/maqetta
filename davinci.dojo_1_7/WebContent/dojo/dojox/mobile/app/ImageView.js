@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/mobile/app/_Widget","dojo/fx/easing"],function(_1,_2,_3){
+define("dojox/mobile/app/ImageView",["dojo","dijit","dojox","dojox/mobile/app/_Widget","dojo/fx/easing"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.ImageView",1);
 _1.experimental("dojox.mobile.app.ImageView");
 _1.declare("dojox.mobile.app.ImageView",_3.mobile.app._Widget,{zoom:1,zoomCenterX:0,zoomCenterY:0,maxZoom:5,autoZoomLevel:3,disableAutoZoom:false,disableSwipe:false,autoZoomEvent:null,_leftImg:null,_centerImg:null,_rightImg:null,_leftSmallImg:null,_centerSmallImg:null,_rightSmallImg:null,constructor:function(){

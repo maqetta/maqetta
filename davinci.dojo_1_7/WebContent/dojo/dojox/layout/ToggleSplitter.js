@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/layout/BorderContainer"],function(_1,_2,_3){
+define("dojox/layout/ToggleSplitter",["dojo","dijit","dojox","dijit/layout/BorderContainer"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ToggleSplitter",1);
 define("dojox/layout/ToggleSplitter",["dojo","dijit"],function(_4,_5){
 _4.experimental("dojox.layout.ToggleSplitter");

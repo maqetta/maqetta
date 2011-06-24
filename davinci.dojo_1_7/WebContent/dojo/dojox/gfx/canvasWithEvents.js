@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./canvas"],function(){
+define("dojox/gfx/canvasWithEvents",["./canvas"],function(){
 var _1=dojo.getObject("dojox.gfx.canvasWithEvents",true);
 dojo.experimental("dojox.gfx.canvasWithEvents");
 var d=dojo,g=dojox.gfx,gs=g.shape,ga=g.arc,_2=g.canvas,m=g.matrix;

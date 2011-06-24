@@ -147,27 +147,24 @@ _23.removeAttribute("tabIndex");
 }
 },focus:function(){
 this._setCurrentFocusAttr(this.currentFocus,true);
-},_onMonthSelect:function(_25){
-this.currentFocus=this.dateFuncObj.add(this.currentFocus,"month",_25-this.currentFocus.getMonth());
-this._populateGrid();
 },_onDayClick:function(evt){
 _1.stopEvent(evt);
-for(var _26=evt.target;_26&&!_26.dijitDateValue;_26=_26.parentNode){
+for(var _25=evt.target;_25&&!_25.dijitDateValue;_25=_25.parentNode){
 }
-if(_26&&!_1.hasClass(_26,"dijitCalendarDisabledDate")){
-this.set("value",_26.dijitDateValue);
+if(_25&&!_1.hasClass(_25,"dijitCalendarDisabledDate")){
+this.set("value",_25.dijitDateValue);
 }
-},onChange:function(_27){
-},_isSelectedDate:function(_28,_29){
-return this._isValidDate(this.value)&&!this.dateFuncObj.compare(_28,this.value,"date");
-},isDisabledDate:function(_2a,_2b){
-},getClassForDate:function(_2c,_2d){
+},onChange:function(_26){
+},_isSelectedDate:function(_27,_28){
+return this._isValidDate(this.value)&&!this.dateFuncObj.compare(_27,this.value,"date");
+},isDisabledDate:function(_29,_2a){
+},getClassForDate:function(_2b,_2c){
 }});
-_1.declare("dijit.CalendarLite._MonthWidget",_2._WidgetBase,{_setMonthAttr:function(_2e){
-var _2f=this.dateLocaleModule.getNames("months","wide","standAlone",this.lang,_2e),_30=(_1.isIE==6?"":"<div class='dijitSpacer'>"+_1.map(_2f,function(s){
+_1.declare("dijit.CalendarLite._MonthWidget",_2._WidgetBase,{_setMonthAttr:function(_2d){
+var _2e=this.dateLocaleModule.getNames("months","wide","standAlone",this.lang,_2d),_2f=(_1.isIE==6?"":"<div class='dijitSpacer'>"+_1.map(_2e,function(s){
 return "<div>"+s+"</div>";
 }).join("")+"</div>");
-this.domNode.innerHTML=_30+"<div class='dijitCalendarMonthLabel dijitCalendarCurrentMonthLabel'>"+_2f[_2e.getMonth()]+"</div>";
+this.domNode.innerHTML=_2f+"<div class='dijitCalendarMonthLabel dijitCalendarCurrentMonthLabel'>"+_2e[_2d.getMonth()]+"</div>";
 }});
 return _2.CalendarLite;
 });

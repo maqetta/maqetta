@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_WidgetBase"],function(_1,_2,_3){
+define("dojox/mobile/app/AlertDialog",["dojo","dijit","dojox","dijit/_WidgetBase"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.AlertDialog",1);
 _1.experimental("dojox.mobile.app.AlertDialog");
 _1.declare("dojox.mobile.app.AlertDialog",_2._WidgetBase,{title:"",text:"",controller:null,buttons:null,defaultButtonLabel:"OK",onChoose:null,constructor:function(){

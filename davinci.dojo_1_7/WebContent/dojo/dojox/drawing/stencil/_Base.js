@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../..","dojo/fx/easing","../defaults"],function(_1,_2){
+define("dojox/drawing/stencil/_Base",["dojo","../..","dojo/fx/easing","../defaults"],function(_1,_2){
 _1.getObject("drawing.stencil",true,_2);
 _1.getObject("drawing.tools.custom",true,_2);
 _2.drawing.stencil._Base=_2.drawing.util.oo.declare(function(_3){

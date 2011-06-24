@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_WidgetBase","dojo/string"],function(_1,_2,_3){
+define("dojox/mobile/app/ImageThumbView",["dojo","dijit","dojox","dijit/_WidgetBase","dojo/string"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.ImageThumbView",1);
 _1.experimental("dojox.mobile.app.ImageThumbView");
 _1.declare("dojox.mobile.app.ImageThumbView",_2._WidgetBase,{items:[],urlParam:"url",labelParam:null,itemTemplate:"<div class=\"mblThumbInner\">"+"<div class=\"mblThumbOverlay\"></div>"+"<div class=\"mblThumbMask\">"+"<div class=\"mblThumbSrc\" style=\"background-image:url(${url})\"></div>"+"</div>"+"</div>",minPadding:4,maxPerRow:3,maxRows:-1,baseClass:"mblImageThumbView",thumbSize:"medium",animationEnabled:true,selectedIndex:-1,cache:null,cacheMustMatch:false,clickEvent:"onclick",cacheBust:false,disableHide:false,constructor:function(_4,_5){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/Tooltip","dojo/i18n","dijit/nls/loading"],function(_1,_2,_3){
+define("dojox/widget/DynamicTooltip",["dojo","dijit","dojox","dijit/Tooltip","dojo/i18n","dijit/nls/loading"],function(_1,_2,_3){
 _1.getObject("dojox.widget.DynamicTooltip",1);
 _1.experimental("dojox.widget.DynamicTooltip");
 _1.requireLocalization("dijit","loading");

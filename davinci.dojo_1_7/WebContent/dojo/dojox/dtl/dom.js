@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_base/html"],function(_1,_2,dd,_3){
+define("dojox/dtl/dom",["dojo/_base/kernel","dojo/_base/lang","./_base","dojox/string/tokenize","./Context","dojo/_base/html"],function(_1,_2,dd,_3){
 dd.BOOLS={checked:1,disabled:1,readonly:1};
 dd.TOKEN_CHANGE=-11;
 dd.TOKEN_ATTR=-12;

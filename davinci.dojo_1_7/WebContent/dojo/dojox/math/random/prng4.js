@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/math/random/prng4",["dojo","dojox"],function(_1,_2){
 _1.getObject("math.random.prng4",true,_2);
 function _3(){
 this.i=0;

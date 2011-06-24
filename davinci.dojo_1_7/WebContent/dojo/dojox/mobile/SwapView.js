@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./View","./_ScrollableMixin"],function(_1,_2){
+define("dojox/mobile/SwapView",["./View","./_ScrollableMixin"],function(_1,_2){
 return dojo.declare("dojox.mobile.SwapView",[dojox.mobile.View,dojox.mobile._ScrollableMixin],{scrollDir:"f",weight:1.2,buildRendering:function(){
 this.inherited(arguments);
 dojo.addClass(this.domNode,"mblSwapView");

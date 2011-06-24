@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","../util","dijit/_Widget"],function(_1,_2,_3){
+define("dojox/grid/cells/_base",["dojo","dijit","dojox","../util","dijit/_Widget"],function(_1,_2,_3){
 _1.declare("dojox.grid._DeferredTextWidget",_2._Widget,{deferred:null,_destroyOnRemove:true,postCreate:function(){
 if(this.deferred){
 this.deferred.addBoth(_1.hitch(this,function(_4){

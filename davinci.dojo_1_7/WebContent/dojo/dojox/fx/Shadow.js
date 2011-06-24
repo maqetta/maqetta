@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dijit/_Widget","dojo/NodeList-fx"],function(_1,_2){
+define("dojox/fx/Shadow",["dijit/_Widget","dojo/NodeList-fx"],function(_1,_2){
 dojo.experimental("dojox.fx.Shadow");
 dojo.declare("dojox.fx.Shadow",dijit._Widget,{shadowPng:dojo.moduleUrl("dojox.fx","resources/shadow"),shadowThickness:7,shadowOffset:3,opacity:0.75,animate:false,node:null,startup:function(){
 this.inherited(arguments);

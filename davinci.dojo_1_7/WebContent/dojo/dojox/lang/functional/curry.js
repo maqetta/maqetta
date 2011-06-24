@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/lang/functional/lambda"],function(_1,_2,_3){
+define("dojox/lang/functional/curry",["dojo","dijit","dojox","dojox/lang/functional/lambda"],function(_1,_2,_3){
 _1.getObject("dojox.lang.functional.curry",1);
 (function(){
 var df=_3.lang.functional,ap=Array.prototype;

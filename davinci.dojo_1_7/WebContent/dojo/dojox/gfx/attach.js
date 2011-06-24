@@ -4,5 +4,5 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox/gfx"],function(){
+define("dojox/gfx/attach",["dojox/gfx"],function(){
 });

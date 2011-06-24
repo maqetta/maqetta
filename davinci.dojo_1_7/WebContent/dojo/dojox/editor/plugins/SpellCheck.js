@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_base/popup","dijit/_Widget","dijit/_Templated","dijit/form/TextBox","dijit/form/DropDownButton","dijit/TooltipDialog","dijit/form/MultiSelect","dojo/io/script","dijit/Menu","dojo/i18n","dojox/editor/plugins/nls/SpellCheck"],function(_1,_2,_3){
+define("dojox/editor/plugins/SpellCheck",["dojo","dijit","dojox","dijit/_base/popup","dijit/_Widget","dijit/_Templated","dijit/form/TextBox","dijit/form/DropDownButton","dijit/TooltipDialog","dijit/form/MultiSelect","dojo/io/script","dijit/Menu","dojo/i18n","dojox/editor/plugins/nls/SpellCheck"],function(_1,_2,_3){
 _1.getObject("dojox.editor.plugins.SpellCheck",1);
 _1.requireLocalization("dojox.editor.plugins","SpellCheck");
 _1.experimental("dojox.editor.plugins.SpellCheck");

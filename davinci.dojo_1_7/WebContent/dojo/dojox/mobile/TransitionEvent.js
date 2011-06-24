@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/on","./transition"],function(_1,_2,on,_3){
+define("dojox/mobile/TransitionEvent",["dojo/_base/kernel","dojo/_base/declare","dojo/on","./transition"],function(_1,_2,on,_3){
 return _1.declare("dojox.mobile.TransitionEvent",null,{constructor:function(_4,_5,_6){
 this.transitionOptions=_5;
 this.target=_4;

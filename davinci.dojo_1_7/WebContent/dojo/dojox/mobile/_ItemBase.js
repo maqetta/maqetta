@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./ProgressIndicator","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/mobile/_ItemBase",["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./ProgressIndicator","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6){
 return dojo.declare("dojox.mobile._ItemBase",[dijit._WidgetBase,dijit._Container,dijit._Contained],{icon:"",iconPos:"",alt:"",href:"",hrefTarget:"",moveTo:"",scene:"",clickable:false,url:"",urlTarget:"",transition:"",transitionDir:1,transitionOptions:null,callback:null,sync:true,label:"",toggle:false,_duration:800,inheritParams:function(){
 var _7=this.getParent();
 if(_7){

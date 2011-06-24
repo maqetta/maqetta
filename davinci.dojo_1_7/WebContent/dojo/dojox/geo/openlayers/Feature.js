@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojox/geo/openlayers/Map"],function(_1,_2,_3){
+define("dojox/geo/openlayers/Feature",["dojo/_base/kernel","dojo/_base/declare","dojox/geo/openlayers/Map"],function(_1,_2,_3){
 return _1.declare("dojox.geo.openlayers.Feature",null,{constructor:function(){
 this._layer=null;
 this._coordSys=dojox.geo.openlayers.EPSG4326;

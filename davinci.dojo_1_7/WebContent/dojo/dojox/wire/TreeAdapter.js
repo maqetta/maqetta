@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/wire/CompositeWire"],function(_1,_2,_3){
+define("dojox/wire/TreeAdapter",["dojo","dijit","dojox","dojox/wire/CompositeWire"],function(_1,_2,_3){
 _1.getObject("dojox.wire.TreeAdapter",1);
 _1.declare("dojox.wire.TreeAdapter",_3.wire.CompositeWire,{_wireClass:"dojox.wire.TreeAdapter",constructor:function(_4){
 this._initializeChildren(this.nodes);

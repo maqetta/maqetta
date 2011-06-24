@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/fx"],function(_1,_2,_3){
+define("dojox/widget/rotator/Fade",["dojo","dijit","dojox","dojo/fx"],function(_1,_2,_3){
 _1.getObject("dojox.widget.rotator.Fade",1);
 (function(d){
 function _4(_5,_6){

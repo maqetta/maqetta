@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/mobile/app/SceneAssistant",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.SceneAssistant",1);
 _1.experimental("dojox.mobile.app.SceneAssistant");
 _1.declare("dojox.mobile.app.SceneAssistant",null,{constructor:function(){

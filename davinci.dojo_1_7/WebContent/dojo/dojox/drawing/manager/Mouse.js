@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo","../defaults","./Stencil"],function(_1){
+define("dojox/drawing/manager/Mouse",["dojo","../util/oo","../defaults","./Stencil"],function(_1){
 dojox.drawing.manager.Mouse=dojox.drawing.util.oo.declare(function(_2){
 this.util=_2.util;
 this.keys=_2.keys;

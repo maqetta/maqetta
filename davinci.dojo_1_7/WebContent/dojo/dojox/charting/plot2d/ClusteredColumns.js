@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","./Columns","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils"],function(_1,_2,_3,_4,dc,df,_5,du){
+define("dojox/charting/plot2d/ClusteredColumns",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","./Columns","./common","dojox/lang/functional","dojox/lang/functional/reversed","dojox/lang/utils"],function(_1,_2,_3,_4,dc,df,_5,du){
 var _6=df.lambda("item.purgeGroup()");
 return _1.declare("dojox.charting.plot2d.ClusteredColumns",dojox.charting.plot2d.Columns,{render:function(_7,_8){
 if(this.zoom&&!this.isDataDirty()){

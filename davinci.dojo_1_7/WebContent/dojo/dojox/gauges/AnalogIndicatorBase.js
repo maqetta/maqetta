@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/fx","dojox/gfx","./_Indicator"],function(_1,_2,_3,_4,_5,_6,_7){
+define("dojox/gauges/AnalogIndicatorBase",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/fx","dojox/gfx","./_Indicator"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.gauges.AnalogIndicatorBase",[_7],{draw:function(_8,_9){
 if(this.shape){
 this._move(_9);

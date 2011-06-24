@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[görüntüleme seçenekleri]",
 	title: "Başlık",

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../Arrow","../../util/positioning"],function(_1){
+define("dojox/drawing/tools/custom/Vector",["dojo","../Arrow","../../util/positioning"],function(_1){
 dojox.drawing.tools.custom.Vector=dojox.drawing.util.oo.declare(dojox.drawing.tools.Arrow,function(_2){
 this.minimumSize=this.style.arrows.length;
 this.addShadow({size:3,mult:2});

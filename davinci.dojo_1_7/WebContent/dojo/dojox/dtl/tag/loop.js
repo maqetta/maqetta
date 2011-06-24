@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base","dojox/string/tokenize","dojo/_base/array"],function(_1,_2,dd,_3){
+define("dojox/dtl/tag/loop",["dojo/_base/kernel","dojo/_base/lang","../_base","dojox/string/tokenize","dojo/_base/array"],function(_1,_2,dd,_3){
 _1.getObject("dtl.tag.loop",true,dojox);
 var _4=dd.tag.loop;
 _4.CycleNode=_1.extend(function(_5,_6,_7,_8){

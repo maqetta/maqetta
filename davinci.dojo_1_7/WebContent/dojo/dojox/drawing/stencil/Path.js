@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","./_Base","../util/oo","../manager/_registry"],function(_1){
+define("dojox/drawing/stencil/Path",["dojo","./_Base","../util/oo","../manager/_registry"],function(_1){
 dojox.drawing.stencil.Path=dojox.drawing.util.oo.declare(dojox.drawing.stencil._Base,function(_2){
 _1.disconnect(this._postRenderCon);
 },{type:"dojox.drawing.stencil.Path",closePath:true,baseRender:true,closeRadius:10,closeColor:{r:255,g:255,b:0,a:0.5},_create:function(_3,_4){

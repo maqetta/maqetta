@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
+define("dojox/cometd/longPollTransportJsonEncoded",["dojo","dijit","dojox","dojox/cometd/_base"],function(_1,_2,_3){
 _1.getObject("dojox.cometd.longPollTransportJsonEncoded",1);
 _3.cometd.longPollTransportJsonEncoded=new function(){
 this._connectionType="long-polling";

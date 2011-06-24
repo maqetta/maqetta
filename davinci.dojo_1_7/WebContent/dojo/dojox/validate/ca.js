@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./_base","./regexp","./us"],function(_1,_2,_3,us){
+define("dojox/validate/ca",["dojo/_base/kernel","./_base","./regexp","./us"],function(_1,_2,_3,us){
 var ca=_1.getObject("ca",true,_2);
 _1.mixin(ca,{isPhoneNumber:function(_4){
 return us.isPhoneNumber(_4);

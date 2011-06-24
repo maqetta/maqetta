@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/drawing/_base"],function(_1,_2,_3){
+define("dojox/drawing",["dojo","dijit","dojox","dojox/drawing/_base"],function(_1,_2,_3){
 _1.getObject("dojox.drawing",1);
 return _1.getObject("dojox.drawing");
 });

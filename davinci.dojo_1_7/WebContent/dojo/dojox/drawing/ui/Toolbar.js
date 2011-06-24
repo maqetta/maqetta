@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/common"],function(_1){
+define("dojox/drawing/ui/Toolbar",["dojo","../util/common"],function(_1){
 _1.declare("dojox.drawing.ui.Toolbar",[],{constructor:function(_2,_3){
 this.util=dojox.drawing.util.common;
 if(_2.drawing){

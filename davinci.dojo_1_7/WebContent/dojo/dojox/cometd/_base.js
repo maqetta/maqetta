@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/AdapterRegistry"],function(_1,_2,_3){
+define("dojox/cometd/_base",["dojo","dijit","dojox","dojo/AdapterRegistry"],function(_1,_2,_3){
 _1.getObject("dojox.cometd._base",1);
 _3.cometd={Connection:function(_4){
 _1.mixin(this,{prefix:_4,_status:"unconnected",_handshook:false,_initialized:false,_polling:false,expectedNetworkDelay:10000,connectTimeout:0,version:"1.0",minimumVersion:"0.9",clientId:null,messageId:0,batch:0,_isXD:false,handshakeReturn:null,currentTransport:null,url:null,lastMessage:null,_messageQ:[],handleAs:"json",_advice:{},_backoffInterval:0,_backoffIncrement:1000,_backoffMax:60000,_deferredSubscribes:{},_deferredUnsubscribes:{},_subscriptions:[],_extendInList:[],_extendOutList:[]});

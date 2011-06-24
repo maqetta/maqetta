@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./EdgeToEdgeList","./_DataListMixin"],function(_1,_2){
+define("dojox/mobile/EdgeToEdgeDataList",["./EdgeToEdgeList","./_DataListMixin"],function(_1,_2){
 return dojo.declare("dojox.mobile.EdgeToEdgeDataList",[dojox.mobile.EdgeToEdgeList,dojox.mobile._DataListMixin],{});
 });

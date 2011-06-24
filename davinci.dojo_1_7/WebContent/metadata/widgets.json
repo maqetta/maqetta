@@ -339,7 +339,7 @@
                 "style": "width: 200px;"
             },
             "resizable": "width",
-             "inlineEdit": {
+            "inlineEdit": {
                 "property": "value",
                 "displayOnCreate": false,
                 "multiLine": false
@@ -1728,7 +1728,7 @@
             "icon": "resources/images/textarea.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
             "inlineEdit": {
-            	"property": "value",
+                "property": "value",
                 "displayOnCreate": false,
                 "multiLine": false
             }
@@ -1781,8 +1781,8 @@
             "name": "Slider",
             "type": "dojox.mobile.Slider",
             "category": "mobile",
-            "icon": "resources/images/horizontalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw=="
+            "icon": "resources/images/dx-mbl-horizontalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///87W5DdYkDtelTpelYOcwUBonj9mnEBonURto0Ruo0dzqOTt+EZzp9Xk9Nvo9kx+sU1+sZ/E6K3M68re8tDh81KHuZC95ZG95Z/F6KzM663N68ne8tDi81aOv5G+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZWQJJwSCwaj8ikcsk8fp7Q5KfxqD4an6Lo47h4KBsOxXNxfERCScjAgIAymAyEYbBEhInRaFHR+CcdCnoHQgIDAwhfYWMIhwJFBFRWDQVJh5cDTZqbS0EAOw=="
         },
         {
             "name": "TextArea",
@@ -1811,6 +1811,8 @@
             "name": "ToggleButton",
             "type": "dojox.mobile.ToggleButton",
             "category": "mobile",
+            "icon": "resources/images/dx-mbl-toggle-toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///y5KhTFPijZXkDZYkDxhmeHn8DtimUJsouHr9+fv+fD1+/P3/Eh2q8LX79fl9djm9dvo9uLs906AtKTH6bbR7NLj9OPr81KJu1OJulaNv5C95aTH6LXR7LjU7rjU7b/Z8Mje8sne8tPl9dvp9uLt9+ny+laOv36z4X604Ii545C95JbB5pbB5afL6qbK6afL6bnW77jV7b/a8LvS5cvh8+Pv+dzr9////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAZ3wJxwSCwaj8iiAolqojY1haDmRAk1iqyiERFAtApGJocZLR6LkcD8aD8UlNxMAJp8BDOTZe+xSBw5BzECLwIwJRWJiR0XCTkIJy0CLiQclpcsIgY5BSE2KzYqoqMpKTQEOQMyMjerrq84A0ICtLW2tUm5uru8uUEAOw==",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,

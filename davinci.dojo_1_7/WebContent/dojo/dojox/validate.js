@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./validate/_base"],function(_1){
+define("dojox/validate",["./validate/_base"],function(_1){
 return _1;
 });

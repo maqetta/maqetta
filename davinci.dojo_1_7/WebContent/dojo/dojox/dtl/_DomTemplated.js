@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/html",".","./contrib/dijit","./render/dom","dojo/cache","dijit/_Templated"],function(_1,_2,_3,_4,_5){
+define("dojox/dtl/_DomTemplated",["dojo/_base/kernel","dojo/_base/html",".","./contrib/dijit","./render/dom","dojo/cache","dijit/_Templated"],function(_1,_2,_3,_4,_5){
 _3._DomTemplated=function(){
 };
 _3._DomTemplated.prototype={_dijitTemplateCompat:false,buildRendering:function(){

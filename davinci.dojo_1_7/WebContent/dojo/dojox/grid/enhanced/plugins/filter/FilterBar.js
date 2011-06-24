@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/fx","dojo/string","dijit/form/Button","dijit/_WidgetsInTemplateMixin","dijit/focus"],function(_1,_2,_3){
+define("dojox/grid/enhanced/plugins/filter/FilterBar",["dojo","dijit","dojox","dojo/fx","dojo/string","dijit/form/Button","dijit/_WidgetsInTemplateMixin","dijit/focus"],function(_1,_2,_3){
 var _4="dojoxGridFBarHover",_5="dojoxGridFBarFiltered",_6=function(_7){
 try{
 if(_7&&_7.preventDefault){

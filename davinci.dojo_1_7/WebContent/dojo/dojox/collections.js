@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./collections/_base"],function(_1){
+define("dojox/collections",["./collections/_base"],function(_1){
 return _1;
 });

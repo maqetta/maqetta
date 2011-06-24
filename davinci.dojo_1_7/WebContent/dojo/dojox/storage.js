@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/storage/_common"],function(_1,_2,_3){
+define("dojox/storage",["dojo","dijit","dojox","dojox/storage/_common"],function(_1,_2,_3){
 _1.getObject("dojox.storage",1);
 return _1.getObject("dojox.storage");
 });

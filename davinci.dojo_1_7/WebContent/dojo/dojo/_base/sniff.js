@@ -12,6 +12,9 @@ var n=navigator,_3=n.userAgent,_4=n.appVersion,tv=parseFloat(_4),_5,_6,_7,_8,_9,
 _1.isBrowser=true,_1._name="browser";
 if(_3.indexOf("Opera")>=0){
 _5=tv;
+if(_5>=9.8){
+_5=parseFloat(_3.split("Version/")[1])||tv;
+}
 }
 if(_3.indexOf("AdobeAIR")>=0){
 _6=1;
@@ -49,7 +52,6 @@ _1.config.ieForceActiveXXhr=true;
 }
 _1.locale=_1.locale||(_e?n.userLanguage:n.language).toLowerCase();
 _10=document.compatMode=="BackCompat";
-_2.add("browser",1);
 _2.add("opera",_1.isOpera=_5);
 _2.add("air",_1.isAIR=_6);
 _2.add("khtml",_1.isKhtml=_7);

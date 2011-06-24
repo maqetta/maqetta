@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo"],function(_1){
+define("dojox/math/random/Simple",["dojo"],function(_1){
 _1.declare("dojox.math.random.Simple",null,{destroy:function(){
 },nextBytes:function(_2){
 for(var i=0,l=_2.length;i<l;++i){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./_base","./shape","./path","./arc","./decompose"],function(){
+define("dojox/gfx/canvas",["./_base","./shape","./path","./arc","./decompose"],function(){
 var _1=dojo.getObject("dojox.gfx.canvas",true);
 dojo.experimental("dojox.gfx.canvas");
 var d=dojo,g=dojox.gfx,gs=g.shape,ga=g.arc,_2=null,m=g.matrix,mp=m.multiplyPoint,pi=Math.PI,_3=2*pi,_4=pi/2;

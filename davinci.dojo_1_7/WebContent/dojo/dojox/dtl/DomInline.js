@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","./dom","dijit/_Widget"],function(_1,_2,_3,_4){
+define("dojox/dtl/DomInline",["dojo/_base/kernel","dojo/_base/lang","./dom","dijit/_Widget"],function(_1,_2,_3,_4){
 dojox.dtl.DomInline=_1.extend(function(_5,_6){
 this.create(_5,_6);
 },_4.prototype,{context:null,render:function(_7){

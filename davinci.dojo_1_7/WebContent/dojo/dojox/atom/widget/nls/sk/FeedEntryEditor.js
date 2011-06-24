@@ -1,3 +1,4 @@
+require.built();
 define(({
 	doNew: "[nový]",
 	edit: "[upraviť]",

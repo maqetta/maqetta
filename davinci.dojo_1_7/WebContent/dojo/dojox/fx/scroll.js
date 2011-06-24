@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define([".","dojox/fx/_core"],function(){
+define("dojox/fx/scroll",[".","dojox/fx/_core"],function(){
 dojo.experimental("dojox.fx.scroll");
 dojox.fx.smoothScroll=function(_1){
 if(!_1.target){

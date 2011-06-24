@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo","../manager/_registry","../plugins/_Plugin"],function(_1){
+define("dojox/drawing/ui/Tooltip",["dojo","../util/oo","../manager/_registry","../plugins/_Plugin"],function(_1){
 var _2=null;
 var _3=dojox.drawing.util.oo.declare(dojox.drawing.plugins._Plugin,function(_4){
 this.createDom();

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],function(_1,_2,_3){
+define("dojox/mobile/RoundRectList",["dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],function(_1,_2,_3){
 return dojo.declare("dojox.mobile.RoundRectList",[dijit._WidgetBase,dijit._Container,dijit._Contained],{transition:"slide",iconBase:"",iconPos:"",select:"",stateful:false,buildRendering:function(){
 this.domNode=this.containerNode=this.srcNodeRef||dojo.doc.createElement("UL");
 this.domNode.className="mblRoundRectList";

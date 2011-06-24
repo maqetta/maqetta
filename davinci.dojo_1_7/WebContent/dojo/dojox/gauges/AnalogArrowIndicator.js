@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
+define("dojox/gauges/AnalogArrowIndicator",["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
 _1.experimental("dojox.gauges.AnalogArrowIndicator");
 return _1.declare("dojox.gauges.AnalogArrowIndicator",[_3],{_getShapes:function(_4){
 if(!this._gauge){

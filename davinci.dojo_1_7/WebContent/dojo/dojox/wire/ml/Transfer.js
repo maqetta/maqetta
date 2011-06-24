@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dijit/_Container","dojox/wire/_base","dojox/wire/ml/Action"],function(_1,_2,_3){
+define("dojox/wire/ml/Transfer",["dojo","dijit","dojox","dijit/_Widget","dijit/_Container","dojox/wire/_base","dojox/wire/ml/Action"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.Transfer",1);
 _1.declare("dojox.wire.ml.Transfer",_3.wire.ml.Action,{source:"",sourceStore:"",sourceAttribute:"",sourcePath:"",type:"",converter:"",delimiter:"",target:"",targetStore:"",targetAttribute:"",targetPath:"",_run:function(){
 var _4=this._getWire("source");

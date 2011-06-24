@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/dnd/Manager","./PureSource"],function(_1){
+define("dojox/mdnd/LazyManager",["dojo/_base/kernel","dojo/dnd/Manager","./PureSource"],function(_1){
 return _1.declare("dojox.mdnd.LazyManager",null,{constructor:function(){
 this._registry={};
 this._fakeSource=new dojox.mdnd.PureSource(_1.create("div"),{"copyOnly":false});

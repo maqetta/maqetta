@@ -1,3 +1,4 @@
+require.built();
 define(({
 name: "名前",
 path: "パス",

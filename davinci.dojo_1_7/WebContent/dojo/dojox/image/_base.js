@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/image/_base",["dojo","dojox"],function(_1,_2){
 _1.getObject("image",true,_2);
 var d=_1;
 var _3;

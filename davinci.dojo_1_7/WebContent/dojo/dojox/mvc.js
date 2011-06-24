@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./mvc/_base"],function(_1){
+define("dojox/mvc",["./mvc/_base"],function(_1){
 return _1;
 });

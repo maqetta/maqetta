@@ -37,7 +37,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 		}
 		//storeData.properties.jsId = storeId;
 		dataList.properties.id = dataListId;
-		dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';
+		dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';   
 		dataList.context = this._context;
 		
 		//var data = dataList.properties.data;

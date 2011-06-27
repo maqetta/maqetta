@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/_ContentPaneResizeMixin",["dojo/_base/kernel","..","../_Contained","./_LayoutWidget","dojo/_base/NodeList","dojo/_base/array","dojo/_base/html","dojo/_base/sniff","dojo/_base/window","dojo/query"],function(_1,_2){
 _1.declare("dijit.layout._ContentPaneResizeMixin",null,{doLayout:true,isContainer:true,isLayoutContainer:true,_startChildren:function(){
 _1.forEach(this.getChildren(),function(_3){

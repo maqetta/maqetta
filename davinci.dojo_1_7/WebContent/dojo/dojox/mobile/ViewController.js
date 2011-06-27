@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/ViewController",["dojo/_base/kernel","dojo/_base/declare","dojo/on","dojo/_base/array","dojo/DeferredList","./TransitionEvent","./ProgressIndicator"],function(_1,_2,on,_3,_4,_5,_6){
 var _7=_1.declare(null,{constructor:function(){
 this.viewMap={};

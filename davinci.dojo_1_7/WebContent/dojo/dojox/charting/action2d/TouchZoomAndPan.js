@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/action2d/TouchZoomAndPan",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/event","./ChartAction","../Element","dojo/gesture/tap","../plot2d/common"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 var _9=_1.declare(_6,{constructor:function(_a){
 },render:function(){

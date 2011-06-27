@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/behavior",["./main"],function(_1){
 _1.behavior=new function(){
 function _2(_3,_4){

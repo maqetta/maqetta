@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/layout/templates/TabContainer.html"]="<div class=\"dijitTabContainer\">\n\t<div class=\"dijitTabListWrapper\" dojoAttachPoint=\"tablistNode\"></div>\n\t<div dojoAttachPoint=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" dojoAttachPoint=\"containerNode\"></div>\n</div>\n";
 define("dijit/layout/_TabContainerBase",["dojo/_base/kernel","..","dojo/text!./templates/TabContainer.html","./StackContainer","../_TemplatedMixin","dojo/_base/html"],function(_1,_2,_3){
 _1.declare("dijit.layout._TabContainerBase",[_2.layout.StackContainer,_2._TemplatedMixin],{tabPosition:"top",baseClass:"dijitTabContainer",tabStrip:false,nested:false,templateString:_3,postMixInProperties:function(){

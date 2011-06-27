@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/TreeSelection",["dojo","dojox","./DataSelection"],function(_1,_2){
 _1.declare("dojox.grid.TreeSelection",_2.grid.DataSelection,{setMode:function(_3){
 this.selected={};

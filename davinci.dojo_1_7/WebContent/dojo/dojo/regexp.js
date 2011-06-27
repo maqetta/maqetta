@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/regexp",["./_base/kernel"],function(_1){
 _1.getObject("regexp",true,_1);
 _1.regexp.escapeString=function(_2,_3){

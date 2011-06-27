@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/_Plugin",["dojo/_base/kernel","..","../_Widget","../form/Button","dojo/_base/array","dojo/_base/connect","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit._editor._Plugin",null,{constructor:function(_3,_4){
 this.params=_3||{};

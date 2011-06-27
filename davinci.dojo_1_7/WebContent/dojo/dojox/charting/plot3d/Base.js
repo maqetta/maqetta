@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/plot3d/Base",["dojo/_base/kernel","dojo/_base/declare"],function(_1){
 return _1.declare("dojox.charting.plot3d.Base",null,{constructor:function(_2,_3,_4){
 this.width=_2;

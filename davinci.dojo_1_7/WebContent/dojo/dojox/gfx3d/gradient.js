@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx3d/gradient",["dojo/_base/kernel","dojox","./matrix","./vector"],function(_1,_2){
 _1.getObject("gfx3d",true,_2);
 var _3=function(a,b){

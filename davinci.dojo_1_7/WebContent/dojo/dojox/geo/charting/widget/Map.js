@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/charting/widget/Map",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dijit/_Widget","dojox/geo/charting/Map"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.geo.charting.widget.Map",dijit._Widget,{shapeData:"",dataStore:null,dataBindingAttribute:"",dataBindingValueFunction:null,markerData:"",series:"",adjustMapCenterOnResize:false,adjustMapScaleOnResize:false,animateOnResize:false,onFeatureClick:null,onFeatureOver:null,enableMouseSupport:false,enableTouchSupport:false,enableMouseZoom:false,enableMousePan:false,enableKeyboardSupport:false,showTooltips:false,enableFeatureZoom:true,colorAnimationDuration:0,mouseClickThreshold:2,_mouseInteractionSupport:null,_touchInteractionSupport:null,_keyboardInteractionSupport:null,constructor:function(_7,_8){
 this.map=null;

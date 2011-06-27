@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/templates/Menu.html"]="<table class=\"dijit dijitMenu dijitMenuPassive dijitReset dijitMenuTable\" role=\"menu\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress:_onKeyPress\" cellspacing=\"0\">\n\t<tbody class=\"dijitReset\" dojoAttachPoint=\"containerNode\"></tbody>\n</table>\n";
 define("dijit/DropDownMenu",["dojo/_base/kernel",".","dojo/text!./templates/Menu.html","./_OnDijitClickMixin","./_MenuBase","dojo/_base/connect","dojo/_base/declare","dojo/_base/event"],function(_1,_2,_3){
 _1.declare("dijit.DropDownMenu",[_2._MenuBase,_2._OnDijitClickMixin],{templateString:_3,baseClass:"dijitMenu",postCreate:function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/storage/FlashStorageProvider",["dojo","dijit","dojox","dojox/flash","dojox/storage/manager","dojox/storage/Provider"],function(_1,_2,_3){
 _1.getObject("dojox.storage.FlashStorageProvider",1);
 _1.declare("dojox.storage.FlashStorageProvider",_3.storage.Provider,{initialized:false,_available:null,_statusHandler:null,_flashReady:false,_pageReady:false,initialize:function(){

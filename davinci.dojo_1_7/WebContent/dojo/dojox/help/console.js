@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/help/console",["dojo","dijit","dojox","dojox/help/_base"],function(_1,_2,_3){
 _1.getObject("dojox.help.console",1);
 _1.mixin(_3.help,{_plainText:function(_4){

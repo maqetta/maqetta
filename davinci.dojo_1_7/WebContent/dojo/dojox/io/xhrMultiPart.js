@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/io/xhrMultiPart",["dojo/_base/array","dojo/query","dojox/uuid/generateRandomUuid","dojo/_base/xhr"],function(_1,_2,_3){
 _1.getObject("io.xhrMultiPart",true,dojox);
 function _4(_5,_6){

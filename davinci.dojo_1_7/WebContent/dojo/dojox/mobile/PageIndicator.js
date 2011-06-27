@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/PageIndicator",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","dojo/_base/lang","dijit/_WidgetBase","dijit/_Contained"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile.PageIndicator",[dijit._WidgetBase,dijit._Contained],{refId:"",buildRendering:function(){
 this.domNode=this.srcNodeRef||_1.doc.createElement("DIV");

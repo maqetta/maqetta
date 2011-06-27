@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/GlossyCircularGaugeBase",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojox/gfx","./AnalogGauge","./AnalogCircleIndicator","./TextIndicator","./GlossyCircularGaugeNeedle"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 return _1.declare("dojox.gauges.GlossyCircularGaugeBase",[_6],{_defaultIndicator:_7,_needle:null,_textIndicator:null,_textIndicatorAdded:false,_range:null,value:0,color:"black",needleColor:"#c4c4c4",textIndicatorFont:"normal normal normal 20pt serif",textIndicatorVisible:true,textIndicatorColor:"#c4c4c4",_majorTicksOffset:130,majorTicksInterval:10,_majorTicksLength:5,majorTicksColor:"#c4c4c4",majorTicksLabelPlacement:"inside",_minorTicksOffset:130,minorTicksInterval:5,_minorTicksLength:3,minorTicksColor:"#c4c4c4",noChange:false,title:"",font:"normal normal normal 10pt serif",scalePrecision:0,textIndicatorPrecision:0,_font:null,constructor:function(){
 this.startAngle=-135;

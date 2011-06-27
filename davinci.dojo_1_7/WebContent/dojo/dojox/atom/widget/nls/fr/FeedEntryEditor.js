@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	doNew: "[nouveau]",
 	edit: "[éditer]",

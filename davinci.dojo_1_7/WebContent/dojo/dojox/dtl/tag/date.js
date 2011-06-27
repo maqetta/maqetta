@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/tag/date",["dojo/_base/kernel","dojo/_base/lang","../_base","../utils/date"],function(_1,_2,dd,_3){
 _1.getObject("dtl.tag.date",true,dojox);
 dojox.dtl.tag.date.NowNode=function(_4,_5){

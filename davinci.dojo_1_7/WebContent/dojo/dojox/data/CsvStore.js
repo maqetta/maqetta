@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/CsvStore",["dojo","dojox","dojo/data/util/filter","dojo/data/util/simpleFetch"],function(_1,_2){
 _1.declare("dojox.data.CsvStore",null,{constructor:function(_3){
 this._attributes=[];

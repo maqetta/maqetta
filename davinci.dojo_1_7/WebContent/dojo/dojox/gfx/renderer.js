@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/renderer",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/sniff"],function(_1){
 var _2=null;
 return {load:function(id,_3,_4){

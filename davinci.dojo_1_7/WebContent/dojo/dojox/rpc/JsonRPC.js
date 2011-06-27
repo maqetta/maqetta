@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/rpc/JsonRPC",["dojo","dojox","dojox/rpc/Service"],function(_1,_2){
 function _3(_4){
 return {serialize:function(_5,_6,_7,_8){

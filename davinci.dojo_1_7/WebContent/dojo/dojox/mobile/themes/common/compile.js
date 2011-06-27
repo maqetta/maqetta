@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 var fs=require("fs");
 var path=require("path");
 var less=require("less");

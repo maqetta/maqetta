@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/highlight/_base",["dojo","dojox/main"],function(_1,_2){
 var dh=_1.getObject("highlight",true,_2),_3="\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)";
 dh.languages=dh.languages||{};

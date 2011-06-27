@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 name: "ชื่อ",
 path: "พาธ",

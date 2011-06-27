@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/EnterKeyHandling",["dojo/_base/kernel","../..","dojo/window","../_Plugin","../range","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit._editor.plugins.EnterKeyHandling",_2._editor._Plugin,{blockNodeForEnter:"BR",constructor:function(_3){
 if(_3){

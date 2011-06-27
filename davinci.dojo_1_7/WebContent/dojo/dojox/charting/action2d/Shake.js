@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/action2d/Shake",["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./PlotAction","dojo/fx","dojo/fx/easing","dojox/gfx/matrix","dojox/gfx/fx"],function(_1,_2,_3,_4,df,_5,m,gf){
 var _6=3;
 return _1.declare("dojox.charting.action2d.Shake",dojox.charting.action2d.PlotAction,{defaultParams:{duration:400,easing:_5.backOut,shiftX:_6,shiftY:_6},optionalParams:{},constructor:function(_7,_8,_9){

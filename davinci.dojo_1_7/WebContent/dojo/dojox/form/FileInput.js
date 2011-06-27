@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/FileInput",["dojo","dijit","dojox","dijit/form/_FormWidget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.form.FileInput",1);
 _1.experimental("dojox.form.FileInput");

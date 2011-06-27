@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/Uploader",["dojo","dijit","dojox/form/uploader/Base","dijit/form/Button","dojo/i18n!./nls/Uploader"],function(_1,_2,_3,_4,_5){
 _1.experimental("dojox.form.Uploader");
 _1.declare("dojox.form.Uploader",[dojox.form.uploader.Base],{uploadOnSelect:false,tabIndex:0,multiple:false,label:_5.label,url:"",name:"uploadedfile",flashFieldName:"",uploadType:"form",_nameIndex:0,widgetsInTemplate:true,templateString:"<div><div dojoType=\"dijit.form.Button\" dojoAttachPoint=\"button\">${label}</div></div>",postMixInProperties:function(){

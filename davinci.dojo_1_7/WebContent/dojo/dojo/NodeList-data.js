@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/NodeList-data",["./main"],function(_1){
 var _2={},x=0,_3="data-dojo-dataid",nl=_1.NodeList,_4=function(_5){
 var _6=_1.attr(_5,_3);

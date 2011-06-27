@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/plugins/drawing/Silverlight",["dojo","../_Plugin","../../util/oo"],function(_1){
 _1.getObject("drawing.plugins.drawing",true,dojox);
 dojox.drawing.plugins.drawing.Silverlight=dojox.drawing.util.oo.declare(function(_2){

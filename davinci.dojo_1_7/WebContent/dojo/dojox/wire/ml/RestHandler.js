@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire/ml/RestHandler",["dojo","dijit","dojox","dojox/wire/_base","dojox/wire/ml/util"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.RestHandler",1);
 _1.declare("dojox.wire.ml.RestHandler",null,{contentType:"text/plain",handleAs:"text",bind:function(_4,_5,_6,_7){

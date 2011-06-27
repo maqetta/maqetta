@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/date/timezone",["dojo/main","dojo/date","dojo/date/locale","dojo/_base/array","dojo/_base/xhr"],function(_1,_2,_3){
 dojo.experimental("dojox.date.timezone");
 dojo.getObject("date.timezone",true,dojox);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/robot/recorder",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.robot.recorder",1);
 _1.experimental("dojox.robot.recorder");

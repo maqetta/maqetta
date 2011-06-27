@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/Save",["dojo","dijit","dojox","dijit/form/Button","dijit/_editor/_Plugin","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Save"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.Save",_2._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",url:"",logResults:true,_initButton:function(){
 var _4=_1.i18n.getLocalization("dojox.editor.plugins","Save");

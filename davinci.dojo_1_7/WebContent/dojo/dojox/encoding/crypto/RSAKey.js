@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/crypto/RSAKey",["dojo/_base/kernel","dojo/_base/declare","dojox/math/BigInteger","dojox/math/random/Simple"],function(_1,_2,_3,_4){
 _1.getObject("encoding.crypto.RSAKey",true,dojox);
 _1.experimental("dojox.encoding.crypto.RSAKey");

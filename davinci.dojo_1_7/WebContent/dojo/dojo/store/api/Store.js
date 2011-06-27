@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/api/Store",[],function(){
 dojo.declare("dojo.store.api.Store",null,{idProperty:"id",queryEngine:null,get:function(id){
 },getIdentity:function(_1){

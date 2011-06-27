@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/easy64",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.easy64",true,dojox);
 var c=function(_2,_3,_4){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/themes/PlotKit/red",["./base","../../Theme"],function(pk,_1){
 pk.red=pk.base.clone();
 pk.red.chart.fill=pk.red.plotarea.fill="#f5e6e6";

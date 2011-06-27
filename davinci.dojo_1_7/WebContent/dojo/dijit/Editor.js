@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/Editor",["dojo/_base/kernel",".","./_base/focus","./_editor/RichText","./Toolbar","./ToolbarSeparator","./_editor/_Plugin","./_editor/plugins/EnterKeyHandling","./_editor/range","./_Container","dojo/i18n","./layout/_LayoutWidget","dojo/i18n!./_editor/nls/commands","./form/ToggleButton","dojo/_base/Deferred","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window","dojo/string"],function(_1,_2){
 _1.declare("dijit.Editor",_2._editor.RichText,{plugins:null,extraPlugins:null,constructor:function(){
 if(!_1.isArray(this.plugins)){

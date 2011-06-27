@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/filter/logic",["dojo/_base/kernel"],function(_1){
 _1.getObject("dtl.filter.logic",true,dojox);
 _1.mixin(dojox.dtl.filter.logic,{default_:function(_2,_3){

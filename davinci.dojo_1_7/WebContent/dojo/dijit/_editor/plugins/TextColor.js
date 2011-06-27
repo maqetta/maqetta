@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/TextColor",["dojo/_base/kernel","../..","../_Plugin","../../form/DropDownButton","../../ColorPalette","dojo/colors"],function(_1,_2){
 _1.declare("dijit._editor.plugins.TextColor",_2._editor._Plugin,{buttonClass:_2.form.DropDownButton,useDefaultCommand:false,constructor:function(){
 this.dropDown=new _2.ColorPalette();

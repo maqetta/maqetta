@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/timing/ThreadPool",["./_base"],function(){
 dojo.experimental("dojox.timing.ThreadPool");
 var t=dojox.timing;

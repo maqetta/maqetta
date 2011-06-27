@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/manager/Anchors",["dojo","../util/oo","./Stencil"],function(_1){
 dojox.drawing.manager.Anchors=dojox.drawing.util.oo.declare(function(_2){
 this.mouse=_2.mouse;

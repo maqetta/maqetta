@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/TextIndicator",["dojo/_base/kernel","dojo/_base/declare","./_Indicator"],function(_1,_2,_3){
 _1.experimental("dojox.gauges.TextIndicator");
 return _1.declare("dojox.gauges.TextIndicator",[_3],{x:0,y:0,align:"middle",fixedPrecision:true,precision:0,draw:function(_4,_5){

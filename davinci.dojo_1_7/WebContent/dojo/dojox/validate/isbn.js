@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/validate/isbn",["dojo/_base/lang","./_base"],function(_1,_2){
 dojox.validate.isValidIsbn=function(_3){
 var _4,_5=0,_6;

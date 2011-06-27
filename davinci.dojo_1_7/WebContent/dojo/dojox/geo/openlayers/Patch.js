@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/openlayers/Patch",["dojo/_base/kernel"],function(_1){
 dojox.geo.openlayers.Patch={destroyMap:function(){
 if(!this.unloadDestroy){

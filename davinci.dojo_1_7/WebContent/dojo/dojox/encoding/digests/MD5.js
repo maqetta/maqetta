@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/digests/MD5",["dojo/_base/kernel","dojox/encoding/digests/_base"],function(_1,_2){
 _1.getObject("encoding.digests.MD5",true,dojox);
 var _3=8;

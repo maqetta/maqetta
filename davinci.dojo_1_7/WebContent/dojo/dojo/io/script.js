@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/io/script",["../main"],function(_1){
 _1.getObject("io",true,_1);
 var _2=_1.isIE?"onreadystatechange":"load",_3=/complete|loaded/;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/functional/fold",["dojo/_base/kernel","dojo/_base/array","./lambda"],function(_1,_2,df){
 var d=_1,_3={};
 d.mixin(df,{foldl:function(a,f,z,o){

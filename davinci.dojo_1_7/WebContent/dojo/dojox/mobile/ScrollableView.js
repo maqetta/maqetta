@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/ScrollableView",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./View","./_ScrollableMixin"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.mobile.ScrollableView",[dojox.mobile.View,dojox.mobile._ScrollableMixin],{scrollableParams:{noResize:true},buildRendering:function(){
 this.inherited(arguments);

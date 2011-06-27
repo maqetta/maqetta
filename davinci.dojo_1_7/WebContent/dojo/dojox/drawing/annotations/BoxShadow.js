@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/annotations/BoxShadow",["dojo","../util/oo","./Angle"],function(_1){
 dojox.drawing.annotations.BoxShadow=dojox.drawing.util.oo.declare(function(_2){
 this.stencil=_2.stencil;

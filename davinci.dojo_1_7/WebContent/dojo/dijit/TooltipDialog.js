@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/templates/TooltipDialog.html"]="<div role=\"presentation\" tabIndex=\"-1\">\n\t<div class=\"dijitTooltipContainer\" role=\"presentation\">\n\t\t<div class =\"dijitTooltipContents dijitTooltipFocusNode\" dojoAttachPoint=\"containerNode\" role=\"dialog\"></div>\n\t</div>\n\t<div class=\"dijitTooltipConnector\" role=\"presentation\"></div>\n</div>\n";
 define("dijit/TooltipDialog",["dojo/_base/kernel",".","dojo/text!./templates/TooltipDialog.html","./layout/ContentPane","./_TemplatedMixin","./form/_FormMixin","./_DialogMixin","./focus","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang"],function(_1,_2,_3){
 _1.declare("dijit.TooltipDialog",[_2.layout.ContentPane,_2._TemplatedMixin,_2.form._FormMixin,_2._DialogMixin],{title:"",doLayout:false,autofocus:true,baseClass:"dijitTooltipDialog",_firstFocusItem:null,_lastFocusItem:null,templateString:_3,_setTitleAttr:function(_4){

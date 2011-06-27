@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/secure/DOM",["dojo","dijit","dojox","dojox/lang/observable"],function(_1,_2,_3){
 _1.getObject("dojox.secure.DOM",1);
 _3.secure.DOM=function(_4){

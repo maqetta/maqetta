@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/Timeline",["dojo/fx/easing","dojox/fx"],function(){
 dojox.fx.animateTimeline=function(_1,_2){
 var _3=new dojox.fx._Timeline(_1.keys);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dojox/grid/resources/Expando.html"]="<div class=\"dojoxGridExpando\"\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\n\t></div\n></div>\n";
 define("dojox/grid/LazyTreeGrid",["dojo","dijit","dojox","dojo/text!./resources/Expando.html","./_View","./TreeGrid","./cells/tree","./LazyTreeGridStoreModel"],function(_1,_2,_3,_4){
 _1.declare("dojox.grid._LazyExpando",[_2._Widget,_2._TemplatedMixin],{itemId:"",cellIdx:-1,view:null,rowIdx:-1,expandoCell:null,level:0,open:false,templateString:_4,onToggle:function(_5){

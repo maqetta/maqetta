@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/array",["./kernel","./lang"],function(_1){
 var _2=function(_3,_4,cb){
 return [(typeof _3=="string")?_3.split(""):_3,_4||_1.global,(typeof cb=="string")?new Function("item","index","array",cb):cb];

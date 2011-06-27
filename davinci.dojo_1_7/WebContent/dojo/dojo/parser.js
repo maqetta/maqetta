@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/parser",["./_base/kernel","./_base/lang","./_base/array","./_base/html","./_base/window","./_base/url","./_base/json","./aspect","./date/stamp","./query"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
 new Date("X");
 var _b={"dom-attributes-explicit":document.createElement("div").attributes.length<40};

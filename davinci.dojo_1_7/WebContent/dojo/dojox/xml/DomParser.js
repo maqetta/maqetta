@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/xml/DomParser",["dojo/_base/kernel","dojo/_base/array"],function(_1){
 _1.getObject("xml",true,dojox);
 dojox.xml.DomParser=new (function(){

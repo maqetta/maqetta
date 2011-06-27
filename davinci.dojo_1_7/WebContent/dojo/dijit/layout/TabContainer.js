@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/TabContainer",["dojo/_base/kernel","..","./_TabContainerBase","./TabController","./ScrollingTabController","dojo/_base/declare"],function(_1,_2){
 _1.declare("dijit.layout.TabContainer",_2.layout._TabContainerBase,{useMenu:true,useSlider:true,controllerWidget:"",_makeController:function(_3){
 var _4=this.baseClass+"-tabs"+(this.doLayout?"":" dijitTabNoLayout"),_5=_1.getObject(this.controllerWidget);

@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[visualizza opzioni]",
 	title: "Titolo",

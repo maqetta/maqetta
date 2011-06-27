@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/Declaration",["dojo/_base/kernel",".","./_Widget","./_TemplatedMixin","./_WidgetsInTemplateMixin","dojo/_base/NodeList","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/parser","dojo/query"],function(_1,_2){
 _1.declare("dijit.Declaration",_2._Widget,{_noScript:true,stopParser:true,widgetClass:"",defaults:null,mixins:[],buildRendering:function(){
 var _3=this.srcNodeRef.parentNode.removeChild(this.srcNodeRef),_4=_1.query("> script[type^='dojo/method']",_3).orphan(),_5=_1.query("> script[type^='dojo/connect']",_3).orphan(),_6=_3.nodeName;

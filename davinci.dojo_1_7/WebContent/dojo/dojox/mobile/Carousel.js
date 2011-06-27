@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/Carousel",["dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./PageIndicator","./SwapView"],function(_1,_2,_3,_4,_5){
 dojo.experimental("dojox.mobile.Carousel");
 return dojo.declare("dojox.mobile.Carousel",[dijit._WidgetBase,dijit._Container,dijit._Contained],{numVisible:3,title:"",pageIndicator:true,navButton:false,height:"300px",store:null,query:null,queryOptions:null,buildRendering:function(){

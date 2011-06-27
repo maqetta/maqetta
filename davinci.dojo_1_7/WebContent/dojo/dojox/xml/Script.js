@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/xml/Script",["dojo/_base/declare","dojo/parser","./widgetParser"],function(_1,_2,_3){
 dojo.getObject("xml.Script",true,dojox);
 _1("dojox.xml.Script",null,{constructor:function(_4,_5){

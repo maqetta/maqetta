@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/_Scroller",["dojo","dijit","dojox"],function(_1,_2,_3){
 var _4=function(_5){
 var i=0,n,p=_5.parentNode;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/fx/Toggler",["../main"],function(_1){
 _1.declare("dojo.fx.Toggler",null,{node:null,showFunc:_1.fadeIn,hideFunc:_1.fadeOut,showDuration:200,hideDuration:200,constructor:function(_2){
 var _3=this;

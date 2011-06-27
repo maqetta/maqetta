@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/dnd/PlottedDnd",["dojo","dijit","dojox","dojo/dnd/Source","dojo/dnd/Manager","dojox/layout/dnd/Avatar"],function(_1,_2,_3){
 _1.getObject("dojox.layout.dnd.PlottedDnd",1);
 _1.declare("dojox.layout.dnd.PlottedDnd",[_1.dnd.Source],{GC_OFFSET_X:_1.dnd.manager().OFFSET_X,GC_OFFSET_Y:_1.dnd.manager().OFFSET_Y,constructor:function(_4,_5){

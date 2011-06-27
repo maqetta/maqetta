@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/tree/_dndSelector",["dojo/_base/kernel","..","dojo/touch","dojo/dnd/common","./_dndContainer","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/lang","dojo/_base/window","dojo/mouse"],function(_1,_2,_3){
 _1.declare("dijit.tree._dndSelector",_2.tree._dndContainer,{constructor:function(_4,_5){
 this.selection={};

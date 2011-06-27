@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/_Templated",["dojo/_base/kernel","dojo/_base/declare","./_base","dijit/_Templated","dojo/_base/html"],function(_1,_2,dd,dt){
 return _1.declare("dojox.dtl._Templated",dt,{_dijitTemplateCompat:false,buildRendering:function(){
 var _3;

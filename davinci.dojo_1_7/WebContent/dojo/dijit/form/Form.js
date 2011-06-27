@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/Form",["dojo/_base/kernel","..","../_Widget","../_TemplatedMixin","./_FormMixin","../layout/_ContentPaneResizeMixin","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/sniff"],function(_1,_2){
 _1.declare("dijit.form.Form",[_2._Widget,_2._TemplatedMixin,_2.form._FormMixin,_2.layout._ContentPaneResizeMixin],{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",templateString:"<form dojoAttachPoint='containerNode' dojoAttachEvent='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",postMixInProperties:function(){
 this.nameAttrSetting=this.name?("name='"+this.name+"'"):"";

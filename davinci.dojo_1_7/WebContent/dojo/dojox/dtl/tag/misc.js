@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/tag/misc",["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array","dojo/_base/connect"],function(_1,_2,dd){
 _1.getObject("dtl.tag.misc",true,dojox);
 var _3=dd.tag.misc;

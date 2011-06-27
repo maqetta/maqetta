@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_PaletteMixin",["dojo/_base/kernel",".","./_CssStateMixin","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","./typematic","./focus"],function(_1,_2){
 _1.declare("dijit._PaletteMixin",[_2._CssStateMixin],{defaultTimeout:500,timeoutChangeRate:0.9,value:null,_selectedCell:-1,tabIndex:"0",cellClass:"dijitPaletteCell",dyeClass:"",_preparePalette:function(_3,_4,_5){
 this._cells=[];

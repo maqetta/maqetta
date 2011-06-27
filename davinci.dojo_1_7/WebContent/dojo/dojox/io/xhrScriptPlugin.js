@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/io/xhrScriptPlugin",["dojo/_base/window","dojo/io/script","dojox/io/xhrPlugins","dojox/io/scriptFrame"],function(_1,_2,_3,_4){
 _1.getObject("io.xhrScriptPlugin",true,dojox);
 dojox.io.xhrScriptPlugin=function(_5,_6,_7){

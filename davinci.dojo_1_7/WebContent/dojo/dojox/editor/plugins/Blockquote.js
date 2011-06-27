@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/Blockquote",["dojo","dijit","dojox","dijit/_editor/_Plugin","dijit/form/ToggleButton","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Blockquote"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.Blockquote",_2._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",_initButton:function(){
 this._nlsResources=_1.i18n.getLocalization("dojox.editor.plugins","Blockquote");

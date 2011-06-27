@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/query",["./_base/kernel","./_base/NodeList","./has","./selector/_loader","./selector/_loader!default"],function(_1,_2,_3,_4,_5){
 "use strict";
 function _6(_7){

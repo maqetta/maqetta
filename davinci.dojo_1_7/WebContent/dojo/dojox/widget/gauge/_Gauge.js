@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/gauge/_Gauge",["dojo","dijit","dojox","dojox/gauges/_Gauge"],function(_1,_2,_3){
 _1.getObject("dojox.widget.gauge._Gauge",1);
 _3.widget.gauge._Gauge=_3.gauges._Gauge;

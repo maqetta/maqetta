@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/ContentPane",["dojo/_base/kernel","..","../_Widget","./_ContentPaneResizeMixin","dojo/string","dojo/html","dojo/i18n!../nls/loading","dojo/_base/Deferred","dojo/_base/array","dojo/_base/html","dojo/_base/lang","dojo/_base/window","dojo/_base/xhr","dojo/i18n"],function(_1,_2){
 _1.declare("dijit.layout.ContentPane",[_2._Widget,_2.layout._ContentPaneResizeMixin],{href:"",content:"",extractContent:false,parseOnLoad:true,parserScope:_1._scopeName,preventCache:false,preload:false,refreshOnShow:false,loadingMessage:"<span class='dijitContentPaneLoading'><span class='dijitInline dijitIconLoading'></span>${loadingState}</span>",errorMessage:"<span class='dijitContentPaneError'><span class='dijitInline dijitIconError'></span>${errorState}</span>",isLoaded:false,baseClass:"dijitContentPane",ioArgs:{},onLoadDeferred:null,_setTitleAttr:null,stopParser:true,template:false,create:function(_3,_4){
 if((!_3||!_3.template)&&_4&&!("href" in _3)&&!("content" in _3)){

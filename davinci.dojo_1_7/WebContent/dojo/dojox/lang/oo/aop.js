@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/oo/aop",["dojo","dijit","dojox","dojox/lang/oo/Decorator","dojox/lang/oo/general"],function(_1,_2,_3){
 _1.getObject("dojox.lang.oo.aop",1);
 (function(){

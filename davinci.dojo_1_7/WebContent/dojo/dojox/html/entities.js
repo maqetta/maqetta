@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/html/entities",["dojo","dojox"],function(_1,_2){
 var _3=function(_4,_5){
 var _6,_7;

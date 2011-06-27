@@ -1,38 +1,47 @@
-require.built();
-define({root:
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+//>>built
+define({ root:
+//begin v1.x content
 ({
 next: "Next",
 previous: "Previous",
 done: "Done"
 })
+//end v1.x content
 ,
-"da":1,
-"es":1,
-"pt-pt":1,
-"hu":1,
-"de":1,
-"sk":1,
-"sl":1,
-"pl":1,
-"pt":1,
-"ca":1,
-"sv":1,
-"zh-tw":1,
-"ar":1,
-"fi":1,
-"ro":1,
-"nb":1,
-"ru":1,
-"zh":1,
-"fr":1,
-"th":1,
-"it":1,
-"he":1,
-"cs":1,
-"nl":1,
-"kk":1,
-"el":1,
-"tr":1,
-"ko":1,
-"ja":1
+"zh": true,
+"zh-tw": true,
+"tr": true,
+"th": true,
+"sv": true,
+"sl": true,
+"sk": true,
+"ru": true,
+"ro": true,
+"pt": true,
+"pt-pt": true,
+"pl": true,
+"nl": true,
+"nb": true,
+"ko": true,
+"kk": true,
+"ja": true,
+"it": true,
+"hu": true,
+"he": true,
+"fr": true,
+"fi": true,
+"es": true,
+"el": true,
+"de": true,
+"da": true,
+"cs": true,
+"ca": true,
+"az": true,
+"ar": true
 });

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/CssRuleStore",["dojo","dojox","dojo/data/util/sorter","dojo/data/util/filter","dojox/data/css"],function(_1,_2){
 _1.declare("dojox.data.CssRuleStore",null,{_storeRef:"_S",_labelAttribute:"selector",_cache:null,_browserMap:null,_cName:"dojox.data.CssRuleStore",constructor:function(_3){
 if(_3){

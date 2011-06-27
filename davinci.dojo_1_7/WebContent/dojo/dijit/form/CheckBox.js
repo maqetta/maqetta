@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/form/templates/CheckBox.html"]="<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\n\t><input\n\t \t${!nameAttrSetting} type=\"${type}\" ${checkedAttrSetting}\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\n\t\tdojoAttachPoint=\"focusNode\"\n\t \tdojoAttachEvent=\"onclick:_onClick\"\n/></div>\n";
 define("dijit/form/CheckBox",["dojo/_base/kernel","..","dojo/text!./templates/CheckBox.html","require","./ToggleButton","./_CheckBoxMixin","dojo/_base/NodeList","dojo/_base/declare","dojo/_base/html","dojo/query"],function(_1,_2,_3,_4){
 _1.declare("dijit.form.CheckBox",[_2.form.ToggleButton,_2.form._CheckBoxMixin],{templateString:_3,baseClass:"dijitCheckBox",_setValueAttr:function(_5,_6){

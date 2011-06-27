@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/plugins/tools/Zoom",["dojo","../../util/oo","../_Plugin","../../manager/_registry"],function(_1){
 var _2=Math.pow(2,0.25),_3=10,_4=0.1,_5=1,dt=dojox.drawing.plugins.tools;
 dt.ZoomIn=dojox.drawing.util.oo.declare(function(_6){

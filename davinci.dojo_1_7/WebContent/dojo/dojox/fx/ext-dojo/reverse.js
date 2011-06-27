@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/ext-dojo/reverse",["dojo/_base/lang","dojo/fx","dojo/fx/easing","dojox/fx"],function(){
 dojo.extend(dojo.Animation,{_reversed:false,reverse:function(_1,_2){
 var _3=this.status()=="playing";

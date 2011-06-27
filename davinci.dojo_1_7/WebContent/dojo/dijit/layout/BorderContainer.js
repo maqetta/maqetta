@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/BorderContainer",["dojo/_base/kernel","..","dojo/touch","dojo/cookie","../_WidgetBase","../_TemplatedMixin","./_LayoutWidget","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2,_3){
 _1.declare("dijit.layout.BorderContainer",_2.layout._LayoutWidget,{design:"headline",gutters:true,liveSplitters:true,persist:false,baseClass:"dijitBorderContainer",_splitterClass:"dijit.layout._Splitter",postMixInProperties:function(){
 if(!this.gutters){

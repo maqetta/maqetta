@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/app/_event",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app._event",1);
 _1.experimental("dojox.mobile.app._event.js");

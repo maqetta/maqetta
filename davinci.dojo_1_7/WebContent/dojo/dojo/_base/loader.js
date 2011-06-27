@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/loader",["./kernel","../has","require","./json"],function(_1,_2,_3,_4){
 if(!1){
 console.error("cannot load the Dojo v1.x loader with a foreign loader");

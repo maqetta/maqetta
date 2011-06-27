@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/filter/_DataExprs",["dojo","dojox","dojo/date/locale","./_ConditionExpr"],function(_1,_2){
 var _3=_1.getObject("grid.enhanced.plugins.filter",true,_2);
 _1.declare("dojox.grid.enhanced.plugins.filter.BooleanExpr",_3._DataExpr,{_name:"bool",_convertData:function(_4){

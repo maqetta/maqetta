@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/uploader/plugins/IFrame",["dojo","dojo/io/iframe","dojox/form/uploader/plugins/HTML5"],function(_1){
 _1.declare("dojox.form.uploader.plugins.IFrame",[],{force:"",postMixInProperties:function(){
 this.inherited(arguments);

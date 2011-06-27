@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/calc/FuncGen",["dojo","dijit/_Templated","dojox/math/_base","dijit/dijit","dijit/form/ComboBox","dijit/form/SimpleTextarea","dijit/form/Button","dojo/data/ItemFileWriteStore"],function(_1){
 _1.experimental("dojox.calc.FuncGen");
 _1.declare("dojox.calc.FuncGen",[dijit._Widget,dijit._Templated],{templateString:_1.cache("dojox.calc","templates/FuncGen.html"),widgetsInTemplate:true,onSelect:function(){

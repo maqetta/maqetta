@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mvc/_DataBindingMixin",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dijit/_base/manager"],function(_1,_2,_3,_4,_5){
 return _4("dojox.mvc._DataBindingMixin",null,{ref:null,isValid:function(){
 return this.get("binding")?this.get("binding").get("valid"):true;

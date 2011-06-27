@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/CssClassStore",["dojo","dojox","dojox/data/CssRuleStore"],function(_1,_2){
 _1.declare("dojox.data.CssClassStore",_2.data.CssRuleStore,{_labelAttribute:"class",_idAttribute:"class",_cName:"dojox.data.CssClassStore",getFeatures:function(){
 return {"dojo.data.api.Read":true,"dojo.data.api.Identity":true};

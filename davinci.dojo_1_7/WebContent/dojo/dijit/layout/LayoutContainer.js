@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/LayoutContainer",["dojo/_base/kernel","..","../_WidgetBase","./_LayoutWidget"],function(_1,_2){
 _1.declare("dijit.layout.LayoutContainer",_2.layout._LayoutWidget,{baseClass:"dijitLayoutContainer",constructor:function(){
 _1.deprecated("dijit.layout.LayoutContainer is deprecated","use BorderContainer instead",2);

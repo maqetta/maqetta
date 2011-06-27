@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/rpc/Client",["dojo","dojox"],function(_1,_2){
 _1.getObject("rpc.Client",true,_2);
 _1._defaultXhr=_1.xhr;

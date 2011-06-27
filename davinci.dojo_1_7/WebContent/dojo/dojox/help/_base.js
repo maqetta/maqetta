@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/help/_base",["dojo","dijit","dojox","dojox/rpc/Service","dojo/io/script"],function(_1,_2,_3){
 _1.getObject("dojox.help._base",1);
 _1.experimental("dojox.help");

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/manager/_ValueMixin",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.form.manager._ValueMixin",1);
 _1.declare("dojox.form.manager._ValueMixin",null,{elementValue:function(_4,_5){

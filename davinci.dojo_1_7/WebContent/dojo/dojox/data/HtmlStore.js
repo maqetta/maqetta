@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/HtmlStore",["dojo","dojox","dojo/data/util/simpleFetch","dojo/data/util/filter","dojox/xml/parser"],function(_1,_2){
 _1.declare("dojox.data.HtmlStore",null,{constructor:function(_3){
 if(_3&&"urlPreventCache" in _3){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/calc/_Executor",["dojo","dijit/_Templated","dojox/math/_base"],function(_1){
 _1.experimental("dojox.calc._Executor");
 _1.getObject("calc",true,dojox);

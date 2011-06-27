@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/sniff",["dojo/_base/kernel","..","dojo/uacss"],function(_1,_2){
 return _2;
 });

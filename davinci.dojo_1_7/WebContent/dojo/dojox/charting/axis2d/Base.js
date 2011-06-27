@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/axis2d/Base",["dojo/_base/kernel","dojo/_base/declare","../Element"],function(_1,_2,_3){
 return _1.declare("dojox.charting.axis2d.Base",dojox.charting.Element,{constructor:function(_4,_5){
 this.vertical=_5&&_5.vertical;

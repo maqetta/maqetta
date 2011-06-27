@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/uploader/plugins/Flash",["dojo","dojox/form/uploader/plugins/HTML5","dojox/embed/Flash"],function(_1){
 _1.declare("dojox.form.uploader.plugins.Flash",[],{swfPath:_1.config.uploaderPath||_1.moduleUrl("dojox.form","resources/uploader.swf"),skipServerCheck:true,serverTimeout:2000,isDebug:false,devMode:false,deferredUploading:0,force:"",postMixInProperties:function(){
 if(!this.supports("multiple")){

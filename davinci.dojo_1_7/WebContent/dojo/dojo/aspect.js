@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/aspect",[],function(){
 "use strict";
 function _1(_2,_3,_4,_5){

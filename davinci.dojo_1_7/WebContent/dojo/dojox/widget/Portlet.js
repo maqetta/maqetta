@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/Portlet",["dojo","dijit","dojox","dijit/TitlePane","dojo/fx"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Portlet",1);
 _1.experimental("dojox.widget.Portlet");

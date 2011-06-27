@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/plugins/drawing/Grid",["dojo","../_Plugin","../../util/oo"],function(_1){
 _1.getObject("drawing.plugins.drawing",true,dojox);
 dojox.drawing.plugins.drawing.Grid=dojox.drawing.util.oo.declare(dojox.drawing.plugins._Plugin,function(_2){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/SafePaste",["dojo","dijit","dojox","dojox/editor/plugins/PasteFromWord","dojo/string","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/SafePaste"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.SafePaste",[_3.editor.plugins.PasteFromWord],{_initButton:function(){
 this._filters=this._filters.slice(0);

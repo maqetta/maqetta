@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/plot2d/_PlotEvents",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect"],function(_1){
 return _1.declare("dojox.charting.plot2d._PlotEvents",null,{constructor:function(){
 this._shapeEvents=[];

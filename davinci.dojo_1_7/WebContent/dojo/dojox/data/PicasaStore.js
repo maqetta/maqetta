@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/PicasaStore",["dojo","dojox","dojo/io/script","dojo/data/util/simpleFetch","dojo/date/stamp"],function(_1,_2){
 _1.declare("dojox.data.PicasaStore",null,{constructor:function(_3){
 if(_3&&_3.label){

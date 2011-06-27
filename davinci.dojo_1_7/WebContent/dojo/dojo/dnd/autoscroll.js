@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/autoscroll",["../main","../window"],function(_1){
 _1.getObject("dnd",true,_1);
 _1.dnd.getViewport=_1.window.getBox;

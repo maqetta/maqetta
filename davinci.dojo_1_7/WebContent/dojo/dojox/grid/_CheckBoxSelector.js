@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/_CheckBoxSelector",["dojox","./_Selector"],function(_1){
 return _1.grid._CheckBoxSelector;
 });

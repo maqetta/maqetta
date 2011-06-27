@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[顯示選項]",
 	title: "標題",

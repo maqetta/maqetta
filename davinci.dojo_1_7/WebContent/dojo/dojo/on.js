@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/on",["./aspect","./_base/kernel","./has"],function(_1,_2,_3){
 "use strict";
 var _4=_1.after;

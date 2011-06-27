@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/io/OAuth",["dojo/_base/array","dojo/_base/xhr","dojox/encoding/digests/SHA1"],function(_1,_2,_3){
 _1.getObject("io.OAuth",true,dojox);
 dojox.io.OAuth=new (function(){

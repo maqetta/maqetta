@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dojox/grid/enhanced/templates/Pagination.html"]="<div dojoAttachPoint=\"paginatorBar\">\n\t<table cellpadding=\"0\" cellspacing=\"0\"  class=\"dojoxGridPaginator\">\n\t\t<tr>\n\t\t\t<td dojoAttachPoint=\"descriptionTd\" class=\"dojoxGridDescriptionTd\">\n\t\t\t\t<div dojoAttachPoint=\"descriptionDiv\" class=\"dojoxGridDescription\" />\n\t\t\t</td>\n\t\t\t<td dojoAttachPoint=\"sizeSwitchTd\"></td>\n\t\t\t<td dojoAttachPoint=\"pageStepperTd\" class=\"dojoxGridPaginatorFastStep\">\n\t\t\t\t<div dojoAttachPoint=\"pageStepperDiv\" class=\"dojoxGridPaginatorStep\"></div>\n\t\t\t</td>\n\t\t</tr>\n\t</table>\n</div>\n";
 define("dojox/grid/enhanced/plugins/Pagination",["dojo","dijit","dojox","dojo/text!../templates/Pagination.html","./Dialog","./_StoreLayer","../_Plugin","dijit/form/Button","dijit/form/NumberTextBox","dijit/focus","dojo/i18n!../nls/Pagination"],function(_1,_2,_3,_4){
 _1.declare("dojox.grid.enhanced.plugins.Pagination",_3.grid.enhanced._Plugin,{name:"pagination",_pageSize:25,_defaultRowsPerPage:25,_currentPage:0,_maxSize:0,init:function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/TimedMoveable",["../main","./Moveable"],function(_1){
 var _2=_1.dnd.Moveable.prototype.onMove;
 _1.declare("dojo.dnd.TimedMoveable",_1.dnd.Moveable,{timeout:40,constructor:function(_3,_4){

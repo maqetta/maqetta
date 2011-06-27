@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/OpenSearchStore",["dojo","dijit","dojox","dojo/data/util/simpleFetch","dojox/xml/DomParser","dojox/xml/parser"],function(_1,_2,_3){
 _1.getObject("dojox.data.OpenSearchStore",1);
 _1.experimental("dojox.data.OpenSearchStore");

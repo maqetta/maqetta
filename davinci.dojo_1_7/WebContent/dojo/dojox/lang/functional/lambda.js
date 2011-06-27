@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/functional/lambda",["../..","dojo/_base/kernel","dojo/_base/array"],function(_1,_2){
 var df=_2.getObject("lang.functional",true,_1);
 var _3={};

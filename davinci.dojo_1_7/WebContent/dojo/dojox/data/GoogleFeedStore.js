@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/GoogleFeedStore",["dojo","dojox","dojox/data/GoogleSearchStore"],function(_1,_2){
 _1.experimental("dojox.data.GoogleFeedStore");
 _1.declare("dojox.data.GoogleFeedStore",_2.data.GoogleSearchStore,{_type:"",_googleUrl:"http://ajax.googleapis.com/ajax/services/feed/load",_attributes:["title","link","author","published","content","summary","categories"],_queryAttrs:{"url":"q"},getFeedValue:function(_3,_4){

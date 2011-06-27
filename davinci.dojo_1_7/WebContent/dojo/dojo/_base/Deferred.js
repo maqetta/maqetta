@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/Deferred",["./kernel","./lang"],function(_1){
 var _2=function(){
 };

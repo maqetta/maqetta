@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Avatar",["../main","./common"],function(_1){
 _1.declare("dojo.dnd.Avatar",null,{constructor:function(_2){
 this.manager=_2;

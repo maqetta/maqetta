@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire/ml/Action",["dojo","dijit","dojox","dijit/_Widget","dijit/_Container","dojox/wire/Wire","dojox/wire/ml/util"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.Action",1);
 _1.declare("dojox.wire.ml.Action",[_2._Widget,_2._Container],{trigger:"",triggerEvent:"",triggerTopic:"",postCreate:function(){

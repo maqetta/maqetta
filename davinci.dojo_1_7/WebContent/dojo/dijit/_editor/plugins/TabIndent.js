@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/TabIndent",["dojo/_base/kernel","../..","../_Plugin","../../form/ToggleButton","dojo/_base/connect","dojo/_base/declare"],function(_1,_2){
 _1.experimental("dijit._editor.plugins.TabIndent");
 _1.declare("dijit._editor.plugins.TabIndent",_2._editor._Plugin,{useDefaultCommand:false,buttonClass:_2.form.ToggleButton,command:"tabIndent",_initButton:function(){

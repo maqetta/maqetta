@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/image/_base",["dojo","dojox"],function(_1,_2){
 _1.getObject("image",true,_2);
 var d=_1;

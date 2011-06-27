@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/math/random/Secure",["dojo"],function(_1){
 _1.declare("dojox.math.random.Secure",null,{constructor:function(_2,_3){
 this.prng=_2;

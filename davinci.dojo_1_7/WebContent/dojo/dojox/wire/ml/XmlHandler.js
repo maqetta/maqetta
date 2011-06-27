@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire/ml/XmlHandler",["dojo","dijit","dojox","dojox/wire/ml/RestHandler","dojox/xml/parser","dojox/wire/_base","dojox/wire/ml/util"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.XmlHandler",1);
 _1.declare("dojox.wire.ml.XmlHandler",_3.wire.ml.RestHandler,{contentType:"text/xml",handleAs:"xml",_getContent:function(_4,_5){

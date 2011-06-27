@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
         nomatchMessage: "As senhas não correspondem.",
 		badPasswordMessage: "Senha Inválida."

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/testing/DocTest",["dojo/string"],function(){
 dojo.declare("dojox.testing.DocTest",null,{errors:[],getTests:function(_1){
 var _2=dojo.moduleUrl(_1).path;

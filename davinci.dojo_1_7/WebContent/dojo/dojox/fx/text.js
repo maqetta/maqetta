@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/text",["./_base","dojo/fx","dojo/fx/easing"],function(){
 dojo.getObject("fx.text",true,dojox);
 dojox.fx.text._split=function(_1){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/AndOrReadStore",["dojo","dojox","dojo/data/util/filter","dojo/data/util/simpleFetch","dojo/date/stamp"],function(_1,_2){
 _1.declare("dojox.data.AndOrReadStore",null,{constructor:function(_3){
 this._arrayOfAllItems=[];

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/embed/Object",["dojo","dijit","dojox","dijit/_Widget","dojox/embed/Flash","dojox/embed/Quicktime"],function(_1,_2,_3){
 _1.getObject("dojox.embed.Object",1);
 _1.experimental("dojox.embed.Object");

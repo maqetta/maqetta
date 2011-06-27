@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/ui/Button",["dojo","../stencil/Ellipse","../stencil/Rect","../stencil/Text","../manager/_registry","../util/oo"],function(_1){
 dojox.drawing.ui.Button=dojox.drawing.util.oo.declare(function(_2){
 _2.subShape=true;

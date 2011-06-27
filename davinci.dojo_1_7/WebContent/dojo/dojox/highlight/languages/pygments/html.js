@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/highlight/languages/pygments/html",["dojox/main","../../_base","./_html"],function(_1){
 var dh=_1.highlight,_2=dh.languages,_3=[],ht=_2.pygments._html.tags;
 for(var _4 in ht){

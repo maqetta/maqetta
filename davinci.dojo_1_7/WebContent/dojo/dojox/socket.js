@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/socket",["dojo","dojo/on","dojo/cookie","dojo/_base/url"],function(_1,on){
 var _2=window.WebSocket;
 function _3(_4){

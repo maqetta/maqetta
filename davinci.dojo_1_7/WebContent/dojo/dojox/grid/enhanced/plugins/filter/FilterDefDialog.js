@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/filter/FilterDefDialog",["dojo","dijit","dojox","dojo/string","dojo/window","dojo/date/locale","dijit/Tooltip","dijit/form/ComboBox","dijit/form/Select","dijit/form/TextBox","dijit/form/RadioButton","dijit/form/NumberTextBox","dijit/form/DateTextBox","dijit/form/TimeTextBox","dijit/form/Button","dijit/layout/AccordionContainer","dijit/layout/ContentPane","dijit/_WidgetsInTemplateMixin","dijit/focus","dojox/html/ellipsis","dojox/html/metrics","./FilterBuilder","../Dialog","../../../cells/dijit"],function(_1,_2,_3){
 var _4=_1.getObject("grid.enhanced.plugins.filter",true,_3);
 _tabIdxes={relSelect:60,accordionTitle:70,removeCBoxBtn:-1,colSelect:90,condSelect:95,valueBox:10,addCBoxBtn:20,filterBtn:30,clearBtn:40,cancelBtn:50};

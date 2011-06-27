@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/io/xhrWindowNamePlugin",["dojo/_base/json","dojox/io/xhrPlugins","dojox/io/windowName","dojox/io/httpParse","dojox/secure/capability","dojo/_base/xhr"],function(_1,_2,_3,_4,_5){
 _1.getObject("io.xhrWindowNamePlugin",true,dojox);
 dojox.io.xhrWindowNamePlugin=function(_6,_7,_8){

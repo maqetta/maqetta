@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/util/QueryResults",["../../_base/kernel","../../_base/lang","../../_base/Deferred"],function(_1){
 _1.getObject("store.util",true,_1);
 _1.store.util.QueryResults=function(_2){

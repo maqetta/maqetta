@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/functional/array",["dojo/_base/kernel","dojo/_base/array","./lambda"],function(_1,_2,df){
 var d=_1,_3={};
 d.mixin(df,{filter:function(a,f,o){

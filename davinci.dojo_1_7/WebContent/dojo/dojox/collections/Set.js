@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/collections/Set",["./_base","./ArrayList"],function(_1,_2){
 _1.Set=new (function(){
 function _3(_4){

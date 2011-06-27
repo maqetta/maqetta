@@ -36,7 +36,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 			dataList.properties = {};
 		}
 		//storeData.properties.jsId = storeId;
-		//dataListId.properties.id = dataListId;
+		dataList.properties.id = dataListId;
 		dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';
 		dataList.context = this._context;
 		
@@ -90,7 +90,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 		var command = new davinci.commands.CompoundCommand();
 		var index = args.index;
 		
-		command.add(new davinci.ve.commands.AddCommand(/*dataList*/ dataListWidget, args.parent, index));
+		command.add(new davinci.ve.commands.AddCommand(/*dataList*/ dataListWidget, dataList.context.rootNode /*args.parent*/, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(comboBoxWidget, args.parent, index));
 		

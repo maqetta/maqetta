@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Selector",["../main","./common","./Container"],function(_1){
 _1.declare("dojo.dnd.Selector",_1.dnd.Container,{constructor:function(_2,_3){
 if(!_3){

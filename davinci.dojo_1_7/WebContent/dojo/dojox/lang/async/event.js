@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/async/event",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.async.event",1);
 (function(){

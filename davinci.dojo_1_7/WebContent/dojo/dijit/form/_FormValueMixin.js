@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_FormValueMixin",["dojo/_base/kernel","..","./_FormWidgetMixin","dojo/_base/connect","dojo/_base/declare","dojo/_base/html","dojo/_base/sniff"],function(_1,_2){
 return _1.declare("dijit.form._FormValueMixin",_2.form._FormWidgetMixin,{readOnly:false,_setReadOnlyAttr:function(_3){
 _1.attr(this.focusNode,"readOnly",_3);

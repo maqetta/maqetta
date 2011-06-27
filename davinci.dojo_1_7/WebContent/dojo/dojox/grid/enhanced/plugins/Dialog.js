@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/Dialog",["dojo","dijit","dojox","dojo/window","dijit/Dialog"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced.plugins.Dialog",_2.Dialog,{refNode:null,_position:function(){
 if(this.refNode&&!this._relativePosition){

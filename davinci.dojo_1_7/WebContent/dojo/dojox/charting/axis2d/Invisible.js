@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/axis2d/Invisible",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./Base","../scaler/linear","dojo/string","dojox/gfx","dojox/lang/utils","dojox/lang/functional"],function(_1,_2,_3,_4,_5,_6,g,du,df){
 var _7=du.merge,_8=4,_9=45;
 return _1.declare("dojox.charting.axis2d.Invisible",dojox.charting.axis2d.Base,{defaultParams:{vertical:false,fixUpper:"none",fixLower:"none",natural:false,leftBottom:true,includeZero:false,fixed:true,majorLabels:true,minorTicks:true,minorLabels:true,microTicks:false,rotation:0},optionalParams:{min:0,max:1,from:0,to:1,majorTickStep:4,minorTickStep:2,microTickStep:1,labels:[],labelFunc:null,maxLabelSize:0,maxLabelCharCount:0,trailingSymbol:null},constructor:function(_a,_b){

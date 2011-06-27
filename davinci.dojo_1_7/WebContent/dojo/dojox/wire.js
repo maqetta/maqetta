@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire",["dojo","dijit","dojox","dojox/wire/_base"],function(_1,_2,_3){
 _1.getObject("dojox.wire",1);
 return _1.getObject("dojox.wire");

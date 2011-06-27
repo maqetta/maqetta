@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/manager/_Mixin",["dojo","dijit","dojox","dijit/_Widget"],function(_1,_2,_3){
 _1.getObject("dojox.form.manager._Mixin",1);
 (function(){

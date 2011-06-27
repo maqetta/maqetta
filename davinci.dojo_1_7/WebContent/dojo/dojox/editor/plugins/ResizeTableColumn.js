@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/ResizeTableColumn",["dojo","dijit","dojox","dojox/editor/plugins/TablePlugins"],function(_1,_2,_3){
 _1.getObject("dojox.editor.plugins.ResizeTableColumn",1);
 _1.declare("dojox.editor.plugins.ResizeTableColumn",_3.editor.plugins.TablePlugins,{constructor:function(){

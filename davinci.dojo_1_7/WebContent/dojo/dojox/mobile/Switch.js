@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/Switch",["./common","dijit/_WidgetBase","dijit/_Contained"],function(_1,_2,_3){
 return dojo.declare("dojox.mobile.Switch",[dijit._WidgetBase,dijit._Contained],{value:"on",name:"",leftLabel:"ON",rightLabel:"OFF",_width:53,buildRendering:function(){
 this.domNode=dojo.doc.createElement("DIV");

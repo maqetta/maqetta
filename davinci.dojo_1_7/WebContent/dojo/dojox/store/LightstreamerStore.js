@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/store/LightstreamerStore",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred","dojo/store/util/QueryResults"],function(_1){
 _1.getObject("store",true,dojox);
 var _2=0;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/annotations/Arrow",["dojo","../util/oo","../stencil/Path","./Angle"],function(_1){
 dojox.drawing.annotations.Arrow=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Path,function(_2){
 this.stencil.connectMult([[this.stencil,"select",this,"select"],[this.stencil,"deselect",this,"deselect"],[this.stencil,"render",this,"render"],[this.stencil,"onDelete",this,"destroy"]]);

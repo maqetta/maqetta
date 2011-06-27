@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/split",["./_base","dojo/fx","dojo/fx/easing"],function(_1,_2){
 dojo.mixin(dojox.fx,{_split:function(_3){
 _3.rows=_3.rows||3;

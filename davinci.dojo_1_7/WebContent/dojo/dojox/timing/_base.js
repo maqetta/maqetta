@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/timing/_base",["dojo/_base/kernel","dojo/_base/lang"],function(_1){
 _1.experimental("dojox.timing");
 _1.getObject("timing",true,dojox);

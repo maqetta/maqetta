@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/selector/acme",["../_base/kernel","../has","../_base/sniff","../_base/array","../_base/lang","../_base/window"],function(_1,_2){
 var _3=_1.trim;
 var _4=_1.forEach;

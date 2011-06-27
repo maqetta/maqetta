@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/themes/PlotKit/blue",["./base","../../Theme"],function(pk,_1){
 pk.blue=pk.base.clone();
 pk.blue.chart.fill=pk.blue.plotarea.fill="#e7eef6";

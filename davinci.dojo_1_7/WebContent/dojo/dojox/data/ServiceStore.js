@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/ServiceStore",["dojo","dojox"],function(_1,_2){
 _1.declare("dojox.data.ServiceStore",_1.getObject("data.ClientFilter",0,_2)||null,{service:null,constructor:function(_3){
 this.byId=this.fetchItemByIdentity;

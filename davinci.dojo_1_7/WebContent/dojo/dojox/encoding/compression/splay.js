@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/compression/splay",["dojo/_base/kernel","dojox/encoding/bits"],function(_1){
 _1.getObject("encoding.compression.splay",true,dojox);
 dojox.encoding.compression.Splay=function(n){

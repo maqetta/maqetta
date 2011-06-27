@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/plot2d/Base",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","../Element","./_PlotEvents","../scaler/primitive","./common","dojox/gfx/fx"],function(_1,_2,_3,_4,_5,_6,_7,_8,fx){
 return _1.declare("dojox.charting.plot2d.Base",[dojox.charting.Element,dojox.charting.plot2d._PlotEvents],{constructor:function(_9,_a){
 this.zoom=null,this.zoomQueue=[];

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gantt/GanttResourceItem",["dojo","dijit","dojox","dojo/date/locale"],function(_1,_2,_3){
 _1.getObject("dojox.gantt.GanttResourceItem",1);
 _1.declare("dojox.gantt.GanttResourceItem",null,{constructor:function(_4){

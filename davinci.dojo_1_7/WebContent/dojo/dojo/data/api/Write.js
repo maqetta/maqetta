@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/api/Write",["../..","./Read"],function(_1){
 _1.declare("dojo.data.api.Write",_1.data.api.Read,{getFeatures:function(){
 return {"dojo.data.api.Read":true,"dojo.data.api.Write":true};

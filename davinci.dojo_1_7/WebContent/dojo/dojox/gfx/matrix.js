@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/matrix",["dojo/_base/kernel"],function(){
 var m=dojo.getObject("gfx.matrix",true,dojox);
 var _1={};

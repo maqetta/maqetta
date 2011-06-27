@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/NodeList-html",[".","./html"],function(_1){
 _1.extend(_1.NodeList,{html:function(_2,_3){
 var _4=new _1.html._ContentSetter(_3||{});

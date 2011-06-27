@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 function rhinoDojoConfig(_1,_2,_3){
 var _4=function(_5,_6){
 print((_5?_5+":":"")+_6[0]);

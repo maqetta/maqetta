@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/NodeList/delegate",["dojo","dijit","dojox","dojo/NodeList-traverse"],function(_1,_2,_3){
 _1.getObject("dojox.NodeList.delegate",1);
 _1.extend(_1.NodeList,{delegate:function(_4,_5,fn){

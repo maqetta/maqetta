@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/string/tokenize",["dojo/_base/kernel"],function(_1){
 _1.getObject("string",true,dojox);
 dojox.string.tokenize=function(_2,re,_3,_4){

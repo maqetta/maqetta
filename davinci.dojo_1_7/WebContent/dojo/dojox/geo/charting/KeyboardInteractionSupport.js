@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/charting/KeyboardInteractionSupport",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","dojox/lang/functional"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.geo.charting.KeyboardInteractionSupport",null,{_map:null,_zoomEnabled:false,constructor:function(_7,_8){
 this._map=_7;

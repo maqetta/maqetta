@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/util/oo",["./common"],function(_1){
 dojox.drawing.util.oo={declare:function(){
 var f,o,_2=0,a=arguments;

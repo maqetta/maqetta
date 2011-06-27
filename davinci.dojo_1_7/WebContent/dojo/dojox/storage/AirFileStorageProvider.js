@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/storage/AirFileStorageProvider",["dojo","dijit","dojox","dojox/storage/manager","dojox/storage/Provider"],function(_1,_2,_3){
 _1.getObject("dojox.storage.AirFileStorageProvider",1);
 if(_1.isAIR){

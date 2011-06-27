@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/validate/web",["dojo/_base/kernel","./_base","./regexp"],function(_1,_2,_3){
 dojox.validate.isIpAddress=function(_4,_5){
 var re=new RegExp("^"+_3.ipAddress(_5)+"$","i");

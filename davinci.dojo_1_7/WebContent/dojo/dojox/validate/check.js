@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/validate/check",["dojo/_base/lang","./_base"],function(_1,_2){
 _1.experimental("dojox.validate.check");
 _2.check=function(_3,_4){

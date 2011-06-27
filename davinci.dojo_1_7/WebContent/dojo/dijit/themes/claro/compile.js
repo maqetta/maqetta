@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.paths.unshift("/opt/less/lib","C:/less/lib");
 var fs=require("fs"),path=require("path"),less=require("less");
 var options={compress:false,optimization:1,silent:false};

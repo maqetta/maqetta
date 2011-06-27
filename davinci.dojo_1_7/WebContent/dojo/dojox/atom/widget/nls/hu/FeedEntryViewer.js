@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[megjelenítési beállítások]",
 	title: "Cím",

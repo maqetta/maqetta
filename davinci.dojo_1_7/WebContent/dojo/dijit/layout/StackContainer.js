@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/StackContainer",["dojo/_base/kernel","..","dojo/cookie","dojo/i18n!../nls/common","../_WidgetBase","./_LayoutWidget","./StackController","dojo/_base/array","dojo/_base/connect","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.layout.StackContainer",_2.layout._LayoutWidget,{doLayout:true,persist:false,baseClass:"dijitStackContainer",buildRendering:function(){
 this.inherited(arguments);

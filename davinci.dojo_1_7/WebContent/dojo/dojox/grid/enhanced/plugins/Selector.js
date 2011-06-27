@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/Selector",["dojo","dijit","dojox","dijit/focus","../../cells/_base","../_Plugin","./AutoScroll"],function(_1,_2,_3){
 var _4=0,_5=1,_6=2,_7={col:"row",row:"col"},_8=function(_9,_a,_b,_c,_d){
 if(_9!=="cell"){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/UploadImage",["dojo","dijit","dojox","dojox/form/FileUploader","dijit/_editor/_Plugin"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.UploadImage");
 _1.declare("dojox.editor.plugins.UploadImage",_2._editor._Plugin,{tempImageUrl:"",iconClassPrefix:"editorIcon",useDefaultCommand:false,uploadUrl:"",button:null,label:"Upload",setToolbar:function(_4){

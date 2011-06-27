@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 if(typeof dojo==="undefined"){
 dojo={doc:document,global:window,isWebKit:navigator.userAgent.indexOf("WebKit")!=-1,isAndroid:parseFloat(navigator.userAgent.split("Android ")[1])||undefined};
 dojox={mobile:{}};

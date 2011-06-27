@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_tree/dndSource",["dojo/_base/kernel","..","../tree/dndSource"],function(_1,_2){
 _1.deprecated("dijit._tree.dndSource has been moved to dijit.tree.dndSource, use that instead","","2.0");
 _1.getObject("_tree",true,_2);

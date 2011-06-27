@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/analytics/plugins/dojo",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
 _1.getObject("analytics.plugins",true,dojox);
 dojox.analytics.plugins.dojo=new (function(){

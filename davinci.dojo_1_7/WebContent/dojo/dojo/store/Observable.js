@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/Observable",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/Deferred","dojo/_base/array"],function(_1){
 _1.getObject("store",true,_1);
 return _1.store.Observable=function(_2){

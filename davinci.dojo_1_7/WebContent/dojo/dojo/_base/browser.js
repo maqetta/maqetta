@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 if(require.has){
 require.has.add("config-selectorEngine","acme");
 }

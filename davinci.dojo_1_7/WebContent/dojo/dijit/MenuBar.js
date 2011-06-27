@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/templates/MenuBar.html"]="<div class=\"dijitMenuBar dijitMenuPassive\" dojoAttachPoint=\"containerNode\"  role=\"menubar\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress: _onKeyPress\"></div>\n";
 define("dijit/MenuBar",["dojo/_base/kernel",".","dojo/text!./templates/MenuBar.html","./Menu","dojo/_base/connect","dojo/_base/event"],function(_1,_2,_3){
 _1.declare("dijit.MenuBar",_2._MenuBase,{templateString:_3,baseClass:"dijitMenuBar",_isMenuBar:true,postCreate:function(){

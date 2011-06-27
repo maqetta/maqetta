@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/window",["./_base/kernel","./dom","./dom-geometry","./dom-style","./_base/sniff","./_base/window"],function(_1){
 _1.getObject("window",true,_1);
 _1.window.getBox=function(){

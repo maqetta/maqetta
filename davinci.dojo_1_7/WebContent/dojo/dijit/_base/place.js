@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/place",["dojo/_base/kernel","..","../place","dojo/window","dojo/_base/array","dojo/_base/lang"],function(_1,_2,_3){
 _2.getViewport=function(){
 return _1.window.getBox();

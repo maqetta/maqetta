@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/html",["./kernel","../dom","../dom-style","../dom-prop","../dom-class","../dom-construct","../dom-geometry"],function(_1){
 return _1;
 });

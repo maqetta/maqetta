@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/app/_FormWidget",["dojo","dijit","dojox","dojo/window","dijit/_WidgetBase","dijit/focus"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app._FormWidget",1);
 _1.experimental("dojox.mobile.app._FormWidget");

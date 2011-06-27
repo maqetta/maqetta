@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/ItemExplorer",["dojo","dijit","dojox","dijit/Tree","dijit/Dialog","dijit/Menu","dijit/form/ValidationTextBox","dijit/form/Textarea","dijit/form/Button","dijit/form/RadioButton","dijit/form/FilteringSelect"],function(_1,_2,_3){
 _1.getObject("dojox.data.ItemExplorer",1);
 (function(){

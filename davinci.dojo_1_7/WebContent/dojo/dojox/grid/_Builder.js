@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/_Builder",["dojo","dojox","dojo/dnd/Moveable","./util"],function(_1,_2){
 var dg=_2.grid;
 var _3=function(td){

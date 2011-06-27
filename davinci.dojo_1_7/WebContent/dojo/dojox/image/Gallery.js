@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/image/Gallery",["dojo","dijit","dojox","dojo/fx","dijit/_Widget","dijit/_Templated","dojox/image/ThumbnailPicker","dojox/image/SlideShow"],function(_1,_2,_3){
 _1.getObject("dojox.image.Gallery",1);
 _1.experimental("dojox.image.Gallery");

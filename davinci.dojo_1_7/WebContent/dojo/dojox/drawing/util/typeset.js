@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/util/typeset",["../library/greek","./common"],function(_1){
 dojox.drawing.util.typeset={convertHTML:function(_2){
 if(_2){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/tools/custom/Axes",["dojo","../../annotations/Label","./Vector"],function(_1){
 dojox.drawing.tools.custom.Axes=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Path,function(_2){
 this.closePath=false;

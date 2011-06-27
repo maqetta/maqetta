@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[volby zobrazení]",
 	title: "Název",

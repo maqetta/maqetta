@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/ContentPane",["dojo/_base/kernel","dojo/_base/declare","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","dojo/_base/xhr","./ProgressIndicator"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile.ContentPane",[dijit._WidgetBase,dijit._Container,dijit._Contained],{href:"",content:"",parseOnLoad:true,prog:true,startup:function(){
 if(this._started){

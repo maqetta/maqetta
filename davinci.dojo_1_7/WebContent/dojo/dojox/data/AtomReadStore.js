@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/AtomReadStore",["dojo","dojox","dojo/data/util/filter","dojo/data/util/simpleFetch","dojo/date/stamp"],function(_1,_2){
 _1.experimental("dojox.data.AtomReadStore");
 _1.declare("dojox.data.AtomReadStore",null,{constructor:function(_3){

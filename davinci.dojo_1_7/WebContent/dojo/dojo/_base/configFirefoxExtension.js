@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 if(typeof window!="undefined"){
 dojo.isBrowser=true;
 dojo._name="browser";

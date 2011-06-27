@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/contrib/data",["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array"],function(_1,_2,dd){
 _1.getObject("dtl.contrib.data",true,dojox);
 var _3=dd.contrib.data;

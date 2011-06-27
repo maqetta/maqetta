@@ -112,12 +112,12 @@ dojo.mixin(davinci.resource, {
 		davinci.resource.resourceChanged("created", destFile);
 	},
 
-	download: function(files,archiveName){
+	download: function(files,archiveName, userLibs){
 		
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
 		*/
-		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files));
+		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+ "&libs="+escape(dojo.toJson(userLibs) );
 	},
 	
 

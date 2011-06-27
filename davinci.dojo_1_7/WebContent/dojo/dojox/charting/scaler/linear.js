@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/scaler/linear",["dojo/_base/kernel","../../main","dojo/_base/lang","./common"],function(_1,_2,_3,_4){
 var _5=_1.getObject("charting.scaler.linear",true,_2);
 var _6=3,_7=_4.findString,_8=_4.getNumericLabel;

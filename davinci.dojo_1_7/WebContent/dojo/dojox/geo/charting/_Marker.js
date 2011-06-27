@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/charting/_Marker",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","./_base"],function(_1,_2,_3){
 return _1.declare("dojox.geo.charting._Marker",null,{_needTooltipRefresh:null,_map:null,constructor:function(_4,_5){
 this._map=_5;

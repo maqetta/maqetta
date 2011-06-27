@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/calc/Standard",["dojo","dijit/_Templated","dojox/math/_base","dijit/dijit","dijit/Menu","dijit/MenuItem","dijit/form/ComboButton","dijit/TooltipDialog","dijit/form/TextBox","dijit/form/Button","dojox/calc/_Executor"],function(_1){
 _1.experimental("dojox.calc.Standard");
 _1.declare("dojox.calc.Standard",[dijit._Widget,dijit._Templated],{templateString:_1.cache("dojox.calc","templates/Standard.html"),readStore:null,writeStore:null,functions:[],widgetsInTemplate:true,executorLoaded:function(){

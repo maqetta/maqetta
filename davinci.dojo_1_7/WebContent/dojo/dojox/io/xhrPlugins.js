@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/io/xhrPlugins",["dojo/_base/kernel","dojo/_base/xhr","dojo/AdapterRegistry"],function(_1,_2,_3){
 _1.getObject("io.xhrPlugins",true,dojox);
 var _4;

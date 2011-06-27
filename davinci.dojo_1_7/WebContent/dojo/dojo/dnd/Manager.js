@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Manager",["../main","./common","./autoscroll","./Avatar"],function(_1){
 _1.declare("dojo.dnd.Manager",null,{constructor:function(){
 this.avatar=null;

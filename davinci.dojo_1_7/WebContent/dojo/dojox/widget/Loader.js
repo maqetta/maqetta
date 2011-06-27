@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/Loader",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Loader",1);
 _1.deprecated("dojox.widget.Loader","","2.0");

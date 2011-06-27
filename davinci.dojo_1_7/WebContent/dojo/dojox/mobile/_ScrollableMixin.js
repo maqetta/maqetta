@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/_ScrollableMixin",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","./common","dijit/_WidgetBase","./scrollable"],function(_1,_2,_3,_4,_5,_6){
 _1.declare("dojox.mobile._ScrollableMixin",null,{fixedHeader:"",fixedFooter:"",scrollableParams:{},allowNestedScrolls:true,destroy:function(){
 this.cleanup();

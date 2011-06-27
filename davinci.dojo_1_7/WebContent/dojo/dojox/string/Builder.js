@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/string/Builder",["dojo/_base/kernel"],function(_1){
 _1.getObject("string",true,dojox);
 dojox.string.Builder=function(_2){

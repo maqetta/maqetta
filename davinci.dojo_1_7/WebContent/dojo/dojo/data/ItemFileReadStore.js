@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/ItemFileReadStore",["../main","./util/filter","./util/simpleFetch","../date/stamp"],function(_1){
 _1.declare("dojo.data.ItemFileReadStore",null,{constructor:function(_2){
 this._arrayOfAllItems=[];

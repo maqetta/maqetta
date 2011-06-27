@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/atom/io/model",["dojo","dijit","dojox","dojox/xml/parser","dojo/string","dojo/date/stamp"],function(_1,_2,_3){
 _1.getObject("dojox.atom.io.model",1);
 _3.atom.io.model._Constants={"ATOM_URI":"http://www.w3.org/2005/Atom","ATOM_NS":"http://www.w3.org/2005/Atom","PURL_NS":"http://purl.org/atom/app#","APP_NS":"http://www.w3.org/2007/app"};

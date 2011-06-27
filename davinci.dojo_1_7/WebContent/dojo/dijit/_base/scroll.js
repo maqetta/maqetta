@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/scroll",["dojo/_base/kernel","..","dojo/window"],function(_1,_2){
 _2.scrollIntoView=function(_3,_4){
 _1.window.scrollIntoView(_3,_4);

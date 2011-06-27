@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/api/Identity",["../..","./Read"],function(_1){
 _1.declare("dojo.data.api.Identity",_1.data.api.Read,{getFeatures:function(){
 return {"dojo.data.api.Read":true,"dojo.data.api.Identity":true};

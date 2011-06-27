@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/app/StageController",["dojo","dijit","dojox","dojox/mobile/app/SceneController"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.StageController",1);
 _1.experimental("dojox.mobile.app.StageController");

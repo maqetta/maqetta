@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/plugins/drawing/GreekPalette",["dojo","dijit","dojox","dojo/i18n","dojox/editor/plugins/nls/latinEntities"],function(_1,_2,_3){
 _1.getObject("dojox.drawing.plugins.drawing.GreekPalette",1);
 define(["dojo","dijit","dijit/focus","dijit/_base/popup","../../library/greek","dijit/_Widget","dijit/_TemplatedMixin","dijit/_PaletteMixin","dojo/i18n"],function(_4,_5){

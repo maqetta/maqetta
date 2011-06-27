@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mvc/Generate",["dojo/_base/lang","dojo/_base/declare","./_Container","./Group","dijit/form/TextBox"],function(_1,_2,_3){
 return _2("dojox.mvc.Generate",[_3],{_counter:0,_defaultWidgetMapping:{"String":"dijit.form.TextBox"},_defaultClassMapping:{"Label":"generate-label-cell","String":"generate-dijit-cell","Heading":"generate-heading","Row":"row"},_defaultIdNameMapping:{"String":"textbox_t"},_updateBinding:function(){
 this.inherited(arguments);

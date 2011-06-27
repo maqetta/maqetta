@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/compression/lzw",["dojo/_base/kernel","dojox/encoding/bits"],function(_1){
 _1.getObject("encoding.compression.lzw",true,dojox);
 var _2=function(x){

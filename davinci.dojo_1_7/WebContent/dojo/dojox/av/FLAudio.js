@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/av/FLAudio",["dojo","dojox/embed/Flash","dojox/timing/doLater"],function(_1,_2){
 _1.experimental("dojox.av.FLVideo");
 _1.declare("dojox.av.FLAudio",null,{id:"",initialVolume:0.7,initialPan:0,isDebug:false,statusInterval:200,_swfPath:_1.moduleUrl("dojox.av","resources/audio.swf"),allowScriptAccess:"always",allowNetworking:"all",constructor:function(_3){

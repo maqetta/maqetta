@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/rotator/Pan",["dojo","dijit","dojox","dojo/fx"],function(_1,_2,_3){
 _1.getObject("dojox.widget.rotator.Pan",1);
 (function(d){

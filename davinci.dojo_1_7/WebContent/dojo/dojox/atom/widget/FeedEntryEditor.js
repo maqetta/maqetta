@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/atom/widget/FeedEntryEditor",["dojo","dijit","dojox","dojox/atom/widget/FeedEntryViewer","dijit/_Widget","dijit/_Templated","dijit/_Container","dijit/Editor","dijit/form/TextBox","dijit/form/SimpleTextarea","dojo/i18n","dojox/atom/widget/nls/FeedEntryEditor","dojo/i18n","dojox/atom/widget/nls/PeopleEditor"],function(_1,_2,_3){
 _1.getObject("dojox.atom.widget.FeedEntryEditor",1);
 _1.requireLocalization("dojox.atom.widget","FeedEntryEditor");

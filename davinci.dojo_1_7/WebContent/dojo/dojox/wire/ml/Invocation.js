@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire/ml/Invocation",["dojo","dijit","dojox","dojox/wire/ml/Action"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.Invocation",1);
 _1.declare("dojox.wire.ml.Invocation",_3.wire.ml.Action,{object:"",method:"",topic:"",parameters:"",result:"",error:"",_run:function(){

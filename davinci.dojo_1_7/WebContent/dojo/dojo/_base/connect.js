@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/connect",["./kernel","../on","../aspect","./event","../mouse","../has","./lang"],function(_1,on,_2,_3,_4,_5){
 _5.add("events-keypress-typed",function(){
 var _6={charCode:0};

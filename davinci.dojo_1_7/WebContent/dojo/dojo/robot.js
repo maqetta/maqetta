@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/robot",["dojo","doh/robot","dojo/window"],function(_1){
 _1.experimental("dojo.robot");
 _1.mixin(doh.robot,{_resolveNode:function(n){

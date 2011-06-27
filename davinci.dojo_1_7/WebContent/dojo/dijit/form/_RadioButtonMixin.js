@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_RadioButtonMixin",["dojo/_base/kernel","..","dojo/_base/NodeList","dojo/_base/array","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/window","dojo/query"],function(_1,_2){
 _1.declare("dijit.form._RadioButtonMixin",null,{type:"radio",_getRelatedWidgets:function(){
 var _3=[];

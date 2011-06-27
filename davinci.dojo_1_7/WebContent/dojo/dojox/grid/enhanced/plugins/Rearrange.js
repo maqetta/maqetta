@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/Rearrange",["dojo","dojox","../_Plugin","./_RowMapLayer"],function(_1,_2){
 _1.declare("dojox.grid.enhanced.plugins.Rearrange",_2.grid.enhanced._Plugin,{name:"rearrange",constructor:function(_3,_4){
 this.grid=_3;

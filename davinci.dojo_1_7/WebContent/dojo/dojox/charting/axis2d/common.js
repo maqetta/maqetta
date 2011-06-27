@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/axis2d/common",["dojo/_base/kernel","../../main","dojo/_base/lang","dojo/_base/html","dojo/_base/window","dojox/gfx"],function(_1,_2,_3,_4,_5,g){
 var _6=_1.getObject("charting.axis2d.common",true,_2);
 var _7=function(s){

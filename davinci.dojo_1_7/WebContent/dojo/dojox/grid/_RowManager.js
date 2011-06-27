@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/_RowManager",["dojo","dojox"],function(_1,_2){
 var _3=function(_4,_5){
 if(_4.style.cssText==undefined){

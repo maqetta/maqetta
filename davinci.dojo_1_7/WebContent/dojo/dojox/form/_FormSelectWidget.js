@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/_FormSelectWidget",["dojo","dijit","dojox","dijit/form/_FormSelectWidget"],function(_1,_2,_3){
 _1.getObject("dojox.form._FormSelectWidget",1);
 _1.deprecated("dojox.form._FormSelectWidget","Use dijit.form._FormSelectWidget instead","2.0");

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/xmpp/TransportSession",["dojo","dijit","dojox","dojox/xmpp/bosh","dojox/xmpp/util","dojox/data/dom"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.TransportSession",1);
 _3.xmpp.TransportSession=function(_4){

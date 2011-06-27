@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/rpc/Service",["dojo","dojox","dojo/AdapterRegistry","dojo/_base/url"],function(_1,_2){
 _1.declare("dojox.rpc.Service",null,{constructor:function(_3,_4){
 var _5;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/charting/widget/Legend",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/window","dijit/_Widget"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.geo.charting.widget.Legend",dijit._Widget,{horizontal:true,legendBody:null,swatchSize:18,map:null,postCreate:function(){
 if(!this.map){

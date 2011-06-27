@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/fx",["./main","./fx/Toggler"],function(_1){
 var _2={_fire:function(_3,_4){
 if(this[_3]){

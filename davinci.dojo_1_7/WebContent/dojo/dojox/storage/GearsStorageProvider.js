@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/storage/GearsStorageProvider",["dojo","dijit","dojox","dojo/gears","dojox/storage/Provider","dojox/storage/manager","dojox/sql"],function(_1,_2,_3){
 _1.getObject("dojox.storage.GearsStorageProvider",1);
 if(_1.gears.available){

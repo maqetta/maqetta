@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_OnDijitClickMixin",["dojo/_base/kernel","dojo/on","./main","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/sniff","dojo/_base/unload","dojo/_base/window"],function(_1,on,_2){
 var _3=null;
 if(_1.isIE){

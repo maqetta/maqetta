@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mvc/_base",["dojo/_base/kernel","dojo/_base/lang","./StatefulModel","./Bind","./_DataBindingMixin","./_patches"],function(_1,_2,_3){
 _1.experimental("dojox.mvc");
 var _4=_1.getObject("dojox.mvc",true);

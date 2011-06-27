@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/embed/Flash",["dojo"],function(_1){
 _1.getObject("embed",true,dojox);
 var _2,_3;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 dojo.declare("dijit.tree.model",null,{destroy:function(){
 },getRoot:function(_1){
 },mayHaveChildren:function(_2){

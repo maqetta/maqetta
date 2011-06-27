@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/kernel",["../has","./config","require","module"],function(_1,_2,_3,_4){
 var i,p,_5={},_6={},_7={config:{},global:this,dijit:_5,dojox:_6},_8={dojo:["dojo",_7],dijit:["dijit",_5],dojox:["dojox",_6]},_9=_4.id.match(/[^\/]+/)[0],_a=_2[_9+"Scope"]||_2.scopeMap||[],_b=(new Date).getTime(),_c,_d,_e,_f;
 for(i=0;i<_a.length;i++){
@@ -35,7 +36,7 @@ _1.add("config-"+p,_10[p]);
 }
 _7.baseUrl=_7.config.baseUrl=_3.baseUrl;
 var rev="$Rev: 23930 $".match(/\d+/);
-_7.version={major:1,minor:7,patch:0,flag:"b2",revision:rev?+rev[0]:NaN,toString:function(){
+_7.version={major:1,minor:7,patch:0,flag:"b3",revision:rev?+rev[0]:NaN,toString:function(){
 var v=_7.version;
 return v.major+"."+v.minor+"."+v.patch+v.flag+" ("+v.revision+")";
 }};

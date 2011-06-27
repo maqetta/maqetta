@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/AdapterRegistry",["./main"],function(_1){
 _1.AdapterRegistry=function(_2){
 this.pairs=[];

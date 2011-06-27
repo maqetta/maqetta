@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/action2d/ChartAction",["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./Base"],function(_1,_2,_3,_4){
 return _1.declare("dojox.charting.action2d.ChartAction",dojox.charting.action2d.Base,{constructor:function(_5,_6){
 },connect:function(){

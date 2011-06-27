@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/charting/_base",["dojo/_base/kernel","dojo/_base/lang","../../main","dojo/_base/html","dojox/gfx/matrix","dijit/Tooltip","dojo/NodeList-traverse"],function(_1,_2,_3,_4,_5,_6,_7){
 var _8=_1.getObject("geo.charting",true,_3);
 _8.showTooltip=function(_9,_a,_b){

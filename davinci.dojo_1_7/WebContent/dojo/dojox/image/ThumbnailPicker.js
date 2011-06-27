@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/image/ThumbnailPicker",["dojo","dijit","dojox","dojox/fx/scroll","dojo/fx/easing","dojo/fx","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.image.ThumbnailPicker",1);
 _1.experimental("dojox.image.ThumbnailPicker");

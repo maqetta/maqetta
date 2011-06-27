@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/ToggleDir",["dojo/_base/kernel","../..","../_Plugin","../../form/ToggleButton","dojo/_base/connect","dojo/_base/declare","dojo/_base/html","dojo/_base/lang"],function(_1,_2){
 _1.experimental("dijit._editor.plugins.ToggleDir");
 _1.declare("dijit._editor.plugins.ToggleDir",_2._editor._Plugin,{useDefaultCommand:false,command:"toggleDir",buttonClass:_2.form.ToggleButton,_initButton:function(){

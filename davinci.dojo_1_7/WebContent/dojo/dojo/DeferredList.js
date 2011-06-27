@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/DeferredList",["./_base/kernel","./_base/Deferred","./_base/array"],function(_1){
 _1.DeferredList=function(_2,_3,_4,_5,_6){
 var _7=[];

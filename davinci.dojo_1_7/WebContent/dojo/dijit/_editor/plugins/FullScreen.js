@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/FullScreen",["dojo/_base/kernel","../..","../../focus","../../_base/focus","dojo/window","dojo/i18n","../_Plugin","../../form/ToggleButton","dojo/i18n!../nls/commands","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit._editor.plugins.FullScreen",_2._editor._Plugin,{zIndex:500,_origState:null,_origiFrameState:null,_resizeHandle:null,isFullscreen:false,toggle:function(){
 this.button.set("checked",!this.button.get("checked"));

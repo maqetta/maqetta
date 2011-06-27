@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/jaxer",["./main"],function(_1){
 if(typeof print=="function"){
 console.debug=Jaxer.Log.debug;

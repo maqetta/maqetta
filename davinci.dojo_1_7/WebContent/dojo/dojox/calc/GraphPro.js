@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/calc/GraphPro",["dojo","dojox/calc/Standard","dijit/dijit","dijit/Menu","dijit/MenuItem","dijit/form/ComboButton","dijit/form/Select","dijit/form/CheckBox","dijit/ColorPalette","dojox/charting/Chart2D","dojox/calc/Grapher","dojox/layout/FloatingPane","dojox/charting/themes/Tufte","dojo/colors"],function(_1){
 _1.experimental("dojox.calc.GraphPro");
 _1.declare("dojox.calc.GraphPro",dojox.calc.Standard,{templateString:_1.cache("dojox.calc","templates/GraphPro.html"),grapher:null,funcMaker:null,aFloatingPane:null,executorLoaded:function(){

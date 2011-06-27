@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mdnd/DropIndicator",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./AreaManager"],function(_1){
 var di=_1.declare("dojox.mdnd.DropIndicator",null,{node:null,constructor:function(){
 var _2=document.createElement("div");

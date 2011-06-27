@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/RollingList",["dojo","dijit","dojox","dojo/window","dijit/layout/ContentPane","dijit/_Templated","dijit/_Contained","dijit/layout/_LayoutWidget","dijit/Menu","dijit/form/Button","dijit/focus","dijit/_base/focus","dojox/html/metrics","dojo/i18n","dojo/i18n","dijit/nls/common"],function(_1,_2,_3){
 _1.getObject("dojox.widget.RollingList",1);
 _1.experimental("dojox.widget.RollingList");

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/Tooltip",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dijit/place","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5){
 return _1.declare("dojox.mobile.Tooltip",dijit._WidgetBase,{baseClass:"mblTooltip mblTooltipHidden",buildRendering:function(){
 this.inherited(arguments);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/ToolbarSeparator",["dojo/_base/kernel",".","./_Widget","./_TemplatedMixin","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.ToolbarSeparator",[_2._Widget,_2._TemplatedMixin],{templateString:"<div class=\"dijitToolbarSeparator dijitInline\" role=\"presentation\"></div>",buildRendering:function(){
 this.inherited(arguments);

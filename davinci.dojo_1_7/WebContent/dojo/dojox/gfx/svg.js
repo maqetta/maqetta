@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/svg",["./_base","./path"],function(){
 var _1=dojo.getObject("gfx.svg",true,dojox),d=dojo,g=dojox.gfx,gs=g.shape;
 _1.useSvgWeb=(typeof window.svgweb!="undefined");

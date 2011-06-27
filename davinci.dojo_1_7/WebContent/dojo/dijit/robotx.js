@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/robotx",["dojo/_base/kernel",".","./robot","dojo/robotx","dojo/_base/window"],function(_1,_2){
 _1.experimental("dijit.robotx");
 var _3=doh.robot._updateDocument;

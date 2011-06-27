@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/focus",["dojo/_base/kernel","..","../focus","./manager","dojo/_base/array","dojo/_base/connect","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2,_3){
 _1.mixin(_2,{_curFocus:null,_prevFocus:null,isCollapsed:function(){
 return _2.getBookmark().isCollapsed;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/typed",["dojo","dijit","dojox","dojox/json/schema"],function(_1,_2,_3){
 _1.getObject("dojox.lang.typed",1);
 (function(){

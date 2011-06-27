@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/DialogUnderlay",["dojo/_base/kernel",".","dojo/window","./_Widget","./_TemplatedMixin","./BackgroundIframe","dojo/_base/declare","dojo/_base/html","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit.DialogUnderlay",[_2._Widget,_2._TemplatedMixin],{templateString:"<div class='dijitDialogUnderlayWrapper'><div class='dijitDialogUnderlay' dojoAttachPoint='node'></div></div>",dialogId:"","class":"",_setDialogIdAttr:function(id){
 _1.attr(this.node,"id",id+"_underlay");

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ToggleButtonMixin",["dojo/_base/kernel","..","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.form._ToggleButtonMixin",null,{checked:false,_onClick:function(_3){
 var _4=this.checked;

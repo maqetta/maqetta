@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/app/List",["dojo","dijit","dojox","dojo/string","dijit/_WidgetBase"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.List",1);
 _1.experimental("dojox.mobile.app.List");

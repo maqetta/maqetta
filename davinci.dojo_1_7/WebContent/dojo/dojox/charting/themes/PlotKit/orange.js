@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/themes/PlotKit/orange",["./base","../../Theme"],function(pk,_1){
 pk.orange=pk.base.clone();
 pk.orange.chart.fill=pk.orange.plotarea.fill="#f5eee6";

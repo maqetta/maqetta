@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/ext-dijit/layout/StackContainer-touch",["dojo","dijit","dojox","dijit/layout/StackContainer"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ext-dijit.layout.StackContainer-touch",1);
 _1.experimental("dojox.layout.ext-dijit.layout.StackContainer-touch");

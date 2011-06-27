@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx3d/matrix",["dojo/_base/kernel","dojox","dojo/_base/lang"],function(_1,_2,_3){
 _1.getObject("gfx3d",true,_2);
 _2.gfx3d.matrix={_degToRad:function(_4){

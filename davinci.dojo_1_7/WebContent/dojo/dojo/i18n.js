@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/i18n",["./_base/kernel","require","./has","./_base/array","./_base/lang","./_base/xhr"],function(_1,_2,_3,_4,_5){
 var _6=_1.i18n={},_7=/(^.*(^|\/)nls)(\/|$)([^\/]*)\/?([^\/]*)/,_8=function(_9,_a,_b,_c){
 for(var _d=[_b+_c],_e=_a.split("-"),_f="",i=0;i<_e.length;i++){

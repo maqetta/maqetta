@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/util/filter",["../.."],function(_1){
 _1.getObject("data.util.filter",true,_1);
 _1.data.util.filter.patternToRegExp=function(_2,_3){

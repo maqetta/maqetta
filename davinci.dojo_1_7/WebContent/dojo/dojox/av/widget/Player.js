@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/av/widget/Player",["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
 _1.experimental("dojox.av.widget.Player");
 _1.declare("dojox.av.widget.Player",[_2._Widget,_2._TemplatedMixin],{playerWidth:"480px",widgetsInTemplate:true,templateString:_1.cache("dojox.av.widget","resources/Player.html"),_fillContent:function(){

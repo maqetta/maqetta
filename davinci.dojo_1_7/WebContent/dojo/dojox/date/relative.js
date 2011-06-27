@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/date/relative",["dojo/_base/kernel","dojo/_base/lang","dojo/date/locale","dojo/i18n"],function(d,_1,_2,_3){
 dojo.getObject("date.relative",true,dojox);
 var _4=1000*60*60*24,_5=6*_4,_6=d.delegate,_7=_2._getGregorianBundle,_8=_2.format;

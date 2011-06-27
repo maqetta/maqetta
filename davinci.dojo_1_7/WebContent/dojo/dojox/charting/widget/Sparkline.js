@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/widget/Sparkline",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/html","dojo/query","./Chart","../themes/GreySkies","../plot2d/Lines"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 var d=_1;
 _1.declare("dojox.charting.widget.Sparkline",dojox.charting.widget.Chart,{theme:_7,margins:{l:0,r:0,t:0,b:0},type:"Lines",valueFn:"Number(x)",store:"",field:"",query:"",queryOptions:"",start:"0",count:"Infinity",sort:"",data:"",name:"default",buildRendering:function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/_PluginManager",["dojo","dojox","./_Events","./_FocusManager"],function(_1,_2){
 _1.declare("dojox.grid.enhanced._PluginManager",null,{_options:null,_plugins:null,_connects:null,constructor:function(_3){
 this.grid=_3;

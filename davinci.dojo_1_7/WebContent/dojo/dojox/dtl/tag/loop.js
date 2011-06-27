@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/tag/loop",["dojo/_base/kernel","dojo/_base/lang","../_base","dojox/string/tokenize","dojo/_base/array"],function(_1,_2,dd,_3){
 _1.getObject("dtl.tag.loop",true,dojox);
 var _4=dd.tag.loop;

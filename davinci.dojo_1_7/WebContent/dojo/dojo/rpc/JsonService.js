@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/rpc/JsonService",["../main","./RpcService"],function(_1){
 _1.declare("dojo.rpc.JsonService",_1.rpc.RpcService,{bustCache:false,contentType:"application/json-rpc",lastSubmissionId:0,callRemote:function(_2,_3){
 var _4=new _1.Deferred();

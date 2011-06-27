@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dom-construct",["./_base/kernel","./_base/sniff","./_base/window","./dom","./dom-prop","./on"],function(_1,_2,_3,_4,_5,on){
 var _6={option:["select"],tbody:["table"],thead:["table"],tfoot:["table"],tr:["table","tbody"],td:["table","tbody","tr"],th:["table","thead","tr"],legend:["fieldset"],caption:["table"],colgroup:["table"],col:["table","colgroup"],li:["ul"]},_7=/<\s*([\w\:]+)/,_8={},_9=0,_a="__"+_1._scopeName+"ToDomId";
 for(var _b in _6){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dom-class",["./_base/kernel","./_base/lang","./dom"],function(_1,_2,_3){
 var _4="className";
 _1.hasClass=function(_5,_6){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/CalendarFx",["dojo","dijit","dojox","dojox/widget/FisheyeLite"],function(_1,_2,_3){
 _1.getObject("dojox.widget.CalendarFx",1);
 _1.declare("dojox.widget._FisheyeFX",null,{addFx:function(_4,_5){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/AutoRotator",["dojo","dijit","dojox","dojox/widget/Rotator"],function(_1,_2,_3){
 _1.getObject("dojox.widget.AutoRotator",1);
 (function(d){

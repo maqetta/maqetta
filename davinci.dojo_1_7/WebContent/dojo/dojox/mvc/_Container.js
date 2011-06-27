@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mvc/_Container",["dojo/_base/declare","dojo/parser","dojo/_base/lang","dijit/_WidgetBase"],function(_1,_2,_3,_4){
 return _1("dojox.mvc._Container",[_4],{stopParser:true,templateString:"",_containedWidgets:[],_createBody:function(){
 this._containedWidgets=_2.parse(this.srcNodeRef,{template:true,inherited:{dir:this.dir,lang:this.lang},propsThis:this,scope:"dojo"});

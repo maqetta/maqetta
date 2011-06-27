@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/storage/Provider",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.storage.Provider",1);
 _1.declare("dojox.storage.Provider",null,{constructor:function(){

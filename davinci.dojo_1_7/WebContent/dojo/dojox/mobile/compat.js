@@ -11,4 +11,5 @@
 		http://dojotoolkit.org
 */
 
+//>>built
 require({cache:{}});define("dojox/mobile/compat",["dojo/_base/kernel","dojo/_base/sniff"],function(_1,_2){_1.getObject("mobile.compat",true,dojox);if(!_2.isWebKit){require(["dojox/mobile/_compat"]);}return dojox.mobile.compat;});

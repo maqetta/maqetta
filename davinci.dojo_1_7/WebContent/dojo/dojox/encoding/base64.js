@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/base64",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.base64",true,dojox);
 var p="=";

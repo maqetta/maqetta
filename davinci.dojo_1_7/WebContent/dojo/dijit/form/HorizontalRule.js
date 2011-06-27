@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/HorizontalRule",["dojo/_base/kernel","..","../_Widget","../_TemplatedMixin"],function(_1,_2){
 _1.declare("dijit.form.HorizontalRule",[_2._Widget,_2._TemplatedMixin],{templateString:"<div class=\"dijitRuleContainer dijitRuleContainerH\"></div>",count:3,container:"containerNode",ruleStyle:"",_positionPrefix:"<div class=\"dijitRuleMark dijitRuleMarkH\" style=\"left:",_positionSuffix:"%;",_suffix:"\"></div>",_genHTML:function(_3,_4){
 return this._positionPrefix+_3+this._positionSuffix+this.ruleStyle+this._suffix;

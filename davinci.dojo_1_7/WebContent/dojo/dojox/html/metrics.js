@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/html/metrics",["dojo/_base/kernel","dojo/_base/window","dojo/_base/lang","dojo/_base/html"],function(_1,_2){
 var _3=_1.getObject("html.metrics",true,dojox);
 _3.getFontMeasurements=function(){

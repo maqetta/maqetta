@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/date/buddhist/locale",["dojo/_base/kernel","dojo/date","dojo/i18n","dojo/regexp","dojo/string","./Date","dojo/i18n!dojo/cldr/nls/buddhist"],function(d,dd,_1,_2,_3,_4){
 dojo.getObject("date.buddhist.locale",true,dojox);
 dojo.experimental("dojox.date.buddhist.locale");

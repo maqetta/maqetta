@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/openlayers/Map",["dojo/_base/kernel","dojo/_base/declare","dojox/main","dojo/_base/lang","dojo/_base/array","dojo/_base/json","dojox/geo/openlayers/TouchInteractionSupport","dojox/geo/openlayers/Layer","dojox/geo/openlayers/Patch"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 _1.experimental("dojox.geo.openlayers.Map");
 var _a=_1.getObject("geo.openlayers.BaseLayerType",true,_3);

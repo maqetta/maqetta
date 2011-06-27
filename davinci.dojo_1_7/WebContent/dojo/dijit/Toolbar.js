@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/Toolbar",["dojo/_base/kernel",".","require","./_Widget","./_KeyNavContainer","./_TemplatedMixin","dojo/_base/connect","dojo/_base/declare"],function(_1,_2,_3){
 _1.declare("dijit.Toolbar",[_2._Widget,_2._TemplatedMixin,_2._KeyNavContainer],{templateString:"<div class=\"dijit\" role=\"toolbar\" tabIndex=\"${tabIndex}\" dojoAttachPoint=\"containerNode\">"+"</div>",baseClass:"dijitToolbar",postCreate:function(){
 this.inherited(arguments);

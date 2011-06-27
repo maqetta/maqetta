@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/templates/Tooltip.html"]="<div class=\"dijitTooltip dijitTooltipLeft\" id=\"dojoTooltip\"\n\t><div class=\"dijitTooltipContainer dijitTooltipContents\" dojoAttachPoint=\"containerNode\" role='alert'></div\n\t><div class=\"dijitTooltipConnector\" dojoAttachPoint=\"connectorNode\"></div\n></div>\n";
 define("dijit/Tooltip",["dojo/_base/kernel",".","dojo/text!./templates/Tooltip.html","./place","./_Widget","./_TemplatedMixin","./BackgroundIframe","dojo/_base/array","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2,_3,_4){
 _1.declare("dijit._MasterTooltip",[_2._Widget,_2._TemplatedMixin],{duration:_2.defaultDuration,templateString:_3,postCreate:function(){

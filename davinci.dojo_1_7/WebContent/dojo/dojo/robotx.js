@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/robotx",["dojo","dojo/robot"],function(_1){
 _1.experimental("dojo.robotx");
 var _2=null;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/NumberSpinner",["dojo/_base/kernel","..","./_Spinner","./NumberTextBox","dojo/_base/connect","dojo/_base/event"],function(_1,_2){
 _1.declare("dijit.form.NumberSpinner",[_2.form._Spinner,_2.form.NumberTextBoxMixin],{adjust:function(_3,_4){
 var tc=this.constraints,v=isNaN(_3),_5=!isNaN(tc.max),_6=!isNaN(tc.min);

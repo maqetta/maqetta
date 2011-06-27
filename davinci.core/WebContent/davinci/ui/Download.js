@@ -79,26 +79,35 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		
 	},
 	
+	_getLibs : function(){
+		var nodeList = dojo.query("[libItemCheck]", this.domNode );
+		var userLibs = [];
+		for(var i =0;i<nodeList.length;i++){
+			var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
+			var value = dojo.attr(nodeList[i], "checked");
+			if(value){
+				//var lib = this._userList[element];
+				userLibs.push({'id':this._userLibs[element]['id'],'version':this._userLibs[element]['version'] ,'root': this._userLibs[element]['base']});
+				//	this.list.push(this._getLibRoot(lib['id'], lib['version']))
+			}
+		}
+		
+		return userLibs;
+	},
+	
 	_getResources : function(){
 		
 		var folder=davinci.resource.getRoot();
 		/* get all sub files */
 		var list = [];
+		var userLibs = [];
 		for(var i = 0;i<folder.children.length;i++){
 			list.push(folder.children[i].getPath());
 		}
+
+		var allLibs = this._getLibs();
 		
-		var nodeList = dojo.query("[libItemCheck]", this.domNode );
-		for(var i =0;i<nodeList.length;i++){
-			var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
-			var value = dojo.attr(nodeList[i], "checked");
-			if(value=='checked'){
-				var lib = this._userList[element];
-					this.list.push(this._getLibRoot(lib['id'], lib['version']))
-			}
-		}
-		
-		return list;
+		return {'userFiles':list, 'userLibs': this._getLibs()};
 	},
 	
 	_rewriteUrls : function(){
@@ -133,15 +142,15 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	okButton : function(){
-		function makeTimeoutFunction(downloadFiles, fileName, pages){
+		function makeTimeoutFunction(downloadFiles, fileName, libs){
 			return function(){
 				
 				
 				
 				var files = downloadFiles;
 				var fn = fileName
-				var pgs = pages;
-				davinci.resource.download(files, fn);		
+				
+				davinci.resource.download(files, fn, libs);		
 				/*
 				for(var i=0;i<pgs.length;i++){
 					pgs[i].removeWorkingCopy();
@@ -152,10 +161,11 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		}
 		var fileName =dojo.attr( this.__fileName, "value");
 		this._rewriteUrls();
+	
 		var allFiles = this._getResources();
 		var pages = this._noRewrite ? [] : this._pages;
 		/* have to close the dialog before the download call starts */
-		setTimeout(makeTimeoutFunction(allFiles, fileName, pages), 300);
+		setTimeout(makeTimeoutFunction(allFiles['userFiles'], fileName, allFiles['userLibs']), 300);
 		this.onClose();
 	},
 	cancelButton : function(){

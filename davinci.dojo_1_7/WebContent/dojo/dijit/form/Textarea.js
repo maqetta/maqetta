@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/Textarea",["dojo/_base/kernel","..","./SimpleTextarea","./_ExpandingTextAreaMixin","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.form.Textarea",[_2.form.SimpleTextarea,_2.form._ExpandingTextAreaMixin],{baseClass:"dijitTextBox dijitTextArea dijitExpandingTextArea",cols:"",buildRendering:function(){
 this.inherited(arguments);

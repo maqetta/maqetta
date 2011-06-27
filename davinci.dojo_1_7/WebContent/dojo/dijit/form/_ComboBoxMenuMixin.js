@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ComboBoxMenuMixin",["dojo/_base/kernel","..","dojo/_base/array","dojo/_base/html","dojo/_base/window","dojo/i18n"],function(_1,_2){
 _1.declare("dijit.form._ComboBoxMenuMixin",null,{_messages:null,postMixInProperties:function(){
 this.inherited(arguments);

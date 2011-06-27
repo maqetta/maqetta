@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/secure/capability",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.secure.capability",1);
 _3.secure.badProps=/^__|^(apply|call|callee|caller|constructor|eval|prototype|this|unwatch|valueOf|watch)$|__$/;

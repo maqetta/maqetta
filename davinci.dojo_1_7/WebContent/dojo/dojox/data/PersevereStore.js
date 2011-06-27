@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/PersevereStore",["dojo","dijit","dojox","dojox/io/xhrScriptPlugin","dojox/io/xhrPlugins"],function(_1,_2,_3){
 _1.getObject("dojox.data.PersevereStore",1);
 define("dojox/data/PersevereStore",["dojo","dojox","dojox/data/JsonQueryRestStore","dojox/rpc/Client","dojo/_base/url"],function(_4,_5){

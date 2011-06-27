@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/SplitContainer",["dojo/_base/kernel","..","dojo/cookie","../_WidgetBase","./_LayoutWidget","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit.layout.SplitContainer",_2.layout._LayoutWidget,{constructor:function(){
 _1.deprecated("dijit.layout.SplitContainer is deprecated","use BorderContainer with splitter instead",2);

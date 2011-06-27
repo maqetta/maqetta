@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/sketch/Annotation",["dojo/_base/lang","dojo/_base/declare","dojo/_base/json","./Anchor","./_Plugin"],function(_1){
 _1.declare("dojox.sketch.AnnotationTool",dojox.sketch._Plugin,{onMouseDown:function(e){
 this._omd=true;

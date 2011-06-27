@@ -4,5 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/_base",["dojo","dojox","dojox/drawing/Drawing"],function(_1){
 });

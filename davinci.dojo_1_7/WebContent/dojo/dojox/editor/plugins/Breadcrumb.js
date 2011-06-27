@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/Breadcrumb",["dojo","dijit","dojox","dojo/string","dijit/_Widget","dijit/_TemplatedMixin","dijit/Toolbar","dijit/Menu","dijit/MenuItem","dijit/MenuSeparator","dijit/_editor/range","dijit/_editor/selection","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/ComboButton","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/Breadcrumb"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.Breadcrumb");
 _1.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[_2._Widget,_2._TemplatedMixin,_2._Contained],{templateString:"<tr><td dojoAttachPoint=\"title\" colspan=\"4\" class=\"dijitToolbar\" style=\"font-weight: bold; padding: 3px;\"></td></tr>",menuTitle:"",postCreate:function(){

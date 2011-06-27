@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/TimeTextBox",["dojo/_base/kernel","..","../_TimePicker","./_DateTimeTextBox","dojo/_base/connect","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit.form.TimeTextBox",_2.form._DateTimeTextBox,{baseClass:"dijitTextBox dijitComboBox dijitTimeTextBox",popupClass:"dijit._TimePicker",_selector:"time",value:new Date(""),_onKey:function(_3){
 this.inherited(arguments);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/Exporter",["dojo","dojox","../_Plugin","../../_RowSelector"],function(_1,_2){
 _1.declare("dojox.grid.enhanced.plugins.Exporter",_2.grid.enhanced._Plugin,{name:"exporter",constructor:function(_3,_4){
 this.grid=_3;

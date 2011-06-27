@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 exports.config=function(_1){
 for(var _2=[],_3=[],i=0;i<process.argv.length;i++){
 var _4=(process.argv[i]+"").split("=");

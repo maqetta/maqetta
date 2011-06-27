@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/TreeGrid",["dojo","dijit","dojox","./DataGrid","./_TreeView","./cells/tree","./TreeSelection"],function(_1,_2,_3){
 _1.experimental("dojox.grid.TreeGrid");
 _1.declare("dojox.grid._TreeAggregator",null,{cells:[],grid:null,childFields:[],constructor:function(_4){

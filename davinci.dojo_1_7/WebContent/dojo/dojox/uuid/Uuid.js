@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/uuid/Uuid",["dojo/_base/lang","./_base"],function(_1,_2){
 dojox.uuid.Uuid=function(_3){
 this._uuidString=dojox.uuid.NIL_UUID;

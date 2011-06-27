@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/SnapLogicStore",["dojo","dojox","dojo/io/script","dojo/data/util/sorter"],function(_1,_2){
 _1.declare("dojox.data.SnapLogicStore",null,{Parts:{DATA:"data",COUNT:"count"},url:"",constructor:function(_3){
 if(_3.url){

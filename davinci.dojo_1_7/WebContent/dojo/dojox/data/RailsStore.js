@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/RailsStore",["dojo","dojox","dojox/data/JsonRestStore"],function(_1,_2){
 _1.declare("dojox.data.RailsStore",_2.data.JsonRestStore,{constructor:function(){
 },preamble:function(_3){

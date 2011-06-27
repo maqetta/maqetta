@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/app/main",["dojo","dijit","dojox","dojo/cache","dojo/fx","dojox/json/ref","dojo/parser","./scene","dojox/mobile/transition","dojo/on"],function(_1,_2,_3,_4,fx,_5,_6,_7,_8,_9){
 var _a=_1.declare([_7],{constructor:function(_b){
 this.scenes={};

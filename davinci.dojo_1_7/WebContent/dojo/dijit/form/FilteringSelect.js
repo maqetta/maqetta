@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/FilteringSelect",["dojo/_base/kernel","..","./MappedTextBox","./ComboBoxMixin","dojo/_base/Deferred","dojo/_base/declare","dojo/_base/lang","dojo/data/util/filter"],function(_1,_2){
 _1.declare("dijit.form.FilteringSelect",[_2.form.MappedTextBox,_2.form.ComboBoxMixin],{required:true,_lastDisplayedValue:"",_isValidSubset:function(){
 return this._opened;

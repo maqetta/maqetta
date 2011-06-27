@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire/CompositeWire",["dojo","dijit","dojox","dojox/wire/_base","dojox/wire/Wire"],function(_1,_2,_3){
 _1.getObject("dojox.wire.CompositeWire",1);
 _1.declare("dojox.wire.CompositeWire",_3.wire.Wire,{_wireClass:"dojox.wire.CompositeWire",constructor:function(_4){

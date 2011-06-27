@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_DialogMixin",["dojo/_base/kernel",".","./_Widget","dojo/_base/declare"],function(_1,_2){
 _1.declare("dijit._DialogMixin",null,{execute:function(_3){
 },onCancel:function(){

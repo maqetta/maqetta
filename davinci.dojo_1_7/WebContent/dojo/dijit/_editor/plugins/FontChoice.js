@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/FontChoice",["dojo/_base/kernel","../..","../../_Widget","../../_TemplatedMixin","../../_WidgetsInTemplateMixin","../_Plugin","../range","../selection","../../form/FilteringSelect","dojo/store/Memory","dojo/i18n","dojo/i18n!../nls/FontChoice","dojo/_base/array","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit._editor.plugins._FontDropDown",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{label:"",plainText:false,templateString:"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>"+"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>"+"<input dojoType='dijit.form.FilteringSelect' required='false' labelType='html' labelAttr='label' searchAttr='name' "+"tabIndex='-1' id='${selectId}' dojoAttachPoint='select' value=''/>"+"</span>",postMixInProperties:function(){
 this.inherited(arguments);

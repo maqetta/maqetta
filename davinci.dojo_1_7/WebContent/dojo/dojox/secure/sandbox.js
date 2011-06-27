@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/secure/sandbox",["dojo","dijit","dojox","dojox/secure/DOM","dojox/secure/capability","dojo/NodeList-fx","dojo/_base/url"],function(_1,_2,_3){
 _1.getObject("dojox.secure.sandbox",1);
 (function(){

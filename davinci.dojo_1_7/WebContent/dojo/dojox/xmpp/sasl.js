@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/xmpp/sasl",["dojo","dijit","dojox","dojox/xmpp/util","dojo/AdapterRegistry","dojox/encoding/digests/MD5"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.sasl",1);
 _3.xmpp.sasl.saslNS="urn:ietf:params:xml:ns:xmpp-sasl";

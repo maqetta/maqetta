@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dom-style",["./_base/kernel","./_base/sniff","./dom"],function(_1,_2,_3){
 var _4;
 if(_2.isWebKit){

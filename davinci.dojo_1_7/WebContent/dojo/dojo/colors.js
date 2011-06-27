@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/colors",["./_base/kernel","./_base/Color","./_base/array"],function(_1){
 _1.getObject("colors",true,_1);
 var _2=function(m1,m2,h){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/ext-dojo/NodeList-style",["dojo/_base/NodeList","dojo/NodeList-fx","../style"],function(){
 dojo.extend(dojo.NodeList,{addClassFx:function(_1,_2){
 return dojo.fx.combine(this.map(function(n){

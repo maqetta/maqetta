@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/AlwaysShowToolbar",["dojo/_base/kernel","../..","../_Plugin","dojo/_base/array","dojo/_base/connect","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit._editor.plugins.AlwaysShowToolbar",_2._editor._Plugin,{_handleScroll:true,setEditor:function(e){
 if(!e.iframe){

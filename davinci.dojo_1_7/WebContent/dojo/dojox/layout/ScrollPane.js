@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/ScrollPane",["dojo","dijit","dojox","dijit/layout/ContentPane","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ScrollPane",1);
 _1.experimental("dojox.layout.ScrollPane");

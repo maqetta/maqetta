@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./SpinWheelSlot"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
+define("dojox/mobile/SpinWheel",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./SpinWheelSlot"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 return _1.declare("dojox.mobile.SpinWheel",[dijit._WidgetBase,dijit._Container,dijit._Contained],{slotClasses:[],slotProps:[],centerPos:0,buildRendering:function(){
 this.inherited(arguments);
 _1.addClass(this.domNode,"mblSpinWheel");

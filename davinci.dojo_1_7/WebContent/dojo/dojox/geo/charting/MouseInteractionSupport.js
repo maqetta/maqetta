@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/window","dojo/_base/html"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/geo/charting/MouseInteractionSupport",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/window","dojo/_base/html"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.geo.charting.MouseInteractionSupport",null,{_map:null,_mapClickLocation:null,_screenClickLocation:null,_mouseDragListener:null,_mouseUpListener:null,_mouseUpClickListener:null,_mouseDownListener:null,_mouseMoveListener:null,_mouseWheelListener:null,_currentFeature:null,_cancelMouseClick:null,_zoomEnabled:false,_panEnabled:false,_onDragStartListener:null,_onSelectStartListener:null,mouseClickThreshold:2,constructor:function(_7,_8){
 this._map=_7;
 this._mapClickLocation={x:0,y:0};
@@ -80,18 +80,19 @@ this._mouseDragListener=_1.connect(_1.doc,"onmousemove",this,this._mouseDragHand
 this._mouseUpClickListener=this._map.surface.connect("onmouseup",this,this._mouseUpClickHandler);
 this._mouseUpListener=_1.connect(_1.doc,"onmouseup",this,this._mouseUpHandler);
 }else{
-this._mouseDragListener=_1.connect(node,"onmousemove",this,this._mouseDragHandler);
+var _15=_1.byId(this._map.container);
+this._mouseDragListener=_1.connect(_15,"onmousemove",this,this._mouseDragHandler);
 this._mouseUpClickListener=this._map.surface.connect("onmouseup",this,this._mouseUpClickHandler);
 this._mouseUpListener=this._map.surface.connect("onmouseup",this,this._mouseUpHandler);
 this._map.surface.rawNode.setCapture();
 }
-},_mouseUpClickHandler:function(_15){
+},_mouseUpClickHandler:function(_16){
 if(!this._cancelMouseClick){
-this._mouseClickHandler(_15);
+this._mouseClickHandler(_16);
 }
 this._cancelMouseClick=false;
-},_mouseUpHandler:function(_16){
-_1.stopEvent(_16);
+},_mouseUpHandler:function(_17){
+_1.stopEvent(_17);
 this._map.mapObj.marker._needTooltipRefresh=true;
 if(this._mouseDragListener){
 _1.disconnect(this._mouseDragListener);
@@ -108,33 +109,33 @@ this._mouseUpListener=null;
 if(_1.isIE){
 this._map.surface.rawNode.releaseCapture();
 }
-},_getFeatureFromMouseEvent:function(_17){
-var _18=null;
-if(_17.gfxTarget&&_17.gfxTarget.getParent){
-_18=this._map.mapObj.features[_17.gfxTarget.getParent().id];
+},_getFeatureFromMouseEvent:function(_18){
+var _19=null;
+if(_18.gfxTarget&&_18.gfxTarget.getParent){
+_19=this._map.mapObj.features[_18.gfxTarget.getParent().id];
 }
-return _18;
-},_mouseMoveHandler:function(_19){
+return _19;
+},_mouseMoveHandler:function(_1a){
 if(this._mouseDragListener&&this._panEnabled){
 return;
 }
-var _1a=this._getFeatureFromMouseEvent(_19);
-if(_1a!=this._currentFeature){
+var _1b=this._getFeatureFromMouseEvent(_1a);
+if(_1b!=this._currentFeature){
 if(this._currentFeature){
 this._currentFeature._onmouseoutHandler();
 }
-this._currentFeature=_1a;
-if(_1a){
-_1a._onmouseoverHandler();
+this._currentFeature=_1b;
+if(_1b){
+_1b._onmouseoverHandler();
 }
 }
-if(_1a){
-_1a._onmousemoveHandler(_19);
+if(_1b){
+_1b._onmousemoveHandler(_1a);
 }
-},_mouseDragHandler:function(_1b){
-_1.stopEvent(_1b);
-var dx=Math.abs(_1b.pageX-this._screenClickLocation.x);
-var dy=Math.abs(_1b.pageY-this._screenClickLocation.y);
+},_mouseDragHandler:function(_1c){
+_1.stopEvent(_1c);
+var dx=Math.abs(_1c.pageX-this._screenClickLocation.x);
+var dy=Math.abs(_1c.pageY-this._screenClickLocation.y);
 if(!this._cancelMouseClick&&(dx>this.mouseClickThreshold||dy>this.mouseClickThreshold)){
 this._cancelMouseClick=true;
 if(this._panEnabled){
@@ -144,22 +145,22 @@ this._map.mapObj.marker.hide();
 if(!this._panEnabled){
 return;
 }
-var _1c=this._map._getContainerBounds();
-var _1d=_1b.pageX-_1c.x,_1e=_1b.pageY-_1c.y;
-var _1f=this._map.screenCoordsToMapCoords(_1d,_1e);
-var _20=_1f.x-this._mapClickLocation.x;
-var _21=_1f.y-this._mapClickLocation.y;
-var _22=this._map.getMapCenter();
-this._map.setMapCenter(_22.x-_20,_22.y-_21);
-},_mouseWheelHandler:function(_23){
-_1.stopEvent(_23);
+var _1d=this._map._getContainerBounds();
+var _1e=_1c.pageX-_1d.x,_1f=_1c.pageY-_1d.y;
+var _20=this._map.screenCoordsToMapCoords(_1e,_1f);
+var _21=_20.x-this._mapClickLocation.x;
+var _22=_20.y-this._mapClickLocation.y;
+var _23=this._map.getMapCenter();
+this._map.setMapCenter(_23.x-_21,_23.y-_22);
+},_mouseWheelHandler:function(_24){
+_1.stopEvent(_24);
 this._map.mapObj.marker.hide();
-var _24=this._map._getContainerBounds();
-var _25=_23.pageX-_24.x,_26=_23.pageY-_24.y;
-var _27=this._map.screenCoordsToMapCoords(_25,_26);
-var _28=_23[(_1.isMozilla?"detail":"wheelDelta")]/(_1.isMozilla?-3:120);
-var _29=Math.pow(1.2,_28);
-this._map.setMapScaleAt(this._map.getMapScale()*_29,_27.x,_27.y,false);
+var _25=this._map._getContainerBounds();
+var _26=_24.pageX-_25.x,_27=_24.pageY-_25.y;
+var _28=this._map.screenCoordsToMapCoords(_26,_27);
+var _29=_24[(_1.isMozilla?"detail":"wheelDelta")]/(_1.isMozilla?-3:120);
+var _2a=Math.pow(1.2,_29);
+this._map.setMapScaleAt(this._map.getMapScale()*_2a,_28.x,_28.y,false);
 this._map.mapObj.marker._needTooltipRefresh=true;
 }});
 });

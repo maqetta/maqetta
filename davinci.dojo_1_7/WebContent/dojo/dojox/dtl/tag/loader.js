@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array","dojo/_base/connect"],function(_1,_2,dd){
+define("dojox/dtl/tag/loader",["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array","dojo/_base/connect"],function(_1,_2,dd){
 _1.getObject("dtl.tag.loader",true,dojox);
 var _3=dd.tag.loader;
 _3.BlockNode=_1.extend(function(_4,_5){

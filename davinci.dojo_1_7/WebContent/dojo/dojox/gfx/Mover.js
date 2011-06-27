@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/connect"],function(_1){
+define("dojox/gfx/Mover",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/connect"],function(_1){
 return _1.declare("dojox.gfx.Mover",null,{constructor:function(_2,e,_3){
 this.shape=_2;
 this.lastX=e.clientX;

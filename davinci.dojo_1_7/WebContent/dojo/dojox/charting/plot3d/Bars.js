@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojox/gfx3d","dojo/_base/window","dojo/_base/declare","dojo/_base/Color","./Base"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/charting/plot3d/Bars",["dojo/_base/kernel","dojox/gfx3d","dojo/_base/window","dojo/_base/declare","dojo/_base/Color","./Base"],function(_1,_2,_3,_4,_5,_6){
 var _7=function(a,f,o){
 a=typeof a=="string"?a.split(""):a;
 o=o||_1.global;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/widget/Portlet","dijit/Tooltip","dijit/form/TextBox","dijit/form/Button","dojox/data/GoogleFeedStore"],function(_1,_2,_3){
+define("dojox/widget/FeedPortlet",["dojo","dijit","dojox","dojox/widget/Portlet","dijit/Tooltip","dijit/form/TextBox","dijit/form/Button","dojox/data/GoogleFeedStore"],function(_1,_2,_3){
 _1.getObject("dojox.widget.FeedPortlet",1);
 _1.declare("dojox.widget.FeedPortlet",_3.widget.Portlet,{local:false,maxResults:5,url:"",openNew:true,showFeedTitle:true,postCreate:function(){
 this.inherited(arguments);

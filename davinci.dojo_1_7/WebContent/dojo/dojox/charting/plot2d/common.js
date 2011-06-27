@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","../../main","dojo/_base/lang","dojo/_base/array","dojo/_base/Color","dojox/gfx","dojox/lang/functional"],function(_1,_2,_3,_4,_5,g,df){
+define("dojox/charting/plot2d/common",["dojo/_base/kernel","../../main","dojo/_base/lang","dojo/_base/array","dojo/_base/Color","dojox/gfx","dojox/lang/functional"],function(_1,_2,_3,_4,_5,g,df){
 var _6=_1.getObject("charting.plot2.common",true,_2);
 return _1.mixin(_6,{makeStroke:function(_7){
 if(!_7){

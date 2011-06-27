@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
+define("dojox/analytics/plugins/mouseOver",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
 _3.plugins.mouseOver=new (function(){
 this.watchMouse=_1.config["watchMouseOver"]||true;
 this.mouseSampleDelay=_1.config["sampleDelay"]||2500;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/bits",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.bits",true,dojox);
 dojox.encoding.bits.OutputStream=function(){
 this.reset();

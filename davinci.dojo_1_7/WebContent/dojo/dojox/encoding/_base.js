@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/_base",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding._base",true,dojox);
 return dojox.encoding._base;
 });

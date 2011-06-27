@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","./Invisible","../scaler/common","../scaler/linear","./common","dojox/gfx","dojox/lang/utils"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,g,du){
+define("dojox/charting/axis2d/Default",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/html","./Invisible","../scaler/common","../scaler/linear","./common","dojox/gfx","dojox/lang/utils"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,g,du){
 var _a=4,_b=45;
 return _1.declare("dojox.charting.axis2d.Default",dojox.charting.axis2d.Invisible,{defaultParams:{vertical:false,fixUpper:"none",fixLower:"none",natural:false,leftBottom:true,includeZero:false,fixed:true,majorLabels:true,minorTicks:true,minorLabels:true,microTicks:false,rotation:0,htmlLabels:true,enableCache:false},optionalParams:{min:0,max:1,from:0,to:1,majorTickStep:4,minorTickStep:2,microTickStep:1,labels:[],labelFunc:null,maxLabelSize:0,maxLabelCharCount:0,trailingSymbol:null,stroke:{},majorTick:{},minorTick:{},microTick:{},tick:{},font:"",fontColor:"",title:"",titleGap:0,titleFont:"",titleFontColor:"",titleOrientation:""},constructor:function(_c,_d){
 this.opt=_1.clone(this.defaultParams);

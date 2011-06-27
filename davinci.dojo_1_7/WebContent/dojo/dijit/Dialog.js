@@ -264,8 +264,8 @@ return ds[ds.length-1].dialog==_1a;
 _2._dialogStack=[{dialog:null,focus:null,underlayAttrs:null}];
 if(!_1.isAsync){
 _1.ready(0,function(){
-_5(["dijit/TooltipDialog"],function(){
-});
+var _1b=["dijit/TooltipDialog"];
+_5(_1b);
 });
 }
 return _2.Dialog;

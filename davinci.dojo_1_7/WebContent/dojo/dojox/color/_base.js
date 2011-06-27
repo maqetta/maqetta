@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","../main","dojo/_base/lang","dojo/_base/Color","dojo/colors"],function(_1,_2,_3,_4,_5){
+define("dojox/color/_base",["dojo/_base/kernel","../main","dojo/_base/lang","dojo/_base/Color","dojo/colors"],function(_1,_2,_3,_4,_5){
 _1.getObject("color",true,_2);
 _2.color.Color=_4;
 _2.color.blend=_1.blendColors;

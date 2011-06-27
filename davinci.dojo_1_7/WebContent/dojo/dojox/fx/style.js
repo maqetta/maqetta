@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox/fx/_base"],function(){
+define("dojox/fx/style",["dojox/fx/_base"],function(){
 dojo.experimental("dojox.fx.style");
 var d=dojo;
 var _1=function(_2){

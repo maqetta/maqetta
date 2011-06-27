@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./tokenize"],function(_1,_2){
+define("dojox/string/sprintf",["dojo/_base/kernel","./tokenize"],function(_1,_2){
 _1.getObject("string",true,dojox);
 dojox.string.sprintf=function(_3,_4){
 for(var _5=[],i=1;i<arguments.length;i++){

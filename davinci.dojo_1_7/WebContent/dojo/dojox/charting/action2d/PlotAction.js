@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./Base","dojo/fx/easing","dojox/lang/functional","dojox/lang/functional/object"],function(_1,_2,_3,_4,_5,df,_6){
+define("dojox/charting/action2d/PlotAction",["dojo/_base/kernel","dojo/_base/connect","dojo/_base/declare","./Base","dojo/fx/easing","dojox/lang/functional","dojox/lang/functional/object"],function(_1,_2,_3,_4,_5,df,_6){
 var _7=400,_8=_5.backOut;
 return _1.declare("dojox.charting.action2d.PlotAction",dojox.charting.action2d.Base,{overOutEvents:{onmouseover:1,onmouseout:1},constructor:function(_9,_a,_b){
 this.anim={};

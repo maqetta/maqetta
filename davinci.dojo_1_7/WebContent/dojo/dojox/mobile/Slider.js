@@ -4,10 +4,10 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","dijit/_WidgetBase","dijit/form/_FormValueMixin"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/mobile/Slider",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","dijit/_WidgetBase","dijit/form/_FormValueMixin"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.mobile.Slider",[dijit._WidgetBase,dijit.form._FormValueMixin],{value:0,min:0,max:100,step:1,baseClass:"mblSlider",flip:false,orientation:"auto",halo:"8pt",buildRendering:function(){
 this.focusNode=this.domNode=_1.create("div",{});
-this.valueNode=_1.create("input",(this.srcNodeRef&&this.srcNodeRef.name)?{type:"hidden",name:this.srcNodeRef.name}:{},this.domNode,"last");
+this.valueNode=_1.create("input",(this.srcNodeRef&&this.srcNodeRef.name)?{type:"hidden",name:this.srcNodeRef.name}:{type:"hidden"},this.domNode,"last");
 var _7=_1.create("div",{style:{position:"relative",height:"100%",width:"100%"}},this.domNode,"last");
 this.progressBar=_1.create("div",{style:{position:"absolute"},"class":"mblSliderProgressBar"},_7,"last");
 this.touchBox=_1.create("div",{style:{position:"absolute"},"class":"mblSliderTouchBox"},_7,"last");

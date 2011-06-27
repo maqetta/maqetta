@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","dojo/io/iframe","dojox/data/dom","dojo/_base/xhr","dojo/_base/url"],function(_1,_2,_3){
+define("dojox/io/proxy/xip",["dojo/_base/lang","dojo/io/iframe","dojox/data/dom","dojo/_base/xhr","dojo/_base/url"],function(_1,_2,_3){
 _1.getObject("io.proxy.xip",true,dojox);
 dojox.io.proxy.xip={xipClientUrl:((_1.config||djConfig)["xipClientUrl"])||_1.moduleUrl("dojox.io.proxy","xip_client.html").toString(),urlLimit:4000,_callbackName:(dojox._scopeName||"dojox")+".io.proxy.xip.fragmentReceived",_state:{},_stateIdCounter:0,_isWebKit:navigator.userAgent.indexOf("WebKit")!=-1,send:function(_4){
 var _5=this.xipClientUrl;

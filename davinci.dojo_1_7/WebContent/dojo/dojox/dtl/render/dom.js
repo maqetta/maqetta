@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../Context","../dom","dojo/_base/html","dojo/_base/kernel"],function(_1,_2,_3){
+define("dojox/dtl/render/dom",["dojo/_base/kernel","dojo/_base/lang","../Context","../dom","dojo/_base/html","dojo/_base/kernel"],function(_1,_2,_3){
 _1.getObject("dtl.render.dom",true,dojox);
 dojox.dtl.render.dom.Render=function(_4,_5){
 this._tpl=_5;

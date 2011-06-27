@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./timing/_base"],function(_1){
+define("dojox/timing",["./timing/_base"],function(_1){
 return _1;
 });

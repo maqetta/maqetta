@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/async",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.async",1);
 (function(){
 var d=_1,_4=d.Deferred,_5=d.forEach,_6=d.some,_7=_3.lang.async,_8=Array.prototype.slice,_9=Object.prototype.toString;

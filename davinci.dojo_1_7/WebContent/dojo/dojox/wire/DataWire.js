@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/wire/Wire"],function(_1,_2,_3){
+define("dojox/wire/DataWire",["dojo","dijit","dojox","dojox/wire/Wire"],function(_1,_2,_3){
 _1.getObject("dojox.wire.DataWire",1);
 _1.declare("dojox.wire.DataWire",_3.wire.Wire,{_wireClass:"dojox.wire.DataWire",constructor:function(_4){
 if(!this.dataStore&&this.parent){

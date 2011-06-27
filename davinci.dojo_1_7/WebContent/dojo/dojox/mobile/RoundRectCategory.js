@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dijit/_WidgetBase","dijit/_Contained"],function(_1,_2){
+define("dojox/mobile/RoundRectCategory",["dijit/_WidgetBase","dijit/_Contained"],function(_1,_2){
 return dojo.declare("dojox.mobile.RoundRectCategory",[dijit._WidgetBase,dijit._Contained],{label:"",buildRendering:function(){
 this.domNode=this.containerNode=this.srcNodeRef||dojo.doc.createElement("H2");
 this.domNode.className="mblRoundRectCategory";

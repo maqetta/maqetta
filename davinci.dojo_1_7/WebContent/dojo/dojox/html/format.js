@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./entities","dojo/_base/lang","dojo/_base/array","dojo/_base/window"],function(d,_1){
+define("dojox/html/format",["dojo/_base/kernel","./entities","dojo/_base/lang","dojo/_base/array","dojo/_base/window"],function(d,_1){
 var _2=d.getObject("html.format",true,dojox);
 _2.prettyPrint=function(_3,_4,_5,_6,_7){
 var _8=[];

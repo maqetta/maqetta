@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/widget/rotator/Slide",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.widget.rotator.Slide",1);
 (function(d){
 var _4=0,_5=1,UP=2,_6=3;

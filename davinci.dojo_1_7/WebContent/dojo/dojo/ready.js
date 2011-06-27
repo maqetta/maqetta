@@ -45,7 +45,9 @@ _3.ready(_a);
 var _b=_1.ready=_1.addOnLoad=function(_c,_d,_e){
 var _f=_5._toArray(arguments);
 if(typeof _c!="number"){
-_e=_d,_d=_c,_c=1000;
+_e=_d;
+_d=_c;
+_c=1000;
 }else{
 _f.shift();
 }
@@ -58,9 +60,12 @@ for(var i=0;i<_8.length&&_c>=_8[i].priority;i++){
 _8.splice(i,0,_e);
 _7();
 };
+true||_2.add("dojo-config-addOnLoad",1);
+if(1){
 var dca=_1.config.addOnLoad;
 if(dca){
 _b[(_5.isArray(dca)?"apply":"call")](_1,dca);
+}
 }
 _4(function(){
 _6=1;
@@ -69,5 +74,13 @@ if(_8.length){
 _7(_a);
 }
 });
+if(1&&_1.config.parseOnLoad&&!_1.isAsync){
+_b(99,function(){
+if(!_1.parser){
+_1.deprecated("Add explicit require(['dojo/parser']);","","2.0");
+_3(["dojo/parser"]);
+}
+});
+}
 return _b;
 });

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang"],function(_1){
+define("dojox/analytics/_base",["dojo/_base/kernel","dojo/_base/lang"],function(_1){
 dojox.analytics=function(){
 this._data=[];
 this._id=1;

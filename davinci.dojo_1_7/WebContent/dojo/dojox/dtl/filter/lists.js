@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","../_base"],function(_1,dd){
+define("dojox/dtl/filter/lists",["dojo/_base/kernel","../_base"],function(_1,dd){
 _1.getObject("dtl.filter.lists",true,dojox);
 _1.mixin(dojox.dtl.filter.lists,{_dictsort:function(a,b){
 if(a[0]==b[0]){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/grid/_Events",["dojo","dojox"],function(_1,_2){
 _1.declare("dojox.grid._Events",null,{cellOverClass:"dojoxGridCellOver",onKeyEvent:function(e){
 this.dispatchKeyEvent(e);
 },onContentEvent:function(e){

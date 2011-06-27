@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","../Element","./common","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,_5,dc,du,fx){
+define("dojox/charting/plot2d/Grid",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","../Element","./common","dojox/lang/utils","dojox/gfx/fx"],function(_1,_2,_3,_4,_5,dc,du,fx){
 return _1.declare("dojox.charting.plot2d.Grid",dojox.charting.Element,{defaultParams:{hAxis:"x",vAxis:"y",hMajorLines:true,hMinorLines:false,vMajorLines:true,vMinorLines:false,hStripes:"none",vStripes:"none",animate:null,enableCache:false},optionalParams:{},constructor:function(_6,_7){
 this.opt=_1.clone(this.defaultParams);
 du.updateWithObject(this.opt,_7);

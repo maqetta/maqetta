@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","../_Plugin"],function(_1,_2,_3){
+define("dojox/grid/enhanced/plugins/NestedSorting",["dojo","dijit","dojox","../_Plugin"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced.plugins.NestedSorting",_3.grid.enhanced._Plugin,{name:"nestedSorting",_currMainSort:"none",_currRegionIdx:-1,_a11yText:{"dojoxGridDescending":"&#9662;","dojoxGridAscending":"&#9652;","dojoxGridAscendingTip":"&#1784;","dojoxGridDescendingTip":"&#1783;","dojoxGridUnsortedTip":"x"},constructor:function(){
 this._sortDef=[];
 this._sortData={};
@@ -334,6 +334,10 @@ _28();
 var _32=_1.hasClass(_1.body(),"dijit_a11y");
 if(!_23){
 _26.innerHTML=this._sortDef.length+1;
+_26.title=this.nls.nestedSort+" - "+this.nls.ascending;
+if(_32){
+_24.innerHTML=this._a11yText.dojoxGridUnsortedTip;
+}
 return;
 }
 if(_23.index||(_23.index===0&&this._sortDef.length>1)){

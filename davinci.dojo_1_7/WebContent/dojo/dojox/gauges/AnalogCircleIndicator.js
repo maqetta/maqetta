@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
+define("dojox/gauges/AnalogCircleIndicator",["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
 _1.experimental("dojox.gauges.AnalogCircleIndicator");
 return _1.declare("dojox.gauges.AnalogCircleIndicator",[_3],{_getShapes:function(_4){
 var _5=this.color?this.color:"black";

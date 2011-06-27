@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./Mover","./Moveable"],function(){
+define("dojox/gfx/move",["./Mover","./Moveable"],function(){
 return dojo.getObject("dojox.gfx.move",true);
 });

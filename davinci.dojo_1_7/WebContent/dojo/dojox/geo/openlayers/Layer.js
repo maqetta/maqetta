@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/sniff"],function(_1,_2,_3,_4){
+define("dojox/geo/openlayers/Layer",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/sniff"],function(_1,_2,_3,_4){
 return _1.declare("dojox.geo.openlayers.Layer",null,{constructor:function(_5,_6){
 var ol=_6?_6.olLayer:null;
 if(!ol){
@@ -47,6 +47,15 @@ ft.splice(i,1);
 }
 f._setLayer(null);
 f.remove();
+},removeFeatureAt:function(_9){
+var ft=this._features;
+var f=ft[_9];
+if(!f){
+return;
+}
+ft.splice(_9,1);
+f._setLayer(null);
+f.remove();
 },getFeatures:function(){
 return this._features;
 },getFeatureAt:function(i){
@@ -62,8 +71,8 @@ return this._features.length;
 },clear:function(){
 var fa=this.getFeatures();
 this.removeFeature(fa);
-},moveTo:function(_9){
-if(_9.zoomChanged){
+},moveTo:function(_a){
+if(_a.zoomChanged){
 if(this._features==null){
 return;
 }

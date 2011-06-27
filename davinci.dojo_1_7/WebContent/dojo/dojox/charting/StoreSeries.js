@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred"],function(_1){
+define("dojox/charting/StoreSeries",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred"],function(_1){
 return _1.declare("dojox.charting.StoreSeries",null,{constructor:function(_2,_3,_4){
 this.store=_2;
 this.kwArgs=_3;

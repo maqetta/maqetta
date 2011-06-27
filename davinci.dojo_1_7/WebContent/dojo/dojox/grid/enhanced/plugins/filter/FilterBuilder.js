@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./_FilterExpr"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/filter/FilterBuilder",["dojo","dojox","./_FilterExpr"],function(_1,_2){
 var _3=_2.grid.enhanced.plugins.filter,_4=function(_5){
 return _1.partial(function(_6,_7){
 return new _3[_6](_7);

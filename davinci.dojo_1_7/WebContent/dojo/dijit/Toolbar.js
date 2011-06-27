@@ -11,7 +11,8 @@ this.connectKeyNavHandlers(this.isLeftToRight()?[_1.keys.LEFT_ARROW]:[_1.keys.RI
 }});
 if(!_1.isAsync){
 _1.ready(0,function(){
-_3(["dijit/ToolbarSeparator"]);
+var _4=["dijit/ToolbarSeparator"];
+_3(_4);
 });
 }
 return _2.Toolbar;

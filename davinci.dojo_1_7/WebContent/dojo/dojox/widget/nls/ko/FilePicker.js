@@ -1,3 +1,4 @@
+require.built();
 define(({
 name: "이름",
 path: "경로",

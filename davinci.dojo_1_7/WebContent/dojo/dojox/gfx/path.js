@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./matrix","./shape"],function(_1,_2){
+define("dojox/gfx/path",["./matrix","./shape"],function(_1,_2){
 dojo.declare("dojox.gfx.path.Path",dojox.gfx.shape.Shape,{constructor:function(_3){
 this.shape=dojo.clone(dojox.gfx.defaultPath);
 this.segments=[];

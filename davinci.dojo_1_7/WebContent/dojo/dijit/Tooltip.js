@@ -12,7 +12,7 @@ this.bgIframe=new _2.BackgroundIframe(this.domNode);
 this.fadeIn=_1.fadeIn({node:this.domNode,duration:this.duration,onEnd:_1.hitch(this,"_onShow")});
 this.fadeOut=_1.fadeOut({node:this.domNode,duration:this.duration,onEnd:_1.hitch(this,"_onHide")});
 },show:function(_5,_6,_7,_8){
-if(this.aroundNode&&this.aroundNode===_6){
+if(this.aroundNode&&this.aroundNode===_6&&this.containerNode.innerHTML==_5){
 return;
 }
 this.domNode.width="auto";
@@ -111,13 +111,14 @@ _1.declare("dijit.Tooltip",_2._Widget,{label:"",showDelay:400,connectId:[],posit
 _1.forEach(this._connections||[],function(_1d){
 _1.forEach(_1d,_1.hitch(this,"disconnect"));
 },this);
-var ary=_1.isArrayLike(_1c)?_1c:(_1c?[_1c]:[]);
-this._connections=_1.map(ary,function(id){
+this._connectIds=_1.filter(_1.isArrayLike(_1c)?_1c:(_1c?[_1c]:[]),function(id){
+return _1.byId(id);
+});
+this._connections=_1.map(this._connectIds,function(id){
 var _1e=_1.byId(id);
-return _1e?[this.connect(_1e,"onmouseenter","_onTargetMouseEnter"),this.connect(_1e,"onmouseleave","_onTargetMouseLeave"),this.connect(_1e,"onfocus","_onTargetFocus"),this.connect(_1e,"onblur","_onTargetBlur")]:[];
+return [this.connect(_1e,"onmouseenter","_onHover"),this.connect(_1e,"onmouseleave","_onUnHover"),this.connect(_1e,"onfocus","_onHover"),this.connect(_1e,"onblur","_onUnHover")];
 },this);
 this._set("connectId",_1c);
-this._connectIds=ary;
 },addTarget:function(_1f){
 var id=_1f.id||_1f;
 if(_1.indexOf(this._connectIds,id)==-1){
@@ -136,16 +137,6 @@ _1.addClass(this.domNode,"dijitTooltipData");
 this.inherited(arguments);
 var ids=this.connectId;
 _1.forEach(_1.isArrayLike(ids)?ids:[ids],this.addTarget,this);
-},_onTargetMouseEnter:function(e){
-this._onHover(e);
-},_onTargetMouseLeave:function(e){
-this._onUnHover(e);
-},_onTargetFocus:function(e){
-this._focus=true;
-this._onHover(e);
-},_onTargetBlur:function(e){
-this._focus=false;
-this._onUnHover(e);
 },_onHover:function(e){
 if(!this._showTimer){
 var _21=e.target;

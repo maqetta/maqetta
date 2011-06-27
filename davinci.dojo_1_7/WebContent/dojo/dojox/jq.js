@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/NodeList-traverse","dojo/NodeList-manipulate","dojo/io/script"],function(_1,_2,_3){
+define("dojox/jq",["dojo","dijit","dojox","dojo/NodeList-traverse","dojo/NodeList-manipulate","dojo/io/script"],function(_1,_2,_3){
 _1.getObject("dojox.jq",1);
 (function(){
 _1.config.ioPublish=true;

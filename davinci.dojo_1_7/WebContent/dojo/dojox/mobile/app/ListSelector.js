@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/mobile/app/_Widget","dojo/fx"],function(_1,_2,_3){
+define("dojox/mobile/app/ListSelector",["dojo","dijit","dojox","dojox/mobile/app/_Widget","dojo/fx"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.ListSelector",1);
 _1.experimental("dojox.mobile.app.ListSelector");
 _1.declare("dojox.mobile.app.ListSelector",_3.mobile.app._Widget,{data:null,controller:null,onChoose:null,destroyOnHide:false,_setDataAttr:function(_4){

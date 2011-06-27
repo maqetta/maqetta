@@ -69,5 +69,5 @@ _22.push(arr[i]);
 }
 return _22;
 }});
-return _1;
+return {indexOf:_1.indexOf,lastIndexOf:_1.lastIndexOf,forEach:_1.forEach,every:_1.every,some:_1.some,map:_1.map,filter:_1.filter};
 });

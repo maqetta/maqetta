@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./analytics/_base"],function(_1){
+define("dojox/analytics",["./analytics/_base"],function(_1){
 return _1;
 });

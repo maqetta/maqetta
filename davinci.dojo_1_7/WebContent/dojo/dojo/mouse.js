@@ -6,7 +6,7 @@
 
 define("dojo/mouse",["./_base/kernel","./on","./has"],function(_1,on,_2){
 _2.add("dom-quirks",document.compatMode=="BackCompat");
-_2.add("events-mouseenter","onmouseenter" in document);
+_2.add("events-mouseenter","onmouseenter" in document.createElement("div"));
 var _3;
 if(_2("dom-quirks")||!_2("dom-addeventlistener")){
 _3={LEFT:1,MIDDLE:4,RIGHT:2,isButton:function(e,_4){

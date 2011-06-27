@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/layout/BorderContainer",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.layout.BorderContainer",1);
 console.error("dojox.layout.BorderContainer moved to dijit.layout.BorderContainer");
 return _1.getObject("dojox.layout.BorderContainer");

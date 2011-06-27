@@ -339,7 +339,7 @@
                 "style": "width: 200px;"
             },
             "resizable": "width",
-             "inlineEdit": {
+            "inlineEdit": {
                 "property": "value",
                 "displayOnCreate": false,
                 "multiLine": false
@@ -1491,8 +1491,8 @@
             "name": "RoundRectDataList",
             "type": "dojox.mobile.RoundRectDataList",
             "category": "mobile",
-            "icon": "resources/images/dx-mbl-roundrectlist.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
+            "icon": "resources/images/RoundRectDataList.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+lpzp2V+sGqEtW2FsHSLtNfi9Tlck22GsHOLtH2Uu5q03W56jr7J2+Lq99jf6ubt+La/zGiKutXi9ERvo/P3/Ex7r0x9sUx8r8TU5ejx+lKHuVKHuFaOv3io0bnW78jg8+zz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaEwNfL8vEYj8ePRWjxQCzQaBTiWX4grqx2a4F8Xh2LC7MtWzivjLjMvqRB8PhmTt9o0usta89nvSpiZFooAIWFKC8TEmwpAQsKBQEtLyEIElIWKyKbmypCIRMIoggOJRELBgkRJ0KtriYPsbEkrrUjBwcMBAcjtbUNFAMvDAK+tQzGybVBADs=",
             "isContainer": true
         },
         {
@@ -1533,8 +1533,8 @@
             "name": "EdgeToEdgeDataList",
             "type": "dojox.mobile.EdgeToEdgeDataList",
             "category": "mobile",
-            "icon": "resources/images/dx-mbl-edge-edgellist.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
+            "icon": "resources/images/EdgeToEdgeDataList.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
             "isContainer": true
         },
         {
@@ -1554,7 +1554,8 @@
             "type": "dojox.mobile.Switch",
             "category": "mobile",
             "icon": "resources/images/dx-mbl-switch.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw=="
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw==",
+            "resizable": "none"
         },
         {
             "name": "IconContainer",
@@ -1648,6 +1649,8 @@
             "name": "SpinWheel",
             "type": "dojox.mobile.SpinWheel",
             "category": "mobile",
+            "icon": "resources/images/SpinWheel.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
             "isContainer": true,
             "children": [
                 {
@@ -1668,6 +1671,8 @@
             "name": "SpinWheelSlot",
             "type": "dojox.mobile.SpinWheelSlot",
             "category": "mobile",
+            "icon": "resources/images/SpinWheelSlot.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck/P2+zxhlz9mnPH1+qXG49Pn+O30+f///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARKMMlJqzQ4650M+iAAgkY3HkA6IqW3vmwyzHRtJwKh77weCAlAoEAsGgsBQHB4PCaXgah0GlWmrtis0gUbtVbX1Rf8am3OGYt6EgEAOw==",
             "properties": {
                 "labels": "['A','B','C','D','E']"
             }
@@ -1675,51 +1680,67 @@
         {
             "name": "SpinWheelDatePicker",
             "type": "dojox.mobile.SpinWheelDatePicker",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/SpinWheelDatePicker.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEBAWDhAYPj5+0hooFBwqDlck/P2+zxhl7vH2ShQiDBYkDhgmD9mnL3K3DhgkEBomEhwoPH1+iBQiChYkKXG49Pn+N/q8+30+UhQUOj4+PD4+FhYSHBoOGhgOP///////yH5BAEAAB8ALAAAAAAQABAAAAVz4CeOZGmKVaqqZ2UYXvEa1ZdMirM8A3EVwAvNhtM9IITZrMbROJ+cBmNK/TQTmgSWI4h4I4bDp5N1YjsWippiKHw2GSxWs0mv2x9MPC7JYARKeABPGYUACECJbgGMjYyBQyYuP0GRJS4vMi81kisrJ6AfIQA7"
         },
         {
             "name": "SpinWheelTimePicker",
             "type": "dojox.mobile.SpinWheelTimePicker",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/SpinWheelTimePicker.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPj5+zlck/P2+zxhlz9mnPH1+rjI2NDg8OXq76XG49Pn+N/q8xBQgHCYuIiowDhwmMjY4Njo8MDY4Njw+LDQ2OD4+PD4+P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABgALAAAAAAQABAAAAV2ICaOZGmKSqqqp3K9gSArLRwELy0azdMYr2BO5HhQLJSHA0FoOjGGR8TCsEQehoK2IBhgGpRKhSGmNBaJtCCAeUgkEMZb8kCr2eCDnnEwA2QybFERhIQPCDeJbBhFFBNJDkJDOz0/NjgXOiUuMEGaJCuhJ6MYIQA7"
         },
         {
             "name": "Carousel",
             "type": "dojox.mobile.Carousel",
             "category": "mobile",
+            "icon": "resources/images/CarouselSideScrollableList.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
             "isContainer": true
         },
         {
             "name": "CheckBox",
             "type": "dojox.mobile.CheckBox",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/checkbox.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg=="
         },
         {
             "name": "ComboBox",
             "type": "dojox.mobile.ComboBox",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/combo-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC"
         },
         {
             "name": "ContentPane",
             "type": "dojox.mobile.ContentPane",
             "category": "mobile",
+            "icon": "resources/images/ContentPane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
             "isContainer": true
         },
         {
             "name": "ExpandingTextArea",
             "type": "dojox.mobile.ExpandingTextArea",
             "category": "mobile",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
             "inlineEdit": {
-            	"property": "value",
+                "property": "value",
                 "displayOnCreate": false,
                 "multiLine": false
-            },
+            }
         },
         {
             "name": "FixedSplitter",
             "type": "dojox.mobile.FixedSplitter",
             "category": "mobile",
+            "icon": "resources/images/FixedSplitter.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
             "isContainer": true,
-             "properties": {
+            "properties": {
                 "orientation": "H"
             },
             "children": [
@@ -1738,37 +1759,49 @@
             "name": "FixedSplitterPane",
             "type": "dojox.mobile.FixedSplitterPane",
             "category": "mobile",
+            "icon": "resources/images/FixedSplitterPane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck/P2+ztfljtgljxhlz5mnD9mnEJtokNtokdzp0h0qeTt+Obu+Ed1qUp6rUx9sFCEt06As0x9r1GEtlGGuFOKvFOKu1SKvFaOv8/t+////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoCaOZCliaKqqZ+a+8Cte2WLfN6OLVBasQFHEh4nBMCIHsYa7ITUJX8UXqFoDFtHBN6FeqxCRwSdpmM/nh4jgU3i/DRHAh3hfEXJfwW4t5AMDfFUCfwCGh4gAJoskIQA7",
             "isContainer": true
         },
         {
             "name": "Overlay",
             "type": "dojox.mobile.Overlay",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/Overlay.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPr6//z8//39//z8/vn6//T2/fH0/PT2/O7y+/P2/eju+vT3/ff5/fv8/ubt+urw++3y+/H1/OXt+uTs+efu+ujv+uvx+/T3/Orx+/P3/fn7/jdimzlknb3L3u3z+/D1/O/0+zllnTtooDtonz1roz5rokBvpvP3/ERzqUd4rkd4rUp9skt+skp9sU2BtU2BtEt8r42szPb5/FGIulCFuFCFt1KJu1KIulOJu1WMvQBAeFSMvVaOv+/1+gBVlvz9/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEAALAAAAAAQABAAAAekgECCg4SFgjyIiYqLQDwCj5CRkDxAOZKXjztANgMCMJ+goAIBOEA0BJiRADVALgwNnzEdPh0xnw0ML0AtCxq+Gj46Pr8aCy1AKQYMssE6wrUMESpAKBAXCxkFCwcFJwkLBR4oQCYYEYuKHw8mQCQKCDwNP/P0PBAUJUAiDhg3Mv8AZcywIGEEEA4TKqwA0aOhQxYKJoQAsmFDh4oYM17cYKjjoEAAOw=="
         },
         {
             "name": "RadioButton",
             "type": "dojox.mobile.RadioButton",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/radio-button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII="
         },
         {
             "name": "Slider",
             "type": "dojox.mobile.Slider",
-            "category": "mobile"
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-horizontalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///87W5DdYkDtelTpelYOcwUBonj9mnEBonURto0Ruo0dzqOTt+EZzp9Xk9Nvo9kx+sU1+sZ/E6K3M68re8tDh81KHuZC95ZG95Z/F6KzM663N68ne8tDi81aOv5G+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZWQJJwSCwaj8ikcsk8fp7Q5KfxqD4an6Lo47h4KBsOxXNxfERCScjAgIAymAyEYbBEhInRaFHR+CcdCnoHQgIDAwhfYWMIhwJFBFRWDQVJh5cDTZqbS0EAOw=="
         },
         {
             "name": "TextArea",
             "type": "dojox.mobile.TextArea",
             "category": "mobile",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
             "inlineEdit": {
                 "property": "value",
                 "displayOnCreate": false,
                 "multiLine": false
-            },
+            }
         },
         {
             "name": "TextBox",
             "type": "dojox.mobile.TextBox",
             "category": "mobile",
+            "icon": "resources/images/text-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
             "inlineEdit": {
                 "property": "value",
                 "displayOnCreate": false
@@ -1778,6 +1811,8 @@
             "name": "ToggleButton",
             "type": "dojox.mobile.ToggleButton",
             "category": "mobile",
+            "icon": "resources/images/dx-mbl-toggle-toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///y5KhTFPijZXkDZYkDxhmeHn8DtimUJsouHr9+fv+fD1+/P3/Eh2q8LX79fl9djm9dvo9uLs906AtKTH6bbR7NLj9OPr81KJu1OJulaNv5C95aTH6LXR7LjU7rjU7b/Z8Mje8sne8tPl9dvp9uLt9+ny+laOv36z4X604Ii545C95JbB5pbB5afL6qbK6afL6bnW77jV7b/a8LvS5cvh8+Pv+dzr9////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAZ3wJxwSCwaj8iiAolqojY1haDmRAk1iqyiERFAtApGJocZLR6LkcD8aD8UlNxMAJp8BDOTZe+xSBw5BzECLwIwJRWJiR0XCTkIJy0CLiQclpcsIgY5BSE2KzYqoqMpKTQEOQMyMjerrq84A0ICtLW2tUm5uru8uUEAOw==",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,

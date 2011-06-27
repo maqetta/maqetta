@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/lang/observable",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.observable",1);
 _1.experimental("dojox.lang.observable");
 _3.lang.observable=function(_4,_5,_6,_7){

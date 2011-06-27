@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/dnd/Avatar","dojo/dnd/common"],function(_1,_2,_3){
+define("dojox/layout/dnd/Avatar",["dojo","dijit","dojox","dojo/dnd/Avatar","dojo/dnd/common"],function(_1,_2,_3){
 _1.getObject("dojox.layout.dnd.Avatar",1);
 _1.declare("dojox.layout.dnd.Avatar",_1.dnd.Avatar,{constructor:function(_4,_5){
 this.opacity=_5||0.9;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojo/_base/fx","./AnalogIndicatorBase"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/gauges/AnalogArcIndicator",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojo/_base/fx","./AnalogIndicatorBase"],function(_1,_2,_3,_4,_5,_6){
 _1.experimental("dojox.gauges.AnalogArcIndicator");
 return _1.declare("dojox.gauges.AnalogArcIndicator",[_6],{_createArc:function(_7){
 if(this.shape){

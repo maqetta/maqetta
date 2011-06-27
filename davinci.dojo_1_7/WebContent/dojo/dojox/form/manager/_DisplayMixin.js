@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox"],function(_1,_2,_3){
+define("dojox/form/manager/_DisplayMixin",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.form.manager._DisplayMixin",1);
 _1.declare("dojox.form.manager._DisplayMixin",null,{gatherDisplayState:function(_4){
 var _5=this.inspectAttachedPoints(function(_6,_7){

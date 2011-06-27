@@ -4,8 +4,8 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","./common","dijit/_WidgetBase","./scrollable"],function(_1,_2,_3,_4,_5,_6){
-_1.declare("dojox.mobile._ScrollableMixin",null,{fixedHeader:"",fixedFooter:"",scrollableParams:{},destroy:function(){
+define("dojox/mobile/_ScrollableMixin",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","./common","dijit/_WidgetBase","./scrollable"],function(_1,_2,_3,_4,_5,_6){
+_1.declare("dojox.mobile._ScrollableMixin",null,{fixedHeader:"",fixedFooter:"",scrollableParams:{},allowNestedScrolls:true,destroy:function(){
 this.cleanup();
 this.inherited(arguments);
 },startup:function(){
@@ -30,12 +30,14 @@ _7.style.bottom="0px";
 _8.fixedFooterHeight=_7.offsetHeight;
 }
 this.init(_8);
+if(this.allowNestedScrolls){
 for(var p=this.getParent();p;p=p.getParent()){
 if(p&&p.scrollableParams){
 this.isNested=true;
 this.dirLock=true;
 p.dirLock=true;
 break;
+}
 }
 }
 this.inherited(arguments);

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojox/gfx","./scheduler","./gradient","./vector","./matrix","./lighting"],function(_1){
+define("dojox/gfx3d/object",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojox/gfx","./scheduler","./gradient","./vector","./matrix","./lighting"],function(_1){
 var _2=function(o,x){
 if(arguments.length>1){
 o=x;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./util"],function(_1,_2){
+define("dojox/grid/_FocusManager",["dojo","dojox","./util"],function(_1,_2){
 _1.declare("dojox.grid._FocusManager",null,{constructor:function(_3){
 this.grid=_3;
 this.cell=null;
@@ -154,6 +154,9 @@ return null;
 var _15=null;
 if(this._colHeadNode){
 var _16=this.grid.getCell(_14);
+if(!_16){
+return;
+}
 _15=this._scrollInfo(_16,_16.getNode(0));
 }
 if(_15&&_15.s&&_15.sr&&_15.n){

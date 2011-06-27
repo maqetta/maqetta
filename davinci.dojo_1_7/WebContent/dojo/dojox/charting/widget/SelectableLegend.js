@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/query","dojo/_base/html","dojo/_base/connect","dojo/_base/Color","./Legend","dijit/form/CheckBox","../action2d/Highlight","dojox/lang/functional","dojox/gfx/fx"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,df,fx){
+define("dojox/charting/widget/SelectableLegend",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/query","dojo/_base/html","dojo/_base/connect","dojo/_base/Color","./Legend","dijit/form/CheckBox","../action2d/Highlight","dojox/lang/functional","dojox/gfx/fx"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,df,fx){
 var _b=_1.declare(null,{constructor:function(_c){
 this.legend=_c;
 this.index=0;

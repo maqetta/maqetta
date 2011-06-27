@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/string","dojo/date/locale","dijit/TooltipDialog","dijit/_base/popup","dijit/form/Button","dojo/i18n!../../nls/Filter"],function(_1,_2,_3){
+define("dojox/grid/enhanced/plugins/filter/FilterStatusTip",["dojo","dijit","dojox","dojo/string","dojo/date/locale","dijit/TooltipDialog","dijit/_base/popup","dijit/form/Button","dojo/i18n!../../nls/Filter"],function(_1,_2,_3){
 var _4="",_5="",_6="",_7="",_8="dojoxGridFStatusTipOddRow",_9="dojoxGridFStatusTipHandle",_a="dojoxGridFStatusTipCondition",_b="dojoxGridFStatusTipDelRuleBtnIcon",_c="</tbody></table>";
 _1.declare("dojox.grid.enhanced.plugins.filter.FilterStatusTip",null,{constructor:function(_d){
 var _e=this.plugin=_d.plugin;

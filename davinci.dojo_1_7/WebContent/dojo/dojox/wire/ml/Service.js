@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_Widget","dojox/xml/parser","dojox/wire/_base","dojox/wire/ml/util"],function(_1,_2,_3){
+define("dojox/wire/ml/Service",["dojo","dijit","dojox","dijit/_Widget","dojox/xml/parser","dojox/wire/_base","dojox/wire/ml/util"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.Service",1);
 _1.declare("dojox.wire.ml.Service",_2._Widget,{url:"",serviceUrl:"",serviceType:"",handlerClass:"",preventCache:true,postCreate:function(){
 this.handler=this._createHandler();

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_WidgetBase"],function(_1,_2,_3){
+define("dojox/mobile/app/_Widget",["dojo","dijit","dojox","dijit/_WidgetBase"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app._Widget",1);
 _1.experimental("dojox.mobile.app._Widget");
 _1.declare("dojox.mobile.app._Widget",_2._WidgetBase,{getScroll:function(){

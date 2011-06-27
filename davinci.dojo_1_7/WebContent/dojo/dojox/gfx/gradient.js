@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./matrix"],function(m){
+define("dojox/gfx/gradient",["./matrix"],function(m){
 dojo.getObject("dojox.gfx.gradient",true);
 var d=dojo,C=d.Color;
 dojox.gfx.gradient.rescale=function(_1,_2,to){

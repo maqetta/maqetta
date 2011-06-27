@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/html","dojox/gfx","dojox/gfx3d"],function(_1,_2,_3,_4,_5,_6){
+define("dojox/charting/Chart3D",["dojo/_base/kernel","dojo/_base/array","dojo/_base/declare","dojo/_base/html","dojox/gfx","dojox/gfx3d"],function(_1,_2,_3,_4,_5,_6){
 var _7={x:0,y:0,z:1},v=_6.vector,n=_5.normalizedLength;
 return _1.declare("dojox.charting.Chart3D",null,{constructor:function(_8,_9,_a,_b){
 this.node=_1.byId(_8);

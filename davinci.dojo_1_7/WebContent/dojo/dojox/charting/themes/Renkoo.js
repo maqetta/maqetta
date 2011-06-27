@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../Theme","dojox/gfx/gradutils","./common"],function(_1,_2){
+define("dojox/charting/themes/Renkoo",["../Theme","dojox/gfx/gradutils","./common"],function(_1,_2){
 var _3=dojox.charting.themes,g=_1.generateGradient,_4={type:"linear",space:"shape",x1:0,y1:0,x2:0,y2:150};
 _3.Renkoo=new _1({chart:{fill:"#123666",pageStyle:{backgroundColor:"#123666",backgroundImage:"none",color:"#95afdb"}},plotarea:{fill:"#123666"},axis:{stroke:{color:"#95afdb",width:1},tick:{color:"#95afdb",position:"center",font:"normal normal normal 7pt Lucida Grande, Helvetica, Arial, sans-serif",fontColor:"#95afdb"}},series:{stroke:{width:2.5,color:"#123666"},outline:null,font:"normal normal normal 8pt Lucida Grande, Helvetica, Arial, sans-serif",fontColor:"#95afdb"},marker:{stroke:{width:2.5,color:"#ccc"},outline:null,font:"normal normal normal 8pt Lucida Grande, Helvetica, Arial, sans-serif",fontColor:"#95afdb"},seriesThemes:[{fill:g(_4,"#e7e391","#f8f7de")},{fill:g(_4,"#ffb6b6","#ffe8e8")},{fill:g(_4,"#bcda7d","#eef7da")},{fill:g(_4,"#d5d5d5","#f4f4f4")},{fill:g(_4,"#c1e3fd","#e4f3ff")}],markerThemes:[{fill:"#fcfcf3",stroke:{color:"#e7e391"}},{fill:"#fff1f1",stroke:{color:"#ffb6b6"}},{fill:"#fafdf4",stroke:{color:"#bcda7d"}},{fill:"#fbfbfb",stroke:{color:"#d5d5d5"}},{fill:"#f3faff",stroke:{color:"#c1e3fd"}}]});
 _3.Renkoo.next=function(_5,_6,_7){

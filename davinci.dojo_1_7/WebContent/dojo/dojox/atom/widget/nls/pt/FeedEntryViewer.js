@@ -1,3 +1,4 @@
+require.built();
 define(({
 	displayOptions: "[exibir opções]",
 	title: "Título",

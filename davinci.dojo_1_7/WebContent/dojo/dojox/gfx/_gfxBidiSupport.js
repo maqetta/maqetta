@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./utils","./shape","dojox/string/BidiEngine"],function(){
+define("dojox/gfx/_gfxBidiSupport",["./utils","./shape","dojox/string/BidiEngine"],function(){
 dojo.getObject("dojox.gfx._gfxBidiSupport",true);
 var g=dojox.gfx;
 switch(g.renderer){

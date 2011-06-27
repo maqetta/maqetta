@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","../util/oo","../util/positioning"],function(_1){
+define("dojox/drawing/annotations/Angle",["dojo","../util/oo","../util/positioning"],function(_1){
 _1.getObject("drawing.annotations",true,dojox);
 dojox.drawing.annotations.Angle=dojox.drawing.util.oo.declare(function(_2){
 this.stencil=_2.stencil;

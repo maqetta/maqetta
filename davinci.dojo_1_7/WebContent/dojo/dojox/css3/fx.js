@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/fx","dojox/html/ext-dojo/style","dojox/fx/ext-dojo/complex"],function(_1){
+define("dojox/css3/fx",["dojo/_base/kernel","dojo/fx","dojox/html/ext-dojo/style","dojox/fx/ext-dojo/complex"],function(_1){
 var _2=_1.getObject("css3.fx",true,dojox);
 return _1.mixin(_2,{puff:function(_3){
 return _1.fx.combine([_1.fadeOut(_3),this.expand({node:_3.node,endScale:_3.endScale||2})]);

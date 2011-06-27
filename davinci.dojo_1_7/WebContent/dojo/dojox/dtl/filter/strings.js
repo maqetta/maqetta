@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojox/string/tokenize","dojox/string/sprintf","../filter/htmlstrings","dojo/_base/array"],function(_1,_2,_3){
+define("dojox/dtl/filter/strings",["dojo/_base/kernel","dojo/_base/lang","dojox/string/tokenize","dojox/string/sprintf","../filter/htmlstrings","dojo/_base/array"],function(_1,_2,_3){
 _1.getObject("dtl.filter.strings",true,dojox);
 _1.mixin(dojox.dtl.filter.strings,{_urlquote:function(_4,_5){
 if(!_5){

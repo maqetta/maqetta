@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/lang/functional/lambda","dojox/lang/functional/util"],function(_1,_2,_3){
+define("dojox/lang/functional/tailrec",["dojo","dijit","dojox","dojox/lang/functional/lambda","dojox/lang/functional/util"],function(_1,_2,_3){
 _1.getObject("dojox.lang.functional.tailrec",1);
 (function(){
 var df=_3.lang.functional,_4=df.inlineLambda,_5="_x";

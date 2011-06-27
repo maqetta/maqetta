@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define("dijit/_MenuBase",["dojo/_base/kernel",".","./popup","dojo/window","./_Widget","./_FocusMixin","./_KeyNavContainer","./_TemplatedMixin","dojo/_base/html","dojo/_base/lang"],function(_1,_2,pm){
+define("dijit/_MenuBase",["dojo/_base/kernel",".","./popup","dojo/window","./_Widget","./_FocusMixin","./_KeyNavContainer","./_TemplatedMixin","dojo/_base/html","dojo/_base/lang","dojo/_base/array"],function(_1,_2,pm){
 _1.declare("dijit._MenuBase",[_2._Widget,_2._TemplatedMixin,_2._KeyNavContainer],{parentMenu:null,popupDelay:500,onExecute:function(){
 },onCancel:function(_3){
 },_moveToPopup:function(_4){
@@ -140,8 +140,8 @@ this.parentMenu=null;
 this._stopPopupTimer();
 var _13=this.focusedChild&&this.focusedChild.from_item;
 if(this.currentPopup){
-var _14=this._focusManager.get("curNode");
-if(_14&&_1.isDescendant(_14,this.currentPopup.domNode)){
+if(_1.indexOf(this._focusManager.activeStack,this.id)>=0){
+_1.attr(this.focusedChild.focusNode,"tabIndex",this.tabIndex);
 this.focusedChild.focusNode.focus();
 }
 pm.close(this.currentPopup);
@@ -152,8 +152,8 @@ this.focusedChild._setSelected(false);
 this.focusedChild._onUnhover();
 this.focusedChild=null;
 }
-},_onItemFocus:function(_15){
-if(this._hoveredChild&&this._hoveredChild!=_15){
+},_onItemFocus:function(_14){
+if(this._hoveredChild&&this._hoveredChild!=_14){
 this._hoveredChild._onUnhover();
 }
 },_onBlur:function(){

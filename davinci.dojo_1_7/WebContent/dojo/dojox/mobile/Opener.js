@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./Tooltip","./Overlay","./common"],function(_1,_2,_3){
+define("dojox/mobile/Opener",["./Tooltip","./Overlay","./common"],function(_1,_2,_3){
 var _4=dojo.declare("dojox.mobile.Opener",dojo.hasClass(dojo.doc.documentElement,"dj_phone")?dojox.mobile.Overlay:dojox.mobile.Tooltip,{onShow:function(_5){
 },onHide:function(_6,v){
 },show:function(_7,_8){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","./cells","./_RowSelector"],function(_1,_2){
+define("dojox/grid/_Layout",["dojo","dojox","./cells","./_RowSelector"],function(_1,_2){
 _1.declare("dojox.grid._Layout",null,{constructor:function(_3){
 this.grid=_3;
 },cells:[],structure:null,defaultWidth:"6em",moveColumn:function(_4,_5,_6,_7,_8){

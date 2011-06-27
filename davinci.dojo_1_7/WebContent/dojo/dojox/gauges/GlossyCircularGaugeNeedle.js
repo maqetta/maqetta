@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","./AnalogIndicatorBase"],function(_1,_2,_3,_4){
+define("dojox/gauges/GlossyCircularGaugeNeedle",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","./AnalogIndicatorBase"],function(_1,_2,_3,_4){
 return _1.declare("dojox.gauges.GlossyCircularGaugeNeedle",[_4],{interactionMode:"gauge",color:"#c4c4c4",_getShapes:function(_5){
 var _6=_1.blendColors(new _1.Color(this.color),new _1.Color("black"),0.3);
 if(!this._gauge){

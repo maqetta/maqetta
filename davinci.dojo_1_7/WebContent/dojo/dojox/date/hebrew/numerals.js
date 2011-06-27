@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array"],function(_1){
+define("dojox/date/hebrew/numerals",["dojo/_base/kernel","dojo/_base/array"],function(_1){
 _1.getObject("date.hebrew.numerals",true,dojox);
 _1.experimental("dojox.date.hebrew.numerals");
 var _2="אבגדהוזחט";

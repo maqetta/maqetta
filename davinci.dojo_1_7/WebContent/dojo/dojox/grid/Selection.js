@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/grid/Selection",["dojo","dojox"],function(_1,_2){
 _1.declare("dojox.grid.Selection",null,{constructor:function(_3){
 this.grid=_3;
 this.selected=[];

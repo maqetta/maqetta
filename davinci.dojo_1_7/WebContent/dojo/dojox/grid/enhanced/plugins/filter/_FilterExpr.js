@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","dojo/date","./_DataExprs"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/filter/_FilterExpr",["dojo","dojox","dojo/date","./_DataExprs"],function(_1,_2){
 var _3=_1.getObject("grid.enhanced.plugins.filter",true,_2);
 _1.declare("dojox.grid.enhanced.plugins.filter.LogicAND",_3._BiOpExpr,{_name:"and",_calculate:function(_4,_5,_6,_7){
 var _8=_4.applyRow(_6,_7).getValue()&&_5.applyRow(_6,_7).getValue();

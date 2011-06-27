@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/array","dojo/_base/html","dojo/_base/window","dojox/mdnd/AreaManager","dojo/dnd/Manager"],function(_1){
+define("dojox/mdnd/adapter/DndFromDojo",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/array","dojo/_base/html","dojo/_base/window","dojox/mdnd/AreaManager","dojo/dnd/Manager"],function(_1){
 var _2=_1.declare("dojox.mdnd.adapter.DndFromDojo",null,{dropIndicatorSize:{"w":0,"h":50},dropIndicatorSize:{"w":0,"h":50},_areaManager:null,_dojoManager:null,_currentArea:null,_oldArea:null,_moveHandler:null,_subscribeHandler:null,constructor:function(){
 this._areaManager=dojox.mdnd.areaManager();
 this._dojoManager=_1.dnd.manager();

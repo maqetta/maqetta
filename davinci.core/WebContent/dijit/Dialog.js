@@ -34,9 +34,9 @@ dojo.declare(
 		// |	foo.startup();
 
 		templateString: dojo.cache("dijit", "templates/Dialog.html"),
-		
+
 		baseClass: "dijitDialog",
-		
+
 		cssStateNodes: {
 			closeButtonNode: "dijitDialogCloseIcon"
 		},
@@ -368,7 +368,7 @@ dojo.declare(
 					delete this._fadeInDeferred;
 				})
 			}).play();
-			
+
 			return this._fadeInDeferred;
 		},
 
@@ -394,13 +394,15 @@ dojo.declare(
 				delete this._fadeOutDeferred;
 			}));
 
-			fadeOut = dojo.fadeOut({
+            // fire onHide when the promise resolves.
+			this._fadeOutDeferred.then(dojo.hitch(this, 'onHide'));
+
+		    fadeOut = dojo.fadeOut({
 				node: this.domNode,
 				duration: this.duration,
 				onEnd: dojo.hitch(this, function(){
 					this.domNode.style.display = "none";
 					dijit._DialogLevelManager.hide(this);
-					this.onHide();
 					this._fadeOutDeferred.callback(true);
 					delete this._fadeOutDeferred;
 				})
@@ -548,7 +550,7 @@ dijit._DialogLevelManager = {
 					pd.dialog._getFocusItems(pd.dialog.domNode);
 					focus = pd.dialog._firstFocusItem;
 				}
-	
+
 				try{
 					dijit.focus(focus);
 				}catch(e){

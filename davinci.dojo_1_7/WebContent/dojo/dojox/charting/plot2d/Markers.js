@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","./Default"],function(_1,_2){
+define("dojox/charting/plot2d/Markers",["dojo/_base/kernel","dojo/_base/declare","./Default"],function(_1,_2){
 return dojo.declare("dojox.charting.plot2d.Markers",dojox.charting.plot2d.Default,{constructor:function(){
 this.opt.markers=true;
 }});

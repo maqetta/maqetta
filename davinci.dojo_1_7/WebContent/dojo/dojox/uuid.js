@@ -4,6 +4,6 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox/uuid/_base"],function(_1){
+define("dojox/uuid",["dojox/uuid/_base"],function(_1){
 return _1;
 });

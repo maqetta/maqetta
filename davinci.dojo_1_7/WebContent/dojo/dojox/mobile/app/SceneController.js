@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/mobile/_base"],function(_1,_2,_3){
+define("dojox/mobile/app/SceneController",["dojo","dijit","dojox","dojox/mobile/_base"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.SceneController",1);
 _1.experimental("dojox.mobile.app.SceneController");
 (function(){

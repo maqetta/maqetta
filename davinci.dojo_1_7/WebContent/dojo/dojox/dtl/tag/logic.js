@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array"],function(_1,_2,dd){
+define("dojox/dtl/tag/logic",["dojo/_base/kernel","dojo/_base/lang","../_base","dojo/_base/array"],function(_1,_2,dd){
 _1.getObject("dtl.tag.logic",true,dojox);
 var _3=dd.text;
 var _4=dd.tag.logic;

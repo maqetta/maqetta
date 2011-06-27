@@ -177,7 +177,7 @@ catch(e){
 }});
 var _20=new _5();
 _1.addOnLoad(function(){
-var _21=_20.registerWin(window);
+var _21=_20.registerWin(_1.global);
 if(_1.isIE){
 _1.addOnWindowUnload(function(){
 _20.unregisterWin(_21);

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_base","dijit/_WidgetBase","dojox/mobile","dojox/mobile/parser","dojox/mobile/Button","dojox/mobile/app/_event","dojox/mobile/app/_Widget","dojox/mobile/app/StageController","dojox/mobile/app/SceneController","dojox/mobile/app/SceneAssistant","dojox/mobile/app/AlertDialog","dojox/mobile/app/List","dojox/mobile/app/ListSelector","dojox/mobile/app/TextBox","dojox/mobile/app/ImageView","dojox/mobile/app/ImageThumbView"],function(_1,_2,_3){
+define("dojox/mobile/app/_base",["dojo","dijit","dojox","dijit/_base","dijit/_WidgetBase","dojox/mobile","dojox/mobile/parser","dojox/mobile/Button","dojox/mobile/app/_event","dojox/mobile/app/_Widget","dojox/mobile/app/StageController","dojox/mobile/app/SceneController","dojox/mobile/app/SceneAssistant","dojox/mobile/app/AlertDialog","dojox/mobile/app/List","dojox/mobile/app/ListSelector","dojox/mobile/app/TextBox","dojox/mobile/app/ImageView","dojox/mobile/app/ImageThumbView"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app._base",1);
 _1.experimental("dojox.mobile.app._base");
 (function(){

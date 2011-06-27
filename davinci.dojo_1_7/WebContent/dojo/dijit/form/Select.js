@@ -131,6 +131,9 @@ this.dropDown.destroyRecursive(_14);
 delete this.dropDown;
 }
 this.inherited(arguments);
+},_onBlur:function(){
+_2.hideTooltip(this.domNode);
+this.inherited(arguments);
 }});
 return _2.form.Select;
 });

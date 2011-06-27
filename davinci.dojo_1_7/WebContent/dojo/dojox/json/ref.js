@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojox","dojo/date/stamp","dojo/_base/array","dojo/_base/json"],function(_1,_2){
+define("dojox/json/ref",["dojo/_base/kernel","dojox","dojo/date/stamp","dojo/_base/array","dojo/_base/json"],function(_1,_2){
 _1.getObject("json",true,_2);
 return _2.json.ref={resolveJson:function(_3,_4){
 _4=_4||{};

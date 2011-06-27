@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["../has","require"],function(_1,_2){
+define("dojo/_base/config",["../has","require"],function(_1,_2){
 true||_1.add("dojo-sniff",1?1:0);
 var _3=this.dojoConfig||this.djConfig||{};
 if(1&&1&&!1){

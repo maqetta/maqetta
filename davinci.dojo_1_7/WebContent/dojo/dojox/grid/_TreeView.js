@@ -5,7 +5,7 @@
 */
 
 require.cache["dojox/grid/resources/Expando.html"]="<div class=\"dojoxGridExpando\"\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\n\t></div\n></div>\n";
-define(["dojo","dijit","dojox","dojo/text!./resources/Expando.html","dijit/_Widget","dijit/_TemplatedMixin","./_View"],function(_1,_2,_3,_4){
+define("dojox/grid/_TreeView",["dojo","dijit","dojox","dojo/text!./resources/Expando.html","dijit/_Widget","dijit/_TemplatedMixin","./_View"],function(_1,_2,_3,_4){
 _1.declare("dojox.grid._Expando",[_2._Widget,_2._TemplatedMixin],{open:false,toggleClass:"",itemId:"",cellIdx:-1,view:null,rowNode:null,rowIdx:-1,expandoCell:null,level:0,templateString:_4,_toggleRows:function(_5,_6){
 if(!_5||!this.rowNode){
 return;

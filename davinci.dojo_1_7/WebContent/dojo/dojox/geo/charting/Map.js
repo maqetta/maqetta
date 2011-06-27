@@ -4,13 +4,14 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/xhr","dojo/_base/connect","dojo/_base/window","dojox/gfx","dojox/geo/charting/_base","dojox/geo/charting/Feature","dojox/geo/charting/_Marker","dojo/number"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
+define("dojox/geo/charting/Map",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/_base/xhr","dojo/_base/connect","dojo/_base/window","dojox/gfx","dojox/geo/charting/_base","dojox/geo/charting/Feature","dojox/geo/charting/_Marker","dojo/number"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c){
 return _1.declare("dojox.geo.charting.Map",null,{defaultColor:"#B7B7B7",highlightColor:"#D5D5D5",series:[],dataBindingAttribute:null,dataBindingValueFunction:null,dataStore:null,showTooltips:true,enableFeatureZoom:true,colorAnimationDuration:0,_idAttributes:null,_onSetListener:null,_onNewListener:null,_onDeleteListener:null,constructor:function(_d,_e){
 _1.style(_d,"display","block");
 this.container=_d;
 var _f=this._getContainerBounds();
 this.surface=_8.createSurface(_d,_f.w,_f.h);
 this._createZoomingCursor();
+this.mapBackground=this.surface.createRect({x:0,y:0,width:_f.w,height:_f.w}).setFill("rgba(0,0,0,0)");
 this.mapObj=this.surface.createGroup();
 this.mapObj.features={};
 if(typeof _e=="object"){
@@ -21,7 +22,7 @@ _1.xhrGet({url:_e,handleAs:"json",sync:true,load:_1.hitch(this,"_init")});
 }
 }
 },_getContainerBounds:function(){
-var _10=_1.coords(this.container,true);
+var _10=_1.position(this.container,true);
 var _11=_1.marginBox(this.container);
 var _12=_1.contentBox(this.container);
 this._storedContainerBounds={x:_10.x,y:_10.y,w:_12.w||100,h:_12.h||100};
@@ -32,6 +33,7 @@ var _17=this._getContainerBounds();
 if((_16.w==_17.w)&&(_16.h==_17.h)){
 return;
 }
+this.mapBackground.setShape({width:_17.w,height:_17.h});
 this.surface.setDimensions(_17.w,_17.h);
 this.mapObj.marker.hide();
 this.mapObj.marker._needTooltipRefresh=true;

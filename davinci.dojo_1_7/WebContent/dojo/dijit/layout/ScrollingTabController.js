@@ -7,7 +7,7 @@
 require.cache["dijit/layout/templates/ScrollingTabController.html"]="<div class=\"dijitTabListContainer-${tabPosition}\" style=\"visibility:hidden\">\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerMenuButton\"\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\n\t\t\tid=\"${id}_menuBtn\" containerId=\"${containerId}\" iconClass=\"dijitTabStripMenuIcon\"\n\t\t\tdropDownPosition=\"below-alt, above-alt\"\n\t\t\tdojoAttachPoint=\"_menuBtn\" showLabel=\"false\" title=\"\">&#9660;</div>\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\n\t\t\tid=\"${id}_leftBtn\" iconClass=\"dijitTabStripSlideLeftIcon\"\n\t\t\tdojoAttachPoint=\"_leftBtn\" dojoAttachEvent=\"onClick: doSlideLeft\" showLabel=\"false\" title=\"\">&#9664;</div>\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\n\t\t\tid=\"${id}_rightBtn\" iconClass=\"dijitTabStripSlideRightIcon\"\n\t\t\tdojoAttachPoint=\"_rightBtn\" dojoAttachEvent=\"onClick: doSlideRight\" showLabel=\"false\" title=\"\">&#9654;</div>\n\t<div class='dijitTabListWrapper' dojoAttachPoint='tablistWrapper'>\n\t\t<div role='tablist' dojoAttachEvent='onkeypress:onkeypress'\n\t\t\t\tdojoAttachPoint='containerNode' class='nowrapTabStrip'></div>\n\t</div>\n</div>";
 require.cache["dijit/layout/templates/_ScrollingTabControllerButton.html"]="<div dojoAttachEvent=\"onclick:_onClick\">\n\t<div role=\"presentation\" class=\"dijitTabInnerDiv\" dojoattachpoint=\"innerDiv,focusNode\">\n\t\t<div role=\"presentation\" class=\"dijitTabContent dijitButtonContents\" dojoattachpoint=\"tabContent\">\n\t\t\t<img role=\"presentation\" alt=\"\" src=\"${_blankGif}\" class=\"dijitTabStripIcon\" dojoAttachPoint=\"iconNode\"/>\n\t\t\t<span dojoAttachPoint=\"containerNode,titleNode\" class=\"dijitButtonText\"></span>\n\t\t</div>\n\t</div>\n</div>";
 define("dijit/layout/ScrollingTabController",["dojo/_base/kernel","..","dojo/text!./templates/ScrollingTabController.html","dojo/text!./templates/_ScrollingTabControllerButton.html","./TabController","../_WidgetsInTemplateMixin","../Menu","../form/Button","../_HasDropDown","dojo/_base/NodeList","dojo/_base/array","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/fx","dojo/query"],function(_1,_2,_3,_4){
-_1.declare("dijit.layout.ScrollingTabController",[_2.layout.TabController,_2._WidgetsInTemplateMixin],{templateString:_3,useMenu:true,useSlider:true,tabStripClass:"",widgetsInTemplate:true,_minScroll:5,_setClassAttr:{node:"containerNode",type:"class"},buildRendering:function(){
+_1.declare("dijit.layout.ScrollingTabController",[_2.layout.TabController,_2._WidgetsInTemplateMixin],{baseClass:"dijitTabController dijitScrollingTabController",templateString:_3,useMenu:true,useSlider:true,tabStripClass:"",widgetsInTemplate:true,_minScroll:5,_setClassAttr:{node:"containerNode",type:"class"},buildRendering:function(){
 this.inherited(arguments);
 var n=this.domNode;
 this.scrollNode=this.tablistWrapper;
@@ -61,9 +61,6 @@ var _13=this._getTabsWidth();
 _12=_12||_1.style(this.scrollNode,"width");
 return _13>0&&_12<_13;
 },resize:function(dim){
-if(this.domNode.offsetWidth==0){
-return;
-}
 this._dim=dim;
 this.scrollNode.style.height="auto";
 this._contentBox=_2.layout.marginBox2contentBox(this.domNode,{h:0,w:dim.w});

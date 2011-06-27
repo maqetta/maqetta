@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/lang/oo/Decorator","dojox/lang/oo/general"],function(_1,_2,_3){
+define("dojox/lang/oo/aop",["dojo","dijit","dojox","dojox/lang/oo/Decorator","dojox/lang/oo/general"],function(_1,_2,_3){
 _1.getObject("dojox.lang.oo.aop",1);
 (function(){
 var oo=_3.lang.oo,md=oo.makeDecorator,_4=oo.general,_5=oo.aop,_6=_1.isFunction;

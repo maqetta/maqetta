@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/focus"],function(_1,_2,_3){
+define("dojox/grid/enhanced/_FocusManager",["dojo","dijit","dojox","dijit/focus"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced._FocusArea",null,{constructor:function(_4,_5){
 this._fm=_5;
 this._evtStack=[_4.name];

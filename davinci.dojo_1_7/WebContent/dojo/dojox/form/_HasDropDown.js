@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dijit/_HasDropDown"],function(_1,_2,_3){
+define("dojox/form/_HasDropDown",["dojo","dijit","dojox","dijit/_HasDropDown"],function(_1,_2,_3){
 _1.getObject("dojox.form._HasDropDown",1);
 _1.deprecated("dojox.form._HasDropDown","Use dijit._HasDropDown instead","2.0");
 _1.setObject("dojox.form._HasDropDown",_2._HasDropDown);

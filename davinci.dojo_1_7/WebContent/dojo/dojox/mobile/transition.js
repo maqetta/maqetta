@@ -4,17 +4,23 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/array","dojo/_base/html","dojo/DeferredList"],function(_1,_2,_3,_4){
+define("dojox/mobile/transition",["dojo/_base/kernel","dojo/_base/array","dojo/_base/html","dojo/DeferredList"],function(_1,_2,_3,_4){
 return function(_5,to,_6){
 var _7=(_6&&_6.reverse)?" mblReverse":"";
 if(!_6||!_6.transition){
+if(_5&&_5.tagname){
 _1.style(_5,"display","none");
+}
+if(to){
 _1.style(to,"display","");
+}
 }else{
 var _8=[];
-_1.style(_5,"display","");
+if(to){
 _1.style(to,"display","");
+}
 if(_5){
+_1.style(_5,"display","");
 var _9=new _1.Deferred();
 var _a=_1.connect(_5,"webkitAnimationEnd",function(){
 _1.style(_5,"display","none");

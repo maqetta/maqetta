@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
+define("dojox/av/widget/Status",["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin"],function(_1,_2){
 _1.declare("dojox.av.widget.Status",[_2._Widget,_2._TemplatedMixin],{templateString:_1.cache("dojox.av.widget","resources/Status.html"),setMedia:function(_3){
 this.media=_3;
 _1.connect(this.media,"onMetaData",this,function(_4){

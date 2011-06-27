@@ -34,7 +34,8 @@ this.inherited(arguments);
 }});
 if(!_1.isAsync){
 _1.ready(0,function(){
-_4(["dijit/form/RadioButton"]);
+var _8=["dijit/form/RadioButton"];
+_4(_8);
 });
 }
 return _2.form.CheckBox;

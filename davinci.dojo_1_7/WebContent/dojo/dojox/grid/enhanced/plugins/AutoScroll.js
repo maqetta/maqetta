@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox","../_Plugin","../../_RowSelector"],function(_1,_2){
+define("dojox/grid/enhanced/plugins/AutoScroll",["dojo","dojox","../_Plugin","../../_RowSelector"],function(_1,_2){
 _1.declare("dojox.grid.enhanced.plugins.AutoScroll",_2.grid.enhanced._Plugin,{name:"autoScroll",autoScrollInterval:1000,autoScrollMargin:30,constructor:function(_3,_4){
 this.grid=_3;
 this.readyForAutoScroll=false;

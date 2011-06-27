@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dojox"],function(_1,_2){
+define("dojox/math/BigInteger",["dojo","dojox"],function(_1,_2){
 _1.getObject("math.BigInteger",true,_2);
 _1.experimental("dojox.math.BigInteger");
 var _3;

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/Color","./Element","./Theme","./Series","./axis2d/common","dojox/gfx","dojox/lang/functional","dojox/lang/functional/fold","dojox/lang/functional/reversed"],function(_1,_2,_3,_4,_5,_6,_7,_8,g,df){
+define("dojox/charting/Chart",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/Color","./Element","./Theme","./Series","./axis2d/common","dojox/gfx","dojox/lang/functional","dojox/lang/functional/fold","dojox/lang/functional/reversed"],function(_1,_2,_3,_4,_5,_6,_7,_8,g,df){
 var dc=dojox.charting,_9=df.lambda("item.clear()"),_a=df.lambda("item.purgeGroup()"),_b=df.lambda("item.destroy()"),_c=df.lambda("item.dirty = false"),_d=df.lambda("item.dirty = true"),_e=df.lambda("item.name");
 _1.declare("dojox.charting.Chart",null,{constructor:function(_f,_10){
 if(!_10){

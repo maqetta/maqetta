@@ -54,7 +54,10 @@ public class VLibraryResource implements IVResource {
     }
 
     public String getPath() {
-        String name =this.parent.getPath() +  IVResource.SEPERATOR + this.name;
+    	if(this.parent==null)
+    		return this.name;
+    	
+        return this.parent.getPath() +  IVResource.SEPERATOR + this.name;
        /*
         if (name != null && name.length() > 0 && name.charAt(name.length() - 1) == '/') {
             name = name.substring(0, name.length() - 1);
@@ -66,7 +69,7 @@ public class VLibraryResource implements IVResource {
             name = name.substring(1);
         }
         */
-        return name;
+        
     }
 
     public void createNewInstance() throws IOException {

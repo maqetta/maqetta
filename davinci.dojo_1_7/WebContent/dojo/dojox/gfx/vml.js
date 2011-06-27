@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./_base","./shape","./path","./arc","./gradient"],function(){
+define("dojox/gfx/vml",["./_base","./shape","./path","./arc","./gradient"],function(){
 var _1=dojo.getObject("dojox.gfx.vml",true),d=dojo,g=dojox.gfx,m=g.matrix,gs=g.shape;
 _1.xmlns="urn:schemas-microsoft-com:vml";
 _1.text_alignment={start:"left",middle:"center",end:"right"};

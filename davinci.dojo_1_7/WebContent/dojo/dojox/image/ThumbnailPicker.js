@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/fx/scroll","dojo/fx/easing","dojo/fx","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
+define("dojox/image/ThumbnailPicker",["dojo","dijit","dojox","dojox/fx/scroll","dojo/fx/easing","dojo/fx","dijit/_Widget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.image.ThumbnailPicker",1);
 _1.experimental("dojox.image.ThumbnailPicker");
 _1.declare("dojox.image.ThumbnailPicker",[_2._Widget,_2._Templated],{imageStore:null,request:null,size:500,thumbHeight:75,thumbWidth:100,useLoadNotifier:false,useHyperlink:false,hyperlinkTarget:"new",isClickable:true,isScrollable:true,isHorizontal:true,autoLoad:true,linkAttr:"link",imageThumbAttr:"imageUrlThumb",imageLargeAttr:"imageUrl",pageSize:20,titleAttr:"title",templateString:_1.cache("dojox.image","resources/ThumbnailPicker.html","<div dojoAttachPoint=\"outerNode\" class=\"thumbOuter\">\n\t<div dojoAttachPoint=\"navPrev\" class=\"thumbNav thumbClickable\">\n\t  <img src=\"\" dojoAttachPoint=\"navPrevImg\"/>    \n\t</div>\n\t<div dojoAttachPoint=\"thumbScroller\" class=\"thumbScroller\">\n\t  <div dojoAttachPoint=\"thumbsNode\" class=\"thumbWrapper\"></div>\n\t</div>\n\t<div dojoAttachPoint=\"navNext\" class=\"thumbNav thumbClickable\">\n\t  <img src=\"\" dojoAttachPoint=\"navNextImg\"/>  \n\t</div>\n</div>"),_thumbs:[],_thumbIndex:0,_maxPhotos:0,_loadedImages:{},postCreate:function(){

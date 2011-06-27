@@ -5,49 +5,49 @@
 */
 
 require.cache["dojox/form/resources/TriStateCheckBox.html"]="<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\n\t><div class=\"dojoxTriStateCheckBoxInner\" dojoAttachPoint=\"stateLabelNode\"></div\n\t><input ${!nameAttrSetting} type=\"${type}\" dojoAttachPoint=\"focusNode\"\n\tclass=\"dijitReset dojoxTriStateCheckBoxInput\" dojoAttachEvent=\"onclick:_onClick\"\n/></div>";
-define(["dojo","dijit","dijit/form/ToggleButton","dojo/text!./resources/TriStateCheckBox.html"],function(_1,_2){
-_1.declare("dojox.form.TriStateCheckBox",_2.form.ToggleButton,{templateString:_1.cache("dojox.form","resources/TriStateCheckBox.html"),baseClass:"dojoxTriStateCheckBox",type:"checkbox",_currentState:0,_stateType:"False",readOnly:false,constructor:function(){
+define("dojox/form/TriStateCheckBox",["dojo","dijit","dojo/text!./resources/TriStateCheckBox.html","dijit/form/ToggleButton"],function(_1,_2,_3){
+_1.declare("dojox.form.TriStateCheckBox",_2.form.ToggleButton,{templateString:_3,baseClass:"dojoxTriStateCheckBox",type:"checkbox",_currentState:0,_stateType:"False",readOnly:false,constructor:function(){
 this.states=[false,true,"mixed"];
 this._stateLabels={"False":"&#63219","True":"&#8730;","Mixed":"&#8801"};
 this.stateValues={"False":"off","True":"on","Mixed":"mixed"};
-},_setCheckedAttr:function(_3,_4){
-this._set("checked",_3);
-this._currentState=_1.indexOf(this.states,_3);
-this._stateType=this._getStateType(_3);
-_1.attr(this.focusNode||this.domNode,"checked",_3);
+},_setIconClassAttr:null,_setCheckedAttr:function(_4,_5){
+this._set("checked",_4);
+this._currentState=_1.indexOf(this.states,_4);
+this._stateType=this._getStateType(_4);
+_1.attr(this.focusNode||this.domNode,"checked",_4);
 _1.attr(this.focusNode,"value",this.stateValues[this._stateType]);
-(this.focusNode||this.domNode).setAttribute("aria-checked",_3);
-this._handleOnChange(_3,_4);
-},setChecked:function(_5){
-_1.deprecated("setChecked("+_5+") is deprecated. Use set('checked',"+_5+") instead.","","2.0");
-this.set("checked",_5);
-},_setReadOnlyAttr:function(_6){
-this._set("readOnly",_6);
-_1.attr(this.focusNode,"readOnly",_6);
-this.focusNode.setAttribute("aria-readonly",_6);
-},_setValueAttr:function(_7,_8){
-if(typeof _7=="string"&&(_1.indexOf(this.states,_7)<0)){
-if(_7==""){
-_7="on";
+(this.focusNode||this.domNode).setAttribute("aria-checked",_4);
+this._handleOnChange(_4,_5);
+},setChecked:function(_6){
+_1.deprecated("setChecked("+_6+") is deprecated. Use set('checked',"+_6+") instead.","","2.0");
+this.set("checked",_6);
+},_setReadOnlyAttr:function(_7){
+this._set("readOnly",_7);
+_1.attr(this.focusNode,"readOnly",_7);
+this.focusNode.setAttribute("aria-readonly",_7);
+},_setValueAttr:function(_8,_9){
+if(typeof _8=="string"&&(_1.indexOf(this.states,_8)<0)){
+if(_8==""){
+_8="on";
 }
-this.stateValues["True"]=_7;
-_7=true;
+this.stateValues["True"]=_8;
+_8=true;
 }
 if(this._created){
-this._currentState=_1.indexOf(this.states,_7);
-this.set("checked",_7,_8);
+this._currentState=_1.indexOf(this.states,_8);
+this.set("checked",_8,_9);
 _1.attr(this.focusNode,"value",this.stateValues[this._stateType]);
 }
-},_setValuesAttr:function(_9){
-this.stateValues["True"]=_9[0]?_9[0]:this.stateValues["True"];
-this.stateValues["Mixed"]=_9[1]?_9[1]:this.stateValues["False"];
+},_setValuesAttr:function(_a){
+this.stateValues["True"]=_a[0]?_a[0]:this.stateValues["True"];
+this.stateValues["Mixed"]=_a[1]?_a[1]:this.stateValues["False"];
 },_getValueAttr:function(){
 return this.stateValues[this._stateType];
 },startup:function(){
 this.set("checked",this.params.checked||this.states[this._currentState]);
 _1.attr(this.stateLabelNode,"innerHTML",this._stateLabels[this._stateType]);
 this.inherited(arguments);
-},_fillContent:function(_a){
+},_fillContent:function(_b){
 },reset:function(){
 this._hasBeenBlurred=false;
 this.stateValues={"False":"off","True":"on","Mixed":"mixed"};
@@ -75,8 +75,8 @@ this._currentState++;
 this.set("checked",this.states[this._currentState]);
 _1.attr(this.stateLabelNode,"innerHTML",this._stateLabels[this._stateType]);
 return this.onClick(e);
-},_getStateType:function(_b){
-return _b?(_b=="mixed"?"Mixed":"True"):"False";
+},_getStateType:function(_c){
+return _c?(_c=="mixed"?"Mixed":"True"):"False";
 }});
 return dojox.form.TriStateCheckBox;
 });

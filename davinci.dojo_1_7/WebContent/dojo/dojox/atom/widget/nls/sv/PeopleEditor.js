@@ -1,3 +1,4 @@
+require.built();
 define(({
 	add: "Lägg till",
 	addAuthor: "Lägg till författare",

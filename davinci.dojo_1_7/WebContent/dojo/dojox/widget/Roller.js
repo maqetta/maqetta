@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget"],function(_1,_2){
+define("dojox/widget/Roller",["dojo","dijit","dijit/_Widget"],function(_1,_2){
 _1.declare("dojox.widget.Roller",_2._Widget,{delay:2000,autoStart:true,itemSelector:"> li",durationIn:400,durationOut:275,_idx:-1,postCreate:function(){
 if(!this["items"]){
 this.items=[];

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/lang","dojo/_base/array","./_base"],function(_1){
+define("dojox/timing/Sequence",["dojo/_base/lang","dojo/_base/array","./_base"],function(_1){
 _1.experimental("dojox.timing.Sequence");
 _1.declare("dojox.timing.Sequence",null,{_goOnPause:0,_running:false,constructor:function(){
 this._defsResolved=[];

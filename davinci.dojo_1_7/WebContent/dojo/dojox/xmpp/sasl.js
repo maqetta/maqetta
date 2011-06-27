@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/xmpp/util","dojo/AdapterRegistry","dojox/encoding/digests/MD5"],function(_1,_2,_3){
+define("dojox/xmpp/sasl",["dojo","dijit","dojox","dojox/xmpp/util","dojo/AdapterRegistry","dojox/encoding/digests/MD5"],function(_1,_2,_3){
 _1.getObject("dojox.xmpp.sasl",1);
 _3.xmpp.sasl.saslNS="urn:ietf:params:xml:ns:xmpp-sasl";
 _1.declare("dojox.xmpp.sasl._Base",null,{mechanism:null,closeAuthTag:true,constructor:function(_4){

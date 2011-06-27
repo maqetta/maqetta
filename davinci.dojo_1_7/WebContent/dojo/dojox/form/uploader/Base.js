@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin"],function(_1,_2){
+define("dojox/form/uploader/Base",["dojo","dijit","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin"],function(_1,_2){
 _1.declare("dojox.form.uploader.Base",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{getForm:function(){
 if(!this.form){
 var n=this.domNode;

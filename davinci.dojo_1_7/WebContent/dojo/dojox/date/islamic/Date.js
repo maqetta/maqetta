@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/i18n","dojo/cldr/nls/islamic"],function(_1,_2,_3){
+define("dojox/date/islamic/Date",["dojo","dijit","dojox","dojo/i18n","dojo/cldr/nls/islamic"],function(_1,_2,_3){
 _1.getObject("dojox.date.islamic.Date",1);
 define(["dojo/_base/kernel","dojo/date"],function(_4,dd){
 _4.getObject("date.buddhist.Date",true,_3);

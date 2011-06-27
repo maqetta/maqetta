@@ -1,3 +1,4 @@
+require.built();
 define(({
 	doNew: "[nieuw]",
 	edit: "[bewerken]",

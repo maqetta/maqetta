@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["./RoundRectCategory"],function(_1){
+define("dojox/mobile/EdgeToEdgeCategory",["./RoundRectCategory"],function(_1){
 return dojo.declare("dojox.mobile.EdgeToEdgeCategory",dojox.mobile.RoundRectCategory,{buildRendering:function(){
 this.inherited(arguments);
 this.domNode.className="mblEdgeToEdgeCategory";

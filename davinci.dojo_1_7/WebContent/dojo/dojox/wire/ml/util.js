@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojox/xml/parser","dojox/wire/Wire"],function(_1,_2,_3){
+define("dojox/wire/ml/util",["dojo","dijit","dojox","dojox/xml/parser","dojox/wire/Wire"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.util",1);
 _3.wire.ml._getValue=function(_4,_5){
 if(!_4){

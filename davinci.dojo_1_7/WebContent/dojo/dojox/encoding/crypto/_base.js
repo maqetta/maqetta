@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel"],function(_1){
+define("dojox/encoding/crypto/_base",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.crypto",true,dojox);
 var c=dojox.encoding.crypto;
 c.cipherModes={ECB:0,CBC:1,PCBC:2,CFB:3,OFB:4,CTR:5};

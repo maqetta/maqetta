@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","dojo/_base/lang","dojox/string/tokenize","dojo/_base/json","dojo/_base/html","dojox/string/Builder"],function(_1,_2,_3){
+define("dojox/dtl/_base",["dojo/_base/kernel","dojo/_base/lang","dojox/string/tokenize","dojo/_base/json","dojo/_base/html","dojox/string/Builder"],function(_1,_2,_3){
 _1.experimental("dojox.dtl");
 _1.getObject("dtl",true,dojox);
 (dojox.dtl._base=function(){

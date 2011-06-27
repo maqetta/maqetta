@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo","dijit","dojox","dojo/string","dojo/window","dojo/date/locale","dijit/Tooltip","dijit/form/ComboBox","dijit/form/Select","dijit/form/TextBox","dijit/form/RadioButton","dijit/form/NumberTextBox","dijit/form/DateTextBox","dijit/form/TimeTextBox","dijit/form/Button","dijit/layout/AccordionContainer","dijit/layout/ContentPane","dijit/_WidgetsInTemplateMixin","dijit/focus","dojox/html/ellipsis","dojox/html/metrics","./FilterBuilder","../Dialog","../../../cells/dijit"],function(_1,_2,_3){
+define("dojox/grid/enhanced/plugins/filter/FilterDefDialog",["dojo","dijit","dojox","dojo/string","dojo/window","dojo/date/locale","dijit/Tooltip","dijit/form/ComboBox","dijit/form/Select","dijit/form/TextBox","dijit/form/RadioButton","dijit/form/NumberTextBox","dijit/form/DateTextBox","dijit/form/TimeTextBox","dijit/form/Button","dijit/layout/AccordionContainer","dijit/layout/ContentPane","dijit/_WidgetsInTemplateMixin","dijit/focus","dojox/html/ellipsis","dojox/html/metrics","./FilterBuilder","../Dialog","../../../cells/dijit"],function(_1,_2,_3){
 var _4=_1.getObject("grid.enhanced.plugins.filter",true,_3);
 _tabIdxes={relSelect:60,accordionTitle:70,removeCBoxBtn:-1,colSelect:90,condSelect:95,valueBox:10,addCBoxBtn:20,filterBtn:30,clearBtn:40,cancelBtn:50};
 _1.declare("dojox.grid.enhanced.plugins.filter.FilterDefDialog",null,{curColIdx:-1,_relOpCls:"logicall",_savedCriterias:null,plugin:null,constructor:function(_5){
@@ -660,7 +660,7 @@ this.dlg.onRendered(this);
 var g=this.plugin.grid,_6e=g.layout.cells[parseInt(this._colSelect.get("value"),10)],res={cbox:this};
 if(_6d=="string"){
 if(_6e&&(_6e.suggestion||_6e.autoComplete)){
-_1.mixin(res,{store:g.store,searchAttr:_6e.field||_6e.name,fetchProperties:{sort:[{"attribute":_6e.field||_6e.name}]}});
+_1.mixin(res,{store:g.store,searchAttr:_6e.field||_6e.name,fetchProperties:{sort:[{"attribute":_6e.field||_6e.name}],query:g.query,queryOptions:g.queryOptions}});
 }
 }else{
 if(_6d=="boolean"){

@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/declare","dojo/_base/lang","dijit/_WidgetBase"],function(_1,_2,_3){
+define("dojox/mvc/Output",["dojo/_base/declare","dojo/_base/lang","dijit/_WidgetBase"],function(_1,_2,_3){
 return _1("dojox.mvc.Output",[_3],{templateString:"",postscript:function(_4,_5){
 this.srcNodeRef=dojo.byId(_5);
 if(this.srcNodeRef){

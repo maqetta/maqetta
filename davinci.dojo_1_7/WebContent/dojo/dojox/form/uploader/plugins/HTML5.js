@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo"],function(_1){
+define("dojox/form/uploader/plugins/HTML5",["dojo"],function(_1){
 _1.declare("dojox.form.uploader.plugins.HTML5",[],{errMsg:"Error uploading files. Try checking permissions",uploadType:"html5",postCreate:function(){
 this.connectForm();
 this.inherited(arguments);
@@ -81,7 +81,7 @@ clearInterval(_d);
 _c.onreadystatechange=_1.hitch(this,function(){
 if(_c.readyState===4){
 clearInterval(_d);
-this.onComplete(_1.eval(_c.responseText));
+this.onComplete(JSON.parse(_c.responseText));
 }
 });
 _c.open("POST",this.getUrl());

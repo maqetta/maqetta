@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojo/_base/kernel","./lambda"],function(_1,df){
+define("dojox/lang/functional/object",["dojo/_base/kernel","./lambda"],function(_1,df){
 var d=_1,_2={};
 d.mixin(df,{keys:function(_3){
 var t=[];

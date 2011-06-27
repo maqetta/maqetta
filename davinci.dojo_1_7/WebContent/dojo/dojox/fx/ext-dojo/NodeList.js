@@ -4,7 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
-define(["dojox/fx","dojo/_base/NodeList","dojo/NodeList-fx"],function(){
+define("dojox/fx/ext-dojo/NodeList",["dojox/fx","dojo/_base/NodeList","dojo/NodeList-fx"],function(){
 dojo.experimental("dojox.fx.ext-dojo.NodeList");
 dojo.extend(dojo.NodeList,{sizeTo:function(_1){
 return this._anim(dojox.fx,"sizeTo",_1);

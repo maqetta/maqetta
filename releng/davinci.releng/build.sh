@@ -1,8 +1,9 @@
 #! /bin/sh
 
 #
-#  you must have some version of eclipse installed to build against
+# Directory in which to do the build. No trailing slash.
 #
+export buildDirectory="/Users/wayne/work/build"
 
 #
 # Path to parent directory of the eclipse application directory.
@@ -26,27 +27,27 @@ export baseLocation="${base}/eclipse"
 launcherVersion="1.1.1.R36x_v20101122_1400"
 
 #
-# Directory in which to do the build. No trailing slash.
+# If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
 #
-export buildDirectory="/path/to/your/build/directory"
+# Note: This build feature SHOULD NOT be used for production builds.
+#
+#export maqettaCode="/path/to/working/copy"
 
 #
 # Directory containing build.xml (this should not have to be changed in most cases).
 # No trailing slash.
 #
-export relEngDir="${buildDirectory}/repository/maqetta/releng/davinci.releng"
+if [ ${maqettaCode} ]
+then
+    export relEngDir="${maqettaCode}/releng/davinci.releng"
+else
+    export relEngDir="${buildDirectory}/repository/maqetta/releng/davinci.releng"
+fi
 
 #
-# If 'maqettaCode' is set, copy files from your local workspace instead of GitHub repository
+# GitHub read-only URL for Maqetta repository. This should not change.
 #
-# Note: This build feature is in incubation and *cannot* be used for production builds.
-#
-#export maqettaCode="/path/to/your/local/eclipse/workspace"
-
-#
-# GitHub URL for Maqetta repository. This should not change.
-#
-export gitRepository="git@github.com:maqetta/maqetta.git"
+export gitRepository="git://github.com/maqetta/maqetta.git"
 
 #
 # Windowing System, Operating System and processor Architecture settings
@@ -58,27 +59,39 @@ export myWS="cocoa"
 export myOS="macosx"
 export myArch="x86_64"
 
-#
-# Set up for and pull down the latest code from GitHub
-#
-if [ ! -d ${buildDirectory}/repository ]
+if [ ! ${maqettaCode} ]
 then
-    echo "Making repository directory"
-    mkdir -p ${buildDirectory}/repository
-fi
+    # 
+    # Set up for and pull down the latest code from GitHub
+    #
+    if [ ! -d ${buildDirectory}/repository ]
+    then
+        echo "Making repository directory"
+        mkdir -p ${buildDirectory}/repository
+    fi
 
-#
-# If '.git' directory exists we need only pull
-#
-if [ -d ${buildDirectory}/repository/maqetta/.git ]
-then
-    echo "Doing 'git pull'..."
+    #
+    # If '.git' directory exists we need only pull
+    #
+    if [ -d ${buildDirectory}/repository/maqetta/.git ]
+    then
+        echo "Doing 'git pull'..."
+        cd ${buildDirectory}/repository/maqetta
+        git pull
+    else
+        echo "Cloning repository. This may take a few moments..."
+        cd ${buildDirectory}/repository
+        git clone ${gitRepository}
+    fi
+    echo "Done fetching maqetta core."
+    #
+    # Save repository revision level for later referrence
+    #
     cd ${buildDirectory}/repository/maqetta
-    git pull
+    git describe >${buildDirectory}/build.level
 else
-    echo "Cloning repository. This may take a few moments..."
-    cd ${buildDirectory}/repository
-    git clone ${gitRepository}
+    cd ${maqettaCode}
+    git describe >${buildDirectory}/build.level
 fi
 
 #

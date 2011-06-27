@@ -161,7 +161,7 @@
         <defaultexcludes remove="**/.svn"/>
         <defaultexcludes remove="**/.svn/**"/>
         <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${repoPath}${extPath}/${project}"/>
+            <fileset dir="${maqettaCode}${extPath}/${project}"/>
         </copy>
         <defaultexcludes default="true"/>
     </target>

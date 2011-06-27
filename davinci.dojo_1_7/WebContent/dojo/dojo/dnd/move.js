@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/move",["../main","./Mover","./Moveable"],function(_1){
 _1.declare("dojo.dnd.move.constrainedMoveable",_1.dnd.Moveable,{constraints:function(){
 },within:false,markupFactory:function(_2,_3){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_Contained",["dojo/_base/kernel",".","dojo/_base/declare"],function(_1,_2){
 _1.declare("dijit._Contained",null,{getParent:function(){
 var _3=_2.getEnclosingWidget(this.domNode.parentNode);

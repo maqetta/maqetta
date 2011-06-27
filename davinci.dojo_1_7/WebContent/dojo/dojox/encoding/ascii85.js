@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/ascii85",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.ascii85",true,dojox);
 var c=function(_2,_3,_4){

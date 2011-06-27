@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/CdfStore",["dojo","dojox","dojo/data/util/sorter"],function(_1,_2){
 _2.data.ASYNC_MODE=0;
 _2.data.SYNC_MODE=1;

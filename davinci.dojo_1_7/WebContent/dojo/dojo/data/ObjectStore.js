@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/ObjectStore",["../main","../regexp"],function(_1){
 _1.declare("dojo.data.ObjectStore",null,{objectStore:null,constructor:function(_2){
 _1.mixin(this,_2);

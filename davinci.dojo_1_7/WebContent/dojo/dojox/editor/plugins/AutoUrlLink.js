@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/AutoUrlLink",["dojo","dijit","dojox","dojo/string","dijit/_editor/_Plugin","dijit/form/Button"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.AutoUrlLink",[_2._editor._Plugin],{_template:"<a _djrealurl='${url}' href='${url}'>${url}</a>",setEditor:function(_4){
 this.editor=_4;

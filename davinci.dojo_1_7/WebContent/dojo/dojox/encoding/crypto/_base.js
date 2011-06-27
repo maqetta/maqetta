@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/crypto/_base",["dojo/_base/kernel"],function(_1){
 _1.getObject("encoding.crypto",true,dojox);
 var c=dojox.encoding.crypto;

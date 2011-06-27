@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/analytics/_base",["dojo/_base/kernel","dojo/_base/lang"],function(_1){
 dojox.analytics=function(){
 this._data=[];

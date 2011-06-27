@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/NormalizeIndentOutdent",["dojo","dijit","dojox","dijit/_editor/selection","dijit/_editor/_Plugin"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.NormalizeIndentOutdent",_2._editor._Plugin,{indentBy:40,indentUnits:"px",setEditor:function(_4){
 this.editor=_4;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/JsonRest",["../_base/kernel","../_base/xhr","../json","../_base/declare","./util/QueryResults"],function(_1,_2,_3,_4,_5){
 return _4("dojo.store.JsonRest",null,{constructor:function(_6){
 _1.safeMixin(this,_6);

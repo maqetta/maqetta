@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/popup",["dojo/_base/kernel","..","../popup","../BackgroundIframe","dojo/_base/html"],function(_1,_2,_3,_4){
 var _5=_3._createWrapper;
 _3._createWrapper=function(_6){

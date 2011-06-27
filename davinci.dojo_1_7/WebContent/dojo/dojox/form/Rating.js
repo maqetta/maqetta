@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/Rating",["dojo","dijit","dojox","dijit/form/_FormWidget"],function(_1,_2,_3){
 _1.getObject("dojox.form.Rating",1);
 _1.declare("dojox.form.Rating",_2.form._FormWidget,{templateString:null,numStars:3,value:0,constructor:function(_4){

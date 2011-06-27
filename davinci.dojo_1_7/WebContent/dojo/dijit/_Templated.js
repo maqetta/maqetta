@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_Templated",["dojo/_base/kernel",".","./_WidgetBase","./_TemplatedMixin","./_WidgetsInTemplateMixin","dojo/string","dojo/parser","dojo/cache","dojo/_base/array","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit._Templated",[_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{widgetsInTemplate:false,constructor:function(){
 _1.deprecated(this.declaredClass+": dijit._Templated deprecated, use dijit._TemplatedMixin and if necessary dijit._WidgetsInTemplateMixin","","2.0");

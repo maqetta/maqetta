@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/ItemFileWriteStore",["../main","./ItemFileReadStore"],function(_1){
 _1.declare("dojo.data.ItemFileWriteStore",_1.data.ItemFileReadStore,{constructor:function(_2){
 this._features["dojo.data.api.Write"]=true;

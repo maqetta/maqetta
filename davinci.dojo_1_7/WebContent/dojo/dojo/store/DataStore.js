@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/DataStore",["../main","./util/QueryResults"],function(_1){
 _1.declare("dojo.store.DataStore",null,{target:"",constructor:function(_2){
 _1.mixin(this,_2);

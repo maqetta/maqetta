@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/FlickrRestStore",["dojo","dojox","dojox/data/FlickrStore"],function(_1,_2){
 _1.declare("dojox.data.FlickrRestStore",_2.data.FlickrStore,{constructor:function(_3){
 if(_3){

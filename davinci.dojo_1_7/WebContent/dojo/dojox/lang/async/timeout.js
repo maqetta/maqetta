@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/async/timeout",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.async.timeout",1);
 (function(){

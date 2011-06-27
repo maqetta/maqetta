@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/typematic",["../typematic"],function(_1){
 return _1;
 });

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/tree/dndSource",["dojo/_base/kernel","..","dojo/touch","./_dndSelector","dojo/dnd/Manager","dojo/_base/array","dojo/_base/connect","dojo/_base/html"],function(_1,_2,_3){
 _1.declare("dijit.tree.dndSource",_2.tree._dndSelector,{isSource:true,accept:["text","treeNode"],copyOnly:false,dragThreshold:5,betweenThreshold:0,constructor:function(_4,_5){
 if(!_5){

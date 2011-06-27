@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/contrib/objects",["dojo/_base/kernel"],function(_1){
 _1.getObject("dtl.contrib.objects",true,dojox);
 _1.mixin(dojox.dtl.contrib.objects,{key:function(_2,_3){

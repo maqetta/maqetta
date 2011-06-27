@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/tools/Pencil",["../stencil/Path","../util/oo","../manager/_registry"],function(){
 dojox.drawing.tools.Pencil=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Path,function(){
 this._started=false;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/ToolbarLineBreak",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dijit/_editor/_Plugin"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.ToolbarLineBreak",[_2._Widget,_2._TemplatedMixin],{templateString:"<span class='dijit dijitReset'><br></span>",postCreate:function(){
 _1.setSelectable(this.domNode,false);

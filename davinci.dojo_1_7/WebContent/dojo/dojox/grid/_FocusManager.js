@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/_FocusManager",["dojo","dojox","./util"],function(_1,_2){
 _1.declare("dojox.grid._FocusManager",null,{constructor:function(_3){
 this.grid=_3;

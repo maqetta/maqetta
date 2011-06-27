@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/declare",["./kernel","../has","./lang","./array"],function(_1,_2){
 var _3=_1._mixin,op=Object.prototype,_4=op.toString,_5=new Function,_6=0,_7="constructor";
 function _8(_9,_a){

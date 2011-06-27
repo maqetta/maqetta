@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/Overlay",["dojo","dijit","dojox","dojo/window","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5){
 return _1.declare("dojox.mobile.Overlay",_2._WidgetBase,{baseClass:"mblOverlay mblOverlayHidden",show:function(_6){
 var vp,_7;

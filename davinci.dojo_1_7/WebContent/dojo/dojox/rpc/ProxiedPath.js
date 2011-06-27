@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/rpc/ProxiedPath",["dojo","dojox","dojox/rpc/Service"],function(_1,_2){
 _2.rpc.envelopeRegistry.register("PROXIED-PATH",function(_3){
 return _3=="PROXIED-PATH";

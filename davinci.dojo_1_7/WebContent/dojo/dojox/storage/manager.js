@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/storage/manager",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.storage.manager",1);
 _3.storage.manager=new function(){

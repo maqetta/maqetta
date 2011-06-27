@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/util/sorter",["../.."],function(_1){
 _1.getObject("data.util.sorter",true,_1);
 _1.data.util.sorter.basicComparator=function(a,b){

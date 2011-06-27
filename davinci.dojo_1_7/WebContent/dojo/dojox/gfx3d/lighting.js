@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx3d/lighting",["dojo/_base/kernel","dojox","dojox/gfx/_base"],function(_1,_2){
 _1.getObject("gfx3d",true,_2);
 var _3=_2.gfx3d.lighting={black:function(){

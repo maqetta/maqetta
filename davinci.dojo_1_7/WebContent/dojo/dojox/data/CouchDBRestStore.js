@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/CouchDBRestStore",["dojo","dojox","dojox/data/JsonRestStore"],function(_1,_2){
 _1.declare("dojox.data.CouchDBRestStore",_2.data.JsonRestStore,{save:function(_3){
 var _4=this.inherited(arguments);

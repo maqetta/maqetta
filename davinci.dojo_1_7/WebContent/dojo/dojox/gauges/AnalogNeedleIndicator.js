@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/AnalogNeedleIndicator",["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
 _1.experimental("dojox.gauges.AnalogNeedleIndicator");
 return _1.declare("dojox.gauges.AnalogNeedleIndicator",[_3],{_getShapes:function(_4){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/math/curves",["dojo","dojox"],function(_1,_2){
 _1.getObject("math.curves",true,_2);
 _1.mixin(_2.math.curves,{Line:function(_3,_4){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/robot",["dojo/_base/kernel",".","dojo/robot"],function(_1,_2){
 return _2;
 });

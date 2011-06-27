@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/action2d/TouchIndicator",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/event","./ChartAction","./_IndicatorElement","dojox/lang/utils"],function(_1,_2,_3,_4,_5,_6,du){
 return _1.declare("dojox.charting.action2d.TouchIndicator",dojox.charting.action2d.ChartAction,{defaultParams:{series:null,dualIndicator:false,vertical:true,autoScroll:true,fixed:true,precision:0},optionalParams:{lineStroke:{},outlineStroke:{},shadowStroke:{},stroke:{},outline:{},shadow:{},fill:{},fillFunc:null,labelFunc:null,font:"",fontColor:"",markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerSymbol:""},constructor:function(_7,_8,_9){
 this._listeners=[{eventName:"ontouchstart",methodName:"onTouchStart"},{eventName:"ontouchmove",methodName:"onTouchMove"},{eventName:"ontouchend",methodName:"onTouchEnd"},{eventName:"ontouchcancel",methodName:"onTouchEnd"}];

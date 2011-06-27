@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/app/ImageThumbView",["dojo","dijit","dojox","dijit/_WidgetBase","dojo/string"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.ImageThumbView",1);
 _1.experimental("dojox.mobile.app.ImageThumbView");

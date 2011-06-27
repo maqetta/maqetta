@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/FilePicker",["dojo","dijit","dojox","dojox/widget/RollingList","dojo/i18n","dojo/i18n","dojox/widget/nls/FilePicker"],function(_1,_2,_3){
 _1.getObject("dojox.widget.FilePicker",1);
 _1.requireLocalization("dojox.widget","FilePicker");

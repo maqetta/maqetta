@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx3d/scheduler",["dojo/_base/kernel","dojox","./vector","dojo/_base/array"],function(_1,_2){
 _1.getObject("gfx3d",true,_2);
 _2.gfx3d.scheduler={zOrder:function(_3,_4){

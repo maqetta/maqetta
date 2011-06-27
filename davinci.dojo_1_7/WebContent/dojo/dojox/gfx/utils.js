@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/utils",["dojox/gfx"],function(){
 var gu=dojo.getObject("dojox.gfx.utils",true);
 var d=dojo,g=dojox.gfx;

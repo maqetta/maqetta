@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/Inline",["dojo/_base/kernel","dojo/_base/lang","./_base","dijit/_Widget"],function(_1,_2,dd,_3){
 dd.Inline=_1.extend(function(_4,_5){
 this.create(_4,_5);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/FixedSplitterPane",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","dijit/_WidgetBase","dijit/_Container","dijit/_Contained"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile.FixedSplitterPane",[dijit._WidgetBase,dijit._Container,dijit._Contained],{buildRendering:function(){
 this.inherited(arguments);

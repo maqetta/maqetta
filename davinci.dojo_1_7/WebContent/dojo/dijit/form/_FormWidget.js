@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_FormWidget",["dojo/_base/kernel","..","dojo/window","../_Widget","../_TemplatedMixin","../_CssStateMixin","./_FormValueMixin","./_FormWidgetMixin","dojo/_base/sniff"],function(_1,_2){
 _1.declare("dijit.form._FormWidget",[_2._Widget,_2._TemplatedMixin,_2._CssStateMixin,_2.form._FormWidgetMixin],{setDisabled:function(_3){
 _1.deprecated("setDisabled("+_3+") is deprecated. Use set('disabled',"+_3+") instead.","","2.0");

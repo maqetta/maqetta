@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[显示选项]",
 	title: "标题",

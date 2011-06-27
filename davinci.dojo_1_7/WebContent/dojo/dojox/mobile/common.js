@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/common",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/ready","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
 _1.getObject("mobile",true,dojox);
 var ua=navigator.userAgent;

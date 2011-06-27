@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/ExpandingTextArea",["./TextArea","dijit/form/_ExpandingTextAreaMixin"],function(_1,_2){
 return dojo.declare("dojox.mobile.ExpandingTextArea",[dojox.mobile.TextArea,dijit.form._ExpandingTextAreaMixin],{baseClass:"mblTextArea mblExpandingTextArea"});
 });

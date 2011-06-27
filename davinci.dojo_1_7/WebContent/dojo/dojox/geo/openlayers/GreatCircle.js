@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/openlayers/GreatCircle",["dojox/geo/openlayers/GeometryFeature","dojox/geo/openlayers/Point","dojox/geo/openlayers/LineString"],function(_1,_2,_3){
 dojox.geo.openlayers.GreatCircle={toPointArray:function(p1,p2,_4){
 var _5=p1.x;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/cldr/supplemental",["../main","../i18n"],function(_1){
 _1.getObject("cldr.supplemental",true,_1);
 _1.cldr.supplemental.getFirstDayOfWeek=function(_2){

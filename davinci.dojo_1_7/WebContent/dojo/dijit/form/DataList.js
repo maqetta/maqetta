@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/DataList",["dojo/_base/kernel","..","dojo/store/Memory","dojo/_base/NodeList","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/query"],function(_1,_2){
 function _3(_4){
 return {id:_4.value,value:_4.value,name:_1.trim(_4.innerText||_4.textContent||"")};

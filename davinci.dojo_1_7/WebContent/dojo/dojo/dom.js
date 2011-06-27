@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dom",["./_base/kernel","./_base/sniff","./_base/lang","./_base/window"],function(_1,_2,_3,_4){
 try{
 document.execCommand("BackgroundImageCache",false,true);

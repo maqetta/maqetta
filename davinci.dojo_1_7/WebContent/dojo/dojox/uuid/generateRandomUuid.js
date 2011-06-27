@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/uuid/generateRandomUuid",["dojo/_base/kernel","./_base"],function(_1){
 dojox.uuid.generateRandomUuid=function(){
 var _2=16;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/util/SimpleQueryEngine",["../../_base/array"],function(_1){
 return function(_2,_3){
 switch(typeof _2){

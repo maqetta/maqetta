@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/window",["dojo/_base/kernel","..","dojo/window"],function(_1,_2){
 _2.getDocumentWindow=function(_3){
 return _1.window.get(_3);

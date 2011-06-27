@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/unload",["./kernel","./connect"],function(_1){
 var _2=window;
 _1.addOnWindowUnload=function(_3,_4){

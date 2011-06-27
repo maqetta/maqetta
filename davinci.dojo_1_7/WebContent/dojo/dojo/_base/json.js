@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/json",["./kernel","../json"],function(_1,_2){
 _1.fromJson=function(js){
 return eval("("+js+")");

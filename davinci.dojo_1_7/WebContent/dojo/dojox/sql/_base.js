@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/sql/_base",["dojo","dijit","dojox","dojox/sql/_crypto"],function(_1,_2,_3){
 _1.getObject("dojox.sql._base",1);
 _1.mixin(_3.sql,{dbName:null,debug:(_1.exists("dojox.sql.debug")?_3.sql.debug:false),open:function(_4){

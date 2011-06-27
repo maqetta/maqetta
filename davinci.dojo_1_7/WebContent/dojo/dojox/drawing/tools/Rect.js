@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/tools/Rect",["../stencil/Rect","../util/oo","../manager/_registry"],function(){
 dojox.drawing.tools.Rect=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Rect,function(){
 },{draws:true,onDrag:function(_1){

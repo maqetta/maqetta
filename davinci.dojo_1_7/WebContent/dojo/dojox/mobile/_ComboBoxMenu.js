@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/_ComboBoxMenu",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dijit/form/_ComboBoxMenuMixin","dijit/_WidgetBase","dojox/mobile/_ListTouchMixin","./scrollable"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile._ComboBoxMenu",[dijit._WidgetBase,dojox.mobile._ListTouchMixin,dijit.form._ComboBoxMenuMixin],{baseClass:"mblComboBoxMenu",bgIframe:true,buildRendering:function(){
 this.domNode=this.focusNode=_1.create("div",{"class":"mblReset"});

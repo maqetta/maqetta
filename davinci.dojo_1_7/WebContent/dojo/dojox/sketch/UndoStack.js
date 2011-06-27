@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/sketch/UndoStack",["dojo/_base/lang","dojo/_base/declare","../xml/DomParser"],function(_1){
 _1.getObject("sketch",true,dojox);
 var ta=dojox.sketch;

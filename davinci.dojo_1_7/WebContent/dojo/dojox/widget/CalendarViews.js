@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/CalendarViews",["dojo","dijit","dojox","dojox/widget/Calendar"],function(_1,_2,_3){
 _1.getObject("dojox.widget.CalendarViews",1);
 _1.experimental("dojox.widget.CalendarViews");

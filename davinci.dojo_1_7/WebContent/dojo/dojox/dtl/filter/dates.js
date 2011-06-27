@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/filter/dates",["dojo/_base/kernel","../utils/date"],function(dk,_1){
 dojo.getObject("dtl.filter.dates",true,dojox);
 var _2=dojox.dtl.filter.dates;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/BarGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/html","dojo/_base/event","dojox/gfx","./_Gauge","./BarLineIndicator"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 _1.experimental("dojox.gauges.BarGauge");
 return _1.declare("dojox.gauges.BarGauge",_8,{dataX:5,dataY:5,dataWidth:0,dataHeight:0,_defaultIndicator:_9,startup:function(){

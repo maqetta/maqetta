@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/Manager",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dojox/form/manager/_Mixin","dojox/form/manager/_NodeMixin","dojox/form/manager/_FormMixin","dojox/form/manager/_ValueMixin","dojox/form/manager/_EnableMixin","dojox/form/manager/_DisplayMixin","dojox/form/manager/_ClassMixin"],function(_1,_2,_3){
 _1.getObject("dojox.form.Manager",1);
 _1.declare("dojox.form.Manager",[_2._Widget,_3.form.manager._Mixin,_3.form.manager._NodeMixin,_3.form.manager._FormMixin,_3.form.manager._ValueMixin,_3.form.manager._EnableMixin,_3.form.manager._DisplayMixin,_3.form.manager._ClassMixin],{buildRendering:function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/fx/easing",["../main"],function(_1){
 _1.getObject("fx.easing",true,_1);
 _1.fx.easing={linear:function(n){

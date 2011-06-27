@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
         nomatchMessage: "Parolalar eşleşmiyor.",
 		badPasswordMessage: "Geçersiz Parola."

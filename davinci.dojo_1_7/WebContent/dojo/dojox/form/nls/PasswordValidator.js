@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define({root:
 ({
         nomatchMessage: "Passwords do not match.",

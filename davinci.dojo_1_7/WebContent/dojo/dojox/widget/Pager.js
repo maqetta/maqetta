@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/Pager",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dojo/fx"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Pager",1);
 _1.experimental("dojox.widget.Pager");

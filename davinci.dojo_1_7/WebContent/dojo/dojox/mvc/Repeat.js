@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mvc/Repeat",["dojo/_base/declare","./_Container"],function(_1,_2){
 return _1("dojox.mvc.Repeat",[_2],{index:0,postscript:function(_3,_4){
 this.srcNodeRef=dojo.byId(_4);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ButtonMixin",["dojo/_base/kernel","..","dojo/_base/event","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.form._ButtonMixin",null,{label:"",type:"button",_onClick:function(e){
 if(this.disabled){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/utils/date",["dojo/_base/kernel","dojo/_base/lang","dojox/date/php"],function(_1,_2,_3){
 _1.getObject("dtl.utils.date",true,dojox);
 dojox.dtl.utils.date.DateFormat=function(_4){

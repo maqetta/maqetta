@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/CellMerge",["dojo","dojox","../_Plugin"],function(_1,_2){
 _1.declare("dojox.grid.enhanced.plugins.CellMerge",_2.grid.enhanced._Plugin,{name:"cellMerge",constructor:function(_3,_4){
 this.grid=_3;

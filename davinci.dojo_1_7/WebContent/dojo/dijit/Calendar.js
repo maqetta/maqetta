@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/Calendar",["dojo/_base/kernel",".","dojo/date","dojo/date/locale","./CalendarLite","./_CssStateMixin","./hccss","./form/DropDownButton","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
 _1.declare("dijit.Calendar",[_2.CalendarLite,_2._CssStateMixin],{cssStateNodes:{"decrementMonth":"dijitCalendarArrow","incrementMonth":"dijitCalendarArrow","previousYearLabelNode":"dijitCalendarPreviousYear","nextYearLabelNode":"dijitCalendarNextYear"},setValue:function(_3){
 _1.deprecated("dijit.Calendar:setValue() is deprecated.  Use set('value', ...) instead.","","2.0");

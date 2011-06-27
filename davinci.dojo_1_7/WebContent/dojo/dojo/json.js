@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/json",["./has"],function(_1){
 "use strict";
 var _2=typeof JSON!="undefined";

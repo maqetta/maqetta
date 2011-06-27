@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/date",["./_base/kernel"],function(_1){
 _1.getObject("date",true,_1);
 _1.date.getDaysInMonth=function(_2){

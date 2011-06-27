@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[možnosti prikaza]",
 	title: "Naslov",

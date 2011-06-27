@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/annotations/Label",["dojo","../stencil/Text","./Angle"],function(_1){
 dojox.drawing.annotations.Label=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Text,function(_2){
 this.master=_2.stencil;

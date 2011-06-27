@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_FocusMixin",["dojo/_base/kernel",".","./focus","./_WidgetBase","dojo/_base/declare","dojo/_base/lang"],function(_1,_2,_3){
 _1.extend(_2._WidgetBase,{focused:false,onFocus:function(){
 },onBlur:function(){

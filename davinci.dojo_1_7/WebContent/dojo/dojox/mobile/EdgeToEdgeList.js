@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/EdgeToEdgeList",["./RoundRectList"],function(_1){
 return dojo.declare("dojox.mobile.EdgeToEdgeList",dojox.mobile.RoundRectList,{buildRendering:function(){
 this.inherited(arguments);

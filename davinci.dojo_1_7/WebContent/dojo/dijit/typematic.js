@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/typematic",["dojo/_base/kernel",".","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
 _2.typematic={_fireEventAndReload:function(){
 this._timer=null;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Moveable",["../main","./Mover"],function(_1){
 _1.declare("dojo.dnd.Moveable",null,{handle:"",delay:0,skip:false,constructor:function(_2,_3){
 this.node=_1.byId(_2);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/RangeBoundTextBox",["dojo/_base/kernel","..","./MappedTextBox","dojo/_base/declare","dojo/i18n"],function(_1,_2){
 _1.declare("dijit.form.RangeBoundTextBox",_2.form.MappedTextBox,{rangeMessage:"",rangeCheck:function(_3,_4){
 return ("min" in _4?(this.compare(_3,_4.min)>=0):true)&&("max" in _4?(this.compare(_3,_4.max)<=0):true);

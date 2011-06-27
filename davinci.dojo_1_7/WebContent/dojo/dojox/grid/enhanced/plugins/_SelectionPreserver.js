@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/_SelectionPreserver",["dojo","dojox","../../_SelectionPreserver"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced.plugins._SelectionPreserver",_3,{constructor:function(_4){
 var _5=this.grid;

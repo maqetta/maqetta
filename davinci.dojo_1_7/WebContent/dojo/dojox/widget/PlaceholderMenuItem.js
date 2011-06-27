@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/PlaceholderMenuItem",["dojo","dijit","dojox","dijit/Menu"],function(_1,_2,_3){
 _1.getObject("dojox.widget.PlaceholderMenuItem",1);
 _1.experimental("dojox.widget.PlaceholderMenuItem");

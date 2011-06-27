@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/arc",["./matrix"],function(_1){
 dojo.getObject("dojox.gfx.arc",true);
 var m=dojox.gfx.matrix,_2=2*Math.PI,_3=Math.PI/4,_4=Math.PI/8,_5=_3+_4,_6=_7(_4);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/gesture/tap",["dojo","../gesture"],function(_1,_2){
 function _3(_4){
 clearTimeout(_4);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/date/stamp",["../main"],function(_1){
 _1.getObject("date.stamp",true,_1);
 _1.date.stamp.fromISOString=function(_2,_3){

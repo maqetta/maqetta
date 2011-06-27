@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/FisheyeLite",["dojo","dojox","dijit/_Widget","dojo/fx/easing"],function(_1,_2,_3,_4){
 _1.getObject("widget",true,_2);
 _1.experimental("dojox.widget.FisheyeLite");

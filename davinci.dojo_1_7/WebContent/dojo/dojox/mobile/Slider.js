@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/Slider",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","dijit/_WidgetBase","dijit/form/_FormValueMixin"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.mobile.Slider",[dijit._WidgetBase,dijit.form._FormValueMixin],{value:0,min:0,max:100,step:1,baseClass:"mblSlider",flip:false,orientation:"auto",halo:"8pt",buildRendering:function(){
 this.focusNode=this.domNode=_1.create("div",{});

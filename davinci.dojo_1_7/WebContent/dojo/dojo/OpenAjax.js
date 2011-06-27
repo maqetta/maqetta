@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 if(!window["OpenAjax"]){
 OpenAjax=new function(){
 var t=true;

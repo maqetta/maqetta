@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/dom",["dojo","dojox","dojox/xml/parser"],function(_1,_2){
 _1.deprecated("dojox.data.dom","Use dojox.xml.parser instead.","2.0");
 if(!_2.data){

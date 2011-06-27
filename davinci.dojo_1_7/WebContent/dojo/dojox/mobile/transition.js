@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/transition",["dojo/_base/kernel","dojo/_base/array","dojo/_base/html","dojo/DeferredList"],function(_1,_2,_3,_4){
 return function(_5,to,_6){
 var _7=(_6&&_6.reverse)?" mblReverse":"";

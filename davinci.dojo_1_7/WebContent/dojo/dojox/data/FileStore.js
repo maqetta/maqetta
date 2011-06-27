@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/FileStore",["dojo","dojox"],function(_1,_2){
 _1.declare("dojox.data.FileStore",null,{constructor:function(_3){
 if(_3&&_3.label){

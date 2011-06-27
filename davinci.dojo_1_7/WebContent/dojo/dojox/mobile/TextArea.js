@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/TextArea",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./TextBox"],function(_1,_2,_3,_4){
 return _1.declare("dojox.mobile.TextArea",dojox.mobile.TextBox,{baseClass:"mblTextArea",postMixInProperties:function(){
 if(!this.value&&this.srcNodeRef){

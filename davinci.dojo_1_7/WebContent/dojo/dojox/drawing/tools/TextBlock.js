@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/tools/TextBlock",["dojo","../stencil/Text","../util/oo","../manager/_registry"],function(_1){
 var _2;
 _1.addOnLoad(function(){

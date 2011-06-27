@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/Stateful",["./_base/kernel","./_base/declare","./_base/array"],function(_1,_2){
 return _1.declare("dojo.Stateful",null,{postscript:function(_3){
 if(_3){

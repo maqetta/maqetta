@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/gears",["./main"],function(_1){
 _1.getObject("gears",true,_1);
 _1.gears._gearsObject=function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/html/_base",["dojo","dijit","dojox","dojo/html","dojo/_base/url"],function(_1,_2,_3){
 _1.getObject("dojox.html._base",1);
 (function(){

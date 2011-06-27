@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/cells/tree",["dojo","dojox","../cells"],function(_1,_2){
 _2.grid.cells.TreeCell={formatAggregate:function(_3,_4,_5){
 var f,g=this.grid,i=g.edit.info,d=g.aggregator?g.aggregator.getForCell(this,_4,_3,_4===this.level?"cnt":this.parentCell.aggregate):(this.value||this.defaultValue);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/functional/sequence",["dojo","dijit","dojox","dojox/lang/functional/lambda"],function(_1,_2,_3){
 _1.getObject("dojox.lang.functional.sequence",1);
 (function(){

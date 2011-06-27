@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/gesture",["./_base/kernel","./on","./touch","./has"],function(_1,on,_2,_3){
 _1.gesture={events:{},gestures:[],_gestureElements:[],register:function(_4){
 if(!_3("touch")&&_4.touchOnly){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/TableContainer",["dojo","dijit","dojox","dijit/layout/_LayoutWidget"],function(_1,_2,_3){
 _1.getObject("dojox.layout.TableContainer",1);
 _1.experimental("dojox.layout.TableContainer");

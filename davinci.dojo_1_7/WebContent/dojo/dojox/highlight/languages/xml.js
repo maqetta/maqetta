@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/highlight/languages/xml",["dojox/main","../_base"],function(_1){
 var _2={className:"comment",begin:"<!--",end:"-->"};
 var _3={className:"attribute",begin:" [a-zA-Z-]+\\s*=\\s*",end:"^",contains:["value"]};

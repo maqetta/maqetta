@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gantt/TabMenu",["dojo","dijit","dojox","dijit/dijit","dijit/Menu","dijit/Dialog","dijit/form/NumberSpinner","dijit/form/Button","dijit/form/CheckBox","dijit/form/DateTextBox","dijit/form/TimeTextBox","dojo/date/locale","dijit/form/Form","dojo/parser"],function(_1,_2,_3){
 _1.getObject("dojox.gantt.TabMenu",1);
 (function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/sketch/Figure",["dojo/_base/lang","dojo/_base/connect","dojo/_base/html","../gfx","../xml/DomParser","./UndoStack"],function(_1){
 _1.experimental("dojox.sketch");
 var ta=dojox.sketch;

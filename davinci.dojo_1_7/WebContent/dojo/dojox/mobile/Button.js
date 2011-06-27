@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/Button",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/form/_FormWidgetMixin","dijit/form/_ButtonMixin"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile.Button",[dijit._WidgetBase,dijit.form._FormWidgetMixin,dijit.form._ButtonMixin],{baseClass:"mblButton",duration:1000,_onClick:function(e){
 var _8=this.inherited(arguments);

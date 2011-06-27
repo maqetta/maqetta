@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/HtmlTableStore",["dojo","dojox","dojo/data/util/simpleFetch","dojo/data/util/filter","dojox/xml/parser"],function(_1,_2){
 _1.declare("dojox.data.HtmlTableStore",null,{constructor:function(_3){
 _1.deprecated("dojox.data.HtmlTableStore","Please use dojox.data.HtmlStore");

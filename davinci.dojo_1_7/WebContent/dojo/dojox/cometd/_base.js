@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/cometd/_base",["dojo","dijit","dojox","dojo/AdapterRegistry"],function(_1,_2,_3){
 _1.getObject("dojox.cometd._base",1);
 _3.cometd={Connection:function(_4){

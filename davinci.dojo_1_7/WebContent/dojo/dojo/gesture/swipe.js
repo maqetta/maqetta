@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/gesture/swipe",["dojo","../gesture"],function(_1,_2){
 var _3=_1.declare(null,{swipeTimeout:300,swipeSpeed:600,swipeRange:60,swipeDirection:{none:0,up:1,down:2,left:4,right:8},swipeContext:{x:0,y:0,t:0},defaultEvent:"swipe",subEvents:["up","right","down","left"],constructor:function(_4){
 _1.mixin(this,_4);

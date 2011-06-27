@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/focus",["dojo/_base/kernel",".","dojo/on","dojo/aspect","dojo/Stateful","dojo/window","./_base/manager","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/ready","dojo/_base/sniff","dojo/_base/unload","dojo/_base/window","dijit/_base/manager"],function(_1,_2,on,_3,_4){
 var _5=_1.declare([_4,on.Evented],{curNode:null,activeStack:[],constructor:function(){
 var _6=_1.hitch(this,function(_7){

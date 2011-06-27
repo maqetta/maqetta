@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/SpinWheelDatePicker",["dojo/date","dojo/date/locale","./SpinWheel","./SpinWheelSlot"],function(_1,_2,_3,_4){
 var _5=dojo.declare(dojox.mobile.SpinWheelSlot,{buildRendering:function(){
 this.labels=[];

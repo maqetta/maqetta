@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/DataSelection",["dojo","dojox","./_SelectionPreserver","./Selection"],function(_1,_2,_3){
 _1.declare("dojox.grid.DataSelection",_2.grid.Selection,{constructor:function(_4){
 if(_4.keepSelection){

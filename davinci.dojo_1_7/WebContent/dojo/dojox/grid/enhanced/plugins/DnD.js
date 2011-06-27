@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/DnD",["dojo","dojox","dojo/dnd/move","dojo/dnd/Source","../_Plugin","./Selector","./Rearrange"],function(_1,_2){
 var _3=function(a){
 a.sort(function(v1,v2){

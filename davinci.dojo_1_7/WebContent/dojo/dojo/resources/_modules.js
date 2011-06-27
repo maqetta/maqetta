@@ -4,3 +4,4 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built

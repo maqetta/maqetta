@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ListMouseMixin",["dojo/_base/kernel","..","dojo/touch","./_ListBase","dojo/_base/event"],function(_1,_2,_3){
 _1.declare("dijit.form._ListMouseMixin",_2.form._ListBase,{postCreate:function(){
 this.inherited(arguments);

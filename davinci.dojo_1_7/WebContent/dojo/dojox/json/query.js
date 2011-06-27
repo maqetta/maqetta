@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/json/query",["dojo/_base/kernel","dojox","dojo/_base/array"],function(_1,_2){
 _1.getObject("json",true,_2);
 _2.json._slice=function(_3,_4,_5,_6){

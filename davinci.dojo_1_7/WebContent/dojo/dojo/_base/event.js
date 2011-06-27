@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/event",["./kernel","../on","../has"],function(_1,on,_2){
 _2.add("dom-addeventlistener",!!document.addEventListener);
 if(on._fixEvent){

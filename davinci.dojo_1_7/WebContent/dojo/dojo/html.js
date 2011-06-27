@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/html",["./main","./parser"],function(_1){
 _1.getObject("html",true,_1);
 var _2=0,d=_1;

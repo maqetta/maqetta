@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_Widget",["dojo/_base/kernel",".","./_WidgetBase","./_OnDijitClickMixin","./_FocusMixin","dojo/_base/lang","dojo/_base/connect","dojo/uacss","dijit/hccss","./_base/manager"],function(_1,_2){
 _2._connectToDomNode=function(_3){
 };

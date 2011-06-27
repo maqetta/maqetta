@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/cells",["dojox","./cells/_base"],function(_1){
 return _1.grid.cells;
 });

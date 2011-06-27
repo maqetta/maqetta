@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/NodeList-traverse",["./main"],function(_1){
 _1.extend(_1.NodeList,{_buildArrayFromCallback:function(_2){
 var _3=[];

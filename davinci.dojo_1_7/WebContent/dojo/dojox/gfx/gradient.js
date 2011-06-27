@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/gradient",["./matrix"],function(m){
 dojo.getObject("dojox.gfx.gradient",true);
 var d=dojo,C=d.Color;

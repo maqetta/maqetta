@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/PopupMenuItem",["dojo/_base/kernel",".","./MenuItem","./hccss","dojo/_base/declare","dojo/_base/html","dojo/_base/window","dojo/query"],function(_1,_2){
 _1.declare("dijit.PopupMenuItem",_2.MenuItem,{_fillContent:function(){
 if(this.srcNodeRef){

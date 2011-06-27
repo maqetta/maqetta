@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/wire/ml/DataStore",["dojo","dijit","dojox","dijit/_Widget","dojox/wire/_base"],function(_1,_2,_3){
 _1.getObject("dojox.wire.ml.DataStore",1);
 _1.declare("dojox.wire.ml.DataStore",_2._Widget,{storeClass:"",postCreate:function(){

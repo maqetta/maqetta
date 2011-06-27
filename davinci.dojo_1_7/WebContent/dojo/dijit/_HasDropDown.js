@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_HasDropDown",["dojo/_base/kernel",".","dojo/has","dojo/touch","./focus","./popup","./_FocusMixin","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/window","dojo/window"],function(_1,_2,_3,_4,_5,_6){
 _1.declare("dijit._HasDropDown",_2._FocusMixin,{_buttonNode:null,_arrowWrapperNode:null,_popupStateNode:null,_aroundNode:null,dropDown:null,autoWidth:true,forceWidth:false,maxHeight:0,dropDownPosition:["below","above"],_stopClickEvents:true,_onDropDownMouseDown:function(e){
 if(this.disabled||this.readOnly){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_FormMixin",["dojo/_base/kernel","..","dojo/window","dojo/_base/array","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit.form._FormMixin",null,{state:"",reset:function(){
 _1.forEach(this.getDescendants(),function(_3){

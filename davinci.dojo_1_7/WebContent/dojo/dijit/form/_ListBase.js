@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ListBase",["dojo/_base/kernel","..","dojo/window"],function(_1,_2){
 _1.declare("dijit.form._ListBase",null,{selected:null,_getTarget:function(_3){
 var _4=_3.target;

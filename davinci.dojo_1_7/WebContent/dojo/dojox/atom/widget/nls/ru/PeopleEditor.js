@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	add: "Добавить",
 	addAuthor: "Добавить автора",

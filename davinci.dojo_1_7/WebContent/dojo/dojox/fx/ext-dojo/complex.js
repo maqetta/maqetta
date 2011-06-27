@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/ext-dojo/complex",["dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/Color","dojo/_base/fx"],function(_1){
 _1.getObject("fx.ext-dojo.complex",true,dojox);
 var da=_1.animateProperty;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/io/iframe",["../main","require"],function(_1,_2){
 _1.getObject("io",true,_1);
 _1.io.iframe={create:function(_3,_4,_5){

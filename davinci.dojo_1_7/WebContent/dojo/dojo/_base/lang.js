@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/lang",["./kernel","../has","./sniff"],function(_1,_2){
 var _3=Object.prototype.toString;
 _1.isString=function(it){

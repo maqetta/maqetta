@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Container",["../main","./common","../parser"],function(_1){
 _1.declare("dojo.dnd.Container",null,{skipForm:false,constructor:function(_2,_3){
 this.node=_1.byId(_2);

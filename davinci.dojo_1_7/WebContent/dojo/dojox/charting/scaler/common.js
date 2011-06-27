@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/scaler/common",["dojo/_base/kernel","../../main","dojo/_base/lang"],function(_1,_2){
 var eq=function(a,b){
 return Math.abs(a-b)<=0.000001*(Math.abs(a)+Math.abs(b));

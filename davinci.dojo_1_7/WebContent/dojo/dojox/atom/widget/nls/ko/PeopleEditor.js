@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	add: "추가",
 	addAuthor: "작성자 추가",

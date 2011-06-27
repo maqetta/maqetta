@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/uuid/generateTimeBasedUuid",["dojo/_base/kernel","./_base"],function(_1){
 dojox.uuid.generateTimeBasedUuid=function(_2){
 var _3=dojox.uuid.generateTimeBasedUuid._generator.generateUuidString(_2);

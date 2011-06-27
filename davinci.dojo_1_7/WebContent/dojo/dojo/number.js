@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/number",["./_base/kernel","./i18n","./i18n!./cldr/nls/number","./string","./regexp"],function(_1){
 _1.getObject("number",true,_1);
 _1.number.format=function(_2,_3){

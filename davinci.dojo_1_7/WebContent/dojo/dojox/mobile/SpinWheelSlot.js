@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/SpinWheelSlot",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","dijit/_WidgetBase","dijit/_Contained","./_ScrollableMixin"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile.SpinWheelSlot",[dijit._WidgetBase,dijit._Contained,dojox.mobile._ScrollableMixin],{items:[],labels:[],labelFrom:0,labelTo:0,maxSpeed:500,minItems:15,centerPos:0,value:"",scrollBar:false,constraint:false,allowNestedScrolls:false,buildRendering:function(){
 this.inherited(arguments);

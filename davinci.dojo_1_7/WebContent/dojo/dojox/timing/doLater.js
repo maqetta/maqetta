@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/timing/doLater",["./_base"],function(_1){
 dojo.experimental("dojox.timing.doLater");
 _1.doLater=function(_2,_3,_4){

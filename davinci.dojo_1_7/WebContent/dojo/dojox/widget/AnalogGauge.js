@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/AnalogGauge",["dojo","dijit","dojox","dojox/widget/gauge/_Gauge","dojox/gauges/AnalogGauge"],function(_1,_2,_3){
 _1.getObject("dojox.widget.AnalogGauge",1);
 _3.widget.AnalogGauge=_3.gauges.AnalogGauge;

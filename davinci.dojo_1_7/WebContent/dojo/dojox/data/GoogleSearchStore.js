@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/GoogleSearchStore",["dojo","dojox","dojo/io/script"],function(_1,_2){
 _1.experimental("dojox.data.GoogleSearchStore");
 _1.declare("dojox.data.GoogleSearchStore",null,{constructor:function(_3){

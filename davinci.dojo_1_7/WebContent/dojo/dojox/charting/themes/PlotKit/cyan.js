@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/themes/PlotKit/cyan",["./base","../../Theme"],function(pk,_1){
 pk.cyan=pk.base.clone();
 pk.cyan.chart.fill=pk.cyan.plotarea.fill="#e6f1f5";

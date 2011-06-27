@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/silverlight_attach",["./silverlight"],function(){
 dojo.getObject("dojox.gfx.silverlight_attach",true);
 dojo.experimental("dojox.gfx.silverlight_attach");

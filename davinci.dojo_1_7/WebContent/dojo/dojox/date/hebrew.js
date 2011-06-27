@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/date/hebrew",["dojo/_base/kernel","dojo/date","./hebrew/Date"],function(d,dd,_1){
 dojo.getObject("date.hebrew",true,dojox);
 dojo.experimental("dojox.date.hebrew");

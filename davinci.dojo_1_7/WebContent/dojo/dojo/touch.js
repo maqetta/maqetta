@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/touch",["./_base/kernel","./on","./has"],function(_1,on,_2){
 function _3(_4){
 return function(_5,_6){

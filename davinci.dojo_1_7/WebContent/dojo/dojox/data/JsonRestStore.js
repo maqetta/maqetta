@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/JsonRestStore",["dojo","dojox","dojox/rpc/JsonRest","dojox/data/ServiceStore"],function(_1,_2){
 _1.declare("dojox.data.JsonRestStore",_2.data.ServiceStore,{constructor:function(_3){
 _1.connect(_2.rpc.Rest._index,"onUpdate",this,function(_4,_5,_6,_7){

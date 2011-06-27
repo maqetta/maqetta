@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/_Indicator",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/connect","dijit/_Widget"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.gauges._Indicator",[_7],{value:0,type:"",color:"black",strokeColor:"",label:"",font:{family:"sans-serif",size:"12px"},length:0,width:0,offset:0,hover:"",front:false,easing:_1._defaultEasing,duration:1000,hideValue:false,noChange:false,interactionMode:"indicator",_gauge:null,title:"",startup:function(){
 if(this.onDragMove){

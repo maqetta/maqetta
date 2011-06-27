@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/html",["dojo/_base/kernel","..","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
 _1.getObject("_editor",true,_2);
 _2._editor.escapeXml=function(_3,_4){

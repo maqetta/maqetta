@@ -228,7 +228,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		this.addReviewerButton = new dijit.form.Button({
 			disabled:true,
 			onClick:dojo.hitch(this,this.addReviewer),
-			label: "<div style='width:75px;height:10px;margin:-6px 0 0 0'>Add</div>"
+			label: "<div style='width:75px;height:10px;margin:-6px 0 0 0'>"+langObj.add+"</div>"
 		},this.addReviewerButton);
 		
 		var stateStore = new dojox.data.QueryReadStore({
@@ -641,6 +641,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var warningString = this.warningString;
 		
 		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		
 		dojo.xhrPost({url:"./cmd/publish",sync:false,handleAs:"text",
 			content:{
@@ -681,7 +682,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             		dojo.publish("/davinci/review/resourceChanged", [{message:langObj.draftSaved, type:"message"},"create"]);
             	}
             }else{
-            	var dialogContent = dojo.string.substitute(warningString, {htmlContent: result});
+            	var dialogContent = dojo.string.substitute(warningString, {htmlContent: result, inviteNotSent:langObj.inviteNotSent, mailFailureMsg:langObj.mailFailureMsg, buttonOk:dijitLangObj.buttonOk});
             	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.inviteFailed, type:"warning"},"create"]);
             	if(!this.invitationDialog){
             		this.invitationDialog = new dijit.Dialog({

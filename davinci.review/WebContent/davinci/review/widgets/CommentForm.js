@@ -14,12 +14,25 @@ dojo.require("dijit.MenuItem");
 dojo.require("davinci.review.widgets.Comment");
 dojo.require("dojo.fx");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.widgets", "widgets");
+dojo.requireLocalization("dijit", "common");
+
 dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templated],{
 	templateString: dojo.cache("davinci", "review/widgets/templates/CommentForm.html"),
 	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		dojo.mixin(this, langObj);
+		dojo.mixin(this, dijitLangObj);
+		this.inherited(arguments);
+	},
+	
 	postCreate: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		this.subject = new dijit.form.TextBox({
-			placeHolder: "Subject",
+			placeHolder: langObj.subject,
 			style: "width: 100%"
 		}, this.subjectNode);
 		this.content = new dijit.form.SimpleTextarea({
@@ -30,7 +43,7 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 		this._constructCommentTypes();
 		this._constructSeverities();
 		var submitButton = new dijit.form.Button({
-			label: "Submit", 
+			label: langObj.submit, 
 			onClick: dojo.hitch(this, "_submit")
 		}, this.submitNode);
 		
@@ -104,28 +117,29 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 	 * Generate a drop down button for comment types.
 	 */
 	_constructCommentTypes : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		var typeList = new dijit.Menu();
 		this.type = new dijit.form.DropDownButton({
-				label: "Unassigned",
+				label: langObj.unassigned,
 				iconClass: "dijitEditorIcon emptyIcon",	//Here use an empty icon, the generated DropDownButton will align automatically.
 				dropDown : typeList
 			}, this.commentType);
 		
 		typeList.addChild(new dijit.MenuItem({ 
-			label : "Unassigned",
+			label : langObj.unassigned,
 			onClick: dojo.hitch( this, "setTypeButtonLabel", "Unassigned" )
 		}));
 		
 		typeList.addChild(new dijit.MenuItem({ 
-			label : "Requirement",
+			label : langObj.requirement,
 			onClick: dojo.hitch( this, "setTypeButtonLabel", "Requirement" )
 		}));
 		typeList.addChild(new dijit.MenuItem({ 
-			label : "Task",
+			label : langObj.task,
 			onClick: dojo.hitch( this, "setTypeButtonLabel", "Task" )
 		}));
 		typeList.addChild( new dijit.MenuItem({ 
-			label : "Defect",
+			label : langObj.defect,
 			onClick: dojo.hitch( this, "setTypeButtonLabel", "Defect" )
 		}));
 		
@@ -139,34 +153,35 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 	 * Generate a drop down button for comment severity(High, Low, Medium).
 	 */
 	_constructSeverities : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		var severityList = new dijit.Menu();
 		
 		this.severity = new dijit.form.DropDownButton({
-			label: "Unassigned",
+			label: langObj.unassigned,
 			iconClass: "dijitEditorIcon severityUnassigned",
 			dropDown : severityList
 		}, this.commentSeverity);
 		
 		severityList.addChild(new dijit.MenuItem({
-			label: "Unassigned",
+			label: langObj.unassigned,
 			iconClass: "dijitEditorIcon severityUnassigned",
 			onClick: dojo.hitch( this, "setSeverityButtonLabel", "Unassigned" )
 		}));
 		
 		severityList.addChild(new dijit.MenuItem({
-			label: "Low",
+			label: langObj.low,
 			iconClass: "dijitEditorIcon severityLow",
 			onClick: dojo.hitch( this, "setSeverityButtonLabel", "Low" )
 		}));
 		
 		severityList.addChild(new dijit.MenuItem({
-			label: "Medium",
+			label: langObj.medium,
 			iconClass: "dijitEditorIcon severityMedium",
 			onClick: dojo.hitch( this, "setSeverityButtonLabel", "Medium" )
 		}));
 		
 		severityList.addChild(new dijit.MenuItem({
-			label: "High",
+			label: langObj.high,
 			iconClass: "dijitEditorIcon severityHigh",
 			onClick: dojo.hitch( this, "setSeverityButtonLabel", "High" )
 		}));
@@ -188,8 +203,9 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 	},
 	
 	reset: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		dojo.style(this.subject.domNode, "display", "block");
-		this.placeHolder.innerHTML = "Comment";
+		this.placeHolder.innerHTML = langObj.comment;
 		this.showPlaceHolder();
 		this.subject.set("value", "");
 		this.content.set("value", "");
@@ -215,7 +231,8 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 	
 	setReplyMode: function(){
 		dojo.style(this.subject.domNode, "display", "none");
-		this.placeHolder.innerHTML = "Comment reply";
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		this.placeHolder.innerHTML = langObj.commentReply;
 	},
 	
 	setEditMode: function(){

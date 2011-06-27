@@ -514,6 +514,13 @@
 .davinciComment{
 	border-top: 1px solid black;
 }
+
+.davinciComment2 {
+	border-top: none; 
+	margin-top: 2px; 
+	padding-bottom: 2px;
+}
+
 .davinciComment .commentBody{
 	background-color: white;
 	padding:4px;
@@ -569,6 +576,27 @@
 .davinciComment .commentSubjectDisabled,
 .davinciComment .commentLinkButtonDisabled {
 	color: #818181;
+}
+
+.davinciComment .editReplyBlock {
+	float: right;
+}
+
+.davinciComment .editReplySpace {
+	display: inline-block; 
+	width: 2px;
+}
+
+.davinciComment .contentNode {
+	position:relative;
+}
+
+.davinciComment .submitCancelDiv {
+	text-align: right;
+}
+
+.davinciComment .cancelLink {
+	vertical-align: middle;
 }
 
 .severityLow {
@@ -664,6 +692,25 @@
 
 .publishWizard .bottomButton {
 	float:right;
+}
+
+.mailFailureInfo {
+	font-weight:bold;
+}
+
+.mailFailureExtraInfo {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.mailFailureContent {
+	border:1px dashed;
+	padding:3px;
+	margin-bottom:10px;
+}
+
+.mailFailureButton {
+	text-align:center;
 }
 
 .review-tips {

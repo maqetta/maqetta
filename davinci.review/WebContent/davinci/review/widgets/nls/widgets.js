@@ -1,4 +1,42 @@
 ({
+		//Comment.js
+		"open":"Open",
+		"close":"Close",
+		"more":" more...",
+		"commentHide":" hide",
+		
+		//Comment.html
+		"by":"by",
+		"edit":"Edit",
+		"reply":"Reply",
+		"type":"Type",
+		"severity":"Severity",
+		"status":"Status",
+		
+		//CommentForm.js
+		"subject":"Subject",
+		"submit":"Submit",
+		"unassigned":"Unassigned",
+		"requirement":"Requirement",
+		"task":"Task",
+		"defect":"Defect",
+		"low":"Low",
+		"medium":"Medium",
+		"high":"High",
+		"comment":"Comment",
+		"commentReply":"Comment reply",
+		
+		//CommentForm.html
+		//Comment, Type, Severity defined above
+		
+		//InfoCard.html
+		"yourRole":"Your Role",
+		"dueBy":"Due by",
+		"createdBy":"Created by",
+		"artifactsInRev":"Artifacts In Review",
+		"reviewers":"Reviewers",
+		
+	
 		//PublishWizard.js
 		"enterNameOrEmail":"Enter a name or email address",
 		"noReviewersSelected":"No reviewers selected yet",
@@ -12,6 +50,7 @@
 		"user":"User",
 		"email":"Email",
 		"action":"Action",
+		"add":"Add",
 		
 		//PublisherWizard.html
 		"generalInfo":" General Information",
@@ -31,7 +70,8 @@
 		"back":"Back",
 		"saveAsDraft":"Save as draft",
 		
-		//MailFailurDialogContent.html -- not implemented yet - need to look into this
-		"inviteNotSent":"Invitation was not sent"
+		//MailFailurDialogContent.html
+		"inviteNotSent":"Invitation was not sent",
+		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually."
 
 })

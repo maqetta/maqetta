@@ -1,5 +1,8 @@
 dojo.provide("davinci.review.util");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review", "review");
+
 dojo.require("dojo.date.locale");
 
 davinci.review.util = {
@@ -12,13 +15,14 @@ davinci.review.util = {
 		if ( !date || !baseDate )
 			return '';
 		
+		var langObj = dojo.i18n.getLocalization("davinci.review", "review");
 		var diff = date.getTime() - baseDate.getTime();
-		var direction = ( diff < 0 ? 'ago' : 'later' );
+		var direction = ( diff < 0 ? langObj.ago : langObj.later );
 		var day, hour, min, second;
 		
 		diff = Math.floor( Math.abs( diff ) / 1000 );
 		
-		if(diff <= 60) return "just now";
+		if(diff <= 60) return langObj.justNow;
 		
 		if ( threshhold && diff > threshhold )
 			return dojo.date.locale.format(date, {formatLength:'short',selector:'date'});
@@ -31,7 +35,7 @@ davinci.review.util = {
 		diff = Math.floor( diff / 24 );
 		day = diff;
 		
-		var timeStr = day ? day + ' days ': hour ? hour + ' hours ':min ? min + ' mins ':'';
+		var timeStr = day ? day + langObj.days: hour ? hour + langObj.hours:min ? min + langObj.mins:'';
 	    return timeStr + direction;
 	},
 	

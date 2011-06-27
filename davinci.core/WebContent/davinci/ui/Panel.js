@@ -2,6 +2,8 @@ dojo.provide("davinci.ui.Panel");
 
 dojo.require("dijit.layout.ContentPane");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("davinci.ui.Panel",dijit.layout.ContentPane, {
 	
@@ -330,7 +332,8 @@ davinci.ui.Panel.openDialog = function(params)
 	   return true;
    };
    
-   var okLabel=params.buttonLabel || 'ok';
+   var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+   var okLabel=params.buttonLabel || dijitLangObj.buttonOk;
    var okStyle=params.buttonStyle || '';
    var okBtn=new dijit.form.Button({label:okLabel, style:okStyle, /* type:"submit",*/
 	   onClick : okClicked });

@@ -148,7 +148,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	
 	attach: function(widget){
-		if(!widget || widget.id == "dijit__MasterTooltip_0"){
+		if(!widget || widget.internal){
 			return;
 		}
 		this.inherited(arguments);

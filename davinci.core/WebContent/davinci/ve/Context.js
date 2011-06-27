@@ -147,9 +147,10 @@ dojo.declare("davinci.ve.Context", null, {
 		var isContainer = davinci.ve.metadata.queryDescriptor(widget.type, "isContainer");
 		
 		widget.attach();
-		
-		if(type.substring(type.lastIndexOf(".") + 1).charAt(0) == "_"){  
-			// internal widget, such as _StackButton, _Splitter
+
+		if(widget.type.charAt(widget.type.lastIndexOf(".") + 1) == "_"){ //TODO: dijit-specific convention of "private" widgets
+			widget.internal = true;
+			// internal Dijit widget, such as _StackButton, _Splitter, _MasterTooltip
 			return;
 		}
 
@@ -306,7 +307,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// check for false alarms to avoid reloading theme
 		var model = this.getModel();
 		if(this._themeUrl){
-			var style = model.find({'elementType':'CSSImport', 'url':this._themeUrl},true);
+			var style = model.find({elementType:'CSSImport', url:this._themeUrl},true);
 			if(style!=null && style.length!=0)
 				changed = false;
 		}
@@ -316,23 +317,21 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	getTheme : function(){
-		
+	getTheme: function(){
 		if(this._theme==null){
 			var theme = this.loadThemeMeta(this._srcDocument);
-			this._themeUrl = theme['url'];
-			this._themeMetaCache = theme['themeMetaCache'];
-			this._theme = theme['theme']
-			
+			this._themeUrl = theme.url;
+			this._themeMetaCache = theme.themeMetaCache;
+			this._theme = theme.theme;
 		}
 		return this._theme;
 	}, 
-	getThemeMeta : function(){
+
+	getThemeMeta: function(){
 		if(!this._themeMetaCache ){
 			this.getTheme();
 		}
-			return this._themeMetaCache;
-		
+		return this._themeMetaCache;
 	},
 	
 	loadThemeMeta: function(model){

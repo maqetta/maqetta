@@ -3,7 +3,7 @@
 #
 # Directory in which to do the build. No trailing slash.
 #
-export buildDirectory="/Users/wayne/work/build"
+export buildDirectory="/path/to/build/directory"
 
 #
 # Path to parent directory of the eclipse application directory.
@@ -61,7 +61,7 @@ export myArch="x86_64"
 
 if [ ! ${maqettaCode} ]
 then
-    # 
+    #
     # Set up for and pull down the latest code from GitHub
     #
     if [ ! -d ${buildDirectory}/repository ]

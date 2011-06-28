@@ -188,7 +188,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			{
 				davinci.Workbench.openEditor({
 					fileName: node,
-					content: node.getContents()
+					content: node.getText()
 				});
 			}
 		}

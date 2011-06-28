@@ -123,7 +123,13 @@ dojo.declare("davinci.ui.dnd.DragSource", null, {
 	},
 
 	createDragClone: function(e){
-		var dragClone = this.dragClone = this.dragObject.cloneNode(true);
+		var dragClone;
+		if (e.dragSource.dragHandler && e.dragSource.dragHandler.createDragClone) {
+			dragClone = e.dragSource.dragHandler.createDragClone();
+		} else {
+			dragClone = this.dragObject.cloneNode(true);
+		}
+		this.dragClone = dragClone;
 		dojo._setOpacity(dragClone, 0.5);
 		dragClone.style.zIndex = 1000;
 

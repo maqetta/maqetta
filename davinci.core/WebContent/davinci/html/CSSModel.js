@@ -114,7 +114,7 @@ davinci.html.CSSElement.prototype._convertNode = function(domNode){
  	}else if(this.url){
  		 var file = this.getResource();
  		 if(file)
- 			 txt = file.getContents();
+ 			 txt = file.getText();
  	}
  	if (txt)
 		  this.setText(txt);
@@ -341,7 +341,7 @@ davinci.html.CSSFragment= function(args){
 	}else if(this.url){
 		 var file = this.getResource();
 		 if(file)
-			 txt = file.getContents();
+			 txt = file.getText();
 	}
 	if (txt)
 		  this.setText(txt);

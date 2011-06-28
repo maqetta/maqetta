@@ -62,7 +62,6 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		tree.startup();
 
 		dojo.connect(tree, 'onDblClick', dojo.hitch(this,this._dblClick ));
-		var that = this;
 		tree.watch("selectedItems", dojo.hitch(this, function (prop, oldValue, newValue) {
 			var items = dojo.map(newValue, function(item){ return {resource:item}; });
 			this.publish("/davinci/ui/selectionChanged", [items, this]);

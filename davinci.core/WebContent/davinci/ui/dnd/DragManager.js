@@ -19,12 +19,13 @@ dojo.declare("davinci.ui.dnd.DragManager", null, {
 
 	constructor: function(){
 		this.dropTargets = [];
-		this._connectors = [];
-		this._connectors.push(dojo.connect(dojo.doc, "onkeydown", this, "onKeyDown"));
-		this._connectors.push(dojo.connect(dojo.doc, "onmouseover", this, "onMouseOver"));
-		this._connectors.push(dojo.connect(dojo.doc, "onmouseout", this, "onMouseOut"));
-		this._connectors.push(dojo.connect(dojo.doc, "onmousedown", this, "onMouseDown"));
-		this._connectors.push(dojo.connect(dojo.doc, "onmouseup", this, "onMouseUp"));
+		this._connectors = [
+			dojo.connect(dojo.doc, "onkeydown", this, "onKeyDown"),
+			dojo.connect(dojo.doc, "onmouseover", this, "onMouseOver"),
+			dojo.connect(dojo.doc, "onmouseout", this, "onMouseOut"),
+			dojo.connect(dojo.doc, "onmousedown", this, "onMouseDown"),
+			dojo.connect(dojo.doc, "onmouseup", this, "onMouseUp")
+		];
 	},
 
 	destroy: function(){

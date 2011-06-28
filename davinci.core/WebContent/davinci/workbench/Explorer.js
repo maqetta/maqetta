@@ -4,6 +4,7 @@ dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
 dojo.require("dijit.Tree");
+dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
@@ -24,23 +25,47 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		});
 		
 		var model= davinci.resource;
-		var tree = this.tree = new dijit.Tree({
+
+		// Patch Tree to allow for image drag-and-drop.  code moved from davinci.ui.widget.Tree.
+		// TODO: Would be better and more efficient to make use of the dijit.Tree drag-and-drop with dojo.dnd,
+		// but it does not seem to perform well over an IFRAME and would require some reworking of the drag source and target.
+		var imageDragTree = dojo.declare("", dijit.Tree, { //FIXME: why won't null work as first arg to dojo.declare?
+			_createTreeNode: function(args){
+				var treeNode = this.inherited(arguments);
+		 		if (dragSources && args.item){
+					dragSources.forEach(function(source){
+						if (source.dragSource(args.item)){
+							var ds = new davinci.ui.dnd.DragSource(treeNode.domNode, "component", treeNode);
+							ds.targetShouldShowCaret = true;
+							ds.returnCloneOnFailure = false;
+							dojo["require"](source.dragHandler);
+							var dragHandlerClass = dojo.getObject(source.dragHandler); 
+							ds.dragHandler = new dragHandlerClass(args.item);
+			                this.connect(ds, "initDrag", function(e){if (ds.dragHandler.initDrag) ds.dragHandler.initDrag(e);}); // move start
+							this.connect(ds, "onDragStart", function(e){ds.dragHandler.dragStart(e);}); // move start
+							this.connect(ds, "onDragEnd", function(e){ds.dragHandler.dragEnd(e);}); // move end
+						}
+			 		}, this);
+		 		}
+				return treeNode;
+			}
+		});
+		var tree = this.tree = new imageDragTree({
 			showRoot:false,
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			filters: [davinci.resource.alphabeticalSortFilter],
-			isMultiSelect: true,
-			dragSources:dragSources});
-
+			dndController: null,
+			isMultiSelect: true});
 		this.setContent(tree); 
 		tree.startup();
+
 		dojo.connect(tree, 'onDblClick', dojo.hitch(this,this._dblClick ));
-		var that = this;
-		tree.watch("selectedItems", function (prop, oldValue, newValue) {
+		tree.watch("selectedItems", dojo.hitch(this, function (prop, oldValue, newValue) {
 			var items = dojo.map(newValue, function(item){ return {resource:item}; });
-			that.publish("/davinci/ui/selectionChanged",[items, that]);
-		});
+			this.publish("/davinci/ui/selectionChanged", [items, this]);
+		}));
 
 		var popup=davinci.Workbench.createPopup({
 			partID: 'davinci.ui.navigator',

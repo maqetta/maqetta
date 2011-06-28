@@ -1445,8 +1445,8 @@
                     "content": "<option></option>"
                 }
             ],
-            "helper": "davinci.libraries.dojo.dijit.form.DataListHelper"
-            /*"helper": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper",*/
+            "helper": "davinci.libraries.dojo.dijit.form.DataListHelper",
+            "tool": "davinci.libraries.dojo.dijit.form.DataListCreateTool",
             /*"inlineEdit": "davinci.ve.input.ItemFileReadStoreInput" */
         },
         {

@@ -58,6 +58,12 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DataListHelper", null, {
 			}
 		}
 		return children;
+	},
+	
+	
+	create: function(widget, srcElement){
+		
+		debugger;
 	}
-
+	
 });

@@ -23,6 +23,13 @@
 		"reviewPageTitle":"Maqetta Review Board",
 		
 		//davinci/Runtime.js
-		"careful":"Careful! You are about to leave daVinci."
+		"careful":"Careful! You are about to leave daVinci.",
+		"errorLoadingPlugin":"error loading plugin ${0}, response=${1}",
+		"errorLoadingPlugins":"error loading plugins",
+		
+		//davinci/Workbench.js
+		"perspectiveNotFound":"perspective not found: ${0}",
+		"scopeNotDefined":"scope not defined for action: ${0}",
+		"funcNotDefined":"function not defined for action: ${0}"
 
 })

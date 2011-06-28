@@ -661,10 +661,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			error: function(response){
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-				davinci.Runtime.handleError("Error to publish review session "
-					       + ", response="
-					       + response+", reason="+
-					       msg);
+				davinci.Runtime.handleError(dojo.string.substitute(langObj.errorPublish, [response, msg]));
 			}
 		}).then(function(result){
 			if(typeof hasToaster == "undefined"){

@@ -32,7 +32,7 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 	postCreate: function(){
 		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		this.subject = new dijit.form.TextBox({
-			placeHolder: langObj.subject,
+			placeHolder: langObj.subjectPlaceHolder,
 			style: "width: 100%"
 		}, this.subjectNode);
 		this.content = new dijit.form.SimpleTextarea({

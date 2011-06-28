@@ -46,12 +46,10 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 				},
 				error: dojo.hitch(this,function(response){
 					dojo.publish("/davinci/review/commentAddedError",[this]);
+					var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 					var msg = response.responseText;
 					msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-					davinci.Runtime.handleError("error adding comment "
-						       + ", response="
-						       + response+", reason="+
-						       msg);
+					davinci.Runtime.handleError(dojo.string.substitute(langObj.errorAddingCom, [response, msg]));
 				})
 			}).then(dojo.hitch(this, "_populate"));
 		}else{
@@ -184,12 +182,10 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 				isUpdateStatus: updateStatus
 			},
 			error: function(response){
+				var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-				davinci.Runtime.handleError("error to update comment "
-					       + ", response="
-					       + response+", reason="+
-					       msg);
+				davinci.Runtime.handleError(dojo.string.substitute(langObj.errorUpdateCom, [response, msg]));
 			}
 		}).then(dojo.hitch(this,function(){
 			if(updateStatus){

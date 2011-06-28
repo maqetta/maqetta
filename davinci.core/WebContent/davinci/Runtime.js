@@ -40,9 +40,8 @@ dojo.mixin(davinci.Runtime,	{
 //					retry=true;
 					window.location.reload();
 				} else {
-					davinci.Runtime.handleError("error loading plugin "
-								       + pluginName + ", response="
-								       + response);
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					davinci.Runtime.handleError(dojo.string.substitute(langObj.errorLoadingPlugin, [pluginName, response]));
 				}
 			}
 		});
@@ -67,7 +66,8 @@ dojo.mixin(davinci.Runtime,	{
 					//window.location.reload();
 					window.location.href= './welcome';
 				}else{
-					davinci.Runtime.handleError("error loading plugins");
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					davinci.Runtime.handleError(langObj.errorLoadingPlugins);
 				}
 			}
 		});

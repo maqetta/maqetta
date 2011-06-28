@@ -1,8 +1,5 @@
 dojo.provide("davinci.review.util");
 
-dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.review", "review");
-
 dojo.require("dojo.date.locale");
 
 davinci.review.util = {
@@ -11,18 +8,18 @@ davinci.review.util = {
 	 * E.g. current time is 2010-12-28 4:24:00, time passed: 2010-12-28 4:20:00, then
 	 * the relative time is "4 mins ago".
 	 */
+		//TODO: i18n
 	toRelativeTime : function ( date, baseDate, threshhold ) {
 		if ( !date || !baseDate )
 			return '';
 		
-		var langObj = dojo.i18n.getLocalization("davinci.review", "review");
 		var diff = date.getTime() - baseDate.getTime();
-		var direction = ( diff < 0 ? langObj.ago : langObj.later );
+		var direction = ( diff < 0 ? "ago" : "later" );
 		var day, hour, min, second;
 		
 		diff = Math.floor( Math.abs( diff ) / 1000 );
 		
-		if(diff <= 60) return langObj.justNow;
+		if(diff <= 60) return "just now";
 		
 		if ( threshhold && diff > threshhold )
 			return dojo.date.locale.format(date, {formatLength:'short',selector:'date'});
@@ -35,7 +32,7 @@ davinci.review.util = {
 		diff = Math.floor( diff / 24 );
 		day = diff;
 		
-		var timeStr = day ? day + langObj.days: hour ? hour + langObj.hours:min ? min + langObj.mins:'';
+		var timeStr = day ? day + " days ": hour ? hour + " hours ":min ? min + " mins ":'';
 	    return timeStr + direction;
 	},
 	

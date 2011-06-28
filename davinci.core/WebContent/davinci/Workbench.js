@@ -17,6 +17,8 @@ dojo.require("davinci.ui.Panel");
 dojo.require("davinci.resource");
 dojo.require("davinci.ui.Dialogs");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci", "webContent");
 
 dojo.require("davinci.workbench.EditorContainer");
 
@@ -213,8 +215,10 @@ dojo.mixin(davinci.Workbench, {
 		var perspective = davinci.Runtime.getExtension("davinci.perspective",perspectiveID);
 
 
-		if (!perspective)
-			davinci.Runtime.handleError("perspective not found: " + perspectiveID);
+		if (!perspective){
+			var langObj = dojo.i18n.getLocalization("davinci","webContent");
+			davinci.Runtime.handleError(dojo.string.substitute(langObj.perspectiveNotFound,[perspectiveID]));
+		}
 
 		perspective=dojo.clone(perspective);	// clone so views aren't added to original definition
 
@@ -704,13 +708,17 @@ dojo.mixin(davinci.Workbench, {
 				if (item.scope)
 				{
 					var scope=this.actionScope[item.scope];
-					if (!scope)
-						davinci.Runtime.handleError("scope not defined for action: "+item.id);
+					if (!scope){
+						var langObj = dojo.i18n.getLocalization("davinci","webContent");
+						davinci.Runtime.handleError(dojo.string.substitute(langObj.scopeNotDefined,[item.id]));
+					}
 					else
 					{
 						var func=scope[item.run];
-						if (!func)
-							davinci.Runtime.handleError("function not defined for action: "+item.id);
+						if (!func){
+							var langObj = dojo.i18n.getLocalization("davinci","webContent");
+							davinci.Runtime.handleError(dojo.string.substitute(langObj.funcNotDefined,[item.id]));
+						}
 						else
 							func.apply(this);
 					}

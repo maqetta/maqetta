@@ -4,6 +4,8 @@
 		"close":"Close",
 		"more":" more...",
 		"commentHide":" hide",
+		"errorUpdateCom":"error to update comment , response=${0} , reason=${1}",
+		"errorAddingCom":"error adding comment , response=${0} , reason=${1}",
 		
 		//Comment.html
 		"by":"by",
@@ -14,7 +16,7 @@
 		"status":"Status",
 		
 		//CommentForm.js
-		"subject":"Subject",
+		"subjectPlaceHolder":"Subject",
 		"submit":"Submit",
 		"unassigned":"Unassigned",
 		"requirement":"Requirement",
@@ -51,6 +53,7 @@
 		"email":"Email",
 		"action":"Action",
 		"add":"Add",
+		"errorPublish":"Error to publish review session , response=${0}, reason=${1}",
 		
 		//PublisherWizard.html
 		"generalInfo":" General Information",

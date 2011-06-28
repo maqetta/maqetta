@@ -124,7 +124,7 @@ dojo.declare("davinci.ui.dnd.DragSource", null, {
 
 	createDragClone: function(e){
 		var dragClone;
-		if (e.dragSource.dragHandler.createDragClone) {
+		if (e.dragSource.dragHandler && e.dragSource.dragHandler.createDragClone) {
 			dragClone = e.dragSource.dragHandler.createDragClone();
 		} else {
 			dragClone = this.dragObject.cloneNode(true);

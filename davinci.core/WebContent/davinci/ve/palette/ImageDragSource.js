@@ -72,5 +72,10 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 		if (this.context) {
 			this.context.setActiveTool(null);
 		}
+	},
+
+	createDragClone: function()
+	{
+		return dojo.create("img", {src: this.data.getURL()});
 	}
 });

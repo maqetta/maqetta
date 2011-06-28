@@ -100,6 +100,23 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
        this._srcDocument.addStyleSheet(url, null, true);
     },
 
+    _findScriptAdditions : function(){
+    	// this is a bit gross and dojo specific, but...... guess a necisary evil.
+    	if(this._scriptAdditions!=null)
+    		return this._scriptAddtions;
+    	
+    	var documentHeader = this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
+    	var scriptsInHeader = documentHeader.find({elementType:"HTMLElement", 'tag':'script'});
+    	for(var i=0;i<scriptsInHeader;i++){
+    		var text = scriptsInHeader[i].getText();
+    		if(text.indexOf("dojo.require"))
+    			return scriptsInHeader[i];
+    	}
+    	// no requires js header area found
+    	return null;
+    	
+    },
+    
     addJavaScript : function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
 		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
 		
@@ -111,7 +128,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 				return;
 			}
 		}
-		
+	
     	if (url) {
             if(url.indexOf("dojo.js")>-1){
                 	// nasty nasty nasty special case for dojo attribute thats required.. need to generalize in the metadata somehow.
@@ -119,7 +136,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
               }
            	this.addHeaderScript(url);
         }else if (text) {
-        	this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
+        	this._scriptAdditions = this.addHeaderScriptSrc(text, this._findScriptAdditions(),this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
         }
     },
 

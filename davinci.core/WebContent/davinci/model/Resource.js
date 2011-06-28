@@ -314,7 +314,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
    }
 
-   davinci.model.Resource.File.prototype.getContents= function()
+   davinci.model.Resource.File.prototype.getText= function()
    {
  		  var contents=davinci.Runtime.serverJSONRequest({
  			   url:"./cmd/loadFile", handleAs:"text",

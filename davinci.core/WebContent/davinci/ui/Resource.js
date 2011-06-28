@@ -352,7 +352,7 @@ dojo.mixin(davinci.ui.Resource, {
 		{
 			davinci.Workbench.openEditor({
 				fileName: resource,
-				content: resource.getContents()
+				content: resource.getText()
 			});
 		}
 	}

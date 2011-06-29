@@ -309,44 +309,6 @@
             }
         },
         {
-            "name": "SimpleTextarea",
-            "description": "Text Area (Basic)",
-            "type": "dijit.form.SimpleTextarea",
-            "category": "controls",
-            "icon": "resources/images/simpletextarea.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkJusyPP2+zpeljpflvL2/OTt+Obu+E1+sfn7/VKHulOIuVaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVEICSOZGmeaGoCDKCS7sswDdDMeC4qzgM8jqAwuBAhHAVAwcBsHg4I0cCRACQE2KygQBABAAHwd0wuxV4Q1hnNbrvfkBAAOw==",
-            "properties": {
-                "rows": "10",
-                "cols": "10",
-                "style": "width: 200px;"
-            },
-            "resizable": "width",
-            "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false,
-                "multiLine": false
-            },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
-        },
-        {
-            "name": "Textarea",
-            "description": "Text Area (Resizing)",
-            "type": "dijit.form.Textarea",
-            "category": "controls",
-            "icon": "resources/images/textarea.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-            "properties": {
-                "style": "width: 200px;"
-            },
-            "resizable": "width",
-            "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false,
-                "multiLine": false
-            },
-            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
-        },
-        {
             "name": "ComboBox",
             "description": "Combo Box",
             "type": "dijit.form.ComboBox",
@@ -416,43 +378,6 @@
             "resizable": "width",
             "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
             "inlineEdit": "davinci.ve.input.SelectInput"
-        },
-        {
-            "name": "MultiSelect",
-            "description": "Select (Multiple)",
-            "type": "dijit.form.MultiSelect",
-            "category": "controls",
-            "icon": "resources/images/multi-select.png",
-            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
-            "properties": {
-                "style": "width: 200px;"
-            },
-            "children": [
-                {
-                    "type": "html.option",
-                    "properties": {
-                        "value": "Item 1"
-                    },
-                    "children": "Item 1"
-                },
-                {
-                    "type": "html.option",
-                    "properties": {
-                        "value": "Item 2"
-                    },
-                    "children": "Item 2"
-                },
-                {
-                    "type": "html.option",
-                    "properties": {
-                        "value": "Item 3"
-                    },
-                    "children": "Item 3"
-                }
-            ],
-            "resizable": "width",
-            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
-            "inlineEdit": "davinci.ve.input.OptionsInput"
         },
         {
             "name": "DropDownSelect",
@@ -542,6 +467,81 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII=",
             "resizable": "none",
             "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+        },
+        {
+            "name": "MultiSelect",
+            "description": "Select (Multiple)",
+            "type": "dijit.form.MultiSelect",
+            "category": "controls",
+            "icon": "resources/images/multi-select.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.OptionsInput"
+        },
+        {
+            "name": "SimpleTextarea",
+            "description": "Text Area (Basic)",
+            "type": "dijit.form.SimpleTextarea",
+            "category": "controls",
+            "icon": "resources/images/simpletextarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkJusyPP2+zpeljpflvL2/OTt+Obu+E1+sfn7/VKHulOIuVaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVEICSOZGmeaGoCDKCS7sswDdDMeC4qzgM8jqAwuBAhHAVAwcBsHg4I0cCRACQE2KygQBABAAHwd0wuxV4Q1hnNbrvfkBAAOw==",
+            "properties": {
+                "rows": "10",
+                "cols": "10",
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "Textarea",
+            "description": "Text Area (Resizing)",
+            "type": "dijit.form.Textarea",
+            "category": "controls",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
         },
         {
             "name": "Tree",

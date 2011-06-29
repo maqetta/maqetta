@@ -56,7 +56,11 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			filters: [davinci.resource.alphabeticalSortFilter],
-			dndController: null,
+			dndController: dojo.declare("", null, { // dijit.Tree does not appear to allow null for dndController.  Pass in a dummy as long as we do our own DnD
+				setSelection: function(){},
+				userSelect: function(){},
+				removeTreeNode: function(){}
+			}),
 			isMultiSelect: true});
 		this.setContent(tree); 
 		tree.startup();

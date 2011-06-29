@@ -20,7 +20,7 @@ dojo.mixin(davinci.resource, {
 				davinci.resource.onChildrenChange(davinci.resource.getRoot(),children);
 			}));
 			return davinci.resource.getRoot();
-		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated'){
+		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated' || type=='reload'){
 			var parent, resourcePath;
 			
 			if(changedResource.parent){
@@ -33,11 +33,15 @@ dojo.mixin(davinci.resource, {
 				parent = davinci.resource.findResource(p1.toString()) || davinci.resource.getRoot();
 				resourcePath = changedResource;
 			}
-			if(parent.elementType=="Folder" && type!='renamed'){
+			if(parent.elementType=="Folder" && type=='reload'){
+				/* 'reload' forces a full parent reload.  most model actions handle the server
+				 * command and the modeling commands, so forcing a client & server resource sync isn't usually neccisary.
+			     */
 				parent.reload();
 			}
+			
 			/* force the resource parent to update its children */
-			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)});	
+			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)}, true);	
 		}
 			
 			
@@ -108,8 +112,8 @@ dojo.mixin(davinci.resource, {
 			handleAs:"text", 
 			sync:true,
 			content:{source:path, dest: destPath, recurse: String(recurse)}  });
-		
-		davinci.resource.resourceChanged("created", destFile);
+		/* force a reload since we dont really know if this is a file or directory being copied */
+		davinci.resource.resourceChanged("reload", destFile);
 	},
 
 	download: function(files,archiveName, userLibs){

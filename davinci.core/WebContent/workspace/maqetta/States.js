@@ -1069,15 +1069,9 @@ if (typeof dojo != "undefined") {
 		if (typeof dojo != "undefined") {
 			var cache = {};
 			
-            // hook dojox.mobile.parser
-            if (dojo.getObject("dojox.mobile.parser.parse")) {
-                var dojox_mobile_parser_parse = dojox.mobile.parser.parse;
-                dojox.mobile.parser.parse = function() {
-                    _preserveStates(cache);
-                    return dojox_mobile_parser_parse.apply(this, arguments);
-                };
-            // hook main dojo.parser
-            } else if (dojo.getObject("dojo.parser.parse")) {
+            // hook main dojo.parser (or dojox.mobile.parser, which also
+            // defines "dojo.parser" object)
+            if (dojo.getObject("dojo.parser.parse")) {
                 var dojo_parser_parse = dojo.parser.parse;
                 dojo.parser.parse = function() {
                     _preserveStates(cache);

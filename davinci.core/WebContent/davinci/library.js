@@ -14,7 +14,7 @@ davinci.library.getThemes=function(){
 	var allThemes = davinci.resource.findResource("*.theme");
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
-		var contents = allThemes[i].getContents();
+		var contents = allThemes[i].getText();
 		var t = eval(contents);
 		t.file = allThemes[i];
 		results.push(t);

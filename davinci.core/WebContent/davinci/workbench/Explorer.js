@@ -2,7 +2,7 @@ dojo.provide("davinci.workbench.Explorer");
 
 dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
-dojo.require("davinci.ui.widgets.ResourceTreeModel");
+
 dojo.require("dijit.Tree");
 dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");

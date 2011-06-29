@@ -75,9 +75,9 @@ dojo.mixin(davinci.ui.Resource, {
 '	</div>'+
 '	<div class="parentFolderInputRow"><input dojoType="dijit.form.TextBox" type="text" name="fileDialogParentFolder" id="fileDialogParentFolder"></input></div>'+
 '	<div class="folderContainer">'+
-'		<div dojoType="davinci.ui.widgets.ResourceTreeModel" foldersOnly="false" jsId="fileDialogFolderModel"></div>'+
+
 '		<div dojoType="dijit.layout.ContentPane">'+
-'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="fileDialogFolderModel"></div>'+
+'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="davinci.resource"></div>'+
 '		</div>'+
 '	</div>'+
 '	<div class="buttonRow">'+

@@ -14,7 +14,7 @@ dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInp
 	    { 
           type: "tree",
 	      data: "file",
-	      model: "davinci.ui.widgets.ResourceTreeModel",
+	      model: davinci.resource,
 	      filters: "davinci.ui.widgets.OpenFileDialog.filter",
 	      link : { target: "textValue",
         	targetFunction : function (input){

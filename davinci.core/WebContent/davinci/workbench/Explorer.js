@@ -102,7 +102,7 @@ debugger;
 		{
 			davinci.Workbench.openEditor({
 				fileName: node,
-				content: node.getContents()
+				content: node.getText()
 			});
 		}
 	},

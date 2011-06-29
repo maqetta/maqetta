@@ -10,7 +10,7 @@ dojo.declare("davinci.review.actions.ViewFileAction",davinci.actions.Action,{
 		if(davinci.review.Runtime.getMode()=="reviewPage"){
 			davinci.Workbench.openEditor({
 				fileName: item,
-				content: item.getContents()
+				content: item.getText()
 			});
 		}
 		else if(davinci.review.Runtime.getMode()=="designPage"){

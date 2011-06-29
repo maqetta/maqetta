@@ -104,7 +104,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		for(var i=0;i<pages.length;i++){
-			var newSource = pageBuilder.rebuildSource(pages[i].getContents(), pages[i]);
+			var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
 			pages[i].setContents(newSource, false);
 		}
 		this.onClose();

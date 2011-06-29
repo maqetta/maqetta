@@ -824,6 +824,17 @@ davinci.Inherits(davinci.html.CSSImport,davinci.html.CSSElement);
 davinci.html.CSSImport.prototype.getCSSFile = function(){
 					 return this.parent;
 }
+davinci.html.CSSImport.prototype.getCSSFile = function(){
+	 return this.parent;
+}
+davinci.html.CSSImport.prototype.setUrl = function(url){
+	 this.url = url;
+}
+
+davinci.html.CSSImport.prototype.getUrl = function(url){
+	return this.url ;
+}
+
 davinci.html.CSSImport.prototype.visit = function(visitor){
 			  if (!visitor.visit(this)){
 				  for (var i=0;i<this.children.length;i++)

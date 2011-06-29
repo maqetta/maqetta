@@ -247,6 +247,7 @@ dojo.declare("davinci.ve.Context", null, {
 		
 		var relativePath = new davinci.model.Path(relativePrefix);
 		return dojo.every(requires, function(r) {
+		
 			var src = r.src;
 			if (src) {	// resource with URL
 				if (r.$library) {
@@ -1915,11 +1916,13 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		if (scriptAdditions){
 			var scriptText = scriptAdditions.find({'elementType':'HTMLText'}, true);
-			oldText = scriptText.getText();
-			if (oldText.indexOf(text)>0){
-				return scriptAdditions;  // already in the header
-			}
-			scriptAdditions.parent.removeChild(scriptAdditions);
+			if(scriptText){
+				oldText = scriptText.getText();
+				if (oldText.indexOf(text)>0){
+					return scriptAdditions;  // already in the header
+				}
+				scriptAdditions.parent.removeChild(scriptAdditions);
+				}
 			scriptAdditions = null;
 		}
 		// create a new script element

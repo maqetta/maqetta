@@ -1380,7 +1380,7 @@ dojo.mixin(davinci.Workbench, {
 					var resourceInfo=resource.getFileInfo();
 					davinci.Workbench.openEditor({
 						fileName: resource,
-						content: resource.getContents(),
+						content: resource.getText(),
 						noSelect:noSelect,
 						isDirty:resourceInfo.isDirty,
 						'startup': false

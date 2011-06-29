@@ -16,7 +16,7 @@ dojo.declare("davinci.ve.ThemeModifier", null, {
 			    includeImports : true,
 			    loader:function(url){
 					var resource=  davinci.resource.findResource(url);
-					return resource.getContents();
+					return resource.getText();
 				}
 			}));
 		}

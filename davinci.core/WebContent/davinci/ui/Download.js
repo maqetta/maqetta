@@ -80,15 +80,15 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_getLibs : function(){
+		var nodeValues = dojo.query("[libItemPath]", this.domNode );
 		var nodeList = dojo.query("[libItemCheck]", this.domNode );
 		var userLibs = [];
 		for(var i =0;i<nodeList.length;i++){
 			var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
 			var value = dojo.attr(nodeList[i], "checked");
 			if(value){
-				//var lib = this._userList[element];
-				userLibs.push({'id':this._userLibs[element]['id'],'version':this._userLibs[element]['version'] ,'root': this._userLibs[element]['base']});
-				//	this.list.push(this._getLibRoot(lib['id'], lib['version']))
+				var libLocation = dojo.attr(nodeValues[i], "value") || this._userLibs[element]['root']
+				userLibs.push({'id':this._userLibs[element]['id'],'version':this._userLibs[element]['version'] ,'root': libLocation});
 			}
 		}
 		
@@ -111,31 +111,31 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_rewriteUrls : function(){
-		var libs = [];
 		
-		var nodeList = dojo.query("[libItemPath]", this.domNode );
-		for(var i =0;i<nodeList.length;i++){
-			var element = parseInt(dojo.attr(nodeList[i], "libItemPath"));
-			var value = dojo.attr(nodeList[i], "value");
-			if(this._userLibs[element]['initRoot']!= value){
-				this._userLibs[element]['base'] = value;
-				libs.push(this._userLibs[element]);
+		var resources = this._getResources();
+		var libs = this._getLibs();
+		
+		//this._pages = davinci.resource.findResource("*.html", true, null, true);
+		
+		var pageBuilder = new davinci.ve.RebaseDownload(resources['userLibs']);
+		for(var i=0;i<resources['userFiles'].length;i++){
+			var allResources = null
+			
+			
+			var resource = davinci.resource.findResource(resources['userFiles'][i]);
+			
+			if(resource.extension!="html")
+				continue;
+			
+			if(resource.elementType=="Folder"){
+				allResources = davinci.resource.findResource("*.html", true, resource, true);
+			}else{
+				allResources = [resource];
 			}
-		
-		}
-		
-		if(libs.length==0){
-			this._noRewrite = true;
-			return;
-		}
-		
-		this._pages = davinci.resource.findResource("*.html", true, null, true);
-		
-		var pageBuilder = new davinci.ve.RebaseDownload(libs);
-		for(var i=0;i<this._pages.length;i++){
-			var newSource = pageBuilder.rebuildSource(this._pages[i].getContents(), this._pages[i]);
-			/* set the contents and save it as a working copy.. AFTER the zip we need to remove the working copies */
-			this._pages[i].setContents(newSource, true);
+			for(var k=0;k<allResources.length;k++){
+				var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
+				allResources[k].setContents(newSource, true);
+			}
 		}
 	
 		

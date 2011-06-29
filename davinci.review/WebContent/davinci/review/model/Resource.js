@@ -194,7 +194,7 @@ dojo.declare("davinci.review.model.Resource.File",
 		return label = segments[segments.length-1]+".rev";
 		
 	},
-	getContents: function(){
+	getText: function(){
 		return "";
 	},
 	removeWorkingCopy: function(){

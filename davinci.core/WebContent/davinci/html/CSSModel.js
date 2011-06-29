@@ -114,7 +114,7 @@ davinci.html.CSSElement.prototype._convertNode = function(domNode){
  	}else if(this.url){
  		 var file = this.getResource();
  		 if(file)
- 			 txt = file.getContents();
+ 			 txt = file.getText();
  	}
  	if (txt)
 		  this.setText(txt);
@@ -341,7 +341,7 @@ davinci.html.CSSFragment= function(args){
 	}else if(this.url){
 		 var file = this.getResource();
 		 if(file)
-			 txt = file.getContents();
+			 txt = file.getText();
 	}
 	if (txt)
 		  this.setText(txt);
@@ -824,6 +824,17 @@ davinci.Inherits(davinci.html.CSSImport,davinci.html.CSSElement);
 davinci.html.CSSImport.prototype.getCSSFile = function(){
 					 return this.parent;
 }
+davinci.html.CSSImport.prototype.getCSSFile = function(){
+	 return this.parent;
+}
+davinci.html.CSSImport.prototype.setUrl = function(url){
+	 this.url = url;
+}
+
+davinci.html.CSSImport.prototype.getUrl = function(url){
+	return this.url ;
+}
+
 davinci.html.CSSImport.prototype.visit = function(visitor){
 			  if (!visitor.visit(this)){
 				  for (var i=0;i<this.children.length;i++)

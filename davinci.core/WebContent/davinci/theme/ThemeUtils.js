@@ -55,7 +55,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 					   loader:function(url){
 						
 							var r1=  davinci.resource.findResource(url);
-							return r1.getContents();
+							return r1.getText();
 						}
 		});
 		var elements = cssModel.find({'elementType':'CSSSelector', 'cls':oldClass});
@@ -78,7 +78,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	for(var i=0;i<themeJson['meta'].length;i++){
 		var fileUrl = directoryPath.append(themeJson['meta'][i]);
 		var file = davinci.resource.findResource(fileUrl.toString());
-		var contents = file.getContents();
+		var contents = file.getText();
 		var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
 		file.setContents(newContents);
 	}
@@ -87,7 +87,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	for(var i=0;i<themeJson['themeEditorHtmls'].length;i++){
 		var fileUrl = directoryPath.append(themeJson['themeEditorHtmls'][i]);
 		var file = davinci.resource.findResource(fileUrl.toString());
-		var contents = file.getContents();
+		var contents = file.getText();
 		var htmlFile = new davinci.html.HTMLFile(fileUrl);
 		htmlFile.setText(contents,true);
 		var element = htmlFile.find({'elementType':'HTMLElement', 'tag':'body'},true);

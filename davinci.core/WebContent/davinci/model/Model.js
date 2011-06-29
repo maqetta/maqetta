@@ -110,8 +110,8 @@ davinci.model.Model.prototype.find = function (attributeMap, stopOnFirst) {
 	
 	this.visit(visitor);
 	
-	if(stopOnFirst && visitor.found.length>0)
-		return visitor.found[0];
+	if(stopOnFirst )
+		return (visitor.found.length>0) ? visitor.found[0] : null;
 	
 	return visitor.found;
 	

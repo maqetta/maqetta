@@ -374,7 +374,7 @@ davinci.html.HTMLFile.prototype.reportPositions = function(){
 	 davinci.html.HTMLElement.prototype.getText = function(context){
 		 
 
-		 
+		 context = context || {};
 		 var s="";
 		 var doFormat;
 //		 if (!this.wasParsed  && !davinci.html._noFormatElements[this.tag])

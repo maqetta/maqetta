@@ -67,10 +67,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		var containerNode = this.getContainerNode();
 		dojo.addClass(containerNode, "editContextContainer");
-		if(this.getPreference("showLayoutGrid")){
-			dojo.addClass(containerNode, "editLayoutGrid");
-		}
-
+		
 		this._connects = [
 			dojo.connect(this._commandStack, "onExecute", this, "onContentChange"),
 			dojo.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
@@ -108,9 +105,6 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.select(null);
 		dojo.removeClass(containerNode, "editContextContainer");
-		if(this.getPreference("showLayoutGrid")){
-			dojo.removeClass(containerNode, "editLayoutGrid");
-		}
 		dojo.forEach(this.getTopWidgets(), this.detach, this);
 		this.unloadStyleSheet(this._contentStyleSheet);
 	},
@@ -1319,14 +1313,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		davinci.ve._preferences[name] = value;
 
 		if(this.isActive()){
-			if(name == "showLayoutGrid"){
-				var containerNode = this.getContainerNode();
-				if(value){
-					dojo.addClass(containerNode, "editLayoutGrid");
-				}else{
-					dojo.removeClass(containerNode, "editLayoutGrid");
-				}
-			}
+			// Previously, included logic to show a rectangular grid under the drawing canvas.
+			// Now, nothing, but leaving empty IF statement in case we add things in future.
 		}
 	},
 

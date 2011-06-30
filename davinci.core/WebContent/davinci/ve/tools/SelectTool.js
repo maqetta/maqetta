@@ -71,13 +71,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		if(!position){
 			return undefined;
 		}
-		if(this._context.getPreference("flowLayout") || !this._context.getPreference("snapToLayoutGrid")){
-			return position;
-		}
-		var pitch = (this._context.getPreference("layoutGridPitch") || 10);
-		var x = Math.round(position.x / pitch) * pitch;
-		var y = Math.round(position.y / pitch) * pitch;
-		return {x: x, y: y};
+		return position;
 	}
 
 });
@@ -363,7 +357,6 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 		}
 		var dx = 0, dy = 0;
 		var pitch = this._context.getPreference("keyboardMovePitch") ||	//TODO: enable this preference
-					this._context.getPreference("layoutGridPitch")/2+1 ||  // +1 for rounding
 					6;
 		switch(event.keyCode){
 		case dojo.keys.RIGHT_ARROW:	dx = pitch;	break;

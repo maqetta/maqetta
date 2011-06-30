@@ -111,6 +111,16 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}
 
 		target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+		
+		// XXX Have to do this call here, rather than in the more favorable
+		//  create() or _create() since different "subclasses" of CreateTool
+		//  either override create() or _create().  It is very inconsistent.
+		try {
+			target = this._getAllowedTargetWidget(target);
+		} catch(e) {
+			davinci.Runtime.handleError(e.message);
+			return;
+		}
 
 		if(this._resizable && this._position){
 			var p = this._context.getContentPosition(event);
@@ -151,7 +161,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 //			parent = child = undefined;
 //		}
 		var index = args.index;
-		var position = undefined;
+		var position;
 		var widgetAbsoluteLayout = false;
 		if (this._data.properties && this._data.properties.style && (this._data.properties.style.indexOf('absolute') > 0)){
 			widgetAbsoluteLayout = true;
@@ -206,7 +216,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			return;
 		}
 
-		var widget = undefined;
+		var widget;
 		dojo.withDoc(this._context.getDocument(), function(){
 			widget = davinci.ve.widget.createWidget(this._data);
 		}, this);
@@ -260,6 +270,60 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 		}
 		return true;
-	}
+	},
 
+	/**
+	 * Find a valid parent for the dropped widget, based on the widgets'
+	 * 'allowedChild' and 'allowedParent' properties. If no valid parent is
+	 * found, then throw an error.
+	 * 
+	 * @param target {davinci.ve._Widget}
+	 * 			The widget on which the user dropped the new widget.
+	 * @return a widget which is allowed to contain the dropped widget 
+	 * @type davinci.ve._Widget
+	 * @throws {Error} if no valid parent widget is found
+	 */
+	_getAllowedTargetWidget: function(target) {
+		// get data for widget we are adding to page
+		var newTarget = target,
+			childType = this._data.type,
+			allowedParent = davinci.ve.metadata.queryDescriptor(childType, "allowedParent");
+		allowedParent = allowedParent && allowedParent.split(/\s*,\s*/);
+		
+		function isAllowed(parent) {
+			var parentType = parent instanceof davinci.ve._Widget ?
+					parent.type : parent._dvWidget.type;
+			var allowedChild = davinci.ve.metadata.queryDescriptor(parentType, "allowedChild");
+			allowedChild = allowedChild && allowedChild.split(/\s*,\s*/);
+			
+			var isAllowedChild = !allowedChild || allowedChild.indexOf(childType) !== -1;
+			var isAllowedParent = !allowedParent || allowedParent.indexOf(parentType) !== -1;
+			return isAllowedChild && isAllowedParent;
+		}
+		
+		while (newTarget && ! isAllowed(newTarget)) {
+			newTarget = newTarget.parent;
+		}
+		
+		// If no valid target found, throw error
+		if (! newTarget) {
+			var errorMsg = ['No valid target for widget found.\n',
+			                '\n',
+			                'The selected target for the widget [',
+			                childType,
+			                '] was not valid.\n'].join('');
+			if (allowedParent) {
+				errorMsg += ['The widget requires ',
+				             allowedParent.length > 1 ?
+				            		 'one of the following parent types' :
+				            			 'the parent type',
+				             ' [',
+				             allowedParent.join(', '),
+				             '].'].join('');
+			}
+			throw new Error(errorMsg);
+		}
+		
+		return newTarget;
+	}
 });

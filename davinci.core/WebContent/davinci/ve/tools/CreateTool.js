@@ -1,11 +1,12 @@
 dojo.provide("davinci.ve.tools.CreateTool");
 
+dojo.require("davinci.ve.tools._Tool");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.SelectTool");
+
 
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 

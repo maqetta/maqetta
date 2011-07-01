@@ -111,8 +111,6 @@ property: "Property",
 
 /* PreferencePane */
 flowLayout: "Flow Layout",
-snapToGrid: "Snap To Grid",
-showGrid: "Show Grid",
 liveEdit: "Live Edit",
 
 /* WidgetSelectionPane*/

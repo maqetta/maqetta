@@ -102,8 +102,6 @@ property: "プロパティ",
 
 /* PreferencePane */
 flowLayout: "フローレイアウト",
-snapToGrid: "グリッドにスナップ",
-showGrid: "グリッドの表示",
 liveEdit: "ライブ編集",
 
 __dummy__: ""

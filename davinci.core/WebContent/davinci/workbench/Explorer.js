@@ -2,8 +2,9 @@ dojo.provide("davinci.workbench.Explorer");
 
 dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
-dojo.require("davinci.ui.widgets.ResourceTreeModel");
+
 dojo.require("dijit.Tree");
+dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");
 
@@ -55,7 +56,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
-			filters: [davinci.resource.alphabeticalSortFilter],
+			transforms: [davinci.resource.alphabeticalSort],
 			dndController: dojo.declare("", null, { // dijit.Tree does not appear to allow null for dndController.  Pass in a dummy as long as we do our own DnD
 				setSelection: function(){},
 				userSelect: function(){},

@@ -55,12 +55,23 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	toggleOrientation : function() {
-		if(this._orientation == 'landscape'){
-			this._orientation = 'portrait';
-		}else{
-			this._orientation = 'landscape';			
+		if(this.deviceName!='none'){
+			//FIXME: Would be better to publish an event about orientation changing
+			//and then have the toolbar widget subscribe to it and update the icon
+			//But easier said than done because of the way the Workbench works.
+			//Current Workbench doesn't support icons that can toggle based on
+			//product state.
+			var rotateIconNode = dojo.query('.rotateIcon')[0];
+			var ccwClass = 'rotateIconCCW';
+			if(this._orientation == 'landscape'){
+				this._orientation = 'portrait';
+				dojo.removeClass(rotateIconNode,ccwClass);
+			}else{
+				this._orientation = 'landscape';			
+				dojo.addClass(rotateIconNode,ccwClass);
+			}
+			this.silhouetteiframe.setOrientation(this._orientation)	;
 		}
-		this.silhouetteiframe.setOrientation(this._orientation)	;
 	},
 
 	_objectPropertiesChange : function (event){

@@ -36,7 +36,7 @@ dojo.declare("davinci.ui.widgets.FolderSelection", [dijit._Widget], {
 					              {
 					                  type: "tree",
 					                  data: "file",
-					                  model: "davinci.ui.widgets.ResourceTreeModel",
+					                  model: davinci.resource,
 					                  filters: filter
 					                  
 					                  

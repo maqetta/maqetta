@@ -420,7 +420,7 @@ dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
               type: "tree",
       	      data: "file",
       	      style: "height:10em;overflow:auto",
-      	      model: "davinci.ui.widgets.ResourceTreeModel",
+      	      model: davinci.resource,
       	      filters: "davinci.ui.widgets.OpenFileDialog.filter"
 
       	    }

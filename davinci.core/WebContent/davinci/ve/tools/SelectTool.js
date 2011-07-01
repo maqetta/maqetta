@@ -1,86 +1,12 @@
 dojo.provide("davinci.ve.tools.SelectTool");
 
+dojo.require("davinci.ve.tools._Tool");
 dojo.require("davinci.ve.metadata");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
 
-dojo.declare("davinci.ve.tools._Tool", null, {
-
-	_getTarget: function(){
-		return this._target;
-	},
-
-	_setTarget: function(target){
-		
-		if(!this._feedback){
-			this._feedback = this._context.getDocument().createElement("div");
-			this._feedback.className = "editFeedback";
-			this._feedback.style.position = "absolute";
-			this._feedback.style.zIndex = "99"; // below Focus (zIndex = "100")
-			dojo.style(this._feedback, "opacity", 0.1);
-		}
-
-		if(target == this._feedback){
-			return;
-		}
-
-		var containerNode = this._context.getContainerNode();
-		var widget = undefined;
-		
-		while(target && target != containerNode){
-			widget = davinci.ve.widget.getEnclosingWidget(target);
-			if(widget && !widget.getContext()){
-				target = widget.domNode.parentNode;
-				widget = undefined;
-			}else{
-				if (widget && widget.getContainerNode()) {
-					// overlay feedback for "control" container (DropDownButton, etc.)
-					//FIXME: Not sure why it is necessary to mask DropDownButton
-					//and a small number of widgets whereas other similar widgets
-					//such as DropDownSelect don't require it.
-					if (!davinci.ve.metadata.queryDescriptor(widget.type, "isControl")) {
-						widget = undefined;
-					}
-				}
-				break;
-			}
-		}
-
-		if(widget){
-			var node = widget.getStyleNode();
-			var box = this._context.getDojo().position(node, true);
-			box.l = box.x;
-			box.t = box.y;
-
-			if(this._feedback.parentNode != containerNode){
-				containerNode.appendChild(this._feedback);
-			}
-			dojo.marginBox(this._feedback, box);
-			this._target = widget;
-		}else{
-			if(this._feedback.parentNode){
-				this._feedback.parentNode.removeChild(this._feedback);
-			}
-			this._target = undefined;
-		}
-	},
-
-	_adjustPosition: function(position){
-		if(!position){
-			return undefined;
-		}
-		if(this._context.getPreference("flowLayout") || !this._context.getPreference("snapToLayoutGrid")){
-			return position;
-		}
-		var pitch = (this._context.getPreference("layoutGridPitch") || 10);
-		var x = Math.round(position.x / pitch) * pitch;
-		var y = Math.round(position.y / pitch) * pitch;
-		return {x: x, y: y};
-	}
-
-});
 
 dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 
@@ -363,7 +289,6 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 		}
 		var dx = 0, dy = 0;
 		var pitch = this._context.getPreference("keyboardMovePitch") ||	//TODO: enable this preference
-					this._context.getPreference("layoutGridPitch")/2+1 ||  // +1 for rounding
 					6;
 		switch(event.keyCode){
 		case dojo.keys.RIGHT_ARROW:	dx = pitch;	break;

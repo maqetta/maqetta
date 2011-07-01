@@ -16,6 +16,7 @@ dojo.require("dojox.widget.Toaster");
 dojo.require("dojo.string");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.Tree");
+dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.resource");
 dojo.require("davinci.model.Resource");
 
@@ -114,9 +115,9 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			labelAttr: "name", 
 			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
-			isMultiSelect : true,
+			isMultiSelect: true,
 			onDblClick: dojo.hitch(this,doubleClick),
-			filters:[davinci.resource.alphabeticalSortFilter]
+			transforms: [davinci.resource.alphabeticalSort]
 		});
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();

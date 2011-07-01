@@ -41,12 +41,8 @@ dojo.mixin(davinci.resource, {
 			}
 			
 			/* force the resource parent to update its children */
-			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)}, true);	
+			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);}, true);	
 		}
-			
-			
-			
-			
 	},
 	
 	
@@ -79,9 +75,7 @@ dojo.mixin(davinci.resource, {
 	},
 	
 	destroy: function(){
-		for(var i=0;i<davinci.resource.subscriptions.length;i++){
-			dojo.unsubscribe(davinci.resource.subscription[i]);
-		}
+		davinci.resource.subscriptions.forEach(dojo.unsubscribe);
 	},
 		
 	mayHaveChildren: function(/*dojo.data.Item*/ item){
@@ -101,7 +95,7 @@ dojo.mixin(davinci.resource, {
 	},
 	
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
-		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async
+		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async (ALP: what does this mean?)
 	},
 	
 	copy: function(sourceFile, destFile, recurse){
@@ -155,7 +149,7 @@ dojo.mixin(davinci.resource, {
 			name=name.toString();
 		}
 		var isWildcard;
-		for (var i=0;i<segments.length;i++) {
+		for (var i=0;i<segments.length;i++) { //FIXME: use filter()
 			if (segments[i].indexOf("*") >= 0) {
 				isWildcard=true;
 				break;
@@ -235,15 +229,6 @@ dojo.mixin(davinci.resource, {
 	
 });
 
-dojo.declare("davinci.resource.alphabeticalSortFilter",null,{
-   filterList: function(list)
-   {
-	return list.sort(function (file1,file2)
-		{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0;});
-   }
-
-});
-
 dojo.declare("davinci.resource.foldersFilter",null,{
    filterItem: function(item)
    {
@@ -281,5 +266,7 @@ dojo.declare("davinci.resource.FileTypeFilter",null,{
 		return newList;
     }
 });
+
+davinci.resource.alphabeticalSort = function(items){ return items.sort(function(a,b){ return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); }); };
 
 davinci.resource.subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged",davinci.resource, function(){return davinci.resource.resourceChanged;}())];

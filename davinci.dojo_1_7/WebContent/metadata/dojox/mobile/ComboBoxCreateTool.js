@@ -37,7 +37,9 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 		}
 		//storeData.properties.jsId = storeId;
 		dataList.properties.id = dataListId;
-		dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';   
+		debugger;
+		dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';
+		//dataList.properties.style = "display: none;"
 		dataList.context = this._context;
 		
 		//var data = dataList.properties.data;
@@ -69,6 +71,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 		// node.id= (data.properties && data.properties.id) || data.context.getUniqueID(srcElement); 
 		//treeData.properties.id = treeId;
 		comboBox.context = this._context;
+		//comboBox.properties.value = 'Item 1';
 		comboBox.properties['data-dojo-props'] = 'value:"Item 1", list:"'+dataListId+'"';
 		// </hack>
 	
@@ -86,11 +89,17 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 			console.error(this.declaredClass + 'Error creating widgets')
 			return;
 		}
-	
+		comboBoxWidget.dijitWidget.store = dataListWidget.dijitWidget;
+		//dataListWidget.domNode.style.display = 'none';
+		//comboBoxWidget.domNode.style.display = '';
+
+		
 		var command = new davinci.commands.CompoundCommand();
 		var index = args.index;
+		var store = comboBoxWidget.dijitWidget.store;
+		//var items = store.query(function(){return true;},{ignoreCase: true} );
 		
-		command.add(new davinci.ve.commands.AddCommand(/*dataList*/ dataListWidget, dataList.context.rootNode /*args.parent*/, index));
+		command.add(new davinci.ve.commands.AddCommand(/*dataList*/ dataListWidget, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(comboBoxWidget, args.parent, index));
 		
@@ -102,6 +111,24 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 		}
 		
 		this._context.getCommandStack().execute(command);
+		
+		var dj = this._context.getDojo();
+		var localDijit = this._context.getDijit();
+		var list = dj.byId(dataListId);
+		// remove all registered widgets, some may be partly constructed.
+//		localDijit.registry.forEach(function(w){
+//			  w.destroy();			 
+//		});
+//		try{
+//		dj.parser.parse(this._context.rootNode);
+//		}catch (e){
+//			debugger;
+//		}
+//		debugger;
+//		list = localDijit.byId(dataListId);
+//		this._context.attach(this._context.rootNode);
+		
+		//var list2 = dt.byId(dataListId);
 //		this._select(comboBoxWidget);
 		
 	}

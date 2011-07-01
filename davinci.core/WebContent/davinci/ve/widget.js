@@ -588,9 +588,8 @@ davinci.ve.widget.getWidget = function(node){
 		}else if (dvWidgetType){
 			widget=new davinci.ve.GenericWidget(data,node,dvWidgetType);
 		}else{
-			if(node.nodeName == "svg" || node.parentNode == node.ownerDocument.body && (node.style.display == "none" || node.style.visibility == "hidden")){
-				// Question: Is this still needed for daVinci? Prevents getting widget for top level html elements that have display set to none.
-				// exclude temporary node for _Templated and Grid
+			if(node.nodeName == "svg"){
+				//FIXME: inline SVG support not yet available
 				return undefined;
 			}
 			widget=new davinci.ve.HTMLWidget(data,node);

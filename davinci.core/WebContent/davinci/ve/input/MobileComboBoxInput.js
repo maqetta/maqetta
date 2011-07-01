@@ -1,8 +1,6 @@
 dojo.provide("davinci.ve.input.MobileComboBoxInput");
 dojo.require("davinci.ve.input.SmartInput");
-//dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
-//dojo.require("davinci.commands.CompoundCommand");
 
 dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput, {
 	property: "value",
@@ -35,21 +33,16 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 		
-		//var data = widget.getData();
-		//console.log(widget, data); // no children in the data!
-		//debugger;
-		debugger;
-		//var data = widget.getData();
+
 		var data = widget.dijitWidget.store.domNode._dvWidget.getData();;
-		var children = data.children;// this.getChildren(widget);
+		var children = data.children;
 		var result = [];
 		
 		for (var i = 0; i < children.length; i++) {
 			var child = children[i];
-			//result.push(child.innerHTML);
 			var text = child.properties.value;
 			text = dojox.html.entities.decode(text);
-			var selected = (/*widget.dijitWidget.*/value == text) ? "+" : "";
+			var selected = (value == text) ? "+" : "";
 			result.push(selected + text);
 		}
 		
@@ -67,28 +60,24 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 	},
 	
 	update: function(widget, values) {
-		debugger;
+
 		var data = widget.dijitWidget.store.domNode._dvWidget.getData();;
-		var children = data.children;// this.getChildren(widget);
+		var children = data.children;
 		var selectedItem;
 		for (var i = 0; i < values.length; i++) {
 			var value = values[i];
 			var text = value.text;
 			if (i < children.length) {
 				var child = children[i];
-				//this.updateChild(child, text);
 				child.children = text;
 				child.properties.value = text;
-				//child.properties.selected = value.selected;
 				if (value.selected){
 					selectedItem = text;
 				}
 			} else {
-				//this.addChild(children, text);
 				children.push(this.createChildData(text, text, value.selected));
 			}
 			if (!this.isHtmlSupported()){
-				// dojo expects the text to be decoded for widgets that do not support HTML ie.ComboBox - wdr
 				values[i].text = dojox.html.entities.decode(text);
 			}
 		}
@@ -97,23 +86,16 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 			var length = children.length;
 			for (var i = values.length; i < length; i++) {
 				var child = children[i];
-				//this.removeChild(children, child);
 				children.pop();
 			}
 		}
 		var dataListId = widget.dijitWidget.store.id;
 		var dataListWidget = davinci.ve.widget.byId(dataListId);
-		//var dataListProps = this.getProperties(dataListWidget, values);
-		var comboBoxProps = {}; //this.getProperties(widget, values);
-		debugger;
+		var comboBoxProps = {}; 
 		var dataListProps = {};
 		dataListProps['data-dojo-props'] = 'id:"'+dataListId+'"';
-		//dataListProps.style = "display: none;"
-		//comboBoxProps.style = "display: '';"
-		//comboBoxProps.value = selectedItem;
 		comboBoxProps['data-dojo-props'] = 'value:"'+selectedItem+'", list:"'+dataListId+'"';
 		var command = new davinci.commands.OrderedCompoundCommand();
-		//var command = new davinci.commands.CompoundCommand();
 		var x = dojo.getObject(dataListId);
 		var y = dijit.byId(dataListId);
 		
@@ -125,7 +107,7 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 	},
 
 	show: function(widgetId){
-		debugger;
+
 		 this._widget = davinci.ve.widget.byId(widgetId);
 		 this.inherited(arguments);
 	},

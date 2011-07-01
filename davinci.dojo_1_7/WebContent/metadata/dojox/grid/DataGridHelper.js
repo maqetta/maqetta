@@ -111,7 +111,7 @@ _serializeStructure: function(/*Object*/ structure){
 },
 
 create: function(widget, srcElement){
-
+debugger;
 	var storeId = srcElement.getAttribute("store");
 	if(storeId){
 		var storeWidget = davinci.ve.widget.byId(storeId);

@@ -286,6 +286,8 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}else{
 			this.context.setSource(content);
 		}
+		// auto save file
+		this.save(true);
 	},
 
 	supports : function (something){

@@ -11,7 +11,7 @@ dojo.provide("davinci.library");
 
 davinci.library.getThemes=function(){
 	
-	var allThemes = davinci.resource.findResource("*.theme");
+	var allThemes = davinci.resource.findResource("*.theme", true, "./themes");
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getText();

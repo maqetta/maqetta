@@ -40,6 +40,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}));	
 		//dojo.subscribe("/davinci/ui/styleValuesChange", dojo.hitch(this, this._stylePropertiesChange));
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanges",  dojo.hitch(this, this._objectPropertiesChange));
+		dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelected));
 	},
 	
 	setDevice : function(deviceName) {
@@ -94,6 +95,24 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}
 		//context.onSelectionChange(context.getSelection());
 		this._srcChanged();
+	},
+
+	_editorSelected : function (event){
+
+		if(!this.isActiveEditor() )
+			return;
+		// Print an alert showing any message strings accumulated during page load process
+		if(this._onloadMessages && this._onloadMessages.length>0){
+			var str="";
+			for(var i=0; i<this._onloadMessages.length; i++){
+				if(i>0){
+					str+="\n\n";
+				}
+				str+=this._onloadMessages[i];
+			}
+			this._onloadMessages=[];
+			alert(str);			
+		}
 	},
 	
 
@@ -199,6 +218,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	setContent : function (fileName, content){
+		this._onloadMessages=[];	// List of messages to present to user after loading has completed
 		this._setContent(fileName, content);
 	},
 	

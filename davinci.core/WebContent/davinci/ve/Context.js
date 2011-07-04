@@ -376,7 +376,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var newThemeName = claroThemeName;
 			var oldThemeName;
 			for(var i=0;i<imports.length;i++){
-				var cssfilenamematch=imports[i].url.match(/\/([^/]*)\.css$/);
+				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
 				if(cssfilenamematch && cssfilenamematch.length==2){
 					var cssfilename = cssfilenamematch[1];
 					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));

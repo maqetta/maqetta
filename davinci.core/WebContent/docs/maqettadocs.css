@@ -228,3 +228,6 @@ div.right-col {
 	border:3px solid #769DC0;
 	font-family:'Courier New';	
 }
+#pagebody .code_block_tight_spacing {
+	line-height:1.1;
+}

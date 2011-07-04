@@ -32,7 +32,7 @@ this.onChange(this.get("value"));
 }
 }
 }else{
-this._set("value",null);
+this._set("value",new Date(""));
 this.set("currentFocus",this.currentFocus);
 }
 },_setText:function(_8,_9){

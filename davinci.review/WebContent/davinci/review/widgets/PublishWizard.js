@@ -101,7 +101,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var fileIndex= this.fileIndex = 1;
 		this.reviewFiles = reviewFiles;
 					
-		var sourceTreeModel=this.sourceTreeModel = new davinci.review.actions.ReviewFileTreeModel({
+		var sourceTreeModel=this.sourceTreeModel = new davinci.review.model.ReviewFileTreeModel({
 			root : new davinci.model.Resource.Folder(".",null),
 			foldersOnly:false
 		});
@@ -122,7 +122,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();
 		
-		var targetTreeModel=this.targetTreeModel = new davinci.review.actions.ReviewFileTreeModel({
+		var targetTreeModel=this.targetTreeModel = new davinci.review.model.ReviewFileTreeModel({
 			root : new davinci.review.model.Resource.Empty(),
 			foldersOnly:false
 		});

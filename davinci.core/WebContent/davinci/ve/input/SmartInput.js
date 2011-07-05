@@ -46,6 +46,10 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			}
 		}
 		
+		if (typeof(this.supportsHTML) === 'boolean'){
+			return this.supportsHTML;
+		}
+		
 		if (this.supportsHTML=== 'true'){
 			return true;
 		} else {

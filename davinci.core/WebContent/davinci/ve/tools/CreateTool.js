@@ -10,13 +10,26 @@ dojo.require("davinci.ve.commands.ResizeCommand");
 
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
-	constructor: function(data){
-		this._data = data;
-		if(data && data.type){
-			var resizable = davinci.ve.metadata.queryDescriptor(data.type, "resizable");
-			if (resizable != "none") {
-				this._resizable = resizable;
-			}
+	constructor: function(data) {
+		// XXX For most widgets, 'data' comes in as:
+		//			{ type,
+		//			  properties,
+		//			  children
+		//			}
+		//  Some widgets may choose to define their own 'data' object:
+		//			{  type,
+		//			   widget_data
+		//			}
+		//  Since this is all a temporary solution (until we implement a clean
+		//  interface for the CreateTool subclasses), we set 'this._data'
+		//  accordingly, so as to not have to change the rest of the code that
+		//  makes use of 'this._data'.
+		this._type = data.type;
+		this._data = data.widget_data || data;
+
+		var resizable = davinci.ve.metadata.queryDescriptor(this._type, "resizable");
+		if (resizable !== "none") {
+			this._resizable = resizable;
 		}
 	},
 
@@ -335,7 +348,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		var queryDescriptor = davinci.ve.metadata.queryDescriptor,
 			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
 			newTarget = target,
-			childType = this._data.type,
+			childType = this._type,
 			childClassList,
 			childDescriptor = queryDescriptor(childType),
 			allowedParent = childDescriptor.allowedParent || "ANY",

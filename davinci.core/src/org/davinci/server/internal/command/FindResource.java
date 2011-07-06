@@ -9,6 +9,8 @@ import org.davinci.server.Command;
 import org.davinci.server.IVResource;
 import org.davinci.server.Resource;
 import org.davinci.server.user.User;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 public class FindResource extends Command {
 
@@ -21,7 +23,8 @@ public class FindResource extends Command {
       
         IVResource[] foundFiles = null;
         if (inFolder != null) {
-            foundFiles = user.findFiles(pathStr, inFolder, ignoreCase, workspaceOnly);
+        	IPath path = new Path(inFolder).append(pathStr);
+            foundFiles = user.findFiles(path.toString(), inFolder, ignoreCase, workspaceOnly);
         } else {
             foundFiles = user.findFiles(pathStr, ignoreCase, workspaceOnly);
         }

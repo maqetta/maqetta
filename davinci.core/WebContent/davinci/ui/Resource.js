@@ -245,6 +245,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.destroyRecursive();
 		// If resource exists, delete it because we will soon make a new version of that resource
 		var existing=davinci.resource.findResource(fullName);
+		oldEditor.editorContainer.forceClose(oldEditor);
 		if(existing){
 			existing.removeWorkingCopy();
 			existing.deleteResource();
@@ -253,7 +254,7 @@ dojo.mixin(davinci.ui.Resource, {
 		// Do various cleanups around currently open file
 		oldResource.removeWorkingCopy();
 		oldEditor.isDirty = false;
-		oldEditor.editorContainer.forceClose(oldEditor);
+		
 		
 		// Create a new editor for the new filename
 		var file = folder.createResource(fileName);

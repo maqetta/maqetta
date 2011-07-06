@@ -284,25 +284,68 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	 * @throws {Error} if no valid parent widget is found
 	 */
 	_getAllowedTargetWidget: function(target) {
-		// get data for widget we are adding to page
-		var newTarget = target,
-			childType = this._data.type,
-			allowedParent = davinci.ve.metadata.queryDescriptor(childType, "allowedParent");
-		allowedParent = allowedParent && allowedParent.split(/\s*,\s*/);
+		// returns an array consisting of 'type' and any 'class' properties
+		function getClassList(type, descriptor) {
+			// some types may not have a descriptor
+			if (descriptor) {
+				var classList = descriptor['class'];
+				if (classList) {
+					classList = classList.split(/\s+/);
+					classList.push(type);
+					return classList;
+				}
+			}
+			return [type];
+		}
 		
+		// returns 'true' if any of the elements in 'classes' are in 'arr'
+		function containsClass(arr, classes) {
+			return classes.some(function(elem) {
+				return arr.indexOf(elem) !== -1;
+			});
+		}
+		
+		// Returns 'true' if the dropped widget is allowed as a child of the
+		// given parent.
+		// NOTE: uses following vars from parent context: 'childType',
+		// 'allowedParent', 'queryDescriptor'
 		function isAllowed(parent) {
 			var parentType = parent instanceof davinci.ve._Widget ?
 					parent.type : parent._dvWidget.type;
-			var allowedChild = davinci.ve.metadata.queryDescriptor(parentType, "allowedChild");
-			allowedChild = allowedChild && allowedChild.split(/\s*,\s*/);
+			var descriptor = queryDescriptor(parentType),
+				parentClassList,
+				allowedChild = descriptor && descriptor.allowedChild || "NONE";
 			
-			var isAllowedChild = !allowedChild || allowedChild.indexOf(childType) !== -1;
-			var isAllowedParent = !allowedParent || allowedParent.indexOf(parentType) !== -1;
+			// special case for HTML <body>
+			if (parentType === "html.body") {
+				allowedChild = "ANY";
+			}
+			allowedChild = allowedChild.split(/\s*,\s*/);
+			parentClassList = getClassList(parentType, descriptor);
+			
+			var isAllowedChild = allowedChild[0] !== "NONE" &&
+								 (allowedChild[0] === "ANY" ||
+								  containsClass(allowedChild, childClassList));
+			var isAllowedParent = allowAnyParent ||
+								  containsClass(allowedParent, parentClassList);
 			return isAllowedChild && isAllowedParent;
 		}
 		
+		// get data for widget we are adding to page
+		var queryDescriptor = davinci.ve.metadata.queryDescriptor,
+			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
+			newTarget = target,
+			childType = this._data.type,
+			childClassList,
+			childDescriptor = queryDescriptor(childType),
+			allowedParent = childDescriptor.allowedParent || "ANY",
+			allowAnyParent;
+		allowedParent = allowedParent.split(/\s*,\s*/);
+		allowAnyParent = allowedParent[0] === "ANY";
+		childClassList = getClassList(childType, childDescriptor);
+
 		while (newTarget && ! isAllowed(newTarget)) {
-			newTarget = newTarget.parent;
+			newTarget = getEnclosingWidget(newTarget);
 		}
 		
 		// If no valid target found, throw error

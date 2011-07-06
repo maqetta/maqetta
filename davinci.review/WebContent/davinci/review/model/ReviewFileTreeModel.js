@@ -1,7 +1,7 @@
-dojo.provide("davinci.review.actions.ReviewFileTreeModel");
+dojo.provide("davinci.review.model.ReviewFileTreeModel");
 
 dojo.declare(
-	"davinci.review.actions.ReviewFileTreeModel",
+	"davinci.review.model.ReviewFileTreeModel",
 	null,
 {
 	

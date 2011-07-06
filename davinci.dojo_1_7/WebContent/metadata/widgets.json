@@ -84,6 +84,7 @@
                 }
             ],
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": "davinci.ve.input.BorderContainerInput",
             "helper": "davinci.libraries.dojo.dijit.layout.BorderContainerHelper"
         },
@@ -115,6 +116,7 @@
                 }
             ],
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": "davinci.ve.input.StackContainerInput"
         },
         {
@@ -178,6 +180,7 @@
                 "style": "width: 250px; height: 250px;"
             },
             "isContainer": true,
+            "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
         },
         {
@@ -682,6 +685,7 @@
                 "title": "Dialog"
             },
             "isContainer": true,
+            "allowedChild": "ANY",
             "isLayered": true,
             "resizable": "none",
             "tool": "davinci.libraries.dojo.dijit.DialogCreateTool",
@@ -698,6 +702,7 @@
             "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
             "resizable": "none",
             "isContainer": true,
+            "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
             "inlineEdit": "davinci.ve.input.RichTextInput"
         },
@@ -972,7 +977,8 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dijit.layout.StackContainerCreateTool",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "Form",
@@ -984,7 +990,8 @@
             "properties": {
                 "style": "width: 250px; height: 250px;"
             },
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "AnalogGauge",
@@ -1317,7 +1324,8 @@
                 "withHandles": true,
                 "style": "width: 500px; height: 300px;"
             },
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "FloatingPane",
@@ -1331,6 +1339,7 @@
                 "style": "width: 300px; height: 300px;"
             },
             "isContainer": true,
+            "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
         },
         {
@@ -1343,7 +1352,8 @@
             "properties": {
                 "style": "width: 300px; height: 300px"
             },
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "RadioGroup",
@@ -1457,25 +1467,31 @@
             "name": "View",
             "type": "dojox.mobile.View",
             "category": "mobile",
+            "class": "DojoxMobileView",
             "icon": "resources/images/dx-mbl-view.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtWKf21SLvVKHuWKh21OHuWKf2WKh2VWLvVaOv7nW78jg84C/64K/64DB64DB6ZfX9v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZ0wJJwSCwOOcikMinkjJ7QKJRTqoRAIJJ2SxJ9PpsSJkOhXDIatEZDIVtKE4l8Tp9HShKPfs/fQ/BcgVx/DiQAhgABAgcLEhYWJA8lDIKVDSUJHZqbnJsKJQaVggglBIaIioyOkAUlA6KBA64DtLW2tka5Q0EAOw==",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "ScrollableView",
             "type": "dojox.mobile.ScrollableView",
             "category": "mobile",
+            "class": "DojoxMobileView",
             "icon": "resources/images/dx-mbl-scrollable-view.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFOiPj6/jJRijRTjTRUjTdXkTdXkLrH3+Hp+OHp9zdakzZYkDdYkDlbkzlck97o+ODp+N/o9ztflj5km/L2/Pj6/T5mnD9mnT5lm0FqoENupENuo0Ruo0ZxpvL2+0l3rEl4rEh2qkl3q0l2qk6BtE1+sU+BtFCDtVCFt1CEtlSLvVOJulOHuVaOv7nW78/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaAQJlwSCwKXcikcilzxZ5QaApGVclWMUAWMFhgYiRYACGStaJoDKzyuchQr7hc3jAwGAeZCR1lKRIRLDIjWVtdXyUSEhAnMh58UCCKECEyGnOYHRsbHBwyFJBPGVQwFDIThQBcXjEOYggOMg+hMQUwFgIEsg+8vb0BwMBGw8TFQkEAOw==",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "SwapView",
             "type": "dojox.mobile.SwapView",
             "category": "mobile",
+            "class": "DojoxMobileView",
             "icon": "resources/images/dx-mbl--flippable-iew.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "Heading",
@@ -1489,6 +1505,7 @@
                 "supportsHTML": true
             },
             "isContainer": true,
+            "allowedParent": "DojoxMobileView",
             "allowedChild": "dojox.mobile.ToolBarButton"
         },
         {
@@ -1497,7 +1514,8 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-roundrect.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk55qcnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVHoCSOZGmeJ6SuLERCRSzPhStBQRDtPB8QLgigR9w9goIi0RFMKHuJIOLJWwQb1N0hOMhGGEGFgiq2QQzitFphE7XeqLj8FAIAOw==",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "RoundRectCategory",
@@ -1540,7 +1558,8 @@
             "category": "mobile",
             "icon": "resources/images/RoundRectDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+lpzp2V+sGqEtW2FsHSLtNfi9Tlck22GsHOLtH2Uu5q03W56jr7J2+Lq99jf6ubt+La/zGiKutXi9ERvo/P3/Ex7r0x9sUx8r8TU5ejx+lKHuVKHuFaOv3io0bnW78jg8+zz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaEwNfL8vEYj8ePRWjxQCzQaBTiWX4grqx2a4F8Xh2LC7MtWzivjLjMvqRB8PhmTt9o0usta89nvSpiZFooAIWFKC8TEmwpAQsKBQEtLyEIElIWKyKbmypCIRMIoggOJRELBgkRJ0KtriYPsbEkrrUjBwcMBAcjtbUNFAMvDAK+tQzGybVBADs=",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "EdgeToEdgeCategory",
@@ -1583,7 +1602,8 @@
             "category": "mobile",
             "icon": "resources/images/EdgeToEdgeDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "ListItem",
@@ -1615,7 +1635,7 @@
             "isContainer": true,
             "allowedChild": "dojox.mobile.IconItem",
             "properties": {
-                "defaultIcon": "__MAQ_LIB_BASE_URL__/resources/images/icon-container-fallback.png"
+                "defaultIcon": "sample_data/images/icon-container-fallback.png"
             },
             "children": [
                 {
@@ -1753,7 +1773,8 @@
             "category": "mobile",
             "icon": "resources/images/CarouselSideScrollableList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "CheckBox",
@@ -1820,7 +1841,8 @@
             "category": "mobile",
             "icon": "resources/images/ContentPane.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "ExpandingTextArea",
@@ -1841,6 +1863,7 @@
             "icon": "resources/images/FixedSplitter.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
             "isContainer": true,
+            "allowedChild": "ANY",
             "properties": {
                 "orientation": "H"
             },
@@ -1862,7 +1885,8 @@
             "category": "mobile",
             "icon": "resources/images/FixedSplitterPane.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck/P2+ztfljtgljxhlz5mnD9mnEJtokNtokdzp0h0qeTt+Obu+Ed1qUp6rUx9sFCEt06As0x9r1GEtlGGuFOKvFOKu1SKvFaOv8/t+////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoCaOZCliaKqqZ+a+8Cte2WLfN6OLVBasQFHEh4nBMCIHsYa7ITUJX8UXqFoDFtHBN6FeqxCRwSdpmM/nh4jgU3i/DRHAh3hfEXJfwW4t5AMDfFUCfwCGh4gAJoskIQA7",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "ANY"
         },
         {
             "name": "Overlay",

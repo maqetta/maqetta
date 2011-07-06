@@ -1257,10 +1257,12 @@ dojo.declare("davinci.ve._Widget",null,{
 //	                value = this.getContext().getContentUrl(value);
 //		            break;
 		        case "date":
-		            value = dojo.date.stamp.toISOString(value, {selector: "date"});
-		            break;
 		        case "time":
-		            value = dojo.date.stamp.toISOString(value, {selector: "time"});
+		        	if(isFinite(value)){
+		        		value = dojo.date.stamp.toISOString(value, {selector: property.format});
+		        	}else{
+		        		value = "";
+		        	}
 		            break;
 		        default:
 		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.

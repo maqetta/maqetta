@@ -109,9 +109,9 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			this.addFiles([item]);
 		};
 		var sourceTree= this.sourceTree = new dijit.Tree({
+			id: "reviewWizardSourceTree",
 			showRoot:false,
 			model: sourceTreeModel, 
-			
 			labelAttr: "name", 
 			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
@@ -127,9 +127,9 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			foldersOnly:false
 		});
 		var targetTree = this.targetTree = new davinci.review.widgets.Tree({
+			id: "reviewWizardTargetTree",
 			showRoot:false,
 			model: targetTreeModel, 
-			
 			labelAttr: "name", 
 			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
@@ -697,5 +697,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			dojo.unsubscribe(sub);
 		});
 		delete this._subs;
+		this.sourceTree.destroyRecursive();
+		this.targetTree.destroyRecursive();
 	}	
 });

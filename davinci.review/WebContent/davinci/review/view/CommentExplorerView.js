@@ -26,8 +26,9 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		var model= new davinci.review.model.ReviewTreeModel();
 		this.model = model;
 		this.tree = new davinci.ui.widgets.Tree({
+			id: "reviewCommentExplorerViewTree",
 			showRoot:false,
-			model: model, id:'reviewResourceTree',
+			model: model,
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			filters : [davinci.review.model.Resource.dateSortFilter,this.commentingFilter],

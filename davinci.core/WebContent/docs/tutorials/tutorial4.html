@@ -409,6 +409,72 @@ you won't need to relocate JavaScript libraries for each new ZIP file.
 Maqetta will automatically fix up all HTML files in your workspace
 to take into account the new location(s) for your JavaScript libraries.</p>
 
+<a name="exploring_workspace_html_files"><h2>Exporting to IBM Rational Application Developer (TM) 8.0</h2></a>
+
+<p>This section is relevant to web development teams that use IBM Rational Application Developer (RAD) 8.0
+in conjunction with the Dojo Toolkit.</p>
+
+<p>To demonstrate Maqetta integration with RAD:</p>
+<ul>
+<li>Launch RAD</li>
+<li>Issue a <code>New-&gt;Other...</code> command and then choose Web-&gt;Static Web Project. The following dialog will appear:
+<p><a href="img/RAD_New_Static_Web_Project.png" target="_blank"><img alt="image" src="img/RAD_New_Static_Web_Project.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
+</li>
+<li>Fill out the usual fields (e.g., project name) as you would normally,
+but also click on the "Modify..." button so that you can tell RAD that you want to include the
+Dojo facet as part of your static web project. This brings up the Project Facets dialog.
+Open up the "Web 2.0" group and click on the checkbox next to "Dojo Toolkit":
+<p><a href="img/RAD_Dojo_Project_Facet.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Facet.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
+And then click OK.
+</li>
+<li>Click Next until you get to the Dojo Project Setup dialog:
+<p><a href="img/RAD_Dojo_Project_Setup_1.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_1.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
+Click on the "Change these setup options" button. You will see the following wizard pane:
+<p><a href="img/RAD_Dojo_Project_Setup_2.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_2.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
+Notice that RAD provides three options for how to configure Dojo within your project:
+<ol>
+	<li>clone a copy of Dojo into the current project</li>
+	<li>reference a copy of Dojo that is within a project in the current workspace</li>
+	<li>reference Dojo off of a remote server (CDN)</li>
+</ol>
+</li>
+<li>Choose option 1 (clone a copy of Dojo into the current project) and click Next. You will see the following:
+<p><a href="img/RAD_Dojo_Project_Setup_3.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_3.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
+As you can see, RAD allows you to choose where you would like the Dojo toolkit to be located
+within your current project (i.e., relative to the <code>WebContent\</code> folder). 
+The dialog above shows the RAD's default location for Dojo: <code>dojo</code>.
+<div class="note">
+Maqetta uses a different default location for Dojo: : <code>lib/dojo</code>.
+</div>
+</li>
+<li>Click Finish to create your static web project. If you look in the Project Explorer,
+you will see a <code>dojo/</code> folder within the <code>WebContent/</code> folder for your new project.
+</li>
+<li>Go into the Maqetta application and click on the Download Entire Workspace icon
+<img src="img/download.gif" title="Download Entire Workspace" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+within the Files palette. In the Download dialog, uncheck the box next to "Dojo 1.7" 
+(this causes the download ZIP to <em>not</em> include the Dojo JavaScript files)
+and replace the string <code>lib/dojo</code> with the string <code>dojo</code>
+(this causes all cloned HTML files that are included within the ZIP to look
+for the Dojo JavaScript files at relative URL <code>./dojo</code> instead of relative URL <code>./lib/dojo</code>).
+</li>
+<li>Click OK to start the download process. </li>
+<li>Wait until the browser has completed the download.
+(Since Dojo was not included in the ZIP, the download should be completed quickly.)</li>
+<li>Using an external utility (e.g., use a product like WinZip or operating system utilities), 
+unzip the contents of the ZIP file into the <code>WebContent</code>
+folder for your project. (You'll need to know where your Eclipse workspace is stored on your system.)
+When completed, files such as <code>Sample1.html</code> and <code>app.css</code> should end up
+in your <code>WebContent</code> folder.
+</li>
+<li>Back in RAD, issue a Refresh command on your new project. The files from the Maqetta ZIP should
+appear in the Project Explorer.
+</li>
+<li>Find Sample1.html. Using the context menu, choose "Open With" and then "Web Browser".
+You should see Sample.html running within the embedded Web browser that is part of RAD.
+</li>
+</ul>
+
 <p class="prevnext"><a href="tutorials/tutorial3.html">Previous</a> / <a href="tutorials/tutorial5.html">Next</a></p>
 
 </div> <!-- pagebody -->

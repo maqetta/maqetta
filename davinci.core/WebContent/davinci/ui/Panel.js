@@ -20,7 +20,10 @@ dojo.declare("davinci.ui.Panel",dijit.layout.ContentPane, {
 	postMixInProperties: function(){
 		this.inherited(arguments);
 
-		function clone (o)
+/*		The object is to nested for cloning, this and dojo.clone send the browser into a recursive dive
+ *      Is it necessary to clone the object? the code seems to work without problems without cloning. wdr issue #630
+ *      
+ * 		function clone (o)
 		{
 		
 			if(!o){ return o; }
@@ -32,7 +35,7 @@ dojo.declare("davinci.ui.Panel",dijit.layout.ContentPane, {
 				return r; // Array
 			}
 			if(!dojo.isObject(o) || dojo.isFunction(o)){
-				return o;	/*anything*/
+				return o;	anything
 			}
 			r={};
 			for(i in o){
@@ -45,6 +48,7 @@ dojo.declare("davinci.ui.Panel",dijit.layout.ContentPane, {
 		
 		
 			this.definition= clone(this.definition);
+			*/
 
 	},
 
@@ -995,6 +999,10 @@ davinci.ui.Panel.metadata['tree']=
 //				dojo.require(modelName);
 				var modelParm= field.modelParms ||{};
 				parms.model=new (dojo.getObject(modelName))(modelParm);
+			} else {
+				// I would assume that becouse we are not cloning the model in postMixInProperties 
+				// we are being passed the model object instead of the name, so lets just use it.    wdr issue #630
+				parms.model = modelName; // wdr
 			}
 			parms.filters=[];
 			if (field.filters)

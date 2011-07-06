@@ -31,12 +31,12 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 		// If in inlineEdit mode, if we get here, the user has clicked outside of the
 		// inlineEdit box, in which case we should bring down inlineEdit, commit the
 		// inlineEdit changes, and leave the current selection as it was previously.
-		var focus = (this._context && this._context._focuses && this._context._focuses[0]) ? this._context._focuses[0] : null;
+/*		var focus = (this._context && this._context._focuses && this._context._focuses[0]) ? this._context._focuses[0] : null;
 		if(focus && focus._inline) {
 			dojo.stopEvent(event);
 			return;
 		}
-		
+		*/
 		var widget = (this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target));
 		while(widget){
 			if(widget.getContext()){ // managed widget

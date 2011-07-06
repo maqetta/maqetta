@@ -1635,7 +1635,7 @@
             "isContainer": true,
             "allowedChild": "dojox.mobile.IconItem",
             "properties": {
-                "defaultIcon": "__MAQ_LIB_BASE_URL__/resources/images/icon-container-fallback.png"
+                "defaultIcon": "sample_data/images/icon-container-fallback.png"
             },
             "children": [
                 {

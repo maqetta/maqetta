@@ -50,28 +50,36 @@ davinci.library.getMetaData=function(theme){
 //FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
 	return (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
-}
-davinci.library.getlibMetaData=function(id, version){
-	
+};
+
+davinci.library.getLibMetadata = function(id, version) {
 	var path = davinci.library.getMetaRoot(id, version);
-	
-	if(path==null)
-		return null
-	
-    var data = dojo.xhrGet({
-        url : path + "/widgets.json",
-        sync : true, // XXX should be async
-        handleAs: "text"
-    });
-   
-    var result = {'data':data['results'][0], 'metaPath':path};
-   
-    return result;
-	//return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true  }));
-}
+
+	if (path == null) {
+		return null;
+	}
+
+	var result = null;
+	dojo.xhrGet({
+		url : path + "/widgets.json",
+		sync : true, // XXX should be async
+		handleAs : "json",
+		load : function(data) {
+			result = {
+				descriptor : data,
+				metaPath : path
+			};
+		}
+		// XXX handle error is 'widgets.json' does not exist at 'path'
+	});
+
+	return result;
+	// return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true }));
+};
 
 davinci.library.getUserLibs=function(base){
-	// not sure if we want to only allow the logged in user to view his/her installed libs, or to include user name in request of targe user.
+	// not sure if we want to only allow the logged in user to view his/her
+	// installed libs, or to include user name in request of targe user.
 
 	return davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{'base':base },sync:true  })[0]['userLibs'];
 	

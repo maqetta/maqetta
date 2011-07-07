@@ -1,3 +1,5 @@
+// Runtime version, used by preview-in-browser
+
 // Various functions extracted from dojo for use in non-dojo environments
 (function(){
 

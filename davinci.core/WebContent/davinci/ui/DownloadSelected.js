@@ -15,7 +15,7 @@ dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 	
 	buildRendering : function(){
 		this.inherited(arguments);
-		this._files=davinci.model.Resource.getSelectedResources();
+		this._files=davinci.ui.Resource.getSelectedResources();
 		var uiArray = ["<div class='downloadSelectedHeader'>Selected Files</div>"];
 		uiArray.push("<div class='downloadSelectedList'>");
 		if(!this._files){
@@ -36,6 +36,7 @@ dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 		
 	},
 	_getResources : function(){
+		
 		var list = [];
 		
 		for(var i=0;i<this._files.length;i++){
@@ -49,9 +50,9 @@ dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 			if(value){
 				var lib = this._userLibs[element];
 				var root = this._getLibRoot(lib['id'], lib['version']);
-				for(var i=0;i<list.length;i++){
+				for(var k=0;k<list.length;k++){
 					// ensure we dont add duplicate if the user selected a library
-					if(list[i]==root) continue;
+					if(list[k]==root) continue;
 					
 				}
 				list.push(root);

@@ -9,15 +9,45 @@
         <env-entry>
                 <env-entry-name>maqetta.baseDirectory</env-entry-name>
                 <env-entry-type>java.lang.String</env-entry-type>
-                <env-entry-value></env-entry-value>
+                <env-entry-value>/davinciUsers</env-entry-value>
                
         </env-entry> 
 
+<!--  smtp server for review and commenting -->
+        <env-entry>
+                <env-entry-name>smtp.mailServer</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>relay.us.ibm.com</env-entry-value>
+        </env-entry> 
+<!--  smtp username for review and commenting -->
+        <env-entry>
+                <env-entry-name>smtp.loginUser</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+        </env-entry> 
+<!--  smtp password for review and commenting -->
+        <env-entry>
+                <env-entry-name>smtp.password</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+        </env-entry>         
+<!--  smtp fake reviewer review and commenting -->
+        <env-entry>
+                <env-entry-name>davinci.review.fakeReviewer</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+        </env-entry>         
+<!--  smtp notification ID for R&C-->
+        <env-entry>
+                <env-entry-name>smtp.notificationId</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value></env-entry-value>
+        </env-entry>                 
 <!--  maximum number of maqetta users allowed -->
         <env-entry>
                 <env-entry-name>maqetta.maxUsers</env-entry-name>
                 <env-entry-type>java.lang.String</env-entry-type>
-                <env-entry-value></env-entry-value>
+                <env-entry-value>2000</env-entry-value>
         </env-entry> 
 
 <!--  send debug info to console-->

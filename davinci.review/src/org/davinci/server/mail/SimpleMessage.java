@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2007, International Business Machines Corporation, 
- * Shanghai Globalization Laboratory. All rights reserved.
- */
 package org.davinci.server.mail;
 
 

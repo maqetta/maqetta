@@ -3,7 +3,7 @@ dojo.provide("davinci.ve.views.DataStoresView");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ve.widget");
 
-dojo.require("davinci.ui.widgets.Tree");
+dojo.require("dijit.Tree");
 dojo.require("dijit.tree.dndSource");
 
 dojo.require("dijit.layout.BorderContainer");
@@ -22,8 +22,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
 
         this.container = new dijit.layout.BorderContainer({
             style: "height: 300px"
-        },
-        "DataStoresContainer");
+        }, "DataStoresContainer");
         
         this.container.startup();
 
@@ -152,7 +151,7 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
         };
 
 
-        var tree = new davinci.ui.widgets.Tree({model: treeModel,
+        var tree = new dijit.Tree({model: treeModel,
                                                 getIconClass: getIconClass,
                                                 dragSources: dragSources
                                                }
@@ -160,10 +159,10 @@ dojo.declare("davinci.ve.views.DataStoresView", [davinci.workbench.ViewPart], {
         var popup = davinci.Workbench.createPopup({ partID: 'davinci.ve.datastores',
             domNode: tree.domNode, openCallback: tree.getMenuOpenCallback()});
         
-        tree.notifySelect = dojo.hitch(this, function (item)
-                {
-                    this.publish("/davinci/ui/selectionChanged",[item,this]);
-                }); 
+        var that = this;
+        tree.watch("selectedItem", function(prop, oldValue, newValue) {
+        	that.publish("/davinci/ui/selectionChanged",[newValue, that]);
+        }); 
 
         tree.startup();
         this.container.addChild(tree);        

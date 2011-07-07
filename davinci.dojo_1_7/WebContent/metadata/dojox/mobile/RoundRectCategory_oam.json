@@ -1,0 +1,42 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/RoundRectCategory",
+    "name": "dojox.mobile.RoundRectCategory",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "defaultValue": "RoundRectCategory"
+        }
+    },
+    "content": "<div label='RoundRectCategory'></div>"
+}

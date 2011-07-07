@@ -17,191 +17,160 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 
-
+@SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
-	private static final byte[] buffer = new byte[8192];
-	HashMap commands = new HashMap();
-	boolean initialized=false;
-	
-	public DavinciCommandServlet() {
-	}
-	
+    private HashMap commands    = new HashMap();
+    private boolean initialized = false;
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+    public DavinciCommandServlet() {
+    }
 
-		if (!initialized)
-			initialize();
-		String pathInfo = req.getPathInfo();
-		if (pathInfo.startsWith("/"))
-			pathInfo=pathInfo.substring(1);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		CommandDescriptor commandDescriptor = (CommandDescriptor)this.commands.get(pathInfo);
-		if (commandDescriptor==null || commandDescriptor.isPut())
-		{
-			// NULL Pointer into debugger;
-			Object obj=null;
-			obj.hashCode();
-		}
-		User user=checkLogin(req, resp, commandDescriptor);
-		if (user==null && !commandDescriptor.isNoLogin())
-			return;
+        if (!initialized) {
+            initialize();
+        }
+        String pathInfo = req.getPathInfo();
+        if (pathInfo.startsWith("/")) {
+            pathInfo = pathInfo.substring(1);
+        }
 
-		Command command=commandDescriptor.getCommand();
-		command.init(); 
-		
-		command.handleCommand(req, resp, user);
-		if (command.getErrorString()!=null)
-		{
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
-		}
-		else if (command.getResponse()!=null)
-		{
-			ServletOutputStream stream = resp.getOutputStream();
-			stream.print(command.getResponse());
-			
-		}
-	}
+        CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
+        if (commandDescriptor == null || commandDescriptor.isPut()) {
+            throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Get processing"));
+        }
+        User user = checkLogin(req, resp, commandDescriptor);
+        if (user == null && !commandDescriptor.isNoLogin()) {
+            return;
+        }
 
-	
-	private User checkLogin(HttpServletRequest req,HttpServletResponse resp,CommandDescriptor commandDescriptor) throws IOException
-	{
-		
+        Command command = commandDescriptor.getCommand();
+        command.init();
 
-		User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-		if (user==null)
-		{
-			if (ServerManager.LOCAL_INSTALL)
-			{
-				user = ServerManager.getServerManger().getUserManager().getSingleUser();
-				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER,
-						user);
-			}
-			else
-			{
-				if (!commandDescriptor.isNoLogin())
-				{
-					resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-					return null;
-				}
-			}
+        command.handleCommand(req, resp, user);
+        if (command.getErrorString() != null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
+        } else if (command.getResponse() != null) {
+            ServletOutputStream stream = resp.getOutputStream();
+            stream.print(command.getResponse());
 
-				
-		}
-		return user;
-	}
-	
-	
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		if (!initialized)
-			initialize();
-		String pathInfo = req.getPathInfo();
-		if (pathInfo.startsWith("/"))
-			pathInfo=pathInfo.substring(1);
+        }
+    }
 
-		CommandDescriptor commandDescriptor = (CommandDescriptor)this.commands.get(pathInfo);
-		if (commandDescriptor==null || !commandDescriptor.isPut())
-		{
-			// NULL Pointer into debugger;
-			Object obj=null;
-			obj.hashCode();
-		}
+    private User checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
-		User user=checkLogin(req, resp, commandDescriptor);
-		if (user==null && !commandDescriptor.isNoLogin())
-			return;
-		Command command=commandDescriptor.getCommand();
-		command.init();
-		
-		command.handleCommand(req, resp, user);
-	
+        User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        if (user == null) {
+            if (ServerManager.LOCAL_INSTALL) {
+                user = ServerManager.getServerManger().getUserManager().getSingleUser();
+                req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
+            } else {
+                if (!commandDescriptor.isNoLogin()) {
+                    resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    return null;
+                }
+            }
 
-	}
+        }
+        return user;
+    }
 
-	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.service(req, resp);
-	}
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!initialized) {
+            initialize();
+        }
+        String pathInfo = req.getPathInfo();
+        if (pathInfo.startsWith("/")) {
+            pathInfo = pathInfo.substring(1);
+        }
 
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse resp)
-			throws ServletException, IOException {
-		if (!initialized)
-			initialize();
-		
-		String pathInfo = request.getPathInfo();
-		if (pathInfo.startsWith("/"))
-			pathInfo=pathInfo.substring(1);
+        CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
+        if (commandDescriptor == null || !commandDescriptor.isPut()) {
+            throw new java.lang.AssertionError(new String("commandDescriptor is null or is not Put in Put processing"));
+        }
 
-		User user = (User) request.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
-		CommandDescriptor commandDescriptor = (CommandDescriptor)this.commands.get(pathInfo);
-		if (commandDescriptor==null || commandDescriptor.isPut())
-		{
-			// NULL Pointer into debugger;
-			Object obj=null;
-			obj.hashCode();
-		}
-		if (user==null)
-		{
-			if (!commandDescriptor.isNoLogin())
-			{
-				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				return;
-			}
-				
-		}
-		Command command=commandDescriptor.getCommand();
-		command.init();
-		
-		command.handleCommand(request, resp, user);
-		if (command.getErrorString()!=null)
-		{
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
-		}
-		else if (command.getResponse()!=null)
-		{
-			ServletOutputStream stream = resp.getOutputStream();
-			stream.print(command.getResponse());
-			
-		}
-	}
-	
-	void loadCommands()
-	{
-	  IExtensionRegistry registry = Activator.getActivator().getRegistry();
-		if (registry != null) {
-			IExtensionPoint point = registry.getExtensionPoint(
-					IDavinciServerConstants.BUNDLE_ID, IDavinciServerConstants.EXTENSION_POINT_COMMAND);
+        User user = checkLogin(req, resp, commandDescriptor);
+        if (user == null && !commandDescriptor.isNoLogin()) {
+            return;
+        }
+        Command command = commandDescriptor.getCommand();
+        command.init();
 
-			if (point != null) {
-				IExtension[] extensions = point.getExtensions();
-				for (int i = 0; i < extensions.length; i++) {
-					IConfigurationElement[] elements = extensions[i]
-							.getConfigurationElements();
-					for (int j = 0; j < elements.length; j++) {
-						if (elements[j].getName().equals(IDavinciServerConstants.EP_TAG_COMMAND)) {
-							CommandDescriptor cmd=new CommandDescriptor(elements[j]);
-							this.commands.put(cmd.getPath(),cmd);
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	private void initialize()
-	{
-		if (commands.isEmpty())
-			this.loadCommands();
-		if (ServerManager.getServerManger()==null)
-			ServerManager.createServerManger(getServletConfig());
-		this.initialized=true;
-	}
+        command.handleCommand(req, resp, user);
+
+    }
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        super.service(req, resp);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+        if (!initialized) {
+            initialize();
+        }
+
+        String pathInfo = request.getPathInfo();
+        if (pathInfo.startsWith("/")) {
+            pathInfo = pathInfo.substring(1);
+        }
+
+        User user = (User) request.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
+        if (commandDescriptor == null || commandDescriptor.isPut()) {
+            throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Post processing"));
+        }
+        if (user == null) {
+            if (!commandDescriptor.isNoLogin()) {
+                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+        }
+        Command command = commandDescriptor.getCommand();
+        command.init();
+
+        command.handleCommand(request, resp, user);
+        if (command.getErrorString() != null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
+        } else if (command.getResponse() != null) {
+            ServletOutputStream stream = resp.getOutputStream();
+            stream.print(command.getResponse());
+
+        }
+    }
+
+    void loadCommands() {
+        IExtensionRegistry registry = Activator.getActivator().getRegistry();
+        if (registry != null) {
+            IExtensionPoint point = registry.getExtensionPoint(IDavinciServerConstants.BUNDLE_ID, IDavinciServerConstants.EXTENSION_POINT_COMMAND);
+
+            if (point != null) {
+                IExtension[] extensions = point.getExtensions();
+                for (int i = 0; i < extensions.length; i++) {
+                    IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+                    for (int j = 0; j < elements.length; j++) {
+                        if (elements[j].getName().equals(IDavinciServerConstants.EP_TAG_COMMAND)) {
+                            CommandDescriptor cmd = new CommandDescriptor(elements[j]);
+                            this.commands.put(cmd.getPath(), cmd);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void initialize() {
+        if (commands.isEmpty()) {
+            this.loadCommands();
+        }
+        if (ServerManager.getServerManger() == null) {
+            ServerManager.createServerManger(getServletConfig());
+        }
+        this.initialized = true;
+    }
 
 }
-

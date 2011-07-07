@@ -38,7 +38,7 @@ dojo.declare("davinci.review.actions.CloseVersionAction",davinci.actions.Action,
 	isEnabled: function(context){
 		if(davinci.review.Runtime.getRole()!="Designer") return false;
 		var selection = davinci.Runtime.getSelection();
-		if(!selection) return false;
+		if(!selection || selection.length == 0) return false;
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
 		if(!item.closed&&!item.isDraft) return true;
 		return false;

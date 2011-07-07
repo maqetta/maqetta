@@ -18,6 +18,6 @@ dojo.declare("davinci.review.actions.EditVersionAction",davinci.actions.Action,{
 	isEnabled: function(context){
 		if(davinci.review.Runtime.getRole()!="Designer") return false;
 		var selection = davinci.Runtime.getSelection();
-		return selection?true:false;
+		return selection && selection.length > 0 ? true : false;
 	}
 });

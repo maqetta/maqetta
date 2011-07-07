@@ -11,62 +11,59 @@ import java.net.URLConnection;
 
 public interface IVResource {
 
-	
-	public static final char SEPERATOR = '/';
+    public static final char SEPERATOR = '/';
 
-	URLConnection openConnection() throws MalformedURLException, IOException;
+    URLConnection openConnection() throws MalformedURLException, IOException;
 
-	public boolean exists();
+    public boolean exists();
 
-	public String toString();
+    public String toString();
 
-	public String getPath();
-	
-	public boolean readOnly();
-	
-	public void createNewInstance() throws IOException;
-	
-	public boolean delete();
-	
-	public IVResource create(String path);
-	
-	public OutputStream getOutputStreem() throws FileNotFoundException, IOException;
-	
-	public InputStream getInputStreem() throws IOException;
-	
-	public IVResource[] listFiles();
-	
-	public String getName();
-	
-	public boolean isDirectory();
-	
-	/* only working copy no actual saved file */
-	public boolean committed();
-	
-	public void removeWorkingCopy();
-	
-	public void flushWorkingCopy();
-	
-	public URI getURI() throws URISyntaxException; 
-	
-	public IVResource[] find(String path); 
-	
-	public boolean mkdir();
+    public String getPath();
 
-	public boolean isFile();
-	
-	public boolean isDirty();
-	
-	public IVResource[] getParents();
-	
-	public IVResource getParent() ;
+    public boolean readOnly();
 
-	IVResource get(String childName);
-	
-	
-	/* search for children, supports wild card */
-	IVResource[] findChildren(String childName);
+    public void createNewInstance() throws IOException;
 
+    public boolean delete();
 
-	void add(IVResource v);
+    public IVResource create(String path);
+
+    public OutputStream getOutputStreem() throws FileNotFoundException, IOException;
+
+    public InputStream getInputStreem() throws IOException;
+
+    public IVResource[] listFiles();
+
+    public String getName();
+
+    public boolean isDirectory();
+
+    /* only working copy no actual saved file */
+    public boolean committed();
+
+    public void removeWorkingCopy();
+
+    public void flushWorkingCopy();
+
+    public URI getURI() throws URISyntaxException;
+
+    public IVResource[] find(String path);
+
+    public boolean mkdir();
+
+    public boolean isFile();
+
+    public boolean isDirty();
+
+    public IVResource[] getParents();
+
+    public IVResource getParent();
+
+    IVResource get(String childName);
+
+    /* search for children, supports wild card */
+    IVResource[] findChildren(String childName);
+
+    void add(IVResource v);
 }

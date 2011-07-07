@@ -1,5 +1,5 @@
 dojo.provide("davinci.ui.widgets.ResourceTreeModel");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 
 
 dojo.declare("davinci.ui.widgets.ResourceTreeModel",null, {
@@ -7,15 +7,15 @@ dojo.declare("davinci.ui.widgets.ResourceTreeModel",null, {
    foldersOnly : false,
 		
 	constructor: function(args){
-			this.root=davinci.model.Resource.getRoot();
+			this.root=davinci.resource.getRoot();
 			this.subscription=[];
 			this.subscription.push(dojo.subscribe("/davinci/resource/resourceChanged",this,this.resourceChanged));
-			this.subscription.push(dojo.subscribe("/davinci/resource/workspaceChanged",this,this.workspaceChanged));
+		//	this.subscription.push(dojo.subscribe("/davinci/resource/workspaceChanged",this,this.workspaceChanged));
 			this.foldersOnly=args && args.foldersOnly;
 	},
 	
 	workspaceChanged : function(){
-		this.root=davinci.model.Resource.getRoot();
+		this.root=davinci.resource.getRoot();
 		this.root.getChildren(dojo.hitch(this,function(children){
 												this.onChildrenChange(this.root,children)
 											   }

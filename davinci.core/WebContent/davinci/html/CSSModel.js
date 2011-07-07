@@ -2,7 +2,7 @@ dojo.provide("davinci.html.CSSModel");
 dojo.require("davinci.model.Model");
 dojo.require("davinci.html.CSSParser");
 dojo.require("davinci.model.Path");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("davinci.model.Factory");
 
 
@@ -92,6 +92,9 @@ davinci.html.CSSElement.prototype._convertNode = function(domNode){
 		return this.parent.getID()+":"+this.startOffset+":"+this.getLabel();
 	}
 
+ 
+
+ 
  /**  
   * @class davinci.html.CSSFile
     * @constructor 
@@ -140,7 +143,7 @@ davinci.html.CSSElement.prototype._convertNode = function(domNode){
  
 davinci.html.CSSFile.prototype.getResource = function (isWorkingCopy) {
 	
-	return davinci.model.Resource.findResource(this.url);
+	return davinci.resource.findResource(this.url);
 }
 
 davinci.html.CSSFile.prototype.addRule = function (ruleText) {
@@ -319,7 +322,32 @@ davinci.html.CSSFile.prototype.getStyleValue = function(propertyNames, domElemen
 		 
 }
 	
+/**  
+ * @class davinci.html.CSSFile
+   * @constructor 
+   * @extends davinci.html.CSSElement
+ */
+davinci.html.CSSFragment= function(args){
 	
+	this.inherits(davinci.html.CSSElement);  
+	this.elementType="CSSFile";
+	dojo.mixin(this, args);
+	if(!this.options)
+		this.options =  {xmode:'style', css:true, expandShorthand:false};
+	var txt = null;
+	
+	if (this.url && this.loader){
+		txt=this.loader(this.url);
+	}else if(this.url){
+		 var file = this.getResource();
+		 if(file)
+			 txt = file.getContents();
+	}
+	if (txt)
+		  this.setText(txt);
+	
+}
+davinci.Inherits(davinci.html.CSSFragment, davinci.html.CSSFile);	
 	
  /**  
   * @class davinci.html.CSSRule
@@ -564,18 +592,25 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 
  
 	 davinci.html.CSSSelector.prototype.matches = function(domNode, index){
+		 //FIXME: Will produce incorrect results if more than 9 class matches
+		 //Should use a very higher "base", not just base 10
 		 var inx=index || 0;
 		 var node=domNode[inx];
 		 var specific=0;
+		 var anymatches=false;
 		 if (this.id)
 		 {
 			if (this.id!=node.id)
 				return -1;
 			specific+=100;
+			anymatches=true;
 		 }
 		 if (this.element)
 		 {
-			if (this.element!='*')
+			if (this.element=='*'){
+				anymatches=true;
+			}
+			else
 			{
 				if (this.element!=node.tagName)
 	            {
@@ -583,6 +618,7 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 						return -1;
 	            }  				
 				specific+=1;
+				anymatches=true;
 			}
 		 }
 		 if (this.cls && node.classes)
@@ -601,6 +637,8 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 						  return -1;
 					  
 				  }
+				  specific+=(matchClasses.length*10);
+				  anymatches=true;
 			 }
 			  else
 			{
@@ -609,13 +647,17 @@ davinci.html.CSSRule.prototype.removeStyleValues = function(propertyNames){
 					  if (found=(classes[i]==this.cls))
 						  break;
 				  if (!found)
-					  return -1;
-				  
+					  return -1;	  
+				  specific+=10;
+				  anymatches=true;
 			}
 				  
-			  specific+=10;
  		 }
-		 return specific;
+		 if(!anymatches){
+			 return -1;
+		 }else{
+		 	return specific;
+		 }
 		 
 	 }
 	

@@ -30,13 +30,11 @@
 
    <configurations>
       <plugin id="davinci.core" autoStart="true" startLevel="4" />
-      <plugin id="davinci.dojo_1_6" autoStart="true" startLevel="5" />
-      <plugin id="davinci.review" autoStart="true" startLevel="5" />
+      <plugin id="davinci.dojo_1_7" autoStart="true" startLevel="5" />
       <plugin id="davinci.html" autoStart="true" startLevel="5" />
       <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="5" />
       <plugin id="davinci.jqueryui_1_8" autoStart="true" startLevel="5" />
-      <plugin id="javax.mail" autoStart="true" startLevel="3" />
-      <plugin id="javax.activation" autoStart="true" startLevel="3" />
+      <plugin id="davinci.review" autoStart="true" startLevel="5" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="3" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.core.jobs" autoStart="true" startLevel="2" />

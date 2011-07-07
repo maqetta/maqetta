@@ -1,0 +1,19 @@
+
+  /* ContentPane */
+ .sketch .dijitContentPane {
+    padding : 8px;
+    border-color : #000000;
+    border-width : 3px;
+    background-color : #ffffff;
+    background-position : ;
+}
+
+  /* nested layouts */
+ .sketch .dijitTabContainerTop-dijitContentPane, .sketch .dijitTabContainerLeft-dijitContentPane, .sketch .dijitTabContainerBottom-dijitContentPane, .sketch .dijitTabContainerRight-dijitContentPane, .sketch .dijitAccordionContainer-dijitContentPane {
+    background-color : #fff;
+    padding : 8px;
+}
+ .sketch .dijitSplitContainer-dijitContentPane, .sketch .dijitBorderContainer-dijitContentPane {
+    background-color : #fff;
+    padding : 8px;
+}

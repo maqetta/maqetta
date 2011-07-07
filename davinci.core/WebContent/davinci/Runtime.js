@@ -337,6 +337,7 @@ dojo.mixin(davinci.Runtime,	{
 	logoff: function(args)
 	{
 		var loading = dojo.create("div",null, dojo.body(), "first");
+		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>';
 		dojo.addClass(loading, 'loading');
 		this.unload();
 		davinci.Runtime.serverJSONRequest({

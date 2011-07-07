@@ -13,17 +13,16 @@ import org.davinci.server.user.UserException;
 
 public class LogOff extends Command {
 
-	@Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-            User user) throws IOException {
-	    if ( user.getUserName().startsWith(IDavinciServerConstants.GUEST_USER_PREFIX) ) {
-	        try {
+    @Override
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        if (user.getUserName().startsWith(IDavinciServerConstants.GUEST_USER_PREFIX)) {
+            try {
                 ServerManager.getServerManger().getUserManager().removeUser(user.getUserName());
             } catch (UserException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-	    }
+        }
         req.getSession().invalidate();
         responseString = "OK";
     }

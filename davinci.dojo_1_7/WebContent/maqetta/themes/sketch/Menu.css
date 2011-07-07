@@ -1,0 +1,158 @@
+.sketch .dijitMenuBar {
+	border: 1px solid #b5bcc7;
+	margin: 0px;
+	padding: 0px;
+	background-color: #e6e6e7;
+	background-image: url("images/commonHighlight.png");
+	background-position:0px 0px;
+	background-repeat:repeat-x;
+}
+.dj_ie6 .sketch .dijitMenuBar {
+	background-image:none;
+}
+.sketch .dijitMenu {
+	background-repeat:repeat-y;
+	background-color:#fff;
+	border: 3px solid black;
+	border-radius: 6px; 
+	-moz-border-radius: 6px; 
+	-webkit-border-radius: 6px;
+	margin-top: -2px;
+}
+.sketch .dijitMenuBar .dijitMenuItem {  
+	padding: 6px 10px 7px;
+	background-position:0px 100px;
+	color:#4a4a4a;
+	margin:-1px;
+}	
+.sketch .dijitMenuItem {
+	background-image: url("images/menuHighlight.png");
+	background-position:0px -40px;
+	background-repeat:repeat-x;
+}
+
+/* this prevents jiggling upon hover of a menu item */
+.sketch .dijitMenuTable {
+	border-collapse:separate;
+	border-spacing:0 0;
+	padding:0px;
+}
+.sketch .dijitMenuItem td{
+	padding:1px;
+}
+/* hover over a MenuBarItem */
+/*.sketch .dijitMenuPassive .dijitMenuItemHover,
+.sketch .dijitMenuPassive .dijitMenuItemSelected {
+	background-color: #abd6ff;
+	border:solid 1px #769dc0;
+	background-position:0px 0px;
+	color:#000;
+	padding: 5px 9px 6px;
+}
+*/
+.sketch .dijitMenuPassive .dijitMenuItemActive{
+	background-position:0px -177px;
+}
+.dj_ie6 .sketch .dijitMenuItem,
+.dj_ie6 .sketch .dijitMenuPassive .dijitMenuItem {
+	background-image: none;
+}
+
+/* MenuBarItem that has been selected and menu drops down from it */
+/*
+.sketch .dijitMenuActive .dijitMenuItemHover,
+.sketch .dijitMenuActive .dijitMenuItemSelected {
+	border:solid 1px #769dc0;
+	padding: 5px 9px 6px;
+	background-color: #9dcfff;
+	background-color: red;
+	background-position:0px 0px;
+	color:#000;
+}
+*/
+.dj_ie .sketch .dijitMenuActive .dijitMenuItemHover,
+.dj_ie .sketch .dijitMenuActive .dijitMenuItemSelected,
+.dj_ie .sketch .dijitMenuPassive .dijitMenuItemHover,
+.dj_ie .sketch .dijitMenuPassive .dijitMenuItemSelected {
+	padding-top: 6px;
+	padding-bottom: 5px;
+	margin-top: -3px;
+}
+.sketch .dijitMenuActive .dijitMenuItemActive{
+	background-color: #7dbefa;
+	background-position:0px -177px;
+}
+.sketch .dijitMenuItemActive {
+	background-position:0px -177px;
+}
+.sketch td.dijitMenuItemIconCell {
+ padding: 2px;
+ margin: 0px 0px 0px 4px;
+}
+.sketch td.dijitMenuItemLabel {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.sketch .dijitMenuExpand {
+	width: 7px;
+	height: 7px;
+	background-image: url('images/spriteArrows.png');
+	background-position: -14px 0px;
+	margin-right:3px;
+}
+.sketch .dijitMenuItemDisabled .dijitMenuItemIconCell {
+	opacity:1;
+}
+.sketch .dijitMenuSeparatorTop {
+	height: auto;
+	margin-top:1px; /* prevents spacing above/below separator */
+	border-bottom: 2px solid black;
+}
+.sketch .dijitMenuSeparatorBottom{
+	height: auto;
+	margin-bottom:1px;
+}
+/* the checked menu item */
+.sketch .dijitCheckedMenuItemIconChar {
+	display: none;
+}
+.sketch .dijitCheckedMenuItemIcon {
+	background-image: url('form/images/checkboxRadioButtonStates.png');
+	background-repeat:no-repeat;
+	background-position: -15px 50%;
+	width:15px;
+	height:16px;
+}
+.dj_ie6 .sketch .dijitCheckedMenuItemIcon {
+	background-image: url('form/images/checkboxAndRadioButtons_IE6.png');
+}
+.sketch .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
+	background-position: 0 50%;
+}
+
+/*ComboBox Menu*/
+.sketch .dijitComboBoxMenu {
+	margin-left:0px;
+	background-image: none;
+}
+.sketch .dijitComboBoxMenu .dijitMenuItem{
+	padding:2px 0px;
+	text-indent:6px;
+	border-width:1px 0px 1px 0px;
+	border-style:solid;
+	border-color:#fff;
+}
+/*
+.sketch .dijitComboBoxMenu .dijitMenuItemSelected {
+	color:#000;
+	border-color:#768dc0;
+	background-color:#abd6ff;
+}
+.sketch .dijitComboBoxMenuActive .dijitMenuItemSelected {
+	background-position:0px -177px;
+	background-color:#7dbefa;
+}
+*/
+.sketch .dijitMenuPreviousButton, .sketch .dijitMenuNextButton {
+	font-style: italic;
+}

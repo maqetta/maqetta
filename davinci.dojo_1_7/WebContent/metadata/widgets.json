@@ -1,0 +1,1821 @@
+{
+    "name": "dojo",
+    "longName": "Dojo Toolkit",
+    "version": "1.7",
+    "categories": {
+        "containers": {
+            "name": "Dojo Containers",
+            "description": "Dojo Containers",
+            "widgetClass": "dijit"
+        },
+        "controls": {
+            "name": "Dojo Controls",
+            "description": "Dojo Controls",
+            "widgetClass": "dijit"
+        },
+        "untested": {
+            "name": "Untested Dojo & HTML",
+            "widgetClass": "dijit"
+        },
+        "untested-obj": {
+            "name": "Untested Dojo & HTML",
+            "widgetClass": "object"
+        },
+        "mobile": {
+            "name": "Dojox Mobile",
+            "widgetClass": "dijit"
+        }
+    },
+    "widgets": [
+        {
+            "name": "BorderContainer",
+            "description": "Border Container",
+            "type": "dijit.layout.BorderContainer",
+            "category": "containers",
+            "icon": "resources/images/border-container.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARJJREFUeNqkUzFuhEAMNFHqHAUEiU9Q0PKS3BNo6O9aJMQDqHkM4iG05CJdGgpgfXhvvVqyECHdSNaO7PWMsRYHEaGua+z7Hgi+7wPzLZh14kACZVniPM8yTM4xTZMOqpv8nZSEENqB+e/9DmIRJ6A6Xddd3aW8FFhcrFE/TifdaEHllymeAkQYQRBAURS7OwjDEFh2U6DrOrheLrDjDXmea64FxnHU4w7DIJt/bt+AAtVenqf36cs6/DcBc2piAUSxriszMn6DF2FNcAR45BM8z9tc5N+7lkAURZBl2a57HMe2gHxIajFt20JVVasHY06Spimcv87AfS8v0eG/sWkamUiSBJhvwawTd3bf+0E8BBgAL2nsdz3dOk4AAAAASUVORK5CYII=",
+            "properties": {
+                "design": "sidebar",
+                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "top",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "height: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "bottom",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "height: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "leading",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "width: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "trailing",
+                        "splitter": true,
+                        "doLayout": false,
+                        "style": "width: 50px;"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "region": "center",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.BorderContainerInput",
+            "helper": "davinci.libraries.dojo.dijit.layout.BorderContainerHelper"
+        },
+        {
+            "name": "TabContainer",
+            "description": "Tab Container",
+            "type": "dijit.layout.TabContainer",
+            "category": "containers",
+            "icon": "resources/images/tab-container.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASlJREFUeNpi/P//PwMlgAVEBHbuxGnKgbf/GS1+f8SQP8HKzwg3gOEHA8P6enesBngWrvxflOyGId43d9d/kCEsEP0/GFYevInTmUDFWMUduBn/w13gbaaMVREucRAI7doK88IPMLXt8ksGRqjk//9AFuN/ND6YBeZ76YqD9UG8ADXg1x+ksAJqZkAOOiAfFGGMDAjhHx+gBoD9ACL//gPrg1n7H2oO3BnIYlB9YAO+/mQCc3/++QexjAHNcphGNHGQPrAB/37/hngB6IL/MGVAPzOCnI3BRwCQPrABP3/8RHEBNPwQzmaEBQkkIGFyIH0syNHy8+9/JCcjHAzjMzJAXYhkOtgAli+/wJxiJ0WS8gHTt68M8JRoGtRKVmZipDQ3MjFQCAACDAAZhYTuU0wrQQAAAABJRU5ErkJggg==",
+            "properties": {
+                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;",
+                "controllerWidget": "dijit.layout.TabController"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Tab 1",
+                        "doLayout": false
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Tab 2",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "isContainer": true,
+            "inlineEdit": "davinci.ve.input.StackContainerInput"
+        },
+        {
+            "name": "AccordionContainer",
+            "description": "Accordion Container",
+            "type": "dijit.layout.AccordionContainer",
+            "category": "containers",
+            "icon": "resources/images/accordion.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
+            "properties": {
+                "style": "width: 100%; height: 100%; min-width:1em; min-height:1em;"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Pane 1",
+                        "doLayout": false
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Pane 2",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "inlineEdit": "davinci.ve.input.AccordionContainerInput"
+        },
+        {
+            "name": "TitlePane",
+            "description": "Title Pane",
+            "type": "dijit.TitlePane",
+            "category": "containers",
+            "icon": "resources/images/title-pane.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVxJREFUeNqkUz1LA0EQfRvzKVYW9voHYinYyAkWaptGRCsrIVGLpBBFEINJIYhNTJdCm4hgpSik9td4MWp27/Y2697saRPUJM4xt7dvZ9683dljWms4R08aI1o8fEnOcVFaHjo5X7m3BF6nQ8CSU+gLemyd/4iLt1dL0HVdcD/A3cMZ1jerFKDNc9UoEn57c9pHwH2F7ouLGE3aLj54gHchUavtYHJmGvXLPZqHzuPMuIkbYxD0zQzug5vCpEC0O+Ay+GY/3F2lyn+ZMFtnYRemZrdH6wKLupBdmMfJwdrQ+fvH15Yg8H0CtjbKtrepBBKZDNIT40gaD8dEJo16fpHWU0zD0wzK5FkCT9JCq1ka/AKZTUsvIhCqR6CTq/yq4MsaBQdJo4IrbQlUYE/8uVkcqLqKxhgXloB1BQFzuerACmxhaQl6ajgFiJrek8reg+xKeeS/kQj+Y58CDAA9vJ+nCFLrswAAAABJRU5ErkJggg==",
+            "properties": {
+                "title": "Pane",
+                "style": "width: 100%; min-width:1em;"
+            },
+            "resizable": "width",
+            "isLayoutContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper",
+            "inlineEdit": {
+                "property": "title",
+                "displayOnCreate": true,
+                "multiLine": false
+            }
+        },
+        {
+            "name": "ContentPane",
+            "description": "Content Pane",
+            "type": "dijit.layout.ContentPane",
+            "category": "containers",
+            "icon": "resources/images/content-pane.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII=",
+            "properties": {
+                "title": "Pane",
+                "doLayout": false,
+                "style": "width: 250px; height: 250px;"
+            },
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
+        },
+        {
+            "name": "Toolbar",
+            "description": "Toolbar",
+            "type": "dijit.Toolbar",
+            "category": "containers",
+            "icon": "resources/images/toolbar.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOtJREFUeNpi/P//PwMlgAVEhPcf+E+RAX9+/mKoTXMiWXPTzH0MTCDGzy9f4YIxmZOIokHg19dvDIygMHAtWPq/vjQYLPgfCHecf8ngaSTOsP0cHtpQgqGxey3ECyCT3n/9CdINNsJCTZDh/ZdfcNoSRH9G8C1UBYDqfyBcYJowg7JAlJCVYGgu9CFZc+2ErRAD/v39BxZQ4STNgL9//kBi4R+QQQ749+cvzIC/ZBoAdcFfSl3w69t3sgwA6QMb8PsfeVH4599/aCwA00Jy2QIG5n+YJv1lYgKLw+h/QBqUaCBizJCERAkACDAAug6MMt3XrLUAAAAASUVORK5CYII=",
+            "children": [
+                {
+                    "type": "dijit.form.Button",
+                    "properties": {
+                        "label": "Button 1"
+                    }
+                },
+                {
+                    "type": "dijit.form.Button",
+                    "properties": {
+                        "label": "Button 2"
+                    }
+                },
+                {
+                    "type": "dijit.form.Button",
+                    "properties": {
+                        "label": "Button 3"
+                    }
+                }
+            ],
+            "resizable": "none",
+            "isLayoutContainer": true,
+            "inlineEdit": "davinci.ve.input.ToolbarInput"
+        },
+        {
+            "name": "MenuBar",
+            "description": "Menu Bar",
+            "type": "dijit.MenuBar",
+            "category": "containers",
+            "icon": "resources/images/menu-bar.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjc5MkUyMjZCNTk1NDExRTA4Nzg1OTZGMjZENkFBOUQxIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjc5MkUyMjZDNTk1NDExRTA4Nzg1OTZGMjZENkFBOUQxIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NzkyRTIyNjk1OTU0MTFFMDg3ODU5NkYyNkQ2QUE5RDEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NzkyRTIyNkE1OTU0MTFFMDg3ODU5NkYyNkQ2QUE5RDEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz51mObVAAAAkUlEQVR42mL8//8/AyWAiYFCQLEBLDM33vx/4MIDsjQ7GCgwsOwAap5R4ECWARkTDjCwMHz4AeZ4eHTAJXbsqEARQ+fDxYB6WX78+MEAMiIjA+GKHzAboGLofJgYSC/YABDPw8OCAd0EuBg6HyoGNiAiwIIhImMGUIQDiy9hdmOXS0jwYGAc+glp1AAGBoAAAwAf+zynzvjO1gAAAABJRU5ErkJggg==",
+            "children": [
+                {
+                    "type": "dijit.PopupMenuBarItem",
+                    "properties": {
+                        "label": "Menu 1"
+                    },
+                    "children": [
+                        {
+                            "type": "dijit.Menu",
+                            "children": [
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 1.1"
+                                    }
+                                },
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 1.2"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "dijit.PopupMenuBarItem",
+                    "properties": {
+                        "label": "Menu 2"
+                    },
+                    "children": [
+                        {
+                            "type": "dijit.Menu",
+                            "children": [
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 2.1"
+                                    }
+                                },
+                                {
+                                    "type": "dijit.MenuItem",
+                                    "properties": {
+                                        "label": "Menu Item 2.2"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "resizable": true,
+            "isLayered": true,
+            "helper": "davinci.libraries.dojo.dijit.MenuHelper",
+            "inlineEdit": "davinci.ve.input.MenuBarInput"
+        },
+        {
+            "name": "Button",
+            "description": "Button",
+            "type": "dijit.form.Button",
+            "category": "controls",
+            "icon": "resources/images/button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjdDQjJCMEM2NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjdDQjJCMEM3NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6N0NCMkIwQzQ1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0NCMkIwQzU1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5rUarGAAAA00lEQVR42mL8//8/AyWAiYFCwAJjBHbuJNkp68vdGRlBXgBpttCQYPAwUCBa844LDxhO3HiBcAFM84MPPwhqVhDgAKsHGQAJgx8QTTde/IAwofgHFDOgiYHUwfSxwPT/+IGwGd0N2NwEUg/SwgJT8oOBA8UQQgCkHkSywEyDGUM8gFgINuDDiw8MH4AcIEU0kBAAWgfUgBKIGhIcDGhhhhWD1UHDjQUWSjs2HGBw8HBgMJDgIMoFB3YcAOtjhOUFTc9GklPi9e31jIwDnpkoNgAgwABCAXZ5t0pvnQAAAABJRU5ErkJggg==",
+            "properties": {
+                "label": "Button"
+            },
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.ButtonHelper",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "multiLine": false,
+                "supportsHTML": true,
+                "helpText": "If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment)."
+            }
+        },
+        {
+            "name": "TextBox",
+            "description": "Text Box",
+            "type": "dijit.form.TextBox",
+            "category": "controls",
+            "icon": "resources/images/text-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
+            "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "SimpleTextarea",
+            "description": "Text Area (Basic)",
+            "type": "dijit.form.SimpleTextarea",
+            "category": "controls",
+            "icon": "resources/images/simpletextarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkJusyPP2+zpeljpflvL2/OTt+Obu+E1+sfn7/VKHulOIuVaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVEICSOZGmeaGoCDKCS7sswDdDMeC4qzgM8jqAwuBAhHAVAwcBsHg4I0cCRACQE2KygQBABAAHwd0wuxV4Q1hnNbrvfkBAAOw==",
+            "properties": {
+                "rows": "10",
+                "cols": "10",
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "Textarea",
+            "description": "Text Area (Resizing)",
+            "type": "dijit.form.Textarea",
+            "category": "controls",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width",
+             "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "ComboBox",
+            "description": "Combo Box",
+            "type": "dijit.form.ComboBox",
+            "category": "controls",
+            "icon": "resources/images/combo-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1",
+                    "content": "<option></option>"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2",
+                    "content": "<option></option>"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3",
+                    "content": "<option></option>"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "FilteringSelect",
+            "description": "Select (Filtering)",
+            "type": "dijit.form.FilteringSelect",
+            "category": "controls",
+            "icon": "resources/images/filtering-select.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVJJREFUeNpi/P//PwMlgAVEhPcf+E+RAb++fWeoz3QlqLhxxh6G+gwXBH/6bgYmEOPHp69gAVGGvwxijH8ZhP/9AbNhWJwRgn9+/AxWl5TYy/D61hOgvi8QF3z/8Akswc/JjGLjfwZGMM0IZIHY3z5ADDi4ogQs+23+XgZGUCBaRE4EByUjRBeUATOEASoANe4/0DhGqOh/aBjIm+kzfn37/n+IkxZJAbhm3zWIAX9//WHg4OVlMDBQZhD6+5doA7aceQQx4M/PnwywePRN6IVEDzsrAysnJwMHDxcDGxCDaFZODoZJqfZwA/78+AWLxh9wf+9cWkK0C359/wEx4DeQAXOBe3QPXhfAwKwsJ3D6gSckmAGHV5cT7YLf36AuADkFBmxDO4lyweJCZ7DLIbEADIz/0DA4vaGSeBcA9YETkpF/JyLNMGBJTXgAI6XZGSDAAJsyjhMJL+H/AAAAAElFTkSuQmCC",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "MultiSelect",
+            "description": "Select (Multiple)",
+            "type": "dijit.form.MultiSelect",
+            "category": "controls",
+            "icon": "resources/images/multi-select.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.OptionsInput"
+        },
+        {
+            "name": "DropDownSelect",
+            "description": "Select (Drop Down)",
+            "type": "dijit.form.Select",
+            "category": "controls",
+            "icon": "resources/images/dropdown.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVJJREFUeNpi/P//PwMlgAVEhPcf+E+RAb++fWeoz3QlqLhxxh6G+gwXBH/6bgYmEOPHp69gAVGGvwxijH8ZhP/9AbNhWJwRgn9+/AxWl5TYy/D61hOgvi8QF3z/8Akswc/JjGLjfwZGMM0IZIHY3z5ADDi4ogQs+23+XgZGUCBaRE4EByUjRBeUATOEASoANe4/0DhGqOh/aBjIm+kzfn37/n+IkxZJAbhm3zWIAX9//WHg4OVlMDBQZhD6+5doA7aceQQx4M/PnwywePRN6IVEDzsrAysnJwMHDxcDGxCDaFZODoZJqfZwA/78+AWLxh9wf+9cWkK0C359/wEx4DeQAXOBe3QPXhfAwKwsJ3D6gSckmAGHV5cT7YLf36AuADkFBmxDO4lyweJCZ7DLIbEADIz/0DA4vaGSeBcA9YETkpF/JyLNMGBJTXgAI6XZGSDAAJsyjhMJL+H/AAAAAElFTkSuQmCC",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "Item 3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "resizable": "none",
+            "isControl": true,
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper",
+            "inlineEdit": "davinci.ve.input.SelectInput"
+        },
+        {
+            "name": "DropDownButton",
+            "description": "Drop Down Button",
+            "type": "dijit.form.DropDownButton",
+            "category": "controls",
+            "icon": "resources/images/dropdown-button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARdJREFUeNpi/P//PwMlgImBQkCxASwgYsOFF/XL999oQJEB+YwRv+ZIR40GRlAYhHTt/p/nq8egJy9MtM0crEwM0f37IC74/eMng6qCKMPlh59QFMmJcuI15M/3n1ADvv0AC3z59Q9Fwe9//xnc/fMxNO7cMJHhL1Du17fvkED8+fU7WOLdtz8o+OTdTwyb1vajaAbxT97/xPDnL7IB3yAGvAFqQsd7rn9gWL2yDywPokH8t19/M/wCuuAn0OVgL3z79Qes4P33P1j9uunSW4Yly3oYNl56A44dRkZGhj9AA35//QYxgOHzVzAVbSaGN9BizMThbH5OFmDg/2IARyMoHdRXz2sgNRE1tiZB0sHQzgsUGwAQYACAA5T7PaIl/wAAAABJRU5ErkJggg==",
+            "properties": {
+                "label": "Drop Down"
+            },
+            "children": [
+                {
+                    "type": "dijit.Menu",
+                    "children": [
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Option 1"
+                            }
+                        },
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Option 2"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "resizable": "none",
+            "isControl": true,
+            "helper": "davinci.libraries.dojo.dijit.form.DropDownButtonHelper",
+            "inlineEdit": "davinci.ve.input.DropDownButtonInput"
+        },
+        {
+            "name": "CheckBox",
+            "description": "Check Box",
+            "type": "dijit.form.CheckBox",
+            "category": "controls",
+            "icon": "resources/images/checkbox.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg==",
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+        },
+        {
+            "name": "RadioButton",
+            "description": "Radio Button",
+            "type": "dijit.form.RadioButton",
+            "category": "controls",
+            "icon": "resources/images/radio-button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII=",
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.CheckBoxHelper"
+        },
+        {
+            "name": "Tree",
+            "description": "Tree",
+            "type": "dijit.Tree",
+            "category": "controls",
+            "icon": "resources/images/tree.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
+            "data": [
+                {
+                    "type": "dojo.data.ItemFileReadStore",
+                    "properties": {
+                        "data": {
+                            "identifier": "id",
+                            "label": "label",
+                            "items": [
+                                {
+                                    "label": "1",
+                                    "id": "1",
+                                    "children": [
+                                        {
+                                            "label": "1.1",
+                                            "id": "1.1"
+                                        },
+                                        {
+                                            "label": "1.2",
+                                            "id": "1.2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "2",
+                                    "id": "2",
+                                    "children": [
+                                        {
+                                            "id": "2.1",
+                                            "label": "2.1"
+                                        },
+                                        {
+                                            "id": "2.2",
+                                            "label": "2.2"
+                                        },
+                                        {
+                                            "id": "2.3",
+                                            "label": "2.3"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "dijit.tree.ForestStoreModel",
+                    "properties": {
+                        "rootLabel": "Root"
+                    }
+                },
+                {
+                    "type": "dijit.Tree",
+                    "properties": {
+                        "style": "width: 250px; height: 250px; overflow:auto;",
+                        "showRoot": false,
+                        "autoExpand": true
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dijit.TreeCreateTool",
+            "inlineEdit": "davinci.ve.input.TreeInput"
+        },
+        {
+            "name": "DataGrid",
+            "description": "DataGrid",
+            "type": "dojox.grid.DataGrid",
+            "category": "controls",
+            "icon": "resources/images/data-grid.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjZBRkZCQTRGNTk1MTExRTBBNEUxRjRDMkRBREZBNzRCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjZBRkZCQTUwNTk1MTExRTBBNEUxRjRDMkRBREZBNzRCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NkFGRkJBNEQ1OTUxMTFFMEE0RTFGNEMyREFERkE3NEIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NkFGRkJBNEU1OTUxMTFFMEE0RTFGNEMyREFERkE3NEIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6FULAwAAABHklEQVR42mL8//8/AyWABUSE9x/4T5EBIDAvyxZMJ007zFAXbgZmMzOBMCMDMyMjmJ/dvZlhaqkvmC3OxwpWCzbg5+dvYMGrX5gZPr54DWZ/ZefCauMbJg4I/YWB4ceXrwyMoDDwqdnw/+/v3wwMII8wgiiIjSDyP5QH8yNYBpkDMsCjbNX/k2/+g7FH6ar/H778wYrXnfmAwnfJX/of7IU/P3+jOPMPI+5AQ5b7++sXJAz+ABn1navhEoeuf8FpALoc3AWNzaFgAZBBTho8WDXvu/EFRa7vJ9QFIKcgAzZG3MkCWe7Pr9+IdIDshR3Xv+I0AF0O4gJgFDaWI7zgocmNUzOyXPuvPwxMDBQCcELS9277T5EBlACKvQAQYABZaKNFxNmUSQAAAABJRU5ErkJggg==",
+            "data": [
+                {
+                    "type": "dojo.data.ItemFileReadStore",
+                    "properties": {
+                        "data": {
+                            "identifier": "id",
+                            "items": [
+                                {
+                                    "label": "Label 1",
+                                    "id": "1"
+                                },
+                                {
+                                    "label": "Label 2",
+                                    "id": "2"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "dojox.grid.DataGrid",
+                    "properties": {
+                        "structure": [
+                            {
+                                "name": "ID",
+                                "field": "id",
+                                "width": "auto"
+                            },
+                            {
+                                "field": "label",
+                                "name": "Label",
+                                "width": "auto"
+                            }
+                        ],
+                        "style": "width: 300px; height: 300px;"
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dojox.grid.DataGridCreateTool",
+            "helper": "davinci.libraries.dojo.dojox.grid.DataGridHelper",
+            "inlineEdit": "davinci.ve.input.DataGridInput"
+        },
+        {
+            "name": "Calendar",
+            "description": "Calendar (Read Only)",
+            "type": "dijit.Calendar",
+            "category": "controls",
+            "icon": "resources/images/calendar.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAcFJREFUeNqcUj1IQlEUPjfc+llqCEKwpaCgrJZqKOhnqiChsbQhF+f2moqgpaH2rDEqiiCwBB2sRbJArYa0hohSCLTQ93rvds95710VHaIDx/P5ne+ce869j3HOAW039MCPr9PwV5sddIBntJPZLAKLV+eHCDMpY2UlnP5bvyv7V9gA6qx04bMAmbwKmZwiXIWPvAI9bY0iFikSh7m8QhrUo9nKx8IknsTFGYyXcwDvohHDgbgxhWUVDbJfijE23osIO+Fnmnw79CKKzTJswEot5Aq+uV6Ix+6FJ8HewCESjJIjTtwmKWev5xAXOCEw6o2G4jR039Y5z+WK5H/FWCdX4HppLEykMtkqrJu4vaWZML2T9R2cRtP8LJygS5wa6QYDg8BdNbChmRlwMLmCd/NUjmfhu9Qr4enlALl384Q4S4N18hJ1XYeaWNMk1rRqTcUKR4Ebwq7JPiAsnss10Q9HFyY/YfKmpmKFpY0T/v2tkrvXDig+vWX54vohRXTUYMScR2gqXqGoFEqvYI7X2tQkxv6hSBq1IHHVCoHII/cHY/QJL4w7wX8ZI94t8J7gUYYYNcSPOWFyuIPJBv+1XwEGAJJgewSkj0bcAAAAAElFTkSuQmCC",
+            "inlineEdit": "davinci.ve.input.CalendarInput"
+        },
+        {
+            "name": "Dialog",
+            "description": "Dialog",
+            "type": "dijit.Dialog",
+            "category": "untested",
+            "icon": "resources/images/dialog.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPb1+x02ay9MiC5KhTBNhzJRizJRijVWjzlbkzFJbzhclDximTJLcTNMcj9onz9onkRupUxmik5oi0RupEh1qkd2q0d1qkd2qkh2q0h2qkt7r7PO67vT7U6BtE+BtUx8r7PO6rXQ7LXQ67jS7LrT7bvU7fT4/FGHuVGHuFSKvFSLvFaNv7fS7NDj9NLk9dLk9NTl9VaOv8zh88/j9M7i89Tm9dnp9uz1/Mns/////////wAAAAAAAAAAAAAAAAAAACH5BAEAADoALAAAAAAQABAAAAaXQF1sSCwOV0OhjNZywWyAqBQQ06Vkm9CoBA1IcpKASaU7YUMsDjTc8JpQuo4MJGKRoDlGgJEzeXQac3V3ABEBCQERJh86FoJ2XRE5hiYZOhNLMy81UFNREDoOGRSjFRgXGReoFBQPOgs4sbKzsgs6Cjg3uru8ugg6BziewwAHOgXCxFMGOgTJylECOgPU1dbXOtna29w6QQA7",
+            "properties": {
+                "style": "width: 250px; height: 250px;",
+                "title": "Dialog"
+            },
+            "isContainer": true,
+            "isLayered": true,
+            "resizable": "none",
+            "tool": "davinci.libraries.dojo.dijit.DialogCreateTool",
+            "helper": "davinci.libraries.dojo.dijit.DialogHelper"
+        },
+        {
+            "name": "Tooltip",
+            "description": "Tooltip",
+            "type": "dijit.Tooltip",
+            "category": "untested",
+            "icon": "resources/images/tooltip.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEJ1o2GMs2GMsmmRtmmRtW+WuXOZuz5zoUh6plCAqlCAqViGrmiStmmStmiStW+Xudr0/+P3/+T3//X8/9r1/9v1/+z6/+36//T8//X9//r+/////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVU4CaOZGme6GakpUGt7PZAUVWkgyNFfMQwg0FjQBAFIMikEikQLSTQKC8qWYgUVOg0mhAhLODw5RK2IEQAjHqdmawxANFBQ6/b6Qf5Yc/v82OAgYEhADs=",
+            "children": "Text",
+            "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
+            "resizable": "none",
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
+            "inlineEdit": "davinci.ve.input.RichTextInput"
+        },
+        {
+            "name": "ValidationTextBox",
+            "description": "Validation Text Box",
+            "type": "dijit.form.ValidationTextBox",
+            "category": "untested",
+            "icon": "resources/images/dojo-validtn-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAMFAQdlXWPf5/TdYkPP2+/L2/Pb5/eTt+Obu+M/t+//80/3dgv3egvjYgP7jlvDYkP/ilu3AYO2/YLWUUtKdPu3CdMaFLuGlVeXHoOKzeOGzeOrAjOrAjerJn1AoALo7O7o8O8BBQcpKSclJSdNSUdJSUtlXV9lYV9lYWOi+vv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZ3QJVwSCwaj8gkEcVEBU7M08nkDKBUqIR2y92eVKREYVA4mM0GgwBRUo3E5PPB0Ll0BCIVAF4+Gy4KFwIhKh8JBIiJBBsNHg0cKYUfHyCTkykXjQ0XkUgaEQ0UDRIZSRcMFR4VCxdJFg4PEw8QFkkYFri4GEq8vEEAOw==",
+            "resizable": "width"
+        },
+        {
+            "name": "NumberTextBox",
+            "description": "Number Text Box",
+            "type": "dijit.form.NumberTextBox",
+            "category": "untested",
+            "icon": "resources/images/nmb-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhZelwjJSjDNSjDdYkDpel/P2+zpelvL2/EJsouTt+Obu+Ep6rkt6rvn7/fz9/lGGuFaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABUALAAAAAAQABAAAAViYCWOZGmeJxERqMm2YhRJhCTfeFRFE0VQk6BQqINMEASEgkBYEhZQSKUxcRAcBgMhq0UgGJVE9Zrdag3eROUweRAeZS3TW6gIxlgu1zuoAAABBAF/hIUAJC8wIiqJio6PIyEAOw==",
+            "resizable": "width"
+        },
+        {
+            "name": "NumberSpinner",
+            "description": "Number Spinner",
+            "type": "dijit.form.NumberSpinner",
+            "category": "untested",
+            "icon": "resources/images/number-spinner.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTdYkDlclPP2+zhclD1jmz1jmvL2/EJrokJsokd0qeTt+Obu+EZ0qdvo9kt8sE+DtlCDtrbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C24oC14b3Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZ6QJVwSCwaj0aRcslcCjupqDQl2kyuG46qkkJ4v6LJBXCZWFSU7tcr0gDeGorqkTJADIZIRJQJYUAgEioNCAZfBgxNIg4qC4VehokmHyaVCioJj3iIIidvACcHKgRqayIeIwAkHgUqA6VgKCWzKAJCAbi5urlIvb6/v0EAOw==",
+            "resizable": "width"
+        },
+        {
+            "name": "DateTextBox",
+            "description": "Date Text Box",
+            "type": "dijit.form.DateTextBox",
+            "category": "untested",
+            "icon": "resources/images/date-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADdXkDZYkTZYkDdYkDlck2eAq3WNtHuRtrG/1vP2+zxhmD1imFN1pneRt6i50rHA1tbe6vL2/D9mnUBonkFpn0JqoEFonlJ1pnqWu5CoyKK20Ke50rLC2OLr90ZzqERvpEVvpWyOuHyawIahw9fg6+Tt+Obu+Eh2q0h3q0t7r0l2qk19sYCgxOXu+Iapzdfi7VCFt1CEtrnO4laOv8/t++j4+PD4+P+oAP///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAaVwJxwSCwKZ8ikMjmM0Z7QKA02PNFKrU5pa+qaVEMJLUFORCLms2Q4EAwAg7ggIKgPKqsh5XBg8P0HFwcFKUMwODgyiIo4LohUQh4hGQ4OGw4ZISMhIRVDKIgvNzcviCyIKEMfNjYkoySsIqwgQxYYHBC5EBwYGhgYE0MLNTUIxA/EDcQKQwTEBs/RNQRscdbX1kbaQ0EAOw==",
+            "resizable": "width"
+        },
+        {
+            "name": "TimeTextBox",
+            "description": "Time Text Box",
+            "type": "dijit.form.TimeTextBox",
+            "category": "untested",
+            "icon": "resources/images/time-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAO7w9S5KhW2BqjJSjPP2+/f5/BhHhRlEgBpFgR1JhCNVmCZYmiBKgiNNhDlnpD9sp+zy+hZFgCRXmCJSjyNUkCdamiRSijxqpUJsouTt+DBdkUt6rhZUkRdSjxdSjhhQi1GGuHKgzHSjzXOizHelznyo0VaOvwJWlwNXlwVXl+vy93SfuXiiu87k8H+pv9bs99fs993x+9vv+d7x+8/t+9Xs993y/Nru997x+o62xoy1xarM2LLR3eb4/5C5x67O2Mrh59Tp7tDm6tLn6+v8/+z8/9js78jf4tDl583i4uHx8fD///H//8Xc29zt7PH9/P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAFAALAAAAAAQABAAAAeOgFCCg4SFhoeIhD4UCBQ+iU0KIUpPTiMKTYImmyYqEklMS6JLPymaNDQ2LiRErQytRRcuUCA0GRAUSD27Cbs9Rh5QGzQEBQdCMskNyTI3EVAYxAUTRy3WFtYtQB9QA9IrIjUv4xovMA8sUAHrAgAVPDHxMTM7KIdNCyVBOEMOJ5mIdHAw0CFHooMIEyYKBAA7",
+            "resizable": "width"
+        },
+        {
+            "name": "CurrencyTextBox",
+            "description": "Currency Text Box",
+            "type": "dijit.form.CurrencyTextBox",
+            "category": "untested",
+            "icon": "resources/images/currency-text-box.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAALrD1y5KhZelwjJSjDNSjDdYkDpel/P2+zpelvL2/EJsouTt+Obu+Ep6rkt6rvn7/fz9/lGGuFaOv6vH38fa6s/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVr4CWOZEkWUmGul8qOkjQVU0zFeHxJlVVYlUohSKxILpFKopBYFJ7OAoMRuTgqj0L2UDh4uYnGRYHVcp9eZkJxQVQgBUg6nagbLoNy9tnlJwh4enNfB38XAQECBQKIAIiPiCcvJSguk5eYKyEAOw==",
+            "resizable": "width"
+        },
+        {
+            "name": "HorizontalSlider",
+            "description": "Slider (Horizontal)",
+            "type": "dijit.form.HorizontalSlider",
+            "category": "untested",
+            "icon": "resources/images/horizontalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width"
+        },
+        {
+            "name": "VerticalSlider",
+            "description": "Slider (Vertical)",
+            "type": "dijit.form.VerticalSlider",
+            "category": "untested",
+            "icon": "resources/images/verticalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+            "properties": {
+                "style": "height: 200px;"
+            },
+            "resizable": "height"
+        },
+        {
+            "name": "ContextMenu",
+            "description": "Context Menu",
+            "type": "dijit.Menu",
+            "category": "untested",
+            "icon": "resources/images/contextmenu.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzpeljpfljpflTtfljtflT1jmT9mnT9nnT9onUJtokVyp0Zyp0Zypkl3rEp4q0x9sU1+sU19sE+DtVSLvVKHuVKIuVWLvVaOv////////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVQICeOZGmepqaurEpmWyzPFoltABAISTNdmwupMituKiQKTsfzASUkiHEWIT2Wu95v4yAxpjIGSYFtbhckBDiGIA0KhwPBIB8QCgaUfs/vhwAAOw==",
+            "properties": {
+                "contextMenuForWindow": true,
+                "style": "visibility: hidden;"
+            },
+            "children": [
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 1"
+                    }
+                },
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 2"
+                    }
+                },
+                {
+                    "type": "dijit.MenuItem",
+                    "properties": {
+                        "label": "Menu item 3"
+                    }
+                }
+            ],
+            "resizable": "none",
+            "isLayered": true,
+            "helper": "davinci.libraries.dojo.dijit.MenuHelper"
+        },
+        {
+            "name": "PopupMenuBarItem",
+            "description": "Popup Menu Bar Item",
+            "type": "dijit.PopupMenuBarItem",
+            "category": "untested",
+            "icon": "resources/images/popupmenubaritem.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAJimxDBNiJmoxTFRijximTximD1imENvpEl4q0+Bs1OJupi94FaOv7bb8Mjn+OHw+b3h8+j1/M/t++Tz+uj2/Ov4/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABYALAAAAAAQABAAAAVt4MKMjEia46JUbKVIsLS2ShJReOIEgZPgOcRkOEFAAACIkIg4PJ4oUul5WBgIhVcspiAQFpawRceTDHoJsdqIlAiSCLX40KjbGwd5OHrSW7RbMn5kAWZofmwAbnB+dHd1eXpWXgUFBAZgfppiIQA7",
+            "properties": {
+                "label": "Menu"
+            },
+            "children": [
+                {
+                    "type": "dijit.Menu",
+                    "children": [
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Menu Item 1"
+                            }
+                        },
+                        {
+                            "type": "dijit.MenuItem",
+                            "properties": {
+                                "label": "Menu Item 2"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "resizable": "none"
+        },
+        {
+            "name": "MenuItem",
+            "description": "Menu Item",
+            "type": "dijit.MenuItem",
+            "category": "untested",
+            "icon": "resources/images/menuitem.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
+            "properties": {
+                "label": "Menu Item"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "CheckedMenuItem",
+            "description": "Checked Menu Item",
+            "type": "dijit.CheckedMenuItem",
+            "category": "untested",
+            "icon": "resources/images/checkedmenuitem.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPb3/fb3/Pv8/+nu+uzw+nCDrJimxOft+vL1/DBNiJahuOft+e/z+/v8/unv+j1gmYGQqOfu+vX4/TphmjximjximT1imkBmnWx9l52wzPL2/DpimUJpoEVuo36av/X4/EdzqDNObz1Vc36bvylIa0l3q0x7sDJObqa+2E6Bs0+BtE1+sKfA2vj7/v3+/1OIu1GFt1WMvZi94FaOv4yy0/H7/+77//3+/v///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAauwJxsRiwai7LcDMdsOpuzXIxJqz6bsdzrdhvhPNxbYrNKuV45mEBQaK8FhgyK1YDlVJK8Xh+QfFoqOSYaElU0e30fACY5JQwaXh4ak2NlCCU5IA4MbQUMn3FzDCA5HQ4SNTY2CiQSDgMODgQdORwOJBA1ECIKrrCyHLURCicYIQqUZCkOwRwRDhC4DhERoSzMORfP07HUCwffDhdCFeXlDxYVExQPFBVJOfHy8/RBADs=",
+            "properties": {
+                "label": "Checked Menu Item"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "MenuSeparator",
+            "description": "Menu Separator",
+            "type": "dijit.MenuSeparator",
+            "category": "untested",
+            "icon": "resources/images/menuseparator.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39/5imxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNroUNvpEVxpkh2q0l4q6a916S71Ut8r06Bs0+Bs6fA2vT4/Pr8/lKHuVSLvFOJupi94N3q9laOv7bb8Mjn+L3h88jo98/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAaIwNBoSCwWQyCUcslkgjSlgcEQnVYNqJOmYgoQCN1vmIAyVSSktNA4DJEkoUVCMUrZ7/YRJKTqqz4AAxQYGYUAH35+Hh0BFxYbkB0eiX0iBQiYHJgFIn4Dn6ChookiApgImggCnZQTDoKEhQ4TlCoRDY2PkA0RtQwHDcHCBwy1IQ/Iych8tc2JQQA7",
+            "properties": {
+                "label": "Menu Separator"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "PopupMenuItem",
+            "description": "Popup Menu Item",
+            "type": "dijit.PopupMenuItem",
+            "category": "untested",
+            "icon": "resources/images/popupmenuitem.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADdakzpdlTpdlDpelTximTtglztgljpelD1imT9mnUBon0BonkBpnkJsoUVyp0ZzqERvpERwpEVvpEdzqEdzp0h3q0p6rkh3qkl3q0l3qkt6rrrT7k6BtFCEt01+sU+BtE1+sFGEt1CFt1CFtlKHuVKIuVGFt1SKvFSKu1aNv1WMvVaOv//79////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC4ALAAAAAAQABAAAAaEQNdqSFylXMgkUtVqNlkqpRLVAiQcHtZJmiw5nSQu0hTqiEKizqhjGolMJpGLs6nb6fb6xwXaWLEbHn5Xgh4uGnl1FokbFi4VFRcZGBgXFYOAFS4UX00PjBMuElWELBGYghAuDZ0tDYwNLgwLCgsMtwSoGwhiLgaMBb0CBwMDAcYHvb1BADs=",
+            "properties": {
+                "label": "Popup Menu Item"
+            },
+            "resizable": "none"
+        },
+        {
+            "name": "Editor",
+            "description": "Editor",
+            "type": "dijit.Editor",
+            "category": "untested",
+            "icon": "resources/images/rt-editor.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAMgqS9SgsBMT+4SYyT1jmj5jmjZhmTlhmTtimD9nnUJqoEBnnDVhmURuo0RvozJjmzNjm0l3q0l3qk2AslCDtk5/svz9/k+DtVOKu1SJu1WMvVaOv5nA4JzC4p7D4qPF44K13Ia33Im43Y263pG939vx/N7y/M/t+9Dt+9bv+9nw+8Dp+sPq+sXr+sjr+s3t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADEALAAAAAAQABAAAAaNwJhwSCwKN8ikchnTmEwllSqFerlaLNZKE8uYPp5Oh0MaiUIg0AoTu7jfcDglVjnZ7/j7JBY5wf6AAIB/Enx+gzCCg4V9fwICA4kAAAGEMQ6Hjol/ABYWDTEKfgOPApuJngoxCX6mMKaKnRYLMQWjj5EBkwGeBDEHmYh/nggxDw8MEMfIBg/NxwxG0kNBADs="
+        },
+        {
+            "name": "InlineEditBox",
+            "description": "Inline Edit Box",
+            "type": "dijit.InlineEditBox",
+            "category": "untested",
+            "icon": "resources/images/inlineeditbox.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAISYyaC05jdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVzoHaNZGmKWKqu6qVRWCM3wiw7TqVNGCAIhB+A4BMcLJoIRpABOoMEwiGigfR+QcGweHhoGJioeBw9LDSJMJl8UGgQ6qggABQfEG91vW7Hw39AEnxleAZLUIh2BRoDS1hzgwcDjHFrZZOAmZqAGp2en6AaIQA7",
+            "children": "Text",
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dijit.form.TextareaHelper"
+        },
+        {
+            "name": "ProgressBar",
+            "description": "Progress Bar",
+            "type": "dijit.ProgressBar",
+            "category": "untested",
+            "icon": "resources/images/progressbar.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlckzthmDxhl0BonkBonUVwpUp6rU+BtU+CtFOJu1OKu1aOv/b8//n9/8/t++/6//L7/+v5/+76//X8//j9/+v6/+77/+/7//L8//b9//X9//n+//j+///ovfvcsvTKofTJofbKo/TJo/TKo+20kOegfeeffuegfuWfff///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZfwJRwSCwaj8ikUrloOp/QVIJErZIc2Kwiheh4v9dKpEI+pAyetPp6eVgsEkOq8AGNRKAQyoGB9DEFKQRWVHsTGgwaGQMpAiclJiYoJ3sNDRwbFAEpAJ2en6BLoqOkpEEAOw==",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "resizable": "width"
+        },
+        {
+            "name": "ColorPalette",
+            "description": "Color Palette",
+            "type": "dijit.ColorPalette",
+            "category": "untested",
+            "icon": "resources/images/colorpalette.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANhASOiYoMjQ8C5KhTBOiDFOiDNTjTRTjTdZkzdakzdZkjdakjhakjthmTtgmDthmD9on0Bon0Bpn0RwpkRvpURwpUVwpUh3rEl3rEl4rEl3q0x/sk1+sk1/slCEt1GFuFGEt1CFt1OKvFGFt1SKvFSLvFOLvFaOv4C46AB4uACQ0DCYaHi4mDh4OPj4iODAKOjgyPjYiMhoGPBwaLi4uP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADUALAAAAAAQABAAAAaRwJpwSCwOT8ikMnl0uU6x2On1Oslkp2HJaYqSqKSraAgamc8hz+fjGQ05MBgnEOjMZhsAgDPUxC90GXcZehhDFhMTFYsVFhUUixZDEQICESgoESoqEikpEEMOlQ2YDpsOng9DCAkLrgsKsQutDEMGNDQHLCwGKysGLS0GQwS4BbsFvgTBBEMDz9DR0EbU1dZDQQA7",
+            "resizable": "none"
+        },
+        {
+            "name": "StackContainer",
+            "description": "Stack Container",
+            "type": "dijit.layout.StackContainer",
+            "category": "untested",
+            "icon": "resources/images/stackcontainer.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADteljtelfP2+zpfljpflTtfljtflT1jmUBnnUBonUJtokZyp0Zypkl4q0x+sUx9sFCCtbjQ6E+DtVSLvVKHuVKIuVWMvabG47DM5rHM5laOv6XH5KXG46XH43+z2n+z2YC02ou53Yu63ZjA4Hiw2H+02v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACYALAAAAAAQABAAAAaEQJNmSCxqTEikRcBsNidJJEVgrCYlgqXTCUU+BNOq0dQQYLVbJnQh+E4j8HhEUDEpBGUsJoPZ8wUQJgkCbF8cGxwdHRccAg4mBwJ3ZSOVliN4JgMEg2wiIiEhoCECDEmRdyAfHiAlICCSSZuDJLW2JAIIUZBpTQe7mwXCwgQGAQC7ybtBADs=",
+            "data": [
+                {
+                    "type": "dijit.layout.StackController"
+                },
+                {
+                    "type": "dijit.layout.StackContainer",
+                    "properties": {
+                        "style": "width: 250px; height: 250px;"
+                    },
+                    "children": [
+                        {
+                            "type": "dijit.layout.ContentPane",
+                            "properties": {
+                                "title": "Page 1",
+                                "doLayout": false
+                            }
+                        },
+                        {
+                            "type": "dijit.layout.ContentPane",
+                            "properties": {
+                                "title": "Page 2",
+                                "doLayout": false
+                            }
+                        }
+                    ]
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dijit.layout.StackContainerCreateTool",
+            "isContainer": true
+        },
+        {
+            "name": "Form",
+            "description": "Form",
+            "type": "dijit.form.Form",
+            "category": "untested",
+            "icon": "resources/images/form.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPj4+fX19uTk5eDg4TteljxgmD5km0Bon0BonkFon0NsokFonkVxp0NtokZxpkl2q0h2q0h2qkt7r0l2qk5/s06As05/slGEtvr7/FCFt1CEtlSLvFOIulWLvVaOv/T19dzd3dTV1f7+/vz8/Pv7+/r6+vn5+fj4+PX19fT09PHx8fDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAaEQBbLQywai8KhiMRsOj3JjuhoJG2SHNEEw+1iJiROUiMimM9n0yVpEZne8DglKZkS43BJ8iGqpCoBHhcPCwQBEEkMIwqMKo6PKg5JDSUClpeYCkkIAEUDn6ADB0kGJxUrFSAeGREJBCAGSQUojAoht7ghBUkEH76/wB8EvGjFZ0nIyclBADs=",
+            "properties": {
+                "style": "width: 250px; height: 250px;"
+            },
+            "isContainer": true
+        },
+        {
+            "name": "AnalogGauge",
+            "description": "AnalogGauge",
+            "type": "dojox.widget.AnalogGauge",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
+            "properties": {
+                "style": "width: 250px; height: 250px;",
+                "width": 250,
+                "height": 250,
+                "ranges": [
+                    {
+                        "low": 0,
+                        "high": 100,
+                        "color": "black",
+                        "hover": "",
+                        "size": 100
+                    }
+                ],
+                "minorTicks": {
+                    "offset": 70,
+                    "length": 5,
+                    "interval": 5,
+                    "color": "gray"
+                },
+                "majorTicks": {
+                    "offset": 70,
+                    "length": 10,
+                    "interval": 20,
+                    "color": "gray"
+                },
+                "indicators": [
+                    {
+                        "value": 0,
+                        "width": 3,
+                        "length": 100,
+                        "hover": "Value: 0",
+                        "title": "Value",
+                        "color": "red",
+                        "offset": 0,
+                        "front": false,
+                        "label": ""
+                    }
+                ]
+            },
+            "helper": "davinci.libraries.dojo.dojox.widget.AnalogGaugeHelper"
+        },
+        {
+            "name": "BarGauge",
+            "description": "BarGauge",
+            "type": "dojox.widget.BarGauge",
+            "category": "untested",
+            "icon": "resources/images/bargauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADdYkDpdlTlckzxgmDxhlz5kmneTu3WPtz9mnEFonvD1/EJtokJtoUVwpkh1qkdzp3ubweLt+kt5roGjyb7b+sDc+kx+sUp6rU6As0+CtLXW+bbX+bfY+bnZ+brZ+b3b+uTv+uPu+ebw+ujx+vD2/FGGuFOJu1SKvFWMvYiw1IWrz5q93FaOv5C32Y6115K42ZW62pi82+31/Oz0++rz+v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADUALAAAAAAQABAAAAaQwFqKVSsajaykEXVsskjEoql5qtZOilNRVWqWKt2SrFvM1DDoMwVznrGLltpldZF/6hdavTaR1B4xD38egg8jgkUONQswC4sdjgsijkUNNQgvCJccmgggmjUQDDUELQSkG6cEIadFCTUCLgKwGrMCEbNFBTUAvby+vQBFBgNNxkcBycrLy0YHRc810dPH1TVBADs=",
+            "properties": {
+                "style": "width: 300px; height: 55px;",
+                "width": 300,
+                "height": 55,
+                "dataHeight": 25,
+                "dataWidth": 275,
+                "dataY": 25,
+                "dataX": 10,
+                "ranges": [
+                    {
+                        "low": 5,
+                        "high": 10,
+                        "hover": "5 - 10"
+                    },
+                    {
+                        "low": 10,
+                        "high": 20,
+                        "hover": "10 - 20"
+                    },
+                    {
+                        "low": 20,
+                        "high": 30,
+                        "hover": "20 - 30"
+                    },
+                    {
+                        "low": 30,
+                        "high": 40,
+                        "hover": "30 - 40"
+                    },
+                    {
+                        "low": 40,
+                        "high": 50,
+                        "hover": "40 - 50"
+                    },
+                    {
+                        "low": 50,
+                        "high": 60,
+                        "hover": "50 - 60"
+                    },
+                    {
+                        "low": 60,
+                        "high": 70,
+                        "hover": "60 - 70"
+                    },
+                    {
+                        "low": 70,
+                        "high": 75,
+                        "hover": "70 - 75"
+                    }
+                ],
+                "majorTicks": {
+                    "length": 5,
+                    "width": 1,
+                    "offset": -5,
+                    "interval": 5,
+                    "color": "black"
+                },
+                "indicators": [
+                    {
+                        "value": 17,
+                        "width": 7,
+                        "hover": "Value: 17",
+                        "title": "Value"
+                    }
+                ]
+            },
+            "helper": "davinci.libraries.dojo.dojox.widget.BarGaugeHelper"
+        },
+        {
+            "name": "EnhancedCalendar",
+            "description": "Calendar (Enhanced)",
+            "type": "dojox.widget.Calendar",
+            "category": "untested",
+            "icon": "resources/images/enhancedCalendar.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKWyzFBrmlBqmFBtnFBtm1BrmVBwn1BwnlBzoitWjVB2pVB2pFB8q1B5qEh4qFB/r1B9rFCGt1CGtlCFtVCIuNHj8pXA4ZXA4KjL5qjL5aDA2LzX673Y7NHk8pXB4ZTB4JXB4KfM5qjM5qjM5bzY7LzY69Dk8tHk8eb1+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAaLQJWGQiwaixoV5dQ5mTomZrPypChLnFKJlNqkSGBSyRoJZUQYUWqUOotGI4lqAvJ46haQxXMBgT4TQg6DhIWESQ8oiouMiw8qECgpk5SVkwwqDZKTCSkJn5UNKgqbnpSdlAsqCKWoqJQIKgetppYGKgS0n68pAyoFpZaVASoAAsfIycgAKs3Oz9AqQQA7"
+        },
+        {
+            "name": "Chart2D",
+            "description": "Chart2D",
+            "type": "dojox.charting.widget.Chart2D",
+            "category": "untested",
+            "icon": "resources/images/chart.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEFmkERqk2WezYm43Iu43Iu53LbU6tDj8tDj8d3r9om53Im42q7R6b3Z7b3Z7NDk8rzZ7L3a7b3a7NDk8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABQALAAAAAAQABAAAAVXICWOZGkGgakGSZKiKsW2bguTwaEfyPT8j9QoEGlIAo6IxAFhCmUMRsAQiFqlQ5Rhi+reZNuwmDscKAqFQYEwWCgGz4BgTq8L4t58N8YXAf6AgYB9hIUhADs=",
+            "properties": {
+                "style": "width: 300px; height: 300px;"
+            },
+            "children": [
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "axis",
+                        "name": "x"
+                    }
+                },
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "axis",
+                        "name": "y",
+                        "vertical": true,
+                        "includeZero": true
+                    }
+                },
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "plot",
+                        "name": "default",
+                        "type": "Lines"
+                    }
+                },
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "class": "series",
+                        "name": "a",
+                        "data": "1, 0.5, 2, 1.5, 3"
+                    }
+                }
+            ],
+            "helper": "davinci.libraries.dojo.dojox.charting.widget.Chart2DHelper"
+        },
+        {
+            "name": "MultiComboBox",
+            "description": "Combo Box (Multiple)",
+            "type": "dojox.form.MultiComboBox",
+            "category": "untested",
+            "icon": "resources/images/multicombobox.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACI5Zi5KhTFPijtimjtimUJsokh2q0l3q7bQ7cLX76TH6bbR7VKJu1OJulaNv5C85ZC95ZG95KTI6VaOv3604X+04X6z4H604JC95M/t++f2/fT6/P///////wAAAAAAACH5BAEAAB0ALAAAAAAQABAAAAVMYCeOZGmeaKquU+s6ris2WW1nU6LrTHdkmo1QOFkAjghDpwDkOJ0ThQKgkBQ6hOaTM4FgHpDIoCPQPicVysVSEYgC8Lg8vqrb7/h8CAA7",
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "1"
+                    },
+                    "children": "Item1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "2"
+                    },
+                    "children": "Item2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "3"
+                    },
+                    "children": "Item3"
+                }
+            ],
+            "resizable": "width",
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+        },
+        {
+            "name": "CheckedMultiSelect",
+            "description": "Select (Check Box)",
+            "type": "dojox.form.CheckedMultiSelect",
+            "category": "untested",
+            "icon": "resources/images/checkedmultiSelect.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADFPiWd9qTVWkDVWjzVhmj9nnilvxCluwiluwSlrvCptvylqtypptylnsyplripjqSphpSpeoCtfoStdnCtbmCtZlCpYkStYkStXj5mxz5mxzpiz0Ziy0Jmyz+zz+u70+pi94Ony+uHu+eXw+ezz+d3s+Ony+c/n99jq97/g9MLh9cPi9crl9s/n9tPp99jr99zt+OHv+P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaVQBnIQCwaiyDZ4cNkhppQhEwB3RSgTYUsQQqFOAROKEAmexKyRWiQEXS8cK+JIWuEMgDNp8wfNWQOXhohIoWGhTEOMg8lXk58ZDAPMhAoLy8hVpebLygQMhEuXmBikC4SMhNrbW8nrq8tEzIUd3l7kAEsFDIVKiGDKsHCwSsVMhcpKSHJzM0pFkIY0tPU00ky2Nna20EAOw==",
+            "properties": {
+                "style": "width: 200px;"
+            },
+            "children": [
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "1"
+                    },
+                    "children": "Item 1"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "2"
+                    },
+                    "children": "Item 2"
+                },
+                {
+                    "type": "html.option",
+                    "properties": {
+                        "value": "3"
+                    },
+                    "children": "Item 3"
+                }
+            ],
+            "helper": "davinci.libraries.dojo.dijit.form.SelectHelper"
+        },
+        {
+            "name": "TimeSpinner",
+            "description": "Time Spinner",
+            "type": "dojox.form.TimeSpinner",
+            "category": "untested",
+            "icon": "resources/images/timespinner.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTlclPP2+zhclD1jmz1jmkJrokJsokd0qUZ0qdvo9kt8sE+DtlCDtrDO7LbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C14oC24oC14Yi644m5473Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZzQJVwSCwaj8aPcslcCjWpaPSDeVitmIwqkjp4D58HhQIYPyQqSPf7uUwA8MkFomqsvR9LxVPp9B0qC3dgTUoMKgqDHyYmHIyOCSoIiickcAAjJwYqBIobICEAIiAbBSoDiiglq6soAkIBsbKzski2t7i4QQA7"
+        },
+        {
+            "name": "FileInput",
+            "description": "File Input",
+            "type": "dojox.form.FileInput",
+            "category": "untested",
+            "icon": "resources/images/fileinput.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAEpjm4meyzFPiTxXjEdknENek0BajUJcj1JtpF98uISczIObyfX3+zVWjztZjU9toVBuol5+u4KdzIigzJyw06W53Ka52sLQ6jpYikhmmE5uoVBuoKW52qa626a52fH0+TxhmZmw0sXS5ff5/PX3+jtimU1vn8LR5r/M3vP2+kJsokZzqERupImozYupzpq01Ki/2sDR5cHP4Ozx9+/z+Ep5rkt7r8LR4k6AtFKGuVKFuMHS5O7z+PH1+fX4+/j6/Pf5+1OKvMfZ6VaOv8fa6uzy9/D1+fP3+vr9//b5++v2/PD1+Or2/Ob1++v3/OX1++r3/PL6/fr9/hV8RmilhLrSuv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAFYALAAAAAAQABAAAAe5gFZTVFZWQ4eIh4WLU1OGP5CRLUOLVlWNQpGRLy5BlZdUSUQ2JUAjMC8tOoWNrQw+sD4kDCQ4jI0pRDk2LCANAkc1lVM3PR89S8c9RkYrlVYyPEO7vb80Ks8oRTPc3NszKFYaD+Tl5QgbGiYaVhBNT+9PTyci9RcxOxBWBExKTlBQnEyIQDBCggAErGSIwrAhhQUQFUgIkcEKACRSMCJBwsGCRw8dKgCwUsCAyZMnMTgYcKDAs5fPAgEAOw==",
+            "resizable": "width"
+        },
+        {
+            "name": "FileInputAuto",
+            "description": "File Input (Auto)",
+            "type": "dojox.form.FileInputAuto",
+            "category": "untested",
+            "icon": "resources/images/fileinputauto.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTBNiDFPiTBNh/X3+zJRizNSjDVWjzZYkfH0+Tpeljxhmff5/PX3+jtimT5lnOju9uft9fP2+kJsokJsoUZzqERupImozYupzpq01Ki/2uzx9+/z+Ep5rkt7r+Xs9Oju9U6AtFKGuVKFuMPT5Ofu9ebt9Orw9u7z+PH1+fX4+/j6/Pf5+1OKvFaOv8fa6unw9uzy9/D1+fP3+vD1+BV8RmilhLrSuv///wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADgALAAAAAAQABAAAAaEQFzNhisaj8haDedqOpvIm/K1qlovrujQas1gWkal+OVxsBiazGUUVqoIqriqQWiEjjWSxCXyWBYHAjMdSBUpCSk0iCkyMhVIFCh8foACHBNIDzEbnJybGw9ICjCTf4EnCkgIICWsICAQrQhIBhEmt7i3BUgBH76/vwNIAMTFxgBIyUhBADs=",
+            "resizable": "width"
+        },
+        {
+            "name": "FileInputBlind",
+            "description": "File Input (Blind)",
+            "type": "dojox.form.FileInputBlind",
+            "category": "untested",
+            "icon": "resources/images/fileinputblind.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAALK907G80rO+1Pv8/vr7/bTA1bO/1LK90rbD2LTB1rbE2ff5/Pb4+7fG2rbF2bnI3LzN4brL37nJ3dTf7dPe69nj79/n8dPf7L/S5b3Q47zO4env9fb5/PX4+/n7/fj6/Pz9/vv8/b/T5tfk8MDV5+rx9/b5+/n7/KjOusfd0f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZ7QJVwSCwKUSmj8ohSjUjQKMmIQpVA2OxlWkRms5WJaFgtlzQOrKVywZCrg7g8NAhliKhNiITRSBQFACEQRRQEhyeHBB4eEUUPJ3x+gAAnD0UNH5qbmw1FCAuSf4ELCEUJJqmqHKkJRQYMsbKyAkUAHbi5uQdFAb6/wAFBADs=",
+            "resizable": "width"
+        },
+        {
+            "name": "Rating",
+            "description": "Rating",
+            "type": "dojox.form.Rating",
+            "category": "untested",
+            "icon": "resources/images/rating.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAG6awXqgwpe72ylro16XyHehxZy71J691qPA2LTP5rrQ4r3S487e63+pyZu918DV5c3f7c/g7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVAoCSOZGmeaKquLEkQIyGMSUIOwzgEo2GIuGAw4Cv6HMIGjvgwQiQAXAG6W0gUPqtkgDjkuIufIcL4tc7otLoUAgA7",
+            "resizable": "none"
+        },
+        {
+            "name": "SortList",
+            "description": "List (Sorted)",
+            "type": "dojox.widget.SortList",
+            "category": "untested",
+            "icon": "resources/images/sortlist.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPn6/jVPijZQijFPiTFOiOzx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DdakjZYkDhbkzdYkDlbk97o+ODp+N/o9/X4/TlelTpelj5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm0Bon0Bpn0FqoPX4/ENupENuo0Ruo0d0qefv+fL2+0l3rEl4rEh2qkd0qEl2qkV3rE6BtE1+sk1/sk1+sU1/sU+BtFCFt1KHulKIulCEtlOIu1KIuVOJulOIuXCcxsbY6VaOv8fa6u/5/s/t+1tbW1paWllZWf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEoALAAAAAAQABAAAAezgEhIREhHREOIiYlKSoJIFxuRkTlGlTyMQkmQkpExRgQLL4w9RQEPJTJBBRshRh0sIKNGK5yREgkQEAqyAxkjKjQ+Gz8NDBU/srWRxMbISjNGAxgkMDdAHDMWFhQ4jC6zK+HiLdoULt7RGSQqNTsr5NvnSidGBfb3BSknJygojB9GBPiCYUOHAxGVjGhgFMGIiYcQTUz4tGACIwRGAGjcCACjBwMHGBEYSbJkSUYoU6pEGQgAOw==",
+            "properties": {
+                "title": "Sorted List",
+                "style": "width: 300px; height: 300px"
+            },
+            "children": [
+                {
+                    "type": "html.li",
+                    "children": "Item1"
+                },
+                {
+                    "type": "html.li",
+                    "children": "Item2"
+                },
+                {
+                    "type": "html.li",
+                    "children": "Item3"
+                }
+            ],
+            "helper": "davinci.libraries.dojo.dojox.widget.SortListHelper"
+        },
+        {
+            "name": "GridContainer",
+            "description": "Grid Container",
+            "type": "dojox.layout.GridContainer",
+            "category": "untested",
+            "icon": "resources/images/gridcontainer.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPb1+y5KhfD0/DVWkDZXjzlclDhclDximjximUBpn0Fpn0RvpUh1qq7M8Ed2q0d2qkh2q0h2qkt7r0+Btd3q9/T4/E6CtNTl9VaOv9fn9ez1/Mns/////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVxICeOZCliaKquHFZh15UxVE1TLzdtT7wxmyAwaOFIGBGHA/KIOJsMJCfyE1gbVgHWuuAsfppwI6wZhxWcRLTBbrsb6EP1mt0KEJzCD8Bv8AF+fAZ5a29vgwR7fX+BAAMciQyMk3yPAZeYmZomnJ2eIiEAOw==",
+            "properties": {
+                "nbZones": "3",
+                "opacity": "0.7",
+                "allowAutoScroll": true,
+                "hasResizableColumns": true,
+                "withHandles": true,
+                "style": "width: 500px; height: 300px;"
+            },
+            "isContainer": true
+        },
+        {
+            "name": "FloatingPane",
+            "description": "Floating Pane",
+            "type": "dojox.layout.FloatingPane",
+            "category": "untested",
+            "icon": "resources/images/floatingpane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAMDAyDhQkLjAyOjw+JjA4ODw+LjAwPD4+P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARMMMlJqyQ4650I+mAIEh0SnGj6kV4gggGAsOb7xXMZHHzP46xDYEAsEgOCQzDFDBiUHaJhSqUSWcaskVXoer9eLnhcEJO/rI06Y2lPIgA7",
+            "properties": {
+                "title": "Floating Pane",
+                "style": "width: 300px; height: 300px;"
+            },
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
+        },
+        {
+            "name": "ScrollPane",
+            "description": "Scroll Pane",
+            "type": "dojox.layout.ScrollPane",
+            "category": "untested",
+            "icon": "resources/images/scrollpane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPn6/jFOiDFOh+zx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DZYkDhbkzdYkDlbk97o+ODp+N/o9z5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm/X4/ENupENuo0Ruo+fv+fL2+0l3rEl4rEh2qkl2qk6BtE+BtFCFt1CEtlOIu1OJulaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaTwFdrSCwaXymXUlVpNpPLl8kVSJSczWm19Nq4LiINtuIFa16PQ6OBWLvTa8Rr5Ro7WQuFhDWv2yt4enwnLhaGh4YnExMRKC8kLiGSk5IjixEkj5GUk5aMmR4uA6OkoyAeHh8fLxkuDK+wrxxKLhQvDi4duru6EFQJEC8GLgDFxsXDGAQFLwHOAs7R0s4v1dbX2C9BADs=",
+            "properties": {
+                "style": "width: 300px; height: 300px"
+            },
+            "isContainer": true
+        },
+        {
+            "name": "RadioGroup",
+            "description": "Radio Group",
+            "type": "dojox.layout.RadioGroup",
+            "category": "untested",
+            "icon": "resources/images/radiogroup.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
+            "properties": {
+                "style": "float: left; width: 300px; height: 300px"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 1"
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ColorPicker",
+            "description": "Color Picker",
+            "type": "dojox.widget.ColorPicker",
+            "category": "untested",
+            "icon": "resources/images/colorpicker.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5Lhi5KhS5LhS9MhzFPijFOiTJQijJSjDJRizRUjjNTjDVWjzZXkDZZkTdZkkx8rz1ypE6CtFSKvVKHuXymzKXL7b3Z8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABgALAAAAAAQABAAAAU/ICaOZGmeznKaTUUVqxgwriTEgeVOQYwFrkgvlrgEHpDhSXFpBpSmQ9PoQ0yhJsPVR9j6Bk4fBmDEnp7itCkEADs=",
+            "resizable": "none"
+        },
+        {
+            "name": "ItemFileReadStore",
+            "description": "ItemFileReadStore",
+            "type": "dojo.data.ItemFileReadStore",
+            "category": "untested-obj",
+            "icon": "resources/images/DataPanel.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
+            "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
+            "resizable": "none",
+            "invisible": false,
+            "helper": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper",
+            "inlineEdit": "davinci.ve.input.ItemFileReadStoreInput"
+        },
+        {
+            "name": "ItemFileWriteStore",
+            "description": "ItemFileWriteStore",
+            "type": "dojo.data.ItemFileWriteStore",
+            "category": "untested-obj",
+            "icon": "resources/images/DataPanel.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
+            "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
+            "resizable": "none",
+            "invisible": false,
+            "inlineEdit": "davinci.ve.input.ItemFileReadStoreInput"
+        },
+        {
+            "name": "ForestStoreModel",
+            "type": "dijit.tree.ForestStoreModel",
+            "category": "untested-obj",
+            "hidden": true,
+            "invisible": true,
+            "helper": "davinci.libraries.dojo.dijit.tree.ForestStoreModelHelper"
+        },
+        {
+            "name": "View",
+            "type": "dojox.mobile.View",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-view.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtWKf21SLvVKHuWKh21OHuWKf2WKh2VWLvVaOv7nW78jg84C/64K/64DB64DB6ZfX9v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZ0wJJwSCwOOcikMinkjJ7QKJRTqoRAIJJ2SxJ9PpsSJkOhXDIatEZDIVtKE4l8Tp9HShKPfs/fQ/BcgVx/DiQAhgABAgcLEhYWJA8lDIKVDSUJHZqbnJsKJQaVggglBIaIioyOkAUlA6KBA64DtLW2tka5Q0EAOw==",
+            "isContainer": true
+        },
+        {
+            "name": "ScrollableView",
+            "type": "dojox.mobile.ScrollableView",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-scrollable-view.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFOiPj6/jJRijRTjTRUjTdXkTdXkLrH3+Hp+OHp9zdakzZYkDdYkDlbkzlck97o+ODp+N/o9ztflj5km/L2/Pj6/T5mnD9mnT5lm0FqoENupENuo0Ruo0ZxpvL2+0l3rEl4rEh2qkl3q0l2qk6BtE1+sU+BtFCDtVCFt1CEtlSLvVOJulOHuVaOv7nW78/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaAQJlwSCwKXcikcilzxZ5QaApGVclWMUAWMFhgYiRYACGStaJoDKzyuchQr7hc3jAwGAeZCR1lKRIRLDIjWVtdXyUSEhAnMh58UCCKECEyGnOYHRsbHBwyFJBPGVQwFDIThQBcXjEOYggOMg+hMQUwFgIEsg+8vb0BwMBGw8TFQkEAOw==",
+            "isContainer": true
+        },
+        {
+            "name": "SwapView",
+            "type": "dojox.mobile.SwapView",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--flippable-iew.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
+            "isContainer": true
+        },
+        {
+            "name": "Heading",
+            "type": "dojox.mobile.Heading",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-heading.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEh1qkd2q0d2qkh2q0h2qkt7r0t8r0+BtU6CtFGGuVGHuVSLvFaNv1WLvKzM6a3M6a3M6LfS7DJlklaOv4y64Iy635zD5J3E5KzN6azM6IK13Iy734273////////wAAACH5BAEAAB4ALAAAAAAQABAAAAVQoCeOZGmeaKqqU+u+LdN6U2Tf+D15S5ZJwIzjgXFkIJmGJ2GRtCSbTWc6vSg8hw0HCN1UKFotwlPQmM/os8FDIADcgYGAIJgD3qu8fs/nhwAAOw==",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            },
+            "isContainer": true
+        },
+        {
+            "name": "RoundRect",
+            "type": "dojox.mobile.RoundRect",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrect.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk55qcnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVHoCSOZGmeJ6SuLERCRSzPhStBQRDtPB8QLgigR9w9goIi0RFMKHuJIOLJWwQb1N0hOMhGGEGFgiq2QQzitFphE7XeqLj8FAIAOw==",
+            "isContainer": true
+        },
+        {
+            "name": "RoundRectCategory",
+            "type": "dojox.mobile.RoundRectCategory",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrectctgy.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk5zlckzpdlD1hmEBnnENuonmbw3mawkh1qXufxnqdxHmbwkx8r1CCtX6ly3yiyIGozpqcnlKHuVWMvoOs04Su1IKr0f///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZjwJMQAolIJpTLhhMSCZ8aSyWD8XQ+pRHpye16n6CweAziggrotLpQPoECAZN8Pg8QyiAAfS9/4AV8ew54CYF0CXgIhnMLeA2Lcgd4A5AmDHgKCouZbSAGmaChCm1CZKZfqE9BADs=",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "RoundRectList",
+            "type": "dojox.mobile.RoundRectList",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-roundrectlist.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "RoundRectDataList",
+            "type": "dojox.mobile.RoundRectDataList",
+            "category": "mobile",
+            "icon": "resources/images/RoundRectDataList.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+lpzp2V+sGqEtW2FsHSLtNfi9Tlck22GsHOLtH2Uu5q03W56jr7J2+Lq99jf6ubt+La/zGiKutXi9ERvo/P3/Ex7r0x9sUx8r8TU5ejx+lKHuVKHuFaOv3io0bnW78jg8+zz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaEwNfL8vEYj8ePRWjxQCzQaBTiWX4grqx2a4F8Xh2LC7MtWzivjLjMvqRB8PhmTt9o0usta89nvSpiZFooAIWFKC8TEmwpAQsKBQEtLyEIElIWKyKbmypCIRMIoggOJRELBgkRJ0KtriYPsbEkrrUjBwcMBAcjtbUNFAMvDAK+tQzGybVBADs=",
+            "isContainer": true
+        },
+        {
+            "name": "EdgeToEdgeCategory",
+            "type": "dojox.mobile.EdgeToEdgeCategory",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-edge-edge-ctg.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlckztfljtglj5kmz5lmkFqoEJqoEZxpkVypkl3q0p4q0x9sU1+sbnW7////7q6urOzs7KysqmpqaioqHBwcG9vb25ubmxsbGpqamlpaWdnZ////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVb4CaOZClSaKquG/W8cAxTmwU5UATteQ9Vm8tkIpEMj0TiZYPROJ/QZ2bDcFiv2Otik3AssmDF5gAuIzaFhnrNXhs2gzKYsAl45VfBBoDHAvYAgYKDgyaGh4giIQA7",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "EdgeToEdgeList",
+            "type": "dojox.mobile.EdgeToEdgeList",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-edge-edgellist.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.ListItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "EdgeToEdgeDataList",
+            "type": "dojox.mobile.EdgeToEdgeDataList",
+            "category": "mobile",
+            "icon": "resources/images/EdgeToEdgeDataList.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
+            "isContainer": true
+        },
+        {
+            "name": "ListItem",
+            "type": "dojox.mobile.ListItem",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-list-item.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5Khd/k7jJRit7j7N3i6zdak+Dm79/l7j9mnUJqoEVyp0ZxpuHo8UVypkl3q0p4q0x9sU1+sVCDteTs9OLq8lKHueTt9ePs9P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABkALAAAAAAQABAAAAVbYCaOZClaaKqumYW9cAxb2YQRNzEEBkNdF8wkE5QZMZeMBMJsOp2ZyNEIyTgwACxAUEAoIpUK5pFZTGWNzHPdTGQM55ghc7jldr1f8ECPw/gHgYKDhCaGh4giIQA7",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "Switch",
+            "type": "dojox.mobile.Switch",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-switch.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw==",
+            "resizable": "none"
+        },
+        {
+            "name": "IconContainer",
+            "type": "dojox.mobile.IconContainer",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-icon-container.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
+            "isContainer": true,
+            "properties": {
+                "defaultIcon": "__MAQ_LIB_BASE_URL__/resources/images/icon-container-fallback.png"
+            },
+            "children": [
+                {
+                    "type": "dojox.mobile.IconItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.IconItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "IconItem",
+            "type": "dojox.mobile.IconItem",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--icon-item.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs="
+        },
+        {
+            "name": "Button",
+            "type": "dojox.mobile.Button",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "ToolBarButton",
+            "type": "dojox.mobile.ToolBarButton",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        },
+        {
+            "name": "TabBar",
+            "type": "dojox.mobile.TabBar",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--tab-container.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
+            "isContainer": true,
+            "properties": {
+                "barType": "segmentedControl"
+            },
+            "children": [
+                {
+                    "type": "dojox.mobile.TabBarButton",
+                    "properties": {
+                        "selected": true
+                    }
+                },
+                {
+                    "type": "dojox.mobile.TabBarButton"
+                },
+                {
+                    "type": "dojox.mobile.TabBarButton"
+                }
+            ]
+        },
+        {
+            "name": "TabBarButton",
+            "type": "dojox.mobile.TabBarButton",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw=="
+        },
+        {
+            "name": "SpinWheel",
+            "type": "dojox.mobile.SpinWheel",
+            "category": "mobile",
+            "icon": "resources/images/SpinWheel.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
+            "isContainer": true,
+            "children": [
+                {
+                    "type": "dojox.mobile.SpinWheelSlot",
+                    "properties": {
+                        "labels": "['A','B','C','D','E']"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.SpinWheelSlot",
+                    "properties": {
+                        "labels": "['A','B','C','D','E']"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "SpinWheelSlot",
+            "type": "dojox.mobile.SpinWheelSlot",
+            "category": "mobile",
+            "icon": "resources/images/SpinWheelSlot.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck/P2+zxhlz9mnPH1+qXG49Pn+O30+f///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARKMMlJqzQ4650M+iAAgkY3HkA6IqW3vmwyzHRtJwKh77weCAlAoEAsGgsBQHB4PCaXgah0GlWmrtis0gUbtVbX1Rf8am3OGYt6EgEAOw==",
+            "properties": {
+                "labels": "['A','B','C','D','E']"
+            }
+        },
+        {
+            "name": "SpinWheelDatePicker",
+            "type": "dojox.mobile.SpinWheelDatePicker",
+            "category": "mobile",
+            "icon": "resources/images/SpinWheelDatePicker.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEBAWDhAYPj5+0hooFBwqDlck/P2+zxhl7vH2ShQiDBYkDhgmD9mnL3K3DhgkEBomEhwoPH1+iBQiChYkKXG49Pn+N/q8+30+UhQUOj4+PD4+FhYSHBoOGhgOP///////yH5BAEAAB8ALAAAAAAQABAAAAVz4CeOZGmKVaqqZ2UYXvEa1ZdMirM8A3EVwAvNhtM9IITZrMbROJ+cBmNK/TQTmgSWI4h4I4bDp5N1YjsWippiKHw2GSxWs0mv2x9MPC7JYARKeABPGYUACECJbgGMjYyBQyYuP0GRJS4vMi81kisrJ6AfIQA7"
+        },
+        {
+            "name": "SpinWheelTimePicker",
+            "type": "dojox.mobile.SpinWheelTimePicker",
+            "category": "mobile",
+            "icon": "resources/images/SpinWheelTimePicker.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPj5+zlck/P2+zxhlz9mnPH1+rjI2NDg8OXq76XG49Pn+N/q8xBQgHCYuIiowDhwmMjY4Njo8MDY4Njw+LDQ2OD4+PD4+P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABgALAAAAAAQABAAAAV2ICaOZGmKSqqqp3K9gSArLRwELy0azdMYr2BO5HhQLJSHA0FoOjGGR8TCsEQehoK2IBhgGpRKhSGmNBaJtCCAeUgkEMZb8kCr2eCDnnEwA2QybFERhIQPCDeJbBhFFBNJDkJDOz0/NjgXOiUuMEGaJCuhJ6MYIQA7"
+        },
+        {
+            "name": "Carousel",
+            "type": "dojox.mobile.Carousel",
+            "category": "mobile",
+            "icon": "resources/images/CarouselSideScrollableList.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
+            "isContainer": true
+        },
+        {
+            "name": "CheckBox",
+            "type": "dojox.mobile.CheckBox",
+            "category": "mobile",
+            "icon": "resources/images/checkbox.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg=="
+        },
+        {
+            "name": "ComboBox",
+            "type": "dojox.mobile.ComboBox",
+            "category": "mobile",
+            "icon": "resources/images/combo-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC"
+        },
+        {
+            "name": "ContentPane",
+            "type": "dojox.mobile.ContentPane",
+            "category": "mobile",
+            "icon": "resources/images/ContentPane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
+            "isContainer": true
+        },
+        {
+            "name": "ExpandingTextArea",
+            "type": "dojox.mobile.ExpandingTextArea",
+            "category": "mobile",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "inlineEdit": {
+            	"property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            }
+        },
+        {
+            "name": "FixedSplitter",
+            "type": "dojox.mobile.FixedSplitter",
+            "category": "mobile",
+            "icon": "resources/images/FixedSplitter.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
+            "isContainer": true,
+            "properties": {
+                "orientation": "H"
+            },
+            "children": [
+                {
+                    "type": "html.div",
+                    "properties": {
+                        "style": "width: 200px; border-right: 1px solid black;"
+                    }
+                },
+                {
+                    "type": "html.div"
+                }
+            ]
+        },
+        {
+            "name": "FixedSplitterPane",
+            "type": "dojox.mobile.FixedSplitterPane",
+            "category": "mobile",
+            "icon": "resources/images/FixedSplitterPane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck/P2+ztfljtgljxhlz5mnD9mnEJtokNtokdzp0h0qeTt+Obu+Ed1qUp6rUx9sFCEt06As0x9r1GEtlGGuFOKvFOKu1SKvFaOv8/t+////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoCaOZCliaKqqZ+a+8Cte2WLfN6OLVBasQFHEh4nBMCIHsYa7ITUJX8UXqFoDFtHBN6FeqxCRwSdpmM/nh4jgU3i/DRHAh3hfEXJfwW4t5AMDfFUCfwCGh4gAJoskIQA7",
+            "isContainer": true
+        },
+        {
+            "name": "Overlay",
+            "type": "dojox.mobile.Overlay",
+            "category": "mobile",
+            "icon": "resources/images/Overlay.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPr6//z8//39//z8/vn6//T2/fH0/PT2/O7y+/P2/eju+vT3/ff5/fv8/ubt+urw++3y+/H1/OXt+uTs+efu+ujv+uvx+/T3/Orx+/P3/fn7/jdimzlknb3L3u3z+/D1/O/0+zllnTtooDtonz1roz5rokBvpvP3/ERzqUd4rkd4rUp9skt+skp9sU2BtU2BtEt8r42szPb5/FGIulCFuFCFt1KJu1KIulOJu1WMvQBAeFSMvVaOv+/1+gBVlvz9/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEAALAAAAAAQABAAAAekgECCg4SFgjyIiYqLQDwCj5CRkDxAOZKXjztANgMCMJ+goAIBOEA0BJiRADVALgwNnzEdPh0xnw0ML0AtCxq+Gj46Pr8aCy1AKQYMssE6wrUMESpAKBAXCxkFCwcFJwkLBR4oQCYYEYuKHw8mQCQKCDwNP/P0PBAUJUAiDhg3Mv8AZcywIGEEEA4TKqwA0aOhQxYKJoQAsmFDh4oYM17cYKjjoEAAOw=="
+        },
+        {
+            "name": "RadioButton",
+            "type": "dojox.mobile.RadioButton",
+            "category": "mobile",
+            "icon": "resources/images/radio-button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII="
+        },
+        {
+            "name": "Slider",
+            "type": "dojox.mobile.Slider",
+            "category": "mobile",
+            "icon": "resources/images/horizontalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw=="
+        },
+        {
+            "name": "TextArea",
+            "type": "dojox.mobile.TextArea",
+            "category": "mobile",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            }
+        },
+        {
+            "name": "TextBox",
+            "type": "dojox.mobile.TextBox",
+            "category": "mobile",
+            "icon": "resources/images/text-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "ToggleButton",
+            "type": "dojox.mobile.ToggleButton",
+            "category": "mobile",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            }
+        }
+    ]
+}

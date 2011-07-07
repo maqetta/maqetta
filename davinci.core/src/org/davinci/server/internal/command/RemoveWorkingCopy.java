@@ -11,11 +11,12 @@ import org.davinci.server.user.User;
 
 public class RemoveWorkingCopy extends Command {
 
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
-		String path=req.getParameter("path");
-		IVResource file = user.getResource(path);
-		if(file!=null)
-			file.removeWorkingCopy();
-	}
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        String path = req.getParameter("path");
+        IVResource file = user.getResource(path);
+        if (file != null) {
+            file.removeWorkingCopy();
+        }
+    }
 
 }

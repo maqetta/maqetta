@@ -6,7 +6,8 @@
 		{ id: '0', name:'Home', url: 'home.html' },
 		{ id: '1', name:'About Maqetta', url: 'overview.html' },
 		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
-			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' }
+			{ id: '2.1', name:'Preview 2', url: 'releasenotes/preview2.html' },
+			{ id: '2.2', name:'Preview 1', url: 'releasenotes/preview1.html' }
 		] },
 		{ id: '3', name:'Accessing / Installing Maqetta', url: 'install.html' },
 		{ id: '4', name:'Tutorials', url: 'tutorials/tutorials.html', children:[
@@ -51,10 +52,7 @@
 			] },
 			{ id: '5.4', name:'Review and Commenting', url: 'reviewCommenting.html', children:[
 				{ id: '5.4.1', name:'About Review and Commenting', url: 'reviewCommentingAbout.html' }
-			] },
-			{ id: '5.5', name:'Theme Editor', url: 'themeEditor.html', children:[
-				{ id: '5.5.1', name:'About the Claro Theme Editor', url:'themeEditorAbout.html' }
-			] },
+			] }
 		] },
 		{ id: '6', name:'Learning Resources', url: 'resources.html' },
 			

@@ -11,7 +11,7 @@ dojo.provide("davinci.library");
 
 davinci.library.getThemes=function(){
 	
-	var allThemes = davinci.model.Resource.findResource("*.theme");
+	var allThemes = davinci.resource.findResource("*.theme");
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getContents();
@@ -36,7 +36,7 @@ davinci.library.getMetaData=function(theme){
 	var metaResources = [];
 	for(var i = 0;i<theme.meta.length;i++){
 		var absoluteLocation = parent.append(theme.meta[i]);
-		var resource=  davinci.model.Resource.findResource(absoluteLocation.toString());
+		var resource=  davinci.resource.findResource(absoluteLocation.toString());
 		metaResources.push(resource);
 	}
 			
@@ -54,6 +54,9 @@ davinci.library.getInstalledLibs=function(){
 davinci.library.getlibMetaData=function(id, version){
 	
 	var path = davinci.library.getMetaRoot(id, version);
+	
+	if(path==null)
+		return null
 	
     var data = dojo.xhrGet({
         url : path + "/widgets.json",
@@ -111,6 +114,7 @@ davinci.library.getLibRoot = function(id, version, base) {
 davinci.library.getMetaRoot=function(id,version){
 	
 	var response = davinci.Runtime.serverJSONRequest({url:"./cmd/getMetaRoot", handleAs:"text", content:{'id':id, 'version':version},sync:true  });
+
 	return response;
 }
 

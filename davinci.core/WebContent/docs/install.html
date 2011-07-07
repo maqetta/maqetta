@@ -21,48 +21,123 @@
 
 <h1>Accessing/Installing Maqetta</h1>
 
-<h2>Supported browsers: Google Chrome (current release), Mozilla Firefox 4 and Mac Safari 5</h2>
+<h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox 4 and Mac Safari 5</h2>
 <p>
 The current builds of Maqetta only run on Google Chrome, Firefox 4 and Safari 5 on the Mac. 
 </p>
 
-<h2>Make sure you have a clean setup: restart browser and clear caches</h2>
+<h2 id="prep_steps">Preparatory steps: restart browser and clear caches</h2>
 
 <p>Before opening up a new Maqetta Preview release in your browser, we
 recommend that you close and restart your browser and clear its caches.
-These steps are likely not necessary in most cases, but recommended nevertheless during 
-the "Preview" phase of the open source project because
-we aren't sure yet that we have dealt with Maqetta's caching logic completely.
-<em>These procedures are likely more important for people 
-who have used previous versions of Maqetta.</em></p>
+These steps should not be necessary in most cases, but is recommended to minimize
+chances of problems.
+There is a section below that provides <a href="#clearing_caches">Detailed instructions for clearing caches in various browsers</a>.</p>
 
-<p>There is a section below that provides "Detailed instructions for clearing caches in various browsers".</p>
-
-<h2>Run off server vs local install</h2>
-
-<p>With the Preview 1 release, we have addressed some network performance issues, but several network performance issues remain,
-	with the result that some operations can be quite slow when running the web-hosted version of Maqetta,
-	particularly if the hosting server is burdened and/or your network connection is slow.
-	For example, network performance might be particularly slow if you are using a VPN
-	or working from a hotel room.
-	Improving network performance will be a top engineering priority going forward.</p>
-<p>
-	Because of these lingering network performance, the Preview 1 release for Maqetta offers two usage options:</p>
+<h2 id="run_off_cloud">How to run the cloud version of Maqetta (i.e., run off server)</h2>
+<p> Our strategic goal is that ultimately everyone will run Maqetta in the cloud (i.e., off of a server)
+	saving files in their cloud workspace. The team features of Maqetta, particularly review and commenting,
+	require users to run the server-based version of the product.</p>
+<p>You can run Maqetta instantly by opening up the Maqetta application
+in your browser. To run the Maqetta application from Maqetta.org, simply open the following URL in your browser:</p>
 <ul>
-	<li><b>Run off server</b> - 
-		This option is the most convenient because there is no installation step,
-		and allows you to use the web-based review and commenting features,
-		but performance might be slow at times.
+<li> <a href="http://maqetta.org" style="font-size:120%;color:magenta;"><strong>http://maqetta.org</strong></a>
 	</li>
-	<li><b>Download the ZIP and run Maqetta locally</b> - 
-		With this option, you download a ZIP file containing Maqetta, double-click on a file to launch
-		the Maqetta server on <i>localhost:50000</i>, and then launch Maqetta by
-navigating your browser to <a href="http://localhost:50000/maqetta" rel="external">http://localhost:50000/maqetta</a>.
-As a result, you will be running Maqetta on a &quot;local cloud&quot; where <a href="http://localhost:50000/maqetta" rel="external">http://localhost:50000/maqetta</a>
-simulates a cloud environment. Detailed installation instructions can be found in a subsequent section.</li>
 </ul>
+<p>To launch the Maqetta application at Maqetta.org, click on appropriate buttons or hyperlinks
+to register, login and/or run the application as a guest user.</p>
+<p>With this option, you will be running Maqetta in the cloud, and your workspace (where your files are stored) will be stored on the Maqetta server.</p>
 
-<h2>Detailed instructions for clearing caches in various browsers</h2>
+<h2 id="local_install">Instructions for installing and running Maqetta locally</h2>
+
+<p>With this option, you download a ZIP file containing Maqetta, double-click on a file to launch
+	the Maqetta server on <i>localhost:50000</i>, and then launch Maqetta by
+	navigating your browser to <a href="http://localhost:50000/maqetta" rel="external">http://localhost:50000/maqetta</a>.
+	As a result, you will be running Maqetta on a &quot;local cloud&quot; where <a href="http://localhost:50000/maqetta" rel="external">http://localhost:50000/maqetta</a>
+	simulates a cloud environment. Detailed installation instructions can be found in a subsequent section.
+	With this approach, you cannot use the team features such
+	as review and commenting.</p>
+<p>Here are the instructions for installing and running Maqetta locally (i.e. http://localhost:50000).</p>
+
+<h3 id="local_install_java">Step 1: Verify you have Java Version 5 installed on your machine.</h3>
+
+<p>Maqetta requires Java Version 5 (i.e. JRE Version 1.5), installed on your machine in order to run Maqetta locally.<br />
+Follow these steps to check your Java version:</p>
+
+<ol><li> Open a Command Prompt window
+<ul><li>On Windows: Click <b>Start > Run</b>, type in <code style="letter-spacing:1px;">cmd</code> and click OK</li>
+    <li>On Mac: Open <b>Finder > Applications > Utilites > Terminal</b></li></ul>
+<li>Type in <code>java -version</code></li>
+<li>If the version number 1.5.0 or higher, no further action is required.</li>
+<li>If the version number is lower than 1.5.0, or you don't have Java on your machine, then you'll need to install
+	Java 1.5 (or later) onto your machine.
+</li>
+</ol>
+
+<h3 id="local_install_download">Step 2: Pull down the most recent Maqetta build</h3>
+
+<ol><li> Create a folder on your local system for the Maqetta application (e.g., "maqetta_preview")
+</li><li> Navigate your browser to the appropriate Maqetta downloads page. 
+<strong><em>Note that there might be multiple Maqetta downloads pages.
+For example, your company might provide customized versions of Maqetta that are available
+somewhere on your company's servers.</em></strong>
+If you are looking for a recent Maqetta build that was created from the code in the Maqetta open source project without customizations, go to:
+<a href="http://maqetta.org/downloads" rel="external" title="Maqetta downloads">http://maqetta.org/downloads</a>.
+	If there are multiple ZIP files shown, usually you will want the ZIP file
+	that either has the largest version number or the most recent date.
+</li><li> Using the browser, download the ZIP by using the Save Link As... (or similar) command on the context menu (right mouse button on Windows) into the Maqetta application folder you created. 
+</li><li> After downloading, extract the ZIP file contents:
+<ul>
+<li>On Windows, extract (unzip) into the Maqetta application folder you just created</li>
+<li>On Mac, if you simply double-click on the maqetta_preview.zip file, a folder named maqetta_preview will be created next to the ZIP file. The maqetta_preview folder will contain the extracted contents of the ZIP file.</li>
+</ul>
+</li></ol>
+<p> </p>
+
+
+<h3 id="local_install_launch_server">Step 3: Launch the Maqetta server</h3>
+
+<ol><li> With the Explorer (Windows) or Finder (Mac), navigate to the directory into which you unzipped the Maqetta files.
+</li><li> Launch the Maqetta server process.
+<ul><li> On Windows, double-click on the file <b>maqetta.local.win.bat</b> (depending on your settings, the Windows explorer might not show the &quot;.bat&quot; extension).
+</li><li> On Mac, double-click on the file <b>maqetta.local.mac.command</b> (depending on your settings, the Mac finder might not show the &quot;.command&quot; extension).
+
+</li></ul>
+</li></ol>
+
+<p> </p>
+
+<p>You can tell that the server has launched if you see the following message in the shell window:
+</p>
+<p> </p>
+<hr />
+<pre>!!!!!!!!!!!!!!<br />NOTE: CLOSING THIS WINDOW WILL <br />      STOP THE MAQETTA SERVER PROCESS<br />!!!!!!!!!!!!!<br /><br />Using directory : &lt;maqetta-unzip-dir&gt;\users<br />start your browser at http://localhost:50000/maqetta<br /><br />osgi&gt;</pre>
+<hr />
+<p> </p>
+<p>The Maqetta server will continue to run until you close the shell window that comes up after you double-click on the server launch file. Therefore, if you close the shell window, the Maqetta server process will stop running, at which point you can't run <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a> anymore. <br /></p>
+<p><i><font color="#ff0000"><b><u>One possible problem</u></b> <font color="#000000">is that you might already be running a different localhost server on your system at <b><u>http://localhost:50000</u></b> (the default for Maqetta). Refer to the detailed notes immediately below about how to change the Maqetta launch script to use a different port number.</font></font></i><br /></p><p /><p><b><i>Detailed notes about the Maqetta server <br /></i></b></p>
+
+<ul><li>On the Mac, you can launch the Maqetta server from the Dock by dragging the <code>maqetta.local.mac.command</code> onto the right part of the doc.</li>
+<li>The launch scripts (<b>maqetta.local.win.bat</b> and <b>maqetta.local.mac.command</b>) have some default parameters:
+<ul>
+<li><b>HTTP port number</b> - The scripts default to port 50000. If you prefer to use 8080 or some other port number, hand-edit the launch script 
+and change 50000 to something else (any number in the 50000's is OK).
+</li><li><b>User workspace folder</b> - Any files that you create in Maqetta will be saved into a folder managed by the Maqetta server process. You can change the location for where your workspace is saved by hand-editing the launch scripts. <i><b>Note that a future version of Maqetta will allow you to open any file on your local system. The current release can only open files within the workspace area.</b></i><br /><br />The default <b>user workspace folder</b> locations are:<br /><br />
+
+<ul><li>Windows: &lt;maqetta-unzip-dir&gt;\users</li>
+<li>Macintosh: &lt;maqetta-unzip-dir&gt;/users</li></ul>
+
+</li></ul>
+</li></ul>
+
+<h3 id="local_install_launch_browser">Step 4: Launch Maqetta application in Google Chrome, Firefox 4 or Mac Safari</h3>
+
+<p>Once the Maqetta server has been launched (see previous steps), open Chrome, Firefox or Safari and go to the following URL: 
+</p>
+<ul><li> <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a>
+</li></ul>
+
+<h2 id="clearing_caches">Detailed instructions for clearing caches in various browsers</h2>
 
 <ul>
 	<li><strong>Quit and restart your browser before launching a new version of Maqetta for the first time.</strong>
@@ -92,7 +167,7 @@ simulates a cloud environment. Detailed installation instructions can be found i
 								<ul>
 									<li>If you run Maqetta at Maqetta.org, then you can start typing "maqetta.org" into the search box
 										and immediately you will see the subset of sites that match the pattern (e.g., maqetta.org).</li>
-									<li>If you run Maqetta at http://dleadt.torolab.ibm.com:9080/maqetta/, then you can start typing the string "dleadt" into the search box.</li>
+									<li>If you run Maqetta at http://maqetta.austin.ibm.com/maqetta/, then you can start typing the string "maqetta.austin" into the search box.</li>
 									<li>If run run locally on http://localhost, then you can start typing "localhost" into the search box.</li>
 								</ul>
 							<li>When the listing of sites shows the site from which you run Maqetta, click on the row for that site to select that row.</li>
@@ -132,88 +207,7 @@ simulates a cloud environment. Detailed installation instructions can be found i
 
 <p> </p>
 
-<h2>Instructions for installing and running Maqetta locally</h2>
-
-<p>Use these instructions for installing and running Maqetta locally (i.e. http://localhost:50000).</p>
-
-<h3>Step 1: Verify you have Java Version 5 installed on your machine.</h3>
-
-<p>Maqetta requires Java Version 5 (i.e. JRE Version 1.5), installed on your machine in order to run Maqetta locally.<br />
-Follow these steps to check your Java version:</p>
-
-<ol><li> Open a Command Prompt window
-<ul><li>On Windows: Click <b>Start > Run</b>, type in <code style="letter-spacing:1px;">cmd</code> and click OK</li>
-    <li>On Mac: Open <b>Finder > Applications > Utilites > Terminal</b></li></ul>
-<li>Type in <code>java -version</code></li>
-<li>If the version number 1.5.0 or higher, no further action is required.</li>
-<li>If the version number is lower than 1.5.0, or you don't have Java on your machine, then you'll need to install
-	Java 1.5 (or later) onto your machine.
-</li>
-</ol>
-
-<h3>Step 2: Pull down the most recent Maqetta build</h3>
-
-<ol><li> Create a folder on your local system for the Maqetta application (e.g., "maqetta_preview_1")
-</li><li> Open a browser window and go to the appropriate Maqetta downloads page. 
-<strong><em>Note that there are likely to be multiple Maqetta downloads pages.
-For example, your company might provide customized versions of Maqetta that are available
-somewhere on your company's servers.</em></strong>
-If you are looking for a recent Maqetta build that was created from the code in the Maqetta open source project without customizations, go to:
-<a href="http://maqetta.org/downloads" rel="external" title="Maqetta downloads">http://maqetta.org/downloads</a>.
-</li><li> Using the browser, download the ZIP by using the Save Link As... (or similar) command on the context menu (right mouse button on Windows) into the Maqetta application folder you created. 
-</li><li> After downloading, extract the ZIP file contents:
-<ul>
-<li>On Windows, extract (unzip) into the Maqetta application folder you just created</li>
-<li>On Mac, if you simply double-click on the maqetta_preview_1.zip file, a folder named maqetta_preview_1 will be created next to the ZIP file. The maqetta_preview_1 folder will contain the extracted contents of the ZIP file.</li>
-</ul>
-</li></ol>
-<p> </p>
-
-
-<h3>Step 3: Launch the Maqetta server</h3>
-
-<ol><li> With the Explorer (Windows) or Finder (Mac), navigate to the directory into which you unzipped the Maqetta files.
-</li><li> Launch the Maqetta server process.
-<ul><li> On Windows, double-click on the file <b>maqetta.local.win.bat</b> (depending on your settings, the Windows explorer might not show the &quot;.bat&quot; extension).
-</li><li> On Mac, double-click on the file <b>maqetta.local.mac.command</b> (depending on your settings, the Mac finder might not show the &quot;.command&quot; extension).
-
-</li></ul>
-</li></ol>
-
-<p> </p>
-
-<p>You can tell that the server has launched if you see the following message in the shell window:
-</p>
-<p> </p>
-<hr />
-<pre>!!!!!!!!!!!!!!<br />NOTE: CLOSING THIS WINDOW WILL <br />      STOP THE MAQETTA SERVER PROCESS<br />!!!!!!!!!!!!!<br /><br />Using directory : &lt;maqetta-unzip-dir&gt;\users<br />start your browser at http://localhost:50000/maqetta<br /><br />osgi&gt;</pre>
-<hr />
-<p> </p>
-<p>The Maqetta server will continue to run until you close the shell window that comes up after you double-click on the server launch file. Therefore, if you close the shell window, the Maqetta server process will stop running, at which point you can't run <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a> anymore. <br /></p>
-<p><i><font color="#ff0000"><b><u>One possible problem</u></b> <font color="#000000">is that you might already be running a different localhost server on your system at <b><u>http://localhost:50000</u></b> (the default for Maqetta). Refer to the detailed notes immediately below about how to change the Maqetta launch script to use a different port number.</font></font></i><br /></p><p /><p><b><i>Detailed notes about the Maqetta server <br /></i></b></p>
-
-<ul><li>On the Mac, you can launch the Maqetta server from the Dock by dragging the <code>maqetta.local.mac.command</code> onto the right part of the doc.</li>
-<li>The launch scripts (<b>maqetta.local.win.bat</b> and <b>maqetta.local.mac.command</b>) have some default parameters:
-<ul>
-<li><b>HTTP port number</b> - The scripts default to port 50000. If you prefer to use 8080 or some other port number, hand-edit the launch script 
-and change 50000 to something else (any number in the 50000's is OK).
-</li><li><b>User workspace folder</b> - Any files that you create in Maqetta will be saved into a folder managed by the Maqetta server process. You can change the location for where your workspace is saved by hand-editing the launch scripts. <i><b>Note that a future version of Maqetta will allow you to open any file on your local system. The current release can only open files within the workspace area.</b></i><br /><br />The default <b>user workspace folder</b> locations are:<br /><br />
-
-<ul><li>Windows: &lt;maqetta-unzip-dir&gt;\users</li>
-<li>Macintosh: &lt;maqetta-unzip-dir&gt;/users</li></ul>
-
-</li></ul>
-</li></ul>
-
-
-<h3>Step 4: Launch Maqetta application in Google Chrome, Firefox 4 or Mac Safari</h3>
-
-<p>Once the Maqetta server has been launched (see previous steps), open Chrome, Firefox or Safari and go to the following URL: 
-</p>
-<ul><li> <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a>
-</li></ul>
-
-<h2>HTML5 appcache - say yes to the "Allow" prompt</h2>
+<h2 id="offline_prompt">HTML5 offline prompt in Firefox - say yes to the "Allow" prompt</h2>
 <p>
 Maqetta now takes advantage of a recent HTML5 feature shipping in modern browsers - the HTML appcache.
 This allows the browser to save a cached version of large parts of Maqetta on your local computer,

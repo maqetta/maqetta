@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html manifest="app/davinci/davinci.manifest">
+<html>
   <head>
     <title>Maqetta Designer</title>
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
     <style type="text/css">
-		@import url("app/davinci/workbench.css");
+		@import url("app/davinci/workbench.css?@revision@");
 		html, body {
 			width: 100%;
 			height: 100%;
@@ -14,12 +14,11 @@
     </style>
     <!-- propvieweffects.css needs to be separate and not built -->
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
-    <link href="app/davinci/propvieweffects.css" rel="stylesheet" type="text/css"></link> 
-    <script type="text/javascript" src="app/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-    <script type="text/javascript" src="app/dijit/dijit.js"></script>
-    <script type="text/javascript" src="app/davinci/davinci-common.js"></script>
-    <script type="text/javascript" src="app/davinci/davinci.js"></script>
-    <script type="text/javascript" src="app/davinci/repositoryinfoLive.js"></script>
+    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link> 
+    <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
+    <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
+    <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
 
     <script type="text/javascript">
     	davinci.useAppCache = true; // needed to provide FF "allow" warning
@@ -88,7 +87,7 @@
   </head>
 
 	<body class="claro">
-		<div class="loading"></div>
+		<div class="loading"><table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table></div>
 		<div id="davinci_app">
 			<div id="davinci_top_bar">
 					<div id="davinci_user_container">
@@ -100,7 +99,7 @@
 					<span class="maq_banner_name_box">
 						<span class="maq_banner_name">Maqetta</span>
 						<span class="maq_banner_component">Designer,</span>
-						<span class="maq_banner_version">Preview 1</span>
+						<span class="maq_banner_version">Preview 2</span>
 					</span>
 <!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions					
 					<div id="toolbar_container">

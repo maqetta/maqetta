@@ -1,3 +1,4 @@
+// Runtime version, used by preview-in-browser
 (function() {
 	/**
 	 * Collapses all text nodes that only contain white space characters into empty string.

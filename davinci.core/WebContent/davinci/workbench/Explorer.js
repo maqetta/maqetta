@@ -3,8 +3,8 @@ dojo.provide("davinci.workbench.Explorer");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
-dojo.require("davinci.ui.widgets.Tree");
-dojo.require("davinci.model.Resource");
+dojo.require("dijit.Tree");
+dojo.require("davinci.resource");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
@@ -19,37 +19,48 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	postCreate: function(){
 		this.inherited(arguments);
 
-		
 		var dragSources=davinci.Runtime.getExtensions("davinci.dnd", function (extension){
-			 if (dojo.some(extension.parts,function(item){ return item=="davinci.ui.navigator"; }))
-					 if (extension.dragSource)
-						 return true;
+			 return dojo.some(extension.parts,function(item){ return item=="davinci.ui.navigator"; }) && extension.dragSource;
 		});
 		
-		var model= new davinci.ui.widgets.ResourceTreeModel();
-		this.tree = new davinci.ui.widgets.Tree({
+		var model= davinci.resource;
+		var tree = this.tree = new dijit.Tree({
 			showRoot:false,
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
-			filters : [davinci.model.Resource.alphabeticalSortFilter],
-			isMultiSelect : true,
+			filters: [davinci.resource.alphabeticalSortFilter],
+			isMultiSelect: true,
 			dragSources:dragSources});
 
-		this.setContent(this.tree); 
-		this.tree.startup();
-		dojo.connect(this.tree, 'onDblClick',  
-				dojo.hitch(this,this._dblClick ));
-		this.tree.notifySelect=dojo.hitch(this, function (item)
-				{
-					var items = dojo.map(this.tree.getSelectedItems(),function(item){ return {resource:item}});
-					this.publish("/davinci/ui/selectionChanged",[items,this]);
+		this.setContent(tree); 
+		tree.startup();
+		dojo.connect(tree, 'onDblClick', dojo.hitch(this,this._dblClick ));
+		var that = this;
+		tree.watch("selectedItems", function (prop, oldValue, newValue) {
+			var items = dojo.map(newValue, function(item){ return {resource:item}; });
+			that.publish("/davinci/ui/selectionChanged",[items, that]);
+		});
 
-				});	
-		
-		var popup=davinci.Workbench.createPopup({ partID: 'davinci.ui.navigator',
-				domNode: this.tree.domNode, openCallback:this.tree.getMenuOpenCallback()});
-
+		var popup=davinci.Workbench.createPopup({
+			partID: 'davinci.ui.navigator',
+			domNode: this.tree.domNode/*,
+			openCallback:function (event)
+			{
+//				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
+//TODO: use setter?				tree.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
+				var w = dijit.getEnclosingWidget(event.target);
+				if(!w || !w.item){
+//					dojo.style(this._menu.domNode, "display", "none");
+					return;
+				}
+				if (dojo.indexOf(tree.get("selectedNodes"), w) == -1){
+debugger;
+//					tree._selectNode(w);
+				}
+				tree.set("selectedNode", w);
+debugger;
+			}*/});
 	},
 
 	destroy: function(){
@@ -70,23 +81,24 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	_getIconClass: function(item, opened){
 		
 		var readOnly = "";
-		if(item.readOnly)
+		if(item.readOnly){
 			readOnly = " readOnlyResource";
+		}
 		
-		if (item.elementType=="Folder")
-			return  (opened ? "dijitFolderOpened"  : "dijitFolderClosed") + readOnly;
+		if (item.elementType=="Folder"){
+			return (opened ? "dijitFolderOpened" : "dijitFolderClosed") + readOnly;
+		}
 		if (item.elementType=="File"){
 			var icon;
 			var fileType=item.getExtension();
 			var extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
 				return extension.extension==fileType;
 			});
-			if (extension)
+			if (extension){
 				icon=extension.iconClass + readOnly;
+			}
 			return icon ||	("dijitLeaf" + readOnly);
-
 		}
 		return "dijitLeaf" + readOnly;
 	}
-
 });

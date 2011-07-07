@@ -9,7 +9,7 @@ dojo.mixin(davinci.review.Runtime,{
 		else{
 			if(!davinci.Runtime.userInfo){
 	            var result = davinci.Runtime.serverJSONRequest({
-	                url: "./cmd/getUserInfo",
+	                url: "./cmd/getReviewUserInfo",
 	                sync: true
 	            });
 				davinci.Runtime.userInfo = result;
@@ -26,12 +26,27 @@ dojo.mixin(davinci.review.Runtime,{
 		else{
 				if(!davinci.Runtime.userInfo){
 		            var result = davinci.Runtime.serverJSONRequest({
-		                url: "./cmd/getUserInfo",
+		                url: "./cmd/getReviewUserInfo",
 		                sync: true
 		            });
 					davinci.Runtime.userInfo = result;
 				}
 				return davinci.Runtime.userInfo.userName;
+			}
+	},
+	
+	getDesignerEmail: function(){
+		if(davinci.Runtime.commenting_designerEmail)
+			return davinci.Runtime.commenting_designerEmail;
+		else{
+				if(!davinci.Runtime.userInfo){
+		            var result = davinci.Runtime.serverJSONRequest({
+		                url: "./cmd/getReviewUserInfo",
+		                sync: true
+		            });
+					davinci.Runtime.userInfo = result;
+				}
+				return davinci.Runtime.userInfo.email;
 			}
 	},
 	

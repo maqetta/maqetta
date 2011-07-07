@@ -1,6 +1,4 @@
 dojo.provide("davinci.review.actions.ReviewFileTreeModel");
-dojo.require("davinci.model.Resource");
-
 
 dojo.declare(
 	"davinci.review.actions.ReviewFileTreeModel",

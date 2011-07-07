@@ -1,3 +1,7 @@
+/*
+ * UI Dialog includes
+ */
+
 dojo.provide("davinci.ui.Dialogs");
 dojo.provide("davinci.ui.DeployDialog");
 dojo.require("davinci.ui.Download");
@@ -6,6 +10,7 @@ dojo.require("davinci.ui.UserLibraries");
 dojo.require("davinci.ui.NewTheme");
 dojo.require("davinci.actions.OpenThemeEditor");
 dojo.require("davinci.ui.OpenThemeDialog");
+dojo.require("davinci.ui.Resource");
 
 if (!davinci)
 	davinci={};

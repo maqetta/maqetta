@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// Reads through the library descriptor file (i.e. "widgets.json"), converting
+// images specified by the "icon" properties to a base64 representation. Base64
+// string is saved as "iconBase64" property.
+
 var fs = require('fs'),
     util = require('util'),
     path = require('path');
@@ -50,7 +54,7 @@ fs.readFile(descriptorPath, "utf8", function(err, data) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function printHelp() {
-    util.log("Usage: node transformDojoMetadata.js metadataDir");
+    util.log("Usage: node icon2Base64.js widgets.json");
     process.exit(1);
 }
 

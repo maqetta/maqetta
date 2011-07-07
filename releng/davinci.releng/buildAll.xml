@@ -1,10 +1,10 @@
 <project name="maqetta" default="nightly">
-    
+
     <target name="nightly" depends="init">
         <tstamp>
-            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyyMMddHHmm"/>
+            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
-        
+
         <!--
         -->
         <antcall target="clean">
@@ -13,18 +13,18 @@
         </antcall>
         <antcall target="zips">
         </antcall>
-        
+
         <antcall target="updateZip">
             <param name="addPlugin" value="davinci.joomla"/>
             <param name="fromZipName" value="${maqettaArchiveName}"/>
             <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
         </antcall>
-        
+
         <!--
         <antcall target="war"></antcall>
         -->
     </target>
-    
+
     <target name="init">
         <!--  copy environment vars -->
         <property environment="env"/>
@@ -50,23 +50,23 @@
         <initEnvVar varName="myOS"/>
         <initEnvVar varName="myWS"/>
         <initEnvVar varName="myArch"/>
-        
+
         <property file="build.properties">
         </property>
         <mkdir dir="${buildDirectory}/plugins"/>
         <mkdir dir="${buildDirectory}/features"/>
-    	
+
     	<property name="repoName" value="maqetta" />
     	<property name="repoPath" value="${buildDirectory}/repository/${repoName}" />
     </target>
-    
+
     <target name="zips">
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/zipFile"/>
         </ant>
-        
+
     </target>
-    
+
     <target name="war">
         <!-- build servlet bridge separately first because it is not part of the feature built -->
         <!--
@@ -82,7 +82,22 @@
             <property name="builder" value="${basedir}/warFile"/>
         </ant>
     </target>
-    
+
+	  <target name="w3war">
+	    <!-- build servlet bridge separately first because it is not part of the feature built -->
+	    <!--
+	     -->
+		<antcall target="buildPlugin">
+			<param name="pluginName" value="org.eclipse.equinox.servletbridge"/>
+		</antcall>
+		<delete >
+			<fileset dir="${buildDirectory}/${buildLabel}" includes="org.eclipse.equinox.servletbridge*.jar"></fileset>
+		</delete>
+		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+			<property name="builder" value="${basedir}/W3warFile" />
+		</ant>
+	  </target>
+
     <target name="populate">
         <condition property="getMethod" value="fromGit" else="localCopy">
             <not>
@@ -101,40 +116,42 @@
                 </antcall>
             </sequential>
         </macrodef>
-        
+
         <!-- -->
         <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
         <!-- -->
-        
+
         <populateDir project="davinci.core"/>
-        <populateDir project="davinci.dojo_1_6"/>
+        <populateDir project="davinci.dojo_1_7"/>
         <populateDir project="davinci.html"/>
         <populateDir project="davinci.jqueryui_1_8"/>
         <populateDir project="davinci.product" extPath="/releng"/>
         <populateDir project="davinci.yui_2_6_0"/>
-        
+
         <populateDir project="davinci.joomla"/>
         <populateDir project="davinci.review"/>
-        
+
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
-    	
+
+        <!--
         <populateDir project="javax.activation"/>
         <populateDir project="javax.mail"/>
+        -->
 
     	<populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
-    	
+
         <!--
         <populateDir project="org.eclipse.equinox.server.core" isFeature="true" extPath="/releng"/>
         <populateDir project="org.eclipse.equinox.server.servletbridge" isFeature="true" extPath="/releng"/>
-        
+
         <populateDir project="org.eclipse.equinox.http.servletbridge"   extPath="/releng"/>
         <populateDir project="org.eclipse.equinox.servletbridge"   extPath="/releng"/>
         <populateDir project="org.eclipse.equinox.servletbridge.extensionbundle"   extPath="/releng"/>
         -->
-        
+
     </target>
-    
+
     <target name="localCopy">
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
@@ -148,7 +165,7 @@
         </copy>
         <defaultexcludes default="true"/>
     </target>
-    
+
     <target name="fromGit">
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
@@ -162,7 +179,7 @@
         </copy>
         <defaultexcludes default="true"/>
     </target>
-    
+
     <target name="buildPlugin">
         <property name="pluginDestination" value="${buildDirectory}/${buildLabel}"/>
         <eclipse.generateFeature
@@ -182,7 +199,7 @@
             <property name="topLevelElementId " value="${pluginName}.feature"/>
             <property name="javacfailonerror" value="true"/>
         </ant>
-        
+
         <!-- at this point the plugin is in a zip file,  unzip the jar to the desired location -->
         <property name="tmpDir" value="${buildDirectory}/tempJar"/>
         <mkdir dir="${tmpDir}"/>
@@ -194,9 +211,9 @@
         <delete dir="${tmpDir}"/>
         <delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
         <delete dir="${buildDirectory}/features/${pluginName}.feature"/>
-        
+
     </target>
-    
+
     <target name="makeEar">
         <mkdir dir="${assemblyTempDir}"/>
         <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}"/>
@@ -208,7 +225,7 @@
         </zip>
         <delete dir="${assemblyTempDir}"/>
     </target>
-    
+
     <!-- create a new zip file from the base zip file with a new plugin added -->
     <target name="updateZip">
         <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
@@ -217,20 +234,20 @@
         <mkdir dir="${tempDir}"/>
         <!-- unzip the base zip file -->
         <unzip dest="${tempDir}" src="${maqettaZipPath}"/>
-    	
+
         <!-- build the plugin being added -->
         <antcall target="buildPlugin">
             <param name="pluginName" value="${addPlugin}"/>
             <param name="pluginDestination" value="${tempDir}/plugins"/>
         </antcall>
-        
+
         <!-- add the plugin to the config.ini -->
         <replaceregexp file="${tempDir}/configuration/config.ini"
          match="davinci.core@4:start(.*)"
          replace="davinci.core@4:start,${addPlugin}@5:start\1"
          byline="true"
         />
-        
+
         <!-- make the new zip file -->
         <zip destfile="${buildDirectory}/${buildLabel}/${newZipName}" filesonly="false">
             <zipfileset dir="${tempDir}" includes="**/**" excludes=""/>
@@ -238,33 +255,33 @@
         </zip>
         <delete dir="${tempDir}"/>
     </target>
-    
+
     <!-- create a new war file from the base war file with a new plugin added -->
     <target name="updateWar">
         <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
         <property name="maqettaWarPath" value="${buildDirectory}/${buildLabel}/${warFileName}.war"/>
         <mkdir dir="${tempDir}"/>
-    	
+
         <!-- unzip the base zip file -->
         <unzip dest="${tempDir}" src="${maqettaWarPath}"/>
-    	
+
         <!-- build the plugin being added -->
         <antcall target="buildPlugin">
             <param name="pluginName" value="${addPlugin}"/>
             <param name="pluginDestination" value="${tempDir}/WEB-INF/plugins"/>
         </antcall>
-        
-        
+
+
         <path id="mystery.file.id">
             <fileset dir="${tempDir}/WEB-INF/plugins">
                 <include name="${addPlugin}*.jar"/>
             </fileset>
         </path>
-        
+
         <property name="mystery.file" refid="mystery.file.id"/>
         <basename property="newJarName" file="${mystery.file}"/>
         <basename property="newPluginName" file="${mystery.file}" suffix=".jar"/>
-        
+
         <!-- add the plugin to the config.ini -->
         <concat destfile="${tempDir}/WEB-INF/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info"
          append="yes">
@@ -275,20 +292,20 @@
          replace="${addPlugin},\1"
          byline="true"
         />
-        
+
         <!-- make the new zip file -->
         <zip destfile="${buildDirectory}/${buildLabel}/${newWarName}" filesonly="false">
             <zipfileset dir="${tempDir}" includes="**/**" excludes=""/>
         </zip>
         <delete dir="${tempDir}"/>
     </target>
-    
+
     <target name="clean" depends="init">
-        
+
         <defaultexcludes remove="**/.gitignore"/>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>
-        
+
         <delete includeemptydirs="true">
             <fileset dir="${buildDirectory}" includes="plugins/,features/,result/,*.properties,*.xml"/>
         </delete>
@@ -296,5 +313,5 @@
         <mkdir dir="${buildDirectory}/plugins"/>
         <mkdir dir="${buildDirectory}/features"/>
     </target>
-    
+
 </project>

@@ -1,6 +1,6 @@
 dojo.provide("davinci.actions.SelectThemeAction");
 dojo.require("davinci.actions.Action");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 dojo.require("davinci.ui.widgets.ThemeSelection");
 dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
@@ -13,8 +13,8 @@ dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 		
 		var theme = e.getContext().getTheme();
 			
-
-		this._themeChooser = new davinci.ui.widgets.ThemeSelection({value:theme});
+	
+		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false});
 		
 		//this._themeChooser.set('value', theme);
 		davinci.Workbench.showModal(this._themeChooser, "Select a theme", "width:130px");

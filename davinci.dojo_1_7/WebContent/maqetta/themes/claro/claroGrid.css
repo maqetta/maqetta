@@ -1,0 +1,268 @@
+/* @import url("Grid.css"); */
+
+.claro .dojoxGrid {
+	background-color: #e9e9e9;
+	font-size: 0.85em; /* inherit font-family from dojo.css */
+}
+
+/* master messages */
+
+.claro .dojoxGridMasterMessages {
+	background-color: #fefefe;
+}
+
+.claro .dojoxGridLoading, 
+.claro .dojoxGridError {
+	background-position:left center;
+	background-repeat: no-repeat;
+	padding-left:25px;
+}
+
+.dijitRtl .claro .dojoxGridLoading, 
+.dijitRtl .claro .dojoxGridError,
+.dijitRtl .claro .dojoxGridNoData {
+	background-position:right;
+	padding-right:25px;
+	padding-left:0px;
+}
+
+.claro .dojoxGridLoading {
+	background-image: url('../../../dijit/themes/claro/images/loading.gif');
+}
+
+.claro .dojoxGridError {
+	background-image: url('../../../dijit/themes/claro/images/warning.png');
+}
+
+/* header */
+
+.claro .dojoxGridHeader {
+	background-color:  #e9e9e9;
+}
+
+.claro .dojoxGridHeader .dojoxGridCell { 
+	border-width: 1px;
+	padding-bottom: 0px;
+	border-color: transparent #ACA899 #919191 transparent;
+	background: url(../../../dijit/themes/claro/images/tabEnabled.png) #e9e9e9 repeat-x top;
+	color: #000 !important;
+}
+
+.claro .dojoxGridHeader .dojoxGridCellOver {
+	background: url(../../../dijit/themes/claro/images/tabHover.png) #e9e9e9 repeat-x top;
+	color: #000 !important;
+}
+.claro .dojoxGridHeader .dojoxGridCellFocus {
+	border-color: #ACA899 #919191;
+	border-style: dashed;
+}
+.claro .dojoxGridArrowButtonChar {
+	float: right;
+	display: none;
+}
+.claro .dojoxGridArrowButtonNode {
+	display: block !important;
+	padding-left: 0px;
+	float: right;
+	background:url("../../../dijit/themes/claro/images/spriteArrows.png") no-repeat left center;
+	width: 7px;
+	height: 1em;
+	margin: 2px 4px 0px 5px;
+}
+.dj_ie6 .claro .dojoxGridArrowButtonNode {
+	background-image:url("../../../dijit/themes/claro/images/spriteArrows.gif");
+	margin-left: 0px;
+}
+
+.claro .dojoxGridSortUp .dojoxGridArrowButtonNode {
+	background-position: -21px;
+}
+.dijit_a11y .claro .dojoxGridArrowButtonNode {
+	display: none !important;
+}
+
+/* content */
+
+.claro .dojoxGridScrollbox {
+	background-color: #fefefe;
+}
+
+/* rowbar */
+
+.claro .dojoxGridRowbar { 
+	border: none;
+	background: url(images/tabEnabled_rotated.png) #e9e9e9 repeat-y right;
+	border-right: 1px solid #ccc;
+	padding: 0px;
+}
+
+.claro .dojoxGridRowbarInner {
+	border: none;
+	border-bottom: 1px solid #ccc;
+}
+
+.claro .dojoxGridRowbarOver {
+	background: url(images/tabHover_rotated.png) #e9e9e9 repeat-y right;
+}
+
+.claro .dojoxGridRowbarSelected {
+	background: url(../../../dijit/themes/claro/images/tabDisabled.png) #D8E8F9 no-repeat center;
+	border-right: 1px solid #ccc;
+}
+
+/* rows */
+
+.claro .dojoxGridRow {
+	border: none;
+	background-color: white;
+}
+
+.claro .dojoxGridRowOver {
+	border-top-color: #ccc;
+	border-bottom-color: #ccc;
+}
+
+.claro .dojoxGridRowOver .dojoxGridCell {
+	background-color: #60a1ea; 
+	color:#fff;
+}
+
+.claro .dojoxGridRowOver .dojoxGridCell .dijit {
+	color: #000;
+}
+
+.claro .dojoxGridRowOver .dojoxGridCell .dijitDisabled {
+	color: gray;
+}
+
+.claro .dojoxGridRowOdd {
+	background-color: #f2f5f9;
+}
+
+.claro .dojoxGridRowSelected {
+	background-color: #aec7e3 !important;
+}
+
+.dijit_a11y .claro .dojoxGridRowSelected { 
+    background-color: #aec7e3;     
+    border-style: solid;     
+}   
+
+/* cells */
+
+.claro .dojoxGridCell {
+	border: 1px dotted #D5CDB5;
+	border-left-color: transparent;
+	border-top-color: transparent;
+}
+
+.dj_ff2 .claro .dojoxGridCell {
+	border-left-width: 0px;
+	border-top-width: 0px;
+}
+
+.dj_ie6 .claro .dojoxGridCell {
+	border: 1px solid white;
+	border-right: 1px solid #D5CDB5;
+}
+
+.claro .dojoxGridCellFocus {
+	border: 1px dashed darkblue !important;
+}
+
+.claro .dojoxGridCellOver {
+	border: 1px dotted #a6a6a6;
+}
+
+.claro .dojoxGridCellFocus .dojoxGridCellOver {
+	border: 1px dashed darkblue !important;
+}
+
+/* editing */
+
+/* FIXME: these colors are off! */
+.claro .dojoxGridRowEditing td {
+	/* background-color: #F4FFF4; */
+	background-color: #60a1ea; 
+	/* padding: 0px 3px 0px 3px; */
+}
+
+.claro .dojoxGridRow-inserting td {
+	background-color: #F4FFF4;
+}
+.claro .dojoxGridRow-inflight td {
+	background-color: #F2F7B7;
+}
+.claro .dojoxGridRow-error td {
+	background-color: #F8B8B6;
+}
+
+/* Drag and Drop */
+
+.claro .dojoxGrid .dojoDndItemBefore {
+	border-left-color: #3559ac;
+}
+.claro .dojoxGrid .dojoDndItemAfter {
+	border-right-color: #3559ac;
+}
+
+/* Tree Grid */
+.claro .dojoxGridExpando {
+	float: left;
+	height: 18px;
+	width: 18px;
+	text-align: center;
+	margin-top: -3px;
+}
+.dijitRtl .claro .dojoxGridExpando {
+	float: right;
+}
+.claro .dojoxGridExpandoCell {
+	padding-top: 5px;
+}
+.claro .dojoxGridExpandoNode {
+	height: 18px;
+	background-image: url('../../../dijit/themes/claro/images/treeExpand_plus.gif');
+}
+.claro .dojoxGridExpandoOpened .dojoxGridExpandoNode {
+	background-image: url('../../../dijit/themes/claro/images/treeExpand_minus.gif');		
+}
+.claro .dojoxGridExpandoLoading .dojoxGridExpandoNode {
+	background-image: url('../../../dijit/themes/claro/images/treeExpand_loading.gif');		
+}
+.claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpando {
+	visibility: visible !important;
+	width: 18px !important;
+}
+.claro .dojoxGridTreeModel .dojoxGridNoChildren .dojoxGridExpandoNode {
+	background-image: url('../../../dijit/themes/claro/images/treeExpand_leaf.gif');
+	background-position: -3px;
+}
+.claro .dojoxGridExpandoNodeInner {
+	visibility: hidden;
+}
+.dijit_a11y .dojoxGridExpandoNodeInner {
+	visibility: visible;
+}
+		
+.claro .dojoxGridSummaryRow .dojoxGridCell {
+	border-top-color: #999;
+	border-top-style: solid;
+}
+.claro .dojoxGridSpacerCell,
+.claro .dojoxGridExpandoCell,
+.claro .dojoxGridSummaryRow .dojoxGridSpacerCell {
+	border-color: transparent;
+	border-right-color: #D5CDB5;
+}
+.claro .dojoxGridSummaryRow .dojoxGridTotalCell,
+.claro .dojoxGridRowCollapsed .dojoxGridExpandoCell,
+.claro .dojoxGridTreeModel .dojoxGridExpandoCell {
+	border-bottom-color: #D5CDB5;
+}
+.claro .dojoxGridSubRowAlt {
+	background-color: #F8F8F8;
+}
+.claro .dojoxGridRowOdd .dojoxGridSubRowAlt {
+	background-color: #EDEFF3;
+}

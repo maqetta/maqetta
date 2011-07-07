@@ -8,11 +8,13 @@ dojo.require("davinci.ui.widgets.ThemeStore");
 
 dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	
-	constructor : function(){
-		this._themeData = [];
-		
-		var themes = davinci.model.Resource.findResource("*.theme",true,"./themes",true);
+	workspaceOnly : true,
 	
+
+	buildRendering: function(){
+		this._themeData = [];
+		var themes = davinci.resource.findResource("*.theme",true,"./themes",this.workspaceOnly);
+		this._themeCount = themes.length;
 		this._select = dojo.doc.createElement("select");
 		for (var i = 0; i < themes.length; i++){
 			var contents = themes[i].getContents();
@@ -25,13 +27,17 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 			this._select.appendChild(op);
 			
 		}
-	},
-	
-	buildRendering: function(){
+		
 		this.domNode = this._select;
 		dojo.style(this.domNode, "width:100%;");
 		dojo.connect(this._select, "onchange", this, "_onChange");
 	},
+	
+	
+	_getNumberOfThemesAttr : function(){
+		return this._themeCount;
+	},
+	
 	_setValueAttr : function(value){
 		var selection = value;
 		if(value && value.className){

@@ -1,7 +1,7 @@
 dojo.provide("davinci.ui.widgets.OpenFileDialog");
 	
 dojo.require("davinci.ui.Panel");
-dojo.require("davinci.model.Resource");
+dojo.require("davinci.resource");
 
 //
 //  usage:
@@ -14,7 +14,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 	
 	constructor : function (parms)
 	{
-	      this.filter=new davinci.model.Resource.FileTypeFilter(parms.fileTypes || "*");
+	      this.filter=new davinci.resource.FileTypeFilter(parms.fileTypes || "*");
 	      dojo.mixin(this, parms);
 	      davinci.ui.widgets.OpenFileDialog.filter=this.filter;
 	},

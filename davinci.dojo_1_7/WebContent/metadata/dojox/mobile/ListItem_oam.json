@@ -1,0 +1,89 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/ListItem",
+    "name": "dojox.mobile.ListItem",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.parser');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/iphone/iphone.css",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../"
+        }
+    },
+    "property": {
+        "transition": {
+            "datatype": "string",
+            "defaultValue": "slide"
+        },
+        "transitionDir": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "icon": {
+            "datatype": "string"
+        },
+        "iconPos": {
+            "datatype": "string"
+        },
+        "moveTo": {
+            "datatype": "string"
+        },
+        "href": {
+            "datatype": "string"
+        },
+        "hrefTarget": {
+            "datatype": "string"
+        },
+        "url": {
+            "datatype": "string"
+        },
+        "callback": {
+            "datatype": "string"
+        },
+        "sync": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "ListItem"
+        },
+        "rightText": {
+            "datatype": "string"
+        },
+        "btnClass": {
+            "datatype": "string"
+        },
+        "anchorLabel": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "noArrow": {
+            "datatype": "boolean",
+            "defaultValue": false
+        }
+    },
+    "content": "<li label='ListItem'></li>"
+}

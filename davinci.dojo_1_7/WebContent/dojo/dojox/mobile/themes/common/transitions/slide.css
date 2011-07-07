@@ -1,0 +1,34 @@
+.mblSlide.mblOut {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblSlideOut;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform: translateX(-100%);
+}
+.mblSlide.mblIn {
+	-webkit-animation-duration: .4s;
+	-webkit-animation-name: mblSlideIn;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform: translateX(0px);
+}
+.mblSlide.mblOut.mblReverse {
+	-webkit-animation-name: mblSlideOutReverse;
+}
+.mblSlide.mblIn.mblReverse {
+	-webkit-animation-name: mblSlideInReverse;
+}
+@-webkit-keyframes mblSlideOut {
+	from { -webkit-transform: translateX(0px); }
+	to { -webkit-transform: translateX(-100%); }
+}
+@-webkit-keyframes mblSlideIn {
+	from { -webkit-transform: translateX(100%); }
+	to { -webkit-transform: translateX(0px); }
+}
+@-webkit-keyframes mblSlideOutReverse {
+	from { -webkit-transform: translateX(0px); }
+	to { -webkit-transform: translateX(100%); }
+}
+@-webkit-keyframes mblSlideInReverse {
+	from { -webkit-transform: translateX(-100%); }
+	to { -webkit-transform: translateX(0px); }
+}

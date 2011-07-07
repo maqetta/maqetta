@@ -5,4 +5,4 @@ dojo.provide("davinci.version");
        //              Current version number for the software.
 =====*/
 
-davinci.version="Preview 1.0.1";
+davinci.version="Preview 2";

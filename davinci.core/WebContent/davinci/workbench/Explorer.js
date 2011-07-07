@@ -79,7 +79,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 
 		var popup=davinci.Workbench.createPopup({
 			partID: 'davinci.ui.navigator',
-			domNode: this.tree.domNode,
+			domNode: this.tree.domNode/*,
 			openCallback:function (event)
 			{
 //				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
@@ -93,7 +93,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 //					tree._selectNode(w);
 //				}
 				tree.set("selectedNodes", [w]);
-			}});
+			}*/});
 	},
 
 	destroy: function(){

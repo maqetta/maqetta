@@ -1,6 +1,7 @@
 package org.davinci.server.review;
 
 import java.io.IOException;
+
 import java.net.URL;
 
 import javax.servlet.ServletException;
@@ -15,15 +16,12 @@ import org.davinci.server.ServerManager;
 import org.davinci.server.VURL;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.User;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.osgi.framework.Bundle;
 
 public class DavinciReviewServlet extends DavinciPageServlet {
 	private ReviewManager reviewManager;
 
-	private static String LOGIN_URL = "http://maqetta.org/index.php?option=com_user&view=login";
 
 	public void initialize() {
 		serverManager = ServerManager.createServerManger(getServletConfig());
@@ -131,22 +129,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		}
 	}
 
-	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
-		if (welcomeExtension==null)
-			writeInternalPage(req, resp, "welcome.html");
-		else{
-			String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
-			Bundle bundle=Activator.getActivator().getOtherBundle(name);
-			if (bundle!=null)
-			{
-				String path=welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
-				VURL resourceURL = new VURL(bundle.getResource(path));
-				this.writePage(req, resp, resourceURL, false);
-			}
-
-		}
-	}
+	
 
 	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp,IPath path) throws ServletException, IOException {
 		// Remove the follow URL prefix

@@ -48,14 +48,15 @@ public class DavinciPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(serverManager==null)
             initialize();
-
+        String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
+        
         User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String pathInfo = req.getPathInfo();
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
         }
 
-        if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/"))) {
+        if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam==null) {
             if (!ServerManager.LOCAL_INSTALL) {
                 if (user == null) {
                     resp.sendRedirect("./welcome");
@@ -66,11 +67,8 @@ public class DavinciPageServlet extends HttpServlet {
                 /* local install, set user to single user */
                 user = this.userManager.getSingleUser();
                 req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-                if (req.getParameter(IDavinciServerConstants.PREVIEW_PARAM)!=null) {
-                	handlePreview(req,resp);
-                }else{
-                	writeInternalPage(req, resp, "pagedesigner.html");
-                }
+                writeInternalPage(req, resp, "pagedesigner.html");
+               
             }
         } else if (pathInfo.equals("/welcome")) {
             /* write the welcome page (may come from extension point) */

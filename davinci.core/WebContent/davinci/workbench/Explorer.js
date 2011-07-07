@@ -55,14 +55,19 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			showRoot:false,
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
-			getIconClass: dojo.hitch(this,this._getIconClass),
+			getIconClass: this._getIconClass,
 			transforms: [davinci.resource.alphabeticalSort],
-			dndController: dojo.declare("", null, { // dijit.Tree does not appear to allow null for dndController.  Pass in a dummy as long as we do our own DnD
-				setSelection: function(){},
-				userSelect: function(){},
-				removeTreeNode: function(){}
-			}),
 			isMultiSelect: true});
+
+		// the default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
+		var handler = tree.dndController.onMouseDown;
+		tree.dndController.onMouseDown = function(event){
+			var stop = dojo.stopEvent;
+			dojo.stopEvent = function(){};
+			handler.call(tree.dndController, event);
+			dojo.stopEvent = stop;	
+		};
+
 		this.setContent(tree); 
 		tree.startup();
 
@@ -74,7 +79,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 
 		var popup=davinci.Workbench.createPopup({
 			partID: 'davinci.ui.navigator',
-			domNode: this.tree.domNode/*,
+			domNode: this.tree.domNode,
 			openCallback:function (event)
 			{
 //				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
@@ -84,13 +89,11 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 //					dojo.style(this._menu.domNode, "display", "none");
 					return;
 				}
-				if (dojo.indexOf(tree.get("selectedNodes"), w) == -1){
-debugger;
+//				if (dojo.indexOf(tree.get("selectedNodes"), w) == -1){
 //					tree._selectNode(w);
-				}
-				tree.set("selectedNode", w);
-debugger;
-			}*/});
+//				}
+				tree.set("selectedNodes", [w]);
+			}});
 	},
 
 	destroy: function(){

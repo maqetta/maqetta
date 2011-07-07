@@ -11,25 +11,12 @@ dojo.require("davinci.ve.commands.ResizeCommand");
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
 	constructor: function(data) {
-		// XXX For most widgets, 'data' comes in as:
-		//			{ type,
-		//			  properties,
-		//			  children
-		//			}
-		//  Some widgets may choose to define their own 'data' object:
-		//			{  type,
-		//			   widget_data
-		//			}
-		//  Since this is all a temporary solution (until we implement a clean
-		//  interface for the CreateTool subclasses), we set 'this._data'
-		//  accordingly, so as to not have to change the rest of the code that
-		//  makes use of 'this._data'.
-		this._type = data.type;
-		this._data = data.widget_data || data;
-
-		var resizable = davinci.ve.metadata.queryDescriptor(this._type, "resizable");
-		if (resizable !== "none") {
-			this._resizable = resizable;
+		this._data = data;
+		if (data && data.type) {
+			var resizable = davinci.ve.metadata.queryDescriptor(data.type, "resizable");
+			if (resizable !== "none") {
+				this._resizable = resizable;
+			}
 		}
 	},
 
@@ -320,9 +307,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		
 		// Returns 'true' if the dropped widget is allowed as a child of the
 		// given parent.
-		// NOTE: uses following vars from parent context: 'childType',
-		// 'allowedParent', 'queryDescriptor'
-		function isAllowed(parent) {
+		function isAllowed(children, parent) {
 			var parentType = parent instanceof davinci.ve._Widget ?
 					parent.type : parent._dvWidget.type;
 			var descriptor = queryDescriptor(parentType),
@@ -336,45 +321,62 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			allowedChild = allowedChild.split(/\s*,\s*/);
 			parentClassList = getClassList(parentType, descriptor);
 			
-			var isAllowedChild = allowedChild[0] !== "NONE" &&
-								 (allowedChild[0] === "ANY" ||
-								  containsClass(allowedChild, childClassList));
-			var isAllowedParent = allowAnyParent ||
-								  containsClass(allowedParent, parentClassList);
-			return isAllowedChild && isAllowedParent;
+			// Cycle through children, making sure that all of them work for
+			// the given parent.
+			return children.every(function(child){
+				var isAllowedChild = allowedChild[0] !== "NONE" &&
+									 (allowedChild[0] === "ANY" ||
+									  containsClass(allowedChild, child.classList));
+				var isAllowedParent = child.allowedParent[0] === "ANY" ||
+									  containsClass(child.allowedParent, parentClassList);
+				return isAllowedChild && isAllowedParent;
+			});
 		}
 		
 		// get data for widget we are adding to page
 		var queryDescriptor = davinci.ve.metadata.queryDescriptor,
 			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
 			newTarget = target,
-			childType = this._type,
-			childClassList,
-			childDescriptor = queryDescriptor(childType),
-			allowedParent = childDescriptor.allowedParent || "ANY",
-			allowAnyParent;
-		allowedParent = allowedParent.split(/\s*,\s*/);
-		allowAnyParent = allowedParent[0] === "ANY";
-		childClassList = getClassList(childType, childDescriptor);
+			data = this._data.length ? this._data : [this._data],
+			children = [];
 
-		while (newTarget && ! isAllowed(newTarget)) {
+		// 'this._data' may represent a single widget or an array of widgets.
+		// Get data for all widgets, for use later in isAllowed().
+		data.forEach(function(elem) {
+			var descriptor = queryDescriptor(elem.type),
+				child;
+			child = {
+				allowedParent: descriptor.allowedParent || "ANY",
+				classList: getClassList(elem.type, descriptor)
+			};
+			child.allowedParent = child.allowedParent.split(/\s*,\s*/);
+			children.push(child);
+		});
+
+		while (newTarget && ! isAllowed(children, newTarget)) {
 			newTarget = getEnclosingWidget(newTarget);
 		}
 		
 		// If no valid target found, throw error
 		if (! newTarget) {
-			var errorMsg = ['No valid target for widget found.\n',
+			var typeList = [];
+			data.forEach(function(elem) {
+				typeList.push(elem.type);  
+			});
+			
+			var errorMsg = ['No valid target for widget(s) found.\n',
 			                '\n',
-			                'The selected target for the widget [',
-			                childType,
+			                'The selected target for the widget(s) [',
+			                typeList.join(', '),
 			                '] was not valid.\n'].join('');
-			if (allowedParent) {
+			// XXX Need to update this message for multiple widgets
+			if (children.length === 1 && children[0].allowedParent) {
 				errorMsg += ['The widget requires ',
-				             allowedParent.length > 1 ?
+				             children[0].allowedParent.length > 1 ?
 				            		 'one of the following parent types' :
 				            			 'the parent type',
 				             ' [',
-				             allowedParent.join(', '),
+				             children[0].allowedParent.join(', '),
 				             '].'].join('');
 			}
 			throw new Error(errorMsg);

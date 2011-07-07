@@ -178,8 +178,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 				name: item.name,
 				paletteId: this.id,
 				type: item.type,
-				data: item.data ? {type: item.type, widget_data: item.data} :
-					  {type: item.type, properties: item.properties, children: item.children},
+				data: item.data || {type: item.type, properties: item.properties, children: item.children},
 				tool: item.tool
 			};
 			this._createItem(opt);

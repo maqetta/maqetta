@@ -346,7 +346,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			var descriptor = queryDescriptor(elem.type),
 				child;
 			child = {
-				allowedParent: descriptor.allowedParent || "ANY",
+				allowedParent: (descriptor && descriptor.allowedParent) || "ANY",
 				classList: getClassList(elem.type, descriptor)
 			};
 			child.allowedParent = child.allowedParent.split(/\s*,\s*/);

@@ -90,18 +90,15 @@
         "required": {
             "datatype": "boolean",
             "title": "Required",
-            "hidden": true
         },
         "promptMessage": {
             "datatype": "string",
-            "title": "Prompt Message",
-            "hidden": true
+            "title": "Prompt Message"
         },
         "invalidMessage": {
             "datatype": "string",
             "defaultValue": "The value entered is not valid.",
-            "title": "Invalid Message",
-            "hidden": true
+            "title": "Invalid Message"
         },
         "constraints": {
             "datatype": "json",
@@ -111,15 +108,27 @@
         },
         "tooltipPosition": {
             "datatype": "array",
+            "option": [
+                {
+                    "value": "[before]"
+                },
+                {
+                    "value": "[after]"
+                },
+                {
+                    "value": "[above]"
+                },
+                {
+                    "value": "[below]"
+                }
+            ],
             "defaultValue": "[]",
-            "title": "Tooltip Positions",
-            "hidden": true
+            "title": "Tooltip Positions"
         },
         "rangeMessage": {
             "datatype": "string",
             "defaultValue": "This value is out of range.",
-            "title": "Range Message",
-            "hidden": true
+            "title": "Range Message"
         },
         "editOptions": {
             "datatype": "json",

@@ -107,14 +107,14 @@ dojo.declare("davinci.ui.Editor", null, {
 		if (this._dontNotifyChange) {
 			return;
 		}
-		this.lastChangeStamp = +new Date;
+		this.lastChangeStamp = Date.now();
 		if (this.handleChange && !("waiter" in this)) {
 			try {
 				// don't process keystrokes until the user stops typing
 				// keep re-executing the following closure until the doLater condition is satisfied
 				this.waiter = true;
 				(function(that){
-					if (dojox.timing.doLater(new Date - that.lastChangeStamp > 200, that)) { return; }
+					if (dojox.timing.doLater(Date.now() - that.lastChangeStamp > 200, that)) { return; }
 					delete that.waiter;
 					that.handleChange(that._textModel.getText());
 				})(this);
@@ -122,7 +122,7 @@ dojo.declare("davinci.ui.Editor", null, {
 		}
 	},
 	
-	update_size : function(){
+	update_size: function(){
 		
 	},
 		

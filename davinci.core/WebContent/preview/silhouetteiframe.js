@@ -33,6 +33,15 @@ if (!window.preview) {
 
 // Class constructor
 preview.silhouetteiframe = function(args){
+	this.themeMap = []; // map silhouette files to dojo mobile theme names
+	this.themeMap['android_340x480.svg'] = 'Android';
+	this.themeMap['android_480x800.svg'] = 'Android';
+	this.themeMap['androidtablet.svg'] = 'Android';
+	this.themeMap['bbplaybook.svg'] = 'BlackBerry';
+	this.themeMap['blackberry.svg'] = 'BlackBerry';
+	this.themeMap['ipad.svg'] = 'iPad';
+	this.themeMap['iphone.svg'] = 'iPhone';
+	
 	var rootNode = this.rootNode = args.rootNode;
 	if(!rootNode){
 		console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
@@ -173,6 +182,7 @@ preview.silhouetteiframe.prototype = {
 			silhouetteiframe_object_container.innerHTML = '<object class="silhouetteiframe_object" data="'+
 				this.svgfilename+'" type="image/svg+xml" '+
 				'onload="event.target.parentNode.parentNode._silhouetteiframe.svgloadhandler(event.target)"></object>';
+			this.updatePageStyle(this.svgfilename);
 		}else{
 			// Restore element.style on the rootNode and iframe node
 			this._restoreStyle(this.rootNode.style, this._silhouette_div_container_orig_style);			
@@ -477,6 +487,26 @@ preview.silhouetteiframe.prototype = {
 			a1_elem.beginElement();
 			a2_elem.beginElement();
 		}
+	},
+	
+	updatePageStyle: function(fileName){
+		debugger;
+
+
+		var silhouetteiframe_iframe = this.rootNode.querySelectorAll(".silhouetteiframe_iframe")[0];
+		if(!silhouetteiframe_iframe){
+			return;
+		}
+		var path = fileName.split('/');// just get the first part of the file name android_340... or ipad
+		var file = path[path.length-1];
+		theme = this.themeMap[file];
+		var parts = silhouetteiframe_iframe.src.split('?');
+		var url = parts[0];
+		if (parts.length == 1 || parts[1]  != 'theme='+theme){ // only reload if device theme has changed
+			silhouetteiframe_iframe.src = url + '?theme='+theme;
+		}
+		
+		
 	}
 
 }

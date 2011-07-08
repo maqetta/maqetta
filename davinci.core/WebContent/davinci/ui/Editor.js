@@ -88,7 +88,7 @@ dojo.declare("davinci.ui.Editor", null, {
 	},
 	_updateStyler: function () {
 		var extension=this.fileName.substr(this.fileName.lastIndexOf('.')+1);
-		var map={'js': 'js','json': 'js','html':'html','css':'css'};
+		var map={js: 'js', json: 'js', html:'html', css:'css'};
 		var style=map[extension];
 		
 		if (style)
@@ -100,24 +100,25 @@ dojo.declare("davinci.ui.Editor", null, {
 			if (this.editor){
 //				new eclipse.TextStyler(this.editor, style);
 				this._styler.setView(this.editor);
-		}
+			}
 		}
 	},
 	_onTextChanged: function(textChangeEvent) {
 		if (this._dontNotifyChange) {
 			return;
 		}
-		if (this.handleChange && !("lastChangeStamp" in this)) {
+		this.lastChangeStamp = +new Date;
+		if (this.handleChange && !("waiter" in this)) {
 			try {
-				this.lastChangeStamp = +new Date;
 				// don't process keystrokes until the user stops typing
 				// keep re-executing the following closure until the doLater condition is satisfied
+				this.waiter = true;
 				(function(that){
 					if (dojox.timing.doLater(new Date - that.lastChangeStamp > 200, that)) { return; }
-					delete that.lastChangeStamp;
+					delete that.waiter;
 					that.handleChange(that._textModel.getText());
 				})(this);
-			} catch (e){console.log(e);}
+			} catch (e){console.error(e);}
 		}
 	},
 	
@@ -139,14 +140,15 @@ dojo.declare("davinci.ui.Editor", null, {
 	destroy: function () {
 	},
 
-	select : function (selectionInfo)
+	select: function (selectionInfo)
 	{
 		
 //		var start=this._textModel.getLineStart(selectionInfo.startLine)+selectionInfo.startCol;
 //		var end=this._textModel.getLineStart(selectionInfo.endLine)+selectionInfo.endCol;
 		this._selecting=true;
-		if (this.editor)
+		if (this.editor) {
 			this.editor.setSelection(selectionInfo.startOffset,selectionInfo.endOffset);
+		}
 		this._selecting=false;
 	},
 	getText: function() {

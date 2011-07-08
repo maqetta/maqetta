@@ -136,8 +136,11 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		if(this._values[this._targetValueIndex].readOnly){
 			//FIXME: the commented out message in next line provides a more informative error message
-            //content = "This property change cannot be completed because the operation attempts to modify a read-only theme CSS file. <br><br>To change this property, one technique is to add a class to this widget (at top of Properties palette)  and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.";
-			alert("Error- cant change read only value")
+            var content = "This property change cannot be completed because the operation attempts to modify a read-only theme CSS file. <br><br>To change this property, one technique is to add a class to this widget (at top of Properties palette)  and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.";
+			var errorDialog = new davinci.ui.Error({'errorText': content});
+			davinci.Workbench.showModal(errorDialog, 'Error modifying value');
+            
+            //alert("Error- cant change read only value")
 			this._setFieldValue(this._value,this._loc);
 			return;
 		}else if(this._values[this._targetValueIndex].type=="theme" &&

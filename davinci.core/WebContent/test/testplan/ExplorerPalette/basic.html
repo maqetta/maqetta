@@ -25,7 +25,7 @@
 		<li>Look at Files palette. You should see an initial set of files. For 0.6, there is Sample1.html, Sample2.html, SampleBanner.jpg, SampleJs.js, app.css and a themes/ folder with dijit.css, dijit_rtl.css and two folders (claro, sketch) each with many files inside.</li>
 		<li>Verify the tree control and that you can expand and close folders by clicking on + and - squares.</li>
 		<li>With the mouse inside of the Files palette's main area, click the right mouse button (or Ctrl-click on Mac) to bring up context menu. 
-		You should see <!-- DISABLED FOR NOW. SEE #43 "New file...",--> "New folder...", "Upload file", "Delete resource", "Add link" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
+		You should see <!-- DISABLED FOR NOW. SEE #43 "New file...",--> "New folder...", "Upload file", "Delete resource" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
 		<li>Try double-clicking on the various file types to make sure that the appropriate editor is launched.
 			<ul>
 				<li>Double-click on Sample1.html. The page editor should show the sample contents, which (with 0.5 completed) should include a states demo where some controls appear and disappear at runtime depending on what the user clicks on at runtime.</li>
@@ -121,33 +121,6 @@
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
 		<li>See description above for expected results.</li>
-	</ol>
-
-	<h2 class="test_section">add link</h2>
-	<h3 class="steps_subsection">Steps</h3>
-	<ol class="steps">
-        <li>Warning: Currently if you delete a link using "Delete resource", it will delete the directory from your
-        local file system. Therefore all the tests should only be done using a temporary test directory on your local file system.</li>
-        <li>Create a test directory on your local file system (we'll call it "test").</li>
-        <li>Copy some files into the test directory. (Include HTML, CSS, Javascript or image files.)</li>
-		<li>In Maqetta, bring up the Files palette context menu and select "Add link".
-        A dialog titled "Select Directory to link to" will be displayed, with a list of your local file directories.</li>
-        <li>Scroll down and select the "test" directory.</li>
-        <li>In the "Local Name" text box enter "test".</li>
-        <li>Click the "Link" button.</li>
-        <li>Expand the test folder and open some of the files from the folder.</li>
-	</ol>
-	<h3 class="expectedResults_subsection">Expected results</h3>
-	<ol class="expectedResults">
-        <li>When you click the "Link" button you should see a new folder in the Files Palette 
-        (called "test [C:\test] on Windows).</li>
-        <li>Currently Maqetta can only open HTML, CSS, Javascript and image files. 
-        Other files types may hang Maqetta when you try to open them.
-        Non-Maqetta HTML files won't display in design mode, but will show in source mode and you can view them 
-        using Preview in browser. For image files, open a Maqetta HTML file then drag the image onto the canvas.</li>
-        <li><i>Currently if you delete the link using "Delete resource", it will delete the directory from your
-        local file system.</i></li>
-        <li>Known bug: After deleting a link, Maqetta cannot a new link using the same directory name.</li>
 	</ol>
 
 </body>

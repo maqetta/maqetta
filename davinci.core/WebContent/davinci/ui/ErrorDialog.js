@@ -5,32 +5,26 @@ dojo.require("dijit.form.Button");
 
 dojo.declare("davinci.ui.ErrorDialog",   [dijit._Widget, dijit._Templated], {
 	
-	
-	templateString: dojo.cache("davinci.ui", "templates/ErrorDialog.html"),
-	widgetsInTemplate: true,
-	
-	/* check box for rewrite dojo */
-
-	_okButton : null,
-	_cancelButton : null,
-	_errorText : null,
-	
 	/* message */
 	errorText : "I am error!",
-	
 	/* cancel button text */
 	cancelButtonText : "Cancel",
 	/* call back when user clicks "Cancel" */
-	cancelCallBack : function(){this.onClose();},
+	cancelCallBack : function(){},
 	/* ok button text */
 	okButtonText : "OK",
-	
 	/* ok button call back */
-	okCallBack : function(){this.onClose();},
+	okCallBack : function(){},
+
+
 	
-	okButton : function(){this.okCallBack();},
-	cancelButton : function(){this.cancelCallBack();},
-	
+	templateString: dojo.cache("davinci.ui", "templates/ErrorDialog.html"),
+	widgetsInTemplate: true,
+	_okButton : null,
+	_cancelButton : null,
+	_errorText : null,
+	okButton : function(){this.okCallBack();this.onClose();},
+	cancelButton : function(){this.cancelCallBack();this.onClose();},
 	onClose:function(){},
 	
 	_setErrorTextAttr : function(value){

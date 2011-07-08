@@ -88,6 +88,24 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		this._started=true;
 	},
 	
+	
+	_canModifyRule : function(modifiedRule){
+		
+		// not all "rules" passed in are rules, and sometimes they are null (in case of element.style).
+		if(!modifiedRule || !modifiedRule.getCSSFile) // empty object, in cases like element.style there is no rule
+			return true; 
+		
+		var cssFile = modifiedRule.getCSSFile();
+		if(cssFile==null) return true;
+		
+		
+		var resource = cssFile.getResource();
+		return !resource.readOnly;
+		
+	},
+	
+	
+	
 	_onFieldChange : function(){
 		
 		if(this.context)
@@ -114,7 +132,13 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var askUser = false;
 		// New logic: prompt user only if theme CSS files are going to change
 		var content = null;
-		if(this._values[this._targetValueIndex].type=="theme" &&
+
+		
+		if(this._values[this._targetValueIndex].readOnly){
+			alert("Error- cant change read only value")
+			this._setFieldValue(this._value,this._loc);
+			return;
+		}else if(this._values[this._targetValueIndex].type=="theme" &&
 				   editorPrefs['cssOverrideWarn'] &&
 					this._editor.supports("MultiPropTarget")){
 			askUser = true;
@@ -375,6 +399,12 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			/* different class for element.style since we dont want to hide it (but want to hide the X */
 			if(rules[i].type=="element.style" && !rules[i].value)
 				rules[i]['extraClass'].push("elementStyleNode");
+			
+			if(!this._canModifyRule(rules[i].rule)){
+				rules[i]['extraClass'].push("readOnlyRule");
+				rules[i].readOnly = true;
+			}
+			
 		}
 	
 	},
@@ -406,29 +436,21 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 
 		this._radio = [];
 	
-		function isReadOnly(value){
-			
-			if(value && value.rule && value.rule.getCSSFile){
-				var file = value.rule.getCSSFile();
-				var resource = file.getResource();
-				return resource.readOnly;
-			}else{
-				return false;
-			}
-			
-		}
+	
 		
 		for(var i = 0;i<this._values.length;i++){
 			
-			var readOnly = isReadOnly(this._values[i]);
-			
 			var valueString = this._formatRuleString(this._values[i]);
-			this._radio.push( dojo.create("input", {type:'radio', name:this._radioGroupName}) );
+			
+			// uncomment the disabled bit to make read only options unselectable 
+			this._radio.push( dojo.create("input", {'type':'radio', 'name':this._radioGroupName /*, 'disabled': this._values[i].readOnly*/}) );
+			
+			
 			row = dojo.doc.createElement("tr");
 			for(var j=0;j<this._values[i].extraClass.length;j++)
 				dojo.addClass(row,this._values[i].extraClass[j]);
 			
-			 column = dojo.doc.createElement("td");
+			column = dojo.doc.createElement("td");
 			row.appendChild(column);
 			
 			dojo.addClass(column, "cascadeSpacer");
@@ -461,7 +483,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			dojo.addClass(column, "cascadRemove");
 			
 			var button = dojo.doc.createElement("button");
-			dojo.attr(button, "disabled", isReadOnly);
+			dojo.attr(button, "disabled", this._values[i].readOnly);
 			dojo.addClass(button,"cascadeRemoveButton");
 			column.appendChild(button);
 			this._handles.push(dojo.connect(button, "onclick", this, makeRemoveOnChange(i)));
@@ -588,6 +610,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var defaultValue = false;
 		
 		for(var i = 0;i<this._values.length;i++){
+			/* skip read only values */
+			//if(this._values[i]['readOnly']) continue;
+			
 			if((this._values[i].value && !foundValue && !defaultValue) ||
 					(!foundValue && !defaultValue && 
 					 this._values[i].type!="element.style" && 
@@ -612,6 +637,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 	},
 	_getDefaultSelection : function(){
+		
 		var theme = this.context.getThemeMeta();
 		if(!theme)
 			return null;
@@ -677,6 +703,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	
 	_onChange : function(event){
 		var loc = null;
+		
 		if(this._values[event.target].type=="element.style"){
 			loc = this._getBaseLocation();
 		}else if(this._values[event.target].type=="proposal"){

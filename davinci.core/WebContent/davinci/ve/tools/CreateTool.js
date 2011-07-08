@@ -119,6 +119,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			target = this._getAllowedTargetWidget(target);
 		} catch(e) {
 			davinci.Runtime.handleError(e.message);
+			// make sure to reset tool, in order to cancel drag/drop operation
+			this._context.setActiveTool(null);
 			return;
 		}
 

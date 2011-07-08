@@ -19,7 +19,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require("dojox.mobile.deviceTheme");"
+            "$text": "dojo.require('dojox.mobile.deviceTheme');"
         },
       /*  {
             "type": "javascript",

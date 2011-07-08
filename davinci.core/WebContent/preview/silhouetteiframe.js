@@ -497,11 +497,14 @@ preview.silhouetteiframe.prototype = {
 		if(!silhouetteiframe_iframe){
 			return;
 		}
+		var parts = silhouetteiframe_iframe.src.split('?');
+		var url = parts[0];
+		if (url.length < 1){
+			return; // we must be running in the pagedesigner 
+		}
 		var path = fileName.split('/');// just get the first part of the file name android_340... or ipad
 		var file = path[path.length-1];
 		theme = this.themeMap[file];
-		var parts = silhouetteiframe_iframe.src.split('?');
-		var url = parts[0];
 		if (parts.length == 1 || parts[1]  != 'theme='+theme){ // only reload if device theme has changed
 			silhouetteiframe_iframe.src = url + '?theme='+theme;
 		}

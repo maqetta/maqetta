@@ -101,7 +101,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var fileIndex= this.fileIndex = 1;
 		this.reviewFiles = reviewFiles;
 					
-		var sourceTreeModel=this.sourceTreeModel = new davinci.review.actions.ReviewFileTreeModel({
+		var sourceTreeModel=this.sourceTreeModel = new davinci.review.model.ReviewFileTreeModel({
 			root : new davinci.model.Resource.Folder(".",null),
 			foldersOnly:false
 		});
@@ -109,9 +109,9 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			this.addFiles([item]);
 		};
 		var sourceTree= this.sourceTree = new dijit.Tree({
+			id: "reviewWizardSourceTree",
 			showRoot:false,
 			model: sourceTreeModel, 
-			
 			labelAttr: "name", 
 			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
@@ -122,14 +122,14 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();
 		
-		var targetTreeModel=this.targetTreeModel = new davinci.review.actions.ReviewFileTreeModel({
+		var targetTreeModel=this.targetTreeModel = new davinci.review.model.ReviewFileTreeModel({
 			root : new davinci.review.model.Resource.Empty(),
 			foldersOnly:false
 		});
 		var targetTree = this.targetTree = new davinci.review.widgets.Tree({
+			id: "reviewWizardTargetTree",
 			showRoot:false,
 			model: targetTreeModel, 
-			
 			labelAttr: "name", 
 			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
@@ -697,5 +697,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			dojo.unsubscribe(sub);
 		});
 		delete this._subs;
+		this.sourceTree.destroyRecursive();
+		this.targetTree.destroyRecursive();
 	}	
 });

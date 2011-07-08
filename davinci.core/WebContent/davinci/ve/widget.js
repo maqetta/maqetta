@@ -116,16 +116,28 @@ davinci.ve.widget.getStyleString = function(style){
 	return styleStr;
 };
 
-davinci.ve.widget.getEnclosingWidget = function(node){
-	var richText = this.getEnclosingWidgetForRichText(node);
-	if (richText){
+/**
+ * Return instance of "managed" widget which contains the given 'node'.
+ * 
+ * @param {DOMElement | davinci.ve._Widget} node
+ * 			Element for which to find enclosing "managed" widget.
+ * 
+ * @return "managed" widget instance which contains 'node'; 'undefined' if no
+ * 			such valid widget instance is found.
+ * @type {davinci.ve._Widget}
+ */
+davinci.ve.widget.getEnclosingWidget = function(node) {
+	var richText = davinci.ve.widget.getEnclosingWidgetForRichText(node);
+	if (richText) {
 		return richText;
 	}
-	while(node){
-		if (node._dvWidget) {
-			return node._dvWidget;
+	var enc = node;
+	while (enc) {
+		if (enc._dvWidget) {
+			return enc._dvWidget;
 		}
-		node = node.parentNode;
+		//        DOMElement || davinci.ve._Widget
+		enc = enc.parentNode || (enc.domNode && enc.domNode.parentNode);
 	}
 };
 
@@ -134,7 +146,7 @@ davinci.ve.widget.getEnclosingWidgetForRichText = function(node){
 	if (node._dvWidget.type === 'html.stickynote' || node._dvWidget.type === 'html.richtext' ){
 		return node._dvWidget;
 	} else if (node.parentNode){
-		return this.getEnclosingWidgetForRichText(node.parentNode);
+		return davinci.ve.widget.getEnclosingWidgetForRichText(node.parentNode);
 	} else {
 		return null;
 	}
@@ -1257,10 +1269,12 @@ dojo.declare("davinci.ve._Widget",null,{
 //	                value = this.getContext().getContentUrl(value);
 //		            break;
 		        case "date":
-		            value = dojo.date.stamp.toISOString(value, {selector: "date"});
-		            break;
 		        case "time":
-		            value = dojo.date.stamp.toISOString(value, {selector: "time"});
+		        	if(isFinite(value)){
+		        		value = dojo.date.stamp.toISOString(value, {selector: property.format});
+		        	}else{
+		        		value = "";
+		        	}
 		            break;
 		        default:
 		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.

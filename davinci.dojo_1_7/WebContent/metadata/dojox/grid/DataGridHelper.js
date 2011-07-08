@@ -118,7 +118,7 @@ create: function(widget, srcElement){
 
 		if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
 			this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/);
-			//this.replaceStoreData(widget.dijitWidget.store, storeWidget.properties.data);
+
 		}
 	
 	}
@@ -169,36 +169,9 @@ updateStore: function(store, /*properties*/ storeWidget) { //wdr 3-11
 		store.close();
 	}
 	
-	//return this.replaceDataGridStoreData(data);
-	//this.replaceStoreData(store, data);
+
 }
 
-//replaceStoreData: function(store, data) {
-//	// Kludge to force reload of store data
-//	store.clearOnClose = true;
-//	//if (!store.data)
-//	store.data = data;
-//	store.close();
-//	store.fetch({
-//		query: this.query,
-//		queryOptions:{deep:true}, 
-//		onComplete: dojo.hitch(this, function(items){
-//			for (var i = 0; i < items.length; i++) {
-//				var item = items[i];
-//				console.warn("i=", i, "item=", item);
-//			}
-//		})
-//	});
-//}
-//replaceDataGridStoreData: function(data) {
-//	var store = this._widget.dijitWidget.store;
-//
-//	this.replaceStoreData(store, data);
-//
-//	store.data = data;
-//	// FIXME: How do we set this such that the model recognizes the update?
-//	// Berkland: How do we get the corresponding dv widget handle from something like a dojo data store object? Doesn't seem to be any handle attached.
-//	//var dvWidget = davinci.ve.widget.getWidget(store.domNode);
-//}
+
 
 });

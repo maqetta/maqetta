@@ -11,6 +11,8 @@ dojo.require("davinci.ui.NewTheme");
 dojo.require("davinci.actions.OpenThemeEditor");
 dojo.require("davinci.ui.OpenThemeDialog");
 dojo.require("davinci.ui.Resource");
+dojo.require("davinci.ui.ErrorDialog");
+
 
 if (!davinci)
 	davinci={};
@@ -21,6 +23,12 @@ if (!davinci.ui)
 
 davinci.ui.DeployAllDialog=function(){
 	return new davinci.ui.Download();
+	
+	
+}
+davinci.ui.Error=function(arguments){
+
+	return new davinci.ui.ErrorDialog(arguments);
 	
 	
 }

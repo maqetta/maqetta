@@ -42,6 +42,12 @@ preview.silhouetteiframe = function(args){
 	this.themeMap['ipad.svg'] = 'iPad';
 	this.themeMap['iphone.svg'] = 'iPhone';
 	
+	this.themeCssMap = []; // map silhouette files to dojo mobile theme names, for pagedesigner
+	this.themeCssMap['Android'] = ['android/android.css'];
+	this.themeCssMap['BlackBerry'] = ['blackberry/blackberry.css'];
+	this.themeCssMap['iPad'] = ['iphone/iphone.css', 'iphone/ipad.css'];
+	this.themeCssMap['iPhone'] = ['iphone/iphone.css'];
+	
 	var rootNode = this.rootNode = args.rootNode;
 	if(!rootNode){
 		console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
@@ -489,9 +495,23 @@ preview.silhouetteiframe.prototype = {
 		}
 	},
 	
+	getMobileTheme: function(svgFile){
+		
+		var path = svgFile.split('/');// just get the first part of the file name android_340... or ipad
+		var file = path[path.length-1];
+		return this.themeMap[file];
+		
+	},
+	
+	getMobileCss: function(theme){
+		if (!theme){
+			return this.themeCssMap['iPhone'];
+		}
+		return this.themeCssMap[theme];
+	
+	},
+	
 	updatePageStyle: function(fileName){
-		debugger;
-
 
 		var silhouetteiframe_iframe = this.rootNode.querySelectorAll(".silhouetteiframe_iframe")[0];
 		if(!silhouetteiframe_iframe){
@@ -502,9 +522,7 @@ preview.silhouetteiframe.prototype = {
 		if (url.length < 1){
 			return; // we must be running in the pagedesigner 
 		}
-		var path = fileName.split('/');// just get the first part of the file name android_340... or ipad
-		var file = path[path.length-1];
-		theme = this.themeMap[file];
+		var theme = this.getMobileTheme(fileName);
 		if (parts.length == 1 || parts[1]  != 'theme='+theme){ // only reload if device theme has changed
 			silhouetteiframe_iframe.src = url + '?theme='+theme;
 		}
@@ -512,4 +530,35 @@ preview.silhouetteiframe.prototype = {
 		
 	}
 
-}
+};
+
+preview.silhouetteiframe.themeMap = []; // map silhouette files to dojo mobile theme names
+preview.silhouetteiframe.themeMap['android_340x480.svg'] = 'Android';
+preview.silhouetteiframe.themeMap['android_480x800.svg'] = 'Android';
+preview.silhouetteiframe.themeMap['androidtablet.svg'] = 'Android';
+preview.silhouetteiframe.themeMap['bbplaybook.svg'] = 'BlackBerry';
+preview.silhouetteiframe.themeMap['blackberry.svg'] = 'BlackBerry';
+preview.silhouetteiframe.themeMap['ipad.svg'] = 'iPad';
+preview.silhouetteiframe.themeMap['iphone.svg'] = 'iPhone';
+
+preview.silhouetteiframe.themeCssMap = []; // map silhouette files to dojo mobile theme names, for pagedesigner
+preview.silhouetteiframe.themeCssMap['Android'] = ['android/android.css'];
+preview.silhouetteiframe.themeCssMap['BlackBerry'] = ['blackberry/blackberry.css'];
+preview.silhouetteiframe.themeCssMap['iPad'] = ['iphone/iphone.css', 'iphone/ipad.css'];
+preview.silhouetteiframe.themeCssMap['iPhone'] = ['iphone/iphone.css'];
+
+preview.silhouetteiframe.getMobileTheme = function(svgFile){
+	
+	var path = svgFile.split('/');// just get the first part of the file name android_340... or ipad
+	var file = path[path.length-1];
+	return preview.silhouetteiframe.themeMap[file];
+	
+};
+
+preview.silhouetteiframe.getMobileCss = function(theme){
+	if (!theme){
+		return preview.silhouetteiframe.themeCssMap['iPhone'];
+	}
+	return preview.silhouetteiframe.themeCssMap[theme];
+
+};

@@ -115,7 +115,11 @@ dojo.mixin(davinci.resource, {
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
 		*/
-		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+ "&libs="+escape(dojo.toJson(userLibs) );
+		var libString = "";
+		if(userLibs)
+			libString = "&libs="+escape(dojo.toJson(userLibs));
+		
+		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+libString ;
 	},
 	
 

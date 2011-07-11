@@ -23,7 +23,7 @@
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
-		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>From the New menu on the banner, choose "HTML File..."</li>
 		<li>Click Create to accept the default file name (file1.html)</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Close the editor by clicking "x" on editor's tab</li>
@@ -41,7 +41,7 @@
 	<h2 class="test_section">New menu: New HTML File - default filename, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>From the New menu on the banner, choose "HTML File..."</li>
 		<li>Click OK to accept the default file name (file1.html)</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -61,7 +61,7 @@
 	<h2 class="test_section">New menu: New HTML File - different filename in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>From the New menu on the banner, choose "HTML File..."</li>
 		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -77,7 +77,7 @@
 	<h2 class="test_section">New menu: New HTML File - nested directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose New Folder...</li>
+		<li>From the New menu on the banner, choose "Folder..."</li>
 		<li>Type a name for the new folder or accept the default name. Keep the current parent folder as ".".</li>
 		<li>Highlight the new folder name in the Files palette.</li>
 		<li>From the New menu on the banner, choose New HTML File...</li>
@@ -98,7 +98,7 @@
 	<h2 class="test_section">New menu: New CSS File - different filename in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose New CSS File...</li>
+		<li>From the New menu on the banner, choose "CSS File..."</li>
 		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
 		<li>Add some text to the file, such as ".foo { color:red; }"</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -114,7 +114,7 @@
 	<h2 class="test_section">New menu: New JavaScript File - different filename in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose New JavaScript File...</li>
+		<li>From the New menu on the banner, choose "JavaScript File..."</li>
 		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
 		<li>Add some text to the file, such as "// a comment"</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -131,7 +131,7 @@
 	<h2 class="test_section">New menu: New File - in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose New File...</li>
+		<li>From the New menu on the banner, choose "File..."</li>
 		<li>Type a new file name, such as "a.txt", within the default directory.</li>
 		<li>Add some text to the file, such as "some text"</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -145,10 +145,25 @@
 	</ol>
 -->
 
-	<h2 class="test_section">Open menu: Open File</h2>
+	<h2 class="test_section">New menu: New theme </h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the Open menu on the banner, choose Open File...</li>
+		<li>From the New menu on the banner, choose "Theme..."</li>
+		<li>Enter a new theme name, such as "mytheme1", and click OK</li>
+		<li>Look under <code>themes/</code> folder in Files palette and look for a folder with the name you have provided.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>There should be a new folder <code>themes/mytheme1/</code>, inside of which should be many CSS files and files mytheme1.json and mytheme1.theme.</li>
+	</ol>
+
+	<h2 class="test_section">New menu: New review </h2>
+	<p>(Review and commenting testing is provided elsewhere)</p>
+
+	<h2 class="test_section">Open menu: File...</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the Open menu on the banner, choose "File..."</li>
 		<li>From the file dialog that appears, select the "Sample1.html" file in the root folder and click "OK".</li>
 		<li>Close the editor by clicking "x" on editor's tab</li>
 	</ol>
@@ -157,15 +172,15 @@
 		<li>After clicking OK in the Open File dialog, Sample1.html should have appear in the visual editor.</li>
 	</ol>
 
-	<h2 class="test_section">Open menu: Open Claro Theme Editor</h2>
+	<h2 class="test_section">Open menu: Theme Editor...</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the Open menu on the banner, choose Open Claro Theme Editor</li>
-		<li>Close the theme editor by clicking "x" on editor's tab</li>
+		<li>From the Open menu on the banner, choose "Theme Editor..."</li>
+		<li>In dialog that appears, choose the theme you created earlier (e.g., mytheme1).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>After issuing the Open Claro Theme Editor command, the theme editor should have appeared,
+		<li>After issuing the Open Theme Editor command, the theme editor should have appeared,
 			showing a collection of Dojo widgets, and...</li>
 		<li>Properties palette should have content, and...</li>
 		<li>States palette should show a list of widget states, such as Normal, Selected, and Hover, and...</li>

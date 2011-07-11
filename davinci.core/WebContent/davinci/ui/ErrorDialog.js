@@ -5,32 +5,26 @@ dojo.require("dijit.form.Button");
 
 dojo.declare("davinci.ui.ErrorDialog",   [dijit._Widget, dijit._Templated], {
 	
+	/* message */
+	errorText : "I am error!",
+	/* cancel button text */
+	cancelButtonText : "",
+	/* call back when user clicks "Cancel" */
+	cancelCallBack : function(){},
+	/* ok button text */
+	okButtonText : "OK",
+	/* ok button call back */
+	okCallBack : function(){},
+
+
 	
 	templateString: dojo.cache("davinci.ui", "templates/ErrorDialog.html"),
 	widgetsInTemplate: true,
-	
-	/* check box for rewrite dojo */
-
 	_okButton : null,
 	_cancelButton : null,
 	_errorText : null,
-	
-	/* message */
-	errorText : "I am error!",
-	
-	/* cancel button text */
-	cancelButtonText : "Cancel",
-	/* call back when user clicks "Cancel" */
-	cancelCallBack : function(){this.onClose();},
-	/* ok button text */
-	okButtonText : "OK",
-	
-	/* ok button call back */
-	okCallBack : function(){this.onClose();},
-	
-	okButton : function(){this.okCallBack();},
-	cancelButton : function(){this.cancelCallBack();},
-	
+	okButton : function(){this.okCallBack();this.onClose();},
+	cancelButton : function(){this.cancelCallBack();this.onClose();},
 	onClose:function(){},
 	
 	_setErrorTextAttr : function(value){
@@ -46,6 +40,14 @@ dojo.declare("davinci.ui.ErrorDialog",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_setCancelButtonTextAttr : function(value){
+		//if no cancel button text, just hide it 
+		
+		if(value==null || value==""){
+			dojo.addClass(this._cancelButton.domNode, "dijitHidden");
+		}else{
+			dojo.removeClass(this._cancelButton.domNode, "dijitHidden");
+		}
+		
 		dojo.attr(this._cancelButton,'label',  value);
 	},
 	_setOkButtonTextAttr : function(value){

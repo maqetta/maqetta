@@ -30,8 +30,11 @@ public class Download extends Command {
         String res = req.getParameter("resources");
         String libs = req.getParameter("libs");
         ArrayList o = (ArrayList) JSONReader.read(res);
-        List lib = (List) JSONReader.read(libs);
-        String[] resources = (String[]) o.toArray(new String[o.size()]);
+        List lib = null;
+       if(libs!=null)
+    	   lib = (List) JSONReader.read(libs);
+        
+       String[] resources = (String[]) o.toArray(new String[o.size()]);
 
         IVResource[] files = new IVResource[resources.length];
         for (int i = 0; i < files.length; i++) {
@@ -44,7 +47,7 @@ public class Download extends Command {
 
             ZipOutputStream zos = new ZipOutputStream(resp.getOutputStream());
             zipFiles(files, zos, false);
-            zipLibs(lib, zos);
+            if(lib!=null) zipLibs(lib, zos);
             zos.close();
             // responseString="OK";
 

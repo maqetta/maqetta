@@ -112,30 +112,30 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
 		target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 		
-		// XXX Have to do this call here, rather than in the more favorable
-		//  create() or _create() since different "subclasses" of CreateTool
-		//  either override create() or _create().  It is very inconsistent.
 		try {
+			// XXX Have to do this call here, rather than in the more favorable
+			//  create() or _create() since different "subclasses" of CreateTool
+			//  either override create() or _create().  It is very inconsistent.
 			target = this._getAllowedTargetWidget(target);
-		} catch(e) {
-			davinci.Runtime.handleError(e.message);
-			// make sure to reset tool, in order to cancel drag/drop operation
-			this._context.setActiveTool(null);
-			return;
-		}
 
-		if(this._resizable && this._position){
-			var p = this._context.getContentPosition(event);
-			var w = (this._resizable != "height" ? p.x - this._position.x : 0);
-			var h = (this._resizable != "width" ? p.y - this._position.y : 0);
-			if(w > 4 || h > 4){
-				size = {w: (w > 0 ? w : undefined), h: (h > 0 ? h : undefined)};
+			if(this._resizable && this._position){
+				var p = this._context.getContentPosition(event);
+				var w = (this._resizable != "height" ? p.x - this._position.x : 0);
+				var h = (this._resizable != "width" ? p.y - this._position.y : 0);
+				if(w > 4 || h > 4){
+					size = {w: (w > 0 ? w : undefined), h: (h > 0 ? h : undefined)};
+				}
 			}
-		}
 
-		try {
 			this.create({target: target, size: size});
+		} catch(e) {
+			if (e instanceof InvalidTargetWidgetError) {
+				davinci.Runtime.handleError(e.message);
+			}
 		} finally {
+			// Make sure that if calls above fail due to invalid target or some
+			// unknown creation error that we properly unset the active tool,
+			// in order to avoid drag/drop issues.
 			this._context.setActiveTool(null);
 		}
 	},
@@ -370,9 +370,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				typeList.push(elem.type);  
 			});
 			
-			var errorMsg = ['No valid target for widget(s) found.\n',
-			                '\n',
-			                'The selected target for the widget(s) [',
+			var errorMsg = ['The selected target for the widget(s) [',
 			                typeList.join(', '),
 			                '] was not valid.\n'].join('');
 			// XXX Need to update this message for multiple widgets
@@ -385,9 +383,21 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				             children[0].allowedParent.join(', '),
 				             '].'].join('');
 			}
-			throw new Error(errorMsg);
+			throw new InvalidTargetWidgetError(errorMsg);
 		}
 		
 		return newTarget;
 	}
 });
+
+/**
+ * Custom error, thrown when a valid parent widget is not found.
+ */
+var InvalidTargetWidgetError = function(message) {
+    this.prototype = Error.prototype;
+    this.name = 'InvalidTargetWidgetError';
+    this.message = 'No valid target for widget(s) found.';
+    if (message) {
+    	this.message += '\n\n' + message;
+    }
+};

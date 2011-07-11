@@ -93,9 +93,12 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 		for(var i in this._pageLayout){
 			var widget = dijit.byId(this._pageLayout[i].id); 
 			if(!widget){
+				/* onchange is lowercase for DOM/non dijit */
 				var box = dojo.byId(this._pageLayout[i].id);
+				this._connect(box, "onchange", this, makeOnChange(i));
+			}else{
+				this._connect(widget, "onChange", this, makeOnChange(i));
 			}
-			this._connect(box, "onChange", this, makeOnChange(i));		
 		}
 	},
 	
@@ -110,7 +113,6 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 		this._connects.forEach(dojo.disconnect);
 	},
 	_onChange: function(a){
-	
 		var index = a.target;
 		var box = dojo.byId(this._pageLayout[index].id);
 		var value = null;

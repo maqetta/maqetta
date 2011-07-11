@@ -132,8 +132,12 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				size = {w: (w > 0 ? w : undefined), h: (h > 0 ? h : undefined)};
 			}
 		}
-		this.create({target: target, size: size});
-		this._context.setActiveTool(null);
+
+		try {
+			this.create({target: target, size: size});
+		} finally {
+			this._context.setActiveTool(null);
+		}
 	},
 
 	create: function(args){

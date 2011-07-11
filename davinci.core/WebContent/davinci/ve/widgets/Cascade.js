@@ -233,8 +233,24 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		alert("This value is overriden and can not be changed.");
 		return false;
 	},
-	
+		
 	_getAllRules : function(){
+		//FIXME: This function is a short-term solution that gets things working reasonably
+		// and depends on the fact that the current software always puts themes in the
+		// ./themes/ folder. Not good to hardcode such filenaming assumptions.
+		// Logged code cleanup bug https://github.com/maqetta/maqetta/issues/696
+		function getRuleType(rule){
+			if(rule && rule.parent && rule.parent.url){
+				var url=rule.parent.url;
+				if(/^themes\//.test(url) || /\/themes\//.test(url)){
+					return 'theme';
+				}else{
+					return 'queried';
+				}
+			}
+			
+		}
+
 		var values =  [];
 		/* element rules */
 		var defaultSelection=this._getDefaultSelection();
@@ -259,8 +275,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				if(j!=0) s+=", ";
 				s+=rule.selectors[j].getLabel();
 			}
+			var ruletype = getRuleType(rule);
 			values.push({'rule':v['rules'][i], 'ruleString':s,
-						'matchLevel':v['matchLevels'][i], type:'queried'});
+						'matchLevel':v['matchLevels'][i], type:ruletype});
 		}
 		
 		/* create list of proposals for new rules (using classes defined on this widget) */

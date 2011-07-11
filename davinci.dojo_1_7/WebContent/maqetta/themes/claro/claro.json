@@ -1520,6 +1520,76 @@
                 
             } 
         },
+        
+        "ValidationTextBox": {
+            "displayName": "ValidationTextBox" ,
+            "states": {
+                "Normal": {
+                    "selectors": {
+						".claro .dijitTextBox": [
+							"$std_10" 
+						],
+						".claro .dijitTextBox .dijitInputInner": [
+							"text-align"
+						]
+					},
+                    "query": "$auto" 
+                },
+                "Selected": {
+                    "selectors": {
+						".claro .dijitTextBoxFocused": [
+							"$std_10" 
+						],
+						".claro .dijitTextBoxFocused .dijitInputContainer": [
+							"background",
+							"background-color"
+						]
+					},
+                    "query": ".dijit.dijitReset.dijitLeft.dijitTextBox",
+					"simulate": "dijitTextBoxFocused"
+                },
+                "Hover": {
+                },
+                "Disabled":{},
+                "ReadOnly":{}
+                
+            } 
+        },
+        
+        "NumberTextBox": {
+            "displayName": "NumberTextBox" ,
+            "states": {
+                "Normal": {
+                    "selectors": {
+						".claro .dijitTextBox": [
+							"$std_10" 
+						],
+						".claro .dijitTextBox .dijitInputInner": [
+							"text-align"
+						]
+					},
+                    "query": "$auto" 
+                },
+                "Selected": {
+                    "selectors": {
+						".claro .dijitTextBoxFocused": [
+							"$std_10" 
+						],
+						".claro .dijitTextBoxFocused .dijitInputContainer": [
+							"background",
+							"background-color"
+						]
+					},
+                    "query": ".dijit.dijitReset.dijitLeft.dijitTextBox",
+					"simulate": "dijitTextBoxFocused"
+                },
+                "Hover": {
+                },
+                "Disabled":{},
+                "ReadOnly":{}
+                
+            } 
+        },
          
         "TitlePane": {
             "displayName": "TitlePane" ,

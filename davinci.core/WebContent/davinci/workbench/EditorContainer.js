@@ -4,7 +4,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 
 	constructor:function(args){
 		// Menu routines in Dojo and Workbench require unique names
-		var unique="m"+(new Date().getTime());
+		var unique="m"+Date.now();
 		this.toolbarMenuActionSets=[
       		{
       			 id: unique+"-DropdownMenuActionSet",
@@ -57,7 +57,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		{
 			content=editor.getDefaultContent();
 			editor.isDirty=!editor.isReadOnly;
-			editor.lastModifiedTime=new Date().getTime();
+			editor.lastModifiedTime=Date.now();
 		}
 		if (!content)
 		{
@@ -96,7 +96,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 			title="*"+title;
 		}
 		davinci.Workbench.editorTabs.setTitle(this,title);
-		this.lastModifiedTime=new Date().getTime();
+		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
 	},
 	

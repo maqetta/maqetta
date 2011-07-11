@@ -19,12 +19,11 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+            "$text": "dojo.require('dojox.mobile.deviceTheme');"
         },
         {
-            "type": "css",
-            "src": "dojox/mobile/themes/iphone/iphone.css",
-            "$library": "dojo"
+            "type": "javascript",
+            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
         }
     ],
     "library": {

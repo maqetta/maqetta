@@ -16,7 +16,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.Button');"
+            "$text": "dojo.require('dijit.form.ComboButton');"
         }
     ],
     "library": {

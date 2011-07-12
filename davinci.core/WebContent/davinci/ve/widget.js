@@ -1549,7 +1549,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	addChild: function(child,index)
 	{
-		if(this.dijitWidget.addChild){
+		if (this.dijitWidget.addChild && child.dijitWidget) {
 			if(index === undefined || index === -1){
 				index = "last";
 				this._srcElement.addChild(child._srcElement);

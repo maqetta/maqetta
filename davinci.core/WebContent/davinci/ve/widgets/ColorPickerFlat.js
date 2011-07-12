@@ -61,7 +61,7 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	}, 
 	
 	_setValueAttr : function(value){
-		this._colorPicker.setColor(value);
+		this._colorPicker.setColor(value || "");
 	}
 
 });

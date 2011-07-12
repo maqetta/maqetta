@@ -53,6 +53,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	    	svgfilename = "app/preview/images/"+deviceName+".svg";
 	    }
 		this.silhouetteiframe.setSVGFilename(svgfilename);
+		this.getContext().setMobileTheme(deviceName, this.silhouetteiframe);
 	},
 	
 	toggleOrientation : function() {
@@ -220,6 +221,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	setContent : function (fileName, content){
 		this._onloadMessages=[];	// List of messages to present to user after loading has completed
 		this._setContent(fileName, content);
+
 	},
 	
 	saveAs : function (newFileName, oldFileName, content){

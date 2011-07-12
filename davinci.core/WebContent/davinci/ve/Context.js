@@ -292,8 +292,85 @@ dojo.declare("davinci.ve.Context", null, {
 	_require: function(module){
 		try{
 			this.getDojo()["require"](module);
+			
 		}catch(e){
 			console.warn("FAILED: Context.js _require failure for module="+module);
+		}
+	},
+	
+	
+	
+	getMobileDevice : function(){
+		
+		var doc = this.getDocument();
+		var head = doc.getElementsByTagName("head")[0];
+		var htmlElement=this.getDocumentElement();
+		var bodyElement=htmlElement.getChildElement("body");
+		return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
+		
+	},
+	
+	setMobileDevice: function (device){
+		var doc = this.getDocument();
+		var head = doc.getElementsByTagName("head")[0];
+		var htmlElement=this.getDocumentElement();
+		var bodyElement=htmlElement.getChildElement("body");
+		bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE,device);
+	},
+	
+	setMobileTheme: function(device, silhouetteiframe){
+
+		var cssFiles = ['iphone/iphone.css'];
+		// if no device is specified mobile styling defaults to iphone
+		if (device && silhouetteiframe){
+			theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
+			cssFiles = preview.silhouetteiframe.getMobileCss(theme);
+		}
+
+
+		var oldDevice = this.getMobileDevice();
+		var oldCssFiles;
+		if (oldDevice){
+			oldCssFiles = preview.silhouetteiframe.getMobileCss(preview.silhouetteiframe.getMobileTheme(oldDevice+'.svg'));
+		} else {
+			oldCssFiles = preview.silhouetteiframe.getMobileCss('iPhone');
+		}
+		var lib = this.getLibraryBase();
+		if (lib.length == 0) {
+			lib = './lib';
+		}
+		var doc = this.getDocument();
+		// remove the old css files
+		for (var oc = 0; oc < oldCssFiles.length; oc++){
+			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
+			var head = doc.getElementsByTagName("head")[0];
+			var links = head.querySelectorAll(qStr);
+			// remove the old css files
+			for(var x = 0; x < links.length; x++){
+				head.removeChild(links[x]);
+			}
+		}
+		if (device){
+			this.setMobileDevice(device);
+			// add the new css files
+			for (var i = 0; i < cssFiles.length; i++){
+				var link = doc.createElement("link");
+				link.setAttribute("rel", "stylesheet");
+				link.setAttribute("type", "text/css");
+				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
+				
+				head.appendChild(link);
+			}
+		}else if (oldDevice){
+			// set it up for the old device
+			for (var i = 0; i < cssFiles.length; i++){
+				var link = doc.createElement("link");
+				link.setAttribute("rel", "stylesheet");
+				link.setAttribute("type", "text/css");
+				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
+				
+				head.appendChild(link);
+			}
 		}
 	},
 
@@ -493,7 +570,6 @@ dojo.declare("davinci.ve.Context", null, {
 			
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
-
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
@@ -736,8 +812,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		collapse(containerNode);
 
 		this._processWidgets(containerNode, active, states);
-
-		loading.parentNode.removeChild(loading);
+		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
+		var mobileDevice = this.getMobileDevice();
+		if (mobileDevice){
+			this._editor.visualEditor.setDevice(mobileDevice);
+		}
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 
@@ -1878,6 +1957,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	_reDojoJS: new RegExp(".*/dojo.js$"),
 	
 	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
+		
 		if (url) {
 			var isDojoJS = this._reDojoJS.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
@@ -1895,16 +1975,9 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 						});
 			}
 			if (doUpdateModel) {
-				if (isDojoJS) {
-					// XXX Nasty nasty nasty special case for dojo attribute thats
-					// required. Need to generalize in the metadata somehow.
-					this.addHeaderScript(url, {
-						'djConfig' : "parseOnLoad: true"
-					});
-				}
 				
+				/* update the script if found */
 				var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
-				
 				for(var i=0;i<elements.length;i++){
 					var n = elements[i];
 					var elementUrl = n.getAttribute("src");
@@ -1914,7 +1987,16 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					}
 				}
 				
-				this.addHeaderScript(url);
+				
+				if (isDojoJS) {
+					// XXX Nasty nasty nasty special case for dojo attribute thats
+					// required. Need to generalize in the metadata somehow.
+					this.addHeaderScript(url, {
+						'djConfig' : "parseOnLoad: true"
+					});
+				}else{
+					this.addHeaderScript(url);
+				}
 			}
 		} else if (text) {
 			this.getGlobal()['eval'](text);
@@ -2001,3 +2083,4 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 davinci.ve._contextCount = 0;
 
 davinci.ve._preferences = {};
+davinci.preference_mobile_device_ATTRIBUTE = 'data-maqetta-device';

@@ -1495,6 +1495,9 @@
             "icon": "resources/images/dx-mbl-view.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtWKf21SLvVKHuWKh21OHuWKf2WKh2VWLvVaOv7nW78jg84C/64K/64DB64DB6ZfX9v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZ0wJJwSCwOOcikMinkjJ7QKJRTqoRAIJJ2SxJ9PpsSJkOhXDIatEZDIVtKE4l8Tp9HShKPfs/fQ/BcgVx/DiQAhgABAgcLEhYWJA8lDIKVDSUJHZqbnJsKJQaVggglBIaIioyOkAUlA6KBA64DtLW2tka5Q0EAOw==",
             "isContainer": true,
+            "properties": {
+                 "style": "height: 100%;"
+            },
             "allowedChild": "ANY"
         },
         {

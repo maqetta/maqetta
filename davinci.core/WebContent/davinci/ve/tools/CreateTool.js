@@ -129,9 +129,18 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
 			this.create({target: target, size: size});
 		} catch(e) {
+			var content,
+				title;
 			if (e instanceof InvalidTargetWidgetError) {
-				davinci.Runtime.handleError(e.message);
+				content = e.message;
+				title = 'Invalid Target';
+			} else {
+				content = 'The action was interrupted by an internal error.';
+				title = 'Error';
+				console.error(e);
 			}
+            var errorDialog = new davinci.ui.Error({errorText: content});
+            davinci.Workbench.showModal(errorDialog, title);
 		} finally {
 			// Make sure that if calls above fail due to invalid target or some
 			// unknown creation error that we properly unset the active tool,
@@ -370,18 +379,18 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				typeList.push(elem.type);  
 			});
 			
-			var errorMsg = ['The selected target for the widget(s) [',
-			                typeList.join(', '),
-			                '] was not valid.\n'].join('');
+			var errorMsg;
 			// XXX Need to update this message for multiple widgets
 			if (children.length === 1 && children[0].allowedParent) {
-				errorMsg += ['The widget requires ',
+				errorMsg = ['The widget <span style="font-family: monospace">',
+				             typeList.join(', '),
+				             '</span> requires ',
 				             children[0].allowedParent.length > 1 ?
 				            		 'one of the following parent types' :
 				            			 'the parent type',
-				             ' [',
+				             ' <span style="font-family: monospace">',
 				             children[0].allowedParent.join(', '),
-				             '].'].join('');
+				             '</span>.'].join('');
 			}
 			throw new InvalidTargetWidgetError(errorMsg);
 		}
@@ -396,8 +405,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 var InvalidTargetWidgetError = function(message) {
     this.prototype = Error.prototype;
     this.name = 'InvalidTargetWidgetError';
-    this.message = 'No valid target for widget(s) found.';
+    this.message = 'The selected target is not a valid parent for the given widget.';
     if (message) {
-    	this.message += '\n\n' + message;
+    	this.message += ' ' + message;
     }
 };

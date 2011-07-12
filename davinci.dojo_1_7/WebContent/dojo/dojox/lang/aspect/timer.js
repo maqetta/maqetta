@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/aspect/timer",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.lang.aspect.timer",1);
 (function(){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/IndirectSelection",["dojo","dijit","dojox","dojo/string","../_Plugin","../../cells/dijit"],function(_1,_2,_3){
 _1.declare("dojox.grid.enhanced.plugins.IndirectSelection",_3.grid.enhanced._Plugin,{name:"indirectSelection",constructor:function(){
 var _4=this.grid.layout;

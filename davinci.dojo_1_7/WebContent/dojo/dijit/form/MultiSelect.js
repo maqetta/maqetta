@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/MultiSelect",["dojo/_base/kernel","..","./_FormWidget","dojo/_base/NodeList","dojo/_base/array","dojo/_base/html","dojo/query"],function(_1,_2){
 _1.declare("dijit.form.MultiSelect",_2.form._FormValueWidget,{size:7,templateString:"<select multiple='true' ${!nameAttrSetting} dojoAttachPoint='containerNode,focusNode' dojoAttachEvent='onchange: _onChange'></select>",addSelected:function(_3){
 _3.getSelected().forEach(function(n){

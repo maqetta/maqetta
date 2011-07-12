@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/_compat",["dojo/_base/kernel","./common","dojo/uacss","dojo/_base/fx","dojo/fx","dojo/fx/easing","dojox/fx","dojox/fx/flip"],function(_1,_2,_3,_4,fx,_5,_6,_7){
 if(!_1.isWebKit){
 if(dojox.mobile.View){

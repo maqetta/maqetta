@@ -182,7 +182,7 @@ public class VDirectory implements IVResource {
         for (int i = 0; i < this.children.size(); i++) {
             IVResource child = (IVResource) children.get(i);
             if (child != null && child.getName().equals(childName)) {
-                return (IVResource) children.get(i);
+                return child;
             }
         }
         return null;

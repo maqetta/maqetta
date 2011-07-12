@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/_ViewManager",["dojo","dojox","./_View"],function(_1,_2){
 _1.declare("dojox.grid._ViewManager",null,{constructor:function(_3){
 this.grid=_3;

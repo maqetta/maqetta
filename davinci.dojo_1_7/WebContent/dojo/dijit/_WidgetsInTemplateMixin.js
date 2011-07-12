@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_WidgetsInTemplateMixin",["dojo/_base/kernel",".","dojo/parser","dojo/_base/array","dojo/_base/declare"],function(_1,_2){
 _1.declare("dijit._WidgetsInTemplateMixin",null,{_earlyTemplatedStartup:false,widgetsInTemplate:true,_beforeFillContent:function(){
 if(this.widgetsInTemplate){

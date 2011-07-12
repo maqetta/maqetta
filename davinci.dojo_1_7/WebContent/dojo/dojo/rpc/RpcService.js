@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/rpc/RpcService",["../main","../_base/url"],function(_1){
 _1.declare("dojo.rpc.RpcService",null,{constructor:function(_2){
 if(_2){

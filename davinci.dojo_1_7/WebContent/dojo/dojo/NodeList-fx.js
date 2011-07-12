@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/NodeList-fx",["./main","./fx"],function(_1){
 _1.extend(_1.NodeList,{_anim:function(_2,_3,_4){
 _4=_4||{};

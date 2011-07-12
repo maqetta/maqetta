@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/ViewSource",["dojo/_base/kernel","../..","../../focus","dojo/window","dojo/i18n","../_Plugin","../../form/ToggleButton","dojo/i18n!../nls/commands","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit._editor.plugins.ViewSource",_2._editor._Plugin,{stripScripts:true,stripComments:true,stripIFrames:true,readOnly:false,_fsPlugin:null,toggle:function(){
 if(_1.isWebKit){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 require.cache["dijit/layout/templates/AccordionButton.html"]="<div dojoAttachEvent='onclick:_onTitleClick' class='dijitAccordionTitle'>\n\t<div dojoAttachPoint='titleNode,focusNode' dojoAttachEvent='onkeypress:_onTitleKeyPress'\n\t\t\tclass='dijitAccordionTitleFocus' role=\"tab\" aria-expanded=\"false\"\n\t\t><span class='dijitInline dijitAccordionArrow' role=\"presentation\"></span\n\t\t><span class='arrowTextUp' role=\"presentation\">+</span\n\t\t><span class='arrowTextDown' role=\"presentation\">-</span\n\t\t><img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon\" dojoAttachPoint='iconNode' style=\"vertical-align: middle\" role=\"presentation\"/>\n\t\t<span role=\"presentation\" dojoAttachPoint='titleTextNode' class='dijitAccordionText'></span>\n\t</div>\n</div>\n";
 define("dijit/layout/AccordionContainer",["dojo/_base/kernel","..","dojo/text!./templates/AccordionButton.html","require","../_Container","../_TemplatedMixin","../_CssStateMixin","./StackContainer","./ContentPane","../focus","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/fx","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2,_3,_4){
 _1.declare("dijit.layout.AccordionContainer",_2.layout.StackContainer,{duration:_2.defaultDuration,buttonWidget:"dijit.layout._AccordionButton",baseClass:"dijitAccordionContainer",buildRendering:function(){

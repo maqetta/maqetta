@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/plot3d/Cylinders",["dojo/_base/kernel","dojox/gfx3d","dojo/_base/window","dojo/_base/window","dojo/_base/Color","./Base"],function(_1,_2){
 var _3=function(a,f,o){
 a=typeof a=="string"?a.split(""):a;

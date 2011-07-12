@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/GridSource",["dojo","dojox","dojo/dnd/Source","./DnD"],function(_1,_2){
 var _3=function(_4){
 var a=_4[0];

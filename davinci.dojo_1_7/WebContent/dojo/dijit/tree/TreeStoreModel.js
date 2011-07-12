@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/tree/TreeStoreModel",["dojo/_base/kernel","..","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/json","dojo/_base/lang","dojo/data/api/Identity","dojo/data/api/Notification"],function(_1,_2){
 _1.declare("dijit.tree.TreeStoreModel",null,{store:null,childrenAttrs:["children"],newItemIdAttr:"id",labelAttr:"",root:null,query:null,deferItemLoadingUntilExpand:false,constructor:function(_3){
 _1.mixin(this,_3);

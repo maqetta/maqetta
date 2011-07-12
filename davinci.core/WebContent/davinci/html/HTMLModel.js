@@ -272,7 +272,7 @@ davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad)
 //    link.addAttribute('href', url);
 //    this.getDocumentElement().getChildElement('head').addChild(link);
     if (!this._styleElem) {
-        var head = this.getDocumentElement().getChildElement('head');
+        var head = this.find({'elementType':"HTMLElement",'tag':'head'}, true);
         var style = head.getChildElement('style');
         if (!style) {
             style = new davinci.html.HTMLElement('style');
@@ -374,7 +374,7 @@ davinci.html.HTMLFile.prototype.reportPositions = function(){
 	 davinci.html.HTMLElement.prototype.getText = function(context){
 		 
 
-		 
+		 context = context || {};
 		 var s="";
 		 var doFormat;
 //		 if (!this.wasParsed  && !davinci.html._noFormatElements[this.tag])

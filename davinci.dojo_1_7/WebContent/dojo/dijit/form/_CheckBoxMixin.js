@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_CheckBoxMixin",["dojo/_base/kernel","..","dojo/_base/declare","dojo/_base/event","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.form._CheckBoxMixin",null,{type:"checkbox",value:"on",readOnly:false,_setReadOnlyAttr:function(_3){
 this._set("readOnly",_3);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Source",["../main","./Selector","./Manager"],function(_1){
 _1.declare("dojo.dnd.Source",_1.dnd.Selector,{isSource:true,horizontal:false,copyOnly:false,selfCopy:false,selfAccept:true,skipForm:false,withHandles:false,autoSync:false,delay:0,accept:["text"],generateText:true,constructor:function(_2,_3){
 _1.mixin(this,_1.mixin({},_3));

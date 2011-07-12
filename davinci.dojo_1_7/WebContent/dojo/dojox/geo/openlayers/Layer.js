@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/openlayers/Layer",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/sniff"],function(_1,_2,_3,_4){
 return _1.declare("dojox.geo.openlayers.Layer",null,{constructor:function(_5,_6){
 var ol=_6?_6.olLayer:null;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/app/TextBox",["dojo","dijit","dojox","dojox/mobile/TextBox"],function(_1,_2,_3){
 _1.getObject("dojox.mobile.app.TextBox",1);
 _1.deprecated("dojox.mobile.app.TextBox is deprecated","dojox.mobile.app.TextBox moved to dojox.mobile.TextBox",1.8);

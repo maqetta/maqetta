@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/NumberTextBox",["dojo/_base/kernel","..","./RangeBoundTextBox","dojo/number","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit.form.NumberTextBoxMixin",null,{regExpGen:_1.number.regexp,value:NaN,editOptions:{pattern:"#.######"},_formatter:_1.number.format,postMixInProperties:function(){
 this.inherited(arguments);

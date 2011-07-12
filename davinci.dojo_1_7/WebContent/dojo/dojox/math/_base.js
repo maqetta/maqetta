@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/math/_base",["dojo","dojox"],function(_1,_2){
 _1.getObject("math",true,_2);
 var m=_2.math;

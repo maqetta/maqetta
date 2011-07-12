@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/rpc/JsonpService",["../main","./RpcService","../io/script"],function(_1){
 _1.declare("dojo.rpc.JsonpService",_1.rpc.RpcService,{constructor:function(_2,_3){
 if(this.required){

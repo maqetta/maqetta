@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_KeyNavContainer",["dojo/_base/kernel",".","./_Container","./_FocusMixin","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/html","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit._KeyNavContainer",[_2._Container,_2._FocusMixin],{tabIndex:"0",connectKeyNavHandlers:function(_3,_4){
 var _5=(this._keyNavCodes={});

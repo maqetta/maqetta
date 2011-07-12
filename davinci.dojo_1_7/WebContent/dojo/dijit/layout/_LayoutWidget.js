@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/_LayoutWidget",["dojo/_base/kernel","..","../_Widget","../_Container","../_Contained","dojo/_base/array","dojo/_base/declare","dojo/_base/html","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit.layout._LayoutWidget",[_2._Widget,_2._Container,_2._Contained],{baseClass:"dijitLayoutContainer",isLayoutContainer:true,buildRendering:function(){
 this.inherited(arguments);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/cache",["dojo","dojo/text"],function(_1){
 return _1.cache;
 });

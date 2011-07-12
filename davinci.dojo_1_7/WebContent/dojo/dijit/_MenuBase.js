@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_MenuBase",["dojo/_base/kernel",".","./popup","dojo/window","./_Widget","./_FocusMixin","./_KeyNavContainer","./_TemplatedMixin","dojo/_base/html","dojo/_base/lang","dojo/_base/array"],function(_1,_2,pm){
 _1.declare("dijit._MenuBase",[_2._Widget,_2._TemplatedMixin,_2._KeyNavContainer],{parentMenu:null,popupDelay:500,onExecute:function(){
 },onCancel:function(_3){

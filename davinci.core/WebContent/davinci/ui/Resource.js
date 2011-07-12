@@ -75,9 +75,9 @@ dojo.mixin(davinci.ui.Resource, {
 '	</div>'+
 '	<div class="parentFolderInputRow"><input dojoType="dijit.form.TextBox" type="text" name="fileDialogParentFolder" id="fileDialogParentFolder"></input></div>'+
 '	<div class="folderContainer">'+
-'		<div dojoType="davinci.ui.widgets.ResourceTreeModel" foldersOnly="false" jsId="fileDialogFolderModel"></div>'+
+
 '		<div dojoType="dijit.layout.ContentPane">'+
-'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="fileDialogFolderModel"></div>'+
+'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="davinci.resource"></div>'+
 '		</div>'+
 '	</div>'+
 '	<div class="buttonRow">'+
@@ -245,6 +245,7 @@ dojo.mixin(davinci.ui.Resource, {
 		dialog.destroyRecursive();
 		// If resource exists, delete it because we will soon make a new version of that resource
 		var existing=davinci.resource.findResource(fullName);
+		oldEditor.editorContainer.forceClose(oldEditor);
 		if(existing){
 			existing.removeWorkingCopy();
 			existing.deleteResource();
@@ -253,7 +254,7 @@ dojo.mixin(davinci.ui.Resource, {
 		// Do various cleanups around currently open file
 		oldResource.removeWorkingCopy();
 		oldEditor.isDirty = false;
-		oldEditor.editorContainer.forceClose(oldEditor);
+		
 		
 		// Create a new editor for the new filename
 		var file = folder.createResource(fileName);
@@ -352,7 +353,7 @@ dojo.mixin(davinci.ui.Resource, {
 		{
 			davinci.Workbench.openEditor({
 				fileName: resource,
-				content: resource.getContents()
+				content: resource.getText()
 			});
 		}
 	}

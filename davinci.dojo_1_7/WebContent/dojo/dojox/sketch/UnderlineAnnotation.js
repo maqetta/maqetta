@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/sketch/UnderlineAnnotation",["./Annotation","./Anchor"],function(){
 var ta=dojox.sketch;
 ta.UnderlineAnnotation=function(_1,id){

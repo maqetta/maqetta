@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/parser",["dojo/ready"],function(_1){
 dojo.getObject("mobile",true,dojox);
 dojox.mobile.parser=new function(){

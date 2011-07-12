@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/store/Cache",["../main"],function(_1){
 _1.getObject("store",true,_1);
 _1.store.Cache=function(_2,_3,_4){

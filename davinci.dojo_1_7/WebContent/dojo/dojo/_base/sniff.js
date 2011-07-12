@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/sniff",["./kernel","../has"],function(_1,_2){
 if(!1){
 return _1;
@@ -57,9 +58,9 @@ _2.add("air",_1.isAIR=_6);
 _2.add("khtml",_1.isKhtml=_7);
 _2.add("webKit",_1.isWebKit=_8);
 _2.add("chrome",_1.isChrome=_9);
-_2.add("mac ",_1.isMac=_a);
+_2.add("mac",_1.isMac=_a);
 _2.add("safari",_1.isSafari=_b);
-_2.add("mozilla ",_1.isMozilla=_1.isMoz=_c);
+_2.add("mozilla",_1.isMozilla=_1.isMoz=_c);
 _2.add("ie",_1.isIE=_e);
 _2.add("ff",_1.isFF=_f);
 _2.add("quirks",_1.isQuirks=_10);

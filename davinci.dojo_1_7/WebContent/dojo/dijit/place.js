@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/place",["dojo/_base/kernel",".","dojo/window","dojo/_base/array","dojo/_base/html","dojo/_base/window"],function(_1,_2){
 function _3(_4,_5,_6,_7){
 var _8=_1.window.getBox();

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gantt/GanttTaskItem",["dojo","dijit","dojox","dojo/date/locale","dijit/focus"],function(_1,_2,_3){
 _1.getObject("dojox.gantt.GanttTaskItem",1);
 _1.declare("dojox.gantt.GanttTaskControl",null,{constructor:function(_4,_5,_6){

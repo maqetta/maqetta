@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/AnalogGauge",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dojo/_base/html","dojo/_base/event","./_Gauge","dojox/gfx","./AnalogLineIndicator"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
 _1.experimental("dojox.gauges.AnalogGauge");
 return _1.declare("dojox.gauges.AnalogGauge",_7,{startAngle:-90,endAngle:90,cx:0,cy:0,radius:0,orientation:"clockwise",_defaultIndicator:_9,startup:function(){

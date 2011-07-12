@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/css",["dojo","dojox"],function(_1,_2){
 if(!_2.data){
 _2.data={};

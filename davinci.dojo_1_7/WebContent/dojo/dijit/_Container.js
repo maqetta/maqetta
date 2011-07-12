@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_Container",["dojo/_base/kernel",".","dojo/_base/array","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit._Container",null,{isContainer:true,buildRendering:function(){
 this.inherited(arguments);

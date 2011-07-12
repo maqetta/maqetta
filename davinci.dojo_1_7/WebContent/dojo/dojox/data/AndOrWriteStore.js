@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/AndOrWriteStore",["dojo","dojox","dojox/data/AndOrReadStore"],function(_1,_2){
 _1.declare("dojox.data.AndOrWriteStore",_2.data.AndOrReadStore,{constructor:function(_3){
 this._features["dojo.data.api.Write"]=true;

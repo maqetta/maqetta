@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/PageBreak",["dojo","dijit","dojox","dijit/_editor/html","dijit/_editor/_Plugin","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/PageBreak"],function(_1,_2,_3){
 _1.declare("dojox.editor.plugins.PageBreak",_2._editor._Plugin,{useDefaultCommand:false,iconClassPrefix:"dijitAdditionalEditorIcon",_unbreakableNodes:["li","ul","ol"],_pbContent:"<hr style='page-break-after: always;' class='dijitEditorPageBreak'>",_initButton:function(){
 var ed=this.editor;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/IconContainer",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./View","./Heading","./_ItemBase","./IconItem"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
 return _1.declare("dojox.mobile.IconContainer",[dijit._WidgetBase,dijit._Container,dijit._Contained],{defaultIcon:"",transition:"below",pressedIconOpacity:0.4,iconBase:"",iconPos:"",back:"Home",label:"My Application",single:false,buildRendering:function(){
 this.domNode=this.containerNode=this.srcNodeRef||_1.doc.createElement("UL");

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/action2d/MouseZoomAndPan",["dojo/_base/kernel","dojo/_base/html","dojo/_base/declare","dojo/_base/window","dojo/_base/connect","./ChartAction"],function(_1,_2,_3,_4,_5,_6){
 var _7=_1.isMozilla?-3:120;
 var _8={none:function(_9){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/StackController",["dojo/_base/kernel","..","../_Widget","../_TemplatedMixin","../_Container","../form/ToggleButton","../focus","dojo/i18n!../nls/common","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/event","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
 _1.declare("dijit.layout.StackController",[_2._Widget,_2._TemplatedMixin,_2._Container],{baseClass:"dijitTabController",templateString:"<span role='tablist' dojoAttachEvent='onkeypress'></span>",containerId:"",buttonWidget:"dijit.layout._StackButton",constructor:function(){
 this.pane2button={};

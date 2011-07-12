@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/ready",["./_base/kernel","./has","require","./domReady","./_base/lang"],function(_1,_2,_3,_4,_5){
 var _6=0,_7,_8=[],_9=0,_a=function(){
 if(_6&&!_9&&_8.length){

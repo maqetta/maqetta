@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/ClientFilter",["dojo","dojox","dojo/data/util/filter"],function(_1,_2){
 var cf;
 var _3=function(_4,_5,_6){

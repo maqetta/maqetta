@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/Cookie",["dojo","dijit","dojox","dojo/cookie","../_Plugin","../../_RowSelector","../../cells/_base"],function(_1,_2,_3){
 var _4=function(_5){
 return window.location+"/"+_5.id;

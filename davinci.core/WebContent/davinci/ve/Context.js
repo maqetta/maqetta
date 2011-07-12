@@ -67,10 +67,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		var containerNode = this.getContainerNode();
 		dojo.addClass(containerNode, "editContextContainer");
-		if(this.getPreference("showLayoutGrid")){
-			dojo.addClass(containerNode, "editLayoutGrid");
-		}
-
+		
 		this._connects = [
 			dojo.connect(this._commandStack, "onExecute", this, "onContentChange"),
 			dojo.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
@@ -108,9 +105,6 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.select(null);
 		dojo.removeClass(containerNode, "editContextContainer");
-		if(this.getPreference("showLayoutGrid")){
-			dojo.removeClass(containerNode, "editLayoutGrid");
-		}
 		dojo.forEach(this.getTopWidgets(), this.detach, this);
 		this.unloadStyleSheet(this._contentStyleSheet);
 	},
@@ -147,9 +141,10 @@ dojo.declare("davinci.ve.Context", null, {
 		var isContainer = davinci.ve.metadata.queryDescriptor(widget.type, "isContainer");
 		
 		widget.attach();
-		
-		if(type.substring(type.lastIndexOf(".") + 1).charAt(0) == "_"){  
-			// internal widget, such as _StackButton, _Splitter
+
+		if(widget.type.charAt(widget.type.lastIndexOf(".") + 1) == "_"){ //TODO: dijit-specific convention of "private" widgets
+			widget.internal = true;
+			// internal Dijit widget, such as _StackButton, _Splitter, _MasterTooltip
 			return;
 		}
 
@@ -246,6 +241,7 @@ dojo.declare("davinci.ve.Context", null, {
 		
 		var relativePath = new davinci.model.Path(relativePrefix);
 		return dojo.every(requires, function(r) {
+		
 			var src = r.src;
 			if (src) {	// resource with URL
 				if (r.$library) {
@@ -296,8 +292,85 @@ dojo.declare("davinci.ve.Context", null, {
 	_require: function(module){
 		try{
 			this.getDojo()["require"](module);
+			
 		}catch(e){
 			console.warn("FAILED: Context.js _require failure for module="+module);
+		}
+	},
+	
+	
+	
+	getMobileDevice : function(){
+		
+		var doc = this.getDocument();
+		var head = doc.getElementsByTagName("head")[0];
+		var htmlElement=this.getDocumentElement();
+		var bodyElement=htmlElement.getChildElement("body");
+		return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
+		
+	},
+	
+	setMobileDevice: function (device){
+		var doc = this.getDocument();
+		var head = doc.getElementsByTagName("head")[0];
+		var htmlElement=this.getDocumentElement();
+		var bodyElement=htmlElement.getChildElement("body");
+		bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE,device);
+	},
+	
+	setMobileTheme: function(device, silhouetteiframe){
+
+		var cssFiles = ['iphone/iphone.css'];
+		// if no device is specified mobile styling defaults to iphone
+		if (device && silhouetteiframe){
+			theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
+			cssFiles = preview.silhouetteiframe.getMobileCss(theme);
+		}
+
+
+		var oldDevice = this.getMobileDevice();
+		var oldCssFiles;
+		if (oldDevice){
+			oldCssFiles = preview.silhouetteiframe.getMobileCss(preview.silhouetteiframe.getMobileTheme(oldDevice+'.svg'));
+		} else {
+			oldCssFiles = preview.silhouetteiframe.getMobileCss('iPhone');
+		}
+		var lib = this.getLibraryBase();
+		if (lib.length == 0) {
+			lib = './lib';
+		}
+		var doc = this.getDocument();
+		// remove the old css files
+		for (var oc = 0; oc < oldCssFiles.length; oc++){
+			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
+			var head = doc.getElementsByTagName("head")[0];
+			var links = head.querySelectorAll(qStr);
+			// remove the old css files
+			for(var x = 0; x < links.length; x++){
+				head.removeChild(links[x]);
+			}
+		}
+		if (device){
+			this.setMobileDevice(device);
+			// add the new css files
+			for (var i = 0; i < cssFiles.length; i++){
+				var link = doc.createElement("link");
+				link.setAttribute("rel", "stylesheet");
+				link.setAttribute("type", "text/css");
+				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
+				
+				head.appendChild(link);
+			}
+		}else if (oldDevice){
+			// set it up for the old device
+			for (var i = 0; i < cssFiles.length; i++){
+				var link = doc.createElement("link");
+				link.setAttribute("rel", "stylesheet");
+				link.setAttribute("type", "text/css");
+				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
+				
+				head.appendChild(link);
+			}
 		}
 	},
 
@@ -306,7 +379,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// check for false alarms to avoid reloading theme
 		var model = this.getModel();
 		if(this._themeUrl){
-			var style = model.find({'elementType':'CSSImport', 'url':this._themeUrl},true);
+			var style = model.find({elementType:'CSSImport', url:this._themeUrl},true);
 			if(style!=null && style.length!=0)
 				changed = false;
 		}
@@ -316,29 +389,29 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	getTheme : function(){
-		
+	getTheme: function(){
 		if(this._theme==null){
 			var theme = this.loadThemeMeta(this._srcDocument);
-			this._themeUrl = theme['url'];
-			this._themeMetaCache = theme['themeMetaCache'];
-			this._theme = theme['theme']
-			
+			this._themeUrl = theme.url;
+			this._themeMetaCache = theme.themeMetaCache;
+			this._theme = theme.theme;
 		}
 		return this._theme;
 	}, 
-	getThemeMeta : function(){
+
+	getThemeMeta: function(){
 		if(!this._themeMetaCache ){
 			this.getTheme();
 		}
-			return this._themeMetaCache;
-		
+		return this._themeMetaCache;
 	},
 	
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
 		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
 		var imports = [];
+		var claroThemeName="claro";
+		var claroThemeUrl;
 		for(var z=0;z<style.length;z++){
 			for(var i=0;i<style[z].children.length;i++){
 				if(style[z].children[i]['elementType']== 'CSSImport')
@@ -359,15 +432,70 @@ dojo.declare("davinci.ve.Context", null, {
 			var url = imports[i].url;
 			/* trim off any relative prefix */
 			for(var themeUrl in themeHash){
+				if(themeUrl.indexOf(claroThemeName) > -1){
+					claroThemeUrl = themeUrl;
+				}
 				if(url.indexOf(themeUrl)  > -1){
 					var returnObject = {};
 					returnObject['themeUrl'] = url;
 					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-					returnObject['theme'] =  themeHash[themeUrl];;
+					returnObject['theme'] =  themeHash[themeUrl];
 					return returnObject;	
 				}
 			}
-			
+		}
+		// If we are here, we didn't find a cross-reference match between 
+		// CSS files listed among the @import commands and the themes in
+		// themes/ folder of the user's workspace. So, see if there is an @import
+		// that looks like a theme reference and see if claro/ is in
+		// the list of themes, if so, use claro instead of old theme
+		if(claroThemeUrl){
+			var newThemeName = claroThemeName;
+			var oldThemeName;
+			for(var i=0;i<imports.length;i++){
+				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
+				if(cssfilenamematch && cssfilenamematch.length==2){
+					var cssfilename = cssfilenamematch[1];
+					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));
+					if(themematch){
+						oldThemeName = cssfilename;
+						break;
+					}
+				}
+			}
+			if(oldThemeName){
+				// Update model
+				var htmlElement=this.model.getDocumentElement();
+				var head=htmlElement.getChildElement("head");
+				var bodyElement=htmlElement.getChildElement("body");
+				var classAttr=bodyElement.getAttribute("class");
+				if (classAttr){
+					bodyElement.setAttribute("class",classAttr.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName));
+				}
+				var styleTags=head.getChildElements("style");
+				dojo.forEach(styleTags, function (styleTag){
+					dojo.forEach(styleTag.children,function(styleRule){
+						if (styleRule.elementType=="CSSImport"){
+							styleRule.url = styleRule.url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+						}
+					}); 
+				});
+				// Update data in returnObject
+				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+				var returnObject = {};
+				returnObject['themeUrl'] = url;
+				// Pull claro theme data
+				returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[claroThemeUrl]);
+				returnObject['theme'] =  themeHash[claroThemeUrl];
+				returnObject['themeMetaCache']['usingSubstituteTheme'] = {
+						oldThemeName:oldThemeName,
+						newThemeName:newThemeName
+				};
+				// Make sure source pane updates text from model
+				this._editor._visualChanged();
+				
+				return returnObject;	
+			}
 		}
 	},
 	
@@ -442,7 +570,6 @@ dojo.declare("davinci.ve.Context", null, {
 			
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
-
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
@@ -598,7 +725,23 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
 		dojo.addClass(loading, 'loading');
-
+		
+		/* cache the theme metadata */	
+		this.themeChanged();
+		var theme = this.getThemeMeta();
+		if(theme && theme.usingSubstituteTheme){
+			var oldThemeName = theme.usingSubstituteTheme.oldThemeName;
+			var newThemeName = theme.usingSubstituteTheme.newThemeName;
+			for(var ss=0;ss<data.styleSheets.length; ss++){
+				var sheet=data.styleSheets[ss];
+				data.styleSheets[ss] = sheet.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
+			}
+			data.bodyClasses = data.bodyClasses.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName);
+			//FIXME: Needs to be globalized
+			if(this._editor && this._editor.visualEditor && this._editor.visualEditor._onloadMessages){
+				this._editor.visualEditor._onloadMessages.push("Warning. File refers to CSS theme '"+oldThemeName+"' which is not in your workspace. Using CSS theme '"+newThemeName+" instead.");
+			}
+		}
 		
 		this.setHeader({
 			title: data.title,
@@ -613,13 +756,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		});
 
 		var content = data.content || "";
-		
-		
-		/* cache the theme metadata */
-		
-		this.themeChanged();
-		this.getThemeMeta();
-		
+			
 		var containerNode = this.getContainerNode();
 	
 		
@@ -675,8 +812,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		collapse(containerNode);
 
 		this._processWidgets(containerNode, active, states);
-
-		loading.parentNode.removeChild(loading);
+		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
+		var mobileDevice = this.getMobileDevice();
+		if (mobileDevice){
+			this._editor.visualEditor.setDevice(mobileDevice);
+		}
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 
@@ -1319,14 +1459,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		davinci.ve._preferences[name] = value;
 
 		if(this.isActive()){
-			if(name == "showLayoutGrid"){
-				var containerNode = this.getContainerNode();
-				if(value){
-					dojo.addClass(containerNode, "editLayoutGrid");
-				}else{
-					dojo.removeClass(containerNode, "editLayoutGrid");
-				}
-			}
+			// Previously, included logic to show a rectangular grid under the drawing canvas.
+			// Now, nothing, but leaving empty IF statement in case we add things in future.
 		}
 	},
 
@@ -1916,11 +2050,13 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		if (scriptAdditions){
 			var scriptText = scriptAdditions.find({'elementType':'HTMLText'}, true);
-			oldText = scriptText.getText();
-			if (oldText.indexOf(text)>0){
-				return scriptAdditions;  // already in the header
-			}
-			scriptAdditions.parent.removeChild(scriptAdditions);
+			if(scriptText){
+				oldText = scriptText.getText();
+				if (oldText.indexOf(text)>0){
+					return scriptAdditions;  // already in the header
+				}
+				scriptAdditions.parent.removeChild(scriptAdditions);
+				}
 			scriptAdditions = null;
 		}
 		// create a new script element
@@ -1944,3 +2080,4 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 davinci.ve._contextCount = 0;
 
 davinci.ve._preferences = {};
+davinci.preference_mobile_device_ATTRIBUTE = 'data-maqetta-device';

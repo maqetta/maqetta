@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/TabBar",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/array","dojo/_base/html","./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./Heading","./_ItemBase","./TabBarButton"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
 return _1.declare("dojox.mobile.TabBar",[dijit._WidgetBase,dijit._Container,dijit._Contained],{iconBase:"",iconPos:"",barType:"tabBar",inHeading:false,tag:"UL",_fixedButtonWidth:76,_fixedButtonMargin:17,_largeScreenWidth:500,buildRendering:function(){
 this._clsName=this.barType=="segmentedControl"?"mblTabButton":"mblTabBarButton";

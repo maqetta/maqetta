@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/OpmlStore",["dojo","dojox","dojo/data/util/simpleFetch","dojo/data/util/filter"],function(_1,_2){
 _1.declare("dojox.data.OpmlStore",null,{constructor:function(_3){
 this._xmlData=null;

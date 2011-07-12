@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 if(dojo.config["baseUrl"]){
 dojo.baseUrl=dojo.config["baseUrl"];
 }else{

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_firebug/firebug",["../_base/kernel","require","../_base/html","../_base/sniff","../_base/array","../_base/lang","../_base/event","../_base/unload"],function(_1,_2){
 var _3=(/Trident/.test(window.navigator.userAgent));
 if(_3){

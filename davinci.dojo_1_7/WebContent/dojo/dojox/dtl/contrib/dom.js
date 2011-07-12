@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dtl/contrib/dom",["dojo/_base/kernel","dojo/_base/lang","../_base","../dom","dojo/_base/html"],function(_1,_2,dd){
 _1.getObject("dtl.contrib.dom",true,dojox);
 var _3=dd.contrib.dom;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/api/Request",["../.."],function(_1){
 _1.declare("dojo.data.api.Request",null,{abort:function(){
 throw new Error("Unimplemented API: dojo.data.api.Request.abort");

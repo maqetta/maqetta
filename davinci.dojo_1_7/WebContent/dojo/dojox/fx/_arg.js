@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/fx/_arg",["."],function(){
 dojox.fx._arg.StyleArgs=function(_1){
 this.node=_1.node;

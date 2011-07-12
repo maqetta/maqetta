@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 	displayOptions: "[көрсету параметрлері]",
 	title: "Тақырып",

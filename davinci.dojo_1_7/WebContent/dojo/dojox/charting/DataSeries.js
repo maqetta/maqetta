@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/DataSeries",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojox/lang/functional"],function(_1,_2,_3,_4,df){
 return _1.declare("dojox.charting.DataSeries",null,{constructor:function(_5,_6,_7){
 this.store=_5;

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/action2d/_IndicatorElement",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../Element","../plot2d/common","../axis2d/common","dojox/gfx"],function(_1,_2,_3,_4,_5,_6,_7){
 var _8=function(_9){
 return _a(_9,_9.getShape().text);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 dojox.embed.Flash.place=function(_1,_2){
 var o=dojox.embed.Flash.__ie_markup__(_1);
 _2=dojo.byId(_2);

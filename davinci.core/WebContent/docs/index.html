@@ -19,10 +19,8 @@
 			dojo.addOnLoad(function() {
 				// Set global variable docs_base_url
 				// to the base directory for the docset
-console.log("addOnLoad entered");
                 var initial_loc = location.href;
                 var hash_index = initial_loc.indexOf('#');
-console.log("hash_index="+hash_index);
                 var initial_loc_nohash = (hash_index>=0) ? initial_loc.substr(0,hash_index) : initial_loc;
             	var base_index = initial_loc_nohash.lastIndexOf('/');
             	// docs_base_url is a global
@@ -34,7 +32,7 @@ console.log("hash_index="+hash_index);
                 		initial_goto_page = initial_loc.substr(hash_index+1)+".html";
                 	}
             	}
-console.log("initial_goto_page="+initial_goto_page);
+
             	// Go get the JSON structure that is used to populate the Tree widget
             	var maqettadocs_json_deferred = dojo.xhrGet({
                     url: "maqettadocs.json",
@@ -173,6 +171,7 @@ console.log("initial_goto_page="+initial_goto_page);
 			*/
 			
         </script>
+        <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/document.css"/>
         <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/claro.css"/>
         <link rel="stylesheet" type="text/css" href="maqettadocs.css"/>
         <style type="text/css">
@@ -203,7 +202,6 @@ console.log("initial_goto_page="+initial_goto_page);
 			        </div>
 			        <div dojoType="dijit.Tree" id="mytree" model="continentModel" showRoot="false">
 			            <script type="dojo/method" event="onClick" args="item">
-console.log('item.url='+item.url);
 							if (item.url) {
 goToPage(item.url);
 //								content.setHref(item.url);

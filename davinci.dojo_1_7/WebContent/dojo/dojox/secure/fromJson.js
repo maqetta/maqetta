@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/secure/fromJson",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.secure.fromJson",1);
 _3.secure.fromJson=typeof JSON!="undefined"?JSON.parse:(function(){

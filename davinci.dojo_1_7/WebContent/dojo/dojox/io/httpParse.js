@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/io/httpParse",[],function(){
 dojo.getObject("io.httpParse",true,dojox);
 dojox.io.httpParse=function(_1,_2,_3){

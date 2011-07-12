@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_base/wai",["dojo/_base/kernel","..","../hccss","dojo/_base/html","dojo/_base/lang"],function(_1,_2){
 _1.mixin(_2,{hasWaiRole:function(_3,_4){
 var _5=this.getWaiRole(_3);

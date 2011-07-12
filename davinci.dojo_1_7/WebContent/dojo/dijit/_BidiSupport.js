@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_BidiSupport",["dojo/_base/kernel","./_WidgetBase","dojo/_base/lang"],function(_1,_2){
 _1.extend(_2,{getTextDir:function(_3){
 return this.textDir=="auto"?this._checkContextual(_3):this.textDir;

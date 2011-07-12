@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/range",["dojo/_base/kernel","..","dojo/_base/array","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
 _2.range={};
 _2.range.getIndex=function(_3,_4){

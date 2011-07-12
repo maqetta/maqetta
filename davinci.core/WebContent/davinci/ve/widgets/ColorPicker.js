@@ -20,13 +20,13 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		
 		this.inherited(arguments);
 		
-		var statics = ["", davinci.ve.widgets.ColorPicker.divider, "Color picker....", "Remove Value"];
+		this._statics = ["", davinci.ve.widgets.ColorPicker.divider, "Color picker....", "Remove Value"];
 		this._run = {};
 		if(!this.data ){
-			this.data=[{value:statics[0]}];
-			this.data.push({value:statics[2],run:this._chooseColorValue});
-			this.data.push({value:statics[3],run:function(){this.attr('value','')}});
-			this.data.push({value:statics[1]});   
+			this.data=[{value:this._statics[0]}];
+			this.data.push({value:this._statics[2],run:this._chooseColorValue});
+			this.data.push({value:this._statics[3],run:function(){this.attr('value','')}});
+			this.data.push({value:this._statics[1]});   
 			this.data.push({value:'black'});
 			this.data.push({value:'white'});
 			this.data.push({value:'red'});
@@ -46,7 +46,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 			}
 		}
 		
-		this._store = new davinci.ve.widgets.ColorStore({values:displayValues, noncolors:statics});
+		this._store = new davinci.ve.widgets.ColorStore({values:displayValues, noncolors:this._statics});
 		this._dropDown = new dijit.form.ComboBox({store:this._store, required: false, labelType:'html', labelAttr:'label', style:'width:100%'});
 		dojo.connect(this._dropDown, "onChange", this, "_onChange");
 		var top = dojo.doc.createElement("div");
@@ -114,9 +114,10 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 						}
 						
 						closePopup();
-
+						/*
 						if(!colorpicker.canceled && oldValue!=colorpicker.attr("value")) 
 							target.onChange();
+					    */
 					}
 				});
 
@@ -127,7 +128,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		};
 		if(this._value in dojo.Color.named){
 			
-			var value = dojo.colorFromString(this._value)
+			var value = dojo.colorFromString(this._value);
 			content.attr('value', value.toHex());
 		}else if(this._value!=null && this._value!=''){
 			content.attr('value', this._value);
@@ -143,6 +144,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 	
 	
 	onChange : function(event){
+		
 		this._oldvalue = this._value;
 		this._value = this._dropDown.attr("value");
 		
@@ -163,7 +165,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 	
 	_onChange : function(event){
 		
-		var similar = null;
+	
 		
 		if(event in this._run){
 			//this._dropDown.attr("value", this._store.getItemNumber(0));
@@ -177,7 +179,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 			dojo.style(this._selectedColor, "backgroundColor", event);
 		}
 		
-		if(this._currentValue!=this._dropDown.attr("value")){
+		if(this._currentValue!=this._dropDown.attr("value") && dojo.indexOf(this._statics, event) < 0){
 			this._currentValue=this._dropDown.attr("value");
 			this.onChange(event);
 		}

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/CurrencyTextBox",["dojo/_base/kernel","..","dojo/currency","./NumberTextBox","dojo/_base/declare","dojo/_base/lang"],function(_1,_2){
 _1.declare("dijit.form.CurrencyTextBox",_2.form.NumberTextBox,{currency:"",baseClass:"dijitTextBox dijitCurrencyTextBox",regExpGen:function(_3){
 return "("+(this.focused?this.inherited(arguments,[_1.mixin({},_3,this.editOptions)])+"|":"")+_1.currency.regexp(_3)+")";

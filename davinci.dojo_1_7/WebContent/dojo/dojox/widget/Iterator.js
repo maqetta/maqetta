@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/Iterator",["dojo","dijit","dojox","dijit/Declaration"],function(_1,_2,_3){
 _1.getObject("dojox.widget.Iterator",1);
 _1.experimental("dojox.widget.Iterator");

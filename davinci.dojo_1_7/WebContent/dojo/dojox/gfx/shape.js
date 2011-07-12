@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/shape",["..","dojo/_base/kernel","dojo/_base/html","./matrix","dojo/_base/declare","dojo/_base/connect","dojo/_base/Color"],function(_1,_2){
 _2.getObject("gfx.shape",true,_1);
 var _3={};

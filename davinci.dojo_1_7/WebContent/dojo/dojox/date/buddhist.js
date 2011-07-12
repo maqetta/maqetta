@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/date/buddhist",["dojo/_base/kernel","dojo/date","./buddhist/Date"],function(d,dd,_1){
 dojo.getObject("date.buddhist",true,dojox);
 dojo.experimental("dojox.date.buddhist");

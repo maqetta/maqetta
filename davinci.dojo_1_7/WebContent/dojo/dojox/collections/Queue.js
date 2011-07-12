@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/collections/Queue",["dojo/_base/kernel","dojo/_base/array","./_base"],function(_1,_2,_3){
 _3.Queue=function(_4){
 var q=[];

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/hash",["./_base/kernel","require","./_base/connect","./_base/lang","./ready","./_base/sniff","./_base/window"],function(_1,_2){
 _1.hash=function(_3,_4){
 if(!arguments.length){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ComboBoxMenu",["dojo/_base/kernel","..","./_ComboBoxMenuMixin","../_WidgetBase","../_TemplatedMixin","./_ListMouseMixin","dojo/_base/connect","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.form._ComboBoxMenu",[_2._WidgetBase,_2._TemplatedMixin,_2.form._ListMouseMixin,_2.form._ComboBoxMenuMixin],{templateString:"<div class='dijitReset dijitMenu' dojoAttachPoint='containerNode' style='overflow: auto; overflow-x: hidden;'>"+"<div class='dijitMenuItem dijitMenuPreviousButton' dojoAttachPoint='previousButton' role='option'></div>"+"<div class='dijitMenuItem dijitMenuNextButton' dojoAttachPoint='nextButton' role='option'></div>"+"</div>",baseClass:"dijitComboBoxMenu",_createMenuItem:function(){
 return _1.create("div",{"class":"dijitReset dijitMenuItem"+(this.isLeftToRight()?"":" dijitMenuItemRtl"),role:"option"});

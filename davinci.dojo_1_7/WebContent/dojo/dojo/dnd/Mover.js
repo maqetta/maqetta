@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dnd/Mover",["../main","./common","./autoscroll"],function(_1){
 _1.declare("dojo.dnd.Mover",null,{constructor:function(_2,e,_3){
 this.node=_1.byId(_2);

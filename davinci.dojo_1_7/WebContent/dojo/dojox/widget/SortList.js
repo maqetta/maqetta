@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/SortList",["dojo","dijit","dojox","dijit/layout/_LayoutWidget","dijit/_Templated"],function(_1,_2,_3){
 _1.getObject("dojox.widget.SortList",1);
 _1.experimental("dojox.widget.SortList");

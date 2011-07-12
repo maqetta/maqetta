@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/api/Read",["../..","./Request"],function(_1){
 _1.declare("dojo.data.api.Read",null,{getValue:function(_2,_3,_4){
 throw new Error("Unimplemented API: dojo.data.api.Read.getValue");

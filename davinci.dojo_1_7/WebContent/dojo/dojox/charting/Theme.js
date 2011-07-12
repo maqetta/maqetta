@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/Theme",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojox/color/_base","dojox/color/Palette","dojox/lang/utils","dojox/gfx/gradutils"],function(_1,_2,_3,_4,_5,_6,_7){
 _1.declare("dojox.charting.Theme",null,{shapeSpaces:{shape:1,shapeX:1,shapeY:1},constructor:function(_8){
 _8=_8||{};

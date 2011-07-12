@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/hccss",["require","dojo/_base/kernel","dojo/_base/html","dojo/ready","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 if(_2.isIE||_2.isMoz){
 _2.ready(90,function(){

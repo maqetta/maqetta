@@ -17,7 +17,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		this._themeCount = themes.length;
 		this._select = dojo.doc.createElement("select");
 		for (var i = 0; i < themes.length; i++){
-			var contents = themes[i].getContents();
+			var contents = themes[i].getText();
 			var t = eval(contents);
 			t.file = themes[i];
 			this._themeData.push(t);

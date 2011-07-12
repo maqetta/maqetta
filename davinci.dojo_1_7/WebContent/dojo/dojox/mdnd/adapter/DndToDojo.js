@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mdnd/adapter/DndToDojo",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/connect","dojo/_base/window","dojo/_base/array","dojox/mdnd/PureSource","dojox/mdnd/LazyManager"],function(_1){
 var _2=_1.declare("dojox.mdnd.adapter.DndToDojo",null,{_dojoList:null,_currentDojoArea:null,_dojoxManager:null,_dragStartHandler:null,_dropHandler:null,_moveHandler:null,_moveUpHandler:null,_draggedNode:null,constructor:function(){
 this._dojoList=[];

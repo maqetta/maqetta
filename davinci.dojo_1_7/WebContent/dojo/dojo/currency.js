@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/currency",["./_base/kernel","./_base/array","./number","./i18n","./i18n!./cldr/nls/currency","./cldr/monetary"],function(_1){
 _1.getObject("currency",true,_1);
 _1.currency._mixInDefaults=function(_2){

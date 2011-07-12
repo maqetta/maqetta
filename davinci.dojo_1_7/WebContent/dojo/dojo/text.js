@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/text",["./_base/kernel","require","./has","./_base/xhr"],function(_1,_2,_3,_4){
 var _5;
 if(1){

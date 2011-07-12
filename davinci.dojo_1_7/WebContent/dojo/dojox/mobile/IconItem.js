@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/IconItem",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/array","./common","./_ItemBase","./TransitionEvent"],function(_1,_2,_3,_4,_5,_6,_7){
 return _1.declare("dojox.mobile.IconItem",dojox.mobile._ItemBase,{lazy:false,requires:"",timeout:10,closeBtnClass:"mblDomButtonBlueMinus",closeBtnProp:null,templateString:"<li class=\"mblIconItem\">"+"<div class=\"mblIconArea\" dojoAttachPoint=\"iconDivNode\">"+"<div><img src=\"${icon}\" dojoAttachPoint=\"iconNode\"></div><span dojoAttachPoint=\"labelNode1\"></span>"+"</div>"+"</li>",templateStringSub:"<li class=\"mblIconItemSub\" lazy=\"${lazy}\" style=\"display:none;\" dojoAttachPoint=\"contentNode\">"+"<h2 class=\"mblIconContentHeading\" dojoAttachPoint=\"closeNode\">"+"<div class=\"${closeBtnClass}\" style=\"position:absolute;left:4px;top:2px;\" dojoAttachPoint=\"closeIconNode\"></div><span dojoAttachPoint=\"labelNode2\"></span>"+"</h2>"+"<div class=\"mblContent\" dojoAttachPoint=\"containerNode\"></div>"+"</li>",createTemplate:function(s){
 _1.forEach(["lazy","icon","closeBtnClass"],function(v){

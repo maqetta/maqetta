@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/dnd/BoundingBoxController",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.dnd.BoundingBoxController",1);
 _1.declare("dojox.dnd.BoundingBoxController",null,{_startX:null,_startY:null,_endX:null,_endY:null,constructor:function(_4,_5){

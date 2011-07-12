@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_FormSelectWidget",["dojo/_base/kernel","..","./_FormWidget","dojo/data/util/sorter","dojo/_base/NodeList","dojo/_base/array","dojo/_base/connect","dojo/_base/html","dojo/_base/lang","dojo/data/api/Identity","dojo/data/api/Notification","dojo/query"],function(_1,_2){
 _1.declare("dijit.form._FormSelectWidget",_2.form._FormValueWidget,{multiple:false,options:null,store:null,query:null,queryOptions:null,onFetch:null,sortByLabel:true,loadChildrenOnOpen:false,getOptions:function(_3){
 var _4=_3,_5=this.options||[],l=_5.length;

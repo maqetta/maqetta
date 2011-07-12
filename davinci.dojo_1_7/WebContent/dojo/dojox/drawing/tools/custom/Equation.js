@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/tools/custom/Equation",["../../util/oo","../TextBlock"],function(){
 dojox.drawing.tools.custom.Equation=dojox.drawing.util.oo.declare(dojox.drawing.tools.TextBlock,function(_1){
 },{customType:"equation"});

@@ -20,7 +20,7 @@ dojo.mixin(davinci.resource, {
 				davinci.resource.onChildrenChange(davinci.resource.getRoot(),children);
 			}));
 			return davinci.resource.getRoot();
-		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated'){
+		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated' || type=='reload'){
 			var parent, resourcePath;
 			
 			if(changedResource.parent){
@@ -33,16 +33,16 @@ dojo.mixin(davinci.resource, {
 				parent = davinci.resource.findResource(p1.toString()) || davinci.resource.getRoot();
 				resourcePath = changedResource;
 			}
-			if(parent.elementType=="Folder" && type!='renamed'){
+			if(parent.elementType=="Folder" && type=='reload'){
+				/* 'reload' forces a full parent reload.  most model actions handle the server
+				 * command and the modeling commands, so forcing a client & server resource sync isn't usually neccisary.
+			     */
 				parent.reload();
 			}
+			
 			/* force the resource parent to update its children */
-			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children)});	
+			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);}, true);	
 		}
-			
-			
-			
-			
 	},
 	
 	
@@ -75,9 +75,7 @@ dojo.mixin(davinci.resource, {
 	},
 	
 	destroy: function(){
-		for(var i=0;i<davinci.resource.subscriptions.length;i++){
-			dojo.unsubscribe(davinci.resource.subscription[i]);
-		}
+		davinci.resource.subscriptions.forEach(dojo.unsubscribe);
 	},
 		
 	mayHaveChildren: function(/*dojo.data.Item*/ item){
@@ -97,7 +95,7 @@ dojo.mixin(davinci.resource, {
 	},
 	
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
-		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async
+		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async (ALP: what does this mean?)
 	},
 	
 	copy: function(sourceFile, destFile, recurse){
@@ -108,8 +106,8 @@ dojo.mixin(davinci.resource, {
 			handleAs:"text", 
 			sync:true,
 			content:{source:path, dest: destPath, recurse: String(recurse)}  });
-		
-		davinci.resource.resourceChanged("created", destFile);
+		/* force a reload since we dont really know if this is a file or directory being copied */
+		davinci.resource.resourceChanged("reload", destFile);
 	},
 
 	download: function(files,archiveName, userLibs){
@@ -117,7 +115,11 @@ dojo.mixin(davinci.resource, {
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
 		*/
-		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+ "&libs="+escape(dojo.toJson(userLibs) );
+		var libString = "";
+		if(userLibs)
+			libString = "&libs="+escape(dojo.toJson(userLibs));
+		
+		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+libString ;
 	},
 	
 
@@ -151,7 +153,7 @@ dojo.mixin(davinci.resource, {
 			name=name.toString();
 		}
 		var isWildcard;
-		for (var i=0;i<segments.length;i++) {
+		for (var i=0;i<segments.length;i++) { //FIXME: use filter()
 			if (segments[i].indexOf("*") >= 0) {
 				isWildcard=true;
 				break;
@@ -231,15 +233,6 @@ dojo.mixin(davinci.resource, {
 	
 });
 
-dojo.declare("davinci.resource.alphabeticalSortFilter",null,{
-   filterList: function(list)
-   {
-	return list.sort(function (file1,file2)
-		{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0;});
-   }
-
-});
-
 dojo.declare("davinci.resource.foldersFilter",null,{
    filterItem: function(item)
    {
@@ -277,5 +270,7 @@ dojo.declare("davinci.resource.FileTypeFilter",null,{
 		return newList;
     }
 });
+
+davinci.resource.alphabeticalSort = function(items){ return items.sort(function(a,b){ return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); }); };
 
 davinci.resource.subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged",davinci.resource, function(){return davinci.resource.resourceChanged;}())];

@@ -25,7 +25,7 @@ dojo.declare("davinci.ve.RebaseDownload", davinci.ve.RebuildPage, {
 		for(var name in this.libs){
 			var item = this.libs[name];
 			if(item['id']==id && item['version']==version)
-				return item['base'];
+				return item['root'];
 		}
 		return davinci.library.getLibRoot(id,version) || "";
 	}

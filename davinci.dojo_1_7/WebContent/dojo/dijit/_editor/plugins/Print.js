@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/_editor/plugins/Print",["dojo/_base/kernel","../..","../../focus","../_Plugin","../../form/Button","dojo/i18n","dojo/i18n!../nls/commands","dojo/_base/lang","dojo/_base/sniff"],function(_1,_2){
 _1.declare("dijit._editor.plugins.Print",_2._editor._Plugin,{_initButton:function(){
 var _3=_1.i18n.getLocalization("dijit._editor","commands"),_4=this.editor;

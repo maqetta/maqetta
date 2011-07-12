@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/EnhancedGrid",["dojo","dojox","./DataGrid","./enhanced/_PluginManager","./enhanced/plugins/_SelectionPreserver","dojo/i18n!./enhanced/nls/EnhancedGrid"],function(_1,_2){
 _1.experimental("dojox.grid.EnhancedGrid");
 _1.declare("dojox.grid.EnhancedGrid",_2.grid.DataGrid,{plugins:null,pluginMgr:null,_pluginMgrClass:_2.grid.enhanced._PluginManager,postMixInProperties:function(){

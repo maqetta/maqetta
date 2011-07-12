@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/ToggleButton",["dojo/_base/kernel","..","./Button","./_ToggleButtonMixin","dojo/_base/declare"],function(_1,_2){
 _1.declare("dijit.form.ToggleButton",[_2.form.Button,_2.form._ToggleButtonMixin],{baseClass:"dijitToggleButton",setChecked:function(_3){
 _1.deprecated("setChecked("+_3+") is deprecated. Use set('checked',"+_3+") instead.","","2.0");

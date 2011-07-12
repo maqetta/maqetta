@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/_ExpandingTextAreaMixin",["dojo/_base/kernel","..","dojo/_base/declare","dojo/_base/html","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
 var _3;
 _1.declare("dijit.form._ExpandingTextAreaMixin",null,{_setValueAttr:function(){

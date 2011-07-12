@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/grid/enhanced/plugins/Printer",["dojo","dijit","dojox","../_Plugin","./exporter/TableWriter","dojo/DeferredList"],function(_1){
 _1.declare("dojox.grid.enhanced.plugins.Printer",dojox.grid.enhanced._Plugin,{name:"printer",constructor:function(_2){
 this.grid=_2;

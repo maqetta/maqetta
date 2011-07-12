@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/canvas",["./_base","./shape","./path","./arc","./decompose"],function(){
 var _1=dojo.getObject("dojox.gfx.canvas",true);
 dojo.experimental("dojox.gfx.canvas");

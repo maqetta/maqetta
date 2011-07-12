@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/charting/MouseInteractionSupport",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/window","dojo/_base/html"],function(_1,_2,_3,_4,_5,_6){
 return _1.declare("dojox.geo.charting.MouseInteractionSupport",null,{_map:null,_mapClickLocation:null,_screenClickLocation:null,_mouseDragListener:null,_mouseUpListener:null,_mouseUpClickListener:null,_mouseDownListener:null,_mouseMoveListener:null,_mouseWheelListener:null,_currentFeature:null,_cancelMouseClick:null,_zoomEnabled:false,_panEnabled:false,_onDragStartListener:null,_onSelectStartListener:null,mouseClickThreshold:2,constructor:function(_7,_8){
 this._map=_7;

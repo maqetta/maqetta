@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/has",["require"],function(_1){
 var _2=_1.has||function(){
 };

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dom-prop",["./_base/kernel","./_base/sniff","./_base/lang","./_base/window","./dom","./dom-style"],function(_1,_2,_3,_4,_5,_6){
 var _7={"class":"className","for":"htmlFor",tabindex:"tabIndex",readonly:"readOnly",colspan:"colSpan",frameborder:"frameBorder",rowspan:"rowSpan",valuetype:"valueType"},_8={classname:"class",htmlfor:"for",tabindex:"tabIndex",readonly:"readOnly"},_9={innerHTML:1,className:1,htmlFor:_2.isIE,value:1};
 function _a(_b){

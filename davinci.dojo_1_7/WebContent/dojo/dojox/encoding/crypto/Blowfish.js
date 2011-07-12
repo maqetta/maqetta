@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/encoding/crypto/Blowfish",["dojo/_base/array","dojox/encoding/base64","dojox/encoding/crypto/_base"],function(_1,_2,_3){
 _1.getObject("encoding.crypto.Blowfish",true,dojox);
 dojox.encoding.crypto.Blowfish=new function(){

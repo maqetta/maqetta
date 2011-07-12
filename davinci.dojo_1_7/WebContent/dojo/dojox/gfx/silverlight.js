@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gfx/silverlight",["./_base","./shape","./path"],function(){
 var sl=dojo.getObject("dojox.gfx.silverlight",true);
 dojo.experimental("dojox.gfx.silverlight");

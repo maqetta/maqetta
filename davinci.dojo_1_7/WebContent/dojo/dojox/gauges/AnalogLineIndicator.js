@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/gauges/AnalogLineIndicator",["dojo/_base/kernel","dojo/_base/declare","./AnalogIndicatorBase"],function(_1,_2,_3){
 return _1.declare("dojox.gauges.AnalogLineIndicator",[_3],{_getShapes:function(_4){
 var _5=this.direction;

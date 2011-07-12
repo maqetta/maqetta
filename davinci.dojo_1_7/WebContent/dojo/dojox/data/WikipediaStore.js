@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/WikipediaStore",["dojo","dojox","dojo/io/script","dojox/rpc/Service","dojox/data/ServiceStore"],function(_1,_2){
 _1.experimental("dojox.data.WikipediaStore");
 _1.declare("dojox.data.WikipediaStore",_2.data.ServiceStore,{constructor:function(_3){

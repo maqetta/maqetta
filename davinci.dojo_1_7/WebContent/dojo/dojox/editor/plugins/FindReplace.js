@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/FindReplace",["dojo","dijit","dojox","dojo/string","dijit/_base/popup","dijit/_Widget","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","dijit/TooltipDialog","dijit/Toolbar","dijit/form/CheckBox","dijit/form/TextBox","dijit/_editor/_Plugin","dijit/form/Button","dijit/form/DropDownButton","dojox/editor/plugins/ToolbarLineBreak","dojo/i18n","dojo/i18n!dojox/editor/plugins/nls/FindReplace"],function(_1,_2,_3){
 _1.experimental("dojox.editor.plugins.FindReplace");
 _1.declare("dojox.editor.plugins._FindReplaceCloseBox",[_2._Widget,_2._TemplatedMixin,_2._WidgetsInTemplateMixin],{btnId:"",widget:null,widgetsInTemplate:true,templateString:"<span style='float: right' class='dijitInline' tabindex='-1'>"+"<button class='dijit dijitReset dijitInline' "+"id='${btnId}' dojoAttachPoint='button' dojoType='dijit.form.Button' tabindex='-1' iconClass='dijitEditorIconsFindReplaceClose' showLabel='false'>X</button>"+"</span>",postMixInProperties:function(){

@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 name: "名称",
 path: "路径",

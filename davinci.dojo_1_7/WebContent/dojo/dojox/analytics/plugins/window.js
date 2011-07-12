@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/analytics/plugins/window",["dojo/_base/kernel","dojo/_base/lang","../_base"],function(_1,_2,_3){
 _3.plugins.window=new (function(){
 this.addData=_1.hitch(_3,"addData","window");

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/SimpleTextarea",["dojo/_base/kernel","..","./TextBox","dojo/_base/html","dojo/_base/sniff","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit.form.SimpleTextarea",_2.form.TextBox,{baseClass:"dijitTextBox dijitTextArea",rows:"3",cols:"20",templateString:"<textarea ${!nameAttrSetting} dojoAttachPoint='focusNode,containerNode,textbox' autocomplete='off'></textarea>",postMixInProperties:function(){
 if(!this.value&&this.srcNodeRef){

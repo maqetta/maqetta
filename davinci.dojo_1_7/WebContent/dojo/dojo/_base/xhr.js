@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/xhr",["./kernel","../has","require","../on","./sniff","./Deferred","./json","./lang"],function(_1,_2,_3,on){
 _2.add("native-xhr",function(){
 return typeof XMLHttpRequest!=="undefined";

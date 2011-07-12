@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/ResizeHandle",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dojo/fx","dojo/window"],function(_1,_2,_3){
 _1.getObject("dojox.layout.ResizeHandle",1);
 _1.experimental("dojox.layout.ResizeHandle");

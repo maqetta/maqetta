@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/selector/lite",["../has","../_base/kernel"],function(_1,_2){
 "use strict";
 var _3=document.createElement("div");

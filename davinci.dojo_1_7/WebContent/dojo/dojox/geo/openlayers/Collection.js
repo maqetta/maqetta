@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/geo/openlayers/Collection",["dojo/_base/kernel","dojo/_base/declare","dojox/geo/openlayers/Geometry"],function(_1,_2,_3){
 return _1.declare("dojox.geo.openlayers.Collection",dojox.geo.openlayers.Geometry,{setGeometries:function(g){
 this.coordinates=g;

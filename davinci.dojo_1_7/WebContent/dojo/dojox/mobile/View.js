@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/View",["./common","dijit/_WidgetBase","dijit/_Container","dijit/_Contained","./ViewController"],function(_1,_2,_3,_4){
 return dojo.declare("dojox.mobile.View",[dijit._WidgetBase,dijit._Container,dijit._Contained],{selected:false,keepScrollPos:true,constructor:function(_5,_6){
 if(_6){

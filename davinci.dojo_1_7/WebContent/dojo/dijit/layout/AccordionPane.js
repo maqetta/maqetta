@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/layout/AccordionPane",["dojo/_base/kernel","..","./ContentPane","dojo/_base/declare"],function(_1,_2){
 _1.declare("dijit.layout.AccordionPane",_2.layout.ContentPane,{constructor:function(){
 _1.deprecated("dijit.layout.AccordionPane deprecated, use ContentPane instead","","2.0");

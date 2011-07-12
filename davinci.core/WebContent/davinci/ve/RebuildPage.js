@@ -86,13 +86,17 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 
 	
 	addModeledStyleSheet : function(url, baseSrcPath) {
+		/* "baseSrcPath" is the tail of the style sheet path
+		 * this is so we can determine if a link already exists in the file but has the 
+		 * wrong directory
+		 */
 		
 		var elements = this._srcDocument.find({'elementType':"CSSImport"});
 		
 		for(var i=0;i<elements.length;i++){
 			var n = elements[i];
 			if(n.url && n.url.indexOf(baseSrcPath) > -1){
-				n.url = url;
+				n.setUrl(url);
 				return;
 			}
 		}
@@ -100,6 +104,21 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
        this._srcDocument.addStyleSheet(url, null, true);
     },
 
+    _findScriptAdditions : function(){
+    	// this is a bit gross and dojo specific, but...... guess a necisary evil.
+    	   	
+    	var documentHeader = this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
+    	var scriptsInHeader = documentHeader.find({elementType:"HTMLElement", 'tag':'script'});
+    	for(var i=0;i<scriptsInHeader.length;i++){
+    		var text = scriptsInHeader[i].getText();
+    		if(text.indexOf("dojo.require") > -1)
+    			return scriptsInHeader[i];
+    	}
+    	// no requires js header area found
+    	return null;
+    	
+    },
+    
     addJavaScript : function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
 		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
 		
@@ -111,6 +130,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 				return;
 			}
 		}
+	
 		
     	if (url) {
             if(url.indexOf("dojo.js")>-1){
@@ -119,24 +139,18 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
               }
            	this.addHeaderScript(url);
         }else if (text) {
-        	this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
+        	this._scriptAdditions = this.addHeaderScriptSrc(text, this._findScriptAdditions(),this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
         }
     },
 
     changeThemeBase: function(theme, relativePrefix){
    
-    	/*
-		var modelHead =model.find({'elementType':"HTMLElement",'tag':'head'}, true)
-		var modelBody = model.getChildElement('body');
-		var modelStyle = model.getChildElements('style');
-		*/
-		// find the old theme file name
+    	// find the old theme file name
 		var basePath = new davinci.model.Path(relativePrefix);
-		
 		var files = theme.files;
 		for (var x=0; x<files.length; x++){
 			var filename = basePath.append(theme.file.parent.getPath()).append(theme.files[x]);
-			this.addModeledStyleSheet(filename, theme[files[x]]);
+			this.addModeledStyleSheet(filename.toString(), new davinci.model.Path(theme.files[x]));
 
 		}
 	}

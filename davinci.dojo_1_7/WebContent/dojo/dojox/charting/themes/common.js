@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/themes/common",["dojo/_base/kernel","../../main"],function(_1,_2){
 return _1.getObject("charting.themes",true,_2);
 });

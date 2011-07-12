@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/analytics",["./analytics/_base"],function(_1){
 return _1;
 });

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/lang/functional",["dojo/_base/kernel","./functional/lambda","./functional/array","./functional/object"],function(_1,df){
 return df;
 });

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/tree/_dndContainer",["dojo/_base/kernel","..","dojo/dnd/common","dojo/dnd/Container","dojo/_base/array","dojo/_base/connect","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
 _1.getObject("tree",true,_2);
 _2.tree._compareNodes=function(n1,n2){

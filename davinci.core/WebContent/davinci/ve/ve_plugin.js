@@ -560,21 +560,20 @@
 		                 	{name:"Visual Editor", id:"editorPrefs", category:"davinci.html.general",
 		                 	 pane:"davinci.ve.prefs.HTMLEditPreferences",
 		                 	defaultValues : {
-		     					"showLayoutGrid" : false,
 		     					"flowLayout":true,
 		     					"cssOverrideWarn":true 
-		     				  }		                 	}
+		     				  }
+		                 	}
 		                 	
 	                 	 ],
     "davinci.dnd" : [
                  {  parts: ["davinci.ui.navigator"],
-                	 dragSource : function (object) 
-                	 { if (object.elementType=='File')
+                	 dragSource : function (object) {
+                	  if (object.elementType=='File')
                 	   {
-                		 var extension=object.getExtension();
-                		 return extension=='gif' || extension=='jpeg' || extension=='jpg' || extension=='png'  || extension=='json';
+                		 return /gif|jpeg|jpg|png|json/i.test(object.getExtension());
                 	   }
-                	},
+                	 },
                 	 dragHandler : "davinci.ve.palette.ImageDragSource"
                  }
                  ],					   

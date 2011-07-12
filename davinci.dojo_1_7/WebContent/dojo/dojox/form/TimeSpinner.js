@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/TimeSpinner",["dojo","dijit","dojox","dijit/form/_Spinner","dojo/date","dojo/date/locale","dojo/date/stamp"],function(_1,_2,_3){
 _1.getObject("dojox.form.TimeSpinner",1);
 _1.declare("dojox.form.TimeSpinner",[_2.form._Spinner],{required:false,adjust:function(_4,_5){

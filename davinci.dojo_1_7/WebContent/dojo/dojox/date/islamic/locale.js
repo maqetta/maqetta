@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/date/islamic/locale",["dojo","dijit","dojox","dojo/i18n","dojo/cldr/nls/islamic"],function(_1,_2,_3){
 _1.getObject("dojox.date.islamic.locale",1);
 define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/date","dojo/i18n","dojo/regexp","dojo/string","./Date","dojo/i18n!dojo/cldr/nls/islamic"],function(d,_4,_5,dd,_6,_7,_8,_9){

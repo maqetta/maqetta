@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/collections",["./collections/_base"],function(_1){
 return _1;
 });

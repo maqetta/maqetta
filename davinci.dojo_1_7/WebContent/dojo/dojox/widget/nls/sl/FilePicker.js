@@ -1,4 +1,4 @@
-require.built();
+//>>built
 define(({
 name: "Ime",
 path: "Pot",

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mvc/Bind",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array"],function(_1,_2,_3){
 var _4=_1.getObject("dojox.mvc",true);
 return _1.mixin(_4,{bind:function(_5,_6,_7,_8,_9,_a){

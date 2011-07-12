@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/data/S3Store",["dojo","dojox","dojox/data/JsonRestStore","dojox/rpc/ProxiedPath"],function(_1,_2){
 _1.declare("dojox.data.S3Store",_2.data.JsonRestStore,{_processResults:function(_3){
 var _4=_3.getElementsByTagName("Key");

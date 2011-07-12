@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/fx",["./kernel","./Color","./connect","./lang","./html","./sniff"],function(_1){
 var _2=_1._mixin;
 _1._Line=function(_3,_4){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/form/FileInputBlind",["dojo","dijit","dojox","dojox/form/FileInputAuto"],function(_1,_2,_3){
 _1.getObject("dojox.form.FileInputBlind",1);
 return _1.getObject("dojox.form.FileInputBlind");

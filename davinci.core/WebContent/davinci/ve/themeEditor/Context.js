@@ -148,10 +148,10 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	},
 	
 	attach: function(widget){
-		if(!widget || widget.id == "dijit__MasterTooltip_0"){
+		this.inherited(arguments);
+		if(!widget || widget.internal){
 			return;
 		}
-		this.inherited(arguments);
 //		var isThemeWidget = "true"==widget._srcElement.getAttribute('dvThemeWidget');
 		var isThemeWidget = false;
 		var classes = widget.getClassNames();

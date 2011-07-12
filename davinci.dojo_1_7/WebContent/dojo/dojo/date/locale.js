@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/date/locale",["../main","../date","../cldr/supplemental","../regexp","../string","../i18n!../cldr/nls/gregorian"],function(_1){
 _1.getObject("date.locale",true,_1);
 function _2(_3,_4,_5,_6){

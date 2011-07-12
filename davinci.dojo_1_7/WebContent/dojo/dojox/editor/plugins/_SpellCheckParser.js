@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/editor/plugins/_SpellCheckParser",["dojo","dojox"],function(_1,_2){
 _1.declare("dojox.editor.plugins._SpellCheckParser",null,{lang:"english",parseIntoWords:function(_3){
 function _4(c){

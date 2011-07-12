@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/Menu",["dojo/_base/kernel",".","./popup","require","dojo/window","./DropDownMenu","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/html","dojo/_base/lang","dojo/_base/sniff","dojo/_base/window"],function(_1,_2,pm,_3){
 _1.declare("dijit.Menu",_2.DropDownMenu,{constructor:function(){
 this._bindings=[];

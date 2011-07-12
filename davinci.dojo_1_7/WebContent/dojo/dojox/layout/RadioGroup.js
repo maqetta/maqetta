@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/RadioGroup",["dojo","dijit","dojox","dijit/_Widget","dijit/_Templated","dijit/_Contained","dijit/layout/StackContainer","dojo/fx/easing"],function(_1,_2,_3){
 _1.getObject("dojox.layout.RadioGroup",1);
 _1.experimental("dojox.layout.RadioGroup");

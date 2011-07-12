@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/window",["./kernel"],function(_1){
 _1.doc=window["document"]||null;
 _1.body=function(){

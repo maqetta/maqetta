@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/app/bind",["dojo","dijit"],function(_1,_2){
 return function(_3,_4){
 _1.forEach(_3,function(_5){

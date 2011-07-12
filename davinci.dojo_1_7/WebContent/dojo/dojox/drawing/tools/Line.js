@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/tools/Line",["../stencil/Line","../util/oo","../manager/_registry"],function(){
 dojox.drawing.tools.Line=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Line,function(){
 },{draws:true,showAngle:true,onTransformEnd:function(_1){

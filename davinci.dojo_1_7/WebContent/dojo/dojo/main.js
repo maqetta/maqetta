@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/main",["./_base/kernel","./has","require","./_base/sniff","./_base/lang","./_base/array","./_base/declare","./_base/Deferred","./_base/json","./_base/Color","require","./_base/browser","./_base/loader"],function(_1,_2,_3){
 if(_1.config.isDebug){
 _3(["./_firebug/firebug"]);

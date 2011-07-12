@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/NodeList",["./kernel","../on","./lang","./array","./html"],function(_1,on){
 var ap=Array.prototype,_2=ap.slice,_3=ap.concat;
 var _4=function(a,_5,_6){

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/data/util/simpleFetch",["../..","./sorter"],function(_1){
 _1.getObject("data.util.simpleFetch",true,_1);
 _1.data.util.simpleFetch.fetch=function(_2){

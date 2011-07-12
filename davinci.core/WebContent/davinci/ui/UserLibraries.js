@@ -96,7 +96,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		if(values.length){
 			var isOk = davinci.library.modifyLib(values);
 			
-			davinci.resource.resourceChanged("updated", davinci.resource.getRoot());
+			davinci.resource.resourceChanged("reload", davinci.resource.getRoot());
 			dojo.publish("/davinci/ui/libraryChanged");
 		}
 		
@@ -104,7 +104,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		for(var i=0;i<pages.length;i++){
-			var newSource = pageBuilder.rebuildSource(pages[i].getContents(), pages[i]);
+			var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
 			pages[i].setContents(newSource, false);
 		}
 		this.onClose();

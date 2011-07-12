@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/app/module/env",["dojo","dijit","dojox"],function(_1,_2,_3){
 return _1.declare(null,{mode:"",init:function(){
 }});

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/rpc/Rest",["dojo","dojox"],function(_1,_2){
 _1.getObject("rpc.Rest",true,_2);
 if(_2.rpc&&_2.rpc.transportRegistry){

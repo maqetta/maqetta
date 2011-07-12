@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/widget/rotator/Wipe",["dojo","dijit","dojox"],function(_1,_2,_3){
 _1.getObject("dojox.widget.rotator.Wipe",1);
 (function(d){

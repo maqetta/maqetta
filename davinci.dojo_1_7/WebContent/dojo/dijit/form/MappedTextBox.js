@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/form/MappedTextBox",["dojo/_base/kernel","..","./ValidationTextBox","dojo/_base/declare","dojo/_base/html"],function(_1,_2){
 _1.declare("dijit.form.MappedTextBox",_2.form.ValidationTextBox,{postMixInProperties:function(){
 this.inherited(arguments);

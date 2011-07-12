@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/av/_Media",["dojo"],function(_1){
 _1.getObject("dojox.av",true);
 _1.experimental("dojox.av.FLVideo");

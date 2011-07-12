@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/cldr/monetary",["../main"],function(_1){
 _1.getObject("cldr.monetary",true,_1);
 _1.cldr.monetary.getData=function(_2){

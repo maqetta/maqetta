@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/_base/Color",["./kernel","./array","./lang"],function(_1){
 _1.Color=function(_2){
 if(_2){

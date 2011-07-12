@@ -62,16 +62,6 @@
 	outline: 0px none #FFFFFF;
 }
 
-.editLayoutGrid {
-	background-image: url('images/grid.gif');
-}
-.editLayoutGrid FORM,
-.editLayoutGrid .dijitContentPane,
-.editLayoutGrid .dojoxScrollWindow {
-	background-image: url('images/grid.gif');
-}
-
-
 /* HTML widgets */
 
 DIV.HtmlWidget {

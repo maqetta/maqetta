@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/manager/_registry",["dojo","../../drawing"],function(_1){
 _1.getObject("drawing.stencil",true,dojox);
 var _2={tool:{},stencil:{},drawing:{},plugin:{},button:{}};

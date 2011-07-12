@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/drawing/Drawing",["dojo","../","./manager/_registry","../gfx","./util/oo","./util/common","./util/typeset","./defaults","./manager/Anchors","./manager/Canvas","./manager/keys","./manager/Mouse","./manager/Stencil","./manager/StencilUI","./manager/Undo","./stencil/_Base","./stencil/Ellipse","./stencil/Image","./stencil/Line","./stencil/Path","./stencil/Rect","./stencil/Text","./annotations/Angle","./annotations/Arrow","./annotations/BoxShadow","./annotations/Label"],function(_1,_2){
 _1.experimental("dojox.drawing");
 var _3=false;

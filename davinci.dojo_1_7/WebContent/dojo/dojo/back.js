@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/back",["./main","require"],function(_1,_2){
 _1.getObject("back",true,_1);
 var _3=_1.back,_4=_3.getHash=function(){

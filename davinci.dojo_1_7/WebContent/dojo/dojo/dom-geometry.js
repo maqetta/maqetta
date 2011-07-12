@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/dom-geometry",["./_base/kernel","./_base/sniff","./_base/window","./dom","./dom-style"],function(_1,_2,_3,_4,_5){
 _1.boxModel="content-box";
 if(_2.isIE){

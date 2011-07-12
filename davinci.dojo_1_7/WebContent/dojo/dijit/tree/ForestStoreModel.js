@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dijit/tree/ForestStoreModel",["dojo/_base/kernel","..","./TreeStoreModel","dojo/_base/array","dojo/_base/lang","dojo/_base/window"],function(_1,_2){
 _1.declare("dijit.tree.ForestStoreModel",_2.tree.TreeStoreModel,{rootId:"$root$",rootLabel:"ROOT",query:null,constructor:function(_3){
 this.root={store:this,root:true,id:_3.rootId,label:_3.rootLabel,children:_3.rootChildren};

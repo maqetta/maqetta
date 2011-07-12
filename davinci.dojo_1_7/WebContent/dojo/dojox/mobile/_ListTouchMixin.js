@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/_ListTouchMixin",["dijit/form/_ListBase"],function(_1){
 return dojo.declare("dojox.mobile._ListTouchMixin",dijit.form._ListBase,{postCreate:function(){
 this.inherited(arguments);

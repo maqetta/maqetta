@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/string/BidiComplex",["dojo/_base/kernel","dojo/_base/array","dojo/_base/connect"],function(_1){
 _1.experimental("dojox.string.BidiComplex");
 _1.getObject("string.BidiComplex",true,dojox);

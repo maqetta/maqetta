@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/layout/FloatingPane",["dojo","dijit","dojox","dojo/window","dijit/_Templated","dijit/_Widget","dijit/BackgroundIframe","dojo/dnd/Moveable","dojox/layout/ContentPane","dojox/layout/ResizeHandle"],function(_1,_2,_3){
 _1.getObject("dojox.layout.FloatingPane",1);
 _1.experimental("dojox.layout.FloatingPane");

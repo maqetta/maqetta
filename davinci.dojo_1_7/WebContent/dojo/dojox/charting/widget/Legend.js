@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/charting/widget/Legend",["dojo/_base/kernel","dojo/_base/html","dojo/_base/declare","dijit/_Widget","dojox/gfx","dojox/lang/functional","dojox/lang/functional/array","dojox/lang/functional/fold"],function(_1,_2,_3,_4,_5,df){
 var _6=/\.(StackedColumns|StackedAreas|ClusteredBars)$/;
 return _1.declare("dojox.charting.widget.Legend",dijit._Widget,{chartRef:"",horizontal:true,swatchSize:18,legendBody:null,postCreate:function(){

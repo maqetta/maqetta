@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/NodeList-manipulate",["./main"],function(_1){
 function _2(_3){
 var _4="",ch=_3.childNodes;

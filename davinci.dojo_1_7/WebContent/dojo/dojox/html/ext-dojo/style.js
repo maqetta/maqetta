@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/html/ext-dojo/style",["dojo/_base/kernel","dojo/_base/html"],function(_1){
 _1.experimental("dojox.html.ext-dojo.style");
 var st=_1.getObject("html.ext-dojo.style",true,dojox);

@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojox/mobile/ComboBox",["./TextBox","./_ComboBoxMenu","dijit/form/_AutoCompleterMixin","./common","dijit/popup"],function(_1,_2,_3,_4,_5){
 dojo.experimental("dojox.mobile.ComboBox");
 return dojo.declare("dojox.mobile.ComboBox",[dojox.mobile.TextBox,dijit.form._AutoCompleterMixin],{dropDownClass:"dojox.mobile._ComboBoxMenu",selectOnClick:false,autoComplete:false,dropDown:null,maxHeight:-1,dropDownPosition:["below","above"],_throttleOpenClose:function(){

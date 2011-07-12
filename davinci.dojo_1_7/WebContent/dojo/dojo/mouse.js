@@ -4,6 +4,7 @@
 	see: http://dojotoolkit.org/license for details
 */
 
+//>>built
 define("dojo/mouse",["./_base/kernel","./on","./has"],function(_1,on,_2){
 _2.add("dom-quirks",document.compatMode=="BackCompat");
 _2.add("events-mouseenter","onmouseenter" in document.createElement("div"));

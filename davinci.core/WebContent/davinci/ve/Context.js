@@ -831,7 +831,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		if (mobileDevice){
 			this._editor.visualEditor.setDevice(mobileDevice);
 		}
-		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
+		
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 

@@ -68,13 +68,13 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		// Don't populate the editor until the tab is selected.  Defer processing,
 		// but also avoid problems with display:none on hidden tabs making it impossible
 		// to do geometry measurements in editor initialization
-		var tabContainer = dijit.byId("editors_tabcontainer");
-		if(tabContainer.selectedChildWidget.domNode == this.domNode){
+		var tabContainer = "editors_tabcontainer";
+		if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
 			// Tab is visible.  Go ahead
 			editor.setContent(fileName,content);	
 		}else{
 			// When tab is selected, set up the editor
-			var handle = dojo.subscribe("/davinci/ui/editorSelected", null, function(args){
+			var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
 				if(editor==args.editor){
 					dojo.unsubscribe(handle);
 					editor.setContent(fileName,content);		

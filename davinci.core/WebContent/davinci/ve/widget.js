@@ -1494,7 +1494,10 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		}else{
 			this.type=dijitWidget.declaredClass;
 		}
-		this.acceptsHTMLChildren=dijitWidget._setContentAttr;
+
+		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);
+		this.acceptsHTMLChildren = allowedChild[0] === 'ANY' ||
+								   allowedChild.indexOf('HTML') !== -1;
 		this.dijitWidget=dijitWidget;
 		this.containerNode=dijitWidget.containerNode;
 		this.styleNode=dijitWidget.styleNode;

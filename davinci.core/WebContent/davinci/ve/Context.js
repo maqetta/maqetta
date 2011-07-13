@@ -640,6 +640,11 @@ dojo.declare("davinci.ve.Context", null, {
 					// See note above about margin:0 temporary hack
 					body.style.width = "100%";
 					body.style.height = "100%";
+					// Force visibility:visible because CSS stylesheets in dojox.mobile
+					// have BODY { visibility:hidden;} only to set visibility:visible within JS code. 
+					// Maybe done to minimize flickering. Will follow up with dojox.mobile
+					// folks to find out what's up. See #712
+					body.style.visibility = "visible";
 					body.style.margin = "0";
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
@@ -1957,6 +1962,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	_reDojoJS: new RegExp(".*/dojo.js$"),
 	
 	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
+		
 		if (url) {
 			var isDojoJS = this._reDojoJS.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
@@ -1974,16 +1980,9 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 						});
 			}
 			if (doUpdateModel) {
-				if (isDojoJS) {
-					// XXX Nasty nasty nasty special case for dojo attribute thats
-					// required. Need to generalize in the metadata somehow.
-					this.addHeaderScript(url, {
-						'djConfig' : "parseOnLoad: true"
-					});
-				}
 				
+				/* update the script if found */
 				var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
-				
 				for(var i=0;i<elements.length;i++){
 					var n = elements[i];
 					var elementUrl = n.getAttribute("src");
@@ -1993,7 +1992,16 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					}
 				}
 				
-				this.addHeaderScript(url);
+				
+				if (isDojoJS) {
+					// XXX Nasty nasty nasty special case for dojo attribute thats
+					// required. Need to generalize in the metadata somehow.
+					this.addHeaderScript(url, {
+						'djConfig' : "parseOnLoad: true"
+					});
+				}else{
+					this.addHeaderScript(url);
+				}
 			}
 		} else if (text) {
 			this.getGlobal()['eval'](text);

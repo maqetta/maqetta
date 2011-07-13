@@ -61,7 +61,10 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	}, 
 	
 	_setValueAttr : function(value){
-		this._colorPicker.setColor(value);
+		// color picker freeks out on setting non color values, this means it will always be whatever it was at before.
+		
+		if(value!=null && value!="")
+			this._colorPicker.setColor(value);
 	}
 
 });

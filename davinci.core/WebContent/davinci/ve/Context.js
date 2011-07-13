@@ -640,6 +640,11 @@ dojo.declare("davinci.ve.Context", null, {
 					// See note above about margin:0 temporary hack
 					body.style.width = "100%";
 					body.style.height = "100%";
+					// Force visibility:visible because CSS stylesheets in dojox.mobile
+					// have BODY { visibility:hidden;} only to set visibility:visible within JS code. 
+					// Maybe done to minimize flickering. Will follow up with dojox.mobile
+					// folks to find out what's up. See #712
+					body.style.visibility = "visible";
 					body.style.margin = "0";
 
 					body._edit_context = context; // TODO: find a better place to stash the root context

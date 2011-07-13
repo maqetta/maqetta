@@ -1525,7 +1525,7 @@
             },
             "isContainer": true,
             "allowedParent": "DojoxMobileView",
-            "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar, HTML"
+            "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
         },
         {
             "name": "RoundRect",

@@ -185,7 +185,6 @@ preview.silhouetteiframe.prototype = {
 			silhouetteiframe_object_container.innerHTML = '<object class="silhouetteiframe_object" data="'+
 				this.svgfilename+'" type="image/svg+xml" '+
 				'onload="event.target.parentNode.parentNode._silhouetteiframe.svgloadhandler(event.target)"></object>';
-			this.updatePageStyle(this.svgfilename);
 		}else{
 			// Restore element.style on the rootNode and iframe node
 			this._restoreStyle(this.rootNode.style, this._silhouette_div_container_orig_style);			
@@ -490,27 +489,8 @@ preview.silhouetteiframe.prototype = {
 			a1_elem.beginElement();
 			a2_elem.beginElement();
 		}
-	},
-	
-	updatePageStyle: function(fileName){
-
-		var silhouetteiframe_iframe = this.rootNode.querySelectorAll(".silhouetteiframe_iframe")[0];
-		if(!silhouetteiframe_iframe){
-			return;
-		}
-		var parts = silhouetteiframe_iframe.src.split('?');
-		var url = parts[0];
-		if (url.length < 1){
-			return; // we must be running in the pagedesigner 
-		}
-		var theme = preview.silhouetteiframe.getMobileTheme(fileName);
-		if (parts.length == 1 || parts[1]  != 'theme='+theme){ // only reload if device theme has changed
-			silhouetteiframe_iframe.src = url + '?theme='+theme;
-		}
-		
-		
 	}
-
+	
 };
 
 preview.silhouetteiframe.themeMap = []; // map silhouette files to dojo mobile theme names

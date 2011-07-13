@@ -340,15 +340,24 @@ dojo.declare("davinci.ve.Context", null, {
 			lib = './lib';
 		}
 		var doc = this.getDocument();
+		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
 		for (var oc = 0; oc < oldCssFiles.length; oc++){
 			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
-			var head = doc.getElementsByTagName("head")[0];
 			var links = head.querySelectorAll(qStr);
 			// remove the old css files
 			for(var x = 0; x < links.length; x++){
 				head.removeChild(links[x]);
 			}
+		}
+		// remove the old iPhone files
+		var iphone_qStr = 'link'; // iphone gets added by require, so we need to remove it
+		var iphone_links = head.querySelectorAll(iphone_qStr);
+		// remove the old css files
+		for(var ip = 0; ip < iphone_links.length; ip++){
+			var href = iphone_links[ip].href;
+			if (href.indexOf('iphone/iphone.css') > 0)
+				head.removeChild(iphone_links[ip]);
 		}
 		if (device){
 			this.setMobileDevice(device);
@@ -359,7 +368,7 @@ dojo.declare("davinci.ve.Context", null, {
 				link.setAttribute("type", "text/css");
 				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
 				
-				head.appendChild(link);
+				head.appendChild(link,0);
 			}
 		}else if (oldDevice){
 			// set it up for the old device
@@ -369,7 +378,7 @@ dojo.declare("davinci.ve.Context", null, {
 				link.setAttribute("type", "text/css");
 				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
 				
-				head.appendChild(link);
+				head.appendChild(link,0);
 			}
 		}
 	},
@@ -640,6 +649,11 @@ dojo.declare("davinci.ve.Context", null, {
 					// See note above about margin:0 temporary hack
 					body.style.width = "100%";
 					body.style.height = "100%";
+					// Force visibility:visible because CSS stylesheets in dojox.mobile
+					// have BODY { visibility:hidden;} only to set visibility:visible within JS code. 
+					// Maybe done to minimize flickering. Will follow up with dojox.mobile
+					// folks to find out what's up. See #712
+					body.style.visibility = "visible";
 					body.style.margin = "0";
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
@@ -817,6 +831,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		if (mobileDevice){
 			this._editor.visualEditor.setDevice(mobileDevice);
 		}
+		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 

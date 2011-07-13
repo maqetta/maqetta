@@ -145,7 +145,7 @@
         "state": {
             "datatype": "string",
             "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
-            "hidden": false
+            "hidden": true
         }
     },
     "content": "<input type='text'></input>"

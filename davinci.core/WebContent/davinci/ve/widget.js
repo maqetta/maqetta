@@ -1589,7 +1589,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	isLayout: function()
 	{
-		return this.dijitWidget.addChild;
+		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
 	},
 	resize: function()
 	{

@@ -1494,7 +1494,10 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		}else{
 			this.type=dijitWidget.declaredClass;
 		}
-		this.acceptsHTMLChildren=dijitWidget._setContentAttr;
+
+		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);
+		this.acceptsHTMLChildren = allowedChild[0] === 'ANY' ||
+								   allowedChild.indexOf('HTML') !== -1;
 		this.dijitWidget=dijitWidget;
 		this.containerNode=dijitWidget.containerNode;
 		this.styleNode=dijitWidget.styleNode;
@@ -1549,7 +1552,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	addChild: function(child,index)
 	{
-		if(this.dijitWidget.addChild){
+		if (this.dijitWidget.addChild && child.dijitWidget) {
 			if(index === undefined || index === -1){
 				index = "last";
 				this._srcElement.addChild(child._srcElement);
@@ -1594,12 +1597,12 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			this.dijitWidget.resize();
 		}
 	},
-	removeChild: function( /*Widget*/child){
-		if(!child){
+	removeChild: function(/*Widget*/child) {
+		if (!child) {
 			return;
 		}
 
-		if(this.dijitWidget.removeChild){
+		if (this.dijitWidget.removeChild && child.dijitWidget) {
 			// it's a Widget and a Container
 			this.dijitWidget.removeChild(child.dijitWidget);
 			this._srcElement.removeChild(child._srcElement);

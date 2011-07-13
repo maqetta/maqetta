@@ -300,15 +300,12 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	 */
 	_getAllowedTargetWidget: function(target) {
 		// returns an array consisting of 'type' and any 'class' properties
-		function getClassList(type, descriptor) {
-			// some types may not have a descriptor
-			if (descriptor) {
-				var classList = descriptor['class'];
-				if (classList) {
-					classList = classList.split(/\s+/);
-					classList.push(type);
-					return classList;
-				}
+		function getClassList(type) {
+			var classList = Metadata.queryDescriptor(type, 'class');
+			if (classList) {
+				classList = classList.split(/\s+/);
+				classList.push(type);
+				return classList;
 			}
 			return [type];
 		}
@@ -325,16 +322,14 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		function isAllowed(children, parent) {
 			var parentType = parent instanceof davinci.ve._Widget ?
 					parent.type : parent._dvWidget.type;
-			var descriptor = queryDescriptor(parentType),
-				parentClassList,
-				allowedChild = descriptor && descriptor.allowedChild || "NONE";
+			var parentClassList,
+				allowedChild = Metadata.getAllowedChild(parentType);
 			
 			// special case for HTML <body>
 			if (parentType === "html.body") {
-				allowedChild = "ANY";
+				allowedChild = ["ANY"];
 			}
-			allowedChild = allowedChild.split(/\s*,\s*/);
-			parentClassList = getClassList(parentType, descriptor);
+			parentClassList = getClassList(parentType);
 			
 			// Cycle through children, making sure that all of them work for
 			// the given parent.
@@ -349,7 +344,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}
 		
 		// get data for widget we are adding to page
-		var queryDescriptor = davinci.ve.metadata.queryDescriptor,
+		var Metadata = davinci.ve.metadata,
 			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
 			newTarget = target,
 			data = this._data.length ? this._data : [this._data],
@@ -358,14 +353,10 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		// 'this._data' may represent a single widget or an array of widgets.
 		// Get data for all widgets, for use later in isAllowed().
 		data.forEach(function(elem) {
-			var descriptor = queryDescriptor(elem.type),
-				child;
-			child = {
-				allowedParent: (descriptor && descriptor.allowedParent) || "ANY",
-				classList: getClassList(elem.type, descriptor)
-			};
-			child.allowedParent = child.allowedParent.split(/\s*,\s*/);
-			children.push(child);
+			children.push({
+				allowedParent: Metadata.getAllowedParent(elem.type),
+				classList: getClassList(elem.type)
+			});
 		});
 
 		while (newTarget && ! isAllowed(children, newTarget)) {

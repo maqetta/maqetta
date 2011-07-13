@@ -23,7 +23,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+            "$text": "dojo.require('dojox.mobile.compat');"
         }
     ],
     "library": {

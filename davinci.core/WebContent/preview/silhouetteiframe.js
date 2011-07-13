@@ -33,20 +33,6 @@ if (!window.preview) {
 
 // Class constructor
 preview.silhouetteiframe = function(args){
-	this.themeMap = []; // map silhouette files to dojo mobile theme names
-	this.themeMap['android_340x480.svg'] = 'Android';
-	this.themeMap['android_480x800.svg'] = 'Android';
-	this.themeMap['androidtablet.svg'] = 'Android';
-	this.themeMap['bbplaybook.svg'] = 'BlackBerry';
-	this.themeMap['blackberry.svg'] = 'BlackBerry';
-	this.themeMap['ipad.svg'] = 'iPad';
-	this.themeMap['iphone.svg'] = 'iPhone';
-	
-	this.themeCssMap = []; // map silhouette files to dojo mobile theme names, for pagedesigner
-	this.themeCssMap['Android'] = ['android/android.css'];
-	this.themeCssMap['BlackBerry'] = ['blackberry/blackberry.css'];
-	this.themeCssMap['iPad'] = ['iphone/iphone.css', 'iphone/ipad.css'];
-	this.themeCssMap['iPhone'] = ['iphone/iphone.css'];
 	
 	var rootNode = this.rootNode = args.rootNode;
 	if(!rootNode){

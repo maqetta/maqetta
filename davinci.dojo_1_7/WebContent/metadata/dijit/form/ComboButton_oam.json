@@ -17,6 +17,14 @@
         {
             "type": "javascript",
             "$text": "dojo.require('dijit.form.ComboButton');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.Menu');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.MenuItem');"
         }
     ],
     "library": {
@@ -41,6 +49,11 @@
         "value": {
             "datatype": "string",
             "title": "Value"
+        },
+        "dropDown": {
+            "datatype": "object",
+            "title": "Popup",
+            "isData": true
         },
         "tabIndex": {
             "datatype": "string",
@@ -74,8 +87,29 @@
         },
         "optionsTitle": {
             "datatype": "string",
+            "defaultValue": "combo options",
             "description": "Text that describes the options menu (accessibility)",
             "hidden": false
+        },
+        "dropDownPosition": {
+            "datatype": "array",
+            "description":"TODO: changes the direction of the arrow and placement of menu.",
+            "option": [
+                {
+                    "value": "[before]"
+                },
+                {
+                    "value": "[after]"
+                },
+                {
+                    "value": "[above]"
+                },
+                {
+                    "value": "[below]"
+                }
+            ],
+            "title": "Dropdown Position",
+            "hidden":true
         },
         "scrollOnFocus": {
             "datatype": "boolean",

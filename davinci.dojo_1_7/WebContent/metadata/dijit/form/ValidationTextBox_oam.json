@@ -128,7 +128,7 @@
                 }
             ],
             "defaultValue": "[]",
-            "title": "Tooltip Positions"
+            "title": "Tooltip Position"
         },
         "scrollOnFocus": {
             "datatype": "boolean",

@@ -16,15 +16,18 @@ dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 
 dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPart, {
-	postCreate: function(){
+	postCreate: function()
+	{
 		this.inherited(arguments);
+
+		
+		
 		
 		var model= new davinci.review.model.ReviewTreeModel();
 		this.model = model;
 		this.tree = new davinci.ui.widgets.Tree({
-			id: "reviewCommentExplorerViewTree",
 			showRoot:false,
-			model: model,
+			model: model, id:'reviewResourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			filters : [davinci.review.model.Resource.dateSortFilter,this.commentingFilter],
@@ -61,18 +64,6 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
 		if(davinci.review.Runtime.getRole()!="Designer")
 		dojo.style(this.toolbarDiv, "display", "none");
-		
-		// Customize dijit._masterTT so that it will not be closed when the cursor is hovring on it
-		if(!dijit._masterTT){ dijit._masterTT = new dijit._MasterTooltip(); }
-		this.connect(dijit._masterTT.domNode, "mouseover", function(){
-			if(this._delTimer){
-				clearTimeout(this._delTimer);
-				this._delTimer = null;
-			}
-		});
-		this.connect(dijit._masterTT.domNode, "mouseleave", function(){
-			this._lastAnchorNode && this._leave();
-		});
 	},
 	
 	_updateActionBar: function(item,context){
@@ -234,7 +225,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
                 timePattern:'HH:mm:ss'
 			});
 			template.detail_creator = davinci.review.Runtime.getDesigner()
-						+ "&nbsp;&lt" + davinci.review.Runtime.getDesignerEmail() + "&gt";
+						+ "&nbsp;(" + davinci.review.Runtime.getDesignerEmail() + ")";
 			template.detail_files = "";
 			item.getChildren(function(children){ c = children; },true);
 			dojo.forEach(c, function(i){
@@ -250,13 +241,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
 			
 			this._showTimer = setTimeout(dojo.hitch(this, function(){
-				if(this._delTimer){
-					clearTimeout(this._delTimer);
-					delete this._delTimer;
-				}
 				dijit.showTooltip(dojo.string.substitute(this.infoCardContent, template), node.rowNode);
-				this._lastAnchorNode = node;
-				delete this._showTimer;
 			}), 1000);
 		}
 		
@@ -267,12 +252,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			clearTimeout(this._showTimer);
 			delete this._showTimer;
 		}
-		if(this._lastAnchorNode){
-			this._delTimer = setTimeout(dojo.hitch(this, function(){
-				dijit.hideTooltip(this._lastAnchorNode.rowNode);
-				delete this._delTimer;
-			}), 1000);
-		}
+		dijit.hideTooltip(node.rowNode);
 	},
 	
 	

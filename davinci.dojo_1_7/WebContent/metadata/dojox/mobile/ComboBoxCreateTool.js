@@ -20,7 +20,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 			return;
 		}
 
-		var dataList = this._data[0]
+		var dataList = this._data[0];
 		var comboBox = this._data[1];
 		
 		if(!this._context.loadRequires(dataList.type,true) ||
@@ -44,23 +44,24 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.v
 		var dataListWidget = undefined;
 		var comboBoxWidget = undefined;
 		
-		var dj = this._context.getDojo();
+		//var dj = this._context.getDojo();
 		dojo.withDoc(this._context.getDocument(), function(){
 			dataListWidget = davinci.ve.widget.createWidget(dataList);
 			comboBoxWidget = davinci.ve.widget.createWidget(comboBox);
 		});
 		
 		if(!dataListWidget || !comboBoxWidget){
-			console.error(this.declaredClass + 'Error creating widgets')
+			console.error(this.declaredClass + 'Error creating widgets');
 			return;
 		}
 		comboBoxWidget.dijitWidget.store = dataListWidget.dijitWidget;
 		
 		var command = new davinci.commands.CompoundCommand();
 		var index = args.index;
-		var store = comboBoxWidget.dijitWidget.store;
-		
-		command.add(new davinci.ve.commands.AddCommand( dataListWidget, args.parent, index));
+		//var store = comboBoxWidget.dijitWidget.store;
+		// always put datalists as first element under body, to ensure they are constructed by dojo before they are used
+		var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
+		command.add(new davinci.ve.commands.AddCommand( dataListWidget, bodyWidget , 0 ));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(comboBoxWidget, args.parent, index));
 		

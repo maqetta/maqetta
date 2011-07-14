@@ -167,14 +167,23 @@ davinci.states = {
 		return name;
 	},
 	
-	_FORMATTING_SUFFIXES: { "width": "px", "height": "px", "top": "px", "left": "px" },
+	_DYNAMIC_PROPERTIES: { width:1, height:1, top:1, right:1, bottom:1, left:1 },
 	
 	_getFormattedValue: function(name, value) {
-		var suffix = this._FORMATTING_SUFFIXES[name];
-		if (suffix && (typeof value != "string" || value.indexOf(suffix) < 0)) {
-			value += suffix;
+		//FIXME: This code needs to be analyzed more carefully
+		// Right now, only checking six properties which might be set via dynamic
+		// drag actions on canvas. If just a raw number value, then add "px" to end.
+		if(name in this._DYNAMIC_PROPERTIES){
+			if(typeof value != 'string'){
+				return value+"px";
+			}
+			var trimmed_value = dojo.trim(value);
+			// See if value is a number
+			if(/^[-+]?[0-9]*\.?[0-9]+$/.test(trimmed_value)){
+				value = trimmed_value+"px";
+			}
 		}
-		return value;
+		return value;			
 	},
 	
 	_resetAndCacheNormalStyle: function(widget, node, style, newState) {

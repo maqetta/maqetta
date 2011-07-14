@@ -1518,6 +1518,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-heading.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEh1qkd2q0d2qkh2q0h2qkt7r0t8r0+BtU6CtFGGuVGHuVSLvFaNv1WLvKzM6a3M6a3M6LfS7DJlklaOv4y64Iy635zD5J3E5KzN6azM6IK13Iy734273////////wAAACH5BAEAAB4ALAAAAAAQABAAAAVQoCeOZGmeaKqqU+u+LdN6U2Tf+D15S5ZJwIzjgXFkIJmGJ2GRtCSbTWc6vSg8hw0HCN1UKFotwlPQmM/os8FDIADcgYGAIJgD3qu8fs/nhwAAOw==",
+            "helper": "davinci.libraries.dojo.dojox.mobile.HeadingHelper",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -1628,6 +1629,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-list-item.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5Khd/k7jJRit7j7N3i6zdak+Dm79/l7j9mnUJqoEVyp0ZxpuHo8UVypkl3q0p4q0x9sU1+sVCDteTs9OLq8lKHueTt9ePs9P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABkALAAAAAAQABAAAAVbYCaOZClaaKqumYW9cAxb2YQRNzEEBkNdF8wkE5QZMZeMBMJsOp2ZyNEIyTgwACxAUEAoIpUK5pFZTGWNzHPdTGQM55ghc7jldr1f8ECPw/gHgYKDhCaGh4giIQA7",
+            "helper": "davinci.libraries.dojo.dojox.mobile.ListItemHelper",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -1675,6 +1677,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--icon-item.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
+            "helper": "davinci.libraries.dojo.dojox.mobile.IconItemHelper",
             "allowedParent": "dojox.mobile.IconContainer"
         },
         {
@@ -1695,6 +1698,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
+            "helper": "davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -1734,6 +1738,7 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
+            "helper": "davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper",
             "allowedParent": "dojox.mobile.TabBar"
         },
         {

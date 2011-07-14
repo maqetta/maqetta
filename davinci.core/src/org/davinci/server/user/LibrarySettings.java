@@ -89,7 +89,7 @@ public class LibrarySettings extends XMLFile {
 
     @Override
     protected String[] getAttributeNames() {
-        return new String[] { "id", "name", "verion", "virtualRoot" };
+        return new String[] { "id", "name", "version", "virtualRoot" };
     }
 
     @Override

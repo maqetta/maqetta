@@ -215,7 +215,7 @@
 					
 					{
 						id: "openThemeEditor",
-						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:100px;width: 200px')", 
+						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:110px;width: 200px')", 
 						label: "Theme Editor",
 						menubarPath: "davinci.open/open2"	  
 					},

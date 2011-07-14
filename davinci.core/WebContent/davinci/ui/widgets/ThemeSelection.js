@@ -9,12 +9,14 @@ dojo.require("davinci.ui.widgets.ThemeStore");
 dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	
 	workspaceOnly : true,
-	
+	message: 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.',
 
 	buildRendering: function(){
+
 		this._themeData = [];
 		var themes = davinci.resource.findResource("*.theme",true,"./themes",this.workspaceOnly);
 		this._themeCount = themes.length;
+		var div = dojo.doc.createElement("div");
 		this._select = dojo.doc.createElement("select");
 		for (var i = 0; i < themes.length; i++){
 			var contents = themes[i].getText();
@@ -28,8 +30,19 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 			
 		}
 		
-		this.domNode = this._select;
-		dojo.style(this.domNode, "width:100%;");
+		div.appendChild(this._select);
+//		if (this.dojoVersion){
+			this._warnDiv = dojo.doc.createElement("div");
+			this._warnDiv.innerHTML = '<table>' + 
+									'<tr><td></td><td>'+this.message+'</td><td></td></tr>'+
+									'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
+								'</table>';
+			div.appendChild(this._warnDiv);
+			dojo.style(this._warnDiv, "display","none");
+//		}
+		this.domNode = div;
+		dojo.style(this._select, "width","180px");
+		dojo.style(this.domNode, "width","100%");
 		dojo.connect(this._select, "onchange", this, "_onChange");
 	},
 	
@@ -82,14 +95,50 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		var currentValue = this._getValueAttr();
 		if( currentValue==null  ||  this._blockChange)
 			return;
-			
 		this.value = currentValue;
-		this.onChange();
+		this._cookieName = 'maqetta_'+currentValue.name+'_'+currentValue.version;
+		var warnCookie = dojo.cookie(this._cookieName);
+		if (this.dojoVersion && currentValue.version !== this.dojoVersion && !warnCookie){
+			dojo.style(this._warnDiv, "display", "block");
+			var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
+			var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');
+			dojo.connect(ok, "onClick", this, "_warnOk");
+			dojo.connect(cancel, "onClick", this, "_warnCancel");
+			
+			
+		} else {
+			this._destroy();
+			this.onChange();
+		}
 		
 		
 		
 	},
 	_getThemeDataAttr : function(){
 		return this._themeData;
+	},
+	
+	_warnOk: function(){
+		dojo.cookie(this._cookieName, "true");
+		this._destroy();
+		this.onChange();
+		
+	},
+	
+	_warnCancel: function(){
+		this._destroy();
+		this.onClose();
+		
+	},
+	
+	_destroy: function(){
+		var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
+		dojo.disconnect(ok);
+		ok.destroy();
+		var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');
+		dojo.disconnect(cancel);
+		cancel.destroy();
 	}
+	
+	
 });

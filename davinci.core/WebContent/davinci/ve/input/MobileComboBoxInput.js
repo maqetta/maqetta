@@ -98,7 +98,7 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 		var command = new davinci.commands.OrderedCompoundCommand();
 		var x = dojo.getObject(dataListId);
 		var y = dijit.byId(dataListId);
-		debugger;
+		
 		command.add(new davinci.ve.commands.ModifyCommand(dataListWidget, dataListProps, children));
 		var comboBoxCommand = new davinci.ve.commands.ModifyCommand(widget, comboBoxProps, []);
 		command.add(comboBoxCommand);

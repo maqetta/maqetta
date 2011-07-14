@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;
 
+@SuppressWarnings("serial")
 public class DavinciReviewServlet extends DavinciPageServlet {
 	private ReviewManager reviewManager;
-
-	private static String LOGIN_URL = "http://maqetta.org/index.php?option=com_user&view=login";
+	protected String revieweeName;
 
 	public void initialize() {
 		serverManager = ServerManager.createServerManger(getServletConfig());
@@ -40,18 +40,24 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 	}
 
 	public String getLoginUrl(HttpServletRequest req){
-		//	return req.getContextPath() + "/welcome";
-		return serverManager.getDavinciProperty("loginUrl");
-		//return "http://maqetta.org/index.php?option=com_user&view=login";
+        String loginUrl = serverManager.getDavinciProperty("loginUrl");
+        String params = "";
+        String pseparator = loginUrl.indexOf("?") > 0 ? "&" : "?";
+        if ( revieweeName != null ) {
+	        params = pseparator + "revieweeuser=" + revieweeName;
+	    }
+		return  loginUrl + params;
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
-	    
+
 	    if(serverManager==null)
 	        initialize();
-	    
-		String contextString = req.getContextPath();
+
+        revieweeName  = req.getParameter("revieweeuser");
+
+        String contextString = req.getContextPath();
 
 		String pathInfo = req.getPathInfo();
 
@@ -93,8 +99,8 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			}
 
 			// Handle the library request before the other operations
-			if(handleLibraryRequest(req, resp, path))
-				return;
+			if(handleLibraryRequest(req, resp, path)) { return; }
+
 			if (prefix.equals(IDavinciServerConstants.APP_URL.substring(1))
 					|| prefix.equals(IDavinciServerConstants.USER_URL.substring(1))
 					|| prefix.equals("cmd")) {

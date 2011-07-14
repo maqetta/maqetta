@@ -1529,6 +1529,20 @@
             "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
         },
         {
+            "name": "ToolBarButton",
+            "type": "dojox.mobile.ToolBarButton",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
+            "helper": "davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "supportsHTML": true
+            },
+            "allowedParent": "dojox.mobile.Heading"
+        },
+        {
             "name": "RoundRect",
             "type": "dojox.mobile.RoundRect",
             "category": "mobile",
@@ -1638,49 +1652,6 @@
             "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList"
         },
         {
-            "name": "Switch",
-            "type": "dojox.mobile.Switch",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl-switch.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw==",
-            "resizable": "none"
-        },
-        {
-            "name": "IconContainer",
-            "type": "dojox.mobile.IconContainer",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl-icon-container.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
-            "isContainer": true,
-            "allowedChild": "dojox.mobile.IconItem",
-            "properties": {
-                "defaultIcon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFkaO4nazAucXThpmyt8PRsr7O3+Tr2N7mw83ZdIqmmqq+g5evq7jJ4ufsy9PegZWuztbgpLLEq7nJiZy0d4yomKi94ebsfpOsfJGrlqe8jp+3wsvYobHD6OzwboWiiJuzfZKsrrvMprTGzdXfx9DbydLdxc7au8bUb4ajxs/bc4mlk6S6197lwcvX2d/neY6pv8nW5enuo7LE4OXrn67Bmam+1dzkz9bgyNDbqLbHcYekjqC2lKW62+Hoipy0////GCC5wQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAFASURBVHjafNPZcoIwFIDhExAULKAYBJfixq4stRZKEHn/tyoI6Y1Nv4tM5p85k8nFgaZJ5vB4BfOkaaDx5Un9/qqeyH4DY0P5+JtiJGB4nywTGfi8Zsl50HI2DcyCzQTrm82CNKM24tLNMrWe/ZYU8IhyFUXkYkVZcrRgkA6UI4qiX7SHQIsEUYWOHf0otJ8QiroujgMUAZGwtjjL8cW9ZhcV+Ze8ROUNyeeFhgkEpIPd04xbG+f7fbtaOTPOwl0NwO4JnrexbaIFtn14Xp+GWTKNQ4GgTZitiReGhz4G7bs9XKW601kJDrfvG4Eopebuk/PgaYlA2g8qdcDRspcATwf6ieJpwpDuBrJ3ioVy5KlvtOxSsCo2C8w7mwnaF5sGPLqxIB4MdGVBMoyhZKmSdhdgW+qvyi20u/DvHv0IMAAbv4T3o6uF6wAAAABJRU5ErkJggg%3D%3D"
-            },
-            "children": [
-                {
-                    "type": "dojox.mobile.IconItem",
-                    "properties": {
-                        "label": "Item 1"
-                    }
-                },
-                {
-                    "type": "dojox.mobile.IconItem",
-                    "properties": {
-                        "label": "Item 2"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "IconItem",
-            "type": "dojox.mobile.IconItem",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl--icon-item.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
-            "helper": "davinci.libraries.dojo.dojox.mobile.IconItemHelper",
-            "allowedParent": "dojox.mobile.IconContainer"
-        },
-        {
             "name": "Button",
             "type": "dojox.mobile.Button",
             "category": "mobile",
@@ -1693,18 +1664,124 @@
             }
         },
         {
-            "name": "ToolBarButton",
-            "type": "dojox.mobile.ToolBarButton",
+            "name": "ToggleButton",
+            "type": "dojox.mobile.ToggleButton",
             "category": "mobile",
-            "icon": "resources/images/dx-mbl--toolbar-button.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ToolBarButtonHelper",
+            "icon": "resources/images/dx-mbl-toggle-toolbar-button.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///y5KhTFPijZXkDZYkDxhmeHn8DtimUJsouHr9+fv+fD1+/P3/Eh2q8LX79fl9djm9dvo9uLs906AtKTH6bbR7NLj9OPr81KJu1OJulaNv5C95aTH6LXR7LjU7rjU7b/Z8Mje8sne8tPl9dvp9uLt9+ny+laOv36z4X604Ii545C95JbB5pbB5afL6qbK6afL6bnW77jV7b/a8LvS5cvh8+Pv+dzr9////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAZ3wJxwSCwaj8iiAolqojY1haDmRAk1iqyiERFAtApGJocZLR6LkcD8aD8UlNxMAJp8BDOTZe+xSBw5BzECLwIwJRWJiR0XCTkIJy0CLiQclpcsIgY5BSE2KzYqoqMpKTQEOQMyMjerrq84A0ICtLW2tUm5uru8uUEAOw==",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
                 "supportsHTML": true
-            },
-            "allowedParent": "dojox.mobile.Heading"
+            }
+        },
+        {
+            "name": "Switch",
+            "type": "dojox.mobile.Switch",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-switch.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw==",
+            "resizable": "none"
+        },
+        {
+            "name": "CheckBox",
+            "type": "dojox.mobile.CheckBox",
+            "category": "mobile",
+            "icon": "resources/images/checkbox.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg=="
+        },
+        {
+            "name": "RadioButton",
+            "type": "dojox.mobile.RadioButton",
+            "category": "mobile",
+            "icon": "resources/images/radio-button.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII="
+        },
+        {
+            "name": "TextBox",
+            "type": "dojox.mobile.TextBox",
+            "category": "mobile",
+            "icon": "resources/images/text-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false
+            }
+        },
+        {
+            "name": "ComboBox",
+            "type": "dojox.mobile.ComboBox",
+            "category": "mobile",
+            "icon": "resources/images/combo-box.png",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC",
+            "data": [
+                {
+                    "type": "dijit.form.DataList",
+                    "properties": {
+                        "data-dojo-props": "id:\"items\""
+                    },
+                    "children": [
+                    {
+                        "type": "html.option",
+                        "properties": {
+                            "value": "Item 1"
+                        },
+                        "children": "Item 1",
+                        "content": "<option></option>"
+                    },
+                    {
+                        "type": "html.option",
+                        "properties": {
+                            "value": "Item 2"
+                        },
+                        "children": "Item 2",
+                        "content": "<option></option>"
+                    },
+                    {
+                        "type": "html.option",
+                        "properties": {
+                            "value": "Item 3"
+                        },
+                        "children": "Item 3",
+                        "content": "<option></option>"
+                    }
+                    ]
+        
+                },
+                {
+                    "type": "dojox.mobile.ComboBox",
+                    "properties": {
+                        "data-dojo-props": "value:\"Item 1\", list:\"items\""
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool",
+            "helper": "davinci.libraries.dojo.dojox.mobile.ComboBoxHelper",
+            "inlineEdit": "davinci.ve.input.MobileComboBoxInput"
+        },
+        {
+            "name": "TextArea",
+            "type": "dojox.mobile.TextArea",
+            "category": "mobile",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            }
+        },
+        {
+            "name": "ExpandingTextArea",
+            "type": "dojox.mobile.ExpandingTextArea",
+            "category": "mobile",
+            "icon": "resources/images/textarea.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+            "inlineEdit": {
+                "property": "value",
+                "displayOnCreate": false,
+                "multiLine": false
+            }
         },
         {
             "name": "TabBar",
@@ -1740,6 +1817,57 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
             "helper": "davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper",
             "allowedParent": "dojox.mobile.TabBar"
+        },
+        {
+            "name": "Slider",
+            "type": "dojox.mobile.Slider",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-horizontalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///87W5DdYkDtelTpelYOcwUBonj9mnEBonURto0Ruo0dzqOTt+EZzp9Xk9Nvo9kx+sU1+sZ/E6K3M68re8tDh81KHuZC95ZG95Z/F6KzM663N68ne8tDi81aOv5G+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZWQJJwSCwaj8ikcsk8fp7Q5KfxqD4an6Lo47h4KBsOxXNxfERCScjAgIAymAyEYbBEhInRaFHR+CcdCnoHQgIDAwhfYWMIhwJFBFRWDQVJh5cDTZqbS0EAOw=="
+        },
+        {
+            "name": "ContentPane",
+            "type": "dojox.mobile.ContentPane",
+            "category": "mobile",
+            "icon": "resources/images/ContentPane.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
+            "isContainer": true,
+            "allowedChild": "ANY"
+        },
+        {
+            "name": "IconContainer",
+            "type": "dojox.mobile.IconContainer",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl-icon-container.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
+            "isContainer": true,
+            "allowedChild": "dojox.mobile.IconItem",
+            "properties": {
+                "defaultIcon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFkaO4nazAucXThpmyt8PRsr7O3+Tr2N7mw83ZdIqmmqq+g5evq7jJ4ufsy9PegZWuztbgpLLEq7nJiZy0d4yomKi94ebsfpOsfJGrlqe8jp+3wsvYobHD6OzwboWiiJuzfZKsrrvMprTGzdXfx9DbydLdxc7au8bUb4ajxs/bc4mlk6S6197lwcvX2d/neY6pv8nW5enuo7LE4OXrn67Bmam+1dzkz9bgyNDbqLbHcYekjqC2lKW62+Hoipy0////GCC5wQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAFASURBVHjafNPZcoIwFIDhExAULKAYBJfixq4stRZKEHn/tyoI6Y1Nv4tM5p85k8nFgaZJ5vB4BfOkaaDx5Un9/qqeyH4DY0P5+JtiJGB4nywTGfi8Zsl50HI2DcyCzQTrm82CNKM24tLNMrWe/ZYU8IhyFUXkYkVZcrRgkA6UI4qiX7SHQIsEUYWOHf0otJ8QiroujgMUAZGwtjjL8cW9ZhcV+Ze8ROUNyeeFhgkEpIPd04xbG+f7fbtaOTPOwl0NwO4JnrexbaIFtn14Xp+GWTKNQ4GgTZitiReGhz4G7bs9XKW601kJDrfvG4Eopebuk/PgaYlA2g8qdcDRspcATwf6ieJpwpDuBrJ3ioVy5KlvtOxSsCo2C8w7mwnaF5sGPLqxIB4MdGVBMoyhZKmSdhdgW+qvyi20u/DvHv0IMAAbv4T3o6uF6wAAAABJRU5ErkJggg%3D%3D"
+            },
+            "children": [
+                {
+                    "type": "dojox.mobile.IconItem",
+                    "properties": {
+                        "label": "Item 1"
+                    }
+                },
+                {
+                    "type": "dojox.mobile.IconItem",
+                    "properties": {
+                        "label": "Item 2"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "IconItem",
+            "type": "dojox.mobile.IconItem",
+            "category": "mobile",
+            "icon": "resources/images/dx-mbl--icon-item.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
+            "helper": "davinci.libraries.dojo.dojox.mobile.IconItemHelper",
+            "allowedParent": "dojox.mobile.IconContainer"
         },
         {
             "name": "SpinWheel",
@@ -1799,85 +1927,6 @@
             "allowedChild": "ANY"
         },
         {
-            "name": "CheckBox",
-            "type": "dojox.mobile.CheckBox",
-            "category": "mobile",
-            "icon": "resources/images/checkbox.png",
-            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpi/P//P8PGnQf/M5AJWGAMf3d7kjUDLUYYAAITd94kWnO+uzqqC2DAQkGAgYEDwpbg4ICLv/jxA8IAUicefMD0Agw8+ABRCNL7geEHXBwkHG4uD2avuPAAtwEQS4Cqf3DAtX8A2p5urw6Xv3DjBZzNhMuPP6Da0TUHdu5ksNCQwG0ASEO8uToYv/iAqtmxcSODAjCMBAQ48BuAHtIwzQZAmzUkBIBhzIHfCyBnIgNkzQJIMYPVAJACkDNBmghpxhoLEkD/CXBIgBUXzjzI4GCgAHE2B4GkDE8HLxDpQACq8cWHH4TzAnqgkZyZQBmDHMAIys6UAIAAAwBz81X4fS5oMgAAAABJRU5ErkJggg=="
-        },
-        {
-            "name": "ComboBox",
-            "type": "dojox.mobile.ComboBox",
-            "category": "mobile",
-            "icon": "resources/images/combo-box.png",
-            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC",
-            "data": [
-                {
-                    "type": "dijit.form.DataList",
-                    "properties": {
-                        "data-dojo-props": "id:\"items\""
-                    },
-                    "children": [
-                    {
-                        "type": "html.option",
-                        "properties": {
-                            "value": "Item 1"
-                        },
-                        "children": "Item 1",
-                        "content": "<option></option>"
-                    },
-                    {
-                        "type": "html.option",
-                        "properties": {
-                            "value": "Item 2"
-                        },
-                        "children": "Item 2",
-                        "content": "<option></option>"
-                    },
-                    {
-                        "type": "html.option",
-                        "properties": {
-                            "value": "Item 3"
-                        },
-                        "children": "Item 3",
-                        "content": "<option></option>"
-                    }
-                    ]
-        
-                },
-                {
-                    "type": "dojox.mobile.ComboBox",
-                    "properties": {
-                        "data-dojo-props": "value:\"Item 1\", list:\"items\""
-                    }
-                }
-            ],
-            "tool": "davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ComboBoxHelper",
-            "inlineEdit": "davinci.ve.input.MobileComboBoxInput"
-        },
-        {
-            "name": "ContentPane",
-            "type": "dojox.mobile.ContentPane",
-            "category": "mobile",
-            "icon": "resources/images/ContentPane.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
-            "isContainer": true,
-            "allowedChild": "ANY"
-        },
-        {
-            "name": "ExpandingTextArea",
-            "type": "dojox.mobile.ExpandingTextArea",
-            "category": "mobile",
-            "icon": "resources/images/textarea.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-            "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false,
-                "multiLine": false
-            }
-        },
-        {
             "name": "FixedSplitter",
             "type": "dojox.mobile.FixedSplitter",
             "category": "mobile",
@@ -1916,55 +1965,6 @@
             "category": "mobile",
             "icon": "resources/images/Overlay.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPr6//z8//39//z8/vn6//T2/fH0/PT2/O7y+/P2/eju+vT3/ff5/fv8/ubt+urw++3y+/H1/OXt+uTs+efu+ujv+uvx+/T3/Orx+/P3/fn7/jdimzlknb3L3u3z+/D1/O/0+zllnTtooDtonz1roz5rokBvpvP3/ERzqUd4rkd4rUp9skt+skp9sU2BtU2BtEt8r42szPb5/FGIulCFuFCFt1KJu1KIulOJu1WMvQBAeFSMvVaOv+/1+gBVlvz9/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEAALAAAAAAQABAAAAekgECCg4SFgjyIiYqLQDwCj5CRkDxAOZKXjztANgMCMJ+goAIBOEA0BJiRADVALgwNnzEdPh0xnw0ML0AtCxq+Gj46Pr8aCy1AKQYMssE6wrUMESpAKBAXCxkFCwcFJwkLBR4oQCYYEYuKHw8mQCQKCDwNP/P0PBAUJUAiDhg3Mv8AZcywIGEEEA4TKqwA0aOhQxYKJoQAsmFDh4oYM17cYKjjoEAAOw=="
-        },
-        {
-            "name": "RadioButton",
-            "type": "dojox.mobile.RadioButton",
-            "category": "mobile",
-            "icon": "resources/images/radio-button.png",
-            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYFJREFUeNqMU6t2AjEQnXAq4ojbuF23uOCQ9A9ax6+0qpJv6SfUFYkDxzrWZV3WxW3nDk3KY+khnEOYyzzu3MyoYRho7HRdd/NHURTqGnu6Btq2HSLf3gcKIQimtSYNLMTB8I+yLNXdBEcOpBjJWEvLhcv4vmk5EXHSyAn+/FVqAZURbNjLuVqwpusl4cwaKotpTgRmFTBmkhlE+Yrkfqu+f24z/e9DEI/1akGuLulr40/+fCZJMPRsbJWDweR5ZunjxckNOyW13B78ETdJDEDL1QV1fS/2vDJkWLFt2/EN24KPtAUWYDsuIosE2jgHHzJutRERoUnNely0cH4qrirPGOMFHtgGAvFOcsXLBIZ5QuFiOhVFvWcm/LEyAzo/L6rDD/45ASbMcubgvYDrleOKRDsO2h2D3LDfXucnNuwHf8Q9MAeRaWupLHOwb6SdNAfqehc22/2QJlHUPptEYcgFeELVzST+twtJI9DG+5zvghrbxrFNvLeR6t46P3p+BBgAiJjb9hNPKQcAAAAASUVORK5CYII="
-        },
-        {
-            "name": "Slider",
-            "type": "dojox.mobile.Slider",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl-horizontalslider.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///87W5DdYkDtelTpelYOcwUBonj9mnEBonURto0Ruo0dzqOTt+EZzp9Xk9Nvo9kx+sU1+sZ/E6K3M68re8tDh81KHuZC95ZG95Z/F6KzM663N68ne8tDi81aOv5G+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZWQJJwSCwaj8ikcsk8fp7Q5KfxqD4an6Lo47h4KBsOxXNxfERCScjAgIAymAyEYbBEhInRaFHR+CcdCnoHQgIDAwhfYWMIhwJFBFRWDQVJh5cDTZqbS0EAOw=="
-        },
-        {
-            "name": "TextArea",
-            "type": "dojox.mobile.TextArea",
-            "category": "mobile",
-            "icon": "resources/images/textarea.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-            "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false,
-                "multiLine": false
-            }
-        },
-        {
-            "name": "TextBox",
-            "type": "dojox.mobile.TextBox",
-            "category": "mobile",
-            "icon": "resources/images/text-box.png",
-            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
-            "inlineEdit": {
-                "property": "value",
-                "displayOnCreate": false
-            }
-        },
-        {
-            "name": "ToggleButton",
-            "type": "dojox.mobile.ToggleButton",
-            "category": "mobile",
-            "icon": "resources/images/dx-mbl-toggle-toolbar-button.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///y5KhTFPijZXkDZYkDxhmeHn8DtimUJsouHr9+fv+fD1+/P3/Eh2q8LX79fl9djm9dvo9uLs906AtKTH6bbR7NLj9OPr81KJu1OJulaNv5C95aTH6LXR7LjU7rjU7b/Z8Mje8sne8tPl9dvp9uLt9+ny+laOv36z4X604Ii545C95JbB5pbB5afL6qbK6afL6bnW77jV7b/a8LvS5cvh8+Pv+dzr9////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAZ3wJxwSCwaj8iiAolqojY1haDmRAk1iqyiERFAtApGJocZLR6LkcD8aD8UlNxMAJp8BDOTZe+xSBw5BzECLwIwJRWJiR0XCTkIJy0CLiQclpcsIgY5BSE2KzYqoqMpKTQEOQMyMjerrq84A0ICtLW2tUm5uru8uUEAOw==",
-            "inlineEdit": {
-                "property": "label",
-                "displayOnCreate": true,
-                "supportsHTML": true
-            }
         }
     ]
 }

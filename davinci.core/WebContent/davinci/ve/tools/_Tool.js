@@ -29,15 +29,23 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		
 		while(target && target != containerNode){
 			widget = davinci.ve.widget.getEnclosingWidget(target);
+			// Not sure when widget.getContext() won't be true. Maybe that check deals with
+			// widgets that are either not completely ready or in process of being deleted?
+			// If anyone knows answer, please update this comment.
 			if(widget && !widget.getContext()){
 				target = widget.domNode.parentNode;
 				widget = null;
 			}else{
+				// Flow typically comes to here. The following check determines if
+				// current widget is a container, which means it can contain other widgets.
+				// If a container, then don't put editFeedback overlay over this DOM node
+				// because we want user to be able to click-select on child widgets,
+				// (unless the "isControl" metadata override is set for this widget type).
 				if (widget && widget.getContainerNode()) {
-					// overlay feedback for "control" container (DropDownButton, etc.)
-					//FIXME: Not sure why it is necessary to mask DropDownButton
-					//and a small number of widgets whereas other similar widgets
-					//such as DropDownSelect don't require it.
+					// Some Dijit widgets inherit from dijit._Container even those
+					// they aren't really meant to contain child widgets.
+					// "isControl" metadata flag overrides and says this is really 
+					// a primitive widget not a container widget.
 					if (!davinci.ve.metadata.queryDescriptor(widget.type, "isControl")) {
 						widget = null;
 					}

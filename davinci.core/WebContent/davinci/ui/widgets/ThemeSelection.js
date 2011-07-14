@@ -12,6 +12,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	message: 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.',
 
 	buildRendering: function(){
+
 		this._themeData = [];
 		var themes = davinci.resource.findResource("*.theme",true,"./themes",this.workspaceOnly);
 		this._themeCount = themes.length;
@@ -30,14 +31,16 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		}
 		
 		div.appendChild(this._select);
-		this._warnDiv = dojo.doc.createElement("div");
-		this._warnDiv.innerHTML = '<table>' + 
-								'<tr><td></td><td>'+this.message+'</td><td></td></tr>'+
-								'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
-							'</table>';
-		div.appendChild(this._warnDiv);
+//		if (this.dojoVersion){
+			this._warnDiv = dojo.doc.createElement("div");
+			this._warnDiv.innerHTML = '<table>' + 
+									'<tr><td></td><td>'+this.message+'</td><td></td></tr>'+
+									'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
+								'</table>';
+			div.appendChild(this._warnDiv);
+			dojo.style(this._warnDiv, "display","none");
+//		}
 		this.domNode = div;
-		dojo.style(this._warnDiv, "display","none");
 		dojo.style(this._select, "width","180px");
 		dojo.style(this.domNode, "width","100%");
 		dojo.connect(this._select, "onchange", this, "_onChange");
@@ -95,7 +98,7 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		this.value = currentValue;
 		this._cookieName = 'maqetta_'+currentValue.name+'_'+currentValue.version;
 		var warnCookie = dojo.cookie(this._cookieName);
-		if (currentValue.version !== this.dojoVersion && !warnCookie){
+		if (this.dojoVersion && currentValue.version !== this.dojoVersion && !warnCookie){
 			dojo.style(this._warnDiv, "display", "block");
 			var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
 			var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');

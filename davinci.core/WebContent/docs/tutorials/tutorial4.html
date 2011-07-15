@@ -31,17 +31,13 @@
 
 <a name="choose_device_silhouette"><h2>Choosing a device silhouette</h2></a>
 
-<p>When you launch Maqetta for the first time, Maqetta creates a default workspace. The picture below
-shows the default workspace:
-</p>
-
 <p>Set up your authoring canvas to author inside of an iPhone silhouette as follows:</p>
 <ul>
 <li><p>Go to the New menu at the top of the application, and issue a "New HTML File" command to open
 	up a new file within the Maqetta visual editor. You can either accept the default filename
 	(e.g., <code>file1.html</code>) or enter a custom filename.</li>
 <li>Click on the Choose Device icon
-	<img src="img/device.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
 	on the page editor's toolbar. The dialog looks as follows:
 	<p><a href="img/choose_device_dialog.png" target="_blank"><img alt="image" src="img/choose_device_dialog.png" style="margin: 1em 1em 0pt 0pt;" width="150" /></a></p>
 	On the menu that appears choose "iphone". The page canvas should show a near life-size silhouette of an iPhone.
@@ -50,18 +46,18 @@ shows the default workspace:
 <li>The current release provides authoring support for a handful of popular mobile devices, including
 	both phones and tablets, and supports authoring in both portrait and landscape.
 	Use the Choose Device icon
-	<img src="img/device.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
 	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
 	</li>
 <li>Switch between portrait and landscape modes by clicking on the
-	<img src="img/rotate.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
 	icon.
 	</li>
 <li>Using the same two icons,
-	<img src="img/device.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
 	and
-	<img src="img/rotate.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	, to back to showing the iPhone silhouette in portrait mode.
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	, to return back to showing the iPhone silhouette in portrait mode.
 	</li>
 </ul>
 
@@ -70,11 +66,10 @@ shows the default workspace:
 <p>In the widget palette, open up the "Dojox Mobile" section of the Widgets palette:
 </p>
 <p><a href="img/dojox_mobile_widgets.png" target="_blank"><img alt="image" src="img/dojox_mobile_widgets.png" style="margin: 1em 1em 0pt 0pt;" height="500" /></a></p>	
-<p>As you can see, the dojox.mobile widget library offers a wide variety of commonly used mobile widgets, which generally
-fall into the following categories:
+<p>As you can see, the dojox.mobile widget library offers a wide variety of commonly used mobile widget:
 </p>
 <ul>
-	<li>"View" widgets - container widgets that represent switchable alternate views. Typically, one view appears at a time, and
+	<li>View widgets - container widgets that represent switchable alternate views. Typically, one view appears at a time, and
 		when the running application switches to a different view, the old view slides out and the new view slides in:
 		<ul>
 			<li><strong>View</strong> - Usually, a View is used as a container for a (non-scrollable) full page of mobile content.</li>
@@ -82,14 +77,14 @@ fall into the following categories:
 			<li><strong>SwapView</strong> - A container for a full page of mobile content, but which swappable with an alternate views (e.g., via a touch horizontal-flick gesture).</li>
 		</ul>
 	</li>
-	<li>"Heading" widgets - These are widgets typically used at the top of a mobile screen:
+	<li>Heading widgets - These are widgets typically used at the top of a mobile screen:
 		<ul>
 			<li><strong>Heading</strong> - Heading (titlebar) widget.</li>
 			<li><strong>ToolBarButton</strong> - A button widget that can be placed inside of a Heading widget.</li>
 		</ul>
 	</li>
-	<li>"RoundedRect", "EdgeToEdge" and "List" widgets - These are widgets that either visually appear as
-		rounded rectangles or are used to display a list of things:
+	<li>RoundedRect, EdgeToEdge and List widgets - These are widgets that either visually appear as
+		rounded rectangles or are used to display a list of information or choices:
 		<ul>
 			<li><strong>RoundRect</strong> - A simple RoundRect into which other widgets and HTML elements can be dropped.</li>
 			<li><strong>RoundRectCategory</strong> - A heading widget typically used above a RoundRectList or RoundRectDataList.</li>
@@ -101,7 +96,7 @@ fall into the following categories:
 			<li><strong>ListItem</strong> - Child widget for RoundRectList or EdgeToEdgeList.</li>
 		</ul>
 	</li>
-	<li>"Form" widgets - These are low-level UI controls often used in forms:
+	<li>Form widgets - These are low-level UI controls often used in forms:
 		<ul>
 			<li><strong>Button</strong></li>
 			<li><strong>ToggleButton</strong></li>
@@ -114,15 +109,15 @@ fall into the following categories:
 			<li><strong>ExpandingTextArea</strong></li>
 		</ul>
 	</li>
-	<li>"TabBar" widgets - These are widgets typically used at the top or bottom of a screen
-		to manage an associated set of Views, resulting in a user interface similar to TabContainer
+	<li>TabBar widgets - These are widgets typically used at the top or bottom of a screen
+		to manage an associated set of Views, resulting in a user interface similar to a TabContainer
 		desktop widget.
 		<ul>
 			<li><strong>TabBar</strong> - Container widget.</li>
 			<li><strong>TabBarButton</strong> - Buttons within the TabBar.</li>
 		</ul>
 	</li>
-	<li>"Other" widgets:
+	<li>Other widgets:
 		<ul>
 			<li><strong>Slider</strong></li>
 			<li><strong>ContentPane</strong></li>
@@ -162,7 +157,13 @@ fall into the following categories:
 <li>Drag/drop a View widget onto the page canvas.
 	Notice that the page canvas now has a gray background. 
 	This is because the first dojox.mobile widget added to the page
+	brings in the CSS theme stylesheets that provide a native look-and-feel
+	for a particular mobile device.
 	<p><a href="img/Mobile_View_Widget_Added.png" target="_blank"><img alt="image" src="img/Mobile_View_Widget_Added.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>	
+	Also notice that there is a selection rectangle around the entire page.
+	This is because the View is selected and it has default width and height of 100%.
+	<div class="note">If you want the View to have dimensions, particularly height, less than 100%,
+		you can change dimensions in the Layout section of the Properties palette.</div>
 	</li>
 <li>In order to allow easy authoring of multiple screens, 
 	the Dojox Mobile widget uses the '<code>id</code>' attribute to put a referenceable name
@@ -172,6 +173,8 @@ fall into the following categories:
 	The top of the Properties palette should now show <code>for: dojox.mobile.View #root_view</code>:
 	<p><a href="img/Mobile_ID_root_view.png" target="_blank"><img alt="image" src="img/Mobile_ID_root_view.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>	
 	.
+	<div class="note">Make sure that you entered the exact string "root_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
 	</li>
 <li>Look at the Outline palette. Right now the "root_view" View is visible because its
 	eyeball icon is open:
@@ -180,8 +183,175 @@ fall into the following categories:
 	<p><a href="img/Mobile_root_view_invisible.png" target="_blank"><img alt="image" src="img/Mobile_root_view_invisible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	.	
 	</li>
+<li>Drag/drop a second View widget onto the page canvas.
+	Notice that this new View widget is currently selected.
+	Go to the Common section of the Properties palette and type "alerts_view" as the value for the 
+	'<code>id</code>' attribute and then hit Return to complete the operation.
+	The top of the Properties palette should now show <code>for: dojox.mobile.View #alerts_view</code>
+	<div class="note">Make sure that you entered the exact string "alerts_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	</li>
+<li>Use the Outline palette to change visibility of the two View widgets.
+	First, click on the eyeball icon to the left of the second View to make the second View invisible
+	(after the operation, the eyeball should have a white interior).
+	Then, click on the eyeball icon to the left of the first View to make the first View visible
+	(after the operation, the eyeball should have content and not be filled with white).
+	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	</li>
 </ul>
 
+<a name="setting_up_views"><h2>Assembling the root view</h2></a>
+
+<p>Perform the following steps to add some content to the first View (i.e., the View with id="root_view"):
+</p>
+
+<ul>
+<li>Drag/drop a Heading widget into the middle of the View.
+	An edit box will appear that allows you to enter the text content for the Heading.
+	<p><a href="img/Mobile_Heading_My_Mobile_App.png" target="_blank"><img alt="image" src="img/Mobile_Heading_My_Mobile_App.png" style="margin: 1em 1em 0pt 0pt;" height="275" /></a></p>
+	Enter "My Mobile App" and click the OK button or hit Return to commit the Heading's text content.
+	The Heading should now have the label "My Mobile App".
+	</li>
+<li>Drag/drop a RoundRectList widget into the middle of the View.
+	You should see two list items labeled "Item 1" and "Item 2".
+	Double-click on the "Item 1" list item to edit the text.
+	Enter "Alerts"  and click the OK button or hit Return to commit the revised text content.
+	Double-click on the "Item 2" list item to edit the text.
+	Enter "Status"  and click the OK button or hit Return to commit the revised text content.
+	</li>
+<li>Drag/drop a third ListItem widget and drop onto the second list item (which should say "Status").
+	This will add a third list item to the RoundRectList.
+	A text entry popup should appear after dropping this third list item.
+	Enter "News" and then click the OK button or hit Return to commit the text content.
+	<p><a href="img/Mobile_Root_View_RectList.png" target="_blank"><img alt="image" src="img/Mobile_Root_View_RectList.png" style="margin: 1em 1em 0pt 0pt;" height="175" /></a></p>
+	</li>
+<li>Select the first list item ("Alerts").
+	Go to the Properties palette and navigate to the "Widget-Specific" pane.
+	(You might have to first click on the "All" link at the top of the palette
+	and then click on the "Widget-Specific" button.)
+	Enter "alerts_view" as the value of the "moveTo" property and hit Return to commit the value.
+	<div class="note">Make sure that you entered the exact string "alerts_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	<p><a href="img/Mobile_MoveTo_Alerts.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Alerts.png" style="margin: 1em 1em 0pt 0pt;" height="300" /></a></p>
+	After hitting Return, an arrow icon should appear on the right side of the "Alerts" list item:
+	<p><a href="img/Mobile_MoveTo_Alerts_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Alerts_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="175" /></a></p>
+	</li>
+</ul>
+
+<a name="setting_up_views"><h2>Assembling the alerts view</h2></a>
+
+<p>Perform the following steps to add some content to the second View (i.e., the View with id="alerts_view"):
+</p>
+
+<ul>
+<li>Use the Outline palette to change visibility of the two View widgets.
+	First, click on the eyeball icon to the left of the first View to make the first View invisible
+	(after the operation, the eyeball should have a white interior).
+	Then, click on the eyeball icon to the left of the second View to make the second View visible
+	(after the operation, the eyeball should have content and not be filled with white).
+	<p><a href="img/Mobile_second_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_second_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	</li>
+<li>Drag/drop a Heading widget into the middle of the View.
+	An edit box will appear that allows you to enter the text content for the Heading.
+	Enter "Alerts" and click the OK button or hit Return to commit the Heading's text content.
+	The Heading should now have the label "Alerts".
+	</li>
+<li>In the Widgets palette, go to the HTML section. Drag/drop a <code>&lt;div&gt;</code> widget 
+	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
+	Double-click on the empty DIV. 
+	An edit box will appear that allows you to enter the text content for the Heading.
+	Enter "Today's alerts" and click the OK button or hit Return to commit the text content.
+	Go to the Properties palette and navigate to the "Padding/Margins" pane.
+	(You might have to first click on the "All" link at the top of the palette
+	and then click on the "Padding/Margins" button.)
+	Find the property named "margin", enter the value "1em", and hit Return to commit the new margin value.
+	<div class="note">For this step, be sure to enter a value for the shortcut property "margin"
+		and not the more specific "margin-top", "margin-right", "margin-bottom" or "margin_left".</div>
+	</li>
+<li>In the Widgets palette, go to the HTML section. Drag/drop another <code>&lt;div&gt;</code> widget 
+	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
+	Double-click on the empty DIV. 
+	An edit box will appear that allows you to enter the text content for the Heading.
+	Enter "10:30am 85% capacity" and click the OK button or hit Return to commit the text content.
+	Go to the Properties palette and navigate to the "Padding/Margins" pane.
+	Find the property named "margin-left", enter the value "1em", and hit Return to commit the new margin value.
+	<div class="note">You might have to click on the "show t/r/b/l" checkbox to expose
+		the "margin-left" property.</div>
+	<p><a href="img/Mobile_second_view_content.png" target="_blank"><img alt="image" src="img/Mobile_second_view_content.png" style="margin: 1em 1em 0pt 0pt;" height="300" /></a></p>
+	</li>
+<li>Click on the Heading at the top to select it.
+	Go to the Properties palette and navigate to the "Widget-Specific" pane.
+	(You might have to first click on the "All" link at the top of the palette
+	and then click on the "Widget-Specific" button.)
+	Enter "Home" as the value for the "Back" property and hit Return to commit the value.
+	Enter "root_view" as the value of the "moveTo" property and hit Return to commit the value.
+	<div class="note">Make sure that you entered the exact string "root_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	After hitting Return, a button labeled "Home" should appear on the left side of the Heading:
+	<p><a href="img/Mobile_MoveTo_Root_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Root_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	</li>
+<li>Use the Outline palette to change visibility of the two View widgets.
+	First, click on the eyeball icon to the left of the second View to make the second View invisible
+	(after the operation, the eyeball should have a white interior).
+	Then, click on the eyeball icon to the left of the first View to make the first View visible
+	(after the operation, the eyeball should have content and not be filled with white).
+	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	The root View should now be visible.</li>
+</ul>
+
+<a name="setting_up_views"><h2>Verifying against different devices and orientations</h2></a>
+
+<p>Mobile user interfaces created with Dojox Mobile and Maqetta automatically
+	restyle themselves based on the target device and orientation.
+</p>
+
+<ul>
+<li>Use the Choose Device icon
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
+	Notice that the page gets restyled to match the native look-and-feel for different devices.
+	Here is a snapshot of how the root View looks with an Android theme.
+	<p><a href="img/Mobile_root_view_android.png" target="_blank"><img alt="image" src="img/Mobile_root_view_android.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>		
+	</li>
+<li>Switch between portrait and landscape modes by clicking on the
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	icon.
+	Note that the user interface stretches to fit both landscape or portrait orientations.
+	</li>
+<li>Using the same two icons,
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	and
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	, to back to showing the iPhone silhouette in portrait mode.
+	</li>
+</ul>
+
+<a name="setting_up_views"><h2>Preview and run your mobile application</h2></a>
+
+<p>Now let's preview your mobile application and test its interactivity,
+	including slide-in animations.
+	.
+</p>
+
+<ul>
+<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.gif" />. 
+	This will launch a new browser window that contains the mobile application you just created
+	running inside of the same mobile device silhouette as you see in the page editor,
+	with controls at the top for switching devices, controlling zoom level and changing orientation
+	(portrait vs. landscape).
+	<p><a href="img/Mobile_preview_1.png" target="_blank"><img alt="image" src="img/Mobile_preview_1.png" style="margin: 1em 1em 0pt 0pt;" height="550" /></a></p>
+	</li>
+<li>Use the controls at the top of the device to preview for different devices,
+	zoom in and out, and switch orientation.
+	</li>
+<li>Click on the "Alerts" list item.
+	This should cause a slide-in animation to transition from the root view to the alerts view.
+	<p><a href="img/Mobile_preview_2.png" target="_blank"><img alt="image" src="img/Mobile_preview_2.png" style="margin: 1em 1em 0pt 0pt;" height="550" /></a></p>		
+	</li>
+<li>Click on the "Home" button.
+	This should cause a slide-in animation to transition back from the alerts view to the root view.
+	</li>
+</ul>
 
 <p class="prevnext"><a href="tutorials/tutorial3.html">Previous</a> / <a href="tutorials/tutorial5.html">Next</a></p>
 

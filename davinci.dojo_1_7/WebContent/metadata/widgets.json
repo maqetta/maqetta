@@ -1501,7 +1501,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFOiPj6/jJRijRTjTRUjTdXkTdXkLrH3+Hp+OHp9zdakzZYkDdYkDlbkzlck97o+ODp+N/o9ztflj5km/L2/Pj6/T5mnD9mnT5lm0FqoENupENuo0Ruo0ZxpvL2+0l3rEl4rEh2qkl3q0l2qk6BtE1+sU+BtFCDtVCFt1CEtlSLvVOJulOHuVaOv7nW78/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaAQJlwSCwKXcikcilzxZ5QaApGVclWMUAWMFhgYiRYACGStaJoDKzyuchQr7hc3jAwGAeZCR1lKRIRLDIjWVtdXyUSEhAnMh58UCCKECEyGnOYHRsbHBwyFJBPGVQwFDIThQBcXjEOYggOMg+hMQUwFgIEsg+8vb0BwMBGw8TFQkEAOw==",
             "isContainer": true,
             "allowedChild": "ANY",
-            "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper"
+            "helper": "davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper"
         },
         {
             "name": "SwapView",

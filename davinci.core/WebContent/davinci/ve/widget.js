@@ -1273,9 +1273,9 @@ dojo.declare("davinci.ve._Widget",null,{
 		        case "time":
 		        	if(isFinite(value)){
 		        		value = dojo.date.stamp.toISOString(value, {selector: property.format});
-		        	}else{
+		        	}/*else{
 		        		value = "";
-		        	}
+		        	}*/
 		            break;
 		        default:
 		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.

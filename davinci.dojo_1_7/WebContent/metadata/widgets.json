@@ -1792,6 +1792,7 @@
             "icon": "resources/images/dx-mbl--tab-container.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
             "isContainer": true,
+            "inlineEdit": "davinci.ve.input.ToolbarInput",
             "allowedChild": "dojox.mobile.TabBarButton",
             "properties": {
                 "barType": "segmentedControl"
@@ -1818,7 +1819,14 @@
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
             "helper": "davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper",
-            "allowedParent": "dojox.mobile.TabBar"
+            "allowedParent": "dojox.mobile.TabBar",
+            "inlineEdit": {
+                "property": "label",
+                "displayOnCreate": true,
+                "multiLine": false,
+                "supportsHTML": true,
+                "helpText": "If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment)."
+            }
         },
         {
             "name": "Slider",

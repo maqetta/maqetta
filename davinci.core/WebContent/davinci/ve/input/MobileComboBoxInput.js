@@ -60,7 +60,8 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 	},
 	
 	update: function(widget, values) {
-
+		if (values.length < 1)
+			return;
 		var data = widget.dijitWidget.store.domNode._dvWidget.getData();;
 		var children = data.children;
 		var selectedItem;
@@ -93,6 +94,9 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 		var dataListWidget = davinci.ve.widget.byId(dataListId);
 		var comboBoxProps = {}; 
 		var dataListProps = {};
+		if (!selectedItem) {
+			selectedItem = values[0].text;
+		}
 		dataListProps['data-dojo-props'] = 'id:"'+dataListId+'"';
 		comboBoxProps['data-dojo-props'] = 'value:"'+selectedItem+'", list:"'+dataListId+'"';
 		var command = new davinci.commands.OrderedCompoundCommand();

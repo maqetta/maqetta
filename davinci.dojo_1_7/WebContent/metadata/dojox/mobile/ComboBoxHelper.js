@@ -29,6 +29,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxHelper", null, {
 		}
 		//"value:"Item 1", list:"DataList_1""
 		var patt= new RegExp('^[ \s]+|[ \s]+$', "g");
+//		^[ \t]+|[ \t]+$
 		var re = new RegExp('"', "g");
 		for (var i = 0; i < dojoProps.length; i++){
 			var prop = dojoProps[i].split(':');
@@ -38,7 +39,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxHelper", null, {
 				storeId = storeId.replace(patt, '');
 			}else if(result === 'value'){
 				value = prop[1].replace(re,'');
-				value = value.replace(patt, '');
 			}
 		}
 		var storeWidget = davinci.ve.widget.byId(storeId);

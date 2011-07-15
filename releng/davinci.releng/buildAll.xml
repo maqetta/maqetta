@@ -1,5 +1,7 @@
 <project name="maqetta" default="nightly">
 
+    <import file="${deployment-type}.xml"/>
+
     <target name="nightly" depends="init">
         <tstamp>
             <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
@@ -98,60 +100,6 @@
 		</ant>
 	  </target>
 
-    <target name="populate">
-        <condition property="getMethod" value="fromGit" else="localCopy">
-            <not>
-                <isset property="maqettaCode"/>
-            </not>
-        </condition>
-        <macrodef name="populateDir">
-            <attribute name="project"/>
-            <attribute name="isFeature" default="false"/>
-            <attribute name="extPath" default=""/>
-            <sequential>
-                <antcall target="${getMethod}">
-                    <param name="project" value="@{project}"/>
-                    <param name="isFeature" value="@{isFeature}"/>
-                    <param name="extPath" value="@{extPath}"/>
-                </antcall>
-            </sequential>
-        </macrodef>
-
-        <!-- -->
-        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
-        <!-- -->
-
-        <populateDir project="davinci.core"/>
-        <populateDir project="davinci.dojo_1_7"/>
-        <populateDir project="davinci.html"/>
-        <populateDir project="davinci.jqueryui_1_8"/>
-        <populateDir project="davinci.product" extPath="/releng"/>
-        <populateDir project="davinci.yui_2_6_0"/>
-
-        <populateDir project="davinci.joomla"/>
-        <populateDir project="davinci.review"/>
-
-        <populateDir project="org.apache.commons.fileupload"/>
-        <populateDir project="org.apache.commons.io"/>
-
-        <!--
-        <populateDir project="javax.activation"/>
-        <populateDir project="javax.mail"/>
-        -->
-
-    	<populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
-
-        <!--
-        <populateDir project="org.eclipse.equinox.server.core" isFeature="true" extPath="/releng"/>
-        <populateDir project="org.eclipse.equinox.server.servletbridge" isFeature="true" extPath="/releng"/>
-
-        <populateDir project="org.eclipse.equinox.http.servletbridge"   extPath="/releng"/>
-        <populateDir project="org.eclipse.equinox.servletbridge"   extPath="/releng"/>
-        <populateDir project="org.eclipse.equinox.servletbridge.extensionbundle"   extPath="/releng"/>
-        -->
-
-    </target>
-
     <target name="localCopy">
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
@@ -242,7 +190,7 @@
         </antcall>
 
         <!-- add the plugin to the config.ini -->
-        <replaceregexp file="${tempDir}/configuration/config.ini"
+        <replaceregexp file="${tempDir}/configuration/config-${deployment-type}.ini"
          match="davinci.core@4:start(.*)"
          replace="davinci.core@4:start,${addPlugin}@5:start\1"
          byline="true"

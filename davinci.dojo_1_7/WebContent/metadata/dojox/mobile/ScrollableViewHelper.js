@@ -22,7 +22,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper", [davinc
 	 */
 	create: function(widget, srcElement) {
 		this.inherited(arguments);
-debugger;
 		widget.dijitWidget.disableScroll(true);
 	}
 

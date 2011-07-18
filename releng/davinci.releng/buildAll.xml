@@ -202,7 +202,7 @@
             <zipfileset dir="${tempDir}" includes="*.command" filemode="755"/>
             <zipfileset dir="${tempDir}" includes="*.sh" filemode="755" />
         </zip>
-        <delete dir="${tempDir}"/></delete>
+        <delete dir="${tempDir}"/>
     </target>
 
     <!-- create a new war file from the base war file with a new plugin added -->

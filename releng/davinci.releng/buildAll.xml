@@ -190,7 +190,7 @@
         </antcall>
 
         <!-- add the plugin to the config.ini -->
-        <replaceregexp file="${tempDir}/configuration/config-${deployment-type}.ini"
+        <replaceregexp file="${tempDir}/configuration/config.ini"
          match="davinci.core@4:start(.*)"
          replace="davinci.core@4:start,${addPlugin}@5:start\1"
          byline="true"
@@ -202,7 +202,7 @@
             <zipfileset dir="${tempDir}" includes="*.command" filemode="755"/>
             <zipfileset dir="${tempDir}" includes="*.sh" filemode="755" />
         </zip>
-        <delete dir="${tempDir}"/>
+        <delete dir="${tempDir}"/></delete>
     </target>
 
     <!-- create a new war file from the base war file with a new plugin added -->

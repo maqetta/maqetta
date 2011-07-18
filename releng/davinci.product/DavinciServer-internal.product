@@ -29,7 +29,6 @@
       <plugin id="davinci.core"/>
       <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
-      <plugin id="davinci.joomla"/>
       <plugin id="davinci.review"/>
       <plugin id="javax.servlet"/>
       <plugin id="org.apache.commons.fileupload"/>

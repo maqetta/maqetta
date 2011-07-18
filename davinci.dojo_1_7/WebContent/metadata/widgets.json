@@ -1792,7 +1792,7 @@
             "icon": "resources/images/dx-mbl--tab-container.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
             "isContainer": true,
-            "inlineEdit": "davinci.ve.input.ToolbarInput",
+            "inlineEdit": "davinci.ve.input.TabBarInput",
             "allowedChild": "dojox.mobile.TabBarButton",
             "properties": {
                 "barType": "segmentedControl"

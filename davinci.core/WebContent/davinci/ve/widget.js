@@ -1002,10 +1002,7 @@ dojo.declare("davinci.ve._Widget",null,{
 				//}
 			}
 		}
-		var style = this.getStyle(options);
-		if(style){
-			data.properties.style = style;
-		}
+		data.properties.style = this.getStyle(options);
 		var classNames = this.getClassNames(options);
 		if(classNames){
 			data.properties['class'] = classNames;

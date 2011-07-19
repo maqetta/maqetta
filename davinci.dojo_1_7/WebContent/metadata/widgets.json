@@ -1089,25 +1089,31 @@
             "allowedChild": "ANY"
         },
         {
+            "name": "Range-gauge",
+            "description": "Range",
+            "type": "dojox.gauges.Range",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw=="
+         },
+         {
+            "name": "AnalogLineIndicator-gauge",
+            "description": "AnalogLineIndicator",
+            "type": "dojox.gauges.AnalogLineIndicator",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw=="
+         },
+        {
             "name": "AnalogGauge",
             "description": "AnalogGauge",
-            "type": "dojox.widget.AnalogGauge",
+            "type": "dojox.gauges.AnalogGauge",
             "category": "untested",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "properties": {
-                "style": "width: 250px; height: 250px;",
                 "width": 250,
                 "height": 250,
-                "ranges": [
-                    {
-                        "low": 0,
-                        "high": 100,
-                        "color": "black",
-                        "hover": "",
-                        "size": 100
-                    }
-                ],
                 "minorTicks": {
                     "offset": 70,
                     "length": 5,
@@ -1120,21 +1126,32 @@
                     "interval": 20,
                     "color": "gray"
                 },
-                "indicators": [
-                    {
+            },
+            "children": [
+                {
+                    "type": "dojox.gauges.AnalogLineIndicator",
+                    "properties": {
                         "value": 0,
                         "width": 3,
                         "length": 100,
                         "hover": "Value: 0",
                         "title": "Value",
-                        "color": "red",
+                        "color": "blue",
                         "offset": 0,
                         "front": false,
                         "label": ""
                     }
-                ]
-            },
-            "helper": "davinci.libraries.dojo.dojox.widget.AnalogGaugeHelper"
+                },
+                {
+                    "type": "dojox.gauges.Range",
+                    "properties": {
+                         "low": 0,
+                        "high": 100,
+                        "hover": "",
+                        "color": {"color": "red"}
+                    }
+                }
+              ]
         },
         {
             "name": "BarGauge",

@@ -302,6 +302,9 @@ davinci.ve.widget.createWidget = function(data){
 		if(data.properties.theme){
 			theme = data.properties.theme.themeName;
 		}
+		if(data.type == "dojox.gauges.Range" && typeof data.properties.color == "string") {//check specific to analog gauge  // TODO: move to helper
+			data.properties.color = {'color': data.properties.color};//dojo changes property to string so we switch back to object upon color change
+		}
 	}
 	var widgetClassId = davinci.ve.metadata.queryDescriptor(type, "widgetClass");
 	var widgetClassName;
@@ -997,6 +1000,9 @@ dojo.declare("davinci.ve._Widget",null,{
 						// HACK: There's probably a better way to do this with the new model, just a stopgap measure until Phil takes a look
 						} else if (property.datatype && (property.datatype.indexOf("dijit") == 0 || property.datatype == "object" && property.isData)) {
 							data.properties[name] = value;
+						} else if (property.datatype == "json" && data.type == "dojox.gauges.Range") {//check specific to analog gauge  // TODO: move to helper
+							value = this._stringValue(name, value);
+							data.properties[name] = value;
 						}
 					}
 				//}
@@ -1260,6 +1266,8 @@ dojo.declare("davinci.ve._Widget",null,{
 			// Kludge to prevent array from iframe from being mistaken as object
 			var context = this.getContext();
 			var dj = context && context.getDojo() || dojo;
+			if(value && value['_ticks']) //check specific to analog gauge  // TODO: move to helper
+				delete value._ticks; //prevent value from becoming a cyclic data structure
 			if(dj.isObject(value)){
 				value = dj.toJson(value);
 			}

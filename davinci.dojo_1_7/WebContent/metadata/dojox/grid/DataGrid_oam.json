@@ -146,6 +146,7 @@
             "description": "Set to true if you want to be able to select the text within the grid.",
             "hidden": false
         },
+/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
         "loadingMessage": {
             "datatype": "string",
             "description": "Message that shows while the grid is loading",
@@ -158,6 +159,7 @@
             "hidden": false,
             "defaultValue": "<span class='dojoxGridError'>Sorry, an error occurred</span>"
         },
+*/
         "noDataMessage": {
             "datatype": "string",
             "description": "Message that shows if the grid has no data - wrap it in a\nspan with class 'dojoxGridNoData' if you want it to be\nstyled similar to the loading and error messages",

@@ -673,6 +673,13 @@ dojo.declare("davinci.ve.Context", null, {
 					};
 console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
+					var mobileDevice = context.getMobileDevice();
+					if (mobileDevice){
+						setTimeout(function(){
+							// have to delay this so Chrome will update the canvas correctly
+							context._editor.visualEditor.setDevice(mobileDevice);
+						},100);
+					}
 				} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
@@ -827,11 +834,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 
 		this._processWidgets(containerNode, active, states);
 		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
-		var mobileDevice = this.getMobileDevice();
-		if (mobileDevice){
-			this._editor.visualEditor.setDevice(mobileDevice);
-		}
-		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
+		
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 

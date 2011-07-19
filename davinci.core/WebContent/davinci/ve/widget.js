@@ -1008,10 +1008,7 @@ dojo.declare("davinci.ve._Widget",null,{
 				//}
 			}
 		}
-		var style = this.getStyle(options);
-		if(style){
-			data.properties.style = style;
-		}
+		data.properties.style = this.getStyle(options);
 		var classNames = this.getClassNames(options);
 		if(classNames){
 			data.properties['class'] = classNames;
@@ -1281,9 +1278,9 @@ dojo.declare("davinci.ve._Widget",null,{
 		        case "time":
 		        	if(isFinite(value)){
 		        		value = dojo.date.stamp.toISOString(value, {selector: property.format});
-		        	}else{
+		        	}/*else{
 		        		value = "";
-		        	}
+		        	}*/
 		            break;
 		        default:
 		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.
@@ -1597,7 +1594,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	isLayout: function()
 	{
-		return this.dijitWidget.addChild;
+		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
 	},
 	resize: function()
 	{

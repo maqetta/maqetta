@@ -109,26 +109,52 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 //						dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:"Normal"}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
 					this.initialSet=true;
+
+					var ldojoVersion = this.context.getDojo().version.major +'.'+ this.context.getDojo().version.minor;
+					if (ldojoVersion !== this.theme.version){
+						var cookieName = 'maqetta_'+this.theme.name+'_'+this.theme.version;
+						var warnCookie = dojo.cookie(cookieName);
+						if (!warnCookie){
+							dojo.cookie(cookieName, "true");
+							this.themeVersionWarn();
+						}
+					}
 				}));
+				
 			}
 		}
 	},
 	
+	themeVersionWarn: function(){
+		var message = 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.';
 
-//	insertCssFile : function (filename) { not used anymore wdr 4/6/11
-//// XXX Doesn't look like this.imports is used anywhere
-////		if(!this.imports){
-////			this.imports = [];
-////		}
-//		if (filename.elementType && filename.elementType=="File") {
-//		    // need to get relative path to current context
-//		    filename = (new davinci.model.Path(this.context.relativePrefix)).append(resource.getPath()).toString();
-//		}
-//		// filename should be relative at this point
-//	
-////		this.imports.push(resource);
-//		this.context.addModeledStyleSheet(filename);
-//	},
+		this._dialog = new dijit.Dialog({
+			id: "maqetta.themeVersionMismatch",
+			title:"Theme version warnning",
+			onCancel:function(){
+				this.destroyRecursive(false);
+			},
+			style: 'width:250px;'
+		});
+		var formHTML = '<table>' + 
+							'<tr><td></td><td>'+message+'</td><td></td></tr>'+
+							'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="themeWarnOk" >Ok</button></td><td></td></tr>'+
+						'</table>';
+		
+		this._dialog.setContent(formHTML);
+		var ok = dijit.byId('themeWarnOk');
+		ok.domNode.onclick = dojo.hitch(this, 'themeVersionWarnOk');
+		this._dialog.show();
+	},
+	
+	themeVersionWarnOk: function(){
+
+		if (this._dialog){
+			this._dialog.hide();
+			this._dialog.destroyRecursive(false);
+			delete this._dialog;
+		}
+	},
 
 	hotModifyCssRule : function(){
 		
@@ -137,9 +163,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 	},
 	getOutline : function (){
 		return null; // Theme editor does no support an outline.
-//		if (!this.outline)
-//			this.outline=new davinci.ve.themeEditor.VisualThemeOutline(this);
-//		return this.outline;
+
 	}
 	
 	

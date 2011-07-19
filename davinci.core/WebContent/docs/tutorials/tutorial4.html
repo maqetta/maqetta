@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="maqettadocs.css" />
-<title>Exporting to Developer Tools Tutorial</title>
+<title>Mobile User Interface Tutorial</title>
 </head>
 <body class="maqettadocs">
 
@@ -18,461 +18,339 @@
     </td></tr>
 </table>
 
-<h1>Exporting to Developer Tools Tutorial</h1>
+<h1>Mobile User Interface Tutorial</h1>
 
 <a name="about_this_tutorial"><h2>About this tutorial</h2></a>
 
-<p>Using Maqetta, the user create web application prototypes which are subsequently handed off to
-	developers, who transform the prototype incrementally into a production application.</p>
-<p>	This tutorial introduces the features in Maqetta that help with the 
-	designer-to-developer hand-off. The tutorial starts by introducing some important
-	concepts. The tutorial then highlights the product's export-as-ZIP and workspace management features.</p>
+<p>	This tutorial introduces how to use Maqetta to author mobile user interfaces.
+	With Maqetta, you can drag/drop mobile widgets with device-native look-and-feel
+	into a life-size replica of a mobile device. The resulting application
+	will automatically adapt its styling to match native look-and-feel for the target device
+	and will automatically include animated slide-in transitions from one "view" (i.e., a full screen of mobile content)
+	to another view.</p>
 
-<a name="exploring_workspace_html_files"><h2>Exploring the Maqetta workspace</h2></a>
+<a name="choose_device_silhouette"><h2>Choosing a device silhouette</h2></a>
 
-<p>When you launch Maqetta for the first time, Maqetta creates a default workspace. The picture below
-shows the default workspace:
-</p>
-
-<p><a href="img/Files_palette_initial.png" target="_blank"><img alt="image" src="img/Files_palette_initial.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a></p>
-
-<p>Make the following adjustments to the Files palette</p>
-<ul>
-<li>Drag the horizontal divider that is just above the Files palette:
-	<p><a href="img/Files_palette_divider.png" target="_blank"><img alt="image" src="img/Files_palette_divider.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a></p>
-	 upwards
-	to increase the size of the Files palette until it is about 2/3 the height
-	of the Maqetta browser window. (As a result, this will take size away from the 
-	Widgets and Review palettes.)
-</li>
-<li>Look at the <code>lib</code> entry in the Files palette. 
-	If it is closed (i.e., it has a "+" icon on the left size),
-	then click on the "+' to open <code>lib</code> to show its children.</li>
-<li>Under <code>lib</code>, you should see a child entry for <code>dojo</code>.
-	Look at the <code>dojo</code> entry in the Files palette. 
-	If it is closed (i.e., it has a "+" icon on the left size),
-	then click on the "+' to open <code>dojo</code> to show its children.</li>
-<li>Look at the <code>themes</code> entry in the Files palette. 
-	If it is closed (i.e., it has a "+" icon on the left size),
-	then click on the "+' to open <code>themes</code> to show its children</li>
-</ul>
-
-<p>The Files palette should now look something like this:</p>
-
-<p><a href="img/Files_palette_libs_themes.png" target="_blank"><img alt="image" src="img/Files_palette_libs_themes.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a></p>
-
-<p>Some things to note:</p> 
-<ul>
-<li>In Maqetta's default workspace, JavaScript libraries are placed into the <code>libs/</code> folder.
-	The picture above shows two libraries, <code>dojo/</code> and <code>html/</code>.
-	<ul>
-		<li>The <code>dojo/</code> folder contains a <em>read-only</em> version of the 
-			<a href="http://dojotoolkit.org">Dojo toolkit</a>.
-			Inside the outer <code>dojo/</code> are the three main folders that make up a Dojo release,
-			<code>dijit</code> (Dojo's desktop widget library),
-			<code>dojo</code> (Dojo's core functions) and
-			<code>dojox</code> (an extensive library of Dojo extensions).
-			<div class="note">
-				<div>Maqetta includes a <em>release</em> distribution of Dojo in your workspace.</div>
-				<div>A <em>release</em> distribution contains
-				compressed versions of JavaScript and CSS files. The Dojo 1.6.1 release distribution can be found at 
-				<a href="http://download.dojotoolkit.org/release-1.6.1/dojo-release-1.6.1.zip">http://download.dojotoolkit.org/release-1.6.1/dojo-release-1.6.1.zip</a>.</div>
-				<div>In contrast, <em>source</em> distributions contain uncompressed versions of JavaScript and CSS
-				files and include various other files useful to developers, such as build utilities,
-				demos, test files and documentation.
-				The Dojo 1.6.1 source distribution can be found at 
-				<a href="http://download.dojotoolkit.org/release-1.6.1/dojo-release-1.6.1-src.zip">http://download.dojotoolkit.org/release-1.6.1/dojo-release-1.6.1-src.zip</a>.</div>
-			</div>
-		</li>
-		<li>At <a href="http://maqetta.org">Maqetta.org</a>, you will also see
-			<code>jQuery/</code> and <code>YUI</code> subfolders within the <code>libs/</code> folder.
-			These subfolders are present because <a href="http://maqetta.org">Maqetta.org</a>, 
-			the application also includes
-			widgets from the <code>jQuery/</code> and <code>YUI</code> libraries.
-			<div class="note">
-				<div>Maqetta has a general architecture that allows arbitrary JavaScript toolkits
-					and arbitrary widget libraries to plug in. With the current release,
-					not all library extensibility points are completed, so at this time adding
-					additional libraries requires some source code changes to the
-					Maqetta open source.</div>
-			</div>
-		</li>
-		<li>The <code>themes/</code> folder (Dojo themes) contains the CSS style themes used by your
-			applications. If you application uses any Dojo widgets, your application
-			probably requires the <code>themes/</code> folder in order to work properly
-			outside of Maqetta.
-		</li>
-		<li>The <code>html/</code> folder is likely to be removed from future releases and can be ignored
-			for now.
-		</li>
-	</ul>
-</li>
-<li>All CSS themes used by Maqetta are in the <code>themes/</code> folder. Maqetta includes
-	two themes by default in each workspace, both of which are <em>read-only</em>:
-	<ul>
-		<li>The <code>claro/</code> theme is the default theme used by the Dijit widget library in the Dojo toolkit.
-		</li>
-		<li>The <code>sketch/</code> theme restyles Dijit widgets to have a pseudo-hand-drawn look that is
-			useful in early wireframing scenarios when designers prefer visually neutral rendition
-			of UI so that reviewers will focus on the flow of the UI rather than focus on
-			visual aspects such as fonts and colors. 
-		</li>
-		<li>Any custom themes created with the "New theme..." command (found on the New menu at the top of the application)
-			will be added to the <code>themes/</code> folder. For example, if you create a new theme called "mytheme1":
-			then the Files palette would show a <code>mytheme1</code> subfolder under <code>themes/</code>:
-		</li>
-	</ul>
-</li>
-<li><p>Maqetta automatically includes a reference to an application CSS file (i.e., <code>app.css</code>) with each new HTML
-	file created by a New HTML File command.</p>
-	<p>You can insert application-specific CSS style rules in the <code>app.css</code> file
-	either by using some of the advanced features in the Properties palette
-	or by double-clicking on <code>app.css</code> in the Files palette
-	to bring up the source editor, where you can type CSS style rules by hand.
-	(See <a href="index.html#peAppCss">Creating Style Rules with app.css</a>.)</p>
-	<p>At the top of the default <code>app.css</code> file, you will find a large CSS comment block 
-	that explains the purpose of the file and some hints about how to use it:</p>
-	<blockquote><strong>app.css default contents</strong>
-	<pre class="code_block_tight_spacing">
-/*
- * This file is provided for application-specific style rules.
- *
- * By default, Maqetta includes this CSS file within HTML pages
- * authored in Maqetta.
- *
- * This file is typically used to override style rules found in
- * theme CSS files. For example, suppose the theme CSS file has:
- *
- * .claro .dijitButton .dijitButtonNode {
- *		padding:2px 4px 4px 4px;
- * }
- *
- * But for your application suppose you want to tighten the padding
- * for buttons. Then, you might include the following style rule
- * in this file (assuming that you accept Maqetta's default where
- * id "myapp" is present on the BODY element, and assuming
- * that you are using the "claro" theme):
- *
- * #myapp.claro .dijitButton .dijitButtonNode {
- *		padding:1px 3px 3px 3px;
- * }
- *
- * Because of CSS precedence rules (see [1]), the above style rule
- * (which begins with #myapp.claro) will "win the cascade" versus 
- * the style rule from the theme CSS file due to the use of the
- * ID select (#myapp), which has higher specificity than the class
- * selectors used throughout the Claro theme.
- *
- * [1] http://www.w3.org/TR/CSS21/cascade.html#cascade
- */
-html,body {
-	height: 100%;
-	width: 100%;
-}
-	</pre></blockquote>
-	</li>
-</ul>
-
-<a name="exploring_workspace_html_files"><h2>Exploring the HTML files created by Maqetta</h2></a>
-
-<p>This part of the tutorial provides an overview of some technical details about
-the HTML files that Maqetta creates:
-</p>
-
+<p>Set up your authoring canvas to author inside of an iPhone silhouette as follows:</p>
 <ul>
 <li><p>Go to the New menu at the top of the application, and issue a "New HTML File" command to open
 	up a new file within the Maqetta visual editor. You can either accept the default filename
-	(e.g., <code>file1.html</code> or enter a custom filename).</li>
-<li>Go into top/bottom split view by clicking on Split Horizontally icon
-	<img src="img/Maqetta-toolbar-splith.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	the last icon on the toolbar. Pull on the horiztonal divider until 
-	all of the source code for application is visible. Your screen should
-	look like this now:</p>
-	<p><a href="img/HTML_Page_Initial_Split_View.png" target="_blank"><img alt="image" src="img/HTML_Page_Initial_Split_View.png" style="margin: 1em 1em 0pt 0pt;" width="600" /></a></p>
-</li>
-<li>Drag/drop a Button widget onto the page. In the top pane, you should see a Button widget rendered on the 
-	canvas. In the bottom pane (source view), you should see the following:
-	<blockquote><strong>HTML source file contents</strong>
-	<pre class="code_block_tight_spacing">
-[01] &lt;!DOCTYPE html>
-[02] &lt;html>
-[03] &lt;head>
-[04] &lt;title>Untitled&lt;/title>
-[05] &lt;style type="text/css">
-[06] @import "themes/claro/claro.css";
-[07] @import "app.css";
-[08] @import "./lib/dojo/dojo/resources/dojo.css";
-[09] &lt;/style>
-[10] &lt;script type="text/javascript" djConfig="parseOnLoad: true" src="./lib/dojo/dojo/dojo.js">&lt;/script>
-[11] &lt;script type="text/javascript">
-[12] dojo.require('dijit.form.Button');&lt;/script>
-[13] &lt;script src="maqetta/States.js">&lt;/script>
-[14] &lt;script src="maqetta/maqetta.js">&lt;/script>
-[15] &lt;/head>
-[16] &lt;body class="claro" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp">
-[17]  &lt;input type="button" dojoType="dijit.form.Button" disabled="false" intermediateChanges="false" label="Button" iconClass="dijitNoIcon">&lt;/input>
-[18] &lt;/body>
-[19] &lt;/html>
-	</pre></blockquote>
-<li>Some notes about the above HTML file listing:
-	<ul>
-		<li>Lines <code>[06]-[09]</code> - These lines load the CSS files used by this HTML file:
-			<ul>
-				<li><code>themes/claro/claro.css</code> - Reference to the CSS theme used by this page. (Default for Dojo/Dijit is the "claro" theme.)</li>
-				<li><code>app.css</code> - Application-specific CSS style rules. (See discussion earlier in this tutorial about <code>app.css</code>.)</li>
-				<li><code>dojo.css</code> - Some commonly used CSS rules provided by the Dojo toolkit.</li>
-			</ul>
-			<div class="note">
-				Note that Maqetta application will update the URL references to the above files automatically
-				in various scenarios. For example, if you save an HTML file into a nested folder, 
-				Maqetta will insert any necessary <code>../</code> references so that the HTML files
-				will properly load the CSS files.
-			</div>
-		</li>
-		<li>Line <code>[10]</code> - This line loads Dojo's JavaScript files.
-			<div class="note">
-				Note that Maqetta application will update the URL references to <code>dojo.js</code>
-				in various scenarios. For example, if you save an HTML file into a nested folder, 
-				Maqetta will insert any necessary <code>../</code> references so that the HTML files
-				will properly load Dojo's JavaScript files.
-			</div>
-		</li>
-		<li>Lines <code>[11]-[12]</code> - This is a Dojo-specific line of JavaScript.
-			Dojo requires calls to <code>dojo.require()</code> for each widget type used
-			by an HTML page. Maqetta automatically adds all necessary <code>dojo.require()</code>
-			statements to the HTML page.
-		</li>
-		<li>Lines <code>[13]-[14]</code> - These lines include Maqetta-specific runtime JavaScript files
-			These JavaScript files are necessary to make the application states feature work
-			when your HTML page runs outside of the Maqetta authoring environment.
-			<div class="note">
-				In most cases, your development team will strip out these two <code>&lt;script&gt;</code>
-				elements in the process of transforming the Maqetta mockup into a production application.
-			</div>
-		</li>
-		<li>Line <code>[16]</code> - The <code>&lt;body&gt;</code> element often includes some Maqetta-specific
-			attributes that provide essential authoring information to the Maqetta page editor
-			and/or are required so that the application states feature can run outside of the
-			Maqetta authoring environment:
-			<ul>
-				<li><code>class="claro"</code> - The currently active theme name (in this case, "claro")
-					appears in two places
-					in the HTML source code: (1) within an @import command in the <code>&lt;head&gt;</code>
-					and as a class name on the <code>&lt;body&gt;</code> element.</li>
-				<li><code>dvFlowLayout="true"</code> - This attribute persists whether this HTML file
-					is currently being editing using flow layout or absolute layout.</li>
-				<li><code>data-davinci-ws="collapse"</code> - This attribute allows Maqetta
-					to work around HTML/CSS white space complexities. Without this attribute,
-					Maqetta would either have to create unreadable source code or 
-					fail to deliver on true WYWIWYG authoring.</li>
-				<li><code>id="myapp"</code> - This attribute allows Maqetta to insert
-					style rules within <code>app.css</code> file that reliably
-					override style rules within the CSS themes. Typically, CSS themes
-					use <em>class selectors</em> to style widgets and HTML.
-					This allows Maqetta to create override CSS rules in <code>app.css</code>
-					that reliably override the theme CSS rules because Maqetta's override
-					CSS rules use <em>id selectors</em>, which have higher priority (i.e., "specificity") in CSS.
-					<div class="note">Maqetta's override CSS rules always include <code>#myapp</code> at the
-					beginning of the selector.</div>
-					</li>
-				<li><code>dvStates</code> attribute - (Not shown above) If an HTML page
-					defines custom application states via the States palette, then the
-					<code>&lt;body&gt;</code> element and various other elements within the page
-					will include a <code>dvStates</code> attribute. The <code>dvStates</code> attribute 
-					is necessary to make the application states feature work
-					when your HTML page runs outside of the Maqetta authoring environment.</li>
-			</ul>
-		</li>
-		<li>Line <code>[17]</code> - This line provides the declarative markup for the Button widget.
-			Typically, each widget on the page will be represented in the HTML file as a single line of HTML.
-			Some widgets, however, expand into multiple lines of HTML.
-		</li>
-	</ul>
-</li>
+	(e.g., <code>file1.html</code>) or enter a custom filename.</li>
+<li>Click on the Choose Device icon
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	on the page editor's toolbar. The dialog looks as follows:
+	<p><a href="img/choose_device_dialog.png" target="_blank"><img alt="image" src="img/choose_device_dialog.png" style="margin: 1em 1em 0pt 0pt;" width="150" /></a></p>
+	On the menu that appears choose "iphone". The page canvas should show a near life-size silhouette of an iPhone.
+	<p><a href="img/iphone_silhouette.png" target="_blank"><img alt="image" src="img/iphone_silhouette.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>	
+	</li>
+<li>The current release provides authoring support for a handful of popular mobile devices, including
+	both phones and tablets, and supports authoring in both portrait and landscape.
+	Use the Choose Device icon
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
+	</li>
+<li>Switch between portrait and landscape modes by clicking on the
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	icon.
+	</li>
+<li>Using the same two icons,
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	and
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	, to return back to showing the iPhone silhouette in portrait mode.
+	</li>
 </ul>
 
-<a name="exploring_workspace_html_files"><h2>Exporting your entire workspace as a ZIP to give to developers</h2></a>
+<a name="dojox_mobile_widget_library"><h2>Introducing the dojox.mobile widget library</h2></a>
 
-<p>Maqetta allows you to export your entire workspace or a subset of your workspace as a ZIP
-file that can be handed to developers, who can then incrementally transform the UI mockup
-created by Maqetta into a production application.
+<p>In the widget palette, open up the "Dojox Mobile" section of the Widgets palette:
 </p>
-
-<p>To export your entire workspace as a ZIP file:
+<p><a href="img/dojox_mobile_widgets.png" target="_blank"><img alt="image" src="img/dojox_mobile_widgets.png" style="margin: 1em 1em 0pt 0pt;" height="500" /></a></p>	
+<p>As you can see, the dojox.mobile widget library offers a wide variety of commonly used mobile widget:
 </p>
 <ul>
-	<li>Click on the first icon in the Files palette, the Download Entire Workspace icon
-		<img src="img/download.gif" title="Download Entire Workspace" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-		This brings up the following dialog:
-		<p><a href="img/HTML_Page_Initial_Split_View.png" target="_blank"><img alt="image" src="img/Download_Dialog.png" style="margin: 1em 1em 0pt 0pt;" /></a></p>
-	</li>
-	<li>Accept all of the defaults, and click on the OK button to download your entire workspace 
-		as a ZIP file named <code>workspace1.zip</code>. This will initiate a browser downlaod
-		action, with the download process happening the background.</li>
-	<li>Invoke the browser's Download feature to look at all of the browser's recent downloads.
-		In most browsers, the most recent download appears at the top. If the download is not
-		yet completed, the browser usually will show download progress. Wait until the download is complete.</li>
-	<li>Once the download has completed, using your local machine's features (e.g., Windows Explorer or Mac Finder),
-		create a new empty folder and move or copy the downloaded ZIP file into that new folder,
-		then unzip the ZIP file's contents into that folder.
-		<div class="note">
-			If you have a localhost web server on your machine, create the new empty folder
-			somewhere within the web site contents area for your localhost web server.
-			For example, we XAMPP or MAMP, the web site contents are stored in the <code>htdocs/</code>
-			folder. This will allow you to actually run the Maqetta-created web pages
-			on your localhost server.
-		</div>
-	</li>
-	<li>Using either Windows Explorer or Mac Finder, examine the hierarchy of files after unzipping.
-		You should see a local replica of your Maqetta workspace.</li>
-</ul>
-
-<a name="exploring_workspace_html_files"><h2>Exporting selected files from your workspace as a ZIP to give to developers</h2></a>
-
-<p>To export only selected files within a ZIP file:
-</p>
-<ul>
-	<li>In the Files palette, select all files that you would like to include in the download
-		other than the <code>libs/</code> and <code>themes/</code> files. (The download
-		dialog will allow you to include or exclude those files.)</li>
-	<li>Click on the scond icon in the Files palette, the Download Selected Files icon
-		<img src="img/download-selected-files.gif" title="Download Selected Files" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-		This will bring up a similar download dialog as the 
-		Download Entire Workspace icon.
-	</li>
-	<li>Then follow similar steps as described above for the Download Entire Workspace icon.</li>
-</ul>
-
-<a name="exploring_workspace_html_files"><h2>Download dialog options</h2></a>
-
-<p>The download dialog provides the following options:</p>
-<ul>
-	<li>
-		<p><strong>Include/exclude particular libraries</strong> - The checkboxes to the left of the
-		list of libraries and themes controls whether the given resources should be included 
-		in the download ZIP file. By default, all JavaScript libraries (e.g., dojo) and the <code>themes</code>
-		folder will be included in the download ZIP file.</p>
-		<p>The decision whether to include particular JavaScript libraries in your download ZIP
-		depends on the needs and constraints of the team that will receive the ZIP.
-		Usually, you will want to collaborate with your development team to find out
-		whether they want or do not want the libaries and/or themes within the ZIP.
-		Two common scenarios:</p>
+	<li>View widgets - container widgets that represent switchable alternate views. Typically, one view appears at a time, and
+		when the running application switches to a different view, the old view slides out and the new view slides in:
 		<ul>
-			<li><em>You probably would <strong>not</strong> include a particular JavaScript libraries if</em>
-			you are handing the ZIP off to a development team that is familiar
-			with the JavaScript libraries you are using in the UI mockups. The development
-			team might not want the JavaScript libraries included in the ZIP because they
-			may already have copies of the JavaScript libraries on their development systems
-			and it is wasteful to include these (usually quite large) components if not needed.</li>
-			<li><em>You probably would include all JavaScript libraries and themes if</em>
-			you want the contents of the download ZIP to be a totally self-contained, runnable
-			application that you can install on an arbitrary web server or localhost server.</li>
+			<li><strong>View</strong> - Usually, a View is used as a container for a (non-scrollable) full page of mobile content.</li>
+			<li><strong>ScrollableView</strong> - A container for a full page of mobile content, but which is scrollable (e.g., via a touch vertical-flick gesture).</li>
+			<li><strong>SwapView</strong> - A container for a full page of mobile content, but which swappable with an alternate views (e.g., via a touch horizontal-flick gesture).</li>
 		</ul>
 	</li>
-	<li><strong>Relocate particular libraries</strong> - 
-		Sometimes the development team sets up their folder hierarchy differently than
-		how Maqetta sets up user workspaces. For example, by default Maqetta places
-		the Dojo libraries at <code>./libs/dojo</code>, whereas the development team
-		might place Dojo at a different location, such as <code>./js/dojo</code>, 
-		<code>./dojo</code> or perhaps <code>../../libraries/dojo</code>.
-		The editable textboxes within the dialog allow you to "relocate" the JavaScript
-		libraries when the ZIP file is created to a n alternate location than what you are
-		using in your Maqetta workspace. For example, if Dojo is located at <code>./lib/dojo</code>
-		and your development team put the Dojo library at <code>./dojo</code>, then you
-		can change the textbox from <code>lib/dojo</code> to <code>dojo</code>.
-		Maqetta will automatically fix up the cloned copies of all HTML files in the ZIP
-		file such that all URL references to Dojo will point to <code>./dojo</code>
-		instead of <code>./lib/dojo</code>.
-		<div class="note">
-			Note that changing the textboxes in the download dialog only affect
-			the cloned files within the ZIP. Your Maqetta workspace files remain
-			as they were.
-		</div>
+	<li>Heading widgets - These are widgets typically used at the top of a mobile screen:
+		<ul>
+			<li><strong>Heading</strong> - Heading (titlebar) widget.</li>
+			<li><strong>ToolBarButton</strong> - A button widget that can be placed inside of a Heading widget.</li>
+		</ul>
+	</li>
+	<li>RoundedRect, EdgeToEdge and List widgets - These are widgets that either visually appear as
+		rounded rectangles or are used to display a list of information or choices:
+		<ul>
+			<li><strong>RoundRect</strong> - A simple RoundRect into which other widgets and HTML elements can be dropped.</li>
+			<li><strong>RoundRectCategory</strong> - A heading widget typically used above a RoundRectList or RoundRectDataList.</li>
+			<li><strong>RoundRectList</strong> - A list of items displayed as a vertical stacked group of rounded rectangles. </li>
+			<li><strong>RoundRectDataList</strong> - Same as RoundRectList, except data comes from a data store. </li>
+			<li><strong>EdgeToEdgeCategory</strong> - A heading widget typically used above a EdgeToEdgeList or EdgeToEdgeDataList.</li>
+			<li><strong>EdgeToEdgeList</strong> - A list of items displayed in a UI element that spans the full width of screen. </li>
+			<li><strong>EdgeToEdgeDataList</strong> - Same as EdgeToEdgeList, except data comes from a data store. </li>
+			<li><strong>ListItem</strong> - Child widget for RoundRectList or EdgeToEdgeList.</li>
+		</ul>
+	</li>
+	<li>Form widgets - These are low-level UI controls often used in forms:
+		<ul>
+			<li><strong>Button</strong></li>
+			<li><strong>ToggleButton</strong></li>
+			<li><strong>Switch</strong></li>
+			<li><strong>Checkbox</strong></li>
+			<li><strong>RadioButton</strong></li>
+			<li><strong>TextBox</strong></li>
+			<li><strong>ComboBox</strong></li>
+			<li><strong>TextArea</strong></li>
+			<li><strong>ExpandingTextArea</strong></li>
+		</ul>
+	</li>
+	<li>TabBar widgets - These are widgets typically used at the top or bottom of a screen
+		to manage an associated set of Views, resulting in a user interface similar to a TabContainer
+		desktop widget.
+		<ul>
+			<li><strong>TabBar</strong> - Container widget.</li>
+			<li><strong>TabBarButton</strong> - Buttons within the TabBar.</li>
+		</ul>
+	</li>
+	<li>Other widgets:
+		<ul>
+			<li><strong>Slider</strong></li>
+			<li><strong>ContentPane</strong></li>
+			<li>Icons
+				<ul>
+					<li><strong>IconContainer</strong></li>
+					<li><strong>IconItem</strong></li>
+				</ul>
+			</li>
+			<li>SpinWheel
+				<ul>
+					<li><strong>SpinWheel</strong></li>
+					<li><strong>SpinWheelSlot</strong></li>
+					<li><strong>SpinWheelDatePicker</strong></li>
+					<li><strong>SpinWheelTimePicker</strong></li>
+				</ul>
+			</li>
+			<li><strong>Carousel</strong></li>
+			<li>FixedSplitter
+				<ul>
+					<li><strong>FixedSplitter</strong></li>
+					<li><strong>FixedSplitterPane</strong></li>
+				</ul>
+			</li>
+			<li><strong>Overlay</strong></li>
+		</ul>
 	</li>
 </ul>
 
-<a name="exploring_workspace_html_files"><h2>Customizing your workspace to relocate JavaScript libraries</h2></a>
+<a name="setting_up_views"><h2>Setting up 2 different views</h2></a>
 
-<p>The third icon at the top of the Files palettes allows you to permanently modify the folder
-structure of your Maqetta workspace.</p>
+<p>Typically, mobile user interfaces consist of a series of different screens.
+	For this tutorial we will create 2 of the screens using the "View" widget.
+</p>
 
-<p><a href="img/modify_libraries_dialog.png" target="_blank"><img alt="image" src="img/modify_libraries_dialog.png" style="margin: 1em 1em 0pt 0pt;"/></a></p>
-
-
-<p>For example, by default, Maqetta places all JavaScript libraries
-within the <code>./libs</code> folder, with the Dojo toolkit located at <code>./libs/dojo</code>.
-These defaults usually work well for most Maqetta users. However, if your development team 
-uses a different folder hierarchy, and you often create download ZIPs that you hand off to your developers,
-then sometimes it will be more efficient and less error-prone if you customize your Maqetta workspace
-to match the folder structure used by your developers. That way, when you create a download ZIP,
-you won't need to relocate JavaScript libraries for each new ZIP file.
-Maqetta will automatically fix up all HTML files in your workspace
-to take into account the new location(s) for your JavaScript libraries.</p>
-
-<a name="exploring_workspace_html_files"><h2>Exporting to IBM Rational Application Developer (TM) 8.0</h2></a>
-
-<p>This section is relevant to web development teams that use IBM Rational Application Developer (RAD) 8.0
-in conjunction with the Dojo Toolkit.</p>
-
-<p>To demonstrate Maqetta integration with RAD:</p>
 <ul>
-<li>Launch RAD</li>
-<li>Issue a <code>New-&gt;Other...</code> command and then choose Web-&gt;Static Web Project. The following dialog will appear:
-<p><a href="img/RAD_New_Static_Web_Project.png" target="_blank"><img alt="image" src="img/RAD_New_Static_Web_Project.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-</li>
-<li>Fill out the usual fields (e.g., project name) as you would normally,
-but also click on the "Modify..." button so that you can tell RAD that you want to include the
-Dojo facet as part of your static web project. This brings up the Project Facets dialog.
-Open up the "Web 2.0" group and click on the checkbox next to "Dojo Toolkit":
-<p><a href="img/RAD_Dojo_Project_Facet.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Facet.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-And then click OK.
-</li>
-<li>Click Next until you get to the Dojo Project Setup dialog:
-<p><a href="img/RAD_Dojo_Project_Setup_1.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_1.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-Click on the "Change these setup options" button. You will see the following wizard pane:
-<p><a href="img/RAD_Dojo_Project_Setup_2.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_2.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-Notice that RAD provides three options for how to configure Dojo within your project:
-<ol>
-	<li>clone a copy of Dojo into the current project</li>
-	<li>reference a copy of Dojo that is within a project in the current workspace</li>
-	<li>reference Dojo off of a remote server (CDN)</li>
-</ol>
-</li>
-<li>Choose option 1 (clone a copy of Dojo into the current project) and click Next. You will see the following:
-<p><a href="img/RAD_Dojo_Project_Setup_3.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_3.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-As you can see, RAD allows you to choose where you would like the Dojo toolkit to be located
-within your current project (i.e., relative to the <code>WebContent\</code> folder). 
-The dialog above shows the RAD's default location for Dojo: <code>dojo</code>.
-<div class="note">
-Maqetta uses a different default location for Dojo: : <code>lib/dojo</code>.
-</div>
-</li>
-<li>Click Finish to create your static web project. If you look in the Project Explorer,
-you will see a <code>dojo/</code> folder within the <code>WebContent/</code> folder for your new project.
-</li>
-<li>Go into the Maqetta application and click on the Download Entire Workspace icon
-<img src="img/download.gif" title="Download Entire Workspace" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-within the Files palette. In the Download dialog, uncheck the box next to "Dojo 1.7" 
-(this causes the download ZIP to <em>not</em> include the Dojo JavaScript files)
-and replace the string <code>lib/dojo</code> with the string <code>dojo</code>
-(this causes all cloned HTML files that are included within the ZIP to look
-for the Dojo JavaScript files at relative URL <code>./dojo</code> instead of relative URL <code>./lib/dojo</code>).
-</li>
-<li>Click OK to start the download process. </li>
-<li>Wait until the browser has completed the download.
-(Since Dojo was not included in the ZIP, the download should be completed quickly.)</li>
-<li>Using an external utility (e.g., use a product like WinZip or operating system utilities), 
-unzip the contents of the ZIP file into the <code>WebContent</code>
-folder for your project. (You'll need to know where your Eclipse workspace is stored on your system.)
-When completed, files such as <code>Sample1.html</code> and <code>app.css</code> should end up
-in your <code>WebContent</code> folder.
-</li>
-<li>Back in RAD, issue a Refresh command on your new project. The files from the Maqetta ZIP should
-appear in the Project Explorer.
-</li>
-<li>Find Sample1.html. Using the context menu, choose "Open With" and then "Web Browser".
-You should see Sample.html running within the embedded Web browser that is part of RAD.
-</li>
+<li>Drag/drop a View widget onto the page canvas.
+	Notice that the page canvas now has a gray background. 
+	This is because the first dojox.mobile widget added to the page
+	brings in the CSS theme stylesheets that provide a native look-and-feel
+	for a particular mobile device.
+	<p><a href="img/Mobile_View_Widget_Added.png" target="_blank"><img alt="image" src="img/Mobile_View_Widget_Added.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>	
+	Also notice that there is a selection rectangle around the entire page.
+	This is because the View is selected and it has default width and height of 100%.
+	<div class="note">If you want the View to have dimensions, particularly height, less than 100%,
+		you can change dimensions in the Layout section of the Properties palette.</div>
+	</li>
+<li>In order to allow easy authoring of multiple screens, 
+	the Dojox Mobile widget uses the '<code>id</code>' attribute to put a referenceable name
+	on widgets. To put a name on this View widget, go to the Properties palette.
+	Open up the "Common" section. Type "root_view" as the value for the 
+	'<code>id</code>' attribute and then hit Return to complete the operation.
+	The top of the Properties palette should now show <code>for: dojox.mobile.View #root_view</code>:
+	<p><a href="img/Mobile_ID_root_view.png" target="_blank"><img alt="image" src="img/Mobile_ID_root_view.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>	
+	.
+	<div class="note">Make sure that you entered the exact string "root_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	</li>
+<li>Look at the Outline palette. Right now the "root_view" View is visible because its
+	eyeball icon is open:
+	<p><a href="img/Mobile_root_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_root_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>		
+	Now make the "root_view" View invisible by clicking on the eyeball icon in the Outline palette to "close" the eye.
+	<p><a href="img/Mobile_root_view_invisible.png" target="_blank"><img alt="image" src="img/Mobile_root_view_invisible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	.	
+	</li>
+<li>Drag/drop a second View widget onto the page canvas.
+	Notice that this new View widget is currently selected.
+	Go to the Common section of the Properties palette and type "alerts_view" as the value for the 
+	'<code>id</code>' attribute and then hit Return to complete the operation.
+	The top of the Properties palette should now show <code>for: dojox.mobile.View #alerts_view</code>
+	<div class="note">Make sure that you entered the exact string "alerts_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	</li>
+<li>Use the Outline palette to change visibility of the two View widgets.
+	First, click on the eyeball icon to the left of the second View to make the second View invisible
+	(after the operation, the eyeball should have a white interior).
+	Then, click on the eyeball icon to the left of the first View to make the first View visible
+	(after the operation, the eyeball should have content and not be filled with white).
+	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	</li>
+</ul>
+
+<a name="setting_up_views"><h2>Assembling the root view</h2></a>
+
+<p>Perform the following steps to add some content to the first View (i.e., the View with id="root_view"):
+</p>
+
+<ul>
+<li>Drag/drop a Heading widget into the middle of the View.
+	An edit box will appear that allows you to enter the text content for the Heading.
+	<p><a href="img/Mobile_Heading_My_Mobile_App.png" target="_blank"><img alt="image" src="img/Mobile_Heading_My_Mobile_App.png" style="margin: 1em 1em 0pt 0pt;" height="275" /></a></p>
+	Enter "My Mobile App" and click the OK button or hit Return to commit the Heading's text content.
+	The Heading should now have the label "My Mobile App".
+	</li>
+<li>Drag/drop a RoundRectList widget into the middle of the View.
+	You should see two list items labeled "Item 1" and "Item 2".
+	Double-click on the "Item 1" list item to edit the text.
+	Enter "Alerts"  and click the OK button or hit Return to commit the revised text content.
+	Double-click on the "Item 2" list item to edit the text.
+	Enter "Status"  and click the OK button or hit Return to commit the revised text content.
+	</li>
+<li>Drag/drop a third ListItem widget and drop onto the second list item (which should say "Status").
+	This will add a third list item to the RoundRectList.
+	A text entry popup should appear after dropping this third list item.
+	Enter "News" and then click the OK button or hit Return to commit the text content.
+	<p><a href="img/Mobile_Root_View_RectList.png" target="_blank"><img alt="image" src="img/Mobile_Root_View_RectList.png" style="margin: 1em 1em 0pt 0pt;" height="175" /></a></p>
+	</li>
+<li>Select the first list item ("Alerts").
+	Go to the Properties palette and navigate to the "Widget-Specific" pane.
+	(You might have to first click on the "All" link at the top of the palette
+	and then click on the "Widget-Specific" button.)
+	Enter "alerts_view" as the value of the "moveTo" property and hit Return to commit the value.
+	<div class="note">Make sure that you entered the exact string "alerts_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	<p><a href="img/Mobile_MoveTo_Alerts.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Alerts.png" style="margin: 1em 1em 0pt 0pt;" height="300" /></a></p>
+	After hitting Return, an arrow icon should appear on the right side of the "Alerts" list item:
+	<p><a href="img/Mobile_MoveTo_Alerts_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Alerts_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="175" /></a></p>
+	</li>
+</ul>
+
+<a name="setting_up_views"><h2>Assembling the alerts view</h2></a>
+
+<p>Perform the following steps to add some content to the second View (i.e., the View with id="alerts_view"):
+</p>
+
+<ul>
+<li>Use the Outline palette to change visibility of the two View widgets.
+	First, click on the eyeball icon to the left of the first View to make the first View invisible
+	(after the operation, the eyeball should have a white interior).
+	Then, click on the eyeball icon to the left of the second View to make the second View visible
+	(after the operation, the eyeball should have content and not be filled with white).
+	<p><a href="img/Mobile_second_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_second_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	</li>
+<li>Drag/drop a Heading widget into the middle of the View.
+	An edit box will appear that allows you to enter the text content for the Heading.
+	Enter "Alerts" and click the OK button or hit Return to commit the Heading's text content.
+	The Heading should now have the label "Alerts".
+	</li>
+<li>In the Widgets palette, go to the HTML section. Drag/drop a <code>&lt;div&gt;</code> widget 
+	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
+	Double-click on the empty DIV. 
+	An edit box will appear that allows you to enter the text content for the Heading.
+	Enter "Today's alerts" and click the OK button or hit Return to commit the text content.
+	Go to the Properties palette and navigate to the "Padding/Margins" pane.
+	(You might have to first click on the "All" link at the top of the palette
+	and then click on the "Padding/Margins" button.)
+	Find the property named "margin", enter the value "1em", and hit Return to commit the new margin value.
+	<div class="note">For this step, be sure to enter a value for the shortcut property "margin"
+		and not the more specific "margin-top", "margin-right", "margin-bottom" or "margin_left".</div>
+	</li>
+<li>In the Widgets palette, go to the HTML section. Drag/drop another <code>&lt;div&gt;</code> widget 
+	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
+	Double-click on the empty DIV. 
+	An edit box will appear that allows you to enter the text content for the Heading.
+	Enter "10:30am 85% capacity" and click the OK button or hit Return to commit the text content.
+	Go to the Properties palette and navigate to the "Padding/Margins" pane.
+	Find the property named "margin-left", enter the value "1em", and hit Return to commit the new margin value.
+	<div class="note">You might have to click on the "show t/r/b/l" checkbox to expose
+		the "margin-left" property.</div>
+	<p><a href="img/Mobile_second_view_content.png" target="_blank"><img alt="image" src="img/Mobile_second_view_content.png" style="margin: 1em 1em 0pt 0pt;" height="300" /></a></p>
+	</li>
+<li>Click on the Heading at the top to select it.
+	Go to the Properties palette and navigate to the "Widget-Specific" pane.
+	(You might have to first click on the "All" link at the top of the palette
+	and then click on the "Widget-Specific" button.)
+	Enter "Home" as the value for the "Back" property and hit Return to commit the value.
+	Enter "root_view" as the value of the "moveTo" property and hit Return to commit the value.
+	<div class="note">Make sure that you entered the exact string "root_view".
+		The tutorial won't work if the ID is not entered correctly.</div>
+	After hitting Return, a button labeled "Home" should appear on the left side of the Heading:
+	<p><a href="img/Mobile_MoveTo_Root_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Root_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	</li>
+<li>Use the Outline palette to change visibility of the two View widgets.
+	First, click on the eyeball icon to the left of the second View to make the second View invisible
+	(after the operation, the eyeball should have a white interior).
+	Then, click on the eyeball icon to the left of the first View to make the first View visible
+	(after the operation, the eyeball should have content and not be filled with white).
+	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
+	The root View should now be visible.</li>
+</ul>
+
+<a name="setting_up_views"><h2>Verifying against different devices and orientations</h2></a>
+
+<p>Mobile user interfaces created with Dojox Mobile and Maqetta automatically
+	restyle themselves based on the target device and orientation.
+</p>
+
+<ul>
+<li>Use the Choose Device icon
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
+	Notice that the page gets restyled to match the native look-and-feel for different devices.
+	Here is a snapshot of how the root View looks with an Android theme.
+	<p><a href="img/Mobile_root_view_android.png" target="_blank"><img alt="image" src="img/Mobile_root_view_android.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>		
+	</li>
+<li>Switch between portrait and landscape modes by clicking on the
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	icon.
+	Note that the user interface stretches to fit both landscape or portrait orientations.
+	</li>
+<li>Using the same two icons,
+	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	and
+	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	, to back to showing the iPhone silhouette in portrait mode.
+	</li>
+</ul>
+
+<a name="setting_up_views"><h2>Preview and run your mobile application</h2></a>
+
+<p>Now let's preview your mobile application and test its interactivity,
+	including slide-in animations.
+	.
+</p>
+
+<ul>
+<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.gif" />. 
+	This will launch a new browser window that contains the mobile application you just created
+	running inside of the same mobile device silhouette as you see in the page editor,
+	with controls at the top for switching devices, controlling zoom level and changing orientation
+	(portrait vs. landscape).
+	<p><a href="img/Mobile_preview_1.png" target="_blank"><img alt="image" src="img/Mobile_preview_1.png" style="margin: 1em 1em 0pt 0pt;" height="550" /></a></p>
+	</li>
+<li>Use the controls at the top of the device to preview for different devices,
+	zoom in and out, and switch orientation.
+	</li>
+<li>Click on the "Alerts" list item.
+	This should cause a slide-in animation to transition from the root view to the alerts view.
+	<p><a href="img/Mobile_preview_2.png" target="_blank"><img alt="image" src="img/Mobile_preview_2.png" style="margin: 1em 1em 0pt 0pt;" height="550" /></a></p>		
+	</li>
+<li>Click on the "Home" button.
+	This should cause a slide-in animation to transition back from the alerts view to the root view.
+	</li>
 </ul>
 
 <p class="prevnext"><a href="tutorials/tutorial3.html">Previous</a> / <a href="tutorials/tutorial5.html">Next</a></p>

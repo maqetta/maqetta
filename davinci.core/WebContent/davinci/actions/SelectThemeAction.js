@@ -12,12 +12,10 @@ dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 		var e = davinci.Workbench.getOpenEditor();
 		
 		var theme = e.getContext().getTheme();
-			
+		var ldojoVersion = e.getContext().getDojo().version.major +'.'+ e.getContext().getDojo().version.minor;
 	
-		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false});
-		
-		//this._themeChooser.set('value', theme);
-		davinci.Workbench.showModal(this._themeChooser, "Select a theme", "width:130px");
+		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false, dojoVersion: ldojoVersion });
+		davinci.Workbench.showModal(this._themeChooser, "Select a theme", "width:200px");
 		dojo.connect(this._themeChooser, "onChange", this, "_changeTheme");
 		
 	},

@@ -1,0 +1,37 @@
+<project name="maqetta-external" default="populate">
+    <target name="populate">
+        <condition property="getMethod" value="fromGit" else="localCopy">
+            <not>
+                <isset property="maqettaCode"/>
+            </not>
+        </condition>
+        <macrodef name="populateDir">
+            <attribute name="project"/>
+            <attribute name="isFeature" default="false"/>
+            <attribute name="extPath" default=""/>
+            <sequential>
+                <antcall target="${getMethod}">
+                    <param name="project" value="@{project}"/>
+                    <param name="isFeature" value="@{isFeature}"/>
+                    <param name="extPath" value="@{extPath}"/>
+                </antcall>
+            </sequential>
+        </macrodef>
+
+        <!-- -->
+        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
+        <!-- -->
+
+        <populateDir project="davinci.core"/>
+        <populateDir project="davinci.dojo_1_7"/>
+        <populateDir project="davinci.html"/>
+        <populateDir project="davinci.jqueryui_1_8"/>
+        <populateDir project="davinci.product" extPath="/releng"/>
+        <populateDir project="davinci.yui_2_6_0"/>
+        <populateDir project="davinci.review"/>
+        <populateDir project="davinci.joomla"/>
+        <populateDir project="org.apache.commons.fileupload"/>
+        <populateDir project="org.apache.commons.io"/>
+
+    </target>
+</project>

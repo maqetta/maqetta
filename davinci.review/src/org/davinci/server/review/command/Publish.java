@@ -30,7 +30,7 @@ import org.davinci.server.user.User;
 
 public class Publish extends Command {
 	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
-	
+
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			User user) throws IOException {
 
@@ -70,7 +70,7 @@ public class Publish extends Command {
 		}
 
 		reviewers.add(new Reviewer(user.getUserName(), user.getPerson().getEmail()));
-		
+
 		String fakeReviewer = ServerManager.getServerManger().getDavinciProperty(Constants.FAKE_REVIEWER);
 		if(fakeReviewer != null)
 			reviewers.add(new Reviewer("fakeReviewer", fakeReviewer));
@@ -179,9 +179,9 @@ public class Publish extends Command {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
 		String prefix =  System.getProperty("org.eclipse.equinox.http.jetty.context.path");
 		if(prefix != null){
-			return host + prefix + "/review/" + user.getUserName();
+			return host + prefix + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
 		} else {
-			return host + "/review/" + user.getUserName();
+			return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName();
 		}
 	}
 }

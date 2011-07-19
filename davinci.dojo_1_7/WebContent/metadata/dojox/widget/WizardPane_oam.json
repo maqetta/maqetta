@@ -51,6 +51,7 @@
             "datatype": "boolean",
             "title": "Refresh On Show"
         },
+/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
         "loadingMessage": {
             "datatype": "string",
             "defaultValue": "<span class='dijitContentPaneLoading'>Loading...</span>",
@@ -61,6 +62,7 @@
             "defaultValue": "<span class='dijitContentPaneError'>Sorry, an error occurred</span>",
             "title": "Error Message"
         },
+*/
         "doLayout": {
             "datatype": "string",
             "defaultValue": "auto",
@@ -79,11 +81,13 @@
             "datatype": "string",
             "title": "Done Function"
         },
+/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
         "ioArgs": {
             "datatype": "json",
             "description": "Parameters to pass to xhrGet() request, for example:\n\t<div dojoType=\"dijit.layout.ContentPane\" href=\"./bar\" ioArgs=\"{timeout: 500}\">",
             "hidden": false
         },
+*/
         "isContainer": {
             "datatype": "boolean",
             "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",

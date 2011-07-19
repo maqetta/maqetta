@@ -33,7 +33,6 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DataListCreateTool", davinci.ve.
 		if(!dataList.properties){
 			dataList.properties = {};
 		}
-		debugger;
 		dataList.properties.id = dataListId;
 		dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';
 		dataList.context = this._context;

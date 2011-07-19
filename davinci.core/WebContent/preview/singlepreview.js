@@ -18,7 +18,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 	margin:0,
 	pathToPreviewerFolder:'preview/',
 	silhouetteiframe:null,
-	_cnncts:[],
+	silhouetteiframe_connect_onload:null,
 	
 	buildRendering: function() {
 		this._connects=[];
@@ -96,9 +96,9 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 			spw.connect(device_select, 'onChange', function(newvalue){
 				if(newvalue != spw.currentDevice){
 					spw.currentDevice = newvalue;
-					if(spw.silhouetteiframe && spw.silhouetteiframe.setSVGFilename){
-						spw.silhouetteiframe.setSVGFilename(spw.devicelist[spw.currentDevice].file);
-					}
+					var theme = preview.silhouetteiframe.getMobileTheme(spw.devicelist[spw.currentDevice].file);
+					var iframefilename_with_params = spw.iframefilename+'?theme='+theme;
+					this.update_silhouette_container(iframefilename_with_params);
 				}
 			});
 		},1);
@@ -151,31 +151,42 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 			}
 			spw.silhouetteiframe.setOrientation(spw.currentOrientation);	
 		});
+		var theme = preview.silhouetteiframe.getMobileTheme(this.devicelist[this.currentDevice].file);
+		var iframefilename_with_params = this.iframefilename+'?theme='+theme;
+		this.update_silhouette_container(iframefilename_with_params);
+	},
 
+	update_silhouette_container: function(iframefilename_with_params){
+		var spw = this;	// spw = single preview widget -- used by out-of-scope callbacks below
+		if(this.silhouetteiframe_connect_onload){
+			dojo.disconnect(this.silhouetteiframe_connect_onload);
+			this.silhouetteiframe_connect_onload=null;
+		}
 		var silhouette_container = dojo.query(".silhouette_container",this.domNode)[0];
 		silhouette_container.innerHTML = '<div class="silhouette_div_container">'+
 			'<span class="silhouetteiframe_object_container"></span>'+
-			'<iframe src="'+iframefilename+'" class="silhouetteiframe_iframe"></iframe>'+
+			'<iframe src="'+iframefilename_with_params+'" class="silhouetteiframe_iframe"></iframe>'+
 			'</div>';
 		var silhouette_div_container=dojo.query('.silhouette_div_container',silhouette_container)[0];
 		
 		// Don't start rendering silhouette until iframe is loaded
 		var silhouetteiframe_iframe=dojo.query('.silhouetteiframe_iframe',silhouette_container)[0];
-		var that=this;
-		var conn = dojo.connect(silhouetteiframe_iframe, 'onload', function(){
-			that.silhouetteiframe = new preview.silhouetteiframe({
+		this.silhouetteiframe_connect_onload = dojo.connect(silhouetteiframe_iframe, 'onload', function(){
+			spw.silhouetteiframe = new preview.silhouetteiframe({
 				rootNode:silhouette_div_container,
 				svgfilename:spw.devicelist[spw.currentDevice].file,
 				orientation:orientation,
 				scalefactor:scalefactor,
 				margin:spw.margin
 			});
-		});
-		this._cnncts.push(conn);
+		});	
 	},
 	
 	destroy: function(preserveDom){
-		dojo.forEach(this._cnncts, dojo.disconnect);
+		if(this.silhouetteiframe_connect_onload){
+			dojo.disconnect(this.silhouetteiframe_connect_onload);
+			this.silhouetteiframe_connect_onload=null;
+		}
 		this.device_select.destroy();
 		this.sliderLabels.destroy();
 		this.zoom_select.destroy();

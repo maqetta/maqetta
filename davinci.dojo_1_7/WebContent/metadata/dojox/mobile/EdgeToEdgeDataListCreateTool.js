@@ -100,9 +100,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		
 		this._context.getCommandStack().execute(command);
 		this._select(edge2Edge);
-/*		var tempstore = edge2Edge.dijitWidget.store;
-		edge2Edge.dijitWidget.setStore(tempstore);
-		edge2Edge.dijitWidget.buildRendering();*/
 		debugger;
 		
 	}

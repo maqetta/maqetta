@@ -145,6 +145,7 @@
                     }
                 }
             ],
+            "isContainer": true,
             "inlineEdit": "davinci.ve.input.AccordionContainerInput"
         },
         {
@@ -213,6 +214,7 @@
             ],
             "resizable": "none",
             "isLayoutContainer": true,
+            "isContainer": true,
             "allowedChild": "DijitButtons",
             "inlineEdit": "davinci.ve.input.ToolbarInput"
         },
@@ -277,6 +279,7 @@
             ],
             "resizable": true,
             "isLayered": true,
+            "isContainer": true,
             "allowedChild": "dijit.PopupMenuBarItem",
             "helper": "davinci.libraries.dojo.dijit.MenuHelper",
             "inlineEdit": "davinci.ve.input.MenuBarInput"
@@ -822,6 +825,7 @@
             "resizable": "none",
             "isLayered": true,
             "allowedChild": "DijitMenuItems",
+            "isContainer": true,
             "helper": "davinci.libraries.dojo.dijit.MenuHelper"
         },
         {
@@ -1393,6 +1397,7 @@
                     }
                 }
             ],
+            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane"
         },
         {
@@ -1489,6 +1494,7 @@
             "properties": {
                  "style": "height: 100%;"
             },
+            "isContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper"
         },
@@ -1637,7 +1643,7 @@
             "category": "mobile",
             "icon": "resources/images/EdgeToEdgeDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
-            /*"isContainer": true,*/
+            "isContainer": false,
             "data": [
                 {
                     "type": "dojo.data.ItemFileReadStore",
@@ -1666,8 +1672,8 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper"
-          /*  "inlineEdit": "davinci.ve.input.EdgeToEdgeDataListInput"*/
+            "helper": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper",
+            "inlineEdit": "davinci.ve.input.EdgeToEdgeDataListInput"
         },
         {
             "name": "ListItem",

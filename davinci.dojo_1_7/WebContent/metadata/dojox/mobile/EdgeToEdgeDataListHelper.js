@@ -118,15 +118,16 @@ debugger;
 		var storeWidget = davinci.ve.widget.byId(storeId);
 
 		if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
-			this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/);
+			this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/, widget);
 
 		}
 	
 	}
+//	widget.getChildren = dojo.hitch(this, "getChildren");
 
 },
 
-updateStore: function(store, /*properties*/ storeWidget) { 
+updateStore: function(store, /*properties*/ storeWidget, widget) { 
 	debugger;
 	var data = storeWidget._srcElement.getAttribute('data'); 
 	var url = storeWidget._srcElement.getAttribute('url'); 
@@ -152,7 +153,7 @@ updateStore: function(store, /*properties*/ storeWidget) {
 		//if (!store.data)
 		store.data = data;
 		delete store.url; // wdr remove old url if switching
-		store.close();
+/*		store.close();
 		store.fetch({
 			query: this.query,
 			queryOptions:{deep:true}, 
@@ -161,18 +162,50 @@ updateStore: function(store, /*properties*/ storeWidget) {
 					var item = items[i];
 					console.warn("label=", i, "moveTo=", item);
 				}
+				widget.dijitWidget.refresh(); //setStore(store);
 			})
-		});
+		});*/
 	}else{ // must be url data store
 		// Kludge to force reload of store data
 		store.clearOnClose = true;
 		store.url = /*properties.*/url; // wdr 3-11
 		delete store.data; // wdr remove old url if switching
-		store.close();
+/*		store.close();
+		store.fetch({
+			query: this.query,
+			queryOptions:{deep:true}, 
+			onComplete: dojo.hitch(this, function(items){
+				for (var i = 0; i < items.length; i++) {
+					var item = items[i];
+					console.warn("label=", i, "moveTo=", item);
+				}
+				widget.dijitWidget.refresh(); //setStore(store);
+			})
+		});*/
 	}
+	store.close();
+	store.fetch({
+		query: this.query,
+		queryOptions:{deep:true}, 
+		onComplete: dojo.hitch(this, function(items){
+			for (var i = 0; i < items.length; i++) {
+				var item = items[i];
+				console.warn("label=", i, "moveTo=", item);
+			}
+			widget.dijitWidget.refresh(); //setStore(store);
+		})
+	});
 	
 
-}
+}/*,
+
+getChildren: function(attach){
+	debugger;
+	var children=[];
+	return children;
+}*/
+
+
 
 
 

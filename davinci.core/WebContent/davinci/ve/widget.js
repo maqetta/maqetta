@@ -1518,6 +1518,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	getChildren: function(attach)
 	{
 		var children=[];
+
 		if (this.acceptsHTMLChildren)
 		{
 			var dvWidget = function(child){
@@ -1526,7 +1527,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 
 			// this.containerNode is a Dojo attachpoint. FIXME: Perhaps this detail should be abstracted by a helper?
 			return dojo.map(dojo.filter((this.containerNode || this.domNode).children, dvWidget), dvWidget);
-		} else {
+		} else if(davinci.ve.metadata.queryDescriptor(this.type, "isContainer")){ //wdr
 			dojo.map(this.dijitWidget.getChildren(), function(widget){
 				if (!widget){ return; }
 				if (attach && !widget.domNode._dvWidget)

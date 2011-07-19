@@ -382,6 +382,22 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		}
 	},
+	
+	/**
+	 * @static
+	 */
+	_mobileMetaElement: {
+		name: 'viewport',
+		content: 'width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no'
+	},
+	
+	setMobileMeta: function(deviceName) {
+		if (deviceName === 'none') {
+			this._removeHeadElement('meta', this._mobileMetaElement);
+		} else {
+			this._addHeadElement('meta', this._mobileMetaElement);
+		}
+	},
 
 	themeChanged : function(){
 		var changed = true;
@@ -2046,7 +2062,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 		
-		var head =  this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
+		var head =  this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
 		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
 		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
 		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
@@ -2070,7 +2086,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		var oldText = '';
 		
 		if (scriptAdditions){
-			var scriptText = scriptAdditions.find({'elementType':'HTMLText'}, true);
+			var scriptText = scriptAdditions.find({elementType: 'HTMLText'}, true);
 			if(scriptText){
 				oldText = scriptText.getText();
 				if (oldText.indexOf(text)>0){
@@ -2095,6 +2111,84 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		newScriptText.setText(oldText + "\n" + text); //wdr
 		script.addChild(newScriptText); //wdr
 		return script;
+	},
+	
+	/**
+	 * Significant attributes for HTML elements; used for matching duplicates.
+	 * If an element isn't listed here, defaults to 'src'.
+	 * 
+	 * @static
+	 */
+	_significantAttrs: {
+		link: 'href',
+		meta: 'name'
+	},
+	
+	/**
+	 * Add element to <head> of document.  Modeled on dojo.create().
+	 */
+	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
+		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		
+		if (! allowDup) {
+			// Does <head> already have an element that matches the given
+			// element?  Only match based on significant attribute.  For
+			// example, a <script> element will match if its 'src' attr is the
+			// same as the incoming attr.  Same goes for <meta> and its 'name'
+			// attr.
+			var sigAttr = this._significantAttrs[tag] || 'src';
+			var found = head.find({ elementType: 'HTMLElement', tag: tag })
+					.some(function(elem) {
+						return elem.getAttribute(sigAttr) === attrs[sigAttr];
+					});
+			if (found) {
+				return;
+			}
+		}
+		
+		// add to Model...
+		var elem = new davinci.html.HTMLElement(tag);
+		for (var name in attrs) if (attrs.hasOwnProperty(name)) {
+			elem.addAttribute(name, attrs[name]);
+		}
+		head.addChild(elem);
+		
+		// add to DOM...
+		dojo.withGlobal(this.getGlobal(), function() {
+			dojo.create(tag, attrs, dojo.query('head')[0]);
+		});
+	},
+	
+	/**
+	 * Remove element from <head> that matches given tag and attributes.
+	 */
+	_removeHeadElement: function(tag, attrs) {
+		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		
+		// remove from Model...
+		head.find({ elementType: 'HTMLElement', tag: tag }).some(function(elem) {
+			var found = true;
+			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
+				if (elem.getAttribute(name) !== attrs[name]) {
+					found = false;
+					break;
+				}
+			}
+			
+			if (found) {
+				head.removeChild(elem);
+				return true;	// break some() iteration
+			}
+		});
+		
+		// remove from DOM...
+		dojo.withGlobal(this.getGlobal(), function() {
+			var queryStr = tag;
+			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
+				queryStr += '[' + name + '="' + attrs[name] + '"]';
+			}
+			dojo.destroy(dojo.query(queryStr)[0]);
+		});
 	}
 });
 

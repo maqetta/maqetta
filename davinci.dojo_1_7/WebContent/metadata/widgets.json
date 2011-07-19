@@ -1637,7 +1637,37 @@
             "category": "mobile",
             "icon": "resources/images/EdgeToEdgeDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
-            "isContainer": true
+            /*"isContainer": true,*/
+            "data": [
+                {
+                    "type": "dojo.data.ItemFileReadStore",
+                    "properties": {
+                        "data": {
+                            "identifier": "label",
+                            "items": [
+                                {
+                                    "label": "Label 1",
+                                    "moveTo": "dummy"
+                                },
+                                {
+                                    "label": "Label 2",
+                                    "moveTo": "dummy"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "dojox.mobile.EdgeToEdgeDataList",
+                    "properties": {
+                            "query": {"label": "*"}
+
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
+            "helper": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper"
+          /*  "inlineEdit": "davinci.ve.input.EdgeToEdgeDataListInput"*/
         },
         {
             "name": "ListItem",

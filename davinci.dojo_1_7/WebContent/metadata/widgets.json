@@ -1958,13 +1958,13 @@
                 {
                     "type": "dojox.mobile.SpinWheelSlot",
                     "properties": {
-                        "labels": "['A','B','C','D','E']"
+                        "labels": ['A','B','C','D','E']
                     }
                 },
                 {
                     "type": "dojox.mobile.SpinWheelSlot",
                     "properties": {
-                        "labels": "['A','B','C','D','E']"
+                        "labels": ['A','B','C','D','E']
                     }
                 }
             ]
@@ -1978,7 +1978,8 @@
             "allowedParent": "dojox.mobile.SpinWheel",
             "properties": {
                 "labels": "['A','B','C','D','E']"
-            }
+            },
+            "inlineEdit": "davinci.ve.input.SpinWheelSlotInput"
         },
         {
             "name": "SpinWheelDatePicker",

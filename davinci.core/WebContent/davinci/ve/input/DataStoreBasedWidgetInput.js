@@ -89,7 +89,10 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 		var value ='';
 		for (var i = 0; i <  this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
 			var item = this._widget.dijitWidget.store._arrayOfAllItems[i];
-				value +=  item.label[0] + ', ' + item.moveTo[0];
+				value +=  item.label[0];
+				if (item.moveTo){
+					value +=  ', ' + item.moveTo[0];
+				}
 			value += '\n';
 		}
 		this._data = value;

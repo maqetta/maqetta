@@ -17,7 +17,7 @@ dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataSt
 	multiLine: "true",
 	supportsHTML: "false", 
 
-	helpText:  'If the CSV data format is selected enter text in the format: <i>list label, transition_page_name</i> the transition page name is optional'+
+	helpText:  'If the CSV data format is selected enter text in the format: <i>list label, transition_view_name</i> the transition view name is optional'+
     		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
 
@@ -37,10 +37,11 @@ dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataSt
 			var item = {};
 			item.label = cols[0];
 			if (cols[1]){
-				item.moveTo = cols[1];
-			} else {
+				var patt= new RegExp('^[ \s]+|[ \s]+$', "g");
+				item.moveTo = cols[1].replace(patt, ''); // strip leading trailing white space
+			}/* else {
 				item.moveTo = 'transition_to_page';
-			}
+			}*/
 
 			items.push(item);
 		}

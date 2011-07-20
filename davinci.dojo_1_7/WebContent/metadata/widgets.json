@@ -84,7 +84,7 @@
                 }
             ],
             "isContainer": true,
-            "allowedChild": "ANY",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.ve.input.BorderContainerInput",
             "helper": "davinci.libraries.dojo.dijit.layout.BorderContainerHelper"
         },
@@ -116,7 +116,7 @@
                 }
             ],
             "isContainer": true,
-            "allowedChild": "ANY",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.ve.input.StackContainerInput"
         },
         {
@@ -146,6 +146,7 @@
                 }
             ],
             "isContainer": true,
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.ve.input.AccordionContainerInput"
         },
         {

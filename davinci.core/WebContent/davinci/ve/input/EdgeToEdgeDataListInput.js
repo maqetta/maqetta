@@ -17,15 +17,12 @@ dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataSt
 	multiLine: "true",
 	supportsHTML: "false", 
 
-	helpText:  'If the CSV data format is selected enter text in the format: first line is column headers separated by commas all following lines are data for those columns.'+
+	helpText:  'If the CSV data format is selected enter text in the format: <i>list label, transition_page_name</i> the transition page name is optional'+
     		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
 
 
-
-	
-
     updateStore: function() {
-    	debugger;
+ 
 		textArea = dijit.byId("davinciIleb"),
 		value = textArea.attr('value'),
 		nodes = value,
@@ -42,7 +39,7 @@ dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataSt
 			if (cols[1]){
 				item.moveTo = cols[1];
 			} else {
-				item.moveTo = 'dummy';
+				item.moveTo = 'transition_to_page';
 			}
 
 			items.push(item);

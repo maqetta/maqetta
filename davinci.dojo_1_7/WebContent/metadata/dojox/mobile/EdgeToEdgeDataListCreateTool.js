@@ -14,7 +14,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 	},
 	
 	_create: function(args){
-		debugger;
 		
 		if(this._data.length !== 2){
 			return;
@@ -23,7 +22,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		var storeData = this._data[0]
 		var edge2EdgeData = this._data[1];
 		
-		if(!this._context.loadRequires(storeData.type,true) /*|| !this._context.loadRequires(modelData.type,true)*/ ||
+		if(!this._context.loadRequires(storeData.type,true) ||
 			!this._context.loadRequires(edge2EdgeData.type,true)){
 			return;
 		}
@@ -32,7 +31,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		if(!storeData.properties){
 			storeData.properties = {};
 		}
-		//storeData.properties.store = storeId;
 		storeData.properties.jsId = storeId;
 		storeData.properties.id = storeId;
 		storeData.context = this._context;
@@ -62,11 +60,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		if(!edge2EdgeData.properties){
 			edge2EdgeData.properties = { };
 		}
-		// <hack> Added to make new ve code happy, davinci.ve.widget.createWidget requires id in properties or context on data, but id didn't work when dragging second tree onto canvas so switched to context:
-		// node.id= (data.properties && data.properties.id) || data.context.getUniqueID(srcElement); 
-		//treeData.properties.id = treeId;
 		edge2EdgeData.context = this._context;
-		// </hack>
 	
 		var store = undefined;
 		var edge2Edge = undefined;
@@ -75,8 +69,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		dojo.withDoc(this._context.getDocument(), function(){
 			store = davinci.ve.widget.createWidget(storeData);
 			edge2EdgeData.properties.store = dj.getObject(storeId);
-	//		edge2EdgeData.properties.store = "none";
-	//		edge2EdgeData.properties.store = storeId;
 			edge2Edge = davinci.ve.widget.createWidget(edge2EdgeData);
 		});
 		
@@ -100,7 +92,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
 		
 		this._context.getCommandStack().execute(command);
 		this._select(edge2Edge);
-		debugger;
 		
 	}
 	

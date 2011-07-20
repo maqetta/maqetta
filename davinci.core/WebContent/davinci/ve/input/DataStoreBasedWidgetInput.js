@@ -24,7 +24,8 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 
 
 
-	parse: function(input) {
+/*	parse: function(input) {
+		debugger;
 		var values = this.parseGrid(input);
         if (values.length < 2) {
             alert('invalid input (1)');
@@ -45,11 +46,12 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
             structure.push({field: field, name: name, width: width, editor: editor});
         }
         return structure;
-	},
+	},*/
 	
     // in this case, the first row is the Fields
     // the second row is the Display Names (column headers)
-	update: function(widget, structure) {
+	/*update: function(widget, structure) {
+		debugger;
 	    if (structure.length > 0) {
 	       // var properties = {structure: structure};
 	        var command = new davinci.ve.commands.ModifyCommand(widget, properties, null, this._getContext());
@@ -58,7 +60,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	    }
 	    return widget;
 	    
-	},
+	},*/
 	
 	_getContainer: function(widget){
 		while(widget){
@@ -81,7 +83,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 
 	
 	refreshStoreView: function(){
-		debugger;
+	
 		var textArea = dijit.byId("davinciIleb");
 
 		var value ='';
@@ -95,7 +97,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},
 	
 	
-
+/*
     addOne: function() {
         this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
     },
@@ -106,7 +108,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
             gridColDS.deleteItem(item);
         });
     },
-    
+    */
 	
 	onOk: function(e){
 		
@@ -127,7 +129,6 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},
 	
     updateWidget: function() {
-    	debugger;
         
         var context = this._getContext();
         var widget = this._widget;
@@ -143,7 +144,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
     },
     
     updateStore: function() {
-    	debugger;
+    	// widget specific data here, this example is EdgeToEdgeDataList
     		textArea = dijit.byId("davinciIleb"),
     		value = textArea.attr('value'),
     		nodes = value,
@@ -189,42 +190,40 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},*/
 
 	replaceStoreData: function(data) {
-		debugger;
+
 		var store = this._widget.dijitWidget.store;
 
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = davinci.ve.widget.byId(storeId);
 		var properties = {};
 		properties['data'] = data;
-		storeWidget._srcElement.setAttribute('url', ''); //wdr 3-11
+		storeWidget._srcElement.setAttribute('url', ''); 
 		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; 
 		var command = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
-		//var command = new davinci.ve.commands.ModifyFileItemStoreCommand(storeWidget, properties);
 		store.data = data;
 
 		return command;
 	},
 		
-	_attr: function(widget, name, value) {
+/*	_attr: function(widget, name, value) {
 		debugger;
 		var properties = {};
 		properties[name] = value;
 		
 		var command = new davinci.ve.commands.ModifyCommand(widget, properties);
 		this._addOrExecCommand(command);
-	},
+	},*/
 	
-	_addOrExecCommand: function(command) {
+/*	_addOrExecCommand: function(command) {
 		debugger;
 		if (this.command && command) {
 			this.command.add(command);
 		} else {
 			this._getContext().getCommandStack().execute(this.command || command);
 		}	
-	},
+	},*/
 	
 	updateWidgetForUrlStore: function(){
-		debugger;
 		
     	var textArea = dijit.byId("davinciIleb");
     	this._url = textArea.value;
@@ -256,7 +255,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},
 	
 	_urlDataStoreLoaded : function(items){
-		debugger;
+
 		if (items.length < 1){
 			console.error('Data store empty');
 			return;
@@ -266,7 +265,6 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 			var item = items[i];
 			console.warn("i=", i, "item=", item);
 		}
-		var store = this._widget.dijitWidget.store;
 		var storeId = this._widget.domNode._dvWidget._srcElement.getAttribute("store");
 		var storeWidget = davinci.ve.widget.byId(storeId);
 		var properties = {};
@@ -276,7 +274,6 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
-		var escapeHTML = (this._format === 'text');
         var command = new davinci.ve.commands.ModifyCommand(widget, null, null, context);
         var compoundCommand = new davinci.commands.OrderedCompoundCommand();
         compoundCommand.add(storeCmd);
@@ -287,7 +284,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},
 	
 	show: function(widgetId) {
-		debugger;
+		
         this._widget = davinci.ve.widget.byId(widgetId);
 	    
 	    var width = 200;
@@ -440,7 +437,6 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},
 	
 	changeDataStoreType: function (e){
-		debugger;
 
 		this._dataStoreType = e;
 	    var textArea = dijit.byId("davinciIleb");
@@ -455,12 +451,12 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 		}else if ( e=== 'file'){
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
 			textArea.setValue( this._url);
-	    	tagetObj.style.height = '40px'
+	    	tagetObj.style.height = '40px';
 			
 		}else if (e === 'url'){
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 			textArea.setValue( this._url);
-	    	tagetObj.style.height = '40px'
+	    	tagetObj.style.height = '40px';
 	    	dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
 			
 		} else {
@@ -472,7 +468,6 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 	},
 	
 	resize: function(e){
-		debugger;
 		
 		this.inherited(arguments);	
 		var tagetObj = dojo.byId("iedResizeDiv");
@@ -489,8 +484,7 @@ dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.Smar
 		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
 				
 		if (this._dataStoreType === 'file') {
-			var ieb = dojo.byId("ieb");
-			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
+			dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
 			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");

@@ -1653,11 +1653,11 @@
                             "items": [
                                 {
                                     "label": "Label 1",
-                                    "moveTo": "dummy"
+                                    "moveTo": "transitionToPage"
                                 },
                                 {
                                     "label": "Label 2",
-                                    "moveTo": "dummy"
+                                    "moveTo": "transitionToPage"
                                 }
                             ]
                         }

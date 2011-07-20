@@ -1549,7 +1549,11 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	addChild: function(child,index)
 	{
-		if (this.dijitWidget.addChild && child.dijitWidget) {
+		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
+		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
+		// so it follows the generic path for those types of containers.
+		if (this.dijitWidget.addChild && ! this.acceptsHTMLChildren) {
 			if(index === undefined || index === -1){
 				index = "last";
 				this._srcElement.addChild(child._srcElement);
@@ -1599,7 +1603,11 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			return;
 		}
 
-		if (this.dijitWidget.removeChild && child.dijitWidget) {
+		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
+		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
+		// so it follows the generic path for those types of containers.
+		if (this.dijitWidget.removeChild && ! this.acceptsHTMLChildren) {
 			// it's a Widget and a Container
 			this.dijitWidget.removeChild(child.dijitWidget);
 			this._srcElement.removeChild(child._srcElement);

@@ -1600,7 +1600,37 @@
             "category": "mobile",
             "icon": "resources/images/RoundRectDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+lpzp2V+sGqEtW2FsHSLtNfi9Tlck22GsHOLtH2Uu5q03W56jr7J2+Lq99jf6ubt+La/zGiKutXi9ERvo/P3/Ex7r0x9sUx8r8TU5ejx+lKHuVKHuFaOv3io0bnW78jg8+zz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaEwNfL8vEYj8ePRWjxQCzQaBTiWX4grqx2a4F8Xh2LC7MtWzivjLjMvqRB8PhmTt9o0usta89nvSpiZFooAIWFKC8TEmwpAQsKBQEtLyEIElIWKyKbmypCIRMIoggOJRELBgkRJ0KtriYPsbEkrrUjBwcMBAcjtbUNFAMvDAK+tQzGybVBADs=",
-            "isContainer": true
+            "isContainer": false,
+            "data": [
+                {
+                    "type": "dojo.data.ItemFileReadStore",
+                    "properties": {
+                        "data": {
+                            "identifier": "label",
+                            "items": [
+                                {
+                                    "label": "Label 1",
+                                    "moveTo": "transitionToPage"
+                                },
+                                {
+                                    "label": "Label 2",
+                                    "moveTo": "transitionToPage"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "dojox.mobile.RoundRectDataList",
+                    "properties": {
+                            "query": {"label": "*"}
+
+                    }
+                }
+            ],
+            "tool": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool",
+            "helper": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListHelper",
+            "inlineEdit": "davinci.ve.input.EdgeToEdgeDataListInput"
         },
         {
             "name": "EdgeToEdgeCategory",

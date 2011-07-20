@@ -46,14 +46,17 @@
         "iconPos": {
             "datatype": "string"
         },
-        "store": {
-            "datatype": "string"
-        },
         "query": {
-            "datatype": "string"
+            "datatype": "json",
+            "hidden": true
         },
-        "queryOptions": {
-            "datatype": "string"
+		 "queryOptions": {
+            "datatype": "json",
+            "hidden": false
+        },
+         "store": {
+            "datatype": "object",
+            "hidden": true
         }
     },
     "content": "<ul></ul>"

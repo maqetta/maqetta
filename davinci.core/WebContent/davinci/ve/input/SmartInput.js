@@ -596,9 +596,9 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 					if (djprop === 'innerHTML'){
 						values.richText = values.textContent;
 						delete values.textContent;
-						command = new davinci.ve.commands.ModifyRichTextCommand(this._widget, values, context);
+						command = new davinci.ve.commands.ModifyRichTextCommand(this._widget, values, null, context);
 					}else{
-						command = new davinci.ve.commands.ModifyCommand(this._widget, values, context);
+						command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);
 					}
 					this._widget._edit_context.getCommandStack().execute(command);
 					this._widget=command.newWidget;	

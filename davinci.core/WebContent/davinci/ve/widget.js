@@ -1558,8 +1558,9 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		// so it follows the generic path for those types of containers.
 		if (this.dijitWidget.addChild && ! this.acceptsHTMLChildren) {
 			if(index === undefined || index === -1){
-				index = "last";
+//				index = "last";
 				this._srcElement.addChild(child._srcElement);
+				this.dijitWidget.addChild(child.dijitWidget);
 			}else {
 				var children = this.getChildren();
 				if(index < children.length){
@@ -1567,14 +1568,14 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 				}else{
 					this._srcElement.addChild(child._srcElement);
 				}
-				if(index === 0){
-					index = "first";
-				}
+//				if(index === 0){
+//					index = "first";
+//				}
+				this.dijitWidget.addChild(child.dijitWidget, index);
 			}
-			this.dijitWidget.addChild(child.dijitWidget, index);
-			return;
+		} else {
+			this.inherited(arguments);
 		}
-		this.inherited(arguments);
 	},
 	_getWidget: function(){
 		return this.dijitWidget;

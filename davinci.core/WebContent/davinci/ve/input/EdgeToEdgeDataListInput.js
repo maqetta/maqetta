@@ -37,12 +37,8 @@ dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataSt
 			var item = {};
 			item.label = cols[0];
 			if (cols[1]){
-				var patt= new RegExp('^[ \s]+|[ \s]+$', "g");
-				item.moveTo = cols[1].replace(patt, ''); // strip leading trailing white space
-			}/* else {
-				item.moveTo = 'transition_to_page';
-			}*/
-
+				item.moveTo = cols[1].trim(); // strip leading trailing white space
+			}
 			items.push(item);
 		}
 	

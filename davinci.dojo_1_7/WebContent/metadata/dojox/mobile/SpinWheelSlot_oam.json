@@ -36,11 +36,11 @@
         }
     },
     "property": {
-        "items": {
+      /*  "items": {
             "datatype": "[[]]"
-        },
+        },*/
         "labels": {
-            "datatype": "[string]"
+            "datatype": "json"
         },
         "labelFrom": {
             "datatype": "number"

@@ -758,16 +758,22 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 	 	return undefined;
 	},
-	addClass: function(className){
-		var classes = this.getClassNames() || "";
-		var split = classes.split(' ');
-		for(var i =0;i<split.length;i++){
-			if(split[i]==className) return;
+	
+	addClass: function(newClass) {
+		// add to Model...
+		var classes = this.getClassNames();
+		classes = classes ? classes.split(/\s+/) : [];
+		if (classes.indexOf(newClass) !== -1) {
+			// duplicate class name
+			return;
 		}
-		var newClass = (classes?(classes + " "):"") + className;
-		this._srcElement.setAttribute("class", newClass);
-		dojo.addClass(this.domNode,className);
+		classes.push(newClass);
+		this._srcElement.setAttribute('class', classes.join(' '));
+		
+		// add to DOM...
+		dojo.addClass(this.domNode, newClass);
 	},
+	
 	getId: function(){
 		if (!this.id)
 		{
@@ -928,15 +934,11 @@ dojo.declare("davinci.ve._Widget",null,{
 //		return childrenData;
 	},
 
-	getClassNames: function(){
-		var attr=this._srcElement.getAttribute("class");
-		if(attr && attr.length>0){
-			return attr;
-		}
-		return "";
+	getClassNames: function() {
+		return this._srcElement.getAttribute('class') || '';
 	},
+
 	_getData: function(options){
-		var context = this.getContext();
 		var data = {type: this.type, properties: {}};
 		//FIXME: Might need OpenAjax widgets logic here someday
 		if(options.identify){
@@ -1556,8 +1558,9 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		// so it follows the generic path for those types of containers.
 		if (this.dijitWidget.addChild && ! this.acceptsHTMLChildren) {
 			if(index === undefined || index === -1){
-				index = "last";
+//				index = "last";
 				this._srcElement.addChild(child._srcElement);
+				this.dijitWidget.addChild(child.dijitWidget);
 			}else {
 				var children = this.getChildren();
 				if(index < children.length){
@@ -1565,14 +1568,14 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 				}else{
 					this._srcElement.addChild(child._srcElement);
 				}
-				if(index === 0){
-					index = "first";
-				}
+//				if(index === 0){
+//					index = "first";
+//				}
+				this.dijitWidget.addChild(child.dijitWidget, index);
 			}
-			this.dijitWidget.addChild(child.dijitWidget, index);
-			return;
+		} else {
+			this.inherited(arguments);
 		}
-		this.inherited(arguments);
 	},
 	_getWidget: function(){
 		return this.dijitWidget;

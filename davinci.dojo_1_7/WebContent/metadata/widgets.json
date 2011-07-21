@@ -162,6 +162,7 @@
             },
             "resizable": "width",
             "isLayoutContainer": true,
+            "isContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper",
             "inlineEdit": {
@@ -1718,7 +1719,9 @@
                 "displayOnCreate": true,
                 "supportsHTML": true
             },
-            "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList"
+            "isContainer": true,
+            "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
+            "allowedChild": "dojox.mobile.Switch"
         },
         {
             "name": "Button",
@@ -1750,7 +1753,8 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-switch.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPHf8SAwcCg4gDBAiDBIiDhQmEBgoEhoqFBwsMDQ8Njg8HCQyEBoqICg0JCw4LDA2MDQ6MjY8FiAuGCIwJiw0LDI6Iio0KDA6FCAuHio4Hio2JCw0KDA4LjQ6NDg8ODo8P////Dw8Ojo6ODg4NjY2NDQ0MjIyLCwsKioqKCgoJiYmJCQkP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAZxQJZwSCwaj8hkUcBsBk7QqHDQqVY3J1BoGwKdWISEJkOeoEKj9CiEYhUijrhjcVav2wYP58JvpEQkgSQiKSwHChWJFRZ/JY4lhCwIHxCVEBQqIyabJiMqLBgfoqIPKgB2AJ8sEqytDCuwsUqztLW2RUEAOw==",
-            "resizable": "none"
+            "resizable": "none",
+            "helper": "davinci.libraries.dojo.dojox.mobile.SwitchHelper"
         },
         {
             "name": "CheckBox",
@@ -1958,13 +1962,13 @@
                 {
                     "type": "dojox.mobile.SpinWheelSlot",
                     "properties": {
-                        "labels": "['A','B','C','D','E']"
+                        "labels": ['A','B','C','D','E']
                     }
                 },
                 {
                     "type": "dojox.mobile.SpinWheelSlot",
                     "properties": {
-                        "labels": "['A','B','C','D','E']"
+                        "labels": ['A','B','C','D','E']
                     }
                 }
             ]
@@ -1978,7 +1982,8 @@
             "allowedParent": "dojox.mobile.SpinWheel",
             "properties": {
                 "labels": "['A','B','C','D','E']"
-            }
+            },
+            "inlineEdit": "davinci.ve.input.SpinWheelSlotInput"
         },
         {
             "name": "SpinWheelDatePicker",

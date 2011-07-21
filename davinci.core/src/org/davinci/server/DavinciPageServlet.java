@@ -204,6 +204,10 @@ public class DavinciPageServlet extends HttpServlet {
         long lastModified = connection.getLastModified();
         int contentLength = connection.getContentLength();
 
+        if (resourceURL.getPath().endsWith(".html")) {
+            resp.setDateHeader("Expires", System.currentTimeMillis() + 24*60*60*1000);
+        }
+
         String etag = null;
         if (lastModified != -1 && contentLength != -1) {
             etag = "W/\"" + contentLength + "-" + lastModified + "\""; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$

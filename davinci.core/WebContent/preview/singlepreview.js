@@ -10,7 +10,6 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 	devicelist:null,
 	currentDevice:0,
 	currentZoom:1,
-	currentOrientation:'portrait',
 	iframefilename:null,
 	orientation:'portrait',
 	scalefactor:1,
@@ -132,24 +131,25 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 		}
 
 		var angle_node = dojo.query('.controlbar_angle',this.domNode)[0];
+		var cw_ccw_class = (spw.orientation == 'landscape') ? 'control_angle_ccw' : 'control_angle_cw';
 		var angle_select = this.angle_select = 
 			new dijit.form.Button({ 
-				iconClass:"control_angle control_angle_cw",
+				iconClass:"control_angle "+cw_ccw_class,
 				showLabel:false,
 				style:"width:16px; height:16px;"
 			},angle_node);
 		this.connect(angle_select, 'onClick', function(){
 			var iconnode = dojo.query('.control_angle',spw.domNode)[0];
-			if(spw.currentOrientation == 'landscape'){
-				spw.currentOrientation = 'portrait';
+			if(spw.orientation == 'landscape'){
+				spw.orientation = 'portrait';
 				dojo.removeClass(iconnode, 'control_angle_ccw');
 				dojo.addClass(iconnode, 'control_angle_cw');
 			}else{
-				spw.currentOrientation = 'landscape';
+				spw.orientation = 'landscape';
 				dojo.removeClass(iconnode, 'control_angle_cw');
 				dojo.addClass(iconnode, 'control_angle_ccw');
 			}
-			spw.silhouetteiframe.setOrientation(spw.currentOrientation);	
+			spw.silhouetteiframe.setOrientation(spw.orientation);	
 		});
 		var theme = preview.silhouetteiframe.getMobileTheme(this.devicelist[this.currentDevice].file);
 		var iframefilename_with_params = this.iframefilename+'?theme='+theme;

@@ -29,7 +29,7 @@ _7.resize();
 },isTopLevel:function(e){
 var _8=this.getParent&&this.getParent();
 return (!_8||!_8.resize);
-},addChild:function(_9){
+},addChild:function(_9, insertIndex){
 var c=_9.domNode;
 var _a=this.checkFixedBar(c,true);
 if(_a){
@@ -45,11 +45,11 @@ c.style.bottom="0px";
 }
 }
 this.resize();
+				if(this._started && !_9._started){
+					_9.startup();
+				}
 }else{
-this.containerNode.appendChild(c);
-}
-if(this._started&&!_9._started){
-_9.startup();
+				this.inherited(arguments);
 }
 },reparent:function(){
 var i,_b,_c,c;

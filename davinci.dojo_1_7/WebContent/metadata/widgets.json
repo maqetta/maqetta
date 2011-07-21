@@ -1981,7 +1981,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck/P2+zxhlz9mnPH1+qXG49Pn+O30+f///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARKMMlJqzQ4650M+iAAgkY3HkA6IqW3vmwyzHRtJwKh77weCAlAoEAsGgsBQHB4PCaXgah0GlWmrtis0gUbtVbX1Rf8am3OGYt6EgEAOw==",
             "allowedParent": "dojox.mobile.SpinWheel",
             "properties": {
-                "labels": "['A','B','C','D','E']"
+                "labels": ['A','B','C','D','E']
             },
             "inlineEdit": "davinci.ve.input.SpinWheelSlotInput"
         },

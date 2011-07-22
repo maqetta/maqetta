@@ -311,6 +311,8 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	setMobileDevice: function (device){
+		if (!device)
+			device = 'none';
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		var htmlElement=this.getDocumentElement();
@@ -318,11 +320,11 @@ dojo.declare("davinci.ve.Context", null, {
 		bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE,device);
 	},
 	
-	setMobileTheme: function(device, silhouetteiframe){
+	setMobileTheme: function(device){
 
 		var cssFiles = ['iphone/iphone.css'];
 		// if no device is specified mobile styling defaults to iphone
-		if (device && silhouetteiframe){
+		if (device){
 			theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
 			cssFiles = preview.silhouetteiframe.getMobileCss(theme);
 		}
@@ -1991,7 +1993,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	_reDojoJS: new RegExp(".*/dojo.js$"),
 	
 	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
-		
+
 		if (url) {
 			var isDojoJS = this._reDojoJS.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.

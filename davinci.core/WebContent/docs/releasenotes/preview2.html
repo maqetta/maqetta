@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="maqettadocs.css" />
-<title>Maqetta User Guide: Introduction and Overview</title>
+<title>Maqetta Preview 2 Release Notes</title>
 </head>
 
 <body class="maqettadocs">
@@ -43,7 +43,11 @@
 				With Dojo 1.7, there is now a complete collection of mobile widgets that provide
 				native look&amp;feel - mobile web widgets that look and act like native device
 				controls. Maqetta Preview 2 supports nearly all of the Dojo 1.7 mobile widgets
-				so that designers can drag/drop assemble a mobile user interface.</li>
+				so that designers can do quick drag/drop assembly of mobile user interface.
+				User interfaces can contain multiple "views" (or screens),
+				with automatic slide-in/slide-out animations between the views.
+				Authors can export their mobile UIs as a ZIP, upload to a Web site,
+				and then the mobile UI mockups will run on target devices.</li>
 			<li><strong>Device silhouettes are now pixel-perfect</strong>
 				There have been numerous fixes and improvements to the Maqetta feature that allows
 				authoring inside of an actual-size image of a mobile device (a "device silhouette"). 
@@ -58,12 +62,15 @@
 				(using CSS3 transforms) so that grow or shrink the preview in order to: (a) zoom in/out so that
 				the preview will be the same size as the target device, (b) zoom in to look more closely
 				at certain UI components, (c) zoom out in case the whole user interface is too large for your display .</li>
+			<li><strong>Mobile user interface authoring tutorial</strong>
+				The documentation now includes a tutorial on authoring mobile user interfaces.</li>
 		</ul>
 	</li>
-	<li><strong>User workspaces now use Dojo 1.7</strong>. 
-		Maqetta Preview 2 has updated all user workspaces that use Dojo to use Dojo 1.7. (Preview 1 used Dojo 1.5.)
-		This update to Dojo 1.7 was mostly necessary to support the updated dojox.mobile widget set that 
-		is included in Dojo 1.7, but it also keeps Maqetta up to date with latest features in Dojo.
+	<li><strong>Tutorial on exporting to developer tools such as Eclipse</strong>. 
+		Maqetta Preview 2 includes a new tutorial that explains how to export your
+		Maqetta workspace as a ZIP file that can be subsequently uploaded to a web site or
+		imported into
+		developer tools such as Eclipse or Rational Application Developer.
 	</li>
 	<li><strong>Usability improvements to Web-based review and commenting</strong>. 
 		We had a major usability issue with review and commenting with the Preview 1 release
@@ -92,13 +99,13 @@
 		(In a future release, we will add support for reading JSON from an arbitrary
 		URL, but this requires cross-domain data access, which didn't make it into Preview 2.)</em>
 	</li>
-	<li><strong>No longer need to clear cache with new releases</strong>. 
-		Preview 2 includes "cache busting" logic that ensure that new releases of Maqetta
+	<li><strong>Cache busting</strong>. 
+		Preview 2 includes "cache busting" logic that ensures that new releases of Maqetta
 		will pull new versions of Maqetta JavaScript files automatically instead of possibly using
 		the JavaScript files from earlier releases.
 	</li>
 	<li><strong>Many bug fixes</strong>. 
-		Preview 2 includes many miscellaneous bug fixes. Some of those fixes
+		Preview 2 includes over 180 miscellaneous bug fixes. Some of those fixes
 		can be seen by going to <a href="https://github.com/maqetta/maqetta/issues?sort=created&direction=desc&state=closed&page=1&milestone=13">this URL which lists bugs closed against the Preview 2 release</a>.
 	</li>
 </ul>

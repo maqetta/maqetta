@@ -4,7 +4,11 @@ dojo.require("davinci.ve.input.ContainerInput");
 dojo.declare("davinci.ve.input.EdgeToEdgeListInput", davinci.ve.input.ContainerInput, {
 
 	propertyName: "label",
-	
-	childType: "dojox.mobile.ListItem"
+	multiLine: "true",
+	childType: "dojox.mobile.ListItem",
+	format: "rows",
+	supportsHTML: "true",
+	helpText:  "Enter one list item per line."
+
 	
 });

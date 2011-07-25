@@ -7,6 +7,8 @@ dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
 dojo.require("davinci.libraries.dojo.dojox.mobile.MobileCreateTool");
 
+// NOTE: Used by EdgeToEdgeDataList, RoundRectDataList, Carousel
+
 dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool", davinci.libraries.dojo.dojox.mobile.MobileCreateTool, {
 	constructor: function(data){
 		

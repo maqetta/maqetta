@@ -56,13 +56,16 @@
             "defaultValue": "300px"
         },
         "store": {
-            "datatype": "string"
+            "datatype": "object",
+            "hidden": true
         },
         "query": {
-            "datatype": "string"
+            "datatype": "json",
+            "hidden": true
         },
         "queryOptions": {
-            "datatype": "string"
+            "datatype": "json",
+            "hidden": true
         }
     },
     "content": "<div></div>"

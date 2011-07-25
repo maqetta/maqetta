@@ -82,16 +82,12 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			domNode: this.tree.domNode,
 			openCallback:function (event)
 			{
-//				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
-//TODO: use setter?				tree.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
-
 				// Make sure corresponding node on the Tree is set, as needed for right-mouse clicks (ctrl-click selects just fine)
 				var w = dijit.getEnclosingWidget(event.target);
 				if(w && w.item){
 					var nodes = tree.get("selectedNodes");
 					if(dojo.indexOf(nodes, w) == -1) {
-						nodes.push(w);
-						tree.set("selectedNodes", nodes);
+						tree.set("selectedNodes", [w]);
 					}
 				}
 			}});

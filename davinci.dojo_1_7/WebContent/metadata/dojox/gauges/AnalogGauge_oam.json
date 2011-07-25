@@ -25,26 +25,6 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.AnalogArcIndicator');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.AnalogNeedleIndicator');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.AnalogArrowIndicator');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.AnalogLineIndicator');"
-        },
-        {
-            "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.Range');"
-        },
-        {
-            "type": "javascript",
             "$text": "dojo.require('dijit.Tooltip');"
         }
     ],

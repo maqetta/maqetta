@@ -28,6 +28,7 @@
         "value": {
             "datatype": "number",
             "description": "The value (on the gauge) that this indicator should be placed at",
+            "defaultValue": 40,
             "hidden": false
         },
         "type": {
@@ -38,6 +39,7 @@
         "color": {
             "datatype": "string",
             "description": "The color of the indicator.",
+            "defaultValue": "red",
             "hidden": false
         },
         "label": {
@@ -45,20 +47,28 @@
             "description": "The text label for the indicator.",
             "hidden": false
         },
+         "title": {
+            "datatype": "string",
+            "description": "Title to go with textfield below gauge",
+            "defaultValue": "Arrow",
+            "hidden": false
+        },
         "length": {
             "datatype": "number",
             "description": "The length of the indicator.  In the above example, the radius of the AnalogGauge\nis 125, but the length of the indicator is 135, meaning it would project beyond\nthe edge of the AnalogGauge",
+            "defaultValue": 65,
             "hidden": false
         },
         "width": {
             "datatype": "number",
             "description": "The width of the indicator.",
+            "defaultValue": 5,
             "hidden": false
         },
         "offset": {
             "datatype": "number",
-            "description": "The offset of the indicator",
-            "hidden": false
+            "description": "The offset of the indicator - doesn't seem to be used for ArrowIndicator",
+            "hidden": true
         },
         "hover": {
             "datatype": "string",
@@ -68,13 +78,10 @@
         "front": {
             "datatype": "boolean",
             "description": "Keep this indicator at the front",
+            "defaultValue": false,
             "hidden": true
         },
-        "easing": {
-            "datatype": "object",
-            "description": "indicates the easing function to be used when animating the of an indicator.",
-            "hidden": true
-        },
+        
         "duration": {
             "datatype": "number",
             "description": "indicates how long an animation of the indicator should take",

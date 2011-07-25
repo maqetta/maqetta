@@ -1094,20 +1094,82 @@
             "allowedChild": "ANY"
         },
         {
-            "name": "Range-gauge",
+            "name": "Range",
             "description": "Range",
             "type": "dojox.gauges.Range",
             "category": "untested",
             "icon": "resources/images/analoggauge.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw=="
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
+            "allowedParent": "dojox.gauges.AnalogGauge"
          },
          {
-            "name": "AnalogLineIndicator-gauge",
+            "name": "AnalogLineIndicator",
             "description": "AnalogLineIndicator",
             "type": "dojox.gauges.AnalogLineIndicator",
             "category": "untested",
             "icon": "resources/images/analoggauge.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw=="
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
+            "properties": {
+                        "value": 5,
+                        "width": 3,
+                        "length": 100,
+                        "color": "red",
+                        "title": "Line",
+                        "offset": 0,
+                        "front": false
+             },
+            "allowedParent": "dojox.gauges.AnalogGauge"
+         },
+         {
+            "name": "AnalogArcIndicator",
+            "description": "AnalogArcIndicator",
+            "type": "dojox.gauges.AnalogArcIndicator",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
+            "properties": {
+                        "value": 40,
+                        "width": 10,
+                        "color": "red",
+                        "title": "Arc",
+                        "offset": 100,
+                        "front": false
+             },
+            "allowedParent": "dojox.gauges.AnalogGauge"
+         },
+         {
+            "name": "AnalogArrowIndicator",
+            "description": "AnalogArrowIndicator",
+            "type": "dojox.gauges.AnalogArrowIndicator",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
+            "properties": {
+                        "value": 40,
+                        "width": 5,
+                        "length": 65,
+                        "color": "red",
+                        "title": "Arrow",
+                        "front": false
+             },
+            "allowedParent": "dojox.gauges.AnalogGauge"
+         },
+         {
+            "name": "AnalogNeedleIndicator",
+            "description": "AnalogNeedleIndicator",
+            "type": "dojox.gauges.AnalogNeedleIndicator",
+            "category": "untested",
+            "icon": "resources/images/analoggauge.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
+            "properties": {
+                        "value": 70,
+                        "width": 5,
+                        "length": 65,
+                        "color": "red",
+                        "title": "Needle",
+                        "front": false
+             },
+            "allowedParent": "dojox.gauges.AnalogGauge"
          },
         {
             "name": "AnalogGauge",
@@ -1119,6 +1181,7 @@
             "properties": {
                 "width": 250,
                 "height": 250,
+                "radius": 120,
                 "minorTicks": {
                     "offset": 70,
                     "length": 5,
@@ -1140,7 +1203,7 @@
                         "width": 3,
                         "length": 100,
                         "hover": "Value: 0",
-                        "title": "Value",
+                        "title": "Line",
                         "color": "blue",
                         "offset": 0,
                         "front": false,
@@ -1153,10 +1216,12 @@
                          "low": 0,
                         "high": 100,
                         "hover": "",
-                        "color": {"color": "red"}
+                        "color": {"color": "black"}
                     }
                 }
-              ]
+              ],
+              "allowedChild": "dojox.gauges.AnalogLineIndicator, dojox.gauges.AnalogArcIndicator, dojox.gauges.AnalogArrowIndicator, dojox.gauges.AnalogNeedleIndicator, dojox.gauges.Range",
+            "isContainer": true
         },
         {
             "name": "BarGauge",

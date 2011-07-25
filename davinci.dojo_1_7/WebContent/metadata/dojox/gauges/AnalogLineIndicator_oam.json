@@ -16,10 +16,6 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dojox.gauges.AnalogGauge');"
-        },
-        {
-            "type": "javascript",
             "$text": "dojo.require('dojox.gauges.AnalogLineIndicator');"
         }
     ],
@@ -32,16 +28,19 @@
         "value": {
             "datatype": "number",
             "description": "The value (on the gauge) that this indicator should be placed at",
+            "defaultValue": 5,
             "hidden": false
         },
         "type": {
             "datatype": "string",
             "description": "The type of indicator to draw.  Varies by gauge type.  Some examples include\n\"line\", \"arrow\", and \"bar\"",
+            "defaultValue": "line",
             "hidden": false
         },
         "color": {
             "datatype": "string",
             "description": "The color of the indicator.",
+            "defaultValue": "red",
             "hidden": false
         },
         "label": {
@@ -49,14 +48,22 @@
             "description": "The text label for the indicator.",
             "hidden": false
         },
+        "title": {
+            "datatype": "string",
+            "description": "Title to go with textfield below gauge",
+            "defaultValue": "Line",
+            "hidden": false
+        },
         "length": {
             "datatype": "number",
             "description": "The length of the indicator.  In the above example, the radius of the AnalogGauge\nis 125, but the length of the indicator is 135, meaning it would project beyond\nthe edge of the AnalogGauge",
+            "defaultValue": 100,
             "hidden": false
         },
         "width": {
             "datatype": "number",
             "description": "The width of the indicator.",
+            "defaultValue": 3,
             "hidden": false
         },
         "offset": {
@@ -72,6 +79,7 @@
         "front": {
             "datatype": "boolean",
             "description": "Keep this indicator at the front",
+            "defaultValue": false,
             "hidden": false
         },
         
@@ -90,5 +98,5 @@
             "hidden": false
         }
     },
-    "content": "<div></div>"
+    "content": "<span></span>"
 }

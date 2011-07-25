@@ -28,11 +28,13 @@ dojo.declare("davinci.ve.input.ContainerInput", davinci.ve.input.SmartInput, {
 	},
 	
 	parse: function(input) {
+
 		var result = this.parseItems(input);
 		return result;
 	},
 	
 	update: function(widget, value) {
+
 		var values = value;
 		
 		this.command = new davinci.commands.CompoundCommand();
@@ -40,6 +42,9 @@ dojo.declare("davinci.ve.input.ContainerInput", davinci.ve.input.SmartInput, {
 		var children = widget.getChildren();
 		for (var i = 0; i < values.length; i++) {
 			var text = values[i].text;
+			//text = dojox.html.entities.encode(text);
+			if (this.isHtmlSupported() && (this.getFormat() === 'html')) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
+				text = dojox.html.entities.encode(text);
 			if (i < children.length) {
 				var child = children[i];
 				this._attr(child, this.propertyName, text);

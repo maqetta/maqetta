@@ -53,7 +53,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	    	svgfilename = "app/preview/images/"+deviceName+".svg";
 	    }
 		this.silhouetteiframe.setSVGFilename(svgfilename);
-		this.getContext().setMobileTheme(deviceName, this.silhouetteiframe);
+		this.getContext().setMobileTheme(deviceName);
 
 		// #683 - When using mobile silhouette, add mobile <meta> tags to
 		// document.

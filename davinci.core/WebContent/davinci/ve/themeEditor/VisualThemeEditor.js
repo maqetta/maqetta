@@ -130,7 +130,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 		this._dialog = new dijit.Dialog({
 			id: "maqetta.themeVersionMismatch",
-			title:"Theme version warnning",
+			title:"Theme Version Warning",
 			onCancel:function(){
 				this.destroyRecursive(false);
 			},

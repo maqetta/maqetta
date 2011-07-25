@@ -5,9 +5,11 @@ dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.ve.tools.CreateTool");
+dojo.require("davinci.libraries.dojo.dojox.mobile.MobileCreateTool");
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool", davinci.ve.tools.CreateTool, {
+// NOTE: Used by EdgeToEdgeDataList, RoundRectDataList, Carousel
+
+dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListCreateTool", davinci.libraries.dojo.dojox.mobile.MobileCreateTool, {
 	constructor: function(data){
 		
 		this._resizable = "both";

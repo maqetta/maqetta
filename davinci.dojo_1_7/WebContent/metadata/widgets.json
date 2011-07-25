@@ -836,6 +836,7 @@
             "description": "Popup Menu Bar Item",
             "type": "dijit.PopupMenuBarItem",
             "category": "untested",
+            "helper": "davinci.libraries.dojo.dijit.PopupMenuBarItemHelper",
             "icon": "resources/images/popupmenubaritem.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAJimxDBNiJmoxTFRijximTximD1imENvpEl4q0+Bs1OJupi94FaOv7bb8Mjn+OHw+b3h8+j1/M/t++Tz+uj2/Ov4/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABYALAAAAAAQABAAAAVt4MKMjEia46JUbKVIsLS2ShJReOIEgZPgOcRkOEFAAACIkIg4PJ4oUul5WBgIhVcspiAQFpawRceTDHoJsdqIlAiSCLX40KjbGwd5OHrSW7RbMn5kAWZofmwAbnB+dHd1eXpWXgUFBAZgfppiIQA7",
             "properties": {

@@ -132,6 +132,7 @@ davinci.model.Resource.Folder.prototype.reload= function(){
 }
 
 davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder, localOnly){
+	
 	 var file;
 	 
 	 if(name!=null){

@@ -52,19 +52,10 @@ davinci.ve.metadata = function() {
     });
     
     function parseLibraryDescriptor(data) {
-       var  path = new davinci.model.Path(data.metaPath);
+    	var path = new davinci.model.Path(data.metaPath),
+    		descriptor = data.descriptor;
      
-        // handle substitutions
-       var descriptor  = null;
-       
-       if(data['data']!=null){
-    	   data = data['data'].replace(/__MAQ_LIB_BASE_URL__/g, document.baseURI + path.toString());
-       	   descriptor  = dojo.fromJson(data);;
-        }else{
-        	descriptor = {};
-        }
-       
-        descriptor.$path = path.toString();;
+        descriptor.$path = path.toString();
         libraries[descriptor.name] = descriptor;
         
         descriptor.$providedTypes = {};
@@ -242,34 +233,31 @@ davinci.ve.metadata = function() {
         });
         return obj;
     }
+    
+    function getAllowedElement(name, type) {
+    	var propName = 'allowed' + name,
+    		prop = davinci.ve.metadata.queryDescriptor(type, propName);
+    	if (! prop) {
+    		// set default -- 'ANY' for 'allowedParent' and 'NONE' for
+    		// 'allowedChild'
+    		prop = name === 'Parent' ? 'ANY' : 'NONE';
+    	}
+    	return prop.split(/\s*,\s*/);
+    }
 
     
     return /** @scope davinci.ve.metadata */ {
         /**
          * Read the library metadata for all the libraries linked in the user's workspace
          */
-        init : function() {
-        	
-            dojo.forEach(davinci.library.getInstalledLibs(), function(lib) {
-            	
-            //	var path = davinci.library.getMetaRoot(lib.id, lib.version);
-             
-                var data = davinci.library.getlibMetaData(lib.id, lib.version);
-                if(data==null)
-                	return;
-                parseLibraryDescriptor(data)
-                /*
-                dojo.xhrGet({
-                    url : path + "/widgets.json",
-                    sync : true, // XXX should be async
-                    load : function(data) {
-                        debugger;
-                    	parseLibraryDescriptor(data, path);
-                    }
-                });
-                */
-            });
-        },
+		init : function() {
+			dojo.forEach(davinci.library.getInstalledLibs(), function(lib) {
+				var data = davinci.library.getLibMetadata(lib.id, lib.version);
+				if (data) {
+					parseLibraryDescriptor(data);
+				}
+			});
+		},
         
         /**
          * Get library metadata.
@@ -372,6 +360,32 @@ davinci.ve.metadata = function() {
                     break;
             }
             return value;
+        },
+        
+        /**
+         * Return value of 'allowedParent' property from widget's descriptor.
+         * If widget does not define that property, then it defaults to ['ANY'].
+         * 
+         * @param {String} type
+         * 			Widget type (i.e. "dijit.form.Button")
+         * @returns Array of allowed widget types or ['ANY']
+         * @type {[String]}
+         */
+        getAllowedParent: function(type) {
+        	return getAllowedElement('Parent', type);
+        },
+        
+        /**
+         * Return value of 'allowedChild' property from widget's descriptor.
+         * If widget does not define that property, then it defaults to ['NONE'].
+         * 
+         * @param {String} type
+         * 			Widget type (i.e. "dijit.form.Button")
+         * @returns Array of allowed widget types, ['ANY'] or ['NONE']
+         * @type {[String]}
+         */
+        getAllowedChild: function(type) {
+        	return getAllowedElement('Child', type);
         }
     };
 }();

@@ -40,8 +40,11 @@ dojo.mixin(davinci.workbench.Preferences,	{
 		    "<div dojoType='dijit.layout.ContentPane' id='pref.TreePane' splitter='true' region='leading' style='width: 200px;' minSize='100' maxSize='300'></div>"+
 		    "<div dojoType='dijit.layout.ContentPane' region='bottom' style='height: 25px'>"+
 			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.save();\">"+dijitLangObj.buttonSave+"</button></td>"+
-			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.restoreDefaults();\">"+langObj.restoreDefaults+"</button></td>"+
-				"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.finish();\">"+dijitLangObj.buttonCancel+"</button></td>"+
+			/*
+			 * FIXME: we don't have logic to yet implement restoreDefaults() yet. See #627
+			 "<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.restoreDefaults();\">"+langObj.restoreDefaults+"</button></td>"+
+			*/
+			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.finish();\">"+dijitLangObj.buttonCancel+"</button></td>"+
 			"</div>"+
 		    "<div dojoType='dijit.layout.ContentPane' region='center' id='pref.RightPane'></div>"+
 		 "</div>";

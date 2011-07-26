@@ -560,7 +560,6 @@
 		                 	{name:"Visual Editor", id:"editorPrefs", category:"davinci.html.general",
 		                 	 pane:"davinci.ve.prefs.HTMLEditPreferences",
 		                 	defaultValues : {
-		     					"showLayoutGrid" : false,
 		     					"flowLayout":true,
 		     					"cssOverrideWarn":true 
 		     				  }

@@ -30,6 +30,8 @@ public class VLibraryResource implements IVResource {
     private IVResource     parent;
     private String         name;
     private String bundleRoot;
+	private IVResource[] _parents;
+	private IVResource[] _files;
 
     public VLibraryResource(Library b, URL file, IVResource parent, String name, String bundleRoot) {
         this.resourcePointer = file;
@@ -113,29 +115,47 @@ public class VLibraryResource implements IVResource {
     }
 
     public IVResource[] listFiles() {
-        IPath p1 = new Path(this.bundleRoot);
-        // p1 = p1.removeFirstSegments(new
-        // Path(virtualRoot).matchingFirstSegments(p1));
-        String path = p1.append("*").toString();
-
-        URL[] files = this.library.find(path);
-        ArrayList found = new ArrayList();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i] == null) {
-                continue;
-            }
-            IPath myPath = new Path(this.resourcePointer.getPath());
-            IPath itemPath = new Path(files[i].getPath());
-            IPath newPath = itemPath.removeFirstSegments(myPath.matchingFirstSegments(itemPath));
-            IVResource item = null;
-            // String cp =
-            // myPath.append(newPath).toString();//itemPath.removeFirstSegments(myPath.matchingFirstSegments(itemPath)).toString();
-
-            item = new VLibraryResource(this.library, files[i], this, newPath.removeTrailingSeparator().toString(), new Path(this.bundleRoot).append(newPath).toString());
-            found.add(item);
-
-        }
-        return (IVResource[]) found.toArray(new IVResource[found.size()]);
+    	if(this._files==null){
+    		this._files = listFiles("*", false);
+    	}
+    	return this._files;
+    	
+    }
+    
+    public IVResource[] listFiles(String name, boolean recurse) {
+    
+	    	IPath p1 = new Path(this.bundleRoot);
+	        String path = p1.append(name).toString();
+	        URL[] files = this.library.find(path, recurse);
+	        ArrayList found = new ArrayList();
+	        for (int i = 0; i < files.length; i++) {
+	            if (files[i] == null) {
+	                continue;
+	            }
+	            IPath myPath = new Path(this.resourcePointer.getPath());
+	            IPath itemPath = new Path(files[i].getPath());
+	            IPath newPath = itemPath.removeFirstSegments(myPath.matchingFirstSegments(itemPath));
+	            IVResource item = null;
+	            
+	            String[] pathSplit = newPath.segments();
+	            
+	            IVResource parent = this;
+	            IVResource lastParent = null;
+	            for(int k=0;k<pathSplit.length-1;k++){
+	            	lastParent = parent;
+	            	parent = this.get(pathSplit[k]);
+	            	if(parent==null)
+	            		parent = new VDirectory(lastParent, pathSplit[k]);
+	            }
+	            	
+	            String itemName = pathSplit[pathSplit.length-1];
+	            item = new VLibraryResource(this.library, files[i], parent, itemName, new Path(this.bundleRoot).append(itemName).toString());
+	            found.add(item);
+	
+	        }
+    	
+	        return (IVResource[]) found.toArray(new IVResource[found.size()]);
+    
     }
 
     public boolean mkdir() {
@@ -173,17 +193,22 @@ public class VLibraryResource implements IVResource {
     }
 
     public IVResource[] getParents() {
-        Vector parents = new Vector();
-
-        IVResource parent = this.getParent();
-        while (parent != null) {
-            parents.add(0, parent);
-            parent = parent.getParent();
-        }
-        if (this.isDirectory()) {
-            parents.add(this);
-        }
-        return (IVResource[]) parents.toArray(new IVResource[parents.size()]);
+    	
+    	if(this._parents==null){
+    	
+	        Vector parents = new Vector();
+	
+	        IVResource parent = this.getParent();
+	        while (parent != null) {
+	            parents.add(0, parent);
+	            parent = parent.getParent();
+	        }
+	        if (this.isDirectory()) {
+	            parents.add(this);
+	        }
+	       this._parents= (IVResource[]) parents.toArray(new IVResource[parents.size()]);
+	   	}
+    	return this._parents;
     }
 
     public IVResource create(String path) {
@@ -196,12 +221,12 @@ public class VLibraryResource implements IVResource {
 
     }
 
-    @SuppressWarnings("unused")
+   
     public IVResource get(String childName) {
         IPath p1 = new Path(this.bundleRoot);
         // p1 = p1.removeFirstSegments(new
         // Path(virtualRoot).matchingFirstSegments(p1));
-        URL[] files = this.library.find(p1.append(childName).toString());
+        URL[] files = this.library.find(p1.append(childName).toString(), false);
         for (int i = 0; i < files.length; i++) {
             IPath myPath = new Path(this.resourcePointer.getPath());
             IPath itemPath = new Path(files[i].getPath());
@@ -234,8 +259,11 @@ public class VLibraryResource implements IVResource {
     }
 
     public IVResource[] findChildren(String childName) {
-        IVResource[] children = this.listFiles();
+        IVResource[] children = this.listFiles(childName, true);
 
+        return children;
+        
+        /*
         Path path = new Path(childName);
         IOFileFilter filter;
         if (path.segment(0).equals("*")) {
@@ -265,6 +293,6 @@ public class VLibraryResource implements IVResource {
         }
 
         return (IVResource[]) results.toArray(new IVResource[results.size()]);
-
+		*/
     }
 }

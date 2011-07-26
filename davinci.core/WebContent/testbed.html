@@ -16,24 +16,24 @@
     <script>
     	
     	
-    	dojo.require("davinci.ve.widgets.ColorPicker");
-
-		function run(){
-			/*
-			var widget = new davinci.ve.widgets.ColorPicker({});
-			var attach = dojo.byId('mainAttach');
-			attach.appendChild(widget.domNode);
-			*/
-		}
+    	dojo.require("dijit.form.Button")
+		dojo.require("davinci.Workbench");
+    	dojo.require("davinci.ui.Dialogs");
     	
-    	dojo.addOnLoad(run);
+    	function showError(){
+    		var errorTitle = "Can't modify read only attribute!";
+    		var errorText = "Would you like to copy the theme to your workspace?";
+    		
+    		davinci.Workbench.showModal(davinci.ui.Error({'errorText':errorText, 'okButtonText':'Copy Theme'}), errorTitle);
+
+		}
     </script>
   </head>
   <body class="claro">
   <br><br><br><br>
  
   <div id="mainAttach"></div>
-  <div dojoType="davinci.ve.widgets.ColorPicker"></div>
+  <div dojoType="dijit.form.Button" onClick="showError()">Show Error</div>
   
   </body>
 

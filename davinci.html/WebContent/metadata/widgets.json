@@ -29,6 +29,7 @@
             "icon": "resources/images/html-div.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAALNJREFUeNpi/P//P4NUxvb/DGQCFhjj2QxPkjUDLWZgYqAQgA34//8fmNO74TIcwwCMjU2MAagPbADTv79wyeIAXTBG1oALMAL1gcOA8f9vgoqRDQWxIfr+QF3w9w95/v/7C+qCf78x/AezBa8XgC5gAKUDhZh5/8kBIH3QQPxNlhdALqdOOmD8+5vMQIS6gPH/X/K8ANQHDQMyoxEYC9CE9I9BI6SHdBeA9f7/T1EgAgQYAMdnhUefY5wVAAAAAElFTkSuQmCC",
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "textContent",
                 "displayOnCreate": false
@@ -43,6 +44,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASBJREFUeNpinHvsoY+u1KKDNxjAIM5eA0gCuUAGhIRzt1x+BmQzAbEYDwuQLPHWASKgHIQLJ+GMJEs5IIOFATcA6u/ZegXCgAsiNGDKYQfzjt7/TzQAKoba4Fu3kYEQ2Nzkj+Sk//+bC33wqK7q2Qjzw/9/QOrfXxBpIATS/+rLH/+8eUDGxklJkCBCgP//WRj//wcyPr96AxcEqj4+Lw3Nhi+v3gJJxv9/mRjBNiADoMGWSbOACGgVmhQj2Ia/QNZvJF1AZ0BsAOqBW/Xn33+IDSyYNiD7AcOGfyyM/9A1wG3ABEDFLIwMILv+/f+fXLYAWY7537+/TExA8h8TKL39Z2IGaWD4Dw3Wk/PTGYgBICf9Z1i29yIDcYCRgQEgwAA7ha1OfGHYvwAAAABJRU5ErkJggg==",
             "resizable": "none",
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "textContent",
                 "displayOnCreate": false
@@ -84,7 +86,8 @@
                     ]
                 }
             ],
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr"
         },
         {
             "name": "<tbody>",
@@ -119,7 +122,9 @@
                 }
             ],
             "resizable": "none",
-            "isContainer": true
+            "isContainer": true,
+            "allowedParent": "html.table",
+            "allowedChild": "html.tr"
         },
         {
             "name": "<tr>",
@@ -138,7 +143,9 @@
                 }
             ],
             "resizable": "none",
-            "isContainer": true
+            "isContainer": true,
+            "allowedParent": "html.tbody, html.table, html.thead, html.tfoot",
+            "allowedChild": "html.td, html.th"
         },
         {
             "name": "<td>",
@@ -149,6 +156,8 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXhJREFUeNrEUz1LA0EQnTvzO/wPYsBOrQW109ImpLPIL9DWKqQQRESEFGKjYmGwEyQggUTBRn+BIhFFTXK53Z1xZi53ulcpKdxjmXnD7Lv39iMgIhhnhDDmKKTJavXyz1KOKvNBRkCIsFWe09wxFbI1iTEy5ppB0shB69v1K18BOdTYvHvUZm1k0oi7rUwhIIkAs8VJQESfwMQxVGoXv5Le7jxAwF/yZ2aVubRxRjKYmWJrqXZyQ/3I0HtvSG8fA8Xd1z49v/ToqftJi5va/30KJhqOyGQ/WL6xCcZkCkakrMcOopyFKGKvCGLNslFrDMTGqX8hECz7AKN7YwZDnwC5uXp47XndPW17uN64zXK0zidwzsH6yozKNKxg57gFpeUi11EtHZx3YG1hKiNoNO9zx8iMcjRigWQFYuJfVAMp/jmcRf8qG90sUAWoEWUZpG8FcwRICQ7ShunSniYToiIMIb3XguXELdcKnEtM6639chD8+2v8EmAA9/wqJKl9P7kAAAAASUVORK5CYII=",
             "hidden": true,
             "isContainer": true,
+            "allowedParent": "html.tr",
+            "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "textContent",
                 "displayOnCreate": false
@@ -161,7 +170,9 @@
             "category": "html",
             "hidden": true,
             "resizable": "none",
-            "isContainer": true
+            "isContainer": true,
+            "allowedParent": "html.table",
+            "allowedChild": "html.tr"
         },
         {
             "name": "<th>",
@@ -169,7 +180,9 @@
             "type": "html.th",
             "category": "html",
             "hidden": true,
-            "isContainer": true
+            "isContainer": true,
+            "allowedParent": "html.tr",
+            "allowedChild": "ANY"
         },
         {
             "name": "<thead>",
@@ -178,7 +191,9 @@
             "category": "html",
             "hidden": true,
             "resizable": "none",
-            "isContainer": true
+            "isContainer": true,
+            "allowedParent": "html.table",
+            "allowedChild": "html.tr"
         },
         {
             "name": "<a>",
@@ -194,6 +209,7 @@
             "resizable": "none",
             "isControl": true,
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "textContent",
                 "displayOnCreate": true
@@ -269,7 +285,6 @@
                 "src": "",
                 "style": "width: 300px; height: 300px;"
             },
-            "isContainer": true,
             "inlineEdit": "davinci.ve.input.HtmlSrcAttributeInput"
         },
         {
@@ -301,12 +316,22 @@
             "resizable": "none"
         },
         {
+            "name": "<dl>",
+            "description": "Definition List",
+            "type": "html.dl",
+            "category": "html",
+            "hidden": true,
+            "resizable": "none",
+            "allowedChild": "html.dt, html.dd"
+        },
+        {
             "name": "<dd>",
             "description": "Definition Description",
             "type": "html.dd",
             "category": "html",
             "hidden": true,
-            "resizable": "none"
+            "resizable": "none",
+            "allowedParent": "html.dd"
         },
         {
             "name": "<dt>",
@@ -314,7 +339,8 @@
             "type": "html.dt",
             "category": "html",
             "hidden": true,
-            "resizable": "none"
+            "resizable": "none",
+            "allowedParent": "html.dd"
         },
         {
             "name": "<li>",
@@ -323,6 +349,8 @@
             "category": "html",
             "hidden": true,
             "resizable": "none",
+            "allowedParent": "html.ul, html.ol",
+            "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "textContent",
                 "displayOnCreate": true
@@ -335,7 +363,8 @@
             "category": "html",
             "hidden": true,
             "resizable": "none",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "html.li"
         },
         {
             "name": "<p>",
@@ -345,6 +374,7 @@
             "hidden": true,
             "resizable": "none",
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "richText",
                 "displayOnCreate": true
@@ -389,7 +419,8 @@
             "category": "html",
             "hidden": true,
             "resizable": "none",
-            "isContainer": true
+            "isContainer": true,
+            "allowedChild": "html.li"
         },
         {
             "name": "hr",
@@ -409,6 +440,7 @@
             "children": "Enter Text",
             "resizable": "none",
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": "davinci.ve.input.RichTextInput"
         },
         {
@@ -423,6 +455,7 @@
             },
             "children": "<i>Enter Note</i>",
             "isContainer": true,
+            "allowedChild": "ANY",
             "inlineEdit": "davinci.ve.input.RichTextInput"
         },
         {

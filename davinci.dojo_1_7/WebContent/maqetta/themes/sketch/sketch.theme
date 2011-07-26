@@ -2,7 +2,7 @@
 
 	name : "Sketch",
 	specVersion: "0.7",
-	version : "1.0",
+	version : "1.7",
 	files : ["sketch.css"],
 	meta : ["sketch.json"],
 	themeEditorHtmls: ["dojo-theme-editor.html"],

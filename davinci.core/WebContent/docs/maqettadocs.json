@@ -14,16 +14,18 @@
 			{ id: '4.1', name:'Introducing the Page Editor', url: 'tutorials/tutorial1.html' }, 
 			{ id: '4.2', name:'Build a Task Manager (Scene Graph)', url: 'tutorials/tutorial2.html' }, 
 			{ id: '4.3', name:'Build a Task Manager (Application States)', url: 'tutorials/tutorial3.html' },
-			{ id: '4.4', name:'Theme Editor Tutorial', url: 'tutorials/tutorial4.html' },
-			{ id: '4.5', name:'BorderContainer Tutorials', url: 'tutorials/BCtutorials.html', children:[
-				{ id: '4.5.1', name:'BorderContainer Example', url: 'tutorials/BCExample.html' },
-				{ id: '4.5.2', name:'BorderContainer Basics', url: 'tutorials/BCBasics.html' },
-				{ id: '4.5.3', name:'About Gutters', url: 'tutorials/BCGutters.html' },
-				{ id: '4.5.4', name:'About Splitters', url: 'tutorials/BCSplitters.html' },
-				{ id: '4.5.5', name:'BorderContainer Panes', url: 'tutorials/BCPanes.html' },
-				{ id: '4.5.6', name:'Background Color or Image', url: 'tutorials/BCBackground.html' },
-				{ id: '4.5.7', name:'Nested BorderContainers', url: 'tutorials/BCNestedBC.html' },
-				{ id: '4.5.8', name:'Single Borders on BorderContainer', url: 'tutorials/BCSingleBorders.html' }
+			{ id: '4.4', name:'Mobile User Interface Tutorial', url: 'tutorials/tutorial4.html' },
+			{ id: '4.5', name:'Exporting to Developer Tools Tutorial', url: 'tutorials/tutorial5.html' },
+			{ id: '4.6', name:'Theme Editor Tutorial', url: 'tutorials/tutorial6.html' },
+			{ id: '4.7', name:'BorderContainer Tutorials', url: 'tutorials/BCtutorials.html', children:[
+				{ id: '4.7.1', name:'BorderContainer Example', url: 'tutorials/BCExample.html' },
+				{ id: '4.7.2', name:'BorderContainer Basics', url: 'tutorials/BCBasics.html' },
+				{ id: '4.7.3', name:'About Gutters', url: 'tutorials/BCGutters.html' },
+				{ id: '4.7.4', name:'About Splitters', url: 'tutorials/BCSplitters.html' },
+				{ id: '4.7.5', name:'BorderContainer Panes', url: 'tutorials/BCPanes.html' },
+				{ id: '4.7.6', name:'Background Color or Image', url: 'tutorials/BCBackground.html' },
+				{ id: '4.7.7', name:'Nested BorderContainers', url: 'tutorials/BCNestedBC.html' },
+				{ id: '4.7.8', name:'Single Borders on BorderContainer', url: 'tutorials/BCSingleBorders.html' }
 			] },
 		] },
 	    { id: '5', name:'Using Maqetta', url: 'userguide.html', children:[

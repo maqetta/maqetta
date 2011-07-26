@@ -50,8 +50,9 @@ public abstract class Library {
 
     public abstract URL getURL(String path);
 
-    public abstract URL[] find(String searchFor);
-
+    public abstract URL[] find(String searchFor, boolean recurse);
+    
+ 
     public abstract URL[] listURL(String path);
 
     public int compareTo(Object item) {

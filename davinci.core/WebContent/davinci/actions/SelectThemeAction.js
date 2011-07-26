@@ -15,13 +15,11 @@ dojo.declare("davinci.actions.SelectThemeAction", davinci.actions.Action, {
 		var e = davinci.Workbench.getOpenEditor();
 		
 		var theme = e.getContext().getTheme();
-			
+		var ldojoVersion = e.getContext().getDojo().version.major +'.'+ e.getContext().getDojo().version.minor;
 	
-		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false});
-		
-		//this._themeChooser.set('value', theme);
-		davinci.Workbench.showModal(this._themeChooser, langObj.selectTheme);//width needs to be adjusted to fit language
-		dojo.connect(this._themeChooser, "onChange", this, "_changeTheme");  //I'm still thinking on where it would be best to make that change
+		this._themeChooser = new davinci.ui.widgets.ThemeSelection({'value':theme, workspaceOnly:false, dojoVersion: ldojoVersion });
+		davinci.Workbench.showModal(this._themeChooser, langObj.selectTheme, "width:200px");//width needs to be adjusted to fit language
+		dojo.connect(this._themeChooser, "onChange", this, "_changeTheme");
 		
 	},
 

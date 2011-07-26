@@ -51,6 +51,10 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			}
 		}
 		
+		if (typeof(this.supportsHTML) === 'boolean'){
+			return this.supportsHTML;
+		}
+		
 		if (this.supportsHTML=== 'true'){
 			return true;
 		} else {
@@ -597,9 +601,9 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 					if (djprop === 'innerHTML'){
 						values.richText = values.textContent;
 						delete values.textContent;
-						command = new davinci.ve.commands.ModifyRichTextCommand(this._widget, values, context);
+						command = new davinci.ve.commands.ModifyRichTextCommand(this._widget, values, null, context);
 					}else{
-						command = new davinci.ve.commands.ModifyCommand(this._widget, values, context);
+						command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);
 					}
 					this._widget._edit_context.getCommandStack().execute(command);
 					this._widget=command.newWidget;	
@@ -640,8 +644,8 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 				contentPaneAncestor.removeChild(iebPointer);
 				
 				if(value != null && !cancel){
-					if (this._format === 'text' && this.isHtmlSupported()) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
-						value = /*dojox.html.entities.encode(*/dojox.html.entities.encode(value)/*)*/;
+				if (!this.disableEncode && this._format === 'text' ) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
+						value = dojox.html.entities.encode(value);
 				
 					this.updateWidget(value);
 				}
@@ -689,7 +693,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		
 		setFormat: function(value){
 			
-			
+			var format;
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var n = dojo.create("div", { innerHTML: value});

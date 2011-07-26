@@ -8,7 +8,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 
 	constructor:function(args){
 		// Menu routines in Dojo and Workbench require unique names
-		var unique="m"+(new Date().getTime());
+		var unique="m"+Date.now();
 		this.toolbarMenuActionSets=[
       		{
       			 id: unique+"-DropdownMenuActionSet",
@@ -55,48 +55,68 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		var editor = this.editor=new constr(this.containerNode);
 		this.containerNode = editor.domNode || this.containerNode;
 		editor.editorID=editorExtension.id;
-		editor.isDirty= (editor.isReadOnly) ? false : this.isDirty;
+		editor.isDirty= !editor.isReadOnly && this.isDirty;
 		this._createToolbar();
 		if (!content)
 		{
 			content=editor.getDefaultContent();
 			editor.isDirty=!editor.isReadOnly;
-			editor.lastModifiedTime=new Date().getTime();
+			editor.lastModifiedTime=Date.now();
 		}
 		if (!content)
+		{
 			content="";
+		}
 		editor.resourceFile=file;
-		editor.setContent(fileName,content);
+
+		// Don't populate the editor until the tab is selected.  Defer processing,
+		// but also avoid problems with display:none on hidden tabs making it impossible
+		// to do geometry measurements in editor initialization
+		var tabContainer = "editors_tabcontainer";
+		if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+			// Tab is visible.  Go ahead
+			editor.setContent(fileName,content);	
+		}else{
+			// When tab is selected, set up the editor
+			var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+				if(editor==args.editor){
+					dojo.unsubscribe(handle);
+					editor.setContent(fileName,content);		
+				}
+			});
+		}
 		editor.editorContainer=this;
 		this.setDirty(editor.isDirty);
 		//dojo.publish("/davinci/ui/EditorOpening", [this.editor]);
 	},
 
-	setDirty : function (isDirty)
+	setDirty: function (isDirty)
 	{
 		var title=this.attr("title");
-		if (title[0]=="*")
+		if (title[0]=="*"){
 			title=title.substring(1);
-		if (isDirty)
+		}
+		if (isDirty){
 			title="*"+title;
+		}
 		davinci.Workbench.editorTabs.setTitle(this,title);
-		this.lastModifiedTime=new Date().getTime();
+		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
 	},
 	
-	save : function(isWorkingCopy){
+	save: function(isWorkingCopy){
 		this.editor.save(isWorkingCopy);
 		this.setDirty(isWorkingCopy);
-		
 	},
-	_close : function(editor, dirtycheck){
+
+	_close: function(editor, dirtycheck){
 		dojo.publish("/davinci/ui/EditorClosing", [editor]);
 		var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
 		     okToClose=confirm(langObj.fileHasUnsavedChanges);
 		}
-		if (okToClose ){
+		if (okToClose){
 	    	
 			//this.editor.resourceFile.removeWorkingCopy();
 			if(editor.getFileEditors){
@@ -116,13 +136,13 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 	/* Callback to handle notifier when parent widget closes an
 	 * editor tab, usually in response to user clicking on "x" close icon.
 	 */
-	onClose : function(){
+	onClose: function(){
 		return this._close(this.editor, true);
 	},
 	/* forceClose is where daVinci actively removes a child editor.
 	 * (eg, saveas might close old editor before creating new editor)
 	 */
-	forceClose : function(editor, dirtycheck){
+	forceClose: function(editor, dirtycheck){
 		this._close(editor, dirtycheck);
 		var parent = this.getParent();
 		if(parent){	
@@ -144,17 +164,18 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		return editorActions;
 	},
 
-	_getViewContext : function()
+	_getViewContext: function()
 	{
 		return this.editor;
 	},
 
-	destroy : function()
+	destroy: function()
 	{
 		this.inherited(arguments);
 		//TODO: should we implement getChildren() in _ToolbaredContainer instead so that the children will get destroyed automatically?
-        if (this.editor)
+        if (this.editor){
         	this.editor.destroy();
+        }
         delete this.editor;
 	}
 });

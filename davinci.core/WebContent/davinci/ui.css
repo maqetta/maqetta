@@ -148,6 +148,9 @@
 	width: 16px;
 	height: 16px;
 }
+.rotateIconCCW {
+	background-position: -82px -878px;
+}
 .deviceIcon {
 	background-image: url(./img/sprite.png);
 	background-position: 0 -780px;

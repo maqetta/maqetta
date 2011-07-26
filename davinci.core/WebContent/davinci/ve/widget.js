@@ -8,7 +8,7 @@ dojo.require("davinci.ve.themeEditor.metadata.metadata");
 davinci.ve.widget.widgetHash={};
 davinci.ve.widget._dojo = function(node){
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
-//TODO: for some reason node.ownerDocument is occasionally null	
+//TODO: for some reason node.ownerDocument is occasionally null
 	doc=doc||dojo.doc;
 	var win = dijit.getDocumentWindow(doc);
 	return win.dojo || dojo;
@@ -36,7 +36,7 @@ davinci.ve.widget.allWidgets = function(containerNode){
 	}
 	find(containerNode);
 	return result;
-	
+
 }
 
 //recursively search for widget closest to target under root
@@ -116,16 +116,28 @@ davinci.ve.widget.getStyleString = function(style){
 	return styleStr;
 };
 
-davinci.ve.widget.getEnclosingWidget = function(node){
-	var richText = this.getEnclosingWidgetForRichText(node);
-	if (richText){
+/**
+ * Return instance of "managed" widget which contains the given 'node'.
+ *
+ * @param {DOMElement | davinci.ve._Widget} node
+ * 			Element for which to find enclosing "managed" widget.
+ *
+ * @return "managed" widget instance which contains 'node'; 'undefined' if no
+ * 			such valid widget instance is found.
+ * @type {davinci.ve._Widget}
+ */
+davinci.ve.widget.getEnclosingWidget = function(node) {
+	var richText = davinci.ve.widget.getEnclosingWidgetForRichText(node);
+	if (richText) {
 		return richText;
 	}
-	while(node){
-		if (node._dvWidget) {
-			return node._dvWidget;
+	var enc = node;
+	while (enc) {
+		if (enc._dvWidget) {
+			return enc._dvWidget;
 		}
-		node = node.parentNode;
+		//        DOMElement || davinci.ve._Widget
+		enc = enc.parentNode || (enc.domNode && enc.domNode.parentNode);
 	}
 };
 
@@ -134,7 +146,7 @@ davinci.ve.widget.getEnclosingWidgetForRichText = function(node){
 	if (node._dvWidget.type === 'html.stickynote' || node._dvWidget.type === 'html.richtext' ){
 		return node._dvWidget;
 	} else if (node.parentNode){
-		return this.getEnclosingWidgetForRichText(node.parentNode);
+		return davinci.ve.widget.getEnclosingWidgetForRichText(node.parentNode);
 	} else {
 		return null;
 	}
@@ -158,12 +170,12 @@ davinci.ve.widget.getUniqueObjectId = function(type, node){
 davinci.ve.widget.getType = function(widget){
 	if(widget.type)
 		return widget.type;
-	
+
 }
 
 
 davinci.ve.widget.getLabel = function(widget){
-	
+
 	var text = "<span class='propertiesTitleWidgetName'>";
 	//FIXME: This is a hack so that meaningful names
 	//don't show a bunch of ugly prefix stuff.
@@ -210,8 +222,8 @@ davinci.ve.widget.getLabel = function(widget){
 	if (widgetText) {
 		text += "<span class='propertiesTitleWidgetText'>" + widgetText + "</span> ";
 	}
-	
-	/* add the class */	
+
+	/* add the class */
 	var node = widget.domNode;
 	var srcElement = widget._srcElement;
 	var id = widget.getId();
@@ -219,7 +231,7 @@ davinci.ve.widget.getLabel = function(widget){
 	var className = classAttr && dojo.trim(classAttr);
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
-		//text += node.tagName;	
+		//text += node.tagName;
 		if (id) {
 			text += "#" + id;
 		}
@@ -243,7 +255,7 @@ davinci.ve.widget.byId = function(id){
 			return widget;
 		}
 	}
-    return davinci.ve.widget.widgetHash[id];	
+    return davinci.ve.widget.widgetHash[id];
 };
 
 davinci.ve.widget.byNode = function(node){
@@ -316,7 +328,7 @@ davinci.ve.widget.createWidget = function(data){
 		return undefined;
 	}
 	c = dojo.getObject(widgetClassName);
-	
+
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = davinci.ve.widget._getUniqueId();
@@ -346,7 +358,7 @@ davinci.ve.widget.createWidget = function(data){
 	    }
         node = n;
 	}
-    
+
     var srcElement = new davinci.html.HTMLElement(node.tagName.toLowerCase());
     if (node.hasAttributes()) {
         var attrs = node.attributes;
@@ -357,7 +369,7 @@ davinci.ve.widget.createWidget = function(data){
     if (node.innerHTML) {
         srcElement.addText(node.innerHTML);
     }
-	
+
     if (metadata.javascript) {
         var js = {};
         js.location = metadata.javascript.location || "afterContent";
@@ -366,12 +378,12 @@ davinci.ve.widget.createWidget = function(data){
         } else {
             js.$text = (metadata.javascript.$text || metadata.javascript).replace(/__WID__/g, uniqueId);
         }
-        
+
         if (js.location == "atEnd") {
             console.error("ERROR: <javascript> metadata element -- 'location' of 'atEnd' not supported");
             js.location = "afterContent";
         }
-        
+
         var script = dojo.doc.createElement("script");
         var scriptModel = new davinci.html.HTMLElement("script");
         if (js.src) {
@@ -382,7 +394,7 @@ davinci.ve.widget.createWidget = function(data){
             scriptModel.script = "";
             scriptModel.setScript(js.$text);
         }
-        
+
         var wrapper = dojo.doc.createElement("div");
         var wrapperModel = new davinci.html.HTMLElement("div");
         if (js.location == "beforeContent") {
@@ -400,7 +412,7 @@ davinci.ve.widget.createWidget = function(data){
     }
 
     node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement);
-	
+
 	var children = data.children;
 	if(children){
 		if(dojo.isString(children)){
@@ -455,19 +467,19 @@ davinci.ve.widget.createWidget = function(data){
 	if(widget.chart && (data.properties && data.properties["theme"])){
 		widget.chart.theme.themeName = theme;
 	}
-	
+
 	/* this was _edit_scripts which didn't seem right */
 	if(data.scripts){
 		widget.scripts = data.scripts;
 	}
 //	var df = davinci.ve.widget.getDavinciFields(data);
-//	
+//
 //	dojo.mixin(widget, df);
 
 	if(data.context) {
 		widget._edit_context = data.context;
 	}
-	
+
 	if(data.properties){
 		widget.setProperties(data.properties);
 	}
@@ -476,7 +488,7 @@ davinci.ve.widget.createWidget = function(data){
 		widget.states = data.states;
 		var states_json = JSON.stringify(widget.states);
 		// Escape single quotes that aren't already escaped
-		states_json = states_json.replace(/(\\)?'/g, function($0, $1){ 
+		states_json = states_json.replace(/(\\)?'/g, function($0, $1){
 			return $1 ? $0 : "\\'";
 		});
 		// Replace double quotes with single quotes
@@ -512,8 +524,8 @@ davinci.ve.widget._createSrcElement = function( node){
 }
 
 davinci.ve.widget._parseNodeData = function(node, options){
-	
-	
+
+
 	// summary:
 	// 		Same general routine as davinci.ve.widget._getData,
 	// 		only adding the "html." prefix to the widget type to make it look like a widget to the Dojo Composition Tool.
@@ -521,12 +533,12 @@ davinci.ve.widget._parseNodeData = function(node, options){
 	if(!node){
 		return undefined;
 	}
-	
+
 	options = (options || {});
 
 	var data = {};
 	data['properties'] = {};
-	
+
 	for(var i = 0; i < node.attributes.length; i++){
 		var a = node.attributes[i];
 		if(!a.specified || !a.nodeValue){
@@ -553,7 +565,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 //		}
 		data.properties[n] = v;
 	}
-	
+
 	if(node.tagName.toLowerCase() == "script"){
 		data.children = (node.innerHTML || undefined);
 	}//else{
@@ -563,7 +575,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 }
 
 davinci.ve.widget.getWidget = function(node){
-	
+
 	if(!node || node.nodeType != 1){
 		return undefined;
 	}
@@ -579,7 +591,7 @@ davinci.ve.widget.getWidget = function(node){
 			var w= d.byNode(node);
 			if (w)
 			{
-				widget=new davinci.ve.DijitWidget(data,node,w); 
+				widget=new davinci.ve.DijitWidget(data,node,w);
 			}
 			else
 				widget=new davinci.ve.ObjectWidget(data,node);
@@ -588,15 +600,14 @@ davinci.ve.widget.getWidget = function(node){
 		}else if (dvWidgetType){
 			widget=new davinci.ve.GenericWidget(data,node,dvWidgetType);
 		}else{
-			if(node.nodeName == "svg" || node.parentNode == node.ownerDocument.body && (node.style.display == "none" || node.style.visibility == "hidden")){
-				// Question: Is this still needed for daVinci? Prevents getting widget for top level html elements that have display set to none.
-				// exclude temporary node for _Templated and Grid
+			if(node.nodeName == "svg"){
+				//FIXME: inline SVG support not yet available
 				return undefined;
 			}
 			widget=new davinci.ve.HTMLWidget(data,node);
 		}
 	}
-	
+
 	return widget;
 };
 
@@ -646,7 +657,7 @@ dojo.declare("davinci.ve._Widget",null,{
 		if ((this.dijitWidget && this.dijitWidget.isContainer)
                 || davinci.ve.metadata.queryDescriptor(this.type, "isContainer")) {
             return (this.containerNode || this.domNode);
-        }	
+        }
 		return undefined;
 	},
 
@@ -670,7 +681,7 @@ dojo.declare("davinci.ve._Widget",null,{
     	       // this._edit_helper = dojo.getObject(helper); wdr
     	        var aClass = dojo.getObject(helper);
     	        if (aClass) {
-    	        	this._edit_helper  = new aClass();				
+    	        	this._edit_helper  = new aClass();
     			}
     	        //wdr
     	        var obj = dojo.getObject(helper);
@@ -683,7 +694,7 @@ dojo.declare("davinci.ve._Widget",null,{
         }
         return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
     },
-	
+
 	attr: function(name,value)
 	{
 		var attrValue=	this._attr.apply(this, arguments);
@@ -692,7 +703,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			value=this._stringValue(name, value);
 			this._srcElement.addAttribute(name,value);
 		}
-		else 
+		else
 			return attrValue;
 	},
 
@@ -734,7 +745,7 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 	getParent: function(){
 			return davinci.ve.widget.getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
-			
+
 	},
 	getObjectId: function(widget){
 		widget = widget || this;
@@ -747,16 +758,22 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 	 	return undefined;
 	},
-	addClass: function(className){
-		var classes = this.getClassNames() || "";
-		var split = classes.split(' ');
-		for(var i =0;i<split.length;i++){
-			if(split[i]==className) return;
+	
+	addClass: function(newClass) {
+		// add to Model...
+		var classes = this.getClassNames();
+		classes = classes ? classes.split(/\s+/) : [];
+		if (classes.indexOf(newClass) !== -1) {
+			// duplicate class name
+			return;
 		}
-		var newClass = (classes?(classes + " "):"") + className;
-		this._srcElement.setAttribute("class", newClass);
-		dojo.addClass(this.domNode,className);
+		classes.push(newClass);
+		this._srcElement.setAttribute('class', classes.join(' '));
+		
+		// add to DOM...
+		dojo.addClass(this.domNode, newClass);
 	},
+	
 	getId: function(){
 		if (!this.id)
 		{
@@ -771,8 +788,9 @@ dojo.declare("davinci.ve._Widget",null,{
 				return undefined;
 			}
 		}
-		if (this._srcElement && this._srcElement._getAttribute("id").noPersist)
-			return undefined;
+		if ( this._srcElement && this._srcElement._getAttribute("id")
+		  && this._srcElement._getAttribute("id").noPersist ) { return undefined; }
+
 		return this.id;
 	},
 	setMarginBox: function(box){
@@ -816,9 +834,9 @@ dojo.declare("davinci.ve._Widget",null,{
 		// return a sorted array of sorted style values.
 		var v = [];
 		var shorthands = davinci.html.css.shorthand;
-		
+
 		var foundShorthands = [];
-		
+
 		for(var j=0;j<shorthands.length;j++){
 			for(var i=0;i<shorthands[j].length;i++){
 				if(shorthands[j][i] in values){
@@ -826,34 +844,34 @@ dojo.declare("davinci.ve._Widget",null,{
 					foundShorthands.push(shorthands[j][i]);
 				}
 			}
-		}		
-		
+		}
+
 		for(var name in values){
 			var found = false;
-			
+
 			for(var i=0;!found && i<foundShorthands.length;i++){
 				if(foundShorthands[i] == name)
 					found=true;
 			}
-			
+
 			if(!found)
 				v.push({'name': name, 'value':values[name]});
 		}
-		
+
 		return v;
 	},
-	
+
 	_styleText: function (v){
 		var s = "";
 		/* if ordering is given, respect it */
 		if(dojo.isArray(v)){
-		
+
 			for(var i = 0;i<v.length;i++){
 				value = davinci.ve.states.normalize("style", this, v[i].name, v[i].value);
 				if(value !== undefined && value != "" && value!=null){
 					s += v[i].name + ": " + value + "; ";
 				}
-	
+
 			}
 		}else{
 			for(var name in v){
@@ -863,7 +881,7 @@ dojo.declare("davinci.ve._Widget",null,{
 					s += name + ": " + value + "; ";
 				}
 			}
-			
+
 		}
 		return dojo.trim(s);
 	},
@@ -889,7 +907,7 @@ dojo.declare("davinci.ve._Widget",null,{
 //				var n = childNodes[i];
 //				var d = undefined;
 //				switch(n.nodeType){
-//				case 1: // Element				
+//				case 1: // Element
 //					var w = davinci.ve.widget.byNode(n);
 //					if(w){
 //						d = davinci.ve.widget.getData(w, options);
@@ -916,15 +934,11 @@ dojo.declare("davinci.ve._Widget",null,{
 //		return childrenData;
 	},
 
-	getClassNames: function(){	
-		var attr=this._srcElement.getAttribute("class");
-		if(attr && attr.length>0){
-			return attr;
-		}
-		return "";
+	getClassNames: function() {
+		return this._srcElement.getAttribute('class') || '';
 	},
+
 	_getData: function(options){
-		var context = this.getContext();
 		var data = {type: this.type, properties: {}};
 		//FIXME: Might need OpenAjax widgets logic here someday
 		if(options.identify){
@@ -932,17 +946,17 @@ dojo.declare("davinci.ve._Widget",null,{
 				this._srcElement = davinci.ve.widget._createSrcElement(this.domNode);
 			}
 			var idProp = this._srcElement._getAttribute("id");
-			//if (this._srcElement._getAttribute("id").noPersist) 
+			//if (this._srcElement._getAttribute("id").noPersist)
 			if (idProp && idProp.noPersist)
 				data.properties.isTempID=true;
 			data.properties.id = this.id;
 		}else if(options.identify !== false){
 			data.properties.id = this.getId();
 		}
-		if ((options.preserveTagName !== false) && (this.id)) { 
+		if ((options.preserveTagName !== false) && (this.id)) {
 			data.tagName = this._srcElement.tag;
 		}
-		
+
 		// get all properties
 	    var properties = davinci.ve.metadata.query(this, "property");
 	    if (this.domNode && this.domNode.parentNode) { // "widget" could be a string for dojoType
@@ -956,7 +970,7 @@ dojo.declare("davinci.ve._Widget",null,{
 	            }
 	        }
 	    }
-		
+
 		if(properties){
 			for(var name in properties){
 				if(name=="_children" || name == "id" || name == "style" || name == "class" || name == "dir" || name == "lang"){
@@ -990,17 +1004,14 @@ dojo.declare("davinci.ve._Widget",null,{
 				//}
 			}
 		}
-		var style = this.getStyle(options);
-		if(style){
-			data.properties.style = style;
-		}
+		data.properties.style = this.getStyle(options);
 		var classNames = this.getClassNames(options);
 		if(classNames){
 			data.properties['class'] = classNames;
 		}
-		
+
 		data.children = this.getChildrenData(options);
-		
+
 		return data;
 	},
 
@@ -1014,20 +1025,20 @@ dojo.declare("davinci.ve._Widget",null,{
 		}else{
 			data = this._getData( options);
 		}
-		
+
 		data.states=this.states;
 		if(!data.properties)
 			data.properties = {};
-		
+
 		if (this.properties)
 			for(var name in this.properties){
 				if(!(name in data.properties)){
 					data.properties[name] = this.properties[name];
 				}
 			}
-		
+
 		return data;
-		
+
 	},
 
 	getPropertyValue: function(name){
@@ -1064,10 +1075,10 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 
 	getStyleValues: function( options){
-		
+
 		var style = this.getStyleNode().style;
 		var text = this._srcElement.getAttribute("style");
-		
+
 		var values =davinci.ve.widget.parseStyleValues(text);
 
 		if(style){
@@ -1096,7 +1107,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			}
 		}
 		return values;
-	},	
+	},
 	_updateSrcStyle: function()
 	{
 		var styleValue=this.getStyle();
@@ -1106,7 +1117,7 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 		else
 			this._srcElement.removeAttribute("style");
-			
+
 	},
 	setStyleValues: function( values){
 		if(!values){
@@ -1114,11 +1125,11 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 		var style = this.getStyleNode().style;
 		var v = this._sortStyleValues(values);
-		
+
 		for(var i=0;i<v.length;i++){
 			var value = (v[i].value || "");
 			var name = v[i].name;
-			
+
 			if(name.indexOf("-") >= 0){
 				// convert "property-name" to "propertyName"
 				var names = name.split("-");
@@ -1131,21 +1142,21 @@ dojo.declare("davinci.ve._Widget",null,{
 			/* lots of input boxes convert */
 			if(value=="")
 				value = null;
-			
+
 			style[name] = value;
 		}
-	
+
 		var text = this._styleText(v);
-		
+
 		if (this.dijitWidget)
 			this.dijitWidget.style = text;
 		if (text.length>0)
 			this._srcElement.addAttribute("style",text);
 		else
 			this._srcElement.removeAttribute("style");
-		
+
 		style.cssText = text;
-		
+
 	},
 
 	isLayout: function()
@@ -1154,7 +1165,7 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 	resize: function()
 	{
-		
+
 	},
 
 	removeChild: function( /*Widget*/child){
@@ -1167,12 +1178,12 @@ dojo.declare("davinci.ve._Widget",null,{
 			this._srcElement.removeChild(child._srcElement);
 		}
 	},
-	
+
 	setProperties: function(properties, modelOnly) {
 		if(!this.properties) {
 			this.properties = {};
 		}
-		
+
 		modelOnly = modelOnly ? modelOnly : false; // default modelOnly to false
 
 		if (properties.id)
@@ -1201,7 +1212,7 @@ dojo.declare("davinci.ve._Widget",null,{
 
 	startup: function()
 	{
-		
+
 	},
 	renderWidget: function(){
 	},
@@ -1220,11 +1231,11 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 	selectChild: function(widget)
 	{
-		
+
 	},
 	attach: function()
 	{
-		
+
 	},
 	_stringValue: function (attributeName, value)
 	{
@@ -1258,14 +1269,16 @@ dojo.declare("davinci.ve._Widget",null,{
 //	                value = this.getContext().getContentUrl(value);
 //		            break;
 		        case "date":
-		            value = dojo.date.stamp.toISOString(value, {selector: "date"});
-		            break;
 		        case "time":
-		            value = dojo.date.stamp.toISOString(value, {selector: "time"});
+		        	if(isFinite(value)){
+		        		value = dojo.date.stamp.toISOString(value, {selector: property.format});
+		        	}/*else{
+		        		value = "";
+		        	}*/
 		            break;
 		        default:
 		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.
-	              
+
 		    }
 // XXX is this used?
 //		}else if(property.type == "widget"){
@@ -1316,7 +1329,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 			var n = childNodes[i];
 			var d;
 			switch(n.nodeType){
-			case 1: // Element				
+			case 1: // Element
 				var w = davinci.ve.widget.byNode(n);
 				if(w){
 					d = w.getData( options);
@@ -1341,11 +1354,11 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 		}
 		return childrenData;
 	},
-	
+
 	setProperties: function(properties)
 	{
 		var node = this.domNode;
-		
+
 		for(var name in properties){
 			if (name === 'style'){ // needed for position absolute
 				dojo.style(node, properties[name]);
@@ -1357,7 +1370,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 		//			dojo.attr(node,name,properties[name]);
 				}
 			}
-			
+
 		}
 		this.inherited(arguments);
 	},
@@ -1392,7 +1405,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 	},
 	_attr: function(name,value)
 	{
-		
+
 		if (arguments.length>1)
 		{
 			this.domNode[name]=value;
@@ -1402,7 +1415,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 			return this.domNode[name];
 		}
 	},
-	
+
 	_getWidget: function(){
 		return this.domNode;
 	},
@@ -1414,7 +1427,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 
 dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	isDijitWidget: true,
-	
+
 	constructor : function(mixin, node, dijitWidget, metadata, srcElement) {
 		if (dojo.isString(dijitWidget)) {
 			var c = davinci.ve.widget._dojo(node).getObject(dijitWidget);
@@ -1424,7 +1437,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			if(srcElement){
 				srcElement.addAttribute("dojoType", dijitWidget);
 			}
-			
+
             // carry over node attributes to params that are passed in to constructor
             var proto = c.prototype, params = {};
             for ( var prop in proto) {
@@ -1444,10 +1457,10 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
             }
             params["class"] = node.className;
             params["style"] = node.style && node.style.cssText;
-            
+
             // mixin other properties into params; 'mixin' takes precedence
             dojo.mixin(params, mixin);
-            
+
             // Bug 7675 - Some widgets (i.e. dojox.mobile.IconItem) require a parent node.
             var parentNode = node.parentNode, didCreateParent = false;
             if (!parentNode) {
@@ -1480,7 +1493,10 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		}else{
 			this.type=dijitWidget.declaredClass;
 		}
-		this.acceptsHTMLChildren=dijitWidget._setContentAttr;
+
+		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);
+		this.acceptsHTMLChildren = allowedChild[0] === 'ANY' ||
+								   allowedChild.indexOf('HTML') !== -1;
 		this.dijitWidget=dijitWidget;
 		this.containerNode=dijitWidget.containerNode;
 		this.styleNode=dijitWidget.styleNode;
@@ -1504,6 +1520,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	getChildren: function(attach)
 	{
 		var children=[];
+
 		if (this.acceptsHTMLChildren)
 		{
 			var dvWidget = function(child){
@@ -1512,7 +1529,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 
 			// this.containerNode is a Dojo attachpoint. FIXME: Perhaps this detail should be abstracted by a helper?
 			return dojo.map(dojo.filter((this.containerNode || this.domNode).children, dvWidget), dvWidget);
-		} else {
+		} else if(davinci.ve.metadata.queryDescriptor(this.type, "isContainer")){ //wdr
 			dojo.map(this.dijitWidget.getChildren(), function(widget){
 				if (!widget){ return; }
 				if (attach && !widget.domNode._dvWidget)
@@ -1535,10 +1552,14 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	addChild: function(child,index)
 	{
-		if(this.dijitWidget.addChild){
+		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
+		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
+		// so it follows the generic path for those types of containers.
+		if (this.dijitWidget.addChild && ! this.acceptsHTMLChildren) {
 			if(index === undefined || index === -1){
-				index = "last";
 				this._srcElement.addChild(child._srcElement);
+				this.dijitWidget.addChild(child.dijitWidget);
 			}else {
 				var children = this.getChildren();
 				if(index < children.length){
@@ -1546,14 +1567,11 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 				}else{
 					this._srcElement.addChild(child._srcElement);
 				}
-				if(index === 0){
-					index = "first";
-				}
+				this.dijitWidget.addChild(child.dijitWidget, index);
 			}
-			this.dijitWidget.addChild(child.dijitWidget, index);
-			return;
+		} else {
+			this.inherited(arguments);
 		}
-		this.inherited(arguments);
 	},
 	_getWidget: function(){
 		return this.dijitWidget;
@@ -1572,7 +1590,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	isLayout: function()
 	{
-		return this.dijitWidget.addChild;
+		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
 	},
 	resize: function()
 	{
@@ -1580,12 +1598,16 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			this.dijitWidget.resize();
 		}
 	},
-	removeChild: function( /*Widget*/child){
-		if(!child){
+	removeChild: function(/*Widget*/child) {
+		if (!child) {
 			return;
 		}
 
-		if(this.dijitWidget.removeChild){
+		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
+		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
+		// so it follows the generic path for those types of containers.
+		if (this.dijitWidget.removeChild && ! this.acceptsHTMLChildren) {
 			// it's a Widget and a Container
 			this.dijitWidget.removeChild(child.dijitWidget);
 			this._srcElement.removeChild(child._srcElement);
@@ -1606,9 +1628,9 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		}
 
 	},
-	
+
 	_refresh: function(widget){
-		/* if the widget is a child of a dijitContainer widget 
+		/* if the widget is a child of a dijitContainer widget
 		 * we may need to refresh the parent to make it all look correct in page editor
 		 */
 		var parentNode = widget.parentNode;
@@ -1617,9 +1639,9 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		} else if (widget._dvWidget.isDijitWidget){
 			widget._dvWidget.resize(); // this step may not be needed
 		}
-		
+
 	},
-	
+
 	_attr: function (name,value)
 	{
 		return this.dijitWidget.get.apply(this.dijitWidget, arguments);
@@ -1629,7 +1651,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 
 dojo.declare("davinci.ve.ObjectWidget",davinci.ve._Widget,{
 	isObjectWidget: true,
-	
+
 	constructor: function (params,node,dijitWidget,metadata,srcElement)
 	{
 		if (dojo.isString(dijitWidget))
@@ -1640,7 +1662,7 @@ dojo.declare("davinci.ve.ObjectWidget",davinci.ve._Widget,{
 			}
 		}
 	},
-	
+
 	postCreate: function(){
 		var id = this._params.jsId;
 		if(id){
@@ -1719,7 +1741,7 @@ dojo.declare("davinci.ve.HTMLWidget",davinci.ve._Widget,{
 			var n = childNodes[i];
 			var d = undefined;
 			switch(n.nodeType){
-			case 1: // Element				
+			case 1: // Element
 				var w = davinci.ve.widget.byNode(n);
 				if(w){
 					d = w.getData( options);
@@ -1744,13 +1766,13 @@ dojo.declare("davinci.ve.HTMLWidget",davinci.ve._Widget,{
 		}
 		return childrenData;
 	},
-	
+
 	setProperties: function(properties, modelOnly) {
-		
+
         modelOnly = modelOnly ? modelOnly : false; // default modelOnly to false
-		
+
         var node = this.domNode;
-		
+
 		for(var name in properties){
 			if (name === 'style'){ // needed for position absolute
 				dojo.style(node, properties[name]);
@@ -1817,7 +1839,7 @@ dojo.declare("davinci.ve.HTMLWidget",davinci.ve._Widget,{
 			return this.domNode[name];
 		}
 	},
-	
+
 	_getWidget: function(){
 		return this.domNode;
 	},
@@ -1937,6 +1959,6 @@ dojo.declare("davinci.ve.HTMLWidget",davinci.ve._Widget,{
 //	getTagName: function(){
 //		return this.domNode.nodeName.toLowerCase();
 //	}
-//	
+//
 //});
 

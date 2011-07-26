@@ -57,12 +57,12 @@ public class LibraryManager {
             this.defaultRoot = defaultRoot;
         }
 
-        public URL[] find(String path) {
+        public URL[] find(String path, boolean recurse) {
             IPath p1 = new Path(this.basePath).append(path);
             String name = p1.lastSegment();
             IPath newBase = p1.removeLastSegments(1);
 
-            Enumeration e = this.bundleBase.findEntries(newBase.toString(), name, false);
+            Enumeration e = this.bundleBase.findEntries(newBase.toString(), name, recurse);
             Vector found = new Vector();
             while (e != null && e.hasMoreElements()) {
 

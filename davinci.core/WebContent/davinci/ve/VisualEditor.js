@@ -40,6 +40,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}));	
 		//dojo.subscribe("/davinci/ui/styleValuesChange", dojo.hitch(this, this._stylePropertiesChange));
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanges",  dojo.hitch(this, this._objectPropertiesChange));
+		dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelected));
 	},
 	
 	setDevice : function(deviceName) {
@@ -52,15 +53,31 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	    	svgfilename = "app/preview/images/"+deviceName+".svg";
 	    }
 		this.silhouetteiframe.setSVGFilename(svgfilename);
+		this.getContext().setMobileTheme(deviceName);
+
+		// #683 - When using mobile silhouette, add mobile <meta> tags to
+		// document.
+		this.getContext().setMobileMeta(deviceName);
 	},
 	
 	toggleOrientation : function() {
-		if(this._orientation == 'landscape'){
-			this._orientation = 'portrait';
-		}else{
-			this._orientation = 'landscape';			
+		if(this.deviceName!='none'){
+			//FIXME: Would be better to publish an event about orientation changing
+			//and then have the toolbar widget subscribe to it and update the icon
+			//But easier said than done because of the way the Workbench works.
+			//Current Workbench doesn't support icons that can toggle based on
+			//product state.
+			var rotateIconNode = dojo.query('.rotateIcon')[0];
+			var ccwClass = 'rotateIconCCW';
+			if(this._orientation == 'landscape'){
+				this._orientation = 'portrait';
+				dojo.removeClass(rotateIconNode,ccwClass);
+			}else{
+				this._orientation = 'landscape';			
+				dojo.addClass(rotateIconNode,ccwClass);
+			}
+			this.silhouetteiframe.setOrientation(this._orientation)	;
 		}
-		this.silhouetteiframe.setOrientation(this._orientation)	;
 	},
 
 	_objectPropertiesChange : function (event){
@@ -83,6 +100,24 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}
 		//context.onSelectionChange(context.getSelection());
 		this._srcChanged();
+	},
+
+	_editorSelected : function (event){
+
+		if(!this.isActiveEditor() )
+			return;
+		// Print an alert showing any message strings accumulated during page load process
+		if(this._onloadMessages && this._onloadMessages.length>0){
+			var str="";
+			for(var i=0; i<this._onloadMessages.length; i++){
+				if(i>0){
+					str+="\n\n";
+				}
+				str+=this._onloadMessages[i];
+			}
+			this._onloadMessages=[];
+			alert(str);			
+		}
 	},
 	
 
@@ -188,7 +223,9 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	setContent : function (fileName, content){
+		this._onloadMessages=[];	// List of messages to present to user after loading has completed
 		this._setContent(fileName, content);
+
 	},
 	
 	saveAs : function (newFileName, oldFileName, content){
@@ -275,6 +312,8 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}else{
 			this.context.setSource(content);
 		}
+		// auto save file
+		this.save(true);
 	},
 
 	supports : function (something){

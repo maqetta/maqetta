@@ -18,7 +18,7 @@ dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInp
 	    { 
           type: "tree",
 	      data: "file",
-	      model: "davinci.ui.widgets.ResourceTreeModel",
+	      model: davinci.resource,
 	      filters: "davinci.ui.widgets.OpenFileDialog.filter",
 	      link : { target: "textValue",
         	targetFunction : function (input){
@@ -184,7 +184,7 @@ dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInp
 //			values['src']=value;
 //			values['alt']=altText;
 //			var context=this._widget.getContext();
-//			command = new davinci.ve.commands.ModifyCommand(this._widget, values, context);
+//			command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);
 //			this._widget._edit_context.getCommandStack().execute(command);
 //			this._widget=command.newWidget;	
 //			this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node
@@ -199,7 +199,7 @@ dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInp
 			values['src']=value;
 			values['alt']=altText;
 			var context=this._widget.getContext();
-			command = new davinci.ve.commands.ModifyCommand(this._widget, values, context);
+			command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);
 			this._widget._edit_context.getCommandStack().execute(command);
 			this._widget=command.newWidget;	
 			this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node

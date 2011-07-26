@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Maqetta Server" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
+<product name="Maqetta Server External" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
-      <linux>/davinci.product/config/config.ini</linux>
-      <macosx>/davinci.product/config/config.ini</macosx>
-      <win32>/davinci.product/config/config.ini</win32>
+      <linux>/davinci.product/config/config-external.ini</linux>
+      <macosx>/davinci.product/config/config-external.ini</macosx>
+      <win32>/davinci.product/config/config-external.ini</win32>
    </configIni>
 
    <launcherArgs>

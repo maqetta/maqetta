@@ -16,7 +16,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.CheckBox');"
+            "$text": "dojo.require('dijit.form.RadioButton');"
         }
     ],
     "library": {

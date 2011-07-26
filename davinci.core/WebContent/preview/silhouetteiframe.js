@@ -33,6 +33,7 @@ if (!window.preview) {
 
 // Class constructor
 preview.silhouetteiframe = function(args){
+	
 	var rootNode = this.rootNode = args.rootNode;
 	if(!rootNode){
 		console.log('preview.silhouetteiframe.buildRendering(): Missing required parameter rootNode');
@@ -99,6 +100,10 @@ preview.silhouetteiframe.prototype = {
 		var rootNode = this.rootNode;
 		if(rootNode && rootNode.children && rootNode.children.length){
 			var spanNode=rootNode.children[0];
+			if (rootNode.children[0].className === 'loading'){
+				spanNode=rootNode.children[1];
+			} 
+			
 		}else{
 			console.error('preview.silhouetteiframe.verifyDOMTree(): no children on rootNode');
 			return false;
@@ -108,7 +113,14 @@ preview.silhouetteiframe.prototype = {
 				console.error('preview.silhouetteiframe.verifyDOMTree(): iframe child not present');
 				return false;
 			}
-			var iframeNode=rootNode.children[1];
+			var iframeNode;
+			if (rootNode.children[0].className === 'loading'){
+				iframeNode=rootNode.children[2];
+			} else {
+				iframeNode=rootNode.children[1];
+			}
+			//var iframeNode=rootNode.children[1];
+			
 		}
 		if(rootNode.nodeName != 'DIV' || rootNode.className.indexOf('silhouette_div_container')==-1 ||
 				!spanNode || spanNode.nodeName != 'SPAN' || spanNode.className.indexOf('silhouetteiframe_object_container')==-1 ||
@@ -478,5 +490,36 @@ preview.silhouetteiframe.prototype = {
 			a2_elem.beginElement();
 		}
 	}
+	
+};
 
-}
+preview.silhouetteiframe.themeMap = []; // map silhouette files to dojo mobile theme names
+preview.silhouetteiframe.themeMap['android_340x480.svg'] = 'Android';
+preview.silhouetteiframe.themeMap['android_480x800.svg'] = 'Android';
+preview.silhouetteiframe.themeMap['androidtablet.svg'] = 'Android';
+preview.silhouetteiframe.themeMap['bbplaybook.svg'] = 'BlackBerry';
+preview.silhouetteiframe.themeMap['blackberry.svg'] = 'BlackBerry';
+preview.silhouetteiframe.themeMap['ipad.svg'] = 'iPad';
+preview.silhouetteiframe.themeMap['iphone.svg'] = 'iPhone';
+
+preview.silhouetteiframe.themeCssMap = []; // map silhouette files to dojo mobile theme names, for pagedesigner
+preview.silhouetteiframe.themeCssMap['Android'] = ['android/android.css'];
+preview.silhouetteiframe.themeCssMap['BlackBerry'] = ['blackberry/blackberry.css'];
+preview.silhouetteiframe.themeCssMap['iPad'] = ['iphone/iphone.css', 'iphone/ipad.css'];
+preview.silhouetteiframe.themeCssMap['iPhone'] = ['iphone/iphone.css'];
+
+preview.silhouetteiframe.getMobileTheme = function(svgFile){
+	
+	var path = svgFile.split('/');// just get the first part of the file name android_340... or ipad
+	var file = path[path.length-1];
+	return preview.silhouetteiframe.themeMap[file];
+	
+};
+
+preview.silhouetteiframe.getMobileCss = function(theme){
+	if (!theme){
+		return preview.silhouetteiframe.themeCssMap['iPhone'];
+	}
+	return preview.silhouetteiframe.themeCssMap[theme];
+
+};

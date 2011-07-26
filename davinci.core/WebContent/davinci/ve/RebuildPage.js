@@ -106,10 +106,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 
     _findScriptAdditions : function(){
     	// this is a bit gross and dojo specific, but...... guess a necisary evil.
-    	
-    	if(this._scriptAdditions!=null)
-    		return this._scriptAdditions;
-    	
+    	   	
     	var documentHeader = this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
     	var scriptsInHeader = documentHeader.find({elementType:"HTMLElement", 'tag':'script'});
     	for(var i=0;i<scriptsInHeader.length;i++){
@@ -142,7 +139,6 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
               }
            	this.addHeaderScript(url);
         }else if (text) {
-        	var sa = this._findScriptAdditions();
         	this._scriptAdditions = this.addHeaderScriptSrc(text, this._findScriptAdditions(),this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
         }
     },

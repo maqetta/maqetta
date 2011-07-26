@@ -24,13 +24,13 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		this.inherited(arguments);
 		
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
-		var statics = ["", davinci.ve.widgets.ColorPicker.divider, langObj.colorPicker, langObj.removeValue];
+		this._statics = ["", davinci.ve.widgets.ColorPicker.divider, langObj.colorPicker, langObj.removeValue];
 		this._run = {};
 		if(!this.data ){
-			this.data=[{value:statics[0]}];
-			this.data.push({value:statics[2],run:this._chooseColorValue});
-			this.data.push({value:statics[3],run:function(){this.attr('value','')}});
-			this.data.push({value:statics[1]});   
+			this.data=[{value:this._statics[0]}];
+			this.data.push({value:this._statics[2],run:this._chooseColorValue});
+			this.data.push({value:this._statics[3],run:function(){this.attr('value','')}});
+			this.data.push({value:this._statics[1]});   
 			this.data.push({value:'black'});
 			this.data.push({value:'white'});
 			this.data.push({value:'red'});
@@ -50,7 +50,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 			}
 		}
 		
-		this._store = new davinci.ve.widgets.ColorStore({values:displayValues, noncolors:statics});
+		this._store = new davinci.ve.widgets.ColorStore({values:displayValues, noncolors:this._statics});
 		this._dropDown = new dijit.form.ComboBox({store:this._store, required: false, labelType:'html', labelAttr:'label', style:'width:100%'});
 		dojo.connect(this._dropDown, "onChange", this, "_onChange");
 		var top = dojo.doc.createElement("div");
@@ -66,6 +66,9 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		dojo.addClass(combo_container, 'colorPickerComboContainer');
 		combo_container.appendChild(this._dropDown.domNode);
 		top.appendChild(combo_container);
+		
+		this._colorPickerFlat = new davinci.ve.widgets.ColorPickerFlat({});
+		
 		this.domNode.appendChild(top);
 	},
 	_chooseColorValue : function(){
@@ -75,8 +78,8 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		
 		
 		
-		var content = new davinci.ve.widgets.ColorPickerFlat({});
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		var content = this._colorPickerFlat;
 		var	dialog = new dijit.TooltipDialog({title: langObj.selectColor, content: content});
 		dijit.popup.moveOffScreen(dialog.domNode);
 		var opened = false;
@@ -119,9 +122,10 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 						}
 						
 						closePopup();
-
+						/*
 						if(!colorpicker.canceled && oldValue!=colorpicker.attr("value")) 
 							target.onChange();
+					    */
 					}
 				});
 
@@ -132,10 +136,10 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		};
 		if(this._value in dojo.Color.named){
 			
-			var value = dojo.colorFromString(this._value)
+			var value = dojo.colorFromString(this._value);
 			content.attr('value', value.toHex());
-		}else if(this._value!=null && this._value!=''){
-			content.attr('value', this._value);
+		}else{
+			content.attr('value', this._value || "", true);
 		}
 		popup(this)();
 
@@ -148,8 +152,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 	
 	
 	onChange : function(event){
-		this._oldvalue = this._value;
-		this._value = this._dropDown.attr("value");
+		//this._value = this._dropDown.attr("value");
 		
 	},
 	_getValueAttr : function(){
@@ -157,18 +160,21 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 	},
 	
 	_setValueAttr : function(value,priority){
-		this._dropDown.attr("value", value, true);
-		this._currentValue = this._dropDown.attr("value");
-		dojo.style(this._selectedColor, "backgroundColor", value);
-		this._onChange(this._currentValue);
-		if(!priority)
-			this.onChange();
 		
+		this._dropDown.attr("value", value, true);
+		dojo.style(this._selectedColor, "backgroundColor", value);
+		
+		if(value in dojo.Color.named){
+			var v = dojo.colorFromString(value);
+			this._colorPickerFlat.attr('value', v.toHex(), priority);
+		}else {
+			this._colorPickerFlat.attr('value', value, priority);
+		}
+		this._onChange(value, priority);
+
 	}, 
 	
-	_onChange : function(event){
-		
-		var similar = null;
+	_onChange : function(event, priority){
 		
 		if(event in this._run){
 			//this._dropDown.attr("value", this._store.getItemNumber(0));
@@ -182,10 +188,14 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 			dojo.style(this._selectedColor, "backgroundColor", event);
 		}
 		
-		if(this._currentValue!=this._dropDown.attr("value")){
-			this._currentValue=this._dropDown.attr("value");
-			this.onChange(event);
+		if(this._value!=event && !(event in this._run)){
+			this._value=event;
+			if(!priority)
+				this.onChange(event);
 		}
+		
+		
+		
 	}	
 
 });

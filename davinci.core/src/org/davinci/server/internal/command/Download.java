@@ -30,8 +30,13 @@ public class Download extends Command {
         String res = req.getParameter("resources");
         String libs = req.getParameter("libs");
         ArrayList o = (ArrayList) JSONReader.read(res);
-        List lib = (List) JSONReader.read(libs);
-        String[] resources = (String[]) o.toArray(new String[o.size()]);
+        List lib = null;
+        boolean includeLibs = true;
+       if(libs!=null){
+    	   lib = (List) JSONReader.read(libs);
+    	   includeLibs= false;
+       }
+       String[] resources = (String[]) o.toArray(new String[o.size()]);
 
         IVResource[] files = new IVResource[resources.length];
         for (int i = 0; i < files.length; i++) {
@@ -43,8 +48,8 @@ public class Download extends Command {
             resp.setHeader("Content-Disposition", "attachment; filename=" + path);
 
             ZipOutputStream zos = new ZipOutputStream(resp.getOutputStream());
-            zipFiles(files, zos, false);
-            zipLibs(lib, zos);
+            zipFiles(files, zos, includeLibs);
+            if(lib!=null) zipLibs(lib, zos);
             zos.close();
             // responseString="OK";
 
@@ -92,7 +97,14 @@ public class Download extends Command {
             	continue;
             
             InputStream fis = files[i].getInputStreem();
-            ZipEntry anEntry = new ZipEntry(files[i].getPath().toString());
+            String pathString = files[i].getPath().toString();
+            if(pathString==null) return;
+            
+            /* remove leading characters that confuse and anger windows built in archive util */
+            while(pathString.charAt(0)=='.' || pathString.charAt(0)=='/' || pathString.charAt(0)=='\\')
+            	pathString=pathString.substring(1);
+
+            ZipEntry anEntry = new ZipEntry(pathString);
                 // place the zip entry in the ZipOutputStream object
             zos.putNextEntry(anEntry);
                 // now write the content of the file to the ZipOutputStream

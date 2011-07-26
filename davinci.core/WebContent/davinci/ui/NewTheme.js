@@ -55,8 +55,9 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		dojo.connect(this._themeSelection, "onChange", this, '_checkValid');
 		//dojo.connect(this._folder, "onblur", this, '_checkValid');
 		//dojo.connect(this._version, "onblur", this, '_checkValid');
-		dojo.connect(this._selector, "onkeypress", this, '_checkValid');
-		//dojo.connect(this._themeLocation, "onblur", this, '_checkValid');
+		//dojo.connect(this._selector, "onkeypress", this, '_checkValid');
+		dojo.connect(this._selector, "onkeyup", this, '_checkValid');
+		//dojo.connect(this._location, "onblur", this, '_checkValid');
 		
 		
 	},
@@ -116,7 +117,9 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 			
 		}
 		var selector = dojo.attr(this._selector, 'value');
-		if(selector==null || selector ==""){
+		
+		var validate = new RegExp("[^0-9_a-zA-Z]");
+		if(selector==null || selector =="" || validate.test(selector) ){
 			isOk = false;
 			//this._error5.innerHTML = "Selector can't be empty"
 		}

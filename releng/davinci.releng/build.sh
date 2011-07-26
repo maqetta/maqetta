@@ -1,38 +1,28 @@
 #! /bin/sh
 
-#
-# Directory in which to do the build. No trailing slash.
-#
-export buildDirectory="/path/to/build/directory"
-
-#
-# Path to parent directory of the eclipse application directory.
-# That is, if eclipse is installed in '/usr/local/eclipse', this property
-# would be set as 'base="/usr/local"'. No trailing slash.
-#
-export base="/path/to/eclipse/parent/directory"
-
-#
 # Path to eclipse directory inclusive. The application directory is
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
-export baseLocation="${base}/eclipse"
 
+if [ ! ${ECLIPSE_HOME} ]
+then
+	export baseLocation="/path/to/eclipse"
+else
+	export baseLocation=${ECLIPSE_HOME}
+fi
+echo "Using ${baseLocation} Eclipse for build..."
 #
-# Version number of the launcher jar file. See ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar.
-# The launcher version is the set of alphanumeric characters between 'launcher_' and the '.' character
-# before the 'jar' file name suffix.
+# Directory in which to do the build. No trailing slash.
 #
-launcherVersion="1.1.1.R36x_v20101122_1400"
+export buildDirectory="/tmp"
 
 #
 # If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
 #
 # Note: This build feature SHOULD NOT be used for production builds.
 #
-#export maqettaCode="/path/to/working/copy"
-
+# export maqettaCode="/Users/childsb/dev/git/maqetta"
 #
 # Directory containing build.xml (this should not have to be changed in most cases).
 # No trailing slash.
@@ -100,9 +90,16 @@ fi
 # Note: Many scripts use relative directory references making
 #       running the build from this directory *imperative*.
 #
+# save off the current directory
+
+currentDirectory=`pwd`
+
 cd ${buildDirectory}
 
 #
 # Run the Ant buildAll script from the davinci.releng project.
 #
-java -jar ${baseLocation}/plugins/org.eclipse.equinox.launcher_${launcherVersion}.jar -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml
+launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
+java -Ddeployment-type="external" -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml
+
+cd ${currentDirectory}

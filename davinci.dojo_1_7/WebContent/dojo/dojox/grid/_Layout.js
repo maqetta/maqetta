@@ -98,6 +98,9 @@ _1b=_1.mixin(_1b,this._defaultCellProps,_16._props,_1a);
 return _1b;
 }
 var _1c=_16.type||_16.cellType||this._defaultCellProps.type||this._defaultCellProps.cellType||_2.grid.cells.Cell;
+if(dojo.isString(_1c)){
+_1c=dojo.getObject(_1c);
+}
 _1a.unitWidth=_18(_16);
 return new _1c(_1.mixin({},this._defaultCellProps,_16,_1a));
 },addRowDef:function(_1d,_1e){

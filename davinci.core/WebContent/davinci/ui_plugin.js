@@ -187,13 +187,16 @@
 						label: "JavaScript File...",
 						menubarPath: "davinci.new/new"	  
 					},
-					
+
+					/* FIXME: Commented out because we don't have a toolbar implemented yet, so no Save/SaveAs buttons,
+					 * and useless until we have those buttons working.
 					{
 						id: "newFile",
 						run: "davinci.ui.Resource.fileDialog('newfile')",
 						label: "File...",
 						menubarPath: "davinci.new/new"	  
 					},
+					*/
 					
 					{
 						id: "newFolder",
@@ -212,7 +215,7 @@
 					
 					{
 						id: "openThemeEditor",
-						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:100px;width: 200px')", 
+						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:110px;width: 200px')", 
 						label: "Theme Editor",
 						menubarPath: "davinci.open/open2"	  
 					},
@@ -254,6 +257,8 @@
 		 id: "explorerActions",
 		 visible:true,
 		actions: [
+					/* FIXME: Commented out because we don't have a toolbar implemented yet, so no Save/SaveAs buttons,
+					 * and useless until we have those buttons working.
 					 {
 						    id: "davinci.ui.newfile",
 						    label: "New file...",
@@ -261,6 +266,7 @@
 								menubarPath: "newfile"
 									
 					 },
+					 */
 					 {
 						    id: "davinci.ui.newfile",
 						    label: "New folder...",

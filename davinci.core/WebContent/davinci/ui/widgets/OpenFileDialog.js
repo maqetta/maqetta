@@ -35,7 +35,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 					                  type: "tree",
 //					                  label: "Select File",
 					                  data: "file",
-					                  model: "davinci.ui.widgets.ResourceTreeModel",
+					                  model: davinci.resource,
 					                  filters: "davinci.ui.widgets.OpenFileDialog.filter"
 					                }						],
 					data:data,

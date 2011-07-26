@@ -19,16 +19,15 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.requireIf(!dojo.isWebKit, 'dojox.mobile.compat');"
+            "$text": "dojo.require('dojox.mobile.deviceTheme');"
+        },
+      	{
+            "type": "javascript",
+            "$text": "dojo.require('dojox.mobile.compat');"
         },
         {
             "type": "javascript",
             "$text": "dojo.require('dojox.mobile.Button');"
-        },
-        {
-            "type": "css",
-            "src": "dojox/mobile/themes/iphone/iphone.css",
-            "$library": "dojo"
         }
     ],
     "library": {
@@ -37,10 +36,6 @@
         }
     },
     "property": {
-        "btnClass": {
-            "datatype": "string",
-            "defaultValue": "mblButton"
-        },
         "duration": {
             "datatype": "number",
             "defaultValue": 1000

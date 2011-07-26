@@ -86,10 +86,12 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		for(var i =0;i<nodeList.length;i++){
 			var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
 			var value = dojo.attr(nodeList[i], "checked");
-			if(value){
-				var libLocation = dojo.attr(nodeValues[i], "value") || this._userLibs[element]['root']
-				userLibs.push({'id':this._userLibs[element]['id'],'version':this._userLibs[element]['version'] ,'root': libLocation});
-			}
+			var libLocation = dojo.attr(nodeValues[i], "value") || this._userLibs[element]['root']
+			userLibs.push({'id':this._userLibs[element]['id'],
+						   'version':this._userLibs[element]['version'] ,
+						   'root': libLocation,
+						   'includeSrc':value});
+			
 		}
 		
 		return userLibs;
@@ -113,7 +115,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	_rewriteUrls : function(){
 		
 		var resources = this._getResources();
-		var libs = this._getLibs();
+
 		
 		//this._pages = davinci.resource.findResource("*.html", true, null, true);
 		
@@ -165,7 +167,13 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		var allFiles = this._getResources();
 		var pages = this._noRewrite ? [] : this._pages;
 		/* have to close the dialog before the download call starts */
-		setTimeout(makeTimeoutFunction(allFiles['userFiles'], fileName, allFiles['userLibs']), 300);
+		var actualLibs = [];
+		for(var k=0;k<allFiles['userLibs'].length;k++){
+			if(allFiles['userLibs'][k]['includeSrc'])
+				actualLibs.push(allFiles['userLibs'][k]);
+		}
+		
+		setTimeout(makeTimeoutFunction(allFiles['userFiles'], fileName, actualLibs), 300);
 		this.onClose();
 	},
 	cancelButton : function(){

@@ -1,12 +1,16 @@
 dojo.provide("davinci.ve.input.SpinWheelSlotInput");
 dojo.require("davinci.ve.input.SmartInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+
 dojo.declare("davinci.ve.input.SpinWheelSlotInput", davinci.ve.input.SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",
 	displayOnCreate: "false",
-	helpText: 'Enter comma sperated values or a range of numbers. For example: "Dogs,Cats,Frogs" or "1-99".',
+	helpText: langObj.spinWheelSlotHelp,
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 

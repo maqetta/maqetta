@@ -2,6 +2,10 @@ dojo.provide("davinci.ve.input.MobileComboBoxInput");
 dojo.require("davinci.ve.input.SmartInput");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+
 dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput, {
 	property: "value",
 	
@@ -14,7 +18,7 @@ dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput
 	displayOnCreate: "true",
 	
 	supportsHTML: "false",
-	helpText: 'Enter multiple lines of text each line will correspond to a option item in the list. <br /> Indicate the default option to be selected with the "+" at the start of the line. ',
+	helpText: langObj.mobileComboBoxHelp1 + "<br />" + langObj.mobileComboBoxHelp2,
 	
 	getProperties: function(widget, options) {
 		var oldValue = widget.attr("value");

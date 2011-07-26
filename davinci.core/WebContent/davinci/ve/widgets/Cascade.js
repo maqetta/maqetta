@@ -139,9 +139,10 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(this._values[this._targetValueIndex].readOnly){
 			//FIXME: the commented out message in next line provides a more informative error message
-            var content = "This property change cannot be completed because the operation attempts to modify a read-only theme CSS file. <br><br>To change this property, one technique is to add a class to this widget (at top of Properties palette)  and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br/><br/>";
+            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
+			var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
 			var errorDialog = new davinci.ui.Error({'errorText': content});
-			davinci.Workbench.showModal(errorDialog, 'Error modifying value');
+			davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue);
             
             //alert("Error- cant change read only value")
 			this._setFieldValue(this._value,this._loc);
@@ -150,7 +151,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				   editorPrefs['cssOverrideWarn'] &&
 					this._editor.supports("MultiPropTarget")){
 			askUser = true;
-			var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>";
+			var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
             content = langObj.changeWillModify+"<br><br>"+dojo.string.substitute(langObj.insteadOfChanging,[helpLink])+"<br><br>"+langObj.okToProceed;
         }
 		// Old prompt if changing app.css or other non-theme CSS file:

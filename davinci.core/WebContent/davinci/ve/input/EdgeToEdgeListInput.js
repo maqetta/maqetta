@@ -1,6 +1,10 @@
 dojo.provide("davinci.ve.input.EdgeToEdgeListInput");
 dojo.require("davinci.ve.input.ContainerInput");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+
 dojo.declare("davinci.ve.input.EdgeToEdgeListInput", davinci.ve.input.ContainerInput, {
 
 	propertyName: "label",
@@ -8,7 +12,7 @@ dojo.declare("davinci.ve.input.EdgeToEdgeListInput", davinci.ve.input.ContainerI
 	childType: "dojox.mobile.ListItem",
 	format: "rows",
 	supportsHTML: "true",
-	helpText:  "Enter one list item per line."
+	helpText:  langObj.edgeToEdgeListHelp
 
 	
 });

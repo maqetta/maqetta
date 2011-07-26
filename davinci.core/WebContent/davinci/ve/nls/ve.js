@@ -53,6 +53,13 @@
 		//input/DropDownButtonInput.js
 		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. Optionally indicate option items by putting one \">\" character at the start of a line.",
 		
+		//input/EdgeToEdgeDataListInput.js
+		"edgeToEdgeFormat":"list label, transition_view_name",
+		"edgeToEdgeDataListHelp":"If the CSV data format is selected, enter text in the format: ${0} The transition view name is optional. If data file from workspace is selected, chose a json item file using the file explore folder.",
+		
+		//input/EdgeToEdgeListInput.js
+		"edgeToEdgeListHelp":"Enter one list item per line.",
+		
 		//input/HtmlSrcAttributeInput.js
 		"typeFileUrl":"type file url",
 		"typeAltText":"type alternate text",
@@ -68,6 +75,10 @@
 		//input/MenuBarInput.js
 		"menuBarInputHelp":"Enter multiple lines of data, one for each menu option. Indicate nesting levels by putting one or more \">\" characters at the start of a line.",
 		
+		//input/MobileComboBoxInput.js
+		"mobileComboBoxHelp1":"Enter multiple lines of text. Each line will correspond to an option item in the list.",
+		"mobileComboBoxHelp2":"Indicate the default option to be selected with the \"+\" at the start of the line.",
+		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",
 		
@@ -79,6 +90,9 @@
 		"smartInputHelp2":"Text represents literal (plain) text.",
 		"loading":"Loading...",
 		
+		//input/SpinWheelSlotInput.js
+		"spinWheelSlotHelp":"Enter comma sperated values or a range of numbers. For example: \"Dogs,Cats,Frogs\" or \"1-99\".",
+		
 		//input/StackContainerInput.js -- untested
 		"stackContainerInputHelp":"Enter a comma-separated list of values, each value is used as the label. If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
 		
@@ -86,6 +100,10 @@
 		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line.",
 		
 		//widgets/Cascade.js
+		"creatingStyleRules":"Creating Style Rules with app.css",
+		"propChangeCannotComplete":"This property change cannot be completed because the operation attempts to modify a read-only theme CSS file.",
+		"toChangeProperty":"To change this property, one technique is to add a class to this widget (at top of Properties palette)  and then open up the CSS Details pane to target a style rule within your app.css file, as described at ${0}.",
+		"errorModifyingValue":"Error modifying value",
 		"changeWillModify":"This change will modify one of the CSS style rules defined within a 'CSS theme' and will therefore probably impact other widgets on a global basis.",
 		"insteadOfChanging":"Instead of changing the theme CSS files, it is usually better to add a class to this widget (at the top of the Properties palette) and then open up the CSS Details pane to target a style rule within your app.css file, as described at ${0}.",
 		"okToProceed":"OK to proceed with this change?",
@@ -104,6 +122,7 @@
 		
 		//widgets/WidgetToolBar.js
 		"toolBarFor":"for: ",
+		"noSelection":"(no selection)",
 		"toolBarClass":"class: "
 
 })

@@ -5,6 +5,11 @@ dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+var helpInfo = "<i>"+langObj.edgeToEdgeFormat+"</i>";
+
 dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataStoreBasedWidgetInput, {
 
 	
@@ -16,9 +21,8 @@ dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataSt
 	
 	multiLine: "true",
 	supportsHTML: "false", 
-
-	helpText:  'If the CSV data format is selected enter text in the format: <i>list label, transition_view_name</i> the transition view name is optional'+
-    		   ' If data file from workspace is selected chose a json item file using the file explore folder.',
+	
+	helpText:  dojo.string.substitute(langObj.edgeToEdgeDataListHelp,[helpInfo]),
 
 
     updateStore: function() {

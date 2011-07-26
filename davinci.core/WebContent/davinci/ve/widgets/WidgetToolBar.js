@@ -13,7 +13,7 @@ var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 dojo.declare("davinci.ve.widgets.WidgetToolBar", [davinci.workbench.ViewLite], {
 
 	widgetDescStart:"<div class='propertiesWidgetDescription'><span class='propertiesWidgetDescriptionFor'>"+langObj.toolBarFor+"</span>",
-	widgetDescUnselectEnd:"(no selection)</div>",
+	widgetDescUnselectEnd:langObj.noSelection + "</div>",
 	
 	buildRendering: function(){
 		this.domNode = dojo.doc.createElement("div");

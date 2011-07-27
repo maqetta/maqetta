@@ -14,7 +14,7 @@
     </style>
     <!-- propvieweffects.css needs to be separate and not built -->
     <!-- FIXME: This LINK element should be added by the properties palette plugin -->
-    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link> 
+    <link href="app/davinci/propvieweffects.css?@revision@" rel="stylesheet" type="text/css"></link>
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, modulePaths:{'preview':'../preview'}, cacheBust: '@revision@'"></script>
     <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
@@ -41,15 +41,15 @@
 	    
     	davinci.useAppCache = true; // needed to provide FF "allow" warning
 
-//		davinci.Runtime.addPlugin( "app/davinci/ui" );	
-//	 	davinci.Runtime.addPlugin( "app/davinci/js/js" );	
-//	//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );	
+//		davinci.Runtime.addPlugin( "app/davinci/ui" );
+//	 	davinci.Runtime.addPlugin( "app/davinci/js/js" );
+//	//	davinci.Runtime.addPlugin( "app/davinci/cssEdit/cssEdit" );
 //	 	davinci.Runtime.addPlugin( "app/davinci/html/html" );
 //		davinci.Runtime.addPlugin( "app/davinci/ve/ve" );
 //		davinci.Runtime.addPlugin( "app/davinci/ve/themeEditor/themeEditor" );
-		
+
 		davinci.Runtime.loadPlugins();
-	
+
  		davinci.Runtime.initialPerspective="davinci.ve.pageDesign";
 		dojo.addOnLoad(function()
 		{
@@ -72,11 +72,11 @@
 			} else {
 			    run();
 			}
-			
+
 			function run() {
-    			var userInfo;	
+    			var userInfo;
     			var result=davinci.Runtime.serverJSONRequest({url:"./cmd/getUserInfo",sync:true});
-	
+
     			if (result && result.userName)
     			{
     		 	   dojo.byId('davinci_user').innerHTML=result.userName;
@@ -94,6 +94,9 @@
     			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
     		 		dojo.byId('davinci_logoff').href="";
     		 		davinci.Runtime.isLocalInstall=true;
+    		 	}
+    		 	if ( davinci.Runtime.plugins['joomlaplugin'] ) {
+                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
     		 	}
     			davinci.Runtime.run(userInfo);
 			}
@@ -120,13 +123,13 @@
 						<span id="maqetta_designer" class="maq_banner_component"></span>
 						<span id="maqetta_version" class="maq_banner_version"></span>
 					</span>
-<!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions					
+<!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions
 					<div id="toolbar_container">
 						<span id="davinci_toolbar_main"></span>
 					</div>
--->					
+-->
 			</div>
-			<div id="mainBody"></div>	
+			<div id="mainBody"></div>
 		</div>
 	</body>
 </html>

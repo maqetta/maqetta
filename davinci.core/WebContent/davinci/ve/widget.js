@@ -1002,9 +1002,6 @@ dojo.declare("davinci.ve._Widget",null,{
 						// HACK: There's probably a better way to do this with the new model, just a stopgap measure until Phil takes a look
 						} else if (property.datatype && (property.datatype.indexOf("dijit") == 0 || property.datatype == "object" && property.isData)) {
 							data.properties[name] = value;
-						} else if (property.datatype == "json" && data.type == "dojox.gauges.Range") {//check specific to analog gauge  // TODO: move to helper
-							value = this._stringValue(name, value);
-							data.properties[name] = value;
 						}
 					}
 				//}

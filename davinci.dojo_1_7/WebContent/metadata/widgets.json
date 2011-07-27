@@ -1428,7 +1428,8 @@
             "type": "dojox.form.TimeSpinner",
             "category": "untested",
             "icon": "resources/images/timespinner.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTlclPP2+zhclD1jmz1jmkJrokJsokd0qUZ0qdvo9kt8sE+DtlCDtrDO7LbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C14oC24oC14Yi644m5473Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZzQJVwSCwaj8aPcslcCjWpaPSDeVitmIwqkjp4D58HhQIYPyQqSPf7uUwA8MkFomqsvR9LxVPp9B0qC3dgTUoMKgqDHyYmHIyOCSoIiickcAAjJwYqBIobICEAIiAbBSoDiiglq6soAkIBsbKzski2t7i4QQA7"
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTlclPP2+zhclD1jmz1jmkJrokJsokd0qUZ0qdvo9kt8sE+DtlCDtrDO7LbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C14oC24oC14Yi644m5473Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZzQJVwSCwaj8aPcslcCjWpaPSDeVitmIwqkjp4D58HhQIYPyQqSPf7uUwA8MkFomqsvR9LxVPp9B0qC3dgTUoMKgqDHyYmHIyOCSoIiickcAAjJwYqBIobICEAIiAbBSoDiiglq6soAkIBsbKzski2t7i4QQA7",
+            "resizable": "width"
         },
         {
             "name": "FileInput",

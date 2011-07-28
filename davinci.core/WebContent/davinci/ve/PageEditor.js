@@ -57,6 +57,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	},
 	
 	supports: function (something){
+		//FIXME: use regexp
 		return something == "palette" || something =="properties" || something =="style" || something == "states" || something=="inline-style" || something=="MultiPropTarget";
 	},
 
@@ -105,13 +106,17 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	},
 
 	_modelSelectionChange: function (selection){
+		if(!this.visualEditor.context ||
+				(selection && selection.length && selection[0]._edit_context != this.visualEditor.context)){
+			return;
+		}
 		
 		this._selectionCssRules = null;
 		
-		if (selection.length>0){
-			if (selection[0].model && selection[0].model.elementType=="HTMLElement"){
-				var htmlElement=selection[0].model;
-				var id=htmlElement.getAttribute("id");
+		if (selection.length){
+			var htmlElement = selection[0].model;
+			if (htmlElement && htmlElement.elementType == "HTMLElement"){
+				var id = htmlElement.getAttribute("id");
 				if (id && this._displayMode!="source"){
 					var widget = davinci.ve.widget.byId(id, this.visualEditor.context.getDocument());
 					this.visualEditor.context.select(widget);
@@ -120,10 +125,14 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 	},
 	
-	_widgetSelectionChange: function (){
-		var selection=this.visualEditor.context.getSelection();
-		if (selection && selection.length>0){
-			if (this._displayMode!="design"){
+	_widgetSelectionChange: function (selection){
+		if(!this.visualEditor.context ||
+				(selection && selection.length && selection[0]._edit_context != this.visualEditor.context)){
+			return;
+		}
+		var selection = this.visualEditor.context.getSelection();
+		if (selection && selection.length){
+			if (this._displayMode != "design"){
 				this.htmlEditor.selectModel([{model:selection[0]._srcElement}]);
 			}
 		}
@@ -243,11 +252,11 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 		if (selectionItem.elementType)
 		{
-				this.htmlEditor.selectModel(selection);
+			this.htmlEditor.selectModel(selection);
 		}
 		else if (selectionItem.model && selectionItem.model.isWidget)
 		{
-					this.visualEditor.context.select(selectionItem.model,selectionItem.add);
+			this.visualEditor.context.select(selectionItem.model,selectionItem.add);
 		}
 	},
 	
@@ -283,10 +292,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		var context = this.getContext();
 		var selections = context.getSelection();
 		for (var i = 0; i < selections.length; i++){
-			var add = true;
-			if(i == 0) {
-				add = false;
-			}
+			var add = (i != 0);
 			context.select(selections[i], add); 
 		}
 	}

@@ -18,6 +18,8 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 	pathToPreviewerFolder:'preview/',
 	silhouetteiframe:null,
 	silhouetteiframe_connect_onload:null,
+	// make sure browsers don't used cache iframe contents from last time
+	_randomUrlParam:'&'+Math.random()+'=1', 
 	
 	buildRendering: function() {
 		this._connects=[];
@@ -96,7 +98,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 				if(newvalue != spw.currentDevice){
 					spw.currentDevice = newvalue;
 					var theme = preview.silhouetteiframe.getMobileTheme(spw.devicelist[spw.currentDevice].file);
-					var iframefilename_with_params = spw.iframefilename+'?theme='+theme;
+					var iframefilename_with_params = spw.iframefilename+'?theme='+theme+this._randomUrlParam;
 					this.update_silhouette_container(iframefilename_with_params);
 				}
 			});
@@ -152,7 +154,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 			spw.silhouetteiframe.setOrientation(spw.orientation);	
 		});
 		var theme = preview.silhouetteiframe.getMobileTheme(this.devicelist[this.currentDevice].file);
-		var iframefilename_with_params = this.iframefilename+'?theme='+theme;
+		var iframefilename_with_params = this.iframefilename+'?theme='+theme+this._randomUrlParam;
 		this.update_silhouette_container(iframefilename_with_params);
 	},
 

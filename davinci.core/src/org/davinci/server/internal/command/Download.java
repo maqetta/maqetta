@@ -97,7 +97,14 @@ public class Download extends Command {
             	continue;
             
             InputStream fis = files[i].getInputStreem();
-            ZipEntry anEntry = new ZipEntry(files[i].getPath().toString());
+            String pathString = files[i].getPath().toString();
+            if(pathString==null) return;
+            
+            /* remove leading characters that confuse and anger windows built in archive util */
+            while(pathString.charAt(0)=='.' || pathString.charAt(0)=='/' || pathString.charAt(0)=='\\')
+            	pathString=pathString.substring(1);
+
+            ZipEntry anEntry = new ZipEntry(pathString);
                 // place the zip entry in the ZipOutputStream object
             zos.putNextEntry(anEntry);
                 // now write the content of the file to the ZipOutputStream

@@ -64,6 +64,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 			content="";
 		}
 		editor.resourceFile=file;
+		editor.fileName=fileName;
 
 		// Don't populate the editor until the tab is selected.  Defer processing,
 		// but also avoid problems with display:none on hidden tabs making it impossible

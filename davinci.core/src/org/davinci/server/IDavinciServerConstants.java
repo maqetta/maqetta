@@ -74,5 +74,6 @@ public interface IDavinciServerConstants {
 	public static final String EP_ATTR_METADATA_VERSION = "version";
 	public static final String EP_ATTR_METADATA_ID = "id";
     public static final String THEMES_DIRECTORY_NAME = "themes";
+	public static final String DEFAULT_PROJECT = "default project";
 
 }

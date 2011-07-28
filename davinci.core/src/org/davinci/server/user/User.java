@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
@@ -23,13 +26,17 @@ import org.davinci.server.VFile;
 import org.davinci.server.VLibraryResource;
 import org.davinci.server.VResourceUtils;
 import org.davinci.server.VWorkspaceRoot;
+import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.Links;
 import org.davinci.server.internal.Links.Link;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.osgi.framework.Bundle;
 
 public class User {
 
+	private static final boolean CASCADE_SETTINGS = false;
 	private File userDirectory;
 	private File settingsDirectory;
 	private Links links;
@@ -37,17 +44,6 @@ public class User {
 	private IVResource workspace;
 	private LibrarySettings libSettings;
 
-	public User(Person person, IVResource userDirectory) {
-		this.person = person;
-		try {
-			this.userDirectory = new File(userDirectory.getURI());
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		rebuildWorkspace();
-	}
 
 	public User(Person person, File userDirectory) {
 		this.person = person;
@@ -63,10 +59,10 @@ public class User {
 	
 	public void rebuildWorkspace() {
 		this.workspace = new VWorkspaceRoot(this);
-		LibInfo libs[] = getLibs("/");
+		LibInfo libs[] =  this.getLibInfo().allLibs();
 		for (int i = 0; i < libs.length; i++) {
 			String defaultRoot = libs[i].getVirtualRoot();
-			IPath path = new Path(defaultRoot);
+			
 			IVResource root = this.workspace;
 			Library b = this.getLibrary(libs[i]);
 			/* library not found on server so avoid adding it to the workspace */
@@ -74,6 +70,10 @@ public class User {
 				continue;
 			}
 
+			String base = libs[i].getBase();
+			IPath path = (new Path(base).append(defaultRoot));
+			
+			
 			for (int k = 0; k < path.segmentCount() - 1; k++) {
 				String segment = path.segment(k);
 				IVResource v = root.get(segment);
@@ -94,6 +94,59 @@ public class User {
 			root.add(libResource);
 		}
 	}
+	
+	public IVResource createProject(String projectName){
+		IVResource project = createResource(projectName);
+		
+		
+		/*
+		 * Load the initial user files extension point and copy the files to the projects root
+		 */
+		List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
+                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
+        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
+            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
+            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
+            String name = libraryElement.getDeclaringExtension().getContributor().getName();
+            Bundle bundle = Activator.getActivator().getOtherBundle(name);
+            File file = null;
+			try {
+				file = new File(project.getURI());
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            VResourceUtils.copyDirectory(file, path, bundle);
+        }
+        addBaseSettings(projectName);
+		return project;
+	}
+	
+	
+	
+	/*
+	 * adds configuration settings for a new path
+	 * 
+	 * used to map configurations to sub folders
+	 */
+	public void addBaseSettings(String base){
+		
+		
+		LibInfo libs[] =  null;
+		
+		if(this.CASCADE_SETTINGS)
+			libs = this.getLibs(".");
+		else
+			libs = this.libSettings.getAllDefaultLibs();
+		
+		for (int i = 0; i < libs.length; i++) {
+			this.modifyLibrary(libs[i].getId(), libs[i].getVersion(), base, true);
+		}
+	}
+	
+	public void deleteBaseSettings(String base){
+		
+	}
 
 	private LibrarySettings getLibInfo() {
 		if (this.libSettings == null) {
@@ -107,23 +160,23 @@ public class User {
 		return this.userDirectory;
 	}
 
-	public void modifyLibrary(String id, String version, boolean installed) {
+	public void modifyLibrary(String id, String version, String base, boolean installed) {
 		LibrarySettings libs = this.getLibInfo();
 
 		if (!installed) {
-			libs.removeLibrary(id, version);
+			libs.removeLibrary(id, version, base);
 
 		} else {
 			String defaultRoot = ServerManager.getServerManger().getLibraryManager().getDefaultRoot(id, version);
-			libs.addLibrary(id, version, id, defaultRoot);
+			libs.addLibrary(id, version, id, defaultRoot, base);
 		}
 		rebuildWorkspace();
 	}
 
-	public void modifyLibrary(String id, String version, String virtualRoot) {
+	public void modifyLibrary(String id, String version, String virtualRoot, String base) {
 		LibrarySettings libs = this.getLibInfo();
 
-		libs.modifyLibrary(id, version, virtualRoot);
+		libs.modifyLibrary(id, version, virtualRoot, base);
 		rebuildWorkspace();
 	}
 
@@ -240,13 +293,8 @@ public class User {
 	 private IVResource getUserFile(String p1) {
 	       
 	        String path = p1;
-	        if (path.startsWith("./")) {
-	            path = path.substring(2);
-	        } else if (path.length() > 0 && path.charAt(0) == '.') {
-	            path = path.substring(1);
-	        }
-
-	       
+	        while(path.charAt(0)=='.' || path.charAt(0)=='/' || path.charAt(0)=='\\')
+            	path=path.substring(1);
 
 	        IPath a = new Path(this.userDirectory.getAbsolutePath()).append(path);
 	        /*
@@ -325,9 +373,7 @@ public class User {
 		return this.links;
 	}
 
-	public IVResource[] findFiles(String pathStr, boolean ignoreCase,
-			boolean workspaceOnly) {
-
+	public IVResource[] findFiles(String pathStr, boolean ignoreCase,boolean workspaceOnly) {
 		return this.findFiles(pathStr, ".", ignoreCase, workspaceOnly);
 	}
 
@@ -419,7 +465,14 @@ public class User {
 	}
 
 	public LibInfo[] getLibs(String base) {
-		return this.getLibInfo().allLibs();
+		LibInfo[] allLibs = this.getLibInfo().allLibs();
+		Vector results = new Vector();
+		for(int i=0;i<allLibs.length;i++){
+			if(allLibs[i].getBase().equals(base))
+				results.add(allLibs[i]);
+		}
+		return (LibInfo[])results.toArray(new LibInfo[results.size()]);
+		
 	}
 
 	public String getLibPath(String id, String version, String base) {

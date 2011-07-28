@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.davinci.server.IDavinciServerConstants;
+import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
+import org.davinci.server.VResourceUtils;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.PersonManager;
@@ -128,7 +130,8 @@ public class UserManagerImpl implements UserManager {
             userDir.mkdir();
             File settingsDir = user.getSettingsDirectory();
             settingsDir.mkdir();
-            initializeNewUserFiles(userDir);
+            IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+            
             this.usersCount++;
             return user;
         }
@@ -150,84 +153,11 @@ public class UserManagerImpl implements UserManager {
          * would call this.personManager.removePerson(userName) here
          */
         File userDir = new File(this.baseDirectory, userName);
-        deleteDir(userDir);
+        VResourceUtils.deleteDir(userDir);
         users.remove(userName);
         this.usersCount--;
     }
 
-    protected void deleteDir(File directory) {
-        deleteContents(directory);
-        directory.delete();
-    }
-
-    protected void deleteContents(File directory) {
-        File[] theFiles = directory.listFiles();
-        for (int i = 0; i < theFiles.length; i++) {
-            if (theFiles[i].isDirectory()) {
-                deleteContents(theFiles[i]);
-            }
-            theFiles[i].delete();
-        }
-    }
-
-    private void initializeNewUserFiles(File userDir) {
-        List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
-                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
-        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
-            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
-            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
-            String name = libraryElement.getDeclaringExtension().getContributor().getName();
-            Bundle bundle = Activator.getActivator().getOtherBundle(name);
-
-            copyDirectory(userDir, path, bundle);
-        }
-
-    }
-
-    public void copyDirectory(File userDir, String bundleDirName, Bundle bundle) {
-
-        Enumeration files = bundle.findEntries(bundleDirName, "*", true);
-        Vector elements = new Vector();
-        if (files != null) {
-            while (files.hasMoreElements()) {
-                URL o = (URL) files.nextElement();
-                if(!o.getPath().endsWith("/"))
-                    elements.add(o);
-            }
-        }
-
-        for (int i = 0; i < elements.size(); i++) {
-            URL source = (URL) elements.get(i);
-            try {
-                URLConnection connection = source.openConnection();
-                String path = source.getPath();
-                String tail = path.substring(bundleDirName.length() + 1);
-                File destination = new File(userDir.getAbsolutePath() + "/" + tail);
-                if (tail.indexOf(".svn") > -1) {
-                    continue;
-                }
-                destination.getParentFile().mkdirs();
-                InputStream in = null;
-                OutputStream out = null;
-                try {
-	                in = connection.getInputStream();
-	                out = new BufferedOutputStream(new FileOutputStream(destination));
-	                byte[] buf = new byte[1024];
-	                int len;
-	                while ((len = in.read(buf)) > 0) {
-	                    out.write(buf, 0, len);
-	                }
-                } finally {
-                	if (in != null) in.close();
-                	if (out != null) out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                // throw new
-                // UserException(UserException.ERROR_COPYING_USER_BASE_DIRECTORY);
-            }
-        }
-    }
 
     /*
      * (non-Javadoc)
@@ -278,12 +208,13 @@ public class UserManagerImpl implements UserManager {
         File userDir = this.baseDirectory;
 
         userDir.mkdir();
+        User user =  new User(new LocalPerson(), userDir);
         File settingsDir = new File(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
         if (!settingsDir.exists()) {
             settingsDir.mkdir();
-            initializeNewUserFiles(userDir);
+            IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
         }
-        return new User(new LocalPerson(), userDir);
+       return user;
 
     }
 

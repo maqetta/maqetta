@@ -7,6 +7,7 @@ dojo.require("dijit.Tree");
 dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");
+dojo.require("davinci.ui.ProjectSelection");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
@@ -68,7 +69,14 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			dojo.stopEvent = stop;	
 		};
 
-		this.setContent(tree); 
+		var projectSelection = new davinci.ui.ProjectSelection({});
+		var topDiv = dojo.doc.createElement('div');
+		if(davinci.Runtime.singleProjectMode()){
+			topDiv.appendChild(projectSelection.domNode);
+		}
+		topDiv.appendChild(tree.domNode);
+		this.setContent(topDiv);
+		
 		tree.startup();
 
 		dojo.connect(tree, 'onDblClick', dojo.hitch(this,this._dblClick ));

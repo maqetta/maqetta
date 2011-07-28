@@ -214,7 +214,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getLibraryBase : function(id, version){
-		return davinci.library.getLibRoot(id,version) || "";
+		return davinci.library.getLibRoot(id,version, this.getResourcePath()) || "";
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
@@ -552,7 +552,11 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	
+	getResourcePath : function(){
+		var filename = this.model.fileName;
+		var path = new davinci.model.Path(filename);
+		return path.removeLastSegments(1);
+	},
 	_setSource: function(source, callback, scope){
 		
 		this._srcDocument=source;

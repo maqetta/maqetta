@@ -126,10 +126,10 @@ public class UserManagerImpl implements UserManager {
 
             User user = new User(person, new File(this.baseDirectory, userName));
             users.put(userName, user);
-            File userDir = user.getUserDirectory();
-            userDir.mkdir();
-            File settingsDir = user.getSettingsDirectory();
-            settingsDir.mkdir();
+            //File userDir = user.getUserDirectory();
+            //userDir.mkdir();
+            //File settingsDir = user.getSettingsDirectory();
+           // settingsDir.mkdir();
             IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
             
             this.usersCount++;

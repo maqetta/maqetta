@@ -82,9 +82,17 @@ dojo.mixin(davinci.resource, {
 	    return item.elementType=="Folder";
 	},
 	getRoot: function(onComplete){
-		
+		//debugger;
 		if (!davinci.resource.root){
-			davinci.resource.root=new davinci.model.Resource.Folder(".",null);
+			var workspace = davinci.resource.getWorkspace();
+			if(davinci.Runtime.singleProjectMode()){
+				var project = davinci.Runtime.getProject();
+				davinci.resource.root = davinci.resource.findResource(project,false, workspace);
+			}else{
+				davinci.resource.root = workspace;
+			}
+				
+			
 		}
 		
 		if(onComplete){
@@ -92,6 +100,13 @@ dojo.mixin(davinci.resource, {
 		}else{
 			return davinci.resource.root;
 		}
+	},
+	
+	getWorkspace : function(){
+		if(this.workspace==null){
+			this.workspace = new davinci.model.Resource.Folder(".",null);
+		}
+		return this.workspace;
 	},
 	
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
@@ -135,7 +150,7 @@ dojo.mixin(davinci.resource, {
 	findResource: function(name, ignoreCase, inFolder, workspaceOnly){
 		ignoreCase=ignoreCase || !davinci.resource.__CASE_SENSITIVE;
 		var seg1=0,segments;
-		var resource=davinci.resource.root;
+		var resource=davinci.resource.getWorkspace();
 		if (inFolder) {
 		    if (typeof inFolder == 'string') {
 		        inFolder = davinci.resource.findResource(inFolder, ignoreCase);
@@ -195,7 +210,7 @@ dojo.mixin(davinci.resource, {
 				for (var i=0;i<response.length;i++)
 				{
 					var foundFile=response[i];
-					var loadResource=davinci.resource.getRoot();
+					var loadResource=davinci.resource.getWorkspace();
 
 					for (var j=0;j<foundFile.parents.length;j++)
 					{
@@ -214,7 +229,7 @@ dojo.mixin(davinci.resource, {
 						}
 						
 					}
-					var resource=davinci.resource.getRoot();
+					var resource=davinci.resource.getWorkspace();
 					seg1=0;
 					segments=foundFile.file.split('/');
 					if (segments[0]=='.') {

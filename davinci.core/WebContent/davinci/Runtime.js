@@ -78,6 +78,21 @@ dojo.mixin(davinci.Runtime,	{
 			this._loadPlugin(plugin, url);
 		}
 	},
+	/*
+	 * running in single project mode or mulit project mode
+	 */
+	singleProjectMode : function(){
+		return true;
+	},
+	
+	
+	/*
+	 * If in single user mode, returns the current active project.
+	 */
+	
+	getProject : function(){
+		return "Default Project";
+	},
 	
 	run : function() {
 		// add class to root HTML element to indicate if mac or windows

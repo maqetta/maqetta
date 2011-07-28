@@ -28,7 +28,7 @@ public class LibrarySettings extends XMLFile {
         }
     }
 
-    public LibInfo[] getAllDefaultLibs() {
+    public static LibInfo[] getAllDefaultLibs() {
         Library[] all = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
         LibInfo[] results = new LibInfo[all.length];
         for (int i = 0; i < all.length; i++) {

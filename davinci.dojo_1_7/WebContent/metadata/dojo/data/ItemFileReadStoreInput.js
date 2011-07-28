@@ -4,8 +4,6 @@ dojo.require("davinci.ve.input.SmartInput");
 dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
 
 	propertyName: null,
-	
-	childType: null,
 
 	property: null,
 	

@@ -7,8 +7,6 @@ dojo.require("dojox.form.DropDownSelect");
 
 dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davinci.ve.input.SmartInput, {
 
-	
-	childType: null,
 
 	displayOnCreate: "true",
 	

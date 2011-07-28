@@ -5,6 +5,4 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarInput", davinci.librarie
 
 	propertyName: "label",
 	
-	childType: "dojox.mobile.TabBarButton" // should really get this from the widget metadata
-	
 });

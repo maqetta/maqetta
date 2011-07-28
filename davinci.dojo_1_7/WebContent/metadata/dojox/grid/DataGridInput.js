@@ -8,8 +8,6 @@ dojo.require("dojox.form.DropDownSelect");
 dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input.SmartInput, {
 
 	propertyName: "structure",
-	
-	childType: null,
 
 	property: "structure",
 	

@@ -5,8 +5,6 @@ dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo
 
 	propertyName: "label",
 	
-	childType: "dijit.PopupMenuBarItem",
-	
 	format: "rows",
 	
 	multiLine: "true",

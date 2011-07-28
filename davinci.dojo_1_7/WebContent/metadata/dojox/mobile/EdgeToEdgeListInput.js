@@ -5,7 +5,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 
 	propertyName: "label",
 	multiLine: "true",
-	childType: "dojox.mobile.ListItem",
 	format: "rows",
 	supportsHTML: "true",
 	helpText:  "Enter one list item per line."

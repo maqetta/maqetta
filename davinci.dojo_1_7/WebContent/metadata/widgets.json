@@ -217,7 +217,7 @@
             "resizable": "none",
             "isLayoutContainer": true,
             "isContainer": true,
-            "allowedChild": "DijitButtons",
+            "allowedChild": "dijit.form.Button",
             "inlineEdit": "davinci.libraries.dojo.dijit.ToolbarInput"
         },
         {

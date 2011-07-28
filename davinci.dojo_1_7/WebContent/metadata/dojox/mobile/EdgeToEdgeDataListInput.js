@@ -7,8 +7,6 @@ dojo.require("dojox.form.DropDownSelect");
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput", davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput, {
 
-	
-	childType: null,
 
 	displayOnCreate: "true",
 	

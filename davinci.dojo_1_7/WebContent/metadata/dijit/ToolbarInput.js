@@ -5,6 +5,4 @@ dojo.declare("davinci.libraries.dojo.dijit.ToolbarInput", davinci.libraries.dojo
 
 	propertyName: "label",
 	
-	childType: "dijit.form.Button"
-	
 });

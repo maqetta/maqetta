@@ -1,8 +1,8 @@
-dojo.provide("davinci.ve.input.MobileComboBoxInput");
+dojo.provide("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput");
 dojo.require("davinci.ve.input.SmartInput");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 
-dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.ve.input.SmartInput, {
 	property: "value",
 	
 	displayOnCreate: "true",

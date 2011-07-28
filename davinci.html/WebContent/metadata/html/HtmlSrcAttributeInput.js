@@ -1,11 +1,11 @@
-dojo.provide("davinci.ve.input.HtmlSrcAttributeInput");
+dojo.provide("davinci.libraries.html.html.HtmlSrcAttributeInput");
 dojo.require("davinci.ve.input.SmartInput");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.LayoutContainer");
 dojo.require("davinci.ui.widgets.OpenFileDialog");
 
-dojo.declare("davinci.ve.input.HtmlSrcAttributeInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.html.html.HtmlSrcAttributeInput", davinci.ve.input.SmartInput, {
 	
 	show: function(widgetId){
 	this._widget = davinci.ve.widget.byId(widgetId);

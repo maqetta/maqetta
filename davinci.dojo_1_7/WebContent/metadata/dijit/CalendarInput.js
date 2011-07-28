@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.CalendarInput");
+dojo.provide("davinci.libraries.dojo.dijit.CalendarInput");
 dojo.require("davinci.ve.input.SmartInput");
 
-dojo.declare("davinci.ve.input.CalendarInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",

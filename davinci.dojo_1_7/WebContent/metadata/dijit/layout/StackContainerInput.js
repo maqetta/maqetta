@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.StackContainerInput");
-dojo.require("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.layout.StackContainerInput");
+dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 
-dojo.declare("davinci.ve.input.StackContainerInput", davinci.ve.input.ContainerInput, {
+dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 
 	propertyName: "title",
 	

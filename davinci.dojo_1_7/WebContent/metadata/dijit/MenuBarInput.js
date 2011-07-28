@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.MenuBarInput");
-dojo.require("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.MenuBarInput");
+dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 
-dojo.declare("davinci.ve.input.MenuBarInput", davinci.ve.input.ContainerInput, {
+dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 
 	propertyName: "label",
 	

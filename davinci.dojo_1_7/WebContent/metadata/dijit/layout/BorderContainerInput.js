@@ -1,11 +1,10 @@
-dojo.provide("davinci.ve.input.BorderContainerInput");
-dojo.require("davinci.ve.input.ContainerInput");
-dojo.require("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.layout.BorderContainerInput");
+dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.LayoutContainer");
 
-dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.ContainerInput, {
+dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 	
 	show: function(widgetId){
 	//debugger;

@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.DropDownButtonInput");
-dojo.require("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.form.DropDownButtonInput");
+dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 
-dojo.declare("davinci.ve.input.DropDownButtonInput", davinci.ve.input.ContainerInput, {
+dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 
 	propertyName: "label",
 		

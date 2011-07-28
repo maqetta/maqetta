@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.TreeInput");
+dojo.provide("davinci.libraries.dojo.dijit.TreeInput");
 dojo.require("davinci.ve.input.SmartInput");
 
-dojo.declare("davinci.ve.input.TreeInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dijit.TreeInput", davinci.ve.input.SmartInput, {
 
 	property: null, 
 	

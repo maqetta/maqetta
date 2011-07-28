@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.ItemFileReadStoreInput");
+dojo.provide("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput");
 dojo.require("davinci.ve.input.SmartInput");
 
-dojo.declare("davinci.ve.input.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
 
 	propertyName: null,
 	

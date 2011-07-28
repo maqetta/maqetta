@@ -1,8 +1,8 @@
-dojo.provide("davinci.ve.input.OptionsInput");
+dojo.provide("davinci.libraries.dojo.dijit.form.OptionsInput");
 dojo.require("davinci.ve.input.SmartInput");
 dojo.require("dojox.html.entities");
 
-dojo.declare("davinci.ve.input.OptionsInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dijit.form.OptionsInput", davinci.ve.input.SmartInput, {
 
 	property: "value",
 	

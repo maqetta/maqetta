@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.SpinWheelSlotInput");
+dojo.provide("davinci.libraries.dojo.dojox.mobile.SpinWheelSlotInput");
 dojo.require("davinci.ve.input.SmartInput");
 
-dojo.declare("davinci.ve.input.SpinWheelSlotInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.SpinWheelSlotInput", davinci.ve.input.SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",

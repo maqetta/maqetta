@@ -1,11 +1,11 @@
-dojo.provide("davinci.ve.input.DataGridInput");
+dojo.provide("davinci.libraries.dojo.dojox.grid.DataGridInput");
 dojo.require("davinci.ve.input.SmartInput");
 //dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
 
-dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input.SmartInput, {
 
 	propertyName: "structure",
 	

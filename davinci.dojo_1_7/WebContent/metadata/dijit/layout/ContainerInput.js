@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.layout.ContainerInput");
 dojo.require("davinci.ve.input.SmartInput");
 
-dojo.declare("davinci.ve.input.ContainerInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dijit.layout.ContainerInput", davinci.ve.input.SmartInput, {
 
 	propertyName: null,
 	

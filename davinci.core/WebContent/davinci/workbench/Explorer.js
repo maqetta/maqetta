@@ -71,8 +71,12 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 
 		var projectSelection = new davinci.ui.ProjectSelection({});
 		var topDiv = dojo.doc.createElement('div');
+		
+		/* is there a better way to get scroll besides setting height to 100%? */
+		topDiv.style.height='100%';
 		if(davinci.Runtime.singleProjectMode()){
 			topDiv.appendChild(projectSelection.domNode);
+			tree.domNode.style.height='100%';
 		}
 		topDiv.appendChild(tree.domNode);
 		this.setContent(topDiv);

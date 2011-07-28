@@ -1,37 +1,23 @@
 package org.davinci.ajaxLibrary;
 
 public class LibInfo {
-    private String base;
-	public LibInfo(String id, String name, String version, String virtualRoot, String base) {
-        this.setName(name);
-        this.setVersion(version);
-        this.setId(id);
-        this.setVirtualRoot(virtualRoot);
-        this.setBase(base);
-
-    }
-
+    
 	public LibInfo(String id, String name, String version, String virtualRoot) {
         this.setName(name);
         this.setVersion(version);
         this.setId(id);
         this.setVirtualRoot(virtualRoot);
+       
 
     }
-	
+
+
     public void setVersion(String version) {
         this.version = version;
     }
 
     public String getVersion() {
         return version;
-    }
-
-    public String getBase() {
-        return this.base;
-    }
-    public void setBase(String base) {
-        this.base = base;
     }
     
     public void setId(String id) {

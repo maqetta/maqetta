@@ -235,7 +235,9 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	
 	_setContent: function(filename,content){
 		var relativePrefix="";
-		var folderDepth=new davinci.model.Path(filename).getSegments().length-1;
+		
+		/* cheating, adding another layer of prefix for project */
+		var folderDepth=new davinci.model.Path(filename).getSegments().length-2;
 		if (folderDepth){
 			for (var i=0;i<folderDepth;i++){
 				relativePrefix+="../";

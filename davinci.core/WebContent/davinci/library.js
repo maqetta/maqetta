@@ -9,9 +9,9 @@ dojo.provide("davinci.library");
  * 
  */
 
-davinci.library.getThemes=function(){
-	
-	var allThemes = davinci.resource.findResource("*.theme", true, "./themes");
+davinci.library.getThemes=function(base){
+	var projectThemeBase = (new davinci.model.Path(base).append("themes"));
+	var allThemes = davinci.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getText();
@@ -49,7 +49,9 @@ davinci.library.getMetaData=function(theme){
 
 //FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
-	return (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
+	if(!davinci.library._serverLibs)
+		davinci.library._serverLibs = (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
+	return davinci.library._serverLibs;
 };
 
 davinci.library.getLibMetadata = function(id, version) {

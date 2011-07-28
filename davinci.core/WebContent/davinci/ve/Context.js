@@ -435,95 +435,9 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
-		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
-		var imports = [];
-		var claroThemeName="claro";
-		var claroThemeUrl;
-		for(var z=0;z<style.length;z++){
-			for(var i=0;i<style[z].children.length;i++){
-				if(style[z].children[i]['elementType']== 'CSSImport')
-					imports.push(style[z].children[i]);
-			}
-		}
-		var allThemes = davinci.library.getThemes();
-		var themeHash = {};
-		for(var i=0;i<allThemes.length;i++){
-			var themePath = new davinci.model.Path(allThemes[i]['file'].getPath());
-			themePath.removeLastSegments(1);
-			for(var k=0;k<allThemes[i]['files'].length;k++){
-				var cssUrl = themePath.append( new davinci.model.Path(allThemes[i]['files']));
-				themeHash[cssUrl] = allThemes[i];
-			}
-		}
-		for(var i=0;i<imports.length;i++){
-			var url = imports[i].url;
-			/* trim off any relative prefix */
-			for(var themeUrl in themeHash){
-				if(themeUrl.indexOf(claroThemeName) > -1){
-					claroThemeUrl = themeUrl;
-				}
-				if(url.indexOf(themeUrl)  > -1){
-					var returnObject = {};
-					returnObject['themeUrl'] = url;
-					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-					returnObject['theme'] =  themeHash[themeUrl];
-					return returnObject;	
-				}
-			}
-		}
-		// If we are here, we didn't find a cross-reference match between 
-		// CSS files listed among the @import commands and the themes in
-		// themes/ folder of the user's workspace. So, see if there is an @import
-		// that looks like a theme reference and see if claro/ is in
-		// the list of themes, if so, use claro instead of old theme
-		if(claroThemeUrl){
-			var newThemeName = claroThemeName;
-			var oldThemeName;
-			for(var i=0;i<imports.length;i++){
-				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
-				if(cssfilenamematch && cssfilenamematch.length==2){
-					var cssfilename = cssfilenamematch[1];
-					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));
-					if(themematch){
-						oldThemeName = cssfilename;
-						break;
-					}
-				}
-			}
-			if(oldThemeName){
-				// Update model
-				var htmlElement=this.model.getDocumentElement();
-				var head=htmlElement.getChildElement("head");
-				var bodyElement=htmlElement.getChildElement("body");
-				var classAttr=bodyElement.getAttribute("class");
-				if (classAttr){
-					bodyElement.setAttribute("class",classAttr.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName));
-				}
-				var styleTags=head.getChildElements("style");
-				dojo.forEach(styleTags, function (styleTag){
-					dojo.forEach(styleTag.children,function(styleRule){
-						if (styleRule.elementType=="CSSImport"){
-							styleRule.url = styleRule.url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-						}
-					}); 
-				});
-				// Update data in returnObject
-				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-				var returnObject = {};
-				returnObject['themeUrl'] = url;
-				// Pull claro theme data
-				returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[claroThemeUrl]);
-				returnObject['theme'] =  themeHash[claroThemeUrl];
-				returnObject['themeMetaCache']['usingSubstituteTheme'] = {
-						oldThemeName:oldThemeName,
-						newThemeName:newThemeName
-				};
-				// Make sure source pane updates text from model
-				this._editor._visualChanged();
-				
-				return returnObject;	
-			}
-		}
+		var ro = davinci.ve.metadata.loadThemeMeta(model);
+		this._editor._visualChanged();
+		return ro;
 	},
 	
 	setSource: function(source, callback, scope){
@@ -553,7 +467,8 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	getResourcePath : function(){
-		var filename = this.model.fileName;
+		var model = this.getModel();
+		var filename = model.fileName;
 		var path = new davinci.model.Path(filename);
 		return path.removeLastSegments(1);
 	},

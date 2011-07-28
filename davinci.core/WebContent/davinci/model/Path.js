@@ -145,6 +145,7 @@ davinci.model.Path.prototype.matchingFirstSegments = function(anotherPath  ){
 }
 davinci.model.Path.prototype.removeFirstSegments = function(count  ){
     this.segments=this.segments.slice(count, this.segments.length);
+    return this;
 }
 
 davinci.model.Path.prototype.removeLastSegments = function(count  ){

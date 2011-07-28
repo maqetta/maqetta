@@ -21,18 +21,21 @@ public class LibrarySettings extends XMLFile {
 
         if (!libFile.exists()) {
             libs = getAllDefaultLibs();
-            this.save();
         } else {
             ArrayList list = this.load(libFile);
             libs = (LibInfo[]) list.toArray(new LibInfo[list.size()]);
         }
     }
 
+    public boolean exists(){
+    	return libFile.exists();
+    }
+ 
     public static LibInfo[] getAllDefaultLibs() {
         Library[] all = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
         LibInfo[] results = new LibInfo[all.length];
         for (int i = 0; i < all.length; i++) {
-            results[i] = new LibInfo(all[i].getID(), all[i].getName(), all[i].getVersion(), all[i].getDefaultRoot(), ".");
+            results[i] = new LibInfo(all[i].getID(), all[i].getName(), all[i].getVersion(), all[i].getDefaultRoot());
         }
         return results;
     }
@@ -49,9 +52,9 @@ public class LibrarySettings extends XMLFile {
         return "library";
     }
 
-    public boolean addLibrary(String name, String version, String id, String virtualRoot, String base) {
+    public boolean addLibrary(String name, String version, String id, String virtualRoot) {
 
-        LibInfo link = new LibInfo(id, name, version, virtualRoot, base);
+        LibInfo link = new LibInfo(id, name, version, virtualRoot);
 
         LibInfo[] newLibs = new LibInfo[libs.length + 1];
         System.arraycopy(libs, 0, newLibs, 0, libs.length);
@@ -63,7 +66,7 @@ public class LibrarySettings extends XMLFile {
 
     public boolean removeLibrary(String id, String version, String base) {
         for (int i = 0; i < this.libs.length; i++) {
-            if (this.libs[i].getId().equals(id) && this.libs[i].getVersion().equals(version) && this.libs[i].getBase().equals(base)) {
+            if (this.libs[i].getId().equals(id) && this.libs[i].getVersion().equals(version)) {
                 LibInfo[] newLinks = new LibInfo[libs.length - 1];
                 System.arraycopy(libs, 0, newLinks, 0, i);
                 System.arraycopy(libs, i + 1, newLinks, i, libs.length - 1 - i);
@@ -78,12 +81,12 @@ public class LibrarySettings extends XMLFile {
 
     public void modifyLibrary(String id, String version, String virtualRoot, String base) {
         this.removeLibrary(id, version, base);
-        this.addLibrary(id, version, id, virtualRoot, base);
+        this.addLibrary(id, version, id, virtualRoot);
     }
 
     protected Object createObject(Element element, String[] attributes) {
 
-        LibInfo link = new LibInfo(attributes[0], attributes[1], attributes[2], attributes[3], attributes[4]);
+        LibInfo link = new LibInfo(attributes[0], attributes[1], attributes[2], attributes[3]);
         return link;
     }
 
@@ -97,7 +100,7 @@ public class LibrarySettings extends XMLFile {
         return new String[] { link.getId(), link.getName(), link.getVersion(), link.getVirtualRoot() };
     }
 
-    private void save() {
+    protected void save() {
         this.save(libFile, Arrays.asList(this.libs));
     }
 }

@@ -42,7 +42,7 @@ public class User {
 	private Links links;
 	private Person person;
 	private IVResource workspace;
-	private LibrarySettings libSettings;
+	
 
 
 	public User(Person person, File userDirectory) {
@@ -64,7 +64,10 @@ public class User {
 		
 		for(int j=0;j<userFiles.length;j++){
 			if(!userFiles[j].isDirectory()) continue;
-			LibInfo libs[] =  this.getLibInfo(userFiles[j]).allLibs();
+			LibrarySettings settings = this.getLibSettings(userFiles[j]);
+			if(!settings.exists()) continue;
+			LibInfo libs[] =  settings.allLibs();
+			
 			
 			IVResource workspace = this.workspace;
 			IVResource firstFolder = new VDirectory(workspace, userFiles[j].getName());
@@ -130,32 +133,31 @@ public class User {
 	 * used to map configurations to sub folders
 	 */
 	public void addBaseSettings(String base){
-		LibInfo libs[] =  null;
+		File baseFile = new File(this.userDirectory, base);
+		File settings = new File(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+		settings.mkdirs();
 		
-		if(this.CASCADE_SETTINGS)
-			libs = this.getLibs(".");
-		else
-			libs = LibrarySettings.getAllDefaultLibs();
-		
-		for (int i = 0; i < libs.length; i++) {
-			this.modifyLibrary(libs[i].getId(), libs[i].getVersion(), base, true);
-		}
+		LibrarySettings ls = this.getLibSettings(base);
+		ls.save();
+		rebuildWorkspace();
+
+	
 	}
 	
 	public void deleteBaseSettings(String base){
 		
 	}
-	private LibrarySettings getLibInfo(String base) {
+	private LibrarySettings getLibSettings(String base) {
 		File baseFile = new File(this.userDirectory, base);
-		return getLibInfo(baseFile);
+		return getLibSettings(baseFile);
 	}
 
-	private LibrarySettings getLibInfo(File base) {
+	private LibrarySettings getLibSettings(File base) {
 		
 		File settings = new File(base, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		settings.mkdirs();
-		
 		return new LibrarySettings(settings);
+		
+		
 	}
 
 	public File getUserDirectory() {
@@ -163,20 +165,20 @@ public class User {
 	}
 
 	public void modifyLibrary(String id, String version, String base, boolean installed) {
-		LibrarySettings libs = this.getLibInfo(base);
+		LibrarySettings libs = this.getLibSettings(base);
 
 		if (!installed) {
 			libs.removeLibrary(id, version, base);
 
 		} else {
 			String defaultRoot = ServerManager.getServerManger().getLibraryManager().getDefaultRoot(id, version);
-			libs.addLibrary(id, version, id, defaultRoot, base);
+			libs.addLibrary(id, version, id, defaultRoot);
 		}
 		rebuildWorkspace();
 	}
 
 	public void modifyLibrary(String id, String version, String virtualRoot, String base) {
-		LibrarySettings libs = this.getLibInfo(base);
+		LibrarySettings libs = this.getLibSettings(base);
 
 		libs.modifyLibrary(id, version, virtualRoot, base);
 		rebuildWorkspace();
@@ -457,13 +459,7 @@ public class User {
 	}
 
 	public LibInfo[] getLibs(String base) {
-		LibInfo[] allLibs = this.getLibInfo(base).allLibs();
-		Vector results = new Vector();
-		for(int i=0;i<allLibs.length;i++){
-			if(allLibs[i].getBase().equals(base))
-				results.add(allLibs[i]);
-		}
-		return (LibInfo[])results.toArray(new LibInfo[results.size()]);
+		return this.getLibSettings(base).allLibs();
 		
 	}
 

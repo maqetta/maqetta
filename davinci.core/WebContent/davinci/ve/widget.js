@@ -167,6 +167,7 @@ davinci.ve.widget.getUniqueObjectId = function(type, node){
 	return id;
 };
 
+//FIXME: why not just use direct property access?
 davinci.ve.widget.getType = function(widget){
 	if(widget.type)
 		return widget.type;
@@ -189,7 +190,7 @@ davinci.ve.widget.getLabel = function(widget){
 		                	    'html.',
 		                	    'OpenAjax.'];
 		for(var i=0; i<prefixes_to_remove.length; i++){
-			if(str.indexOf(prefixes_to_remove[i])==0){
+			if(str.indexOf(prefixes_to_remove[i])==0){ // use ===?
 				returnstr=str.substr(prefixes_to_remove[i].length);
 				//FIXME: Another hack. Need a better approach for this.
 				//Special case logic for HTML widgets
@@ -464,7 +465,7 @@ davinci.ve.widget.createWidget = function(data){
 	var widget = new c(data.properties, node, type, metadata, srcElement);
 	widget._srcElement=srcElement;
 
-	if(widget.chart && (data.properties && data.properties["theme"])){
+	if(widget.chart && (data.properties && data.properties.theme)){
 		widget.chart.theme.themeName = theme;
 	}
 
@@ -486,14 +487,10 @@ davinci.ve.widget.createWidget = function(data){
 
 	if(data.states){
 		widget.states = data.states;
-		var states_json = JSON.stringify(widget.states);
-		// Escape single quotes that aren't already escaped
-		states_json = states_json.replace(/(\\)?'/g, function($0, $1){
-			return $1 ? $0 : "\\'";
-		});
-		// Replace double quotes with single quotes
-		states_json = states_json.replace(/"/g, "'");
-		widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
+		var states_json = davinci.states.serialize(widget);
+		if(states_json){
+			widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
+		}
 	}
 
 	return widget;
@@ -537,7 +534,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 	options = (options || {});
 
 	var data = {};
-	data['properties'] = {};
+	data.properties = {};
 
 	for(var i = 0; i < node.attributes.length; i++){
 		var a = node.attributes[i];
@@ -840,7 +837,7 @@ dojo.declare("davinci.ve._Widget",null,{
 		for(var j=0;j<shorthands.length;j++){
 			for(var i=0;i<shorthands[j].length;i++){
 				if(shorthands[j][i] in values){
-					v.push({'name': shorthands[j][i], 'value':values[shorthands[j][i]]});
+					v.push({name: shorthands[j][i], value: values[shorthands[j][i]]});
 					foundShorthands.push(shorthands[j][i]);
 				}
 			}
@@ -855,7 +852,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			}
 
 			if(!found)
-				v.push({'name': name, 'value':values[name]});
+				v.push({name: name, value: values[name]});
 		}
 
 		return v;
@@ -1116,8 +1113,9 @@ dojo.declare("davinci.ve._Widget",null,{
 			this._srcElement.addAttribute("style",styleValue);
 		}
 		else
+		{
 			this._srcElement.removeAttribute("style");
-
+		}
 	},
 	setStyleValues: function( values){
 		if(!values){
@@ -1184,7 +1182,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			this.properties = {};
 		}
 
-		modelOnly = modelOnly ? modelOnly : false; // default modelOnly to false
+		modelOnly = modelOnly || false; // default modelOnly to false
 
 		if (properties.id)
 		{

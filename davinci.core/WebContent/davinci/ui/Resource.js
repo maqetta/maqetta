@@ -262,22 +262,23 @@ dojo.mixin(davinci.ui.Resource, {
 		var newText = pageBuilder.rebuildSource(oldContent, file);
 		file.setContents(newText);
 		
-		davinci.Workbench.openEditor( {		'fileName' : file, 'content': newText		});
-		
+		davinci.Workbench.openEditor({fileName: file, content: newText});
 	},
-	deleteAction : function()
-	{ 
-		var resource=this.getSelectedResource();
-		if (resource)
-		{
-		    if(!confirm("Are you sure you want to delete "+resource.getPath()+"?")){
-		    	return;
-		    }
+
+	deleteAction: function()
+	{
+		var selection = this.getSelectedResources(),
+			paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t");
+
+		if(!confirm("Are you sure you want to delete:\n\t" + paths)){
+	    	return;
+	    }
+
+	    selection.forEach(function(resource){
 			resource.deleteResource();
-		}else{
-			alert("No resources are currently selected.");
-		}
+		});
 	},
+
 	getSelectedResource: function()
 	{
 	  var selection=davinci.Runtime.getSelection();

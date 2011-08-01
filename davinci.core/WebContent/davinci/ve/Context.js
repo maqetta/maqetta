@@ -56,6 +56,24 @@ dojo.declare("davinci.ve.Context", null, {
 	getModel: function(){
 		return this.model;
 	},
+	
+	/*
+	 * @returns the path to the file being edited
+	 */
+	getPath : function(){
+		
+		/*
+		 * FIXME:
+		 * We dont set the path along with the content in the context class, so
+		 * have to pull the resource path from the model.  
+		 * 
+		 * I would rather see the path passed in, rather than assume the model has the proper URL,
+		 * but using the model for now.
+		 * 
+		 */
+		var path = this.getModel().fileName;
+		return new davinci.model.Path(path);
+	},
 
 	activate: function(){
 		if(this.isActive()){
@@ -485,7 +503,7 @@ dojo.declare("davinci.ve.Context", null, {
 //			data.scripts = dojo.map(data.scripts, this.getRealUrl, this);
 //			data.styleSheets = dojo.map(this._checkSheets(data), this.getRealUrl, this);
 //		}
-
+		
 		if(!this._frameNode){ // initialize frame
 			var dojoUrl;
 			
@@ -497,9 +515,13 @@ dojo.declare("davinci.ve.Context", null, {
 				return false;
 			});
 			
+			/* get the base path, removing the file extension.  the base is used in the library call below
+			 * 
+			 */
+			var resourceBase = (this.getPath().removeLastSegments(1));
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
-				dojo.some(davinci.library.getUserLibs(), function(lib) {
+				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root)
 								.append("dojo/dojo.js").toString();

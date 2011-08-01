@@ -56,6 +56,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 			}
 		}
 		this._srcDocument.setText(source, true);
+		
 		var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 		
 		var elements = this._srcDocument.find({'elementType':"HTMLElement"});
@@ -66,7 +67,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 				this.loadRequires(type, true, true, relativePrefix);
 		}
 		if(themeMetaobject)
-			this.changeThemeBase(themeMetaobject['theme'], relativePrefix);
+			this.changeThemeBase(themeMetaobject['theme'], this._resourcePath);
 		
 		var cssChanges = this.getPageCss();
 		var jsChanges = this.getPageJs();
@@ -147,19 +148,18 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
         }
     },
 
-    changeThemeBase: function(theme, relativePrefix){
+    changeThemeBase: function(theme, resourcePath){
     	
     	// find the old theme file name
-		var basePath = new davinci.model.Path(relativePrefix);
 		var files = theme.files;
 		/* fixme CHEATING, should determine this programatically */
-		var parentPath = (new davinci.model.Path(theme.file.parent.getPath())).removeFirstSegments(2);
+		var parentPath = (new davinci.model.Path(theme.file.parent.getPath()));
 	
 		for (var x=0; x<files.length; x++){
-			var filename = basePath.append(parentPath).append(theme.files[x]);
+			var filename = parentPath.append(theme.files[x]);
+			var relativePath = filename.relativeTo(resourcePath, true);
 			
-			
-			this.addModeledStyleSheet(filename.toString(), new davinci.model.Path(theme.files[x]));
+			this.addModeledStyleSheet(relativePath.toString(), new davinci.model.Path(theme.files[x]));
 
 		}
 	}

@@ -287,21 +287,22 @@ davinci.ve.metadata = function() {
     		}
     		
     		var themePath = new davinci.model.Path(model.fileName);
-    		
+    		/* remove the .theme file, and find themes in the given base location */
     		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
     		var themeHash = {};
     		for(var i=0;i<allThemes.length;i++){
-    			var themePath = new davinci.model.Path(allThemes[i]['file'].getPath());
-    			
-    			/* remove the project segment, should figure this out with logic in case projects aren't 1 folder deep..*/
-    			themePath = themePath.removeFirstSegments(1);
-    			
-    			themePath.removeLastSegments(1);
     			for(var k=0;k<allThemes[i]['files'].length;k++){
-    				var cssUrl = themePath.append( new davinci.model.Path(allThemes[i]['files']));
-    				themeHash[cssUrl] = allThemes[i];
+    				themeHash[allThemes[i]['files']] = allThemes[i];
     			}
     		}
+    		
+    		
+    		/* check the header file for a themes CSS.  
+    		 * 
+    		 * TODO: This is a first level check, a good second level check
+    		 * would be to grep the body classes for the themes className. this would be a bit safer.
+    		 */
+    		
     		for(var i=0;i<imports.length;i++){
     			var url = imports[i].url;
     			/* trim off any relative prefix */

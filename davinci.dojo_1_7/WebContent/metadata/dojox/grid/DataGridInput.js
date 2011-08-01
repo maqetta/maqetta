@@ -1,4 +1,4 @@
-dojo.provide("davinci.ve.input.DataGridInput");
+dojo.provide("davinci.libraries.dojo.dojox.grid.DataGridInput");
 dojo.require("davinci.ve.input.SmartInput");
 //dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
@@ -6,16 +6,14 @@ dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 dojo.requireLocalization("dijit", "common");
 var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
-dojo.declare("davinci.ve.input.DataGridInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input.SmartInput, {
 
 	propertyName: "structure",
-	
-	childType: null,
 
 	property: "structure",
 	

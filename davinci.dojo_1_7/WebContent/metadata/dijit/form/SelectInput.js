@@ -1,11 +1,11 @@
-dojo.provide("davinci.ve.input.SelectInput");
-dojo.require("davinci.ve.input.OptionsInput");
+dojo.provide("davinci.libraries.dojo.dijit.form.SelectInput");
+dojo.require("davinci.libraries.dojo.dijit.form.OptionsInput");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 
-dojo.declare("davinci.ve.input.SelectInput", davinci.ve.input.OptionsInput, {
+dojo.declare("davinci.libraries.dojo.dijit.form.SelectInput", davinci.libraries.dojo.dijit.form.OptionsInput, {
 	
 	supportsHTML: "false",
 	helpText: langObj.selectInputHelp,

@@ -91,26 +91,20 @@ davinci.model.Resource.Resource.prototype.rename = function(newName, recurse){
 
  davinci.model.Resource.Resource.prototype.deleteResource= function(localOnly)
  {
-	 
 	 var response="OK";
 	 if (!localOnly) {
 		 response = davinci.Runtime.serverJSONRequest({
-		   url:"./cmd/deleteResource", handleAs:"text",
-	          content:{'path':this.getPath()},sync:true  });
+			 url: "cmd/deleteResource", handleAs: "text",
+			 content: {path: this.getPath()}, sync: true});
 	 }
-	  if (response=="OK")
-	  {
-		  var list=this.parent.children;
-		  for(var i=0;i<list.length;i++)
-			  if(this==list[i])
-			  {
-				  this.parent.children.splice(i, 1);
-				  break;
-			  }
-			dojo.publish("/davinci/resource/resourceChanged",["deleted",this]);
-	  }
-	  else if (response!="OK")
-		  alert(response);
+	 if (response=="OK") {
+		 var i = this.parent.children.indexOf(this);
+		 this.parent.children.splice(i, 1);
+		 dojo.publish("/davinci/resource/resourceChanged",["deleted",this]);
+	 } else {
+		 //TODO: refresh the resource in the tree if it is a dir -- delete may have been partial.
+		 alert(response);
+	 }
  }
  
  /**  

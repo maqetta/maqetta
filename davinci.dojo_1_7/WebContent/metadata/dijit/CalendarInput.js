@@ -1,11 +1,12 @@
-dojo.provide("davinci.ve.input.CalendarInput");
+dojo.provide("davinci.libraries.dojo.dijit.CalendarInput");
 dojo.require("davinci.ve.input.SmartInput");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 
-dojo.declare("davinci.ve.input.CalendarInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.SmartInput, {
+
 
 	property: "value",
 	supportsHTML: "false",

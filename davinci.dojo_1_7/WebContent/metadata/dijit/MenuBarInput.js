@@ -1,15 +1,14 @@
-dojo.provide("davinci.ve.input.MenuBarInput");
-dojo.require("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.MenuBarInput");
+dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 
-dojo.declare("davinci.ve.input.MenuBarInput", davinci.ve.input.ContainerInput, {
+dojo.declare("davinci.libraries.dojo.dijit.MenuBarInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
+
 
 	propertyName: "label",
-	
-	childType: "dijit.PopupMenuBarItem",
 	
 	format: "rows",
 	

@@ -1,19 +1,17 @@
-dojo.provide("davinci.ve.input.EdgeToEdgeDataListInput");
-dojo.require("davinci.ve.input.DataStoreBasedWidgetInput");
+dojo.provide("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput");
+dojo.require("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput");
 //dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 var helpInfo = "<i>"+langObj.edgeToEdgeFormat+"</i>";
 
-dojo.declare("davinci.ve.input.EdgeToEdgeDataListInput", davinci.ve.input.DataStoreBasedWidgetInput, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput", davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput, {
 
-	
-	childType: null,
 
 	displayOnCreate: "true",
 	

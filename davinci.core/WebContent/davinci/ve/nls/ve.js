@@ -22,82 +22,14 @@
 		"enterStateName":"Please enter a state name.",
 		"stateNameExists":"State name '${name}' already exists. Please enter a different state name.",
 		
-		//input/AccordionContainerInput.js
-		"accordionContainerInputHelp":"If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
-		
-		//input/BorderContainerInput.js
-		"borderContainerDialog":"Border Container Dialog",
-		"borderDesign":"Design",
-		"borderHeadline":"Headline",
-		"borderSidebar":"Sidebar",
-		"borderLeft":"Left",
-		"borderRight":"Right",
-		"borderTop":"Top",
-		"borderBottom":"Bottom",
-		"borderCenter":"Center",
-		"regionMustBeSelected":"At least one region must be selected.",
-		
-		//input/CalendarInput.js -- untested
-		"calendarInputHelp":"Enter a date string for the date you want the widget to display as the current day. For example: \"October 13, 1975\" or an empty string for the current date \"\".",
-		
-		//input/DataGridInput.js
-		"dataGridInputHelp":"If the CSV data format button is selected, enter text in the format: first line is column headers separated by commas and all following lines are data for those columns. If data file from workspace is selected, choose a json item file using the file explore folder.",
-		"invalidInput1":"invalid input (1)",
-		"invalidInput2":"invalid input (2)",
-		"selectSource":"Select a source",//also used in HtmlSrcAttributeInput.js
-		"htmlMarkup":"HTML markup",//also used in SmartInput.js
-		"plainText":"Plain text",
-		"commaSeparatedData":"Comma separated data",
-		"dataFromWorkspace":"Data file from workspace",
-		
-		//input/DropDownButtonInput.js
-		"dropDownButtonInputHelp":"Enter multiple lines of data. The first line is the button text and each addtional line is a drop down option. Optionally indicate option items by putting one \">\" character at the start of a line.",
-		
-		//input/EdgeToEdgeDataListInput.js
-		"edgeToEdgeFormat":"list label, transition_view_name",
-		"edgeToEdgeDataListHelp":"If the CSV data format is selected, enter text in the format: ${0} The transition view name is optional. If data file from workspace is selected, chose a json item file using the file explore folder.",
-		
-		//input/EdgeToEdgeListInput.js
-		"edgeToEdgeListHelp":"Enter one list item per line.",
-		
-		//input/HtmlSrcAttributeInput.js
-		"typeFileUrl":"type file url",
-		"typeAltText":"type alternate text",
-		
-		//input/ItemFileReadStoreInput.js
-		"dataStoreDetails":"DataStore Details",
-		"itemFileReadStore":"ItemFileReadStore",
-		"itemFileWriteStore":"ItemFileWriteStore",
-		"dataStoreId":"DataStore ID:",
-		"url":"URL:",
-		"scriptLabel":"Script:",
-		
-		//input/MenuBarInput.js
-		"menuBarInputHelp":"Enter multiple lines of data, one for each menu option. Indicate nesting levels by putting one or more \">\" characters at the start of a line.",
-		
-		//input/MobileComboBoxInput.js
-		"mobileComboBoxHelp1":"Enter multiple lines of text. Each line will correspond to an option item in the list.",
-		"mobileComboBoxHelp2":"Indicate the default option to be selected with the \"+\" at the start of the line.",
-		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",
-		
-		//input/SelectInput.js
-		"selectInputHelp":"Enter multiple lines of text. Each line will correspond to an option item in the list.  Indicate the default option to be selected with the \"+\" at the start of the line. ",
 		
 		//input/SmartInput.js
 		"smartInputHelp1":"If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
 		"smartInputHelp2":"Text represents literal (plain) text.",
 		"loading":"Loading...",
-		
-		//input/SpinWheelSlotInput.js
-		"spinWheelSlotHelp":"Enter comma sperated values or a range of numbers. For example: \"Dogs,Cats,Frogs\" or \"1-99\".",
-		
-		//input/StackContainerInput.js -- untested
-		"stackContainerInputHelp":"Enter a comma-separated list of values, each value is used as the label. If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).",
-		
-		//input/TreeInput.js
-		"treeInputHelp":"Enter multiple lines of data, one for each row in the tree, indicate nesting levels by putting one or more \">\" characters at the start of a line.",
+		"htmlMarkup":"HTML markup",
 		
 		//widgets/Cascade.js
 		"creatingStyleRules":"Creating Style Rules with app.css",

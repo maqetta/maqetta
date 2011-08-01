@@ -1,17 +1,16 @@
-dojo.provide("davinci.ve.input.ItemFileReadStoreInput");
+dojo.provide("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput");
 dojo.require("davinci.ve.input.SmartInput");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dojo", "dojo");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojo", "dojo");
 dojo.requireLocalization("dijit", "common");
 var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
-dojo.declare("davinci.ve.input.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
+
 
 	propertyName: null,
-	
-	childType: null,
 
 	property: null,
 	

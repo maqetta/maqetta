@@ -435,23 +435,23 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
-		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
+		var style = model.find({elementType:'HTMLElement', tag:'style'});
 		var imports = [];
 		var claroThemeName="claro";
 		var claroThemeUrl;
 		for(var z=0;z<style.length;z++){
 			for(var i=0;i<style[z].children.length;i++){
-				if(style[z].children[i]['elementType']== 'CSSImport')
+				if(style[z].children[i].elementType == 'CSSImport')
 					imports.push(style[z].children[i]);
 			}
 		}
 		var allThemes = davinci.library.getThemes();
 		var themeHash = {};
 		for(var i=0;i<allThemes.length;i++){
-			var themePath = new davinci.model.Path(allThemes[i]['file'].getPath());
+			var themePath = new davinci.model.Path(allThemes[i].file.getPath());
 			themePath.removeLastSegments(1);
-			for(var k=0;k<allThemes[i]['files'].length;k++){
-				var cssUrl = themePath.append( new davinci.model.Path(allThemes[i]['files']));
+			for(var k=0;k<allThemes[i].files.length;k++){
+				var cssUrl = themePath.append( new davinci.model.Path(allThemes[i].files));
 				themeHash[cssUrl] = allThemes[i];
 			}
 		}
@@ -463,11 +463,11 @@ dojo.declare("davinci.ve.Context", null, {
 					claroThemeUrl = themeUrl;
 				}
 				if(url.indexOf(themeUrl)  > -1){
-					var returnObject = {};
-					returnObject['themeUrl'] = url;
-					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-					returnObject['theme'] =  themeHash[themeUrl];
-					return returnObject;	
+					return {
+						themeUrl: url,
+						themeMetaCache: davinci.library.getMetaData(themeHash[themeUrl]),
+						theme: themeHash[themeUrl]
+					};
 				}
 			}
 		}
@@ -509,12 +509,13 @@ dojo.declare("davinci.ve.Context", null, {
 				});
 				// Update data in returnObject
 				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-				var returnObject = {};
-				returnObject['themeUrl'] = url;
+				var returnObject = {
+					themeUrl: url,
 				// Pull claro theme data
-				returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[claroThemeUrl]);
-				returnObject['theme'] =  themeHash[claroThemeUrl];
-				returnObject['themeMetaCache']['usingSubstituteTheme'] = {
+					themeMetaCache: davinci.library.getMetaData(themeHash[claroThemeUrl]),
+					theme: themeHash[claroThemeUrl]
+				};
+				returnObject.themeMetaCache.usingSubstituteTheme = {
 						oldThemeName:oldThemeName,
 						newThemeName:newThemeName
 				};

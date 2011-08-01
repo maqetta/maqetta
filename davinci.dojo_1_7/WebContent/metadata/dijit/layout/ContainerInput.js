@@ -1,7 +1,7 @@
-dojo.provide("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.layout.ContainerInput");
 dojo.require("davinci.ve.input.SmartInput");
 
-dojo.declare("davinci.ve.input.ContainerInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dijit.layout.ContainerInput", davinci.ve.input.SmartInput, {
 
 	propertyName: null,
 	
@@ -33,8 +33,16 @@ dojo.declare("davinci.ve.input.ContainerInput", davinci.ve.input.SmartInput, {
 		return result;
 	},
 	
+	getChildType: function(parentType){
+		if (!this.childType){
+			var allowedChild = davinci.ve.metadata.getAllowedChild(parentType);
+			this.childType = allowedChild[0];
+		}
+		return this.childType;
+	},
+	
 	update: function(widget, value) {
-
+		
 		var values = value;
 		
 		this.command = new davinci.commands.CompoundCommand();
@@ -49,7 +57,7 @@ dojo.declare("davinci.ve.input.ContainerInput", davinci.ve.input.SmartInput, {
 				var child = children[i];
 				this._attr(child, this.propertyName, text);
 			} else {
-				this._addChildOfTypeWithProperty(widget, this.childType, this.propertyName, text);
+				this._addChildOfTypeWithProperty(widget, this.getChildType(widget.type), this.propertyName, text);
 			}
 		}
 		

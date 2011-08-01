@@ -1,18 +1,16 @@
-dojo.provide("davinci.ve.input.BorderContainerInput");
-dojo.require("davinci.ve.input.ContainerInput");
-dojo.require("davinci.ve.input.ContainerInput");
+dojo.provide("davinci.libraries.dojo.dijit.layout.BorderContainerInput");
+dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.LayoutContainer");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 dojo.requireLocalization("dijit", "common");
 var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
-
-dojo.declare("davinci.ve.input.BorderContainerInput", davinci.ve.input.ContainerInput, {
+dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 	
 	show: function(widgetId){
 	//debugger;

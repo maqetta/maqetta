@@ -16,42 +16,37 @@ public class DeleteResource extends Command {
         String path = req.getParameter("path");
         IVResource file = user.getResource(path);
         if (file.isDirectory()) {
-            responseString = deleteDir(file);
+            deleteDir(file);
         } else {
             if (file.delete()) {
                 responseString = "OK";
             } else {
-                responseString = "Problem deleting file";
+                errorString = "Problem deleting file: " + file.getPath();
             }
-
         }
     }
 
-    private String deleteDir(IVResource file) {
-        String response = "OK";
+    private void deleteDir(IVResource file) {
         IVResource[] files = file.listFiles();
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
-                response = deleteDir(files[i]);
-                if (!response.equals("OK")) {
-                    return response;
+                deleteDir(files[i]);
+                if (this.getErrorString() != null) {
+                   return;
                 }
             } else {
                 if (files[i].delete()) {
                     responseString = "OK";
                 } else {
-                    return "Problem deleting file";
+                    errorString = "Problem deleting file: " + files[i].getPath();
+                    return;
                 }
-
             }
-
         }
         if (file.delete()) {
-            return "OK";
+            responseString = "OK";
         } else {
-            return "Problem deleting directory";
+            errorString = "Problem deleting directory: " + file.getPath();
         }
-
     }
-
 }

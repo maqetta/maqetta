@@ -1,12 +1,13 @@
-dojo.provide("davinci.ve.input.MobileComboBoxInput");
+dojo.provide("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput");
 dojo.require("davinci.ve.input.SmartInput");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 
 dojo.require("dojo.i18n");  
-dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
+var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 
-dojo.declare("davinci.ve.input.MobileComboBoxInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.ve.input.SmartInput, {
+
 	property: "value",
 	
 	displayOnCreate: "true",

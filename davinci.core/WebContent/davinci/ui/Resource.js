@@ -271,23 +271,23 @@ dojo.mixin(davinci.ui.Resource, {
 		var newText = pageBuilder.rebuildSource(oldContent, file);
 		file.setContents(newText);
 		
-		davinci.Workbench.openEditor( {		'fileName' : file, 'content': newText		});
-		
+		davinci.Workbench.openEditor({fileName: file, content: newText});
 	},
-	deleteAction : function()
-	{ 
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
-		var resource=this.getSelectedResource();
-		if (resource)
-		{
-		    if(!confirm(dojo.string.substitute(langObj.areYouSureDelete,[resource.getPath()]))){
-		    	return;
-		    }
+
+	deleteAction: function()
+	{
+		var selection = this.getSelectedResources(),
+			paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t");
+
+		if(!confirm(dojo.string.substitute(langObj.areYouSureDelete,[paths]))){
+	    	return;
+	    }
+
+	    selection.forEach(function(resource){
 			resource.deleteResource();
-		}else{
-			alert(langObj.noResourcesSelected);
-		}
+		});
 	},
+
 	getSelectedResource: function()
 	{
 	  var selection=davinci.Runtime.getSelection();

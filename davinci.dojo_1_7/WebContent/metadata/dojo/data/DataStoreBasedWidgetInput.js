@@ -1,14 +1,12 @@
-dojo.provide("davinci.ve.input.DataStoreBasedWidgetInput");
+dojo.provide("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput");
 dojo.require("davinci.ve.input.SmartInput");
 //dojo.require("davinci.ve.commands.ModifyFileItemStoreCommand");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
 
-dojo.declare("davinci.ve.input.DataStoreBasedWidgetInput", davinci.ve.input.SmartInput, {
+dojo.declare("davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput", davinci.ve.input.SmartInput, {
 
-	
-	childType: null,
 
 	displayOnCreate: "true",
 	

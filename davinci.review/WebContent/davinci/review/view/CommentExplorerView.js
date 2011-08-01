@@ -15,6 +15,10 @@ dojo.require("dijit.ToolbarSeparator");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.view", "view");
+dojo.requireLocalization("davinci.review.widgets", "widgets");
+
 dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPart, {
 	postCreate: function()
 	{
@@ -95,10 +99,11 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 	
 	getTopAdditions: function(){
 		var toolbar = new dijit.Toolbar({},dojo.create("div"));
+		var langObj = dojo.i18n.getLocalization("davinci.review.view", "view");
 		var closeBtn = new dijit.form.Button({
 			id: toolbar.get("id") + ".Close",
 			showLabel: false,
-			label:"Close Version",
+			label:langObj.closeVersion,
 			disabled: true,
 			iconClass: "viewActionIcon closeVersionIcon",
 			onClick: dojo.hitch(this,"_closeVersion")
@@ -108,7 +113,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		var openBtn = new dijit.form.Button({
 			id: toolbar.get("id")+".Open",
 			showLabel:false,
-			label:"Open Version",
+			label:langObj.openVersion,
 			disabled:true,
 			iconClass: "viewActionIcon openVersionIcon",
 			onClick: dojo.hitch(this,"_openVersion")
@@ -117,7 +122,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		var editBtn = new dijit.form.Button({
 			id: toolbar.get("id") + ".Edit",
 			showLabel: false,
-			label:"Edit Version",
+			label:langObj.editVersion,
 			disabled: true,
 			iconClass: "viewActionIcon editVersionIcon",
 			onClick: dojo.hitch(this,"_editVersion")
@@ -126,7 +131,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		
 		var input = new dijit.form.TextBox({
 			id:"reviewExplorerFilter",
-			placeHolder: "Type to filter...",
+			placeHolder: langObj.filter,
 			onKeyUp: dojo.hitch(this,this._filter)
 		});
 				
@@ -230,6 +235,14 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			var item = node.item, template = {}, c;
 			
 			template.detail_title = item.name;
+			
+			var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+			template.your_role = langObj.yourRole;
+			template.due_by = langObj.dueBy;
+			template.created_by = langObj.createdBy;
+			template.artifacts_in_rev = langObj.artifactsInRev;
+			template.reviewers = langObj.reviewers;
+			
 			template.detail_role = davinci.review.Runtime.getRole();
 			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : dojo.date.locale.format(item.dueDate, {
 				selector:'date',

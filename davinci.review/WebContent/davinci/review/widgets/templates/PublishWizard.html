@@ -1,41 +1,41 @@
-<div style="width:600px;height:310px">
-		<div style="height:25px">
-			<div dojoAttachPoint="navPage1" dojoAttachEvent="onclick:select" style="display:inline;" class="crumbs done current sep">1. General Information</div>
-			<div dojoAttachPoint="navPage2" dojoAttachEvent="onclick:select" style="display:inline;" class="crumbs todo sep">2. Select Review Files</div>
-			<div dojoAttachPoint="navPage3" dojoAttachEvent="onclick:select" style="display:inline;" class="crumbs todo ">3. Add Reviewers</div>
+<div class='publishWizard'>
+		<div class='steps'>
+			<div dojoAttachPoint="navPage1" dojoAttachEvent="onclick:select" class="crumbs done current sep">1.${generalInfo}</div>
+			<div dojoAttachPoint="navPage2" dojoAttachEvent="onclick:select" class="crumbs todo sep">2.${selectRevFiles}</div>
+			<div dojoAttachPoint="navPage3" dojoAttachEvent="onclick:select" class="crumbs todo ">3.${addReviewers}</div>
 		</div>
-		<div dojoAttachPoint="reviewerStackContainer" style="height:235px;width:600px;">
+		<div dojoAttachPoint="reviewerStackContainer" class='mainSection'>
 		</div>
 		<table cellspacing="10" dojoAttachPoint="page1Node">
 			<tr>
-				<td><label for="versionTitle">Title:</label></td>
+				<td><label for="versionTitle">${title}:</label></td>
 				<td><input dojoAttachPoint="versionTitle"></input></td>
-				<td><input dojoAttachPoint="receiveEmail"></input><label style="position:relative;left:4px;top:3px;" for="receiveEmail">Notify me when a comment is added</label></td>
+				<td><input dojoAttachPoint="receiveEmail"></input><label class='emailLabel' for="receiveEmail">${notifyMe}</label></td>
 			</tr>
 			<tr>
-				<td valign="top"><label for="descriptions">Description:</label></td>
+				<td valign="top"><label for="descriptions">${description}:</label></td>
 				<td colspan="2"><input dojoAttachPoint="descriptions"></input></td>
 			</tr>
 			<tr>
-				<td><label>Window Size:</label></td>
+				<td><label>${windowSize}:</label></td>
 				<td colspan="2"><input dojoAttachPoint="desireWidth"></input><label>*</label><input dojoAttachPoint="desireHeight"/></td>
 			</tr>
 			<tr>
-				<td><label for="dueDate">Due Date:</label></td>
+				<td><label for="dueDate">${dueDate}:</label></td>
 				<td><input dojoAttachPoint="dueDate" /></td>
-				<td class="review-tips"><label>Leave it blank to close the review manually</label></td>
+				<td class="review-tips"><label>${leaveBlank}</label></td>
 			</tr>
 		</table>
 		
 		<table cellspacing="10" dojoAttachPoint="page2Node">
 			<tr>
-				<td>Available files:</td>
+				<td>${availableFiles}:</td>
 				<td></td>
-				<td>Selected files:</td>
+				<td>${selectedFiles}:</td>
 			</tr>
 			<tr>
 				<td>
-					<div dojoAttachPoint="sourceTreeCP" style="width:245px;height:170px;border:1px solid #DBDBDB">
+					<div dojoAttachPoint="sourceTreeCP" class='sourceTree'>
 						
 					</div>
 				</td>
@@ -43,7 +43,7 @@
 					<a href="javascript:void(0);" dojoAttachEvent="onclick:addSelectFiles"><img src="app/davinci/review/resources/img/forward_nav.gif"/></a>
 				</td>
 				<td>
-					<div dojoAttachPoint="targetTreeCP" style="width:245px;height:170px;border:1px solid #DBDBDB">
+					<div dojoAttachPoint="targetTreeCP" class='sourceTree'>
 					
 					</div>
 				</td>
@@ -52,23 +52,23 @@
 		
 		<table cellspacing="10" dojoAttachPoint="page3Node">
 			<tr valign="top">
-				<td align="left" rowspan=2><div style="height:30px">Reviewers:</div></td>
-				<td colspan=2><div dojoAttachPoint="userGrid" style="width:480px;height:160px"></div></td>
+				<td align="left" rowspan=2><div class='reviewers'>${reviewers}:</div></td>
+				<td colspan=2><div dojoAttachPoint="userGrid" class='reviewerList'></div></td>
 			</tr>
 			<tr>
-				<td style="width:220px">
+				<td class='reviewerBox'>
 					<div dojoAttachPoint="addReviewerCombox"></div>
 				</td>
 				<td align="left"><button dojoAttachPoint="addReviewerButton"></button></td>
 			</tr>
 		</table>
 		
-		<div style="margin:10px 0 0 0">
+		<div class='space'>
 		<div dojoAttachPoint="reviewMsg" class="reviewMsg"></div>
-		<a style="float:right;margin:7px 0px 0 5px; text-decoration:none;" href="javascript:void(0);" dojoAttachEvent="onclick:onClose">Cancel</a>
-		<button style="float:right;" dojoAttachPoint="invite">Publish</button>
-		<button style="float:right;" dojoAttachPoint="next">Next &gt</button>
-		<button style="float:right;" dojoAttachPoint="prev">&lt Back</button>
-		<button style="float:right;" dojoAttachPoint="saveDt">Save as draft</button>
+		<a class='cancelButton' href="javascript:void(0);" dojoAttachEvent="onclick:onClose">${buttonCancel}</a>
+		<button class='bottomButton' dojoAttachPoint="invite">${publishReview}</button>
+		<button class='bottomButton' dojoAttachPoint="next">${next} &gt</button>
+		<button class='bottomButton' dojoAttachPoint="prev">&lt ${back}</button>
+		<button class='bottomButton' dojoAttachPoint="saveDt">${saveAsDraft}</button>
 		</div>
 </div>

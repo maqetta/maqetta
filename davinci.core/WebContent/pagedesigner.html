@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Maqetta Designer</title>
+    <title id="title_id"></title>
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
@@ -19,8 +19,26 @@
     <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci.js?@revision@"></script>
+    
+    
+    
 
     <script type="text/javascript">
+    <!-- Globalization -->
+	    //dojo.requireLocalization("", "webContent");//to test "Loading..."
+	    function globalize()
+	    {
+	      var langObj = dojo.i18n.getLocalization("davinci","webContent");
+	      dojo.byId("davinci_user_welcome").innerHTML = langObj.welcome;
+	      dojo.byId("load_screen").innerHTML = langObj.loadingMaqetta;
+	      dojo.byId("davinci_logoff").innerHTML = langObj.logOff;
+	      dojo.byId("maqetta_designer").innerHTML = langObj.designer;
+	      dojo.byId("maqetta_version").innerHTML = davinci.version;
+	      dojo.byId("title_id").innerHTML = langObj.pageDesignerTitle;
+	      //var langObj2 = dojo.i18n.getLocalization("","webContent");//to test "Loading..."
+	    }
+	    dojo.addOnLoad(globalize);
+	    
     	davinci.useAppCache = true; // needed to provide FF "allow" warning
 
 //		davinci.Runtime.addPlugin( "app/davinci/ui" );
@@ -37,15 +55,14 @@
 		{
 		    // Display a warning dialog for unsupported browsers
 			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)) {
+				var langObj = dojo.i18n.getLocalization("davinci","webContent");
                 var unsupportedDialog = new dijit.Dialog({
                     id: "unsupportedBrowserDialog",
-                    title: "Unsupported Browser",
-                    content: ["<p> Maqetta supports Firefox 4, Chrome and Safari 5.",
-                              "Please upgrade your browser to one of these versions. </p>",
-                              "<p> If you wish to continue with an unsupported browser, click \"Continue.\" </p>",
+                    title: langObj.unsupportedBrowser,
+                    content: ["<p>"+ langObj.unsupportedNote +"</p>",
                               "<div class='maqButtonArea'>",
                               "   <button dojoType='dijit.form.Button' type='submit'>",
-                              "      Continue",
+                              langObj.buttonContinue,
                               "   </button>",
                               "</div>"
                              ].join(" "),
@@ -68,11 +85,13 @@
     			else
     			{
     				//FIXME: temporary fix for running via file: URLs
-    		 	   dojo.byId('davinci_user').innerHTML="Maqetta User";
+    				var langObj = dojo.i18n.getLocalization("davinci","webContent");
+    		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
     		 	}
     		 	if (result && result.isLocalInstall)
     		 	{
-    			 	dojo.byId('davinci_user').innerHTML="localhost user";
+    		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
+    			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;
     		 		dojo.byId('davinci_logoff').href="";
     		 		davinci.Runtime.isLocalInstall=true;
     		 	}
@@ -90,19 +109,19 @@
   </head>
 
 	<body class="claro">
-		<div class="loading"><table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table></div>
+		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>
 		<div id="davinci_app">
 			<div id="davinci_top_bar">
 					<div id="davinci_user_container">
-						<span id="davinci_user_welcome">Welcome</span>
+						<span id="davinci_user_welcome"></span>
 						<span id="davinci_user"></span>
 						<span id="davinci_main_menu"> </span>
-						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'>  Log Out</a>
+						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
 					</div>
 					<span class="maq_banner_name_box">
 						<span class="maq_banner_name">Maqetta</span>
-						<span class="maq_banner_component">Designer,</span>
-						<span class="maq_banner_version">Preview 2</span>
+						<span id="maqetta_designer" class="maq_banner_component"></span>
+						<span id="maqetta_version" class="maq_banner_version"></span>
 					</span>
 <!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions
 					<div id="toolbar_container">

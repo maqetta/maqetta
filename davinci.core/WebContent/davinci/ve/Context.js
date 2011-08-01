@@ -453,6 +453,7 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
+
 		var ro = davinci.ve.metadata.loadThemeMeta(model);
 		this._editor._visualChanged();
 		return ro;
@@ -661,7 +662,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = new Date().getTime();
 				}
 			});	
-			win.onbeforeunload = function (e) {
+			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
 				var time = new Date().getTime();
 				var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
 				if (shouldDisplay) {
@@ -678,7 +679,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					// [Leave this Page] [Stay on this Page]
 					return message;
 				}
-			};
+			};*/
 
 		}else{
 			var callbackData = this;

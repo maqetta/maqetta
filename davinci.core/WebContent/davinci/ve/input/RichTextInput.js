@@ -11,6 +11,12 @@ dojo.require("dojox.html.entities");
 dojo.require("dojox.html.ellipsis");
 dojo.require("dojox.layout.ResizeHandle");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+dojo.requireLocalization("dijit", "common");
+var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+
 dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 
 //	property: null,
@@ -18,7 +24,7 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	
 //	multiLine: "false",
 	//supportsHTML: "false",
-	helpText:  'Provides Rich Text (word processor-like), editing of HTML.',
+	helpText:  langObj.richTextInputHelp,
 	
 //	displayOnCreate: "true",
 	property: 'richText',
@@ -133,7 +139,7 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 				'<div class="smartInputHelpDiv" > '+
 	        		'<span id="davinci.ve.input.SmartInput_img_help" title="Help" class="inlineEditHelp" > </span>'+
 		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >OK</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> Cancel</button>  '+
+		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
 		        	'</span>   '+
 		        '</div> '+
 		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+

@@ -7,6 +7,9 @@ dojo.require("davinci.Workbench");
 dojo.require("davinci.commands.CommandStack")
 dojo.require("davinci.ve.metadata");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci", "webContent");
+
 dojo.declare("davinci.Runtime", null, {});
 
 dojo.mixin(davinci.Runtime,	{
@@ -37,9 +40,8 @@ dojo.mixin(davinci.Runtime,	{
 //					retry=true;
 					window.location.reload();
 				} else {
-					davinci.Runtime.handleError("error loading plugin "
-								       + pluginName + ", response="
-								       + response);
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					davinci.Runtime.handleError(dojo.string.substitute(langObj.errorLoadingPlugin, [pluginName, response]));
 				}
 			}
 		});
@@ -64,7 +66,8 @@ dojo.mixin(davinci.Runtime,	{
 					//window.location.reload();
 					window.location.href= './welcome';
 				}else{
-					davinci.Runtime.handleError("error loading plugins");
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
+					davinci.Runtime.handleError(langObj.errorLoadingPlugins);
 				}
 			}
 		});
@@ -121,7 +124,8 @@ dojo.mixin(davinci.Runtime,	{
 		window.onbeforeunload = function (e) {
 			var shouldDisplay = new Date().getTime() - window.davinciBackspaceKeyTime < 100;
 			if (shouldDisplay) {
-				var message = "Careful! You are about to leave daVinci.";
+				var langObj = dojo.i18n.getLocalization("davinci","webContent");
+				var message = langObj.careful;
 				// Mozilla/IE
 				// Are you sure you want to navigate away from this page?
 				// Careful! You will lose any unsaved work if you leave this page now.

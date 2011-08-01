@@ -8,12 +8,13 @@ davinci.review.util = {
 	 * E.g. current time is 2010-12-28 4:24:00, time passed: 2010-12-28 4:20:00, then
 	 * the relative time is "4 mins ago".
 	 */
+		//TODO: i18n
 	toRelativeTime : function ( date, baseDate, threshhold ) {
 		if ( !date || !baseDate )
 			return '';
 		
 		var diff = date.getTime() - baseDate.getTime();
-		var direction = ( diff < 0 ? 'ago' : 'later' );
+		var direction = ( diff < 0 ? "ago" : "later" );
 		var day, hour, min, second;
 		
 		diff = Math.floor( Math.abs( diff ) / 1000 );
@@ -31,7 +32,7 @@ davinci.review.util = {
 		diff = Math.floor( diff / 24 );
 		day = diff;
 		
-		var timeStr = day ? day + ' days ': hour ? hour + ' hours ':min ? min + ' mins ':'';
+		var timeStr = day ? day + " days ": hour ? hour + " hours ":min ? min + " mins ":'';
 	    return timeStr + direction;
 	},
 	

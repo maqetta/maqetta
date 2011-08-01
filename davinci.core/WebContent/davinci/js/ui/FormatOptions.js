@@ -5,6 +5,10 @@ dojo.require("davinci.js.Format");
 
 dojo.require("davinci.workbench.PreferencePane");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.js", "js");
+var langObj = dojo.i18n.getLocalization("davinci.js", "js");
+
 dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane, {
 	getPanel : function (){
     var panel1 =
@@ -16,14 +20,14 @@ dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane
           
           {
             type: "checkBox",
-            label: "New line for blocks",
+            label: langObj.newLineForBlocks,
             data: "blockNewLine",
             defaultValue:true
           }
           ,
           {
             type: "numberTextBox",
-            label: "Block indentation",
+            label: langObj.blockIndention,
             data: "blockIndent",
             defaultValue:3,
             min:0, max:32
@@ -31,69 +35,69 @@ dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane
           ,
           {
             type: "checkBox",
-            label: "New line for function bodies",
+            label: langObj.newLineForFuncBodies,
             data: "functionNewLine",
             defaultValue:true
           }
           ,
           {
             type: "numberTextBox",
-            label: "Function indentation",
+            label: langObj.functionIndention,
             data: "functionIndent",
             defaultValue:5,
             min:0, max:32
           },
           {
             type: "numberTextBox",
-            label: "Function parameter list spacing",
+            label: langObj.funcParameterListSpacing,
             data: "functionParamSpaceing",
             defaultValue:1,
             min:0, max:32
           },
           {
             type: "numberTextBox",
-            label: "Label spacing",
+            label: langObj.labelSpacing,
             data: "labelSpace",
             defaultValue:1,
             min:0, max:32
           },
           {
             type: "checkBox",
-            label: "New line after label",
+            label: langObj.newLineAfterLabel,
             data: "breakOnLabel",
             defaultValue:true
           },
           {
             type: "numberTextBox",
-            label: "'for' statement parameter spacing",
+            label: langObj.forStatementSpacing,
             data: "forParamSpacing",
             defaultValue:1,
             min:0, max:32
           },
           {
             type: "numberTextBox",
-            label: "'if' statement spacing",
+            label: langObj.ifStatementSpacing,
             data: "ifStmtSpacing",
             defaultValue:1,
             min:0, max:32
           },
           {
             type: "numberTextBox",
-            label: "'var' assignment spacing",
+            label: langObj.varAssignmentSpacing,
             data: "varAssignmentSpaceing",
             defaultValue:1,
             min:0, max:32
           },
           {
             type: "numberTextBox",
-            label: "'switch'  spacing",
+            label: langObj.switchSpacing,
             data: "switchSpacing",
             defaultValue:3,
             min:0, max:32
           },
           {
             type: "numberTextBox",
-            label: "Object literal field spacing",
+            label: langObj.objectLiteralFieldSpacing,
             data: "objectLitFieldSpace",
             defaultValue:1,
             min:0, max:32

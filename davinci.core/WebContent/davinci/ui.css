@@ -46,6 +46,35 @@
 	 padding:0;
 	
 }
+
+.templateTable {
+	width:100%;
+}
+
+.templateFiller1 {
+	width:25px;
+}
+
+.templateFiller2 {
+	width:75px;
+}
+
+.templateFiller3 {
+	width:20px;
+}
+
+.templateFiller4 {
+	width:auto;
+}
+
+.templateButton {
+	width:1px;
+}
+
+.templateInput {
+	width:100%;
+}
+
 .downloadAllIcon {
 	background-image: url(./img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: 0 -1060px;

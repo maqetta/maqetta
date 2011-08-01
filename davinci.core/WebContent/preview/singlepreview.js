@@ -5,6 +5,10 @@ dojo.require("dijit.form.Button");
 dojo.require("dijit.form.Slider");
 dojo.require("dijit.form.Select");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("preview", "preview");
+var langObj = dojo.i18n.getLocalization("preview", "preview");
+
 dojo.declare("preview.singlepreview", [dijit._Widget], {
 
 	devicelist:null,
@@ -32,11 +36,11 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 				//layout jumping even if centered
 					'<tr><td style="text-align:left;">'+
 					'<div class="controlbar">'+
-					'<span class="controlbar_label">Device:</span>'+
+					'<span class="controlbar_label">'+langObj.device+'</span>'+
 					'<span class="controlbar_container controlbar_container_device"><span class="controlbar_device"></span></span>'+
-					'<span class="controlbar_label controlbar_label_zoom">Zoom:</span>'+
+					'<span class="controlbar_label controlbar_label_zoom">'+langObj.zoom+'</span>'+
 					'<span class="controlbar_container controlbar_container_zoom"><span class="controlbar_zoom_labels"></span><span class="controlbar_zoom"></span></span>'+
-					'<span class="controlbar_label">Angle:</span>'+
+					'<span class="controlbar_label">'+langObj.angle+'</span>'+
 					'<span class="controlbar_container controlbar_container_angle"><span class="controlbar_angle"></span></span>'+
 					'</div>'+
 					'</td></tr>'+

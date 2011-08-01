@@ -3,6 +3,9 @@ dojo.provide("davinci.ui.widgets.OpenFileDialog");
 dojo.require("davinci.ui.Panel");
 dojo.require("davinci.resource");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
+
 //
 //  usage:
 //var dialog=new davinci.ui.widgets.OpenFileDialog(
@@ -21,6 +24,7 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 	
 	show : function(){
 	
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 			var data={
 					file  : null
 					
@@ -35,13 +39,13 @@ dojo.declare("davinci.ui.widgets.OpenFileDialog",null,{
 					                  filters: "davinci.ui.widgets.OpenFileDialog.filter"
 					                }						],
 					data:data,
-					buttonLabel : 'Open',
+					buttonLabel : langObj.open,
 					onOK:	dojo.hitch(this,function ()
 					{
 						debugger;
 						this.onSelect(data.file);
 					}),
-					title:"Open File"
+					title:langObj.openFile
 			});
 		}
 });

@@ -11,15 +11,19 @@ dojo.require("dijit.form.ComboBox");
 
 dojo.require("davinci.ui.Download");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
+
 dojo.declare("davinci.ui.DownloadSelected",   [davinci.ui.Download], {
 	
 	buildRendering : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.inherited(arguments);
 		this._files=davinci.ui.Resource.getSelectedResources();
-		var uiArray = ["<div class='downloadSelectedHeader'>Selected Files</div>"];
+		var uiArray = ["<div class='downloadSelectedHeader'>"+langObj.selectedFiles+"</div>"];
 		uiArray.push("<div class='downloadSelectedList'>");
 		if(!this._files){
-			uiArray.push("<b>No files selected!</b>");
+			uiArray.push("<b>"+langObj.noFilesSelected+"</b>");
 			this._files = [];
 			dojo.attr(this._okButton, "disabled", "true");
 			

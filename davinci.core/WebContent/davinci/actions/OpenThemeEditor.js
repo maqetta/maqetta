@@ -3,6 +3,9 @@ dojo.require("davinci.actions.Action");
 dojo.require("davinci.resource");
 dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actions");
+var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 
 dojo.declare("davinci.actions.OpenThemeEditor", null, {
 	
@@ -13,9 +16,9 @@ dojo.declare("davinci.actions.OpenThemeEditor", null, {
 		if(this._themeChooser.get('numberOfThemes') > 0)
 			diag = this._themeChooser;
 		else
-			diag = "No editable themes found in your workspace.  Please create a new theme from one of the Read Only themes";
+			diag = langObj.noEditableThemes;
 		//this._themeChooser.set('value', theme);
-		davinci.Workbench.showModal(diag, "Edit Theme", "width:110px");
+		davinci.Workbench.showModal(diag, langObj.editTheme, "width:110px");
 		dojo.connect(this._themeChooser, "onChange", this, "_onChange");
 		
 	},

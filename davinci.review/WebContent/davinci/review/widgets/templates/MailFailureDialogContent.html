@@ -1,4 +1,4 @@
-<div style='font-weight:bold'>Invitation was not sent</div>
-<div style='margin-top:10px;margin-bottom:10px'>It seems that the mail service is down or not configured. Please copy the invitation below and send it manually.</div>
-<div style='border:1px dashed;padding:3px;margin-bottom:10px'>${htmlContent}</div>
-<div style='text-align:center'><button id="_mailFailureDialogButton" dojoType='dijit.form.Button'>OK</button></div>
+<div class='mailFailureInfo'>${inviteNotSent}</div>
+<div class='mailFailureExtraInfo'>${mailFailureMsg}</div>
+<div class='mailFailureContent'>${htmlContent}</div>
+<div class='mailFailureButton'><button id="_mailFailureDialogButton" dojoType='dijit.form.Button'>${buttonOk}</button></div>

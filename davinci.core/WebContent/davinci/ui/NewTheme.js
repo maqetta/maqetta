@@ -80,6 +80,16 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		else
 			davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 	},
+	
+	/*
+	 * @return the project for the target theme.
+	 */
+	getProject : function(){
+		if(davinci.Runtime.singleProjectMode()){
+			return davinci.Runtime.getProject();
+		}
+	},
+	
 	_getThemeLocation : function(){
 		var selector = dojo.attr(this._selector, 'value');
 		
@@ -90,7 +100,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		//	resource.mkdir();
 		
 		
-		return  "./themes/" + selector;
+		return  this.getProject() + "/themes/" + selector;
 	},
 	
 	_checkValid : function(){
@@ -110,17 +120,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 			isOk = false;
 			//this._error5.innerHTML = "Selector can't be empty"
 		}
-		
-		
-		
-		
-		
-		
 		this._okButton.set( 'disabled', !isOk);
-			
-		
-		
-		
 	},
 	
 	okButton : function(){

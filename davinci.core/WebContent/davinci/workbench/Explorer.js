@@ -59,7 +59,12 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			getIconClass: this._getIconClass,
 			transforms: [davinci.resource.alphabeticalSort],
 			isMultiSelect: true});
-
+		
+		/* @peller help!  how do i make these things flow without manually width/height=100%?  If i dont, scroll bars wont show up.
+		 * 
+		 */
+		tree.domNode.style.height='100%';
+		tree.domNode.style.width='100%';
 		// the default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
 		var handler = tree.dndController.onMouseDown;
 		tree.dndController.onMouseDown = function(event){

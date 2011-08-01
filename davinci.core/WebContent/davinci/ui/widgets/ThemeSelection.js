@@ -46,6 +46,13 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		dojo.connect(this._select, "onchange", this, "_onChange");
 	},
 	
+	_setBaseAttr : function(base){
+		this._base = base;
+	},
+	
+	_getBaseAttr : function(){
+		return this._base;
+	},
 	
 	_getNumberOfThemesAttr : function(){
 		return this._themeCount;

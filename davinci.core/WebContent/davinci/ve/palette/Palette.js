@@ -191,7 +191,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	    	if(uri.indexOf("http")==0)
 	    		return uri;
 	    	
-	    	return location.href + uri;
+	    	return davinci.Workbench.location() + uri;
 	      
 	    }
 	    return dojo.moduleUrl("davinci", fallbackUri).uri;

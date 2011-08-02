@@ -14,7 +14,7 @@ dojo.declare("davinci.review.actions.ViewFileAction",davinci.actions.Action,{
 			});
 		}
 		else if(davinci.review.Runtime.getMode()=="designPage"){
-			window.open(location.href+"review/"+davinci.Runtime.userName+"/"+item.parent.timeStamp+"/"
+			window.open(davinci.Workbench.location()+"review/"+davinci.Runtime.userName+"/"+item.parent.timeStamp+"/"
 					+item.name+"/default");
 		}
 	},

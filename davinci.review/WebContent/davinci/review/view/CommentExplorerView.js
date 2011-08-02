@@ -218,7 +218,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			}
 			if (node.elementType=="ReviewFile")
 			{
-				window.open(location.href+"review/"+davinci.Runtime.userName+"/"+node.parent.timeStamp+"/"
+				window.open(davinci.Workbench.location()+"review/"+davinci.Runtime.userName+"/"+node.parent.timeStamp+"/"
 						+node.name+"/default");
 			}
 		}

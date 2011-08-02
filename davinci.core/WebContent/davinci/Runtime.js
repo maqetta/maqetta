@@ -97,31 +97,19 @@ dojo.mixin(davinci.Runtime,	{
 	 */
 	
 	getProject : function(){
+		var params = davinci.Workbench.queryParams();
+		if(params.project)
+			return decodeURI(params.project);
 		
-		var searchString = document.location.search;
-		
-		// remove the ? from the front of the query string 
-		if(searchString && searchString.length>1)
-			searchString = searchString.substring(1);
-		
-		var params = dojo.queryToObject(searchString);
-		
-		return decodeURI(params.project) || davinci.Runtime._DEFAULT_PROJECT;
+		return davinci.Runtime._DEFAULT_PROJECT;
 	},
 	
 	loadProject : function(projectName){
-		
-		// reloads the browser with the current project.
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		
-		var searchString = split.length>1? split[1] : "";
-		var url = split[0];
-		// remove the ? from the front of the query string 
-		var params = dojo.queryToObject(searchString);
+
+		var params = davinci.Workbench.queryParams();
 		params.project = encodeURI(projectName);
 		
-		window.location.href=url + "?" + dojo.objectToQuery(params);
+		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
 	},
 	
 	run : function() {
@@ -389,7 +377,7 @@ dojo.mixin(davinci.Runtime,	{
 		davinci.Runtime.serverJSONRequest({
 			   url:"./cmd/logoff", handleAs:"text",
 				   sync:true  });
-		var newLocation = location.href; //
+		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
 		if (newLocation.charAt(lastChar)=='/')
 			newLocation=newLocation.substr(0,lastChar);

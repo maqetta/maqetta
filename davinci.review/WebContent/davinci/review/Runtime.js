@@ -81,7 +81,7 @@ dojo.mixin(davinci.review.Runtime,{
 		davinci.Runtime.serverJSONRequest({
 			   url:"./cmd/logoff", handleAs:"text",
 				   sync:true  });
-		var newLocation = location.href; //
+		var newLocation = davinci.Workbench.location(); //
 		
 		location.href = newLocation+"/"+davinci.Runtime.commenting_designerName;
 	}	

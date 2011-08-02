@@ -44,7 +44,7 @@ davinci.model.Resource.Resource.prototype.getURL = function(){
 	 while(path.indexOf(".")==0 || path.indexOf("/")==0){
 		 path = path.substring(1,path.length);
 	 }
-	    var loc=location.href;
+	    var loc=davinci.Workbench.location();;
 	    if (loc.charAt(loc.length-1)=='/')
 	    	loc=loc.substring(0,loc.length-1);
 

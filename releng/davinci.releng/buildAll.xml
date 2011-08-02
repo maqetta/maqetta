@@ -65,7 +65,7 @@
         <mkdir dir="${buildDirectory}/features"/>
 
     	<property name="repoName" value="maqetta" />
-    	<property name="repoNameInternal" value="${maqetta}_internal"/>
+    	<property name="repoNameInternal" value="${repoName}_internal"/>
     	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
         <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
         

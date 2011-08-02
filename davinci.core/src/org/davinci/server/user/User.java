@@ -125,6 +125,7 @@ public class User {
             VResourceUtils.copyDirectory(file, path, bundle);
         }
         addBaseSettings(projectName);
+        rebuildWorkspace();
 		return project;
 	}
 	/*

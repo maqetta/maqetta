@@ -137,8 +137,10 @@
                class="org.davinci.server.internal.command.ModifyLib" /> 
           <command path="getMetaRoot" 
                class="org.davinci.server.internal.command.GetMetaRoot" />   
-            <command path="copy" 
-               class="org.davinci.server.internal.command.Copy" />       
+           <command path="copy" 
+               class="org.davinci.server.internal.command.Copy" /> 
+           <command path="createProject" 
+               class="org.davinci.server.internal.command.CreateProject" />         
            <command path="rename" 
                class="org.davinci.server.internal.command.Rename" />         
            <command path="tryIt" noLogin="true"

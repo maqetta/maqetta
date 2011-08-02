@@ -16,15 +16,16 @@ dojo.declare("davinci.ve.Context", null, {
 	immediatePropertyUpdates: false,
 	
 	_subscriptions : [],
-	_contentStyleSheet: document.baseURI + dojo.moduleUrl("davinci.ve", "resources/content.css"),
+	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
 
 	constructor: function(args){
+		
 		if(!args) {
 			args ={};
 		}
-
+		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css"),
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -464,7 +465,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getDojoUrl : function(){
-		 var loc=location.href;
+		 var loc=davinci.Workbench.location();
 			if (loc.charAt(loc.length-1)=='/')
 				loc=loc.substring(0,loc.length-1);
 			
@@ -492,7 +493,7 @@ dojo.declare("davinci.ve.Context", null, {
 		return path.removeLastSegments(1);
 	},
 	_setSource: function(source, callback, scope){
-		
+	
 		this._srcDocument=source;
 		if (this.rootWidget){
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
@@ -542,7 +543,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
-			var realUrl = dojo.global.location.href + "/" ;
+			var realUrl = davinci.Workbench.location() + "/" ;
 			
 			/* change the base if needed */
 			

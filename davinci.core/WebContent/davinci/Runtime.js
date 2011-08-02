@@ -18,6 +18,8 @@ dojo.mixin(davinci.Runtime,	{
 	subscriptions : [],
 	widgetTable: {},
 	
+	_DEFAULT_PROJECT : "Default Project",
+	
 	currentSelection : [],
 	commandStack : new davinci.commands.CommandStack(),
 	clipboard : null,
@@ -91,10 +93,23 @@ dojo.mixin(davinci.Runtime,	{
 	
 	/*
 	 * If in single user mode, returns the current active project.
+	 * 
 	 */
 	
 	getProject : function(){
-		return "Default Project";
+		var params = davinci.Workbench.queryParams();
+		if(params.project)
+			return decodeURI(params.project);
+		
+		return davinci.Runtime._DEFAULT_PROJECT;
+	},
+	
+	loadProject : function(projectName){
+
+		var params = davinci.Workbench.queryParams();
+		params.project = encodeURI(projectName);
+		
+		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
 	},
 	
 	run : function() {
@@ -362,7 +377,7 @@ dojo.mixin(davinci.Runtime,	{
 		davinci.Runtime.serverJSONRequest({
 			   url:"./cmd/logoff", handleAs:"text",
 				   sync:true  });
-		var newLocation = location.href; //
+		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
 		if (newLocation.charAt(lastChar)=='/')
 			newLocation=newLocation.substr(0,lastChar);

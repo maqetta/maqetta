@@ -30,9 +30,15 @@ dojo.mixin(davinci.Workbench, {
 
 	run: function() {
 		this._initKeys();
-		this._baseTitle=dojo.doc.title;
+		
+		if(davinci.Runtime.singleProjectMode())
+			this._baseTitle= "(" + davinci.Runtime.getProject() + ") " + dojo.doc.title;
+		else
+			this._baseTitle= dojo.doc.title;
+		
 		var perspective= davinci.Runtime.initialPerspective || "davinci.ui.main";
 		this.showPerspective(perspective);
+		this._updateTitle();
 		davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Workbench._updateMainToolBar );
 		davinci.Runtime.subscribe("/davinci/ui/editorSelected",davinci.Workbench._updateMainToolBar );
 		davinci.Runtime.subscribe("/davinci/resource/resourceChanged",this._resourceChanged );
@@ -54,6 +60,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 		this._lastAutoSave=new Date().getTime();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
+	
 	},
 	
 	_getHeightInPixels: function(){
@@ -425,7 +432,7 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	
-	showModal : function(content, title, style){
+	showModal : function(content, title, style, callBack){
 
 		
 		 var myDialog = new dijit.Dialog({
@@ -436,6 +443,7 @@ dojo.mixin(davinci.Workbench, {
 		var handle = dojo.connect(content,"onClose",this,function(){
 									myDialog.hide();
 									dojo.disconnect(handle);
+									if(callBack) callBack();
 								  });
 		myDialog.show();
 		
@@ -625,7 +633,27 @@ dojo.mixin(davinci.Workbench, {
 		});
 		return dojoMenu;
 	},
+	
+	location : function(){
+		// reloads the browser with the current project.
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
 		
+		var searchString = split.length>1? split[1] : "";
+		return split[0];
+	},
+	
+	queryParams : function(){
+		// reloads the browser with the current project.
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
+		var searchString = split.length>1? split[1] : "";
+		// remove the ? from the front of the query string 
+		var params = dojo.queryToObject(searchString);
+		return params;
+		
+	},
+	
 	_openMenu: function (dojoMenu,menus,evt) {
 
 		if (dojoMenu._widgetCallback)
@@ -1351,20 +1379,30 @@ dojo.mixin(davinci.Workbench, {
 		}
 	},
 
-	_initializeWorkbenchState: function()
-	{
-		var state= (this._state=davinci.Runtime.serverJSONRequest({
-			   url:"./cmd/getWorkbenchState", handleAs:"json",
-				   sync:true  }));
-		if (state&&state.editors)
-		{
+	_initializeWorkbenchState: function(){
+		var state= (this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+		if (state&&state.editors){
 			state.version = davinci.version;
-			for (var i=0;i<state.editors.length;i++)
-			{
+			
+			var project = null;
+		
+			var singleProject = davinci.Runtime.singleProjectMode();
+		
+			if(singleProject){
+				var p = davinci.Runtime.getProject();
+				project = new davinci.model.Path(p);
+			}
+			
+			for (var i=0;i<state.editors.length;i++){
+				if(singleProject){
+					// if running in single user mode, only load editors open for specific projects
+					var path = new davinci.model.Path(state.editors[i]);
+					if(!path.startsWith(project)) continue;
+				}
+				
 				var resource=davinci.resource.findResource(state.editors[i]);
 				var noSelect=state.editors[i]!=state.activeEditor;
-				if (resource)
-				{
+				if (resource){
 					var resourceInfo=resource.getFileInfo();
 					davinci.Workbench.openEditor({
 						fileName: resource,

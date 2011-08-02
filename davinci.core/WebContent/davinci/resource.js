@@ -44,7 +44,23 @@ dojo.mixin(davinci.resource, {
 			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);}, true);	
 		}
 	},
+
+	listProjects : function(callBack){
+		
+		/*
+		 *  projects are the first folder children of the workspace.
+		 *  may turn this into its own command.   
+		 */
+		
+		if(callBack)
+			davinci.resource.getWorkspace().getChildren(callBack, false);
+		else
+			return davinci.resource.getWorkspace().getChildren();
+	},
 	
+	createProject : function(projectName, initContent){
+		 davinci.Runtime.serverJSONRequest({url:"./cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent},sync:true  });
+	},
 	
 	/* Resource tree model methods */
 	newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -136,9 +152,6 @@ dojo.mixin(davinci.resource, {
 		
 		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+libString ;
 	},
-	
-
-
 	
 	
 	/**

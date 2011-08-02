@@ -11,7 +11,7 @@ dojo.require("dijit.form.TextBox");
 dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
 dojo.require("dojox.form.uploader.plugins.HTML5");
-
+dojo.require("davinci.ui.NewProject");
 
 dojo.mixin(davinci.ui.Resource, {
 	/*
@@ -266,7 +266,21 @@ dojo.mixin(davinci.ui.Resource, {
 		
 		davinci.Workbench.openEditor({fileName: file, content: newText});
 	},
-
+	
+	
+	newProject : function(){
+		var projectDialog = new davinci.ui.NewProject({});
+		function callBack(){
+			var newProjectName = dojo.attr(projectDialog, "value");
+			davinci.resource.createProject(newProjectName, true);
+			
+			if(davinci.Runtime.singleProjectMode())
+				davinci.Runtime.loadProject(newProjectName);
+		}
+	    davinci.Workbench.showModal(projectDialog, 'New Project', 'height:110px;width: 200px', callBack);
+	},
+	
+	
 	deleteAction: function()
 	{
 		var selection = this.getSelectedResources(),

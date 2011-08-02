@@ -15,7 +15,12 @@ echo "Using ${baseLocation} Eclipse for build..."
 #
 # Directory in which to do the build. No trailing slash.
 #
-export buildDirectory="/tmp"
+if [ ! ${MAQETTA_BUILD_DIR} ]
+then
+    export buildDirectory="/tmp"
+else
+    export buildDirectory=${MAQ_BUILD_DIR}
+fi
 
 #
 # If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository

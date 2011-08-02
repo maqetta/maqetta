@@ -117,7 +117,7 @@ dojo.mixin(davinci.ui.Resource, {
 			dojo.byId("fileDialogFileNameRow").style.display="none";
 		}
 	},
-	addFiles : function(){
+	addFiles: function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var formHtml = 
 		'<label for=\"fileDialogParentFolder\">'+ langObj.parentFolder +' </label><div id="fileDialogParentFolder" ></div>'+
@@ -133,7 +133,7 @@ dojo.mixin(davinci.ui.Resource, {
 			var resource=davinci.ui.Resource.getSelectedResource();
 			if (resource)
 			{
-				folder=(resource.elementType=='Folder'?resource:resource.parent);
+				folder = resource.elementType == 'Folder' ? resource : resource.parent;
 			}
 //			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 			dojo.byId('fileDialogParentFolder').innerText=folder.getPath();
@@ -152,7 +152,8 @@ dojo.mixin(davinci.ui.Resource, {
 
 			dojo.connect(f0, "onComplete", function(dataArray){
 				dojo.forEach(dataArray, function(data){
-					folder.createResource(data.file, false, true);
+					// Refresh the changed folder
+					davinci.resource.resourceChanged('updated', folder);
 				});
 				dojo.disconnect(upload);
 				dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ dialog.destroyRecursive(false); });
@@ -160,14 +161,6 @@ dojo.mixin(davinci.ui.Resource, {
 			});
 		});
 		dialog.setContent(formHtml);
-		
-		var folder=davinci.resource.getRoot();
-		var resource=this.getSelectedResource();
-		if (resource)
-		{
-			folder=(resource.elementType=='Folder'?resource:resource.parent);
-		}
-		
 		dialog.show();
 	},
 	getNewFileName : function (fileOrFolder, fileDialogParentFolder, extension){

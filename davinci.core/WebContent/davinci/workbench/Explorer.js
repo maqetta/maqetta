@@ -7,7 +7,7 @@ dojo.require("dijit.Tree");
 dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");
-dojo.require("davinci.ui.ProjectSelection");
+dojo.require("davinci.ui.widgets.ProjectSelection");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
@@ -74,14 +74,21 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			dojo.stopEvent = stop;	
 		};
 
-		var projectSelection = new davinci.ui.ProjectSelection({});
+		
 		var topDiv = dojo.doc.createElement('div');
 		
 		/* is there a better way to get scroll besides setting height to 100%? */
 		topDiv.style.height='100%';
 		if(davinci.Runtime.singleProjectMode()){
+			var projectSelection = new davinci.ui.widgets.ProjectSelection({});
 			topDiv.appendChild(projectSelection.domNode);
 			tree.domNode.style.height='100%';
+			dojo.connect(projectSelection, "onChange", function(){
+				var project = this.value;
+				davinci.Runtime.loadProject(project);
+			});
+			
+			
 		}
 		topDiv.appendChild(tree.domNode);
 		this.setContent(topDiv);

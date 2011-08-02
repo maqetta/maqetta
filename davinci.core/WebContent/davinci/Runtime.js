@@ -18,6 +18,8 @@ dojo.mixin(davinci.Runtime,	{
 	subscriptions : [],
 	widgetTable: {},
 	
+	_DEFAULT_PROJECT : "Default Project",
+	
 	currentSelection : [],
 	commandStack : new davinci.commands.CommandStack(),
 	clipboard : null,
@@ -91,10 +93,35 @@ dojo.mixin(davinci.Runtime,	{
 	
 	/*
 	 * If in single user mode, returns the current active project.
+	 * 
 	 */
 	
 	getProject : function(){
-		return "Default Project";
+		
+		var searchString = document.location.search;
+		
+		// remove the ? from the front of the query string 
+		if(searchString && searchString.length>1)
+			searchString = searchString.substring(1);
+		
+		var params = dojo.queryToObject(searchString);
+		
+		return decodeURI(params.project) || davinci.Runtime._DEFAULT_PROJECT;
+	},
+	
+	loadProject : function(projectName){
+		
+		// reloads the browser with the current project.
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
+		
+		var searchString = split.length>1? split[1] : "";
+		var url = split[0];
+		// remove the ? from the front of the query string 
+		var params = dojo.queryToObject(searchString);
+		params.project = encodeURI(projectName);
+		
+		window.location.href=url + "?" + dojo.objectToQuery(params);
 	},
 	
 	run : function() {

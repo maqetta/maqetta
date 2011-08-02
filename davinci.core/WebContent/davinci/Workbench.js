@@ -30,9 +30,15 @@ dojo.mixin(davinci.Workbench, {
 
 	run: function() {
 		this._initKeys();
-		this._baseTitle=dojo.doc.title;
+		
+		if(davinci.Runtime.singleProjectMode())
+			this._baseTitle= "(" + davinci.Runtime.getProject() + ") " + dojo.doc.title;
+		else
+			this._baseTitle= dojo.doc.title;
+		
 		var perspective= davinci.Runtime.initialPerspective || "davinci.ui.main";
 		this.showPerspective(perspective);
+		this._updateTitle();
 		davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Workbench._updateMainToolBar );
 		davinci.Runtime.subscribe("/davinci/ui/editorSelected",davinci.Workbench._updateMainToolBar );
 		davinci.Runtime.subscribe("/davinci/resource/resourceChanged",this._resourceChanged );
@@ -54,6 +60,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 		this._lastAutoSave=new Date().getTime();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
+	
 	},
 	
 	_getHeightInPixels: function(){
@@ -425,7 +432,7 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	
-	showModal : function(content, title, style){
+	showModal : function(content, title, style, callBack){
 
 		
 		 var myDialog = new dijit.Dialog({
@@ -436,6 +443,7 @@ dojo.mixin(davinci.Workbench, {
 		var handle = dojo.connect(content,"onClose",this,function(){
 									myDialog.hide();
 									dojo.disconnect(handle);
+									callBack();
 								  });
 		myDialog.show();
 		

@@ -54,6 +54,11 @@ export myWS="cocoa"
 export myOS="macosx"
 export myArch="x86_64"
 
+#
+# save off the current directory
+#
+currentDirectory=`pwd`
+
 if [ ! ${maqettaCode} ]
 then
     #
@@ -85,6 +90,20 @@ then
     cd ${buildDirectory}/repository/maqetta
     git describe >${buildDirectory}/build.level
 else
+    if [ ! -e ${buildDirectory}/repository/maqetta ]
+    then
+        #
+        # Create symlink to 'maqettaCode' repo at ${buildDirectory}/repository/maqetta -- Eclipse
+        # build system requires that.
+        #
+        if [ ! -d ${buildDirectory}/repository ]
+        then
+            mkdir -p ${buildDirectory}/repository
+        fi
+        cd ${buildDirectory}/repository
+        ln -s ${maqettaCode} maqetta
+    fi
+    
     cd ${maqettaCode}
     git describe >${buildDirectory}/build.level
 fi
@@ -95,9 +114,6 @@ fi
 # Note: Many scripts use relative directory references making
 #       running the build from this directory *imperative*.
 #
-# save off the current directory
-
-currentDirectory=`pwd`
 
 cd ${buildDirectory}
 

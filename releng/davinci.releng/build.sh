@@ -19,7 +19,7 @@ if [ ! ${MAQETTA_BUILD_DIR} ]
 then
     export buildDirectory="/tmp"
 else
-    export buildDirectory=${MAQ_BUILD_DIR}
+    export buildDirectory=${MAQETTA_BUILD_DIR}
 fi
 
 #

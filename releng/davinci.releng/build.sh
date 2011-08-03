@@ -50,9 +50,24 @@ export gitRepository="git://github.com/maqetta/maqetta.git"
 # Note: See ${baseLocation}/plugins/org.eclipse.equinox.launcher.xxx.yyy.xxx/
 #       to determine your settings, they should be similar to 'cocoa.macosx.x86_64'
 #
-export myWS="cocoa"
-export myOS="macosx"
-export myArch="x86_64"
+if [ ${MAQETTA_WS} ]
+then
+    export myWS=${MAQETTA_WS}
+else
+    export myWS="cocoa"
+fi
+if [ ${MAQETTA_OS} ]
+then
+    export myOS=${MAQETTA_OS}
+else
+    export myOS="macosx"
+fi
+if [ ${MAQETTA_ARCH} ]
+then
+    export myArch=${MAQETTA_ARCH}
+else
+    export myArch="x86_64"
+fi
 
 #
 # save off the current directory

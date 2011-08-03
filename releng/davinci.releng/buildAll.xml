@@ -35,7 +35,6 @@
             <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
         </antcall>        
     </target>
-    
 
     <target name="init">
         <!--  copy environment vars -->

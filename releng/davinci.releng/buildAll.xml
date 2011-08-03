@@ -1,37 +1,41 @@
 <project name="maqetta" default="nightly">
 
     <import file="${deployment-type}.xml"/>
-
+    
     <target name="nightly" depends="init">
         <tstamp>
             <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
 
-        <!--
-        -->
         <antcall target="clean">
         </antcall>
         <antcall target="populate">
         </antcall>
         <antcall target="zips">
         </antcall>
-
-        <antcall target="updateZip">
-            <param name="addPlugin" value="davinci.joomla"/>
-            <param name="fromZipName" value="${maqettaArchiveName}"/>
-            <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
+        <antcall target="updateZips">
         </antcall>
-
-        <antcall target="updateZip">
-            <param name="addPlugin" value="davinci.w3ibm"/>
-            <param name="fromZipName" value="${maqettaArchiveName}"/>
-            <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
-        </antcall>
-
         <!--
         <antcall target="war"></antcall>
         -->
     </target>
+
+    <target name="updateZips" depends="addJoomla, addW3ibm"></target>
+    <target name="addJoomla">
+        <antcall target="updateZip">
+            <param name="addPlugin" value="davinci.joomla"/>
+            <param name="fromZipName" value="${maqettaArchiveName}"/>
+            <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
+        </antcall>        
+    </target>
+    <target name="addW3ibm" if="run.internal.targets">
+        <antcall target="updateZip">
+            <param name="addPlugin" value="davinci.w3ibm"/>
+            <param name="fromZipName" value="${maqettaArchiveName}"/>
+            <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
+        </antcall>        
+    </target>
+    
 
     <target name="init">
         <!--  copy environment vars -->
@@ -78,6 +82,9 @@
                 </not>
             </and>
         </condition>        
+        <condition property="run.internal.targets">
+            <equals arg1="${deployment-type}" arg2="internal"/>
+        </condition>
     </target>
 
     <target name="zips">

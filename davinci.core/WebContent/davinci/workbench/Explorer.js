@@ -59,12 +59,11 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			getIconClass: this._getIconClass,
 			transforms: [davinci.resource.alphabeticalSort],
 			isMultiSelect: true});
-		
-		/* @peller help!  how do i make these things flow without manually width/height=100%?  If i dont, scroll bars wont show up.
-		 * 
-		 */
-		tree.domNode.style.height='100%';
-		tree.domNode.style.width='100%';
+
+		// Because there are two child elements in this layout container, and it only sizes the top (topDiv), we have to manage the size of the children
+		// ourselves (or use yet another layout container to do it)  We'll just use CSS to fix the bottom of the Tree to the bottom of the panel,
+		// using a variation of the 4-corners CSS trick.  An additional kludge seems necessary to set the Tree width properly to account for the scrollbar.
+		dojo.style(tree.domNode, {width: "100%", "overflow-x": "hidden", position: "absolute", bottom: 0, top: "20px"});
 
 		// The default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
 		// Circumvent dojo.stopEvent temporarily.
@@ -81,13 +80,10 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		tree.dndController.onMouseDown = dojo.hitch(null, handler, down);
 		
 		var topDiv = dojo.doc.createElement('div');
-		
-		/* is there a better way to get scroll besides setting height to 100%? */
-		topDiv.style.height='100%';
+
 		if(davinci.Runtime.singleProjectMode()){
 			var projectSelection = new davinci.ui.widgets.ProjectSelection({});
 			topDiv.appendChild(projectSelection.domNode);
-			tree.domNode.style.height='100%';
 			dojo.connect(projectSelection, "onChange", function(){
 				var project = this.value;
 				davinci.Runtime.loadProject(project);

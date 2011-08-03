@@ -30,7 +30,8 @@
         },
         "value": {
             "datatype": "string",
-            "title": "Value"
+            "title": "Value",
+            "defaultValue":"0"
         },
         "tabIndex": {
             "datatype": "string",

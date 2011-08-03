@@ -720,7 +720,7 @@
             "name": "ToggleButton",
             "description": "ToggleButton",
             "type": "dijit.form.ToggleButton",
-            "category": "untested",
+            "category": "controls",
             "class": "DijitButtons",
             "icon": "resources/images/button.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjdDQjJCMEM2NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjdDQjJCMEM3NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6N0NCMkIwQzQ1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0NCMkIwQzU1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5rUarGAAAA00lEQVR42mL8//8/AyWAiYFCwAJjBHbuJNkp68vdGRlBXgBpttCQYPAwUCBa844LDxhO3HiBcAFM84MPPwhqVhDgAKsHGQAJgx8QTTde/IAwofgHFDOgiYHUwfSxwPT/+IGwGd0N2NwEUg/SwgJT8oOBA8UQQgCkHkSywEyDGUM8gFgINuDDiw8MH4AcIEU0kBAAWgfUgBKIGhIcDGhhhhWD1UHDjQUWSjs2HGBw8HBgMJDgIMoFB3YcAOtjhOUFTc9GklPi9e31jIwDnpkoNgAgwABCAXZ5t0pvnQAAAABJRU5ErkJggg==",
@@ -740,7 +740,7 @@
             "name": "ComboButton",
             "description": "ComboButton",
             "type": "dijit.form.ComboButton",
-            "category": "untested",
+            "category": "controls",
             "class": "DijitButtons",
             "icon": "resources/images/button.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjdDQjJCMEM2NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjdDQjJCMEM3NTk1MDExRTBCNUNCOEUyN0UxMkJCM0EzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6N0NCMkIwQzQ1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0NCMkIwQzU1OTUwMTFFMEI1Q0I4RTI3RTEyQkIzQTMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5rUarGAAAA00lEQVR42mL8//8/AyWAiYFCwAJjBHbuJNkp68vdGRlBXgBpttCQYPAwUCBa844LDxhO3HiBcAFM84MPPwhqVhDgAKsHGQAJgx8QTTde/IAwofgHFDOgiYHUwfSxwPT/+IGwGd0N2NwEUg/SwgJT8oOBA8UQQgCkHkSywEyDGUM8gFgINuDDiw8MH4AcIEU0kBAAWgfUgBKIGhIcDGhhhhWD1UHDjQUWSjs2HGBw8HBgMJDgIMoFB3YcAOtjhOUFTc9GklPi9e31jIwDnpkoNgAgwABCAXZ5t0pvnQAAAABJRU5ErkJggg==",
@@ -776,7 +776,7 @@
             "name": "ValidationTextBox",
             "description": "Validation Text Box",
             "type": "dijit.form.ValidationTextBox",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/dojo-validtn-text-box.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAMFAQdlXWPf5/TdYkPP2+/L2/Pb5/eTt+Obu+M/t+//80/3dgv3egvjYgP7jlvDYkP/ilu3AYO2/YLWUUtKdPu3CdMaFLuGlVeXHoOKzeOGzeOrAjOrAjerJn1AoALo7O7o8O8BBQcpKSclJSdNSUdJSUtlXV9lYV9lYWOi+vv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZ3QJVwSCwaj8gkEcVEBU7M08nkDKBUqIR2y92eVKREYVA4mM0GgwBRUo3E5PPB0Ll0BCIVAF4+Gy4KFwIhKh8JBIiJBBsNHg0cKYUfHyCTkykXjQ0XkUgaEQ0UDRIZSRcMFR4VCxdJFg4PEw8QFkkYFri4GEq8vEEAOw==",
             "resizable": "width"
@@ -785,7 +785,7 @@
             "name": "NumberTextBox",
             "description": "Number Text Box",
             "type": "dijit.form.NumberTextBox",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/nmb-text-box.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhZelwjJSjDNSjDdYkDpel/P2+zpelvL2/EJsouTt+Obu+Ep6rkt6rvn7/fz9/lGGuFaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABUALAAAAAAQABAAAAViYCWOZGmeJxERqMm2YhRJhCTfeFRFE0VQk6BQqINMEASEgkBYEhZQSKUxcRAcBgMhq0UgGJVE9Zrdag3eROUweRAeZS3TW6gIxlgu1zuoAAABBAF/hIUAJC8wIiqJio6PIyEAOw==",
             "resizable": "width"
@@ -794,10 +794,13 @@
             "name": "NumberSpinner",
             "description": "Number Spinner",
             "type": "dijit.form.NumberSpinner",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/number-spinner.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTdYkDlclPP2+zhclD1jmz1jmvL2/EJrokJsokd0qeTt+Obu+EZ0qdvo9kt8sE+DtlCDtrbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C24oC14b3Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZ6QJVwSCwaj0aRcslcCjupqDQl2kyuG46qkkJ4v6LJBXCZWFSU7tcr0gDeGorqkTJADIZIRJQJYUAgEioNCAZfBgxNIg4qC4VehokmHyaVCioJj3iIIidvACcHKgRqayIeIwAkHgUqA6VgKCWzKAJCAbi5urlIvb6/v0EAOw==",
-            "resizable": "width"
+            "resizable": "width",
+            "properties": {
+            	"value":"0"
+            }
         },
         {
             "name": "DateTextBox",
@@ -821,10 +824,13 @@
             "name": "CurrencyTextBox",
             "description": "Currency Text Box",
             "type": "dijit.form.CurrencyTextBox",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/currency-text-box.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAALrD1y5KhZelwjJSjDNSjDdYkDpel/P2+zpelvL2/EJsouTt+Obu+Ep6rkt6rvn7/fz9/lGGuFaOv6vH38fa6s/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVr4CWOZEkWUmGul8qOkjQVU0zFeHxJlVVYlUohSKxILpFKopBYFJ7OAoMRuTgqj0L2UDh4uYnGRYHVcp9eZkJxQVQgBUg6nagbLoNy9tnlJwh4enNfB38XAQECBQKIAIiPiCcvJSguk5eYKyEAOw==",
-            "resizable": "width"
+            "resizable": "width",
+            "properties": {
+            	"currency":"USD"
+            }
         },
         {
             "name": "HorizontalSlider",
@@ -1039,7 +1045,7 @@
             "name": "ColorPalette",
             "description": "Color Palette",
             "type": "dijit.ColorPalette",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/colorpalette.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANhASOiYoMjQ8C5KhTBOiDFOiDNTjTRTjTdZkzdakzdZkjdakjhakjthmTtgmDthmD9on0Bon0Bpn0RwpkRvpURwpUVwpUh3rEl3rEl4rEl3q0x/sk1+sk1/slCEt1GFuFGEt1CFt1OKvFGFt1SKvFSLvFOLvFaOv4C46AB4uACQ0DCYaHi4mDh4OPj4iODAKOjgyPjYiMhoGPBwaLi4uP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADUALAAAAAAQABAAAAaRwJpwSCwOT8ikMnl0uU6x2On1Oslkp2HJaYqSqKSraAgamc8hz+fjGQ05MBgnEOjMZhsAgDPUxC90GXcZehhDFhMTFYsVFhUUixZDEQICESgoESoqEikpEEMOlQ2YDpsOng9DCAkLrgsKsQutDEMGNDQHLCwGKysGLS0GQwS4BbsFvgTBBEMDz9DR0EbU1dZDQQA7",
             "resizable": "none"
@@ -1086,11 +1092,12 @@
             "name": "Form",
             "description": "Form",
             "type": "dijit.form.Form",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/form.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPj4+fX19uTk5eDg4TteljxgmD5km0Bon0BonkFon0NsokFonkVxp0NtokZxpkl2q0h2q0h2qkt7r0l2qk5/s06As05/slGEtvr7/FCFt1CEtlSLvFOIulWLvVaOv/T19dzd3dTV1f7+/vz8/Pv7+/r6+vn5+fj4+PX19fT09PHx8fDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAaEQBbLQywai8KhiMRsOj3JjuhoJG2SHNEEw+1iJiROUiMimM9n0yVpEZne8DglKZkS43BJ8iGqpCoBHhcPCwQBEEkMIwqMKo6PKg5JDSUClpeYCkkIAEUDn6ADB0kGJxUrFSAeGREJBCAGSQUojAoht7ghBUkEH76/wB8EvGjFZ0nIyclBADs=",
             "properties": {
-                "style": "width: 250px; height: 250px;"
+                "style": "width: 250px; height: 250px;",
+                "encType": "multipart/form-data"
             },
             "isContainer": true,
             "allowedChild": "ANY"
@@ -1102,7 +1109,8 @@
             "category": "untested",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
-            "allowedParent": "dojox.gauges.AnalogGauge"
+            "allowedParent": "dojox.gauges.AnalogGauge",
+            "helper": "davinci.libraries.dojo.dojox.gauges.RangeHelper"
          },
          {
             "name": "AnalogLineIndicator",
@@ -1223,7 +1231,8 @@
                 }
               ],
               "allowedChild": "dojox.gauges.AnalogLineIndicator, dojox.gauges.AnalogArcIndicator, dojox.gauges.AnalogArrowIndicator, dojox.gauges.AnalogNeedleIndicator, dojox.gauges.Range",
-            "isContainer": true
+            "isContainer": true,
+            "helper": "davinci.libraries.dojo.dojox.gauges.AnalogGaugeHelper"
         },
         {
             "name": "BarGauge",
@@ -1426,7 +1435,7 @@
             "name": "TimeSpinner",
             "description": "Time Spinner",
             "type": "dojox.form.TimeSpinner",
-            "category": "untested",
+            "category": "controls",
             "icon": "resources/images/timespinner.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAACI5Zi5KhTFPiTBPiTRUjTRVjTlclPP2+zhclD1jmz1jmkJrokJsokd0qUZ0qdvo9kt8sE+DtlCDtrDO7LbR7dPk9dTk9djn9u30+1OJu1OKu8Da8cnf89Pl9dTl9VaOv4C14oC24oC14Yi644m5473Z8Mnf8sTd8d7s98/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAZzQJVwSCwaj8aPcslcCjWpaPSDeVitmIwqkjp4D58HhQIYPyQqSPf7uUwA8MkFomqsvR9LxVPp9B0qC3dgTUoMKgqDHyYmHIyOCSoIiickcAAjJwYqBIobICEAIiAbBSoDiiglq6soAkIBsbKzski2t7i4QQA7",
             "resizable": "width"
@@ -1548,24 +1557,90 @@
             "icon": "resources/images/radiogroup.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
             "properties": {
-                "style": "float: left; width: 300px; height: 300px"
+            	"hasButtons": true,
+                "style": "width: 300px; height: 300px"
             },
             "children": [
                 {
                     "type": "dijit.layout.ContentPane",
                     "properties": {
-                        "title": "Page 1"
+                        "title": "Page 1",
+                        "doLayout": false
                     }
                 },
                 {
                     "type": "dijit.layout.ContentPane",
                     "properties": {
-                        "title": "Page 2"
+                        "title": "Page 2",
+                        "doLayout": false
                     }
                 }
             ],
             "isContainer": true,
-            "allowedChild": "dijit.layout.ContentPane"
+            "allowedChild": "dijit.layout.ContentPane",
+            "inlineEdit": "davinci.ve.input.StackContainerInput"
+        },
+        {
+            "name": "RadioGroupFade",
+            "description": "Radio Group Fade",
+            "type": "dojox.layout.RadioGroupFade",
+            "category": "untested",
+            "icon": "resources/images/radiogroup.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
+            "properties": {
+            	"hasButtons": true,
+                "style": "width: 300px; height: 300px"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 1",
+                        "doLayout": false
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 2",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "isContainer": true,
+            "allowedChild": "dijit.layout.ContentPane",
+            "inlineEdit": "davinci.ve.input.StackContainerInput"
+        },
+        {
+            "name": "RadioGroupSlide",
+            "description": "Radio Group Slide",
+            "type": "dojox.layout.RadioGroupSlide",
+            "category": "untested",
+            "icon": "resources/images/radiogroup.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
+            "properties": {
+            	"hasButtons": true,
+                "style": "width: 300px; height: 300px"
+            },
+            "children": [
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 1",
+                        "doLayout": false
+                    }
+                },
+                {
+                    "type": "dijit.layout.ContentPane",
+                    "properties": {
+                        "title": "Page 2",
+                        "doLayout": false
+                    }
+                }
+            ],
+            "isContainer": true,
+            "allowedChild": "dijit.layout.ContentPane",
+            "inlineEdit": "davinci.ve.input.StackContainerInput"
         },
         {
             "name": "ColorPicker",

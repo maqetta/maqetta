@@ -44,12 +44,13 @@ dojo.declare("davinci.ui.dnd.DragManager", null, {
 	onMouseDown: function(e, dragSource){
 		if(this.disabled){ return; }
 		if(this.dragTriggered){ return; }
+		if(!dojo.mouseButtons.isLeft(e) || e.metaKey || e.ctrlKey){ return; } // ignore right-click, mod keys
 		if(dojo.isIE){
 			e.pageX -= 2;
 			e.pageY -= 2;
 		}
-		if(this.dragTriggered){ return; } // still dragging
-		var ds = this.currentDragSource = dragSource ? dragSource : this.findDragSource(e);
+		if(this.dragTriggered){ return; } // still dragging  FIXME: can't be valid to do this twice?
+		var ds = this.currentDragSource = dragSource || this.findDragSource(e);
 		if(!ds){ return; }
 		ds.onDragDown(e);
 		for(var i = 0, len = this.dropTargets.length; i < len; i++){

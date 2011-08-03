@@ -17,7 +17,7 @@ public class SetWorkbenchState extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
-        File settingsDir = user.getSettingsDirectory();
+        File settingsDir = user.getWorkbenchSettings();
         File settingsFile = new File(settingsDir, IDavinciServerConstants.WORKBENCH_STATE_FILE);
         if (!settingsFile.exists()) {
             settingsFile.createNewFile();

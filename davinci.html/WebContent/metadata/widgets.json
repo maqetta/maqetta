@@ -285,7 +285,7 @@
                 "src": "",
                 "style": "width: 300px; height: 300px;"
             },
-            "inlineEdit": "davinci.ve.input.HtmlSrcAttributeInput"
+            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInput"
         },
         {
             "name": "img",
@@ -297,7 +297,7 @@
             "properties": {
                 "src": ""
             },
-            "inlineEdit": "davinci.ve.input.HtmlSrcAttributeInput"
+            "inlineEdit": "davinci.libraries.html.html.HtmlSrcAttributeInput"
         },
         {
             "name": "<br>",

@@ -24,25 +24,26 @@ public class ModifyLib extends Command {
             String version = (String) libEntry.get("version");
             Boolean installed = (Boolean) libEntry.get("installed");
             String path = (String) libEntry.get("path");
+            String base = (String) libEntry.get("base");
             if (installed != null) {
                 // add or remove the library
-                this.updateLib(user, id, version, installed);// Boolean.parseBoolean(installedString));
+                this.updateLib(user, id, version, installed, base);// Boolean.parseBoolean(installedString));
             }
             if (path != null) {
                 // update library root
-                this.changeLibraryRoot(user, id, version, path);
+                this.changeLibraryRoot(user, id, version, path, base);
             }
         }
 
         responseString = "OK";
     }
 
-    public void changeLibraryRoot(User user, String id, String version, String path) {
-        user.modifyLibrary(id, version, path);
+    public void changeLibraryRoot(User user, String id, String version, String path, String base) {
+        user.modifyLibrary(id, version, path, base);
     }
 
-    public void updateLib(User user, String id, String version, boolean installed) {
-        user.modifyLibrary(id, version, installed);
+    public void updateLib(User user, String id, String version, boolean installed, String base) {
+        user.modifyLibrary(id, version, base, installed);
     }
 
 }

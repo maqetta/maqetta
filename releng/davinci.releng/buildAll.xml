@@ -22,6 +22,12 @@
             <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
         </antcall>
 
+        <antcall target="updateZip">
+            <param name="addPlugin" value="davinci.w3ibm"/>
+            <param name="fromZipName" value="${maqettaArchiveName}"/>
+            <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
+        </antcall>
+
         <!--
         <antcall target="war"></antcall>
         -->
@@ -59,7 +65,19 @@
         <mkdir dir="${buildDirectory}/features"/>
 
     	<property name="repoName" value="maqetta" />
-    	<property name="repoPath" value="${buildDirectory}/repository/${repoName}" />
+    	<property name="repoNameInternal" value="${repoName}_internal"/>
+    	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
+        <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
+        
+        <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
+        <condition property="maqettaCodeInternal" value="${maqettaCode}_internal">
+            <and>
+                <isset property="maqettaCode"/>
+                <not>
+                    <isset property="maqettaCodeInternal"/>
+                </not>
+            </and>
+        </condition>        
     </target>
 
     <target name="zips">
@@ -104,12 +122,15 @@
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
         </condition>
+        <condition property="maqettaSource" value="${maqettaCode}" else="${maqettaCodeInternal}">
+            <isfalse value="${isInternal}"/>
+        </condition>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>
         <defaultexcludes remove="**/.svn"/>
         <defaultexcludes remove="**/.svn/**"/>
         <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${maqettaCode}${extPath}/${project}"/>
+            <fileset dir="${maqettaSource}${extPath}/${project}"/>
         </copy>
         <defaultexcludes default="true"/>
     </target>
@@ -118,12 +139,15 @@
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
         </condition>
+        <condition property="maqettaRepository" value="${repoPath}" else="${repoPathInternal}">
+            <isfalse value="${isInternal}"/>
+        </condition>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>
         <defaultexcludes remove="**/.svn"/>
         <defaultexcludes remove="**/.svn/**"/>
         <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${repoPath}${extPath}/${project}"/>
+            <fileset dir="${maqettaRepository}${extPath}/${project}"/>
         </copy>
         <defaultexcludes default="true"/>
     </target>

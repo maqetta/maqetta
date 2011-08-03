@@ -7,6 +7,9 @@ dojo.require("davinci.workbench.Preferences");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.ve.widget");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");  
+
 dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 
 	target : null,
@@ -133,12 +136,13 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		// New logic: prompt user only if theme CSS files are going to change
 		var content = null;
 
-		
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(this._values[this._targetValueIndex].readOnly){
 			//FIXME: the commented out message in next line provides a more informative error message
-            var content = "This property change cannot be completed because the operation attempts to modify a read-only theme CSS file. <br><br>To change this property, one technique is to add a class to this widget (at top of Properties palette)  and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br/><br/>";
+            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
+			var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
 			var errorDialog = new davinci.ui.Error({'errorText': content});
-			davinci.Workbench.showModal(errorDialog, 'Error modifying value');
+			davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue);
             
             //alert("Error- cant change read only value")
 			this._setFieldValue(this._value,this._loc);
@@ -147,7 +151,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				   editorPrefs['cssOverrideWarn'] &&
 					this._editor.supports("MultiPropTarget")){
 			askUser = true;
-            content = "This change will modify one of the CSS style rules defined within a 'CSS theme' and therefore probably impact other widgets on a global basis.<br><br>Instead of changing the theme CSS files, it is usually better to add a class to this widget (at top of Properties palette) and then open up the CSS Details pane to target a style rule within your app.css file, as described at <a href='app/docs/index.html#peAppCss' target='_blank'>Creating Style Rules with app.css</a>.<br><br>OK to proceed with this change?";
+			var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
+            content = langObj.changeWillModify+"<br><br>"+dojo.string.substitute(langObj.insteadOfChanging,[helpLink])+"<br><br>"+langObj.okToProceed;
         }
 		// Old prompt if changing app.css or other non-theme CSS file:
 		// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";
@@ -230,7 +235,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_onChangeOverride : function(){
-		alert("This value is overriden and can not be changed.");
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		alert(langObj.valueIsOverriden);
 		return false;
 	},
 		
@@ -438,6 +444,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			dojo.addClass(this.container,"dijitHidden");
 			return;
 		}
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		dojo.removeClass(this.container,"dijitHidden");
 		this._buildCssRuleset();
 		function makeOnChange(target){return function(){return this._onChange({target:target});};}
@@ -451,7 +458,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		row.className = "propApplyToLabelRow";
 		column = dojo.doc.createElement("td");
 		column.colSpan = '3';
-		column.innerHTML = "Apply to which style rule:";
+		column.innerHTML = langObj.applyToWhich;
 		column.className = "propApplyToLabelCell";
 		row.appendChild(column);
 		table.appendChild(row);
@@ -524,6 +531,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		// of interactive states, not just "Normal" or the current state
 		// FIXME: The default value of this checkbox should be true if there
 		// is a custom value for the property for the current state, else false.
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var state=davinci.ve.states.getState();
 		var isNormalState = davinci.ve.states.isNormalState(state);
 		if(!isNormalState){
@@ -535,7 +543,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			this._whichStateInputElement = whichStateInputElement;
 			column.appendChild(whichStateInputElement);
 			var whichStateLabelElement = dojo.create("label", {className:'propWhichStateLabel'});
-			whichStateLabelElement.innerHTML = " Only apply to current state ("+state+")";
+			whichStateLabelElement.innerHTML = dojo.string.substitute(langObj.onlyApplyToState,[state]);
 			column.appendChild(whichStateLabelElement);
 			column.className = "propWhichStateCell";
 			row.appendChild(column);
@@ -751,18 +759,21 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		}
 	},
 	_formatRuleString : function(r){
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(r.type=="element.style"){
 			return "element.style";
 		}
 		var s = "";
 		if(r.type=="proposal"){
-			s+="[class:" + r.className + " - New rule in " + this.targetFile + "] ";
+			//s+="[class:" + r.className + " - New rule in " + this.targetFile + "] ";
+			s+=dojo.string.substitute(langObj.newRule, [r.className,this.targetFile]);
 			s+=r.ruleString;
 		}else{
 			var rule = r.rule;
 			
 			if(r.className){
-				s+="[class:" + r.className + " - Existing rule in " + this.targetFile + "] ";
+				//s+="[class:" + r.className + " - Existing rule in " + this.targetFile + "] ";
+				s+=dojo.string.substitute(langObj.existingRule, [r.className,this.targetFile]);
 			}else if(r.type=="theme"){
 				s+="[" + r.type + "] ";
 			}
@@ -778,10 +789,14 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			if(file)
 				s += "  (" + file.url || file.relativeURL;
 			
-			if(r.property)
-				s += " line:" + r.property.startLine+ ")";
-			else
-				s += " line:" + rule.startLine+ ")";
+			if(r.property){
+				//s += " line:" + r.property.startLine+ ")";
+				s += dojo.string.substitute(langObj.line,[r.property.startLine]);
+			}
+			else{
+				//s += " line:" + rule.startLine+ ")";
+				s += dojo.string.substitute(langObj.line,[rule.startLine || langObj.propUndefined]);
+			}
 		}
 		
 		return s;

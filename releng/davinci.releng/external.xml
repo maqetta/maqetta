@@ -8,11 +8,13 @@
         <macrodef name="populateDir">
             <attribute name="project"/>
             <attribute name="isFeature" default="false"/>
+            <attribute name="isInternal" default="false"/>
             <attribute name="extPath" default=""/>
             <sequential>
                 <antcall target="${getMethod}">
                     <param name="project" value="@{project}"/>
                     <param name="isFeature" value="@{isFeature}"/>
+                    <param name="isInternal" value="@{isInternal}"/>
                     <param name="extPath" value="@{extPath}"/>
                 </antcall>
             </sequential>

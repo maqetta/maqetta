@@ -9,9 +9,13 @@ dojo.provide("davinci.library");
  * 
  */
 
-davinci.library.getThemes=function(){
+davinci.library.getThemes=function(base){
 	
-	var allThemes = davinci.resource.findResource("*.theme", true, "./themes");
+	if(base==null)
+		debugger;
+	
+	var projectThemeBase = (new davinci.model.Path(base).append("themes"));
+	var allThemes = davinci.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getText();
@@ -49,7 +53,9 @@ davinci.library.getMetaData=function(theme){
 
 //FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
-	return (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
+	if(!davinci.library._serverLibs)
+		davinci.library._serverLibs = (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
+	return davinci.library._serverLibs;
 };
 
 davinci.library.getLibMetadata = function(id, version) {
@@ -80,7 +86,8 @@ davinci.library.getLibMetadata = function(id, version) {
 davinci.library.getUserLibs=function(base){
 	// not sure if we want to only allow the logged in user to view his/her
 	// installed libs, or to include user name in request of targe user.
-
+	if(base==null || base=="")
+		debugger;
 	return davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{'base':base },sync:true  })[0]['userLibs'];
 	
 
@@ -95,6 +102,10 @@ dojo.subscribe("/davinci/ui/libraryChanged", this, function() {
 
 davinci.library.getLibRoot = function(id, version, base) {
     // check cache
+	
+	if(base==null)
+		debugger;
+	
     var cache = davinci.library._libRootCache;
     if (cache[id] && cache[id][version]) {
         return cache[id][version];

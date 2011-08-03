@@ -9,6 +9,10 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
+
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebuildPage");
 
@@ -18,19 +22,27 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 	templateString: dojo.cache("davinci.ui", "templates/UserLibraries.html"),
 	widgetsInTemplate: true,
 	
+	postMixInProperties : function() {
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		dojo.mixin(this, dijitLangObj);
+		this.inherited(arguments);
+	},
+	
 	/* templated attach points, custom input section */
 	
 	/* check box for rewrite dojo */
 	_tableDiv : null,
 
 	buildRendering : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		this.inherited(arguments);
 		this._handles = [];
 		this._allLibs = davinci.library.getInstalledLibs();
-		this._userLibs = davinci.library.getUserLibs();
+		this._userLibs = davinci.library.getUserLibs(this.getResourceBase());
 		var uiArray = [];
 		
-		uiArray.push("<table cellspacing='0' cellpadding='0' width='100%'><tr><td class='header'></td><td class='header'>Library</td><td class='header'>Version</td><td class='header'>Workspace Location</td></tr>");
+		uiArray.push("<table cellspacing='0' cellpadding='0' width='100%'><tr><td class='header'></td><td class='header'>"+langObj.library+"</td><td class='header'>"+langObj.version+"</td><td class='header'>"+langObj.workspaceLocation+"</td></tr>");
+
 		uiArray.push("<tr></tr>");
 		this.libraries = {};
 		/* build UI table */
@@ -57,7 +69,19 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		dojo.place(html, this._tableDiv);
 	
 	},
-
+	/* returns the base resource for this change (folder)
+	 * this is essentially the 'project', since any settings applied to a root
+	 * folder cascade to its children.
+	 * 
+	 *  
+	 */
+	getResourceBase : function(){
+		// returns the base folder for this change.
+		
+		if(davinci.Runtime.singleProjectMode())
+			return davinci.resource.getRoot().getName();
+	},
+	
 	_getLibRoot: function( id, version){
 		return this._getUserLib(id,version) || this._getGlobalLib(id,version);
 	},
@@ -96,11 +120,11 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		if(values.length){
 			var isOk = davinci.library.modifyLib(values);
 			
-			davinci.resource.resourceChanged("reload", davinci.resource.getRoot());
+			davinci.resource.resourceChanged("reload", this.getResourceBase());
 			dojo.publish("/davinci/ui/libraryChanged");
 		}
 		
-		var pages = davinci.resource.findResource("*.html", true, null, true);
+		var pages = davinci.resource.findResource("*.html", true, this.getResourceBase(), true);
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		for(var i=0;i<pages.length;i++){
@@ -131,6 +155,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 					changes.push(item);
 				}
 				item.installed = value;
+				item.base = this.getResourceBase();
 			}
 		
 		}
@@ -148,6 +173,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 				}
 				item.path = value;
 				item.oldPath = this._allLibs[element]['initRoot'];
+				item.base = this.getResourceBase();
 			}
 		
 		}

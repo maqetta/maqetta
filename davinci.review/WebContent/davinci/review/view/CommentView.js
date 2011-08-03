@@ -19,6 +19,9 @@ dojo.require("dijit.MenuSeparator");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.Menu");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.view", "view");
+
 dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 	interval: 33554432,
 	id: 0,
@@ -621,9 +624,10 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 	
 	getTopAdditions: function(){
 		this.category = "content";
+		var langObj = dojo.i18n.getLocalization("davinci.review.view", "view");
 		var filter = new dijit.form.TextBox({
 			id: "filterText",
-			placeHolder: "Type to filter"
+			placeHolder: langObj.filter
 		});
 		dojo.connect(filter.domNode, "onkeyup", this, function(e){
 			this._filter();
@@ -663,8 +667,9 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				item.onClick(evt);
 			}
 		}});
+		var langObj = dojo.i18n.getLocalization("davinci.review.view", "view");
 		reviewerList.addChild(new dijit.CheckedMenuItem({
-			label:"All Reviewers",
+			label:langObj.allReviewers,
 			checked: true,
 			onChange: dojo.hitch(this,function(check){
 				

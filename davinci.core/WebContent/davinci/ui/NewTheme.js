@@ -9,6 +9,10 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ui", "ui");
+dojo.requireLocalization("dijit", "common");
+
 dojo.require("davinci.library");
 dojo.require("davinci.ve.RebaseDownload");
 dojo.require("dojox.widget.Standby");
@@ -33,6 +37,14 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_error3 : null,
 	_error4 : null,
 	_errorMsg : null,
+	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		dojo.mixin(this, langObj);
+		dojo.mixin(this, dijitLangObj);
+		this.inherited(arguments);
+	},
 
 	postCreate : function(){
 		this.inherited(arguments);
@@ -66,6 +78,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_createTheme : function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var oldTheme = this._themeSelection.attr('value');
 	//	var targetFolder = this._themeLocation.attr('value');
 		var selector = dojo.attr(this._selector, 'value');
@@ -76,10 +89,20 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		var newBase = this._getThemeLocation();
 		var r1=  davinci.resource.findResource(base);
 		if(r1)
-			alert("Theme already Exists!");
+			alert(langObj.themeAlreadyExists);
 		else
 			davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 	},
+	
+	/*
+	 * @return the project for the target theme.
+	 */
+	getProject : function(){
+		if(davinci.Runtime.singleProjectMode()){
+			return davinci.Runtime.getProject();
+		}
+	},
+	
 	_getThemeLocation : function(){
 		var selector = dojo.attr(this._selector, 'value');
 		
@@ -90,7 +113,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		//	resource.mkdir();
 		
 		
-		return  "./themes/" + selector;
+		return  this.getProject() + "/themes/" + selector;
 	},
 	
 	_checkValid : function(){
@@ -110,17 +133,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 			isOk = false;
 			//this._error5.innerHTML = "Selector can't be empty"
 		}
-		
-		
-		
-		
-		
-		
 		this._okButton.set( 'disabled', !isOk);
-			
-		
-		
-		
 	},
 	
 	okButton : function(){

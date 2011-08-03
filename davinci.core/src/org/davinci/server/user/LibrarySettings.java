@@ -20,15 +20,18 @@ public class LibrarySettings extends XMLFile {
         libFile = new File(dir, IDavinciServerConstants.LIBS_FILE);
 
         if (!libFile.exists()) {
-            libs = getDefaultLibs();
-            this.save();
+            libs = getAllDefaultLibs();
         } else {
             ArrayList list = this.load(libFile);
             libs = (LibInfo[]) list.toArray(new LibInfo[list.size()]);
         }
     }
 
-    private LibInfo[] getDefaultLibs() {
+    public boolean exists(){
+    	return libFile.exists();
+    }
+ 
+    public static LibInfo[] getAllDefaultLibs() {
         Library[] all = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
         LibInfo[] results = new LibInfo[all.length];
         for (int i = 0; i < all.length; i++) {
@@ -61,7 +64,7 @@ public class LibrarySettings extends XMLFile {
         return true;
     }
 
-    public boolean removeLibrary(String id, String version) {
+    public boolean removeLibrary(String id, String version, String base) {
         for (int i = 0; i < this.libs.length; i++) {
             if (this.libs[i].getId().equals(id) && this.libs[i].getVersion().equals(version)) {
                 LibInfo[] newLinks = new LibInfo[libs.length - 1];
@@ -76,8 +79,8 @@ public class LibrarySettings extends XMLFile {
 
     }
 
-    public void modifyLibrary(String id, String version, String virtualRoot) {
-        this.removeLibrary(id, version);
+    public void modifyLibrary(String id, String version, String virtualRoot, String base) {
+        this.removeLibrary(id, version, base);
         this.addLibrary(id, version, id, virtualRoot);
     }
 
@@ -87,19 +90,17 @@ public class LibrarySettings extends XMLFile {
         return link;
     }
 
-    @Override
     protected String[] getAttributeNames() {
-        return new String[] { "id", "name", "version", "virtualRoot" };
+        return new String[] { "id", "name", "version", "virtualRoot", "base" };
     }
 
-    @Override
     protected String[] getAttributeValues(Object object) {
         LibInfo link = (LibInfo) object;
 
         return new String[] { link.getId(), link.getName(), link.getVersion(), link.getVirtualRoot() };
     }
 
-    private void save() {
+    protected void save() {
         this.save(libFile, Arrays.asList(this.libs));
     }
 }

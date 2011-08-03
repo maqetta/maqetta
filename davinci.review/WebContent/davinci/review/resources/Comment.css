@@ -373,6 +373,7 @@
 	float:left;
 	height:20px;
 	line-height:20px;
+	display:inline;
 }
 .current{
 	color:black;
@@ -513,6 +514,13 @@
 .davinciComment{
 	border-top: 1px solid black;
 }
+
+.davinciComment2 {
+	border-top: none; 
+	margin-top: 2px; 
+	padding-bottom: 2px;
+}
+
 .davinciComment .commentBody{
 	background-color: white;
 	padding:4px;
@@ -570,6 +578,27 @@
 	color: #818181;
 }
 
+.davinciComment .editReplyBlock {
+	float: right;
+}
+
+.davinciComment .editReplySpace {
+	display: inline-block; 
+	width: 2px;
+}
+
+.davinciComment .contentNode {
+	position:relative;
+}
+
+.davinciComment .submitCancelDiv {
+	text-align: right;
+}
+
+.davinciComment .cancelLink {
+	vertical-align: middle;
+}
+
 .severityLow {
 	background: no-repeat url( "img/severity_low.gif" );
 }
@@ -610,6 +639,78 @@
 	display: inline-block;
 	float:left;
 	padding: 10px 0 0 10px;
+}
+
+.publishWizard {
+	width:600px;
+	height:310px;
+}
+
+.publishWizard .steps {
+	height:25px;
+}
+
+.publishWizard .mainSection {
+	height:235px;
+	width:600px;
+}
+
+.publishWizard .emailLabel {
+	position:relative;
+	left:4px;
+	top:3px;
+}
+
+.publishWizard .sourceTree {
+	width:245px;
+	height:170px;
+	border:1px solid #DBDBDB;
+}
+
+.publishWizard .reviewers {
+	height:30px;
+}
+
+.publishWizard .reviewerList {
+	width:480px;
+	height:160px;
+}
+
+.publishWizard .reviewerBox {
+	width:220px;
+}
+
+.publishWizard .space {
+	margin:10px 0 0 0;
+}
+
+.publishWizard .cancelButton {
+	float:right;
+	margin:7px 0px 0 5px; 
+	text-decoration:none;
+}
+
+.publishWizard .bottomButton {
+	float:right;
+}
+
+.mailFailureInfo {
+	font-weight:bold;
+}
+
+.mailFailureExtraInfo {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.mailFailureContent {
+	border:1px dashed;
+	padding:3px;
+	margin-bottom:10px;
+}
+
+.mailFailureButton {
+	text-align:center;
 }
 
 .review-tips {

@@ -16,15 +16,16 @@ dojo.declare("davinci.ve.Context", null, {
 	immediatePropertyUpdates: false,
 	
 	_subscriptions : [],
-	_contentStyleSheet: document.baseURI + dojo.moduleUrl("davinci.ve", "resources/content.css"),
+	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
 
 	constructor: function(args){
+		
 		if(!args) {
 			args ={};
 		}
-
+		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css"),
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -55,6 +56,24 @@ dojo.declare("davinci.ve.Context", null, {
 	//FIXME: accessor func is unnecessary?
 	getModel: function(){
 		return this.model;
+	},
+	
+	/*
+	 * @returns the path to the file being edited
+	 */
+	getPath : function(){
+		
+		/*
+		 * FIXME:
+		 * We dont set the path along with the content in the context class, so
+		 * have to pull the resource path from the model.  
+		 * 
+		 * I would rather see the path passed in, rather than assume the model has the proper URL,
+		 * but using the model for now.
+		 * 
+		 */
+		var path = this.getModel().fileName;
+		return new davinci.model.Path(path);
 	},
 
 	activate: function(){
@@ -214,7 +233,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getLibraryBase : function(id, version){
-		return davinci.library.getLibRoot(id,version) || "";
+		return davinci.library.getLibRoot(id,version, this.getResourcePath()) || "";
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
@@ -435,95 +454,10 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
-		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
-		var imports = [];
-		var claroThemeName="claro";
-		var claroThemeUrl;
-		for(var z=0;z<style.length;z++){
-			for(var i=0;i<style[z].children.length;i++){
-				if(style[z].children[i]['elementType']== 'CSSImport')
-					imports.push(style[z].children[i]);
-			}
-		}
-		var allThemes = davinci.library.getThemes();
-		var themeHash = {};
-		for(var i=0;i<allThemes.length;i++){
-			var themePath = new davinci.model.Path(allThemes[i]['file'].getPath());
-			themePath.removeLastSegments(1);
-			for(var k=0;k<allThemes[i]['files'].length;k++){
-				var cssUrl = themePath.append( new davinci.model.Path(allThemes[i]['files']));
-				themeHash[cssUrl] = allThemes[i];
-			}
-		}
-		for(var i=0;i<imports.length;i++){
-			var url = imports[i].url;
-			/* trim off any relative prefix */
-			for(var themeUrl in themeHash){
-				if(themeUrl.indexOf(claroThemeName) > -1){
-					claroThemeUrl = themeUrl;
-				}
-				if(url.indexOf(themeUrl)  > -1){
-					var returnObject = {};
-					returnObject['themeUrl'] = url;
-					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-					returnObject['theme'] =  themeHash[themeUrl];
-					return returnObject;	
-				}
-			}
-		}
-		// If we are here, we didn't find a cross-reference match between 
-		// CSS files listed among the @import commands and the themes in
-		// themes/ folder of the user's workspace. So, see if there is an @import
-		// that looks like a theme reference and see if claro/ is in
-		// the list of themes, if so, use claro instead of old theme
-		if(claroThemeUrl){
-			var newThemeName = claroThemeName;
-			var oldThemeName;
-			for(var i=0;i<imports.length;i++){
-				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
-				if(cssfilenamematch && cssfilenamematch.length==2){
-					var cssfilename = cssfilenamematch[1];
-					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));
-					if(themematch){
-						oldThemeName = cssfilename;
-						break;
-					}
-				}
-			}
-			if(oldThemeName){
-				// Update model
-				var htmlElement=this.model.getDocumentElement();
-				var head=htmlElement.getChildElement("head");
-				var bodyElement=htmlElement.getChildElement("body");
-				var classAttr=bodyElement.getAttribute("class");
-				if (classAttr){
-					bodyElement.setAttribute("class",classAttr.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName));
-				}
-				var styleTags=head.getChildElements("style");
-				dojo.forEach(styleTags, function (styleTag){
-					dojo.forEach(styleTag.children,function(styleRule){
-						if (styleRule.elementType=="CSSImport"){
-							styleRule.url = styleRule.url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-						}
-					}); 
-				});
-				// Update data in returnObject
-				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-				var returnObject = {};
-				returnObject['themeUrl'] = url;
-				// Pull claro theme data
-				returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[claroThemeUrl]);
-				returnObject['theme'] =  themeHash[claroThemeUrl];
-				returnObject['themeMetaCache']['usingSubstituteTheme'] = {
-						oldThemeName:oldThemeName,
-						newThemeName:newThemeName
-				};
-				// Make sure source pane updates text from model
-				this._editor._visualChanged();
-				
-				return returnObject;	
-			}
-		}
+
+		var ro = davinci.ve.metadata.loadThemeMeta(model);
+		this._editor._visualChanged();
+		return ro;
 	},
 	
 	setSource: function(source, callback, scope){
@@ -531,7 +465,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getDojoUrl : function(){
-		 var loc=location.href;
+		 var loc=davinci.Workbench.location();
 			if (loc.charAt(loc.length-1)=='/')
 				loc=loc.substring(0,loc.length-1);
 			
@@ -552,9 +486,14 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	
+	getResourcePath : function(){
+		var model = this.getModel();
+		var filename = model.fileName;
+		var path = new davinci.model.Path(filename);
+		return path.removeLastSegments(1);
+	},
 	_setSource: function(source, callback, scope){
-		
+	
 		this._srcDocument=source;
 		if (this.rootWidget){
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
@@ -566,7 +505,7 @@ dojo.declare("davinci.ve.Context", null, {
 //			data.scripts = dojo.map(data.scripts, this.getRealUrl, this);
 //			data.styleSheets = dojo.map(this._checkSheets(data), this.getRealUrl, this);
 //		}
-
+		
 		if(!this._frameNode){ // initialize frame
 			var dojoUrl;
 			
@@ -578,9 +517,13 @@ dojo.declare("davinci.ve.Context", null, {
 				return false;
 			});
 			
+			/* get the base path, removing the file extension.  the base is used in the library call below
+			 * 
+			 */
+			var resourceBase = (this.getPath().removeLastSegments(1));
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
-				dojo.some(davinci.library.getUserLibs(), function(lib) {
+				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root)
 								.append("dojo/dojo.js").toString();
@@ -600,7 +543,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
-			var realUrl = dojo.global.location.href + "/" ;
+			var realUrl = davinci.Workbench.location() + "/" ;
 			
 			/* change the base if needed */
 			
@@ -720,7 +663,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = new Date().getTime();
 				}
 			});	
-			win.onbeforeunload = function (e) {
+			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
 				var time = new Date().getTime();
 				var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
 				if (shouldDisplay) {
@@ -737,7 +680,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					// [Leave this Page] [Stay on this Page]
 					return message;
 				}
-			};
+			};*/
 
 		}else{
 			var callbackData = this;

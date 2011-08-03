@@ -235,7 +235,9 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	
 	_setContent: function(filename,content){
 		var relativePrefix="";
-		var folderDepth=new davinci.model.Path(filename).getSegments().length-1;
+		
+		/* cheating, adding another layer of prefix for project */
+		var folderDepth=new davinci.model.Path(filename).getSegments().length-2;
 		if (folderDepth){
 			for (var i=0;i<folderDepth;i++){
 				relativePrefix+="../";
@@ -250,7 +252,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	   
 		if (!this.initialSet){
 			
-			var loc=location.href;
+			var loc=davinci.Workbench.location();
 			//FIXME: replace this stuff with a regexp
 			if (loc.charAt(loc.length-1)=='/'){
 				loc=loc.substring(0,loc.length-1);
@@ -389,7 +391,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		editor.save();
 		if(deviceName && deviceName.length>0 && deviceName!='none'){
 			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			var url = window.location.href+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
+			var url = widavinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 			window.open(url);
 		}else{
 			window.open(fileURL);

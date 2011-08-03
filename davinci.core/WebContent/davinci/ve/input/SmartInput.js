@@ -11,6 +11,10 @@ dojo.require("dojox.html.entities");
 dojo.require("dojox.html.ellipsis");
 dojo.require("dojox.layout.ResizeHandle");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+dojo.requireLocalization("dijit", "common");
+
 dojo.declare("davinci.ve.input.SmartInput", null, {
 
 	property: null,
@@ -26,14 +30,15 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 	_connection: [],
 	
 	getHelpText: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 	
 		if (this.helpText) {
 			return this.helpText;
 		}
 		if (this.isHtmlSupported()){
-			return 'If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment).';
+			return langObj.smartInputHelp1;
 		} 
-		return 'Text represents literal (plain) text.';
+		return langObj.smartInputHelp2;
 		
 	},
 	
@@ -395,7 +400,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		var loading = doc.createElement("div");
 		var contentPaneAncestor = this._findContentPaneAncestor(iframeNode);
 		if(!contentPaneAncestor){
-		//loading.innerHTML='<table><tr><td>Loading...</td></tr></table>';
+		//loading.innerHTML='<table><tr><td>'+langObj.loading+'</td></tr></table>';
 			return;
 		}
 		contentPaneAncestor.appendChild(loading);
@@ -742,7 +747,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			var what = dojox.html.entities.encode(value);
 			textObj.innerHTML = '<div class="dojoxEllipsis">Plain text ('+what+') </div>';
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
-			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">HTML markup</div>';
+			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+langObj.htmlMarkup+'</div>';
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var table = dojo.byId('davinci.ve.input.SmartInput_table');
@@ -819,6 +824,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		},
 
 		_getTemplate: function(){
+			var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 			
 			var editBox = ''+
 				'<div id="iedResizeDiv" class="iedResizeDiv" >' + 
@@ -869,7 +875,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 					'<div class="smartInputHelpDiv" > '+
 		        		'<span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp" > </span>'+
 			        	'<span class="smartInputSpacerSpan" >'+
-			        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >OK</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> Cancel</button>  '+
+			        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
 			        	'</span>   '+
 			        '</div> '+
 			        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+

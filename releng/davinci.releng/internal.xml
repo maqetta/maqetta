@@ -8,11 +8,13 @@
         <macrodef name="populateDir">
             <attribute name="project"/>
             <attribute name="isFeature" default="false"/>
+            <attribute name="isInternal" default="false"/>
             <attribute name="extPath" default=""/>
             <sequential>
                 <antcall target="${getMethod}">
                     <param name="project" value="@{project}"/>
                     <param name="isFeature" value="@{isFeature}"/>
+                    <param name="isInternal" value="@{isInternal}"/>
                     <param name="extPath" value="@{extPath}"/>
                 </antcall>
             </sequential>
@@ -28,6 +30,7 @@
         <populateDir project="davinci.product" extPath="/releng"/>
         <populateDir project="davinci.review"/>
         <populateDir project="davinci.joomla"/>
+        <populateDir project="davinci.w3ibm" isInternal="true"/>
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
         <populateDir project="davinci.war" isFeature="true" extPath="/releng"/>

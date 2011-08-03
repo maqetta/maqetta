@@ -17,6 +17,8 @@ dojo.require("davinci.ui.Panel");
 dojo.require("davinci.resource");
 dojo.require("davinci.ui.Dialogs");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci", "webContent");
 
 dojo.require("davinci.workbench.EditorContainer");
 
@@ -28,9 +30,15 @@ dojo.mixin(davinci.Workbench, {
 
 	run: function() {
 		this._initKeys();
-		this._baseTitle=dojo.doc.title;
+		
+		if(davinci.Runtime.singleProjectMode())
+			this._baseTitle= "(" + davinci.Runtime.getProject() + ") " + dojo.doc.title;
+		else
+			this._baseTitle= dojo.doc.title;
+		
 		var perspective= davinci.Runtime.initialPerspective || "davinci.ui.main";
 		this.showPerspective(perspective);
+		this._updateTitle();
 		davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Workbench._updateMainToolBar );
 		davinci.Runtime.subscribe("/davinci/ui/editorSelected",davinci.Workbench._updateMainToolBar );
 		davinci.Runtime.subscribe("/davinci/resource/resourceChanged",this._resourceChanged );
@@ -52,6 +60,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 		this._lastAutoSave=new Date().getTime();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
+	
 	},
 	
 	_getHeightInPixels: function(){
@@ -65,17 +74,16 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	_pushImageCss: function (urlToImage){
-		var className = "." + urlToImage.replace(/\//g,"_").replace(/\./g,"_").replace(/:/g,"_");
-		var plainCssText = 
-			  "background-image: url('" + urlToImage + "');" +
-			  "background-repeat: no-repeat;" +
-			  "width: 18px;" + 
-			  "height: 18px;" + 
-			  "text-align: center;";
-		dojox.html.insertCssRule(className, plainCssText);
+		var className = "." + urlToImage.replace(/[\/\.:]/g,"_");
+		dojox.html.insertCssRule(className,
+			"background-image: url('" + urlToImage + "');" +
+			"background-repeat: no-repeat;" +
+			"width: 18px;" + 
+			"height: 18px;" + 
+			"text-align: center;");
 		return className;
 	},
-	_resourceChanged : function (type,changedResource)
+	_resourceChanged: function (type,changedResource)
 	{
 		if (type=='deleted')
 		{
@@ -112,9 +120,9 @@ dojo.mixin(davinci.Workbench, {
 		   actionSets = davinci.Runtime.getExtensions('davinci.actionSets');
 		for(var i = 0;i<actionSets.length;i++){
 			this._loadActionSetContainer(actionSets[i]);
-			var actions = actionSets[i]['actions'];
+			var actions = actionSets[i].actions;
 			for(var k = 0;k<actions.length;k++){
-			  var toolBarPath = actions[k]['toolbarPath'];
+			  var toolBarPath = actions[k].toolbarPath;
 			  if(toolBarPath){
 				  if(!_toolbarcache[toolBarPath]){
 					  _toolbarcache[toolBarPath] = []
@@ -173,7 +181,7 @@ dojo.mixin(davinci.Workbench, {
 						if (action.icon)
 						{
 							var imageNode = document.createElement('img');
-							imageNode.src=action['icon'];
+							imageNode.src=action.icon;
 							imageNode.height = imageNode.width = 18;
 							dojoAction.domNode.appendChild(imageNode);
 						}
@@ -213,8 +221,10 @@ dojo.mixin(davinci.Workbench, {
 		var perspective = davinci.Runtime.getExtension("davinci.perspective",perspectiveID);
 
 
-		if (!perspective)
-			davinci.Runtime.handleError("perspective not found: " + perspectiveID);
+		if (!perspective){
+			var langObj = dojo.i18n.getLocalization("davinci","webContent");
+			davinci.Runtime.handleError(dojo.string.substitute(langObj.perspectiveNotFound,[perspectiveID]));
+		}
 
 		perspective=dojo.clone(perspective);	// clone so views aren't added to original definition
 
@@ -273,7 +283,7 @@ dojo.mixin(davinci.Workbench, {
 			
 			dojo.connect(mainBody.tabs.editors, "removeChild", this, this._editorTabClosed);
 		}
-		mainBody.editorsStackContainer.addChild(mainBody.tabs['editors']);
+		mainBody.editorsStackContainer.addChild(mainBody.tabs.editors);
 		mainBody.editorsStackContainer.selectChild(mainBody.editorsWelcomePage);
 		dojo.connect(dijit.byId("editors_tabcontainer"),"selectChild",function(child){
 			if (child.editor)
@@ -422,17 +432,18 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	
-	showModal : function(content, title, style){
+	showModal : function(content, title, style, callBack){
 
 		
 		 var myDialog = new dijit.Dialog({
-		      'title': title,
-		      'content': content,
-		      'style': (style || "width: 300px")
+		      title: title,
+		      content: content,
+		      style: style || "width: 300px"
 		  });
 		var handle = dojo.connect(content,"onClose",this,function(){
 									myDialog.hide();
 									dojo.disconnect(handle);
+									if(callBack) callBack();
 								  });
 		myDialog.show();
 		
@@ -497,16 +508,16 @@ dojo.mixin(davinci.Workbench, {
 	
 							wasAdditions = id == "additions";
 							menus.push( {
-								id :id,
-								isSeparator :item.separator[j + 1],
-								menus : []
+								id: id,
+								isSeparator: item.separator[j + 1],
+								menus: []
 							});
 						}
 						if (!wasAdditions)
 							menus.push( {
-								id :"additions",
-								isSeparator :false,
-								menus : []
+								id: "additions",
+								isSeparator: false,
+								menus: []
 							});
 	
 					}
@@ -515,9 +526,9 @@ dojo.mixin(davinci.Workbench, {
 			}
 			if (pathsOptional)
 			menuTree.push( {
-				id : sep,
-				isSeparator :false,
-				menus : [item]
+				id: sep,
+				isSeparator: false,
+				menus: [item]
 			});
 			// davinci.Runtime.handleError("menu item not found:
 			// "+path);
@@ -533,9 +544,9 @@ dojo.mixin(davinci.Workbench, {
 						if (menu.__mainMenu) {
 							for ( var j = 0; j < menu.separator.length; j += 2) {
 								menuTree.push( {
-										id :menu.separator[j],
-										isSeparator :menu.separator[j + 1],
-										menus : []
+										id: menu.separator[j],
+										isSeparator: menu.separator[j + 1],
+										menus: []
 								});
 							}
 						} else {
@@ -544,7 +555,7 @@ dojo.mixin(davinci.Workbench, {
 							{
 								var menuItems=menu.populate();
 								for (var item in menuItems)
-									addItem(menuItems[item], menuItems[item]['menubarPath']);
+									addItem(menuItems[item], menuItems[item].menubarPath);
 							}
 								
 						}
@@ -622,7 +633,27 @@ dojo.mixin(davinci.Workbench, {
 		});
 		return dojoMenu;
 	},
+	
+	location : function(){
+		// reloads the browser with the current project.
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
 		
+		var searchString = split.length>1? split[1] : "";
+		return split[0];
+	},
+	
+	queryParams : function(){
+		// reloads the browser with the current project.
+		var fullPath = document.location.href;
+		var split = fullPath.split("?");
+		var searchString = split.length>1? split[1] : "";
+		// remove the ? from the front of the query string 
+		var params = dojo.queryToObject(searchString);
+		return params;
+		
+	},
+	
 	_openMenu: function (dojoMenu,menus,evt) {
 
 		if (dojoMenu._widgetCallback)
@@ -704,13 +735,17 @@ dojo.mixin(davinci.Workbench, {
 				if (item.scope)
 				{
 					var scope=this.actionScope[item.scope];
-					if (!scope)
-						davinci.Runtime.handleError("scope not defined for action: "+item.id);
+					if (!scope){
+						var langObj = dojo.i18n.getLocalization("davinci","webContent");
+						davinci.Runtime.handleError(dojo.string.substitute(langObj.scopeNotDefined,[item.id]));
+					}
 					else
 					{
 						var func=scope[item.run];
-						if (!func)
-							davinci.Runtime.handleError("function not defined for action: "+item.id);
+						if (!func){
+							var langObj = dojo.i18n.getLocalization("davinci","webContent");
+							davinci.Runtime.handleError(dojo.string.substitute(langObj.funcNotDefined,[item.id]));
+						}
 						else
 							func.apply(this);
 					}
@@ -885,7 +920,7 @@ dojo.mixin(davinci.Workbench, {
 			// already open
 			tabContainer.selectChild(tab);
 			var editor=tab.editor;
-			if (keywordArgs["startOffset"]) {
+			if (keywordArgs.startOffset) {
 				editor.select(keywordArgs);
 			}
 			return;
@@ -901,11 +936,12 @@ dojo.mixin(davinci.Workbench, {
 		});
 
 		var editorExtension = editorExtensions[0];
-		if (editorExtensions.length>1 && !dojo.some(editorExtensions, function(extension){
+		if (editorExtensions.length>1){
+			dojo.some(editorExtensions, function(extension){
 			editorExtension = extension;
 			return extension.isDefault;
-		}))
-		{
+		})}
+		/*{
 			var data={
 					listData:editorExtensions
 			};
@@ -928,7 +964,7 @@ dojo.mixin(davinci.Workbench, {
 					title:"Select Editor"
 			});
 			return;
-		}
+		}*/
 		var ee = this._createEditor(editorExtension,fileName,keywordArgs);
 		if(editorCreateCallback){
 			editorCreateCallback.call(window, ee);
@@ -940,8 +976,7 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs){
-		var nodeNameArray = new String(fileName).split('/'); // unnecessary conversion to String?
-		var nodeName = nodeNameArray[nodeNameArray.length-1];
+		var nodeName = fileName.split('/').pop()
 
 		var loading = dojo.query('.loading');
 		if (loading[0]){
@@ -996,16 +1031,6 @@ dojo.mixin(davinci.Workbench, {
 		}
 		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName);
 		
-//					var constr=dojo.getObject(editorExtension.editorClass);	  
-//		  			var editor = new constr(tab.domNode);
-//					editor.editorID=editorExtension.id;
-//					if (!content)
-//						content=editor.getDefaultContent();
-//					if (!content)
-//						content="";
-//					editor.setContent(fileName,content);
-//					editor.resourceFile=file;
-//					tab.editor=editor;
 		if (keywordArgs.startLine) {
 			tab.editor.select(keywordArgs);
 		}
@@ -1171,7 +1196,7 @@ dojo.mixin(davinci.Workbench, {
 			cmd=this.keyBindings[this.currentContext][seq];
 		}
 		if (!cmd) {
-			cmd=this.keyBindings['all'][seq];
+			cmd=this.keyBindings.all[seq];
 		}
 		if (cmd)
 		{
@@ -1307,7 +1332,7 @@ dojo.mixin(davinci.Workbench, {
 				editor: newEditor,
 				oldEditor: oldEditor
 			}]);
-		} catch (ex) {console.log(ex);}
+		} catch (ex) {console.error(ex);}
 		this._updateTitle(newEditor);
 		davinci.Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 	
@@ -1354,27 +1379,37 @@ dojo.mixin(davinci.Workbench, {
 		}
 	},
 
-	_initializeWorkbenchState: function()
-	{
-		var state= (this._state=davinci.Runtime.serverJSONRequest({
-			   url:"./cmd/getWorkbenchState", handleAs:"json",
-				   sync:true  }));
-		if (state&&state.editors)
-		{
+	_initializeWorkbenchState: function(){
+		var state= (this._state=davinci.Runtime.serverJSONRequest({url:"./cmd/getWorkbenchState", handleAs:"json", sync:true  }));
+		if (state&&state.editors){
 			state.version = davinci.version;
-			for (var i=0;i<state.editors.length;i++)
-			{
+			
+			var project = null;
+		
+			var singleProject = davinci.Runtime.singleProjectMode();
+		
+			if(singleProject){
+				var p = davinci.Runtime.getProject();
+				project = new davinci.model.Path(p);
+			}
+			
+			for (var i=0;i<state.editors.length;i++){
+				if(singleProject){
+					// if running in single user mode, only load editors open for specific projects
+					var path = new davinci.model.Path(state.editors[i]);
+					if(!path.startsWith(project)) continue;
+				}
+				
 				var resource=davinci.resource.findResource(state.editors[i]);
 				var noSelect=state.editors[i]!=state.activeEditor;
-				if (resource)
-				{
+				if (resource){
 					var resourceInfo=resource.getFileInfo();
 					davinci.Workbench.openEditor({
 						fileName: resource,
 						content: resource.getText(),
-						noSelect:noSelect,
-						isDirty:resourceInfo.isDirty,
-						'startup': false
+						noSelect: noSelect,
+						isDirty: resourceInfo.isDirty,
+						startup: false
 					});
 				}
 			}

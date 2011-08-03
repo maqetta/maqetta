@@ -1,13 +1,16 @@
 package org.davinci.ajaxLibrary;
 
 public class LibInfo {
-    public LibInfo(String id, String name, String version, String virtualRoot) {
+    
+	public LibInfo(String id, String name, String version, String virtualRoot) {
         this.setName(name);
         this.setVersion(version);
         this.setId(id);
         this.setVirtualRoot(virtualRoot);
+       
 
     }
+
 
     public void setVersion(String version) {
         this.version = version;
@@ -16,7 +19,7 @@ public class LibInfo {
     public String getVersion() {
         return version;
     }
-
+    
     public void setId(String id) {
         this.id = id;
     }
@@ -54,5 +57,6 @@ public class LibInfo {
     private String version;
     private String id;
     private String virtualRoot;
+
 
 }

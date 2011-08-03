@@ -130,6 +130,17 @@ davinci.model.Path.prototype.relativeTo = function(base, ignoreFilename  ){
 	return  (  new davinci.model.Path(newSegments,false,this.hasTrailing));
 }
 
+davinci.model.Path.prototype.startsWith = function(anotherPath  ){
+	var count = this.matchingFirstSegments(anotherPath)
+	return anotherPath._length()==count;
+		
+}
+
+davinci.model.Path.prototype._length = function(anotherPath  ){
+	return this.segments.length;
+		
+}
+
 davinci.model.Path.prototype.matchingFirstSegments = function(anotherPath  ){
 	var mySegments=this.segments;
 	var pathSegments=anotherPath.getSegments();
@@ -145,6 +156,7 @@ davinci.model.Path.prototype.matchingFirstSegments = function(anotherPath  ){
 }
 davinci.model.Path.prototype.removeFirstSegments = function(count  ){
     this.segments=this.segments.slice(count, this.segments.length);
+    return this;
 }
 
 davinci.model.Path.prototype.removeLastSegments = function(count  ){

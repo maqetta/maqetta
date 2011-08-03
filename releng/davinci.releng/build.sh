@@ -138,4 +138,11 @@ cd ${buildDirectory}
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
 java -Ddeployment-type="external" -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
+#
+# save exit code for later
+#
+exitCode=$?
+
 cd ${currentDirectory}
+
+exit ${exitCode}

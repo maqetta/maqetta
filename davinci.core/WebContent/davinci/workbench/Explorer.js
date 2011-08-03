@@ -65,15 +65,20 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 		 */
 		tree.domNode.style.height='100%';
 		tree.domNode.style.width='100%';
-		// the default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
-		var handler = tree.dndController.onMouseDown;
-		tree.dndController.onMouseDown = function(event){
-			var stop = dojo.stopEvent;
-			dojo.stopEvent = function(){};
-			handler.call(tree.dndController, event);
-			dojo.stopEvent = stop;	
-		};
 
+		// The default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
+		// Circumvent dojo.stopEvent temporarily.
+		var down = tree.dndController.onMouseDown,
+			handler = function(oldHandler, event){
+				var stop = dojo.stopEvent;
+				dojo.stopEvent = function(){};
+				try{
+					oldHandler.call(tree.dndController, event);
+				}finally{
+					dojo.stopEvent = stop;	
+				}
+			};
+		tree.dndController.onMouseDown = dojo.hitch(null, handler, down);
 		
 		var topDiv = dojo.doc.createElement('div');
 		

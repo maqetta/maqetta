@@ -70,7 +70,9 @@ public class SystemFileList extends Command {
         fileName = pathEscape(fileName);
         sb.append("{'name': '").append(fileName).append("',");
         sb.append("'parentDir': '").append(parentPath).append("',");
-        sb.append(" 'size': ").append(file.getTotalSpace()).append(",");
+// XXX getTotalSpace() wasn't introduced until Java 1.6, but we need to
+//	support Java 1.5.
+//        sb.append(" 'size': ").append(file.getTotalSpace()).append(",");
         sb.append("'modified': 1234567,");
         sb.append("  'directory': ").append(file.isDirectory()).append(",");
         if (file.isDirectory()) {

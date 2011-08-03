@@ -121,6 +121,6 @@ cd ${buildDirectory}
 # Run the Ant buildAll script from the davinci.releng project.
 #
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type="external" -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml
+java -Ddeployment-type="external" -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 cd ${currentDirectory}

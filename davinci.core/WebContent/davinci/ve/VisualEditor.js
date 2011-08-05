@@ -391,7 +391,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		editor.save();
 		if(deviceName && deviceName.length>0 && deviceName!='none'){
 			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			var url = widavinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
+			var url = davinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 			window.open(url);
 		}else{
 			window.open(fileURL);

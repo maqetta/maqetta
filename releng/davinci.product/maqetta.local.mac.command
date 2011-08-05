@@ -25,6 +25,7 @@ echo       STOP THE MAQETTA SERVER PROCESS
 echo !!!!!!!!!!!!!
 echo
 port=50000
+consolePort=50005
 scriptdir=`dirname "$0"`
 # usersdir="$HOME/Library/Application Support/maqetta/users"
 usersdir="$scriptdir"/users
@@ -41,4 +42,4 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta -Dmaqetta.localInstall=true "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -jar "$jarFilePath" -console -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta -Dmaqetta.localInstall=true "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -jar "$jarFilePath" -console 50005 -noExit

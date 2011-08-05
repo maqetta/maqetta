@@ -93,14 +93,12 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		}
 	},
 
-	resize: function(box){
+	resize: function(box, widget){
 		if(!box){
 			return;
 		}
 
 		var b = dojo.mixin(this._box, box);
-		b.w = box.w;
-		b.h = box.h;
 
 		// Adjust for size of border when near the top left corner of the screen
 		if(b.l < this.size){
@@ -124,13 +122,14 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 			b.h = 0;
 		}
 
-		// Right/bottom edge must stay on screen
+		// When a single widget is 100%x100%, right/bottom edge must stay on screen
 		var container = this._context.getContainerNode();
-		if(b.l + b.w > container.scrollWidth){
-			b.w = container.scrollWidth - this.size * 2;
-		}
-		if(b.t + b.h > container.scrollHeight){
+		if(widget.getParent().type == "html.body" && widget.domNode.style.height == "100%"){
 			b.h = container.scrollHeight - this.size * 2;
+		}
+
+		if(widget.getParent().type == "html.body" && widget.domNode.style.width == "100%"){
+			b.w = container.scrollWidth - this.size * 2;
 		}
 
 		var h = b.h + this.size * 2;

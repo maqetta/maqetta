@@ -122,14 +122,16 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 			b.h = 0;
 		}
 
-		// When a single widget is 100%x100%, right/bottom edge must stay on screen
-		var container = this._context.getContainerNode();
-		if(widget.getParent().type == "html.body" && widget.domNode.style.height == "100%"){
-			b.h = container.scrollHeight - this.size * 2;
-		}
-
-		if(widget.getParent().type == "html.body" && widget.domNode.style.width == "100%"){
-			b.w = container.scrollWidth - this.size * 2;
+		// When a single widget at the top-level is 100%x100%, right/bottom edge must stay on screen
+		if(widget.getParent().type == "html.body"){
+			var container = this._context.getContainerNode();
+			if(widget.domNode.style.height == "100%"){
+				b.h = container.scrollHeight - this.size * 2;
+			}
+	
+			if(widget.domNode.style.width == "100%"){
+				b.w = container.scrollWidth - this.size * 2;
+			}
 		}
 
 		var h = b.h + this.size * 2;

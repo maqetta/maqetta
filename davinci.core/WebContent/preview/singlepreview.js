@@ -7,7 +7,6 @@ dojo.require("dijit.form.Select");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("preview", "preview");
-var langObj = dojo.i18n.getLocalization("preview", "preview");
 
 dojo.declare("preview.singlepreview", [dijit._Widget], {
 
@@ -27,6 +26,7 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 	
 	buildRendering: function() {
 		this._connects=[];
+		var langObj = dojo.i18n.getLocalization("preview", "preview");
 		if(this.devicelist && this.devicelist.length>0 && this.iframefilename){
 			this.addStyleDeclarations();
 			this.domNode = this.srcNodeRef;

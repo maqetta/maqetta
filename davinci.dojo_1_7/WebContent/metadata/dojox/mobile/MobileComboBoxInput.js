@@ -4,7 +4,6 @@ dojo.require("davinci.commands.OrderedCompoundCommand");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.ve.input.SmartInput, {
 
@@ -19,7 +18,12 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileComboBoxInput", davinci.
 	displayOnCreate: "true",
 	
 	supportsHTML: "false",
-	helpText: langObj.mobileComboBoxHelp1 + "<br />" + langObj.mobileComboBoxHelp2,
+	helpText: "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
+		this.helpText = langObj.mobileComboBoxHelp1 + "<br />" + langObj.mobileComboBoxHelp2;
+	},
 	
 	getProperties: function(widget, options) {
 		var oldValue = widget.attr("value");

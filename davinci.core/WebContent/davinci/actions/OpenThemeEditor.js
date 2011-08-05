@@ -5,12 +5,12 @@ dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.actions", "actions");
-var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 
 dojo.declare("davinci.actions.OpenThemeEditor", null, {
 	
 	constructor: function(){
 	
+		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		this._themeChooser = new davinci.ui.widgets.ThemeSelection({value:"                ", 'searchWorkspace':false});
 		var diag = null;
 		if(this._themeChooser.get('numberOfThemes') > 0)

@@ -3,7 +3,6 @@ dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 
@@ -11,7 +10,12 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput", davinci.
 	multiLine: "true",
 	format: "rows",
 	supportsHTML: "true",
-	helpText:  langObj.edgeToEdgeListHelp
+	helpText:  "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
+		this.helpText = langObj.edgeToEdgeListHelp;
+	}
 
 	
 });

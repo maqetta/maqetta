@@ -3,14 +3,18 @@ dojo.require("davinci.ve.input.SmartInput");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.SpinWheelSlotInput", davinci.ve.input.SmartInput, {
 
 	property: "value",
 	supportsHTML: "false",
 	displayOnCreate: "false",
-	helpText: langObj.spinWheelSlotHelp,
+	helpText: "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
+		this.helpText = langObj.spinWheelSlotHelp;
+	},
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 

@@ -7,8 +7,6 @@ dojo.require("dojox.form.DropDownSelect");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-var helpInfo = "<i>"+langObj.edgeToEdgeFormat+"</i>";
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput", davinci.libraries.dojo.dojo.data.DataStoreBasedWidgetInput, {
 
@@ -20,7 +18,13 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.EdgeToEdgeDataListInput", davi
 	multiLine: "true",
 	supportsHTML: "false", 
 	
-	helpText:  dojo.string.substitute(langObj.edgeToEdgeDataListHelp,[helpInfo]),
+	helpText:  "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
+		var helpInfo = "<i>"+langObj.edgeToEdgeFormat+"</i>";
+		this.helpText = dojo.string.substitute(langObj.edgeToEdgeDataListHelp,[helpInfo]);
+	},
 
 
     updateStore: function() {

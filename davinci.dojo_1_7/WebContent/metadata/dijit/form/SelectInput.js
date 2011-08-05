@@ -3,12 +3,16 @@ dojo.require("davinci.libraries.dojo.dijit.form.OptionsInput");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 
 dojo.declare("davinci.libraries.dojo.dijit.form.SelectInput", davinci.libraries.dojo.dijit.form.OptionsInput, {
 	
 	supportsHTML: "false",
-	helpText: langObj.selectInputHelp,
+	helpText: "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
+		this.helpText = langObj.selectInputHelp;
+	},
 	
 	getProperties: function(widget, options) {
 		var oldValue = widget.attr("value");

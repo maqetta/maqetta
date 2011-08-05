@@ -9,7 +9,6 @@ dojo.require("dijit.TooltipDialog");
 dojo.require("dijit.form.Button");
 
 dojo.requireLocalization("dijit", "common");
-var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	
@@ -26,6 +25,7 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 		top.appendChild(this._colorPicker.domNode);
 		var bd = dojo.doc.createElement("div");
 		
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		var okButton = dijit.form.Button({label:dijitLangObj.buttonOk});
 		okButton.innerHtml = "OK";
 		bd.appendChild(okButton.domNode);

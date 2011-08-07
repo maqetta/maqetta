@@ -1,4 +1,31 @@
 #!/bin/sh
+
+print_help() {
+    echo "Usage: ./maqetta.local.mac.command [OPTION]..."
+    echo ""
+    echo "Options:"
+    echo " -c, --consolePort <port>    enable console, listening on port number <port>"
+    echo " -h, --help                  show this message"
+}
+
+# parse options
+while [ "${1+isset}" ]; do
+    case "$1" in
+        -c|--consolePort)
+            consolePort="-console $2"
+            shift 2
+            ;;
+        -h|--help)
+            print_help
+            exit
+            ;;
+        *)
+            echo "Error: Unknown option: $1" >&2
+            exit 1
+            ;;
+    esac
+done
+
 # Make sure user has Java 1.6 installed
 javaversion=`java -version 2>&1 | grep "java version"`
 if [ -z "$javaversion" ]; then
@@ -25,7 +52,6 @@ echo       STOP THE MAQETTA SERVER PROCESS
 echo !!!!!!!!!!!!!
 echo
 port=50000
-consolePort=50005
 scriptdir=`dirname "$0"`
 # usersdir="$HOME/Library/Application Support/maqetta/users"
 usersdir="$scriptdir"/users
@@ -42,4 +68,4 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta -Dmaqetta.localInstall=true "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -jar "$jarFilePath" -console 50005 -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=$port  -Dorg.eclipse.equinox.http.jetty.context.path=/maqetta -Dmaqetta.localInstall=true "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -jar "$jarFilePath" $consolePort -noExit

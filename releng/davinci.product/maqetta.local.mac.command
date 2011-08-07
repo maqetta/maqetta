@@ -4,13 +4,21 @@ print_help() {
     echo "Usage: ./maqetta.local.mac.command [OPTION]..."
     echo ""
     echo "Options:"
+    echo " -p, --port <port>           server listens on port # <port>; defaults to 50000"
     echo " -c, --consolePort <port>    enable console, listening on port number <port>"
     echo " -h, --help                  show this message"
 }
 
+# defaults
+port=50000
+
 # parse options
 while [ "${1+isset}" ]; do
     case "$1" in
+        -p|--port)
+            port=$2
+            shift 2
+            ;;
         -c|--consolePort)
             consolePort="-console $2"
             shift 2
@@ -51,7 +59,6 @@ echo NOTE: CLOSING THIS WINDOW WILL
 echo       STOP THE MAQETTA SERVER PROCESS
 echo !!!!!!!!!!!!!
 echo
-port=50000
 scriptdir=`dirname "$0"`
 # usersdir="$HOME/Library/Application Support/maqetta/users"
 usersdir="$scriptdir"/users

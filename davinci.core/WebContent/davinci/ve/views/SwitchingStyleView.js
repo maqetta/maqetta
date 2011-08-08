@@ -24,19 +24,19 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 
 	pageTemplate : [
 	         
-	          {key: "Common", 
+	          {key: "common", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
-	          {key: "Widget-specific",
+	          {key: "widgetSpecific",
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
-	          {key: "Events", 
+	          {key: "events", 
 		          pageTemplate:{html: "<div dojoType='davinci.ve.widgets.EventSelection'></div>"}},
-	          {key: "Layout",
+	          {key: "layout",
 		       	  /* startsNewGroup:true, // This flag causes a few extra pixels between this and previous button */
 	           	  pageTemplate:[{display:"width", type:"multi", target:"width", values:['', 'auto','100%','200px','10em']},
 	            	                
     	                {display:"height", type:"multi", target:"height", values:['','auto','100%','200px','10em']},
     	                {html:"&nbsp;"},
-    	                {key: "show min/max", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
+    	                {key: "showMinMax", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
     	                	pageTemplate:[{display:"min-height", type:"multi", target:"min-height", rowClass:"propertiesSectionHidden"},
                                 {display:"max-height", type:"multi", target:"max-height", rowClass:"propertiesSectionHidden"},
                                 {display:"min-width", type:"multi", target:"min-width", rowClass:"propertiesSectionHidden"},
@@ -56,7 +56,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 	            	                
 	            	                
 	            	                ]},
-	           {key: "Padding/Margins", 
+	           {key: "paddingMargins", 
 	           	  pageTemplate:[
     	                {display:"<b>(padding)</b>", type:"multi", target:"padding", values:['', '0px', '1em']},
 		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
@@ -75,7 +75,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     		 			       {display:"margin-left", type:"multi", target:"margin-left", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
     	                	]}
     	                ]},
-	           {key: "Background", 
+	           {key: "background", 
 	       		  pageTemplate : [{display:"background-color", type:"color", target:'background-color'},
 /* FIXME: Gradients not working yet. Comment out switch for now 
     	                {display:"image/gradient", type:"combo", values:['image', 'gradient']},
@@ -101,7 +101,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     			 	    {display:"size", target:"none", type:"multi"}
 */                			 	    
     		       	   ]},
-	           {key:"Border", 
+	           {key:"border", 
 		       		pageTemplate : [
    		                {display:"<b>(border)</b>", type:"multi", target:'border', values:['','none','1px solid black']}, 
    		                {display:"show", type:"combo", values:['none','sides','props','all'],
@@ -174,7 +174,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		                     {display:"border-bottom-left-radius", type:"multi", target:['border-bottom-left-radius','-moz-border-radius-bottomleft'] , values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"}
 	    	                ]}
 		            	  ]},
-	           {key: "Fonts and Text",
+	           {key: "fontsAndText",
 	                  pageTemplate:[{display:"font", type:"text", target:"font"},
                         {display:"font-family", type:"font", target:"font-family"},
     	                {display:"size", type:"multi", target:"font-size", values:['','100%','1em','10px','10pt']},
@@ -212,51 +212,14 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		//run through pageTemplate to insert localized strings
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		for(var i=0;i<this.pageTemplate.length;i++){
-			switch(this.pageTemplate[i].key)
-			{
-				case "Common":
-					this.pageTemplate[i].title = langObj.common;
-					break;
-				case "Widget-specific":
-					this.pageTemplate[i].title = langObj.widgetSpecific;
-					break;
-				case "Events":
-					this.pageTemplate[i].title = langObj.events;
-					break;
-				case "Layout":
-					this.pageTemplate[i].title = langObj.layout;
-					for(var j=0; j<this.pageTemplate[i].pageTemplate.length; j++){
-						if(this.pageTemplate[i].pageTemplate[j].key && this.pageTemplate[i].pageTemplate[j].key == "show min/max"){
-							this.pageTemplate[i].pageTemplate[j].display += langObj.showMinMax;
-						}
+			this.pageTemplate[i].title = langObj[this.pageTemplate[i].key] ? langObj[this.pageTemplate[i].key] : "Key not found";
+			if(this.pageTemplate[i].pageTemplate){
+				for(var j=0; j<this.pageTemplate[i].pageTemplate.length; j++){
+					if(this.pageTemplate[i].pageTemplate[j].key){
+						this.pageTemplate[i].pageTemplate[j].display += langObj[this.pageTemplate[i].pageTemplate[j].key] ? langObj[this.pageTemplate[i].pageTemplate[j].key] : "Key not found";
 					}
-					break;
-				case "Padding/Margins":
-					this.pageTemplate[i].title = langObj.paddingMargins;
-					for(var j=0; j<this.pageTemplate[i].pageTemplate.length; j++){
-						if(this.pageTemplate[i].pageTemplate[j].key && this.pageTemplate[i].pageTemplate[j].key == "showtrbl"){
-							this.pageTemplate[i].pageTemplate[j].display += langObj.showtrbl;
-						}
-					}
-					break;
-				case "Background":
-					this.pageTemplate[i].title = langObj.background;
-					break;
-				case "Border":
-					this.pageTemplate[i].title = langObj.border;
-					for(var j=0; j<this.pageTemplate[i].pageTemplate.length; j++){
-						if(this.pageTemplate[i].pageTemplate[j].key && this.pageTemplate[i].pageTemplate[j].key == "showDetails"){
-							this.pageTemplate[i].pageTemplate[j].display += langObj.showDetails;
-						}
-					}
-					break;
-				case "Fonts and Text":
-					this.pageTemplate[i].title = langObj.fontsAndText;
-					break;
-				default:
-					this.pageTemplate[i].title = "Template not found";
+				}
 			}
-			
 		}
 		for(var i=0;i<this.pageTemplate.length;i++){
 			var title=this.pageTemplate[i].title;

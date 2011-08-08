@@ -117,7 +117,7 @@
             ],
             "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.ve.input.StackContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
         {
             "name": "AccordionContainer",
@@ -1436,7 +1436,7 @@
             "tool": "davinci.libraries.dojo.dojo.data.DataStoreCreateTool",
             "resizable": "none",
             "invisible": false,
-            "inlineEdit": "davinci.ve.input.ItemFileReadStoreInput"
+            "inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput"
         },
         {
             "name": "ForestStoreModel",
@@ -1485,7 +1485,7 @@
             ],
             "helper": "davinci.libraries.dojo.dijit.form.DataListHelper",
             "tool": "davinci.libraries.dojo.dijit.form.DataListCreateTool",
-            /*"inlineEdit": "davinci.ve.input.ItemFileReadStoreInput" */
+            /*"inlineEdit": "davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput" */
         },
         {
             "name": "View",

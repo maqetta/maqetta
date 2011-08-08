@@ -1,6 +1,6 @@
 <project name="maqetta-internal" default="populate">
     <target name="populate">
-        <condition property="getMethod" value="fromGit" else="localCopy">
+    	<condition property="getMethod" value="fromGit" else="localCopy">
             <not>
                 <isset property="maqettaCode"/>
             </not>
@@ -23,7 +23,9 @@
         <!-- -->
         <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
         <!-- -->
-
+    	
+    	
+    	
         <populateDir project="davinci.core"/>
         <populateDir project="davinci.dojo_1_7"/>
         <populateDir project="davinci.html"/>

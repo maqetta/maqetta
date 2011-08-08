@@ -12,6 +12,20 @@
 
    <windowImages/>
 
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <license>
+        <url>1</url>
+   </license>
+
    <plugins>
       <plugin id="javax.servlet"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
@@ -23,7 +37,7 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.equinox.server.core" version="1.0.0.qualifier"/>
+      <feature id="org.eclipse.equinox.server.core" version="1.0.1.qualifier"/>
       <feature id="org.eclipse.equinox.server.servletbridge" version="1.0.0.qualifier"/>
       <feature id="davinci.war" version="1.0.0.qualifier"/>
    </features>
@@ -32,9 +46,9 @@
       <plugin id="davinci.core" autoStart="true" startLevel="4" />
       <plugin id="davinci.dojo_1_7" autoStart="true" startLevel="5" />
       <plugin id="davinci.html" autoStart="true" startLevel="5" />
-      <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="5" />
       <plugin id="davinci.jqueryui_1_8" autoStart="true" startLevel="5" />
       <plugin id="davinci.review" autoStart="true" startLevel="5" />
+      <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="5" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="3" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.core.jobs" autoStart="true" startLevel="2" />

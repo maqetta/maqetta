@@ -1,5 +1,6 @@
 <project name="maqetta-external" default="populate">
-    <target name="populate">
+	
+	<target name="populate">
         <condition property="getMethod" value="fromGit" else="localCopy">
             <not>
                 <isset property="maqettaCode"/>
@@ -23,7 +24,7 @@
         <!-- -->
         <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
         <!-- -->
-
+		
         <populateDir project="davinci.core"/>
         <populateDir project="davinci.dojo_1_7"/>
         <populateDir project="davinci.html"/>
@@ -34,6 +35,6 @@
         <populateDir project="davinci.joomla"/>
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
-
+        <populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
     </target>
 </project>

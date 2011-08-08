@@ -22,6 +22,8 @@ else
     export buildDirectory=${MAQETTA_BUILD_DIR}
 fi
 
+echo "Using ${buildDirectory} for build out directory.."
+
 #
 # If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
 #
@@ -131,6 +133,29 @@ else
     cd ${maqettaCode}
     git describe >${buildDirectory}/build.level
 fi
+
+# Retrieve external equinox dependancies
+
+equinoxGitRepo="git://git.eclipse.org/gitroot/equinox/rt.equinox.bundles.git/"
+
+# Stable version of equinox to checkout 
+equinoxBranch="remotes/origin/R3_6_maintenance"
+
+# Set up for and pull down the latest code from GitHub
+#
+export equinoxRepo=${buildDirectory}/repository/rt.equinox.bundles
+#
+if [ ! -f ${equinoxRepo}/.git ]
+then
+      echo "Cloning Equinox repository. This may take a few moments..."
+      cd ${buildDirectory}/repository
+      git clone ${equinoxGitRepo}
+fi
+
+echo "Switching Equinox to branch ${equinoxBranch}..."
+cd ${equinoxRepo}
+git checkout ${equinoxBranch}
+
 
 #
 # Change directory to the build directory.

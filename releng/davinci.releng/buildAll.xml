@@ -1,6 +1,7 @@
 <project name="maqetta" default="nightly">
 
-    <import file="${deployment-type}.xml"/>
+	<!--<include file="equinox-depends.xml"/>-->
+	<import file="${deployment-type}.xml"/>
     
     <target name="nightly" depends="init">
         <tstamp>
@@ -11,13 +12,16 @@
         </antcall>
         <antcall target="populate">
         </antcall>
+    	
+    	<antcall target="populateEquinoxBridge">
+    	     </antcall>
+    	
         <antcall target="zips">
         </antcall>
         <antcall target="updateZips">
         </antcall>
-        <!--
         <antcall target="war"></antcall>
-        -->
+        
     </target>
 
     <target name="updateZips" depends="addJoomla, addW3ibm"></target>
@@ -35,6 +39,34 @@
             <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
         </antcall>        
     </target>
+	
+    <target name="populateEquinoxBridge">
+   
+        <macrodef name="populateEDir">
+            <attribute name="project"/>
+            <attribute name="isFeature" default="false"/>
+            <attribute name="isInternal" default="false"/>
+            <attribute name="extPath" default=""/>
+            <sequential>
+                <antcall target="fromEquinox">
+                    <param name="project" value="@{project}"/>
+                    <param name="isFeature" value="@{isFeature}"/>
+                    <param name="extPath" value="@{extPath}"/>
+                </antcall>
+            </sequential>
+        </macrodef>
+
+        <!-- -->
+        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
+        <!-- -->
+
+        <populateEDir project="org.eclipse.equinox.http.servletbridge"/>
+        <populateEDir project="org.eclipse.equinox.server.core" isFeature="true"/>
+        <populateEDir project="org.eclipse.equinox.server.servletbridge" isFeature="true"/>
+        <populateEDir project="org.eclipse.equinox.servletbridge"/>
+        <populateEDir project="org.eclipse.equinox.servletbridge.extensionbundle"/>
+    </target>
+
 
     <target name="init">
         <!--  copy environment vars -->
@@ -61,7 +93,9 @@
         <initEnvVar varName="myOS"/>
         <initEnvVar varName="myWS"/>
         <initEnvVar varName="myArch"/>
-
+        <initEnvVar varName="equinoxRepo"/>
+    	
+    	
         <property file="build.properties">
         </property>
         <mkdir dir="${buildDirectory}/plugins"/>
@@ -155,9 +189,33 @@
         <copy todir="${buildDirectory}/${pluginDir}/${project}">
             <fileset dir="${maqettaRepository}${extPath}/${project}"/>
         </copy>
+    	
+    	<!--
+    	<copy todir="${buildDirectory}/${pluginDir}/${project}">
+            <fileset dir="${maqettaRepository}${extPath}/${project}"/>
+        </copy>
+        -->
+    	
         <defaultexcludes default="true"/>
     </target>
 
+    <target name="fromEquinox">
+        <condition property="pluginDir" value="features" else="plugins">
+            <istrue value="${isFeature}"/>
+        </condition>
+        <condition property="sourcePath" value="features" else="bundles">
+              <istrue value="${isFeature}"/>
+         </condition>
+        <defaultexcludes remove="**/.git"/>
+        <defaultexcludes remove="**/.git/**"/>
+        <defaultexcludes remove="**/.svn"/>
+        <defaultexcludes remove="**/.svn/**"/>
+        <copy todir="${buildDirectory}/${pluginDir}/${project}">
+            <fileset dir="${equinoxRepo}/${sourcePath}/${project}"/>
+        </copy>
+        <defaultexcludes default="true"/>
+    </target>
+	
     <target name="buildPlugin">
         <property name="pluginDestination" value="${buildDirectory}/${buildLabel}"/>
         <eclipse.generateFeature

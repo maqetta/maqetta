@@ -31,13 +31,6 @@
          unpack="false"/>
 
    <plugin
-         id="davinci.dojo_1_6"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="davinci.yui_2_6_0"
          download-size="0"
          install-size="0"
@@ -65,26 +58,27 @@
          version="0.0.0"
          unpack="false"/>
 
-
-         
    <plugin
          id="org.eclipse.core.runtime"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
    <plugin
          id="org.eclipse.equinox.preferences"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
    <plugin
          id="org.eclipse.core.contenttype"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
    <plugin
          id="org.eclipse.equinox.app"
          download-size="0"
@@ -92,5 +86,11 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="davinci.dojo_1_7"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

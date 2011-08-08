@@ -110,9 +110,9 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 //		});
 		
 		var sourceTreeModel = this.sourceTreeMode = new dijit.tree.TreeStoreModel({
+			deferItemLoadingUntilExpand: true,
 			store: new davinci.review.model.store.GeneralReviewReadStore({
 				root: new davinci.model.Resource.Folder(".",null),
-				deferItemLoadingUntilExpand: true,
 				getLabel: function(item){
 					var label = item.getName();
 					if (item.link){ label=label + "  [" + item.link + "]"; }
@@ -127,9 +127,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var sourceTree = this.sourceTree = new dijit.Tree({
 			showRoot:false,
 			model: sourceTreeModel, 
-			
 			labelAttr: "name", 
-			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect: true,
 			onDblClick: dojo.hitch(this,doubleClick),
@@ -146,7 +144,6 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var targetTreeModel = this.targetTreeModel = new dijit.tree.TreeStoreModel({
 			store: new davinci.review.model.store.GeneralReviewReadStore({
 				root: new davinci.review.model.Resource.Empty(),
-				deferItemLoadingUntilExpand: true,
 				getLabel: function(item){
 					var label = item.getName();
 					if (item.link){ label=label + "  [" + item.link + "]"; }
@@ -158,9 +155,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var targetTree = this.targetTree = new davinci.review.widgets.Tree({
 			showRoot:false,
 			model: targetTreeModel, 
-			
 			labelAttr: "name", 
-			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect : true
 		});

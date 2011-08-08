@@ -69,9 +69,7 @@ dojo.declare("davinci.review.model.store.GeneralReviewReadStore", null, {
 	isItemLoaded: function(/* anything */ something){
 		var result = this.isItem(something);
 		if(result && typeof something == "object"){
-			result = dojo.some(this._loadedItems, function(item){
-				if(this.getIdentity(something) == this.getIdentity(item)){ return true; }
-			}, this);
+			result = something.isLoaded;
 		}
 		return result;
 	},
@@ -84,10 +82,11 @@ dojo.declare("davinci.review.model.store.GeneralReviewReadStore", null, {
 				var scope = keywordArgs.scope ? keywordArgs.scope : dojo.global;
 				self._loadedItems = self._loadedItems.concat(children);
 				item.children = children;
+				item.isLoaded = true;
 				dojo.forEach(children, function(child){
 					child.r = self; // Indicate that this item belongs to this store
-					keywordArgs.onItem.call(scope, child);
 				});
+				keywordArgs.onItem && keywordArgs.onItem.call(scope, item);
 			}, true);
 		}
 	},
@@ -96,6 +95,9 @@ dojo.declare("davinci.review.model.store.GeneralReviewReadStore", null, {
 		// Return the root node only
 		if(keywordArgs.onComplete){
 			var scope = keywordArgs.scope ? keywordArgs.scope : dojo.global;
+			this.root.r = this;
+			this._loadedItems.push(this.root);
+			this.loadItem({item: this.root});
 			keywordArgs.onComplete.call(scope, [this.root]);
 		}
 		return keywordArgs;
@@ -110,6 +112,6 @@ dojo.declare("davinci.review.model.store.GeneralReviewReadStore", null, {
 	},
 	
 	hasAttribute: function(item, attribute){
-		return this.isItem(item) && typeof item[attribute];
+		return this.isItem(item) && (attribute == "children" ? item.elementType == "Folder" : typeof item[attribute]);
 	}
 });

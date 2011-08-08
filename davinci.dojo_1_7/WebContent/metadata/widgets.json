@@ -117,7 +117,7 @@
             ],
             "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.ve.input.StackContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
         {
             "name": "AccordionContainer",

@@ -3,7 +3,6 @@ dojo.require("davinci.libraries.dojo.dijit.layout.ContainerInput");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 
 dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 
@@ -15,7 +14,12 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonInput", davinci.li
 	
 	supportsHTML: "true",
 	
-	helpText: langObj.dropDownButtonInputHelp,
+	helpText: "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
+		this.helpText = langObj.dropDownButtonInputHelp;
+	},
 	
 	serialize: function(widget, callback, value) {
 		var result = [];

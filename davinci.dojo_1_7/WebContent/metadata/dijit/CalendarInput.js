@@ -3,7 +3,6 @@ dojo.require("davinci.ve.input.SmartInput");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 
 dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.SmartInput, {
 
@@ -11,7 +10,12 @@ dojo.declare("davinci.libraries.dojo.dijit.CalendarInput", davinci.ve.input.Smar
 	property: "value",
 	supportsHTML: "false",
 	displayOnCreate: "false",
-	helpText: langObj.calendarInputHelp,
+	helpText: "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
+		this.helpText = langObj.calendarInputHelp;
+	},
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 		// TODO: Add code to simplify the initial text

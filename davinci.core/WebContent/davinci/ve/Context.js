@@ -15,7 +15,7 @@ dojo.declare("davinci.ve.Context", null, {
 	moduleLoader: null,
 	immediatePropertyUpdates: false,
 	
-	_subscriptions : [],
+	_subscriptions: [],
 	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
@@ -61,7 +61,7 @@ dojo.declare("davinci.ve.Context", null, {
 	/*
 	 * @returns the path to the file being edited
 	 */
-	getPath : function(){
+	getPath: function(){
 		
 		/*
 		 * FIXME:
@@ -232,7 +232,7 @@ dojo.declare("davinci.ve.Context", null, {
 		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
-	getLibraryBase : function(id, version){
+	getLibraryBase: function(id, version){
 		return davinci.library.getLibRoot(id,version, this.getResourcePath()) || "";
 	},
 
@@ -319,7 +319,7 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	
 	
-	getMobileDevice : function(){
+	getMobileDevice: function(){
 		
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
@@ -330,8 +330,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	setMobileDevice: function (device){
-		if (!device)
+		if (!device) {
 			device = 'none';
+		}
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		var htmlElement=this.getDocumentElement();
@@ -420,7 +421,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 
-	themeChanged : function(){
+	themeChanged: function(){
 		var changed = true;
 		// check for false alarms to avoid reloading theme
 		var model = this.getModel();
@@ -464,10 +465,11 @@ dojo.declare("davinci.ve.Context", null, {
 		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope]);
 	},
 
-	getDojoUrl : function(){
-		 var loc=davinci.Workbench.location();
-			if (loc.charAt(loc.length-1)=='/')
-				loc=loc.substring(0,loc.length-1);
+	getDojoUrl: function(){
+		var loc=davinci.Workbench.location();
+		if (loc.charAt(loc.length-1)=='/') {
+			loc=loc.substring(0,loc.length-1);
+		}
 			
 		if(document && document.getElementsByTagName){
 			var scripts = document.getElementsByTagName("script");
@@ -486,7 +488,7 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	getResourcePath : function(){
+	getResourcePath: function(){
 		var model = this.getModel();
 		var filename = model.fileName;
 		var path = new davinci.model.Path(filename);
@@ -1007,11 +1009,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	},
 	
 	getStyle: function(){
-		return (this._header ? this._header.style : undefined);
+		return this._header ? this._header.style : undefined;
 	},
 
 	setStyle: function(style){
-		var values = (davinci.ve.widget.parseStyleValues(style) );
+		var values = (davinci.ve.widget.parseStyleValues(style));
 		if(this._header){
 			var oldValues = davinci.ve.widget.parseStyleValues(this._header.style);
 			if(oldValues){
@@ -1029,7 +1031,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 //		davinci.ve.widget.setStyleValues(this.container, values); //TODO
 	},
 
-	loadStyleSheet : function(url) {
+	loadStyleSheet: function(url) {
 		if (!url) {
 			return;
 		}
@@ -1056,7 +1058,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		this._links.push(link);
 	},
 
-	addModeledStyleSheet : function(url, libBasePath) {
+	addModeledStyleSheet: function(url, libBasePath) {
 		this.loadStyleSheet(url);
 		if (!this.model.hasStyleSheet(url)) {
 			this.model.addStyleSheet(url);
@@ -1390,12 +1392,12 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					this._connects.push(dojo.connect(focus, "onExtentChange", this, "onExtentChange"));
 					focus._connected = true;
 				}
-				focus.resize(state.box);
+				var w = this.getSelection();
+				focus.resize(state.box, w[0]);
 				focus.allow(state.op);
 				if(focus.domNode.parentNode != containerNode){
 					containerNode.appendChild(focus.domNode);
 				}
-				var w = this.getSelection();
 				focus.show(w[0],inline);
 			}else{ // hide
 				focus.hide();
@@ -1799,7 +1801,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		return selector;
 	},
-	getSelector : function( widget, target){
+	getSelector: function( widget, target){
 		// return rules based on metadata IE theme
 		
 		var theme = this.getThemeMeta();
@@ -1971,7 +1973,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					// XXX Nasty nasty nasty special case for dojo attribute thats
 					// required. Need to generalize in the metadata somehow.
 					this.addHeaderScript(url, {
-						'djConfig' : "parseOnLoad: true"
+						djConfig: "parseOnLoad: true"
 					});
 				}else{
 					this.addHeaderScript(url);

@@ -6,15 +6,15 @@ dojo.require("dijit.layout.LayoutContainer");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dijit", "dijit");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
 dojo.requireLocalization("dijit", "common");
-var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci.libraries.dojo.dijit.layout.ContainerInput, {
 	
 	show: function(widgetId){
 	//debugger;
 	this._widget = davinci.ve.widget.byId(widgetId);
+	var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dijit", "dijit");
+	var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		if (!this._inline) {
 			this._inline = new dijit.Dialog({
                 title: langObj.borderContainerDialog,

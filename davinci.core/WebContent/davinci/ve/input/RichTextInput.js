@@ -13,9 +13,7 @@ dojo.require("dojox.layout.ResizeHandle");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ve", "ve");
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 dojo.requireLocalization("dijit", "common");
-var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 
@@ -24,13 +22,19 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	
 //	multiLine: "false",
 	//supportsHTML: "false",
-	helpText:  langObj.richTextInputHelp,
+	//helpText:  "test",
 	
 //	displayOnCreate: "true",
 	property: 'richText',
     displayOnCreate: 'true',
 //	_connection: [],
 	
+    
+	getHelpText: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		return langObj.richTextInputHelp;
+	},
+    
     show: function(widgetId){ 
 
 		this._widget = davinci.ve.widget.byId(widgetId);
@@ -106,6 +110,7 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	},
 	_getTemplate: function(){
 		
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		var editBox = ''+
 		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 400px; height: 245px;" >' + 
 		"<div dojoType=\"dijit.Editor\" width=\"600\" height=\"200\" id=\"davinciIleb\"  style=\"border-width: 0px;\" plugins=\"['undo','redo','|','cut','copy','paste','|','bold','italic','underline','strikethrough','foreColor','hiliteColor','insertHorizontalRule','createLink','unlink','insertImage','delete','removeFormat','|', 'insertOrderedList','insertUnorderedList','indent', 'outdent', 'justifyLeft', 'justifyCenter', 'justifyRight','fontName', 'fontSize', 'formatBlock']\" > </div>"+

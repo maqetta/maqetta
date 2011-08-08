@@ -9,13 +9,14 @@
 var SERVER_URL = 'http://localhost:50000/maqetta',
 
     page = new WebPage(),
-    reErrorMsg = /^[a-zA-Z]*Error:/;
+    reErrorMsg = /(^[a-zA-Z]*Error:|\WException\W)/;
 
 
 page.onConsoleMessage = function(msg, lineNum, sourceId) {
     // Exit if there is an error message
     if (reErrorMsg.test(msg)) {
         console.error(msg);
+        console.error('\t' + sourceId + ' @ line ' + lineNum);
         phantom.exit(1);
     }
     console.log(msg);

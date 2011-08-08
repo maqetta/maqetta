@@ -3,7 +3,8 @@ dojo.require("davinci.actions.Action");
 dojo.require("davinci.resource");
 //dojo.require("davinci.ve.commands.ChangeThemeCommand");
 
-
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.actions", "actions");
 
 dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 	
@@ -58,9 +59,9 @@ dojo.declare("davinci.actions.SelectLayoutAction", davinci.actions.Action, {
 			formHtml = formHtml + '<option>Flow positioning</option>';
 		}
 			
-
+		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		formHtml = formHtml + '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectLayout", title:"New widgets should use: ", style: "width: 200px",
+		var	dialog = new dijit.Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
 			onCancel:function(){this.destroyRecursive(false);}});	
 		dialog._selectLayout = this;
 		dojo.connect(dialog, 'onLoad', function(){

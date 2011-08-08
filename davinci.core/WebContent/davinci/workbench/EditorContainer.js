@@ -1,5 +1,9 @@
 dojo.provide("davinci.workbench.EditorContainer");
 dojo.require("davinci.workbench._ToolbaredContainer");
+
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.workbench", "workbench");  
+
 dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredContainer, {
 
 	constructor:function(args){
@@ -64,17 +68,18 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 			content="";
 		}
 		editor.resourceFile=file;
+		editor.fileName=fileName;
 
 		// Don't populate the editor until the tab is selected.  Defer processing,
 		// but also avoid problems with display:none on hidden tabs making it impossible
 		// to do geometry measurements in editor initialization
-		var tabContainer = dijit.byId("editors_tabcontainer");
-		if(tabContainer.selectedChildWidget.domNode == this.domNode){
+		var tabContainer = "editors_tabcontainer";
+		if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
 			// Tab is visible.  Go ahead
 			editor.setContent(fileName,content);	
 		}else{
 			// When tab is selected, set up the editor
-			var handle = dojo.subscribe("/davinci/ui/editorSelected", null, function(args){
+			var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
 				if(editor==args.editor){
 					dojo.unsubscribe(handle);
 					editor.setContent(fileName,content);		
@@ -107,9 +112,10 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 
 	_close: function(editor, dirtycheck){
 		dojo.publish("/davinci/ui/EditorClosing", [editor]);
+		var langObj = dojo.i18n.getLocalization("davinci.workbench", "workbench");
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
-		     okToClose=confirm("This file has unsaved changes. Are you sure you want to close WITHOUT saving?");
+		     okToClose=confirm(langObj.fileHasUnsavedChanges);
 		}
 		if (okToClose){
 	    	

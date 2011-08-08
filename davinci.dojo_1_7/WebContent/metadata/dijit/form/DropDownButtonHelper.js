@@ -2,7 +2,14 @@ dojo.provide("davinci.libraries.dojo.dijit.form.DropDownButtonHelper");
 
 dojo.declare("davinci.libraries.dojo.dijit.form.DropDownButtonHelper", null, {
 
+	create: function(widget, srcElement){
+	
+		if (widget.dijitWidget.dropDown)
+			widget.dijitWidget.dropDown._popupWrapper._dvWidget.hidden=true; // this will hide the dijitMenu in designer
+	},
+	
 	getData: function(/*Widget*/ widget, /*Object*/ options){
+		
 		// summary:
 		//		Returns a serialized form of the passed DropDownButton, also serializing the children MenuItems and Menus.
 		//

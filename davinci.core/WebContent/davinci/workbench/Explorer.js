@@ -7,6 +7,7 @@ dojo.require("dijit.Tree");
 dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");
+dojo.require("davinci.ui.widgets.ProjectSelection");
 
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
@@ -59,16 +60,40 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			transforms: [davinci.resource.alphabeticalSort],
 			isMultiSelect: true});
 
-		// the default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
-		var handler = tree.dndController.onMouseDown;
-		tree.dndController.onMouseDown = function(event){
-			var stop = dojo.stopEvent;
-			dojo.stopEvent = function(){};
-			handler.call(tree.dndController, event);
-			dojo.stopEvent = stop;	
-		};
+		// Because there are two child elements in this layout container, and it only sizes the top (topDiv), we have to manage the size of the children
+		// ourselves (or use yet another layout container to do it)  We'll just use CSS to fix the bottom of the Tree to the bottom of the panel,
+		// using a variation of the 4-corners CSS trick.  An additional kludge seems necessary to set the Tree width properly to account for the scrollbar.
+		dojo.style(tree.domNode, {width: "100%", "overflow-x": "hidden", position: "absolute", bottom: 0, top: "20px"});
 
-		this.setContent(tree); 
+		// The default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
+		// Circumvent dojo.stopEvent temporarily.
+		var down = tree.dndController.onMouseDown,
+			handler = function(oldHandler, event){
+				var stop = dojo.stopEvent;
+				dojo.stopEvent = function(){};
+				try{
+					oldHandler.call(tree.dndController, event);
+				}finally{
+					dojo.stopEvent = stop;	
+				}
+			};
+		tree.dndController.onMouseDown = dojo.hitch(null, handler, down);
+		
+		var topDiv = dojo.doc.createElement('div');
+
+		if(davinci.Runtime.singleProjectMode()){
+			var projectSelection = new davinci.ui.widgets.ProjectSelection({});
+			topDiv.appendChild(projectSelection.domNode);
+			dojo.connect(projectSelection, "onChange", function(){
+				var project = this.value;
+				davinci.Runtime.loadProject(project);
+			});
+			
+			
+		}
+		topDiv.appendChild(tree.domNode);
+		this.setContent(topDiv);
+		
 		tree.startup();
 
 		dojo.connect(tree, 'onDblClick', dojo.hitch(this,this._dblClick ));
@@ -79,21 +104,18 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 
 		var popup=davinci.Workbench.createPopup({
 			partID: 'davinci.ui.navigator',
-			domNode: this.tree.domNode/*,
+			domNode: this.tree.domNode,
 			openCallback:function (event)
 			{
-//				var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
-//TODO: use setter?				tree.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;
+				// Make sure corresponding node on the Tree is set, as needed for right-mouse clicks (ctrl-click selects just fine)
 				var w = dijit.getEnclosingWidget(event.target);
-				if(!w || !w.item){
-//					dojo.style(this._menu.domNode, "display", "none");
-					return;
+				if(w && w.item){
+					var nodes = tree.get("selectedNodes");
+					if(dojo.indexOf(nodes, w) == -1) {
+						tree.set("selectedNodes", [w]);
+					}
 				}
-//				if (dojo.indexOf(tree.get("selectedNodes"), w) == -1){
-//					tree._selectNode(w);
-//				}
-				tree.set("selectedNodes", [w]);
-			}*/});
+			}});
 	},
 
 	destroy: function(){

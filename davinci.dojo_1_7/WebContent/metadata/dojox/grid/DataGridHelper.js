@@ -117,19 +117,19 @@ create: function(widget, srcElement){
 		var storeWidget = davinci.ve.widget.byId(storeId);
 
 		if (storeWidget /*&& storeWidget.properties*/ && widget.dijitWidget && widget.dijitWidget.store){  //wdr 3-11
-			this.updateStore(widget.dijitWidget.store, storeWidget/*.properties*//*.data*/);
-
+			this.updateStore(widget, storeWidget);
 		}
 	
 	}
 
 },
 
-updateStore: function(store, /*properties*/ storeWidget) { //wdr 3-11
-	var data = storeWidget._srcElement.getAttribute('data'); //wdr 3-11
-	var url = storeWidget._srcElement.getAttribute('url'); //wdr 3-11
-	if (/*properties.*/data){ //wdr 3-11
-		var value = /*properties.*/data; // wdr 3-11
+updateStore: function(widget,  storeWidget, w) { 
+	var store = widget.dijitWidget.store;
+	var data = storeWidget._srcElement.getAttribute('data'); 
+	var url = storeWidget._srcElement.getAttribute('url'); 
+	if (data){ 
+		var value = data; 
 		var storeData = eval('storeData = '+value);
 		var data = { identifier: storeData.identifier,  items:[] };
 	
@@ -159,6 +159,7 @@ updateStore: function(store, /*properties*/ storeWidget) { //wdr 3-11
 					var item = items[i];
 					console.warn("i=", i, "item=", item);
 				}
+				widget.dijitWidget.setStore(store);
 			})
 		});
 	}else{ // must be url data store

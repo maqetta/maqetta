@@ -41,7 +41,14 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 			filename = filename.substring(2); // remove the ./ from the parent path
 			var newFilename;
 			for (var y=0; y<header.styleSheets.length; y++){
-				if(header.styleSheets[y] === filename){
+				function stripDotSlash(filename){
+					if(filename.substr(0,2)=="./")
+						return filename.substring(2); // remove the ./ from the parent path
+					else
+						return filename;
+				}
+				var ss_stripped = stripDotSlash(header.styleSheets[y]);
+				if(ss_stripped === filename){
 					// found the sheet to change
 					newFilename = newThemeInfo.file.parent.getPath()+'/'+newThemeInfo.files[0]; // might need to change this is we ever support more than on css
 					newFilename = newFilename.substring(2); // remove the ./ from the parent path
@@ -59,7 +66,8 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 						var children = modelStyle[elm].children;
 						for (var ch = 0; ch < children.length; ch++ ){
 							var child = children[ch];
-							if (child.elementType == 'CSSImport' && child.url == filename){
+							var url_stripped = stripDotSlash(child.url);
+							if (child.elementType == 'CSSImport' && url_stripped == filename){
 								child.url = newFilename;
 								break;
 							}

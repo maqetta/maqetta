@@ -1,6 +1,6 @@
-( 
+(
 {
-	id: "joomlaplugin", 
+	id: "joomlaplugin",
 	"davinci.actionSets":
 	[
 	 {
@@ -10,12 +10,12 @@
 		actions: [
 					{
 						id: "davinciCommunity",
-						run: "window.open('http://maqetta.org/index.php?option=com_content&view=article&id=15')",  
+						run: "window.open('http://'+window.location.hostname+'/index.php?option=com_content&view=article&id=15')",
 						label: "Community",
-						menubarPath: "davinci.help/help"	  
-					}					
+						menubarPath: "davinci.help/help"
+					}
 		]
-	 } 
-	]	         
+	 }
+	]
 }
 )

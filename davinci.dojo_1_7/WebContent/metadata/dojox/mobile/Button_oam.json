@@ -36,10 +36,6 @@
         }
     },
     "property": {
-        "btnClass": {
-            "datatype": "string",
-            "defaultValue": "mblButton"
-        },
         "duration": {
             "datatype": "number",
             "defaultValue": 1000

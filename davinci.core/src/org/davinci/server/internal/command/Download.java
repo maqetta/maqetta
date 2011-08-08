@@ -18,6 +18,8 @@ import org.davinci.server.ServerManager;
 import org.davinci.server.VLibraryResource;
 import org.davinci.server.user.User;
 import org.davinci.server.util.JSONReader;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 public class Download extends Command {
 
@@ -29,11 +31,17 @@ public class Download extends Command {
         String path = req.getParameter("fileName");
         String res = req.getParameter("resources");
         String libs = req.getParameter("libs");
+        String rootString = req.getParameter("root");
+        IPath root = new Path(rootString);
+        
+        
         ArrayList o = (ArrayList) JSONReader.read(res);
         List lib = null;
-       if(libs!=null)
+        boolean includeLibs = true;
+       if(libs!=null){
     	   lib = (List) JSONReader.read(libs);
-        
+    	   includeLibs= false;
+       }
        String[] resources = (String[]) o.toArray(new String[o.size()]);
 
         IVResource[] files = new IVResource[resources.length];
@@ -46,8 +54,8 @@ public class Download extends Command {
             resp.setHeader("Content-Disposition", "attachment; filename=" + path);
 
             ZipOutputStream zos = new ZipOutputStream(resp.getOutputStream());
-            zipFiles(files, zos, false);
-            if(lib!=null) zipLibs(lib, zos);
+            zipFiles(files, root, zos, includeLibs);
+            if(lib!=null) zipLibs(lib, root, zos);
             zos.close();
             // responseString="OK";
 
@@ -59,7 +67,7 @@ public class Download extends Command {
 
     }
     
-    private static void zipLibs(List libs, ZipOutputStream zos) throws IOException{
+    private static void zipLibs(List libs, IPath root, ZipOutputStream zos) throws IOException{
         for (int i = 0; i < libs.size(); i++) {
             HashMap libEntry = (HashMap) libs.get(i);
             String id = (String) libEntry.get("id");
@@ -67,35 +75,49 @@ public class Download extends Command {
             String path = (String) libEntry.get("root");
             Library lib = ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
             IVResource libResource = new VLibraryResource(lib, lib.getURL(""), null ,path, "");
-            zipDir(libResource,zos, true);
+            zipDir(libResource,root, zos, true);
             
         }
     }
     
 
-    private static void zipDir(IVResource zipDir, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private static void zipDir(IVResource zipDir, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         IVResource[] dirList = zipDir.listFiles();
         
         if(!includeLibs && zipDir instanceof VLibraryResource)
         	return;
         
-        zipFiles(dirList, zos,includeLibs);
+        zipFiles(dirList, root, zos,includeLibs);
     }
 
-    private static void zipFiles(IVResource[] files, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private static void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         byte[] readBuffer = new byte[2156];
         int bytesIn = 0;
         // loop through dirList, and zip the files
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
-                zipDir(files[i], zos,includeLibs);
+                zipDir(files[i], root, zos,includeLibs);
                 continue;
             }
             if(!includeLibs && files[i] instanceof VLibraryResource)
             	continue;
             
             InputStream fis = files[i].getInputStreem();
-            ZipEntry anEntry = new ZipEntry(files[i].getPath().toString());
+            
+            
+            IPath filePath = new Path(files[i].getPath());
+            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
+            
+            
+            if(pathString==null) return;
+            
+            /* remove leading characters that confuse and anger windows built in archive util */
+            while(pathString.charAt(0)=='.' || pathString.charAt(0)=='/' || pathString.charAt(0)=='\\')
+            	pathString=pathString.substring(1);
+
+            
+            
+            ZipEntry anEntry = new ZipEntry(pathString);
                 // place the zip entry in the ZipOutputStream object
             zos.putNextEntry(anEntry);
                 // now write the content of the file to the ZipOutputStream

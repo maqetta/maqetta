@@ -167,6 +167,7 @@ davinci.ve.widget.getUniqueObjectId = function(type, node){
 	return id;
 };
 
+//FIXME: why not just use direct property access?
 davinci.ve.widget.getType = function(widget){
 	if(widget.type)
 		return widget.type;
@@ -189,7 +190,7 @@ davinci.ve.widget.getLabel = function(widget){
 		                	    'html.',
 		                	    'OpenAjax.'];
 		for(var i=0; i<prefixes_to_remove.length; i++){
-			if(str.indexOf(prefixes_to_remove[i])==0){
+			if(str.indexOf(prefixes_to_remove[i])==0){ // use ===?
 				returnstr=str.substr(prefixes_to_remove[i].length);
 				//FIXME: Another hack. Need a better approach for this.
 				//Special case logic for HTML widgets
@@ -464,7 +465,7 @@ davinci.ve.widget.createWidget = function(data){
 	var widget = new c(data.properties, node, type, metadata, srcElement);
 	widget._srcElement=srcElement;
 
-	if(widget.chart && (data.properties && data.properties["theme"])){
+	if(widget.chart && (data.properties && data.properties.theme)){
 		widget.chart.theme.themeName = theme;
 	}
 
@@ -486,14 +487,10 @@ davinci.ve.widget.createWidget = function(data){
 
 	if(data.states){
 		widget.states = data.states;
-		var states_json = JSON.stringify(widget.states);
-		// Escape single quotes that aren't already escaped
-		states_json = states_json.replace(/(\\)?'/g, function($0, $1){
-			return $1 ? $0 : "\\'";
-		});
-		// Replace double quotes with single quotes
-		states_json = states_json.replace(/"/g, "'");
-		widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
+		var states_json = davinci.states.serialize(widget);
+		if(states_json){
+			widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
+		}
 	}
 
 	return widget;
@@ -537,7 +534,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 	options = (options || {});
 
 	var data = {};
-	data['properties'] = {};
+	data.properties = {};
 
 	for(var i = 0; i < node.attributes.length; i++){
 		var a = node.attributes[i];
@@ -758,16 +755,22 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 	 	return undefined;
 	},
-	addClass: function(className){
-		var classes = this.getClassNames() || "";
-		var split = classes.split(' ');
-		for(var i =0;i<split.length;i++){
-			if(split[i]==className) return;
+	
+	addClass: function(newClass) {
+		// add to Model...
+		var classes = this.getClassNames();
+		classes = classes ? classes.split(/\s+/) : [];
+		if (classes.indexOf(newClass) !== -1) {
+			// duplicate class name
+			return;
 		}
-		var newClass = (classes?(classes + " "):"") + className;
-		this._srcElement.setAttribute("class", newClass);
-		dojo.addClass(this.domNode,className);
+		classes.push(newClass);
+		this._srcElement.setAttribute('class', classes.join(' '));
+		
+		// add to DOM...
+		dojo.addClass(this.domNode, newClass);
 	},
+	
 	getId: function(){
 		if (!this.id)
 		{
@@ -834,7 +837,7 @@ dojo.declare("davinci.ve._Widget",null,{
 		for(var j=0;j<shorthands.length;j++){
 			for(var i=0;i<shorthands[j].length;i++){
 				if(shorthands[j][i] in values){
-					v.push({'name': shorthands[j][i], 'value':values[shorthands[j][i]]});
+					v.push({name: shorthands[j][i], value: values[shorthands[j][i]]});
 					foundShorthands.push(shorthands[j][i]);
 				}
 			}
@@ -849,7 +852,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			}
 
 			if(!found)
-				v.push({'name': name, 'value':values[name]});
+				v.push({name: name, value: values[name]});
 		}
 
 		return v;
@@ -928,15 +931,11 @@ dojo.declare("davinci.ve._Widget",null,{
 //		return childrenData;
 	},
 
-	getClassNames: function(){
-		var attr=this._srcElement.getAttribute("class");
-		if(attr && attr.length>0){
-			return attr;
-		}
-		return "";
+	getClassNames: function() {
+		return this._srcElement.getAttribute('class') || '';
 	},
+
 	_getData: function(options){
-		var context = this.getContext();
 		var data = {type: this.type, properties: {}};
 		//FIXME: Might need OpenAjax widgets logic here someday
 		if(options.identify){
@@ -1002,10 +1001,7 @@ dojo.declare("davinci.ve._Widget",null,{
 				//}
 			}
 		}
-		var style = this.getStyle(options);
-		if(style){
-			data.properties.style = style;
-		}
+		data.properties.style = this.getStyle(options);
 		var classNames = this.getClassNames(options);
 		if(classNames){
 			data.properties['class'] = classNames;
@@ -1117,8 +1113,9 @@ dojo.declare("davinci.ve._Widget",null,{
 			this._srcElement.addAttribute("style",styleValue);
 		}
 		else
+		{
 			this._srcElement.removeAttribute("style");
-
+		}
 	},
 	setStyleValues: function( values){
 		if(!values){
@@ -1185,7 +1182,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			this.properties = {};
 		}
 
-		modelOnly = modelOnly ? modelOnly : false; // default modelOnly to false
+		modelOnly = modelOnly || false; // default modelOnly to false
 
 		if (properties.id)
 		{
@@ -1273,9 +1270,9 @@ dojo.declare("davinci.ve._Widget",null,{
 		        case "time":
 		        	if(isFinite(value)){
 		        		value = dojo.date.stamp.toISOString(value, {selector: property.format});
-		        	}else{
+		        	}/*else{
 		        		value = "";
-		        	}
+		        	}*/
 		            break;
 		        default:
 		        	 value = dojox.html.entities.encode(value); //When placing data in an HTML attribute, we should probably just encode it to be safe.
@@ -1521,6 +1518,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	getChildren: function(attach)
 	{
 		var children=[];
+
 		if (this.acceptsHTMLChildren)
 		{
 			var dvWidget = function(child){
@@ -1529,7 +1527,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 
 			// this.containerNode is a Dojo attachpoint. FIXME: Perhaps this detail should be abstracted by a helper?
 			return dojo.map(dojo.filter((this.containerNode || this.domNode).children, dvWidget), dvWidget);
-		} else {
+		} else if(davinci.ve.metadata.queryDescriptor(this.type, "isContainer")){ //wdr
 			dojo.map(this.dijitWidget.getChildren(), function(widget){
 				if (!widget){ return; }
 				if (attach && !widget.domNode._dvWidget)
@@ -1552,10 +1550,14 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	addChild: function(child,index)
 	{
-		if (this.dijitWidget.addChild && child.dijitWidget) {
+		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
+		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
+		// so it follows the generic path for those types of containers.
+		if (this.dijitWidget.addChild && ! this.acceptsHTMLChildren) {
 			if(index === undefined || index === -1){
-				index = "last";
 				this._srcElement.addChild(child._srcElement);
+				this.dijitWidget.addChild(child.dijitWidget);
 			}else {
 				var children = this.getChildren();
 				if(index < children.length){
@@ -1563,14 +1565,11 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 				}else{
 					this._srcElement.addChild(child._srcElement);
 				}
-				if(index === 0){
-					index = "first";
-				}
+				this.dijitWidget.addChild(child.dijitWidget, index);
 			}
-			this.dijitWidget.addChild(child.dijitWidget, index);
-			return;
+		} else {
+			this.inherited(arguments);
 		}
-		this.inherited(arguments);
 	},
 	_getWidget: function(){
 		return this.dijitWidget;
@@ -1589,7 +1588,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	},
 	isLayout: function()
 	{
-		return this.dijitWidget.addChild;
+		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
 	},
 	resize: function()
 	{
@@ -1602,7 +1601,11 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			return;
 		}
 
-		if (this.dijitWidget.removeChild && child.dijitWidget) {
+		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
+		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
+		// so it follows the generic path for those types of containers.
+		if (this.dijitWidget.removeChild && ! this.acceptsHTMLChildren) {
 			// it's a Widget and a Container
 			this.dijitWidget.removeChild(child.dijitWidget);
 			this._srcElement.removeChild(child._srcElement);

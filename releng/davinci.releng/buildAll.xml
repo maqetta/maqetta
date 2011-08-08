@@ -1,28 +1,39 @@
 <project name="maqetta" default="nightly">
 
+    <import file="${deployment-type}.xml"/>
+    
     <target name="nightly" depends="init">
         <tstamp>
             <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
 
-        <!--
-        -->
         <antcall target="clean">
         </antcall>
         <antcall target="populate">
         </antcall>
         <antcall target="zips">
         </antcall>
+        <antcall target="updateZips">
+        </antcall>
+        <!--
+        <antcall target="war"></antcall>
+        -->
+    </target>
 
+    <target name="updateZips" depends="addJoomla, addW3ibm"></target>
+    <target name="addJoomla">
         <antcall target="updateZip">
             <param name="addPlugin" value="davinci.joomla"/>
             <param name="fromZipName" value="${maqettaArchiveName}"/>
             <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
-        </antcall>
-
-        <!--
-        <antcall target="war"></antcall>
-        -->
+        </antcall>        
+    </target>
+    <target name="addW3ibm" if="run.internal.targets">
+        <antcall target="updateZip">
+            <param name="addPlugin" value="davinci.w3ibm"/>
+            <param name="fromZipName" value="${maqettaArchiveName}"/>
+            <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
+        </antcall>        
     </target>
 
     <target name="init">
@@ -57,7 +68,22 @@
         <mkdir dir="${buildDirectory}/features"/>
 
     	<property name="repoName" value="maqetta" />
-    	<property name="repoPath" value="${buildDirectory}/repository/${repoName}" />
+    	<property name="repoNameInternal" value="${repoName}_internal"/>
+    	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
+        <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
+        
+        <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
+        <condition property="maqettaCodeInternal" value="${maqettaCode}_internal">
+            <and>
+                <isset property="maqettaCode"/>
+                <not>
+                    <isset property="maqettaCodeInternal"/>
+                </not>
+            </and>
+        </condition>        
+        <condition property="run.internal.targets">
+            <equals arg1="${deployment-type}" arg2="internal"/>
+        </condition>
     </target>
 
     <target name="zips">
@@ -98,70 +124,19 @@
 		</ant>
 	  </target>
 
-    <target name="populate">
-        <condition property="getMethod" value="fromGit" else="localCopy">
-            <not>
-                <isset property="maqettaCode"/>
-            </not>
-        </condition>
-        <macrodef name="populateDir">
-            <attribute name="project"/>
-            <attribute name="isFeature" default="false"/>
-            <attribute name="extPath" default=""/>
-            <sequential>
-                <antcall target="${getMethod}">
-                    <param name="project" value="@{project}"/>
-                    <param name="isFeature" value="@{isFeature}"/>
-                    <param name="extPath" value="@{extPath}"/>
-                </antcall>
-            </sequential>
-        </macrodef>
-
-        <!-- -->
-        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
-        <!-- -->
-
-        <populateDir project="davinci.core"/>
-        <populateDir project="davinci.dojo_1_7"/>
-        <populateDir project="davinci.html"/>
-        <populateDir project="davinci.jqueryui_1_8"/>
-        <populateDir project="davinci.product" extPath="/releng"/>
-        <populateDir project="davinci.yui_2_6_0"/>
-
-        <populateDir project="davinci.joomla"/>
-        <populateDir project="davinci.review"/>
-
-        <populateDir project="org.apache.commons.fileupload"/>
-        <populateDir project="org.apache.commons.io"/>
-
-        <!--
-        <populateDir project="javax.activation"/>
-        <populateDir project="javax.mail"/>
-        -->
-
-    	<populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
-
-        <!--
-        <populateDir project="org.eclipse.equinox.server.core" isFeature="true" extPath="/releng"/>
-        <populateDir project="org.eclipse.equinox.server.servletbridge" isFeature="true" extPath="/releng"/>
-
-        <populateDir project="org.eclipse.equinox.http.servletbridge"   extPath="/releng"/>
-        <populateDir project="org.eclipse.equinox.servletbridge"   extPath="/releng"/>
-        <populateDir project="org.eclipse.equinox.servletbridge.extensionbundle"   extPath="/releng"/>
-        -->
-
-    </target>
-
     <target name="localCopy">
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
+        </condition>
+        <condition property="maqettaSource" value="${maqettaCode}" else="${maqettaCodeInternal}">
+            <isfalse value="${isInternal}"/>
         </condition>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>
         <defaultexcludes remove="**/.svn"/>
         <defaultexcludes remove="**/.svn/**"/>
         <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${maqettaCode}${extPath}/${project}"/>
+            <fileset dir="${maqettaSource}${extPath}/${project}"/>
         </copy>
         <defaultexcludes default="true"/>
     </target>
@@ -170,12 +145,15 @@
         <condition property="pluginDir" value="features" else="plugins">
             <istrue value="${isFeature}"/>
         </condition>
+        <condition property="maqettaRepository" value="${repoPath}" else="${repoPathInternal}">
+            <isfalse value="${isInternal}"/>
+        </condition>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>
         <defaultexcludes remove="**/.svn"/>
         <defaultexcludes remove="**/.svn/**"/>
         <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${repoPath}${extPath}/${project}"/>
+            <fileset dir="${maqettaRepository}${extPath}/${project}"/>
         </copy>
         <defaultexcludes default="true"/>
     </target>

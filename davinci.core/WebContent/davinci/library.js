@@ -8,10 +8,33 @@ dojo.provide("davinci.library");
  * 
  * 
  */
+if(!davinci.library._themesCache)
+	davinci.library._themesCache = {};
 
-davinci.library.getThemes=function(){
+if(!davinci.library._themesMetaCache)
+	davinci.library._themesMetaCache = {};
+
+if(!davinci.library._userLibsCache)
+	davinci.library._userLibsCache = {};
+
+davinci.library.themesChanged=function(base){
+	if(base)
+		davinci.library._themesCache[base] = null;
+	else
+		davinci.library._themesCache[base] = {};
+}
+
+davinci.library.getThemes=function(base){
 	
-	var allThemes = davinci.resource.findResource("*.theme", true, "./themes");
+	if(base==null)
+		debugger;
+	
+	
+	if(davinci.library._themesCache[base])
+		return davinci.library._themesCache[base];
+	
+	var projectThemeBase = (new davinci.model.Path(base).append("themes"));
+	var allThemes = davinci.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
 		var contents = allThemes[i].getText();
@@ -19,11 +42,19 @@ davinci.library.getThemes=function(){
 		t.file = allThemes[i];
 		results.push(t);
 	}
-	return results;
+
+	davinci.library._themesCache[base] = results;
+	return davinci.library._themesCache[base];
 }
 
 davinci.library.getMetaData=function(theme){
+	
+	
 	/* load/find theme metadata files */
+	
+	if(davinci.library._themesMetaCache[theme.name])
+		return davinci.library._themesMetaCache[theme.name];
+	
 	var results = null;
 	var themeCssFiles = [];
 	var parent = new davinci.model.Path(theme.file.getPath());
@@ -43,18 +74,19 @@ davinci.library.getMetaData=function(theme){
 	var metaDataLoader = new davinci.ve.themeEditor.metadata.query(metaResources);
 	
 	var metadata = new davinci.ve.themeEditor.metadata.CSSThemeProvider(metaResources,theme.className);
-	return {'loader':metaDataLoader, 'css':themeCssFiles, 'metadata':metadata};
-	
+	davinci.library._themesMetaCache[theme.name] =  {'loader':metaDataLoader, 'css':themeCssFiles, 'metadata':metadata};
+	return davinci.library._themesMetaCache[theme.name];
 }
 
 //FIXME: should these be cached?
 davinci.library.getInstalledLibs=function(){
-	return (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
+	if(!davinci.library._serverLibs)
+		davinci.library._serverLibs = (davinci.Runtime.serverJSONRequest({url:"./cmd/listLibs", handleAs:"json", content:{},sync:true  }))[0]['userLibs'];
+	return davinci.library._serverLibs;
 };
 
 davinci.library.getLibMetadata = function(id, version) {
 	var path = davinci.library.getMetaRoot(id, version);
-
 	if (path == null) {
 		return null;
 	}
@@ -77,12 +109,19 @@ davinci.library.getLibMetadata = function(id, version) {
 	// return (davinci.Runtime.serverJSONRequest({url:"./cmd/getLibMetadata", handleAs:"json", content:{'id': id, 'version':version},sync:true }));
 };
 
+
 davinci.library.getUserLibs=function(base){
 	// not sure if we want to only allow the logged in user to view his/her
 	// installed libs, or to include user name in request of targe user.
-
-	return davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{'base':base },sync:true  })[0]['userLibs'];
+	if(base==null || base=="")
+		debugger;
 	
+	if(davinci.library._userLibsCache.base)
+		return davinci.library._userLibsCache.base;
+	
+	davinci.library._userLibsCache.base = davinci.Runtime.serverJSONRequest({url:"./cmd/getUserLibs", handleAs:"json", content:{'base':base },sync:true  })[0]['userLibs'];
+	
+	return davinci.library._userLibsCache.base;
 
 }
 
@@ -91,14 +130,30 @@ davinci.library.getUserLibs=function(base){
 davinci.library._libRootCache = {};
 dojo.subscribe("/davinci/ui/libraryChanged", this, function() {
     davinci.library._libRootCache = {};
+    davinci.library._userLibsCache = {};
 });
 
 davinci.library.getLibRoot = function(id, version, base) {
     // check cache
+	
+	if(base==null)
+		debugger;
+	
     var cache = davinci.library._libRootCache;
-    if (cache[id] && cache[id][version]) {
-        return cache[id][version];
+    if ( cache[base] && cache[base][id] && cache[base][id][version]) {
+        return cache[base][id][version];
     }
+    
+    if(!cache[base])
+    	cache[base] = {};
+    
+    if(!cache[base][id])
+    	cache[base][id] = {};
+    
+    if(!cache[base][id][version])
+    	cache[base][id][version] = {};
+    
+    
     // send server request
     var response = davinci.Runtime.serverJSONRequest({
         url : "./cmd/getLibRoots",
@@ -115,7 +170,7 @@ davinci.library.getLibRoot = function(id, version, base) {
     if (!cache[id]) {
         cache[id] = {};
     }
-    cache[id][version] = value;
+    cache[base][id][version] = value;
     return value;
 };
 

@@ -8,6 +8,15 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerHelper", null, 
 			if(changedRegionSize === undefined){ return; }
 			var region,
 				changedSide = /left|right|leading|trailing/.test(changedRegion);
+			if (!changedSide){ // might be an id
+				for(var i = 0; i < this.children.length; i++){
+					if (this.children[i].getAttribute("id") === changedRegion){
+						changedRegion = this.children[i].getAttribute("region");
+						changedSide = /left|right|leading|trailing/.test(changedRegion);
+						break;; // we are done;
+					}
+				}
+			}
 			if(dojo.some(this.children, function(child){
 				region = child; return child.getAttribute && child.getAttribute("region") == changedRegion;
 			})){

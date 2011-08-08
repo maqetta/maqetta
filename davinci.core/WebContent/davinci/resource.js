@@ -44,7 +44,23 @@ dojo.mixin(davinci.resource, {
 			parent.getChildren(function(children){davinci.resource.onChildrenChange(parent,children);}, true);	
 		}
 	},
+
+	listProjects : function(callBack){
+		
+		/*
+		 *  projects are the first folder children of the workspace.
+		 *  may turn this into its own command.   
+		 */
+		
+		if(callBack)
+			davinci.resource.getWorkspace().getChildren(callBack, false);
+		else
+			return davinci.resource.getWorkspace().getChildren();
+	},
 	
+	createProject : function(projectName, initContent){
+		 davinci.Runtime.serverJSONRequest({url:"./cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent},sync:true  });
+	},
 	
 	/* Resource tree model methods */
 	newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -82,9 +98,17 @@ dojo.mixin(davinci.resource, {
 	    return item.elementType=="Folder";
 	},
 	getRoot: function(onComplete){
-		
+		//debugger;
 		if (!davinci.resource.root){
-			davinci.resource.root=new davinci.model.Resource.Folder(".",null);
+			var workspace = davinci.resource.getWorkspace();
+			if(davinci.Runtime.singleProjectMode()){
+				var project = davinci.Runtime.getProject();
+				davinci.resource.root = davinci.resource.findResource(project,false, workspace);
+			}else{
+				davinci.resource.root = workspace;
+			}
+				
+			
 		}
 		
 		if(onComplete){
@@ -92,6 +116,13 @@ dojo.mixin(davinci.resource, {
 		}else{
 			return davinci.resource.root;
 		}
+	},
+	
+	getWorkspace : function(){
+		if(this.workspace==null){
+			this.workspace = new davinci.model.Resource.Folder(".",null);
+		}
+		return this.workspace;
 	},
 	
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
@@ -110,20 +141,22 @@ dojo.mixin(davinci.resource, {
 		davinci.resource.resourceChanged("reload", destFile);
 	},
 
-	download: function(files,archiveName, userLibs){
+	download: function(files,archiveName, root, userLibs){
 		
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
 		*/
 		var libString = "";
+		var rootString = "";
+		
 		if(userLibs)
 			libString = "&libs="+escape(dojo.toJson(userLibs));
 		
-		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+libString ;
+		if(root)
+			rootString = "&root="+ escape(root);
+		
+		window.location.href= "./cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString ;
 	},
-	
-
-
 	
 	
 	/**
@@ -135,7 +168,7 @@ dojo.mixin(davinci.resource, {
 	findResource: function(name, ignoreCase, inFolder, workspaceOnly){
 		ignoreCase=ignoreCase || !davinci.resource.__CASE_SENSITIVE;
 		var seg1=0,segments;
-		var resource=davinci.resource.root;
+		var resource=davinci.resource.getWorkspace();
 		if (inFolder) {
 		    if (typeof inFolder == 'string') {
 		        inFolder = davinci.resource.findResource(inFolder, ignoreCase);
@@ -195,7 +228,7 @@ dojo.mixin(davinci.resource, {
 				for (var i=0;i<response.length;i++)
 				{
 					var foundFile=response[i];
-					var loadResource=davinci.resource.getRoot();
+					var loadResource=davinci.resource.getWorkspace();
 
 					for (var j=0;j<foundFile.parents.length;j++)
 					{
@@ -214,7 +247,7 @@ dojo.mixin(davinci.resource, {
 						}
 						
 					}
-					var resource=davinci.resource.getRoot();
+					var resource=davinci.resource.getWorkspace();
 					seg1=0;
 					segments=foundFile.file.split('/');
 					if (segments[0]=='.') {

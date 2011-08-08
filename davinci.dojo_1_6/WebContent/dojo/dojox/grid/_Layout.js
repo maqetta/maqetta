@@ -102,6 +102,9 @@ _19=dojo.mixin(_19,this._defaultCellProps,_14._props,_18);
 return _19;
 }
 var _1a=_14.type||_14.cellType||this._defaultCellProps.type||this._defaultCellProps.cellType||dojox.grid.cells.Cell;
+if(dojo.isString(_1a)){
+_1a=dojo.getObject(_1a);
+}
 _18.unitWidth=_16(_14);
 return new _1a(dojo.mixin({},this._defaultCellProps,_14,_18));
 },addRowDef:function(_1b,_1c){

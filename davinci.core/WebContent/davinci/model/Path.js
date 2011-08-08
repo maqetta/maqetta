@@ -68,6 +68,10 @@ davinci.model.Path.prototype.getParentPath = function(  ){
 	return dojo.clone(this._parentPath);
 }
 
+davinci.model.Path.prototype._clone = function(){
+	return new davinci.model.Path(dojo.clone(this.segments), this.hasLeading, this.hasTrailing);
+}
+
 
 davinci.model.Path.prototype.append = function( tail ){
 	if (typeof tail == 'string')
@@ -130,6 +134,17 @@ davinci.model.Path.prototype.relativeTo = function(base, ignoreFilename  ){
 	return  (  new davinci.model.Path(newSegments,false,this.hasTrailing));
 }
 
+davinci.model.Path.prototype.startsWith = function(anotherPath  ){
+	var count = this.matchingFirstSegments(anotherPath)
+	return anotherPath._length()==count;
+		
+}
+
+davinci.model.Path.prototype._length = function(anotherPath  ){
+	return this.segments.length;
+		
+}
+
 davinci.model.Path.prototype.matchingFirstSegments = function(anotherPath  ){
 	var mySegments=this.segments;
 	var pathSegments=anotherPath.getSegments();
@@ -145,6 +160,18 @@ davinci.model.Path.prototype.matchingFirstSegments = function(anotherPath  ){
 }
 davinci.model.Path.prototype.removeFirstSegments = function(count  ){
     this.segments=this.segments.slice(count, this.segments.length);
+    return this;
+}
+
+
+davinci.model.Path.prototype.removeMatchingLastSegments = function(anotherPath  ){
+	  var match = this.matchingFirstSegments(anotherPath);
+	  return this._clone().removeLastSegments(match);
+}
+
+davinci.model.Path.prototype.removeMatchingFirstSegments = function(anotherPath  ){
+    var match = this.matchingFirstSegments(anotherPath);
+    return this._clone().removeFirstSegments(match);
 }
 
 davinci.model.Path.prototype.removeLastSegments = function(count  ){

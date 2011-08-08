@@ -11,6 +11,10 @@ dojo.require("dojox.html.entities");
 dojo.require("dojox.html.ellipsis");
 dojo.require("dojox.layout.ResizeHandle");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+dojo.requireLocalization("dijit", "common");
+
 dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 
 //	property: null,
@@ -18,13 +22,19 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	
 //	multiLine: "false",
 	//supportsHTML: "false",
-	helpText:  'Provides Rich Text (word processor-like), editing of HTML.',
+	//helpText:  "test",
 	
 //	displayOnCreate: "true",
 	property: 'richText',
     displayOnCreate: 'true',
 //	_connection: [],
 	
+    
+	getHelpText: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		return langObj.richTextInputHelp;
+	},
+    
     show: function(widgetId){ 
 
 		this._widget = davinci.ve.widget.byId(widgetId);
@@ -100,6 +110,7 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 	},
 	_getTemplate: function(){
 		
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		var editBox = ''+
 		'<div id="iedResizeDiv"  class="iedResizeDiv" style="width: 400px; height: 245px;" >' + 
 		"<div dojoType=\"dijit.Editor\" width=\"600\" height=\"200\" id=\"davinciIleb\"  style=\"border-width: 0px;\" plugins=\"['undo','redo','|','cut','copy','paste','|','bold','italic','underline','strikethrough','foreColor','hiliteColor','insertHorizontalRule','createLink','unlink','insertImage','delete','removeFormat','|', 'insertOrderedList','insertUnorderedList','indent', 'outdent', 'justifyLeft', 'justifyCenter', 'justifyRight','fontName', 'fontSize', 'formatBlock']\" > </div>"+
@@ -133,7 +144,7 @@ dojo.declare("davinci.ve.input.RichTextInput", davinci.ve.input.SmartInput, {
 				'<div class="smartInputHelpDiv" > '+
 	        		'<span id="davinci.ve.input.SmartInput_img_help" title="Help" class="inlineEditHelp" > </span>'+
 		        	'<span class="smartInputSpacerSpan" >'+
-		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >OK</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> Cancel</button>  '+
+		        	'<button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="button" class="inlineEditHelpOk" >'+dijitLangObj.buttonOk+'</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel"> '+dijitLangObj.buttonCancel+'</button>  '+
 		        	'</span>   '+
 		        '</div> '+
 		        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+

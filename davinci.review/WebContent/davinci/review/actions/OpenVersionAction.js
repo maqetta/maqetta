@@ -3,6 +3,9 @@ dojo.provide("davinci.review.actions.OpenVersionAction");
 dojo.require("davinci.actions.Action");
 dojo.require("dojox.widget.Toaster");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.actions", "actions");
+
 dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action,{
 	run: function(context){
 	var selection = davinci.Runtime.getSelection();
@@ -23,7 +26,8 @@ dojo.declare("davinci.review.actions.OpenVersionAction",davinci.actions.Action,{
 	            	});
 	            	hasToaster = true;
             	}
-            	dojo.publish("/davinci/review/resourceChanged", [{message:"Open the version successfully!", type:"message"},"open",item]);
+            	var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
+            	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.openSuccessful, type:"message"},"open",item]);
             }
 		});
 	},

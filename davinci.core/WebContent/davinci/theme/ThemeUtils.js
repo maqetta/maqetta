@@ -13,19 +13,23 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	var themeRoot = davinci.resource.findResource(directory);
 	var fileName = originalTheme.file.getName();
 	/* remove the copied theme */
-	
-	
-	var badTheme = davinci.resource.findResource(directory + "/" + fileName);
-	badTheme.deleteResource();
-	
+	var sameName = (name==originalTheme.name);
+	var themeFile = null;
+	if(!sameName){
+		var badTheme = davinci.resource.findResource(directory + "/" + fileName);
+		badTheme.deleteResource();
+	}
 	
 	
 	
 	var directoryPath = new davinci.model.Path(themeRoot.getPath());
 	var lastSeg = directoryPath.lastSegment();
 	/* create the .theme file */
-	var themeFile = themeRoot.createResource(lastSeg + ".theme");
-
+	if(!sameName)
+		themeFile = themeRoot.createResource(lastSeg + ".theme");
+	else
+		themeFile = davinci.resource.findResource(directory + "/" + fileName);
+	
 	var themeJson = {};
 	themeJson['className'] = selector;
 	themeJson['name']= name;
@@ -37,14 +41,14 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	
 	
 	
-	var oldClass = originalTheme['className']
+	var oldClass = originalTheme['className'];
 	var toSave = {};
 	/* re-write CSS Selectors */
 	for(var i=0;i<themeJson['files'].length;i++){
 		var fileUrl = directoryPath.append(themeJson['files'][i]);
 		
 		var resource = davinci.resource.findResource(fileUrl);
-		if(renameFiles && resource.getName().indexOf(oldClass) > -1){
+		if(!sameName && renameFiles && resource.getName().indexOf(oldClass) > -1){
 			var newName = resource.getName().replace(oldClass, selector);
 			resource.rename(newName);
 			themeJson['files'][i] =newName;
@@ -96,5 +100,6 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		
 		htmlFile.save();
 	}
+	davinci.library.themesChanged();
 }
 

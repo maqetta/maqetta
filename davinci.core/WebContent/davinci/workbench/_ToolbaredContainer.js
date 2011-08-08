@@ -29,8 +29,11 @@ dojo.declare("davinci.workbench._ToolbaredContainer", [dijit.layout._LayoutWidge
 
 	setContent: function(/*Widget*/data){
 		this.mainWidget = data;
-		dojo.place(data.domNode, this.containerNode, "replace");
-		this.containerNode = data.domNode;
+		
+		var domNode = data.domNode || data;
+		
+		dojo.place(domNode, this.containerNode, "replace");
+		this.containerNode = domNode;
 
 		//TODO: move this to part of the widget life cycle
 		if (!this._toolbarCreated) {

@@ -9,6 +9,9 @@ dojo.require("dijit.TooltipDialog");
 dojo.require("dijit.form.Button");
 dojo.require("davinci.ve.widgets.ColorPickerFlat");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
+
 dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 	
 	/* change increment for spinners */
@@ -20,7 +23,8 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		
 		this.inherited(arguments);
 		
-		this._statics = ["", davinci.ve.widgets.ColorPicker.divider, "Color picker....", "Remove Value"];
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		this._statics = ["", davinci.ve.widgets.ColorPicker.divider, langObj.colorPicker, langObj.removeValue];
 		this._run = {};
 		if(!this.data ){
 			this.data=[{value:this._statics[0]}];
@@ -36,7 +40,7 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		              
 		}else{
 			this.data.push({value:davinci.ve.widgets.ColorPicker.divider});
-			this.data.push({value:"Remove Value",run:function(){this.attr('value','')}});
+			this.data.push({value:langObj.removeValue,run:function(){this.attr('value','')}});
 		}
 		var displayValues = [];
 		for(var i = 0;i<this.data.length;i++){
@@ -74,8 +78,9 @@ dojo.declare("davinci.ve.widgets.ColorPicker", [dijit._Widget], {
 		
 		
 		
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		var content = this._colorPickerFlat;
-		var	dialog = new dijit.TooltipDialog({title: 'select a color', content: content});
+		var	dialog = new dijit.TooltipDialog({title: langObj.selectColor, content: content});
 		dijit.popup.moveOffScreen(dialog.domNode);
 		var opened = false;
 		var closePopup = function(target){ return function(){

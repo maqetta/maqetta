@@ -8,8 +8,17 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.form.DropDownButton");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.widgets", "widgets");
+
 dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],{
 	templateString: dojo.cache("davinci", "review/widgets/templates/Comment.html"),
+	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		dojo.mixin(this, langObj);
+		this.inherited(arguments);
+	},
 	
 	VISIBLE_PART_LENGTH: 80, // By default, how many leading characters of the comment will be shown.
 	
@@ -37,12 +46,10 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 				},
 				error: dojo.hitch(this,function(response){
 					dojo.publish("/davinci/review/commentAddedError",[this]);
+					var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 					var msg = response.responseText;
 					msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-					davinci.Runtime.handleError("error adding comment "
-						       + ", response="
-						       + response+", reason="+
-						       msg);
+					davinci.Runtime.handleError(dojo.string.substitute(langObj.errorAddingCom, [response, msg]));
 				})
 			}).then(dojo.hitch(this, "_populate"));
 		}else{
@@ -120,6 +127,7 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 	},
 	
 	_constructStatus : function( defaultLabel ){
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 		var statusList= new dijit.Menu();
 		this.commentStatus = new dijit.form.DropDownButton( {
 			label: defaultLabel,
@@ -128,12 +136,12 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		}, this.commentStatus);
 		
 		statusList.addChild(new dijit.MenuItem({
-			label: "Open",
+			label: langObj.open,
 			onClick: dojo.hitch(this, "_setStatusBtnLabel", "Open")
 		}));
 		
 		statusList.addChild(new dijit.MenuItem({
-			label: "Close",
+			label: langObj.close,
 			onClick: dojo.hitch(this, "_setStatusBtnLabel", "Close")
 		}));
 		if(!dojo.hasClass(this.commentStatus.domNode.parentNode, "commentTheme")){
@@ -174,12 +182,10 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 				isUpdateStatus: updateStatus
 			},
 			error: function(response){
+				var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-				davinci.Runtime.handleError("error to update comment "
-					       + ", response="
-					       + response+", reason="+
-					       msg);
+				davinci.Runtime.handleError(dojo.string.substitute(langObj.errorUpdateCom, [response, msg]));
 			}
 		}).then(dojo.hitch(this,function(){
 			if(updateStatus){
@@ -328,8 +334,8 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 			if(link.length > 0){ this.contentNode.removeChild(link[0]); }
 			return;
 		}
-
-		var linkHtml = toFold ? " more...": " hide";
+		var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+		var linkHtml = toFold ? langObj.more: langObj.commentHide;
 		
 		var unfoldLink = dojo.create("a",{
 			"class": "commentLinkButton",

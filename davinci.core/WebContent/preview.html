@@ -40,6 +40,7 @@
 		<script src="app/dojo/dojo.js" djConfig="modulePaths:{'preview':'../preview'}"></script>
 		<link rel="stylesheet" type="text/css" href="app/dijit/themes/claro/claro.css"/>
 		<script>
+		 	dojo.requireLocalization("davinci", "webContent");
 			dojo.require('preview.singlepreview');
 			//FIXME: Pull from server instead of hardcode
 			var devicelist=[
@@ -73,8 +74,9 @@
 				if(urlparams.file){
 					iframefilename = urlparams.file;
 				}else{
+					var langObj = dojo.i18n.getLocalization("davinci","webContent");
 					var error_div = document.getElementById('preview_app_error');
-					error_div.innerHTML='Maqetta device previewer error. Must supply URL parameter \'file=\'';
+					error_div.innerHTML=langObj.devicePreviewError;
 					error_div.style.display = "block";
 				}
 				if(urlparams.orientation){

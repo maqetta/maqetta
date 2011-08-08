@@ -15,16 +15,17 @@ dojo.declare("davinci.ve.Context", null, {
 	moduleLoader: null,
 	immediatePropertyUpdates: false,
 	
-	_subscriptions : [],
-	_contentStyleSheet: document.baseURI + dojo.moduleUrl("davinci.ve", "resources/content.css"),
+	_subscriptions: [],
+	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
 
 	constructor: function(args){
+		
 		if(!args) {
 			args ={};
 		}
-
+		this._contentStyleSheet = davinci.Workbench.location() + dojo.moduleUrl("davinci.ve", "resources/content.css"),
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
@@ -55,6 +56,24 @@ dojo.declare("davinci.ve.Context", null, {
 	//FIXME: accessor func is unnecessary?
 	getModel: function(){
 		return this.model;
+	},
+	
+	/*
+	 * @returns the path to the file being edited
+	 */
+	getPath: function(){
+		
+		/*
+		 * FIXME:
+		 * We dont set the path along with the content in the context class, so
+		 * have to pull the resource path from the model.  
+		 * 
+		 * I would rather see the path passed in, rather than assume the model has the proper URL,
+		 * but using the model for now.
+		 * 
+		 */
+		var path = this.getModel().fileName;
+		return new davinci.model.Path(path);
 	},
 
 	activate: function(){
@@ -213,8 +232,8 @@ dojo.declare("davinci.ve.Context", null, {
 		return davinci.resource.findResource(this.getDocumentLocation());
 	},
 
-	getLibraryBase : function(id, version){
-		return davinci.library.getLibRoot(id,version) || "";
+	getLibraryBase: function(id, version){
+		return davinci.library.getLibRoot(id,version, this.getResourcePath()) || "";
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
@@ -300,7 +319,7 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	
 	
-	getMobileDevice : function(){
+	getMobileDevice: function(){
 		
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
@@ -311,6 +330,9 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	setMobileDevice: function (device){
+		if (!device) {
+			device = 'none';
+		}
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		var htmlElement=this.getDocumentElement();
@@ -318,11 +340,11 @@ dojo.declare("davinci.ve.Context", null, {
 		bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE,device);
 	},
 	
-	setMobileTheme: function(device, silhouetteiframe){
+	setMobileTheme: function(device){
 
 		var cssFiles = ['iphone/iphone.css'];
 		// if no device is specified mobile styling defaults to iphone
-		if (device && silhouetteiframe){
+		if (device){
 			theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
 			cssFiles = preview.silhouetteiframe.getMobileCss(theme);
 		}
@@ -340,15 +362,24 @@ dojo.declare("davinci.ve.Context", null, {
 			lib = './lib';
 		}
 		var doc = this.getDocument();
+		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
 		for (var oc = 0; oc < oldCssFiles.length; oc++){
 			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
-			var head = doc.getElementsByTagName("head")[0];
 			var links = head.querySelectorAll(qStr);
 			// remove the old css files
 			for(var x = 0; x < links.length; x++){
 				head.removeChild(links[x]);
 			}
+		}
+		// remove the old iPhone files
+		var iphone_qStr = 'link'; // iphone gets added by require, so we need to remove it
+		var iphone_links = head.querySelectorAll(iphone_qStr);
+		// remove the old css files
+		for(var ip = 0; ip < iphone_links.length; ip++){
+			var href = iphone_links[ip].href;
+			if (href.indexOf('iphone/iphone.css') > 0)
+				head.removeChild(iphone_links[ip]);
 		}
 		if (device){
 			this.setMobileDevice(device);
@@ -359,7 +390,7 @@ dojo.declare("davinci.ve.Context", null, {
 				link.setAttribute("type", "text/css");
 				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
 				
-				head.appendChild(link);
+				head.appendChild(link,0);
 			}
 		}else if (oldDevice){
 			// set it up for the old device
@@ -369,12 +400,28 @@ dojo.declare("davinci.ve.Context", null, {
 				link.setAttribute("type", "text/css");
 				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
 				
-				head.appendChild(link);
+				head.appendChild(link,0);
 			}
 		}
 	},
+	
+	/**
+	 * @static
+	 */
+	_mobileMetaElement: {
+		name: 'viewport',
+		content: 'width=device-width, initial-scale=1.0, user-scalable=no'
+	},
+	
+	setMobileMeta: function(deviceName) {
+		if (deviceName === 'none') {
+			this._removeHeadElement('meta', this._mobileMetaElement);
+		} else {
+			this._addHeadElement('meta', this._mobileMetaElement);
+		}
+	},
 
-	themeChanged : function(){
+	themeChanged: function(){
 		var changed = true;
 		// check for false alarms to avoid reloading theme
 		var model = this.getModel();
@@ -408,105 +455,21 @@ dojo.declare("davinci.ve.Context", null, {
 	
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
-		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
-		var imports = [];
-		var claroThemeName="claro";
-		var claroThemeUrl;
-		for(var z=0;z<style.length;z++){
-			for(var i=0;i<style[z].children.length;i++){
-				if(style[z].children[i]['elementType']== 'CSSImport')
-					imports.push(style[z].children[i]);
-			}
-		}
-		var allThemes = davinci.library.getThemes();
-		var themeHash = {};
-		for(var i=0;i<allThemes.length;i++){
-			var themePath = new davinci.model.Path(allThemes[i]['file'].getPath());
-			themePath.removeLastSegments(1);
-			for(var k=0;k<allThemes[i]['files'].length;k++){
-				var cssUrl = themePath.append( new davinci.model.Path(allThemes[i]['files']));
-				themeHash[cssUrl] = allThemes[i];
-			}
-		}
-		for(var i=0;i<imports.length;i++){
-			var url = imports[i].url;
-			/* trim off any relative prefix */
-			for(var themeUrl in themeHash){
-				if(themeUrl.indexOf(claroThemeName) > -1){
-					claroThemeUrl = themeUrl;
-				}
-				if(url.indexOf(themeUrl)  > -1){
-					var returnObject = {};
-					returnObject['themeUrl'] = url;
-					returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
-					returnObject['theme'] =  themeHash[themeUrl];
-					return returnObject;	
-				}
-			}
-		}
-		// If we are here, we didn't find a cross-reference match between 
-		// CSS files listed among the @import commands and the themes in
-		// themes/ folder of the user's workspace. So, see if there is an @import
-		// that looks like a theme reference and see if claro/ is in
-		// the list of themes, if so, use claro instead of old theme
-		if(claroThemeUrl){
-			var newThemeName = claroThemeName;
-			var oldThemeName;
-			for(var i=0;i<imports.length;i++){
-				var cssfilenamematch=imports[i].url.match(/\/([^\/]*)\.css$/);
-				if(cssfilenamematch && cssfilenamematch.length==2){
-					var cssfilename = cssfilenamematch[1];
-					var themematch = imports[i].url.match(new RegExp("themes/"+cssfilename+"/"+cssfilename+".css$"));
-					if(themematch){
-						oldThemeName = cssfilename;
-						break;
-					}
-				}
-			}
-			if(oldThemeName){
-				// Update model
-				var htmlElement=this.model.getDocumentElement();
-				var head=htmlElement.getChildElement("head");
-				var bodyElement=htmlElement.getChildElement("body");
-				var classAttr=bodyElement.getAttribute("class");
-				if (classAttr){
-					bodyElement.setAttribute("class",classAttr.replace(new RegExp("\\b"+oldThemeName+"\\b","g"),newThemeName));
-				}
-				var styleTags=head.getChildElements("style");
-				dojo.forEach(styleTags, function (styleTag){
-					dojo.forEach(styleTag.children,function(styleRule){
-						if (styleRule.elementType=="CSSImport"){
-							styleRule.url = styleRule.url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-						}
-					}); 
-				});
-				// Update data in returnObject
-				var url = imports[i].url.replace(new RegExp("/"+oldThemeName,"g"),"/"+newThemeName);
-				var returnObject = {};
-				returnObject['themeUrl'] = url;
-				// Pull claro theme data
-				returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[claroThemeUrl]);
-				returnObject['theme'] =  themeHash[claroThemeUrl];
-				returnObject['themeMetaCache']['usingSubstituteTheme'] = {
-						oldThemeName:oldThemeName,
-						newThemeName:newThemeName
-				};
-				// Make sure source pane updates text from model
-				this._editor._visualChanged();
-				
-				return returnObject;	
-			}
-		}
+
+		var ro = davinci.ve.metadata.loadThemeMeta(model);
+		this._editor._visualChanged();
+		return ro;
 	},
 	
 	setSource: function(source, callback, scope){
 		dojo.withDoc(this.getDocument(), "_setSource", this, [source, callback, scope]);
 	},
 
-	getDojoUrl : function(){
-		 var loc=location.href;
-			if (loc.charAt(loc.length-1)=='/')
-				loc=loc.substring(0,loc.length-1);
+	getDojoUrl: function(){
+		var loc=davinci.Workbench.location();
+		if (loc.charAt(loc.length-1)=='/') {
+			loc=loc.substring(0,loc.length-1);
+		}
 			
 		if(document && document.getElementsByTagName){
 			var scripts = document.getElementsByTagName("script");
@@ -525,9 +488,14 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	
+	getResourcePath: function(){
+		var model = this.getModel();
+		var filename = model.fileName;
+		var path = new davinci.model.Path(filename);
+		return path.removeLastSegments(1);
+	},
 	_setSource: function(source, callback, scope){
-		
+	
 		this._srcDocument=source;
 		if (this.rootWidget){
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
@@ -539,7 +507,7 @@ dojo.declare("davinci.ve.Context", null, {
 //			data.scripts = dojo.map(data.scripts, this.getRealUrl, this);
 //			data.styleSheets = dojo.map(this._checkSheets(data), this.getRealUrl, this);
 //		}
-
+		
 		if(!this._frameNode){ // initialize frame
 			var dojoUrl;
 			
@@ -551,9 +519,13 @@ dojo.declare("davinci.ve.Context", null, {
 				return false;
 			});
 			
+			/* get the base path, removing the file extension.  the base is used in the library call below
+			 * 
+			 */
+			var resourceBase = (this.getPath().removeLastSegments(1));
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
-				dojo.some(davinci.library.getUserLibs(), function(lib) {
+				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root)
 								.append("dojo/dojo.js").toString();
@@ -573,7 +545,7 @@ dojo.declare("davinci.ve.Context", null, {
 			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 //			/* this defaults to the base page */
-			var realUrl = dojo.global.location.href + "/" ;
+			var realUrl = davinci.Workbench.location() + "/" ;
 			
 			/* change the base if needed */
 			
@@ -664,6 +636,13 @@ dojo.declare("davinci.ve.Context", null, {
 					};
 console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
+					var mobileDevice = context.getMobileDevice();
+					if (mobileDevice){
+						setTimeout(function(){
+							// have to delay this so Chrome will update the canvas correctly
+							context._editor.visualEditor.setDevice(mobileDevice);
+						},100);
+					}
 				} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
@@ -686,7 +665,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = new Date().getTime();
 				}
 			});	
-			win.onbeforeunload = function (e) {
+			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
 				var time = new Date().getTime();
 				var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
 				if (shouldDisplay) {
@@ -703,7 +682,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					// [Leave this Page] [Stay on this Page]
 					return message;
 				}
-			};
+			};*/
 
 		}else{
 			var callbackData = this;
@@ -818,10 +797,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 
 		this._processWidgets(containerNode, active, states);
 		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
-		var mobileDevice = this.getMobileDevice();
-		if (mobileDevice){
-			this._editor.visualEditor.setDevice(mobileDevice);
-		}
+		
 		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 
@@ -1033,11 +1009,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	},
 	
 	getStyle: function(){
-		return (this._header ? this._header.style : undefined);
+		return this._header ? this._header.style : undefined;
 	},
 
 	setStyle: function(style){
-		var values = (davinci.ve.widget.parseStyleValues(style) );
+		var values = (davinci.ve.widget.parseStyleValues(style));
 		if(this._header){
 			var oldValues = davinci.ve.widget.parseStyleValues(this._header.style);
 			if(oldValues){
@@ -1055,7 +1031,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 //		davinci.ve.widget.setStyleValues(this.container, values); //TODO
 	},
 
-	loadStyleSheet : function(url) {
+	loadStyleSheet: function(url) {
 		if (!url) {
 			return;
 		}
@@ -1082,7 +1058,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		this._links.push(link);
 	},
 
-	addModeledStyleSheet : function(url, libBasePath) {
+	addModeledStyleSheet: function(url, libBasePath) {
 		this.loadStyleSheet(url);
 		if (!this.model.hasStyleSheet(url)) {
 			this.model.addStyleSheet(url);
@@ -1416,12 +1392,12 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					this._connects.push(dojo.connect(focus, "onExtentChange", this, "onExtentChange"));
 					focus._connected = true;
 				}
-				focus.resize(state.box);
+				var w = this.getSelection();
+				focus.resize(state.box, w[0]);
 				focus.allow(state.op);
 				if(focus.domNode.parentNode != containerNode){
 					containerNode.appendChild(focus.domNode);
 				}
-				var w = this.getSelection();
 				focus.show(w[0],inline);
 			}else{ // hide
 				focus.hide();
@@ -1825,7 +1801,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		
 		return selector;
 	},
-	getSelector : function( widget, target){
+	getSelector: function( widget, target){
 		// return rules based on metadata IE theme
 		
 		var theme = this.getThemeMeta();
@@ -1962,7 +1938,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	_reDojoJS: new RegExp(".*/dojo.js$"),
 	
 	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
-		
+
 		if (url) {
 			var isDojoJS = this._reDojoJS.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
@@ -1997,7 +1973,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					// XXX Nasty nasty nasty special case for dojo attribute thats
 					// required. Need to generalize in the metadata somehow.
 					this.addHeaderScript(url, {
-						'djConfig' : "parseOnLoad: true"
+						djConfig: "parseOnLoad: true"
 					});
 				}else{
 					this.addHeaderScript(url);
@@ -2033,7 +2009,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 		
-		var head =  this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true);
+		var head =  this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
 		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
 		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
 		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
@@ -2057,7 +2033,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		var oldText = '';
 		
 		if (scriptAdditions){
-			var scriptText = scriptAdditions.find({'elementType':'HTMLText'}, true);
+			var scriptText = scriptAdditions.find({elementType: 'HTMLText'}, true);
 			if(scriptText){
 				oldText = scriptText.getText();
 				if (oldText.indexOf(text)>0){
@@ -2082,6 +2058,84 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		newScriptText.setText(oldText + "\n" + text); //wdr
 		script.addChild(newScriptText); //wdr
 		return script;
+	},
+	
+	/**
+	 * Significant attributes for HTML elements; used for matching duplicates.
+	 * If an element isn't listed here, defaults to 'src'.
+	 * 
+	 * @static
+	 */
+	_significantAttrs: {
+		link: 'href',
+		meta: 'name'
+	},
+	
+	/**
+	 * Add element to <head> of document.  Modeled on dojo.create().
+	 */
+	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
+		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		
+		if (! allowDup) {
+			// Does <head> already have an element that matches the given
+			// element?  Only match based on significant attribute.  For
+			// example, a <script> element will match if its 'src' attr is the
+			// same as the incoming attr.  Same goes for <meta> and its 'name'
+			// attr.
+			var sigAttr = this._significantAttrs[tag] || 'src';
+			var found = head.find({ elementType: 'HTMLElement', tag: tag })
+					.some(function(elem) {
+						return elem.getAttribute(sigAttr) === attrs[sigAttr];
+					});
+			if (found) {
+				return;
+			}
+		}
+		
+		// add to Model...
+		var elem = new davinci.html.HTMLElement(tag);
+		for (var name in attrs) if (attrs.hasOwnProperty(name)) {
+			elem.addAttribute(name, attrs[name]);
+		}
+		head.addChild(elem);
+		
+		// add to DOM...
+		dojo.withGlobal(this.getGlobal(), function() {
+			dojo.create(tag, attrs, dojo.query('head')[0]);
+		});
+	},
+	
+	/**
+	 * Remove element from <head> that matches given tag and attributes.
+	 */
+	_removeHeadElement: function(tag, attrs) {
+		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		
+		// remove from Model...
+		head.find({ elementType: 'HTMLElement', tag: tag }).some(function(elem) {
+			var found = true;
+			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
+				if (elem.getAttribute(name) !== attrs[name]) {
+					found = false;
+					break;
+				}
+			}
+			
+			if (found) {
+				head.removeChild(elem);
+				return true;	// break some() iteration
+			}
+		});
+		
+		// remove from DOM...
+		dojo.withGlobal(this.getGlobal(), function() {
+			var queryStr = tag;
+			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
+				queryStr += '[' + name + '="' + attrs[name] + '"]';
+			}
+			dojo.destroy(dojo.query(queryStr)[0]);
+		});
 	}
 });
 

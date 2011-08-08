@@ -188,6 +188,13 @@
 						menubarPath: "davinci.new/new"	  
 					},
 
+					{
+						id: "newProject",
+						run: "davinci.ui.Resource.newProject()",
+						label: "Project...",
+						menubarPath: "davinci.new/new"	  
+					},
+					
 					/* FIXME: Commented out because we don't have a toolbar implemented yet, so no Save/SaveAs buttons,
 					 * and useless until we have those buttons working.
 					{
@@ -215,7 +222,7 @@
 					
 					{
 						id: "openThemeEditor",
-						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:100px;width: 200px')", 
+						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:110px;width: 200px')", 
 						label: "Theme Editor",
 						menubarPath: "davinci.open/open2"	  
 					},

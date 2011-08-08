@@ -8,6 +8,10 @@
 @import url("syntaxColors.css");
 @import url("propview.css");
 
+BODY{
+	position: fixed;
+}
+
 .downloadSelectedHeader{
 	font-weight: bold;
 }

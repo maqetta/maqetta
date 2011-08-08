@@ -4,22 +4,22 @@
     <title>Welcome to Maqetta</title>
     <style type="text/css">
 			@import url("app/davinci/davinci.css?@revision@");
-	
+
 			html, body {
 				width: 100%;
 				height: 100%;
 			}
-	
+
 			#mainBody {
 				/* kludge to avoid scrollbars.  using padding with absolute positioning seems to
 				 * prevent mouse events from reaching the toolbar, for some reason */
 				height: 90%;
 			}
-	
+
 			#error-holder {
 				color: red;
 			}
-	
+
 			.sniff {
 				color: red;
 				font-style: bold;
@@ -27,7 +27,7 @@
 				padding: 2em;
 			}
     </style>
-    
+
     <script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="parseOnLoad: true, cacheBust: '@revision@'"></script>
     <script type="text/javascript" src="app/dijit/dijit.js?@revision@"></script>
     <script type="text/javascript" src="app/davinci/davinci-common.js?@revision@"></script>
@@ -46,8 +46,8 @@
 				loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading Maqetta...</td></tr></table>';
 				dojo.addClass(loading, 'loading');
 		   		showMainPage(".");
-			}else 
-				showMainPage(result);  			  
+			}else
+				showMainPage(result);
 	 		return;
 		}, function(error){
 			dojo.attr("error-holder", "innerHTML", "Invalid userid or password");
@@ -68,7 +68,7 @@
                var loading = dojo.create("div",null, dojo.body(), "first");
 			   dojo.addClass(loading, 'loading');
      		   showMainPage(".");
-     		   return true;         
+     		   return true;
             }
             else
             {
@@ -78,9 +78,9 @@
   			//TODO: parse result and display more detailed error message?
   			console.info(error.responseText);
           	dojo.attr("error-holder", "innerHTML", "Failed to create new user '"+user+"'");
-          });         
+          });
     }
-    
+
     function showMainPage(url)
     {
        location.href = url;
@@ -95,21 +95,21 @@
           if (result && result.length)
           {
      		   dojo.byId('username').value=result;
-     		   return;         
+     		   return;
           }
 		});
-	 
+
 	});
-    
+
     </script>
-   
+
 </head>
 
 <body class="claro">
 	<div id="davinci_top_bar"></div>
 		<span class="maq_banner_name_box">
 			<span class="maq_banner_name">Maqetta</span>
-			<span class="maq_banner_version">Preview 1</span>
+			<span class="maq_banner_version">Preview 2</span>
 		</span>
 	</div>
 	<div id="loginpane">

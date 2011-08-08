@@ -6,11 +6,22 @@ dojo.require("davinci.ve.widgets.HTMLStringUtil");
 dojo.require("davinci.workbench.ViewLite");
 dojo.require("davinci.ve.commands.ModifyCommand");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.ve", "ve");
 
 dojo.declare("davinci.ve.widgets.WidgetToolBar", [davinci.workbench.ViewLite], {
 
-	widgetDescStart:"<div class='propertiesWidgetDescription'><span class='propertiesWidgetDescriptionFor'>for: </span>",
-	widgetDescUnselectEnd:"(no selection)</div>",
+	widgetDescStart:"",
+	widgetDescUnselectEnd:"",
+	
+	postMixInProperties : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		var str1 = "<div class='propertiesWidgetDescription'><span class='propertiesWidgetDescriptionFor'>"+langObj.toolBarFor+"</span>";
+		var str2 = langObj.noSelection + "</div>";
+		this.widgetDescStart = str1;
+		this.widgetDescUnselectEnd = str2;
+		this.inherited(arguments);
+	},
 	
 	buildRendering: function(){
 		this.domNode = dojo.doc.createElement("div");
@@ -53,7 +64,8 @@ dojo.declare("davinci.ve.widgets.WidgetToolBar", [davinci.workbench.ViewLite], {
 			classDiv.className = "propClassInputRow";
 			var labelSpan = dojo.doc.createElement("span");
 			var classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName'});
-			classLabelElement.innerHTML = "class: ";
+			var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+			classLabelElement.innerHTML = langObj.toolBarClass;
 			labelSpan.appendChild(classLabelElement);
 			var classAttr = srcElement.getAttribute("class");
 			var className = (classAttr && dojo.trim(classAttr)) || "";

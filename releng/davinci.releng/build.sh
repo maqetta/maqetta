@@ -15,7 +15,12 @@ echo "Using ${baseLocation} Eclipse for build..."
 #
 # Directory in which to do the build. No trailing slash.
 #
-export buildDirectory="/tmp"
+if [ ! ${MAQETTA_BUILD_DIR} ]
+then
+    export buildDirectory="/tmp"
+else
+    export buildDirectory=${MAQETTA_BUILD_DIR}
+fi
 
 #
 # If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
@@ -45,9 +50,38 @@ export gitRepository="git://github.com/maqetta/maqetta.git"
 # Note: See ${baseLocation}/plugins/org.eclipse.equinox.launcher.xxx.yyy.xxx/
 #       to determine your settings, they should be similar to 'cocoa.macosx.x86_64'
 #
-export myWS="cocoa"
-export myOS="macosx"
-export myArch="x86_64"
+if [ ${MAQETTA_WS} ]
+then
+    export myWS=${MAQETTA_WS}
+else
+    export myWS="cocoa"
+fi
+if [ ${MAQETTA_OS} ]
+then
+    export myOS=${MAQETTA_OS}
+else
+    export myOS="macosx"
+fi
+if [ ${MAQETTA_ARCH} ]
+then
+    export myArch=${MAQETTA_ARCH}
+else
+    export myArch="x86_64"
+fi
+
+#
+# Set deployment type, default to "external"
+#
+deploymentType="external"
+if [ ${MAQETTA_DEPLOYMENT} ]
+then
+    deploymentType="${MAQETTA_DEPLOYMENT}"
+fi
+
+#
+# save off the current directory
+#
+currentDirectory=`pwd`
 
 if [ ! ${maqettaCode} ]
 then
@@ -80,6 +114,20 @@ then
     cd ${buildDirectory}/repository/maqetta
     git describe >${buildDirectory}/build.level
 else
+    if [ ! -e ${buildDirectory}/repository/maqetta ]
+    then
+        #
+        # Create symlink to 'maqettaCode' repo at ${buildDirectory}/repository/maqetta -- Eclipse
+        # build system requires that.
+        #
+        if [ ! -d ${buildDirectory}/repository ]
+        then
+            mkdir -p ${buildDirectory}/repository
+        fi
+        cd ${buildDirectory}/repository
+        ln -s ${maqettaCode} maqetta
+    fi
+    
     cd ${maqettaCode}
     git describe >${buildDirectory}/build.level
 fi
@@ -90,9 +138,6 @@ fi
 # Note: Many scripts use relative directory references making
 #       running the build from this directory *imperative*.
 #
-# save off the current directory
-
-currentDirectory=`pwd`
 
 cd ${buildDirectory}
 
@@ -100,6 +145,13 @@ cd ${buildDirectory}
 # Run the Ant buildAll script from the davinci.releng project.
 #
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml
+java -Ddeployment-type=${deploymentType} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+
+#
+# save exit code for later
+#
+exitCode=$?
 
 cd ${currentDirectory}
+
+exit ${exitCode}

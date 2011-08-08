@@ -3,11 +3,15 @@ dojo.provide("davinci.review.actions.CloseVersionAction");
 dojo.require("davinci.actions.Action");
 dojo.require("dojox.widget.Toaster");
 
+dojo.require("dojo.i18n");  
+dojo.requireLocalization("davinci.review.actions", "actions");
+
 dojo.declare("davinci.review.actions.CloseVersionAction",davinci.actions.Action,{
 	run: function(context){
 	var selection = davinci.Runtime.getSelection();
+	var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
 	if(!selection) return;
-	okToClose=confirm("Are you sure you want to close this version");
+	okToClose=confirm(langObj.areYouSureClose);
 	if(!okToClose)
 		return;
 	var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
@@ -26,7 +30,7 @@ dojo.declare("davinci.review.actions.CloseVersionAction",davinci.actions.Action,
 	            	});
 	            	hasToaster = true;
             	}
-            	dojo.publish("/davinci/review/resourceChanged", [{message:"Close the version successfully!", type:"message"},"closed",item]);
+            	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.closeSuccessful, type:"message"},"closed",item]);
             }
 		});
 	},

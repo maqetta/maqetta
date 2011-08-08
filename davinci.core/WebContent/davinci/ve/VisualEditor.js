@@ -18,7 +18,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	deviceName: 'none',
 	_orientation: 'portrait',
 	
-	constructor : function(element, pageEditor)	{
+	constructor: function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
 		this.contentPane = dijit.getEnclosingWidget(element);
 		dojo.addClass(this.contentPane.domNode, "fullPane");
@@ -43,7 +43,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelected));
 	},
 	
-	setDevice : function(deviceName) {
+	setDevice: function(deviceName) {
 	    this.deviceName = deviceName;
 	    var svgfilename;
 	    if(deviceName=='none'){
@@ -53,10 +53,14 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	    	svgfilename = "app/preview/images/"+deviceName+".svg";
 	    }
 		this.silhouetteiframe.setSVGFilename(svgfilename);
-		this.getContext().setMobileTheme(deviceName, this.silhouetteiframe);
+		this.getContext().setMobileTheme(deviceName);
+
+		// #683 - When using mobile silhouette, add mobile <meta> tags to
+		// document.
+		this.getContext().setMobileMeta(deviceName);
 	},
 	
-	toggleOrientation : function() {
+	toggleOrientation: function() {
 		if(this.deviceName!='none'){
 			//FIXME: Would be better to publish an event about orientation changing
 			//and then have the toolbar widget subscribe to it and update the icon
@@ -76,7 +80,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}
 	},
 
-	_objectPropertiesChange : function (event){
+	_objectPropertiesChange: function (event){
 
 		if(!this.isActiveEditor() )
 			return;
@@ -98,27 +102,27 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this._srcChanged();
 	},
 
-	_editorSelected : function (event){
+	_editorSelected: function (event){
 
 		if(!this.isActiveEditor() )
 			return;
 		// Print an alert showing any message strings accumulated during page load process
 		if(this._onloadMessages && this._onloadMessages.length>0){
 			var str="";
-			for(var i=0; i<this._onloadMessages.length; i++){
+			for(var i=0; i<this._onloadMessages.length; i++){ //FIXME: use join instead
 				if(i>0){
 					str+="\n\n";
 				}
 				str+=this._onloadMessages[i];
 			}
 			this._onloadMessages=[];
-			alert(str);			
+			alert(str);		//FIXME	
 		}
 	},
 	
 
-	isActiveEditor : function(){
-		return  (davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass=="davinci.ve.PageEditor" && davinci.Runtime.currentEditor.visualEditor == this);
+	isActiveEditor: function(){
+		return davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass=="davinci.ve.PageEditor" && davinci.Runtime.currentEditor.visualEditor == this;
 	},
 	
 	_stylePropertiesChange : function (value){
@@ -169,7 +173,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			if(value.appliesTo.type=="proposal"){
 
 				//FIXME: Not included in Undo logic
-				var cssFile = this.context.model.find({'elementType':'CSSFile', 'url': value.appliesTo.targetFile}, true );
+				var cssFile = this.context.model.find({elementType:'CSSFile', url: value.appliesTo.targetFile}, true);
 				if(!cssFile){
 					console.log("Cascade._changeValue: can't find targetFile");
 					return;
@@ -193,11 +197,11 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			dojo.publish("/davinci/ui/widgetValuesChanged",[value]);
 		}
 	},
-	_srcChanged : function(){
+	_srcChanged: function(){
 		this.isDirty = true;
 	},
 	
-	getContext : function(){
+	getContext: function(){
 		return this.context;
 	},
 
@@ -214,24 +218,26 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}
 		return this.template;
 	},
-	destroy : function (){
+	destroy: function (){
 		dojo.forEach(this._handles,dojo.disconnect);
 	},
 	
-	setContent : function (fileName, content){
+	setContent: function (fileName, content){
 		this._onloadMessages=[];	// List of messages to present to user after loading has completed
 		this._setContent(fileName, content);
 
 	},
 	
-	saveAs : function (newFileName, oldFileName, content){
+	saveAs: function (newFileName, oldFileName, content){
 		
 		this._setContent(newFileName, content);
 	},
 	
-	_setContent : function(filename,content){
+	_setContent: function(filename,content){
 		var relativePrefix="";
-		var folderDepth=new davinci.model.Path(filename).getSegments().length-1;
+		
+		/* cheating, adding another layer of prefix for project */
+		var folderDepth=new davinci.model.Path(filename).getSegments().length-2;
 		if (folderDepth){
 			for (var i=0;i<folderDepth;i++){
 				relativePrefix+="../";
@@ -240,13 +246,14 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this._setContentRaw(filename, relativePrefix, content);
 	},
 	
-	_setContentRaw : function(filename,relativePrefix, content){
+	_setContentRaw: function(filename,relativePrefix, content){
 		this.fileName=filename;
 		this.basePath=new davinci.model.Path(filename);
 	   
 		if (!this.initialSet){
 			
-			var loc=location.href;
+			var loc=davinci.Workbench.location();
+			//FIXME: replace this stuff with a regexp
 			if (loc.charAt(loc.length-1)=='/'){
 				loc=loc.substring(0,loc.length-1);
 			}
@@ -312,15 +319,17 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this.save(true);
 	},
 
-	supports : function (something){
+	supports: function (something){
+		//FIXME: regexp
 		return ( something == "palette" || something =="properties" || something =="style"|| something == "states" || something=="inline-style" || something=="MultiPropTarget");
 	},
-	
-	getIsDirty : function(){
+
+	//FIXME: pointless. unused? remove?
+	getIsDirty: function(){
 		var dirty = (this.context.getCurrentPoint() != this.savePoint);
 	},
 
-	getSelectedWidget : function(){
+	getSelectedWidget: function(){
 		//if(this._selectedWidget)
 		//	return this._selectedWidget;
 		
@@ -333,24 +342,25 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}
 		return widget;
 	},
-	getSelectedSubWidget : function(){
-		if(this._selectedSubWidget){
-			return this._selectedSubWidget;
-			
-		}
+
+	getSelectedSubWidget: function(){
+		return this._selectedSubWidget;
 	},
-	getDefaultContent : function (){
+
+	getDefaultContent: function (){
 		return null;
 	},
 
-	saved : function(){
+	saved: function(){
 		this.save();
 	},
-	getFileEditors : function(){
+
+	//FIXME
+	getFileEditors: function(){
 		debugger;
 	},
 	
-	save : function (isAutoSave){
+	save: function (isAutoSave){
 		var model = this.context.getModel();
 		model.setDirty(true);
 		var visitor = {
@@ -366,11 +376,11 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this.isDirty=isAutoSave;
 	},
 	
-	getDefaultContent : function (){
+	getDefaultContent: function (){
 		return this.getTemplate();
 	},
 	
-	previewInBrowser : function(){
+	previewInBrowser: function(){
 		var deviceName = this.deviceName;
 		var editor = davinci.Workbench.getOpenEditor();
 		var fileURL = editor.resourceFile.getURL();
@@ -381,7 +391,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		editor.save();
 		if(deviceName && deviceName.length>0 && deviceName!='none'){
 			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			var url = window.location.href+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
+			var url = davinci.Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
 			window.open(url);
 		}else{
 			window.open(fileURL);

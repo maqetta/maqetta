@@ -8,6 +8,8 @@ dojo.require("dijit.form.TextBox");
 dojo.require("dijit.TooltipDialog");
 dojo.require("dijit.form.Button");
 
+dojo.requireLocalization("dijit", "common");
+
 dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	
 	/* change increment for spinners */
@@ -23,10 +25,11 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 		top.appendChild(this._colorPicker.domNode);
 		var bd = dojo.doc.createElement("div");
 		
-		var okButton = dijit.form.Button({label:"ok"});
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
+		var okButton = dijit.form.Button({label:dijitLangObj.buttonOk});
 		okButton.innerHtml = "OK";
 		bd.appendChild(okButton.domNode);
-		var cancelButton = dijit.form.Button({label:"cancel"})
+		var cancelButton = dijit.form.Button({label:dijitLangObj.buttonCancel})
 		bd.appendChild(cancelButton.domNode);
 		top.appendChild(bd);
 		
@@ -61,10 +64,9 @@ dojo.declare("davinci.ve.widgets.ColorPickerFlat", [dijit._Widget], {
 	}, 
 	
 	_setValueAttr : function(value){
-		// color picker freeks out on setting non color values, this means it will always be whatever it was at before.
-		
-		if(value!=null && value!="")
-			this._colorPicker.setColor(value);
+		// have to sanatize these values so that the color picker doesn't freak out
+		var color = new dojo.Color(value);
+		this._colorPicker.setColor(color.toHex());
 	}
 
 });

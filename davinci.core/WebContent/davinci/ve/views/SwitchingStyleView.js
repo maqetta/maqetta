@@ -302,20 +302,6 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 					}
 			);
 		}
-		// Install any onchange handlers for specific input elements
-		for(var i=0;i<this.pageTemplate.length;i++){
-			var section=this.pageTemplate[i];
-			if(section.pageTemplate){
-				for(var j=0;j<section.pageTemplate.length;j++){
-					var propData=section.pageTemplate[j];
-					if(propData.onchange && propData.id){
-						// onchange function gets invoked with "this" pointing to pageTemplate[i]
-						// and receives parameter j
-						dojo.connect(dojo.byId(propData.id), "onchange", dojo.hitch(section,propData.onchange,j));
-					}
-				}
-			}
-		}
 		this.inherited(arguments);
 			
 	},
@@ -393,7 +379,22 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		this.domNode.style.height="100%";
 	
 		this.inherited(arguments);
-		
+
+		// Install any onchange handlers for specific input elements
+		for(var i=0;i<this.pageTemplate.length;i++){
+			var section=this.pageTemplate[i];
+			if(section.pageTemplate){
+				for(var j=0;j<section.pageTemplate.length;j++){
+					var propData=section.pageTemplate[j];
+					if(propData.onchange && propData.id){
+						// onchange function gets invoked with "this" pointing to pageTemplate[i]
+						// and receives parameter j
+						dojo.connect(dojo.byId(propData.id), "onchange", dojo.hitch(section,propData.onchange,j));
+					}
+				}
+			}
+		}
+
 		for(var v=0;v<this.pageTemplate.length;v++){
 			this.pageTemplate[v]['cascade'] = [];
 			var page = this.pageTemplate[v]['pageTemplate'];

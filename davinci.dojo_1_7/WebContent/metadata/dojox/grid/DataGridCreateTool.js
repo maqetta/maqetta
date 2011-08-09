@@ -14,7 +14,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 	},
 	
 	_create: function(args){
-		
+		debugger;
 		if(this._data.length !== 2){
 			return;
 		}

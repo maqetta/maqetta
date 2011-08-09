@@ -120,7 +120,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 //			foldersOnly:false
 //		});
 		
-		var sourceTreeModel = this.sourceTreeMode = new dijit.tree.TreeStoreModel({
+		var sourceTreeModel = this.sourceTreeModel = new dijit.tree.TreeStoreModel({
 			deferItemLoadingUntilExpand: true,
 			store: new davinci.review.model.store.GeneralReviewReadStore({
 				root: new davinci.model.Resource.Folder(".",null),
@@ -722,7 +722,6 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             }
 		});
 		this.onClose();
-		
 	},
 	
 	onClose:function(){

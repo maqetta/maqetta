@@ -16,7 +16,11 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.Slider');"
+            "$text": "dojo.require('dijit.form.HorizontalSlider');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.form.HorizontalRule');"
         }
     ],
     "library": {
@@ -37,8 +41,9 @@
         "container": {
             "datatype": "string",
             "description": "For HorizontalSlider, this is either \"topDecoration\" or \"bottomDecoration\",\nand indicates whether this rule goes above or below the slider.",
+            "defaultValue":"bottomDecoration",
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<div></div>"
 }

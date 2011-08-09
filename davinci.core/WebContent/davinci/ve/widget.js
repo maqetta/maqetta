@@ -1290,6 +1290,13 @@ dojo.declare("davinci.ve._Widget",null,{
 //				value = value.getId();
 //			else
 //			   value=value.id;
+		} else if (property.datatype == "array"){
+			//return value;
+			if(typeof value == "string"){
+				var arr = value.split(",");
+				value = arr;
+			}
+			
 		}
 		return value;
 	}

@@ -770,7 +770,7 @@
             "resizable": "none",
             "isControl": true,
             "helper": "davinci.libraries.dojo.dijit.form.DropDownButtonHelper",
-            "inlineEdit": "davinci.ve.input.DropDownButtonInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.form.DropDownButtonInput"
         },
         {
             "name": "ValidationTextBox",
@@ -842,7 +842,9 @@
             "properties": {
                 "style": "width: 200px;"
             },
-            "resizable": "width"
+            "resizable": "width",
+            "allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule",
+            "isContainer": true
         },
         {
             "name": "HorizontalRuleLabels",
@@ -852,9 +854,12 @@
             "icon": "resources/images/horizontalslider.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
             "properties": {
-                "style": "width: 200px;"
+            	"style": "height:20px;",
+                "container":"bottomDecoration",
+                "count": "3"
             },
-            "resizable": "width"
+            "helper": "davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper",
+            "allowedParent": "dijit.form.HorizontalSlider"
         },
         {
             "name": "HorizontalRule",
@@ -864,9 +869,10 @@
             "icon": "resources/images/horizontalslider.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
             "properties": {
-                "style": "width: 200px;"
+            	"style": "height:5px;",
+                "container":"bottomDecoration"
             },
-            "resizable": "width"
+            "allowedParent": "dijit.form.HorizontalSlider"
         },
         {
             "name": "VerticalSlider",
@@ -1578,7 +1584,7 @@
             ],
             "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.ve.input.StackContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
         {
             "name": "RadioGroupFade",
@@ -1609,7 +1615,7 @@
             ],
             "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.ve.input.StackContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
         {
             "name": "RadioGroupSlide",
@@ -1640,7 +1646,7 @@
             ],
             "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
-            "inlineEdit": "davinci.ve.input.StackContainerInput"
+            "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
         {
             "name": "ColorPicker",

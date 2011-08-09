@@ -141,16 +141,21 @@ dojo.mixin(davinci.resource, {
 		davinci.resource.resourceChanged("reload", destFile);
 	},
 
-	download: function(files,archiveName, userLibs){
+	download: function(files,archiveName, root, userLibs){
 		
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
 		*/
 		var libString = "";
+		var rootString = "";
+		
 		if(userLibs)
 			libString = "&libs="+escape(dojo.toJson(userLibs));
 		
-		window.location.href= "./cmd/download?fileName=" + archiveName + "&resources="+escape(dojo.toJson(files))+libString ;
+		if(root)
+			rootString = "&root="+ escape(root);
+		
+		window.location.href= "./cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString ;
 	},
 	
 	

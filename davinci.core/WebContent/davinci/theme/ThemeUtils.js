@@ -100,5 +100,6 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		
 		htmlFile.save();
 	}
+	davinci.library.themesChanged();
 }
 

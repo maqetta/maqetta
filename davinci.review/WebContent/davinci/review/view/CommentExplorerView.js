@@ -20,12 +20,8 @@ dojo.requireLocalization("davinci.review.view", "view");
 dojo.requireLocalization("davinci.review.widgets", "widgets");
 
 dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPart, {
-	postCreate: function()
-	{
+	postCreate: function(){
 		this.inherited(arguments);
-
-		
-		
 		
 		var model= new davinci.review.model.ReviewTreeModel();
 		this.model = model;

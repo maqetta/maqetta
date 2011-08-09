@@ -22,6 +22,8 @@ else
     export buildDirectory=${MAQETTA_BUILD_DIR}
 fi
 
+echo "Using ${buildDirectory} for build out directory.."
+
 #
 # If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
 #
@@ -67,6 +69,15 @@ then
     export myArch=${MAQETTA_ARCH}
 else
     export myArch="x86_64"
+fi
+
+#
+# Set deployment type, default to "external"
+#
+deploymentType="external"
+if [ ${MAQETTA_DEPLOYMENT} ]
+then
+    deploymentType="${MAQETTA_DEPLOYMENT}"
 fi
 
 #
@@ -123,6 +134,29 @@ else
     git describe >${buildDirectory}/build.level
 fi
 
+# Retrieve external equinox dependancies
+
+equinoxGitRepo="git://git.eclipse.org/gitroot/equinox/rt.equinox.bundles.git/"
+
+# Stable version of equinox to checkout 
+equinoxBranch="remotes/origin/R3_6_maintenance"
+
+# Set up for and pull down the latest code from GitHub
+#
+export equinoxRepo=${buildDirectory}/repository/rt.equinox.bundles
+#
+if [ ! -f ${equinoxRepo}/.git ]
+then
+      echo "Cloning Equinox repository. This may take a few moments..."
+      cd ${buildDirectory}/repository
+      git clone ${equinoxGitRepo}
+fi
+
+echo "Switching Equinox to branch ${equinoxBranch}..."
+cd ${equinoxRepo}
+git checkout ${equinoxBranch}
+
+
 #
 # Change directory to the build directory.
 #
@@ -136,6 +170,13 @@ cd ${buildDirectory}
 # Run the Ant buildAll script from the davinci.releng project.
 #
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type="external" -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -Ddeployment-type=${deploymentType} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+
+#
+# save exit code for later
+#
+exitCode=$?
 
 cd ${currentDirectory}
+
+exit ${exitCode}

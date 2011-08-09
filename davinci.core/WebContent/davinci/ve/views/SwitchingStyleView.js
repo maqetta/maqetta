@@ -12,7 +12,7 @@ dojo.require("davinci.ve.widgets.Cascade");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ve", "ve");  
-var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+
 
 dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, {
 
@@ -24,19 +24,19 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 
 	pageTemplate : [
 	         
-	          {title:langObj.common, 
+	          {key: "common", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
-	          {title:langObj.widgetSpecific,
+	          {key: "widgetSpecific",
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
-	          {title:langObj.events, 
+	          {key: "events", 
 		          pageTemplate:{html: "<div dojoType='davinci.ve.widgets.EventSelection'></div>"}},
-	          {title:langObj.layout,
+	          {key: "layout",
 		       	  /* startsNewGroup:true, // This flag causes a few extra pixels between this and previous button */
 	           	  pageTemplate:[{display:"width", type:"multi", target:"width", values:['', 'auto','100%','200px','10em']},
 	            	                
     	                {display:"height", type:"multi", target:"height", values:['','auto','100%','200px','10em']},
     	                {html:"&nbsp;"},
-    	                {display:"&nbsp;&nbsp;&nbsp;"+langObj.showMinMax, type:"toggleSection",
+    	                {key: "showMinMax", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
     	                	pageTemplate:[{display:"min-height", type:"multi", target:"min-height", rowClass:"propertiesSectionHidden"},
                                 {display:"max-height", type:"multi", target:"max-height", rowClass:"propertiesSectionHidden"},
                                 {display:"min-width", type:"multi", target:"min-width", rowClass:"propertiesSectionHidden"},
@@ -56,10 +56,10 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 	            	                
 	            	                
 	            	                ]},
-	           {title:langObj.paddingMargins, 
+	           {key: "paddingMargins", 
 	           	  pageTemplate:[
     	                {display:"<b>(padding)</b>", type:"multi", target:"padding", values:['', '0px', '1em']},
-		                 {display:"&nbsp;&nbsp;&nbsp;"+langObj.showtrbl, type:"toggleSection",
+		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
     	                	pageTemplate:[
     		 			       {display:"padding-top", type:"multi", target:"padding-top", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
     		 			       {display:"padding-right", type:"multi", target:"padding-right", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
@@ -67,7 +67,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     		 			       {display:"padding-left", type:"multi", target:"padding-left", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
     	                	]},
     	                {display:"<b>(margin)</b>", type:"multi", target:"margin", values:['', '0px', '1em']},
-		                 {display:"&nbsp;&nbsp;&nbsp;"+langObj.showtrbl, type:"toggleSection",
+		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
     	                	pageTemplate:[
     		 			       {display:"margin-top", type:"multi", target:"margin-top", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
     		 			       {display:"margin-right", type:"multi", target:"margin-right", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
@@ -75,7 +75,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     		 			       {display:"margin-left", type:"multi", target:"margin-left", values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
     	                	]}
     	                ]},
-	           {title:langObj.background, 
+	           {key: "background", 
 	       		  pageTemplate : [{display:"background-color", type:"color", target:'background-color'},
 /* FIXME: Gradients not working yet. Comment out switch for now 
     	                {display:"image/gradient", type:"combo", values:['image', 'gradient']},
@@ -101,7 +101,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
     			 	    {display:"size", target:"none", type:"multi"}
 */                			 	    
     		       	   ]},
-	           {title:langObj.border, 
+	           {key:"border", 
 		       		pageTemplate : [
    		                {display:"<b>(border)</b>", type:"multi", target:'border', values:['','none','1px solid black']}, 
    		                {display:"show", type:"combo", values:['none','sides','props','all'],
@@ -166,7 +166,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
    		                {display:"border-left-color", type:"color", target:'border-left-color',rowClass:'propertiesSectionHidden'},
       		         {display:"border-collapse", type:"combo", target:'border-collapse',  values:['', 'separate', 'collapse']},
    		             {display:"<b>(border-radius)</b>", type:"multi", target:['border-radius','-moz-border-radius'],  values:['', '0px', '6px']},
-	                 {display:langObj.showDetails, type:"toggleSection",
+	                 {key: "showDetails", display:"", type:"toggleSection",
  	                	pageTemplate:[
 		                     {display:"border-top-left-radius", type:"multi", target:["border-top-left-radius",'-moz-border-radius-topleft'], values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"},
 		                     {display:"border-top-right-radius", type:"multi", target:['border-top-right-radius','-moz-border-radius-topright'] , values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"},
@@ -174,7 +174,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		                     {display:"border-bottom-left-radius", type:"multi", target:['border-bottom-left-radius','-moz-border-radius-bottomleft'] , values:['', '0px', '6px'], rowClass:"propertiesSectionHidden"}
 	    	                ]}
 		            	  ]},
-	           {title:langObj.fontsAndText,
+	           {key: "fontsAndText",
 	                  pageTemplate:[{display:"font", type:"text", target:"font"},
                         {display:"font-family", type:"font", target:"font-family"},
     	                {display:"size", type:"multi", target:"font-size", values:['','100%','1em','10px','10pt']},
@@ -209,6 +209,18 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";
 		template+="<td class='propPaletteRoot'>";
+		//run through pageTemplate to insert localized strings
+		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
+		for(var i=0;i<this.pageTemplate.length;i++){
+			this.pageTemplate[i].title = langObj[this.pageTemplate[i].key] ? langObj[this.pageTemplate[i].key] : "Key not found";
+			if(this.pageTemplate[i].pageTemplate){
+				for(var j=0; j<this.pageTemplate[i].pageTemplate.length; j++){
+					if(this.pageTemplate[i].pageTemplate[j].key){
+						this.pageTemplate[i].pageTemplate[j].display += langObj[this.pageTemplate[i].pageTemplate[j].key] ? langObj[this.pageTemplate[i].pageTemplate[j].key] : "Key not found";
+					}
+				}
+			}
+		}
 		for(var i=0;i<this.pageTemplate.length;i++){
 			var title=this.pageTemplate[i].title;
 			// Use same styling as Dijit TitlePane
@@ -290,20 +302,6 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 					}
 			);
 		}
-		// Install any onchange handlers for specific input elements
-		for(var i=0;i<this.pageTemplate.length;i++){
-			var section=this.pageTemplate[i];
-			if(section.pageTemplate){
-				for(var j=0;j<section.pageTemplate.length;j++){
-					var propData=section.pageTemplate[j];
-					if(propData.onchange && propData.id){
-						// onchange function gets invoked with "this" pointing to pageTemplate[i]
-						// and receives parameter j
-						dojo.connect(dojo.byId(propData.id), "onchange", dojo.hitch(section,propData.onchange,j));
-					}
-				}
-			}
-		}
 		this.inherited(arguments);
 			
 	},
@@ -381,8 +379,22 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		this.domNode.style.height="100%";
 	
 		this.inherited(arguments);
-		
-		
+
+		// Install any onchange handlers for specific input elements
+		for(var i=0;i<this.pageTemplate.length;i++){
+			var section=this.pageTemplate[i];
+			if(section.pageTemplate){
+				for(var j=0;j<section.pageTemplate.length;j++){
+					var propData=section.pageTemplate[j];
+					if(propData.onchange && propData.id){
+						// onchange function gets invoked with "this" pointing to pageTemplate[i]
+						// and receives parameter j
+						dojo.connect(dojo.byId(propData.id), "onchange", dojo.hitch(section,propData.onchange,j));
+					}
+				}
+			}
+		}
+
 		for(var v=0;v<this.pageTemplate.length;v++){
 			this.pageTemplate[v]['cascade'] = [];
 			var page = this.pageTemplate[v]['pageTemplate'];

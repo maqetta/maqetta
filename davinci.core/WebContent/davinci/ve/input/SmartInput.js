@@ -747,6 +747,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			var what = dojox.html.entities.encode(value);
 			textObj.innerHTML = '<div class="dojoxEllipsis">Plain text ('+what+') </div>';
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
+			var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+langObj.htmlMarkup+'</div>';
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');

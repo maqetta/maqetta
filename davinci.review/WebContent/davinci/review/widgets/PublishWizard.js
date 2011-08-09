@@ -20,6 +20,8 @@ dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.resource");
 dojo.require("davinci.model.Resource");
 
+dojo.require("dijit.tree.TreeStoreModel");
+dojo.require("davinci.review.model.store.GeneralReviewReadStore");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.review.widgets", "widgets");
 dojo.requireLocalization("dijit", "common");
@@ -113,10 +115,23 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		var fileIndex= this.fileIndex = 1;
 		this.reviewFiles = reviewFiles;
 					
-		var sourceTreeModel=this.sourceTreeModel = new davinci.review.model.ReviewFileTreeModel({
-			root : new davinci.model.Resource.Folder(".",null),
-			foldersOnly:false
+//		var sourceTreeModel=this.sourceTreeModel = new davinci.review.model.ReviewFileTreeModel({
+//			root : new davinci.model.Resource.Folder(".",null),
+//			foldersOnly:false
+//		});
+		
+		var sourceTreeModel = this.sourceTreeModel = new dijit.tree.TreeStoreModel({
+			deferItemLoadingUntilExpand: true,
+			store: new davinci.review.model.store.GeneralReviewReadStore({
+				root: new davinci.model.Resource.Folder(".",null),
+				getLabel: function(item){
+					var label = item.getName();
+					if (item.link){ label=label + "  [" + item.link + "]"; }
+					return label;
+				}
+			})
 		});
+		
 		var doubleClick = function(item){
 			this.addFiles([item]);
 		};
@@ -125,7 +140,6 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			showRoot:false,
 			model: sourceTreeModel, 
 			labelAttr: "name", 
-			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect: true,
 			onDblClick: dojo.hitch(this,doubleClick),
@@ -134,16 +148,27 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 		sourceTreeCP.domNode.appendChild(sourceTree.domNode);
 		sourceTree.startup();
 		
-		var targetTreeModel=this.targetTreeModel = new davinci.review.model.ReviewFileTreeModel({
-			root : new davinci.review.model.Resource.Empty(),
-			foldersOnly:false
+//		var targetTreeModel=this.targetTreeModel = new davinci.review.model.ReviewFileTreeModel({
+//			root : new davinci.review.model.Resource.Empty(),
+//			foldersOnly:false
+//		});
+		
+		var targetTreeModel = this.targetTreeModel = new dijit.tree.TreeStoreModel({
+			store: new davinci.review.model.store.GeneralReviewReadStore({
+				root: new davinci.review.model.Resource.Empty(),
+				getLabel: function(item){
+					var label = item.getName();
+					if (item.link){ label=label + "  [" + item.link + "]"; }
+					return label;
+				}
+			})
 		});
+		
 		var targetTree = this.targetTree = new davinci.review.widgets.Tree({
 			id: "reviewWizardTargetTree",
 			showRoot:false,
 			model: targetTreeModel, 
 			labelAttr: "name", 
-			childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
 			isMultiSelect : true
 		});
@@ -697,7 +722,6 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             }
 		});
 		this.onClose();
-		
 	},
 	
 	onClose:function(){

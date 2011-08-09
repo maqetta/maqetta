@@ -4,11 +4,11 @@ dojo.require("davinci.resource");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.actions", "actions");
-var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 
 dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 	
 	run: function(){
+		var langObj = dojo.i18n.getLocalization("davinci.actions", "actions");
 		var files=davinci.ui.Resource.getSelectedResources();
 		this._files=files;
 		var filesDiv="";

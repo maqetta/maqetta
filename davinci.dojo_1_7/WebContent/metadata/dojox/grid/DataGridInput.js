@@ -7,9 +7,7 @@ dojo.require("dojox.form.DropDownSelect");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 dojo.requireLocalization("dijit", "common");
-var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input.SmartInput, {
 
@@ -25,7 +23,12 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	supportsHTML: "true", 
 	//helpText:  'First line is column headers separated by commons all following lines are data for those columns.',
 
-	helpText:  langObj.dataGridInputHelp,
+	helpText:  "",
+	
+	constructor : function() {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
+		this.helpText = langObj.dataGridInputHelp;
+	},
 
 
 	serialize: function(widget, callback, value) {
@@ -42,6 +45,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	// splits the input by rows then columns
 	// see @update() for format
 	parse: function(input) {
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 		var values = this.parseGrid(input);
         if (values.length < 2) {
             alert(langObj.invalidInput1);
@@ -432,7 +436,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
       			  file  : null
 
             };
-      	
+      	  	var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
       		this._fileSelectionDialog = davinci.ui.Panel.openDialog( {
       			definition: definition,
       			data: data,
@@ -469,6 +473,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	updateFormats: function(){
 			
 		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 		if (this._dataStoreType === 'file' ){
 			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
@@ -554,6 +559,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	
 	_getTemplate: function(){
 		
+		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
+		var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 		var template = ''+
 		'<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv" style="background-color: #F7FCFF;	margin: 0 0 0 -1px;"> ' +
 		'<table id="davinci.ve.input.DataGridInput_table" > ' +

@@ -3,9 +3,7 @@ dojo.require("davinci.ve.input.SmartInput");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojo", "dojo");
-var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojo", "dojo");
 dojo.requireLocalization("dijit", "common");
-var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 
 dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", davinci.ve.input.SmartInput, {
 
@@ -70,6 +68,8 @@ dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreInput", davinci.
 	
 	show: function(widgetId) {
 	    this._widget = davinci.ve.widget.byId(widgetId);
+	    var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojo", "dojo");
+	    var dijitLangObj = dojo.i18n.getLocalization("dijit", "common");
 	    this._inline = new dijit.Dialog({
             title: langObj.dataStoreDetails,
             style: "width: 500px; height:350px"

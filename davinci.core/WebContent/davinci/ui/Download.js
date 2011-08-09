@@ -44,7 +44,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		this.inherited(arguments);
 		
 		this._handles = [];
-		this._userLibs = davinci.library.getUserLibs();
+		this._userLibs = davinci.library.getUserLibs(this.getRoot());
 		var uiArray = [];
 		
 		uiArray.push("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>"+langObj.library+"</td><td class='header'>"+langObj.version+"</td><td class='header'>"+langObj.include+"<br>"+langObj.source+"</td><td class='header'>"+langObj.baseLocation+"</td></tr>");
@@ -97,6 +97,12 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		return userLibs;
 	},
 	
+	getRoot : function(){
+		if(davinci.Runtime.singleProjectMode()){
+			return davinci.Runtime.getProject();
+		}
+	},
+	
 	_getResources : function(){
 		
 		var folder=davinci.resource.getRoot();
@@ -144,15 +150,16 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	okButton : function(){
-		function makeTimeoutFunction(downloadFiles, fileName, libs){
+		function makeTimeoutFunction(downloadFiles, fileName, root, libs){
 			return function(){
 				
 				
 				
 				var files = downloadFiles;
 				var fn = fileName
+			
 				
-				davinci.resource.download(files, fn, libs);		
+				davinci.resource.download(files, fn, root, libs);		
 				/*
 				for(var i=0;i<pgs.length;i++){
 					pgs[i].removeWorkingCopy();
@@ -173,7 +180,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 				actualLibs.push(allFiles['userLibs'][k]);
 		}
 		
-		setTimeout(makeTimeoutFunction(allFiles['userFiles'], fileName, actualLibs), 300);
+		setTimeout(makeTimeoutFunction(allFiles['userFiles'], fileName, this.getRoot(), actualLibs), 300);
 		this.onClose();
 	},
 	cancelButton : function(){

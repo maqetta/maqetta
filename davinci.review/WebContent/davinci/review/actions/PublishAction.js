@@ -34,7 +34,8 @@ dojo.declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
 		var langObj = dojo.i18n.getLocalization("davinci.review.actions", "actions");
 		this.dialog = new dijit.Dialog( {
 			title : langObj.newReview,
-			onCancle: dojo.hitch(this,this.close)
+			onCancle: dojo.hitch(this,this.close),
+			onHide: dojo.hitch(this, this.hide)
 		});
 		this.dialog.setContent(publishWizard);
 		this.dialog.show();
@@ -45,8 +46,11 @@ dojo.declare("davinci.review.actions.PublishAction", davinci.actions.Action, {
 		
 	},
 	
+	hide: function(){
+		this.dialog.destroyRecursive();
+	},
+	
 	close: function(){
-		this.publishWizard.destroy();
 		this.dialog.hide();
 	}
 });

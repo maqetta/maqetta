@@ -286,7 +286,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	if (patt.test(this._url)){ // absolute url
     		url = this._url;
     	} else {
-    		var file = davinci.resource.findResource(this._url); // relative so we have to get the absolute for the update of the store
+    		var parentFolder = new davinci.model.Path(this._widget._edit_context._srcDocument.fileName).getParentPath().toString();
+    		var file = davinci.resource.findResource(this._url, null, parentFolder); // relative so we have to get the absolute for the update of the store
     		if (!file){
     			alert('File: ' + this._url + ' does not exsist.');
     			return;

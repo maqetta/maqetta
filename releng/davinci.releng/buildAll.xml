@@ -84,7 +84,7 @@
 	<!-- Build the 3 types of zips from each of their product files.  
 	     There is internal zip, external zip and joomla zip -->
 	
-	<target name="zips" depends="extZips, intZips" />
+	<target name="zips" depends="extZips, intZips, joomla" />
 	<!-- internal zip -->
     <target name="intZips" if="run.internal.targets">
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">

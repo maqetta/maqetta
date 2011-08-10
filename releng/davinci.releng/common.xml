@@ -39,7 +39,7 @@
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
     </target>
-	
+
     <!--  equinox deps to copy in -->
  	<target name="populateEquinoxBridge">
  	
@@ -81,5 +81,37 @@
         </copy>
         <defaultexcludes default="true"/>
     </target>	
-	
+
+    <target name="localCopy">
+        <condition property="pluginDir" value="features" else="plugins">
+            <istrue value="${isFeature}"/>
+        </condition>
+        <condition property="maqettaSource" value="${maqettaCode}" else="${maqettaCodeInternal}">
+            <isfalse value="${isInternal}"/>
+        </condition>
+        <defaultexcludes remove="**/.git"/>
+        <defaultexcludes remove="**/.git/**"/>
+        <defaultexcludes remove="**/.svn"/>
+        <defaultexcludes remove="**/.svn/**"/>
+        <copy todir="${buildDirectory}/${pluginDir}/${project}">
+            <fileset dir="${maqettaSource}${extPath}/${project}"/>
+        </copy>
+        <defaultexcludes default="true"/>
+    </target>
+    <target name="fromGit">
+        <condition property="pluginDir" value="features" else="plugins">
+            <istrue value="${isFeature}"/>
+        </condition>
+        <condition property="maqettaRepository" value="${repoPath}" else="${repoPathInternal}">
+            <isfalse value="${isInternal}"/>
+        </condition>
+        <defaultexcludes remove="**/.git"/>
+        <defaultexcludes remove="**/.git/**"/>
+        <defaultexcludes remove="**/.svn"/>
+        <defaultexcludes remove="**/.svn/**"/>
+        <copy todir="${buildDirectory}/${pluginDir}/${project}">
+            <fileset dir="${maqettaRepository}${extPath}/${project}"/>
+        </copy>
+        <defaultexcludes default="true"/>
+    </target>
 </project>

@@ -4,9 +4,9 @@
 <product name="Maqetta Server External" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
-      <linux>/davinci.product/config/config-internal.ini</linux>
-      <macosx>/davinci.product/config/config-internal.ini</macosx>
-      <win32>/davinci.product/config/config-internal.ini</win32>
+      <linux>/davinci.product/config/config-external.ini</linux>
+      <macosx>/davinci.product/config/config-joomla.ini</macosx>
+      <win32>/davinci.product/config/config-joomla.ini</win32>
    </configIni>
 
    <launcherArgs>
@@ -29,8 +29,10 @@
       <plugin id="davinci.core"/>
       <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
+      <plugin id="davinci.joomla"/>
+      <plugin id="davinci.jqueryui_1_8"/>
       <plugin id="davinci.review"/>
-      <plugin id="davinci.w3ibm"/>
+      <plugin id="davinci.yui_2_6_0"/>
       <plugin id="javax.servlet"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>

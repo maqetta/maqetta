@@ -461,7 +461,27 @@ davinci.ve.widget.createWidget = function(data){
 			});
 		}
 	}
-
+	//need a helper to process the data for horizontalSlider
+	var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
+    if (helper) {
+    	var myHelper;
+        try {
+            dojo["require"](helper);
+        } catch(e) {
+            console.error("Failed to load helper: " + helper);
+            console.error(e);
+        }
+        var aClass = dojo.getObject(helper);
+        if (aClass) {
+        	myHelper  = new aClass();
+		}
+        var obj = dojo.getObject(helper);
+        myHelper = new obj();
+        if(myHelper.preProcessData)
+        	data =  myHelper.preProcessData(data);
+        	
+    }
+	
 	var widget = new c(data.properties, node, type, metadata, srcElement);
 	widget._srcElement=srcElement;
 
@@ -1290,13 +1310,6 @@ dojo.declare("davinci.ve._Widget",null,{
 //				value = value.getId();
 //			else
 //			   value=value.id;
-		} else if (property.datatype == "array"){
-			//return value;
-			if(typeof value == "string"){
-				var arr = value.split(",");
-				value = arr;
-			}
-			
 		}
 		return value;
 	}

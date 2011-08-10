@@ -69,7 +69,6 @@
         },
         "container": {
             "datatype": "string",
-            "defaultValue": "bottomDecoration",
             "description": "For HorizontalSlider, this is either \"topDecoration\" or \"bottomDecoration\",\nand indicates whether this rule goes above or below the slider.",
             "hidden": false
         }

@@ -90,7 +90,7 @@
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/zipFile"/>
         	<property name="product" value="davinci.product/DavinciServer-internal.product"/>
-        	<property name="maqettaArchiveName" value="w3-maqetta.zip"/>
+        	<property name="maqettaArchiveName" value="w3ibm-maqetta.zip"/>
         </ant>
     </target>
 	

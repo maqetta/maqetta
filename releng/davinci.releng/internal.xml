@@ -1,7 +1,6 @@
-<project name="maqetta-external" default="populate">
-	
-	<target name="populate">
-        <condition property="getMethod" value="fromGit" else="localCopy">
+<project name="maqetta-internal" default="populate">
+    <target name="populate">
+    	<condition property="getMethod" value="fromGit" else="localCopy">
             <not>
                 <isset property="maqettaCode"/>
             </not>
@@ -22,15 +21,10 @@
         </macrodef>
 
         <!-- -->
-        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
+        <!-- LIST OF MAQETTA Internal PROJECTS GOES HERE -->
         <!-- -->
-		
-        <populateDir project="davinci.jqueryui_1_8"/>
-        <populateDir project="davinci.product" extPath="/releng"/>
-        <populateDir project="davinci.yui_2_6_0"/>
-        <populateDir project="davinci.joomla"/>
-        <populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
-
-
+    	<populateDir project="davinci.oneui_2010_08_02" isInternal="true"/>
+        <populateDir project="davinci.w3ibm" isInternal="true"/>
+        <populateDir project="davinci.w3war" isFeature="true" isInternal="true"/>
     </target>
 </project>

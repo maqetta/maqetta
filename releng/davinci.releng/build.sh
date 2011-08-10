@@ -27,7 +27,7 @@ echo "Using ${MAQETTA_BUILD_DIR} for build out directory.."
 #
 # Note: This build feature SHOULD NOT be used for production builds.
 #
-export maqettaCode="/Users/childsb/dev/git/maqetta"
+# export maqettaCode="/Users/childsb/dev/git/maqetta"
 #
 # Directory containing build.xml (this should not have to be changed in most cases).
 # No trailing slash.

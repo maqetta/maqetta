@@ -42,7 +42,9 @@
             <param name="addPlugin" value="davinci.w3ibm"/>
             <param name="fromZipName" value="${maqettaArchiveName}"/>
             <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
-        </antcall>        
+        </antcall>
+		<!-- delete the old archive only leaving the new w3 one -->
+		<delete file="${maqettaArchiveName}.zip"/>
     </target>
 
 
@@ -124,10 +126,11 @@
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/warFile"/>
         	<property name="warProject" value="davinci.war"/>
+        	
         </ant>
     </target>
 
-	  <target name="intWar" if="run.internal.targets">
+    <target name="intWar" if="run.internal.targets">
 	    <!-- build servlet bridge separately first because it is not part of the feature built -->
 	    <!--
 	     -->
@@ -140,8 +143,9 @@
 		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="builder" value="${basedir}/warFile"/>
 			<property name="warProject" value="davinci.w3war"/>
+			<property name="warFileName" value="w3-${warFileName}"/>
 		</ant>
-	  </target>
+	</target>
 
     <target name="localCopy">
         <condition property="pluginDir" value="features" else="plugins">

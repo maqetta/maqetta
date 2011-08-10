@@ -8,7 +8,7 @@
 	      Equinox (dep for running war): ${buildDirectory}/repository/rt.equinox.bundles
 	
 	-->
-	<import file="depends.xml"/>
+	<import file="common.xml"/>
 	<import file="${deployment-type}.xml"/>
 	
 	

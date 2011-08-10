@@ -17,12 +17,10 @@ echo "Using ${baseLocation} Eclipse for build..."
 #
 if [ ! ${MAQETTA_BUILD_DIR} ]
 then
-    export buildDirectory="/tmp"
-else
-    export buildDirectory=${MAQETTA_BUILD_DIR}
+    export MAQETTA_BUILD_DIR="/tmp"
 fi
 
-echo "Using ${buildDirectory} for build out directory.."
+echo "Using ${MAQETTA_BUILD_DIR} for build out directory.."
 
 #
 # If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
@@ -38,7 +36,7 @@ if [ ${maqettaCode} ]
 then
     export relEngDir="${maqettaCode}/releng/davinci.releng"
 else
-    export relEngDir="${buildDirectory}/repository/maqetta/releng/davinci.releng"
+    export relEngDir="${MAQETTA_BUILD_DIR}/repository/maqetta/releng/davinci.releng"
 fi
 
 #
@@ -74,10 +72,10 @@ fi
 #
 # Set deployment type, default to "external"
 #
-deploymentType="external"
-if [ ${MAQETTA_DEPLOYMENT} ]
+
+if [ ! ${MAQETTA_DEPLOYMENT} ]
 then
-    deploymentType="${MAQETTA_DEPLOYMENT}"
+    MAQETTA_DEPLOYMENT="external"
 fi
 
 #
@@ -90,48 +88,48 @@ then
     #
     # Set up for and pull down the latest code from GitHub
     #
-    if [ ! -d ${buildDirectory}/repository ]
+    if [ ! -d ${MAQETTA_BUILD_DIR}/repository ]
     then
         echo "Making repository directory"
-        mkdir -p ${buildDirectory}/repository
+        mkdir -p ${MAQETTA_BUILD_DIR}/repository
     fi
 
     #
     # If '.git' directory exists we need only pull
     #
-    if [ -d ${buildDirectory}/repository/maqetta/.git ]
+    if [ -d ${MAQETTA_BUILD_DIR}/repository/maqetta/.git ]
     then
         echo "Doing 'git pull'..."
-        cd ${buildDirectory}/repository/maqetta
+        cd ${MAQETTA_BUILD_DIR}/repository/maqetta
         git pull
     else
         echo "Cloning repository. This may take a few moments..."
-        cd ${buildDirectory}/repository
+        cd ${MAQETTA_BUILD_DIR}/repository
         git clone ${gitRepository}
     fi
     echo "Done fetching maqetta core."
     #
     # Save repository revision level for later referrence
     #
-    cd ${buildDirectory}/repository/maqetta
-    git describe >${buildDirectory}/build.level
+    cd ${MAQETTA_BUILD_DIR}/repository/maqetta
+    git describe >${MAQETTA_BUILD_DIR}/build.level
 else
-    if [ ! -e ${buildDirectory}/repository/maqetta ]
+    if [ ! -e ${MAQETTA_BUILD_DIR}/repository/maqetta ]
     then
         #
-        # Create symlink to 'maqettaCode' repo at ${buildDirectory}/repository/maqetta -- Eclipse
+        # Create symlink to 'maqettaCode' repo at ${MAQETTA_BUILD_DIR}/repository/maqetta -- Eclipse
         # build system requires that.
         #
-        if [ ! -d ${buildDirectory}/repository ]
+        if [ ! -d ${MAQETTA_BUILD_DIR}/repository ]
         then
-            mkdir -p ${buildDirectory}/repository
+            mkdir -p ${MAQETTA_BUILD_DIR}/repository
         fi
-        cd ${buildDirectory}/repository
+        cd ${MAQETTA_BUILD_DIR}/repository
         ln -s ${maqettaCode} maqetta
     fi
     
     cd ${maqettaCode}
-    git describe >${buildDirectory}/build.level
+    git describe >${MAQETTA_BUILD_DIR}/build.level
 fi
 
 # Retrieve external equinox dependancies
@@ -143,12 +141,12 @@ equinoxBranch="remotes/origin/R3_6_maintenance"
 
 # Set up for and pull down the latest code from GitHub
 #
-export equinoxRepo=${buildDirectory}/repository/rt.equinox.bundles
+export equinoxRepo=${MAQETTA_BUILD_DIR}/repository/rt.equinox.bundles
 #
 if [ ! -f ${equinoxRepo}/.git ]
 then
       echo "Cloning Equinox repository. This may take a few moments..."
-      cd ${buildDirectory}/repository
+      cd ${MAQETTA_BUILD_DIR}/repository
       git clone ${equinoxGitRepo}
 fi
 
@@ -164,13 +162,15 @@ git checkout ${equinoxBranch}
 #       running the build from this directory *imperative*.
 #
 
-cd ${buildDirectory}
+cd ${MAQETTA_BUILD_DIR}
 
 #
 # Run the Ant buildAll script from the davinci.releng project.
 #
+export buildDirectory=${MAQETTA_BUILD_DIR}
+echo "Starting ${MAQETTA_DEPLOYMENT} build...."
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type=${deploymentType} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 #
 # save exit code for later

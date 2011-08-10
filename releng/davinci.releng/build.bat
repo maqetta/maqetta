@@ -1,6 +1,6 @@
 rem
 rem  you must have some version of eclipse installed to build against
-rem  create a directory to do the build in, build results will be in buildDirectory\result
+rem  create a directory to do the build in, build results will be in MAQETTA_BUILD_DIR\result
 rem
 
 rem
@@ -27,13 +27,13 @@ set launcherVersion=1.0.201.R35x_v20090715
 rem
 rem Directory in which to do the build. No trailing backslash.
 rem
-set buildDirectory=c:\build-out
+set MAQETTA_BUILD_DIR=c:\build-out
 
 rem
 rem Directory containing build.xml (this should not have to be changed in most cases).
 rem No trailing backslash.
 rem
-set relEngDir=%buildDirectory%\repository\maqetta\releng\davinci.releng"
+set relEngDir=%MAQETTA_BUILD_DIR%\repository\maqetta\releng\davinci.releng"
 
 rem
 rem If 'maqettaCode' is set, copy files from your local workspace instead of GitHub repository
@@ -60,21 +60,21 @@ set myArch=x86
 rem
 rem Set up for and pull down the latest code from GitHub
 rem
-IF NOT EXIST %buildDirectory%\repository (
+IF NOT EXIST %MAQETTA_BUILD_DIR%\repository (
     rem "Making repository directory..."
-    mkdir %buildDirectory%\repository
+    mkdir %MAQETTA_BUILD_DIR%\repository
 )
 
 rem
 rem If '.git' directory exists we need only pull
 rem
-IF EXIST %buildDirectory%\repository\maqetta\.git (
+IF EXIST %MAQETTA_BUILD_DIR%\repository\maqetta\.git (
     rem "Doing 'git pull'..."
-    cd %buildDirectory%\repository\maqetta
+    cd %MAQETTA_BUILD_DIR%\repository\maqetta
     git pull
 ) ELSE (
     rem "Cloning repository. This may take a few moments..."
-    cd %buildDirectory%\repository
+    cd %MAQETTA_BUILD_DIR%\repository
     git clone %gitRepository%
 )
 
@@ -84,6 +84,6 @@ rem
 rem Note: Many scripts use relative directory references making
 rem       running the build from this directory *imperative*.
 rem
-cd %buildDirectory%
+cd %MAQETTA_BUILD_DIR%
 
 java -jar %baseLocation%\plugins\org.eclipse.equinox.launcher_%launcherVersion%.jar -application org.eclipse.ant.core.antRunner -buildfile %relEngDir%\buildAll.xml

@@ -1,70 +1,50 @@
 <project name="maqetta" default="nightly">
-
-	<!--<include file="equinox-depends.xml"/>-->
+	
+	<!--  This line loads either internal.xml or external.xml.  These files copy the deps from the git repos.
+	      The git repos are initialized in the shell script prior to running the build script.
+	      
+	      Internal repo is ${buildDirectory}/repository/maqetta
+	      External repo is ${buildDirectoyr}/repository/maqetta_internal
+	      Equinox (dep for running war): ${buildDirectory}/repository/rt.equinox.bundles
+	
+	-->
+	<import file="common.xml"/>
 	<import file="${deployment-type}.xml"/>
-    
-    <target name="nightly" depends="init">
+	
+	
+	<target name="nightly" depends="init">
         <tstamp>
             <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
-
-        <antcall target="clean">
-        </antcall>
-        <antcall target="populate">
-        </antcall>
-    	
-    	<antcall target="populateEquinoxBridge">
-    	     </antcall>
-    	
-        <antcall target="zips">
-        </antcall>
-        <antcall target="updateZips">
-        </antcall>
-        <antcall target="war"></antcall>
-        
+        <antcall target="clean"/>
+		<!-- base maqetta out of depends.xml -->
+		<antcall target="populateBaseMaqetta"/>
+		
+		<!-- populate function out of internal.xml or external.xml -->
+        <antcall target="populate"/>
+        <antcall target="zips"/>
+        <antcall target="updateZips"/>
+        <antcall target="war"/>
     </target>
 
     <target name="updateZips" depends="addJoomla, addW3ibm"></target>
-    <target name="addJoomla">
+
+	<target name="addJoomla" if="run.external.targets">
         <antcall target="updateZip">
             <param name="addPlugin" value="davinci.joomla"/>
             <param name="fromZipName" value="${maqettaArchiveName}"/>
             <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
         </antcall>        
     </target>
-    <target name="addW3ibm" if="run.internal.targets">
+    
+	<target name="addW3ibm" if="run.internal.targets">
         <antcall target="updateZip">
             <param name="addPlugin" value="davinci.w3ibm"/>
             <param name="fromZipName" value="${maqettaArchiveName}"/>
             <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
-        </antcall>        
-    </target>
-	
-    <target name="populateEquinoxBridge">
-   
-        <macrodef name="populateEDir">
-            <attribute name="project"/>
-            <attribute name="isFeature" default="false"/>
-            <attribute name="isInternal" default="false"/>
-            <attribute name="extPath" default=""/>
-            <sequential>
-                <antcall target="fromEquinox">
-                    <param name="project" value="@{project}"/>
-                    <param name="isFeature" value="@{isFeature}"/>
-                    <param name="extPath" value="@{extPath}"/>
-                </antcall>
-            </sequential>
-        </macrodef>
-
-        <!-- -->
-        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
-        <!-- -->
-
-        <populateEDir project="org.eclipse.equinox.http.servletbridge"/>
-        <populateEDir project="org.eclipse.equinox.server.core" isFeature="true"/>
-        <populateEDir project="org.eclipse.equinox.server.servletbridge" isFeature="true"/>
-        <populateEDir project="org.eclipse.equinox.servletbridge"/>
-        <populateEDir project="org.eclipse.equinox.servletbridge.extensionbundle"/>
+        </antcall>
+		<!-- delete the old archive only leaving the new w3 one -->
+		<delete file="${maqettaArchiveName}.zip"/>
     </target>
 
 
@@ -118,6 +98,9 @@
         <condition property="run.internal.targets">
             <equals arg1="${deployment-type}" arg2="internal"/>
         </condition>
+        <condition property="run.external.targets">
+            <equals arg1="${deployment-type}" arg2="external"/>
+        </condition>
     </target>
 
     <target name="zips">
@@ -127,7 +110,9 @@
 
     </target>
 
-    <target name="war">
+	<target name="war" depends="extWar,intWar"/>
+    
+	<target name="extWar" if="run.external.targets">
         <!-- build servlet bridge separately first because it is not part of the feature built -->
         <!--
         -->
@@ -140,10 +125,12 @@
         </delete>
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/warFile"/>
+        	<property name="warProject" value="davinci.war"/>
+        	
         </ant>
     </target>
 
-	  <target name="w3war">
+    <target name="intWar" if="run.internal.targets">
 	    <!-- build servlet bridge separately first because it is not part of the feature built -->
 	    <!--
 	     -->
@@ -154,9 +141,11 @@
 			<fileset dir="${buildDirectory}/${buildLabel}" includes="org.eclipse.equinox.servletbridge*.jar"></fileset>
 		</delete>
 		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
-			<property name="builder" value="${basedir}/W3warFile" />
+			<property name="builder" value="${basedir}/warFile"/>
+			<property name="warProject" value="davinci.w3war"/>
+			<property name="warFileName" value="w3-${warFileName}"/>
 		</ant>
-	  </target>
+	</target>
 
     <target name="localCopy">
         <condition property="pluginDir" value="features" else="plugins">

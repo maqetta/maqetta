@@ -25,16 +25,12 @@
         <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
         <!-- -->
 		
-        <populateDir project="davinci.core"/>
-        <populateDir project="davinci.dojo_1_7"/>
-        <populateDir project="davinci.html"/>
         <populateDir project="davinci.jqueryui_1_8"/>
         <populateDir project="davinci.product" extPath="/releng"/>
         <populateDir project="davinci.yui_2_6_0"/>
-        <populateDir project="davinci.review"/>
         <populateDir project="davinci.joomla"/>
-        <populateDir project="org.apache.commons.fileupload"/>
-        <populateDir project="org.apache.commons.io"/>
         <populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
+
+
     </target>
 </project>

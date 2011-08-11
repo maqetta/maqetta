@@ -125,7 +125,7 @@
 	<target name="extEAR" if="run.external.targets">
         <antcall target="makeEar">
             <param name="warFileName" value="maqetta.war"/>
-        	<param name="warProject" value="maqetta.war"/>
+        	<param name="warProject" value="davinci.war"/>
         	<param name="earFile" value="maqetta.ear"/>
         </antcall>
 	</target>

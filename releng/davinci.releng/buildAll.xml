@@ -24,6 +24,7 @@
         <antcall target="populate"/>
         <antcall target="zips"/>
         <antcall target="war"/>
+		<antcall target="ear"/>
     </target>
 
     <target name="init">
@@ -111,6 +112,26 @@
         	<property name="maqettaArchiveName" value="maqetta.zip"/>
         </ant>
     </target>
+	
+	
+	<!-- build the internal and external EAR -->
+	<target name="ear" depends="extEAR,intEAR"/>
+	
+	<target name="extEAR" if="run.external.targets">
+        <antcall target="makeEar">
+            <param name="warFileName" value="davinci.war"/>
+        	<param name="warProject" value="davinci.war"/>
+        	<param name="earFile" value="davinci.ear"/>
+        </antcall>
+	</target>
+
+	<target name="intEAR" if="run.internal.targets">
+        <antcall target="makeEar">
+            <param name="warFileName" value="w3-davinci.war"/>
+        	<param name="warProject" value="davinci.w3war"/>
+        	<param name="earFile" value="w3-davinci.ear"/>
+        </antcall>
+	</target>
 
 	<!-- build the internal and external WAR -->
 	<target name="war" depends="extWar,intWar"/>
@@ -146,7 +167,7 @@
 		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="builder" value="${basedir}/warFile"/>
 			<property name="warProject" value="davinci.w3war"/>
-			<property name="warFileName" value="w3-${warFileName}"/>
+			<property name="warFileName" value="w3-davinci.war"/>
 		</ant>
 	</target>
 
@@ -178,22 +199,24 @@
             <fileset file="${tmpDir}/eclipse/plugins/*.jar">
             </fileset>
         </move>
+		<!--
         <delete dir="${tmpDir}"/>
         <delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
-        <delete dir="${buildDirectory}/features/${pluginName}.feature"/>
-
+    	<delete dir="${buildDirectory}/features/${pluginName}.feature"/>
+		-->
     </target>
 
     <target name="makeEar">
-        <mkdir dir="${assemblyTempDir}"/>
-        <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}"/>
-        <copy todir="${assemblyTempDir}">
-            <fileset dir="${warProject}/earRootFiles"/>
+        <mkdir dir="${buildDirectory}/ear"/>
+    	
+        <copy todir="${buildDirectory}/ear" file="${buildDirectory}/${buildLabel}/${warFileName}"/>
+        <copy todir="${buildDirectory}/ear">
+            <fileset dir="${buildDirectory}/features/${warProject}/earRootFiles"/>
         </copy>
-        <zip destfile="${buildResults}/${earFile}" filesonly="false">
-            <zipfileset dir="${assemblyTempDir}" includes="**/**" excludes=""/>
+        <zip destfile="${buildDirectory}/${buildLabel}/${earFile}" filesonly="false">
+            <zipfileset dir="${buildDirectory}/ear" includes="**/**" excludes=""/>
         </zip>
-        <delete dir="${assemblyTempDir}"/>
+        <delete dir="${buildDirectory}/ear"/>
     </target>
 
     <target name="clean" depends="init">

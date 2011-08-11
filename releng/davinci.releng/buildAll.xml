@@ -55,8 +55,8 @@
         <initEnvVar varName="equinoxRepo"/>
     	
     	
-        <property file="build.properties">
-        </property>
+        <property file="build.properties"/>
+        
         <mkdir dir="${buildDirectory}/plugins"/>
         <mkdir dir="${buildDirectory}/features"/>
 
@@ -64,7 +64,9 @@
     	<property name="repoNameInternal" value="${repoName}_internal"/>
     	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
         <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
-        
+    	
+    	
+    	
         <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
         <condition property="maqettaCodeInternal" value="${maqettaCode}_internal">
             <and>
@@ -80,11 +82,11 @@
         <condition property="run.external.targets">
             <equals arg1="${deployment-type}" arg2="external"/>
         </condition>
-    	
+
     	<condition property="run.dojo.build">
     		<equals arg1="${dojoBuild}" arg2="true"/>
     	</condition>
-    	<echo message="Running dojo buid.. ${dojoBuild}." />
+    	<echo message="run dojo build:${run.dojo.build}"/>
     </target>
 
 	<!-- Build the 3 types of zips from each of their product files.  
@@ -97,6 +99,7 @@
             <property name="builder" value="${basedir}/zipFile"/>
         	<property name="product" value="davinci.product/DavinciServer-internal.product"/>
         	<property name="maqettaArchiveName" value="w3ibm-maqetta.zip"/>
+        	<property name="run.dojo.build" value="${run.dojo.build}"/>
         </ant>
     </target>
 	
@@ -106,6 +109,7 @@
             <property name="builder" value="${basedir}/zipFile"/>
         	<property name="product" value="davinci.product/DavinciServer-Joomla.product"/>
         	<property name="maqettaArchiveName" value="joomla-maqetta.zip"/>
+        	<property name="run.dojo.build" value="${run.dojo.build}"/>
         </ant>
 
     </target>
@@ -115,6 +119,7 @@
             <property name="builder" value="${basedir}/zipFile"/>
         	<property name="product" value="davinci.product/DavinciServer-external.product"/>
         	<property name="maqettaArchiveName" value="maqetta.zip"/>
+        	<property name="run.dojo.build" value="${run.dojo.build}"/>
         </ant>
     </target>
 	

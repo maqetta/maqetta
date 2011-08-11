@@ -1,12 +1,14 @@
 #! /bin/sh
-
+#
+# External build script.  This build script calls out to the external build for the majority of work
+#
 # Path to eclipse directory inclusive. The application directory is
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
-# Run Dojo build or not
 
-dojoBuild=true
+# run dojo build by default
+[ "${DOJO_BUILD}" ] || DOJO_BUILD=true
 
 if [ ! ${ECLIPSE_HOME} ]
 then
@@ -14,6 +16,11 @@ then
 else
 	export baseLocation=${ECLIPSE_HOME}
 fi
+#
+# GitHub read-only URL for Maqetta repository. This should not change.
+#
+export gitRepository="git://github.com/maqetta/maqetta.git"
+
 echo "Using ${baseLocation} Eclipse for build..."
 #
 # Directory in which to do the build. No trailing slash.
@@ -42,10 +49,7 @@ else
     export relEngDir="${MAQETTA_BUILD_DIR}/repository/maqetta/releng/davinci.releng"
 fi
 
-#
-# GitHub read-only URL for Maqetta repository. This should not change.
-#
-export gitRepository="git://github.com/maqetta/maqetta.git"
+
 
 #
 # Windowing System, Operating System and processor Architecture settings
@@ -173,7 +177,7 @@ cd ${MAQETTA_BUILD_DIR}
 export buildDirectory=${MAQETTA_BUILD_DIR}
 echo "Starting ${MAQETTA_DEPLOYMENT} build...."
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${dojoBuild} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${DOJO_BUILD} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 #
 # save exit code for later

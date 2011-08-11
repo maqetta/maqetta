@@ -19,27 +19,6 @@
 	<property environment="env"/>
 	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
 
-	<!-- +++++++++++ Verify that "svn" or "svn.exe" is on the PATH +++++++++++ -->
-	<target name="verify.command.line.svn">
-		<!--
-		<echo message="filepath=${env.PATH}"/>
-		<echo message="filepath=${env.Path}"/>
-		-->
-		<condition property="command.line.svn.ok">
-			<or>
-				<available file="svn" filepath="${env.PATH}"/>
-				<available file="svn" filepath="${env.Path}"/>
-				<available file="svn.exe" filepath="${env.PATH}"/>
-				<available file="svn.exe" filepath="${env.Path}"/>
-			</or>
-		</condition>
-	</target>
-
-	<!-- ++++++++++ Crash and burn if can't find command-line svn ++++++++++++ -->
-	<target name="check.command.line.svn" depends="verify.command.line.svn" unless="command.line.svn.ok">
-		<fail message="ERROR - YOU NEED TO INSTALL AN SVN COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
-	</target>
-
     <!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
     <target name="verify.command.line.git">
         <!--
@@ -195,7 +174,7 @@
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
 	</target>
-	<target name="dojoBuild">
+	<target name="dojoBuild" if="run.dojo.build">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>

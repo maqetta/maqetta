@@ -22,7 +22,8 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
             });
 			this._inline.onCancel = dojo.hitch(this, "cancel");
 			this._inline.callBackObj = this;
-			var s = '<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" style="width: 325px; height:285px" liveSplitters="true" id="borderContainer">';
+			var s = '<div id="davinci.libraries.dojo.dijit.layout.BorderContainerInput_div" >';
+			s +='<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" style="width: 325px; height:285px" liveSplitters="true" id="borderContainer">';
 			s += '	<div dojoType="dijit.layout.LayoutContainer" style="height: 3em;" region="top">';
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px">'+langObj.borderDesign+'</div>';
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><input type="radio" dojoType="dijit.form.RadioButton" name="headline" id="headlineRadio" value="headline" /> <label for="headlineRadio"> '+langObj.borderHeadline+'  </label></div>';
@@ -51,11 +52,15 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><button dojoType="dijit.form.Button" type="button" id="okButton" > '+dijitLangObj.buttonOk+' </button></div>';
 			s += '		<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><button dojoType="dijit.form.Button" type="button" id="cancelButton"> '+dijitLangObj.buttonCancel+' </button></div>';
 			s += '	</div>';
-			s += '</div>'
+			s += '</div>';
+			s += '</div>';
 			
 			this._inline.attr("content", s);
 			this._inline.show();
-			var obj = dijit.byId('sidebarRadio');
+	
+			var obj = dojo.byId('davinci.libraries.dojo.dijit.layout.BorderContainerInput_div');
+			obj.onkeypress = dojo.hitch(this,"onKeyPress");
+			obj = dijit.byId('sidebarRadio');
 			obj.onClick = dojo.hitch(this, "onChange");
 			obj = dijit.byId('headlineRadio');
 			obj.setChecked(false);
@@ -72,7 +77,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 			obj = dijit.byId('bottomCheckBox');
 			obj.setChecked(false);
 			obj.onClick = dojo.hitch(this, "onChange");
-			obj = dijit.byId('centerCheckBox')
+			obj = dijit.byId('centerCheckBox');
 			obj.setChecked(false);;
 			obj.onClick = dojo.hitch(this, "onChange");
 			obj = dijit.byId('okButton');
@@ -87,7 +92,13 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 		
 	//debugger;
 	},
-		
+	
+	onKeyPress: function(event){
+		if (event.keyCode == 13) {
+			this.updateWidget();
+		}
+	},
+			
 	onChange: function(event){
 		//debugger;
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
@@ -183,7 +194,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
         var data = this._widget.getData(); 
         data.properties.design = type;
         var newChildren = [];
-        for (i=0; i<data.children.length; i++){
+        for (var i=0; i<data.children.length; i++){
         	var regionName = data.children[i].properties.region;
         	var addRegion = region[regionName];
         	if (addRegion){
@@ -193,7 +204,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
         	
         }
         for (r in region){
-        	var name = '' + r;
+        	//var name = '' + r;
         	if (region[r]){ 
         		// add region
         		var child = dojo.clone(data.children[0]);
@@ -243,7 +254,7 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
         	headlineRadio.setChecked(true);
         	sidebarRadio.setChecked(false);
         }
-        for (i=0; i <  data.children.length; i++){
+        for (var i=0; i <  data.children.length; i++){
         	var regionCheckBox = data.children[i].properties.region + 'CheckBox';
         	var obj = dijit.byId(regionCheckBox);
     		obj.setChecked(true);

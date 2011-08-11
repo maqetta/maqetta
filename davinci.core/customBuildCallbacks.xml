@@ -195,39 +195,27 @@
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
 	</target>
-
-	<!-- ===================================================================== -->
-	<!-- Steps to do after the target gather.bin.parts                         -->
-	<!-- Available parameters :                                                -->
-	<!--   build.result.folder - folder containing the build results           -->
-	<!--   target.folder - destination folder                                  -->
-	<!-- ===================================================================== -->
-	<target name="post.gather.bin.parts">
-
-		<echo message="Inserting git describe information"/>
-		<antcall target="update.revisions"/>
-		<antcall target="update.repositoryinfo.js"/>
-
+	<target name="dojoBuild">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
 
 		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
-			<fileset dir="${basedir}">
-				<include name="WebContent/util/"/>
-			</fileset>
+				<fileset dir="${basedir}">
+					<include name="WebContent/util/"/>
+				</fileset>
 		</copy>
 		<java fork="true" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
-		    maxmemory="1024m"
-			classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
-			classname="org.mozilla.javascript.tools.shell.Main"
-			description="Run Dojo build script"
-			>
-			<arg value="build.js"/>
-			<arg value="profileFile=${basedir}/davinci.profile.js"/>
-			<arg value="action=release"/>
-			<arg value="cssOptimize=comments.keepLines"/>
-			<arg value="layerOptimize=shrinksafe.keepLines"/>
+			    maxmemory="1024m"
+				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
+				classname="org.mozilla.javascript.tools.shell.Main"
+				description="Run Dojo build script"
+				>
+				<arg value="build.js"/>
+				<arg value="profileFile=${basedir}/davinci.profile.js"/>
+				<arg value="action=release"/>
+				<arg value="cssOptimize=comments.keepLines"/>
+				<arg value="layerOptimize=shrinksafe.keepLines"/>
 		</java>
 		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
 		<copy toFile="${target.folder}/WebContent/release/dojo/workspace/app.css" file="${target.folder}/WebContent/workspace/app.css" overwrite="true" />
@@ -241,7 +229,7 @@
 		<delete dir="${target.folder}/WebContent/dojox"/>
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
-        <delete dir="${target.folder}/WebContent/preview"/>
+	    <delete dir="${target.folder}/WebContent/preview"/>
 		<delete dir="${target.folder}/WebContent/workspace"/>
 		<move todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="move Dojo build">
 			<fileset dir="${target.folder}/WebContent/release/dojo">
@@ -250,10 +238,25 @@
 				<include name="dijit/"/>
 				<include name="dojox/"/>
 				<include name="eclipse/"/>
-                <include name="preview/"/>
-				<include name="workspace/"/>
+	            <include name="preview/"/>
+	    		<include name="workspace/"/>
 			</fileset>
 		</move>
+	
+	</target>
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.bin.parts                         -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder containing the build results           -->
+	<!--   target.folder - destination folder                                  -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.bin.parts">
+		<antcall target="dojoBuild"/>
+		<echo message="Inserting git describe information"/>
+		<antcall target="update.revisions"/>
+		<antcall target="update.repositoryinfo.js"/>
+
+		
 	</target>
 
 	<!-- ===================================================================== -->

@@ -4,6 +4,9 @@
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
+# Run Dojo build or not
+
+dojoBuild=true
 
 if [ ! ${ECLIPSE_HOME} ]
 then
@@ -170,7 +173,7 @@ cd ${MAQETTA_BUILD_DIR}
 export buildDirectory=${MAQETTA_BUILD_DIR}
 echo "Starting ${MAQETTA_DEPLOYMENT} build...."
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${dojoBuild} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 #
 # save exit code for later

@@ -264,6 +264,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	_select: function(widget) {
 		var inLineEdit = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
 		if (!this._data.fileDragCreate && inLineEdit && inLineEdit.displayOnCreate) {
+			widget.inLineEdit_displayOnCreate = inLineEdit.displayOnCreate;
 			this._context.select(widget,null,true); // display inline
 		} else {
 			this._context.select(widget); // no inline on create

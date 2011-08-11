@@ -86,6 +86,11 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.BorderContainerInput", davinci
 			obj = dijit.byId('cancelButton');
 			obj.onClick = dojo.hitch(this, "cancel");
 			dojo.style('cancelButton', "width", "50px");
+			if (this._widget.inLineEdit_displayOnCreate){
+				// hide cancel on widget creation #120
+				delete this._widget.inLineEdit_displayOnCreate;
+				dojo.style(obj.domNode, "display", "none");
+			}
 			this.updateDialog();
 			
 		}

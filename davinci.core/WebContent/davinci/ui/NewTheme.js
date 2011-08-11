@@ -37,6 +37,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_error3 : null,
 	_error4 : null,
 	_errorMsg : null,
+	_themeValidator: /^[-]?([_a-z]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])([_a-z0-9-]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])*$/i,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -128,10 +129,19 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		}
 		var selector = dojo.attr(this._selector, 'value');
 		
-		var validate = new RegExp("[^0-9_a-zA-Z]");
-		if(selector==null || selector =="" || validate.test(selector) ){
+		/*
+		 * see http://www.w3.org/TR/CSS21/syndata.html#tokenization
+		 * 
+		 *     ident    [-]?{nmstart}{nmchar}*
+         *     nmstart  [_a-z]|{nonascii}|{escape}
+         *     nonascii [^\0-\237]
+         *     unicode  \\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?
+         *     escape   {unicode}|\\[^\n\r\f0-9a-f]
+         *     nmchar   [_a-z0-9-]|{nonascii}|{escape}
+		 * 
+		 */				
+		if ( selector==null || selector == "" || ! this._themeValidator.test(selector) ) {
 			isOk = false;
-			//this._error5.innerHTML = "Selector can't be empty"
 		}
 		this._okButton.set( 'disabled', !isOk);
 	},

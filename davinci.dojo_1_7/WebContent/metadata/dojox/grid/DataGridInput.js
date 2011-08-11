@@ -4,6 +4,7 @@ dojo.require("davinci.ve.input.SmartInput");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
+dojo.require('dojox.data.ItemJsonpReadStore');
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
@@ -163,7 +164,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	    	this.updateWidgetForUrlStore();
 		} else if (this._dataStoreType === 'url'){
 			this._format = this.getFormat();
-	    	this.updateWidgetForUrlStore(); 
+	    	this.updateWidgetForUrlStore(true); 
 		}
 	    this.hide(true); // we already updated the widget so just do a hide like cancel
 	},
@@ -250,7 +251,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		var storeWidget = davinci.ve.widget.byId(storeId);
 		var properties = {};
 		properties['data'] = data;
-		storeWidget._srcElement.setAttribute('url', ''); //wdr 3-11
+		storeWidget._srcElement.setAttribute('url', ''); 
+		storeWidget._srcElement.setAttribute('jsonpcallback', '');
 		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; // wdr 3-11
 		var command = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
 		//var command = new davinci.ve.commands.ModifyFileItemStoreCommand(storeWidget, properties);
@@ -275,11 +277,12 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		}	
 	},
 	
-	updateWidgetForUrlStore: function(){
+	updateWidgetForUrlStore: function(jsonP){
 		
 		var structure = [];
     	//var textBox = dijit.byId("davinci.ve.input.DataGridInput.url"); 
     	var textArea = dijit.byId("davinciIleb");
+    	var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
     	this._url = textArea.value;
     	var url;
     	var patt=/http:\/\//i;
@@ -296,7 +299,13 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	}
     	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
     	//url = 'http://localhost:8080/davinci/user/user5/ws/workspace/' + url;
-    	var store = new dojo.data.ItemFileReadStore({url: url});
+    	//var store = new dojo.data.ItemFileReadStore({url: url});
+    	if (jsonP){
+    		this._callback = callbackTextBox.value;
+    	} else {
+    		this._callback = '';
+    	}
+    	var store = new dojox.data.ItemJsonpReadStore({url: url, jsonpcallback: this._callback });
     	store.fetch({
     		query: this.query,
     		queryOptions:{deep:true}, 
@@ -310,6 +319,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	},
 	
 	_urlDataStoreLoaded : function(items){
+		debugger;
 		if (items.length < 1){
 			console.error("Data store empty");
 			return;
@@ -337,6 +347,11 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		var context = this._getContext();
         var widget = this._widget;
 		properties.url = this._url; 
+		if (this._callback){
+			properties.jsonpcallback = this._callback;
+		} else {
+			storeWidget._srcElement.setAttribute('jsonpcallback', '');
+		}
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
@@ -378,18 +393,28 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
    		var storeWidget = davinci.ve.widget.byId(storeId);
         this._data = storeWidget._srcElement.getAttribute('data'); 
         this._url = storeWidget._srcElement.getAttribute('url'); 
+        this._callback = storeWidget._srcElement.getAttribute('jsonpcallback');
         this._inline.eb = dijit.byId("davinciIleb");
         this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
         if(this._data){ 
         	dataStoreType.setValue('dummyData');
         	this._dataStoreType = 'dummyData';
         	this._url = ' ';
+        	this._callback = '';
         	this.refreshStoreView();
+        }else if(this._callback){
+        	dataStoreType.setValue('url');
+        	this._dataStoreType = 'url';
+        	this._inline.eb.setValue( this._url); 
+        	var tb =  dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
+            tb.setValue(this._callback);
+        	this._data = ' ';
         }else{
         	dataStoreType.setValue('file');
         	this._dataStoreType = 'file';
         	this._inline.eb.setValue( this._url); 
         	this._data = ' ';
+        	this._callback = '';
         }
         this.changeDataStoreType(this._dataStoreType);
         dojo.style('iedResizeDiv', 'background-color', 'white');
@@ -475,7 +500,9 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			
 		// NOTE: if you put a break point in here while debugging it will break the dojoEllipsis
 		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
-		if (this._dataStoreType === 'file' ){
+		var callbackTr = dojo.byId("davinci.ve.input.SmartInput_callback");
+		dojo.style(callbackTr, 'display', 'none');
+		if (this._dataStoreType === 'file' || this._dataStoreType === 'url'){
 			var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
@@ -493,6 +520,10 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			dojo.style(htmlObj, 'display', '');
 			dojo.style(textObj, 'display', '');
 			dojo.style(table, 'display', '');
+			if (this._dataStoreType === 'url'){
+				dojo.style(callbackTr, 'display', '');
+				
+			}
 			
 		} else {
 			this.inherited(arguments);
@@ -505,6 +536,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		this._dataStoreType = e;
 	    var textArea = dijit.byId("davinciIleb");
 	    var tagetObj = dojo.byId("iedResizeDiv");
+		var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
 	    var resizeWidth = dojo.style('iedResizeDiv', 'width');
 		if (e === 'dummyData'){
 			textArea.setValue( this._data);
@@ -515,11 +547,16 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		}else if ( e=== 'file'){
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
 			textArea.setValue( this._url);
-	    	tagetObj.style.height = '40px'
+	    	tagetObj.style.height = '40px';
 			
 		}else if (e === 'url'){
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 			textArea.setValue( this._url);
+			if (this._callback){
+				callbackTextBox.setValue( this._callback);
+			} else {
+				callbackTextBox.setValue('callback'); // provide a default
+			}
 	    	tagetObj.style.height = '40px'
 	    	dojo.style('ieb', 'width', resizeWidth + 15 + 'px' );
 			
@@ -554,6 +591,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1  + 'px');
 			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
 		} else {
+			var ieb = dojo.byId("ieb");
+			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 15 + "px");
 			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
 		}
 	},
@@ -572,7 +611,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 						'<select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> ' +
 							'<option value="dummyData">'+langObj.commaSeparatedData+'</option> ' +
 							'<option value="file">'+langObj.dataFromWorkspace+'</option> ' +
-// hide for M2							'<option value="url">URL (JSONP)</option> ' +
+							'<option value="url">'+langObj.dataFromJsonpURL+'</option> ' +
 						'</select>' +
 					'<td>' +
 					'<td></td>' + 
@@ -607,6 +646,12 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
          						'</div>'+
              				'</td> '+
      					'</tr> '+
+     					'<tr id="davinci.ve.input.SmartInput_callback"> '+
+     					'<td class="smartInputTd1">'+langObj.callbackParameter+'</td> '+
+     					'<td class="smartInputTd2">'+
+   							'<input type="text" name="davinci.ve.input.SmartInput_callback_editbox" value="callback" data-dojo-type="dijit.form.TextBox" data-dojo-props="trim:true" id="davinci.ve.input.SmartInput_callback_editbox">' +
+         				'</td> '+
+ 					'</tr> '+
  					'</tbody>'+ 
 					'</table> '+
 				'<div class="smartInputHelpDiv" > '+

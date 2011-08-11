@@ -9,7 +9,9 @@
 		"plainText":"Plain text",
 		"commaSeparatedData":"Comma separated data",
 		"dataFromWorkspace":"Data file from workspace",
-		
+		"dataFromJsonpURL": "Data from URL (JSONP)",
+		"callbackParameter": "Callback parameter",
+			
 		//mobile/EdgeToEdgeDataListInput.js
 		"edgeToEdgeFormat":"list label, transition_view_name",
 		"edgeToEdgeDataListHelp":"If the CSV data format is selected, enter text in the format: ${0} The transition view name is optional. If data file from workspace is selected, chose a json item file using the file explore folder.",

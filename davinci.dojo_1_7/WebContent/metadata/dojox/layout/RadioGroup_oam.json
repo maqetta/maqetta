@@ -37,6 +37,8 @@
         },
         "duration": {
             "datatype": "number",
+            "description": "used for Fade and Slide RadioGroup's, the duration to run the transition animation. does not affect anything in default RadioGroup",
+            "hidden": true,
             "defaultValue": 750,
             "title": "Duration"
         },

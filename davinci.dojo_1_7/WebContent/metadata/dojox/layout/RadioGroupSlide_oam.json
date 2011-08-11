@@ -74,6 +74,11 @@
             "datatype": "boolean",
             "title": "Selected"
         },
+        "slideFrom": {
+        	"datatype": "string",
+            "description": "A parameter needed by RadioGroupSlide only. Defaults to 'random', or specify one of 'top', 'left', 'right', 'bottom' to slideFrom top, left, right, or bottom",
+            "hidden": false
+        },
         "closable": {
             "datatype": "boolean",
             "title": "Closable"

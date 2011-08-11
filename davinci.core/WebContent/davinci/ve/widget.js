@@ -461,7 +461,28 @@ davinci.ve.widget.createWidget = function(data){
 			});
 		}
 	}
-
+	//need a helper to process the data for horizontalSlider prior to creating the widget
+	// -- may be needed for other widgets with properties of dataype array
+	var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
+    if (helper) {
+    	var myHelper;
+        try {
+            dojo["require"](helper);
+        } catch(e) {
+            console.error("Failed to load helper: " + helper);
+            console.error(e);
+        }
+        var aClass = dojo.getObject(helper);
+        if (aClass) {
+        	myHelper  = new aClass();
+		}
+        var obj = dojo.getObject(helper);
+        myHelper = new obj();
+        if(myHelper.preProcessData)
+        	data =  myHelper.preProcessData(data);
+        	
+    }
+	
 	var widget = new c(data.properties, node, type, metadata, srcElement);
 	widget._srcElement=srcElement;
 
@@ -1257,6 +1278,12 @@ dojo.declare("davinci.ve._Widget",null,{
 			// Kludge to prevent array from iframe from being mistaken as object
 			var context = this.getContext();
 			var dj = context && context.getDojo() || dojo;
+			
+			var helper = this.getHelper();
+			if(helper && helper.checkValue){
+				value =  helper.checkValue(value);
+			}
+			
 			if(dj.isObject(value)){
 				value = dj.toJson(value);
 			}

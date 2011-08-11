@@ -36,7 +36,9 @@
         "value": {
             "datatype": "string",
             "format": "date",
-            "title": "Value"
+            "title": "Value",
+            "hidden": true,
+            "description":"hidden because currently writing value as '7/5/2011' breaks it"
         },
         "tabIndex": {
             "datatype": "string",
@@ -73,7 +75,8 @@
         },
         "maxLength": {
             "datatype": "string",
-            "title": "Max Length"
+            "title": "Max Length",
+            "hidden": true
         },
         "required": {
             "datatype": "boolean",

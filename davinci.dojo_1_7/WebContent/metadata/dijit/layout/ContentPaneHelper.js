@@ -19,6 +19,19 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.ContentPaneHelper", null, {
 //			});
 //			widget.destroy();
 //		},
+		create: function(widget, srcElement){
+			//
+			// RadioGroupSlide in particular needs the contentPanes to have a background for the sliding to look right
+			//
+			var parent = widget.getParent();
+			if (parent && (parent.type == "dojox.layout.RadioGroup" || parent.type == "dojox.layout.RadioGroupSlide" || parent.type == "dojox.layout.RadioGroupFade")){
+				if (!widget.getStyle().match("background")){
+					var styleArray = [];
+					styleArray['background'] = "white";
+					widget.setStyleValues(styleArray);
+				}
+			}
+		},
 
 		getContainerNode: function(/*Widget*/ widget){
 			// summary:

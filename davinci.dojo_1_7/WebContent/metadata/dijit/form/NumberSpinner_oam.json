@@ -30,7 +30,8 @@
         },
         "value": {
             "datatype": "string",
-            "title": "Value"
+            "title": "Value",
+            "defaultValue":"0"
         },
         "tabIndex": {
             "datatype": "string",
@@ -73,7 +74,7 @@
             "datatype": "boolean",
             "defaultValue": true,
             "title": "Required",
-            "hidden": true
+            "hidden": false
         },
         "promptMessage": {
             "datatype": "string",
@@ -139,7 +140,7 @@
         "state": {
             "datatype": "string",
             "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
-            "hidden": false
+            "hidden": true
         }
     },
     "content": "<input type='text'></input>"

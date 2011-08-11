@@ -31,10 +31,12 @@
         },
         "action": {
             "datatype": "string",
+            "description": "Server-side form handler.",
             "title": "Action"
         },
         "method": {
             "datatype": "string",
+            "description": "HTTP method used to submit the form, either 'GET' or 'POST'.",
             "option": [
                 {
                     "value": "POST"
@@ -47,6 +49,7 @@
         },
         "encType": {
             "datatype": "string",
+            "description": "Encoding type for the form, ex: application/x-www-form-urlencoded.",
             "option": [
                 {
                     "value": "multipart/form-data"
@@ -56,14 +59,19 @@
         },
         "accept-charset": {
             "datatype": "string",
-            "title": "Accept Charset"
+             "description": "List of supported charsets. - not used in test files",
+            "title": "Accept Charset",
+            "hidden":true
         },
         "accept": {
             "datatype": "string",
-            "title": "Accept"
+             "description": "List of MIME types for file upload. - not used in test files",
+            "title": "Accept",
+            "hidden":true
         },
         "target": {
             "datatype": "string",
+            "description": "Target frame for the document to be opened in.",
             "option": [
                 {
                     "value": "_blank"
@@ -81,5 +89,5 @@
             "title": "Target"
         }
     },
-    "content": "<form></form>"
+    "content": "<div></div>"
 }

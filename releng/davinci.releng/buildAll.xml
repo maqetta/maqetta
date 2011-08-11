@@ -1,72 +1,31 @@
 <project name="maqetta" default="nightly">
-
-	<!--<include file="equinox-depends.xml"/>-->
+	
+	<!--  This line loads either internal.xml or external.xml.  These files copy the deps from the git repos.
+	      The git repos are initialized in the shell script prior to running the build script.
+	      
+	      Internal repo is ${buildDirectory}/repository/maqetta
+	      External repo is ${buildDirectoyr}/repository/maqetta_internal
+	      Equinox (dep for running war): ${buildDirectory}/repository/rt.equinox.bundles
+	
+	-->
+	<import file="common.xml"/>
 	<import file="${deployment-type}.xml"/>
-    
-    <target name="nightly" depends="init">
+	
+	
+	<target name="nightly" depends="init">
         <tstamp>
             <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
-
-        <antcall target="clean">
-        </antcall>
-        <antcall target="populate">
-        </antcall>
-    	
-    	<antcall target="populateEquinoxBridge">
-    	     </antcall>
-    	
-        <antcall target="zips">
-        </antcall>
-        <antcall target="updateZips">
-        </antcall>
-        <antcall target="war"></antcall>
-        
+        <antcall target="clean"/>
+		<!-- base maqetta out of common.xml -->
+		<antcall target="populateBaseMaqetta"/>
+		
+		<!-- populate function out of internal.xml or external.xml -->
+        <antcall target="populate"/>
+        <antcall target="zips"/>
+        <antcall target="war"/>
+		<antcall target="ear"/>
     </target>
-
-    <target name="updateZips" depends="addJoomla, addW3ibm"></target>
-    <target name="addJoomla">
-        <antcall target="updateZip">
-            <param name="addPlugin" value="davinci.joomla"/>
-            <param name="fromZipName" value="${maqettaArchiveName}"/>
-            <param name="newZipName" value="joomla-${maqettaArchiveName}.zip"/>
-        </antcall>        
-    </target>
-    <target name="addW3ibm" if="run.internal.targets">
-        <antcall target="updateZip">
-            <param name="addPlugin" value="davinci.w3ibm"/>
-            <param name="fromZipName" value="${maqettaArchiveName}"/>
-            <param name="newZipName" value="w3ibm-${maqettaArchiveName}.zip"/>
-        </antcall>        
-    </target>
-	
-    <target name="populateEquinoxBridge">
-   
-        <macrodef name="populateEDir">
-            <attribute name="project"/>
-            <attribute name="isFeature" default="false"/>
-            <attribute name="isInternal" default="false"/>
-            <attribute name="extPath" default=""/>
-            <sequential>
-                <antcall target="fromEquinox">
-                    <param name="project" value="@{project}"/>
-                    <param name="isFeature" value="@{isFeature}"/>
-                    <param name="extPath" value="@{extPath}"/>
-                </antcall>
-            </sequential>
-        </macrodef>
-
-        <!-- -->
-        <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
-        <!-- -->
-
-        <populateEDir project="org.eclipse.equinox.http.servletbridge"/>
-        <populateEDir project="org.eclipse.equinox.server.core" isFeature="true"/>
-        <populateEDir project="org.eclipse.equinox.server.servletbridge" isFeature="true"/>
-        <populateEDir project="org.eclipse.equinox.servletbridge"/>
-        <populateEDir project="org.eclipse.equinox.servletbridge.extensionbundle"/>
-    </target>
-
 
     <target name="init">
         <!--  copy environment vars -->
@@ -118,16 +77,66 @@
         <condition property="run.internal.targets">
             <equals arg1="${deployment-type}" arg2="internal"/>
         </condition>
+        <condition property="run.external.targets">
+            <equals arg1="${deployment-type}" arg2="external"/>
+        </condition>
     </target>
 
-    <target name="zips">
+	<!-- Build the 3 types of zips from each of their product files.  
+	     There is internal zip, external zip and joomla zip -->
+	
+	<target name="zips" depends="extZips, intZips, joomla" />
+	<!-- internal zip -->
+    <target name="intZips" if="run.internal.targets">
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/zipFile"/>
+        	<property name="product" value="davinci.product/DavinciServer-internal.product"/>
+        	<property name="maqettaArchiveName" value="w3ibm-maqetta.zip"/>
+        </ant>
+    </target>
+	
+	<!-- joomla zip -->
+    <target name="joomla" if="run.external.targets">
+        <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+            <property name="builder" value="${basedir}/zipFile"/>
+        	<property name="product" value="davinci.product/DavinciServer-Joomla.product"/>
+        	<property name="maqettaArchiveName" value="joomla-maqetta.zip"/>
         </ant>
 
     </target>
+	<!-- External Zips -->
+    <target name="extZips" if="run.external.targets">
+        <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+            <property name="builder" value="${basedir}/zipFile"/>
+        	<property name="product" value="davinci.product/DavinciServer-external.product"/>
+        	<property name="maqettaArchiveName" value="maqetta.zip"/>
+        </ant>
+    </target>
+	
+	
+	<!-- build the internal and external EAR -->
+	<target name="ear" depends="extEAR,intEAR"/>
+	
+	<target name="extEAR" if="run.external.targets">
+        <antcall target="makeEar">
+            <param name="warFileName" value="davinci.war"/>
+        	<param name="warProject" value="davinci.war"/>
+        	<param name="earFile" value="davinci.ear"/>
+        </antcall>
+	</target>
 
-    <target name="war">
+	<target name="intEAR" if="run.internal.targets">
+        <antcall target="makeEar">
+            <param name="warFileName" value="w3-davinci.war"/>
+        	<param name="warProject" value="davinci.w3war"/>
+        	<param name="earFile" value="w3-davinci.ear"/>
+        </antcall>
+	</target>
+
+	<!-- build the internal and external WAR -->
+	<target name="war" depends="extWar,intWar"/>
+   
+	<target name="extWar" if="run.external.targets">
         <!-- build servlet bridge separately first because it is not part of the feature built -->
         <!--
         -->
@@ -140,10 +149,12 @@
         </delete>
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/warFile"/>
+        	<property name="warProject" value="davinci.war"/>
+        	
         </ant>
     </target>
 
-	  <target name="w3war">
+    <target name="intWar" if="run.internal.targets">
 	    <!-- build servlet bridge separately first because it is not part of the feature built -->
 	    <!--
 	     -->
@@ -154,69 +165,13 @@
 			<fileset dir="${buildDirectory}/${buildLabel}" includes="org.eclipse.equinox.servletbridge*.jar"></fileset>
 		</delete>
 		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
-			<property name="builder" value="${basedir}/W3warFile" />
+			<property name="builder" value="${basedir}/warFile"/>
+			<property name="warProject" value="davinci.w3war"/>
+			<property name="warFileName" value="w3-davinci.war"/>
 		</ant>
-	  </target>
+	</target>
 
-    <target name="localCopy">
-        <condition property="pluginDir" value="features" else="plugins">
-            <istrue value="${isFeature}"/>
-        </condition>
-        <condition property="maqettaSource" value="${maqettaCode}" else="${maqettaCodeInternal}">
-            <isfalse value="${isInternal}"/>
-        </condition>
-        <defaultexcludes remove="**/.git"/>
-        <defaultexcludes remove="**/.git/**"/>
-        <defaultexcludes remove="**/.svn"/>
-        <defaultexcludes remove="**/.svn/**"/>
-        <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${maqettaSource}${extPath}/${project}"/>
-        </copy>
-        <defaultexcludes default="true"/>
-    </target>
-
-    <target name="fromGit">
-        <condition property="pluginDir" value="features" else="plugins">
-            <istrue value="${isFeature}"/>
-        </condition>
-        <condition property="maqettaRepository" value="${repoPath}" else="${repoPathInternal}">
-            <isfalse value="${isInternal}"/>
-        </condition>
-        <defaultexcludes remove="**/.git"/>
-        <defaultexcludes remove="**/.git/**"/>
-        <defaultexcludes remove="**/.svn"/>
-        <defaultexcludes remove="**/.svn/**"/>
-        <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${maqettaRepository}${extPath}/${project}"/>
-        </copy>
-    	
-    	<!--
-    	<copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${maqettaRepository}${extPath}/${project}"/>
-        </copy>
-        -->
-    	
-        <defaultexcludes default="true"/>
-    </target>
-
-    <target name="fromEquinox">
-        <condition property="pluginDir" value="features" else="plugins">
-            <istrue value="${isFeature}"/>
-        </condition>
-        <condition property="sourcePath" value="features" else="bundles">
-              <istrue value="${isFeature}"/>
-         </condition>
-        <defaultexcludes remove="**/.git"/>
-        <defaultexcludes remove="**/.git/**"/>
-        <defaultexcludes remove="**/.svn"/>
-        <defaultexcludes remove="**/.svn/**"/>
-        <copy todir="${buildDirectory}/${pluginDir}/${project}">
-            <fileset dir="${equinoxRepo}/${sourcePath}/${project}"/>
-        </copy>
-        <defaultexcludes default="true"/>
-    </target>
-	
-    <target name="buildPlugin">
+	<target name="buildPlugin">
         <property name="pluginDestination" value="${buildDirectory}/${buildLabel}"/>
         <eclipse.generateFeature
          featureId="${pluginName}.feature"
@@ -244,101 +199,27 @@
             <fileset file="${tmpDir}/eclipse/plugins/*.jar">
             </fileset>
         </move>
+		<!--
         <delete dir="${tmpDir}"/>
         <delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
-        <delete dir="${buildDirectory}/features/${pluginName}.feature"/>
-
+    	<delete dir="${buildDirectory}/features/${pluginName}.feature"/>
+		-->
     </target>
 
     <target name="makeEar">
-        <mkdir dir="${assemblyTempDir}"/>
-        <copy todir="${assemblyTempDir}" file="${buildResults}/${warFileName}"/>
-        <copy todir="${assemblyTempDir}">
-            <fileset dir="${warProject}/earRootFiles"/>
+        <mkdir dir="${buildDirectory}/ear"/>
+    	
+        <copy todir="${buildDirectory}/ear" file="${buildDirectory}/${buildLabel}/${warFileName}"/>
+        <copy todir="${buildDirectory}/ear">
+            <fileset dir="${buildDirectory}/features/${warProject}/earRootFiles"/>
         </copy>
-        <zip destfile="${buildResults}/${earFile}" filesonly="false">
-            <zipfileset dir="${assemblyTempDir}" includes="**/**" excludes=""/>
+        <zip destfile="${buildDirectory}/${buildLabel}/${earFile}" filesonly="false">
+            <zipfileset dir="${buildDirectory}/ear" includes="**/**" excludes=""/>
         </zip>
-        <delete dir="${assemblyTempDir}"/>
-    </target>
-
-    <!-- create a new zip file from the base zip file with a new plugin added -->
-    <target name="updateZip">
-        <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
-        <property name="fromZipName" value="${maqettaArchiveName}"/>
-        <property name="maqettaZipPath" value="${buildDirectory}/${buildLabel}/${fromZipName}.zip"/>
-        <mkdir dir="${tempDir}"/>
-        <!-- unzip the base zip file -->
-        <unzip dest="${tempDir}" src="${maqettaZipPath}"/>
-
-        <!-- build the plugin being added -->
-        <antcall target="buildPlugin">
-            <param name="pluginName" value="${addPlugin}"/>
-            <param name="pluginDestination" value="${tempDir}/plugins"/>
-        </antcall>
-
-        <!-- add the plugin to the config.ini -->
-        <replaceregexp file="${tempDir}/configuration/config.ini"
-         match="davinci.core@4:start(.*)"
-         replace="davinci.core@4:start,${addPlugin}@5:start\1"
-         byline="true"
-        />
-
-        <!-- make the new zip file -->
-        <zip destfile="${buildDirectory}/${buildLabel}/${newZipName}" filesonly="false">
-            <zipfileset dir="${tempDir}" includes="**/**" excludes="*.command, *.sh"/>
-            <zipfileset dir="${tempDir}" includes="*.command" filemode="755"/>
-            <zipfileset dir="${tempDir}" includes="*.sh" filemode="755" />
-        </zip>
-        <delete dir="${tempDir}"/>
-    </target>
-
-    <!-- create a new war file from the base war file with a new plugin added -->
-    <target name="updateWar">
-        <property name="tempDir" value="${buildDirectory}/maqettaTmp"/>
-        <property name="maqettaWarPath" value="${buildDirectory}/${buildLabel}/${warFileName}.war"/>
-        <mkdir dir="${tempDir}"/>
-
-        <!-- unzip the base zip file -->
-        <unzip dest="${tempDir}" src="${maqettaWarPath}"/>
-
-        <!-- build the plugin being added -->
-        <antcall target="buildPlugin">
-            <param name="pluginName" value="${addPlugin}"/>
-            <param name="pluginDestination" value="${tempDir}/WEB-INF/plugins"/>
-        </antcall>
-
-
-        <path id="mystery.file.id">
-            <fileset dir="${tempDir}/WEB-INF/plugins">
-                <include name="${addPlugin}*.jar"/>
-            </fileset>
-        </path>
-
-        <property name="mystery.file" refid="mystery.file.id"/>
-        <basename property="newJarName" file="${mystery.file}"/>
-        <basename property="newPluginName" file="${mystery.file}" suffix=".jar"/>
-
-        <!-- add the plugin to the config.ini -->
-        <concat destfile="${tempDir}/WEB-INF/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info"
-         append="yes">
-            ${newPluginName},plugins/${newJarName},4,true
-        </concat>
-        <replaceregexp file="${tempDir}/WEB-INF/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info"
-         match="^${addPlugin}_(.*)"
-         replace="${addPlugin},\1"
-         byline="true"
-        />
-
-        <!-- make the new zip file -->
-        <zip destfile="${buildDirectory}/${buildLabel}/${newWarName}" filesonly="false">
-            <zipfileset dir="${tempDir}" includes="**/**" excludes=""/>
-        </zip>
-        <delete dir="${tempDir}"/>
+        <delete dir="${buildDirectory}/ear"/>
     </target>
 
     <target name="clean" depends="init">
-
         <defaultexcludes remove="**/.gitignore"/>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>

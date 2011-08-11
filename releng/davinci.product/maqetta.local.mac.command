@@ -34,7 +34,7 @@ while [ "${1+isset}" ]; do
     esac
 done
 
-# Make sure user has Java 1.6 installed
+# Make sure user has Java 1.5 installed
 javaversion=`java -version 2>&1 | grep "java version"`
 if [ -z "$javaversion" ]; then
 	echo Unable to determine which version of Java is installed on this machine

@@ -37,6 +37,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_error3 : null,
 	_error4 : null,
 	_errorMsg : null,
+	_themeValidator: /^[-]?([_a-z]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])([_a-z0-9-]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])*$/i,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -138,10 +139,8 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
          *     escape   {unicode}|\\[^\n\r\f0-9a-f]
          *     nmchar   [_a-z0-9-]|{nonascii}|{escape}
 		 * 
-		 */
-		var validate = /^[-]?([_a-z]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])([_a-z0-9-]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])*$/i;
-				
-		if ( selector==null || selector == "" || ! validate.test(selector) ) {
+		 */				
+		if ( selector==null || selector == "" || ! this._themeValidator.test(selector) ) {
 			isOk = false;
 		}
 		this._okButton.set( 'disabled', !isOk);

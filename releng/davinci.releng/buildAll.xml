@@ -80,6 +80,11 @@
         <condition property="run.external.targets">
             <equals arg1="${deployment-type}" arg2="external"/>
         </condition>
+    	
+    	<condition property="run.dojo.build">
+    		<equals arg1="${dojoBuild}" arg2="true"/>
+    	</condition>
+    	<echo message="Running dojo buid.. ${dojoBuild}." />
     </target>
 
 	<!-- Build the 3 types of zips from each of their product files.  
@@ -119,17 +124,17 @@
 	
 	<target name="extEAR" if="run.external.targets">
         <antcall target="makeEar">
-            <param name="warFileName" value="davinci.war"/>
-        	<param name="warProject" value="davinci.war"/>
-        	<param name="earFile" value="davinci.ear"/>
+            <param name="warFileName" value="maqetta.war"/>
+        	<param name="warProject" value="maqetta.war"/>
+        	<param name="earFile" value="maqetta.ear"/>
         </antcall>
 	</target>
 
 	<target name="intEAR" if="run.internal.targets">
         <antcall target="makeEar">
-            <param name="warFileName" value="w3-davinci.war"/>
+            <param name="warFileName" value="w3-maqetta.war"/>
         	<param name="warProject" value="davinci.w3war"/>
-        	<param name="earFile" value="w3-davinci.ear"/>
+        	<param name="earFile" value="w3-maqetta.ear"/>
         </antcall>
 	</target>
 
@@ -149,7 +154,7 @@
         </delete>
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/warFile"/>
-        	<property name="warProject" value="davinci.war"/>
+        	<property name="warProject" value="maqetta.war"/>
         	
         </ant>
     </target>
@@ -167,7 +172,7 @@
 		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="builder" value="${basedir}/warFile"/>
 			<property name="warProject" value="davinci.w3war"/>
-			<property name="warFileName" value="w3-davinci.war"/>
+			<property name="warFileName" value="w3-maqetta.war"/>
 		</ant>
 	</target>
 
@@ -199,11 +204,11 @@
             <fileset file="${tmpDir}/eclipse/plugins/*.jar">
             </fileset>
         </move>
-		<!--
+		
         <delete dir="${tmpDir}"/>
         <delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
     	<delete dir="${buildDirectory}/features/${pluginName}.feature"/>
-		-->
+		
     </target>
 
     <target name="makeEar">

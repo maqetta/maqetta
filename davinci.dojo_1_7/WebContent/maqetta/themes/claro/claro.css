@@ -849,22 +849,36 @@ img.dijitColorPaletteUnder {
 }
 .dijitColorPalette .dijitPaletteCell {
 	
-	height: 20px;
+	/*height: 20px;
 	width: 20px;
 	font-size: 1px;
 	vertical-align: middle;
+	text-align: center;*/
+	font-size: 1px;
+	vertical-align: middle;
 	text-align: center;
+	background: none;
 }
 .dijitColorPalette .dijitPaletteImg {
 	
-	width: 16px;
+	/*width: 16px;
 	height: 14px;
 	border: 1px solid #999;
 	cursor: default;
-	vertical-align: middle;
+	vertical-align: middle;*/
+	padding: 1px;
+	border: 1px solid #999;
+	margin: 2px 1px;
+	cursor: default;
+	font-size: 1px;
 }
 .dj_iequirks .dijitColorPalette .dijitPaletteImg {
 	margin: 1px;	
+}
+.dijitColorPalette .dijitColorPaletteSwatch {
+	/* the actual part where the color is */
+	width: 14px;
+	height: 12px;
 }
 .dijitPaletteTable td {
 		padding: 0px;
@@ -876,6 +890,7 @@ img.dijitColorPaletteUnder {
 .dijitColorPalette .dijitPaletteCellActive .dijitPaletteImg,
 .dijitColorPalette .dijitPaletteCellSelected .dijitPaletteImg {
 	border: 2px solid #000;
+	margin: 1px 0;
 }
 .dijit_a11y .dijitColorPalette .dijitPaletteTable,
 .dijit_a11y .dijitColorPalette .dijitPaletteTable * {

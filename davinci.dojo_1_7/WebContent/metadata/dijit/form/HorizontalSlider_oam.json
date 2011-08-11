@@ -16,7 +16,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.Slider');"
+            "$text": "dojo.require('dijit.form.HorizontalSlider');"
         }
     ],
     "library": {
@@ -114,5 +114,5 @@
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<div></div>"
 }

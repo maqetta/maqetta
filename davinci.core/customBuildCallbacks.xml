@@ -63,7 +63,7 @@
 
 	<!--    Write git revision SHA1 to WebContent/pagedesigner.html, welcome.html...   -->
 	<target name="update.revisions" depends="check.command.line.git">
-		<exec executable="git" output="${env.MAQETTA_BUILD_DIR}/git-log.out" dir="${user.dir}/repository/maqetta">
+		<exec executable="git" output="${env.MAQETTA_BUILD_DIR}/git-log.out" dir="${env.MAQETTA_BUILD_DIR}/repository/maqetta">
 			<arg value="log"/>
             <arg value="-1"/>
 		</exec>
@@ -87,7 +87,7 @@
 
 	<!--    Write git revision SHA1 to WebContent/davinci/repositoryinfo.js   -->
 	<target name="update.repositoryinfo.js" depends="check.command.line.git">
-        <exec executable="git" output="${env.MAQETTA_BUILD_DIR}/git-log.out" dir="${user.dir}/repository/maqetta">
+        <exec executable="git" output="${env.MAQETTA_BUILD_DIR}/git-log.out" dir="${env.MAQETTA_BUILD_DIR}/repository/maqetta">
             <arg value="log"/>
             <arg value="-1"/>
         </exec>

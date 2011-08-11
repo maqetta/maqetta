@@ -16,7 +16,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.Button');"
+            "$text": "dojo.require('dijit.form.ToggleButton');"
         }
     ],
     "library": {
@@ -65,6 +65,7 @@
         },
         "iconClass": {
             "datatype": "string",
+            "defaultValue": "dijitCheckBoxIcon",
             "title": "Icon Class"
         },
         "checked": {

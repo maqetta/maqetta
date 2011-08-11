@@ -16,7 +16,11 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.Slider');"
+            "$text": "dojo.require('dijit.form.HorizontalSlider');"
+        },
+        {
+            "type": "javascript",
+            "$text": "dojo.require('dijit.form.HorizontalRule');"
         }
     ],
     "library": {
@@ -40,5 +44,5 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<div></div>"
 }

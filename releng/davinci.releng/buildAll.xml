@@ -154,7 +154,7 @@
         </delete>
         <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
             <property name="builder" value="${basedir}/warFile"/>
-        	<property name="warProject" value="maqetta.war"/>
+        	<property name="warProject" value="davinci.war"/>
         	
         </ant>
     </target>

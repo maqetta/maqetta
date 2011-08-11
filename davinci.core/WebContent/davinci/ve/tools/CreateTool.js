@@ -86,7 +86,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				y = event.y - pos.y,
 				list = davinci.ve.widget.allWidgets(this._context.getContainerNode());
 			list = list.filter(function(w){
-				return davinci.ve.metadata.queryDescriptor(w.type, "isContainer");
+				return davinci.ve.metadata.getAllowedChild(w.type)[0] !== 'NONE';
 			}).filter(function(w){
 				var c = dojo.position(w.domNode),
 					p = context.getContentPosition(c);

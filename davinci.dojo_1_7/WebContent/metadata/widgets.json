@@ -279,7 +279,6 @@
                     ]
                 }
             ],
-            "resizable": true,
             "isLayered": true,
             "isContainer": true,
             "allowedChild": "dijit.PopupMenuBarItem",

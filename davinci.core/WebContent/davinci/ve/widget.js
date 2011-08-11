@@ -461,7 +461,8 @@ davinci.ve.widget.createWidget = function(data){
 			});
 		}
 	}
-	//need a helper to process the data for horizontalSlider
+	//need a helper to process the data for horizontalSlider prior to creating the widget
+	// -- may be needed for other widgets with properties of dataype array
 	var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
     if (helper) {
     	var myHelper;

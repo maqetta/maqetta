@@ -13,7 +13,11 @@
 	</tr>
 	 -->
 	<tr>
-	<td>${newName}:</td><td><input class='templateInput' type='text' dojoAttachPoint="_selector"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+	<td>${newName}:</td><td><input class='templateInput' type='text' 
+    dojoAttachPoint="_selector"
+    dojoType="dijit.form.ValidationTextBox"
+    required="true" 
+    invalidMessage="Invalid CSS Identifier."></input></td><td><div dojoAttachPoint='_error4'></div></td>
 	</tr>
 	</table>
 

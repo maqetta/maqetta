@@ -742,20 +742,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		});
 
 		var content = data.content || "";
-			
-		var containerNode = this.getContainerNode();
-	
 		
 		var active = this.isActive();
 		if(active){
 			this.select(null);
 			dojo.forEach(this.getTopWidgets(), this.detach, this);
 		}
-		var escapees = [],
-			scripts = {},
-			states = {},
-			properties = {},
-			containerNode = this.getContainerNode();
+		var states = {},
+		    containerNode = this.getContainerNode();
 	
 		if (data.states) {
 			states["body"] = data.states;

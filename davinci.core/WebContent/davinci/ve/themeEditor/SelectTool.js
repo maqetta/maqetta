@@ -177,10 +177,9 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 					var parent = davinci.ve.widget.byNode(child.domNode.offsetParent);
 					var index;
 					
-					if (parent.isLayoutContainer || parent.isHtmlWidget ||
-							davinci.ve.metadata.queryDescriptor(parent.type, "isLayoutContainer")) {
-								index = 0;
-								parent = child;
+					if (parent.isLayoutContainer || parent.isHtmlWidget) {
+						index = 0;
+						parent = child;
 					} else {
 						index = parent.indexOf( child);
 					}

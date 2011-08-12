@@ -181,8 +181,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if (this._data.properties && this._data.properties.style && (this._data.properties.style.indexOf('absolute') > 0)){
 			widgetAbsoluteLayout = true;
 		}
-		if (!widgetAbsoluteLayout  && this._context.getFlowLayout() || ( (parent.isHtmlWidget &&!parent.isRoot) ||
-						davinci.ve.metadata.queryDescriptor(parent.type, "isLayoutContainer"))) {
+		if (! widgetAbsoluteLayout && this._context.getFlowLayout() ||
+		        (parent.isHtmlWidget && ! parent.isRoot)) {
 			// do not position child under layout container... except for ContentPane
 			if(child){
 				index = parent.indexOf( child);

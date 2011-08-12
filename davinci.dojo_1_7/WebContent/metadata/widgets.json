@@ -158,7 +158,6 @@
                 "style": "width: 100%; min-width:1em;"
             },
             "resizable": "width",
-            "isLayoutContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper",
             "inlineEdit": {
@@ -210,7 +209,6 @@
                 }
             ],
             "resizable": "none",
-            "isLayoutContainer": true,
             "allowedChild": "dijit.form.Button",
             "inlineEdit": "davinci.libraries.dojo.dijit.ToolbarInput"
         },

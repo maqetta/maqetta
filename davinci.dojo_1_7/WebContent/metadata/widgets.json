@@ -1126,6 +1126,7 @@
             "description": "Range",
             "type": "dojox.gauges.Range",
             "category": "untested",
+            "class": "DojoxGauges",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "allowedParent": "dojox.gauges.AnalogGauge",
@@ -1136,6 +1137,7 @@
             "description": "AnalogLineIndicator",
             "type": "dojox.gauges.AnalogLineIndicator",
             "category": "untested",
+            "class": "DojoxGauges",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "properties": {
@@ -1154,6 +1156,7 @@
             "description": "AnalogArcIndicator",
             "type": "dojox.gauges.AnalogArcIndicator",
             "category": "untested",
+            "class": "DojoxGauges",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "properties": {
@@ -1171,6 +1174,7 @@
             "description": "AnalogArrowIndicator",
             "type": "dojox.gauges.AnalogArrowIndicator",
             "category": "untested",
+            "class": "DojoxGauges",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "properties": {
@@ -1188,6 +1192,7 @@
             "description": "AnalogNeedleIndicator",
             "type": "dojox.gauges.AnalogNeedleIndicator",
             "category": "untested",
+            "class": "DojoxGauges",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
             "properties": {
@@ -1249,7 +1254,7 @@
                     }
                 }
             ],
-            "allowedChild": "dojox.gauges.AnalogLineIndicator, dojox.gauges.AnalogArcIndicator, dojox.gauges.AnalogArrowIndicator, dojox.gauges.AnalogNeedleIndicator, dojox.gauges.Range",
+            "allowedChild": "DojoxGauges",
             "helper": "davinci.libraries.dojo.dojox.gauges.AnalogGaugeHelper"
         },
         {

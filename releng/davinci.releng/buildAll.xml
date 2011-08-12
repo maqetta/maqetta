@@ -245,11 +245,11 @@
             <fileset dir="${buildDirectory}" includes="plugins/,${dojo.cache.directory}, features/,result/,*.properties,*.xml"/>
         </delete>
     	
-    	<delete includeemptydirs="true">
+    	<delete includeemptydirs="true" quiet="true" failonerror="false">
     	            <fileset dir="${dojo.cache.directory}" includes="*"/>
     	  </delete>
     	    	
-    	<delete dir="${dojo.cache.directory}"/>
+    	<delete dir="${dojo.cache.directory}" quiet="true" failonerror="false"/>
         <defaultexcludes default="true"/>
         <mkdir dir="${buildDirectory}/plugins"/>
         <mkdir dir="${buildDirectory}/features"/>

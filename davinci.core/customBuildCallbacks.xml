@@ -19,27 +19,6 @@
 	<property environment="env"/>
 	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
 
-	<!-- +++++++++++ Verify that "svn" or "svn.exe" is on the PATH +++++++++++ -->
-	<target name="verify.command.line.svn">
-		<!--
-		<echo message="filepath=${env.PATH}"/>
-		<echo message="filepath=${env.Path}"/>
-		-->
-		<condition property="command.line.svn.ok">
-			<or>
-				<available file="svn" filepath="${env.PATH}"/>
-				<available file="svn" filepath="${env.Path}"/>
-				<available file="svn.exe" filepath="${env.PATH}"/>
-				<available file="svn.exe" filepath="${env.Path}"/>
-			</or>
-		</condition>
-	</target>
-
-	<!-- ++++++++++ Crash and burn if can't find command-line svn ++++++++++++ -->
-	<target name="check.command.line.svn" depends="verify.command.line.svn" unless="command.line.svn.ok">
-		<fail message="ERROR - YOU NEED TO INSTALL AN SVN COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
-	</target>
-
     <!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
     <target name="verify.command.line.git">
         <!--
@@ -195,7 +174,9 @@
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
 	</target>
-	<target name="dojoBuild">
+	
+	
+	<target name="dojo.build" if="${run.dojo.build}" unless="${dojo.build.exists}">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
@@ -217,12 +198,34 @@
 				<arg value="cssOptimize=comments.keepLines"/>
 				<arg value="layerOptimize=shrinksafe.keepLines"/>
 		</java>
+		
 		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
 		<copy toFile="${target.folder}/WebContent/release/dojo/workspace/app.css" file="${target.folder}/WebContent/workspace/app.css" overwrite="true" />
+		
 		<!-- Copy over original workspace/maqetta folder -->
 		<copy todir="${target.folder}/WebContent/release/dojo/workspace/maqetta">
 			<fileset dir="${target.folder}/WebContent/workspace/maqetta"/>
 		</copy>
+	
+		
+		<copy todir="${dojo.cache.directory}">
+				<fileset dir="${target.folder}/WebContent/workspace/maqetta"/>
+		</copy>
+		<echo message="caching dojo build.."/>
+		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
+					<fileset dir="${target.folder}/WebContent/release/dojo">
+						<include name="davinci/"/>
+						<include name="dojo/"/>
+						<include name="dijit/"/>
+						<include name="dojox/"/>
+						<include name="eclipse/"/>
+			            <include name="preview/"/>
+			    		<include name="workspace/"/>
+					</fileset>
+				</copy>
+	</target>
+	
+	<target name="copy.dojo">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>
@@ -231,19 +234,20 @@
 		<delete dir="${target.folder}/WebContent/eclipse"/>
 	    <delete dir="${target.folder}/WebContent/preview"/>
 		<delete dir="${target.folder}/WebContent/workspace"/>
-		<move todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="move Dojo build">
-			<fileset dir="${target.folder}/WebContent/release/dojo">
-				<include name="davinci/"/>
-				<include name="dojo/"/>
-				<include name="dijit/"/>
-				<include name="dojox/"/>
-				<include name="eclipse/"/>
-	            <include name="preview/"/>
-	    		<include name="workspace/"/>
-			</fileset>
-		</move>
-	
+		
+		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached Dojo build">
+					<fileset dir="${dojo.cache.directory}">
+						<include name="davinci/"/>
+						<include name="dojo/"/>
+						<include name="dijit/"/>
+						<include name="dojox/"/>
+						<include name="eclipse/"/>
+			            <include name="preview/"/>
+			    		<include name="workspace/"/>
+					</fileset>
+				</copy>
 	</target>
+	
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the target gather.bin.parts                         -->
 	<!-- Available parameters :                                                -->
@@ -251,7 +255,14 @@
 	<!--   target.folder - destination folder                                  -->
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
-		<antcall target="dojoBuild"/>
+		
+		
+    	<condition property="dojo.build.exists">
+    		<available file="${dojo.cache.directory}" type="dir"/>
+    	</condition>
+		
+		<antcall target="dojo.build"/>
+		<antcall target="copy.dojo"/>
 		<echo message="Inserting git describe information"/>
 		<antcall target="update.revisions"/>
 		<antcall target="update.repositoryinfo.js"/>

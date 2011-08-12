@@ -3,6 +3,7 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit.form.RadioButton");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.Menu");
@@ -37,6 +38,19 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_error3 : null,
 	_error4 : null,
 	_errorMsg : null,
+    /*
+     * CSS identifier validation RegExp
+     * 
+     * see http://www.w3.org/TR/CSS21/syndata.html#tokenization
+     * 
+     *     ident    [-]?{nmstart}{nmchar}*
+     *     nmstart  [_a-z]|{nonascii}|{escape}
+     *     nonascii [^\0-\237]
+     *     unicode  \\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?
+     *     escape   {unicode}|\\[^\n\r\f0-9a-f]
+     *     nmchar   [_a-z0-9-]|{nonascii}|{escape}
+     * 
+     */             
 	_themeValidator: /^[-]?([_a-z]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])([_a-z0-9-]|[^\0-\237]|\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?|\[^\n\r\f0-9a-f])*$/i,
 	
 	postMixInProperties : function() {
@@ -54,27 +68,21 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		
 		/* wire up error handlers */
 		dojo.connect(this._themeSelection, "onChange", this, '_checkValid');
-		//dojo.connect(this._folder, "onblur", this, '_checkValid');
-		//dojo.connect(this._version, "onblur", this, '_checkValid');
-		//dojo.connect(this._selector, "onkeypress", this, '_checkValid');
-		dojo.connect(this._selector, "onkeyup", this, '_checkValid');
-		//dojo.connect(this._location, "onblur", this, '_checkValid');
 		
+		/*
+		 * Override the ValidationTextBox 'validator' method.
+		 */
+		this._selector.validator = dojo.hitch(this, function(value, constraints) {
+            var isValid = this._themeValidator.test(value);
+            if ( ! isValid ) { this._okButton.set( 'disabled', !isValid); }
+	        return isValid;
+		});
 		
 	},
 	
 	_baseThemeChanged : function(){
 		
 		this._theme = this._themeSelection.get("value");
-		//dojo.attr(this._themeName, 'value', this._theme.name);
-	//	dojo.attr(this._selector, 'value', this._theme.className);
-	//	var newVersion = parseFloat(this._theme.version);
-	//	dojo.attr(this._version, 'value', ++newVersion);
-	//	var selector = dojo.attr(this._selector, 'value');
-	//	var newBase = selector + "-" + newVersion;
-		
-		
-	//	dojo.attr(this._themeLocation, 'value', newBase);
 		
 	},
 	
@@ -84,7 +92,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	//	var targetFolder = this._themeLocation.attr('value');
 		var selector = dojo.attr(this._selector, 'value');
 		var themeName = selector;
-		var version = null
+		var version = null;
 		var base = selector;
 	
 		var newBase = this._getThemeLocation();
@@ -122,27 +130,8 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		var isOk = true;
 		var oldTheme = this._themeSelection.attr('value');
 		
-		if(oldTheme==null || oldTheme ==""){
-			isOk = false;
-			
-			
-		}
-		var selector = dojo.attr(this._selector, 'value');
-		
-		/*
-		 * see http://www.w3.org/TR/CSS21/syndata.html#tokenization
-		 * 
-		 *     ident    [-]?{nmstart}{nmchar}*
-         *     nmstart  [_a-z]|{nonascii}|{escape}
-         *     nonascii [^\0-\237]
-         *     unicode  \\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?
-         *     escape   {unicode}|\\[^\n\r\f0-9a-f]
-         *     nmchar   [_a-z0-9-]|{nonascii}|{escape}
-		 * 
-		 */				
-		if ( selector==null || selector == "" || ! this._themeValidator.test(selector) ) {
-			isOk = false;
-		}
+		if( oldTheme==null || oldTheme =="" ) { isOk = false;}
+
 		this._okButton.set( 'disabled', !isOk);
 	},
 	

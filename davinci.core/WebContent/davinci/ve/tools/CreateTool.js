@@ -162,14 +162,12 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if(!this._context.getFlowLayout()){
 			parent = this._context.rootWidget;
 		}
-		while(parent){
-				parentNode = parent.getContainerNode();
-				if(parentNode){ // container widget
-					break;
-				}else{
-					child = parent; // insert before this widget for flow layout
-				}
- 
+		while (parent) {
+			parentNode = parent.getContainerNode();
+			if (parentNode) { // container widget
+				break;
+			}
+			child = parent; // insert before this widget for flow layout
 			parent = parent.getParent();
 		}
 //		if(!parent){
@@ -184,8 +182,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if (! widgetAbsoluteLayout && this._context.getFlowLayout() ||
 		        (parent.isHtmlWidget && ! parent.isRoot)) {
 			// do not position child under layout container... except for ContentPane
-			if(child){
-				index = parent.indexOf( child);
+			if (child) {
+				index = parent.indexOf(child);
 			}
 		}else if(args.position){
 			// specified position must be relative to parent

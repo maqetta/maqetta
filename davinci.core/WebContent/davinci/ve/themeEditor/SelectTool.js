@@ -181,7 +181,7 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 						index = 0;
 						parent = child;
 					} else {
-						index = parent.indexOf( child);
+						index = parent.indexOf(child);
 					}
 					
 					//get the data				

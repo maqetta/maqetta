@@ -871,7 +871,36 @@
             "properties": {
                 "style": "height: 200px;"
             },
-            "resizable": "height"
+            "resizable": "height",
+            "allowedChild": "dijit.form.VerticalRuleLabels, dijit.form.VerticalRule"
+        },
+         {
+            "name": "VerticalRuleLabels",
+            "description": "Labels for Vertical Slider",
+            "type": "dijit.form.VerticalRuleLabels",
+            "category": "untested",
+            "icon": "resources/images/verticalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+            "properties": {
+            	"style": "width:20px;",
+                "container":"rightDecoration",
+                "count": "3"
+            },
+            "helper": "davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper",
+            "allowedParent": "dijit.form.VerticalSlider"
+        },
+        {
+            "name": "VerticalRule",
+            "description": "Hash marks for Vertical Slider",
+            "type": "dijit.form.VerticalRule",
+            "category": "untested",
+            "icon": "resources/images/verticalslider.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
+            "properties": {
+            	"style": "width:5px;",
+                "container":"rightDecoration"
+            },
+            "allowedParent": "dijit.form.VerticalSlider"
         },
         {
             "name": "ContextMenu",

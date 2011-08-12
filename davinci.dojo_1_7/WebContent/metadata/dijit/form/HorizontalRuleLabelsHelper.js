@@ -13,7 +13,11 @@ dojo.declare("davinci.libraries.dojo.dijit.form.HorizontalRuleLabelsHelper", nul
 				data.properties.numericMargin = 0;//numericMargin > 0 only if labels aren't specified
 			} else if(data.properties.labels.length != parseInt(data.properties.count) || data.properties.numericMargin){
 				//remove Labels if user changes Count so that it can calculate the percentages for the Labels
-				delete data.properties.labels;
+				if(parseInt(data.properties.count) > 1)
+					delete data.properties.labels;
+				else{//Dojo doesn't handle a count of just 1
+					data.properties.labels = new Array("50%");
+				}
 			}
 		}
 		return data;

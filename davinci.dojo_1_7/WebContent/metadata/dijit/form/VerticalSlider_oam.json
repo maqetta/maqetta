@@ -16,7 +16,7 @@
         },
         {
             "type": "javascript",
-            "$text": "dojo.require('dijit.form.Slider');"
+            "$text": "dojo.require('dijit.form.VerticalSlider');"
         }
     ],
     "library": {
@@ -104,15 +104,15 @@
         },
         "widgetsInTemplate": {
             "datatype": "boolean",
-            "hidden": false,
+            "hidden": true,
             "defaultValue": true
         },
         "isContainer": {
             "datatype": "boolean",
             "description": "Just a flag indicating that this widget descends from dijit._Container",
-            "hidden": false,
+            "hidden": true,
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<div></div>"
 }

@@ -64,7 +64,7 @@
     	<property name="repoNameInternal" value="${repoName}_internal"/>
     	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
         <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
-    	
+    	<property name="dojo.cache.directory" value="${buildDirectory}/dojo_cache"/>
     	
     	
         <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
@@ -100,7 +100,7 @@
         	<property name="product" value="davinci.product/DavinciServer-internal.product"/>
         	<property name="maqettaArchiveName" value="w3ibm-maqetta.zip"/>
         	<property name="run.dojo.build" value="${run.dojo.build}"/>
-        	<property name="noclean" value="true"/>
+        	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
         </ant>
     </target>
 	
@@ -111,8 +111,7 @@
         	<property name="product" value="davinci.product/DavinciServer-Joomla.product"/>
         	<property name="maqettaArchiveName" value="joomla-maqetta.zip"/>
         	<property name="run.dojo.build" value="${run.dojo.build}"/>
-        	<property name="noclean" value="true"/>
-        	
+        	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>        	
         </ant>
 
     </target>
@@ -123,7 +122,7 @@
         	<property name="product" value="davinci.product/DavinciServer-external.product"/>
         	<property name="maqettaArchiveName" value="maqetta.zip"/>
         	<property name="run.dojo.build" value="${run.dojo.build}"/>
-        	<property name="noclean" value="true"/>
+        	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
         </ant>
     </target>
 	
@@ -165,7 +164,8 @@
             <property name="builder" value="${basedir}/warFile"/>
         	<property name="warProject" value="davinci.war"/>
         	<property name="warFileName" value="maqetta.war"/>
-        	<property name="noclean" value="true"/>
+        	
+        	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
         </ant>
     </target>
 
@@ -183,12 +183,13 @@
 			<property name="builder" value="${basedir}/warFile"/>
 			<property name="warProject" value="davinci.w3war"/>
 			<property name="warFileName" value="w3-maqetta.war"/>
-			<property name="noclean" value="true"/>
+			<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
 		</ant>
 	</target>
 
 	<target name="buildPlugin">
         <property name="pluginDestination" value="${buildDirectory}/${buildLabel}"/>
+		<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
         <eclipse.generateFeature
          featureId="${pluginName}.feature"
          buildDirectory="${buildDirectory}"
@@ -241,8 +242,14 @@
         <defaultexcludes remove="**/.git/**"/>
 
         <delete includeemptydirs="true">
-            <fileset dir="${buildDirectory}" includes="plugins/,features/,result/,*.properties,*.xml"/>
+            <fileset dir="${buildDirectory}" includes="plugins/,${dojo.cache.directory}, features/,result/,*.properties,*.xml"/>
         </delete>
+    	
+    	<delete includeemptydirs="true">
+    	            <fileset dir="${dojo.cache.directory}" includes="*"/>
+    	  </delete>
+    	    	
+    	<delete dir="${dojo.cache.directory}"/>
         <defaultexcludes default="true"/>
         <mkdir dir="${buildDirectory}/plugins"/>
         <mkdir dir="${buildDirectory}/features"/>

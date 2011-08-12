@@ -256,7 +256,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 		
-		<property name="dojo.cache.directory" value="${buildDirectory}/tmp/dojo"/>
+		
     	<condition property="dojo.build.exists">
     		<available file="${dojo.cache.directory}" type="dir"/>
     	</condition>

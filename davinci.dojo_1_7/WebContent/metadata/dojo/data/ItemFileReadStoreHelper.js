@@ -2,10 +2,7 @@ dojo.provide("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper");
 
 dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper", null, {
 
-
 	getData: function(/*Widget*/ widget, /*Object*/ options){
-	
-debugger;
 		if(!widget){
 			return undefined;
 		}
@@ -25,7 +22,4 @@ debugger;
 		return widgetData;
 	}
 
-	
-
 });
-

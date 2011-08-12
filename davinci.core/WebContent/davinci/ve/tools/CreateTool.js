@@ -86,7 +86,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				y = event.y - pos.y,
 				list = davinci.ve.widget.allWidgets(this._context.getContainerNode());
 			list = list.filter(function(w){
-				return davinci.ve.metadata.queryDescriptor(w.type, "isContainer");
+				return davinci.ve.metadata.getAllowedChild(w.type)[0] !== 'NONE';
 			}).filter(function(w){
 				var c = dojo.position(w.domNode),
 					p = context.getContentPosition(c);
@@ -162,14 +162,12 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if(!this._context.getFlowLayout()){
 			parent = this._context.rootWidget;
 		}
-		while(parent){
-				parentNode = parent.getContainerNode();
-				if(parentNode){ // container widget
-					break;
-				}else{
-					child = parent; // insert before this widget for flow layout
-				}
- 
+		while (parent) {
+			parentNode = parent.getContainerNode();
+			if (parentNode) { // container widget
+				break;
+			}
+			child = parent; // insert before this widget for flow layout
 			parent = parent.getParent();
 		}
 //		if(!parent){
@@ -181,11 +179,11 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if (this._data.properties && this._data.properties.style && (this._data.properties.style.indexOf('absolute') > 0)){
 			widgetAbsoluteLayout = true;
 		}
-		if (!widgetAbsoluteLayout  && this._context.getFlowLayout() || ( (parent.isHtmlWidget &&!parent.isRoot) ||
-						davinci.ve.metadata.queryDescriptor(parent.type, "isLayoutContainer"))) {
+		if (! widgetAbsoluteLayout && this._context.getFlowLayout() ||
+		        (parent.isHtmlWidget && ! parent.isRoot)) {
 			// do not position child under layout container... except for ContentPane
-			if(child){
-				index = parent.indexOf( child);
+			if (child) {
+				index = parent.indexOf(child);
 			}
 		}else if(args.position){
 			// specified position must be relative to parent

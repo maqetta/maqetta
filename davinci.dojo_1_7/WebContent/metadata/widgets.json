@@ -83,7 +83,6 @@
                     }
                 }
             ],
-            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.BorderContainerInput",
             "helper": "davinci.libraries.dojo.dijit.layout.BorderContainerHelper"
@@ -115,7 +114,6 @@
                     }
                 }
             ],
-            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
@@ -145,7 +143,6 @@
                     }
                 }
             ],
-            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.AccordionContainerInput"
         },
@@ -161,8 +158,6 @@
                 "style": "width: 100%; min-width:1em;"
             },
             "resizable": "width",
-            "isLayoutContainer": true,
-            "isContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper",
             "inlineEdit": {
@@ -183,7 +178,6 @@
                 "doLayout": false,
                 "style": "width: 250px; height: 250px;"
             },
-            "isContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
         },
@@ -215,8 +209,6 @@
                 }
             ],
             "resizable": "none",
-            "isLayoutContainer": true,
-            "isContainer": true,
             "allowedChild": "dijit.form.Button",
             "inlineEdit": "davinci.libraries.dojo.dijit.ToolbarInput"
         },
@@ -280,7 +272,6 @@
                 }
             ],
             "isLayered": true,
-            "isContainer": true,
             "allowedChild": "dijit.PopupMenuBarItem",
             "helper": "davinci.libraries.dojo.dijit.MenuHelper",
             "inlineEdit": "davinci.libraries.dojo.dijit.MenuBarInput"
@@ -693,7 +684,6 @@
                 "style": "width: 250px; height: 250px;",
                 "title": "Dialog"
             },
-            "isContainer": true,
             "allowedChild": "ANY",
             "isLayered": true,
             "resizable": "none",
@@ -710,7 +700,6 @@
             "children": "Text",
             "tool": "davinci.libraries.dojo.dijit.TooltipCreateTool",
             "resizable": "none",
-            "isContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.TooltipHelper",
             "inlineEdit": "davinci.ve.input.RichTextInput"
@@ -842,8 +831,7 @@
                 "style": "width: 200px;"
             },
             "resizable": "width",
-            "allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule",
-            "isContainer": true
+            "allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule"
         },
         {
             "name": "HorizontalRuleLabels",
@@ -919,7 +907,6 @@
             "resizable": "none",
             "isLayered": true,
             "allowedChild": "DijitMenuItems",
-            "isContainer": true,
             "helper": "davinci.libraries.dojo.dijit.MenuHelper"
         },
         {
@@ -1090,7 +1077,6 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dijit.layout.StackContainerCreateTool",
-            "isContainer": true,
             "allowedChild": "ANY"
         },
         {
@@ -1104,7 +1090,6 @@
                 "style": "width: 250px; height: 250px;",
                 "encType": "multipart/form-data"
             },
-            "isContainer": true,
             "allowedChild": "ANY"
         },
         {
@@ -1186,7 +1171,7 @@
              },
             "allowedParent": "dojox.gauges.AnalogGauge"
          },
-        {
+         {
             "name": "AnalogGauge",
             "description": "AnalogGauge",
             "type": "dojox.gauges.AnalogGauge",
@@ -1234,9 +1219,8 @@
                         "color": {"color": "black"}
                     }
                 }
-              ],
-              "allowedChild": "dojox.gauges.AnalogLineIndicator, dojox.gauges.AnalogArcIndicator, dojox.gauges.AnalogArrowIndicator, dojox.gauges.AnalogNeedleIndicator, dojox.gauges.Range",
-            "isContainer": true,
+            ],
+            "allowedChild": "dojox.gauges.AnalogLineIndicator, dojox.gauges.AnalogArcIndicator, dojox.gauges.AnalogArrowIndicator, dojox.gauges.AnalogNeedleIndicator, dojox.gauges.Range",
             "helper": "davinci.libraries.dojo.dojox.gauges.AnalogGaugeHelper"
         },
         {
@@ -1523,7 +1507,6 @@
                 "withHandles": true,
                 "style": "width: 500px; height: 300px;"
             },
-            "isContainer": true,
             "allowedChild": "ANY"
         },
         {
@@ -1537,7 +1520,6 @@
                 "title": "Floating Pane",
                 "style": "width: 300px; height: 300px;"
             },
-            "isContainer": true,
             "allowedChild": "ANY",
             "helper": "davinci.libraries.dojo.dijit.layout.ContentPaneHelper"
         },
@@ -1551,7 +1533,6 @@
             "properties": {
                 "style": "width: 300px; height: 300px"
             },
-            "isContainer": true,
             "allowedChild": "ANY"
         },
         {
@@ -1581,7 +1562,6 @@
                     }
                 }
             ],
-            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
@@ -1612,7 +1592,6 @@
                     }
                 }
             ],
-            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
@@ -1643,7 +1622,6 @@
                     }
                 }
             ],
-            "isContainer": true,
             "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "davinci.libraries.dojo.dijit.layout.StackContainerInput"
         },
@@ -1750,11 +1728,9 @@
             "class": "DojoxMobileView",
             "icon": "resources/images/dx-mbl-view.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtWKf21SLvVKHuWKh21OHuWKf2WKh2VWLvVaOv7nW78jg84C/64K/64DB64DB6ZfX9v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZ0wJJwSCwOOcikMinkjJ7QKJRTqoRAIJJ2SxJ9PpsSJkOhXDIatEZDIVtKE4l8Tp9HShKPfs/fQ/BcgVx/DiQAhgABAgcLEhYWJA8lDIKVDSUJHZqbnJsKJQaVggglBIaIioyOkAUlA6KBA64DtLW2tka5Q0EAOw==",
-            "isContainer": true,
             "properties": {
                  "style": "height: 100%;"
             },
-            "isContainer": true,
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper"
@@ -1766,7 +1742,6 @@
             "class": "DojoxMobileView",
             "icon": "resources/images/dx-mbl-scrollable-view.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFOiPj6/jJRijRTjTRUjTdXkTdXkLrH3+Hp+OHp9zdakzZYkDdYkDlbkzlck97o+ODp+N/o9ztflj5km/L2/Pj6/T5mnD9mnT5lm0FqoENupENuo0Ruo0ZxpvL2+0l3rEl4rEh2qkl3q0l2qk6BtE1+sU+BtFCDtVCFt1CEtlSLvVOJulOHuVaOv7nW78/t+////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaAQJlwSCwKXcikcilzxZ5QaApGVclWMUAWMFhgYiRYACGStaJoDKzyuchQr7hc3jAwGAeZCR1lKRIRLDIjWVtdXyUSEhAnMh58UCCKECEyGnOYHRsbHBwyFJBPGVQwFDIThQBcXjEOYggOMg+hMQUwFgIEsg+8vb0BwMBGw8TFQkEAOw==",
-            "isContainer": true,
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper"
@@ -1778,7 +1753,6 @@
             "class": "DojoxMobileView",
             "icon": "resources/images/dx-mbl--flippable-iew.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
-            "isContainer": true,
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper"
@@ -1796,7 +1770,6 @@
                 "displayOnCreate": true,
                 "supportsHTML": true
             },
-            "isContainer": true,
             "allowedParent": "DojoxMobileView",
             "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
         },
@@ -1822,7 +1795,6 @@
             "icon": "resources/images/dx-mbl-roundrect.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk55qcnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVHoCSOZGmeJ6SuLERCRSzPhStBQRDtPB8QLgigR9w9goIi0RFMKHuJIOLJWwQb1N0hOMhGGEGFgiq2QQzitFphE7XeqLj8FAIAOw==",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
-            "isContainer": true,
             "allowedChild": "ANY"
         },
         {
@@ -1844,7 +1816,6 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-roundrectlist.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
-            "isContainer": true,
             "allowedChild": "dojox.mobile.ListItem",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput",
@@ -1869,7 +1840,6 @@
             "category": "mobile",
             "icon": "resources/images/RoundRectDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+lpzp2V+sGqEtW2FsHSLtNfi9Tlck22GsHOLtH2Uu5q03W56jr7J2+Lq99jf6ubt+La/zGiKutXi9ERvo/P3/Ex7r0x9sUx8r8TU5ejx+lKHuVKHuFaOv3io0bnW78jg8+zz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaEwNfL8vEYj8ePRWjxQCzQaBTiWX4grqx2a4F8Xh2LC7MtWzivjLjMvqRB8PhmTt9o0usta89nvSpiZFooAIWFKC8TEmwpAQsKBQEtLyEIElIWKyKbmypCIRMIoggOJRELBgkRJ0KtriYPsbEkrrUjBwcMBAcjtbUNFAMvDAK+tQzGybVBADs=",
-            "isContainer": false,
             "data": [
                 {
                     "type": "dojo.data.ItemFileReadStore",
@@ -1920,7 +1890,6 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl-edge-edgellist.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
-            "isContainer": true,
             "allowedChild": "dojox.mobile.ListItem",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.EdgeToEdgeListInput",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
@@ -1945,7 +1914,6 @@
             "category": "mobile",
             "icon": "resources/images/EdgeToEdgeDataList.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
-            "isContainer": false,
             "data": [
                 {
                     "type": "dojo.data.ItemFileReadStore",
@@ -1990,7 +1958,6 @@
                 "displayOnCreate": true,
                 "supportsHTML": true
             },
-            "isContainer": true,
             "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
             "allowedChild": "dojox.mobile.Switch"
         },
@@ -2142,7 +2109,6 @@
             "category": "mobile",
             "icon": "resources/images/dx-mbl--tab-container.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAABw6dU5rpCZMiHyRr3uRsHuRrzFhnTt0r1aOv4fG74bG7ofF7ofG7pDQ85HQ85DQ8pHQ8pfX9v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVCoCSOZGmeaKqubFsGMAzMdBxHeAQIvADkEZgD8mgADEgDoNhowBgMxQJwqB4ACYWCASMQBgMAYowAEArogGvNbrtDADs=",
-            "isContainer": true,
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "inlineEdit": "davinci.libraries.dojo.dojox.mobile.TabBarInput",
             "allowedChild": "dojox.mobile.TabBarButton",
@@ -2196,7 +2162,6 @@
             "icon": "resources/images/ContentPane.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
-            "isContainer": true,
             "allowedChild": "ANY"
         },
         {
@@ -2206,7 +2171,6 @@
             "icon": "resources/images/dx-mbl-icon-container.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
-            "isContainer": true,
             "allowedChild": "dojox.mobile.IconItem",
             "properties": {
                 "defaultIcon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFkaO4nazAucXThpmyt8PRsr7O3+Tr2N7mw83ZdIqmmqq+g5evq7jJ4ufsy9PegZWuztbgpLLEq7nJiZy0d4yomKi94ebsfpOsfJGrlqe8jp+3wsvYobHD6OzwboWiiJuzfZKsrrvMprTGzdXfx9DbydLdxc7au8bUb4ajxs/bc4mlk6S6197lwcvX2d/neY6pv8nW5enuo7LE4OXrn67Bmam+1dzkz9bgyNDbqLbHcYekjqC2lKW62+Hoipy0////GCC5wQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAFASURBVHjafNPZcoIwFIDhExAULKAYBJfixq4stRZKEHn/tyoI6Y1Nv4tM5p85k8nFgaZJ5vB4BfOkaaDx5Un9/qqeyH4DY0P5+JtiJGB4nywTGfi8Zsl50HI2DcyCzQTrm82CNKM24tLNMrWe/ZYU8IhyFUXkYkVZcrRgkA6UI4qiX7SHQIsEUYWOHf0otJ8QiroujgMUAZGwtjjL8cW9ZhcV+Ze8ROUNyeeFhgkEpIPd04xbG+f7fbtaOTPOwl0NwO4JnrexbaIFtn14Xp+GWTKNQ4GgTZitiReGhz4G7bs9XKW601kJDrfvG4Eopebuk/PgaYlA2g8qdcDRspcATwf6ieJpwpDuBrJ3ioVy5KlvtOxSsCo2C8w7mwnaF5sGPLqxIB4MdGVBMoyhZKmSdhdgW+qvyi20u/DvHv0IMAAbv4T3o6uF6wAAAABJRU5ErkJggg%3D%3D"
@@ -2242,7 +2206,6 @@
             "category": "mobile",
             "icon": "resources/images/SpinWheel.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
-            "isContainer": true,
             "allowedChild": "dojox.mobile.SpinWheelSlot",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "children": [
@@ -2326,7 +2289,6 @@
             "category": "mobile",
             "icon": "resources/images/FixedSplitter.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
-            "isContainer": true,
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "allowedChild": "html.div, dojox.mobile.FixedSplitterPane",
             "properties": {
@@ -2351,7 +2313,6 @@
             "icon": "resources/images/FixedSplitterPane.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck/P2+ztfljtgljxhlz5mnD9mnEJtokNtokdzp0h0qeTt+Obu+Ed1qUp6rUx9sFCEt06As0x9r1GEtlGGuFOKvFOKu1SKvFaOv8/t+////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoCaOZCliaKqqZ+a+8Cte2WLfN6OLVBasQFHEh4nBMCIHsYa7ITUJX8UXqFoDFtHBN6FeqxCRwSdpmM/nh4jgU3i/DRHAh3hfEXJfwW4t5AMDfFUCfwCGh4gAJoskIQA7",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
-            "isContainer": true,
             "allowedParent": "dojox.mobile.FixedSplitter",
             "allowedChild": "ANY"
         },

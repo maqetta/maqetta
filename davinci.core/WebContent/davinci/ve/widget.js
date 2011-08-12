@@ -36,8 +36,7 @@ davinci.ve.widget.allWidgets = function(containerNode){
 	}
 	find(containerNode);
 	return result;
-
-}
+};
 
 //recursively search for widget closest to target under root
 davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock){
@@ -46,11 +45,12 @@ davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hL
 
 	if(containerNode){
 		var list = davinci.ve.widget.allWidgets(containerNode);
-		if(davinci.ve.metadata.queryDescriptor(target.type, "isContainer")){
+		if (davinci.ve.metadata.getAllowedChild(target.type)[0] !== 'NONE') {
 			// filter out child widgets of target so we don't try to drop a widget within itself
-			list = list.filter(function(w){
-				for(w = w.getParent && w.getParent(); w && w.getParent && w != containerNode; w = w.getParent()){
-					if(w == target){
+			list = list.filter(function(widget) {
+			    var w = widget;
+				for (w = w.getParent && w.getParent(); w && w.getParent && w != containerNode; w = w.getParent()) {
+					if (w === target) {
 						return false;
 					}
 				}
@@ -79,10 +79,10 @@ davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hL
 			}
 		});
 	}
-	if(davinci.ve.metadata.queryDescriptor(result.widget.type, "isContainer")){
+	if (davinci.ve.metadata.getAllowedChild(result.widget.type)[0] !== 'NONE') {
 		c = dojo.position(result.widget.domNode);
 		p = context.getContentPosition(c);
-		if(t.l > p.x && t.l < p.x + c.w && t.t > p.y && t.t < p.y + c.h){
+		if (t.l > p.x && t.l < p.x + c.w && t.t > p.y && t.t < p.y + c.h) {
 			result.insert = true;
 		}
 	}
@@ -673,7 +673,7 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 
 		if ((this.dijitWidget && this.dijitWidget.isContainer)
-                || davinci.ve.metadata.queryDescriptor(this.type, "isContainer")) {
+                || davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
             return (this.containerNode || this.domNode);
         }
 		return undefined;
@@ -1546,15 +1546,14 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	{
 		var children=[];
 
-		if (this.acceptsHTMLChildren)
-		{
-			var dvWidget = function(child){
+		if (this.acceptsHTMLChildren) {
+			var dvWidget = function(child) {
 				return child._dvWidget;
 			};
 
 			// this.containerNode is a Dojo attachpoint. FIXME: Perhaps this detail should be abstracted by a helper?
 			return dojo.map(dojo.filter((this.containerNode || this.domNode).children, dvWidget), dvWidget);
-		} else if(davinci.ve.metadata.queryDescriptor(this.type, "isContainer")){ //wdr
+		} else if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
 			dojo.map(this.dijitWidget.getChildren(), function(widget){
 				if (!widget){ return; }
 				if (attach && !widget.domNode._dvWidget)

@@ -100,6 +100,7 @@
         	<property name="product" value="davinci.product/DavinciServer-internal.product"/>
         	<property name="maqettaArchiveName" value="w3ibm-maqetta.zip"/>
         	<property name="run.dojo.build" value="${run.dojo.build}"/>
+        	<property name="noclean" value="true"/>
         </ant>
     </target>
 	
@@ -110,6 +111,8 @@
         	<property name="product" value="davinci.product/DavinciServer-Joomla.product"/>
         	<property name="maqettaArchiveName" value="joomla-maqetta.zip"/>
         	<property name="run.dojo.build" value="${run.dojo.build}"/>
+        	<property name="noclean" value="true"/>
+        	
         </ant>
 
     </target>
@@ -120,6 +123,7 @@
         	<property name="product" value="davinci.product/DavinciServer-external.product"/>
         	<property name="maqettaArchiveName" value="maqetta.zip"/>
         	<property name="run.dojo.build" value="${run.dojo.build}"/>
+        	<property name="noclean" value="true"/>
         </ant>
     </target>
 	
@@ -161,6 +165,7 @@
             <property name="builder" value="${basedir}/warFile"/>
         	<property name="warProject" value="davinci.war"/>
         	<property name="warFileName" value="maqetta.war"/>
+        	<property name="noclean" value="true"/>
         </ant>
     </target>
 
@@ -178,6 +183,7 @@
 			<property name="builder" value="${basedir}/warFile"/>
 			<property name="warProject" value="davinci.w3war"/>
 			<property name="warFileName" value="w3-maqetta.war"/>
+			<property name="noclean" value="true"/>
 		</ant>
 	</target>
 

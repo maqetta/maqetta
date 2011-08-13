@@ -74,7 +74,7 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		 */
 		this._selector.validator = dojo.hitch(this, function(value, constraints) {
             var isValid = this._themeValidator.test(value);
-            if ( ! isValid ) { this._okButton.set( 'disabled', !isValid); }
+            this._okButton.set( 'disabled', !isValid);
 	        return isValid;
 		});
 		

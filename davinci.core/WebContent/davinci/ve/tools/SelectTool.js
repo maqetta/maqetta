@@ -97,6 +97,7 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 		// FIXME: sometime an exception occurs...
 		try{
 			this._setTarget(event.relatedTarget);
+			//this.updateSnapLines(event);
 		}catch(e){
 		}
 	},

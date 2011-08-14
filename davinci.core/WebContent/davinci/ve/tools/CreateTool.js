@@ -56,7 +56,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 		}else{
 			this._setTarget(event.target);
-		}
+			this.updateSnapLines(event);		}
 	},
 	
 	onKeyDown: function(event){
@@ -228,6 +228,17 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if(!this._loadType(this._data)){
 			return;
 		}
+		/* OLD CODE
+		if(args.position && this._snapOpportunities && this._snapOpportunities.length>0){
+			for(var i=0;i<this._snapOpportunities.length;i++){
+				var snapOpp = this._snapOpportunities[i];
+				if(snapOpp.type=="top"){
+					args.position.y = snapOpp.y; // Top snapping
+				}
+			}
+		}
+		*/
+		
 
 		var widget;
 		dojo.withDoc(this._context.getDocument(), function(){
@@ -243,8 +254,18 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			args.parent || this._context.getContainerNode(),
 			args.index));
 
+/* 
+		if(args.position && this._snapY){
+			if(this._snapY.type=="top"){ // Top snapping
+				args.position.y = this._snapY.y;
+			}else if(this._snapY.type=="bottom"){ // Bottom snapping
+			}else if(this._snapY.type=="middle"){ // Middle snapping
+			}
+		}
+*/
+
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y));
+			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y, this._snapX, this._snapY));
 		}
 		if(args.size || widget.isLayoutContainer){
 			// For containers, issue a resize regardless of whether an explicit size was set.

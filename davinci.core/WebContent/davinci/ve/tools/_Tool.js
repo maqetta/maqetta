@@ -62,13 +62,6 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 			box.l = box.x;
 			box.t = box.y;
 
-			/* ORIGINAL CODE
-			if(this._feedback.parentNode != containerNode){
-				containerNode.appendChild(this._feedback);
-			}
-			dojo.marginBox(this._feedback, box);
-			*/
-			/* NEW CODE START */
 			var domNode = widget.domNode;
 			var parentNode = domNode.parentNode;
 			for(var index=0;index<parentNode.children.length;index++){
@@ -83,7 +76,6 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 			/*FIXME: Need to get z-index from computed style instead */
 			this._feedback.style.zIndex = domNode.style.zIndex;
 			parentNode.insertBefore(this._feedback,domNode.nextSibling);
-			/* NEW CODE END */
 			
 			this._target = widget;
 		}else{
@@ -114,8 +106,8 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		widget_position.y += (dj_margin_box.t - dj_position_scroll.y);
 		
 		//FIXME: Make this a preference. Also, add a preference for snapping in general.
-		
 		var hitradius=5;
+		
 		var currentDeltaX = this._snapX ? this._snapX.delta : hitradius+1;
 		var currentDeltaY = this._snapY ? this._snapY.delta : hitradius+1;
 		
@@ -182,12 +174,102 @@ console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+cur
 			this._snapLinesDiv = dojo.create('div',
 					{'class':'snaplines',style:'position:absolute;z-index:1001;'}, 
 					containerNode);
-			this._snapLinesDiv.style.left='10px';
-			this._snapLinesDiv.style.top='10px';
-			this._snapLinesDiv.style.width='100px';
-			this._snapLinesDiv.style.height='50px';
-			this._snapLinesDiv.style.backgroundColor='pink';
+			this._snapLinesDivWidgetX = dojo.create('div',
+					{'class':'snaplinesWidgetX',style:'position:absolute;'}, 
+					this._snapLinesDiv);
+			this._snapLinesDivAlignX = dojo.create('div',
+					{'class':'snaplinesAlignX',style:'position:absolute;'}, 
+					this._snapLinesDiv);
+			this._snapLinesDivWidgetY = dojo.create('div',
+					{'class':'snaplinesWidgetY',style:'position:absolute;'}, 
+					this._snapLinesDiv);
+			this._snapLinesDivAlignY = dojo.create('div',
+					{'class':'snaplinesAlignY',style:'position:absolute;'}, 
+					this._snapLinesDiv);
+			this._snapLinesDivWidgetX.style.left='5px';
+			this._snapLinesDivWidgetX.style.top='5px';
+			this._snapLinesDivWidgetX.style.width='10px';
+			this._snapLinesDivWidgetX.style.height='5px';
+			this._snapLinesDivWidgetX.style.backgroundColor='pink';
+			this._snapLinesDivWidgetX.style.opacity='.1';
 		}
+		this._snapLinesDiv.style.display="block";
+		var box;
+		function snapSetup(context,widget,widgetDiv,alignDiv){
+			widgetDiv.style.display='block';
+			alignDiv.style.display='block';		
+			var dj = context.getDojo();
+			box = dj._getMarginBox(widget.domNode);
+			box.r = box.l + box.w;
+			box.b = box.t + box.h;
+			box.c = box.l + box.w/2;
+			box.m = box.t + box.h/2;
+			widgetDiv.style.left = box.l+'px';
+			widgetDiv.style.top = box.t+'px';
+			widgetDiv.style.width = box.w+'px';
+			widgetDiv.style.height = box.h+'px';
+			//FIXME: Put into stylesheet
+			widgetDiv.style.backgroundColor='rgba(255,0,255,.05)';
+		}
+		if(this._snapX){
+			snapSetup(this._context,this._snapX.widget,this._snapLinesDivWidgetX,this._snapLinesDivAlignX);
+			var t,h;
+			if(box.t<position.y){
+				t = box.t;
+				h = position.y - box.t;
+			}else{
+				t = position.y;
+				h = box.b - position.y;
+			}
+			if(this._snapX.type=="left"){
+				this._snapLinesDivAlignX.style.left = box.l+'px';
+			}else if(this._snapX.type=="center"){
+				this._snapLinesDivAlignX.style.left = box.c+'px';
+			}else{	// "right"
+				this._snapLinesDivAlignX.style.left = box.r+'px';
+			}
+			this._snapLinesDivAlignX.style.top = t+'px';
+			this._snapLinesDivAlignX.style.width = '1px';
+			this._snapLinesDivAlignX.style.height = h+'px';
+			//FIXME: Put into stylesheet
+			this._snapLinesDivAlignX.style.backgroundColor='rgba(255,0,255,.75)';
+		}else{
+			this._snapLinesDivWidgetX.style.display='none';
+			this._snapLinesDivAlignX.style.display='none';
+		}
+		if(this._snapY){
+			snapSetup(this._context,this._snapY.widget,this._snapLinesDivWidgetY,this._snapLinesDivAlignY);
+			var l,w;
+			if(box.l<position.x){
+				l = box.l;
+				w = position.x - box.l;
+			}else{
+				l = position.x;
+				w = box.r - position.x;
+			}
+			if(this._snapY.type=="top"){
+				this._snapLinesDivAlignY.style.top = box.t+'px';
+			}else if(this._snapY.type=="middle"){
+				this._snapLinesDivAlignY.style.top = box.m+'px';
+			}else{	// "bottom"
+				this._snapLinesDivAlignY.style.top = box.b+'px';
+			}
+			this._snapLinesDivAlignY.style.left = l+'px';
+			this._snapLinesDivAlignY.style.height = '1px';
+			this._snapLinesDivAlignY.style.width = w+'px';
+			//FIXME: Put into stylesheet
+			this._snapLinesDivAlignY.style.backgroundColor='rgba(255,0,255,.75)';
+		}else{
+			this._snapLinesDivWidgetX.style.display='none';
+			this._snapLinesDivAlignX.style.display='none';
+		}
+	},
+	
+	clearSnapLines: function(){
+		if(this._snapLinesDiv){
+			this._snapLinesDiv.style.display="none";
+		}
+		this._snapX = this._snapY = null;
 	}
 
 });

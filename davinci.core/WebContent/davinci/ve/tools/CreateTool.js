@@ -146,6 +146,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			// unknown creation error that we properly unset the active tool,
 			// in order to avoid drag/drop issues.
 			this._context.setActiveTool(null);
+			this.clearSnapLines();
 		}
 	},
 
@@ -253,16 +254,6 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		command.add(new davinci.ve.commands.AddCommand(widget,
 			args.parent || this._context.getContainerNode(),
 			args.index));
-
-/* 
-		if(args.position && this._snapY){
-			if(this._snapY.type=="top"){ // Top snapping
-				args.position.y = this._snapY.y;
-			}else if(this._snapY.type=="bottom"){ // Bottom snapping
-			}else if(this._snapY.type=="middle"){ // Middle snapping
-			}
-		}
-*/
 
 		if(args.position){
 			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y, this._snapX, this._snapY));

@@ -129,14 +129,14 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		var _this = this;
 		function snapX(type,x,delta){
 			if(delta<currentDeltaX){
-console.log('snapping. type='+type+',x='+x+',delta='+delta+',currentDeltaX='+currentDeltaX);
+//console.log('snapping. type='+type+',x='+x+',delta='+delta+',currentDeltaX='+currentDeltaX);
 				_this._snapX = {type:type, x:x, widget:widget, delta:delta};
 				currentDeltaX = delta;
 			}
 		}
 		function snapY(type,y,delta){
 			if(delta<currentDeltaY){
-console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+currentDeltaY);
+//console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+currentDeltaY);
 				_this._snapY = {type:type, y:y, widget:widget, delta:delta};
 				currentDeltaY = delta;
 			}
@@ -151,13 +151,16 @@ console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+cur
 	},
 	
 	_findSnapOpportunitiesTop: function(){
-		this._snapX = null;
-		this._snapY = null;
 		dojo.forEach(this._context.getTopWidgets(), this._findSnapOpportunities, this);
 	},
 	
 	findSnapPoints: function(){
-		this._findSnapOpportunitiesTop();
+		this._snapX = null;
+		this._snapY = null;
+		var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+		if(editorPrefs.snap){
+			this._findSnapOpportunitiesTop();
+		}
 	},
 	
 	updateSnapLines: function(event){
@@ -260,8 +263,8 @@ console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+cur
 			//FIXME: Put into stylesheet
 			this._snapLinesDivAlignY.style.backgroundColor='rgba(255,0,255,.75)';
 		}else{
-			this._snapLinesDivWidgetX.style.display='none';
-			this._snapLinesDivAlignX.style.display='none';
+			this._snapLinesDivWidgetY.style.display='none';
+			this._snapLinesDivAlignY.style.display='none';
 		}
 	},
 	

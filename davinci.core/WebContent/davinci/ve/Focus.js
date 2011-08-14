@@ -86,12 +86,16 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		b.t = box.t;
 
 		dojo.style(this.domNode, {left: b.l + "px", top: b.t + "px"});
-		var snapBox = {l:b.l, t:b.t, w:0, h:0};
-		if(this._box && this._box.w && this._box.h){
-			snapBox.w = this._box.w;
-			snapBox.h = this._box.h;
+		if(this._mover){
+			var snapBox = {l:b.l, t:b.t, w:0, h:0};
+			if(this._box && this._box.w && this._box.h){
+				snapBox.w = this._box.w;
+				snapBox.h = this._box.h;
+			}
+			davinci.ve.Snap.updateSnapLines(this._context, snapBox);
+		}else{
+			davinci.ve.Snap.clearSnapLines(this._context);
 		}
-		davinci.ve.Snap.updateSnapLines(this._context, snapBox);
 		if(this._contexDiv){
 			var x = b.w + 10;
 			this._contexDiv.style.left = x + 'px';

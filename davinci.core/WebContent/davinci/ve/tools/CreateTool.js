@@ -6,6 +6,7 @@ dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
+dojo.require("davinci.ve.Snap");
 
 
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
@@ -56,7 +57,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 		}else{
 			this._setTarget(event.target);
-			this.updateSnapLines(event);		}
+			davinci.ve.Snap.updateSnapLines(this._context, event);
+		}
 	},
 	
 	onKeyDown: function(event){
@@ -146,7 +148,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			// unknown creation error that we properly unset the active tool,
 			// in order to avoid drag/drop issues.
 			this._context.setActiveTool(null);
-			this.clearSnapLines();
+			davinci.ve.Snap.clearSnapLines(this._context);
 		}
 	},
 
@@ -229,17 +231,6 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if(!this._loadType(this._data)){
 			return;
 		}
-		/* OLD CODE
-		if(args.position && this._snapOpportunities && this._snapOpportunities.length>0){
-			for(var i=0;i<this._snapOpportunities.length;i++){
-				var snapOpp = this._snapOpportunities[i];
-				if(snapOpp.type=="top"){
-					args.position.y = snapOpp.y; // Top snapping
-				}
-			}
-		}
-		*/
-		
 
 		var widget;
 		dojo.withDoc(this._context.getDocument(), function(){
@@ -256,7 +247,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			args.index));
 
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y, this._snapX, this._snapY));
+			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y, this._context._snapX, this._context._snapY));
 		}
 		if(args.size || widget.isLayoutContainer){
 			// For containers, issue a resize regardless of whether an explicit size was set.

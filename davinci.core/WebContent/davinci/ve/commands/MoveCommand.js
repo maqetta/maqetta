@@ -8,6 +8,7 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 
 	constructor: function(widget, left, top, snapX, snapY){
 		this._id = (widget ? widget.id : undefined);
+		this._context = widget.getContext();
 		this._newBox = {l: left, t: top};
 		this._snapX = snapX;
 		this._snapY = snapY;
@@ -25,6 +26,7 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		if(!node){
 			return;
 		}
+		var context = this._context;
 
 		if(!this._oldBox){
 			var box = widget.getMarginBox();
@@ -35,24 +37,24 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		this._state = davinci.ve.states.getState();
 		var isNormalState = davinci.ve.states.isNormalState(this._state);
 
-		if(this._snapX){
+		if(context && context._snapX){
 			var w = this._oldBox.w;
-			if(this._snapX.type=="left"){
-				this._newBox.l = this._snapX.x;
-			}else if(w && this._snapX.type=="right"){
-				this._newBox.l = this._snapX.x - w;
-			}else if(w && this._snapX.type=="center"){
-				this._newBox.l = this._snapX.x - w/2;
+			if(context._snapX.type=="left"){
+				this._newBox.l = context._snapX.x;
+			}else if(w && context._snapX.type=="right"){
+				this._newBox.l = context._snapX.x - w;
+			}else if(w && context._snapX.type=="center"){
+				this._newBox.l = context._snapX.x - w/2;
 			}
 		}
-		if(this._snapY){
+		if(context && context._snapY){
 			var h = this._oldBox.h;
-			if(this._snapY.type=="top"){
-				this._newBox.t = this._snapY.y;
-			}else if(h && this._snapY.type=="bottom"){
-				this._newBox.t = this._snapY.y - h;
-			}else if(h && this._snapY.type=="middle"){
-				this._newBox.t = this._snapY.y - h/2;
+			if(context._snapY.type=="top"){
+				this._newBox.t = context._snapY.y;
+			}else if(h && context._snapY.type=="bottom"){
+				this._newBox.t = context._snapY.y - h;
+			}else if(h && context._snapY.type=="middle"){
+				this._newBox.t = context._snapY.y - h/2;
 			}
 		}
 

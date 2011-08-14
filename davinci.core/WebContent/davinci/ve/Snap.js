@@ -11,7 +11,11 @@ davinci.ve.Snap = function() {
 	return /** @scope davinci.ve.Snap */ {
 		_findSnapOpportunities:function(widget){
 			var context = this;
+			/*OLD CODE
 			var position = context._lastSnapPosition;
+			*/
+			var snapBox = context._lastSnapBox;
+			
 			var node = widget.domNode;
 			var dj = context.getDojo();
 			// Do a little extra work because Dojo doesn't have API to give margin box with scroll.
@@ -31,18 +35,28 @@ davinci.ve.Snap = function() {
 			var widgetLeft = widget_position.x;
 			var widgetCenter = widget_position.x + (dj_margin_box.w/2);
 			var widgetRight = widget_position.x + dj_margin_box.w;
+			/*OLD CODE
 			var deltaLeft = Math.abs(widgetLeft-position.x);
 			var deltaCenter = Math.abs(widgetCenter-position.x);
 			var deltaRight = Math.abs(widgetRight-position.x);
+			*/
+			var deltaLeft = Math.abs(widgetLeft-snapBox.l);
+			var deltaCenter = Math.abs(widgetCenter-snapBox.c);
+			var deltaRight = Math.abs(widgetRight-snapBox.r);
 			
 			var widgetTop = widget_position.y;
 			var widgetMiddle = widget_position.y + (dj_margin_box.h/2);
 			var widgetBottom = widget_position.y + dj_margin_box.h;
+			/*
 			var deltaTop = Math.abs(widgetTop-position.y);
 			var deltaMiddle = Math.abs(widgetMiddle-position.y);
 			var deltaBottom = Math.abs(widgetBottom-position.y);
-			//console.log('widgetBottom='+widgetBottom+',deltaBottom='+deltaBottom+',currentDeltaY='+currentDeltaY);
-			//console.log('widgetMiddle='+widgetMiddle+',deltaMiddle='+deltaMiddle+',currentDeltaY='+currentDeltaY);
+			*/
+			var deltaTop = Math.abs(widgetTop-snapBox.t);
+			var deltaMiddle = Math.abs(widgetMiddle-snapBox.m);
+			var deltaBottom = Math.abs(widgetBottom-snapBox.b);
+console.log('widgetBottom='+widgetBottom+',deltaBottom='+deltaBottom+',currentDeltaY='+currentDeltaY);
+console.log('widgetMiddle='+widgetMiddle+',deltaMiddle='+deltaMiddle+',currentDeltaY='+currentDeltaY);
 			function snapX(type,x,delta){
 				if(delta<currentDeltaX){
 console.log('snapping. type='+type+',x='+x+',delta='+delta+',currentDeltaX='+currentDeltaX);
@@ -79,14 +93,30 @@ console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+cur
 			}
 		},
 		
-		updateSnapLines:function(context, event){
-			var position = {x:event.pageX, y:event.pageY};
+		updateSnapLines:function(context, rect){
+			//FIXME: Probably remove position and context._lastSnapPosition
+			var position = {x:rect.l, y:rect.t};
 			if(context._lastSnapPosition){
 				if(context._lastSnapPosition.x == position.x && context._lastSnapPosition.y == position.y){
 					return;
 				}
 			}
 			context._lastSnapPosition = position;
+			if(context._lastSnapBox){
+				if(context._lastSnapBox.l == rect.l &&
+					context._lastSnapBox.t == rect.t &&
+					context._lastSnapBox.w == rect.w &&
+					context._lastSnapBox.h == rect.h){
+					return;
+				}
+			}
+			snapBox={
+				l:rect.l, t:rect.t, w:rect.w, h:rect.h,
+				c:rect.l+rect.w/2, r:rect.l+rect.w,
+				m:rect.t+rect.h/2, b:rect.t+rect.h
+			};
+			context._lastSnapBox = snapBox;
+
 			var containerNode = context.getContainerNode();
 			davinci.ve.Snap.findSnapPoints(context);
 			if(!context._snapLinesDiv){
@@ -132,12 +162,21 @@ console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+cur
 			if(context._snapX){
 				snapSetup(context,context._snapX.widget,context._snapLinesDivWidgetX,context._snapLinesDivAlignX);
 				var t,h;
+				/*OLD CODE
 				if(box.t<position.y){
 					t = box.t;
 					h = position.y - box.t;
 				}else{
 					t = position.y;
 					h = box.b - position.y;
+				}
+				*/
+				if(box.t<snapBox.t){
+					t = box.t;
+					h = snapBox.t - box.t;
+				}else{
+					t = snapBox.t;
+					h = box.b - snapBox.t;
 				}
 				if(context._snapX.type=="left"){
 					context._snapLinesDivAlignX.style.left = box.l+'px';
@@ -158,12 +197,21 @@ console.log('snapping. type='+type+',y='+y+',delta='+delta+',currentDeltaY='+cur
 			if(context._snapY){
 				snapSetup(context,context._snapY.widget,context._snapLinesDivWidgetY,context._snapLinesDivAlignY);
 				var l,w;
+				/*OLD CODE
 				if(box.l<position.x){
 					l = box.l;
 					w = position.x - box.l;
 				}else{
 					l = position.x;
 					w = box.r - position.x;
+				}
+				*/
+				if(box.l<snapBox.l){
+					l = box.l;
+					w = snapBox.l - box.l;
+				}else{
+					l = snapBox.l;
+					w = box.r - snapBox.l;
 				}
 				if(context._snapY.type=="top"){
 					context._snapLinesDivAlignY.style.top = box.t+'px';

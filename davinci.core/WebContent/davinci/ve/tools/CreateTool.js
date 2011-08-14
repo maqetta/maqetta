@@ -57,7 +57,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 		}else{
 			this._setTarget(event.target);
-			davinci.ve.Snap.updateSnapLines(this._context, event);
+			davinci.ve.Snap.updateSnapLines(this._context, {l:event.pageX,t:event.pageY,w:0,h:0});
 		}
 	},
 	

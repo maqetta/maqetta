@@ -6,12 +6,17 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 
 	name: "move",
 
-	constructor: function(widget, left, top, snapX, snapY){
+	constructor: function(widget, left, top, commandForXYDeltas){
 		this._id = (widget ? widget.id : undefined);
 		this._context = widget.getContext();
 		this._newBox = {l: left, t: top};
-		this._snapX = snapX;
-		this._snapY = snapY;
+		// Because snapping will shift the first widget in a hard-to-predict
+		// way, MoveCommand will store the actual shift amount on each command
+		// object upon computing the actual final shift amount and then store
+		// that amount on the command object. This allows multiple selection moves
+		// to work with snapping such that selected widgets 2-N are shifted
+		// by the same amount as the first widget.
+		this._commandForXYDeltas = commandForXYDeltas;
 	},
 
 	execute: function(){
@@ -37,26 +42,33 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		this._state = davinci.ve.states.getState();
 		var isNormalState = davinci.ve.states.isNormalState(this._state);
 
-		if(context && context._snapX){
-			var w = this._oldBox.w;
-			if(context._snapX.type=="left"){
-				this._newBox.l = context._snapX.x;
-			}else if(w && context._snapX.type=="right"){
-				this._newBox.l = context._snapX.x - w;
-			}else if(w && context._snapX.type=="center"){
-				this._newBox.l = context._snapX.x - w/2;
+		if(this._commandForXYDeltas){
+			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
+			this._newBox.t = this._oldBox.t + this._commandForXYDeltas._deltaY;
+		}else{
+			if(context && context._snapX){
+				var w = this._oldBox.w;
+				if(context._snapX.type=="left"){
+					this._newBox.l = context._snapX.x;
+				}else if(w && context._snapX.type=="right"){
+					this._newBox.l = context._snapX.x - w;
+				}else if(w && context._snapX.type=="center"){
+					this._newBox.l = context._snapX.x - w/2;
+				}
+			}
+			if(context && context._snapY){
+				var h = this._oldBox.h;
+				if(context._snapY.type=="top"){
+					this._newBox.t = context._snapY.y;
+				}else if(h && context._snapY.type=="bottom"){
+					this._newBox.t = context._snapY.y - h;
+				}else if(h && context._snapY.type=="middle"){
+					this._newBox.t = context._snapY.y - h/2;
+				}
 			}
 		}
-		if(context && context._snapY){
-			var h = this._oldBox.h;
-			if(context._snapY.type=="top"){
-				this._newBox.t = context._snapY.y;
-			}else if(h && context._snapY.type=="bottom"){
-				this._newBox.t = context._snapY.y - h;
-			}else if(h && context._snapY.type=="middle"){
-				this._newBox.t = context._snapY.y - h/2;
-			}
-		}
+		this._deltaX = this._newBox.l - this._oldBox.l;
+		this._deltaY = this._newBox.t - this._oldBox.t;
 
 		var cleanValues = { left: this._newBox.l, top: this._newBox.t, position: "absolute"};
 		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);	

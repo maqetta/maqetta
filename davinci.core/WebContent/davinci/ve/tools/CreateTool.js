@@ -247,7 +247,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			args.index));
 
 		if(args.position){
-			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y, this._context._snapX, this._context._snapY));
+			command.add(new davinci.ve.commands.MoveCommand(widget, args.position.x, args.position.y));
 		}
 		if(args.size || widget.isLayoutContainer){
 			// For containers, issue a resize regardless of whether an explicit size was set.

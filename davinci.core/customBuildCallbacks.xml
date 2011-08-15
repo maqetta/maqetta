@@ -81,7 +81,6 @@
         </loadfile>
 		<filter token="revision" value="${git.log}"/>
         <copy file="${rep.info.file}" tofile="${rep.info.file}.tmp" filtering="true"/>
-        <delete file="${rep.info.file}"/>
         <tstamp>
             <format property="maqBuildTime" timezone="GMT" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         </tstamp>
@@ -257,6 +256,9 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 		
+        <echo message="Inserting git describe information"/>
+        <antcall target="update.revisions"/>
+        <antcall target="update.repositoryinfo.js"/>
 		
     	<condition property="dojo.build.exists">
     		<available file="${dojo.cache.directory}" type="dir"/>
@@ -264,9 +266,6 @@
 		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build"/>
 		<antcall target="copy.dojo"/>
-		<echo message="Inserting git describe information"/>
-		<antcall target="update.revisions"/>
-		<antcall target="update.repositoryinfo.js"/>
 
 		
 	</target>

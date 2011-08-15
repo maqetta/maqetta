@@ -45,6 +45,7 @@
 		"noFilesSelected":"No files selected yet",
 		"dueDateIncorrect":"Due Date incorrect",
 		"titleRequired":"Title required",
+		"publishSuccessful":"Publish Successfully",
 		"inviteSucessful":"You have successfully invited the reviewers!",
 		"draftSaved":"Saved as draft successfully!",
 		"inviteFailed":"Failed to send out the invitation",

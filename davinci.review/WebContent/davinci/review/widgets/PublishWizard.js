@@ -698,26 +698,30 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
             	});
             	hasToaster = true;
         	}
+        	if(!this.invitationDialog){
+        		this.invitationDialog = new dijit.Dialog();
+    		}
             if (result=="OK"){
             	if(!value){
-            		dojo.publish("/davinci/review/resourceChanged", [{message:langObj.inviteSucessful, type:"message"},"create"]);
+            		// dojo.publish("/davinci/review/resourceChanged", [{message:langObj.inviteSucessful, type:"message"},"create"]);
+        			var dialogContent = langObj.inviteSucessful + "<div class='mailButton'><button id=\"_mailSentButton\" dojoType='dijit.form.Button'>" + dijitLangObj.buttonOk + "</button></div>";
+        			this.invitationDialog.set("title", langObj.publishSuccessful);
+        			this.invitationDialog.set("content", dialogContent);
+        			this.invitationDialog.connect(dijit.byId("_mailSentButton"), "onClick", function(){
+	        			this.hide();
+	        		});
+            		this.invitationDialog.show();
             	}else{
             		dojo.publish("/davinci/review/resourceChanged", [{message:langObj.draftSaved, type:"message"},"create"]);
             	}
             }else{
             	var dialogContent = dojo.string.substitute(warningString, {htmlContent: result, inviteNotSent:langObj.inviteNotSent, mailFailureMsg:langObj.mailFailureMsg, buttonOk:dijitLangObj.buttonOk});
             	dojo.publish("/davinci/review/resourceChanged", [{message:langObj.inviteFailed, type:"warning"},"create"]);
-            	if(!this.invitationDialog){
-            		this.invitationDialog = new dijit.Dialog({
-            			title: langObj.warning,
-            			content: dialogContent
-            		});
-            		this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function(){
-            			this.hide();
-            		});
-            	}else{
-            		this.invitationDialog.content = dialogContent;
-            	}
+        		this.invitationDialog.set("title", langObj.warning);
+        		this.invitationDialog.set("content", dialogContent);
+        		this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function(){
+	        			this.hide();
+	        	});
             	this.invitationDialog.show();
             }
 		});

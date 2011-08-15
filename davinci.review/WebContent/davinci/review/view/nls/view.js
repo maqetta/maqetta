@@ -6,6 +6,8 @@
 		"filter":"Type to filter...",
 		
 		//CommentView.js
-		"allReviewers":"All Reviewers"
+		"allReviewers":"All Reviewers",
+		"addComment": "Add comment",
+		"showReviewer":"Show review participants"
 
 })

@@ -10,7 +10,7 @@
 		"commaSeparatedData":"Comma separated data",
 		"dataFromWorkspace":"Data file from workspace",
 		"dataFromJsonpURL": "Data from URL (JSONP)",
-		"callbackParameter": "Callback parameter",
+		"callbackParameter": "Callback ",
 			
 		//mobile/EdgeToEdgeDataListInput.js
 		"edgeToEdgeFormat":"list label, transition_view_name",

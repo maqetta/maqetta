@@ -3,7 +3,7 @@ define(["dojo", "dojox", "dojo/data/ItemFileReadStore" /*"dojo/data/util/simpleF
 dojo.declare("dojox.data.ItemJsonpReadStore", dojo.data.ItemFileReadStore /*null*/,{
 
 	constructor: function(/* Object */ keywordParameters){
-debugger;
+
 /*		if(keywordParameters.jsonpcallback == undefined){
 			throw new Error("dojox.data.ItemJsonpReadStore:  Missing required paramater 'jsonpCallback' ");
 		}
@@ -23,7 +23,7 @@ debugger;
 							/* Function */ errorCallback){
 		//	summary:
 		//		See dojo.data.util.simpleFetch.fetch()
-		debugger;
+
 		if (!this._jsonpCallback) {
 			this.inherited(arguments);
 		}else {
@@ -140,7 +140,6 @@ debugger;
 								}
 		                    },
 		                    error: function(error) {
-		                    	debugger;
 		                        console.error( "An unexpected error occurred: " + error);
 		                        self._loadInProgress = false;
 								errorCallback(error, keywordArgs);
@@ -237,7 +236,6 @@ debugger;
 								}
 		                    },
 		                    error: function(error) {
-		                    	debugger;
 		                    	self._loadInProgress = false;
 								if(keywordArgs.onError){
 									var scope = keywordArgs.scope?keywordArgs.scope:dojo.global;

@@ -123,7 +123,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		}
 
 		// When a single widget at the top-level is 100%x100%, right/bottom edge must stay on screen
-		if(widget.getParent().type == "html.body"){
+		if(widget && widget.getParent().type == "html.body"){
 			var container = this._context.getContainerNode();
 			if(widget.domNode.style.height == "100%"){
 				b.h = container.scrollHeight - this.size * 2;

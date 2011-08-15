@@ -206,9 +206,9 @@
 		<copy todir="${target.folder}/WebContent/release/dojo/workspace/maqetta">
 			<fileset dir="${target.folder}/WebContent/workspace/maqetta"/>
 		</copy>
-	<!--
+	
 		<mkdir dir="${dojo.cache.directory}"/>
-		-->
+		
 		<copy todir="${dojo.cache.directory}">
 				<fileset dir="${target.folder}/WebContent/workspace/maqetta"/>
 		</copy>

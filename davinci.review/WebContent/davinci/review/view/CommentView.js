@@ -651,6 +651,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 			showLabel: false,
 			disabled: true,
 			iconClass: "davinciReviewToolbarAdd",
+			title: langObj.addComment,
 			onClick: dojo.hitch(this,"_showCommentForm")
 		});
 		
@@ -689,6 +690,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 			showLabel: false,
 			disabled: true,
 			iconClass: "davinciReviewToolbarReviewers",
+			title: langObj.showReviewer,
 			dropDown: reviewerList
 		});
 		this.reviewerList = reviewerList;

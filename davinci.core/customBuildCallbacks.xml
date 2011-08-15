@@ -223,7 +223,7 @@
 			            <include name="preview/"/>
 			    		<include name="workspace/"/>
 					</fileset>
-				</copy>
+		</copy>
 	</target>
 	
 	<target name="copy.dojo">
@@ -246,7 +246,7 @@
 			            <include name="preview/"/>
 			    		<include name="workspace/"/>
 					</fileset>
-				</copy>
+		</copy>
 	</target>
 	
 	<!-- ===================================================================== -->
@@ -261,7 +261,7 @@
     	<condition property="dojo.build.exists">
     		<available file="${dojo.cache.directory}" type="dir"/>
     	</condition>
-		
+		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build"/>
 		<antcall target="copy.dojo"/>
 		<echo message="Inserting git describe information"/>

@@ -226,7 +226,7 @@
 		</copy>
 	</target>
 	
-	<target name="copy.dojo">
+	<target name="copy.dojo" if="run.dojo.build">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>

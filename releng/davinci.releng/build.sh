@@ -6,9 +6,8 @@
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
+
 set -x
-# run dojo build by default
-[ -z ${DOJO_BUILD} ] || DOJO_BUILD=true
 
 if [ -z ${ECLIPSE_HOME} ]
 then
@@ -16,6 +15,7 @@ then
 else
 	export baseLocation=${ECLIPSE_HOME}
 fi
+
 #
 # GitHub read-only URL for Maqetta repository. This should not change.
 #
@@ -57,33 +57,13 @@ fi
 # Note: See ${baseLocation}/plugins/org.eclipse.equinox.launcher.xxx.yyy.xxx/
 #       to determine your settings, they should be similar to 'cocoa.macosx.x86_64'
 #
-if [ -n ${MAQETTA_WS} ]
-then
-    export myWS=${MAQETTA_WS}
-else
-    export myWS="cocoa"
-fi
-if [ -n ${MAQETTA_OS} ]
-then
-    export myOS=${MAQETTA_OS}
-else
-    export myOS="macosx"
-fi
-if [ -n ${MAQETTA_ARCH} ]
-then
-    export myArch=${MAQETTA_ARCH}
-else
-    export myArch="x86_64"
-fi
+export myWS=${MAQETTA_WS:=cocoa}
+export myOS=${MAQETTA_OS:=macosx}
+export myArch=${MAQETTA_ARCH:=x86_64}
 
 #
 # Set deployment type, default to "external"
 #
-
-if [ -z ${MAQETTA_DEPLOYMENT} ]
-then
-    MAQETTA_DEPLOYMENT="external"
-fi
 
 #
 # save off the current directory
@@ -175,9 +155,9 @@ cd ${MAQETTA_BUILD_DIR}
 # Run the Ant buildAll script from the davinci.releng project.
 #
 export buildDirectory=${MAQETTA_BUILD_DIR}
-echo "Starting ${MAQETTA_DEPLOYMENT} build...."
+echo "Starting ${MAQETTA_DEPLOYMENT:=external} build...."
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${DOJO_BUILD} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${DOJO_BUILD:=true} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 #
 # save exit code for later

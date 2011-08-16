@@ -539,24 +539,22 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 			context.setTheme(this.theme);
 			this._themeFileContent = this.resourceFile.getText(); // get the content for use later when setting dirty. Timing issue
 
-			this._subscriptions.push(dojo.subscribe("/davinci/ui/styleValuesChange", dojo.hitch(this, this._propertiesChange)));
-			this._subscriptions.push(dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._widgetStateChanged) ));
-			this._subscriptions.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",  dojo.hitch(this, this._subwidgetSelectionChanged)));
-			dojo.connect(this._visualEditor, "onSelectionChange",this, "onSelectionChange");
-			
+			var subs = this._subscriptions;
+			subs.push(dojo.subscribe("/davinci/ui/styleValuesChange", this,
+			        '_propertiesChange'));
+			subs.push(dojo.subscribe("/davinci/states/state/changed", this,
+			        '_widgetStateChanged'));
+			subs.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",
+			        this, '_subwidgetSelectionChanged'));
+			dojo.connect(this._visualEditor, "onSelectionChange", this,
+			        "onSelectionChange");
 		}catch(e){
-			
 			alert("error loading:" + filename + e);
 			//delete this.tabs;
 		}
-
 	},
-	
-	
-
 
 	getDefaultContent : function (){
-		
 		/* a template file should be specified in the extension definition instead
 		 * 
 		 */
@@ -567,8 +565,6 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 
 	},
 	getFileEditors : function(){
-
-
 		function getVisitor(dirtyResources, urlResolver, results) {
 			return {
 				lookFor : dirtyResources,
@@ -631,12 +627,9 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 					}
 				return (this.lookFor.length<=0);
 				}
-			
 			};
-			
-		
-			
-		};
+		}
+
 		var cssFiles = this._getCssFiles();
 		var visitor = getVisitor(this._dirtyResource, this._URLResolver, isWorkingCopy);
 		if (cssFiles){
@@ -655,7 +648,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 	destroy : function ()	{
 		this.inherited(arguments);
 		if(this._visualEditor) this._visualEditor.destroy();
-		dojo.forEach(this._subscriptions, function(item) {
+		this._subscriptions.forEach(function(item) {
 			var topic = item[0];
 			var isStatesSubscription = topic.indexOf("/davinci/states") == 0;
 			if (isStatesSubscription) {
@@ -671,22 +664,15 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		return dojo.toJson(this.theme, true);		
 	},
 	
-
-	disableWidget: function(widget){
-	
+	disableWidget: function(widget) {
 		if (!widget) return;
 
-		var domNode = widget;
-		if (widget.domNode)
-			domNode = widget.domNode;
 		var frame = this.getContext().getDocument().getElementById("enableWidgetFocusFrame_" + widget.id); 
 		if (frame){
 			frame.parentNode.removeChild(frame);
 		}
 		//create
 		this._createFrame(widget, 'disableWidgetFocusFrame_', 'disableWidgetFocusFrame');
-
-
 	},
 	
 	_createFrame: function(widget, id, className){

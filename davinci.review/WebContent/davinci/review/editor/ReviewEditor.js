@@ -59,7 +59,6 @@ dojo.declare("davinci.review.editor.ReviewEditor", davinci.ui.ModelEditor, {
     
 		this.context = new davinci.review.editor.Context({
 			containerNode: this._designCP.domNode,
-			immediatePropertyUpdates: true,
 			baseURL : baseUrl,
 			fileName : this.fileName,
 			resourceFile: this.resourceFile,

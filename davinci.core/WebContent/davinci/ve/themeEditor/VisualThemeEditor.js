@@ -40,8 +40,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			visualEditor:this,
 			containerNode: this.domNode,
 			baseURL : resource.getURL(),
-			relativePrefix:relativePrefix,
-			immediatePropertyUpdates: true
+			relativePrefix:relativePrefix
 		});
 	
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");

@@ -7,14 +7,15 @@
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
 
-set -x
-
 if [ -z ${ECLIPSE_HOME} ]
 then
 	export baseLocation="/path/to/eclipse"
 else
 	export baseLocation=${ECLIPSE_HOME}
 fi
+
+# run dojo build by default
+[ "${MAQETTA_DOJO_BUILD}" ] || MAQETTA_DOJO_BUILD=true
 
 #
 # GitHub read-only URL for Maqetta repository. This should not change.
@@ -42,15 +43,7 @@ echo "Using ${MAQETTA_BUILD_DIR} for build out directory.."
 # Directory containing build.xml (this should not have to be changed in most cases).
 # No trailing slash.
 #
-if [ -n ${maqettaCode} ]
-then
-    export relEngDir="${maqettaCode}/releng/davinci.releng"
-else
-    export relEngDir="${MAQETTA_BUILD_DIR}/repository/maqetta/releng/davinci.releng"
-fi
-
-
-
+export relEngDir="${MAQETTA_BUILD_DIR}/repository/maqetta/releng/davinci.releng"
 #
 # Windowing System, Operating System and processor Architecture settings
 #
@@ -157,7 +150,7 @@ cd ${MAQETTA_BUILD_DIR}
 export buildDirectory=${MAQETTA_BUILD_DIR}
 echo "Starting ${MAQETTA_DEPLOYMENT:=external} build...."
 launcher="`ls ${baseLocation}/plugins/org.eclipse.equinox.launcher_*.jar`"
-java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${DOJO_BUILD:=true} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
+java -Ddeployment-type=${MAQETTA_DEPLOYMENT} -DdojoBuild=${MAQETTA_DOJO_BUILD} -jar ${launcher} -application org.eclipse.ant.core.antRunner -buildfile ${relEngDir}/buildAll.xml -consoleLog
 
 #
 # save exit code for later

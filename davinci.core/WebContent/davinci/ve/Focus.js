@@ -32,7 +32,7 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 
 		this._frames = [];
 		for(var i = 0; i < 4; i++){
-			var style = {position: "absolute", opacity: 0.5, overflow: "hidden", cursor: "move"};
+			var style = {position: "absolute", opacity: 0.5, overflow: "hidden", cursor: "move"}; // move to CSS
 			dojo.mixin(style, i < 2 ? {width: this.size + "px", height: this.size * 2 + "px"} : {height: this.size + "px"});
 			var frame = dojo.create("div", {"class": "editFocusFrame", style: style}, this.domNode);
 			this._frames.push(frame);
@@ -394,10 +394,9 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		contexDiv.style.display = "none";
 		this._contexDiv = contexDiv;
 		this.domNode.appendChild(contexDiv);
-		var span = this._contexDiv.firstElementChild;
-		var pMenu;
-		var menuId = this._context._themeName + '_subwidgetmenu';
-		pMenu = dijit.byId(menuId);
+		var span = this._contexDiv.firstElementChild,
+		    menuId = this._context._themeName + '_subwidgetmenu',
+		    pMenu = dijit.byId(menuId);
 		if (pMenu) {
 			pMenu.destroyRecursive(false);
 		}
@@ -405,8 +404,8 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		// if we don't when we create the subwidget menu dojo/resources/blank.gif can't be found 
 		// and we have no check boxes on FF
 		var localDijit = this._context.getDijit();
-        //pMenu = new dijit.Menu({ id:menuId  },span);
-        pMenu = new localDijit.Menu({ id:menuId  },span);
+		//pMenu = new dijit.Menu({ id:menuId  },span);
+		pMenu = new localDijit.Menu({id:menuId}, span);
 
 		var widget = this._context._selectedWidget;
 		this._displayedWidget = widget;
@@ -420,41 +419,41 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		if(subwidgets){
 			//var item = new dijit.CheckedMenuItem({
 			var checked = false;
-			if (!widget.subwidget)
+			if (!widget.subwidget) {
 				checked = true; // no subwidget selected
+			}
 			var item = new localDijit.CheckedMenuItem({
-		        label: 'WidgetOuterContainer',
-                id: this._context._themeName + '_WidgetOuterContainer',
-                checked: checked,
-                onClick: dojo.hitch(this, "_subwidgetSelected")
-        	});
+				label: 'WidgetOuterContainer',
+				id: this._context._themeName + '_WidgetOuterContainer',
+				checked: checked,
+				onClick: dojo.hitch(this, "_subwidgetSelected")
+			});
 			pMenu.addChild(item);
 			this._currentItem = item;
 			//pMenu.addChild(new dijit.MenuSeparator());
 			for (var s in subwidgets){
 				//pMenu.addChild(new dijit.CheckedMenuItem({
-				if (widget.subwidget === s)
-					checked = true; 
-				else
-					checked = false;
+				checked = (widget.subwidget === s);
 				var menuItem = new localDijit.CheckedMenuItem({
-	                label: s,
-	                id: this._context._themeName + '_' + s,
-	                checked: checked,
-	                onClick: dojo.hitch(this, "_subwidgetSelected")
-            	})
+					label: s,
+					id: this._context._themeName + '_' + s,
+					checked: checked,
+					onClick: dojo.hitch(this, "_subwidgetSelected")
+				});
 				pMenu.addChild(menuItem);
-				if (checked)
+				if (checked) {
 					this._currentItem = menuItem;
+				}
 			}
 		}
 
-        pMenu.startup();
-        this._cm = pMenu;
-        this._updateSubwidgetListForState();
-        dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange));
-        dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState));
+		pMenu.startup();
+		this._cm = pMenu;
+		this._updateSubwidgetListForState();
+		dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",dojo.hitch(this,this._subwidgetSelectedChange));
+		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._updateSubwidgetListForState));
 	},
+
 	stopPropagation: function(e){
 		
 		//console.log('Focus:stopPropagation');
@@ -496,17 +495,17 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 			return;
 		} else {
 			if (this._currentItem) {
-            	this._currentItem.set("checked", false); // unset the one we have
+				this._currentItem.set("checked", false); // unset the one we have
 			}
 			if (e.subwidget){
 				this._currentItem = localDijit.byId(this._context._themeName + '_' + e.subwidget);
 				if (this._currentItem) {
-	            	this._currentItem.set("checked", true);
+					this._currentItem.set("checked", true);
 				}
 			} else{
 				this._currentItem = localDijit.byId(this._context._themeName + '_WidgetOuterContainer');
 				if (this._currentItem) {
-	            	this._currentItem.set("checked", true);
+					this._currentItem.set("checked", true);
 				}
 				//this._currentItem = null;
 			}
@@ -516,19 +515,19 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 	
 	_updateSubwidgetListForState: function() {
 		if (this._displayedWidget === this._context._selectedWidget) {
-			var editor = davinci.Runtime.currentEditor;
-			var themeMetadata = editor._theme;
-			var items = this._cm.getChildren();
-			for (var i=0; i<items.length; i++){
-				for (var i=0; i<items.length; i++){ 
-					var subwidget = items[i].label;
-					if (subwidget === 'WidgetOuterContainer'){
-						subwidget = null;
-					}
-					items[i].setDisabled(!themeMetadata.isStateValid(this._displayedWidget, editor._currentState, subwidget));
+			var editor = davinci.Runtime.currentEditor,
+			    themeMetadata = editor._theme;
+			this._cm.getChildren().forEach(function(child) {
+				var subwidget = child.label;
+				if (subwidget === 'WidgetOuterContainer') {
+				    subwidget = null;
 				}
-			}
-
+				child.setDisabled(
+					!themeMetadata.isStateValid(
+						this._displayedWidget,
+						editor._currentState,
+						subwidget));
+			}, this);
 		} else {
 			this._clearList();
 			this._createSubwidgetList();

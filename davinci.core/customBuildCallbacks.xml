@@ -81,7 +81,6 @@
         </loadfile>
 		<filter token="revision" value="${git.log}"/>
         <copy file="${rep.info.file}" tofile="${rep.info.file}.tmp" filtering="true"/>
-        <delete file="${rep.info.file}"/>
         <tstamp>
             <format property="maqBuildTime" timezone="GMT" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         </tstamp>
@@ -176,7 +175,7 @@
 	</target>
 	
 	
-	<target name="dojo.build" if="${run.dojo.build}" unless="${dojo.build.exists}">
+	<target name="dojo.build" if="run.dojo.build" unless="dojo.build.exists">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
@@ -223,10 +222,10 @@
 			            <include name="preview/"/>
 			    		<include name="workspace/"/>
 					</fileset>
-				</copy>
+		</copy>
 	</target>
 	
-	<target name="copy.dojo">
+	<target name="copy.dojo" if="run.dojo.build">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>
@@ -246,7 +245,7 @@
 			            <include name="preview/"/>
 			    		<include name="workspace/"/>
 					</fileset>
-				</copy>
+		</copy>
 	</target>
 	
 	<!-- ===================================================================== -->
@@ -257,16 +256,16 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 		
+        <echo message="Inserting git describe information"/>
+        <antcall target="update.revisions"/>
+        <antcall target="update.repositoryinfo.js"/>
 		
     	<condition property="dojo.build.exists">
     		<available file="${dojo.cache.directory}" type="dir"/>
     	</condition>
-		
+		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build"/>
 		<antcall target="copy.dojo"/>
-		<echo message="Inserting git describe information"/>
-		<antcall target="update.revisions"/>
-		<antcall target="update.repositoryinfo.js"/>
 
 		
 	</target>

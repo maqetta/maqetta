@@ -76,7 +76,7 @@ davinci.ve.Snap = function() {
 			context._snapX = null;
 			context._snapY = null;
 			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
-			if(editorPrefs.snap && !context.getFlowLayout()){
+			if(editorPrefs.snap){
 				davinci.ve.Snap._findSnapOpportunitiesTop(context);
 			}
 		},
@@ -109,19 +109,19 @@ davinci.ve.Snap = function() {
 			davinci.ve.Snap.findSnapPoints(context);
 			if(!context._snapLinesDiv){
 				context._snapLinesDiv = dojo.create('div',
-						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1001;'}, 
+						{'class':'snaplines',style:'position:absolute;top:0px;left:0px;z-index:1001;pointer-events:none;'}, 
 						containerNode);
 				context._snapLinesDivWidgetX = dojo.create('div',
-						{'class':'snaplinesWidgetX',style:'position:absolute;'}, 
+						{'class':'snaplinesWidgetX',style:'position:absolute;pointer-events:none;'}, 
 						context._snapLinesDiv);
 				context._snapLinesDivAlignX = dojo.create('div',
-						{'class':'snaplinesAlignX',style:'position:absolute;'}, 
+						{'class':'snaplinesAlignX',style:'position:absolute;pointer-events:none;'}, 
 						context._snapLinesDiv);
 				context._snapLinesDivWidgetY = dojo.create('div',
-						{'class':'snaplinesWidgetY',style:'position:absolute;'}, 
+						{'class':'snaplinesWidgetY',style:'position:absolute;pointer-events:none;'}, 
 						context._snapLinesDiv);
 				context._snapLinesDivAlignY = dojo.create('div',
-						{'class':'snaplinesAlignY',style:'position:absolute;'}, 
+						{'class':'snaplinesAlignY',style:'position:absolute;pointer-events:none;'}, 
 						context._snapLinesDiv);
 				context._snapLinesDivWidgetX.style.left='5px';
 				context._snapLinesDivWidgetX.style.top='5px';
@@ -135,17 +135,6 @@ davinci.ve.Snap = function() {
 				widgetDiv.style.display='block';
 				alignDiv.style.display='block';		
 				var dj = context.getDojo();
-				/*OLD CODE
-				box = dj._getMarginBox(widget.domNode);
-				box.r = box.l + box.w;
-				box.b = box.t + box.h;
-				box.c = box.l + box.w/2;
-				box.m = box.t + box.h/2;
-				widgetDiv.style.left = box.l+'px';
-				widgetDiv.style.top = box.t+'px';
-				widgetDiv.style.width = box.w+'px';
-				widgetDiv.style.height = box.h+'px';
-				*/
 				box = dj.coords(widget.domNode, true);
 				box.r = box.x + box.w;
 				box.b = box.y + box.h;
@@ -161,22 +150,6 @@ davinci.ve.Snap = function() {
 			if(context._snapX){
 				snapSetup(context,context._snapX.widget,context._snapLinesDivWidgetX,context._snapLinesDivAlignX);
 				var t,h;
-				/* OLD CODE
-				if(box.t<snapBox.t){
-					t = box.t;
-					h = snapBox.t - box.t;
-				}else{
-					t = snapBox.t;
-					h = box.b - snapBox.t;
-				}
-				if(context._snapX.type=="left"){
-					context._snapLinesDivAlignX.style.left = box.l+'px';
-				}else if(context._snapX.type=="center"){
-					context._snapLinesDivAlignX.style.left = box.c+'px';
-				}else{	// "right"
-					context._snapLinesDivAlignX.style.left = box.r+'px';
-				}
-				*/
 				if(box.y<snapBox.t){
 					t = box.y;
 					h = snapBox.t - box.y;
@@ -203,22 +176,6 @@ davinci.ve.Snap = function() {
 			if(context._snapY){
 				snapSetup(context,context._snapY.widget,context._snapLinesDivWidgetY,context._snapLinesDivAlignY);
 				var l,w;
-				/*
-				if(box.l<snapBox.l){
-					l = box.l;
-					w = snapBox.l - box.l;
-				}else{
-					l = snapBox.l;
-					w = box.r - snapBox.l;
-				}
-				if(context._snapY.type=="top"){
-					context._snapLinesDivAlignY.style.top = box.t+'px';
-				}else if(context._snapY.type=="middle"){
-					context._snapLinesDivAlignY.style.top = box.m+'px';
-				}else{	// "bottom"
-					context._snapLinesDivAlignY.style.top = box.b+'px';
-				}
-				*/
 				if(box.x<snapBox.l){
 					l = box.x;
 					w = snapBox.l - box.x;

@@ -86,7 +86,11 @@ dojo.declare("davinci.ve.Focus", dijit._Widget, {
 		b.t = box.t;
 
 		dojo.style(this.domNode, {left: b.l + "px", top: b.t + "px"});
-		if(this._mover){
+		var position_prop;
+		if(this._selectedWidget){
+			var position_prop = dojo.style(this._selectedWidget.domNode,"position");
+		}
+		if(this._mover && position_prop=="absolute"){
 			var snapBox = {l:b.l, t:b.t, w:0, h:0};
 			if(this._box && this._box.w && this._box.h){
 				snapBox.w = this._box.w;

@@ -6,11 +6,11 @@
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
 #
-
+set -x
 # run dojo build by default
-[ "${DOJO_BUILD}" ] || DOJO_BUILD=true
+[ -z ${DOJO_BUILD} ] || DOJO_BUILD=true
 
-if [ ! ${ECLIPSE_HOME} ]
+if [ -z ${ECLIPSE_HOME} ]
 then
 	export baseLocation="/path/to/eclipse"
 else
@@ -25,7 +25,7 @@ echo "Using ${baseLocation} Eclipse for build..."
 #
 # Directory in which to do the build. No trailing slash.
 #
-if [ ! ${MAQETTA_BUILD_DIR} ]
+if [ -z ${MAQETTA_BUILD_DIR} ]
 then
     export MAQETTA_BUILD_DIR="/tmp"
 fi
@@ -42,7 +42,7 @@ echo "Using ${MAQETTA_BUILD_DIR} for build out directory.."
 # Directory containing build.xml (this should not have to be changed in most cases).
 # No trailing slash.
 #
-if [ ${maqettaCode} ]
+if [ -n ${maqettaCode} ]
 then
     export relEngDir="${maqettaCode}/releng/davinci.releng"
 else
@@ -57,19 +57,19 @@ fi
 # Note: See ${baseLocation}/plugins/org.eclipse.equinox.launcher.xxx.yyy.xxx/
 #       to determine your settings, they should be similar to 'cocoa.macosx.x86_64'
 #
-if [ ${MAQETTA_WS} ]
+if [ -n ${MAQETTA_WS} ]
 then
     export myWS=${MAQETTA_WS}
 else
     export myWS="cocoa"
 fi
-if [ ${MAQETTA_OS} ]
+if [ -n ${MAQETTA_OS} ]
 then
     export myOS=${MAQETTA_OS}
 else
     export myOS="macosx"
 fi
-if [ ${MAQETTA_ARCH} ]
+if [ -n ${MAQETTA_ARCH} ]
 then
     export myArch=${MAQETTA_ARCH}
 else
@@ -80,7 +80,7 @@ fi
 # Set deployment type, default to "external"
 #
 
-if [ ! ${MAQETTA_DEPLOYMENT} ]
+if [ -z ${MAQETTA_DEPLOYMENT} ]
 then
     MAQETTA_DEPLOYMENT="external"
 fi
@@ -90,7 +90,7 @@ fi
 #
 currentDirectory=`pwd`
 
-if [ ! ${maqettaCode} ]
+if [ -z ${maqettaCode} ]
 then
     #
     # Set up for and pull down the latest code from GitHub

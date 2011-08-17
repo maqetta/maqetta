@@ -111,6 +111,8 @@ property: "Property",
 
 /* PreferencePane */
 flowLayout: "Flow Layout",
+snapToNearestWidget: "Snap to nearest widget",
+warnOnCSSOverride: "Warn on CSS Override",
 liveEdit: "Live Edit",
 
 /* WidgetSelectionPane*/

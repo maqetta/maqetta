@@ -16,7 +16,9 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 			this._feedback = this._context.getDocument().createElement("div");
 			this._feedback.className = "editFeedback";
 			this._feedback.style.position = "absolute";
+			/* ORIGINAL CODE
 			this._feedback.style.zIndex = "99"; // below Focus (zIndex = "100")
+			*/
 			dojo.style(this._feedback, "opacity", 0.1);
 		}
 
@@ -60,10 +62,21 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 			box.l = box.x;
 			box.t = box.y;
 
-			if(this._feedback.parentNode != containerNode){
-				containerNode.appendChild(this._feedback);
+			var domNode = widget.domNode;
+			var parentNode = domNode.parentNode;
+			for(var index=0;index<parentNode.children.length;index++){
+				if(domNode == parentNode.children[index]){
+					break;
+				}
 			}
-			dojo.marginBox(this._feedback, box);
+			this._feedback.style.left = domNode.offsetLeft+"px";
+			this._feedback.style.top = domNode.offsetTop+"px";
+			this._feedback.style.width = domNode.offsetWidth+"px";
+			this._feedback.style.height = domNode.offsetHeight+"px";
+			/*FIXME: Need to get z-index from computed style instead */
+			this._feedback.style.zIndex = domNode.style.zIndex;
+			parentNode.insertBefore(this._feedback,domNode.nextSibling);
+			
 			this._target = widget;
 		}else{
 			if(this._feedback.parentNode){

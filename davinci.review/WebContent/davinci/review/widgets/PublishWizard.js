@@ -627,9 +627,13 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			//init reviewers
 			var i;
 			for(i = 0;i< node.reviewers.length;i++){
-				this.jsonStore.newItem({name: node.reviewers[i].name, 
-					email: node.reviewers[i].email,
-					displayName: node.reviewers[i].name+' ('+node.reviewers[i].email+')'});
+				if(node.reviewers[i].name != davinci.review.Runtime.getDesigner()){
+					this.jsonStore.newItem({
+						name: node.reviewers[i].name,
+						email: node.reviewers[i].email,
+						displayName: node.reviewers[i].name+' ('+node.reviewers[i].email+')'
+					});
+				}
 			}
 			
 			

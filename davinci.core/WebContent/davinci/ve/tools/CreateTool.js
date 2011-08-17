@@ -6,6 +6,7 @@ dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
+dojo.require("davinci.ve.Snap");
 
 
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
@@ -56,6 +57,9 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 		}else{
 			this._setTarget(event.target);
+			if(!this._context.getFlowLayout()){
+				davinci.ve.Snap.updateSnapLines(this._context, {l:event.pageX,t:event.pageY,w:0,h:0});
+			}
 		}
 	},
 	
@@ -146,6 +150,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			// unknown creation error that we properly unset the active tool,
 			// in order to avoid drag/drop issues.
 			this._context.setActiveTool(null);
+			davinci.ve.Snap.clearSnapLines(this._context);
 		}
 	},
 

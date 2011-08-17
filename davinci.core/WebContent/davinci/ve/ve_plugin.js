@@ -561,6 +561,7 @@
 		                 	 pane:"davinci.ve.prefs.HTMLEditPreferences",
 		                 	defaultValues : {
 		     					"flowLayout":true,
+		     					"snap":true,
 		     					"cssOverrideWarn":true 
 		     				  }
 		                 	}

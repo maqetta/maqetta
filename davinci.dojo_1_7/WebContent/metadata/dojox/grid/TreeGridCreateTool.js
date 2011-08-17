@@ -1,4 +1,4 @@
-dojo.provide("davinci.libraries.dojo.dojox.grid.DataGridCreateTool");
+dojo.provide("davinci.libraries.dojo.dojox.grid.TreeGridCreateTool");
 
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.commands.CompoundCommand");
@@ -7,14 +7,14 @@ dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
 dojo.require("davinci.ve.tools.CreateTool");
 
-dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.tools.CreateTool, {
+dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridCreateTool", davinci.ve.tools.CreateTool, {
 	constructor: function(data){
 		
 		this._resizable = "both";
 	},
 	
 	_create: function(args){
-	
+		debugger;
 		if(this._data.length !== 2){
 			return;
 		}

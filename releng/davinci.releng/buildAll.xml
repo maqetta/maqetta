@@ -236,7 +236,7 @@
         <delete dir="${buildDirectory}/ear"/>
     </target>
 
-    <target name="clean" depends="init">
+    <target name="clean">
         <defaultexcludes remove="**/.gitignore"/>
         <defaultexcludes remove="**/.git"/>
         <defaultexcludes remove="**/.git/**"/>
@@ -246,8 +246,8 @@
         </delete>
     	
     	<delete includeemptydirs="true" quiet="true" failonerror="false">
-    	            <fileset dir="${dojo.cache.directory}" includes="*"/>
-    	  </delete>
+    	    <fileset dir="${dojo.cache.directory}" includes="*"/>
+    	</delete>
     	    	
     	<delete dir="${dojo.cache.directory}" quiet="true" failonerror="false"/>
         <defaultexcludes default="true"/>

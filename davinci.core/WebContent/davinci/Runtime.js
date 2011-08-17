@@ -18,7 +18,7 @@ dojo.mixin(davinci.Runtime,	{
 	subscriptions : [],
 	widgetTable: {},
 	
-	_DEFAULT_PROJECT : "Default Project",
+	_DEFAULT_PROJECT : "Project1",
 	
 	currentSelection : [],
 	commandStack : new davinci.commands.CommandStack(),

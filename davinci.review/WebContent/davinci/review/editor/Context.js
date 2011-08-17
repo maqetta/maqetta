@@ -8,11 +8,6 @@ dojo.require("davinci.ve.Focus");
 
 dojo.declare("davinci.review.editor.Context", null, {
 
-//	urlResolver: null,   // XXX not used
-	moduleLoader: null,
-	immediatePropertyUpdates: false,
-	
-	_subscriptions : [],
 	_contentStyleSheet: "" + dojo.moduleUrl("davinci.ve", "resources/content.css"),
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",

@@ -152,7 +152,7 @@
       <extension
             point="davinci.core.initialUserFiles">
              <initalUserFile
-                  path="WebContent/workspace/"/>
+                  path="WebContent/project/base/"/>
              <initalUserFile
                   path="WebContent/samples/"/>
       </extension>

@@ -284,8 +284,9 @@ dojo.mixin(davinci.ui.Resource, {
 	deleteAction: function()
 	{
 		var selection = this.getSelectedResources(),
-			paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t");
+		    paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t"),
 
+		    langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		if(!confirm(dojo.string.substitute(langObj.areYouSureDelete,[paths]))){
 	    	return;
 	    }

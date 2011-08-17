@@ -4,7 +4,7 @@ dojo.require("davinci.ve.input.SmartInput");
 dojo.require("davinci.commands.OrderedCompoundCommand");
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.form.DropDownSelect");
-dojo.require('dojox.data.ItemJsonpReadStore');
+//dojo.require('davinci.libraries.dojo.dojox.data.ItemJsonpReadStore');
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.libraries.dojo.dojox", "dojox");
@@ -29,6 +29,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	constructor : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.libraries.dojo.dojox", "dojox");
 		this.helpText = langObj.dataGridInputHelp;
+		
 	},
 
 
@@ -305,7 +306,15 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	} else {
     		this._callback = '';
     	}
-    	var store = new dojox.data.ItemJsonpReadStore({url: url, jsonpcallback: this._callback });
+    	var store;
+    	// need to use the same toolkit that the page is using, not the one maqetta is using
+		var dj = this._widget.getContext().getDojo();
+		try{
+			dj["require"]('dojox.data.ItemJsonpReadStore');
+		}catch(e){
+			console.warn("FAILED: failure for module=dojox.data.ItemJsonpReadStore");
+		}
+		store = new dj.dojox.data.ItemJsonpReadStore({url: url, jsonpcallback: this._callback });
     	store.fetch({
     		query: this.query,
     		queryOptions:{deep:true}, 
@@ -319,7 +328,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	},
 	
 	_urlDataStoreLoaded : function(items){
-		debugger;
+
 		if (items.length < 1){
 			console.error("Data store empty");
 			return;

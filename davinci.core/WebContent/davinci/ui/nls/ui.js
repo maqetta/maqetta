@@ -28,7 +28,7 @@
 		
 		//NewTheme.js
 		"themeAlreadyExists":"Theme already Exists!",
-		"invalidCSS": "Invalid CSS Identifier.",
+		"invalidThemeName": "Invalid theme name",
 		
 		//OpenThemeDialog.js
 		"noUserThemes":"No user themes found in workspace. Please create a new theme before editing.",

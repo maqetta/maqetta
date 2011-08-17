@@ -1,5 +1,6 @@
 ({defaultValues : {
-					"flowLayout":true,
-					"cssOverrideWarn":true 
-				  }
+		"flowLayout":true,
+		"snap":true,
+		"cssOverrideWarn":true 
+	}
 })

@@ -97,6 +97,7 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 		// FIXME: sometime an exception occurs...
 		try{
 			this._setTarget(event.relatedTarget);
+			//this.updateSnapLines(event);
 		}catch(e){
 		}
 	},
@@ -230,24 +231,28 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 					var position = this._adjustPosition({x: left, y: top});
 					left = position.x;
 					top = position.y;
-					var c = new davinci.ve.commands.MoveCommand(widget, left, top);
+					var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
 					if(command){ // move and resize
 						command = new davinci.commands.CompoundCommand(command);
-						command.add(c);
+						command.add(first_c);
 					}else if(selection.length > 1){ // multiple move
 						var b = widget.getMarginBox(),
 							dx = left - b.l,
 							dy = top - b.t;
-						command = new davinci.commands.CompoundCommand(c);
+						command = new davinci.commands.CompoundCommand(first_c);
 						dojo.forEach(selection, function(w){
 							if(w != widget && w.getStyleNode().style.position == "absolute"){
 								b = w.getMarginBox();
-								c = new davinci.ve.commands.MoveCommand(w, b.l + dx, b.t + dy);
+								// Because snapping will shift the first widget in a hard-to-predict
+								// way, MoveCommand will store the actual shift amount on the
+								// command object (first_c). MoveCommand will use the shift amount
+								// for first_c for the other move commands.
+								var c = new davinci.ve.commands.MoveCommand(w, b.l + dx, b.t + dy, first_c);
 								command.add(c);
 							}
 						});
 					}else{ // single move
-						command = c;
+						command = first_c;
 					}
 				}
 			}

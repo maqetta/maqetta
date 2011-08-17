@@ -102,6 +102,8 @@ property: "プロパティ",
 
 /* PreferencePane */
 flowLayout: "フローレイアウト",
+snapToNearestWidget: "Snap to nearest widget",
+warnOnCSSOverride: "Warn on CSS Override",
 liveEdit: "ライブ編集",
 
 __dummy__: ""

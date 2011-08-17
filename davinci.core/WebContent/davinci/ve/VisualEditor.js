@@ -31,16 +31,22 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			rootNode:silhouette_div_container,
 			margin:20
 		});
-		this._subscriptions = [];
-		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(containerWidget, newState, oldState) { 
-			if ((top.davinci && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass) == "davinci.ve.VisualEditor") {
-				return; // ignore updates in theme editor
-			}
-			this.onContentChange();
-		}));	
-		//dojo.subscribe("/davinci/ui/styleValuesChange", dojo.hitch(this, this._stylePropertiesChange));
-		dojo.subscribe("/davinci/ui/widgetPropertiesChanges",  dojo.hitch(this, this._objectPropertiesChange));
-		dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelected));
+
+        this._subscriptions = [
+            dojo.subscribe("/davinci/states/state/changed", this,
+                    function(containerWidget, newState, oldState) {
+                        if (top.davinci && davinci.Runtime.currentEditor &&
+                                davinci.Runtime.currentEditor.declaredClass === "davinci.ve.VisualEditor") {
+                            return; // ignore updates in theme editor
+                        }
+                        this.onContentChange();
+                    }),
+            // dojo.subscribe("/davinci/ui/styleValuesChange", this,
+            //      '_stylePropertiesChange'),
+            dojo.subscribe("/davinci/ui/widgetPropertiesChanges", this,
+                    '_objectPropertiesChange'),
+            dojo.subscribe("/davinci/ui/editorSelected", this, '_editorSelected')
+        ];
 	},
 	
 	setDevice: function(deviceName) {
@@ -218,14 +224,15 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		}
 		return this.template;
 	},
-	destroy: function (){
-		dojo.forEach(this._handles,dojo.disconnect);
+	
+	destroy: function () {
+	    this._handles.forEach(dojo.disconnect);
+	    this._subscriptions.forEach(dojo.unsubscribe);
 	},
 	
 	setContent: function (fileName, content){
 		this._onloadMessages=[];	// List of messages to present to user after loading has completed
 		this._setContent(fileName, content);
-
 	},
 	
 	saveAs: function (newFileName, oldFileName, content){
@@ -268,7 +275,6 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 				editor: this._pageEditor,
 				visualEditor: this,
 				containerNode: containerNode,
-				immediatePropertyUpdates: true,
 				model: content,
 				baseURL: baseUrl,
 				relativePrefix: relativePrefix,

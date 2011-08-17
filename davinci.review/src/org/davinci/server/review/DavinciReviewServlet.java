@@ -63,6 +63,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 		User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 		if(user==null){
+		    req.getSession().setAttribute(IDavinciServerConstants.REDIRECT_TO, req.getRequestURL().toString());
 			resp.sendRedirect(this.getLoginUrl(req));
 			return;
 		}

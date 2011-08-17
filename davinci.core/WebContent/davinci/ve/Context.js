@@ -11,17 +11,10 @@ dojo.require("davinci.library");
 
 dojo.declare("davinci.ve.Context", null, {
 
-//	urlResolver: null,   // XXX not used
-	moduleLoader: null,
-	immediatePropertyUpdates: false,
-	
-	_subscriptions: [],
-	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
 
-	constructor: function(args){
-		
+	constructor: function(args) {
 		if(!args) {
 			args ={};
 		}
@@ -505,10 +498,6 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		var data = this._parse(source);
 		this._scriptAdditions=data.scriptAdditions;
-//		if(this.urlResolver){	   // XXX not used
-//			data.scripts = dojo.map(data.scripts, this.getRealUrl, this);
-//			data.styleSheets = dojo.map(this._checkSheets(data), this.getRealUrl, this);
-//		}
 		
 		if(!this._frameNode){ // initialize frame
 			var dojoUrl;
@@ -742,20 +731,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		});
 
 		var content = data.content || "";
-			
-		var containerNode = this.getContainerNode();
-	
 		
 		var active = this.isActive();
 		if(active){
 			this.select(null);
 			dojo.forEach(this.getTopWidgets(), this.detach, this);
 		}
-		var escapees = [],
-			scripts = {},
-			states = {},
-			properties = {},
-			containerNode = this.getContainerNode();
+		var states = {},
+		    containerNode = this.getContainerNode();
 	
 		if (data.states) {
 			states["body"] = data.states;
@@ -854,7 +837,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			localDijit.registry.forEach(function(w){
 				  w.destroy();			 
 			});
-			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
+			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+			        this, '_editorSelectionChange');
 		}
 	
 		this._restoreStates(states);
@@ -973,8 +957,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			if(header.className){
 				var classes = header.className.split(' ');
 				dojo.some(classes, function(clasz, index){
-						
-						classes.splice(index, 1)
+						classes.splice(index, 1);
 						newBodyClasses = classes.join(' ');
 						return true;
 				});

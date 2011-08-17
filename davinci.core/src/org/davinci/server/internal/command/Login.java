@@ -20,6 +20,7 @@ public class Login extends Command {
         user = ServerManager.getServerManger().getUserManager().login(name, password);
         if (user != null) {
             String redirect = (String) req.getSession().getAttribute(IDavinciServerConstants.REDIRECT_TO);
+            req.getSession().removeAttribute(IDavinciServerConstants.REDIRECT_TO); // burn after reading
             this.responseString = (redirect != null) ? redirect : "OK";
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);

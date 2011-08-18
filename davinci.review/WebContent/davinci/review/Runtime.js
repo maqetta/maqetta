@@ -63,10 +63,10 @@ dojo.mixin(davinci.review.Runtime,{
 	},
 	
 	
-	getColor: function(/*string*/ email){
+	getColor: function(/*string*/ name){
 		var index;
 		dojo.some(this.reviewers,function(item,n){
-			if(item.email==email){
+			if(item.name==name){
 				index = n;
 				return true;
 			}

@@ -69,11 +69,12 @@
               alias="/app/OpenAjax"
               base-name="/WebContent/OpenAjax"
               />
+        <!--      
         <resource
               alias="/app/workspace"
-              base-name="/WebContent/workspace"
+              base-name="/WebContent/project/base"
               />
-
+		-->
       </extension>
       <extension
          point="org.eclipse.core.runtime.products">

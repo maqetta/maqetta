@@ -1,6 +1,6 @@
 @import url("../dojo/resources/dojo.css");
 @import url("../dijit/themes/claro/claro.css");
-@import url("../dojox/widget/Toaster/Toaster.css");
+@import url("claroToaster.css"); // to be moved to dojox in 1.8
 @import url("../dojox/layout/resources/ResizeHandle.css");
 @import url("../dojox/html/resources/ellipsis.css");
 @import url("../dojox/form/resources/UploaderFileList.css");

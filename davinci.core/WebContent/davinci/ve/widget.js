@@ -686,31 +686,43 @@ dojo.declare("davinci.ve._Widget",null,{
         return this.metadata;
     },
 
-	getHelper: function() {
-        if (!this._edit_helper /*|| !widget._edit_helper.getChildren*/) {
-    	    var helper = davinci.ve.metadata.queryDescriptor(this.type, "helper");
-    	    if (helper) {
+    /*
+     * Loads a helper files, loads corresponding JS class, instantiates an object of that class
+     * and assigns that object to "this" (the dvWidget object).
+     * @param {String} metadata_propname Property name in widgets.json for this type of helper
+     * @param {String} dvwidget_propname Property name on dvWidget object to point to instance of helper class
+     * @param {null|Object} Returns null if load process had an error, else instance object for helper class
+     */
+	_getMetadataHelper: function(metadata_propname, dvwidget_propname) {
+        if (!this[dvwidget_propname]) {
+    	    var jsclass = davinci.ve.metadata.queryDescriptor(this.type, metadata_propname);
+    	    if (jsclass) {
     	        try {
-    	            dojo["require"](helper);
+    	            dojo["require"](jsclass);
     	        } catch(e) {
-                    console.error("Failed to load helper: " + helper);
+                    console.error("Failed to load helper: " + jsclass);
                     console.error(e);
     	        }
-    	       // this._edit_helper = dojo.getObject(helper); wdr
-    	        var aClass = dojo.getObject(helper);
+    	        var aClass = dojo.getObject(jsclass);
     	        if (aClass) {
-    	        	this._edit_helper  = new aClass();
+    	        	this[dvwidget_propname]  = new aClass();
     			}
-    	        //wdr
-    	        var obj = dojo.getObject(helper);
-    	        this._edit_helper = new obj();
-
+    	        var obj = dojo.getObject(jsclass);
+    	        this[dvwidget_propname] = new obj();
     	    }
-    	    if (!this._edit_helper) {
-    	        this._edit_helper = true;
+    	    if (!this[dvwidget_propname]) {
+    	        this[dvwidget_propname] = true;
     	    }
         }
-        return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
+        return (typeof this[dvwidget_propname] === "boolean") ? null : this[dvwidget_propname];
+    },
+
+	getHelper: function() {
+		return(this._getMetadataHelper('helper','_edit_helper'));
+    },
+
+	getRTHelper: function() {
+		return(this._getMetadataHelper('rthelper','_edit_rthelper'));
     },
 
 	attr: function(name,value)

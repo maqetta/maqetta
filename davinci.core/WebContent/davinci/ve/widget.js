@@ -4,6 +4,7 @@ dojo.require("davinci.html.HTMLModel");
 dojo.require("davinci.ve.palette.Palette");
 dojo.require("davinci.ve.themeEditor.metadata.query");
 dojo.require("davinci.ve.themeEditor.metadata.metadata");
+dojo.require("davinci.maqetta.States");
 
 davinci.ve.widget.widgetHash={};
 davinci.ve.widget._dojo = function(node){
@@ -1266,7 +1267,14 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 	attach: function()
 	{
-
+		var helper = this.getHelper();
+		if(helper && helper.create){
+			helper.create(this, this._srcElement);
+		}
+		var rthelper = this.getRTHelper();
+		if(rthelper && rthelper.init){
+			rthelper.init(this, davinci.states);
+		}
 	},
 	_stringValue: function (attributeName, value)
 	{
@@ -1539,10 +1547,10 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		this.styleNode=dijitWidget.styleNode;
 		this.id=dijitWidget.id;
 
-		var helper = this.getHelper();
+		/*var helper = this.getHelper();
 		if(helper && helper.create && srcElement){
 			helper.create(this, srcElement);
-		}
+		}*/
 	},
 	getParent: function()
 	{
@@ -1617,13 +1625,13 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		this.dijitWidget.startup();
 
 	},
-	attach: function()
+	/*attach: function()
 	{
 		var helper = this.getHelper();
 		if(helper && helper.create){
 			helper.create(this, this._srcElement);
 		}
-	},
+	},*/
 	isLayout: function()
 	{
 		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);

@@ -490,6 +490,43 @@ davinci.ve.metadata = function() {
          */
         getAllowedChild: function(type) {
         	return getAllowedElement('Child', type);
+        },
+        
+        /**
+         * This is called by review/commenting code to set up module paths
+         * to helper functions needed in the user HTML document.
+         * @param {Object} dj "dojo" object used in user HTML document
+         */
+        registerRTHelperModulePaths: function(dj){
+        	console.log('registerRTHelperModulePaths entered');
+
+            for(var lib in libraries){
+        		var library = libraries[lib];
+        		//var path = new davinci.model.Path(libraries[lib].$path);
+        		//var path = new davinci.model.Path(temp+libraries[lib].$path);
+        		//var modulePath = path.relativeTo(dj.baseUrl).toString();
+        		var modulePath = '/maqetta/'+libraries[lib].$path+"/";
+            	//dj.registerModulePath(METADATA_CLASS_BASE + lib, modulePath);
+        		for(var i=0; i<library.widgets.length; i++){
+        			var w = library.widgets[i];
+        			if(w.rthelper){
+        				// Remove leading 'davinci.libraries.<libname>.'
+        				var stripped = w.rthelper.replace(METADATA_CLASS_BASE+library.name+'.','');
+        				// Replace dots with slashes
+        				var rthelperPath = modulePath+stripped.split('.').join('/')+'.js';
+        				//FIXME: Trying out async
+        				dojo.xhrGet({url:rthelperPath,sync:false,handleAs:"text"
+        				}).then(function(result){
+        					dj.eval(result);
+         			 		return;
+        				}, function(error){
+        					console.log('cannot load '+rthelperPath);
+        				});
+        			}
+        		}
+        	}
+        	console.log('registerRTHelperModulePaths exit');
         }
+
     };
 }();

@@ -16,10 +16,62 @@ davinci.states = {
 	},
 	
 	/**
-	 * Returns the array of states declared by the widget, plus the implicit normal state. 
+	 * Finds the nearest parent widget that is functioning as a view manager.
+	 * For simple scenarios, the BODY will be the view manager widget.
+	 */
+	nearestParentViewMgr:function(widget){
+		var w = widget;
+		// Note: When parsing a page, context is not available yet,
+		// so have to find (what will be) context.rootwidget the long way
+		var bodyWidget =w.domNode.ownerDocument.body._dvWidget;
+		while(w && !w._viewMgr){
+			if(w == bodyWidget){
+				return w;
+			}
+			w = w.getParent && w.getParent();
+		}
+		if(w && w._viewMgr){
+			return w;
+		}else{
+			console.log("Error in States.js nearestParentViewMgr");
+			return bodyWidget;
+		}
+	},
+	
+	/**
+	 * Installs a particular view manager onto a particular widget,
+	 * which overrides the default view manager 
+	 * (which is centered on user-defined application states).
+	 * For simple scenarios, "widget" is the BODY element,
+	 * and at this time the only know custom view manager is for dojox.mobile.View.
+	 */
+	setViewMgr:function(widget, viewMgr){
+		widget = this._getWidget(widget);
+		if(widget){
+			widget._viewMgr = viewMgr;
+		}
+		//FIXME: may need to run various cleanup and reset things
+	},
+	
+	/**
+	 * Returns the array of views for the given widget.
 	 */ 
-	getStates: function(widget, associative){ 
+	getViews: function(widget, associative){
 		widget = this._getWidget(widget); 
+		if(widget && widget._viewMgr){
+			return widget._viewMgr.getViews(widget, associative);
+		}
+		return this._getStates(widget, associative);
+	},
+	//FIXME: Get rid of this
+	getStates:function(widget, associative){
+		return this.getViews(widget, associative);
+	},
+	
+	/**
+	 * getStates for default view manager
+	 */ 
+	_getStates: function(widget, associative){ 
 		var names = associative ? {"Normal": "Normal"} : ["Normal"];
 		var states = widget && widget.states;
 		if (states) {

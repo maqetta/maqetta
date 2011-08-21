@@ -82,8 +82,7 @@
                     davinci.Runtime.isLocalInstall = true;
                 }
 
-//				Did not see any usage
-//				davinci.ve.metadata.initMetadataProviders();
+				davinci.ve.metadata.init();
 				davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Runtime._selectionChanged);
 				davinci.Workbench.runComment();
 				// intercept BS key - prevent browser from navigating backwards

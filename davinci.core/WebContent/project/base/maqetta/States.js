@@ -935,13 +935,13 @@ davinci.states = {
 			var states = dojo.clone(widget.states);
 			delete states["undefined"];
 			if (!this._isEmpty(states)) {
-				value = JSON.stringify(states);
-				// Escape single quotes that aren't already escaped
-				value = value.replace(/(\\)?'/g, function($0, $1){ 
-					return $1 ? $0 : "\\'";
-				});
-				// Replace double quotes with single quotes
-				value = value.replace(/"/g, "'");
+				value = JSON.stringify(states)
+					// Escape single quotes that aren't already escaped
+					.replace(/(\\)?'/g, function($0, $1){ 
+						return $1 ? $0 : "\\'";
+					})
+					// Replace double quotes with single quotes
+					.replace(/"/g, "'");
 			}
 		}
 		return value;

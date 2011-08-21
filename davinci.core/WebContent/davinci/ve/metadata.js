@@ -493,39 +493,33 @@ davinci.ve.metadata = function() {
         },
         
         /**
-         * This is called by review/commenting code to set up module paths
-         * to helper functions needed in the user HTML document.
+         * This is called by review/commenting code to load all
+         * of the review helper JavaScript files that might
+         * apply to any widgets available to the user's workspace.
+         * 
          * @param {Object} dj "dojo" object used in user HTML document
          */
-        registerRTHelperModulePaths: function(dj){
-        	console.log('registerRTHelperModulePaths entered');
-
+        loadReviewHelpers: function(dj){
             for(var lib in libraries){
         		var library = libraries[lib];
-        		//var path = new davinci.model.Path(libraries[lib].$path);
-        		//var path = new davinci.model.Path(temp+libraries[lib].$path);
-        		//var modulePath = path.relativeTo(dj.baseUrl).toString();
-        		var modulePath = '/maqetta/'+libraries[lib].$path+"/";
-            	//dj.registerModulePath(METADATA_CLASS_BASE + lib, modulePath);
+         		var modulePath = '/maqetta/'+libraries[lib].$path+"/";
         		for(var i=0; i<library.widgets.length; i++){
         			var w = library.widgets[i];
-        			if(w.rthelper){
+        			if(w.reviewHelper){
         				// Remove leading 'davinci.libraries.<libname>.'
-        				var stripped = w.rthelper.replace(METADATA_CLASS_BASE+library.name+'.','');
+        				var stripped = w.reviewHelper.replace(METADATA_CLASS_BASE+library.name+'.','');
         				// Replace dots with slashes
-        				var rthelperPath = modulePath+stripped.split('.').join('/')+'.js';
-        				//FIXME: Trying out async
-        				dojo.xhrGet({url:rthelperPath,sync:false,handleAs:"text"
+        				var reviewHelperPath = modulePath+stripped.split('.').join('/')+'.js';
+        				//FIXME: Trying out async. May need to use sync to match everything else.
+        				dojo.xhrGet({url:reviewHelperPath,sync:false,handleAs:"text"
         				}).then(function(result){
         					dj.eval(result);
-         			 		return;
         				}, function(error){
-        					console.log('cannot load '+rthelperPath);
+        					console.log('cannot load '+reviewHelperPath);
         				});
         			}
         		}
         	}
-        	console.log('registerRTHelperModulePaths exit');
         }
 
     };

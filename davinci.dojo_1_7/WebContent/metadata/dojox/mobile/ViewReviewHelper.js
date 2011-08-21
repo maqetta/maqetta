@@ -1,6 +1,6 @@
-dojo.provide("davinci.libraries.dojo.dojox.mobile.ViewRTHelper");
+dojo.provide("davinci.libraries.dojo.dojox.mobile.ViewReviewHelper");
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewRTHelper", null, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewReviewHelper", null, {
 
 	init: function(widget, viewController) {
 		if(viewController){

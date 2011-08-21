@@ -1850,7 +1850,7 @@
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper",
-            "rthelper": "davinci.libraries.dojo.dojox.mobile.ViewRTHelper"
+            "reviewHelper": "davinci.libraries.dojo.dojox.mobile.ViewReviewHelper"
         },
         {
             "name": "ScrollableView",

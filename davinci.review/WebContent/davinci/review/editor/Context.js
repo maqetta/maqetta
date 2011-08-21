@@ -41,7 +41,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 				src: this.baseURL,
 				onload: dojo.hitch(this,function(){
 					var userdoc_dj = this.frame.contentWindow.dojo;
-					davinci.ve.metadata.registerRTHelperModulePaths(userdoc_dj);
+					davinci.ve.metadata.loadReviewHelpers(userdoc_dj);
 					this._initDrawing();
 					dojo.publish("/davinci/review/context/loaded", [
 						this,

@@ -722,8 +722,8 @@ dojo.declare("davinci.ve._Widget",null,{
 		return(this._getMetadataHelper('helper','_edit_helper'));
     },
 
-	getRTHelper: function() {
-		return(this._getMetadataHelper('rthelper','_edit_rthelper'));
+	getReviewHelper: function() {
+		return(this._getMetadataHelper('reviewHelper','_edit_reviewHelper'));
     },
 
 	attr: function(name,value)
@@ -1271,9 +1271,9 @@ dojo.declare("davinci.ve._Widget",null,{
 		if(helper && helper.create){
 			helper.create(this, this._srcElement);
 		}
-		var rthelper = this.getRTHelper();
-		if(rthelper && rthelper.init){
-			rthelper.init(this, davinci.states);
+		var reviewHelper = this.getReviewHelper();
+		if(reviewHelper && reviewHelper.init){
+			reviewHelper.init(this, davinci.states);
 		}
 	},
 	_stringValue: function (attributeName, value)

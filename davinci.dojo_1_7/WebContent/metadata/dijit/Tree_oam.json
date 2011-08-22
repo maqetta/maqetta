@@ -43,6 +43,11 @@
             "datatype": "string",
             "hidden": true
         },
+        "autoExpand": {
+            "datatype": "boolean",
+            "defaultValue": false,
+            "title": "Expand Folders"
+        },
         "showRoot": {
             "datatype": "boolean",
             "defaultValue": true,

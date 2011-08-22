@@ -14,6 +14,13 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 	},
 	
 	_create: function(args){
+		
+		var command = this._getCreateCommand(args);
+		this._context.getCommandStack().execute(command);
+		this._select(this._dataGrid);
+	},
+	
+	_getCreateCommand: function(args){
 	
 		if(this._data.length !== 2){
 			return;
@@ -93,10 +100,27 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		if(args.size){
 			command.add(new davinci.ve.commands.ResizeCommand(dataGrid, args.size.w, args.size.h));
 		}
+		this._dataGrid = dataGrid;
+		/*this._context.getCommandStack().execute(command);
+		this._select(dataGrid);*/
+		return command;
 		
-		this._context.getCommandStack().execute(command);
-		this._select(dataGrid);
-		
+	},
+	
+	addPasteCreateCommand: function(command, args){
+
+		this._context = this._data.context;
+		var storeId = this._data.properties.store._edit_object_id;
+		//var storeId = this._widget._srcElement.getAttribute("store"); 
+   		var storeWidget = davinci.ve.widget.byId(storeId);
+   		var storeData = storeWidget.getData();
+   		var data = [];
+   		data[0] = storeData;
+   		data[1] = this._data;
+   		this._data = data;
+   		command.add( this._getCreateCommand(args));
+   		return this._dataGrid;
+
 	}
 	
 

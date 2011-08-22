@@ -36,28 +36,54 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 					style.position = undefined;
 					style.left = undefined;
 					style.top = undefined;
-					//d.properties.style = davinci.ve.widget.getStyle(style); // not sure how thisever worked...
-					// if no postion past paste where it was
-					//d.properties.style = davinci.ve.widget.getStyleString(style);
 				}
 			}
 
 			var widget = undefined;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
-				widget = davinci.ve.widget.createWidget(d);
+				var tool = davinci.ve.metadata.queryDescriptor(d.type, "tool");
+			    if (tool) {
+			    	var myTool;
+			        try {
+			            dojo["require"](tool);
+			        } catch(e) {
+			            console.error("Failed to load tool: " + tool);
+			            console.error(e);
+			        }
+			        var aClass = dojo.getObject(tool);
+			        if (aClass) {
+			        	myTool  = new aClass(d);
+					}
+			       // var obj = dojo.getObject(tool);
+			        //myTool = new obj();
+			        if(myTool.addPasteCreateCommand)
+			        	var myArgs = {};
+			        	myArgs.parent = args.parent || this._context.getContainerNode();
+			        	myArgs.position = position;
+			        	myArgs.index = index;
+			        	widget =  myTool.addPasteCreateCommand(command,myArgs);
+			        	
+			    } else {
+			    	widget = davinci.ve.widget.createWidget(d);
+			    	if(!widget){
+						return;
+					}
+
+					command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
+					if(index !== undefined && index >= 0){
+						index++;
+					}
+					if(position){
+						command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
+					}
+			    }
+				
 			}, this);
 			if(!widget){
 				return;
 			}
 
-			command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
-			if(index !== undefined && index >= 0){
-				index++;
-			}
-			if(position){
-				command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
-			}
 			selection.push(widget);
 		}, this);
 

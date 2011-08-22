@@ -47,10 +47,9 @@ davinci.states = {
 	 */
 	setViewMgr:function(widget, viewMgr){
 		widget = this._getWidget(widget);
-		if(widget){
+		if(widget && widget._viewMgr != viewMgr){
 			widget._viewMgr = viewMgr;
-		}
-		//FIXME: may need to run various cleanup and reset things
+			this.publish("/davinci/states/list/changed", null);		}
 	},
 	
 	/**
@@ -145,6 +144,7 @@ davinci.states = {
 		}
 		if (!_silent) {
 			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
+			this.publish("/davinci/states/list/changed", null);
 		}
 		this._updateSrcState (widget);
 		
@@ -311,6 +311,7 @@ davinci.states = {
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].origin = true;
 		this.publish("/davinci/states/state/added", [{widget:widget, state:state}]);
+		this.publish("/davinci/states/list/changed", null);
 		this._updateSrcState (widget);
 	},
 	
@@ -338,6 +339,7 @@ davinci.states = {
 			delete widget.states[state];
 		}
 		this.publish("/davinci/states/state/removed", [{widget:widget, state:state}]);
+		this.publish("/davinci/states/list/changed", null);
 		this._updateSrcState (widget);
 	},
 	
@@ -359,6 +361,7 @@ davinci.states = {
 		delete widget.states[oldName];
 		if (!property) {
 			this.publish("/davinci/states/state/renamed", [{widget:widget, oldName:oldName, newName:newName}]);
+			this.publish("/davinci/states/list/changed", null);
 		}
 		this._updateSrcState (widget);
 		return true;

@@ -37,6 +37,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				}, 100);
 			}
 		});
+		dojo.publish("/davinci/states/list/changed",null);
 	}
 
 });

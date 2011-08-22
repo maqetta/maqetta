@@ -82,6 +82,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		this.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._removeState));
 		this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._renameState));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
+		dojo.subscribe("/davinci/states/list/changed", dojo.hitch(this, this._listChanged));
 
 		this._createStateList();	
 	},
@@ -109,6 +110,10 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 		} else if (this.isThemeEditor()){
 			this._updateThemeSelection(event.newState);
 		}
+	},
+	
+	_listChanged: function() {
+		this._updateView();
 	},
 	
 	_editorSelected : function (event){	
@@ -391,6 +396,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	},
 	
 	_updateList: function() {
+		var anyChanges = false;
 		var latestStates = davinci.ve.states.getStates(this._getWidget(), true), 
 			storedStates = this._getStates();
 		
@@ -399,6 +405,7 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 			var state = storedStates[name];
 			if (!latestStates[name]) {
 				this._store.deleteItem(state);
+				anyChanges = true;
 			}
 		}
 		
@@ -408,12 +415,18 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 			if (!storedState) {
 				var newState = { name: name, id: name };
 				this._store.newItem(newState);
+				anyChanges = true;
 			}
 		}
-		this._store.save();
+		if(anyChanges){
+			this._store.save();
+		}
+		return anyChanges;
 	},
 	
 	_updateSelection: function() {
+		//FIXME: Maybe only update selection if it has changed?
+		//Does this logic cause flicker
 		var selectionIndex = 0;
 		var currentState = davinci.ve.states.getState(this._getWidget());
 

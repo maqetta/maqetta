@@ -1905,17 +1905,33 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		return v;
 	},
 	
-	 getUniqueID: function(node) {
+	 getUniqueID: function(node, persist, idRoot) {
 		 var id = node.getAttribute("id");
+		 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null;
 		 if (!id) {
-			 if (!this._uniqueIDs.hasOwnProperty(node.tag)) {
-				 id = this._uniqueIDs[node.tag]=0;
+			 var root = idRoot ? idRoot : node.tag;
+			 var num;
+			 while(1){
+				 if (!this._uniqueIDs.hasOwnProperty(root)) {
+					 num = this._uniqueIDs[root]=0;
+				 }
+				 else {
+					 num=++this._uniqueIDs[root];
+				 }
+				id=root+"_"+num;	
+				if(userDoc){
+					// If this is called when user doc is available,
+					// make sure this ID is unique
+					//FIXME: Need a getElementById in the model
+					if(!userDoc.getElementById(id)){
+						break;
+					}
+				}else{
+					break;
+				}
 			 }
-			 else {
-				 id=++this._uniqueIDs[node.tag];
-			 }
-			id=node.tag+"_"+id;
-			node.addAttribute("id",id,true);	 
+			var noPersist = !persist;
+			node.addAttribute("id",id,noPersist);	 
 		 }
 		 return id;
 	},

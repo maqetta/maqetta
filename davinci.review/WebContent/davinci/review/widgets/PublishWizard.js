@@ -590,7 +590,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			var vName = !isRestart?node.name:node.name+" (R)";
 			this.versionTitle.set('value',vName);
 			if(!this.isRestart)
-				this.dueDate.set('value',node.dueDate=="infinite"?"":node.dueDate);
+				this.dueDate.set('value', node.dueDate == "infinite" ? new Date("") : node.dueDate);
 				this.desireWidth.set('value',node.width==0?"":node.width);
 				this.desireHeight.set('value',node.height==0?"":node.height);
 				if(node.description){
@@ -607,29 +607,36 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 				var i;
 				var search = function(item,name){
 					var newChildren;
-					item.getChildren(function(children){newChildren=children;},true);
-					for(i=0;i<newChildren.length;i++){
-						if(newChildren[i].name == name)
-							return newChildren[i];
+					if(item.getChildren){
+						item.getChildren(function(children){
+							newChildren = children;
+						}, true);
+						for(var i = 0; i < newChildren.length; i++){
+							if (newChildren[i].name == name) 
+								return newChildren[i];
+						}
 					}
 					return null;
-					
 				};
-				for(i=0;i<segments.length;i++){
+				for(i = 0;i < segments.length; i++){
 					item = search(item,segments[i]);
-					if(item==null)
+					if(item == null)
 						break;
 				}
-				if(item!=null){
+				if(item != null){
 					this.addFiles([item]);
 				}
 			}));
 			//init reviewers
 			var i;
 			for(i = 0;i< node.reviewers.length;i++){
-				this.jsonStore.newItem({name: node.reviewers[i].name, 
-					email: node.reviewers[i].email,
-					displayName: node.reviewers[i].name+' ('+node.reviewers[i].email+')'});
+				if(node.reviewers[i].name != davinci.review.Runtime.getDesigner()){
+					this.jsonStore.newItem({
+						name: node.reviewers[i].name,
+						email: node.reviewers[i].email,
+						displayName: node.reviewers[i].name+' ('+node.reviewers[i].email+')'
+					});
+				}
 			}
 			
 			

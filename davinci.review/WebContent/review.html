@@ -3,6 +3,7 @@
     <head>
         <title id="title_id"></title>
         
+        <meta charset="utf-8" />
         <meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
         <meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0",  FALSE">
         <meta http-equiv="Pragma" CONTENT="no-cache">
@@ -64,17 +65,17 @@
 //				dojo.byId('davinci_review_title').innerHTML = davinci.Runtime.commenting_designerName+"'s Review Board";
                 var userInfo;
                 var result = davinci.Runtime.serverJSONRequest({
-                    url: "./cmd/getReviewUserInfo",
+                    url: "cmd/getReviewUserInfo",
                     sync: true
                 });
 
                 if(!result) return;
                 if (result && result.userName) {
-                    dojo.byId('davinci_user').innerHTML = result.userName;
+                    dojo.byId('davinci_user').innerText = result.userName;
                 }
 				else {
                     //FIXME: temporary fix for running via file: URLs
-                    dojo.byId('davinci_user').innerHTML = "Davinci User";
+                    dojo.byId('davinci_user').innerText = "Davinci User";
                 }
                 davinci.Runtime.commenting_reviewerName = result;
                 if (result && result.isLocalInstall) {
@@ -101,15 +102,14 @@
 					var path = new davinci.model.Path(page);
 					var version = path.getSegments()[0];
 					path.removeFirstSegments(1);
-					var fileName = "./"+path.toString();
-					var node = davinci.review.model.Resource.root.findFile(version,fileName);
-					if(node)
-					davinci.Workbench.openEditor({
-		                   fileName: node,
+					var node = davinci.review.model.Resource.root.findFile(version, path.toString());
+					if(node) {
+						davinci.Workbench.openEditor({
+							fileName: node,
 							content: node.getText()
-		               });
+						});
+					}
 				}
-
             }
         </script>
     </head>

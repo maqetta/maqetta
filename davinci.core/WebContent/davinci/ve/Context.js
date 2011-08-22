@@ -39,6 +39,29 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.relativePrefix = this.relativePrefix || "";
 
+		// bind overlay widgets to corresponding davinci states
+		// FIXME: need to have a destroy to clean this up this handle?
+		this._stateSubscription = davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(args){
+			if(this.getDojo().doc.body != args.widget.containerNode){
+				// ignore event coming from another window
+				return;
+			}
+			var prefix = "_show:", widget, dvWidget, helper;
+			if(args.newState && !args.newState.indexOf(prefix)){
+				widget = this.getDijit().byId(args.newState.substring(6));
+//				widget && widget.show();
+				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				helper = dvWidget.getHelper();
+				helper && helper.popup && helper.popup(dvWidget);
+			}
+			if(args.oldState && !args.oldState.indexOf(prefix)){
+				widget = this.getDijit().byId(args.oldState.substring(6));
+//				widget && widget.hide();
+				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				helper = dvWidget.getHelper();
+				helper && helper.tearDown && helper.tearDown(dvWidget);
+			}
+		}));
 	},
 	
 
@@ -837,37 +860,15 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			localDijit.registry.forEach(function(w){
 				  w.destroy();			 
 			});
+
 			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
-			        this, '_editorSelectionChange');
+					this, '_editorSelectionChange');
 		}
 	
 		this._restoreStates(states);
 		if(attachWidgets){
 			this._attachAll();
 		}
-
-		// bind overlay widgets to corresponding davinci states
-		davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(args){
-			if(this.getDojo().doc.body != args.widget.containerNode){
-				// ignore event coming from another window
-				return;
-			}
-			var prefix = "_show:", widget, dvWidget, helper;
-			if(args.newState && !args.newState.indexOf(prefix)){
-				widget = this.getDijit().byId(args.newState.substring(6));
-//				widget && widget.show();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
-				helper = dvWidget.getHelper();
-				helper && helper.popup && helper.popup(dvWidget);
-			}
-			if(args.oldState && !args.oldState.indexOf(prefix)){
-				widget = this.getDijit().byId(args.oldState.substring(6));
-//				widget && widget.hide();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
-				helper = dvWidget.getHelper();
-				helper && helper.tearDown && helper.tearDown(dvWidget);
-			}
-		}));
 	},
 	
 	_editorSelectionChange: function(event){

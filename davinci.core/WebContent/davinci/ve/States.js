@@ -90,10 +90,11 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 	{
 		if (widget._srcElement) {
 			var str=this.serialize(widget);
-			if (str.trim().length>0)
+			if (str.trim()) {
 				widget._srcElement.addAttribute(davinci.states.ATTRIBUTE,str);
-			else
+			} else {
 				widget._srcElement.removeAttribute(davinci.states.ATTRIBUTE);
+			}
 		}
 	},
 
@@ -102,8 +103,9 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 			var doc = this.getDocument();
 			widget = doc && doc.body;
 		}
-		if (widget && widget._dvWidget)
+		if (widget && widget._dvWidget) {
 				return widget._dvWidget;
+		}
 		return widget;
 	},
 	

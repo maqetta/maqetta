@@ -590,7 +590,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 			var vName = !isRestart?node.name:node.name+" (R)";
 			this.versionTitle.set('value',vName);
 			if(!this.isRestart)
-				this.dueDate.set('value',node.dueDate=="infinite"?"":node.dueDate);
+				this.dueDate.set('value', node.dueDate == "infinite" ? new Date("") : node.dueDate);
 				this.desireWidth.set('value',node.width==0?"":node.width);
 				this.desireHeight.set('value',node.height==0?"":node.height);
 				if(node.description){

@@ -1473,11 +1473,11 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
                 if (typeof proto[prop] == "string") {
                     params[prop] = val;
                 } else if (typeof proto[prop] == "number") {
-                    params[prop] = val - 0;
+                    params[prop] = +val;
                 } else if (typeof proto[prop] == "boolean") {
-                    params[prop] = (val != "false");
+                    params[prop] = !!val;
                 } else if (typeof proto[prop] == "object") {
-                    params[prop] = eval("(" + val + ")");
+                    params[prop] = dojo.fromJson(val);
                 }
             }
             params["class"] = node.className;
@@ -1508,7 +1508,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 				this.isLayoutContainer=dijitWidget.isLayoutContainer;
 
                 // clean up -- "unwrap" incoming node from created DIV (bug 7675)
-                if (didCreateParent) {
+                if (didCreateParent && parentNode.firstChild) {
                     node = parentNode.removeChild(parentNode.firstChild);
                 }
 			} catch (e) {

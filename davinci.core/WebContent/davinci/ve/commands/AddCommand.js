@@ -76,6 +76,10 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 //				this._data.properties.id = widget.id;
 //			}
 //		}
+		//FIXME: Probably better to publish a specific reparent event
+		//and have things that need to update the list respond to
+		//that event and then maybe they update the states list
+		dojo.publish("/davinci/states/list/changed", null);
 	},
 
 	undo: function(){
@@ -100,6 +104,10 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		}
 		parent.removeChild(widget);
 		widget.destroyWidget();  
+		//FIXME: Probably better to publish a specific reparent event
+		//and have things that need to update the list respond to
+		//that event and then maybe they update the states list
+		dojo.publish("/davinci/states/list/changed", null);
 	}
 
 });

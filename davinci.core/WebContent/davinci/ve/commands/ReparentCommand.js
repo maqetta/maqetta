@@ -8,6 +8,7 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 
 	constructor: function(widget, parent, index){
 		this._id = (widget ? widget.id : undefined);
+		//FIXME: Code shouldn't depend on BODY having id="myapp". Why not just look for BODY tag?
 		this._newParentId = (parent ? parent.id : "myapp");
 		this._newIndex = index;
 	},

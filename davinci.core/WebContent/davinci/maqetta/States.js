@@ -62,7 +62,8 @@ davinci.states = {
 		}
 		return this._getStates(widget, associative);
 	},
-	//FIXME: Get rid of this
+	//FIXME: Get rid of this. Preserved for now because other code
+	//hasn't been updated to call getViews instead
 	getStates:function(widget, associative){
 		return this.getViews(widget, associative);
 	},
@@ -124,7 +125,20 @@ davinci.states = {
 	 * Sets the current state of the widget.  
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/changed", callback).
 	 */
+	setView: function(widget, newState, updateWhenCurrent, _silent){
+		widget = this._getWidget(widget); 
+		if(widget && widget._viewMgr){
+			return widget._viewMgr.setView(widget, newState, updateWhenCurrent, _silent);
+		}
+		return this._setState(widget, newState, updateWhenCurrent, _silent);
+	},
+	//FIXME: Get rid of this. Preserved for now because other code
+	//hasn't been updated to call getViews instead
 	setState: function(widget, newState, updateWhenCurrent, _silent){
+		return this.setView(widget, newState, updateWhenCurrent, _silent);
+	},
+	
+	_setState: function(widget, newState, updateWhenCurrent, _silent){
 		if (arguments.length < 2) {
 			newState = arguments[0];
 			widget = undefined;

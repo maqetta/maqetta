@@ -21,6 +21,32 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewReviewHelper", null, {
 			}
 		}
 		return views;
+	},
+	
+	setView: function(widget, newState, updateWhenCurrent, _silent){
+		if (arguments.length < 2) {
+			newState = arguments[0];
+			widget = undefined;
+		}
+		debugger;
+		widget = this._getWidget(widget);
+		if (!widget || !widget.states || (!updateWhenCurrent && widget.states.current == newState)) {
+			return;
+		}
+		var oldState = widget.states.current;
+		
+		if (this.isNormalState(newState)) {
+			if (!widget.states.current) return;
+			delete widget.states.current;
+			newState = undefined;
+		} else {
+			widget.states.current = newState;
+		}
+		if (!_silent) {
+			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
+			this.publish("/davinci/states/list/changed", null);
+		}
+		this._updateSrcState (widget);		
 	}
 
 });

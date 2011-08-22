@@ -1848,7 +1848,7 @@
                  "style": "height: 100%;"
             },
             "allowedChild": "ANY",
-            "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
+            "tool": "davinci.libraries.dojo.dojox.mobile.ViewCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper",
             "reviewHelper": "davinci.libraries.dojo.dojox.mobile.ViewReviewHelper",
             "requiresId":true,

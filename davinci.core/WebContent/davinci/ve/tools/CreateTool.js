@@ -241,6 +241,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		if(!widget){
 			return;
 		}
+		this._widget = widget;
 
 		var command = new davinci.commands.CompoundCommand();
 

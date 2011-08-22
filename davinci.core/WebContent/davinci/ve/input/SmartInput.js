@@ -371,7 +371,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		this._inline._setStyleAttr({display: "block"});
 		this._connectHelpDiv();
 		this._connectResizeHandle();
-	//	this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); //comment out for debug
+		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); //comment out for debug
 		
 		this.resize(null);
 

@@ -703,10 +703,29 @@
 	margin-bottom:10px;
 }
 
+.contentNoSelect {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}	
+
+.contentSelect {
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-o-user-select: text;
+	user-select: text;
+}
+
 .mailFailureContent {
 	border:1px dashed;
 	padding:3px;
 	margin-bottom:10px;
+	width: 600px;
+	height: 200px;
+	scroll: auto;
 }
 
 .mailFailureButton {

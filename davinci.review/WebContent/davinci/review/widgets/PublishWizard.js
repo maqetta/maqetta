@@ -607,20 +607,23 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 				var i;
 				var search = function(item,name){
 					var newChildren;
-					item.getChildren(function(children){newChildren=children;},true);
-					for(i=0;i<newChildren.length;i++){
-						if(newChildren[i].name == name)
-							return newChildren[i];
+					if(item.getChildren){
+						item.getChildren(function(children){
+							newChildren = children;
+						}, true);
+						for(var i = 0; i < newChildren.length; i++){
+							if (newChildren[i].name == name) 
+								return newChildren[i];
+						}
 					}
 					return null;
-					
 				};
-				for(i=0;i<segments.length;i++){
+				for(i = 0;i < segments.length; i++){
 					item = search(item,segments[i]);
-					if(item==null)
+					if(item == null)
 						break;
 				}
-				if(item!=null){
+				if(item != null){
 					this.addFiles([item]);
 				}
 			}));

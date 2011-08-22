@@ -6,7 +6,7 @@ if (!davinci)
 davinci.Inherits = function(clazz, parent ){
 	clazz.prototype = new parent();
 	clazz.prototype.constructor = clazz;
-}
+};
 
 /**
  * @class davinci.model.Model
@@ -19,7 +19,7 @@ davinci.model.Model= function(){
 	this.endOffset = 0;
 	this.parent= null;
 	this.children = [];
-}
+};
 davinci.model.Model.prototype.inherits = function( parent ){
  	if( arguments.length > 1 ){
  		parent.apply( this, Array.prototype.slice.call( arguments, 1 ) );
@@ -27,12 +27,12 @@ davinci.model.Model.prototype.inherits = function( parent ){
  	else{
  		parent.call( this );
  	}
-}
+};
 davinci.model.Model.prototype.getText= function(){
 	
-}
+};
 
-davinci.model.Model.prototype.setText= function(text){}
+davinci.model.Model.prototype.setText= function(text){};
 davinci.model.Model.prototype.addChild= function(child,index, fromParser){
 	child.parent=this;	
 	if (index!=undefined)
@@ -41,19 +41,19 @@ davinci.model.Model.prototype.addChild= function(child,index, fromParser){
 	}
 	else
 		this.children.push(child);
-}
+};
 davinci.model.Model.prototype.setStart = function (offset){
 	this.startOffset=offset;
-}
+};
 davinci.model.Model.prototype.setEnd = function (offset){
 	this.endOffset=offset;
-}
+};
 davinci.model.Model.prototype.getLabel = function (){
 	return null;
-}
+};
 davinci.model.Model.prototype.getID = function (){
 	return null;
-}
+};
 davinci.model.Model.prototype.findChildAtPosition = function (position){
 	if (!position.endOffset)
 		position.endOffset=position.startOffset;
@@ -72,7 +72,7 @@ davinci.model.Model.prototype.findChildAtPosition = function (position){
 		return this;
 	}
 	return null;
-}
+};
 
 davinci.model.Model.prototype.removeChild = function(child){
 	 for (var i=0;i<this.children.length;i++)
@@ -81,7 +81,7 @@ davinci.model.Model.prototype.removeChild = function(child){
 			 this.children.splice(i, 1);
 			 return;
 		 }
-}
+};
 
 davinci.model.Model.prototype.find = function (attributeMap, stopOnFirst) {
 	
@@ -116,15 +116,15 @@ davinci.model.Model.prototype.find = function (attributeMap, stopOnFirst) {
 	return visitor.found;
 	
 	
-}
+};
 
 davinci.model.Model.prototype.setDirty = function(isDirty){
 	this.dirtyResource = isDirty;
-}
+};
 
 davinci.model.Model.prototype.isDirty = function(){
 	return this.dirtyResource;
-}
+};
 
 
 davinci.model.Model.prototype.searchUp = function(elementType){
@@ -135,16 +135,15 @@ davinci.model.Model.prototype.searchUp = function(elementType){
 	
 	return parent;
 	
-}
+};
 davinci.model.Model.prototype.visit = function(visitor){
   if (!visitor.visit(this))
 	  for (var i=0;i<this.children.length;i++)
 		 this.children[i].visit(visitor);
   if(visitor.endVisit) visitor.endVisit(this);	
-}
+};
 
-davinci.model.Model.updatePositions = function (model,offset,delta)
-{
+davinci.model.Model.updatePositions = function (model,offset,delta) {
 	
 	visitor = 
 	{
@@ -166,19 +165,18 @@ davinci.model.Model.updatePositions = function (model,offset,delta)
 	};
 	
 	model.visit(visitor);
-}
+};
 
 /**
  * @class davinci.model.Comment
    * @extends davinci.model.Model
    * @constructor
  */
-davinci.model.Comment= function()
-{
+davinci.model.Comment= function() {
 	this.inherits( davinci.model.Model);  
 	this.elementType="Comment";
 	this.nosemicolon=true;
-}
+};
 
 davinci.Inherits(davinci.model.Comment,davinci.model.Model);
 davinci.model.Comment.prototype.addComment = function(type, start,stop,text){
@@ -194,17 +192,16 @@ davinci.model.Comment.prototype.addComment = function(type, start,stop,text){
 			                                s:text};
 	
 	
-}
+};
 davinci.model.Comment.prototype.appendComment = function(text){
 	
 	var comment=this.comments[this.comments.length-1];
 	comment.s+=text;
 	comment.stop+=text.length;
-}
+};
 
 
-davinci.model.Comment.prototype.getText = function (context) 
-{
+davinci.model.Comment.prototype.getText = function (context) {
 	var s="";
 	
 
@@ -216,6 +213,6 @@ davinci.model.Comment.prototype.getText = function (context)
 		}	
 	}
 	return s;
-} 
+};
 
 

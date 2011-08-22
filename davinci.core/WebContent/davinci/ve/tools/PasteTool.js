@@ -43,8 +43,8 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
 				var tool = davinci.ve.metadata.queryDescriptor(d.type, "tool");
+				var myTool;
 			    if (tool) {
-			    	var myTool;
 			        try {
 			            dojo["require"](tool);
 			        } catch(e) {
@@ -57,27 +57,31 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 					}
 			       // var obj = dojo.getObject(tool);
 			        //myTool = new obj();
-			        if(myTool.addPasteCreateCommand)
-			        	var myArgs = {};
-			        	myArgs.parent = args.parent || this._context.getContainerNode();
-			        	myArgs.position = position;
-			        	myArgs.index = index;
-			        	widget =  myTool.addPasteCreateCommand(command,myArgs);
-			        	
-			    } else {
-			    	widget = davinci.ve.widget.createWidget(d);
-			    	if(!widget){
+		        }
+		        if(myTool && myTool.addPasteCreateCommand){
+		        	var myArgs = {};
+		        	myArgs.parent = args.parent || this._context.getContainerNode();
+		        	myArgs.position = position;
+		        	myArgs.index = index;
+		        	widget =  myTool.addPasteCreateCommand(command,myArgs);
+		        	if(!widget){
 						return;
 					}
+		        } else {
+		        	widget = davinci.ve.widget.createWidget(d);
+		        	if(!widget){
+						return;
+					}
+		        	command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
+		        }
+		    					
+				if(index !== undefined && index >= 0){
+					index++;
+				}
+				if(position){
+					command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
+				}
 
-					command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
-					if(index !== undefined && index >= 0){
-						index++;
-					}
-					if(position){
-						command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
-					}
-			    }
 				
 			}, this);
 			if(!widget){

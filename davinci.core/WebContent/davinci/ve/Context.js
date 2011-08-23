@@ -926,11 +926,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				}
 			}
 		}});
+		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
 			davinci.ve.states.setState(item.widget, item.state, true);
 		}
+		*/
+		davinci.ve.states.viewsRefresh(this);
 	},
 
 	getHeader: function(){

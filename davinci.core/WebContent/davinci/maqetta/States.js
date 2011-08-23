@@ -53,6 +53,20 @@ davinci.states = {
 	},
 	
 	/**
+	 * Send message to tell listeners they may need to update
+	 * based on latest set of states/views
+	 */
+	viewsRefresh:function(context){
+		var rootWidget = context.rootWidget;
+		if(rootWidget){
+			var state = this.getState(rootWidget);
+			//Force recompute-all due to state change
+			this.setState(state);
+		}
+		//this.publish("/davinci/states/list/changed", null);
+	},
+	
+	/**
 	 * Returns the array of views for the given widget.
 	 */ 
 	getViews: function(widget, associative){

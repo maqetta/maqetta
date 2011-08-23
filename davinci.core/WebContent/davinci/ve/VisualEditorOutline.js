@@ -19,8 +19,7 @@ dojo.declare("davinci.ve.VisualEditorOutline",davinci.workbench.OutlineProvider,
 		this._handles=[];
 		this._connect("onSelectionChange", "onSelectionChange");
 		this._connect("deselect", "deselect"); 
-		
-		
+
 		this._widgetModel=new davinci.ve.OutlineTreeModel(this._context);
 		this._srcModel=new davinci.html.ui.HTMLOutlineModel(editor.model);
 		davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 

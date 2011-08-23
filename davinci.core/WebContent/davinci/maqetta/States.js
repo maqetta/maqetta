@@ -105,7 +105,7 @@ davinci.states = {
 	 * Returns true if the widget declares the state, false otherwise.
 	 */
 	hasState: function(widget, state, property){ 
-		if (arguments.length < 2) {
+		if (typeof widget == "string" || arguments.length < 2) {
 			state = arguments[0];
 			widget = undefined;
 		}
@@ -116,8 +116,21 @@ davinci.states = {
 	/**
 	 * Returns the current state of the widget.
 	 */
-	getState: function(widget){ 
+	getView: function(widget){ 
 		widget = this._getWidget(widget);
+		if(widget && widget._viewMgr){
+			//FIXME: check for getView/etc?
+			return widget._viewMgr.getView(widget);
+		}else{
+			return this._getState(widget);
+		}
+	},
+	//FIXME: Get rid of this. Preserved for now because other code
+	//hasn't been updated to call getView instead
+	getState: function(widget){ 
+		return this.getView(widget);
+	},
+	_getState: function(widget){ 
 		return widget && widget.states && widget.states.current;
 	},
 	
@@ -126,28 +139,38 @@ davinci.states = {
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/changed", callback).
 	 */
 	setView: function(widget, newState, updateWhenCurrent, _silent){
+		var oldState;
+		if (typeof widget == "string" || arguments.length < 2) {
+			newState = arguments[0];
+			//FIXME: this is OK for views that are on BODY, but not for nested views
+			widget = undefined;
+		}
 		widget = this._getWidget(widget); 
 		if(widget && widget._viewMgr){
-			return widget._viewMgr.setView(widget, newState, updateWhenCurrent, _silent);
+			widget._viewMgr.setView(widget, newState, updateWhenCurrent, _silent);
+		}else{
+			if(widget && widget.states){
+				//FIXME: Do we really need oldState? Not currently available with View widget
+				oldState = widget.states.current;				
+			}
+			this._setState(widget, newState, updateWhenCurrent, _silent);
 		}
-		return this._setState(widget, newState, updateWhenCurrent, _silent);
+		if (!_silent) {
+			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
+			this.publish("/davinci/states/list/changed", null);
+		}
 	},
 	//FIXME: Get rid of this. Preserved for now because other code
-	//hasn't been updated to call getViews instead
+	//hasn't been updated to call SetView instead
 	setState: function(widget, newState, updateWhenCurrent, _silent){
 		return this.setView(widget, newState, updateWhenCurrent, _silent);
 	},
 	
 	_setState: function(widget, newState, updateWhenCurrent, _silent){
-		if (arguments.length < 2) {
-			newState = arguments[0];
-			widget = undefined;
-		}
 		widget = this._getWidget(widget);
 		if (!widget || !widget.states || (!updateWhenCurrent && widget.states.current == newState)) {
 			return;
 		}
-		var oldState = widget.states.current;
 		
 		if (this.isNormalState(newState)) {
 			if (!widget.states.current) return;
@@ -155,10 +178,6 @@ davinci.states = {
 			newState = undefined;
 		} else {
 			widget.states.current = newState;
-		}
-		if (!_silent) {
-			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
-			this.publish("/davinci/states/list/changed", null);
 		}
 		this._updateSrcState (widget);
 		
@@ -501,6 +520,23 @@ davinci.states = {
 		}
 		return widget;
 	},
+
+	/**
+	 * Callback function for dojo.subscribe("/davinci/states/state/changed",...)
+	 * 
+	 * @param {object} e Event object
+	 */
+	_stateChanged: function(e){
+		var children = davinci.states._getChildrenOfNode(e.widget.domNode || e.widget);
+		while (children.length) {
+			var child = children.shift();
+			var childWidget = davinci.states._getWidgetByNode(child);
+			if (!davinci.states.isContainer(childWidget)) {
+				children = children.concat(davinci.states._getChildrenOfNode(childWidget.domNode || childWidget));				
+			}
+			davinci.states._update(childWidget, e.newState, e.oldState);
+		}		
+	},
 	
 	initialize: function() {
 	
@@ -517,7 +553,7 @@ davinci.states = {
 					davinci.states._update(childWidget, e.newState, e.oldState);
 				}
 			});
-			
+			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged(e)));			
 			this.subscribed = true;
 		}
 	}

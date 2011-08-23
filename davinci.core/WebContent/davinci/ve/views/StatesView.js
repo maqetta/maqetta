@@ -425,8 +425,8 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	},
 	
 	_updateSelection: function() {
-		//FIXME: Maybe only update selection if it has changed?
-		//Does this logic cause flicker
+		var selection = this._getStateList().selection;
+		var oldSelectionIndex = selection.selectedIndex;
 		var selectionIndex = 0;
 		var currentState = davinci.ve.states.getState(this._getWidget());
 
@@ -440,9 +440,10 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 				}
 			})
 		});
-
-		this._getStateList().selection.clear();
-		this._getStateList().selection.addToSelection(selectionIndex);
+		if(oldSelectionIndex!=selectionIndex){
+			this._getStateList().selection.clear();
+			this._getStateList().selection.addToSelection(selectionIndex);			
+		}
 	},
 
 	_updateThemeSelection: function(currentState, silent) {

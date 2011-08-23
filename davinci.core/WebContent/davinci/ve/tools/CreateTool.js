@@ -58,7 +58,13 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}else{
 			this._setTarget(event.target);
 			if(!this._context.getFlowLayout()){
-				davinci.ve.Snap.updateSnapLines(this._context, {l:event.pageX,t:event.pageY,w:0,h:0});
+				var box = {l:event.pageX,t:event.pageY,w:0,h:0};
+				if(event.target.tagName == "IFRAME"){
+					var pos = dojo.position(event.target);
+					box.l = event.x - pos.x;
+					box.t = event.y - pos.y;
+				}
+				davinci.ve.Snap.updateSnapLines(this._context, box);
 			}
 		}
 	},
@@ -112,6 +118,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				target = match;
 			}
 			target = target || this._context.rootWidget;
+			this._position = {x:x, y:y};
 		}
 
 		target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);

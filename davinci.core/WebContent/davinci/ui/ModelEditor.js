@@ -6,14 +6,14 @@ dojo.require("davinci.ui.TextEditor");
 
 dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 
-	  constructor : function (element) {
+    constructor : function (element) {
 		this.model=null;
 		this.subscribe("/davinci/ui/selectionChanged", this.selectModel);
 
 	},
-	colorize : function (text)
-	{
-	return null;
+	
+	colorize : function (text) {
+	    return null;
 	},
 	
 	setContent : function (filename, content) {

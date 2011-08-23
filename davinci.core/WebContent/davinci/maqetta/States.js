@@ -153,6 +153,10 @@ davinci.states = {
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/changed", callback).
 	 */
 	setView: function(widget, newState, updateWhenCurrent, _silent){
+		// Prevent infinite loop
+		if(this._setViewPublishing){
+			return;
+		}
 		var oldState;
 		if (typeof widget == "string" || arguments.length < 2) {
 			newState = arguments[0];
@@ -170,8 +174,10 @@ davinci.states = {
 			this._setState(widget, newState, updateWhenCurrent, _silent);
 		}
 		if (!_silent) {
+			this._setViewPublishing = true;
 			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
 			this.publish("/davinci/states/list/changed", null);
+			this._setViewPublishing = false;
 		}
 	},
 	//FIXME: Get rid of this. Preserved for now because other code

@@ -1381,7 +1381,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 
 		if(state){
 			if(state.box && state.op){
-				if(!focus._connected){
+				if(!focus._connected && this._connects){
 					this._connects.push(dojo.connect(focus, "onExtentChange", this, "onExtentChange"));
 					focus._connected = true;
 				}

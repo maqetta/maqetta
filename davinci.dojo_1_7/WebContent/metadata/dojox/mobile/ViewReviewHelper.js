@@ -49,8 +49,9 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewReviewHelper", null, {
 	
 	setView: function(viewContainerWidget, newView, updateWhenCurrent, _silent){
 		if(viewContainerWidget && typeof newView == "string"){
+			var context = viewContainerWidget._edit_context;
 			var node = viewContainerWidget.domNode;
-			if(node && node.ownerDocument){
+			if(node && node.ownerDocument && context){
 				var dj = node.ownerDocument.defaultView.dojo;
 				var newSelectedViewNode = dj.byId(newView);
 				if(newSelectedViewNode){
@@ -59,6 +60,9 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewReviewHelper", null, {
 						if(dojo.hasClass(child, "mblView")){
 							if(child == newSelectedViewNode){
 								child.style.display = "block";
+								if(child._dvWidget){
+									context.select(child._dvWidget);									
+								}
 							}else{
 								child.style.display = "none";							
 							}

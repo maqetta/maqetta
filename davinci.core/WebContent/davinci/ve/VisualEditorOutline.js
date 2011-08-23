@@ -24,6 +24,8 @@ dojo.declare("davinci.ve.VisualEditorOutline",davinci.workbench.OutlineProvider,
 		this._widgetModel=new davinci.ve.OutlineTreeModel(this._context);
 		this._srcModel=new davinci.html.ui.HTMLOutlineModel(editor.model);
 		davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
+			//FIXME: Jon may need to make fixes here. 
+			// These direct calls to davinci.ve.states probably won't work with views.
 			if ((typeof davinci != "undefined" && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass) == "davinci.themeEditor.ThemeEditor") return; // ignore updates in theme editor
 			if (!this._tree) return;
 			var children = davinci.ve.states.getChildren(e.widget);

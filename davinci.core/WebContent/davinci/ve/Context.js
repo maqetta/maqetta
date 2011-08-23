@@ -39,9 +39,12 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.relativePrefix = this.relativePrefix || "";
 
+		//FIXME: Good change this section might go away or get consolidated
+		//into Jon's states/views changes
 		// bind overlay widgets to corresponding davinci states
 		// FIXME: need to have a destroy to clean this up this handle?
 		this._stateSubscription = davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(args){
+			/*
 			if(this.getDojo().doc.body != args.widget.containerNode){
 				// ignore event coming from another window
 				return;
@@ -61,6 +64,7 @@ dojo.declare("davinci.ve.Context", null, {
 				helper = dvWidget.getHelper();
 				helper && helper.tearDown && helper.tearDown(dvWidget);
 			}
+			*/
 		}));
 	},
 	

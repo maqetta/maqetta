@@ -26,26 +26,37 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxHelper", null, {
 			throw('ComboBoxHelper: Error missing data-dojo-props')
 			
 		}
+		var values = this.getStoreValues(dojoProps);
+        if (widget._edit_context) {
+            var ldijit = widget._edit_context.getDijit();
+            var storeWidget = ldijit.byId(values.storeId);
+            if (storeWidget) { // only replace the store if we find a new one.
+                widget.dijitWidget.store = storeWidget;
+            }
+        }
+		
+		widget.domNode.value = values.value;
+
+		
+	},
+	
+	getStoreValues: function(dojoProps){
+		var values = {};
 		//"value:"Item 1", list:"DataList_1""
-		var patt= new RegExp('^[ \s]+|[ \s]+$', "g");
-//		^[ \t]+|[ \t]+$
 		var re = new RegExp('"', "g");
 		for (var i = 0; i < dojoProps.length; i++){
 			var prop = dojoProps[i].split(':');
-			var result = prop[0].replace(patt, '');
+			var result = prop[0].trim()
 			if(result === 'list'){ 
-				storeId =  prop[1].replace(re,'');
-				storeId = storeId.replace(patt, '');
+				values.storeId =  prop[1].replace(re,'');
+				values.storeId = values.storeId.trim();
 			}else if(result === 'value'){
-				value = prop[1].replace(re,'');
+				values.value = prop[1].replace(re,'');
+				values.value = values.value.trim();
 			}
 		}
-		var storeWidget = davinci.ve.widget.byId(storeId);
-		if(storeWidget.dijitWidget){ // only replace the store if we find a new one. 
-			widget.dijitWidget.store = storeWidget.dijitWidget;
-		}
-		widget.domNode.value = value;
-
+		
+		return values;
 		
 	},
 	

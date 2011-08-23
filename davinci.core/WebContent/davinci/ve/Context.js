@@ -374,6 +374,7 @@ dojo.declare("davinci.ve.Context", null, {
 		if (lib.length == 0) {
 			lib = './lib';
 		}
+		lib = this.relativePrefix + lib;
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
@@ -391,8 +392,10 @@ dojo.declare("davinci.ve.Context", null, {
 		// remove the old css files
 		for(var ip = 0; ip < iphone_links.length; ip++){
 			var href = iphone_links[ip].href;
-			if (href.indexOf('iphone/iphone.css') > 0)
-				head.removeChild(iphone_links[ip]);
+			if (href.indexOf('iphone/iphone.css') > 0 || href.indexOf('iphone/iphone-compat.css') > 0){
+			    head.removeChild(iphone_links[ip]); 
+			}
+			
 		}
 		if (device){
 			this.setMobileDevice(device);
@@ -2115,7 +2118,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
 				queryStr += '[' + name + '="' + attrs[name] + '"]';
 			}
-			dojo.destroy(dojo.query(queryStr)[0]);
+			//dojo.destroy(dojo.query(queryStr)[0]);
+			var n = dojo.query(queryStr)[0];
+			if (n){ // throws exception if n is null
+			    dojo.destroy(n);
+			}
 		});
 	}
 });

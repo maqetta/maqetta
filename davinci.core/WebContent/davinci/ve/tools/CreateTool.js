@@ -59,11 +59,6 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			this._setTarget(event.target);
 			if(!this._context.getFlowLayout()){
 				var box = {l:event.pageX,t:event.pageY,w:0,h:0};
-				if(event.target.tagName == "IFRAME"){
-					var pos = dojo.position(event.target);
-					box.l = event.x - pos.x;
-					box.t = event.y - pos.y;
-				}
 				davinci.ve.Snap.updateSnapLines(this._context, box);
 			}
 		}
@@ -83,45 +78,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			this._position = this._adjustPosition(this._context.getContentPosition(event));
 		}
 
-		var target, size;
-
-		if(event.target.tagName == "IFRAME"){
-			// We registered mouse listeners on the IFRAME since registering them on the content did not work cross-iframe
-			// in Safari.  Try to calculate if there's a container widget at this x/y coordinate
-
-			//TODO: make sure to check includeScroll
-			var context = this._context,
-				pos = dojo.position(event.target),
-				x = event.x - pos.x,
-				y = event.y - pos.y,
-				list = davinci.ve.widget.allWidgets(this._context.getContainerNode());
-			list = list.filter(function(w){
-				return davinci.ve.metadata.getAllowedChild(w.type)[0] !== 'NONE';
-			}).filter(function(w){
-				var c = dojo.position(w.domNode),
-					p = context.getContentPosition(c);
-				return x > p.x && x < p.x + c.w && y > p.y && y < p.y + c.h;
-			});
-			// look for a match deep in the widget hierarchy
-			var match;
-			if(list.some(function(w){
-				match = w;
-				return list.every(function(x){
-					if(x != w){
-						for(; x.getParent; x = x.getParent()){
-							if(x == w){ return false; }
-						}
-					}
-					return true;
-				});
-			})){
-				target = match;
-			}
-			target = target || this._context.rootWidget;
-			this._position = {x:x, y:y};
-		}
-
-		target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+		var size,
+			target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 		
 		try {
 			// XXX Have to do this call here, rather than in the more favorable

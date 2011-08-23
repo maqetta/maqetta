@@ -111,11 +111,6 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
 			dojo.connect(containerNode, "onmouseout", this, "onMouseOut"),
-			// When dragging from the top window to the editor, Safari only gets mouse events on the top document
-			dojo.connect(this.hostNode, "onmousedown", this, "onMouseDown"),
-			dojo.connect(this.hostNode, "onmousemove", this, "onMouseMove"),
-			dojo.connect(this.hostNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(this.hostNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
 	},

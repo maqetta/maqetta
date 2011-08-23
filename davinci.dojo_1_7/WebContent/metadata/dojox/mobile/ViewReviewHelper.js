@@ -7,6 +7,12 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewReviewHelper", null, {
 			var nearestParentViewMgr = viewController.nearestParentViewMgr(widget);
 			viewController.setViewMgr(nearestParentViewMgr, this);
 		}
+		dojo.subscribe("/davinci/ui/widgetSelected",dojo.hitch(this,function(e){
+			var widget=e[0];
+			if(widget && widget.domNode && dojo.hasClass(widget.domNode,"mblView") && widget.domNode.id){
+				davinci.ve.states.setState(widget.domNode.id);
+			}
+		}));
 	},
 	
 	getViews: function(widget){

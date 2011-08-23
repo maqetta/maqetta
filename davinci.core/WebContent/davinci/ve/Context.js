@@ -1667,9 +1667,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	},
 
 	onSelectionChange: function(selection){
+		//Prevent infinite loop
+		if(this._publishingWidgetSelected){
+			return;
+		}
+		this._publishingWidgetSelected = true;
 		this._cssCache = {};
-		
 		dojo.publish("/davinci/ui/widgetSelected",[selection]);
+		this._publishingWidgetSelected = false;
 	},
 
 	hotModifyCssRule: function(r){

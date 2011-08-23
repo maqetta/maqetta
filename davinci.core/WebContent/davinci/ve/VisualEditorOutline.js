@@ -82,13 +82,25 @@ dojo.declare("davinci.ve.VisualEditorOutline",davinci.workbench.OutlineProvider,
 		return this._tree && this._tree._getSelectedItemAttr();
 	},
 	
-	onSelectionChange: function(selection, add){ 
+	onSelectionChange: function(selection, add){
+		/*
+		//Prevent infinite loop
+		if(this._onSelectionChangeInProcess){
+			return;
+		}
+		this._onSelectionChangeInProcess = true;
+		*/
 		if (this._outlineMode!="design")
 			return;
 		selection = selection || this._context.getSelection();
 		if (selection) {
 			this._tree.selectNode(selection, add); 
 		}
+		/*
+		//FIXME: Probably overkill
+		davinci.ve.states.viewsRefresh(this._context);
+		this._onSelectionChangeInProcess = false;
+		*/
 	},
 	
 	deselect: function(){

@@ -55,7 +55,7 @@
 		dojo.addOnLoad(function()
 		{
 		    // Display a warning dialog for unsupported browsers
-			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)) {
+			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
 				var langObj = dojo.i18n.getLocalization("davinci","webContent");
                 var unsupportedDialog = new dijit.Dialog({
                     id: "unsupportedBrowserDialog",

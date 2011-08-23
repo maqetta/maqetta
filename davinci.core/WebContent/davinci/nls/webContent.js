@@ -6,7 +6,7 @@
 		"loadingMaqetta":"&nbsp;Loading Maqetta...",
 		"logOff":"Log Out",//also in review.html
 		"unsupportedBrowser":"Unsupported Browser",
-		"unsupportedNote":"Maqetta supports Firefox 4, Chrome and Safari 5. Please upgrade your browser to one of these versions. If you wish to continue with an unsupported browser, click \"Continue.\"",
+		"unsupportedNote":"Maqetta supports Firefox 4, Chrome 5, and Safari 5.1 or greater. If you wish to continue with an unsupported browser, click \"Continue.\"",
 		"buttonContinue":"Continue",
 		"pageDesignerTitle":"Maqetta Designer",
 		"maqettaUser":"Maqetta User",

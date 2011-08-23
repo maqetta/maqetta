@@ -88,8 +88,8 @@
     }
 
 	dojo.addOnLoad(function (){
-		if(!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
-			dojo.create("div", {innerHTML: "Firefox 4, Chrome 5, Safari 5 or greater is required", "class": "sniff"}, "loginpane", "first");
+		if(!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)){
+			dojo.create("div", {innerHTML: "Firefox 4, Chrome 5, Safari 5.1 or greater is required", "class": "sniff"}, "loginpane", "first");
 		}
 
 		dojo.xhrGet({url:"cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){

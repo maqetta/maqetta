@@ -1,3 +1,5 @@
+//FIXME: Does anyone invoke these routines? Don't think so. Should remove
+
 dojo.provide("davinci.ve.actions.LayerActions");
 
 dojo.require("davinci.ve.widget");

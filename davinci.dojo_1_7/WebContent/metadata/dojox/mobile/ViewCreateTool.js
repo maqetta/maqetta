@@ -55,8 +55,11 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewCreateTool", davinci.libra
 	    	var okWidget = dijit.byId('ViewCreateToolOKButton');
 	    	dialog.connect(okWidget,'onclick',function(){alert('hi');});
 	    	dialog._viewWidget = this._widget;
+	    	dialog._viewTarget = target;
 	    	dialog._viewWidgetContext = this._context;
 	    	dialog.show();
+        }else{
+        	davinci.ve.states.setState(this._context.rootWidget, this._widget.domNode.id, true, false);
         }
      },
      
@@ -70,12 +73,20 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewCreateTool", davinci.libra
     	 }
     	 var dialog = dijit.byId('ViewCreateToolDialog');
     	 var viewWidget = dialog._viewWidget;
+    	 var viewTarget = dialog._viewTarget;
     	 var context = dialog._viewWidgetContext;
     	 dialog.hide();
     	 dialog.destroyRecursive();
     	 if(value=="bodyParent"){
      		var command = new davinci.ve.commands.ReparentCommand(viewWidget, context.rootWidget, undefined);
     		context.getCommandStack().execute(command);
+    		//FIXME: May need to do same reselect business for other reparent commands.
+    		context.select(null);
+    		context.select(viewWidget);
+    		davinci.ve.states.setState(context.rootWidget, viewWidget.domNode.id, true, false);
+    	 }else{
+    		 var nearestParentViewMgr = davinci.ve.states.nearestParentViewMgr(viewTarget);
+    		 davinci.ve.states.setState(nearestParentViewMgr, viewWidget.domNode.id, true, false);
     	 }
      }
 });

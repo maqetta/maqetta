@@ -212,15 +212,21 @@ davinci.states = {
 	
 	setStyle: function(widget, state, style, value, silent) {
 		widget = this._getWidget(widget);
-
 		if (!widget || !style) return;
-			
 		if (typeof style == "string") {
 			var name = style;
 			style = {};
 			style[name] = value;
 		}
-		
+		var helper = widget.getHelper();
+		if(helper && helper.setStyle){
+			return helper.setStyle(widget, state, style, value, silent);			
+		}else{
+			return this._setStyle(widget, state, style, value, silent);
+		}
+	},
+	
+	_setStyle: function(widget, state, style, value, silent) {
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].style = widget.states[state].style || {};
@@ -232,11 +238,11 @@ davinci.states = {
 				widget.states[state].style[name] = value;
 			}		
 		}
-			
 		if (!silent) {
 			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:style}]);
 		}
 		this._updateSrcState (widget);
+		return true;
 	},
 	
 	_convertStyleName: function(name) {

@@ -38,6 +38,28 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			}
 		});
 		dojo.publish("/davinci/states/list/changed",null);
+	},
+	
+	setStyle: function(widget, state, style, value, silent) {
+		//FIXME: Need to figure out how this relates to states.
+		//Maybe need to update display for states for all sibling widgets
+		//FIXME: Need to deal with other properties than just display
+		if(typeof style.display == "string"){
+			if(style.display == "none"){
+				return false;
+			}else{
+				var domNode = widget.domNode;
+				var display = dojo.style(domNode,"display");
+				if(display=="none"){
+					var nearestParentViewMgr = davinci.ve.states.nearestParentViewMgr(widget);
+					davinci.ve.states.setView(nearestParentViewMgr, domNode.id);
+					return true;
+				}else{
+					return false;
+				}				
+			}
+		}
+		return false;
 	}
 
 });

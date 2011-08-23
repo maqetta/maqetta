@@ -264,7 +264,7 @@ dojo.declare("davinci.ve.OutlineTreeModel",	null, {
 		var visible = !on;
 		var state = davinci.ve.states.getState();
 		var value = visible ? "" : "none";
-		davinci.ve.states.setStyle(item, state, "display", value);
+		return davinci.ve.states.setStyle(item, state, "display", value);
 	},
 	
 	isToggleOn: function(item) {

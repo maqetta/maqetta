@@ -114,7 +114,6 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 	},
 	
 	selectModel : function (selection) {
-	    console.debug("ModelEditor::selectModel");
 		if (this.publishingSelect)
 			return;
 		if (selection.length>0)
@@ -122,7 +121,6 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 			if (selection[0].model)
 			{
 				var model=selection[0].model;
-		        console.debug("ModelEditor::selectModel model.elementType="+model.elementType);
 				if (model.elementType)
 					this.select({ startOffset:model.startOffset, endOffset:model.endOffset});
 			}

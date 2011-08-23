@@ -57,8 +57,8 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	},
 	
 	supports: function (something){
-		//FIXME: use regexp
-		return something == "palette" || something =="properties" || something =="style" || something == "states" || something=="inline-style" || something=="MultiPropTarget";
+	    var pattern=/^\s*(palette|properties|style|states|inline-style|MultiPropTarget)\s*$/;
+	    return pattern.test(something);
 	},
 
 	focus: function(){

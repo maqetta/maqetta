@@ -816,7 +816,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		if(this._widget)
 			this._topWidgetDom = this.context.getWidgetTopDom(this._widget, this.target) || this._widget.domNode || this._widget;
 		else
-			this._topWidgetdom = null;
+			this._topWidgetDom = null;
 		
 		this._updateCascadeList();	
 	

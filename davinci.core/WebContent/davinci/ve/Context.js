@@ -370,16 +370,14 @@ dojo.declare("davinci.ve.Context", null, {
 		} else {
 			oldCssFiles = preview.silhouetteiframe.getMobileCss('iPhone');
 		}
-		var lib = this.getLibraryBase();
-		if (lib.length == 0) {
-			lib = './lib';
-		}
+		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
+		var lib = this.getLibraryBase('dojo', libVer);
 		lib = this.relativePrefix + lib;
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
 		for (var oc = 0; oc < oldCssFiles.length; oc++){
-			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
+			var qStr = 'link[href="'+lib+'/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
 			var links = head.querySelectorAll(qStr);
 			// remove the old css files
 			for(var x = 0; x < links.length; x++){
@@ -404,7 +402,7 @@ dojo.declare("davinci.ve.Context", null, {
 				var link = doc.createElement("link");
 				link.setAttribute("rel", "stylesheet");
 				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
+				link.setAttribute("href", lib+"/dojox/mobile/themes/"+cssFiles[i]);
 				
 				head.appendChild(link,0);
 			}
@@ -414,7 +412,7 @@ dojo.declare("davinci.ve.Context", null, {
 				var link = doc.createElement("link");
 				link.setAttribute("rel", "stylesheet");
 				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
+				link.setAttribute("href", lib+"/dojox/mobile/themes/"+oldCssFiles[i]);
 				
 				head.appendChild(link,0);
 			}

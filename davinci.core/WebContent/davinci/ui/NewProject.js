@@ -15,7 +15,7 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 	templateString: dojo.cache("davinci.ui", "templates/NewProject.html"),
 	_okButton: null,
 	_projectName : null,
-	
+	_eclipseSupport: null,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -33,6 +33,8 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		dojo.connect(this._projectName, "onkeyup", this, '_checkValid');
 		
 	},
+	
+	
 	_checkValid : function(){
 		
 		// make sure the project name is OK.
@@ -50,6 +52,11 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		this.value = dojo.attr(this._projectName, "value");
 		this.onClose();
 	},
+	
+	_getEclipseProjectAttr : function(){
+		 return dojo.attr(this._eclipseSupport, "checked");
+	},
+	
 	_getValueAttr : function(){
 		return this.value;
 	},

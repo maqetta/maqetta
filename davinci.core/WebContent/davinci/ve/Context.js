@@ -1416,7 +1416,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		var bodyElement=htmlElement.getChildElement("body");
 		flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			flowLayout = editorPrefs.flowLayout;
 			this.setFlowLayout(flowLayout);
 		} else {

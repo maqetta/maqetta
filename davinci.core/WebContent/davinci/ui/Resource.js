@@ -272,6 +272,9 @@ dojo.mixin(davinci.ui.Resource, {
 		var projectDialog = new davinci.ui.NewProject({});
 		function callBack(){
 			var newProjectName = dojo.attr(projectDialog, "value");
+			var isEclipse = dojo.attr(projectDialog, "eclipseProject");
+			
+			
 			davinci.resource.createProject(newProjectName, true);
 			
 			if(davinci.Runtime.singleProjectMode())

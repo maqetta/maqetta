@@ -130,7 +130,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			return;
 		}
 		
-		var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+		var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 		
 		var askUser = false;
 		// New logic: prompt user only if theme CSS files are going to change
@@ -171,7 +171,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 																	
 																	if(!result.alwaysShow){
 																		editorPrefs['cssOverrideWarn'] = false;
-																		davinci.workbench.Preferences.savePreferences('davinci.ve.editorPrefs',editorPrefs);
+																		davinci.workbench.Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
 																	}
 																	
 																})});

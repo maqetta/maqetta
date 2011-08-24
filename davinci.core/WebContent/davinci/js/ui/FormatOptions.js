@@ -109,7 +109,7 @@ dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane
             type: "dynamic",
             createNode : function (fieldData,parentNode,panel){
             
-            var options=davinci.workbench.Preferences.getPreferences("davinci.js.format");
+            var options=davinci.workbench.Preferences.getPreferences("davinci.js.format", davinci.Runtime.getProject());
              var div = dojo.doc.createElement("div");
 
                dojo.connect(panel,"onChange",function(){

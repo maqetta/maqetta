@@ -51,7 +51,25 @@
 		}
 		
 	],
-	
+	"davinci.preferences" : [
+	    {
+	    	name:"Project",
+	        id:"project",
+	        category:"",
+	        pageContent:"Project Settings here"
+	    },
+		{name:"Project Settings", 
+	     id:"projectPrefs", 
+	     category:"davinci.ui.project",
+		 
+	     pane:"davinci.ui.ProjectPreferences",
+			    defaultValues : {
+			    	"webContent":"",
+			    	"themeFolderNode":"./themes"
+			     }
+	     }
+		                 	
+	 ],
 	"davinci.perspective":
 		 {
 			 id:"main",

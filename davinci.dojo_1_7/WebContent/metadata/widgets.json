@@ -872,8 +872,8 @@
                 }
             ],
             "tool": "davinci.libraries.dojo.dojox.grid.TreeGridCreateTool",
-            "helper": "davinci.libraries.dojo.dojox.grid.TreeGridHelper",
-            "inlineEdit": "davinci.libraries.dojo.dojox.grid.TreeGridInput" 
+            "helper": "davinci.libraries.dojo.dojox.grid.TreeGridHelper"
+            /*"inlineEdit": "davinci.libraries.dojo.dojox.grid.TreeGridInput" */
         },
         {
             "name": "ValidationTextBox",

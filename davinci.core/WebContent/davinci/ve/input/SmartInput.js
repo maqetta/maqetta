@@ -473,14 +473,20 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 	
 	handleEvent: function(event){
 
-		if (event.keyCode == 13) {
-			var multiLine = this.multiLine;
-			if (!multiLine || multiLine == "false" || this._lastKeyCode == 13){ // back to back CR
-				this.hide();
-			}
-		} else {
-			this.updateFormats();
-		}
+	    switch (event.keyCode)
+	    {
+    	    case 13: // enter
+    	        var multiLine = this.multiLine;
+                if (!multiLine || multiLine == "false" || this._lastKeyCode == 13 || event.ctrlKey){ // back to back CR or CTRL+ENTER
+                    this.onOk();
+                }
+                break;
+    	    case 27: // ESC
+    	        this.onCancel();
+    	        break;
+    	    default:
+    	        this.updateFormats();
+	    }
 		this._lastKeyCode = event.keyCode;
 		this.updateSimStyle();
 	},

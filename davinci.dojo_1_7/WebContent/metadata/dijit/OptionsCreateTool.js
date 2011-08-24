@@ -79,8 +79,9 @@ dojo.declare("dojo.metadata.dijit.OptionsCreateTool", davinci.ve.tools.CreateToo
 
 		var command = new davinci.commands.CompoundCommand();
 		var index = args.index;
-		
-		command.add(new davinci.ve.commands.AddCommand(store, args.parent, index));
+		// always put store and model as first element under body, to ensure they are constructed by dojo before they are used
+        var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
+        command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(widget, args.parent, index));
 		

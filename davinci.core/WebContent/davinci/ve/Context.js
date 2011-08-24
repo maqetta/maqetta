@@ -346,15 +346,14 @@ dojo.declare("davinci.ve.Context", null, {
 		} else {
 			oldCssFiles = preview.silhouetteiframe.getMobileCss('iPhone');
 		}
-		var lib = this.getLibraryBase();
-		if (lib.length == 0) {
-			lib = './lib';
-		}
+		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
+		var lib = this.getLibraryBase('dojo', libVer);
+		lib = this.relativePrefix + lib;
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
 		for (var oc = 0; oc < oldCssFiles.length; oc++){
-			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
+			var qStr = 'link[href="'+lib+'/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
 			var links = head.querySelectorAll(qStr);
 			// remove the old css files
 			for(var x = 0; x < links.length; x++){
@@ -367,8 +366,10 @@ dojo.declare("davinci.ve.Context", null, {
 		// remove the old css files
 		for(var ip = 0; ip < iphone_links.length; ip++){
 			var href = iphone_links[ip].href;
-			if (href.indexOf('iphone/iphone.css') > 0)
-				head.removeChild(iphone_links[ip]);
+			if (href.indexOf('iphone/iphone.css') > 0 || href.indexOf('iphone/iphone-compat.css') > 0){
+			    head.removeChild(iphone_links[ip]); 
+			}
+			
 		}
 		if (device){
 			this.setMobileDevice(device);
@@ -377,7 +378,7 @@ dojo.declare("davinci.ve.Context", null, {
 				var link = doc.createElement("link");
 				link.setAttribute("rel", "stylesheet");
 				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
+				link.setAttribute("href", lib+"/dojox/mobile/themes/"+cssFiles[i]);
 				
 				head.appendChild(link,0);
 			}
@@ -387,7 +388,7 @@ dojo.declare("davinci.ve.Context", null, {
 				var link = doc.createElement("link");
 				link.setAttribute("rel", "stylesheet");
 				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
+				link.setAttribute("href", lib+"/dojox/mobile/themes/"+oldCssFiles[i]);
 				
 				head.appendChild(link,0);
 			}
@@ -2091,7 +2092,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
 				queryStr += '[' + name + '="' + attrs[name] + '"]';
 			}
-			dojo.destroy(dojo.query(queryStr)[0]);
+			//dojo.destroy(dojo.query(queryStr)[0]);
+			var n = dojo.query(queryStr)[0];
+			if (n){ // throws exception if n is null
+			    dojo.destroy(n);
+			}
 		});
 	}
 });

@@ -12,8 +12,15 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", dav
 	constructor: function(data){
 		this._resizable = "both";
 	},
-
+	
 	_create: function(args){
+        
+        var command = this._getCreateCommand(args);
+        this._context.getCommandStack().execute(command);
+        this._select(this._container);
+    },
+
+    _getCreateCommand: function(args){
 		if(this._data.length !== 2){
 			return;
 		}
@@ -58,10 +65,20 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.StackContainerCreateTool", dav
 		if(args.size){
 			command.add(new davinci.ve.commands.ResizeCommand(container, args.size.w, args.size.h));
 		}
-		this._context.getCommandStack().execute(command);
+		this._container = container;
+        return command;
+	},
+    
+    addPasteCreateCommand: function(command, args){
 
-		this._context.select(controller);
-		this._context.select(container, true); // add
-	}
+        this._context = this._data.context;
+        var data = [];
+        data[0] = {type: 'dijit.layout.StackController'};
+        data[1] = this._data;
+        this._data = data;
+        command.add( this._getCreateCommand(args));
+        return this._container;
+
+    }
 
 });

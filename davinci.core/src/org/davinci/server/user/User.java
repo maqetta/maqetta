@@ -6,8 +6,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
@@ -32,6 +34,7 @@ import org.davinci.server.internal.Links.Link;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.project.util.EclipseProjectUtil;
 import org.osgi.framework.Bundle;
 
 public class User {
@@ -103,27 +106,79 @@ public class User {
 		}
 	}
 	
-	public IVResource createProject(String projectName){
-		IVResource project = createResource(projectName);
+	public IVResource createEclipseProject(String projectName){
+		IVResource project = createProject(projectName, "WebContent", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
 		 */
-		List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
-                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
-        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
-            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
-            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
-            String name = libraryElement.getDeclaringExtension().getContributor().getName();
-            Bundle bundle = Activator.getActivator().getOtherBundle(name);
-            File file = null;
-			try {
-				file = new File(project.getURI());
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            VResourceUtils.copyDirectory(file, path, bundle);
+
+           
+         Hashtable eclipseConfig = EclipseProjectUtil.getEclipseConfig(projectName);
+         Iterator keys = eclipseConfig.keySet().iterator();
+         while(keys.hasNext()){
+          	Object key = keys.next();
+           	String filePath = (String)key;
+           	String xml = (String)eclipseConfig.get(key);
+           	IPath resourcePath = new Path(project.getPath()).append(filePath);
+           	IVResource resource = this.createResource(resourcePath.toString());
+           	
+           	VResourceUtils.setText(resource, xml);
+           	
+          }
+        /* modify the library settings with the WebContent folder */
+       Library[] allLibs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+        
+        for(int i=0;i<allLibs.length;i++){
+        	Library lib = allLibs[i];
+        	String id= lib.getID();
+        	String version = lib.getVersion();
+        	String root = lib.getDefaultRoot();
+        	String libPath = "./WebContent" + root;
+        	this.modifyLibrary(id, version,  libPath, project.getPath());
         }
+        
+        rebuildWorkspace();
+		return project;
+	}
+	
+	
+	
+	
+	public IVResource createProject(String projectName){
+		return this.createProject(projectName, "", true);
+	}
+	
+	public IVResource createProject(String projectName, String basePath, boolean initFiles){
+		IVResource project = createResource(projectName + "/");
+		/*
+		 * Load the initial user files extension point and copy the files to the projects root
+		 */
+		
+		if(basePath!=null && !basePath.equals("")){
+			project.create(basePath + "/");
+		}
+			
+		
+		if(initFiles){
+			List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
+	                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
+	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
+	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
+	            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
+	            String name = libraryElement.getDeclaringExtension().getContributor().getName();
+	            Bundle bundle = Activator.getActivator().getOtherBundle(name);
+	            File file = null;
+				try {
+					
+					file = new File(project.getURI().getPath()+ "/" + basePath);
+					
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            VResourceUtils.copyDirectory(file, path, bundle);
+	        }
+		}
         addBaseSettings(projectName);
         rebuildWorkspace();
 		return project;

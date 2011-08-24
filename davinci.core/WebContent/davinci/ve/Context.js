@@ -38,30 +38,6 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 
 		this.relativePrefix = this.relativePrefix || "";
-
-		// bind overlay widgets to corresponding davinci states
-		// FIXME: need to have a destroy to clean this up this handle?
-		this._stateSubscription = davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(args){
-			if(this.getDojo().doc.body != args.widget.containerNode){
-				// ignore event coming from another window
-				return;
-			}
-			var prefix = "_show:", widget, dvWidget, helper;
-			if(args.newState && !args.newState.indexOf(prefix)){
-				widget = this.getDijit().byId(args.newState.substring(6));
-//				widget && widget.show();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
-				helper = dvWidget.getHelper();
-				helper && helper.popup && helper.popup(dvWidget);
-			}
-			if(args.oldState && !args.oldState.indexOf(prefix)){
-				widget = this.getDijit().byId(args.oldState.substring(6));
-//				widget && widget.hide();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
-				helper = dvWidget.getHelper();
-				helper && helper.tearDown && helper.tearDown(dvWidget);
-			}
-		}));
 	},
 	
 
@@ -532,7 +508,7 @@ dojo.declare("davinci.ve.Context", null, {
 			/* get the base path, removing the file extension.  the base is used in the library call below
 			 * 
 			 */
-			var resourceBase = (this.getPath().removeLastSegments(1));
+			var resourceBase = this.getPath().removeLastSegments(1);
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
 				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {

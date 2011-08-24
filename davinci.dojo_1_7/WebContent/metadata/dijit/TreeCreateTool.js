@@ -95,10 +95,11 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 
 		var command = new davinci.commands.CompoundCommand();
 		var index = args.index;
-		
-		command.add(new davinci.ve.commands.AddCommand(store, args.parent, index));
+		// always put store and model as first element under body, to ensure they are constructed by dojo before they are used
+        var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
+		command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(model, args.parent, index));
+		command.add(new davinci.ve.commands.AddCommand(model, bodyWidget, 1));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(tree, args.parent, index));
 		

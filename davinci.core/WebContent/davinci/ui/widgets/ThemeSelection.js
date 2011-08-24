@@ -31,15 +31,8 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		}
 		
 		div.appendChild(this._select);
-//		if (this.dojoVersion){
-			this._warnDiv = dojo.doc.createElement("div");
-			this._warnDiv.innerHTML = '<table>' + 
-									'<tr><td></td><td>'+this.message+'</td><td></td></tr>'+
-									'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
-								'</table>';
-			div.appendChild(this._warnDiv);
-			dojo.style(this._warnDiv, "display","none");
-//		}
+		this._warnDiv = dojo.doc.createElement("div");
+		div.appendChild(this._warnDiv);
 		this.domNode = div;
 		dojo.style(this._select, "width","180px");
 		dojo.style(this.domNode, "width","100%");
@@ -106,7 +99,10 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		this._cookieName = 'maqetta_'+currentValue.name+'_'+currentValue.version;
 		var warnCookie = dojo.cookie(this._cookieName);
 		if (this.dojoVersion && currentValue.version !== this.dojoVersion && !warnCookie){
-			dojo.style(this._warnDiv, "display", "block");
+			this._warnDiv.innerHTML = '<table>' + 
+                                            '<tr><td></td><td>'+this.message+'</td><td></td></tr>'+
+                                             '<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.ok">Ok</button><button data-dojo-type="dijit.form.Button" type="button" id="davinci.ui.widgets.ThemeSelection.cancel">Cancel</button></td><td></td></tr>'+
+                                       '</table>';
 			var ok = dijit.byId('davinci.ui.widgets.ThemeSelection.ok');
 			var cancel = dijit.byId('davinci.ui.widgets.ThemeSelection.cancel');
 			dojo.connect(ok, "onClick", this, "_warnOk");
@@ -114,7 +110,6 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 			
 			
 		} else {
-			this._destroy();
 			this.onChange();
 		}
 		

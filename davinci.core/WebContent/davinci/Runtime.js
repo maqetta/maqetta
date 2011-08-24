@@ -13,29 +13,29 @@ dojo.requireLocalization("davinci", "webContent");
 dojo.declare("davinci.Runtime", null, {});
 
 dojo.mixin(davinci.Runtime,	{
-	plugins : [],
-	extensionPoints : [],
-	subscriptions : [],
+	plugins: [],
+	extensionPoints: [],
+	subscriptions: [],
 	widgetTable: {},
 	
-	_DEFAULT_PROJECT : "project1",
+	_DEFAULT_PROJECT: "project1",
 	
-	currentSelection : [],
-	commandStack : new davinci.commands.CommandStack(),
-	clipboard : null,
+	currentSelection: [],
+	commandStack: new davinci.commands.CommandStack(),
+	clipboard: null,
 	
-	addPlugin : function(pluginName) {
-		url = "./" + pluginName + "_plugin.js";
+	addPlugin: function(pluginName) {
+		url = pluginName + "_plugin.js";
 		dojo.xhrGet( {
 			// The following URL must match that used to test
 			// the server.
-			url :url,
-			handleAs :"json",
-			sync :true,
-			load : function(responseObject, ioArgs) {
+			url:url,
+			handleAs:"json",
+			sync:true,
+			load: function(responseObject, ioArgs) {
 				davinci.Runtime._loadPlugin(responseObject,url);
 			},
-			error : function(response, ioArgs) {
+			error: function(response, ioArgs) {
 				if (response.status==401)
 				{
 //					davinci.Runtime.doLogin();
@@ -50,23 +50,23 @@ dojo.mixin(davinci.Runtime,	{
 	},
 
 	
-	loadPlugins : function() {
+	loadPlugins: function() {
 		dojo.xhrGet( {
 			// The following URL must match that used to test
 			// the server.
-			url :'./cmd/getPlugins',
-			handleAs :"json",
-			sync :true,
-			load : function(responseObject, ioArgs) {
+			url:'cmd/getPlugins',
+			handleAs:"json",
+			sync:true,
+			load: function(responseObject, ioArgs) {
 			   davinci.Runtime._loadPlugins(responseObject);
 			},
-			error : function(response, ioArgs) {
+			error: function(response, ioArgs) {
 				if (response.status==401)
 				{
 //					davinci.Runtime.doLogin();
 //					retry=true;
 					//window.location.reload();
-					window.location.href= './welcome';
+					window.location.href= 'welcome';
 				}else{
 					var langObj = dojo.i18n.getLocalization("davinci","webContent");
 					davinci.Runtime.handleError(langObj.errorLoadingPlugins);
@@ -75,7 +75,7 @@ dojo.mixin(davinci.Runtime,	{
 		});
 	},
 	
-	_loadPlugins : function(plugins) {
+	_loadPlugins: function(plugins) {
 		for (var i=0;i<plugins.length;i+=2)
 		{
 			var url=plugins[i];
@@ -86,7 +86,7 @@ dojo.mixin(davinci.Runtime,	{
 	/*
 	 * running in single project mode or mulit project mode
 	 */
-	singleProjectMode : function(){
+	singleProjectMode: function(){
 		return true;
 	},
 	
@@ -96,15 +96,16 @@ dojo.mixin(davinci.Runtime,	{
 	 * 
 	 */
 	
-	getProject : function(){
+	getProject: function(){
 		var params = davinci.Workbench.queryParams();
-		if(params.project)
+		if(params.project) {
 			return decodeURI(params.project);
+		}
 		
 		return davinci.Runtime._DEFAULT_PROJECT;
 	},
 	
-	loadProject : function(projectName){
+	loadProject: function(projectName){
 
 		var params = davinci.Workbench.queryParams();
 		params.project = encodeURI(projectName);
@@ -112,7 +113,7 @@ dojo.mixin(davinci.Runtime,	{
 		window.location.href=davinci.Workbench.location() + "?" + dojo.objectToQuery(params);
 	},
 	
-	run : function() {
+	run: function() {
 		// add class to root HTML element to indicate if mac or windows
 		// this is because of different alignment on mac/chrome vs win/chrome
 		// FIXME: this platform-dependent logic might not be necessary if
@@ -156,20 +157,20 @@ dojo.mixin(davinci.Runtime,	{
 		};
 	},
 	
-	unload : function ()
+	unload: function ()
 	{
 		davinci.Workbench.unload();
 	},
-	subscribe : function(topic,func)
+	subscribe: function(topic,func)
 	{
 		this.subscriptions.push(dojo.subscribe(topic,this,func));
 	},
 	
-	destroy : function ()
+	destroy: function ()
 	{
 		dojo.forEach(this.subscriptions, dojo.unsubscribe);
 	},
-	_loadPlugin : function(plugin,url) {
+	_loadPlugin: function(plugin,url) {
 		
 		var pluginID = plugin.id;
 		this.plugins[pluginID]= plugin;
@@ -189,7 +190,7 @@ dojo.mixin(davinci.Runtime,	{
 		}
 	},
 	
-	_addExtension : function(id, extension, pluginID) {
+	_addExtension: function(id, extension, pluginID) {
 		
 		if (extension.id)
 			extension.id = pluginID + "." + extension.id;
@@ -201,7 +202,7 @@ dojo.mixin(davinci.Runtime,	{
 		this.extensionPoints[id] = extensions;
 	},
 	
-	getExtensions : function(extensionID, testFunction) {
+	getExtensions: function(extensionID, testFunction) {
 		
 		var extensions = this.extensionPoints[extensionID];
 		if (testFunction) {
@@ -221,7 +222,7 @@ dojo.mixin(davinci.Runtime,	{
 			return extensions;
 	},
 	
-	getExtension : function(extensionID, testFunction) {
+	getExtension: function(extensionID, testFunction) {
 		var extensions = this.extensionPoints[extensionID];
 		if (testFunction) {
 			var isFunction = testFunction instanceof Function;
@@ -235,17 +236,18 @@ dojo.mixin(davinci.Runtime,	{
 					else if (extensions[i].id == testFunction)
 						return extensions[i];
 			return null;
-		} else
+		} else {
 			return extensions[0];
+		}
 	},
 	
 	
 	
-	handleError : function(error) {
+	handleError: function(error) {
 		alert(error);
 	},
 
-	_loadCSS : function(plugin,pluginURL) {
+	_loadCSS: function(plugin,pluginURL) {
 		pluginURL=pluginURL.split('/');
 		var cssURL=plugin.css.split('/');
 		pluginURL.pop(); //remove plugin name
@@ -258,7 +260,7 @@ dojo.mixin(davinci.Runtime,	{
 		headID.appendChild(cssNode);
 	},
 		
-	executeCommand : function (cmdID)
+	executeCommand: function (cmdID)
 	{
 		var cmd=this.getExtension("davinci.commands", cmdID);
 		if (cmd && cmd.run)
@@ -272,7 +274,7 @@ dojo.mixin(davinci.Runtime,	{
 		this.currentSelection=selection;
 	},
 	
-	getSelection : function ()
+	getSelection: function ()
 	{
 		return this.currentSelection;
 	},
@@ -291,14 +293,14 @@ dojo.mixin(davinci.Runtime,	{
 			var isInput=false;
 			var	dialog = new dijit.Dialog({id: "connectDialog", title:"Please login", 
 				onExecute:function(){
-					dojo.xhrGet({url:"./cmd/login",sync:true,handleAs:"text",
+					dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
 						content:{'userName':dojo.byId("username").value, 'password': dojo.byId("password").value, 'noRedirect':true}
 					}).then(function(result){
 			            if (result=="OK")
 			            {
 			            	// cheap fix.
 			            	//window.location.reload();
-			            	window.location.href= './welcome';
+			            	window.location.href= 'welcome';
 			            	//retry=false;
 			            } else {
 			            	console.warn("Unknown error: result="+result);
@@ -320,7 +322,7 @@ dojo.mixin(davinci.Runtime,	{
 
 	},
 	
-	serverJSONRequest : function (ioArgs)
+	serverJSONRequest: function (ioArgs)
 	{
 		var resultObj;
 		var args={handleAs:"json" };
@@ -334,7 +336,7 @@ dojo.mixin(davinci.Runtime,	{
 //				davinci.Runtime.doLogin();
 //				retry=true;
 				//window.location.reload();
-				window.location.href= './welcome';
+				window.location.href= 'welcome';
 			}
 			else if (response.status==400)
 			{
@@ -366,7 +368,7 @@ dojo.mixin(davinci.Runtime,	{
 	},
 	serverPut: function(args)
 	{
-			dojo.xhrPut(args);	
+		dojo.xhrPut(args);	
 	},
 	logoff: function(args)
 	{
@@ -375,7 +377,7 @@ dojo.mixin(davinci.Runtime,	{
 		dojo.addClass(loading, 'loading');
 		this.unload();
 		davinci.Runtime.serverJSONRequest({
-			   url:"./cmd/logoff", handleAs:"text",
+			   url:"cmd/logoff", handleAs:"text",
 				   sync:true  });
 		var newLocation = davinci.Workbench.location(); //
 		var lastChar=newLocation.length-1;
@@ -383,11 +385,9 @@ dojo.mixin(davinci.Runtime,	{
 			newLocation=newLocation.substr(0,lastChar);
 		location.href = newLocation+"/welcome";
 	},	
-	arrayRemove : function (array,item)
+	arrayRemove: function (array,item)
 	{
-		array.splice(
-					dojo.indexOf(array,item),1);
-
+		array.splice(dojo.indexOf(array,item),1);
 	},
 	arrayAddOnce: function(array,item)
 	{
@@ -397,4 +397,4 @@ dojo.mixin(davinci.Runtime,	{
 	}
 });
 
-davinci.isMac = navigator.platform.indexOf("Mac") != -1; // FIXME: dojo.isMac?
+davinci.isMac = dojo.isMac; //FIXME: remove

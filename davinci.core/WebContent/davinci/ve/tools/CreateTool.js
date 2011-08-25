@@ -7,6 +7,7 @@ dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
 dojo.require("davinci.ve.Snap");
+dojo.require("davinci.ui.Dialogs");
 
 
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {

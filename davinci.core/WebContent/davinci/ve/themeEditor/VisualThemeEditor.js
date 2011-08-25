@@ -11,7 +11,7 @@ dojo.require("davinci.workbench.Preferences");
  * HTML rendered as the theme editor
  */
 
-davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor")+"davinci-dojo-theme-editor.html"; 
+davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor", "davinci-dojo-theme-editor.html"); 
 
 
 

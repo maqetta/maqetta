@@ -14,26 +14,15 @@ public class CreateProject extends Command {
    
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
         String projectName = req.getParameter("name");
-        boolean isFolder = "true".equalsIgnoreCase(req.getParameter("initContents"));
-        IVResource newFile = user.createProject(projectName);
-        if (isFolder) {
-            if (newFile.exists()) {
-                responseString = "Folder already exists";
-            } else {
-                if (newFile.mkdir()) {
-                    responseString = "OK";
-                }
-            }
-
-        } else {
-            if (newFile.exists()) {
-                responseString = "File already exists";
-            } else {
-                newFile.createNewInstance();
-                responseString = "OK";
-
-            }
+        boolean initContents = "true".equalsIgnoreCase(req.getParameter("initContents"));
+        boolean eclipseProject = "true".equalsIgnoreCase(req.getParameter("eclipseSupport"));
+        if(eclipseProject){
+        	IVResource newFile = user.createEclipseProject(projectName);
+        }else{
+        
+        	IVResource newFile = user.createProject(projectName);
         }
+        responseString = "OK";
 
     }
 

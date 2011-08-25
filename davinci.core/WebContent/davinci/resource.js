@@ -4,7 +4,7 @@ dojo.provide("davinci.resource.alphabeticalSortFilter");
 dojo.provide("davinci.resource.foldersFilter");
 dojo.require("davinci.model.Resource");
 dojo.require("davinci.model.Path");
-
+dojo.require("davinci.ui.Resource");
 
 dojo.mixin(davinci.resource, {
 	root:null,
@@ -58,8 +58,8 @@ dojo.mixin(davinci.resource, {
 			return davinci.resource.getWorkspace().getChildren();
 	},
 	
-	createProject : function(projectName, initContent){
-		 davinci.Runtime.serverJSONRequest({url:"./cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent},sync:true  });
+	createProject : function(projectName, initContent, eclipseSupport){
+		 davinci.Runtime.serverJSONRequest({url:"./cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent, 'eclipseSupport': eclipseSupport},sync:true  });
 	},
 	
 	/* Resource tree model methods */

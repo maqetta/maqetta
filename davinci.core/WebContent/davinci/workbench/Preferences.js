@@ -8,12 +8,12 @@ dojo.requireLocalization("dijit", "common");
 dojo.mixin(davinci.workbench.Preferences,	{
 	
 	_allPrefs: {},
-	savePreferences: function(id, preferences)
+	savePreferences: function(id, base, preferences)
 	{
 	    this._allPrefs[id]=preferences;
 		davinci.Runtime.serverPut(
 				{
-					url: "./cmd/setPreferences?id="+id,
+					url: "./cmd/setPreferences?id="+id + "&base=" + escape(base),
 					putData: dojo.toJson(preferences),
 					handleAs:"json",
 					contentType:"text/html"
@@ -123,14 +123,12 @@ dojo.mixin(davinci.workbench.Preferences,	{
 		}
 		return freechildren;
 	},
-	setPaneContent: function(node)
-	{
+	setPaneContent: function(node){
 		var domNode;
 		this._currentPane=null;
 		var extension= this._extensions[node.index[0]];
-		var prefs=this.getPreferences(extension.id);
-		if (extension.pane)
-		{
+		var prefs=this.getPreferences(extension.id, davinci.Runtime.getProject());
+		if (extension.pane){
 			dojo["require"](extension.pane);
 			var cls=eval(extension.pane);
 			var pane=new cls();
@@ -139,15 +137,13 @@ dojo.mixin(davinci.workbench.Preferences,	{
 			this._currentPane.setPreferences(prefs);
 			domNode=pane.domNode;
 		}
-		else if (extension.panel)
-		{
-//			debugger;
+		else if (extension.panel){
+
 			var widget=	 new davinci.ui.Panel({definition:extension.panel, data:prefs});
 			domNode=widget.domNode;
 
 		}
-		else if (extension.pageContent)
-		{
+		else if (extension.pageContent){
 			domNode=document.createTextNode(extension.pageContent);
 		}
 		else
@@ -157,12 +153,13 @@ dojo.mixin(davinci.workbench.Preferences,	{
 	},
 	
 	_save: function(listOfPages){
-//		debugger;
 		if (this._currentPane)
 		{
 			var prefs=this._currentPane.getPreferences();
 			var id=this._currentPane._extension.id;
-			this.savePreferences(id, prefs);
+			var base = davinci.Runtime.getProject();
+			
+			this.savePreferences(id, base, prefs);
 		}
 		for(var i = 0;i<listOfPages.length;i++){
 			try{
@@ -177,29 +174,29 @@ dojo.mixin(davinci.workbench.Preferences,	{
 		this._save(this._extensions);
 		this.finish();
 	},
-	finish: function ()
-	{
+	finish: function (){
 		this._extensions=null;
 		this._currentPane=null;
 		dijit.byId('preference.main.dialog').destroyRecursive(false);
 	},
 	
-	getPreferences: function (id){
+	getPreferences: function (id, base){
+		if(!this._allPrefs[base])
+			this._allPrefs[base] = {};
 		
-		if (!this._allPrefs[id]){
+		if (!this._allPrefs[base][id]){
 			var prefs= davinci.Runtime.serverJSONRequest({
 				   url:"./cmd/getPreferences", handleAs:"json",
-			          content:{'id':id},sync:true  });
+			          content:{'id':id, 'base': base},sync:true  });
 			if(!prefs){
 				prefs=this.getDefaultPreferences(id);
 			}
-			this._allPrefs[id]=prefs;
+			this._allPrefs[base][id]=prefs;
 		}
-		return this._allPrefs[id];
+		return this._allPrefs[base][id];
 	},
 	
 	getDefaultPreferences: function(id){
-		
 		this._loadExtensions();
 		for(var i =0;i<this._extensions.length;i++){
 			if(this._extensions[i].id==id){

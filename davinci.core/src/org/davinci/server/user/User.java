@@ -407,15 +407,22 @@ public class User {
 	}
 
 	public File getWorkbenchSettings() {
-		if (this.settingsDirectory == null) {
-			this.settingsDirectory = new File(this.userDirectory,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-			if(!this.settingsDirectory.exists())
-				this.settingsDirectory.mkdirs();
-		}
-
-		return this.settingsDirectory;
+		return getWorkbenchSettings("");
 	}
 
+	public File getWorkbenchSettings(String base) {
+	
+		
+			File baseFile = new File(this.userDirectory,base);
+			File settingsDirectory = new File(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+			
+			if(!settingsDirectory.exists())
+				settingsDirectory.mkdirs();
+		
+
+		return settingsDirectory;
+	}
+	
 	synchronized public Links getLinks() {
 		if (this.links == null) {
 			this.links = new Links(this.getWorkbenchSettings());

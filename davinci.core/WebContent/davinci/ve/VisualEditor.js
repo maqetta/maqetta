@@ -261,7 +261,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 //			this.context.addActionGroup(new davinci.ve.actions.ContextActions());
 //			this.context.addActionGroup(new davinci.ve.actions.ChildActions());
 
-			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			if (prefs) {
 				this.context.setPreferences(prefs);
 			}

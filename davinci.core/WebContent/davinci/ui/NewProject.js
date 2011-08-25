@@ -15,7 +15,7 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 	templateString: dojo.cache("davinci.ui", "templates/NewProject.html"),
 	_okButton: null,
 	_projectName : null,
-	
+	_eclipseSupport: null,
 	
 	postMixInProperties : function() {
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
@@ -33,6 +33,8 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		dojo.connect(this._projectName, "onkeyup", this, '_checkValid');
 		
 	},
+	
+	
 	_checkValid : function(){
 		
 		// make sure the project name is OK.
@@ -47,9 +49,26 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 	},
 	
 	okButton : function(){
-		this.value = dojo.attr(this._projectName, "value");
+		var newProjectName = dojo.attr(this._projectName, "value");
+		var isEclipse = dojo.attr(this._eclipseSupport,'checked');
+
+		davinci.resource.createProject(newProjectName, true, isEclipse);
+		
+		if(isEclipse){
+			var prefValue = {webContentFolder:"./WebContent", themeFolder: "./WebContent/themes"};
+			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',newProjectName, prefValue);
+		}
+		
+		if(davinci.Runtime.singleProjectMode())
+			davinci.Runtime.loadProject(newProjectName);
+		
 		this.onClose();
 	},
+	
+	_getEclipseProjectAttr : function(){
+		 return dojo.attr(this._eclipseSupport, "checked");
+	},
+	
 	_getValueAttr : function(){
 		return this.value;
 	},

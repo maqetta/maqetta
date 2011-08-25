@@ -58,8 +58,10 @@ davinci.model.Model.prototype.getID = function() {
 };
 
 davinci.model.Model.prototype.findChildAtPosition = function (position){
-	if ( ! position.endOffset ) {
-		position.endOffset=position.startOffset;
+    
+	if ( ! position.endOffset ) {//|| position.startOffset == position.endOffset ) { 
+//	    return null;
+	    position.endOffset = position.startOffset;
 	}
 	
 	if (position.startOffset>=this.startOffset  && position.endOffset<=this.endOffset) {

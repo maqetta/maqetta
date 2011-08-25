@@ -114,12 +114,11 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 	},
 	
 	selectModel : function (selection) {
-		if (this.publishingSelect)
+		if (this.publishingSelect) {
 			return;
-		if (selection.length>0)
-		{
-			if (selection[0].model)
-			{
+		}
+		if (selection.length>0) {
+			if (selection[0].model) {
 				var model=selection[0].model;
 				if (model.elementType)
 					this.select({ startOffset:model.startOffset, endOffset:model.endOffset});
@@ -128,19 +127,16 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 	},
 
 	selectionChange : function (selection) {
-	   var childModel=this.model.findChildAtPosition(selection);
-	   selection.model=childModel;
-	   if (childModel!=this._selectedModel)
-		{
-			this.publishingSelect=true;
-			dojo.publish("/davinci/ui/selectionChanged",[[selection],this]);		
-			this.publishingSelect=false;
-		   
-		}
-	   this._selectedModel=childModel;
-		
-	},
+       var childModel = this.model.findChildAtPosition(selection);
+       selection.model = childModel;
+       if (childModel != this._selectedModel) {
+           this.publishingSelect = true;
+           dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
+           this.publishingSelect = false;
+       }
+       this._selectedModel = childModel;
 
+	},
 
 	getSyntaxPositions : function (text,lineNumber) {
 		

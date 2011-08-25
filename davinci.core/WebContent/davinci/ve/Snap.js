@@ -75,7 +75,7 @@ davinci.ve.Snap = function() {
 		findSnapPoints:function(context){
 			context._snapX = null;
 			context._snapY = null;
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			if(editorPrefs.snap){
 				davinci.ve.Snap._findSnapOpportunitiesTop(context);
 			}

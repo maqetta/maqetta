@@ -89,18 +89,27 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_createTheme : function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var oldTheme = this._themeSelection.attr('value');
-	//	var targetFolder = this._themeLocation.attr('value');
 		var selector = dojo.attr(this._selector, 'value');
 		var themeName = selector;
 		var version = null;
 		var base = selector;
 	
 		var newBase = this._getThemeLocation();
-		var r1=  davinci.resource.findResource(base);
-		if(r1)
+		var r1=  davinci.resource.findResource(newBase+'/'+base+'.theme');
+		if(r1){
 			alert(langObj.themeAlreadyExists);
-		else
+		}else{
 			davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
+			var newTheme = davinci.resource.findResource(newBase+'/'+base+'.theme');
+			 if(newTheme){
+                 var contents = newTheme.getText();
+                 var t = eval(contents);
+                 t.file = newTheme;
+                 davinci.Workbench.openEditor({
+                     fileName: t.file,
+                     content: t});
+             }
+		}
 	},
 	
 	/*

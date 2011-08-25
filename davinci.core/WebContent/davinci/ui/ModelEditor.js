@@ -113,15 +113,14 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
         dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
 	},
 	
-	selectModel : function (selection) {
+	selectModel: function (selection) {
 		if (this.publishingSelect) {
 			return;
 		}
-		if (selection.length>0) {
-			if (selection[0].model) {
-				var model=selection[0].model;
-				if (model.elementType)
-					this.select({ startOffset:model.startOffset, endOffset:model.endOffset});
+		if (selection.length && selection[0].model) {
+			var model=selection[0].model;
+			if (model.elementType) {
+				this.select({ startOffset:model.startOffset, endOffset:model.endOffset});
 			}
 		}
 	},

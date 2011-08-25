@@ -31,7 +31,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 				this._data.properties.id= this._id;
 			widget = davinci.ve.widget.createWidget(this._data);
 		}else if(this._id){
-			widget = davinci.ve.widget.byId(this._id,parent.getContext());
+			widget = davinci.ve.widget.byId(this._id,parent.getContext().getDocument());
 		}
 		if(!widget){
 			return;
@@ -51,7 +51,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 				this._index =parent.indexOf(  this._index);
 			} else {
 				// _index is no longer valid since it was replaced, lets find it
-				var w = davinci.ve.widget.byId(this._index.id,parent.getContext())
+				var w = davinci.ve.widget.byId(this._index.id,parent.getContext().getDocument())
 				this._index = parent.indexOf( w);
 			}
 		}

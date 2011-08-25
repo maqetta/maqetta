@@ -3,6 +3,7 @@ dojo.provide("davinci.ve.PageEditor");
 dojo.require("dijit.layout.BorderContainer");
 dojo.require("davinci.html.ui.HTMLEditor");
 dojo.require("davinci.ve.VisualEditor");
+dojo.require("davinci.ve.VisualEditorOutline");
 dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.utils.URLRewrite");
 

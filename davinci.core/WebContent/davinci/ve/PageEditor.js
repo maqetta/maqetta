@@ -12,66 +12,64 @@ dojo.require("davinci.ve.utils.URLRewrite");
 dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	   
 
-	  constructor: function (element) {
-			
-	    this._bc = new dijit.layout.BorderContainer({}, element);
-	
-		this.domNode = this._bc.domNode;
-	
-		this._commandStack = new davinci.commands.CommandStack(this);
-		this.savePoint=0;
-	
-		this._designCP = new dijit.layout.ContentPane({region:'center'});
-		this._bc.addChild(this._designCP);
-	
-	
-		this.visualEditor=new davinci.ve.VisualEditor(this._designCP.domNode, this);
-		this.currentEditor=this.visualEditor;
-		this.currentEditor._commandStack=this._commandStack;
-		
-		this._srcCP = new dijit.layout.ContentPane({region:'bottom',splitter:true,style: "height:50%"});
-	
-		// hack to get the source content page to resize itself
-		var oldResize=this._srcCP.resize;
-		this._srcCP.resize = function(changeSize, resultSize)
-		{
-			dojo.marginBox(this.domNode, resultSize);
-			oldResize.apply(this, arguments);
-		};
-	
-		this.htmlEditor=new davinci.html.ui.HTMLEditor(this._srcCP.domNode,true);
-		this.htmlEditor.setVisible(false);
-		this.model=this.htmlEditor.model;
-	
-		this._displayMode="design";
-	
-		this.model=this.htmlEditor.model;
+    constructor: function (element) {
 
-		this._bc.startup();
-		this._bc.resize(); // kludge: forces primary tab to display	
+        this._bc = new dijit.layout.BorderContainer({}, element);
 
-		
-		this._connect(this.visualEditor,"onContentChange", "_visualChanged");
-		this._connect(this.htmlEditor,"handleChange", "_srcChanged");
-		this.subscribe("/davinci/ui/styleValuesChange",   this._stylePropertiesChange);
-		this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
-		this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
-//		this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
-	},
+        this.domNode = this._bc.domNode;
+
+        this._commandStack = new davinci.commands.CommandStack(this);
+        this.savePoint=0;
+
+        this._designCP = new dijit.layout.ContentPane({region:'center'});
+        this._bc.addChild(this._designCP);
+
+
+        this.visualEditor=new davinci.ve.VisualEditor(this._designCP.domNode, this);
+        this.currentEditor=this.visualEditor;
+        this.currentEditor._commandStack=this._commandStack;
+
+        this._srcCP = new dijit.layout.ContentPane({region:'bottom',splitter:true,style: "height:50%"});
+
+        // hack to get the source content page to resize itself
+        var oldResize=this._srcCP.resize;
+        this._srcCP.resize = function(changeSize, resultSize)
+        {
+            dojo.marginBox(this.domNode, resultSize);
+            oldResize.apply(this, arguments);
+        };
+
+        this.htmlEditor=new davinci.html.ui.HTMLEditor(this._srcCP.domNode,true);
+        this.htmlEditor.setVisible(false);
+        this.model=this.htmlEditor.model;
+
+        this._displayMode="design";
+
+        this.model=this.htmlEditor.model;
+
+        this._bc.startup();
+        this._bc.resize(); // kludge: forces primary tab to display	
+
+
+        this._connect(this.visualEditor,"onContentChange", "_visualChanged");
+        this._connect(this.htmlEditor,"handleChange", "_srcChanged");
+        this.subscribe("/davinci/ui/styleValuesChange",   this._stylePropertiesChange);
+        this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
+        this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
+//      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
+    },
 	
 	supports: function (something){
 	    return /^\s*(palette|properties|style|states|inline-style|MultiPropTarget)\s*$/.test(something);
 	},
 
-	focus: function(){
+	focus: function() {
 //		if(this.currentEditor==this.visualEditor)
 //			this.visualEditor.onContentChange();
 	},
 
-	switchDisplayMode: function (newMode)
-	{
-		if (this._displayMode!="design")
-		{
+	switchDisplayMode: function (newMode) {
+		if (this._displayMode!="design") {
 			this._bc.removeChild(this._srcCP);
 			this.htmlEditor.setVisible(false);
 		}
@@ -97,8 +95,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 			this._bc.design="headline";
 			dim = box.h/2;
 		}
-		if (newMode!="design")
-		{
+		if (newMode!="design") {
 			this._bc.addChild(this._srcCP);
 			this.htmlEditor.setVisible(true);
 		}
@@ -107,19 +104,22 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		this._bc._layoutChildren(this._srcCP.id, dim);
 	},
 
-	_modelSelectionChange: function (selection){
-		if(!this.visualEditor.context ||
-				(selection && selection.length && selection[0]._edit_context != this.visualEditor.context)){
+	_modelSelectionChange: function (selection) {
+	    /*
+	     * we do not want to drive selection on the view editor unless:
+	     *     - we are in an editor mode which has a view editor (not source mode)
+	     *     - we are the current editor
+	     */
+		if( this._displayMode == "source" || davinci.Runtime.currentEditor !== this ) {
 			return;
 		}
 		
 		this._selectionCssRules = null;
-		
-		if (selection.length){
+		if ( selection.length ) {
 			var htmlElement = selection[0].model;
-			if (htmlElement && htmlElement.elementType == "HTMLElement"){
+			if ( htmlElement && htmlElement.elementType == "HTMLElement" ) {
 				var id = htmlElement.getAttribute("id");
-				if (id && this._displayMode!="source"){
+				if ( id && this._displayMode!="source" ) {
 					var widget = davinci.ve.widget.byId(id, this.visualEditor.context.getDocument());
 					this.visualEditor.context.select(widget);
 				}
@@ -127,7 +127,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 	},
 	
-	_widgetSelectionChange: function (selection){
+	_widgetSelectionChange: function (selection) {
 		if(!this.visualEditor.context ||
 				(selection && selection.length && selection[0]._edit_context != this.visualEditor.context)){
 			return;
@@ -140,13 +140,12 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 	},
 
-	_stylePropertiesChange: function (value){
+	_stylePropertiesChange: function (value) {
 		this.visualEditor._stylePropertiesChange(value);
 //		this._srcChanged();
 	},
 	
-	_setDirty: function()
-	{
+	_setDirty: function() {
 		this.isDirty=true;
 		this.lastModifiedTime=Date.now();
 		if (this.editorContainer){
@@ -154,14 +153,13 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 	},
 	
-	_visualChanged: function(){
+	_visualChanged: function() {
 		this._setDirty();
 		this.htmlEditor.setValue(this.model.getText(),true);
 	},
 	
-	_srcChanged: function(){
-		if (!this._updateDesignTimer)
-		{
+	_srcChanged: function() {
+		if (!this._updateDesignTimer) {
 			var self=this;
 			this._updateDesignTimer=setTimeout(function (){
 				self.visualEditor.setContent(self.fileName,self.htmlEditor.model);
@@ -173,47 +171,50 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		this.lastModifiedTime=Date.now();
 	},
 	
-	getContext: function(){
+	getContext: function() {
 		return this.visualEditor.context;
 	},
 	
-	getOutline: function(){
+	getOutline: function() {
 		if (!this.outline) {
 			this.outline=new davinci.ve.VisualEditorOutline(this);
 		}
 		return this.outline;
 	},
 	
-	getPropertiesView: function()
-	{
+	getPropertiesView: function() {
 		return this.currentEditor.getPropertiesView();
 	},
 	
 	
 	setContent: function (filename, content) {
-		this.fileName=filename;
-		this.htmlEditor.setContent(filename,content);
-		if (this._isNewFile && this.resourceFile.parent!=davinci.resource.getRoot())
-		{
-			var rootPath=new davinci.model.Path([]),
-				newPath=new davinci.model.Path(this.resourceFile.getPath()).getParentPath(),
-				updatePath = function(src) {
-					return rootPath.append(src).relativeTo(newPath).toString();
-				};
-			var visitor = { visit: function (element)
-			  {
-				if (element.elementType == "HTMLElement" && element.tag == "script") {
-					var src = element.getAttribute("src");
-					if (src) {
-						element.addAttribute("src", updatePath(src));
-					}
-				} else if (element.elementType == "CSSImport") {
-					element.url = updatePath(element.url);
-				}
-			  }
-			};
-			this.htmlEditor.model.visit(visitor);
-		}
+
+	    this.fileName=filename;
+	    this.htmlEditor.setContent(filename,content);
+	    if (this._isNewFile && this.resourceFile.parent!=davinci.resource.getRoot()) {
+	        var rootPath=new davinci.model.Path([]);
+	        var newPath=new davinci.model.Path(this.resourceFile.getPath()).getParentPath();
+	        function updatePath(src) {
+	            var fullPath=rootPath.append(src);
+	            var newSrc=fullPath.relativeTo(newPath);
+	            return newSrc.toString();
+	        }
+	        var visitor={visit: function (element) {
+	            if (element.elementType=="HTMLElement") {
+	                if (element.tag=="script") {
+	                    var src=element.getAttribute("src");
+	                    if (src) {
+	                        element.addAttribute("src",updatePath(src));
+	                    }
+	                }
+	            } else if (element.elementType=="CSSImport") {
+	                var newPath=updatePath(element.url);
+	                element.url=newPath;
+	            }
+	        }
+	        };
+	        this.htmlEditor.model.visit(visitor);
+	    }
 //		console.log(this.htmlEditor.model.getText());
 		this.visualEditor.setContent(filename,this.htmlEditor.model);
 		dojo.connect(this.htmlEditor.model, "onChange", this, '_themeChange');
@@ -222,20 +223,20 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		this.htmlEditor.setValue(this.model.getText(), true);
 
 	},
-	_themeChange: function(e){
+	
+	_themeChange: function(e) {
 		//debugger;
-		if (e && e.elementType === 'CSSRule'){
+		if (e && e.elementType === 'CSSRule') {
 			this.visualEditor.context.hotModifyCssRule(e);
 		}
 	},
 	
-	getDefaultContent: function()
-	{
+	getDefaultContent: function() {
 		this._isNewFile=true;
 		return this.visualEditor.getDefaultContent();
 	},
 
-	selectModel: function (selection){
+	selectModel: function (selection) {
 		if (this.publishingSelect) {
 			return;
 		}
@@ -243,18 +244,14 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		if (!selectionItem) {
 			return;
 		}
-		if (selectionItem.elementType)
-		{
+		if (selectionItem.elementType) {
 			this.htmlEditor.selectModel(selection);
-		}
-		else if (selectionItem.model && selectionItem.model.isWidget)
-		{
+		} else if (selectionItem.model && selectionItem.model.isWidget) {
 			this.visualEditor.context.select(selectionItem.model,selectionItem.add);
 		}
 	},
 	
-	save: function (isAutoSave)
-	{
+	save: function (isAutoSave) {
 	//	this.inherited(arguments);
 		this.savePoint=this._commandStack.getUndoCount();
 		this.visualEditor.save(isAutoSave);
@@ -265,12 +262,11 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		}
 	},
 
-	previewInBrowser: function ()
-	{
+	previewInBrowser: function () {
 		this.visualEditor.previewInBrowser();
 	},
 
-	destroy: function (){
+	destroy: function () {
 		
 		this.inherited(arguments);
 		this.visualEditor.destroy();
@@ -281,10 +277,10 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		return this.htmlEditor.getText();
 	},
 	
-	onResize: function(){
+	onResize: function() {
 		var context = this.getContext();
 		var selections = context.getSelection();
-		for (var i = 0; i < selections.length; i++){
+		for (var i = 0; i < selections.length; i++) {
 			var add = (i != 0);
 			context.select(selections[i], add); 
 		}

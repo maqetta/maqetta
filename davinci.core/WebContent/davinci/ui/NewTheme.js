@@ -103,7 +103,8 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 			var newTheme = davinci.resource.findResource(newBase+'/'+base+'.theme');
 			 if(newTheme){
                  var contents = newTheme.getText();
-                 var t = eval(contents);
+                // var t = eval(contents);
+                 var t = dojo.fromJson(contents);
                  t.file = newTheme;
                  davinci.Workbench.openEditor({
                      fileName: t.file,

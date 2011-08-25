@@ -27,7 +27,7 @@ dojo.require("davinci.ve.ThemeModifier");
 dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davinci.ve.ThemeModifier], {
 	
 	children : [],
-	_visualEditor : null,
+	visualEditor : null, 
 	_currentState: "Normal", // the state is for all the widgets on the page
 	_dirtyResource : {},
 	_subWidgetSelection:null,
@@ -469,15 +469,15 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 	},
 	
 	getContext : function (){
-    	return this._visualEditor.context;
+    	return this.visualEditor.context;
     },
 	
 	getOutline : function (){
-		return this._visualEditor.getOutline();
+		return this.visualEditor.getOutline();
 	},
 	
 	getPropertiesView : function (){
-		return this._visualEditor.getPropertiesView();
+		return this.visualEditor.getPropertiesView();
 	},
 	getThemeFile : function(){
 		return this.theme;
@@ -493,7 +493,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 			
 			this.theme = dojo.isString(content)? dojo.fromJson(content) : content;
 			this.theme.file = davinci.resource.findResource(filename);
-			//dojo.connect(this._visualEditor, "onSelectionChange", this,"onSelectionChange");
+			//dojo.connect(this.visualEditor, "onSelectionChange", this,"onSelectionChange");
 			this.themeCssfiles = [];
 			for(var i = 0;i<this.theme.files.length;i++){
 				if(this.theme.files[i].indexOf(".css")>-1){
@@ -512,7 +512,8 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 				
 			}
 			
-			this._visualEditor = new davinci.ve.themeEditor.VisualThemeEditor(this, this._cp.domNode,filename, this.themeCssfiles, themeHtmlResources,this.theme);
+			this.visualEditor = new davinci.ve.themeEditor.VisualThemeEditor(this, this._cp.domNode,filename, this.themeCssfiles, themeHtmlResources,this.theme);
+			
 			this.fileName = filename;
 			
 			/*
@@ -546,7 +547,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 			        '_widgetStateChanged'));
 			subs.push(dojo.subscribe("/davinci/ui/subwidgetSelectionChanged",
 			        this, '_subwidgetSelectionChanged'));
-			dojo.connect(this._visualEditor, "onSelectionChange", this,
+			dojo.connect(this.visualEditor, "onSelectionChange", this,
 			        "onSelectionChange");
 		}catch(e){
 			alert("error loading:" + filename + e);
@@ -647,7 +648,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 
 	destroy : function ()	{
 		this.inherited(arguments);
-		if(this._visualEditor) this._visualEditor.destroy();
+		if(this.visualEditor) this.visualEditor.destroy();
 		this._subscriptions.forEach(function(item) {
 			var topic = item[0];
 			var isStatesSubscription = topic.indexOf("/davinci/states") == 0;

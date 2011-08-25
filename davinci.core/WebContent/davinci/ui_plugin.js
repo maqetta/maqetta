@@ -59,7 +59,7 @@
 	        pageContent:"Project Settings here"
 	    },
 		{name:"Project Settings", 
-	     id:"projectPrefs", 
+	     id:"ProjectPrefs", 
 	     category:"davinci.ui.project",
 		 
 	     pane:"davinci.ui.ProjectPreferences",

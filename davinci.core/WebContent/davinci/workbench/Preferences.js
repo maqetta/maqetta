@@ -123,14 +123,12 @@ dojo.mixin(davinci.workbench.Preferences,	{
 		}
 		return freechildren;
 	},
-	setPaneContent: function(node)
-	{
+	setPaneContent: function(node){
 		var domNode;
 		this._currentPane=null;
 		var extension= this._extensions[node.index[0]];
 		var prefs=this.getPreferences(extension.id, davinci.Runtime.getProject());
-		if (extension.pane)
-		{
+		if (extension.pane){
 			dojo["require"](extension.pane);
 			var cls=eval(extension.pane);
 			var pane=new cls();
@@ -139,15 +137,13 @@ dojo.mixin(davinci.workbench.Preferences,	{
 			this._currentPane.setPreferences(prefs);
 			domNode=pane.domNode;
 		}
-		else if (extension.panel)
-		{
-//			debugger;
+		else if (extension.panel){
+
 			var widget=	 new davinci.ui.Panel({definition:extension.panel, data:prefs});
 			domNode=widget.domNode;
 
 		}
-		else if (extension.pageContent)
-		{
+		else if (extension.pageContent){
 			domNode=document.createTextNode(extension.pageContent);
 		}
 		else
@@ -157,7 +153,6 @@ dojo.mixin(davinci.workbench.Preferences,	{
 	},
 	
 	_save: function(listOfPages){
-//		debugger;
 		if (this._currentPane)
 		{
 			var prefs=this._currentPane.getPreferences();
@@ -179,15 +174,13 @@ dojo.mixin(davinci.workbench.Preferences,	{
 		this._save(this._extensions);
 		this.finish();
 	},
-	finish: function ()
-	{
+	finish: function (){
 		this._extensions=null;
 		this._currentPane=null;
 		dijit.byId('preference.main.dialog').destroyRecursive(false);
 	},
 	
 	getPreferences: function (id, base){
-		
 		if(!this._allPrefs[base])
 			this._allPrefs[base] = {};
 		
@@ -204,7 +197,6 @@ dojo.mixin(davinci.workbench.Preferences,	{
 	},
 	
 	getDefaultPreferences: function(id){
-		
 		this._loadExtensions();
 		for(var i =0;i<this._extensions.length;i++){
 			if(this._extensions[i].id==id){

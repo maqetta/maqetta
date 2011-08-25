@@ -55,8 +55,8 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 		davinci.resource.createProject(newProjectName, true, isEclipse);
 		
 		if(isEclipse){
-			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPreferences.webContentFolder',newProjectName, "./WebContent");
-			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPreferences.themeFolder',newProjectName, "./WebContent/themes");
+			var prefValue = {webContentFolder:"./WebContent", themeFolder: "./WebContent/themes"};
+			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPrefs',newProjectName, prefValue);
 		}
 		
 		if(davinci.Runtime.singleProjectMode())

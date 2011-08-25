@@ -50,7 +50,7 @@ dojo.mixin(davinci.Workbench, {
 		davinci.Runtime.subscribe("/davinci/states/state/changed",
 			function(containerWidget, newState, oldState) {
 				// ignore updates in theme editor
-				if (davinci.Runtime.currentEditor.declaredClass != "davinci.ve.VisualEditor") {
+				if (davinci.Runtime.currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" /*"davinci.ve.VisualEditor"*/) {
 					davinci.Runtime.currentEditor.visualEditor.onContentChange.apply(davinci.Runtime.currentEditor.visualEditor, arguments);
 				}
 			}),

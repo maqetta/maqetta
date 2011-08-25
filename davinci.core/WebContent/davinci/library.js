@@ -24,16 +24,32 @@ davinci.library.themesChanged=function(base){
 		davinci.library._themesCache[base] = {};
 }
 
-davinci.library.getThemes=function(base){
-	
+davinci.library.getThemes=function(base, workspaceOnly, flushCache){
+
 	if(base==null)
 		debugger;
+	if(flushCache)
+		davinci.library._themesCache[base] = null
 	
+	function result(){
+		/* filters out workspace/non workspace values  before returning them.  always caches ALL themes */
+		var rlt = [];
+		if(davinci.library._themesCache[base]){
+			
+			var cache= davinci.library._themesCache[base];
+			for(var i=0;i<cache.length;i++){
+				if(!workspaceOnly || !cache[i].file.isVirtual()){
+					rlt.push(cache[i]);
+				}
+			}
+		}
+		return rlt;
+	}
 	
-	if(davinci.library._themesCache[base])
-		return davinci.library._themesCache[base];
+	if(davinci.library._themesCache[base]) return result();
 	
-	var projectThemeBase = (new davinci.model.Path(base).append("themes"));
+	var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	var projectThemeBase = (new davinci.model.Path(base).append(prefs['themeFolder']));
 	var allThemes = davinci.resource.findResource("*.theme", true, projectThemeBase.toString());
 	var results = [];
 	for (var i = 0; i < allThemes.length; i++){
@@ -44,7 +60,8 @@ davinci.library.getThemes=function(base){
 	}
 
 	davinci.library._themesCache[base] = results;
-	return davinci.library._themesCache[base];
+	return result();
+	
 }
 
 davinci.library.getMetaData=function(theme){

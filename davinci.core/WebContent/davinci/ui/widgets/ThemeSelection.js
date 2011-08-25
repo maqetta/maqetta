@@ -10,26 +10,11 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	
 	workspaceOnly : true,
 	message: 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.',
-
+	
+	/* setup basic DOM */
 	buildRendering: function(){
-
-		this._themeData = [];
-		var themes = davinci.resource.findResource("*.theme",true,"./themes",this.workspaceOnly);
-		this._themeCount = themes.length;
 		var div = dojo.doc.createElement("div");
 		this._select = dojo.doc.createElement("select");
-		for (var i = 0; i < themes.length; i++){
-			var contents = themes[i].getText();
-			var t = eval(contents);
-			t.file = themes[i];
-			this._themeData.push(t);
-			var op = dojo.doc.createElement("option");
-			op.value = t.className;
-			op.text = t.className;
-			this._select.appendChild(op);
-			
-		}
-		
 		div.appendChild(this._select);
 		this._warnDiv = dojo.doc.createElement("div");
 		div.appendChild(this._warnDiv);
@@ -37,6 +22,20 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 		dojo.style(this._select, "width","180px");
 		dojo.style(this.domNode, "width","100%");
 		dojo.connect(this._select, "onchange", this, "_onChange");
+	},
+
+	/* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
+	postCreate : function(){
+
+		this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
+		this._themeCount = this._themeData.length;
+		for (var i = 0; i < this._themeData.length; i++){
+			var op = dojo.doc.createElement("option");
+			op.value =this._themeData[i].className;
+			op.text = this._themeData[i].className;
+			this._select.appendChild(op);
+			
+		}
 	},
 	
 	_setBaseAttr : function(base){
@@ -86,6 +85,11 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 			
 		return null;
 	},
+	
+	_setWorkspaceOnlyAttr : function(value){
+		this.workspaceOnly = value;
+	},
+	
 	onChange : function(){
 		
 	},

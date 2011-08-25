@@ -698,25 +698,16 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		},
 		
 		setFormat: function(value){
-			
-			var format;
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var n = dojo.create("div", { innerHTML: value});
-			if (n.children.length > 0){
-				format = 'html';
-			}else{
-				format = 'text';
-			}
-			var n = dojo.create("div", { innerHTML: value});
+			var format = n.children.length ? 'html' : 'text';
 			if (format === 'html'){
-			
-				htmlRadio.setChecked(true);
-				textRadio.setChecked(false);
+				htmlRadio.set('checked', true);
+				textRadio.set('checked', false);
 			}else{ 
-				
-				htmlRadio.setChecked(false);
-				textRadio.setChecked(true);
+				htmlRadio.set('checked', false);
+				textRadio.set('checked', true);
 			}
 			this._format = format;
 
@@ -763,8 +754,8 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			if (disabled){
 				dojo.addClass(textObj,'inlineEditDisabled');
 				dojo.addClass(htmlObj,'inlineEditDisabled');
-				htmlRadio.setChecked(false);
-				textRadio.setChecked(true);
+				htmlRadio.set('checked', false);
+				textRadio.set('checked', true);
 			}else{
 				dojo.removeClass(textObj,'inlineEditDisabled');
 				dojo.removeClass(htmlObj,'inlineEditDisabled');

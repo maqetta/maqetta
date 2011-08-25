@@ -146,7 +146,7 @@ dojo.mixin(davinci.Workbench, {
 			dojo.forEach(toolbar1.getChildren(), function(child){
  				if (child.isEnabled)
  				{
- 					child.setDisabled(!child.isEnabled(change.targetObjectId));
+				    child.set('disabled', !child.isEnabled(change.targetObjectId));
  				}
  			});
 		}
@@ -200,14 +200,15 @@ dojo.mixin(davinci.Workbench, {
 						var dojoAction;
 						if (action.toggle || action.radioGroup)
 						{
-							dojoAction =new dijit.form.ToggleButton(parms);
-							dojoAction.item=action;
-							dojoAction.setChecked(action.initialValue);
+							dojoAction = new dijit.form.ToggleButton(parms);
+							dojoAction.item = action;
+							dojoAction.set('checked', action.initialValue);
 							if (action.radioGroup)
 							{
 								var group=radioGroups[action.radioGroup];
-								if (!group)
+								if (!group) {
 									group=radioGroups[action.radioGroup]=[];
+								}
 								group.push(dojoAction);
 								dojoAction.onChange=dojo.hitch(this,"_toggleButton",dojoAction,context,group);
 							}
@@ -230,12 +231,11 @@ dojo.mixin(davinci.Workbench, {
 						toolbar1.addChild(dojoAction);
 						if(action.isEnabled && !action.isEnabled(targetObjectId) ){ 
 							dojoAction.isEnabled = action.isEnabled;
-							dojoAction.setDisabled(true);
+							dojoAction.set('disabled', true);
 						}else{
-							dojoAction.setDisabled(false);
+							dojoAction.set('disabled', false);
 						}
 				}
-		
 		}
 		return toolbar1;
 	},
@@ -761,19 +761,20 @@ dojo.mixin(davinci.Workbench, {
 		if (!button.checked) {
 			return;
 		}
-		for (var i=0;i<group.length;i++) {
-			if (group[i]!=button) {
-				group[i].setChecked(false);
+		group.forEach(function(item){
+			if (item != button) {
+				item.set('checked', false);
 			}
-		}
+		})
 		this._runAction(button.item,context,button.item.id);
 	},
 	_runAction: function (item,context,arg)
 	{
 		if (item.run)
 		{
-			if (item.run instanceof Function)
+			if (item.run instanceof Function) {
 				item.run();
+			}
 			else
 			{
 				if (item.scope)

@@ -49,7 +49,19 @@ dojo.declare("davinci.ui.NewProject",   [dijit._Widget,dijit._Templated], {
 	},
 	
 	okButton : function(){
-		this.value = dojo.attr(this._projectName, "value");
+		var newProjectName = dojo.attr(this._projectName, "value");
+		var isEclipse = dojo.attr(this._eclipseSupport,'checked');
+
+		davinci.resource.createProject(newProjectName, true, isEclipse);
+		
+		if(isEclipse){
+			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPreferences.webContentFolder',newProjectName, "./WebContent");
+			davinci.workbench.Preferences.savePreferences('davinci.ui.ProjectPreferences.themeFolder',newProjectName, "./WebContent/themes");
+		}
+		
+		if(davinci.Runtime.singleProjectMode())
+			davinci.Runtime.loadProject(newProjectName);
+		
 		this.onClose();
 	},
 	

@@ -270,17 +270,7 @@ dojo.mixin(davinci.ui.Resource, {
 	
 	newProject : function(){
 		var projectDialog = new davinci.ui.NewProject({});
-		function callBack(){
-			var newProjectName = dojo.attr(projectDialog, "value");
-			var isEclipse = dojo.attr(projectDialog, "eclipseProject");
-			
-			
-			davinci.resource.createProject(newProjectName, true);
-			
-			if(davinci.Runtime.singleProjectMode())
-				davinci.Runtime.loadProject(newProjectName);
-		}
-	    davinci.Workbench.showModal(projectDialog, 'New Project', 'height:110px;width: 200px', callBack);
+	    davinci.Workbench.showModal(projectDialog, 'New Project', 'height:160px;width: 250px');
 	},
 	
 	

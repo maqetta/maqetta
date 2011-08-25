@@ -37,8 +37,8 @@ dojo.declare("davinci.ui.ProjectPreferences",davinci.workbench.PreferencePane, {
 	setPreferences: function(preferences){
 		
 		preferences = (preferences || {});
-		this._webContentNode.set( 'value', preferences['webContent']);
-		this._themeFolderNode.set( 'value', preferences['themeFolderNode']);
+		this._webContentNode.set( 'value', preferences['webContentFolder']);
+		this._themeFolderNode.set( 'value', preferences['themeFolder']);
 		
 	},
 
@@ -49,7 +49,7 @@ dojo.declare("davinci.ui.ProjectPreferences",davinci.workbench.PreferencePane, {
 		
 		var preferences = {
 			'themeFolder': dojo.attr(themeFolderNode, 'value'),
-			'webContent': dojo.attr(webContentNode, 'value'),
+			'webContentFolder': dojo.attr(webContentNode, 'value'),
 		};
 		return preferences;
 	},

@@ -64,8 +64,8 @@
 		 
 	     pane:"davinci.ui.ProjectPreferences",
 			    defaultValues : {
-			    	"webContent":"",
-			    	"themeFolderNode":"./themes"
+			    	"webContentFolder":"",
+			    	"themeFolder":"./themes"
 			     }
 	     }
 		                 	

@@ -15,7 +15,7 @@ import org.davinci.server.user.User;
 
 public class SetPreferences extends Command {
 
-    @Override
+
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
         String id = req.getParameter("id");
         String base = req.getParameter("base");

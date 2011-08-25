@@ -411,16 +411,16 @@ public class User {
 	}
 
 	public File getWorkbenchSettings(String base) {
-		if (this.settingsDirectory == null) {
+	
 		
 			File baseFile = new File(this.userDirectory,base);
-			this.settingsDirectory = new File(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+			File settingsDirectory = new File(baseFile,IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 			
-			if(!this.settingsDirectory.exists())
-				this.settingsDirectory.mkdirs();
-		}
+			if(!settingsDirectory.exists())
+				settingsDirectory.mkdirs();
+		
 
-		return this.settingsDirectory;
+		return settingsDirectory;
 	}
 	
 	synchronized public Links getLinks() {

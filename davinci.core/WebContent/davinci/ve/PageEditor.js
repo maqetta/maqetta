@@ -1,7 +1,9 @@
 dojo.provide("davinci.ve.PageEditor");
  
 dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.ContentPane");
 dojo.require("davinci.html.ui.HTMLEditor");
+dojo.require("davinci.model.Path");
 dojo.require("davinci.ve.VisualEditor");
 dojo.require("davinci.ve.VisualEditorOutline");
 dojo.require("davinci.commands.CommandStack");
@@ -57,9 +59,8 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
     },
 	
-	supports: function (something) {
-	    var pattern=/^\s*(palette|properties|style|states|inline-style|MultiPropTarget)\s*$/;
-	    return pattern.test(something);
+	supports: function (something){
+	    return /^\s*(palette|properties|style|states|inline-style|MultiPropTarget)\s*$/.test(something);
 	},
 
 	focus: function() {
@@ -146,7 +147,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	
 	_setDirty: function() {
 		this.isDirty=true;
-		this.lastModifiedTime=new Date().getTime();
+		this.lastModifiedTime=Date.now();
 		if (this.editorContainer){
 			this.editorContainer.setDirty(true);
 		}
@@ -167,7 +168,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 			},700);
 		}
 		this.isDirty=true;
-		this.lastModifiedTime=new Date().getTime();
+		this.lastModifiedTime=Date.now();
 	},
 	
 	getContext: function() {
@@ -187,6 +188,7 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	
 	
 	setContent: function (filename, content) {
+
 	    this.fileName=filename;
 	    this.htmlEditor.setContent(filename,content);
 	    if (this._isNewFile && this.resourceFile.parent!=davinci.resource.getRoot()) {
@@ -235,6 +237,9 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	},
 
 	selectModel: function (selection) {
+		if (this.publishingSelect) {
+			return;
+		}
 		var selectionItem= selection && selection[0];
 		if (!selectionItem) {
 			return;

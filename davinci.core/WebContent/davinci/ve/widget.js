@@ -244,8 +244,8 @@ davinci.ve.widget.getLabel = function(widget){
 	return text;
 };
 
-davinci.ve.widget.byId = function(id){
-	var node=dojo.byId(id);
+davinci.ve.widget.byId = function(id, container){
+	var node=dojo.byId(id, container);
 	if (node)
 	{
 		if (node._dvWidget) {

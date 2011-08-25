@@ -19,6 +19,8 @@ dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.workbench.EditorContainer");
 //dojo.require("davinci.ui.Panel");
 
+dojo.require("davinci.ui.OpenThemeDialog"); // ui_plugin.js
+
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci", "webContent");
 

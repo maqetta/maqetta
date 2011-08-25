@@ -2,6 +2,7 @@ dojo.provide("davinci.ve.widgets.Cascade");
 dojo.require('davinci.workbench.WidgetLite');
 dojo.require("davinci.html.CSSModel");
 dojo.require("davinci.ve.widget");
+dojo.require("davinci.ui.ErrorDialog");
 dojo.require("davinci.ui.widgets.DocileDialog");
 dojo.require("davinci.workbench.Preferences");
 dojo.require("davinci.Workbench");
@@ -79,7 +80,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			
 			this._setFieldValue = function(value, baseLocation){
 				this._value = value || "";
-				this._loc = baseLocation
+				this._loc = baseLocation;
 				dojo.attr(node, 'value', this._value);
 			};
 			dojo.connect(node, "onchange", this, "_onFieldChange", true);
@@ -141,14 +142,14 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			//FIXME: the commented out message in next line provides a more informative error message
             var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 			var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
-			var errorDialog = new davinci.ui.Error({'errorText': content});
+			var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
 			davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue);
             
             //alert("Error- cant change read only value")
 			this._setFieldValue(this._value,this._loc);
 			return;
 		}else if(this._values[this._targetValueIndex].type=="theme" &&
-				   editorPrefs['cssOverrideWarn'] &&
+				   editorPrefs.cssOverrideWarn &&
 					this._editor.supports("MultiPropTarget")){
 			askUser = true;
 			var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
@@ -158,7 +159,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";
 
 		if(askUser){
-			var overRide = new davinci.ui.widgets.DocileDialog({'content':content,
+			var overRide = new davinci.ui.widgets.DocileDialog({content:content,
 																callBack:dojo.hitch(this, function(result){
 																
 																	if(result.value=="ok"){
@@ -170,7 +171,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 																	}
 																	
 																	if(!result.alwaysShow){
-																		editorPrefs['cssOverrideWarn'] = false;
+																		editorPrefs.cssOverrideWarn = false;
 																		davinci.workbench.Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
 																	}
 																	
@@ -226,8 +227,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				for(var j=0;j<this._shorthands.length && !found;j++){
 					if(this._shorthands[j]==expanded[i]) found = true;
 				}
-				if(!found)
-					this._shorthands.push(expanded[i])
+				if(!found) {
+					this._shorthands.push(expanded[i]);
+				}
 				this._buildShortHands(expanded[i]);
 			}
 		}
@@ -269,7 +271,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				if(name in v)
 					value = v[name];
 			
-			values.push({'rule':v, 'value':value, 'matchLevel':'element.style', type:'element.style'});
+			values.push({rule:v, value:value, matchLevel:'element.style', type:'element.style'});
 		}
 		
 		/* selection (queried) rules */
@@ -282,8 +284,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				s+=rule.selectors[j].getLabel();
 			}
 			var ruletype = getRuleType(rule);
-			values.push({'rule':v['rules'][i], 'ruleString':s,
-						'matchLevel':v['matchLevels'][i], type:ruletype});
+			values.push({rule:v.rules[i], ruleString:s,
+						matchLevel:v.matchLevels[i], type:ruletype});
 		}
 		
 		/* create list of proposals for new rules (using classes defined on this widget) */
@@ -304,9 +306,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				}
 				if(!existingRule){
 					var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
-					values.splice(nProposals,0,{'rule':null, 'ruleString':proposedNewRule, 
-								'targetFile':this.targetFile, 'className':thisClass,
-								'value':null, 'matchLevel':matchLevel, type:'proposal'});
+					values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
+								targetFile:this.targetFile, className:thisClass,
+								value:null, matchLevel:matchLevel, type:'proposal'});
 					nProposals++;
 				}
 			}
@@ -324,11 +326,11 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			for(var k=0;!found && k<values.length;k++){
 				if(values[k].rule==v[i]){
 					found = true;
-					values[k]['type'] = 'theme';
+					values[k].type = 'theme';
 				}
 			}
 			if(!found)
-				values.push({'rule' : v[i], 'matchLevel': 'theme', 'type':'theme'});
+				values.push({rule : v[i], matchLevel: 'theme', type:'theme'});
 		}
 		
 		return values;
@@ -345,10 +347,10 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		/* figure out the properties values */
 		var shorthands = this._getShortHands();
 		for(var i = 0;i<allRules.length;i++){
-			var rule = allRules[i]['rule'];
+			var rule = allRules[i].rule;
 			if(rule){
 				for(var k=0;k<shorthands.length;k++){
-					if(allRules[i].type!="element.style" && allRules[i]['rule'].getProperty(shorthands[i])!=null){
+					if(allRules[i].type!="element.style" && allRules[i].rule.getProperty(shorthands[i])!=null){
 						allRules[i].shorthand = shorthands[i];
 						var prop = rule.getProperty(shorthands[i]);
 						allRules[i].value = prop && prop.value;
@@ -362,9 +364,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 						this._hasOverride = true;
 					}
 				}
-				if(!allRules[i].shorthand && allRules[i]['type']!="element.style")
-					allRules[i]['value'] = this._getRuleTargetValue(rule);
-				else if(!allRules[i].shorthand && allRules[i]['type']=="element.style")
+				if(!allRules[i].shorthand && allRules[i].type!="element.style")
+					allRules[i].value = this._getRuleTargetValue(rule);
+				else if(!allRules[i].shorthand && allRules[i].type=="element.style")
 						allRules[i].value = rule[this.target[0]];
 			}else{
 				// rule is null when type=='proposal'
@@ -385,7 +387,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var sorted = [];
 		for(var i = 0;i<rules.length;i++){
 			var inserted = false;
-			if(rules[i]['type']=="element.style"){
+			if(rules[i].type=="element.style"){
 				sorted.splice(0,0,rules[i] );
 				inserted = true;
 			}
@@ -413,23 +415,23 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		 */
 		var foundValue = false;
 		for(var i = 0;i<rules.length;i++){
-			rules[i]['extraClass'] = [];
+			rules[i].extraClass = [];
 			if(this._hasOverride)
-				rules[i]['extraClass'].push("shorthandOverrideCascadeNode");
+				rules[i].extraClass.push("shorthandOverrideCascadeNode");
 			else if(foundValue)
-				rules[i]['extraClass'].push("cssShorthandOverRidden");
+				rules[i].extraClass.push("cssShorthandOverRidden");
 			
 			if( rules[i].value || (rules[i].type!="element.style" && this._getRuleTargetValue(rules[i].rule))){
 				foundValue = true;
 			}else if(!rules[i].value && rules[i].type!="element.style"){
-				rules[i]['extraClass'].push("hiddenCascadeNode");	
+				rules[i].extraClass.push("hiddenCascadeNode");	
 			}
 			/* different class for element.style since we dont want to hide it (but want to hide the X */
 			if(rules[i].type=="element.style" && !rules[i].value)
-				rules[i]['extraClass'].push("elementStyleNode");
+				rules[i].extraClass.push("elementStyleNode");
 			
 			if(!this._canModifyRule(rules[i].rule)){
-				rules[i]['extraClass'].push("readOnlyRule");
+				rules[i].extraClass.push("readOnlyRule");
 				rules[i].readOnly = true;
 			}
 			
@@ -472,7 +474,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			var valueString = this._formatRuleString(this._values[i]);
 			
 			// uncomment the disabled bit to make read only options unselectable 
-			this._radio.push( dojo.create("input", {'type':'radio', 'name':this._radioGroupName /*, 'disabled': this._values[i].readOnly*/}) );
+			this._radio.push( dojo.create("input", {type:'radio', name:this._radioGroupName /*, disabled: this._values[i].readOnly*/}) );
 			
 			
 			row = dojo.doc.createElement("tr");
@@ -559,12 +561,12 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			if(rule!="element.style" && this._values[i].rule==rule ){
 				dojo.removeClass(this._radio[i].parentNode.parentNode, "hiddenCascadeNode");
 				dojo.attr(this._radio[i], 'checked',true);
-				this._onChange({'target':i});
+				this._onChange({target:i});
 				break;
 			}else if(rule=="element.style" &&  this._values[i].type=="element.style"){
 				dojo.removeClass(this._radio[i].parentNode.parentNode, "hiddenCascadeNode");
 				dojo.attr(this._radio[i], 'checked',true);
-				this._onChange({'target':i});
+				this._onChange({target:i});
 				break;
 			}
 		}
@@ -587,7 +589,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 				
 				dojo.removeClass(this._radio[i].parentNode.parentNode, "hiddenCascadeNode");
 				dojo.attr(this._radio[i], 'checked',true);
-				this._onChange({'target':i});
+				this._onChange({target:i});
 				break;
 			}
 		}
@@ -641,7 +643,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		for(var i = 0;i<this._values.length;i++){
 			/* skip read only values */
-			//if(this._values[i]['readOnly']) continue;
+			//if(this._values[i].readOnly) continue;
 			
 			if((this._values[i].value && !foundValue && !defaultValue) ||
 					(!foundValue && !defaultValue && 
@@ -684,13 +686,13 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		}
 
 		var meta = theme.loader.getMetaData(widgetType);
-		if(!meta || !meta['states']){
+		if(!meta || !meta.states){
 			
 		//	console.log("error loading metadata:\nwidgetType:" + widgetType + "\nfound:\n" + meta);
 			return "element.style";
 		}
-		if(meta &&  meta['states'][state] && meta['states'][state]['elements'] ){
-			var md = meta['states'][state]['elements'];
+		if(meta &&  meta.states[state] && meta.states[state].elements ){
+			var md = meta.states[state].elements;
 			for(var name in md){
 					for(var p=0;p<md[name].length;p++){
 						if( this._isTarget(md[name][p])){	
@@ -704,8 +706,8 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		}
 		
 		/* no metadata for where this value goes in DOM, search for default target rule */
-		if(meta && meta['states'][state] && meta['states'][state]['selectors']){
-			var md = meta['states'][state]['selectors'];
+		if(meta && meta.states[state] && meta.states[state].selectors){
+			var md = meta.states[state].selectors;
 			for(var name in md){
 				for(var c=0;c<md[name].length;c++){
 					if(this._isTarget(md[name][c])) return name;

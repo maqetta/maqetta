@@ -240,7 +240,7 @@
 					
 					{
 						id: "openThemeEditor",
-						run: "davinci.Workbench.showModal(davinci.ui.OpenTheme(), 'Open Theme', 'height:110px;width: 200px')", 
+						run: "davinci.Workbench.showModal(new davinci.ui.OpenThemeDialog(), 'Open Theme', 'height:110px;width: 200px')", 
 						label: "Theme Editor",
 						menubarPath: "davinci.open/open2"	  
 					},
@@ -358,7 +358,7 @@
 				 				 id: "download",
 				 				 iconClass: 'downloadAllIcon',
 				 				 run : function(){
-								 	davinci.Workbench.showModal(davinci.ui.DeployAllDialog(), "Download", "width: 400px");
+								 	davinci.Workbench.showModal(new davinci.ui.Download(), "Download", "width: 400px");
 							 	 },
 				 				 radioGroup : "displayMode",
 				 			 	 label: "Download Entire Workspace",
@@ -368,7 +368,7 @@
 				 				 id: "download",
 				 				 iconClass: 'downloadSomeIcon',
 				 				 run : function(){
-								 	davinci.Workbench.showModal(davinci.ui.DeploySomeDialog(), "Download", "width: 400px");
+								 	davinci.Workbench.showModal(new davinci.ui.DownloadSelected(), "Download", "width: 400px");
 							 	 },
 				 				 radioGroup : "displayMode",
 				 			 	 label: "Download Selected Files",
@@ -378,7 +378,7 @@
 				 				 id: "userlibs",
 				 				 iconClass: 'userLibIcon',
 				 				 run : function(){
-								 	davinci.Workbench.showModal(davinci.ui.UserLibs(), "User Libraries", "width: 400px");
+								 	davinci.Workbench.showModal(new davinci.ui.UserLibraries(), "User Libraries", "width: 400px");
 							 	 },
 				 				 radioGroup : "displayMode",
 				 			 	 label: "Modify Libraries",

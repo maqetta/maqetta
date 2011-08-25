@@ -1,14 +1,15 @@
 dojo.provide("davinci.ve.tools.CreateTool");
 
+dojo.require("davinci.Workbench");
+dojo.require("davinci.ui.ErrorDialog");
 dojo.require("davinci.ve.tools._Tool");
+dojo.require("davinci.ve.metadata");
 dojo.require("davinci.ve.widget");
 dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
 dojo.require("davinci.ve.Snap");
-dojo.require("davinci.ui.Dialogs");
-
 
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
@@ -109,7 +110,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 				title = 'Error';
 				console.error(e);
 			}
-            var errorDialog = new davinci.ui.Error({errorText: content});
+            var errorDialog = new davinci.ui.ErrorDialog({errorText: content});
             davinci.Workbench.showModal(errorDialog, title);
 		} finally {
 			// Make sure that if calls above fail due to invalid target or some

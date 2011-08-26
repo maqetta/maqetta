@@ -5,6 +5,8 @@ dojo.require("davinci.ve.palette.Palette");
 dojo.require("davinci.ve.themeEditor.metadata.query");
 dojo.require("davinci.ve.themeEditor.metadata.metadata");
 
+davinci.ve.widget.widgetHash={};
+
 davinci.ve.widget._dojo = function(node){
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
 //TODO: for some reason node.ownerDocument is occasionally null
@@ -244,7 +246,7 @@ davinci.ve.widget.getLabel = function(widget){
 };
 
 davinci.ve.widget.byId = function(id, doc){
-	var node=dojo.byId(id, doc);
+	var node=dojo.byId(id, doc && doc.body ? doc : undefined); // we're sometimes getting called with context as the second arg; don't pass it as a doc.
 	if (node)
 	{
 		if (node._dvWidget) {
@@ -255,6 +257,7 @@ davinci.ve.widget.byId = function(id, doc){
 			return widget;
 		}
 	}
+	return davinci.ve.widget.widgetHash[id];
 };
 
 davinci.ve.widget.byNode = function(node){
@@ -642,6 +645,7 @@ dojo.declare("davinci.ve._Widget",null,{
 
 	postscript: function ()
 	{
+		if(this.id) davinci.ve.widget.widgetHash[this.id]=this;
 		this.buildRendering();
 		this.postCreate();
 	},

@@ -1879,11 +1879,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		return v;
 	},
 	
-	 getUniqueID: function(node) {
+	 getUniqueID: function(node, persist, idRoot) {
 		 var id = node.getAttribute("id");
 		 if (!id) {
 			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null;
-			 var root = node.tag;
+			 var root = idRoot ? idRoot : node.tag;
 			 var num;
 			 while(1){
 				 if (!this._uniqueIDs.hasOwnProperty(root)) {
@@ -1902,7 +1902,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					 break;
 				 }
 			 }
-			node.addAttribute("id",id,true);	 
+			 var noPersist = !persist;
+			 node.addAttribute("id",id,noPersist);	 
 		 }
 		 return id;
 	},

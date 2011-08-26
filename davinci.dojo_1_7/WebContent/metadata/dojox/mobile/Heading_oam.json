@@ -53,7 +53,19 @@
             "datatype": "string"
         },
         "fixed": {
-            "datatype": "string"
+            "datatype": "string",
+            "defaultValue": "",
+            "option": [
+                {
+                    "value": ""
+                },
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                }
+            ]
         }
     },
     "content": "<h1 label='Heading'></h1>"

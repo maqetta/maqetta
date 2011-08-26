@@ -37,6 +37,27 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				}, 100);
 			}
 		});
+	},
+	
+	/**
+	 * By default, when dragging/dropping new widgets onto canvas, Maqetta
+	 * defaults to adding a new widget as a child of the mostly deeply nested
+	 * valid container that is under the mouse points. But for View widgets,
+	 * which default to height:100%, this means it is really hard for the user
+	 * to create sibling View widgets via drag/drop. This helper function
+	 * makes it so that by default a new View element will be added as a sibling
+	 * to the candidate view target.
+	 * 
+	 * @param {Array[davinci.ve._Widget]} allowedParentList List of candidate parent widgets
+	 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
+	 */
+	chooseParent: function(allowedParentList){
+		if(allowedParentList.length>1 && dojo.hasClass(allowedParentList[0].domNode,"mblView")){
+			return allowedParentList[1];
+		}else{
+			return allowedParentList[0];
+		}
+
 	}
 
 });

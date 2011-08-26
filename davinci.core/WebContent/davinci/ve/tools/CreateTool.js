@@ -87,7 +87,32 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			// XXX Have to do this call here, rather than in the more favorable
 			//  create() or _create() since different "subclasses" of CreateTool
 			//  either override create() or _create().  It is very inconsistent.
-			target = this._getAllowedTargetWidget(target);
+			var allowedParentList = this._getAllowedTargetWidget(target),
+				Metadata = davinci.ve.metadata,
+				type = this._data.type,
+				helper;
+			var helperClassName = davinci.ve.metadata.queryDescriptor(type, "helper");
+			if(helperClassName){
+				//FIXME: Duplicated from widget.js. Should be factored out into a utility
+		        try {
+		            dojo["require"](helperClassName);
+		        } catch(e) {
+	                console.error("Failed to load helper: " + helperClassName);
+	                console.error(e);
+		        }
+		        var aClass = dojo.getObject(helperClassName);
+		        if (aClass) {
+		        	helper  = new aClass();
+				}
+		        var obj = dojo.getObject(helperClassName);
+		        helper = new obj();
+			}
+
+			if(allowedParentList.length>1 && helper && helper.chooseParent){
+				target = helper.chooseParent(allowedParentList);
+			}else{
+				target = allowedParentList[0];				
+			}
 
 			if(this._resizable && this._position){
 				var p = this._context.getContentPosition(event);
@@ -259,13 +284,14 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	},
 
 	/**
-	 * Find a valid parent for the dropped widget, based on the widgets'
-	 * 'allowedChild' and 'allowedParent' properties. If no valid parent is
+	 * Create a candidate list of valid parents for the dropped widget, based on the widgets'
+	 * 'allowedChild' and 'allowedParent' properties. The logic ascends the DOM hierarchy
+	 * starting with "target" to find all possible valid parents. If no valid parent is
 	 * found, then throw an error.
 	 * 
 	 * @param target {davinci.ve._Widget}
 	 * 			The widget on which the user dropped the new widget.
-	 * @return a widget which is allowed to contain the dropped widget 
+	 * @return an array of widgets which are possible valid parents for the dropped widget 
 	 * @type davinci.ve._Widget
 	 * @throws {Error} if no valid parent widget is found
 	 */
@@ -318,6 +344,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		var Metadata = davinci.ve.metadata,
 			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
 			newTarget = target,
+			allowedParentList = [],
 			data = this._data.length ? this._data : [this._data],
 			children = [];
 
@@ -330,12 +357,15 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			});
 		});
 
-		while (newTarget && ! isAllowed(children, newTarget)) {
+		while (newTarget) {
+			if(isAllowed(children, newTarget)){
+				allowedParentList.push(newTarget);
+			}
 			newTarget = getEnclosingWidget(newTarget);
 		}
 		
 		// If no valid target found, throw error
-		if (! newTarget) {
+		if (allowedParentList.length == 0) {
 			var typeList = [];
 			data.forEach(function(elem) {
 				typeList.push(elem.type);  
@@ -357,7 +387,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			throw new InvalidTargetWidgetError(errorMsg);
 		}
 		
-		return newTarget;
+		return allowedParentList;
 	}
 });
 

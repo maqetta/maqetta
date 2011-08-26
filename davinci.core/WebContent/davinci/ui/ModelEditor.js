@@ -110,7 +110,7 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
                 newModel: this.model
         };
         
-        dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+        //dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
 	},
 	
 	selectModel: function (selection) {

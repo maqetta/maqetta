@@ -51,14 +51,14 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 					type: "html.img"
 				};
 			}
-			var metadata = davinci.ve.metadata.query(createData.type);
-			var tool;
-			createData.fileDragCreate = true; 
-			if (metadata && metadata.tool) {
+            createData.fileDragCreate = true; 
+			var toolName = davinci.ve.metadata.queryDescriptor(createData.type, 'tool'),
+			    tool;
+			if (toolName) {
 //					dojo["require"](data.tool);
 				dojo._loadUri(davinci.resource.findResource(
-						'./' + metadata.tool.replace(/\./g, "/") + ".js").getURL());
-				var ctor = dojo.getObject(metadata.tool);
+						'./' + toolName.replace(/\./g, "/") + ".js").getURL());
+				var ctor = dojo.getObject(toolName);
 				tool = new ctor(createData);
 			} else {
 				tool = new davinci.ve.tools.CreateTool(createData);

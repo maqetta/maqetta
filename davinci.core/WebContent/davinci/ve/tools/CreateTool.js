@@ -36,7 +36,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			this._context.rootNode.style.cursor = this._oldCursor;
 		}
 		this._setTarget(null);
-		this._position = undefined;
+		delete this._position;
 	},
 
 	onMouseDown: function(event){

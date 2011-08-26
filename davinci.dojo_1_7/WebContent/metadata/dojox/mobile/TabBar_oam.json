@@ -43,7 +43,19 @@
             "datatype": "string"
         },
         "fixed": {
-            "datatype": "string"
+            "datatype": "string",
+            "defaultValue": "",
+            "option": [
+                {
+                    "value": ""
+                },
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                }
+            ]
         }
     },
     "content": "<ul></ul>"

@@ -1174,11 +1174,13 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		if(position.target){ // event
 			position = {x: position.pageX, y: position.pageY};
 		}
-
+/*
 		var containerNode = this.getContainerNode();
 		var x = position.x + containerNode.scrollLeft;
 		var y = position.y + containerNode.scrollTop;
 		return {x: x, y: y};
+*/
+		return position;
 	},
 
 	getCommandStack: function(){

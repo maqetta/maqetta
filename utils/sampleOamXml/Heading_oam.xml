@@ -1,0 +1,38 @@
+<widget id="http://dojotoolkit.org/dojox/mobile/Heading"
+        name="dojox.mobile.Heading"
+        spec="1.0"
+        version="1.7">
+    <library name="dojo" src="../../../">
+        <require type="javascript" src="dojo/dojo.js"/>
+    </library>
+    <require type="javascript">
+        dojo.require('dojox.mobile');
+    </require>
+    <require type="javascript">
+        dojo.require('dojox.mobile.parser');
+    </require>
+    <require type="javascript">
+        dojo.require('dojox.mobile.deviceTheme');
+    </require>
+    <require type="javascript">
+        dojo.require('dojox.mobile.compat');
+    </require>
+    <properties>
+        <property name="back" datatype="string"/>
+        <property name="href" datatype="string"/>
+        <property name="moveTo" datatype="string"/>
+        <property name="transition" datatype="string" defaultValue="slide"/>
+        <property name="label" datatype="string" defaultValue="Heading"/>
+        <property name="iconBase" datatype="string"/>
+        <property name="fixed" datatype="string" defaultValue="">
+            <option value=""/>
+            <option value="top"/>
+            <option value="bottom"/>
+        </property>
+    </properties>
+    <content>
+        <![CDATA[
+            <h1 label='Heading'></h1>
+        ]]>
+    </content>
+</widget>

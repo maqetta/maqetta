@@ -10,17 +10,23 @@ dojo.require("davinci.ve.tools.CreateTool");
 dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 
 	_create: function(args){
-		var command = new davinci.commands.CompoundCommand();
-		var index = args.index;
-		var baseline = undefined;
-		var selection = [];
+		var command = new davinci.commands.CompoundCommand(),
+			index = args.index,
+			baseline,
+			selection = [];
 		dojo.forEach(this._data, function(d){
-			if(!this._context.loadRequires(d.type)){
-				return;
-			}
+			var loadRequiresForTree = dojo.hitch(this, function(d){
+				if(d.children){
+					d.children.forEach(loadRequiresForTree, this);
+				}
+				if(!this._context.loadRequires(d.type)){
+					throw "Failed to load dependencies for " + d.type;
+				}				
+			});
+			
+			loadRequiresForTree(d);
 
-			var position = undefined;
-			var style = davinci.ve.widget.parseStyleValues((d.properties && d.properties.style));
+			var position, style = davinci.ve.widget.parseStyleValues((d.properties && d.properties.style));
 			if(style && style.position == "absolute"){
 				if(args.position){
 					var p = {x: (parseInt(style.left) || 0), y: (parseInt(style.top) || 0)};

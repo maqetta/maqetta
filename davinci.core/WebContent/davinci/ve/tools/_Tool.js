@@ -64,6 +64,8 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 
 			var domNode = widget.domNode;
 			var parentNode = domNode.parentNode;
+			
+			//FIXME: no side effects? index is never used?
 			for(var index=0;index<parentNode.children.length;index++){
 				if(domNode == parentNode.children[index]){
 					break;
@@ -86,6 +88,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		}
 	},
 
+	//FIXME: pointless?
 	_adjustPosition: function(position){
 		if(!position){
 			return undefined;

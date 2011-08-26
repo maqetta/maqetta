@@ -51,6 +51,9 @@
         },
         "iconBase": {
             "datatype": "string"
+        },
+        "fixed": {
+            "datatype": "string"
         }
     },
     "content": "<h1 label='Heading'></h1>"

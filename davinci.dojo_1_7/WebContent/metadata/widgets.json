@@ -1886,7 +1886,7 @@
                 "displayOnCreate": true,
                 "supportsHTML": true
             },
-            "allowedParent": "DojoxMobileView",
+            "allowedParent": "DojoxMobileView, html.body",
             "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
         },
         {

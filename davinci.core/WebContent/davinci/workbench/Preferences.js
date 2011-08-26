@@ -8,9 +8,8 @@ dojo.requireLocalization("dijit", "common");
 dojo.mixin(davinci.workbench.Preferences,	{
 	
 	_allPrefs: {},
-	savePreferences: function(id, base, preferences)
-	{
-	    this._allPrefs[id]=preferences;
+	savePreferences: function(id, base, preferences){
+		
 		davinci.Runtime.serverPut(
 				{
 					url: "./cmd/setPreferences?id="+id + "&base=" + escape(base),
@@ -18,7 +17,12 @@ dojo.mixin(davinci.workbench.Preferences,	{
 					handleAs:"json",
 					contentType:"text/html"
 				});	
-
+		
+		if(!this._allPrefs[base])
+			this._allPrefs[base] = {};
+		
+		this._allPrefs[base][id]=preferences;
+		
 		dojo.publish("/davinci/preferencesChanged",[{id:id, preferences:preferences}]);
 	},
 	_loadExtensions: function (){
@@ -181,6 +185,7 @@ dojo.mixin(davinci.workbench.Preferences,	{
 	},
 	
 	getPreferences: function (id, base){
+		
 		if(!this._allPrefs[base])
 			this._allPrefs[base] = {};
 		

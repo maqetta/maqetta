@@ -255,6 +255,7 @@
             "inlineEdit": {
                 "property": "title",
                 "displayOnCreate": true,
+                "supportsHTML": true,
                 "multiLine": false
             }
         },

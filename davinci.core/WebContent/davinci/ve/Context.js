@@ -1201,7 +1201,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 			return;
 		}
-
+		dojo.publish("/davinci/ve/widget/visibility/changed/start",[]);
+				
 		var helper = this._needsTearDown && this._needsTearDown.getHelper();
 		if(helper && helper.tearDown){
 			if(helper.tearDown(this._needsTearDown, widget)){
@@ -1277,8 +1278,20 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		}
 		
 		if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
+			var oldSelection = this._selection;
 			this._selection = selection;
-			this.onSelectionChange(selection, add); 
+			this.onSelectionChange(selection, add);
+			if(oldSelection){
+				oldSelection.forEach(function(w){
+					var h = w.getHelper();
+					if(h && h.onDeselect){
+						h.onDeselect(w);
+					}
+				},this);
+			}
+			if(helper && helper.onSelect){
+				helper.onSelect(widget);
+			}
 		}
 
 		this.focus({
@@ -1287,12 +1300,15 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			hasLayout: widget.isLayout(),
 			isChild: parent && parent.isLayout()
 		}, index, inline);
+		
+		dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
 	},
 
 	deselect: function(widget){
 		if(!this._selection){
 			return;
 		}
+		dojo.publish("/davinci/ve/widget/visibility/changed/start",[]);
 
 		var helper = this._needsTearDown && this._needsTearDown.getHelper();
 		if(helper && helper.tearDown){
@@ -1301,6 +1317,9 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 
+		if(widget){
+			helper = widget.getHelper();
+		}
 		if(widget && this._selection.length > 0){ // undo of add got us here some how.
 			if(this._selection.length === 1){
 				if(this._selection[0] != widget){
@@ -1316,12 +1335,24 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				this.focus(null, index);
 				this._selection.splice(index, 1);
 			}
+			if(helper && helper.onDeselect){
+				helper.onDeselect(widget);
+			}
 		}else{ // deselect all
+			if(this._selection){
+				this._selection.forEach(function(w){
+					var h = w.getHelper();
+					if(h && h.onDeselect){
+						h.onDeselect(w);
+					}
+				},this);
+			}
 			this.focus(null);
 			this._selection = undefined;
 		}
 
 		this.onSelectionChange(this.getSelection());
+		dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
 	},
 	focus: function(state, index, inline){
 		if(!this._focuses){

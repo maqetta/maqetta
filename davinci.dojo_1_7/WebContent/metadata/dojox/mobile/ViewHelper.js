@@ -39,6 +39,24 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		});
 	},
 	
+	onSelect: function(widget){
+		if(widget){
+			var domNode = widget.domNode;
+			if(domNode){
+				var parentNode = domNode.parentNode;
+				for(var i=0;i<parentNode.children.length;i++){
+					var node=parentNode.children[i];
+					if(node==domNode){
+						node.style.display = "";
+					}else if(dojo.hasClass(node,"mblView")){
+						node.style.display = "none";
+					}	
+				}
+				dojo.publish("/davinci/ve/widget/visibility/changed/widget",[widget]);
+			}
+		}
+	},
+	
 	/**
 	 * By default, when dragging/dropping new widgets onto canvas, Maqetta
 	 * defaults to adding a new widget as a child of the mostly deeply nested

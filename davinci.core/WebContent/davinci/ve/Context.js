@@ -447,7 +447,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// try to find the theme using path magic
 
 		var ro = davinci.ve.metadata.loadThemeMeta(model);
-		this._editor._visualChanged();
+		//this._editor._visualChanged(); // do not know why we are calling this handler method inline
 		return ro;
 	},
 	

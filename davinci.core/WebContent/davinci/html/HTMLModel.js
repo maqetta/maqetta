@@ -215,7 +215,7 @@ davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
     }
 
     // this.reportPositions();
-    this.endOffset = result.offset || formattedHTML.length;
+    this.endOffset = result.endOffset;
     this.errors = result.errors;
     var htmlmodel = this;
     if (!noImport) {

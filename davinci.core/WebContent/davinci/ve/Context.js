@@ -1880,13 +1880,26 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	 getUniqueID: function(node) {
 		 var id = node.getAttribute("id");
 		 if (!id) {
-			 if (!this._uniqueIDs.hasOwnProperty(node.tag)) {
-				 id = this._uniqueIDs[node.tag]=0;
+			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null;
+			 var root = node.tag;
+			 var num;
+			 while(1){
+				 if (!this._uniqueIDs.hasOwnProperty(root)) {
+					 num = this._uniqueIDs[root]=0;
+				 } else {
+					 num=++this._uniqueIDs[root];
+				 }
+				 id=root+"_"+num;	
+				 if(userDoc){
+					 // If this is called when user doc is available,
+					 // make sure this ID is unique
+					 if(!userDoc.getElementById(id)){
+						 break;
+					 }
+				 }else{
+					 break;
+				 }
 			 }
-			 else {
-				 id=++this._uniqueIDs[node.tag];
-			 }
-			id=node.tag+"_"+id;
 			node.addAttribute("id",id,true);	 
 		 }
 		 return id;

@@ -1256,7 +1256,10 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 	attach: function()
 	{
-
+		var helper = this.getHelper();
+		if(helper && helper.create){
+			helper.create(this, this._srcElement);
+		}
 	},
 	_stringValue: function (attributeName, value)
 	{
@@ -1606,13 +1609,6 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 	{
 		this.dijitWidget.startup();
 
-	},
-	attach: function()
-	{
-		var helper = this.getHelper();
-		if(helper && helper.create){
-			helper.create(this, this._srcElement);
-		}
 	},
 	isLayout: function()
 	{

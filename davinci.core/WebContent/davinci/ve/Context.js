@@ -144,6 +144,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 
 		widget.metadata = widget.metadata || davinci.ve.metadata.query(widget.type);
+		widget._edit_context = this;
 		
 		widget.attach();
 
@@ -152,8 +153,6 @@ dojo.declare("davinci.ve.Context", null, {
 			// internal Dijit widget, such as _StackButton, _Splitter, _MasterTooltip
 			return;
 		}
-
-		widget._edit_context = this;
 
 		var id = widget.getId();
 		if(id){
@@ -1201,7 +1200,6 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 			return;
 		}
-		dojo.publish("/davinci/ve/widget/visibility/changed/start",[]);
 				
 		var helper = this._needsTearDown && this._needsTearDown.getHelper();
 		if(helper && helper.tearDown){
@@ -1308,7 +1306,6 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		if(!this._selection){
 			return;
 		}
-		dojo.publish("/davinci/ve/widget/visibility/changed/start",[]);
 
 		var helper = this._needsTearDown && this._needsTearDown.getHelper();
 		if(helper && helper.tearDown){

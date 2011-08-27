@@ -253,6 +253,7 @@ davinci.states = {
 		}
 		widget = this._getWidget(widget);
 		if (!widget || this.hasState(widget, state)) {
+			//FIXME: This should probably be an error of some sort
 			return;
 		}
 		widget.states = widget.states || {};

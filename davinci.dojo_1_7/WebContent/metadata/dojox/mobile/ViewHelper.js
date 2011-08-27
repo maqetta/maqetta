@@ -2,6 +2,12 @@ dojo.provide("davinci.libraries.dojo.dojox.mobile.ViewHelper");
 
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
+		
+	constructor: function(){
+		//FIXME: Lots of helper objects are instantiated. Only need one per session.
+		//Need to change logic EVERYWHERE around how helpers are instantiated and referenced.
+		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
+	},
 
 	/**
 	 * Override default dojox.mobile.View behavior, which is to automatically
@@ -37,12 +43,49 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				}, 100);
 			}
 		});
+		var context = widget.getContext();
+		if(context && node.id){
+			var bodyWidget = context.rootWidget;
+			if(!davinci.ve.states.hasState(bodyWidget, node.id)){
+				// Create a new state whose name matches ID on the widget
+				//FIXME: Need to make this more robust
+				davinci.ve.states.add(bodyWidget, node.id);				
+			}
+		}	
+	},
+	
+	_widgetSelectedUpdateVisibility: function(domNode){	
+		if(domNode && domNode._dvWidget){
+			var parentNode = domNode.parentNode;
+			for(var i=0;i<parentNode.children.length;i++){
+				var node=parentNode.children[i];
+				if(node==domNode){
+					node.style.display = "";
+				}else if(dojo.hasClass(node,"mblView")){
+					node.style.display = "none";
+				}	
+			}
+			dojo.publish("/davinci/ve/widget/visibility/changed/widget",[domNode._dvWidget]);
+		}
+	},
+	
+	_changeState: function(event){	
+		if(event && event.newState && event.widget && event.widget.domNode){
+			var newState = event.newState;
+			var dj = event.widget.domNode.ownerDocument.defaultView.dojo;
+			var domNode = dj.byId(newState);
+			if(domNode && dojo.hasClass(domNode,"mblView")){
+				davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(domNode);
+				dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
+			}
+		}
 	},
 	
 	onSelect: function(widget){
 		if(widget){
 			var domNode = widget.domNode;
 			if(domNode){
+				/*
 				var parentNode = domNode.parentNode;
 				for(var i=0;i<parentNode.children.length;i++){
 					var node=parentNode.children[i];
@@ -53,6 +96,17 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 					}	
 				}
 				dojo.publish("/davinci/ve/widget/visibility/changed/widget",[widget]);
+				*/
+				davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(domNode);
+				var context = widget.getContext();
+				if(context && domNode.id){
+					var bodyWidget = context.rootWidget;
+					if(davinci.ve.states.hasState(bodyWidget, domNode.id)){
+						// Set the current state to the state name that matches ID on the widget
+						//FIXME: Need to make this more robust
+						davinci.ve.states.setState(bodyWidget, domNode.id);				
+					}
+				}	
 			}
 		}
 	},

@@ -11,6 +11,7 @@ davinci.states = {
 
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
+	DEFAULT_STATE_PROP_NAME: "$DefaultState$",
 
 	constructor: function(){
 	},
@@ -125,7 +126,7 @@ davinci.states = {
 		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
 	},
 
-	setStyle: function(widget, state, style, value, silent) {
+	setStyle: function(widget, state, style, value) {
 		widget = this._getWidget(widget);
 
 		if (!widget || !style) return;
@@ -144,12 +145,15 @@ davinci.states = {
 			continueProcessing = helper.setStyle(widget, state, style);			
 		}
 		if(continueProcessing){
-			return this._setStyle(widget, state, style, silent);
+			return this._setStyle(widget, state, style);
 		}
 	},
 	
-	_setStyle: function(widget, state, style, silent) {
+	_setStyle: function(widget, state, style) {
 
+		if(typeof state == "undefined"){
+			state = this.DEFAULT_STATE_PROP_NAME;
+		}
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].style = widget.states[state].style || {};
@@ -162,9 +166,7 @@ davinci.states = {
 			}		
 		}
 			
-		if (!silent) {
-			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:style}]);
-		}
+		this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:style}]);
 		this._updateSrcState (widget);
 	},
 	
@@ -354,7 +356,8 @@ davinci.states = {
 		var value = "";
 		if (widget.states) {
 			var states = dojo.clone(widget.states);
-			delete states["undefined"];
+			delete states["undefined"];	// Legacy code used property "undefined"
+			delete states[this.DEFAULT_STATE_PROP_NAME];
 			if (!this._isEmpty(states)) {
 				value = JSON.stringify(states);
 				// Escape single quotes that aren't already escaped

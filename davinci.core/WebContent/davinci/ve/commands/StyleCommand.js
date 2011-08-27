@@ -45,8 +45,7 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 			this._state = undefined;
 		}
 		var isNormalState = davinci.ve.states.isNormalState(this._state);
-
-		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);			
+		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined);			
 
 		if (isNormalState) {
 			if(!this._oldValues){

@@ -91,7 +91,7 @@ davinci.states = {
 		} else {
 			widget.states.current = newState;
 		}
-		if (!_silent) {
+		if (!_silent && newState != oldState) {
 			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
 		}
 		this._updateSrcState (widget);

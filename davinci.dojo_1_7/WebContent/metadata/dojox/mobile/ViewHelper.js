@@ -74,7 +74,9 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			var newState = event.newState;
 			var dj = event.widget.domNode.ownerDocument.defaultView.dojo;
 			var domNode = dj.byId(newState);
-			if(domNode && dojo.hasClass(domNode,"mblView")){
+			var context = (domNode._dvWidget && domNode._dvWidget.getContext());
+			if(domNode && context && dojo.hasClass(domNode,"mblView")){
+				context.select(domNode._dvWidget);
 				davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(domNode);
 				dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
 			}

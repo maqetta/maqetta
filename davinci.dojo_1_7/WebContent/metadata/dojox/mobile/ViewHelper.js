@@ -132,6 +132,51 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			return allowedParentList[0];
 		}
 
+	},
+	
+	/**
+	 * Helper to intercept style change processing on widgets.
+	 * This routine looks to see if 'display' property is being changed on a Dojo Mobile view widget.
+	 * If so, then ensure that exactly one sibling is visible.
+	 * 
+	 * @param {davinci.ve._Widget} widget Root widget for view/state management
+	 * @param {string} state Name of current state (null or empty string means default state)
+	 * @param {object} style Object containing list of changed properties e.g {color:"red"}
+	 * @return {boolean} Return true if default setStyle processing should continue 
+	 */
+	setStyle: function(widget, state, style){
+		if(!widget || !widget.domNode || !style || (typeof style.display != "string")){
+			return true;
+		}
+		var context = widget.getContext();
+		if(!context){
+			return true;
+		}
+		var domNode = widget.domNode;
+		if(dojo.hasClass(domNode,"mblView")){
+			if(style.display != "none" && domNode.style.display=="none"){
+				context.select(domNode._dvWidget);
+				davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(domNode);
+				dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
+			}else if(style.display == "none" && domNode.style.display!="none"){
+				//Find first sibling view that isn't this View and switch to it.
+				var parentNode = domNode.parentNode;
+				for(var i=0;i<parentNode.children.length;i++){
+					var node=parentNode.children[i];
+					if(dojo.hasClass(node,"mblView") && node!=domNode && node._dvWidget){
+						context.select(node._dvWidget);
+						davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(node);
+						dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
+						break;
+					}
+				}
+			}
+			delete style.display;
+			var nprops = Object.keys(style).length;	//ECMA5 feature. FF4+, SF5+, IE9+
+			return (nprops>0);	
+		}else{
+			return true;			
+		}
 	}
 
 });

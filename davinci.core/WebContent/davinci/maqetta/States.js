@@ -124,7 +124,7 @@ davinci.states = {
 		
 		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
 	},
-	
+
 	setStyle: function(widget, state, style, value, silent) {
 		widget = this._getWidget(widget);
 
@@ -135,7 +135,21 @@ davinci.states = {
 			style = {};
 			style[name] = value;
 		}
-		
+
+		//FIXME: Helpers maybe should be object-oriented
+		//and inherit from a base class so they can call inherited().
+		var continueProcessing = true;
+		var helper = widget.getHelper();
+		if(helper && helper.setStyle){
+			continueProcessing = helper.setStyle(widget, state, style);			
+		}
+		if(continueProcessing){
+			return this._setStyle(widget, state, style, silent);
+		}
+	},
+	
+	_setStyle: function(widget, state, style, silent) {
+
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].style = widget.states[state].style || {};

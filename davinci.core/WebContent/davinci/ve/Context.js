@@ -1208,8 +1208,6 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 
 			var parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout())};
-//			op = {move: true};
-//			op = {move: (node.style.position == "absolute")};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
 			var resizable = (parent && parent.isLayout() ) ?
@@ -1279,63 +1277,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			var parent = widget.getParent();
 			if(parent){
 				parent.selectChild(widget);
-				// re-run this after the animations take place. Could hook the remaining code to an onEnd event?
-//				if(!widget._refocus){
-//					widget._refocus = true;
-//					var w=widget;
-//					setTimeout(
-//						dojo.hitch(this, function(){this.select(w); delete w._refocus;
-//					}), 1000);
-//					return;
-//				}
 			}
-
-	/****		
-			var box, op;
-
-			if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
-				var node = widget.getStyleNode();
-				if(helper && helper.getSelectNode){
-					node = helper.getSelectNode(this) || node;
-				}
-				box = this.getDojo().position(node, true);
-	****/
-	/*
-				// Adjust dimensions from border-box to content-box
-				var e = dojo._getPadBorderExtents(node);
-				box.l = Math.round(box.x + e.l);
-				box.t = Math.round(box.y + e.t);
-				box.w -= e.w;
-				box.h -= e.h;
-	*/
-	/****
-				box.l = box.x;
-				box.t = box.y;
-
-				op = {move: !(parent && parent.isLayout())};
-//				op = {move: true};
-//				op = {move: (node.style.position == "absolute")};
-
-				//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-				var resizable = (parent && parent.isLayout() 
-	****/
-										/*&& parent.declaredClass != "dijit.layout.BorderContainer"*/
-	/****																
-																					) ?
-						"none" : davinci.ve.metadata.queryDescriptor(widget.type, "resizable");
-				switch(resizable){
-				case "width":
-					op.resizeWidth = true;
-					break;
-				case "height":
-					op.resizeHeight = true;
-					break;
-				case "both":
-					op.resizeWidth = true;
-					op.resizeHeight = true;
-				}
-			}
-	****/
 			
 			if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
 				var oldSelection = this._selection;
@@ -1354,14 +1296,6 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				}
 			}
 		}
-/****
-		this.focus({
-			box: box,
-			op: op,
-			hasLayout: widget.isLayout(),
-			isChild: parent && parent.isLayout()
-		}, index, inline);
-****/
 		this.updateFocus(widget, index, inline);
 	},
 
@@ -1413,6 +1347,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 
 		this.onSelectionChange(this.getSelection());
 	},
+	
 	focus: function(state, index, inline){
 		if(!this._focuses){
 			this._focuses = [];

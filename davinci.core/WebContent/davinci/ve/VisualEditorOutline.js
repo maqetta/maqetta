@@ -141,27 +141,6 @@ dojo.declare("davinci.ve.OutlineTreeModel",	null, {
 			delete this._skipRefresh;
 			this.refresh();
 		}));
-		
-		/* This monkey business is due to dojox.mobile.View widgets, which require that
-		 * exactly one and only one View widget at the same level of DOM are visible at once.
-		 * The dojox.mobile.View helpers listen to "select" events and when one View is selected,
-		 * it messes with the 'display' property on all sibling View widgets
-		 * to ensure this rule is enforced. These 'display' changes need to be communicated
-		 * to the Outline palette so it can update the eyeball icons.
-		 * To minimize flicker, it is necessary to publish (/davinci/ve/widget/visibility/changed/widget)
-		 * and when changes are done, publish (/davinci/ve/widget/visibility/changed/end)
-		 */
-		dojo.subscribe("/davinci/ve/widget/visibility/changed/widget", dojo.hitch(this, function(e) {
-			this._skipRefresh = true;
-			this._anyVisibilityChanges = true;
-		}));
-		dojo.subscribe("/davinci/ve/widget/visibility/changed/end", dojo.hitch(this, function(e) {
-			delete this._skipRefresh;
-			if(this._anyVisibilityChanges){
-				this.refresh();
-				this._anyVisibilityChanges = false;
-			}
-		}));
 },
 	
 	_connect: function(contextFunction, thisFunction)

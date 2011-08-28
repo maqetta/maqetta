@@ -1363,8 +1363,6 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		}, index, inline);
 ****/
 		this.updateFocus(widget, index, inline);
-		//FIXME: Does this really make sense?
-		dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
 	},
 
 	deselect: function(widget){
@@ -1414,7 +1412,6 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		}
 
 		this.onSelectionChange(this.getSelection());
-		dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
 	},
 	focus: function(state, index, inline){
 		if(!this._focuses){

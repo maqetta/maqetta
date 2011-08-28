@@ -3,6 +3,10 @@ dojo.provide("davinci.libraries.dojo.dojox.mobile.ViewHelper");
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 
+	constructor: function(){		
+		//FIXME: Need helper added to StatesView palette
+	},
+
 	/**
 	 * Override default dojox.mobile.View behavior, which is to automatically
 	 * hide ("display: none") any additional Views added to page.  This causes
@@ -39,6 +43,100 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		});
 	},
 	
+	/*
+	 * Ensures that the given View widget has its visibility turned on and
+	 * other sibling View widgets have their visibility turned off 
+	 * @param {davinci.ve._Widget} widget  Widget that needs it visibility turned on
+	 */
+	_updateVisibility: function(domNode){
+		if(!domNode || !domNode._dvWidget || !dojo.hasClass(domNode,"mblView")){
+			return;
+		}
+		var widget = domNode._dvWidget;
+		var context = widget.getContext();
+		var parentNode = domNode.parentNode;
+		var node;
+		var state = davinci.ve.states.getState();
+		var changesNeeded = false;
+		if(domNode.style.display == "none"){
+			changesNeeded = true;
+		}else{
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					if(node!=domNode && node.style.display != "none"){
+						changesNeeded = true;
+						break;
+					}
+				}
+			}
+		}
+		if(changesNeeded){
+			var command = new davinci.commands.CompoundCommand();
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					if(node==domNode){
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));	
+					}else{
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));
+					}	
+				}
+			}
+			context.getCommandStack().execute(command);
+		}
+	},
+	
+	/*
+	 * Called by Outline palette whenever user toggles visibility by clicking on eyeball.
+	 * @param {davinci.ve._Widget} widget  Widget whose visibility is being toggled
+	 * @param {boolean} on  Whether given widget is currently visible
+	 * @return {boolean}  whether standard toggle proceessing should proceed
+	 * FIXME: Better if helper had a class inheritance setup
+	 */
+	onToggleVisibility: function(widget, on){
+		if(!widget || !widget.domNode || !dojo.hasClass(widget.domNode,"mblView")){
+			return true;
+		}
+		var domNode = widget.domNode;
+		var context = widget.getContext();
+		var parentNode = domNode.parentNode;
+		var node;
+		var state = davinci.ve.states.getState();
+		// Only toggle visibility off if there is another View that we can toggle on
+		if(on){
+			var count = 0;
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					count++;
+				}
+			}
+			if(count>1){
+				for(var i=0;i<parentNode.children.length;i++){
+					node=parentNode.children[i];
+					if(dojo.hasClass(node,"mblView")){
+						if(node!=domNode){
+							this._updateVisibility(node);
+							break;
+						}
+					}
+				}
+			}
+		// Toggle visibility on for this node, toggle visibility off other Views
+		}else{
+			this._updateVisibility(domNode);
+		}
+		return false;
+	},
+	
+	onSelect: function(widget){
+		if(!widget || !widget.domNode || !dojo.hasClass(widget.domNode,"mblView")){
+			return;
+		}
+		this._updateVisibility(widget.domNode);
+	},
+
 	/**
 	 * By default, when dragging/dropping new widgets onto canvas, Maqetta
 	 * defaults to adding a new widget as a child of the mostly deeply nested
@@ -59,5 +157,5 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		}
 
 	}
-
+	
 });

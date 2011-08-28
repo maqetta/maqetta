@@ -144,6 +144,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 
 		widget.metadata = widget.metadata || davinci.ve.metadata.query(widget.type);
+		widget._edit_context = this;
 		
 		widget.attach();
 
@@ -152,8 +153,6 @@ dojo.declare("davinci.ve.Context", null, {
 			// internal Dijit widget, such as _StackButton, _Splitter, _MasterTooltip
 			return;
 		}
-
-		widget._edit_context = this;
 
 		var id = widget.getId();
 		if(id){
@@ -447,7 +446,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// try to find the theme using path magic
 
 		var ro = davinci.ve.metadata.loadThemeMeta(model);
-		this._editor._visualChanged();
+		//this._editor._visualChanged(); // do not know why we are calling this handler method inline
 		return ro;
 	},
 	
@@ -1194,74 +1193,24 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		return this._selection;
 	},
 	
-	select: function(widget, add, inline){
-		if(!widget || widget==this.rootWidget){
-			if(!add){
-				this.deselect(); // deselect all
-			}
-			return;
-		}
-
-		var helper = this._needsTearDown && this._needsTearDown.getHelper();
-		if(helper && helper.tearDown){
-			if(helper.tearDown(this._needsTearDown, widget)){
-				delete this._needsTearDown;
-			}
-		}
-
-		helper = widget.getHelper();			
-		if(helper && helper.popup){
-			helper.popup(this._needsTearDown = widget);
-		}
-
-		var selection, index; 
-		if(add && this._selection){
-			index = this._selection.length;
-			selection = this._selection;
-			selection.push(widget);
-		}else{
-			selection = [widget];
-		}
-
-		var parent = widget.getParent();
-		if(parent){
-			parent.selectChild(widget);
-			// re-run this after the animations take place. Could hook the remaining code to an onEnd event?
-//			if(!widget._refocus){
-//				widget._refocus = true;
-//				var w=widget;
-//				setTimeout(
-//					dojo.hitch(this, function(){this.select(w); delete w._refocus;
-//				}), 1000);
-//				return;
-//			}
-		}
-
+	updateFocus: function(widget, index, inline){
 		var box, op;
 
 		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
 			var node = widget.getStyleNode();
+			helper = widget.getHelper();			
 			if(helper && helper.getSelectNode){
 				node = helper.getSelectNode(this) || node;
 			}
 			box = this.getDojo().position(node, true);
-/*
-			// Adjust dimensions from border-box to content-box
-			var e = dojo._getPadBorderExtents(node);
-			box.l = Math.round(box.x + e.l);
-			box.t = Math.round(box.y + e.t);
-			box.w -= e.w;
-			box.h -= e.h;
-*/
 			box.l = box.x;
 			box.t = box.y;
 
+			var parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout())};
-//			op = {move: true};
-//			op = {move: (node.style.position == "absolute")};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			var resizable = (parent && parent.isLayout() /*&& parent.declaredClass != "dijit.layout.BorderContainer"*/) ?
+			var resizable = (parent && parent.isLayout() ) ?
 					"none" : davinci.ve.metadata.queryDescriptor(widget.type, "resizable");
 			switch(resizable){
 			case "width":
@@ -1275,18 +1224,79 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				op.resizeHeight = true;
 			}
 		}
-		
-		if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
-			this._selection = selection;
-			this.onSelectionChange(selection, add); 
-		}
-
 		this.focus({
 			box: box,
 			op: op,
 			hasLayout: widget.isLayout(),
 			isChild: parent && parent.isLayout()
 		}, index, inline);
+			
+	},
+	
+	select: function(widget, add, inline){
+		if(!widget || widget==this.rootWidget){
+			if(!add){
+				this.deselect(); // deselect all
+			}
+			return;
+		}
+		
+		var alreadySelected = false;
+		if(this._selection){
+			for(var i=0; i<this._selection.length; i++){
+				if(this._selection[i]==widget){
+					alreadySelected = true;
+					index = i;
+					break;
+				}
+			}
+		}
+
+		if(!alreadySelected){
+			var helper = this._needsTearDown && this._needsTearDown.getHelper();
+			if(helper && helper.tearDown){
+				if(helper.tearDown(this._needsTearDown, widget)){
+					delete this._needsTearDown;
+				}
+			}
+
+			helper = widget.getHelper();			
+			if(helper && helper.popup){
+				helper.popup(this._needsTearDown = widget);
+			}
+
+			var selection, index; 
+			if(add && this._selection){
+				index = this._selection.length;
+				selection = this._selection;
+				selection.push(widget);
+			}else{
+				selection = [widget];
+			}
+
+			var parent = widget.getParent();
+			if(parent){
+				parent.selectChild(widget);
+			}
+			
+			if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
+				var oldSelection = this._selection;
+				this._selection = selection;
+				this.onSelectionChange(selection, add);
+				if(oldSelection){
+					oldSelection.forEach(function(w){
+						var h = w.getHelper();
+						if(h && h.onDeselect){
+							h.onDeselect(w);
+						}
+					},this);
+				}
+				if(helper && helper.onSelect){
+					helper.onSelect(widget);
+				}
+			}
+		}
+		this.updateFocus(widget, index, inline);
 	},
 
 	deselect: function(widget){
@@ -1301,6 +1311,9 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 
+		if(widget){
+			helper = widget.getHelper();
+		}
 		if(widget && this._selection.length > 0){ // undo of add got us here some how.
 			if(this._selection.length === 1){
 				if(this._selection[0] != widget){
@@ -1316,13 +1329,25 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				this.focus(null, index);
 				this._selection.splice(index, 1);
 			}
+			if(helper && helper.onDeselect){
+				helper.onDeselect(widget);
+			}
 		}else{ // deselect all
+			if(this._selection){
+				this._selection.forEach(function(w){
+					var h = w.getHelper();
+					if(h && h.onDeselect){
+						h.onDeselect(w);
+					}
+				},this);
+			}
 			this.focus(null);
 			this._selection = undefined;
 		}
 
 		this.onSelectionChange(this.getSelection());
 	},
+	
 	focus: function(state, index, inline){
 		if(!this._focuses){
 			this._focuses = [];
@@ -1879,11 +1904,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		return v;
 	},
 	
-	 getUniqueID: function(node) {
+	 getUniqueID: function(node, persist, idRoot) {
 		 var id = node.getAttribute("id");
 		 if (!id) {
 			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null;
-			 var root = node.tag;
+			 var root = idRoot ? idRoot : node.tag;
 			 var num;
 			 while(1){
 				 if (!this._uniqueIDs.hasOwnProperty(root)) {
@@ -1902,7 +1927,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 					 break;
 				 }
 			 }
-			node.addAttribute("id",id,true);	 
+			 var noPersist = !persist;
+			 node.addAttribute("id",id,noPersist);	 
 		 }
 		 return id;
 	},

@@ -124,7 +124,7 @@ davinci.states = {
 		
 		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
 	},
-	
+
 	setStyle: function(widget, state, style, value, silent) {
 		widget = this._getWidget(widget);
 
@@ -135,7 +135,7 @@ davinci.states = {
 			style = {};
 			style[name] = value;
 		}
-		
+
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].style = widget.states[state].style || {};
@@ -253,6 +253,7 @@ davinci.states = {
 		}
 		widget = this._getWidget(widget);
 		if (!widget || this.hasState(widget, state)) {
+			//FIXME: This should probably be an error of some sort
 			return;
 		}
 		widget.states = widget.states || {};

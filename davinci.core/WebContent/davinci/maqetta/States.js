@@ -11,8 +11,6 @@ davinci.states = {
 
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
-	//DEFAULT_STATE_PROP_NAME: "$DefaultState$",
-	DEFAULT_STATE_PROP_NAME: "undefined",
 
 	constructor: function(){
 	},
@@ -138,9 +136,6 @@ davinci.states = {
 			style[name] = value;
 		}
 
-		if(typeof state == "undefined"){
-			state = this.DEFAULT_STATE_PROP_NAME;
-		}
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].style = widget.states[state].style || {};
@@ -343,8 +338,7 @@ davinci.states = {
 		var value = "";
 		if (widget.states) {
 			var states = dojo.clone(widget.states);
-			delete states["undefined"];	// Legacy code used property "undefined"
-			delete states[this.DEFAULT_STATE_PROP_NAME];
+			delete states["undefined"];
 			if (!this._isEmpty(states)) {
 				value = JSON.stringify(states);
 				// Escape single quotes that aren't already escaped

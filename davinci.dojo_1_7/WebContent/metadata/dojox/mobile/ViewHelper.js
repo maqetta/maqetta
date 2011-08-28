@@ -2,11 +2,13 @@ dojo.provide("davinci.libraries.dojo.dojox.mobile.ViewHelper");
 
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
-		
+
 	constructor: function(){
 		//FIXME: Lots of helper objects are instantiated. Only need one per session.
 		//Need to change logic EVERYWHERE around how helpers are instantiated and referenced.
-		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
+		//dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._changeState));
+		
+		//FIXME: Need helper added to StatesView palette
 	},
 
 	/**
@@ -43,6 +45,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				}, 100);
 			}
 		});
+/* Delete this
 		var context = widget.getContext();
 		if(context && node.id){
 			var bodyWidget = context.rootWidget;
@@ -51,7 +54,52 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				//FIXME: Need to make this more robust
 				davinci.ve.states.add(bodyWidget, node.id);				
 			}
-		}	
+		}
+*/
+	},
+	
+	/*
+	 * Ensures that the given View widget has its visibility turned on and
+	 * other sibling View widgets have their visibility turned off 
+	 * @param {davinci.ve._Widget} widget  Widget that needs it visibility turned on
+	 */
+	_updateVisibility: function(domNode){
+		if(!domNode || !domNode._dvWidget || !dojo.hasClass(domNode,"mblView")){
+			return;
+		}
+		var widget = domNode._dvWidget;
+		var context = widget.getContext();
+		var parentNode = domNode.parentNode;
+		var node;
+		var state = davinci.ve.states.getState();
+		var changesNeeded = false;
+		if(domNode.style.display == "none"){
+			changesNeeded = true;
+		}else{
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					if(node!=domNode && node.style.display != "none"){
+						changesNeeded = true;
+						break;
+					}
+				}
+			}
+		}
+		if(changesNeeded){
+			var command = new davinci.commands.CompoundCommand();
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					if(node==domNode){
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));	
+					}else{
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));
+					}	
+				}
+			}
+			context.getCommandStack().execute(command);
+		}
 	},
 	
 	/*
@@ -80,35 +128,19 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 				}
 			}
 			if(count>1){
-				var command = new davinci.commands.CompoundCommand();
-				var foundOtherView = false;
 				for(var i=0;i<parentNode.children.length;i++){
 					node=parentNode.children[i];
 					if(dojo.hasClass(node,"mblView")){
-						if(node==domNode || foundOtherView){
-							command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));	
-						}else{
-							foundOtherView = true;
-							command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));
-						}	
+						if(node!=domNode){
+							this._updateVisibility(node);
+							break;
+						}
 					}
 				}
-				context.getCommandStack().execute(command);
 			}
 		// Toggle visibility on for this node, toggle visibility off other Views
 		}else{
-			var command = new davinci.commands.CompoundCommand();
-			for(var i=0;i<parentNode.children.length;i++){
-				node=parentNode.children[i];
-				if(dojo.hasClass(node,"mblView")){
-					if(node==domNode){
-						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));
-					}else{
-						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));
-					}	
-				}
-			}
-			context.getCommandStack().execute(command);
+			this._updateVisibility(domNode);
 		}
 		return false;
 	},
@@ -127,7 +159,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			dojo.publish("/davinci/ve/widget/visibility/changed/widget",[domNode._dvWidget]);
 		}
 	},
-	
+/*	
 	_changeState: function(event){	
 		if(event && event.newState && event.widget && event.widget.domNode){
 			var newState = event.newState;
@@ -141,12 +173,20 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			}
 		}
 	},
-	
+*/
+
+	onSelect: function(widget){
+		if(!widget || !widget.domNode || !dojo.hasClass(widget.domNode,"mblView")){
+			return;
+		}
+		this._updateVisibility(widget.domNode);
+	},
+
+	/* Remove this version
 	onSelect: function(widget){
 		if(widget){
 			var domNode = widget.domNode;
 			if(domNode){
-				/*
 				var parentNode = domNode.parentNode;
 				for(var i=0;i<parentNode.children.length;i++){
 					var node=parentNode.children[i];
@@ -157,8 +197,8 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 					}	
 				}
 				dojo.publish("/davinci/ve/widget/visibility/changed/widget",[widget]);
-				*/
 				davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(domNode);
+				/*FIXME: Remove this
 				var context = widget.getContext();
 				if(context && domNode.id){
 					var bodyWidget = context.rootWidget;
@@ -167,10 +207,11 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 						//FIXME: Need to make this more robust
 						davinci.ve.states.setState(bodyWidget, domNode.id);				
 					}
-				}	
+				}
 			}
 		}
 	},
+	*/
 	
 	/**
 	 * By default, when dragging/dropping new widgets onto canvas, Maqetta

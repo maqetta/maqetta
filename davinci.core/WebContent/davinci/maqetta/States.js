@@ -11,7 +11,8 @@ davinci.states = {
 
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
-	DEFAULT_STATE_PROP_NAME: "$DefaultState$",
+	//DEFAULT_STATE_PROP_NAME: "$DefaultState$",
+	DEFAULT_STATE_PROP_NAME: "undefined",
 
 	constructor: function(){
 	},

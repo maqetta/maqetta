@@ -91,7 +91,7 @@ davinci.states = {
 		} else {
 			widget.states.current = newState;
 		}
-		if (!_silent && newState != oldState) {
+		if (!_silent) {
 			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
 		}
 		this._updateSrcState (widget);
@@ -125,7 +125,7 @@ davinci.states = {
 		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
 	},
 
-	setStyle: function(widget, state, style, value) {
+	setStyle: function(widget, state, style, value, silent) {
 		widget = this._getWidget(widget);
 
 		if (!widget || !style) return;
@@ -148,7 +148,9 @@ davinci.states = {
 			}		
 		}
 			
-		this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:style}]);
+		if (!silent) {
+			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:style}]);
+		}
 		this._updateSrcState (widget);
 	},
 	

@@ -38,9 +38,10 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 		}
 		
 		this._state = davinci.ve.states.getState();
+		var isNormalState = davinci.ve.states.isNormalState(this._state);
 
 		var cleanValues = { width: this._newBox.w, height: this._newBox.h };
-		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined);
+		davinci.ve.states.setStyle(widget, this._state, cleanValues, undefined, isNormalState);
 
 		if (isNormalState) {
 			dojo.contentBox(node, this._newBox);

@@ -54,6 +54,65 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		}	
 	},
 	
+	/*
+	 * Called by Outline palette whenever user toggles visibility by clicking on eyeball.
+	 * @param {davinci.ve._Widget} widget  Widget whose visibility is being toggled
+	 * @param {boolean} on  Whether given widget is currently visible
+	 * @return {boolean}  whether standard toggle proceessing should proceed
+	 * FIXME: Better if helper had a class inheritance setup
+	 */
+	onToggleVisibility: function(widget, on){
+		if(!widget || !widget.domNode || !dojo.hasClass(widget.domNode,"mblView")){
+			return true;
+		}
+		var domNode = widget.domNode;
+		var context = widget.getContext();
+		var parentNode = domNode.parentNode;
+		var node;
+		var state = davinci.ve.states.getState();
+		// Only toggle visibility off if there is another View that we can toggle on
+		if(on){
+			var count = 0;
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					count++;
+				}
+			}
+			if(count>1){
+				var command = new davinci.commands.CompoundCommand();
+				var foundOtherView = false;
+				for(var i=0;i<parentNode.children.length;i++){
+					node=parentNode.children[i];
+					if(dojo.hasClass(node,"mblView")){
+						if(node==domNode || foundOtherView){
+							command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));	
+						}else{
+							foundOtherView = true;
+							command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));
+						}	
+					}
+				}
+				context.getCommandStack().execute(command);
+			}
+		// Toggle visibility on for this node, toggle visibility off other Views
+		}else{
+			var command = new davinci.commands.CompoundCommand();
+			for(var i=0;i<parentNode.children.length;i++){
+				node=parentNode.children[i];
+				if(dojo.hasClass(node,"mblView")){
+					if(node==domNode){
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:""}));
+					}else{
+						command.add(new davinci.ve.commands.StyleCommand(node._dvWidget, {display:"none"}));
+					}	
+				}
+			}
+			context.getCommandStack().execute(command);
+		}
+		return false;
+	},
+	
 	_widgetSelectedUpdateVisibility: function(domNode){	
 		if(domNode && domNode._dvWidget){
 			var parentNode = domNode.parentNode;
@@ -132,51 +191,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			return allowedParentList[0];
 		}
 
-	},
-	
-	/**
-	 * Helper to intercept style change processing on widgets.
-	 * This routine looks to see if 'display' property is being changed on a Dojo Mobile view widget.
-	 * If so, then ensure that exactly one sibling is visible.
-	 * 
-	 * @param {davinci.ve._Widget} widget Root widget for view/state management
-	 * @param {string} state Name of current state (null or empty string means default state)
-	 * @param {object} style Object containing list of changed properties e.g {color:"red"}
-	 * @return {boolean} Return true if default setStyle processing should continue 
-	 */
-	setStyle: function(widget, state, style){
-		if(!widget || !widget.domNode || !style || (typeof style.display != "string")){
-			return true;
-		}
-		var context = widget.getContext();
-		if(!context){
-			return true;
-		}
-		var domNode = widget.domNode;
-		if(dojo.hasClass(domNode,"mblView")){
-			if(style.display != "none" && domNode.style.display=="none"){
-				context.select(domNode._dvWidget);
-				davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(domNode);
-				dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
-			}else if(style.display == "none" && domNode.style.display!="none"){
-				//Find first sibling view that isn't this View and switch to it.
-				var parentNode = domNode.parentNode;
-				for(var i=0;i<parentNode.children.length;i++){
-					var node=parentNode.children[i];
-					if(dojo.hasClass(node,"mblView") && node!=domNode && node._dvWidget){
-						context.select(node._dvWidget);
-						davinci.libraries.dojo.dojox.mobile.ViewHelper.prototype._widgetSelectedUpdateVisibility(node);
-						dojo.publish("/davinci/ve/widget/visibility/changed/end",[]);
-						break;
-					}
-				}
-			}
-			delete style.display;
-			var nprops = Object.keys(style).length;	//ECMA5 feature. FF4+, SF5+, IE9+
-			return (nprops>0);	
-		}else{
-			return true;			
-		}
 	}
-
+	
 });

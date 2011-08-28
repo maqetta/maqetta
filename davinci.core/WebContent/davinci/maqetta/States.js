@@ -137,20 +137,6 @@ davinci.states = {
 			style[name] = value;
 		}
 
-		//FIXME: Helpers maybe should be object-oriented
-		//and inherit from a base class so they can call inherited().
-		var continueProcessing = true;
-		var helper = widget.getHelper();
-		if(helper && helper.setStyle){
-			continueProcessing = helper.setStyle(widget, state, style);			
-		}
-		if(continueProcessing){
-			return this._setStyle(widget, state, style);
-		}
-	},
-	
-	_setStyle: function(widget, state, style) {
-
 		if(typeof state == "undefined"){
 			state = this.DEFAULT_STATE_PROP_NAME;
 		}

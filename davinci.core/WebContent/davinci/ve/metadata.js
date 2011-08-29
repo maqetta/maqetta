@@ -60,6 +60,17 @@ davinci.ve.metadata = function() {
         descriptor.$path = path.toString();
         libraries[descriptor.name] = descriptor;
         
+        if (descriptor.callbacks) {
+            dojo.xhrGet({
+                url: path.append(descriptor.callbacks).toString(),
+                sync: true, // XXX should be async
+                handleAs: 'javascript',
+                load: function(data) {
+                    descriptor.callbacks = data;
+                }
+            });
+        }
+        
         descriptor.$providedTypes = {};
         dojo.forEach(descriptor.widgets, function(item) {
             descriptor.$providedTypes[item.type] = item;
@@ -94,11 +105,13 @@ davinci.ve.metadata = function() {
                 path.relativeTo(dojo.baseUrl).toString());
     }
     
-    function getDescriptorForType(type) {
-        for (var name in libraries) if (libraries.hasOwnProperty(name)) {
-            var lib = libraries[name];
-            if (lib.$providedTypes[type]) {
-                return lib;
+    function getLibraryForType(type) {
+        if (type) {
+            for (var name in libraries) if (libraries.hasOwnProperty(name)) {
+                var lib = libraries[name];
+                if (lib.$providedTypes[type]) {
+                    return lib;
+                }
             }
         }
         return null;
@@ -143,7 +156,7 @@ davinci.ve.metadata = function() {
         }
         
         // get path from library descriptor
-        var lib = getDescriptorForType(type),
+        var lib = getLibraryForType(type),
             descriptorPath;
         if (lib) {
             descriptorPath = lib.$path;
@@ -272,8 +285,7 @@ davinci.ve.metadata = function() {
         	return name ? libraries[name] : libraries;
         },
         
-        
-    	loadThemeMeta: function(model){
+    	loadThemeMeta: function(model) {
     		// try to find the theme using path magic
     		var style = model.find({'elementType':'HTMLElement', 'tag':'style'});
     		var imports = [];
@@ -374,16 +386,42 @@ davinci.ve.metadata = function() {
     		}
     	},
         
-        getLibraryBase : function(type) {
-            if (type) {
-                var lib = getDescriptorForType(type);
-                if (lib) {
-                    return lib.$path;
-                }
-            }
-            return undefined;
+    	/**
+    	 * Returns the descriptor for the library which contains the given
+    	 * widget type
+    	 * @param type {string} widget type
+    	 * @returns {Object} library JSON descriptor
+    	 */
+        getLibraryForType: function(type) {
+            return getLibraryForType(type);
         },
         
+        getLibraryBase: function(type) {
+            var lib = getLibraryForType(type);
+            if (lib) {
+                return lib.$path;
+            }
+        },
+
+        /**
+         * Invoke the callback function, if implemented by the widget library.
+         * @param type {string} widget type
+         * @param fnName {string} callback function name
+         * @param args {?Array} arguments array to pass to callback function
+         */
+        // XXX make this part of a mixin for the library metadata obj
+        invokeCallback: function(type, fnName, args) {
+            var lib = getLibraryForType(type),
+                fn;
+            if (lib && lib.callbacks) {
+                fn = lib.callbacks[fnName];
+                if (fn) {
+                    fn.apply(lib.callbacks, args);
+                }
+            }
+            // XXX handle/report errors?
+        },
+
         /**
          * @param {String|Object} widget
          *            Can be either a string of the widget type (i.e. "dijit.form.Button") or
@@ -391,9 +429,9 @@ davinci.ve.metadata = function() {
          * @param queryString
          * @return 'undefined' if there is any error; otherwise, the requested data.
          */
-        query : function(widget, queryString) {
+        query: function(widget, queryString) {
             if (!widget) {
-                return undefined;
+                return;
             }
             
             var type,
@@ -410,7 +448,7 @@ davinci.ve.metadata = function() {
             if (!metadata) {
                 metadata = getMetadata(type);
                 if (!metadata) {
-                    return undefined;
+                    return;
                 }
                 if (widget.declaredClass) {
                     widget.metadata = metadata;
@@ -427,7 +465,7 @@ davinci.ve.metadata = function() {
          * @return 'undefined' if there is any error; otherwise, the requested data.
          */
         queryDescriptor : function(type, queryString) {
-            var lib = getDescriptorForType(type),
+            var lib = getLibraryForType(type),
                 item;
             if (lib) {
                 item = lib.$providedTypes[type];

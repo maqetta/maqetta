@@ -493,12 +493,23 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	getResourcePath: function(){
+	getResourcePath: function() {
 		var model = this.getModel();
 		var filename = model.fileName;
 		var path = new davinci.model.Path(filename);
 		return path.removeLastSegments(1);
 	},
+
+	/**
+	 * Get a full path for the given resource relative to the project base.
+	 * @param resource {string} resource path segment
+	 * @returns {davinci.model.Path} full path of resource
+	 */
+    getPathRelativeToProject: function(resource) {
+        return (new davinci.model.Path(this.baseURL)).removeLastSegments(1)
+                .append(this.relativePrefix).append(resource);
+    },
+
 	_setSource: function(source, callback, scope){
 	
 		this._srcDocument=source;

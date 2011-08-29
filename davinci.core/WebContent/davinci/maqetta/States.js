@@ -322,8 +322,16 @@ davinci.states = {
 		}
 		widget = this._getWidget(widget);
 		if (!widget) return;
-		return (((widget.domNode || widget).style.display != "none") && 
-			(!widget.states || !widget.states[state] || !widget.states[state].style || widget.states[state].style.display != "none"));
+		// FIXME: The way the code is now, sometimes there is an "undefined" property
+		// within widget.states. That code seems somewhat accidental and needs
+		// to be studied and cleaned up.
+		var domNode = (widget.domNode || widget);
+		var isNormalState = (typeof state == undefined || state == "undefined");
+		if(isNormalState){
+			return domNode.style.display != "none";
+		}else{
+			return !widget.states || !widget.states[state] || !widget.states[state].style || widget.states[state].style.display != "none";
+		}
 	},
 	
 	_isEmpty: function(object) {

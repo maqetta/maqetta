@@ -1907,9 +1907,10 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	 getUniqueID: function(node, persist, idRoot) {
 		 var id = node.getAttribute("id");
 		 if (!id) {
-			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null;
-			 var root = idRoot ? idRoot : node.tag;
-			 var num;
+			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null,
+			 	root = idRoot || node.tag,
+			 	num;
+
 			 while(1){
 				 if (!this._uniqueIDs.hasOwnProperty(root)) {
 					 num = this._uniqueIDs[root]=0;

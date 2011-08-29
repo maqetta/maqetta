@@ -29,7 +29,7 @@ davinci.ve.widget.allWidgets = function(containerNode){
 		if (element._dvWidget) {
 			result.push(element._dvWidget);
 		}
-		element.childNodes.forEach(function(node) {
+		dojo.forEach(element.childNodes, function(node) {
 			if (node.nodeType == 1) {
 				find(node);
 			}
@@ -41,13 +41,20 @@ davinci.ve.widget.allWidgets = function(containerNode){
 
 //recursively search for widget closest to target under root
 //FIXME: Used by SelectTool.  Move code there?
-davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock){
+davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock, allowedFilter){
 	var result = {distance: Infinity, widget: target},
 		t = dim,
 		isContainer = function(type) { return davinci.ve.metadata.getAllowedChild(type)[0] !== 'NONE'; };
 
 	if(containerNode){
 		var list = davinci.ve.widget.allWidgets(containerNode);
+		if (allowedFilter) {
+			// remove anything that wouldn't be a valid sibling.  Would be much more efficient to do during list construction.
+			list = list.filter(function(w){
+				var parent = w.getParent();
+				return parent.type && allowedFilter(parent);
+			});
+		}
 		if (isContainer(target.type)) {
 			// filter out child widgets of target so we don't try to drop a widget within itself
 			list = list.filter(function(widget) {
@@ -82,7 +89,9 @@ davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hL
 			}
 		});
 	}
-	if (isContainer(result.widget.type)) {
+
+	// Eligible for inserting as a child of result rather than a sibling?
+	if (allowedFilter ? allowedFilter(result.widget) : isContainer(result.widget.type)) {
 		c = dojo.position(result.widget.domNode);
 		p = context.getContentPosition(c);
 		if (t.l > p.x && t.l < p.x + c.w && t.t > p.y && t.t < p.y + c.h) {

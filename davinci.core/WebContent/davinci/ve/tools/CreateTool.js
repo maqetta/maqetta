@@ -82,30 +82,46 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
 		var size,
 			target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
-		
+
+		/**
+		 * Custom error, thrown when a valid parent widget is not found.
+		 */
+		var InvalidTargetWidgetError = function(message) {
+		    this.prototype = Error.prototype;
+		    this.name = 'InvalidTargetWidgetError';
+		    this.message = 'The selected target is not a valid parent for the given widget.';
+		    if (message) {
+		    	this.message += ' ' + message;
+		    }
+		}
+
 		try {
 			// XXX Have to do this call here, rather than in the more favorable
 			//  create() or _create() since different "subclasses" of CreateTool
 			//  either override create() or _create().  It is very inconsistent.
-			var allowedParentList = this._getAllowedTargetWidget(target),
-				Metadata = davinci.ve.metadata,
-				type = this._data.type,
-				helper;
-			var helperClassName = davinci.ve.metadata.queryDescriptor(type, "helper");
-			if(helperClassName){
-				//FIXME: Duplicated from widget.js. Should be factored out into a utility
-		        try {
-		            dojo["require"](helperClassName);
-		        } catch(e) {
-	                console.error("Failed to load helper: " + helperClassName);
-	                console.error(e);
-		        }
-		        var aClass = dojo.getObject(helperClassName);
-		        if (aClass) {
-		        	helper  = new aClass();
+			var allowedParentList = this._getAllowedTargetWidget(target, this._data, true),
+				helper = this._getHelper();
+
+			// If no valid target found, throw error
+			if (allowedParentList.length == 0) {
+				var typeList = data.map(function(elem) {
+					return elem.type;  
+				}).join(', ');
+				
+				var errorMsg;
+				// XXX Need to update this message for multiple widgets
+				if (children.length === 1 && children[0].allowedParent) {
+					errorMsg = ['The widget <span style="font-family: monospace">',
+					             typeList,
+					             '</span> requires ',
+					             children[0].allowedParent.length > 1 ?
+					            		 'one of the following parent types' :
+					            			 'the parent type',
+					             ' <span style="font-family: monospace">',
+					             children[0].allowedParent.join(', '),
+					             '</span>.'].join('');
 				}
-		        var obj = dojo.getObject(helperClassName);
-		        helper = new obj();
+				throw new InvalidTargetWidgetError(errorMsg);
 			}
 
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
@@ -144,6 +160,26 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			this._context.setActiveTool(null);
 			davinci.ve.Snap.clearSnapLines(this._context);
 		}
+	},
+
+	_getHelper: function(){
+		var helper, helperClassName = davinci.ve.metadata.queryDescriptor(this._data.type, "helper");
+		if(helperClassName){
+			//FIXME: Duplicated from widget.js. Should be factored out into a utility
+	        try {
+	            dojo["require"](helperClassName);
+	        } catch(e) {
+                throw "Failed to load helper: " + helperClassName;
+	        }
+	        var aClass = dojo.getObject(helperClassName);
+	        if (aClass) {
+	        	helper  = new aClass();
+			}
+	        //FIXME: dup of above?
+	        var obj = dojo.getObject(helperClassName);
+	        helper = new obj();
+		}
+		return helper;
 	},
 
 	create: function(args){
@@ -281,124 +317,5 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 		}
 		return true;
-	},
-
-	/**
-	 * Create a candidate list of valid parents for the dropped widget, based on the widgets'
-	 * 'allowedChild' and 'allowedParent' properties. The logic ascends the DOM hierarchy
-	 * starting with "target" to find all possible valid parents. If no valid parent is
-	 * found, then throw an error.
-	 * 
-	 * @param target {davinci.ve._Widget}
-	 * 			The widget on which the user dropped the new widget.
-	 * @return an array of widgets which are possible valid parents for the dropped widget 
-	 * @type davinci.ve._Widget
-	 * @throws {Error} if no valid parent widget is found
-	 */
-	_getAllowedTargetWidget: function(target) {
-		// returns an array consisting of 'type' and any 'class' properties
-		function getClassList(type) {
-			var classList = Metadata.queryDescriptor(type, 'class');
-			if (classList) {
-				classList = classList.split(/\s+/);
-				classList.push(type);
-				return classList;
-			}
-			return [type];
-		}
-		
-		// returns 'true' if any of the elements in 'classes' are in 'arr'
-		function containsClass(arr, classes) {
-			return classes.some(function(elem) {
-				return arr.indexOf(elem) !== -1;
-			});
-		}
-		
-		// Returns 'true' if the dropped widget is allowed as a child of the
-		// given parent.
-		function isAllowed(children, parent) {
-			var parentType = parent instanceof davinci.ve._Widget ?
-					parent.type : parent._dvWidget.type;
-			var parentClassList,
-				allowedChild = Metadata.getAllowedChild(parentType);
-			
-			// special case for HTML <body>
-			if (parentType === "html.body") {
-				allowedChild = ["ANY"];
-			}
-			parentClassList = getClassList(parentType);
-			
-			// Cycle through children, making sure that all of them work for
-			// the given parent.
-			return children.every(function(child){
-				var isAllowedChild = allowedChild[0] !== "NONE" &&
-									 (allowedChild[0] === "ANY" ||
-									  containsClass(allowedChild, child.classList));
-				var isAllowedParent = child.allowedParent[0] === "ANY" ||
-									  containsClass(child.allowedParent, parentClassList);
-				return isAllowedChild && isAllowedParent;
-			});
-		}
-		
-		// get data for widget we are adding to page
-		var Metadata = davinci.ve.metadata,
-			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
-			newTarget = target,
-			allowedParentList = [],
-			data = this._data.length ? this._data : [this._data],
-			children = [];
-
-		// 'this._data' may represent a single widget or an array of widgets.
-		// Get data for all widgets, for use later in isAllowed().
-		data.forEach(function(elem) {
-			children.push({
-				allowedParent: Metadata.getAllowedParent(elem.type),
-				classList: getClassList(elem.type)
-			});
-		});
-
-		while (newTarget) {
-			if(isAllowed(children, newTarget)){
-				allowedParentList.push(newTarget);
-			}
-			newTarget = getEnclosingWidget(newTarget);
-		}
-		
-		// If no valid target found, throw error
-		if (allowedParentList.length == 0) {
-			var typeList = [];
-			data.forEach(function(elem) {
-				typeList.push(elem.type);  
-			});
-			
-			var errorMsg;
-			// XXX Need to update this message for multiple widgets
-			if (children.length === 1 && children[0].allowedParent) {
-				errorMsg = ['The widget <span style="font-family: monospace">',
-				             typeList.join(', '),
-				             '</span> requires ',
-				             children[0].allowedParent.length > 1 ?
-				            		 'one of the following parent types' :
-				            			 'the parent type',
-				             ' <span style="font-family: monospace">',
-				             children[0].allowedParent.join(', '),
-				             '</span>.'].join('');
-			}
-			throw new InvalidTargetWidgetError(errorMsg);
-		}
-		
-		return allowedParentList;
 	}
 });
-
-/**
- * Custom error, thrown when a valid parent widget is not found.
- */
-var InvalidTargetWidgetError = function(message) {
-    this.prototype = Error.prototype;
-    this.name = 'InvalidTargetWidgetError';
-    this.message = 'The selected target is not a valid parent for the given widget.';
-    if (message) {
-    	this.message += ' ' + message;
-    }
-};

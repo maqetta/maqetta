@@ -8,11 +8,9 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 		this.data = data;
 	},
 	
-	initDrag: function()
-	{
+	initDrag: function(){
 		var editor=davinci.Workbench.getOpenEditor();
-		if (editor && editor.currentEditor && editor.currentEditor.context)
-		{
+		if (editor && editor.currentEditor && editor.currentEditor.context)	{
 			this.context=editor.currentEditor.context;
 			davinci.ui.dnd.dragManager.document = this.context.getDocument();
 			var frameNode = this.context.getFrameNode();
@@ -28,25 +26,27 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 			this.context=null;
 		}
 	},
-	dragStart: function()
-	{
-		if (this.context)
-		{
+	dragStart: function(){
+		
+		if (this.context){
 			var createData;
-			if (this.data.getExtension() === "json")
-			{
+			var targetPath = this.context.getPath();
+			var imagePath = new davinci.model.Path(this.data.getPath());
+			var relativepath = (imagePath.relativeTo(targetPath, true)).toString();
+			
+			if (this.data.getExtension() === "json"){
 				createData={
 					type: "dojo.data.ItemFileWriteStore",
 					properties: {
 						jsId: "myDataStore",
-						url: this.data.getPath()
+						url: relativepath
 					}
 				};
 			} else {
 				createData={
 					children : [],
 					properties : {
-					   src : this.data.getPath()
+					   src : relativepath
 					},
 					type: "html.img"
 				};

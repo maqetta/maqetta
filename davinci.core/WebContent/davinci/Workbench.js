@@ -19,6 +19,14 @@ dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.workbench.EditorContainer");
 //dojo.require("davinci.ui.Panel");
 
+/*
+ * Dialog deps from davinci.dialog
+ */
+
+dojo.require("davinci.ui.NewTheme");
+
+
+
 dojo.require("davinci.ui.OpenThemeDialog"); // ui_plugin.js
 
 dojo.require("dojo.i18n");  

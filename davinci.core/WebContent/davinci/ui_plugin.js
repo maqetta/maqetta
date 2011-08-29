@@ -253,7 +253,7 @@
 					},
 					{
 						id: "newTheme",
-						run: "davinci.Workbench.showModal(davinci.ui.NewThemeDialog(), 'New Theme', 'height:135px;width: 300px')",
+						run: "davinci.Workbench.showModal(new davinci.ui.NewTheme(), 'New Theme', 'height:135px;width: 300px')",
 						label: "Theme...",
 						menubarPath: "davinci.new/new"	  
 					},

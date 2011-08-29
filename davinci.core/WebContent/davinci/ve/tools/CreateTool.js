@@ -14,9 +14,11 @@ dojo.require("davinci.ve.Snap");
 dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 
 	constructor: function(data) {
-		this._data = data;
-		if (data && data.type) {
-			var resizable = davinci.ve.metadata.queryDescriptor(data.type, "resizable");
+	 // Clone the data in case something modifies it downstream
+	    this._data = dojo.clone(data.data);
+	    this._type = data.type;
+		if (this._data && this._type) {
+			var resizable = davinci.ve.metadata.queryDescriptor(this._type, "resizable");
 			if (resizable !== "none") {
 				this._resizable = resizable;
 			}
@@ -99,9 +101,9 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			// XXX Have to do this call here, rather than in the more favorable
 			//  create() or _create() since different "subclasses" of CreateTool
 			//  either override create() or _create().  It is very inconsistent.
-			var allowedParentList = this._getAllowedTargetWidget(target, this._data, true),
-				helper = this._getHelper(),
-				type = this._data.type;
+			var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
+			var	helper = this._getHelper();
+			var type = this._type;
 
 			// If no valid target found, throw error
 			if (allowedParentList.length == 0) {
@@ -182,7 +184,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	},
 
 	_getHelper: function(){
-		var helper, helperClassName = davinci.ve.metadata.queryDescriptor(this._data.type, "helper");
+		var helper, helperClassName = davinci.ve.metadata.queryDescriptor(this._type, "helper");
 		if(helperClassName){
 			//FIXME: Duplicated from widget.js. Should be factored out into a utility
 	        try {

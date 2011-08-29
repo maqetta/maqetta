@@ -14,7 +14,8 @@ dojo.declare("davinci.libraries.dojo.dijit.TooltipCreateTool", davinci.ve.tools.
 			this._data.properties = {};
 		}
 		// Name the widget so it can be referenced by a state name
-		this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
+		//this._data.properties.id = dijit.getUniqueId(this._data.type.replace(/\./g,"_"));
+		this._data.properties.id = dijit.getUniqueId(this._type.replace(/\./g,"_"));
 		this._data.properties.connectId = [];
 		if(args.target && args.target != this._context.container){
 			var connectId = args.target.getId();

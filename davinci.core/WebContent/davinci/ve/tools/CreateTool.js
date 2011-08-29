@@ -100,7 +100,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			//  create() or _create() since different "subclasses" of CreateTool
 			//  either override create() or _create().  It is very inconsistent.
 			var allowedParentList = this._getAllowedTargetWidget(target, this._data, true),
-				helper = this._getHelper();
+				helper = this._getHelper(),
+				type = this._data.type;
 
 			// If no valid target found, throw error
 			if (allowedParentList.length == 0) {

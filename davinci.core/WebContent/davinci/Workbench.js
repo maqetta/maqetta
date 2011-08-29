@@ -57,19 +57,19 @@ dojo.mixin(davinci.Workbench, {
 
 		davinci.Runtime.subscribe("/davinci/states/state/changed",
 			function(containerWidget, newState, oldState) {
+				var currentEditor = davinci.Runtime.currentEditor;
 				// ignore updates in theme editor
-				if (davinci.Runtime.currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" /*"davinci.ve.VisualEditor"*/) {
-					davinci.Runtime.currentEditor.visualEditor.onContentChange.apply(davinci.Runtime.currentEditor.visualEditor, arguments);
+				if (currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" /*"davinci.ve.VisualEditor"*/) {
+					currentEditor.visualEditor.onContentChange.apply(currentEditor.visualEditor, arguments);
 				}
-			}),
+			}
+		);
         davinci.Runtime.subscribe("/davinci/ui/widgetPropertiesChanges",
         	function() {
-        		davinci.Runtime.currentEditor.visualEditor._objectPropertiesChange.apply(davinci.Runtime.currentEditor.visualEditor, arguments);
-        	}),
-        davinci.Runtime.subscribe("/davinci/ui/editorSelected",
-            function() {
-       			davinci.Runtime.currentEditor.visualEditor._editorSelected.apply(davinci.Runtime.currentEditor.visualEditor, arguments);
-            }),
+        		var currentEditor = davinci.Runtime.currentEditor;
+        		currentEditor.visualEditor._objectPropertiesChange.apply(currentEditor.visualEditor, arguments);
+        	}
+        );
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
 		davinci.states.subscribe("/davinci/states/state/changed", function(args){

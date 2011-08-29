@@ -90,25 +90,12 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this._srcChanged();
 	},
 
-	_editorSelected: function (event){
-
-		if(!this.isActiveEditor() )
-			return;
-		// Print an alert showing any message strings accumulated during page load process
-		if(this._onloadMessages && this._onloadMessages.length){
-			var str = this._onloadMessages.join("\n\n");
-			this._onloadMessages=[];
-			alert(str);		//FIXME	
-		}
-	},
-	
-
 	isActiveEditor: function(){
-		return davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass=="davinci.ve.PageEditor" && davinci.Runtime.currentEditor.visualEditor == this;
+		var currentEditor = davinci.Runtime.currentEditor;
+		return currentEditor && currentEditor.declaredClass=="davinci.ve.PageEditor" && currentEditor.visualEditor == this;
 	},
 	
-	_stylePropertiesChange : function (value){
-		
+	_stylePropertiesChange: function (value){
 		if(!this.isActiveEditor() ){
 			return;
 		}

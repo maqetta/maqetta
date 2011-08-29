@@ -104,7 +104,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			return true;
 		}
 		var domNode = widget.domNode;
-		var context = widget.getContext();
 		var parentNode = domNode.parentNode;
 		var node;
 		var state = davinci.ve.states.getState();
@@ -174,7 +173,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			return;
 		}
 		var domNode = widget.domNode;
-		var context = widget.getContext();
 		var parentNode = domNode.parentNode;
 		var dijitWidget, node, selectedNode;
 		var state = davinci.ve.states.getState();

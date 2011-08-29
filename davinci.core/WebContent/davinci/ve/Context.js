@@ -13,6 +13,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
+	// keeps track of widgets-per-library loaded in context
+	_widgets: null,
 
 	constructor: function(args) {
 		if(!args) {
@@ -36,6 +38,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this._widgetIds = [];
 		this._objectIds = [];
+		this._widgets = [];
 
 		this.relativePrefix = this.relativePrefix || "";
 	},
@@ -198,7 +201,19 @@ dojo.declare("davinci.ve.Context", null, {
 		if (this._selection){
 			davinci.ve._remove(this._selection,widget);
 		}
-		
+
+        var library = davinci.ve.metadata.getLibraryForType(widget.type),
+            libId = library.name,
+            data = [widget.type, this];
+        // Always invoke the 'onRemove' callback.
+        davinci.ve.metadata.invokeCallback(widget.type, 'onRemove', data);
+        // If this is the last widget removed from page from a given library,
+        // then invoke the 'onLastRemove' callback.
+        this._widgets[libId] -= 1;
+        if (this._widgets[libId] === 0) {
+            davinci.ve.metadata.invokeCallback(widget.type, 'onLastRemove', data);
+        }
+
 		dojo.forEach(widget.getChildren(), this.detach, this);
 		delete this._containerControls;
 	},
@@ -477,12 +492,23 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	getResourcePath: function(){
+	getResourcePath: function() {
 		var model = this.getModel();
 		var filename = model.fileName;
 		var path = new davinci.model.Path(filename);
 		return path.removeLastSegments(1);
 	},
+
+	/**
+	 * Get a full path for the given resource relative to the project base.
+	 * @param resource {string} resource path segment
+	 * @returns {davinci.model.Path} full path of resource
+	 */
+    getPathRelativeToProject: function(resource) {
+        return (new davinci.model.Path(this.baseURL)).removeLastSegments(1)
+                .append(this.relativePrefix).append(resource);
+    },
+
 	_setSource: function(source, callback, scope){
 	
 		this._srcDocument=source;

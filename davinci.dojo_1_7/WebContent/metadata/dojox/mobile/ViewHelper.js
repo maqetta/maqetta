@@ -59,7 +59,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		var context = widget.getContext();
 		var parentNode = domNode.parentNode;
 		var node;
-		var state = davinci.ve.states.getState();
 		var changesNeeded = false;
 		if(domNode.style.display == "none" || domNode.getAttribute("selected") != "true"){
 			changesNeeded = true;
@@ -106,7 +105,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		var domNode = widget.domNode;
 		var parentNode = domNode.parentNode;
 		var node;
-		var state = davinci.ve.states.getState();
 		// Only toggle visibility off if there is another View that we can toggle on
 		if(on){
 			var count = 0;
@@ -175,7 +173,6 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		var domNode = widget.domNode;
 		var parentNode = domNode.parentNode;
 		var dijitWidget, node, selectedNode;
-		var state = davinci.ve.states.getState();
 		// Find first widget with 'selected' attribute set to true
 		// If none found, then pick first View node
 		for(var i=0;i<parentNode.children.length;i++){

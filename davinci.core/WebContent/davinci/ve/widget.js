@@ -29,24 +29,33 @@ davinci.ve.widget.allWidgets = function(containerNode){
 		if (element._dvWidget) {
 			result.push(element._dvWidget);
 		}
-		for (var i=0;i<element.childNodes.length;i++) {
-			if (element.childNodes[i].nodeType==1) {
-				find(element.childNodes[i]);
+		dojo.forEach(element.childNodes, function(node) {
+			if (node.nodeType == 1) {
+				find(node);
 			}
-		}
+		});
 	}
 	find(containerNode);
 	return result;
 };
 
 //recursively search for widget closest to target under root
-davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock){
+//FIXME: Used by SelectTool.  Move code there?
+davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock, allowedFilter){
 	var result = {distance: Infinity, widget: target},
-		t = dim;
+		t = dim,
+		isContainer = function(type) { return davinci.ve.metadata.getAllowedChild(type)[0] !== 'NONE'; };
 
 	if(containerNode){
 		var list = davinci.ve.widget.allWidgets(containerNode);
-		if (davinci.ve.metadata.getAllowedChild(target.type)[0] !== 'NONE') {
+		if (allowedFilter) {
+			// remove anything that wouldn't be a valid sibling.  Would be much more efficient to do during list construction.
+			list = list.filter(function(w){
+				var parent = w.getParent();
+				return parent.type && allowedFilter(parent);
+			});
+		}
+		if (isContainer(target.type)) {
 			// filter out child widgets of target so we don't try to drop a widget within itself
 			list = list.filter(function(widget) {
 			    var w = widget;
@@ -80,7 +89,9 @@ davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hL
 			}
 		});
 	}
-	if (davinci.ve.metadata.getAllowedChild(result.widget.type)[0] !== 'NONE') {
+
+	// Eligible for inserting as a child of result rather than a sibling?
+	if (allowedFilter ? allowedFilter(result.widget) : isContainer(result.widget.type)) {
 		c = dojo.position(result.widget.domNode);
 		p = context.getContentPosition(c);
 		if (t.l > p.x && t.l < p.x + c.w && t.t > p.y && t.t < p.y + c.h) {
@@ -98,8 +109,8 @@ davinci.ve.widget.parseStyleValues = function(text){
 		dojo.forEach(text.split(";"), function(s){
 			var i = s.indexOf(":");
 			if(i > 0){
-				var n = dojo.trim(s.substring(0, i));
-				var v = dojo.trim(s.substring(i + 1));
+				var n = s.substring(0, i).trim();
+				var v = s.substring(i + 1).trim();
 				values[n] = v;
 			}
 		});
@@ -168,16 +179,7 @@ davinci.ve.widget.getUniqueObjectId = function(type, node){
 	return id;
 };
 
-//FIXME: why not just use direct property access?
-davinci.ve.widget.getType = function(widget){
-	if(widget.type)
-		return widget.type;
-
-}
-
-
 davinci.ve.widget.getLabel = function(widget){
-
 	var text = "<span class='propertiesTitleWidgetName'>";
 	//FIXME: This is a hack so that meaningful names
 	//don't show a bunch of ugly prefix stuff.
@@ -230,7 +232,7 @@ davinci.ve.widget.getLabel = function(widget){
 	var srcElement = widget._srcElement;
 	var id = widget.getId();
 	var classAttr = srcElement && srcElement.getAttribute("class");
-	var className = classAttr && dojo.trim(classAttr);
+	var className = classAttr && classAttr.trim();
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
 		//text += node.tagName;
@@ -334,7 +336,7 @@ davinci.ve.widget.createWidget = function(data){
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = davinci.ve.widget._getUniqueId();
-    var content = dojo.trim(metadata.content).replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
+    var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
 	var node = dijit.getDocumentWindow(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(metadata.tagName || "div", metadata.attributes);
@@ -573,7 +575,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 		}
 		var v = a.nodeValue;
 		if(v && n == "class"){
-			v = dojo.trim(v.replace("HtmlWidget", ""));
+			v = v.replace("HtmlWidget", "").trim();
 			if(!v){
 				continue;
 			}
@@ -903,7 +905,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			}
 
 		}
-		return dojo.trim(s);
+		return s.trim();
 	},
 
 	getChildrenData: function(options){
@@ -1366,7 +1368,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 				}
 				break;
 			case 3: // Text
-				d = dojo.trim(n.nodeValue);
+				d = n.nodeValue.trim();
 				if(d && options.serialize){
 					d = davinci.html.escapeXml(d);
 				}
@@ -1770,7 +1772,7 @@ dojo.declare("davinci.ve.HTMLWidget",davinci.ve._Widget,{
 				}
 				break;
 			case 3: // Text
-				d = dojo.trim(n.nodeValue);
+				d = n.nodeValue.trim();
 				if(d && options.serialize){
 					d = davinci.html.escapeXml(d);
 				}

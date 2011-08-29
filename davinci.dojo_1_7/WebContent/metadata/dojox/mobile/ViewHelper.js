@@ -61,13 +61,13 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 		var node;
 		var state = davinci.ve.states.getState();
 		var changesNeeded = false;
-		if(domNode.style.display == "none"){
+		if(domNode.style.display == "none" || domNode.getAttribute("selected") != "true"){
 			changesNeeded = true;
 		}else{
 			for(var i=0;i<parentNode.children.length;i++){
 				node=parentNode.children[i];
 				if(dojo.hasClass(node,"mblView")){
-					if(node!=domNode && node.style.display != "none"){
+					if(node!=domNode && (node.style.display != "none" || domNode.getAttribute("selected") == "true")){
 						changesNeeded = true;
 						break;
 					}
@@ -161,6 +161,39 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ViewHelper", null, {
 			return allowedParentList[0];
 		}
 
+	},
+	
+	/**
+	 * Called at end of document loading, after all widgets initialized.
+	 * @param {davinci.ve._Widget} widget  A View widget
+	 * @param {boolean} already  False if this first call for this document. True for subsequent widgets.
+	 */
+	onLoad: function(widget, already){
+		if(already){
+			// Only run this logic once
+			return;
+		}
+		var domNode = widget.domNode;
+		var context = widget.getContext();
+		var parentNode = domNode.parentNode;
+		var dijitWidget, node, selectedNode;
+		var state = davinci.ve.states.getState();
+		// Find first widget with 'selected' attribute set to true
+		// If none found, then pick first View node
+		for(var i=0;i<parentNode.children.length;i++){
+			node=parentNode.children[i];
+			if(dojo.hasClass(node,"mblView")){
+				if(!selectedNode){
+					selectedNode = node;
+				}
+				dijitWidget = node._dvWidget.dijitWidget;
+				if(dijitWidget.selected){
+					selectedNode = node;
+					break;
+				}
+			}
+		}
+		this._updateVisibility(selectedNode);
 	}
 	
 });

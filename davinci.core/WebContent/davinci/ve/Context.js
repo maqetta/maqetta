@@ -78,6 +78,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
+		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
 		dojo.addClass(containerNode, "editContextContainer");
@@ -924,6 +925,25 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			var item = currentStateCache[i];
 			davinci.ve.states.setState(item.widget, item.state, true);
 		}
+	},
+	
+	/**
+	 * If any widgets in the document have onLoad helpers, invoke those helpers.
+	 * We pass a parameter to tell the helper whether this is the first time
+	 * it has been called for this document.
+	 * FIXME: If we change helpers to using object-oriented approach inheriting from
+	 * helper base class, then helper class can probably keep track of already themselves.
+	 */
+	_onLoadHelpers: function(){
+		var onLoadHelpersSoFar={};
+		dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(function(widget){
+			var helper = widget.getHelper();
+			if(helper && helper.onLoad){
+				var already = onLoadHelpersSoFar[widget.type];
+				onLoadHelpersSoFar[widget.type] = true;
+				helper.onLoad(widget,already);
+			}
+		}, this);
 	},
 
 	getHeader: function(){

@@ -181,8 +181,8 @@ dojo.declare("preview.singlepreview", [dijit._Widget], {
 			spw.silhouetteiframe = new preview.silhouetteiframe({
 				rootNode:silhouette_div_container,
 				svgfilename:spw.devicelist[spw.currentDevice].file,
-				orientation:orientation,
-				scalefactor:scalefactor,
+				orientation:spw.orientation,
+				scalefactor:spw.scalefactor,
 				margin:spw.margin
 			});
 		});	

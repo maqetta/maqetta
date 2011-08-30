@@ -488,7 +488,16 @@ davinci.ve.widget.createWidget = function(data){
         	
     }
 	
-	var widget = new c(data.properties, node, type, metadata, srcElement);
+    // Strip out event attributes. We want them in the model
+    // but not in the DOM within page canvas.
+    var props = {};
+    for(var p in data.properties){
+    	console.log('p='+p);
+    	if(p.substr(0,2).toLowerCase()!="on" ){
+    		props[p] = data.properties[p];
+    	}
+    }
+	var widget = new c(props, node, type, metadata, srcElement);
 	widget._srcElement=srcElement;
 
 	if(widget.chart && (data.properties && data.properties.theme)){
@@ -1052,12 +1061,30 @@ dojo.declare("davinci.ve._Widget",null,{
 		if(!data.properties)
 			data.properties = {};
 
-		if (this.properties)
+		if (this.properties){
 			for(var name in this.properties){
 				if(!(name in data.properties)){
 					data.properties[name] = this.properties[name];
 				}
 			}
+		}
+		
+		// Find "on*" event attributes that are in the model and
+		// place on the data object. Note that Maqetta strips
+		// on* event attributes from the DOM that appears on visual canvas.
+		// Upon creating new widgets, the calling logic needs to 
+		// put these attributes in model but not in visual canvas.
+		if(options.eventAttributes){
+			var srcElement = this._srcElement;
+			//FIXME: Assumes "attributes" is a public API. See #nnn
+			var attributes = srcElement.attributes;
+			for(var i=0; i<attributes.length; i++){
+				var attribute = attributes[i];
+				if(attribute.name.substr(0,2).toLowerCase()=="on" ){
+					data.properties[attribute.name] = attribute.value;
+				}
+			}
+		}
 
 		return data;
 

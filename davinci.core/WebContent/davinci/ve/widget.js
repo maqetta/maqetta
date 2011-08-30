@@ -1254,6 +1254,13 @@ dojo.declare("davinci.ve._Widget",null,{
 			} else {
 			    delete this.properties[name];
 				this._srcElement.removeAttribute(name);
+				/*
+				 * WORKAROUND for issue 771
+				 * This workaround can be removed once we integrate a version of dojo
+				 * which includes the fix for http://bugs.dojotoolkit.org/ticket/13776
+				 */
+				var w = this._getWidget();
+				if (w.declaredClass == "dojox.mobile.Heading" && name == "back") dojo.destroy(w._btn);
 			}
 		}
 	},

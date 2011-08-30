@@ -1851,8 +1851,7 @@
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper",
-            "requiresId":true,
-            "idRoot":"View"
+            "requiresId":true
         },
         {
             "name": "ScrollableView",
@@ -1864,8 +1863,7 @@
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ScrollableViewHelper",
-            "requiresId":true,
-            "idRoot":"ScrollableView"
+            "requiresId":true
         },
         {
             "name": "SwapView",
@@ -1877,8 +1875,7 @@
             "allowedChild": "ANY",
             "tool": "davinci.libraries.dojo.dojox.mobile.MobileCreateTool",
             "helper": "davinci.libraries.dojo.dojox.mobile.ViewHelper",
-            "requiresId":true,
-            "idRoot":"SwapView"
+            "requiresId":true
         },
         {
             "name": "Heading",

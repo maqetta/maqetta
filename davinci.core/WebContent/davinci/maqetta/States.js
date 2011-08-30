@@ -326,11 +326,15 @@ davinci.states = {
 		// within widget.states. That code seems somewhat accidental and needs
 		// to be studied and cleaned up.
 		var domNode = (widget.domNode || widget);
-		var isNormalState = (typeof state == undefined || state == "undefined");
+		var isNormalState = (typeof state == "undefined" || state == "undefined");
 		if(isNormalState){
 			return domNode.style.display != "none";
 		}else{
-			return !widget.states || !widget.states[state] || !widget.states[state].style || widget.states[state].style.display != "none";
+			if(widget.states && widget.states[state] && widget.states[state].style && typeof widget.states[state].style.display == "string"){
+				return widget.states[state].style.display != "none";
+			}else{
+				return domNode.style.display != "none";
+			}
 		}
 	},
 	

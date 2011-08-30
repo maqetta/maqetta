@@ -277,14 +277,17 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 
 	onDragStart: function(e){
 		
-		var data = e.dragSource.data;
-		var toolClass = davinci.ve.tools.CreateTool;
+		var data = e.dragSource.data,
+		// Clone the data in case something modifies it downstream
+			dataClone = dojo.clone(data.data),
+			toolClass = davinci.ve.tools.CreateTool;
 		if (data.tool) {
 		    dojo["require"](data.tool);
 		    toolClass = dojo.getObject(data.tool);
 		}
-
-		this._context.setActiveTool(new toolClass(data));
+		var tool = new toolClass(dataClone);
+		tool._type = data.type;
+		this._context.setActiveTool(tool);
 	},
 
     onDragEnd: function(e){

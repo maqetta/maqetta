@@ -190,6 +190,7 @@ davinci.ve.widget.getLabel = function(widget){
 		                	    'dijit.form.',
 		                	    'dijit.layout.',
 		                	    'dijit.',
+		                	    'dojox.mobile.',
 		                	    'html.',
 		                	    'OpenAjax.'];
 		for(var i=0; i<prefixes_to_remove.length; i++){
@@ -416,7 +417,11 @@ davinci.ve.widget.createWidget = function(data){
     }
 
     var requiresId = davinci.ve.metadata.queryDescriptor(type,"requiresId");
-    var idRoot = davinci.ve.metadata.queryDescriptor(type,"idRoot");
+    var name = davinci.ve.metadata.queryDescriptor(type,"name");
+    var idRoot = node.tagName.toLowerCase();
+    if(name.match(/^[A-Za-z]\w*$/) != null){
+    	idRoot = name;
+    }
     node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement, requiresId, idRoot);
 
 	var children = data.children;
@@ -1253,6 +1258,13 @@ dojo.declare("davinci.ve._Widget",null,{
 			} else {
 			    delete this.properties[name];
 				this._srcElement.removeAttribute(name);
+				/*
+				 * WORKAROUND for issue 771
+				 * This workaround can be removed once we integrate a version of dojo
+				 * which includes the fix for http://bugs.dojotoolkit.org/ticket/13776
+				 */
+				var w = this._getWidget();
+				if (name == "back" && w.declaredClass != undefined && w.declaredClass == "dojox.mobile.Heading") dojo.destroy(w._btn);
 			}
 		}
 	},

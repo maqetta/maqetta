@@ -190,6 +190,7 @@ davinci.ve.widget.getLabel = function(widget){
 		                	    'dijit.form.',
 		                	    'dijit.layout.',
 		                	    'dijit.',
+		                	    'dojox.mobile.',
 		                	    'html.',
 		                	    'OpenAjax.'];
 		for(var i=0; i<prefixes_to_remove.length; i++){

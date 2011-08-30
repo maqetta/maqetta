@@ -1797,7 +1797,7 @@
             "invisible": true,
             "helper": "davinci.libraries.dojo.dijit.tree.ForestStoreModelHelper"
         },
-         {
+        {
             "name": "DataList",
             "description": "DataList",
             "type": "dijit.form.DataList",

@@ -75,7 +75,7 @@ davinci.library.getMetaData=function(theme){
 	var results = null;
 	var themeCssFiles = [];
 	var parent = new davinci.model.Path(theme.file.getPath());
-	parent.removeLastSegments();
+	parent = parent.removeLastSegments();
 	for(var i = 0;i<theme.files.length;i++){
 		if(theme.files[i].indexOf(".css")>-1){
 			themeCssFiles.push(parent.append(theme.files[i]));

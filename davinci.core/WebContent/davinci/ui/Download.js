@@ -8,6 +8,7 @@ dojo.require("dijit.MenuItem");
 dojo.require("dijit.Menu");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
+dojo.require("davinci.theme.ThemeUtils");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
@@ -141,6 +142,7 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 				allResources = [resource];
 			}
 			for(var k=0;k<allResources.length;k++){
+				if( davinci.theme.isThemeHTML(allResources[k])) continue;
 				var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
 				allResources[k].setContents(newSource, true);
 			}

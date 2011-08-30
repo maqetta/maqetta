@@ -82,8 +82,8 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
 			var htmlFile = davinci.model.Factory.newHTML();
+			htmlFile.fileName = fileName;
 			htmlFile.setText(content);
-			htmlFile.fileName = fileName; 
 			htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content
 			this.context.model = htmlFile;
 			this.context._themeName = this.theme.name;

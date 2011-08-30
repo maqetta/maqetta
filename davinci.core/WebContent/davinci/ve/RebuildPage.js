@@ -37,6 +37,9 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 	
 	rebuildSource: function(source, resource){
 		
+		if ( !( resource && resource.extension && resource.extension == "html")) return source;
+		
+		
 		var relativePrefix = "";
 		this.model = this._srcDocument =  davinci.model.Factory.getNewFromResource(resource);
 		
@@ -58,38 +61,38 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 
 		this._srcDocument.setText(source, true);
 
-		if ( resource && resource.extension && resource.extension == "html") {
-            var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
+		 
+        var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
-            var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
-            for ( var i = 0; i < elements.length; i++ ) {
-                var n = elements[i];
-                var type = n.getAttribute("dojoType")
-                        || /* n.getAttribute("oawidget") || */n
-                                .getAttribute("dvwidget");
-                if (type != null)
-                    this.loadRequires(type, true, true, relativePrefix);
-            }
-            if (themeMetaobject)
-                this.changeThemeBase(themeMetaobject['theme'],
-                        this._resourcePath);
+        var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
+        for ( var i = 0; i < elements.length; i++ ) {
+            var n = elements[i];
+            var type = n.getAttribute("dojoType")
+                    || /* n.getAttribute("oawidget") || */n
+                            .getAttribute("dvwidget");
+            if (type != null)
+                this.loadRequires(type, true, true, relativePrefix);
+        }
+        if (themeMetaobject)
+            this.changeThemeBase(themeMetaobject['theme'],
+                    this._resourcePath);
 
-            var cssChanges = this.getPageCss();
-            var jsChanges = this.getPageJs();
+        var cssChanges = this.getPageCss();
+        var jsChanges = this.getPageJs();
 
-            var basePath = new davinci.model.Path(relativePrefix);
+        var basePath = new davinci.model.Path(relativePrefix);
 
-            for ( var i = 0; i < cssChanges.length; i++ ) {
-                var filename = basePath.append(cssChanges[i]);
-                this.addModeledStyleSheet(filename.toString(), cssChanges[i]);
-            }
+        for ( var i = 0; i < cssChanges.length; i++ ) {
+            var filename = basePath.append(cssChanges[i]);
+            this.addModeledStyleSheet(filename.toString(), cssChanges[i]);
+        }
 
-            for ( var i = 0; i < jsChanges.length; i++ ) {
-                var filename = basePath.append(jsChanges[i]);
-                this.addJavaScript(filename.toString(), null, null, null,
-                        jsChanges[i]);
-            }
-		}
+        for ( var i = 0; i < jsChanges.length; i++ ) {
+            var filename = basePath.append(jsChanges[i]);
+            this.addJavaScript(filename.toString(), null, null, null,
+                    jsChanges[i]);
+        }
+		
 		return this._srcDocument.getText();
 		
 	},

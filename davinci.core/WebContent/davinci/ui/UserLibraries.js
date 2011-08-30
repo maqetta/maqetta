@@ -8,6 +8,7 @@ dojo.require("dijit.MenuItem");
 dojo.require("dijit.Menu");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.ComboBox");
+dojo.require("davinci.theme.ThemeUtils");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.ui", "ui");
@@ -120,14 +121,49 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		if(values.length){
 			var isOk = davinci.library.modifyLib(values);
 			
-			davinci.resource.resourceChanged("reload", this.getResourceBase());
+			var resourceChanges = [];
+			/* compile a list of parent diretories that may have changed from the library change 
+			 * 
+			 * Need to scan for 3 areas for resource notification
+			 * 1) parent directory of change
+			 * 2) original directory of change
+			 * 3) new directory
+			 * 
+			 * */
+			for(var i=0;i<values.length;i++){
+				
+				
+				/* check parent */
+				var baseDirectory = (new davinci.model.Path(values[i].base).append(values[i].oldPath)).removeLastSegments(1);
+				var found = false
+				var basePath = new davinci.model.Path(values[i].base);
+				for(var j=0;j<resourceChanges.length && !found;j++){
+					if(resourceChanges[j].equals(basePath))
+						found = true;
+				}
+				if(!found)
+					resourceChanges.push(basePath);
+				
+			}
+			
+			for(var i=0;i<resourceChanges.length;i++){
+				
+				davinci.resource.resourceChanged("reload", resourceChanges[i].toString());
+				davinci.library.themesChanged(resourceChanges[i].toString());
+			}
+			
+		//	davinci.resource.resourceChanged("reload", this.getResourceBase());
 			dojo.publish("/davinci/ui/libraryChanged");
+			
 		}
 		
 		var pages = davinci.resource.findResource("*.html", true, this.getResourceBase(), true);
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
 		for(var i=0;i<pages.length;i++){
+			/* dont process theme editor pages */
+			if(davinci.theme.isThemeHTML(pages[i])) continue;
+			
 			var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
 			pages[i].setContents(newSource, false);
 		}

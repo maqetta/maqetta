@@ -538,6 +538,17 @@ davinci_top_bar .dijitButtonNode {
 	background-position:-114px -4px;
 }
 
+#dvOutlineSubcontainer {
+    overflow: auto;
+    /* overflow: hidden; /* hide scrollbars on outline */
+    white-space: nowrap;
+    height: 100%;
+}
+
+[id="davinci.ui.outline"] .dijitTree {
+	height: 100%
+}
+
 .dvBox {
 	display: inline-block;
 	height: 13px;
@@ -590,12 +601,7 @@ davinci_top_bar .dijitButtonNode {
 	height: 80%;
 	xbackground: blue;
 }
-#dvOutlineSubcontainer {
-	overflow: auto;
-	/* overflow: hidden; /* hide scrollbars on outline */
-	white-space: nowrap;
-	height: 100%;
-}
+
 .dvStateBox {
 	display: inline-block;
 	width: 10px;

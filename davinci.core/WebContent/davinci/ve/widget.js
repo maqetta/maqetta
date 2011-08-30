@@ -1073,15 +1073,13 @@ dojo.declare("davinci.ve._Widget",null,{
 		// on* event attributes from the DOM that appears on visual canvas.
 		// Upon creating new widgets, the calling logic needs to 
 		// put these attributes in model but not in visual canvas.
-		if(options.eventAttributes){
-			var srcElement = this._srcElement;
-			//FIXME: Assumes "attributes" is a public API. See #nnn
-			var attributes = srcElement.attributes;
-			for(var i=0; i<attributes.length; i++){
-				var attribute = attributes[i];
-				if(attribute.name.substr(0,2).toLowerCase()=="on" ){
-					data.properties[attribute.name] = attribute.value;
-				}
+		var srcElement = this._srcElement;
+		//FIXME: Assumes "attributes" is a public API. See #nnn
+		var attributes = srcElement.attributes;
+		for(var i=0; i<attributes.length; i++){
+			var attribute = attributes[i];
+			if(attribute.name.substr(0,2).toLowerCase()=="on" ){
+				data.properties[attribute.name] = attribute.value;
 			}
 		}
 

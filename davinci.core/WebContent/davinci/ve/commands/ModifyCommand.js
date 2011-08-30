@@ -53,7 +53,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		//if(!this._oldData ){
 		// after creating the widget we need to refresh the data, the createWidget function removes the id's of the widgets and 
 		// children. We need the id's to be consistent for undo/redo to work -- wdr
-			this._oldData = widget.getData({eventAttributes:true});
+			this._oldData = widget.getData();
 			this._oldData.context = this._context;
 			
 			this._newData = {type: this._oldData.type,

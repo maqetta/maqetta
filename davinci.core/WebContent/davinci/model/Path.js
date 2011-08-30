@@ -74,6 +74,9 @@ davinci.model.Path.prototype._clone = function(){
 
 
 davinci.model.Path.prototype.append = function( tail ){
+	
+	tail = tail || "";
+	
 	if (typeof tail == 'string')
 		tail=new davinci.model.Path(tail);
 	if (tail.isAbsolute())

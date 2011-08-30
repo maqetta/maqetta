@@ -101,7 +101,15 @@ public class User {
 					continue;
 				}
 				IVResource libResource = new VLibraryResource(b, file, root,path.lastSegment(), "");
-				root.add(libResource);
+				/* need a special case for library items whos root is the project roots */
+				if(path.segmentCount()==0){
+					
+					IVResource[] children = libResource.listFiles();
+					for(int p=0;p<children.length;p++)
+						root.add(children[p]);
+				}else{
+					root.add(libResource);
+				}
 			}
 		}
 	}

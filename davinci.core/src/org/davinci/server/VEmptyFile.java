@@ -89,10 +89,9 @@ public class VEmptyFile implements IVResource {
         return false;
     }
 
-    public boolean isFile() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean isVirtual() {
+		return true;
+	}
 
     public IVResource[] listFiles() {
         // TODO Auto-generated method stub

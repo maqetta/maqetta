@@ -151,8 +151,11 @@
             point="davinci.core.initialUserFiles">
              <initalUserFile
                   path="WebContent/project/base/"/>
+              <!-- moving samples to plugin (issue 574 -->
+              <!--
              <initalUserFile
                   path="WebContent/samples/"/>
+              -->
       </extension>
       <extension
             point="davinci.core.jsPlugin">
@@ -172,5 +175,10 @@
                path="app/davinci/ve/themeEditor/themeEditor"
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
       </extension>
+      <extension point="davinci.core.ajaxLibrary">
+	     <ajaxLibrary name="sample files" id="Samples" version="0.3">
+		      <libraryPath location="WebContent/samples" name="/"></libraryPath>
+		 </ajaxLibrary>
+	 </extension>
       
 </plugin>

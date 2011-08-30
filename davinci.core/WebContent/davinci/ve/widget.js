@@ -1260,7 +1260,7 @@ dojo.declare("davinci.ve._Widget",null,{
 				 * which includes the fix for http://bugs.dojotoolkit.org/ticket/13776
 				 */
 				var w = this._getWidget();
-				if (w.declaredClass == "dojox.mobile.Heading" && name == "back") dojo.destroy(w._btn);
+				if (w.declaredClass && w.declaredClass == "dojox.mobile.Heading" && name == "back") dojo.destroy(w._btn);
 			}
 		}
 	},

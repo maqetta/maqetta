@@ -492,7 +492,6 @@ davinci.ve.widget.createWidget = function(data){
     // but not in the DOM within page canvas.
     var props = {};
     for(var p in data.properties){
-    	console.log('p='+p);
     	if(p.substr(0,2).toLowerCase()!="on" ){
     		props[p] = data.properties[p];
     	}

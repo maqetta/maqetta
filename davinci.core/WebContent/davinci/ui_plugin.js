@@ -298,15 +298,17 @@
                 },
                 {
                     id: "davinci.ui.delete",
-                    label: "Delete resource",
+                    label: "Delete",
+                    iconClass: "editActionIcon editDeleteIcon",
                     run: "davinci.ui.Resource.deleteAction()",
                     menubarPath: "delete"
 
                 },
                 {
                     id: "davinci.ui.download",
-                    action: "davinci.actions.DownloadAction",
                     label: "Download",
+                    iconClass: "downloadSomeIcon",
+                    action: "davinci.actions.DownloadAction",
                     menubarPath: "delete"
 
                 }

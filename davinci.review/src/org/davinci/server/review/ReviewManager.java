@@ -159,8 +159,13 @@ public class ReviewManager {
 	}
 
 	public DesignerUser getDesignerUser(String name) {
-		if (users.get(name) == null) {
+		DesignerUser designer = users.get(name);
+		if (null == designer) {
 			loadUser(name);
+		}else{
+			// Update the workspace information so that the new created project
+			// will be imported.
+			designer.rawUser.rebuildWorkspace();
 		}
 		return users.get(name);
 	}

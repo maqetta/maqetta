@@ -84,7 +84,7 @@ public class User {
 					continue;
 				}
 				IPath path = new Path(defaultRoot);
-				for (int k = 0; k < path.segmentCount() - 1; k++) {
+				for (int k = 0; k < path.segmentCount(); k++) {
 					String segment = path.segment(k);
 					IVResource v = root.get(segment);
 					if (v == null) {
@@ -102,14 +102,14 @@ public class User {
 				}
 				IVResource libResource = new VLibraryResource(b, file, root,path.lastSegment(), "");
 				/* need a special case for library items whos root is the project roots */
-				if(path.segmentCount()==0){
+				//if(path.segmentCount()==0){
 					
-					IVResource[] children = libResource.listFiles();
-					for(int p=0;p<children.length;p++)
-						root.add(children[p]);
-				}else{
-					root.add(libResource);
-				}
+				IVResource[] children = libResource.listFiles();
+				for(int p=0;p<children.length;p++)
+					root.add(children[p]);
+				//}else{
+				//	root.add(libResource);
+				//}
 			}
 		}
 	}

@@ -21,62 +21,49 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 	},
 	
 	_changeTheme: function(newThemeInfo, oldTheme){
-	
+		
 		var modelDoc = this._context.getModel().getDocumentElement(); 
-	
 		var d = this._context.getDocument();
 		var modelHead = modelDoc.getChildElement('head');
 		var b = d.getElementsByTagName("body");
 		var modelBody = modelDoc.getChildElement('body');
-		var modelStyle = modelHead.getChildElements('style');
+		
 		var header = dojo.clone( this._context.getHeader());
-		
-		
+		var resourcePath = this._context.getFullResourcePath();
 		// find the old theme file name
+		function sameSheet(headerSheet, file){
+			return (headerSheet.indexOf(file) > -1)
+		}
 		
-			
 		var files = oldTheme.files;
+		
 		for (var x=0; x<files.length; x++){
-			var filename = oldTheme.file.parent.getPath()+'/'+ oldTheme.files[x];
-			filename = filename.substring(2); // remove the ./ from the parent path
-			var newFilename;
+			var filename = files[x];
 			for (var y=0; y<header.styleSheets.length; y++){
-				function stripDotSlash(filename){
-					if(filename.substr(0,2)=="./")
-						return filename.substring(2); // remove the ./ from the parent path
-					else
-						return filename;
-				}
-				var ss_stripped = stripDotSlash(header.styleSheets[y]);
-				if(ss_stripped === filename){
+				
+				if(sameSheet(header.styleSheets[y], filename)){
 					// found the sheet to change
-					newFilename = newThemeInfo.file.parent.getPath()+'/'+newThemeInfo.files[0]; // might need to change this is we ever support more than on css
-					newFilename = newFilename.substring(2); // remove the ./ from the parent path
-					header.styleSheets[y] = newFilename;
+					
+					var ssPath = new davinci.model.Path(newThemeInfo.file.parent.getPath()).append(newThemeInfo.files[0]);
+					newFilename = ssPath.relativeTo(resourcePath, true);
+					//header.styleSheets[y] = newFilename;
 					
 					var modelAttribute = modelBody.getAttribute('class');
 					modelAttribute = modelAttribute.replace(oldTheme.className,newThemeInfo.className);
-				
 					header.bodyClass = modelAttribute;
-					
 					modelBody.removeAttribute('class');
 					modelBody.addAttribute('class',modelAttribute, false);
 					this._context.setHeader(header);
-					for (var elm=0; elm<modelStyle.length; elm++){
-						var children = modelStyle[elm].children;
-						for (var ch = 0; ch < children.length; ch++ ){
-							var child = children[ch];
-							var url_stripped = stripDotSlash(child.url);
-							if (child.elementType == 'CSSImport' && url_stripped == filename){
-								child.url = newFilename;
-								break;
-							}
+					var importElements = modelHead.find({elementType:'CSSImport'});
+					
+					for(var i=0;i<importElements.length;i++){
+						if(sameSheet(importElements[i].url, filename)){
+							importElements[i].url = newFilename;
+							break;
 						}
-					}
-					//e._visualChanged();
+					}					//e._visualChanged();
 					var text = this._context.getModel().getText();
 					var e = davinci.Workbench.getOpenEditor();
-					
 					e.setContent(e.fileName,text); // force regen of HTML Model to load new theme
 
 				}

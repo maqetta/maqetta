@@ -186,6 +186,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 	},
 	
 	_changeValue : function(targetIndex,value){
+		
 		// applyToWhichStates controls whether style change is attached to Normal or other states
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)

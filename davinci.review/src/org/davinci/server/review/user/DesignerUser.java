@@ -26,7 +26,7 @@ public class DesignerUser{
 	private Version latestVersion;
 	private File userDirectory;
 	
-	private User rawUser;
+	public User rawUser;
 
 	public DesignerUser(String name) {
 		this.name = name;

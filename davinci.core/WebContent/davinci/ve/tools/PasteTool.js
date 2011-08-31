@@ -17,7 +17,7 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 		dojo.forEach(this._data, function(d){
 			var loadRequiresForTree = dojo.hitch(this, function(d){
 				if(d.type){ // structure has plain 'string' nodes which don't have type or children
-					if(d.children){
+					if(d.children && d.children instanceof Array){ // sometimes children is just a string also
 						d.children.forEach(loadRequiresForTree, this);
 					}
 					if(!this._context.loadRequires(d.type)){

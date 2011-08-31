@@ -499,7 +499,12 @@ dojo.declare("davinci.ve.Context", null, {
 		var path = new davinci.model.Path(filename);
 		return this.getFullResourcePath().removeLastSegments(1);
 	},
-
+	getProject : function(){
+		if(davinci.Runtime.singleProjectMode())
+			return davinci.Runtime.getProject();
+		
+	},
+	
 	getFullResourcePath: function() {
 		var model = this.getModel();
 		var filename = model.fileName;
@@ -546,8 +551,10 @@ dojo.declare("davinci.ve.Context", null, {
 				// pull Dojo path from installed libs, if available
 				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
-						dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root)
-								.append("dojo/dojo.js").toString();
+						
+						var fullDojoPath = new davinci.model.Path(this.getProject()).append(lib.root).append("dojo/dojo.js");
+						dojoUrl = fullDojoPath.relativeTo(this.getResourcePath(),true).toString();
+						//dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
 						return true;
 					}
 					return false;

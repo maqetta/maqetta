@@ -94,7 +94,7 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 		var subject = this.subject.get("value"),
 			content = this.content.get("value").replace(/\n/g, "<br/>"),
 			type = dojo.byId(this.type.id + "_label" ).innerHTML,
-			severity = this.severity.containerNode.innerHTML,
+			severity = this.severity.get("label"),
 			func = this._update ? "onUpdate" : "onSubmit";
 		
 		this[func]({

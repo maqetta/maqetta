@@ -119,7 +119,9 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 				if (!editor || editor.declaredClass == "davinci.themeEditor.ThemeEditor"){ return; } // ignore updates in theme editor
 
 				dojo.publish("/davinci/states/state/changed/start");
-				var children = this.getChildren(e.widget);
+				// If rootWidget, then loop through children, else loop starting with this widget.
+				var widget = (e.widget == this.getContext().rootWidget) ? e.widget : e.widget.getParent();
+				var children = this.getChildren(widget);
 				while (children.length) {
 					var child = children.shift();
 					if (child) {

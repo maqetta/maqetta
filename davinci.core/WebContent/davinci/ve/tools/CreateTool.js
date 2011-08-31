@@ -96,18 +96,42 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}
 
 		try {
+			// create tool _data can be an object or an array of objects
+			// The array could hold a mix of widget data from different libs for example if this is a paste 
+			// where a dojo button and a html label were selected.
+			var data = this._data instanceof Array ? this._data : [this._data],
+
 			// XXX Have to do this call here, rather than in the more favorable
 			//  create() or _create() since different "subclasses" of CreateTool
 			//  either override create() or _create().  It is very inconsistent.
-			var allowedParentList = this._getAllowedTargetWidget(target, this._data, true);
-			var	helper = this._getHelper();
+			    allowedParentList = this._getAllowedTargetWidget(target, this._data, true),
+			    helper = this._getHelper();
 
 			// If no valid target found, throw error
 			if (allowedParentList.length == 0) {
+				// returns an array consisting of 'type' and any 'class' properties
+				function getClassList(type) {
+					var classList = davinci.ve.metadata.queryDescriptor(type, 'class');
+					if (classList) {
+						classList = classList.split(/\s+/);
+						classList.push(type);
+				        return classList;
+					}
+					return [type];
+				}
+
 				var typeList = data.map(function(elem) {
 					return elem.type;  
-				}).join(', ');
-				
+				}).join(', '),
+
+					// 'this._data' may represent a single widget or an array of widgets.
+					// Get data for all widgets
+					children = data.map(function(elem) {
+						return {
+							allowedParent: davinci.ve.metadata.getAllowedParent(elem.type),
+					        classList: getClassList(elem.type)
+						};
+				    });
 				var errorMsg;
 				// XXX Need to update this message for multiple widgets
 				if (children.length === 1 && children[0].allowedParent) {
@@ -138,16 +162,8 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 					size = {w: (w > 0 ? w : undefined), h: (h > 0 ? h : undefined)};
 				}
 			}
-			// create tool _data can be an object or an array of objects
-			// The array could hold a mix of widget data from different libs for example if this is a paste 
-			// where a dojo button and a html label were selected.
-			var tempData = [];
-			if (this._data instanceof Array) {
-			    tempData = this._data;
-			} else {
-			    tempData[0] = this._data;
-			}
-			for (var i = 0; i < tempData.length; i++){
+
+			for (var i = 0; i < data.length; i++){
 			    var type = tempData[i].type;
     	        // If this is the first widget added to page from a given library,
     	        // then invoke the 'onFirstAdd' callback.

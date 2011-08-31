@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import org.davinci.server.review.user.Reviewer;
+
 public class Version{
 
 	private boolean hasClosedManually = false;

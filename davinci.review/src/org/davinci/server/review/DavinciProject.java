@@ -3,6 +3,8 @@ package org.davinci.server.review;
 import java.io.File;
 import java.io.Serializable;
 
+import org.davinci.server.review.user.DesignerUser;
+
 public class DavinciProject implements Serializable {
 	/**
 	 * 
@@ -11,8 +13,9 @@ public class DavinciProject implements Serializable {
 
 	private String ownerId;
 
-	// FIXME Currently, there is no project concept, so set project name a value
-	// by default
+	// FIXME Currently, there is no project concept actually.
+	// A project is just a directory with user workspace.
+	// So set project name a value by default
 	private String projectName = "Project";
 
 	private CommentsDocument commentsDocument;

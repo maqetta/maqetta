@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
+import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.user.User;
 
 public class ManagerVersion extends Command {

@@ -7,6 +7,8 @@ import org.davinci.server.user.User;
 public class Constants {
 	public static final String BUNDLE_ID = "davinci.review";
 	
+	public static final String CMD_URL = "/cmd";
+	
 	public static final String REVIEW_DIRECTORY_NAME=".review";
 
 	public static final String REVIEW_INFO = "DAVINCI.REVIEW";

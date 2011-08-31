@@ -28,7 +28,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.ServerManager;
+import org.davinci.server.review.user.DesignerUser;
+import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.LibrarySettings;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -37,8 +41,8 @@ import org.xml.sax.SAXException;
 public class ReviewManager {
 //	private static final String LS = System.getProperty("line.separator");
 	private static ReviewManager theReviewManager;
-	HashMap<DavinciProject, HashMap<String, LibInfo[]>> snapshotLibs;
-	File baseDirectory;
+	private HashMap<DavinciProject, HashMap<String, LibInfo[]>> snapshotLibs;
+	public File baseDirectory;
 
 
 	public static ReviewManager getReviewManager()
@@ -109,7 +113,8 @@ public class ReviewManager {
 //					&& path.indexOf(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME) < 0  // Need to copy the settings
 					&& path.indexOf(IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME) < 0
 					&& path.indexOf(Constants.REVIEW_DIRECTORY_NAME) < 0
-					&& path.indexOf(".svn") < 0) {
+					&& path.indexOf(".svn") < 0
+					&& containsPublishedFiles(files[i], user)) {
 				File destination = new File(versionDir, files[i].getName());
 				copyDirectory(files[i], destination);
 			}
@@ -206,6 +211,19 @@ public class ReviewManager {
 		users.put(name, user);
 	}
 
+	private boolean containsPublishedFiles(File dir, DesignerUser user){
+		for(Version version : user.getVersions()){
+			for(String res : version.resources){
+				IPath resPath = new Path(res);
+				while(resPath.segment(0).equals(".")) resPath = resPath.removeFirstSegments(1);
+				if(dir.getName().equals(resPath.segment(0))){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	class VersionFile {
 		public String latestVersionID;
 
@@ -390,6 +408,8 @@ public class ReviewManager {
 		path.append("/");
 		path.append(project.getOwnerId());
 		path.append("/");
+		path.append(project.getProjectName());
+		path.append("/");
 		path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		return new LibrarySettings(new File(path.toString())).allLibs();
 	}
@@ -414,6 +434,8 @@ public class ReviewManager {
 			path.append("/snapshot/");
 			path.append(version);
 			path.append("/");
+			path.append(project.getProjectName());
+			path.append("/");
 			path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 
 			libInfos = new LibrarySettings(new File(path.toString())).allLibs();
@@ -421,5 +443,49 @@ public class ReviewManager {
 				versions.put(version, libInfos);
 		}
 		return libInfos;
+	}
+	
+	public static IPath adjustPath(IPath path, String ownerId, String version, String projectName){
+		// Map the request lib path stored in the snapshot to the actual system lib path
+		// A path like: project1/./lib/dojo/dojo.js
+		ReviewManager reviewManager = ReviewManager.getReviewManager();
+		DavinciProject project = new DavinciProject();
+		project.setOwnerId(ownerId);
+		project.setProjectName(projectName);
+		LibInfo[] sysLibs = reviewManager.getSystemLibs(project);
+		LibInfo[] versionLibs = reviewManager.getVersionLib(project, version);
+
+		// If the lib path is not specified in the review version,
+		// just return the path
+		if(versionLibs == null) return path;
+		
+		IPath cp = new Path(path.toString());
+		IPath newPath = new Path(cp.segment(0));
+		cp = cp.removeFirstSegments(1);
+		
+		int c = 0;
+		while(cp.segment(0).equals(".") || cp.segment(0).equals("..")){
+			c++;
+		}
+		cp = cp.removeFirstSegments(c);
+		
+		for(LibInfo info : versionLibs){
+			IPath versionVirtualRoot = new Path(info.getVirtualRoot());
+			if(cp.matchingFirstSegments(versionVirtualRoot) == versionVirtualRoot.segmentCount()){
+				String virtualRoot = null;
+				for(LibInfo lib : sysLibs){
+					if(lib.getId().equals(info.getId())){
+						virtualRoot = lib.getVirtualRoot();
+						break;
+					}
+				}
+				if(virtualRoot != null){
+					IPath vr = newPath.append(virtualRoot);
+					return vr.append(cp.removeFirstSegments(versionVirtualRoot.segmentCount()));
+				}
+				break;
+			}
+		}
+		return path;
 	}
 }

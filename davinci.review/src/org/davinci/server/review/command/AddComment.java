@@ -17,12 +17,12 @@ import org.davinci.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.DavinciProject;
-import org.davinci.server.review.DesignerUser;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.ReviewObject;
 import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
+import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.user.User;
 import org.davinci.server.user.UserManager;
 
@@ -32,7 +32,11 @@ public class AddComment extends Command {
 			throws IOException {
 		try {
 			UserManager userManager = ServerManager.getServerManger().getUserManager();
-			String designerName = ((ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO)).getDesignerName();
+			ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
+			if(null == reviewInfo){
+				throw new Exception("Session timed out! Please login again.");
+			}
+			String designerName = reviewInfo.getDesignerName();
 			User designer = null;
 			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName))
 				designer = userManager.getUser(IDavinciServerConstants.LOCAL_INSTALL_USER);

@@ -1,4 +1,4 @@
-package org.davinci.server.review;
+package org.davinci.server.review.user;
 
 import org.davinci.server.user.Person;
 

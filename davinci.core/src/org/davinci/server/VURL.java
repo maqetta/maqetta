@@ -101,11 +101,7 @@ public class VURL implements IVResource {
         return false;
     }
 
-    public boolean isFile() {
-        return !isDirectory();
-    }
-
-    public IVResource[] find(String path) {
+     public IVResource[] find(String path) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -164,4 +160,8 @@ public class VURL implements IVResource {
         // TODO Auto-generated method stub
         return null;
     }
+
+    public boolean isVirtual() {
+		return true;
+	}
 }

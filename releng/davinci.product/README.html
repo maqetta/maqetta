@@ -13,7 +13,7 @@
 
 <h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox 4 and Mac Safari 5</h2>
 <p>
-The current builds of Maqetta only run on Google Chrome, Firefox 4 and Safari 5 on the Mac. 
+The current builds of Maqetta only run on Google Chrome, Firefox 4 and Safari 5.1 on the Mac. 
 </p>
 
 <h2 id="prep_steps">Preparatory steps: restart browser and clear caches</h2>
@@ -108,14 +108,14 @@ and change 50000 to something else (any number in the 50000's is OK).
 </li></ul>
 </li></ul>
 
-<h3 id="local_install_launch_browser">Step 3: Launch Maqetta application in Google Chrome, Firefox 4 or Mac Safari</h3>
+<h3 id="local_install_launch_browser">Step 3: Launch Maqetta application in Google Chrome, Firefox 4 or Mac Safari 5.1</h3>
 
 <p>Once the Maqetta server has been launched (see previous steps), open Chrome, Firefox or Safari and go to the following URL: 
 </p>
 <ul><li> <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a>
 </li></ul>
 
-<h2 id="clearing_caches">Detailed instructions for clearing caches in various browsers</h2>
+<h2 id="clearing_caches">Detailed instructions for clearing caches and cookies in various browsers</h2>
 
 <ul>
 	<li><strong>Quit and restart your browser before launching a new version of Maqetta for the first time.</strong>
@@ -136,7 +136,7 @@ and change 50000 to something else (any number in the 50000's is OK).
 						In the dialog that follows, make sure "Empty the cache" is checked.
 						You might want to uncheck the other items so that other things are not also cleared.
 						Now, click on the "Clear browsing data" button.</li>
-					<li>Clear appcache (offline storage): 
+					<li>Clear appcache (offline storage) and cookies: 
 						<ul>
 							<li>While in the "Under the Hood" tab, click on "Content settings...." to bring up the Content Settings dialog.</li>
 							<li>In the "Cookies" section towards the top, click on the "All Cookies and Site Data..." button to bring up the Cookies and Other Data panel.</li>
@@ -145,7 +145,6 @@ and change 50000 to something else (any number in the 50000's is OK).
 								<ul>
 									<li>If you run Maqetta at Maqetta.org, then you can start typing "maqetta.org" into the search box
 										and immediately you will see the subset of sites that match the pattern (e.g., maqetta.org).</li>
-									<li>If you run Maqetta at http://maqetta.austin.ibm.com/maqetta/, then you can start typing the string "maqetta.austin" into the search box.</li>
 									<li>If run run locally on http://localhost, then you can start typing "localhost" into the search box.</li>
 								</ul>
 							<li>When the listing of sites shows the site from which you run Maqetta, click on the row for that site to select that row.</li>
@@ -172,11 +171,33 @@ and change 50000 to something else (any number in the 50000's is OK).
 						the server is "maqetta.org". 
 						If the Maqetta server is listed, click on it and then click "Remove" (and then "Remove offline data").
 					</li>
+					<li>Clear cookies: Click on the "Privacy" tab, then click on the hyperlink that says "remove individual cookies".
+						This brings up a "Cookies" dialog. In the search text entry box at the top, 
+						type in the URL for the web server where you are running Maqetta.
+						For example:
+						<ul>
+							<li>If you run Maqetta at Maqetta.org, then type "maqetta.org" into the search box.</li>
+							<li>If run run locally on http://localhost, then type "localhost" into the search box.</li>
+						</ul>
+						Select all cookies listed and then click the "Remove cookie" button.
+					</li>
 				</ul>
 			</li>
 			<li>Safari
 				<ul>
-				 	<li>(Mac only) Under the "Safari" menu, invoke the "Empty cache..." command to clear both the browser cache and the application cache.</li>
+				 	<li>(Mac only) Clear both the browser cache and the application cache: Under the "Safari" menu, invoke the "Empty cache..." command,
+				 		and then click "Empty" on the dialog that appears.</li>
+					<li>(Mac only) Clear cookies: Under the "Safari" menu, invoke the "Preferences..." command to bring up the Preferences dialog.
+						Click on the "Security" tab, then click on "Show Cookies" button.
+						This brings up a "Cookies" dialog. In the search text entry box at the top, 
+						type in the URL for the web server where you are running Maqetta.
+						For example:
+						<ul>
+							<li>If you run Maqetta at Maqetta.org, then type "maqetta.org" into the search box.</li>
+							<li>If run run locally on http://localhost, then type "localhost" into the search box.</li>
+						</ul>
+						Select all cookies listed and then click the "Remove" button.
+					</li>
 				</ul>
 			</li>
 		</ul>

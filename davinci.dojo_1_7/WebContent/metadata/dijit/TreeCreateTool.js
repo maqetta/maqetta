@@ -12,13 +12,20 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 	constructor: function(data){
 		this._resizable = "both";
 	},
-
+	
 	_create: function(args){
+		
+		var command = this._getCreateCommand(args);
+		this._context.getCommandStack().execute(command);
+		this._select(this._tree);
+	},
+
+	_getCreateCommand: function(args){
 		if(this._data.length !== 3){
 			return;
 		}
 		
-		var storeData = this._data[0]
+		var storeData = this._data[0];
 		var modelData = this._data[1];
 		var treeData = this._data[2];
 		
@@ -64,15 +71,10 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 		modelData.properties.id = modelId;
 		modelData.context = this._context;
 		
-		var treeId = davinci.ve.widget.getUniqueObjectId(treeData.type, this._context.getDocument());
 		if(!treeData.properties){
 			treeData.properties = { };
 		}
-		// <hack> Added to make new ve code happy, davinci.ve.widget.createWidget requires id in properties or context on data, but id didn't work when dragging second tree onto canvas so switched to context:
-		// node.id= (data.properties && data.properties.id) || data.context.getUniqueID(srcElement); 
-		//treeData.properties.id = treeId;
 		treeData.context = this._context;
-		// </hack>
 
 		var store = undefined;
 		var model = undefined;
@@ -93,10 +95,11 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 
 		var command = new davinci.commands.CompoundCommand();
 		var index = args.index;
-		
-		command.add(new davinci.ve.commands.AddCommand(store, args.parent, index));
+		// always put store and model as first element under body, to ensure they are constructed by dojo before they are used
+        var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
+		command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(model, args.parent, index));
+		command.add(new davinci.ve.commands.AddCommand(model, bodyWidget, 1));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new davinci.ve.commands.AddCommand(tree, args.parent, index));
 		
@@ -107,9 +110,30 @@ dojo.declare("davinci.libraries.dojo.dijit.TreeCreateTool", davinci.ve.tools.Cre
 			command.add(new davinci.ve.commands.ResizeCommand(tree, args.size.w, args.size.h));
 		}
 		
-		this._context.getCommandStack().execute(command);
+		//this._context.getCommandStack().execute(command);
 
-		this._select(tree);
+		//this._select(tree);
+		this._tree = tree;
+		return command;
+	},
+	
+	addPasteCreateCommand: function(command, args){
+
+		this._context = this._data.context;
+		var model = this._data.properties.model;
+		var modelWidget = davinci.ve.widget.byId(model.id);
+		var modelData = modelWidget.getData();
+		var storeWidget = davinci.ve.widget.byId(model.store._edit_object_id);
+   		var storeData = storeWidget.getData();
+   		var data = [];
+   		data[0] = storeData;
+   		data[1] = modelData;
+   		data[2] = this._data;
+   		this._data = data;
+   		command.add( this._getCreateCommand(args));
+   		return this._tree;
+
 	}
+	
 
 });

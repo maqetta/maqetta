@@ -4,7 +4,7 @@ dojo.require("davinci.workbench.Preferences");
 
 davinci.js.format = function(model, opt) {
     var options = opt || 
-    	davinci.workbench.Preferences.getPreferences("davinci.js.format");
+    	davinci.workbench.Preferences.getPreferences("davinci.js.format", davinci.Runtime.getProject());
     var indentLevel = 0;
     var output=[];
     var newline = "\n";

@@ -16,6 +16,8 @@ public interface IVResource {
     URLConnection openConnection() throws MalformedURLException, IOException;
 
     public boolean exists();
+    
+    public boolean isVirtual();
 
     public String toString();
 
@@ -51,8 +53,6 @@ public interface IVResource {
     public IVResource[] find(String path);
 
     public boolean mkdir();
-
-    public boolean isFile();
 
     public boolean isDirty();
 

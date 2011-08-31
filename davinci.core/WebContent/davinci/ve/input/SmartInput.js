@@ -473,14 +473,20 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 	
 	handleEvent: function(event){
 
-		if (event.keyCode == 13) {
-			var multiLine = this.multiLine;
-			if (!multiLine || multiLine == "false" || this._lastKeyCode == 13){ // back to back CR
-				this.hide();
-			}
-		} else {
-			this.updateFormats();
-		}
+	    switch (event.keyCode)
+	    {
+    	    case 13: // enter
+    	        var multiLine = this.multiLine;
+                if (!multiLine || multiLine == "false" || this._lastKeyCode == 13 || event.ctrlKey){ // back to back CR or CTRL+ENTER
+                    this.onOk();
+                }
+                break;
+    	    case 27: // ESC
+    	        this.onCancel();
+    	        break;
+    	    default:
+    	        this.updateFormats();
+	    }
 		this._lastKeyCode = event.keyCode;
 		this.updateSimStyle();
 	},
@@ -692,25 +698,16 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 		},
 		
 		setFormat: function(value){
-			
-			var format;
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 			var n = dojo.create("div", { innerHTML: value});
-			if (n.children.length > 0){
-				format = 'html';
-			}else{
-				format = 'text';
-			}
-			var n = dojo.create("div", { innerHTML: value});
+			var format = n.children.length ? 'html' : 'text';
 			if (format === 'html'){
-			
-				htmlRadio.setChecked(true);
-				textRadio.setChecked(false);
+				htmlRadio.set('checked', true);
+				textRadio.set('checked', false);
 			}else{ 
-				
-				htmlRadio.setChecked(false);
-				textRadio.setChecked(true);
+				htmlRadio.set('checked', false);
+				textRadio.set('checked', true);
 			}
 			this._format = format;
 
@@ -757,8 +754,8 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			if (disabled){
 				dojo.addClass(textObj,'inlineEditDisabled');
 				dojo.addClass(htmlObj,'inlineEditDisabled');
-				htmlRadio.setChecked(false);
-				textRadio.setChecked(true);
+				htmlRadio.set('checked', false);
+				textRadio.set('checked', true);
 			}else{
 				dojo.removeClass(textObj,'inlineEditDisabled');
 				dojo.removeClass(htmlObj,'inlineEditDisabled');

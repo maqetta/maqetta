@@ -1,5 +1,4 @@
 dojo.provide("davinci.libraries.dojo.dojox.mobile.HeadingHelper");
-dojo.require("davinci.ve.tools.CreateTool");
 
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.HeadingHelper", null, {

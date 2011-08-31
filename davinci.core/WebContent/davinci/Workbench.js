@@ -11,16 +11,27 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.StackContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.TabContainer");
+dojo.require("davinci.resource");
+dojo.require("davinci.Runtime");
+dojo.require("davinci.model.Path");
 //dojo.require("davinci.workbench._ToolbaredContainer");
 dojo.require("davinci.workbench.ViewPart");
-dojo.require("davinci.ui.Panel");
-dojo.require("davinci.resource");
-dojo.require("davinci.ui.Dialogs");
+dojo.require("davinci.workbench.EditorContainer");
+//dojo.require("davinci.ui.Panel");
+
+/*
+ * Dialog deps from davinci.dialog
+ */
+
+dojo.require("davinci.ui.NewTheme");
+
+
+
+dojo.require("davinci.ui.OpenThemeDialog"); // ui_plugin.js
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci", "webContent");
 
-dojo.require("davinci.workbench.EditorContainer");
 
 dojo.provide("davinci.Workbench");
 
@@ -31,18 +42,56 @@ dojo.mixin(davinci.Workbench, {
 	run: function() {
 		this._initKeys();
 		
-		if(davinci.Runtime.singleProjectMode())
-			this._baseTitle= "(" + davinci.Runtime.getProject() + ") " + dojo.doc.title;
-		else
-			this._baseTitle= dojo.doc.title;
-		
+		if(davinci.Runtime.singleProjectMode()) {
+			this._baseTitle = "(" + davinci.Runtime.getProject() + ") " + dojo.doc.title;
+		} else {
+			this._baseTitle = dojo.doc.title;
+		}
+
 		var perspective= davinci.Runtime.initialPerspective || "davinci.ui.main";
 		this.showPerspective(perspective);
 		this._updateTitle();
-		davinci.Runtime.subscribe("/davinci/ui/selectionChanged",davinci.Workbench._updateMainToolBar );
-		davinci.Runtime.subscribe("/davinci/ui/editorSelected",davinci.Workbench._updateMainToolBar );
-		davinci.Runtime.subscribe("/davinci/resource/resourceChanged",this._resourceChanged );
-/* NO MORE MAIN TOOLBAR WITH NEW UI
+		davinci.Runtime.subscribe("/davinci/ui/selectionChanged", davinci.Workbench._updateMainToolBar);
+		davinci.Runtime.subscribe("/davinci/ui/editorSelected", davinci.Workbench._updateMainToolBar);
+		davinci.Runtime.subscribe("/davinci/resource/resourceChanged", this._resourceChanged);
+
+		davinci.Runtime.subscribe("/davinci/states/state/changed",
+			function(containerWidget, newState, oldState) {
+				var currentEditor = davinci.Runtime.currentEditor;
+				// ignore updates in theme editor
+				if (currentEditor.declaredClass != "davinci.ve.themeEditor.ThemeEditor" /*"davinci.ve.VisualEditor"*/) {
+					currentEditor.visualEditor.onContentChange.apply(currentEditor.visualEditor, arguments);
+				}
+			}
+		);
+        davinci.Runtime.subscribe("/davinci/ui/widgetPropertiesChanges",
+        	function() {
+        		var currentEditor = davinci.Runtime.currentEditor;
+        		currentEditor.visualEditor._objectPropertiesChange.apply(currentEditor.visualEditor, arguments);
+        	}
+        );
+
+		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
+		davinci.states.subscribe("/davinci/states/state/changed", function(args){
+			var prefix = "_show:", widget, dvWidget, helper,
+				thisDijit = davinci.Runtime.currentEditor.visualEditor.context.getDijit();
+			if(args.newState && !args.newState.indexOf(prefix)){
+				widget = thisDijit.byId(args.newState.substring(6));
+//    				widget && widget.show();
+				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				helper = dvWidget.getHelper();
+				helper && helper.popup && helper.popup(dvWidget);
+			}
+			if(args.oldState && !args.oldState.indexOf(prefix)){
+				widget = thisDijit.byId(args.oldState.substring(6));
+//    				widget && widget.hide();
+				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
+				helper = dvWidget.getHelper();
+				helper && helper.tearDown && helper.tearDown(dvWidget);
+			}
+		});
+
+		/* NO MORE MAIN TOOLBAR WITH NEW UI
 		this._createToolBar('init',dojo.byId('davinci_toolbar_main'));
 */
 /*
@@ -58,9 +107,8 @@ dojo.mixin(davinci.Workbench, {
 		if (loading[0]){ // remove the loading div
 			loading[0].parentNode.removeChild(loading[0]);
 		}
-		this._lastAutoSave=new Date().getTime();
+		this._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
-	
 	},
 	
 	_getHeightInPixels: function(){
@@ -108,7 +156,7 @@ dojo.mixin(davinci.Workbench, {
 			dojo.forEach(toolbar1.getChildren(), function(child){
  				if (child.isEnabled)
  				{
- 					child.setDisabled(!child.isEnabled(change.targetObjectId));
+				    child.set('disabled', !child.isEnabled(change.targetObjectId));
  				}
  			});
 		}
@@ -116,8 +164,9 @@ dojo.mixin(davinci.Workbench, {
 
 	_createToolBar: function (targetObjectId,targetDiv,actionSets,context){
 		var _toolbarcache = [];
-		if (!actionSets)
+		if (!actionSets) {
 		   actionSets = davinci.Runtime.getExtensions('davinci.actionSets');
+		}
 		for(var i = 0;i<actionSets.length;i++){
 			this._loadActionSetContainer(actionSets[i]);
 			var actions = actionSets[i].actions;
@@ -125,7 +174,7 @@ dojo.mixin(davinci.Workbench, {
 			  var toolBarPath = actions[k].toolbarPath;
 			  if(toolBarPath){
 				  if(!_toolbarcache[toolBarPath]){
-					  _toolbarcache[toolBarPath] = []
+					  _toolbarcache[toolBarPath] = [];
 				  }
 				  _toolbarcache[toolBarPath].push(actions[k]);
 			  }
@@ -152,21 +201,24 @@ dojo.mixin(davinci.Workbench, {
 			 	
 			 			this._loadActionClass(action);
 						var parms={showLabel:false/*, id:(id + "_toolbar")*/};
-						if (action.label)
+						if (action.label) {
 							parms.label=action.label;
-						if (action.iconClass)
+						}
+						if (action.iconClass) {
 							parms.iconClass=action.iconClass;
-						var dojoAction ;
+						}
+						var dojoAction;
 						if (action.toggle || action.radioGroup)
 						{
-							dojoAction =new dijit.form.ToggleButton(parms);
-							dojoAction.item=action;
-							dojoAction.setChecked(action.initialValue);
+							dojoAction = new dijit.form.ToggleButton(parms);
+							dojoAction.item = action;
+							dojoAction.set('checked', action.initialValue);
 							if (action.radioGroup)
 							{
 								var group=radioGroups[action.radioGroup];
-								if (!group)
+								if (!group) {
 									group=radioGroups[action.radioGroup]=[];
+								}
 								group.push(dojoAction);
 								dojoAction.onChange=dojo.hitch(this,"_toggleButton",dojoAction,context,group);
 							}
@@ -189,12 +241,11 @@ dojo.mixin(davinci.Workbench, {
 						toolbar1.addChild(dojoAction);
 						if(action.isEnabled && !action.isEnabled(targetObjectId) ){ 
 							dojoAction.isEnabled = action.isEnabled;
-							dojoAction.setDisabled(true);
+							dojoAction.set('disabled', true);
 						}else{
-							dojoAction.setDisabled(false);
+							dojoAction.set('disabled', false);
 						}
 				}
-		
 		}
 		return toolbar1;
 	},
@@ -238,8 +289,8 @@ dojo.mixin(davinci.Workbench, {
 			this.editorsStackContainer=mainBody.editorsStackContainer =
 				new dijit.layout.StackContainer(
 				{
-					region :'center',
-					id : "editorsStackContainer",
+					region:'center',
+					id: "editorsStackContainer",
 					controllerWidget: "dijit.layout.StackController"
 				});
 		}
@@ -251,7 +302,7 @@ dojo.mixin(davinci.Workbench, {
 			this.editorsWelcomePage=mainBody.editorsWelcomePage =
 				new dijit.layout.ContentPane(
 				{
-					id : "editorsWelcomePage",
+					id: "editorsWelcomePage",
 					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
 					/*
 					content: "<div><span id='welcome_page_new_open_container'/></div>\n"+
@@ -273,12 +324,12 @@ dojo.mixin(davinci.Workbench, {
 				new (davinci.Workbench.hideEditorTabs ?
 					dijit.layout.StackContainer : dijit.layout.TabContainer)(
 				{
-					id : "editors_tabcontainer",
+					id: "editors_tabcontainer",
 					controllerWidget: "dijit.layout.TabController"
 				});
 			this.editorTabs.setTitle = function(tab, title){ 
 				tab.attr('title', title);
-				(this.tablist.pane2button[tab.id] || this.tablist.pane2button[tab]).attr('label', title); // FIXME: use tab.id index for Dojo 1.4+
+				this.tablist.pane2button[tab.id].attr('label', title);
 			};
 			
 			dojo.connect(mainBody.tabs.editors, "removeChild", this, this._editorTabClosed);
@@ -346,14 +397,15 @@ dojo.mixin(davinci.Workbench, {
 	onResize: function(e){
 
 		var target = e.explicitOriginalTarget ? e.explicitOriginalTarget : e.srcElement;
-		if ( (e.type == 'resize') || ( ((target.id) && ( (target.id.indexOf('dijit_layout__Splitter_')>-1)) || ( (target.nextSibling && target.nextSibling.id) && (target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1) ))  )  ){
+		if (e.type == 'resize' || ( (target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || (target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1))  )  ){
 			var ed = davinci && davinci.Runtime.currentEditor;
-			if (davinci && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.onResize)
+			if (davinci && davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.onResize) {
 				davinci.Runtime.currentEditor.onResize();
+			}
 		}
-		if(this._orginalOnResize)
+		if(this._orginalOnResize) {
 			this._orginalOnResize();
-
+		}
 	},
 
 	updateMenubar: function(node, actionSets) {
@@ -368,8 +420,9 @@ dojo.mixin(davinci.Workbench, {
 	
 	_updateMainMenubar: function() {
 		 var menuDiv=dojo.byId('davinci_main_menu');
-		 if (!menuDiv)
+		 if (!menuDiv) {
 			 return;  // no menu
+		 }
 		var menuTree = this._createMenuTree();
 
 	   for (var i=0;i<menuTree.length; i++)
@@ -432,7 +485,7 @@ dojo.mixin(davinci.Workbench, {
 	},
 	
 	
-	showModal : function(content, title, style, callBack){
+	showModal: function(content, title, style, callBack){
 
 		
 		 var myDialog = new dijit.Dialog({
@@ -450,7 +503,7 @@ dojo.mixin(davinci.Workbench, {
 		
 	},
 	
-	_createMenuTree : function(actionSets,pathsOptional) {
+	_createMenuTree: function(actionSets,pathsOptional) {
 		if (!actionSets)
 		{  // only get action sets not associated with part
 			actionSets =  davinci.Runtime.getExtensions("davinci.actionSets", function (actionSet)
@@ -554,8 +607,9 @@ dojo.mixin(davinci.Workbench, {
 							if (menu.populate instanceof Function)
 							{
 								var menuItems=menu.populate();
-								for (var item in menuItems)
+								for (var item in menuItems) {
 									addItem(menuItems[item], menuItems[item].menubarPath);
+								}
 							}
 								
 						}
@@ -570,7 +624,7 @@ dojo.mixin(davinci.Workbench, {
 				for ( var actionN = 0, actionLen = actionSet.actions.length; actionN < actionLen; actionN++) {
 					var action = actionSet.actions[actionN];
 					if (action.menubarPath) {
-						addItem(action, action.menubarPath,pathsOptional)
+						addItem(action, action.menubarPath,pathsOptional);
 					}
 				}
 			}
@@ -578,7 +632,7 @@ dojo.mixin(davinci.Workbench, {
 		return menuTree;
 	},
 
-	_loadActionSetContainer : function(actionSet)
+	_loadActionSetContainer: function(actionSet)
 	{
 		if (actionSet.actionsContainer)
 		{
@@ -586,8 +640,7 @@ dojo.mixin(davinci.Workbench, {
 			{
 				actionSet.actionsContainer=dojo["require"](actionSet.actionsContainer);
 			}
-			for (var i=0;i<actionSet.actions.length;i++)
-				actionSet.actions[i].actionLoaded=true;
+			actionSet.actions.forEach(function(action) { action.actionLoaded = true; });
 		}
 
 	},
@@ -634,7 +687,7 @@ dojo.mixin(davinci.Workbench, {
 		return dojoMenu;
 	},
 	
-	location : function(){
+	location: function(){
 		// reloads the browser with the current project.
 		var fullPath = document.location.href;
 		var split = fullPath.split("?");
@@ -643,15 +696,13 @@ dojo.mixin(davinci.Workbench, {
 		return split[0];
 	},
 	
-	queryParams : function(){
+	queryParams: function(){
 		// reloads the browser with the current project.
 		var fullPath = document.location.href;
 		var split = fullPath.split("?");
 		var searchString = split.length>1? split[1] : "";
 		// remove the ? from the front of the query string 
-		var params = dojo.queryToObject(searchString);
-		return params;
-		
+		return dojo.queryToObject(searchString);
 	},
 	
 	_openMenu: function (dojoMenu,menus,evt) {
@@ -680,9 +731,9 @@ dojo.mixin(davinci.Workbench, {
 					if (item.separator) {
 						var subMenu = this._createMenu(item);
 						var popupParent = new dijit.MenuItem({
-							label :item.label,
-							popup :subMenu,
-							id :subMenu.id + "item"
+							label: item.label,
+							popup: subMenu,
+							id: subMenu.id + "item"
 						});
 						popupParent.actionContext=dojoMenu.actionContext;
 						dojoMenu.addChild(popupParent);
@@ -698,9 +749,9 @@ dojo.mixin(davinci.Workbench, {
 								label=item.action.getName();
 						}
 						var menuArgs= {
-								label : label,
-								disabled : !enabled,
-								onClick :dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
+								label: label,
+								disabled: !enabled,
+								onClick: dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
 							};
 						if (item.iconClass)
 							menuArgs.iconClass=item.iconClass;
@@ -715,21 +766,25 @@ dojo.mixin(davinci.Workbench, {
 		return dojoMenu;
 	},
 	
-	_toggleButton : function (button,context,group,arg)
+	_toggleButton: function (button,context,group,arg)
 	{
-		if (!button.checked)
+		if (!button.checked) {
 			return;
-		for (var i=0;i<group.length;i++)
-			if (group[i]!=button)
-				group[i].setChecked(false);
+		}
+		group.forEach(function(item){
+			if (item != button) {
+				item.set('checked', false);
+			}
+		})
 		this._runAction(button.item,context,button.item.id);
 	},
 	_runAction: function (item,context,arg)
 	{
 		if (item.run)
 		{
-			if (item.run instanceof Function)
+			if (item.run instanceof Function) {
 				item.run();
+			}
 			else
 			{
 				if (item.scope)
@@ -750,18 +805,20 @@ dojo.mixin(davinci.Workbench, {
 							func.apply(this);
 					}
 				}
-				else 
+				else {
 				  eval(item.run);
+				}
 			}
 		}
 		else if (item.action)
 		{
 			item.action.run(context);
 		}
-		else if (item.method && context && context[item.method] instanceof Function)
+		else if (item.method && context && context[item.method] instanceof Function) {
 			context[item.method](arg);
-		else if (item.commandID)
+		} else if (item.commandID) {
 			davinci.Runtime.executeCommand(item.commandID);
+		}
 	},
 
 	_getPageHeight: function (){
@@ -1242,7 +1299,7 @@ dojo.mixin(davinci.Workbench, {
 		}
 		
 		var letter=String.fromCharCode(e.keyCode);
-		if ((letter>='A' && letter<='Z')||(letter>='0' && letter<='9'))
+		if (/[A-Z0-9]/.test(letter))
 		{
 			//letter=e.keyChar;
 		}
@@ -1256,10 +1313,8 @@ dojo.mixin(davinci.Workbench, {
 		}
 				
 		seq.push(letter);
-		seq=seq.join("+");
-		return seq;
+		return seq.join("+");
 	},
-	
 
 	setActionScope: function(scopeID,scope)
 	{
@@ -1326,7 +1381,7 @@ dojo.mixin(davinci.Workbench, {
 	_switchEditor: function(newEditor, startup)
 	{
 		var oldEditor = davinci.Runtime.currentEditor;
-		davinci.Runtime.currentEditor =newEditor;
+		davinci.Runtime.currentEditor = newEditor;
 		try {
 			dojo.publish("/davinci/ui/editorSelected", [{
 				editor: newEditor,
@@ -1414,8 +1469,9 @@ dojo.mixin(davinci.Workbench, {
 				}
 			}
 		}
-		else
+		else {
 			this._state={ editors:[], version:davinci.version};
+		}
 	},
 
 	_updateWorkbenchState: function()
@@ -1451,17 +1507,16 @@ dojo.mixin(davinci.Workbench, {
 			saveDirty(editor);
 		});
 				
-		this._lastAutoSave=new Date().getTime();
+		this._lastAutoSave = Date.now();
 	},
 	
 
-	_XX_last_member : true	// dummy with no trailing ','
+	_XX_last_member: true	// dummy with no trailing ','
 });
 
 dojo.declare("davinci.workbench._PopupMenu", dijit.Menu, {
 
-	menuOpened : function (event)
-	{},
+	menuOpened: function (event) {},
 	
 	_openMyself: function(event){
 		this.menuOpened(event);

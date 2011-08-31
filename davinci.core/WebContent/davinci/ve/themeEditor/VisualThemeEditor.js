@@ -11,7 +11,7 @@ dojo.require("davinci.workbench.Preferences");
  * HTML rendered as the theme editor
  */
 
-davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor")+"davinci-dojo-theme-editor.html"; 
+davinci.ve.themeEditor._themeHtml = dojo.moduleUrl("davinci.ve.themeEditor", "davinci-dojo-theme-editor.html"); 
 
 
 
@@ -45,7 +45,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 	
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");
 
-		var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs');
+		var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.themeEditor.editorPrefs', davinci.Runtime.getProject());
 		if (prefs) {
 			this.context.setPreferences(prefs);
 		}
@@ -82,8 +82,8 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
 			var htmlFile = davinci.model.Factory.newHTML();
+			htmlFile.fileName = fileName;
 			htmlFile.setText(content);
-			htmlFile.fileName = fileName; 
 			htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content
 			this.context.model = htmlFile;
 			this.context._themeName = this.theme.name;
@@ -105,7 +105,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 						this.context.getDijit().registry.forEach(function(widget){
 							if(widget.resize){ widget.resize({}); }
 						});
-//						dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:"Normal"}]); // send state message to get Theme and StatesView in same init state
+						dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:"Normal"}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
 					this.initialSet=true;
 

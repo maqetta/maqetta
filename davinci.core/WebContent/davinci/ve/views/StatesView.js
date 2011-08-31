@@ -104,10 +104,10 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 	},
 	
 	_changeState: function(event) {
-		if (!event){
-			this._updateSelection();
-		} else if (this.isThemeEditor()){
+		if (this.isThemeEditor()){
 			this._updateThemeSelection(event.newState);
+		}else{
+			this._updateSelection();
 		}
 	},
 	
@@ -321,8 +321,13 @@ dojo.declare("davinci.ve.views.StatesView",[davinci.workbench.ViewPart], {
 					this._themeState = item.name[0];
 					this._silent = false;
 				} else {
-					var state = item.name[0];
-					davinci.ve.states.setState(state);
+					var currentEditor = top.davinci.Runtime.currentEditor;
+					var context = currentEditor.getContext();
+					var bodyWidget = context.rootWidget;
+					if(context && bodyWidget){
+						var state = item.name[0];
+						davinci.ve.states.setState(bodyWidget, state);
+					}
 				}
 			}
 		});

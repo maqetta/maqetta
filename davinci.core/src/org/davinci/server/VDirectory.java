@@ -143,11 +143,10 @@ public class VDirectory implements IVResource {
         return false;
     }
 
-    public boolean isFile() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
+    public boolean isVirtual() {
+		return true;
+	}
+    
     public IVResource[] listFiles() {
         // TODO Auto-generated method stub
         return (IVResource[]) this.children.toArray(new IVResource[this.children.size()]);

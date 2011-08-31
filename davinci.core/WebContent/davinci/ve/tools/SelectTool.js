@@ -164,7 +164,10 @@ dojo.declare("davinci.ve.tools.SelectTool", davinci.ve.tools._Tool, {
 	
 			if("l" in box && "t" in box) {
 				if (_node.style.position != "absolute") {
-					var close = davinci.ve.widget.findClosest(this._context.getContainerNode(), box, this._context, widget, true);
+					var close = davinci.ve.widget.findClosest(this._context.getContainerNode(), box, this._context, widget, true,
+							dojo.hitch(this, function(w){
+								return this._getAllowedTargetWidget(w, widget.getData()).length;
+							}));
 					this._resetCursor();
 					if (close && close.widget && (close.widget != widget)) {
 						command = cursorOnly ? undefined : new davinci.commands.CompoundCommand();

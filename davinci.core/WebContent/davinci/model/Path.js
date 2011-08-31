@@ -74,6 +74,9 @@ davinci.model.Path.prototype._clone = function(){
 
 
 davinci.model.Path.prototype.append = function( tail ){
+	
+	tail = tail || "";
+	
 	if (typeof tail == 'string')
 		tail=new davinci.model.Path(tail);
 	if (tail.isAbsolute())
@@ -166,7 +169,7 @@ davinci.model.Path.prototype.removeFirstSegments = function(count  ){
 
 davinci.model.Path.prototype.removeMatchingLastSegments = function(anotherPath  ){
 	  var match = this.matchingFirstSegments(anotherPath);
-	  return this._clone().removeLastSegments(match);
+	  return this.removeLastSegments(match);
 }
 
 davinci.model.Path.prototype.removeMatchingFirstSegments = function(anotherPath  ){
@@ -178,12 +181,23 @@ davinci.model.Path.prototype.removeLastSegments = function(count  ){
 	
 	if(!count)
 		count = 1;
-    this.segments=this.segments.slice(0, this.segments.length-count);
-    return this;
+	return new davinci.model.Path(this.segments.slice(0, this.segments.length-count), this.hasLeading, this.hasTrailing);
+	
 }
 
 davinci.model.Path.prototype.lastSegment = function(  ){
 	return this.segments[this.segments.length-1];
+	
+}
+
+davinci.model.Path.prototype.equals = function( anotherPath ){
+	if(this.segments.length!=anotherPath.segments.length) return false;
+	
+	for(var i=0;i<this.segments.length;i++){
+		if(anotherPath.segments[i]!= this.segments[i]) return false;
+	}
+	
+	return true;
 	
 }
 

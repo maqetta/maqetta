@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * This requires the sax-js and jsDom packages to Node. Install using "npm install sax" &
- * "npm install jsom".
+ * This requires the sax-js and jsDom packages to Node. Install with following
+ * commands, in same directory as script:
+ *      npm install sax@0.2.3
+ *      npm install jsdom@0.2.3
  */
 
 var fs = require('fs'),
@@ -35,7 +37,7 @@ function printHelp() {
 }
 
 function convert(filepath, filedata) {
-    var doc = new jsdom.dom.level1.core.Document();
+    var doc = new (jsdom.dom.level3.core.Document)();
     var current = doc;
     var totalElements = 0;
 // NOTE: Creating the parser in strict-mode (first parameter set to 'true') results in many error
@@ -126,7 +128,7 @@ function convertToJson( dom, url ) {
                 }
             }
         }
-        return text;
+        return text.trim();
     }
 
     function _count( obj ) {

@@ -1,6 +1,8 @@
 dojo.provide("davinci.theme.ThemeUtils");
 
-
+davinci.theme.isThemeHTML = function(resource){
+	return ( resource.getName().indexOf("dojo-theme-editor.html") > -1);
+}
 
 davinci.theme.CloneTheme = function(name, version, selector, directory, originalTheme, renameFiles){
 	

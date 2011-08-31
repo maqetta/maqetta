@@ -65,7 +65,7 @@ davinci.model.Resource.Resource.prototype.rename = function(newName, recurse){
 		this.name = newName;
 		dojo.publish("/davinci/resource/resourceChanged",["renamed",this]);
 	
-	},
+},
  
  davinci.model.Resource.Resource.prototype.getParentFolder = function(){
 	 
@@ -74,6 +74,12 @@ davinci.model.Resource.Resource.prototype.rename = function(newName, recurse){
 	 return this;
 	 
  }
+
+davinci.model.Resource.Resource.prototype.isVirtual = function(){
+	 return (this.libraryId!=null)
+	 
+}
+
  davinci.model.Resource.Resource.prototype.visit= function(visitor,dontLoad){
 	 var dontVisitChildren=visitor.visit(this);
 	

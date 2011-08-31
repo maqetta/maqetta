@@ -9,6 +9,11 @@ dojo.require("davinci.ui.dnd.DragSource");
 dojo.require("davinci.resource");
 dojo.require("davinci.ui.widgets.ProjectSelection");
 
+//ui_plugin.js
+dojo.require("davinci.ui.Download");
+dojo.require("davinci.ui.DownloadSelected");
+dojo.require("davinci.ui.UserLibraries");
+
 dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	
 	toolbarID: "workbench.Explorer",

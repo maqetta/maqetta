@@ -1,5 +1,4 @@
 dojo.provide("davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper");
-dojo.require("davinci.ve.tools.CreateTool");
 
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.TabBarButtonHelper", null, {

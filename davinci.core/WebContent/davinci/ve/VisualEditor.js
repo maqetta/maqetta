@@ -1,16 +1,14 @@
 dojo.provide("davinci.ve.VisualEditor");
  
+dojo.require("davinci.Runtime");
+dojo.require("davinci.Workbench");
+dojo.require("davinci.model.Path");
 dojo.require("davinci.ve.Context");
 //dojo.require("davinci.ve.actions.ContextActions");
 //dojo.require("davinci.ve.actions.ChildActions");
-dojo.require("davinci.Workbench");
-dojo.require("davinci.ve.VisualEditorOutline"); //FIXME: not referenced
-dojo.require("davinci.ve.States"); //FIXME: not referenced
-dojo.require("davinci.html.CSSModel"); //FIXME: not referenced
-dojo.require("davinci.html.HTMLModel"); //FIXME: not referenced
+dojo.require("davinci.ve.actions.DeviceActions");
 dojo.require("davinci.ve.commands.ModifyRuleCommand");
 
-dojo.require("davinci.ve.actions.DeviceActions");
 dojo.require("preview.silhouetteiframe");
 
 dojo.declare("davinci.ve.VisualEditor", null, {
@@ -31,29 +29,13 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			rootNode:silhouette_div_container,
 			margin:20
 		});
-
-        this._subscriptions = [
-            dojo.subscribe("/davinci/states/state/changed", this,
-                    function(containerWidget, newState, oldState) {
-                        if (top.davinci && davinci.Runtime.currentEditor &&
-                                davinci.Runtime.currentEditor.declaredClass === "davinci.ve.VisualEditor") {
-                            return; // ignore updates in theme editor
-                        }
-                        this.onContentChange();
-                    }),
-            // dojo.subscribe("/davinci/ui/styleValuesChange", this,
-            //      '_stylePropertiesChange'),
-            dojo.subscribe("/davinci/ui/widgetPropertiesChanges", this,
-                    '_objectPropertiesChange'),
-            dojo.subscribe("/davinci/ui/editorSelected", this, '_editorSelected')
-        ];
 	},
 	
 	setDevice: function(deviceName) {
 	    this.deviceName = deviceName;
 	    var svgfilename;
 	    if(deviceName=='none'){
-	    	svgfilename=null;
+	    	svgfilename = null;
 	    }else{
 			//FIXME: Path shouldn't be hard-coded
 	    	svgfilename = "app/preview/images/"+deviceName+".svg";
@@ -99,7 +81,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			context.select(widget);
 		}else{
 			var selection = context.getSelection();
-			var widget = (selection.length > 0 ? selection[selection.length - 1] : undefined);
+			var widget = selection.length ? selection[selection.length - 1] : undefined;
 			if(selection.length > 1){
 				context.select(widget);
 			}
@@ -108,38 +90,19 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		this._srcChanged();
 	},
 
-	_editorSelected: function (event){
-
-		if(!this.isActiveEditor() )
-			return;
-		// Print an alert showing any message strings accumulated during page load process
-		if(this._onloadMessages && this._onloadMessages.length>0){
-			var str="";
-			for(var i=0; i<this._onloadMessages.length; i++){ //FIXME: use join instead
-				if(i>0){
-					str+="\n\n";
-				}
-				str+=this._onloadMessages[i];
-			}
-			this._onloadMessages=[];
-			alert(str);		//FIXME	
-		}
-	},
-	
-
 	isActiveEditor: function(){
-		return davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.declaredClass=="davinci.ve.PageEditor" && davinci.Runtime.currentEditor.visualEditor == this;
+		var currentEditor = davinci.Runtime.currentEditor;
+		return currentEditor && currentEditor.declaredClass=="davinci.ve.PageEditor" && currentEditor.visualEditor == this;
 	},
 	
-	_stylePropertiesChange : function (value){
-		
+	_stylePropertiesChange: function (value){
 		if(!this.isActiveEditor() ){
 			return;
 		}
 		
-		var context = this.getContext();
-		var selection = context.getSelection();
-		var widget = (selection.length > 0 ? selection[selection.length - 1] : undefined);
+		var context = this.getContext(),
+			selection = context.getSelection(),
+			widget = selection.length ? selection[selection.length - 1] : undefined;
 
 		if(selection.length > 1){
 			context.select(widget);
@@ -215,7 +178,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		//FIXME: use dojo.cache?
 		if(!this.template){
 			dojo.xhrGet({
-				url: dojo.moduleUrl("davinci.ve")+"template.html",
+				url: dojo.moduleUrl("davinci.ve", "template.html"),
 				handleAs: "text",
 				sync: true
 			}).addCallback(dojo.hitch(this, function(result){
@@ -227,7 +190,6 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	
 	destroy: function () {
 	    this._handles.forEach(dojo.disconnect);
-	    this._subscriptions.forEach(dojo.unsubscribe);
 	},
 	
 	setContent: function (fileName, content){
@@ -286,7 +248,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 //			this.context.addActionGroup(new davinci.ve.actions.ContextActions());
 //			this.context.addActionGroup(new davinci.ve.actions.ChildActions());
 
-			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+			var prefs=davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			if (prefs) {
 				this.context.setPreferences(prefs);
 			}
@@ -310,8 +272,8 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 					var coords = context.getDojo().position(frameNode),
 						containerNode = context.getContainerNode();
 					return {
-						x: (coords.x - containerNode.parentNode.scrollLeft),
-						y: (coords.y - containerNode.parentNode.scrollTop)
+						x: coords.x - containerNode.parentNode.scrollLeft,
+						y: coords.y - containerNode.parentNode.scrollTop
 					};
 				};
 			}));
@@ -326,8 +288,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	},
 
 	supports: function (something){
-		//FIXME: regexp
-		return ( something == "palette" || something =="properties" || something =="style"|| something == "states" || something=="inline-style" || something=="MultiPropTarget");
+		return /palette|properties|style|states|inline-style|MultiPropTarget/.test(something);
 	},
 
 	//FIXME: pointless. unused? remove?
@@ -339,11 +300,11 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		//if(this._selectedWidget)
 		//	return this._selectedWidget;
 		
-		var context = this.getContext();
-		
-		var selection = context.getSelection();
-		var widget = (selection.length > 0 ? selection[selection.length - 1] : undefined);
-		if(selection.length > 1){
+		var context = this.getContext(),
+			selection = context.getSelection(),
+			widget = selection.length ? selection[selection.length - 1] : undefined;
+
+			if(selection.length > 1){
 			context.select(widget);
 		}
 		return widget;

@@ -39,7 +39,7 @@ public class VLibraryResource implements IVResource {
         this.isWorkingCopy = false;
         this.library = b;
         this.parent = parent;
-        this.name = name;
+        this.name = (name==null?"":name);
         this.bundleRoot = bundleRoot;
     }
 
@@ -59,8 +59,8 @@ public class VLibraryResource implements IVResource {
     	if(this.parent==null)
     		return this.name;
     	
-        return this.parent.getPath() +  IVResource.SEPERATOR + this.name;
-       /*
+    	 return new Path(this.parent.getPath()).append(this.name).toString();
+       /*        return this.parent.getPath() +  IVResource.SEPERATOR + this.name;
         if (name != null && name.length() > 0 && name.charAt(name.length() - 1) == '/') {
             name = name.substring(0, name.length() - 1);
         }
@@ -78,7 +78,9 @@ public class VLibraryResource implements IVResource {
         File f = new File(this.getPath());
         this.resourcePointer = f.toURL();
     }
-
+    public boolean isVirtual() {
+		return true;
+	}
     public boolean delete() {
         // TODO Auto-generated method stub
         return false;
@@ -161,10 +163,6 @@ public class VLibraryResource implements IVResource {
     public boolean mkdir() {
         // TODO Auto-generated method stub
         return false;
-    }
-
-    public boolean isFile() {
-        return !isDirectory();
     }
 
     public IVResource[] find(String path) {

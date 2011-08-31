@@ -14,7 +14,7 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 				this._data = widget;
 			}
 		}
-		this._parentId =  parent.id  ;
+		this._parentId =  parent.id;
 		this._index = index;
 	},
 
@@ -47,16 +47,17 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 
 
 		// TODO: this._index is typically a number... when is it passed in as a widget?
-			if(this._index && typeof this._index != "number") {			if (this._index.domNode){ // widget
-				this._index =parent.indexOf(  this._index);
+		if(this._index && typeof this._index != "number") {
+			if (this._index.domNode){ // widget
+				this._index = parent.indexOf(  this._index);
 			} else {
 				// _index is no longer valid since it was replaced, lets find it
 				var w = davinci.ve.widget.byId(this._index.id,parent.getContext())
-				this._index = parent.indexOf( w);
+				this._index = parent.indexOf(w);
 			}
 		}
 
-			parent.addChild(  widget, this._index);
+		parent.addChild(  widget, this._index);
 				
 		var context = parent.getContext();
 		if(context){

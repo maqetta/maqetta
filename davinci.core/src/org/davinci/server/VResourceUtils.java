@@ -51,8 +51,6 @@ public class VResourceUtils {
 	    for(int i=0;i<second.length;i++){
 	        boolean found = false;
 	        for(int j=0;!found && j<first.length;j++){
-	         //   System.out.println("FIrst: " + first[j].getPath() + " second " + second[i].getPath());
-	            
 	            if(first[j].getPath().equals(second[i].getPath()))
 	                found = true;
 	        }
@@ -80,7 +78,10 @@ public class VResourceUtils {
                 URLConnection connection = source.openConnection();
                 String path = source.getPath();
                 String tail = path.substring(bundleDirName.length() + 1);
-                File destination = new File(userDir.getAbsolutePath() + "/" + tail);
+                File path1 = new File("/tmp");
+              //  File destination = new File("/Users/childsb/dev/workspaces/maqetta-workspace/childsb@us.ibm.com/project1/WebContent/app.css");
+                File destination = new File(userDir, tail);
+                
                 if (tail.indexOf(".svn") > -1) {
                     continue;
                 }
@@ -121,6 +122,22 @@ public class VResourceUtils {
         }
     }
 	
+    public static void setText(IVResource resource, String text){
+    	// sets text content to an IVREsource
+    	OutputStream out = null;
+    	try{
+			out = resource.getOutputStreem();
+			
+			out.write(text.getBytes());
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+		resource.flushWorkingCopy();
+
+    }
+    
 	public static void copyFile(IVResource src, IVResource dest)
 			throws IOException {
 		InputStream in = null;

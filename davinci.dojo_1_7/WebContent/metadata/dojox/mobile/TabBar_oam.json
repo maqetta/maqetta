@@ -41,6 +41,21 @@
         },
         "iconPos": {
             "datatype": "string"
+        },
+        "fixed": {
+            "datatype": "string",
+            "defaultValue": "",
+            "option": [
+                {
+                    "value": ""
+                },
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                }
+            ]
         }
     },
     "content": "<ul></ul>"

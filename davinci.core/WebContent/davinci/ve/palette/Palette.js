@@ -285,8 +285,9 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		    dojo["require"](data.tool);
 		    toolClass = dojo.getObject(data.tool);
 		}
-
-		this._context.setActiveTool(new toolClass(dataClone));
+		var tool = new toolClass(dataClone);
+		tool._type = data.type;
+		this._context.setActiveTool(tool);
 	},
 
     onDragEnd: function(e){

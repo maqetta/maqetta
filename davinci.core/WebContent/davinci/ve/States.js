@@ -136,7 +136,7 @@ dojo.declare("davinci.ve.States", davinci.maqetta.States, {
 				if (context) {
 					var selection = context.getSelection();
 					if (selection && selection.length == 1) {
-						context.select(selection[0]);
+						context.updateFocus(selection[0]);
 					} else if (selection && selection.length > 1) {
 						console.warn("States::TODO: Handle multiple selection");
 					}

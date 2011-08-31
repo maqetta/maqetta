@@ -64,6 +64,8 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 
 			var domNode = widget.domNode;
 			var parentNode = domNode.parentNode;
+			
+			//FIXME: no side effects? index is never used?
 			for(var index=0;index<parentNode.children.length;index++){
 				if(domNode == parentNode.children[index]){
 					break;
@@ -86,11 +88,98 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 		}
 	},
 
+	//FIXME: pointless?
 	_adjustPosition: function(position){
 		if(!position){
 			return undefined;
 		}
 		return position;
-	}
+	},
 
+	/**
+	 * Create a candidate list of valid parents for the dropped widget, based on the widgets'
+	 * 'allowedChild' and 'allowedParent' properties. The logic ascends the DOM hierarchy
+	 * starting with "target" to find all possible valid parents. If no valid parent is
+	 * found, then return an empty array.
+	 * 
+	 * @param target {davinci.ve._Widget}
+	 * 			The widget on which the user dropped the new widget.
+	 * @param data {boolean}
+	 * 			Data for the dropped widget.
+	 * @param climb {boolean}
+	 * 			Whether to climb the DOM looking for matches.
+	 * @return an array of widgets which are possible valid parents for the dropped widget
+	 * @type davinci.ve._Widget
+	 */
+	_getAllowedTargetWidget: function(target, data, climb) {
+		// returns an array consisting of 'type' and any 'class' properties
+		function getClassList(type) {
+			var classList = Metadata.queryDescriptor(type, 'class');
+			if (classList) {
+				classList = classList.split(/\s+/);
+				classList.push(type);
+				return classList;
+			}
+			return [type];
+		}
+		
+		// returns 'true' if any of the elements in 'classes' are in 'arr'
+		function containsClass(arr, classes) {
+			return classes.some(function(elem) {
+				return arr.indexOf(elem) !== -1;
+			});
+		}
+		
+		// Returns 'true' if the dropped widget is allowed as a child of the
+		// given parent.
+		function isAllowed(children, parent) {
+			var parentType = parent instanceof davinci.ve._Widget ?
+					parent.type : parent._dvWidget.type;
+			var parentClassList,
+				allowedChild = Metadata.getAllowedChild(parentType);
+			
+			// special case for HTML <body>
+			if (parentType === "html.body") {
+				allowedChild = ["ANY"];
+			}
+			parentClassList = getClassList(parentType);
+			
+			// Cycle through children, making sure that all of them work for
+			// the given parent.
+			return children.every(function(child){
+				var isAllowedChild = allowedChild[0] !== "NONE" &&
+									 (allowedChild[0] === "ANY" ||
+									  containsClass(allowedChild, child.classList));
+				var isAllowedParent = child.allowedParent[0] === "ANY" ||
+									  containsClass(child.allowedParent, parentClassList);
+				return isAllowedChild && isAllowedParent;
+			});
+		}
+		
+		// get data for widget we are adding to page
+		var Metadata = davinci.ve.metadata,
+			getEnclosingWidget = davinci.ve.widget.getEnclosingWidget,
+			newTarget = target,
+			allowedParentList = [],
+			data = data.length ? data : [data],
+			children = [];
+
+		// 'data' may represent a single widget or an array of widgets.
+		// Get data for all widgets, for use later in isAllowed().
+		data.forEach(function(elem) {
+			children.push({
+				allowedParent: Metadata.getAllowedParent(elem.type),
+				classList: getClassList(elem.type)
+			});
+		});
+
+		do {
+			if(isAllowed(children, newTarget)){
+				allowedParentList.push(newTarget);
+			}
+			newTarget = getEnclosingWidget(newTarget);
+		} while (newTarget && climb)
+		
+		return allowedParentList;
+	}
 });

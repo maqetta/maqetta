@@ -89,30 +89,43 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	_createTheme : function(){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var oldTheme = this._themeSelection.attr('value');
-	//	var targetFolder = this._themeLocation.attr('value');
 		var selector = dojo.attr(this._selector, 'value');
 		var themeName = selector;
 		var version = null;
 		var base = selector;
 	
 		var newBase = this._getThemeLocation();
-		var r1=  davinci.resource.findResource(base);
-		if(r1)
+		var r1=  davinci.resource.findResource(newBase+'/'+base+'.theme');
+		if(r1){
 			alert(langObj.themeAlreadyExists);
-		else
+		}else{
 			davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
-	},
+		}
+		/* flush the theme cache after creating so new themes show up */
+		var themes = davinci.library.getThemes(this.getBase(), false, true);
+	    
+		var found = null;
+		for(var i=0;i<themes.length && ! found;i++){
+			if(themes[i].name==base)
+				found = themes[i];
+		}
+		
+		davinci.Workbench.openEditor({
+               fileName: found.file,
+               content: found.file.getText()});
+  	},
 	
 	/*
 	 * @return the project for the target theme.
 	 */
-	getProject : function(){
+	getBase : function(){
 		if(davinci.Runtime.singleProjectMode()){
 			return davinci.Runtime.getProject();
 		}
 	},
 	
 	_getThemeLocation : function(){
+		
 		var selector = dojo.attr(this._selector, 'value');
 		
 		//var resource = davinci.resource.findResource("./themes");
@@ -120,9 +133,12 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		/* the directory is virtual, so create an actual instance */
 		//if(resource.libraryId)
 		//	resource.mkdir();
+		var base = this.getBase();
+		var prefs = davinci.workbench.Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		
+		var projectThemeBase = (new davinci.model.Path(base).append(prefs['themeFolder']));
 		
-		return  this.getProject() + "/themes/" + selector;
+		return  projectThemeBase.append(selector).toString();
 	},
 	
 	_checkValid : function(){

@@ -10,17 +10,23 @@ dojo.require("davinci.ve.tools.CreateTool");
 dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 
 	_create: function(args){
-		var command = new davinci.commands.CompoundCommand();
-		var index = args.index;
-		var baseline = undefined;
-		var selection = [];
+		var command = new davinci.commands.CompoundCommand(),
+			index = args.index,
+			baseline,
+			selection = [];
 		dojo.forEach(this._data, function(d){
-			if(!this._context.loadRequires(d.type)){
-				return;
-			}
+			var loadRequiresForTree = dojo.hitch(this, function(d){
+				if(d.children){
+					d.children.forEach(loadRequiresForTree, this);
+				}
+				if(!this._context.loadRequires(d.type)){
+					throw "Failed to load dependencies for " + d.type;
+				}				
+			});
+			
+			loadRequiresForTree(d);
 
-			var position = undefined;
-			var style = davinci.ve.widget.parseStyleValues((d.properties && d.properties.style));
+			var position, style = davinci.ve.widget.parseStyleValues((d.properties && d.properties.style));
 			if(style && style.position == "absolute"){
 				if(args.position){
 					var p = {x: (parseInt(style.left) || 0), y: (parseInt(style.top) || 0)};
@@ -36,28 +42,58 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 					style.position = undefined;
 					style.left = undefined;
 					style.top = undefined;
-					//d.properties.style = davinci.ve.widget.getStyle(style); // not sure how thisever worked...
-					// if no postion past paste where it was
-					//d.properties.style = davinci.ve.widget.getStyleString(style);
 				}
 			}
 
 			var widget = undefined;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
-				widget = davinci.ve.widget.createWidget(d);
+				var tool = davinci.ve.metadata.queryDescriptor(d.type, "tool");
+				var myTool;
+			    if (tool) {
+			        try {
+			            dojo["require"](tool);
+			        } catch(e) {
+			            console.error("Failed to load tool: " + tool);
+			            console.error(e);
+			        }
+			        var aClass = dojo.getObject(tool);
+			        if (aClass) {
+			        	myTool  = new aClass(d);
+					}
+			       // var obj = dojo.getObject(tool);
+			        //myTool = new obj();
+		        }
+		        if(myTool && myTool.addPasteCreateCommand){
+		        	var myArgs = {};
+		        	myArgs.parent = args.parent || this._context.getContainerNode();
+		        	myArgs.position = position;
+		        	myArgs.index = index;
+		        	widget =  myTool.addPasteCreateCommand(command,myArgs);
+		        	if(!widget){
+						return;
+					}
+		        } else {
+		        	widget = davinci.ve.widget.createWidget(d);
+		        	if(!widget){
+						return;
+					}
+		        	command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
+		        }
+		    					
+				if(index !== undefined && index >= 0){
+					index++;
+				}
+				if(position){
+					command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
+				}
+
+				
 			}, this);
 			if(!widget){
 				return;
 			}
 
-			command.add(new davinci.ve.commands.AddCommand(widget, args.parent || this._context.getContainerNode(), index));
-			if(index !== undefined && index >= 0){
-				index++;
-			}
-			if(position){
-				command.add(new davinci.ve.commands.MoveCommand(widget, position.x, position.y));
-			}
 			selection.push(widget);
 		}, this);
 

@@ -6,6 +6,7 @@ dojo.require("davinci.ve.themeEditor.metadata.query");
 dojo.require("davinci.ve.themeEditor.metadata.metadata");
 
 davinci.ve.widget.widgetHash={};
+
 davinci.ve.widget._dojo = function(node){
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
 //TODO: for some reason node.ownerDocument is occasionally null
@@ -28,24 +29,33 @@ davinci.ve.widget.allWidgets = function(containerNode){
 		if (element._dvWidget) {
 			result.push(element._dvWidget);
 		}
-		for (var i=0;i<element.childNodes.length;i++) {
-			if (element.childNodes[i].nodeType==1) {
-				find(element.childNodes[i]);
+		dojo.forEach(element.childNodes, function(node) {
+			if (node.nodeType == 1) {
+				find(node);
 			}
-		}
+		});
 	}
 	find(containerNode);
 	return result;
 };
 
 //recursively search for widget closest to target under root
-davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock){
+//FIXME: Used by SelectTool.  Move code there?
+davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hLock, allowedFilter){
 	var result = {distance: Infinity, widget: target},
-		t = dim;
+		t = dim,
+		isContainer = function(type) { return davinci.ve.metadata.getAllowedChild(type)[0] !== 'NONE'; };
 
 	if(containerNode){
 		var list = davinci.ve.widget.allWidgets(containerNode);
-		if (davinci.ve.metadata.getAllowedChild(target.type)[0] !== 'NONE') {
+		if (allowedFilter) {
+			// remove anything that wouldn't be a valid sibling.  Would be much more efficient to do during list construction.
+			list = list.filter(function(w){
+				var parent = w.getParent();
+				return parent.type && allowedFilter(parent);
+			});
+		}
+		if (isContainer(target.type)) {
 			// filter out child widgets of target so we don't try to drop a widget within itself
 			list = list.filter(function(widget) {
 			    var w = widget;
@@ -79,7 +89,9 @@ davinci.ve.widget.findClosest = function(containerNode, dim, context, target, hL
 			}
 		});
 	}
-	if (davinci.ve.metadata.getAllowedChild(result.widget.type)[0] !== 'NONE') {
+
+	// Eligible for inserting as a child of result rather than a sibling?
+	if (allowedFilter ? allowedFilter(result.widget) : isContainer(result.widget.type)) {
 		c = dojo.position(result.widget.domNode);
 		p = context.getContentPosition(c);
 		if (t.l > p.x && t.l < p.x + c.w && t.t > p.y && t.t < p.y + c.h) {
@@ -97,8 +109,8 @@ davinci.ve.widget.parseStyleValues = function(text){
 		dojo.forEach(text.split(";"), function(s){
 			var i = s.indexOf(":");
 			if(i > 0){
-				var n = dojo.trim(s.substring(0, i));
-				var v = dojo.trim(s.substring(i + 1));
+				var n = s.substring(0, i).trim();
+				var v = s.substring(i + 1).trim();
 				values[n] = v;
 			}
 		});
@@ -167,16 +179,7 @@ davinci.ve.widget.getUniqueObjectId = function(type, node){
 	return id;
 };
 
-//FIXME: why not just use direct property access?
-davinci.ve.widget.getType = function(widget){
-	if(widget.type)
-		return widget.type;
-
-}
-
-
 davinci.ve.widget.getLabel = function(widget){
-
 	var text = "<span class='propertiesTitleWidgetName'>";
 	//FIXME: This is a hack so that meaningful names
 	//don't show a bunch of ugly prefix stuff.
@@ -187,6 +190,7 @@ davinci.ve.widget.getLabel = function(widget){
 		                	    'dijit.form.',
 		                	    'dijit.layout.',
 		                	    'dijit.',
+		                	    'dojox.mobile.',
 		                	    'html.',
 		                	    'OpenAjax.'];
 		for(var i=0; i<prefixes_to_remove.length; i++){
@@ -229,7 +233,7 @@ davinci.ve.widget.getLabel = function(widget){
 	var srcElement = widget._srcElement;
 	var id = widget.getId();
 	var classAttr = srcElement && srcElement.getAttribute("class");
-	var className = classAttr && dojo.trim(classAttr);
+	var className = classAttr && classAttr.trim();
 	if (id || className) {
 		text += "<span class='propertiesTitleClassName'>";
 		//text += node.tagName;
@@ -244,8 +248,8 @@ davinci.ve.widget.getLabel = function(widget){
 	return text;
 };
 
-davinci.ve.widget.byId = function(id){
-	var node=dojo.byId(id);
+davinci.ve.widget.byId = function(id, doc){
+	var node=dojo.byId(id, doc && doc.body ? doc : undefined); // we're sometimes getting called with context as the second arg; don't pass it as a doc.
 	if (node)
 	{
 		if (node._dvWidget) {
@@ -256,7 +260,7 @@ davinci.ve.widget.byId = function(id){
 			return widget;
 		}
 	}
-    return davinci.ve.widget.widgetHash[id];
+	return davinci.ve.widget.widgetHash[id];
 };
 
 davinci.ve.widget.byNode = function(node){
@@ -333,7 +337,7 @@ davinci.ve.widget.createWidget = function(data){
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var uniqueId = davinci.ve.widget._getUniqueId();
-    var content = dojo.trim(metadata.content).replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
+    var content = metadata.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
 	var node = dijit.getDocumentWindow(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(metadata.tagName || "div", metadata.attributes);
@@ -412,7 +416,13 @@ davinci.ve.widget.createWidget = function(data){
         srcElement = wrapperModel;
     }
 
-    node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement);
+    var requiresId = davinci.ve.metadata.queryDescriptor(type,"requiresId");
+    var name = davinci.ve.metadata.queryDescriptor(type,"name");
+    var idRoot = node.tagName.toLowerCase();
+    if(name.match(/^[A-Za-z]\w*$/) != null){
+    	idRoot = name;
+    }
+    node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement, requiresId, idRoot);
 
 	var children = data.children;
 	if(children){
@@ -483,7 +493,15 @@ davinci.ve.widget.createWidget = function(data){
         	
     }
 	
-	var widget = new c(data.properties, node, type, metadata, srcElement);
+    // Strip out event attributes. We want them in the model
+    // but not in the DOM within page canvas.
+    var props = {};
+    for(var p in data.properties){
+    	if(p.substr(0,2).toLowerCase()!="on" ){
+    		props[p] = data.properties[p];
+    	}
+    }
+	var widget = new c(props, node, type, metadata, srcElement);
 	widget._srcElement=srcElement;
 
 	if(widget.chart && (data.properties && data.properties.theme)){
@@ -570,7 +588,7 @@ davinci.ve.widget._parseNodeData = function(node, options){
 		}
 		var v = a.nodeValue;
 		if(v && n == "class"){
-			v = dojo.trim(v.replace("HtmlWidget", ""));
+			v = v.replace("HtmlWidget", "").trim();
 			if(!v){
 				continue;
 			}
@@ -644,8 +662,7 @@ dojo.declare("davinci.ve._Widget",null,{
 
 	postscript: function ()
 	{
-		  if (this.id)
-			  davinci.ve.widget.widgetHash[this.id]=this;
+		if(this.id) davinci.ve.widget.widgetHash[this.id]=this;
 		this.buildRendering();
 		this.postCreate();
 	},
@@ -901,7 +918,7 @@ dojo.declare("davinci.ve._Widget",null,{
 			}
 
 		}
-		return dojo.trim(s);
+		return s.trim();
 	},
 
 	getChildrenData: function(options){
@@ -1048,12 +1065,28 @@ dojo.declare("davinci.ve._Widget",null,{
 		if(!data.properties)
 			data.properties = {};
 
-		if (this.properties)
+		if (this.properties){
 			for(var name in this.properties){
 				if(!(name in data.properties)){
 					data.properties[name] = this.properties[name];
 				}
 			}
+		}
+		
+		// Find "on*" event attributes that are in the model and
+		// place on the data object. Note that Maqetta strips
+		// on* event attributes from the DOM that appears on visual canvas.
+		// Upon creating new widgets, the calling logic needs to 
+		// put these attributes in model but not in visual canvas.
+		var srcElement = this._srcElement;
+		//FIXME: Assumes "attributes" is a public API. See #nnn
+		var attributes = srcElement.attributes;
+		for(var i=0; i<attributes.length; i++){
+			var attribute = attributes[i];
+			if(attribute.name.substr(0,2).toLowerCase()=="on" ){
+				data.properties[attribute.name] = attribute.value;
+			}
+		}
 
 		return data;
 
@@ -1225,6 +1258,13 @@ dojo.declare("davinci.ve._Widget",null,{
 			} else {
 			    delete this.properties[name];
 				this._srcElement.removeAttribute(name);
+				/*
+				 * WORKAROUND for issue 771
+				 * This workaround can be removed once we integrate a version of dojo
+				 * which includes the fix for http://bugs.dojotoolkit.org/ticket/13776
+				 */
+				var w = this._getWidget();
+				if (name == "back" && w.declaredClass != undefined && w.declaredClass == "dojox.mobile.Heading") dojo.destroy(w._btn);
 			}
 		}
 	},
@@ -1254,7 +1294,10 @@ dojo.declare("davinci.ve._Widget",null,{
 	},
 	attach: function()
 	{
-
+		var helper = this.getHelper();
+		if(helper && helper.create){
+			helper.create(this, this._srcElement);
+		}
 	},
 	_stringValue: function (attributeName, value)
 	{
@@ -1361,7 +1404,7 @@ dojo.declare("davinci.ve.GenericWidget",davinci.ve._Widget,{
 				}
 				break;
 			case 3: // Text
-				d = dojo.trim(n.nodeValue);
+				d = n.nodeValue.trim();
 				if(d && options.serialize){
 					d = davinci.html.escapeXml(d);
 				}
@@ -1605,13 +1648,6 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		this.dijitWidget.startup();
 
 	},
-	attach: function()
-	{
-		var helper = this.getHelper();
-		if(helper && helper.create){
-			helper.create(this, this._srcElement);
-		}
-	},
 	isLayout: function()
 	{
 		return this.dijitWidget.isInstanceOf(dijit.layout._LayoutWidget);
@@ -1772,7 +1808,7 @@ dojo.declare("davinci.ve.HTMLWidget",davinci.ve._Widget,{
 				}
 				break;
 			case 3: // Text
-				d = dojo.trim(n.nodeValue);
+				d = n.nodeValue.trim();
 				if(d && options.serialize){
 					d = davinci.html.escapeXml(d);
 				}

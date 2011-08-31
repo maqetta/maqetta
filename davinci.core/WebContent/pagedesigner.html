@@ -2,6 +2,7 @@
 <html>
   <head>
     <title id="title_id"></title>
+	<meta charset="utf-8" />
 	<meta http-equiv="Cache-Control" CONTENT="no-store, no-cache, must-revalidate">
 	<meta http-equiv="Cache-Control" CONTENT="post-check=0, pre-check=0", FALSE">
 	<meta http-equiv="Pragma" CONTENT="no-cache">
@@ -54,7 +55,7 @@
 		dojo.addOnLoad(function()
 		{
 		    // Display a warning dialog for unsupported browsers
-			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)) {
+			if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
 				var langObj = dojo.i18n.getLocalization("davinci","webContent");
                 var unsupportedDialog = new dijit.Dialog({
                     id: "unsupportedBrowserDialog",

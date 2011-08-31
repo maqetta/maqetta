@@ -13,14 +13,14 @@ if (!davinci.model.Factory)
 davinci.model.Factory= function(){
 	this._resources = [];
 	this._instances = [];
-}
+};
 
 davinci.model.Factory.getInstance= function(){
 	if(davinci.model.Factory._instance==null)
 		davinci.model.Factory._instance = new davinci.model.Factory();
 	
 	return davinci.model.Factory._instance;
-}
+};
 
 /* return a model based on resource */
 davinci.model.Factory.prototype.getModel = function( args  ){
@@ -51,7 +51,7 @@ davinci.model.Factory.prototype.getModel = function( args  ){
 	
 	if(url.indexOf("js")> 0)
 		return davinci.model.Factory.newJS(args);
-}
+};
 
 davinci.model.Factory.prototype.closeModel = function( model  ){
 	
@@ -68,7 +68,7 @@ davinci.model.Factory.prototype.closeModel = function( model  ){
 			}
 		}
 	}
-}
+};
 
 davinci.model.Factory.newHTML = function( args ){
 //	debugger;
@@ -81,7 +81,7 @@ davinci.model.Factory.newHTML = function( args ){
 	
 	return model;
 
-}
+};
 
 davinci.model.Factory.newCSS = function( args  ){
 	
@@ -90,7 +90,7 @@ davinci.model.Factory.newCSS = function( args  ){
 	var count = davinci.model.Factory.getInstance()._resources.length-1;
 	davinci.model.Factory.getInstance()._instances[count] = 1;
 	return model;
-}
+};
 
 davinci.model.Factory.newJS = function( args  ){
 	var model = new davinci.js.JSFile(args);
@@ -100,7 +100,33 @@ davinci.model.Factory.newJS = function( args  ){
 	
 	return model;
 	
-}
+};
+
+davinci.model.Factory.getNewFromResource = function( resource  ){
+    
+    var extension = resource.extension;
+
+    if(!extension) {return davinci.model.Factory.newHTML();} // default to HTML
+    
+    switch( extension ) {
+    case "html": 
+        return davinci.model.Factory.newHTML();
+        break;
+
+    case "css": 
+        return davinci.model.Factory.newCSS();
+        break;
+   
+    case "js":
+    case "json": 
+        return davinci.model.Factory.newJS();
+        break;
+    
+    default: 
+        return davinci.model.Factory.newHTML(); // default to HTML
+        
+    }; // end switch
+};
 
 
 

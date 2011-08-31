@@ -37,6 +37,7 @@ dojo.require("davinci.actions.StickyNoteAction");
 dojo.require("davinci.actions.SaveAsWidget");
 dojo.require("davinci.ve.actions.ContextActions");
 dojo.require("davinci.ve.actions.StateActions");
+dojo.require("davinci.ve.commands.ModifyAttributeCommand");
 
 dojo.require("davinci.html.ui.CSSEditor");
 dojo.require("davinci.html.ui.HTMLEditor");

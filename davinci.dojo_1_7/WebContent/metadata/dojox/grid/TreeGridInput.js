@@ -115,7 +115,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.TreeGridInput", davinci.ve.input
 			// Kludge to work around lack of support for frames in ItemFileReadStore::valueIsAnItem method
 			var item = win.eval("new Object()");
 			// Kludge to avoid duplicate ids, model/tree both choke on these
-			item.id = Math.round(Math.random() * 1000000000000);
+			item.id = '' + Math.round(Math.random() * 1000000000000);
 			item.label = node.text;
 			items.push(item);
 		}

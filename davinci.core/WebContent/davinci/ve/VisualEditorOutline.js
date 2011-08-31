@@ -258,11 +258,25 @@ dojo.declare("davinci.ve.OutlineTreeModel",	null, {
 		return true;
 	},
 	
-	toggle: function(item, on, node) {
+	toggle: function(widget, on, node) {
+		var helper = widget.getHelper();
+		var continueProcessing = true;
+		if(helper && helper.onToggleVisibility){
+			continueProcessing = helper.onToggleVisibility(widget, on);
+		}
+		if(continueProcessing){
+			this._toggle(widget, on, node);
+			return true;
+		}else{
+			return false;
+		}
+	},
+	
+	_toggle: function(widget, on, node) {
 		var visible = !on;
 		var state = davinci.ve.states.getState();
 		var value = visible ? "" : "none";
-		davinci.ve.states.setStyle(item, state, "display", value);
+		davinci.ve.states.setStyle(widget, state, "display", value);
 	},
 	
 	isToggleOn: function(item) {

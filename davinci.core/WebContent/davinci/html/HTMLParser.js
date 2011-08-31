@@ -305,7 +305,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 	  var parser = davinci.html.XMLParser.make(stream);
 	  var token;
 	  var errors=[];
-	  function error(text){console.log("ERROR: "+text); errors.push(text)}
+	  function error(text){errors.push(text);}
 	  
 	  var stack=[];
 	  stack.push(parentElement);
@@ -406,7 +406,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 					  if (token.style=="xml-tagname")
 						  model.tag=token.content;
 					  else
-						  error("expecting tag name")
+						  error("expecting tag name");
 						  
 					  while ((token=nextToken(true)).style=="xml-attname")
 					  {
@@ -440,7 +440,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 		                     
 					  }
 					  if (token.style!="xml-punctuation")
-						  error("expecting >")
+						  error("expecting >");
 					  else
 					  {
 						model.startTagOffset=token.offset;
@@ -449,7 +449,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 						else
 						{
 							model.noEndTag=true;
-							model=stack[stack.length-1]
+							model=stack[stack.length-1];
 						}
 						addTrailingWS(token);
 					  }
@@ -524,7 +524,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
             if (token.content.charAt(token.content.length-1)==">")
             {
                 comment.endOffset=token.offset+token.content.length;
-                comment.value+=token.content.substring(0,lastChar)
+                comment.value+=token.content.substring(0,lastChar);
  			   addTrailingWS(token);
                 inComment=undefined;
             }
@@ -541,5 +541,5 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 	  } while (true);
 	  } catch (e) {}
 	  
-	  return { errors:errors, endOffset:(token?token.offset:0)};
+	  return { errors:errors, endOffset:(token?token.offset:0) }
 }

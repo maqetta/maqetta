@@ -56,7 +56,7 @@ public class VFile implements IVResource {
         this(file, null, file.getPath());
     }
 
-    private File getFile() {
+    public File getFile() {
         if (this.workingCopy.exists()) {
             return this.workingCopy;
         }
@@ -103,36 +103,15 @@ public class VFile implements IVResource {
      * cleanPath.charAt(0)=='/'){ cleanPath = cleanPath.substring(1); } return
      * cleanPath; }
      */
-    public String getPath() {
-        if (this.virtualPath == null) {
-            return ".";
+    
+    public String getPath(){
+        if (parent == null) {
+            return this.virtualPath;
         }
-        if (this.parent == null) {
-            return ".";
-        }
-
-        String cleanPath = this.virtualPath;
-        /*
-         * if(cleanPath.length() > 0 && cleanPath.charAt(0)=='.'){ cleanPath =
-         * cleanPath.substring(1); }
-         */
-        if (cleanPath.length() > 0 && cleanPath.charAt(0) == '/') {
-            cleanPath = cleanPath.substring(1);
-        }
-
-        if (this.parent == null) {
-            return cleanPath;
-        }
-        String parentPath = this.parent.getPath();
-        if (parentPath==null ) {
-            return cleanPath;
-        } else if(cleanPath!=null && cleanPath.length()>0){
-            return parentPath + IVResource.SEPERATOR + cleanPath;
-        }else{
-            return parentPath;
-        }
-
+        return new Path(this.parent.getPath()).append(this.virtualPath).toString();
     }
+  
+    
 
     public void createNewInstance() throws IOException {
 
@@ -264,21 +243,28 @@ public class VFile implements IVResource {
         }
 
         IPath a = new Path(this.file.getAbsolutePath()).append(path);
+        boolean directory = path.charAt(path.length()-1)=='/';
+        
         String[] segments = a.segments();
         IPath me = new Path(this.file.getAbsolutePath());
         IVResource parent = this;
         for (int i = me.matchingFirstSegments(a); i < segments.length; i++) {
             int segsToEnd = segments.length - i - 1;
-            File f = new File(a.removeLastSegments(segsToEnd).toOSString());
+            File f = a.removeLastSegments(segsToEnd).toFile();
+            
+            if((i+1==segments.length) && directory)
+            	f.mkdir();
+            
+            	
             parent = new VFile(f, parent, segments[i]);
         }
         return parent;
 
     }
 
-    public boolean isFile() {
-        return this.file.isFile();
-    }
+    public boolean isVirtual() {
+		return false;
+	}
 
     public void flushWorkingCopy() {
         // String name = this.file.getName();
@@ -329,7 +315,7 @@ public class VFile implements IVResource {
     }
 
     public boolean committed() {
-        return !this.file.exists();
+        return !this.workingCopy.exists();
     }
 
     public boolean readOnly() {

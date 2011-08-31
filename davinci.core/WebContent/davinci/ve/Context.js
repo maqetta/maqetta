@@ -13,6 +13,8 @@ dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
+	// keeps track of widgets-per-library loaded in context
+	_widgets: null,
 
 	constructor: function(args) {
 		if(!args) {
@@ -36,32 +38,9 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this._widgetIds = [];
 		this._objectIds = [];
+		this._widgets = [];
 
 		this.relativePrefix = this.relativePrefix || "";
-
-		// bind overlay widgets to corresponding davinci states
-		// FIXME: need to have a destroy to clean this up this handle?
-		this._stateSubscription = davinci.states.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(args){
-			if(this.getDojo().doc.body != args.widget.containerNode){
-				// ignore event coming from another window
-				return;
-			}
-			var prefix = "_show:", widget, dvWidget, helper;
-			if(args.newState && !args.newState.indexOf(prefix)){
-				widget = this.getDijit().byId(args.newState.substring(6));
-//				widget && widget.show();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
-				helper = dvWidget.getHelper();
-				helper && helper.popup && helper.popup(dvWidget);
-			}
-			if(args.oldState && !args.oldState.indexOf(prefix)){
-				widget = this.getDijit().byId(args.oldState.substring(6));
-//				widget && widget.hide();
-				dvWidget = davinci.ve.widget.getWidget(widget.domNode);
-				helper = dvWidget.getHelper();
-				helper && helper.tearDown && helper.tearDown(dvWidget);
-			}
-		}));
 	},
 	
 
@@ -99,6 +78,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
+		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
 		dojo.addClass(containerNode, "editContextContainer");
@@ -111,11 +91,6 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
 			dojo.connect(containerNode, "onmouseout", this, "onMouseOut"),
-			// When dragging from the top window to the editor, Safari only gets mouse events on the top document
-			dojo.connect(this.hostNode, "onmousedown", this, "onMouseDown"),
-			dojo.connect(this.hostNode, "onmousemove", this, "onMouseMove"),
-			dojo.connect(this.hostNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(this.hostNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
 	},
@@ -173,6 +148,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 
 		widget.metadata = widget.metadata || davinci.ve.metadata.query(widget.type);
+		widget._edit_context = this;
 		
 		widget.attach();
 
@@ -181,8 +157,6 @@ dojo.declare("davinci.ve.Context", null, {
 			// internal Dijit widget, such as _StackButton, _Splitter, _MasterTooltip
 			return;
 		}
-
-		widget._edit_context = this;
 
 		var id = widget.getId();
 		if(id){
@@ -228,7 +202,19 @@ dojo.declare("davinci.ve.Context", null, {
 		if (this._selection){
 			davinci.ve._remove(this._selection,widget);
 		}
-		
+
+        var library = davinci.ve.metadata.getLibraryForType(widget.type),
+            libId = library.name,
+            data = [widget.type, this];
+        // Always invoke the 'onRemove' callback.
+        davinci.ve.metadata.invokeCallback(widget.type, 'onRemove', data);
+        // If this is the last widget removed from page from a given library,
+        // then invoke the 'onLastRemove' callback.
+        this._widgets[libId] -= 1;
+        if (this._widgets[libId] === 0) {
+            davinci.ve.metadata.invokeCallback(widget.type, 'onLastRemove', data);
+        }
+
 		dojo.forEach(widget.getChildren(), this.detach, this);
 		delete this._containerControls;
 	},
@@ -329,9 +315,9 @@ dojo.declare("davinci.ve.Context", null, {
 	_require: function(module){
 		try{
 			this.getDojo()["require"](module);
-			
 		}catch(e){
-			console.warn("FAILED: Context.js _require failure for module="+module);
+			console.error("FAILED: Context.js _require failure for module="+module);
+			throw e;
 		}
 	},
 	
@@ -375,15 +361,14 @@ dojo.declare("davinci.ve.Context", null, {
 		} else {
 			oldCssFiles = preview.silhouetteiframe.getMobileCss('iPhone');
 		}
-		var lib = this.getLibraryBase();
-		if (lib.length == 0) {
-			lib = './lib';
-		}
+		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
+		var lib = this.getLibraryBase('dojo', libVer);
+		lib = this.relativePrefix + lib;
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
 		for (var oc = 0; oc < oldCssFiles.length; oc++){
-			var qStr = 'link[href="'+lib+'/dojo/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
+			var qStr = 'link[href="'+lib+'/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
 			var links = head.querySelectorAll(qStr);
 			// remove the old css files
 			for(var x = 0; x < links.length; x++){
@@ -396,8 +381,10 @@ dojo.declare("davinci.ve.Context", null, {
 		// remove the old css files
 		for(var ip = 0; ip < iphone_links.length; ip++){
 			var href = iphone_links[ip].href;
-			if (href.indexOf('iphone/iphone.css') > 0)
-				head.removeChild(iphone_links[ip]);
+			if (href.indexOf('iphone/iphone.css') > 0 || href.indexOf('iphone/iphone-compat.css') > 0){
+			    head.removeChild(iphone_links[ip]); 
+			}
+			
 		}
 		if (device){
 			this.setMobileDevice(device);
@@ -406,7 +393,7 @@ dojo.declare("davinci.ve.Context", null, {
 				var link = doc.createElement("link");
 				link.setAttribute("rel", "stylesheet");
 				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+cssFiles[i]);
+				link.setAttribute("href", lib+"/dojox/mobile/themes/"+cssFiles[i]);
 				
 				head.appendChild(link,0);
 			}
@@ -416,7 +403,7 @@ dojo.declare("davinci.ve.Context", null, {
 				var link = doc.createElement("link");
 				link.setAttribute("rel", "stylesheet");
 				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojo/dojox/mobile/themes/"+oldCssFiles[i]);
+				link.setAttribute("href", lib+"/dojox/mobile/themes/"+oldCssFiles[i]);
 				
 				head.appendChild(link,0);
 			}
@@ -475,7 +462,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// try to find the theme using path magic
 
 		var ro = davinci.ve.metadata.loadThemeMeta(model);
-		this._editor._visualChanged();
+		//this._editor._visualChanged(); // do not know why we are calling this handler method inline
 		return ro;
 	},
 	
@@ -506,12 +493,23 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	getResourcePath: function(){
+	getResourcePath: function() {
 		var model = this.getModel();
 		var filename = model.fileName;
 		var path = new davinci.model.Path(filename);
 		return path.removeLastSegments(1);
 	},
+
+	/**
+	 * Get a full path for the given resource relative to the project base.
+	 * @param resource {string} resource path segment
+	 * @returns {davinci.model.Path} full path of resource
+	 */
+    getPathRelativeToProject: function(resource) {
+        return (new davinci.model.Path(this.baseURL)).removeLastSegments(1)
+                .append(this.relativePrefix).append(resource);
+    },
+
 	_setSource: function(source, callback, scope){
 	
 		this._srcDocument=source;
@@ -536,7 +534,7 @@ dojo.declare("davinci.ve.Context", null, {
 			/* get the base path, removing the file extension.  the base is used in the library call below
 			 * 
 			 */
-			var resourceBase = (this.getPath().removeLastSegments(1));
+			var resourceBase = this.getPath().removeLastSegments(1);
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
 				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
@@ -928,6 +926,25 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			davinci.ve.states.setState(item.widget, item.state, true);
 		}
 	},
+	
+	/**
+	 * If any widgets in the document have onLoad helpers, invoke those helpers.
+	 * We pass a parameter to tell the helper whether this is the first time
+	 * it has been called for this document.
+	 * FIXME: If we change helpers to using object-oriented approach inheriting from
+	 * helper base class, then helper class can probably keep track of already themselves.
+	 */
+	_onLoadHelpers: function(){
+		var onLoadHelpersSoFar={};
+		dojo.query("> *", this.rootNode).map(davinci.ve.widget.getWidget).forEach(function(widget){
+			var helper = widget.getHelper();
+			if(helper && helper.onLoad){
+				var already = onLoadHelpersSoFar[widget.type];
+				onLoadHelpersSoFar[widget.type] = true;
+				helper.onLoad(widget,already);
+			}
+		}, this);
+	},
 
 	getHeader: function(){
 		return (this._header || {});
@@ -1202,11 +1219,13 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		if(position.target){ // event
 			position = {x: position.pageX, y: position.pageY};
 		}
-
+/*
 		var containerNode = this.getContainerNode();
 		var x = position.x + containerNode.scrollLeft;
 		var y = position.y + containerNode.scrollTop;
 		return {x: x, y: y};
+*/
+		return position;
 	},
 
 	getCommandStack: function(){
@@ -1220,74 +1239,24 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		return this._selection;
 	},
 	
-	select: function(widget, add, inline){
-		if(!widget || widget==this.rootWidget){
-			if(!add){
-				this.deselect(); // deselect all
-			}
-			return;
-		}
-
-		var helper = this._needsTearDown && this._needsTearDown.getHelper();
-		if(helper && helper.tearDown){
-			if(helper.tearDown(this._needsTearDown, widget)){
-				delete this._needsTearDown;
-			}
-		}
-
-		helper = widget.getHelper();			
-		if(helper && helper.popup){
-			helper.popup(this._needsTearDown = widget);
-		}
-
-		var selection, index; 
-		if(add && this._selection){
-			index = this._selection.length;
-			selection = this._selection;
-			selection.push(widget);
-		}else{
-			selection = [widget];
-		}
-
-		var parent = widget.getParent();
-		if(parent){
-			parent.selectChild(widget);
-			// re-run this after the animations take place. Could hook the remaining code to an onEnd event?
-//			if(!widget._refocus){
-//				widget._refocus = true;
-//				var w=widget;
-//				setTimeout(
-//					dojo.hitch(this, function(){this.select(w); delete w._refocus;
-//				}), 1000);
-//				return;
-//			}
-		}
-
+	updateFocus: function(widget, index, inline){
 		var box, op;
 
 		if (!davinci.ve.metadata.queryDescriptor(widget.type, "isInvisible")) {
 			var node = widget.getStyleNode();
+			helper = widget.getHelper();			
 			if(helper && helper.getSelectNode){
 				node = helper.getSelectNode(this) || node;
 			}
 			box = this.getDojo().position(node, true);
-/*
-			// Adjust dimensions from border-box to content-box
-			var e = dojo._getPadBorderExtents(node);
-			box.l = Math.round(box.x + e.l);
-			box.t = Math.round(box.y + e.t);
-			box.w -= e.w;
-			box.h -= e.h;
-*/
 			box.l = box.x;
 			box.t = box.y;
 
+			var parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout())};
-//			op = {move: true};
-//			op = {move: (node.style.position == "absolute")};
 
 			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			var resizable = (parent && parent.isLayout() /*&& parent.declaredClass != "dijit.layout.BorderContainer"*/) ?
+			var resizable = (parent && parent.isLayout() ) ?
 					"none" : davinci.ve.metadata.queryDescriptor(widget.type, "resizable");
 			switch(resizable){
 			case "width":
@@ -1301,18 +1270,79 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				op.resizeHeight = true;
 			}
 		}
-		
-		if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
-			this._selection = selection;
-			this.onSelectionChange(selection, add); 
-		}
-
 		this.focus({
 			box: box,
 			op: op,
 			hasLayout: widget.isLayout(),
 			isChild: parent && parent.isLayout()
 		}, index, inline);
+			
+	},
+	
+	select: function(widget, add, inline){
+		if(!widget || widget==this.rootWidget){
+			if(!add){
+				this.deselect(); // deselect all
+			}
+			return;
+		}
+		
+		var alreadySelected = false;
+		if(this._selection){
+			for(var i=0; i<this._selection.length; i++){
+				if(this._selection[i]==widget){
+					alreadySelected = true;
+					index = i;
+					break;
+				}
+			}
+		}
+
+		if(!alreadySelected){
+			var helper = this._needsTearDown && this._needsTearDown.getHelper();
+			if(helper && helper.tearDown){
+				if(helper.tearDown(this._needsTearDown, widget)){
+					delete this._needsTearDown;
+				}
+			}
+
+			helper = widget.getHelper();			
+			if(helper && helper.popup){
+				helper.popup(this._needsTearDown = widget);
+			}
+
+			var selection, index; 
+			if(add && this._selection){
+				index = this._selection.length;
+				selection = this._selection;
+				selection.push(widget);
+			}else{
+				selection = [widget];
+			}
+
+			var parent = widget.getParent();
+			if(parent){
+				parent.selectChild(widget);
+			}
+			
+			if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
+				var oldSelection = this._selection;
+				this._selection = selection;
+				this.onSelectionChange(selection, add);
+				if(oldSelection){
+					oldSelection.forEach(function(w){
+						var h = w.getHelper();
+						if(h && h.onDeselect){
+							h.onDeselect(w);
+						}
+					},this);
+				}
+				if(helper && helper.onSelect){
+					helper.onSelect(widget);
+				}
+			}
+		}
+		this.updateFocus(widget, index, inline);
 	},
 
 	deselect: function(widget){
@@ -1327,6 +1357,9 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			}
 		}
 
+		if(widget){
+			helper = widget.getHelper();
+		}
 		if(widget && this._selection.length > 0){ // undo of add got us here some how.
 			if(this._selection.length === 1){
 				if(this._selection[0] != widget){
@@ -1342,13 +1375,25 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				this.focus(null, index);
 				this._selection.splice(index, 1);
 			}
+			if(helper && helper.onDeselect){
+				helper.onDeselect(widget);
+			}
 		}else{ // deselect all
+			if(this._selection){
+				this._selection.forEach(function(w){
+					var h = w.getHelper();
+					if(h && h.onDeselect){
+						h.onDeselect(w);
+					}
+				},this);
+			}
 			this.focus(null);
 			this._selection = undefined;
 		}
 
 		this.onSelectionChange(this.getSelection());
 	},
+	
 	focus: function(state, index, inline){
 		if(!this._focuses){
 			this._focuses = [];
@@ -1444,7 +1489,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		var bodyElement=htmlElement.getChildElement("body");
 		flowLayout = bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE);
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
-			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs');
+			var editorPrefs = davinci.workbench.Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Runtime.getProject());
 			flowLayout = editorPrefs.flowLayout;
 			this.setFlowLayout(flowLayout);
 		} else {
@@ -1905,17 +1950,32 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		return v;
 	},
 	
-	 getUniqueID: function(node) {
+	 getUniqueID: function(node, persist, idRoot) {
 		 var id = node.getAttribute("id");
 		 if (!id) {
-			 if (!this._uniqueIDs.hasOwnProperty(node.tag)) {
-				 id = this._uniqueIDs[node.tag]=0;
+			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null,
+			 	root = idRoot || node.tag,
+			 	num;
+
+			 while(1){
+				 if (!this._uniqueIDs.hasOwnProperty(root)) {
+					 num = this._uniqueIDs[root]=0;
+				 } else {
+					 num=++this._uniqueIDs[root];
+				 }
+				 id=root+"_"+num;	
+				 if(userDoc){
+					 // If this is called when user doc is available,
+					 // make sure this ID is unique
+					 if(!userDoc.getElementById(id)){
+						 break;
+					 }
+				 }else{
+					 break;
+				 }
 			 }
-			 else {
-				 id=++this._uniqueIDs[node.tag];
-			 }
-			id=node.tag+"_"+id;
-			node.addAttribute("id",id,true);	 
+			 var noPersist = !persist;
+			 node.addAttribute("id",id,noPersist);	 
 		 }
 		 return id;
 	},
@@ -2120,7 +2180,11 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
 				queryStr += '[' + name + '="' + attrs[name] + '"]';
 			}
-			dojo.destroy(dojo.query(queryStr)[0]);
+			//dojo.destroy(dojo.query(queryStr)[0]);
+			var n = dojo.query(queryStr)[0];
+			if (n){ // throws exception if n is null
+			    dojo.destroy(n);
+			}
 		});
 	}
 });

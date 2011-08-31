@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8" />
     <title>Welcome to Maqetta</title>
     <style type="text/css">
 			@import url("app/davinci/davinci.css?@revision@");
@@ -38,7 +39,7 @@
 	{
 		var user = dojo.byId('username').value;
 		var password = dojo.byId('password').value;
-		dojo.xhrGet({url:"./cmd/login",sync:true,handleAs:"text",
+		dojo.xhrGet({url:"cmd/login",sync:true,handleAs:"text",
 			content:{'userName':user, 'password': password}
 		}).then(function(result){
 			if (result=="OK"){
@@ -59,7 +60,7 @@
          var user=dojo.byId('name').value;
          var password=dojo.byId('register_password').value;
          var email=dojo.byId('email').value;
-		 dojo.xhrGet({url:"./cmd/register",sync:true,handleAs:"text",
+		 dojo.xhrGet({url:"cmd/register",sync:true,handleAs:"text",
 			content:{'userName':user, 'password': password, 'email':email}}).then(function(result){
             if (result=="OK")
             {
@@ -87,11 +88,11 @@
     }
 
 	dojo.addOnLoad(function (){
-		if(!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5)){
-			dojo.create("div", {innerHTML: "Firefox 4, Chrome 5, Safari 5 or greater is required", "class": "sniff"}, "loginpane", "first");
+		if(!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)){
+			dojo.create("div", {innerHTML: "Firefox 4, Chrome 5, Safari 5.1 or greater is required", "class": "sniff"}, "loginpane", "first");
 		}
 
-		dojo.xhrGet({url:"./cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){
+		dojo.xhrGet({url:"cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){
           if (result && result.length)
           {
      		   dojo.byId('username').value=result;

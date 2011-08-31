@@ -6,6 +6,7 @@ dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
 dojo.require("davinci.libraries.dojo.dojox.mobile.MobileCreateTool");
+dojo.require("davinci.libraries.dojo.dojox.mobile.ComboBoxHelper");
 
 dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.libraries.dojo.dojox.mobile.MobileCreateTool, {
 	constructor: function(data){
@@ -13,7 +14,15 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.l
 		this._resizable = "both";
 	},
 	
-	_create: function(args){
+
+    _create: function(args) {
+
+        var command = this._getCreateCommand(args);
+        this._context.getCommandStack().execute(command);
+        this._select(this._mobileWidget);
+    },
+	
+	_getCreateCommand: function(args){
 		
 		
 		if(this._data.length !== 2){
@@ -72,9 +81,27 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.l
 			command.add(new davinci.ve.commands.ResizeCommand(comboBoxWidget, args.size.w, args.size.h));
 		}
 		
-		this._context.getCommandStack().execute(command);
-		this._select(comboBoxWidget);
 		
+		this._mobileWidget = comboBoxWidget;
+		return command;
+		
+	},
+	
+	addPasteCreateCommand: function(command, args){
+
+		this._context = this._data.context;
+		var props = this._data.properties['data-dojo-props'].split(',');
+		var x = new davinci.libraries.dojo.dojox.mobile.ComboBoxHelper();
+		var values = x.getStoreValues(props);
+   		var storeWidget = davinci.ve.widget.byId(values.storeId);
+   		var storeData = storeWidget.getData();
+   		var data = [];
+   		data[0] = storeData;
+   		data[1] = this._data;
+   		this._data = data;
+   		command.add( this._getCreateCommand(args));
+   		return this._mobileWidget;
+
 	}
 	
 

@@ -11,6 +11,7 @@ print_help() {
 
 # defaults
 port=50000
+consolePort="-console"
 
 # parse options
 while [ "${1+isset}" ]; do

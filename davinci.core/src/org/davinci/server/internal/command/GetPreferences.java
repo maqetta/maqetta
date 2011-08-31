@@ -19,8 +19,13 @@ public class GetPreferences extends Command {
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
         String path = req.getParameter("id");
-        File userSettings = user.getWorkbenchSettings();
+        String base = req.getParameter("base");
+        
+        File userSettings = user.getWorkbenchSettings(base);
         File settingsFile = new File(userSettings, path + IDavinciServerConstants.SETTINGS_EXTENSION);
+        
+        
+        
         InputStream inputStream;
         if (settingsFile.exists()) {
             inputStream = new BufferedInputStream(new FileInputStream(settingsFile));

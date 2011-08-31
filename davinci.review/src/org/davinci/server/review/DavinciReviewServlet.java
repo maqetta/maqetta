@@ -11,14 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.server.DavinciPageServlet;
 import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.ServerManager;
+import org.davinci.server.IVResource;
 import org.davinci.server.VURL;
 import org.davinci.server.review.cache.ReviewCacheManager;
+import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.user.User;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.osgi.framework.Bundle;
 
 @SuppressWarnings("serial")
 public class DavinciReviewServlet extends DavinciPageServlet {
@@ -26,9 +25,10 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 	protected String revieweeName;
 
 	public void initialize() {
-		serverManager = ServerManager.createServerManger(getServletConfig());
-		userManager = serverManager.getUserManager();
-		libraryManager = serverManager.getLibraryManager();
+		super.initialize();
+//		serverManager = ServerManager.createServerManger(getServletConfig());
+//		userManager = serverManager.getUserManager();
+//		libraryManager = serverManager.getLibraryManager();
 		reviewManager = ReviewManager.getReviewManager();
 	}
 
@@ -42,6 +42,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 	public String getLoginUrl(HttpServletRequest req){
         String loginUrl = serverManager.getDavinciProperty("loginUrl");
         String params = "";
+        if(null == loginUrl) loginUrl = req.getContextPath(); // Ensure loginUrl is not null
         String pseparator = loginUrl.indexOf("?") > 0 ? "&" : "?";
         if ( revieweeName != null ) {
 	        params = pseparator + "revieweeuser=" + revieweeName;
@@ -94,136 +95,124 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		} else {
 			IPath path = new Path(pathInfo);
 			String prefix = path.segment(0);
-			if(prefix==null){
+			if(prefix == null){
 				resp.sendRedirect(contextString + "/review");
 				return;
 			}
 
-			// Handle the library request before the other operations
-			if(handleLibraryRequest(req, resp, path)) { return; }
+			if(handleReviewRequest(req, resp, path) || handleLibraryRequest(req, resp, path, user)) {
+				return;
+			}
 
 			if (prefix.equals(IDavinciServerConstants.APP_URL.substring(1))
-					|| prefix.equals(IDavinciServerConstants.USER_URL.substring(1))
-					|| prefix.equals("cmd")) {
+//					|| prefix.equals(IDavinciServerConstants.USER_URL.substring(1))
+					|| prefix.equals(Constants.CMD_URL.substring(1))) {
 				// Forward to DavinciPageServlet such as "/app/img/1.jpg"
 				req.getRequestDispatcher(pathInfo).forward(req, resp);
 				return;
+			}
+			
+			// Check if it is a valid user name.
+			// If it is a valid user name, do login
+			// Else, error.
+			User designer = userManager.getUser(prefix);
+			if (designer == null) {
+				resp.sendRedirect(this.getLoginUrl(req));
+				return;
 			} else {
-				// Check if it is a valid user name.
-				// If it is a valid user name, do login
-				// Else, error.
-				User designer = userManager.getUser(prefix);
-				if (designer == null) {
-					resp.sendRedirect(this.getLoginUrl(req));
-					return;
-				} else {
-					ReviewObject reviewObject = new ReviewObject(prefix);
-					if (path.segmentCount() > 2) {
-						// Token = 20100101/folder1/sample1.html/default
-						String commentId = path.segment(path.segmentCount() - 1);
-						String fileName = path.removeLastSegments(1).removeFirstSegments(1)
-								.toPortableString();
+				ReviewObject reviewObject = new ReviewObject(prefix);
+				if (path.segmentCount() > 2) {
+					// Token = 20100101/project1/folder1/sample1.html/default
+					String commentId = path.segment(path.segmentCount() - 1);
+					String fileName = path.removeLastSegments(1).removeFirstSegments(1)
+							.toPortableString();
 
-						reviewObject.setFile(fileName);
-						reviewObject.setCommentId(commentId);
-						reviewObject.setDesignerEmail(designer.getPerson().getEmail());
+					reviewObject.setFile(fileName);
+					reviewObject.setCommentId(commentId);
+					reviewObject.setDesignerEmail(designer.getPerson().getEmail());
 
-					}
-					req.getSession()
-							.setAttribute(Constants.REVIEW_INFO, reviewObject);
-					resp.sendRedirect(contextString + "/review");
-					return;
 				}
+				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);
+				resp.sendRedirect(contextString + "/review");
+				return;
 			}
 		}
 	}
 
-	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
-		if (welcomeExtension==null)
-			writeInternalPage(req, resp, "welcome.html");
-		else{
-			String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
-			Bundle bundle=Activator.getActivator().getOtherBundle(name);
-			if (bundle!=null)
-			{
-				String path=welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
-				VURL resourceURL = new VURL(bundle.getResource(path));
-				this.writePage(req, resp, resourceURL, false);
-			}
+//	private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
+//		if (welcomeExtension==null)
+//			writeInternalPage(req, resp, "welcome.html");
+//		else{
+//			String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
+//			Bundle bundle=Activator.getActivator().getOtherBundle(name);
+//			if (bundle!=null)
+//			{
+//				String path=welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
+//				VURL resourceURL = new VURL(bundle.getResource(path));
+//				this.writePage(req, resp, resourceURL, false);
+//			}
+//
+//		}
+//	}
 
-		}
-	}
-
-	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp,IPath path) throws ServletException, IOException {
+	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, User user) throws ServletException, IOException{
 		// Remove the follow URL prefix
-		// /user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
+		// /user/heguyi/ws/workspace/.review/snapshot/20100101/project1/lib/dojo/dojo.js
 		// to
-		// /folder1/sample1.html
-
+		// project1/lib/dojo/dojo.js
 		String version = null;
 		String ownerId = null;
-		String designerName = path.segment(1);
+		String projectName = null;
 
-		if(designerName==null) return false;
-		User user = userManager.getUser(designerName);
-		if(user==null)
-			return false;
-		if(super.handleLibraryRequest(req, resp, path.removeFirstSegments(4),user))
-			return true;
-		if (path.segmentCount() > 7 && path.segment(4).equals(".review")
-				&& path.segment(5).equals("snapshot") && path.segment(0).equals("user")
-				&&path.segment(2).equals("ws")&&path.segment(3).equals("workspace")) {
+		if(isValidReviewPath(path)){
 			ownerId = path.segment(1);
 			version = path.segment(6);
+			projectName = path.segment(7);
 			path = path.removeFirstSegments(7);
-
+			path = ReviewManager.adjustPath(path, ownerId, version, projectName); // So that each snapshot can be mapped to its virtual lib path correctly.
 		}
-		else
-			return false;
-
-		path = adjustPath(path, ownerId, version); // So that each snapshot can be mapped to its virtual lib path correctly.
-		return super.handleLibraryRequest(req, resp, path,user);
+		return super.handleLibraryRequest(req, resp, path, user);
 	}
-
-	public void destroy() {
-		ReviewCacheManager.$.markStop();
-		ReviewCacheManager.$.destroyAllReview();
+	
+	protected boolean handleReviewRequest(HttpServletRequest req, HttpServletResponse resp,IPath path) throws ServletException, IOException {
+		// Get the requested resources from the designer's folder
+		// Remove the follow URL prefix
+		// /user/heguyi/ws/workspace/.review/snapshot/20100101/project1/folder1/sample1.html
+		// to
+		// /.review/snapshot/20100101/project1/folder1/sample1.html
+		if(isValidReviewPath(path)){
+			String designerName = path.segment(1);
+			path = path.removeFirstSegments(4);
+			IVResource vr = reviewManager.getDesignerUser(designerName).getResource(path);
+			if(null != vr){
+				writePage(req, resp, vr, true);
+				return true;
+			}
+		}
+		return false;
 	}
-
+	
 	protected void writeReviewPage(HttpServletRequest req, HttpServletResponse resp, String path) throws ServletException, IOException {
 		URL resourceURL =Activator.getActivator().getBundle().getEntry("/WebContent/"+path);
 		VURL v = new VURL(resourceURL);
 		writePage(req, resp, v, false);
 	}
+	
+	private boolean isValidReviewPath(IPath path){
+		String designerName = path.segment(1);
 
-	protected IPath adjustPath(IPath path, String ownerId, String version){
-		// Map the request lib path stored in the snapshot to the actual system lib path
-		ReviewManager reviewManager = ReviewManager.getReviewManager();
-		DavinciProject project = new DavinciProject();
-		project.setOwnerId(ownerId);
-		LibInfo[] sysLibs = reviewManager.getSystemLibs(project);
-		LibInfo[] versionLibs = reviewManager.getVersionLib(project, version);
-
-		if(versionLibs == null) return path;
-
-		for(LibInfo info : versionLibs){
-			IPath versionVirtualRoot = new Path(info.getVirtualRoot());
-			if(path.matchingFirstSegments(versionVirtualRoot) == versionVirtualRoot.segmentCount()){
-				String virtualRoot = null;
-				for(LibInfo lib : sysLibs){
-					if(lib.getId().equals(info.getId())){
-						virtualRoot = lib.getVirtualRoot();
-						break;
-					}
-				}
-				if(virtualRoot != null){
-					IPath vr = new Path(virtualRoot);
-					return vr.append(path.removeFirstSegments(versionVirtualRoot.segmentCount()));
-				}
-				break;
-			}
-		}
-		return path;
+		// Verify the user
+		if(designerName == null) return false;
+		User user = userManager.getUser(designerName);
+		
+		return null != user && path.segmentCount() > 8 && path.segment(4).equals(".review")
+				&& path.segment(5).equals("snapshot") && path.segment(0).equals("user")
+				&&path.segment(2).equals("ws")&&path.segment(3).equals("workspace");
+	}
+	
+	public void destroy() {
+		ReviewCacheManager.$.markStop();
+		ReviewCacheManager.$.destroyAllReview();
 	}
 }

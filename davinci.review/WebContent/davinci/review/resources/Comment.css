@@ -261,24 +261,10 @@
 	font: x-small arial;
 }
 
+/*
 .davinciReview .severityMedium .severityLow .severityHigh {
 }
-
-.severityLow {
-	background: no-repeat url( "img/severity_low.gif" );
-}
-
-.severityMedium {
-	background: no-repeat url("img/severity_mid.gif");
-}
-
-.severityHigh {
-	background: no-repeat url("img/severity_high.gif");
-}
-
-.severityUnassigned {
-	background: no-repeat url("img/severity_unassigned.gif");
-}
+*/
 
 .emptyIcon {
 	background: no-repeat url("../../../dojo/resources/blank.gif");
@@ -608,6 +594,11 @@
 .severityHigh {
 	background: no-repeat url("img/severity_high.gif");
 }
+
+.severityUnassigned {
+	background: no-repeat url("img/severity_unassigned.gif");
+}
+
 .davinciComment .commentTheme .dijitButtonText {
 	color: #105CB6;
 }

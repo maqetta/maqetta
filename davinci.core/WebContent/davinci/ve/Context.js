@@ -315,9 +315,9 @@ dojo.declare("davinci.ve.Context", null, {
 	_require: function(module){
 		try{
 			this.getDojo()["require"](module);
-			
 		}catch(e){
-			console.warn("FAILED: Context.js _require failure for module="+module);
+			console.error("FAILED: Context.js _require failure for module="+module);
+			throw e;
 		}
 	},
 	

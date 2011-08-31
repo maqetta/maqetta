@@ -497,9 +497,16 @@ dojo.declare("davinci.ve.Context", null, {
 		var model = this.getModel();
 		var filename = model.fileName;
 		var path = new davinci.model.Path(filename);
-		return path.removeLastSegments(1);
+		return this.getFullResourcePath().removeLastSegments(1);
 	},
 
+	getFullResourcePath: function() {
+		var model = this.getModel();
+		var filename = model.fileName;
+		var path = new davinci.model.Path(filename);
+		return path;
+	},
+	
 	/**
 	 * Get a full path for the given resource relative to the project base.
 	 * @param resource {string} resource path segment

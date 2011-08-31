@@ -107,7 +107,6 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		if(selection.length > 1){
 			context.select(widget);
 		}
-		
 		var command = null;
 		
 		if(value.appliesTo=="inline"){
@@ -142,7 +141,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			if(value.appliesTo.type=="proposal"){
 
 				//FIXME: Not included in Undo logic
-				var cssFile = this.context.model.find({elementType:'CSSFile', url: value.appliesTo.targetFile}, true);
+				var cssFile = this.context.model.find({elementType:'CSSFile', relativeURL: value.appliesTo.targetFile}, true);
 				if(!cssFile){
 					console.log("Cascade._changeValue: can't find targetFile");
 					return;

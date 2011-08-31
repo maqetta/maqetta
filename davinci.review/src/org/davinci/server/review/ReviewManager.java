@@ -114,7 +114,7 @@ public class ReviewManager {
 					&& path.indexOf(IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME) < 0
 					&& path.indexOf(Constants.REVIEW_DIRECTORY_NAME) < 0
 					&& path.indexOf(".svn") < 0
-					&& containsPublishedFiles(files[i], user)) {
+					&& containsPublishedFiles(files[i], user, timeStamp)) {
 				File destination = new File(versionDir, files[i].getName());
 				copyDirectory(files[i], destination);
 			}
@@ -216,8 +216,9 @@ public class ReviewManager {
 		users.put(name, user);
 	}
 
-	private boolean containsPublishedFiles(File dir, DesignerUser user){
+	private boolean containsPublishedFiles(File dir, DesignerUser user, String timeStamp){
 		for(Version version : user.getVersions()){
+			if(!version.getTime().equals(timeStamp)) continue;
 			for(String res : version.resources){
 				IPath resPath = new Path(res);
 				while(resPath.segment(0).equals(".")) resPath = resPath.removeFirstSegments(1);

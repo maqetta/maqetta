@@ -164,24 +164,24 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 			}
 
 			for (var i = 0; i < data.length; i++){
-			    var type = tempData[i].type;
-    	        // If this is the first widget added to page from a given library,
+			    var type = data[i].type;
+
+			    // If this is the first widget added to page from a given library,
     	        // then invoke the 'onFirstAdd' callback.
     			// NOTE: These functions must be invoked before loading the widget
     			// or its required resources.  Since create() and _create() can be
     			// overridden by "subclasses", but put this call here.
     	        var library = davinci.ve.metadata.getLibraryForType(type),
     	            libId = library.name,
-    	            data = [type, this._context];
+    	            args = [type, this._context];
     	        if (! this._context._widgets.hasOwnProperty(libId)) {
     	            this._context._widgets[libId] = 0;
     	        }
-    	        this._context._widgets[libId] += 1;
-    	        if (this._context._widgets[libId] === 1) {
-    	            davinci.ve.metadata.invokeCallback(type, 'onFirstAdd', data);
+    	        if (++this._context._widgets[libId] == 1) {
+    	            davinci.ve.metadata.invokeCallback(type, 'onFirstAdd', args);
     	        }
     	        // Always invoke the 'onAdd' callback.
-    	        davinci.ve.metadata.invokeCallback(type, 'onAdd', data);
+    	        davinci.ve.metadata.invokeCallback(type, 'onAdd', args);
 	        }
 			this.create({target: target, size: size});
 		} catch(e) {

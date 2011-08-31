@@ -508,7 +508,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		form.show();
 		
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.email, form.commentId]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.userName, form.commentId]);
 	},
 	
 	_onNewReply: function(args){
@@ -528,7 +528,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		form.show();
 		
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.email, form.commentId]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.userName, form.commentId]);
 	},
 	
 	_onCommentFocus: function(widget, evt){
@@ -712,7 +712,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		var i;
 		for(i = 2;i<children.length;i++){
 			if(children[i].checked){
-				reviewers.push(children[i].reviewer.email);
+				reviewers.push(children[i].reviewer.name);
 			}
 		}
 		//set the select all button.
@@ -768,7 +768,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		form.show();
 		
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.email, form.commentId]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.userName, form.commentId]);
 	},
 	
 	_filter: function(){

@@ -12,7 +12,7 @@
 		"edit":"Edit",
 		"reply":"Reply",
 		"type":"Type",
-		"severity":"Severity",
+		"severityLevel":"Severity",
 		"status":"Status",
 		
 		//CommentForm.js

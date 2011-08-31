@@ -23,6 +23,8 @@ public interface IVResource {
 
     public String getPath();
 
+    public void setParent(IVResource parent);
+    
     public boolean readOnly();
 
     public void createNewInstance() throws IOException;

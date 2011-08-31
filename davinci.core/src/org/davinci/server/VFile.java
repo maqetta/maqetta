@@ -303,7 +303,9 @@ public class VFile implements IVResource {
         // TODO Auto-generated method stub
         return this.parent;
     }
-
+    public void setParent(IVResource parent){
+    	this.parent = parent;
+    }
     public void add(IVResource v) {
         // TODO Auto-generated method stub
 

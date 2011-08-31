@@ -83,6 +83,12 @@ public class User {
 				if (b == null) {
 					continue;
 				}
+				URL file = b.getURL("");
+				// TODO temp fix to avoid adding virtual library entries that don't
+				// exist to the workspace.
+				if (file == null) {
+					continue;
+				}
 				IPath path = new Path(defaultRoot);
 				for (int k = 0; k < path.segmentCount(); k++) {
 					String segment = path.segment(k);
@@ -94,13 +100,8 @@ public class User {
 					root = v;
 				}
 	
-				URL file = b.getURL("");
-				// TODO temp fix to avoid adding virtual library entries that don't
-				// exist to the workspace.
-				if (file == null) {
-					continue;
-				}
-				IVResource libResource = new VLibraryResource(b, file, root,path.lastSegment(), "");
+				
+				IVResource libResource = new VLibraryResource(b, file,"", "");
 				/* need a special case for library items whos root is the project roots */
 				//if(path.segmentCount()==0){
 					

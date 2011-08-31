@@ -135,7 +135,9 @@ public class VURL implements IVResource {
         // TODO Auto-generated method stub
         return null;
     }
-
+    public void setParent(IVResource parent){
+    	// noop
+    }
     public void add(IVResource v) {
         // TODO Auto-generated method stub
 

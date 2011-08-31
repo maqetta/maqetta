@@ -93,7 +93,7 @@ public class Download extends Command {
             String version = (String) libEntry.get("version");
             String path = (String) libEntry.get("root");
             Library lib = ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
-            IVResource libResource = new VLibraryResource(lib, lib.getURL(""), null ,path, "");
+            IVResource libResource = new VLibraryResource(lib, lib.getURL(""),path, "");
             zipDir(libResource,root, zos, true);
             
         }

@@ -33,12 +33,11 @@ public class VLibraryResource implements IVResource {
 	private IVResource[] _parents;
 	private IVResource[] _files;
 
-    public VLibraryResource(Library b, URL file, IVResource parent, String name, String bundleRoot) {
+    public VLibraryResource(Library b, URL file, String name, String bundleRoot) {
         this.resourcePointer = file;
 
         this.isWorkingCopy = false;
         this.library = b;
-        this.parent = parent;
         this.name = (name==null?"":name);
         this.bundleRoot = bundleRoot;
     }
@@ -46,7 +45,9 @@ public class VLibraryResource implements IVResource {
     public boolean exists() {
         return true;
     }
-
+    public void setParent(IVResource parent){
+    	this.parent = parent;
+    }
     public String toString() {
         return this.getPath();
     }
@@ -151,7 +152,8 @@ public class VLibraryResource implements IVResource {
 	            }
 	            	
 	            String itemName = pathSplit[pathSplit.length-1];
-	            item = new VLibraryResource(this.library, files[i], parent, itemName, new Path(this.bundleRoot).append(itemName).toString());
+	            item = new VLibraryResource(this.library, files[i],  itemName, new Path(this.bundleRoot).append(itemName).toString());
+	            item.setParent(parent);
 	            found.add(item);
 	
 	        }
@@ -229,9 +231,10 @@ public class VLibraryResource implements IVResource {
             IPath myPath = new Path(this.resourcePointer.getPath());
             IPath itemPath = new Path(files[i].getPath());
             IPath newPath = itemPath.removeFirstSegments(myPath.matchingFirstSegments(itemPath));
-            IVResource item = new VLibraryResource(this.library, files[i], this, newPath.removeTrailingSeparator().toString(), new Path(this.bundleRoot)
+            IVResource item = new VLibraryResource(this.library, files[i],  newPath.removeTrailingSeparator().toString(), new Path(this.bundleRoot)
                     .append(newPath).toString());
 
+            item.setParent(this);
             if (item != null) {
                 return item;
             }

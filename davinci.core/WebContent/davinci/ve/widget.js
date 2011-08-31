@@ -417,7 +417,11 @@ davinci.ve.widget.createWidget = function(data){
     }
 
     var requiresId = davinci.ve.metadata.queryDescriptor(type,"requiresId");
-    var idRoot = davinci.ve.metadata.queryDescriptor(type,"idRoot");
+    var name = davinci.ve.metadata.queryDescriptor(type,"name");
+    var idRoot = node.tagName.toLowerCase();
+    if(name.match(/^[A-Za-z]\w*$/) != null){
+    	idRoot = name;
+    }
     node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement, requiresId, idRoot);
 
 	var children = data.children;

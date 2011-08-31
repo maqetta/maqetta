@@ -35,11 +35,11 @@ public class LibInfo {
     public String getVirtualRoot() {
         String vr = this.virtualRoot;
 
-        if (vr.charAt(0) == '.') {
+        if (vr.length()>0 && vr.charAt(0) == '.') {
             vr = vr.substring(1);
         }
 
-        if (vr.charAt(0) == '/') {
+        if (vr.length()>0 && vr.charAt(0) == '/') {
             vr = vr.substring(1);
         }
         return vr;

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,11 +25,17 @@ import org.eclipse.core.runtime.Path;
 
 public class Download extends Command {
 
+	
+	private Vector zipedEntries;
+	
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
         if (user == null) {
             return;
         }
-
+        
+        /* keep track of things we've added */
+        zipedEntries = new Vector();
+        
         String path = req.getParameter("fileName");
         String res = req.getParameter("resources");
         String libs = req.getParameter("libs");
@@ -67,7 +75,18 @@ public class Download extends Command {
 
     }
     
-    private static void zipLibs(List libs, IPath root, ZipOutputStream zos) throws IOException{
+    private boolean addEntry(String path){
+    	
+    	for(int i=0;i<this.zipedEntries.size();i++){
+    		String entry = (String)zipedEntries.get(i);
+    		if(entry.compareTo(path)==0) return false;
+    		
+    	}
+    	zipedEntries.add(path);
+    	return true;
+    }
+    
+    private  void zipLibs(List libs, IPath root, ZipOutputStream zos) throws IOException{
         for (int i = 0; i < libs.size(); i++) {
             HashMap libEntry = (HashMap) libs.get(i);
             String id = (String) libEntry.get("id");
@@ -81,7 +100,7 @@ public class Download extends Command {
     }
     
 
-    private static void zipDir(IVResource zipDir, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private  void zipDir(IVResource zipDir, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         IVResource[] dirList = zipDir.listFiles();
         
         if(!includeLibs && zipDir instanceof VLibraryResource)
@@ -90,7 +109,7 @@ public class Download extends Command {
         zipFiles(dirList, root, zos,includeLibs);
     }
 
-    private static void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private  void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         byte[] readBuffer = new byte[2156];
         int bytesIn = 0;
         // loop through dirList, and zip the files
@@ -115,6 +134,7 @@ public class Download extends Command {
             while(pathString.charAt(0)=='.' || pathString.charAt(0)=='/' || pathString.charAt(0)=='\\')
             	pathString=pathString.substring(1);
 
+            if(!addEntry(pathString)) continue;
             
             
             ZipEntry anEntry = new ZipEntry(pathString);

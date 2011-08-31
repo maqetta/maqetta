@@ -262,9 +262,9 @@ public class VFile implements IVResource {
 
     }
 
-    public boolean isFile() {
-        return this.file.isFile();
-    }
+    public boolean isVirtual() {
+		return false;
+	}
 
     public void flushWorkingCopy() {
         // String name = this.file.getName();
@@ -315,7 +315,7 @@ public class VFile implements IVResource {
     }
 
     public boolean committed() {
-        return !this.file.exists();
+        return !this.workingCopy.exists();
     }
 
     public boolean readOnly() {

@@ -497,8 +497,12 @@ davinci.ve.widget.createWidget = function(data){
     // but not in the DOM within page canvas.
     var props = {};
     for(var p in data.properties){
-    	if(p.substr(0,2).toLowerCase()!="on" ){
-    		props[p] = data.properties[p];
+    	// The "if(propval" check will be false for empty strings.
+    	// We are therefore stripping out properties with empty string values
+    	// to match similar check in widget.setProperties
+    	var propval = data.properties[p];
+    	if((propval || typeof propval == "boolean") && p.substr(0,2).toLowerCase()!="on"){
+    		props[p] = propval;
     	}
     }
 	var widget = new c(props, node, type, metadata, srcElement);
@@ -1249,6 +1253,7 @@ dojo.declare("davinci.ve._Widget",null,{
 		}
 		for(var name in properties){
 			var property = properties[name];
+			// The following check on "property" will result in false value for empty strings
 			if(property || typeof property == "boolean"){
 				var value=this._stringValue(name, property);
 				if ( ! modelOnly ) {

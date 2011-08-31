@@ -444,7 +444,7 @@ dojo.declare("davinci.ve.Context", null, {
 	getTheme: function(){
 		if(this._theme==null){
 			var theme = this.loadThemeMeta(this._srcDocument);
-			this._themeUrl = theme.url;
+			this._themeUrl = theme.themeUrl;
 			this._themeMetaCache = theme.themeMetaCache;
 			this._theme = theme.theme;
 		}

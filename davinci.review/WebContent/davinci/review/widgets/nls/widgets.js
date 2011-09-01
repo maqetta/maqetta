@@ -11,7 +11,7 @@
 		"by":"by",
 		"edit":"Edit",
 		"reply":"Reply",
-		"type":"Type",
+		"typeLabel":"Type",
 		"severityLevel":"Severity",
 		"status":"Status",
 		

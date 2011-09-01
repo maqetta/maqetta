@@ -534,6 +534,7 @@
 	margin: 5px;
 }
 .davinciComment .commentFooter{
+	width:100%;
 	margin-bottom: 2px;
 	color: #A0A0A0;
 	font: x-small arial;

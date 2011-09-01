@@ -146,11 +146,11 @@ dojo.declare("davinci.review.editor.Context", null, {
 			dojo.subscribe("/davinci/review/view/closeComment", dojo.hitch(this, function(){
 				this.containerEditor.isDirty = false;
 			})),
-			dojo.subscribe("/davinci/ui/EditorSelected", this, function(editor){
-				if(this === editor.getContext()){
+			dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(editor){
+				if(this === editor.oldEditor.getContext()){
 					this._destroyDrawing();
 				}
-			})
+			}))
 		];
 	},
 	
@@ -185,8 +185,10 @@ dojo.declare("davinci.review.editor.Context", null, {
 	},
 	
 	_destroyDrawing: function(){
-		var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
-		if(surface)	surface.destroy();
+		try{
+			var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
+			if(surface)	surface.destroy();
+		}catch(err){ /*Do nothing*/ }
 		dojo.forEach(this._cxtConns, dojo.disconnect);
 		dojo.forEach(this._cxtSubs, dojo.unsubscribe);
 		doc && delete doc.annotationSureface;

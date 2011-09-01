@@ -225,7 +225,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				
 		});
 		
-		dojo.subscribe("/davinci/ui/EditorSelected", this, function(editor){
+		dojo.subscribe("/davinci/ui/editorSelected", this, function(editor){
 			if(this._commentForm.isShowing){
 				// The form is open, we need to do some cleaning.
 				this._onCommentFormCancel();

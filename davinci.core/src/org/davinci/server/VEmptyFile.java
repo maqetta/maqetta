@@ -102,7 +102,9 @@ public class VEmptyFile implements IVResource {
         // TODO Auto-generated method stub
         return false;
     }
-
+    public void setParent(IVResource parent){
+    	//noop
+    }
     public URLConnection openConnection() throws MalformedURLException, IOException {
         // TODO Auto-generated method stub
         return null;

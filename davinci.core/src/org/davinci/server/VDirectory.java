@@ -34,10 +34,6 @@ public class VDirectory implements IVResource {
         this.children = new Vector();
     }
 
-    public void addChild(IVResource child) {
-        this.children.add(child);
-    }
-
     public IVResource create(String path) {
         // TODO Auto-generated method stub
         return null;
@@ -81,7 +77,9 @@ public class VDirectory implements IVResource {
         // TODO Auto-generated method stub
 
     }
-
+    public void setParent(IVResource parent){
+    	this.parent = parent;
+    }
     public InputStream getInputStreem() throws IOException {
         // TODO Auto-generated method stub
         return null;
@@ -168,6 +166,8 @@ public class VDirectory implements IVResource {
     }
 
     public void add(IVResource v) {
+    	/* ensure that this object is set as the parent */
+    	v.setParent(this);
         this.children.add(v);
 
     }

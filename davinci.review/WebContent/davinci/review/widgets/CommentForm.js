@@ -78,6 +78,7 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 		this.onHide();
 		dojo.style(this.domNode, "display", "none");
 		this.reset();
+		dojo.publish("/davinci/review/view/closeComment", []);
 	},
 	
 	onHide: function(){
@@ -88,6 +89,7 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 		this.isShowing = true;
 		dojo.style(this.domNode, "display", "block");
 		dojo.window.scrollIntoView(this.domNode);
+		dojo.publish("/davinci/review/view/openComment", []);
 	},
 	
 	_submit: function(){
@@ -103,6 +105,7 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 			type: type,
 			severity: severity
 		});
+		
 	},
 	
 	onSubmit: function(args){

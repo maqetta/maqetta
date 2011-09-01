@@ -140,7 +140,13 @@ dojo.declare("davinci.review.editor.Context", null, {
 				surface.filterColorAliases = colorAliases;
 				this._refreshSurface(surface);
 			})),
-			dojo.subscribe("/davinci/ui/EditorClosing", this, function(editor){
+			dojo.subscribe("/davinci/review/view/openComment", dojo.hitch(this, function(){
+				this.containerEditor.isDirty = true;
+			})),
+			dojo.subscribe("/davinci/review/view/closeComment", dojo.hitch(this, function(){
+				this.containerEditor.isDirty = false;
+			})),
+			dojo.subscribe("/davinci/ui/EditorSelected", this, function(editor){
 				if(this === editor.getContext()){
 					this._destroyDrawing();
 				}
@@ -179,12 +185,11 @@ dojo.declare("davinci.review.editor.Context", null, {
 	},
 	
 	_destroyDrawing: function(){
-		var doc = this.getDocument(), surface = doc.annotationSurface;
-		if(surface)
-		surface.destroy();
+		var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
+		if(surface)	surface.destroy();
 		dojo.forEach(this._cxtConns, dojo.disconnect);
 		dojo.forEach(this._cxtSubs, dojo.unsubscribe);
-		delete doc.annotationSureface;
+		doc && delete doc.annotationSureface;
 	}
 });
 

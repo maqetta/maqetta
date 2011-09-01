@@ -21,6 +21,7 @@ dojo.require("dijit.Menu");
 
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci.review.view", "view");
+dojo.requireLocalization("davinci.workbench", "workbench");
 
 dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 	interval: 33554432,
@@ -63,7 +64,6 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				if(focusedComments.length > 0){
 					var pageState = this.commentIndices[focusedComments[0]].pageState;
 					dojo.forEach(this.comments, loopBody);
-					
 				}
 			}
 		});
@@ -78,6 +78,12 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 					}
 				};
 				dojo.forEach(this.comments, loopBody);
+			}
+		});
+		
+		this.connect(dojo.global, "beforeunload", function(evt){
+			if(this._commentForm.isShowing == true){
+				return dojo.i18n.getLocalization("davinci.workbench", "workbench").fileHasUnsavedChanges;
 			}
 		});
 		
@@ -219,12 +225,12 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				
 		});
 		
-		dojo.subscribe("/davinci/ui/EditorClosing", this, function(editor){
+		dojo.subscribe("/davinci/ui/EditorSelected", this, function(editor){
 			if(this._commentForm.isShowing){
 				// The form is open, we need to do some cleaning.
 				this._onCommentFormCancel();
 			}
-			this._closedEditor = editor;
+			this._closedEditor = editor.oldEditor;
 		});
 		
 		dojo.subscribe("/davinci/review/drawing/annotationSelected", this, function(commentId, selected){

@@ -31,15 +31,14 @@
 				the margin shortcut property and paddding shortcut property to new values,
 				making sure to test each property at least once for at least one widget.
 				<blockquote>Note that you will get a prompt in some cases warning you that you
-				might be changing a global CSS style sheet. Say OK to these warnings,
-				but note that this will changes your theme CSS files. After running this
-				test, you'll want to make sure you recreate your user so that the
-				theme CSS files are restored to their original state.</blockquote>
+				are prevented from changing a read-only CSS style sheet. You can verify
+				whether this error message is correct by opening up the CSS Details (Cascade)
+				pane and seeing if the only available style rules are in theme CSS files.
+				For properties that are only defined in read-only themes, either skip
+				those or add a custom class to that widget and choose one of the "New style rule"
+				options in the CSS Details pane as the target for the property change.</blockquote>
 				<blockquote>Note that background-color and background-image can collide. An opaque background-image
 				will mask the background color.</blockquote> 
-				<blockquote>The background image dialog shows a gradient option.
-				No need to verify that feature for the basic test plan, especially since
-				most browsers don't support that particular CSS3 feature yet.</blockquote></li>
 		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
 		<li>Click on the "X" close button for the editor tab for this file</li>
 		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
@@ -130,9 +129,10 @@
 			the text should extend past the end of the DIV).
 			For TextBox,
 			you might find that some of the values have no effect (e.g., line-height and text-indent).
-			<blockquote>Click OK when prompt asks OK to change global style sheet.
-			Note that you should recreate a new user after running this test
-			so that in the future you will be using original CSS theme files.</blockquote>
+			<blockquote>For some properties, you should see a warning about the property
+			change apply to a read-only CSS theme file. Either skip those properties
+			or add a custom CSS class to that widget, open CSS Details, and
+			target the property change to a "New style rule".</blockquote>
 		</li>
 		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
 		<li>Click on the "X" close button for the editor tab for this file</li>

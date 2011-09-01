@@ -41,6 +41,9 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 			widget.startup();
 			widget.renderWidget();
 		}
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 
 	undo: function(){
@@ -67,6 +70,9 @@ dojo.declare("davinci.ve.commands.ReparentCommand", null, {
 			widget.startup();
 			widget.renderWidget();
 		}
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	}
 
 });

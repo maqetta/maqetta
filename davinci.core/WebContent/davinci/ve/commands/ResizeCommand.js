@@ -47,6 +47,9 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 			dojo.contentBox(node, this._newBox);
 			this._resize(widget);
 		}
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 	setContext : function(context){
 		this._context = context;
@@ -64,6 +67,9 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 		widget.setMarginBox(this._oldBox);
 
 		this._resize(widget);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 
 	_resize: function(widget){

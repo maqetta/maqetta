@@ -59,11 +59,9 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 			}			
 			widget.setStyleValues( cleanValues);
 			this._refresh(widget);
-			// The above logic stuffs the latest "Normal" properties onto element.style
-			// If we are not in Normal state, need to restore current state property values
-			if(!veStates.isNormalState(currentState)){
-				davinci.ve.states.setState(widget, currentState, true/*updateWhenCurrent*/, false /*silent*/);
-			}
+			
+			// Recompute styling properties in case we aren't in Normal state
+			davinci.ve.states.resetState(widget);
 		}
 	},
 	
@@ -86,6 +84,9 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 
 		widget.setStyleValues( this._oldValues);
 		this._refresh(widget);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 	
 	_refresh: function(widget){

@@ -36,6 +36,9 @@ dojo.declare("davinci.ve.commands.RemoveCommand", null, {
 		}
 		parent.removeChild( widget);
 		widget.destroyWidget();
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 
 	undo: function(){
@@ -57,6 +60,9 @@ dojo.declare("davinci.ve.commands.RemoveCommand", null, {
 			context.attach(widget);
 			widget.startup();
 			widget.renderWidget();
+			
+			// Recompute styling properties in case we aren't in Normal state
+			davinci.ve.states.resetState(widget);
 		}
 	}
 

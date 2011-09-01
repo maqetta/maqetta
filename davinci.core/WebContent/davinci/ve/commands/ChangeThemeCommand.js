@@ -70,6 +70,9 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 			}
 
 		}
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(this._context.rootWidget);
 	}
 
 });

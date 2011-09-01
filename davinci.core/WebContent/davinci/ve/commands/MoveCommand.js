@@ -77,6 +77,9 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 			node.style.position = "absolute";
 			widget.setMarginBox( this._newBox);
 		}
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 
 	undo: function(){
@@ -94,6 +97,9 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 
 		widget.setMarginBox( this._oldBox);
 		node.style.position = this._oldPosition;
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	}
 
 });

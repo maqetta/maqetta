@@ -30,6 +30,9 @@ dojo.declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		var file = this.cssRule.getCSSFile();
 		file.setDirty(true);
 		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(this.context.rootWidget);
+		
 	},
 
 	undo: function(){
@@ -41,7 +44,9 @@ dojo.declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		var file = this.cssRule.getCSSFile();
 		file.setDirty(true);
 		
-		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(this.context.rootWidget);
+
 	}
 
 });

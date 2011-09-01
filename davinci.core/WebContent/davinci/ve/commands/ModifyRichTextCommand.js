@@ -128,6 +128,9 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		}
 		this.newWidget=newWidget;
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(newWidget);
 	},
 
 	undo: function(){
@@ -173,6 +176,9 @@ dojo.declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 
 		}
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(newWidget);
 	},
 	
 	_refresh: function(widget){

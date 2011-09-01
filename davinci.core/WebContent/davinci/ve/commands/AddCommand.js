@@ -77,6 +77,8 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 //				this._data.properties.id = widget.id;
 //			}
 //		}
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 
 	undo: function(){
@@ -101,6 +103,9 @@ dojo.declare("davinci.ve.commands.AddCommand", null, {
 		}
 		parent.removeChild(widget);
 		widget.destroyWidget();  
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	}
 
 });

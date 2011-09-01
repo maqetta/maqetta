@@ -53,7 +53,7 @@ dojo.declare("davinci.ve.commands.EventCommand", null, {
 		}
 		var widget = davinci.ve.widget.byId(this._newId);
 	
-		this._widget.setProperties(_oldProps);
+		widget.setProperties(this._oldProps);
 		
 	}
 

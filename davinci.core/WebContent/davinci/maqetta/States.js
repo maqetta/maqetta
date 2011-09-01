@@ -98,6 +98,17 @@ davinci.states = {
 		
 	},
 	
+	/**
+	 * If the current state is not Normal, force a call to setState
+	 * so that styling properties get reset for a subtree.
+	 */
+	resetState: function(widget){
+		var currentState = this.getState(widget.getContext().rootWidget);
+		if(!this.isNormalState(currentState)){
+			this.setState(widget, currentState, true/*updateWhenCurrent*/, false /*silent*/);
+		}		
+	},
+	
 	isNormalState: function(state) {
 		if (arguments.length == 0) {
 			state = this.getState();

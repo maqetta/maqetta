@@ -124,6 +124,9 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 		}
 		this.newWidget=newWidget;
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(newWidget);
 	},
 
 	undo: function(){
@@ -169,6 +172,9 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 			newWidget.renderWidget();
 		}
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(newWidget);
 	}
 
 });

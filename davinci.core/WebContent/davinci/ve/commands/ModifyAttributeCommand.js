@@ -55,6 +55,9 @@ dojo.declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 			}
 		}
 		this._refresh(widget);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 
 	undo: function(){
@@ -79,6 +82,9 @@ dojo.declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 			}
 		}
 		this._refresh(widget);
+		
+		// Recompute styling properties in case we aren't in Normal state
+		davinci.ve.states.resetState(widget);
 	},
 	
 	_refresh: function(widget){

@@ -20,16 +20,18 @@ dojo.declare("davinci.review.drawing.tools.HighlightTool", davinci.review.drawin
 	_onShapeMouseOver: function(shape, evt, surface){
 		if(this.surface !== surface || this.surface.isDrawing){ return; }
 		var shapes = this.surface.shapes;
+		shape.style({"cursor": "pointer"});
 		if(!this.shape){
-			shape.style({"opacity": "0.5", "cursor": "pointer"});
+			shape.style({"opacity": "0.5"});
 		}
 	},
 	
 	_onShapeMouseOut: function(shape, evt, surface){
 		if(this.surface !== surface || this.surface.isDrawing){ return; }
 		var shapes = this.surface.shapes;
+		shape.style({"cursor": ""});
 		if(!this.shape){
-			shape.style({"opacity": "1.0", "cursor": ""});
+			shape.style({"opacity": "1.0"});
 		}
 	},
 	

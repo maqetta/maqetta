@@ -161,11 +161,9 @@
              <initalUserFile
                   path="WebContent/project/base/"/>
                   -->
-              <!-- moving samples to plugin (issue 574 -->
-              <!--
              <initalUserFile
                   path="WebContent/samples/"/>
-              -->
+              
       </extension>
       <extension
             point="davinci.core.jsPlugin">
@@ -187,9 +185,11 @@
       </extension>
     
       <extension point="davinci.core.ajaxLibrary">
+      <!--
 	     <ajaxLibrary name="sample files" id="Samples" version="0.3">
 		      <libraryPath location="WebContent/samples" name="/"></libraryPath>
 		 </ajaxLibrary>
+		 -->
 		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
 		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />

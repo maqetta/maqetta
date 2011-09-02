@@ -9,12 +9,6 @@ dojo.declare("davinci.review.drawing.tools.HighlightTool", davinci.review.drawin
 	
 	activate: function(){
 		if(this.activated) return;
-		
-		var shapes = this.surface.shapes;
-		dojo.forEach(shapes, function(shape){
-			shape.style({"opacity": "0.8", "cursor": ""});
-		});
-		
 		this._evtSubs = [
 			dojo.subscribe("/davinci/review/drawing/shapemouseover", this, "_onShapeMouseOver"),
 			dojo.subscribe("/davinci/review/drawing/shapemouseout", this, "_onShapeMouseOut"),

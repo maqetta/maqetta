@@ -318,40 +318,34 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	
-	
-	getMobileDevice: function(){
-		
-		var doc = this.getDocument();
-		var head = doc.getElementsByTagName("head")[0];
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
-		
-	},
-	
-	setMobileDevice: function (device){
-		if (!device) {
-			device = 'none';
-		}
-		var doc = this.getDocument();
-		var head = doc.getElementsByTagName("head")[0];
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE,device);
-	},
-	
-	setMobileTheme: function(device){
+	/**
+	 * Retrieve mobile device from Model.
+	 * @returns {?string} mobile device name
+	 */
+	getMobileDevice: function() {
+        var bodyElement = this.getDocumentElement().getChildElement("body");
+        return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
+    },
 
-		var cssFiles = ['iphone/iphone.css'];
-		// if no device is specified mobile styling defaults to iphone
-		if (device){
-			theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
-			cssFiles = preview.silhouetteiframe.getMobileCss(theme);
-		}
+    /**
+     * Sets mobile device in Model.
+     * @param device {?string} device name
+     */
+    setMobileDevice: function(device) {
+        device = device || 'none';
+        var bodyElement = this.getDocumentElement().getChildElement("body");
+        bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+    },
+	
+	setMobileTheme: function(device) {
+        var oldDevice = this.getMobileDevice() || 'none';
+        if (oldDevice === device) {
+            return;
+        }
 
+        var theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
+		var cssFiles = preview.silhouetteiframe.getMobileCss(theme);
 
-		var oldDevice = this.getMobileDevice();
 		var oldCssFiles;
 		if (oldDevice){
 			oldCssFiles = preview.silhouetteiframe.getMobileCss(preview.silhouetteiframe.getMobileTheme(oldDevice+'.svg'));
@@ -373,17 +367,7 @@ dojo.declare("davinci.ve.Context", null, {
 				head.removeChild(links[x]);
 			}
 		}
-		// remove the old iPhone files
-		var iphone_qStr = 'link'; // iphone gets added by require, so we need to remove it
-		var iphone_links = head.querySelectorAll(iphone_qStr);
-		// remove the old css files
-		for(var ip = 0; ip < iphone_links.length; ip++){
-			var href = iphone_links[ip].href;
-			if (href.indexOf('iphone/iphone.css') > 0 || href.indexOf('iphone/iphone-compat.css') > 0){
-			    head.removeChild(iphone_links[ip]); 
-			}
-			
-		}
+
 		if (device){
 			this.setMobileDevice(device);
 			// add the new css files
@@ -723,7 +707,6 @@ dojo.declare("davinci.ve.Context", null, {
 					win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
-console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
 					var mobileDevice = context.getMobileDevice();
 					if (mobileDevice){

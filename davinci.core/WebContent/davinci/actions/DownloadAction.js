@@ -42,8 +42,8 @@ dojo.declare("davinci.actions.DownloadAction", davinci.actions.Action, {
 		this.dialog.destroyRecursive(false);
 		var path=value.zipFileName;
 		
-
-		davinci.resource.download(resources, path + ".zip");	
+		
+		davinci.resource.download(resources, path + ".zip", davinci.Runtime.getProject());	
 
 	
 	

@@ -1510,7 +1510,7 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			if(srcElement){
 				srcElement.addAttribute("dojoType", dijitWidget);
 			}
-
+			
             // carry over node attributes to params that are passed in to constructor
             var proto = c.prototype, params = {};
             for ( var prop in proto) {

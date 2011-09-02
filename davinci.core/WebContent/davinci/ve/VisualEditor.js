@@ -202,19 +202,11 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	_setContent: function(filename,content){
-		var relativePrefix="";
 		
-		/* cheating, adding another layer of prefix for project */
-		var folderDepth=new davinci.model.Path(filename).getSegments().length-2;
-		if (folderDepth){
-			for (var i=0;i<folderDepth;i++){
-				relativePrefix+="../";
-			}
-		}
-		this._setContentRaw(filename, relativePrefix, content);
+		this._setContentRaw(filename, content);
 	},
 	
-	_setContentRaw: function(filename,relativePrefix, content){
+	_setContentRaw: function(filename, content){
 		this.fileName=filename;
 		this.basePath=new davinci.model.Path(filename);
 	   
@@ -238,7 +230,6 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 				containerNode: containerNode,
 				model: content,
 				baseURL: baseUrl,
-				relativePrefix: relativePrefix,
 				iframeattrs:{'class':'silhouetteiframe_iframe'}
 			});
 

@@ -160,6 +160,7 @@ dojo.declare("davinci.ui.UserLibraries",   [dijit._Widget, dijit._Templated], {
 		var pages = davinci.resource.findResource("*.html", true, this.getResourceBase(), true);
 		
 		var pageBuilder = new davinci.ve.RebuildPage();
+		
 		for(var i=0;i<pages.length;i++){
 			/* dont process theme editor pages */
 			if(davinci.theme.isThemeHTML(pages[i])) continue;

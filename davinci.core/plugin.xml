@@ -66,6 +66,14 @@
               alias="/app/preview"
               base-name="/WebContent/preview"
               />
+        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
+        
+        <resource
+              alias="/app/metadata/maqetta/core/0.3"
+              base-name="/WebContent/project"
+              />
+       
+       
         <!--   
         <resource
               alias="/app/workspace"
@@ -149,8 +157,10 @@
       </extension>
       <extension
             point="davinci.core.initialUserFiles">
+            <!--
              <initalUserFile
                   path="WebContent/project/base/"/>
+                  -->
               <!-- moving samples to plugin (issue 574 -->
               <!--
              <initalUserFile
@@ -175,10 +185,16 @@
                path="app/davinci/ve/themeEditor/themeEditor"
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
       </extension>
+    
       <extension point="davinci.core.ajaxLibrary">
 	     <ajaxLibrary name="sample files" id="Samples" version="0.3">
 		      <libraryPath location="WebContent/samples" name="/"></libraryPath>
 		 </ajaxLibrary>
+		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
+		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
+		      <metadata location="app/metadata/maqetta/core/0.3" />
+		 </ajaxLibrary>
 	 </extension>
-      
+
+
 </plugin>

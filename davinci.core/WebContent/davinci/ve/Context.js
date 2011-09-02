@@ -324,7 +324,7 @@ dojo.declare("davinci.ve.Context", null, {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
-        return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
+        return bodyElement.getAttribute(davinci.ve.Context.MOBILE_DEV_ATTR);
     },
 
     /**
@@ -334,9 +334,9 @@ dojo.declare("davinci.ve.Context", null, {
     setMobileDevice: function(device) {
         var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
-            bodyElement.removeAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+            bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
         } else {
-            bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+            bodyElement.addAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
         }
     },
 	
@@ -2252,6 +2252,5 @@ dojo.declare("davinci.ve.Context", null, {
 });
 
 davinci.ve._contextCount = 0;
-
 davinci.ve._preferences = {};
-davinci.preference_mobile_device_ATTRIBUTE = 'data-maqetta-device';
+davinci.ve.Context.MOBILE_DEV_ATTR = 'data-maqetta-device';

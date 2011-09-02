@@ -332,9 +332,12 @@ dojo.declare("davinci.ve.Context", null, {
      * @param device {?string} device name
      */
     setMobileDevice: function(device) {
-        device = device || 'none';
         var bodyElement = this.getDocumentElement().getChildElement("body");
-        bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+        if (! device || device === 'none') {
+            bodyElement.removeAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+        } else {
+            bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+        }
     },
 	
 	setMobileTheme: function(device) {

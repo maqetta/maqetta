@@ -158,27 +158,30 @@ dojo.declare("davinci.review.editor.Context", null, {
 		var shapes = surface.shapes, result;
 		
 		dojo.forEach(shapes, function(shape){
-			result = 0; // 0 = invisible, 1 = half visible, 2 = visible
+			result = "hidden";
 			if(dojo.some(surface.filterColorAliases, function(colorAlias){ return shape.colorAlias == colorAlias; })){
 				if(surface.filterComments && surface.filterComments.length > 0){
 					if(dojo.some(surface.filterComments, function(commentId){ 
 						return shape.commentId == commentId;
 						})){
-						result = 2;
+						result = "visible";
 					}else{
-						result = 1;
+						result = "partial";
+					}
+					if(shape.state != surface.filterState){
+						result = "hidden";
 					}
 				}else{
 					if(shape.state == surface.filterState){
-						result = 2;
+						result = "visible";
 					}else{
-						result = 0;
+						result = "hidden";
 					}
 				}
 			}
-			if(shape.commentId==surface.commentId){
+			if(shape.commentId == surface.commentId){
 				// Keep the shapes in editing
-				result = 2;
+				result = "visible";
 			}
 			shape.setVisible(result);
 		});

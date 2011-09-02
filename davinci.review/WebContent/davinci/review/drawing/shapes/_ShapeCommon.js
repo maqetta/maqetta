@@ -22,12 +22,12 @@ dojo.declare("davinci.review.drawing.shapes._ShapeCommon", null, {
 	},
 	
 	setVisible: function(visible){
-		if(visible == 2){
-			this.style({"opacity": "1.0"});
-		}else if(visible == 1){
-			this.style({"opacity": "0.1"});
-		}else if(visible == 0){
-			this.style({"opacity": "0.0"});
+		if(visible == "visible"){
+			this.style({"visibility": "visible", "opacity": "1.0"});
+		}else if(visible == "partial"){
+			this.style({"visibility": "visible", "opacity": "0.1"});
+		}else if(visible == "hidden"){
+			this.style({"visibility": "hidden", "opacity": "1.0"});
 		}
 //		this.isVisible = visible;
 	},

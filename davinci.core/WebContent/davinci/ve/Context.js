@@ -614,7 +614,7 @@ dojo.declare("davinci.ve.Context", null, {
 					if (lib.id === "dojo") {
 						
 						var fullDojoPath = new davinci.model.Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
-						dojoUrl = fullDojoPath.relativeTo(this.getResourcePath(),true).toString();
+						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
 						//dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
 						return true;
 					}

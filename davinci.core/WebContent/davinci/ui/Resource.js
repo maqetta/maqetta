@@ -18,44 +18,51 @@ dojo.mixin(davinci.ui.Resource, {
 	 * Present new file or new folder dialog.
 	 * @param action {string} newfile|newhtml|newcss|newjs|newfolder|openfile|saveas
 	 */
-	fileDialog : function(action){
-		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+	fileDialog: function(action){
+		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui"),
+			dialogTitle,
+			fileNameLabel = langObj.fileName,
+			doItLabel = langObj.create,
+			doItAction = "davinci.ui.Resource.createFile({checkForExtension:true})",
+			proposedFileName,
+			hideFileNameInput,
+			folder=davinci.resource.getRoot(),
+			resource=davinci.ui.Resource.getSelectedResource();
 		this.action=action;
-		var dialogTitle;
-		var fileNameLabel = langObj.fileName;
-		var doItLabel = langObj.create;
-		var doItAction = "davinci.ui.Resource.createFile({checkForExtension:true})";
-		var proposedFileName;
-		var hideFileNameInput;
-		var folder=davinci.resource.getRoot();
-		var resource=davinci.ui.Resource.getSelectedResource();
 		if (resource){
-			folder=(resource.elementType=='Folder'?resource:resource.parent);
+			folder = resource.elementType=='Folder'?resource:resource.parent;
 		}
-		if(action==='newfile'){
+		switch(action){
+		case 'newfile':
 			dialogTitle=langObj.createNewFile;
 			proposedFileName = "";
-		}else if(action==='newhtml'){
+			break;
+		case 'newhtml':
 			dialogTitle=langObj.createNewHTMLFile;
 			proposedFileName = this.getNewFileName(action,folder,'.html');
-		}else if(action==='newcss'){
+			break;
+		case 'newcss':
 			dialogTitle=langObj.createNewCSSFile;
 			proposedFileName = this.getNewFileName(action,folder,'.css');
-		}else if(action==='newjs'){
+			break;
+		case 'newjs':
 			dialogTitle=langObj.createNewJSFile;
 			proposedFileName = this.getNewFileName(action,folder,'.js');
-		}else if(action==='openfile'){
+			break;
+		case 'openfile':
 			dialogTitle=langObj.openFile;
 			proposedFileName = "";
 			doItLabel = langObj.open;
 			doItAction = "davinci.ui.Resource.openFile()";
 			hideFileNameInput = true;
-		}else if(action==='newfolder'){
+			break;
+		case 'newfolder':
 			dialogTitle=langObj.createNewFolder;
 			fileNameLabel = langObj.folderName;
 			proposedFileName = this.getNewFileName(action,folder);
 			doItAction = "davinci.ui.Resource.createFile({checkForExtension:false})";
-		}else if(action==='saveas'){
+			break;
+		case 'saveas':
 			dialogTitle=langObj.saveFileAs;
 			doItLabel = langObj.save;
 			doItAction = "davinci.ui.Resource.saveAs({checkForExtension:true})";
@@ -66,10 +73,11 @@ dojo.mixin(davinci.ui.Resource, {
 			if(!oldFileName || !oldFileName===""){
 				return;
 			}
-		}else{
+			break;
+		default:
 			return;
 		}
-		this.fileOrFolder = (action==='newfolder')?'folder':'file';
+		this.fileOrFolder = action === 'newfolder' ? 'folder' : 'file';
 		var formHtml = ''+
 '<div class="fileDialog" style="position:relative">'+
 '	<div id="fileDialogFileNameRow" class="fileNameRow">'+
@@ -151,6 +159,7 @@ dojo.mixin(davinci.ui.Resource, {
 			var upload = dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ f0.upload(); });
 
 			dojo.connect(f0, "onComplete", function(dataArray){
+				f0.set("disabled", true);
 				dojo.forEach(dataArray, function(data){
 					// Refresh the changed folder
 					davinci.resource.resourceChanged('updated', folder);
@@ -269,8 +278,9 @@ dojo.mixin(davinci.ui.Resource, {
 	
 	
 	newProject : function(){
-		var projectDialog = new davinci.ui.NewProject({});
-	    davinci.Workbench.showModal(projectDialog, 'New Project', 'height:160px;width: 250px');
+		var projectDialog = new davinci.ui.NewProject({}),
+			langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
+	    davinci.Workbench.showModal(projectDialog, langObj.newProject, 'height:160px;width: 250px');
 	},
 	
 	

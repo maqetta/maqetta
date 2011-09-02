@@ -65,7 +65,7 @@
 		//addFiles
 		"selectFiles":"Select Files...",
 		"upload":"Upload",
-		"addFiles":"Add Files",
+		"addFiles":"Upload Files",
 		"uploading":"Uploading...",
 		"completed":"completed: ${0} \n",
 		"done":"Done",
@@ -90,8 +90,7 @@
 		"newName":"New Name",
 		
 		//OpenThemeDialog.html
-		"selectTheme":"Select a Theme"
-		
-		
+		"selectTheme":"Select a Theme",
 
+		"newProject":"New Project"
 })

@@ -63,7 +63,7 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		
 		// Populate the comment body
 		//var color = davinci.review.Runtime.getColor(this.email);
-		var color = davinci.review.Runtime.getColor(this.ownerId);
+		var color = this.color = davinci.review.Runtime.getColor(this.ownerId);
 		this.subjectNode.innerHTML = this.subject;
 		dojo.style(this.subjectNode, "color", color);
 		this.ownerName.innerHTML = this.ownerId;
@@ -367,10 +367,10 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		if(this.commentStatus.set){
 			this.commentStatus.set("disabled", false);
 		}
-		dojo.removeClass(this.subjectNode, "commentSubjectDisabled");
+		dojo.removeClass(this.domNode, "disabled");
 		dojo.removeClass(this.mainBody, "commentBodyDisabled");
-		dojo.removeClass(this.editButton, "commentLinkButtonDisabled");
-		dojo.removeClass(this.replyButton, "commentLinkButtonDisabled");
+		dojo.style(this.subjectNode, "color", this.color);
+		dojo.style(this.ownerName, "color", this.color);
 		this.isDisabled = false;
 	},
 	
@@ -378,11 +378,11 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		if(this.commentStatus.set){
 			this.commentStatus.set("disabled", true);
 		}
-		dojo.addClass(this.subjectNode, "commentSubjectDisabled");
+		dojo.addClass(this.domNode, "disabled");
 		dojo.removeAttr(this.mainBody, "style");
 		dojo.addClass(this.mainBody, "commentBodyDisabled");
-		dojo.addClass(this.editButton, "commentLinkButtonDisabled");
-		dojo.addClass(this.replyButton, "commentLinkButtonDisabled");
+		dojo.style(this.subjectNode, "color", "");
+		dojo.style(this.ownerName, "color", "");
 		this.isDisabled = true;
 	},
 	

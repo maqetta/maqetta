@@ -13,7 +13,7 @@
 		"reply":"Reply",
 		"typeLabel":"Type",
 		"severityLevel":"Severity",
-		"status":"Status",
+		"statusLabel":"Status",
 		
 		//CommentForm.js
 		"subjectPlaceHolder":"Subject",

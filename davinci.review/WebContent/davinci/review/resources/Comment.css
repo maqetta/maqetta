@@ -557,12 +557,8 @@
 .davinciComment .commentFocused{
 	border: 2px solid #0000FF;
 }
-.davinciComment .commentBodyDisabled{
-	background-color: #EFEFEF;
-}
-.davinciComment .commentSubjectDisabled,
-.davinciComment .commentLinkButtonDisabled {
-	color: #818181;
+.davinciComment .commentBodyDisabled *{
+	color: #A0A0A0;
 }
 
 .davinciComment .editReplyBlock {
@@ -600,8 +596,27 @@
 	background: no-repeat url("img/severity_unassigned.gif");
 }
 
+.disabled .commentFooter .severityLow {
+	background: no-repeat url( "img/severity_low_disabled.gif" );
+}
+.disabled .commentFooter .severityMedium {
+	background: no-repeat url("img/severity_mid_disabled.gif");
+}
+.disabled .commentFooter .severityHigh {
+	background: no-repeat url("img/severity_high_disabled.gif");
+}
+
+.disabled .commentFooter .severityUnassigned {
+	background: no-repeat url("img/severity_unassigned_disabled.gif");
+}
+
 .davinciComment .commentTheme .dijitButtonText {
 	color: #105CB6;
+}
+
+.davinciComment .commentBodyDisabled .commentTheme .dijitDownArrowButton,
+.davinciComment .commentBodyDisabled .commentTheme .dijitButtonText{
+	color: gray;
 }
 
 .davinciComment .commentTheme .dijitDownArrowButton,

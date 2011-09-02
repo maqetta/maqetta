@@ -295,7 +295,7 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 	
 	focusComment: function(evt){
 		if(this.isDisabled) return;
-		if(this.isFocused && evt && evt.ctrlKey){
+		if(this.isFocused && evt && (evt.ctrlKey || evt.metaKey)){
 			this.blurComment();
 		}else{
 			this.onCommentFocus(this, evt);

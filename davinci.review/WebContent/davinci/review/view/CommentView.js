@@ -59,7 +59,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				}
 			};
 			if(!this._currentPage) return; //No page is opened
-			if(evt.keyCode == dojo.keys.CTRL){
+			if(evt.keyCode == dojo.keys.CTRL || evt.keyCode == dojo.keys.META){
 				var focusedComments = this._cached[this._currentPage].focusedComments;
 				if(focusedComments.length > 0){
 					var pageState = this.commentIndices[focusedComments[0]].pageState;
@@ -69,7 +69,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		});
 		
 		this.connect(this.commentReplies, "keyup", function(evt){
-			if(evt.keyCode == dojo.keys.CTRL){
+			if(evt.keyCode == dojo.keys.CTRL || evt.keyCode == dojo.keys.META){
 				var loopBody = function(comment){
 					comment.enable();
 					var replies = comment.getReplies();
@@ -177,7 +177,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				var focusedComments = this._cached[this._currentPage]&&this._cached[this._currentPage].focusedComments;
 				if(focusedComments)
 					dojo.forEach(focusedComments,dojo.hitch(this,function(commentId){
-						this.commentIndices[commentId].focusComment({ctrlKey:true, silent: true});
+						this.commentIndices[commentId].focusComment({ctrlKey:true, metaKey:true, silent: true});
 					}));
 				
 				//restore the commentForm
@@ -539,13 +539,13 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 	
 	_onCommentFocus: function(widget, evt){
 		var focusedComments = this._cached[this._currentPage].focusedComments;
-		if(!evt || !evt.ctrlKey){
+		if(!evt || (!evt.ctrlKey && !evt.metaKey)){
 			dojo.forEach(focusedComments, function(commentId){
 				this.commentIndices[commentId].blurComment(true);
 			}, this);
 			focusedComments.length = 0;
 			focusedComments.push(widget.commentId);
-		}else if(evt.ctrlKey){
+		}else if(evt.ctrlKey || evt.metaKey){
 			if(!dojo.some(focusedComments, function(commentId){ return commentId == widget.commentId; })){
 				focusedComments.push(widget.commentId);
 			}
@@ -617,8 +617,8 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				});
 				this.reviewerList.addChild(check);
 				if(this._cached[this._currentPage]&&this._cached[this._currentPage].shownColors){
-					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(email){
-						if(email==comment.email) return true;
+					var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name){
+						if(name==comment.name) return true;
 						return false;
 					});
 					check.set("checked",checked);

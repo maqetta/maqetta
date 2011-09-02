@@ -146,9 +146,16 @@ dojo.declare("davinci.review.editor.Context", null, {
 			dojo.subscribe("/davinci/review/view/closeComment", dojo.hitch(this, function(){
 				this.containerEditor.isDirty = false;
 			})),
-			dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(editor){
-				if(this === editor.oldEditor.getContext()){
-					this._destroyDrawing();
+			dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
+				if(this === obj.oldEditor.getContext()){
+					// Determine if the editor is closed, if the editor is closed then
+					// getDocument() will throw an exception
+					try {
+						this.getDocument();
+					}catch(err){
+						// The editor is closed now
+						this._destroyDrawing();
+					}
 				}
 			}))
 		];
@@ -165,6 +172,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 						return shape.commentId == commentId;
 						})){
 						result = "visible";
+						surface.highlightTool && (surface.highlightTool.shape = shape);
 					}else{
 						result = "partial";
 					}

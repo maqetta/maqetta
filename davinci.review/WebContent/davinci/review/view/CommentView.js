@@ -617,7 +617,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				if(!dojo.some(reviewers,function(item){
 					if(item.email==comment.email)return true;
 					else return false;
-				}))
+				}) && davinci.Runtime.commenting_designerName != item.name)
 				reviewers.push({name:comment.ownerId,email:comment.email});
 			});
 			var children = this.reviewerList.getChildren();

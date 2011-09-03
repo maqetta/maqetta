@@ -515,21 +515,21 @@ dojo.declare("davinci.ve.Context", null, {
     	 * 
     	 * */
     	var model = this.getModel();
-    	var imports = model.find({'elementType':'CSSImport', 'tag':'style'});
+    	var imports = model.find({elementType:'CSSImport', tag:'style'});
 		var defaultThemeName="claro";
 		var themePath = new davinci.model.Path(model.fileName);
 		/* remove the .theme file, and find themes in the given base location */
 		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
 		var themeHash = {};
-		var defaultTheme = null;
+		var defaultTheme;
 		
 		for(var i=0;i<allThemes.length;i++){
 			
 			if(allThemes[i].name==defaultThemeName)
 				defaultTheme = allThemes[i];
 			
-			for(var k=0;k<allThemes[i]['files'].length;k++){
-				themeHash[allThemes[i]['files']] = allThemes[i];
+			for(var k=0;k<allThemes[i].files.length;k++){
+				themeHash[allThemes[i].files] = allThemes[i];
 			}
 		}
 		/* check the header file for a themes CSS.  
@@ -549,15 +549,13 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		}
 		
-		var body = model.find({'elementType':'HTMLElement', 'tag':'body'},true);
+		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
 		for(var i=0;i<defaultTheme.files.length;i++){
 			var url = new davinci.model.Path(defaultTheme.file.getPath()).removeLastSegments(1).append(defaultTheme.files[i]).relativeTo(this.getPath(),true);
 			this.addModeledStyleSheet(url.toString(), null, true);
 		}
-    	
-    	
     },
     
 	_setSource: function(source, callback, scope){
@@ -737,7 +735,7 @@ dojo.declare("davinci.ve.Context", null, {
 			// intercept BS key - prompt user before navigating backwards
 			dojo.connect(doc.documentElement, "onkeypress", function(e){
 				if(e.charOrCode==8){
-					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = new Date().getTime();
+					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = Date.now();
 				}
 			});	
 			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
@@ -851,7 +849,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
 		// Similar to features that hopefully will appear in CSS3 via white-space-collapse.
 		// Code is also injected into the page via workbench/davinci/davinci.js to do this at runtime.
-		var skip = {"SCRIPT":1, "STYLE":1},
+		var skip = {SCRIPT:1, STYLE:1},
 			collapse = function(element) {
 			dojo.forEach(element.childNodes, function(cn){
 				if (cn.nodeType == 3){	// Text node
@@ -1220,7 +1218,7 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			var states = cache[id];
 			states = davinci.states.deserialize(states);
-			delete states["current"]; // FIXME: Always start in normal state for now, fix in 0.7
+			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget, states);
 			
 			var state = davinci.ve.states.getState(widget);
@@ -1423,7 +1421,7 @@ dojo.declare("davinci.ve.Context", null, {
 		if(widget){
 			helper = widget.getHelper();
 		}
-		if(widget && this._selection.length > 0){ // undo of add got us here some how.
+		if(widget && this._selection.length){ // undo of add got us here some how.
 			if(this._selection.length === 1){
 				if(this._selection[0] != widget){
 					return;
@@ -1980,24 +1978,23 @@ dojo.declare("davinci.ve.Context", null, {
 			return this._cssCache[domHash];
 		*/
 		
-		if(selection.length > 0){
+		if(selection.length){
 			
 			var matchLevels = [];
 			this._cssCache[domHash] =  this.model.getMatchingRules(targetDom, true);
 			
 			
-			for(var i =0;i<this._cssCache[domHash]['rules'].length;i++){
+			for(var i =0;i<this._cssCache[domHash].rules.length;i++){
 				/* remove stale elements from the cache if they change */
-				var handle = dojo.hitch(this._cssCache[domHash]['rules'][i],"onChange",this,function(){
-					
-										delete this._cssCache[domHash];
-										dojo.unsubscribe(handle);
+				var handle = dojo.hitch(this._cssCache[domHash].rules[i],"onChange",this,function(){
+					delete this._cssCache[domHash];
+					dojo.unsubscribe(handle);
 				});
 			}
 			
 			return this._cssCache[domHash];
 		}else{
-			return {'rules':null,'matchLevels':null};
+			return {rules:null, matchLevels:null};
 		}
 	},
 	
@@ -2067,7 +2064,7 @@ dojo.declare("davinci.ve.Context", null, {
 			if (doUpdateModel) {
 				
 				/* update the script if found */
-				var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
+				var elements = this._srcDocument.find({elementType:"HTMLElement", tag: 'script'});
 				for(var i=0;i<elements.length;i++){
 					var n = elements[i];
 					var elementUrl = n.getAttribute("src");

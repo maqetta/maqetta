@@ -87,9 +87,14 @@ dojo.declare("davinci.review.widgets.CommentForm",[dijit._Widget, dijit._Templat
 	
 	show: function(){
 		this.isShowing = true;
+		this.onShow();
 		dojo.style(this.domNode, "display", "block");
 		dojo.window.scrollIntoView(this.domNode);
 		dojo.publish("/davinci/review/view/openComment", []);
+	},
+	
+	onShow: function(){
+		// Placeholder
 	},
 	
 	_submit: function(){

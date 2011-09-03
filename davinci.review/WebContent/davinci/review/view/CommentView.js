@@ -81,10 +81,20 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 			}
 		});
 		
+		this.connect(this.commentReplies, "click", function(evt){
+			// Blur all the selected comments
+			if(evt.target !== this.commentReplies) return;
+			this._blurAllComments();
+		});
+		
 		this.connect(dojo.global, "beforeunload", function(evt){
 			if(this._commentForm.isShowing == true){
 				return dojo.i18n.getLocalization("davinci.workbench", "workbench").fileHasUnsavedChanges;
 			}
+		});
+		
+		dojo.subscribe("/davinci/review/view/canvasFocused", this, function(){
+			this._blurAllComments();
 		});
 		
 		dojo.subscribe("/davinci/review/resourceChanged",this,function(arg1,arg2,arg3){
@@ -133,7 +143,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args){
 			// summary:
-			//		Remove the comment nodes of the preious page
+			//		Remove the comment nodes of the previous page
 			var editor = args.editor;
 			if(!editor){
 				this._resetCommentView();
@@ -220,18 +230,15 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				// The content of the editor hasn't been loaded yet
 				return;
 			}
-			
-				
-				
 		});
 		
-		dojo.subscribe("/davinci/ui/editorSelected", this, function(editor){
-			if(this._commentForm.isShowing){
-				// The form is open, we need to do some cleaning.
-				this._onCommentFormCancel();
-			}
-			this._closedEditor = editor.oldEditor;
-		});
+//		dojo.subscribe("/davinci/ui/editorSelected", this, function(editor){
+//			if(this._commentForm.isShowing){
+//				// The form is open, we need to do some cleaning.
+//				this._onCommentFormCancel();
+//			}
+//			this._closedEditor = editor.oldEditor;
+//		});
 		
 		dojo.subscribe("/davinci/review/drawing/annotationSelected", this, function(commentId, selected){
 			var comment = this.commentIndices[commentId];
@@ -282,11 +289,16 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		//		Create the comment form and initialize it
 		var form = this._commentForm = new davinci.review.widgets.CommentForm({
 			onSubmit: dojo.hitch(this, "_onCreateNewComment"),
-			onUpdate: dojo.hitch(this, "_onUpdateComment")
+			onUpdate: dojo.hitch(this, "_onUpdateComment"),
+			onShow: dojo.hitch(this, "_onCommentFormShown")
 		});
 		this.connect(form.cancelNode, "click", "_onCommentFormCancel");
 		form.moveTo(this.container.domNode);
 		form.hide();
+	},
+	
+	_onCommentFormShown: function(){
+		
 	},
 	
 	_onErrorCreateNewComment: function(comment){
@@ -514,7 +526,11 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		form.show();
 		
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.userName, form.commentId]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
+			davinci.Runtime.commenting_reviewerName.userName,
+			form.commentId,
+			comment.state
+		]);
 	},
 	
 	_onNewReply: function(args){
@@ -534,7 +550,11 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		form.show();
 		
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.userName, form.commentId]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
+			davinci.Runtime.commenting_reviewerName.userName,
+			form.commentId,
+			this._cached[this._currentPage].pageState
+		]);
 	},
 	
 	_onCommentFocus: function(widget, evt){
@@ -640,15 +660,6 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 			dojo.stopEvent(e);
 		});
 		
-		/*var filterTypeMenu = new dijit.Menu({});
-		var fitlerTypeDropDown = new dijit.form.DropDownButton({
-			iconClass: "dijitEditorIcon emptyIcon",
-			dropDown: filterTypeMenu,
-			showLabel: false
-		});
-		filterTypeMenu.addChild(new dijit.MenuItem({label: "By Subject", onClick: dojo.hitch(this, "_filter", "subject")}));
-		filterTypeMenu.addChild(new dijit.MenuItem({label: "By Content", onClick: dojo.hitch(this, "_filter", "content")}));
-		filterTypeMenu.addChild(new dijit.MenuItem({label: "By Reviewer", onClick: dojo.hitch(this, "_filter", "reviewer")}));*/
 		var toolbar = new dijit.Toolbar({id: "davinciReviewToolbar"}, dojo.create("div"));
 		
 		// Create the add comment button on the toolbar
@@ -774,7 +785,11 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		form.show();
 		
 		// Notify the drawing tool to be in edit mode
-		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [davinci.Runtime.commenting_reviewerName.userName, form.commentId]);
+		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
+			davinci.Runtime.commenting_reviewerName.userName,
+			form.commentId,
+			this._cached[this._currentPage].pageState
+		]);
 	},
 	
 	_filter: function(){
@@ -842,44 +857,20 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		reply.placeAt(this.container.domNode);
 	},
 	
-//	_getDepth: function(replyTo){
-//		return replyTo ? this.commentIndices[replyTo].depth + 1 : 0;
-//	},
+	_blurAllComments: function(){
+		var focusedComments = this._cached[this._currentPage].focusedComments,
+			_candidates = [];
+		if(focusedComments){
+			dojo.forEach(focusedComments, function(commentId){
+				var comment = this.commentIndices[commentId];
+				comment && _candidates.push(comment);
+			}, this);
+			dojo.forEach(_candidates, function(c){
+				c.blurComment();
+			}, this);
+		}
+	},
 	
-//	_getPreviousOrder: function(replyTo){
-//		var parent = this.commentIndices[replyTo],
-//			lastChild = parent.getLastReply();
-//		
-//		while(lastChild){
-//			parent = lastChild;
-//			lastChild = lastChild.getLastReply();
-//		}
-//		return parent.order;
-//	},
-//	
-//	_getNextOrder: function(replyTo){
-//		var parent = this.commentIndices[replyTo];
-//		if(replyTo == 0){
-//			// It's a root comment and add it directly
-//			return this._getPreviousOrder(replyTo) + this.interval;
-//		}else{
-//			var child = parent;
-//			parent = this.commentIndices[parent.replyTo];
-//			var children = parent.getReplies();
-//			var i, len = children.length;
-//			for(i = 0; i < len; i++){
-//				if(children[i] === child){
-//					break;
-//				}
-//			}
-//			if(i == len - 1){
-//				return this._getPreviousOrder(replyTo) + this.interval;
-//			}else{
-//				return children[i + 1].order;
-//			}
-//		}
-//	},
-
 	/**
 	 * Make a DOM element shining for a while. The background
 	 * color will transfer from one to another and then back.

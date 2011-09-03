@@ -104,17 +104,26 @@ dojo.declare("davinci.review.editor.Context", null, {
 		this._cxtConns = [
 			dojo.connect(surface.highlightTool, "onShapeMouseDown", function(shape){
 				dojo.publish("/davinci/review/drawing/annotationSelected", [shape.commentId]);
-			})
+			}),
+			dojo.connect(this.getContainerNode(), "click", dojo.hitch(this, function(evt){
+				if(!this.containerEditor.isDirty && evt.target === this.getContainerNode()){
+					dojo.publish("/davinci/review/view/canvasFocused", [this]);
+				}
+			}))
 		];
 		this._cxtSubs = [
 			dojo.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor){
 				surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(davinci.review.Runtime, davinci.review.Runtime.getColor)); // FIXME: Unique surface is required
 			}),
-			dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", function(reviewer, commentId){
+			dojo.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState){
 				surface.activate();
 				surface.cached = surface.exchangeTool.exportShapesByAttribute();
 				surface.currentReviewer = reviewer;
 				surface.commentId = commentId;
+				
+				surface.filterState = pageState;
+				surface.filterComments = [commentId];				
+				this._refreshSurface(surface);
 			}),
 			dojo.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state){
 				if(obj._currentPage!=this.fileName) return;

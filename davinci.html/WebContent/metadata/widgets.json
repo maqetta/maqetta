@@ -375,6 +375,8 @@
             "allowedParent": "html.tr",
             "allowedChild": "ANY"
         },
+        
+        
         {
             "name": "<thead>",
             "description": "Table Header",
@@ -452,6 +454,13 @@
             },
             "children": "Option X",
             "resizable": "none"
-        }
+        },
+        {
+            "name": "<body>",
+            "type": "html.body",
+            "category": "html",
+            "hidden": true,
+            "allowedChild": "ANY"
+        },
     ]
 }

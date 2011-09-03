@@ -347,6 +347,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	},
 
 	_loadType: function(data){
+		
 		if(!data || !data.type){
 			return false;
 		}

@@ -39,8 +39,6 @@ dojo.declare("davinci.ve.Context", null, {
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets = [];
-
-		this.relativePrefix = this.relativePrefix || "";
 	},
 	
 
@@ -50,7 +48,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	//FIXME: accessor func is unnecessary?
 	getModel: function(){
-		return this.model;
+		return this._srcDocument;
 	},
 	
 	/*
@@ -71,6 +69,8 @@ dojo.declare("davinci.ve.Context", null, {
 		return new davinci.model.Path(path);
 	},
 
+
+	
 	activate: function(){
 		if(this.isActive()){
 			return;
@@ -237,32 +237,28 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getLibraryBase: function(id, version){
-		return davinci.library.getLibRoot(id,version, this.getResourcePath()) || "";
+		return davinci.library.getLibRoot(id,version, this.getBase()) || "";
 	},
 
-	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, relativePrefix) {
+	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
 		
-		if(!relativePrefix){
-			relativePrefix = this.relativePrefix;
-		}
-
 		/* this method is used heavily in RebuildPage.js, so please watch out when changing  API! */
 		if (!type) {
 			return false;
 		}
-
+		
 		var module = type.split(".")[0];
+		/*
 		if (module == "html") {
 			// no require
 			return true;
 		}
-		
+		*/
 		var requires = davinci.ve.metadata.query(type, "require");
 		if (!requires) {
 			return true;
 		}
-		
-		var relativePath = new davinci.model.Path(relativePrefix);
+
 		return dojo.every(requires, function(r) {
 		
 			var src = r.src;
@@ -271,17 +267,18 @@ dojo.declare("davinci.ve.Context", null, {
 					// Since the metadata files are 'relocatable', we don't use the metadata's
 					//  value for $library.src.  Instead, we find the base URL for the user's
 					//  currently selected library.
-					var libVer = davinci.ve.metadata.getLibrary(r.$library).version;
+					var libVer  = davinci.ve.metadata.getLibrary(r.$library).version;
+						
 					if (!libVer) {
 						libVer = davinci.ve.metadata.query(type, "library")[r.$library].version;
 					}
 					var libRoot = this.getLibraryBase(r.$library, libVer);
-					if (!libRoot) {
-						console.warn("No library found for name = '" + r.$library +
-								"' version = '" + libVer + "'");
+					if (libRoot == null /*empty string OK here, but null isn't. */) {
+						console.warn("No library found for name = '" + r.$library +	"' version = '" + libVer + "'");
 						return false;   // kill dojo.every loop
 					}
-					src = relativePath.append(libRoot).append(src);
+					var fullLibPath = new davinci.model.Path(this.getBase()).append(libRoot).append(src);
+					src = fullLibPath.relativeTo(this.getPath(),true).toString();				
 				} else {
 					console.warn("metadata resource does not specify 'library'");
 				}
@@ -289,10 +286,10 @@ dojo.declare("davinci.ve.Context", null, {
 			  
 				switch (r.type) {
 					case "javascript":
-						this.addJavaScript(src, null, updateSrc, false, r.src);
+						this.addJavaScript(src, null, updateSrc, false, r.src,skipDomUpdate);
 						break;
 					case "css":
-						updateSrc ? this.addModeledStyleSheet(src, r.src) : this.loadStyleSheet(src);
+						updateSrc ? this.addModeledStyleSheet(src, r.src, skipDomUpdate) : this.loadStyleSheet(src);
 						break;
 					default:
 						console.warn("Unhandled metadata resource type '" + r.type +
@@ -301,7 +298,7 @@ dojo.declare("davinci.ve.Context", null, {
 			} else {  // resource with text content
 				switch (r.type) {
 					case "javascript":
-						this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires);
+						this.addJavaScript(null, r.$text, updateSrc, doUpdateModelDojoRequires, null, skipDomUpdate);
 						break;
 					default:
 						console.warn("Unhandled metadata resource type '" + r.type +
@@ -321,40 +318,37 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	
-	
-	getMobileDevice: function(){
-		
-		var doc = this.getDocument();
-		var head = doc.getElementsByTagName("head")[0];
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
-		
-	},
-	
-	setMobileDevice: function (device){
-		if (!device) {
-			device = 'none';
-		}
-		var doc = this.getDocument();
-		var head = doc.getElementsByTagName("head")[0];
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE,device);
-	},
-	
-	setMobileTheme: function(device){
+	/**
+	 * Retrieve mobile device from Model.
+	 * @returns {?string} mobile device name
+	 */
+	getMobileDevice: function() {
+        var bodyElement = this.getDocumentElement().getChildElement("body");
+        return bodyElement.getAttribute(davinci.preference_mobile_device_ATTRIBUTE);
+    },
 
-		var cssFiles = ['iphone/iphone.css'];
-		// if no device is specified mobile styling defaults to iphone
-		if (device){
-			theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
-			cssFiles = preview.silhouetteiframe.getMobileCss(theme);
-		}
+    /**
+     * Sets mobile device in Model.
+     * @param device {?string} device name
+     */
+    setMobileDevice: function(device) {
+        var bodyElement = this.getDocumentElement().getChildElement("body");
+        if (! device || device === 'none') {
+            bodyElement.removeAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+        } else {
+            bodyElement.addAttribute(davinci.preference_mobile_device_ATTRIBUTE, device);
+        }
+    },
+	
+	setMobileTheme: function(device) {
+        var oldDevice = this.getMobileDevice() || 'none';
+        if (oldDevice === device) {
+            return;
+        }
 
+        var theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
+		var cssFiles = preview.silhouetteiframe.getMobileCss(theme);
 
-		var oldDevice = this.getMobileDevice();
 		var oldCssFiles;
 		if (oldDevice){
 			oldCssFiles = preview.silhouetteiframe.getMobileCss(preview.silhouetteiframe.getMobileTheme(oldDevice+'.svg'));
@@ -363,7 +357,8 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
 		var lib = this.getLibraryBase('dojo', libVer);
-		lib = this.relativePrefix + lib;
+		var fullLibPath = new davinci.model.Path(this.getBase()).append(lib);
+		lib = fullLibPath.relativeTo(this.getPath(),true).toString();	
 		var doc = this.getDocument();
 		var head = doc.getElementsByTagName("head")[0];
 		// remove the old css files
@@ -375,17 +370,7 @@ dojo.declare("davinci.ve.Context", null, {
 				head.removeChild(links[x]);
 			}
 		}
-		// remove the old iPhone files
-		var iphone_qStr = 'link'; // iphone gets added by require, so we need to remove it
-		var iphone_links = head.querySelectorAll(iphone_qStr);
-		// remove the old css files
-		for(var ip = 0; ip < iphone_links.length; ip++){
-			var href = iphone_links[ip].href;
-			if (href.indexOf('iphone/iphone.css') > 0 || href.indexOf('iphone/iphone-compat.css') > 0){
-			    head.removeChild(iphone_links[ip]); 
-			}
-			
-		}
+
 		if (device){
 			this.setMobileDevice(device);
 			// add the new css files
@@ -499,7 +484,7 @@ dojo.declare("davinci.ve.Context", null, {
 		var path = new davinci.model.Path(filename);
 		return this.getFullResourcePath().removeLastSegments(1);
 	},
-	getProject : function(){
+	getBase : function(){
 		if(davinci.Runtime.singleProjectMode())
 			return davinci.Runtime.getProject();
 		
@@ -518,20 +503,83 @@ dojo.declare("davinci.ve.Context", null, {
 	 * @returns {davinci.model.Path} full path of resource
 	 */
     getPathRelativeToProject: function(resource) {
-        return (new davinci.model.Path(this.baseURL)).removeLastSegments(1)
-                .append(this.relativePrefix).append(resource);
+		var fullLibPath = new davinci.model.Path(resource.getPath());
+		return fullLibPath.relativeTo(this.getPath(),true).toString();	
     },
 
+    /* ensures the file has a valid theme.  Adds the users default if its not there alread */
+    loadTheme : function(){
+    	/* 
+    	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
+    	 * should load from prefs 
+    	 * 
+    	 * */
+    	var model = this.getModel();
+    	var imports = model.find({'elementType':'CSSImport', 'tag':'style'});
+		var defaultThemeName="claro";
+		var themePath = new davinci.model.Path(model.fileName);
+		/* remove the .theme file, and find themes in the given base location */
+		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
+		var themeHash = {};
+		var defaultTheme = null;
+		
+		for(var i=0;i<allThemes.length;i++){
+			
+			if(allThemes[i].name==defaultThemeName)
+				defaultTheme = allThemes[i];
+			
+			for(var k=0;k<allThemes[i]['files'].length;k++){
+				themeHash[allThemes[i]['files']] = allThemes[i];
+			}
+		}
+		/* check the header file for a themes CSS.  
+		 * 
+		 * TODO: This is a first level check, a good second level check
+		 * would be to grep the body classes for the themes className. this would be a bit safer.
+		 */
+		
+		for(var i=0;i<imports.length;i++){
+			var url = imports[i].url;
+			/* trim off any relative prefix */
+			for(var themeUrl in themeHash){
+				if(url.indexOf(themeUrl)  > -1){
+					// theme already exists
+					return true;
+				}
+			}
+		}
+		
+		var body = model.find({'elementType':'HTMLElement', 'tag':'body'},true);
+		body.setAttribute("class", defaultTheme.className);
+		/* add the css */
+		for(var i=0;i<defaultTheme.files.length;i++){
+			var url = new davinci.model.Path(defaultTheme.file.getPath()).removeLastSegments(1).append(defaultTheme.files[i]).relativeTo(this.getPath(),true);
+			this.addModeledStyleSheet(url.toString(), null, true);
+		}
+    	
+    	
+    },
+    
 	_setSource: function(source, callback, scope){
-	
+		
 		this._srcDocument=source;
+		
+		/* determinte if its the theme editor loading */
+		if(!source.themeCssfiles){ // css files need to be added to doc before body content
+			this.loadTheme();
+			this.loadRequires("html.body", true/*doUpdateModel*/, false, true /* skip UI load */ );
+		}
+		/* ensure the top level body deps are met (ie. maqetta.js, states.js and app.css) */
+		/* make sure this file has a valid/good theme */
+		
+		
 		if (this.rootWidget){
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
 			this.rootWidget._srcElement.setAttribute("id", "myapp");
 		}
 		var data = this._parse(source);
 		this._scriptAdditions=data.scriptAdditions;
-		
+		//debugger;
 		if(!this._frameNode){ // initialize frame
 			var dojoUrl;
 			
@@ -546,14 +594,14 @@ dojo.declare("davinci.ve.Context", null, {
 			/* get the base path, removing the file extension.  the base is used in the library call below
 			 * 
 			 */
-			var resourceBase = this.getPath().removeLastSegments(1);
+			var resourceBase = this.getBase();
 			if (!dojoUrl) {
 				// pull Dojo path from installed libs, if available
 				dojo.some(davinci.library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						
-						var fullDojoPath = new davinci.model.Path(this.getProject()).append(lib.root).append("dojo/dojo.js");
-						dojoUrl = fullDojoPath.relativeTo(this.getResourcePath(),true).toString();
+						var fullDojoPath = new davinci.model.Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
+						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
 						//dojoUrl = new davinci.model.Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
 						return true;
 					}
@@ -614,6 +662,8 @@ dojo.declare("davinci.ve.Context", null, {
 					head += '@import "'+ source.themeCssfiles[i] + '";\n';
 				}
 				head += '</style>';
+			}else{
+				this.loadTheme();
 			}
 			//head += '<style type="text/css">@import "claro.css";</style>';
 			head += "</head><body>";
@@ -660,7 +710,6 @@ dojo.declare("davinci.ve.Context", null, {
 					win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
-console.info("Content Dojo version: "+ win.dojo.version.toString());
 					context._setSourceData(data);
 					var mobileDevice = context.getMobileDevice();
 					if (mobileDevice){
@@ -728,7 +777,7 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	},
 
 	_setSourceData: function(data){
-		
+			
 		var frame = this.getFrameNode();
 		var loading = dojo.create("div",null, frame.parentNode, "first");
 
@@ -1075,8 +1124,8 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 		this._links.push(link);
 	},
 
-	addModeledStyleSheet: function(url, libBasePath) {
-		this.loadStyleSheet(url);
+	addModeledStyleSheet: function(url, libBasePath, skipDomUpdate) {
+		if(!skipDomUpdate) this.loadStyleSheet(url);
 		if (!this.model.hasStyleSheet(url)) {
 			this.model.addStyleSheet(url);
 			for (var css in this.model._loadedCSS) {
@@ -1997,14 +2046,14 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 	// XXX see addJavaScript() and addHeaderScript()
 	_reDojoJS: new RegExp(".*/dojo.js$"),
 	
-	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath) {
+	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath,skipDomUpdate) {
 
 		if (url) {
 			var isDojoJS = this._reDojoJS.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
 			//	  Adding it again will overwrite the existing Dojo, breaking some things.
 			//	  See bug 7585.
-			if (!isDojoJS) {
+			if (!isDojoJS && !skipDomUpdate) {
 				var absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
 				dojo.withGlobal(this.getGlobal(),
 						function() {
@@ -2040,7 +2089,9 @@ console.info("Content Dojo version: "+ win.dojo.version.toString());
 				}
 			}
 		} else if (text) {
-			this.getGlobal()['eval'](text);
+			/* run the requires if there is an iframe */
+			if(!skipDomUpdate) this.getGlobal()['eval'](text);
+		//	dojo.eval(text);
 			if (doUpdateModel || doUpdateModelDojoRequires) {
 				this._scriptAdditions = this.addHeaderScriptSrc(text, this._scriptAdditions,this.getDocumentElement().getChildElement('head'),this._statesJsScriptTag);
 			}

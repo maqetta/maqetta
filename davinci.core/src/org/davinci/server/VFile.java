@@ -209,7 +209,7 @@ public class VFile implements IVResource {
     }
 
     public boolean mkdir() {
-        return this.file.mkdir();
+        return this.file.mkdirs();
 
     }
 
@@ -317,7 +317,7 @@ public class VFile implements IVResource {
     }
 
     public boolean committed() {
-        return !this.workingCopy.exists();
+        return (this.file.exists() && !this.workingCopy.exists());
     }
 
     public boolean readOnly() {

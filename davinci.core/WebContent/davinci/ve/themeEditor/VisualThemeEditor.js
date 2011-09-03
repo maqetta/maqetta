@@ -26,13 +26,7 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 		this.basePath=new davinci.model.Path(resource.getPath());
 
-		var relativePrefix="";
-	    var folderDepth=this.basePath.getSegments().length-1;
-		if (folderDepth)
-		{
-			for (var i=0;i<folderDepth;i++)
-				relativePrefix+="../";
-		}
+		
 
 		this._handles=[];
 		this.context = new davinci.ve.themeEditor.Context({
@@ -40,7 +34,6 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			visualEditor:this,
 			containerNode: this.domNode,
 			baseURL : resource.getURL(),
-			relativePrefix:relativePrefix
 		});
 	
 		dojo.connect(this.context, "onSelectionChange",this, "onSelectionChange");

@@ -146,27 +146,47 @@ dojo.mixin(davinci.ui.Resource, {
 //			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 			dojo.byId('fileDialogParentFolder').innerText=folder.getPath();
 
-
 			var f0 = new dojox.form.Uploader({
 				label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
 				url:'./cmd/addFiles?path='+folder.getPath(), 
 				multiple:true
 			});
+
 			dojo.byId("btn0").appendChild(f0.domNode); // tried passing this into the constructor, but there's a bug that sizes the button wrong
 
 			var list = new dojox.form.uploader.FileList({uploader:f0}, "filelist");
 
-			var upload = dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ f0.upload(); });
+			var uploadHandler, uploadBtn = dijit.byId("uploadBtn");
+			uploadBtn.set("disabled", true);
+			dojo.connect(f0, 'onClick', function(){
+				if (uploadHandler) { dojo.disconnect(uploadHandler); }
+				uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){ f0.set("disabled", true); f0.upload(); });
+				if (uploadBtn.oldText) {
+					uploadBtn.containerNode.innerText = uploadBtn.oldText;
+				}
+				uploadBtn.set("disabled", false);
+			});
+
+			var setDone = function(){
+				f0.set("disabled", false);
+				dojo.disconnect(uploadHandler);
+				uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){ dialog.destroyRecursive(false); });
+				uploadBtn.oldText = uploadBtn.containerNode.innerText;
+				uploadBtn.containerNode.innerText = langObj.done;
+			};
 
 			dojo.connect(f0, "onComplete", function(dataArray){
-				f0.set("disabled", true);
 				dojo.forEach(dataArray, function(data){
 					// Refresh the changed folder
 					davinci.resource.resourceChanged('updated', folder);
 				});
-				dojo.disconnect(upload);
-				dojo.connect(dijit.byId("uploadBtn"), "onClick", null, function(){ dialog.destroyRecursive(false); });
-				dojo.byId("uploadBtn").innerText=langObj.done;
+				setDone();
+			});
+			dojo.connect(f0, "onError", function(args){
+				//FIXME: post error message
+				console.error("Upload error: ", args);
+				dialog.set("disabled", false);
+				setDone();
 			});
 		});
 		dialog.setContent(formHtml);

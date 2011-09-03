@@ -633,7 +633,8 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 						+ davinci.review.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
 					onChange: dojo.hitch(this,this._reviewFilterChanged),
 					checked: true,
-					reviewer:comment
+					reviewer:comment,
+					title: comment.email
 				});
 				this.reviewerList.addChild(check);
 				if(this._cached[this._currentPage]&&this._cached[this._currentPage].shownColors){

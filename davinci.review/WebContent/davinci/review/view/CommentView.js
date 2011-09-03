@@ -502,7 +502,10 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 	_onEditComment: function(args){
 		var form = this._commentForm,
 			comment = this.commentIndices[args.commentId];
-			
+		
+		if(comment.ownerId != davinci.Runtime.commenting_reviewerName.userName ||
+		comment.email != davinci.Runtime.commenting_reviewerName.email) return;
+		
 		if(form.isShowing){
 			// The form is open, we need to do some cleaning.
 			this._onCommentFormCancel();
@@ -529,7 +532,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
 			davinci.Runtime.commenting_reviewerName.userName,
 			form.commentId,
-			comment.state
+			comment.pageState
 		]);
 	},
 	
@@ -617,7 +620,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 				if(!dojo.some(reviewers,function(item){
 					if(item.email==comment.email)return true;
 					else return false;
-				}))
+				}) && davinci.Runtime.commenting_designerName != item.name)
 				reviewers.push({name:comment.ownerId,email:comment.email});
 			});
 			var children = this.reviewerList.getChildren();
@@ -633,7 +636,8 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 						+ davinci.review.Runtime.getColor(comment.name) +";'></div><span>"+comment.name+"</span>",
 					onChange: dojo.hitch(this,this._reviewFilterChanged),
 					checked: true,
-					reviewer:comment
+					reviewer:comment,
+					title: comment.email
 				});
 				this.reviewerList.addChild(check);
 				if(this._cached[this._currentPage]&&this._cached[this._currentPage].shownColors){

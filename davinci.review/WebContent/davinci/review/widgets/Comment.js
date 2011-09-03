@@ -90,6 +90,7 @@ dojo.declare("davinci.review.widgets.Comment",[dijit._Widget, dijit._Templated],
 		this.connect(this.editButton, "click", "_editComment");
 		this.connect(this.replyButton, "click", "_newReply");
 		this.connect(this.mainBody, "click", "focusComment");
+		this.connect(this.mainBody, "dblclick", "_editComment");
 		if(this.closed){
 			dojo.style(this.editButton,"display","none");
 			dojo.style(this.replyButton,"display","none");

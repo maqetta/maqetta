@@ -502,7 +502,10 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 	_onEditComment: function(args){
 		var form = this._commentForm,
 			comment = this.commentIndices[args.commentId];
-			
+		
+		if(comment.ownerId != davinci.Runtime.commenting_reviewerName.userName ||
+		comment.email != davinci.Runtime.commenting_reviewerName.email) return;
+		
 		if(form.isShowing){
 			// The form is open, we need to do some cleaning.
 			this._onCommentFormCancel();
@@ -529,7 +532,7 @@ dojo.declare("davinci.review.view.CommentView",	[ davinci.workbench.ViewPart ],{
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
 			davinci.Runtime.commenting_reviewerName.userName,
 			form.commentId,
-			comment.state
+			comment.pageState
 		]);
 	},
 	

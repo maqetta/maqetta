@@ -205,7 +205,7 @@ dojo.declare("davinci.review.widgets.PublishWizard",[dijit._Widget, dijit._Templ
 				width : "70px",
 				styles: "text-align: center;"
 			}, {
-				name : langObj.email,
+				name : langObj.emailAddress,
 				field : 'displayName',
 				width : "320px"
 			}, {

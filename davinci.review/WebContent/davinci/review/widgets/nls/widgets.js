@@ -50,7 +50,7 @@
 		"inviteFailed":"Failed to send out the invitation",
 		"warning":"Warning",
 		"user":"User",
-		"email":"Email",
+		"emailAddress":"Email",
 		"action":"Action",
 		"add":"Add",
 		"errorPublish":"Error to publish review session , response=${0}, reason=${1}",

@@ -345,15 +345,17 @@ dojo.declare("davinci.ve.Context", null, {
      * Sets the correct CSS files for the given mobile device.
      * @param device {string} device identifier, in form of "iphone" or
      *              "android_340x480" (taken from SVG silhouette file name)
+     * @param force {boolean} if true, forces setting of CSS files, even if
+     *              'device' is the same as the current device
      */
-	setMobileTheme: function(device) {
+	setMobileTheme: function(device, force) {
 	    function getDeviceCssFiles(dev) {
 	        var name = preview.silhouetteiframe.getMobileTheme(dev + '.svg');
 	        return preview.silhouetteiframe.getMobileCss(name);
 	    }
 
         var oldDevice = this.getMobileDevice() || 'none';
-        if (oldDevice === device) {
+        if (oldDevice === device && ! force) {
             return;
         }
 
@@ -703,13 +705,17 @@ dojo.declare("davinci.ve.Context", null, {
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
 					context._setSourceData(data);
-					var mobileDevice = context.getMobileDevice();
-					if (mobileDevice){
-						setTimeout(function(){
-							// have to delay this so Chrome will update the canvas correctly
-							context._editor.visualEditor.setDevice(mobileDevice);
-						},100);
-					}
+
+					// Set mobile device CSS files, but only after the initial page
+					// content has finished loading.  This prevents an issue where
+					// deleting a CSS file while the browser is parsing caused
+					// rules from later CSS files to not be used. See GitHub #899.
+					dojo.subscribe('/davinci/ui/context/loaded', function() {
+	                    var mobileDevice = context.getMobileDevice();
+	                    if (mobileDevice) {
+                            context._editor.visualEditor.setDevice(mobileDevice, true);
+	                    }
+					});
 				} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
@@ -793,7 +799,11 @@ dojo.declare("davinci.ve.Context", null, {
 				this._editor.visualEditor._onloadMessages.push("Warning. File refers to CSS theme '"+oldThemeName+"' which is not in your workspace. Using CSS theme '"+newThemeName+" instead.");
 			}
 		}
-		
+
+        dojo.connect(this.getGlobal(), 'onload', this, function() {
+            dojo.publish('/davinci/ui/context/loaded', [this]);
+        });
+
 		this.setHeader({
 			title: data.title,
 			scripts: data.scripts,
@@ -858,8 +868,6 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this._processWidgets(containerNode, active, states);
 		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
-		
-		dojo.publish("/davinci/ui/context/loaded", [this]);
 	},
 
 	/**

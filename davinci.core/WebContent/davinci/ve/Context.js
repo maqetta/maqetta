@@ -39,6 +39,7 @@ dojo.declare("davinci.ve.Context", null, {
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets = [];
+		this._links = [];
 	},
 	
 
@@ -340,59 +341,52 @@ dojo.declare("davinci.ve.Context", null, {
         }
     },
 	
+    /**
+     * Sets the correct CSS files for the given mobile device.
+     * @param device {string} device identifier, in form of "iphone" or
+     *              "android_340x480" (taken from SVG silhouette file name)
+     */
 	setMobileTheme: function(device) {
+	    function getDeviceCssFiles(dev) {
+	        var name = preview.silhouetteiframe.getMobileTheme(dev + '.svg');
+	        return preview.silhouetteiframe.getMobileCss(name);
+	    }
+
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice === device) {
             return;
         }
 
-        var theme = preview.silhouetteiframe.getMobileTheme(device+'.svg');
-		var cssFiles = preview.silhouetteiframe.getMobileCss(theme);
-
-		var oldCssFiles;
-		if (oldDevice){
-			oldCssFiles = preview.silhouetteiframe.getMobileCss(preview.silhouetteiframe.getMobileTheme(oldDevice+'.svg'));
-		} else {
-			oldCssFiles = preview.silhouetteiframe.getMobileCss('iPhone');
-		}
 		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
 		var lib = this.getLibraryBase('dojo', libVer);
 		var fullLibPath = new davinci.model.Path(this.getBase()).append(lib);
-		lib = fullLibPath.relativeTo(this.getPath(),true).toString();	
-		var doc = this.getDocument();
-		var head = doc.getElementsByTagName("head")[0];
-		// remove the old css files
-		for (var oc = 0; oc < oldCssFiles.length; oc++){
-			var qStr = 'link[href="'+lib+'/dojox/mobile/themes/'+oldCssFiles[oc]+'"]';
-			var links = head.querySelectorAll(qStr);
-			// remove the old css files
-			for(var x = 0; x < links.length; x++){
-				head.removeChild(links[x]);
-			}
-		}
+		lib = fullLibPath.relativeTo(this.getPath(),true).toString();
+		var baseUrl = lib + '/dojox/mobile/themes/';
 
-		if (device){
-			this.setMobileDevice(device);
-			// add the new css files
-			for (var i = 0; i < cssFiles.length; i++){
-				var link = doc.createElement("link");
-				link.setAttribute("rel", "stylesheet");
-				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojox/mobile/themes/"+cssFiles[i]);
-				
-				head.appendChild(link,0);
-			}
-		}else if (oldDevice){
-			// set it up for the old device
-			for (var i = 0; i < cssFiles.length; i++){
-				var link = doc.createElement("link");
-				link.setAttribute("rel", "stylesheet");
-				link.setAttribute("type", "text/css");
-				link.setAttribute("href", lib+"/dojox/mobile/themes/"+oldCssFiles[i]);
-				
-				head.appendChild(link,0);
-			}
-		}
+		dojo.withDoc(this.getDocument(), function() {
+	        // remove the old css files
+		    getDeviceCssFiles(oldDevice).forEach(function(file) {
+	            var url = baseUrl + file;
+	            dojo.query('link[href="' + url + '"]').forEach(function(link) {
+	                dojo.destroy(link);
+	            });
+		    });
+
+	        // add new css files
+		    getDeviceCssFiles(device).forEach(function(file) {
+                var url = baseUrl + file;
+                dojo.create('link',
+                    {
+                        rel: 'stylesheet',
+                        type: 'text/css',
+                        href: url
+                    },
+                    dojo.doc.getElementsByTagName('head')[0]
+                );
+		    });
+		});
+
+        this.setMobileDevice(device);
 	},
 	
 	/**
@@ -1095,32 +1089,48 @@ dojo.declare("davinci.ve.Context", null, {
 //		davinci.ve.widget.setStyleValues(this.container, values); //TODO
 	},
 
+	/**
+	 * Load the style sheet into the page's DOM.
+	 * @param url {string}
+	 */
 	loadStyleSheet: function(url) {
-		if (!url) {
-			return;
-		}
-		
-		if (!this._links) {
-			this._links = [];
-		}
-		var found = dojo.some(this._links, function(val) {
-			return val.getAttribute('href') == url;
+        // don't add if stylesheet is already loaded in the page
+		var links = this._links,
+		    doc = this.getDocument();
+		var found = links.some(function(val) {
+			return val.getAttribute('href') === url;
 		});
 		if (found) {
 			return;
 		}
-		
-		var doc = this.getDocument();
-		var head = doc.getElementsByTagName("head")[0];
-		var link = doc.createElement("link");
-		link.setAttribute("rel", "stylesheet");
-		link.setAttribute("type", "text/css");
-		link.setAttribute("href", url);
-		
-		head.appendChild(link);
-		
-		this._links.push(link);
+
+		dojo.withDoc(doc, function() {
+	        var link = dojo.create('link',
+	            {
+    	            rel: 'stylesheet',
+    	            type: 'text/css',
+    	            href: url
+    	        },
+	            doc.getElementsByTagName('head')[0]
+	        );
+	        
+	        links.push(link);
+		});
 	},
+
+	/**
+	 * Remove style sheet from page's DOM.
+	 * @param url {string}
+	 */
+    unloadStyleSheet: function(url) {
+        this._links.some(function(val, idx) {
+            if (val.getAttribute('href') === url) {
+                this._links.splice(idx, 1);
+                dojo.destroy(val);
+                return true; // break
+            }
+        });
+    },
 
 	addModeledStyleSheet: function(url, libBasePath, skipDomUpdate) {
 		if(!skipDomUpdate) this.loadStyleSheet(url);
@@ -1138,29 +1148,6 @@ dojo.declare("davinci.ve.Context", null, {
 			this.hotModifyCssRule(e);
 		}
 	},
-
-	unloadStyleSheet: function(url){
-		if(!url){
-			return;
-		}
-
-		var link = undefined;
-		if(this._links){
-			for(var i = 0; i < this._links.length; i++){
-				var href = this._links[i].getAttribute("href");
-				if(href == url){
-					link = this._links[i];
-					this._links.splice(i, 1);
-					break;
-				}
-			}
-		}
-		if(link){
-			link.parentNode.removeChild(link);
-			dojo._destroyElement(link);
-		}
-	},
-
 
 // XXX no 'getRealUrl()' exists in this class
 //	resolveUrl: function(node){

@@ -47,8 +47,17 @@ dojo.declare("davinci.review.editor.Context", null, {
 //						this.version,
 						davinci.Runtime.commenting_commentId
 					]);
+					//this.parseHyperlink();
 				})
 			}, containerNode);
+		}else{
+			this._initDrawing();
+					dojo.publish("/davinci/review/context/loaded", [
+						this,
+						this.fileName,
+						davinci.Runtime.commenting_commentId
+					]);
+			this.parseHyperlink();
 		}
 	},
 	
@@ -185,6 +194,74 @@ dojo.declare("davinci.review.editor.Context", null, {
 		dojo.forEach(this._cxtConns, dojo.disconnect);
 		dojo.forEach(this._cxtSubs, dojo.unsubscribe);
 		delete doc.annotationSureface;
+	},
+	
+	parseHyperlink: function(){
+		dojo.connect(this.frame.contentWindow, "click", dojo.hitch(this, function(evt){
+			var langObj = dojo.i18n.getLocalization("davinci.review.widgets", "widgets");
+			var linkList = dojo.query('a', this.getContainerNode());
+			var basePath= new davinci.model.Path(this.fileName);
+			if(evt.target.tagName == 'a' || evt.target.tagName == 'A'){
+				item = (evt.target.nodeType == 3) ? evt.target.parentNode : evt.target;
+				var linkAttr = dojo.attr(item, "href");
+				if (linkAttr.indexOf("http") != -1){
+					//console.log("it's an external link");
+					dojo.attr(item, "target", "new");
+				}else{
+					targetAttr = dojo.attr(item, "target");
+					var linkFileName = linkAttr;
+					var linkFilePath = basePath.getParentPath() + "/" + linkAttr;
+					var result = davinci.Runtime.serverJSONRequest({
+		                url: "./cmd/detectLinkedFile",
+		                sync: true,
+		                content:{
+		                	'fileName': linkFilePath
+	                	}
+                	});
+					console.log("file exists: " + result);
+					
+					if (result == true ){
+						if (targetAttr && (targetAttr.indexOf("new")!=-1)){
+							//console.log("it's an internal link opened in new target");
+							dojo.attr(item, "href", "#");
+							dojo.attr(item, "target", "");
+							var originalFileName = this.resourceFile.name;
+							var node = new Object(this.resourceFile);
+							var pathArray = linkFilePath.split('/');
+							node.name =  "./" + pathArray[pathArray.length-2] + "/" + pathArray[pathArray.length-1];
+							davinci.Workbench.openEditor({
+								fileName: node,
+								content: node.getText()
+							});
+							this.resourceFile.name = originalFileName;
+						}else{
+							//console.log("it's an internal link opened here");
+							var tab = dijit.byId(davinci.Workbench._filename2id(this.fileName));
+							tab.onClose();
+							if(tab){
+								dojo.attr(tab, "title", linkFileName);
+								this.baseURL = item.href.substr(0, item.href.lastIndexOf('/')+1) + linkFileName;
+								this.fileName = linkFilePath;
+								this.setURL(this.baseURL);
+								this.setSource();
+							}
+						}
+					}else{
+						dojo.attr(item, "href", "#");
+						if(!this.warningDialog){
+		            		this.warningDialog = new dijit.Dialog({
+		            			title: langObj.warning,
+		            			content: langObj.pageMissed
+		            		});
+		            		this.warningDialog.show();
+		            		;
+		            	}else{
+		            		this.warningDialog.show();
+		            	}
+					}
+				}
+			}
+		}));
 	}
 });
 

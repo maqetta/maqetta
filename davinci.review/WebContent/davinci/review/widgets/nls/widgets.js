@@ -75,6 +75,8 @@
 		
 		//MailFailurDialogContent.html
 		"inviteNotSent":"Invitation was not sent",
-		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually."
-
+		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually.",
+		
+		//Context.js
+		"pageMissed" : "The linked page doesn't exist!"
 })

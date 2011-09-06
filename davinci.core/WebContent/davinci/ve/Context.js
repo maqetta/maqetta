@@ -475,22 +475,18 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	getResourcePath: function() {
-		var model = this.getModel();
-		var filename = model.fileName;
-		var path = new davinci.model.Path(filename);
 		return this.getFullResourcePath().removeLastSegments(1);
 	},
-	getBase : function(){
-		if(davinci.Runtime.singleProjectMode())
+
+	getBase: function(){
+		if(davinci.Runtime.singleProjectMode()) {
 			return davinci.Runtime.getProject();
-		
+		}
 	},
 	
 	getFullResourcePath: function() {
-		var model = this.getModel();
-		var filename = model.fileName;
-		var path = new davinci.model.Path(filename);
-		return path;
+		var filename = this.getModel().fileName;
+		return new davinci.model.Path(filename);
 	},
 	
 	/**
@@ -504,8 +500,7 @@ dojo.declare("davinci.ve.Context", null, {
     },
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
-    loadTheme : function(){
-    	
+    loadTheme: function(){
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
     	 * should load from prefs 
@@ -524,7 +519,8 @@ dojo.declare("davinci.ve.Context", null, {
 			
 			if(allThemes[i].name==defaultThemeName)
 				defaultTheme = allThemes[i];
-			
+
+			//FIXME: this can't be right...
 			for(var k=0;k<allThemes[i].files.length;k++){
 				themeHash[allThemes[i].files] = allThemes[i];
 			}
@@ -1014,26 +1010,22 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	getHeader: function(){
-		return (this._header || {});
+		return this._header || {};
 	},
-	
 
-	
 	setHeader: function(header){
-		
 		var oldStyleSheets,
-		
 			newStyleSheets,
 			oldBodyClasses,
 			newBodyClasses;
 		if(this._header){
-			oldStyleSheets = (this._header.styleSheets || []);
+			oldStyleSheets = this._header.styleSheets || [];
 			oldBodyClasses = this._header.bodyClasses;
 		}else{
 			oldStyleSheets = [];
 		}
 		if(header){
-			newStyleSheets = (header.styleSheets || []);
+			newStyleSheets = header.styleSheets || [];
 			newBodyClasses = header.bodyClasses;
 			if(header.modules){
 				dojo.forEach(header.modules, this._require, this);
@@ -1073,7 +1065,7 @@ dojo.declare("davinci.ve.Context", null, {
 			dojo.forEach(oldStyleSheets, this.unloadStyleSheet, this);
 		}
 
-		this.setStyle((header ? header.style : undefined));
+		this.setStyle(header ? header.style : undefined);
 
 		this._header = header;
 	},
@@ -1243,12 +1235,12 @@ dojo.declare("davinci.ve.Context", null, {
 
 	getDojo: function(){
 		var win = this.getGlobal();
-		return (win.dojo || dojo);
+		return win.dojo || dojo;
 	},
 
 	getDijit: function(){
 		var win = this.getGlobal();
-		return (win && win.dijit || dijit);
+		return win && win.dijit || dijit;
 	},
 
 	//FIXME: accessor func is unnecessary?  Make _frameNode public instead?
@@ -2039,13 +2031,10 @@ dojo.declare("davinci.ve.Context", null, {
 		 return id;
 	},
 
-	// XXX see addJavaScript() and addHeaderScript()
-	_reDojoJS: new RegExp(".*/dojo.js$"),
-	
 	addJavaScript: function(url, text, doUpdateModel, doUpdateModelDojoRequires, baseSrcPath,skipDomUpdate) {
 
 		if (url) {
-			var isDojoJS = this._reDojoJS.test(url);
+			var isDojoJS = /\/dojo.js$/.test(url);
 			// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
 			//	  Adding it again will overwrite the existing Dojo, breaking some things.
 			//	  See bug 7585.

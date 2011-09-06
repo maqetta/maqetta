@@ -49,7 +49,7 @@ public class Resource {
 
             jsonWriter.startObject().addField("name", pathName);
             jsonWriter.addField("isDir", listFiles[j].isDirectory());
-            jsonWriter.addField("isNew", !listFiles[j].committed());
+            jsonWriter.addField("isNew", listFiles[j].isNew());
             jsonWriter.addField("readOnly", listFiles[j].readOnly());
             if (listFiles[j] instanceof VLibraryResource) {
                 VLibraryResource r = (VLibraryResource) listFiles[j];

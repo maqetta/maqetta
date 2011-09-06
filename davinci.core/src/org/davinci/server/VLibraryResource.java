@@ -250,8 +250,8 @@ public class VLibraryResource implements IVResource {
         return this.library.getID();
     }
 
-    public boolean committed() {
-        return true;
+    public boolean isNew() {
+        return false;
     }
 
     public boolean readOnly() {

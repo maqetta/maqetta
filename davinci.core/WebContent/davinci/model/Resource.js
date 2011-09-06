@@ -187,20 +187,35 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	  }
       onComplete(this.children);
   }
-  davinci.model.Resource.Folder.prototype._addFiles= function(responseObject)
-  {
-	
+  
+  
+  /*
+   * add files recreates the children 
+   * should refactor the naming.
+   * 
+   */
+  davinci.model.Resource.Folder.prototype._addFiles= function(responseObject){
 	  this.children=[];
-		for (var i=0;i<responseObject.length;i++)
-		{
-			var child;
+	  this._appendFiles(responseObject);
+  }
+  
+  davinci.model.Resource.Folder.prototype._appendFiles= function(responseObject){
+	
+	  
+		for (var i=0;i<responseObject.length;i++){
+			var child = this._getChild(responseObject[i].name);
+			var hasChild = (child!=null);
+			
 			if (responseObject[i].isDir || responseObject[i].isLib) {
-			    child=new davinci.model.Resource.Folder(responseObject[i].name,this);
-			    if (responseObject[i].isLib) {
+				if(!hasChild)
+					child=new davinci.model.Resource.Folder(responseObject[i].name,this);
+			    
+				if (responseObject[i].isLib) {
 			        child.isLibrary = true;
 			    }
 			} else {
-				child=new davinci.model.Resource.File(responseObject[i].name,this);
+				if(!hasChild)
+					child=new davinci.model.Resource.File(responseObject[i].name,this);
 			}
           
             child.link=responseObject[i].link;
@@ -210,8 +225,8 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
             	child.libraryId = responseObject[i].libraryId;
             	child.libVersion = responseObject[i].libVersion;
             }
-            
-            this.children.push(child);
+            if(!hasChild)
+            	this.children.push(child);
 		}
 		this._isLoaded=true;
 	  
@@ -231,8 +246,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	  return result;
   }
 
-  davinci.model.Resource.Folder.prototype._getChild= function(name)
-  {
+  davinci.model.Resource.Folder.prototype._getChild= function(name){
 	  if (!this.__CASE_SENSITIVE){
 		  name=name.toLowerCase();
 	  }
@@ -242,6 +256,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 			  return this.children[j];
 		  }
 		}
+		return null;
   }
 
   

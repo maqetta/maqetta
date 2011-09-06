@@ -220,7 +220,6 @@
 						<include name="dojox/"/>
 						<include name="eclipse/"/>
 			            <include name="preview/"/>
-			    		<include name="project/"/>
 					</fileset>
 		</copy>
 	</target>
@@ -233,8 +232,6 @@
 		<delete dir="${target.folder}/WebContent/davinci"/>
 		<delete dir="${target.folder}/WebContent/eclipse"/>
 	    <delete dir="${target.folder}/WebContent/preview"/>
-		<delete dir="${target.folder}/WebContent/project"/>
-		
 		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached Dojo build">
 					<fileset dir="${dojo.cache.directory}">
 						<include name="davinci/"/>
@@ -243,7 +240,6 @@
 						<include name="dojox/"/>
 						<include name="eclipse/"/>
 			            <include name="preview/"/>
-			    		<include name="project/"/>
 					</fileset>
 		</copy>
 	</target>

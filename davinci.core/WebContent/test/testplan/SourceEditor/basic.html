@@ -28,34 +28,22 @@
 			which shows the design pane on the top and source pane on the bottom. 
 		The code in the source pane should look something like this:
 <pre>
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;Untitled&lt;/title&gt;
-&lt;script type='text/javascript'&gt;
-oam_urls={
-
-}
-&lt;/script&gt;
-&lt;style type="text/css"&gt;
-@import "./themes/claro/claro.css";
-@import "./dojo/resources/dojo.css";
-&lt;/style&gt;
-&lt;script type="text/javascript" src="./dojo/dojo.js"
-	djConfig="parseOnLoad: true"&gt;&lt;/script&gt; 
-&lt;script type="text/javascript"&gt;
-    dojo.require("dojo.parser");
-    dojo.require("workspace.davinci.States");
-&lt;/script&gt;
-&lt;/head&gt;
-&lt;body class="claro"&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+&lt;meta charset="utf-8"/>
+&lt;title>Untitled&lt;/title>
+&lt;style>@import "themes/claro/claro.css";@import "app.css";
+&lt;/style>
+&lt;script type="text/javascript" src="maqetta/maqetta.js">&lt;/script>
+&lt;script type="text/javascript" src="maqetta/States.js">&lt;/script>
+&lt;/head>
+&lt;body class="claro" data-davinci-ws="collapse" id="myapp" dvFlowLayout="true">
+&lt;/body>
+&lt;/html>
 </pre></li>
-		<li>Verify that you can highlight and copy/paste the source code into some other text editor.
-			<span style="color:red;font-weight:bold;font-style:italic;">Integration with system
-			clipboard not working in 0.6, will be fixed for 0.7.)</span></li>
-		<li>Click on the "Save" icon on the toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
+		<li>Verify that you can highlight and copy/paste the source code into some other text editor.</li>
+		<li>Click on the "Save" icon on the toolbar to save the new file. </li>
 		<li>Click on the "X" close button for the editor tab for this file</li>
 		<li>In the Files palette, double-click on the file you just created to re-open the file.
 			Go into Split View.</li>

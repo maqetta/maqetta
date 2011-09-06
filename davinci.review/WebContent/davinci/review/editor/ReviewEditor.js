@@ -67,6 +67,7 @@ dojo.declare("davinci.review.editor.ReviewEditor", davinci.ui.ModelEditor, {
 
 		this.title = dojo.doc.title;
 		this.context.setSource();
+//	   	this.context.parseHyperlink();
 	},
 	
 	destroy : function (){

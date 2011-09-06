@@ -62,6 +62,7 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 			model: model, id:'resourceTree',
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: this._getIconClass,
+			getRowClass: this._getRowClass,
 			transforms: [davinci.resource.alphabeticalSort],
 			isMultiSelect: true});
 
@@ -139,26 +140,26 @@ dojo.declare("davinci.workbench.Explorer", davinci.workbench.ViewPart, {
 	},
 	
 	_getIconClass: function(item, opened){
-		
-		var readOnly = "";
-		if(item.readOnly){
-			readOnly = " readOnlyResource";
-		}
-		
-		if (item.elementType=="Folder"){
-			return (opened ? "dijitFolderOpened" : "dijitFolderClosed") + readOnly;
+		if (item.elementType == "Folder"){
+			return opened ? "dijitFolderOpened" : "dijitFolderClosed";
 		}
 		if (item.elementType=="File"){
 			var icon;
-			var fileType=item.getExtension();
-			var extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
-				return extension.extension==fileType;
-			});
+				fileType=item.getExtension();
+				extension=davinci.Runtime.getExtension("davinci.fileType", function (extension){
+					return extension.extension==fileType;
+				});
 			if (extension){
-				icon=extension.iconClass + readOnly;
+				icon=extension.iconClass;
 			}
-			return icon ||	("dijitLeaf" + readOnly);
+			return icon || "dijitLeaf";
 		}
-		return "dijitLeaf" + readOnly;
+		return this.prototype.getIconClass(item, opened);
+	},
+
+	_getRowClass: function(item) {
+		if (item.readOnly) {
+			return "readOnlyResource";
+		}
 	}
 });

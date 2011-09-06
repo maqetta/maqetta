@@ -360,3 +360,8 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
     margin-left: 20px;
     margin-right: 20px;
 }
+
+/* Explorer */
+.readOnlyResource .dijitTreeLabel {
+	font-style: italic;
+}

@@ -41,7 +41,9 @@
         },
         "iconPos": {
             "datatype": "string"
-        },
+        }
+        /*FIXME: Restore with fix to #856
+		,
         "fixed": {
             "datatype": "string",
             "defaultValue": "",
@@ -57,6 +59,7 @@
                 }
             ]
         }
+        */
     },
     "content": "<ul></ul>"
 }

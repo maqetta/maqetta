@@ -95,7 +95,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 	},
 
 
-	/*
+	
 	addModeledStyleSheet : function(url, baseSrcPath) {
 		// "baseSrcPath" is the tail of the style sheet path
 		// * this is so we can determine if a link already exists in the file but has the 
@@ -114,7 +114,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 		
        this._srcDocument.addStyleSheet(url, null, true);
     },
-   */
+ 
     _findScriptAdditions : function(){
     	// this is a bit gross and dojo specific, but...... guess a necisary evil.
     	   	

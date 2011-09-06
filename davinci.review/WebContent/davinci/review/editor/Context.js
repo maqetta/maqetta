@@ -233,7 +233,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 				if(evt.target.tagName == 'a' || evt.target.tagName == 'A'){
 					item = (evt.target.nodeType == 3) ? evt.target.parentNode : evt.target;
 					var linkAttr = dojo.attr(item, "href");
-					if (linkAttr.indexOf("http") != -1){
+					if (this.isExternalURL(linkAttr) == true){
 						//console.log("it's an external link");
 						dojo.attr(item, "target", "new");
 					}else{
@@ -247,12 +247,12 @@ dojo.declare("davinci.review.editor.Context", null, {
 								'fileName': linkFilePath
 							}
 						});
-						console.log("file exists: " + result);
+						//console.log("file exists: " + result);
 						
 						if (result == true ){
 							if (targetAttr && (targetAttr.indexOf("new")!=-1)){
 								//console.log("it's an internal link opened in new target");
-								dojo.attr(item, "href", "#");
+								dojo.attr(item, "href", "");
 								dojo.attr(item, "target", "");
 								var originalFileName = this.resourceFile.name;
 								var node = new Object(this.resourceFile);
@@ -276,7 +276,7 @@ dojo.declare("davinci.review.editor.Context", null, {
 								}
 							}
 						}else{
-							dojo.attr(item, "href", "#");
+							dojo.attr(item, "href", "");
 							if(!this.warningDialog){
 			            		this.warningDialog = new dijit.Dialog({
 			            			title: langObj.warning,
@@ -292,6 +292,19 @@ dojo.declare("davinci.review.editor.Context", null, {
 				}
 			}))
 		);
+	},
+	
+	isExternalURL: function(url){
+		if (url.indexOf("http") != -1){
+			var localhost = window.location.host;
+			if (url.indexOf(localhost)!= -1){
+				return false;
+			}else{
+				return true;
+			}
+		}else{
+			return false;
+		}
 	}
 });
 

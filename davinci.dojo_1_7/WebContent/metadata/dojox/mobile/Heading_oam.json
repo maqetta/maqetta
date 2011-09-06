@@ -51,7 +51,9 @@
         },
         "iconBase": {
             "datatype": "string"
-        },
+        }
+        /*FIXME: Restore with fix to #856
+		,
         "fixed": {
             "datatype": "string",
             "defaultValue": "",
@@ -67,6 +69,7 @@
                 }
             ]
         }
+        */
     },
     "content": "<h1 label='Heading'></h1>"
 }

@@ -39,11 +39,14 @@ import javax.xml.xpath.*;
 public class EclipseProjectUtil {
 	/* utilities for creating the XML files needed in an eclipse project */
 	
+	public static String PROJECT_FILE = ".project";
+	
+	
 	
 	public static Hashtable getEclipseConfig(String projectName){
 		Hashtable config = new Hashtable();
 		try{
-		config.put(".project", EclipseProjectUtil.getProjectFile(projectName));
+		config.put(EclipseProjectUtil.PROJECT_FILE, EclipseProjectUtil.getProjectFile(projectName));
 		config.put(".settings/.jsdtscope", EclipseProjectUtil.getJsdtScope());
 		config.put(".settings/org.eclipse.wst.common.component", EclipseProjectUtil.getCommonComponent(projectName));
 		config.put(".settings/org.eclipse.wst.common.project.facet.core.xml", EclipseProjectUtil.getCommonProjectFacetCore());

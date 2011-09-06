@@ -237,9 +237,13 @@ davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
 };   
 
 davinci.html.HTMLFile.prototype.hasStyleSheet = function (url) {
+	var imports = this.find({elementType:'CSSImport'});
+	for(var i=0;i<imports.length;i++){
+		if(imports[i].url == url) return true;
+		
+	}
 
-    return (url in this._loadedCSS);
-
+	return false;
 };
 
 davinci.html.HTMLFile.prototype.addStyleSheet = function(url, content, dontLoad) {

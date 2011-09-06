@@ -505,13 +505,14 @@ dojo.declare("davinci.ve.Context", null, {
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme : function(){
+    	
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
     	 * should load from prefs 
     	 * 
     	 * */
     	var model = this.getModel();
-    	var imports = model.find({elementType:'CSSImport', tag:'style'});
+    	var imports = model.find({elementType:'CSSImport'});
 		var defaultThemeName="claro";
 		var themePath = new davinci.model.Path(model.fileName);
 		/* remove the .theme file, and find themes in the given base location */
@@ -656,9 +657,12 @@ dojo.declare("davinci.ve.Context", null, {
 					head += '@import "'+ source.themeCssfiles[i] + '";\n';
 				}
 				head += '</style>';
-			}else{
+			}
+			/*
+			else{
 				this.loadTheme();
 			}
+			*/
 			//head += '<style type="text/css">@import "claro.css";</style>';
 			head += "</head><body>";
 			if (dojoUrl) {

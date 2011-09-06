@@ -18,10 +18,12 @@ public class DirectoryFilter implements IVResourceFilter {
     public boolean isHidden(IVResource file) {
         IPath path = new Path(file.getPath());
         for (int i = 0; i < this.filterDirs.length; i++) {
-            IPath fp = new Path(filterDirs[i]);
-            if (fp.isPrefixOf(path)) {
-                return true;
+            for(int k=0;k<path.segmentCount();k++){
+            	String seg = path.segment(k);
+            	if(seg!=null && seg.equalsIgnoreCase(filterDirs[i])) return true;
             }
+            
+            
         }
         return false;
     }

@@ -103,6 +103,7 @@ dojo.mixin(davinci.ui.Resource, {
 			onCancel:function(){this.destroyRecursive(false);}});	
 		
 		dialog.setContent(formHtml);	
+
 		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
 		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(prop, oldValue, newValue){
@@ -177,8 +178,15 @@ dojo.mixin(davinci.ui.Resource, {
 
 			dojo.connect(f0, "onComplete", function(dataArray){
 				dojo.forEach(dataArray, function(data){
-					// Refresh the changed folder
-					davinci.resource.resourceChanged('updated', folder);
+					
+					/* 
+					 * need to add to the client side without a server call, mimic the results of a server call
+					 * private API call since this is all part of the resource package.
+					 * 
+					 *  */
+					folder._appendFiles([{isDir:false, isLib:false, isNew:false,name:data.file}])
+					var changed = new davinci.model.Path(folder.getPath()).append(data.file);
+					davinci.resource.resourceChanged('updated', changed.toString());
 				});
 				setDone();
 			});

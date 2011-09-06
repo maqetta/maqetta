@@ -5,13 +5,14 @@ import java.util.Arrays;
 
 import org.davinci.server.user.User;
 import org.davinci.server.util.JSONWriter;
+import org.maqetta.project.util.EclipseProjectUtil;
 
 public class Resource {
 
     static ArrayList resourceFilter = new ArrayList();
     static {
         DirectoryFilter df = new DirectoryFilter(new String[] { IDavinciServerConstants.SETTINGS_DIRECTORY_NAME,
-            IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME, IDavinciServerConstants.SVN_DIRECTORY_NAME });
+            IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME, IDavinciServerConstants.SVN_DIRECTORY_NAME, EclipseProjectUtil.PROJECT_FILE });
 
         Resource.addFilter(df);
         Resource.addFilter(new WorkingCopyFilter());
@@ -49,7 +50,7 @@ public class Resource {
 
             jsonWriter.startObject().addField("name", pathName);
             jsonWriter.addField("isDir", listFiles[j].isDirectory());
-            jsonWriter.addField("isNew", !listFiles[j].committed());
+            jsonWriter.addField("isNew", listFiles[j].isNew());
             jsonWriter.addField("readOnly", listFiles[j].readOnly());
             if (listFiles[j] instanceof VLibraryResource) {
                 VLibraryResource r = (VLibraryResource) listFiles[j];

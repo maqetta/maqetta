@@ -191,8 +191,8 @@ public class VDirectory implements IVResource {
         return this.getPath();
     }
 
-    public boolean committed() {
-        return true;
+    public boolean isNew() {
+        return false;
     }
 
     public boolean readOnly() {

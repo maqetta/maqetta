@@ -79,6 +79,8 @@ public class VFile implements IVResource {
         return this.file.exists() || this.workingCopy.exists();
     }
 
+    
+    
     public boolean isDirty() {
         return this.workingCopy.exists();
     }
@@ -316,8 +318,8 @@ public class VFile implements IVResource {
         return null;
     }
 
-    public boolean committed() {
-        return (this.file.exists() && !this.workingCopy.exists());
+    public boolean isNew() {
+        return (!this.file.exists() && this.workingCopy.exists());
     }
 
     public boolean readOnly() {

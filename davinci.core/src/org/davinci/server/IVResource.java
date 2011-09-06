@@ -44,7 +44,7 @@ public interface IVResource {
     public boolean isDirectory();
 
     /* only working copy no actual saved file */
-    public boolean committed();
+    public boolean isNew();
 
     public void removeWorkingCopy();
 

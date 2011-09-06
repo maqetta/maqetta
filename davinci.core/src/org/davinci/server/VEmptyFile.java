@@ -130,9 +130,9 @@ public class VEmptyFile implements IVResource {
         return null;
     }
 
-    public boolean committed() {
+    public boolean isNew() {
 
-        return true;
+        return false;
     }
 
     public boolean readOnly() {

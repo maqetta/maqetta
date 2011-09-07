@@ -19,6 +19,7 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 	data: null,
 	tool: "",
 	palette: null,
+	category: "",
 
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
@@ -40,6 +41,13 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 
 		img.src = this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
+		dojo.create('span',
+		        {
+		            className: 'maqWidgetsCategory',
+		            innerHTML: this.category
+		        },
+		        a
+		);
 
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);

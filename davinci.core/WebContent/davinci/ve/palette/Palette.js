@@ -179,7 +179,8 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 				paletteId: this.id,
 				type: item.type,
 				data: item.data || {type: item.type, properties: item.properties, children: item.children},
-				tool: item.tool
+				tool: item.tool,
+				category: component.name
 			};
 			this._createItem(opt);
 		}, this);
@@ -207,25 +208,21 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		// <DIV class="dojoyPaletteFolder">
 		//     <A href="javascript:void(0)"><IMG src="a.gif">label</A>
 		// </DIV>
-		var div = this.folderTemplate = dojo.doc.createElement("DIV");
-		div.className = "dojoyPaletteCommon dojoyPaletteFolder dojoyPaletteFolderLow";
-		var a = dojo.doc.createElement("A");
-		a.href = "javascript:void(0)";
-		var img = dojo.doc.createElement("IMG");
-		img.border = "0";
-		a.appendChild(img);
-		div.appendChild(a);
+		this.folderTemplate = dojo.create('div',
+		        {
+		            className: 'dojoyPaletteCommon dojoyPaletteFolder dojoyPaletteFolderLow',
+		            innerHTML: '<a href="javascript:void(0)"><img border="0"/></a>'
+		        }
+		);
 	},
 
 	_createItemTemplate: function(){
-		var div = this.itemTemplate = dojo.doc.createElement("DIV");
-		div.className = "dojoyPaletteCommon dojoyPaletteItem";
-		var a = dojo.doc.createElement("A");
-		a.href = "javascript:void(0)";
-		var img = dojo.doc.createElement("IMG");
-		img.border = "0";
-		a.appendChild(img);
-		div.appendChild(a);
+	    this.itemTemplate = dojo.create('div',
+	            {
+	                className: 'dojoyPaletteCommon dojoyPaletteItem',
+	                innerHTML: '<a href="javascript:void(0)"><img border="0"/></a>'
+	            }
+	    );
 	},
 
 	_createHeader: function(){
@@ -244,20 +241,37 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	},
 	
 	_filter: function(e) {
-		var children = this.getChildren();
-		var value = this.filterField.value;
-		for(var i = 0; i < children.length; i++){
-			var child = children[i];
-			if(value == "") {
-				dojo.style(child.domNode, "display", "block");
-			}else if(child.declaredClass == "davinci.ve.palette.PaletteFolder") {
-				dojo.style(child.domNode, "display", "none");
-			}else if((child.name && child.name.match(new RegExp(value,"i")))) {
-				dojo.style(child.domNode, "display", "block");
-			}else{
-				dojo.style(child.domNode, "display", "none");
-			}
-		}
+        var value = this.filterField.value,
+            re = new RegExp(value, 'i'),
+            action;
+
+        // reset to default state -- only show category headings
+	    function resetWidgets(child) {
+            var style = child.declaredClass === 'davinci.ve.palette.PaletteFolder' ?
+                    'block' : 'none';
+            dojo.style(child.domNode, 'display', style);
+	    }
+
+	    // show widgets which match filter text
+	    function filterWidgets(child) {
+            if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
+                dojo.style(child.domNode, 'display', 'none');
+            } else if (child.name && re.test(child.name)) {
+                dojo.style(child.domNode, 'display', 'block');
+            } else {
+                dojo.style(child.domNode, 'display', 'none');
+            }
+	    }
+
+	    var action;
+	    if (value === '') {
+	        action = resetWidgets;
+	        dojo.removeClass(this.domNode, 'maqWidgetsFiltered');
+	    } else {
+	        action = filterWidgets;
+	        dojo.addClass(this.domNode, 'maqWidgetsFiltered');
+	    }
+        this.getChildren().forEach(action);
 	},
 	
 	_createItem: function(opt){

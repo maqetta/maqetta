@@ -135,11 +135,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	},
 	
 	
-//    die: function() {
-//        this._inline.destroyDescendants();
-//        this._inline.destroy();
-//        delete this._inline;
-//    },
 
     addOne: function() {
         this._gridColDS.newItem({rowid: this._rowid++, width: "auto", editable: true, hidden: false});
@@ -254,10 +249,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		var properties = {};
 		properties['data'] = data;
 		storeWidget._srcElement.setAttribute('url', ''); 
-		//storeWidget._srcElement.setAttribute('jsonpcallback', '');
 		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; // wdr 3-11
 		var command = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
-		//var command = new davinci.ve.commands.ModifyFileItemStoreCommand(storeWidget, properties);
 		store.data = data;
 
 		return command;
@@ -282,7 +275,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	updateWidgetForUrlStore: function(jsonP){
 		
 		var structure = [];
-    	//var textBox = dijit.byId("davinci.ve.input.DataGridInput.url"); 
     	var textArea = dijit.byId("davinciIleb");
     	var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
     	this._url = textArea.value;
@@ -299,9 +291,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     		}
     		url = file.getURL();
     	}
-    	//this._widget._edit_context.baseURL = http://localhost:8080/davinci/user/user5/ws/workspace/file1.html
-    	//url = 'http://localhost:8080/davinci/user/user5/ws/workspace/' + url;
-    	//var store = new dojo.data.ItemFileReadStore({url: url});
     	if (jsonP){
     		this._callback = callbackTextBox.value;
     	} else {
@@ -311,17 +300,13 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	// need to use the same toolkit that the page is using, not the one maqetta is using
 		var dj = this._widget.getContext().getDojo();
 		try{
-			//dj["require"]('dojox.data.ItemJsonpReadStore');
 			dj["require"]('dojo.data.ItemFileReadStore');
 			dj["require"]('dojox.io.xhrScriptPlugin');
 		}catch(e){
-			//console.warn("FAILED: failure for module=dojox.data.ItemJsonpReadStore");
 			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
 		}
-	//	store = new dj.dojox.data.ItemJsonpReadStore({url: url, jsonpcallback: this._callback });
 		dj.dojox.io.xhrScriptPlugin(url,this._callback);
 		dojox.io.xhrScriptPlugin(url,this._callback);
-		//store = new dj.dojo.data.ItemFileReadStore({url: url, jsonpcallback: this._callback });
 		store = new dojo.data.ItemFileReadStore({url: url });
     	store.fetch({
     		query: this.query,
@@ -366,11 +351,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 		properties.url = this._url;
 		var scripts;
 		if (this._callback){
-			//properties.jsonpcallback = this._callback;
 			scripts = [{type: "text/javascript", value: 'dojox.io.xhrScriptPlugin("'+this._url+'","'+this._callback+'");'}];
-		} else {
-			//storeWidget._srcElement.setAttribute('jsonpcallback', '');
-		}
+		} 
 		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 		var storeCmd = new davinci.ve.commands.ModifyCommand(storeWidget, properties);
@@ -382,7 +364,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
         context.getCommandStack().execute(compoundCommand);  
         context.select(command.newWidget);
 
-		//this.die();
 	},
 	
 	show: function(widgetId) {
@@ -412,7 +393,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
    		var storeWidget = davinci.ve.widget.byId(storeId);
         this._data = storeWidget._srcElement.getAttribute('data'); 
         this._url = storeWidget._srcElement.getAttribute('url'); 
-        //this._callback = storeWidget._srcElement.getAttribute('jsonpcallback');
         this._callback = this.getCallback(this._url);
         this._inline.eb = dijit.byId("davinciIleb");
         this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
@@ -642,7 +622,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	                       parms[1] = parms[1].replace(/'/g, "");
     	                       parms[1] = parms[1].replace(/"/g, "");
     	                       parms[1] = parms[1].trim();
-    	                       if (/*parms[0].indexOf(url)> -1*/ parms[0] == url){ // must be the one we were looking for.
+    	                       if ( parms[0] == url){ // must be the one we were looking for.
     	                           return parms[1];
     	                       }
     	                   }

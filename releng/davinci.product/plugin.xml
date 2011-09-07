@@ -13,5 +13,10 @@
             description="Maqetta Server Product"
             name="Maqetta Server Internal">
         </product>
+        <product
+            application="org.eclipse.equinox.app.error"
+            description="Maqetta Server Product"
+            name="Maqetta Server Joomla">
+        </product>
     </extension>
 </plugin>

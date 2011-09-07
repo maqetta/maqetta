@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Maqetta Server External" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
+<product name="Maqetta Server Joomla" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
-      <linux>/davinci.product/config/config-external.ini</linux>
+      <linux>/davinci.product/config/config-joomla.ini</linux>
       <macosx>/davinci.product/config/config-joomla.ini</macosx>
       <win32>/davinci.product/config/config-joomla.ini</win32>
    </configIni>

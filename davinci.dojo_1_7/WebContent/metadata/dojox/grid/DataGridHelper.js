@@ -141,18 +141,14 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     			var item = new Object();
     			var dataStoreItem = storeDataItems[r];
     			for (var name in dataStoreItem){
-    				//item[name] = dataStoreItem[name][0];
     				item[name] = dataStoreItem[name];
     			}
     			items.push(item);
     		}
     		
-    		// Kludge to force reload of store data
     		store.clearOnClose = true;
-    		//if (!store.data)
     		store.data = data;
     		delete store.url; // wdr remove old url if switching
-    		//delete store._jsonpCallback; // remove old callback if switching
     		store.close();
     		store.fetch({
     			query: this.query,
@@ -166,10 +162,8 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     			})
     		});
     	}else{ // must be url data store
-    		// Kludge to force reload of store data
-    		store.clearOnClose = true;
+     		store.clearOnClose = true;
     		store.url = url; 
-    		//store._jsonpCallback = callback;
     		delete store.data; // wdr remove old url if switching
     		store.close();
      	    		
@@ -182,16 +176,11 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
         var dj = widget.getContext().getDojo();
         var o = dojo.getObject("io.xhrScriptPlugin", true, dojox);
         try{
-            //dj["require"]('dojox.data.ItemJsonpReadStore');
             dj["require"]('dojo.data.ItemFileReadStore');
             dj["require"]('dojox.io.xhrScriptPlugin');
         }catch(e){
-            //console.warn("FAILED: failure for module=dojox.data.ItemJsonpReadStore");
             console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
         }
-    //  store = new dj.dojox.data.ItemJsonpReadStore({url: url, jsonpcallback: this._callback });
-      // dojox.io.xhrScriptPlugin("http://localhost:8081/test4/TestService2","callback");
-        dj.dojox.io.xhrScriptPlugin("http://localhost:8081/test4/TestService2","callback");
         
         if (!widget.scripts) return;
         for (x in widget.scripts){

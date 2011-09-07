@@ -474,8 +474,8 @@ davinci.ve.widget.createWidget = function(data){
 	//need a helper to process the data for horizontalSlider prior to creating the widget
 	// -- may be needed for other widgets with properties of dataype array
 	var helper = davinci.ve.widget.getWidgetHelper(type);
-	if(helper.preProcessData){
-        data =  helper.preProcessData(data);
+	if(helper && helper.preProcessData){
+        data = helper.preProcessData(data);
 	}
 		
     // Strip out event attributes. We want them in the model
@@ -716,7 +716,7 @@ dojo.declare("davinci.ve._Widget",null,{
         if (!this._edit_helper) {
             this._edit_helper = davinci.ve.widget.getWidgetHelper(this.type);
     	    if (!this._edit_helper) {
-    	        this._edit_helper = true;
+    	        this._edit_helper = true; // FIXME: why not just assign null and skip the boolean stuff?
     	    }
         }
         return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;

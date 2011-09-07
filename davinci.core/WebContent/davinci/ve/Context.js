@@ -940,7 +940,7 @@ dojo.declare("davinci.ve.Context", null, {
          //need a helper to pre process widget
         var type = node.getAttribute("dojoType");
         var helper = davinci.ve.widget.getWidgetHelper(type);
-        if(helper.preProcess){
+        if(helper && helper.preProcess){
             helper.preProcess(node, this);
         }
        /* var helper = davinci.ve.metadata.queryDescriptor(type, "helper");

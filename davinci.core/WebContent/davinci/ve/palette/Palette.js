@@ -244,20 +244,29 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 	},
 	
 	_filter: function(e) {
-		var children = this.getChildren();
-		var value = this.filterField.value;
-		for(var i = 0; i < children.length; i++){
-			var child = children[i];
-			if(value == "") {
-				dojo.style(child.domNode, "display", "block");
-			}else if(child.declaredClass == "davinci.ve.palette.PaletteFolder") {
-				dojo.style(child.domNode, "display", "none");
-			}else if((child.name && child.name.match(new RegExp(value,"i")))) {
-				dojo.style(child.domNode, "display", "block");
-			}else{
-				dojo.style(child.domNode, "display", "none");
-			}
-		}
+        var value = this.filterField.value,
+            re = new RegExp(value, 'i');
+
+        // reset to default state -- only show category headings
+	    function resetWidgets(child) {
+            var style = child.declaredClass === 'davinci.ve.palette.PaletteFolder' ?
+                    'block' : 'none';
+            dojo.style(child.domNode, 'display', style);
+	    }
+
+	    // show widgets which match filter text
+	    function filterWidgets(child) {
+            if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
+                dojo.style(child.domNode, 'display', 'none');
+            } else if (child.name && re.test(child.name)) {
+                dojo.style(child.domNode, 'display', 'block');
+            } else {
+                dojo.style(child.domNode, 'display', 'none');
+            }
+	    }
+
+	    var action = value === "" ? resetWidgets : filterWidgets;
+        this.getChildren().forEach(action);
 	},
 	
 	_createItem: function(opt){

@@ -1017,8 +1017,7 @@
             "allowedParent": "dijit.form.VerticalSlider"
         },
         {
-            "name": "ContextMenu",
-            "description": "Context Menu",
+            "name": "Menu",
             "type": "dijit.Menu",
             "category": "untested",
             "icon": "resources/images/contextmenu.gif",

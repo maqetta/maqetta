@@ -610,6 +610,7 @@
 
 })();
 
+
 davinci.states = {
 
 	NORMAL: "Normal",
@@ -701,6 +702,17 @@ davinci.states = {
 		
 	},
 	
+	/**
+	 * If the current state is not Normal, force a call to setState
+	 * so that styling properties get reset for a subtree.
+	 */
+	resetState: function(widget){
+		var currentState = this.getState(widget.getContext().rootWidget);
+		if(!this.isNormalState(currentState)){
+			this.setState(widget, currentState, true/*updateWhenCurrent*/, false /*silent*/);
+		}		
+	},
+	
 	isNormalState: function(state) {
 		if (arguments.length == 0) {
 			state = this.getState();
@@ -727,7 +739,7 @@ davinci.states = {
 		
 		return widget.states && widget.states[state] && widget.states[state].style && widget.states[state].style.hasOwnProperty(name);
 	},
-	
+
 	setStyle: function(widget, state, style, value, silent) {
 		widget = this._getWidget(widget);
 
@@ -738,7 +750,7 @@ davinci.states = {
 			style = {};
 			style[name] = value;
 		}
-		
+
 		widget.states = widget.states || {};
 		widget.states[state] = widget.states[state] || {};
 		widget.states[state].style = widget.states[state].style || {};
@@ -770,14 +782,23 @@ davinci.states = {
 		return name;
 	},
 	
-	_FORMATTING_SUFFIXES: { "width": "px", "height": "px", "top": "px", "left": "px" },
+	_DYNAMIC_PROPERTIES: { width:1, height:1, top:1, right:1, bottom:1, left:1 },
 	
 	_getFormattedValue: function(name, value) {
-		var suffix = this._FORMATTING_SUFFIXES[name];
-		if (suffix && (typeof value != "string" || value.indexOf(suffix) < 0)) {
-			value += suffix;
+		//FIXME: This code needs to be analyzed more carefully
+		// Right now, only checking six properties which might be set via dynamic
+		// drag actions on canvas. If just a raw number value, then add "px" to end.
+		if(name in this._DYNAMIC_PROPERTIES){
+			if(typeof value != 'string'){
+				return value+"px";
+			}
+			var trimmed_value = dojo.trim(value);
+			// See if value is a number
+			if(/^[-+]?[0-9]*\.?[0-9]+$/.test(trimmed_value)){
+				value = trimmed_value+"px";
+			}
 		}
-		return value;
+		return value;			
 	},
 	
 	_resetAndCacheNormalStyle: function(widget, node, style, newState) {
@@ -847,6 +868,7 @@ davinci.states = {
 		}
 		widget = this._getWidget(widget);
 		if (!widget || this.hasState(widget, state)) {
+			//FIXME: This should probably be an error of some sort
 			return;
 		}
 		widget.states = widget.states || {};
@@ -915,8 +937,20 @@ davinci.states = {
 		}
 		widget = this._getWidget(widget);
 		if (!widget) return;
-		return (((widget.domNode || widget).style.display != "none") && 
-			(!widget.states || !widget.states[state] || !widget.states[state].style || widget.states[state].style.display != "none"));
+		// FIXME: The way the code is now, sometimes there is an "undefined" property
+		// within widget.states. That code seems somewhat accidental and needs
+		// to be studied and cleaned up.
+		var domNode = (widget.domNode || widget);
+		var isNormalState = (typeof state == "undefined" || state == "undefined");
+		if(isNormalState){
+			return domNode.style.display != "none";
+		}else{
+			if(widget.states && widget.states[state] && widget.states[state].style && typeof widget.states[state].style.display == "string"){
+				return widget.states[state].style.display != "none";
+			}else{
+				return domNode.style.display != "none";
+			}
+		}
 	},
 	
 	_isEmpty: function(object) {
@@ -935,13 +969,13 @@ davinci.states = {
 			var states = dojo.clone(widget.states);
 			delete states["undefined"];
 			if (!this._isEmpty(states)) {
-				value = JSON.stringify(states)
-					// Escape single quotes that aren't already escaped
-					.replace(/(\\)?'/g, function($0, $1){ 
-						return $1 ? $0 : "\\'";
-					})
-					// Replace double quotes with single quotes
-					.replace(/"/g, "'");
+				value = JSON.stringify(states);
+				// Escape single quotes that aren't already escaped
+				value = value.replace(/(\\)?'/g, function($0, $1){ 
+					return $1 ? $0 : "\\'";
+				});
+				// Replace double quotes with single quotes
+				value = value.replace(/"/g, "'");
 			}
 		}
 		return value;
@@ -1152,3 +1186,4 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 		}
 	});
 }
+

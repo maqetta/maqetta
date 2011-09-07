@@ -26,6 +26,10 @@
         },
         {
             "type": "javascript",
+            "$text": "dojo.require('dojox.io.xhrScriptPlugin');"
+        },
+        {
+            "type": "javascript",
             "$text": "dojo.require('dojox.grid.DataGrid');"
         }
     ],

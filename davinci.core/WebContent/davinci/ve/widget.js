@@ -716,7 +716,7 @@ dojo.declare("davinci.ve._Widget",null,{
         if (!this._edit_helper) {
             this._edit_helper = davinci.ve.widget.getWidgetHelper(this.type);
     	    if (!this._edit_helper) {
-    	        this._edit_helper = true;
+    	        this._edit_helper = true; // FIXME: why not just assign null and skip the boolean stuff?
     	    }
         }
         return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;

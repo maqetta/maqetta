@@ -598,7 +598,15 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 	},
 	
 	 getCallback: function(url){
-
+	     
+	    var helper = davinci.ve.widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+        if(helper && helper.getXhrScriptPluginParameters){
+           xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
+            if ( xhrParams){ // must be the one we were looking for.
+                return xhrParams.callback;
+            }
+        }
+/*
 	       if (!url){
 	           return;// must be data
 	       }
@@ -629,7 +637,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
     	               }
     	           }
 	           }
-	       }
+	       }*/
 
 	    },
 	

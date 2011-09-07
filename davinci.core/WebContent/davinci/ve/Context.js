@@ -940,28 +940,9 @@ dojo.declare("davinci.ve.Context", null, {
          //need a helper to pre process widget
         var type = node.getAttribute("dojoType");
         var helper = davinci.ve.widget.getWidgetHelper(type);
-        if(helper.preProcess){
+        if(helper && helper.preProcess){
             helper.preProcess(node, this);
         }
-       /* var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
-        if (helper) {
-            var myHelper;
-            try {
-                dojo["require"](helper);
-            } catch(e) {
-                console.error("Failed to load helper: " + helper);
-                console.error(e);
-            }
-            var aClass = dojo.getObject(helper);
-            if (aClass) {
-                myHelper  = new aClass();
-            }
-            var obj = dojo.getObject(helper);
-            myHelper = new obj();
-            if(myHelper.preProcess)
-                myHelper.preProcess(node, this);
-                
-        }*/
         
     },
 	    

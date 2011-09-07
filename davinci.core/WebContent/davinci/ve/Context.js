@@ -13,8 +13,11 @@ dojo.declare("davinci.ve.Context", null, {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit.dijit",
+
+/*=====
 	// keeps track of widgets-per-library loaded in context
 	_widgets: null,
+=====*/
 
 	constructor: function(args) {
 		if(!args) {

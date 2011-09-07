@@ -87,7 +87,7 @@ r.moveStart("character",_e);
 r.moveEnd("character",_f-_e);
 r.select();
 }
-};
+};_2.form.TextBox.prototype.declaredClass = "dijit.form.TextBox";
 }
 if(_1.isMoz){
 _2.form.TextBox=_1.declare(_2.form.TextBox,{_onBlur:function(e){
@@ -95,7 +95,7 @@ this.inherited(arguments);
 if(this.selectOnClick){
 this.textbox.selectionStart=this.textbox.selectionEnd=undefined;
 }
-}});
+}});_2.form.TextBox.prototype.declaredClass = "dijit.form.TextBox";
 }
 return _2.form.TextBox;
 });

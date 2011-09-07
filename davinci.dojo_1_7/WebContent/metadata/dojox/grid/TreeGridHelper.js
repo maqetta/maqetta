@@ -129,7 +129,7 @@ updateStore: function(widget,  storeWidget, w) {
 	var store = widget.dijitWidget.store;
 	var data = storeWidget._srcElement.getAttribute('data'); 
 	var url = storeWidget._srcElement.getAttribute('url'); 
-	var callback = storeWidget._srcElement.getAttribute('jsonpcallback');
+	//var callback = storeWidget._srcElement.getAttribute('jsonpcallback');
 	if (data){ 
 		var value = data; 
 		var storeData = eval('storeData = '+value);
@@ -152,7 +152,7 @@ updateStore: function(widget,  storeWidget, w) {
 		//if (!store.data)
 		store.data = data;
 		delete store.url; // wdr remove old url if switching
-		delete store._jsonpCallback; // remove old callback if switching
+	//	delete store._jsonpCallback; // remove old callback if switching
 		store.close();
 		widget.dijitWidget.setStore(store);
 //		store.fetch({
@@ -171,7 +171,7 @@ updateStore: function(widget,  storeWidget, w) {
 		// Kludge to force reload of store data
 		store.clearOnClose = true;
 		store.url = url; 
-		store._jsonpCallback = callback;
+		//store._jsonpCallback = callback;
 		delete store.data; // wdr remove old url if switching
 		store.close();
 	}

@@ -473,26 +473,11 @@ davinci.ve.widget.createWidget = function(data){
 	}
 	//need a helper to process the data for horizontalSlider prior to creating the widget
 	// -- may be needed for other widgets with properties of dataype array
-	var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
-    if (helper) {
-    	var myHelper;
-        try {
-            dojo["require"](helper);
-        } catch(e) {
-            console.error("Failed to load helper: " + helper);
-            console.error(e);
-        }
-        var aClass = dojo.getObject(helper);
-        if (aClass) {
-        	myHelper  = new aClass();
-		}
-        var obj = dojo.getObject(helper);
-        myHelper = new obj();
-        if(myHelper.preProcessData)
-        	data =  myHelper.preProcessData(data);
-        	
-    }
-	
+	var helper = davinci.ve.widget.getWidgetHelper(type);
+	if(helper.preProcessData){
+        data =  helper.preProcessData(data);
+	}
+		
     // Strip out event attributes. We want them in the model
     // but not in the DOM within page canvas.
     var props = {};
@@ -612,7 +597,27 @@ davinci.ve.widget._parseNodeData = function(node, options){
 	//	data.children = davinci.ve.widget._getChildrenData(widget, options);
 	//}
 	return data;
-}
+},
+
+davinci.ve.widget.getWidgetHelper = function(type){
+
+    var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
+    if (helper) {
+        try {
+            dojo["require"](helper);
+        } catch(e) {
+            console.error("Failed to load helper: " + helper);
+            console.error(e);
+        }
+        var aClass = dojo.getObject(helper);
+        if (aClass) {
+            this._edit_helper  = new aClass();
+        }
+        var obj = dojo.getObject(helper);
+        return new obj();
+
+    }
+},
 
 davinci.ve.widget.getWidget = function(node){
 
@@ -708,32 +713,16 @@ dojo.declare("davinci.ve._Widget",null,{
     },
 
 	getHelper: function() {
-        if (!this._edit_helper /*|| !widget._edit_helper.getChildren*/) {
-    	    var helper = davinci.ve.metadata.queryDescriptor(this.type, "helper");
-    	    if (helper) {
-    	        try {
-    	            dojo["require"](helper);
-    	        } catch(e) {
-                    console.error("Failed to load helper: " + helper);
-                    console.error(e);
-    	        }
-    	       // this._edit_helper = dojo.getObject(helper); wdr
-    	        var aClass = dojo.getObject(helper);
-    	        if (aClass) {
-    	        	this._edit_helper  = new aClass();
-    			}
-    	        //wdr
-    	        var obj = dojo.getObject(helper);
-    	        this._edit_helper = new obj();
-
-    	    }
+        if (!this._edit_helper) {
+            this._edit_helper = davinci.ve.widget.getWidgetHelper(this.type);
     	    if (!this._edit_helper) {
     	        this._edit_helper = true;
     	    }
         }
         return (typeof this._edit_helper === "boolean") ? null : this._edit_helper;
     },
-
+    
+   
 	attr: function(name,value)
 	{
 		var attrValue=	this._attr.apply(this, arguments);

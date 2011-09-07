@@ -905,6 +905,7 @@ dojo.declare("davinci.ve.Context", null, {
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
 			//we had old files that were missing some of their dojo.require() statements.
 			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/);
+			this.preProcess(n);
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
 
@@ -935,6 +936,35 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
+   preProcess: function (node){
+         //need a helper to pre process widget
+        var type = node.getAttribute("dojoType");
+        var helper = davinci.ve.widget.getWidgetHelper(type);
+        if(helper.preProcess){
+            helper.preProcess(node, this);
+        }
+       /* var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
+        if (helper) {
+            var myHelper;
+            try {
+                dojo["require"](helper);
+            } catch(e) {
+                console.error("Failed to load helper: " + helper);
+                console.error(e);
+            }
+            var aClass = dojo.getObject(helper);
+            if (aClass) {
+                myHelper  = new aClass();
+            }
+            var obj = dojo.getObject(helper);
+            myHelper = new obj();
+            if(myHelper.preProcess)
+                myHelper.preProcess(node, this);
+                
+        }*/
+        
+    },
+	    
 	_editorSelectionChange: function(event){
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time

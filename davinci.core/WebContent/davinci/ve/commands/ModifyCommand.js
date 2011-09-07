@@ -7,7 +7,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 
 	name: "modify",
 
-	constructor: function(widget, properties, children, context){
+	constructor: function(widget, properties, children, context, scripts){
 
 		this._oldId = (widget ? widget.id : undefined);
 		this._properties = properties = (properties || {});
@@ -18,6 +18,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 //		else 
 			this._children = children || properties._children;
 		this._context = context || widget.getContext();;
+		this._scripts = scripts;
 		delete this._properties._children;
 		
 	},
@@ -59,7 +60,7 @@ dojo.declare("davinci.ve.commands.ModifyCommand", null, {
 			this._newData = {type: this._oldData.type,
 				properties: dojo.mixin({}, this._oldData.properties, this._properties),
 				children: (this._children==null?this._oldData.children:this._children),
-				scripts: this._oldData.scripts,
+				scripts: dojo.mixin({}, this._oldData.scripts, this._scripts), //this._oldData.scripts,
 				states: this._oldData.states,
 				context:this._context
 				};

@@ -53,19 +53,18 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 		this._setValues();
 		this._connectAll();
 	},
+	
 	onEditorSelected : function(editorChange){
 		if(editorChange==null){
 			this._widget = null;
-			this.onWidgetSelectionChange();
 		}else{
 			var context = editorChange.getContext();
 			this._widget = context.getSelection()[0];
-			this.onWidgetSelectionChange();
-				
 		}
+		this.onWidgetSelectionChange();
 	 },	
-	 
-	_createWidgetRows: function (properties){
+
+	 _createWidgetRows: function (properties){
 		this._pageLayout = [];
 		for(var name in properties){
 			var property = properties[name];

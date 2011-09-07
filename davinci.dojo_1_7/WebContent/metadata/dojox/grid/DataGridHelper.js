@@ -129,7 +129,6 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridHelper", null, {
     	var store = widget.dijitWidget.store;
     	var data = storeWidget._srcElement.getAttribute('data'); 
     	var url = storeWidget._srcElement.getAttribute('url'); 
-    	//var callback = storeWidget._srcElement.getAttribute('jsonpcallback');
     	if (data){ 
     		var value = data; 
     		var storeData = eval('storeData = '+value);

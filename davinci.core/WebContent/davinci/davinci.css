@@ -683,6 +683,18 @@ davinci_top_bar .dijitButtonNode {
     background-repeat: no-repeat;
     padding-left: 1px;
 }
+
+.maqWidgetsCategory {
+	display: none
+}
+
+.maqWidgetsFiltered .maqWidgetsCategory {
+	display: inline;
+    margin-left: 1em;
+    color: grey;
+    font: italic smaller sans-serif;
+}
+
 /* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
 	look like a button. Really need to do a UI makeover for Add Files dialog. */
 #btn0.browse {

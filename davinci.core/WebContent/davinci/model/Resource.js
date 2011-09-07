@@ -95,8 +95,14 @@ davinci.model.Resource.Resource.prototype.isVirtual = function(){
  }
  
 
- davinci.model.Resource.Resource.prototype.deleteResource= function(localOnly)
- {
+ davinci.model.Resource.Resource.prototype.deleteResource= function(localOnly){
+	 
+	 if(this._deleting){
+		 return;
+	 }
+	 
+	 this._deleting = true;
+	 
 	 var response="OK";
 	 if (!localOnly) {
 		 response = davinci.Runtime.serverJSONRequest({
@@ -341,8 +347,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
    }
 
 
-   davinci.model.Resource.File.prototype.removeWorkingCopy= function()
-   {
+   davinci.model.Resource.File.prototype.removeWorkingCopy= function(){
  		 davinci.Runtime.serverJSONRequest({
  			   url:"./cmd/removeWorkingCopy", handleAs:"text",
  		          content:{'path':this.getPath()}, sync:true

@@ -49,8 +49,11 @@ dojo.declare("davinci.libraries.dojo.dijit.form.DataListHelper", null, {
 	
 	create: function(widget, srcElement){
 		
-		widget.dijitWidget.getChildren = dojo.hitch(this, 'getChildren');
-		widget.dijitWidget.startup = dojo.hitch(this, 'startup');
+		if (widget.dijitWidget){
+		    widget.dijitWidget.getChildren = dojo.hitch(this, 'getChildren');
+		    widget.dijitWidget.startup = dojo.hitch(this, 'startup');
+		}
+		
 		widget.domNode.style.display = 'none';
 	},
 	

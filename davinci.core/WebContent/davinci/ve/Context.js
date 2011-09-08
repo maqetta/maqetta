@@ -112,7 +112,7 @@ dojo.declare("davinci.ve.Context", null, {
 		this._commandStack.clear();
 		if(this._activeTool){
 			this._activeTool.deactivate();
-			this._activeTool = undefined;
+			delete this._activeTool;
 		}
 		var containerNode = this.getContainerNode();
 		this._menu.unBindDomNode(containerNode);
@@ -515,9 +515,9 @@ dojo.declare("davinci.ve.Context", null, {
     	var model = this.getModel();
     	var imports = model.find({elementType:'CSSImport'});
 		var defaultThemeName="claro";
-		var themePath = new davinci.model.Path(model.fileName);
+		
 		/* remove the .theme file, and find themes in the given base location */
-		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
+		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject());
 		var themeHash = {};
 		var defaultTheme;
 		
@@ -716,11 +716,13 @@ dojo.declare("davinci.ve.Context", null, {
 					// content has finished loading.  This prevents an issue where
 					// deleting a CSS file while the browser is parsing caused
 					// rules from later CSS files to not be used. See GitHub #899.
-					dojo.subscribe('/davinci/ui/context/loaded', function() {
-	                    var mobileDevice = context.getMobileDevice();
-	                    if (mobileDevice) {
-                            context._editor.visualEditor.setDevice(mobileDevice, true);
-	                    }
+					dojo.subscribe('/davinci/ui/context/loaded', function(loadedContext) {
+						if (context == loadedContext) {
+							var mobileDevice = context.getMobileDevice();
+		                    if (mobileDevice) {
+	                            context._editor.visualEditor.setDevice(mobileDevice, true);
+		                    }
+						}
 					});
 				} catch(e) {
 					console.error(e);

@@ -1235,10 +1235,6 @@ dojo.declare("davinci.ve.Context", null, {
 	_preserveStates: function(node, cache){
 		var states = davinci.ve.states.retrieve(node);
 		if (states) {
-			if (!node.id) {
-				debugger; // should not happen
-//				node.id = davinci.ve.widget.getTemporaryId(node);
-			}
 			cache[node.id] = states;
 		}
 	},
@@ -1382,7 +1378,6 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	select: function(widget, add, inline){
-		debugger;
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all

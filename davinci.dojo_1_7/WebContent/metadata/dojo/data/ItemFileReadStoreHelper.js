@@ -22,6 +22,9 @@ dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper", null, {
 	
     preProcess: function(node, context){
         var url = node.getAttribute("url");
+        if (!url){
+            return;
+        }
         url = url.trim();
         var xhrParams = this.getXhrScriptPluginParameters(url, context);
         if (xhrParams){

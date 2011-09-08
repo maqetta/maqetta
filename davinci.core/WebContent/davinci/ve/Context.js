@@ -1382,6 +1382,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	select: function(widget, add, inline){
+		debugger;
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all
@@ -1389,15 +1390,15 @@ dojo.declare("davinci.ve.Context", null, {
 			return;
 		}
 		
-		var alreadySelected = false;
+		var index, alreadySelected = false;
 		if(this._selection){
-			for(var i=0; i<this._selection.length; i++){
-				if(this._selection[i]==widget){
-					alreadySelected = true;
+			alreadySelected = this._selection.some(function(w){
+				if (w == widget) {
 					index = i;
-					break;
+					return true;
 				}
-			}
+				return false;
+			});
 		}
 
 		if(!alreadySelected){
@@ -1413,7 +1414,7 @@ dojo.declare("davinci.ve.Context", null, {
 				helper.popup(this._needsTearDown = widget);
 			}
 
-			var selection, index; 
+			var selection; 
 			if(add && this._selection){
 				index = this._selection.length;
 				selection = this._selection;

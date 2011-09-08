@@ -236,8 +236,8 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 		return this.visualEditor.getDefaultContent();
 	},
 
-	selectModel: function (selection) {
-		if (this.publishingSelect) {
+	selectModel: function (selection, editor) {
+		if (this != editor) {
 			return;
 		}
 		var selectionItem= selection && selection[0];

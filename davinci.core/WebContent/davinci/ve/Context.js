@@ -586,7 +586,6 @@ dojo.declare("davinci.ve.Context", null, {
 					dojoUrl = url;
 					return true;
 				}
-				return false;
 			});
 			
 			/* get the base path, removing the file extension.  the base is used in the library call below
@@ -836,7 +835,7 @@ dojo.declare("davinci.ve.Context", null, {
 		    containerNode = this.getContainerNode();
 	
 		if (data.states) {
-			states["body"] = data.states;
+			states.body = data.states;
 		}
 		dojo.forEach(this.getTopWidgets(), function(w){
 			if(w.getContext()){
@@ -850,6 +849,7 @@ dojo.declare("davinci.ve.Context", null, {
 		// has loaded any required resources (i.e. <head> scripts)
 		var scripts;
 		if (content) {
+			// It is necessary to run the dojox.html.set utility from the inner frame.  Might be a Dojo bug.
             var dj = this.getDojo();
 		    dj['require']('dojox.html._base');
 		    dj.getObject('dojox').html.set(containerNode, content, {
@@ -865,11 +865,17 @@ dojo.declare("davinci.ve.Context", null, {
 
 		// Remove "on*" event attributes from editor DOM.
 		// They are already in the model. So, they will not be lost.
-		this._removeEventAttributes(containerNode);
-		var descendantNodes = dojo.query("*",containerNode);
-		for(var n=0;n<descendantNodes.length;n++){
-			this._removeEventAttributes(descendantNodes[n]);
-		}
+
+		var removeEventAttributes = function(node) {
+			if(node){
+				dojo.filter(node.attributes, function(attribute) {
+					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
+				}).forEach(function(attribute) { node.removeAttribute(attribute); });
+			}
+		};
+
+		removeEventAttributes(containerNode);
+		dojo.query("*",containerNode).forEach(removeEventAttributes);
 
 		// Convert all text nodes that only contain white space to empty strings
 		containerNode.setAttribute('data-davinci-ws','collapse');
@@ -906,27 +912,6 @@ dojo.declare("davinci.ve.Context", null, {
         }
 
 		loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
-	},
-
-	/**
-	 * Remove all attributes from 'node' that start with string "on".
-	 */
-	_removeEventAttributes: function(node) {
-		if(node){
-			var attributes=node.attributes;
-			var removeList=[];
-			for(var i=0; i<attributes.length; i++){
-				var attrName = attributes[i].nodeName;
-
-				if( attrName.substr(0,2).toLowerCase()=="on" ) {
-					removeList.push(attrName);
-				}
-			}
-			for(var i=0; i<removeList.length; i++){
-				node.removeAttribute(removeList[i]);
-			}
-		}
-
 	},
 
 	/**
@@ -1386,10 +1371,10 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		
 		var index, alreadySelected = false;
-		if(this._selection){
-			alreadySelected = this._selection.some(function(w){
-				if (w == widget) {
-					index = i;
+		if (this._selection) {
+			alreadySelected = this._selection.some(function(w, idx) {
+				if (w === widget) {
+					index = idx;
 					return true;
 				}
 				return false;

@@ -1382,7 +1382,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	select: function(widget, add, inline){
-		debugger;
+		
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all

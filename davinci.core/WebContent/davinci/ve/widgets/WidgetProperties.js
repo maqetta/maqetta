@@ -57,9 +57,10 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 	onEditorSelected : function(editorChange){
 		if(editorChange==null){
 			this._widget = null;
+			this.context = null;
 		}else{
-			var context = editorChange.getContext();
-			this._widget = context.getSelection()[0];
+			this.context = editorChange.getContext();
+			this._widget = this.context.getSelection()[0];
 		}
 		this.onWidgetSelectionChange();
 	 },	
@@ -106,7 +107,11 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 				/* onchange is lowercase for DOM/non dijit */
 				var box = dojo.byId(this._pageLayout[i].id);
 				this._connect(box, "onchange", this, makeOnChange(i));
+				dojo.connect(widget, "onfocus", this, "_onFieldFocus");
+				dojo.connect(widget, "onblur", this, "_onFieldBlur");
 			}else{
+				dojo.connect(widget, "onFocus", this, "_onFieldFocus");
+				dojo.connect(widget, "onBlur", this, "_onFieldBlur");
 				this._connect(widget, "onChange", this, makeOnChange(i));
 			}
 		}
@@ -127,6 +132,9 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 		var box = dojo.byId(this._pageLayout[index].id);
 		var value = null;
 		
+		if(this.context)
+			this.context.blockChange(false);
+		
 		if(box){
 			if(box.type=='checkbox'){
 				value = dojo.attr(box, 'checked');
@@ -139,6 +147,7 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 				 value = box.attr('value');
 			 }
 		}
+
 		if(this._pageLayout[index].value != value ){
 			this._pageLayout[index].value = value;
 			var valuesObject = {};
@@ -147,7 +156,14 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 			dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
 		}	
 	},
-
+	_onFieldFocus : function(){
+		if(this.context)
+			this.context.blockChange(true);
+	},
+	_onFieldBlur : function(){
+		if(this.context)
+			this.context.blockChange(false);		
+	},
 	_setValues: function() {
 		
 		for(var i=0;i< this._pageLayout.length;i++){

@@ -207,16 +207,19 @@ dojo.declare("davinci.ve.Context", null, {
 			davinci.ve._remove(this._selection,widget);
 		}
 
-        var library = davinci.ve.metadata.getLibraryForType(widget.type),
-            libId = library.name,
-            data = [widget.type, this];
-        // Always invoke the 'onRemove' callback.
-        davinci.ve.metadata.invokeCallback(widget.type, 'onRemove', data);
-        // If this is the last widget removed from page from a given library,
-        // then invoke the 'onLastRemove' callback.
-        this._widgets[libId] -= 1;
-        if (this._widgets[libId] === 0) {
-            davinci.ve.metadata.invokeCallback(widget.type, 'onLastRemove', data);
+        var library = davinci.ve.metadata.getLibraryForType(widget.type);
+        if (library){
+            var libId = library.name,
+                data = [widget.type, this];
+
+            // Always invoke the 'onRemove' callback.
+            davinci.ve.metadata.invokeCallback(widget.type, 'onRemove', data);
+            // If this is the last widget removed from page from a given library,
+            // then invoke the 'onLastRemove' callback.
+            this._widgets[libId] -= 1;
+            if (this._widgets[libId] === 0) {
+                davinci.ve.metadata.invokeCallback(widget.type, 'onLastRemove', data);
+            }
         }
 
 		dojo.forEach(widget.getChildren(), this.detach, this);

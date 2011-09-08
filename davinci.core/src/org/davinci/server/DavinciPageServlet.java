@@ -312,7 +312,7 @@ public class DavinciPageServlet extends HttpServlet {
         URL url = Activator.getActivator().getBundle().getEntry("/WebContent/" + path);
         VURL resourceURL = new VURL(url);
 
-        writePage(req, resp, resourceURL, false);
+        writePage(req, resp, resourceURL, true);
     }
 
     private static int writeResource(InputStream is, OutputStream os) throws IOException {

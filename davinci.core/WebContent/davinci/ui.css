@@ -360,3 +360,7 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
     margin-left: 20px;
     margin-right: 20px;
 }
+
+.NewProjectDialogLabel {
+	white-space:nowrap;
+}

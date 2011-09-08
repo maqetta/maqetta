@@ -1143,9 +1143,10 @@ dojo.declare("davinci.ve.Context", null, {
 	 * @param url {string}
 	 */
     unloadStyleSheet: function(url) {
+        var self = this;
         this._links.some(function(val, idx) {
             if (val.getAttribute('href') === url) {
-                this._links.splice(idx, 1);
+                self._links.splice(idx, 1);
                 dojo.destroy(val);
                 return true; // break
             }

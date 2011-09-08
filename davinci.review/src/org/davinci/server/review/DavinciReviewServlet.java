@@ -121,6 +121,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 				return;
 			} else {
 				ReviewObject reviewObject = new ReviewObject(prefix);
+				reviewObject.setDesignerEmail(designer.getPerson().getEmail());
 				if (path.segmentCount() > 2) {
 					// Token = 20100101/project1/folder1/sample1.html/default
 					String commentId = path.segment(path.segmentCount() - 1);
@@ -129,7 +130,6 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 					reviewObject.setFile(fileName);
 					reviewObject.setCommentId(commentId);
-					reviewObject.setDesignerEmail(designer.getPerson().getEmail());
 
 				}
 				req.getSession().setAttribute(Constants.REVIEW_INFO, reviewObject);

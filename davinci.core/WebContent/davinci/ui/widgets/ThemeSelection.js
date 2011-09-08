@@ -26,16 +26,19 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 
 	/* populate the theme selection, depends on the "workspaceOnly" attribute being set post create */
 	postCreate : function(){
-
+	
 		this._themeData = davinci.library.getThemes(davinci.Runtime.getProject(), this.workspaceOnly);
 		this._themeCount = this._themeData.length;
 		for (var i = 0; i < this._themeData.length; i++){
+			if(this._hasValue(this._themeData[i].className)) continue;
 			var op = dojo.doc.createElement("option");
 			op.value =this._themeData[i].className;
 			op.text = this._themeData[i].className;
 			this._select.appendChild(op);
 			
 		}
+		if(this._selection)
+			this._selectValue(this._selection);
 	},
 	
 	_setBaseAttr : function(base){
@@ -51,25 +54,40 @@ dojo.declare("davinci.ui.widgets.ThemeSelection", [dijit._Widget], {
 	},
 	
 	_setValueAttr : function(value){
-		var selection = value;
+		this._selection = value;
 		if(value && value.className){
-			selection = value.className; 
+			this._selection = value.className; 
 		}
+		this._selectValue(this._selection);
+	},
+	
+	_hasValue : function(themeName){
+		
+		for(var i=0;i<this._select.children.length;i++){
+			if(this._select.children[i].value==themeName){
+				return true;
+			}
+		}
+		return false;
+	},
+	
+	_selectValue : function(value){
+		
 		var found = false;
 		for(var i=0;i<this._select.children.length;i++){
 			if(this._select.children[i].selected)
 				this._select.children[i].selected = false;
 			
-			if(!found && this._select.children[i].value==selection){
+			if(!found && this._select.children[i].value==value){
 				this._select.children[i].selected = true;
 				var found = true;
 			}
 		}
 		
-		if(!found && selection!=null){
+		if(!found && value!=null){
 			var op = dojo.doc.createElement("option");
-			op.value = selection;
-			op.text = selection;
+			op.value = value;
+			op.text = value;
 			op.selected = true;
 			this._select.appendChild(op);	
 		}

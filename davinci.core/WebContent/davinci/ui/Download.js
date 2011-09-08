@@ -129,18 +129,13 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		var pageBuilder = new davinci.ve.RebaseDownload(resources['userLibs']);
 		for(var i=0;i<resources['userFiles'].length;i++){
 			var allResources = null
-			
-			
 			var resource = davinci.resource.findResource(resources['userFiles'][i]);
-			
-			if(resource.extension!="html")
-				continue;
-			
 			if(resource.elementType=="Folder"){
 				allResources = davinci.resource.findResource("*.html", true, resource, true);
-			}else{
+			}else if(resource.extension=="html"){
 				allResources = [resource];
 			}
+			
 			for(var k=0;k<allResources.length;k++){
 				if( davinci.theme.isThemeHTML(allResources[k])) continue;
 				var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);

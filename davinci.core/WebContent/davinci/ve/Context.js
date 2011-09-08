@@ -512,9 +512,9 @@ dojo.declare("davinci.ve.Context", null, {
     	var model = this.getModel();
     	var imports = model.find({elementType:'CSSImport'});
 		var defaultThemeName="claro";
-		var themePath = new davinci.model.Path(model.fileName);
+		
 		/* remove the .theme file, and find themes in the given base location */
-		var allThemes = davinci.library.getThemes(themePath.removeLastSegments(1).toString());
+		var allThemes = davinci.library.getThemes(davinci.Runtime.getProject());
 		var themeHash = {};
 		var defaultTheme;
 		

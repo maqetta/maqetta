@@ -42,11 +42,7 @@ dojo.mixin(davinci.Workbench, {
 	run: function() {
 		this._initKeys();
 		
-		if(davinci.Runtime.singleProjectMode()) {
-			this._baseTitle = "(" + davinci.Runtime.getProject() + ") " + dojo.doc.title;
-		} else {
-			this._baseTitle = dojo.doc.title;
-		}
+		this._baseTitle = dojo.doc.title;
 
 		var perspective= davinci.Runtime.initialPerspective || "davinci.ui.main";
 		this.showPerspective(perspective);

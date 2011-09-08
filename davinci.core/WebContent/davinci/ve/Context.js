@@ -1371,10 +1371,10 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 		
 		var index, alreadySelected = false;
-		if(this._selection){
-			alreadySelected = this._selection.some(function(w){
-				if (w == widget) {
-					index = i;
+		if (this._selection) {
+			alreadySelected = this._selection.some(function(w, idx) {
+				if (w === widget) {
+					index = idx;
 					return true;
 				}
 				return false;

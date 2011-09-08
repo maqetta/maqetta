@@ -34,6 +34,7 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		this._createItemTemplate();
 		this._createHeader();
 		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
+		dojo.subscribe("/davinci/ui/libraryChanged", this, "refresh" );
 	},
 	
 	setContext: function(context){
@@ -42,10 +43,36 @@ dojo.declare("davinci.ve.palette.Palette", [dijit._Widget, dijit._KeyNavContaine
 		this.startupKeyNavChildren();
 	},
 
+	refresh : function(){
+		delete this._loaded;
+		
+	},
+	
 	_loadPalette: function(){
 		
-		this._loadPalette = function(){}; // call this only once
-		var libraries = davinci.ve.metadata.getLibrary();
+		if(this._loaded) return;
+		
+		this._loaded = true; // call this only once
+		var allLibraries = davinci.ve.metadata.getLibrary();
+		var userLibs = davinci.library.getUserLibs(davinci.Runtime.getProject());
+		var libraries = {};
+		
+		function findInAll(name, version){
+			for (var n in allLibraries){
+				var lib = allLibraries[n];
+				if(lib.name===name && lib.version===version){
+					var ro = {};
+					ro[name] = allLibraries[name];
+					return ro;
+				}
+			}
+			return null;
+		}
+		
+		for(var i=0;i<userLibs.length;i++){
+			var library = findInAll(userLibs[i].id, userLibs[i].version);
+			if(library!=null) dojo.mixin(libraries, library);
+		}
 
 		// Merge descriptors that have the same category
 		// XXX Need a better solution for enumerating through descriptor items and creating

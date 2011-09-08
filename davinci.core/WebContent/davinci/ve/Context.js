@@ -7,6 +7,7 @@ dojo.require("davinci.ve.util");
 dojo.require("davinci.ve.Focus");
 dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.library");
+dojo.require("dojox.html._base");
 
 
 dojo.declare("davinci.ve.Context", null, {
@@ -842,8 +843,26 @@ dojo.declare("davinci.ve.Context", null, {
 				w.destroyWidget();
 			}
 		});
-		containerNode.innerHTML = content;
-		
+
+		// Set content
+		//  Content may contain inline scripts. We use dojox.html.set() to pull
+		// out those scripts and execute them later, after _processWidgets()
+		// has loaded any required resources (i.e. <head> scripts)
+		var scripts;
+		if (content) {
+            var dj = this.getDojo();
+		    dj['require']('dojox.html._base');
+		    dj.getObject('dojox').html.set(containerNode, content, {
+		        executeScripts: true,
+		        onEnd: function() {
+		            // save any scripts for later execution
+		            scripts = this._code;
+		            this.executeScripts = false;
+                    this.inherited('onEnd', arguments);
+		        }
+		    });
+		}
+
 		// Remove "on*" event attributes from editor DOM.
 		// They are already in the model. So, they will not be lost.
 		this._removeEventAttributes(containerNode);
@@ -875,7 +894,18 @@ dojo.declare("davinci.ve.Context", null, {
 		collapse(containerNode);
 
 		this._processWidgets(containerNode, active, states);
-		loading.parentNode.removeChild(loading); // need to remove loading for sieloett to display
+
+		// Now that _processWidgets() has loaded any of the widgets' required
+		// resources, we execute the inline scripts.
+        if (scripts) {
+            try {
+                dojox.html.evalInGlobal(scripts, containerNode);
+            } catch(e) {
+                console.error('Error eval script in Context._setSourceData, ' + e);
+            }
+        }
+
+		loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
 	},
 
 	/**
@@ -1352,6 +1382,7 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 	
 	select: function(widget, add, inline){
+		debugger;
 		if(!widget || widget==this.rootWidget){
 			if(!add){
 				this.deselect(); // deselect all
@@ -1359,15 +1390,15 @@ dojo.declare("davinci.ve.Context", null, {
 			return;
 		}
 		
-		var alreadySelected = false;
+		var index, alreadySelected = false;
 		if(this._selection){
-			for(var i=0; i<this._selection.length; i++){
-				if(this._selection[i]==widget){
-					alreadySelected = true;
+			alreadySelected = this._selection.some(function(w){
+				if (w == widget) {
 					index = i;
-					break;
+					return true;
 				}
-			}
+				return false;
+			});
 		}
 
 		if(!alreadySelected){
@@ -1383,7 +1414,7 @@ dojo.declare("davinci.ve.Context", null, {
 				helper.popup(this._needsTearDown = widget);
 			}
 
-			var selection, index; 
+			var selection; 
 			if(add && this._selection){
 				index = this._selection.length;
 				selection = this._selection;

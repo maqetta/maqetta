@@ -125,9 +125,7 @@ dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 		
 		this.outlineTree.notifySelect=dojo.hitch(this, function (item, ctrlKeyPressed) 
 		{
-
-			this.publish("/davinci/ui/selectionChanged",[[{model:item, add:ctrlKeyPressed}],this]);
-
+			this.publish("/davinci/ui/selectionChanged", [[{model:item, add:ctrlKeyPressed}], this.currentEditor]);
 		});
 
 //		editor.addSelectionListener(function (selection){

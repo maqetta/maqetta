@@ -30,7 +30,17 @@ dojo.mixin(davinci.ui.Resource, {
 			resource=davinci.ui.Resource.getSelectedResource();
 		this.action=action;
 		if (resource){
-			folder = resource.elementType=='Folder'?resource:resource.parent;
+			//FIXME: Not sure this is the best way to code this.
+			//The code below filters out the Review* nodes from the Reviews palette
+			//because Runtime's currentSelection might include entries from either the
+			//Files palette or the Reviews palette. But we really shouldn't have one
+			//common selection between the two, so maybe this can be fixed at a higher
+			//level. Whatever, the following fix should be safe in the meantime.
+			if(resource.elementType=='Folder'){
+				folder = resource;
+			}else if(resource.elementType=='File'){
+				folder = resource.parent;
+			}
 		}
 		switch(action){
 		case 'newfile':

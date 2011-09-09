@@ -114,7 +114,7 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 	},
 	
 	selectModel: function (selection, editor) {
-		if (this != editor) {
+		if (this.publishingSelect || this != editor) {
 			return;
 		}
 		if (selection.length && selection[0].model) {
@@ -129,7 +129,9 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
        var childModel = this.model.findChildAtPosition(selection);
        selection.model = childModel;
        if (childModel != this._selectedModel) {
+    	   this.publishingSelect = true;
            dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
+           this.publishingSelect = false;
        }
        this._selectedModel = childModel;
 	},

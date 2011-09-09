@@ -716,13 +716,12 @@ dojo.declare("davinci.ve.Context", null, {
 					// content has finished loading.  This prevents an issue where
 					// deleting a CSS file while the browser is parsing caused
 					// rules from later CSS files to not be used. See GitHub #899.
-					dojo.subscribe('/davinci/ui/context/loaded', function(loadedContext) {
-						if (context == loadedContext) {
-							var mobileDevice = context.getMobileDevice();
-		                    if (mobileDevice) {
-	                            context._editor.visualEditor.setDevice(mobileDevice, true);
-		                    }
-						}
+					var onload = dojo.connect(this, 'onload', function() {
+						var mobileDevice = context.getMobileDevice();
+	                    if (mobileDevice) {
+                            context._editor.visualEditor.setDevice(mobileDevice, true);
+	                    }
+	                    dojo.disconnect(onload);
 					});
 				} catch(e) {
 					console.error(e);
@@ -809,7 +808,7 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 
         dojo.connect(this.getGlobal(), 'onload', this, function() {
-            dojo.publish('/davinci/ui/context/loaded', [this]);
+            this.onload();
         });
 
 		this.setHeader({
@@ -912,6 +911,14 @@ dojo.declare("davinci.ve.Context", null, {
         }
 
 		loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
+	},
+
+	/**
+	 * Invoked when the page associated with this Context has finished its
+	 * initial loading.
+	 */
+	onload: function() {
+	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	},
 
 	/**

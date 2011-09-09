@@ -20,7 +20,7 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 					if(d.children && d.children instanceof Array){ // sometimes children is just a string also
 						d.children.forEach(loadRequiresForTree, this);
 					}
-					if(!this._context.loadRequires(d.type)){
+					if(!this._context.loadRequires(d.type, true, true)){
 						throw "Failed to load dependencies for " + d.type;
 					}
 				}
@@ -40,6 +40,7 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 						baseline = p;
 					}
 				}else{
+					// FIXME: these aren't used?
 					// unset position style values
 					style.position = undefined;
 					style.left = undefined;
@@ -47,7 +48,7 @@ dojo.declare("davinci.ve.tools.PasteTool", davinci.ve.tools.CreateTool, {
 				}
 			}
 
-			var widget = undefined;
+			var widget;
 			dojo.withDoc(this._context.getDocument(), function(){
 				d.context=this._context;
 				var tool = davinci.ve.metadata.queryDescriptor(d.type, "tool");

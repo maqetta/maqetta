@@ -28,6 +28,11 @@
         {
             "type": "javascript",
             "$text": "dojo.require('dojox.mobile.SpinWheel');"
+        },
+        {
+            "type": "css",
+            "src": "dojox/mobile/themes/common/SpinWheel.css",
+            "$library": "dojo"
         }
     ],
     "library": {

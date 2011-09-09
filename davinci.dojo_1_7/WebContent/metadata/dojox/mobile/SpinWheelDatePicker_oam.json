@@ -31,7 +31,7 @@
         },
         {
             "type": "css",
-            "src": "dojox/mobile/themes/SpinWheel.css",
+            "src": "dojox/mobile/themes/common/SpinWheel.css",
             "$library": "dojo"
         }
     ],

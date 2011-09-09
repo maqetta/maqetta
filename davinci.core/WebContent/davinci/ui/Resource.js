@@ -289,7 +289,7 @@ dojo.mixin(davinci.ui.Resource, {
 		var oldEditor = davinci.Workbench.getOpenEditor();
 		var oldFileName = oldEditor.fileName;
 		var oldResource = davinci.resource.findResource(oldFileName);
-		var oldContent = oldEditor.model.getText();
+        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
 		//dialog.close();
 		dialog.destroyRecursive();
 		// If resource exists, delete it because we will soon make a new version of that resource

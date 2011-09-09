@@ -53,7 +53,7 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
 		this._srcDocument.setText(source, true);
 
 		 
-      //  var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
+       var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
         var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
         
@@ -69,12 +69,12 @@ dojo.declare("davinci.ve.RebuildPage", davinci.ve.Context, {
             }
         }
       
-        /*
+        
         if (themeMetaobject)
             this.changeThemeBase(themeMetaobject['theme'],
                     this._resourcePath);
 
-		*/
+		
         /*
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();

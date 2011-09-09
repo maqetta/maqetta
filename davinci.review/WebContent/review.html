@@ -73,11 +73,11 @@
 
                 if(!result) return;
                 if (result && result.userName) {
-                    dojo.byId('davinci_user').innerText = result.userName;
+                    dojo.byId('davinci_user').innerHTML = result.userName;
                 }
 				else {
                     //FIXME: temporary fix for running via file: URLs
-                    dojo.byId('davinci_user').innerText = "Davinci User";
+                    dojo.byId('davinci_user').innerHTML = "Davinci User";
                 }
                 davinci.Runtime.commenting_reviewerName = result;
                 if (result && result.isLocalInstall) {

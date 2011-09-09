@@ -29,6 +29,50 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 			rootNode:silhouette_div_container,
 			margin:20
 		});
+		
+		/* The following code provides a fix for #864: Drag/drop from widget palette
+		 * not working if page canvas is scrolled. Possibly because of the funky stuff we do
+		 * with width/height being 100% on HTML and BODY, both Mozilla and WebKit set
+		 * the BODY height to the size of the IFRAME, and if scrolled, but (invisible)
+		 * top of the BODY is shifted up off of the screen and the height of the BODY
+		 * is equal to height of IFRAME, which causes an empty area at bottom of canvas
+		 * where the browser will not send mouse events. To workaround this problem,
+		 * extend the width/height of the BODY to be the size of the surrounding ContentPane
+		 * adjusted by the amount the BODY is scrolled.
+		 * 
+		 * FIXME: This patch probably won't be necessary if we get rid of the "infinite canvas"
+		 * and instead force user to pick a fixed-size canvas, in which case things will
+		 * work like the mobile silhouettes, which don't have the problem.
+		 */
+		function resizeBody(bodyElem, size){
+			if(bodyElem.scrollLeft > 0){
+				bodyElem.style.width= (size.w + bodyElem.scrollLeft) + "px";
+			}else{
+				bodyElem.style.width = "100%";
+			}
+			if(bodyElem.scrollTop > 0){
+				bodyElem.style.height=(size.h + bodyElem.scrollTop) + "px";
+			}else{
+				bodyElem.style.height = "100%";
+			}
+		}
+		var visualEditor = this;
+		this.contentPane.connect(this.contentPane,"resize",function(newPos){
+			// "this" is the ContentPane dijit
+			var iframe=dojo.query('iframe',this.domNode)[0];
+			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
+				var bodyElem = iframe.contentDocument.body;
+				resizeBody(bodyElem, newPos);
+				if(!visualEditor._scrollHandler){
+					visualEditor._scrollHandler = dojo.connect(iframe.contentDocument, "onscroll", this, function(e){
+						var size={};
+						size.w = dojo.style(this.domNode,'width');
+						size.h = dojo.style(this.domNode,'height');
+						resizeBody(bodyElem, size);
+					});
+				}
+			}
+		});
 	},
 	
 	setDevice: function(deviceName, force) {
@@ -189,6 +233,10 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	
 	destroy: function () {
 	    this._handles.forEach(dojo.disconnect);
+	    if(this._scrollHandler){
+	    	dojo.disconnect(this._scrollHandler);
+	    	this._scrollHandler = null;
+	    }
 	},
 	
 	setContent: function (fileName, content){

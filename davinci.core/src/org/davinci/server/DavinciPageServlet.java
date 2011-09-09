@@ -199,14 +199,10 @@ public class DavinciPageServlet extends HttpServlet {
             return;
         }
         String path = resourceURL.getPath();
-
+        boolean noCache = resourceURL.getPath().endsWith(".html");
         URLConnection connection = resourceURL.openConnection();
         long lastModified = connection.getLastModified();
         int contentLength = connection.getContentLength();
-
-        if (resourceURL.getPath().endsWith(".html")) {
-            resp.setDateHeader("Expires", System.currentTimeMillis() + 24*60*60*1000);
-        }
 
         String etag = null;
         if (lastModified != -1 && contentLength != -1) {
@@ -217,7 +213,7 @@ public class DavinciPageServlet extends HttpServlet {
         // We should prefer ETag validation as the guarantees are stronger and
         // all HTTP 1.1 clients should be using it
         String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
-        if (ifNoneMatch != null && etag != null && ifNoneMatch.indexOf(etag) != -1) {
+        if (ifNoneMatch != null && etag != null && ifNoneMatch.indexOf(etag) != -1 && !noCache) {
             resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
@@ -226,7 +222,7 @@ public class DavinciPageServlet extends HttpServlet {
         // for purposes of comparison we add 999 to ifModifiedSince since the
         // fidelity
         // of the IMS header generally doesn't include milli-seconds
-        if (ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
+        if (ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999) && !noCache) {
             resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
@@ -255,9 +251,13 @@ public class DavinciPageServlet extends HttpServlet {
             resp.setHeader(DavinciPageServlet.ETAG, etag);
         }
 
-        if (!cacheExpires) {
+        if (!cacheExpires && !noCache) {
             String dateStamp = "Mon, 25 Aug " + (Calendar.getInstance().get(Calendar.YEAR) + 5) + " 01:00:00 GMT";
             resp.setHeader(DavinciPageServlet.CACHE_CONTROL, "Expires:" + dateStamp);
+        }else if(noCache){
+        	resp.setDateHeader("Expires", 0);
+        	resp.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+        	resp.setHeader("Pragma","no-cache"); //HTTP 1.0
         }
 
         if (contentLength != 0) {
@@ -312,7 +312,7 @@ public class DavinciPageServlet extends HttpServlet {
         URL url = Activator.getActivator().getBundle().getEntry("/WebContent/" + path);
         VURL resourceURL = new VURL(url);
 
-        writePage(req, resp, resourceURL, true);
+        writePage(req, resp, resourceURL, false);
     }
 
     private static int writeResource(InputStream is, OutputStream os) throws IOException {

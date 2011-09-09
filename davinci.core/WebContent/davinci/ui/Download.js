@@ -105,17 +105,15 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_getResources : function(){
+	
+		var project=davinci.Runtime.getProject();
+		var folder = davinci.resource.findResource(project);
 		
-		var folder=davinci.resource.getRoot();
 		/* get all sub files */
 		var list = [];
-		var userLibs = [];
 		for(var i = 0;i<folder.children.length;i++){
-			list.push(folder.children[i].getPath());
+			list.push(folder.getPath());
 		}
-
-		var allLibs = this._getLibs();
-		
 		return {'userFiles':list, 'userLibs': this._getLibs()};
 	},
 	

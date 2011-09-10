@@ -847,20 +847,19 @@ dojo.declare("davinci.ve.Context", null, {
 		// out those scripts and execute them later, after _processWidgets()
 		// has loaded any required resources (i.e. <head> scripts)
 		var scripts;
-		if (content) {
-			// It is necessary to run the dojox.html.set utility from the inner frame.  Might be a Dojo bug.
-            var dj = this.getDojo();
-		    dj['require']('dojox.html._base');
-		    dj.getObject('dojox').html.set(containerNode, content, {
-		        executeScripts: true,
-		        onEnd: function() {
-		            // save any scripts for later execution
-		            scripts = this._code;
-		            this.executeScripts = false;
-                    this.inherited('onEnd', arguments);
-		        }
-		    });
-		}
+        var dj = this.getDojo();
+	    dj['require']('dojox.html._base');
+        // It is necessary to run the dojox.html.set utility from the context
+	    // of inner frame.  Might be a Dojo bug in _toDom().
+	    dj.getObject('dojox').html.set(containerNode, content, {
+	        executeScripts: true,
+	        onEnd: function() {
+	            // save any scripts for later execution
+	            scripts = this._code;
+	            this.executeScripts = false;
+                this.inherited('onEnd', arguments);
+	        }
+	    });
 
 		// Remove "on*" event attributes from editor DOM.
 		// They are already in the model. So, they will not be lost.

@@ -28,6 +28,7 @@ dojo.declare("davinci.ve.Context", null, {
 		this._id = "_edit_context_" + davinci.ve._contextCount++;
 		this._editor = args.editor;
 		this._visualEditor = args.visualEditor;
+		this.widgetHash = {};
 		
 		dojo.mixin(this, args);
 

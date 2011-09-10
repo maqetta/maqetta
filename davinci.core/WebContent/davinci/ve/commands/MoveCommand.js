@@ -80,6 +80,14 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		davinci.ve.states.resetState(widget);
+		
+		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
+		// I defined yet another one here (widgetPropertiesChanged) just before Preview3
+		// rather than re-use or alter one of the existing widget*Changed events just before
+		// the Preview 3 release to minimize risk of bad side effects, with idea we would clean up later.
+		// For time being, I made payload compatible with /davinci/ui/widgetSelectionChanged. 
+		// Double array is necessary because dojo.publish strips out the outer array.
+		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	},
 
 	undo: function(){
@@ -100,6 +108,8 @@ dojo.declare("davinci.ve.commands.MoveCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		davinci.ve.states.resetState(widget);
+		
+		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
 	}
 
 });

@@ -1985,9 +1985,13 @@ dojo.declare("davinci.ve.Context", null, {
 				return findTarget(target.children[i], rule);
 			}
 		}
-		var rule = new davinci.html.CSSRule();
-		rule.setText(selector + "{}");
-		return findTarget(widget.domNode || widget, rule);
+		if(selector){
+			var rule = new davinci.html.CSSRule();
+			rule.setText(selector + "{}");
+			return findTarget(widget.domNode || widget, rule);
+		}else{
+			return null;
+		}
 	},
 	
 	getSelectionCssRules: function(targetDomNode){
@@ -1997,6 +2001,9 @@ dojo.declare("davinci.ve.Context", null, {
 			
 		}
 		var selection = this.getSelection();
+		if(!targetDomNode && selection.length==0){
+			return {rules:null, matchLevels:null};
+		}
 		
 		var targetDom = targetDomNode || selection[0].domNode || selection[0];
 		

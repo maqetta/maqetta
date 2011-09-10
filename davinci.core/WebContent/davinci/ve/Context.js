@@ -867,8 +867,11 @@ dojo.declare("davinci.ve.Context", null, {
 		var removeEventAttributes = function(node) {
 			if(node){
 				dojo.filter(node.attributes, function(attribute) {
-					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
-				}).forEach(function(attribute) { node.removeAttribute(attribute); });
+					var check = attribute.nodeName.substr(0,2).toLowerCase() == "on";
+					return check;
+				}).forEach(function(attribute) {
+					node.removeAttribute(attribute.nodeName);
+				});
 			}
 		};
 

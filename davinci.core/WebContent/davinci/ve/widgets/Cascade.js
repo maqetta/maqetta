@@ -277,16 +277,18 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		/* selection (queried) rules */
 		var v = this.context.getSelectionCssRules(this._topWidgetDom);
-		for(var i=0;i<v.rules.length;i++){
-			var s="";
-			var rule = v.rules[i];
-			for(var j = 0;j<rule.selectors.length;j++){
-				if(j!=0) s+=", ";
-				s+=rule.selectors[j].getLabel();
+		if(v && v.rules){
+			for(var i=0;i<v.rules.length;i++){
+				var s="";
+				var rule = v.rules[i];
+				for(var j = 0;j<rule.selectors.length;j++){
+					if(j!=0) s+=", ";
+					s+=rule.selectors[j].getLabel();
+				}
+				var ruletype = getRuleType(rule);
+				values.push({rule:v.rules[i], ruleString:s,
+							matchLevel:v.matchLevels[i], type:ruletype});
 			}
-			var ruletype = getRuleType(rule);
-			values.push({rule:v.rules[i], ruleString:s,
-						matchLevel:v.matchLevels[i], type:ruletype});
 		}
 		
 		/* create list of proposals for new rules (using classes defined on this widget) */

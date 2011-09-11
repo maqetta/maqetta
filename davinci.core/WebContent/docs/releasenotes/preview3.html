@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta Preview 3 Release Notes</title>
+</head>
+
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td>
+	<a href="home.html">Home</a> &gt; <a href="releasenotes/releasenotes.html">Release notes</a>
+    </td>
+    <td class="prevnext">
+    <a href="releasenotes/preview2.html">Previous</a> / <a href="releasenotes/releasenotes.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Maqetta Preview 3</h1>
+
+<h2>Preview 3 release notes</h2>
+
+<p>The Preview 3 release includes the following updates:</p>
+
+<ul style="margin-top: 0pt;" type="disc">
+	<li><strong>Mobile authoring updates</strong>. 
+		The Preview 3 release builds on the Preview 2 release (which introduced extensive
+		support for the comprehensive Dojo Mobile 1.7 widget library, including automatic
+		theme switching to deliver native look-and-feel for iPhone, Android and Blackberry
+		devices) by providing improved handling of View widgets (View, ScrollableView and SwapView),
+		along with 
+		<a href="https://github.com/maqetta/maqetta/issues?labels=Mobile&sort=created&direction=desc&state=closed&page=1&milestone=14" target="_blank">some key mobile authoring bug fixes</a>.
+		Whereas in Preview 2, authors needed to carefully manage View widget visibility by manual
+		efforts to ensure only one View widget eyeball icon was active, with Preview 3, Maqetta
+		now automatically mimics Dojo Mobile's runtime behavior and ensures that exactly one 
+		View widget (among a set of sibling View widgets) is visibla at any given time.
+		To switch from authoring within one View to authoring a different View, the author
+		simply has to click on the alternate View in the Outline palette, either by clicking
+		on the View's row in the Outline palette or the View's eyeball icon. (The mobile tutorial has been updated
+		to reflect these new features.)
+	</li>
+	<li><strong>Multiple project support</strong>. 
+		Maqetta Preview 3 adds support for multiple projects, primarily by the addition of the
+		a <strong>New Project...</strong> command on the main toolbar, along with the ability to 
+		switch the currently active project via a drop-down menu at the top of the Files palette.
+	</li>
+	<li><strong>Eclipse-compatible projects</strong>. 
+		The <strong>New Project...</strong> command contains an "Eclipse support" checkbox,
+		which if checked, will result in the new project having a file hierarchy that
+		matches the file hierarchy (and hidden configuration files) that the Eclipse IDE 
+		creates by default when creating a web project. This option also creates
+		the appropriate configuration files used by IBM Rational Application Developer (RAD)
+		when creating a web project that includes the Dojo toolkit facet. This "Eclipse support"
+		option allows a designer to export his Maqetta project as a ZIP (via one of the download icons
+		on the Files palette) and then hand off to a developer who can import the project into Eclipse and/or RAD
+		for further development. (The export to Eclipse tutorial has been updated
+		to reflect these new features.)
+	</li>
+	<li><strong>Bug fixes with nested folders</strong>. 
+		Along with the new "project" features, the Preview 3 release also include several
+		key bug fixes around saving files within nested folders.
+	</li>
+	<li><strong>Dynamic grid lines and snapping for absolute-positioned widgets</strong>. 
+		When using absolute positioning, Maqetta now shows dynamic grid lines as you drag out a 
+		new widget or move an existing widget via drag/drop. The dynamic grid lines
+		show prospective alignment points with the left/center/right and top/middle/bottom
+		for other existing widgets. This makes it quick and easy in absolute positioning
+		mode to align widgets with other widgets (e.g., center align a text label with its corresponding text box).
+	</li>
+	<li><strong>DataGrid can now read in data from a remote URL, including URLs from other domains</strong>. 
+		With Preview 2, DataGrid accepted either user-entered dummy data in the form
+		of multiple rows of comma-separated information, or data from a
+		JSON file from the user's workspace.
+		With Preview 3, Maqetta now supports JSON files from remote URLs,
+		including URLs that come from a different domain (using JSONP under the hood).
+	</li>
+	<li><strong>Support for several new Dojo widgets</strong>. 
+		This release adds support for the following Dojo/Dijit widgets:
+		<ul>
+			<li>dijit.Form</li>
+			<li>dijit.ColorPalette</li>
+			<li>dijit.form.ComboButton</li>
+			<li>dijit.form.CurrentTextBox</li>
+			<li>dijit.form.NumberSpinner</li>
+			<li>dijit.form.NumberTextBox</li>
+			<li>dijit.form.TimeSpinner</li>
+			<li>dijit.form.ToggleButton</li>
+			<li>dijit.form.ValidationTextBox</li>
+		</ul>
+	</li>
+	<li><strong>New Theme command now opens theme editor</strong>. 
+		In previous releases, to create a new theme and then edit that theme, the user
+		need to issue two separate commands, first New Theme and then Open Theme.
+		With Preview 3, the New Theme command automatically opens the theme editor
+		on the new theme that the user has just created.
+	</li>
+	<li><strong>Several user interface fixes for Web-based review and commenting</strong>. 
+		This release includes 
+		a number of bug fixes and UI improvements
+		in the review and commenting feature, including improved approaches
+		to showing annonations that correspond to a particular comment
+		versus annotations associated with other comments.
+	</li>
+	<li><strong>Fixes for some caching bugs</strong>. 
+		The Preview 3 release includes a couple of caching bug fixes that were in previous
+		releases where the author had to hit refresh (and/or clear browser cache and then refresh).
+		(Unfortunately, not all caching bugs have been addressed yet.
+		Subsequent releases will address the issues found 
+		<a href="https://github.com/maqetta/maqetta/wiki/Caching" target="_blank">
+		on this wiki page
+		</a>
+		).
+	</li>
+	<li><strong>Code is now fully globalized</strong>. 
+		The Maqetta team went through the entire project and replaced all hard-coded strings
+		with dynamic references to a localization bundle, thereby making it possible
+		to localize Maqetta simply by adding alternate localization files.
+	</li>
+	<li><strong>Mac Safari 5.1 now required</strong>. 
+		The Preview 3 release requires Safari 5.1. There is a critical bug fix
+		in Safari 5.1 needed by Maqetta.
+	</li>
+	<li><strong>Many other bug fixes</strong>. 
+		Preview 3 includes over 150+ miscellaneous bug fixes. Some of those fixes
+		can be seen by going to 
+		<a href="https://github.com/maqetta/maqetta/issues?sort=created&direction=desc&state=closed&page=1&milestone=14" target="_blank">
+		this URL which lists bugs closed against the Preview 3 release
+		</a>.
+	</li>
+</ul>
+
+<p> </p>
+
+<p class="prevnext">
+    <a href="releasenotes/preview2.html">Previous</a> / <a href="releasenotes/releasenotes.html">Next</a>
+</p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+
+</body>
+</html>

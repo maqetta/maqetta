@@ -76,7 +76,7 @@ Follow these steps to check your Java version:</p>
 
 <h3 id="local_install_download">Step 2: Pull down the most recent Maqetta build</h3>
 
-<ol><li> Create a folder on your local system for the Maqetta application (e.g., "maqetta_preview")
+<ol><li> Create a folder on your local system for the Maqetta application (e.g., "maqetta_preview_N", where N is the preview release number)
 </li><li> Navigate your browser to the appropriate Maqetta downloads page. 
 <strong><em>Note that there might be multiple Maqetta downloads pages.
 For example, your company might provide customized versions of Maqetta that are available
@@ -89,7 +89,9 @@ If you are looking for a recent Maqetta build that was created from the code in 
 </li><li> After downloading, extract the ZIP file contents:
 <ul>
 <li>On Windows, extract (unzip) into the Maqetta application folder you just created</li>
-<li>On Mac, if you simply double-click on the maqetta_preview.zip file, a folder named maqetta_preview will be created next to the ZIP file. The maqetta_preview folder will contain the extracted contents of the ZIP file.</li>
+<li>On Mac, if you simply double-click on the ZIP file you downloaded. A folder with the same name as the ZIP file
+	without the .zip extension will be created next to the ZIP file. 
+	The folder will contain the extracted contents of the ZIP file.</li>
 </ul>
 </li></ol>
 <p> </p>
@@ -111,18 +113,38 @@ If you are looking for a recent Maqetta build that was created from the code in 
 </p>
 <p> </p>
 <hr />
-<pre>!!!!!!!!!!!!!!<br />NOTE: CLOSING THIS WINDOW WILL <br />      STOP THE MAQETTA SERVER PROCESS<br />!!!!!!!!!!!!!<br /><br />Using directory : &lt;maqetta-unzip-dir&gt;\users<br />start your browser at http://localhost:50000/maqetta<br /><br />osgi&gt;</pre>
+<pre>!!!!!!!!!!!!!!
+NOTE: CLOSING THIS WINDOW WILL <br />STOP THE MAQETTA SERVER PROCESS
+!!!!!!!!!!!!!
+
+Using directory: &lt;maqetta-unzip-dir&gt;/users
+Start your browser at: http://localhost:50000/maqetta
+
+osgi&gt;</pre>
 <hr />
 <p> </p>
-<p>The Maqetta server will continue to run until you close the shell window that comes up after you double-click on the server launch file. Therefore, if you close the shell window, the Maqetta server process will stop running, at which point you can't run <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a> anymore. <br /></p>
-<p><i><font color="#ff0000"><b><u>One possible problem</u></b> <font color="#000000">is that you might already be running a different localhost server on your system at <b><u>http://localhost:50000</u></b> (the default for Maqetta). Refer to the detailed notes immediately below about how to change the Maqetta launch script to use a different port number.</font></font></i><br /></p><p /><p><b><i>Detailed notes about the Maqetta server <br /></i></b></p>
+<p>After you double-click on the launch script, the Maqetta server will continue to run until you close the shell window that appears after you double-click.
+If you close the shell window, the Maqetta server process will stop running, at which point you can't run <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a> anymore. <br /></p>
+
+<p><i><font color="#ff0000"><b><u>One possible problem</u></b></font> that some users encounter 
+is that you might already be running a different localhost server on your system at 
+<b><u>http://localhost:50000</u></b> (the default for Maqetta). 
+Refer to the detailed notes immediately below about how to change the Maqetta launch script to use a different port number.
+</i></p>
+
+<p><b><i>Detailed notes about the Maqetta server </i></b></p>
 
 <ul><li>On the Mac, you can launch the Maqetta server from the Dock by dragging the <code>maqetta.local.mac.command</code> onto the right part of the doc.</li>
 <li>The launch scripts (<b>maqetta.local.win.bat</b> and <b>maqetta.local.mac.command</b>) have some default parameters:
 <ul>
-<li><b>HTTP port number</b> - The scripts default to port 50000. If you prefer to use 8080 or some other port number, hand-edit the launch script 
-and change 50000 to something else (any number in the 50000's is OK).
-</li><li><b>User workspace folder</b> - Any files that you create in Maqetta will be saved into a folder managed by the Maqetta server process. You can change the location for where your workspace is saved by hand-editing the launch scripts. <i><b>Note that a future version of Maqetta will allow you to open any file on your local system. The current release can only open files within the workspace area.</b></i><br /><br />The default <b>user workspace folder</b> locations are:<br /><br />
+<li><b>HTTP port number</b> - The scripts default to port 50000. If you prefer to use 8080 or some other port number, 
+you can hand-edit the launch script 
+to change 50000 to something else (any number in the 50000's is OK).
+</li><li><b>User workspace folder</b> - Any files that you create in Maqetta 
+will be saved into a folder managed by the Maqetta server process. 
+You can change the location for where your workspace is saved by hand-editing the launch scripts. 
+<br /><br />
+The default <b>user workspace folder</b> locations are:<br /><br />
 
 <ul><li>Windows: &lt;maqetta-unzip-dir&gt;\users</li>
 <li>Macintosh: &lt;maqetta-unzip-dir&gt;/users</li></ul>
@@ -145,7 +167,7 @@ and change 50000 to something else (any number in the 50000's is OK).
 		recommended nonetheless. 
 		We have found occasional issues with Google Chrome when switching from an old version
 		of Maqetta to a newer version. </li>
-	<li><strong>Clear both the browser's cache and its "appcache" (offline storage):</strong>
+	<li><strong>Clear both the browser's cache, cookes and "appcache" (offline storage):</strong>
 		<ul>
 			<li>Chrome
 				<ul>

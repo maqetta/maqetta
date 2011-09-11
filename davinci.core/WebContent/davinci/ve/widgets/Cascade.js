@@ -320,8 +320,10 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		/* theme/meta rules */
 		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
 			v = this._editor._getCssRules(this._widget, null, this._editor._currentState);
-		} else {
-			v = this.context.getMetaTargets(this.target);
+		} else if(this._widget){
+			v = this.context.getMetaTargets(this._widget,this.target);
+		}else{
+			v=[];
 		}
 		
 		for(var i = 0;i<v.length;i++){

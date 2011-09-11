@@ -1082,7 +1082,7 @@ dojo.mixin(davinci.Workbench, {
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
 		}
-		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName);
+		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName,tab.domNode);
 		
 		if (keywordArgs.startLine) {
 			tab.editor.select(keywordArgs);

@@ -1959,17 +1959,8 @@ dojo.declare("davinci.ve.Context", null, {
 		
 	},
 	
-	getMetaTargets: function(target){
-		// return rules based on metadata IE theme
-	
-		
-		var widget = this.getSelection();
-		if(widget.length>0){
-			widget = widget[0];
-		}
-		
+	getMetaTargets: function(widget, target){
 		var name = this.getSelector(widget,target);
-		
 		var model = this.getModel();
 		return model.getRule(name);
 		

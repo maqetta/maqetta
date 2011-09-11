@@ -104,7 +104,7 @@ dojo.declare("davinci.ve.tools._Tool", null, {
 	 * 
 	 * @param target {davinci.ve._Widget}
 	 * 			The widget on which the user dropped the new widget.
-	 * @param data {boolean}
+	 * @param data {Array|Object}
 	 * 			Data for the dropped widget.
 	 * @param climb {boolean}
 	 * 			Whether to climb the DOM looking for matches.

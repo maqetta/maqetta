@@ -84,6 +84,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
+		this._restoreStates();
 		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
@@ -901,7 +902,8 @@ dojo.declare("davinci.ve.Context", null, {
 		};
 		collapse(containerNode);
 
-		this._processWidgets(containerNode, active, states);
+		this._loadFileStatesCache = states;
+		this._processWidgets(containerNode, active, this._loadFileStatesCache);
 
 		// Now that _processWidgets() has loaded any of the widgets' required
 		// resources, we execute the inline scripts.
@@ -960,7 +962,6 @@ dojo.declare("davinci.ve.Context", null, {
 					this, '_editorSelectionChange');
 		}
 	
-		this._restoreStates(states);
 		if(attachWidgets){
 			this._attachAll();
 		}
@@ -1018,7 +1019,6 @@ dojo.declare("davinci.ve.Context", null, {
 					}	
 					var states = davinci.states.deserialize(stateSrc);
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-					davinci.ve.states.store(widget, states);
 					
 					var state = davinci.ve.states.getState(widget);
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
@@ -1235,19 +1235,18 @@ dojo.declare("davinci.ve.Context", null, {
 	},
 
 	// restore states into widget
-	_restoreStates: function(cache){
-		var dijit = this.getDijit();
+	_restoreStates: function(){
+		var cache = this._loadFileStatesCache;
+		if(!cache){
+			console.error('Context._restoreStates: this._loadFileStatesCache missing');
+			return;
+		}
 		var currentStateCache = [];
 		for(var id in cache){
-			var widget = id == "body" ? this.getContainerNode() : dijit.byId(id);
-			if (!widget) {
-				var node = this.getDocument().getElementById(id);
-				widget = davinci.ve.widget.getWidget(node);
-//				if (!widget) {
-//					var c = davinci.ve.widget.loadHtmlWidget(node);
-//					widget = new c({}, node); 
-//				}
-			}
+			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
+			//That's bad. We should find another way to achieve special case logic for BODY widget.
+			var node = id == "body" ? this.getContainerNode() : this.getDocument().getElementById(id);
+			var widget = davinci.ve.widget.getWidget(node);
 			var states = cache[id];
 			states = davinci.states.deserialize(states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7

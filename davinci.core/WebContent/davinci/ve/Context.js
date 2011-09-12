@@ -356,16 +356,13 @@ dojo.declare("davinci.ve.Context", null, {
      * @param force {boolean} if true, forces setting of CSS files, even if
      *              'device' is the same as the current device
      */
-	setMobileTheme: function(device, force) {
+	setMobileTheme: function(device) {
 	    function getDeviceCssFiles(dev) {
 	        var name = preview.silhouetteiframe.getMobileTheme(dev + '.svg');
 	        return preview.silhouetteiframe.getMobileCss(name);
 	    }
 
         var oldDevice = this.getMobileDevice() || 'none';
-        if (oldDevice === device && ! force) {
-            return;
-        }
 
 		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
 		var lib = this.getLibraryBase('dojo', libVer);
@@ -720,7 +717,7 @@ dojo.declare("davinci.ve.Context", null, {
 					var onload = dojo.connect(this, 'onload', function() {
 						var mobileDevice = context.getMobileDevice();
 	                    if (mobileDevice) {
-                            context._editor.visualEditor.setDevice(mobileDevice, true);
+                            context._editor.visualEditor.setDevice(mobileDevice);
 	                    }
 	                    dojo.disconnect(onload);
 					});

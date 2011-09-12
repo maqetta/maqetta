@@ -744,7 +744,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		if(this._values[event.target].type=="element.style"){
 			loc = this._getBaseLocation();
 		}else if(this._values[event.target].type=="proposal"){
-			loc=null;
+			var model = this.context.getModel();
+			var cssFile = model.find({elementType:'CSSFile', relativeURL: this._values[event.target].targetFile}, true);
+			loc=cssFile.getResource();
 		}else{
 			loc = this._values[event.target].rule.getCSSFile().getResource();
 		}

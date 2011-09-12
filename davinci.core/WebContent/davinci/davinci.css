@@ -1053,11 +1053,23 @@ davinci_top_bar .dijitButtonNode {
 	z-index: -3;
 }
 
+
+
 .EditorContainer IFRAME {
 		 border: 0;
-		 width: 100%;
+		 width: 99%;
 		 height: 100%;
 }
+
+
+#davinci_app  .dojoxEllipsisIFrame{
+	/*
+	 * this is to fix for a FF/FB bug where we get the iframe height from the css rule .EditorContainer IFRAME  
+	 * Creating extra lines between our smart input radio buttons
+	 */
+		 height: 1px;
+}
+
 
 .device {
 	display: none;

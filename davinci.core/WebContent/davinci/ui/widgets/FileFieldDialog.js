@@ -22,6 +22,7 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 	},
 
 	startup : function(){
+		this.inherited(arguments);
 		var data={file  : null};
 		this._button = dojo.byId(this._button);
 		dojo.connect(this._button,"onclick",this,function(){
@@ -75,7 +76,7 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 		
 		this._textField = dojo.byId(this._textField);
 		dojo.connect(this._textField,"onchange", this,"_onChange");
-		this.inherited(arguments);
+		
 	},
 	_setBaseLocationAttr : function(baseLocation){
 		// this is the directory to make everything relative to. also the first directory to show
@@ -89,7 +90,7 @@ dojo.declare("davinci.ui.widgets.FileFieldDialog", [davinci.workbench.WidgetLite
 			dojo.attr(this._textField, "value", value);
 		 }
 	},
-	_onChange : function(){	
+	_onChange : function(){
 		var v1 = dojo.attr(this._textField, "value");
 	
 		var path=new davinci.model.Path(v1);

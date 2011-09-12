@@ -306,8 +306,7 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridInput", davinci.ve.input
 			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
 		}
 		dj.dojox.io.xhrScriptPlugin(url,this._callback);
-		dojox.io.xhrScriptPlugin(url,this._callback);
-		store = new dojo.data.ItemFileReadStore({url: url });
+		store = new dj.data.ItemFileReadStore({url: url });
     	store.fetch({
     		query: this.query,
     		queryOptions:{deep:true}, 

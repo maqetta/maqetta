@@ -9,13 +9,15 @@ dojo.declare("davinci.libraries.dojo.dojo.data.ItemFileReadStoreHelper", null, {
 
 		var widgetData = widget._getData( options);
 		var value = widget._srcElement.getAttribute('data');
-		var url = widget._srcElement.getAttribute('url') || widget.properties.url; // get url for undo from data
 		if (value){
-			var newdata;
 			value = eval('newdata=' +value);
 			widgetData.properties.data = value;
 		} else {
-			widgetData.properties.url = url;
+		    if (widget._srcElement.getAttribute('url')) {
+		        widgetData.properties.url = widget._srcElement.getAttribute('url'); 
+		    } else if (widget.properties) {
+		        widgetData.properties.url = widget.properties.url; // get url for undo from data
+		    } 
 		}
 		return widgetData;
 	},

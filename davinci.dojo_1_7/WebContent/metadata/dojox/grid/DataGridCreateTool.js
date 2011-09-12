@@ -91,9 +91,10 @@ dojo.declare("davinci.libraries.dojo.dojox.grid.DataGridCreateTool", davinci.ve.
 		var index = args.index;
 		// always put store as first element under body, to ensure they are constructed by dojo before they are used
         var bodyWidget = davinci.ve.widget.getWidget(this._context.rootNode);
-		command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
+		//command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
+		command.add(new davinci.ve.commands.AddCommand(store, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new davinci.ve.commands.AddCommand(dataGrid, args.parent, index));
+		command.add(new davinci.ve.commands.AddCommand(dataGrid, args.parent, index+1));
 		
 		if(args.position){
 			command.add(new davinci.ve.commands.MoveCommand(dataGrid, args.position.x, args.position.y));

@@ -713,18 +713,6 @@ dojo.declare("davinci.ve.Context", null, {
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
 					context._setSourceData(data);
-
-					// Set mobile device CSS files, but only after the initial page
-					// content has finished loading.  This prevents an issue where
-					// deleting a CSS file while the browser is parsing caused
-					// rules from later CSS files to not be used. See GitHub #899.
-					/*var onload = dojo.connect(this, 'onload', function() {
-						var mobileDevice = context.getMobileDevice();
-	                    if (mobileDevice) {
-                            context._editor.visualEditor.setDevice(mobileDevice, true);
-	                    }
-	                    dojo.disconnect(onload);
-					});*/
 				} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
@@ -946,15 +934,20 @@ dojo.declare("davinci.ve.Context", null, {
 			var dj = this.getDojo();
 			dj["require"]("dojo.parser");
 			dj.parser.parse(containerNode);
+			// Set mobile device CSS files, but only after the initial page
+            // content has finished loading.  This prevents an issue where
+            // deleting a CSS file while the browser is parsing caused
+            // rules from later CSS files to not be used. See GitHub #899, 993.
 			var self = this;
-			dj.addOnLoad(
-			        function(){
-			            var mobileDevice = self.getMobileDevice();
+            dj.addOnLoad(
+                    function(){
+                        var mobileDevice = self.getMobileDevice();
                         if (mobileDevice) {
                             self.visualEditor.setDevice(mobileDevice, true);
                         }
-			        }
-			      );
+                    }
+                  );
+			
 		} catch(e){
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers

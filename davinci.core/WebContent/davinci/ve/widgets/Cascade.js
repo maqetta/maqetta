@@ -277,16 +277,18 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		
 		/* selection (queried) rules */
 		var v = this.context.getSelectionCssRules(this._topWidgetDom);
-		for(var i=0;i<v.rules.length;i++){
-			var s="";
-			var rule = v.rules[i];
-			for(var j = 0;j<rule.selectors.length;j++){
-				if(j!=0) s+=", ";
-				s+=rule.selectors[j].getLabel();
+		if(v && v.rules){
+			for(var i=0;i<v.rules.length;i++){
+				var s="";
+				var rule = v.rules[i];
+				for(var j = 0;j<rule.selectors.length;j++){
+					if(j!=0) s+=", ";
+					s+=rule.selectors[j].getLabel();
+				}
+				var ruletype = getRuleType(rule);
+				values.push({rule:v.rules[i], ruleString:s,
+							matchLevel:v.matchLevels[i], type:ruletype});
 			}
-			var ruletype = getRuleType(rule);
-			values.push({rule:v.rules[i], ruleString:s,
-						matchLevel:v.matchLevels[i], type:ruletype});
 		}
 		
 		/* create list of proposals for new rules (using classes defined on this widget) */
@@ -318,8 +320,10 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		/* theme/meta rules */
 		if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
 			v = this._editor._getCssRules(this._widget, null, this._editor._currentState);
-		} else {
-			v = this.context.getMetaTargets(this.target);
+		} else if(this._widget){
+			v = this.context.getMetaTargets(this._widget,this.target);
+		}else{
+			v=[];
 		}
 		
 		for(var i = 0;i<v.length;i++){

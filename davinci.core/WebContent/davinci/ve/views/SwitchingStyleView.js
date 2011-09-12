@@ -305,8 +305,6 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		this.inherited(arguments);
 			
 	},
-
-
 	
 	_widgetValuesChanged : function(event){
 		var currentPropSection = davinci.ve.widgets.HTMLStringUtil.getCurrentPropSection();
@@ -342,12 +340,12 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		return visibleCascade;
 	},
 	
-	_widgetSelectionChanged : function (changeEvent){
+	_updatePaletteValues: function(widgets){
 		//debugger;
 		if(	!this._editor )
 			return;
 		//debugger;
-		var widget=changeEvent[0];
+		var widget=widgets[0];
 		/* What about state changes and undo/redo? wdr
 		 * if(this._widget == widget && this._subwidget==widget.subwidget)
 			return false;
@@ -358,10 +356,17 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		this.setReadOnly(!(this._widget || this._subwidget));
 		var visibleCascade = this._getVisibleCascade();
 		for(var i =0;i<visibleCascade.length;i++)
-			visibleCascade[i]._widgetSelectionChanged(changeEvent);
+			visibleCascade[i]._widgetSelectionChanged(widgets);
 		
 	},
 	
+	_widgetSelectionChanged: function(changeEvent){
+		this._updatePaletteValues(changeEvent);
+	},
+	
+	_widgetPropertiesChanged: function(widgets){
+		this._updatePaletteValues(widgets);
+	},
 	
 	_titlePaneOpen : function(index){
 		
@@ -430,6 +435,7 @@ dojo.declare("davinci.ve.views.SwitchingStyleView", davinci.workbench.ViewLite, 
 		this.setReadOnly(true);
 		this.onEditorSelected();
 		dojo.subscribe("/davinci/ui/widgetValuesChanged", dojo.hitch(this, this._widgetValuesChanged));
+		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 		//Don't need to subscribe here. ViewLite already does it for us.
 		//dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 	},

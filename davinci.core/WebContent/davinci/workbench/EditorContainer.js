@@ -48,11 +48,11 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
       	];
 	},
 	
-	setEditor: function(editorExtension,fileName,content,file){
+	setEditor: function(editorExtension,fileName,content,file,rootElement){
 		
 		this.editorExtension=editorExtension;
 		var constr=dojo.getObject(editorExtension.editorClass);
-		var editor = this.editor=new constr(this.containerNode);
+		var editor = this.editor=new constr(this.containerNode,rootElement);
 		this.containerNode = editor.domNode || this.containerNode;
 		editor.editorID=editorExtension.id;
 		editor.isDirty= !editor.isReadOnly && this.isDirty;

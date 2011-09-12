@@ -12,8 +12,9 @@ dojo.require("davinci.ve.utils.URLRewrite");
 dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	   
 
-    constructor: function (element) {
+    constructor: function (element, rootElement) {
 
+    	this._rootElement = rootElement;
         this._bc = new dijit.layout.BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;

@@ -131,8 +131,8 @@ public class Download extends Command {
             if(pathString==null) return;
             
             /* remove leading characters that confuse and anger windows built in archive util */
-            while(pathString.charAt(0)=='.' || pathString.charAt(0)=='/' || pathString.charAt(0)=='\\')
-            	pathString=pathString.substring(1);
+           if(pathString.length() > 1 && pathString.indexOf("./")==0)
+        	   pathString = pathString.substring(2);
 
             if(!addEntry(pathString)) continue;
             

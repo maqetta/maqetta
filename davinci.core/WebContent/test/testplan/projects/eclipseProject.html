@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Eclipse Project Testing</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Eclipse project basic tests</h1>
+
+	<h2 class="test_section">Pull down the most recent Maqetta build</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Start maqetta in mutli user mode.  (repeat tests in single user mode)</li>
+		<li>Create a new project by going to New-->Project in the menu bar.
+		<li>Type a name for the project, and click the "Enable Eclipse Support"
+		<li>Create a new folder under WebContent by going to the New-->Folder in the title bar.  Call the folder aaa</li>
+		<li>Create a new HTML file in the WebContent/aaa folder by going to New-->HTML File in the menu bar</li>
+		<li>Add some content to the new HTML file. Save and close</li>
+		<li>Download the entire workspace as a zip by clicking the "Download Workspace" icon on the File Explore shortcut bar.
+		<li>Default settings are fine, click OK and save the file somewhere on the file system</li>
+		<li>Start Eclipse.  Then go to your workspace and right click and select Import-->Import</li>
+		<li>In "General"" select "Existing Project into Workspace", Click the radio button next to "From Archive" then browse to find the zip file you just downloaded.</li>
+		<li>The Maqetta project should show up in the lists of projects. Select it and click OK</li> 
+		
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<p class="expectedResults">You should now have a project in your Eclipse workspace with the same name and structure as your maqetta project.  You should be able to open
+	any of the HTML files in a browser or editor. </p>
+</body>
+</html>

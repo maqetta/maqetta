@@ -127,6 +127,7 @@ dojo.mixin(davinci.Workbench, {
 			"text-align: center;");
 		return className;
 	},
+
 	_resourceChanged: function (type,changedResource)
 	{
 		if (type=='deleted')
@@ -137,7 +138,7 @@ dojo.mixin(davinci.Workbench, {
 			{
 				var tabContainer = dijit.byId("editors_tabcontainer");
 				tabContainer.removeChild(tab);
-				//	tab.destroyRecursive();
+				tab.destroyRecursive();
 			}
 		}
 	},
@@ -1082,7 +1083,7 @@ dojo.mixin(davinci.Workbench, {
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
 		}
-		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName);
+		tab.setEditor(editorExtension,fileName,content,keywordArgs.fileName,tab.domNode);
 		
 		if (keywordArgs.startLine) {
 			tab.editor.select(keywordArgs);

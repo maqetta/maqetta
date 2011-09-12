@@ -9,7 +9,15 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileCreateTool", davinci.ve.
     create: function(args) {
         this.inherited(arguments);
         var mobileDevice = this._context.getMobileDevice() || 'none';
-		this._context.setMobileTheme(mobileDevice);
+
+    	// remove iphone.css file added by default by dojox.mobile code
+        if (mobileDevice != "iphone") {
+    		dojo.withDoc(this._context.getDocument(), function() {
+    			dojo.query('link[href$="iphone.css"]').orphan();
+    		});
+        }
+
+        this._context.setMobileTheme(mobileDevice);
     }
 
 });

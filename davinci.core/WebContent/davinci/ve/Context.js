@@ -358,39 +358,39 @@ dojo.declare("davinci.ve.Context", null, {
      *              'device' is the same as the current device
      */
 	setMobileTheme: function(device, force) {
-	    function getDeviceCssFiles(dev) {
-	        var name = preview.silhouetteiframe.getMobileTheme(dev + '.svg');
-	        return preview.silhouetteiframe.getMobileCss(name);
-	    }
-
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice === device && ! force) {
             return;
         }
 
-		var libVer = davinci.ve.metadata.getLibrary('dojo').version;
-		var lib = this.getLibraryBase('dojo', libVer);
-		var fullLibPath = new davinci.model.Path(this.getBase()).append(lib);
+		var libVer = davinci.ve.metadata.getLibrary('dojo').version,
+			lib = this.getLibraryBase('dojo', libVer),
+			fullLibPath = new davinci.model.Path(this.getBase()).append(lib);
 		lib = fullLibPath.relativeTo(this.getPath(),true).toString();
-		var baseUrl = lib + '/dojox/mobile/themes/';
 
+		// dojox.mobile specific CSS file handling
+    	// A better approach would be to use theme= or somehow pass the theme into dojox.mobile so that the correct theme files are used
 		dojo.withDoc(this.getDocument(), function() {
-	        // remove the old css files
+			var baseUrl = lib + '/dojox/mobile/themes/';
+
+    	    var getDeviceCssFiles = function (dev) {
+    	        var name = preview.silhouetteiframe.getMobileTheme(dev + '.svg');
+    	        return preview.silhouetteiframe.getMobileCss(name);
+    	    };
+
+			// remove old theme css file.  match -compat files also
+        	// be careful not to remove the theme files about to be added, since that can confuse the browser
 		    getDeviceCssFiles(oldDevice).forEach(function(file) {
-	            var url = baseUrl + file;
-	            dojo.query('link[href="' + url + '"]').forEach(function(link) {
-	                dojo.destroy(link);
-	            });
+		    	dojo.query('link[href^="' + baseUrl + file.split(".")[0] + '"]').orphan();
 		    });
 
-	        // add new css files
+		    // add new css files
 		    getDeviceCssFiles(device).forEach(function(file) {
-                var url = baseUrl + file;
                 dojo.create('link',
                     {
                         rel: 'stylesheet',
                         type: 'text/css',
-                        href: url
+                        href: baseUrl + file
                     },
                     dojo.doc.getElementsByTagName('head')[0]
                 );

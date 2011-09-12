@@ -11,10 +11,8 @@ dojo.require("davinci.ve.utils.URLRewrite");
 
 dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
 	   
+    constructor: function (element) {
 
-    constructor: function (element, rootElement) {
-
-    	this._rootElement = rootElement;
         this._bc = new dijit.layout.BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;
@@ -59,6 +57,10 @@ dojo.declare("davinci.ve.PageEditor", davinci.ui.ModelEditor, {
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
     },
+	
+	setRootElement: function(rootElement){
+    	this._rootElement = rootElement;
+	},
 	
 	supports: function (something){
 	    return /^\s*(palette|properties|style|states|inline-style|MultiPropTarget)\s*$/.test(something);

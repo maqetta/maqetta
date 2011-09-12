@@ -14,7 +14,7 @@ _1.getObject("io.xhrScriptPlugin",true,dojox);
 
 dojox.io.xhrScriptPlugin=function(_5,_6,_7){
 _3.register("script",function(_8,_9){
-return _9.sync!==true&&(_8=="GET"||_7)&&(/*_9.url.substring(0,_5.length)==_5*/_9.url==_5); // fix for http://host/service http://host/service2
+return _9.sync!==true&&(_8=="GET"||_7)&&(_9.url.substring(0,_5.length)==_5); 
 },function(_a,_b,_c){
 var _d=function(){
 _b.callbackParamName=_6;

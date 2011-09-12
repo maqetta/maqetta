@@ -136,7 +136,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		var askUser = false;
 		// New logic: prompt user only if theme CSS files are going to change
 		var content = null;
-
+		
 		var langObj = dojo.i18n.getLocalization("davinci.ve", "ve");
 		if(this._values[this._targetValueIndex].readOnly){
 			//FIXME: the commented out message in next line provides a more informative error message
@@ -162,7 +162,7 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			var overRide = new davinci.ui.widgets.DocileDialog({content:content,
 																callBack:dojo.hitch(this, function(result){
 																
-																	if(result.value=="ok"){
+																	if(result.value=="OK"){
 																		this._value=this._getFieldValue();
 																		this._changeValue(this._targetValueIndex,this._value);
 																	}else{

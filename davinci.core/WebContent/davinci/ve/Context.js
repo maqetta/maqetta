@@ -400,6 +400,18 @@ dojo.declare("davinci.ve.Context", null, {
         this.setMobileDevice(device);
 	},
 	
+	 /**
+     * Sets Device and correct CSS files for the mobile device.
+     */
+	setDeviceAndTheme: function(){
+	    var mobileDevice = this.getMobileDevice();
+        if (mobileDevice) {
+            this._visualEditor.setDevice(mobileDevice, true);
+           
+        }
+   
+	},
+	
 	/**
 	 * @static
 	 */
@@ -938,16 +950,7 @@ dojo.declare("davinci.ve.Context", null, {
             // content has finished loading.  This prevents an issue where
             // deleting a CSS file while the browser is parsing caused
             // rules from later CSS files to not be used. See GitHub #899, 993.
-			var self = this;
-            dj.addOnLoad(
-                    function(){
-                        var mobileDevice = self.getMobileDevice();
-                        if (mobileDevice) {
-                            self.visualEditor.setDevice(mobileDevice, true);
-                        }
-                    }
-                  );
-			
+            dj.addOnLoad(dj.hitch(this,'setDeviceAndTheme'));
 		} catch(e){
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers

@@ -59,8 +59,15 @@ dojo.declare("davinci.ve.widgets.WidgetProperties", [davinci.workbench.ViewLite]
 			this._widget = null;
 			this.context = null;
 		}else{
-			this.context = editorChange.getContext();
-			this._widget = this.context.getSelection()[0];
+		
+			if(editorChange.editorID == "davinci.ve.HTMLPageEditor"){ // not all editors have a context
+				this.context = editorChange.getContext();
+				this._widget = this.context.getSelection()[0];
+			}else{
+				this.context = null;
+				this._widget = null;
+			}
+			
 		}
 		this.onWidgetSelectionChange();
 	 },	

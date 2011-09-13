@@ -121,6 +121,7 @@ dojo.declare("davinci.workbench.EditorContainer",davinci.workbench._ToolbaredCon
 		     okToClose=confirm(langObj.fileHasUnsavedChanges);
 		}
 		if (okToClose){
+	    	this._isClosing = true;
 	    	
 			//this.editor.resourceFile.removeWorkingCopy();
 			if(editor.getFileEditors){

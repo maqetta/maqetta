@@ -11,7 +11,7 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.MobileCreateTool", davinci.ve.
         var mobileDevice = this._context.getMobileDevice() || 'none';
 
     	// remove iphone.css file added by default by dojox.mobile code
-        if (mobileDevice != "iphone") {
+        if (mobileDevice != "iphone" && mobileDevice != "none") {
     		dojo.withDoc(this._context.getDocument(), function() {
     			dojo.query('link[href$="iphone.css"]').orphan();
     		});

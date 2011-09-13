@@ -134,7 +134,7 @@ dojo.mixin(davinci.Workbench, {
 		{
 			fileName=changedResource.getPath();
 			var tab = dijit.byId(davinci.Workbench._filename2id(fileName));
-			if (tab)
+			if (tab && !tab._isClosing)
 			{
 				var tabContainer = dijit.byId("editors_tabcontainer");
 				tabContainer.removeChild(tab);

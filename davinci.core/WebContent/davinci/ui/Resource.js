@@ -239,8 +239,8 @@ dojo.mixin(davinci.ui.Resource, {
 		var resource = davinci.resource.findResource(resourcePath);
 		var data = dialog.getValues();
 		var fileName = data.fileDialogFileName;
-		var folder=(resource.elementType=='Folder'?resource:resource.parent);
-		var fullName=folder.getPath()+'/'+fileName;
+		
+		var fullName=resourcePath+'/'+fileName;
 		if(!fileName || fileName===""){
 			alert(langObj.mustEnterFileName);
 			return false;
@@ -378,9 +378,13 @@ dojo.mixin(davinci.ui.Resource, {
 	_createFile : function(args){
 		var newEditorCallback=(args&&args.newEditorCallback)?args.newEditorCallback:null;
 		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
-		var resource = resources[0];
-		var folder=(resource.elementType=='Folder'?resource:resource.parent);
+		//var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
+		//var resource = resources[0];
+		
+		var resourcePath = dijit.byId('fileDialogParentFolder').get('value');
+	 	var resource = davinci.resource.findResource(resourcePath);
+		
+	 	var folder=(resource.elementType=='Folder'?resource:resource.parent);
 		var data = dialog.getValues();
 		dialog.hide();
 		dialog.destroyRecursive(false);

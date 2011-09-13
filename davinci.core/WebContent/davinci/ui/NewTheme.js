@@ -87,6 +87,18 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 	},
 	
 	_createTheme : function(){
+	    
+	    function findTheme(basePath, theme){
+	        /* flush the theme cache after creating so new themes show up */
+	        var themes = davinci.library.getThemes(basePath, false, true);
+            var found = null;
+            for(var i=0;i<themes.length && ! found;i++){
+                if(themes[i].name==theme)
+                    found = themes[i];
+            }
+            return found;
+	    }
+	    
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var oldTheme = this._themeSelection.attr('value');
 		var selector = dojo.attr(this._selector, 'value');
@@ -101,18 +113,25 @@ dojo.declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
 		}else{
 			davinci.theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 		}
-		/* flush the theme cache after creating so new themes show up */
-		var themes = davinci.library.getThemes(this.getBase(), false, true);
-	    
-		var found = null;
-		for(var i=0;i<themes.length && ! found;i++){
-			if(themes[i].name==base)
-				found = themes[i];
+		var basePath = this.getBase()
+		var found = findTheme(basePath, base);
+		if (found){
+		    davinci.Workbench.openEditor({
+	               fileName: found.file,
+	               content: found.file.getText()});
+		} else {
+		    // for some reason safari needs more time before checking for the theme, so we will give it a break and try again.
+		    setTimeout(function(){
+		        var tryAgain = findTheme(basePath, base);
+		        if (tryAgain){
+		            davinci.Workbench.openEditor({
+		                   fileName: tryAgain.file,
+		                   content: tryAgain.file.getText()});
+		        }
+		    },100);
 		}
 		
-		davinci.Workbench.openEditor({
-               fileName: found.file,
-               content: found.file.getText()});
+		
   	},
 	
 	/*

@@ -101,7 +101,7 @@ dojo.mixin(davinci.ui.Resource, {
 '	<div class="folderContainer">'+
 
 '		<div dojoType="dijit.layout.ContentPane">'+
-'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="davinci.resource"></div>'+
+'			<div class="fileDialogTreeWidget" dojoType="dijit.Tree" id="fileDialogFolderTree" model="davinci.resource" labelAttr="name" childrenAttrs="children"></div>'+
 '		</div>'+
 '	</div>'+
 '	<div class="buttonRow">'+
@@ -113,10 +113,11 @@ dojo.mixin(davinci.ui.Resource, {
 			onCancel:function(){this.destroyRecursive(false);}});	
 		
 		dialog.setContent(formHtml);	
-
-		dijit.byId('fileDialogFolderTree').set("selectedItems", [folder]);
+		
+		var tree = dijit.byId('fileDialogFolderTree');
+		tree.set("selectedItems", [folder]);
 		dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-		dijit.byId('fileDialogFolderTree').watch("selectedItem", function(prop, oldValue, newValue){
+		tree.watch("selectedItem", function(prop, oldValue, newValue){
 			if(newValue.elementType==='Folder'){
 				dijit.byId('fileDialogParentFolder').set('value',newValue.getPath());
 			}else{
@@ -231,8 +232,11 @@ dojo.mixin(davinci.ui.Resource, {
 	_checkFileName : function(args){
 		var langObj = dojo.i18n.getLocalization("davinci.ui", "ui");
 		var dialog = dijit.byId("fileDialog");
-		var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
-		var resource = resources[0];
+	//	var resources=dijit.byId('fileDialogFolderTree').get("selectedItems");
+		
+		var resourcePath = dijit.byId('fileDialogParentFolder').get('value');
+		
+		var resource = davinci.resource.findResource(resourcePath);
 		var data = dialog.getValues();
 		var fileName = data.fileDialogFileName;
 		var folder=(resource.elementType=='Folder'?resource:resource.parent);

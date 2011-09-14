@@ -114,7 +114,7 @@ dojo.declare("davinci.ui.ModelEditor", davinci.ui.TextEditor, {
 	},
 	
 	selectModel: function (selection, editor) {
-		if (this.publishingSelect || this != editor) {
+		if (this.publishingSelect || (editor && this != editor)) {
 			return;
 		}
 		if (selection.length && selection[0].model) {

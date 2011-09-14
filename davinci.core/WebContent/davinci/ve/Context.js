@@ -950,7 +950,19 @@ dojo.declare("davinci.ve.Context", null, {
             // content has finished loading.  This prevents an issue where
             // deleting a CSS file while the browser is parsing caused
             // rules from later CSS files to not be used. See GitHub #899, 993.
-            dj.addOnLoad(dj.hitch(this,'setDeviceAndTheme'));
+			var self = this;
+            dj.addOnLoad(function(){
+                // this is to resolve a race condition on loading a file with mobile. #999
+                // we have to use the addOnLoad for FF, dom event onLoad does not fire for context when when page is refreshed.
+                // and we need this below the parse for chrome to work, although that bug could have been this timing so we may want to revist
+                // 
+                setTimeout(function(){self.setDeviceAndTheme();},200); 
+            });
+           /* if (mobileDevice){
+                setTimeout(function(){
+                    // have to delay this so Chrome will update the canvas correctly
+                    context._editor.visualEditor.setDevice(mobileDevice);
+                },100);*/
 		} catch(e){
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers

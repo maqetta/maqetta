@@ -455,7 +455,11 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 		dojo.removeClass(this.container,"dijitHidden");
 		this._buildCssRuleset();
 		function makeOnChange(target){return function(){return this._onChange({target:target});};}
-		function makeRemoveOnChange(target){return function(){return this._onChangeRemove({target:target});};}
+		function makeRemoveOnChange(target){
+			return function(){
+				return this._onChangeRemove({target:target});
+			};
+		}
 		this._destroy();
 		var table = dojo.doc.createElement("table");
 		dojo.addClass(table, "cascadeTable");
@@ -519,7 +523,9 @@ dojo.declare("davinci.ve.widgets.Cascade",  [davinci.workbench.WidgetLite], {
 			dojo.addClass(column, "cascadRemove");
 			
 			var button = dojo.doc.createElement("button");
-			dojo.attr(button, "disabled", this._values[i].readOnly);
+			if(this._values[i].readOnly){
+				dojo.attr(button, "disabled", "true");
+			}
 			dojo.addClass(button,"cascadeRemoveButton");
 			column.appendChild(button);
 			this._handles.push(dojo.connect(button, "onclick", this, makeRemoveOnChange(i)));

@@ -8,7 +8,7 @@ dojo.require("davinci.ve.Focus");
 dojo.require("davinci.actions.SelectLayoutAction");
 dojo.require("davinci.library");
 dojo.require("dojox.html._base");
-
+dojo.require('preview.silhouetteiframe');
 
 dojo.declare("davinci.ve.Context", null, {
 
@@ -45,8 +45,35 @@ dojo.declare("davinci.ve.Context", null, {
 		this._objectIds = [];
 		this._widgets = [];
 		this._links = [];
+
+		this._dojoxMobileCss = [];
 	},
-	
+
+	_configDojoxMobile: function() {
+		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
+		// monitoring of which stylesheets get loaded for a given theme
+
+		var dm = this.getDojo().getObject("dojox.mobile", true);
+		dm.configDeviceTheme = dojo.hitch(this, function(){
+			var loadDeviceTheme = dm.loadDeviceTheme;
+			// add before advice
+			dm.loadDeviceTheme = dojo.hitch(this, function(device) {
+				this._dojoxMobileCss = [];
+				loadDeviceTheme(device);
+			});
+			dojo.connect(dm, "loadCssFile", this, function(file){
+				this._dojoxMobileCss.push(file);
+			});
+			delete dm.configDeviceTheme;
+		});
+
+		// Set mobile device CSS files
+	    var mobileDevice = this.getMobileDevice();
+        if (mobileDevice) {
+        	this.setMobileDevice(mobileDevice);
+        	this._visualEditor.setDevice(mobileDevice, true);
+        }
+	},
 
 	isActive: function(){
 		return !!this._activeTool;
@@ -342,6 +369,7 @@ dojo.declare("davinci.ve.Context", null, {
      * @param device {?string} device name
      */
     setMobileDevice: function(device) {
+        this.getDojo()["require"]("dojo/_base/config")["mblUserAgent"] = preview.silhouetteiframe.getMobileTheme(device + '.svg');
         var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {
             bodyElement.removeAttribute(davinci.ve.Context.MOBILE_DEV_ATTR, device);
@@ -357,59 +385,25 @@ dojo.declare("davinci.ve.Context", null, {
      * @param force {boolean} if true, forces setting of CSS files, even if
      *              'device' is the same as the current device
      */
-	setMobileTheme: function(device, force) {
+	setMobileTheme: function(device) {
         var oldDevice = this.getMobileDevice() || 'none';
-        if (oldDevice === device && ! force) {
-            return;
+        if (device == oldDevice) {
+        	return;
         }
 
-		var libVer = davinci.ve.metadata.getLibrary('dojo').version,
-			lib = this.getLibraryBase('dojo', libVer),
-			fullLibPath = new davinci.model.Path(this.getBase()).append(lib);
-		lib = fullLibPath.relativeTo(this.getPath(),true).toString();
+		this.setMobileDevice(device);
 
 		// dojox.mobile specific CSS file handling
-    	// A better approach would be to use theme= or somehow pass the theme into dojox.mobile so that the correct theme files are used
-		dojo.withDoc(this.getDocument(), function() {
-			var baseUrl = lib + '/dojox/mobile/themes/';
 
-    	    var getDeviceCssFiles = function (dev) {
-    	        var name = preview.silhouetteiframe.getMobileTheme(dev + '.svg');
-    	        return preview.silhouetteiframe.getMobileCss(name);
-    	    };
+		// remove old theme css files
+		this._dojoxMobileCss.forEach(function (file) {
+			this.getDojo().query('link[href="' + file + '"]').orphan();
+		}, this);
 
-			// remove old theme css file.  match -compat files also
-        	// be careful not to remove the theme files about to be added, since that can confuse the browser
-		    getDeviceCssFiles(oldDevice).forEach(function(file) {
-		    	dojo.query('link[href^="' + baseUrl + file.split(".")[0] + '"]').orphan();
-		    });
-
-		    // add new css files
-		    getDeviceCssFiles(device).forEach(function(file) {
-                dojo.create('link',
-                    {
-                        rel: 'stylesheet',
-                        type: 'text/css',
-                        href: baseUrl + file
-                    },
-                    dojo.doc.getElementsByTagName('head')[0]
-                );
-		    });
-		});
-
-        this.setMobileDevice(device);
-	},
-	
-	 /**
-     * Sets Device and correct CSS files for the mobile device.
-     */
-	setDeviceAndTheme: function(){
-	    var mobileDevice = this.getMobileDevice();
-        if (mobileDevice) {
-            this._visualEditor.setDevice(mobileDevice, true);
-           
-        }
-   
+		var dm = this.getDojo().getObject("dojox.mobile");
+		if(dm && dm.loadDeviceTheme) {
+			dm.loadDeviceTheme(preview.silhouetteiframe.getMobileTheme(device + '.svg'));
+		}
 	},
 	
 	/**
@@ -710,6 +704,7 @@ dojo.declare("davinci.ve.Context", null, {
 					body.style.margin = "0";
 
 					body._edit_context = context; // TODO: find a better place to stash the root context
+					context._configDojoxMobile();
 					context._bootstrapModules.split(",").forEach(
 							function(module){
 								if (module === 'dijit.dijit-all')
@@ -946,23 +941,6 @@ dojo.declare("davinci.ve.Context", null, {
 			var dj = this.getDojo();
 			dj["require"]("dojo.parser");
 			dj.parser.parse(containerNode);
-			// Set mobile device CSS files, but only after the initial page
-            // content has finished loading.  This prevents an issue where
-            // deleting a CSS file while the browser is parsing caused
-            // rules from later CSS files to not be used. See GitHub #899, 993.
-			var self = this;
-            dj.addOnLoad(function(){
-                // this is to resolve a race condition on loading a file with mobile. #999
-                // we have to use the addOnLoad for FF, dom event onLoad does not fire for context when when page is refreshed.
-                // and we need this below the parse for chrome to work, although that bug could have been this timing so we may want to revist
-                // 
-                setTimeout(function(){self.setDeviceAndTheme();},200); 
-            });
-           /* if (mobileDevice){
-                setTimeout(function(){
-                    // have to delay this so Chrome will update the canvas correctly
-                    context._editor.visualEditor.setDevice(mobileDevice);
-                },100);*/
 		} catch(e){
 			// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 			// the dojo parser will throw an exception trying to compute style on hidden containers

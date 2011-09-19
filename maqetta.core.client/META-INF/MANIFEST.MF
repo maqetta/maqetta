@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Server
+Bundle-SymbolicName: maqetta.core.client;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.davinci.server.internal.Activator
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.equinox.http.registry;bundle-version="1.0.200",
+ org.eclipse.equinox.registry;bundle-version="3.4.100"

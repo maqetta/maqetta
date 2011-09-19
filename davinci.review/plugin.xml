@@ -20,7 +20,7 @@
       </extension>
    
       <extension
-            point="davinci.core.command">
+            point="maqetta.core.server.command">
          <command path="listVersions"
                class="org.davinci.server.review.command.ListVersions" />
          <command path="addComment"
@@ -43,7 +43,7 @@
          	   class="org.davinci.server.review.command.GetReviewUserInfo" />   
       </extension>
             <extension
-            point="davinci.core.jsPlugin">
+            point="maqetta.core.server.jsPlugin">
          <jsPlugin
                path="app/davinci/review/review"
                resourcePath="WebContent/davinci/review/review" />

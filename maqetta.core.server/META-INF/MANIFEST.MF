@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server
-Bundle-SymbolicName: davinci.core;singleton:=true
+Bundle-SymbolicName: maqetta.core.server;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.davinci.server.internal.Activator
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

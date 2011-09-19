@@ -2,24 +2,24 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="davinci.core.personManager">
+         point="maqetta.core.server.personManager">
          <personManager class="davinci.joomla.JoomlaPersonManager"/>
    </extension>
    <extension
-         point="davinci.core.welcomePage">
+         point="maqetta.core.server.welcomePage">
       <welcomePage
             path="WebContent/welcome.html">
       </welcomePage>
    </extension>
    <extension
-         point="davinci.core.mailConfig">
+         point="maqetta.core.server.mailConfig">
       <mailConfig
             smtp.mailServer="localhost"
             smtp.notificationId="noreply@maqetta.org">
       </mailConfig>
    </extension>
    <extension
-           point="davinci.core.jsPlugin">
+           point="maqetta.core.server.jsPlugin">
        <jsPlugin
                path="app/joomlaPlugin"
                resourcePath="WebContent/joomla" />

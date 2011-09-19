@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="davinci.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="maqetta.core.server" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="davinci.core" id="welcomePage" name="Welcome page provider"/>
+         <meta.schema plugin="maqetta.core.server" id="personManager" name="Authentication/User Manager "/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice>
-            <element ref="welcomePage"/>
+            <element ref="personManager"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,13 +47,16 @@
       </complexType>
    </element>
 
-   <element name="welcomePage">
+   <element name="personManager">
       <complexType>
-         <attribute name="path" type="string" use="required">
+         <attribute name="class" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.davinci.server.user.PersonManager"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>

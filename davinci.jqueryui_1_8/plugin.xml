@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-      <extension point="davinci.core.ajaxLibrary" >
+      <extension point="maqetta.core.server.ajaxLibrary" >
           <ajaxLibrary name="jquery-ui" id="jquery-ui" version="1.8.11">
             <libraryPath
                 location="WebContent/jquery-ui-1"

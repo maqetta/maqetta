@@ -90,7 +90,7 @@
       </product>
    </extension>
       <extension
-            point="davinci.core.command">
+            point="maqetta.core.server.command">
          <command path="login" noLogin="true" 
                class="org.davinci.server.internal.command.Login" />
          <command path="getLoggingInUser" noLogin="true" 
@@ -156,7 +156,7 @@
                
       </extension>
       <extension
-            point="davinci.core.initialUserFiles">
+            point="maqetta.core.server.initialUserFiles">
             <!--
              <initalUserFile
                   path="WebContent/project/base/"/>
@@ -166,7 +166,7 @@
               
       </extension>
       <extension
-            point="davinci.core.jsPlugin">
+            point="maqetta.core.server.jsPlugin">
          <jsPlugin
                path="app/davinci/ui"
                resourcePath="WebContent/davinci/ui"/>
@@ -184,7 +184,7 @@
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
       </extension>
     
-      <extension point="davinci.core.ajaxLibrary">
+      <extension point="maqetta.core.server.ajaxLibrary">
       <!--
 	     <ajaxLibrary name="sample files" id="Samples" version="0.3">
 		      <libraryPath location="WebContent/samples" name="/"></libraryPath>

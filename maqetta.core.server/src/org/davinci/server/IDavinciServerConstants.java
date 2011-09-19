@@ -60,9 +60,18 @@ public interface IDavinciServerConstants {
 	public static final String EP_TAG_PERSON_MANAGER = "personManager";
 	public static final String EP_ATTR_PERSON_MANAGER_CLASS = "class";
 
+	/*  static pages */
+	public static final String EXTENSION_POINT_MAIN_PAGE = "mainPage";
+	public static final String EP_TAG_MAIN_PAGE = "mainPage";
+	
+	public static final String EXTENSION_POINT_PREVIEW_PAGE = "previewPage";
+	public static final String EP_TAG_PREVIEW_PAGE = "previewPage";
+	
+	
 	public static final String EXTENSION_POINT_WELCOME_PAGE = "welcomePage";
 	public static final String EP_TAG_WELCOME_PAGE = "welcomePage";
-	public static final String EP_ATTR_WELCOME_PAGE_PATH = "path";
+	public static final String EP_ATTR_PAGE_PATH = "path";
+	public static final String EP_ATTR_PAGE_PRIORITY = "priority";
 
 	public static final String EXTENSION_POINT_JSPLUGIN = "jsPlugin";
 	public static final String EP_TAG_JSPLUGIN = "jsPlugin";

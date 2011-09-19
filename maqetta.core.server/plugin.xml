@@ -8,16 +8,15 @@
    <extension-point id="ajaxLibrary" name="AJAX Library" schema="schema/ajaxLibrary.exsd"/>
    <extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
    <extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
+   <extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/>
+   <extension-point id="reviewPage" name="Welcome page provider" schema="schema/mainPage.exsd"/>
+       
+   
+   
    <extension-point id="jsPlugin" name="JavaScript plugins" schema="schema/jsPlugin.exsd"/>
      <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
   
-   <extension
-        point="org.eclipse.equinox.http.registry.httpcontexts">
-      <httpcontext id="davincicontext">
- 		  <resource-mapping path="/" />
-	      <mime-mapping extension="manifest" mime-type="text/cache-manifest" />
-      </httpcontext>
-   </extension>
+  
    
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
@@ -33,54 +32,7 @@
       </servlet>
    </extension>
    
-      <extension
-           id="testResource"
-           point="org.eclipse.equinox.http.registry.resources">
-        <resource
-              alias="/app/davinci"
-              base-name="/WebContent/davinci"
-              httpcontextId="davincicontext"
-              />
-        <resource
-              alias="/app/docs"
-              base-name="/WebContent/docs"
-              />
-        <resource
-              alias="/app/dojo"
-              base-name="/WebContent/dojo"
-              />
-        <resource
-              alias="/app/dojox"
-              base-name="/WebContent/dojox"
-              />
-        <resource
-              alias="/app/dijit"
-              base-name="/WebContent/dijit"
-              />
-        <resource
-              alias="/app/eclipse"
-              base-name="/WebContent/eclipse"
-              />
-          
-        <resource
-              alias="/app/preview"
-              base-name="/WebContent/preview"
-              />
-        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
-        
-        <resource
-              alias="/app/metadata/maqetta/core/0.3"
-              base-name="/WebContent/project"
-              />
-       
-       
-        <!--   
-        <resource
-              alias="/app/workspace"
-              base-name="/WebContent/project/base"
-              />
-		-->
-      </extension>
+
       <extension
          point="org.eclipse.core.runtime.products">
       <product
@@ -155,46 +107,5 @@
                class="org.davinci.server.internal.command.RemoveUser" />         
                
       </extension>
-      <extension
-            point="maqetta.core.server.initialUserFiles">
-            <!--
-             <initalUserFile
-                  path="WebContent/project/base/"/>
-                  -->
-             <initalUserFile
-                  path="WebContent/samples/"/>
-              
-      </extension>
-      <extension
-            point="maqetta.core.server.jsPlugin">
-         <jsPlugin
-               path="app/davinci/ui"
-               resourcePath="WebContent/davinci/ui"/>
-         <jsPlugin
-               path="app/js/js"
-               resourcePath="WebContent/davinci/js/js"/>
-         <jsPlugin
-               path="app/html/html"
-               resourcePath="WebContent/davinci/html/html"/>
-         <jsPlugin
-               path="app/ve/ve"
-               resourcePath="WebContent/davinci/ve/ve"/>
-         <jsPlugin
-               path="app/davinci/ve/themeEditor/themeEditor"
-               resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
-      </extension>
-    
-      <extension point="maqetta.core.server.ajaxLibrary">
-      <!--
-	     <ajaxLibrary name="sample files" id="Samples" version="0.3">
-		      <libraryPath location="WebContent/samples" name="/"></libraryPath>
-		 </ajaxLibrary>
-		 -->
-		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
-		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
-		      <metadata location="app/metadata/maqetta/core/0.3" />
-		 </ajaxLibrary>
-	 </extension>
-
 
 </plugin>

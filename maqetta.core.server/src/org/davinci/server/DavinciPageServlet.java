@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -61,13 +62,13 @@ public class DavinciPageServlet extends HttpServlet {
                 if (user == null) {
                     resp.sendRedirect("./welcome");
                 } else {
-                    writeInternalPage(req, resp, "pagedesigner.html");
+                	writeMainPage(req, resp);
                 }
             } else {
                 /* local install, set user to single user */
                 user = this.userManager.getSingleUser();
                 req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-                writeInternalPage(req, resp, "pagedesigner.html");
+                writeMainPage(req, resp);
                
             }
         } else if (pathInfo.equals("/welcome")) {
@@ -84,28 +85,54 @@ public class DavinciPageServlet extends HttpServlet {
         resp.getOutputStream().close();
     }
 
+    
+    /* Find a plugin with the given extension name and calculate winner based on priority.
+     * 
+     * @param extensionName the extension point name
+     * @return Bundle
+     */
+    private  URL getPageExtensionPath(String extensionPoint, String extensionName){
+    	
+    	  List extensions = serverManager.getExtensions(extensionPoint, extensionName);
+    	  IConfigurationElement winner = null;
+    	  int highest = -100000;
+    	  for(int i=0;i<extensions.size();i++){
+    		IConfigurationElement extension = (IConfigurationElement)extensions.get(i);
+	      	int priority = Integer.parseInt(extension.getAttribute(IDavinciServerConstants.EP_ATTR_PAGE_PRIORITY));
+	      	if(priority > highest){
+	      		winner = extension;
+	      		highest = priority;
+	      	}
+	 	  }
+    	  
+    	  String name = winner.getDeclaringExtension().getContributor().getName();
+	      Bundle bundle= Activator.getActivator().getOtherBundle(name);
+	      String path = winner.getAttribute(IDavinciServerConstants.EP_ATTR_PAGE_PATH);
+    	  
+	      return bundle.getResource(path);
+	          
+    }
+    
     private void writeWelcomePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        IConfigurationElement welcomeExtension = serverManager.getExtension(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE,
-                IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
-        if (welcomeExtension == null) {
-            writeInternalPage(req, resp, "welcome.html");
-        } else {
-            String name = welcomeExtension.getDeclaringExtension().getContributor().getName();
-            Bundle bundle = Activator.getActivator().getOtherBundle(name);
-            if (bundle != null) {
-                String path = welcomeExtension.getAttribute(IDavinciServerConstants.EP_ATTR_WELCOME_PAGE_PATH);
-                VURL resourceURL = new VURL(bundle.getResource(path));
-                this.writePage(req, resp, resourceURL, false);
-            }
-
-        }
+    	URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE, IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
+        VURL resourceURL = new VURL(welcomePage);
+        this.writePage(req, resp, resourceURL, false);
+    }
+    
+    private void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    
+    	URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE, IDavinciServerConstants.EP_TAG_MAIN_PAGE);
+        VURL resourceURL = new VURL(welcomePage);
+        this.writePage(req, resp, resourceURL, false);
     }
 
     private void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String preview = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
         Cookie k = new Cookie("preview", preview);
         resp.addCookie(k);
-        writeInternalPage(req, resp, "preview.html");
+    	URL previewPage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_PREVIEW_PAGE, IDavinciServerConstants.EP_TAG_PREVIEW_PAGE);
+        VURL resourceURL = new VURL(previewPage);
+        this.writePage(req, resp, resourceURL, false);
     }
 
     private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException, ServletException {
@@ -308,11 +335,9 @@ public class DavinciPageServlet extends HttpServlet {
 
     }
 
-    protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, String path) throws ServletException, IOException {
-        URL url = Activator.getActivator().getBundle().getEntry("/WebContent/" + path);
-        VURL resourceURL = new VURL(url);
-
-        writePage(req, resp, resourceURL, false);
+    protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, Bundle bundle, String path) throws ServletException, IOException {
+       VURL resourceURL = new VURL(bundle.getResource(path));
+       writePage(req, resp, resourceURL, false);
     }
 
     private static int writeResource(InputStream is, OutputStream os) throws IOException {

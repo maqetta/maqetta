@@ -3,7 +3,7 @@
 <schema targetNamespace="maqetta.core.server" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="maqetta.core.server" id="welcomePage" name="Welcome page provider"/>
+         <meta.schema plugin="maqetta.core.server" id="mainPage" name="main page provider"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice>
-            <element ref="welcomePage"/>
+            <element ref="mainPage"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,7 +47,7 @@
       </complexType>
    </element>
 
-   <element name="welcomePage">
+   <element name="mainPage">
       <complexType>
          <attribute name="path" type="string" use="required">
             <annotation>
@@ -59,7 +59,7 @@
          <attribute name="priority" type="string">
             <annotation>
                <documentation>
-                  numberical priority.  highest priority wins.
+                  numberic priority.  highest priority wins
                </documentation>
             </annotation>
          </attribute>

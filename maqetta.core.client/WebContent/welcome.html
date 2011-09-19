@@ -92,13 +92,13 @@
 			dojo.create("div", {innerHTML: "Firefox 4, Chrome 5, Safari 5.1 or greater is required", "class": "sniff"}, "loginpane", "first");
 		}
 
-		dojo.xhrGet({url:"cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){
-          if (result && result.length)
-          {
-     		   dojo.byId('username').value=result;
-     		   return;
-          }
-		});
+	//	dojo.xhrGet({url:"cmd/getLoggingInUser",sync:true,handleAs:"text",content:{}}).then(function(result){
+     //     if (result && result.length)
+      //    {
+     //		   dojo.byId('username').value=result;
+     //		   return;
+      //    }
+	//	});
 
 	});
 

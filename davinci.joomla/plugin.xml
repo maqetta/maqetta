@@ -8,7 +8,7 @@
    <extension
          point="maqetta.core.server.welcomePage">
       <welcomePage
-            path="WebContent/welcome.html">
+            path="WebContent/welcome.html" priority="3">
       </welcomePage>
    </extension>
    <extension

@@ -29,8 +29,8 @@
    <plugins>
       <plugin id="javax.servlet"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
-      <plugin id="org.eclipse.equinox.http.servletbridge"/>
-      <plugin id="org.eclipse.equinox.servletbridge"/>
+      <plugin id="org.eclipse.equinox.http.servletbridge" fragment=""/>
+      <plugin id="org.eclipse.equinox.servletbridge" fragment=""/>
       <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
@@ -43,12 +43,13 @@
    </features>
 
    <configurations>
-      <plugin id="maqetta.core.server" autoStart="true" startLevel="4" />
       <plugin id="davinci.dojo_1_7" autoStart="true" startLevel="5" />
       <plugin id="davinci.html" autoStart="true" startLevel="5" />
       <plugin id="davinci.jqueryui_1_8" autoStart="true" startLevel="5" />
       <plugin id="davinci.review" autoStart="true" startLevel="5" />
       <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="5" />
+      <plugin id="maqetta.core.client" autoStart="true" startLevel="4" />
+      <plugin id="maqetta.core.server" autoStart="true" startLevel="4" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="3" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.core.jobs" autoStart="true" startLevel="2" />

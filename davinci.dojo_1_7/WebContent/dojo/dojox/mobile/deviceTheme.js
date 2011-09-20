@@ -10,13 +10,13 @@ dojox.mobile.loadCssFile=function(_6){
 _1.create("LINK",{href:_6,type:"text/css",rel:"stylesheet"},_1.doc.getElementsByTagName("head")[0]);
 };
 dojox.mobile.themeMap=dojox.mobile.themeMap||[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[_1.moduleUrl("dojox.mobile","themes/iphone/ipad.css")]],["Custom","custom",[]],[".*","iphone",[]]];
-dojox.mobile.loadDeviceTheme=function(){
+dojox.mobile.loadDeviceTheme=function(ua){
 var t=_1.config["mblThemeFiles"]||dojox.mobile.themeFiles||["@theme"];
 if(!_1.isArray(t)){
 }
 var i,j;
 var m=dojox.mobile.themeMap;
-var ua=(location.search.match(/theme=(\w+)/))?RegExp.$1:navigator.userAgent;
+ua=ua||_1.config["mblUserAgent"]||(location.search.match(/theme=(\w+)/)?RegExp.$1:navigator.userAgent);
 for(i=0;i<m.length;i++){
 if(ua.match(new RegExp(m[i][0]))){
 var _7=m[i][1];

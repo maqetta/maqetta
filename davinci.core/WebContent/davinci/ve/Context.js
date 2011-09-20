@@ -54,16 +54,24 @@ dojo.declare("davinci.ve.Context", null, {
 		// monitoring of which stylesheets get loaded for a given theme
 
 		var dm = this.getDojo().getObject("dojox.mobile", true);
-		dm.configDeviceTheme = dojo.hitch(this, function(){
+		dm.configDeviceTheme = dojo.hitch(this, function() {
 			var loadDeviceTheme = dm.loadDeviceTheme;
-			// add before advice
+
+			// Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
+			this.getDojo()["require"]("dojox.mobile.compat");
+
+			// add before advice to clear out css file list before loading a new theme
 			dm.loadDeviceTheme = dojo.hitch(this, function(device) {
 				this._dojoxMobileCss = [];
 				loadDeviceTheme(device);
 			});
-			dojo.connect(dm, "loadCssFile", this, function(file){
+
+			// keep an updated list as dojox.mobile loads css files
+			dojo.connect(dm, "loadCssFile", this, function(file) {
 				this._dojoxMobileCss.push(file);
 			});
+
+			// This is a call-once function
 			delete dm.configDeviceTheme;
 		});
 
@@ -369,6 +377,7 @@ dojo.declare("davinci.ve.Context", null, {
      * @param device {?string} device name
      */
     setMobileDevice: function(device) {
+        this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
         this.getDojo()["require"]("dojo/_base/config")["mblUserAgent"] = preview.silhouetteiframe.getMobileTheme(device + '.svg');
         var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {

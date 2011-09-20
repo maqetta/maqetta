@@ -4,14 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
-import org.davinci.server.VDirectory;
 import org.davinci.server.VFile;
-import org.davinci.server.VWorkspaceRoot;
 import org.davinci.server.review.Constants;
-import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.user.User;

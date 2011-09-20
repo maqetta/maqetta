@@ -1,24 +1,12 @@
 package org.davinci.server.internal.user;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
 import org.davinci.server.VResourceUtils;
-import org.davinci.server.internal.Activator;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.PersonManager;
 import org.davinci.server.user.User;
@@ -26,7 +14,6 @@ import org.davinci.server.user.UserException;
 import org.davinci.server.user.UserManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.osgi.framework.Bundle;
 
 public class UserManagerImpl implements UserManager {
 

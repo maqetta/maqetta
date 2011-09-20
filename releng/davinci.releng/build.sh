@@ -2,6 +2,44 @@
 #
 # External build script.  This build script calls out to the external build for the majority of work
 #
+
+print_help() {
+    echo "Usage: $0 [OPTION]..."
+    echo ""
+    echo "Options:"
+    echo " -t, --tag <tag> tag to build"
+    echo " -h, --help               show this message"
+    echo ""
+}
+
+# parse options
+while [ "${1+isset}" ]; do
+    case "$1" in
+        -et|--externalTag)
+            externalTag=$2
+            shift 2
+            ;;
+        -t|--tag)
+            externalTag=$2
+            shift 2
+            ;;
+        -h|--help)
+            print_help
+            exit
+            ;;
+        *)
+            echo "Error: Unknown option: $1" >&2
+            exit 1
+            ;;
+    esac
+done
+
+if  [ ! -z ${externalTag} ] 
+then
+  echo "Using external tag: ${externalTag}"
+fi
+#
+
 # Path to eclipse directory inclusive. The application directory is
 # usually, but not always, named 'eclipse'. It has sub-directories
 # /configuration, /features, /plugins, etc. No trailing slash.
@@ -88,6 +126,13 @@ then
         git clone ${gitRepository}
     fi
     echo "Done fetching maqetta core."
+    if [ ! -z ${externalTag} ]
+    then
+    	echo ""
+    	echo "Switching to tag ${externalTag}"
+    	cd ${MAQETTA_BUILD_DIR}/repository/maqetta
+    	git checkout ${externalTag}
+    fi
     #
     # Save repository revision level for later referrence
     #

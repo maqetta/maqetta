@@ -611,14 +611,6 @@ davinci_top_bar .dijitButtonNode {
 	vertical-align: middle;
 }
 
-.dvHTMLVisualEditorSourcePane {
-	padding: 0 !important;
-	overflow: hidden;
-}
-
-.bbtView {
-}
-
 /* Palette */
 .dojoyPalette {
     background-color: white !important;

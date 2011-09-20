@@ -16,9 +16,9 @@ dojo.declare("davinci.workbench.ViewPart",davinci.workbench._ToolbaredContainer,
 		
 		this.inherited(arguments);
 		this.domNode.view=this;
-//		dojo.addClass(this.domNode, "bbtView");
-		if (this.viewExt.startup)
+		if (this.viewExt.startup) {
 			this.viewExt.startup();
+		}
 	},
 	
 

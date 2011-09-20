@@ -9,14 +9,21 @@
    <extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
    <extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
    <extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/>
-   <extension-point id="reviewPage" name="Welcome page provider" schema="schema/mainPage.exsd"/>
+   <extension-point id="previewPage" name="Preview page provider" schema="schema/previewPage.exsd"/>
        
    
    
    <extension-point id="jsPlugin" name="JavaScript plugins" schema="schema/jsPlugin.exsd"/>
      <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
   
-  
+   	<extension
+        point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext id="davincicontext">
+ 		  <resource-mapping path="/" />
+	      <mime-mapping extension="manifest" mime-type="text/cache-manifest" />
+      </httpcontext>
+   </extension>
+   
    
    <extension
          point="org.eclipse.equinox.http.registry.servlets">

@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
- 	<extension
-        point="org.eclipse.equinox.http.registry.httpcontexts">
-      <httpcontext id="davincicontext">
- 		  <resource-mapping path="/" />
-	      <mime-mapping extension="manifest" mime-type="text/cache-manifest" />
-      </httpcontext>
-   </extension>
-   
       <extension
            id="testResource"
            point="org.eclipse.equinox.http.registry.resources">
         <resource
               alias="/app/davinci"
               base-name="/WebContent/davinci"
-              httpcontextId="davincicontext"
               />
         <resource
               alias="/app/docs"
@@ -94,6 +85,6 @@
       
 	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
 	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="1"/></extension>
-   	<extension point="maqetta.core.server.reviewPage"><previewPage path="WebContent/review.html" priority="1" /></extension>
+   	<extension point="maqetta.core.server.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>
 
 </plugin>

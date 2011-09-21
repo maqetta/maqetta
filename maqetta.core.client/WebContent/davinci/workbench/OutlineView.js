@@ -4,7 +4,7 @@ dojo.require("dijit.layout.TabContainer");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 //dojo.require("davinci.ui.ModelStore");
-dojo.require("davinci.ui.widgets.Tree");
+dojo.require("davinci.ui.widgets.ToggleTree");
 dojo.require("davinci.workbench.OutlineProvider");
 
 dojo.require("dojo.i18n");  
@@ -112,15 +112,14 @@ dojo.declare("davinci.workbench.OutlineView", davinci.workbench.ViewPart, {
 				childrenAttrs : [ "children" ]
 			});
 		}
-		this.outlineTree = new davinci.ui.widgets.Tree({
-			
+		this.outlineTree = new davinci.ui.widgets.ToggleTree({
 			showRoot: this.outlineModel.showRoot,
 			dndController: this.outlineModel.dndController,
 			betweenThreshold: this.outlineModel.betweenThreshold, 
 			checkItemAcceptance: this.outlineModel.checkItemAcceptance, 
 			model: this.outlineModel,
-			getIconClass: iconFunction || davinci.ui.widgets.Tree.prototype.getIconClass,
-			isMultiSelect : true 
+			getIconClass: iconFunction || davinci.ui.widgets.ToggleTree.prototype.getIconClass,
+			isMultiSelect: true 
 		});
 		
 		this.outlineTree.notifySelect=dojo.hitch(this, function (item, ctrlKeyPressed) 

@@ -5,7 +5,7 @@ dojo.require("davinci.review.model.ReviewTreeModel");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.workbench.ViewPart");
 dojo.require("davinci.ui.widgets.ResourceTreeModel");
-dojo.require("davinci.ui.widgets.Tree");
+dojo.require("davinci.ui.widgets.ToggleTree");
 dojo.require("davinci.model.Resource");
 dojo.require("dojo.date.locale");
 dojo.require("davinci.review.actions.OpenVersionAction");
@@ -25,14 +25,15 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		
 		var model= new davinci.review.model.ReviewTreeModel();
 		this.model = model;
-		this.tree = new davinci.ui.widgets.Tree({
+		//FIXME: try using dijit.Tree and davinci.ui.widgets.TransformTreeMixin instead of ToggleTree
+		this.tree = new davinci.ui.widgets.ToggleTree({
 			id: "reviewCommentExplorerViewTree",
 			showRoot:false,
 			model: model,
 			labelAttr: "name", childrenAttrs:"children",
 			getIconClass: dojo.hitch(this,this._getIconClass),
-			filters : [davinci.review.model.Resource.dateSortFilter,this.commentingFilter],
-			isMultiSelect : true});
+			filters: [davinci.review.model.Resource.dateSortFilter,this.commentingFilter],
+			isMultiSelect: true});
 		
 		
 		this.setContent(this.tree); 
@@ -66,7 +67,7 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 		if(davinci.review.Runtime.getRole()!="Designer")
 		dojo.style(this.toolbarDiv, "display", "none");
 		
-		// Customize dijit._masterTT so that it will not be closed when the cursor is hovring on it
+		// Customize dijit._masterTT so that it will not be closed when the cursor is hovering on it
 		if(!dijit._masterTT){ dijit._masterTT = new dijit._MasterTooltip(); }
 		this.connect(dijit._masterTT.domNode, "mouseover", function(){
 			if(this._delTimer){
@@ -243,8 +244,8 @@ dojo.declare("davinci.review.view.CommentExplorerView", davinci.workbench.ViewPa
 			template.detail_dueDate = item.dueDate == "infinite" ? "Infinite" : dojo.date.locale.format(item.dueDate, {
 				selector:'date',
 				formatLength:'long',
-                datePattern:'MMM dd, yyyy', 
-                timePattern:'HH:mm:ss'
+                datePattern:'MMM dd, yyyy', //FIXME: use of pattern prevents globalization
+                timePattern:'HH:mm:ss' //FIXME: not used if selector is 'date'
 			});
 			template.detail_creator = davinci.review.Runtime.getDesigner()
 						+ "&nbsp;&lt" + davinci.review.Runtime.getDesignerEmail() + "&gt";

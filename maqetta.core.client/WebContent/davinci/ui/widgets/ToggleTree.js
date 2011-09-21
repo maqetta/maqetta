@@ -1,10 +1,7 @@
-dojo.provide("davinci.ui.widgets.Tree");
+dojo.provide("davinci.ui.widgets.ToggleTree");
 
 dojo.require("dijit.Tree");
-//TODO:  use dojo DND instead
-dojo.require("davinci.ui.dnd.DragSource");
-dojo.require("davinci.ui.widgets.Filter");
-dojo.declare("davinci.ui.widgets._TreeNode", dijit._TreeNode, {
+dojo.declare("davinci.ui.widgets._ToggleTreeNode", dijit._TreeNode, {
 	postCreate: function(){
 		this.inherited(arguments);
 		
@@ -157,12 +154,20 @@ dojo.declare("davinci.ui.widgets._TreeNode", dijit._TreeNode, {
 	}
 });
 
-dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
+// The primary purpose of this dijit.Tree subclass is to provide a toggle icon on each row,
+// used in Maqetta to implement the eyeball visibility switch.  In order to do this, a custom
+// TreeNode class and template are required, and some other methods are pulled in, with fragile
+// dependencies on dijit.Tree implementations which may break from one release to the next.
+// Other customizations were added, such as focus and UI-level filtering.  Where possible, dijit.Tree
+// should be used directly with mixins to alter behavior.
+
+//NOTE: davinci.review still uses this widget for UI-level filtering
+//FIXME: review any code not related to toggle to determine if it's still necessary
+
+dojo.declare("davinci.ui.widgets.ToggleTree", dijit.Tree, {
 	
 	
 	filters: [], //FIXME: shared array on prototype
-	lastFocusedNode: null, 
-	allFocusedNodes: [], //FIXME: shared array on prototype
 	ctrlKeyPressed: false,
 	
 	constructor: function()
@@ -184,10 +189,9 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		return node;
 	},
 
-	//FIXME: unused?
+	// called from VisualOutlineEditor.  Replace with set("selectedNodes")?
 	selectNode: function (nodeItems, add) 
 	{
-	
 		this.isSelecting=true;
 		if (add) {
 			this.ctrlKeyPressed = add;
@@ -228,11 +232,11 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		//this.ctrlKeyPressed = false;
 		//dojo.stopEvent(event);
 	},
-	filterChanged : function (filter)
+	filterChanged: function (filter)
 	{
 //TODO: implement me		
 	},
-	_getChildrenIntercept : function(item,onComplete,onErr)
+	_getChildrenIntercept: function(item,onComplete,onErr)
 	{
 		var completeHandler=onComplete;
 		if (this.filters.length>0)
@@ -247,7 +251,7 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		this._orgModelGetChildren.apply(this.model,[item,completeHandler,onErr]);
 	},
 	
-	_filterItems : function(items)
+	_filterItems: function(items)
 	{
 				if (items.length==0){
 					return items;
@@ -365,33 +369,7 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		return selectedItems ;
 	},
 	_createTreeNode: function(/*Object*/ args){
- 		var treeNode=new davinci.ui.widgets._TreeNode(args);
- 		if (this.dragSources && args.item)
- 		{
- 			for (var i=0;i<this.dragSources.length;i++)
- 				if (this.dragSources[i].dragSource(args.item))
- 				{
- 					var ds = new davinci.ui.dnd.DragSource(treeNode.domNode, "component", treeNode);
- 					ds.targetShouldShowCaret = true;
- 					ds.returnCloneOnFailure = false;
- 					dojo["require"](this.dragSources[i].dragHandler);
- 					var dragHandlerClass= dojo.getObject(this.dragSources[i].dragHandler); 
- 					ds.dragHandler=new dragHandlerClass(args.item);
-                    this.connect(ds, "initDrag", function(e){if (ds.dragHandler.initDrag) ds.dragHandler.initDrag(e);}); // move start
- 					this.connect(ds, "onDragStart", function(e){ds.dragHandler.dragStart(e);}); // move start
- 					this.connect(ds, "onDragEnd", function(e){ds.dragHandler.dragEnd(e);}); // move end
- 				}
- 		}
- 		return treeNode;
-	},
-	
-	onDragStart: function()
-	{
-		debugger;
-	},
-	onDragEnd: function()
-	{
-		debugger;
+ 		return new davinci.ui.widgets._ToggleTreeNode(args);
 	},
     
 	toggledItems: {},	
@@ -408,12 +386,12 @@ dojo.declare("davinci.ui.widgets.Tree", dijit.Tree, {
 		return items; // dojo.data.Item[]
 	},
     
-	getMenuOpenCallback : function ()
+	getMenuOpenCallback: function ()
 	{
 		return dojo.hitch(this,this._menuOpenCallback);
 	},
 	
-	_menuOpenCallback : function (event)
+	_menuOpenCallback: function (event)
 	{
 		var ctrlKey = dojo.isMac ? event.metaKey : event.ctrlKey;
 		this.ctrlKeyPressed = this._isMultiSelect && event && ctrlKey;

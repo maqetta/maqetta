@@ -16,6 +16,7 @@ dojo.require("dojox.widget.Toaster");
 dojo.require("dojo.string");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.Tree");
+dojo.require("davinci.review.widgets.Tree");
 dojo.require("davinci.ui.widgets.TransformTreeMixin");
 dojo.require("davinci.resource");
 dojo.require("davinci.model.Resource");

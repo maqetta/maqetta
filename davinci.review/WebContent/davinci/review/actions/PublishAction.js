@@ -14,7 +14,6 @@ dojo.require("dijit.form.Form");
 dojo.require("dojo.date.locale");
 dojo.require("dijit.form.MultiSelect");
 dojo.require("davinci.review.model.ReviewFileTreeModel");
-dojo.require("davinci.review.widgets.Tree");
 dojo.require("dojox.validate.regexp");
 dojo.require("davinci.review.widgets.PublishWizard");
 dojo.require("dijit.Dialog");

@@ -5,10 +5,10 @@ dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.libraries.dojo.dojox.mobile.MobileCreateTool");
+dojo.require("davinci.ve.tools.CreateTool");
 dojo.require("davinci.libraries.dojo.dojox.mobile.ComboBoxHelper");
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.libraries.dojo.dojox.mobile.MobileCreateTool, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.ComboBoxCreateTool", davinci.ve.tools.CreateTool, {
 	constructor: function(data){
 		
 		this._resizable = "both";

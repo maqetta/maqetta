@@ -4,8 +4,8 @@ dojo.require("davinci.Runtime");
 dojo.require("davinci.Workbench");
 dojo.require("davinci.model.Path");
 dojo.require("davinci.ve.Context");
-//dojo.require("davinci.ve.actions.ContextActions");
-//dojo.require("davinci.ve.actions.ChildActions");
+//dojorequire("davinci.ve.actions.ContextActions");
+//dojorequire("davinci.ve.actions.ChildActions");
 dojo.require("davinci.ve.actions.DeviceActions");
 dojo.require("davinci.ve.commands.ModifyRuleCommand");
 
@@ -75,7 +75,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 		});
 	},
 	
-	setDevice: function(deviceName, force) {
+	setDevice: function(deviceName) {
 	    this.deviceName = deviceName;
 	    var svgfilename;
 	    if(deviceName=='none'){
@@ -85,7 +85,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 	    	svgfilename = "app/preview/images/"+deviceName+".svg";
 	    }
 		this.silhouetteiframe.setSVGFilename(svgfilename);
-		this.getContext().setMobileTheme(deviceName, force);
+		this.getContext().setMobileTheme(deviceName);
 
 		// #683 - When using mobile silhouette, add mobile <meta> tags to
 		// document.

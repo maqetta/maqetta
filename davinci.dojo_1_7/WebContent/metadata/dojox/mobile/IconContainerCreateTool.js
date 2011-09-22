@@ -5,7 +5,7 @@ dojo.require("davinci.commands.CompoundCommand");
 dojo.require("davinci.ve.commands.AddCommand");
 dojo.require("davinci.ve.commands.MoveCommand");
 dojo.require("davinci.ve.commands.ResizeCommand");
-dojo.require("davinci.libraries.dojo.dojox.mobile.MobileCreateTool");
+dojo.require("davinci.ve.tools.CreateTool");
 
 /**
  * GitHub #801
@@ -19,8 +19,7 @@ dojo.require("davinci.libraries.dojo.dojox.mobile.MobileCreateTool");
  * first instantiating IconContainer and then its children IconItem.
  */
 
-dojo.declare("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool",
-             davinci.libraries.dojo.dojox.mobile.MobileCreateTool, {
+dojo.declare("davinci.libraries.dojo.dojox.mobile.IconContainerCreateTool", davinci.ve.tools.CreateTool, {
 
     _create: function(args) {
         var iconContainerData = this._data[0],

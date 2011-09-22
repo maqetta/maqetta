@@ -56,8 +56,6 @@
                class="org.davinci.server.internal.command.Register" />
          <command path="listFiles" 
                class="org.davinci.server.internal.command.ListFiles" />
-         <command path="saveFile"  isPut="true"
-               class="org.davinci.server.internal.command.SaveFile" />
          <command path="addFiles" 
                class="org.davinci.server.internal.command.AddFiles" />
          <command path="deleteResource" 

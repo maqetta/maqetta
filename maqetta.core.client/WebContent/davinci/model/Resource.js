@@ -350,14 +350,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
  			 this.deleteResource(true);
    }
 
-   davinci.model.Resource.File.prototype.getFileInfo= function()
-   {
- 		  var fileInfo=davinci.Runtime.serverJSONRequest({
- 			   url:"./cmd/getFileInfo", 
- 		          content:{'path':this.getPath()}, sync:true
- 	  	  });
- 		  return fileInfo;
-   }
+
 
    /**  
     * @class davinci.model.Resource.Marker

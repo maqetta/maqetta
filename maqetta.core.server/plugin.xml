@@ -70,8 +70,6 @@
                class="org.davinci.server.internal.command.SetWorkbenchState" />
          <command path="removeWorkingCopy" 
                class="org.davinci.server.internal.command.RemoveWorkingCopy" />
-         <command path="getFileInfo" 
-               class="org.davinci.server.internal.command.GetFileInfo" />
          <command path="logoff" 
                class="org.davinci.server.internal.command.LogOff" />
          <command path="download" 

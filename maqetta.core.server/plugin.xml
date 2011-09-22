@@ -50,8 +50,6 @@
             point="maqetta.core.server.command">
          <command path="login" noLogin="true" 
                class="org.davinci.server.internal.command.Login" />
-         <command path="getUserInfo"  
-               class="org.davinci.server.internal.command.GetUserInfo" />
          <command path="register" noLogin="true" 
                class="org.davinci.server.internal.command.Register" />
          <command path="listFiles" 

@@ -90,6 +90,10 @@ public class DavinciPageServlet extends HttpServlet {
             System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
         }
 
+        /* add the user name to a cookie, prob should move to login but login wasn't persisting the cookie properly */
+        Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user!=null?user.getUserName():null);
+        resp.addCookie(k);
+        
         if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam==null) {
             if (!ServerManager.LOCAL_INSTALL) {
                 if (user == null) {

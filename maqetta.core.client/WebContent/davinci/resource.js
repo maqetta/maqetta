@@ -304,6 +304,12 @@ dojo.declare("davinci.resource.FileTypeFilter",null,{
     }
 });
 
-davinci.resource.alphabeticalSort = function(items){ return items.sort(function(a,b){ return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); }); };
+davinci.resource.alphabeticalSort = function(items){
+	return items.sort(function(a,b) {
+		a = a.name.toLowerCase();
+		b = b.name.toLowerCase();
+		return a < b ? -1 : (a > b ? 1 : 0);
+	});
+};
 
 davinci.resource.subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged",davinci.resource, function(){return davinci.resource.resourceChanged;}())];

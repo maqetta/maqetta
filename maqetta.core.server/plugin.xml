@@ -3,7 +3,6 @@
 <plugin>
    <extension-point id="command" name="Davinci Command" schema="schema/command.exsd"/>
    <extension-point id="jsPlugin" name="Javascript Plugins" schema="schema/jsPlugin.exsd"/>
-   <extension-point id="webContent" name="Served Web content" schema="schema/webContent.exsd"/>
    <extension-point id="initialUserFiles" name="Initial user files" schema="schema/initialUserFiles.exsd"/>
    <extension-point id="ajaxLibrary" name="AJAX Library" schema="schema/ajaxLibrary.exsd"/>
    <extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
@@ -13,7 +12,6 @@
        
    
    
-   <extension-point id="jsPlugin" name="JavaScript plugins" schema="schema/jsPlugin.exsd"/>
      <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
   
    	<extension
@@ -52,8 +50,6 @@
             point="maqetta.core.server.command">
          <command path="login" noLogin="true" 
                class="org.davinci.server.internal.command.Login" />
-         <command path="getLoggingInUser" noLogin="true" 
-               class="org.davinci.server.internal.command.GetLoggingInUser" />
          <command path="getUserInfo"  
                class="org.davinci.server.internal.command.GetUserInfo" />
          <command path="register" noLogin="true" 

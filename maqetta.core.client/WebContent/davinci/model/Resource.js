@@ -331,11 +331,10 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
    }
 
-   davinci.model.Resource.File.prototype.getText= function()
-   {
+   davinci.model.Resource.File.prototype.getText= function(){
+	   	  debugger;
  		  var contents=davinci.Runtime.serverJSONRequest({
- 			   url:"./cmd/loadFile", handleAs:"text",
- 		          content:{'path':this.getPath()}, sync:true
+ 			   url:this.getURL(), handleAs:"text", sync:true
  	  	  });
  		  return contents;
    }

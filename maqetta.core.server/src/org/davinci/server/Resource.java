@@ -52,6 +52,7 @@ public class Resource {
             jsonWriter.addField("isDir", listFiles[j].isDirectory());
             jsonWriter.addField("isNew", listFiles[j].isNew());
             jsonWriter.addField("readOnly", listFiles[j].readOnly());
+            jsonWriter.addField("isDirty", listFiles[j].isDirty());
             if (listFiles[j] instanceof VLibraryResource) {
                 VLibraryResource r = (VLibraryResource) listFiles[j];
                 jsonWriter.addField("libraryId", r.getLibraryId());
@@ -93,6 +94,7 @@ public class Resource {
                     jsonWriter.startObject().addField("isDir", members[k].isDirectory());
                     jsonWriter.addField("name", members[k].getName());
                     jsonWriter.addField("readOnly", members[k].readOnly());
+                    jsonWriter.addField("isDirty", members[k].isDirty());
                     if (members[k] instanceof VLibraryResource) {
                         VLibraryResource r = (VLibraryResource) members[k];
                         jsonWriter.addField("libraryId", r.getLibraryId());

@@ -76,20 +76,20 @@
 
 			function run() {
     			var userInfo;
-    			var result=davinci.Runtime.serverJSONRequest({url:"./cmd/getUserInfo",sync:true});
+    			var result=davinci.Runtime.getUser();
 
-    			if (result && result.userName)
+    			if (result )
     			{
-    		 	   dojo.byId('davinci_user').innerHTML=result.userName;
-    		 	   davinci.Runtime.userName=result.userName;
+    		 	   dojo.byId('davinci_user').innerHTML=result;
+    		 	   davinci.Runtime.userName=result;
     			}
     			else
     			{
     				//FIXME: temporary fix for running via file: URLs
-    				var langObj = dojo.i18n.getLocalization("davinci","webContent");
+    			   var langObj = dojo.i18n.getLocalization("davinci","webContent");
     		 	   dojo.byId('davinci_user').innerHTML=langObj.maqettaUser;
     		 	}
-    		 	if (result && result.isLocalInstall)
+    		 	if (!result)
     		 	{
     		 		var langObj = dojo.i18n.getLocalization("davinci","webContent");
     			 	dojo.byId('davinci_user').innerHTML=langObj.localhostUser;

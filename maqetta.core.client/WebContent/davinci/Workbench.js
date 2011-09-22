@@ -1455,12 +1455,12 @@ dojo.mixin(davinci.Workbench, {
 				var resource=davinci.resource.findResource(state.editors[i]);
 				var noSelect=state.editors[i]!=state.activeEditor;
 				if (resource){
-					var resourceInfo=resource.getFileInfo();
+					
 					davinci.Workbench.openEditor({
 						fileName: resource,
 						content: resource.getText(),
 						noSelect: noSelect,
-						isDirty: resourceInfo.isDirty,
+						isDirty: resource.isDirty,
 						startup: false
 					});
 				}

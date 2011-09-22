@@ -45,6 +45,39 @@ public class DavinciPageServlet extends HttpServlet {
         userManager = serverManager.getUserManager();
         libraryManager = serverManager.getLibraryManager();
     }
+    /*
+     * Save file request from user.  Saves files to workspace.
+     * (non-Javadoc)
+     * @see javax.servlet.http.HttpServlet#doPut(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        String path = req.getPathInfo();
+        boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
+        if(isWorkingCopy){
+        	path = path.substring(0,path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION));
+        }
+        IVResource file = user.getResource(path);
+        /* user is trying to save over a library path */
+        if(file.isVirtual()){
+        	file = user.createResource(path);
+        	file.createNewInstance();
+        	
+        }
+        if (file.exists()) {
+            OutputStream os = file.getOutputStreem();
+            Command.transferStreams(req.getInputStream(), os, false);
+            if (!isWorkingCopy) {
+                // flush the working copy
+                file.flushWorkingCopy();
+            }
+
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        resp.getOutputStream().close();
+    }
+    
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(serverManager==null)
@@ -57,6 +90,10 @@ public class DavinciPageServlet extends HttpServlet {
             System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
         }
 
+        /* add the user name to a cookie, prob should move to login but login wasn't persisting the cookie properly */
+        Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user!=null?user.getUserName():null);
+        resp.addCookie(k);
+        
         if (pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam==null) {
             if (!ServerManager.LOCAL_INSTALL) {
                 if (user == null) {

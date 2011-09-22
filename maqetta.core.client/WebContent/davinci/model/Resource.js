@@ -314,16 +314,16 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 	   return result;
    }
 
-   davinci.model.Resource.File.prototype.setContents = function(content, isWorkingCopy)
-   {
+   davinci.model.Resource.File.prototype.setContents = function(content, isWorkingCopy){
 	   var workingCopy=isWorkingCopy ? "true":"false";
 	   if (this.isNew && !isWorkingCopy){
 		   this.isNew=false;
 	   }
-		var path=encodeURIComponent(this.getPath());
-		davinci.Runtime.serverPut(
+	   var workingCopyExtension = isWorkingCopy?".workingcopy":"";
+	   var path=encodeURIComponent(this.getPath() + workingCopyExtension);
+    	davinci.Runtime.serverPut(
 				{
-					url: "./cmd/saveFile?path="+path+"&isWorkingCopy="+workingCopy,
+					url: path,
 					putData: content,
 					handleAs:"text",
 					contentType:"text/html"
@@ -331,11 +331,10 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
 		dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
    }
 
-   davinci.model.Resource.File.prototype.getText= function()
-   {
+   davinci.model.Resource.File.prototype.getText= function(){
+	   	 
  		  var contents=davinci.Runtime.serverJSONRequest({
- 			   url:"./cmd/loadFile", handleAs:"text",
- 		          content:{'path':this.getPath()}, sync:true
+ 			   url:this.getURL(), handleAs:"text", sync:true
  	  	  });
  		  return contents;
    }
@@ -351,14 +350,7 @@ davinci.model.Resource.Folder.prototype.createResource= function(name, isFolder,
  			 this.deleteResource(true);
    }
 
-   davinci.model.Resource.File.prototype.getFileInfo= function()
-   {
- 		  var fileInfo=davinci.Runtime.serverJSONRequest({
- 			   url:"./cmd/getFileInfo", 
- 		          content:{'path':this.getPath()}, sync:true
- 	  	  });
- 		  return fileInfo;
-   }
+
 
    /**  
     * @class davinci.model.Resource.Marker

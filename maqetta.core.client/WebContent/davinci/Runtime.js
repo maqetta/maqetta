@@ -48,6 +48,10 @@ dojo.mixin(davinci.Runtime,	{
 		});
 	},
 
+	getUser : function(){
+		return dojo.cookie("DAVINCI.USER");
+		
+	},
 	
 	loadPlugins: function() {
 		dojo.xhrGet( {

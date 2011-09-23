@@ -108,7 +108,7 @@ dojo.declare("davinci.ve.palette.PaletteItem", dijit._Widget,{
 		}
 		this.palette.pushedItem = this;
 		davinci.ui.dnd.dragManager.document = this.palette._context.getDocument();
-		var frameNode = this.palette._context.getFrameNode();
+		var frameNode = this.palette._context.frameNode;
 		if(frameNode){
 			var coords = dojo.coords(frameNode);
 			var containerNode = this.palette._context.getContainerNode();

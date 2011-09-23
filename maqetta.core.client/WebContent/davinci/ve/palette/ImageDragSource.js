@@ -13,7 +13,7 @@ dojo.declare("davinci.ve.palette.ImageDragSource", null, {
 		if (editor && editor.currentEditor && editor.currentEditor.context)	{
 			this.context=editor.currentEditor.context;
 			davinci.ui.dnd.dragManager.document = this.context.getDocument();
-			var frameNode = this.context.getFrameNode();
+			var frameNode = this.context.frameNode;
 			if(frameNode){
 				var coords = dojo.coords(frameNode);
 				var containerNode = this.context.getContainerNode();

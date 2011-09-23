@@ -594,7 +594,7 @@ dojo.declare("davinci.ve.Context", null, {
 		var data = this._parse(source);
 		this._scriptAdditions=data.scriptAdditions;
 		//debugger;
-		if(!this._frameNode){ // initialize frame
+		if(!this.frameNode){ // initialize frame
 			var dojoUrl;
 			
 			dojo.some(data.scripts, function(url){
@@ -719,7 +719,7 @@ dojo.declare("davinci.ve.Context", null, {
 									win.dojo._postLoad = true; // this is neede for FF4 to keep dijit._editor.RichText from throwing at line 32 dojo 1.5									
 								win.dojo["require"](module);
 							}); // to bootstrap references to base dijit methods in container
-					context._frameNode = frame;
+					context.frameNode = frame;
 					// see Dojo ticket #5334
 					// If you do not have this particular dojo.isArray code, DataGrid will not render in the tool.
 					// Also, any array value will be converted to {0: val0, 1: val1, ...}
@@ -788,7 +788,7 @@ dojo.declare("davinci.ve.Context", null, {
 
 	_setSourceData: function(data){
 			
-		var frame = this.getFrameNode();
+		var frame = this.frameNode;
 		var loading = dojo.create("div",null, frame.parentNode, "first");
 
 		
@@ -1284,11 +1284,6 @@ dojo.declare("davinci.ve.Context", null, {
 	getDijit: function(){
 		var win = this.getGlobal();
 		return win && win.dijit || dijit;
-	},
-
-	//FIXME: accessor func is unnecessary?  Make _frameNode public instead?
-	getFrameNode: function(){
-		return this._frameNode;
 	},
 
 	//FIXME: accessor func is unnecessary?
@@ -1985,14 +1980,13 @@ dojo.declare("davinci.ve.Context", null, {
 			var rule = new davinci.html.CSSRule();
 			rule.setText(selector + "{}");
 			return findTarget(widget.domNode || widget, rule);
-		}else{
-			return null;
 		}
+		return null;
 	},
 	
 	getSelectionCssRules: function(targetDomNode){
-		if (!this._cssCache)this._cssCache = {}; // prevent undefined exception in theme editor
-		function hashDomNode(node){
+		if (!this._cssCache) { this._cssCache = {}; } // prevent undefined exception in theme editor
+		var hashDomNode = function (node) {
 			return node.id + "_" + node.className;
 			
 		}
@@ -2025,9 +2019,9 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 			
 			return this._cssCache[domHash];
-		}else{
-			return {rules:null, matchLevels:null};
 		}
+
+		return {rules:null, matchLevels:null};
 	},
 	
 	getStyleAttributeValues: function(widget){

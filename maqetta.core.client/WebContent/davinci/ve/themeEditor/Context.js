@@ -35,7 +35,7 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	
 	_setSourceData: function(data){
 		
-		var frame = this.getFrameNode();
+		var frame = this.frameNode;
 		var loading = dojo.create("div", null, frame.parentNode, "first");
 		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
 		dojo.addClass(loading, 'loading');

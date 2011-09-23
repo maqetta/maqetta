@@ -310,7 +310,7 @@ dojo.declare("davinci.ve.VisualEditor", null, {
 				var context=this.context;
 				popup.adjustPosition=function (event)
 				{
-					var frameNode = context.getFrameNode();
+					var frameNode = context.frameNode;
 					var coords = context.getDojo().position(frameNode),
 						containerNode = context.getContainerNode();
 					return {

@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="maqetta.core.server"
+         id="maqetta.core.server.standalone"
          download-size="0"
          install-size="0"
          version="0.0.0"

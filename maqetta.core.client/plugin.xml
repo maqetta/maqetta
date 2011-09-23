@@ -49,7 +49,7 @@
 		-->
       </extension>
        <extension
-            point="maqetta.core.server.jsPlugin">
+            point="maqetta.core.server.standalone.jsPlugin">
          <jsPlugin
                path="app/davinci/ui"
                resourcePath="WebContent/davinci/ui"/>
@@ -67,7 +67,7 @@
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
       </extension>
       <extension
-            point="maqetta.core.server.initialUserFiles">
+            point="maqetta.core.server.standalone.initialUserFiles">
             <!--
              <initalUserFile
                   path="WebContent/project/base/"/>
@@ -76,15 +76,15 @@
                   path="WebContent/samples/"/>
               
       </extension>
-      <extension point="maqetta.core.server.ajaxLibrary">
+      <extension point="maqetta.core.server.standalone.ajaxLibrary">
 		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
 		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />
 		 </ajaxLibrary>
 	 </extension>
       
-	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
-	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="1"/></extension>
-   	<extension point="maqetta.core.server.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>
+	<extension point="maqetta.core.server.standalone.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
+	<extension point="maqetta.core.server.standalone.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="1"/></extension>
+   	<extension point="maqetta.core.server.standalone.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>
 
 </plugin>

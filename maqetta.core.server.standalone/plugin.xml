@@ -47,7 +47,7 @@
       </product>
    </extension>
       <extension
-            point="maqetta.core.server.command">
+            point="maqetta.core.server.standalone.command">
          <command path="login" noLogin="true" 
                class="org.davinci.server.internal.command.Login" />
          <command path="register" noLogin="true" 

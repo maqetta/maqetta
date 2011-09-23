@@ -6,7 +6,7 @@
 	         <resource alias="/app/static/lib/dojo/1.7" base-name="/WebContent/dojo"/>
 	</extension>
 	
-      <extension point="maqetta.core.server.ajaxLibrary">
+      <extension point="maqetta.core.server.standalone.ajaxLibrary">
          <ajaxLibrary name="dojo" id="dojo" version="1.7">
             <libraryPath location="WebContent/dojo" name="/lib/dojo"></libraryPath>
             <metadata location="app/metadata/dojo/1.7" />

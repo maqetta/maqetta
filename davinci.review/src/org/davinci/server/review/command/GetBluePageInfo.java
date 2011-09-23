@@ -9,7 +9,7 @@ import org.davinci.server.Command;
 import org.davinci.server.ServerManager;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.Person;
-import org.davinci.server.user.PersonManager;
+import org.davinci.server.user.IPersonManager;
 
 public class GetBluePageInfo extends Command {
 
@@ -25,7 +25,7 @@ public class GetBluePageInfo extends Command {
 			String startString = req.getParameter("start");
 			String type = req.getParameter("type");
 
-			PersonManager personManager = ServerManager.getServerManger().getUserManager().getPersonManager();
+			IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
 
 			if("photo".equals(type)){
 				responseString = personManager.getPhotoRepositoryPath();

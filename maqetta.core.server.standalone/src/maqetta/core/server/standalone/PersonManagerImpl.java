@@ -1,17 +1,18 @@
-package org.davinci.server.internal.user;
+package maqetta.core.server.standalone;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Set;
 
 import org.davinci.server.IDavinciServerConstants;
+import org.davinci.server.ServerManager;
+import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.Person;
-import org.davinci.server.user.PersonManager;
 import org.davinci.server.user.UserException;
 import org.davinci.server.util.XMLFile;
 import org.w3c.dom.Element;
 
-public class PersonManagerImpl implements PersonManager {
+public class PersonManagerImpl implements IPersonManager {
 
     HashMap             persons      = new HashMap();
 
@@ -71,11 +72,11 @@ public class PersonManagerImpl implements PersonManager {
 
     }
 
-    public PersonManagerImpl(File baseDir) {
-        this.baseDirectory = baseDir;
-        loadUsers();
+    public PersonManagerImpl() {
+    	this.baseDirectory = ServerManager.getServerManger().getBaseDirectory();
+    	loadUsers();
     }
-
+    
     /*
      * (non-Javadoc)
      *

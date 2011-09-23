@@ -1,6 +1,6 @@
 package org.davinci.server.user;
 
-public interface PersonManager {
+public interface IPersonManager {
 
     public abstract boolean hasPermisions(Person owner, Person requester, String resource);
 

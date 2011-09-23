@@ -22,5 +22,5 @@
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="davinci.dojo_1_7@default:true,davinci.html@default:true,davinci.jqueryui_1_8@default:true,davinci.oneui_2010_08_02@default:default,davinci.product@default:true,davinci.review@default:true,davinci.server.gzip@default:true,davinci.yui_2_6_0@default:true,maqetta.core.client@default:default,maqetta.core.server.standalone@default:true,org.apache.commons.fileupload@default:true,org.apache.commons.io@default:true"/>
+<stringAttribute key="workspace_bundles" value="davinci.dojo_1_7@default:true,davinci.html@default:true,davinci.jqueryui_1_8@default:true,davinci.oneui_2010_08_02@default:default,davinci.product@default:true,davinci.review@default:true,davinci.server.gzip@default:true,davinci.yui_2_6_0@default:true,maqetta.core.client@default:default,maqetta.core.server.standalone@default:true,maqetta.core.server@default:default,org.apache.commons.fileupload@default:true,org.apache.commons.io@default:true"/>
 </launchConfiguration>

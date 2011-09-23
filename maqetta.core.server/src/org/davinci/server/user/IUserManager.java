@@ -16,6 +16,5 @@ public interface IUserManager {
 
     public IUser getSingleUser();
 
-    public PersonManager getPersonManager();
 
 }

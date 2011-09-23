@@ -1,10 +1,10 @@
 package davinci.joomla;
 
 import org.davinci.server.user.Person;
-import org.davinci.server.user.PersonManager;
+import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.UserException;
 
-public class JoomlaPersonManager implements PersonManager {
+public class JoomlaPersonManager implements IPersonManager {
 
 	static class PersonImpl implements Person {
 		String name;

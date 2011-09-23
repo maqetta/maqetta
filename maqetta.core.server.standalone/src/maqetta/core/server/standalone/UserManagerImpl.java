@@ -1,4 +1,4 @@
-package org.davinci.server.internal.user;
+package maqetta.core.server.standalone;
 
 import java.io.File;
 import java.util.HashMap;
@@ -8,11 +8,11 @@ import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
 import org.davinci.server.VResourceUtils;
 import org.davinci.server.user.IUser;
+import org.davinci.server.user.IPersonManager;
+import org.davinci.server.user.IUserManager;
 import org.davinci.server.user.Person;
-import org.davinci.server.user.PersonManager;
 import org.davinci.server.user.User;
 import org.davinci.server.user.UserException;
-import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
@@ -22,31 +22,17 @@ public class UserManagerImpl implements IUserManager {
     HashMap                users    = new HashMap();
     public File            baseDirectory;
 
-    PersonManager          personManager;
+    IPersonManager          personManager;
     int                    maxUsers = 0;
     private int            usersCount;
 
-    public UserManagerImpl() {
-        ServerManager serverManger = ServerManager.getServerManger();
-        String basePath = serverManger.getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-        File userDir = null;
-        if (basePath != null && basePath.length() > 0) {
-            File dir = new File(basePath);
-            if (dir.exists()) {
-                userDir = dir;
-            } else {
-                System.out.println("dir doesnt exist");
-            }
-        }
-        if (userDir == null) {
-            userDir = (File) serverManger.servletConfig.getServletContext().getAttribute("javax.servlet.context.tempdir");
-        }
-        if (userDir == null) {
-            userDir = new File(".");
-        }
-        this.baseDirectory = userDir;
 
-        this.usersCount = userDir.list().length;
+    public UserManagerImpl() {
+    
+        ServerManager serverManger = ServerManager.getServerManger();
+        this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
+   
+        this.usersCount = this.baseDirectory.list().length;
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
         }
@@ -57,7 +43,7 @@ public class UserManagerImpl implements IUserManager {
             this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
         }
 
-        this.createPersonManager();
+        this.personManager = ServerManager.getServerManger().getPersonManager();
 
     }
 
@@ -206,24 +192,6 @@ public class UserManagerImpl implements IUserManager {
 
     }
 
-    public PersonManager getPersonManager() {
-        return this.personManager;
-    }
 
-    private void createPersonManager() {
-        IConfigurationElement libraryElement = ServerManager.getServerManger().getExtension(IDavinciServerConstants.EXTENSION_POINT_PERSON_MANAGER,
-                IDavinciServerConstants.EP_TAG_PERSON_MANAGER);
-        if (libraryElement != null) {
-            try {
-                this.personManager = (PersonManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_PERSON_MANAGER_CLASS);
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
-        }
-        if (this.personManager == null) {
-            this.personManager = new PersonManagerImpl(this.baseDirectory);
-        }
-
-    }
 
 }

@@ -58,7 +58,14 @@ public interface IDavinciServerConstants {
 
 	public static final String EXTENSION_POINT_PERSON_MANAGER = "personManager";
 	public static final String EP_TAG_PERSON_MANAGER = "personManager";
-	public static final String EP_ATTR_PERSON_MANAGER_CLASS = "class";
+	
+	public static final String EXTENSION_POINT_LIBRARY_MANAGER = "libraryManager";
+	public static final String EP_TAG_LIBRARY_MANAGER = "libraryManager";
+	public static final String EXTENSION_POINT_USER_MANAGER = "userManager";
+	public static final String EP_TAG_USER_MANAGER = "userManager";
+	
+	
+	public static final String EP_ATTR_CLASS = "class";
 
 	/*  static pages */
 	public static final String EXTENSION_POINT_MAIN_PAGE = "mainPage";
@@ -84,5 +91,6 @@ public interface IDavinciServerConstants {
 	public static final String EP_ATTR_METADATA_ID = "id";
     public static final String THEMES_DIRECTORY_NAME = "themes";
 	public static final String DEFAULT_PROJECT = "project1";
+
 
 }

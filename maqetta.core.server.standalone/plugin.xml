@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-       
-   
-   
-  
-   	<extension
+   <extension
         point="org.eclipse.equinox.http.registry.httpcontexts">
       <httpcontext id="davincicontext">
  		  <resource-mapping path="/" />
@@ -13,6 +9,17 @@
       </httpcontext>
    </extension>
    
+      <extension point="maqetta.core.server.personManager">
+    	<personManager class="maqetta.core.server.standalone.PersonManagerImpl"/>
+   	  </extension>
+
+      <extension point="maqetta.core.server.userManager">
+    	<userManager class="maqetta.core.server.standalone.UserManagerImpl"/>
+   	  </extension>
+   	  <extension point="maqetta.core.server.libraryManager">
+    	<libraryManager class="org.davinci.ajaxLibrary.LibraryManager"/>
+   	  </extension>
+   	  
    
    <extension
          point="org.eclipse.equinox.http.registry.servlets">

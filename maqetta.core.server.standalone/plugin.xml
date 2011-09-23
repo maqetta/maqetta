@@ -16,9 +16,7 @@
       <extension point="maqetta.core.server.userManager">
     	<userManager class="maqetta.core.server.standalone.UserManagerImpl"/>
    	  </extension>
-   	  <extension point="maqetta.core.server.libraryManager">
-    	<libraryManager class="org.davinci.ajaxLibrary.LibraryManager"/>
-   	  </extension>
+
    	  
    
    <extension

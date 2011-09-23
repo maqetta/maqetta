@@ -3,7 +3,7 @@ package org.davinci.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONWriter;
 import org.maqetta.project.util.EclipseProjectUtil;
 
@@ -64,7 +64,7 @@ public class Resource {
         return jsonWriter.getJSON();
     }
 
-    public static String foundVRsourcesToJson(IVResource listFiles[], User user) {
+    public static String foundVRsourcesToJson(IVResource listFiles[], IUser user) {
 
         JSONWriter jsonWriter = new JSONWriter(true);
         for (int i = 0; i < listFiles.length; i++) {

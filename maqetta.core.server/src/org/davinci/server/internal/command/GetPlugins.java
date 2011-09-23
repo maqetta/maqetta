@@ -14,14 +14,14 @@ import org.davinci.server.Command;
 import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.ServerManager;
 import org.davinci.server.internal.Activator;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.osgi.framework.Bundle;
 
 public class GetPlugins extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_JSPLUGIN,
                 IDavinciServerConstants.EP_TAG_JSPLUGIN);
         StringBuffer sb = new StringBuffer();

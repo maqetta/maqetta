@@ -13,7 +13,7 @@ import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.IVResource;
 import org.davinci.server.VURL;
 import org.davinci.server.review.cache.ReviewCacheManager;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -60,7 +60,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 		String pathInfo = req.getPathInfo();
 
-		User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 		if(user==null){
 		    req.getSession().setAttribute(IDavinciServerConstants.REDIRECT_TO, req.getRequestURL().toString());
 			resp.sendRedirect(this.getLoginUrl(req));
@@ -113,7 +113,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 			// Check if it is a valid user name.
 			// If it is a valid user name, do login
 			// Else, error.
-			User designer = userManager.getUser(prefix);
+			IUser designer = userManager.getUser(prefix);
 			if (designer == null) {
 				resp.sendRedirect(this.getLoginUrl(req));
 				return;
@@ -154,7 +154,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 //		}
 //	}
 
-	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, User user) throws ServletException, IOException{
+	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user) throws ServletException, IOException{
 		// Remove the follow URL prefix
 		// /user/heguyi/ws/workspace/.review/snapshot/20100101/project1/lib/dojo/dojo.js
 		// to
@@ -202,7 +202,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 
 		// Verify the user
 		if(designerName == null) return false;
-		User user = userManager.getUser(designerName);
+		IUser user = userManager.getUser(designerName);
 		
 		return null != user && path.segmentCount() > 8 && path.segment(4).equals(".review")
 				&& path.segment(5).equals("snapshot") && path.segment(0).equals("user")

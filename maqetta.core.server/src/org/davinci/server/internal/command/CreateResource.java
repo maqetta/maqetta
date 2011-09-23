@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class CreateResource extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String path = req.getParameter("path");
         boolean isFolder = "true".equalsIgnoreCase(req.getParameter("isFolder"));
         IVResource newFile = user.createResource(path);

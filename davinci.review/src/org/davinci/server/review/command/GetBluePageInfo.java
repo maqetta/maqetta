@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.ServerManager;
+import org.davinci.server.user.IUser;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.PersonManager;
-import org.davinci.server.user.User;
 
 public class GetBluePageInfo extends Command {
 
@@ -18,7 +18,7 @@ public class GetBluePageInfo extends Command {
 //	private static final String PHOTO_REPO_COOKIE = "photoRepositoryPath";
 
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
+			IUser user) throws IOException {
 		try {
 			String name = req.getParameter("searchname");
 			String count = req.getParameter("count");

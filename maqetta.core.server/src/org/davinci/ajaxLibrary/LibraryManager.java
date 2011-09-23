@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;
 
-public class LibraryManager {
+public class LibraryManager implements ILibraryManager {
 
     Library[] installedLibraries;
 
@@ -150,6 +150,9 @@ public class LibraryManager {
         return null;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibraryManager#getDefaultRoot(java.lang.String, java.lang.String)
+	 */
     public String getDefaultRoot(String id, String version) {
         Library l = findLibrary(id, version);
         return l.defaultRoot;
@@ -204,10 +207,16 @@ public class LibraryManager {
 
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibraryManager#getAllLibraries()
+	 */
     public Library[] getAllLibraries() {
         return this.installedLibraries;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.ajaxLibrary.ILibraryManager#getLibrary(java.lang.String, java.lang.String)
+	 */
     public Library getLibrary(String id, String version) {
         for (int i = 0; i < this.installedLibraries.length; i++) {
             if (this.installedLibraries[i].getID().equals(id) && this.installedLibraries[i].getVersion().equals(version)) {

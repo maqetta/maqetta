@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.ajaxLibrary.LibraryManager;
+import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.server.internal.Activator;
-import org.davinci.server.user.User;
-import org.davinci.server.user.UserManager;
+import org.davinci.server.user.IUser;
+import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -36,9 +36,9 @@ public class DavinciPageServlet extends HttpServlet {
     private static final String ETAG              = "ETag";             //$NON-NLS-1$
     private static final String CACHE_CONTROL     = "Cache-Control";
 
-    protected UserManager       userManager;
-    protected ServerManager     serverManager;
-    protected LibraryManager    libraryManager;
+    protected IUserManager       userManager;
+    protected IServerManager     serverManager;
+    protected ILibraryManager    libraryManager;
 
     public void initialize() {
         serverManager = ServerManager.createServerManger(getServletConfig());
@@ -51,7 +51,7 @@ public class DavinciPageServlet extends HttpServlet {
      * @see javax.servlet.http.HttpServlet#doPut(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String path = req.getPathInfo();
         boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
         if(isWorkingCopy){
@@ -84,7 +84,7 @@ public class DavinciPageServlet extends HttpServlet {
             initialize();
         String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
         
-        User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         String pathInfo = req.getPathInfo();
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
@@ -172,7 +172,7 @@ public class DavinciPageServlet extends HttpServlet {
         this.writePage(req, resp, resourceURL, false);
     }
 
-    private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException, ServletException {
+    private void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException, ServletException {
 
         // System.out.println("enter ws request");
         String pathInfo = req.getPathInfo();
@@ -243,7 +243,7 @@ public class DavinciPageServlet extends HttpServlet {
 
     }
 
-    protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, User user) throws ServletException, IOException {
+    protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user) throws ServletException, IOException {
         IVResource libraryURL = user.getResource(path.toString());
         if (libraryURL != null) {
             writePage(req, resp, libraryURL, false);

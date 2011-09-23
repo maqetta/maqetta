@@ -17,12 +17,12 @@ import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.DesignerUser;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class UpdateComment extends Command {
 	boolean isUpdateStatus;
 	
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user)
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		String designerName = ((ReviewObject) req.getSession().getAttribute(
 				Constants.REVIEW_INFO)).getDesignerName();

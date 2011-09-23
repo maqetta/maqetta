@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONReader;
 
 public class ModifyLib extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
 
         String libJson = req.getParameter("libChanges");
         List list = (List) JSONReader.read(libJson);
@@ -38,11 +38,11 @@ public class ModifyLib extends Command {
         responseString = "OK";
     }
 
-    public void changeLibraryRoot(User user, String id, String version, String path, String base) {
+    public void changeLibraryRoot(IUser user, String id, String version, String path, String base) {
         user.modifyLibrary(id, version, path, base);
     }
 
-    public void updateLib(User user, String id, String version, boolean installed, String base) {
+    public void updateLib(IUser user, String id, String version, boolean installed, String base) {
         user.modifyLibrary(id, version, base, installed);
     }
 

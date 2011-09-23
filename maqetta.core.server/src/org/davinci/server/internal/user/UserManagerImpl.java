@@ -7,15 +7,16 @@ import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
 import org.davinci.server.VResourceUtils;
+import org.davinci.server.user.IUser;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.PersonManager;
 import org.davinci.server.user.User;
 import org.davinci.server.user.UserException;
-import org.davinci.server.user.UserManager;
+import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-public class UserManagerImpl implements UserManager {
+public class UserManagerImpl implements IUserManager {
 
     static UserManagerImpl theUserManager;
     HashMap                users    = new HashMap();
@@ -67,7 +68,7 @@ public class UserManagerImpl implements UserManager {
      * org.davinci.server.user.impl.UserManager#hasPermisions(org.davinci.server
      * .user.User, org.davinci.server.user.User, java.lang.String)
      */
-    public boolean hasPermisions(User owner, User requester, String resource) {
+    public boolean hasPermisions(IUser owner, IUser requester, String resource) {
         /*
          * deny permision to direct access of a users workspace
          */
@@ -79,9 +80,9 @@ public class UserManagerImpl implements UserManager {
      * 
      * @see org.davinci.server.user.impl.UserManager#getUser(java.lang.String)
      */
-    public User getUser(String userName) {
+    public IUser getUser(String userName) {
 
-        User user = (User) users.get(userName);
+        IUser user = (IUser) users.get(userName);
         if (user == null && ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return this.getSingleUser();
         }
@@ -99,7 +100,7 @@ public class UserManagerImpl implements UserManager {
      * @see org.davinci.server.user.impl.UserManager#addUser(java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public User addUser(String userName, String password, String email) throws UserException {
+    public IUser addUser(String userName, String password, String email) throws UserException {
 
         if (checkUserExists(userName)) {
             throw new UserException(UserException.ALREADY_EXISTS);
@@ -111,7 +112,7 @@ public class UserManagerImpl implements UserManager {
         Person person = this.personManager.addPerson(userName, password, email);
         if (person != null) {
 
-            User user = new User(person, new File(this.baseDirectory, userName));
+            IUser user = new User(person, new File(this.baseDirectory, userName));
             users.put(userName, user);
             //File userDir = user.getUserDirectory();
             //userDir.mkdir();
@@ -152,7 +153,7 @@ public class UserManagerImpl implements UserManager {
      * @see org.davinci.server.user.impl.UserManager#login(java.lang.String,
      * java.lang.String)
      */
-    public User login(String userName, String password) {
+    public IUser login(String userName, String password) {
         if (!checkUserExists(userName)) {
             return null;
         }
@@ -178,11 +179,11 @@ public class UserManagerImpl implements UserManager {
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return true;
         }
-        User user = getUser(userName);
+        IUser user = getUser(userName);
         return user != null;
     }
 
-    public User getSingleUser() {
+    public IUser getSingleUser() {
         class LocalPerson implements Person {
             public String getEmail() {
                 return "";
@@ -195,7 +196,7 @@ public class UserManagerImpl implements UserManager {
         File userDir = this.baseDirectory;
 
         userDir.mkdir();
-        User user =  new User(new LocalPerson(), userDir);
+        IUser user =  new User(new LocalPerson(), userDir);
         File settingsDir = new File(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
         if (!settingsDir.exists()) {
             settingsDir.mkdir();

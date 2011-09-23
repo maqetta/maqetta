@@ -10,6 +10,7 @@ import org.davinci.server.VFile;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
+import org.davinci.server.user.IUser;
 import org.davinci.server.user.User;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -22,7 +23,7 @@ public class DesignerUser{
 	private Version latestVersion;
 	private File userDirectory;
 	
-	public User rawUser;
+	public IUser rawUser;
 
 	public DesignerUser(String name) {
 		this.name = name;

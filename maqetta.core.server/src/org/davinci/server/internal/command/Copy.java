@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
 import org.davinci.server.VResourceUtils;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class Copy extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String src = req.getParameter("source");
         String des = req.getParameter("dest");
         boolean recurse = Boolean.parseBoolean(req.getParameter("recurse"));

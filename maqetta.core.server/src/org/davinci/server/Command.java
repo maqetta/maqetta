@@ -8,14 +8,14 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public abstract class Command {
 
     protected String errorString;
     protected String responseString;
 
-    abstract public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException;
+    abstract public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException;
 
     public String getErrorString() {
         return errorString;

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.command.CommandDescriptor;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -40,7 +40,7 @@ public class DavinciCommandServlet extends HttpServlet {
         if (commandDescriptor == null || commandDescriptor.isPut()) {
             throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Get processing"));
         }
-        User user = checkLogin(req, resp, commandDescriptor);
+        IUser user = checkLogin(req, resp, commandDescriptor);
         if (user == null && !commandDescriptor.isNoLogin()) {
             return;
         }
@@ -58,9 +58,9 @@ public class DavinciCommandServlet extends HttpServlet {
         }
     }
 
-    private User checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
+    private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
-        User user = (User) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         if (user == null) {
             if (ServerManager.LOCAL_INSTALL) {
                 user = ServerManager.getServerManger().getUserManager().getSingleUser();
@@ -91,7 +91,7 @@ public class DavinciCommandServlet extends HttpServlet {
             throw new java.lang.AssertionError(new String("commandDescriptor is null or is not Put in Put processing"));
         }
 
-        User user = checkLogin(req, resp, commandDescriptor);
+        IUser user = checkLogin(req, resp, commandDescriptor);
         if (user == null && !commandDescriptor.isNoLogin()) {
             return;
         }
@@ -118,7 +118,7 @@ public class DavinciCommandServlet extends HttpServlet {
             pathInfo = pathInfo.substring(1);
         }
 
-        User user = (User) request.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+        IUser user = (IUser) request.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
         CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
         if (commandDescriptor == null || commandDescriptor.isPut()) {
             throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Post processing"));

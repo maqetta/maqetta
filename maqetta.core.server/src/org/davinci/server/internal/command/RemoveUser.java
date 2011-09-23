@@ -8,13 +8,13 @@ import javax.servlet.http.HttpSession;
 
 import org.davinci.server.Command;
 import org.davinci.server.ServerManager;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.davinci.server.user.UserException;
 
 public class RemoveUser extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String name = req.getParameter("userName");
 
         try {

@@ -10,12 +10,12 @@ import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.review.user.Reviewer;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONWriter;
 
 public class ListVersions extends Command {
 
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user)
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 
 		String designer = (String) req.getParameter("designer");

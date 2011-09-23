@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class CreateProject extends Command {
 
    
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String projectName = req.getParameter("name");
         boolean initContents = "true".equalsIgnoreCase(req.getParameter("initContents"));
         boolean eclipseProject = "true".equalsIgnoreCase(req.getParameter("eclipseSupport"));

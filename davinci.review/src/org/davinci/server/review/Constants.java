@@ -1,6 +1,7 @@
 package org.davinci.server.review;
 
 import org.davinci.server.IDavinciServerConstants;
+import org.davinci.server.user.IUser;
 import org.davinci.server.user.Person;
 import org.davinci.server.user.User;
 
@@ -35,7 +36,7 @@ public class Constants {
 	public static final String TEMPLATE_COMMENT_NOTIFICATION_SUBJECT = "maqetta.review.commentNotificationSubject";
 	public static final String TEMPLATE_COMMENT = "maqetta.review.commentTemplate";
 	
-	public static final User LOCAL_INSTALL_USER;
+	public static final IUser LOCAL_INSTALL_USER;
 
 	public static final String LOCAL_INSTALL_USER_NAME = IDavinciServerConstants.LOCAL_INSTALL_USER;
 	static {

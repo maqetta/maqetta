@@ -11,11 +11,11 @@ import org.davinci.server.Command;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.cache.ReviewCacheManager;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class GetComments extends Command {
 
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user)
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		String projectOwner = req.getParameter("ownerId");
 		String projectName = req.getParameter("projectName");

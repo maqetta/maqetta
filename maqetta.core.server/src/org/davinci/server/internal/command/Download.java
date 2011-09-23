@@ -17,7 +17,7 @@ import org.davinci.server.Command;
 import org.davinci.server.IVResource;
 import org.davinci.server.ServerManager;
 import org.davinci.server.VLibraryResource;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONReader;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -27,7 +27,7 @@ public class Download extends Command {
 	
 	private Vector zipedEntries;
 	
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         if (user == null) {
             return;
         }

@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.server.Command;
 import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class SetWorkbenchState extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         File settingsDir = user.getWorkbenchSettings();
         File settingsFile = new File(settingsDir, IDavinciServerConstants.WORKBENCH_STATE_FILE);
         if (!settingsFile.exists()) {

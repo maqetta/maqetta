@@ -35,7 +35,7 @@ import org.eclipse.core.runtime.Path;
 import org.maqetta.project.util.EclipseProjectUtil;
 import org.osgi.framework.Bundle;
 
-public class User {
+public class User implements IUser {
 
 	private static final boolean CASCADE_SETTINGS = false;
 	private File userDirectory;
@@ -59,6 +59,9 @@ public class User {
 	 * performance reasons. 
 	 */
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#rebuildWorkspace()
+	 */
 	public void rebuildWorkspace() {
 		this.workspace = new VWorkspaceRoot();
 		File[] userFiles = this.userDirectory.listFiles();
@@ -113,6 +116,9 @@ public class User {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#createEclipseProject(java.lang.String)
+	 */
 	public IVResource createEclipseProject(String projectName){
 		IVResource project = createProject(projectName, "WebContent", true);
 		/*
@@ -151,10 +157,16 @@ public class User {
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#createProject(java.lang.String)
+	 */
 	public IVResource createProject(String projectName){
 		return this.createProject(projectName, "", true);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#createProject(java.lang.String, java.lang.String, boolean)
+	 */
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
 		IVResource project = createResource(projectName + "/");
 		/*
@@ -195,6 +207,9 @@ public class User {
 	 * 
 	 * used to map configurations to sub folders
 	 */
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#addBaseSettings(java.lang.String)
+	 */
 	public void addBaseSettings(String base){
 		File baseFile = new File(this.userDirectory, base);
 		File settings = new File(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
@@ -207,6 +222,9 @@ public class User {
 	
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#deleteBaseSettings(java.lang.String)
+	 */
 	public void deleteBaseSettings(String base){
 		
 	}
@@ -223,10 +241,16 @@ public class User {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getUserDirectory()
+	 */
 	public File getUserDirectory() {
 		return this.userDirectory;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#modifyLibrary(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
 	public void modifyLibrary(String id, String version, String base, boolean installed) {
 		LibrarySettings libs = this.getLibSettings(base);
 
@@ -240,6 +264,9 @@ public class User {
 		rebuildWorkspace();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#modifyLibrary(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	public void modifyLibrary(String id, String version, String virtualRoot, String base) {
 		LibrarySettings libs = this.getLibSettings(base);
 
@@ -248,6 +275,9 @@ public class User {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#listFiles(java.lang.String)
+	 */
 	public IVResource[] listFiles(String path) {
 	    IVResource[] found = new IVResource[0];
 	    if (path == null || path.equals(".") ) {
@@ -293,6 +323,9 @@ public class User {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getResource(java.lang.String)
+	 */
 	public IVResource getResource(String path) {
 
 	    IVResource r1 = getUserFile(path);
@@ -388,6 +421,9 @@ public class User {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#createResource(java.lang.String)
+	 */
 	public IVResource createResource(String path) {
 		/* serve working copy files if they exist */
 
@@ -413,10 +449,16 @@ public class User {
 		return userFile;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getWorkbenchSettings()
+	 */
 	public File getWorkbenchSettings() {
 		return getWorkbenchSettings("");
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getWorkbenchSettings(java.lang.String)
+	 */
 	public File getWorkbenchSettings(String base) {
 	
 		
@@ -430,6 +472,9 @@ public class User {
 		return settingsDirectory;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getLinks()
+	 */
 	synchronized public Links getLinks() {
 		if (this.links == null) {
 			this.links = new Links(this.getWorkbenchSettings());
@@ -437,10 +482,16 @@ public class User {
 		return this.links;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#findFiles(java.lang.String, boolean, boolean)
+	 */
 	public IVResource[] findFiles(String pathStr, boolean ignoreCase,boolean workspaceOnly) {
 		return this.findFiles(pathStr, ".", ignoreCase, workspaceOnly);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#findFiles(java.lang.String, java.lang.String, boolean, boolean)
+	 */
 	public IVResource[] findFiles(String pathStr, String startFolder,	boolean ignoreCase, boolean workspaceOnly) {
 		boolean isWildcard = pathStr.indexOf('*') >= 0;
 		IPath path = new Path(pathStr);
@@ -528,11 +579,17 @@ public class User {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getLibs(java.lang.String)
+	 */
 	public LibInfo[] getLibs(String base) {
 		return this.getLibSettings(base).allLibs();
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getLibPath(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	public String getLibPath(String id, String version, String base) {
 		/*
 		 * returns the virtual path of library in the users workspace given ID
@@ -551,10 +608,16 @@ public class User {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getUserName()
+	 */
 	public String getUserName() {
 		return this.person.getUserName();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.davinci.server.user.IUser#getPerson()
+	 */
 	public Person getPerson() {
 		return this.person;
 	}

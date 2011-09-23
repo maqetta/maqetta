@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.Command;
 import org.davinci.server.ServerManager;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class GetMetaRoot extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         Library[] libs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
         String libraryID = req.getParameter("id");
         String libraryVersion = req.getParameter("version");

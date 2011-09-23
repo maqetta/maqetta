@@ -16,12 +16,12 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class AddFiles extends Command {
 
     @Override
-    public void handleCommand(HttpServletRequest request, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest request, HttpServletResponse resp, IUser user) throws IOException {
         String path = request.getParameter("path");
         resp.setContentType("application/json");
 

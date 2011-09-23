@@ -9,25 +9,26 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
 
+import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.ajaxLibrary.LibraryManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
 import org.davinci.server.internal.user.UserManagerImpl;
-import org.davinci.server.user.UserManager;
+import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 
-public class ServerManager {
+public class ServerManager implements IServerManager {
 
     static ServerManager  theServerManager;
 
-    UserManager           userManager;
+    IUserManager           userManager;
 
     IExtensionRegistry    registry;
 
-    LibraryManager        libraryManager;
+    ILibraryManager        libraryManager;
 
     public ServletConfig  servletConfig;
 
@@ -68,13 +69,16 @@ public class ServerManager {
         return ServerManager.theServerManager;
     }
 
-    public static ServerManager createServerManger(ServletConfig servletConfig) {
+    public static IServerManager createServerManger(ServletConfig servletConfig) {
         if (ServerManager.theServerManager == null) {
             ServerManager.theServerManager = new ServerManager(servletConfig);
         }
         return ServerManager.theServerManager;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getDavinciProperty(java.lang.String)
+	 */
     public String getDavinciProperty(String propertyName) {
         String property = null;
         if (ServerManager.IN_WAR) {
@@ -99,13 +103,19 @@ public class ServerManager {
         return property;
     }
 
-    public UserManager getUserManager() {
+    /* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getUserManager()
+	 */
+    public IUserManager getUserManager() {
         if (userManager == null) {
             userManager = new UserManagerImpl();
         }
         return userManager;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getExtensions(java.lang.String, java.lang.String)
+	 */
     public List getExtensions(String extensionPoint, String elementTag) {
         ArrayList list = new ArrayList();
         IExtension[] extensions = this.getExtensions(extensionPoint);
@@ -121,6 +131,9 @@ public class ServerManager {
         return list;
     }
 
+    /* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getExtension(java.lang.String, java.lang.String)
+	 */
     public IConfigurationElement getExtension(String extensionPoint, String elementTag) {
         IExtension[] extensions = this.getExtensions(extensionPoint);
         for (int i = 0; i < extensions.length; i++) {
@@ -137,6 +150,9 @@ public class ServerManager {
 
     private static final IExtension[] EMPTY_EXTENSIONS = {};
 
+    /* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getExtensions(java.lang.String)
+	 */
     public IExtension[] getExtensions(String extensionPoint) {
         if (this.registry == null) {
             this.registry = Activator.getActivator().getRegistry();
@@ -151,7 +167,10 @@ public class ServerManager {
         return ServerManager.EMPTY_EXTENSIONS;
     }
 
-    public synchronized LibraryManager getLibraryManager() {
+    /* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getLibraryManager()
+	 */
+    public synchronized ILibraryManager getLibraryManager() {
         if (libraryManager == null) {
             libraryManager = new LibraryManager();
         }

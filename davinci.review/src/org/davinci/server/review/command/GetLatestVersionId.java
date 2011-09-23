@@ -10,12 +10,12 @@ import org.davinci.server.Command;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.user.DesignerUser;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class GetLatestVersionId extends Command{
 
 		public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-				User user) throws IOException {
+				IUser user) throws IOException {
 			ReviewManager cm = ReviewManager.getReviewManager();
 			DesignerUser reviewUser = cm.getDesignerUser(user.getUserName());
 			int latestVersionID = 1;

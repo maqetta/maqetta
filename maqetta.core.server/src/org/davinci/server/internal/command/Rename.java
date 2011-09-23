@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.Command;
 import org.davinci.server.IVResource;
 import org.davinci.server.VResourceUtils;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class Rename extends Command {
 
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
 
         String oldName = req.getParameter("oldName");
         String newName = req.getParameter("newName");

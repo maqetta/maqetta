@@ -395,7 +395,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 	
 	_loading: function(height, width /*, styleHeight, styleWidth*/){
 
-		var iframeNode = this._widget._edit_context._frameNode;
+		var iframeNode = this._widget._edit_context.frameNode;
 		var doc = iframeNode.ownerDocument;
 		var loading = doc.createElement("div");
 		var contentPaneAncestor = this._findContentPaneAncestor(iframeNode);
@@ -627,7 +627,7 @@ dojo.declare("davinci.ve.input.SmartInput", null, {
 			while (connection = this._connection.pop()){
 				dojo.disconnect(connection);
 			}
-			var contentPaneAncestor = this._findContentPaneAncestor(this._widget._edit_context._frameNode);
+			var contentPaneAncestor = this._findContentPaneAncestor(this._widget._edit_context.frameNode);
 			if(!contentPaneAncestor){
 				console.log('ERROR. SmartInput.js _loading(). No ancestor ContentPane');
 				return;

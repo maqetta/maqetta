@@ -26,13 +26,13 @@ import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.review.user.Reviewer;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class Publish extends Command {
 	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
 
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
-			User user) throws IOException {
+			IUser user) throws IOException {
 
 		Version version = null;
 		Boolean isUpdate = req.getParameter("isUpdate").equals("true") ? true
@@ -166,7 +166,7 @@ public class Publish extends Command {
 		}
 	}
 
-	private String getHtmlContent(User user, String message, String url) {
+	private String getHtmlContent(IUser user, String message, String url) {
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("username", user.getUserName());
 		props.put("message", message);
@@ -175,7 +175,7 @@ public class Publish extends Command {
 		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 
-	private String getUrl(User user, String version, String requestUrl, String reviewer) {
+	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
 		String prefix =  System.getProperty("org.eclipse.equinox.http.jetty.context.path");
 		if(prefix != null){

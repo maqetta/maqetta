@@ -50,6 +50,7 @@
       <plugin id="davinci.yui_2_6_0" autoStart="true" startLevel="5" />
       <plugin id="maqetta.core.client" autoStart="true" startLevel="4" />
       <plugin id="maqetta.core.server" autoStart="true" startLevel="4" />
+      <plugin id="maqetta.core.server.standalone" autoStart="true" startLevel="4" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="3" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.core.jobs" autoStart="true" startLevel="2" />

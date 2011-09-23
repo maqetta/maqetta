@@ -3,7 +3,6 @@
 
 <product name="Maqetta Server External" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
       <linux>/davinci.product/config/config-external.ini</linux>
       <macosx>/davinci.product/config/config-external.ini</macosx>
@@ -16,7 +15,6 @@
 
    <windowImages/>
 
-
    <launcher>
       <solaris/>
       <win useIco="false">
@@ -24,10 +22,8 @@
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="davinci.dojo_1_7"/>
@@ -38,6 +34,7 @@
       <plugin id="javax.servlet"/>
       <plugin id="maqetta.core.client"/>
       <plugin id="maqetta.core.server"/>
+      <plugin id="maqetta.core.server.standalone"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
       <plugin id="org.eclipse.core.contenttype"/>

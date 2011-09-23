@@ -23,21 +23,21 @@ import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.DesignerUser;
-import org.davinci.server.user.User;
-import org.davinci.server.user.UserManager;
+import org.davinci.server.user.IUser;
+import org.davinci.server.user.IUserManager;
 
 public class AddComment extends Command {
 
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user)
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		try {
-			UserManager userManager = ServerManager.getServerManger().getUserManager();
+			IUserManager userManager = ServerManager.getServerManger().getUserManager();
 			ReviewObject reviewInfo = (ReviewObject) req.getSession().getAttribute(Constants.REVIEW_INFO);
 			if(null == reviewInfo){
 				throw new Exception("Session timed out! Please login again.");
 			}
 			String designerName = reviewInfo.getDesignerName();
-			User designer = null;
+			IUser designer = null;
 			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName))
 				designer = userManager.getUser(IDavinciServerConstants.LOCAL_INSTALL_USER);
 			else
@@ -75,7 +75,7 @@ public class AddComment extends Command {
 		}
 	}
 
-	protected void notifyRelatedPersons(User reviewer, User designer, Comment comment) {
+	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment) {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment);
@@ -132,7 +132,7 @@ public class AddComment extends Command {
 //		return str;
 //	}
 
-	private String getHtmlContent(User reviewer, Comment comment) {
+	private String getHtmlContent(IUser reviewer, Comment comment) {
 		String commentTitle = comment.getSubject();;
 		String pageName = comment.getPageName();
 		

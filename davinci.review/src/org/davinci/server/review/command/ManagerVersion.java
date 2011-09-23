@@ -11,11 +11,11 @@ import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.DesignerUser;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IUser;
 
 public class ManagerVersion extends Command {
 
-	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, User user)
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
 		String type = req.getParameter("type"); // three types: close, open, delete and publish
 		String vTime = req.getParameter("vTime");

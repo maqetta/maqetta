@@ -33,6 +33,7 @@
       <plugin id="javax.servlet"/>
       <plugin id="maqetta.core.client"/>
       <plugin id="maqetta.core.server"/>
+      <plugin id="maqetta.core.server.standalone"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
       <plugin id="org.eclipse.core.contenttype"/>

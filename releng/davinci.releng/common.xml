@@ -31,7 +31,8 @@
         <!-- LIST OF MAQETTA Internal PROJECTS GOES HERE -->
         <!-- -->
         <populateDir project="maqetta.core.server"/>
-    	 <populateDir project="maqetta.core.client"/>
+    	<populateDir project="maqetta.core.server.standalone"/>
+    	<populateDir project="maqetta.core.client"/>
         <populateDir project="davinci.product" extPath="/releng/" isFeature="true"/>
         <populateDir project="davinci.product" extPath="/releng/" />
         <populateDir project="davinci.dojo_1_7"/>

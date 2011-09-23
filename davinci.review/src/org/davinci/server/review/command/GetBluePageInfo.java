@@ -5,11 +5,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.Command;
-import org.davinci.server.ServerManager;
 import org.davinci.server.user.IUser;
-import org.davinci.server.user.Person;
+import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IPersonManager;
+import org.maqetta.server.Command;
+import org.maqetta.server.ServerManager;
 
 public class GetBluePageInfo extends Command {
 
@@ -32,7 +32,7 @@ public class GetBluePageInfo extends Command {
 			}else{
 				int resultNumber = Integer.parseInt(count);
 				int start = Integer.parseInt(startString);
-				Person[] persons = personManager.getPersons(name, resultNumber, start);
+				IPerson[] persons = personManager.getPersons(name, resultNumber, start);
 				responseString = arrayToJson(persons);
 			}
 		} catch (Exception e) {
@@ -41,12 +41,12 @@ public class GetBluePageInfo extends Command {
 		}
 	}
 
-	private String arrayToJson(Person[] persons) {
+	private String arrayToJson(IPerson[] persons) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(IDENTIFIER_AND_LABEL);
 		buf.append(persons.length);
 		buf.append(IDENTIFIER_AND_LABEL2);
-		for (Person p : persons) {
+		for (IPerson p : persons) {
 			if (p.getEmail().contains("@")) {
 				buf.append("{");
 				buf.append("'");

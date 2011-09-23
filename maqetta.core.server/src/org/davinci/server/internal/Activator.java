@@ -3,10 +3,10 @@ package org.davinci.server.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.davinci.server.IDavinciServerConstants;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
+import org.maqetta.server.IDavinciServerConstants;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

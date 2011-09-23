@@ -3,8 +3,9 @@ package org.davinci.server.user;
 import java.io.File;
 
 import org.davinci.ajaxLibrary.LibInfo;
-import org.davinci.server.IVResource;
 import org.davinci.server.internal.Links;
+import org.maqetta.server.ILinks;
+import org.maqetta.server.IVResource;
 
 public interface IUser {
 
@@ -44,7 +45,7 @@ public interface IUser {
 
 	public File getWorkbenchSettings(String base);
 
-	public Links getLinks();
+	public ILinks getLinks();
 
 	public IVResource[] findFiles(String pathStr, boolean ignoreCase,
 			boolean workspaceOnly);
@@ -58,6 +59,6 @@ public interface IUser {
 
 	public String getUserName();
 
-	public Person getPerson();
+	public IPerson getPerson();
 
 }

@@ -1,9 +1,10 @@
 package org.davinci.server.review;
 
-import org.davinci.server.IDavinciServerConstants;
+import maqetta.core.server.standalone.user.User;
+
 import org.davinci.server.user.IUser;
-import org.davinci.server.user.Person;
-import org.davinci.server.user.User;
+import org.davinci.server.user.IPerson;
+import org.maqetta.server.IDavinciServerConstants;
 
 public class Constants {
 	public static final String BUNDLE_ID = "davinci.review";
@@ -41,7 +42,7 @@ public class Constants {
 	public static final String LOCAL_INSTALL_USER_NAME = IDavinciServerConstants.LOCAL_INSTALL_USER;
 	static {
 		LOCAL_INSTALL_USER = 
-			 new User(new Person() {
+			 new User(new IPerson() {
 				public String getUserName() {
 					return LOCAL_INSTALL_USER_NAME;
 				}

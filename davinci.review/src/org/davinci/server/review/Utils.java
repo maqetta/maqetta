@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import org.davinci.server.ServerManager;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.maqetta.server.ServerManager;
 
 public class Utils {
 	private static Properties templateProperties;

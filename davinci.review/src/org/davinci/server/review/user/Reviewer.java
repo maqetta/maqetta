@@ -1,8 +1,8 @@
 package org.davinci.server.review.user;
 
-import org.davinci.server.user.Person;
+import org.davinci.server.user.IPerson;
 
-public class Reviewer implements Person{
+public class Reviewer implements IPerson{
 	private String name;
 	private String email;
 	

@@ -1,5 +1,7 @@
 package org.davinci.server.user;
 
+import java.io.File;
+
 public interface IUserManager {
 
     public abstract boolean hasPermisions(IUser owner, IUser requester, String resource);
@@ -16,5 +18,5 @@ public interface IUserManager {
 
     public IUser getSingleUser();
 
-
+    public IUser newUser(IPerson p, File f );
 }

@@ -1,9 +1,9 @@
 package org.davinci.server.internal.command;
 
-import org.davinci.server.Command;
-import org.davinci.server.IDavinciServerConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.maqetta.server.Command;
+import org.maqetta.server.IDavinciServerConstants;
 
 public class CommandDescriptor {
 

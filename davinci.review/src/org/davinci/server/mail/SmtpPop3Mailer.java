@@ -24,9 +24,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.davinci.server.ServerManager;
 import org.davinci.server.review.Constants;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.maqetta.server.ServerManager;
 
 /**
  * This is an helper that send mail via smtp protocol. It is intended to be used by a single thread,

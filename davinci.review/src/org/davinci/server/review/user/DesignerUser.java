@@ -4,16 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.davinci.server.IVResource;
-import org.davinci.server.ServerManager;
-import org.davinci.server.VFile;
+import maqetta.core.server.standalone.VFile;
+
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewManager;
 import org.davinci.server.review.Version;
 import org.davinci.server.user.IUser;
-import org.davinci.server.user.User;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IVResource;
+import org.maqetta.server.ServerManager;
 
 public class DesignerUser{
 	private String name;
@@ -27,7 +28,8 @@ public class DesignerUser{
 
 	public DesignerUser(String name) {
 		this.name = name;
-		this.rawUser = new User(new Reviewer(name, ""), this.getUserDirectory());
+		this.rawUser = ServerManager.getServerManger().getUserManager().newUser(new Reviewer(name, ""), this.getUserDirectory());
+		
 	}
 	
 	public Version getVersion(String time) {

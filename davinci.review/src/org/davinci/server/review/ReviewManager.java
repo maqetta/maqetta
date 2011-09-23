@@ -26,13 +26,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.davinci.ajaxLibrary.LibInfo;
-import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.ServerManager;
 import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.ServerManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

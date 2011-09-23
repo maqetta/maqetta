@@ -9,9 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.Command;
-import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.ServerManager;
 import org.davinci.server.mail.SimpleMessage;
 import org.davinci.server.mail.SmtpPop3Mailer;
 import org.davinci.server.review.Comment;
@@ -25,6 +22,9 @@ import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
+import org.maqetta.server.Command;
+import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.ServerManager;
 
 public class AddComment extends Command {
 

@@ -5,9 +5,9 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.Command;
-import org.davinci.server.ServerManager;
 import org.davinci.server.user.IUser;
+import org.maqetta.server.Command;
+import org.maqetta.server.ServerManager;
 
 public class GetReviewUserInfo extends Command {
 

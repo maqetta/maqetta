@@ -12,5 +12,12 @@
    <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
    <!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/>-->
    <extension-point id="userManager" name="User Manager" schema="schema/userManager.exsd"/>
-   
+      <extension point="org.eclipse.equinox.http.registry.servlets">
+
+      <servlet
+            alias="/cmd"
+            class="org.maqetta.server.DavinciCommandServlet"
+            load-on-startup="true">
+      </servlet>
+   </extension>
 </plugin>

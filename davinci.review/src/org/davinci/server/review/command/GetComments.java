@@ -7,11 +7,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.Command;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.DavinciProject;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IUser;
+import org.maqetta.server.Command;
 
 public class GetComments extends Command {
 

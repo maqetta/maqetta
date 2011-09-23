@@ -9,13 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.ServerManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
 
 public class LibraryManager implements ILibraryManager {

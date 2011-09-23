@@ -1,12 +1,12 @@
 package davinci.joomla;
 
-import org.davinci.server.user.Person;
+import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IPersonManager;
 import org.davinci.server.user.UserException;
 
 public class JoomlaPersonManager implements IPersonManager {
 
-	static class PersonImpl implements Person {
+	static class PersonImpl implements IPerson {
 		String name;
 		String email;
 
@@ -31,16 +31,16 @@ public class JoomlaPersonManager implements IPersonManager {
 		}
 	}
 
-	public Person addPerson(String userName, String password, String email)
+	public IPerson addPerson(String userName, String password, String email)
 			throws UserException {
 		return new PersonImpl(userName, email); 
 	}
 
-	public Person getPerson(String userName) {
+	public IPerson getPerson(String userName) {
 		return new PersonImpl(userName);  
 	}
 
-	public boolean hasPermisions(Person owner, Person requester, String resource) {
+	public boolean hasPermisions(IPerson owner, IPerson requester, String resource) {
 		return false;  
 	}
 
@@ -48,11 +48,11 @@ public class JoomlaPersonManager implements IPersonManager {
 		return true;  
 	}
 
-	public Person login(String userName, String password) {
+	public IPerson login(String userName, String password) {
 		return new PersonImpl(userName);
 	}
 
-	public Person[] getPersons(String userName, int resultNumber, int start) {
+	public IPerson[] getPersons(String userName, int resultNumber, int start) {
 		// summary:
 		// Query persons. Support pagination.
 		return new PersonImpl[0]; // NOT IMPLEMENTED; returns empty array in case clients try to iterate

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.davinci.server.IDavinciServerConstants;
 import org.davinci.server.util.XMLFile;
+import org.maqetta.server.IDavinciServerConstants;
 import org.w3c.dom.Element;
 
 public class Links extends XMLFile {

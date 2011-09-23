@@ -16,6 +16,7 @@ Require-Bundle: org.apache.commons.fileupload;bundle-version="1.2.0",
  org.apache.commons.io;bundle-version="1.3.2",
  maqetta.core.client;bundle-version="1.0.0"
 Export-Package: org.davinci.ajaxLibrary,
- org.davinci.server,
+ org.davinci.server.internal.command,
  org.davinci.server.user,
- org.davinci.server.util
+ org.davinci.server.util,
+ org.maqetta.server

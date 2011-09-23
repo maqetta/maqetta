@@ -1,7 +1,8 @@
 package org.davinci.server.review;
 
-import org.davinci.server.DirectoryFilter;
-import org.davinci.server.Resource;
+import maqetta.core.server.standalone.DirectoryFilter;
+import maqetta.core.server.standalone.Resource;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

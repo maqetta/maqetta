@@ -10,11 +10,11 @@
    </extension>
    
       <extension point="maqetta.core.server.personManager">
-    	<personManager class="maqetta.core.server.standalone.PersonManagerImpl"/>
+    	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl"/>
    	  </extension>
 
       <extension point="maqetta.core.server.userManager">
-    	<userManager class="maqetta.core.server.standalone.UserManagerImpl"/>
+    	<userManager class="maqetta.core.server.standalone.servlets.UserManagerImpl"/>
    	  </extension>
 
    	  
@@ -23,14 +23,10 @@
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
             alias="/"
-            class="org.davinci.server.DavinciPageServlet"
+            class="maqetta.core.server.standalone.DavinciPageServlet"
             load-on-startup="true">
       </servlet>
-      <servlet
-            alias="/cmd"
-            class="org.davinci.server.DavinciCommandServlet"
-            load-on-startup="true">
-      </servlet>
+
    </extension>
    
 
@@ -45,57 +41,57 @@
       <extension
             point="maqetta.core.server.command">
          <command path="login" noLogin="true" 
-               class="org.davinci.server.internal.command.Login" />
+               class="maqetta.core.server.standalone.command.Login" />
          <command path="register" noLogin="true" 
-               class="org.davinci.server.internal.command.Register" />
+               class="maqetta.core.server.standalone.command.Register" />
          <command path="listFiles" 
-               class="org.davinci.server.internal.command.ListFiles" />
+               class="maqetta.core.server.standalone.command.ListFiles" />
          <command path="addFiles" 
-               class="org.davinci.server.internal.command.AddFiles" />
+               class="maqetta.core.server.standalone.command.AddFiles" />
          <command path="deleteResource" 
-               class="org.davinci.server.internal.command.DeleteResource" />
+               class="maqetta.core.server.standalone.command.DeleteResource" />
          <command path="createResource" 
-               class="org.davinci.server.internal.command.CreateResource" />
+               class="maqetta.core.server.standalone.command.CreateResource" />
          <command path="getPreferences" 
-               class="org.davinci.server.internal.command.GetPreferences" />
+               class="maqetta.core.server.standalone.command.GetPreferences" />
          <command path="setPreferences"  isPut="true"
-               class="org.davinci.server.internal.command.SetPreferences" />
+               class="maqetta.core.server.standalone.command.SetPreferences" />
          <command path="getWorkbenchState" 
-               class="org.davinci.server.internal.command.GetWorkbenchState" />
+               class="maqetta.core.server.standalone.command.GetWorkbenchState" />
          <command path="setWorkbenchState"  isPut="true"
-               class="org.davinci.server.internal.command.SetWorkbenchState" />
+               class="maqetta.core.server.standalone.command.SetWorkbenchState" />
          <command path="removeWorkingCopy" 
-               class="org.davinci.server.internal.command.RemoveWorkingCopy" />
+               class="maqetta.core.server.standalone.command.RemoveWorkingCopy" />
          <command path="logoff" 
-               class="org.davinci.server.internal.command.LogOff" />
+               class="maqetta.core.server.standalone.command.LogOff" />
          <command path="download" 
-               class="org.davinci.server.internal.command.Download" />
+               class="maqetta.core.server.standalone.command.Download" />
          <command path="findResource" 
-               class="org.davinci.server.internal.command.FindResource" />
+               class="maqetta.core.server.standalone.command.FindResource" />
          <command path="getPlugins" 
-               class="org.davinci.server.internal.command.GetPlugins" />
+               class="maqetta.core.server.standalone.command.GetPlugins" />
           <command path="getLibRoots" 
-               class="org.davinci.server.internal.command.GetLibRoots" /> 
+               class="maqetta.core.server.standalone.command.GetLibRoots" /> 
           <command path="listLibs" 
-               class="org.davinci.server.internal.command.ListLibs" />   
+               class="maqetta.core.server.standalone.command.ListLibs" />   
           <command path="getUserLibs" 
-               class="org.davinci.server.internal.command.GetUserLibs" />   
+               class="maqetta.core.server.standalone.command.GetUserLibs" />   
           <command path="getLibMetadata" 
-               class="org.davinci.server.internal.command.GetLibMetadata" />  
+               class="maqetta.core.server.standalone.command.GetLibMetadata" />  
           <command path="modifyLib" 
-               class="org.davinci.server.internal.command.ModifyLib" /> 
+               class="maqetta.core.server.standalone.command.ModifyLib" /> 
           <command path="getMetaRoot" 
-               class="org.davinci.server.internal.command.GetMetaRoot" />   
+               class="maqetta.core.server.standalone.command.GetMetaRoot" />   
            <command path="copy" 
-               class="org.davinci.server.internal.command.Copy" /> 
+               class="maqetta.core.server.standalone.command.Copy" /> 
            <command path="createProject" 
-               class="org.davinci.server.internal.command.CreateProject" />         
+               class="maqetta.core.server.standalone.command.CreateProject" />         
            <command path="rename" 
-               class="org.davinci.server.internal.command.Rename" />         
+               class="maqetta.core.server.standalone.command.Rename" />         
            <command path="tryIt" noLogin="true"
-               class="org.davinci.server.internal.command.TryIt" />         
+               class="maqetta.core.server.standalone.command.TryIt" />         
            <command path="removeUser" noLogin="true"
-               class="org.davinci.server.internal.command.RemoveUser" />         
+               class="maqetta.core.server.standalone.command.RemoveUser" />         
                
       </extension>
 

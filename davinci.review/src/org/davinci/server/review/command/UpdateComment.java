@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.Command;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.DavinciProject;
@@ -18,6 +17,7 @@ import org.davinci.server.review.Version;
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.DesignerUser;
 import org.davinci.server.user.IUser;
+import org.maqetta.server.Command;
 
 public class UpdateComment extends Command {
 	boolean isUpdateStatus;

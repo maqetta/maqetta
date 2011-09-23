@@ -8,14 +8,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.DavinciPageServlet;
-import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.IVResource;
-import org.davinci.server.VURL;
+import maqetta.core.server.standalone.DavinciPageServlet;
+import maqetta.core.server.standalone.VURL;
+
 import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IVResource;
 
 @SuppressWarnings("serial")
 public class DavinciReviewServlet extends DavinciPageServlet {

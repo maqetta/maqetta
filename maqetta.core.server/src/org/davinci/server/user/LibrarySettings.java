@@ -6,9 +6,9 @@ import java.util.Arrays;
 
 import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
-import org.davinci.server.IDavinciServerConstants;
-import org.davinci.server.ServerManager;
 import org.davinci.server.util.XMLFile;
+import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.ServerManager;
 import org.w3c.dom.Element;
 
 public class LibrarySettings extends XMLFile {
@@ -100,7 +100,7 @@ public class LibrarySettings extends XMLFile {
         return new String[] { link.getId(), link.getName(), link.getVersion(), link.getVirtualRoot() };
     }
 
-    protected void save() {
+    public void save() {
         this.save(libFile, Arrays.asList(this.libs));
     }
 }

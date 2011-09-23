@@ -7,7 +7,7 @@
 	</extension>
 	
 	
-	<extension point="maqetta.core.server.standalone.ajaxLibrary">
+	<extension point="maqetta.core.server.ajaxLibrary">
 	    <ajaxLibrary name="dojo" id="dojo" version="1.5">
 	        <libraryPath location="WebContent/dojo" name="/lib/dojo"></libraryPath>
 	        <metadata location="app/metadata/dojo/1.5" />

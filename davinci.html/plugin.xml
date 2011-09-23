@@ -8,7 +8,7 @@
       	<resource alias="/app/metadata/html/0.8" base-name="/WebContent/metadata"/>
       </extension>
       <extension
-            point="maqetta.core.server.standalone.ajaxLibrary" >
+            point="maqetta.core.server.ajaxLibrary" >
           <ajaxLibrary name="html" id="html" version="0.8">
             <libraryPath
                 location="WebContent/html"

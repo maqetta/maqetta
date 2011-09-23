@@ -7,7 +7,7 @@ public interface IDavinciServerConstants {
 	public static final String LOCAL_INSTALL = "maqetta.localInstall";
 	public static final String MAX_USERS = "maqetta.maxUsers";
 
-	public static final String BUNDLE_ID = "maqetta.core.server.standalone";
+	public static final String BUNDLE_ID = "maqetta.core.server";
 
 	public static final String USER_LIST_FILE = "users.xml";
 

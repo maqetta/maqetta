@@ -25,7 +25,6 @@
    <vm>
    </vm>
 
-
    <plugins>
       <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.html"/>
@@ -35,6 +34,7 @@
       <plugin id="davinci.yui_2_6_0"/>
       <plugin id="javax.servlet"/>
       <plugin id="maqetta.core.client"/>
+      <plugin id="maqetta.core.server"/>
       <plugin id="maqetta.core.server.standalone"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>

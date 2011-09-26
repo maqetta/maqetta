@@ -1669,45 +1669,21 @@ dojo.declare("davinci.ve.Context", null, {
     },
 
     _parse: function(source){
-        var _getValue = function(source, index){
-            if(!source){
-                return undefined;
-            }
+        var data = {metas: [], scripts: [], modules: [], styleSheets: []},
+            htmlElement = source.getDocumentElement(),
+            head = htmlElement.getChildElement("head"),
+            bodyElement = htmlElement.getChildElement("body");
 
-            var quotechar = "\""; // first look for double-quote
-            var begin = source.indexOf(quotechar, index);
-            if(begin < 0){
-                quotechar = "\'"; // then look for single-quote
-                begin = source.indexOf(quotechar, index);
-            }
-            if(begin < 0){
-                return undefined;
-            }
-            begin++;
-            var end = source.indexOf(quotechar, begin); 
-            if(end < 0){
-                return undefined;
-            }
-            return source.substring(begin, end);
-        };
-
-        var data = {metas: [], scripts: [], modules: [], styleSheets: []};
-        var htmlElement=source.getDocumentElement();
-        var head=htmlElement.getChildElement("head");
-        var bodyElement=htmlElement.getChildElement("body");
-        this._uniqueIDs={};
-        var self=this;
+        this._uniqueIDs = {};
         if (bodyElement)
         {
-            bodyElement.visit({ visit: function(element){
-                if (element.elementType=="HTMLElement" && element!=bodyElement)
-                {
-                    self.getUniqueID(element);
+            bodyElement.visit({ visit: dojo.hitch(this, function(element) {
+                if (element.elementType == "HTMLElement" && element != bodyElement) {
+                    this.getUniqueID(element);
                 }
-            }});
-            var classAttr=bodyElement.getAttribute("class");
-            if (classAttr)
-            {
+            })});
+            var classAttr = bodyElement.getAttribute("class");
+            if (classAttr) {
                 data.bodyClasses = classAttr;
                 /*
                 var classes =classAttr.split(' ');
@@ -1719,48 +1695,38 @@ dojo.declare("davinci.ve.Context", null, {
                 });
                 */
             }
-            data.style=bodyElement.getAttribute("style");
-            data.content=bodyElement.getElementText({includeNoPersist:true});
-            var states=bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
+            data.style = bodyElement.getAttribute("style");
+            data.content = bodyElement.getElementText({includeNoPersist:true});
+            var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
             davinci.ve.states.store(data, states);
-            var flowLayout =bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE); // wdr flow
-            var layout = true;
-            if (flowLayout && flowLayout === 'false'){
-                layout = false;
-            }
-            this.setPreference("flowLayout",layout); // wdr flow
 
+            this.setPreference("flowLayout", 
+                    bodyElement.getAttribute(davinci.preference_layout_ATTRIBUTE) !== 'false');
         }
-
+        
         var titleElement=head.getChildElement("title");
         if (titleElement){
             data.title=titleElement.getElementText();
         }
-
+        
         var scriptTags=head.getChildElements("script");
         dojo.forEach(scriptTags, function (scriptTag){
             var value=scriptTag.getAttribute("src");
-            if (value)
+            if (value) {
                 data.scripts.push(value);
+            }
             var text=scriptTag.getElementText();
-            if (text.length>0)
-            {
-                var func = text.indexOf("dojo" + ".require(");
-                while(func >= 0){
-                    value =  _getValue(text, func + 13);
-                    data.modules.push(value);
-                    var nl = text.indexOf("\n", func + 13);
-                    if(nl > 0){
-                        text = text.substring(0, func) + text.substring(nl + 1); // remove line
-                        func = text.indexOf("dojo" + ".require(", func);
-                    }else{
-                        text = text.substring(0, func); // remove rest
-                        break;
-                    }
-                }
+            if (text.length) {
+                // Look for old-style dojo.require dependencies
+                text.replace(/dojo\.require\(["']([^'"]+)["']\)/g, function(match, module) {
+                    data.modules.push(module);
+                });
+
+                //TODO: grab AMD dependencies
+
                 data.scriptAdditions=scriptTag;
             }
-
+            
             // XXX Bug 7499 - (HACK) See comment in addHeaderScript()
             if (/.*(\/)*maqetta\/States.js$/.test(value)) {
                 this._statesJsScriptTag = scriptTag;
@@ -1776,10 +1742,11 @@ dojo.declare("davinci.ve.Context", null, {
                     data.styleSheets.push(styleRule.url);
             }); 
         });
-
+        
         return data;
 
     },
+      
     onKeyDown: function(event){
         if(this._activeTool && this._activeTool.onKeyDown){
             this._activeTool.onKeyDown(event);

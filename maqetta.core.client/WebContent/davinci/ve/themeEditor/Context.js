@@ -35,11 +35,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	
 	_setSourceData: function(data){
 		
-		var frame = this.frameNode;
-		var loading = dojo.create("div", null, frame.parentNode, "first");
-		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
-		dojo.addClass(loading, 'loading');
-
 		// Create phony Dialog and Tooltip widgets with the appearance (template) of the Dijit widgets, but without the behavior.
 		//.We need to do this because the stock widgets don't appear when placed on the page without user interaction, and they have
 		// side effects which would interfere with operation of the Theme Editor.
@@ -143,8 +138,6 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 			// set the style on all widgets and subwidgets that support the state
 			//this._themeEditor._theme.setWidgetStyleValues(widgets[i],this._currentState);
 		}
-		
-		loading.parentNode.removeChild(loading);
 	},
 	
 	attach: function(widget){

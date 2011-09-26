@@ -2,9 +2,14 @@ package org.davinci.server.user;
 
 import java.io.File;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public interface IUserManager {
 
     public abstract boolean hasPermisions(IUser owner, IUser requester, String resource);
+    
+    public IUser authenticate(HttpServletRequest req, HttpServletResponse resp);
 
     public abstract IUser getUser(String userName);
 

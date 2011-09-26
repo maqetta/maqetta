@@ -14,6 +14,7 @@ import org.davinci.server.internal.IRegistryListener;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.Extensions;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
@@ -159,7 +160,7 @@ public class LibraryManager implements ILibraryManager {
     }
 
     void initialize() {
-        List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_AJAXLIBRARY,
+        List extensions = Extensions.getExtensions(IDavinciServerConstants.EXTENSION_POINT_AJAXLIBRARY,
                 IDavinciServerConstants.EP_TAG_AJAXLIBRARY);
         this.installedLibraries = new Library[extensions.size()];
         int count = -1;

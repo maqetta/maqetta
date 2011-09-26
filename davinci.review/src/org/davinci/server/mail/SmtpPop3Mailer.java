@@ -26,6 +26,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.davinci.server.review.Constants;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.maqetta.server.Extensions;
 import org.maqetta.server.ServerManager;
 
 /**
@@ -51,7 +52,7 @@ public class SmtpPop3Mailer {
 		
 		if(defaultMailServer == null || "".equals(defaultMailServer)){
 			// Read it from the contributor bundle
-			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
+			IConfigurationElement mailConfig = Extensions.getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
 			if(mailConfig != null){
 				defaultMailServer = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
 				adminName = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);

@@ -27,6 +27,7 @@ import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.Extensions;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IServerManager;
 import org.maqetta.server.IVResource;
@@ -47,7 +48,7 @@ public class DavinciPageServlet extends HttpServlet {
     protected ILibraryManager    libraryManager;
 
     public void initialize() {
-        serverManager = ServerManager.createServerManger(getServletConfig());
+        serverManager = ServerManager.getServerManger();
         userManager = serverManager.getUserManager();
         libraryManager = serverManager.getLibraryManager();
     }
@@ -136,7 +137,7 @@ public class DavinciPageServlet extends HttpServlet {
      */
     private  URL getPageExtensionPath(String extensionPoint, String extensionName){
     	
-    	  List extensions = serverManager.getExtensions(extensionPoint, extensionName);
+    	  List extensions = Extensions.getExtensions(extensionPoint, extensionName);
     	  IConfigurationElement winner = null;
     	  int highest = -100000;
     	  for(int i=0;i<extensions.size();i++){

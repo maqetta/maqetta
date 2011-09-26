@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.maqetta.server.Extensions;
 import org.maqetta.server.ServerManager;
 
 public class Utils {
@@ -39,7 +40,7 @@ public class Utils {
 
 		notificationId = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
 		if(notificationId == null || "".equals(notificationId)){
-			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
+			IConfigurationElement mailConfig = Extensions.getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
 			if(mailConfig != null){
 				notificationId = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
 			}

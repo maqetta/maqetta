@@ -3,6 +3,9 @@ package maqetta.core.server.standalone.servlets;
 import java.io.File;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import maqetta.core.server.standalone.VResourceUtils;
 import maqetta.core.server.standalone.user.User;
 import org.davinci.server.user.UserException;
@@ -14,6 +17,7 @@ import org.davinci.server.user.IPerson;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IServerManager;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 
@@ -30,7 +34,7 @@ public class UserManagerImpl implements IUserManager {
 
     public UserManagerImpl() {
     
-        ServerManager serverManger = ServerManager.getServerManger();
+        IServerManager serverManger = ServerManager.getServerManger();
         this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
    
         this.usersCount = this.baseDirectory.list().length;
@@ -197,6 +201,18 @@ public class UserManagerImpl implements IUserManager {
        return user;
 
     }
+
+	public IUser authenticate(HttpServletRequest req, HttpServletResponse resp) {
+		 IUser user =  (IUser)req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+	        if (user == null) {
+	            if (ServerManager.LOCAL_INSTALL) {
+	                user = ServerManager.getServerManger().getUserManager().getSingleUser();
+	                req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
+	            } 
+
+	        }
+	        return null;
+	}
 
 
 

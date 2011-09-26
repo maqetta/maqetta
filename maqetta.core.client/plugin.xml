@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension
+        point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext id="maqetta">
+ 		  <resource-mapping path="/" />
+	      <!--<mime-mapping extension="manifest" mime-type="text/cache-manifest" />-->
+      </httpcontext>
+   </extension>
       <extension
-           id="testResource"
+           id="maqettaResources"
            point="org.eclipse.equinox.http.registry.resources">
         <resource
-              alias="/app/davinci"
-              base-name="/WebContent/davinci"
+        	  httpcontextId="maqetta"
+              alias="/app"
+              bundle="maqetta.core.client"
+              base-name="/WebContent"
               />
         <resource
-              alias="/app/docs"
-              base-name="/WebContent/docs"
+              httpcontextId="maqetta"
+              alias="/maqetta"
+              bundle="maqetta.core.client"
+              base-name="/WebContent/pagedesigner.html"
               />
-        <resource
-              alias="/app/dojo"
-              base-name="/WebContent/dojo"
-              />
-        <resource
-              alias="/app/dojox"
-              base-name="/WebContent/dojox"
-              />
-        <resource
-              alias="/app/dijit"
-              base-name="/WebContent/dijit"
-              />
-        <resource
-              alias="/app/eclipse"
-              base-name="/WebContent/eclipse"
-              />
-          
-        <resource
-              alias="/app/preview"
-              base-name="/WebContent/preview"
-              />
+        
+
         <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
         
         <resource
+              httpcontextId="maqetta"
               alias="/app/metadata/maqetta/core/0.3"
+               bundle="maqetta.core.client"
               base-name="/WebContent/project"
               />
        

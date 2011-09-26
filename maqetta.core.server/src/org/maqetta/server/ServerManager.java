@@ -30,13 +30,15 @@ public class ServerManager implements IServerManager {
 
     IUserManager           userManager;
 
-    IExtensionRegistry    registry;
+    static IExtensionRegistry    registry;
     IPersonManager personManager;
     ILibraryManager        libraryManager;
 
-    public ServletConfig  servletConfig;
+   
 
 	private File userDir;
+
+	private IMaqettaConfig config;
 
     public static boolean DEBUG_IO_TO_CONSOLE;
     public static boolean LOCAL_INSTALL;
@@ -49,14 +51,20 @@ public class ServerManager implements IServerManager {
         } else {
             ServerManager.LOCAL_INSTALL = false;
         }
-
-        String base = System.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
+        String base = null;
+        try{
+        	base = System.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
+        }catch(Exception e){
+        	// system property not defined.
+        	if(ServerManager.DEBUG_IO_TO_CONSOLE)
+        		System.out.println(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY + " note defined!  Using system temp location");
+        }
         ServerManager.IN_WAR = base == null;
 
     }
 
-    ServerManager(ServletConfig servletConfig) {
-        this.servletConfig = servletConfig;
+    ServerManager() {
+       
         String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
         if (shouldDebug != null && "true".equals(shouldDebug)) {
             ServerManager.DEBUG_IO_TO_CONSOLE = Boolean.parseBoolean(shouldDebug);
@@ -71,42 +79,30 @@ public class ServerManager implements IServerManager {
         });
     }
 
-    public static ServerManager getServerManger() {
-        return ServerManager.theServerManager;
+    public static IServerManager getServerManger() {
+        if(theServerManager==null)
+        	theServerManager = new ServerManager();
+        return theServerManager;
     }
 
-    public static IServerManager createServerManger(ServletConfig servletConfig) {
-        if (ServerManager.theServerManager == null) {
-            ServerManager.theServerManager = new ServerManager(servletConfig);
-        }
-        return ServerManager.theServerManager;
-    }
+
 
     /* (non-Javadoc)
 	 * @see org.davinci.server.IServerManager#getDavinciProperty(java.lang.String)
 	 */
     public String getDavinciProperty(String propertyName) {
-        String property = null;
-        if (ServerManager.IN_WAR) {
-            try {
-                Context env = (Context) new InitialContext().lookup("java:comp/env");
-                property = (String) env.lookup(propertyName);
-            } catch (NameNotFoundException e) {
-                // ignore
-            } catch (NamingException e) {
-                e.printStackTrace();
-            }
-
-            // String property
-            // =this.servletConfig.getServletContext().getInitParameter(propertyName);
-            System.out.println("servlet parm '" + propertyName + "' is : " + property);
-
-        }
-        if (property == null) {
-            property = System.getProperty(propertyName);
-            System.out.println("servlet parm '" + propertyName + "' is : " + property);
-        }
-        return property;
+    	if (config == null) {
+	        IConfigurationElement libraryElement = Extensions.getExtension(IDavinciServerConstants.EXTENSION_POINT_MAQETTACONFIG, IDavinciServerConstants.EP_TAG_MAQETTACONFIG);
+		        if (libraryElement != null) {
+		        try {
+		           this.config = (IMaqettaConfig) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
+		        } catch (CoreException e) {
+		           e.printStackTrace();
+		        }
+	        }
+ 	 }
+     
+     return config.getProperty(propertyName);
     }
 
     /* (non-Javadoc)
@@ -114,7 +110,7 @@ public class ServerManager implements IServerManager {
 	 */
     public IUserManager getUserManager() {
    	 if (userManager == null) {
-	        IConfigurationElement libraryElement = ServerManager.getServerManger().getExtension(IDavinciServerConstants.EXTENSION_POINT_USER_MANAGER, IDavinciServerConstants.EP_TAG_USER_MANAGER);
+	        IConfigurationElement libraryElement = Extensions.getExtension(IDavinciServerConstants.EXTENSION_POINT_USER_MANAGER, IDavinciServerConstants.EP_TAG_USER_MANAGER);
 		        if (libraryElement != null) {
 		        try {
 		           this.userManager = (IUserManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
@@ -130,57 +126,7 @@ public class ServerManager implements IServerManager {
     /* (non-Javadoc)
 	 * @see org.davinci.server.IServerManager#getExtensions(java.lang.String, java.lang.String)
 	 */
-    public List getExtensions(String extensionPoint, String elementTag) {
-        ArrayList list = new ArrayList();
-        IExtension[] extensions = this.getExtensions(extensionPoint);
-        for (int i = 0; i < extensions.length; i++) {
-            IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-            for (int j = 0; j < elements.length; j++) {
-                if (elements[j].getName().equals(elementTag)) {
-                    list.add(elements[j]);
-                }
-            }
-        }
-
-        return list;
-    }
-
-    /* (non-Javadoc)
-	 * @see org.davinci.server.IServerManager#getExtension(java.lang.String, java.lang.String)
-	 */
-    public IConfigurationElement getExtension(String extensionPoint, String elementTag) {
-        IExtension[] extensions = this.getExtensions(extensionPoint);
-        for (int i = 0; i < extensions.length; i++) {
-            IConfigurationElement[] elements = extensions[i].getConfigurationElements();
-            for (int j = 0; j < elements.length; j++) {
-                if (elements[j].getName().equals(elementTag)) {
-                    return elements[j];
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private static final IExtension[] EMPTY_EXTENSIONS = {};
-
-    /* (non-Javadoc)
-	 * @see org.davinci.server.IServerManager#getExtensions(java.lang.String)
-	 */
-    public IExtension[] getExtensions(String extensionPoint) {
-        if (this.registry == null) {
-            this.registry = Activator.getActivator().getRegistry();
-        }
-        if (this.registry != null) {
-            IExtensionPoint point = this.registry.getExtensionPoint(IDavinciServerConstants.BUNDLE_ID, extensionPoint);
-
-            if (point != null) {
-                return point.getExtensions();
-            }
-        }
-        return ServerManager.EMPTY_EXTENSIONS;
-    }
-
+   
     /* (non-Javadoc)
 	 * @see org.davinci.server.IServerManager#getLibraryManager()
 	 */
@@ -205,7 +151,7 @@ public class ServerManager implements IServerManager {
     public IPersonManager getPersonManager() {
        
     	if(this.personManager==null){
-            IConfigurationElement libraryElement = ServerManager.getServerManger().getExtension(IDavinciServerConstants.EXTENSION_POINT_PERSON_MANAGER,
+            IConfigurationElement libraryElement = Extensions.getExtension(IDavinciServerConstants.EXTENSION_POINT_PERSON_MANAGER,
                     IDavinciServerConstants.EP_TAG_PERSON_MANAGER);
             if (libraryElement != null) {
                 try {
@@ -232,9 +178,7 @@ public class ServerManager implements IServerManager {
 	                 System.out.println("dir doesnt exist");
 	             }
 	         }
-	         if (userDir == null) {
-	             userDir = (File) servletConfig.getServletContext().getAttribute("javax.servlet.context.tempdir");
-	         }
+
 	         if (userDir == null) {
 	             userDir = new File(".");
 	         }

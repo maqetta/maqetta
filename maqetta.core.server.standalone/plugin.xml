@@ -9,6 +9,15 @@
       </httpcontext>
    </extension>
    
+   	<extension id="maqettaStandalone" point="org.eclipse.equinox.http.registry.resources">
+            <resource
+         	httpcontextId="maqetta.core.client.maqetta"
+              alias="/welcome"
+            
+              base-name="/WebContent/welcome.html"
+              />
+      </extension>
+   
       <extension point="maqetta.core.server.personManager">
     	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl"/>
    	  </extension>
@@ -16,8 +25,11 @@
       <extension point="maqetta.core.server.userManager">
     	<userManager class="maqetta.core.server.standalone.servlets.UserManagerImpl"/>
    	  </extension>
-
    	  
+     <extension point="maqetta.core.server.maqettaConfig">
+    	<maqettaConfig class="maqetta.core.server.standalone.MaqettaConfig"/>
+   	  </extension>
+
    
    <extension
          point="org.eclipse.equinox.http.registry.servlets">

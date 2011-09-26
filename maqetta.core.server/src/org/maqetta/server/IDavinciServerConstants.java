@@ -11,7 +11,7 @@ public interface IDavinciServerConstants {
 
 	public static final String USER_LIST_FILE = "users.xml";
 
-	public static final String SESSION_USER = "DAVINCI.USER";
+	public static final String SESSION_USER = "user";
 	public static final String LOGGING_IN_USER = "DAVINCI.LOGGIN.IN.USER";
 	public static final String REDIRECT_TO = "DAVINCI.REDIRECT_TO";
 
@@ -63,7 +63,8 @@ public interface IDavinciServerConstants {
 	public static final String EP_TAG_LIBRARY_MANAGER = "libraryManager";
 	public static final String EXTENSION_POINT_USER_MANAGER = "userManager";
 	public static final String EP_TAG_USER_MANAGER = "userManager";
-	
+	public static final String EXTENSION_POINT_MAQETTACONFIG = "maqettaConfig";
+	public static final String EP_TAG_MAQETTACONFIG = "maqettaConfig";
 	
 	public static final String EP_ATTR_CLASS = "class";
 

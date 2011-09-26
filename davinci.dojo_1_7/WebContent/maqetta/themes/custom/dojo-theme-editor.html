@@ -5,16 +5,16 @@
 <title>Theme Editor</title>
 
 
-<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" djConfig="parseOnLoad: true, mblUserAgent: 'Android' "></script>
 <script type="text/javascript">
 dojo.require('dojox.mobile');
 dojo.require('dojox.mobile.parser');
-dojo.require('dojox.mobile.deviceTheme');
-dojo.require('dojox.mobile.compat');
-</script>
 
+</script>
+<link href="/maqetta/app/static/lib/dojo/1.7/dojox/mobile/themes/custome/custom.css" type="text/css" rel="stylesheet" />
+<link href="/maqetta/app/static/lib/dojo/1.7/dojox/mobile/themes/iphone/custom-compat.css" type="text/css" rel="stylesheet" />
 </head>
-<body class="custom_mobile">
+<body class="custom">
 
  <style>
   body {
@@ -70,22 +70,91 @@ dojo.require('dojox.mobile.compat');
  <div class="theming-group">
   <div class="theming-group-title">
 			Global Styling
-		</div>
-  <div class="theming-group-widgets">
-   <div class="widget-sample">
-
    </div>
-   <div class="globalWidget">
-  
-    <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
-    View
-    </div>
-  		<h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
-  			
+   
+   <div class="globalWidget" >
+			
+	<table style="width: 911px; height: 173px;">
+	 <tbody>
+		 <tr>
+		   <td>
+			<div style="width:100px; height:100px;" >
+					<div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+					View
+					</div>
+				</div>
+			</td>
+		   <td> 
+			
+			</td>
+		 </tr>
+		
+	   </tbody>
+	</table>
    </div>
+    
   </div>
- </div>
- 
+	<div class="theming-group">
+		<div class="theming-group-title">
+			Primitive Widgets
+		</div>
+		<div class="theming-group-widgets">
+			<table role="presentation">
+				<tbody>
+					<tr valign="top">
+						<td style="width:150px">
+							<div class="widget-sample">
+								<button label="Button" dojoType="dojox.mobile.Button" class="dvThemeWidget"></button>
+								<button label="ToggleButton" dojoType="dojox.mobile.ToggleButton" class="dvThemeWidget"></button>
+								<div dojoType="dojox.mobile.Switch" class="dvThemeWidget"></div>
+							</div>
+							
+							
+							
+						</td>
+						<td style="width:150px">
+							<h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
+								<div dojoType="dojox.mobile.RoundRect"></div>
+
+						</td>
+						<td>
+							
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="theming-group">
+		<div class="theming-group-title">
+			Container Widgets
+		</div>
+		<div class="theming-group-widgets">
+			<table role="presentation">
+				<tbody>
+					<tr valign="top">
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+					</tr>
+					<tr>
+						<td>
+							
+						</td>
+						<td>
+			
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 </body>
 </html>

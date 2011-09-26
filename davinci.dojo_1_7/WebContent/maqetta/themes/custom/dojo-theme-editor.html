@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Theme Editor</title>
+
+
+<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+<script type="text/javascript">
+dojo.require('dojox.mobile');
+dojo.require('dojox.mobile.parser');
+dojo.require('dojox.mobile.deviceTheme');
+dojo.require('dojox.mobile.compat');
+</script>
+
+</head>
+<body class="custom_mobile">
+
+ <style>
+  body {
+    padding : 5px;
+    margin : 0;
+}
+
+  .theming-group {
+    padding : 0;
+    padding-top : .3em;
+    padding-bottom : 0;
+    border-spacing : 0;
+}
+
+  .theming-group-title {
+    color : #333;
+    font-family : cursive;
+    background-color : #aaa;
+    padding-left : .3em;
+}
+
+  .theming-group-widgets {
+    padding : 0;
+}
+
+  -widgets#other {
+    width : 40em;
+}
+
+  #SampleContentPane {
+    width : 200px;
+    overflow : hidden;
+}
+
+  #SampleAccordionPane {
+    width : 200px;
+    height : 150px;
+}
+
+  #SampleTabContainer {
+    width : 175px;
+    height : 150px;
+}
+
+  .widget-sample {
+    margin-left : .3em;
+    margin-right : .3em;
+    margin-top : .3em;
+    margin-bottom : .1em;
+}
+
+ </style>
+ <div class="theming-group">
+  <div class="theming-group-title">
+			Global Styling
+		</div>
+  <div class="theming-group-widgets">
+   <div class="widget-sample">
+
+   </div>
+   <div class="globalWidget">
+  
+    <div id="View_0" dojoType="dojox.mobile.View" class="dvThemeWidget" style="height: 100%;" selected="true">
+    View
+    </div>
+  		<h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
+  			
+   </div>
+  </div>
+ </div>
+ 
+
+</body>
+</html>

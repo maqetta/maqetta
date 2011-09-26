@@ -700,7 +700,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		
 		dojo.connect(frame, "onmousedown", this, "editFrameOnMouseDown");
 		var containerNode = this.getContext().getContainerNode(); // click in white space
-		dojo.connect(containerNode, "onmousedown", this, "canvasOnMouseDown"),// click in white space
+		dojo.connect(containerNode, "onmousedown", this, "canvasOnMouseDown");// click in white space
 		frame.className = className;
 		frame.id = id + widget.id;
 		frame.style.position = "absolute";
@@ -716,6 +716,7 @@ dojo.declare("davinci.ve.themeEditor.ThemeEditor", [davinci.ui.ModelEditor,davin
 		frame._widget = widget;
 		domNode.parentNode.appendChild(frame);
 	},
+	
 	
 	canvasOnMouseDown: function(event){
 		//console.log('ThemeEditor:canvasOnMouseDown');

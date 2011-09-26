@@ -100,6 +100,20 @@ dojo.declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 						});
 						dojo.publish("/davinci/states/state/changed", [{widget:'$all', newState:"Normal"}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////				
+					// FIXME Add helper here
+					  // dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
+			        // monitoring of which stylesheets get loaded for a given theme
+/*					    debugger;
+					    var dm = this.context.getDojo().getObject("dojox.mobile", true);
+
+			            // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
+			            this.context.getDojo()["require"]("dojox.mobile.compat");
+			            dm.themeMap.unshift(["mobile2","android",["mobile2.css"]]);
+		                dm.loadDeviceTheme('mobile2');*/
+
+
+					//////////////////////////////////////////////////////////////////////////////////////
 					this.initialSet=true;
 
 					var ldojoVersion = this.context.getDojo().version.major +'.'+ this.context.getDojo().version.minor;

@@ -123,6 +123,7 @@ dojo.declare("davinci.ve.themeEditor.SelectTool", davinci.ve.themeEditor._Tool, 
 			// this._context.select(widget, ctrlKey); // CTRL to add 
 			widget.subwidget = null; // the widget was just selected so ensure the subwidget is null
 			this._context.select(widget, false); // at least for V0.6 theme editor does not support multi select
+			event.stopPropagation(); // wdr mobile
 		}
 	},
 

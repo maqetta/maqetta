@@ -734,7 +734,7 @@ dojo.declare("davinci.ve.Context", null, {
 					dojo.mixin(callbackData, e);
 				}
 
-				context._continueLoading(data, callback, callbackData);
+				context._continueLoading(data, callback, callbackData, scope);
 			};
 
 			doc.open();
@@ -767,11 +767,11 @@ dojo.declare("davinci.ve.Context", null, {
 			};*/
 
 		}else{
-			this._continueLoading(data, callback, this);
+			this._continueLoading(data, callback, this, scope);
 		}
 	},
 
-	_continueLoading: function(data, callback, callbackData) {
+	_continueLoading: function(data, callback, callbackData, scope) {
 		var loading;
 		try {
 			loading = dojo.create("div",

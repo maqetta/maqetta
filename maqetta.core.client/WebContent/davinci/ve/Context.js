@@ -62,6 +62,24 @@ dojo.declare("davinci.ve.Context", null, {
 
             // add before advice to clear out css file list before loading a new theme
             dm.loadDeviceTheme = dojo.hitch(this, function(device) {
+                var htmlElement = this._srcDocument.getDocumentElement();
+                var head = htmlElement.getChildElement("head");
+                var scriptTags=head.getChildElements("script");
+                dojo.forEach(scriptTags, function (scriptTag){
+                    var text=scriptTag.getElementText();
+                    if (text.length) {
+                        // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
+                        var start = text.indexOf('dojox.mobile.themeMap');
+                        if (start > 0){
+                            start = text.indexOf('=', start);
+                            var stop = text.indexOf(';', start);
+                            if (stop > start){
+                                var themeMap = dojo.fromJson(text.substring(start+1,stop));
+                                dm.themeMap = themeMap;
+                            }
+                        }
+                     }
+                }, this);
                 this._dojoxMobileCss = [];
                 loadDeviceTheme(device);
             });

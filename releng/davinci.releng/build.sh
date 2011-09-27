@@ -141,9 +141,10 @@ git checkout ${equinoxBranch}
 # Note: Many scripts use relative directory references making
 #       running the build from this directory *imperative*.
 #
-
+mkdir ${MAQETTA_BUILD_DIR}/plugins
+cd ${MAQETTA_BUILD_DIR}/plugins
+cp -R -f /Users/childsb/dev/ext-build/* . 
 cd ${MAQETTA_BUILD_DIR}
-
 #
 # Run the Ant buildAll script from the davinci.releng project.
 #

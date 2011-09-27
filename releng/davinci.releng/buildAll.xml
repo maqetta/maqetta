@@ -242,7 +242,7 @@
         <defaultexcludes remove="**/.git/**"/>
 
         <delete includeemptydirs="true">
-            <fileset dir="${buildDirectory}" includes="plugins/,${dojo.cache.directory}, features/,result/,*.properties,*.xml"/>
+            <fileset dir="${buildDirectory}" includes="${dojo.cache.directory}, features/,result/,*.properties,*.xml"/>
         </delete>
     	
     	<delete includeemptydirs="true" quiet="true" failonerror="false">

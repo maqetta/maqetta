@@ -1,7 +1,5 @@
-dojo.provide("davinci.libraries.dojo.dijit.layout.ContentPaneHelper");
-
-dojo.declare("davinci.libraries.dojo.dijit.layout.ContentPaneHelper", null, {
-
+define(function() {
+	return function(){
 		//TODO: this doesnt seem necessary, and seems to cause problems		
 //		destroyWidget: function(/*Widget*/ widget){
 //			// summary:
@@ -19,34 +17,32 @@ dojo.declare("davinci.libraries.dojo.dijit.layout.ContentPaneHelper", null, {
 //			});
 //			widget.destroy();
 //		},
-		create: function(widget, srcElement){
+		this.create = function(widget, srcElement){
 			//
 			// RadioGroupSlide in particular needs the contentPanes to have a background for the sliding to look right
 			//
 			var parent = widget.getParent();
 			if (parent && (parent.type == "dojox.layout.RadioGroup" || parent.type == "dojox.layout.RadioGroupSlide" || parent.type == "dojox.layout.RadioGroupFade")){
 				if (!widget.getStyle().match("background")){
-					var styleArray = [];
-					styleArray['background'] = "white";
-					widget.setStyleValues(styleArray);
+					widget.setStyleValues({background: "white"});
 				}
 			}
-		},
+		};
 
-		getContainerNode: function(/*Widget*/ widget){
+		this.getContainerNode = function(/*Widget*/ widget){
 			// summary:
 			//		Overriden to only return the container node if this is not a href ContentPane
 			//
 			if(!widget){
 				return undefined;
 			}
-			widget=widget.dijitWidget;
+			widget = widget.dijitWidget;
 
 			// FIXME: should use davinci.ve.widget.getProperty(widget, "href") to get the href?
 			if(widget.href){
 				return undefined;
 			}
-			return (widget.containerNode || widget.domNode);
-		}
-
+			return widget.containerNode || widget.domNode;
+		};
+	};
 });

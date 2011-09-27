@@ -112,21 +112,22 @@ dojo.declare("davinci.ui.Download",   [dijit._Widget, dijit._Templated], {
 		/* get all sub files */
 		var list = [];
 		for(var i = 0;i<folder.children.length;i++){
-			list.push(folder.getPath());
+			list.push(folder.children[i].getPath());
 		}
 		return {'userFiles':list, 'userLibs': this._getLibs()};
 	},
 	
 	_rewriteUrls : function(){
-		
+	
 		var resources = this._getResources();
 
 		
 		//this._pages = davinci.resource.findResource("*.html", true, null, true);
 		
 		var pageBuilder = new davinci.ve.RebaseDownload(resources['userLibs']);
+		var allResources = [];
 		for(var i=0;i<resources['userFiles'].length;i++){
-			var allResources = null
+			
 			var resource = davinci.resource.findResource(resources['userFiles'][i]);
 			if(resource.elementType=="Folder"){
 				allResources = davinci.resource.findResource("*.html", true, resource, true);

@@ -86,7 +86,7 @@ dojo.declare("davinci.ve.commands.ResizeCommand", null, {
 		var parent = widget.getParent();
 		if(parent && parent.dijitWidget && parent.dijitWidget.isLayoutContainer){
 			parent.resize();
-		}else if(widget.dijitWidget && widget.dijitWidget.isLayoutContainer){
+		}else if(widget.resize){
 			widget.resize();
 		}
 		widget.renderWidget();

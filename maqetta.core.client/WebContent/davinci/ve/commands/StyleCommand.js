@@ -98,8 +98,8 @@ dojo.declare("davinci.ve.commands.StyleCommand", null, {
 			parent = widget.getParent();
 		if (/*widget.parent && widget.*/parent.dijitWidget){
 			this._refresh(/*widget.*/parent);
-		} else if (widget.dijitWidget && widget.dijitWidget.resize){
-			widget.dijitWidget.resize();
+		} else if (widget && widget.resize){
+			widget.resize();
 		}
 		
 	}

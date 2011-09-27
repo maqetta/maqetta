@@ -1,12 +1,14 @@
 define("davinci/ve/HTMLWidget", ["davinci/ve/_Widget"], function() {
 
 return dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
+
 	isHtmlWidget: true,
-	constructor: function (params,node)
-	{
-		this.type="html."+node.tagName.toLowerCase();
-		this.acceptsHTMLChildren=true;
+
+	constructor: function (params,node) {
+		this.type = "html."+node.tagName.toLowerCase();
+		this.acceptsHTMLChildren = true;
 	},
+
 	buildRendering: function() {
 //		if(this.srcNodeRef) {
 //			this.domNode = this.srcNodeRef;
@@ -29,11 +31,11 @@ return dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
 	},
 
 	_getChildrenData: function( options) {
-		var childrenData = [];
-		var childNodes = this.domNode.childNodes;
+		var childrenData = [],
+			childNodes = this.domNode.childNodes;
 		for(var i = 0; i < childNodes.length; i++) {
 			var n = childNodes[i];
-			var d = undefined;
+			var d;
 			switch(n.nodeType) {
 			case 1: // Element
 				var w = davinci.ve.widget.byNode(n);
@@ -63,9 +65,8 @@ return dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
 
 	setProperties: function(properties, modelOnly) {
 
-        modelOnly = modelOnly ? modelOnly : false; // default modelOnly to false
-
         var node = this.domNode;
+        modelOnly = modelOnly || false; // default modelOnly to false
 
 		for(var name in properties) {
 			if (name === 'style') { // needed for position absolute
@@ -74,7 +75,7 @@ return dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
 				if(!properties[name]) {
 					node.removeAttribute(name);
 				} else {
-				    if (!modelOnly ) {
+				    if (!modelOnly) {
 				        node[name] = properties[name];
 				    }
 		//			dojo.attr(node,name,properties[name]);
@@ -123,9 +124,19 @@ return dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
 		return dojo.map(dojo.filter(this.domNode.children, dvWidget), dvWidget);
 	},
 
+	// pass resize along to any child widgets who know how to resize... currently a dijit-only concept.
+	// should this method be defined on the _Widget base class?
+	resize: function() {
+		this.getChildren().forEach(function(widget){
+			if (widget.resize) {
+				widget.resize();
+			}
+		});
+	},
+
 	_attr: function (name,value) {
-		if (arguments.length>1) {
-			this.domNode[name]=value;
+		if (arguments.length > 1) {
+			this.domNode[name] = value;
 		} else {
 			return this.domNode[name];
 		}

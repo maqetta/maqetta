@@ -201,15 +201,15 @@ return dojo.declare("davinci.ve.DijitWidget", davinci.ve._Widget, {
 		}
 	},
 
-	_refresh: function(widget) {
+	_refresh: function(node) {
 		/* if the widget is a child of a dijitContainer widget
 		 * we may need to refresh the parent to make it all look correct in page editor
 		 */
-		var parentNode = widget.parentNode;
+		var parentNode = node.parentNode;
 		if (parentNode._dvWidget && parentNode._dvWidget.isDijitWidget) {
 			this._refresh(parentNode);
-		} else if (widget._dvWidget.isDijitWidget) {
-			widget._dvWidget.resize(); // this step may not be needed
+		} else if (node._dvWidget.resize) {
+			node._dvWidget.resize(); // this step may not be needed
 		}
 	},
 

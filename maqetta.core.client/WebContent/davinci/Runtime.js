@@ -4,7 +4,7 @@ dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 dojo.require("davinci.Workbench");
-dojo.require("davinci.commands.CommandStack")
+dojo.require("davinci.commands.CommandStack");
 dojo.require("davinci.ve.metadata");
 dojo.require("dojo.i18n");  
 dojo.requireLocalization("davinci", "webContent");

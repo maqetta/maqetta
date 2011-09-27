@@ -1,4 +1,8 @@
 dojo.provide("davinci.library");
+
+dojo.require("davinci.ve.themeEditor.metadata.metadata");
+dojo.require("davinci.ve.themeEditor.metadata.query");
+
 /*
  * 
  * hard coded libraries for now, should be generated/server based in future.

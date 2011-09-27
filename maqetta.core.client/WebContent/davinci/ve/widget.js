@@ -1630,30 +1630,89 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 			this.dijitWidget.selectChild(widget.dijitWidget);
 		}
 	},
-	addChild: function(child,index)
-	{
-		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
-		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
-		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
-		// so it follows the generic path for those types of containers.
-		if (this.dijitWidget.addChild && ! this.acceptsHTMLChildren) {
-			if(index === undefined || index === -1){
-				this._srcElement.addChild(child._srcElement);
-				this.dijitWidget.addChild(child.dijitWidget);
-			}else {
-				var children = this.getChildren();
-				if(index < children.length){
-					this._srcElement.insertBefore(child._srcElement,children[index]._srcElement);
-				}else{
-					this._srcElement.addChild(child._srcElement);
-				}
-				this.dijitWidget.addChild(child.dijitWidget, index);
-			}
-		} else {
-			this.inherited(arguments);
-		}
-	},
-	_getWidget: function(){
+	
+	addChild: function(child, index) {
+	    if (this.dijitWidget.addChild && child.dijitWidget) {
+	        if (typeof index === 'number' && index >= 0) {
+                var children = this.getChildren();
+                if (index < children.length) {
+                    this._srcElement.insertBefore(child._srcElement,
+                            children[index]._srcElement);
+                } else {
+                    this._srcElement.addChild(child._srcElement);
+                }
+                if (! this.acceptsHTMLChildren) {
+                    this.dijitWidget.addChild(child.dijitWidget, index);
+                } else {
+                    // See comment for _addChildHooked() for more info.
+                    this._addChildHooked(child.dijitWidget, index);
+                }
+            } else {
+                this._srcElement.addChild(child._srcElement);
+                this.dijitWidget.addChild(child.dijitWidget);
+            }
+        } else {
+            this.inherited(arguments);
+        }
+    },
+
+    // #514, #741, #856 - Some Dojox Mobile containers mixin dijit._Container
+    // (thereby adding addChild()), yet still allow HTML (non-Dojo)
+    // children. We still need to call addChild() when the child is another
+    // Dijit/Dojox widget, but there is a problem -- internally, the Dojo
+    // code only returns children which are Dijit/Dojox widgets, ignoring
+    // any of our HTML widgets. To work around this, we hook dojo.place()
+    // (called internally by addChild()) and pass in reference node based on
+    // Maqetta's understanding of the container's children, which can include
+    // both Dijit/Dojox and HTML widgets.
+    _addChildHooked: function(widget, index) {
+        var dj = davinci.ve.widget._dojo(this.domNode),
+            _place = dj.place,
+            children = this.getChildren(),
+            len = children.length,
+            newRefNode,
+            newPos;
+
+        // Calculate new reference node and insertion point, based on our
+        // view of the container's children.
+        if (len) {
+            var idx = index >= len ? len : index;
+            if (idx === 0) {
+                newRefNode = this.containerNode;
+                newPos = 'first';
+            } else {
+                newRefNode = children[idx - 1].domNode;
+                newPos = 'after';
+            }
+        } else {
+            newRefNode = this.containerNode;
+            newPos = 'last';
+        }
+
+        // Here we hook dojo.place(), call dijit._Container.addChild() (which
+        // ends up calling our dojo.place impl), and then revert dojo.place
+        // to its original value.
+        dj.place = function(node/*, refNode, pos*/) {
+            _place.call(dj, node, newRefNode, newPos);
+        };
+        this.dijitWidget.addChild(widget, index);
+        dj.place = _place;
+    },
+
+    removeChild: function(/*Widget*/child) {
+        if (!child) {
+            return;
+        }
+
+        if (this.dijitWidget.removeChild && child.dijitWidget) {
+            this.dijitWidget.removeChild(child.dijitWidget);
+            this._srcElement.removeChild(child._srcElement);
+        } else {
+            this.inherited(arguments);
+        }
+    },
+
+    _getWidget: function(){
 		return this.dijitWidget;
 	},
 	startup: function()
@@ -1670,23 +1729,6 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
 		if (this.dijitWidget.resize){
 			this.dijitWidget.resize();
 		}
-	},
-	removeChild: function(/*Widget*/child) {
-		if (!child) {
-			return;
-		}
-
-		// #514 & #741 - Some Dojox Mobile containers mixin dijit._Container
-		// (thereby adding addChild()), yet still allow HTML (non-Dojo)
-		// children.  Therefore, we do a check here for 'acceptsHTMLChildren',
-		// so it follows the generic path for those types of containers.
-		if (this.dijitWidget.removeChild && ! this.acceptsHTMLChildren) {
-			// it's a Widget and a Container
-			this.dijitWidget.removeChild(child.dijitWidget);
-			this._srcElement.removeChild(child._srcElement);
-			return;
-		}
-		this.inherited(arguments);
 	},
 
 	renderWidget: function(){

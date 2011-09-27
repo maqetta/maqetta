@@ -40,6 +40,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	},
 
 	onMouseDown: function(event){
+		this._target = davinci.ve.widget.getEnclosingWidget(event.target);
 		this._position = this._adjustPosition(this._context.getContentPosition(event));
 	},
 
@@ -81,7 +82,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		}
 
 		var size,
-			target = target || this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
+			target = this._getTarget() || davinci.ve.widget.getEnclosingWidget(event.target);
 
 		/**
 		 * Custom error, thrown when a valid parent widget is not found.
@@ -93,7 +94,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		    if (message) {
 		    	this.message += ' ' + message;
 		    }
-		}
+		};
 
 		try {
 			// create tool _data can be an object or an array of objects
@@ -124,14 +125,14 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 					return elem.type;  
 				}).join(', '),
 
-					// 'this._data' may represent a single widget or an array of widgets.
-					// Get data for all widgets
-					children = data.map(function(elem) {
-						return {
-							allowedParent: davinci.ve.metadata.getAllowedParent(elem.type),
-					        classList: getClassList(elem.type)
-						};
-				    });
+				// 'this._data' may represent a single widget or an array of widgets.
+				// Get data for all widgets
+				children = data.map(function(elem) {
+					return {
+						allowedParent: davinci.ve.metadata.getAllowedParent(elem.type),
+				        classList: getClassList(elem.type)
+					};
+			    });
 				var errorMsg;
 				// XXX Need to update this message for multiple widgets
 				if (children.length === 1 && children[0].allowedParent) {
@@ -143,7 +144,7 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 					            			 'the parent type',
 					             ' <span style="font-family: monospace">',
 					             children[0].allowedParent.join(', '),
-					             '</span>.'].join('');
+					             '</span>.'].join(''); // FIXME: i18n
 				}
 				throw new InvalidTargetWidgetError(errorMsg);
 			}
@@ -364,3 +365,4 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 		return true;
 	}
 });
+

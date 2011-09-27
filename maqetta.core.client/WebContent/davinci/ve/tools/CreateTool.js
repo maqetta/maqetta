@@ -208,23 +208,19 @@ dojo.declare("davinci.ve.tools.CreateTool", davinci.ve.tools._Tool, {
 	},
 
 	_getHelper: function(){
-		var helper, helperClassName = davinci.ve.metadata.queryDescriptor(this._type, "helper");
-		if(helperClassName){
+	    var helper = davinci.ve.metadata.queryDescriptor(this._type, "helper");
+	    if (helper) {
 			//FIXME: Duplicated from widget.js. Should be factored out into a utility
+	    	var helperConstructor;
 	        try {
-	            dojo["require"](helperClassName);
+	        	helperConstructor = dojo["require"](helper) && dojo.getObject(helper) /* remove && dojo.getObject after transition to AMD */;
 	        } catch(e) {
-                throw "Failed to load helper: " + helperClassName;
+	            console.error("Failed to load helper: " + helper);
+	            console.error(e);
+	            throw e;
 	        }
-	        var aClass = dojo.getObject(helperClassName);
-	        if (aClass) {
-	        	helper  = new aClass();
-			}
-	        //FIXME: dup of above?
-	        var obj = dojo.getObject(helperClassName);
-	        helper = new obj();
-		}
-		return helper;
+	        return new helperConstructor();
+	    }
 	},
 
 	create: function(args){

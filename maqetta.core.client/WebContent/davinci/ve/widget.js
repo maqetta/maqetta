@@ -605,19 +605,15 @@ davinci.ve.widget.getWidgetHelper = function(type){
 
     var helper = davinci.ve.metadata.queryDescriptor(type, "helper");
     if (helper) {
+    	var helperConstructor;
         try {
-            dojo["require"](helper);
+        	helperConstructor = dojo["require"](helper) && dojo.getObject(helper); /* remove && dojo.getObject after transition to AMD */;
         } catch(e) {
             console.error("Failed to load helper: " + helper);
             console.error(e);
+            throw e;
         }
-        var aClass = dojo.getObject(helper);
-        if (aClass) {
-            this._edit_helper  = new aClass();
-        }
-        var obj = dojo.getObject(helper);
-        return new obj();
-
+        return /*this._edit_helper = */new helperConstructor();
     }
 },
 

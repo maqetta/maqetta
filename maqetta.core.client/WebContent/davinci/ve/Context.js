@@ -727,7 +727,6 @@ dojo.declare("davinci.ve.Context", null, {
 					win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
-					context._setSourceData(data);
 				} catch(e) {
 					console.error(e);
 					// recreate the Error since we crossed frames
@@ -735,9 +734,7 @@ dojo.declare("davinci.ve.Context", null, {
 					dojo.mixin(callbackData, e);
 				}
 
-				if(callback){
-					callback.call((scope || context), callbackData); //FIXME: caller does not use callbackData nor error information?
-				}
+				context._continueLoading(data, callback, callbackData, scope);
 			};
 
 			doc.open();
@@ -770,30 +767,40 @@ dojo.declare("davinci.ve.Context", null, {
 			};*/
 
 		}else{
-			var callbackData = this;
-			try {
-				this._setSourceData(data);
-			} catch(e) {
-				// recreate the Error since we crossed frames
-				callbackData = new Error(e.message, e.fileName, e.lineNumber);
-				dojo.mixin(callbackData, e);
+			this._continueLoading(data, callback, this, scope);
+		}
+	},
+
+	_continueLoading: function(data, callback, callbackData, scope) {
+		var loading;
+		try {
+			loading = dojo.create("div",
+					{innerHTML: dojo.replace('<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>', ["Loading..."])}, // FIXME: i18n
+					this.frameNode.parentNode,
+					"first");
+			dojo.addClass(loading, 'loading');
+
+			if (callbackData instanceof Error) {
+				throw callbackData;
 			}
-			
-			if(callback){
-				callback.call((scope || this), callbackData);
-			}
+
+			this._setSourceData(data);
+
+			loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
+		} catch(e) {
+			// recreate the Error since we crossed frames
+			callbackData = new Error(e.message, e.fileName, e.lineNumber);
+			dojo.mixin(callbackData, e);
+			loading.innerHTML = "Uh oh! An error has occurred:<br>" + e.message + "<br>file:" + e.fileName + "<br>line: "+e.lineNumber; // FIXME: i18n
+			dojo.addClass(loading, 'error');
 		}
 		
+		if(callback){
+			callback.call((scope || this), callbackData);
+		}
 	},
 
 	_setSourceData: function(data){
-			
-		var frame = this.frameNode;
-		var loading = dojo.create("div",null, frame.parentNode, "first");
-
-		
-		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Loading...</td></tr></table>';
-		dojo.addClass(loading, 'loading');
 		
 		/* cache the theme metadata */	
 		this.themeChanged();
@@ -917,8 +924,6 @@ dojo.declare("davinci.ve.Context", null, {
                 console.error('Error eval script in Context._setSourceData, ' + e);
             }
         }
-
-		loading.parentNode.removeChild(loading); // need to remove loading for silhouette to display
 	},
 
 	/**

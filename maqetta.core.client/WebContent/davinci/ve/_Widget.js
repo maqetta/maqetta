@@ -1,6 +1,6 @@
 define("davinci/ve/_Widget", ["davinci/ve/metadata"], function() {
 
-return dojo.declare("davinci.ve._Widget", null, {
+/*return*/ dojo.declare("davinci.ve._Widget", null, {
 
 	isWidget: true,
 

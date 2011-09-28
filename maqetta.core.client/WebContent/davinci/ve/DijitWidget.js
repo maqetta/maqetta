@@ -1,6 +1,6 @@
 define("davinci/ve/DijitWidget", ["davinci/ve/_Widget", "davinci/ve/metadata"], function() {
 
-return dojo.declare("davinci.ve.DijitWidget", davinci.ve._Widget, {
+/*return*/ dojo.declare("davinci.ve.DijitWidget", davinci.ve._Widget, {
 
 	isDijitWidget: true,
 

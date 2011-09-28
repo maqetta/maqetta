@@ -1,6 +1,6 @@
 define("davinci/ve/HTMLWidget", ["davinci/ve/_Widget"], function() {
 
-return dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
+/*return*/ dojo.declare("davinci.ve.HTMLWidget", davinci.ve._Widget, {
 
 	isHtmlWidget: true,
 

@@ -1,6 +1,6 @@
 define("davinci/ve/GenericWidget", ["davinci/ve/_Widget"], function() {
 
-return dojo.declare("davinci.ve.GenericWidget", davinci.ve._Widget, {
+/*return*/ dojo.declare("davinci.ve.GenericWidget", davinci.ve._Widget, {
 	isGenericWidget: true,
 	constructor: function (params,node,type,metadata,srcElement) {
 		dojo.attr(node, "dvwidget", type);

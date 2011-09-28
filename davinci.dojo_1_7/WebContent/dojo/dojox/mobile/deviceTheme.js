@@ -7,12 +7,10 @@
 //>>built
 define("dojox/mobile/deviceTheme",["dojo/_base/kernel","dojo/_base/array","dojo/dom-construct","dojo/_base/window","./_base"],function(_1,_2,_3,_4,_5){
 dojox.mobile.loadCssFile=function(_6){
-    debugger;
  _1.create("LINK",{href:_6,type:"text/css",rel:"stylesheet"},_1.doc.getElementsByTagName("head")[0]);
 };
 dojox.mobile.themeMap=dojox.mobile.themeMap||[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[_1.moduleUrl("dojox.mobile","themes/iphone/ipad.css")]],["Custom","custom",[]],[".*","iphone",[]]];
 dojox.mobile.loadDeviceTheme=function(ua){
-    debugger;
 var t=_1.config["mblThemeFiles"]||dojox.mobile.themeFiles||["@theme"];
 if(!_1.isArray(t)){
 }

@@ -467,9 +467,12 @@ dojo.declare("davinci.ve.Context", null, {
     getTheme: function(){
         if(this._theme==null){
             var theme = this.loadThemeMeta(this._srcDocument);
-            this._themeUrl = theme.themeUrl;
-            this._themeMetaCache = theme.themeMetaCache;
-            this._theme = theme.theme;
+            if (theme) { // wdr #1024
+                this._themeUrl = theme.themeUrl;
+                this._themeMetaCache = theme.themeMetaCache;
+                this._theme = theme.theme;
+            }
+            
         }
         return this._theme;
     }, 
@@ -552,6 +555,7 @@ dojo.declare("davinci.ve.Context", null, {
         var imports = model.find({elementType:'CSSImport'});
         var defaultThemeName="claro";
 
+
         /* remove the .theme file, and find themes in the given base location */
         var allThemes = davinci.library.getThemes(davinci.Runtime.getProject());
         var themeHash = {};
@@ -584,6 +588,10 @@ dojo.declare("davinci.ve.Context", null, {
             }
         }
 
+        if (this._loadThemeDojoxMobile(this)){
+            return;
+        }
+             
         var body = model.find({elementType:'HTMLElement', tag:'body'},true);
         body.setAttribute("class", defaultTheme.className);
         /* add the css */
@@ -592,7 +600,28 @@ dojo.declare("davinci.ve.Context", null, {
             this.addModeledStyleSheet(url.toString(), null, true);
         }
     },
-    
+ 
+// FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
+    _loadThemeDojoxMobile: function(context){
+      
+        var htmlElement = context._srcDocument.getDocumentElement();
+        var head = htmlElement.getChildElement("head");
+        var scriptTags=head.getChildElements("script");
+        for(var s=0; s<scriptTags.length; s++){
+            var text=scriptTags[s].getElementText();
+            if (text.length) {
+                // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
+               // var start = text.indexOf('dojox.mobile.themeMap');
+                var start = text.indexOf('dojox.mobile.deviceTheme');
+                if (start > 0){
+                    return true; // it's a mobile theme
+                }
+             }
+        }
+        return false;
+     
+    },
+//////////////////////////////////////////////////////////////////////////////////////////////     
     _setSource: function(source, callback, scope){
 
         this._srcDocument=source;

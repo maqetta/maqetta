@@ -331,6 +331,13 @@ davinci.ve.metadata = function() {
     				}
     			}
     		}
+    		
+    		// check for single mobile theme's
+    		if (ro = this._loadThemeMetaDojoxMobile(model, themeHash)){
+    		    return ro;
+    		}
+
+   		
     		// If we are here, we didn't find a cross-reference match between 
     		// CSS files listed among the @import commands and the themes in
     		// themes/ folder of the user's workspace. So, see if there is an @import
@@ -385,7 +392,47 @@ davinci.ve.metadata = function() {
     			}
     		}
     	},
-        
+ 
+// FIXME this bit of code should be moved to toolkit specific ////////////////////////////////////////////////////////////
+    	/**
+         * Returns the theme meta data if the current theme of the page is dojox.mobile.deviceTheme 
+         * 
+         * @param model {Object}
+         * @param themeHash {Hash}
+         * @returns {Object} theme
+         */
+    	_loadThemeMetaDojoxMobile: function(model, themeHash){
+     
+             var scriptTags=model.find({'elementType':'HTMLElement', 'tag':'script'}); 
+             for(var s=0; s<scriptTags.length; s++){
+                 var text=scriptTags[s].getElementText();
+                 if (text.length) {
+                     // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
+                     var start = text.indexOf('dojox.mobile.themeMap');
+                     if (start > 0){
+                         start = text.indexOf('=', start);
+                         var stop = text.indexOf(';', start);
+                         if (stop > start){
+                             var themeMap = dojo.fromJson(text.substring(start+1,stop));
+                             var url = themeMap[0][2][0];
+                             /* trim off any relative prefix */
+                             for(var themeUrl in themeHash){
+                                 if(url.indexOf(themeUrl)  > -1){
+                                     var returnObject = {};
+                                     returnObject['themeUrl'] = url;
+                                     returnObject['themeMetaCache'] = davinci.library.getMetaData(themeHash[themeUrl]);
+                                     returnObject['theme'] =  themeHash[themeUrl];
+                                     return returnObject;    
+                                 }
+                             }
+                         }
+                      }
+                  }
+             }
+             return;
+    	},
+// FIXME end of dojox mobile  ////////////////////////////////////////////////////////////////
+    	
     	/**
     	 * Returns the descriptor for the library which contains the given
     	 * widget type

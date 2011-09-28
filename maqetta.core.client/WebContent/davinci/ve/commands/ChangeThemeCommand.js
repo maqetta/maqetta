@@ -21,9 +21,12 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 	},
 	
 	_changeTheme: function(newThemeInfo, oldTheme){
-	    
-	    this.removeTheme(oldTheme);
-	    this.addTheme(newThemeInfo);
+	    if (oldTheme){
+	        this.removeTheme(oldTheme);
+	    }
+	    if (newThemeInfo){
+	        this.addTheme(newThemeInfo);
+	    }
 	    var text = this._context.getModel().getText();
         var e = davinci.Workbench.getOpenEditor();
         e.setContent(e.fileName,text); // force regen of HTML Model to load new theme
@@ -33,6 +36,10 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 	
 		
 	removeTheme: function(oldTheme){
+	    var helper = davinci.theme.getHelper(oldTheme);
+	    if (helper && helper.removeTheme){
+	      helper.removeTheme(this._context, oldTheme);  
+	    } else {
 	        var modelDoc = this._context.getModel().getDocumentElement(); 
 	        var d = this._context.getDocument();
 	        var modelHead = modelDoc.getChildElement('head');
@@ -59,7 +66,9 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 	                    modelAttribute = modelAttribute.replace(oldTheme.className,'');
 	                    header.bodyClass = modelAttribute;
 	                    modelBody.removeAttribute('class');
-	                    modelBody.addAttribute('class',modelAttribute, false);
+	                    if (modelAttribute.length > 0){
+	                        modelBody.addAttribute('class',modelAttribute, false);
+	                    }
 	                    this._context.setHeader(header);
 	                    var importElements = modelHead.find({elementType:'CSSImport'});
 	                    
@@ -77,41 +86,48 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 	            }
 
 	        }
-	        
+	    }    
 	      
 	},
 	
 	addTheme: function(newThemeInfo){
-	    var modelDoc = this._context.getModel().getDocumentElement(); 
-        var d = this._context.getDocument();
-        var modelHead = modelDoc.getChildElement('head');
-        var b = d.getElementsByTagName("body");
-        var modelBody = modelDoc.getChildElement('body');
-        
-        var header = dojo.clone( this._context.getHeader());
-        var resourcePath = this._context.getFullResourcePath();
-      
-       
-        var ssPath = new davinci.model.Path(newThemeInfo.file.parent.getPath()).append(newThemeInfo.files[0]);
-        newFilename = ssPath.relativeTo(resourcePath, true);
-        header.styleSheets[header.styleSheets.length] = newFilename;
-        
-        var modelAttribute = modelBody.getAttribute('class');
-        modelAttribute = modelAttribute + ' '+newThemeInfo.className;
-        modelAttribute = modelAttribute.trim();
-        header.bodyClass = modelAttribute;
-        modelBody.removeAttribute('class');
-        modelBody.addAttribute('class',modelAttribute, false);
-        this._context.setHeader(header);
-        var style = modelHead.getChildElement('style');
-        if (!style) {
-            style = new davinci.html.HTMLElement('style');
-            modelHead.addChild(style);
+	    var helper = davinci.theme.getHelper(newThemeInfo);
+        if (helper && helper.addTheme){
+          helper.addTheme(this._context, newThemeInfo);  
+        } else {
+    	    var modelDoc = this._context.getModel().getDocumentElement(); 
+            var d = this._context.getDocument();
+            var modelHead = modelDoc.getChildElement('head');
+            var b = d.getElementsByTagName("body");
+            var modelBody = modelDoc.getChildElement('body');
+            
+            var header = dojo.clone( this._context.getHeader());
+            var resourcePath = this._context.getFullResourcePath();
+          
+           
+            var ssPath = new davinci.model.Path(newThemeInfo.file.parent.getPath()).append(newThemeInfo.files[0]);
+            newFilename = ssPath.relativeTo(resourcePath, true);
+            header.styleSheets[header.styleSheets.length] = newFilename;
+            
+            var modelAttribute = modelBody.getAttribute('class');
+            if (!modelAttribute){
+                modelAttribute = ' '; 
+            } 
+            modelAttribute = modelAttribute + ' '+newThemeInfo.className;
+            modelAttribute = modelAttribute.trim();
+            header.bodyClass = modelAttribute;
+            modelBody.removeAttribute('class');
+            modelBody.addAttribute('class',modelAttribute, false);
+            this._context.setHeader(header);
+            var style = modelHead.getChildElement('style');
+            if (!style) {
+                style = new davinci.html.HTMLElement('style');
+                modelHead.addChild(style);
+            }
+            var css = new davinci.html.CSSImport();
+            css.url = newFilename.toString();
+            style.addChild(css);
         }
-        var css = new davinci.html.CSSImport();
-        css.url = newFilename.toString();
-        style.addChild(css);
-
 	    
 	}
 

@@ -225,6 +225,19 @@ dojo.declare("davinci.ve.themeEditor.Context", davinci.ve.Context, {
 	getStyleAttributeValues: function(widget){
 		/* no style attributes for theme editor */
 		return {};
-	}
+	},
+	 _configDojoxMobile: function() {
+	     // override base
+	     // FIXME Add helper here
+	
+	     var helper;
+         if (this._visualEditor.theme && this._visualEditor.theme.helper){
+             helper = davinci.theme.getHelper(this._visualEditor.theme);
+             if (helper && helper.preThemeConfig){
+                 helper.preThemeConfig(this);
+             } 
+         }
+	    
+	 }
 });
 

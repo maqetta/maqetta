@@ -2,7 +2,7 @@ dojo.provide("davinci.theme.ThemeUtils");
 
 davinci.theme.isThemeHTML = function(resource){
 	return ( resource.getName().indexOf("dojo-theme-editor.html") > -1);
-}
+};
 
 davinci.theme.CloneTheme = function(name, version, selector, directory, originalTheme, renameFiles){
 	
@@ -103,5 +103,29 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		htmlFile.save();
 	}
 	davinci.library.themesChanged();
-}
+};
+
+davinci.theme.getHelper = function(theme){
+
+    if (theme._helper){
+        return theme._helper;
+    }
+    var helper = theme.helper;// davinci.ve.metadata.queryDescriptor(type, "helper");
+    if (helper) {
+        try {
+            dojo["require"](helper);
+        } catch(e) {
+            console.error("Failed to load helper: " + helper);
+            console.error(e);
+        }
+        var aClass = dojo.getObject(helper);
+        if (aClass) {
+            theme._helper  = new aClass();
+        }
+        var obj = dojo.getObject(helper);
+        return new obj();
+
+    }
+};
+
 

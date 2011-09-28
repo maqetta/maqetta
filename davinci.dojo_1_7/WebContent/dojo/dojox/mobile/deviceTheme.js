@@ -15,7 +15,7 @@ var t=_1.config["mblThemeFiles"]||dojox.mobile.themeFiles||["@theme"];
 if(!_1.isArray(t)){
 }
 var i,j;
-var m=dojox.mobile.themeMap;
+var m=dojox.mobile.themeMap; 
 ua=ua||_1.config["mblUserAgent"]||(location.search.match(/theme=(\w+)/)?RegExp.$1:navigator.userAgent);
 for(i=0;i<m.length;i++){
 if(ua.match(new RegExp(m[i][0]))){

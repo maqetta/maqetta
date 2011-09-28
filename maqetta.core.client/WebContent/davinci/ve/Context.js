@@ -48,39 +48,57 @@ dojo.declare("davinci.ve.Context", null, {
 		this._dojoxMobileCss = [];
 	},
 
-	_configDojoxMobile: function() {
-		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
-		// monitoring of which stylesheets get loaded for a given theme
+	    _configDojoxMobile: function() {
+        // dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
+        // monitoring of which stylesheets get loaded for a given theme
 
-		var dm = this.getDojo().getObject("dojox.mobile", true);
-		dm.configDeviceTheme = dojo.hitch(this, function() {
-			var loadDeviceTheme = dm.loadDeviceTheme;
+        var dm = this.getDojo().getObject("dojox.mobile", true);
+        dm.configDeviceTheme = dojo.hitch(this, function() {
+            var loadDeviceTheme = dm.loadDeviceTheme;
 
-			// Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
-			this.getDojo()["require"]("dojox.mobile.compat");
-		
-			// add before advice to clear out css file list before loading a new theme
-			dm.loadDeviceTheme = dojo.hitch(this, function(device) {
-				this._dojoxMobileCss = [];
-				loadDeviceTheme(device);
-			});
+            // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
+            this.getDojo()["require"]("dojox.mobile.compat");
 
-			// keep an updated list as dojox.mobile loads css files
-			dojo.connect(dm, "loadCssFile", this, function(file) {
-				this._dojoxMobileCss.push(file);
-			});
+            // add before advice to clear out css file list before loading a new theme
+            dm.loadDeviceTheme = dojo.hitch(this, function(device) {
+                var htmlElement = this._srcDocument.getDocumentElement();
+                var head = htmlElement.getChildElement("head");
+                var scriptTags=head.getChildElements("script");
+                dojo.forEach(scriptTags, function (scriptTag){
+                    var text=scriptTag.getElementText();
+                    if (text.length) {
+                        // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
+                        var start = text.indexOf('dojox.mobile.themeMap');
+                        if (start > 0){
+                            start = text.indexOf('=', start);
+                            var stop = text.indexOf(';', start);
+                            if (stop > start){
+                                var themeMap = dojo.fromJson(text.substring(start+1,stop));
+                                dm.themeMap = themeMap;
+                            }
+                        }
+                     }
+                }, this);
+                this._dojoxMobileCss = [];
+                loadDeviceTheme(device);
+            });
 
-			// This is a call-once function
-			delete dm.configDeviceTheme;
-		});
+            // keep an updated list as dojox.mobile loads css files
+            dojo.connect(dm, "loadCssFile", this, function(file) {
+                this._dojoxMobileCss.push(file);
+            });
 
-		// Set mobile device CSS files
-		var mobileDevice = this.getMobileDevice();
-		if (mobileDevice) {
-			this.setMobileDevice(mobileDevice);
-			this._visualEditor.setDevice(mobileDevice, true);
-		}
-	},
+            // This is a call-once function
+            delete dm.configDeviceTheme;
+        });
+
+        // Set mobile device CSS files
+        var mobileDevice = this.getMobileDevice();
+        if (mobileDevice) {
+            this.setMobileDevice(mobileDevice);
+            this._visualEditor.setDevice(mobileDevice, true);
+        }
+    },
 
 	isActive: function(){
 		return !!this._activeTool;
@@ -445,15 +463,18 @@ dojo.declare("davinci.ve.Context", null, {
 		}
 	},
 	
-	getTheme: function(){
-		if(this._theme==null){
-			var theme = this.loadThemeMeta(this._srcDocument);
-			this._themeUrl = theme.themeUrl;
-			this._themeMetaCache = theme.themeMetaCache;
-			this._theme = theme.theme;
-		}
-		return this._theme;
-	}, 
+ getTheme: function(){
+        if(this._theme==null){
+            var theme = this.loadThemeMeta(this._srcDocument);
+            if (theme) { // wdr #1024
+                this._themeUrl = theme.themeUrl;
+                this._themeMetaCache = theme.themeMetaCache;
+                this._theme = theme.theme;
+            }
+            
+        }
+        return this._theme;
+    }, 
 
 	getThemeMeta: function(){
 		if(!this._themeMetaCache ){
@@ -565,6 +586,9 @@ dojo.declare("davinci.ve.Context", null, {
 			}
 		}
 		
+		if (this._loadThemeDojoxMobile(this)){
+            return;
+        }
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
@@ -573,6 +597,28 @@ dojo.declare("davinci.ve.Context", null, {
 			this.addModeledStyleSheet(url.toString(), null, true);
 		}
     },
+    
+// FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
+    _loadThemeDojoxMobile: function(context){
+      
+        var htmlElement = context._srcDocument.getDocumentElement();
+        var head = htmlElement.getChildElement("head");
+        var scriptTags=head.getChildElements("script");
+        for(var s=0; s<scriptTags.length; s++){
+            var text=scriptTags[s].getElementText();
+            if (text.length) {
+                // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
+               // var start = text.indexOf('dojox.mobile.themeMap');
+                var start = text.indexOf('dojox.mobile.deviceTheme');
+                if (start > 0){
+                    return true; // it's a mobile theme
+                }
+             }
+        }
+        return false;
+     
+    },
+//////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope){
 		

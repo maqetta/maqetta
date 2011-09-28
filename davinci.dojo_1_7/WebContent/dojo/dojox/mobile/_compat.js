@@ -303,7 +303,8 @@ for(var i=0;i<_25.length;i++){
 var _26=_25[i];
 if((_26.match(dojox.mobile.loadCompatPattern)||location.href.indexOf("mobile/tests/"))&&_26.indexOf("-compat.css")==-1){
 var _27=_26.substring(0,_26.length-4)+"-compat.css";
-dojox.mobile.loadCss(_27);
+dojox.mobile.loadCss(_27); 
+dojox.mobile.loadedCssFiles.push(compatCss); // save css file so we can remove later if theme switch
 }
 }
 };

@@ -1,0 +1,85 @@
+{
+    "dojox": {
+        "Heading": {
+            "displayName": "Heading" ,
+            "states": {
+                "Normal": {
+					"selectors": {
+						".mblHeading": [
+							"color"
+							
+							
+						]								
+					},
+					"query": "" 
+				} 
+            }
+		},
+		"Button": {
+            "displayName": "Button" ,
+            "states": {
+                "Normal": {
+					"selectors": {
+						".mblButton": [
+							"color"
+							
+							
+						]								
+					},
+					"query": "" 
+				} 
+            }
+		},
+		"ToggleButton": {
+            "displayName": "ToggleButton" ,
+            "states": {
+                "Normal": {
+					"selectors": {
+						".mblButton": [
+							"color"
+							
+							
+						]								
+					},
+					"query": "" 
+				} 
+            }
+		},
+		"Switch": {
+            "displayName": "Switch" ,
+            "states": {
+                "Normal": {
+					"selectors": {
+						".mblButton": [
+							"color"
+							
+							
+						]								
+					},
+					"query": "" 
+				} 
+            }
+		},
+		"View": {
+			"displayName": "View" ,
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mobile body.mobile2": [
+							"color",
+							"overflow-x",
+							"-webkit-text-size-adjust",
+							"background-color",
+							"font-family",
+							"font-size",
+							"width",
+							"margin",
+							"padding"							
+						]								
+					},
+					"query": "" 
+				} 
+			}
+		}
+    }
+}

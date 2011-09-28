@@ -1661,42 +1661,15 @@ dojo.declare("davinci.ve.DijitWidget",davinci.ve._Widget,{
     // children. We still need to call addChild() when the child is another
     // Dijit/Dojox widget, but there is a problem -- internally, the Dojo
     // code only returns children which are Dijit/Dojox widgets, ignoring
-    // any of our HTML widgets. To work around this, we hook dojo.place()
-    // (called internally by addChild()) and pass in reference node based on
-    // Maqetta's understanding of the container's children, which can include
-    // both Dijit/Dojox and HTML widgets.
+    // any of our HTML widgets. To work around this, we temporarily replace
+    // the Dijit/Dojox widget's getChildren() with our own, which returns all
+    // Maqetta managed children.
     _addChildHooked: function(widget, index) {
-        var dj = davinci.ve.widget._dojo(this.domNode),
-            _place = dj.place,
-            children = this.getChildren(),
-            len = children.length,
-            newRefNode,
-            newPos;
-
-        // Calculate new reference node and insertion point, based on our
-        // view of the container's children.
-        if (len) {
-            var idx = index >= len ? len : index;
-            if (idx === 0) {
-                newRefNode = this.containerNode;
-                newPos = 'first';
-            } else {
-                newRefNode = children[idx - 1].domNode;
-                newPos = 'after';
-            }
-        } else {
-            newRefNode = this.containerNode;
-            newPos = 'last';
-        }
-
-        // Here we hook dojo.place(), call dijit._Container.addChild() (which
-        // ends up calling our dojo.place impl), and then revert dojo.place
-        // to its original value.
-        dj.place = function(node/*, refNode, pos*/) {
-            _place.call(dj, node, newRefNode, newPos);
-        };
-        this.dijitWidget.addChild(widget, index);
-        dj.place = _place;
+        var parentWidget = this.dijitWidget,
+            _getChildren = parentWidget.getChildren;
+        parentWidget.getChildren = dojo.hitch(this, this.getChildren);
+        parentWidget.addChild(widget, index);
+        parentWidget.getChildren = _getChildren;
     },
 
     removeChild: function(/*Widget*/child) {

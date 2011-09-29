@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Maqetta Server External" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
+<product name="Maqetta Server Internal" id="davinci.product" application="org.eclipse.ant.core.antRunner" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
       <linux>/davinci.product/config/config-internal.ini</linux>

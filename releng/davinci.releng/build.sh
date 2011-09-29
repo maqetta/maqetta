@@ -162,7 +162,7 @@ fi
 equinoxGitRepo="git://git.eclipse.org/gitroot/equinox/rt.equinox.bundles.git/"
 
 # Stable version of equinox to checkout 
-equinoxBranch="remotes/origin/R3_6_maintenance"
+equinoxBranch="R3_6_maintenance"
 
 # Set up for and pull down the latest code from GitHub
 #
@@ -177,7 +177,7 @@ fi
 
 echo "Switching Equinox to branch ${equinoxBranch}..."
 cd ${equinoxRepo}
-git checkout --force ${equinoxBranch}
+git checkout -f -B ${equinoxBranch} remotes/origin/${equinoxBranch}
 
 
 #

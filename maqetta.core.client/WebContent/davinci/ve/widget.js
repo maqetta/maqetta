@@ -338,7 +338,7 @@ davinci.ve.widget.createWidget = function(data){
 		//debugger;
 		return undefined;
 	}
-	c = dojo["require"](widgetClassName);
+	c = dojo.getObject(widgetClassName);
 
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'

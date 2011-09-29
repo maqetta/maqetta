@@ -65,7 +65,7 @@
 			"states": {
 				"Normal": {
 					"selectors": {
-						".mobile body.mobile2": [
+						".mobile body": [
 							"color",
 							"overflow-x",
 							"-webkit-text-size-adjust",

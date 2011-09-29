@@ -31,7 +31,7 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 		themeFile = themeRoot.createResource(lastSeg + ".theme");
 	else
 		themeFile = davinci.resource.findResource(directory + "/" + fileName);
-	
+
 	var themeJson = {};
 	themeJson['className'] = selector;
 	themeJson['name']= name;
@@ -40,6 +40,12 @@ davinci.theme.CloneTheme = function(name, version, selector, directory, original
 	themeJson['files'] = originalTheme['files'];
 	themeJson['meta'] = originalTheme['meta'];
 	themeJson['themeEditorHtmls'] = originalTheme['themeEditorHtmls'];
+	if(originalTheme['helper']){
+	    themeJson['helper'] = originalTheme['helper']; 
+	}
+	if(originalTheme['base']){
+        themeJson['base'] = originalTheme['base']; 
+    }
 	
 	
 	

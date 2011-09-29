@@ -16,7 +16,14 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
 
         // Pull in _compat.js immediately, since it redefines methods like loadCssFile which we wish to add advice to now
         context.getDojo()["require"]("dojox.mobile.compat");
-        dm.themeMap=[[".*","android",["mobile2.css"]]];
+        var resourcePath = context.getFullResourcePath();
+        var ssPath = new davinci.model.Path(context._theme.file.parent.getPath()).append(context._theme.files[0]);
+        newFilename = ssPath.relativeTo(resourcePath, true);
+        var base = "iphone";
+        if (context._theme.base){
+            base = context._theme.base;
+        }
+        dm.themeMap=[[".*",base,[newFilename]]];
 
 	},
 	
@@ -37,7 +44,11 @@ dojo.declare("davinci.libraries.dojo.dojox.mobile.ThemeHelper", null, {
                 if (start > 0){
                     var stop = text.indexOf(';', start);
                     if (stop > start){
-                        var themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap=[[".*","iphone",["'+newFilename+'"]]];' + text.substring(stop+1);
+                        var base = "iphone";
+                        if (theme.base){
+                            base = theme.base;
+                        }
+                        var themeMap = text.substring(0,stop+1) + '\ndojox.mobile.themeMap=[[".*","'+base+'",["'+newFilename+'"]]];' + text.substring(stop+1);
                         // create a new script element
                         var script = new davinci.html.HTMLElement('script');
                         script.addAttribute('type', 'text/javascript');

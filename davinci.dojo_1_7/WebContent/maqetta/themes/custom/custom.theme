@@ -1,1 +1,1 @@
-({"className":"custom","name":"custom","version":"1.7","specVersion":"0.8","files":["custom.css"],"meta":["custom.json"],"themeEditorHtmls":["dojo-theme-editor.html"],"helper":"davinci.libraries.dojo.dojox.mobile.ThemeHelper"})
+({"className":"custom","name":"custom","version":"1.7","specVersion":"0.8","files":["custom.css"],"meta":["custom.json"],"themeEditorHtmls":["dojo-theme-editor.html"],"helper":"davinci.libraries.dojo.dojox.mobile.ThemeHelper","base":"custom"})

@@ -74,7 +74,6 @@ dojo.declare("davinci.ve.commands.ChangeThemeCommand", null, {
 	                    
 	                    for(var i=0;i<importElements.length;i++){
 	                        if(sameSheet(importElements[i].url, filename)){
-	                            debugger;
 	                            importElements[i].url = 'x';
 	                            importElements[i].parent.removeChild(importElements[i]);
 	                            delete importElements[i];

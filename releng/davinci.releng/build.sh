@@ -177,7 +177,7 @@ fi
 
 echo "Switching Equinox to branch ${equinoxBranch}..."
 cd ${equinoxRepo}
-git checkout ${equinoxBranch}
+git checkout --force ${equinoxBranch}
 
 
 #

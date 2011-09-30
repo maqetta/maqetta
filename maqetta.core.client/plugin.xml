@@ -35,11 +35,7 @@
               />
         <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
         
-        <resource
-              alias="/app/metadata/maqetta/core/0.3"
-              base-name="/WebContent/project"
-              />
-       
+
        
         <!--   
         <resource
@@ -66,22 +62,7 @@
                path="app/davinci/ve/themeEditor/themeEditor"
                resourcePath="WebContent/davinci/ve/themeEditor/themeEditor"/>
       </extension>
-      <extension
-            point="maqetta.core.server.initialUserFiles">
-            <!--
-             <initalUserFile
-                  path="WebContent/project/base/"/>
-                  -->
-             <initalUserFile
-                  path="WebContent/samples/"/>
-              
-      </extension>
-      <extension point="maqetta.core.server.ajaxLibrary">
-		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
-		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
-		      <metadata location="app/metadata/maqetta/core/0.3" />
-		 </ajaxLibrary>
-	 </extension>
+
       
 	<extension point="maqetta.core.server.welcomePage"><welcomePage path="WebContent/welcome.html" priority="1"/></extension>
 	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="1"/></extension>

@@ -13,12 +13,45 @@
     	<personManager class="maqetta.core.server.standalone.servlets.PersonManagerImpl"/>
    	  </extension>
 
-      <extension point="maqetta.core.server.userManager">
+     <extension point="maqetta.core.server.userManager">
     	<userManager class="maqetta.core.server.standalone.servlets.UserManagerImpl"/>
-   	  </extension>
-
+   	 </extension>
+	
+	
+	<!-- this probably should eventually be moved to a dojo or RAD specific plugin -->
+	<extension point="maqetta.core.server.libraryFinder">
+    	<libraryFinder class="maqetta.core.server.standalone.DojoLibraryFinder"/>
+   	 </extension>
+	<extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources">
+	
+	        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
+	        
+	        <resource
+	              alias="/app/metadata/maqetta/core/0.3"
+	              base-name="/WebContent/project"
+	              />
+	 </extension>
    	  
-   
+      
+     <extension
+            point="maqetta.core.server.initialUserFiles">
+            <!--
+             <initalUserFile
+                  path="WebContent/project/base/"/>
+                  -->
+             <initalUserFile
+                  path="WebContent/samples/"/>
+              
+      </extension>
+      
+      
+      <extension point="maqetta.core.server.ajaxLibrary">
+		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
+		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
+		      <metadata location="app/metadata/maqetta/core/0.3" />
+		 </ajaxLibrary>
+	 </extension>
+	 
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet

@@ -7,5 +7,7 @@ public interface ILibraryManager {
 	public Library[] getAllLibraries();
 
 	public Library getLibrary(String id, String version);
+	
+	public ILibraryFinder[] getLibraryFinders();
 
 }

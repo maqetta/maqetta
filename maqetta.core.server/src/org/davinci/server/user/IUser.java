@@ -2,7 +2,7 @@ package org.davinci.server.user;
 
 import java.io.File;
 
-import org.davinci.ajaxLibrary.LibInfo;
+import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.internal.Links;
 import org.maqetta.server.ILinks;
 import org.maqetta.server.IVResource;
@@ -53,7 +53,7 @@ public interface IUser {
 	public IVResource[] findFiles(String pathStr, String startFolder,
 			boolean ignoreCase, boolean workspaceOnly);
 
-	public LibInfo[] getLibs(String base);
+	public ILibInfo[] getLibs(String base);
 
 	public String getLibPath(String id, String version, String base);
 

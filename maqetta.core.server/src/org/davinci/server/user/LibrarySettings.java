@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.util.XMLFile;
@@ -14,7 +15,7 @@ import org.w3c.dom.Element;
 public class LibrarySettings extends XMLFile {
 
     File      libFile;
-    LibInfo[] libs;
+    ILibInfo[] libs;
 
     public LibrarySettings(File dir) {
         libFile = new File(dir, IDavinciServerConstants.LIBS_FILE);
@@ -23,7 +24,7 @@ public class LibrarySettings extends XMLFile {
             libs = getAllDefaultLibs();
         } else {
             ArrayList list = this.load(libFile);
-            libs = (LibInfo[]) list.toArray(new LibInfo[list.size()]);
+            libs = (ILibInfo[]) list.toArray(new ILibInfo[list.size()]);
         }
     }
 
@@ -31,9 +32,9 @@ public class LibrarySettings extends XMLFile {
     	return libFile.exists();
     }
  
-    public static LibInfo[] getAllDefaultLibs() {
+    public static ILibInfo[] getAllDefaultLibs() {
         Library[] all = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
-        LibInfo[] results = new LibInfo[all.length];
+        ILibInfo[] results = new ILibInfo[all.length];
         for (int i = 0; i < all.length; i++) {
             results[i] = new LibInfo(all[i].getID(), all[i].getName(), all[i].getVersion(), all[i].getDefaultRoot());
         }
@@ -44,7 +45,7 @@ public class LibrarySettings extends XMLFile {
         return "libraries";
     }
 
-    public LibInfo[] allLibs() {
+    public ILibInfo[] allLibs() {
         return this.libs;
     }
 
@@ -86,7 +87,7 @@ public class LibrarySettings extends XMLFile {
 
     protected Object createObject(Element element, String[] attributes) {
 
-        LibInfo link = new LibInfo(attributes[0], attributes[1], attributes[2], attributes[3]);
+        ILibInfo link = new LibInfo(attributes[0], attributes[1], attributes[2], attributes[3]);
         return link;
     }
 
@@ -95,7 +96,7 @@ public class LibrarySettings extends XMLFile {
     }
 
     protected String[] getAttributeValues(Object object) {
-        LibInfo link = (LibInfo) object;
+        ILibInfo link = (ILibInfo) object;
 
         return new String[] { link.getId(), link.getName(), link.getVersion(), link.getVirtualRoot() };
     }

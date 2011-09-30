@@ -5,8 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryManager;
-import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONWriter;
@@ -20,7 +20,7 @@ public class GetUserLibs extends Command {
         // Library[] libs =
         // ServerManager.getServerManger().getLibraryManager().getAllLibraries();
         String base = req.getParameter("base");
-        LibInfo[] installedLibs = user.getLibs(base);
+        ILibInfo[] installedLibs = user.getLibs(base);
 
         JSONWriter jsonWriter = new JSONWriter(true);
         jsonWriter.startObject().addFieldName("userLibs").startArray();

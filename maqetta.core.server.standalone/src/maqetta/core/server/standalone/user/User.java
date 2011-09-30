@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import maqetta.core.server.standalone.VDirectory;
 import maqetta.core.server.standalone.VFile;
@@ -25,7 +26,8 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.davinci.ajaxLibrary.LibInfo;
+import org.davinci.ajaxLibrary.ILibInfo;
+import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
@@ -76,16 +78,17 @@ public class User implements IUser {
 			if(!userFiles[j].isDirectory()) continue;
 			LibrarySettings settings = this.getLibSettings(userFiles[j]);
 			if(!settings.exists()) continue;
-			LibInfo libs[] =  settings.allLibs();
+			Vector<ILibInfo> libs = new Vector();
+			libs.addAll(Arrays.asList( settings.allLibs()));
 			
 			
 			IVResource workspace = this.workspace;
 			IVResource firstFolder = new VDirectory(workspace, userFiles[j].getName());
 			this.workspace.add(firstFolder);
-			for (int i = 0; i < libs.length; i++) {
+			for (int i = 0; i < libs.size(); i++) {
 				IVResource root = firstFolder;
-				String defaultRoot = libs[i].getVirtualRoot();
-				Library b = this.getLibrary(libs[i]);
+				String defaultRoot = libs.get(i).getVirtualRoot();
+				Library b = this.getLibrary(libs.get(i));
 				/* library not found on server so avoid adding it to the workspace */
 				if (b == null) {
 					continue;
@@ -120,6 +123,30 @@ public class User implements IUser {
 				//}
 			}
 		}
+	}
+	
+	
+	public ILibraryFinder[] getFinders(String base){
+		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
+		File baseFile = new File(this.userDirectory, base);
+		Vector<ILibraryFinder> allLibs = new Vector();
+		for(int i=0;i<finders.length;i++){
+			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
+			allLibs.add(finder);
+		}
+		return allLibs.toArray(new ILibraryFinder[allLibs.size()]);
+	}
+	
+	public ILibInfo[] getExtendedSettings(String base){
+		
+		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
+		File baseFile = new File(this.userDirectory, base);
+		Vector<ILibInfo> allLibs = new Vector();
+		for(int i=0;i<finders.length;i++){
+			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
+			allLibs.addAll(Arrays.asList(finder.getLibInfo()));
+		}
+		return (ILibInfo[]) allLibs.toArray(new ILibInfo[allLibs.size()]);
 	}
 	
 	/* (non-Javadoc)
@@ -223,6 +250,10 @@ public class User implements IUser {
 		
 		LibrarySettings ls = this.getLibSettings(base);
 		ls.save();
+		ILibraryFinder[] finders = this.getFinders(base);
+		for(int i=0;i<finders.length;i++){
+			finders[i].librarySettingsChanged(ls.allLibs());
+		}
 		rebuildWorkspace();
 
 	
@@ -267,6 +298,12 @@ public class User implements IUser {
 			String defaultRoot = ServerManager.getServerManger().getLibraryManager().getDefaultRoot(id, version);
 			libs.addLibrary(id, version, id, defaultRoot);
 		}
+		
+		ILibraryFinder[] finders = this.getFinders(base);
+		for(int i=0;i<finders.length;i++){
+			finders[i].librarySettingsChanged(libs.allLibs());
+		}
+		
 		rebuildWorkspace();
 	}
 
@@ -277,6 +314,11 @@ public class User implements IUser {
 		LibrarySettings libs = this.getLibSettings(base);
 
 		libs.modifyLibrary(id, version, virtualRoot, base);
+		ILibraryFinder[] finders = this.getFinders(base);
+		for(int i=0;i<finders.length;i++){
+			finders[i].librarySettingsChanged(libs.allLibs());
+		}
+		
 		rebuildWorkspace();
 	}
 
@@ -347,7 +389,7 @@ public class User implements IUser {
         return getLibFile(path);
     }
 
-	private Library getLibrary(LibInfo li) {
+	private Library getLibrary(ILibInfo li) {
 		String id = li.getId();
 		String version = li.getVersion();
 		return ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
@@ -588,8 +630,13 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getLibs(java.lang.String)
 	 */
-	public LibInfo[] getLibs(String base) {
-		return this.getLibSettings(base).allLibs();
+	public ILibInfo[] getLibs(String base) {
+		
+		Vector<ILibInfo> allLibs = new Vector();
+		allLibs.addAll(Arrays.asList(this.getLibSettings(base).allLibs()));
+		
+		allLibs.addAll(Arrays.asList(this.getExtendedSettings(base)));
+		return (ILibInfo[]) allLibs.toArray(new ILibInfo[allLibs.size()]);
 		
 	}
 
@@ -602,9 +649,9 @@ public class User implements IUser {
 		 * and version for now its going to be the default, but this will allow
 		 * to remap/move etc..
 		 */
-		LibInfo[] mappedLibs = this.getLibs(base);
+		ILibInfo[] mappedLibs = this.getLibs(base);
 		for (int i = 0; i < mappedLibs.length; i++) {
-			LibInfo library = mappedLibs[i];
+			ILibInfo library = mappedLibs[i];
 			if (library.getId().equals(id)
 					&& library.getVersion().equals(version)) {
 				return library.getVirtualRoot();
